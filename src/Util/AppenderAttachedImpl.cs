@@ -55,12 +55,19 @@ namespace log4net.Util
 			{
 				throw new ArgumentNullException("loggingEvent");
 			}
+
+			// m_appenderList is null when empty
 			if (m_appenderList == null) 
 			{
 				return 0;
 			}
 
-			foreach(IAppender appender in m_appenderList)
+			if (m_appenderArray == null)
+			{
+				m_appenderArray = m_appenderList.ToArray();
+			}
+
+			foreach(IAppender appender in m_appenderArray)
 			{
 				try
 				{
@@ -93,6 +100,7 @@ namespace log4net.Util
 				throw new ArgumentNullException("newAppender");
 			}
 	
+			m_appenderArray = null;
 			if (m_appenderList == null) 
 			{
 				m_appenderList = new AppenderCollection(1);
@@ -121,7 +129,7 @@ namespace log4net.Util
 				}
 				else 
 				{
-					return m_appenderList;
+					return AppenderCollection.ReadOnly(m_appenderList);
 				}
 			}
 		}
@@ -170,8 +178,8 @@ namespace log4net.Util
 						LogLog.Error("AppenderAttachedImpl: Failed to Close appender ["+appender.Name+"]", ex);
 					}
 				}
-				m_appenderList.Clear();
 				m_appenderList = null;	  
+				m_appenderArray = null;
 			}
 		}
 
@@ -190,6 +198,11 @@ namespace log4net.Util
 			if (appender != null && m_appenderList != null) 
 			{
 				m_appenderList.Remove(appender);
+				if (m_appenderList.Count == 0)
+				{
+					m_appenderList = null;
+				}
+				m_appenderArray = null;
 			}
 			return appender;
 		}
@@ -214,9 +227,14 @@ namespace log4net.Util
 		#region Private Instance Fields
 
 		/// <summary>
-		/// Array of appenders
+		/// List of appenders
 		/// </summary>
 		private AppenderCollection m_appenderList;
+
+		/// <summary>
+		/// Array of appenders, used to cache the m_appenderList
+		/// </summary>
+		private IAppender[] m_appenderArray;
 
 		#endregion Private Instance Fields
 	}
