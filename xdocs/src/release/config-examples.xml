@@ -138,7 +138,7 @@ CREATE TABLE [dbo].[Log] (
 					</p>
 					<source language="xml"><![CDATA[
 <appender name="AdoNetAppender_Access" type="log4net.Appender.AdoNetAppender">
-	<connectionString value="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\\log\\access.mdb;User Id=;Password=;" />
+	<connectionString value="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\log\access.mdb;User Id=;Password=;" />
 	<commandText value="INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message]) VALUES (@log_date, @thread, @log_level, @logger, @message)" />
 	<parameter>
 		<parameterName value="@log_date" />
@@ -570,7 +570,7 @@ IN "LRGTABLES";
 				</p>
 				<source language="xml"><![CDATA[
 <appender name="FileAppender" type="log4net.Appender.FileAppender">
-	<file value="${TMP}\\log-file.txt" />
+	<file value="${TMP}\log-file.txt" />
 	<appendToFile value="true" />
 	<encoding value="unicodeFFFE" />
 	<layout type="log4net.Layout.PatternLayout">
@@ -888,7 +888,7 @@ IN "LRGTABLES";
 	<to value="to@domain.com" />
 	<from value="from@domain.com" />
 	<subject value="test logging message" />
-	<pickupDir value="C:\\SmtpPickup" />
+	<pickupDir value="C:\SmtpPickup" />
 	<bufferSize value="512" />
 	<lossy value="true" />
 	<evaluator type="log4net.Core.LevelEvaluator">
