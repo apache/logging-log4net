@@ -430,18 +430,21 @@ namespace log4net.Repository.Hierarchy
 
 			for(Logger c=this; c != null; c=c.m_parent) 
 			{
-				// Protected against simultaneous call to addAppender, removeAppender,...
-				c.m_appenderLock.AcquireReaderLock();
-				try
+				if (c.m_appenderAttachedImpl != null) 
 				{
-					if (c.m_appenderAttachedImpl != null) 
+					// Protected against simultaneous call to addAppender, removeAppender,...
+					c.m_appenderLock.AcquireReaderLock();
+					try
 					{
-						writes += c.m_appenderAttachedImpl.AppendLoopOnAppenders(loggingEvent);
+						if (c.m_appenderAttachedImpl != null) 
+						{
+							writes += c.m_appenderAttachedImpl.AppendLoopOnAppenders(loggingEvent);
+						}
 					}
-				}
-				finally
-				{
-					c.m_appenderLock.ReleaseReaderLock();
+					finally
+					{
+						c.m_appenderLock.ReleaseReaderLock();
+					}
 				}
 
 				if (!c.m_additive) 
