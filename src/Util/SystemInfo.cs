@@ -28,6 +28,7 @@ namespace log4net.Util
 	/// </summary>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
+	/// <author>Alexey Solofnenko</author>
 	public sealed class SystemInfo
 	{
 		#region Private Instance Constructors
@@ -391,7 +392,8 @@ namespace log4net.Util
 		/// </para>
 		/// <para>
 		/// If the type name is not fully qualified, it will be loaded from the assembly
-		/// containing the specified relative type.
+		/// containing the specified relative type. If the type is not found in the assembly 
+		/// then all the loaded assemblies will be searched for the type.
 		/// </para>
 		/// </remarks>
 		/// <returns>The type loaded or <c>null</c> if it could not be loaded.</returns>
@@ -414,7 +416,8 @@ namespace log4net.Util
 		/// </para>
 		/// <para>
 		/// If the type name is not fully qualified it will be loaded from the
-		/// assembly that is directly calling this method.
+		/// assembly that is directly calling this method. If the type is not found 
+		/// in the assembly then all the loaded assemblies will be searched for the type.
 		/// </para>
 		/// </remarks>
 		/// <returns>The type loaded or <c>null</c> if it could not be loaded.</returns>		
@@ -438,7 +441,8 @@ namespace log4net.Util
 		/// </para>
 		/// <para>
 		/// If the type name is not fully qualified it will be loaded from the specified
-		/// assembly.
+		/// assembly. If the type is not found in the assembly then all the loaded assemblies 
+		/// will be searched for the type.
 		/// </para>
 		/// </remarks>
 		/// <returns>The type loaded or <c>null</c> if it could not be loaded.</returns>
@@ -451,12 +455,51 @@ namespace log4net.Util
 #if NETCF
 				return relativeAssembly.GetType(typeName, throwOnError);
 #else
-				return relativeAssembly.GetType(typeName, throwOnError, ignoreCase);
+				// Attempt to lookup the type from the relativeAssembly
+				Type type = relativeAssembly.GetType(typeName, false, ignoreCase);
+				if (type != null)
+				{
+					// Found type in relative assembly
+					//LogLog.Debug("SystemInfo: Loaded type ["+typeName+"] from assembly ["+relativeAssembly.FullName+"]");
+					return type;
+				}
+
+				Assembly[] loadedAssemblies = null;
+				try
+				{
+					loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+				}
+				catch(System.Security.SecurityException)
+				{
+					// Insufficient permissions to get the list of loaded assemblies
+				}
+
+				if (loadedAssemblies != null)
+				{
+					// Search the loaded assemblies for the type
+					foreach (Assembly assembly in loadedAssemblies) 
+					{
+						type = assembly.GetType(typeName, false, ignoreCase);
+						if (type != null)
+						{
+							// Found type in loaded assembly
+							LogLog.Debug("SystemInfo: Loaded type ["+typeName+"] from assembly ["+assembly.FullName+"] by searching loaded assemblies.");
+							return type;
+						}
+					}
+				}
+
+				// Didn't find the type
+				if (throwOnError)
+				{
+					throw new TypeLoadException("Could not load type ["+typeName+"]. Tried assembly ["+relativeAssembly.FullName+"] and all loaded assemblies");
+				}
+				return null;
 #endif
 			}
 			else
 			{
-				// Includes assembly name
+				// Includes explicit assembly name
 				//LogLog.Debug("SystemInfo: Loading type ["+typeName+"] from global Type");
 #if NETCF
 				return Type.GetType(typeName, throwOnError);
