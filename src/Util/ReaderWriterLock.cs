@@ -16,7 +16,7 @@
 //
 #endregion
 
-#if (!NETCF && !MONO)
+#if (!NETCF)
 #define HAS_READERWRITERLOCK
 #endif
 
