@@ -310,7 +310,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 				</p>
 				<p>
 					For more examples of configuring appenders using the <span class="code">XmlConfigurator</span>
-					see the <a href="example-config-appender.html">Example Appender Configuration</a> 
+					see the <a href="../config-examples.html">Example Appender Configuration</a> 
 					document.
 				</p>
 				
