@@ -83,7 +83,7 @@ namespace log4net.Appender
 	/// <code lang="XML" escaped="true">
 	/// <appender name="AdoNetAppender_SqlServer" type="log4net.Appender.AdoNetAppender" >
 	///   <connectionType value="System.Data.SqlClient.SqlConnection, System.Data, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-	///   <connectionString value="data source=GUINNESS;initial catalog=test_log4net;integrated security=false;persist security info=True;User ID=sa;Password=sql" />
+	///   <connectionString value="data source=SQLSVR;initial catalog=test_log4net;integrated security=false;persist security info=True;User ID=sa;Password=sa" />
 	///   <commandText value="INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message]) VALUES (@log_date, @thread, @log_level, @logger, @message)" />
 	///   <parameter>
 	///     <parameterName value="@log_date" />
@@ -137,6 +137,7 @@ namespace log4net.Appender
 			m_useTransactions = true;
 			m_commandType = System.Data.CommandType.Text;
 			m_parameters = new ArrayList();
+			m_reconnectOnError = false;
 		}
 
 		#endregion // Public Instance Constructors
@@ -157,13 +158,13 @@ namespace log4net.Appender
 		/// </para>
 		/// </remarks>
 		/// <example>Connection string for MS Access via ODBC:
-		/// <code>"DSN=MS Access Database;UID=admin;PWD=;SystemDB=C:\\data\\System.mdw;SafeTransactions = 0;FIL=MS Access;DriverID = 25;DBQ=C:\\data\\train33.mdb"</code>
+		/// <code>"DSN=MS Access Database;UID=admin;PWD=;SystemDB=C:\data\System.mdw;SafeTransactions = 0;FIL=MS Access;DriverID = 25;DBQ=C:\data\train33.mdb"</code>
 		/// </example>
 		/// <example>Another connection string for MS Access via ODBC:
-		/// <code>"Driver={Microsoft Access Driver (*.mdb)};DBQ=C:\\Work\\cvs_root\\log4net-1.2\\access.mdb;UID=;PWD=;"</code>
+		/// <code>"Driver={Microsoft Access Driver (*.mdb)};DBQ=C:\Work\cvs_root\log4net-1.2\access.mdb;UID=;PWD=;"</code>
 		/// </example>
 		/// <example>Connection string for MS Access via OLE DB:
-		/// <code>"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\\Work\\cvs_root\\log4net-1.2\\access.mdb;User Id=;Password=;"</code>
+		/// <code>"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\Work\cvs_root\log4net-1.2\access.mdb;User Id=;Password=;"</code>
 		/// </example>
 		public string ConnectionString
 		{
@@ -302,6 +303,38 @@ namespace log4net.Appender
 			set { m_securityContext = value; }
 		}
 
+		/// <summary>
+		/// Should this appender try to reconnect to the database on error.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if the appender should try to reconnect to the database after an
+		/// error has occurred, otherwise <c>false</c>. The default value is <c>false</c>, 
+		/// i.e. not to try to reconnect.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The default behaviour is for the appender not to try to reconnect to the
+		/// database if an error occurs. Subsequent logging events are discarded.
+		/// </para>
+		/// <para>
+		/// To force the appender to attempt to reconnect to the database set this
+		/// property to <c>true</c>.
+		/// </para>
+		/// <note>
+		/// When the appender attempts to connect to the database there may be a
+		/// delay of up to the connection timeout specified in the connection string.
+		/// If the appender is being used synchronously (the default behaviour for
+		/// this appender) then this delay will impact the calling application on
+		/// the current thread. Until the connection can be reestablished this
+		/// potential delay may occur multiple times.
+		/// </note>
+		/// </remarks>
+		public bool ReconnectOnError
+		{
+			get { return m_reconnectOnError; }
+			set { m_reconnectOnError = value; }
+		}
+
 		#endregion // Public Instance Properties
 
 		#region Protected Instance Properties
@@ -349,25 +382,16 @@ namespace log4net.Appender
 		{
 			base.ActivateOptions();
 
+			// Are we using a command object
+			m_usePreparedCommand = (m_commandText != null && m_commandText.Length > 0);
+
 			if (m_securityContext == null)
 			{
 				m_securityContext = SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
 			}
 
 			InitializeDatabaseConnection();
-
-			// Are we using a command object
-			if (m_commandText != null && m_commandText.Length > 0)
-			{
-				m_usePreparedCommand = true;
-
-				// Create the command object
-				InitializeDatabaseCommand();
-			}
-			else
-			{
-				m_usePreparedCommand = false;
-			}
+			InitializeDatabaseCommand();
 		}
 
 		#endregion
@@ -413,6 +437,14 @@ namespace log4net.Appender
 		/// </remarks>
 		override protected void SendBuffer(LoggingEvent[] events)
 		{
+			if (m_reconnectOnError && (m_dbConnection == null || m_dbConnection.State != ConnectionState.Open))
+			{
+				LogLog.Debug("AdoNetAppender: Attempting to reconnect to database. Current Connection State: " + ((m_dbConnection==null)?"<null>":m_dbConnection.State.ToString()) );
+
+				InitializeDatabaseConnection();
+				InitializeDatabaseCommand();
+			}
+
 			// Check that the connection exists and is open
 			if (m_dbConnection != null && m_dbConnection.State == ConnectionState.Open)
 			{
@@ -592,7 +624,9 @@ namespace log4net.Appender
 			catch (System.Exception e)
 			{
 				// Sadly, your connection string is bad.
-				ErrorHandler.Error("Could not open database connection [" + m_connectionString + "]", e);	 
+				ErrorHandler.Error("Could not open database connection [" + m_connectionString + "]", e);
+	 
+				m_dbConnection = null;
 			}
 		}
 
@@ -629,85 +663,88 @@ namespace log4net.Appender
 		/// </summary>
 		private void InitializeDatabaseCommand()
 		{
-			try
+			if (m_dbConnection != null && m_usePreparedCommand)
 			{
-				// Create the command object
-				m_dbCommand = m_dbConnection.CreateCommand();
+				try
+				{
+					// Create the command object
+					m_dbCommand = m_dbConnection.CreateCommand();
 		
-				// Set the command string
-				m_dbCommand.CommandText = m_commandText;
+					// Set the command string
+					m_dbCommand.CommandText = m_commandText;
 
-				// Set the command type
-				m_dbCommand.CommandType = m_commandType;
-			}
-			catch(System.Exception e)
-			{
-				ErrorHandler.Error("Could not create database command ["+m_commandText+"]", e);	 
+					// Set the command type
+					m_dbCommand.CommandType = m_commandType;
+				}
+				catch(System.Exception e)
+				{
+					ErrorHandler.Error("Could not create database command ["+m_commandText+"]", e);	 
+
+					if (m_dbCommand != null)
+					{
+						try
+						{
+							m_dbCommand.Dispose();
+						}
+						catch
+						{
+							// Ignore exception
+						}
+						m_dbCommand = null;
+					}
+				}
 
 				if (m_dbCommand != null)
 				{
 					try
 					{
-						m_dbCommand.Dispose();
+						foreach(AdoNetAppenderParameter param in m_parameters)
+						{
+							try
+							{
+								param.Prepare(m_dbCommand);
+							}
+							catch(System.Exception e)
+							{
+								ErrorHandler.Error("Could not add database command parameter ["+param.ParameterName+"]", e);	 
+								throw;
+							}
+						}
 					}
 					catch
-					{
-						// Ignore exception
-					}
-					m_dbCommand = null;
-				}
-			}
-
-			if (m_dbCommand != null)
-			{
-				try
-				{
-					foreach(AdoNetAppenderParameter param in m_parameters)
 					{
 						try
 						{
-							param.Prepare(m_dbCommand);
+							m_dbCommand.Dispose();
 						}
-						catch(System.Exception e)
+						catch
 						{
-							ErrorHandler.Error("Could not add database command parameter ["+param.ParameterName+"]", e);	 
-							throw;
+							// Ignore exception
 						}
+						m_dbCommand = null;
 					}
 				}
-				catch
-				{
-					try
-					{
-						m_dbCommand.Dispose();
-					}
-					catch
-					{
-						// Ignore exception
-					}
-					m_dbCommand = null;
-				}
-			}
 
-			if (m_dbCommand != null)
-			{
-				try
+				if (m_dbCommand != null)
 				{
-					// Prepare the command statement.
-					m_dbCommand.Prepare();
-				}
-				catch (System.Exception e)
-				{
-					ErrorHandler.Error("Could not prepare database command ["+m_commandText+"]", e);
 					try
 					{
-						m_dbCommand.Dispose();
+						// Prepare the command statement.
+						m_dbCommand.Prepare();
 					}
-					catch
+					catch (System.Exception e)
 					{
-						// Ignore exception
+						ErrorHandler.Error("Could not prepare database command ["+m_commandText+"]", e);
+						try
+						{
+							m_dbCommand.Dispose();
+						}
+						catch
+						{
+							// Ignore exception
+						}
+						m_dbCommand = null;
 					}
-					m_dbCommand = null;
 				}
 			}
 		}
@@ -781,6 +818,11 @@ namespace log4net.Appender
 		/// Indicates whether to use transactions when writing to the database.
 		/// </summary>
 		private bool m_useTransactions;
+
+		/// <summary>
+		/// Indicates whether to use transactions when writing to the database.
+		/// </summary>
+		private bool m_reconnectOnError;
 
 		#endregion // Private Instance Fields
 	}
