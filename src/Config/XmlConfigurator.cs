@@ -52,6 +52,7 @@ namespace log4net.Config
 
 		#region Configure static methods
 
+#if !NETCF
 		/// <summary>
 		/// Automatically configures the log4net system based on the 
 		/// application's configuration settings.
@@ -72,11 +73,27 @@ namespace log4net.Config
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="Log4NetConfigurationSectionHandler"/>
+#else
+		/// <summary>
+		/// Automatically configures the log4net system based on the 
+		/// application's configuration settings.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Each application has a configuration file. This has the
+		/// same name as the application with '.config' appended.
+		/// This file is XML and calling this function prompts the
+		/// configurator to look in that file for a section called
+		/// <c>log4net</c> that contains the configuration data.
+		/// </para>
+		/// </remarks>
+#endif
 		static public void Configure() 
 		{
 			Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()));
 		}
 
+#if !NETCF
 		/// <summary>
 		/// Automatically configures the <see cref="ILoggerRepository"/> using settings
 		/// stored in the application's configuration file.
@@ -97,6 +114,22 @@ namespace log4net.Config
 		/// </para>
 		/// </remarks>
 		/// <param name="repository">The repository to configure.</param>
+#else
+		/// <summary>
+		/// Automatically configures the <see cref="ILoggerRepository"/> using settings
+		/// stored in the application's configuration file.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Each application has a configuration file. This has the
+		/// same name as the application with '.config' appended.
+		/// This file is XML and calling this function prompts the
+		/// configurator to look in that file for a section called
+		/// <c>log4net</c> that contains the configuration data.
+		/// </para>
+		/// </remarks>
+		/// <param name="repository">The repository to configure.</param>
+#endif
 		static public void Configure(ILoggerRepository repository) 
 		{
 			LogLog.Debug("XmlConfigurator: configuring repository [" + repository.Name + "] using .config file section");
@@ -176,6 +209,7 @@ namespace log4net.Config
 			ConfigureFromXml(repository, element);
 		}
 
+#if !NETCF
 		/// <summary>
 		/// Configures log4net using the specified configuration file.
 		/// </summary>
@@ -226,6 +260,42 @@ namespace log4net.Config
 		///	&lt;/configuration&gt;
 		/// </code>
 		/// </remarks>
+#else
+		/// <summary>
+		/// Configures log4net using the specified configuration file.
+		/// </summary>
+		/// <param name="configFile">The XML file to load the configuration from.</param>
+		/// <remarks>
+		/// <para>
+		/// The configuration file must be valid XML. It must contain
+		/// at least one element called <c>log4net</c> that holds
+		/// the log4net configuration data.
+		/// </para>
+		/// <example>
+		/// The following example configures log4net using a configuration file, of which the 
+		/// location is stored in the application's configuration file :
+		/// </example>
+		/// <code lang="C#">
+		/// using log4net.Config;
+		/// using System.IO;
+		/// using System.Configuration;
+		/// 
+		/// ...
+		/// 
+		/// XmlConfigurator.Configure(new FileInfo(ConfigurationSettings.AppSettings["log4net-config-file"]));
+		/// </code>
+		/// <para>
+		/// In the <c>.config</c> file, the path to the log4net can be specified like this :
+		/// </para>
+		/// <code>
+		/// &lt;configuration&gt;
+		///		&lt;appSettings&gt;
+		///			&lt;add key="log4net-config-file" value="log.config"/&gt;
+		///		&lt;/appSettings&gt;
+		///	&lt;/configuration&gt;
+		/// </code>
+		/// </remarks>
+#endif
 		static public void Configure(FileInfo configFile)
 		{
 			Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()), configFile);
@@ -250,6 +320,7 @@ namespace log4net.Config
 			Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()), configStream);
 		}
 
+#if !NETCF
 		/// <summary>
 		/// Configures the <see cref="ILoggerRepository"/> using the specified configuration 
 		/// file.
@@ -302,6 +373,44 @@ namespace log4net.Config
 		///	&lt;/configuration&gt;
 		/// </code>
 		/// </remarks>
+#else
+		/// <summary>
+		/// Configures the <see cref="ILoggerRepository"/> using the specified configuration 
+		/// file.
+		/// </summary>
+		/// <param name="repository">The repository to configure.</param>
+		/// <param name="configFile">The XML file to load the configuration from.</param>
+		/// <remarks>
+		/// <para>
+		/// The configuration file must be valid XML. It must contain
+		/// at least one element called <c>log4net</c> that holds
+		/// the configuration data.
+		/// </para>
+		/// <example>
+		/// The following example configures log4net using a configuration file, of which the 
+		/// location is stored in the application's configuration file :
+		/// </example>
+		/// <code lang="C#">
+		/// using log4net.Config;
+		/// using System.IO;
+		/// using System.Configuration;
+		/// 
+		/// ...
+		/// 
+		/// XmlConfigurator.Configure(new FileInfo(ConfigurationSettings.AppSettings["log4net-config-file"]));
+		/// </code>
+		/// <para>
+		/// In the <c>.config</c> file, the path to the log4net can be specified like this :
+		/// </para>
+		/// <code>
+		/// &lt;configuration&gt;
+		///		&lt;appSettings&gt;
+		///			&lt;add key="log4net-config-file" value="log.config"/&gt;
+		///		&lt;/appSettings&gt;
+		///	&lt;/configuration&gt;
+		/// </code>
+		/// </remarks>
+#endif
 		static public void Configure(ILoggerRepository repository, FileInfo configFile)
 		{
 			LogLog.Debug("XmlConfigurator: configuring repository [" + repository.Name + "] using file [" + configFile + "]");

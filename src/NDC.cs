@@ -17,10 +17,7 @@
 #endregion
 
 using System;
-
-#if !NETCF
 using System.Collections;
-#endif
 
 namespace log4net
 {
