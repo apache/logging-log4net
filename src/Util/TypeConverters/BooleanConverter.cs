@@ -33,7 +33,7 @@ namespace log4net.Util.TypeConverters
 	/// <seealso cref="IConvertTo"/>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
-	public class BooleanConverter : IConvertFrom
+	internal class BooleanConverter : IConvertFrom
 	{
 		#region Implementation of IConvertFrom
 

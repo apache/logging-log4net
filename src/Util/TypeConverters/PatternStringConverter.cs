@@ -40,7 +40,7 @@ namespace log4net.Util.TypeConverters
 	/// <seealso cref="IConvertFrom"/>
 	/// <seealso cref="IConvertTo"/>
 	/// <author>Nicko Cadell</author>
-	public class PatternStringConverter : IConvertTo, IConvertFrom
+	internal class PatternStringConverter : IConvertTo, IConvertFrom
 	{
 		#region Implementation of IConvertTo
 

@@ -39,7 +39,7 @@ namespace log4net.Util.TypeConverters
 	/// <seealso cref="IConvertFrom"/>
 	/// <seealso cref="IConvertTo"/>
 	/// <author>Nicko Cadell</author>
-	public class PatternLayoutConverter : IConvertFrom
+	internal class PatternLayoutConverter : IConvertFrom
 	{
 		#region Implementation of IConvertFrom
 

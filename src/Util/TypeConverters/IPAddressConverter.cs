@@ -32,7 +32,7 @@ namespace log4net.Util.TypeConverters
 	/// <seealso cref="ConverterRegistry"/>
 	/// <seealso cref="IConvertFrom"/>
 	/// <author>Nicko Cadell</author>
-	public class IPAddressConverter : IConvertFrom 
+	internal class IPAddressConverter : IConvertFrom 
 	{
 		#region Implementation of IConvertFrom
 
