@@ -295,10 +295,93 @@ TABLESPACE CSAX30D LOGGING
 </appender>
 					]]></source>
 				</section>
+				
+				<section name="IBM DB2">
+					<p>
+						This example shows how to write events to an IBM DB2 8.2 Database.
+						The following syntax should also work with older DB2 database servers.
+					</p>
+					<p>
+						The database table definition is:
+					</p>
+					<source language="sql"><![CDATA[
+CREATE TABLE "myschema.LOG" (
+	"ID" INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (
+		START WITH +1
+		INCREMENT BY +1
+		MINVALUE +1
+		MAXVALUE +2147483647
+		NO CYCLE
+		NO CACHE
+		NO ORDER
+	),
+	"DATE" TIMESTAMP NOT NULL,
+	"THREAD" VARCHAR(255) NOT NULL,
+	"LEVEL" VARCHAR(500) NOT NULL,
+	"LOGGER" VARCHAR(255) NOT NULL,
+	"MESSAGE" VARCHAR(4000) NOT NULL,
+	"EXCEPTION" VARCHAR(2000)
+)
+IN "LRGTABLES";
+					]]></source>
+					<p>
+						The appender configuration is:
+					</p>
+					<source language="xml"><![CDATA[
+<appender name="ADONetAppender" type="log4net.Appender.ADONetAppender">
+	<bufferSize value="100" />
+	<connectionType value="IBM.Data.DB2.DB2Connection,IBM.Data.DB2, Version=8.1.2.1" />
+	<connectionString value="server=192.168.0.0;database=dbuser;user Id=username;password=password;persist security info=true" />
+	<commandText value="INSERT INTO myschema.Log (Date,Thread,Level,Logger,Message,Exception) VALUES (@log_date,@thread,@log_level,@logger,@message,@exception)" />
+	<parameter>
+		<parameterName value="@log_date" />
+		<dbType value="DateTime" />
+		<layout type="log4net.Layout.RawTimeStampLayout" />
+	</parameter>
+	<parameter>
+		<parameterName value="@thread" />
+		<dbType value="String" />
+		<size value="255" />
+		<layout type="log4net.Layout.PatternLayout">
+			<conversionPattern value="%thread" />
+		</layout>
+	</parameter>
+	<parameter>
+		<parameterName value="@log_level" />
+		<dbType value="String" />
+		<size value="500" />
+		<layout type="log4net.Layout.PatternLayout">
+			<conversionPattern value="%level" />
+		</layout>
+	</parameter>
+	<parameter>
+		<parameterName value="@logger" />
+		<dbType value="String" />
+		<size value="255" />
+		<layout type="log4net.Layout.PatternLayout">
+			<conversionPattern value="%logger" />
+		</layout>
+	</parameter>
+	<parameter>
+		<parameterName value="@message" />
+		<dbType value="String" />
+		<size value="4000" />
+		<layout type="log4net.Layout.PatternLayout">
+			<conversionPattern value="%message" />
+		</layout>
+	</parameter>
+	<parameter>
+		<parameterName value="@exception" />
+		<dbType value="String" />
+		<size value="2000" />
+		<layout type="log4net.Layout.ExceptionLayout" />
+	</parameter>
+</appender>
+					]]></source>
+				</section>				
+				
 			</section>
 				
-
-			
 			
 			<section name="ASPNetTraceAppender">
 				<p>
