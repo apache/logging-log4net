@@ -53,6 +53,13 @@ namespace log4net.Config
 		// Class is not sealed because DOMConfiguratorAttribute extends it while it is obsoleted
 		// 
 
+		/// <summary>
+		/// Default constructor
+		/// </summary>
+		public XmlConfiguratorAttribute() : base(0) /* configurator priority 0 */
+		{
+		}
+
 		#region Public Instance Properties
 
 		/// <summary>

@@ -570,6 +570,9 @@ namespace log4net.Core
 			object[] configAttributes = Attribute.GetCustomAttributes(assembly, typeof(log4net.Config.ConfiguratorAttribute), false);
 			if (configAttributes != null && configAttributes.Length > 0)
 			{
+				// Sort the ConfiguratorAttributes in priority order
+				Array.Sort(configAttributes);
+
 				// Delegate to the attribute the job of configuring the repository
 				foreach(log4net.Config.ConfiguratorAttribute configAttr in configAttributes)
 				{

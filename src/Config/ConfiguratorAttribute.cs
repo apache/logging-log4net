@@ -38,14 +38,68 @@ namespace log4net.Config
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	[AttributeUsage(AttributeTargets.Assembly)]
-	public abstract class ConfiguratorAttribute : Attribute
+	public abstract class ConfiguratorAttribute : Attribute, IComparable
 	{
+		private int m_priority = 0;
+
+		/// <summary>
+		/// Constructor used by subclasses.
+		/// </summary>
+		/// <param name="priority">the ordering priority for this configurator</param>
+		/// <remarks>
+		/// <para>
+		/// The <paramref name="priority"/> is used to order the configurator
+		/// attributes before they are invoked. Higher priority configurators are executed
+		/// before lower priority ones.
+		/// </para>
+		/// </remarks>
+		protected ConfiguratorAttribute(int priority)
+		{
+			m_priority = priority;
+		}
+
 		/// <summary>
 		/// Configures the <see cref="ILoggerRepository"/> for the specified assembly.
 		/// </summary>
 		/// <param name="sourceAssembly">The assembly that this attribute was defined on.</param>
 		/// <param name="targetRepository">The repository to configure.</param>
 		public abstract void Configure(Assembly sourceAssembly, ILoggerRepository targetRepository);
+
+		/// <summary>
+		/// Compare this instance to another ConfiguratorAttribute
+		/// </summary>
+		/// <param name="obj">the object to compare to</param>
+		/// <returns>see <see cref="IComparable.CompareTo"/></returns>
+		/// <remarks>
+		/// <para>
+		/// Compares the priorities of the two <see cref="ConfiguratorAttribute"/> instances.
+		/// Sorts by priority in descending order. Objects with the same priority are
+		/// randomly ordered.
+		/// </para>
+		/// </remarks>
+		public int CompareTo(object obj)
+		{
+			int result = -1;
+
+			if (obj != null && obj is ConfiguratorAttribute)
+			{
+				if (obj == (object)this)
+				{
+					result = 0;
+				}
+				else
+				{
+					// Compare the priorities
+					result = ((ConfiguratorAttribute)obj).m_priority.CompareTo(m_priority);
+					if (result == 0)
+					{
+						// Same priority, so have to provider some ordering
+						result = -1;
+					}
+				}
+			}
+			return result;
+		}
 	}
 }
 
