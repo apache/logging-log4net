@@ -629,7 +629,8 @@ namespace log4net.Repository.Hierarchy
 		/// </remarks>
 		public bool IsDisabled(Level level) 
 		{
-			if (level == null)
+			// Cast level to object for performance
+			if ((object)level == null)
 			{
 				throw new ArgumentNullException("level");
 			}

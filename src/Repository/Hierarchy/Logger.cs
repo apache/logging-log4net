@@ -144,9 +144,12 @@ namespace log4net.Repository.Hierarchy
 			{
 				for(Logger c = this; c != null; c = c.m_parent) 
 				{
-					if (c.m_level != null) 
+					Level level = c.m_level;
+
+					// Casting level to Object for performance, otherwise the overloaded operator is called
+					if ((object)level != null) 
 					{
-						return c.m_level;
+						return level;
 					}
 				}
 				return null; // If reached will cause an NullPointerException.
