@@ -567,6 +567,11 @@ namespace log4net.Repository.Hierarchy
 		/// </remarks>
 		virtual protected void ForcedLog(LoggingEvent logEvent) 
 		{
+			// The logging event may not have been created by this logger
+			// the Repository may not be correctly set on the event. This
+			// is required for the appenders to correctly lookup renderers etc...
+			logEvent.EnsureRepository(this.Hierarchy);
+
 			CallAppenders(logEvent);
 		}
 

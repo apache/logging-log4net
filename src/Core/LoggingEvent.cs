@@ -542,7 +542,19 @@ namespace log4net.Core
 			{ 
 				return m_repository;
 			}
-		}  
+		}
+
+		/// <summary>
+		/// Ensure that the repository is set.
+		/// </summary>
+		/// <param name="repository">the value for the repository</param>
+		internal void EnsureRepository(ILoggerRepository repository)
+		{
+			if (repository != null)
+			{
+				m_repository = repository;
+			}
+		}
 
 		/// <summary>
 		/// Gets the message, rendered through the <see cref="ILoggerRepository.RendererMap" />.
@@ -1338,7 +1350,7 @@ namespace log4net.Core
 		/// <remarks>
 		/// This is not serialized.
 		/// </remarks>
-		private readonly ILoggerRepository m_repository = null;
+		private ILoggerRepository m_repository = null;
 
 		/// <summary>
 		/// The fix state for this event
