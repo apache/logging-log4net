@@ -239,11 +239,13 @@ namespace log4net.Appender
 		/// indicating the TCP port number from which the underlying <see cref="UdpClient" /> will communicate.
 		/// </value>
 		/// <remarks>
+		/// <para>
 		/// The underlying <see cref="UdpClient" /> will bind to this port for sending messages.
-		/// </remarks>
-		/// <remarks>
+		/// </para>
+		/// <para>
 		/// Setting the value to 0 (the default) will cause the udp client not to bind to
 		/// a local port.
+		/// </para>
 		/// </remarks>
 		/// <exception cref="ArgumentOutOfRangeException">The value specified is less than <see cref="IPEndPoint.MinPort" /> or greater than <see cref="IPEndPoint.MaxPort" />.</exception>
 		public int LocalPort
