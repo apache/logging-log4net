@@ -722,7 +722,14 @@ namespace log4net.Layout
 		/// Constructs a PatternLayout using the DefaultConversionPattern
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// The default pattern just produces the application supplied message.
+		/// </para>
+		/// <para>
+		/// Note to Inheritors: This constructor calls the virtual method
+		/// <see cref="CreatePatternParser"/>. If you override this method be
+		/// aware that it will be called before your is called constructor.
+		/// </para>
 		/// </remarks>
 		public PatternLayout() : this(DefaultConversionPattern)
 		{
@@ -732,6 +739,13 @@ namespace log4net.Layout
 		/// Constructs a PatternLayout using the supplied conversion pattern
 		/// </summary>
 		/// <param name="pattern">the pattern to use</param>
+		/// <remarks>
+		/// <para>
+		/// Note to Inheritors: This constructor calls the virtual method
+		/// <see cref="CreatePatternParser"/>. If you override this method be
+		/// aware that it will be called before your is called constructor.
+		/// </para>
+		/// </remarks>
 		public PatternLayout(string pattern) 
 		{
 			// By default we do not process the exception
