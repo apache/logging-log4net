@@ -24,10 +24,6 @@ using log4net.Util;
 using log4net.Layout;
 using log4net.Core;
 
-#if NUNIT_TESTS
-using NUnit.Framework;
-#endif // NUNIT_TESTS
-
 namespace log4net.Appender
 {
 	/// <summary>
@@ -297,56 +293,5 @@ namespace log4net.Appender
 		private string m_machineName;
 
 		#endregion // Private Instance Fields
-
-		#region NUnit Tests
-#if NUNIT_TESTS
-		/// <summary>
-		/// Used for internal unit testing the <see cref="EventLogAppender"/> class.
-		/// </summary>
-		/// <remarks>
-		/// Used for internal unit testing the <see cref="EventLogAppender"/> class.
-		/// </remarks>
-		[TestFixture] public class EventLogAppenderTest
-		{
-			/// <summary>
-			/// Verifies that for each event log level, the correct system
-			/// event log enumeration is returned
-			/// </summary>
-			[Test] public void TestGetEntryType()
-			{
-				EventLogAppender eventAppender = new EventLogAppender();
-
-				Assertion.AssertEquals( 
-					System.Diagnostics.EventLogEntryType.Information,
-					eventAppender.GetEntryType( Level.All ) );
-
-				Assertion.AssertEquals( 
-					System.Diagnostics.EventLogEntryType.Information,
-					eventAppender.GetEntryType( Level.Debug ) );
-
-				Assertion.AssertEquals( 
-					System.Diagnostics.EventLogEntryType.Information,
-					eventAppender.GetEntryType( Level.Info ) );
-
-				Assertion.AssertEquals( 
-					System.Diagnostics.EventLogEntryType.Warning,
-					eventAppender.GetEntryType( Level.Warn ) );
-
-				Assertion.AssertEquals( 
-					System.Diagnostics.EventLogEntryType.Error,
-					eventAppender.GetEntryType( Level.Error ) );
-
-				Assertion.AssertEquals( 
-					System.Diagnostics.EventLogEntryType.Error,
-					eventAppender.GetEntryType( Level.Fatal ) );
-
-				Assertion.AssertEquals( 
-					System.Diagnostics.EventLogEntryType.Error,
-					eventAppender.GetEntryType( Level.Off ) );
-
-			}
-		}
-#endif // NUNIT_TESTS
-		#endregion
 	}
 }

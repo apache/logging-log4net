@@ -1,0 +1,7 @@
+bin
+obj
+log4net.xml
+log4net.Tests.csproj.user
+log4net.Tests.suo
+log4net.sln.old
+
