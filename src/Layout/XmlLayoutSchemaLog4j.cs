@@ -39,6 +39,9 @@ namespace log4net.Layout
 	{
 		#region Static Members
 
+		/// <summary>
+		/// The 1st of January 1970 in UTC
+		/// </summary>
 		private static readonly DateTime s_date1970 = new DateTime(1970, 1, 1);
 
 		#endregion
@@ -174,7 +177,12 @@ method="run" file="Generator.java" line="94"/>
 			writer.WriteAttributeString("logger", loggingEvent.LoggerName);
 
 			// Calculate the timestamp as the number of milliseconds since january 1970
-			TimeSpan timeSince1970 = loggingEvent.TimeStamp - s_date1970;
+			// 
+			// We must convert the TimeStamp to UTC before performing any mathematical
+			// operations. This allows use to take into account discontinuities
+			// caused by daylight savings time transitions.
+			TimeSpan timeSince1970 = loggingEvent.TimeStamp.ToUniversalTime() - s_date1970;
+
 			writer.WriteAttributeString("timestamp", XmlConvert.ToString((long)timeSince1970.TotalMilliseconds));
 			writer.WriteAttributeString("level", loggingEvent.Level.ToString());
 			writer.WriteAttributeString("thread", loggingEvent.ThreadName);

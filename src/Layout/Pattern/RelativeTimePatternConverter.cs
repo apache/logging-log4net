@@ -44,12 +44,15 @@ namespace log4net.Layout.Pattern
 		/// <summary>
 		/// Internal method to get the time difference between two DateTime objects
 		/// </summary>
-		/// <param name="start">start time</param>
-		/// <param name="end">end time</param>
+		/// <param name="start">start time (in the current local time zone)</param>
+		/// <param name="end">end time (in the current local time zone)</param>
 		/// <returns>the time difference in milliseconds</returns>
 		private static long TimeDifferenceInMillis(DateTime start, DateTime end)
 		{
-			return ((end.Ticks - start.Ticks) / TimeSpan.TicksPerMillisecond);
+			// We must convert all times to UTC before performing any mathematical
+			// operations on them. This allows use to take into account discontinuities
+			// caused by daylight savings time transitions.
+			return (long)(end.ToUniversalTime() - start.ToUniversalTime()).TotalMilliseconds;
 		}
 	}
 }
