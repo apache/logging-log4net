@@ -58,20 +58,18 @@ namespace log4net.Util
 		/// Appends a <paramref name="loggingEvent"/> to the buffer.
 		/// </summary>
 		/// <param name="loggingEvent">The event to append to the buffer.</param>
-		/// <param name="discardedLoggingEvent">The event discarded from the buffer, if any.</param>
-		/// <returns><c>true</c> if the buffer is not full, otherwise <c>false</c>.</returns>
-		public bool Append(LoggingEvent loggingEvent, out LoggingEvent discardedLoggingEvent) 
+		/// <returns>The event discarded from the buffer, if the buffer is full, otherwise <c>null</c>.</returns>
+		public LoggingEvent Append(LoggingEvent loggingEvent)
 		{	
-			discardedLoggingEvent = null;
-
 			if (loggingEvent == null)
 			{
 				throw new ArgumentNullException("loggingEvent");
 			}
+
 			lock(this)
 			{
 				// save the discarded event
-				discardedLoggingEvent = m_events[m_last];
+				LoggingEvent discardedLoggingEvent = m_events[m_last];
 
 				// overwrite the last event position
 				m_events[m_last] = loggingEvent;	
@@ -89,7 +87,16 @@ namespace log4net.Util
 					m_first = 0;
 				}
 
-				return (m_numElems < m_maxSize);
+				if (m_numElems < m_maxSize)
+				{
+					// Space remaining
+					return null;
+				}
+				else
+				{
+					// Buffer is full and discarding an event
+					return discardedLoggingEvent;
+				}
 			}
 		}
 
