@@ -281,6 +281,13 @@ namespace log4net.Util
 			{
 				if (s_processStartTime == DateTime.MinValue)
 				{
+#if (NETCF || SSCLI)
+					// NETCF does not have the System.Diagnostics.Process class
+					// SSCLI does not support StartTime property in System.Diagnostics.Process
+
+					// Use the time of the first call as the start time
+					s_processStartTime = DateTime.Now;
+#else
 					try
 					{
 						s_processStartTime = System.Diagnostics.Process.GetCurrentProcess().StartTime;
@@ -290,6 +297,7 @@ namespace log4net.Util
 						// Unable to get the start time, use now as the start time
 						s_processStartTime = DateTime.Now;
 					}
+#endif
 				}
 				return s_processStartTime;
 			}
