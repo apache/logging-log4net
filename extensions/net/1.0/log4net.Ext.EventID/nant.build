@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<project name="eventid-extension" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <!-- compile EventID extension -->
+    <target name="compile" description="Builds EventID extension">
+        <nant buildfile="cs/nant.build" target="compile" />
+    </target>
+</project>

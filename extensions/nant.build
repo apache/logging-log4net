@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<project name="extensions" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <target name="compile" description="Builds extensions">
+        <nant buildfile="net/nant.build" target="compile" />
+    </target>
+</project>

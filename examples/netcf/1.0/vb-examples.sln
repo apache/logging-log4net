@@ -1,0 +1,23 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{CB4CE8C6-1BDB-4DC7-A4D3-65A1999772F8}") = "ConsoleApp", "Tutorials\ConsoleApp\vb\src\ConsoleApp.vbdproj", "{E923C49B-5C5F-49A3-AFE1-7DDB2EC31757}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{E923C49B-5C5F-49A3-AFE1-7DDB2EC31757}.Debug.ActiveCfg = Debug|Windows CE
+		{E923C49B-5C5F-49A3-AFE1-7DDB2EC31757}.Debug.Build.0 = Debug|Windows CE
+		{E923C49B-5C5F-49A3-AFE1-7DDB2EC31757}.Debug.Deploy.0 = Debug|Windows CE
+		{E923C49B-5C5F-49A3-AFE1-7DDB2EC31757}.Release.ActiveCfg = Release|Windows CE
+		{E923C49B-5C5F-49A3-AFE1-7DDB2EC31757}.Release.Build.0 = Release|Windows CE
+		{E923C49B-5C5F-49A3-AFE1-7DDB2EC31757}.Release.Deploy.0 = Release|Windows CE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

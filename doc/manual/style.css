@@ -1,0 +1,215 @@
+body
+{
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+	background: white;
+	color: black;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 70%;
+	width: 100%;
+}
+
+h1, h2, h3, h4, h5
+{
+	margin-bottom: .8em;
+	margin-top: 1em;
+}
+
+h1
+{
+	font-size: 120%;
+	margin-top: 0em;
+}
+
+h2
+{
+	font-size: 115%;
+}
+
+h3
+{
+	font-size: 105%;
+}
+
+h4
+{
+	font-size: 95%;
+}
+
+h5
+{
+	font-size: 85%;
+}
+
+
+div.table
+{
+	text-align: center;
+}
+
+.table table
+{
+	font-size: 100%;
+	border-collapse: collapse;
+	width: 90%;
+}
+
+.table th
+{
+	background-color: #cccccc;
+	color: black;
+	font-weight: bolder;
+	padding: 5px;
+	border: 1px solid #999999;
+}
+
+.table tr
+{
+	background-color: inherit;
+	color: black;
+	padding: 5px;
+	text-align: left;
+	border: 1px solid #999999;
+}
+
+.table td
+{
+	border: 1px solid #999999;
+	padding: 5px;
+}
+
+p
+{
+	margin: .5em 0em .5em 0em;
+}
+
+pre
+{
+	margin-top: .5em;
+	margin-bottom: .5em;
+}
+
+pre.code
+{
+	font-family: Monospace, Courier New, Courier;
+	background-color: inherit;
+	color: #0000AA;
+	font-size: 100%;
+	margin-left: 20px;
+}
+
+span.code
+{
+	font-family: Monospace, Courier New, Courier;
+	background-color: inherit;
+	color: #0000AA;
+	font-size: 100%;
+}
+
+.syntax
+{
+	font-family: Monospace, Courier New, Courier;
+	letter-spacing: .1em;
+	background-color: #cccccc;
+	color: white;
+	font-size: 100%;
+	font-weight: inherit;
+	padding: 5px;
+	border: 1px solid #999999;
+	margin-left: 20px;
+	padding: 4px 8px;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	width: 96%;
+}
+
+.rule dt 
+{
+	font-weight: bolder;
+}
+
+.rule
+{
+	background-color: #f5f5f5;
+	color: black;
+	font-size: 100%;
+	padding: 5px;
+	border: 1px solid #999999;
+	margin-left: 30px;
+	padding: 4px 8px;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	width: 90%;
+}
+
+
+.i1
+{
+	margin-left: 20px;
+}
+
+.i2
+{
+	margin-left: 40px;
+}
+
+.i3
+{
+	margin-left: 60px;
+}
+
+
+div#header
+{
+	width: 100%;
+	margin: 0px 0px 0px 0px;
+	border-width: 0px;
+	border-bottom: 1px solid #999999;
+	padding: 0px 0px 0px 0px;
+	background-color: #99ccff;
+	color: black;
+}
+
+div#header h1
+{
+	margin: 0px 0px 0px 0px;
+	border-width: 0px;
+	padding: 0 .4em .3em .4em;
+	background-color: #99ccff;
+	color: black;
+}
+
+div#footer
+{
+	font-size: 100%;
+	font-style:italic;
+	border-top: 1px solid #999999;
+	margin-left: 20px;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	width: 96%;
+}
+
+div#content
+{
+	margin: 0px 0px 0px 0px;
+	padding: 4px 4px 4px 4px;
+}
+
+a:link
+{
+	color: #0000ff;
+	background-color: inherit;
+}
+
+a:visited
+{
+	color: #0000ff;
+	background-color: inherit;
+}
+
+a:hover
+{
+	color: #3366ff;
+	background-color: inherit;
+}

@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<project name="log4net-samples" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <!-- Include configuration file -->
+    <include buildfile="nant.config" />
+    <!-- Include log4net helpers -->
+    <include buildfile="${log4net.basedir}/log4net.include" />
+    <!-- Targets that should always be executed -->
+    <call target="set-build-configuration" />
+    <call target="set-${project.runtime.config}-${project.runtime.version}-runtime-configuration" />
+    <!-- Target for compiling the example -->
+    <target name="compile" description="Builds the example" depends="check-current-bin-dir, clean-current-bin-dir, check-current-build-defines, check-current-build-config, check-current-build-debug, check-current-runtime-config, check-current-runtime-version, check-log4net-assembly">
+        <!-- copy log4net build output  -->
+        <copy todir="${current.bin.dir}">
+            <fileset basedir="${log4net.basedir}/${current.bin.dir}">
+                <includes name="*.*" />
+            </fileset>
+        </copy>
+        <!-- compile the example -->
+        <csc noconfig="true" warnaserror="true" target="exe" debug="${current.build.debug}" define="${current.build.defines.csc}"
+            output="${current.bin.dir}/ConsoleApp.exe">
+            <sources defaultexcludes="true">
+                <includes name="src/**/*.cs" />
+                <includes name="${log4net.basedir}/src/AssemblyVersionInfo.cs" />
+            </sources>
+            <references defaultexcludes="true">
+                <includes name="${current.bin.dir}/log4net.dll" fromPath="false" />
+            </references>
+        </csc>
+        <!-- copy the ConsoleApp application configuration file -->
+        <copy file="src/App.config" tofile="${current.bin.dir}/ConsoleApp.exe.config" />
+    </target>
+</project>

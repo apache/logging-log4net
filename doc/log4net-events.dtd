@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+// 
+// This framework is based on log4j see http://jakarta.apache.org/log4j
+// Copyright (C) The Apache Software Foundation. All rights reserved.
+//
+// Modifications Copyright (C) 2001-2003 Neoworks Limited. All rights reserved.
+// For more information on Neoworks, please see <http://www.neoworks.com/>. 
+//
+// This software is published under the terms of the Apache Software
+// License version 1.1, a copy of which has been included with this
+// distribution in the LICENSE.txt file.
+// 
+-->
+
+<!-- 
+	This DTD describes the XML produced by the log4net XMLLayout.
+-->
+
+<!-- Version: 1.2 -->
+
+<!ELEMENT log4net:events (log4net:event*)>
+<!ATTLIST log4net:events
+  xmlns:log4net           CDATA #FIXED "http://log4net.sourceforge.net/" 
+  version                (1.2) "1.2" 
+  includesLocationInfo   (true|false) "true"
+>
+
+<!ELEMENT log4net:event
+  (log4net:message, 
+   log4net:NDC?, 
+   log4net:MDC?, 
+   log4net:properties?, 
+   log4net:exception?, 
+   log4net:locationInfo?) >
+
+<!-- The timestamp format is application dependent. -->
+<!ATTLIST log4net:event
+    logger     CDATA #REQUIRED
+    level      CDATA #REQUIRED
+    thread     CDATA #REQUIRED
+    timestamp  CDATA #REQUIRED
+    
+    domain     CDATA #IMPLIED
+    identity   CDATA #IMPLIED
+    username   CDATA #IMPLIED
+>
+
+<!ELEMENT log4net:message (#PCDATA)>
+<!ELEMENT log4net:NDC (#PCDATA)>
+<!ELEMENT log4net:MDC (log4net:data*)>
+
+<!ELEMENT log4net:exception (#PCDATA)>
+
+<!ELEMENT log4net:locationInfo EMPTY>
+<!ATTLIST log4net:locationInfo
+  class  CDATA	#REQUIRED
+  method CDATA	#REQUIRED
+  file   CDATA	#REQUIRED
+  line   CDATA	#REQUIRED
+>
+
+<!ELEMENT log4net:properties (log4net:data*)>
+
+<!ATTLIST log4net:data
+  name 		CDATA  #REQUIRED
+  value 	CDATA  #REQUIRED
+>
+

@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<project name="sscli-examples" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <!-- include configuration file -->
+    <include buildfile="nant.config" />
+    <!-- compile all examples -->
+    <target name="compile" description="Builds Shared Source CLI examples">
+        <available type="Framework" resource="${project.runtime.config}-${project.runtime.version}"
+            property="temp.framework.available" />
+        <if propertytrue="temp.framework.available">
+            <nant buildfile="Repository/nant.build" target="compile" />
+            <nant buildfile="Tutorials/nant.build" target="compile" />
+        </if>
+        <ifnot propertytrue="temp.framework.available">
+            <if propertyexists="project.build.package" propertytrue="project.build.package">
+                <fail message="${project.runtime.description} is not available." />
+            </if>
+            <ifnot propertyexists="project.build.package" propertytrue="project.build.package">
+                <echo message="${project.runtime.description} is not available. Examples skipped." />
+            </ifnot>
+        </ifnot>
+    </target>
+</project>

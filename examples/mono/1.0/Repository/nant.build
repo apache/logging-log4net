@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<project name="repository-examples" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <!-- compile Domain examples -->
+    <target name="compile" description="Builds Repository examples">
+        <nant buildfile="SharedModule/nant.build" target="compile" />
+        <nant buildfile="SimpleApp/nant.build" target="compile" />
+        <nant buildfile="SimpleModule/nant.build" target="compile" />
+    </target>
+</project>

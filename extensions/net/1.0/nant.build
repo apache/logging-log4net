@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<project name="net-1.0-extensions" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <!-- include configuration file -->
+    <include buildfile="nant.config" />
+    <!-- compile all .NET Framework 1.0 extensions -->
+    <target name="compile" description="Builds .NET Framework 1.0 extensions">
+        <available type="Framework" resource="${project.runtime.config}-${project.runtime.version}"
+            property="temp.framework.available" />
+        <if propertytrue="temp.framework.available">
+            <nant buildfile="log4net.Ext.EventID/nant.build" target="compile" />
+            <nant buildfile="log4net.Ext.Trace/nant.build" target="compile" />
+        </if>
+        <ifnot propertytrue="temp.framework.available">
+            <if propertyexists="project.build.package" propertytrue="project.build.package">
+                <fail message="${project.runtime.description} is not available." />
+            </if>
+            <ifnot propertyexists="project.build.package" propertytrue="project.build.package">
+                <echo message="${project.runtime.description} is not available. Extensions skipped." />
+            </ifnot>
+        </ifnot>
+    </target>
+</project>

@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<project name="consoleapp-example" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <!-- compile ConsoleApp example -->
+    <target name="compile" description="Builds ConsoleApp example">
+        <nant buildfile="js/nant.build" target="compile" />
+    </target>
+</project>

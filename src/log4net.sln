@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 7.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net", "log4net.csproj", "{F6A02431-167E-4347-BC43-65532C31CDB7}"
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		ConfigName.0 = Debug
+		ConfigName.1 = Release
+		ConfigName.2 = ReleaseStrong
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{F6A02431-167E-4347-BC43-65532C31CDB7}.Debug.ActiveCfg = Debug|.NET
+		{F6A02431-167E-4347-BC43-65532C31CDB7}.Debug.Build.0 = Debug|.NET
+		{F6A02431-167E-4347-BC43-65532C31CDB7}.Release.ActiveCfg = Release|.NET
+		{F6A02431-167E-4347-BC43-65532C31CDB7}.Release.Build.0 = Release|.NET
+		{F6A02431-167E-4347-BC43-65532C31CDB7}.ReleaseStrong.ActiveCfg = ReleaseStrong|.NET
+		{F6A02431-167E-4347-BC43-65532C31CDB7}.ReleaseStrong.Build.0 = ReleaseStrong|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
