@@ -218,7 +218,7 @@ namespace log4net.Appender
 		/// Add a mapping of level to color - done by the config file
 		/// </summary>
 		/// <param name="mapping">The mapping to add</param>
-		public void AddMapping(ColoredConsoleAppenderLevelColorMapping mapping)
+		public void AddMapping(LevelColors mapping)
 		{
 			ushort usMapping = (ushort)((int)mapping.ForeColor + (((int)mapping.BackColor) << 4) );
 			m_Level2ColorMap[mapping.Level] = usMapping;
@@ -228,7 +228,7 @@ namespace log4net.Appender
 		/// A class to act as a mapping between the level that a logging call is made at and
 		/// the color it should be displayed as.
 		/// </summary>
-		public class ColoredConsoleAppenderLevelColorMapping
+		public class LevelColors
 		{
 			private log4net.Core.Level m_level;
 			private Colors m_foreColor;
