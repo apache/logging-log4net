@@ -22,6 +22,7 @@ using System.Collections;
 using System.IO;
 using System.Reflection;
 using System.Threading;
+using System.Net;
 
 using log4net.Appender;
 using log4net.Util;
@@ -306,7 +307,26 @@ namespace log4net.Config
 		}
 
 		/// <summary>
-		/// Configures log4net using the specified configuration file.
+		/// Configures log4net using the specified configuration URI.
+		/// </summary>
+		/// <param name="configUri">A URI to load the XML configuration from.</param>
+		/// <remarks>
+		/// <para>
+		/// The configuration data must be valid XML. It must contain
+		/// at least one element called <c>log4net</c> that holds
+		/// the log4net configuration data.
+		/// </para>
+		/// <para>
+		/// The <see cref="System.Net.WebRequest"/> must support the URI scheme specified.
+		/// </para>
+		/// </remarks>
+		static public void Configure(Uri configUri)
+		{
+			Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()), configUri);
+		}
+
+		/// <summary>
+		/// Configures log4net using the specified configuration data stream.
 		/// </summary>
 		/// <param name="configStream">A stream to load the XML configuration from.</param>
 		/// <remarks>
@@ -474,6 +494,78 @@ namespace log4net.Config
 			}
 		}
 
+		/// <summary>
+		/// Configures the <see cref="ILoggerRepository"/> using the specified configuration 
+		/// URI.
+		/// </summary>
+		/// <param name="repository">The repository to configure.</param>
+		/// <param name="configUri">A URI to load the XML configuration from.</param>
+		/// <remarks>
+		/// <para>
+		/// The configuration data must be valid XML. It must contain
+		/// at least one element called <c>log4net</c> that holds
+		/// the configuration data.
+		/// </para>
+		/// <para>
+		/// The <see cref="System.Net.WebRequest"/> must support the URI scheme specified.
+		/// </para>
+		/// </remarks>
+		static public void Configure(ILoggerRepository repository, Uri configUri)
+		{
+			LogLog.Debug("XmlConfigurator: configuring repository [" + repository.Name + "] using URI ["+configUri+"]");
+
+			if (configUri == null)
+			{
+				LogLog.Error("XmlConfigurator: Configure called with null 'configUri' parameter");
+			}
+			else
+			{
+				if (configUri.IsFile)
+				{
+					// If URI is local file then call Configure with FileInfo
+					Configure(repository, new FileInfo(configUri.LocalPath));
+				}
+				else
+				{
+					WebRequest configRequest = null;
+
+					try
+					{
+						configRequest = WebRequest.Create(configUri);
+					}
+					catch(Exception ex)
+					{
+						LogLog.Error("XmlConfigurator: Failed to create WebRequest for URI ["+configUri+"]", ex);
+					}
+
+					if (configRequest != null)
+					{
+						try
+						{
+							WebResponse response = configRequest.GetResponse();
+							if (response != null)
+							{
+								try
+								{
+									using(Stream configStream = response.GetResponseStream())
+									{
+										Configure(repository, configStream);
+									}
+								}
+								finally
+								{
+									response.Close();
+								}
+							}
+						}
+						catch(Exception ex)
+						{
+							LogLog.Error("XmlConfigurator: Failed to request config from URI ["+configUri+"]", ex);
+						}
+					}
+				}
+			}
+		}
 
 		/// <summary>
 		/// Configures the <see cref="ILoggerRepository"/> using the specified configuration 
