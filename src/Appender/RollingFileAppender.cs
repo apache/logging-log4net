@@ -287,10 +287,6 @@ namespace log4net.Appender
 		/// The maximum applies to <b>each</b> time based group of files and 
 		/// <b>not</b> the total.
 		/// </para>
-		/// <para>
-		/// Using a daily roll the maximum total files would be 
-		/// <c>(#days run) * (maxSizeRollBackups)</c>.
-		/// </para>
 		/// </remarks>
 		public int MaxSizeRollBackups
 		{

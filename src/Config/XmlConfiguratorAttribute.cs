@@ -131,7 +131,12 @@ namespace log4net.Config
 		/// If specified this is the extension for the configuration file.
 		/// The path to the config file is built by using the <b>application 
 		/// base</b> directory (<see cref="AppDomain.BaseDirectory"/>),
-		/// the <b>assembly name</b> and the config file extension.
+		/// the <b>assembly file name</b> and the config file extension.
+		/// </para>
+		/// <para>
+		/// If the <see cref="ConfigFileExtension"/> is set to <c>MyExt</co> then
+		/// possible config file names would be: <c>MyConsoleApp.exe.MyExt</c> or
+		/// <c>MyClassLibrary.dll.MyExt</c>.
 		/// </para>
 		/// <para>
 		/// The <see cref="ConfigFile"/> takes priority over the <see cref="ConfigFileExtension"/>.
