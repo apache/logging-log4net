@@ -16,30 +16,33 @@
 //
 #endregion
 
+using System;
+
 using log4net.Core;
 
 namespace log4net.Ext.Trace
 {
 	public class TraceLogImpl : LogImpl, ITraceLog
 	{
-		#region Public Instance Constructors
+		/// <summary>
+		/// The fully qualified name of this declaring type not the type of any subclass.
+		/// </summary>
+		private readonly static Type ThisDeclaringType = typeof(TraceLogImpl);
 
 		public TraceLogImpl(ILogger logger) : base(logger)
 		{
 		}
 
-		#endregion Public Instance Constructors
-
 		#region Implementation of ITraceLog
 
 		public void Trace(object message)
 		{
-			Logger.Log(this.FullName, Level.Trace, message, null);
+			Logger.Log(ThisDeclaringType, Level.Trace, message, null);
 		}
 
 		public void Trace(object message, System.Exception t)
 		{
-			Logger.Log(this.FullName, Level.Trace, message, t);
+			Logger.Log(ThisDeclaringType, Level.Trace, message, t);
 		}
 
 		public bool IsTraceEnabled

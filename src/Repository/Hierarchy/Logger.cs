@@ -343,7 +343,8 @@ namespace log4net.Repository.Hierarchy
 		/// <summary>
 		/// This generic form is intended to be used by wrappers.
 		/// </summary>
-		/// <param name="callerFullName">The wrapper class' fully qualified class name.</param>
+		/// <param name="callerStackBoundaryDeclaringType">The declaring type of the method that is
+		/// the stack boundary into the logging system for this call.</param>
 		/// <param name="level">The level of the message to be logged.</param>
 		/// <param name="message">The message object to log.</param>
 		/// <param name="t">The exception to log, including its stack trace.</param>
@@ -351,11 +352,11 @@ namespace log4net.Repository.Hierarchy
 		/// Generate a logging event for the specified <paramref name="level"/> using
 		/// the <paramref name="message"/> and <paramref name="t"/>.
 		/// </remarks>
-		virtual public void Log(string callerFullName, Level level, object message, Exception t) 
+		virtual public void Log(Type callerStackBoundaryDeclaringType, Level level, object message, Exception t) 
 		{
 			if (IsEnabledFor(level))
 			{
-				ForcedLog((callerFullName != null) ? callerFullName : ThisClassFullName , level, message, t);
+				ForcedLog((callerStackBoundaryDeclaringType != null) ? callerStackBoundaryDeclaringType : ThisDeclaringType , level, message, t);
 			}
 		}
 
@@ -526,14 +527,15 @@ namespace log4net.Repository.Hierarchy
 		{
 			if (IsEnabledFor(level))
 			{
-				ForcedLog(ThisClassFullName, level, message, t);
+				ForcedLog(ThisDeclaringType, level, message, t);
 			}
 		}
 
 		/// <summary>
 		/// Creates a new logging event and logs the event without further checks.
 		/// </summary>
-		/// <param name="callerFullName">The wrapper class' fully qualified class name.</param>
+		/// <param name="callerStackBoundaryDeclaringType">The declaring type of the method that is
+		/// the stack boundary into the logging system for this call.</param>
 		/// <param name="level">The level of the message to be logged.</param>
 		/// <param name="message">The message object to log.</param>
 		/// <param name="t">The exception to log, including its stack trace.</param>
@@ -541,9 +543,9 @@ namespace log4net.Repository.Hierarchy
 		/// Generates a logging event and delivers it to the attached
 		/// appenders.
 		/// </remarks>
-		virtual protected void ForcedLog(string callerFullName, Level level, object message, Exception t) 
+		virtual protected void ForcedLog(Type callerStackBoundaryDeclaringType, Level level, object message, Exception t) 
 		{
-			CallAppenders(new LoggingEvent(callerFullName, this.Hierarchy, this.Name, level, message, t));
+			CallAppenders(new LoggingEvent(callerStackBoundaryDeclaringType, this.Hierarchy, this.Name, level, message, t));
 		}
 
 		/// <summary>
@@ -561,9 +563,9 @@ namespace log4net.Repository.Hierarchy
 		#region Private Static Fields
 
 		/// <summary>
-		/// The fully qualified name of the Logger class.
+		/// The fully qualified type of the Logger class.
 		/// </summary>
-		private readonly static string ThisClassFullName = typeof(Logger).FullName;
+		private readonly static Type ThisDeclaringType = typeof(Logger);
 
 		#endregion Private Static Fields
 

@@ -16,19 +16,22 @@
 //
 #endregion
 
+using System;
+
 using log4net.Core;
 
 namespace log4net.Ext.EventID
 {
 	public class EventIDLogImpl : LogImpl, IEventIDLog
 	{
-		#region Public Instance Constructors
+		/// <summary>
+		/// The fully qualified name of this declaring type not the type of any subclass.
+		/// </summary>
+		private readonly static Type ThisDeclaringType = typeof(EventIDLogImpl);
 
 		public EventIDLogImpl(ILogger logger) : base(logger)
 		{
 		}
-
-		#endregion Public Instance Constructors
 
 		#region Implementation of IEventIDLog
 
@@ -41,7 +44,7 @@ namespace log4net.Ext.EventID
 		{
 			if (this.IsInfoEnabled)
 			{
-				LoggingEvent loggingEvent = new LoggingEvent(FullName, Logger.Repository, Logger.Name, Level.Info, message, t);
+				LoggingEvent loggingEvent = new LoggingEvent(ThisDeclaringType, Logger.Repository, Logger.Name, Level.Info, message, t);
 				loggingEvent.EventProperties["EventID"] = eventId;
 				Logger.Log(loggingEvent);
 			}
@@ -56,7 +59,7 @@ namespace log4net.Ext.EventID
 		{
 			if (this.IsWarnEnabled)
 			{
-				LoggingEvent loggingEvent = new LoggingEvent(FullName, Logger.Repository, Logger.Name, Level.Info, message, t);
+				LoggingEvent loggingEvent = new LoggingEvent(ThisDeclaringType, Logger.Repository, Logger.Name, Level.Warn, message, t);
 				loggingEvent.EventProperties["EventID"] = eventId;
 				Logger.Log(loggingEvent);
 			}
@@ -71,7 +74,7 @@ namespace log4net.Ext.EventID
 		{
 			if (this.IsErrorEnabled)
 			{
-				LoggingEvent loggingEvent = new LoggingEvent(this.FullName, Logger.Repository, Logger.Name, Level.Info, message, t);
+				LoggingEvent loggingEvent = new LoggingEvent(ThisDeclaringType, Logger.Repository, Logger.Name, Level.Error, message, t);
 				loggingEvent.EventProperties["EventID"] = eventId;
 				Logger.Log(loggingEvent);
 			}
@@ -86,7 +89,7 @@ namespace log4net.Ext.EventID
 		{
 			if (this.IsFatalEnabled)
 			{
-				LoggingEvent loggingEvent = new LoggingEvent(this.FullName, Logger.Repository, Logger.Name, Level.Info, message, t);
+				LoggingEvent loggingEvent = new LoggingEvent(ThisDeclaringType, Logger.Repository, Logger.Name, Level.Fatal, message, t);
 				loggingEvent.EventProperties["EventID"] = eventId;
 				Logger.Log(loggingEvent);
 			}

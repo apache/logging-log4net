@@ -65,8 +65,9 @@ namespace log4net.Core
 		/// Initializes a new instance of the <see cref="LocationInfo" />
 		/// class based on the current thread.
 		/// </summary>
-		/// <param name="fullNameOfCallingClass">The fully name of the calling class (not assembly qualified).</param>
-		public LocationInfo(string fullNameOfCallingClass) 
+		/// <param name="callerStackBoundaryDeclaringType">The declaring type of the method that is
+		/// the stack boundary into the logging system for this call.</param>
+		public LocationInfo(Type callerStackBoundaryDeclaringType) 
 		{
 			// Initialize all fields
 			m_className = NA;
@@ -76,7 +77,7 @@ namespace log4net.Core
 			m_fullInfo = NA;
 
 #if !NETCF
-			if (fullNameOfCallingClass != null && fullNameOfCallingClass.Length > 0)
+			if (callerStackBoundaryDeclaringType != null)
 			{
 				try
 				{
@@ -87,7 +88,7 @@ namespace log4net.Core
 					while (frameIndex < st.FrameCount)
 					{
 						StackFrame frame = st.GetFrame(frameIndex);
-						if (frame.GetMethod().DeclaringType.FullName == fullNameOfCallingClass)
+						if (frame.GetMethod().DeclaringType == callerStackBoundaryDeclaringType)
 						{
 							break;
 						}
@@ -98,7 +99,7 @@ namespace log4net.Core
 					while (frameIndex < st.FrameCount)
 					{
 						StackFrame frame = st.GetFrame(frameIndex);
-						if (frame.GetMethod().DeclaringType.FullName != fullNameOfCallingClass)
+						if (frame.GetMethod().DeclaringType != callerStackBoundaryDeclaringType)
 						{
 							break;
 						}

@@ -18,6 +18,8 @@
 
 using System;
 
+using log4net;
+
 namespace log4net.Ext.Trace
 {
 	public interface ITraceLog : ILog

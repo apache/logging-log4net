@@ -41,25 +41,9 @@ namespace log4net.Core
 		/// <param name="logger">The logger to wrap.</param>
 		public LogImpl(ILogger logger) : base(logger)
 		{
-			this.m_fullName = this.GetType().FullName;
 		}
 
 		#endregion Public Instance Constructors
-
-		#region Protected Instance Properties
-
-		/// <summary>
-		/// Gets the fully qualified classname of the logger.
-		/// </summary>
-		/// <value>
-		/// The fully qualified classname of the logger.
-		/// </value>
-		protected string FullName 
-		{
-			get { return this.m_fullName; }
-		}
-
-		#endregion Protected Instance Properties
 
 		#region Implementation of ILog
 
@@ -88,7 +72,7 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void Debug(object message) 
 		{
-			Logger.Log(m_fullName, Level.Debug, message, null);
+			Logger.Log(ThisDeclaringType, Level.Debug, message, null);
 		}
 
 		/// <summary>
@@ -104,7 +88,7 @@ namespace log4net.Core
 		/// <seealso cref="Debug(object)"/>
 		virtual public void Debug(object message, Exception t) 
 		{
-			Logger.Log(m_fullName, Level.Debug, message, t);
+			Logger.Log(ThisDeclaringType, Level.Debug, message, t);
 		}
 
 		/// <summary>
@@ -132,7 +116,7 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void Info(object message) 
 		{
-			Logger.Log(m_fullName, Level.Info, message, null);
+			Logger.Log(ThisDeclaringType, Level.Info, message, null);
 		}
   
 		/// <summary>
@@ -148,7 +132,7 @@ namespace log4net.Core
 		/// <seealso cref="Info(object)"/>
 		virtual public void Info(object message, Exception t) 
 		{
-			Logger.Log(m_fullName, Level.Info, message, t);
+			Logger.Log(ThisDeclaringType, Level.Info, message, t);
 		}
 
 		/// <summary>
@@ -176,7 +160,7 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void Warn(object message) 
 		{
-			Logger.Log(m_fullName, Level.Warn, message, null);
+			Logger.Log(ThisDeclaringType, Level.Warn, message, null);
 		}
   
 		/// <summary>
@@ -192,7 +176,7 @@ namespace log4net.Core
 		/// <seealso cref="Warn(object)"/>
 		virtual public void Warn(object message, Exception t) 
 		{
-			Logger.Log(m_fullName, Level.Warn, message, t);
+			Logger.Log(ThisDeclaringType, Level.Warn, message, t);
 		}
 
 		/// <summary>
@@ -220,7 +204,7 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void Error(object message) 
 		{
-			Logger.Log(m_fullName, Level.Error, message, null);
+			Logger.Log(ThisDeclaringType, Level.Error, message, null);
 		}
 
 		/// <summary>
@@ -236,7 +220,7 @@ namespace log4net.Core
 		/// <seealso cref="Error(object)"/>
 		virtual public void Error(object message, Exception t) 
 		{
-			Logger.Log(m_fullName, Level.Error, message, t);
+			Logger.Log(ThisDeclaringType, Level.Error, message, t);
 		}
 
 		/// <summary>
@@ -264,7 +248,7 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void Fatal(object message) 
 		{
-			Logger.Log(m_fullName, Level.Fatal, message, null);
+			Logger.Log(ThisDeclaringType, Level.Fatal, message, null);
 		}
   
 		/// <summary>
@@ -280,7 +264,7 @@ namespace log4net.Core
 		/// <seealso cref="Fatal(object)"/>
 		virtual public void Fatal(object message, Exception t) 
 		{
-			Logger.Log(m_fullName, Level.Fatal, message, t);
+			Logger.Log(ThisDeclaringType, Level.Fatal, message, t);
 		}
 
 		/// <summary>
@@ -399,13 +383,13 @@ namespace log4net.Core
 
 		#endregion Implementation of ILog
 
-		#region Private Instance Fields
+		#region Private Static Instance Fields
 
 		/// <summary>
-		/// The fully qualified name of the Logger class.
+		/// The fully qualified name of this declaring type not the type of any subclass.
 		/// </summary>
-		private readonly string m_fullName;
+		private readonly static Type ThisDeclaringType = typeof(LogImpl);
 
-		#endregion Private Instance Fields
+		#endregion Private Static Instance Fields
 	}
 }

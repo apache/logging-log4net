@@ -20,10 +20,12 @@
  * Custom Logging Classes to support Event IDs.
  */
 
+using System;
+
+using log4net;
+
 namespace log4net.Ext.EventID
 {
-	using System;
-
 	public interface IEventIDLog : ILog
 	{
 		void Info(int eventId, object message);

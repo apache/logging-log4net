@@ -41,7 +41,8 @@ namespace log4net.Core
 		/// <summary>
 		/// This generic form is intended to be used by wrappers.
 		/// </summary>
-		/// <param name="callerFullName">The wrapper class' fully qualified class name.</param>
+		/// <param name="callerStackBoundaryDeclaringType">The declaring type of the method that is
+		/// the stack boundary into the logging system for this call.</param>
 		/// <param name="level">The level of the message to be logged.</param>
 		/// <param name="message">The message object to log.</param>
 		/// <param name="t">the exception to log, including its stack trace. Pass <c>null</c> to not log an exception.</param>
@@ -49,7 +50,7 @@ namespace log4net.Core
 		/// Generates a logging event for the specified <paramref name="level"/> using
 		/// the <paramref name="message"/> and <paramref name="t"/>.
 		/// </remarks>
-		void Log(string callerFullName, Level level, object message, Exception t);
+		void Log(Type callerStackBoundaryDeclaringType, Level level, object message, Exception t);
   
 		/// <summary>
 		/// This is the most generic printing method that is intended to be used 

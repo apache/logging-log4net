@@ -245,7 +245,8 @@ namespace log4net.Core
 		/// Initializes a new instance of the <see cref="LoggingEvent" /> class
 		/// from the supplied parameters.
 		/// </summary>
-		/// <param name="fullNameOfLoggerClass">Fully qualified classname of the logger.</param>
+		/// <param name="callerStackBoundaryDeclaringType">The declaring type of the method that is
+		/// the stack boundary into the logging system for this call.</param>
 		/// <param name="repository">The repository this event is logged in.</param>
 		/// <param name="loggerName">The name of the logger of this event.</param>
 		/// <param name="level">The level of this event.</param>
@@ -262,9 +263,9 @@ namespace log4net.Core
 		/// to create a logging event.
 		/// </para>
 		/// </remarks>
-		public LoggingEvent(string fullNameOfLoggerClass, log4net.Repository.ILoggerRepository repository, string loggerName, Level level, object message, Exception exception) 
+		public LoggingEvent(Type callerStackBoundaryDeclaringType, log4net.Repository.ILoggerRepository repository, string loggerName, Level level, object message, Exception exception) 
 		{
-			m_fqnOfLoggerClass = fullNameOfLoggerClass;
+			m_callerStackBoundaryDeclaringType = callerStackBoundaryDeclaringType;
 			m_message = message;
 			m_repository = repository;
 			m_thrownException = exception;
@@ -280,7 +281,8 @@ namespace log4net.Core
 		/// Initializes a new instance of the <see cref="LoggingEvent" /> class 
 		/// using specific data.
 		/// </summary>
-		/// <param name="fullNameOfLoggerClass">Fully qualified classname of the logger.</param>
+		/// <param name="callerStackBoundaryDeclaringType">The declaring type of the method that is
+		/// the stack boundary into the logging system for this call.</param>
 		/// <param name="repository">The repository this event is logged in.</param>
 		/// <param name="data">Data used to initialize the logging event.</param>
 		/// <remarks>
@@ -293,9 +295,9 @@ namespace log4net.Core
 		/// Use the <see cref="GetLoggingEventData"/> method to obtain an 
 		/// instance of the <see cref="LoggingEventData"/> class.</para>
 		/// </remarks>
-		public LoggingEvent(string fullNameOfLoggerClass, log4net.Repository.ILoggerRepository repository, LoggingEventData data) 
+		public LoggingEvent(Type callerStackBoundaryDeclaringType, log4net.Repository.ILoggerRepository repository, LoggingEventData data) 
 		{
-			m_fqnOfLoggerClass = fullNameOfLoggerClass;
+			m_callerStackBoundaryDeclaringType = callerStackBoundaryDeclaringType;
 			m_repository = repository;
 
 			m_data = data;
@@ -447,7 +449,7 @@ namespace log4net.Core
 			{
 				if (m_data.LocationInfo == null) 
 				{
-					m_data.LocationInfo = new LocationInfo(m_fqnOfLoggerClass);
+					m_data.LocationInfo = new LocationInfo(m_callerStackBoundaryDeclaringType);
 				}
 				return m_data.LocationInfo;
 			}
@@ -1287,10 +1289,10 @@ namespace log4net.Core
 		private PropertiesDictionary m_eventProperties;
 
 		/// <summary>
-		/// The fully qualified classname of the calling 
-		/// logger class.
+		/// The fully qualified Type of the calling 
+		/// logger class in the stack frame (i.e. the declaring type of the method).
 		/// </summary>
-		private readonly string m_fqnOfLoggerClass;
+		private readonly Type m_callerStackBoundaryDeclaringType;
 
 		/// <summary>
 		/// The application supplied message of logging event.
