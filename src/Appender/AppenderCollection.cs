@@ -546,6 +546,20 @@ namespace log4net.Appender
 			this.Capacity = m_count;
 		}
 
+		/// <summary>
+		/// Return the collection elements as an array
+		/// </summary>
+		/// <returns>the array</returns>
+		public virtual IAppender[] ToArray()
+		{
+			IAppender[] resultArray = new IAppender[m_count];
+			if (m_count > 0)
+			{
+				Array.Copy(m_array, 0, resultArray, 0, m_count);
+			}
+			return resultArray;
+		}
+
 		#endregion
 
 		#region Implementation (helpers)
@@ -591,7 +605,10 @@ namespace log4net.Appender
 
 		void ICollection.CopyTo(Array array, int start)
 		{
-			Array.Copy(m_array, 0, array, start, m_count);
+			if (m_count > 0)
+			{
+				Array.Copy(m_array, 0, array, start, m_count);
+			}
 		}
 
 		#endregion
@@ -731,7 +748,7 @@ namespace log4net.Appender
 		#region Nested Read Only Wrapper class
 
 		/// <exclude/>
-		private sealed class ReadOnlyAppenderCollection : AppenderCollection
+		private sealed class ReadOnlyAppenderCollection : AppenderCollection, ICollection
 		{
 			#region Implementation (data)
 
@@ -758,6 +775,11 @@ namespace log4net.Appender
 			public override void CopyTo(IAppender[] array, int start)
 			{
 				m_collection.CopyTo(array,start);
+			}
+
+			void ICollection.CopyTo(Array array, int start)
+			{
+				((ICollection)m_collection).CopyTo(array, start);
 			}
 
 			public override int Count
