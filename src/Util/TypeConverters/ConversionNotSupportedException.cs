@@ -119,13 +119,30 @@ namespace log4net.Util.TypeConverters
 		/// </remarks>
 		public static ConversionNotSupportedException Create(Type destinationType, object sourceValue)
 		{
+			return Create(destinationType, sourceValue, null);
+		}
+
+		/// <summary>
+		/// Creates a new instance of the <see cref="ConversionNotSupportedException" /> class.
+		/// </summary>
+		/// <param name="destinationType">The conversion destination type.</param>
+		/// <param name="sourceValue">The value to convert.</param>
+		/// <param name="innerException">A nested exception to include.</param>
+		/// <returns>An instance of the <see cref="ConversionNotSupportedException" />.</returns>
+		/// <remarks>
+		/// <para>
+		/// Creates a new instance of the <see cref="ConversionNotSupportedException" /> class.
+		/// </para>
+		/// </remarks>
+		public static ConversionNotSupportedException Create(Type destinationType, object sourceValue, Exception innerException)
+		{
 			if (sourceValue == null)
 			{
-				return new ConversionNotSupportedException("Cannot convert value [null] to type ["+destinationType+"]");
+				return new ConversionNotSupportedException("Cannot convert value [null] to type ["+destinationType+"]", innerException);
 			}
 			else
 			{
-				return new ConversionNotSupportedException("Cannot convert from type ["+sourceValue.GetType()+"] value ["+sourceValue+"] to type ["+destinationType+"]");
+				return new ConversionNotSupportedException("Cannot convert from type ["+sourceValue.GetType()+"] value ["+sourceValue+"] to type ["+destinationType+"]", innerException);
 			}
 		}
 
