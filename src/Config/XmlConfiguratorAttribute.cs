@@ -148,7 +148,6 @@ namespace log4net.Config
 			set { m_configFileExtension = value; }
 		}
 
-#if (!SSCLI)
 		/// <summary>
 		/// Gets or sets a value indicating whether to watch the configuration file.
 		/// </summary>
@@ -161,13 +160,21 @@ namespace log4net.Config
 		/// will watch the configuration file and will reload the config each time 
 		/// the file is modified.
 		/// </para>
+		/// <para>
+		/// The config file can only be watched if it is loaded from local disk.
+		/// In a No-Touch (Smart Client) deployment where the application is downloaded
+		/// from a web server the config file may not reside on the local disk
+		/// and therefore it may not be able to watch it.
+		/// </para>
+		/// <note>
+		/// Watching configuration is not supported on the SSCLI.
+		/// </note>
 		/// </remarks>
 		public bool Watch
 		{
 			get { return m_configureAndWatch; }
 			set { m_configureAndWatch = value; }
 		}
-#endif
 
 		#endregion Public Instance Properties
 
@@ -188,6 +195,27 @@ namespace log4net.Config
 		/// </remarks>
 		/// <exception cref="ArgumentOutOfRangeException">The <paramref name="repository" /> does not extend <see cref="Hierarchy"/>.</exception>
 		override public void Configure(Assembly sourceAssembly, ILoggerRepository targetRepository)
+		{
+			Uri applicationBaseDirectoryUri = new Uri(SystemInfo.ApplicationBaseDirectory);
+
+			if (applicationBaseDirectoryUri.IsFile)
+			{
+				ConfigureFromFile(sourceAssembly, targetRepository);
+			}
+			else
+			{
+				ConfigureFromUri(sourceAssembly, targetRepository);
+			}
+		}
+
+		#endregion
+
+		/// <summary>
+		/// Attempt to load configuration from the local file system
+		/// </summary>
+		/// <param name="sourceAssembly">The assembly that this attribute was defined on.</param>
+		/// <param name="targetRepository">The repository to configure.</param>
+		private void ConfigureFromFile(Assembly sourceAssembly, ILoggerRepository targetRepository)
 		{
 			// Work out the full path to the config file
 			string fullPath2ConfigFile = null;
@@ -217,31 +245,106 @@ namespace log4net.Config
 				fullPath2ConfigFile = Path.Combine(SystemInfo.ApplicationBaseDirectory, m_configFile);
 			}
 
+			ConfigureFromFile(targetRepository, new FileInfo(fullPath2ConfigFile));
+		}
+
+		/// <summary>
+		/// Configure the specified repository using a <see cref="FileInfo"/>
+		/// </summary>
+		/// <param name="targetRepository">The repository to configure.</param>
+		/// <param name="configFile">the FileInfo pointing to the config file</param>
+		private void ConfigureFromFile(ILoggerRepository targetRepository, FileInfo configFile)
+		{
 #if (SSCLI)
-			XmlConfigurator.Configure(targetRepository, new FileInfo(fullPath2ConfigFile));
+			if (m_configureAndWatch)
+			{
+				LogLog.Warn("XmlConfiguratorAttribute: Unable to watch config file not supported on SSCLI");
+			}
+			XmlConfigurator.Configure(targetRepository, configFile);
 #else
 			// Do we configure just once or do we configure and then watch?
 			if (m_configureAndWatch)
 			{
-				XmlConfigurator.ConfigureAndWatch(targetRepository, new FileInfo(fullPath2ConfigFile));
+				XmlConfigurator.ConfigureAndWatch(targetRepository, configFile);
 			}
 			else
 			{
-				XmlConfigurator.Configure(targetRepository, new FileInfo(fullPath2ConfigFile));
+				XmlConfigurator.Configure(targetRepository, configFile);
 			}
 #endif
 		}
 
-		#endregion
+		/// <summary>
+		/// Attempt to load configuration from a URI
+		/// </summary>
+		/// <param name="sourceAssembly">The assembly that this attribute was defined on.</param>
+		/// <param name="targetRepository">The repository to configure.</param>
+		private void ConfigureFromUri(Assembly sourceAssembly, ILoggerRepository targetRepository)
+		{
+			Uri applicationBaseDirectoryUri = new Uri(SystemInfo.ApplicationBaseDirectory);
+			Uri systemConfigFileUri = new Uri(SystemInfo.ConfigurationFileLocation);
+
+			// Work out the full path to the config file
+			Uri fullPath2ConfigFile = null;
+			
+			// Select the config file
+			if (m_configFile == null || m_configFile.Length == 0)
+			{
+				if (m_configFileExtension == null || m_configFileExtension.Length == 0)
+				{
+					// Use the default .config file for the AppDomain
+					fullPath2ConfigFile = systemConfigFileUri;
+				}
+				else
+				{
+					// Force the extension to start with a '.'
+					if (m_configFileExtension[0] != '.')
+					{
+						m_configFileExtension = "." + m_configFileExtension;
+					}
+
+					UriBuilder builder = new UriBuilder(systemConfigFileUri);
+
+					// Remove the current extension from the systemConfigFileUri path
+					string path = builder.Path;
+                    int startOfExtension = path.LastIndexOf(".");
+					if (startOfExtension >= 0)
+					{
+						path = path.Substring(0, startOfExtension);
+					}
+					path += m_configFileExtension;
+
+					builder.Path = path;
+					fullPath2ConfigFile = builder.Uri;
+				}
+			}
+			else
+			{
+				// Just the base dir + the config file
+				fullPath2ConfigFile = new Uri(applicationBaseDirectoryUri, m_configFile);
+			}
+
+			if (fullPath2ConfigFile.IsFile)
+			{
+				// The m_configFile could be an absolute local path, therefore we have to be
+				// prepared to switch back to using FileInfos here
+				ConfigureFromFile(targetRepository, new FileInfo(fullPath2ConfigFile.LocalPath));
+			}
+			else
+			{
+				if (m_configureAndWatch)
+				{
+					LogLog.Warn("XmlConfiguratorAttribute: Unable to watch config file loaded from a URI");
+				}
+				XmlConfigurator.Configure(targetRepository, fullPath2ConfigFile);
+			}
+		}
 
 		#region Private Instance Fields
 
 		private string m_configFile = null;
 		private string m_configFileExtension = null;
-
-#if (!SSCLI)
 		private bool m_configureAndWatch = false;
-#endif
 
 		#endregion Private Instance Fields
 	}
