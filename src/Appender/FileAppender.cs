@@ -58,7 +58,7 @@ namespace log4net.Appender
 	/// <para>
 	/// The <see cref="FileAppender"/> supports pluggable file locking models via
 	/// the <see cref="LockingModel"/> property.
-	/// The default behaviour, implemented by <see cref="FileAppender.ExclusiveLock"/> 
+	/// The default behavior, implemented by <see cref="FileAppender.ExclusiveLock"/> 
 	/// is to obtain an exclusive write lock on the file until this appender is closed.
 	/// The alternative model, <see cref="FileAppender.MinimalLock"/>, only holds a
 	/// write lock while the appender is writing a logging event.
@@ -332,12 +332,28 @@ namespace log4net.Appender
 			public abstract void ReleaseLock();
 
 			/// <summary>
-			/// The appender we are related to. Used to identify the security context to work within, and the error handler to use.
+			/// Gets or sets the <see cref="FileAppender"/> for this LockingModel
 			/// </summary>
+			/// <value>
+			/// The <see cref="FileAppender"/> for this LockingModel
+			/// </value>
+			/// <remarks>
+			/// <para>
+			/// The file appender this locking model is attached to and working on
+			/// behalf of.
+			/// </para>
+			/// <para>
+			/// The file appender is used to locate the security context and the error handler to use.
+			/// </para>
+			/// <para>
+			/// The value of this property will be set before <see cref="OpenFile"/> is
+			/// called.
+			/// </para>
+			/// </remarks>
 			public FileAppender CurrentAppender
 			{
 				get { return m_appender; }
-				set { m_appender=value; }
+				set { m_appender = value; }
 			}
 		}
 
