@@ -252,9 +252,9 @@ namespace log4net.Ext.EventID
 		/// </summary>
 		/// <param name="logger">the logger to get the wrapper for</param>
 		/// <returns>the wrapper for the logger specified</returns>
-		public static IEventIDLog WrapLogger(ILogger logger)
+		private static IEventIDLog WrapLogger(ILogger logger)
 		{
-			return (IEventIDLog)s_wrapperMap[logger];
+			return (IEventIDLog)s_wrapperMap.GetWrapper(logger);
 		}
 
 		/// <summary>
@@ -262,7 +262,7 @@ namespace log4net.Ext.EventID
 		/// </summary>
 		/// <param name="loggers">the loggers to get the wrappers for</param>
 		/// <returns>Lookup the wrapper objects for the loggers specified</returns>
-		public static IEventIDLog[] WrapLoggers(ILogger[] loggers)
+		private static IEventIDLog[] WrapLoggers(ILogger[] loggers)
 		{
 			IEventIDLog[] results = new IEventIDLog[loggers.Length];
 			for(int i=0; i<loggers.Length; i++)

@@ -252,9 +252,9 @@ namespace log4net.Ext.Trace
 		/// </summary>
 		/// <param name="logger">the logger to get the wrapper for</param>
 		/// <returns>the wrapper for the logger specified</returns>
-		public static ITraceLog WrapLogger(ILogger logger)
+		private static ITraceLog WrapLogger(ILogger logger)
 		{
-			return (ITraceLog)s_wrapperMap[logger];
+			return (ITraceLog)s_wrapperMap.GetWrapper(logger);
 		}
 
 		/// <summary>
@@ -262,7 +262,7 @@ namespace log4net.Ext.Trace
 		/// </summary>
 		/// <param name="loggers">the loggers to get the wrappers for</param>
 		/// <returns>Lookup the wrapper objects for the loggers specified</returns>
-		public static ITraceLog[] WrapLoggers(ILogger[] loggers)
+		private static ITraceLog[] WrapLoggers(ILogger[] loggers)
 		{
 			ITraceLog[] results = new ITraceLog[loggers.Length];
 			for(int i=0; i<loggers.Length; i++)

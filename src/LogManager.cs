@@ -731,7 +731,7 @@ namespace log4net
 		/// <returns>The wrapper for the logger specified.</returns>
 		private static ILog WrapLogger(ILogger logger)
 		{
-			return (ILog)s_wrapperMap[logger];
+			return (ILog)s_wrapperMap.GetWrapper(logger);
 		}
 
 		/// <summary>
