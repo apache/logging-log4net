@@ -25,7 +25,7 @@
 ' You can specify all the values or you can default the Revision and Build Numbers 
 ' by using the '*' as shown below:
 
-<Assembly: System.Reflection.AssemblyVersion("1.2.0.30714")>
+<Assembly: System.Reflection.AssemblyVersion("1.2.9.0")>
 <Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.2")>
 
 '

@@ -29,7 +29,7 @@ using namespace System::Runtime::CompilerServices;
 // You can specify all the value or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersionAttribute("1.2.0.30714")];
+[assembly: AssemblyVersionAttribute("1.2.9.0")];
 [assembly: AssemblyInformationalVersionAttribute("1.2")];
 
 //

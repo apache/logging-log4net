@@ -30,7 +30,7 @@
 // an import functions as a workaround for this issue.
 import System.Reflection;
 
-[assembly: AssemblyVersion("1.2.0.30714")]
+[assembly: AssemblyVersion("1.2.9.0")]
 [assembly: AssemblyInformationalVersionAttribute("1.2")]
 
 //
