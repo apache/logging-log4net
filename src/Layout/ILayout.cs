@@ -30,7 +30,7 @@ namespace log4net.Layout
 	/// <remarks>
 	/// <para>
 	/// An <see cref="ILayout"/> object is used to format a <see cref="LoggingEvent"/>
-	/// as text. The <see cref="Format(LoggingEvent)"/> method is called by an
+	/// as text. The <see cref="Format(TextWriter,LoggingEvent)"/> method is called by an
 	/// appender to transform the <see cref="LoggingEvent"/> into a string.
 	/// </para>
 	/// <para>
@@ -45,27 +45,23 @@ namespace log4net.Layout
 		/// <summary>
 		/// Implement this method to create your own layout format.
 		/// </summary>
-		/// <param name="loggingEvent">The event to format</param>
-		/// <returns>returns the formatted event</returns>
-		/// <remarks>
-		/// <para>
-		/// This method is called by an appender to format
-		/// the <paramref name="loggingEvent"/> as a string.
-		/// </para>
-		/// </remarks>
-		[Obsolete("Use Format(TextWriter,LoggingEvent)")]
-		string Format(LoggingEvent loggingEvent);
-
-		/// <summary>
-		/// Implement this method to create your own layout format.
-		/// </summary>
 		/// <param name="writer">The TextWriter to write the formatted event to</param>
 		/// <param name="loggingEvent">The event to format</param>
 		/// <remarks>
 		/// <para>
 		/// This method is called by an appender to format
-		/// the <paramref name="loggingEvent"/> as text.
+		/// the <paramref name="loggingEvent"/> as text and output to a writer.
 		/// </para>
+		/// <para>
+		/// If the caller does not have a <see cref="TextWriter"/> and prefers the
+		/// event to be formatted as a <see cref="String"/> then the following
+		/// code can be used to format the event into a <see cref="StringWriter"/>.
+		/// </para>
+		/// <code lang="C#">
+		/// StringWriter writer = new StringWriter();
+		/// Layout.Format(writer, loggingEvent);
+		/// string formattedEvent = writer.ToString();
+		/// </code>
 		/// </remarks>
 		void Format(TextWriter writer, LoggingEvent loggingEvent);
 

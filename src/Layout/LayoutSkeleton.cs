@@ -129,28 +129,6 @@ namespace log4net.Layout
 		/// <summary>
 		/// Implement this method to create your own layout format.
 		/// </summary>
-		/// <param name="loggingEvent">The event to format</param>
-		/// <returns>returns the formatted event</returns>
-		/// <remarks>
-		/// <para>
-		/// This method is called by an appender to format
-		/// the <paramref name="loggingEvent"/> as a string.
-		/// </para>
- 		/// <para>
- 		/// This method must be implemented by the subclass.
- 		/// </para>
-		/// </remarks>
-		[Obsolete("Use Format(TextWriter,LoggingEvent)")]
-		public string Format(LoggingEvent loggingEvent)
-		{
-			StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
-			this.Format(writer, loggingEvent);
-			return writer.ToString();
-		}
-
-		/// <summary>
-		/// Implement this method to create your own layout format.
-		/// </summary>
 		/// <param name="writer">The TextWriter to write the formatted event to</param>
 		/// <param name="loggingEvent">The event to format</param>
 		/// <remarks>
