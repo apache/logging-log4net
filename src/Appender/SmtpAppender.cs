@@ -67,7 +67,13 @@ namespace log4net.Appender
 		#region Public Instance Constructors
 
 		/// <summary>
+		/// Default constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Default constructor
+		/// </para>
+		/// </remarks>
 		public SmtpAppender()
 		{	
 		}
@@ -82,6 +88,11 @@ namespace log4net.Appender
 		/// <value>
 		/// A semicolon-delimited list of e-mail addresses.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// A semicolon-delimited list of recipient e-mail addresses.
+		/// </para>
+		/// </remarks>
 		public string To 
 		{
 			get { return m_to; }
@@ -94,6 +105,11 @@ namespace log4net.Appender
 		/// <value>
 		/// The e-mail address of the sender.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The e-mail address of the sender.
+		/// </para>
+		/// </remarks>
 		public string From 
 		{
 			get { return m_from; }
@@ -106,6 +122,11 @@ namespace log4net.Appender
 		/// <value>
 		/// The subject line of the e-mail message.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The subject line of the e-mail message.
+		/// </para>
+		/// </remarks>
 		public string Subject 
 		{
 			get { return m_subject; }
@@ -120,6 +141,12 @@ namespace log4net.Appender
 		/// The name of the e-mail relay server. If SmtpServer is not set, the 
 		/// name of the local SMTP server is used.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The name of the e-mail relay server. If SmtpServer is not set, the 
+		/// name of the local SMTP server is used.
+		/// </para>
+		/// </remarks>
 		public string SmtpHost
 		{
 			get { return m_smtpHost; }
@@ -131,6 +158,11 @@ namespace log4net.Appender
 		/// </summary>
 		/// <remarks>
 		/// Use the BufferingAppenderSkeleton Fix methods instead 
+		/// </remarks>
+		/// <remarks>
+		/// <para>
+		/// Obsolete property.
+		/// </para>
 		/// </remarks>
 		[Obsolete("Use the BufferingAppenderSkeleton Fix methods")]
 		public bool LocationInfo
@@ -320,6 +352,11 @@ namespace log4net.Appender
 		/// This appender requires a <see cref="Layout"/> to be set.
 		/// </summary>
 		/// <value><c>true</c></value>
+		/// <remarks>
+		/// <para>
+		/// This appender requires a <see cref="Layout"/> to be set.
+		/// </para>
+		/// </remarks>
 		override protected bool RequiresLayout
 		{
 			get { return true; }
@@ -349,6 +386,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Values for the <see cref="SmtpAppender.Authentication"/> property.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// SMTP authentication modes.
+		/// </para>
+		/// </remarks>
 		public enum SmtpAuthentication
 		{
 			/// <summary>

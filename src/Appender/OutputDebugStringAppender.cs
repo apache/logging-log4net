@@ -53,6 +53,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OutputDebugStringAppender" /> class.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Default constructor.
+		/// </para>
+		/// </remarks>
 		public OutputDebugStringAppender()
 		{
 		}
@@ -62,10 +67,14 @@ namespace log4net.Appender
 		#region Override implementation of AppenderSkeleton
 
 		/// <summary>
-		/// This method is called by the <see cref="AppenderSkeleton.DoAppend"/>
-		/// method. 
+		/// Write the logging event to the output debug string API
 		/// </summary>
 		/// <param name="loggingEvent">the event to log</param>
+		/// <remarks>
+		/// <para>
+		/// Write the logging event to the output debug string API
+		/// </para>
+		/// </remarks>
 		override protected void Append(LoggingEvent loggingEvent) 
 		{
 			OutputDebugString(RenderLoggingEvent(loggingEvent));
@@ -75,6 +84,11 @@ namespace log4net.Appender
 		/// This appender requires a <see cref="Layout"/> to be set.
 		/// </summary>
 		/// <value><c>true</c></value>
+		/// <remarks>
+		/// <para>
+		/// This appender requires a <see cref="Layout"/> to be set.
+		/// </para>
+		/// </remarks>
 		override protected bool RequiresLayout
 		{
 			get { return true; }
@@ -88,6 +102,11 @@ namespace log4net.Appender
 		/// Stub for OutputDebugString native method
 		/// </summary>
 		/// <param name="message">the string to output</param>
+		/// <remarks>
+		/// <para>
+		/// Stub for OutputDebugString native method
+		/// </para>
+		/// </remarks>
 #if NETCF
 		[DllImport("CoreDll.dll")]
 #else

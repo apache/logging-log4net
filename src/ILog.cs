@@ -39,7 +39,7 @@ namespace log4net
 	/// </para>
 	/// <para>
 	/// This interface can be implemented in different ways. This documentation
-	/// specifies reasonable behaviour that a caller can expect from the actual
+	/// specifies reasonable behavior that a caller can expect from the actual
 	/// implementation, however different implementations reserve the right to
 	/// do things differently.
 	/// </para>
@@ -63,8 +63,9 @@ namespace log4net
 	/// <author>Gert Driesen</author>
 	public interface ILog : ILoggerWrapper
 	{
+		/// <overloads>Log a message object with the <see cref="Level.Debug"/> level.</overloads>
 		/// <summary>
-		/// Logs a message object with the <see cref="Level.Debug"/> level.
+		/// Log a message object with the <see cref="Level.Debug"/> level.
 		/// </summary>
 		/// <remarks>
 		/// <para>
@@ -103,6 +104,7 @@ namespace log4net
 		/// <seealso cref="IsDebugEnabled"/>
 		void Debug(object message, Exception t);
 
+		/// <overloads>Log a formatted string with the <see cref="Level.Debug"/> level.</overloads>
 		/// <summary>
 		/// Logs a formatted message string with the <see cref="Level.Debug"/> level.
 		/// </summary>
@@ -110,8 +112,8 @@ namespace log4net
 		/// <param name="args">An Object array containing zero or more objects to format</param>
 		/// <remarks>
 		/// <para>
-		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behavior
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format"/> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
@@ -120,6 +122,8 @@ namespace log4net
 		/// methods instead.
 		/// </para>
 		/// </remarks>
+		/// <seealso cref="Debug(object)"/>
+		/// <seealso cref="IsDebugEnabled"/>
 		void DebugFormat(string format, params object[] args); 
 
 		/// <summary>
@@ -130,8 +134,8 @@ namespace log4net
 		/// <param name="args">An Object array containing zero or more objects to format</param>
 		/// <remarks>
 		/// <para>
-		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behavior
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format"/> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
@@ -140,8 +144,11 @@ namespace log4net
 		/// methods instead.
 		/// </para>
 		/// </remarks>
+		/// <seealso cref="Debug(object)"/>
+		/// <seealso cref="IsDebugEnabled"/>
 		void DebugFormat(IFormatProvider provider, string format, params object[] args);
 
+		/// <overloads>Log a message object with the <see cref="Level.Info"/> level.</overloads>
 		/// <summary>
 		/// Logs a message object with the <see cref="Level.Info"/> level.
 		/// </summary>
@@ -182,6 +189,7 @@ namespace log4net
 		/// <seealso cref="IsInfoEnabled"/>
 		void Info(object message, Exception t);
 
+		/// <overloads>Log a formatted message string with the <see cref="Level.Info"/> level.</overloads>
 		/// <summary>
 		/// Logs a formatted message string with the <see cref="Level.Info"/> level.
 		/// </summary>
@@ -189,8 +197,8 @@ namespace log4net
 		/// <param name="args">An Object array containing zero or more objects to format</param>
 		/// <remarks>
 		/// <para>
-		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behavior
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format"/> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
@@ -199,6 +207,8 @@ namespace log4net
 		/// methods instead.
 		/// </para>
 		/// </remarks>
+		/// <seealso cref="Info(object,Exception)"/>
+		/// <seealso cref="IsInfoEnabled"/>
 		void InfoFormat(string format, params object[] args);
 
 		/// <summary>
@@ -209,8 +219,8 @@ namespace log4net
 		/// <param name="args">An Object array containing zero or more objects to format</param>
 		/// <remarks>
 		/// <para>
-		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behavior
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format"/> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
@@ -219,8 +229,11 @@ namespace log4net
 		/// methods instead.
 		/// </para>
 		/// </remarks>
+		/// <seealso cref="Info(object,Exception)"/>
+		/// <seealso cref="IsInfoEnabled"/>
 		void InfoFormat(IFormatProvider provider, string format, params object[] args);
 
+		/// <overloads>Log a message object with the <see cref="Level.Warn"/> level.</overloads>
 		/// <summary>
 		/// Log a message object with the <see cref="Level.Warn"/> level.
 		/// </summary>
@@ -261,6 +274,7 @@ namespace log4net
 		/// <seealso cref="IsWarnEnabled"/>
 		void Warn(object message, Exception t);
 
+		/// <overloads>Log a formatted message string with the <see cref="Level.Warn"/> level.</overloads>
 		/// <summary>
 		/// Logs a formatted message string with the <see cref="Level.Warn"/> level.
 		/// </summary>
@@ -268,8 +282,8 @@ namespace log4net
 		/// <param name="args">An Object array containing zero or more objects to format</param>
 		/// <remarks>
 		/// <para>
-		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behavior
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format"/> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
@@ -278,6 +292,8 @@ namespace log4net
 		/// methods instead.
 		/// </para>
 		/// </remarks>
+		/// <seealso cref="Warn(object,Exception)"/>
+		/// <seealso cref="IsWarnEnabled"/>
 		void WarnFormat(string format, params object[] args);
 
 		/// <summary>
@@ -288,8 +304,8 @@ namespace log4net
 		/// <param name="args">An Object array containing zero or more objects to format</param>
 		/// <remarks>
 		/// <para>
-		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behavior
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format"/> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
@@ -298,8 +314,11 @@ namespace log4net
 		/// methods instead.
 		/// </para>
 		/// </remarks>
+		/// <seealso cref="Warn(object,Exception)"/>
+		/// <seealso cref="IsWarnEnabled"/>
 		void WarnFormat(IFormatProvider provider, string format, params object[] args);
 
+		/// <overloads>Log a message object with the <see cref="Level.Error"/> level.</overloads>
 		/// <summary>
 		/// Logs a message object with the <see cref="Level.Error"/> level.
 		/// </summary>
@@ -340,6 +359,7 @@ namespace log4net
 		/// <seealso cref="IsErrorEnabled"/>
 		void Error(object message, Exception t);
 
+		/// <overloads>Log a formatted message string with the <see cref="Level.Error"/> level.</overloads>
 		/// <summary>
 		/// Logs a formatted message string with the <see cref="Level.Error"/> level.
 		/// </summary>
@@ -347,8 +367,8 @@ namespace log4net
 		/// <param name="args">An Object array containing zero or more objects to format</param>
 		/// <remarks>
 		/// <para>
-		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behavior
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format"/> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
@@ -357,6 +377,8 @@ namespace log4net
 		/// methods instead.
 		/// </para>
 		/// </remarks>
+		/// <seealso cref="Error(object,Exception)"/>
+		/// <seealso cref="IsErrorEnabled"/>
 		void ErrorFormat(string format, params object[] args);
 
 		/// <summary>
@@ -367,8 +389,8 @@ namespace log4net
 		/// <param name="args">An Object array containing zero or more objects to format</param>
 		/// <remarks>
 		/// <para>
-		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behavior
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format"/> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
@@ -377,8 +399,11 @@ namespace log4net
 		/// methods instead.
 		/// </para>
 		/// </remarks>
+		/// <seealso cref="Error(object,Exception)"/>
+		/// <seealso cref="IsErrorEnabled"/>
 		void ErrorFormat(IFormatProvider provider, string format, params object[] args);
 
+		/// <overloads>Log a message object with the <see cref="Level.Fatal"/> level.</overloads>
 		/// <summary>
 		/// Log a message object with the <see cref="Level.Fatal"/> level.
 		/// </summary>
@@ -419,6 +444,7 @@ namespace log4net
 		/// <seealso cref="IsFatalEnabled"/>
 		void Fatal(object message, Exception t);
 
+		/// <overloads>Log a formatted message string with the <see cref="Level.Fatal"/> level.</overloads>
 		/// <summary>
 		/// Logs a formatted message string with the <see cref="Level.Fatal"/> level.
 		/// </summary>
@@ -426,8 +452,8 @@ namespace log4net
 		/// <param name="args">An Object array containing zero or more objects to format</param>
 		/// <remarks>
 		/// <para>
-		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behavior
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format"/> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
@@ -436,6 +462,8 @@ namespace log4net
 		/// methods instead.
 		/// </para>
 		/// </remarks>
+		/// <seealso cref="Fatal(object,Exception)"/>
+		/// <seealso cref="IsFatalEnabled"/>
 		void FatalFormat(string format, params object[] args);
 
 		/// <summary>
@@ -446,8 +474,8 @@ namespace log4net
 		/// <param name="args">An Object array containing zero or more objects to format</param>
 		/// <remarks>
 		/// <para>
-		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behavior
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format"/> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
@@ -456,6 +484,8 @@ namespace log4net
 		/// methods instead.
 		/// </para>
 		/// </remarks>
+		/// <seealso cref="Fatal(object,Exception)"/>
+		/// <seealso cref="IsFatalEnabled"/>
 		void FatalFormat(IFormatProvider provider, string format, params object[] args);
 
 		/// <summary>
@@ -526,6 +556,7 @@ namespace log4net
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="Debug"/>
+		/// <seealso cref="DebugFormat"/>
 		bool IsDebugEnabled { get; }
   
 		/// <summary>
@@ -538,6 +569,7 @@ namespace log4net
 		/// For more information see <see cref="ILog.IsDebugEnabled"/>.
 		/// </remarks>
 		/// <seealso cref="Info"/>
+		/// <seealso cref="InfoFormat"/>
 		/// <seealso cref="ILog.IsDebugEnabled"/>
 		bool IsInfoEnabled { get; }
 
@@ -551,6 +583,7 @@ namespace log4net
 		/// For more information see <see cref="ILog.IsDebugEnabled"/>.
 		/// </remarks>
 		/// <seealso cref="Warn"/>
+		/// <seealso cref="WarnFormat"/>
 		/// <seealso cref="ILog.IsDebugEnabled"/>
 		bool IsWarnEnabled { get; }
 
@@ -564,6 +597,7 @@ namespace log4net
 		/// For more information see <see cref="ILog.IsDebugEnabled"/>.
 		/// </remarks>
 		/// <seealso cref="Error"/>
+		/// <seealso cref="ErrorFormat"/>
 		/// <seealso cref="ILog.IsDebugEnabled"/>
 		bool IsErrorEnabled { get; }
 
@@ -577,6 +611,7 @@ namespace log4net
 		/// For more information see <see cref="ILog.IsDebugEnabled"/>.
 		/// </remarks>
 		/// <seealso cref="Fatal"/>
+		/// <seealso cref="FatalFormat"/>
 		/// <seealso cref="ILog.IsDebugEnabled"/>
 		bool IsFatalEnabled { get; }
 	}

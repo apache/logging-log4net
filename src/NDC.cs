@@ -55,6 +55,7 @@ namespace log4net
 	///	} // at the end of the using block the message is automatically removed 
 	/// </code>
 	/// </example>
+	/// <threadsafety static="true" instance="true" />
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	/*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/

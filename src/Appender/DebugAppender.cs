@@ -46,6 +46,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DebugAppender" />.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Default constructor.
+		/// </para>
+		/// </remarks>
 		public DebugAppender()
 		{
 		}
@@ -55,6 +60,11 @@ namespace log4net.Appender
 		/// with a specified layout.
 		/// </summary>
 		/// <param name="layout">The layout to use with this appender.</param>
+		/// <remarks>
+		/// <para>
+		/// Obsolete constructor.
+		/// </para>
+		/// </remarks>
 		[System.Obsolete("Instead use the default constructor and set the Layout property")]
 		public DebugAppender(ILayout layout)
 		{
@@ -94,17 +104,16 @@ namespace log4net.Appender
 		#region Override implementation of AppenderSkeleton
 
 		/// <summary>
-		/// Overrides the parent method to close the default debug channel
-		/// </summary>
-		override protected void OnClose() 
-		{
-			System.Diagnostics.Debug.Close();
-		}
-
-		/// <summary>
 		/// Writes the logging event to the <see cref="System.Diagnostics.Debug"/> system.
 		/// </summary>
 		/// <param name="loggingEvent">The event to log.</param>
+		/// <remarks>
+		/// <para>
+		/// Writes the logging event to the <see cref="System.Diagnostics.Debug"/> system.
+		/// If <see cref="ImmediateFlush"/> is <c>true</c> then the <see cref="System.Diagnostics.Debug.Flush"/>
+		/// is called.
+		/// </para>
+		/// </remarks>
 		override protected void Append(LoggingEvent loggingEvent) 
 		{
 			//
@@ -125,6 +134,11 @@ namespace log4net.Appender
 		/// This appender requires a <see cref="Layout"/> to be set.
 		/// </summary>
 		/// <value><c>true</c></value>
+		/// <remarks>
+		/// <para>
+		/// This appender requires a <see cref="Layout"/> to be set.
+		/// </para>
+		/// </remarks>
 		override protected bool RequiresLayout
 		{
 			get { return true; }

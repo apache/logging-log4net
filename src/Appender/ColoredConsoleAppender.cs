@@ -77,16 +77,16 @@ namespace log4net.Appender
 	/// </code>
 	/// <para>
 	/// The Level is the standard log4net logging level and ForeColor and BackColor can be any
-	/// combination of:
+	/// combination of the following values:
 	/// <list type="bullet">
-	/// <item><term>Blue</term><description>color is blue</description></item>
-	/// <item><term>Green</term><description>color is red</description></item>
-	/// <item><term>Red</term><description>color is green</description></item>
-	/// <item><term>White</term><description>color is white</description></item>
-	/// <item><term>Yellow</term><description>color is yellow</description></item>
-	/// <item><term>Purple</term><description>color is purple</description></item>
-	/// <item><term>Cyan</term><description>color is cyan</description></item>
-	/// <item><term>HighIntensity</term><description>color is intensified</description></item>
+	/// <item><term>Blue</term><description></description></item>
+	/// <item><term>Green</term><description></description></item>
+	/// <item><term>Red</term><description></description></item>
+	/// <item><term>White</term><description></description></item>
+	/// <item><term>Yellow</term><description></description></item>
+	/// <item><term>Purple</term><description></description></item>
+	/// <item><term>Cyan</term><description></description></item>
+	/// <item><term>HighIntensity</term><description></description></item>
 	/// </list>
 	/// </para>
 	/// </remarks>
@@ -99,6 +99,13 @@ namespace log4net.Appender
 		/// <summary>
 		/// The enum of possible color values for use with the color mapping method
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The following flags can be combined together to
+		/// form the colors.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="ColoredConsoleAppender" />
 		[Flags]
 		public enum Colors : int
 		{
@@ -202,6 +209,12 @@ namespace log4net.Appender
 		/// Target is the value of the console output stream.
 		/// This is either <c>"Console.Out"</c> or <c>"Console.Error"</c>.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Target is the value of the console output stream.
+		/// This is either <c>"Console.Out"</c> or <c>"Console.Error"</c>.
+		/// </para>
+		/// </remarks>
 		virtual public string Target
 		{
 			get { return m_writeToErrorStream ? ConsoleError : ConsoleOut; }
@@ -224,6 +237,13 @@ namespace log4net.Appender
 		/// Add a mapping of level to color - done by the config file
 		/// </summary>
 		/// <param name="mapping">The mapping to add</param>
+		/// <remarks>
+		/// <para>
+		/// Add a <see cref="LevelColors"/> mapping to this appender.
+		/// Each mapping defines the foreground and background colours
+		/// for a level.
+		/// </para>
+		/// </remarks>
 		public void AddMapping(LevelColors mapping)
 		{
 			m_levelMapping.Add(mapping);
@@ -295,17 +315,22 @@ namespace log4net.Appender
 		/// This appender requires a <see cref="Layout"/> to be set.
 		/// </summary>
 		/// <value><c>true</c></value>
+		/// <remarks>
+		/// <para>
+		/// This appender requires a <see cref="Layout"/> to be set.
+		/// </para>
+		/// </remarks>
 		override protected bool RequiresLayout
 		{
 			get { return true; }
 		}
 
 		/// <summary>
-		/// Initialise the options for this appender
+		/// Initialize the options for this appender
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// Initialise the level to color mappings set on this appender.
+		/// Initialize the level to color mappings set on this appender.
 		/// </para>
 		/// </remarks>
 		public override void ActivateOptions()
@@ -322,12 +347,24 @@ namespace log4net.Appender
 		/// The <see cref="ColoredConsoleAppender.Target"/> to use when writing to the Console 
 		/// standard output stream.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The <see cref="ColoredConsoleAppender.Target"/> to use when writing to the Console 
+		/// standard output stream.
+		/// </para>
+		/// </remarks>
 		public const string ConsoleOut = "Console.Out";
 
 		/// <summary>
 		/// The <see cref="ColoredConsoleAppender.Target"/> to use when writing to the Console 
 		/// standard error output stream.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The <see cref="ColoredConsoleAppender.Target"/> to use when writing to the Console 
+		/// standard error output stream.
+		/// </para>
+		/// </remarks>
 		public const string ConsoleError = "Console.Error";
 
 		#endregion // Public Static Fields
@@ -408,6 +445,11 @@ namespace log4net.Appender
 		/// A class to act as a mapping between the level that a logging call is made at and
 		/// the color it should be displayed as.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Defines the mapping between a level and the color it should be displayed in.
+		/// </para>
+		/// </remarks>
 		public class LevelColors : LevelMappingEntry
 		{
 			private Colors m_foreColor;
@@ -417,6 +459,12 @@ namespace log4net.Appender
 			/// <summary>
 			/// The mapped foreground color for the specified level
 			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// Required property.
+			/// The mapped foreground color for the specified level.
+			/// </para>
+			/// </remarks>
 			public Colors ForeColor
 			{
 				get { return m_foreColor; }
@@ -426,6 +474,12 @@ namespace log4net.Appender
 			/// <summary>
 			/// The mapped background color for the specified level
 			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// Required property.
+			/// The mapped background color for the specified level.
+			/// </para>
+			/// </remarks>
 			public Colors BackColor
 			{
 				get { return m_backColor; }
@@ -433,7 +487,7 @@ namespace log4net.Appender
 			}
 
 			/// <summary>
-			/// Initialise the options for the object
+			/// Initialize the options for the object
 			/// </summary>
 			/// <remarks>
 			/// <para>

@@ -54,7 +54,7 @@ namespace log4net.Appender
 	/// When configuring the EventLogAppender a mapping can be
 	/// specified to map a logging level to an event log entry type. For example:
 	/// </para>
-	/// <code>
+	/// <code lang="XML">
 	/// &lt;mapping&gt;
 	/// 	&lt;level value="ERROR" /&gt;
 	/// 	&lt;eventLogEntryType value="Error" /&gt;
@@ -86,6 +86,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EventLogAppender" /> class.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Default constructor.
+		/// </para>
+		/// </remarks>
 		public EventLogAppender()
 		{
 			m_applicationName	= System.Threading.Thread.GetDomain().FriendlyName;
@@ -98,6 +103,11 @@ namespace log4net.Appender
 		/// with the specified <see cref="ILayout" />.
 		/// </summary>
 		/// <param name="layout">The <see cref="ILayout" /> to use with this appender.</param>
+		/// <remarks>
+		/// <para>
+		/// Obsolete constructor.
+		/// </para>
+		/// </remarks>
 		[Obsolete("Instead use the default constructor and set the Layout property")]
 		public EventLogAppender(ILayout layout) : this()
 		{
@@ -171,6 +181,12 @@ namespace log4net.Appender
 		/// Add a mapping of level to <see cref="EventLogEntryType"/> - done by the config file
 		/// </summary>
 		/// <param name="mapping">The mapping to add</param>
+		/// <remarks>
+		/// <para>
+		/// Add a <see cref="Level2EventLogEntryType"/> mapping to this appender.
+		/// Each mapping defines the event log entry type for a level.
+		/// </para>
+		/// </remarks>
 		public void AddMapping(Level2EventLogEntryType mapping)
 		{
 			m_levelMapping.Add(mapping);
@@ -184,9 +200,12 @@ namespace log4net.Appender
 		/// </value>
 		/// <remarks>
 		/// <para>
+		/// The system security context used to write to the EventLog.
+		/// </para>
+		/// <para>
 		/// Unless a <see cref="SecurityContext"/> specified here for this appender
 		/// the <see cref="SecurityContextProvider.DefaultProvider"/> is queried for the
-		/// security context to use. The default behaviour is to use the security context
+		/// security context to use. The default behavior is to use the security context
 		/// of the current thread.
 		/// </para>
 		/// </remarks>
@@ -351,6 +370,11 @@ namespace log4net.Appender
 		/// This appender requires a <see cref="Layout"/> to be set.
 		/// </summary>
 		/// <value><c>true</c></value>
+		/// <remarks>
+		/// <para>
+		/// This appender requires a <see cref="Layout"/> to be set.
+		/// </para>
+		/// </remarks>
 		override protected bool RequiresLayout
 		{
 			get { return true; }
@@ -380,7 +404,7 @@ namespace log4net.Appender
 				return entryType.EventLogEntryType;
 			}
 
-			// Use default behaviour
+			// Use default behavior
 
 			if (level >= Level.Error) 
 			{
@@ -435,6 +459,11 @@ namespace log4net.Appender
 		/// A class to act as a mapping between the level that a logging call is made at and
 		/// the color it should be displayed as.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Defines the mapping between a level and its event log entry type.
+		/// </para>
+		/// </remarks>
 		public class Level2EventLogEntryType : LevelMappingEntry
 		{
 			private EventLogEntryType m_entryType;
@@ -442,6 +471,12 @@ namespace log4net.Appender
 			/// <summary>
 			/// The <see cref="EventLogEntryType"/> for this entry
 			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// Required property.
+			/// The <see cref="EventLogEntryType"/> for this entry
+			/// </para>
+			/// </remarks>
 			public EventLogEntryType EventLogEntryType
 			{
 				get { return m_entryType; }

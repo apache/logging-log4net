@@ -48,6 +48,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Initializes a new instance of the <see cref="BufferingForwardingAppender" /> class.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Default constructor.
+		/// </para>
+		/// </remarks>
 		public BufferingForwardingAppender()
 		{
 		}
@@ -176,6 +181,11 @@ namespace log4net.Appender
 		/// <returns>
 		/// The appender with the specified name, or <c>null</c>.
 		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// Get the named appender attached to this buffering appender.
+		/// </para>
+		/// </remarks>
 		virtual public IAppender GetAppender(string name) 
 		{
 			lock(this)

@@ -69,15 +69,15 @@ namespace log4net.Appender
 	/// </code>
 	/// <para>
 	/// The Level is the standard log4net logging level and ForeColor and BackColor can be any
-	/// of the following value:
+	/// of the following values:
 	/// <list type="bullet">
-	/// <item><term>Blue</term><description>color is blue</description></item>
-	/// <item><term>Green</term><description>color is red</description></item>
-	/// <item><term>Red</term><description>color is green</description></item>
-	/// <item><term>White</term><description>color is white</description></item>
-	/// <item><term>Yellow</term><description>color is yellow</description></item>
-	/// <item><term>Purple</term><description>color is purple</description></item>
-	/// <item><term>Cyan</term><description>color is cyan</description></item>
+	/// <item><term>Blue</term><description></description></item>
+	/// <item><term>Green</term><description></description></item>
+	/// <item><term>Red</term><description></description></item>
+	/// <item><term>White</term><description></description></item>
+	/// <item><term>Yellow</term><description></description></item>
+	/// <item><term>Purple</term><description></description></item>
+	/// <item><term>Cyan</term><description></description></item>
 	/// </list>
 	/// These color values cannot be combined together to make new colors.
 	/// </para>
@@ -86,14 +86,14 @@ namespace log4net.Appender
 	/// <list type="bullet">
 	/// <item><term>Bright</term><description>foreground is brighter</description></item>
 	/// <item><term>Dim</term><description>foreground is dimmer</description></item>
-	/// <item><term>Underscore</term><description>message is underlines</description></item>
+	/// <item><term>Underscore</term><description>message is underlined</description></item>
 	/// <item><term>Blink</term><description>foreground is blinking (does not work on all terminals)</description></item>
 	/// <item><term>Reverse</term><description>foreground and background are reversed</description></item>
 	/// <item><term>Hidden</term><description>output is hidden</description></item>
 	/// <item><term>Strikethrough</term><description>message has a line through it</description></item>
 	/// </list>
 	/// While any of these attributes may be combined together not all combinations
-	/// work well together, for example setting both Bright and Dim attributes makes
+	/// work well together, for example setting both <i>Bright</i> and <i>Dim</i> attributes makes
 	/// no sense.
 	/// </para>
 	/// </remarks>
@@ -106,6 +106,13 @@ namespace log4net.Appender
 		/// <summary>
 		/// The enum of possible display attributes
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The following flags can be combined together to
+		/// form the ANSI color attributes.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="AnsiColorTerminalAppender" />
 		[Flags]
 		public enum AnsiAttributes : int
 		{
@@ -151,6 +158,12 @@ namespace log4net.Appender
 		/// The enum of possible foreground or background color values for 
 		/// use with the color mapping method
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The output can be in one for the following ANSI colors.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="AnsiColorTerminalAppender" />
 		public enum AnsiColors : int
 		{
 			/// <summary>
@@ -215,12 +228,17 @@ namespace log4net.Appender
 
 		/// <summary>
 		/// Target is the value of the console output stream.
-		/// This is either <c>"Console.Out"</c> or <c>"Console.Error"</c>.
 		/// </summary>
 		/// <value>
 		/// Target is the value of the console output stream.
 		/// This is either <c>"Console.Out"</c> or <c>"Console.Error"</c>.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Target is the value of the console output stream.
+		/// This is either <c>"Console.Out"</c> or <c>"Console.Error"</c>.
+		/// </para>
+		/// </remarks>
 		virtual public string Target
 		{
 			get { return m_writeToErrorStream ? ConsoleError : ConsoleOut; }
@@ -240,9 +258,16 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
-		/// Add a mapping of level to color - done by the config file
+		/// Add a mapping of level to color
 		/// </summary>
 		/// <param name="mapping">The mapping to add</param>
+		/// <remarks>
+		/// <para>
+		/// Add a <see cref="LevelColors"/> mapping to this appender.
+		/// Each mapping defines the foreground and background colours
+		/// for a level.
+		/// </para>
+		/// </remarks>
 		public void AddMapping(LevelColors mapping)
 		{
 			m_levelMapping.Add(mapping);
@@ -329,6 +354,11 @@ namespace log4net.Appender
 		/// This appender requires a <see cref="Layout"/> to be set.
 		/// </summary>
 		/// <value><c>true</c></value>
+		/// <remarks>
+		/// <para>
+		/// This appender requires a <see cref="Layout"/> to be set.
+		/// </para>
+		/// </remarks>
 		override protected bool RequiresLayout
 		{
 			get { return true; }
@@ -356,12 +386,24 @@ namespace log4net.Appender
 		/// The <see cref="AnsiColorTerminalAppender.Target"/> to use when writing to the Console 
 		/// standard output stream.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The <see cref="AnsiColorTerminalAppender.Target"/> to use when writing to the Console 
+		/// standard output stream.
+		/// </para>
+		/// </remarks>
 		public const string ConsoleOut = "Console.Out";
 
 		/// <summary>
 		/// The <see cref="AnsiColorTerminalAppender.Target"/> to use when writing to the Console 
 		/// standard error output stream.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The <see cref="AnsiColorTerminalAppender.Target"/> to use when writing to the Console 
+		/// standard error output stream.
+		/// </para>
+		/// </remarks>
 		public const string ConsoleError = "Console.Error";
 
 		#endregion Public Static Fields
@@ -391,6 +433,11 @@ namespace log4net.Appender
 		/// A class to act as a mapping between the level that a logging call is made at and
 		/// the color it should be displayed as.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Defines the mapping between a level and the color it should be displayed in.
+		/// </para>
+		/// </remarks>
 		public class LevelColors : LevelMappingEntry
 		{
 			private AnsiColors m_foreColor;
@@ -401,6 +448,12 @@ namespace log4net.Appender
 			/// <summary>
 			/// The mapped foreground color for the specified level
 			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// Required property.
+			/// The mapped foreground color for the specified level
+			/// </para>
+			/// </remarks>
 			public AnsiColors ForeColor
 			{
 				get { return m_foreColor; }
@@ -410,6 +463,12 @@ namespace log4net.Appender
 			/// <summary>
 			/// The mapped background color for the specified level
 			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// Required property.
+			/// The mapped background color for the specified level
+			/// </para>
+			/// </remarks>
 			public AnsiColors BackColor
 			{
 				get { return m_backColor; }
@@ -419,6 +478,12 @@ namespace log4net.Appender
 			/// <summary>
 			/// The color attributes for the specified level
 			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// Required property.
+			/// The color attributes for the specified level
+			/// </para>
+			/// </remarks>
 			public AnsiAttributes Attributes
 			{
 				get { return m_attributes; }

@@ -64,6 +64,7 @@ namespace log4net
 	///	} // at the end of the using block the message is automatically popped 
 	/// </code>
 	/// </example>
+	/// <threadsafety static="true" instance="true" />
 	/// <author>Nicko Cadell</author>
 	public sealed class ThreadContext
 	{
@@ -104,6 +105,11 @@ namespace log4net
 		/// <value>
 		/// stack map
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The thread local stacks.
+		/// </para>
+		/// </remarks>
 		public static ThreadContextStacks Stacks
 		{
 			get { return s_stacks; }
@@ -115,6 +121,11 @@ namespace log4net
 		/// <value>
 		/// list map
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The thread local lists.
+		/// </para>
+		/// </remarks>
 		public static ThreadContextLists Lists
 		{
 			get { return s_lists; }

@@ -42,6 +42,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ForwardingAppender" /> class.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Default constructor.
+		/// </para>
+		/// </remarks>
 		public ForwardingAppender()
 		{
 		}
@@ -75,10 +80,14 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
-		/// This method is called by the <see cref="AppenderSkeleton.DoAppend"/>
-		/// method. 
+		/// Append the logging event. 
 		/// </summary>
 		/// <param name="loggingEvent">The event to log.</param>
+		/// <remarks>
+		/// <para>
+		/// Delivers the logging event to all the attached appenders.
+		/// </para>
+		/// </remarks>
 		override protected void Append(LoggingEvent loggingEvent) 
 		{
 			// Pass the logging event on the the attached appenders
@@ -155,6 +164,11 @@ namespace log4net.Appender
 		/// <returns>
 		/// The appender with the specified name, or <c>null</c>.
 		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// Get the named appender attached to this appender.
+		/// </para>
+		/// </remarks>
 		virtual public IAppender GetAppender(string name) 
 		{
 			lock(this)

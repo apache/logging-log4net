@@ -55,6 +55,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Initializes a new instance of the <see cref="TraceAppender" />.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Default constructor.
+		/// </para>
+		/// </remarks>
 		public TraceAppender()
 		{
 		}
@@ -64,6 +69,11 @@ namespace log4net.Appender
 		/// with a specified layout.
 		/// </summary>
 		/// <param name="layout">The layout to use with this appender.</param>
+		/// <remarks>
+		/// <para>
+		/// Obsolete constructor.
+		/// </para>
+		/// </remarks>
 		[System.Obsolete("Instead use the default constructor and set the Layout property")]
 		public TraceAppender(ILayout layout)
 		{
@@ -103,21 +113,14 @@ namespace log4net.Appender
 		#region Override implementation of AppenderSkeleton
 
 		/// <summary>
-		/// Overrides the parent method to close the default trace channel
-		/// </summary>
-		override protected void OnClose() 
-		{
-#if NETCF
-			System.Diagnostics.Debug.Close();
-#else
-			System.Diagnostics.Trace.Close();
-#endif
-		}
-
-		/// <summary>
 		/// Writes the logging event to the <see cref="System.Diagnostics.Trace"/> system.
 		/// </summary>
 		/// <param name="loggingEvent">The event to log.</param>
+		/// <remarks>
+		/// <para>
+		/// Writes the logging event to the <see cref="System.Diagnostics.Trace"/> system.
+		/// </para>
+		/// </remarks>
 		override protected void Append(LoggingEvent loggingEvent) 
 		{
 			//
@@ -146,6 +149,11 @@ namespace log4net.Appender
 		/// This appender requires a <see cref="Layout"/> to be set.
 		/// </summary>
 		/// <value><c>true</c></value>
+		/// <remarks>
+		/// <para>
+		/// This appender requires a <see cref="Layout"/> to be set.
+		/// </para>
+		/// </remarks>
 		override protected bool RequiresLayout
 		{
 			get { return true; }

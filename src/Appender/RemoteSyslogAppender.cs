@@ -77,6 +77,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// syslog severities
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The syslog severities.
+		/// </para>
+		/// </remarks>
 		public enum SyslogSeverity
 		{
 			/// <summary>
@@ -123,6 +128,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// syslog facilities
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The syslog facilities
+		/// </para>
+		/// </remarks>
 		public enum SyslogFacility
 		{
 			/// <summary>
@@ -306,6 +316,11 @@ namespace log4net.Appender
 		/// Add a mapping of level to severity
 		/// </summary>
 		/// <param name="mapping">The mapping to add</param>
+		/// <remarks>
+		/// <para>
+		/// Add a <see cref="LevelSeverity"/> mapping to this appender.
+		/// </para>
+		/// </remarks>
 		public void AddMapping(LevelSeverity mapping)
 		{
 			m_levelMapping.Add(mapping);
@@ -392,6 +407,11 @@ namespace log4net.Appender
 		/// </summary>
 		/// <param name="level">A log4net level.</param>
 		/// <returns>A syslog severity.</returns>
+		/// <remarks>
+		/// <para>
+		/// Translates a log4net level to a syslog severity.
+		/// </para>
+		/// </remarks>
 		virtual protected SyslogSeverity GetSeverity(Level level)
 		{
 			LevelSeverity levelSeverity = m_levelMapping.Lookup(level) as LevelSeverity;
@@ -442,6 +462,11 @@ namespace log4net.Appender
 		/// <param name="facility">The syslog facility.</param>
 		/// <param name="severity">The syslog severity.</param>
 		/// <returns>A syslog priority.</returns>
+		/// <remarks>
+		/// <para>
+		/// Generate a syslog priority.
+		/// </para>
+		/// </remarks>
 		public static int GeneratePriority(SyslogFacility facility, SyslogSeverity severity)
 		{
 			return ((int)facility * 8) + (int)severity;
@@ -474,6 +499,12 @@ namespace log4net.Appender
 		/// A class to act as a mapping between the level that a logging call is made at and
 		/// the syslog severity that is should be logged at.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// A class to act as a mapping between the level that a logging call is made at and
+		/// the syslog severity that is should be logged at.
+		/// </para>
+		/// </remarks>
 		public class LevelSeverity : LevelMappingEntry
 		{
 			private SyslogSeverity m_severity;
@@ -481,6 +512,12 @@ namespace log4net.Appender
 			/// <summary>
 			/// The mapped syslog severity for the specified level
 			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// Required property.
+			/// The mapped syslog severity for the specified level
+			/// </para>
+			/// </remarks>
 			public SyslogSeverity Severity
 			{
 				get { return m_severity; }

@@ -67,7 +67,7 @@ namespace log4net.Appender
 	/// </remarks>
 	/// <example>
 	/// An example of a SQL Server table that could be logged to:
-	/// <code>
+	/// <code lang="SQL">
 	/// CREATE TABLE [dbo].[Log] ( 
 	///   [ID] [int] IDENTITY (1, 1) NOT NULL ,
 	///   [Date] [datetime] NOT NULL ,
@@ -80,51 +80,41 @@ namespace log4net.Appender
 	/// </example>
 	/// <example>
 	/// An example configuration to log to the above table:
-	/// <code>
-	/// &lt;appender name="AdoNetAppender_SqlServer" type="log4net.Appender.AdoNetAppender" &gt;
-	///   &lt;param name="ConnectionType" value="System.Data.SqlClient.SqlConnection, System.Data, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" /&gt;
-	///   &lt;param name="ConnectionString" value="data source=GUINNESS;initial catalog=test_log4net;integrated security=false;persist security info=True;User ID=sa;Password=sql" /&gt;
-	///   &lt;param name="CommandText" value="INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message]) VALUES (@log_date, @thread, @log_level, @logger, @message)" /&gt;
-	///   &lt;param name="Parameter"&gt;
-	///     &lt;param name="ParameterName" value="@log_date" /&gt;
-	///     &lt;param name="DbType" value="DateTime" /&gt;
-	///     &lt;param name="Layout" type="log4net.Layout.PatternLayout"&gt;
-	///       &lt;param name="ConversionPattern" value="%d{yyyy'-'MM'-'dd HH':'mm':'ss'.'fff}" /&gt;
-	///     &lt;/param&gt;
-	///   &lt;/param&gt;
-	///   &lt;param name="Parameter"&gt;
-	///     &lt;param name="ParameterName" value="@thread" /&gt;
-	///     &lt;param name="DbType" value="String" /&gt;
-	///     &lt;param name="Size" value="255" /&gt;
-	///     &lt;param name="Layout" type="log4net.Layout.PatternLayout"&gt;
-	///       &lt;param name="ConversionPattern" value="%t" /&gt;
-	///     &lt;/param&gt;
-	///   &lt;/param&gt;
-	///   &lt;param name="Parameter"&gt;
-	///     &lt;param name="ParameterName" value="@log_level" /&gt;
-	///     &lt;param name="DbType" value="String" /&gt;
-	///     &lt;param name="Size" value="50" /&gt;
-	///     &lt;param name="Layout" type="log4net.Layout.PatternLayout"&gt;
-	///       &lt;param name="ConversionPattern" value="%p" /&gt;
-	///     &lt;/param&gt;
-	///   &lt;/param&gt;
-	///   &lt;param name="Parameter"&gt;
-	///     &lt;param name="ParameterName" value="@logger" /&gt;
-	///     &lt;param name="DbType" value="String" /&gt;
-	///     &lt;param name="Size" value="255" /&gt;
-	///     &lt;param name="Layout" type="log4net.Layout.PatternLayout"&gt;
-	///       &lt;param name="ConversionPattern" value="%c" /&gt;
-	///     &lt;/param&gt;
-	///   &lt;/param&gt;
-	///   &lt;param name="Parameter"&gt;
-	///     &lt;param name="ParameterName" value="@message" /&gt;
-	///     &lt;param name="DbType" value="String" /&gt;
-	///     &lt;param name="Size" value="4000" /&gt;
-	///     &lt;param name="Layout" type="log4net.Layout.PatternLayout"&gt;
-	///       &lt;param name="ConversionPattern" value="%m" /&gt;
-	///     &lt;/param&gt;
-	///   &lt;/param&gt;
-	/// &lt;/appender&gt;
+	/// <code lang="XML" escaped="true">
+	/// <appender name="AdoNetAppender_SqlServer" type="log4net.Appender.AdoNetAppender" >
+	///   <connectionType value="System.Data.SqlClient.SqlConnection, System.Data, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+	///   <connectionString value="data source=GUINNESS;initial catalog=test_log4net;integrated security=false;persist security info=True;User ID=sa;Password=sql" />
+	///   <commandText value="INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message]) VALUES (@log_date, @thread, @log_level, @logger, @message)" />
+	///   <parameter>
+	///     <parameterName value="@log_date" />
+	///     <dbType value="DateTime" />
+	///     <layout type="log4net.Layout.PatternLayout" value="%date{yyyy'-'MM'-'dd HH':'mm':'ss'.'fff}" />
+	///   </parameter>
+	///   <parameter>
+	///     <parameterName value="@thread" />
+	///     <dbType value="String" />
+	///     <size value="255" />
+	///     <layout type="log4net.Layout.PatternLayout" value="%thread" />
+	///   </parameter>
+	///   <parameter>
+	///     <parameterName value="@log_level" />
+	///     <dbType value="String" />
+	///     <size value="50" />
+	///     <layout type="log4net.Layout.PatternLayout" value="%level" />
+	///   </parameter>
+	///   <parameter>
+	///     <parameterName value="@logger" />
+	///     <dbType value="String" />
+	///     <size value="255" />
+	///     <layout type="log4net.Layout.PatternLayout" value="%logger" />
+	///   </parameter>
+	///   <parameter>
+	///     <parameterName value="@message" />
+	///     <dbType value="String" />
+	///     <size value="4000" />
+	///     <layout type="log4net.Layout.PatternLayout" value="%message" />
+	///   </parameter>
+	/// </appender>
 	/// </code>
 	/// </example>
 	/// <author>Julian Biddle</author>
@@ -302,7 +292,7 @@ namespace log4net.Appender
 		/// <para>
 		/// Unless a <see cref="SecurityContext"/> specified here for this appender
 		/// the <see cref="SecurityContextProvider.DefaultProvider"/> is queried for the
-		/// security context to use. The default behaviour is to use the security context
+		/// security context to use. The default behavior is to use the security context
 		/// of the current thread.
 		/// </para>
 		/// </remarks>
@@ -821,6 +811,13 @@ namespace log4net.Appender
 		/// <value>
 		/// The name of this parameter.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The name of this parameter. The parameter name
+		/// must match up to a named parameter to the SQL stored procedure
+		/// or prepared statement.
+		/// </para>
+		/// </remarks>
 		public string ParameterName
 		{
 			get { return m_parameterName; }
@@ -833,10 +830,26 @@ namespace log4net.Appender
 		/// <value>
 		/// The database type for this parameter.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The database type for this parameter. This property should
+		/// be set to the database type from the <see cref="DbType"/>
+		/// enumeration. See <see cref="IDataParameter.DbType"/>.
+		/// </para>
+		/// <para>
+		/// This property is optional. If not specified the ADO.NET provider 
+		/// will attempt to infer the type from the value.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="IDataParameter.DbType" />
 		public DbType DbType
 		{
 			get { return m_dbType; }
-			set { m_dbType = value; }
+			set 
+			{ 
+				m_dbType = value; 
+				m_inferType = false;
+			}
 		}
 
 		/// <summary>
@@ -845,6 +858,16 @@ namespace log4net.Appender
 		/// <value>
 		/// The precision for this parameter.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The maximum number of digits used to represent the Value.
+		/// </para>
+		/// <para>
+		/// This property is optional. If not specified the ADO.NET provider 
+		/// will attempt to infer the precision from the value.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="IDbDataParameter.Precision" />
 		public byte Precision 
 		{
 			get { return m_precision; } 
@@ -857,6 +880,16 @@ namespace log4net.Appender
 		/// <value>
 		/// The scale for this parameter.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The number of decimal places to which Value is resolved.
+		/// </para>
+		/// <para>
+		/// This property is optional. If not specified the ADO.NET provider 
+		/// will attempt to infer the scale from the value.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="IDbDataParameter.Scale" />
 		public byte Scale 
 		{
 			get { return m_scale; }
@@ -869,6 +902,16 @@ namespace log4net.Appender
 		/// <value>
 		/// The size for this parameter.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The maximum size, in bytes, of the data within the column.
+		/// </para>
+		/// <para>
+		/// This property is optional. If not specified the ADO.NET provider 
+		/// will attempt to infer the size from the value.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="IDbDataParameter.Size" />
 		public int Size 
 		{
 			get { return m_size; }
@@ -884,6 +927,17 @@ namespace log4net.Appender
 		/// The <see cref="IRawLayout"/> used to render the
 		/// logging event into an object for this parameter.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The <see cref="IRawLayout"/> that renders the value for this
+		/// parameter.
+		/// </para>
+		/// <para>
+		/// The <see cref="RawLayoutConverter"/> can be used to adapt
+		/// any <see cref="ILayout"/> into a <see cref="IRawLayout"/>
+		/// for use in the property.
+		/// </para>
+		/// </remarks>
 		public IRawLayout Layout
 		{
 			get { return m_layout; }
@@ -911,8 +965,11 @@ namespace log4net.Appender
 
 			// Set the parameter properties
 			param.ParameterName = m_parameterName;
-			param.DbType = m_dbType;
-			
+
+			if (!m_inferType)
+			{
+				param.DbType = m_dbType;
+			}
 			if (m_precision != 0)
 			{
 				param.Precision = m_precision;
@@ -962,6 +1019,11 @@ namespace log4net.Appender
 		/// The database type for this parameter.
 		/// </summary>
 		private DbType m_dbType;
+
+		/// <summary>
+		/// Flag to infer type rather than use the DbType
+		/// </summary>
+		private bool m_inferType = true;
 
 		/// <summary>
 		/// The precision for this parameter.

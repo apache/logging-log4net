@@ -41,6 +41,7 @@ namespace log4net
 	/// The MDC is managed on a per thread basis.
 	/// </para>
 	/// </remarks>
+	/// <threadsafety static="true" instance="true" />
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	/*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/

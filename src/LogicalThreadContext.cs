@@ -67,6 +67,7 @@ namespace log4net
 	///	} // at the end of the using block the message is automatically popped 
 	/// </code>
 	/// </example>
+	/// <threadsafety static="true" instance="true" />
 	/// <author>Nicko Cadell</author>
 	public sealed class LogicalThreadContext
 	{
@@ -93,8 +94,8 @@ namespace log4net
 		/// The thread properties map
 		/// </value>
 		/// <remarks>
-		/// The <c>LogicalThreadContext</c> properties override any <see cref="ThreadContext"/> or <see cref="GlobalContext"/>
-		/// properties with the same name.
+		/// The <c>LogicalThreadContext</c> properties override any <see cref="ThreadContext"/> 
+		/// or <see cref="GlobalContext"/> properties with the same name.
 		/// </remarks>
 		public static LogicalThreadContextProperties Properties
 		{
@@ -107,6 +108,11 @@ namespace log4net
 		/// <value>
 		/// stack map
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The logical thread stacks.
+		/// </para>
+		/// </remarks>
 		public static ThreadContextStacks Stacks
 		{
 			get { return s_stacks; }
@@ -118,6 +124,11 @@ namespace log4net
 		/// <value>
 		/// list map
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The logical thread lists.
+		/// </para>
+		/// </remarks>
 		public static ThreadContextLists Lists
 		{
 			get { return s_lists; }

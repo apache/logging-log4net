@@ -46,6 +46,7 @@ namespace log4net
 	/// GlobalContext.Properties["hostname"] = Environment.MachineName;
 	/// </code>
 	/// </example>
+	/// <threadsafety static="true" instance="true" />
 	/// <author>Nicko Cadell</author>
 	public sealed class GlobalContext
 	{
@@ -71,11 +72,16 @@ namespace log4net
 		#region Public Static Properties
 
 		/// <summary>
-		/// The global properties map
+		/// The global properties map.
 		/// </summary>
 		/// <value>
-		/// The global properties map
+		/// The global properties map.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The global properties map.
+		/// </para>
+		/// </remarks>
 		public static GlobalContextProperties Properties
 		{
 			get { return s_properties; }

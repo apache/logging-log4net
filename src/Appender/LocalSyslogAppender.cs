@@ -70,6 +70,13 @@ namespace log4net.Appender
 		/// <summary>
 		/// syslog severities
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The log4net Level maps to a syslog severity using the
+		/// <see cref="AddMapping"/> method and the <see cref="LevelSeverity"/>
+		/// class. The severity is set on <see cref="LevelSeverity.Severity"/>.
+		/// </para>
+		/// </remarks>
 		public enum SyslogSeverity
 		{
 			/// <summary>
@@ -116,6 +123,12 @@ namespace log4net.Appender
 		/// <summary>
 		/// syslog facilities
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The syslog facility defines which subsystem the logging comes from.
+		/// This is set on the <see cref="Facility"/> property.
+		/// </para>
+		/// </remarks>
 		public enum SyslogFacility
 		{
 			/// <summary>
@@ -295,6 +308,11 @@ namespace log4net.Appender
 		/// Add a mapping of level to severity
 		/// </summary>
 		/// <param name="mapping">The mapping to add</param>
+		/// <remarks>
+		/// <para>
+		/// Adds a <see cref="LevelSeverity"/> to this appender.
+		/// </para>
+		/// </remarks>
 		public void AddMapping(LevelSeverity mapping)
 		{
 			m_levelMapping.Add(mapping);
@@ -367,6 +385,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Close the syslog when the appender is closed
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Close the syslog when the appender is closed
+		/// </para>
+		/// </remarks>
 		protected override void OnClose()
 		{
 			base.OnClose();
@@ -392,6 +415,11 @@ namespace log4net.Appender
 		/// This appender requires a <see cref="AppenderSkeleton.Layout"/> to be set.
 		/// </summary>
 		/// <value><c>true</c></value>
+		/// <remarks>
+		/// <para>
+		/// This appender requires a <see cref="AppenderSkeleton.Layout"/> to be set.
+		/// </para>
+		/// </remarks>
 		override protected bool RequiresLayout
 		{
 			get { return true; }
@@ -406,6 +434,11 @@ namespace log4net.Appender
 		/// </summary>
 		/// <param name="level">A log4net level.</param>
 		/// <returns>A syslog severity.</returns>
+		/// <remarks>
+		/// <para>
+		/// Translates a log4net level to a syslog severity.
+		/// </para>
+		/// </remarks>
 		virtual protected SyslogSeverity GetSeverity(Level level)
 		{
 			LevelSeverity levelSeverity = m_levelMapping.Lookup(level) as LevelSeverity;
@@ -456,7 +489,7 @@ namespace log4net.Appender
 		/// <param name="facility">The syslog facility.</param>
 		/// <param name="severity">The syslog severity.</param>
 		/// <returns>A syslog priority.</returns>
-		public static int GeneratePriority(SyslogFacility facility, SyslogSeverity severity)
+		private static int GeneratePriority(SyslogFacility facility, SyslogSeverity severity)
 		{
 			return ((int)facility * 8) + (int)severity;
 		}
@@ -495,19 +528,19 @@ namespace log4net.Appender
 		/// Open connection to system logger.
 		/// </summary>
 		[DllImport("libc")]
-		public static extern void openlog(IntPtr ident, int option, SyslogFacility facility);
+		private static extern void openlog(IntPtr ident, int option, SyslogFacility facility);
 
 		/// <summary>
 		/// Generate a log message.
 		/// </summary>
 		[DllImport("libc")]
-		public static extern void syslog(int priority, string message);
+		private static extern void syslog(int priority, string message);
 
 		/// <summary>
 		/// Close descriptor used to write to system logger.
 		/// </summary>
 		[DllImport("libc")]
-		public static extern void closelog();
+		private static extern void closelog();
 
 		#endregion // External Members
 
@@ -517,6 +550,12 @@ namespace log4net.Appender
 		/// A class to act as a mapping between the level that a logging call is made at and
 		/// the syslog severity that is should be logged at.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// A class to act as a mapping between the level that a logging call is made at and
+		/// the syslog severity that is should be logged at.
+		/// </para>
+		/// </remarks>
 		public class LevelSeverity : LevelMappingEntry
 		{
 			private SyslogSeverity m_severity;
@@ -524,6 +563,12 @@ namespace log4net.Appender
 			/// <summary>
 			/// The mapped syslog severity for the specified level
 			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// Required property.
+			/// The mapped syslog severity for the specified level
+			/// </para>
+			/// </remarks>
 			public SyslogSeverity Severity
 			{
 				get { return m_severity; }

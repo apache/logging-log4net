@@ -57,6 +57,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AspNetTraceAppender" /> class.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Default constructor.
+		/// </para>
+		/// </remarks>
 		public AspNetTraceAppender() 
 		{
 		}
@@ -66,11 +71,15 @@ namespace log4net.Appender
 		#region Override implementation of AppenderSkeleton
 
 		/// <summary>
-		/// Actual writing occurs here.
-		/// <para>Most subclasses of <see cref="AppenderSkeleton"/> will need to 
-		/// override this method.</para>
+		/// Write the logging event to the ASP.NET trace
 		/// </summary>
 		/// <param name="loggingEvent">the event to log</param>
+		/// <remarks>
+		/// <para>
+		/// Write the logging event to the ASP.NET trace
+		/// <see cref="HttpContext.Current.Trace"/>.
+		/// </para>
+		/// </remarks>
 		override protected void Append(LoggingEvent loggingEvent) 
 		{
 			// check if log4net is running in the context of an ASP.NET application
@@ -95,6 +104,11 @@ namespace log4net.Appender
 		/// This appender requires a <see cref="Layout"/> to be set.
 		/// </summary>
 		/// <value><c>true</c></value>
+		/// <remarks>
+		/// <para>
+		/// This appender requires a <see cref="Layout"/> to be set.
+		/// </para>
+		/// </remarks>
 		override protected bool RequiresLayout
 		{
 			get { return true; }

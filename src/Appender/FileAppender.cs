@@ -67,6 +67,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Default constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Default constructor
+		/// </para>
+		/// </remarks>
 		public FileAppender()
 		{
 		}
@@ -77,7 +82,12 @@ namespace log4net.Appender
 		/// <param name="layout">the layout to use with this appender</param>
 		/// <param name="filename">the full path to the file to write to</param>
 		/// <param name="append">flag to indicate if the file should be appended to</param>
-		[Obsolete("Instead use the default constructor and set the Layout, File, & AppendToFile properties")]
+		/// <remarks>
+		/// <para>
+		/// Obsolete constructor.
+		/// </para>
+		/// </remarks>
+		[Obsolete("Instead use the default constructor and set the Layout, File & AppendToFile properties")]
 		public FileAppender(ILayout layout, string filename, bool append) 
 		{
 			Layout = layout;
@@ -90,6 +100,11 @@ namespace log4net.Appender
 		/// </summary>
 		/// <param name="layout">the layout to use with this appender</param>
 		/// <param name="filename">the full path to the file to write to</param>
+		/// <remarks>
+		/// <para>
+		/// Obsolete constructor.
+		/// </para>
+		/// </remarks>
 		[Obsolete("Instead use the default constructor and set the Layout & File properties")]
 		public FileAppender(ILayout layout, string filename) : this(layout, filename, true)
 		{
@@ -165,7 +180,7 @@ namespace log4net.Appender
 		/// <para>
 		/// Unless a <see cref="SecurityContext"/> specified here for this appender
 		/// the <see cref="SecurityContextProvider.DefaultProvider"/> is queried for the
-		/// security context to use. The default behaviour is to use the security context
+		/// security context to use. The default behavior is to use the security context
 		/// of the current thread.
 		/// </para>
 		/// </remarks>
@@ -230,6 +245,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Closes any previously opened file and calls the parent's <see cref="TextWriterAppender.Reset"/>.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Resets the filename and the file stream.
+		/// </para>
+		/// </remarks>
 		override protected void Reset() 
 		{
 			base.Reset();
@@ -257,6 +277,12 @@ namespace log4net.Appender
 		/// <summary>
 		/// Closes the previously opened file.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Writes the <see cref="ILayout.Footer"/> to the file and then
+		/// closes the file.
+		/// </para>
+		/// </remarks>
 		protected void CloseFile() 
 		{
 			WriteFooterAndCloseWriter();

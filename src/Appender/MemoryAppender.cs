@@ -50,6 +50,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MemoryAppender" /> class.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Default constructor.
+		/// </para>
+		/// </remarks>
 		public MemoryAppender() : base()
 		{
 			m_eventsList = new ArrayList();
@@ -63,6 +68,11 @@ namespace log4net.Appender
 		/// Gets the events that have been logged.
 		/// </summary>
 		/// <returns>The events that have been logged</returns>
+		/// <remarks>
+		/// <para>
+		/// Gets the events that have been logged.
+		/// </para>
+		/// </remarks>
 		virtual public LoggingEvent[] GetEvents()
 		{
 			return (LoggingEvent[])m_eventsList.ToArray(typeof(LoggingEvent));
@@ -105,6 +115,13 @@ namespace log4net.Appender
 		/// <summary>
 		/// Gets or sets a the fields that will be fixed in the event
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The logging event needs to have certain thread specific values 
+		/// captured before it can be buffered. See <see cref="LoggingEvent.Fix"/>
+		/// for details.
+		/// </para>
+		/// </remarks>
 		virtual public FixFlags Fix
 		{
 			get { return m_fixFlags; }

@@ -25,10 +25,14 @@ using log4net.Repository;
 namespace log4net
 {
 	/// <summary>
-	/// This is the class used by client applications to bind to logger
-	/// instances.
+	/// This class is used by client applications to request logger instances.
 	/// </summary>
 	/// <remarks>
+	/// <para>
+	/// This class has static methods that are used by a client to request
+	/// a logger instance. The <see cref="GetLogger"/> method is used to
+	/// retrieve a logger.
+	/// </para>
 	/// <para>
 	/// See the <see cref="ILog"/> interface for more details.
 	/// </para>
@@ -46,6 +50,7 @@ namespace log4net
 	/// }
 	/// </code>
 	/// </example>
+	/// <threadsafety static="true" instance="true" />
 	/// <seealso cref="ILog"/>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
@@ -67,6 +72,7 @@ namespace log4net
 
 		#region Type Specific Manager Methods
 
+		/// <overloads>Returns the named logger if it exists.</overloads>
 		/// <summary>
 		/// Returns the named logger if it exists.
 		/// </summary>
@@ -125,6 +131,7 @@ namespace log4net
 			return WrapLogger(LoggerManager.Exists(repositoryAssembly, name));
 		}
 
+		/// <overloads>Get the currently defined loggers.</overloads>
 		/// <summary>
 		/// Returns all the currently defined loggers in the default repository.
 		/// </summary>
@@ -163,6 +170,7 @@ namespace log4net
 			return WrapLoggers(LoggerManager.GetCurrentLoggers(repositoryAssembly));
 		}
 
+		/// <overloads>Get or create a logger.</overloads>
 		/// <summary>
 		/// Retrieves or creates a named logger.
 		/// </summary>
@@ -302,6 +310,7 @@ namespace log4net
 			LoggerManager.Shutdown();
 		}
 
+		/// <overloads>Shutdown a logger repository.</overloads>
 		/// <summary>
 		/// Shuts down the default repository.
 		/// </summary>
@@ -377,6 +386,7 @@ namespace log4net
 			LoggerManager.ShutdownRepository(repositoryAssembly);
 		}
 
+		/// <overloads>Reset the configuration of a repository</overloads>
 		/// <summary>
 		/// Resets all values contained in this repository instance to their defaults.
 		/// </summary>
@@ -433,6 +443,7 @@ namespace log4net
 			LoggerManager.ResetConfiguration(repositoryAssembly);
 		}
 
+		/// <overloads>Get the logger repository.</overloads>
 		/// <summary>
 		/// Returns the default <see cref="ILoggerRepository"/> instance.
 		/// </summary>
@@ -483,6 +494,7 @@ namespace log4net
 			return GetRepository(repositoryAssembly);
 		}
 
+		/// <overloads>Get a logger repository.</overloads>
 		/// <summary>
 		/// Returns the default <see cref="ILoggerRepository"/> instance.
 		/// </summary>
@@ -530,6 +542,7 @@ namespace log4net
 			return LoggerManager.GetRepository(repositoryAssembly);
 		}
 
+		/// <overloads>Create a domain</overloads>
 		/// <summary>
 		/// Creates a repository with the specified repository type.
 		/// </summary>
@@ -553,6 +566,7 @@ namespace log4net
 			return CreateRepository(Assembly.GetCallingAssembly(), repositoryType);
 		}
 
+		/// <overloads>Create a logger repository.</overloads>
 		/// <summary>
 		/// Creates a repository with the specified repository type.
 		/// </summary>

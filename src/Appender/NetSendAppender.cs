@@ -130,14 +130,12 @@ namespace log4net.Appender
 	/// using this appender from the local machine, named 
 	/// LOCAL_PC, to machine OPERATOR_PC :
 	/// </para>
-	/// <code>
-	/// &lt;appender name="NetSendAppender_Operator" type="log4net.Appender.NetSendAppender, log4net"&gt;
-	///     &lt;param name="Server" value="LOCAL_PC" /&gt;
-	///     &lt;param name="Recipient" value="OPERATOR_PC" /&gt;
-	///     &lt;layout type="log4net.Layout.PatternLayout, log4net"&gt;
-	///         &lt;param name="ConversionPattern" value="%-5p %c [%x] - %m%n" /&gt;
-	///     &lt;/layout&gt;
-	/// &lt;/appender&gt;
+	/// <code lang="XML" escaped="true">
+	/// <appender name="NetSendAppender_Operator" type="log4net.Appender.NetSendAppender">
+	///     <server value="LOCAL_PC" />
+	///     <recipient value="OPERATOR_PC" />
+	///     <layout type="log4net.Layout.PatternLayout" value="%-5p %c [%x] - %m%n" />
+	/// </appender>
 	/// </code>
 	/// </example>
 	/// <author>Nicko Cadell</author>
@@ -244,7 +242,7 @@ namespace log4net.Appender
 		/// <para>
 		/// Unless a <see cref="SecurityContext"/> specified here for this appender
 		/// the <see cref="SecurityContextProvider.DefaultProvider"/> is queried for the
-		/// security context to use. The default behaviour is to use the security context
+		/// security context to use. The default behavior is to use the security context
 		/// of the current thread.
 		/// </para>
 		/// </remarks>
@@ -337,6 +335,11 @@ namespace log4net.Appender
 		/// This appender requires a <see cref="Layout"/> to be set.
 		/// </summary>
 		/// <value><c>true</c></value>
+		/// <remarks>
+		/// <para>
+		/// This appender requires a <see cref="Layout"/> to be set.
+		/// </para>
+		/// </remarks>
 		override protected bool RequiresLayout
 		{
 			get { return true; }
@@ -356,7 +359,7 @@ namespace log4net.Appender
 		/// <param name="bufferSize">The length, in bytes, of the message text.</param>
 		/// <remarks>
 		/// <para>
-		/// The following restrictions apply for sending network messages :
+		/// The following restrictions apply for sending network messages:
 		/// </para>
 		/// <para>
 		/// <list type="table">

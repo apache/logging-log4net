@@ -107,6 +107,12 @@ namespace log4net.Appender
 		/// Target is the value of the console output stream.
 		/// This is either <c>"Console.Out"</c> or <c>"Console.Error"</c>.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Target is the value of the console output stream.
+		/// This is either <c>"Console.Out"</c> or <c>"Console.Error"</c>.
+		/// </para>
+		/// </remarks>
 		virtual public string Target
 		{
 			get { return m_writeToErrorStream ? ConsoleError : ConsoleOut; }
@@ -164,6 +170,11 @@ namespace log4net.Appender
 		/// This appender requires a <see cref="Layout"/> to be set.
 		/// </summary>
 		/// <value><c>true</c></value>
+		/// <remarks>
+		/// <para>
+		/// This appender requires a <see cref="Layout"/> to be set.
+		/// </para>
+		/// </remarks>
 		override protected bool RequiresLayout
 		{
 			get { return true; }
@@ -177,12 +188,24 @@ namespace log4net.Appender
 		/// The <see cref="ConsoleAppender.Target"/> to use when writing to the Console 
 		/// standard output stream.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The <see cref="ConsoleAppender.Target"/> to use when writing to the Console 
+		/// standard output stream.
+		/// </para>
+		/// </remarks>
 		public const string ConsoleOut = "Console.Out";
 
 		/// <summary>
 		/// The <see cref="ConsoleAppender.Target"/> to use when writing to the Console 
 		/// standard error output stream.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The <see cref="ConsoleAppender.Target"/> to use when writing to the Console 
+		/// standard error output stream.
+		/// </para>
+		/// </remarks>
 		public const string ConsoleError = "Console.Error";
 
 		#endregion Public Static Fields

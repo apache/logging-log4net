@@ -54,7 +54,13 @@ namespace log4net.Appender
 		#region Public Instance Constructors
 
 		/// <summary>
+		/// Default constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Default constructor
+		/// </para>
+		/// </remarks>
 		public SmtpPickupDirAppender()
 		{
 		}
@@ -69,6 +75,11 @@ namespace log4net.Appender
 		/// <value>
 		/// A semicolon-delimited list of e-mail addresses.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// A semicolon-delimited list of e-mail addresses.
+		/// </para>
+		/// </remarks>
 		public string To 
 		{
 			get { return m_to; }
@@ -81,6 +92,11 @@ namespace log4net.Appender
 		/// <value>
 		/// The e-mail address of the sender.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The e-mail address of the sender.
+		/// </para>
+		/// </remarks>
 		public string From 
 		{
 			get { return m_from; }
@@ -93,6 +109,11 @@ namespace log4net.Appender
 		/// <value>
 		/// The subject line of the e-mail message.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The subject line of the e-mail message.
+		/// </para>
+		/// </remarks>
 		public string Subject 
 		{
 			get { return m_subject; }
@@ -100,9 +121,14 @@ namespace log4net.Appender
 		}
   
 		/// <summary>
+		/// Gets or sets the path to write the messages to.
+		/// </summary>
+		/// <remarks>
+		/// <para>
 		/// Gets or sets the path to write the messages to. This should be the same
 		/// as that used by the agent sending the messages.
-		/// </summary>
+		/// </para>
+		/// </remarks>
 		public string PickupDir
 		{
 			get { return m_pickupDir; }
@@ -117,6 +143,11 @@ namespace log4net.Appender
 		/// Sends the contents of the cyclic buffer as an e-mail message.
 		/// </summary>
 		/// <param name="events">The logging events to send.</param>
+		/// <remarks>
+		/// <para>
+		/// Sends the contents of the cyclic buffer as an e-mail message.
+		/// </para>
+		/// </remarks>
 		override protected void SendBuffer(LoggingEvent[] events) 
 		{
 			// Note: this code already owns the monitor for this
@@ -166,6 +197,11 @@ namespace log4net.Appender
 		/// This appender requires a <see cref="Layout"/> to be set.
 		/// </summary>
 		/// <value><c>true</c></value>
+		/// <remarks>
+		/// <para>
+		/// This appender requires a <see cref="Layout"/> to be set.
+		/// </para>
+		/// </remarks>
 		override protected bool RequiresLayout
 		{
 			get { return true; }

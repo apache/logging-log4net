@@ -85,6 +85,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Initializes a new instance of the <see cref="RemotingAppender" /> class.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Default constructor.
+		/// </para>
+		/// </remarks>
 		public RemotingAppender()
 		{
 		}
@@ -100,6 +105,13 @@ namespace log4net.Appender
 		/// <value>
 		/// The well-known URL of the remote sink.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The URL of the remoting sink that will accept logging events.
+		/// The sink must implement the <see cref="IRemoteLoggingSink"/>
+		/// interface.
+		/// </para>
+		/// </remarks>
 		public string Sink
 		{
 			get { return m_sinkUrl; }
@@ -301,6 +313,11 @@ namespace log4net.Appender
 			/// Delivers logging events to the remote sink
 			/// </summary>
 			/// <param name="events">Array of events to log.</param>
+			/// <remarks>
+			/// <para>
+			/// Delivers logging events to the remote sink
+			/// </para>
+			/// </remarks>
 			void LogEvents(LoggingEvent[] events);
 		}
 	}

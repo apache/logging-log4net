@@ -58,6 +58,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Default constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Default constructor
+		/// </para>
+		/// </remarks>
 		public TelnetAppender()
 		{
 		}
@@ -106,6 +111,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Overrides the parent method to close the socket handler
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Closes all the outstanding connections.
+		/// </para>
+		/// </remarks>
 		protected override void OnClose()  
 		{
 			base.OnClose();
@@ -121,6 +131,11 @@ namespace log4net.Appender
 		/// This appender requires a <see cref="Layout"/> to be set.
 		/// </summary>
 		/// <value><c>true</c></value>
+		/// <remarks>
+		/// <para>
+		/// This appender requires a <see cref="Layout"/> to be set.
+		/// </para>
+		/// </remarks>
 		protected override bool RequiresLayout
 		{
 			get { return true; }
@@ -164,6 +179,11 @@ namespace log4net.Appender
 		/// Writes the logging event to each connected client.
 		/// </summary>
 		/// <param name="loggingEvent">The event to log.</param>
+		/// <remarks>
+		/// <para>
+		/// Writes the logging event to each connected client.
+		/// </para>
+		/// </remarks>
 		protected override void Append(LoggingEvent loggingEvent) 
 		{
 			if (m_handler != null)
@@ -196,6 +216,11 @@ namespace log4net.Appender
 			/// <summary>
 			/// Class that represents a client connected to this handler
 			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// Class that represents a client connected to this handler
+			/// </para>
+			/// </remarks>
 			protected class SocketClient : IDisposable
 			{
 				private Socket m_socket;
@@ -205,6 +230,11 @@ namespace log4net.Appender
 				/// Create this <see cref="SocketClient"/> for the specified <see cref="Socket"/>
 				/// </summary>
 				/// <param name="socket">the client's socket</param>
+				/// <remarks>
+				/// <para>
+				/// Opens a stream writer on the socket.
+				/// </para>
+				/// </remarks>
 				public SocketClient(Socket socket)
 				{
 					m_socket = socket;
@@ -224,6 +254,11 @@ namespace log4net.Appender
 				/// Write a string to the client
 				/// </summary>
 				/// <param name="message">string to send</param>
+				/// <remarks>
+				/// <para>
+				/// Write a string to the client
+				/// </para>
+				/// </remarks>
 				public void Send(String message)
 				{
 					m_writer.Write(message);
@@ -235,6 +270,11 @@ namespace log4net.Appender
 				/// <summary>
 				/// Cleanup the clients connection
 				/// </summary>
+				/// <remarks>
+				/// <para>
+				/// Close the socket connection.
+				/// </para>
+				/// </remarks>
 				public void Dispose()
 				{
 					try
@@ -272,9 +312,14 @@ namespace log4net.Appender
 			/// Opens a new server port on <paramref ref="port"/>
 			/// </summary>
 			/// <param name="port">the local port to listen on for connections</param>
+			/// <remarks>
+			/// <para>
+			/// Creates a socket handler on the specified local server port.
+			/// </para>
+			/// </remarks>
 			public SocketHandler(int port)
 			{
-				m_serverSocket  = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+				m_serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
 				m_serverSocket.Bind(new IPEndPoint(IPAddress.Any, port));
 				m_serverSocket.Listen(5);	
@@ -285,6 +330,11 @@ namespace log4net.Appender
 			/// Sends a string message to each of the connected clients
 			/// </summary>
 			/// <param name="message">the text to send</param>
+			/// <remarks>
+			/// <para>
+			/// Sends a string message to each of the connected clients
+			/// </para>
+			/// </remarks>
 			public void Send(String message)
 			{
 				ArrayList localClients = m_clients;
@@ -386,8 +436,13 @@ namespace log4net.Appender
 			#region IDisposable Members
 
 			/// <summary>
-			/// make sure we close all network connections when this handler is destroyed
+			/// Close all network connections
 			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// Make sure we close all network connections
+			/// </para>
+			/// </remarks>
 			public void Dispose()
 			{
 				ArrayList localClients = m_clients;

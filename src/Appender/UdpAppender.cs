@@ -56,7 +56,8 @@ namespace log4net.Appender
 	/// byte[] buffer;
 	/// string loggingEvent;
 	/// 
-	/// try {
+	/// try 
+	/// {
 	///     udpClient = new UdpClient(8080);
 	///     
 	///     while(true) 
@@ -94,14 +95,12 @@ namespace log4net.Appender
 	/// An example configuration section to log information using this appender to the 
 	/// IP 224.0.0.1 on port 8080:
 	/// </para>
-	/// <code>
-	/// &lt;appender name="UdpAppender" type="log4net.Appender.UdpAppender, log4net"&gt;
-	///     &lt;param name="RemoteAddress" value="224.0.0.1" /&gt;
-	///     &lt;param name="RemotePort" value="8080" /&gt;
-	///     &lt;layout type="log4net.Layout.PatternLayout"&gt;
-	///         &lt;param name="ConversionPattern" value="%-5p %c [%x] - %m%n" /&gt;
-	///     &lt;/layout&gt;
-	/// &lt;/appender&gt;
+	/// <code lang="XML" escaped="true">
+	/// <appender name="UdpAppender" type="log4net.Appender.UdpAppender">
+	///     <remoteAddress value="224.0.0.1" />
+	///     <remotePort value="8080" />
+	///     <layout type="log4net.Layout.PatternLayout" value="%-5level %logger [%ndc] - %message%newline" />
+	/// </appender>
 	/// </code>
 	/// </example>
 	/// <author>Gert Driesen</author>
@@ -146,7 +145,7 @@ namespace log4net.Appender
 		/// them from normal host addresses, allowing nodes to easily detect if a message is of interest.
 		/// </para>
 		/// <para>
-		/// Static multicast addresses that are needed globally are assigned by IANA.  A few examples are listed in the table below :
+		/// Static multicast addresses that are needed globally are assigned by IANA.  A few examples are listed in the table below:
 		/// </para>
 		/// <para>
 		/// <list type="table">
@@ -274,6 +273,11 @@ namespace log4net.Appender
 		/// <value>
 		/// The <see cref="Encoding"/> used to write the packets.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The <see cref="Encoding"/> used to write the packets.
+		/// </para>
+		/// </remarks>
 		public Encoding Encoding
 		{
 			get { return m_encoding; }
@@ -302,7 +306,6 @@ namespace log4net.Appender
 			get { return this.m_client; }
 			set { this.m_client = value; }
 		}
-
 
 		/// <summary>
 		/// Gets or sets the cached remote endpoint to which the logging events should be sent.
@@ -417,6 +420,11 @@ namespace log4net.Appender
 		/// This appender requires a <see cref="Layout"/> to be set.
 		/// </summary>
 		/// <value><c>true</c></value>
+		/// <remarks>
+		/// <para>
+		/// This appender requires a <see cref="Layout"/> to be set.
+		/// </para>
+		/// </remarks>
 		override protected bool RequiresLayout
 		{
 			get { return true; }
@@ -427,8 +435,10 @@ namespace log4net.Appender
 		/// this <see cref="UdpAppender" /> instance.
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// Disables the underlying <see cref="UdpClient" /> and releases all managed 
 		/// and unmanaged resources associated with the <see cref="UdpAppender" />.
+		/// </para>
 		/// </remarks>
 		override protected void OnClose() 
 		{

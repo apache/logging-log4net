@@ -73,6 +73,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Initializes a new instance of the <see cref="BufferingAppenderSkeleton" /> class.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Protected default constructor to allow subclassing.
+		/// </para>
+		/// </remarks>
 		protected BufferingAppenderSkeleton() : this(true)
 		{
 		}
@@ -81,7 +86,17 @@ namespace log4net.Appender
 		/// Initializes a new instance of the <see cref="BufferingAppenderSkeleton" /> class.
 		/// </summary>
 		/// <param name="eventMustBeFixed">the events passed through this appender must be
-		/// fixed by the time that they arrive in the derived class'<c>SendBuffer</c> method.</param>
+		/// fixed by the time that they arrive in the derived class' <c>SendBuffer</c> method.</param>
+		/// <remarks>
+		/// <para>
+		/// Protected constructor to allow subclassing.
+		/// </para>
+		/// <para>
+		/// The <paramref name="eventMustBeFixed"/> should be set if the subclass
+		/// expects the events delivered to be fixed even if the 
+		/// <see cref="BufferSize"/> is set to zero, i.e. when no buffering occurs.
+		/// </para>
+		/// </remarks>
 		protected BufferingAppenderSkeleton(bool eventMustBeFixed) : base()
 		{
 			m_eventMustBeFixed = eventMustBeFixed;
@@ -123,11 +138,20 @@ namespace log4net.Appender
 		/// The size of the cyclic buffer used to hold the logging events.
 		/// </value>
 		/// <remarks>
+		/// <para>
 		/// The <see cref="BufferSize"/> option takes a positive integer
 		/// representing the maximum number of logging events to collect in 
 		/// a cyclic buffer. When the <see cref="BufferSize"/> is reached,
 		/// oldest events are deleted as new events are added to the
 		/// buffer. By default the size of the cyclic buffer is 512 events.
+		/// </para>
+		/// <para>
+		/// If the <see cref="BufferSize"/> is set to a value less than
+		/// or equal to 1 then no buffering will occur. The logging event
+		/// will be delivered synchronously (depending on the <see cref="Lossy"/>
+		/// and <see cref="Evaluator"/> properties). Otherwise the event will
+		/// be buffered.
+		/// </para>
 		/// </remarks>
 		public int BufferSize
 		{
@@ -214,6 +238,17 @@ namespace log4net.Appender
 		/// <summary>
 		/// Gets or sets a the fields that will be fixed in the event
 		/// </summary>
+		/// <value>
+		/// The event fields that will be fixed before the event is buffered
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The logging event needs to have certain thread specific values 
+		/// captured before it can be buffered. See <see cref="LoggingEvent.Fix"/>
+		/// for details.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="LoggingEvent.Fix"/>
 		virtual public FixFlags Fix
 		{
 			get { return m_fixFlags; }

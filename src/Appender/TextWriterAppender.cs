@@ -48,6 +48,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Initializes a new instance of the <see cref="TextWriterAppender" /> class.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Default constructor.
+		/// </para>
+		/// </remarks>
 		public TextWriterAppender() 
 		{
 		}
@@ -59,6 +64,11 @@ namespace log4net.Appender
 		/// </summary>
 		/// <param name="layout">The layout to use with this appender.</param>
 		/// <param name="os">The <see cref="Stream"/> to output to.</param>
+		/// <remarks>
+		/// <para>
+		/// Obsolete constructor.
+		/// </para>
+		/// </remarks>
 		[Obsolete("Instead use the default constructor and set the Layout & Writer properties")]
 		public TextWriterAppender(ILayout layout, Stream os) : this(layout, new StreamWriter(os))
 		{
@@ -72,6 +82,11 @@ namespace log4net.Appender
 		/// <param name="writer">The <see cref="TextWriter" /> to output to</param>
 		/// <remarks>
 		/// The <see cref="TextWriter" /> must have been previously opened.
+		/// </remarks>
+		/// <remarks>
+		/// <para>
+		/// Obsolete constructor.
+		/// </para>
 		/// </remarks>
 		[Obsolete("Instead use the default constructor and set the Layout & Writer properties")]
 		public TextWriterAppender(ILayout layout, TextWriter writer) 
@@ -258,6 +273,11 @@ namespace log4net.Appender
 		/// This appender requires a <see cref="Layout"/> to be set.
 		/// </summary>
 		/// <value><c>true</c></value>
+		/// <remarks>
+		/// <para>
+		/// This appender requires a <see cref="Layout"/> to be set.
+		/// </para>
+		/// </remarks>
 		override protected bool RequiresLayout
 		{
 			get { return true; }
@@ -270,6 +290,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Writes the footer and closes the underlying <see cref="TextWriter"/>.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Writes the footer and closes the underlying <see cref="TextWriter"/>.
+		/// </para>
+		/// </remarks>
 		virtual protected void WriteFooterAndCloseWriter()
 		{
 			WriteFooter();
@@ -279,6 +304,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Closes the underlying <see cref="TextWriter"/>.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Closes the underlying <see cref="TextWriter"/>.
+		/// </para>
+		/// </remarks>
 		virtual protected void CloseWriter() 
 		{
 			if (m_qtw != null) 
@@ -301,7 +331,9 @@ namespace log4net.Appender
 		/// and other variables.
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// Subclasses can override this method for an alternate closing behavior.
+		/// </para>
 		/// </remarks>
 		virtual protected void Reset() 
 		{
@@ -312,6 +344,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Writes a footer as produced by the embedded layout's <see cref="ILayout.Footer"/> property.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Writes a footer as produced by the embedded layout's <see cref="ILayout.Footer"/> property.
+		/// </para>
+		/// </remarks>
 		virtual protected void WriteFooter() 
 		{
 			if (Layout != null && m_qtw != null && !m_qtw.Closed) 
@@ -327,6 +364,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Writes a header produced by the embedded layout's <see cref="ILayout.Header"/> property.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Writes a header produced by the embedded layout's <see cref="ILayout.Header"/> property.
+		/// </para>
+		/// </remarks>
 		virtual protected void WriteHeader() 
 		{
 			if (Layout != null && m_qtw != null && !m_qtw.Closed) 
@@ -356,9 +398,18 @@ namespace log4net.Appender
 		#endregion Protected Instance Methods
 
 		/// <summary>
-		/// This is the <see cref="log4net.Util.QuietTextWriter"/> where logging events
+		/// Gets or sets the <see cref="log4net.Util.QuietTextWriter"/> where logging events
 		/// will be written to. 
 		/// </summary>
+		/// <value>
+		/// The <see cref="log4net.Util.QuietTextWriter"/> where logging events are written.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// This is the <see cref="log4net.Util.QuietTextWriter"/> where logging events
+		/// will be written to. 
+		/// </para>
+		/// </remarks>
 		protected QuietTextWriter QuietWriter
 		{
 			get { return m_qtw; }

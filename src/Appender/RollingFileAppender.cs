@@ -130,6 +130,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Style of rolling to use
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Style of rolling to use
+		/// </para>
+		/// </remarks>
 		public enum RollingMode
 		{
 			/// <summary>
@@ -172,6 +177,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// The code assumes that the following 'time' constants are in a increasing sequence.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The code assumes that the following 'time' constants are in a increasing sequence.
+		/// </para>
+		/// </remarks>
 		protected enum RollPoint
 		{
 			/// <summary>
@@ -217,6 +227,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Initializes a new instance of the <see cref="RollingFileAppender" /> class.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Default constructor.
+		/// </para>
+		/// </remarks>
 		public RollingFileAppender() 
 		{
 			m_dateTime = new DefaultDateTime();
@@ -481,11 +496,16 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
+		/// Write out a logging event.
+		/// </summary>
+		/// <param name="loggingEvent">the event to write to file.</param>
+		/// <remarks>
+		/// <para>
 		/// Handles append time behavior for CompositeRollingAppender.  This checks
 		/// if a roll over either by date (checked first) or time (checked second)
 		/// is need and then appends to the file last.
-		/// </summary>
-		/// <param name="loggingEvent"></param>
+		/// </para>
+		/// </remarks>
 		override protected void Append(LoggingEvent loggingEvent) 
 		{
 			if (m_rollDate) 
@@ -973,8 +993,13 @@ namespace log4net.Appender
 
 		/// <summary>
 		/// Rollover the file(s) to date/time tagged file(s).
-		/// Opens the new file (through setFile) and resets curSizeRollBackups.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Rollover the file(s) to date/time tagged file(s).
+		/// Opens the new file (through setFile) and resets curSizeRollBackups.
+		/// </para>
+		/// </remarks>
 		protected void RollOverTime() 
 		{
 			if (m_staticLogFileName) 
@@ -1022,11 +1047,16 @@ namespace log4net.Appender
 		}
   
 		/// <summary>
-		/// Renames file <paramref name="fromFile"/> to file <paramref name="toFile"/>.  It
-		/// also checks for existence of target file and deletes if it does.
+		/// Renames file <paramref name="fromFile"/> to file <paramref name="toFile"/>.
 		/// </summary>
 		/// <param name="fromFile">Name of existing file to roll.</param>
 		/// <param name="toFile">New name for file.</param>
+		/// <remarks>
+		/// <para>
+		/// Renames file <paramref name="fromFile"/> to file <paramref name="toFile"/>. It
+		/// also checks for existence of target file and deletes if it does.
+		/// </para>
+		/// </remarks>
 		protected void RollFile(string fromFile, string toFile) 
 		{
 			if (FileExists(fromFile))
@@ -1059,6 +1089,11 @@ namespace log4net.Appender
 		/// </summary>
 		/// <param name="path">the path to the file</param>
 		/// <returns>true if the file exists</returns>
+		/// <remarks>
+		/// <para>
+		/// Test if a file exists at a specified path
+		/// </para>
+		/// </remarks>
 		protected bool FileExists(string path)
 		{
 			using(SecurityContext.Impersonate(this))
@@ -1071,6 +1106,14 @@ namespace log4net.Appender
 		/// Deletes the specified file if it exists.
 		/// </summary>
 		/// <param name="fileName">The file to delete.</param>
+		/// <remarks>
+		/// <para>
+		/// Delete a file if is exists.
+		/// The file is first moved to a new filename then deleted.
+		/// This allows the file to be removed even when it cannot
+		/// be deleted, but it still can be moved.
+		/// </para>
+		/// </remarks>
 		protected void DeleteFile(string fileName) 
 		{
 			if (FileExists(fileName)) 
@@ -1415,6 +1458,11 @@ namespace log4net.Appender
 			/// Gets the <i>current</i> time.
 			/// </summary>
 			/// <value>The <i>current</i> time.</value>
+			/// <remarks>
+			/// <para>
+			/// Gets the <i>current</i> time.
+			/// </para>
+			/// </remarks>
 			DateTime Now { get; }
 		}
 
@@ -1427,6 +1475,11 @@ namespace log4net.Appender
 			/// Gets the <b>current</b> time.
 			/// </summary>
 			/// <value>The <b>current</b> time.</value>
+			/// <remarks>
+			/// <para>
+			/// Gets the <b>current</b> time.
+			/// </para>
+			/// </remarks>
 			public DateTime Now
 			{
 				get { return DateTime.Now; }
