@@ -255,11 +255,19 @@ namespace log4net.ObjectRenderer
 			writer.WriteLine();
 
 #if !NETCF
-			if (ex.Source != null && ex.Source.Length > 0)
+			try
 			{
-				writer.Write("Source: ");
-				writer.WriteLine(ex.Source);
+				if (ex.Source != null && ex.Source.Length > 0)
+				{
+					writer.Write("Source: ");
+					writer.WriteLine(ex.Source);
+				}
 			}
+			catch
+			{
+				writer.WriteLine("Source: (Exception Occurred)");
+			}
+
 			if (ex.StackTrace != null && ex.StackTrace.Length > 0)
 			{
 				writer.WriteLine(ex.StackTrace);
