@@ -91,7 +91,9 @@ namespace log4net.Appender
 		public FileAppender(ILayout layout, string filename, bool append) 
 		{
 			Layout = layout;
-			SafeOpenFile(filename, append);
+			File = filename;
+			AppendToFile = append;
+			ActivateOptions();
 		}
 
 		/// <summary>
@@ -295,7 +297,7 @@ namespace log4net.Appender
 		/// <summary>
 		/// Sets and <i>opens</i> the file where the log output will go. The specified file must be writable.
 		/// </summary>
-		/// <param name="fileName">The path to the log file</param>
+		/// <param name="fileName">The path to the log file. Must be a fully qualified path.</param>
 		/// <param name="append">If true will append to fileName. Otherwise will truncate fileName</param>
 		/// <remarks>
 		/// <para>
@@ -318,7 +320,7 @@ namespace log4net.Appender
 		/// <summary>
 		/// Sets and <i>opens</i> the file where the log output will go. The specified file must be writable.
 		/// </summary>
-		/// <param name="fileName">The path to the log file</param>
+		/// <param name="fileName">The path to the log file. Must be a fully qualified path.</param>
 		/// <param name="append">If true will append to fileName. Otherwise will truncate fileName</param>
 		/// <remarks>
 		/// <para>
@@ -332,6 +334,20 @@ namespace log4net.Appender
 		/// </remarks>
 		virtual protected void OpenFile(string fileName, bool append)
 		{
+			if (LogLog.IsErrorEnabled)
+			{
+				// Internal check that the fileName passed in is a rooted path
+				bool isPathRooted = false;
+				using(SecurityContext.Impersonate(this))
+				{
+					isPathRooted = Path.IsPathRooted(fileName);
+				}
+				if (!isPathRooted)
+				{
+					LogLog.Error("FileAppender: INTERNAL ERROR. SafeOpenFile("+fileName+"): File name is not fully qualified.");
+				}
+			}
+
 			lock(this)
 			{
 				Reset();
