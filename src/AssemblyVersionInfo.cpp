@@ -36,6 +36,6 @@ using namespace System::Runtime::CompilerServices;
 // Shared assembly settings
 //
 
-[assembly: AssemblyCompany("The Apache Software Foundation")]
-[assembly: AssemblyCopyright("Copyright 2001-2005 The Apache Software Foundation.")]
-[assembly: AssemblyTrademark("Copyright 2001-2005 The Apache Software Foundation.")]
+[assembly: AssemblyCompany("The Apache Software Foundation")];
+[assembly: AssemblyCopyright("Copyright 2001-2005 The Apache Software Foundation.")];
+[assembly: AssemblyTrademark("Copyright 2001-2005 The Apache Software Foundation.")];
