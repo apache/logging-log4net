@@ -33,7 +33,7 @@ namespace log4net.Plugin
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
-	public class PluginMap
+	public sealed class PluginMap
 	{
 		#region Public Instance Constructors
 
@@ -59,7 +59,7 @@ namespace log4net.Plugin
 		/// The <see cref="IPlugin" /> from the map with the name specified, or 
 		/// <c>null</c> if no plugin is found.
 		/// </returns>
-		virtual public IPlugin this[string name]
+		public IPlugin this[string name]
 		{
 			get
 			{
@@ -79,7 +79,7 @@ namespace log4net.Plugin
 		/// Gets all possible plugins as a list of <see cref="IPlugin" /> objects.
 		/// </summary>
 		/// <value>All possible plugins as a list of <see cref="IPlugin" /> objects.</value>
-		virtual public PluginCollection AllPlugins
+		public PluginCollection AllPlugins
 		{
 			get
 			{
@@ -101,7 +101,7 @@ namespace log4net.Plugin
 		/// <remarks>
 		/// The <see cref="IPlugin" /> will be attached to the repository when added.
 		/// </remarks>
-		virtual public void Add(IPlugin plugin)
+		public void Add(IPlugin plugin)
 		{
 			if (plugin == null)
 			{
@@ -133,7 +133,7 @@ namespace log4net.Plugin
 		/// Removes a <see cref="IPlugin" /> from the map.
 		/// </summary>
 		/// <param name="plugin">The <see cref="IPlugin" /> to remove from the map.</param>
-		virtual public void Remove(IPlugin plugin)
+		public void Remove(IPlugin plugin)
 		{
 			if (plugin == null)
 			{
