@@ -78,7 +78,7 @@ namespace log4net.Layout
 	/// justified to a width of five characters.
 	/// </para>
 	/// <para>
-	/// The recognized conversion characters are :
+	/// The recognized conversion characters are:
 	/// </para>
 	/// <list type="table">
 	///     <listheader>
@@ -117,7 +117,7 @@ namespace log4net.Layout
 	///			<description>
 	/// 			<para>
 	/// 			Used to output the date of the logging event in the local time zone. 
-	/// 			To output the date in universal time use the <c>%utcDate</c> pattern.
+	/// 			To output the date in universal time use the <c>%utcdate</c> pattern.
 	/// 			The date conversion 
 	/// 			specifier may be followed by a <i>date format specifier</i> enclosed 
 	/// 			between braces. For example, <b>%date{HH:mm:ss,fff}</b> or
@@ -398,7 +398,7 @@ namespace log4net.Layout
 	/// 					properties are shared by all the threads in the AppDomain.
 	/// 					</description>
 	/// 				</item>
-	/// 			</list> 			
+	/// 			</list>
 	/// 			
 	///			</description>
 	///		</item>
@@ -475,14 +475,14 @@ namespace log4net.Layout
 	///			</description>
 	///		</item>
 	///     <item>
-	///			<term>utcDate</term> 
+	///			<term>utcdate</term> 
 	///			<description>
 	/// 			<para>
 	/// 			Used to output the date of the logging event in universal time. 
 	/// 			The date conversion 
 	/// 			specifier may be followed by a <i>date format specifier</i> enclosed 
-	/// 			between braces. For example, <b>%utcDate{HH:mm:ss,fff}</b> or
-	/// 			<b>%utcDate{dd MMM yyyy HH:mm:ss,fff}</b>.  If no date format specifier is 
+	/// 			between braces. For example, <b>%utcdate{HH:mm:ss,fff}</b> or
+	/// 			<b>%utcdate{dd MMM yyyy HH:mm:ss,fff}</b>.  If no date format specifier is 
 	/// 			given then ISO8601 format is
 	/// 			assumed (<see cref="log4net.DateFormatter.Iso8601DateFormatter"/>).
 	/// 			</para>
@@ -497,7 +497,7 @@ namespace log4net.Layout
 	/// 			<see cref="log4net.DateFormatter.AbsoluteTimeDateFormatter"/>, 
 	/// 			<see cref="log4net.DateFormatter.DateTimeDateFormatter"/> and respectively 
 	/// 			<see cref="log4net.DateFormatter.Iso8601DateFormatter"/>. For example, 
-	/// 			<b>%utcDate{ISO8601}</b> or <b>%utcDate{ABSOLUTE}</b>.
+	/// 			<b>%utcdate{ISO8601}</b> or <b>%utcdate{ABSOLUTE}</b>.
 	/// 			</para>
 	/// 			<para>
 	/// 			These dedicated date formatters perform significantly

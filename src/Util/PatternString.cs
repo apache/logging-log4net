@@ -31,13 +31,217 @@ namespace log4net.Util
 	/// This class implements a patterned string.
 	/// </summary>
 	/// <remarks>
-	/// <para>This string has embedded patterns that are resolved and expanded
-	/// when the string is formatted.</para>
-	/// <para>This class functions similarly to the <see cref="log4net.Layout.PatternLayout"/>
+	/// <para>
+	/// This string has embedded patterns that are resolved and expanded
+	/// when the string is formatted.
+	/// </para>
+	/// <para>
+	/// This class functions similarly to the <see cref="log4net.Layout.PatternLayout"/>
 	/// in that it accepts a pattern and renders it to a string. Unlike the 
 	/// <see cref="log4net.Layout.PatternLayout"/> however the <c>PatternString</c>
 	/// does does not render properties of a specific <see cref="LoggingEvent"/> but
-	/// of the process in general.</para>
+	/// of the process in general.
+	/// </para>
+	/// <para>
+	/// The recognized conversion characters are:
+	/// </para>
+	/// <list type="table">
+	///     <listheader>
+	///         <term>Conversion Character</term>
+	///         <description>Effect</description>
+	///     </listheader>
+	///     <item>
+	///         <term>appdomain</term>
+	///         <description>
+	///             <para>
+	///             Used to output the friendly name of the current AppDomain.
+	///             </para>
+	///         </description>
+	///     </item>
+	///     <item>
+	///         <term>date</term>
+	///         <description>
+	/// 			<para>
+	/// 			Used to output the date of the logging event in the local time zone. 
+	/// 			To output the date in universal time use the <c>%utcdate</c> pattern.
+	/// 			The date conversion 
+	/// 			specifier may be followed by a <i>date format specifier</i> enclosed 
+	/// 			between braces. For example, <b>%date{HH:mm:ss,fff}</b> or
+	/// 			<b>%date{dd MMM yyyy HH:mm:ss,fff}</b>.  If no date format specifier is 
+	/// 			given then ISO8601 format is
+	/// 			assumed (<see cref="log4net.DateFormatter.Iso8601DateFormatter"/>).
+	/// 			</para>
+	/// 			<para>
+	/// 			The date format specifier admits the same syntax as the
+	/// 			time pattern string of the <see cref="DateTime.ToString"/>.
+	/// 			</para>
+	/// 			<para>
+	/// 			For better results it is recommended to use the log4net date
+	/// 			formatters. These can be specified using one of the strings
+	/// 			"ABSOLUTE", "DATE" and "ISO8601" for specifying 
+	/// 			<see cref="log4net.DateFormatter.AbsoluteTimeDateFormatter"/>, 
+	/// 			<see cref="log4net.DateFormatter.DateTimeDateFormatter"/> and respectively 
+	/// 			<see cref="log4net.DateFormatter.Iso8601DateFormatter"/>. For example, 
+	/// 			<b>%date{ISO8601}</b> or <b>%date{ABSOLUTE}</b>.
+	/// 			</para>
+	/// 			<para>
+	/// 			These dedicated date formatters perform significantly
+	/// 			better than <see cref="DateTime.ToString(string)"/>.
+	/// 			</para>
+	///         </description>
+	///     </item>
+	///     <item>
+	///         <term>env</term>
+	///         <description>
+	///             <para>
+	/// 			Used to output the a specific environment variable. The key to 
+	/// 			lookup must be specified within braces and directly following the
+	/// 			pattern specifier, e.g. <b>%env{COMPUTERNAME}</b> would include the value
+	/// 			of the <c>COMPUTERNAME</c> environment variable.
+	///             </para>
+	///             <para>
+	///             The <c>env</c> pattern is not supported on the .NET Compact Framework.
+	///             </para>
+	///         </description>
+	///     </item>
+	///     <item>
+	///         <term>identity</term>
+	///         <description>
+	///				<para>
+	///				Used to output the user name for the currently active user
+	///				(Principal.Identity.Name).
+	///				</para>
+	///         </description>
+	///     </item>
+	///     <item>
+	///         <term>newline</term>
+	///         <description>
+	/// 			<para>
+	/// 			Outputs the platform dependent line separator character or
+	/// 			characters.
+	/// 			</para>
+	/// 			<para>
+	/// 			This conversion character offers the same performance as using 
+	/// 			non-portable line separator strings such as	"\n", or "\r\n". 
+	/// 			Thus, it is the preferred way of specifying a line separator.
+	/// 			</para> 
+	///         </description>
+	///     </item>
+	///     <item>
+	///         <term>processid</term>
+	///         <description>
+	///             <para>
+	///				Used to output the system process ID for the current process.
+	///             </para>
+	///         </description>
+	///     </item>
+	///     <item>
+	///         <term>property</term>
+	///         <description>
+	/// 			<para>
+	/// 			Used to output a specific context property. The key to 
+	/// 			lookup must be specified within braces and directly following the
+	/// 			pattern specifier, e.g. <b>%property{user}</b> would include the value
+	/// 			from the property that is keyed by the string 'user'. Each property value
+	/// 			that is to be included in the log must be specified separately.
+	/// 			Properties are stored in logging contexts. By default 
+	/// 			the <c>log4net:HostName</c> property is set to the name of machine on 
+	/// 			which the event was originally logged.
+	/// 			</para>
+	/// 			<para>
+	/// 			If no key is specified, e.g. <b>%property</b> then all the keys and their
+	/// 			values are printed in a comma separated list.
+	/// 			</para>
+	/// 			<para>
+	/// 			The properties of an event are combined from a number of different
+	/// 			contexts. These are listed below in the order in which they are searched.
+	/// 			</para>
+	/// 			<list type="definition">
+	/// 				<item>
+	/// 					<term>the thread properties</term>
+	/// 					<description>
+	/// 					The <see cref="ThreadContext.Properties"/> that are set on the current
+	/// 					thread. These properties are shared by all events logged on this thread.
+	/// 					</description>
+	/// 				</item>
+	/// 				<item>
+	/// 					<term>the global properties</term>
+	/// 					<description>
+	/// 					The <see cref="GlobalContext.Properties"/> that are set globally. These 
+	/// 					properties are shared by all the threads in the AppDomain.
+	/// 					</description>
+	/// 				</item>
+	/// 			</list>
+	///         </description>
+	///     </item>
+	///     <item>
+	///         <term>random</term>
+	///         <description>
+	///             <para>
+	///             Used to output a random string of characters. The string is made up of
+	///             uppercase letters and numbers. By default the string is 4 characters long.
+	///             The length of the string can be specified within braces directly following the
+	/// 			pattern specifier, e.g. <b>%random{8}</b> would output an 8 character string.
+	///             </para>
+	///         </description>
+	///     </item>
+	///     <item>
+	///         <term>username</term>
+	///         <description>
+	///				<para>
+	///				Used to output the WindowsIdentity for the currently
+	///				active user.
+	///				</para>
+	///         </description>
+	///     </item>
+	///     <item>
+	///         <term>utcdate</term>
+	///         <description>
+	/// 			<para>
+	/// 			Used to output the date of the logging event in universal time. 
+	/// 			The date conversion 
+	/// 			specifier may be followed by a <i>date format specifier</i> enclosed 
+	/// 			between braces. For example, <b>%utcdate{HH:mm:ss,fff}</b> or
+	/// 			<b>%utcdate{dd MMM yyyy HH:mm:ss,fff}</b>.  If no date format specifier is 
+	/// 			given then ISO8601 format is
+	/// 			assumed (<see cref="log4net.DateFormatter.Iso8601DateFormatter"/>).
+	/// 			</para>
+	/// 			<para>
+	/// 			The date format specifier admits the same syntax as the
+	/// 			time pattern string of the <see cref="DateTime.ToString"/>.
+	/// 			</para>
+	/// 			<para>
+	/// 			For better results it is recommended to use the log4net date
+	/// 			formatters. These can be specified using one of the strings
+	/// 			"ABSOLUTE", "DATE" and "ISO8601" for specifying 
+	/// 			<see cref="log4net.DateFormatter.AbsoluteTimeDateFormatter"/>, 
+	/// 			<see cref="log4net.DateFormatter.DateTimeDateFormatter"/> and respectively 
+	/// 			<see cref="log4net.DateFormatter.Iso8601DateFormatter"/>. For example, 
+	/// 			<b>%utcdate{ISO8601}</b> or <b>%utcdate{ABSOLUTE}</b>.
+	/// 			</para>
+	/// 			<para>
+	/// 			These dedicated date formatters perform significantly
+	/// 			better than <see cref="DateTime.ToString(string)"/>.
+	/// 			</para>
+	///         </description>
+	///     </item>
+	///		<item>
+	///			<term>%</term>
+	///			<description>
+	/// 			<para>
+	/// 			The sequence %% outputs a single percent sign.
+	/// 			</para>
+	///			</description>
+	///		</item>
+	/// </list>
+	/// <para>
+	/// Additional pattern converters may be registered with a specific <see cref="PatternString"/>
+	/// instance using the <see cref="AddConverter"/> methods.
+	/// </para>
+	/// <para>
+	/// See the <see cref="log4net.Layout.PatternLayout"/> for details on the 
+	/// <i>format modifiers</i> supported by the patterns.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	public class PatternString : IOptionHandler
@@ -88,9 +292,9 @@ namespace log4net.Util
 			s_globalRulesRegistry.Add("literal", typeof(LiteralPatternConverter));
 			s_globalRulesRegistry.Add("newline", typeof(NewLinePatternConverter));
 			s_globalRulesRegistry.Add("processid", typeof(ProcessIdPatternConverter));
+			s_globalRulesRegistry.Add("property", typeof(PropertyPatternConverter));
 			s_globalRulesRegistry.Add("random", typeof(RandomStringPatternConverter));
 			s_globalRulesRegistry.Add("username", typeof(UserNamePatternConverter));
-			s_globalRulesRegistry.Add("property", typeof(PropertyPatternConverter));
 
 			s_globalRulesRegistry.Add("utcdate", typeof(UtcDatePatternConverter));
 			s_globalRulesRegistry.Add("utcDate", typeof(UtcDatePatternConverter));
