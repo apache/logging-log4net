@@ -166,10 +166,10 @@
             <call target="compile-${framework::get-target-framework()}" />
         </if>
         <if test="${not framework::exists('netcf-1.0')}">
-            <if test="${property::exists('project.build.package') and project.build.package=true}">
+            <if test="${property::exists('project.build.package') and project.build.package}">
                 <fail message="The .NET Compact Framework 1.0 is not available." />
             </if>
-            <if test="${not(property::exists('project.build.package') and project.build.package=true)}">
+            <if test="${not(property::exists('project.build.package') and project.build.package)}">
                 <echo 
                     message="The .NET Compact Framework 1.0 is not available. Build skipped." />
             </if>
@@ -179,10 +179,10 @@
             <call target="compile-${framework::get-target-framework()}" />
         </if>
         <if test="${not framework::exists('net-1.0')}">
-            <if test="${property::exists('project.build.package') and project.build.package=true}">
+            <if test="${property::exists('project.build.package') and project.build.package}">
                 <fail message="The .NET Framework 1.0 is not available." />
             </if>
-            <if test="${not(property::exists('project.build.package') and project.build.package=true)}">
+            <if test="${not(property::exists('project.build.package') and project.build.package)}">
                 <echo message="The .NET Framework 1.0 is not available. Build skipped." />
             </if>
         </if>
@@ -191,10 +191,10 @@
             <call target="compile-${framework::get-target-framework()}" />
         </if>
         <if test="${not framework::exists('net-1.1')}">
-            <if test="${property::exists('project.build.package') and project.build.package=true}">
+            <if test="${property::exists('project.build.package') and project.build.package}">
                 <fail message="The .NET Framework 1.1 is not available." />
             </if>
-            <if test="${not(property::exists('project.build.package') and project.build.package=true)}">
+            <if test="${not(property::exists('project.build.package') and project.build.package)}">
                 <echo message="The .NET Framework 1.1 is not available. Build skipped." />
             </if>
         </if>
@@ -203,10 +203,10 @@
             <call target="compile-${framework::get-target-framework()}" />
         </if>
         <if test="${not framework::exists('mono-1.0')}">
-            <if test="${property::exists('project.build.package') and project.build.package=true}">
+            <if test="${property::exists('project.build.package') and project.build.package}">
                 <fail message="Mono 1.0 is not available." />
             </if>
-            <if test="${not(property::exists('project.build.package') and project.build.package=true)}">
+            <if test="${not(property::exists('project.build.package') and project.build.package)}">
                 <echo message="Mono 1.0 is not available. Build skipped." />
             </if>
         </if>
@@ -215,10 +215,10 @@
             <call target="compile-${framework::get-target-framework()}" />
         </if>
         <if test="${not framework::exists('sscli-1.0')}">
-            <if test="${property::exists('project.build.package') and project.build.package=true}">
+            <if test="${property::exists('project.build.package') and project.build.package}">
                 <fail message="SSCLI 1.0 is not available." />
             </if>
-            <if test="${not(property::exists('project.build.package') and project.build.package=true)}">
+            <if test="${not(property::exists('project.build.package') and project.build.package)}">
                 <echo message="SSCLI 1.0 is not available. Build skipped." />
             </if>
         </if>
@@ -232,10 +232,10 @@
         <if test="${current.build.config.release}">
             <!-- check if the log4net key file is available -->
             <if test="${not file::exists(log4net.basedir + '/log4net.snk')}">
-                <if test="${property::exists('project.build.package') and project.build.package=true}">
+                <if test="${property::exists('project.build.package') and project.build.package}">
                     <fail message="Key file not found." />
                 </if>
-                <if test="${not(property::exists('project.build.package') and project.build.package=true)}">
+                <if test="${not(property::exists('project.build.package') and project.build.package)}">
                     <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
                     <echo message="The generated key file should be stored in the log4net base directory." />
                     <echo message="The release build will be skipped." />
@@ -269,10 +269,10 @@
         <if test="${current.build.config.release}">
             <!-- check if the log4net key file is available -->
             <if test="${not file::exists(log4net.basedir + '/log4net.snk')}">
-                <if test="${property::exists('project.build.package') and project.build.package=true}">
+                <if test="${property::exists('project.build.package') and project.build.package}">
                     <fail message="Key file not found." />
                 </if>
-                <if test="${not(property::exists('project.build.package') and project.build.package=true)}">
+                <if test="${not(property::exists('project.build.package') and project.build.package)}">
                     <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
                     <echo message="The generated key file should be stored in the log4net base directory." />
                     <echo message="The release build will be skipped." />
@@ -307,10 +307,10 @@
         <if test="${current.build.config.release}">
             <!-- check if the log4net key file is available -->
             <if test="${not file::exists(log4net.basedir + '/log4net.snk')}">
-                <if test="${property::exists('project.build.package') and project.build.package=true}">
+                <if test="${property::exists('project.build.package') and project.build.package}">
                     <fail message="Key file not found." />
                 </if>
-                <if test="${not(property::exists('project.build.package') and project.build.package=true)}">
+                <if test="${not(property::exists('project.build.package') and project.build.package)}">
                     <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
                     <echo message="The generated key file should be stored in the log4net base directory." />
                     <echo message="The release build will be skipped." />
@@ -345,10 +345,10 @@
         <if test="${current.build.config.release}">
             <!-- check if the log4net key file is available -->
             <if test="${not file::exists(log4net.basedir + '/log4net.snk')}">
-                <if test="${property::exists('project.build.package') and project.build.package=true}">
+                <if test="${property::exists('project.build.package') and project.build.package}">
                     <fail message="Key file not found." />
                 </if>
-                <if test="${not(property::exists('project.build.package') and project.build.package=true)}">
+                <if test="${not(property::exists('project.build.package') and project.build.package)}">
                     <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
                     <echo message="The generated key file should be stored in the log4net base directory." />
                     <echo message="The release build will be skipped." />
@@ -386,10 +386,10 @@
         <if test="${current.build.config.release}">
             <!-- check if the log4net key file is available -->
             <if test="${not file::exists(log4net.basedir + '/log4net.snk')}">
-                <if test="${property::exists('project.build.package') and project.build.package=true}">
+                <if test="${property::exists('project.build.package') and project.build.package}">
                     <fail message="Key file not found." />
                 </if>
-                <if test="${not(property::exists('project.build.package') and project.build.package=true)}">
+                <if test="${not(property::exists('project.build.package') and project.build.package)}">
                     <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
                     <echo message="The generated key file should be stored in the log4net base directory." />
                     <echo message="The release build will be skipped." />
