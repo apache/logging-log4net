@@ -40,7 +40,7 @@ namespace log4net.Util
 	/// of the process in general.</para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
-	public class PatternString : IOptionHandler
+	public class PatternString
 	{
 		#region Static Fields
 
@@ -72,7 +72,7 @@ namespace log4net.Util
 		/// </summary>
 		static PatternString()
 		{
-			s_globalRulesRegistry = new Hashtable(35);
+			s_globalRulesRegistry = new Hashtable(10);
 
 			s_globalRulesRegistry.Add("appdomain", typeof(AppDomainPatternConverter));
 			s_globalRulesRegistry.Add("date", typeof(DatePatternConverter));
@@ -98,13 +98,12 @@ namespace log4net.Util
 		}
 
 		/// <summary>
-		/// Constructs a PatternString using the supplied conversion pattern
+		/// Constructs a PatternString
 		/// </summary>
-		/// <param name="pattern">the pattern to use</param>
-		public PatternString(string pattern) 
+		/// <param name="pattern">The pattern to use with this PatternString</param>
+		public PatternString(string pattern)
 		{
-			m_pattern = pattern;
-			m_head = CreatePatternParser((pattern == null) ? "" : pattern).Parse();
+			ConversionPattern = pattern;
 		}
 
 		#endregion
@@ -131,7 +130,7 @@ namespace log4net.Util
 		/// </summary>
 		/// <param name="pattern">the pattern to parse</param>
 		/// <returns></returns>
-		virtual protected PatternParser CreatePatternParser(string pattern) 
+		private PatternParser CreatePatternParser(string pattern) 
 		{
 			PatternParser patternParser = new PatternParser(pattern);
 
@@ -144,31 +143,6 @@ namespace log4net.Util
 			return patternParser;
 		}
   
-		#region Implementation of IOptionHandler
-
-		/// <summary>
-		/// Initialize component options
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// This is part of the <see cref="IOptionHandler"/> delayed object
-		/// activation scheme. The <see cref="ActivateOptions"/> method must 
-		/// be called on this object after the configuration properties have
-		/// been set. Until <see cref="ActivateOptions"/> is called this
-		/// object is in an undefined state and must not be used. 
-		/// </para>
-		/// <para>
-		/// If any of the configuration properties are modified then 
-		/// <see cref="ActivateOptions"/> must be called again.
-		/// </para>
-		/// </remarks>
-		virtual public void ActivateOptions() 
-		{
-			// nothing to do.
-		}
-
-		#endregion
-
 		/// <summary>
 		/// Produces a formatted string as specified by the conversion pattern.
 		/// </summary>
@@ -195,6 +169,5 @@ namespace log4net.Util
 			Format(writer);
 			return writer.ToString();
 		}
-
 	}
 }
