@@ -43,10 +43,21 @@ namespace log4net.Appender
 	/// cyclic buffer. This keeps memory requirements at a reasonable level while 
 	/// still delivering useful application context.
 	/// </para>
+	/// <note type="caution">
+	/// Authentication and setting the server Port are only available on the MS .NET 1.1 runtime.
+	/// For these features to be enabled you need to ensure that you are using a version of
+	/// the log4net assembly that is built against the MS .NET 1.1 framework and that you are
+	/// running the your application on the MS .NET 1.1 runtime. On all other platforms only sending
+	/// unauthenticated messages to a server listening on port 25 (the default) is supported.
+	/// </note>
 	/// <para>
-	/// This appender sets the <c>log4net:HostName</c> property in the 
-	/// <see cref="LoggingEvent.Properties"/> collection to the name of 
-	/// the machine on which the event is logged.
+	/// Authentication is supported by setting the <see cref="Authentication"/> property to
+	/// either <see cref="SmtpAuthentication.Basic"/> or <see cref="SmtpAuthentication.Ntlm"/>.
+	/// If using <see cref="SmtpAuthentication.Basic"/> authentication then the <see cref="Username"/>
+	/// and <see cref="Password"/> properties must also be set.
+	/// </para>
+	/// <para>
+	/// To set the SMTP server port use the <see cref="Port"/> property. The default port is 25.
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
@@ -128,6 +139,78 @@ namespace log4net.Appender
 			set { ; }
 		}
 
+		/// <summary>
+		/// The mode to use to authentication with the SMTP server
+		/// </summary>
+		/// <remarks>
+		/// <note type="caution">Authentication is only available on the MS .NET 1.1 runtime.</note>
+		/// <para>
+		/// Valid Authentication mode values are: <see cref="SmtpAuthentication.None"/>, 
+		/// <see cref="SmtpAuthentication.Basic"/>, and <see cref="SmtpAuthentication.Ntlm"/>. 
+		/// The default value is <see cref="SmtpAuthentication.None"/>. When using 
+		/// <see cref="SmtpAuthentication.Basic"/> you must specify the <see cref="Username"/> 
+		/// and <see cref="Password"/> to use to authenticate.
+		/// When using <see cref="SmtpAuthentication.Ntlm"/> the Windows credentials for the current
+		/// thread, if impersonating, or the process will be used to authenticate. 
+		/// </para>
+		/// </remarks>
+		public SmtpAuthentication Authentication
+		{
+			get { return m_authentication; }
+			set { m_authentication = value; }
+		}
+
+		/// <summary>
+		/// The username to use to authenticate with the SMTP server
+		/// </summary>
+		/// <remarks>
+		/// <note type="caution">Authentication is only available on the MS .NET 1.1 runtime.</note>
+		/// <para>
+		/// A <see cref="Username"/> and <see cref="Password"/> must be specified when 
+		/// <see cref="Authentication"/> is set to <see cref="SmtpAuthentication.Basic"/>, 
+		/// otherwise the username will be ignored. 
+		/// </para>
+		/// </remarks>
+		public string Username
+		{
+			get { return m_username; }
+			set { m_username = value; }
+		}
+
+		/// <summary>
+		/// The password to use to authenticate with the SMTP server
+		/// </summary>
+		/// <remarks>
+		/// <note type="caution">Authentication is only available on the MS .NET 1.1 runtime.</note>
+		/// <para>
+		/// A <see cref="Username"/> and <see cref="Password"/> must be specified when 
+		/// <see cref="Authentication"/> is set to <see cref="SmtpAuthentication.Basic"/>, 
+		/// otherwise the password will be ignored. 
+		/// </para>
+		/// </remarks>
+		public string Password
+		{
+			get { return m_password; }
+			set { m_password = value; }
+		}
+
+		/// <summary>
+		/// The port on which the SMTP server is listening
+		/// </summary>
+		/// <remarks>
+		/// <note type="caution">Server Port is only available on the MS .NET 1.1 runtime.</note>
+		/// <para>
+		/// The port on which the SMTP server is listening. The default
+		/// port is <c>25</c>. The Port can only be changed when running on
+		/// the MS .NET 1.1 runtime.
+		/// </para>
+		/// </remarks>
+		public int Port
+		{
+			get { return m_port; }
+			set { m_port = value; }
+		}
+
 		#endregion // Public Instance Properties
 
 		#region Override implementation of BufferingAppenderSkeleton
@@ -139,7 +222,7 @@ namespace log4net.Appender
 		override protected void SendBuffer(LoggingEvent[] events) 
 		{
 			// Note: this code already owns the monitor for this
-			// appender. This frees us from needing to synchronize on 'cb'.
+			// appender. This frees us from needing to synchronize again.
 			try 
 			{	  
 				StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
@@ -177,6 +260,54 @@ namespace log4net.Appender
 				mailMessage.To = m_to;
 				mailMessage.Subject = m_subject;
 
+#if NET_1_1
+				// The Fields property on the MailMessage allows the CDO properties to be set directly.
+				// This property is only available on .NET Framework 1.1 and the implementation must understand
+				// the CDO properties. For details of the fields available in CDO see:
+				//
+				// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cdosys/html/_cdosys_configuration_coclass.asp
+				// 
+
+				try
+				{
+					if (m_authentication == SmtpAuthentication.Basic)
+					{
+						// Perform basic authentication
+						mailMessage.Fields.Add("http://schemas.microsoft.com/cdo/configuration/smtpauthenticate", 1);
+						mailMessage.Fields.Add("http://schemas.microsoft.com/cdo/configuration/sendusername", m_username);
+						mailMessage.Fields.Add("http://schemas.microsoft.com/cdo/configuration/sendpassword", m_password);
+					}
+					else if (m_authentication == SmtpAuthentication.Ntlm)
+					{
+						// Perform integrated authentication (NTLM)
+						mailMessage.Fields.Add("http://schemas.microsoft.com/cdo/configuration/smtpauthenticate", 2);
+					}
+
+					// Set the port if not the default value
+					if (m_port != 25) 
+					{
+						mailMessage.Fields.Add("http://schemas.microsoft.com/cdo/configuration/smtpserverport", m_port);
+					}
+				}
+				catch(MissingMethodException missingMethodException)
+				{
+					// If we were compiled against .NET 1.1 but are running against .NET 1.0 then
+					// we will get a MissingMethodException when accessing the MailMessage.Fields property.
+
+					ErrorHandler.Error("SmtpAppender: Authentication and server Port are only supported when running on the MS .NET 1.1 framework", missingMethodException);
+				}
+#else
+				if (m_authentication != SmtpAuthentication.None)
+				{
+					ErrorHandler.Error("SmtpAppender: Authentication is only supported on the MS .NET 1.1 build of log4net");
+				}
+
+				if (m_port != 25)
+				{
+					ErrorHandler.Error("SmtpAppender: Server Port is only supported on the MS .NET 1.1 build of log4net");
+				}
+#endif
+
 				if (m_smtpHost != null && m_smtpHost.Length > 0)
 				{
 					SmtpMail.SmtpServer = m_smtpHost;
@@ -212,7 +343,46 @@ namespace log4net.Appender
 		private string m_subject;
 		private string m_smtpHost;
 
+		// authentication fields
+		private SmtpAuthentication m_authentication = SmtpAuthentication.None;
+		private string m_username;
+		private string m_password;
+
+		// server port, default port 25
+		private int m_port = 25;
+
 		#endregion // Private Instance Fields
+
+		#region SmtpAuthentication Enum
+
+		/// <summary>
+		/// Values for the <see cref="SmtpAppender.Authentication"/> property.
+		/// </summary>
+		public enum SmtpAuthentication
+		{
+			/// <summary>
+			/// No authentication
+			/// </summary>
+			None,
+
+			/// <summary>
+			/// Basic authentication.
+			/// </summary>
+			/// <remarks>
+			/// Requires a username and password to be supplied
+			/// </remarks>
+			Basic,
+
+			/// <summary>
+			/// Integrated authentication
+			/// </summary>
+			/// <remarks>
+			/// Uses the Windows credentials from the current thread or process to authenticate.
+			/// </remarks>
+			Ntlm
+		}
+
+		#endregion // SmtpAuthentication Enum
 	}
 }
 
