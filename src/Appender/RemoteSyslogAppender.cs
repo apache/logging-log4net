@@ -370,11 +370,11 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
-		/// Initialise the options for this appender
+		/// Initialize the options for this appender
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// Initialise the level to syslog severity mappings set on this appender.
+		/// Initialize the level to syslog severity mappings set on this appender.
 		/// </para>
 		/// </remarks>
 		public override void ActivateOptions()
