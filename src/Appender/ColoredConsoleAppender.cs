@@ -225,8 +225,19 @@ namespace log4net.Appender
 		/// <param name="mapping">The mapping to add</param>
 		public void AddMapping(LevelColors mapping)
 		{
-			ushort usMapping = (ushort)((int)mapping.ForeColor + (((int)mapping.BackColor) << 4) );
-			m_Level2ColorMap[mapping.Level] = usMapping;
+			AddMapping(mapping.Level, mapping.ForeColor, mapping.BackColor);
+		}
+
+		/// <summary>
+		/// Add a mapping of level to color
+		/// </summary>
+		/// <param name="level">The level to map to a color</param>
+		/// <param name="foreColor">The mapped foreground color for the specified level</param>
+		/// <param name="backColor">The mapped background color for the specified level</param>
+		public void AddMapping(log4net.Core.Level level, Colors foreColor, Colors backColor)
+		{
+			ushort usMapping = (ushort)((int)foreColor + (((int)backColor) << 4) );
+			m_Level2ColorMap[level] = usMapping;
 		}
 
 		/// <summary>
