@@ -69,11 +69,14 @@ namespace log4net.Util
 		/// <returns>the <see cref="LevelMappingEntry"/> for the level or <c>null</c> if no mapping found</returns>
 		public LevelMappingEntry Lookup(Level level)
 		{
-			foreach(LevelMappingEntry entry in m_entries)
+			if (m_entries != null)
 			{
-				if (level >= entry.Level)
+				foreach(LevelMappingEntry entry in m_entries)
 				{
-					return entry;
+					if (level >= entry.Level)
+					{
+						return entry;
+					}
 				}
 			}
 			return null;
