@@ -59,7 +59,11 @@ limitations under the License.
 				</p>
 				
 				<ul>
-					<li>none</li>
+					<li>
+						<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip">incubating-log4net-1.2.9-beta.zip</a>
+						[<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip.asc">PGP</a>]
+						[<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip.md5">MD5</a>]
+					</li>
 				</ul>
 			</section>
 			
