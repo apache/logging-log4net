@@ -55,6 +55,7 @@ namespace log4net.Appender
 		/// with a specified layout.
 		/// </summary>
 		/// <param name="layout">The layout to use with this appender.</param>
+		[System.Obsolete("Instead use the default constructor and set the Layout property")]
 		public DebugAppender(ILayout layout)
 		{
 			Layout = layout;

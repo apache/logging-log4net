@@ -51,6 +51,7 @@ namespace log4net.Appender
 		/// </summary>
 		/// <param name="layout">The layout to use with this appender.</param>
 		/// <param name="os">The <see cref="Stream"/> to output to.</param>
+		[Obsolete("Instead use the default constructor and set the Layout & Writer properties")]
 		public TextWriterAppender(ILayout layout, Stream os) : this(layout, new StreamWriter(os))
 		{
 		}
@@ -64,6 +65,7 @@ namespace log4net.Appender
 		/// <remarks>
 		/// The <see cref="TextWriter" /> must have been previously opened.
 		/// </remarks>
+		[Obsolete("Instead use the default constructor and set the Layout & Writer properties")]
 		public TextWriterAppender(ILayout layout, TextWriter writer) 
 		{
 			Layout = layout;

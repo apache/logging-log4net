@@ -72,6 +72,7 @@ namespace log4net.Appender
 		/// The instance of the <see cref="ConsoleAppender" /> class is set up to write 
 		/// to the standard output stream.
 		/// </remarks>
+		[Obsolete("Instead use the default constructor and set the Layout property")]
 		public ConsoleAppender(ILayout layout) : this(layout, false)
 		{
 		}
@@ -87,6 +88,7 @@ namespace log4net.Appender
 		/// the standard error output stream.  Otherwise, output is written to the standard
 		/// output stream.
 		/// </remarks>
+		[Obsolete("Instead use the default constructor and set the Layout & Target properties")]
 		public ConsoleAppender(ILayout layout, bool writeToErrorStream) 
 		{
 			Layout = layout;

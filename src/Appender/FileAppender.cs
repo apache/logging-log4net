@@ -58,6 +58,7 @@ namespace log4net.Appender
 		/// <param name="layout">the layout to use with this appender</param>
 		/// <param name="filename">the full path to the file to write to</param>
 		/// <param name="append">flag to indicate if the file should be appended to</param>
+		[Obsolete("Instead use the default constructor and set the Layout, File, & AppendToFile properties")]
 		public FileAppender(ILayout layout, string filename, bool append) 
 		{
 			Layout = layout;
@@ -70,6 +71,7 @@ namespace log4net.Appender
 		/// </summary>
 		/// <param name="layout">the layout to use with this appender</param>
 		/// <param name="filename">the full path to the file to write to</param>
+		[Obsolete("Instead use the default constructor and set the Layout & File propertes")]
 		public FileAppender(ILayout layout, string filename) : this(layout, filename, true)
 		{
 		}

@@ -72,6 +72,7 @@ namespace log4net.Appender
 		/// with the specified <see cref="ILayout" />.
 		/// </summary>
 		/// <param name="layout">The <see cref="ILayout" /> to use with this appender.</param>
+		[Obsolete("Instead use the default constructor and set the Layout property")]
 		public EventLogAppender(ILayout layout) : this()
 		{
 			Layout = layout;
