@@ -517,6 +517,8 @@
     </target>
     <!-- Target for generating docs for all runtime configurations -->
     <target name="generate-sdkdoc-all" depends="check-current-build-config">
+        <echo message="Generating SDK documentation temporarily disabled." />
+	<!--
         <echo message="Generating SDK documentation based on the ${current.build.config} build configuration for all runtime configurations." />
         <if test="${framework::exists('netcf-1.0')}">
             <call target="set-netcf-1.0-runtime-configuration" />
@@ -530,6 +532,7 @@
             <call target="set-net-1.1-runtime-configuration" />
             <call target="generate-sdkdoc" />
         </if>
+	-->
         <!-- NAnt doesn't yet come with a version of NDoc that can handle .NET 2.0 assemblies -->
         <!-- Mono 1.0 does not support extracting xml documentation -->
         <!-- SSCLI 1.0 does not support extracting xml documentation -->

@@ -43,7 +43,10 @@
         <if test="${not property::exists('sdkdoc.dir')}">
             <property name="sdkdoc.dir" value="${doc.dir}/sdk" />
         </if>
+	<!-- 
+	Temporarily disabled SDK generation through NAnt build
         <mkdir dir="${sdkdoc.dir}" />
+	-->
     </target>
     <target name="check-sdkdoc-debug">
         <if test="${not property::exists('sdkdoc.debug')}">
@@ -82,7 +85,10 @@
         <if test="${not property::exists('current.sdkdoc.dir')}">
             <fail message="The current sdk document directory has not been specified." />
         </if>
-        <mkdir dir="${sdkdoc.dir}" />
+	<!-- 
+	Temporarily disabled SDK generation through NAnt build
+	<mkdir dir="${sdkdoc.dir}" />
+	-->
     </target>
     <target name="check-current-sdkdoc-debug">
         <if test="${not property::exists('current.sdkdoc.debug')}">
@@ -122,8 +128,11 @@
     </target>
     <target name="clean-current-sdkdoc-dir" depends="check-current-sdkdoc-dir" description="cleaning the current SDK documentation directory">
         <echo message="Cleaning the ${current.sdkdoc.dir} SDK documentation directory." />
+	<!-- 
+	Temporarily disabled SDK generation through NAnt build
         <delete dir="${current.sdkdoc.dir}" if="${directory::exists(current.sdkdoc.dir)}" />
         <mkdir dir="${current.sdkdoc.dir}" />
+	-->
     </target>
     <!-- Targets for setting up the environment -->
     <target name="set-build-configuration" depends="check-current-build-config">
