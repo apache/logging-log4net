@@ -26,14 +26,10 @@ using System.Runtime.CompilerServices;
 [assembly: System.Runtime.InteropServices.ComVisible(false)]
 #endif
 
-// TODO: Reinstate CLS compliant attribute for mono
-// MONO 1.0 Beta seems to have an issue with CLSCompliance
-#if (!MONO)
 //
 // log4net is CLS compliant
 //
 [assembly: System.CLSCompliant(true)]
-#endif
 
 #if (!NETCF)
 //

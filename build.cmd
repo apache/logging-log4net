@@ -41,17 +41,6 @@ IF EXIST nant.build (
 
 ECHO BUILD_FILE is %BUILD_FILE%
 
-REM TODO: Remove this old Mono stuff
-REM Check for Mono old install, update path to include mono libs
-IF EXIST %WINDIR%\monobasepath.bat (
-	CALL %WINDIR%\monobasepath.bat
-	
-	REM Remove quotes from path
-	SET CLEAN_MONO_BASEPATH=!MONO_BASEPATH:"=!
-
-	SET PATH="!CLEAN_MONO_BASEPATH!\bin\;!CLEAN_MONO_BASEPATH!\lib\;%path%"
-)
-REM End TODO
 
 IF "%1"=="package" GOTO Package
 
