@@ -367,9 +367,9 @@ namespace log4net.Appender
 		/// i.e. log.1 is most recent, log.5 is the 5th backup, etc...
 		/// </para>
 		/// <para>
-		/// <see cref="CountDirection" /> &gt; 0 does the opposite i.e.
+		/// <see cref="CountDirection" /> &gt;= 0 does the opposite i.e.
 		/// log.1 is the first backup made, log.5 is the 5th backup made, etc.
-		/// For infinite backups use <see cref="CountDirection" /> &gt; 0 to reduce 
+		/// For infinite backups use <see cref="CountDirection" /> &gt;= 0 to reduce 
 		/// rollover costs.
 		/// </para>
 		/// <para>The default file count direction is -1.</para>
@@ -490,7 +490,7 @@ namespace log4net.Appender
 					m_now = n;
 					m_nextCheck = NextCheckDate(m_now, m_rollPoint);
 	
-					RollOverTime();
+					RollOverTime(true);
 				}
 			}
 	
@@ -553,7 +553,7 @@ namespace log4net.Appender
 				{
 					m_scheduledFilename = fileName;
 
-					if (m_countDirection > 0) 
+					if (m_countDirection >= 0) 
 					{
 						m_curSizeRollBackups++;
 					}
@@ -590,7 +590,7 @@ namespace log4net.Appender
 					fileName = fileName + m_now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo);
 				}
 
-				if (m_countDirection > 0) 
+				if (m_countDirection >= 0) 
 				{
 					fileName = fileName + '.' + (m_curSizeRollBackups + 1);
 				}
@@ -696,7 +696,7 @@ namespace log4net.Appender
 					{
 						m_scheduledFilename = m_baseFileName + last.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo);
 						LogLog.Debug("RollingFileAppender: Initial roll over to ["+m_scheduledFilename+"]");
-						RollOverTime();
+						RollOverTime(false);
 						LogLog.Debug("RollingFileAppender: curSizeRollBackups after rollOver at ["+m_curSizeRollBackups+"]");
 					}
 				}
@@ -815,7 +815,7 @@ namespace log4net.Appender
 					else
 					{
 						// Backups limited to a finite number
-						if (m_countDirection > 0) 
+						if (m_countDirection >= 0) 
 						{
 							// Go with the highest file when counting up
 							m_curSizeRollBackups = backup;
@@ -972,13 +972,15 @@ namespace log4net.Appender
 		/// <summary>
 		/// Rollover the file(s) to date/time tagged file(s).
 		/// </summary>
+		/// <param name="fileIsOpen">set to true if the file to be rolled is currently open</param>
 		/// <remarks>
 		/// <para>
 		/// Rollover the file(s) to date/time tagged file(s).
-		/// Opens the new file (through setFile) and resets curSizeRollBackups.
+		/// Resets curSizeRollBackups. 
+		/// If fileIsOpen is set then the new file is opened (through SafeOpenFile).
 		/// </para>
 		/// </remarks>
-		protected void RollOverTime() 
+		protected void RollOverTime(bool fileIsOpen) 
 		{
 			if (m_staticLogFileName) 
 			{
@@ -999,15 +1001,17 @@ namespace log4net.Appender
 					return;
 				}
 	  
-				// close current file, and rename it to datedFilename
-				this.CloseFile();
+				if (fileIsOpen)
+				{
+					// close current file, and rename it to datedFilename
+					this.CloseFile();
+				}
 	  
 				//we may have to roll over a large number of backups here
-				string from, to;
 				for (int i = 1; i <= m_curSizeRollBackups; i++) 
 				{
-					from = File + '.' + i;
-					to = m_scheduledFilename + '.' + i;
+					string from = File + '.' + i;
+					string to = m_scheduledFilename + '.' + i;
 					RollFile(from, to);
 				}
 	  
@@ -1020,8 +1024,11 @@ namespace log4net.Appender
 			//new scheduled name
 			m_scheduledFilename = File + m_now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo);
 
-			// This will also close the file. This is OK since multiple close operations are safe.
-			SafeOpenFile(m_baseFileName, false);
+			if (fileIsOpen)
+			{
+				// This will also close the file. This is OK since multiple close operations are safe.
+				SafeOpenFile(m_baseFileName, false);
+			}
 		}
   
 		/// <summary>
@@ -1146,22 +1153,27 @@ namespace log4net.Appender
 		/// Implements file roll base on file size.
 		/// </summary>
 		/// <remarks>
-		/// <para>If the maximum number of size based backups is reached
+		/// <para>
+		/// If the maximum number of size based backups is reached
 		/// (<c>curSizeRollBackups == maxSizeRollBackups</c>) then the oldest
 		/// file is deleted -- it's index determined by the sign of countDirection.
 		/// If <c>countDirection</c> &lt; 0, then files
 		/// {<c>File.1</c>, ..., <c>File.curSizeRollBackups -1</c>}
 		/// are renamed to {<c>File.2</c>, ...,
-		/// <c>File.curSizeRollBackups</c>}.	 Moreover, <c>File</c> is
-		/// renamed <c>File.1</c> and closed.</para>
-		/// 
+		/// <c>File.curSizeRollBackups</c>}. Moreover, <c>File</c> is
+		/// renamed <c>File.1</c> and closed.
+		/// </para>
+		/// <para>
 		/// A new file is created to receive further log output.
-		/// 
-		/// <para>If <c>maxSizeRollBackups</c> is equal to zero, then the
-		/// <c>File</c> is truncated with no backup files created.</para>
-		/// 
-		/// <para>If <c>maxSizeRollBackups</c> &lt; 0, then <c>File</c> is
-		/// renamed if needed and no files are deleted.</para>
+		/// </para>
+		/// <para>
+		/// If <c>maxSizeRollBackups</c> is equal to zero, then the
+		/// <c>File</c> is truncated with no backup files created.
+		/// </para>
+		/// <para>
+		/// If <c>maxSizeRollBackups</c> &lt; 0, then <c>File</c> is
+		/// renamed if needed and no files are deleted.
+		/// </para>
 		/// </remarks>
 		protected void RollOverSize() 
 		{
@@ -1259,8 +1271,10 @@ namespace log4net.Appender
 		/// <param name="rollPoint">the type of roll point we are working with</param>
 		/// <returns>the next roll point an interval after the currentDateTime date</returns>
 		/// <remarks>
+		/// <para>
 		/// Advances the date to the next roll point after the 
 		/// currentDateTime date passed to the method.
+		/// </para>
 		/// </remarks>
 		protected DateTime NextCheckDate(DateTime currentDateTime, RollPoint rollPoint) 
 		{
