@@ -633,11 +633,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Layout\Pattern\LiteralPatternConverter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Layout\Pattern\LoggerPatternConverter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -659,11 +654,6 @@
                 />
                 <File
                     RelPath = "Layout\Pattern\NdcPatternConverter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Layout\Pattern\NewLinePatternConverter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

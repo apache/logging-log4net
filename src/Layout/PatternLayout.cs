@@ -768,9 +768,9 @@ namespace log4net.Layout
 		{
 			s_globalRulesRegistry = new Hashtable(35);
 
-			s_globalRulesRegistry.Add("literal", typeof(LiteralPatternConverter));
-			s_globalRulesRegistry.Add("newline", typeof(NewLinePatternConverter));
-			s_globalRulesRegistry.Add("n", typeof(NewLinePatternConverter));
+			s_globalRulesRegistry.Add("literal", typeof(log4net.Util.PatternStringConverters.LiteralPatternConverter));
+			s_globalRulesRegistry.Add("newline", typeof(log4net.Util.PatternStringConverters.NewLinePatternConverter));
+			s_globalRulesRegistry.Add("n", typeof(log4net.Util.PatternStringConverters.NewLinePatternConverter));
 
 			s_globalRulesRegistry.Add("c", typeof(LoggerPatternConverter));
 			s_globalRulesRegistry.Add("logger", typeof(LoggerPatternConverter));
