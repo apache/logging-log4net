@@ -25,6 +25,7 @@ using System.Text.RegularExpressions;
 using log4net.Util;
 using log4net.Layout;
 using log4net.Core;
+using log4net.Config;
 
 using NUnit.Framework;
 using log4net.Repository;
@@ -48,6 +49,19 @@ namespace log4net.Tests.Appender
 		CountingAppender _caRoot;
 		Logger _root;
 
+		private class SilentErrorHandler : IErrorHandler
+		{
+			System.Text.StringBuilder m_buffer=new System.Text.StringBuilder();
+
+			public string Message
+			{
+				get {return m_buffer.ToString();}
+			}
+
+			public void Error(string message)									{m_buffer.Append(message+"\n");}
+			public void Error(string message, Exception e)						{m_buffer.Append(message+"\n"+e.Message+"\n");}
+			public void Error(string message, Exception e, ErrorCode errorCode)	{m_buffer.Append(message+"\n"+e.Message+"\n");}
+		}
 		/// <summary>
 		/// Sets up variables used for the tests
 		/// </summary>
@@ -196,6 +210,17 @@ namespace log4net.Tests.Appender
 		/// <returns></returns>
 		private RollingFileAppender CreateAppender()
 		{
+			return CreateAppender(new FileAppender.ExclusiveLock());
+		}
+
+		/// <summary>
+		/// Returns a RollingFileAppender using all the internal settings for maximum
+		/// file size and number of backups
+		/// </summary>
+		/// <param name="lockmodel">The locking model to test</param>
+		/// <returns></returns>
+		private RollingFileAppender CreateAppender(FileAppender.LockingModelBase lockmodel)
+		{
 			//
 			// Use a basic pattern that
 			// includes just the message and a CR/LF.
@@ -212,6 +237,8 @@ namespace log4net.Tests.Appender
 			appender.MaxSizeRollBackups  = _MaxSizeRollBackups;
 			appender.CountDirection	  = _iCountDirection;
 			appender.RollingStyle		= RollingFileAppender.RollingMode.Size;
+			appender.LockingModel		=lockmodel;
+			
 			appender.ActivateOptions();
 
 			return appender;
@@ -1307,8 +1334,237 @@ namespace log4net.Tests.Appender
 			VerifyInitializeUpInfiniteExpectedValue( alFiles, _fileName, 10 );
 		}
 
+		/// <summary>
+		/// Creates a logger hierarchy, configures a rolling file appender and returns an ILogger
+		/// </summary>
+		/// <param name="filename">The filename to log to</param>
+		/// <param name="lockmodel">The locking model to use.</param>
+		/// <param name="handler">The error handler to use.</param>
+		/// <returns>A configured ILogger</returns>
+		private ILogger CreateLogger(string filename,FileAppender.LockingModelBase lockmodel, IErrorHandler handler)
+		{
+			log4net.Repository.Hierarchy.Hierarchy h = (log4net.Repository.Hierarchy.Hierarchy)log4net.LogManager.CreateRepository("TestRepository");
+
+			log4net.Appender.RollingFileAppender appender = new log4net.Appender.RollingFileAppender();
+			appender.File = filename;
+			appender.AppendToFile = false;
+			appender.CountDirection=0;
+			appender.RollingStyle=RollingFileAppender.RollingMode.Size;
+			appender.MaxFileSize=100000;
+			appender.Encoding=System.Text.Encoding.ASCII;
+			appender.ErrorHandler=handler;
+			if (lockmodel!=null) {appender.LockingModel=lockmodel;}
+			
+			log4net.Layout.PatternLayout layout = new log4net.Layout.PatternLayout();
+			layout.ConversionPattern = "%m%n";
+			layout.ActivateOptions();
+
+			appender.Layout = layout;
+			appender.ActivateOptions();
+
+			h.Root.AddAppender(appender);
+			h.Configured = true;
+
+			ILogger log=h.GetLogger("Logger");
+			return log;
+		}
+
+		/// <summary>
+		/// Destroys the logger hierarchy created by <see cref="RollingFileAppenderTests.CreateLogger"/>
+		/// </summary>
+		private void DestroyLogger()
+		{
+			log4net.Repository.Hierarchy.Hierarchy h = (log4net.Repository.Hierarchy.Hierarchy)log4net.LogManager.GetRepository("TestRepository");
+			h.ResetConfiguration();
+			//Replace the repository selector so that we can recreate the hierarchy with the same name if necesary
+			LoggerManager.RepositorySelector=new DefaultRepositorySelector(log4net.Util.SystemInfo.GetTypeFromString("log4net.Repository.Hierarchy.Hierarchy",true,true));
+		}
+
+		private void AssertFileEquals(string filename, string contents)
+		{
+			StreamReader sr=new StreamReader(filename);
+			string logcont=sr.ReadToEnd();
+			sr.Close();
+
+			Assertion.AssertEquals("Log contents is not what is expected",contents,logcont);
+
+			System.IO.File.Delete(filename);
+		}
+
+		/// <summary>
+		/// Verifies that logging a messsage actually produces output
+		/// </summary>
+		[Test] public void TestLogOutput()
+		{
+			String filename="test.log";
+			SilentErrorHandler sh=new SilentErrorHandler();
+			ILogger log=CreateLogger(filename,new FileAppender.ExclusiveLock(), sh);
+			log.Log(this.GetType(),Level.Info,"This is a message",null);
+			log.Log(this.GetType(),Level.Info,"This is a message 2",null);
+			DestroyLogger();
+
+			AssertFileEquals(filename,"This is a message"+Environment.NewLine+"This is a message 2"+Environment.NewLine);
+			Assertion.AssertEquals("Unexpeced error message","",sh.Message);
+		}
+
+		/// <summary>
+		/// Verifies that attempting to log to a locked file fails gracefully
+		/// </summary>
+		[Test] public void TestExclusiveLockFails()
+		{
+			String filename="test.log";
+
+			FileStream fs=new FileStream(filename,FileMode.Create,FileAccess.Write,FileShare.None);
+			fs.Write(System.Text.Encoding.ASCII.GetBytes("Test"),0,4);
+
+			SilentErrorHandler sh=new SilentErrorHandler();
+			ILogger log=CreateLogger(filename,new FileAppender.ExclusiveLock(),sh);
+			log.Log(this.GetType(),Level.Info,"This is a message",null);
+			log.Log(this.GetType(),Level.Info,"This is a message 2",null);
+			DestroyLogger();
+			fs.Close();
+
+			AssertFileEquals(filename,"Test");
+			Assertion.AssertEquals("Expecting an error message","Unable to aquire lock on file",sh.Message.Substring(0,29));
+		}
+
+		/// <summary>
+		/// Verifies that attempting to log to a locked file recovers if the lock is released
+		/// </summary>
+		[Test] public void TestExclusiveLockRecovers()
+		{
+			String filename="test.log";
+
+			FileStream fs=new FileStream(filename,FileMode.Create,FileAccess.Write,FileShare.None);
+			fs.Write(System.Text.Encoding.ASCII.GetBytes("Test"),0,4);
+
+			SilentErrorHandler sh=new SilentErrorHandler();
+			ILogger log=CreateLogger(filename,new FileAppender.ExclusiveLock(),sh);
+			log.Log(this.GetType(),Level.Info,"This is a message",null);
+			fs.Close();
+			log.Log(this.GetType(),Level.Info,"This is a message 2",null);
+			DestroyLogger();
+
+			AssertFileEquals(filename,"This is a message 2"+Environment.NewLine);
+			Assertion.AssertEquals("Expecting an error message","Unable to aquire lock on file",sh.Message.Substring(0,29));
+		}
+
+		/// <summary>
+		/// Verifies that attempting to log to a file with ExclusiveLock really locks the file
+		/// </summary>
+		[Test] public void TestExclusiveLockLocks()
+		{
+			String filename="test.log";
+			bool locked=false;
+
+			SilentErrorHandler sh=new SilentErrorHandler();
+			ILogger log=CreateLogger(filename,new FileAppender.ExclusiveLock(),sh);
+			log.Log(this.GetType(),Level.Info,"This is a message",null);
+
+			try
+			{
+				FileStream fs=new FileStream(filename,FileMode.Create,FileAccess.Write,FileShare.None);
+				fs.Write(System.Text.Encoding.ASCII.GetBytes("Test"),0,4);
+				fs.Close();
+			}
+			catch (System.IO.IOException e1)
+			{
+				Assertion.AssertEquals("Unexpected exception","The process cannot access the file ",e1.Message.Substring(0,35));
+				locked=true;
+			}
+
+			log.Log(this.GetType(),Level.Info,"This is a message 2",null);
+			DestroyLogger();
+
+			Assertion.Assert("File was not locked",locked);
+			AssertFileEquals(filename,"This is a message"+Environment.NewLine+"This is a message 2"+Environment.NewLine);
+			Assertion.AssertEquals("Unexpected error message","",sh.Message);
+		}
 
 
+		/// <summary>
+		/// Verifies that attempting to log to a locked file fails gracefully
+		/// </summary>
+		[Test] public void TestMinimalLockFails()
+		{
+			String filename="test.log";
+
+			FileStream fs=new FileStream(filename,FileMode.Create,FileAccess.Write,FileShare.None);
+			fs.Write(System.Text.Encoding.ASCII.GetBytes("Test"),0,4);
+
+			SilentErrorHandler sh=new SilentErrorHandler();
+			ILogger log=CreateLogger(filename,new FileAppender.MinimalLock(),sh);
+			log.Log(this.GetType(),Level.Info,"This is a message",null);
+			log.Log(this.GetType(),Level.Info,"This is a message 2",null);
+			DestroyLogger();
+			fs.Close();
+
+			AssertFileEquals(filename,"Test");
+			Assertion.AssertEquals("Expecting an error message","Unable to aquire lock on file",sh.Message.Substring(0,29));
+		}
+
+		/// <summary>
+		/// Verifies that attempting to log to a locked file recovers if the lock is released
+		/// </summary>
+		[Test] public void TestMinimalLockRecovers()
+		{
+			String filename="test.log";
+
+			FileStream fs=new FileStream(filename,FileMode.Create,FileAccess.Write,FileShare.None);
+			fs.Write(System.Text.Encoding.ASCII.GetBytes("Test"),0,4);
+
+			SilentErrorHandler sh=new SilentErrorHandler();
+			ILogger log=CreateLogger(filename,new FileAppender.MinimalLock(),sh);
+			log.Log(this.GetType(),Level.Info,"This is a message",null);
+			fs.Close();
+			log.Log(this.GetType(),Level.Info,"This is a message 2",null);
+			DestroyLogger();
+
+			AssertFileEquals(filename,"This is a message 2"+Environment.NewLine);
+			Assertion.AssertEquals("Expecting an error message","Unable to aquire lock on file",sh.Message.Substring(0,29));
+		}
+
+		/// <summary>
+		/// Verifies that attempting to log to a file with ExclusiveLock really locks the file
+		/// </summary>
+		[Test] public void TestMinimalLockUnlocks()
+		{
+			String filename="test.log";
+			bool locked=false;
+
+			SilentErrorHandler sh=new SilentErrorHandler();
+			ILogger log=CreateLogger(filename,new FileAppender.MinimalLock(),sh);
+			log.Log(this.GetType(),Level.Info,"This is a message",null);
+
+			locked=true;
+			FileStream fs=new FileStream(filename,FileMode.Append,FileAccess.Write,FileShare.None);
+			fs.Write(System.Text.Encoding.ASCII.GetBytes("Test"+Environment.NewLine),0,4+Environment.NewLine.Length);
+			fs.Close();
+
+			log.Log(this.GetType(),Level.Info,"This is a message 2",null);
+			DestroyLogger();
+
+			Assertion.Assert("File was not locked",locked);
+			AssertFileEquals(filename,"This is a message"+Environment.NewLine+"Test"+Environment.NewLine+"This is a message 2"+Environment.NewLine);
+			Assertion.AssertEquals("Unexpected error message","",sh.Message);
+		}
+
+		/// <summary>
+		/// Verify that the default LockModel is ExclusiveLock, to maintain backwards compatability with previous behaviour
+		/// </summary>
+		[Test] public void TestDefaultLockingModel()
+		{
+			String filename="test.log";
+			SilentErrorHandler sh=new SilentErrorHandler();
+			ILogger log=CreateLogger(filename,null,sh);
+
+			IAppender[] appenders=log.Repository.GetAppenders();
+			Assertion.AssertEquals("The wrong number of appenders are configured",1,appenders.Length);
+
+			RollingFileAppender rfa=(RollingFileAppender)(appenders[0]);
+			Assertion.AssertEquals("The LockingModel is of an unexpected type",log4net.Util.SystemInfo.GetTypeFromString("log4net.Appender.FileAppender+ExclusiveLock",true,true),rfa.LockingModel.GetType());
+		}
+		
 		/// <summary>
 		/// Tests the count up case, with infinite max backups , to see that
 		/// initialization of the rolling file appender results in the expected value
