@@ -792,7 +792,7 @@ public class FastLogger
 				<p><a href="#top">Back to Top</a></p>
 
 
-				<section name="Why doesn't the EventLogAppender work?">
+				<section id="trouble-EventLog" name="Why doesn't the EventLogAppender work?">
 					<p>
 						If you are not getting events delivered to the event log this usually indicates 
 						a permissions problem. Basically if the event log does not exist the EventLogAppender 
