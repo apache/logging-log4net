@@ -1179,12 +1179,12 @@ namespace log4net.Core
 		public const string HostNameProperty = "log4net:HostName";
 
 		/// <summary>
-		/// The key into the <see cref="Properties"/> map for the host name value.
+		/// The key into the <see cref="Properties"/> map for the thread identity value.
 		/// </summary>
 		public const string IdentityProperty = "log4net:Identity";
 
 		/// <summary>
-		/// The key into the <see cref="Properties"/> map for the host name value.
+		/// The key into the <see cref="Properties"/> map for the user name value.
 		/// </summary>
 		public const string UserNameProperty = "log4net:UserName";
 
