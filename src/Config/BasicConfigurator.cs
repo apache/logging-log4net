@@ -72,7 +72,7 @@ namespace log4net.Config
 		/// Initializes the log4net logging system using a <see cref="ConsoleAppender"/>
 		/// that will write to <c>Console.Out</c>. The log messages are
 		/// formatted using the <see cref="PatternLayout"/> layout object
-		/// with the <see cref="PatternLayout.TtlnConversionPattern"/>
+		/// with the <see cref="PatternLayout.DetailConversionPattern"/>
 		/// layout style.
 		/// </para>
 		/// </remarks>
@@ -99,13 +99,13 @@ namespace log4net.Config
 		/// Initializes the specified repository using a <see cref="ConsoleAppender"/>
 		/// that will write to <c>Console.Out</c>. The log messages are
 		/// formatted using the <see cref="PatternLayout"/> layout object
-		/// with the <see cref="PatternLayout.TtlnConversionPattern"/>
+		/// with the <see cref="PatternLayout.DetailConversionPattern"/>
 		/// layout style.
 		/// </para>
 		/// </remarks>
 		static public void Configure(ILoggerRepository repository) 
 		{
-			BasicConfigurator.Configure(repository, new ConsoleAppender(new PatternLayout(PatternLayout.TtlnConversionPattern)));
+			BasicConfigurator.Configure(repository, new ConsoleAppender(new PatternLayout(PatternLayout.DetailConversionPattern)));
 		}
 
 		/// <summary>
