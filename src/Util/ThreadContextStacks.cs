@@ -26,6 +26,7 @@ namespace log4net.Util
 	/// </summary>
 	/// <remarks>
 	/// <para>
+	/// Implementation of Stacks collection for the <see cref="log4net.ThreadContext"/>
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
@@ -36,8 +37,13 @@ namespace log4net.Util
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ThreadContextStacks" /> class.
+		/// Internal constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="ThreadContextStacks" /> class.
+		/// </para>
+		/// </remarks>
 		internal ThreadContextStacks(ContextPropertiesBase properties)
 		{
 			m_properties = properties;
@@ -48,11 +54,16 @@ namespace log4net.Util
 		#region Public Instance Properties
 
 		/// <summary>
-		/// Gets or sets the value of a property
+		/// Gets the named thread context stack
 		/// </summary>
 		/// <value>
-		/// The value for the property with the specified key
+		/// The named stack
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets the named thread context stack
+		/// </para>
+		/// </remarks>
 		public ThreadContextStack this[string key]
 		{
 			get 

@@ -29,6 +29,7 @@ namespace log4net.Util
 	/// </summary>
 	/// <remarks>
 	/// <para>
+	/// Implementation of List for the <see cref="log4net.ThreadContext"/>
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
@@ -46,8 +47,13 @@ namespace log4net.Util
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ThreadContextStack" /> class. 
+		/// Internal constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="ThreadContextStack" /> class. 
+		/// </para>
+		/// </remarks>
 		internal ThreadContextList()
 		{
 		}
@@ -59,6 +65,11 @@ namespace log4net.Util
 		/// <summary>
 		/// Clears all the contextual information held in this list.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Clears all the contextual information held in this list.
+		/// </para>
+		/// </remarks>
 		public void Clear() 
 		{
 			m_list.Clear();
@@ -68,6 +79,11 @@ namespace log4net.Util
 		/// Append a message to this list
 		/// </summary>
 		/// <param name="message">the message to append to this list</param>
+		/// <remarks>
+		/// <para>
+		/// Append a message to this list
+		/// </para>
+		/// </remarks>
 		public void Append(string message) 
 		{
 			m_list.Add(message);
@@ -81,6 +97,11 @@ namespace log4net.Util
 		/// Gets the current context information for this list.
 		/// </summary>
 		/// <returns>The current context information.</returns>
+		/// <remarks>
+		/// <para>
+		/// Gets the current context information for this list.
+		/// </para>
+		/// </remarks>
 		internal string GetFullMessage() 
 		{
 			if (m_list.Count > 1)
@@ -113,6 +134,11 @@ namespace log4net.Util
 		/// Gets the current context information for this list.
 		/// </summary>
 		/// <returns>Gets the current context information</returns>
+		/// <remarks>
+		/// <para>
+		/// Gets the current context information for this list.
+		/// </para>
+		/// </remarks>
 		public override string ToString()
 		{
 			return GetFullMessage();
@@ -122,6 +148,11 @@ namespace log4net.Util
 		/// Get a portable version of this object
 		/// </summary>
 		/// <returns>the portable instance of this object</returns>
+		/// <remarks>
+		/// <para>
+		/// Get a portable version of this object
+		/// </para>
+		/// </remarks>
 		object IFixingRequired.GetFixedObject()
 		{
 			return GetFullMessage();

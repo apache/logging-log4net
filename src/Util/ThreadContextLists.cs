@@ -26,6 +26,7 @@ namespace log4net.Util
 	/// </summary>
 	/// <remarks>
 	/// <para>
+	/// Implementation of Lists collection for the <see cref="log4net.ThreadContext"/>
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
@@ -36,8 +37,13 @@ namespace log4net.Util
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ThreadContextLists" /> class.
+		/// Internal constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="ThreadContextLists" /> class.
+		/// </para>
+		/// </remarks>
 		internal ThreadContextLists(ContextPropertiesBase properties)
 		{
 			m_properties = properties;
@@ -48,11 +54,16 @@ namespace log4net.Util
 		#region Public Instance Properties
 
 		/// <summary>
-		/// Gets or sets the value of a property
+		/// Gets the named list
 		/// </summary>
 		/// <value>
-		/// The value for the property with the specified key
+		/// The named list
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets the named list
+		/// </para>
+		/// </remarks>
 		public ThreadContextList this[string key]
 		{
 			get 

@@ -26,6 +26,11 @@ namespace log4net.Util
 	/// <summary>
 	/// Utility class for system specific information.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Utility class of static methods for system specific information.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	/// <author>Alexey Solofnenko</author>
@@ -36,6 +41,11 @@ namespace log4net.Util
 		/// <summary>
 		/// Private constructor to prevent instances.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Only static methods are exposed from this type.
+		/// </para>
+		/// </remarks>
 		private SystemInfo() 
 		{
 		}
@@ -50,6 +60,11 @@ namespace log4net.Util
 		/// <value>
 		/// The system dependent line terminator.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets the system dependent line terminator.
+		/// </para>
+		/// </remarks>
 		public static string NewLine
 		{
 			get
@@ -66,6 +81,11 @@ namespace log4net.Util
 		/// Gets the base directory for this <see cref="AppDomain"/>.
 		/// </summary>
 		/// <value>The base directory path for the current <see cref="AppDomain"/>.</value>
+		/// <remarks>
+		/// <para>
+		/// Gets the base directory for this <see cref="AppDomain"/>.
+		/// </para>
+		/// </remarks>
 		public static string ApplicationBaseDirectory
 		{
 			get 
@@ -83,9 +103,11 @@ namespace log4net.Util
 		/// </summary>
 		/// <value>The path to the configuration file for the current <see cref="AppDomain"/>.</value>
 		/// <remarks>
+		/// <para>
 		/// The .NET Compact Framework 1.0 does not have a concept of a configuration
 		/// file. For this runtime, we use the entry assembly location as the root for
 		/// the configuration file name.
+		/// </para>
 		/// </remarks>
 		public static string ConfigurationFileLocation
 		{
@@ -103,6 +125,11 @@ namespace log4net.Util
 		/// Gets the path to the file that first executed in the current <see cref="AppDomain"/>.
 		/// </summary>
 		/// <value>The path to the entry assembly.</value>
+		/// <remarks>
+		/// <para>
+		/// Gets the path to the file that first executed in the current <see cref="AppDomain"/>.
+		/// </para>
+		/// </remarks>
 		public static string EntryAssemblyLocation
 		{
 			get 
@@ -148,11 +175,19 @@ namespace log4net.Util
 		/// Get the host name or machine name for the current machine
 		/// </summary>
 		/// <value>
+		/// The hostname or machine name
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Get the host name or machine name for the current machine
+		/// </para>
+		/// <para>
 		/// The host name (<see cref="System.Net.Dns.GetHostName"/>) or
 		/// the machine name (<c>Environment.MachineName</c>) for
 		/// the current machine, or if neither of these are available
 		/// then <c>NOT AVAILABLE</c> is returned.
-		/// </value>
+		/// </para>
+		/// </remarks>
 		public static string HostName
 		{
 			get
@@ -215,7 +250,9 @@ namespace log4net.Util
 		/// If available the name of the application is retrieved from
 		/// the <c>AppDomain</c> using <c>AppDomain.CurrentDomain.FriendlyName</c>.
 		/// </para>
-		/// <para>Otherwise the file name of the entry assembly is used.</para>
+		/// <para>
+		/// Otherwise the file name of the entry assembly is used.
+		/// </para>
 		/// </remarks>
 		public static string ApplicationFriendlyName
 		{
@@ -311,12 +348,14 @@ namespace log4net.Util
 		/// Gets the assembly location path for the specified assembly.
 		/// </summary>
 		/// <param name="myAssembly">The assembly to get the location for.</param>
+		/// <returns>The location of the assembly.</returns>
 		/// <remarks>
+		/// <para>
 		/// This method does not guarantee to return the correct path
 		/// to the assembly. If only tries to give an indication as to
 		/// where the assembly was loaded from.
+		/// </para>
 		/// </remarks>
-		/// <returns>The location of the assembly.</returns>
 		public static string AssemblyLocationInfo(Assembly myAssembly)
 		{
 #if NETCF
@@ -349,12 +388,14 @@ namespace log4net.Util
 		/// loaded.
 		/// </summary>
 		/// <param name="type">The <see cref="Type" /> to get the fully qualified name for.</param>
+		/// <returns>The fully qualified name for the <see cref="Type" />.</returns>
 		/// <remarks>
+		/// <para>
 		/// This is equivalent to the <c>Type.AssemblyQualifiedName</c> property,
 		/// but this method works on the .NET Compact Framework 1.0 as well as
 		/// the full .NET runtime.
+		/// </para>
 		/// </remarks>
-		/// <returns>The fully qualified name for the <see cref="Type" />.</returns>
 		public static string AssemblyQualifiedName(Type type)
 		{
 			return type.FullName + ", " + type.Assembly.FullName;
@@ -364,6 +405,7 @@ namespace log4net.Util
 		/// Gets the short name of the <see cref="Assembly" />.
 		/// </summary>
 		/// <param name="myAssembly">The <see cref="Assembly" /> to get the name for.</param>
+		/// <returns>The short name of the <see cref="Assembly" />.</returns>
 		/// <remarks>
 		/// <para>
 		/// The short name of the assembly is the <see cref="Assembly.FullName" /> 
@@ -371,7 +413,7 @@ namespace log4net.Util
 		/// assembly's file name without the extension.
 		/// </para>
 		/// <para>
-		/// Use this rather than Assembly.GetName().Name because that
+		/// Use this rather than <c>Assembly.GetName().Name</c> because that
 		/// is not available on the Compact Framework.
 		/// </para>
 		/// <para>
@@ -381,7 +423,6 @@ namespace log4net.Util
 		/// start from there and strip out just the assembly name.
 		/// </para>
 		/// </remarks>
-		/// <returns>The short name of the <see cref="Assembly" />.</returns>
 		public static string AssemblyShortName(Assembly myAssembly)
 		{
 			string name = myAssembly.FullName;
@@ -398,11 +439,15 @@ namespace log4net.Util
 		}
 
 		/// <summary>
-		/// Gets the file name portion of the <see cref="Assembly" />, including 
-		/// the extension.
+		/// Gets the file name portion of the <see cref="Assembly" />, including the extension.
 		/// </summary>
 		/// <param name="myAssembly">The <see cref="Assembly" /> to get the file name for.</param>
 		/// <returns>The file name of the assembly.</returns>
+		/// <remarks>
+		/// <para>
+		/// Gets the file name portion of the <see cref="Assembly" />, including the extension.
+		/// </para>
+		/// </remarks>
 		public static string AssemblyFileName(Assembly myAssembly)
 		{
 #if NETCF
@@ -435,6 +480,7 @@ namespace log4net.Util
 		/// <param name="typeName">The name of the type to load.</param>
 		/// <param name="throwOnError">Flag set to <c>true</c> to throw an exception if the type cannot be loaded.</param>
 		/// <param name="ignoreCase"><c>true</c> to ignore the case of the type name; otherwise, <c>false</c></param>
+		/// <returns>The type loaded or <c>null</c> if it could not be loaded.</returns>
 		/// <remarks>
 		/// <para>
 		/// If the type name is fully qualified, i.e. if contains an assembly name in 
@@ -447,7 +493,6 @@ namespace log4net.Util
 		/// then all the loaded assemblies will be searched for the type.
 		/// </para>
 		/// </remarks>
-		/// <returns>The type loaded or <c>null</c> if it could not be loaded.</returns>
 		public static Type GetTypeFromString(Type relativeType, string typeName, bool throwOnError, bool ignoreCase)
 		{
 			return GetTypeFromString(relativeType.Assembly, typeName, throwOnError, ignoreCase);
@@ -459,6 +504,7 @@ namespace log4net.Util
 		/// <param name="typeName">The name of the type to load.</param>
 		/// <param name="throwOnError">Flag set to <c>true</c> to throw an exception if the type cannot be loaded.</param>
 		/// <param name="ignoreCase"><c>true</c> to ignore the case of the type name; otherwise, <c>false</c></param>
+		/// <returns>The type loaded or <c>null</c> if it could not be loaded.</returns>		
 		/// <remarks>
 		/// <para>
 		/// If the type name is fully qualified, i.e. if contains an assembly name in 
@@ -471,7 +517,6 @@ namespace log4net.Util
 		/// in the assembly then all the loaded assemblies will be searched for the type.
 		/// </para>
 		/// </remarks>
-		/// <returns>The type loaded or <c>null</c> if it could not be loaded.</returns>		
 		public static Type GetTypeFromString(string typeName, bool throwOnError, bool ignoreCase)
 		{
 			return GetTypeFromString(Assembly.GetCallingAssembly(), typeName, throwOnError, ignoreCase);
@@ -484,6 +529,7 @@ namespace log4net.Util
 		/// <param name="typeName">The name of the type to load.</param>
 		/// <param name="throwOnError">Flag set to <c>true</c> to throw an exception if the type cannot be loaded.</param>
 		/// <param name="ignoreCase"><c>true</c> to ignore the case of the type name; otherwise, <c>false</c></param>
+		/// <returns>The type loaded or <c>null</c> if it could not be loaded.</returns>
 		/// <remarks>
 		/// <para>
 		/// If the type name is fully qualified, i.e. if contains an assembly name in 
@@ -496,7 +542,6 @@ namespace log4net.Util
 		/// will be searched for the type.
 		/// </para>
 		/// </remarks>
-		/// <returns>The type loaded or <c>null</c> if it could not be loaded.</returns>
 		public static Type GetTypeFromString(Assembly relativeAssembly, string typeName, bool throwOnError, bool ignoreCase)
 		{
 			// Check if the type name specifies the assembly name
@@ -565,6 +610,11 @@ namespace log4net.Util
 		/// Generate a new guid
 		/// </summary>
 		/// <returns>A new Guid</returns>
+		/// <remarks>
+		/// <para>
+		/// Generate a new guid
+		/// </para>
+		/// </remarks>
 		public static Guid NewGuid()
 		{
 #if NETCF
@@ -575,15 +625,18 @@ namespace log4net.Util
 		}
 
 		/// <summary>
-		/// Create a new instance of the <see cref="ArgumentOutOfRangeException"/> class 
-		/// with a specified error message, the parameter name, and the value 
-		/// of the argument.
+		/// Create an <see cref="ArgumentOutOfRangeException"/>
 		/// </summary>
 		/// <param name="parameterName">The name of the parameter that caused the exception</param>
 		/// <param name="actualValue">The value of the argument that causes this exception</param>
 		/// <param name="message">The message that describes the error</param>
 		/// <returns>the ArgumentOutOfRangeException object</returns>
 		/// <remarks>
+		/// <para>
+		/// Create a new instance of the <see cref="ArgumentOutOfRangeException"/> class 
+		/// with a specified error message, the parameter name, and the value 
+		/// of the argument.
+		/// </para>
 		/// <para>
 		/// The Compact Framework does not support the 3 parameter constructor for the
 		/// <see cref="ArgumentOutOfRangeException"/> type. This method provides an
@@ -648,8 +701,10 @@ namespace log4net.Util
 		/// Gets an empty array of types.
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// The <c>Type.EmptyTypes</c> field is not available on
 		/// the .NET Compact Framework 1.0.
+		/// </para>
 		/// </remarks>
 		public static readonly Type[] EmptyTypes = new Type[0];
 

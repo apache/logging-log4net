@@ -37,9 +37,9 @@ namespace log4net.Util
 	/// one-at-a-time lock, such as <see cref="System.Threading.Monitor"/>.
 	/// </para>
 	/// <para>
-	/// If a platform does not support a ReaderWriterLock implementation 
-	/// then all readers and writers are serialized. Therefore the caller
-	/// must not rely on multiple simultaneous readers.
+	/// If a platform does not support a <c>System.Threading.ReaderWriterLock</c> 
+	/// implementation then all readers and writers are serialized. Therefore 
+	/// the caller must not rely on multiple simultaneous readers.
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
@@ -48,8 +48,13 @@ namespace log4net.Util
 		#region Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ReaderWriterLock" /> class.
+		/// Constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="ReaderWriterLock" /> class.
+		/// </para>
+		/// </remarks>
 		public ReaderWriterLock()
 		{
 #if HAS_READERWRITERLOCK
@@ -65,8 +70,10 @@ namespace log4net.Util
 		/// Acquires a reader lock
 		/// </summary>
 		/// <remarks>
-		/// AcquireReaderLock blocks if a different thread has the writer 
-		/// lock, or if at least one thread is waiting for the writer lock
+		/// <para>
+		/// <see cref="AcquireReaderLock"/> blocks if a different thread has the writer 
+		/// lock, or if at least one thread is waiting for the writer lock.
+		/// </para>
 		/// </remarks>
 		public void AcquireReaderLock()
 		{
@@ -81,8 +88,10 @@ namespace log4net.Util
 		/// Decrements the lock count
 		/// </summary>
 		/// <remarks>
-		/// ReleaseReaderLock decrements the lock count. When the count 
-		/// reaches zero, the lock is released
+		/// <para>
+		/// <see cref="ReleaseReaderLock"/> decrements the lock count. When the count 
+		/// reaches zero, the lock is released.
+		/// </para>
 		/// </remarks>
 		public void ReleaseReaderLock()
 		{
@@ -97,7 +106,9 @@ namespace log4net.Util
 		/// Acquires the writer lock
 		/// </summary>
 		/// <remarks>
-		/// This method blocks if another thread has a reader lock or writer lock
+		/// <para>
+		/// This method blocks if another thread has a reader lock or writer lock.
+		/// </para>
 		/// </remarks>
 		public void AcquireWriterLock()
 		{
@@ -112,8 +123,10 @@ namespace log4net.Util
 		/// Decrements the lock count on the writer lock
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// ReleaseWriterLock decrements the writer lock count. 
-		/// When the count reaches zero, the writer lock is released
+		/// When the count reaches zero, the writer lock is released.
+		/// </para>
 		/// </remarks>
 		public void ReleaseWriterLock()
 		{

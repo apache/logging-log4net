@@ -53,8 +53,10 @@ namespace log4net.Util
 		/// The impersonation modes for the <see cref="WindowsSecurityContext"/>
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// See the <see cref="WindowsSecurityContext.Credentials"/> property for
 		/// details.
+		/// </para>
 		/// </remarks>
 		public enum ImpersonationMode
 		{
@@ -84,6 +86,11 @@ namespace log4net.Util
 		/// <summary>
 		/// Default constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Default constructor
+		/// </para>
+		/// </remarks>
 		public WindowsSecurityContext()
 		{
 		}
@@ -93,8 +100,11 @@ namespace log4net.Util
 		#region Public Properties
 
 		/// <summary>
-		/// The impersonation mode for this security context
+		/// Gets or sets the impersonation mode for this security context
 		/// </summary>
+		/// <value>
+		/// The impersonation mode for this security context
+		/// </value>
 		/// <remarks>
 		/// <para>
 		/// Impersonate either a user with user credentials or
@@ -124,8 +134,11 @@ namespace log4net.Util
 		}
 
 		/// <summary>
-		/// The Windows username for this security context
+		/// Gets or sets the Windows username for this security context
 		/// </summary>
+		/// <value>
+		/// The Windows username for this security context
+		/// </value>
 		/// <remarks>
 		/// <para>
 		/// This property must be set if <see cref="Credentials"/>
@@ -139,8 +152,11 @@ namespace log4net.Util
 		}
 
 		/// <summary>
-		/// The Windows domain name for this security context
+		/// Gets or sets the Windows domain name for this security context
 		/// </summary>
+		/// <value>
+		/// The Windows domain name for this security context
+		/// </value>
 		/// <remarks>
 		/// <para>
 		/// The default value for <see cref="DomainName"/> is the local machine name
@@ -158,8 +174,11 @@ namespace log4net.Util
 		}
 
 		/// <summary>
-		/// The password for the Windows account specified by the <see cref="UserName"/> and <see cref="DomainName"/> properties.
+		/// Sets the password for the Windows account specified by the <see cref="UserName"/> and <see cref="DomainName"/> properties.
 		/// </summary>
+		/// <value>
+		/// The password for the Windows account specified by the <see cref="UserName"/> and <see cref="DomainName"/> properties.
+		/// </value>
 		/// <remarks>
 		/// <para>
 		/// This property must be set if <see cref="Credentials"/>
@@ -168,7 +187,6 @@ namespace log4net.Util
 		/// </remarks>
 		public string Password
 		{
-			get { return m_password; }
 			set { m_password = value; }
 		}
 
@@ -216,12 +234,15 @@ namespace log4net.Util
 		/// Impersonate the Windows account specified by the <see cref="UserName"/> and <see cref="DomainName"/> properties.
 		/// </summary>
 		/// <param name="state">caller provided state</param>
-		/// <returns>An <see cref="IDisposable"/> instance that will
-		/// revoke the impersonation of this SecurityContext</returns>
+		/// <returns>
+		/// An <see cref="IDisposable"/> instance that will revoke the impersonation of this SecurityContext
+		/// </returns>
 		/// <remarks>
+		/// <para>
 		/// Depending on the <see cref="Credentials"/> property either
 		/// impersonate a user using credentials supplied or revert 
 		/// to the process credentials.
+		/// </para>
 		/// </remarks>
 		public override IDisposable Impersonate(object state)
 		{
@@ -250,7 +271,7 @@ namespace log4net.Util
 		/// <remarks>
 		/// <para>
 		/// Uses the Windows API call LogonUser to get a principal token for the account. This
-		/// token is used to initialise the WindowsIdentity.
+		/// token is used to initialize the WindowsIdentity.
 		/// </para>
 		/// </remarks>
 		private static WindowsIdentity LogonUser(string userName, string domainName, string password)
@@ -310,18 +331,40 @@ namespace log4net.Util
 		#region DisposableImpersonationContext class
 
 		/// <summary>
+		/// Adds <see cref="IDisposable"/> to <see cref="WindowsImpersonationContext"/>
+		/// </summary>
+		/// <remarks>
+		/// <para>
 		/// Helper class to expose the <see cref="WindowsImpersonationContext"/>
 		/// through the <see cref="IDisposable"/> interface.
-		/// </summary>
+		/// </para>
+		/// </remarks>
 		private sealed class DisposableImpersonationContext : IDisposable
 		{
 			private readonly WindowsImpersonationContext m_impersonationContext;
 
+			/// <summary>
+			/// Constructor
+			/// </summary>
+			/// <param name="impersonationContext">the impersonation context being wrapped</param>
+			/// <remarks>
+			/// <para>
+			/// Constructor
+			/// </para>
+			/// </remarks>
 			public DisposableImpersonationContext(WindowsImpersonationContext impersonationContext)
 			{
 				m_impersonationContext = impersonationContext;
 			}
 
+			/// <summary>
+			/// Revert the impersonation
+			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// Revert the impersonation
+			/// </para>
+			/// </remarks>
 			public void Dispose()
 			{
 				m_impersonationContext.Undo();
@@ -329,7 +372,6 @@ namespace log4net.Util
 		}
 
 		#endregion
-
 	}
 }
 

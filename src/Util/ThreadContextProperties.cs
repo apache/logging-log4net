@@ -45,8 +45,13 @@ namespace log4net.Util
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ThreadContextProperties" /> class.
+		/// Internal constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="ThreadContextProperties" /> class.
+		/// </para>
+		/// </remarks>
 		internal ThreadContextProperties()
 		{
 		}
@@ -61,6 +66,11 @@ namespace log4net.Util
 		/// <value>
 		/// The value for the property with the specified key
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets or sets the value of a property
+		/// </para>
+		/// </remarks>
 		override public object this[string key]
 		{
 			get 
@@ -86,6 +96,11 @@ namespace log4net.Util
 		/// Remove a property
 		/// </summary>
 		/// <param name="key">the key for the entry to remove</param>
+		/// <remarks>
+		/// <para>
+		/// Remove a property
+		/// </para>
+		/// </remarks>
 		public void Remove(string key)
 		{
 			PropertiesDictionary dictionary = GetProperties(false);
@@ -96,8 +111,13 @@ namespace log4net.Util
 		}
 
 		/// <summary>
-		/// Clear the global context properties
+		/// Clear all properties
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Clear all properties
+		/// </para>
+		/// </remarks>
 		public void Clear()
 		{
 			PropertiesDictionary dictionary = GetProperties(false);
@@ -112,7 +132,7 @@ namespace log4net.Util
 		#region Internal Instance Methods
 
 		/// <summary>
-		/// Get the PropertiesDictionary stored in the LocalDataStoreSlot for this thread.
+		/// Get the <c>PropertiesDictionary</c> for this thread.
 		/// </summary>
 		/// <param name="create">create the dictionary if it does not exist, otherwise return null if is does not exist</param>
 		/// <returns>the properties for this thread</returns>
@@ -120,7 +140,7 @@ namespace log4net.Util
 		/// <para>
 		/// The collection returned is only to be used on the calling thread. If the
 		/// caller needs to share the collection between different threads then the 
-		/// caller must clone the collection before doings so.
+		/// caller must clone the collection before doing so.
 		/// </para>
 		/// </remarks>
 		internal PropertiesDictionary GetProperties(bool create)

@@ -25,6 +25,11 @@ namespace log4net.Util
 	/// <summary>
 	/// Utility class for transforming strings.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Utility class for transforming strings.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	public sealed class Transform
@@ -35,7 +40,9 @@ namespace log4net.Util
 		/// Initializes a new instance of the <see cref="Transform" /> class. 
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// Uses a private access modifier to prevent instantiation of this class.
+		/// </para>
 		/// </remarks>
 		private Transform()
 		{
@@ -46,13 +53,15 @@ namespace log4net.Util
 		#region Public Static Methods
 
 		/// <summary>
-		/// Write a string to an XmlWriter
+		/// Write a string to an <see cref="XmlWriter"/>
 		/// </summary>
 		/// <param name="writer">the writer to write to</param>
 		/// <param name="stringData">the string to write</param>
 		/// <remarks>
+		/// <para>
 		/// The test is escaped either using XML escape entities
 		/// or using CDATA sections.
+		/// </para>
 		/// </remarks>
 		public static void WriteEscapedXmlString(XmlWriter writer, string stringData)
 		{
@@ -115,7 +124,9 @@ namespace log4net.Util
 		/// <param name="substring">the substring to find</param>
 		/// <returns>the number of times the substring occurs in the text</returns>
 		/// <remarks>
+		/// <para>
 		/// The substring is assumed to be non repeating within itself.
+		/// </para>
 		/// </remarks>
 		private static int CountSubstrings(string text, string substring)
 		{

@@ -29,8 +29,14 @@ namespace log4net.Util
 	/// String keyed object map that is read only.
 	/// </summary>
 	/// <remarks>
-	/// Only member objects that are serializable will
+	/// <para>
+	/// This collection is readonly and cannot be modified.
+	/// </para>
+	/// <para>
+	/// While this collection is serializable only member 
+	/// objects that are serializable will
 	/// be serialized along with this collection.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
@@ -52,16 +58,26 @@ namespace log4net.Util
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ReadOnlyPropertiesDictionary" /> class.
+		/// Constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="ReadOnlyPropertiesDictionary" /> class.
+		/// </para>
+		/// </remarks>
 		public ReadOnlyPropertiesDictionary()
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ReadOnlyPropertiesDictionary" /> class.
+		/// Copy Constructor
 		/// </summary>
 		/// <param name="propertiesDictionary">properties to copy</param>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="ReadOnlyPropertiesDictionary" /> class.
+		/// </para>
+		/// </remarks>
 		public ReadOnlyPropertiesDictionary(ReadOnlyPropertiesDictionary propertiesDictionary)
 		{
 			foreach(DictionaryEntry entry in propertiesDictionary)
@@ -76,11 +92,16 @@ namespace log4net.Util
 
 #if !NETCF
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ReadOnlyPropertiesDictionary" /> class 
-		/// with serialized data.
+		/// Deserialization constructor
 		/// </summary>
 		/// <param name="info">The <see cref="SerializationInfo" /> that holds the serialized object data.</param>
 		/// <param name="context">The <see cref="StreamingContext" /> that contains contextual information about the source or destination.</param>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="ReadOnlyPropertiesDictionary" /> class 
+		/// with serialized data.
+		/// </para>
+		/// </remarks>
 		protected ReadOnlyPropertiesDictionary(SerializationInfo info, StreamingContext context)
 		{
 			foreach(SerializationEntry entry in info)
@@ -98,8 +119,12 @@ namespace log4net.Util
 		/// <summary>
 		/// Gets the key names.
 		/// </summary>
-		/// <value>An array of key names.</value>
 		/// <returns>An array of all the keys.</returns>
+		/// <remarks>
+		/// <para>
+		/// Gets the key names.
+		/// </para>
+		/// </remarks>
 		public string[] GetKeys()
 		{
 			string[] keys = new String[InnerHashtable.Count];
@@ -115,9 +140,11 @@ namespace log4net.Util
 		/// </value>
 		/// <param name="key">The key of the property to get or set.</param>
 		/// <remarks>
+		/// <para>
 		/// The property value will only be serialized if it is serializable.
 		/// If it cannot be serialized it will be silently ignored if
 		/// a serialization operation is performed.
+		/// </para>
 		/// </remarks>
 		public virtual object this[string key]
 		{
@@ -134,6 +161,11 @@ namespace log4net.Util
 		/// </summary>
 		/// <param name="key">the key to look for</param>
 		/// <returns>true if the dictionary contains the specified key</returns>
+		/// <remarks>
+		/// <para>
+		/// Test if the dictionary contains a specified key
+		/// </para>
+		/// </remarks>
 		public bool Contains(string key)
 		{
 			return InnerHashtable.Contains(key);
@@ -144,6 +176,14 @@ namespace log4net.Util
 		/// <summary>
 		/// The hashtable used to store the properties
 		/// </summary>
+		/// <value>
+		/// The internal collection used to store the properties
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The hashtable used to store the properties
+		/// </para>
+		/// </remarks>
 		protected Hashtable InnerHashtable
 		{
 			get { return m_hashtable; }
@@ -157,6 +197,11 @@ namespace log4net.Util
 		/// </summary>
 		/// <param name="info">The <see cref="SerializationInfo" /> to populate with data.</param>
 		/// <param name="context">The destination for this serialization.</param>
+		/// <remarks>
+		/// <para>
+		/// Serializes this object into the <see cref="SerializationInfo" /> provided.
+		/// </para>
+		/// </remarks>
 		[System.Security.Permissions.SecurityPermissionAttribute(System.Security.Permissions.SecurityAction.Demand, SerializationFormatter=true)]
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
@@ -166,7 +211,9 @@ namespace log4net.Util
 				if (entry.Value.GetType().IsSerializable)
 				{
 					// Store the keys as an Xml encoded local name as it may contain colons (':') 
-					// which are not escaped by the Xml Serialization framework
+					// which are NOT escaped by the Xml Serialization framework.
+					// This must be a bug in the serialization framework as we cannot be expected
+					// to know the implementation details of all the possible transport layers.
 					info.AddValue(XmlConvert.EncodeLocalName(entry.Key as string), entry.Value);
 				}
 			}

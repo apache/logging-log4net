@@ -29,8 +29,11 @@ namespace log4net.Util
 	/// String keyed object map.
 	/// </summary>
 	/// <remarks>
-	/// Only member objects that are serializable will
+	/// <para>
+	/// While this collection is serializable only member 
+	/// objects that are serializable will
 	/// be serialized along with this collection.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
@@ -43,16 +46,26 @@ namespace log4net.Util
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PropertiesDictionary" /> class.
+		/// Constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="PropertiesDictionary" /> class.
+		/// </para>
+		/// </remarks>
 		public PropertiesDictionary()
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PropertiesDictionary" /> class.
+		/// Constructor
 		/// </summary>
 		/// <param name="propertiesDictionary">properties to copy</param>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="PropertiesDictionary" /> class.
+		/// </para>
+		/// </remarks>
 		public PropertiesDictionary(ReadOnlyPropertiesDictionary propertiesDictionary) : base(propertiesDictionary)
 		{
 		}
@@ -69,7 +82,9 @@ namespace log4net.Util
 		/// <param name="info">The <see cref="SerializationInfo" /> that holds the serialized object data.</param>
 		/// <param name="context">The <see cref="StreamingContext" /> that contains contextual information about the source or destination.</param>
 		/// <remarks>
+		/// <para>
 		/// Because this class is sealed the serialization constructor is private.
+		/// </para>
 		/// </remarks>
 		private PropertiesDictionary(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
@@ -88,9 +103,11 @@ namespace log4net.Util
 		/// </value>
 		/// <param name="key">The key of the property to get or set.</param>
 		/// <remarks>
+		/// <para>
 		/// The property value will only be serialized if it is serializable.
 		/// If it cannot be serialized it will be silently ignored if
 		/// a serialization operation is performed.
+		/// </para>
 		/// </remarks>
 		override public object this[string key]
 		{
@@ -106,6 +123,11 @@ namespace log4net.Util
 		/// Remove the entry with the specified key from this dictionary
 		/// </summary>
 		/// <param name="key">the key for the entry to remove</param>
+		/// <remarks>
+		/// <para>
+		/// Remove the entry with the specified key from this dictionary
+		/// </para>
+		/// </remarks>
 		public void Remove(string key)
 		{
 			InnerHashtable.Remove(key);
@@ -118,6 +140,12 @@ namespace log4net.Util
 		/// <summary>
 		/// See <see cref="IDictionary.GetEnumerator"/>
 		/// </summary>
+		/// <returns>an enumerator</returns>
+		/// <remarks>
+		/// <para>
+		/// Returns a <see cref="IDictionaryEnumerator"/> over the contest of this collection.
+		/// </para>
+		/// </remarks>
 		IDictionaryEnumerator IDictionary.GetEnumerator()
 		{
 			return InnerHashtable.GetEnumerator();
@@ -126,7 +154,12 @@ namespace log4net.Util
 		/// <summary>
 		/// See <see cref="IDictionary.Remove"/>
 		/// </summary>
-		/// <param name="key"></param>
+		/// <param name="key">the key to remove</param>
+		/// <remarks>
+		/// <para>
+		/// Remove the entry with the specified key from this dictionary
+		/// </para>
+		/// </remarks>
 		void IDictionary.Remove(object key)
 		{
 			InnerHashtable.Remove(key);
@@ -135,8 +168,13 @@ namespace log4net.Util
 		/// <summary>
 		/// See <see cref="IDictionary.Contains"/>
 		/// </summary>
-		/// <param name="key"></param>
-		/// <returns></returns>
+		/// <param name="key">the key to lookup in the collection</param>
+		/// <returns><c>true</c> if the collection contains the specified key</returns>
+		/// <remarks>
+		/// <para>
+		/// Test if this collection contains a specified key.
+		/// </para>
+		/// </remarks>
 		bool IDictionary.Contains(object key)
 		{
 			return InnerHashtable.Contains(key);
@@ -145,6 +183,11 @@ namespace log4net.Util
 		/// <summary>
 		/// Remove all properties from the properties collection
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Remove all properties from the properties collection
+		/// </para>
+		/// </remarks>
 		public override void Clear()
 		{
 			InnerHashtable.Clear();
@@ -153,8 +196,14 @@ namespace log4net.Util
 		/// <summary>
 		/// See <see cref="IDictionary.Add"/>
 		/// </summary>
-		/// <param name="key"></param>
-		/// <param name="value"></param>
+		/// <param name="key">the key</param>
+		/// <param name="value">the value to store for the key</param>
+		/// <remarks>
+		/// <para>
+		/// Store a value for the specified <see cref="String"/> <paramref name="key"/>.
+		/// </para>
+		/// </remarks>
+		/// <exception cref="ArgumentException">Thrown if the <paramref name="key"/> is not a string</exception>
 		void IDictionary.Add(object key, object value)
 		{
 			if (!(key is string))
@@ -167,6 +216,15 @@ namespace log4net.Util
 		/// <summary>
 		/// See <see cref="IDictionary.IsReadOnly"/>
 		/// </summary>
+		/// <value>
+		/// <c>false</c>
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// This collection is modifiable. This property always
+		/// returns <c>false</c>.
+		/// </para>
+		/// </remarks>
 		bool IDictionary.IsReadOnly
 		{
 			get { return false; }
@@ -175,6 +233,15 @@ namespace log4net.Util
 		/// <summary>
 		/// See <see cref="IDictionary.this"/>
 		/// </summary>
+		/// <value>
+		/// The value for the key specified.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Get or set a value for the specified <see cref="String"/> <paramref name="key"/>.
+		/// </para>
+		/// </remarks>
+		/// <exception cref="ArgumentException">Thrown if the <paramref name="key"/> is not a string</exception>
 		object IDictionary.this[object key]
 		{
 			get

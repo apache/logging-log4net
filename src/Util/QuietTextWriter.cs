@@ -24,9 +24,14 @@ using log4net.Core;
 namespace log4net.Util
 {
 	/// <summary>
-	/// QuietTextWriter does not throw exceptions when things go wrong. 
-	/// Instead, it delegates error handling to its <see cref="IErrorHandler"/>.
+	/// <see cref="TextWriter"/> that does not leak exceptions
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// <see cref="QuietTextWriter"/> does not throw exceptions when things go wrong. 
+	/// Instead, it delegates error handling to its <see cref="IErrorHandler"/>.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	public class QuietTextWriter : TextWriterAdapter
@@ -34,10 +39,15 @@ namespace log4net.Util
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Create a new QuietTextWriter using a writer and error handler
+		/// Constructor
 		/// </summary>
 		/// <param name="writer">the writer to actually write to</param>
 		/// <param name="errorHandler">the error handler to report error to</param>
+		/// <remarks>
+		/// <para>
+		/// Create a new QuietTextWriter using a writer and error handler
+		/// </para>
+		/// </remarks>
 		public QuietTextWriter(TextWriter writer, IErrorHandler errorHandler) : base(writer)
 		{
 			if (errorHandler == null)
@@ -52,12 +62,16 @@ namespace log4net.Util
 		#region Public Instance Properties
 
 		/// <summary>
-		/// Gets or sets the error handler that all errors are 
-		/// passed to.
+		/// Gets or sets the error handler that all errors are passed to.
 		/// </summary>
 		/// <value>
 		/// The error handler that all errors are passed to.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets or sets the error handler that all errors are passed to.
+		/// </para>
+		/// </remarks>
 		public IErrorHandler ErrorHandler
 		{
 			get { return m_errorHandler; }
@@ -78,6 +92,11 @@ namespace log4net.Util
 		/// <value>
 		/// <c>true</c> if this writer is closed, otherwise <c>false</c>.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets a value indicating whether this writer is closed.
+		/// </para>
+		/// </remarks>
 		public bool Closed
 		{
 			get { return m_closed; }
@@ -90,7 +109,12 @@ namespace log4net.Util
 		/// <summary>
 		/// Writes a character to the underlying writer
 		/// </summary>
-		/// <param name="value"></param>
+		/// <param name="value">the char to write</param>
+		/// <remarks>
+		/// <para>
+		/// Writes a character to the underlying writer
+		/// </para>
+		/// </remarks>
 		public override void Write(char value) 
 		{
 			try 
@@ -109,6 +133,11 @@ namespace log4net.Util
 		/// <param name="buffer">the buffer to write</param>
 		/// <param name="index">the start index to write from</param>
 		/// <param name="count">the number of characters to write</param>
+		/// <remarks>
+		/// <para>
+		/// Writes a buffer to the underlying writer
+		/// </para>
+		/// </remarks>
 		public override void Write(char[] buffer, int index, int count) 
 		{
 			try 
@@ -125,6 +154,11 @@ namespace log4net.Util
 		/// Writes a string to the output.
 		/// </summary>
 		/// <param name="value">The string data to write to the output.</param>
+		/// <remarks>
+		/// <para>
+		/// Writes a string to the output.
+		/// </para>
+		/// </remarks>
 		override public void Write(string value) 
 		{
 			try 
@@ -140,6 +174,11 @@ namespace log4net.Util
 		/// <summary>
 		/// Closes the underlying output writer.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Closes the underlying output writer.
+		/// </para>
+		/// </remarks>
 		override public void Close()
 		{
 			m_closed = true;
