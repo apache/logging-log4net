@@ -50,42 +50,42 @@ namespace log4net.Util
 
 		#region Public Static Methods
 
-		/// <summary>
-		/// Concatenates two string arrays.
-		/// </summary>
-		/// <param name="l">Left array.</param>
-		/// <param name="r">Right array.</param>
-		/// <returns>Array containing both left and right arrays.</returns>
-		public static string[] ConcatenateArrays(string[] l, string[] r) 
-		{
-			return (string[])ConcatenateArrays(l, r);
-		}
+//		/// <summary>
+//		/// Concatenates two string arrays.
+//		/// </summary>
+//		/// <param name="l">Left array.</param>
+//		/// <param name="r">Right array.</param>
+//		/// <returns>Array containing both left and right arrays.</returns>
+//		public static string[] ConcatenateArrays(string[] l, string[] r) 
+//		{
+//			return (string[])ConcatenateArrays(l, r);
+//		}
 
-		/// <summary>
-		/// Concatenates two arrays.
-		/// </summary>
-		/// <param name="l">Left array</param>
-		/// <param name="r">Right array</param>
-		/// <returns>Array containing both left and right arrays.</returns>
-		public static Array ConcatenateArrays(Array l, Array r) 
-		{
-			if (l == null)
-			{
-				throw new ArgumentNullException("l");
-			}
-			if (r == null)
-			{
-				throw new ArgumentNullException("r");
-			}
-
-			int len = l.Length + r.Length;
-			Array a = Array.CreateInstance(l.GetType(), len);
-
-			Array.Copy(l, 0, a, 0, l.Length);
-			Array.Copy(r, 0, a, l.Length, r.Length);
-
-			return a;
-		}
+//		/// <summary>
+//		/// Concatenates two arrays.
+//		/// </summary>
+//		/// <param name="l">Left array</param>
+//		/// <param name="r">Right array</param>
+//		/// <returns>Array containing both left and right arrays.</returns>
+//		public static Array ConcatenateArrays(Array l, Array r) 
+//		{
+//			if (l == null)
+//			{
+//				throw new ArgumentNullException("l");
+//			}
+//			if (r == null)
+//			{
+//				throw new ArgumentNullException("r");
+//			}
+//
+//			int len = l.Length + r.Length;
+//			Array a = Array.CreateInstance(l.GetType(), len);
+//
+//			Array.Copy(l, 0, a, 0, l.Length);
+//			Array.Copy(r, 0, a, l.Length, r.Length);
+//
+//			return a;
+//		}
   
 		/// <summary>
 		/// Converts string escape characters back to their correct values.
@@ -150,32 +150,32 @@ namespace log4net.Util
 			return defaultValue;
 		}
 
-		/// <summary>
-		/// Converts a string to an integer.
-		/// </summary>
-		/// <param name="argValue">String to convert.</param>
-		/// <param name="defaultValue">The default value.</param>
-		/// <remarks>
-		/// <paramref name="defaultValue"/> is returned when <paramref name="argValue"/>
-		/// cannot be converted to a <see cref="int" /> value.
-		/// </remarks>
-		/// <returns>The <see cref="int" /> value of <paramref name="argValue" />.</returns>
-		public static int ToInt(string argValue, int defaultValue) 
-		{
-			if (argValue != null) 
-			{
-				string s = argValue.Trim();
-				try 
-				{
-					return int.Parse(s, NumberFormatInfo.InvariantInfo);
-				}
-				catch (Exception e) 
-				{
-					LogLog.Error("OptionConverter: [" + s + "] is not in proper int form.", e);
-				}
-			}
-			return defaultValue;
-		}
+//		/// <summary>
+//		/// Converts a string to an integer.
+//		/// </summary>
+//		/// <param name="argValue">String to convert.</param>
+//		/// <param name="defaultValue">The default value.</param>
+//		/// <remarks>
+//		/// <paramref name="defaultValue"/> is returned when <paramref name="argValue"/>
+//		/// cannot be converted to a <see cref="int" /> value.
+//		/// </remarks>
+//		/// <returns>The <see cref="int" /> value of <paramref name="argValue" />.</returns>
+//		public static int ToInt(string argValue, int defaultValue) 
+//		{
+//			if (argValue != null) 
+//			{
+//				string s = argValue.Trim();
+//				try 
+//				{
+//					return int.Parse(s, NumberFormatInfo.InvariantInfo);
+//				}
+//				catch (Exception e) 
+//				{
+//					LogLog.Error("OptionConverter: [" + s + "] is not in proper int form.", e);
+//				}
+//			}
+//			return defaultValue;
+//		}
 
 		/// <summary>
 		/// Parses a file size into a number.
@@ -389,37 +389,37 @@ namespace log4net.Util
 			throw new ArgumentException("Cannot convert source object [" + sourceObject.ToString() + "] to target type [" + targetType.Name + "]", "sourceObject");
 		}
 
-		/// <summary>
-		/// Finds the value corresponding to <paramref name="key"/> in 
-		/// <paramref name="props"/> and then perform variable substitution 
-		/// on the found value.
-		/// </summary>
-		/// <param name="key">The key to lookup.</param>
-		/// <param name="props">The association to use for lookups.</param>
-		/// <returns>The substituted result.</returns>
-		public static string FindAndSubst(string key, System.Collections.IDictionary props) 
-		{
-			if (props == null)
-			{
-				throw new ArgumentNullException("props");
-			}
-
-			string v = props[key] as string;
-			if (v == null) 
-			{
-				return null;	  
-			}
-	
-			try 
-			{
-				return SubstVars(v, props);
-			} 
-			catch(Exception e) 
-			{
-				LogLog.Error("OptionConverter: Bad option value [" + v + "].", e);
-				return v;
-			}	
-		}
+//		/// <summary>
+//		/// Finds the value corresponding to <paramref name="key"/> in 
+//		/// <paramref name="props"/> and then perform variable substitution 
+//		/// on the found value.
+//		/// </summary>
+//		/// <param name="key">The key to lookup.</param>
+//		/// <param name="props">The association to use for lookups.</param>
+//		/// <returns>The substituted result.</returns>
+//		public static string FindAndSubst(string key, System.Collections.IDictionary props) 
+//		{
+//			if (props == null)
+//			{
+//				throw new ArgumentNullException("props");
+//			}
+//
+//			string v = props[key] as string;
+//			if (v == null) 
+//			{
+//				return null;	  
+//			}
+//	
+//			try 
+//			{
+//				return SubstituteVariables(v, props);
+//			} 
+//			catch(Exception e) 
+//			{
+//				LogLog.Error("OptionConverter: Bad option value [" + v + "].", e);
+//				return v;
+//			}	
+//		}
 
 		/// <summary>
 		/// Instantiates an object given a class name.
@@ -501,7 +501,7 @@ namespace log4net.Util
 		/// </para>
 		/// </remarks>
 		/// <returns>The result of the substitutions.</returns>
-		public static string SubstVars(string value, System.Collections.IDictionary props) 
+		public static string SubstituteVariables(string value, System.Collections.IDictionary props) 
 		{
 			StringBuilder buf = new StringBuilder();
 
