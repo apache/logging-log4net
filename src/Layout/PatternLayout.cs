@@ -164,24 +164,6 @@ namespace log4net.Layout
 	///			</description>
 	///		</item>
 	///		<item>
-	///			<term>global</term>
-	///			<description>
-	/// 			<para>
-	/// 			Used to output the a global property. The key to 
-	/// 			lookup must be specified within braces and directly following the
-	/// 			pattern specifier, e.g. <b>%global{user}</b> would include the value
-	/// 			from the property that is keyed by the string 'user'. Each property value
-	/// 			that is to be included in the log must be specified separately.
-	/// 			Properties are added to events by loggers or appenders. By default
-	/// 			no properties are defined.
-	/// 			</para>
-	/// 			<para>
-	/// 			If no key is specified, e.g. <b>%global</b> then all the keys and their
-	/// 			values are printed in a comma separated list.
-	/// 			</para>
-	///			</description>
-	///		</item>
-	///		<item>
 	///			<term>identity</term>
 	///			<description>
 	///				<para>
@@ -292,16 +274,9 @@ namespace log4net.Layout
 	///			<term>mdc</term>
 	///			<description>
 	/// 			<para>
-	/// 			Used to output the MDC (mapped diagnostic context) associated
-	/// 			with the thread that generated the logging event. The key to lookup
-	/// 			must be specified within braces and directly following the
-	/// 			pattern specifier, e.g. <c>%mdc{user}</c> would include the value
-	/// 			from the MDC that is keyed by the string 'user'. Each MDC value
-	/// 			that is to be included in the log must be specified separately.
-	/// 			</para>
-	/// 			<para>
-	/// 			If no key is specified, e.g. <b>%mdc</b> then all the keys and their
-	/// 			values are printed in a comma separated list.
+	/// 			The MDC (old name for the ThreadContext.Properties) is now part of the
+	/// 			combined event properties. This pattern is supported for compatibility
+	/// 			but is equivalent to <b>property</b>.
 	/// 			</para>
 	///			</description>
 	///		</item>
@@ -357,6 +332,10 @@ namespace log4net.Layout
 	///         <term>P</term>
 	///         <description>Equivalent to <b>property</b></description>
 	///     </item>
+	///     <item>
+	///         <term>properties</term>
+	///         <description>Equivalent to <b>property</b></description>
+	///     </item>
 	///		<item>
 	///			<term>property</term>
 	///			<description>
@@ -366,13 +345,42 @@ namespace log4net.Layout
 	/// 			pattern specifier, e.g. <b>%property{user}</b> would include the value
 	/// 			from the property that is keyed by the string 'user'. Each property value
 	/// 			that is to be included in the log must be specified separately.
-	/// 			Properties are added to events by loggers or appenders. By default
-	/// 			no properties are defined.
+	/// 			Properties are added to events by loggers or appenders. By default 
+	/// 			the <c>log4net:HostName</c> property is set to the name of machine on 
+	/// 			which the event was originally logged.
 	/// 			</para>
 	/// 			<para>
 	/// 			If no key is specified, e.g. <b>%property</b> then all the keys and their
 	/// 			values are printed in a comma separated list.
 	/// 			</para>
+	/// 			<para>
+	/// 			The properties of an event are combined from a number of different
+	/// 			contexts. These are listed below in the order in which they are searched.
+	/// 			</para>
+	/// 			<list type="definition">
+	/// 				<item>
+	/// 					<term>the event properties</term>
+	/// 					<description>
+	/// 					The event has <see cref="LoggingEvent.EventProperties"/> that can be set. These 
+	/// 					properties are specific to this event only.
+	/// 					</description>
+	/// 				</item>
+	/// 				<item>
+	/// 					<term>the thread properties</term>
+	/// 					<description>
+	/// 					The <see cref="ThreadContext.Properties"/> that are set on the current
+	/// 					thread. These properties are shared by all events logged on this thread.
+	/// 					</description>
+	/// 				</item>
+	/// 				<item>
+	/// 					<term>the global properties</term>
+	/// 					<description>
+	/// 					The <see cref="GlobalContext.Properties"/> that are set globally. These 
+	/// 					properties are shared by all the threads in the AppDomain.
+	/// 					</description>
+	/// 				</item>
+	/// 			</list> 			
+	/// 			
 	///			</description>
 	///		</item>
 	///     <item>
@@ -702,8 +710,6 @@ namespace log4net.Layout
 			s_globalRulesRegistry.Add("F", typeof(FileLocationPatternConverter));
 			s_globalRulesRegistry.Add("file", typeof(FileLocationPatternConverter));
 
-			s_globalRulesRegistry.Add("global", typeof(GlobalPropertyPatternConverter));
-
 			s_globalRulesRegistry.Add("l", typeof(FullLocationPatternConverter));
 			s_globalRulesRegistry.Add("location", typeof(FullLocationPatternConverter));
 
@@ -721,6 +727,7 @@ namespace log4net.Layout
 
 			s_globalRulesRegistry.Add("P", typeof(PropertyPatternConverter));
 			s_globalRulesRegistry.Add("property", typeof(PropertyPatternConverter));
+			s_globalRulesRegistry.Add("properties", typeof(PropertyPatternConverter));
 
 			s_globalRulesRegistry.Add("r", typeof(RelativeTimePatternConverter));
 			s_globalRulesRegistry.Add("timestamp", typeof(RelativeTimePatternConverter));
@@ -728,11 +735,13 @@ namespace log4net.Layout
 			s_globalRulesRegistry.Add("t", typeof(ThreadPatternConverter));
 			s_globalRulesRegistry.Add("thread", typeof(ThreadPatternConverter));
 
+			// For backwards compatibility the NDC patters
 			s_globalRulesRegistry.Add("x", typeof(NdcPatternConverter));
 			s_globalRulesRegistry.Add("ndc", typeof(NdcPatternConverter));
 
-			s_globalRulesRegistry.Add("X", typeof(MdcPatternConverter));
-			s_globalRulesRegistry.Add("mdc", typeof(MdcPatternConverter));
+			// For backwards compatibility the MDC patters just do a property lookup
+			s_globalRulesRegistry.Add("X", typeof(PropertyPatternConverter));
+			s_globalRulesRegistry.Add("mdc", typeof(PropertyPatternConverter));
 
 			s_globalRulesRegistry.Add("a", typeof(AppDomainPatternConverter));
 			s_globalRulesRegistry.Add("appdomain", typeof(AppDomainPatternConverter));

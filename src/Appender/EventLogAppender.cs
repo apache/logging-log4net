@@ -44,7 +44,7 @@ namespace log4net.Appender
 	/// <remarks>
 	/// <para>
 	/// The <c>EventID</c> of the event log entry can be
-	/// set using the <c>EventLogEventID</c> property (<see cref="LoggingEvent.Properties"/>)
+	/// set using the <c>EventLogEventID</c> property (<see cref="LoggingEvent.EventProperties"/>)
 	/// on the <see cref="LoggingEvent"/>.
 	/// </para>
 	/// <para>
@@ -203,7 +203,7 @@ namespace log4net.Appender
 		/// <para>Writes the event to the system event log using the 
 		/// <see cref="ApplicationName"/>.</para>
 		/// 
-		/// <para>If the event has an <c>EventID</c> property (see <see cref="LoggingEvent.Properties"/>)
+		/// <para>If the event has an <c>EventID</c> property (see <see cref="LoggingEvent.EventProperties"/>)
 		/// set then this integer will be used as the event log event id.</para>
 		/// 
 		/// <para>
@@ -218,7 +218,7 @@ namespace log4net.Appender
 			int eventID = 0;
 
 			// Look for the EventLogEventID property
-			object eventIDPropertyObj = loggingEvent.Properties["EventID"];
+			object eventIDPropertyObj = loggingEvent.LookupProperty("EventID");
 			if (eventIDPropertyObj != null)
 			{
 				if (eventIDPropertyObj is int)

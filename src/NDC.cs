@@ -29,6 +29,10 @@ namespace log4net
 	/// </summary>
 	/// <remarks>
 	/// <para>
+	/// The NDC is deprecated and has been replaced by the <see cref="ThreadContext.Stacks"/>.
+	/// The current NDC implementation forwards to the ThreadContext.Stacks["NDC"].
+	/// </para>
+	/// <para>
 	/// A Nested Diagnostic Context, or NDC in short, is an instrument
 	/// to distinguish interleaved log output from different sources. Log
 	/// output is typically interleaved when a server handles multiple
@@ -56,6 +60,7 @@ namespace log4net
 	/// </example>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
+	/*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
 	public sealed class NDC
 	{
 		#region Private Instance Constructors
@@ -88,9 +93,10 @@ namespace log4net
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="SetMaxDepth"/>
+		[Obsolete("NDC has been replaced by ThreadContext.Stacks", true)]
 		public static int Depth
 		{
-			get { return GetStack().Count; }
+			get { throw new NotSupportedException("NDC has been replaced by ThreadContext.Stacks"); }
 		}
 
 		#endregion Public Static Properties
@@ -104,9 +110,10 @@ namespace log4net
 		/// <remarks>
 		/// After calling this method the <see cref="Depth"/> will be <c>0</c>.
 		/// </remarks>
+		[Obsolete("NDC has been replaced by ThreadContext.Stacks", true)]
 		public static void Clear() 
 		{
-			GetStack().Clear();
+			throw new NotSupportedException("NDC has been replaced by ThreadContext.Stacks");
 		}
 
 		/// <summary>
@@ -118,9 +125,10 @@ namespace log4net
 		/// parent thread.
 		/// </remarks>
 		/// <returns>A clone of the context info for this thread.</returns>
+		[Obsolete("NDC has been replaced by ThreadContext.Stacks", true)]
 		public static Stack CloneStack() 
 		{
-			return (Stack)GetStack().Clone();
+			throw new NotSupportedException("NDC has been replaced by ThreadContext.Stacks");
 		}
 
 		/// <summary>
@@ -136,14 +144,10 @@ namespace log4net
 		/// this method.
 		/// </remarks>
 		/// <param name="stack">The context stack to inherit.</param>
+		[Obsolete("NDC has been replaced by ThreadContext.Stacks", true)]
 		public static void Inherit(Stack stack) 
 		{
-			if (stack == null)
-			{
-				throw new ArgumentNullException("stack");
-			}
-
-			System.Threading.Thread.SetData(s_slot, stack);
+			throw new NotSupportedException("NDC has been replaced by ThreadContext.Stacks");
 		}
 
 		/// <summary>
@@ -158,14 +162,10 @@ namespace log4net
 		/// The message in the context that was removed from the top 
 		/// of the stack.
 		/// </returns>
+		/*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
 		public static string Pop() 
 		{
-			Stack stack = GetStack();
-			if (stack.Count > 0)
-			{
-				return ((DiagnosticContext)(stack.Pop())).Message;
-			}
-			return "";
+			return ThreadContext.Stacks["NDC"].Pop();
 		}
 
 		/// <summary>
@@ -190,12 +190,10 @@ namespace log4net
 		///	}
 		/// </code>
 		/// </example>
+		/*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
 		public static IDisposable Push(string message) 
 		{
-			Stack stack = GetStack();
-			stack.Push(new DiagnosticContext(message, (stack.Count>0) ? (DiagnosticContext)stack.Peek() : null));
-
-			return new NDCAutoDisposeFrame(stack, stack.Count - 1);
+			return ThreadContext.Stacks["NDC"].Push(message);
 		}
 
 		/// <summary>
@@ -205,6 +203,7 @@ namespace log4net
 		/// <remarks>
 		/// This method is not implemented.
 		/// </remarks>
+		[Obsolete("NDC has been replaced by ThreadContext.Stacks")]
 		public static void Remove() 
 		{
 		}
@@ -220,224 +219,12 @@ namespace log4net
 		/// call. This can be used to return to a known context depth.
 		/// </remarks>
 		/// <param name="maxDepth">The maximum depth of the stack</param>
+		[Obsolete("NDC has been replaced by ThreadContext.Stacks", true)]
 		static public void SetMaxDepth(int maxDepth) 
 		{
-			if (maxDepth < 0)
-			{
-				throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("maxDepth", (object)maxDepth, "Parameter: maxDepth, Value: ["+maxDepth+"] out of range. Nonnegative number required");
-			}
-
-			Stack stack = GetStack();
-			while(stack.Count > maxDepth)
-			{
-				stack.Pop();
-			}
+			throw new NotSupportedException("NDC has been replaced by ThreadContext.Stacks");
 		}
 
 		#endregion Public Static Methods
-
-		#region Internal Static Methods
-
-		/// <summary>
-		/// Gets the current context information.
-		/// </summary>
-		/// <returns>The current context information.</returns>
-		internal static string Get() 
-		{
-			Stack stack = GetStack();
-			if (stack.Count > 0)
-			{
-				return ((DiagnosticContext)(stack.Peek())).FullMessage;
-			}
-			return null;
-		}
-  
-		#endregion Internal Static Methods
-
-		#region Private Static Methods
-
-		/// <summary>
-		/// Gets the stack of context objects on this thread.
-		/// </summary>
-		/// <returns>The stack of context objects on the current thread.</returns>
-		static private Stack GetStack()
-		{
-			Stack stack = (Stack)System.Threading.Thread.GetData(s_slot);
-			if (stack == null)
-			{
-				stack = new Stack();
-				System.Threading.Thread.SetData(s_slot, stack);
-			}
-			return stack;
-		}
-
-		#endregion Private Static Methods
-
-		#region Private Static Fields
-
-		/// <summary>
-		/// The thread local data slot to use for context information.
-		/// </summary>
-		private readonly static LocalDataStoreSlot s_slot = System.Threading.Thread.AllocateDataSlot();
-
-		#endregion Private Static Fields
-
-		/// <summary>
-		/// Inner class used to represent a single context in the stack.
-		/// </summary>
-		internal class DiagnosticContext 
-		{
-			#region Internal Instance Constructors
-
-			/// <summary>
-			/// Initializes a new instance of the <see cref="DiagnosticContext" /> class
-			/// with the specified message and parent context.
-			/// </summary>
-			/// <param name="message">The message for this context.</param>
-			/// <param name="parent">The parent context in the chain.</param>
-			internal DiagnosticContext(string message, DiagnosticContext parent) 
-			{
-				m_message = message;
-				if (parent != null) 
-				{
-					m_fullMessage = parent.FullMessage + ' ' + message;
-				} 
-				else 
-				{
-					m_fullMessage = message;
-				}
-			}
-
-			#endregion Internal Instance Constructors
-
-			#region Internal Instance Properties
-
-			/// <summary>
-			/// Get the message.
-			/// </summary>
-			/// <value>The message.</value>
-			internal string Message
-			{
-				get { return m_message; }
-			}
-
-			/// <summary>
-			/// Gets the full text of the context down to the root level.
-			/// </summary>
-			/// <value>
-			/// The full text of the context down to the root level.
-			/// </value>
-			internal string FullMessage
-			{
-				get { return m_fullMessage; }
-			}
-
-			#endregion Internal Instance Properties
-
-			#region Private Instance Fields
-
-			private string m_fullMessage;
-			private string m_message;
-    
-			#endregion
-		}
-
-		/// <summary>
-		/// Inner class that is returned from <see cref="NDC.Push"/>
-		/// </summary>
-		/// <remarks>
- 		/// This class is disposable and when it is disposed it automatically
- 		/// returns the NDC to the correct depth.
-		/// </remarks>
-		internal class NDCAutoDisposeFrame : IDisposable
-		{
-			#region Internal Instance Constructors
-
-			/// <summary>
-			/// Initializes a new instance of the <see cref="NDCAutoDisposeFrame" /> class with
-			/// the specified stack and return depth.
-			/// </summary>
-			/// <param name="frameStack">The internal stack used by the NDC.</param>
-			/// <param name="frameDepth">The depth to return the stack to when this object is disposed.</param>
-			internal NDCAutoDisposeFrame(Stack frameStack, int frameDepth)
-			{
-				m_frameStack = frameStack;
-				m_frameDepth = frameDepth;
-			}
-
-			#endregion Internal Instance Constructors
-
-			#region Implementation of IDisposable
-
-			/// <summary>
-			/// Returns the NDC stack to the correct depth.
-			/// </summary>
-			public void Dispose()
-			{
-				if (m_frameDepth >= 0 && m_frameStack != null)
-				{
-					while(m_frameStack.Count > m_frameDepth)
-					{
-						m_frameStack.Pop();
-					}
-				}
-			}
-
-			#endregion Implementation of IDisposable
-
-			#region Private Instance Fields
-
-			/// <summary>
-			/// The NDC internal stack
-			/// </summary>
-			private Stack m_frameStack;
-
-			/// <summary>
-			/// The depth to rethrow the stack to when this instance is disposed
-			/// </summary>
-			private int m_frameDepth;
-
-			#endregion Private Instance Fields
-		}
-
-#if NETCF
-		/// <summary>
-		/// Subclass of <see cref="System.Collections.Stack"/> to
-		/// provide missing methods.
-		/// </summary>
-		/// <remarks>
-		/// The Compact Framework version of the <see cref="System.Collections.Stack"/>
-		/// class is missing the <c>Clear</c> and <c>Clone</c> methods.
-		/// This subclass adds implementations of those missing methods.
-		/// </remarks>
-		public class Stack : System.Collections.Stack
-		{
-			/// <summary>
-			/// Clears the stack of all elements.
-			/// </summary>
-			public void Clear()
-			{
-				while(Count > 0)
-				{
-					Pop();
-				}
-			}
-
-			/// <summary>
-			/// Makes a shallow copy of the stack's elements.
-			/// </summary>
-			/// <returns>A new stack that has a shallow copy of the stack's elements.</returns>
-			public Stack Clone()
-			{
-				Stack res = new Stack();
-				object[] items = ToArray();
-				foreach(object item in items)
-				{
-					res.Push(item);
-				}
-				return res;
-			}
-		}
-#endif
 	}
 }

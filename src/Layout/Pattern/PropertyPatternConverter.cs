@@ -43,12 +43,12 @@ namespace log4net.Layout.Pattern
 			if (Option != null)
 			{
 				// Write the value for the specified key
-				WriteObject(writer, loggingEvent.Repository, loggingEvent.Properties[Option]);
+				WriteObject(writer, loggingEvent.Repository, loggingEvent.LookupProperty(Option));
 			}
 			else
 			{
 				// Write all the key value pairs
-				WriteDictionary(writer, loggingEvent.Repository, loggingEvent.Properties);
+				WriteDictionary(writer, loggingEvent.Repository, loggingEvent.GetProperties());
 			}
 		}
 	}

@@ -26,14 +26,13 @@ using log4net.Util;
 namespace log4net.Filter
 {
 	/// <summary>
-	/// Simple filter to match a string in the <see cref="MDC"/>
+	/// Simple filter to match a string in the event properties
 	/// </summary>
 	/// <remarks>
-	/// Simple filter to match a string in the <see cref="MDC"/>
+	/// Simple filter to match a string in the event properties
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
-	/// <author>Gert Driesen</author>
-	public class MdcFilter : FilterSkeleton
+	public class PropertyFilter : FilterSkeleton
 	{
 		#region Member Variables
 
@@ -58,8 +57,7 @@ namespace log4net.Filter
 		private Regex m_regexToMatch;
 
 		/// <summary>
-		/// The key to use to lookup the string
-		/// from the MDC
+		/// The key to use to lookup the string from the event properties
 		/// </summary>
 		private string m_key;
 
@@ -70,7 +68,7 @@ namespace log4net.Filter
 		/// <summary>
 		/// Default constructor
 		/// </summary>
-		public MdcFilter()
+		public PropertyFilter()
 		{
 		}
 
@@ -139,8 +137,7 @@ namespace log4net.Filter
 		}
 
 		/// <summary>
-		/// The key to lookup in the <see cref="MDC"/> and then
-		/// match against.
+		/// The key to lookup in the event properties and then match against.
 		/// </summary>
 		public string Key
 		{
@@ -154,9 +151,10 @@ namespace log4net.Filter
 		/// Check if this filter should allow the event to be logged
 		/// </summary>
 		/// <remarks>
-		/// The <see cref="MDC"/> is matched against the <see cref="StringToMatch"/>.
+		/// The event property for the <see cref="Key"/> is matched against 
+		/// the <see cref="StringToMatch"/>.
 		/// If the <see cref="StringToMatch"/> occurs as a substring within
-		/// the message then a match will have occurred. If no match occurs
+		/// the property value then a match will have occurred. If no match occurs
 		/// this function will return <see cref="FilterDecision.Neutral"/>
 		/// allowing other filters to check the event. If a match occurs then
 		/// the value of <see cref="AcceptOnMatch"/> is checked. If it is
@@ -172,7 +170,7 @@ namespace log4net.Filter
 				throw new ArgumentNullException("loggingEvent");
 			}
 
-			// Check if we have a key to lookup the MDC value with
+			// Check if we have a key to lookup the event property value with
 			if (m_key == null)
 			{
 				// We cannot filter so allow the filter chain

@@ -49,7 +49,7 @@ namespace log4net.Layout
 		private string m_key;
 
 		/// <summary>
-		/// The name of the value to lookup in the <see cref="LoggingEvent.Properties"/> collection.
+		/// The name of the value to lookup in the LoggingEvent Properties collection.
 		/// </summary>
 		public string Key
 		{
@@ -69,7 +69,7 @@ namespace log4net.Layout
 		/// </remarks>
 		public virtual object Format(LoggingEvent loggingEvent)
 		{
-			return loggingEvent.Properties[m_key];
+			return loggingEvent.LookupProperty(m_key);
 		}
 
 		#endregion

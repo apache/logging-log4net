@@ -123,6 +123,8 @@ method="run" file="Generator.java" line="94"/>
 
 		*/
 
+		/* Since log4j 1.3 the log4j:MDC has been combined into the log4j:properties element */
+
 		/// <summary>
 		/// Actually do the writing of the xml
 		/// </summary>
@@ -132,44 +134,35 @@ method="run" file="Generator.java" line="94"/>
 		{
 			// Translate logging events for log4j
 
-			// Copy global properties
-			if (loggingEvent.GlobalProperties != null)
-			{
-				foreach(System.Collections.DictionaryEntry entry in loggingEvent.GlobalProperties)
-				{
-					loggingEvent.Properties[(string)entry.Key] = entry.Value;
-				}
-			}
-
 			// Translate hostname property
-			if (loggingEvent.Properties[LoggingEvent.HostNameProperty] != null && 
-				loggingEvent.Properties["log4jmachinename"] == null)
+			if (loggingEvent.LookupProperty(LoggingEvent.HostNameProperty) != null && 
+				loggingEvent.LookupProperty("log4jmachinename") == null)
 			{
-				loggingEvent.Properties["log4jmachinename"] = loggingEvent.Properties[LoggingEvent.HostNameProperty];
+				loggingEvent.GetProperties()["log4jmachinename"] = loggingEvent.LookupProperty(LoggingEvent.HostNameProperty);
 			}
 
 			// translate appdomain name
-			if (loggingEvent.Properties["log4japp"] == null && 
+			if (loggingEvent.LookupProperty("log4japp") == null && 
 				loggingEvent.Domain != null && 
 				loggingEvent.Domain.Length > 0)
 			{
-				loggingEvent.Properties["log4japp"] = loggingEvent.Domain;
+				loggingEvent.GetProperties()["log4japp"] = loggingEvent.Domain;
 			}
 
 			// translate identity name
 			if (loggingEvent.Identity != null && 
 				loggingEvent.Identity.Length > 0 && 
-				loggingEvent.Properties[LoggingEvent.IdentityProperty] == null)
+				loggingEvent.LookupProperty(LoggingEvent.IdentityProperty) == null)
 			{
-				loggingEvent.Properties[LoggingEvent.IdentityProperty] = loggingEvent.Identity;
+				loggingEvent.GetProperties()[LoggingEvent.IdentityProperty] = loggingEvent.Identity;
 			}
 
 			// translate user name
 			if (loggingEvent.UserName != null && 
 				loggingEvent.UserName.Length > 0 && 
-				loggingEvent.Properties[LoggingEvent.UserNameProperty] == null)
+				loggingEvent.LookupProperty(LoggingEvent.UserNameProperty) == null)
 			{
-				loggingEvent.Properties[LoggingEvent.UserNameProperty] = loggingEvent.UserName;
+				loggingEvent.GetProperties()[LoggingEvent.UserNameProperty] = loggingEvent.UserName;
 			}
 
 			// Write the start element
@@ -192,48 +185,37 @@ method="run" file="Generator.java" line="94"/>
 			Transform.WriteEscapedXmlString(writer, loggingEvent.RenderedMessage);
 			writer.WriteEndElement();
 
-			if (loggingEvent.NestedContext != null && loggingEvent.NestedContext.Length > 0)
+			object ndcObj = loggingEvent.LookupProperty("NDC");
+			if (ndcObj != null)
 			{
-				// Append the NDC text
-				writer.WriteStartElement("log4j:NDC");
-				Transform.WriteEscapedXmlString(writer, loggingEvent.NestedContext);
-				writer.WriteEndElement();
+				string valueStr = loggingEvent.Repository.RendererMap.FindAndRender(ndcObj);
+
+				if (valueStr != null && valueStr.Length > 0)
+				{
+					// Append the NDC text
+					writer.WriteStartElement("log4j:NDC");
+					Transform.WriteEscapedXmlString(writer, valueStr);
+					writer.WriteEndElement();
+				}
 			}
 
-			if (loggingEvent.MappedContext != null && loggingEvent.MappedContext.Count > 0)
+			// Append the properties text
+			PropertiesDictionary properties = loggingEvent.GetProperties();
+			if (properties.Count > 0)
 			{
-				// Append the MDC text
-				writer.WriteStartElement("log4j:MDC");
-				foreach(System.Collections.DictionaryEntry entry in loggingEvent.MappedContext)
+				writer.WriteStartElement("log4j:properties");
+				foreach(System.Collections.DictionaryEntry entry in properties)
 				{
 					writer.WriteStartElement("log4j:data");
 					writer.WriteAttributeString("name", (string)entry.Key);
 
-					// TODO: Use an ObjectRenderer to convert the object to a string
-					writer.WriteAttributeString("value", entry.Value.ToString());
+					// Use an ObjectRenderer to convert the object to a string
+					string valueStr = loggingEvent.Repository.RendererMap.FindAndRender(entry.Value);
+					writer.WriteAttributeString("value", valueStr);
+
 					writer.WriteEndElement();
 				}
 				writer.WriteEndElement();
-			}
-
-			if (loggingEvent.Properties != null)
-			{
-				// Append the properties text
-				string[] propKeys = loggingEvent.Properties.GetKeys();
-				if (propKeys.Length > 0)
-				{
-					writer.WriteStartElement("log4j:properties");
-					foreach(string key in propKeys)
-					{
-						writer.WriteStartElement("log4j:data");
-						writer.WriteAttributeString("name", key);
-
-						// TODO: Use an ObjectRenderer to convert the object to a string
-						writer.WriteAttributeString("value", loggingEvent.Properties[key].ToString());
-						writer.WriteEndElement();
-					}
-					writer.WriteEndElement();
-				}
 			}
 
 			string exceptionStr = loggingEvent.GetExceptionString();

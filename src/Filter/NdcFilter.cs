@@ -156,7 +156,17 @@ namespace log4net.Filter
 				throw new ArgumentNullException("loggingEvent");
 			}
 
-			string msg = loggingEvent.NestedContext;
+			string msg = null;
+
+			object msgObj = loggingEvent.LookupProperty("NDC");
+			if (msgObj is string)
+			{
+				msg = (string)msgObj;
+			}
+			else if (msgObj is ThreadContextStack)
+			{
+				msg = ((ThreadContextStack)msgObj).GetFullMessage();
+			}
 
 			// Check if we have been setup to filter
 			if (msg == null || (m_stringToMatch == null && m_regexToMatch == null))

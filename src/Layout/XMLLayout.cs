@@ -153,8 +153,6 @@ namespace log4net.Layout
 			{
 				m_elmEvent = m_prefix + ":" + ELM_EVENT;
 				m_elmMessage = m_prefix + ":" + ELM_MESSAGE;
-				m_elmNdc = m_prefix + ":" + ELM_NDC;
-				m_elmMdc = m_prefix + ":" + ELM_MDC;
 				m_elmProperties = m_prefix + ":" + ELM_PROPERTIES;
 				m_elmGlobalProperties = m_prefix + ":" + ELM_GLOBAL_PROPERTIES;
 				m_elmData = m_prefix + ":" + ELM_DATA;
@@ -198,75 +196,24 @@ namespace log4net.Layout
 			Transform.WriteEscapedXmlString(writer, loggingEvent.RenderedMessage);
 			writer.WriteEndElement();
 
-			if (loggingEvent.NestedContext != null && loggingEvent.NestedContext.Length > 0)
-			{
-				// Append the NDC text
-				writer.WriteStartElement(m_elmNdc);
-				Transform.WriteEscapedXmlString(writer, loggingEvent.NestedContext);
-				writer.WriteEndElement();
-			}
+			PropertiesDictionary properties = loggingEvent.GetProperties();
 
-			if (loggingEvent.MappedContext != null && loggingEvent.MappedContext.Count > 0)
+			// Append the properties text
+			if (properties.Count > 0)
 			{
-				// Append the MDC text
-				writer.WriteStartElement(m_elmMdc);
-				foreach(System.Collections.DictionaryEntry entry in loggingEvent.MappedContext)
+				writer.WriteStartElement(m_elmGlobalProperties);
+				foreach(System.Collections.DictionaryEntry entry in properties)
 				{
 					writer.WriteStartElement(m_elmData);
 					writer.WriteAttributeString(ATTR_NAME, (string)entry.Key);
 
-					// TODO Should use an ObjectRenderer to convert to a string
-					writer.WriteAttributeString(ATTR_VALUE, entry.Value.ToString());
+					// Use an ObjectRenderer to convert the object to a string
+					string valueStr = loggingEvent.Repository.RendererMap.FindAndRender(entry.Value);
+					writer.WriteAttributeString(ATTR_VALUE, valueStr);
+
 					writer.WriteEndElement();
 				}
 				writer.WriteEndElement();
-			}
-
-			if (loggingEvent.Properties != null)
-			{
-				// Append the properties text
-				string[] propKeys = loggingEvent.Properties.GetKeys();
-				if (propKeys.Length > 0)
-				{
-					writer.WriteStartElement(m_elmProperties);
-					foreach(string key in propKeys)
-					{
-						writer.WriteStartElement(m_elmData);
-						writer.WriteAttributeString(ATTR_NAME, key);
-
-						// TODO Should use an ObjectRenderer to convert to a string
-						writer.WriteAttributeString(ATTR_VALUE, loggingEvent.Properties[key].ToString());
-						writer.WriteEndElement();
-					}
-					writer.WriteEndElement();
-				}
-			}
-
-			if (loggingEvent.GlobalProperties != null)
-			{
-				// Append the properties text
-				string[] propKeys = loggingEvent.Properties.GetKeys();
-				if (loggingEvent.GlobalProperties.Count > 0)
-				{
-					writer.WriteStartElement(m_elmGlobalProperties);
-					foreach(System.Collections.DictionaryEntry entry in loggingEvent.GlobalProperties)
-					{
-						writer.WriteStartElement(m_elmData);
-						writer.WriteAttributeString(ATTR_NAME, (string)entry.Key);
-
-						if (entry.Value == null)
-						{
-							writer.WriteAttributeString(ATTR_VALUE, "null");
-						}
-						else
-						{
-							// TODO Should use an ObjectRenderer to convert to a string
-							writer.WriteAttributeString(ATTR_VALUE, entry.Value.ToString());
-						}
-						writer.WriteEndElement();
-					}
-					writer.WriteEndElement();
-				}
 			}
 
 			string exceptionStr = loggingEvent.GetExceptionString();
@@ -304,8 +251,6 @@ namespace log4net.Layout
 
 		private string m_elmEvent = ELM_EVENT;
 		private string m_elmMessage = ELM_MESSAGE;
-		private string m_elmNdc = ELM_NDC;
-		private string m_elmMdc = ELM_MDC;
 		private string m_elmData = ELM_DATA;
 		private string m_elmProperties = ELM_PROPERTIES;
 		private string m_elmGlobalProperties = ELM_GLOBAL_PROPERTIES;
@@ -320,8 +265,6 @@ namespace log4net.Layout
 
 		private const string ELM_EVENT = "event";
 		private const string ELM_MESSAGE = "message";
-		private const string ELM_NDC = "ndc";
-		private const string ELM_MDC = "mdc";
 		private const string ELM_PROPERTIES = "properties";
 		private const string ELM_GLOBAL_PROPERTIES = "global-properties";
 		private const string ELM_DATA = "data";

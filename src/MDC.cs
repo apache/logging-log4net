@@ -26,6 +26,10 @@ namespace log4net
 	/// </summary>
 	/// <remarks>
 	/// <para>
+	/// The MDC is deprecated and has been replaced by the <see cref="ThreadContext.Properties"/>.
+	/// The current MDC implementation forwards to the ThreadContext.Properties.
+	/// </para>
+	/// <para>
 	/// The MDC class is similar to the <see cref="NDC"/> class except that it is
 	/// based on a map instead of a stack. It provides <i>mapped
 	/// diagnostic contexts</i>. A <i>Mapped Diagnostic Context</i>, or
@@ -39,6 +43,7 @@ namespace log4net
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
+	/*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
 	public sealed class MDC
 	{
 		#region Private Instance Constructors
@@ -68,13 +73,15 @@ namespace log4net
 		/// </remarks>
 		/// <param name="key">The key to lookup in the MDC.</param>
 		/// <returns>The string value held for the key, or a <c>null</c> reference if no corresponding value is found.</returns>
+		/*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
 		public static string Get(string key)
 		{
-			if (key == null)
+			object obj = ThreadContext.Properties[key];
+			if (obj == null)
 			{
-				throw new ArgumentNullException("key");
+				return null;
 			}
-			return GetMap()[key] as string;
+			return obj.ToString();
 		}
 
 		/// <summary>
@@ -94,21 +101,10 @@ namespace log4net
 		/// </remarks>
 		/// <param name="key">The key to store the value under.</param>
 		/// <param name="value">The value to store.</param>
+		/*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
 		public static void Set(string key, string value)
 		{
-			if (key == null)
-			{
-				throw new ArgumentNullException("key");
-			}
-
-			if (value == null)
-			{
-				GetMap().Remove(key);
-			}
-			else
-			{
-				GetMap()[key] = value;
-			}
+			ThreadContext.Properties[key] = value;
 		}
 
 		/// <summary>
@@ -120,14 +116,10 @@ namespace log4net
 		/// </para>
 		/// </remarks>
 		/// <param name="key">The key to remove.</param>
+		/*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
 		public static void Remove(string key)
 		{
-			if (key == null)
-			{
-				throw new ArgumentNullException("key");
-			}
-
-			Set(key, null);
+			ThreadContext.Properties.Remove(key);
 		}
 
 		/// <summary>
@@ -138,59 +130,12 @@ namespace log4net
 		/// Remove all the entries from this thread's MDC
 		/// </para>
 		/// </remarks>
+		/*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
 		public static void Clear()
 		{
-			Hashtable map = (Hashtable)System.Threading.Thread.GetData(s_slot);
-			if (map != null)
-			{
-				map.Clear();
-			}
+			ThreadContext.Properties.Clear();
 		}
 
 		#endregion Public Static Methods
-
-		#region Internal Static Methods
-
-		/// <summary>
-		/// Gets the map on this thread.
-		/// </summary>
-		/// <returns>The map on the current thread.</returns>
-		internal static IDictionary GetMap()
-		{
-			Hashtable map = (Hashtable)System.Threading.Thread.GetData(s_slot);
-			if (map == null)
-			{
-				map = new Hashtable();
-				System.Threading.Thread.SetData(s_slot, map);
-			}
-			return map;
-		}
-
-		/// <summary>
-		/// Gets a readonly copy of the map on this thread.
-		/// </summary>
-		/// <returns>A readonly copy of the map on the current thread.</returns>
-		internal static IDictionary CopyMap()
-		{
-			Hashtable map = (Hashtable)System.Threading.Thread.GetData(s_slot);
-			if (map == null)
-			{
-				return log4net.Util.EmptyDictionary.Instance;
-			}
-
-			// Return a copy of the map
-			return (IDictionary)map.Clone();
-		}
-
-		#endregion Internal Static Methods
-
-		#region Private Static Fields
-
-		/// <summary>
-		/// The thread local data slot to use for context information.
-		/// </summary>
-		private readonly static LocalDataStoreSlot s_slot = System.Threading.Thread.AllocateDataSlot();
-
-		#endregion Private Static Fields
 	}
 }

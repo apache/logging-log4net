@@ -37,11 +37,6 @@ namespace log4net.Appender
 	/// UDP guarantees neither that messages arrive, nor that they arrive in the correct order.
 	/// </para>
 	/// <para>
-	/// This appender sets the <c>log4net:HostName</c> property in the 
-	/// <see cref="LoggingEvent.Properties"/> collection to the name of 
-	/// the machine on which the event is logged.
-	/// </para>
-	/// <para>
 	/// To view the logging results, a custom application can be developed that listens for logging 
 	/// events.
 	/// </para>
@@ -306,9 +301,6 @@ namespace log4net.Appender
 			set { this.m_client = value; }
 		}
 
-		#endregion Protected Instance Properties
-
-		#region Private Instance Properties
 
 		/// <summary>
 		/// Gets or sets the cached remote endpoint to which the logging events should be sent.
@@ -321,13 +313,13 @@ namespace log4net.Appender
 		/// with the values of the <see cref="RemoteAddress" /> and <see cref="RemotePort"/>
 		/// properties.
 		/// </remarks>
-		private IPEndPoint RemoteEndPoint
+		protected IPEndPoint RemoteEndPoint
 		{
 			get { return this.m_remoteEndPoint; }
 			set { this.m_remoteEndPoint = value; }
 		}
 
-		#endregion Private Instance Properties
+		#endregion Protected Instance Properties
 
 		#region Implementation of IOptionHandler
 
@@ -402,12 +394,6 @@ namespace log4net.Appender
 		/// </remarks>
 		protected override void Append(LoggingEvent loggingEvent) 
 		{
-			// Set the hostname property
-			if (loggingEvent.Properties[LoggingEvent.HostNameProperty] == null)
-			{
-				loggingEvent.Properties[LoggingEvent.HostNameProperty] = SystemInfo.HostName;
-			}
-
 			try 
 			{
 				Byte [] buffer = m_encoding.GetBytes(RenderLoggingEvent(loggingEvent).ToCharArray());

@@ -46,11 +46,6 @@ namespace log4net.Appender
 	/// cyclic buffer. This keeps memory requirements at a reasonable level while 
 	/// still delivering useful application context.
 	/// </para>
-	/// <para>
-	/// This appender sets the <c>log4net:HostName</c> property in the 
-	/// <see cref="LoggingEvent.Properties"/> collection to the name of 
-	/// the machine on which the event is logged.
-	/// </para>
 	/// </remarks>
 	/// <author>Niall Daley</author>
 	/// <author>Nicko Cadell</author>
@@ -125,7 +120,7 @@ namespace log4net.Appender
 		override protected void SendBuffer(LoggingEvent[] events) 
 		{
 			// Note: this code already owns the monitor for this
-			// appender. This frees us from needing to synchronize on 'cb'.
+			// appender. This frees us from needing to synchronize again.
 			try 
 			{	  
 				using(StreamWriter writer = File.CreateText(Path.Combine(m_pickupDir, SystemInfo.NewGuid().ToString("N"))))
@@ -141,16 +136,8 @@ namespace log4net.Appender
 						writer.Write(t);
 					}
 
-					string hostName = SystemInfo.HostName;
-
 					for(int i = 0; i < events.Length; i++) 
 					{
-						// Set the hostname property
-						if (events[i].Properties[LoggingEvent.HostNameProperty] == null)
-						{
-							events[i].Properties[LoggingEvent.HostNameProperty] = hostName;
-						}
-
 						// Render the event and append the text to the buffer
 						RenderLoggingEvent(writer, events[i]);
 					}

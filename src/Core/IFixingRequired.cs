@@ -17,29 +17,20 @@
 #endregion
 
 using System;
-using System.Text;
-using System.IO;
 
-using log4net.Core;
-
-namespace log4net.Layout.Pattern
+namespace log4net.Core
 {
 	/// <summary>
-	/// Converter to include event NDC
+	/// Interface that indicates that the object requires fixing before it
+	/// can be taken outside the context of the appender's DoAppend method.
 	/// </summary>
 	/// <author>Nicko Cadell</author>
-	internal sealed class NdcPatternConverter : PatternLayoutConverter 
+	public interface IFixingRequired
 	{
 		/// <summary>
-		/// Convert the pattern to the rendered message
+		/// Get a portable version of this object
 		/// </summary>
-		/// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
-		/// <param name="loggingEvent">the event being logged</param>
-		/// <returns>the relevant location information</returns>
-		override protected void Convert(TextWriter writer, LoggingEvent loggingEvent)
-		{
-			// Write the value for the specified key
-			WriteObject(writer, loggingEvent.Repository, loggingEvent.LookupProperty("NDC"));
-		}
+		/// <returns>the portable instance of this object</returns>
+		object GetFixedObject();
 	}
 }

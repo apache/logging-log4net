@@ -233,17 +233,8 @@ namespace log4net.Appender
 					writer.Write(t);
 				}
 
-
-				string hostName = SystemInfo.HostName;
-
 				for(int i = 0; i < events.Length; i++) 
 				{
-					// Set the hostname property
-					if (events[i].Properties[LoggingEvent.HostNameProperty] == null)
-					{
-						events[i].Properties[LoggingEvent.HostNameProperty] = hostName;
-					}
-
 					// Render the event and append the text to the buffer
 					RenderLoggingEvent(writer, events[i]);
 				}

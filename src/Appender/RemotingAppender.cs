@@ -42,10 +42,6 @@ namespace log4net.Appender
 	/// object to deliver events to is specified by setting the
 	/// appenders <see cref="RemotingAppender.Sink"/> property.</para>
 	/// <para>
-	/// This appender sets the <c>log4net:HostName</c> property in the 
-	/// <see cref="LoggingEvent.Properties"/> collection to the name of 
-	/// the machine on which the event is logged.</para>
-	/// <para>
 	/// The RemotingAppender buffers events before sending them. This allows it to 
 	/// make more efficient use of the remoting infrastructure.</para>
 	/// <para>
@@ -249,17 +245,6 @@ namespace log4net.Appender
 			try
 			{
 				LoggingEvent[] events = (LoggingEvent[])state;
-
-				string hostName = SystemInfo.HostName;
-
-				// Set the hostname
-				foreach(LoggingEvent e in events)
-				{
-					if (e.Properties[LoggingEvent.HostNameProperty] == null)
-					{
-						e.Properties[LoggingEvent.HostNameProperty] = hostName;
-					}
-				}
 
 				// Send the events
 				m_sinkObj.LogEvents(events);

@@ -55,11 +55,6 @@ namespace log4net.Core
 		public string Ndc;
 
 		/// <summary>
-		/// The local cache of the MDC dictionary
-		/// </summary>
-		public IDictionary Mdc;
-
-		/// <summary>
 		/// The application supplied message of logging event.
 		/// </summary>
 		public string Message;
@@ -115,14 +110,6 @@ namespace log4net.Core
 		/// </remarks>
 		public PropertiesDictionary Properties;
 
-		/// <summary>
-		/// Global properties
-		/// </summary>
-		/// <remarks>
-		/// Global properties are defined on the <see cref="GlobalContext"/>
-		/// </remarks>
-		public ReadOnlyPropertiesDictionary GlobalProperties;
-
 		#endregion Public Instance Fields
 	}
 
@@ -135,6 +122,7 @@ namespace log4net.Core
 		/// <summary>
 		/// Fix the MDC
 		/// </summary>
+		[Obsolete("Replaced by composite Properties")]
 		Mdc = 0x01,
 
 		/// <summary>
@@ -187,6 +175,11 @@ namespace log4net.Core
 		Exception = 0x100,
 
 		/// <summary>
+		/// Fix the event properties
+		/// </summary>
+		Properties = 0x200,
+
+		/// <summary>
 		/// No fields fixed
 		/// </summary>
 		None = 0x0,
@@ -204,15 +197,15 @@ namespace log4net.Core
 		/// This set of partial fields gives good performance. The following fields are fixed:
 		/// </para>
 		/// <list type="bullet">
-		/// <item><description><see cref="Mdc"/></description></item>
 		/// <item><description><see cref="Ndc"/></description></item>
 		/// <item><description><see cref="Message"/></description></item>
 		/// <item><description><see cref="ThreadName"/></description></item>
 		/// <item><description><see cref="Exception"/></description></item>
 		/// <item><description><see cref="Domain"/></description></item>
+		/// <item><description><see cref="Properties"/></description></item>
 		/// </list>
 		/// </remarks>
-		Partial = Mdc | Ndc | Message | ThreadName | Exception | Domain,
+		Partial = Ndc | Message | ThreadName | Exception | Domain | Properties,
 	}
 
 	/// <summary>
@@ -281,9 +274,6 @@ namespace log4net.Core
 
 			// Store the event creation time
 			m_data.TimeStamp = DateTime.Now;
-
-			// Lookup the global properties as soon as possible
-			m_data.GlobalProperties = log4net.GlobalContext.Properties.GetReadOnlyProperties();
 		}
 
 		/// <summary>
@@ -354,7 +344,6 @@ namespace log4net.Core
 			m_data.Level = (Level)info.GetValue("Level", typeof(Level));
 
 			m_data.Ndc = info.GetString("Ndc");
-			m_data.Mdc = (IDictionary) info.GetValue("Mdc", typeof(IDictionary));
 			m_data.Message = info.GetString("Message");
 			m_data.ThreadName = info.GetString("ThreadName");
 			m_data.TimeStamp = info.GetDateTime("TimeStamp");
@@ -362,7 +351,6 @@ namespace log4net.Core
 			m_data.UserName = info.GetString("UserName");
 			m_data.ExceptionString = info.GetString("ExceptionString");
 			m_data.Properties = (PropertiesDictionary) info.GetValue("Properties", typeof(PropertiesDictionary));
-			m_data.GlobalProperties = (ReadOnlyPropertiesDictionary) info.GetValue("GlobalProperties", typeof(ReadOnlyPropertiesDictionary));
 			m_data.Domain = info.GetString("Domain");
 			m_data.Identity = info.GetString("Identity");
 		}
@@ -465,43 +453,27 @@ namespace log4net.Core
 			}
 		}
 
-		/// <summary>
-		/// Gets the text of the <see cref="NDC"/>.
-		/// </summary>
-		/// <value>
-		/// The text of the <see cref="NDC"/>.
-		/// </value>
-		public string NestedContext
-		{
-			get
-			{
-				if (m_data.Ndc == null) 
-				{
-					m_data.Ndc = NDC.Get();
-					if (m_data.Ndc == null)
-					{
-						m_data.Ndc = "";
-					}
-				}
-				return m_data.Ndc; 
-			}
-		}
-
-		/// <summary>
-		/// Get the MDC dictionary.
-		/// </summary>
-		public IDictionary MappedContext
-		{
-			get
-			{
-				if (m_data.Mdc == null)
-				{
-					// This creates a live copy of the MDC
-					m_data.Mdc = MDC.GetMap();
-				}
-				return m_data.Mdc;
-			}
-		}
+//		/// <summary>
+//		/// Gets the text of the <see cref="ThreadContext.Stacks"/>.
+//		/// </summary>
+//		/// <value>
+//		/// The text of the <see cref="ThreadContext.Stacks"/>.
+//		/// </value>
+//		public string NestedContext
+//		{
+//			get
+//			{
+//				if (m_data.Ndc == null) 
+//				{
+//					m_data.Ndc = ThreadContext.Stack.GetFullMessage();
+//					if (m_data.Ndc == null)
+//					{
+//						m_data.Ndc = "";
+//					}
+//				}
+//				return m_data.Ndc; 
+//			}
+//		}
 
 		/// <summary>
 		/// Gets the message object used to initialize this event.
@@ -683,7 +655,8 @@ namespace log4net.Core
 							// some undefined set of SecurityPermission flags.
 							LogLog.Debug("LoggingEvent: Security exception while trying to get current thread ID. Error Ignored. Empty thread name.");
 
-							m_data.ThreadName = "";
+							// As a last resort use the hash code of the Thread object
+							m_data.ThreadName = System.Threading.Thread.CurrentThread.GetHashCode().ToString();
 						}
 					}
 #endif
@@ -836,45 +809,27 @@ namespace log4net.Core
 		/// Additional event specific properties.
 		/// </value>
 		/// <remarks>
+		/// <para>
 		/// A logger or an appender may attach additional
 		/// properties to specific events. These properties
 		/// have a string key and an object value.
+		/// </para>
+		/// <para>
+		/// This property is for events that have been added directly to
+		/// this event. The aggregate properties (which include these
+		/// event properties) can be retrieved using <see cref="LookupProperty"/>
+		/// and <see cref="GetProperties"/>.
+		/// </para>
 		/// </remarks>
-		public PropertiesDictionary Properties
+		public PropertiesDictionary EventProperties
 		{
 			get 
 			{ 
-				if (m_data.Properties == null)
+				if (m_eventProperties == null)
 				{
-					m_data.Properties = new PropertiesDictionary();
+					m_eventProperties = new PropertiesDictionary();
 				}
-				return m_data.Properties; 
-			}
-		}
-
-		/// <summary>
-		/// Gets the global properties defined when this event was created.
-		/// </summary>
-		/// <value>
-		/// Globally defined properties.
-		/// </value>
-		/// <remarks>
-		/// Global properties are defined by the <see cref="GlobalContext"/>
-		/// </remarks>
-		public ReadOnlyPropertiesDictionary GlobalProperties
-		{
-			get 
-			{ 
-				// The global properties are captured in the constructor
-				// because they are global shared state they must be captured as soon as possible
-
-				if (m_data.GlobalProperties == null)
-				{
-					// Just in case for some reason this is null set it to an empty collection
-					// callers do not expect this property to return null
-					m_data.GlobalProperties = new ReadOnlyPropertiesDictionary();
-				}
-				return m_data.GlobalProperties; 
+				return m_eventProperties; 
 			}
 		}
 
@@ -926,7 +881,6 @@ namespace log4net.Core
 			info.AddValue("LoggerName", m_data.LoggerName);
 			info.AddValue("Level", m_data.Level);
 			info.AddValue("Ndc", m_data.Ndc);
-			info.AddValue("Mdc", m_data.Mdc);
 			info.AddValue("Message", m_data.Message);
 			info.AddValue("ThreadName", m_data.ThreadName);
 			info.AddValue("TimeStamp", m_data.TimeStamp);
@@ -934,7 +888,6 @@ namespace log4net.Core
 			info.AddValue("UserName", m_data.UserName);
 			info.AddValue("ExceptionString", m_data.ExceptionString);
 			info.AddValue("Properties", m_data.Properties);
-			info.AddValue("GlobalProperties", m_data.GlobalProperties);
 			info.AddValue("Domain", m_data.Domain);
 			info.AddValue("Identity", m_data.Identity);
 		}
@@ -975,23 +928,6 @@ namespace log4net.Core
 		{
 			Fix = fixFlags;
 			return m_data;
-		}
-
-		/// <summary>
-		/// Looks up the specified key in the <see cref="MDC"/>.
-		/// </summary>
-		/// <param name="key">The key to lookup.</param>
-		/// <returns>
-		/// The value associated with the key, or <c>null</c> if the key was not found.
-		/// </returns>
-		public string LookupMappedContext(string key)
-		{
-			if (m_data.Mdc == null)
-			{
-				// This creates a live copy of the MDC
-				m_data.Mdc = MDC.GetMap();
-			}
-			return m_data.Mdc[key] as string;
 		}
 
 		/// <summary>
@@ -1131,20 +1067,13 @@ namespace log4net.Core
 
 			if (updateFlags > 0)
 			{
-				if ((updateFlags & FixFlags.Mdc) != 0)
-				{
-					// Force the MDC to be cached
-					CacheMappedContext();
-
-					m_fixFlags |= FixFlags.Mdc;
-				}
-				if ((updateFlags & FixFlags.Ndc) != 0)
-				{
-					// Force the NDC to be cached
-					string tmp = this.NestedContext;
-
-					m_fixFlags |= FixFlags.Ndc;
-				}
+//				if ((updateFlags & FixFlags.Ndc) != 0)
+//				{
+//					// Force the NDC to be cached
+//					string tmp = this.NestedContext;
+//
+//					m_fixFlags |= FixFlags.Ndc;
+//				}
 				if ((updateFlags & FixFlags.Message) != 0)
 				{
 					// Force the message to be rendered
@@ -1203,6 +1132,13 @@ namespace log4net.Core
 
 					m_fixFlags |= FixFlags.Exception;
 				}
+
+				if ((updateFlags & FixFlags.Properties) != 0)
+				{
+					CacheProperties();
+
+					m_fixFlags |= FixFlags.Properties;
+				}
 			}
 		}
 
@@ -1210,16 +1146,125 @@ namespace log4net.Core
 
 		#region Protected Instance Methods
 
-		/// <summary>
-		/// Creates a cached copy of the <see cref="MDC" />.
-		/// </summary>
-		protected void CacheMappedContext()
+		private void CreateCompositeProperties()
 		{
-			// Copy the MDC dictionary
-			if (m_data.Mdc == null || m_data.Mdc.IsReadOnly == false)
+			m_compositeProperties = new CompositeProperties();
+
+			if (m_eventProperties != null)
 			{
-				m_data.Mdc = MDC.CopyMap();
+				m_compositeProperties.Add(m_eventProperties);
 			}
+			m_compositeProperties.Add(ThreadContext.Properties.GetProperties());
+
+			// TODO: Add Repository Properties
+
+			m_compositeProperties.Add(GlobalContext.Properties.GetReadOnlyProperties());
+		}
+
+		private void CacheProperties()
+		{
+			if (m_data.Properties == null)
+			{
+				if (m_compositeProperties == null)
+				{
+					CreateCompositeProperties();
+				}
+
+				PropertiesDictionary flattenedProperties = m_compositeProperties.Flatten();
+
+				PropertiesDictionary fixedProperties = new PropertiesDictionary();
+
+				// Fix any IFixingRequired objects
+				foreach(DictionaryEntry entry in flattenedProperties)
+				{
+					string key = (string)entry.Key;
+					object val = entry.Value;
+
+					IFixingRequired fixingRequired = val as IFixingRequired;
+					if (fixingRequired != null)
+					{
+						val = fixingRequired.GetFixedObject();
+					}
+
+					fixedProperties[key] = val;
+				}
+
+				m_data.Properties = fixedProperties;
+			}
+		}
+
+		/// <summary>
+		/// Lookup a composite property in this event
+		/// </summary>
+		/// <param name="key">the key for the property to lookup</param>
+		/// <returns>the value for the property</returns>
+		/// <remarks>
+		/// <para>
+		/// This event has composite properties that combine together properties from
+		/// several different contexts in the following order:
+		/// <list type="definition">
+		///		<item>
+		/// 		<term>this events properties</term>
+		/// 		<description>
+		/// 		This event has <see cref="EventProperties"/> that can be set. These 
+		/// 		properties are specific to this event only.
+		/// 		</description>
+		/// 	</item>
+		/// 	<item>
+		/// 		<term>the thread properties</term>
+		/// 		<description>
+		/// 		The <see cref="ThreadContext.Properties"/> that are set on the current
+		/// 		thread. These properties are shared by all events logged on this thread.
+		/// 		</description>
+		/// 	</item>
+		/// 	<item>
+		/// 		<term>the global properties</term>
+		/// 		<description>
+		/// 		The <see cref="GlobalContext.Properties"/> that are set globally. These 
+		/// 		properties are shared by all the threads in the AppDomain.
+		/// 		</description>
+		/// 	</item>
+		/// </list>
+		/// </para>
+		/// </remarks>
+		public object LookupProperty(string key)
+		{
+			if (m_data.Properties != null)
+			{
+				return m_data.Properties[key];
+			}
+			if (m_compositeProperties == null)
+			{
+				CreateCompositeProperties();
+			}
+			return m_compositeProperties[key];
+		}
+
+		/// <summary>
+		/// Get all the composite properties in this event
+		/// </summary>
+		/// <returns>the <see cref="PropertiesDictionary"/> containing all the properties</returns>
+		/// <remarks>
+		/// <para>
+		/// See <see cref="LookupProperty"/> for details of the composite properties 
+		/// stored by the event.
+		/// </para>
+		/// <para>
+		/// This method returns a single <see cref="PropertiesDictionary"/> containing all the
+		/// properties defined for this event.
+		/// </para>
+		/// </remarks>
+		public PropertiesDictionary GetProperties()
+		{
+			if (m_data.Properties != null)
+			{
+				return m_data.Properties;
+			}
+			if (m_compositeProperties == null)
+			{
+				CreateCompositeProperties();
+			}
+			return m_compositeProperties.Flatten();
 		}
 
 		#endregion Public Instance Methods
@@ -1230,6 +1275,16 @@ namespace log4net.Core
 		/// The internal logging event data.
 		/// </summary>
 		private LoggingEventData m_data;
+
+		/// <summary>
+		/// The internal logging event data.
+		/// </summary>
+		private CompositeProperties m_compositeProperties;
+
+		/// <summary>
+		/// The internal logging event data.
+		/// </summary>
+		private PropertiesDictionary m_eventProperties;
 
 		/// <summary>
 		/// The fully qualified classname of the calling 
@@ -1273,17 +1328,17 @@ namespace log4net.Core
 		#region Constants
 
 		/// <summary>
-		/// The key into the <see cref="Properties"/> map for the host name value.
+		/// The key into the Properties map for the host name value.
 		/// </summary>
 		public const string HostNameProperty = "log4net:HostName";
 
 		/// <summary>
-		/// The key into the <see cref="Properties"/> map for the thread identity value.
+		/// The key into the Properties map for the thread identity value.
 		/// </summary>
 		public const string IdentityProperty = "log4net:Identity";
 
 		/// <summary>
-		/// The key into the <see cref="Properties"/> map for the user name value.
+		/// The key into the Properties map for the user name value.
 		/// </summary>
 		public const string UserNameProperty = "log4net:UserName";
 
