@@ -65,8 +65,8 @@ limitations under the License.
 						run-time potentially causing your application to crash. <b>If for any reason, log4net 
 						throws an uncaught exception</b> (except for <span class="code">ArgumentException</span> and 
 						<span class="code">ArgumentNullException</span> which may be thrown), <b>please send an email 
-						to the <a href="mailto:log4net-users@logging.apache.org">
-						log4net-users@logging.apache.org</a> mailing list</b>. Uncaught exceptions 
+						to the <a href="mailto:log4net-user@logging.apache.org">
+						log4net-user@logging.apache.org</a> mailing list</b>. Uncaught exceptions 
 						are handled as serious bugs requiring immediate attention.
 					</p>
 					<p>
