@@ -90,7 +90,7 @@ namespace log4net.Layout
 				throw new ArgumentNullException("loggingEvent");
 			}
 
-			writer.Write(loggingEvent.GetExceptionStrRep());
+			writer.Write(loggingEvent.GetExceptionString());
 		}
 
 		#endregion
