@@ -175,7 +175,7 @@
         </if>
         <if test="${framework::exists('net-1.0')}">
             <call target="compile-net-1.0" />
-            <call target="compile-core" />
+            <call target="compile-cli-1.0" />
         </if>
         <if test="${not framework::exists('net-1.0')}">
             <if test="${property::exists('project.build.package') and project.build.package}">
@@ -201,12 +201,15 @@
         </if>
         <if test="${not framework::exists('net-2.0')}">
             <if test="${property::exists('project.build.package') and project.build.package}">
+                <!-- .NET 2.0 Build Skipped for Package
                 <fail message="The .NET Framework 2.0 is not available." />
+                -->
+                <echo message="The .NET Framework 2.0 is not available. Build skipped during package." />
             </if>
             <if test="${not(property::exists('project.build.package') and project.build.package)}">
                 <echo message="The .NET Framework 2.0 is not available. Build skipped." />
             </if>
-        </if>
+        </if> 
         <if test="${framework::exists('mono-1.0')}">
             <call target="compile-mono-1.0" />
         </if>
@@ -462,17 +465,19 @@
         </if>
     </target>
     <!--
-        This version is built targeting .NET 1.0, but does not contain any 
-        classes that are .NET 1.0 or Windows-specific.
+        This version is built to run on any CLI 1.0 (ECMA 335) standard runtime.
+        The build excludes any code that is platform specific.
+        The .NET 1.0 compiler and library are used to build the assembly.
         
-        Therefore, the log4net Core is runtime compatible with the following 
-        frameworks :
+        The log4net CLI 1.0 assembly is runtime compatible with the following frameworks :
         * Microsoft .NET Framework 1.0 (and higher)
         * Mono 1.0 (and higher)
         
-        We only provide this "flavor" of log4net in release configuration.
+        We only provide this "flavor" of log4net in release configuration because
+        debugging information is not standardized and would be too closely tied to
+        a specific implementation.
     -->
-    <target name="compile-core" description="Builds Core version" depends="set-core-configuration, check-log4net-basedir" if="${current.build.config.release}">
+    <target name="compile-cli-1.0" description="Builds CLI 1.0 version" depends="set-cli-1.0-configuration, check-log4net-basedir, clean-current-bin-dir" if="${current.build.config.release}">
         <delete>
             <fileset basedir="${current.bin.dir}">
                 <include name="log4net.*" />
@@ -518,7 +523,7 @@
     <!-- Target for generating docs for all runtime configurations -->
     <target name="generate-sdkdoc-all" depends="check-current-build-config">
         <echo message="Generating SDK documentation temporarily disabled." />
-	<!--
+        <!--
         <echo message="Generating SDK documentation based on the ${current.build.config} build configuration for all runtime configurations." />
         <if test="${framework::exists('netcf-1.0')}">
             <call target="set-netcf-1.0-runtime-configuration" />
@@ -532,7 +537,7 @@
             <call target="set-net-1.1-runtime-configuration" />
             <call target="generate-sdkdoc" />
         </if>
-	-->
+        -->
         <!-- NAnt doesn't yet come with a version of NDoc that can handle .NET 2.0 assemblies -->
         <!-- Mono 1.0 does not support extracting xml documentation -->
         <!-- SSCLI 1.0 does not support extracting xml documentation -->
@@ -641,8 +646,8 @@
             <fileset basedir="src">
                 <include name="**/*" />
                 <exclude name="**/obj/**" />
-                <exclude name="log4net.csproj.user" />
-                <exclude name="log4net.suo" />
+                <exclude name="*.csproj.user" />
+                <exclude name="*.suo" />
                 <exclude name="log4net.ndoc" />
                 <exclude name="log4net*.xml" />
                 <exclude name="**/*.sln.old" />
@@ -670,25 +675,19 @@
         <mkdir dir="${current.package.dir}/doc" />
         <copy todir="${current.package.dir}/doc" includeemptydirs="false">
             <fileset basedir="doc">
-                <include name="*" />
-            </fileset>
-        </copy>
-        <mkdir dir="${current.package.dir}/doc/manual" />
-        <copy todir="${current.package.dir}/doc/manual" includeemptydirs="false">
-            <fileset basedir="doc/manual">
-                <include name="*" />
+                <include name="**/*" />
             </fileset>
         </copy>
     </target>
     <target name="package-release-files" depends="check-current-package-dir, check-log4net-basedir">
         <copy todir="${current.package.dir}">
             <fileset basedir=".">
-                <include name="index.html" />
+                <!-- <include name="index.html" /> -->
                 <include name="build.cmd" />
                 <include name="ChangeLog.txt" />
                 <include name="log4net.build" />
                 <include name="log4net.include" />
-                <include name="releasenotes.html" />
+                <!-- <include name="releasenotes.html" /> -->
                 <include name="LICENSE.txt" />
                 <include name="log4net.snk" />
             </fileset>
