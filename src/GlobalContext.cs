@@ -36,6 +36,10 @@ namespace log4net
 	/// be included in the output of log messages. The <see cref="log4net.Layout.PatternLayout"/>
 	/// supports selecting and outputing these properties.
 	/// </para>
+	/// <para>
+	/// By default the <c>log4net:HostName</c> property is set to the name of 
+	/// the current machine.
+	/// </para>
 	/// </remarks>
 	/// <example>
 	/// <code>
@@ -58,6 +62,11 @@ namespace log4net
 		}
 
 		#endregion Private Instance Constructors
+
+		static GlobalContext()
+		{
+			Properties[log4net.Core.LoggingEvent.HostNameProperty] = SystemInfo.HostName;
+		}
 
 		#region Public Static Properties
 
