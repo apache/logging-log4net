@@ -186,7 +186,7 @@ namespace log4net.Appender
 		/// </remarks>
 		protected override void Append(LoggingEvent loggingEvent) 
 		{
-			if (m_handler != null)
+			if (m_handler != null && m_handler.HasConnections)
 			{
 				m_handler.Send(RenderLoggingEvent(loggingEvent));
 			}
@@ -381,6 +381,29 @@ namespace log4net.Appender
 					m_clients = clientsCopy;
 				}
 			}
+
+			/// <summary>
+			/// Test if this handler has active connections
+			/// </summary>
+			/// <value>
+			/// <c>true</c> if this handler has active connections
+			/// </value>
+			/// <remarks>
+			/// <para>
+			/// This property will be <c>true</c> while this handler has
+			/// active connections, that is at least one connection that 
+			/// the handler will attempt to send a message to.
+			/// </para>
+			/// </remarks>
+			public bool HasConnections
+			{
+				get
+				{
+					ArrayList localClients = m_clients;
+
+					return (localClients != null && localClients.Count > 0);
+				}
+			}
 			
 			/// <summary>
 			/// Callback used to accept a connection on the server socket
@@ -459,13 +482,17 @@ namespace log4net.Appender
 				{
 					localSocket.Shutdown(SocketShutdown.Both);
 				} 
-				catch { }
+				catch 
+				{ 
+				}
 
 				try
 				{
 					localSocket.Close();
 				}
-				catch { }			
+				catch 
+				{ 
+				}			
 			}
 
 			#endregion
