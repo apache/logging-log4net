@@ -184,7 +184,8 @@ namespace log4net.ObjectRenderer
 			}
 			else
 			{
-				writer.Write(obj.ToString());
+				string str = obj.ToString();
+				writer.Write( (str==null) ? "(null)" : str );
 			}
 		}
 
