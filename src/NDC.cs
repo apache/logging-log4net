@@ -251,20 +251,6 @@ namespace log4net
 			return null;
 		}
   
-		/// <summary>
-		/// Peeks at the message on the top of the context stack.
-		/// </summary>
-		/// <returns>The message on the top of the stack.</returns>
-		internal static string Peek() 
-		{
-			Stack stack = GetStack();
-			if (stack.Count > 0)
-			{
-				return ((DiagnosticContext)(stack.Peek())).Message;
-			}
-			return "";
-		}
- 
 		#endregion Internal Static Methods
 
 		#region Private Static Methods
