@@ -1,19 +1,14 @@
 <?xml version="1.0" ?>
 <project name="log4net" default="compile-all" xmlnds="http://tempuri.org/nant-vs.xsd">
     <!-- Global project settings -->
-    <property name="log4net.basedir" value="." readonly="false" />
-    <property name="project.build.config" value="debug" readonly="false" />
-    <property name="project.build.package" value="false" readonly="false" />
+    <property name="log4net.basedir" value="." />
+    <property name="project.build.config" value="debug" />
+    <property name="project.build.package" value="false" />
     <!-- Include log4net helpers -->
     <include buildfile="${log4net.basedir}/log4net.include" />
     <!-- Targets that should always be executed -->
     <call target="set-build-configuration" />
     <call target="set-framework-configuration" />
-    <!-- The path to the log4net assembly for current build/runtime -->
-    <property 
-        name="log4net.assembly" 
-        value="${log4net.basedir}/bin/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/log4net.dll"
-        dynamic="true" />
     <!-- Targets that check settings -->
     <target name="check-package-version">
         <fail 
@@ -21,8 +16,7 @@
             if="${not property::exists('package.version')}" />
     </target>
     <target name="check-package-dir">
-        <property name="package.dir" value="build/package" overwrite="false" 
-            readonly="false" />
+        <property name="package.dir" value="build/package" overwrite="false" />
         <mkdir dir="${package.dir}" />
     </target>
     <target name="check-current-package-dir">
@@ -37,7 +31,7 @@
             if="${not property::exists('current.package.zipfile')}" />
     </target>
     <target name="check-htmlhelp-compiler">
-        <if test="$not property::exists('htmlhelp.compiler')}">
+        <if test="${not property::exists('htmlhelp.compiler')}">
             <readregistry
                 property="htmlhelp.workshop.installroot"
                 key="SOFTWARE\Microsoft\HTML Help Workshop\InstallDir"
@@ -46,16 +40,14 @@
             <if test="${property::exists('htmlhelp.workshop.installroot')}">
                 <property 
                     name="htmlhelp.compiler"
-                    value="${htmlhelp.workshop.installroot}/hhc.exe"
-                    readonly="false" />
+                    value="${htmlhelp.workshop.installroot}/hhc.exe" />
             </if>
         </if>
         <if test="${not property::exists('htmlhelp.compiler')}">
             <sysinfo />
             <property 
                 name="htmlhelp.compiler"
-                value="${sys.os.folder.programfiles}/HTML Help Worshop/hhc.exe"
-                readonly="false" />
+                value="${sys.os.folder.programfiles}/HTML Help Worshop/hhc.exe" />
         </if>
     </target>
     <!-- Target for cleaning up the current package directory -->
@@ -228,7 +220,7 @@
     </target>
     <target name="compile-netcf-1.0" description="Builds .NET Compact Framework 1.0 version" depends="set-netcf-1.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir">
         <!-- initialize the temp.build.skip property to false -->
-        <property name="temp.build.skip" value="false" readonly="false" />
+        <property name="temp.build.skip" value="false" />
         <if test="${current.build.config.release}">
             <!-- check if the log4net key file is available -->
             <if test="${not file::exists(log4net.basedir + '/log4net.snk')}">
@@ -239,7 +231,7 @@
                     <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
                     <echo message="The generated key file should be stored in the log4net base directory." />
                     <echo message="The release build will be skipped." />
-                    <property name="temp.build.skip" value="true" readonly="false" />
+                    <property name="temp.build.skip" value="true" />
                 </if>
             </if>
             <if test="${file::exists(log4net.basedir + '/log4net.snk')}">
@@ -247,7 +239,7 @@
                 <copy file="${log4net.basedir}/log4net.snk" todir="${current.bin.dir}/../../../" if="${current.build.config.release}" />
             </if>
         </if>
-        <if test="${not temp.build.skip)}">
+        <if test="${not temp.build.skip}">
             <csc warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
                 <sources basedir="${log4net.basedir}/src">
                     <include name="**/*.cs" />
@@ -265,7 +257,7 @@
     </target>
     <target name="compile-net-1.0" description="Builds .NET Framework 1.0 version" depends="set-net-1.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir">
         <!-- initialize the temp.build.skip property to false -->
-        <property name="temp.build.skip" value="false" readonly="false" />
+        <property name="temp.build.skip" value="false" />
         <if test="${current.build.config.release}">
             <!-- check if the log4net key file is available -->
             <if test="${not file::exists(log4net.basedir + '/log4net.snk')}">
@@ -276,7 +268,7 @@
                     <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
                     <echo message="The generated key file should be stored in the log4net base directory." />
                     <echo message="The release build will be skipped." />
-                    <property name="temp.build.skip" value="true" readonly="false" />
+                    <property name="temp.build.skip" value="true" />
                 </if>
             </if>
             <if test="${file::exists(log4net.basedir + '/log4net.snk')}">
@@ -303,7 +295,7 @@
     </target>
     <target name="compile-net-1.1" description="Builds .NET Framework 1.1 version" depends="set-net-1.1-runtime-configuration, check-log4net-basedir, clean-current-bin-dir">
         <!-- initialize the temp.build.skip property to false -->
-        <property name="temp.build.skip" value="false" readonly="false" />
+        <property name="temp.build.skip" value="false" />
         <if test="${current.build.config.release}">
             <!-- check if the log4net key file is available -->
             <if test="${not file::exists(log4net.basedir + '/log4net.snk')}">
@@ -314,7 +306,7 @@
                     <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
                     <echo message="The generated key file should be stored in the log4net base directory." />
                     <echo message="The release build will be skipped." />
-                    <property name="temp.build.skip" value="true" readonly="false" />
+                    <property name="temp.build.skip" value="true" />
                 </if>
             </if>
             <if test="${file::exists(log4net.basedir + '/log4net.snk')}">
@@ -341,7 +333,7 @@
     </target>
     <target name="compile-mono-1.0" description="Builds Mono 1.0 version" depends="set-mono-1.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir">
         <!-- initialize the temp.build.skip property to false -->
-        <property name="temp.build.skip" value="false" readonly="false" />
+        <property name="temp.build.skip" value="false" />
         <if test="${current.build.config.release}">
             <!-- check if the log4net key file is available -->
             <if test="${not file::exists(log4net.basedir + '/log4net.snk')}">
@@ -352,7 +344,7 @@
                     <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
                     <echo message="The generated key file should be stored in the log4net base directory." />
                     <echo message="The release build will be skipped." />
-                    <property name="temp.build.skip" value="true" readonly="false" />
+                    <property name="temp.build.skip" value="true" />
                 </if>
             </if>
             <if test="${file::exists(log4net.basedir + '/log4net.snk')}">
@@ -382,7 +374,7 @@
     </target>
     <target name="compile-sscli-1.0" description="Builds SSCLI 1.0 version" depends="set-sscli-1.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir">
         <!-- initialize the temp.build.skip property to false -->
-        <property name="temp.build.skip" value="false" readonly="false" />
+        <property name="temp.build.skip" value="false" />
         <if test="${current.build.config.release}">
             <!-- check if the log4net key file is available -->
             <if test="${not file::exists(log4net.basedir + '/log4net.snk')}">
@@ -393,7 +385,7 @@
                     <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
                     <echo message="The generated key file should be stored in the log4net base directory." />
                     <echo message="The release build will be skipped." />
-                    <property name="temp.build.skip" value="true" readonly="false" />
+                    <property name="temp.build.skip" value="true" />
                 </if>
             </if>
             <if test="${file::exists(log4net.basedir + '/log4net.snk')}">
@@ -485,7 +477,7 @@
     </target>
     <target name="package" depends="set-package-configuration" description="Build and Package distribution">
         <!-- set flag to indicating that this is a package build -->
-        <property name="project.build.package" value="true" readonly="false" />
+        <property name="project.build.package" value="true" />
         <!-- clean the current package directory -->
         <call target="clean-current-package-dir" />
         <!-- copies the examples to the current package directory -->

@@ -1,8 +1,13 @@
 <?xml version="1.0" ?>
 <project name="log4net-helpers" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <!-- The path to the log4net output directory for current build/runtime -->
+    <property 
+        name="log4net.output.dir" 
+        value="${log4net.basedir}/bin/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}"
+        dynamic="true" />
     <target name="check-bin-dir">
         <if test="${not property::exists('bin.dir')}">
-            <property name="bin.dir" value="bin" readonly="false" />
+            <property name="bin.dir" value="bin" />
         </if>
         <mkdir dir="${bin.dir}" />
     </target>
@@ -30,13 +35,13 @@
     </target>
     <target name="check-doc-dir">
         <if test="${not property::exists('doc.dir')}">
-            <property name="doc.dir" value="doc" readonly="false" />
+            <property name="doc.dir" value="doc" />
         </if>
         <mkdir dir="${doc.dir}" />
     </target>
     <target name="check-sdkdoc-dir" depends="check-doc-dir">
         <if test="${not property::exists('sdkdoc.dir')}">
-            <property name="sdkdoc.dir" value="${doc.dir}/sdk" readonly="false" />
+            <property name="sdkdoc.dir" value="${doc.dir}/sdk" />
         </if>
         <mkdir dir="${sdkdoc.dir}" />
     </target>
@@ -90,7 +95,7 @@
                 <fail message="The build configuration has not been specified and no default build configuration is available." />
             </if>
             <if test="${property::exists('project.build.config')}">
-                <property name="current.build.config" value="${project.build.config}" readonly="false" />
+                <property name="current.build.config" value="${project.build.config}" />
             </if>
         </if>
     </target>
@@ -99,8 +104,13 @@
             <fail message="The log4net base directory has not been specified." />
         </if>
     </target>
-    <target name="check-log4net-assembly" depends="check-current-build-config, check-log4net-basedir">
-        <if test="${not file:exists(log4net.assembly)}">
+    <target name="check-log4net-output-dir">
+        <if test="${not property::exists('log4net.output.dir')}">
+            <fail message="The log4net output directory has not been specified." />
+        </if>
+    </target>
+    <target name="check-log4net-assembly" depends="check-current-build-config, check-log4net-output-dir">
+        <if test="${not file::exists(path::combine(log4net.output.dir, 'log4net.dll'))}">
             <fail message="The log4net '${current.build.config}' assembly for ${framework::get-description(framework::get-target-framework())} is not available." />
         </if>
     </target>
@@ -123,31 +133,31 @@
         <call target="set-${current.build.config}-build-configuration" />
     </target>
     <target name="set-debug-build-configuration">
-        <property name="build.debug" value="true" readonly="false" />
-        <property name="build.defines.csc" value="DEBUG,TRACE" readonly="false" />
-        <property name="build.defines.jsc" value="DEBUG,TRACE" readonly="false" />
-        <property name="build.defines.vbc" value="DEBUG=True,TRACE=True" readonly="false" />
-        <property name="build.defines.vjc" value="DEBUG,TRACE" readonly="false" />
-        <property name="build.defines.cl" value="/D _DEBUG" readonly="false" />
-        <property name="sdkdoc.debug" value="false" readonly="false" />
-        <property name="current.build.config" value="debug" readonly="false" />
+        <property name="build.debug" value="true" />
+        <property name="build.defines.csc" value="DEBUG,TRACE" />
+        <property name="build.defines.jsc" value="DEBUG,TRACE" />
+        <property name="build.defines.vbc" value="DEBUG=True,TRACE=True" />
+        <property name="build.defines.vjc" value="DEBUG,TRACE" />
+        <property name="build.defines.cl" value="/D _DEBUG" />
+        <property name="sdkdoc.debug" value="false" />
+        <property name="current.build.config" value="debug" />
         <call target="set-build-configuration-flags" />
     </target>
     <target name="set-release-build-configuration">
-        <property name="build.debug" value="false" readonly="false" />
-        <property name="build.defines.csc" value="TRACE,STRONG" readonly="false" />
-        <property name="build.defines.jsc" value="TRACE,STRONG" readonly="false" />
-        <property name="build.defines.vbc" value="TRACE=True,STRONG=True" readonly="false" />
-        <property name="build.defines.vjc" value="TRACE,STRONG" readonly="false" />
-        <property name="build.defines.cl" value="/D STRONG" readonly="false" />
-        <property name="sdkdoc.debug" value="false" readonly="false" />
-        <property name="current.build.config" value="release" readonly="false" />
+        <property name="build.debug" value="false" />
+        <property name="build.defines.csc" value="TRACE,STRONG" />
+        <property name="build.defines.jsc" value="TRACE,STRONG" />
+        <property name="build.defines.vbc" value="TRACE=True,STRONG=True" />
+        <property name="build.defines.vjc" value="TRACE,STRONG" />
+        <property name="build.defines.cl" value="/D STRONG" />
+        <property name="sdkdoc.debug" value="false" />
+        <property name="current.build.config" value="release" />
         <call target="set-build-configuration-flags" />
     </target>
     <target name="set-build-configuration-flags" depends="check-current-build-config">
-        <property name="current.build.config.debug" value="false" readonly="false" />
-        <property name="current.build.config.release" value="false" readonly="false" />
-        <property name="current.build.config.${current.build.config}" value="true" readonly="false" />
+        <property name="current.build.config.debug" value="false" />
+        <property name="current.build.config.release" value="false" />
+        <property name="current.build.config.${current.build.config}" value="true" />
     </target>
     <target name="set-framework-configuration" depends="check-current-build-config">
         <if test="${not target::exists('set-' + framework::get-target-framework() + '-runtime-configuration')}">
@@ -157,62 +167,62 @@
     </target>
     <target name="set-net-1.0-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
         <property name="nant.settings.currentframework" value="net-1.0" />
-        <property name="current.build.debug" value="${build.debug}" dynamic="true" readonly="false" />
-        <property name="current.build.defines.csc" value="${build.defines.csc},NET,NET_1_0" dynamic="true" readonly="false" />
-        <property name="current.build.defines.jsc" value="${build.defines.jsc},NET,NET_1_0" dynamic="true" readonly="false" />
-        <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_1_0=True" dynamic="true" readonly="false" />
-        <property name="current.build.defines.vjc" value="${build.defines.vjc},NET,NET_1_0" dynamic="true" readonly="false" />
-        <property name="current.build.defines.cl" value="${build.defines.cl} /D NET /D NET_1_0" dynamic="true" readonly="false" />
-        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" readonly="false" />
-        <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" readonly="false" />
-        <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" readonly="false" />
+        <property name="current.build.debug" value="${build.debug}" dynamic="true" />
+        <property name="current.build.defines.csc" value="${build.defines.csc},NET,NET_1_0" dynamic="true" />
+        <property name="current.build.defines.jsc" value="${build.defines.jsc},NET,NET_1_0" dynamic="true" />
+        <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_1_0=True" dynamic="true" />
+        <property name="current.build.defines.vjc" value="${build.defines.vjc},NET,NET_1_0" dynamic="true" />
+        <property name="current.build.defines.cl" value="${build.defines.cl} /D NET /D NET_1_0" dynamic="true" />
+        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />
+        <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
     </target>
     <target name="set-net-1.1-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
         <property name="nant.settings.currentframework" value="net-1.1" />
-        <property name="current.build.debug" value="${build.debug}" dynamic="true" readonly="false" />
-        <property name="current.build.defines.csc" value="${build.defines.csc},NET,NET_1_1" dynamic="true" readonly="false" />
-        <property name="current.build.defines.jsc" value="${build.defines.jsc},NET,NET_1_1" dynamic="true" readonly="false" />
-        <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_1_1=True" dynamic="true" readonly="false" />
-        <property name="current.build.defines.vjc" value="${build.defines.vjc},NET,NET_1_1" dynamic="true" readonly="false" />
-        <property name="current.build.defines.cl" value="${build.defines.cl} /D NET /D NET_1_1" dynamic="true" readonly="false" />
-        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" readonly="false" />
-        <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" readonly="false" />
-        <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" readonly="false" />
+        <property name="current.build.debug" value="${build.debug}" dynamic="true" />
+        <property name="current.build.defines.csc" value="${build.defines.csc},NET,NET_1_1" dynamic="true" />
+        <property name="current.build.defines.jsc" value="${build.defines.jsc},NET,NET_1_1" dynamic="true" />
+        <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_1_1=True" dynamic="true" />
+        <property name="current.build.defines.vjc" value="${build.defines.vjc},NET,NET_1_1" dynamic="true" />
+        <property name="current.build.defines.cl" value="${build.defines.cl} /D NET /D NET_1_1" dynamic="true" />
+        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />
+        <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
     </target>
     <target name="set-netcf-1.0-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
         <property name="nant.settings.currentframework" value="netcf-1.0" />
-        <property name="current.build.debug" value="${build.debug}" dynamic="true" readonly="false" />
-        <property name="current.build.defines.csc" value="${build.defines.csc},NETCF,NETCF_1_0" dynamic="true" readonly="false" />
-        <property name="current.build.defines.jsc" value="${build.defines.jsc},NETCF,NETCF_1_0" dynamic="true" readonly="false" />
-        <property name="current.build.defines.vbc" value="${build.defines.vbc},NETCF=True" dynamic="true" readonly="false" />
-        <property name="current.build.defines.vjc" value="${build.defines.vjc},NETCF" dynamic="true" readonly="false" />
-        <property name="current.build.defines.cl" value="${build.defines.cl} /D NETCF /D NETCF_1_0" dynamic="true" readonly="false" />
-        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" readonly="false" />
-        <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" readonly="false" />
-        <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" readonly="false" />
+        <property name="current.build.debug" value="${build.debug}" dynamic="true" />
+        <property name="current.build.defines.csc" value="${build.defines.csc},NETCF,NETCF_1_0" dynamic="true" />
+        <property name="current.build.defines.jsc" value="${build.defines.jsc},NETCF,NETCF_1_0" dynamic="true" />
+        <property name="current.build.defines.vbc" value="${build.defines.vbc},NETCF=True" dynamic="true" />
+        <property name="current.build.defines.vjc" value="${build.defines.vjc},NETCF" dynamic="true" />
+        <property name="current.build.defines.cl" value="${build.defines.cl} /D NETCF /D NETCF_1_0" dynamic="true" />
+        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />
+        <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
     </target>
     <target name="set-mono-1.0-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
         <property name="nant.settings.currentframework" value="mono-1.0" />
-        <property name="current.build.debug" value="${build.debug}" dynamic="true" readonly="false" />
-        <property name="current.build.defines.csc" value="${build.defines.csc},MONO,MONO_1_0" dynamic="true" readonly="false" />
-        <property name="current.build.defines.jsc" value="${build.defines.jsc},MONO,MONO_1_0" dynamic="true" readonly="false" />
-        <property name="current.build.defines.vbc" value="${build.defines.vbc},MONO=True,MONO_1_0=True" dynamic="true" readonly="false" />
-        <property name="current.build.defines.vjc" value="${build.defines.vjc},MONO,MONO_1_0" dynamic="true" readonly="false" />
-        <property name="current.build.defines.cl" value="${build.defines.cl} /D MONO /D MONO_1_0" dynamic="true" readonly="false" />
-        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" readonly="false" />
-        <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" readonly="false" />
-        <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" readonly="false" />
+        <property name="current.build.debug" value="${build.debug}" dynamic="true" />
+        <property name="current.build.defines.csc" value="${build.defines.csc},MONO,MONO_1_0" dynamic="true" />
+        <property name="current.build.defines.jsc" value="${build.defines.jsc},MONO,MONO_1_0" dynamic="true" />
+        <property name="current.build.defines.vbc" value="${build.defines.vbc},MONO=True,MONO_1_0=True" dynamic="true" />
+        <property name="current.build.defines.vjc" value="${build.defines.vjc},MONO,MONO_1_0" dynamic="true" />
+        <property name="current.build.defines.cl" value="${build.defines.cl} /D MONO /D MONO_1_0" dynamic="true" />
+        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />
+        <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
     </target>
     <target name="set-sscli-1.0-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
         <property name="nant.settings.currentframework" value="sscli-1.0" />
-        <property name="current.build.debug" value="${build.debug}" dynamic="true" readonly="false" />
-        <property name="current.build.defines.csc" value="${build.defines.csc},SSCLI,SSCLI_1_0" dynamic="true" readonly="false" />
-        <property name="current.build.defines.jsc" value="${build.defines.jsc},SSCLI,SSCLI_1_0" dynamic="true" readonly="false" />
-        <property name="current.build.defines.vbc" value="${build.defines.vbc},SSCLI=True,SSCLI_1_0=True" dynamic="true" readonly="false" />
-        <property name="current.build.defines.vjc" value="${build.defines.vjc},SSCLI,SSCLI_1_0" dynamic="true" readonly="false" />
-        <property name="current.build.defines.cl" value="${build.defines.cl} /D SSCLI /D SSCLI_1_0" dynamic="true" readonly="false" />
-        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" readonly="false" />
-        <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" readonly="false" />
-        <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" readonly="false" />
+        <property name="current.build.debug" value="${build.debug}" dynamic="true" />
+        <property name="current.build.defines.csc" value="${build.defines.csc},SSCLI,SSCLI_1_0" dynamic="true" />
+        <property name="current.build.defines.jsc" value="${build.defines.jsc},SSCLI,SSCLI_1_0" dynamic="true" />
+        <property name="current.build.defines.vbc" value="${build.defines.vbc},SSCLI=True,SSCLI_1_0=True" dynamic="true" />
+        <property name="current.build.defines.vjc" value="${build.defines.vjc},SSCLI,SSCLI_1_0" dynamic="true" />
+        <property name="current.build.defines.cl" value="${build.defines.cl} /D SSCLI /D SSCLI_1_0" dynamic="true" />
+        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />
+        <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
     </target>
 </project>
