@@ -215,7 +215,7 @@ method="run" file="Generator.java" line="94"/>
 				}
 			}
 
-			string exceptionStr = loggingEvent.GetExceptionStrRep();
+			string exceptionStr = loggingEvent.GetExceptionString();
 			if (exceptionStr != null && exceptionStr.Length > 0)
 			{
 				// Append the stack trace line
