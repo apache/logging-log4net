@@ -473,20 +473,52 @@ namespace log4net.Core
 		/// The message object used to initialize this event.
 		/// </value>
 		/// <remarks>
+		/// <para>
 		/// Gets the message object used to initialize this event.
 		/// Note that this event may not have a valid message object.
 		/// If the event is serialized the message object will not 
 		/// be transferred. To get the text of the message the
 		/// <see cref="RenderedMessage"/> property must be used 
 		/// not this property.
+		/// </para>
+		/// <para>
 		/// If there is no defined message object for this event then
 		/// null will be returned.
+		/// </para>
 		/// </remarks>
 		public object MessageObject
 		{
 			get 
 			{ 
 				return m_message;
+			}
+		} 
+
+		/// <summary>
+		/// Gets the exception object used to initialize this event.
+		/// </summary>
+		/// <value>
+		/// The exception object used to initialize this event.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets the exception object used to initialize this event.
+		/// Note that this event may not have a valid exception object.
+		/// If the event is serialized the exception object will not 
+		/// be transferred. To get the text of the exception the
+		/// <see cref="GetExceptionString"/> method must be used 
+		/// not this property.
+		/// </para>
+		/// <para>
+		/// If there is no defined exception object for this event then
+		/// null will be returned.
+		/// </para>
+		/// </remarks>
+		public Exception ExceptionObject
+		{
+			get 
+			{ 
+				return m_thrownException;
 			}
 		} 
 
