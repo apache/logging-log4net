@@ -122,18 +122,18 @@ namespace log4net.Config
 		/// <summary>
 		/// Configures the <see cref="ILoggerRepository"/> for the specified assembly.
 		/// </summary>
-		/// <param name="assembly">The assembly that this attribute was defined on.</param>
-		/// <param name="repository">The repository to configure.</param>
+		/// <param name="sourceAssembly">The assembly that this attribute was defined on.</param>
+		/// <param name="targetRepository">The repository to configure.</param>
 		/// <remarks>
 		/// <para>
 		/// Configure the repository using the <see cref="XmlConfigurator"/>.
-		/// The <paramref name="repository"/> specified must extend the <see cref="Hierarchy"/>
+		/// The <paramref name="targetRepository"/> specified must extend the <see cref="Hierarchy"/>
 		/// class otherwise the <see cref="XmlConfigurator"/> will not be able to
 		/// configure it.
 		/// </para>
 		/// </remarks>
 		/// <exception cref="ArgumentOutOfRangeException">The <paramref name="repository" /> does not extend <see cref="Hierarchy"/>.</exception>
-		override public void Configure(Assembly assembly, ILoggerRepository repository)
+		override public void Configure(Assembly sourceAssembly, ILoggerRepository targetRepository)
 		{
 			// Work out the full path to the config file
 			string fullPath2ConfigFile = null;
@@ -154,7 +154,7 @@ namespace log4net.Config
 						m_configFileExtension = "." + m_configFileExtension;
 					}
 
-					fullPath2ConfigFile = Path.Combine(SystemInfo.ApplicationBaseDirectory, SystemInfo.AssemblyFileName(assembly) + m_configFileExtension);
+					fullPath2ConfigFile = Path.Combine(SystemInfo.ApplicationBaseDirectory, SystemInfo.AssemblyFileName(sourceAssembly) + m_configFileExtension);
 				}
 			}
 			else
@@ -164,16 +164,16 @@ namespace log4net.Config
 			}
 
 #if (SSCLI)
-			XmlConfigurator.Configure(repository, new FileInfo(fullPath2ConfigFile));
+			XmlConfigurator.Configure(targetRepository, new FileInfo(fullPath2ConfigFile));
 #else
 			// Do we configure just once or do we configure and then watch?
 			if (m_configureAndWatch)
 			{
-				XmlConfigurator.ConfigureAndWatch(repository, new FileInfo(fullPath2ConfigFile));
+				XmlConfigurator.ConfigureAndWatch(targetRepository, new FileInfo(fullPath2ConfigFile));
 			}
 			else
 			{
-				XmlConfigurator.Configure(repository, new FileInfo(fullPath2ConfigFile));
+				XmlConfigurator.Configure(targetRepository, new FileInfo(fullPath2ConfigFile));
 			}
 #endif
 		}

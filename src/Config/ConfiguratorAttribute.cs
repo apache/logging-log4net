@@ -43,9 +43,9 @@ namespace log4net.Config
 		/// <summary>
 		/// Configures the <see cref="ILoggerRepository"/> for the specified assembly.
 		/// </summary>
-		/// <param name="assembly">The assembly that this attribute was defined on.</param>
-		/// <param name="repository">The repository to configure.</param>
-		public abstract void Configure(Assembly assembly, ILoggerRepository repository);
+		/// <param name="sourceAssembly">The assembly that this attribute was defined on.</param>
+		/// <param name="targetRepository">The repository to configure.</param>
+		public abstract void Configure(Assembly sourceAssembly, ILoggerRepository targetRepository);
 	}
 }
 
