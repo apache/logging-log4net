@@ -35,6 +35,7 @@ namespace log4net.Plugin
 		/// <summary>
 		/// Supports type-safe iteration over a <see cref="PluginCollection"/>.
 		/// </summary>
+		/// <exclude/>
 		public interface IPluginCollectionEnumerator
 		{
 			/// <summary>
@@ -80,9 +81,9 @@ namespace log4net.Plugin
 		#region Static Wrappers
 
 		/// <summary>
-		///	Creates a synchronized (thread-safe) wrapper for a 
-		/// <c>PluginCollection</c> instance.
+		///	Creates a synchronized (thread-safe) wrapper for a <c>PluginCollection</c> instance.
 		/// </summary>
+		/// <param name="list">list to create a synchronized wrapper arround</param>
 		/// <returns>
 		/// A <c>PluginCollection</c> wrapper that is synchronized (thread-safe).
 		/// </returns>
@@ -94,9 +95,9 @@ namespace log4net.Plugin
 		}
         
 		/// <summary>
-		///	Creates a read-only wrapper for a 
-		/// <c>PluginCollection</c> instance.
+		///	Creates a read-only wrapper for a <c>PluginCollection</c> instance.
 		/// </summary>
+		/// <param name="list">list to create a readonly wrapper arround</param>
 		/// <returns>
 		/// A <c>PluginCollection</c> wrapper that is read-only.
 		/// </returns>
@@ -167,6 +168,7 @@ namespace log4net.Plugin
 		/// Type visible only to our subclasses
 		/// Used to access protected constructor
 		/// </summary>
+		/// <exclude/>
 		protected enum Tag 
 		{
 			/// <summary>
@@ -179,6 +181,7 @@ namespace log4net.Plugin
 		/// Allow subclasses to avoid our default constructors
 		/// </summary>
 		/// <param name="t"></param>
+		/// <exclude/>
 		protected PluginCollection(Tag t)
 		{
 			m_array = null;
@@ -302,6 +305,7 @@ namespace log4net.Plugin
 		/// <summary>
 		/// Creates a shallow copy of the <see cref="PluginCollection"/>.
 		/// </summary>
+		/// <returns>A new <see cref="PluginCollection"/> with a shallow copy of the collection data.</returns>
 		public virtual object Clone()
 		{
 			PluginCollection newCol = new PluginCollection(m_count);
@@ -583,7 +587,7 @@ namespace log4net.Plugin
 			int max = (allowEqualEnd) ? (m_count) : (m_count-1);
 			if (i < 0 || i > max)
 			{
-				throw new System.ArgumentOutOfRangeException("Index was out of range.  Must be non-negative and less than the size of the collection. [" + (object)i + "] Specified argument was out of the range of valid values.");
+				throw new System.ArgumentOutOfRangeException("i", (object)i, "Index was out of range. Must be non-negative and less than the size of the collection. [" + (object)i + "] Specified argument was out of the range of valid values.");
 			}
 		}
 
@@ -663,6 +667,7 @@ namespace log4net.Plugin
 		/// <summary>
 		/// Supports simple iteration over a <see cref="PluginCollection"/>.
 		/// </summary>
+		/// <exclude/>
 		private class Enumerator : IEnumerator, IPluginCollectionEnumerator
 		{
 			#region Implementation (data)
@@ -745,6 +750,7 @@ namespace log4net.Plugin
 
 		#region Nested Synchronized Wrapper class
 
+		/// <exclude/>
 		private class SyncPluginCollection : PluginCollection
 		{
 			#region Implementation (data)
@@ -945,6 +951,7 @@ namespace log4net.Plugin
 
 		#region Nested Read Only Wrapper class
 
+		/// <exclude/>
 		private class ReadOnlyPluginCollection : PluginCollection
 		{
 			#region Implementation (data)

@@ -34,6 +34,7 @@ namespace log4net.Appender
 		/// <summary>
 		/// Supports type-safe iteration over a <see cref="AppenderCollection"/>.
 		/// </summary>
+		/// <exclude/>
 		public interface IAppenderCollectionEnumerator
 		{
 			/// <summary>
@@ -76,9 +77,9 @@ namespace log4net.Appender
 	
 		#region Static Wrappers
 		/// <summary>
-		/// Creates a synchronized (thread-safe) wrapper for a 
-		/// <c>AppenderCollection</c> instance.
+		/// Creates a synchronized (thread-safe) wrapper for a <c>AppenderCollection</c> instance.
 		/// </summary>
+		/// <param name="list">list to create a synchronized wrapper arround</param>
 		/// <returns>
 		/// An <c>AppenderCollection</c> wrapper that is synchronized (thread-safe).
 		/// </returns>
@@ -90,9 +91,9 @@ namespace log4net.Appender
 		}
         
 		/// <summary>
-		/// Creates a read-only wrapper for a 
-		/// <c>AppenderCollection</c> instance.
+		/// Creates a read-only wrapper for a <c>AppenderCollection</c> instance.
 		/// </summary>
+		/// <param name="list">list to create a readonly wrapper arround</param>
 		/// <returns>
 		/// An <c>AppenderCollection</c> wrapper that is read-only.
 		/// </returns>
@@ -172,6 +173,7 @@ namespace log4net.Appender
 		/// Type visible only to our subclasses
 		/// Used to access protected constructor
 		/// </summary>
+		/// <exclude/>
 		protected enum Tag 
 		{
 			/// <summary>
@@ -184,6 +186,7 @@ namespace log4net.Appender
 		/// Allow subclasses to avoid our default constructors
 		/// </summary>
 		/// <param name="t"></param>
+		/// <exclude/>
 		protected AppenderCollection(Tag t)
 		{
 			m_array = null;
@@ -299,6 +302,7 @@ namespace log4net.Appender
 		/// <summary>
 		/// Creates a shallow copy of the <see cref="AppenderCollection"/>.
 		/// </summary>
+		/// <returns>A new <see cref="AppenderCollection"/> with a shallow copy of the collection data.</returns>
 		public virtual object Clone()
 		{
 			AppenderCollection newCol = new AppenderCollection(m_count);
@@ -448,7 +452,7 @@ namespace log4net.Appender
 		/// Returns an enumerator that can iterate through the <c>AppenderCollection</c>.
 		/// </summary>
 		/// <returns>An <see cref="Enumerator"/> for the entire <c>AppenderCollection</c>.</returns>
-		public virtual Enumerator GetEnumerator()
+		public virtual IAppenderCollectionEnumerator GetEnumerator()
 		{
 			return new Enumerator(this);
 		}
@@ -578,7 +582,7 @@ namespace log4net.Appender
 			int max = (allowEqualEnd) ? (m_count) : (m_count-1);
 			if (i < 0 || i > max)
 			{
-				throw new System.ArgumentOutOfRangeException("Index was out of range.  Must be non-negative and less than the size of the collection. [" + (object)i + "] Specified argument was out of the range of valid values.");
+				throw new System.ArgumentOutOfRangeException("i", (object)i, "Index was out of range. Must be non-negative and less than the size of the collection. [" + (object)i + "] Specified argument was out of the range of valid values.");
 			}
 		}
 
@@ -657,7 +661,8 @@ namespace log4net.Appender
 		/// <summary>
 		/// Supports simple iteration over a <see cref="AppenderCollection"/>.
 		/// </summary>
-		public class Enumerator : IEnumerator, IAppenderCollectionEnumerator
+		/// <exclude/>
+		private class Enumerator : IEnumerator, IAppenderCollectionEnumerator
 		{
 			#region Implementation (data)
 			
@@ -736,6 +741,7 @@ namespace log4net.Appender
 
 		#region Nested Synchronized Wrapper class
 
+		/// <exclude/>
 		private class SyncAppenderCollection : AppenderCollection
 		{
 			#region Implementation (data)
@@ -880,7 +886,7 @@ namespace log4net.Appender
 
 			#region Type-safe IEnumerable
 
-			public override Enumerator GetEnumerator()
+			public override IAppenderCollectionEnumerator GetEnumerator()
 			{
 				lock(m_root)
 				{
@@ -933,6 +939,7 @@ namespace log4net.Appender
 
 		#region Nested Read Only Wrapper class
 
+		/// <exclude/>
 		private class ReadOnlyAppenderCollection : AppenderCollection
 		{
 			#region Implementation (data)
@@ -1036,7 +1043,7 @@ namespace log4net.Appender
 
 			#region Type-safe IEnumerable
 
-			public override Enumerator GetEnumerator()
+			public override IAppenderCollectionEnumerator GetEnumerator()
 			{
 				return m_collection.GetEnumerator();
 			}

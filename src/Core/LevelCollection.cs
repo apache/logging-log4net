@@ -76,9 +76,9 @@ namespace log4net.Core
 	
 		#region Static Wrappers
 		/// <summary>
-		/// Creates a synchronized (thread-safe) wrapper for a 
-		/// <c>LevelCollection</c> instance.
+		/// Creates a synchronized (thread-safe) wrapper for a <c>LevelCollection</c> instance.
 		/// </summary>
+		/// <param name="list">list to create a synchronized wrapper arround</param>
 		/// <returns>
 		/// A <c>LevelCollection</c> wrapper that is synchronized (thread-safe).
 		/// </returns>
@@ -90,9 +90,9 @@ namespace log4net.Core
 		}
 
 		/// <summary>
-		/// Creates a read-only wrapper for a 
-		/// <c>LevelCollection</c> instance.
+		/// Creates a read-only wrapper for a <c>LevelCollection</c> instance.
 		/// </summary>
+		/// <param name="list">list to create a readonly wrapper arround</param>
 		/// <returns>
 		/// A <c>LevelCollection</c> wrapper that is read-only.
 		/// </returns>
@@ -292,6 +292,7 @@ namespace log4net.Core
 		/// <summary>
 		/// Creates a shallow copy of the <see cref="LevelCollection"/>.
 		/// </summary>
+		/// <returns>A new <see cref="LevelCollection"/> with a shallow copy of the collection data.</returns>
 		public virtual object Clone()
 		{
 			LevelCollection newCol = new LevelCollection(m_count);
@@ -572,7 +573,7 @@ namespace log4net.Core
 			int max = (allowEqualEnd) ? (m_count) : (m_count-1);
 			if (i < 0 || i > max)
 			{
-				throw new System.ArgumentOutOfRangeException("Index was out of range.  Must be non-negative and less than the size of the collection. [" + (object)i + "] Specified argument was out of the range of valid values.");
+				throw new System.ArgumentOutOfRangeException("i", (object)i, "Index was out of range. Must be non-negative and less than the size of the collection. [" + (object)i + "] Specified argument was out of the range of valid values.");
 			}
 		}
 
