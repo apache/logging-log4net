@@ -37,6 +37,12 @@ namespace log4net
 	/// has properties for determining if those logging levels are
 	/// enabled in the current configuration.
 	/// </para>
+	/// <para>
+	/// This interface can be implemented in different ways. This documentation
+	/// specifies reasonable behaviour that a caller can expect from the actual
+	/// implementation, however different implementations reserve the right to
+	/// do things differently.
+	/// </para>
 	/// </remarks>
 	/// <example>Simple example of logging messages
 	/// <code>

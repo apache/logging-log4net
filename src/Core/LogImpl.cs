@@ -18,6 +18,8 @@
 
 using System;
 
+using log4net.Repository;
+
 namespace log4net.Core
 {
 	/// <summary>
@@ -27,6 +29,66 @@ namespace log4net.Core
 	/// <para>
 	/// This implementation of the <see cref="ILog"/> interface
 	/// forwards to the <see cref="ILogger"/> held by the base class.
+	/// </para>
+	/// <para>
+	/// This logger has methods to allow the caller to log at the following
+	/// levels:
+	/// </para>
+	/// <list type="definition">
+	///   <item>
+	///     <term>DEBUG</term>
+	///     <description>
+	///     The <see cref="Debug"/> and <see cref="DebugFormat"/> methods log messages
+	///     at the <c>DEBUG</c> level. That is the level with that name defined in the
+	///     repositories <see cref="ILoggerRepository.LevelMap"/>. The default value
+	///     for this level is <see cref="Level.Debug"/>. The <see cref="IsDebugEnabled"/>
+	///     property tests if this level is enabled for logging.
+	///     </description>
+	///   </item>
+	///   <item>
+	///     <term>INFO</term>
+	///     <description>
+	///     The <see cref="Info"/> and <see cref="InfoFormat"/> methods log messages
+	///     at the <c>INFO</c> level. That is the level with that name defined in the
+	///     repositories <see cref="ILoggerRepository.LevelMap"/>. The default value
+	///     for this level is <see cref="Level.Info"/>. The <see cref="IsInfoEnabled"/>
+	///     property tests if this level is enabled for logging.
+	///     </description>
+	///   </item>
+	///   <item>
+	///     <term>WARN</term>
+	///     <description>
+	///     The <see cref="Warn"/> and <see cref="WarnFormat"/> methods log messages
+	///     at the <c>WARN</c> level. That is the level with that name defined in the
+	///     repositories <see cref="ILoggerRepository.LevelMap"/>. The default value
+	///     for this level is <see cref="Level.Warn"/>. The <see cref="IsWarnEnabled"/>
+	///     property tests if this level is enabled for logging.
+	///     </description>
+	///   </item>
+	///   <item>
+	///     <term>ERROR</term>
+	///     <description>
+	///     The <see cref="Error"/> and <see cref="ErrorFormat"/> methods log messages
+	///     at the <c>ERROR</c> level. That is the level with that name defined in the
+	///     repositories <see cref="ILoggerRepository.LevelMap"/>. The default value
+	///     for this level is <see cref="Level.Error"/>. The <see cref="IsErrorEnabled"/>
+	///     property tests if this level is enabled for logging.
+	///     </description>
+	///   </item>
+	///   <item>
+	///     <term>FATAL</term>
+	///     <description>
+	///     The <see cref="Fatal"/> and <see cref="FatalFormat"/> methods log messages
+	///     at the <c>FATAL</c> level. That is the level with that name defined in the
+	///     repositories <see cref="ILoggerRepository.LevelMap"/>. The default value
+	///     for this level is <see cref="Level.Fatal"/>. The <see cref="IsFatalEnabled"/>
+	///     property tests if this level is enabled for logging.
+	///     </description>
+	///   </item>
+	/// </list>
+	/// <para>
+	/// The values for these levels and their semantic meanings can be changed by 
+	/// configuring the <see cref="ILoggerRepository.LevelMap"/> for the repository.
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
@@ -41,21 +103,41 @@ namespace log4net.Core
 		/// <param name="logger">The logger to wrap.</param>
 		public LogImpl(ILogger logger) : base(logger)
 		{
+			// Listen for changes to the repository
+			logger.Repository.ConfigurationChanged += new LoggerRepositoryConfigurationChangedEventHandler(LoggerRepositoryConfigurationChanged);
+
+			// load the current levels
+			ReloadLevels(logger.Repository);
 		}
 
 		#endregion Public Instance Constructors
 
+		/// <summary>
+		/// Virtual method called when the configuration of the repository changes
+		/// </summary>
+		/// <param name="repository">the repository holding the levels</param>
+		protected virtual void ReloadLevels(ILoggerRepository repository)
+		{
+			LevelMap levelMap = repository.LevelMap;
+
+			m_levelDebug = levelMap.LookupWithDefault(Level.Debug);
+			m_levelInfo = levelMap.LookupWithDefault(Level.Info);
+			m_levelWarn = levelMap.LookupWithDefault(Level.Warn);
+			m_levelError = levelMap.LookupWithDefault(Level.Error);
+			m_levelFatal = levelMap.LookupWithDefault(Level.Fatal);
+		}
+
 		#region Implementation of ILog
 
 		/// <summary>
-		/// Logs a message object with the <see cref="Level.Debug"/> level.
+		/// Logs a message object with the <c>DEBUG</c> level.
 		/// </summary>
 		/// <param name="message">The message object to log.</param>
 		/// <remarks>
 		/// <para>
 		/// This method first checks if this logger is <c>DEBUG</c>
 		/// enabled by comparing the level of this logger with the 
-		/// <see cref="Level.Debug"/> level. If this logger is
+		/// <c>DEBUG</c> level. If this logger is
 		/// <c>DEBUG</c> enabled, then it converts the message object
 		/// (passed as parameter) to a string by invoking the appropriate
 		/// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then 
@@ -72,7 +154,7 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void Debug(object message) 
 		{
-			Logger.Log(ThisDeclaringType, Level.Debug, message, null);
+			Logger.Log(ThisDeclaringType, m_levelDebug, message, null);
 		}
 
 		/// <summary>
@@ -88,11 +170,11 @@ namespace log4net.Core
 		/// <seealso cref="Debug(object)"/>
 		virtual public void Debug(object message, Exception t) 
 		{
-			Logger.Log(ThisDeclaringType, Level.Debug, message, t);
+			Logger.Log(ThisDeclaringType, m_levelDebug, message, t);
 		}
 
 		/// <summary>
-		/// Logs a formatted message string with the <see cref="Level.Debug"/> level.
+		/// Logs a formatted message string with the <c>DEBUG</c> level.
 		/// </summary>
 		/// <param name="format">A String containing zero or more format items</param>
 		/// <param name="args">An Object array containing zero or more objects to format</param>
@@ -110,11 +192,11 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void DebugFormat(string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, Level.Debug, String.Format(format, args), null);
+			Logger.Log(ThisDeclaringType, m_levelDebug, String.Format(format, args), null);
 		}
 
 		/// <summary>
-		/// Logs a formatted message string with the <see cref="Level.Debug"/> level.
+		/// Logs a formatted message string with the <c>DEBUG</c> level.
 		/// </summary>
 		/// <param name="provider">An <see cref="IFormatProvider"/> that supplies culture-specific formatting information</param>
 		/// <param name="format">A String containing zero or more format items</param>
@@ -133,18 +215,18 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void DebugFormat(IFormatProvider provider, string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, Level.Debug, String.Format(provider, format, args), null);
+			Logger.Log(ThisDeclaringType, m_levelDebug, String.Format(provider, format, args), null);
 		}
 
 		/// <summary>
-		/// Logs a message object with the <see cref="Level.Info"/> level.
+		/// Logs a message object with the <c>INFO</c> level.
 		/// </summary>
 		/// <param name="message">The message object to log.</param>
 		/// <remarks>
 		/// <para>
 		/// This method first checks if this logger is <c>INFO</c>
 		/// enabled by comparing the level of this logger with the 
-		/// <see cref="Level.Info"/> level. If this logger is
+		/// <c>INFO</c> level. If this logger is
 		/// <c>INFO</c> enabled, then it converts the message object
 		/// (passed as parameter) to a string by invoking the appropriate
 		/// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then 
@@ -161,7 +243,7 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void Info(object message) 
 		{
-			Logger.Log(ThisDeclaringType, Level.Info, message, null);
+			Logger.Log(ThisDeclaringType, m_levelInfo, message, null);
 		}
   
 		/// <summary>
@@ -177,11 +259,11 @@ namespace log4net.Core
 		/// <seealso cref="Info(object)"/>
 		virtual public void Info(object message, Exception t) 
 		{
-			Logger.Log(ThisDeclaringType, Level.Info, message, t);
+			Logger.Log(ThisDeclaringType, m_levelInfo, message, t);
 		}
 
 		/// <summary>
-		/// Logs a formatted message string with the <see cref="Level.Info"/> level.
+		/// Logs a formatted message string with the <c>INFO</c> level.
 		/// </summary>
 		/// <param name="format">A String containing zero or more format items</param>
 		/// <param name="args">An Object array containing zero or more objects to format</param>
@@ -199,11 +281,11 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void InfoFormat(string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, Level.Info, String.Format(format, args), null);
+			Logger.Log(ThisDeclaringType, m_levelInfo, String.Format(format, args), null);
 		}
 
 		/// <summary>
-		/// Logs a formatted message string with the <see cref="Level.Info"/> level.
+		/// Logs a formatted message string with the <c>INFO</c> level.
 		/// </summary>
 		/// <param name="provider">An <see cref="IFormatProvider"/> that supplies culture-specific formatting information</param>
 		/// <param name="format">A String containing zero or more format items</param>
@@ -222,18 +304,18 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void InfoFormat(IFormatProvider provider, string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, Level.Info, String.Format(provider, format, args), null);
+			Logger.Log(ThisDeclaringType, m_levelInfo, String.Format(provider, format, args), null);
 		}
 
 		/// <summary>
-		/// Logs a message object with the <see cref="Level.Warn"/> level.
+		/// Logs a message object with the <c>WARN</c> level.
 		/// </summary>
 		/// <param name="message">the message object to log</param>
 		/// <remarks>
 		/// <para>
 		/// This method first checks if this logger is <c>WARN</c>
 		/// enabled by comparing the level of this logger with the 
-		/// <see cref="Level.Warn"/> level. If this logger is
+		/// <c>WARN</c> level. If this logger is
 		/// <c>WARN</c> enabled, then it converts the message object
 		/// (passed as parameter) to a string by invoking the appropriate
 		/// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then 
@@ -250,7 +332,7 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void Warn(object message) 
 		{
-			Logger.Log(ThisDeclaringType, Level.Warn, message, null);
+			Logger.Log(ThisDeclaringType, m_levelWarn, message, null);
 		}
   
 		/// <summary>
@@ -266,11 +348,11 @@ namespace log4net.Core
 		/// <seealso cref="Warn(object)"/>
 		virtual public void Warn(object message, Exception t) 
 		{
-			Logger.Log(ThisDeclaringType, Level.Warn, message, t);
+			Logger.Log(ThisDeclaringType, m_levelWarn, message, t);
 		}
 
 		/// <summary>
-		/// Logs a formatted message string with the <see cref="Level.Warn"/> level.
+		/// Logs a formatted message string with the <c>WARN</c> level.
 		/// </summary>
 		/// <param name="format">A String containing zero or more format items</param>
 		/// <param name="args">An Object array containing zero or more objects to format</param>
@@ -288,11 +370,11 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void WarnFormat(string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, Level.Warn, String.Format(format, args), null);
+			Logger.Log(ThisDeclaringType, m_levelWarn, String.Format(format, args), null);
 		}
 
 		/// <summary>
-		/// Logs a formatted message string with the <see cref="Level.Warn"/> level.
+		/// Logs a formatted message string with the <c>WARN</c> level.
 		/// </summary>
 		/// <param name="provider">An <see cref="IFormatProvider"/> that supplies culture-specific formatting information</param>
 		/// <param name="format">A String containing zero or more format items</param>
@@ -311,18 +393,18 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void WarnFormat(IFormatProvider provider, string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, Level.Warn, String.Format(provider, format, args), null);
+			Logger.Log(ThisDeclaringType, m_levelWarn, String.Format(provider, format, args), null);
 		}
 
 		/// <summary>
-		/// Logs a message object with the <see cref="Level.Error"/> level.
+		/// Logs a message object with the <c>ERROR</c> level.
 		/// </summary>
 		/// <param name="message">The message object to log.</param>
 		/// <remarks>
 		/// <para>
 		/// This method first checks if this logger is <c>ERROR</c>
 		/// enabled by comparing the level of this logger with the 
-		/// <see cref="Level.Error"/> level. If this logger is
+		/// <c>ERROR</c> level. If this logger is
 		/// <c>ERROR</c> enabled, then it converts the message object
 		/// (passed as parameter) to a string by invoking the appropriate
 		/// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then 
@@ -339,7 +421,7 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void Error(object message) 
 		{
-			Logger.Log(ThisDeclaringType, Level.Error, message, null);
+			Logger.Log(ThisDeclaringType, m_levelError, message, null);
 		}
 
 		/// <summary>
@@ -355,11 +437,11 @@ namespace log4net.Core
 		/// <seealso cref="Error(object)"/>
 		virtual public void Error(object message, Exception t) 
 		{
-			Logger.Log(ThisDeclaringType, Level.Error, message, t);
+			Logger.Log(ThisDeclaringType, m_levelError, message, t);
 		}
 
 		/// <summary>
-		/// Logs a formatted message string with the <see cref="Level.Error"/> level.
+		/// Logs a formatted message string with the <c>ERROR</c> level.
 		/// </summary>
 		/// <param name="format">A String containing zero or more format items</param>
 		/// <param name="args">An Object array containing zero or more objects to format</param>
@@ -377,11 +459,11 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void ErrorFormat(string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, Level.Error, String.Format(format, args), null);
+			Logger.Log(ThisDeclaringType, m_levelError, String.Format(format, args), null);
 		}
 
 		/// <summary>
-		/// Logs a formatted message string with the <see cref="Level.Error"/> level.
+		/// Logs a formatted message string with the <c>ERROR</c> level.
 		/// </summary>
 		/// <param name="provider">An <see cref="IFormatProvider"/> that supplies culture-specific formatting information</param>
 		/// <param name="format">A String containing zero or more format items</param>
@@ -400,18 +482,18 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void ErrorFormat(IFormatProvider provider, string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, Level.Error, String.Format(provider, format, args), null);
+			Logger.Log(ThisDeclaringType, m_levelError, String.Format(provider, format, args), null);
 		}
 
 		/// <summary>
-		/// Logs a message object with the <see cref="Level.Fatal"/> level.
+		/// Logs a message object with the <c>FATAL</c> level.
 		/// </summary>
 		/// <param name="message">The message object to log.</param>
 		/// <remarks>
 		/// <para>
 		/// This method first checks if this logger is <c>FATAL</c>
 		/// enabled by comparing the level of this logger with the 
-		/// <see cref="Level.Fatal"/> level. If this logger is
+		/// <c>FATAL</c> level. If this logger is
 		/// <c>FATAL</c> enabled, then it converts the message object
 		/// (passed as parameter) to a string by invoking the appropriate
 		/// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then 
@@ -428,7 +510,7 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void Fatal(object message) 
 		{
-			Logger.Log(ThisDeclaringType, Level.Fatal, message, null);
+			Logger.Log(ThisDeclaringType, m_levelFatal, message, null);
 		}
   
 		/// <summary>
@@ -444,11 +526,11 @@ namespace log4net.Core
 		/// <seealso cref="Fatal(object)"/>
 		virtual public void Fatal(object message, Exception t) 
 		{
-			Logger.Log(ThisDeclaringType, Level.Fatal, message, t);
+			Logger.Log(ThisDeclaringType, m_levelFatal, message, t);
 		}
 
 		/// <summary>
-		/// Logs a formatted message string with the <see cref="Level.Fatal"/> level.
+		/// Logs a formatted message string with the <c>FATAL</c> level.
 		/// </summary>
 		/// <param name="format">A String containing zero or more format items</param>
 		/// <param name="args">An Object array containing zero or more objects to format</param>
@@ -466,11 +548,11 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void FatalFormat(string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, Level.Fatal, String.Format(format, args), null);
+			Logger.Log(ThisDeclaringType, m_levelFatal, String.Format(format, args), null);
 		}
 
 		/// <summary>
-		/// Logs a formatted message string with the <see cref="Level.Fatal"/> level.
+		/// Logs a formatted message string with the <c>FATAL</c> level.
 		/// </summary>
 		/// <param name="provider">An <see cref="IFormatProvider"/> that supplies culture-specific formatting information</param>
 		/// <param name="format">A String containing zero or more format items</param>
@@ -489,7 +571,7 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void FatalFormat(IFormatProvider provider, string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, Level.Fatal, String.Format(provider, format, args), null);
+			Logger.Log(ThisDeclaringType, m_levelFatal, String.Format(provider, format, args), null);
 		}
 
 		/// <summary>
@@ -537,7 +619,7 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public bool IsDebugEnabled
 		{
-			get { return Logger.IsEnabledFor(Level.Debug); }
+			get { return Logger.IsEnabledFor(m_levelDebug); }
 		}
   
 		/// <summary>
@@ -554,7 +636,7 @@ namespace log4net.Core
 		/// <seealso cref="LogImpl.IsDebugEnabled"/>
 		virtual public bool IsInfoEnabled
 		{
-			get { return Logger.IsEnabledFor(Level.Info); }
+			get { return Logger.IsEnabledFor(m_levelInfo); }
 		}
 
 		/// <summary>
@@ -571,7 +653,7 @@ namespace log4net.Core
 		/// <seealso cref="ILog.IsDebugEnabled"/>
 		virtual public bool IsWarnEnabled
 		{
-			get { return Logger.IsEnabledFor(Level.Warn); }
+			get { return Logger.IsEnabledFor(m_levelWarn); }
 		}
 
 		/// <summary>
@@ -587,7 +669,7 @@ namespace log4net.Core
 		/// <seealso cref="ILog.IsDebugEnabled"/>
 		virtual public bool IsErrorEnabled
 		{
-			get { return Logger.IsEnabledFor(Level.Error); }
+			get { return Logger.IsEnabledFor(m_levelError); }
 		}
 
 		/// <summary>
@@ -603,10 +685,28 @@ namespace log4net.Core
 		/// <seealso cref="ILog.IsDebugEnabled"/>
 		virtual public bool IsFatalEnabled
 		{
-			get { return Logger.IsEnabledFor(Level.Fatal); }
+			get { return Logger.IsEnabledFor(m_levelFatal); }
 		}
 
 		#endregion Implementation of ILog
+
+		#region Private Methods
+
+		/// <summary>
+		/// Event handler for the <see cref="log4net.Repository.ILoggerRepository.ConfigurationChanged"/> event
+		/// </summary>
+		/// <param name="sender">the repository</param>
+		/// <param name="e">Empty</param>
+		private void LoggerRepositoryConfigurationChanged(object sender, EventArgs e)
+		{
+			ILoggerRepository repository = sender as ILoggerRepository;
+			if (repository != null)
+			{
+				ReloadLevels(repository);
+			}
+		}
+
+		#endregion
 
 		#region Private Static Instance Fields
 
@@ -616,5 +716,15 @@ namespace log4net.Core
 		private readonly static Type ThisDeclaringType = typeof(LogImpl);
 
 		#endregion Private Static Instance Fields
+
+		#region Private Fields
+
+		private Level m_levelDebug;
+		private Level m_levelInfo;
+		private Level m_levelWarn;
+		private Level m_levelError;
+		private Level m_levelFatal;
+
+		#endregion
 	}
 }

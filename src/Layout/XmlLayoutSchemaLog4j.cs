@@ -177,7 +177,7 @@ method="run" file="Generator.java" line="94"/>
 			TimeSpan timeSince1970 = loggingEvent.TimeStamp.ToUniversalTime() - s_date1970;
 
 			writer.WriteAttributeString("timestamp", XmlConvert.ToString((long)timeSince1970.TotalMilliseconds));
-			writer.WriteAttributeString("level", loggingEvent.Level.ToString());
+			writer.WriteAttributeString("level", loggingEvent.Level.DisplayName);
 			writer.WriteAttributeString("thread", loggingEvent.ThreadName);
     
 			// Append the message text

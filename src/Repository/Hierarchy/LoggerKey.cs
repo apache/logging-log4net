@@ -67,17 +67,20 @@ namespace log4net.Repository.Hierarchy
 		/// <c>true</c> if the specified <see cref="object" /> is equal to the current <see cref="LoggerKey" />; otherwise, <c>false</c>.</returns>
 		override public bool Equals(object obj) 
 		{
-			if (this == obj)
+			// Compare reference type of this against argument
+			if (((object)this) == obj)
 			{
 				return true;
 			}
-			if ((obj != null) && (obj is LoggerKey)) 
+			
+			LoggerKey objKey = obj as LoggerKey;
+			if (objKey != null) 
 			{
 #if NETCF
-				return m_name == ((LoggerKey)obj).m_name;
+				return ( m_name == objKey.m_name );
 #else
 				// Compare reference types rather than string's overloaded ==
-				return ((object)m_name) == ((object)((LoggerKey)obj).m_name);
+				return ( ((object)m_name) == ((object)objKey.m_name) );
 #endif
 			}
 			return false;

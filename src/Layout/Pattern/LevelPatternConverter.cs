@@ -38,7 +38,7 @@ namespace log4net.Layout.Pattern
 		/// <returns>the relevant location information</returns>
 		override protected void Convert(TextWriter writer, LoggingEvent loggingEvent)
 		{
-			writer.Write( loggingEvent.Level.ToString() );
+			writer.Write( loggingEvent.Level.DisplayName );
 		}
 	}
 }

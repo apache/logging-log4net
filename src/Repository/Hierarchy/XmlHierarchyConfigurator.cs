@@ -506,7 +506,7 @@ namespace log4net.Repository.Hierarchy
 			MethodInfo methInfo = null;
 
 			// Try to find a writable property
-			propInfo = targetType.GetProperty(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
+			propInfo = targetType.GetProperty(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.IgnoreCase);
 			if (propInfo != null && propInfo.CanWrite)
 			{
 				// found a property
@@ -611,16 +611,30 @@ namespace log4net.Repository.Hierarchy
 							// Got a converted result
 							LogLog.Debug("XmlConfigurator: Setting Property [" + propInfo.Name + "] to " + convertedValue.GetType().Name + " value [" + convertedValue.ToString() + "]");
 
-							// Pass to the property
-							propInfo.SetValue(target, convertedValue, BindingFlags.SetProperty, null, null, CultureInfo.InvariantCulture);
+							try
+							{
+								// Pass to the property
+								propInfo.SetValue(target, convertedValue, BindingFlags.SetProperty, null, null, CultureInfo.InvariantCulture);
+							}
+							catch(TargetInvocationException targetInvocationEx)
+							{
+								LogLog.Error("XmlConfigurator: Failed to set parameter [" + propInfo.Name + "] on object [" + target + "] using value [" + convertedValue + "]", targetInvocationEx.InnerException);
+							}
 						}
 						else if (methInfo != null)
 						{
 							// Got a converted result
 							LogLog.Debug("XmlConfigurator: Setting Collection Property [" + methInfo.Name + "] to " + convertedValue.GetType().Name + " value [" + convertedValue.ToString() + "]");
 
-							// Pass to the property
-							methInfo.Invoke(target, BindingFlags.InvokeMethod, null, new object[] {convertedValue}, CultureInfo.InvariantCulture);
+							try
+							{
+								// Pass to the property
+								methInfo.Invoke(target, BindingFlags.InvokeMethod, null, new object[] {convertedValue}, CultureInfo.InvariantCulture);
+							}
+							catch(TargetInvocationException targetInvocationEx)
+							{
+								LogLog.Error("XmlConfigurator: Failed to set parameter [" + name + "] on object [" + target + "] using value [" + convertedValue + "]", targetInvocationEx.InnerException);
+							}
 						}
 					}
 					else
@@ -650,16 +664,30 @@ namespace log4net.Repository.Hierarchy
 							// Got a converted result
 							LogLog.Debug("XmlConfigurator: Setting Property ["+ propInfo.Name +"] to object ["+ createdObject +"]");
 
-							// Pass to the property
-							propInfo.SetValue(target, createdObject, BindingFlags.SetProperty, null, null, CultureInfo.InvariantCulture);
+							try
+							{
+								// Pass to the property
+								propInfo.SetValue(target, createdObject, BindingFlags.SetProperty, null, null, CultureInfo.InvariantCulture);
+							}
+							catch(TargetInvocationException targetInvocationEx)
+							{
+								LogLog.Error("XmlConfigurator: Failed to set parameter [" + propInfo.Name + "] on object [" + target + "] using value [" + createdObject + "]", targetInvocationEx.InnerException);
+							}
 						}
 						else if (methInfo != null)
 						{
 							// Got a converted result
 							LogLog.Debug("XmlConfigurator: Setting Collection Property ["+ methInfo.Name +"] to object ["+ createdObject +"]");
 
-							// Pass to the property
-							methInfo.Invoke(target, BindingFlags.InvokeMethod, null, new object[] {createdObject}, CultureInfo.InvariantCulture);
+							try
+							{
+								// Pass to the property
+								methInfo.Invoke(target, BindingFlags.InvokeMethod, null, new object[] {createdObject}, CultureInfo.InvariantCulture);
+							}
+							catch(TargetInvocationException targetInvocationEx)
+							{
+								LogLog.Error("XmlConfigurator: Failed to set parameter [" + methInfo.Name + "] on object [" + target + "] using value [" + createdObject + "]", targetInvocationEx.InnerException);
+							}
 						}
 					}
 				}
@@ -682,11 +710,11 @@ namespace log4net.Repository.Hierarchy
 			string requiredMethodNameA = name;
 			string requiredMethodNameB = "Add" + name;
 
-			MethodInfo[] methods = targetType.GetMethods(BindingFlags.Instance | BindingFlags.Public);
+			MethodInfo[] methods = targetType.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
 			foreach(MethodInfo methInfo in methods)
 			{
-				if (methInfo.IsPublic && !methInfo.IsStatic)
+				if (!methInfo.IsStatic)
 				{
 					if (string.Compare(methInfo.Name, requiredMethodNameA, true, System.Globalization.CultureInfo.InvariantCulture) == 0 ||
 						string.Compare(methInfo.Name, requiredMethodNameB, true, System.Globalization.CultureInfo.InvariantCulture) == 0)

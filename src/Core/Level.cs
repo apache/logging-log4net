@@ -22,10 +22,37 @@ using System.Collections;
 namespace log4net.Core
 {
 	/// <summary>
-	/// Defines the set of levels recognized by the system.
+	/// Defines the default set of levels recognized by the system.
 	/// </summary>
 	/// <remarks>
-	/// Some of the predefined levels recognized by the system are
+	/// <p>
+	/// Each <see cref="LoggingEvent"/> has an associated <see cref="Level"/>.
+	/// </p>
+	/// <p>
+	/// Levels have a numeric <see cref="Level.Value"/> that defines the relative 
+	/// ordering between levels. Two Levels with the same <see cref="Level.Value"/> 
+	/// are demmed to be equivalent.
+	/// </p>
+	/// <p>
+	/// The levels that are recognised by log4net are set for each <see cref="log4net.Repository.ILoggerRepository"/>
+	/// and each repository can have different levels defined. The levels are stored
+	/// in the <see cref="log4net.Repository.ILoggerRepository.LevelMap"/> on the repository. Levels are
+	/// looked up by name from the <see cref="log4net.Repository.ILoggerRepository.LevelMap"/>.
+	/// </p>
+	/// <p>
+	/// When logging at level INFO the actual level used is not <see cref="Level.Info"/> but
+	/// the value of <c>LoggerRepository.LevelMap["INFO"]</c>. The default value for this is
+	/// <see cref="Level.Info"/>, but this can be changed by reconfiguring the level map.
+	/// </p>
+	/// <p>
+	/// Each level has a <see cref="DisplayName"/> in addition to its <see cref="Name"/>. The 
+	/// <see cref="DisplayName"/> is the string that is written into the output log. By default
+	/// the display name is the same as the level name, but this can be used to alias levels
+	/// or to localise the log output.
+	/// </p>
+	/// <p>
+	/// Some of the predefined levels recognized by the system are:
+	/// </p>
 	/// <list type="bullet">
 	///		<item>
 	///			<description><see cref="Off"/>.</description>
@@ -65,10 +92,31 @@ namespace log4net.Core
 		/// </summary>
 		/// <param name="level">Integer value for this level, higher values represent more severe levels.</param>
 		/// <param name="levelName">The string name of this level.</param>
-		public Level(int level, string levelName) 
+		/// <param name="displayName">The display name for this level. This may be localised or otherwise different from the name</param>
+		public Level(int level, string levelName, string displayName) 
 		{
-			m_level = level;
-			m_levelStr = string.Intern(levelName);
+			if (levelName == null)
+			{
+				throw new ArgumentNullException("levelName");
+			}
+			if (displayName == null)
+			{
+				throw new ArgumentNullException("displayName");
+			}
+
+			m_levelValue = level;
+			m_levelName = string.Intern(levelName);
+			m_levelDisplayName = displayName;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Level" /> class with
+		/// the specified level name and value.
+		/// </summary>
+		/// <param name="level">Integer value for this level, higher values represent more severe levels.</param>
+		/// <param name="levelName">The string name of this level.</param>
+		public Level(int level, string levelName) : this(level, levelName, levelName)
+		{
 		}
 
 		#endregion Public Instance Constructors
@@ -83,7 +131,7 @@ namespace log4net.Core
 		/// </value>
 		public string Name
 		{
-			get { return m_levelStr; }
+			get { return m_levelName; }
 		}
 
 		/// <summary>
@@ -94,7 +142,18 @@ namespace log4net.Core
 		/// </value>
 		public int Value
 		{
-			get { return m_level; }
+			get { return m_levelValue; }
+		}
+
+		/// <summary>
+		/// Gets the display name of the level.
+		/// </summary>
+		/// <value>
+		/// The display name of the level.
+		/// </value>
+		public string DisplayName
+		{
+			get { return m_levelDisplayName; }
 		}
 
 		#endregion Public Instance Properties
@@ -110,7 +169,7 @@ namespace log4net.Core
 		/// </returns>
 		override public string ToString() 
 		{
-			return m_levelStr;
+			return m_levelName;
 		}
 
 		/// <summary>
@@ -122,9 +181,10 @@ namespace log4net.Core
 		/// <returns><c>true</c> if the objects are equal.</returns>
 		override public bool Equals(object o)
 		{
-			if (o != null && o is Level)
+			Level otherLevel = o as Level;
+			if (otherLevel != null)
 			{
-				return m_level == ((Level)o).m_level;
+				return m_levelValue == otherLevel.m_levelValue;
 			}
 			else
 			{
@@ -139,7 +199,7 @@ namespace log4net.Core
 		/// <returns>A hash code for the current <see cref="Level" />.</returns>
 		override public int GetHashCode()
 		{
-			return m_level;
+			return m_levelValue;
 		}
 
 		#endregion Override implementation of Object
@@ -209,7 +269,7 @@ namespace log4net.Core
 		/// </returns>
 		public static bool operator > (Level l, Level r)
 		{
-			return l.m_level > r.m_level;
+			return l.m_levelValue > r.m_levelValue;
 		}
 
 		/// <summary>
@@ -224,7 +284,7 @@ namespace log4net.Core
 		/// </returns>
 		public static bool operator < (Level l, Level r)
 		{
-			return l.m_level < r.m_level;
+			return l.m_levelValue < r.m_levelValue;
 		}
 
 		/// <summary>
@@ -239,7 +299,7 @@ namespace log4net.Core
 		/// </returns>
 		public static bool operator >= (Level l, Level r)
 		{
-			return l.m_level >= r.m_level;
+			return l.m_levelValue >= r.m_levelValue;
 		}
 
 		/// <summary>
@@ -254,7 +314,7 @@ namespace log4net.Core
 		/// </returns>
 		public static bool operator <= (Level l, Level r)
 		{
-			return l.m_level <= r.m_level;
+			return l.m_levelValue <= r.m_levelValue;
 		}
 
 		/// <summary>
@@ -271,7 +331,7 @@ namespace log4net.Core
 		{
 			if (((object)l) != null && ((object)r) != null)
 			{
-				return l.m_level == r.m_level;
+				return l.m_levelValue == r.m_levelValue;
 			}
 			else
 			{
@@ -340,7 +400,7 @@ namespace log4net.Core
 				return 1;
 			}
 
-			return l.m_level - r.m_level;
+			return l.m_levelValue - r.m_levelValue;
 		}
 
 		#endregion Public Static Methods
@@ -451,10 +511,10 @@ namespace log4net.Core
 
 		#region Private Instance Fields
 
-		private readonly int m_level;
-		private readonly string m_levelStr;
+		private readonly int m_levelValue;
+		private readonly string m_levelName;
+		private readonly string m_levelDisplayName;
 
 		#endregion Private Instance Fields
-
 	}
 }

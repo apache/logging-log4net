@@ -71,17 +71,6 @@ namespace log4net.Repository.Hierarchy
 
 	#endregion LoggerCreationEvent
 
-	#region HierarchyConfigurationChangedEvent
-
-	/// <summary>
-	/// Delegate used to handle event notifications for hierarchy configuration changes.
-	/// </summary>
-	/// <param name="sender">The <see cref="Hierarchy"/> that has had its configuration changed.</param>
-	/// <param name="e">Empty event arguments.</param>
-	public delegate void HierarchyConfigurationChangedEventHandler(object sender, EventArgs e);
-
-	#endregion HierarchyConfigurationChangedEvent
-
 	/// <summary>
 	/// This class is specialized in retrieving loggers by name and
 	/// also maintaining the logger hierarchy. Implements the 
@@ -115,18 +104,6 @@ namespace log4net.Repository.Hierarchy
 		{
 			add { m_loggerCreatedEvent += value; }
 			remove { m_loggerCreatedEvent -= value; }
-		}
-
-		/// <summary>
-		/// Event to notify that the hierarchy has had its configuration changed.
-		/// </summary>
-		/// <value>
-		/// Event to notify that the hierarchy has had its configuration changed.
-		/// </value>
-		public event HierarchyConfigurationChangedEventHandler ConfigurationChangedEvent
-		{
-			add { m_configurationChangedEvent += value; }
-			remove { m_configurationChangedEvent -= value; }
 		}
 
 		#endregion Public Events
@@ -363,6 +340,9 @@ namespace log4net.Repository.Hierarchy
 			}
 
 			base.ResetConfiguration();
+
+			// Notify listeners
+			OnConfigurationChanged(null);
 		}
 
 		/// <summary>
@@ -442,7 +422,7 @@ namespace log4net.Repository.Hierarchy
 			Configured = true;
 
 			// Notify listeners
-			OnConfigurationChangedEvent();
+			OnConfigurationChanged(null);
 		}
 
 		#endregion Implementation of IBasicRepositoryConfigurator
@@ -477,7 +457,7 @@ namespace log4net.Repository.Hierarchy
 			Configured = true;
 
 			// Notify listeners
-			OnConfigurationChangedEvent();
+			OnConfigurationChanged(null);
 		}
 
 		#endregion Implementation of IXmlRepositoryConfigurator
@@ -609,18 +589,6 @@ namespace log4net.Repository.Hierarchy
 		#region Protected Instance Methods
 
 		/// <summary>
-		/// Notify the registered listeners that the hierarchy has had its configuration changed
-		/// </summary>
-		protected virtual void OnConfigurationChangedEvent()
-		{
-			HierarchyConfigurationChangedEventHandler handler = m_configurationChangedEvent;
-			if (handler != null)
-			{
-				handler(this, EventArgs.Empty);
-			}
-		}
-
-		/// <summary>
 		/// Sends a logger creation event to all registered listeners
 		/// </summary>
 		/// <param name="logger">The newly created logger</param>
@@ -739,7 +707,81 @@ namespace log4net.Repository.Hierarchy
 					childLogger.Parent = log;	  
 				}
 			}
-		}	
+		}
+
+		/// <summary>
+		/// Define or redefine a Level using the values in the <see cref="LevelEntry"/> argument
+		/// </summary>
+		/// <param name="levelEntry">the level values</param>
+		internal void AddLevel(LevelEntry levelEntry)
+		{
+			if (levelEntry == null) throw new ArgumentNullException("levelEntry");
+			if (levelEntry.Name == null) throw new ArgumentNullException("levelEntry.Name");
+
+			// Lookup replacement value
+			if (levelEntry.Value == -1)
+			{
+				Level previousLevel = LevelMap[levelEntry.Name];
+				if (previousLevel == null)
+				{
+					throw new InvalidOperationException("Cannot redefine level ["+levelEntry.Name+"] because it is not defined in the LevelMap. To define the level supply the level value.");
+				}
+
+				levelEntry.Value = previousLevel.Value;
+			}
+
+			LevelMap.Add(levelEntry.Name, levelEntry.Value, levelEntry.DisplayName);
+		}
+
+		/// <summary>
+		/// A class to hold the value, name and display name for a logging event
+		/// </summary>
+		internal class LevelEntry
+		{
+			private int m_levelValue = -1;
+			private string m_levelName = null;
+			private string m_levelDisplayName = null;
+
+			/// <summary>
+			/// Value of the level
+			/// </summary>
+			/// <remarks>
+			/// If the value is not set (defaults to -1) the value will be looked
+			/// up for the current level with the same name.
+			/// </remarks>
+			public int Value
+			{
+				get { return m_levelValue; }
+				set { m_levelValue = value; }
+			}
+
+			/// <summary>
+			/// Name of the level
+			/// </summary>
+			public string Name
+			{
+				get { return m_levelName; }
+				set { m_levelName = value; }
+			}
+
+			/// <summary>
+			/// Display name for the level
+			/// </summary>
+			public string DisplayName
+			{
+				get { return m_levelDisplayName; }
+				set { m_levelDisplayName = value; }
+			}
+
+			/// <summary>
+			/// Override ToString to return sensible debug info
+			/// </summary>
+			/// <returns>string info about this object</returns>
+			public override string ToString()
+			{
+				return "LevelEntry(Value="+m_levelValue+", Name="+m_levelName+", DisplayName="+m_levelDisplayName+")";
+			}
+		}
 
 		#endregion Private Instance Methods
 
@@ -752,7 +794,6 @@ namespace log4net.Repository.Hierarchy
   
 		private bool m_emittedNoAppenderWarning = false;
 		private event LoggerCreationEventHandler m_loggerCreatedEvent;
-		private event HierarchyConfigurationChangedEventHandler m_configurationChangedEvent;
 
 		#endregion Private Instance Fields
 	}

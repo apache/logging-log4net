@@ -29,25 +29,51 @@ namespace log4net.Ext.Trace
 		/// </summary>
 		private readonly static Type ThisDeclaringType = typeof(TraceLogImpl);
 
+		/// <summary>
+		/// The default value for the TRACE level
+		/// </summary>
+		private readonly static Level s_defaultLevelTrace = new Level(20000, "TRACE");
+		
+		/// <summary>
+		/// The current value for the TRACE level
+		/// </summary>
+		private Level m_levelTrace;
+		
+
 		public TraceLogImpl(ILogger logger) : base(logger)
 		{
+		}
+
+		/// <summary>
+		/// Lookup the current value of the TRACE level
+		/// </summary>
+		protected override void ReloadLevels(log4net.Repository.ILoggerRepository repository)
+		{
+			base.ReloadLevels(repository);
+
+			m_levelTrace = repository.LevelMap.LookupWithDefault(s_defaultLevelTrace);
 		}
 
 		#region Implementation of ITraceLog
 
 		public void Trace(object message)
 		{
-			Logger.Log(ThisDeclaringType, Level.Trace, message, null);
+			Logger.Log(ThisDeclaringType, m_levelTrace, message, null);
 		}
 
 		public void Trace(object message, System.Exception t)
 		{
-			Logger.Log(ThisDeclaringType, Level.Trace, message, t);
+			Logger.Log(ThisDeclaringType, m_levelTrace, message, t);
+		}
+
+		public void TraceFormat(string format, params object[] args)
+		{
+			Logger.Log(ThisDeclaringType, m_levelTrace, String.Format(format, args), null);
 		}
 
 		public bool IsTraceEnabled
 		{
-			get { return Logger.IsEnabledFor(Level.Trace); }
+			get { return Logger.IsEnabledFor(m_levelTrace); }
 		}
 
 		#endregion Implementation of ITraceLog

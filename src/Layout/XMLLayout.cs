@@ -175,7 +175,7 @@ namespace log4net.Layout
 			writer.WriteStartElement(m_elmEvent);
 			writer.WriteAttributeString(ATTR_LOGGER, loggingEvent.LoggerName);
 			writer.WriteAttributeString(ATTR_TIMESTAMP, XmlConvert.ToString(loggingEvent.TimeStamp));
-			writer.WriteAttributeString(ATTR_LEVEL, loggingEvent.Level.ToString());
+			writer.WriteAttributeString(ATTR_LEVEL, loggingEvent.Level.DisplayName);
 			writer.WriteAttributeString(ATTR_THREAD, loggingEvent.ThreadName);
 
 			if (loggingEvent.Domain != null && loggingEvent.Domain.Length > 0)

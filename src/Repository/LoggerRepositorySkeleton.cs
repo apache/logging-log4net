@@ -46,6 +46,7 @@ namespace log4net.Repository
 		private bool m_configured;
 		private event LoggerRepositoryShutdownEventHandler m_shutdownEvent;
 		private event LoggerRepositoryConfigurationResetEventHandler m_configurationResetEvent;
+		private event LoggerRepositoryConfigurationChangedEventHandler m_configurationChangedEvent;
 		private PropertiesDictionary m_properties;
 
 		#endregion
@@ -215,7 +216,7 @@ namespace log4net.Repository
 			}
 
 			// Notify listeners
-			OnShutdownEvent();
+			OnShutdown(null);
 		}
 
 		/// <summary>
@@ -242,7 +243,7 @@ namespace log4net.Repository
 			Configured = false;
 
 			// Notify listeners
-			OnConfigurationResetEvent();
+			OnConfigurationReset(null);
 		}
 
 		/// <summary>
@@ -293,10 +294,22 @@ namespace log4net.Repository
 		/// <value>
 		/// Event to notify that the repository has had its configuration reset.
 		/// </value>
-		public event LoggerRepositoryConfigurationResetEventHandler ConfigurationResetEvent
+		public event LoggerRepositoryConfigurationResetEventHandler ConfigurationReset
 		{
 			add { m_configurationResetEvent += value; }
 			remove { m_configurationResetEvent -= value; }
+		}
+
+		/// <summary>
+		/// Event to notify that the repository has had its configuration changed.
+		/// </summary>
+		/// <value>
+		/// Event to notify that the repository has had its configuration changed.
+		/// </value>
+		public event LoggerRepositoryConfigurationChangedEventHandler ConfigurationChanged
+		{
+			add { m_configurationChangedEvent += value; }
+			remove { m_configurationChangedEvent -= value; }
 		}
 
 		/// <summary>
@@ -374,9 +387,48 @@ namespace log4net.Repository
 		/// <summary>
 		/// Notify the registered listeners that the repository is shutting down
 		/// </summary>
-		protected virtual void OnShutdownEvent()
+		protected virtual void OnShutdown(EventArgs e)
 		{
+			if (e == null)
+			{
+				e = EventArgs.Empty;
+			}
+
 			LoggerRepositoryShutdownEventHandler handler = m_shutdownEvent;
+			if (handler != null)
+			{
+				handler(this, e);
+			}
+		}
+
+		/// <summary>
+		/// Notify the registered listeners that the repository has had its configuration reset
+		/// </summary>
+		protected virtual void OnConfigurationReset(EventArgs e)
+		{
+			if (e == null)
+			{
+				e = EventArgs.Empty;
+			}
+
+			LoggerRepositoryConfigurationResetEventHandler handler = m_configurationResetEvent;
+			if (handler != null)
+			{
+				handler(this, e);
+			}
+		}
+
+		/// <summary>
+		/// Notify the registered listeners that the repository has had its configuration changed
+		/// </summary>
+		protected virtual void OnConfigurationChanged(EventArgs e)
+		{
+			if (e == null)
+			{
+				e = EventArgs.Empty;
+			}
+
+			LoggerRepositoryConfigurationChangedEventHandler handler = m_configurationChangedEvent;
 			if (handler != null)
 			{
 				handler(this, EventArgs.Empty);
@@ -384,15 +436,16 @@ namespace log4net.Repository
 		}
 
 		/// <summary>
-		/// Notify the registered listeners that the repository has had its configuration reset
+		/// Raise a configuration changed event on this repository
 		/// </summary>
-		protected virtual void OnConfigurationResetEvent()
+		/// <param name="e">EventArgs.Empty</param>
+		/// <remarks>
+		/// Applications that programatically change the configuration of the repository should
+		/// raise this event notification to notify listeners.
+		/// </remarks>
+		public void RaiseConfigurationChanged(EventArgs e)
 		{
-			LoggerRepositoryConfigurationResetEventHandler handler = m_configurationResetEvent;
-			if (handler != null)
-			{
-				handler(this, EventArgs.Empty);
-			}
+			OnConfigurationChanged(e);
 		}
 	}
 }

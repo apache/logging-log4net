@@ -26,6 +26,7 @@ namespace log4net.Ext.Trace
 	{
 		void Trace(object message);
 		void Trace(object message, Exception t);
+		void TraceFormat(string format, params object[] args); 
 		bool IsTraceEnabled { get; }
 	}
 }

@@ -92,7 +92,7 @@ namespace log4net.Layout
 				throw new ArgumentNullException("loggingEvent");
 			}
 
-			writer.Write(loggingEvent.Level.Name);
+			writer.Write(loggingEvent.Level.DisplayName);
 			writer.Write(" - ");
 			loggingEvent.WriteRenderedMessage(writer);
 			writer.WriteLine();

@@ -41,7 +41,7 @@ namespace log4net.Repository
 
 	#endregion
 
-	#region LoggerRepositoryConfigurationResetEvent
+	#region LoggerRepositoryConfigurationResetEventHandler
 
 	/// <summary>
 	/// Delegate used to handle logger repository configuration reset event notifications
@@ -53,6 +53,17 @@ namespace log4net.Repository
 	/// Delegate used to handle logger repository configuration reset event notifications
 	/// </remarks>
 	public delegate void LoggerRepositoryConfigurationResetEventHandler(object sender, EventArgs e);
+
+	#endregion
+
+	#region LoggerRepositoryConfigurationChangedEventHandler
+
+	/// <summary>
+	/// Delegate used to handle event notifications for logger repository configuration changes.
+	/// </summary>
+	/// <param name="sender">The <see cref="ILoggerRepository"/> that has had its configuration changed.</param>
+	/// <param name="e">Empty event arguments.</param>
+	public delegate void LoggerRepositoryConfigurationChangedEventHandler(object sender, EventArgs e);
 
 	#endregion
 	
@@ -230,7 +241,15 @@ namespace log4net.Repository
 		/// <value>
 		/// Event to notify that the repository has had its configuration reset.
 		/// </value>
-		event LoggerRepositoryConfigurationResetEventHandler ConfigurationResetEvent;
+		event LoggerRepositoryConfigurationResetEventHandler ConfigurationReset;
+
+		/// <summary>
+		/// Event to notify that the repository has had its configuration changed.
+		/// </summary>
+		/// <value>
+		/// Event to notify that the repository has had its configuration changed.
+		/// </value>
+		event LoggerRepositoryConfigurationChangedEventHandler ConfigurationChanged;
 
 		/// <summary>
 		/// Repository specific properties
