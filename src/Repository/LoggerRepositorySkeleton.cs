@@ -346,20 +346,20 @@ namespace log4net.Repository
 		/// <summary>
 		/// Adds an object renderer for a specific class. 
 		/// </summary>
-		/// <param name="classToRender">The type that will be rendered by the renderer supplied.</param>
-		/// <param name="objectRenderer">The object renderer used to render the object.</param>
-		virtual public void AddRenderer(Type classToRender, IObjectRenderer objectRenderer) 
+		/// <param name="typeToRender">The type that will be rendered by the renderer supplied.</param>
+		/// <param name="rendererInstance">The object renderer used to render the object.</param>
+		virtual public void AddRenderer(Type typeToRender, IObjectRenderer rendererInstance) 
 		{
-			if (classToRender == null)
+			if (typeToRender == null)
 			{
-				throw new ArgumentNullException("classToRender");
+				throw new ArgumentNullException("typeToRender");
 			}
-			if (objectRenderer == null)
+			if (rendererInstance == null)
 			{
-				throw new ArgumentNullException("objectRenderer");
+				throw new ArgumentNullException("rendererInstance");
 			}
 
-			m_rendererMap.Put(classToRender, objectRenderer);
+			m_rendererMap.Put(typeToRender, rendererInstance);
 		}
 
 		/// <summary>
@@ -367,9 +367,10 @@ namespace log4net.Repository
 		/// </summary>
 		protected void FireShutdownEvent()
 		{
-			if (m_shutdownEvent != null)
+			LoggerRepositoryShutdownEventHandler tmp = m_shutdownEvent;
+			if (tmp != null)
 			{
-				m_shutdownEvent(this, EventArgs.Empty);
+				tmp(this, EventArgs.Empty);
 			}
 		}
 
