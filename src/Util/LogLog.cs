@@ -184,59 +184,37 @@ namespace log4net.Util
 		#region Public Static Methods
 
 		/// <summary>
-		/// Writes output to the standard output stream.  
+		/// Test if LogLog.Debug is enabled for output.
 		/// </summary>
-		/// <param name="msg">The message to log.</param>
+		/// <value>
+		/// <c>true</c> if Debug is enabled
+		/// </value>
 		/// <remarks>
-		/// Uses Console.Out for console output,
-		/// and Trace for OutputDebugString output.
+		/// <para>
+		/// Test if LogLog.Debug is enabled for output.
+		/// </para>
 		/// </remarks>
-		private static void EmitOutLine(string msg)
+		public static bool IsDebugEnabled
 		{
-#if NETCF
-			Console.WriteLine(msg);
-			//System.Diagnostics.Debug.WriteLine(msg);
-#else
-			Console.Out.WriteLine(msg);
-			Trace.WriteLine(msg);
-#endif
-		}
-
-		/// <summary>
-		/// Writes output to the standard error stream.  
-		/// </summary>
-		/// <param name="msg">The message to log.</param>
-		/// <remarks>
-		/// Use Console.Error for console output,
-		/// and Trace for OutputDebugString output.
-		/// </remarks>
-		private static void EmitErrorLine(string msg)
-		{
-#if NETCF
-			Console.WriteLine(msg);
-			//System.Diagnostics.Debug.WriteLine(msg);
-#else
-			Console.Error.WriteLine(msg);
-			Trace.WriteLine(msg);
-#endif
+			get { return s_debugEnabled && !s_quietMode; }
 		}
 
 		/// <summary>
 		/// Writes log4net internal debug messages to the 
 		/// standard output stream.
 		/// </summary>
-		/// <param name="msg">The message to log.</param>
+		/// <param name="message">The message to log.</param>
 		/// <remarks>
 		/// <para>
 		///	All internal debug messages are prepended with 
 		///	the string "log4net: ".
 		/// </para>
 		/// </remarks>
-		public static void Debug(string msg) 
+		public static void Debug(string message) 
 		{
-			if (s_debugEnabled && !s_quietMode) 
+			if (IsDebugEnabled) 
 			{
-				EmitOutLine(PREFIX + msg);
+				EmitOutLine(PREFIX + message);
 			}
 		}
 
@@ -244,42 +222,117 @@ namespace log4net.Util
 		/// Writes log4net internal debug messages to the 
 		/// standard output stream.
 		/// </summary>
-		/// <param name="msg">The message to log.</param>
-		/// <param name="t">An exception to log.</param>
+		/// <param name="message">The message to log.</param>
+		/// <param name="exception">An exception to log.</param>
 		/// <remarks>
 		/// <para>
 		///	All internal debug messages are prepended with 
 		///	the string "log4net: ".
 		/// </para>
 		/// </remarks>
-		public static void Debug(string msg, Exception t) 
+		public static void Debug(string message, Exception exception) 
 		{
-			if (s_debugEnabled && !s_quietMode) 
+			if (IsDebugEnabled) 
 			{
-				EmitOutLine(PREFIX + msg);
-				if (t != null)
+				EmitOutLine(PREFIX + message);
+				if (exception != null)
 				{
-					EmitOutLine(t.ToString());
+					EmitOutLine(exception.ToString());
 				}
 			}
 		}
   
 		/// <summary>
+		/// Test if LogLog.Warn is enabled for output.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if Warn is enabled
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Test if LogLog.Warn is enabled for output.
+		/// </para>
+		/// </remarks>
+		public static bool IsWarnEnabled
+		{
+			get { return !s_quietMode; }
+		}
+
+		/// <summary>
+		/// Writes log4net internal warning messages to the 
+		/// standard error stream.
+		/// </summary>
+		/// <param name="message">The message to log.</param>
+		/// <remarks>
+		/// <para>
+		///	All internal warning messages are prepended with 
+		///	the string "log4net:WARN ".
+		/// </para>
+		/// </remarks>
+		public static void Warn(string message) 
+		{
+			if (IsWarnEnabled)
+			{
+				EmitErrorLine(WARN_PREFIX + message);
+			}
+		}  
+
+		/// <summary>
+		/// Writes log4net internal warning messages to the 
+		/// standard error stream.
+		/// </summary>
+		/// <param name="message">The message to log.</param>
+		/// <param name="exception">An exception to log.</param>
+		/// <remarks>
+		/// <para>
+		///	All internal warning messages are prepended with 
+		///	the string "log4net:WARN ".
+		/// </para>
+		/// </remarks>
+		public static void Warn(string message, Exception exception) 
+		{
+			if (IsWarnEnabled)
+			{
+				EmitErrorLine(WARN_PREFIX + message);
+				if (exception != null) 
+				{
+					EmitErrorLine(exception.ToString());
+				}
+			}
+		} 
+
+		/// <summary>
+		/// Test if LogLog.Error is enabled for output.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if Error is enabled
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Test if LogLog.Error is enabled for output.
+		/// </para>
+		/// </remarks>
+		public static bool IsErrorEnabled
+		{
+			get { return !s_quietMode; }
+		}
+
+		/// <summary>
 		/// Writes log4net internal error messages to the 
 		/// standard error stream.
 		/// </summary>
-		/// <param name="msg">The message to log.</param>
+		/// <param name="message">The message to log.</param>
 		/// <remarks>
 		/// <para>
 		///	All internal error messages are prepended with 
 		///	the string "log4net:ERROR ".
 		/// </para>
 		/// </remarks>
-		public static void Error(string msg) 
+		public static void Error(string message) 
 		{
-			if (!s_quietMode)
+			if (IsErrorEnabled)
 			{
-				EmitErrorLine(ERR_PREFIX + msg);
+				EmitErrorLine(ERR_PREFIX + message);
 			}
 		}  
 
@@ -287,70 +340,65 @@ namespace log4net.Util
 		/// Writes log4net internal error messages to the 
 		/// standard error stream.
 		/// </summary>
-		/// <param name="msg">The message to log.</param>
-		/// <param name="t">An exception to log.</param>
+		/// <param name="message">The message to log.</param>
+		/// <param name="exception">An exception to log.</param>
 		/// <remarks>
 		/// <para>
 		///	All internal debug messages are prepended with 
 		///	the string "log4net:ERROR ".
 		/// </para>
 		/// </remarks>
-		public static void Error(string msg, Exception t) 
+		public static void Error(string message, Exception exception) 
 		{
-			if (!s_quietMode)
+			if (IsErrorEnabled)
 			{
-				EmitErrorLine(ERR_PREFIX + msg);
-				if (t != null) 
+				EmitErrorLine(ERR_PREFIX + message);
+				if (exception != null) 
 				{
-					EmitErrorLine(t.ToString());
+					EmitErrorLine(exception.ToString());
 				}
 			}
 		}  
-
-		/// <summary>
-		/// Writes log4net internal warning messages to the 
-		/// standard error stream.
-		/// </summary>
-		/// <param name="msg">The message to log.</param>
-		/// <remarks>
-		/// <para>
-		///	All internal warning messages are prepended with 
-		///	the string "log4net:WARN ".
-		/// </para>
-		/// </remarks>
-		public static void Warn(string msg) 
-		{
-			if (!s_quietMode)
-			{
-				EmitErrorLine(WARN_PREFIX + msg);
-			}
-		}  
-
-		/// <summary>
-		/// Writes log4net internal warning messages to the 
-		/// standard error stream.
-		/// </summary>
-		/// <param name="msg">The message to log.</param>
-		/// <param name="t">An exception to log.</param>
-		/// <remarks>
-		/// <para>
-		///	All internal warning messages are prepended with 
-		///	the string "log4net:WARN ".
-		/// </para>
-		/// </remarks>
-		public static void Warn(string msg, Exception t) 
-		{
-			if (!s_quietMode)
-			{
-				EmitErrorLine(WARN_PREFIX + msg);
-				if (t != null) 
-				{
-					EmitErrorLine(t.ToString());
-				}
-			}
-		} 
 
 		#endregion Public Static Methods
+
+		/// <summary>
+		/// Writes output to the standard output stream.  
+		/// </summary>
+		/// <param name="message">The message to log.</param>
+		/// <remarks>
+		/// Uses Console.Out for console output,
+		/// and Trace for OutputDebugString output.
+		/// </remarks>
+		private static void EmitOutLine(string message)
+		{
+#if NETCF
+			Console.WriteLine(message);
+			//System.Diagnostics.Debug.WriteLine(message);
+#else
+			Console.Out.WriteLine(message);
+			Trace.WriteLine(message);
+#endif
+		}
+
+		/// <summary>
+		/// Writes output to the standard error stream.  
+		/// </summary>
+		/// <param name="message">The message to log.</param>
+		/// <remarks>
+		/// Use Console.Error for console output,
+		/// and Trace for OutputDebugString output.
+		/// </remarks>
+		private static void EmitErrorLine(string message)
+		{
+#if NETCF
+			Console.WriteLine(message);
+			//System.Diagnostics.Debug.WriteLine(message);
+#else
+			Console.Error.WriteLine(message);
+			Trace.WriteLine(message);
+#endif
+		}
 
 		#region Private Static Fields
 
