@@ -133,7 +133,7 @@ namespace log4net.Core
 			}
 			if (name.Length == 0)
 			{
-				throw new ArgumentOutOfRangeException("Parameter: name, Value: ["+name+"] out of range. Level name must not be empty");
+				throw new ArgumentOutOfRangeException("name", name, "Parameter: name, Value: ["+name+"] out of range. Level name must not be empty");
 			}
 
 			Add(new Level(value, name));
