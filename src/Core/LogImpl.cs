@@ -181,7 +181,7 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behaviour
+		/// String.Format for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
@@ -204,7 +204,7 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behaviour
+		/// String.Format for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
@@ -270,7 +270,7 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behaviour
+		/// String.Format for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
@@ -293,7 +293,7 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behaviour
+		/// String.Format for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
@@ -359,7 +359,7 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behaviour
+		/// String.Format for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
@@ -382,7 +382,7 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behaviour
+		/// String.Format for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
@@ -448,7 +448,7 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behaviour
+		/// String.Format for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
@@ -471,7 +471,7 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behaviour
+		/// String.Format for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
@@ -537,7 +537,7 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behaviour
+		/// String.Format for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
@@ -560,7 +560,7 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behaviour
+		/// String.Format for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
