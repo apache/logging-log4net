@@ -92,6 +92,51 @@ namespace log4net.Core
 		}
 
 		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Debug"/> level.
+		/// </summary>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="args">An Object array containing zero or more objects to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <see cref="String.Format"/> method. See
+		/// String.Format for details of the syntax of the format string and the behaviour
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Debug"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		virtual public void DebugFormat(string format, params object[] args) 
+		{
+			Logger.Log(ThisDeclaringType, Level.Debug, String.Format(format, args), null);
+		}
+
+		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Debug"/> level.
+		/// </summary>
+		/// <param name="provider">An <see cref="IFormatProvider"/> that supplies culture-specific formatting information</param>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="args">An Object array containing zero or more objects to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <see cref="String.Format"/> method. See
+		/// String.Format for details of the syntax of the format string and the behaviour
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Debug"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		virtual public void DebugFormat(IFormatProvider provider, string format, params object[] args) 
+		{
+			Logger.Log(ThisDeclaringType, Level.Debug, String.Format(provider, format, args), null);
+		}
+
+		/// <summary>
 		/// Logs a message object with the <see cref="Level.Info"/> level.
 		/// </summary>
 		/// <param name="message">The message object to log.</param>
@@ -133,6 +178,51 @@ namespace log4net.Core
 		virtual public void Info(object message, Exception t) 
 		{
 			Logger.Log(ThisDeclaringType, Level.Info, message, t);
+		}
+
+		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Info"/> level.
+		/// </summary>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="args">An Object array containing zero or more objects to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <see cref="String.Format"/> method. See
+		/// String.Format for details of the syntax of the format string and the behaviour
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Info"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		virtual public void InfoFormat(string format, params object[] args) 
+		{
+			Logger.Log(ThisDeclaringType, Level.Info, String.Format(format, args), null);
+		}
+
+		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Info"/> level.
+		/// </summary>
+		/// <param name="provider">An <see cref="IFormatProvider"/> that supplies culture-specific formatting information</param>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="args">An Object array containing zero or more objects to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <see cref="String.Format"/> method. See
+		/// String.Format for details of the syntax of the format string and the behaviour
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Info"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		virtual public void InfoFormat(IFormatProvider provider, string format, params object[] args) 
+		{
+			Logger.Log(ThisDeclaringType, Level.Info, String.Format(provider, format, args), null);
 		}
 
 		/// <summary>
@@ -180,6 +270,51 @@ namespace log4net.Core
 		}
 
 		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Warn"/> level.
+		/// </summary>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="args">An Object array containing zero or more objects to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <see cref="String.Format"/> method. See
+		/// String.Format for details of the syntax of the format string and the behaviour
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Warn"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		virtual public void WarnFormat(string format, params object[] args) 
+		{
+			Logger.Log(ThisDeclaringType, Level.Warn, String.Format(format, args), null);
+		}
+
+		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Warn"/> level.
+		/// </summary>
+		/// <param name="provider">An <see cref="IFormatProvider"/> that supplies culture-specific formatting information</param>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="args">An Object array containing zero or more objects to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <see cref="String.Format"/> method. See
+		/// String.Format for details of the syntax of the format string and the behaviour
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Warn"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		virtual public void WarnFormat(IFormatProvider provider, string format, params object[] args) 
+		{
+			Logger.Log(ThisDeclaringType, Level.Warn, String.Format(provider, format, args), null);
+		}
+
+		/// <summary>
 		/// Logs a message object with the <see cref="Level.Error"/> level.
 		/// </summary>
 		/// <param name="message">The message object to log.</param>
@@ -224,6 +359,51 @@ namespace log4net.Core
 		}
 
 		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Error"/> level.
+		/// </summary>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="args">An Object array containing zero or more objects to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <see cref="String.Format"/> method. See
+		/// String.Format for details of the syntax of the format string and the behaviour
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Error"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		virtual public void ErrorFormat(string format, params object[] args) 
+		{
+			Logger.Log(ThisDeclaringType, Level.Error, String.Format(format, args), null);
+		}
+
+		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Error"/> level.
+		/// </summary>
+		/// <param name="provider">An <see cref="IFormatProvider"/> that supplies culture-specific formatting information</param>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="args">An Object array containing zero or more objects to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <see cref="String.Format"/> method. See
+		/// String.Format for details of the syntax of the format string and the behaviour
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Error"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		virtual public void ErrorFormat(IFormatProvider provider, string format, params object[] args) 
+		{
+			Logger.Log(ThisDeclaringType, Level.Error, String.Format(provider, format, args), null);
+		}
+
+		/// <summary>
 		/// Logs a message object with the <see cref="Level.Fatal"/> level.
 		/// </summary>
 		/// <param name="message">The message object to log.</param>
@@ -265,6 +445,51 @@ namespace log4net.Core
 		virtual public void Fatal(object message, Exception t) 
 		{
 			Logger.Log(ThisDeclaringType, Level.Fatal, message, t);
+		}
+
+		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Fatal"/> level.
+		/// </summary>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="args">An Object array containing zero or more objects to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <see cref="String.Format"/> method. See
+		/// String.Format for details of the syntax of the format string and the behaviour
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Fatal"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		virtual public void FatalFormat(string format, params object[] args) 
+		{
+			Logger.Log(ThisDeclaringType, Level.Fatal, String.Format(format, args), null);
+		}
+
+		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Fatal"/> level.
+		/// </summary>
+		/// <param name="provider">An <see cref="IFormatProvider"/> that supplies culture-specific formatting information</param>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="args">An Object array containing zero or more objects to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <see cref="String.Format"/> method. See
+		/// String.Format for details of the syntax of the format string and the behaviour
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Fatal"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		virtual public void FatalFormat(IFormatProvider provider, string format, params object[] args) 
+		{
+			Logger.Log(ThisDeclaringType, Level.Fatal, String.Format(provider, format, args), null);
 		}
 
 		/// <summary>
