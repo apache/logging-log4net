@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<project name="performance-examples" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <!-- compile Performance examples -->
+    <target name="compile" description="Builds Performance examples">
+        <nant buildfile="NotLogging/nant.build" target="compile" />
+    </target>
+</project>

@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<project name="examples" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <target name="compile" description="Builds examples">
+        <nant buildfile="mono/nant.build" target="compile" />
+        <nant buildfile="net/nant.build" target="compile" />
+        <nant buildfile="netcf/nant.build" target="compile" />
+        <nant buildfile="sscli/nant.build" target="compile" />
+    </target>
+    <target name="update-version-info" description="Updates the AssemblyVersionInfo.cs of the examples">
+        <nant buildfile="net/nant.build" target="update-version-info" />
+    </target>
+</project>

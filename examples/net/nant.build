@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<project name="net-examples" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <!-- compile .NET Framework examples -->
+    <target name="compile" description="Builds .NET Framework examples">
+        <nant buildfile="1.0/nant.build" target="compile" />
+        <nant buildfile="1.1/nant.build" target="compile" />
+    </target>
+    <!-- update the version of .NET Framework examples -->
+    <target name="update-version-info" description="Update AssemblyVersionInfo of .NET Framework examples">
+        <nant buildfile="1.0/nant.build" target="update-version-info" />
+    </target>
+</project>

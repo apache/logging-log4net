@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<project name="extensibility-examples" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <!-- compile Extensibility examples -->
+    <target name="compile" description="Builds Extensibility examples">
+        <nant buildfile="EventIDLogApp/nant.build" target="compile" />
+        <nant buildfile="TraceLogApp/nant.build" target="compile" />
+    </target>
+</project>

@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<project name="netcf-examples" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <!-- compile Shared Source CLI examples -->
+    <target name="compile" description="Builds Shared Source CLI examples">
+        <nant buildfile="1.0/nant.build" target="compile" />
+    </target>
+</project>

@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<project name="consoleapp-example" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <!-- compile WebApp example -->
+    <target name="compile" description="Builds WebApp example">
+        <nant buildfile="cs/nant.build" target="compile" />
+        <nant buildfile="vb/nant.build" target="compile" />
+    </target>
+    <!-- update the version of WebApp example -->
+    <target name="update-version-info" description="Update AssemblyVersionInfo of WebApp example">
+        <nant buildfile="cs/nant.build" target="update-version-info" />
+        <nant buildfile="vb/nant.build" target="update-version-info" />
+    </target>
+</project>

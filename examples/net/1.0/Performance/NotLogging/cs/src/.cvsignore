@@ -1,0 +1,6 @@
+bin
+obj
+log4net.xml
+NotLogging.csproj.user
+NotLogging.suo
+

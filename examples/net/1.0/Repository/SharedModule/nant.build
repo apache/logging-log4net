@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<project name="sharedmodule-example" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <!-- compile SharedModule example -->
+    <target name="compile" description="Builds SharedModule example">
+        <nant buildfile="cs/nant.build" target="compile" />
+        <nant buildfile="vb/nant.build" target="compile" />
+    </target>
+</project>

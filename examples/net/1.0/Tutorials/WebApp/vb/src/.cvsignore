@@ -1,0 +1,8 @@
+bin
+obj
+log-data
+simple-module-log.txt
+webapp-log.txt
+WebApp.vbproj.user
+WebApp.suo
+

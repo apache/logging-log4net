@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<project name="tracelogapp-example" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <!-- compile TraceLogApp example -->
+    <target name="compile" description="Builds TraceLogApp example">
+        <nant buildfile="cs/nant.build" target="compile" />
+    </target>
+</project>

@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<project name="eventidlogapp-example" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <!-- compile EventIDLogApp example -->
+    <target name="compile" description="Builds EventIDLogApp example">
+        <nant buildfile="cs/nant.build" target="compile" />
+    </target>
+</project>

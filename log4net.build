@@ -1,0 +1,711 @@
+<?xml version="1.0" ?>
+<project name="log4net" default="compile-all" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <!-- Global project settings -->
+    <property name="log4net.basedir" value="." readonly="false" />
+    <property name="project.build.config" value="debug" readonly="false" />
+    <property name="project.build.package" value="false" readonly="false" />
+    <!-- Include log4net helpers -->
+    <include buildfile="${log4net.basedir}/log4net.include" />
+    <!-- Targets that should always be executed -->
+    <call target="set-build-configuration" />
+    <call target="set-runtime-configuration" />
+    <!-- Targets that check settings -->
+    <target name="check-package-version">
+        <ifnot propertyexists="package.version">
+            <fail message="A package version has not been specified." />
+        </ifnot>
+    </target>
+    <target name="check-package-dir">
+        <ifnot propertyexists="package.dir">
+            <property name="package.dir" value="build/package" readonly="false" />
+        </ifnot>
+        <mkdir dir="${package.dir}" />
+    </target>
+    <target name="check-current-package-dir">
+        <ifnot propertyexists="current.package.dir">
+            <fail message="The current package directory has not been specified." />
+        </ifnot>
+        <mkdir dir="${current.package.dir}" />
+    </target>
+    <target name="check-current-package-zipfile">
+        <ifnot propertyexists="current.package.zipfile">
+            <fail message="The current package zipfile has not been specified." />
+        </ifnot>
+    </target>
+    <target name="check-htmlhelp-compiler">
+        <ifnot propertyexists="htmlhelp.compiler">
+            <readregistry property="htmlhelp.workshop.installroot" key="SOFTWARE\Microsoft\HTML Help Workshop\InstallDir" hive="CurrentUser" failonerror="false" />
+            <if propertyexists="htmlhelp.workshop.installroot">
+                <property name="htmlhelp.compiler" value="${htmlhelp.workshop.installroot}/hhc.exe" readonly="false" />
+            </if>
+        </ifnot>
+        <ifnot propertyexists="htmlhelp.compiler">
+            <sysinfo />
+            <property name="htmlhelp.compiler" value="${sys.os.folder.programfiles}/HTML Help Worshop/hhc.exe" readonly="false" />
+        </ifnot>
+    </target>
+    <!-- Target for cleaning up the current package directory -->
+    <target name="clean-current-package-dir" depends="check-current-package-dir" description="Cleans the current package directory">
+        <echo message="Cleaning the ${current.package.dir} package directory." />
+        <available type="Directory" resource="${current.package.dir}" property="temp.current.package.dir.available" />
+        <if propertytrue="temp.current.package.dir.available">
+            <delete dir="${current.package.dir}" />
+        </if>
+        <mkdir dir="${current.package.dir}" />
+    </target>
+    <!-- Displays configuration info, usefull for working out why log4net doesn't build -->
+    <target name="display-setup" depends="check-htmlhelp-compiler">
+        <!-- .NET Framework 1.0 -->
+        <available type="Framework" resource="net-1.0" property="temp.framework.available" />
+        <if propertytrue="temp.framework.available">
+            <property name="nant.settings.currentframework" value="net-1.0" />
+            <call target="display-current-runtime" />
+        </if>
+        <ifnot propertytrue="temp.framework.available">
+            <echo message=".NET Framework 1.0 runtime is not available." />
+        </ifnot>
+        <!-- .NET Framework 1.1 -->
+        <available type="Framework" resource="net-1.1" property="temp.framework.available" />
+        <if propertytrue="temp.framework.available">
+            <property name="nant.settings.currentframework" value="net-1.1" />
+            <call target="display-current-runtime" />
+        </if>
+        <ifnot propertytrue="temp.framework.available">
+            <echo message=".NET Framework 1.1 runtime is not available." />
+        </ifnot>
+        <!-- .NET Compact Framework 1.0 -->
+        <available type="Framework" resource="netcf-1.0" property="temp.framework.available" />
+        <if propertytrue="temp.framework.available">
+            <property name="nant.settings.currentframework" value="netcf-1.0" />
+            <call target="display-current-runtime" />
+        </if>
+        <ifnot propertytrue="temp.framework.available">
+            <echo message=".NET Compact Framework 1.0 runtime is not available." />
+        </ifnot>
+        <!-- Mono 1.0 -->
+        <available type="Framework" resource="mono-1.0" property="temp.framework.available" />
+        <if propertytrue="temp.framework.available">
+            <property name="nant.settings.currentframework" value="mono-1.0" />
+            <call target="display-current-runtime" />
+        </if>
+        <ifnot propertytrue="temp.framework.available">
+            <echo message="Mono 1.0 runtime is not available." />
+        </ifnot>
+        <!-- SSCLI 1.0 -->
+        <available type="Framework" resource="sscli-1.0" property="temp.framework.available" />
+        <if propertytrue="temp.framework.available">
+            <property name="nant.settings.currentframework" value="sscli-1.0" />
+            <call target="display-current-runtime" />
+        </if>
+        <ifnot propertytrue="temp.framework.available">
+            <echo message="SSCLI 1.0 runtime is not available." />
+        </ifnot>
+        <!-- HTML Help Compiler -->
+        <echo message="htmlhelp.compiler: ${htmlhelp.compiler}" />
+    </target>
+    <target name="display-current-runtime">
+        <echo message="" />
+        <echo message="----------------------------------------------------------" />
+        <echo message=" ${nant.settings.currentframework.description}" />
+        <echo message="----------------------------------------------------------" />
+        <echo message="" />
+        <echo message="framework : ${nant.settings.currentframework}" />
+        <echo message="description : ${nant.settings.currentframework.description}" />
+        <if propertyexists="nant.settings.currentframework.sdkdirectory">
+            <echo message="sdk directory : ${nant.settings.currentframework.sdkdirectory}" />
+        </if>
+        <ifnot propertyexists="nant.settings.currentframework.sdkdirectory">
+            <echo message="sdk directory : &lt;not configured/available&gt;" />
+        </ifnot>
+        <echo message="framework directory : ${nant.settings.currentframework.frameworkdirectory}" />
+        <echo message="assembly directory : ${nant.settings.currentframework.frameworkassemblydirectory}" />
+        <echo message="" />
+    </target>
+    <!-- Target for setting the package configuration -->
+    <target name="set-package-configuration" depends="check-package-dir, check-package-version">
+        <property name="current.package.dir" value="${package.dir}/${nant.project.name}-${package.version}" />
+        <property name="log4net.basedir" value="${current.package.dir}" />
+        <property name="current.package.zipfile" value="${nant.project.name}-${package.version}.zip" />
+        <property name="bin.dir" value="${current.package.dir}/bin" />
+        <property name="doc.dir" value="${current.package.dir}/doc" />
+        <property name="sdkdoc.dir" value="${doc.dir}/sdk" />
+        <available type="Directory" resource="${current.package.dir}" property="temp.current.package.dir.available" />
+        <delete dir="${current.package.dir}" if="${temp.current.package.dir.available}" />
+        <mkdir dir="${current.package.dir}" />
+    </target>
+    <!-- Target for compiling all build configurations for all runtime configurations -->
+    <target name="compile-all" description="Compile all build configurations for all runtime configurations">
+        <echo message="Compiling all build configurations for all runtime configurations." />
+        <call target="set-debug-build-configuration" />
+        <call target="compile-build" />
+        <call target="set-release-build-configuration" />
+        <call target="compile-build" />
+    </target>
+    <!-- Target for compiling all build configurations for the current runtime configurations -->
+    <target name="compile-runtime" description="Compile all build configurations for the current runtime configuration"
+        depends="check-current-runtime-config, check-current-runtime-version">
+        <echo message="Compiling all build configurations for the ${current.runtime.config}-${current.runtime.version} runtime configuration." />
+        <call target="set-debug-build-configuration" />
+        <!-- make sure that the runtime properties that rely on build configuration information are refreshed -->
+        <call target="set-runtime-configuration" />
+        <call target="compile-${current.runtime.config}-${current.runtime.version}" />
+        <call target="set-release-build-configuration" />
+        <!-- make sure that the runtime properties that rely on build configuration information are refreshed -->
+        <call target="set-runtime-configuration" />
+        <call target="compile-${current.runtime.config}-${current.runtime.version}" />
+    </target>
+    <!-- Target for compiling all runtime configurations in the current build configuration -->
+    <target name="compile-build" description="Compile current build configurations for all runtime configurations">
+        <echo message="Compiling all runtime configurations for the ${current.build.config} build configuration." />
+        <available type="Framework" resource="netcf-1.0" property="temp.framework.available" />
+        <if propertytrue="temp.framework.available">
+            <call target="set-netcf-1.0-runtime-configuration" />
+            <call target="compile-${current.runtime.config}-${current.runtime.version}" />
+        </if>
+        <ifnot propertytrue="temp.framework.available">
+            <if propertyexists="project.build.package" propertytrue="project.build.package">
+                <fail message="The .NET Compact Framework 1.0 is not available." />
+            </if>
+            <ifnot propertyexists="project.build.package" propertytrue="project.build.package">
+                <echo message="The .NET Compact Framework 1.0 is not available. Build skipped." />
+            </ifnot>
+        </ifnot>
+        <available type="Framework" resource="net-1.0" property="temp.framework.available" />
+        <if propertytrue="temp.framework.available">
+            <call target="set-net-1.0-runtime-configuration" />
+            <call target="compile-${current.runtime.config}-${current.runtime.version}" />
+        </if>
+        <ifnot propertytrue="temp.framework.available">
+            <if propertyexists="project.build.package" propertytrue="project.build.package">
+                <fail message="The .NET Framework 1.0 is not available." />
+            </if>
+            <ifnot propertyexists="project.build.package" propertytrue="project.build.package">
+                <echo message="The .NET Framework 1.0 is not available. Build skipped." />
+            </ifnot>
+        </ifnot>
+        <available type="Framework" resource="net-1.1" property="temp.framework.available" />
+        <if propertytrue="temp.framework.available">
+            <call target="set-net-1.1-runtime-configuration" />
+            <call target="compile-${current.runtime.config}-${current.runtime.version}" />
+        </if>
+        <ifnot propertytrue="temp.framework.available">
+            <if propertyexists="project.build.package" propertytrue="project.build.package">
+                <fail message="The .NET Framework 1.1 is not available." />
+            </if>
+            <ifnot propertyexists="project.build.package" propertytrue="project.build.package">
+                <echo message="The .NET Framework 1.1 is not available. Build skipped." />
+            </ifnot>
+        </ifnot>
+        <available type="Framework" resource="mono-1.0" property="temp.framework.available" />
+        <if propertytrue="temp.framework.available">
+            <call target="set-mono-1.0-runtime-configuration" />
+            <call target="compile-${current.runtime.config}-${current.runtime.version}" />
+        </if>
+        <ifnot propertytrue="temp.framework.available">
+            <available type="Framework" resource="mono-1.0-linux" property="temp.framework.available" />
+            <if propertytrue="temp.framework.available">
+                <call target="set-mono-1.0-linux-runtime-configuration" />
+                <call target="compile-${current.runtime.config}-${current.runtime.version}" />
+            </if>
+            <ifnot propertytrue="temp.framework.available">
+                <if propertyexists="project.build.package" propertytrue="project.build.package">
+                    <fail message="Mono 1.0 is not available." />
+                </if>
+                <ifnot propertyexists="project.build.package" propertytrue="project.build.package">
+                    <echo message="Mono 1.0 is not available. Build skipped." />
+                </ifnot>
+            </ifnot>
+        </ifnot>
+        <available type="Framework" resource="sscli-1.0" property="temp.framework.available" />
+        <if propertytrue="temp.framework.available">
+            <call target="set-sscli-1.0-runtime-configuration" />
+            <call target="compile-${current.runtime.config}-${current.runtime.version}" />
+        </if>
+        <ifnot propertytrue="temp.framework.available">
+            <if propertyexists="project.build.package" propertytrue="project.build.package">
+                <fail message="SSCLI 1.0 is not available." />
+            </if>
+            <ifnot propertyexists="project.build.package" propertytrue="project.build.package">
+                <echo message="SSCLI 1.0 is not available. Build skipped." />
+            </ifnot>
+        </ifnot>
+    </target>
+    <target name="compile" description="Builds the current build configuration for the current runtime configuration."
+        depends="check-current-build-config, check-current-runtime-config, check-current-runtime-version">
+        <call target="compile-${current.runtime.config}-${current.runtime.version}" />
+    </target>
+    <target name="compile-netcf-1.0" description="Builds .NET Compact Framework 1.0 version" depends="set-netcf-1.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir">
+        <!-- initialize the temp.build.skip property to false -->
+        <property name="temp.build.skip" value="false" readonly="false" />
+        <if propertytrue="current.build.config.release">
+            <!-- check if the log4net key file is available -->
+            <available type="File" resource="${log4net.basedir}/log4net.snk" property="temp.log4net.keyfile.available" />
+            <ifnot propertytrue="temp.log4net.keyfile.available">
+                <if propertyexists="project.build.package" propertytrue="project.build.package">
+                    <fail message="Key file not found." />
+                </if>
+                <ifnot propertyexists="project.build.package" propertytrue="project.build.package">
+                    <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
+                    <echo message="The generated key file should be stored in the log4net base directory." />
+                    <echo message="The release build will be skipped." />
+                    <property name="temp.build.skip" value="true" readonly="false" />
+                </ifnot>
+            </ifnot>
+            <if propertytrue="temp.log4net.keyfile.available">
+                <!-- copy the log4net key file to the location where the compiler expects it to be -->
+                <copy file="${log4net.basedir}/log4net.snk" todir="${current.bin.dir}/../../../" if="${current.build.config.release}" />
+            </if>
+        </if>
+        <ifnot propertytrue="temp.build.skip">
+            <csc warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+                <sources basedir="${log4net.basedir}/src">
+                    <includes name="**/*.cs" />
+                    <!-- .NET Compact Framework 1.0 has no support for ASP.NET -->
+                    <excludes name="Appender/AspNetTraceAppender.cs" />
+                    <!-- .NET Compact Framework 1.0 has no support for Win32 API's -->
+                    <excludes name="Appender/ColoredConsoleAppender.cs" />
+                    <!-- .NET Compact Framework 1.0 has no support for System.Diagnostics.EventLog -->
+                    <excludes name="Appender/EventLogAppender.cs" />
+                    <!-- .NET Compact Framework 1.0 has no support for Win32 NetMessageBufferSend function -->
+                    <excludes name="Appender/NetSendAppender.cs" />
+                    <!-- .NET Compact Framework 1.0 has no support for System.Runtime.Remoting -->
+                    <excludes name="Appender/RemotingAppender.cs" />
+                    <!-- .NET Compact Framework 1.0 has no support for System.Web.Mail -->
+                    <excludes name="Appender/SmtpAppender.cs" />
+                    <!-- 
+                        do not include attributes in the .NET Compact Framework 1.0 version
+                        because reading attributes is not supported anyway
+
+                        including these attributes would confuse developers and would possible
+                        cause issues when reading these attribute would eventually become
+                        available
+                    -->
+                    <excludes name="Config/AliasDomainAttribute.cs" />
+                    <excludes name="Config/AliasRepositoryAttribute.cs" />
+                    <excludes name="Config/ConfiguratorAttribute.cs" />
+                    <excludes name="Config/DomainAttribute.cs" />
+                    <excludes name="Config/RepositoryAttribute.cs" />
+                    <excludes name="Config/DOMConfiguratorAttribute.cs" />
+                    <excludes name="Config/XmlConfiguratorAttribute.cs" />
+                    <excludes name="Config/PluginAttribute.cs" />
+                    <!-- .NET Compact Framework 1.0 has no support for application configuration files -->
+                    <excludes name="Config/Log4NetConfigurationSectionHandler.cs" />
+                    <!-- .NET Compact Framework 1.0 has no support for Environment.GetEnvironmentVariable() -->
+                    <excludes name="Util/PatternStringConverters/EnvironmentPatternConverter.cs" />
+                    <!-- .NET Compact Framework 1.0 has no support for System.Runtime.Remoting -->
+                    <excludes name="Plugin/RemoteLoggingServerPlugin.cs" />
+                    <!-- .NET Compact Framework 1.0 uses the CompactRepositorySelector implementation of IRepositorySelector -->
+                    <excludes name="Core/DefaultRepositorySelector.cs" />
+                </sources>
+                <references>
+                    <includes name="mscorlib.dll" />
+                    <includes name="System.dll" />
+                    <includes name="System.Data.dll" />
+                    <includes name="System.Xml.dll" />
+                    <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework>/<framework version>/<build configuration> directory -->
+                    <includes name="lib/${current.runtime.config}/${current.runtime.version}/${current.build.config}/*.dll" />
+                </references>
+            </csc>
+        </ifnot>
+    </target>
+    <target name="compile-net-1.0" description="Builds .NET Framework 1.0 version" depends="set-net-1.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir">
+        <!-- initialize the temp.build.skip property to false -->
+        <property name="temp.build.skip" value="false" readonly="false" />
+        <if propertytrue="current.build.config.release">
+            <!-- check if the log4net key file is available -->
+            <available type="File" resource="${log4net.basedir}/log4net.snk" property="temp.log4net.keyfile.available" />
+            <ifnot propertytrue="temp.log4net.keyfile.available">
+                <if propertyexists="project.build.package" propertytrue="project.build.package">
+                    <fail message="Key file not found." />
+                </if>
+                <ifnot propertyexists="project.build.package" propertytrue="project.build.package">
+                    <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
+                    <echo message="The generated key file should be stored in the log4net base directory." />
+                    <echo message="The release build will be skipped." />
+                    <property name="temp.build.skip" value="true" readonly="false" />
+                </ifnot>
+            </ifnot>
+            <if propertytrue="temp.log4net.keyfile.available">
+                <!-- copy the log4net key file to the location where the compiler expects it to be -->
+                <copy file="${log4net.basedir}/log4net.snk" todir="${current.bin.dir}/../../../" if="${current.build.config.release}" />
+            </if>
+        </if>
+        <ifnot propertytrue="temp.build.skip">
+            <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+                <sources basedir="${log4net.basedir}/src">
+                    <includes name="**/*.cs" />
+                    <!-- .NET Framework 1.0 uses the DefaultRepositorSelector implementation of IRepositorySelector -->
+                    <excludes name="spi/CompactRepositorySelector.cs" />
+                </sources>
+                <references>
+                    <includes name="mscorlib.dll" />                
+                    <includes name="System.dll" />
+                    <includes name="System.Data.dll" />
+                    <includes name="System.Web.dll" />
+                    <includes name="System.Xml.dll" />
+                    <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework>/<framework version>/<build configuration> directory -->
+                    <includes name="lib/${current.runtime.config}/${current.runtime.version}/${current.build.config}/*.dll" />
+                </references>
+            </csc>
+        </ifnot>
+    </target>
+    <target name="compile-net-1.1" description="Builds .NET Framework 1.1 version" depends="set-net-1.1-runtime-configuration, check-log4net-basedir, clean-current-bin-dir">
+        <!-- initialize the temp.build.skip property to false -->
+        <property name="temp.build.skip" value="false" readonly="false" />
+        <if propertytrue="current.build.config.release">
+            <!-- check if the log4net key file is available -->
+            <available type="File" resource="${log4net.basedir}/log4net.snk" property="temp.log4net.keyfile.available" />
+            <ifnot propertytrue="temp.log4net.keyfile.available">
+                <if propertyexists="project.build.package" propertytrue="project.build.package">
+                    <fail message="Key file not found." />
+                </if>
+                <ifnot propertyexists="project.build.package" propertytrue="project.build.package">
+                    <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
+                    <echo message="The generated key file should be stored in the log4net base directory." />
+                    <echo message="The release build will be skipped." />
+                    <property name="temp.build.skip" value="true" readonly="false" />
+                </ifnot>
+            </ifnot>
+            <if propertytrue="temp.log4net.keyfile.available">
+                <!-- copy the log4net key file to the location where the compiler expects it to be -->
+                <copy file="${log4net.basedir}/log4net.snk" todir="${current.bin.dir}/../../../" if="${current.build.config.release}" />
+            </if>
+        </if>
+        <ifnot propertytrue="temp.build.skip">
+            <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+                <sources basedir="${log4net.basedir}/src">
+                    <includes name="**/*.cs" />
+                    <!-- .NET Framework 1.0 uses the DefaultRepositorSelector implementation of IRepositorySelector -->
+                    <excludes name="spi/CompactRepositorySelector.cs" />
+                </sources>
+                <references>
+                    <includes name="mscorlib.dll" />                
+                    <includes name="System.dll" />
+                    <includes name="System.Data.dll" />
+                    <includes name="System.Web.dll" />
+                    <includes name="System.Xml.dll" />
+                    <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework>/<framework version>/<build configuration> directory -->
+                    <includes name="lib/${current.runtime.config}/${current.runtime.version}/${current.build.config}/*.dll" />
+                </references>
+            </csc>
+        </ifnot>
+    </target>
+    <target name="compile-mono-1.0" description="Builds Mono 1.0 version" depends="set-mono-1.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir">
+        <!-- initialize the temp.build.skip property to false -->
+        <property name="temp.build.skip" value="false" readonly="false" />
+        <if propertytrue="current.build.config.release">
+            <!-- check if the log4net key file is available -->
+            <available type="File" resource="${log4net.basedir}/log4net.snk" property="temp.log4net.keyfile.available" />
+            <ifnot propertytrue="temp.log4net.keyfile.available">
+                <if propertyexists="project.build.package" propertytrue="project.build.package">
+                    <fail message="Key file not found." />
+                </if>
+                <ifnot propertyexists="project.build.package" propertytrue="project.build.package">
+                    <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
+                    <echo message="The generated key file should be stored in the log4net base directory." />
+                    <echo message="The release build will be skipped." />
+                    <property name="temp.build.skip" value="true" readonly="false" />
+                </ifnot>
+            </ifnot>
+            <if propertytrue="temp.log4net.keyfile.available">
+                <!-- copy the log4net key file to the location where the compiler expects it to be -->
+                <copy file="${log4net.basedir}/log4net.snk" todir="${current.bin.dir}/../../../" if="${current.build.config.release}" />
+            </if>
+        </if>
+        <ifnot propertytrue="temp.build.skip">
+            <csc nostdlib="false" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll">
+                <sources basedir="${log4net.basedir}/src">
+                    <includes name="**/*.cs" />
+                    <!-- Mono 1.0 has no support for Win32 API's -->
+                    <excludes name="Appender/ColoredConsoleAppender.cs" />
+                    <!-- Mono 1.0 has no full support for System.Diagnostics.EventLog -->
+                    <excludes name="Appender/EventLogAppender.cs" />
+                    <!-- Mono 1.0 has no support for Win32 NetMessageBufferSend function -->
+                    <excludes name="Appender/NetSendAppender.cs" />
+                    <!-- Mono 1.0 has no support for Win32 OutputDebugString function -->
+                    <excludes name="Appender/OutputDebugStringAppender.cs" />
+                    <!-- Mono 1.0 uses no native Win32 functions -->
+                    <excludes name="helpers/NativeError.cs" />
+                    <!-- Mono 1.0 uses the DefaultRepositorSelector implementation of IRepositorySelector -->
+                    <excludes name="spi/CompactRepositorySelector.cs" />
+                </sources>
+                <references>
+                    <includes name="System.dll" />
+                    <includes name="System.Data.dll" />
+                    <includes name="System.Web.dll" />
+                    <includes name="System.Xml.dll" />
+                    <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework>/<framework version>/<build configuration> directory -->
+                    <includes name="lib/${current.runtime.config}/${current.runtime.version}/${current.build.config}/*.dll" />
+                </references>
+            </csc>
+        </ifnot>
+    </target>
+    <target name="compile-sscli-1.0" description="Builds SSCLI 1.0 version" depends="set-sscli-1.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir">
+        <!-- initialize the temp.build.skip property to false -->
+        <property name="temp.build.skip" value="false" readonly="false" />
+        <if propertytrue="current.build.config.release">
+            <!-- check if the log4net key file is available -->
+            <available type="File" resource="${log4net.basedir}/log4net.snk" property="temp.log4net.keyfile.available" />
+            <ifnot propertytrue="temp.log4net.keyfile.available">
+                <if propertyexists="project.build.package" propertytrue="project.build.package">
+                    <fail message="Key file not found." />
+                </if>
+                <ifnot propertyexists="project.build.package" propertytrue="project.build.package">
+                    <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
+                    <echo message="The generated key file should be stored in the log4net base directory." />
+                    <echo message="The release build will be skipped." />
+                    <property name="temp.build.skip" value="true" readonly="false" />
+                </ifnot>
+            </ifnot>
+            <if propertytrue="temp.log4net.keyfile.available">
+                <!-- copy the log4net key file to the location where the compiler expects it to be -->
+                <copy file="${log4net.basedir}/log4net.snk" todir="${current.bin.dir}/../../../" if="${current.build.config.release}" />
+            </if>
+        </if>
+        <ifnot propertytrue="temp.build.skip">
+            <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}"
+                define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll">
+                <sources basedir="${log4net.basedir}/src">
+                    <includes name="**/*.cs" />
+                    <!-- SSCLI 1.0 has no support for ADO.NET -->
+                    <excludes name="Appender/ADONetAppender.cs" />
+                    <!-- SSCLI 1.0 has no support for ASP.NET -->
+                    <excludes name="Appender/ASPNetTraceAppender.cs" />
+                    <!-- SSCLI 1.0 has no support for Win32 API's -->
+                    <excludes name="Appender/ColoredConsoleAppender.cs" />
+                    <!-- SSCLI 1.0 has no support for System.Diagnostics.EventLog -->
+                    <excludes name="Appender/EventLogAppender.cs" />
+                    <!-- SSCLI 1.0 has no support for Win32 NetMessageBufferSend function -->
+                    <excludes name="Appender/NetSendAppender.cs" />
+                    <!-- SSCLI 1.0 has no support for Win32 OutputDebugString function -->
+                    <excludes name="Appender/OutputDebugStringAppender.cs" />
+                    <!-- SSCLI 1.0 has no support for System.Web.Mail -->
+                    <excludes name="Appender/SMTPAppender.cs" />
+                    <!-- SSCLI uses no native Win32 functions -->
+                    <excludes name="helpers/NativeError.cs" />
+                    <!-- SSCLI 1.0 uses the DefaultRepositorSelector implementation of IRepositorySelector -->
+                    <excludes name="spi/CompactRepositorySelector.cs" />
+                </sources>
+                <references>
+                    <includes name="mscorlib.dll" />
+                    <includes name="System.dll" />
+                    <includes name="System.Xml.dll" />
+                    <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework>/<framework version>/<build configuration> directory -->
+                    <includes name="lib/${current.runtime.config}/${current.runtime.version}/${current.build.config}/*.dll" />
+                </references>
+            </csc>
+        </ifnot>
+    </target>
+    <!-- Target for generating docs for all runtime configurations -->
+    <target name="generate-sdkdoc-all" depends="check-current-build-config">
+        <echo message="Generating SDK documentation based on the ${current.build.config} build configuration for all runtime configurations." />
+        <available type="Framework" resource="netcf-1.0" property="temp.framework.available" />
+        <if propertytrue="temp.framework.available">
+            <call target="set-netcf-1.0-runtime-configuration" />
+            <call target="generate-sdkdoc" />
+        </if>
+        <available type="Framework" resource="net-1.0" property="temp.framework.available" />
+        <if propertytrue="temp.framework.available">
+            <call target="set-net-1.0-runtime-configuration" />
+            <call target="generate-sdkdoc" />
+        </if>
+        <available type="Framework" resource="net-1.1" property="temp.framework.available" />
+        <if propertytrue="temp.framework.available">
+            <call target="set-net-1.1-runtime-configuration" />
+            <call target="generate-sdkdoc" />
+        </if>
+        <!-- Mono 1.0 does not support extracting xml documentation -->
+        <!-- SSCLI 1.0 does not support extracting xml documentation -->
+    </target>
+    <!-- Target for generating docs for build configurations -->
+    <target name="generate-sdkdoc" depends="compile, check-htmlhelp-compiler, check-current-runtime-config, check-current-runtime-version, check-current-runtime-description, check-current-sdkdoc-dir, check-current-sdkdoc-debug, clean-current-sdkdoc-dir">
+        <ndoc>
+            <assemblies basedir="${current.bin.dir}">
+                <includes name="log4net.dll" />
+            </assemblies>
+            <documenters>
+                <documenter name="MSDN">
+                    <property name="OutputDirectory" value="${current.sdkdoc.dir}" />
+                    <property name="HtmlHelpName" value="log4net-sdk-${current.runtime.config}-${current.runtime.version}" />
+                    <property name="HtmlHelpCompilerFilename" value="${htmlhelp.compiler}" />
+                    <property name="IncludeFavorites" value="true" />
+                    <property name="IncludeHierarchy" value="true" />
+                    <property name="Title" value="log4net SDK Documentation - ${current.runtime.description}" />
+                    <property name="SplitTOCs" value="false" />
+                    <property name="DefaulTOC" value="" />
+                    <property name="ShowVisualBasic" value="true" />
+                    <property name="OmitObjectTags" value="false" />
+                    <property name="RootPageContainsNamespaces" value="false" />
+                    <property name="SortTOCByNamespace" value="true" />
+                    <property name="ShowMissingSummaries" value="${current.sdkdoc.debug}" />
+                    <property name="ShowMissingRemarks" value="${current.sdkdoc.debug}" />
+                    <property name="ShowMissingParams" value="${current.sdkdoc.debug}" />
+                    <property name="ShowMissingReturns" value="${current.sdkdoc.debug}" />
+                    <property name="ShowMissingValues" value="${current.sdkdoc.debug}" />
+                    <property name="DocumentAttributes" value="false" />
+                    <property name="DocumentedAttributes" value="" />
+                    <property name="DocumentInternals" value="false" />
+                    <property name="DocumentPrivates" value="false" />
+                    <property name="DocumentProtected" value="true" />
+                    <property name="DocumentEmptyNamespaces" value="false" />
+                    <property name="SkipNamespacesWithoutSummaries" value="false" />
+                    <property name="AutoPropertyBackerSummaries" value="false" />
+                    <property name="AutoDocumentConstructors" value="true" />
+                    <property name="GetExternalSummaries" value="true" />
+                    <property name="IncludeAssemblyVersion" value="false" />
+                    <property name="CopyrightText" value="Copyright (C) 2001-2003 Neoworks Limited. All Rights Reserved." />
+                    <property name="CopyrightHref" value="http://www.sourceforge.net/projects/log4net" />
+                </documenter>
+            </documenters>
+        </ndoc>
+        <!-- Remove everything except the help file itself from the current SDK documentation directory -->
+        <delete>
+            <fileset basedir="${current.sdkdoc.dir}">
+                <includes name="**/*" />
+                <excludes name="**/*.chm" />
+            </fileset>
+        </delete>
+    </target>
+    <target name="package" depends="set-package-configuration" description="Build and Package distribution">
+        <!-- set flag to indicating that this is a package build -->
+        <property name="project.build.package" value="true" readonly="false" />
+        <!-- clean the current package directory -->
+        <call target="clean-current-package-dir" />
+        <!-- copies the examples to the current package directory -->
+        <call target="package-examples" />
+        <!-- copies the sources to the current package directory -->
+        <call target="package-src" />
+        <!-- copies the extenstions to the current package directory -->
+        <call target="package-extensions" />
+        <!-- copies the documentation to the current package directory -->
+        <call target="package-doc" />
+        <!-- copies the release files to the current package directory -->
+        <call target="package-release-files" />
+        <!-- compile all build configurations for all runtime configurations  -->
+        <call target="compile-all" />
+        <!-- compile all examples -->
+        <call target="compile-examples" />
+        <!-- compile all extensions -->
+        <call target="compile-extensions" />
+        <!-- generate the sdk docs using the release build configuration for all runtime configuration -->
+        <call target="set-release-build-configuration" />
+        <call target="generate-sdkdoc-all" />
+        <!-- create the package distribution zipfile -->
+        <call target="create-package-zipfile" />
+    </target>
+    <target name="package-examples" depends="check-current-package-dir, check-log4net-basedir">
+        <mkdir dir="${current.package.dir}/examples" />
+        <delete dir="${current.package.dir}/examples" />
+        <copy todir="${current.package.dir}/examples">
+            <fileset basedir="examples">
+                <includes name="**/*" />
+                <excludes name="**/bin/**" />
+                <excludes name="**/build/**" />
+                <excludes name="**/doc/**" />
+                <excludes name="**/obj/**" />
+                <excludes name="**/*.csproj.user" />
+                <excludes name="**/*.csdproj.user" />
+                <excludes name="**/*.vbproj.user" />
+                <excludes name="**/*.vbdproj.user" />
+                <excludes name="**/*.suo" />
+                <excludes name="**/*.sln.old" />
+                <!-- file created by mono compiler -->
+                <excludes name="**/gc.log" />
+            </fileset>
+        </copy>
+    </target>
+    <target name="package-src" depends="check-current-package-dir, check-log4net-basedir">
+        <mkdir dir="${current.package.dir}/src" />
+        <delete dir="${current.package.dir}/src" />
+        <copy todir="${current.package.dir}/src">
+            <fileset basedir="src">
+                <includes name="**/*" />
+                <excludes name="**/obj/**" />
+                <excludes name="log4net.csproj.user" />
+                <excludes name="log4net.suo" />
+                <excludes name="log4net.ndoc" />
+                <excludes name="log4net*.xml" />
+                <excludes name="**/*.sln.old" />
+            </fileset>
+        </copy>
+    </target>
+    <target name="package-extensions" depends="check-current-package-dir, check-log4net-basedir">
+        <mkdir dir="${current.package.dir}/extensions" />
+        <delete dir="${current.package.dir}/extensions" />
+        <copy todir="${current.package.dir}/extensions">
+            <fileset basedir="extensions">
+                <includes name="**/*" />
+                <excludes name="**/bin/**" />
+                <excludes name="**/build/**" />
+                <excludes name="**/doc/**" />
+                <excludes name="**/obj/**" />
+                <excludes name="**/*.csproj.user" />
+                <excludes name="**/*.vbproj.user" />
+                <excludes name="**/*.suo" />
+                <excludes name="**/*.sln.old" />
+            </fileset>
+        </copy>
+    </target>
+    <target name="package-doc" depends="check-current-package-dir, check-log4net-basedir">
+        <mkdir dir="${current.package.dir}/doc" />
+        <copy todir="${current.package.dir}/doc" includeemptydirs="false">
+            <fileset basedir="doc">
+                <includes name="*" />
+            </fileset>
+        </copy>
+        <mkdir dir="${current.package.dir}/doc/manual" />
+        <copy todir="${current.package.dir}/doc/manual" includeemptydirs="false">
+            <fileset basedir="doc/manual">
+                <includes name="*" />
+            </fileset>
+        </copy>
+    </target>
+    <target name="package-release-files" depends="check-current-package-dir, check-log4net-basedir">
+        <copy todir="${current.package.dir}">
+            <fileset basedir=".">
+                <includes name="index.html" />
+                <includes name="build.cmd" />
+                <includes name="ChangeLog.txt" />
+                <includes name="log4net.build" />
+                <includes name="log4net.include" />
+                <includes name="releasenotes.html" />
+                <includes name="LICENSE.txt" />
+                <includes name="log4net.snk" />
+            </fileset>
+        </copy>
+    </target>
+    <target name="create-package-zipfile" depends="check-current-package-dir, check-current-package-zipfile, check-log4net-basedir">
+        <!-- delete the specified zipfile if it already exists -->
+        <delete>
+            <fileset basedir=".">
+                <includes name="${current.package.zipfile}" />
+            </fileset>
+        </delete>
+        <zip zipfile="${current.package.zipfile}" ziplevel="9">
+            <fileset basedir="${current.package.dir}">
+                <includes name="**/*" />
+                <!-- do not include the log4net keyfiles -->
+                <excludes name="**/*.snk" />
+                <!-- do not include the built examples -->
+                <excludes name="examples/**/bin/**" />
+                <!-- do not include the docs of examples -->
+                <excludes name="examples/**/doc/**" />
+                <!-- do not include the built extensions -->
+                <excludes name="extensions/**/bin/**" />
+                <!-- do not include the docs of extensions -->
+                <excludes name="extensions/**/doc/**" />
+                <!-- file created by mono compiler -->
+                <excludes name="**/gc.log" />
+            </fileset>
+        </zip>
+    </target>
+    <target name="update-version-info">
+        <nant buildfile="${log4net.basedir}/examples/nant.build" target="update-version-info" inheritall="false" />
+    </target>
+    <target name="compile-examples" description="Build all examples">
+        <nant buildfile="${log4net.basedir}/examples/nant.build" target="compile" inheritall="false" />
+    </target>
+    <target name="compile-extensions" description="Build all extensions">
+        <nant buildfile="${log4net.basedir}/extensions/nant.build" target="compile" inheritall="false" />
+    </target>
+</project>

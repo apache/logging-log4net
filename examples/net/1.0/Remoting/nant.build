@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<project name="remoting-examples" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <!-- compile Remoting examples -->
+    <target name="compile" description="Builds Remoting examples">
+        <nant buildfile="RemotingClient/nant.build" target="compile" />
+        <nant buildfile="RemotingServer/nant.build" target="compile" />
+    </target>
+</project>

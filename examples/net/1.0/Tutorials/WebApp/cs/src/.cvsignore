@@ -1,0 +1,9 @@
+bin
+obj
+log-data
+simple-module-log.txt
+webapp-log.txt
+obj
+WebApp.csproj.user
+WebApp.suo
+
