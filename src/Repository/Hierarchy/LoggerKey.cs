@@ -47,21 +47,6 @@ namespace log4net.Repository.Hierarchy
 
 		#endregion Internal Instance Constructors
 
-		#region Internal Instance Properties
-
-		/// <summary>
-		/// Gets the name of the logger.
-		/// </summary>
-		/// <value>
-		/// The name of the logger.
-		/// </value>
-		internal string Value
-		{
-			get { return m_name; }
-		}
-
-		#endregion Internal Instance Properties
-
 		#region Override implementation of Object
 
 		/// <summary>
@@ -102,8 +87,8 @@ namespace log4net.Repository.Hierarchy
 
 		#region Private Instance Fields
 
-		private string m_name;  
-		private int m_hashCache;
+		private readonly string m_name;  
+		private readonly int m_hashCache;
 
 		#endregion Private Instance Fields
 	}	
