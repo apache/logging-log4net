@@ -3,27 +3,46 @@
 REM We are going to change the environment variables, so protect the current settings.
 SETLOCAL ENABLEDELAYEDEXPANSION
 
-REM Figure out the path to the log4net directory
-call :ComputeBase %~f0
-set LOG4NET_DIR=%RESULT%
+IF "%1"=="-?" GOTO CommandLineOptions
 
-echo LOG4NET_DIR is %LOG4NET_DIR%
+REM Figure out the path to the log4net directory
+CALL :ComputeBase %~f0
+SET LOG4NET_DIR=%RESULT%
+ECHO LOG4NET_DIR is %LOG4NET_DIR%
 
 REM Get path to NAnt.exe
-set NANTEXE_PATH=C:\net\nant-20031003\bin\nant.exe
-echo NANTEXE_PATH is %NANTEXE_PATH%
 
+REM Try and determine if NAnt is in the PATH
+SET NANTEXE_PATH=nant.exe
+%NANTEXE_PATH% -help >NUL: 2>NUL:
+IF NOT ERRORLEVEL 1 goto FoundNAnt
+
+REM Try hard coded path for NAnt
+SET NANTEXE_PATH=C:\net\nant-0.85-20040520\bin\nant.exe
+%NANTEXE_PATH% -help >NUL: 2>NUL:
+IF NOT ERRORLEVEL 1 goto FoundNAnt
+
+REM We have not found NAnt
+ECHO.
+ECHO NAnt does not appear to be installed. NAnt.exe failed to execute.
+ECHO Please ensure NAnt is installed and can be found in the PATH.
+GOTO EndError
+
+
+:FoundNAnt
+ECHO NANTEXE_PATH is %NANTEXE_PATH%
 
 REM Setup the build file
 IF EXIST nant.build (
-	set BUILD_FILE=nant.build
+	SET BUILD_FILE=nant.build
 ) ELSE (
-	set BUILD_FILE=%LOG4NET_DIR%\log4net.build
+	SET BUILD_FILE=%LOG4NET_DIR%\log4net.build
 )
 
-echo BUILD_FILE is %BUILD_FILE%
+ECHO BUILD_FILE is %BUILD_FILE%
 
-REM Check for Mono install, update path to include mono libs
+REM TODO: Remove this old Mono stuff
+REM Check for Mono old install, update path to include mono libs
 IF EXIST %WINDIR%\monobasepath.bat (
 	CALL %WINDIR%\monobasepath.bat
 	
@@ -32,53 +51,72 @@ IF EXIST %WINDIR%\monobasepath.bat (
 
 	SET PATH="!CLEAN_MONO_BASEPATH!\bin\;!CLEAN_MONO_BASEPATH!\lib\;%path%"
 )
+REM End TODO
 
 IF "%1"=="package" GOTO Package
 
-REM echo PATH is %PATH%
-
 "%NANTEXE_PATH%" "-buildfile:%BUILD_FILE%" %1 %2 %3 %4 %5 %6 %7 %8
-GOTO End
+GOTO EndOk
 
 :Package
 IF "%2"=="" GOTO NoProjectVersion
 
 "%NANTEXE_PATH%" "-buildfile:%BUILD_FILE%" package "-D:package.version=%2" %3 %4 %5 %6 %7 %8
-GOTO End
+GOTO EndOk
 
 :NoProjectVersion
+ECHO.
+ECHO SYNTAX ERROR: Missing Version String.
 ECHO Please specify the version number of log4net that you want to package.
 GOTO CommandLineOptions
 
 :CommandLineOptions
-ECHO The following commandline is valid :
-ECHO usage: build.cmd [target]
-ECHO When no target is specified, debug build configuration for the .NET Framework 1.0 is built.
-echo When the target is "package", the version number of log4net that you want to package has to be specified.
-ECHO eg. build.cmd package 1.3.0
-GOTO End
+ECHO.
+ECHO Use the following command line syntax:
+ECHO.
+ECHO     build.cmd -?
+ECHO     build.cmd -projecthelp
+ECHO     build.cmd [nant target]
+ECHO     build.cmd package [version string]
+ECHO.
+ECHO To get a list of all NAnt build targets run build.cmd with the -projecthelp option.
+ECHO If no NAnt target is specified then the default target is 'compile-all'. This will compile all configurations on all available frameworks.
+ECHO When using the 'package' command the version label for the package must be specified.
+ECHO.
+ECHO     Examples:
+ECHO.
+ECHO     build.cmd compile-mono-1.0
+ECHO     build.cmd compile-all
+ECHO     build.cmd package 1.3.0
+ECHO     build.cmd package 2.1.0-alpha
+ECHO.
+GOTO EndError
 
 
 REM ------------------------------------------
 REM Expand a string to a full path
 REM ------------------------------------------
 :FullPath
-set RESULT=%~f1
-goto :EOF
+SET RESULT=%~f1
+GOTO :EOF
 
 REM ------------------------------------------
 REM Compute the current directory
 REM given a path to this batch script.
 REM ------------------------------------------
 :ComputeBase
-set RESULT=%~dp1
+SET RESULT=%~dp1
 REM Remove the trailing \
-set RESULT=%RESULT:~0,-1%
-Call :FullPath %RESULT%
-goto :EOF
+SET RESULT=%RESULT:~0,-1%
+CALL :FullPath %RESULT%
+GOTO :EOF
 
 
-:End
+:EndOk
 ENDLOCAL
 EXIT /B 0
+
+:EndError
+ENDLOCAL
+EXIT /B 1
 
