@@ -57,18 +57,33 @@ namespace log4net.Core
 		/// <summary>
 		/// Removes all attached appenders.
 		/// </summary>
+		/// <remarks>
+		/// Removes and closes all attached appenders
+		/// </remarks>
 		void RemoveAllAppenders();
 
 		/// <summary>
 		/// Removes the specified appender from the list of attached appenders.
 		/// </summary>
 		/// <param name="appender">The appender to remove.</param>
-		void RemoveAppender(IAppender appender);
+		/// <returns>The appender removed from the list</returns>
+		/// <remarks>
+		/// The appender removed is not closed.
+		/// If you are discarding the appender you must call
+		/// <see cref="IAppender.Close"/> on the appender removed.
+		/// </remarks>
+		IAppender RemoveAppender(IAppender appender);
 
 		/// <summary>
 		/// Removes the appender with the specified name from the list of appenders.
 		/// </summary>
 		/// <param name="name">The name of the appender to remove.</param>
-		void RemoveAppender(string name);   	
+		/// <returns>The appender removed from the list</returns>
+		/// <remarks>
+		/// The appender removed is not closed.
+		/// If you are discarding the appender you must call
+		/// <see cref="IAppender.Close"/> on the appender removed.
+		/// </remarks>
+		IAppender RemoveAppender(string name);   	
 	}
 }

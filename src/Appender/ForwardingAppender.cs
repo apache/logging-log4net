@@ -192,30 +192,44 @@ namespace log4net.Appender
 		/// Removes the specified appender from the list of appenders.
 		/// </summary>
 		/// <param name="appender">The appender to remove.</param>
-		virtual public void RemoveAppender(IAppender appender) 
+		/// <returns>The appender removed from the list</returns>
+		/// <remarks>
+		/// The appender removed is not closed.
+		/// If you are discarding the appender you must call
+		/// <see cref="IAppender.Close"/> on the appender removed.
+		/// </remarks>
+		virtual public IAppender RemoveAppender(IAppender appender) 
 		{
 			lock(this)
 			{
 				if (appender != null && m_appenderAttachedImpl != null) 
 				{
-					m_appenderAttachedImpl.RemoveAppender(appender);
+					return m_appenderAttachedImpl.RemoveAppender(appender);
 				}
 			}
+			return null;
 		}
 
 		/// <summary>
 		/// Removes the appender with the specified name from the list of appenders.
 		/// </summary>
 		/// <param name="name">The name of the appender to remove.</param>
-		virtual public void RemoveAppender(string name) 
+		/// <returns>The appender removed from the list</returns>
+		/// <remarks>
+		/// The appender removed is not closed.
+		/// If you are discarding the appender you must call
+		/// <see cref="IAppender.Close"/> on the appender removed.
+		/// </remarks>
+		virtual public IAppender RemoveAppender(string name) 
 		{
 			lock(this)
 			{
 				if (name != null && m_appenderAttachedImpl != null)
 				{
-					m_appenderAttachedImpl.RemoveAppender(name);
+					return m_appenderAttachedImpl.RemoveAppender(name);
 				}
 			}
+			return null;
 		}
   
 		#endregion Implementation of IAppenderAttachable

@@ -152,6 +152,9 @@ namespace log4net.Util
 		/// <summary>
 		/// Removes all attached appenders.
 		/// </summary>
+		/// <remarks>
+		/// Removes and closes all attached appenders
+		/// </remarks>
 		public void RemoveAllAppenders() 
 		{
 			if (m_appenderList != null) 
@@ -176,21 +179,34 @@ namespace log4net.Util
 		/// Removes the specified appender from the list of attached appenders.
 		/// </summary>
 		/// <param name="appender">The appender to remove.</param>
-		public void RemoveAppender(IAppender appender) 
+		/// <returns>The appender removed from the list</returns>
+		/// <remarks>
+		/// The appender removed is not closed.
+		/// If you are discarding the appender you must call
+		/// <see cref="IAppender.Close"/> on the appender removed.
+		/// </remarks>
+		public IAppender RemoveAppender(IAppender appender) 
 		{
 			if (appender != null && m_appenderList != null) 
 			{
-				m_appenderList.Remove(appender);	
+				m_appenderList.Remove(appender);
 			}
+			return appender;
 		}
 
 		/// <summary>
 		/// Removes the appender with the specified name from the list of appenders.
 		/// </summary>
 		/// <param name="name">The name of the appender to remove.</param>
-		public void RemoveAppender(string name) 
+		/// <returns>The appender removed from the list</returns>
+		/// <remarks>
+		/// The appender removed is not closed.
+		/// If you are discarding the appender you must call
+		/// <see cref="IAppender.Close"/> on the appender removed.
+		/// </remarks>
+		public IAppender RemoveAppender(string name) 
 		{
-			RemoveAppender(GetAppender(name));
+			return RemoveAppender(GetAppender(name));
 		}
 
 		#endregion

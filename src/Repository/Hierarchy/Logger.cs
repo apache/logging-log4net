@@ -283,46 +283,56 @@ namespace log4net.Repository.Hierarchy
 		/// Remove the appender passed as parameter form the list of appenders.
 		/// </summary>
 		/// <param name="appender">The appender to remove</param>
+		/// <returns>The appender removed from the list</returns>
 		/// <remarks>
 		/// Remove the appender passed as parameter form the list of appenders.
+		/// The appender removed is not closed.
+		/// If you are discarding the appender you must call
+		/// <see cref="IAppender.Close"/> on the appender removed.
 		/// </remarks>
-		virtual public void RemoveAppender(IAppender appender) 
+		virtual public IAppender RemoveAppender(IAppender appender) 
 		{
 			m_appenderLock.AcquireWriterLock();
 			try
 			{
 				if (appender != null && m_appenderAttachedImpl != null) 
 				{
-					m_appenderAttachedImpl.RemoveAppender(appender);
+					return m_appenderAttachedImpl.RemoveAppender(appender);
 				}
 			}
 			finally
 			{
 				m_appenderLock.ReleaseWriterLock();
 			}
+			return null;
 		}
 
 		/// <summary>
 		/// Remove the appender passed as parameter form the list of appenders.
 		/// </summary>
 		/// <param name="name">The name of the appender to remove</param>
+		/// <returns>The appender removed from the list</returns>
 		/// <remarks>
 		/// Remove the named appender passed as parameter form the list of appenders.
+		/// The appender removed is not closed.
+		/// If you are discarding the appender you must call
+		/// <see cref="IAppender.Close"/> on the appender removed.
 		/// </remarks>
-		virtual public void RemoveAppender(string name) 
+		virtual public IAppender RemoveAppender(string name) 
 		{
 			m_appenderLock.AcquireWriterLock();
 			try
 			{
 				if (name != null && m_appenderAttachedImpl != null)
 				{
-					m_appenderAttachedImpl.RemoveAppender(name);
+					return m_appenderAttachedImpl.RemoveAppender(name);
 				}
 			}
 			finally
 			{
 				m_appenderLock.ReleaseWriterLock();
 			}
+			return null;
 		}
   
 		#endregion
