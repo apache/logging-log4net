@@ -303,6 +303,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Config\SecurityContextProviderAttribute.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Config\XmlConfigurator.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -414,6 +419,16 @@
                 />
                 <File
                     RelPath = "Core\LogImpl.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Core\SecurityContext.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Core\SecurityContextProvider.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -858,6 +873,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Util\NullSecurityContext.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Util\OnlyOnceErrorHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -949,6 +969,11 @@
                 />
                 <File
                     RelPath = "Util\Transform.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Util\WindowsSecurityContext.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
