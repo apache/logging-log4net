@@ -32,12 +32,6 @@ namespace log4net
 	/// <para>
 	/// See the <see cref="ILog"/> interface for more details.
 	/// </para>
-	/// <para>
-	/// log4net uses NUnit 2.0 to provide internal unit testing.
-	/// To run the tests you will need a copy of NUnit 2.0. Then
-	/// run the following command:
-	/// </para>
-	/// <code>nunit-console.exe /assembly:&lt;log4net assembly&gt;</code>
 	/// </remarks>
 	/// <example>Simple example of logging messages
 	/// <code>
@@ -113,6 +107,13 @@ namespace log4net
 		/// <summary>
 		/// Returns the named logger if it exists.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// If the named logger exists (in the repository for the specified assembly) then it
+		/// returns a reference to the logger, otherwise it returns
+		/// <c>null</c>.
+		/// </para>
+		/// </remarks>
 		/// <param name="repositoryAssembly">The assembly to use to lookup the repository.</param>
 		/// <param name="name">The fully qualified logger name to look for.</param>
 		/// <returns>
@@ -673,12 +674,12 @@ namespace log4net
 		/// specified such that a call to <see cref="GetRepository(Assembly)"/> with the
 		/// same assembly specified will return the same repository instance.
 		/// </para>
+		/// </remarks>
 		/// <param name="repositoryAssembly">The assembly to use to get the name of the repository.</param>
 		/// <param name="repositoryType">A <see cref="Type"/> that implements <see cref="ILoggerRepository"/>
 		/// and has a no arg constructor. An instance of this type will be created to act
 		/// as the <see cref="ILoggerRepository"/> for the repository specified.</param>
 		/// <returns>The <see cref="ILoggerRepository"/> created for the repository.</returns>
-		/// </remarks>
 		[Obsolete("Use CreateRepository instead of CreateDomain")]
 		public static ILoggerRepository CreateDomain(Assembly repositoryAssembly, Type repositoryType)
 		{
@@ -694,12 +695,12 @@ namespace log4net
 		/// specified such that a call to <see cref="GetRepository(Assembly)"/> with the
 		/// same assembly specified will return the same repository instance.
 		/// </para>
+		/// </remarks>
 		/// <param name="repositoryAssembly">The assembly to use to get the name of the repository.</param>
 		/// <param name="repositoryType">A <see cref="Type"/> that implements <see cref="ILoggerRepository"/>
 		/// and has a no arg constructor. An instance of this type will be created to act
 		/// as the <see cref="ILoggerRepository"/> for the repository specified.</param>
 		/// <returns>The <see cref="ILoggerRepository"/> created for the repository.</returns>
-		/// </remarks>
 		public static ILoggerRepository CreateRepository(Assembly repositoryAssembly, Type repositoryType)
 		{
 			return LoggerManager.CreateRepository(repositoryAssembly, repositoryType);
@@ -708,6 +709,11 @@ namespace log4net
 		/// <summary>
 		/// Gets the list of currently defined repositories.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Get an array of all the <see cref="ILoggerRepository"/> objects that have been created.
+		/// </para>
+		/// </remarks>
 		/// <returns>An array of all the known <see cref="ILoggerRepository"/> objects.</returns>
 		public static ILoggerRepository[] GetAllRepositories()
 		{
@@ -723,7 +729,7 @@ namespace log4net
 		/// </summary>
 		/// <param name="logger">The logger to get the wrapper for.</param>
 		/// <returns>The wrapper for the logger specified.</returns>
-		public static ILog WrapLogger(ILogger logger)
+		private static ILog WrapLogger(ILogger logger)
 		{
 			return (ILog)s_wrapperMap[logger];
 		}
@@ -733,7 +739,7 @@ namespace log4net
 		/// </summary>
 		/// <param name="loggers">The loggers to get the wrappers for.</param>
 		/// <returns>The wrapper objects for the loggers specified.</returns>
-		public static ILog[] WrapLoggers(ILogger[] loggers)
+		private static ILog[] WrapLoggers(ILogger[] loggers)
 		{
 			ILog[] results = new ILog[loggers.Length];
 			for(int i=0; i<loggers.Length; i++)
