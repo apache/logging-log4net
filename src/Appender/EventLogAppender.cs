@@ -24,9 +24,8 @@
 #if !MONO 
 // SSCLI 1.0 has no support for EventLog
 #if !SSCLI
-// We don't want framework or platform specific code in the Core version of
-// log4net
-#if !CORE
+// We don't want framework or platform specific code in the CLI version of log4net
+#if !CLI_1_0
 
 using System;
 using System.Diagnostics;
@@ -493,7 +492,7 @@ namespace log4net.Appender
 	}
 }
 
-#endif // !CORE
+#endif // !CLI_1_0
 #endif // !SSCLI
 #endif // !MONO
 #endif // !NETCF

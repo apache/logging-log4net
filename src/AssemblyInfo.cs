@@ -44,7 +44,9 @@ using System.Runtime.CompilerServices;
 // associated with an assembly.
 //
 
-#if (NET_1_0)
+#if (CLI_1_0)
+[assembly: AssemblyTitle("log4net for CLI 1.0 Compatible Frameworks")]
+#elif (NET_1_0)
 [assembly: AssemblyTitle("log4net for .NET Framework 1.0")]
 #elif (NET_1_1)
 [assembly: AssemblyTitle("log4net for .NET Framework 1.1")]
@@ -54,6 +56,8 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("log4net for Mono 1.0")]
 #elif (SSCLI_1_0)
 [assembly: AssemblyTitle("log4net for Shared Source CLI 1.0")]
+#elif (CLI_1_0)
+[assembly: AssemblyTitle("log4net for CLI Compatible Frameworks")]
 #elif (NET)
 [assembly: AssemblyTitle("log4net for .NET Framework")]
 #elif (NETCF)
