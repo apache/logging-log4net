@@ -46,21 +46,21 @@ namespace log4net.Util.PatternStringConverters
 	/// 		<term>ISO8601</term>
 	/// 		<description>
 	/// 		Uses the <see cref="Iso8601DateFormatter"/> formatter. 
-	/// 		Formats using the <c>"YYYY-MM-dd HH:mm:ss,SSS"</c> pattern.
+	/// 		Formats using the <c>"yyyy-MM-dd HH:mm:ss,fff"</c> pattern.
 	/// 		</description>
 	/// 	</item>
 	/// 	<item>
 	/// 		<term>DATE</term>
 	/// 		<description>
 	/// 		Uses the <see cref="DateTimeDateFormatter"/> formatter. 
-	/// 		Formats using the <c>"dd MMM YYYY HH:mm:ss,SSS"</c> for example, <c>"06 Nov 1994 15:49:37,459"</c>.
+	/// 		Formats using the <c>"dd MMM yyyy HH:mm:ss,fff"</c> for example, <c>"06 Nov 1994 15:49:37,459"</c>.
 	/// 		</description>
 	/// 	</item>
 	/// 	<item>
 	/// 		<term>ABSOLUTE</term>
 	/// 		<description>
 	/// 		Uses the <see cref="AbsoluteTimeDateFormatter"/> formatter. 
-	/// 		Formats using the <c>"HH:mm:ss,SSS"</c> for example, <c>"15:49:37,459"</c>.
+	/// 		Formats using the <c>"HH:mm:ss,fff"</c> for example, <c>"15:49:37,459"</c>.
 	/// 		</description>
 	/// 	</item>
 	/// 	<item>

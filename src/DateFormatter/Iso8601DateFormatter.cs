@@ -22,11 +22,11 @@ using System.Text;
 namespace log4net.DateFormatter
 {
 	/// <summary>
-	/// Formats the <see cref="DateTime"/> as <c>"YYYY-MM-dd HH:mm:ss,SSS"</c>.
+	/// Formats the <see cref="DateTime"/> as <c>"yyyy-MM-dd HH:mm:ss,fff"</c>.
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// Formats the <see cref="DateTime"/> specified as a string: <c>"YYYY-MM-dd HH:mm:ss,SSS"</c>.
+	/// Formats the <see cref="DateTime"/> specified as a string: <c>"yyyy-MM-dd HH:mm:ss,fff"</c>.
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
@@ -58,10 +58,10 @@ namespace log4net.DateFormatter
 		/// <param name="buffer">The string builder to write to.</param>
 		/// <remarks>
 		/// <para>
-		/// Formats the date specified as a string: <c>"YYYY-MM-dd HH:mm:ss"</c>.
+		/// Formats the date specified as a string: <c>"yyyy-MM-dd HH:mm:ss"</c>.
 		/// </para>
 		/// <para>
-		/// The base class will append the <c>",SSS"</c> milliseconds section.
+		/// The base class will append the <c>",fff"</c> milliseconds section.
 		/// This method will only be called at most once per second.
 		/// </para>
 		/// </remarks>

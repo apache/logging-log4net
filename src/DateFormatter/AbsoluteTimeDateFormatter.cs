@@ -23,11 +23,11 @@ using System.Text;
 namespace log4net.DateFormatter
 {
 	/// <summary>
-	/// Formats a <see cref="DateTime"/> as <c>"HH:mm:ss,SSS"</c>.
+	/// Formats a <see cref="DateTime"/> as <c>"HH:mm:ss,fff"</c>.
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// Formats a <see cref="DateTime"/> in the format <c>"HH:mm:ss,SSS"</c> for example, <c>"15:49:37,459"</c>.
+	/// Formats a <see cref="DateTime"/> in the format <c>"HH:mm:ss,fff"</c> for example, <c>"15:49:37,459"</c>.
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
@@ -80,7 +80,7 @@ namespace log4net.DateFormatter
 		#region Implementation of IDateFormatter
 
 		/// <summary>
-		/// Renders the date into a string. Format is "HH:mm:ss,SSS".
+		/// Renders the date into a string. Format is "HH:mm:ss,fff".
 		/// </summary>
 		/// <param name="dateToFormat">The date to render into a string.</param>
 		/// <param name="writer">The writer to write to.</param>

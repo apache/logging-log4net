@@ -23,12 +23,12 @@ using System.Globalization;
 namespace log4net.DateFormatter
 {
 	/// <summary>
-	/// Formats a <see cref="DateTime"/> as <c>"dd MMM YYYY HH:mm:ss,SSS"</c>
+	/// Formats a <see cref="DateTime"/> as <c>"dd MMM yyyy HH:mm:ss,fff"</c>
 	/// </summary>
 	/// <remarks>
 	/// <para>
 	/// Formats a <see cref="DateTime"/> in the format 
-	/// <c>"dd MMM YYYY HH:mm:ss,SSS"</c> for example, 
+	/// <c>"dd MMM yyyy HH:mm:ss,fff"</c> for example, 
 	/// <c>"06 Nov 1994 15:49:37,459"</c>.
 	/// </para>
 	/// </remarks>
@@ -63,11 +63,11 @@ namespace log4net.DateFormatter
 		/// <param name="buffer">The string builder to write to.</param>
 		/// <remarks>
 		/// <para>
-		/// Formats a DateTime in the format <c>"dd MMM YYYY HH:mm:ss"</c>
+		/// Formats a DateTime in the format <c>"dd MMM yyyy HH:mm:ss"</c>
 		/// for example, <c>"06 Nov 1994 15:49:37"</c>.
 		/// </para>
 		/// <para>
-		/// The base class will append the <c>",SSS"</c> milliseconds section.
+		/// The base class will append the <c>",fff"</c> milliseconds section.
 		/// This method will only be called at most once per second.
 		/// </para>
 		/// </remarks>
