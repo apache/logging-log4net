@@ -676,7 +676,7 @@ namespace log4net.Repository.Hierarchy
 
 				if (levelValue == null)
 				{
-					LogLog.Error("XmlConfigurator: Unknown Level Specifed ["+ value +"]");
+					LogLog.Error("XmlConfigurator: Unknown Level Specified ["+ value +"]");
 				}
 
 				return levelValue;
