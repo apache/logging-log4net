@@ -196,12 +196,12 @@ namespace log4net.Util
 		#endregion Internal Methods
 
 		/// <summary>
-		/// Gets the current context information  for this stack.
+		/// Gets the current context information for this stack.
 		/// </summary>
 		/// <returns>Gets the current context information</returns>
 		/// <remarks>
 		/// <para>
-		/// Gets the current context information  for this stack.
+		/// Gets the current context information for this stack.
 		/// </para>
 		/// </remarks>
 		public override string ToString()
