@@ -67,7 +67,8 @@ namespace log4net.Util
 		{
 			foreach(SerializationEntry entry in info)
 			{
-				m_ht[XmlConvert.EncodeLocalName(entry.Name)] = entry.Value;
+				// The keys are stored as Xml encoded names
+				m_ht[XmlConvert.DecodeName(entry.Name)] = entry.Value;
 			}
 		}
 #endif
@@ -124,6 +125,8 @@ namespace log4net.Util
 				// If value is serializable then we add it to the list
 				if (entry.Value.GetType().IsSerializable)
 				{
+					// Store the keys as an Xml encoded local name as it may contain colons (':') 
+					// which are not escaped by the Xml Serialisation framework
 					info.AddValue(XmlConvert.EncodeLocalName(entry.Key as string), entry.Value);
 				}
 			}
