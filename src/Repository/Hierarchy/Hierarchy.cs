@@ -391,6 +391,26 @@ namespace log4net.Repository.Hierarchy
 			this.GetLogger(logEvent.LoggerName, m_defaultFactory).Log(logEvent);
 		}
 
+		/// <summary>
+		/// Returns all the Appenders that are configured as an Array.
+		/// </summary>
+		/// <returns>All the Appenders</returns>
+		/// <remarks>
+		/// <para>Returns all the Appenders that are configured as an Array.</para>
+		/// </remarks>
+		override public log4net.Appender.IAppender[] GetAppenders()
+		{
+			System.Collections.ArrayList appenders = new System.Collections.ArrayList();
+
+			appenders.AddRange(Root.Appenders);
+			foreach(Logger logger in GetCurrentLoggers())
+			{
+				appenders.AddRange(logger.Appenders);
+			}
+
+			return (log4net.Appender.IAppender[])appenders.ToArray(typeof(log4net.Appender.IAppender));
+		}
+
 		#endregion Override Implementation of LoggerRepositorySkeleton
 
 		#region Implementation of IBasicRepositoryConfigurator

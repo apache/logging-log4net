@@ -239,5 +239,14 @@ namespace log4net.Repository
 		/// These properties can be specified on a repository specific basis
 		/// </remarks>
 		PropertiesDictionary Properties { get; }
+
+		/// <summary>
+		/// Returns all the Appenders that are configured as an Array.
+		/// </summary>
+		/// <returns>All the Appenders</returns>
+		/// <remarks>
+		/// <para>Returns all the Appenders that are configured as an Array.</para>
+		/// </remarks>
+		log4net.Appender.IAppender[] GetAppenders();
 	}
 }

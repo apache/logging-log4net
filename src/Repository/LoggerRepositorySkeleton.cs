@@ -310,6 +310,15 @@ namespace log4net.Repository
 			get { return m_properties; } 
 		}
 
+		/// <summary>
+		/// Returns all the Appenders that are configured as an Array.
+		/// </summary>
+		/// <returns>All the Appenders</returns>
+		/// <remarks>
+		/// <para>Returns all the Appenders that are configured as an Array.</para>
+		/// </remarks>
+		abstract public log4net.Appender.IAppender[] GetAppenders();
+
 		#endregion
 
 		private void AddBuiltinLevels()
