@@ -101,6 +101,11 @@ namespace log4net.Core
 		/// Construct a new wrapper for the specified logger.
 		/// </summary>
 		/// <param name="logger">The logger to wrap.</param>
+		/// <remarks>
+		/// <para>
+		/// Construct a new wrapper for the specified logger.
+		/// </para>
+		/// </remarks>
 		public LogImpl(ILogger logger) : base(logger)
 		{
 			// Listen for changes to the repository
@@ -116,6 +121,11 @@ namespace log4net.Core
 		/// Virtual method called when the configuration of the repository changes
 		/// </summary>
 		/// <param name="repository">the repository holding the levels</param>
+		/// <remarks>
+		/// <para>
+		/// Virtual method called when the configuration of the repository changes
+		/// </para>
+		/// </remarks>
 		protected virtual void ReloadLevels(ILoggerRepository repository)
 		{
 			LevelMap levelMap = repository.LevelMap;
@@ -158,14 +168,19 @@ namespace log4net.Core
 		}
 
 		/// <summary>
-		/// Logs a message object with the <c>DEBUG</c> level including
-		/// the stack trace of the <see cref="Exception"/> <paramref name="t"/> passed
-		/// as a parameter.
+		/// Logs a message object with the <c>DEBUG</c> level
 		/// </summary>
 		/// <param name="message">The message object to log.</param>
 		/// <param name="t">The exception to log, including its stack trace.</param>
 		/// <remarks>
+		/// <para>
+		/// Logs a message object with the <c>DEBUG</c> level including
+		/// the stack trace of the <see cref="Exception"/> <paramref name="t"/> passed
+		/// as a parameter.
+		/// </para>
+		/// <para>
 		/// See the <see cref="Debug(object)"/> form for more detailed information.
+		/// </para>
 		/// </remarks>
 		/// <seealso cref="Debug(object)"/>
 		virtual public void Debug(object message, Exception t) 
@@ -247,14 +262,19 @@ namespace log4net.Core
 		}
   
 		/// <summary>
-		/// Logs a message object with the <c>INFO</c> level including
-		/// the stack trace of the <see cref="Exception"/> <paramref name="t"/> 
-		/// passed as a parameter.
+		/// Logs a message object with the <c>INFO</c> level.
 		/// </summary>
 		/// <param name="message">The message object to log.</param>
 		/// <param name="t">The exception to log, including its stack trace.</param>
 		/// <remarks>
+		/// <para>
+		/// Logs a message object with the <c>INFO</c> level including
+		/// the stack trace of the <see cref="Exception"/> <paramref name="t"/> 
+		/// passed as a parameter.
+		/// </para>
+		/// <para>
 		/// See the <see cref="Info(object)"/> form for more detailed information.
+		/// </para>
 		/// </remarks>
 		/// <seealso cref="Info(object)"/>
 		virtual public void Info(object message, Exception t) 
@@ -336,14 +356,19 @@ namespace log4net.Core
 		}
   
 		/// <summary>
-		/// Logs a message object with the <c>WARN</c> level including
-		/// the stack trace of the <see cref="Exception"/> <paramref name="t"/> 
-		/// passed as a parameter.
+		/// Logs a message object with the <c>WARN</c> level
 		/// </summary>
 		/// <param name="message">The message object to log.</param>
 		/// <param name="t">The exception to log, including its stack trace.</param>
 		/// <remarks>
+		/// <para>
+		/// Logs a message object with the <c>WARN</c> level including
+		/// the stack trace of the <see cref="Exception"/> <paramref name="t"/> 
+		/// passed as a parameter.
+		/// </para>
+		/// <para>
 		/// See the <see cref="Warn(object)"/> form for more detailed information.
+		/// </para>
 		/// </remarks>
 		/// <seealso cref="Warn(object)"/>
 		virtual public void Warn(object message, Exception t) 
@@ -425,14 +450,19 @@ namespace log4net.Core
 		}
 
 		/// <summary>
-		/// Logs a message object with the <c>ERROR</c> level including
-		/// the stack trace of the <see cref="Exception"/> <paramref name="t"/> 
-		/// passed as a parameter.
+		/// Logs a message object with the <c>ERROR</c> level
 		/// </summary>
 		/// <param name="message">The message object to log.</param>
 		/// <param name="t">The exception to log, including its stack trace.</param>
 		/// <remarks>
+		/// <para>
+		/// Logs a message object with the <c>ERROR</c> level including
+		/// the stack trace of the <see cref="Exception"/> <paramref name="t"/> 
+		/// passed as a parameter.
+		/// </para>
+		/// <para>
 		/// See the <see cref="Error(object)"/> form for more detailed information.
+		/// </para>
 		/// </remarks>
 		/// <seealso cref="Error(object)"/>
 		virtual public void Error(object message, Exception t) 
@@ -514,14 +544,19 @@ namespace log4net.Core
 		}
   
 		/// <summary>
-		/// Logs a message object with the <c>FATAL</c> level including
-		/// the stack trace of the <see cref="Exception"/> <paramref name="t"/> 
-		/// passed as a parameter.
+		/// Logs a message object with the <c>FATAL</c> level
 		/// </summary>
 		/// <param name="message">The message object to log.</param>
 		/// <param name="t">The exception to log, including its stack trace.</param>
 		/// <remarks>
+		/// <para>
+		/// Logs a message object with the <c>FATAL</c> level including
+		/// the stack trace of the <see cref="Exception"/> <paramref name="t"/> 
+		/// passed as a parameter.
+		/// </para>
+		/// <para>
 		/// See the <see cref="Fatal(object)"/> form for more detailed information.
+		/// </para>
 		/// </remarks>
 		/// <seealso cref="Fatal(object)"/>
 		virtual public void Fatal(object message, Exception t) 
@@ -590,7 +625,7 @@ namespace log4net.Core
 		/// <para>
 		/// For some <c>log</c> Logger object, when you write:
 		/// </para>
-		/// <code>
+		/// <code lang="C#">
 		/// log.Debug("This is entry number: " + i );
 		/// </code>
 		/// <para>
@@ -600,7 +635,7 @@ namespace log4net.Core
 		/// <para>
 		/// If you are worried about speed, then you should write:
 		/// </para>
-		/// <code>
+		/// <code lang="C#">
 		/// if (log.IsDebugEnabled())
 		/// { 
 		///	 log.Debug("This is entry number: " + i );
@@ -630,8 +665,10 @@ namespace log4net.Core
 		/// <c>false</c> otherwise.
 		/// </value>
 		/// <remarks>
+		/// <para>
 		/// See <see cref="IsDebugEnabled"/> for more information and examples 
 		/// of using this method.
+		/// </para>
 		/// </remarks>
 		/// <seealso cref="LogImpl.IsDebugEnabled"/>
 		virtual public bool IsInfoEnabled
@@ -647,8 +684,10 @@ namespace log4net.Core
 		/// <c>false</c> otherwise.
 		/// </value>
 		/// <remarks>
+		/// <para>
 		/// See <see cref="IsDebugEnabled"/> for more information and examples 
 		/// of using this method.
+		/// </para>
 		/// </remarks>
 		/// <seealso cref="ILog.IsDebugEnabled"/>
 		virtual public bool IsWarnEnabled
@@ -664,7 +703,9 @@ namespace log4net.Core
 		/// <c>false</c> otherwise.
 		/// </value>
 		/// <remarks>
+		/// <para>
 		/// See <see cref="IsDebugEnabled"/> for more information and examples of using this method.
+		/// </para>
 		/// </remarks>
 		/// <seealso cref="ILog.IsDebugEnabled"/>
 		virtual public bool IsErrorEnabled
@@ -680,7 +721,9 @@ namespace log4net.Core
 		/// <c>false</c> otherwise.
 		/// </value>
 		/// <remarks>
+		/// <para>
 		/// See <see cref="IsDebugEnabled"/> for more information and examples of using this method.
+		/// </para>
 		/// </remarks>
 		/// <seealso cref="ILog.IsDebugEnabled"/>
 		virtual public bool IsFatalEnabled

@@ -28,12 +28,15 @@ namespace log4net.Layout
 	/// Interface implemented by layout objects
 	/// </summary>
 	/// <remarks>
-	/// <para>An <see cref="ILayout"/> object is used to format a <see cref="LoggingEvent"/>
+	/// <para>
+	/// An <see cref="ILayout"/> object is used to format a <see cref="LoggingEvent"/>
 	/// as text. The <see cref="Format(LoggingEvent)"/> method is called by an
-	/// appender to transform the <see cref="LoggingEvent"/> into a string.</para>
-	/// 
-	/// <para>The layout can also supply <see cref="Header"/> and <see cref="Footer"/>
-	/// text that is appender before any events and after all the events respectively.</para>
+	/// appender to transform the <see cref="LoggingEvent"/> into a string.
+	/// </para>
+	/// <para>
+	/// The layout can also supply <see cref="Header"/> and <see cref="Footer"/>
+	/// text that is appender before any events and after all the events respectively.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
@@ -45,8 +48,10 @@ namespace log4net.Layout
 		/// <param name="loggingEvent">The event to format</param>
 		/// <returns>returns the formatted event</returns>
 		/// <remarks>
-		/// <para>This method is called by an appender to format
-		/// the <paramref name="loggingEvent"/> as a string.</para>
+		/// <para>
+		/// This method is called by an appender to format
+		/// the <paramref name="loggingEvent"/> as a string.
+		/// </para>
 		/// </remarks>
 		[Obsolete("Use Format(TextWriter,LoggingEvent)")]
 		string Format(LoggingEvent loggingEvent);
@@ -57,8 +62,10 @@ namespace log4net.Layout
 		/// <param name="writer">The TextWriter to write the formatted event to</param>
 		/// <param name="loggingEvent">The event to format</param>
 		/// <remarks>
-		/// <para>This method is called by an appender to format
-		/// the <paramref name="loggingEvent"/> as text.</para>
+		/// <para>
+		/// This method is called by an appender to format
+		/// the <paramref name="loggingEvent"/> as text.
+		/// </para>
 		/// </remarks>
 		void Format(TextWriter writer, LoggingEvent loggingEvent);
 
@@ -67,8 +74,12 @@ namespace log4net.Layout
 		/// </summary>
 		/// <value>The content type</value>
 		/// <remarks>
-		/// <para>The content type output by this layout.</para>
-		/// <para>This is a MIME type e.g. <c>"text/plain"</c>.</para>
+		/// <para>
+		/// The content type output by this layout.
+		/// </para>
+		/// <para>
+		/// This is a MIME type e.g. <c>"text/plain"</c>.
+		/// </para>
 		/// </remarks>
 		string ContentType { get; }
 
@@ -77,8 +88,10 @@ namespace log4net.Layout
 		/// </summary>
 		/// <value>the layout header</value>
 		/// <remarks>
-		/// <para>The Header text will be appended before any logging events
-		/// are formatted and appended.</para>
+		/// <para>
+		/// The Header text will be appended before any logging events
+		/// are formatted and appended.
+		/// </para>
 		/// </remarks>
 		string Header { get; }
 
@@ -87,8 +100,10 @@ namespace log4net.Layout
 		/// </summary>
 		/// <value>the layout footer</value>
 		/// <remarks>
-		/// <para>The Footer text will be appended after all the logging events
-		/// have been formatted and appended.</para>
+		/// <para>
+		/// The Footer text will be appended after all the logging events
+		/// have been formatted and appended.
+		/// </para>
 		/// </remarks>
 		string Footer { get; }
 
@@ -97,10 +112,12 @@ namespace log4net.Layout
 		/// </summary>
 		/// <value><c>false</c> if this layout handles exceptions</value>
 		/// <remarks>
-		/// <para>If this layout handles the exception object contained within
+		/// <para>
+		/// If this layout handles the exception object contained within
 		/// <see cref="LoggingEvent"/>, then the layout should return
 		/// <c>false</c>. Otherwise, if the layout ignores the exception
-		/// object, then the layout should return <c>true</c>.</para>
+		/// object, then the layout should return <c>true</c>.
+		/// </para>
 		/// </remarks>
 		bool IgnoresException { get; }
 	}

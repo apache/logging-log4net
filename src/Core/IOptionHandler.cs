@@ -21,8 +21,20 @@ using System;
 namespace log4net.Core
 {
 	/// <summary>
-	/// A string based interface to configure components.
+	/// Interface used to delay activate a configured object.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// This allows an object to defer activation of its options until all
+	/// options have been set. This is required for components which have
+	/// related options that remain ambiguous until all are set.
+	/// </para>
+	/// <para>
+	/// If a component implements this interface then the <see cref="ActivateOptions"/> method 
+	/// must be called by the container after its all the configured properties have been set 
+	/// and before the component can be used.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	public interface IOptionHandler
 	{

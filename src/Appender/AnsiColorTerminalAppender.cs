@@ -55,17 +55,17 @@ namespace log4net.Appender
 	/// When configuring the ANSI colored terminal appender, a mapping should be
 	/// specified to map a logging level to a color. For example:
 	/// </para>
-	/// <code>
-	/// &lt;mapping&gt;
-	/// 	&lt;level value="ERROR" /&gt;
-	/// 	&lt;foreColor value="White" /&gt;
-	/// 	&lt;backColor value="Red" /&gt;
-	///     &lt;attributes value="Bright,Underscore" /&gt;
-	/// &lt;/mapping&gt;
-	/// &lt;mapping&gt;
-	/// 	&lt;level value="DEBUG" /&gt;
-	/// 	&lt;backColor value="Green" /&gt;
-	/// &lt;/mapping&gt;
+	/// <code lang="XML" escaped="true">
+	/// <mapping>
+	/// 	<level value="ERROR" />
+	/// 	<foreColor value="White" />
+	/// 	<backColor value="Red" />
+	///     <attributes value="Bright,Underscore" />
+	/// </mapping>
+	/// <mapping>
+	/// 	<level value="DEBUG" />
+	/// 	<backColor value="Green" />
+	/// </mapping>
 	/// </code>
 	/// <para>
 	/// The Level is the standard log4net logging level and ForeColor and BackColor can be any

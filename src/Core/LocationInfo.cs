@@ -62,11 +62,16 @@ namespace log4net.Core
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="LocationInfo" />
-		/// class based on the current thread.
+		/// Constructor
 		/// </summary>
 		/// <param name="callerStackBoundaryDeclaringType">The declaring type of the method that is
 		/// the stack boundary into the logging system for this call.</param>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="LocationInfo" />
+		/// class based on the current thread.
+		/// </para>
+		/// </remarks>
 		public LocationInfo(Type callerStackBoundaryDeclaringType) 
 		{
 			// Initialize all fields
@@ -142,13 +147,18 @@ namespace log4net.Core
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="LocationInfo" />
-		/// class with the specified data.
+		/// Constructor
 		/// </summary>
 		/// <param name="className">The fully qualified class name.</param>
 		/// <param name="methodName">The method name.</param>
 		/// <param name="fileName">The file name.</param>
 		/// <param name="lineNumber">The line number of the method within the file.</param>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="LocationInfo" />
+		/// class with the specified data.
+		/// </para>
+		/// </remarks>
 		public LocationInfo(string className, string methodName, string fileName, string lineNumber)
 		{
 			m_className = className;
@@ -171,6 +181,12 @@ namespace log4net.Core
 		/// The fully qualified class name of the caller making the logging 
 		/// request.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets the fully qualified class name of the caller making the logging 
+		/// request.
+		/// </para>
+		/// </remarks>
 		public string ClassName
 		{
 			get { return m_className; }
@@ -179,7 +195,14 @@ namespace log4net.Core
 		/// <summary>
 		/// Gets the file name of the caller.
 		/// </summary>
-		/// <value>The file name of the caller.</value>
+		/// <value>
+		/// The file name of the caller.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets the file name of the caller.
+		/// </para>
+		/// </remarks>
 		public string FileName
 		{
 			get { return m_fileName; }
@@ -191,6 +214,11 @@ namespace log4net.Core
 		/// <value>
 		/// The line number of the caller.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets the line number of the caller.
+		/// </para>
+		/// </remarks>
 		public string LineNumber
 		{
 			get { return m_lineNumber; }
@@ -202,19 +230,29 @@ namespace log4net.Core
 		/// <value>
 		/// The method name of the caller.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets the method name of the caller.
+		/// </para>
+		/// </remarks>
 		public string MethodName
 		{
 			get { return m_methodName; }
 		}
 
 		/// <summary>
-		/// Gets all available caller information, in the format
-		/// <c>fully.qualified.classname.of.caller.methodName(Filename:line)</c>
+		/// Gets all available caller information
 		/// </summary>
 		/// <value>
 		/// All available caller information, in the format
 		/// <c>fully.qualified.classname.of.caller.methodName(Filename:line)</c>
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets all available caller information, in the format
+		/// <c>fully.qualified.classname.of.caller.methodName(Filename:line)</c>
+		/// </para>
+		/// </remarks>
 		public string FullInfo
 		{
 			get { return m_fullInfo; }
@@ -224,11 +262,11 @@ namespace log4net.Core
 
 		#region Private Instance Fields
 
-		private string m_className;
-		private string m_fileName;
-		private string m_lineNumber;
-		private string m_methodName;
-		private string m_fullInfo;
+		private readonly string m_className;
+		private readonly string m_fileName;
+		private readonly string m_lineNumber;
+		private readonly string m_methodName;
+		private readonly string m_fullInfo;
 
 		#endregion Private Instance Fields
 

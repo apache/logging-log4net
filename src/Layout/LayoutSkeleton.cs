@@ -28,8 +28,10 @@ namespace log4net.Layout
 	/// Extend this abstract class to create your own log layout format.
 	/// </summary>
 	/// <remarks>
-	/// <para>This is the base implementation of the <see cref="ILayout"/>
-	/// interface. Most layout objects should extend this class.</para>
+	/// <para>
+	/// This is the base implementation of the <see cref="ILayout"/>
+	/// interface. Most layout objects should extend this class.
+	/// </para>
 	/// </remarks>
 	/// <remarks>
 	/// <note type="inheritinfo">
@@ -53,7 +55,9 @@ namespace log4net.Layout
 		/// The header text
 		/// </summary>
 		/// <remarks>
-		/// <para>See <see cref="Header"/> for more information.</para>
+		/// <para>
+		/// See <see cref="Header"/> for more information.
+		/// </para>
 		/// </remarks>
 		private string m_header = null;
 
@@ -61,7 +65,9 @@ namespace log4net.Layout
 		/// The footer text
 		/// </summary>
 		/// <remarks>
-		/// <para>See <see cref="Footer"/> for more information.</para>
+		/// <para>
+		/// See <see cref="Footer"/> for more information.
+		/// </para>
 		/// </remarks>
 		private string m_footer = null;
 
@@ -69,7 +75,9 @@ namespace log4net.Layout
 		/// Flag indicating if this layout handles exceptions
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// <c>false</c> if this layout handles exceptions
+		/// </para>
 		/// </remarks>
 		private bool m_ignoresException = true;
 
@@ -81,7 +89,9 @@ namespace log4net.Layout
 		/// Empty default constructor
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// Empty default constructor
+		/// </para>
 		/// </remarks>
 		protected LayoutSkeleton()
 		{
@@ -92,7 +102,7 @@ namespace log4net.Layout
 		#region Implementation of IOptionHandler
 
 		/// <summary>
-		/// Activate the options that were previously set with calls to option setters.
+		/// Activate component options
 		/// </summary>
 		/// <remarks>
 		/// <para>
@@ -122,10 +132,13 @@ namespace log4net.Layout
 		/// <param name="loggingEvent">The event to format</param>
 		/// <returns>returns the formatted event</returns>
 		/// <remarks>
-		/// <para>This method is called by an appender to format
-		/// the <paramref name="loggingEvent"/> as a string.</para>
-		/// 
- 		/// <para>This method must be implemented by the subclass.</para>
+		/// <para>
+		/// This method is called by an appender to format
+		/// the <paramref name="loggingEvent"/> as a string.
+		/// </para>
+ 		/// <para>
+ 		/// This method must be implemented by the subclass.
+ 		/// </para>
 		/// </remarks>
 		[Obsolete("Use Format(TextWriter,LoggingEvent)")]
 		public string Format(LoggingEvent loggingEvent)
@@ -141,8 +154,10 @@ namespace log4net.Layout
 		/// <param name="writer">The TextWriter to write the formatted event to</param>
 		/// <param name="loggingEvent">The event to format</param>
 		/// <remarks>
-		/// <para>This method is called by an appender to format
-		/// the <paramref name="loggingEvent"/> as text.</para>
+		/// <para>
+		/// This method is called by an appender to format
+		/// the <paramref name="loggingEvent"/> as text.
+		/// </para>
 		/// </remarks>
 		abstract public void Format(TextWriter writer, LoggingEvent loggingEvent);
 
@@ -151,10 +166,14 @@ namespace log4net.Layout
 		/// </summary>
 		/// <value>The content type is <c>"text/plain"</c></value>
 		/// <remarks>
-		/// <para>The content type output by this layout.</para>
-		/// <para>This base class uses the value <c>"text/plain"</c>.
+		/// <para>
+		/// The content type output by this layout.
+		/// </para>
+		/// <para>
+		/// This base class uses the value <c>"text/plain"</c>.
 		/// To change this value a subclass must override this
-		/// property.</para>
+		/// property.
+		/// </para>
 		/// </remarks>
 		virtual public string ContentType
 		{
@@ -166,8 +185,10 @@ namespace log4net.Layout
 		/// </summary>
 		/// <value>the layout header</value>
 		/// <remarks>
-		/// <para>The Header text will be appended before any logging events
-		/// are formatted and appended.</para>
+		/// <para>
+		/// The Header text will be appended before any logging events
+		/// are formatted and appended.
+		/// </para>
 		/// </remarks>
 		virtual public string Header
 		{
@@ -180,8 +201,10 @@ namespace log4net.Layout
 		/// </summary>
 		/// <value>the layout footer</value>
 		/// <remarks>
-		/// <para>The Footer text will be appended after all the logging events
-		/// have been formatted and appended.</para>
+		/// <para>
+		/// The Footer text will be appended after all the logging events
+		/// have been formatted and appended.
+		/// </para>
 		/// </remarks>
 		virtual public string Footer
 		{

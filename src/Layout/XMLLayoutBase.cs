@@ -45,16 +45,21 @@ namespace log4net.Layout
 		#region Protected Instance Constructors
 
 		/// <summary>
+		/// Protected constructor to support subclasses
+		/// </summary>
+		/// <remarks>
+		/// <para>
 		/// Initializes a new instance of the <see cref="XmlLayoutBase" /> class
 		/// with no location info.
-		/// </summary>
+		/// </para>
+		/// </remarks>
 		protected XmlLayoutBase() : this(false)
 		{
 			IgnoresException = false;
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="XmlLayoutBase" /> class.
+		/// Protected constructor to support subclasses
 		/// </summary>
 		/// <remarks>
 		/// <para>
@@ -95,7 +100,7 @@ namespace log4net.Layout
 		/// statement will be output. 
 		/// </para>
 		/// <para>
-		/// If you are embedding this layout within an SMTPAppender
+		/// If you are embedding this layout within an <c>SMTPAppender</c>
 		/// then make sure to set the <b>LocationInfo</b> option of that 
 		/// appender as well.
 		/// </para>
@@ -138,7 +143,14 @@ namespace log4net.Layout
 		/// <summary>
 		/// Gets the content type output by this layout. 
 		/// </summary>
-		/// <value>As this is the XML layout, the value is always "text/xml".</value>
+		/// <value>
+		/// As this is the XML layout, the value is always <c>"text/xml"</c>.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// As this is the XML layout, the value is always <c>"text/xml"</c>.
+		/// </para>
+		/// </remarks>
 		override public string ContentType
 		{
 			get { return "text/xml"; }
@@ -149,6 +161,17 @@ namespace log4net.Layout
 		/// </summary>
 		/// <param name="loggingEvent">The event being logged.</param>
 		/// <param name="writer">The TextWriter to write the formatted event to</param>
+		/// <remarks>
+		/// <para>
+		/// Format the <see cref="LoggingEvent"/> and write it to the <see cref="TextWriter"/>.
+		/// </para>
+		/// <para>
+		/// This method creates an <see cref="XmlTextWriter"/> that writes to the
+		/// <paramref name="writer"/>. The <see cref="XmlTextWriter"/> is passed 
+		/// to the <see cref="FormatXml"/> method. Subclasses should override the
+		/// <see cref="FormatXml"/> method rather than this method.
+		/// </para>
+		/// </remarks>
 		override public void Format(TextWriter writer, LoggingEvent loggingEvent) 
 		{
 			if (loggingEvent == null)
@@ -185,6 +208,12 @@ namespace log4net.Layout
 		/// </summary>
 		/// <param name="writer">The writer to use to output the event to.</param>
 		/// <param name="loggingEvent">The event to write.</param>
+		/// <remarks>
+		/// <para>
+		/// Subclasses should override this method to format
+		/// the <see cref="LoggingEvent"/> as XML.
+		/// </para>
+		/// </remarks>
 		abstract protected void FormatXml(XmlWriter writer, LoggingEvent loggingEvent);
 
 		#endregion Protected Instance Methods

@@ -25,17 +25,13 @@ using log4net.Core;
 namespace log4net.Layout
 {
 	/// <summary>
-	/// Interface for raw layout objects
+	/// Adapts any <see cref="ILayout"/> to a <see cref="IRawLayout"/>
 	/// </summary>
 	/// <remarks>
-	/// <para>Interface used to format a <see cref="LoggingEvent"/>
-	/// to an object.</para>
-	/// 
-	/// <para>This interface should not be confused with the
-	/// <see cref="ILayout"/> interface. This interface is used in
-	/// only certain specialized situations where a raw object is
-	/// required rather than a formatted string. The <see cref="ILayout"/>
-	/// is not generally useful than this interface.</para>
+	/// <para>
+	/// Where an <see cref="IRawLayout"/> is required this adapter
+	/// allows a <see cref="ILayout"/> to be specified.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
@@ -56,6 +52,11 @@ namespace log4net.Layout
 		/// Construct a new adapter
 		/// </summary>
 		/// <param name="layout">the layout to adapt</param>
+		/// <remarks>
+		/// <para>
+		/// Create the adapter for the specified <paramref name="layout"/>.
+		/// </para>
+		/// </remarks>
 		public Layout2RawLayoutAdapter(ILayout layout)
 		{
 			m_layout = layout;
@@ -71,9 +72,13 @@ namespace log4net.Layout
 		/// <param name="loggingEvent">The event to format</param>
 		/// <returns>returns the formatted event</returns>
 		/// <remarks>
-		/// <para>Format the logging event as an object.</para>
-		/// <para>Uses the <see cref="ILayout"/> object supplied to 
-		/// the constructor to perform the formatting.</para>
+		/// <para>
+		/// Format the logging event as an object.
+		/// </para>
+		/// <para>
+		/// Uses the <see cref="ILayout"/> object supplied to 
+		/// the constructor to perform the formatting.
+		/// </para>
 		/// </remarks>
 		virtual public object Format(LoggingEvent loggingEvent)
 		{

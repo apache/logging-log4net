@@ -26,10 +26,12 @@ namespace log4net.Core
 	/// An evaluator that triggers at a threshold level
 	/// </summary>
 	/// <remarks>
-	/// <para>This evaluator will trigger if the level of the event
+	/// <para>
+	/// This evaluator will trigger if the level of the event
 	/// passed to <see cref="IsTriggeringEvent(LoggingEvent)"/>
 	/// is equal to or greater than the <see cref="Threshold"/>
-	/// level.</para>
+	/// level.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	public class LevelEvaluator : ITriggeringEventEvaluator 
@@ -43,12 +45,15 @@ namespace log4net.Core
 		/// Create a new evaluator using the <see cref="Level.Off"/> threshold.
 		/// </summary>
 		/// <remarks>
-		/// <para>Create a new evaluator using the <see cref="Level.Off"/> threshold.</para>
-		/// 
-		/// <para>This evaluator will trigger if the level of the event
+		/// <para>
+		/// Create a new evaluator using the <see cref="Level.Off"/> threshold.
+		/// </para>
+		/// <para>
+		/// This evaluator will trigger if the level of the event
 		/// passed to <see cref="IsTriggeringEvent(LoggingEvent)"/>
 		/// is equal to or greater than the <see cref="Threshold"/>
-		/// level.</para>
+		/// level.
+		/// </para>
 		/// </remarks>
 		public LevelEvaluator() : this(Level.Off)
 		{
@@ -59,12 +64,15 @@ namespace log4net.Core
 		/// </summary>
 		/// <param name="threshold">the threshold to trigger at</param>
 		/// <remarks>
-		/// <para>Create a new evaluator using the specified <see cref="Level"/> threshold.</para>
-		/// 
-		/// <para>This evaluator will trigger if the level of the event
+		/// <para>
+		/// Create a new evaluator using the specified <see cref="Level"/> threshold.
+		/// </para>
+		/// <para>
+		/// This evaluator will trigger if the level of the event
 		/// passed to <see cref="IsTriggeringEvent(LoggingEvent)"/>
 		/// is equal to or greater than the <see cref="Threshold"/>
-		/// level.</para>
+		/// level.
+		/// </para>
 		/// </remarks>
 		public LevelEvaluator(Level threshold)
 		{
@@ -83,10 +91,12 @@ namespace log4net.Core
 		/// The <see cref="Level"/> that will cause this evaluator to trigger
 		/// </value>
 		/// <remarks>
-		/// <para>This evaluator will trigger if the level of the event
+		/// <para>
+		/// This evaluator will trigger if the level of the event
 		/// passed to <see cref="IsTriggeringEvent(LoggingEvent)"/>
 		/// is equal to or greater than the <see cref="Threshold"/>
-		/// level.</para>
+		/// level.
+		/// </para>
 		/// </remarks>
 		public Level Threshold
 		{
@@ -102,10 +112,12 @@ namespace log4net.Core
 		/// is equal or higher than the <see cref="Threshold"/>. 
 		/// Otherwise it returns <c>false</c></returns>
 		/// <remarks>
-		/// <para>This evaluator will trigger if the level of the event
+		/// <para>
+		/// This evaluator will trigger if the level of the event
 		/// passed to <see cref="IsTriggeringEvent(LoggingEvent)"/>
 		/// is equal to or greater than the <see cref="Threshold"/>
-		/// level.</para>
+		/// level.
+		/// </para>
 		/// </remarks>
 		public bool IsTriggeringEvent(LoggingEvent loggingEvent) 
 		{

@@ -24,6 +24,11 @@ namespace log4net.DateFormatter
 	/// <summary>
 	/// Formats the <see cref="DateTime"/> using the <see cref="DateTime.ToString"/> method.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Formats the <see cref="DateTime"/> using the <see cref="DateTime"/> <see cref="DateTime.ToString"/> method.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	public class SimpleDateFormatter : IDateFormatter
@@ -31,14 +36,19 @@ namespace log4net.DateFormatter
 		#region Public Instance Constructors
 
 		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="format">The format string.</param>
+		/// <remarks>
+		/// <para>
 		/// Initializes a new instance of the <see cref="SimpleDateFormatter" /> class 
 		/// with the specified format string.
-		/// </summary>
-		/// <remarks>
+		/// </para>
+		/// <para>
 		/// The format string must be compatible with the options
 		/// that can be supplied to <see cref="DateTime.ToString"/>.
+		/// </para>
 		/// </remarks>
-		/// <param name="format">The format string.</param>
 		public SimpleDateFormatter(string format)
 		{
 			m_formatString = format;
@@ -53,6 +63,12 @@ namespace log4net.DateFormatter
 		/// </summary>
 		/// <param name="dateToFormat">The date to convert to a string.</param>
 		/// <param name="writer">The writer to write to.</param>
+		/// <remarks>
+		/// <para>
+		/// Uses the date format string supplied to the constructor to call
+		/// the <see cref="DateTime.ToString(string)"/> method to format the date.
+		/// </para>
+		/// </remarks>
 		virtual public void FormatDate(DateTime dateToFormat, TextWriter writer)
 		{
 			writer.Write(dateToFormat.ToString(m_formatString, System.Globalization.DateTimeFormatInfo.InvariantInfo));
@@ -66,8 +82,10 @@ namespace log4net.DateFormatter
 		/// The format string used to format the <see cref="DateTime" />.
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// The format string must be compatible with the options
 		/// that can be supplied to <see cref="DateTime.ToString"/>.
+		/// </para>
 		/// </remarks>
 		private readonly string m_formatString;
 

@@ -25,21 +25,30 @@ using log4net.Core;
 namespace log4net.Layout.Pattern
 {
 	/// <summary>
-	/// Converter to include event appdomain name
+	/// Write the event appdomain name to the output
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Writes the <see cref="LoggingEvent.Domain"/> to the output writer.
+	/// </para>
+	/// </remarks>
 	/// <author>Daniel Cazzulino</author>
 	/// <author>Nicko Cadell</author>
 	internal sealed class AppDomainPatternConverter : PatternLayoutConverter 
 	{
 		/// <summary>
-		/// Convert the pattern to the rendered message
+		/// Write the event appdomain name to the output
 		/// </summary>
 		/// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
 		/// <param name="loggingEvent">the event being logged</param>
-		/// <returns>the relevant location information</returns>
+		/// <remarks>
+		/// <para>
+		/// Writes the <see cref="LoggingEvent.Domain"/> to the output <paramref name="writer"/>.
+		/// </para>
+		/// </remarks>
 		override protected void Convert(TextWriter writer, LoggingEvent loggingEvent)
 		{
-			writer.Write( loggingEvent.Domain );
+			writer.Write(loggingEvent.Domain);
 		}
 	}
 }

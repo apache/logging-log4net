@@ -59,7 +59,7 @@ namespace log4net.Layout
 	/// that the log4net environment was set to use a PatternLayout. Then the
 	/// statements
 	/// </para>
-	/// <code>
+	/// <code lang="C#">
 	/// ILog log = LogManager.GetLogger(typeof(TestApp));
 	/// log.Debug("Message 1");
 	/// log.Warn("Message 2");   
@@ -698,17 +698,24 @@ namespace log4net.Layout
 
 		/// <summary>
 		/// Default pattern string for log output. 
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Default pattern string for log output. 
 		/// Currently set to the string <b>"%message%newline"</b> 
 		/// which just prints the application supplied message. 
-		/// </summary>
+		/// </para>
+		/// </remarks>
 		public const string DefaultConversionPattern ="%message%newline";
 
 		/// <summary>
 		/// A detailed conversion pattern
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// A conversion pattern which includes Time, Thread, Logger, and Nested Context.
 		/// Current value is <b>%timestamp [%thread] %level %logger %ndc - %message%newline</b>.
+		/// </para>
 		/// </remarks>
 		public const string DetailConversionPattern = "%timestamp [%thread] %level %logger %ndc - %message%newline";
 
@@ -720,7 +727,9 @@ namespace log4net.Layout
 		/// Internal map of converter identifiers to converter types.
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// This static map is overridden by the m_converterRegistry instance map
+		/// </para>
 		/// </remarks>
 		private static Hashtable s_globalRulesRegistry;
 
@@ -750,6 +759,11 @@ namespace log4net.Layout
 		/// <summary>
 		/// Initialize the global registry
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Defines the builtin global rules.
+		/// </para>
+		/// </remarks>
 		static PatternLayout()
 		{
 			s_globalRulesRegistry = new Hashtable(35);
@@ -878,10 +892,15 @@ namespace log4net.Layout
 		#endregion
   
 		/// <summary>
+		/// The pattern formatting string
+		/// </summary>
+		/// <remarks>
+		/// <para>
 		/// The <b>ConversionPattern</b> option. This is the string which
 		/// controls formatting and consists of a mix of literal content and
 		/// conversion specifiers.
-		/// </summary>
+		/// </para>
+		/// </remarks>
 		public string ConversionPattern
 		{
 			get { return m_pattern;	}
@@ -889,12 +908,16 @@ namespace log4net.Layout
 		}
 
 		/// <summary>
-		/// Returns PatternParser used to parse the conversion string. Subclasses
-		/// may override this to return a subclass of PatternParser which recognize
-		/// custom conversion characters.
+		/// Create the pattern parser instance
 		/// </summary>
 		/// <param name="pattern">the pattern to parse</param>
-		/// <returns></returns>
+		/// <returns>The <see cref="PatternParser"/> that will format the event</returns>
+		/// <remarks>
+		/// <para>
+		/// Creates the <see cref="PatternParser"/> used to parse the conversion string. Sets the
+		/// global and instance rules on the <see cref="PatternParser"/>.
+		/// </para>
+		/// </remarks>
 		virtual protected PatternParser CreatePatternParser(string pattern) 
 		{
 			PatternParser patternParser = new PatternParser(pattern);
@@ -961,6 +984,12 @@ namespace log4net.Layout
 		/// </summary>
 		/// <param name="loggingEvent">the event being logged</param>
 		/// <param name="writer">The TextWriter to write the formatted event to</param>
+		/// <remarks>
+		/// <para>
+		/// Parse the <see cref="LoggingEvent"/> using the patter format
+		/// specified in the <see cref="ConversionPattern"/> property.
+		/// </para>
+		/// </remarks>
 		override public void Format(TextWriter writer, LoggingEvent loggingEvent) 
 		{
 			if (writer == null)
@@ -989,8 +1018,10 @@ namespace log4net.Layout
 		/// </summary>
 		/// <param name="converterInfo">the converter info</param>
 		/// <remarks>
+		/// <para>
 		/// This version of the method is used by the configurator.
 		/// Programmatic users should use the alternative <see cref="AddConverter(string,Type)"/> method.
+		/// </para>
 		/// </remarks>
 		public void AddConverter(ConverterInfo converterInfo)
 		{
@@ -1002,6 +1033,17 @@ namespace log4net.Layout
 		/// </summary>
 		/// <param name="name">the name of the conversion pattern for this converter</param>
 		/// <param name="type">the type of the converter</param>
+		/// <remarks>
+		/// <para>
+		/// Add a named pattern converter to this instance. This
+		/// converter will be used in the formatting of the event.
+		/// This method must be called before <see cref="ActivateOptions"/>.
+		/// </para>
+		/// <para>
+		/// The <paramref name="type"/> specified must extend the 
+		/// <see cref="PatternConverter"/> type.
+		/// </para>
+		/// </remarks>
 		public void AddConverter(string name, Type type)
 		{
 			if (name == null) throw new ArgumentNullException("name");
@@ -1017,6 +1059,13 @@ namespace log4net.Layout
 		/// <summary>
 		/// Wrapper class used to map converter names to converter types
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Pattern converter info class used during configuration to
+		/// pass to the <see cref="PatternLayout.AddConverter(ConverterInfo)"/>
+		/// method.
+		/// </para>
+		/// </remarks>
 		public sealed class ConverterInfo
 		{
 			private string m_name;
@@ -1032,6 +1081,11 @@ namespace log4net.Layout
 			/// <summary>
 			/// Gets or sets the name of the conversion pattern
 			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// The name of the pattern in the format string
+			/// </para>
+			/// </remarks>
 			public string Name
 			{
 				get { return m_name; }
@@ -1041,6 +1095,12 @@ namespace log4net.Layout
 			/// <summary>
 			/// Gets or sets the type of the converter
 			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// The value specified must extend the 
+			/// <see cref="PatternConverter"/> type.
+			/// </para>
+			/// </remarks>
 			public Type Type
 			{
 				get { return m_type; }

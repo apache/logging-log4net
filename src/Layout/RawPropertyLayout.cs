@@ -28,7 +28,9 @@ namespace log4net.Layout
 	/// Extract the value of a property from the <see cref="LoggingEvent"/>
 	/// </summary>
 	/// <remarks>
+	/// <para>
 	/// Extract the value of a property from the <see cref="LoggingEvent"/>
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	public class RawPropertyLayout : IRawLayout
@@ -38,8 +40,6 @@ namespace log4net.Layout
 		/// <summary>
 		/// Constructs a RawPropertyLayout
 		/// </summary>
-		/// <remarks>
-		/// </remarks>
 		public RawPropertyLayout()
 		{
 		}
@@ -51,6 +51,14 @@ namespace log4net.Layout
 		/// <summary>
 		/// The name of the value to lookup in the LoggingEvent Properties collection.
 		/// </summary>
+		/// <value>
+		/// Value to lookup in the LoggingEvent Properties collection
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// String name of the property to lookup in the <see cref="LoggingEvent"/>.
+		/// </para>
+		/// </remarks>
 		public string Key
 		{
 			get { return m_key; }
@@ -60,12 +68,16 @@ namespace log4net.Layout
 		#region Implementation of IRawLayout
 
 		/// <summary>
-		/// Implement this method to create your own layout format.
+		/// Lookup the property for <see cref="Key"/>
 		/// </summary>
 		/// <param name="loggingEvent">The event to format</param>
-		/// <returns>returns the formatted event</returns>
+		/// <returns>returns property value</returns>
 		/// <remarks>
-		/// <para>Implement this method to create your own layout format.</para>
+		/// <para>
+		/// Looks up and returns the object value of the property
+		/// named <see cref="Key"/>. If there is no property defined
+		/// with than name then <c>null</c> will be returned.
+		/// </para>
 		/// </remarks>
 		public virtual object Format(LoggingEvent loggingEvent)
 		{

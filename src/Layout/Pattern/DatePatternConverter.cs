@@ -35,9 +35,13 @@ namespace log4net.Layout.Pattern
 	/// Render the <see cref="LoggingEvent.TimeStamp"/> to the writer as a string.
 	/// </para>
 	/// <para>
-	/// The value of the option determines the formatting of the date. The following
-	/// values are allowed:
+	/// The value of the <see cref="log4net.Util.PatternConverter.Option"/> determines 
+	/// the formatting of the date. The following values are allowed:
 	/// <list type="definition">
+	///		<listheader>
+	/// 		<term>Option value</term>
+	/// 		<description>Output</description>
+	/// 	</listheader>
 	///		<item>
 	/// 		<term>ISO8601</term>
 	/// 		<description>

@@ -21,6 +21,11 @@ namespace log4net.Core
 	/// <summary>
 	/// Defined error codes that can be passed to the <see cref="IErrorHandler.Error"/> method.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Values passed to the <see cref="IErrorHandler.Error"/> method.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	public enum ErrorCode : int
 	{

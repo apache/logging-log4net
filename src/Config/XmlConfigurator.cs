@@ -234,10 +234,10 @@ namespace log4net.Config
 		/// configuration. If this file is also a .NET .config file then you must specify 
 		/// a configuration section for the <c>log4net</c> element otherwise .NET will 
 		/// complain. Set the type for the section handler to <see cref="System.Configuration.IgnoreSectionHandler"/>, for example:
-		/// <code>
-		/// &lt;configSections&gt;
-		///		&lt;section name="log4net" type="System.Configuration.IgnoreSectionHandler" /&gt;
-		///	&lt;/configSections&gt;
+		/// <code lang="XML" escaped="true">
+		/// <configSections>
+		///		<section name="log4net" type="System.Configuration.IgnoreSectionHandler" />
+		///	</configSections>
 		/// </code>
 		/// </para>
 		/// <example>
@@ -347,10 +347,10 @@ namespace log4net.Config
 		/// configuration. If this file is also a .NET .config file then you must specify 
 		/// a configuration section for the <c>log4net</c> element otherwise .NET will 
 		/// complain. Set the type for the section handler to <see cref="System.Configuration.IgnoreSectionHandler"/>, for example:
-		/// <code>
-		/// &lt;configSections&gt;
-		///		&lt;section name="log4net" type="System.Configuration.IgnoreSectionHandler" /&gt;
-		///	&lt;/configSections&gt;
+		/// <code lang="XML" escaped="true">
+		/// <configSections>
+		///		<section name="log4net" type="System.Configuration.IgnoreSectionHandler" />
+		///	</configSections>
 		/// </code>
 		/// </para>
 		/// <example>

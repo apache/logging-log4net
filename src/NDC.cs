@@ -180,7 +180,7 @@ namespace log4net
 		/// context.
 		/// </remarks>
 		/// <example>Simple example of using the <c>Push</c> method with the <c>using</c> keyword.
-		/// <code>
+		/// <code lang="C#">
 		/// using(log4net.NDC.Push("NDC_Message"))
 		/// {
 		///		log.Warn("This should have an NDC message");

@@ -27,18 +27,27 @@ namespace log4net.Layout.Pattern
 	/// <summary>
 	/// Converter to include event thread name
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Writes the <see cref="LoggingEvent.ThreadName"/> to the output.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	internal sealed class ThreadPatternConverter : PatternLayoutConverter 
 	{
 		/// <summary>
-		/// Convert the pattern to the rendered message
+		/// Write the ThreadName to the output
 		/// </summary>
 		/// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
 		/// <param name="loggingEvent">the event being logged</param>
-		/// <returns>the relevant location information</returns>
+		/// <remarks>
+		/// <para>
+		/// Writes the <see cref="LoggingEvent.ThreadName"/> to the <paramref name="writer" />.
+		/// </para>
+		/// </remarks>
 		override protected void Convert(TextWriter writer, LoggingEvent loggingEvent)
 		{
-			writer.Write( loggingEvent.ThreadName );
+			writer.Write(loggingEvent.ThreadName);
 		}
 	}
 }

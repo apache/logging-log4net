@@ -42,7 +42,7 @@ namespace log4net
 	/// </para>
 	/// </remarks>
 	/// <example>
-	/// <code>
+	/// <code lang="C#">
 	/// GlobalContext.Properties["hostname"] = Environment.MachineName;
 	/// </code>
 	/// </example>

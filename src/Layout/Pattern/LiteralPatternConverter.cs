@@ -26,14 +26,34 @@ using log4net.Util;
 namespace log4net.Layout.Pattern
 {
 	/// <summary>
-	/// Pattern converter for literal instances in the pattern
+	/// Pattern converter for literal string instances in the pattern
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Writes the literal string value specified in the 
+	/// <see cref="log4net.Util.PatternConverter.Option"/> property to 
+	/// the output.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	internal class LiteralPatternConverter : PatternLayoutConverter 
 	{
 		/// <summary>
-		/// the next patter converter in the chain
+		/// Set the next converter in the chain
 		/// </summary>
+		/// <param name="pc">The next pattern converter in the chain</param>
+		/// <returns>The next pattern converter</returns>
+		/// <remarks>
+		/// <para>
+		/// Special case the building of the pattern converter chain
+		/// for <see cref="LiteralPatternConverter"/> instances. Two adjacent
+		/// literals in the pattern can be represented by a single combined
+		/// pattern converter. This implementation detects when a 
+		/// <see cref="LiteralPatternConverter"/> is added to the chain
+		/// after this converter and combines its value with this converter's
+		/// literal value.
+		/// </para>
+		/// </remarks>
 		public override PatternConverter SetNext(PatternConverter pc)
 		{
 			if (pc is LiteralPatternConverter)
@@ -49,11 +69,20 @@ namespace log4net.Layout.Pattern
 		}
 
 		/// <summary>
-		/// Override the formatting behavior to ignore the FormattingInfo
-		/// because we have a literal instead.
+		/// Write the literal to the output
 		/// </summary>
 		/// <param name="writer">the writer to write to</param>
 		/// <param name="state">the event being logged</param>
+		/// <remarks>
+		/// <para>
+		/// Override the formatting behavior to ignore the FormattingInfo
+		/// because we have a literal instead.
+		/// </para>
+		/// <para>
+		/// Writes the value of <see cref="log4net.Util.PatternConverter.Option"/>
+		/// to the output <paramref name="writer"/>.
+		/// </para>
+		/// </remarks>
 		override public void Format(TextWriter writer, object state) 
 		{
 			writer.Write(Option);
@@ -64,7 +93,11 @@ namespace log4net.Layout.Pattern
 		/// </summary>
 		/// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
 		/// <param name="loggingEvent">the event being logged</param>
-		/// <returns>the literal</returns>
+		/// <remarks>
+		/// <para>
+		/// This method is not used.
+		/// </para>
+		/// </remarks>
 		override protected void Convert(TextWriter writer, LoggingEvent loggingEvent) 
 		{
 			throw new InvalidOperationException("Should never get here because of the overridden Format method");

@@ -25,20 +25,27 @@ using log4net.Core;
 namespace log4net.Layout.Pattern
 {
 	/// <summary>
-	/// Converter to render the exception text
+	/// Write the exception text to the output
 	/// </summary>
 	/// <remarks>
+	/// <para>
 	/// If an exception object is stored in the logging event
 	/// it will be rendered into the pattern output with a
-	/// trainling newline.
+	/// trailing newline.
+	/// </para>
+	/// <para>
 	/// If there is no exception then nothing will be output
 	/// and no trailing newline will be appended.
 	/// It is typical to put a newline before the exception
 	/// and to have the exception as the last data in the pattern.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	internal sealed class ExceptionPatternConverter : PatternLayoutConverter 
 	{
+		/// <summary>
+		/// Default constructor
+		/// </summary>
 		public ExceptionPatternConverter()
 		{
 			// This converter handles the exception
@@ -46,11 +53,23 @@ namespace log4net.Layout.Pattern
 		}
 
 		/// <summary>
-		/// Convert the pattern to the rendered message
+		/// Write the exception text to the output
 		/// </summary>
 		/// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
 		/// <param name="loggingEvent">the event being logged</param>
-		/// <returns>the relevant location information</returns>
+		/// <remarks>
+		/// <para>
+		/// If an exception object is stored in the logging event
+		/// it will be rendered into the pattern output with a
+		/// trailing newline.
+		/// </para>
+		/// <para>
+		/// If there is no exception then nothing will be output
+		/// and no trailing newline will be appended.
+		/// It is typical to put a newline before the exception
+		/// and to have the exception as the last data in the pattern.
+		/// </para>
+		/// </remarks>
 		override protected void Convert(TextWriter writer, LoggingEvent loggingEvent)
 		{
 			string exceptionString = loggingEvent.GetExceptionString();

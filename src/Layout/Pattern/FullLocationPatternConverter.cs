@@ -25,17 +25,26 @@ using log4net.Core;
 namespace log4net.Layout.Pattern
 {
 	/// <summary>
-	/// Converter to include event location information
+	/// Write the caller location info to the output
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Writes the <see cref="LocationInfo.FullInfo"/> to the output writer.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	internal sealed class FullLocationPatternConverter : PatternLayoutConverter 
 	{
 		/// <summary>
-		/// Convert the pattern to the rendered message
+		/// Write the caller location info to the output
 		/// </summary>
 		/// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
 		/// <param name="loggingEvent">the event being logged</param>
-		/// <returns>the relevant location information</returns>
+		/// <remarks>
+		/// <para>
+		/// Writes the <see cref="LocationInfo.FullInfo"/> to the output writer.
+		/// </para>
+		/// </remarks>
 		override protected void Convert(TextWriter writer, LoggingEvent loggingEvent)
 		{
 			writer.Write( loggingEvent.LocationInformation.FullInfo );

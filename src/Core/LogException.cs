@@ -28,7 +28,8 @@ namespace log4net.Core
 	/// <para>
 	/// This type extends <see cref="ApplicationException"/>. It
 	/// does not add any new functionality but does differentiate the
-	/// type of exception being thrown.</para>
+	/// type of exception being thrown.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
@@ -40,27 +41,42 @@ namespace log4net.Core
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="LogException" /> class.
+		/// Constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="LogException" /> class.
+		/// </para>
+		/// </remarks>
 		public LogException()
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="LogException" /> class with
-		/// the specified message.
+		/// Constructor
 		/// </summary>
 		/// <param name="message">A message to include with the exception.</param>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="LogException" /> class with
+		/// the specified message.
+		/// </para>
+		/// </remarks>
 		public LogException(String message) : base(message) 
 		{
 		}
 		
 		/// <summary>
-		/// Initializes a new instance of the <see cref="LogException" /> class
-		/// with the specified message and inner exception.
+		/// Constructor
 		/// </summary>
 		/// <param name="message">A message to include with the exception.</param>
 		/// <param name="innerException">A nested exception to include.</param>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="LogException" /> class
+		/// with the specified message and inner exception.
+		/// </para>
+		/// </remarks>
 		public LogException(String message, Exception innerException) : base(message, innerException) 
 		{
 		}
@@ -71,11 +87,16 @@ namespace log4net.Core
 
 #if !NETCF
 		/// <summary>
-		/// Initializes a new instance of the <see cref="LogException" /> class 
-		/// with serialized data.
+		/// Serialization constructor
 		/// </summary>
 		/// <param name="info">The <see cref="SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
 		/// <param name="context">The <see cref="StreamingContext" /> that contains contextual information about the source or destination.</param>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="LogException" /> class 
+		/// with serialized data.
+		/// </para>
+		/// </remarks>
 		protected LogException(SerializationInfo info, StreamingContext context) : base(info, context) 
 		{
 		}

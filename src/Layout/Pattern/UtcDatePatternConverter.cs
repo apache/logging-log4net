@@ -27,10 +27,13 @@ using log4net.DateFormatter;
 namespace log4net.Layout.Pattern
 {
 	/// <summary>
-	/// Date pattern converter, uses a <see cref="IDateFormatter"/> to format 
-	/// the date of a <see cref="LoggingEvent"/>.
+	/// Write the TimeStamp to the output
 	/// </summary>
 	/// <remarks>
+	/// <para>
+	/// Date pattern converter, uses a <see cref="IDateFormatter"/> to format 
+	/// the date of a <see cref="LoggingEvent"/>.
+	/// </para>
 	/// <para>
 	/// Uses a <see cref="IDateFormatter"/> to format the <see cref="LoggingEvent.TimeStamp"/> 
 	/// in Universal time.
@@ -44,7 +47,7 @@ namespace log4net.Layout.Pattern
 	internal class UtcDatePatternConverter : DatePatternConverter
 	{
 		/// <summary>
-		/// Convert the TimeStamp into a rendered message
+		/// Write the TimeStamp to the output
 		/// </summary>
 		/// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
 		/// <param name="loggingEvent">the event being logged</param>

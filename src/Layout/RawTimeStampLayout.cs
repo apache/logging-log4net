@@ -28,7 +28,9 @@ namespace log4net.Layout
 	/// Extract the date from the <see cref="LoggingEvent"/>
 	/// </summary>
 	/// <remarks>
+	/// <para>
 	/// Extract the date from the <see cref="LoggingEvent"/>
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
@@ -37,10 +39,8 @@ namespace log4net.Layout
 		#region Constructors
 
 		/// <summary>
-		/// Constructs a RawDateLayout
+		/// Constructs a RawTimeStampLayout
 		/// </summary>
-		/// <remarks>
-		/// </remarks>
 		public RawTimeStampLayout()
 		{
 		}
@@ -50,12 +50,18 @@ namespace log4net.Layout
 		#region Implementation of IRawLayout
 
 		/// <summary>
-		/// Implement this method to create your own layout format.
+		/// Gets the <see cref="LoggingEvent.TimeStamp"/> as a <see cref="DateTime"/>.
 		/// </summary>
 		/// <param name="loggingEvent">The event to format</param>
-		/// <returns>returns the formatted event</returns>
+		/// <returns>returns the time stamp</returns>
 		/// <remarks>
-		/// <para>Implement this method to create your own layout format.</para>
+		/// <para>
+		/// Gets the <see cref="LoggingEvent.TimeStamp"/> as a <see cref="DateTime"/>.
+		/// </para>
+		/// <para>
+		/// The time stamp is in local time. To format the time stamp
+		/// in universal time use <see cref="RawUtcTimeStampLayout"/>.
+		/// </para>
 		/// </remarks>
 		public virtual object Format(LoggingEvent loggingEvent)
 		{

@@ -130,6 +130,11 @@ method="run" file="Generator.java" line="94"/>
 		/// </summary>
 		/// <param name="writer">the writer to use</param>
 		/// <param name="loggingEvent">the event to write</param>
+		/// <remarks>
+		/// <para>
+		/// Generate XML that is compatible with the log4j schema.
+		/// </para>
+		/// </remarks>
 		override protected void FormatXml(XmlWriter writer, LoggingEvent loggingEvent)
 		{
 			// Translate logging events for log4j

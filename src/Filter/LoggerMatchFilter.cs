@@ -28,13 +28,15 @@ namespace log4net.Filter
 	/// Simple filter to match a string in the event's logger name.
 	/// </summary>
 	/// <remarks>
-	/// <para>The works very similar to the <see cref="LevelMatchFilter"/>. It admits two 
+	/// <para>
+	/// The works very similar to the <see cref="LevelMatchFilter"/>. It admits two 
 	/// options <see cref="LoggerToMatch"/> and <see cref="AcceptOnMatch"/>. If the 
 	/// <see cref="LoggingEvent.LoggerName"/> of the <see cref="LoggingEvent"/> starts 
 	/// with the value of the <see cref="LoggerToMatch"/> option, then the 
 	/// <see cref="Decide"/> method returns <see cref="FilterDecision.Accept"/> in 
 	/// case the <see cref="AcceptOnMatch"/> option value is set to <c>true</c>, 
-	/// if it is <c>false</c> then <see cref="FilterDecision.Deny"/> is returned.</para>
+	/// if it is <c>false</c> then <see cref="FilterDecision.Deny"/> is returned.
+	/// </para>
 	/// </remarks>
 	/// <author>Daniel Cazzulino</author>
 	public class LoggerMatchFilter : FilterSkeleton
@@ -67,11 +69,19 @@ namespace log4net.Filter
 		#region Properties
 
 		/// <summary>
+		/// <see cref="FilterDecision.Accept"/> when matching <see cref="LoggerToMatch"/>
+		/// </summary>
+		/// <remarks>
+		/// <para>
 		/// The <see cref="AcceptOnMatch"/> property is a flag that determines
 		/// the behavior when a matching <see cref="Level"/> is found. If the
 		/// flag is set to true then the filter will <see cref="FilterDecision.Accept"/> the 
 		/// logging event, otherwise it will <see cref="FilterDecision.Deny"/> the event.
-		/// </summary>
+		/// </para>
+		/// <para>
+		/// The default is <c>true</c> i.e. to <see cref="FilterDecision.Accept"/> the event.
+		/// </para>
+		/// </remarks>
 		public bool AcceptOnMatch
 		{
 			get { return m_acceptOnMatch; }
@@ -82,10 +92,13 @@ namespace log4net.Filter
 		/// The <see cref="LoggingEvent.LoggerName"/> that the filter will match
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// This filter will attempt to match this value against logger name in
 		/// the following way. The match will be done against the beginning of the
 		/// logger name (using <see cref="String.StartsWith"/>). The match is
-		/// case sensitive.
+		/// case sensitive. If a match is found then
+		/// the result depends on the value of <see cref="AcceptOnMatch"/>.
+		/// </para>
 		/// </remarks>
 		public string LoggerToMatch
 		{
@@ -100,7 +113,10 @@ namespace log4net.Filter
 		/// <summary>
 		/// Check if this filter should allow the event to be logged
 		/// </summary>
+		/// <param name="loggingEvent">the event being logged</param>
+		/// <returns>see remarks</returns>
 		/// <remarks>
+		/// <para>
 		/// The rendered message is matched against the <see cref="LoggerToMatch"/>.
 		/// If the <see cref="LoggerToMatch"/> equals the beginning of 
 		/// the incoming <see cref="LoggingEvent.LoggerName"/> (<see cref="String.StartsWith"/>)
@@ -110,9 +126,8 @@ namespace log4net.Filter
 		/// the value of <see cref="AcceptOnMatch"/> is checked. If it is
 		/// true then <see cref="FilterDecision.Accept"/> is returned otherwise
 		/// <see cref="FilterDecision.Deny"/> is returned.
+		/// </para>
 		/// </remarks>
-		/// <param name="loggingEvent">the event being logged</param>
-		/// <returns>see remarks</returns>
 		override public FilterDecision Decide(LoggingEvent loggingEvent) 
 		{
 			if (loggingEvent == null)

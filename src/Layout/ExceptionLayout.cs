@@ -29,9 +29,13 @@ namespace log4net.Layout
 	/// A Layout that renders only the Exception text from the logging event
 	/// </summary>
 	/// <remarks>
-	/// <para>A Layout that renders only the Exception text from the logging event</para>
-	/// <para>This Layout should only be used with appenders that utilize multiple
-	/// layouts (e.g. <see cref="log4net.Appender.AdoNetAppender"/>).</para>
+	/// <para>
+	/// A Layout that renders only the Exception text from the logging event.
+	/// </para>
+	/// <para>
+	/// This Layout should only be used with appenders that utilize multiple
+	/// layouts (e.g. <see cref="log4net.Appender.AdoNetAppender"/>).
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
@@ -40,9 +44,12 @@ namespace log4net.Layout
 		#region Constructors
 
 		/// <summary>
-		/// Constructs a ExceptionLayout
+		/// Default constructor
 		/// </summary>
 		/// <remarks>
+		/// <para>
+		/// Constructs a ExceptionLayout
+		/// </para>
 		/// </remarks>
 		public ExceptionLayout()
 		{
@@ -54,8 +61,17 @@ namespace log4net.Layout
 		#region Implementation of IOptionHandler
 
 		/// <summary>
-		/// Does not do anything as options become effective immediately.
+		/// Activate component options
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Part of the <see cref="IOptionHandler"/> component activation
+		/// framework.
+		/// </para>
+		/// <para>
+		/// This method does nothing as options become effective immediately.
+		/// </para>
+		/// </remarks>
 		override public void ActivateOptions() 
 		{
 			// nothing to do.
@@ -70,6 +86,12 @@ namespace log4net.Layout
 		/// </summary>
 		/// <param name="writer">The TextWriter to write the formatted event to</param>
 		/// <param name="loggingEvent">the event being logged</param>
+		/// <remarks>
+		/// <para>
+		/// Write the exception string to the <see cref="TextWriter"/>.
+		/// The exception string is retrieved from <see cref="LoggingEvent.GetExceptionString()"/>.
+		/// </para>
+		/// </remarks>
 		override public void Format(TextWriter writer, LoggingEvent loggingEvent) 
 		{
 			if (loggingEvent == null)

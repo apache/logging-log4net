@@ -25,20 +25,31 @@ using log4net.Core;
 namespace log4net.Layout.Pattern
 {
 	/// <summary>
-	/// Converter to include event location information
+	/// Write the method name to the output
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Writes the caller location <see cref="LocationInfo.MethodName"/> to
+	/// the output.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	internal sealed class MethodLocationPatternConverter : PatternLayoutConverter 
 	{
 		/// <summary>
-		/// Convert the pattern to the rendered message
+		/// Write the method name to the output
 		/// </summary>
 		/// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
 		/// <param name="loggingEvent">the event being logged</param>
-		/// <returns>the relevant location information</returns>
+		/// <remarks>
+		/// <para>
+		/// Writes the caller location <see cref="LocationInfo.MethodName"/> to
+		/// the output.
+		/// </para>
+		/// </remarks>
 		override protected void Convert(TextWriter writer, LoggingEvent loggingEvent)
 		{
-			writer.Write( loggingEvent.LocationInformation.MethodName );
+			writer.Write(loggingEvent.LocationInformation.MethodName);
 		}
 	}
 }

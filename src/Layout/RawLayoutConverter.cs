@@ -28,7 +28,11 @@ namespace log4net.Layout
 	/// Type converter for the <see cref="IRawLayout"/> interface
 	/// </summary>
 	/// <remarks>
-	/// <para>Used to convert objects to the <see cref="IRawLayout"/> interface</para>
+	/// <para>
+	/// Used to convert objects to the <see cref="IRawLayout"/> interface.
+	/// Supports converting from the <see cref="ILayout"/> interface to
+	/// the <see cref="IRawLayout"/> interface using the <see cref="Layout2RawLayoutAdapter"/>.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
@@ -41,6 +45,13 @@ namespace log4net.Layout
 		/// </summary>
 		/// <param name="sourceType">the source to be to be converted</param>
 		/// <returns><c>true</c> if the source type can be converted to <see cref="IRawLayout"/></returns>
+		/// <remarks>
+		/// <para>
+		/// Test if the <paramref name="sourceType"/> can be converted to a
+		/// <see cref="IRawLayout"/>. Only <see cref="ILayout"/> is supported
+		/// as the <paramref name="sourceType"/>.
+		/// </para>
+		/// </remarks>
 		public bool CanConvertFrom(Type sourceType) 
 		{
 			// Accept an ILayout object
@@ -52,6 +63,15 @@ namespace log4net.Layout
 		/// </summary>
 		/// <param name="source">the value to convert</param>
 		/// <returns>the <see cref="IRawLayout"/> object</returns>
+		/// <remarks>
+		/// <para>
+		/// Convert the <paramref name="source"/> object to a 
+		/// <see cref="IRawLayout"/> object. If the <paramref name="source"/> object
+		/// is a <see cref="ILayout"/> then the <see cref="Layout2RawLayoutAdapter"/>
+		/// is used to adapt between the two interfaces, otherwise an
+		/// exception is thrown.
+		/// </para>
+		/// </remarks>
 		public object ConvertFrom(object source) 
 		{
 			if (source is ILayout) 

@@ -25,34 +25,34 @@ namespace log4net.Core
 	/// Defines the default set of levels recognized by the system.
 	/// </summary>
 	/// <remarks>
-	/// <p>
+	/// <para>
 	/// Each <see cref="LoggingEvent"/> has an associated <see cref="Level"/>.
-	/// </p>
-	/// <p>
+	/// </para>
+	/// <para>
 	/// Levels have a numeric <see cref="Level.Value"/> that defines the relative 
 	/// ordering between levels. Two Levels with the same <see cref="Level.Value"/> 
-	/// are demmed to be equivalent.
-	/// </p>
-	/// <p>
-	/// The levels that are recognised by log4net are set for each <see cref="log4net.Repository.ILoggerRepository"/>
+	/// are deemed to be equivalent.
+	/// </para>
+	/// <para>
+	/// The levels that are recognized by log4net are set for each <see cref="log4net.Repository.ILoggerRepository"/>
 	/// and each repository can have different levels defined. The levels are stored
 	/// in the <see cref="log4net.Repository.ILoggerRepository.LevelMap"/> on the repository. Levels are
 	/// looked up by name from the <see cref="log4net.Repository.ILoggerRepository.LevelMap"/>.
-	/// </p>
-	/// <p>
+	/// </para>
+	/// <para>
 	/// When logging at level INFO the actual level used is not <see cref="Level.Info"/> but
 	/// the value of <c>LoggerRepository.LevelMap["INFO"]</c>. The default value for this is
 	/// <see cref="Level.Info"/>, but this can be changed by reconfiguring the level map.
-	/// </p>
-	/// <p>
+	/// </para>
+	/// <para>
 	/// Each level has a <see cref="DisplayName"/> in addition to its <see cref="Name"/>. The 
 	/// <see cref="DisplayName"/> is the string that is written into the output log. By default
 	/// the display name is the same as the level name, but this can be used to alias levels
-	/// or to localise the log output.
-	/// </p>
-	/// <p>
+	/// or to localize the log output.
+	/// </para>
+	/// <para>
 	/// Some of the predefined levels recognized by the system are:
-	/// </p>
+	/// </para>
 	/// <list type="bullet">
 	///		<item>
 	///			<description><see cref="Off"/>.</description>
@@ -87,12 +87,17 @@ namespace log4net.Core
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Level" /> class with
-		/// the specified level name and value.
+		/// Constructor
 		/// </summary>
 		/// <param name="level">Integer value for this level, higher values represent more severe levels.</param>
 		/// <param name="levelName">The string name of this level.</param>
-		/// <param name="displayName">The display name for this level. This may be localised or otherwise different from the name</param>
+		/// <param name="displayName">The display name for this level. This may be localized or otherwise different from the name</param>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="Level" /> class with
+		/// the specified level name and value.
+		/// </para>
+		/// </remarks>
 		public Level(int level, string levelName, string displayName) 
 		{
 			if (levelName == null)
@@ -110,11 +115,16 @@ namespace log4net.Core
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Level" /> class with
-		/// the specified level name and value.
+		/// Constructor
 		/// </summary>
 		/// <param name="level">Integer value for this level, higher values represent more severe levels.</param>
 		/// <param name="levelName">The string name of this level.</param>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="Level" /> class with
+		/// the specified level name and value.
+		/// </para>
+		/// </remarks>
 		public Level(int level, string levelName) : this(level, levelName, levelName)
 		{
 		}
@@ -124,33 +134,48 @@ namespace log4net.Core
 		#region Public Instance Properties
 
 		/// <summary>
-		/// Gets the name of the level.
+		/// Gets the name of this level.
 		/// </summary>
 		/// <value>
-		/// The name of the level.
+		/// The name of this level.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets the name of this level.
+		/// </para>
+		/// </remarks>
 		public string Name
 		{
 			get { return m_levelName; }
 		}
 
 		/// <summary>
-		/// Gets the value of the level.
+		/// Gets the value of this level.
 		/// </summary>
 		/// <value>
-		/// The value of the level.
+		/// The value of this level.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets the value of this level.
+		/// </para>
+		/// </remarks>
 		public int Value
 		{
 			get { return m_levelValue; }
 		}
 
 		/// <summary>
-		/// Gets the display name of the level.
+		/// Gets the display name of this level.
 		/// </summary>
 		/// <value>
-		/// The display name of the level.
+		/// The display name of this level.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets the display name of this level.
+		/// </para>
+		/// </remarks>
 		public string DisplayName
 		{
 			get { return m_levelDisplayName; }
@@ -167,18 +192,28 @@ namespace log4net.Core
 		/// <returns>
 		/// A <see cref="string" /> representation of the current <see cref="Level" />.
 		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// Returns the level <see cref="Name"/>.
+		/// </para>
+		/// </remarks>
 		override public string ToString() 
 		{
 			return m_levelName;
 		}
 
 		/// <summary>
-		/// Compares the levels of <see cref="Level" /> instances, and 
-		/// defers to base class if the target object is not a <see cref="Level" />
-		/// instance.
+		/// Compares levels.
 		/// </summary>
 		/// <param name="o">The object to compare against.</param>
 		/// <returns><c>true</c> if the objects are equal.</returns>
+		/// <remarks>
+		/// <para>
+		/// Compares the levels of <see cref="Level" /> instances, and 
+		/// defers to base class if the target object is not a <see cref="Level" />
+		/// instance.
+		/// </para>
+		/// </remarks>
 		override public bool Equals(object o)
 		{
 			Level otherLevel = o as Level;
@@ -193,10 +228,18 @@ namespace log4net.Core
 		}
 
 		/// <summary>
-		/// Returns a hash code suitable for use in hashing algorithms and data 
-		/// structures like a hash table.
+		/// Returns a hash code
 		/// </summary>
 		/// <returns>A hash code for the current <see cref="Level" />.</returns>
+		/// <remarks>
+		/// <para>
+		/// Returns a hash code suitable for use in hashing algorithms and data 
+		/// structures like a hash table.
+		/// </para>
+		/// <para>
+		/// Returns the hash code of the level <see cref="Value"/>.
+		/// </para>
+		/// </remarks>
 		override public int GetHashCode()
 		{
 			return m_levelValue;
@@ -267,6 +310,11 @@ namespace log4net.Core
 		/// <c>true</c> if <paramref name="l" /> is greater than 
 		/// <paramref name="r" />; otherwise, <c>false</c>.
 		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// Compares two levels.
+		/// </para>
+		/// </remarks>
 		public static bool operator > (Level l, Level r)
 		{
 			return l.m_levelValue > r.m_levelValue;
@@ -282,6 +330,11 @@ namespace log4net.Core
 		/// <c>true</c> if <paramref name="l" /> is less than 
 		/// <paramref name="r" />; otherwise, <c>false</c>.
 		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// Compares two levels.
+		/// </para>
+		/// </remarks>
 		public static bool operator < (Level l, Level r)
 		{
 			return l.m_levelValue < r.m_levelValue;
@@ -297,6 +350,11 @@ namespace log4net.Core
 		/// <c>true</c> if <paramref name="l" /> is greater than or equal to 
 		/// <paramref name="r" />; otherwise, <c>false</c>.
 		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// Compares two levels.
+		/// </para>
+		/// </remarks>
 		public static bool operator >= (Level l, Level r)
 		{
 			return l.m_levelValue >= r.m_levelValue;
@@ -312,6 +370,11 @@ namespace log4net.Core
 		/// <c>true</c> if <paramref name="l" /> is less than or equal to 
 		/// <paramref name="r" />; otherwise, <c>false</c>.
 		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// Compares two levels.
+		/// </para>
+		/// </remarks>
 		public static bool operator <= (Level l, Level r)
 		{
 			return l.m_levelValue <= r.m_levelValue;
@@ -327,6 +390,11 @@ namespace log4net.Core
 		/// <c>true</c> if the value of <paramref name="l" /> is the same as the 
 		/// value of <paramref name="r" />; otherwise, <c>false</c>.
 		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// Compares two levels.
+		/// </para>
+		/// </remarks>
 		public static bool operator == (Level l, Level r)
 		{
 			if (((object)l) != null && ((object)r) != null)
@@ -349,6 +417,11 @@ namespace log4net.Core
 		/// <c>true</c> if the value of <paramref name="l" /> is different from
 		/// the value of <paramref name="r" />; otherwise, <c>false</c>.
 		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// Compares two levels.
+		/// </para>
+		/// </remarks>
 		public static bool operator != (Level l, Level r)
 		{
 			return !(l==r);
@@ -385,6 +458,11 @@ namespace log4net.Core
 		///		</item>
 		/// </list>
 		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// Compares two levels.
+		/// </para>
+		/// </remarks>
 		public static int Compare(Level l, Level r)
 		{
 			if (l == null && r == null)
@@ -408,8 +486,7 @@ namespace log4net.Core
 		#region Public Static Fields
 
 		/// <summary>
-		/// The <see cref="Off" /> level designates a higher level than all the 
-		/// rest.
+		/// The <see cref="Off" /> level designates a higher level than all the rest.
 		/// </summary>
 		public readonly static Level Off = new Level(int.MaxValue, "OFF");
 

@@ -26,7 +26,9 @@ namespace log4net.Filter
 	/// The return result from <see cref="IFilter.Decide"/>
 	/// </summary>
 	/// <remarks>
+	/// <para>
 	/// The return result from <see cref="IFilter.Decide"/>
+	/// </para>
 	/// </remarks>
 	public enum FilterDecision : int
 	{
@@ -48,5 +50,4 @@ namespace log4net.Filter
 		/// </summary>
 		Accept = 1,
 	}
-
 }

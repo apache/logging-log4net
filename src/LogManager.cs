@@ -38,7 +38,7 @@ namespace log4net
 	/// </para>
 	/// </remarks>
 	/// <example>Simple example of logging messages
-	/// <code>
+	/// <code lang="C#">
 	/// ILog log = LogManager.GetLogger("application-log");
 	/// 
 	/// log.Info("Application Start");

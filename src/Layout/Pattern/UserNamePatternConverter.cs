@@ -36,7 +36,6 @@ namespace log4net.Layout.Pattern
 		/// </summary>
 		/// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
 		/// <param name="loggingEvent">the event being logged</param>
-		/// <returns>the relevant location information</returns>
 		override protected void Convert(TextWriter writer, LoggingEvent loggingEvent)
 		{
 			writer.Write( loggingEvent.UserName );

@@ -41,12 +41,12 @@ namespace log4net.Layout
 	/// the <see cref="XmlLayout" /> output goes, then a well-formed XML file would 
 	/// be:
 	/// </para>
-	/// <code>
+	/// <code lang="XML">
 	/// &lt;?xml version="1.0" ?&gt;
 	/// 
 	/// &lt;!DOCTYPE log4net:events SYSTEM "log4net-events.dtd" [&lt;!ENTITY data SYSTEM "abc"&gt;]&gt;
 	///
-	/// &lt;log4net:events version="1.2" xmlns:log4net="http://log4net.sourceforge.net/"&gt;
+	/// &lt;log4net:events version="1.2" xmlns:log4net="http://logging.apache.org/log4net/schemas/log4net-events-1.2&gt;
 	///     &amp;data;
 	/// &lt;/log4net:events&gt;
 	/// </code>
@@ -170,6 +170,12 @@ namespace log4net.Layout
 		/// </summary>
 		/// <param name="writer">The writer to use to output the event to.</param>
 		/// <param name="loggingEvent">The event to write.</param>
+		/// <remarks>
+		/// <para>
+		/// Override the base class <see cref="XmlLayoutBase.FormatXml"/> method
+		/// to write the <see cref="LoggingEvent"/> to the <see cref="XmlWriter"/>.
+		/// </para>
+		/// </remarks>
 		override protected void FormatXml(XmlWriter writer, LoggingEvent loggingEvent)
 		{
 			writer.WriteStartElement(m_elmEvent);

@@ -29,7 +29,9 @@ namespace log4net.Filter
 	/// Simple filter to match a string in the rendered message
 	/// </summary>
 	/// <remarks>
+	/// <para>
 	/// Simple filter to match a string in the rendered message
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
@@ -40,22 +42,22 @@ namespace log4net.Filter
 		/// <summary>
 		/// Flag to indicate the behavior when we have a match
 		/// </summary>
-		private bool m_acceptOnMatch = true;
+		protected bool m_acceptOnMatch = true;
 
 		/// <summary>
 		/// The string to substring match against the message
 		/// </summary>
-		private string m_stringToMatch;
+		protected string m_stringToMatch;
 
 		/// <summary>
 		/// A string regex to match
 		/// </summary>
-		private string m_stringRegexToMatch;
+		protected string m_stringRegexToMatch;
 
 		/// <summary>
 		/// A regex object to match (generated from m_stringRegexToMatch)
 		/// </summary>
-		private Regex m_regexToMatch;
+		protected Regex m_regexToMatch;
 
 		#endregion
 
@@ -99,11 +101,19 @@ namespace log4net.Filter
 		#endregion
 
 		/// <summary>
+		/// <see cref="FilterDecision.Accept"/> when matching <see cref="StringToMatch"/> or <see cref="RegexToMatch"/>
+		/// </summary>
+		/// <remarks>
+		/// <para>
 		/// The <see cref="AcceptOnMatch"/> property is a flag that determines
 		/// the behavior when a matching <see cref="Level"/> is found. If the
 		/// flag is set to true then the filter will <see cref="FilterDecision.Accept"/> the 
-		/// logging event, otherwise it will <see cref="FilterDecision.Deny"/> the event.
-		/// </summary>
+		/// logging event, otherwise it will <see cref="FilterDecision.Neutral"/> the event.
+		/// </para>
+		/// <para>
+		/// The default is <c>true</c> i.e. to <see cref="FilterDecision.Accept"/> the event.
+		/// </para>
+		/// </remarks>
 		public bool AcceptOnMatch
 		{
 			get { return m_acceptOnMatch; }
@@ -111,10 +121,20 @@ namespace log4net.Filter
 		}
 
 		/// <summary>
+		/// Sets the static string to match
+		/// </summary>
+		/// <remarks>
+		/// <para>
 		/// The string that will be substring matched against
 		/// the rendered message. If the message contains this
-		/// string then the filter will match.
-		/// </summary>
+		/// string then the filter will match. If a match is found then
+		/// the result depends on the value of <see cref="AcceptOnMatch"/>.
+		/// </para>
+		/// <para>
+		/// One of <see cref="StringToMatch"/> or <see cref="RegexToMatch"/>
+		/// must be specified.
+		/// </para>
+		/// </remarks>
 		public string StringToMatch
 		{
 			get { return m_stringToMatch; }
@@ -122,10 +142,20 @@ namespace log4net.Filter
 		}
 
 		/// <summary>
+		/// Sets the regular expression to match
+		/// </summary>
+		/// <remarks>
+		/// <para>
 		/// The regular expression pattern that will be matched against
 		/// the rendered message. If the message matches this
-		/// pattern then the filter will match.
-		/// </summary>
+		/// pattern then the filter will match. If a match is found then
+		/// the result depends on the value of <see cref="AcceptOnMatch"/>.
+		/// </para>
+		/// <para>
+		/// One of <see cref="StringToMatch"/> or <see cref="RegexToMatch"/>
+		/// must be specified.
+		/// </para>
+		/// </remarks>
 		public string RegexToMatch
 		{
 			get { return m_stringRegexToMatch; }
@@ -137,7 +167,10 @@ namespace log4net.Filter
 		/// <summary>
 		/// Check if this filter should allow the event to be logged
 		/// </summary>
+		/// <param name="loggingEvent">the event being logged</param>
+		/// <returns>see remarks</returns>
 		/// <remarks>
+		/// <para>
 		/// The rendered message is matched against the <see cref="StringToMatch"/>.
 		/// If the <see cref="StringToMatch"/> occurs as a substring within
 		/// the message then a match will have occurred. If no match occurs
@@ -146,9 +179,8 @@ namespace log4net.Filter
 		/// the value of <see cref="AcceptOnMatch"/> is checked. If it is
 		/// true then <see cref="FilterDecision.Accept"/> is returned otherwise
 		/// <see cref="FilterDecision.Deny"/> is returned.
+		/// </para>
 		/// </remarks>
-		/// <param name="loggingEvent">the event being logged</param>
-		/// <returns>see remarks</returns>
 		override public FilterDecision Decide(LoggingEvent loggingEvent) 
 		{
 			if (loggingEvent == null)

@@ -23,8 +23,13 @@ using System.Text;
 namespace log4net.DateFormatter
 {
 	/// <summary>
-	/// Formats a <see cref="DateTime"/> in the format <c>"HH:mm:ss,SSS"</c> for example, <c>"15:49:37,459"</c>.
+	/// Formats a <see cref="DateTime"/> as <c>"HH:mm:ss,SSS"</c>.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Formats a <see cref="DateTime"/> in the format <c>"HH:mm:ss,SSS"</c> for example, <c>"15:49:37,459"</c>.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	public class AbsoluteTimeDateFormatter : IDateFormatter
@@ -32,16 +37,18 @@ namespace log4net.DateFormatter
 		#region Protected Instance Methods
 
 		/// <summary>
-		/// Renders the date into a string. Format is "HH:mm:ss".
+		/// Renders the date into a string. Format is <c>"HH:mm:ss"</c>.
 		/// </summary>
+		/// <param name="dateToFormat">The date to render into a string.</param>
+		/// <param name="buffer">The string builder to write to.</param>
 		/// <remarks>
-		/// Sub classes should override this method to render the date
+		/// <para>
+		/// Subclasses should override this method to render the date
 		/// into a string using a precision up to the second. This method
 		/// will be called at most once per second and the result will be
 		/// reused if it is needed again during the same second.
+		/// </para>
 		/// </remarks>
-		/// <param name="dateToFormat">The date to render into a string.</param>
-		/// <param name="buffer">The string builder to write to.</param>
 		virtual protected void FormatDateWithoutMillis(DateTime dateToFormat, StringBuilder buffer)
 		{
 			int hour = dateToFormat.Hour;
@@ -75,17 +82,21 @@ namespace log4net.DateFormatter
 		/// <summary>
 		/// Renders the date into a string. Format is "HH:mm:ss,SSS".
 		/// </summary>
-		/// <remarks>
-		/// <para>Uses the FormatDateWithoutMillis() method to generate the
-		/// time string up to the seconds and then appends the current
-		/// milliseconds. The results from FormatDateWithoutMillis() are
-		/// cached and FormatDateWithoutMillis() is called at most once
-		/// per second.</para>
-		/// <para>Sub classes should override FormatDateWithoutMillis()
-		/// rather than FormatDate().</para>
-		/// </remarks>
 		/// <param name="dateToFormat">The date to render into a string.</param>
 		/// <param name="writer">The writer to write to.</param>
+		/// <remarks>
+		/// <para>
+		/// Uses the <see cref="FormatDateWithoutMillis"/> method to generate the
+		/// time string up to the seconds and then appends the current
+		/// milliseconds. The results from <see cref="FormatDateWithoutMillis"/> are
+		/// cached and <see cref="FormatDateWithoutMillis"/> is called at most once
+		/// per second.
+		/// </para>
+		/// <para>
+		/// Sub classes should override <see cref="FormatDateWithoutMillis"/>
+		/// rather than <see cref="FormatDate"/>.
+		/// </para>
+		/// </remarks>
 		virtual public void FormatDate(DateTime dateToFormat, TextWriter writer)
 		{
 			// Calculate the current time precise only to the second

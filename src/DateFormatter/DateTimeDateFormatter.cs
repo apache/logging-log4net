@@ -23,8 +23,15 @@ using System.Globalization;
 namespace log4net.DateFormatter
 {
 	/// <summary>
-	/// Formats a <see cref="DateTime"/> in the format <c>"dd MMM YYYY HH:mm:ss,SSS"</c> for example, <c>"06 Nov 1994 15:49:37,459"</c>.
+	/// Formats a <see cref="DateTime"/> as <c>"dd MMM YYYY HH:mm:ss,SSS"</c>
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Formats a <see cref="DateTime"/> in the format 
+	/// <c>"dd MMM YYYY HH:mm:ss,SSS"</c> for example, 
+	/// <c>"06 Nov 1994 15:49:37,459"</c>.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	/// <author>Angelika Schnagl</author>
@@ -33,8 +40,13 @@ namespace log4net.DateFormatter
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="DateTimeDateFormatter" /> class.
+		/// Default constructor.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="DateTimeDateFormatter" /> class.
+		/// </para>
+		/// </remarks>
 		public DateTimeDateFormatter()
 		{
 			m_dateTimeFormatInfo = DateTimeFormatInfo.InvariantInfo;
@@ -45,15 +57,20 @@ namespace log4net.DateFormatter
 		#region Override implementation of AbsoluteTimeDateFormatter
 
 		/// <summary>
-		/// Formats the date as: "dd MMM YYYY HH:mm:ss"
-		/// the base class will append the ',SSS' milliseconds section.
-		/// We will only be called at most once per second.
+		/// Formats the date without the milliseconds part
 		/// </summary>
-		/// <remarks>
-		/// Formats a DateTime in the format "dd MMM YYYY HH:mm:ss" for example, "06 Nov 1994 15:49:37".
-		/// </remarks>
 		/// <param name="dateToFormat">The date to format.</param>
 		/// <param name="buffer">The string builder to write to.</param>
+		/// <remarks>
+		/// <para>
+		/// Formats a DateTime in the format <c>"dd MMM YYYY HH:mm:ss"</c>
+		/// for example, <c>"06 Nov 1994 15:49:37"</c>.
+		/// </para>
+		/// <para>
+		/// The base class will append the <c>",SSS"</c> milliseconds section.
+		/// This method will only be called at most once per second.
+		/// </para>
+		/// </remarks>
 		override protected void FormatDateWithoutMillis(DateTime dateToFormat, StringBuilder buffer)
 		{
 			int day = dateToFormat.Day;
@@ -81,7 +98,7 @@ namespace log4net.DateFormatter
 		/// <summary>
 		/// The format info for the invariant culture.
 		/// </summary>
-		private readonly DateTimeFormatInfo  m_dateTimeFormatInfo;
+		private readonly DateTimeFormatInfo m_dateTimeFormatInfo;
 
 		#endregion Private Instance Fields
 	}

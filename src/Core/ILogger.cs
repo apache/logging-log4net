@@ -24,8 +24,14 @@ using log4net.Repository;
 namespace log4net.Core
 {
 	/// <summary>
-	/// Interface that all loggers should implement.
+	/// Interface that all loggers implement
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// This interface supports logging events and testing if a level
+	/// is enabled for logging.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	public interface ILogger
@@ -36,6 +42,11 @@ namespace log4net.Core
 		/// <value>
 		/// The name of the logger.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The name of this logger
+		/// </para>
+		/// </remarks>
 		string Name { get; }
 
 		/// <summary>
@@ -45,12 +56,14 @@ namespace log4net.Core
 		/// the stack boundary into the logging system for this call.</param>
 		/// <param name="level">The level of the message to be logged.</param>
 		/// <param name="message">The message object to log.</param>
-		/// <param name="t">the exception to log, including its stack trace. Pass <c>null</c> to not log an exception.</param>
+		/// <param name="exception">the exception to log, including its stack trace. Pass <c>null</c> to not log an exception.</param>
 		/// <remarks>
+		/// <para>
 		/// Generates a logging event for the specified <paramref name="level"/> using
-		/// the <paramref name="message"/> and <paramref name="t"/>.
+		/// the <paramref name="message"/> and <paramref name="exception"/>.
+		/// </para>
 		/// </remarks>
-		void Log(Type callerStackBoundaryDeclaringType, Level level, object message, Exception t);
+		void Log(Type callerStackBoundaryDeclaringType, Level level, object message, Exception exception);
   
 		/// <summary>
 		/// This is the most generic printing method that is intended to be used 
@@ -58,7 +71,9 @@ namespace log4net.Core
 		/// </summary>
 		/// <param name="logEvent">The event being logged.</param>
 		/// <remarks>
-		/// Logs the specified logging event.
+		/// <para>
+		/// Logs the specified logging event through this logger.
+		/// </para>
 		/// </remarks>
 		void Log(LoggingEvent logEvent);
 
@@ -69,13 +84,26 @@ namespace log4net.Core
 		/// <returns>
 		/// <c>true</c> if this logger is enabled for <c>level</c>, otherwise <c>false</c>.
 		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// Test if this logger is going to log events of the specified <paramref name="level"/>.
+		/// </para>
+		/// </remarks>
 		bool IsEnabledFor(Level level);
 
 		/// <summary>
 		/// Gets the <see cref="ILoggerRepository"/> where this 
 		/// <c>Logger</c> instance is attached to.
 		/// </summary>
-		/// <value>The <see cref="ILoggerRepository" /> that this logger belongs to.</value>
+		/// <value>
+		/// The <see cref="ILoggerRepository" /> that this logger belongs to.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets the <see cref="ILoggerRepository"/> where this 
+		/// <c>Logger</c> instance is attached to.
+		/// </para>
+		/// </remarks>
 		ILoggerRepository Repository { get; }
 	}
 }

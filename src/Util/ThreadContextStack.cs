@@ -114,7 +114,7 @@ namespace log4net.Util
 		/// context.
 		/// </remarks>
 		/// <example>Simple example of using the <c>Push</c> method with the <c>using</c> keyword.
-		/// <code>
+		/// <code lang="C#">
 		/// using(log4net.ThreadContext.Stacks["NDC"].Push("Stack_Message"))
 		/// {
 		///		log.Warn("This should have an ThreadContext Stack message");

@@ -22,8 +22,13 @@ using System.Text;
 namespace log4net.DateFormatter
 {
 	/// <summary>
-	/// Formats the <see cref="DateTime"/> specified as a string: <c>"YYYY-MM-dd HH:mm:ss,SSS"</c>.
+	/// Formats the <see cref="DateTime"/> as <c>"YYYY-MM-dd HH:mm:ss,SSS"</c>.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Formats the <see cref="DateTime"/> specified as a string: <c>"YYYY-MM-dd HH:mm:ss,SSS"</c>.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	public class Iso8601DateFormatter : AbsoluteTimeDateFormatter
@@ -31,8 +36,13 @@ namespace log4net.DateFormatter
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Iso8601DateFormatter" /> class.
+		/// Default constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="Iso8601DateFormatter" /> class.
+		/// </para>
+		/// </remarks>
 		public Iso8601DateFormatter()
 		{
 		}
@@ -42,12 +52,19 @@ namespace log4net.DateFormatter
 		#region Override implementation of AbsoluteTimeDateFormatter
 
 		/// <summary>
-		/// Formats the date specified as a string: 'YYYY-MM-dd HH:mm:ss'
-		/// the base class will append the ',SSS' milliseconds section.
-		/// We will only be called at most once per second.
+		/// Formats the date without the milliseconds part
 		/// </summary>
 		/// <param name="dateToFormat">The date to format.</param>
 		/// <param name="buffer">The string builder to write to.</param>
+		/// <remarks>
+		/// <para>
+		/// Formats the date specified as a string: <c>"YYYY-MM-dd HH:mm:ss"</c>.
+		/// </para>
+		/// <para>
+		/// The base class will append the <c>",SSS"</c> milliseconds section.
+		/// This method will only be called at most once per second.
+		/// </para>
+		/// </remarks>
 		override protected void FormatDateWithoutMillis(DateTime dateToFormat, StringBuilder buffer)
 		{
 			buffer.Append(dateToFormat.Year);

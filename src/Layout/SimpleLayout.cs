@@ -29,11 +29,13 @@ namespace log4net.Layout
 	/// A very simple layout
 	/// </summary>
 	/// <remarks>
+	/// <para>
 	/// SimpleLayout consists of the level of the log statement,
 	/// followed by " - " and then the log message itself. For example,
 	/// <code>
 	/// DEBUG - Hello world
 	/// </code>
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
@@ -44,8 +46,6 @@ namespace log4net.Layout
 		/// <summary>
 		/// Constructs a SimpleLayout
 		/// </summary>
-		/// <remarks>
-		/// </remarks>
 		public SimpleLayout()
 		{
 			IgnoresException = true;
@@ -81,10 +81,17 @@ namespace log4net.Layout
 		#region Override implementation of LayoutSkeleton
 
 		/// <summary>
-		/// Produces a formatted string.
+		/// Produces a simple formatted output.
 		/// </summary>
 		/// <param name="loggingEvent">the event being logged</param>
 		/// <param name="writer">The TextWriter to write the formatted event to</param>
+		/// <remarks>
+		/// <para>
+		/// Formats the event as the level of the even,
+		/// followed by " - " and then the log message itself. The
+		/// output is terminated by a newline.
+		/// </para>
+		/// </remarks>
 		override public void Format(TextWriter writer, LoggingEvent loggingEvent) 
 		{
 			if (loggingEvent == null)

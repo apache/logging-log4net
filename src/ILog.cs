@@ -45,7 +45,7 @@ namespace log4net
 	/// </para>
 	/// </remarks>
 	/// <example>Simple example of logging messages
-	/// <code>
+	/// <code lang="C#">
 	/// ILog log = LogManager.GetLogger("application-log");
 	/// 
 	/// log.Info("Application Start");
@@ -500,7 +500,7 @@ namespace log4net
 		/// disabled log debug statements.
 		/// </para>
 		/// <para> For some ILog interface <c>log</c>, when you write:</para>
-		/// <code>
+		/// <code lang="C#">
 		/// log.Debug("This is entry number: " + i );
 		/// </code>
 		/// <para>
@@ -510,7 +510,7 @@ namespace log4net
 		/// <para>
 		/// If you are worried about speed (who isn't), then you should write:
 		/// </para>
-		/// <code>
+		/// <code lang="C#">
 		/// if (log.IsDebugEnabled)
 		/// { 
 		///     log.Debug("This is entry number: " + i );
@@ -529,13 +529,13 @@ namespace log4net
 		/// <para>Alternatively if your logger is available statically then the is debug
 		/// enabled state can be stored in a static variable like this:
 		/// </para>
-		/// <code>
+		/// <code lang="C#">
 		/// private static readonly bool isDebugEnabled = log.IsDebugEnabled;
 		/// </code>
 		/// <para>
 		/// Then when you come to log you can write:
 		/// </para>
-		/// <code>
+		/// <code lang="C#">
 		/// if (isDebugEnabled)
 		/// { 
 		///     log.Debug("This is entry number: " + i );

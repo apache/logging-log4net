@@ -26,35 +26,18 @@ using log4net.Util;
 namespace log4net.Filter
 {
 	/// <summary>
-	/// Simple filter to match a string in the event properties
+	/// Simple filter to match a string an event property
 	/// </summary>
 	/// <remarks>
-	/// Simple filter to match a string in the event properties
+	/// <para>
+	/// Simple filter to match a string in the value for a
+	/// specific event property
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
-	public class PropertyFilter : FilterSkeleton
+	public class PropertyFilter : StringMatchFilter
 	{
 		#region Member Variables
-
-		/// <summary>
-		/// Flag to indicate the behavior when we have a match
-		/// </summary>
-		private bool m_acceptOnMatch = true;
-
-		/// <summary>
-		/// The string to substring match against the message
-		/// </summary>
-		private string m_stringToMatch;
-
-		/// <summary>
-		/// A string regex to match
-		/// </summary>
-		private string m_stringRegexToMatch;
-
-		/// <summary>
-		/// A regex object to match (generated from m_stringRegexToMatch)
-		/// </summary>
-		private Regex m_regexToMatch;
 
 		/// <summary>
 		/// The key to use to lookup the string from the event properties
@@ -74,71 +57,16 @@ namespace log4net.Filter
 
 		#endregion
 
-		#region Implementation of IOptionHandler
-
-		/// <summary>
-		/// Initialize and precompile the Regex if required
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// This is part of the <see cref="IOptionHandler"/> delayed object
-		/// activation scheme. The <see cref="ActivateOptions"/> method must 
-		/// be called on this object after the configuration properties have
-		/// been set. Until <see cref="ActivateOptions"/> is called this
-		/// object is in an undefined state and must not be used. 
-		/// </para>
-		/// <para>
-		/// If any of the configuration properties are modified then 
-		/// <see cref="ActivateOptions"/> must be called again.
-		/// </para>
-		/// </remarks>
-		override public void ActivateOptions() 
-		{
-			if (m_stringRegexToMatch != null)
-			{
-				m_regexToMatch = new Regex(m_stringRegexToMatch, RegexOptions.Compiled);
-			}
-		}
-
-		#endregion
-
-		/// <summary>
-		/// The <see cref="AcceptOnMatch"/> property is a flag that determines
-		/// the behavior when a matching <see cref="Level"/> is found. If the
-		/// flag is set to true then the filter will <see cref="FilterDecision.Accept"/> the 
-		/// logging event, otherwise it will <see cref="FilterDecision.Deny"/> the event.
-		/// </summary>
-		public bool AcceptOnMatch
-		{
-			get { return m_acceptOnMatch; }
-			set { m_acceptOnMatch = value; }
-		}
-
-		/// <summary>
-		/// The string that will be substring matched against
-		/// the rendered message. If the message contains this
-		/// string then the filter will match.
-		/// </summary>
-		public string StringToMatch
-		{
-			get { return m_stringToMatch; }
-			set { m_stringToMatch = value; }
-		}
-
-		/// <summary>
-		/// The regular expression pattern that will be matched against
-		/// the rendered message. If the message matches this
-		/// pattern then the filter will match.
-		/// </summary>
-		public string RegexToMatch
-		{
-			get { return m_stringRegexToMatch; }
-			set { m_stringRegexToMatch = value; }
-		}
-
 		/// <summary>
 		/// The key to lookup in the event properties and then match against.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The key name to use to lookup in the properties map of the
+		/// <see cref="LoggingEvent"/>. The match will be performed against 
+		/// the value of this property if it exists.
+		/// </para>
+		/// </remarks>
 		public string Key
 		{
 			get { return m_key; }
@@ -150,19 +78,21 @@ namespace log4net.Filter
 		/// <summary>
 		/// Check if this filter should allow the event to be logged
 		/// </summary>
+		/// <param name="loggingEvent">the event being logged</param>
+		/// <returns>see remarks</returns>
 		/// <remarks>
+		/// <para>
 		/// The event property for the <see cref="Key"/> is matched against 
-		/// the <see cref="StringToMatch"/>.
-		/// If the <see cref="StringToMatch"/> occurs as a substring within
+		/// the <see cref="StringMatchFilter.StringToMatch"/>.
+		/// If the <see cref="StringMatchFilter.StringToMatch"/> occurs as a substring within
 		/// the property value then a match will have occurred. If no match occurs
 		/// this function will return <see cref="FilterDecision.Neutral"/>
 		/// allowing other filters to check the event. If a match occurs then
-		/// the value of <see cref="AcceptOnMatch"/> is checked. If it is
+		/// the value of <see cref="StringMatchFilter.AcceptOnMatch"/> is checked. If it is
 		/// true then <see cref="FilterDecision.Accept"/> is returned otherwise
 		/// <see cref="FilterDecision.Deny"/> is returned.
+		/// </para>
 		/// </remarks>
-		/// <param name="loggingEvent">the event being logged</param>
-		/// <returns>see remarks</returns>
 		override public FilterDecision Decide(LoggingEvent loggingEvent) 
 		{
 			if (loggingEvent == null)

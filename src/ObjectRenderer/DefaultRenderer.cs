@@ -48,7 +48,9 @@ namespace log4net.ObjectRenderer
 		/// Default constructor
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// Default constructor
+		/// </para>
 		/// </remarks>
 		public DefaultRenderer()
 		{
@@ -68,7 +70,6 @@ namespace log4net.ObjectRenderer
 		/// <para>
 		/// Render the object <paramref name="obj"/> to a string.
 		/// </para>
-		/// 
 		/// <para>
 		/// The <paramref name="rendererMap"/> parameter is
 		/// provided to lookup and render other objects. This is
@@ -76,9 +77,9 @@ namespace log4net.ObjectRenderer
 		/// nested objects of unknown type. The <see cref="RendererMap.FindAndRender"/>
 		/// method can be used to render these objects.
 		/// </para>
-		/// 
-		/// <para>The default renderer supports rendering objects to strings as follows:</para>
-		/// 
+		/// <para>
+		/// The default renderer supports rendering objects to strings as follows:
+		/// </para>
 		/// <list type="table">
 		///		<listheader>
 		///			<term>Value</term>

@@ -125,12 +125,12 @@ namespace log4net.Util
 		/// The following example enables internal debugging using the 
 		/// application configuration file :
 		/// </para>
-		/// <code>
-		/// &lt;configuration&gt;
-		///		&lt;appSettings&gt;
-		///			&lt;add key="log4net.Internal.Debug" value="true" /&gt;
-		///		&lt;/appSettings&gt;
-		/// &lt;/configuration&gt;
+		/// <code lang="XML" escaped="true">
+		/// <configuration>
+		///		<appSettings>
+		///			<add key="log4net.Internal.Debug" value="true" />
+		///		</appSettings>
+		/// </configuration>
 		/// </code>
 		/// </example>
 		public static bool InternalDebugging
@@ -165,12 +165,12 @@ namespace log4net.Util
 		/// <example>
 		/// The following example disables internal logging using the 
 		/// application configuration file :
-		/// <code>
-		/// &lt;configuration&gt;
-		///		&lt;appSettings&gt;
-		///			&lt;add key="log4net.Internal.Quiet" value="true" /&gt;
-		///		&lt;/appSettings&gt;
-		/// &lt;/configuration&gt;
+		/// <code lang="XML" escaped="true">
+		/// <configuration>
+		///		<appSettings>
+		///			<add key="log4net.Internal.Quiet" value="true" />
+		///		</appSettings>
+		/// </configuration>
 		/// </code>
 		/// </example>
 		public static bool QuietMode

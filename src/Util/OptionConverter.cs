@@ -469,15 +469,15 @@ namespace log4net.Util
 		/// The variable substitution delimiters are <b>${</b> and <b>}</b>.
 		/// </para>
 		/// <para>
-		/// For example, if props contains &quot;key=value&quot;, then the call
+		/// For example, if props contains <c>key=value</c>, then the call
 		/// </para>
 		/// <para>
-		/// <code>
-		/// string s = OptionConverter.substituteVars("Value of key is ${key}.");
+		/// <code lang="C#">
+		/// string s = OptionConverter.SubstituteVariables("Value of key is ${key}.");
 		/// </code>
 		/// </para>
 		/// <para>
-		/// will set the variable <c>s</c> to &quot;Value of key is value.&quot;.
+		/// will set the variable <c>s</c> to "Value of key is value.".
 		/// </para>
 		/// <para>
 		/// If no value could be found for the specified key, then substitution 
@@ -485,19 +485,19 @@ namespace log4net.Util
 		/// </para>
 		/// <para>
 		/// For example, if system properties contains no value for the key
-		/// &quot;nonExistentKey&quot;, then the call
+		/// "nonExistentKey", then the call
 		/// </para>
 		/// <para>
-		/// <code>
-		/// string s = OptionConverter.subsVars("Value of nonExistentKey is [${nonExistentKey}]");
+		/// <code lang="C#">
+		/// string s = OptionConverter.SubstituteVariables("Value of nonExistentKey is [${nonExistentKey}]");
 		/// </code>
 		/// </para>
 		/// <para>
-		/// will set <s>s</s> to &quot;Value of nonExistentKey is []&quot;.	 
+		/// will set <s>s</s> to "Value of nonExistentKey is []".	 
 		/// </para>
 		/// <para>
 		/// An Exception is thrown if <paramref name="value"/> contains a start 
-		/// delimiter &quot;${&quot; which is not balanced by a stop delimiter "}". 
+		/// delimiter "${" which is not balanced by a stop delimiter "}". 
 		/// </para>
 		/// </remarks>
 		/// <returns>The result of the substitutions.</returns>

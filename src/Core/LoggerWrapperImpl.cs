@@ -36,6 +36,11 @@ namespace log4net.Core
 		/// Constructs a new wrapper for the specified logger.
 		/// </summary>
 		/// <param name="logger">The logger to wrap.</param>
+		/// <remarks>
+		/// <para>
+		/// Constructs a new wrapper for the specified logger.
+		/// </para>
+		/// </remarks>
 		protected LoggerWrapperImpl(ILogger logger) 
 		{
 			m_logger = logger;

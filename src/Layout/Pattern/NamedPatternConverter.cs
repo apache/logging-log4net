@@ -27,8 +27,19 @@ using log4net.Util;
 namespace log4net.Layout.Pattern
 {
 	/// <summary>
-	/// Converter to deal with '.' separated strings
+	/// Converter to output and truncate <c>'.'</c> separated strings
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// This abstract class supports truncating a <c>'.'</c> separated string
+	/// to show a specified number of elements from the right hand side.
+	/// This is used to truncate class names that are fully qualified.
+	/// </para>
+	/// <para>
+	/// Subclasses should override the <see cref="GetFullyQualifiedName"/> method to
+	/// return the fully qualified string.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	internal abstract class NamedPatternConverter : PatternLayoutConverter, IOptionHandler
 	{
@@ -37,7 +48,7 @@ namespace log4net.Layout.Pattern
 		#region Implementation of IOptionHandler
 
 		/// <summary>
-		/// Initialise the converter 
+		/// Initialize the converter 
 		/// </summary>
 		/// <remarks>
 		/// <para>
@@ -88,11 +99,19 @@ namespace log4net.Layout.Pattern
 		#endregion
 
 		/// <summary>
-		/// Overridden by subclasses to get the fully qualified name before the
-		/// precision is applied to it.
+		/// Get the fully qualified string data
 		/// </summary>
 		/// <param name="loggingEvent">the event being logged</param>
 		/// <returns>the fully qualified name</returns>
+		/// <remarks>
+		/// <para>
+		/// Overridden by subclasses to get the fully qualified name before the
+		/// precision is applied to it.
+		/// </para>
+		/// <para>
+		/// Return the fully qualified <c>'.'</c> (dot/period) separated string.
+		/// </para>
+		/// </remarks>
 		abstract protected string GetFullyQualifiedName(LoggingEvent loggingEvent);
 	
 		/// <summary>
@@ -100,6 +119,10 @@ namespace log4net.Layout.Pattern
 		/// </summary>
 		/// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
 		/// <param name="loggingEvent">the event being logged</param>
+		/// <remarks>
+		/// Render the <see cref="GetFullyQualifiedName"/> to the precision
+		/// specified by the <see cref="PatternConverter.Option"/> property.
+		/// </remarks>
 		override protected void Convert(TextWriter writer, LoggingEvent loggingEvent)
 		{
 			string name = GetFullyQualifiedName(loggingEvent);

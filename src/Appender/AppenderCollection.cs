@@ -45,13 +45,13 @@ namespace log4net.Appender
 			/// <summary>
 			/// Advances the enumerator to the next element in the collection.
 			/// </summary>
-			/// <exception cref="InvalidOperationException">
-			/// The collection was modified after the enumerator was created.
-			/// </exception>
 			/// <returns>
 			/// <c>true</c> if the enumerator was successfully advanced to the next element; 
 			/// <c>false</c> if the enumerator has passed the end of the collection.
 			/// </returns>
+			/// <exception cref="InvalidOperationException">
+			/// The collection was modified after the enumerator was created.
+			/// </exception>
 			bool MoveNext();
 
 			/// <summary>
@@ -700,13 +700,13 @@ namespace log4net.Appender
 			/// <summary>
 			/// Advances the enumerator to the next element in the collection.
 			/// </summary>
-			/// <exception cref="InvalidOperationException">
-			/// The collection was modified after the enumerator was created.
-			/// </exception>
 			/// <returns>
 			/// <c>true</c> if the enumerator was successfully advanced to the next element; 
 			/// <c>false</c> if the enumerator has passed the end of the collection.
 			/// </returns>
+			/// <exception cref="InvalidOperationException">
+			/// The collection was modified after the enumerator was created.
+			/// </exception>
 			public bool MoveNext()
 			{
 				if (m_version != m_collection.m_version)
