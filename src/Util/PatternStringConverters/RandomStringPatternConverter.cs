@@ -93,10 +93,15 @@ namespace log4net.Util.PatternStringConverters
 		#endregion
 
 		/// <summary>
-		/// Convert the pattern into the rendered message
+		/// Write a randoim string to the output
 		/// </summary>
 		/// <param name="writer">the writer to write to</param>
 		/// <param name="state">null, state is not set</param>
+		/// <remarks>
+		/// <para>
+		/// Write a randoim string to the output <paramref name="writer"/>.
+		/// </para>
+		/// </remarks>
 		override protected void Convert(TextWriter writer, object state) 
 		{
 			try 

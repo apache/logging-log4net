@@ -91,6 +91,10 @@ namespace log4net.Util
 			s_globalRulesRegistry.Add("random", typeof(RandomStringPatternConverter));
 			s_globalRulesRegistry.Add("username", typeof(UserNamePatternConverter));
 			s_globalRulesRegistry.Add("property", typeof(PropertyPatternConverter));
+
+			s_globalRulesRegistry.Add("utcdate", typeof(UtcDatePatternConverter));
+			s_globalRulesRegistry.Add("utcDate", typeof(UtcDatePatternConverter));
+			s_globalRulesRegistry.Add("UtcDate", typeof(UtcDatePatternConverter));
 		}
 
 		#endregion Static Constructor

@@ -27,13 +27,71 @@ using log4net.Core;
 namespace log4net.Util.PatternStringConverters
 {
 	/// <summary>
-	/// Date pattern converter, uses a <see cref="IDateFormatter"/> to 
-	/// format the current local date and time for this computer.
+	/// Write the current date to the output
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Date pattern converter, uses a <see cref="IDateFormatter"/> to format 
+	/// the current date and time to the writer as a string.
+	/// </para>
+	/// <para>
+	/// The value of the <see cref="log4net.Util.PatternConverter.Option"/> determines 
+	/// the formatting of the date. The following values are allowed:
+	/// <list type="definition">
+	///		<listheader>
+	/// 		<term>Option value</term>
+	/// 		<description>Output</description>
+	/// 	</listheader>
+	///		<item>
+	/// 		<term>ISO8601</term>
+	/// 		<description>
+	/// 		Uses the <see cref="Iso8601DateFormatter"/> formatter. 
+	/// 		Formats using the <c>"YYYY-MM-dd HH:mm:ss,SSS"</c> pattern.
+	/// 		</description>
+	/// 	</item>
+	/// 	<item>
+	/// 		<term>DATE</term>
+	/// 		<description>
+	/// 		Uses the <see cref="DateTimeDateFormatter"/> formatter. 
+	/// 		Formats using the <c>"dd MMM YYYY HH:mm:ss,SSS"</c> for example, <c>"06 Nov 1994 15:49:37,459"</c>.
+	/// 		</description>
+	/// 	</item>
+	/// 	<item>
+	/// 		<term>ABSOLUTE</term>
+	/// 		<description>
+	/// 		Uses the <see cref="AbsoluteTimeDateFormatter"/> formatter. 
+	/// 		Formats using the <c>"HH:mm:ss,SSS"</c> for example, <c>"15:49:37,459"</c>.
+	/// 		</description>
+	/// 	</item>
+	/// 	<item>
+	/// 		<term>other</term>
+	/// 		<description>
+	/// 		Any other pattern string uses the <see cref="SimpleDateFormatter"/> formatter. 
+	/// 		This formatter passes the pattern string to the <see cref="DateTime"/> 
+	/// 		<see cref="DateTime.ToString(string)"/> method.
+	/// 		For details on valid patterns see 
+	/// 		<a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/frlrfsystemglobalizationdatetimeformatinfoclasstopic.asp">DateTimeFormatInfo Class</a>.
+	/// 		</description>
+	/// 	</item>
+	/// </list>
+	/// </para>
+	/// <para>
+	/// The date and time is in the local time zone and is rendered in that zone.
+	/// To output the time in Universal time see <see cref="UtcDatePatternConverter"/>.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
-	internal sealed class DatePatternConverter : PatternConverter, IOptionHandler
+	internal class DatePatternConverter : PatternConverter, IOptionHandler
 	{
-		private IDateFormatter m_df;
+		/// <summary>
+		/// The <see cref="IDateFormatter"/> used to render the date to a string
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The <see cref="IDateFormatter"/> used to render the date to a string
+		/// </para>
+		/// </remarks>
+		protected IDateFormatter m_dateFormatter;
 	
 		#region Implementation of IOptionHandler
 
@@ -63,26 +121,26 @@ namespace log4net.Util.PatternStringConverters
 			
 			if (string.Compare(dateFormatStr, AbsoluteTimeDateFormatter.Iso8601TimeDateFormat, true, System.Globalization.CultureInfo.InvariantCulture) == 0) 
 			{
-				m_df = new Iso8601DateFormatter();
+				m_dateFormatter = new Iso8601DateFormatter();
 			}
 			else if (string.Compare(dateFormatStr, AbsoluteTimeDateFormatter.AbsoluteTimeDateFormat, true, System.Globalization.CultureInfo.InvariantCulture) == 0)
 			{
-				m_df = new AbsoluteTimeDateFormatter();
+				m_dateFormatter = new AbsoluteTimeDateFormatter();
 			}
 			else if (string.Compare(dateFormatStr, AbsoluteTimeDateFormatter.DateAndTimeDateFormat, true, System.Globalization.CultureInfo.InvariantCulture) == 0)
 			{
-				m_df = new DateTimeDateFormatter();
+				m_dateFormatter = new DateTimeDateFormatter();
 			}
 			else 
 			{
 				try 
 				{
-					m_df = new SimpleDateFormatter(dateFormatStr);
+					m_dateFormatter = new SimpleDateFormatter(dateFormatStr);
 				}
 				catch (Exception e) 
 				{
 					LogLog.Error("DatePatternConverter: Could not instantiate SimpleDateFormatter with ["+dateFormatStr+"]", e);
-					m_df = new Iso8601DateFormatter();
+					m_dateFormatter = new Iso8601DateFormatter();
 				}	
 			}
 		}
@@ -90,15 +148,24 @@ namespace log4net.Util.PatternStringConverters
 		#endregion
 
 		/// <summary>
-		/// Convert the pattern into the rendered message
+		/// Write the current date to the output
 		/// </summary>
-		/// <param name="writer">the writer to write to</param>
+		/// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
 		/// <param name="state">null, state is not set</param>
+		/// <remarks>
+		/// <para>
+		/// Pass the current date and time to the <see cref="IDateFormatter"/>
+		/// for it to render it to the writer.
+		/// </para>
+		/// <para>
+		/// The date and time passed is in the local time zone.
+		/// </para>
+		/// </remarks>
 		override protected void Convert(TextWriter writer, object state) 
 		{
 			try 
 			{
-				m_df.FormatDate(DateTime.Now, writer);
+				m_dateFormatter.FormatDate(DateTime.Now, writer);
 			}
 			catch (Exception ex) 
 			{

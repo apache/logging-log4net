@@ -30,16 +30,31 @@ using log4net.Core;
 namespace log4net.Util.PatternStringConverters
 {
 	/// <summary>
-	/// Environment pattern converter expands environment variables
+	/// Write an environment variable to the output
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Write an environment variable to the output writer.
+	/// The value of the <see cref="log4net.Util.PatternConverter.Option"/> determines 
+	/// the name of the variable to output.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	internal sealed class EnvironmentPatternConverter : PatternConverter
 	{
 		/// <summary>
-		/// Convert the pattern into the rendered message
+		/// Write an environment variable to the output
 		/// </summary>
 		/// <param name="writer">the writer to write to</param>
 		/// <param name="state">null, state is not set</param>
+		/// <remarks>
+		/// <para>
+		/// Writes the environment variable to the output <paramref name="writer"/>.
+		/// The name of the environment variable to output must be set
+		/// using the <see cref="log4net.Util.PatternConverter.Option"/>
+		/// property.
+		/// </para>
+		/// </remarks>
 		override protected void Convert(TextWriter writer, object state) 
 		{
 			try 

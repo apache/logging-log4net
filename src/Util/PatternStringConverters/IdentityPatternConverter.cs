@@ -25,16 +25,26 @@ using log4net.Util;
 namespace log4net.Util.PatternStringConverters
 {
 	/// <summary>
-	/// Converter to include event identity
+	/// Write the current thread identity to the output
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Write the current thread identity to the output writer
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	internal sealed class IdentityPatternConverter : PatternConverter 
 	{
 		/// <summary>
-		/// Convert the pattern to the rendered message
+		/// Write the current thread identity to the output
 		/// </summary>
 		/// <param name="writer">the writer to write to</param>
 		/// <param name="state">null, state is not set</param>
+		/// <remarks>
+		/// <para>
+		/// Writes the current thread identity to the output <paramref name="writer"/>.
+		/// </para>
+		/// </remarks>
 		override protected void Convert(TextWriter writer, object state) 
 		{
 #if (NETCF || SSCLI)

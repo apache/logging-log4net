@@ -48,11 +48,21 @@ namespace log4net.Util.PatternStringConverters
 	internal sealed class PropertyPatternConverter : PatternConverter 
 	{
 		/// <summary>
-		/// Write the property or specified properties as required
+		/// Write the property value to the output
 		/// </summary>
 		/// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
-		/// <param name="state">reserved</param>
-		/// <returns>the result of converting the pattern</returns>
+		/// <param name="state">null, state is not set</param>
+		/// <remarks>
+		/// <para>
+		/// Writes out the value of a named property. The property name
+		/// should be set in the <see cref="log4net.Util.PatternConverter.Option"/>
+		/// property.
+		/// </para>
+		/// <para>
+		/// If the <see cref="log4net.Util.PatternConverter.Option"/> is set to <c>null</c>
+		/// then all the properties are written as key value pairs.
+		/// </para>
+		/// </remarks>
 		override protected void Convert(TextWriter writer, object state) 
 		{
 			CompositeProperties compositeProperties = new CompositeProperties();
