@@ -1,4 +1,732 @@
 
+=============================================================================
+log4net moved to Apache
+=============================================================================
+
+2004-01-26 05:12  ncadell
+
+	* ILog.cs, LogManager.cs, log4net.csproj,
+	Appender/AppenderSkeleton.cs, Appender/AspNetTraceAppender.cs,
+	Appender/ColoredConsoleAppender.cs, Appender/ConsoleAppender.cs,
+	Appender/EventLogAppender.cs, Appender/FileAppender.cs,
+	Appender/MemoryAppender.cs, Appender/RollingFileAppender.cs,
+	Appender/SmtpAppender.cs, Appender/TextWriterAppender.cs,
+	Appender/UdpAppender.cs, Config/BasicConfigurator.cs,
+	Core/CompactRepositorySelector.cs,
+	Core/DefaultRepositorySelector.cs, Core/ErrorCode.cs,
+	Core/ErrorCodes.cs, Core/IErrorHandler.cs, Core/Level.cs,
+	Core/LevelEvaluator.cs, Core/LogImpl.cs, Core/LoggerManager.cs,
+	Core/LoggingEvent.cs, DateFormatter/AbsoluteTimeDateFormatter.cs,
+	Filter/DenyAllFilter.cs, Filter/FilterDecision.cs,
+	Filter/FilterSkeleton.cs, Filter/IFilter.cs,
+	Filter/LevelMatchFilter.cs, Filter/LevelRangeFilter.cs,
+	Filter/LoggerMatchFilter.cs, Filter/MdcFilter.cs,
+	Filter/NdcFilter.cs, Filter/StringMatchFilter.cs,
+	Layout/PatternLayout.cs, Layout/Pattern/DatePatternConverter.cs,
+	Repository/ILoggerRepository.cs,
+	Repository/LoggerRepositorySkeleton.cs,
+	Repository/Hierarchy/Hierarchy.cs, Repository/Hierarchy/Logger.cs,
+	Util/CountingQuietTextWriter.cs, Util/OnlyOnceErrorHandler.cs,
+	Util/PatternParser.cs, Util/PropertiesCollection.cs,
+	Util/PropertiesDictionary.cs, Util/QuietTextWriter.cs,
+	Util/TextWriterAdapter.cs,
+	Util/PatternStringConverters/DatePatternConverter.cs:
+
+	Updated code inline with FxCop recommendations.
+	Lots of changes to member casing. Changed properties to methods when
+	returning an array.
+	
+2004-01-26 03:00  ncadell
+
+	* MDC.cs, log4net.csproj, Appender/AdoNetAppender.cs,
+	Appender/AppenderSkeleton.cs,
+	Appender/BufferingAppenderSkeleton.cs,
+	Appender/BufferingForwardingAppender.cs,
+	Appender/EventLogAppender.cs, Appender/FileAppender.cs,
+	Appender/ForwardingAppender.cs, Appender/NetSendAppender.cs,
+	Appender/RemotingAppender.cs, Appender/RollingFileAppender.cs,
+	Appender/SmtpAppender.cs, Appender/SmtpPickupDirAppender.cs,
+	Appender/TextWriterAppender.cs, Appender/UdpAppender.cs,
+	Config/BasicConfigurator.cs, Config/DOMConfigurator.cs,
+	Config/DOMConfiguratorAttribute.cs, Config/PluginAttribute.cs,
+	Config/XmlConfigurator.cs, Config/XmlConfiguratorAttribute.cs,
+	Core/DefaultRepositorySelector.cs, Core/LevelMap.cs,
+	Core/LocationInfo.cs, Core/LoggerManager.cs, Core/LoggingEvent.cs,
+	Filter/LevelMatchFilter.cs, Filter/LevelRangeFilter.cs,
+	Filter/LoggerMatchFilter.cs, Filter/MdcFilter.cs,
+	Filter/NdcFilter.cs, Filter/StringMatchFilter.cs,
+	Layout/ExceptionLayout.cs, Layout/IRawLayout.cs,
+	Layout/PatternLayout.cs, Layout/RawLayoutConverter.cs,
+	Layout/RawPropertyLayout.cs, Layout/RawTimeStampLayout.cs,
+	Layout/SimpleLayout.cs, Layout/XMLLayout.cs,
+	Layout/XMLLayoutBase.cs, Layout/XmlLayoutSchemaLog4j.cs,
+	Layout/Pattern/DatePatternConverter.cs,
+	Layout/Pattern/LiteralPatternConverter.cs,
+	Layout/Pattern/NamedPatternConverter.cs,
+	Layout/Pattern/NewLinePatternConverter.cs,
+	Layout/Pattern/PatternLayoutConverter.cs,
+	ObjectRenderer/DefaultRenderer.cs, ObjectRenderer/RendererMap.cs,
+	Plugin/PluginMap.cs, Plugin/RemoteLoggingServerPlugin.cs,
+	Repository/ILoggerRepository.cs,
+	Repository/LoggerRepositorySkeleton.cs,
+	Repository/Hierarchy/Hierarchy.cs, Repository/Hierarchy/Logger.cs,
+	Repository/Hierarchy/RootLogger.cs,
+	Repository/Hierarchy/XmlHierarchyConfigurator.cs,
+	Util/AppenderAttachedImpl.cs, Util/CountingQuietTextWriter.cs,
+	Util/CyclicBuffer.cs, Util/EmptyCollection.cs,
+	Util/EmptyDictionary.cs, Util/FormattingInfo.cs, Util/LogLog.cs,
+	Util/NativeError.cs, Util/NullDictionaryEnumerator.cs,
+	Util/NullEnumerator.cs, Util/OnlyOnceErrorHandler.cs,
+	Util/OptionConverter.cs, Util/PatternConverter.cs,
+	Util/PatternParser.cs, Util/PatternString.cs,
+	Util/PropertiesCollection.cs, Util/ProtectCloseTextWriter.cs,
+	Util/QuietTextWriter.cs, Util/ReaderWriterLock.cs,
+	Util/ReusableStringWriter.cs, Util/SystemInfo.cs,
+	Util/TextWriterAdapter.cs, Util/Transform.cs,
+	Util/PatternStringConverters/AppDomainPatternConverter.cs,
+	Util/PatternStringConverters/DatePatternConverter.cs,
+	Util/PatternStringConverters/EnvironmentPatternConverter.cs,
+	Util/PatternStringConverters/IdentityPatternConverter.cs,
+	Util/PatternStringConverters/LiteralPatternConverter.cs,
+	Util/PatternStringConverters/NewLinePatternConverter.cs,
+	Util/PatternStringConverters/ProcessIdPatternConverter.cs,
+	Util/PatternStringConverters/UserNamePatternConverter.cs,
+	Util/TypeConverters/BooleanConverter.cs,
+	Util/TypeConverters/ConversionNotSupportedException.cs,
+	Util/TypeConverters/ConverterRegistry.cs,
+	Util/TypeConverters/EncodingConverter.cs,
+	Util/TypeConverters/IConvertFrom.cs,
+	Util/TypeConverters/IConvertTo.cs,
+	Util/TypeConverters/PatternStringConverter.cs,
+	Util/TypeConverters/TypeConverterAttribute.cs,
+	helpers/AppenderAttachedImpl.cs,
+	helpers/CountingQuietTextWriter.cs, helpers/CyclicBuffer.cs,
+	helpers/EmptyCollection.cs, helpers/EmptyDictionary.cs,
+	helpers/FormattingInfo.cs, helpers/LogLog.cs,
+	helpers/NativeError.cs, helpers/NullDictionaryEnumerator.cs,
+	helpers/NullEnumerator.cs, helpers/OnlyOnceErrorHandler.cs,
+	helpers/OptionConverter.cs, helpers/PatternConverter.cs,
+	helpers/PatternParser.cs, helpers/PatternString.cs,
+	helpers/PropertiesCollection.cs, helpers/ProtectCloseTextWriter.cs,
+	helpers/QuietTextWriter.cs, helpers/ReaderWriterLock.cs,
+	helpers/ReusableStringWriter.cs, helpers/SystemInfo.cs,
+	helpers/TextWriterAdapter.cs, helpers/Transform.cs,
+	helpers/PatternStringConverters/AppDomainPatternConverter.cs,
+	helpers/PatternStringConverters/DatePatternConverter.cs,
+	helpers/PatternStringConverters/EnvironmentPatternConverter.cs,
+	helpers/PatternStringConverters/IdentityPatternConverter.cs,
+	helpers/PatternStringConverters/LiteralPatternConverter.cs,
+	helpers/PatternStringConverters/NewLinePatternConverter.cs,
+	helpers/PatternStringConverters/ProcessIdPatternConverter.cs,
+	helpers/PatternStringConverters/UserNamePatternConverter.cs,
+	helpers/TypeConverters/BooleanConverter.cs,
+	helpers/TypeConverters/ConversionNotSupportedException.cs,
+	helpers/TypeConverters/ConverterRegistry.cs,
+	helpers/TypeConverters/EncodingConverter.cs,
+	helpers/TypeConverters/IConvertFrom.cs,
+	helpers/TypeConverters/IConvertTo.cs,
+	helpers/TypeConverters/PatternStringConverter.cs,
+	helpers/TypeConverters/TypeConverterAttribute.cs:
+
+	Renamed log4net.helpers namespace to log4net.Util
+	
+2004-01-26 02:51  ncadell
+
+	* ILog.cs, LogManager.cs, log4net.csproj,
+	Appender/AdoNetAppender.cs, Appender/AppenderSkeleton.cs,
+	Appender/AspNetTraceAppender.cs,
+	Appender/BufferingAppenderSkeleton.cs,
+	Appender/BufferingForwardingAppender.cs,
+	Appender/ColoredConsoleAppender.cs, Appender/ConsoleAppender.cs,
+	Appender/CountingAppender.cs, Appender/DebugAppender.cs,
+	Appender/EventLogAppender.cs, Appender/FileAppender.cs,
+	Appender/ForwardingAppender.cs, Appender/IAppender.cs,
+	Appender/MemoryAppender.cs, Appender/NetSendAppender.cs,
+	Appender/OutputDebugStringAppender.cs,
+	Appender/RemotingAppender.cs, Appender/RollingFileAppender.cs,
+	Appender/SmtpAppender.cs, Appender/SmtpPickupDirAppender.cs,
+	Appender/TextWriterAppender.cs, Appender/TraceAppender.cs,
+	Appender/UdpAppender.cs, Config/BasicConfigurator.cs,
+	Config/PluginAttribute.cs, Core/CompactRepositorySelector.cs,
+	Core/DefaultRepositorySelector.cs, Core/ErrorCodes.cs,
+	Core/IAppenderAttachable.cs, Core/IErrorHandler.cs,
+	Core/ILogger.cs, Core/ILoggerWrapper.cs, Core/IOptionHandler.cs,
+	Core/IRepositorySelector.cs, Core/ITriggeringEventEvaluator.cs,
+	Core/Level.cs, Core/LevelCollection.cs, Core/LevelEvaluator.cs,
+	Core/LevelMap.cs, Core/LocationInfo.cs, Core/LogException.cs,
+	Core/LogImpl.cs, Core/LoggerManager.cs, Core/LoggerWrapperImpl.cs,
+	Core/LoggingEvent.cs, Core/WrapperMap.cs, Filter/DenyAllFilter.cs,
+	Filter/FilterSkeleton.cs, Filter/IFilter.cs,
+	Filter/LevelMatchFilter.cs, Filter/LevelRangeFilter.cs,
+	Filter/LoggerMatchFilter.cs, Filter/MdcFilter.cs,
+	Filter/NdcFilter.cs, Filter/StringMatchFilter.cs,
+	Layout/ExceptionLayout.cs, Layout/ILayout.cs, Layout/IRawLayout.cs,
+	Layout/Layout2RawLayoutAdapter.cs, Layout/LayoutSkeleton.cs,
+	Layout/PatternLayout.cs, Layout/RawLayoutConverter.cs,
+	Layout/RawPropertyLayout.cs, Layout/RawTimeStampLayout.cs,
+	Layout/SimpleLayout.cs, Layout/XMLLayout.cs,
+	Layout/XMLLayoutBase.cs, Layout/XmlLayoutSchemaLog4j.cs,
+	Layout/Pattern/AppDomainPatternConverter.cs,
+	Layout/Pattern/DatePatternConverter.cs,
+	Layout/Pattern/FileLocationPatternConverter.cs,
+	Layout/Pattern/FullLocationPatternConverter.cs,
+	Layout/Pattern/IdentityPatternConverter.cs,
+	Layout/Pattern/LevelPatternConverter.cs,
+	Layout/Pattern/LineLocationPatternConverter.cs,
+	Layout/Pattern/LiteralPatternConverter.cs,
+	Layout/Pattern/LoggerPatternConverter.cs,
+	Layout/Pattern/MdcPatternConverter.cs,
+	Layout/Pattern/MessagePatternConverter.cs,
+	Layout/Pattern/MethodLocationPatternConverter.cs,
+	Layout/Pattern/NamedPatternConverter.cs,
+	Layout/Pattern/NdcPatternConverter.cs,
+	Layout/Pattern/NewLinePatternConverter.cs,
+	Layout/Pattern/PatternLayoutConverter.cs,
+	Layout/Pattern/PropertyPatternConverter.cs,
+	Layout/Pattern/RelativeTimePatternConverter.cs,
+	Layout/Pattern/ThreadPatternConverter.cs,
+	Layout/Pattern/TypeNamePatternConverter.cs,
+	Layout/Pattern/UserNamePatternConverter.cs,
+	Plugin/RemoteLoggingServerPlugin.cs,
+	Repository/ILoggerRepository.cs,
+	Repository/LoggerRepositorySkeleton.cs,
+	Repository/Hierarchy/DefaultLoggerFactory.cs,
+	Repository/Hierarchy/Hierarchy.cs, Repository/Hierarchy/Logger.cs,
+	Repository/Hierarchy/RootLogger.cs,
+	Repository/Hierarchy/XmlHierarchyConfigurator.cs,
+	helpers/AppenderAttachedImpl.cs,
+	helpers/CountingQuietTextWriter.cs, helpers/CyclicBuffer.cs,
+	helpers/OnlyOnceErrorHandler.cs, helpers/OptionConverter.cs,
+	helpers/PatternConverter.cs, helpers/PatternParser.cs,
+	helpers/PatternString.cs, helpers/ProtectCloseTextWriter.cs,
+	helpers/QuietTextWriter.cs,
+	helpers/PatternStringConverters/DatePatternConverter.cs,
+	helpers/PatternStringConverters/EnvironmentPatternConverter.cs,
+	helpers/PatternStringConverters/NewLinePatternConverter.cs,
+	spi/CompactRepositorySelector.cs, spi/DefaultRepositorySelector.cs,
+	spi/ErrorCodes.cs, spi/IAppenderAttachable.cs,
+	spi/IErrorHandler.cs, spi/ILogger.cs, spi/ILoggerWrapper.cs,
+	spi/IOptionHandler.cs, spi/IRepositorySelector.cs,
+	spi/ITriggeringEventEvaluator.cs, spi/Level.cs,
+	spi/LevelCollection.cs, spi/LevelEvaluator.cs, spi/LevelMap.cs,
+	spi/LocationInfo.cs, spi/LogException.cs, spi/LogImpl.cs,
+	spi/LoggerManager.cs, spi/LoggerWrapperImpl.cs,
+	spi/LoggingEvent.cs, spi/WrapperMap.cs:
+
+	Renamed log4net.spi namespace to log4net.Core
+	
+2004-01-26 02:42  ncadell
+
+	* Appender/ASPNetTraceAppender.cs, Appender/AspNetTraceAppender.cs,
+	Appender/SMTPAppender.cs, Appender/SmtpAppender.cs,
+	DateFormatter/ISO8601DateFormatter.cs,
+	DateFormatter/Iso8601DateFormatter.cs, Filter/MDCFilter.cs,
+	Filter/MdcFilter.cs, Filter/NdcFilter.cs, Filter/NDCFilter.cs:
+
+	Fixed pascal casing
+	
+	* Appender/ADONetAppender.cs:
+
+	Fixed pascal case
+	
+	* Appender/AdoNetAppender.cs:
+
+	Fixed pascal casing
+	
+	* log4net.csproj, Appender/ASPNetTraceAppender.cs,
+	Appender/SMTPAppender.cs, DateFormatter/ISO8601DateFormatter.cs,
+	Filter/MDCFilter.cs, Filter/NDCFilter.cs, Layout/PatternLayout.cs,
+	Layout/Pattern/DatePatternConverter.cs,
+	helpers/PatternStringConverters/DatePatternConverter.cs:
+
+	Fixed pascal casing of classes
+	
+2004-01-26 02:14  ncadell
+
+	* Layout/ExceptionLayout.cs:
+
+	Fixed doc
+	
+	* Appender/: ADONetAppender.cs, BufferingAppenderSkeleton.cs:
+
+	Fixed pascal casing of AdoNetAppender
+	
+	* Appender/ADONetAppender.cs:
+
+	Fixed pascal casing of ADONetAppender
+	
+	* log4net.csproj, Config/DOMConfigurator.cs,
+	Config/DOMConfiguratorAttribute.cs, Config/XmlConfigurator.cs,
+	Config/XmlConfiguratorAttribute.cs,
+	Repository/IDOMRepositoryConfigurator.cs,
+	Repository/IXmlRepositoryConfigurator.cs,
+	Repository/Hierarchy/DOMHierarchyConfigurator.cs,
+	Repository/Hierarchy/Hierarchy.cs,
+	Repository/Hierarchy/XmlHierarchyConfigurator.cs:
+
+	Obsoleted DOMConfigurator, replaced with XmlConfigurator.
+	Replaced DOMConfiguratorAttribute with XmlConfiguratorAttribute.
+	Replaced DOMHierarchyConfigurator with XmlHierarchyConfigurator.
+	
+2004-01-26 01:46  ncadell
+
+	* LogManager.cs, log4net.csproj, Config/AliasDomainAttribute.cs,
+	Config/AliasRepositoryAttribute.cs, Config/DomainAttribute.cs,
+	Config/RepositoryAttribute.cs, spi/DefaultRepositorySelector.cs,
+	spi/LoggerManager.cs:
+
+	Obsoleted use of term "Domain" or "logging domain".
+	Added RepositoryAttribute and AliasRepositoryAttribute attributes.
+	Obsoleted DomainAttribute and AliasDomainAttribute.
+	Obsoleted CreateDomain methods in LogManager and LoggerManager
+	replaced with CreateRepository methods.
+	
+2004-01-26 00:36  ncadell
+
+	* Appender/RemotingAppender.cs:
+
+	Changed to send events using a pool thread rather than the caller's
+	thread. This fixes a side effect caused by the remoting framework
+	that could cause loss of data in the CallContext.
+	
+	* Appender/FileAppender.cs:
+
+	Changed to check if directory exists before creating it.
+	
+	* Appender/: UdpAppender.cs, SmtpPickupDirAppender.cs,
+	SMTPAppender.cs:
+
+	Changed hostname property to log4net:HostName
+	
+	* Appender/TraceAppender.cs:
+
+	Updated documentation
+	Changed to pass the logger name as the Trace category.
+	
+	* Appender/DebugAppender.cs:
+
+	Updated documentation.
+	Changed to pass the logger name as the debug category.
+	
+	* AssemblyInfo.cs:
+
+	Added AllowPartiallyTrustedCallers attribute to the assembly. This
+	allows partially trusted callers to call a strongly named log4net assembly.
+	
+2004-01-17 19:40  ncadell
+
+	* log4net.csproj, Filter/LoggerMatchFilter.cs:
+
+	Added LoggerMatchFilter. This filter does a StartsWith match against
+	the event's logger name.
+	
+	* Appender/ColoredConsoleAppender.cs:
+
+	Console colours are restored between appends so that any additional
+	Console.Write uses the default colours.
+	Added doc comments.
+	
+	* Appender/: ADONetAppender.cs, AppenderSkeleton.cs,
+	BufferingAppenderSkeleton.cs, BufferingForwardingAppender.cs,
+	DebugAppender.cs, ForwardingAppender.cs, TextWriterAppender.cs,
+	TraceAppender.cs, UdpAppender.cs:
+
+	Changed IsAsSevereAsThreshold and OnClose from public to virtual
+	protected. These should not be exposed in the appender's public interface.
+	This change breaks appenders that override the OnClose method.
+	
+2004-01-13 03:13  ncadell
+
+	* ILog.cs, LogManager.cs, MDC.cs, NDC.cs,
+	Appender/ADONetAppender.cs, Appender/ASPNetTraceAppender.cs,
+	Appender/AppenderCollection.cs, Appender/AppenderSkeleton.cs,
+	Appender/BufferingAppenderSkeleton.cs,
+	Appender/BufferingForwardingAppender.cs,
+	Appender/ColoredConsoleAppender.cs, Appender/ConsoleAppender.cs,
+	Appender/CountingAppender.cs, Appender/DebugAppender.cs,
+	Appender/EventLogAppender.cs, Appender/FileAppender.cs,
+	Appender/ForwardingAppender.cs, Appender/IAppender.cs,
+	Appender/MemoryAppender.cs, Appender/NetSendAppender.cs,
+	Appender/OutputDebugStringAppender.cs,
+	Appender/RemotingAppender.cs, Appender/RollingFileAppender.cs,
+	Appender/SMTPAppender.cs, Appender/SmtpPickupDirAppender.cs,
+	Appender/TextWriterAppender.cs, Appender/TraceAppender.cs,
+	Appender/UdpAppender.cs, Config/AliasDomainAttribute.cs,
+	Config/BasicConfigurator.cs, Config/ConfiguratorAttribute.cs,
+	Config/DOMConfigurator.cs, Config/DOMConfiguratorAttribute.cs,
+	Config/DomainAttribute.cs,
+	Config/Log4NetConfigurationSectionHandler.cs,
+	Config/PluginAttribute.cs,
+	DateFormatter/AbsoluteTimeDateFormatter.cs,
+	DateFormatter/DateTimeDateFormatter.cs,
+	DateFormatter/IDateFormatter.cs,
+	DateFormatter/ISO8601DateFormatter.cs,
+	DateFormatter/SimpleDateFormatter.cs, Filter/DenyAllFilter.cs,
+	Filter/FilterSkeleton.cs, Filter/IFilter.cs,
+	Filter/LevelMatchFilter.cs, Filter/LevelRangeFilter.cs,
+	Filter/MDCFilter.cs, Filter/NDCFilter.cs,
+	Filter/StringMatchFilter.cs, Layout/ExceptionLayout.cs,
+	Layout/ILayout.cs, Layout/IRawLayout.cs,
+	Layout/Layout2RawLayoutAdapter.cs, Layout/LayoutSkeleton.cs,
+	Layout/PatternLayout.cs, Layout/RawLayoutConverter.cs,
+	Layout/RawPropertyLayout.cs, Layout/RawTimeStampLayout.cs,
+	Layout/SimpleLayout.cs, Layout/XMLLayout.cs,
+	Layout/XMLLayoutBase.cs, Layout/XmlLayoutSchemaLog4j.cs,
+	Layout/Pattern/AppDomainPatternConverter.cs,
+	Layout/Pattern/DatePatternConverter.cs,
+	Layout/Pattern/FileLocationPatternConverter.cs,
+	Layout/Pattern/FullLocationPatternConverter.cs,
+	Layout/Pattern/IdentityPatternConverter.cs,
+	Layout/Pattern/LevelPatternConverter.cs,
+	Layout/Pattern/LineLocationPatternConverter.cs,
+	Layout/Pattern/LiteralPatternConverter.cs,
+	Layout/Pattern/LoggerPatternConverter.cs,
+	Layout/Pattern/MdcPatternConverter.cs,
+	Layout/Pattern/MessagePatternConverter.cs,
+	Layout/Pattern/MethodLocationPatternConverter.cs,
+	Layout/Pattern/NamedPatternConverter.cs,
+	Layout/Pattern/NdcPatternConverter.cs,
+	Layout/Pattern/NewLinePatternConverter.cs,
+	Layout/Pattern/PatternLayoutConverter.cs,
+	Layout/Pattern/PropertyPatternConverter.cs,
+	Layout/Pattern/RelativeTimePatternConverter.cs,
+	Layout/Pattern/ThreadPatternConverter.cs,
+	Layout/Pattern/TypeNamePatternConverter.cs,
+	Layout/Pattern/UserNamePatternConverter.cs,
+	ObjectRenderer/DefaultRenderer.cs,
+	ObjectRenderer/IObjectRenderer.cs, ObjectRenderer/RendererMap.cs,
+	Plugin/IPlugin.cs, Plugin/IPluginFactory.cs,
+	Plugin/PluginCollection.cs, Plugin/PluginMap.cs,
+	Plugin/PluginSkeleton.cs, Plugin/RemoteLoggingServerPlugin.cs,
+	Repository/IBasicRepositoryConfigurator.cs,
+	Repository/IDOMRepositoryConfigurator.cs,
+	Repository/ILoggerRepository.cs,
+	Repository/LoggerRepositorySkeleton.cs,
+	Repository/Hierarchy/DOMHierarchyConfigurator.cs,
+	Repository/Hierarchy/DefaultLoggerFactory.cs,
+	Repository/Hierarchy/Hierarchy.cs,
+	Repository/Hierarchy/ILoggerFactory.cs,
+	Repository/Hierarchy/Logger.cs, Repository/Hierarchy/LoggerKey.cs,
+	Repository/Hierarchy/ProvisionNode.cs,
+	Repository/Hierarchy/RootLogger.cs,
+	helpers/AppenderAttachedImpl.cs,
+	helpers/CountingQuietTextWriter.cs, helpers/CyclicBuffer.cs,
+	helpers/EmptyCollection.cs, helpers/EmptyDictionary.cs,
+	helpers/FormattingInfo.cs, helpers/LogLog.cs,
+	helpers/NativeError.cs, helpers/NullDictionaryEnumerator.cs,
+	helpers/NullEnumerator.cs, helpers/OnlyOnceErrorHandler.cs,
+	helpers/OptionConverter.cs, helpers/PatternConverter.cs,
+	helpers/PatternParser.cs, helpers/PatternString.cs,
+	helpers/PropertiesCollection.cs, helpers/ProtectCloseTextWriter.cs,
+	helpers/QuietTextWriter.cs, helpers/ReaderWriterLock.cs,
+	helpers/ReusableStringWriter.cs, helpers/SystemInfo.cs,
+	helpers/TextWriterAdapter.cs, helpers/Transform.cs,
+	helpers/PatternStringConverters/AppDomainPatternConverter.cs,
+	helpers/PatternStringConverters/DatePatternConverter.cs,
+	helpers/PatternStringConverters/EnvironmentPatternConverter.cs,
+	helpers/PatternStringConverters/IdentityPatternConverter.cs,
+	helpers/PatternStringConverters/LiteralPatternConverter.cs,
+	helpers/PatternStringConverters/NewLinePatternConverter.cs,
+	helpers/PatternStringConverters/UserNamePatternConverter.cs,
+	helpers/TypeConverters/BooleanConverter.cs,
+	helpers/TypeConverters/ConversionNotSupportedException.cs,
+	helpers/TypeConverters/ConverterRegistry.cs,
+	helpers/TypeConverters/EncodingConverter.cs,
+	helpers/TypeConverters/IConvertFrom.cs,
+	helpers/TypeConverters/IConvertTo.cs,
+	helpers/TypeConverters/PatternStringConverter.cs,
+	helpers/TypeConverters/TypeConverterAttribute.cs,
+	spi/CompactRepositorySelector.cs, spi/DefaultRepositorySelector.cs,
+	spi/ErrorCodes.cs, spi/IAppenderAttachable.cs,
+	spi/IErrorHandler.cs, spi/ILogger.cs, spi/ILoggerWrapper.cs,
+	spi/IOptionHandler.cs, spi/IRepositorySelector.cs,
+	spi/ITriggeringEventEvaluator.cs, spi/Level.cs,
+	spi/LevelCollection.cs, spi/LevelEvaluator.cs, spi/LevelMap.cs,
+	spi/LocationInfo.cs, spi/LogException.cs, spi/LogImpl.cs,
+	spi/LoggerManager.cs, spi/LoggerWrapperImpl.cs,
+	spi/LoggingEvent.cs, spi/WrapperMap.cs:
+
+	Added <author> tags
+	
+	* log4net.csproj,
+	helpers/PatternStringConverters/ProcessIdPatternConverter.cs:
+
+	Added ProcessIdPatternConverter
+	
+2003-10-16 14:30  ncadell
+
+	* ObjectRenderer/RendererMap.cs:
+
+	Changed RendererMap to display full stack trace when an internal error
+	occurs during a render operation.
+	
+2003-10-02 23:52  ncadell
+
+	* log4net.csproj:
+
+	Added PatternString
+	
+	* helpers/: PatternStringConverters/AppDomainPatternConverter.cs,
+	PatternStringConverters/DatePatternConverter.cs,
+	PatternStringConverters/EnvironmentPatternConverter.cs,
+	PatternStringConverters/IdentityPatternConverter.cs,
+	PatternStringConverters/LiteralPatternConverter.cs,
+	PatternStringConverters/NewLinePatternConverter.cs,
+	PatternStringConverters/UserNamePatternConverter.cs,
+	PatternString.cs, TypeConverters/PatternStringConverter.cs:
+
+	Adding PatternString
+	
+2003-08-17 19:30  ncadell
+
+	* helpers/PatternParser.cs:
+
+	FxCop. Specified number format info and culture info.
+	
+	* helpers/TextWriterAdapter.cs:
+
+	Added Writer property
+	
+	* helpers/ProtectCloseTextWriter.cs:
+
+	Changed to use Writer property rather than m_writer field directly
+	
+	* helpers/PatternConverter.cs:
+
+	Made m_option private, use the Option property to get or set the value.
+	
+	* helpers/OptionConverter.cs:
+
+	Added support for IConvertTo type converters
+	
+	* Layout/Pattern/: DatePatternConverter.cs,
+	LiteralPatternConverter.cs, MdcPatternConverter.cs,
+	NamedPatternConverter.cs, NewLinePatternConverter.cs,
+	PropertyPatternConverter.cs:
+
+	Changed to use Option property rather than m_option field.
+	
+	* Layout/PatternLayout.cs:
+
+	Fixed PatternLayoutShim protection level
+	
+	* Appender/SMTPAppender.cs:
+
+	FxCop. Specified culture info to StringWriter
+	
+	* Appender/TraceAppender.cs:
+
+	Fixed spelling mistake
+	
+	* spi/LoggingEvent.cs:
+
+	FxCop. Changed to specify the culture info to StringWriters
+	
+	* helpers/TypeConverters/: ConverterRegistry.cs, IConvertTo.cs,
+	TypeConverterAttribute.cs:
+
+	Updated type converters to support IConvertTo as well as IConvertFrom
+	
+	* Appender/DebugAppender.cs:
+
+	Added debug appender
+	
+2003-08-03 23:29  ncadell
+
+	* log4net.csproj:
+
+	Added pattern converters.
+	
+	* Layout/PatternLayout.cs:
+
+	Updated to write to a TextWriter.
+	Changed to use new PatternParser, generates converter registry.
+	Updated documentation to include long pattern names.
+	
+	* helpers/: PatternConverter.cs, PatternParser.cs:
+
+	Changed PatternParser to parse long patterns. Patterns are stored in
+	a registry that is external to the parser.
+	Changed the PatternConverter to convert any state object not only a
+	LoggingEvent object.
+	
+	* Layout/Pattern/: AppDomainPatternConverter.cs,
+	DatePatternConverter.cs, FileLocationPatternConverter.cs,
+	FullLocationPatternConverter.cs, IdentityPatternConverter.cs,
+	LevelPatternConverter.cs, LineLocationPatternConverter.cs,
+	LiteralPatternConverter.cs, LoggerPatternConverter.cs,
+	MdcPatternConverter.cs, MessagePatternConverter.cs,
+	MethodLocationPatternConverter.cs, NamedPatternConverter.cs,
+	NdcPatternConverter.cs, NewLinePatternConverter.cs,
+	PatternLayoutConverter.cs, PropertyPatternConverter.cs,
+	RelativeTimePatternConverter.cs, ThreadPatternConverter.cs,
+	TypeNamePatternConverter.cs, UserNamePatternConverter.cs:
+
+	Added pattern converter classes.
+	
+	* Appender/ADONetAppender.cs:
+
+	Added documentation for using the Oracle provider.
+	
+	* ObjectRenderer/: DefaultRenderer.cs, IObjectRenderer.cs,
+	RendererMap.cs:
+
+	Changed IObjectRenderer to render to a TextWriter rather than returning
+	a new string object.
+	
+	* Layout/SimpleLayout.cs:
+
+	Updated to write the logging event message to a writer
+	
+	* spi/LoggingEvent.cs:
+
+	Added constructor that takes the repository and fullNameOfLoggerClass.
+	Added Repository property to get the ILoggerRepository that this event
+	was generated in.
+	Updated to use IObjectRenderer taking a TextWriter.
+	
+	* DateFormatter/: AbsoluteTimeDateFormatter.cs, IDateFormatter.cs,
+	SimpleDateFormatter.cs:
+
+	Changed IDateFormatter to write to a TextWriter rather than returning
+	a new string.
+	
+	* helpers/FormattingInfo.cs:
+
+	Added new constructor that takes formatting info settings.
+	Changed default min and max values to be Int32.MinValue and MaxValue.
+	
+	* spi/LocationInfo.cs:
+
+	Added check for fullNameOfCallingClass being null or empty. In that case
+	the location information is not generated.
+	
+	* helpers/PropertiesCollection.cs:
+
+	Added support for the IDictionary interface to the PropertiesCollection.
+	
+	* Layout/RawPropertyLayout.cs:
+
+	Added RawPropertyLayout. Returns the object value of a property.
+	
+2003-07-31 18:33  drieseng
+
+	* helpers/PropertiesCollection.cs, spi/LoggingEvent.cs:
+
+	SecurityPermissionAttribute class is now available in Mono (cvs)
+	
+	* Config/DOMConfigurator.cs:
+
+	XmlValidatingReader is now partially implemented in Mono
+	
+2003-07-31 05:54  drieseng
+
+	* Plugin/RemoteLoggingServerPlugin.cs:
+
+	undo temporary work around for mono bug #45520 : use the fully qualified 
+	type name to refer to log4net.Appender.RemotingAppender.IRemoteLoggingSink, 
+	instead of using alias.
+	
+	This issue has now been fixed in Mono (cvs) and will be available in 
+	Mono 0.26
+	
+2003-07-20 19:56  ncadell
+
+	* Appender/ADONetAppender.cs, Appender/AppenderSkeleton.cs,
+	Appender/SMTPAppender.cs, Appender/SmtpPickupDirAppender.cs,
+	Appender/TextWriterAppender.cs, Layout/ExceptionLayout.cs,
+	Layout/ILayout.cs, Layout/Layout2RawLayoutAdapter.cs,
+	Layout/LayoutSkeleton.cs, Layout/PatternLayout.cs,
+	Layout/SimpleLayout.cs, Layout/XMLLayoutBase.cs:
+
+	Changed ILayout. Added Format(TextWriter, LoggingEvent) method. Marked as
+	obsolete the Format(LoggingEvent) method. Having the layouts write into
+	a caller supplied TextWriter will reduce the number of buffers and copies
+	required in some cases (e.g. FileAppender).
+	
+	Updated all layouts to write to a TextWriter. Updated Appenders to pass
+	TextWriter when rendering the event.
+	
+	* helpers/CountingQuietTextWriter.cs:
+
+	Changed to use the Encoding property on this instance rather than the
+	Writer.Encoding property. Encoding is correctly forwarded to the
+	underlying writer.
+	
+	* helpers/QuietTextWriter.cs:
+
+	Changed to use TextWriterAdapter base class. Now the QuietTextWriter
+	is a TextWriter.
+	
+	* log4net.csproj:
+
+	Added new classes
+	
+	* helpers/ReusableStringWriter.cs:
+
+	Added ReusableStringWriter. This class extends StringWriter and adds
+	a Reset method that allows the writer to reuse its internal buffers.
+	This allows the StringWriter to be reused rather than recreated.
+	
+	* helpers/ProtectCloseTextWriter.cs:
+
+	Added ProtectCloseTextWriter. This class is a TextWriterAdapter that 
+	ignores	the Close method, i.e it forwards all messages to another 
+	TextWriter except the Close message.
+	
+	* helpers/TextWriterAdapter.cs:
+
+	Added TextWriterAdapter. This class is a TextWriter that forwards all
+	messages to a separate TextWriter instance.
+	
+2003-07-19 18:07  ncadell
+
+	* log4net.csproj, Repository/Hierarchy/Logger.cs,
+	helpers/ReaderWriterLock.cs:
+
+	Added ReaderWriterLock class that implements a multiple reader single
+	writer lock abstraction for multiple platforms.
+	Logger uses this lock to protect its appender list, this should increase
+	multithreaded throughput.
+	
+2003-07-17 12:07  ncadell
+
+	* Layout/PatternLayout.cs, spi/LocationInfo.cs,
+	spi/LoggingEvent.cs:
+
+	Added documentation on when the caller location information is available
+	
+2003-07-15 17:59  drieseng
+
+	* spi/DefaultRepositorySelector.cs:
+
+	xml doc updates
+	
+	* spi/LocationInfo.cs:
+
+	- xml doc updates
+	- code restructure
+	
+	* spi/Level.cs:
+
+	implement IComparable (was already implemented but was not in the class
+	signature)
+	xml doc updates
+	code restructure
+	
+2003-07-14 18:52  ncadell
+
+	* AssemblyVersionInfo.cpp, AssemblyVersionInfo.cs,
+	AssemblyVersionInfo.js, AssemblyVersionInfo.vb:
+
+	Updated version number to 1.2.0.30714
+	
+2003-07-14 09:14  ncadell
+
+	* log4net.csproj:
+
+	Added file Layout\XmlLayoutSchemaLog4j.cs
+	
 
 =============================================================================
 Version 1.2.0 BETA 8
@@ -77,7 +805,7 @@ Version 1.2.0 BETA 8
 
 	* Plugin/RemoteLoggingServerPlugin.cs:
 
-	temporary workaround for mono bug #45520 : use the fully qualified 
+	temporary work around for mono bug #45520 : use the fully qualified 
 	type name to refer to 
 	log4net.Appender.RemotingAppender.IRemoteLoggingSink, instead of 
 	using alias.
@@ -1054,7 +1782,7 @@ Version 1.2.0 BETA 6
 	
 	* helpers/TypeConverters/ConversionNotSupportedException.cs:
 
-	Made serialisable
+	Made serializable
 	
 2003-02-26 20:29  drieseng
 
@@ -1382,7 +2110,7 @@ Version 1.2.0 BETA 6
 	Documentation fix for .NETCF version + improved docs
 	m_immediateFlush is now private instead of protected, public access to
 	this variable was already available using the ImmediateFlush property
-	reorganised source code
+	reorganized source code
 	
 	* Appender/ConsoleAppender.cs:
 
@@ -1390,7 +2118,7 @@ Version 1.2.0 BETA 6
 	docs
 	Updated the license
 	Removed override of ActiveOptions (nothing was done anyway)
-	Changed organisation of source
+	Changed organization of source
 	
 2003-02-21 16:44  drieseng
 
@@ -1467,7 +2195,7 @@ Version 1.2.0 BETA 6
 	* helpers/PropertiesCollection.cs:
 
 	Added PropertiesCollection. Simple mapping between a string key and
-	an object value. Efficient serialisation scheme.
+	an object value. Efficient serialization scheme.
 	
 2003-02-15 19:47  ncadell
 
@@ -1493,9 +2221,9 @@ Version 1.2.0 BETA 6
 
 	* Config/DomainAttribute.cs, spi/DefaultRepositorySelector.cs:
 
-	Updated default behaviour of DefaultRepositorySelector. Assemblies are
+	Updated default behavior of DefaultRepositorySelector. Assemblies are
 	now be default placed into the default domain. To specify another
-	domain the DomainAttribute must be used. This is the opposite behaviour
+	domain the DomainAttribute must be used. This is the opposite behavior
 	to what was previously available.
 	
 2003-02-10 01:59  ncadell
@@ -1979,7 +2707,7 @@ Version 1.2.0 BETA 4
 
 	Removed the SecurityPermissionAttribute from the GetObjectData method.
 	This security check is not required because only public fields are
-	serialised.
+	serialized.
 	
 2002-12-05 01:00  ncadell
 
@@ -2100,7 +2828,7 @@ Version 1.2.0 BETA 4
 	
 	* helpers/OptionConverter.cs:
 
-	Optimised reflection invoke method calls
+	Optimized reflection invoke method calls
 	
 2002-11-24 18:46  ncadell
 
@@ -2202,7 +2930,7 @@ Version 1.2.0 BETA 4
 	
 	* spi/LoggingEvent.cs:
 
-	Removed FixVolatileData call from the serialisation GetObjectData
+	Removed FixVolatileData call from the serialization GetObjectData
 	method. FixVolatileData must be called during the IAppender.DoAppend
 	method. Calling it during the GetObjectData method will be too late.
 	
@@ -2239,7 +2967,7 @@ Version 1.2.0 BETA 4
 	
 	* helpers/EmptyCollection.cs:
 
-	Marked as serialisable
+	Marked as serializable
 	
 2002-11-04 00:55  ncadell
 
@@ -2543,7 +3271,7 @@ Version 1.2.0 BETA 3
 	Repository/Hierarchy/RootLogger.cs,
 	spi/DefaultRepositorySelector.cs:
 
-	Moved Hierarch and all related classes into a separate
+	Moved Hierarchy and all related classes into a separate
 	namespace log4net.Repository.Hierarchy.
 	
 	Created LoggerRepositorySkeleton with basic implementation
@@ -2670,7 +3398,7 @@ Version 1.2.0 BETA 3
 	Added LoggingEventData as an externalisable data holder for the
 	LoggingEvent object. Use the GetLoggingEventData() method to obtain
 	the instance for the event. The LoggingEvent has a constructor
-	that takes a LoggingEventData to use to initialise the event.
+	that takes a LoggingEventData to use to initialize the event.
 	
 2002-08-03 22:49  ncadell
 
@@ -2793,7 +3521,7 @@ Version 1.2.0 BETA 2
 	* spi/LoggingEvent.cs:
 
 	Added FixVolatileData() method. Updated comments. Removed 'message'
-	from serialised data.
+	from serialized data.
 	
 	* spi/LevelEvaluator.cs:
 
@@ -3102,8 +3830,8 @@ Version 1.2.0 BETA 1
 
 	Changed rendering of exceptions to use the ObjectRenderer map. 
 	This allows	the rendering of exceptions to be intercepted in a 
-	user defined way. The exception is not serialised with the 
-	LoggingEvent only the string representation is serialised.
+	user defined way. The exception is not serialized with the 
+	LoggingEvent only the string representation is serialized.
 	
 	* ObjectRenderer/DefaultRenderer.cs:
 
@@ -3304,7 +4032,7 @@ Version 1.2.0 BETA 1
 	
 	* spi/LoggingEvent.cs:
 
-	Changed to use StringBuilder.AppendFormat() On deserialise it 
+	Changed to use StringBuilder.AppendFormat() On deserialize it 
 	loads the Priority from the intern pool.
 	
 	* helpers/Transform.cs:
@@ -3315,7 +4043,7 @@ Version 1.2.0 BETA 1
 	* helpers/OptionConverter.cs:
 
 	Added ConvertStringTo() method that takes a string and a Type to 
-	convert it to. Returns an instance of Type initialised from the
+	convert it to. Returns an instance of Type initialized from the
 	string. Uses various methods to do the conversion.
 	
 	* Repository/LoggerKey.cs:
@@ -3406,10 +4134,10 @@ Version 1.2.0 BETA 1
 	constructor. Static methods are used to create instances of the class 
 	and these are internally pooled (like String.Intern()). This allows 
 	extenders to add new Priorities without extending the class and also 
-	ensures that serialised events will be able to reconstruct their 
+	ensures that serialized events will be able to reconstruct their 
 	Priority objects even when the sub classing code is not available. 
 	This allows us to develop stand alone remoting sinks that do not need 
-	to be modified to support customised logging frameworks.
+	to be modified to support customized logging frameworks.
 	
 2002-05-20 11:41  ncadell
 
@@ -3593,8 +4321,8 @@ Version 1.2.0 BETA 1
 
 	Moved Hierarchy and Category to the Repository namespace.
 	Changed GetMap() from private to internal. This needs to be 
-	called by LoggingEvent when it is serialised so that it 
-	can deserialise correctly.
+	called by LoggingEvent when it is serialized so that it 
+	can deserialize correctly.
 	
 	* LogManager.cs:
 
