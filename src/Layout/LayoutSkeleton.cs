@@ -75,11 +75,20 @@ namespace log4net.Layout
 		/// Activate the options that were previously set with calls to option setters.
 		/// </summary>
 		/// <remarks>
-		/// <para>This allows deferred activation of the options once all
-		/// options have been set. This is required for components which have
-		/// related options that remain ambiguous until all are set.</para>
-		/// 
- 		/// <para>This method must be implemented by the subclass.</para>
+		/// <para>
+		/// This is part of the <see cref="IOptionHandler"/> delayed object
+		/// activation scheme. The <see cref="ActivateOptions"/> method must 
+		/// be called on this object after the configuration properties have
+		/// been set. Until <see cref="ActivateOptions"/> is called this
+		/// object is in an undefined state and must not be used. 
+		/// </para>
+		/// <para>
+		/// If any of the configuration properties are modified then 
+		/// <see cref="ActivateOptions"/> must be called again.
+		/// </para>
+ 		/// <para>
+ 		/// This method must be implemented by the subclass.
+ 		/// </para>
 		/// </remarks>
 		abstract public void ActivateOptions();
 
@@ -161,7 +170,7 @@ namespace log4net.Layout
 		}
 
 		/// <summary>
-		/// Flag indicating if this layout handle exceptions
+		/// Flag indicating if this layout handles exceptions
 		/// </summary>
 		/// <value><c>false</c> if this layout handles exceptions</value>
 		/// <remarks>
