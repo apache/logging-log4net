@@ -45,7 +45,7 @@ namespace log4net.Ext.EventID
 			if (this.IsInfoEnabled)
 			{
 				LoggingEvent loggingEvent = new LoggingEvent(ThisDeclaringType, Logger.Repository, Logger.Name, Level.Info, message, t);
-				loggingEvent.EventProperties["EventID"] = eventId;
+				loggingEvent.Properties["EventID"] = eventId;
 				Logger.Log(loggingEvent);
 			}
 		}
@@ -60,7 +60,7 @@ namespace log4net.Ext.EventID
 			if (this.IsWarnEnabled)
 			{
 				LoggingEvent loggingEvent = new LoggingEvent(ThisDeclaringType, Logger.Repository, Logger.Name, Level.Warn, message, t);
-				loggingEvent.EventProperties["EventID"] = eventId;
+				loggingEvent.Properties["EventID"] = eventId;
 				Logger.Log(loggingEvent);
 			}
 		}
@@ -75,7 +75,7 @@ namespace log4net.Ext.EventID
 			if (this.IsErrorEnabled)
 			{
 				LoggingEvent loggingEvent = new LoggingEvent(ThisDeclaringType, Logger.Repository, Logger.Name, Level.Error, message, t);
-				loggingEvent.EventProperties["EventID"] = eventId;
+				loggingEvent.Properties["EventID"] = eventId;
 				Logger.Log(loggingEvent);
 			}
 		}
@@ -90,7 +90,7 @@ namespace log4net.Ext.EventID
 			if (this.IsFatalEnabled)
 			{
 				LoggingEvent loggingEvent = new LoggingEvent(ThisDeclaringType, Logger.Repository, Logger.Name, Level.Fatal, message, t);
-				loggingEvent.EventProperties["EventID"] = eventId;
+				loggingEvent.Properties["EventID"] = eventId;
 				Logger.Log(loggingEvent);
 			}
 		}
