@@ -401,6 +401,22 @@ namespace log4net.Repository.Hierarchy
 		/// <param name="appender">the appender to use to log all logging events</param>
 		void IBasicRepositoryConfigurator.Configure(log4net.Appender.IAppender appender)
 		{
+			BasicRepositoryConfigure(appender);
+		}
+
+		/// <summary>
+		/// Initialize the log4net system using the specified appender
+		/// </summary>
+		/// <param name="appender">the appender to use to log all logging events</param>
+		/// <remarks>
+		/// <para>
+		/// This method provides the same functionality as the 
+		/// <see cref="IBasicRepositoryConfigurator.Configure"/> method implemented
+		/// on this object, but it is protected and therefore can be called by subclasses.
+		/// </para>
+		/// </remarks>
+		protected void BasicRepositoryConfigure(log4net.Appender.IAppender appender)
+		{
 			Root.AddAppender(appender);
 
 			Configured = true;
@@ -418,6 +434,22 @@ namespace log4net.Repository.Hierarchy
 		/// </summary>
 		/// <param name="element">the element containing the root of the config</param>
 		void IXmlRepositoryConfigurator.Configure(System.Xml.XmlElement element)
+		{
+			XmlRepositoryConfigure(element);
+		}
+
+		/// <summary>
+		/// Initialize the log4net system using the specified config
+		/// </summary>
+		/// <param name="element">the element containing the root of the config</param>
+		/// <remarks>
+		/// <para>
+		/// This method provides the same functionality as the 
+		/// <see cref="IBasicRepositoryConfigurator.Configure"/> method implemented
+		/// on this object, but it is protected and therefore can be called by subclasses.
+		/// </para>
+		/// </remarks>
+		protected void XmlRepositoryConfigure(System.Xml.XmlElement element)
 		{
 			XmlHierarchyConfigurator config = new XmlHierarchyConfigurator(this);
 			config.Configure(element);
