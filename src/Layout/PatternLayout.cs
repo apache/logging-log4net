@@ -142,6 +142,23 @@ namespace log4net.Layout
 	/// 			</para>
 	///			</description>
 	///		</item>
+	///		<item>
+	///			<term>exception</term>
+	///			<description>
+	///				<para>
+	///				Used to output the exception passed in with the log message.
+	///				</para>
+	///				<para>
+	/// 			If an exception object is stored in the logging event
+	/// 			it will be rendered into the pattern output with a
+	/// 			trainling newline.
+	/// 			If there is no exception then nothing will be output
+	/// 			and no trailing newline will be appended.
+	/// 			It is typical to put a newline before the exception
+	/// 			and to have the exception as the last data in the pattern.
+	///				</para>
+	///			</description>
+	///		</item>
 	///     <item>
 	///         <term>F</term>
 	///         <description>Equivalent to <b>file</b></description>
@@ -597,11 +614,14 @@ namespace log4net.Layout
 	/// Location information uses the <c>System.Diagnostics.StackTrace</c> class to generate
 	/// a call stack. The caller's information is then extracted from this stack.
 	/// </para>
+	/// <note type="caution">
 	/// <para>
 	/// The <c>System.Diagnostics.StackTrace</c> class is not supported on the 
 	/// .NET Compact Framework 1.0 therefore caller location information is not
 	/// available on that framework.
 	/// </para>
+	/// </note>
+	/// <note type="caution">
 	/// <para>
 	/// The <c>System.Diagnostics.StackTrace</c> class has this to say about Release builds:
 	/// </para>
@@ -616,6 +636,11 @@ namespace log4net.Layout
 	/// <para>
 	/// This means that in a Release build the caller information may be incomplete or may 
 	/// not exist at all! Therefore caller location information cannot be relied upon in a Release build.
+	/// </para>
+	/// </note>
+	/// <para>
+	/// Additional pattern converters may be registered with a specific <see cref="PatternLayout"/>
+	/// instance using the <see cref="AddConverter"/> methods.
 	/// </para>
 	/// </remarks>
 	/// <example>
@@ -709,6 +734,8 @@ namespace log4net.Layout
 
 			s_globalRulesRegistry.Add("d", typeof(DatePatternConverter));
 			s_globalRulesRegistry.Add("date", typeof(DatePatternConverter));
+
+			s_globalRulesRegistry.Add("exception", typeof(ExceptionPatternConverter));
 
 			s_globalRulesRegistry.Add("F", typeof(FileLocationPatternConverter));
 			s_globalRulesRegistry.Add("file", typeof(FileLocationPatternConverter));
@@ -870,6 +897,22 @@ namespace log4net.Layout
 		override public void ActivateOptions() 
 		{
 			m_head = CreatePatternParser(m_pattern).Parse();
+
+			PatternConverter curConverter = m_head;
+			while(curConverter != null)
+			{
+				if (curConverter is PatternLayoutConverter)
+				{
+					if (!((PatternLayoutConverter)curConverter).IgnoresException)
+					{
+						// Found converter that handles the exception
+						this.IgnoresException = false;
+
+						break;
+					}
+				}
+				curConverter = curConverter.Next;
+			}
 		}
 
 		#endregion

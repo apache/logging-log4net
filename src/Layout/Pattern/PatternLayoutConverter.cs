@@ -50,6 +50,32 @@ namespace log4net.Layout.Pattern
 
 		#endregion Protected Instance Constructors
 
+		#region Public Properties
+
+		/// <summary>
+		/// Flag indicating if this converter handles the logging event exception
+		/// </summary>
+		/// <value><c>false</c> if this converter handles the logging event exception</value>
+		/// <remarks>
+		/// <para>
+		/// If this converter handles the exception object contained within
+		/// <see cref="LoggingEvent"/>, then this property should be set to
+		/// <c>false</c>. Otherwise, if the layout ignores the exception
+		/// object, then the property should be set to <c>true</c>.
+		/// </para>
+		/// <para>
+		/// Set this value to override a this default setting. The default
+		/// value is <c>true</c>, this converter does not handle the exception.
+		/// </para>
+		/// </remarks>
+		virtual public bool IgnoresException 
+		{ 
+			get { return m_ignoresException; }
+			set { m_ignoresException = value; }
+		}
+
+		#endregion Public Properties
+
 		#region Protected Abstract Methods
 
 		/// <summary>
@@ -83,5 +109,13 @@ namespace log4net.Layout.Pattern
 		}
 
 		#endregion Protected Methods
+
+		/// <summary>
+		/// Flag indicating if this converter handles exceptions
+		/// </summary>
+		/// <remarks>
+		/// <c>false</c> if this converter handles exceptions
+		/// </remarks>
+		private bool m_ignoresException = true;
 	}
 }

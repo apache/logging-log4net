@@ -568,6 +568,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Layout\Pattern\ExceptionPatternConverter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Layout\Pattern\FileLocationPatternConverter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
