@@ -356,28 +356,6 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
-		/// Gets or sets the path to the file that logging will be written to.
-		/// </summary>
-		/// <value>
-		/// The path to the file that logging will be written to.
-		/// </value>
-		/// <remarks>
-		/// <para>
-		/// If the path is relative it is taken as relative from 
-		/// the application base directory.
-		/// </para>
-		/// </remarks>
-		override public string File
-		{
-			get { return base.File; }
-			set 
-			{ 
-				base.File = value; 
-				m_baseFileName = base.File;
-			}
-		}
-
-		/// <summary>
 		/// Gets or sets the rolling file count direction. 
 		/// </summary>
 		/// <value>
@@ -562,12 +540,16 @@ namespace log4net.Appender
 				}
 				else
 				{
-					// If not Appending to an existing file we should have rolled the file out of the
-					// way. Therefore we should not be overwirtting an existing file.
-					// The only exception is if we are not allowed to roll the existing file away.
-					if (m_maxSizeRollBackups != 0 && FileExists(fileName))
+					if (LogLog.IsErrorEnabled)
 					{
-						LogLog.Error("RollingFileAppender: INTERNAL ERROR. Append is False but OutputFile ["+fileName+"] already exists.");
+						// Internal check that the file is not being overwritten
+						// If not Appending to an existing file we should have rolled the file out of the
+						// way. Therefore we should not be over-writing an existing file.
+						// The only exception is if we are not allowed to roll the existing file away.
+						if (m_maxSizeRollBackups != 0 && FileExists(fileName))
+						{
+							LogLog.Error("RollingFileAppender: INTERNAL ERROR. Append is False but OutputFile ["+fileName+"] already exists.");
+						}
 					}
 				}
 
