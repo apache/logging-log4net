@@ -65,50 +65,50 @@ limitations under the License.
            <!-- START main table --> 
                 
 
-	                                                                       <h1><a id="HC-28441588"></a>log4net Release Notes</h1>
+	                                                                       <h1><a id="HC-17547166"></a>log4net Release Notes</h1>
     <div class="i1">
                                     			<h2>Contents</h2>
 		<div class="i1">
-																			    <a href="#HC-30633470">1.2.9 Beta</a><br/>
+																			    <a href="#HC-3338151">1.2.9 Beta</a><br/>
     <div class="i1">
-                                        <a href="#HC-28336193">Breaking Changes</a><br/>
-    <div class="i1">
-                              </div>
-                                                    <a href="#HC-26750913">New Features</a><br/>
+                                        <a href="#HC-26697745">Breaking Changes</a><br/>
     <div class="i1">
                               </div>
-                                                    <a href="#HC-6775863">Other Changes</a><br/>
+                                                    <a href="#HC-8752113">New Features</a><br/>
+    <div class="i1">
+                              </div>
+                                                    <a href="#HC-27692793">Other Changes</a><br/>
     <div class="i1">
                               </div>
                       </div>
-																    <a href="#HC-31753535">1.2.0 Beta 8</a><br/>
+																    <a href="#HC-32801378">1.2.0 Beta 8</a><br/>
     <div class="i1">
                               </div>
-																    <a href="#HC-28154095">1.2.0 Beta 7</a><br/>
+																    <a href="#HC-26396889">1.2.0 Beta 7</a><br/>
     <div class="i1">
                               </div>
-																    <a href="#HC-1281123">1.2.0 Beta 6</a><br/>
+																    <a href="#HC-29384701">1.2.0 Beta 6</a><br/>
     <div class="i1">
                               </div>
-																    <a href="#HC-23459640">1.2.0 Beta 5</a><br/>
+																    <a href="#HC-14556042">1.2.0 Beta 5</a><br/>
     <div class="i1">
                               </div>
-																    <a href="#HC-21607056">1.2.0 Beta 4</a><br/>
+																    <a href="#HC-31601333">1.2.0 Beta 4</a><br/>
     <div class="i1">
                               </div>
-																    <a href="#HC-23738549">1.2.0 Beta 3</a><br/>
+																    <a href="#HC-24056908">1.2.0 Beta 3</a><br/>
     <div class="i1">
                               </div>
-																    <a href="#HC-11601738">1.2.0 Beta 2</a><br/>
+																    <a href="#HC-27108604">1.2.0 Beta 2</a><br/>
     <div class="i1">
                               </div>
-																    <a href="#HC-5612344">1.2.0 Beta 1</a><br/>
+																    <a href="#HC-12231782">1.2.0 Beta 1</a><br/>
     <div class="i1">
                               </div>
 									</div>
-	                                                    <h2><a id="HC-30633470"></a>1.2.9 Beta</h2>
+	                                                    <h2><a id="HC-3338151"></a>1.2.9 Beta</h2>
     <div class="i1">
-                                        <h3><a id="HC-28336193"></a>Breaking Changes</h3>
+                                        <h3><a id="HC-26697745"></a>Breaking Changes</h3>
     <div class="i1">
                                     <ul>
 						<li>
@@ -161,7 +161,7 @@ limitations under the License.
 						</li>
 					</ul>
                       </div>
-                                                    <h3><a id="HC-26750913"></a>New Features</h3>
+                                                    <h3><a id="HC-8752113"></a>New Features</h3>
     <div class="i1">
                                     <ul>
 						<li>
@@ -367,6 +367,20 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 							</p>
 						</li>
 						<li>
+							<h3>Pluggable file locking models for the <span class="code">FileAppender</span></h3>
+							<p>
+								The <span class="code">FileAppender</span> (and by extension the 
+								<span class="code">RollingFileAppender</span>) now support pluggable file
+								locking models. The default model, <span class="code">ExclusiveLock</span>, 
+								maintains the current exclusive file locking behavior. An alternative
+								model, <span class="code">MinimalLock</span>, can be used to support writing to
+								a single output file from multiple processes. 
+							</p>
+							<p>
+								For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.FileAppender.LockingModel.html">log4net.Appender.FileAppender.LockingModel</a>.
+							</p>
+						</li>
+						<li>
 							<h3><span class="code">RollingFileAppender</span> roll once</h3>
 							<p>
 								The <span class="code">RollingFileAppender</span> now supports a new
@@ -399,7 +413,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 						</li>
 					</ul>
                       </div>
-                                                    <h3><a id="HC-6775863"></a>Other Changes</h3>
+                                                    <h3><a id="HC-27692793"></a>Other Changes</h3>
     <div class="i1">
                                     <ul>
 						<li>
@@ -444,7 +458,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 					</ul>
                       </div>
                       </div>
-                                                    <h2><a id="HC-31753535"></a>1.2.0 Beta 8</h2>
+                                                    <h2><a id="HC-32801378"></a>1.2.0 Beta 8</h2>
     <div class="i1">
                                     <ul>
 					<li>
@@ -548,7 +562,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 					</li>
 				</ul>
                       </div>
-                                                    <h2><a id="HC-28154095"></a>1.2.0 Beta 7</h2>
+                                                    <h2><a id="HC-26396889"></a>1.2.0 Beta 7</h2>
     <div class="i1">
                                     <ul>
 					<li>
@@ -609,7 +623,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 					</li>
 				</ul>
                       </div>
-                                                    <h2><a id="HC-1281123"></a>1.2.0 Beta 6</h2>
+                                                    <h2><a id="HC-29384701"></a>1.2.0 Beta 6</h2>
     <div class="i1">
                                     <ul>
 					<li>
@@ -669,11 +683,11 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 					<li>
 						<h3>Removed DomainAttribute.UseDefaultDomain property</h3>
 						<p>
-							Updated default behaviour of <span class="code">DefaultRepositorySelector</span>. Assemblies 
+							Updated default behavior of <span class="code">DefaultRepositorySelector</span>. Assemblies 
 							are now by default placed into the default domain. To specify another domain, 
-							the <span class="code">DomainAttribute</span> must be used. This is the opposite behaviour 
+							the <span class="code">DomainAttribute</span> must be used. This is the opposite behavior 
 							to what was previously available. If you were previously specifying the <span class="code">DomainAttribute.UseDefaultDomain</span>
-							property then you should remove it, and if the default behaviour is now 
+							property then you should remove it, and if the default behavior is now 
 							sufficient, you do not need to specify the <span class="code">DomainAttribute</span> at all.
 						</p>
 					</li>
@@ -791,7 +805,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 					</li>
 				</ul>
                       </div>
-                                                    <h2><a id="HC-23459640"></a>1.2.0 Beta 5</h2>
+                                                    <h2><a id="HC-14556042"></a>1.2.0 Beta 5</h2>
     <div class="i1">
                                     <ul>
 					<li>
@@ -807,7 +821,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 					</li>
 				</ul>
                       </div>
-                                                    <h2><a id="HC-21607056"></a>1.2.0 Beta 4</h2>
+                                                    <h2><a id="HC-31601333"></a>1.2.0 Beta 4</h2>
     <div class="i1">
                                     <ul>
 					<li>
@@ -877,7 +891,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 					</li>
 				</ul>
                       </div>
-                                                    <h2><a id="HC-23738549"></a>1.2.0 Beta 3</h2>
+                                                    <h2><a id="HC-24056908"></a>1.2.0 Beta 3</h2>
     <div class="i1">
                                     <ul>
 					<li>
@@ -922,7 +936,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 					</li>
 				</ul>
                       </div>
-                                                    <h2><a id="HC-11601738"></a>1.2.0 Beta 2</h2>
+                                                    <h2><a id="HC-27108604"></a>1.2.0 Beta 2</h2>
     <div class="i1">
                                     <ul>
 					<li>
@@ -937,7 +951,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 					</li>
 				</ul>
                       </div>
-                                                    <h2><a id="HC-5612344"></a>1.2.0 Beta 1</h2>
+                                                    <h2><a id="HC-12231782"></a>1.2.0 Beta 1</h2>
     <div class="i1">
                                     <ul>
 					<li>
@@ -982,7 +996,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 						<p>
 							The <span class="code">LoggingEvent</span> class is serializable. All local state is 
 							captured before serialization occurs. This now allows <span class="code">LoggingEvent</span> 
-							objects to be serialised between applications or machines.
+							objects to be serialized between applications or machines.
 						</p>
 					</li>
 					<li>
@@ -1066,7 +1080,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 							is to have a separate <span class="code">ILoggerRepository</span> for each domain. When a 
 							call is made to the static methods on <span class="code">LogManager</span> the domain can be 
 							specified (as a string) or the domain can be inferred automatically from the 
-							calling assembly. The default behaviour is for each assembly loaded into the 
+							calling assembly. The default behavior is for each assembly loaded into the 
 							process to have its own domain and <span class="code">ILoggerRepository</span>. These can 
 							each be configured separately. This allows standalone assemblies to use log4net 
 							without conflicting with other modules in the process. The domain for the 

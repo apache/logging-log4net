@@ -4,11 +4,77 @@ Version 1.2.9 BETA
 =============================================================================
 
 
+2005-03-15 21:12  niall
+
+	* Appender/FileAppender.cs:
+
+	Implemented nestable locking and delegated impersonation to the locking model.
+	
+2005-03-14 02:44  nicko
+
+	* Layout/: ILayout.cs, LayoutSkeleton.cs:
+
+	Removed obsolete Format method from ILayout and LayoutSkeleton. It was 
+	already a breaking change, best to remove the old method before the next 
+	release, i.e. so we don't have to break it again.
+	
+2005-03-14 02:08  nicko
+
+	* Appender/EventLogAppender.cs:
+
+	Mono now supports the EventLog API. The implementation is a NOP
+	
+2005-03-11 22:57  nicko
+
+	* Appender/FileAppender.cs:
+
+	Updated doc comments
+	
+2005-03-11 22:30  nicko
+
+	* Appender/FileAppender.cs:
+
+	Updated comments, fixed couple of typos
+	
+2005-03-11 18:38  niall
+
+	* Appender/FileAppender.cs:
+
+	Added documentation for the locking models in FileAppender.
+	
+	* Appender/FileAppender.cs:
+
+	Implemented locking models so that FileAppender and it's subclasses can 
+	change their file access semantics.
+	
+2005-03-07 01:34  nicko
+
+	* Appender/FileAppender.cs:
+
+	Added virtual SetQWForFiles(Stream) method to make it simpler for subclasses 
+	to wrap the output file stream, for example to add support for encryption
+	
+2005-03-04 21:11  nicko
+
+	* DateFormatter/AbsoluteTimeDateFormatter.cs:
+
+	Added Thread.MemoryBarrier call on NET_1_1 after writing to local variable, 
+	this is only required on SMP machines with a weak memory model 
+	(e.g. Itanium)
+	
+2005-02-27 22:57  nicko
+
+	* AssemblyVersionInfo.cpp, AssemblyVersionInfo.cs,
+	AssemblyVersionInfo.js, AssemblyVersionInfo.vb:
+
+	Updated version numbers to 1.2.9.0
+	
 2005-02-15 18:56  nicko
 
 	* Util/TypeConverters/IPAddressConverter.cs:
 
-	Only attempt to IPAddress.Parse if the string contains valid IP address characters
+	Only attempt to IPAddress.Parse if the string contains valid IP address 
+	characters
 
 2005-02-14 19:45  nicko
 
@@ -24,7 +90,8 @@ Version 1.2.9 BETA
 
 	* Config/XmlConfigurator.cs:
 
-	Added DefaultCredential authentication support to loading config from web request
+	Added DefaultCredential authentication support to loading config from web 
+	request
 
 2005-02-14 03:45  nicko
 
@@ -34,14 +101,16 @@ Version 1.2.9 BETA
 
 	* NDC.cs, Util/ThreadContextStack.cs:
 
-	Added support for all old methods in NDC - Depth, SetMaxDepth, CloneStack, Inherit
+	Added support for all old methods in NDC - Depth, SetMaxDepth, CloneStack, 
+	Inherit
 
 2005-02-14 03:24  nicko
 
 	* LogicalThreadContext.cs, ThreadContext.cs, log4net.csproj,
 	  Util/ThreadContextList.cs, Util/ThreadContextLists.cs:
 
-	Removed Context Lists. The Context Stacks give essentially the same functionality
+	Removed Context Lists. The Context Stacks give essentially the same 
+	functionality
 
 	* AssemblyInfo.cs:
 
@@ -49,7 +118,8 @@ Version 1.2.9 BETA
 
 	* Config/XmlConfiguratorAttribute.cs:
 
-	Added support for locating the config file when the app is deployed from a web server, i.e. via no-touch deployment
+	Added support for locating the config file when the app is deployed from a 
+	web server, i.e. via no-touch deployment
 
 	* Config/XmlConfigurator.cs:
 
@@ -85,14 +155,16 @@ Version 1.2.9 BETA
 	  Layout/Pattern/DatePatternConverter.cs,
 	  Util/PatternStringConverters/DatePatternConverter.cs:
 
-	Updated date patterns in doc comments to use .NET DateTime.ToString formatting patterns rather than Java syntax
+	Updated date patterns in doc comments to use .NET DateTime.ToString 
+	formatting patterns rather than Java syntax
 
 	* Appender/EventLogAppender.cs, Appender/RollingFileAppender.cs,
 	  Layout/Pattern/NamedPatternConverter.cs, Util/OptionConverter.cs,
 	  Util/SystemInfo.cs,
 	  Util/PatternStringConverters/RandomStringPatternConverter.cs:
 
-	Added SystemInfo.TryParse methods for parsing strings to integers. These methods give a performance boost when the string cannot be parsed.
+	Added SystemInfo.TryParse methods for parsing strings to integers. These 
+	methods give a performance boost when the string cannot be parsed.
 
 2005-02-07 04:05  nicko
 
@@ -121,11 +193,13 @@ Version 1.2.9 BETA
 	* Util/TypeConverters/: ConverterRegistry.cs,
 	  IPAddressConverter.cs:
 
-	Added IPAddressConverter that converts string IP addresses or DNS Hostnames into IPAddress objects
+	Added IPAddressConverter that converts string IP addresses or DNS Hostnames 
+	into IPAddress objects
 
 	* Util/OptionConverter.cs:
 
-	Updated ConvertStringTo to check for a registered converter before looking for static Parse method
+	Updated ConvertStringTo to check for a registered converter before looking 
+	for static Parse method
 
 	* Util/TypeConverters/ConversionNotSupportedException.cs:
 
@@ -133,7 +207,10 @@ Version 1.2.9 BETA
 
 	* Appender/RollingFileAppender.cs:
 
-	Fixed issue where ExistingInit could open the output file if the current file is from previous date period. This could lead to double open. Fixed CountDirection when value is 0. Previously value had to be > or < 0 but not 0. Now must either be positive or negative, 0 is positive.
+	Fixed issue where ExistingInit could open the output file if the current 
+	file is from previous date period. This could lead to double open. Fixed 
+	CountDirection when value is 0. Previously value had to be > or < 0 but 
+	not 0. Now must either be positive or negative, 0 is positive.
 
 	* Appender/FileAppender.cs:
 
@@ -143,7 +220,8 @@ Version 1.2.9 BETA
 
 	* Appender/ColoredConsoleAppender.cs:
 
-	Fixed background color overspill when changing background colors and the console buffer is scrolled - see comment in code
+	Fixed background color overspill when changing background colors and the 
+	console buffer is scrolled - see comment in code
 
 2005-01-31 22:56  nicko
 
@@ -162,7 +240,8 @@ Version 1.2.9 BETA
 
 	* Appender/ColoredConsoleAppender.cs:
 
-	Updated to support writing more than 30,000 chars. Changed to use Stream that calls WriteFile rather than WriteConsoleW
+	Updated to support writing more than 30,000 chars. Changed to use Stream 
+	that calls WriteFile rather than WriteConsoleW
 
 2005-01-31 02:32  nicko
 
@@ -184,7 +263,8 @@ Version 1.2.9 BETA
 
 	* Repository/Hierarchy/: Hierarchy.cs, Logger.cs:
 
-	Added casting to improve performance when comparing Level object against null. Only reference equals is required
+	Added casting to improve performance when comparing Level object against 
+	null. Only reference equals is required
 
 	* ObjectRenderer/RendererMap.cs:
 
@@ -192,11 +272,13 @@ Version 1.2.9 BETA
 
 	* Core/LoggingEvent.cs:
 
-	Updated to use RendererMap.FindAndRender method that returns a string where appropriate
+	Updated to use RendererMap.FindAndRender method that returns a string where 
+	appropriate
 
 	* Appender/AppenderCollection.cs:
 
-	Added ToArray() to AppenderCollection. Added missing ICollection.CopyTo to ReadOnlyAppenderCollection.
+	Added ToArray() to AppenderCollection. Added missing ICollection.CopyTo to 
+	ReadOnlyAppenderCollection.
 
 2005-01-25 01:59  nicko
 
@@ -208,7 +290,8 @@ Version 1.2.9 BETA
 
 	* Appender/TelnetAppender.cs:
 
-	Added check to only send events if the handler currently has open connections
+	Added check to only send events if the handler currently has open 
+	connections
 
 2005-01-18 20:16  nicko
 
@@ -382,7 +465,8 @@ Version 1.2.9 BETA
 	  Layout/Pattern/LiteralPatternConverter.cs,
 	  Layout/Pattern/NewLinePatternConverter.cs:
 
-	Replaced literal and newline layout pattern converters with string pattern converters
+	Replaced literal and newline layout pattern converters with string pattern 
+	converters
 
 2004-12-19 23:57  nicko
 
@@ -572,7 +656,8 @@ Version 1.2.9 BETA
 
 	* Core/LoggingEvent.cs, Repository/Hierarchy/Logger.cs:
 
-	Added EnsureRepository method to LoggingEvent used by ForcedLog(LoggingEvent) to ensure that the event has a repository set
+	Added EnsureRepository method to LoggingEvent used by 
+	ForcedLog(LoggingEvent) to ensure that the event has a repository set
 
 2004-11-29 16:56  nicko
 
@@ -620,7 +705,8 @@ Version 1.2.9 BETA
 
 	* Appender/FileAppender.cs:
 
-	Added check to FileAppender.OpenFile to ensure that the file path is fully qualified
+	Added check to FileAppender.OpenFile to ensure that the file path is fully 
+	qualified
 
 	* Util/LogLog.cs:
 
@@ -686,13 +772,15 @@ Version 1.2.9 BETA
 	* Appender/RollingFileAppender.cs:
 
 	Added support for rolling the current file out of the way if not appending.
-	Added new rolling style 'Once' which rolls the file only when the appender is configured.
+	Added new rolling style 'Once' which rolls the file only when the appender 
+	is configured.
 
 2004-11-17 21:50  nicko
 
 	* ObjectRenderer/DefaultRenderer.cs:
 
-	Removed explicit support for rendering Exceptions. Exception.ToString gives better results.
+	Removed explicit support for rendering Exceptions. Exception.ToString gives 
+	better results.
 	Added support for rendering collections and dictionaries.
 
 2004-11-15 20:40  nicko
@@ -713,7 +801,8 @@ Version 1.2.9 BETA
 
 	* Config/SecurityContextProviderAttribute.cs:
 
-	Added SecurityContextProviderAttribute for specifying the SecurityContextProvider type in an assembly attribute
+	Added SecurityContextProviderAttribute for specifying the 
+	SecurityContextProvider type in an assembly attribute
 
 	* Config/ConfiguratorAttribute.cs,
 	  Config/XmlConfiguratorAttribute.cs,
@@ -733,7 +822,11 @@ Version 1.2.9 BETA
 
 	* Core/LoggingEvent.cs, Layout/PatternLayout.cs:
 
-	Renamed LoggingEvent.EventProperties to LoggingEvent.Properties. This is in line with the other properties layers and is also backwardly compatible as that is what it used to be called. If the properties have been cached then the combined properties are returned, otherwise just the event properties are returned.
+	Renamed LoggingEvent.EventProperties to LoggingEvent.Properties. This is in 
+	line with the other properties layers and is also backwardly compatible as 
+	that is what it used to be called. If the properties have been cached then 
+	the combined properties are returned, otherwise just the event properties 
+	are returned.
 
 2004-10-31 22:35  nicko
 
@@ -756,9 +849,13 @@ Version 1.2.9 BETA
 	  Repository/Hierarchy/LoggerKey.cs,
 	  Repository/Hierarchy/XmlHierarchyConfigurator.cs:
 
-	Update to allow Level configuration to be redefined in the repository LevelMap. This is now the authority on levels and the Level.Debug etc. values are just the default values.
-	Levels now have a display name which can be configured to alias or localize levels in the output.
-	The LogImpl looks up the level values to use from the LevelMap and listens for configuration changes.
+	Update to allow Level configuration to be redefined in the repository 
+	LevelMap. This is now the authority on levels and the Level.Debug etc. 
+	values are just the default values.
+	Levels now have a display name which can be configured to alias or localize 
+	levels in the output.
+	The LogImpl looks up the level values to use from the LevelMap and listens 
+	for configuration changes.
 
 2004-10-01 22:24  nicko
 
@@ -772,7 +869,8 @@ Version 1.2.9 BETA
 	  Util/OptionConverter.cs, Util/PatternParser.cs,
 	  Util/TypeConverters/ConverterRegistry.cs:
 
-	Replaced all type.GetConstructor().Invoke() with EmptyTypes with Activator.CreateInstance
+	Replaced all type.GetConstructor().Invoke() with EmptyTypes with 
+	Activator.CreateInstance
 
 	* Repository/: ILoggerRepository.cs, LoggerRepositorySkeleton.cs,
 	  Hierarchy/Hierarchy.cs:
@@ -788,7 +886,9 @@ Version 1.2.9 BETA
 
 	* ILog.cs, Core/LogImpl.cs:
 
-	Added DebugFormat, InfoFormat, WarnFormat, ErrorFormat and FatalFormat methods to ILog interface. These methods use String.Format style format strings.
+	Added DebugFormat, InfoFormat, WarnFormat, ErrorFormat and FatalFormat 
+	methods to ILog interface. These methods use String.Format style format 
+	strings.
 
 2004-09-27 00:21  nicko
 
@@ -801,28 +901,37 @@ Version 1.2.9 BETA
 	  Util/PatternStringConverters/PropertyPatternConverter.cs:
 
 	Added LogicalThreadContext based on ideas by Ian Kundil.
-	The LogicalThreadContext stores properties in the System.Runtime.Remoting.Messaging.CallContext which allows them to flow across thread boundaries as a call is marshalled. This does not support flowing across a Remoting boundary.
+	The LogicalThreadContext stores properties in the 
+	System.Runtime.Remoting.Messaging.CallContext which allows them to flow 
+	across thread boundaries as a call is marshalled. This does not support 
+	flowing across a Remoting boundary.
 
-	Reduced the times when a PropertiesDictionary is created just to support reading.
+	Reduced the times when a PropertiesDictionary is created just to support 
+	reading.
 
 2004-09-26 23:41  nicko
 
 	* Appender/RollingFileAppender.cs:
 
-	Updated doc comments. I have not been able to confirm the stuff on win32 file locking and sharing modes
+	Updated doc comments. I have not been able to confirm the stuff on win32 
+	file locking and sharing modes
 
 	* Appender/BufferingForwardingAppender.cs,
 	  Appender/ForwardingAppender.cs, Core/IAppenderAttachable.cs,
 	  Repository/Hierarchy/Logger.cs, Util/AppenderAttachedImpl.cs:
 
-	Amended the IAppenderAttachable interface to make the behaviour regarding closing the appenders more explicit. Updated the RemoveAppender methods to return the appender removed.
+	Amended the IAppenderAttachable interface to make the behaviour regarding 
+	closing the appenders more explicit. Updated the RemoveAppender methods to 
+	return the appender removed.
 
 2004-09-26 19:06  nicko
 
 	* log4net.csproj, Appender/AnsiColorTerminalAppender.cs:
 
 	Added AnsiColorTerminalAppender contributed by Patrick Wagstrom.
-	This appender uses ANSI Color escape sequences to colorize log messages. Different foreground and background colors as well as attributes like Bright and Underline can be specified for different levels.
+	This appender uses ANSI Color escape sequences to colorize log messages. 
+	Different foreground and background colors as well as attributes like 
+	Bright and Underline can be specified for different levels.
 
 2004-09-19 20:50  nicko
 
@@ -830,7 +939,8 @@ Version 1.2.9 BETA
 	  Layout/Pattern/ExceptionPatternConverter.cs,
 	  Layout/Pattern/PatternLayoutConverter.cs:
 
-	Added ExceptionPatternConverter. Updated PatternLayout to check converters for IgnoresException.
+	Added ExceptionPatternConverter. Updated PatternLayout to check converters 
+	for IgnoresException.
 
 	* Layout/LayoutSkeleton.cs:
 
@@ -877,7 +987,8 @@ Version 1.2.9 BETA
 
 	* Appender/: LocalSyslogAppender.cs, RemoteSyslogAppender.cs:
 
-	Added LocalSyslogAppender and RemoteSyslogAppender based on Rob Lyon's contribution.
+	Added LocalSyslogAppender and RemoteSyslogAppender based on Rob Lyon's 
+	contribution.
 	LocalSyslogAppender uses libc calls to write to the local syslog service.
 	RemoteSyslogAppender uses UDP port 514 to send messages to a remote syslogd.
 
@@ -926,7 +1037,8 @@ Version 1.2.9 BETA
 
 	Added LevelMapping helper to simplify writing appender configurable level
 	mappings, e.g. the Level to Color mapping of the ColoredConsoleAppender.
-	Updated the ColoredConsoleAppender and EventLogAppender to use the LevelMapping.
+	Updated the ColoredConsoleAppender and EventLogAppender to use the 
+	LevelMapping.
 
 2004-09-10 20:40  nicko
 
@@ -977,17 +1089,22 @@ Version 1.2.9 BETA
 	  Util/PatternStringConverters/PropertyPatternConverter.cs:
 
 	Added ThreadContext.
-	The ThreadContext.Properties is a replacement for the MDC. The ThreadContext.Stacks is a replacement for the NDC.
-	The ThreadContext.Stacks and ThreadContext.Lists are stored in the ThreadContext.Properties.
+	The ThreadContext.Properties is a replacement for the MDC. The 
+	ThreadContext.Stacks is a replacement for the NDC.
+	The ThreadContext.Stacks and ThreadContext.Lists are stored in the 
+	ThreadContext.Properties.
 	The MDC and NDC forward to the new implementation where possible.
-	The contexts are composed into layers; GlobalContext.Properties are overridden by ThreadContext.Properties and they are overridden by LoggingEvent.EventProperties.
+	The contexts are composed into layers; GlobalContext.Properties are 
+	overridden by ThreadContext.Properties and they are overridden by 
+	LoggingEvent.EventProperties.
 	Changed filters and layouts to lookup properties from the LoggingEvent.
 
 2004-09-09 21:37  nicko
 
 	* Config/XmlConfigurator.cs:
 
-	Improved doc comments. Added more detail to missing config section error message
+	Improved doc comments. Added more detail to missing config section error 
+	message
 
 	* GlobalContext.cs:
 
@@ -997,11 +1114,13 @@ Version 1.2.9 BETA
 
 	* ObjectRenderer/DefaultRenderer.cs:
 
-	Fix for error when reading the Exception.Source property that may occur if it is an unmanaged exception. Reported by Brent Matzelle.
+	Fix for error when reading the Exception.Source property that may occur if 
+	it is an unmanaged exception. Reported by Brent Matzelle.
 
 	* ObjectRenderer/RendererMap.cs:
 
-	Added simple FindAndRender() method that writes to a StringWriter and then returns the string
+	Added simple FindAndRender() method that writes to a StringWriter and then 
+	returns the string
 
 	* Util/: GlobalContextProperties.cs, PatternConverter.cs:
 
@@ -1009,7 +1128,8 @@ Version 1.2.9 BETA
 
 	* Repository/Hierarchy/XmlHierarchyConfigurator.cs:
 
-	Added support for using a TypeConverter to convert from the explicitly specified type to the actual required property type
+	Added support for using a TypeConverter to convert from the explicitly 
+	specified type to the actual required property type
 
 2004-08-23 01:07  nicko
 
@@ -1028,7 +1148,8 @@ Version 1.2.9 BETA
 	* Layout/: XmlLayoutSchemaLog4j.cs,
 	  Pattern/RelativeTimePatternConverter.cs:
 
-	Fixed DateTime handling, convert to UTC before any math operations involving 2 DateTimes.
+	Fixed DateTime handling, convert to UTC before any math operations 
+	involving 2 DateTimes.
 
 	* Core/LoggingEvent.cs:
 
@@ -1075,16 +1196,19 @@ Version 1.2.9 BETA
 
 	* Layout/PatternLayout.cs:
 
-	Cleaned up PatternLayout(string) constructor. Added more docs about ActivateOptions() method
+	Cleaned up PatternLayout(string) constructor. Added more docs about 
+	ActivateOptions() method
 
 2004-08-11 21:04  nicko
 
 	* Appender/SmtpAppender.cs:
 
 	Update to the SmtpAppender from Al Little.
-	Added SMTP Basic (username & password) and NTLM (Windows Integrated) authentication to the SmtpAppender.
+	Added SMTP Basic (username & password) and NTLM (Windows Integrated) 
+	authentication to the SmtpAppender.
 	Added property to allow the SMTP server port to be set.
-	These features are only available on .NET 1.1 runtime using CDO as the mail client implementation.
+	These features are only available on .NET 1.1 runtime using CDO as the mail 
+	client implementation.
 
 2004-08-02 10:44  nicko
 
@@ -1127,7 +1251,8 @@ Version 1.2.9 BETA
 	  Util/GlobalContextProperties.cs:
 
 	Added GlobalContext similar to MDC but not thread local.
-	GlobalContext.Properties is a shared properties dictionary that can be included in the
+	GlobalContext.Properties is a shared properties dictionary that can be 
+	included in the
 	output by using the %global pattern in the PatternLayout.
 
 	* Repository/Hierarchy/XmlHierarchyConfigurator.cs:
@@ -1136,9 +1261,11 @@ Version 1.2.9 BETA
 
 	* Util/: PropertiesDictionary.cs, ReadOnlyPropertiesDictionary.cs:
 
-	Added ReadOnlyPropertiesDictionary that is a read only mapping from String to Object.
+	Added ReadOnlyPropertiesDictionary that is a read only mapping from String 
+	to Object.
 	Changed the PropertiesDictionary to extend the ReadOnlyPropertiesDictionary.
-	Added copy constructors to both to allows the dictionary to be initialised from another
+	Added copy constructors to both to allows the dictionary to be initialised 
+	from another
 	ReadOnlyPropertiesDictionary.
 
 2004-07-30 15:19  nicko
@@ -1155,9 +1282,10 @@ Version 1.2.9 BETA
 
 	* Repository/Hierarchy/XmlHierarchyConfigurator.cs:
 
-	Changed the way that the Add<name> method is looked up. The code now supports methods
-	that are overloaded and finds the first one with a single argument, previously it would
-	only find the first method and give an error if it did not have a single argument.
+	Changed the way that the Add<name> method is looked up. The code now 
+	supports methods that are overloaded and finds the first one with a single 
+	argument, previously it would only find the first method and give an error 
+	if it did not have a single argument.
 
 2004-07-24 15:54  drieseng
 
@@ -1190,7 +1318,8 @@ Version 1.2.9 BETA
 	  Repository/LoggerRepositorySkeleton.cs,
 	  Repository/Hierarchy/Hierarchy.cs:
 
-	Changed event delivery method names from FireXXX to OnXXX as per .net guidelines
+	Changed event delivery method names from FireXXX to OnXXX as per .net 
+	guidelines
 
 2004-06-07 02:10  nicko
 
@@ -1231,11 +1360,13 @@ Version 1.2.9 BETA
 
 	* Plugin/RemoteLoggingServerPlugin.cs:
 
-	Made the RemoteLoggingSinkImpl nested class private. Removed the RemoteLoggingSinkImpl.LoggerRepository property
+	Made the RemoteLoggingSinkImpl nested class private. Removed the 
+	RemoteLoggingSinkImpl.LoggerRepository property
 
 	* Repository/Hierarchy/Hierarchy.cs:
 
-	Added protected methods to access the implementation of the IBasicRepositoryConfigurator and IXmlRepositoryConfigurator interfaces.
+	Added protected methods to access the implementation of the 
+	IBasicRepositoryConfigurator and IXmlRepositoryConfigurator interfaces.
 
 	* Util/PatternStringConverters/EnvironmentPatternConverter.cs:
 
@@ -1247,7 +1378,8 @@ Version 1.2.9 BETA
 
 	* Util/SystemInfo.cs:
 
-	Make catches more specific where possible. Added method CreateArgumentOutOfRangeException
+	Make catches more specific where possible. Added method 
+	CreateArgumentOutOfRangeException
 
 2004-06-02 17:28  nicko
 
@@ -1257,7 +1389,8 @@ Version 1.2.9 BETA
 
 	* Util/CyclicBuffer.cs:
 
-	Simplified CyclicBuffer.Append method signature. Now just returns the discarded event (if any) rather than having bools and out params
+	Simplified CyclicBuffer.Append method signature. Now just returns the 
+	discarded event (if any) rather than having bools and out params
 
 	* Util/: Transform.cs, OptionConverter.cs:
 
@@ -1265,15 +1398,18 @@ Version 1.2.9 BETA
 
 	* Repository/Hierarchy/LoggerKey.cs:
 
-	Removed unused internal property Value. Marked private fields as readonly as LoggerKey is immutable.
+	Removed unused internal property Value. Marked private fields as readonly 
+	as LoggerKey is immutable.
 
 	* Repository/LoggerRepositorySkeleton.cs:
 
-	Updated parameter names in line with guidelines. Fixed race condition in FireShutdownEvent
+	Updated parameter names in line with guidelines. Fixed race condition in 
+	FireShutdownEvent
 
 	* Core/WrapperMap.cs:
 
-	Made the ILoggerRepository Shutdown event handler delegate method private. Added a new overridable method RepositoryShutdown.
+	Made the ILoggerRepository Shutdown event handler delegate method private. 
+	Added a new overridable method RepositoryShutdown.
 
 2004-06-02 16:37  nicko
 
@@ -1296,8 +1432,10 @@ Version 1.2.9 BETA
 	  TraceAppender.cs, ColoredConsoleAppender.cs:
 
 	Marked all non default constructors as Obsolete.
-	The correct usage model for appenders is to create an instance using the default constructor, set the properties on the instance and then call ActivateOptions().
-	The alternative constructors represent a set of different and possible incorrect initialisation paths.
+	The correct usage model for appenders is to create an instance using the 
+	default constructor, set the properties on the instance and then call 
+	ActivateOptions(). The alternative constructors represent a set of 
+	different and possible incorrect initialisation paths.
 
 	* Appender/MemoryAppender.cs:
 
@@ -1305,7 +1443,8 @@ Version 1.2.9 BETA
 
 	* Config/BasicConfigurator.cs:
 
-	Changed default console appender construction to use the IOptionHandler pattern more correctly.
+	Changed default console appender construction to use the IOptionHandler 
+	pattern more correctly.
 
 	* Core/LevelCollection.cs, Appender/AppenderCollection.cs:
 
@@ -1327,7 +1466,8 @@ Version 1.2.9 BETA
 
 	* Repository/LoggerRepositorySkeleton.cs:
 
-	Changed to set threshold field directly in the constructor rather than using the virtual property
+	Changed to set threshold field directly in the constructor rather than 
+	using the virtual property
 
 	* Util/PatternString.cs:
 
@@ -1363,7 +1503,8 @@ Version 1.2.9 BETA
 
 	* Appender/AppenderSkeleton.cs:
 
-	Renamed LoggingEvent.GetExceptionStrRep to GetExceptionString. Updated doc comments.
+	Renamed LoggingEvent.GetExceptionStrRep to GetExceptionString. Updated doc 
+	comments.
 
 2004-05-30 12:38  nicko
 
@@ -1400,7 +1541,8 @@ Version 1.2.9 BETA
 
 	* Layout/: XMLLayout.cs, XMLLayoutBase.cs, XmlLayoutSchemaLog4j.cs:
 
-	Renamed loggingEvent.GetExceptionStrRep to GetExceptionString. Updated doc comments
+	Renamed loggingEvent.GetExceptionStrRep to GetExceptionString. Updated doc 
+	comments
 
 	* Layout/Pattern/: DatePatternConverter.cs,
 	  NamedPatternConverter.cs, NewLinePatternConverter.cs:
@@ -1454,12 +1596,14 @@ Version 1.2.9 BETA
 	* AssemblyInfo.cs:
 
 	Reinstated CLSCompliant attribute in Mono builds.
-	Removed code from build.cmd that called %WINDIR%\monobasepath.bat if it exists.
-	This was a hack to get early versions of mono to build but is no longer required.
+	Removed code from build.cmd that called %WINDIR%\monobasepath.bat if it 
+	exists. This was a hack to get early versions of mono to build but is no 
+	longer required.
 
 	* Util/: NativeError.cs, SystemInfo.cs:
 
-	Added NativeError.GetLastError method to get the native error for the last windows error.
+	Added NativeError.GetLastError method to get the native error for the last 
+	windows error.
 
 2004-05-21 23:15  nicko
 
@@ -1481,8 +1625,10 @@ Version 1.2.9 BETA
 	  Util/PatternStringConverters/EnvironmentPatternConverter.cs:
 
 	Updated log4net.build to not specify file excludes for specific platforms.
-	Updated code files to use C# preprocessor defines to conditionally exclude the contents of some files from some of the builds.
-	This improves the visibility of the exclusions and reduces the maintenance of the nant build file.
+	Updated code files to use C# preprocessor defines to conditionally exclude 
+	the contents of some files from some of the builds. This improves the 
+	visibility of the exclusions and reduces the maintenance of the nant build 
+	file.
 
 2004-05-20 20:40  nicko
 
@@ -1506,13 +1652,15 @@ Version 1.2.9 BETA
 
 	* Util/PropertiesDictionary.cs:
 
-	Fixed bug where the dictionary entry key is not decoded correctly on deserialization
+	Fixed bug where the dictionary entry key is not decoded correctly on 
+	deserialization
 
 2004-04-18 19:34  nicko
 
 	* Util/PropertiesDictionary.cs:
 
-	Fixed issue with SerializationInfo keys, must be valid XML Qnames otherwise SOAP serialization fails
+	Fixed issue with SerializationInfo keys, must be valid XML Qnames otherwise 
+	SOAP serialization fails
 
 2004-03-12 19:12  nicko
 
@@ -1549,7 +1697,8 @@ Version 1.2.9 BETA
 
 	* log4net.sln:
 
-	Removed the ReleaseStrong configuration from the solution, it doesn't exist anymore.
+	Removed the ReleaseStrong configuration from the solution, it doesn't exist 
+	anymore.
 
 	* Appender/BufferingAppenderSkeleton.cs:
 
@@ -1621,7 +1770,8 @@ Version 1.2.9 BETA
 	  Repository/Hierarchy/Logger.cs:
 
 	Created new project log4net.Tests.
-	Moved existing NUnit tests from the log4net assembly to the log4net.Tests assembly.
+	Moved existing NUnit tests from the log4net assembly to the log4net.Tests 
+	assembly.
 
 2004-02-16 02:10  nicko
 

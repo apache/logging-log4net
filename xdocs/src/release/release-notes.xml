@@ -288,6 +288,20 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 							</p>
 						</li>
 						<li>
+							<h3>Pluggable file locking models for the <span class="code">FileAppender</span></h3>
+							<p>
+								The <span class="code">FileAppender</span> (and by extension the 
+								<span class="code">RollingFileAppender</span>) now support pluggable file
+								locking models. The default model, <span class="code">ExclusiveLock</span>, 
+								maintains the current exclusive file locking behavior. An alternative
+								model, <span class="code">MinimalLock</span>, can be used to support writing to
+								a single output file from multiple processes. 
+							</p>
+							<p>
+								For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.FileAppender.LockingModel.html">log4net.Appender.FileAppender.LockingModel</a>.
+							</p>
+						</li>
+						<li>
 							<h3><span class="code">RollingFileAppender</span> roll once</h3>
 							<p>
 								The <span class="code">RollingFileAppender</span> now supports a new
@@ -591,11 +605,11 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 					<li>
 						<h3>Removed DomainAttribute.UseDefaultDomain property</h3>
 						<p>
-							Updated default behaviour of <span class="code">DefaultRepositorySelector</span>. Assemblies 
+							Updated default behavior of <span class="code">DefaultRepositorySelector</span>. Assemblies 
 							are now by default placed into the default domain. To specify another domain, 
-							the <span class="code">DomainAttribute</span> must be used. This is the opposite behaviour 
+							the <span class="code">DomainAttribute</span> must be used. This is the opposite behavior 
 							to what was previously available. If you were previously specifying the <span class="code">DomainAttribute.UseDefaultDomain</span>
-							property then you should remove it, and if the default behaviour is now 
+							property then you should remove it, and if the default behavior is now 
 							sufficient, you do not need to specify the <span class="code">DomainAttribute</span> at all.
 						</p>
 					</li>
@@ -904,7 +918,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 						<p>
 							The <span class="code">LoggingEvent</span> class is serializable. All local state is 
 							captured before serialization occurs. This now allows <span class="code">LoggingEvent</span> 
-							objects to be serialised between applications or machines.
+							objects to be serialized between applications or machines.
 						</p>
 					</li>
 					<li>
@@ -988,7 +1002,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 							is to have a separate <span class="code">ILoggerRepository</span> for each domain. When a 
 							call is made to the static methods on <span class="code">LogManager</span> the domain can be 
 							specified (as a string) or the domain can be inferred automatically from the 
-							calling assembly. The default behaviour is for each assembly loaded into the 
+							calling assembly. The default behavior is for each assembly loaded into the 
 							process to have its own domain and <span class="code">ILoggerRepository</span>. These can 
 							each be configured separately. This allows standalone assemblies to use log4net 
 							without conflicting with other modules in the process. The domain for the 
