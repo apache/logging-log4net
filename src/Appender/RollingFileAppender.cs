@@ -635,7 +635,7 @@ namespace log4net.Appender
 		/// <returns></returns>
 		private static string GetWildcardPatternForFile(string baseFileName)
 		{
-			return baseFileName + "*";
+			return baseFileName + '*';
 		}
 
 		/// <summary>
