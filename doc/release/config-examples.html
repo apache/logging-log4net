@@ -65,81 +65,81 @@ limitations under the License.
            <!-- START main table --> 
                 
 
-	                                                                       <h1><a id="HC-19673895"></a>log4net Config Examples</h1>
+	                                                                       <h1><a id="HC-27582163"></a>log4net Config Examples</h1>
     <div class="i1">
                                     			<h2>Contents</h2>
 		<div class="i1">
-																			    <a href="#HC-25804854">Overview</a><br/>
+																			    <a href="#HC-31384576">Overview</a><br/>
     <div class="i1">
                                                   </div>
-																    <a href="#HC-14111765">AdoNetAppender</a><br/>
+																    <a href="#HC-14910620">AdoNetAppender</a><br/>
     <div class="i1">
-                                                                                <a href="#HC-31384576">MS SQL Server</a><br/>
+                                                                                <a href="#HC-21101238">MS SQL Server</a><br/>
     <div class="i1">
                                                                                                               </div>
-                                                    <a href="#HC-14910620">MS Access</a><br/>
+                                                    <a href="#HC-4973260">MS Access</a><br/>
     <div class="i1">
                                                   </div>
-                                                    <a href="#HC-18306724">Oracle9i</a><br/>
+                                                    <a href="#HC-1503089">Oracle9i</a><br/>
     <div class="i1">
                                                                                                               </div>
-                                                    <a href="#HC-20526817">Oracle8i</a><br/>
+                                                    <a href="#HC-29493424">Oracle8i</a><br/>
     <div class="i1">
                                                                                                               </div>
-                                                    <a href="#HC-21101238">IBM DB2</a><br/>
+                                                    <a href="#HC-29919449">IBM DB2</a><br/>
     <div class="i1">
                                                                                                               </div>
                       </div>
-																    <a href="#HC-11731442">AspNetTraceAppender</a><br/>
+																    <a href="#HC-9472129">AspNetTraceAppender</a><br/>
     <div class="i1">
                                                                       </div>
-																    <a href="#HC-4508606">BufferingForwardingAppender</a><br/>
+																    <a href="#HC-15855697">BufferingForwardingAppender</a><br/>
     <div class="i1">
                                                                                                               </div>
-																    <a href="#HC-10233621">ColoredConsoleAppender</a><br/>
+																    <a href="#HC-30969271">ColoredConsoleAppender</a><br/>
     <div class="i1">
                                                                                                               </div>
-																    <a href="#HC-30008954">ConsoleAppender</a><br/>
+																    <a href="#HC-4205299">ConsoleAppender</a><br/>
     <div class="i1">
                                                                                                               </div>
-																    <a href="#HC-3823508">EventLogAppender</a><br/>
+																    <a href="#HC-12839401">EventLogAppender</a><br/>
     <div class="i1">
                                                                                                                                   </div>
-																    <a href="#HC-4973260">FileAppender</a><br/>
+																    <a href="#HC-3273383">FileAppender</a><br/>
     <div class="i1">
                                                                                                               </div>
-																    <a href="#HC-1503089">ForwardingAppender</a><br/>
+																    <a href="#HC-20039836">ForwardingAppender</a><br/>
     <div class="i1">
                                                                       </div>
-																    <a href="#HC-29493424">MemoryAppender</a><br/>
+																    <a href="#HC-23690087">MemoryAppender</a><br/>
     <div class="i1">
                                                                       </div>
-																    <a href="#HC-29919449">NetSendAppender</a><br/>
+																    <a href="#HC-2409635">NetSendAppender</a><br/>
     <div class="i1">
                                                                       </div>
-																    <a href="#HC-9472129">OutputDebugStringAppender</a><br/>
+																    <a href="#HC-32098350">OutputDebugStringAppender</a><br/>
     <div class="i1">
                                                                       </div>
-																    <a href="#HC-15855697">RemotingAppender</a><br/>
+																    <a href="#HC-22367538">RemotingAppender</a><br/>
     <div class="i1">
                                                                                                               </div>
-																    <a href="#HC-30969271">RollingFileAppender</a><br/>
+																    <a href="#HC-20910958">RollingFileAppender</a><br/>
     <div class="i1">
                                                                                                                                                                                                                   </div>
-																    <a href="#HC-4205299">SmtpAppender</a><br/>
+																    <a href="#HC-1352077">SmtpAppender</a><br/>
     <div class="i1">
                                                                                                                                                       </div>
-																    <a href="#HC-12839401">SmtpPickupDirAppender</a><br/>
+																    <a href="#HC-8012937">SmtpPickupDirAppender</a><br/>
     <div class="i1">
                                                                                                               </div>
-																    <a href="#HC-3273383">TraceAppender</a><br/>
+																    <a href="#HC-19509473">TraceAppender</a><br/>
     <div class="i1">
                                                                       </div>
-																    <a href="#HC-23690087">UdpAppender</a><br/>
+																    <a href="#HC-1812813">UdpAppender</a><br/>
     <div class="i1">
                                                                       </div>
 									</div>
-	                                                    <h2><a id="HC-25804854"></a>Overview</h2>
+	                                                    <h2><a id="HC-31384576"></a>Overview</h2>
     <div class="i1">
                                     <p>
 					This document presents example configurations for the built-in appenders.
@@ -153,7 +153,7 @@ limitations under the License.
 					more details on each options see the SDK documentation for the appender.
 				</p>
                       </div>
-                                                    <h2><a id="HC-14111765"></a>AdoNetAppender</h2>
+                                                    <h2><a id="HC-14910620"></a>AdoNetAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.AdoNetAppender.html">log4net.Appender.AdoNetAppender</a>.
@@ -162,7 +162,7 @@ limitations under the License.
 					The configuration of the <span class="code">AdoNetAppender</span> depends on the
 					provider selected for the target database. Here are some examples.
 				</p>
-                                                    <h3><a id="HC-31384576"></a>MS SQL Server</h3>
+                                                    <h3><a id="HC-21101238"></a>MS SQL Server</h3>
     <div class="i1">
                                     <p>
 						The following example shows how to configure the <span class="code">AdoNetAppender</span> 
@@ -248,7 +248,7 @@ CREATE TABLE [dbo].[Log] (
 					</pre></div>
 
                       </div>
-                                                    <h3><a id="HC-14910620"></a>MS Access</h3>
+                                                    <h3><a id="HC-4973260"></a>MS Access</h3>
     <div class="i1">
                                     <p>
 						This example shows how to write events to an Access Database.
@@ -302,7 +302,7 @@ CREATE TABLE [dbo].[Log] (
 					</pre></div>
 
                       </div>
-                                                    <h3><a id="HC-18306724"></a>Oracle9i</h3>
+                                                    <h3><a id="HC-1503089"></a>Oracle9i</h3>
     <div class="i1">
                                     <p>
 						This example shows how to write events to an Oracle9i Database.
@@ -372,7 +372,7 @@ create table log (
 					</pre></div>
 
                       </div>
-                                                    <h3><a id="HC-20526817"></a>Oracle8i</h3>
+                                                    <h3><a id="HC-29493424"></a>Oracle8i</h3>
     <div class="i1">
                                     <p>
 						This example shows how to write events to an Oracle8i Database.
@@ -425,7 +425,7 @@ TABLESPACE CSAX30D LOGGING
 					</pre></div>
 
                       </div>
-                                                    <h3><a id="HC-21101238"></a>IBM DB2</h3>
+                                                    <h3><a id="HC-29919449"></a>IBM DB2</h3>
     <div class="i1">
                                     <p>
 						This example shows how to write events to an IBM DB2 8.2 Database.
@@ -514,7 +514,7 @@ IN &quot;LRGTABLES&quot;;
 
                       </div>
                       </div>
-                                                    <h2><a id="HC-11731442"></a>AspNetTraceAppender</h2>
+                                                    <h2><a id="HC-9472129"></a>AspNetTraceAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.AspNetTraceAppender.html">log4net.Appender.AspNetTraceAppender</a>.
@@ -536,7 +536,7 @@ IN &quot;LRGTABLES&quot;;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-4508606"></a>BufferingForwardingAppender</h2>
+                                                    <h2><a id="HC-15855697"></a>BufferingForwardingAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.BufferingForwardingAppender.html">log4net.Appender.BufferingForwardingAppender</a>.
@@ -573,7 +573,7 @@ IN &quot;LRGTABLES&quot;;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-10233621"></a>ColoredConsoleAppender</h2>
+                                                    <h2><a id="HC-30969271"></a>ColoredConsoleAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.ColoredConsoleAppender.html">log4net.Appender.ColoredConsoleAppender</a>.
@@ -619,7 +619,7 @@ IN &quot;LRGTABLES&quot;;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-30008954"></a>ConsoleAppender</h2>
+                                                    <h2><a id="HC-4205299"></a>ConsoleAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.ConsoleAppender.html">log4net.Appender.ConsoleAppender</a>.
@@ -652,7 +652,7 @@ IN &quot;LRGTABLES&quot;;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-3823508"></a>EventLogAppender</h2>
+                                                    <h2><a id="HC-12839401"></a>EventLogAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.EventLogAppender.html">log4net.Appender.EventLogAppender</a>.
@@ -691,7 +691,7 @@ IN &quot;LRGTABLES&quot;;
 					FAQ: <a href="faq.html#trouble-EventLog">Why doesn't the EventLogAppender work?</a>.
 				</p>
                       </div>
-                                                    <h2><a id="HC-4973260"></a>FileAppender</h2>
+                                                    <h2><a id="HC-3273383"></a>FileAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.FileAppender.html">log4net.Appender.FileAppender</a>.
@@ -730,7 +730,7 @@ IN &quot;LRGTABLES&quot;;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-1503089"></a>ForwardingAppender</h2>
+                                                    <h2><a id="HC-20039836"></a>ForwardingAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.ForwardingAppender.html">log4net.Appender.ForwardingAppender</a>.
@@ -753,7 +753,7 @@ IN &quot;LRGTABLES&quot;;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-29493424"></a>MemoryAppender</h2>
+                                                    <h2><a id="HC-23690087"></a>MemoryAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.MemoryAppender.html">log4net.Appender.MemoryAppender</a>.
@@ -770,7 +770,7 @@ IN &quot;LRGTABLES&quot;;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-29919449"></a>NetSendAppender</h2>
+                                                    <h2><a id="HC-2409635"></a>NetSendAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.NetSendAppender.html">log4net.Appender.NetSendAppender</a>.
@@ -799,7 +799,7 @@ IN &quot;LRGTABLES&quot;;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-9472129"></a>OutputDebugStringAppender</h2>
+                                                    <h2><a id="HC-32098350"></a>OutputDebugStringAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.OutputDebugStringAppender.html">log4net.Appender.OutputDebugStringAppender</a>.
@@ -818,7 +818,7 @@ IN &quot;LRGTABLES&quot;;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-15855697"></a>RemotingAppender</h2>
+                                                    <h2><a id="HC-22367538"></a>RemotingAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.RemotingAppender.html">log4net.Appender.RemotingAppender</a>.
@@ -863,7 +863,7 @@ IN &quot;LRGTABLES&quot;;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-30969271"></a>RollingFileAppender</h2>
+                                                    <h2><a id="HC-20910958"></a>RollingFileAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.RollingFileAppender.html">log4net.Appender.RollingFileAppender</a>.
@@ -960,7 +960,7 @@ IN &quot;LRGTABLES&quot;;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-4205299"></a>SmtpAppender</h2>
+                                                    <h2><a id="HC-1352077"></a>SmtpAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.SmtpAppender.html">log4net.Appender.SmtpAppender</a>.
@@ -1035,7 +1035,7 @@ IN &quot;LRGTABLES&quot;;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-12839401"></a>SmtpPickupDirAppender</h2>
+                                                    <h2><a id="HC-8012937"></a>SmtpPickupDirAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.SmtpPickupDirAppender.html">log4net.Appender.SmtpPickupDirAppender</a>.
@@ -1079,7 +1079,7 @@ IN &quot;LRGTABLES&quot;;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-3273383"></a>TraceAppender</h2>
+                                                    <h2><a id="HC-19509473"></a>TraceAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.TraceAppender.html">log4net.Appender.TraceAppender</a>.
@@ -1101,7 +1101,7 @@ IN &quot;LRGTABLES&quot;;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-23690087"></a>UdpAppender</h2>
+                                                    <h2><a id="HC-1812813"></a>UdpAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.UdpAppender.html">log4net.Appender.UdpAppender</a>.
@@ -1161,6 +1161,8 @@ IN &quot;LRGTABLES&quot;;
 </div>
               	 <div class="menu_item">    <a href="../history.html">History</a>
 </div>
+              	 <div class="menu_item">    <a href="../downloads.html">Downloads</a>
+</div>
                   <div class="menu_header">log4net 1.2 Documentation</div>
               	 <div class="menu_item">    <a href="../release/features.html">Features</a>
 </div>
@@ -1190,9 +1192,6 @@ IN &quot;LRGTABLES&quot;;
               	 <div class="menu_item">    <a href="../release/manual/repositories.html">Repositories</a>
 </div>
               	 <div class="menu_item">    <a href="../release/manual/internals.html">Internals</a>
-</div>
-                  <div class="menu_header">log4net Releases</div>
-              	 <div class="menu_item">    <a href="http://sourceforge.net/project/showfiles.php?group_id=31983&release_id=171808">download at sourceforge.net</a>
 </div>
              </div> 
    

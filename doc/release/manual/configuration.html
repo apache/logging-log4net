@@ -65,57 +65,57 @@ limitations under the License.
            <!-- START main table --> 
                 
 
-	                                                                       <h1><a id="HC-173823"></a>log4net Manual - Configuration</h1>
+	                                                                       <h1><a id="HC-26903574"></a>log4net Manual - Configuration</h1>
     <div class="i1">
                                     			<h2>Contents</h2>
 		<div class="i1">
-																			    <a href="#HC-24325842">Configuration</a><br/>
+																			    <a href="#HC-7152512">Configuration</a><br/>
     <div class="i1">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <a href="#HC-18158190">Configuration Attributes</a><br/>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <a href="#HC-9110923">Configuration Attributes</a><br/>
     <div class="i1">
                                                                       </div>
-                                                    <a href="#HC-18721294">Configuration Files</a><br/>
+                                                    <a href="#HC-5958617">Configuration Files</a><br/>
     <div class="i1">
-                                                                                <a href="#HC-9110923">.config Files</a><br/>
+                                                                                <a href="#HC-18061339">.config Files</a><br/>
     <div class="i1">
                                                                                                                                   </div>
-                                                    <a href="#HC-5958617">Reading Files Directly</a><br/>
+                                                    <a href="#HC-22447700">Reading Files Directly</a><br/>
     <div class="i1">
                                                                                                                                                                           </div>
                       </div>
-                                                    <a href="#HC-20054554">Configuration Syntax</a><br/>
+                                                    <a href="#HC-26030331">Configuration Syntax</a><br/>
     <div class="i1">
-                                                                                                                                                                                    <a href="#HC-2622421">Appenders</a><br/>
+                                                                                                                                                                                    <a href="#HC-9089167">Appenders</a><br/>
     <div class="i1">
-                                                                                                                                                                                                        <a href="#HC-6829042">Filters</a><br/>
+                                                                                                                                                                                                        <a href="#HC-9293149">Filters</a><br/>
     <div class="i1">
                                                                                                                                                                                                                                                                               </div>
-                                                    <a href="#HC-9089167">Layouts</a><br/>
+                                                    <a href="#HC-22640653">Layouts</a><br/>
     <div class="i1">
                                                                                                                                                       </div>
                       </div>
-                                                    <a href="#HC-21860890">Root Logger</a><br/>
+                                                    <a href="#HC-14207560">Root Logger</a><br/>
     <div class="i1">
                                                                                                                                   </div>
-                                                    <a href="#HC-28517927">Loggers</a><br/>
+                                                    <a href="#HC-13129484">Loggers</a><br/>
     <div class="i1">
                                                                                                                                                       </div>
-                                                    <a href="#HC-9293149">Renderers</a><br/>
+                                                    <a href="#HC-13299949">Renderers</a><br/>
     <div class="i1">
                                                                                                                                   </div>
-                                                    <a href="#HC-27635615">Parameters</a><br/>
+                                                    <a href="#HC-26174809">Parameters</a><br/>
     <div class="i1">
-                                                                                                                                                                                                                            <a href="#HC-11343231">Extension Parameters</a><br/>
+                                                                                                                                                                                                                            <a href="#HC-21411547">Extension Parameters</a><br/>
     <div class="i1">
                                                   </div>
-                                                    <a href="#HC-22958990">Compact Parameter Syntax</a><br/>
+                                                    <a href="#HC-26156009">Compact Parameter Syntax</a><br/>
     <div class="i1">
                                                                                                               </div>
                       </div>
                       </div>
                       </div>
 									</div>
-	                                                    <h2><a id="HC-24325842"></a>Configuration</h2>
+	                                                    <h2><a id="HC-7152512"></a>Configuration</h2>
     <div class="i1">
                                     <p>
 					Inserting log requests into the application code requires a fair amount of 
@@ -413,7 +413,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 					see the <a href="../config-examples.html">Example Appender Configuration</a> 
 					document.
 				</p>
-                                                    <h3><a id="HC-18158190"></a>Configuration Attributes</h3>
+                                                    <h3><a id="HC-9110923"></a>Configuration Attributes</h3>
     <div class="i1">
                                     <p>
 						The log4net configuration can be configured using assembly-level attributes rather than
@@ -509,7 +509,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 						certainly before any external assemblies have been loaded and invoked.</strong>
 					</p>
                       </div>
-                                                    <h3><a id="HC-18721294"></a>Configuration Files</h3>
+                                                    <h3><a id="HC-5958617"></a>Configuration Files</h3>
     <div class="i1">
                                     <p>
 						Typically the log4net configuration is specified using a file. This file can
@@ -519,7 +519,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 						<li>Using the .NET <span class="code">System.Configuration</span> API</li>
 						<li>Reading the file contents directly</li>
 					</ul>
-                                                    <h4><a id="HC-9110923"></a>.config Files</h4>
+                                                    <h4><a id="HC-18061339"></a>.config Files</h4>
     <div class="i1">
                                     <p>	
 							The <span class="code">System.Configuration</span> API is only available if the
@@ -578,7 +578,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 							XML element name must be <span class="code">log4net</span>.
 						</p>
                       </div>
-                                                    <h4><a id="HC-5958617"></a>Reading Files Directly</h4>
+                                                    <h4><a id="HC-22447700"></a>Reading Files Directly</h4>
     <div class="i1">
                                     <p>
 							The XmlConfigurator can directly read any XML file and use it to configure log4net. 
@@ -657,7 +657,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 						</p>
                       </div>
                       </div>
-                                                    <h3><a id="HC-20054554"></a>Configuration Syntax</h3>
+                                                    <h3><a id="HC-26030331"></a>Configuration Syntax</h3>
     <div class="i1">
                                     <p>
 						log4net includes a configuration reader that parses an XML DOM, the 
@@ -769,7 +769,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 							</tr>
 						</table>
 					</div>
-                                                    <h4><a id="HC-2622421"></a>Appenders</h4>
+                                                    <h4><a id="HC-9089167"></a>Appenders</h4>
     <div class="i1">
                                     <p>
 							Appenders may only be defined as child elements of the <span class="code">&lt;log4net&gt;</span>
@@ -862,7 +862,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 							<a href="example-config-appender.html">Example Appender Configuration</a> 
 							document.
 						</p>
-                                                    <h5><a id="HC-6829042"></a>Filters</h5>
+                                                    <h5><a id="HC-9293149"></a>Filters</h5>
     <div class="i1">
                                     <p>
 								Filters elements may only be defined as children of <span class="code">&lt;appender&gt;</span> elements.
@@ -961,7 +961,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 &lt;filter type=&quot;log4net.Filter.DenyAllFilter&quot; /&gt;</pre></div>
 
                       </div>
-                                                    <h5><a id="HC-9089167"></a>Layouts</h5>
+                                                    <h5><a id="HC-22640653"></a>Layouts</h5>
     <div class="i1">
                                     <p>
 								Layout elements may only be defined as children of <span class="code">&lt;appender&gt;</span> elements.
@@ -1020,7 +1020,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 
                       </div>
                       </div>
-                                                    <h4><a id="HC-21860890"></a>Root Logger</h4>
+                                                    <h4><a id="HC-14207560"></a>Root Logger</h4>
     <div class="i1">
                                     <p>
 							Only one root logger element may only be defined and it must be a child of <span class="code">&lt;log4net&gt;</span> element.
@@ -1074,7 +1074,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 							</table>
 						</div>
                       </div>
-                                                    <h4><a id="HC-28517927"></a>Loggers</h4>
+                                                    <h4><a id="HC-13129484"></a>Loggers</h4>
     <div class="i1">
                                     <p>
 							Logger elements may only be defined as children of the <span class="code">&lt;log4net&gt;</span> element.
@@ -1153,7 +1153,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 							</table>
 						</div>
                       </div>
-                                                    <h4><a id="HC-9293149"></a>Renderers</h4>
+                                                    <h4><a id="HC-13299949"></a>Renderers</h4>
     <div class="i1">
                                     <p>
 							Renderer elements may only be defined as children of the <span class="code">&lt;log4net&gt;</span> element.
@@ -1201,7 +1201,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 							The <span class="code">&lt;renderer&gt;</span> element supports no child elements.
 						</p>
                       </div>
-                                                    <h4><a id="HC-27635615"></a>Parameters</h4>
+                                                    <h4><a id="HC-26174809"></a>Parameters</h4>
     <div class="i1">
                                     <p>
 							Parameter elements may be children of many elements. See the specific elements above for details.
@@ -1281,7 +1281,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 	&lt;param name=&quot;Threshold&quot; value=&quot;WARN&quot;/&gt;
 &lt;param&gt;</pre></div>
 
-                                                    <h5><a id="HC-11343231"></a>Extension Parameters</h5>
+                                                    <h5><a id="HC-21411547"></a>Extension Parameters</h5>
     <div class="i1">
                                     <p>
 								Configuration parameters map directly to writable properties on an object.
@@ -1294,7 +1294,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 								details of the properties available.
 							</p>
                       </div>
-                                                    <h5><a id="HC-22958990"></a>Compact Parameter Syntax</h5>
+                                                    <h5><a id="HC-26156009"></a>Compact Parameter Syntax</h5>
     <div class="i1">
                                     <p>
 								All parameters may alternately be specified using the parameter name as the element name
@@ -1360,6 +1360,8 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 </div>
               	 <div class="menu_item">    <a href="../../history.html">History</a>
 </div>
+              	 <div class="menu_item">    <a href="../../downloads.html">Downloads</a>
+</div>
                   <div class="menu_header">log4net 1.2 Documentation</div>
               	 <div class="menu_item">    <a href="../../release/features.html">Features</a>
 </div>
@@ -1389,9 +1391,6 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
               	 <div class="menu_item">    <a href="../../release/manual/repositories.html">Repositories</a>
 </div>
               	 <div class="menu_item">    <a href="../../release/manual/internals.html">Internals</a>
-</div>
-                  <div class="menu_header">log4net Releases</div>
-              	 <div class="menu_item">    <a href="http://sourceforge.net/project/showfiles.php?group_id=31983&release_id=171808">download at sourceforge.net</a>
 </div>
              </div> 
    

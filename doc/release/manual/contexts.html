@@ -65,26 +65,26 @@ limitations under the License.
            <!-- START main table --> 
                 
 
-	                                                                       <h1><a id="HC-25182688"></a>log4net Manual - Contexts</h1>
+	                                                                       <h1><a id="HC-6159089"></a>log4net Manual - Contexts</h1>
     <div class="i1">
                                     			<h2>Contents</h2>
 		<div class="i1">
-																																								    <a href="#HC-1335930">Scopes</a><br/>
+																																								    <a href="#HC-14418997">Scopes</a><br/>
     <div class="i1">
                                                   </div>
-																    <a href="#HC-17456161">Context Properties</a><br/>
+																    <a href="#HC-22459270">Context Properties</a><br/>
     <div class="i1">
-                                                                                                                        <a href="#HC-14418997">Active Property Values</a><br/>
+                                                                                                                        <a href="#HC-10163824">Active Property Values</a><br/>
     <div class="i1">
                                                                                                                                   </div>
                       </div>
-																    <a href="#HC-22459270">Context Stacks</a><br/>
+																    <a href="#HC-33355664">Context Stacks</a><br/>
     <div class="i1">
                                                                                                                                                                           </div>
-																    <a href="#HC-19161779">Nested Diagnostic Contexts</a><br/>
+																    <a href="#HC-14765441">Nested Diagnostic Contexts</a><br/>
     <div class="i1">
                               </div>
-																    <a href="#HC-30145090">Mapped Diagnostic Contexts</a><br/>
+																    <a href="#HC-27752604">Mapped Diagnostic Contexts</a><br/>
     <div class="i1">
                               </div>
 																							</div>
@@ -104,7 +104,7 @@ limitations under the License.
                                                 <p>
 				Log4net supports different types of contextual logging and contexts with different scopes.
 			</p>
-                                                    <h2><a id="HC-1335930"></a>Scopes</h2>
+                                                    <h2><a id="HC-14418997"></a>Scopes</h2>
     <div class="i1">
                                     <p>
 					Contextual data can be set in different scopes. These contexts have progressively narrower visibility.
@@ -154,7 +154,7 @@ limitations under the License.
 					</table>
 				</div>
                       </div>
-                                                    <h2><a id="HC-17456161"></a>Context Properties</h2>
+                                                    <h2><a id="HC-22459270"></a>Context Properties</h2>
     <div class="i1">
                                     <p>
 					The log4net contexts store properties, i.e. name value pairs. The name is a string
@@ -178,7 +178,7 @@ log4net.GlobalContext.Properties[&quot;name&quot;] = value;
 					which will locate any custom renderer for the value type. The default behaviour for
 					custom types is to call the object's <span class="code">ToString()</span> method.
 				</p>
-                                                    <h3><a id="HC-14418997"></a>Active Property Values</h3>
+                                                    <h3><a id="HC-10163824"></a>Active Property Values</h3>
     <div class="i1">
                                     <p>
 						An active property value is one who's value changes over time.
@@ -216,7 +216,7 @@ log4net.GlobalContext.Properties[&quot;GCAllocatedBytes&quot;] = new GCAllocated
 					</p>
                       </div>
                       </div>
-                                                    <h2><a id="HC-22459270"></a>Context Stacks</h2>
+                                                    <h2><a id="HC-33355664"></a>Context Stacks</h2>
     <div class="i1">
                                     <p>
 					Sometimes simple key value pairs are not the most convenient way of capturing contextual
@@ -269,7 +269,7 @@ using(log4net.ThreadContext.Stacks[&quot;NDC&quot;].Push(&quot;context&quot;))
 					can occur.
 				</p>
                       </div>
-                                                    <h2><a id="HC-19161779"></a>Nested Diagnostic Contexts</h2>
+                                                    <h2><a id="HC-14765441"></a>Nested Diagnostic Contexts</h2>
     <div class="i1">
                                     <p>
 					The <span class="code">NDC</span> (Nested Diagnostic Context) exists for compatibility
@@ -277,7 +277,7 @@ using(log4net.ThreadContext.Stacks[&quot;NDC&quot;].Push(&quot;context&quot;))
 					in the thread context property named <i>NDC</i>.
 				</p>
                       </div>
-                                                    <h2><a id="HC-30145090"></a>Mapped Diagnostic Contexts</h2>
+                                                    <h2><a id="HC-27752604"></a>Mapped Diagnostic Contexts</h2>
     <div class="i1">
                                     <p>
 					The <span class="code">MDC</span> (MappedDiagnostic Context) exists for compatibility
@@ -343,6 +343,8 @@ using(log4net.ThreadContext.Stacks[&quot;NDC&quot;].Push(&quot;context&quot;))
 </div>
               	 <div class="menu_item">    <a href="../../history.html">History</a>
 </div>
+              	 <div class="menu_item">    <a href="../../downloads.html">Downloads</a>
+</div>
                   <div class="menu_header">log4net 1.2 Documentation</div>
               	 <div class="menu_item">    <a href="../../release/features.html">Features</a>
 </div>
@@ -372,9 +374,6 @@ using(log4net.ThreadContext.Stacks[&quot;NDC&quot;].Push(&quot;context&quot;))
               	 <div class="menu_item">    <a href="../../release/manual/repositories.html">Repositories</a>
 </div>
               	 <div class="menu_item">    <a href="../../release/manual/internals.html">Internals</a>
-</div>
-                  <div class="menu_header">log4net Releases</div>
-              	 <div class="menu_item">    <a href="http://sourceforge.net/project/showfiles.php?group_id=31983&release_id=171808">download at sourceforge.net</a>
 </div>
              </div> 
    

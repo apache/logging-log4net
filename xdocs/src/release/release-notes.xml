@@ -42,16 +42,21 @@ limitations under the License.
 						<li>
 							<h3>Renamed config classes and attributes</h3>
 							<p>
+								In the <span class="code">log4net.Config</span> namespace the <span class="code">DOMConfigurator</span>, 
+								<span class="code">DOMConfiguratorAttribute</span>, <span class="code">RepositoryAttribute</span>, 
+								and <span class="code">AliasRepositoryAttribute</span> have been marked as obsolete. These types are
+								still available and functional in this release.
+							</p>
+							<p>	
 								The <span class="code">XmlConfigurator</span> and <span class="code">XmlConfiguratorAttribute</span> 
 								types replace <span class="code">DOMConfigurator</span> and 
 								<span class="code">DOMConfiguratorAttribute</span>. The <span class="code">DomainAttribute</span> 
 								and <span class="code">AliasDomainAttribute</span> types replace 
 								<span class="code">RepositoryAttribute</span> and <span class="code">AliasRepositoryAttribute</span>. 
-								The old types are obsolete but functional.
 							</p>
 						</li>
 						<li>
-							<h3>Fixed pascal casing of several types</h3>
+							<h3>Fixed pascal casing of type names</h3>
 							<p>
 								Renamed <span class="code">AdoNetAppender</span>, <span class="code">AspNetTraceAppender</span>, 
 								<span class="code">SmtpAppender</span>, <span class="code">Iso8601DateFormatter</span>, 
