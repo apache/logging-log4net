@@ -96,19 +96,29 @@ namespace log4net.DateFormatter
 			// the previously calculated time string
 			if (s_lastTimeToTheSecond != currentTimeToTheSecond)
 			{
-				// We are in a new second.
-				s_lastTimeToTheSecond = currentTimeToTheSecond;
-				s_lastTimeBuf.Length = 0;
+				// lock so that only one thread can use the buffer and
+				// update the s_lastTimeToTheSecond and s_lastTimeString
 
-				// Calculate the new string for this second
-				FormatDateWithoutMillis(dateToFormat, s_lastTimeBuf);
+				// PERF: Try removing this lock and using a new StringBuilder each time
+				lock(s_lastTimeBuf)
+				{
+					if (s_lastTimeToTheSecond != currentTimeToTheSecond)
+					{
+						// We are in a new second.
+						s_lastTimeBuf.Length = 0;
 
-				// Store the time as a string (we only have to do this once per second)
-				s_lastTimeString = s_lastTimeBuf.ToString();
+						// Calculate the new string for this second
+						FormatDateWithoutMillis(dateToFormat, s_lastTimeBuf);
+
+						// Store the time as a string (we only have to do this once per second)
+						s_lastTimeString = s_lastTimeBuf.ToString();
+						s_lastTimeToTheSecond = currentTimeToTheSecond;
+					}
+				}
 			}
 			writer.Write(s_lastTimeString);
 	
-			// Append the current milli info
+			// Append the current millisecond info
 			writer.Write(',');
 			int millis = dateToFormat.Millisecond;
 			if (millis < 100) 
