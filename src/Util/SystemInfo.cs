@@ -258,6 +258,43 @@ namespace log4net.Util
 			}
 		}
 
+		private static DateTime s_processStartTime = DateTime.MinValue;
+
+		/// <summary>
+		/// Get the start time for the current process.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Tries to get the start time for the current process.
+		/// Failing that it returns the time of the first call to
+		/// this property.
+		/// </para>
+		/// <para>
+		/// Note that AppDomains may be loaded and unloaded within the
+		/// same process without the process terminating and therefore
+		/// without the process start time being reset.
+		/// </para>
+		/// </remarks>
+		public static DateTime ProcessStartTime
+		{
+			get
+			{
+				if (s_processStartTime == DateTime.MinValue)
+				{
+					try
+					{
+						s_processStartTime = System.Diagnostics.Process.GetCurrentProcess().StartTime;
+					}
+					catch
+					{
+						// Unable to get the start time, use now as the start time
+						s_processStartTime = DateTime.Now;
+					}
+				}
+				return s_processStartTime;
+			}
+		}
+
 		#endregion Public Static Properties
 
 		#region Public Static Methods
