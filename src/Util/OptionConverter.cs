@@ -87,41 +87,41 @@ namespace log4net.Util
 //			return a;
 //		}
   
-		/// <summary>
-		/// Converts string escape characters back to their correct values.
-		/// </summary>
-		/// <param name="s">String to convert.</param>
-		/// <returns>Converted result.</returns>
-		public static string ConvertSpecialChars(string s) 
-		{
-			if (s == null)
-			{
-				throw new ArgumentNullException("s");
-			}
-			char c;
-			int len = s.Length;
-			StringBuilder buf = new StringBuilder(len);
-	
-			int i = 0;
-			while(i < len) 
-			{
-				c = s[i++];
-				if (c == '\\') 
-				{
-					c =  s[i++];
-					if (c == 'n')	  c = '\n';
-					else if (c == 'r') c = '\r';
-					else if (c == 't') c = '\t';
-					else if (c == 'f') c = '\f';
-					else if (c == '\b') c = '\b';					
-					else if (c == '\"') c = '\"';				
-					else if (c == '\'') c = '\'';			
-					else if (c == '\\') c = '\\';			
-				}
-				buf.Append(c);	  
-			}
-			return buf.ToString();
-		}
+//		/// <summary>
+//		/// Converts string escape characters back to their correct values.
+//		/// </summary>
+//		/// <param name="s">String to convert.</param>
+//		/// <returns>Converted result.</returns>
+//		public static string ConvertSpecialChars(string s) 
+//		{
+//			if (s == null)
+//			{
+//				throw new ArgumentNullException("s");
+//			}
+//			char c;
+//			int len = s.Length;
+//			StringBuilder buf = new StringBuilder(len);
+//	
+//			int i = 0;
+//			while(i < len) 
+//			{
+//				c = s[i++];
+//				if (c == '\\') 
+//				{
+//					c =  s[i++];
+//					if (c == 'n')	  c = '\n';
+//					else if (c == 'r') c = '\r';
+//					else if (c == 't') c = '\t';
+//					else if (c == 'f') c = '\f';
+//					else if (c == '\b') c = '\b';					
+//					else if (c == '\"') c = '\"';				
+//					else if (c == '\'') c = '\'';			
+//					else if (c == '\\') c = '\\';			
+//				}
+//				buf.Append(c);	  
+//			}
+//			return buf.ToString();
+//		}
 
 		/// <summary>
 		/// Converts a string to a <see cref="bool" /> value.

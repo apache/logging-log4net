@@ -535,9 +535,6 @@ namespace log4net.Repository.Hierarchy
 				{
 					string propertyValue = element.GetAttribute(VALUE_ATTR);
 
-					// Fixup embedded non-printable chars
-					propertyValue = OptionConverter.ConvertSpecialChars(propertyValue);
-
 #if !NETCF	
 					try
 					{
