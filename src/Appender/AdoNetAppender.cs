@@ -138,6 +138,9 @@ namespace log4net.Appender
 		/// <summary> 
 		/// Initializes a new instance of the <see cref="AdoNetAppender" /> class.
 		/// </summary>
+		/// <remarks>
+		/// Public default constructor to initialize a new instance of this class.
+		/// </remarks>
 		public AdoNetAppender()
 		{
 			m_connectionType = "System.Data.OleDb.OleDbConnection, System.Data, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089";
@@ -266,13 +269,23 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
-		/// Gets or sets a value that indicates whether transactions should be used
-		/// to insert logging events in the database.
+		/// Should transactions be used to insert logging events in the database.
 		/// </summary>
 		/// <value>
 		/// <c>true</c> if transactions should be used to insert logging events in
 		/// the database, otherwise <c>false</c>. The default value is <c>true</c>.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets or sets a value that indicates whether transactions should be used
+		/// to insert logging events in the database.
+		/// </para>
+		/// <para>
+		/// When set a single transaction will be used to insert the buffered events
+		/// into the database. Otherwise each event will be inserted without using
+		/// an explicit transaction.
+		/// </para>
+		/// </remarks>
 		public bool UseTransactions
 		{
 			get { return m_useTransactions; }
@@ -309,6 +322,19 @@ namespace log4net.Appender
 		/// <summary>
 		/// Initialize the appender based on the options set
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This is part of the <see cref="IOptionHandler"/> delayed object
+		/// activation scheme. The <see cref="ActivateOptions"/> method must 
+		/// be called on this object after the configuration properties have
+		/// been set. Until <see cref="ActivateOptions"/> is called this
+		/// object is in an undefined state and must not be used. 
+		/// </para>
+		/// <para>
+		/// If any of the configuration properties are modified then 
+		/// <see cref="ActivateOptions"/> must be called again.
+		/// </para>
+		/// </remarks>
 		override public void ActivateOptions() 
 		{
 			base.ActivateOptions();
@@ -335,6 +361,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Override the parent method to close the database
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Closes the database command and database connection.
+		/// </para>
+		/// </remarks>
 		override protected void OnClose() 
 		{
 			base.OnClose();
@@ -358,6 +389,12 @@ namespace log4net.Appender
 		/// Inserts the events into the database.
 		/// </summary>
 		/// <param name="events">The events to insert into the database.</param>
+		/// <remarks>
+		/// <para>
+		/// Insert all the events specified in the <paramref name="events"/>
+		/// array into the database.
+		/// </para>
+		/// </remarks>
 		override protected void SendBuffer(LoggingEvent[] events)
 		{
 			// Check that the connection exists and is open
@@ -368,9 +405,10 @@ namespace log4net.Appender
 					// Create transaction
 					// NJC - Do this on 2 lines because it can confuse the debugger
 					IDbTransaction dbTran = null;
-					dbTran = m_dbConnection.BeginTransaction();
 					try
 					{
+						dbTran = m_dbConnection.BeginTransaction();
+
 						SendBuffer(dbTran, events);
 
 						// commit transaction
@@ -379,12 +417,15 @@ namespace log4net.Appender
 					catch(Exception ex)
 					{
 						// rollback the transaction
-						try
+						if (dbTran != null)
 						{
-							dbTran.Rollback();
-						}
-						catch(Exception)
-						{
+							try
+							{
+								dbTran.Rollback();
+							}
+							catch(Exception)
+							{
+							}
 						}
 
 						// Can't insert into the database. That's a bad thing
@@ -513,7 +554,7 @@ namespace log4net.Appender
 		/// <summary>
 		/// Connects to the database.
 		/// </summary>		
-		virtual protected void InitializeDatabaseConnection()
+		private void InitializeDatabaseConnection()
 		{
 			try
 			{
@@ -536,6 +577,18 @@ namespace log4net.Appender
 		/// <summary>
 		/// Retrieves the class type of the ADO.NET provider.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Gets the Type of the ADO.NET provider to use to connect to the
+		/// database. This method resolves the type specified in the 
+		/// <see cref="ConnectionType"/> property.
+		/// </para>
+		/// <para>
+		/// Subclasses can override this method to return a different type
+		/// if necessary.
+		/// </para>
+		/// </remarks>
+		/// <returns>The <see cref="Type"/> of the ADO.NET provider</returns>
 		virtual protected Type ResolveConnectionType()
 		{
 			try
@@ -552,7 +605,7 @@ namespace log4net.Appender
 		/// <summary>
 		/// Prepares the database command and initialize the parameters.
 		/// </summary>
-		virtual protected void InitializeDatabaseCommand()
+		private void InitializeDatabaseCommand()
 		{
 			try
 			{
@@ -708,9 +761,11 @@ namespace log4net.Appender
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AdoNetAppenderParameter" />
-		/// class.
+		/// Initializes a new instance of the <see cref="AdoNetAppenderParameter" /> class.
 		/// </summary>
+		/// <remarks>
+		/// Default constructor for the AdoNetAppenderParameter class.
+		/// </remarks>
 		public AdoNetAppenderParameter()
 		{
 			m_precision = 0;
