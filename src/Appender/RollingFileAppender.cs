@@ -583,7 +583,7 @@ namespace log4net.Appender
 		/// Does the work of bumping the 'current' file counter higher
 		/// to the highest count when an incremental file name is seen.
 		/// The highest count is either the first file (when count direction
-		/// is greater than 0 ) or the last file (when count direction less than 0).
+		/// is greater than 0) or the last file (when count direction less than 0).
 		/// In either case, we want to know the highest count that is present.
 		/// </summary>
 		/// <param name="baseFile"></param>
@@ -613,7 +613,7 @@ namespace log4net.Appender
 				int endLength = curFileName.Length - index;
 				if (baseFile.Length + endLength != curFileName.Length) 
 				{
-					//file is probably scheduledFilename + .x so I don't care
+					// file is probably scheduledFilename + .x so I don't care
 					return;
 				}
 			}
@@ -663,7 +663,7 @@ namespace log4net.Appender
 					LogLog.Debug("RollingFileAppender: File name ["+curFileName+"] moves current count to ["+m_curSizeRollBackups+"]");
 				}
 			} 
-			catch (Exception /*e*/) 
+			catch (FormatException /*e*/) 
 			{
 				//this happens when file.log -> file.log.yyyy-mm-dd which is normal
 				//when staticLogFileName == false

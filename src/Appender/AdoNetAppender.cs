@@ -425,6 +425,7 @@ namespace log4net.Appender
 							}
 							catch(Exception)
 							{
+								// Ignore exception
 							}
 						}
 
@@ -593,7 +594,7 @@ namespace log4net.Appender
 		{
 			try
 			{
-				return Type.GetType(m_connectionType, true);
+				return SystemInfo.GetTypeFromString(m_connectionType, true, false);
 			}
 			catch(Exception ex)
 			{
@@ -618,7 +619,7 @@ namespace log4net.Appender
 				// Set the command type
 				m_dbCommand.CommandType = m_commandType;
 			}
-			catch (System.Exception e)
+			catch(System.Exception e)
 			{
 				ErrorHandler.Error("Could not create database command ["+m_commandText+"]", e);	 
 
@@ -630,6 +631,7 @@ namespace log4net.Appender
 					}
 					catch
 					{
+						// Ignore exception
 					}
 					m_dbCommand = null;
 				}
@@ -660,6 +662,7 @@ namespace log4net.Appender
 					}
 					catch
 					{
+						// Ignore exception
 					}
 					m_dbCommand = null;
 				}
@@ -681,6 +684,7 @@ namespace log4net.Appender
 					}
 					catch
 					{
+						// Ignore exception
 					}
 					m_dbCommand = null;
 				}
