@@ -100,7 +100,17 @@ namespace log4net.Config
 #else
 			try
 			{
-				ConfigureFromXml(repository, (XmlElement) System.Configuration.ConfigurationSettings.GetConfig("log4net"));
+				XmlElement configElement = System.Configuration.ConfigurationSettings.GetConfig("log4net") as XmlElement;
+				if (configElement == null)
+				{
+					// Failed to load the xml config using configuration settings handler
+					LogLog.Error("XmlConfigurator: Failed to find configuration section 'log4net' in the application's .config file. Check your .config file for the <log4net> and <configSections> elements.");
+				}
+				else
+				{
+					// Configure using the xml loaded from the config file
+					ConfigureFromXml(repository, configElement);
+				}
 			}
 			catch(System.Configuration.ConfigurationException confEx)
 			{
