@@ -112,7 +112,7 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
-		/// Obselete
+		/// Obsolete
 		/// </summary>
 		/// <remarks>
 		/// Use the BufferingAppenderSkeleton Fix methods instead 

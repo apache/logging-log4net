@@ -28,7 +28,7 @@ namespace log4net.Util
 	/// A <see cref="TextWriter"/> that ignores the <see cref="Close"/> message
 	/// </summary>
 	/// <remarks>
-	/// Used in special cases where it is nessasary to protect a writer
+	/// Used in special cases where it is necessary to protect a writer
 	/// from being closed by a client.
 	/// </remarks>
 	/// <author>Nicko Cadell</author>

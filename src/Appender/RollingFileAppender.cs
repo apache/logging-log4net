@@ -151,11 +151,11 @@ namespace log4net.Appender
 		#region Public Instance Properties
 
 		/// <summary>
-		/// Gets or sets the datepattern to be used for generating file names
+		/// Gets or sets the date pattern to be used for generating file names
 		/// when rolling over on date.
 		/// </summary>
 		/// <value>
-		/// The datepattern to be used for generating file names when rolling 
+		/// The date pattern to be used for generating file names when rolling 
 		/// over on date.
 		/// </value>
 		/// <remarks>
@@ -223,7 +223,7 @@ namespace log4net.Appender
 		/// argument.
 		/// </para>
 		/// <para>
-		/// The default maximum filesize is 10MB.
+		/// The default maximum file size is 10MB.
 		/// </para>
 		/// </remarks>
 		public long MaxFileSize
@@ -250,7 +250,7 @@ namespace log4net.Appender
 		/// For example, the value "10KB" will be interpreted as 10240.
 		/// </para>
 		/// <para>
-		/// The default maximum filesize is 10MB.
+		/// The default maximum file size is 10MB.
 		/// </para>
 		/// </remarks>
 		public string MaximumFileSize
@@ -294,10 +294,10 @@ namespace log4net.Appender
 		/// </para>
 		/// <para>
 		/// By default newer files have lower numbers (<see cref="CountDirection" /> &lt; 0),
-		/// ie. log.1 is most recent, log.5 is the 5th backup, etc...
+		/// i.e. log.1 is most recent, log.5 is the 5th backup, etc...
 		/// </para>
 		/// <para>
-		/// <see cref="CountDirection" /> &gt; 0 does the opposite ie.
+		/// <see cref="CountDirection" /> &gt; 0 does the opposite i.e.
 		/// log.1 is the first backup made, log.5 is the 5th backup made, etc.
 		/// For infinite backups use <see cref="CountDirection" /> &gt; 0 to reduce 
 		/// rollover costs.
@@ -344,7 +344,7 @@ namespace log4net.Appender
 		}
   
 		/// <summary>
-		/// Gets or sets a value indicting whether to always log to
+		/// Gets or sets a value indicating whether to always log to
 		/// the same file.
 		/// </summary>
 		/// <value>
@@ -386,7 +386,7 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
-		/// Handles append time behaviour for CompositeRollingAppender.  This checks
+		/// Handles append time behavior for CompositeRollingAppender.  This checks
 		/// if a roll over either by date (checked first) or time (checked second)
 		/// is need and then appends to the file last.
 		/// </summary>
@@ -450,10 +450,10 @@ namespace log4net.Appender
 				long currentCount = 0;
 				if (append) 
 				{
-					FileInfo fi = new FileInfo(fileName);
-					if (fi.Exists)
+					FileInfo fileInfo = new FileInfo(fileName);
+					if (fileInfo.Exists)
 					{
-						currentCount = fi.Length;
+						currentCount = fileInfo.Length;
 					}
 				}
 
@@ -467,10 +467,10 @@ namespace log4net.Appender
 
 		#endregion
 
-		#region Initialise Options
+		#region Initialize Options
 
 		/// <summary>
-		///	Determines curSizeRollBackups (only within the current rollpoint)
+		///	Determines curSizeRollBackups (only within the current roll point)
 		/// </summary>
 		private void DetermineCurSizeRollBackups()
 		{
@@ -489,8 +489,8 @@ namespace log4net.Appender
 			FileInfo fileInfo = new FileInfo(sName);
 			if (null != fileInfo)
 			{
-				ArrayList arrFiles = GetExistingFiles(fileInfo.FullName);
-				InitializeRollBackups((new FileInfo(m_baseFileName)).Name, arrFiles);
+				ArrayList arrayFiles = GetExistingFiles(fileInfo.FullName);
+				InitializeRollBackups((new FileInfo(m_baseFileName)).Name, arrayFiles);
 
 			}
 
@@ -570,7 +570,7 @@ namespace log4net.Appender
 		/// <summary>
 		/// <para>Initializes based on existing conditions at time of <see cref="ActivateOptions"/>.
 		/// The following is done:</para>
-		///		A) determine curSizeRollBackups (only within the current rollpoint)
+		///		A) determine curSizeRollBackups (only within the current roll point)
 		///		B) initiates a roll over if needed for crossing a date boundary since the last run.
 		/// </summary>
 		protected void ExistingInit() 
@@ -618,7 +618,7 @@ namespace log4net.Appender
 				}
 			}
 	
-			// Only look for files in the current rollpoint
+			// Only look for files in the current roll point
 			if (m_rollDate)
 			{
 				if (! curFileName.StartsWith(baseFile + m_dateTime.Now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo)))
@@ -887,7 +887,7 @@ namespace log4net.Appender
 		}
   
 		/// <summary>
-		/// Implements roll overs base on file size.
+		/// Implements file roll base on file size.
 		/// </summary>
 		/// <remarks>
 		/// <para>If the maximum number of size based backups is reached
@@ -1134,7 +1134,7 @@ namespace log4net.Appender
 		private bool m_rollSize = true;
   
 		/// <summary>
-		/// Value indicting whether to always log to the same file.
+		/// Value indicating whether to always log to the same file.
 		/// </summary>
 		private bool m_staticLogFileName = true;
   

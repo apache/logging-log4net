@@ -43,7 +43,7 @@ namespace log4net.Filter
 		#region Member Variables
 
 		/// <summary>
-		/// Flag to indicate the behaviour when matching a <see cref="Level"/>
+		/// Flag to indicate the behavior when matching a <see cref="Level"/>
 		/// </summary>
 		private bool m_acceptOnMatch = true;
 
@@ -72,7 +72,7 @@ namespace log4net.Filter
 
 		/// <summary>
 		/// The <see cref="AcceptOnMatch"/> property is a flag that determines
-		/// the behaviour when a matching <see cref="Level"/> is found. If the
+		/// the behavior when a matching <see cref="Level"/> is found. If the
 		/// flag is set to true then the filter will <see cref="FilterDecision.Accept"/> the 
 		/// logging event, otherwise it will <see cref="FilterDecision.Neutral"/> the event.
 		/// </summary>

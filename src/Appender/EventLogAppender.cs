@@ -136,7 +136,7 @@ namespace log4net.Appender
 		#region Implementation of IOptionHandler
 
 		/// <summary>
-		/// Initialise the appender based on the options set
+		/// Initialize the appender based on the options set
 		/// </summary>
 		override public void ActivateOptions() 
 		{

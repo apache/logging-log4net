@@ -113,7 +113,7 @@ namespace log4net.Util
 		/// </summary>
 		/// <param name="text">the text to search</param>
 		/// <param name="substring">the substring to find</param>
-		/// <returns>the nunmber of times the substring occurs in the text</returns>
+		/// <returns>the number of times the substring occurs in the text</returns>
 		/// <remarks>
 		/// The substring is assumed to be non repeating within itself.
 		/// </remarks>

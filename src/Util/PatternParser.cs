@@ -34,9 +34,13 @@ namespace log4net.Util
 	/// Most of the work of the <see cref="PatternLayout"/> class
 	/// is delegated to the PatternParser class.
 	/// </summary>
+	/// <remarks>
+	/// The <c>PatternParser</c> processes a pattern string and
+	/// returns a chain of <see cref="PatternConverter"/> objects.
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
-	public class PatternParser
+	public sealed class PatternParser
 	{
 		#region Public Instance Constructors
 
@@ -74,9 +78,9 @@ namespace log4net.Util
 		/// <summary>
 		/// The converter registry used by this parser
 		/// </summary>
-		public Hashtable ConverterRegistry
+		public Hashtable PatternConverters
 		{
-			get { return m_converterRegistry; }
+			get { return m_patternConverters; }
 		}
 
 		#endregion Public Instance Properties
@@ -87,10 +91,10 @@ namespace log4net.Util
 		/// Build the unified cache of converters from the static and instance maps
 		/// </summary>
 		/// <returns>the list of all the converter names</returns>
-		protected string[] BuildCache()
+		private string[] BuildCache()
 		{
-			string[] converterNamesCache = new string[m_converterRegistry.Keys.Count];
-			m_converterRegistry.Keys.CopyTo(converterNamesCache, 0);
+			string[] converterNamesCache = new string[m_patternConverters.Keys.Count];
+			m_patternConverters.Keys.CopyTo(converterNamesCache, 0);
 
 			// sort array so that longer strings come first
 			Array.Sort(converterNamesCache, 0, converterNamesCache.Length, StringLengthComparer.Instance);
@@ -144,7 +148,7 @@ namespace log4net.Util
 		/// <remarks>
 		/// The matches param must be sorted such that longer strings come before shorter ones.
 		/// </remarks>
-		protected void ParseInternal(string pattern, string[] matches)
+		private void ParseInternal(string pattern, string[] matches)
 		{
 			int offset = 0;
 			while(offset < pattern.Length)
@@ -193,12 +197,12 @@ namespace log4net.Util
 							formattingInfo.Min = (formattingInfo.Min * 10) + int.Parse(pattern[offset].ToString(CultureInfo.InvariantCulture), System.Globalization.NumberFormatInfo.InvariantInfo);
 							offset++;
 						}
-						// Look for the seperator between min and max
+						// Look for the separator between min and max
 						if (offset < pattern.Length)
 						{
 							if (pattern[offset] == '.')
 							{
-								// Seen seperator
+								// Seen separator
 								offset++;
 							}
 						}
@@ -214,12 +218,12 @@ namespace log4net.Util
 							offset++;
 						}
 
-						int remaingStringLength = pattern.Length - offset;
+						int remainingStringLength = pattern.Length - offset;
 
 						// Look for pattern
 						for(int m=0; m<matches.Length; m++)
 						{
-							if (matches[m].Length <= remaingStringLength)
+							if (matches[m].Length <= remainingStringLength)
 							{
 								if (String.Compare(pattern, offset, matches[m], 0, matches[m].Length, false, System.Globalization.CultureInfo.InvariantCulture) == 0)
 								{
@@ -263,7 +267,7 @@ namespace log4net.Util
 		/// Process a parsed literal
 		/// </summary>
 		/// <param name="text">the literal text</param>
-		protected void ProcessLiteral(string text)
+		private void ProcessLiteral(string text)
 		{
 			if (text.Length > 0)
 			{
@@ -278,12 +282,12 @@ namespace log4net.Util
 		/// <param name="converterName">the name of the converter</param>
 		/// <param name="option">the optional option for the converter</param>
 		/// <param name="formattingInfo">the formatting info for the converter</param>
-		protected void ProcessConverter(string converterName, string option, FormattingInfo formattingInfo)
+		private void ProcessConverter(string converterName, string option, FormattingInfo formattingInfo)
 		{
 			LogLog.Debug("Converter: ["+converterName+"] Option: ["+option+"] Format: [min="+formattingInfo.Min+",max="+formattingInfo.Max+",leftAlign="+formattingInfo.LeftAlign+"]");
 
 			// Lookup the converter type
-			Type converterType = (Type)m_converterRegistry[converterName];
+			Type converterType = (Type)m_patternConverters[converterName];
 			if (converterType == null)
 			{
 				LogLog.Error("PatternParser: Unknown converter name ["+converterName+"] in conversion pattern.");
@@ -320,7 +324,7 @@ namespace log4net.Util
 		/// to the chain.
 		/// </summary>
 		/// <param name="pc">The pattern converter to add.</param>
-		protected void AddConverter(PatternConverter pc) 
+		private void AddConverter(PatternConverter pc) 
 		{
 			// Add the pattern converter to the list.
 
@@ -369,7 +373,7 @@ namespace log4net.Util
 		/// <remarks>
 		/// This map overrides the static s_globalRulesRegistry map
 		/// </remarks>
-		private Hashtable m_converterRegistry = new Hashtable();
+		private Hashtable m_patternConverters = new Hashtable();
 
 		#endregion Private Instance Fields
 	}

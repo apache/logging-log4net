@@ -39,7 +39,7 @@ namespace log4net.Core
 	/// <remarks>
 	/// <para>
 	/// This class maintains a mapping between <see cref="ILogger"/> objects and
-	/// <see cref="ILoggerWrapper"/> objects. Use the indexor accessor to lookup the 
+	/// <see cref="ILoggerWrapper"/> objects. Use the indexer accessor to lookup the 
 	/// <see cref="ILoggerWrapper"/> for the specified <see cref="ILogger"/>.
 	/// </para>
 	/// </remarks>
@@ -73,13 +73,13 @@ namespace log4net.Core
 		/// The wrapper object for the specified logger.
 		/// </value>
 		/// <remarks>
-		/// If the logger is null then the coresponding wrapper is null
+		/// If the logger is null then the corresponding wrapper is null
 		/// </remarks>
 		virtual public ILoggerWrapper this[ILogger logger]
 		{
 			get
 			{
-				// If the logger is null then the coresponding wrapper is null
+				// If the logger is null then the corresponding wrapper is null
 				if (logger == null)
 				{
 					return null;
@@ -147,7 +147,7 @@ namespace log4net.Core
 		/// <remarks>
 		/// This implementation uses the <see cref="WrapperCreationHandler"/>
 		/// passed to the constructor to create the wrapper. This method
-		/// can be overriden in a subclass.
+		/// can be overridden in a subclass.
 		/// </remarks>
 		/// <returns>The wrapper object for the logger.</returns>
 		virtual protected ILoggerWrapper CreateNewWrapperObject(ILogger logger)

@@ -27,7 +27,7 @@ using log4net.Core;
 namespace log4net.Util.PatternStringConverters
 {
 	/// <summary>
-	/// Environment pattern converter expamds environment variables
+	/// Environment pattern converter expands environment variables
 	/// </summary>
 	/// <author>Nicko Cadell</author>
 	internal sealed class EnvironmentPatternConverter : PatternConverter
@@ -43,7 +43,7 @@ namespace log4net.Util.PatternStringConverters
 			{
 				if (this.Option != null && this.Option.Length > 0)
 				{
-					// Lookup the environement vairable
+					// Lookup the environment variable
 					string envValue = Environment.GetEnvironmentVariable(this.Option);
 					if (envValue != null && envValue.Length > 0)
 					{

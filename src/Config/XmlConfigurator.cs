@@ -347,7 +347,7 @@ namespace log4net.Config
 					// Create a text reader for the file stream
 					XmlTextReader xmlReader = new XmlTextReader(configStream);
 #else
-					// Create a validating reader arround a text reader for the file stream
+					// Create a validating reader around a text reader for the file stream
 					XmlValidatingReader xmlReader = new XmlValidatingReader(new XmlTextReader(configStream));
 
 					// Specify that the reader should not perform validation, but that it should
@@ -408,7 +408,7 @@ namespace log4net.Config
 		/// </para>
 		/// <para>
 		/// The configuration file will be monitored using a <see cref="FileSystemWatcher"/>
-		/// and depends on the behaviour of that class.
+		/// and depends on the behavior of that class.
 		/// </para>
 		/// <para>
 		/// For more information on how to configure log4net using
@@ -436,14 +436,14 @@ namespace log4net.Config
 		/// </para>
 		/// <para>
 		/// The configuration file will be monitored using a <see cref="FileSystemWatcher"/>
-		/// and depends on the behaviour of that class.
+		/// and depends on the behavior of that class.
 		/// </para>
 		/// <para>
 		/// For more information on how to configure log4net using
 		/// a separate configuration file, see <see cref="Configure(FileInfo)"/>.
 		/// </para>
 		/// </remarks>
-		/// <seealso cfer="Configure(FileInfo)"/>
+		/// <seealso cref="Configure(FileInfo)"/>
 		static public void ConfigureAndWatch(ILoggerRepository repository, FileInfo configFile)
 		{
 			LogLog.Debug("XmlConfigurator: configuring repository [" + repository.Name + "] using file [" + configFile + "] watching for file updates");
@@ -465,7 +465,7 @@ namespace log4net.Config
 				}
 				catch(Exception ex)
 				{
-					LogLog.Error("Failed to initialise configuration file watcher for file ["+configFile.FullName+"]", ex);
+					LogLog.Error("Failed to initialize configuration file watcher for file ["+configFile.FullName+"]", ex);
 				}
 			}
 		}
@@ -484,11 +484,11 @@ namespace log4net.Config
 		/// changes to a specified file. Because multiple change notifications
 		/// may be raised when the file is modified, a timer is used to
 		/// compress the notifications into a single event. The timer
-		/// waits for <see cref="TimoutMillis"/> time before delivering
+		/// waits for <see cref="TimeoutMillis"/> time before delivering
 		/// the event notification. If any further <see cref="FileSystemWatcher"/>
 		/// change notifications arrive while the timer is waiting it
-		/// is reset and waits again for <see cref="TimoutMillis"/> to
-		/// elaps.
+		/// is reset and waits again for <see cref="TimeoutMillis"/> to
+		/// elapse.
 		/// </remarks>
 		private sealed class ConfigureAndWatchHandler
 		{
@@ -511,7 +511,7 @@ namespace log4net.Config
 			/// The default amount of time to wait after receiving notification
 			/// before reloading the config file.
 			/// </summary>
-			private const int TimoutMillis = 500;
+			private const int TimeoutMillis = 500;
 
 			/// <summary>
 			/// Initializes a new instance of the <see cref="ConfigureAndWatchHandler" /> class.
@@ -542,7 +542,7 @@ namespace log4net.Config
 				watcher.EnableRaisingEvents = true;
 
 				// Create the timer that will be used to deliver events. Set as disabled
-				m_timer = new Timer(new TimerCallback(OnWhatchedFileChange), null, Timeout.Infinite, Timeout.Infinite);
+				m_timer = new Timer(new TimerCallback(OnWatchedFileChange), null, Timeout.Infinite, Timeout.Infinite);
 			}
 
 			/// <summary>
@@ -557,9 +557,9 @@ namespace log4net.Config
 			{
 				LogLog.Debug("ConfigureAndWatchHandler: "+e.ChangeType+" [" + m_configFile.FullName + "]");
 
-				// Deliver the event in TimoutMillis time
+				// Deliver the event in TimeoutMillis time
 				// timer will fire only once
-				m_timer.Change(TimoutMillis, Timeout.Infinite);
+				m_timer.Change(TimeoutMillis, Timeout.Infinite);
 			}
 
 			/// <summary>
@@ -574,16 +574,16 @@ namespace log4net.Config
 			{
 				LogLog.Debug("ConfigureAndWatchHandler: " + e.ChangeType + " [" + m_configFile.FullName + "]");
 
-				// Deliver the event in TimoutMillis time
+				// Deliver the event in TimeoutMillis time
 				// timer will fire only once
-				m_timer.Change(TimoutMillis, Timeout.Infinite);
+				m_timer.Change(TimeoutMillis, Timeout.Infinite);
 			}
 
 			/// <summary>
 			/// Called by the timer when the configuration has been updated.
 			/// </summary>
 			/// <param name="state">null</param>
-			private void OnWhatchedFileChange(object state)
+			private void OnWatchedFileChange(object state)
 			{
 				XmlConfigurator.Configure(m_repository, m_configFile);
 			}

@@ -46,7 +46,7 @@ namespace log4net.Util
 		}
 
 		/// <summary>
-		/// Reset this string witer so that it can be reused.
+		/// Reset this string writer so that it can be reused.
 		/// The internal buffers are cleared and reset.
 		/// </summary>
 		/// <param name="maxCapacity">the maximum buffer capacity before it is trimmed</param>

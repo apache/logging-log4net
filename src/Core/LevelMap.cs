@@ -29,7 +29,7 @@ namespace log4net.Core
 	/// </summary>
 	/// <remarks>
 	/// Mapping between string name and Level object.
-	/// This mapping is held seperatly for each ILoggerRepository.
+	/// This mapping is held separately for each ILoggerRepository.
 	/// The level name is case insensitive.
 	/// </remarks>
 	/// <author>Nicko Cadell</author>

@@ -53,10 +53,10 @@ namespace log4net.Repository
 		#region Constructors
 
 		/// <summary>
-		/// Default Construtor
+		/// Default Constructor
 		/// </summary>
 		/// <remarks>
-		/// Initialises the repository with default (empty) properties
+		/// Initializes the repository with default (empty) properties
 		/// </remarks>
 		protected LoggerRepositorySkeleton() : this(new PropertiesDictionary())
 		{
@@ -202,7 +202,7 @@ namespace log4net.Repository
 		/// Shutdown the repository
 		/// </summary>
 		/// <remarks>
-		/// Shutdown the repository. Can be overriden in a subclass.
+		/// Shutdown the repository. Can be overridden in a subclass.
 		/// This base class implementation notifies the <see cref="ShutdownEvent"/>
 		/// listeners and all attached plugins of the shutdown event.
 		/// </remarks>
@@ -303,7 +303,7 @@ namespace log4net.Repository
 		/// Repository specific properties
 		/// </summary>
 		/// <remarks>
-		/// These properties can be specified on a reporitory specific basis
+		/// These properties can be specified on a repository specific basis
 		/// </remarks>
 		public PropertiesDictionary Properties 
 		{ 

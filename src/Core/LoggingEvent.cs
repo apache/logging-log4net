@@ -274,7 +274,7 @@ namespace log4net.Core
 		/// </summary>
 		/// <param name="fullNameOfLoggerClass">Fully qualified classname of the logger.</param>
 		/// <param name="repository">The repository this event is logged in.</param>
-		/// <param name="data">Data used to initialise the logging event.</param>
+		/// <param name="data">Data used to initialize the logging event.</param>
 		/// <remarks>
 		/// <para>
 		/// This constructor is provided to allow a <see cref="LoggingEvent" />
@@ -297,7 +297,7 @@ namespace log4net.Core
 		/// Initializes a new instance of the <see cref="LoggingEvent" /> class 
 		/// using specific data.
 		/// </summary>
-		/// <param name="data">Data used to initialise the logging event.</param>
+		/// <param name="data">Data used to initialize the logging event.</param>
 		/// <remarks>
 		/// <para>
 		/// This constructor is provided to allow a <see cref="LoggingEvent" />
@@ -328,11 +328,11 @@ namespace log4net.Core
 		{
 			m_data.LoggerName = info.GetString("LoggerName");
 
-			// Note we are desrialising the whole level object. That is the
+			// Note we are deserializing the whole level object. That is the
 			// name and the value. This value is correct for the source 
 			// hierarchy but may not be for the target hierarchy that this
-			// event may be relogged into. If it is to be relogged it may
-			// be nessasary to relookup the level based only on the name.
+			// event may be re-logged into. If it is to be re-logged it may
+			// be necessary to re-lookup the level based only on the name.
 			m_data.Level = (Level)info.GetValue("Level", typeof(Level));
 
 			m_data.Ndc = info.GetString("Ndc");
@@ -412,7 +412,7 @@ namespace log4net.Core
 		/// </para>
 		/// <para>
 		/// See the <see cref="LocationInfo"/> class for more information on
-		/// supported frameworks and the different behaviour in Debug and
+		/// supported frameworks and the different behavior in Debug and
 		/// Release builds.
 		/// </para>
 		/// </remarks>
@@ -467,15 +467,15 @@ namespace log4net.Core
 		}
 
 		/// <summary>
-		/// Gets the message object used to initialise this event.
+		/// Gets the message object used to initialize this event.
 		/// </summary>
 		/// <value>
-		/// The message object used to initialise this event.
+		/// The message object used to initialize this event.
 		/// </value>
 		/// <remarks>
-		/// Gets the message object used to initialise this event.
+		/// Gets the message object used to initialize this event.
 		/// Note that this event may not have a valid message object.
-		/// If the event is serialised the message object will not 
+		/// If the event is serialized the message object will not 
 		/// be transferred. To get the text of the message the
 		/// <see cref="RenderedMessage"/> property must be used 
 		/// not this property.
@@ -549,7 +549,7 @@ namespace log4net.Core
 		/// does store the message data in the internal cache. Therefore 
 		/// if called only once this method should be faster than the
 		/// <see cref="RenderedMessage"/> property, however if the message is
-		/// to be accessed multiple times then the property will be more efficent.
+		/// to be accessed multiple times then the property will be more efficient.
 		/// </remarks>
 		public void WriteRenderedMessage(TextWriter writer)
 		{
@@ -612,7 +612,7 @@ namespace log4net.Core
 						{
 							// This security exception will occur if the caller does not have 
 							// some undefined set of SecurityPermission flags.
-							LogLog.Debug("LoggingEvent: Security exception while trying to get current thread ID. Error Ingnored. Empty thread name.");
+							LogLog.Debug("LoggingEvent: Security exception while trying to get current thread ID. Error Ignored. Empty thread name.");
 
 							m_data.ThreadName = "";
 						}
@@ -814,7 +814,7 @@ namespace log4net.Core
 		/// <param name="context">The destination for this serialization.</param>
 		/// <remarks>
 		/// <para>
-		/// The data in this event must be fixed before it can be serialised.
+		/// The data in this event must be fixed before it can be serialized.
 		/// </para>
 		/// <para>
 		/// The <see cref="FixVolatileData"/> method must be called during the
@@ -826,7 +826,7 @@ namespace log4net.Core
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			// The caller must call FixVolatileData before this object
-			// can be serialised.
+			// can be serialized.
 
 			info.AddValue("LoggerName", m_data.LoggerName);
 			info.AddValue("Level", m_data.Level);
@@ -933,7 +933,7 @@ namespace log4net.Core
 		}
 
 		/// <summary>
-		/// Fixs instance fields that hold volatile data.
+		/// Fix instance fields that hold volatile data.
 		/// </summary>
 		/// <remarks>
 		/// <para>
@@ -1147,8 +1147,8 @@ namespace log4net.Core
 		/// The exception that was thrown.
 		/// </summary>
 		/// <remarks>
-		/// This is not serialised. The string representation
-		/// is serialised instead.
+		/// This is not serialized. The string representation
+		/// is serialized instead.
 		/// </remarks>
 		private readonly Exception m_thrownException;
 
@@ -1156,7 +1156,7 @@ namespace log4net.Core
 		/// The repository that generated the logging event
 		/// </summary>
 		/// <remarks>
-		/// This is not serialised.
+		/// This is not serialized.
 		/// </remarks>
 		private readonly ILoggerRepository m_repository = null;
 
@@ -1165,7 +1165,7 @@ namespace log4net.Core
 		/// </summary>
 		/// <remarks>
 		/// These flags indicate which fields have been fixed.
-		/// Not serialised.
+		/// Not serialized.
 		/// </remarks>
 		private FixFlags m_fixFlags = FixFlags.None;
 

@@ -69,7 +69,7 @@ namespace log4net.Appender
 		/// flush at the end of each write.
 		/// </summary>
 		/// <remarks>
-		/// <para>The default behaviour is to flush at the end of each 
+		/// <para>The default behavior is to flush at the end of each 
 		/// write. If the option is set to<c>false</c>, then the underlying 
 		/// stream can defer writing to physical medium to a later time. 
 		/// </para>

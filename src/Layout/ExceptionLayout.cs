@@ -30,7 +30,7 @@ namespace log4net.Layout
 	/// </summary>
 	/// <remarks>
 	/// <para>A Layout that renders only the Exception text from the logging event</para>
-	/// <para>This Layout should only be used with appenders that utilise multiple
+	/// <para>This Layout should only be used with appenders that utilize multiple
 	/// layouts (e.g. <see cref="log4net.Appender.AdoNetAppender"/>).</para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>

@@ -21,7 +21,7 @@ using System;
 namespace log4net.Util.TypeConverters
 {
 	/// <summary>
-	/// Class and Interface level attribute that specifes a type converter
+	/// Class and Interface level attribute that specifies a type converter
 	/// to use with the associated type.
 	/// </summary>
 	/// <remarks>

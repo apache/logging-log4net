@@ -110,32 +110,39 @@ namespace log4net.Util
 			int FORMAT_MESSAGE_IGNORE_INSERTS = 0x00000200;		// Insert sequences in the message definition are to be ignored
 			int FORMAT_MESSAGE_FROM_SYSTEM  = 0x00001000;		// The function should search the system message-table resource(s) for the requested message
 
-			string lpMsgBuf = "";				// buffer that will receive the message
-			IntPtr ptrlpSource = new IntPtr();	// Location of the message definition, will be ignored
-			IntPtr prtArguments = new IntPtr();	// Pointer to array of values to insert, not supported as it requires unsafe code
+			string msgBuf = "";				// buffer that will receive the message
+			IntPtr sourcePtr = new IntPtr();	// Location of the message definition, will be ignored
+			IntPtr argumentsPtr = new IntPtr();	// Pointer to array of values to insert, not supported as it requires unsafe code
 
 			if (messageId != 0) 
 			{
 				// If the function succeeds, the return value is the number of TCHARs stored in the output buffer, excluding the terminating null character
-				int messageSize = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, ref ptrlpSource, messageId, 0, ref lpMsgBuf, 255, prtArguments);
+				int messageSize = FormatMessage(
+					FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, 
+					ref sourcePtr, 
+					messageId, 
+					0, 
+					ref msgBuf, 
+					255, 
+					argumentsPtr);
 
 				if (messageSize > 0) 
 				{
 					// Remove trailing null-terminating characters (\r\n) from the message
-					lpMsgBuf = lpMsgBuf.TrimEnd(new char[] {'\r', '\n'});
+					msgBuf = msgBuf.TrimEnd(new char[] {'\r', '\n'});
 				}
 				else 
 				{
 					// A message could not be located.
-					lpMsgBuf = null;
+					msgBuf = null;
 				}
 			} 
 			else 
 			{
-				lpMsgBuf = null;
+				msgBuf = null;
 			}
 
-			return lpMsgBuf;
+			return msgBuf;
 		}
 
 		#endregion Public Static Methods
@@ -161,7 +168,7 @@ namespace log4net.Util
 		/// <param name="dwFlags">Formatting options, and how to interpret the <paramref name="lpSource" /> parameter.</param>
 		/// <param name="lpSource">Location of the message definition.</param>
 		/// <param name="dwMessageId">Message identifier for the requested message.</param>
-		/// <param name="dwLanguageId">Languager identifier for the requested message.</param>
+		/// <param name="dwLanguageId">Language identifier for the requested message.</param>
 		/// <param name="lpBuffer">If <paramref name="dwFlags" /> includes FORMAT_MESSAGE_ALLOCATE_BUFFER, the function allocates a buffer using the <c>LocalAlloc</c> function, and places the pointer to the buffer at the address specified in <paramref name="lpBuffer" />.</param>
 		/// <param name="nSize">If the FORMAT_MESSAGE_ALLOCATE_BUFFER flag is not set, this parameter specifies the maximum number of TCHARs that can be stored in the output buffer. If FORMAT_MESSAGE_ALLOCATE_BUFFER is set, this parameter specifies the minimum number of TCHARs to allocate for an output buffer.</param>
 		/// <param name="Arguments">Pointer to an array of values that are used as insert values in the formatted message.</param>

@@ -71,7 +71,7 @@ namespace log4net.Core
 			{
 				// Register the AppDomain events, note we have to do this with a
 				// method call rather than directly here because the AppDomain
-				// makes a LinkDemand which throws the execption during the JIT phase.
+				// makes a LinkDemand which throws the exception during the JIT phase.
 				RegisterAppDomainEvents();
 			}
 			catch(System.Security.SecurityException)
@@ -97,10 +97,10 @@ namespace log4net.Core
 		/// Register for ProcessExit and DomainUnload events on the AppDomain
 		/// </summary>
 		/// <remarks>
-		/// This needs to be in a seperate method because the events make
+		/// This needs to be in a separate method because the events make
 		/// a LinkDemand for the ControlAppDomain SecurityPermission. Because
 		/// this is a LinkDemand it is demanded at JIT time. Therefore we cannot
-		/// catch the exception in the method itself, we habe to catch it in the
+		/// catch the exception in the method itself, we have to catch it in the
 		/// caller.
 		/// </remarks>
 		private static void RegisterAppDomainEvents()
@@ -309,7 +309,7 @@ namespace log4net.Core
 		/// Gets the logger for the fully qualified name of the type specified.
 		/// </remarks>
 		/// <param name="repository">The repository to lookup in.</param>
-		/// <param name="type">The <paramref name="type"/> opf which the fullname will be used as the name of the logger to retrieve.</param>
+		/// <param name="type">The <paramref name="type"/> of which the fullname will be used as the name of the logger to retrieve.</param>
 		/// <returns>The logger with the name specified.</returns>
 		public static ILogger GetLogger(string repository, Type type) 
 		{
@@ -331,7 +331,7 @@ namespace log4net.Core
 		/// Gets the logger for the fully qualified name of the type specified.
 		/// </remarks>
 		/// <param name="repositoryAssembly">the assembly to use to lookup the repository</param>
-		/// <param name="type">The <paramref name="type"/> opf which the fullname will be used as the name of the logger to retrieve.</param>
+		/// <param name="type">The <paramref name="type"/> of which the fullname will be used as the name of the logger to retrieve.</param>
 		/// <returns>The logger with the name specified.</returns>
 		public static ILogger GetLogger(Assembly repositoryAssembly, Type type) 
 		{
@@ -739,7 +739,7 @@ namespace log4net.Core
 		#region Private Static Fields
 
 		/// <summary>
-		/// Initialise the default repository selector
+		/// Initialize the default repository selector
 		/// </summary>
 		private static IRepositorySelector s_repositorySelector;
 

@@ -100,7 +100,7 @@ namespace log4net.Util
 			}
 			char c;
 			int len = s.Length;
-			StringBuilder sbuf = new StringBuilder(len);
+			StringBuilder buf = new StringBuilder(len);
 	
 			int i = 0;
 			while(i < len) 
@@ -118,9 +118,9 @@ namespace log4net.Util
 					else if (c == '\'') c = '\'';			
 					else if (c == '\\') c = '\\';			
 				}
-				sbuf.Append(c);	  
+				buf.Append(c);	  
 			}
-			return sbuf.ToString();
+			return buf.ToString();
 		}
 
 		/// <summary>
@@ -221,7 +221,7 @@ namespace log4net.Util
 			}	
 			if (s != null) 
 			{
-				// Trin again to remove whitespace between the number and the size specifier
+				// Try again to remove whitespace between the number and the size specifier
 				s = s.Trim();
 
 				try 
@@ -309,7 +309,7 @@ namespace log4net.Util
 //		}
 
 		/// <summary>
-		/// Checks if there is an apropriate type conversion from the source type to the target type.
+		/// Checks if there is an appropriate type conversion from the source type to the target type.
 		/// </summary>
 		/// <param name="sourceType">The type to convert from.</param>
 		/// <param name="targetType">The type to convert to.</param>
@@ -426,7 +426,7 @@ namespace log4net.Util
 		/// </summary>
 		/// <param name="className">The fully qualified class name of the object to instantiate.</param>
 		/// <param name="superClass">The class to which the new object should belong.</param>
-		/// <param name="defaultValue">The object to return in case of non-fulfilment.</param>
+		/// <param name="defaultValue">The object to return in case of non-fulfillment.</param>
 		/// <remarks>
 		/// Checks that the <paramref name="className"/> is a subclass of
 		/// <paramref name="superClass"/>. If that test fails or the object could
@@ -485,15 +485,15 @@ namespace log4net.Util
 		/// </para>
 		/// <para>
 		/// For example, if system properties contains no value for the key
-		/// &quot;inexistentKey&quot;, then the call
+		/// &quot;nonExistentKey&quot;, then the call
 		/// </para>
 		/// <para>
 		/// <code>
-		/// string s = OptionConverter.subsVars("Value of inexistentKey is [${inexistentKey}]");
+		/// string s = OptionConverter.subsVars("Value of nonExistentKey is [${nonExistentKey}]");
 		/// </code>
 		/// </para>
 		/// <para>
-		/// will set <s>s</s> to &quot;Value of inexistentKey is []&quot;.	 
+		/// will set <s>s</s> to &quot;Value of nonExistentKey is []&quot;.	 
 		/// </para>
 		/// <para>
 		/// An Exception is thrown if <paramref name="value"/> contains a start 
@@ -503,7 +503,7 @@ namespace log4net.Util
 		/// <returns>The result of the substitutions.</returns>
 		public static string SubstVars(string value, System.Collections.IDictionary props) 
 		{
-			StringBuilder sbuf = new StringBuilder();
+			StringBuilder buf = new StringBuilder();
 
 			int i = 0;
 			int j, k;
@@ -519,13 +519,13 @@ namespace log4net.Util
 					}
 					else 
 					{
-						sbuf.Append(value.Substring(i, value.Length - i));
-						return sbuf.ToString();
+						buf.Append(value.Substring(i, value.Length - i));
+						return buf.ToString();
 					}
 				}
 				else 
 				{
-					sbuf.Append(value.Substring(i, j - i));
+					buf.Append(value.Substring(i, j - i));
 					k = value.IndexOf(DELIM_STOP, j);
 					if (k == -1) 
 					{
@@ -540,7 +540,7 @@ namespace log4net.Util
 
 						if (replacement != null) 
 						{
-							sbuf.Append(replacement);
+							buf.Append(replacement);
 						}
 						i = k + DELIM_STOP_LEN;		
 					}

@@ -26,15 +26,15 @@ namespace log4net.Config
 	/// <remarks>
 	/// <para>
 	/// An assembly's logger repository is defined by its <see cref="RepositoryAttribute"/>,
-	/// however this can be overidden by an assembly loaded before the target assembly.
+	/// however this can be overridden by an assembly loaded before the target assembly.
 	/// </para>
 	/// <para>
-	/// An assembly can alias another assembly's reporitory to its repository by
-	/// specifying this attribute with the name of the target reporitory.
+	/// An assembly can alias another assembly's repository to its repository by
+	/// specifying this attribute with the name of the target repository.
 	/// </para>
 	/// <para>
 	/// This attribute can only be specified on the assembly and may be used
-	/// as many times as nessasary to alias all the required reporitories.
+	/// as many times as necessary to alias all the required repositories.
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
@@ -44,7 +44,7 @@ namespace log4net.Config
 	public /*sealed*/ class AliasRepositoryAttribute : Attribute
 	{
 		//
-		// Class is not sealed because AliasDomainAttribute extends it while it is obseleted
+		// Class is not sealed because AliasDomainAttribute extends it while it is obsoleted
 		// 
 
 		#region Public Instance Constructors

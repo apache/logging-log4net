@@ -39,29 +39,6 @@ namespace log4net.Layout
 	/// <author>Gert Driesen</author>
 	public class SimpleLayout : LayoutSkeleton
 	{
-		#region Constants
-
-//		/// <summary>
-//		/// Initial buffer size
-//		/// </summary>
-//  		protected const int BUF_SIZE = 256;
-//
-//		/// <summary>
-//		/// Maximum buffer size before it is recycled
-//		/// </summary>
-//		protected const int MAX_CAPACITY = 1024;
-
-		#endregion
-
-		#region Member Variables
-  
-//		/// <summary>
-//		/// output buffer appended to when Format() is invoked
-//		/// </summary>
-//		private StringBuilder m_sbuf = new StringBuilder(BUF_SIZE);
-  
-		#endregion
-
 		#region Constructors
 
 		/// <summary>

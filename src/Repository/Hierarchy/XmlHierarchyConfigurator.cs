@@ -82,12 +82,12 @@ namespace log4net.Repository.Hierarchy
 			if (!LogLog.InternalDebugging)
 			{
 				// Look for a debug attribute to enable internal debug
-				string debugAttrib = element.GetAttribute(INTERNAL_DEBUG_ATTR);
-				LogLog.Debug("XmlConfigurator: "+INTERNAL_DEBUG_ATTR+" attribute [" + debugAttrib + "].");
+				string debugAttribute = element.GetAttribute(INTERNAL_DEBUG_ATTR);
+				LogLog.Debug("XmlConfigurator: "+INTERNAL_DEBUG_ATTR+" attribute [" + debugAttribute + "].");
 
-				if (debugAttrib.Length>0 && debugAttrib != "null") 
+				if (debugAttribute.Length>0 && debugAttribute != "null") 
 				{	  
-					LogLog.InternalDebugging = OptionConverter.ToBoolean(debugAttrib, true);
+					LogLog.InternalDebugging = OptionConverter.ToBoolean(debugAttribute, true);
 				}
 				else 
 				{
@@ -107,17 +107,17 @@ namespace log4net.Repository.Hierarchy
 			ConfigUpdateMode configUpdateMode = ConfigUpdateMode.Merge;
 
 			// Look for the config update attribute
-			string configUpdateModeAttrib = element.GetAttribute(CONFIG_UPDATE_MODE_ATTR);
-			if (configUpdateModeAttrib != null && configUpdateModeAttrib.Length > 0)
+			string configUpdateModeAttribute = element.GetAttribute(CONFIG_UPDATE_MODE_ATTR);
+			if (configUpdateModeAttribute != null && configUpdateModeAttribute.Length > 0)
 			{
 				// Parse the attribute
 				try
 				{
-					configUpdateMode = (ConfigUpdateMode)OptionConverter.ConvertStringTo(typeof(ConfigUpdateMode), configUpdateModeAttrib);
+					configUpdateMode = (ConfigUpdateMode)OptionConverter.ConvertStringTo(typeof(ConfigUpdateMode), configUpdateModeAttribute);
 				}
 				catch
 				{
-					LogLog.Error("XmlConfigurator: Invalid " + CONFIG_UPDATE_MODE_ATTR + " attribute value [" + configUpdateModeAttrib + "]");
+					LogLog.Error("XmlConfigurator: Invalid " + CONFIG_UPDATE_MODE_ATTR + " attribute value [" + configUpdateModeAttribute + "]");
 				}
 			}
 
@@ -305,9 +305,9 @@ namespace log4net.Repository.Hierarchy
 				return appender;
 			}
 				/* Yes, it's ugly.  But all of these exceptions point to the same problem: we can't create an Appender */
-			catch (Exception oops) 
+			catch (Exception ex) 
 			{
-				LogLog.Error("XmlConfigurator: Could not create Appender [" + appenderName + "] of type [" + typeName + "]. Reported error follows.", oops);
+				LogLog.Error("XmlConfigurator: Could not create Appender [" + appenderName + "] of type [" + typeName + "]. Reported error follows.", ex);
 				return null;
 			}
 		}
@@ -436,16 +436,16 @@ namespace log4net.Repository.Hierarchy
 		/// <param name="isRoot">Flag to indicate if the logger is the root logger.</param>
 		protected void ParseLevel(XmlElement element, Logger log, bool isRoot) 
 		{
-			string catName = log.Name;
+			string loggerName = log.Name;
 			if (isRoot) 
 			{
-				catName = "root";
+				loggerName = "root";
 			}
 
-			string priStr = element.GetAttribute(VALUE_ATTR);
-			LogLog.Debug("XmlConfigurator: Logger [" + catName + "] Level string is [" + priStr + "].");
+			string levelStr = element.GetAttribute(VALUE_ATTR);
+			LogLog.Debug("XmlConfigurator: Logger [" + loggerName + "] Level string is [" + levelStr + "].");
 	
-			if (INHERITED == priStr) 
+			if (INHERITED == levelStr) 
 			{
 				if (isRoot) 
 				{
@@ -458,17 +458,17 @@ namespace log4net.Repository.Hierarchy
 			} 
 			else 
 			{
-				log.Level = log.Hierarchy.LevelMap[priStr];
+				log.Level = log.Hierarchy.LevelMap[levelStr];
 				if (log.Level == null)
 				{
-					LogLog.Error("XmlConfigurator: Undefined level [" + priStr + "] on Logger [" + log.Name + "].");
+					LogLog.Error("XmlConfigurator: Undefined level [" + levelStr + "] on Logger [" + log.Name + "].");
 				}
 			}
-			LogLog.Debug("XmlConfigurator: Logger [" + catName + "] level set to [name=\"" + log.Level.Name + "\",value=" + log.Level.Value + "].");	
+			LogLog.Debug("XmlConfigurator: Logger [" + loggerName + "] level set to [name=\"" + log.Level.Name + "\",value=" + log.Level.Value + "].");	
 		}
 
 		/// <summary>
-		/// Sets a paramater on an object.
+		/// Sets a parameter on an object.
 		/// </summary>
 		/// <remarks>
 		/// The parameter name must correspond to a writable property
@@ -700,7 +700,7 @@ namespace log4net.Repository.Hierarchy
 					}
 					else
 					{
-						LogLog.Error("XmlConfigurator: Object type ["+objectType.FullName+"] is not assignable to type ["+typeConstraint.FullName+"]. There are no acceptable type convertions.");
+						LogLog.Error("XmlConfigurator: Object type ["+objectType.FullName+"] is not assignable to type ["+typeConstraint.FullName+"]. There are no acceptable type conversions.");
 						return null;
 					}
 				}
@@ -732,7 +732,7 @@ namespace log4net.Repository.Hierarchy
 				((IOptionHandler) createdObject).ActivateOptions();
 			}
 
-			// Ok object should be initialised
+			// Ok object should be initialized
 
 			if (requiresConversion)
 			{

@@ -29,7 +29,7 @@ namespace log4net.Config
 	/// </para>
 	/// <para>
 	/// An assembly's logger repository is defined by its <see cref="DomainAttribute"/>,
-	/// however this can be overidden by an assembly loaded before the target assembly.
+	/// however this can be overridden by an assembly loaded before the target assembly.
 	/// </para>
 	/// <para>
 	/// An assembly can alias another assembly's domain to its repository by
@@ -37,7 +37,7 @@ namespace log4net.Config
 	/// </para>
 	/// <para>
 	/// This attribute can only be specified on the assembly and may be used
-	/// as many times as nessasary to alias all the required domains.
+	/// as many times as necessary to alias all the required domains.
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>

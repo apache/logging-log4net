@@ -24,7 +24,7 @@ namespace log4net.Util.TypeConverters
 	/// Interface supported by type converters
 	/// </summary>
 	/// <remarks>
-	/// This interface supports conversion from a single type to arbitary types.
+	/// This interface supports conversion from a single type to arbitrary types.
 	/// See <see cref="TypeConverterAttribute"/>.
 	/// </remarks>
 	/// <author>Nicko Cadell</author>

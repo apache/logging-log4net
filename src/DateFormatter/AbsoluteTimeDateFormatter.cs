@@ -139,7 +139,7 @@ namespace log4net.DateFormatter
 		/// <summary>
 		/// String constant used to specify ISO8601DateFormat in layouts. Current value is <b>ISO8601</b>.
 		/// </summary>
-		public const string Isi8601TimeDateFormat = "ISO8601";
+		public const string Iso8601TimeDateFormat = "ISO8601";
 
 		#endregion Public Static Fields
 

@@ -48,7 +48,7 @@ namespace log4net.Util.PatternStringConverters
 		}
 
 		/// <summary>
-		/// Override the formatting behaviour to ignore the FormattingInfo
+		/// Override the formatting behavior to ignore the FormattingInfo
 		/// because we have a literal instead.
 		/// </summary>
 		/// <param name="writer">the writer to write to</param>
@@ -65,7 +65,7 @@ namespace log4net.Util.PatternStringConverters
 		/// <param name="state">null, state is not set</param>
 		override protected void Convert(TextWriter writer, object state) 
 		{
-			throw new InvalidOperationException("Should never get here because of the overriden Format method");
+			throw new InvalidOperationException("Should never get here because of the overridden Format method");
 		}
 	}
 }

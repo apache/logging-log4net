@@ -25,7 +25,7 @@ namespace log4net.Util
 	/// <summary>
 	/// Implements log4net's default error handling policy which consists 
 	/// of emitting a message for the first error in an appender and 
-	/// ignoring all suqsequent errors.
+	/// ignoring all subsequent errors.
 	/// </summary>
 	/// <remarks>
 	/// <para>

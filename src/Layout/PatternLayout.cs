@@ -92,7 +92,7 @@ namespace log4net.Layout
 	///     <item>
 	///         <term>appdomain</term>
 	///         <description>
-	///				Used to output the frienly name of the AppDomain where the 
+	///				Used to output the friendly name of the AppDomain where the 
 	///				logging event was generated. 
 	///         </description>
 	///     </item>
@@ -159,7 +159,7 @@ namespace log4net.Layout
 	///				is not an issue.
 	///				</para>
 	/// 			<para>
-	/// 			See the note below on the availablity of caller location information.
+	/// 			See the note below on the availability of caller location information.
 	/// 			</para>
 	///			</description>
 	///		</item>
@@ -204,7 +204,7 @@ namespace log4net.Layout
 	/// 			unless execution speed is not an issue.
 	/// 			</para>
 	/// 			<para>
-	/// 			See the note below on the availablity of caller location information.
+	/// 			See the note below on the availability of caller location information.
 	/// 			</para>
 	///			</description>
 	///		</item>
@@ -229,7 +229,7 @@ namespace log4net.Layout
 	///				is not an issue.
 	///				</para>
 	/// 			<para>
-	/// 			See the note below on the availablity of caller location information.
+	/// 			See the note below on the availability of caller location information.
 	/// 			</para>
 	///			</description>
 	///		</item>
@@ -296,7 +296,7 @@ namespace log4net.Layout
 	///				is not an issue.
 	///				</para>
 	/// 			<para>
-	/// 			See the note below on the availablity of caller location information.
+	/// 			See the note below on the availability of caller location information.
 	/// 			</para>
 	///			</description>
 	///		</item>
@@ -399,7 +399,7 @@ namespace log4net.Layout
 	/// 			not an issue.
 	/// 			</para>
 	/// 			<para>
-	/// 			See the note below on the availablity of caller location information.
+	/// 			See the note below on the availability of caller location information.
 	/// 			</para>
 	///			</description>
 	///     </item>
@@ -443,7 +443,7 @@ namespace log4net.Layout
 	///		</item>
 	/// </list>
 	/// <para>
-	/// The single letter patterns are deprecated in favour of the 
+	/// The single letter patterns are deprecated in favor of the 
 	/// longer more descriptive patterns.
 	/// </para>
 	/// <para>
@@ -469,14 +469,14 @@ namespace log4net.Layout
 	/// data. The value is never truncated.
 	/// </para>
 	/// <para>
-	/// This behaviour can be changed using the <i>maximum field
+	/// This behavior can be changed using the <i>maximum field
 	/// width</i> modifier which is designated by a period followed by a
 	/// decimal constant. If the data item is longer than the maximum
 	/// field, then the extra characters are removed from the
 	/// <i>beginning</i> of the data item and not from the end. For
 	/// example, it the maximum field width is eight and the data item is
 	/// ten characters long, then the first two characters of the data item
-	/// are dropped. This behaviour deviates from the printf function in C
+	/// are dropped. This behavior deviates from the printf function in C
 	/// where truncation is done from the end.
 	/// </para>
 	/// <para>
@@ -629,7 +629,7 @@ namespace log4net.Layout
 		/// Internal map of converter identifiers to converter types.
 		/// </summary>
 		/// <remarks>
-		/// This static map is overriden by the m_converterRegistry instance map
+		/// This static map is overridden by the m_converterRegistry instance map
 		/// </remarks>
 		private static Hashtable s_globalRulesRegistry;
 
@@ -652,7 +652,7 @@ namespace log4net.Layout
 		#region Static Constructor
 
 		/// <summary>
-		/// Initialise the global registry
+		/// Initialize the global registry
 		/// </summary>
 		static PatternLayout()
 		{
@@ -773,7 +773,7 @@ namespace log4net.Layout
 			// Add all the builtin patterns
 			foreach(DictionaryEntry entry in s_globalRulesRegistry)
 			{
-				patternParser.ConverterRegistry.Add(entry.Key, entry.Value);
+				patternParser.PatternConverters.Add(entry.Key, entry.Value);
 			}
 
 			return patternParser;

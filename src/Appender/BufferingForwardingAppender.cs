@@ -76,9 +76,9 @@ namespace log4net.Appender
 				// Delegate to base, which will flush buffers
 				base.OnClose();
 
-				if (m_aai != null)
+				if (m_appenderAttachedImpl != null)
 				{
-					m_aai.RemoveAllAppenders();
+					m_appenderAttachedImpl.RemoveAllAppenders();
 				}
 			}
 		}
@@ -99,12 +99,12 @@ namespace log4net.Appender
 		override protected void SendBuffer(LoggingEvent[] events)
 		{
 			// Pass the logging event on to the attached appenders
-			if (m_aai != null)
+			if (m_appenderAttachedImpl != null)
 			{
 				// Send each event one at a time
 				foreach(LoggingEvent e in events)
 				{
-					m_aai.AppendLoopOnAppenders(e);
+					m_appenderAttachedImpl.AppendLoopOnAppenders(e);
 				}
 			}
 		}
@@ -132,11 +132,11 @@ namespace log4net.Appender
 			}
 			lock(this)
 			{
-				if (m_aai == null) 
+				if (m_appenderAttachedImpl == null) 
 				{
-					m_aai = new log4net.Util.AppenderAttachedImpl();
+					m_appenderAttachedImpl = new log4net.Util.AppenderAttachedImpl();
 				}
-				m_aai.AddAppender(newAppender);
+				m_appenderAttachedImpl.AddAppender(newAppender);
 			}
 		}
 
@@ -157,13 +157,13 @@ namespace log4net.Appender
 			{
 				lock(this)
 				{
-					if (m_aai == null)
+					if (m_appenderAttachedImpl == null)
 					{
 						return AppenderCollection.EmptyCollection;
 					}
 					else 
 					{
-						return m_aai.Appenders;
+						return m_appenderAttachedImpl.Appenders;
 					}
 				}
 			}
@@ -180,12 +180,12 @@ namespace log4net.Appender
 		{
 			lock(this)
 			{
-				if (m_aai == null || name == null)
+				if (m_appenderAttachedImpl == null || name == null)
 				{
 					return null;
 				}
 
-				return m_aai.GetAppender(name);
+				return m_appenderAttachedImpl.GetAppender(name);
 			}
 		}
 
@@ -201,10 +201,10 @@ namespace log4net.Appender
 		{
 			lock(this)
 			{
-				if (m_aai != null) 
+				if (m_appenderAttachedImpl != null) 
 				{
-					m_aai.RemoveAllAppenders();
-					m_aai = null;
+					m_appenderAttachedImpl.RemoveAllAppenders();
+					m_appenderAttachedImpl = null;
 				}
 			}
 		}
@@ -217,9 +217,9 @@ namespace log4net.Appender
 		{
 			lock(this)
 			{
-				if (appender != null && m_aai != null) 
+				if (appender != null && m_appenderAttachedImpl != null) 
 				{
-					m_aai.RemoveAppender(appender);
+					m_appenderAttachedImpl.RemoveAppender(appender);
 				}
 			}
 		}
@@ -232,9 +232,9 @@ namespace log4net.Appender
 		{
 			lock(this)
 			{
-				if (name != null && m_aai != null)
+				if (name != null && m_appenderAttachedImpl != null)
 				{
-					m_aai.RemoveAppender(name);
+					m_appenderAttachedImpl.RemoveAppender(name);
 				}
 			}
 		}
@@ -246,7 +246,7 @@ namespace log4net.Appender
 		/// <summary>
 		/// Implementation of the <see cref="IAppenderAttachable"/> interface
 		/// </summary>
-		private AppenderAttachedImpl m_aai;
+		private AppenderAttachedImpl m_appenderAttachedImpl;
 
 		#endregion Private Instance Fields
 	}

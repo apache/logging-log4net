@@ -25,7 +25,7 @@ namespace log4net.Util.TypeConverters
 {
 	/// <summary>
 	/// Implementation of <see cref="IConvertFrom"/> that converts 
-	/// a <see cref="PatternString"/> to a string ans a string into
+	/// a <see cref="PatternString"/> to a string and a string into
 	/// a <see cref="PatternString"/>.
 	/// </summary>
 	/// <author>Nicko Cadell</author>

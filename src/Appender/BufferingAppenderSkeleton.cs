@@ -57,7 +57,7 @@ namespace log4net.Appender
 	/// buffer will not be sent when it is full, and new events arriving 
 	/// in the appender will overwrite the oldest event in the buffer. 
 	/// In lossy mode the buffer will only be sent when the <see cref="Evaluator"/>
-	/// triggers. This can be useful behaviour when you need to know about 
+	/// triggers. This can be useful behavior when you need to know about 
 	/// ERROR events but not about events with a lower level, configure an 
 	/// evaluator that will trigger when an ERROR event arrives, the whole 
 	/// buffer will be sent which gives a history of events leading up to
@@ -188,7 +188,7 @@ namespace log4net.Appender
 		/// <remarks>
 		/// <para>
 		/// Setting this property to <c>true</c> will cause only part of the
-		/// event data to be fixed and serialised. This will improve performance.
+		/// event data to be fixed and serialized. This will improve performance.
 		/// </para>
 		/// <para>
 		/// See <see cref="LoggingEvent.FixVolatileData(bool)"/> for more information.
@@ -225,7 +225,7 @@ namespace log4net.Appender
 		#region Implementation of IOptionHandler
 
 		/// <summary>
-		/// Initialise the appender based on the options set
+		/// Initialize the appender based on the options set
 		/// </summary>
 		override public void ActivateOptions() 
 		{
@@ -264,11 +264,11 @@ namespace log4net.Appender
 				{
 					if (m_lossyEvaluator != null)
 					{
-						foreach(LoggingEvent evnt in m_cb.PopAll())
+						foreach(LoggingEvent loggingEvent in m_cb.PopAll())
 						{
-							if (m_lossyEvaluator.IsTriggeringEvent(evnt))
+							if (m_lossyEvaluator.IsTriggeringEvent(loggingEvent))
 							{
-								SendBuffer(new LoggingEvent[] { evnt } );
+								SendBuffer(new LoggingEvent[] { loggingEvent } );
 							}
 						}
 					}
@@ -310,7 +310,7 @@ namespace log4net.Appender
 		override protected void Append(LoggingEvent loggingEvent) 
 		{
 			// If the buffer size is set to 1 or less then the buffer will be
-			// sent immediaty because there is not enough space in the buffer
+			// sent immediately because there is not enough space in the buffer
 			// to buffer up more than 1 event. Therefore as a special case
 			// we don't use the buffer at all.
 			if (m_bufferSize <= 1)
@@ -326,7 +326,7 @@ namespace log4net.Appender
 						loggingEvent.Fix = this.Fix;
 					}
 
-					// Not buffering events, send immediatly
+					// Not buffering events, send immediately
 					SendBuffer(new LoggingEvent[] { loggingEvent } );
 				}
 			}

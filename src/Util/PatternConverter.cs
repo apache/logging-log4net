@@ -93,7 +93,7 @@ namespace log4net.Util
 		/// convert conversion specifiers in the correct way.
 		/// </summary>
 		/// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
-		/// <param name="state">The state objet on which the pattern converter should be executed.</param>
+		/// <param name="state">The state object on which the pattern converter should be executed.</param>
 		abstract protected void Convert(TextWriter writer, object state);
 
 		#endregion Protected Abstract Methods
@@ -106,7 +106,7 @@ namespace log4net.Util
 		/// <param name="pc">the pattern converter that should follow this converter in the chain</param>
 		/// <returns>the next converter</returns>
 		/// <remarks>
-		/// The PatternConverter can merge with its neighbour during this method (or a sub class).
+		/// The PatternConverter can merge with its neighbor during this method (or a sub class).
 		/// Therefore the return value may or may not be the value of the argument passed in.
 		/// </remarks>
 		public virtual PatternConverter SetNext(PatternConverter pc)

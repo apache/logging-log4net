@@ -80,7 +80,7 @@ namespace log4net.Appender
 		/// </summary>
 		/// <value>
 		/// <para>
-		/// The default behaviour is to flush at the end of each 
+		/// The default behavior is to flush at the end of each 
 		/// append operation.
 		/// </para>
 		/// <para>
@@ -282,7 +282,7 @@ namespace log4net.Appender
 		/// and other variables.
 		/// </summary>
 		/// <remarks>
-		/// Subclasses can override this method for an alternate closing behaviour.
+		/// Subclasses can override this method for an alternate closing behavior.
 		/// </remarks>
 		virtual protected void Reset() 
 		{

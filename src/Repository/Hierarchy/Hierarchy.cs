@@ -396,7 +396,7 @@ namespace log4net.Repository.Hierarchy
 		#region Implementation of IBasicRepositoryConfigurator
 
 		/// <summary>
-		/// Initialise the log4net system using the specified appender
+		/// Initialize the log4net system using the specified appender
 		/// </summary>
 		/// <param name="appender">the appender to use to log all logging events</param>
 		void IBasicRepositoryConfigurator.Configure(log4net.Appender.IAppender appender)
@@ -414,7 +414,7 @@ namespace log4net.Repository.Hierarchy
 		#region Implementation of IXmlRepositoryConfigurator
 
 		/// <summary>
-		/// Initialise the log4net system using the specified config
+		/// Initialize the log4net system using the specified config
 		/// </summary>
 		/// <param name="element">the element containing the root of the config</param>
 		void IXmlRepositoryConfigurator.Configure(System.Xml.XmlElement element)
@@ -466,7 +466,7 @@ namespace log4net.Repository.Hierarchy
 			}
 			else
 			{
-				// If not configured the hierarchy is effectivly disabled
+				// If not configured the hierarchy is effectively disabled
 				return true;
 			}
 		}

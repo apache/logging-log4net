@@ -45,7 +45,7 @@ namespace log4net.Config
 	public /*sealed*/ class RepositoryAttribute : Attribute
 	{
 		//
-		// Class is not sealed because DomainAttribute extends it while it is obseleted
+		// Class is not sealed because DomainAttribute extends it while it is obsoleted
 		// 
 
 		#region Public Instance Constructors
@@ -58,7 +58,7 @@ namespace log4net.Config
 		}
 
 		/// <summary>
-		/// Initialise a new instance of the <see cref="RepositoryAttribute" /> class 
+		/// Initialize a new instance of the <see cref="RepositoryAttribute" /> class 
 		/// with the name of the repository.
 		/// </summary>
 		/// <param name="name">The name of the repository.</param>

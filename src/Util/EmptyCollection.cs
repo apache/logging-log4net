@@ -50,7 +50,7 @@ namespace log4net.Util
 		/// <summary>
 		/// Gets the singleton instance of the empty collection.
 		/// </summary>
-		/// <returns>The singletion instance of the empty collection.</returns>
+		/// <returns>The singleton instance of the empty collection.</returns>
 		public static EmptyCollection Instance
 		{
 			get { return s_instance; }

@@ -268,7 +268,7 @@ namespace log4net.Appender
 		/// </summary>
 		/// <value>
 		/// <c>true</c> if transactions should be used to insert logging events in
-		/// the database, otherwisr <c>false</c>. The default value is <c>true</c>.
+		/// the database, otherwise <c>false</c>. The default value is <c>true</c>.
 		/// </value>
 		public bool UseTransactions
 		{
@@ -304,7 +304,7 @@ namespace log4net.Appender
 		#region Implementation of IOptionHandler
 
 		/// <summary>
-		/// Initialise the appender based on the options set
+		/// Initialize the appender based on the options set
 		/// </summary>
 		override public void ActivateOptions() 
 		{
@@ -672,8 +672,7 @@ namespace log4net.Appender
 		private CommandType m_commandType;
 
 		/// <summary>
-		/// Incicats whether to use Utransactions when writing to the 
-		/// database.
+		/// Indicates whether to use transactions when writing to the database.
 		/// </summary>
 		private bool m_useTransactions;
 

@@ -24,7 +24,7 @@ namespace log4net.Util.TypeConverters
 	/// Type converter for Boolean.
 	/// </summary>
 	/// <remarks>
-	/// Supportes conversion from string to boolean type.
+	/// Supports conversion from string to boolean type.
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>

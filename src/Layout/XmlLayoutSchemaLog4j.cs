@@ -31,7 +31,7 @@ namespace log4net.Layout
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// Formats the log events acording to the http://jakarta.apache.org/log4j schema.
+	/// Formats the log events according to the http://jakarta.apache.org/log4j schema.
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
@@ -121,7 +121,7 @@ method="run" file="Generator.java" line="94"/>
 		*/
 
 		/// <summary>
-		/// Actualy do the writing of the xml
+		/// Actually do the writing of the xml
 		/// </summary>
 		/// <param name="writer">the writer to use</param>
 		/// <param name="loggingEvent">the event to write</param>

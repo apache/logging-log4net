@@ -22,10 +22,10 @@ using System.Collections;
 namespace log4net.Core
 {
 	/// <summary>
-	/// Defines the set of levels recognised by the system.
+	/// Defines the set of levels recognized by the system.
 	/// </summary>
 	/// <remarks>
-	/// Some of the predefined levels recognised by the system are
+	/// Some of the predefined levels recognized by the system are
 	/// <list type="bullet">
 	///		<item>
 	///			<description><see cref="Off"/>.</description>
@@ -61,7 +61,7 @@ namespace log4net.Core
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Level" /> class with
-		/// the specicied level name and value.
+		/// the specified level name and value.
 		/// </summary>
 		/// <param name="level">Integer value for this level, higher values represent more severe levels.</param>
 		/// <param name="levelName">The string name of this level.</param>
@@ -153,7 +153,7 @@ namespace log4net.Core
 		/// <param name="r">A <see cref="Level"/> instance or <see langword="null" /> to compare with this instance.</param>
 		/// <returns>
 		/// A 32-bit signed integer that indicates the relative order of the 
-		/// comparands. The return value has these meanings:
+		/// values compared. The return value has these meanings:
 		/// <list type="table">
 		///		<listheader>
 		///			<term>Value</term>
@@ -305,7 +305,7 @@ namespace log4net.Core
 		/// <param name="r">The second <see cref="Level"/> to compare.</param>
 		/// <returns>
 		/// A 32-bit signed integer that indicates the relative order of the 
-		/// two comparands. The return value has these meanings:
+		/// two values compared. The return value has these meanings:
 		/// <list type="table">
 		///		<listheader>
 		///			<term>Value</term>

@@ -67,7 +67,7 @@ namespace log4net.Filter
 
 		/// <summary>
 		/// The <see cref="AcceptOnMatch"/> property is a flag that determines
-		/// the behaviour when a matching <see cref="Level"/> is found. If the
+		/// the behavior when a matching <see cref="Level"/> is found. If the
 		/// flag is set to true then the filter will <see cref="FilterDecision.Accept"/> the 
 		/// logging event, otherwise it will <see cref="FilterDecision.Deny"/> the event.
 		/// </summary>

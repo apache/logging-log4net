@@ -277,7 +277,7 @@ namespace log4net.Core
 					}
 					else
 					{
-						LogLog.Debug("DefaultRepositorySelector: repository [" + actualRepositoryName + "] already exisits, using repository type [" + rep.GetType().FullName + "]");
+						LogLog.Debug("DefaultRepositorySelector: repository [" + actualRepositoryName + "] already exists, using repository type [" + rep.GetType().FullName + "]");
 
 						if (readAssemblyAttributes)
 						{
@@ -339,7 +339,7 @@ namespace log4net.Core
 						// Check repository type
 						if (aliasedRepository.GetType() == repositoryType)
 						{
-							// Repository type is compatable
+							// Repository type is compatible
 							LogLog.Debug("DefaultRepositorySelector: Aliasing repository [" + repository + "] to existing repository [" + aliasedRepository.Name + "]");
 							rep = aliasedRepository;
 
@@ -349,7 +349,7 @@ namespace log4net.Core
 						else
 						{
 							// Invalid repository type for alias
-							LogLog.Error("DefaultRepositorySelector: Failed to alias repository [" + repository + "] to existing repository ["+aliasedRepository.Name+"]. Requested repository type ["+repositoryType.FullName+"] is not compatable with existing type [" + aliasedRepository.GetType().FullName + "]");
+							LogLog.Error("DefaultRepositorySelector: Failed to alias repository [" + repository + "] to existing repository ["+aliasedRepository.Name+"]. Requested repository type ["+repositoryType.FullName+"] is not compatible with existing type [" + aliasedRepository.GetType().FullName + "]");
 
 							// We now drop through to create the repository without aliasing
 						}
@@ -408,7 +408,7 @@ namespace log4net.Core
 		/// The repository must not already exist.
 		/// </para>
 		/// <para>
-		/// When the repository is created it must utilise the same reporitory type as 
+		/// When the repository is created it must utilize the same repository type as 
 		/// the repository it is aliased to, otherwise the aliasing will fail.
 		/// </para>
 		/// </remarks>
@@ -561,7 +561,7 @@ namespace log4net.Core
 				throw new ArgumentNullException("repository");
 			}
 
-			// Look for the Configurator attributes (eg. DOMConfiguratorAttribute) on the assembly
+			// Look for the Configurator attributes (e.g. DOMConfiguratorAttribute) on the assembly
 			object[] configAttributes = Attribute.GetCustomAttributes(assembly, typeof(log4net.Config.ConfiguratorAttribute), false);
 			if (configAttributes != null && configAttributes.Length > 0)
 			{

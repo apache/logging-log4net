@@ -108,7 +108,7 @@ namespace log4net.Util
 		/// </summary>
 		/// <param name="buffer">the buffer to write</param>
 		/// <param name="index">the start index to write from</param>
-		/// <param name="count">the nuber of characters to write</param>
+		/// <param name="count">the number of characters to write</param>
 		public override void Write(char[] buffer, int index, int count) 
 		{
 			try 

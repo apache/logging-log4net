@@ -41,10 +41,10 @@ namespace log4net.Util.PatternStringConverters
 			string dateFormatStr = Option;
 			if (dateFormatStr == null)
 			{
-				dateFormatStr = AbsoluteTimeDateFormatter.Isi8601TimeDateFormat;
+				dateFormatStr = AbsoluteTimeDateFormatter.Iso8601TimeDateFormat;
 			}
 			
-			if (string.Compare(dateFormatStr, AbsoluteTimeDateFormatter.Isi8601TimeDateFormat, true, System.Globalization.CultureInfo.InvariantCulture) == 0) 
+			if (string.Compare(dateFormatStr, AbsoluteTimeDateFormatter.Iso8601TimeDateFormat, true, System.Globalization.CultureInfo.InvariantCulture) == 0) 
 			{
 				m_df = new Iso8601DateFormatter();
 			}

@@ -184,11 +184,11 @@ namespace log4net.Repository.Hierarchy
 			m_appenderLock.AcquireWriterLock();
 			try
 			{
-				if (m_aai == null) 
+				if (m_appenderAttachedImpl == null) 
 				{
-					m_aai = new log4net.Util.AppenderAttachedImpl();
+					m_appenderAttachedImpl = new log4net.Util.AppenderAttachedImpl();
 				}
-				m_aai.AddAppender(newAppender);
+				m_appenderAttachedImpl.AddAppender(newAppender);
 			}
 			finally
 			{
@@ -213,13 +213,13 @@ namespace log4net.Repository.Hierarchy
 				m_appenderLock.AcquireReaderLock();
 				try
 				{
-					if (m_aai == null)
+					if (m_appenderAttachedImpl == null)
 					{
 						return AppenderCollection.EmptyCollection;
 					}
 					else 
 					{
-						return m_aai.Appenders;
+						return m_appenderAttachedImpl.Appenders;
 					}
 				}
 				finally
@@ -242,12 +242,12 @@ namespace log4net.Repository.Hierarchy
 			m_appenderLock.AcquireReaderLock();
 			try
 			{
-				if (m_aai == null || name == null)
+				if (m_appenderAttachedImpl == null || name == null)
 				{
 					return null;
 				}
 
-				return m_aai.GetAppender(name);
+				return m_appenderAttachedImpl.GetAppender(name);
 			}
 			finally
 			{
@@ -267,10 +267,10 @@ namespace log4net.Repository.Hierarchy
 			m_appenderLock.AcquireWriterLock();
 			try
 			{
-				if (m_aai != null) 
+				if (m_appenderAttachedImpl != null) 
 				{
-					m_aai.RemoveAllAppenders();
-					m_aai = null;
+					m_appenderAttachedImpl.RemoveAllAppenders();
+					m_appenderAttachedImpl = null;
 				}
 			}
 			finally
@@ -291,9 +291,9 @@ namespace log4net.Repository.Hierarchy
 			m_appenderLock.AcquireWriterLock();
 			try
 			{
-				if (appender != null && m_aai != null) 
+				if (appender != null && m_appenderAttachedImpl != null) 
 				{
-					m_aai.RemoveAppender(appender);
+					m_appenderAttachedImpl.RemoveAppender(appender);
 				}
 			}
 			finally
@@ -314,9 +314,9 @@ namespace log4net.Repository.Hierarchy
 			m_appenderLock.AcquireWriterLock();
 			try
 			{
-				if (name != null && m_aai != null)
+				if (name != null && m_appenderAttachedImpl != null)
 				{
-					m_aai.RemoveAppender(name);
+					m_appenderAttachedImpl.RemoveAppender(name);
 				}
 			}
 			finally
@@ -434,9 +434,9 @@ namespace log4net.Repository.Hierarchy
 				c.m_appenderLock.AcquireReaderLock();
 				try
 				{
-					if (c.m_aai != null) 
+					if (c.m_appenderAttachedImpl != null) 
 					{
-						writes += c.m_aai.AppendLoopOnAppenders(loggingEvent);
+						writes += c.m_appenderAttachedImpl.AppendLoopOnAppenders(loggingEvent);
 					}
 				}
 				finally
@@ -474,7 +474,7 @@ namespace log4net.Repository.Hierarchy
 				}
 				catch(System.Security.SecurityException)
 				{
-					// Insufficent permissions to display info from the AppDomain
+					// Insufficient permissions to display info from the AppDomain
 				}
 				m_hierarchy.EmittedNoAppenderWarning = true;
 			}
@@ -491,9 +491,9 @@ namespace log4net.Repository.Hierarchy
 			m_appenderLock.AcquireWriterLock();
 			try
 			{
-				if (m_aai != null)
+				if (m_appenderAttachedImpl != null)
 				{
-					AppenderCollection appenders = m_aai.Appenders;
+					AppenderCollection appenders = m_appenderAttachedImpl.Appenders;
 					foreach(IAppender appender in appenders)
 					{
 						if (appender is IAppenderAttachable)
@@ -602,7 +602,7 @@ namespace log4net.Repository.Hierarchy
 		/// <summary>
 		/// Helper implementation of the <see cref="IAppenderAttachable"/> interface
 		/// </summary>
-		private log4net.Util.AppenderAttachedImpl m_aai;
+		private log4net.Util.AppenderAttachedImpl m_appenderAttachedImpl;
 
 		/// <summary>
 		/// Flag indicating if child loggers inherit their parents appenders
@@ -619,7 +619,7 @@ namespace log4net.Repository.Hierarchy
 		private bool m_additive = true;
 
 		/// <summary>
-		/// Lock to protect AppenderAttachedImpl variable m_aai
+		/// Lock to protect AppenderAttachedImpl variable m_appenderAttachedImpl
 		/// </summary>
 		private readonly ReaderWriterLock m_appenderLock = new ReaderWriterLock();
   

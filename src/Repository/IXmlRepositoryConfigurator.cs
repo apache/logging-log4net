@@ -32,7 +32,7 @@ namespace log4net.Repository
 	public interface IXmlRepositoryConfigurator
 	{
 		/// <summary>
-		/// Initialise the log4net system using the specified config
+		/// Initialize the log4net system using the specified config
 		/// </summary>
 		/// <param name="element">the element containing the root of the config</param>
 		void Configure(System.Xml.XmlElement element);

@@ -332,7 +332,7 @@ namespace log4net.Appender
 		#region Implementation of IOptionHandler
 
 		/// <summary>
-		/// Initialise the appender based on the options set.
+		/// Initialize the appender based on the options set.
 		/// </summary>
 		/// <remarks>
 		/// <para>
@@ -402,14 +402,15 @@ namespace log4net.Appender
 				Byte [] buffer = m_encoding.GetBytes(RenderLoggingEvent(loggingEvent).ToCharArray());
 				this.Client.Send(buffer, buffer.Length, this.RemoteEndPoint);
 			} 
-			catch (Exception exc) 
+			catch (Exception ex) 
 			{
 				ErrorHandler.Error(
 					"Unable to send logging event to remote host " + 
 					this.RemoteAddress.ToString() + 
 					" on port " + 
 					this.RemotePort + ".", 
-					exc, ErrorCode.WriteFailure);
+					ex, 
+					ErrorCode.WriteFailure);
 			}
 		}
 
@@ -470,12 +471,14 @@ namespace log4net.Appender
 					this.Client = new UdpClient(this.LocalPort);
 				}
 			} 
-			catch (Exception exc) 
+			catch (Exception ex) 
 			{
 				ErrorHandler.Error(
 					"Could not initialize the UdpClient connection on port " + 
 					this.LocalPort.ToString(NumberFormatInfo.InvariantInfo) + ".", 
-					exc, ErrorCode.GenericFailure);
+					ex, 
+					ErrorCode.GenericFailure);
+
 				this.Client = null;
 			}
 		}

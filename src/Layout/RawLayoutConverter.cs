@@ -39,7 +39,7 @@ namespace log4net.Layout
 		/// <summary>
 		/// Can the sourceType be converted to an <see cref="IRawLayout"/>
 		/// </summary>
-		/// <param name="sourceType">the source tybe to be converted</param>
+		/// <param name="sourceType">the source to be to be converted</param>
 		/// <returns><c>true</c> if the source type can be converted to <see cref="IRawLayout"/></returns>
 		public bool CanConvertFrom(Type sourceType) 
 		{

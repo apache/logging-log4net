@@ -31,8 +31,13 @@ namespace log4net.Util
 	/// This class implements a patterned string.
 	/// </summary>
 	/// <remarks>
-	/// This string has embeded patterns that are resolved and expanded
-	/// when the string is formatted.
+	/// <para>This string has embedded patterns that are resolved and expanded
+	/// when the string is formatted.</para>
+	/// <para>This class functions similarly to the <see cref="log4net.Layout.PatternLayout"/>
+	/// in that it accepts a pattern and renders it to a string. Unlike the 
+	/// <see cref="log4net.Layout.PatternLayout"/> however the <c>PatternString</c>
+	/// does does not render properties of a specific <see cref="LoggingEvent"/> but
+	/// of the process in general.</para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	public class PatternString : IOptionHandler
@@ -42,9 +47,6 @@ namespace log4net.Util
 		/// <summary>
 		/// Internal map of converter identifiers to converter types.
 		/// </summary>
-		/// <remarks>
-		/// This static map is overriden by the m_converterRegistry instance map
-		/// </remarks>
 		private static Hashtable s_globalRulesRegistry;
 
 		#endregion Static Fields
@@ -66,7 +68,7 @@ namespace log4net.Util
 		#region Static Constructor
 
 		/// <summary>
-		/// Initialise the global registry
+		/// Initialize the global registry
 		/// </summary>
 		static PatternString()
 		{
@@ -136,7 +138,7 @@ namespace log4net.Util
 			// Add all the builtin patterns
 			foreach(DictionaryEntry entry in s_globalRulesRegistry)
 			{
-				patternParser.ConverterRegistry.Add(entry.Key, entry.Value);
+				patternParser.PatternConverters.Add(entry.Key, entry.Value);
 			}
 
 			return patternParser;

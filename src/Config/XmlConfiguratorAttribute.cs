@@ -47,7 +47,7 @@ namespace log4net.Config
 	public /*sealed*/ class XmlConfiguratorAttribute : ConfiguratorAttribute
 	{
 		//
-		// Class is not sealed because DOMConfiguratorAttribute extends it while it is obseleted
+		// Class is not sealed because DOMConfiguratorAttribute extends it while it is obsoleted
 		// 
 
 		#region Public Instance Properties

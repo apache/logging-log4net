@@ -79,7 +79,7 @@ namespace log4net.Appender
 		/// <remarks>
 		/// <para>
 		/// Setting this property to <c>true</c> will cause only part of the event 
-		/// data to be fixed and stored in the appender, hereby improving performace. 
+		/// data to be fixed and stored in the appender, hereby improving performance. 
 		/// </para>
 		/// <para>
 		/// See <see cref="LoggingEvent.FixVolatileData(bool)"/> for more information.

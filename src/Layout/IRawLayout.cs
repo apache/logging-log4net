@@ -33,9 +33,9 @@ namespace log4net.Layout
 	/// 
 	/// <para>This interface should not be confused with the
 	/// <see cref="ILayout"/> interface. This interface is used in
-	/// only certain specialised situations where a raw object is
+	/// only certain specialized situations where a raw object is
 	/// required rather than a formatted string. The <see cref="ILayout"/>
-	/// is not generally usefull than this interface.</para>
+	/// is not generally useful than this interface.</para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>

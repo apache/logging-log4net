@@ -22,7 +22,7 @@ using log4net.Core;
 namespace log4net.Filter
 {
 	/// <summary>
-	/// Users should extend this class to implement customised logging
+	/// Users should extend this class to implement customized logging
 	/// event filtering. 
 	/// </summary>
 	/// <remarks>
@@ -47,7 +47,7 @@ namespace log4net.Filter
 	/// <para>If the value <see cref="FilterDecision.Neutral"/> is returned, then the next filter
 	/// in the chain is consulted. If there are no more filters in the
 	/// chain, then the log event is logged. Thus, in the presence of no
-	/// filters, the default behaviour is to log all logging events.</para>
+	/// filters, the default behavior is to log all logging events.</para>
 	/// 
 	/// <para>If the value <see cref="FilterDecision.Accept"/> is returned, then the log
 	/// event is logged without consulting the remaining filters. </para>

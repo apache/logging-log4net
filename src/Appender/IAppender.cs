@@ -27,7 +27,7 @@ namespace log4net.Appender
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// Implementers should consider extending the <see cref="AppenderSkeleton"/>
+	/// Implementors should consider extending the <see cref="AppenderSkeleton"/>
 	/// class which provides a default implementation of this interface.
 	/// </para>
 	/// <para>

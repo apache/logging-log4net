@@ -304,7 +304,7 @@ namespace log4net.Config
 		/// </para>
 		/// <para>
 		/// The configuration file will be monitored using a <see cref="FileSystemWatcher"/>
-		/// and depends on the behaviour of that class.
+		/// and depends on the behavior of that class.
 		/// </para>
 		/// <para>
 		/// For more information on how to configure log4net using
@@ -336,14 +336,14 @@ namespace log4net.Config
 		/// </para>
 		/// <para>
 		/// The configuration file will be monitored using a <see cref="FileSystemWatcher"/>
-		/// and depends on the behaviour of that class.
+		/// and depends on the behavior of that class.
 		/// </para>
 		/// <para>
 		/// For more information on how to configure log4net using
 		/// a separate configuration file, see <see cref="Configure(FileInfo)"/>.
 		/// </para>
 		/// </remarks>
-		/// <seealso cfer="Configure(FileInfo)"/>
+		/// <seealso cref="Configure(FileInfo)"/>
 		[Obsolete("Use XmlConfigurator.ConfigureAndWatch instead of DOMConfigurator.ConfigureAndWatch")]
 		static public void ConfigureAndWatch(ILoggerRepository repository, FileInfo configFile)
 		{

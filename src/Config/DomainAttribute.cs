@@ -58,7 +58,7 @@ namespace log4net.Config
 		}
 
 		/// <summary>
-		/// Initialise a new instance of the <see cref="DomainAttribute" /> class 
+		/// Initialize a new instance of the <see cref="DomainAttribute" /> class 
 		/// with the name of the domain.
 		/// </summary>
 		/// <param name="name">The name of the domain.</param>

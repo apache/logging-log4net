@@ -241,7 +241,7 @@ namespace log4net.ObjectRenderer
 		/// 
 		/// <para>The <see cref="RenderExceptionMessage(RendererMap,Exception,TextWriter)"/>
 		/// method is called to render the Exception's message into a string. This method
-		/// can be overridden to change the behaviour when rendering
+		/// can be overridden to change the behavior when rendering
 		/// exceptions. To change or extend only the message that is
 		/// displayed override the <see cref="RenderExceptionMessage(RendererMap,Exception,TextWriter)"/>
 		/// method instead.</para>

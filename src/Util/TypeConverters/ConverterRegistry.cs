@@ -37,7 +37,7 @@ namespace log4net.Util.TypeConverters
 		/// </summary>
 		private ConverterRegistry() 
 		{
-			// Initialise the type2converter hashtable
+			// Initialize the type2converter hashtable
 			m_type2converter = new Hashtable();
 		}
 

@@ -170,7 +170,7 @@ namespace log4net.Appender
 		#region Implementation of IOptionHandler
 
 		/// <summary>
-		/// Initialise the appender based on the options set
+		/// Initialize the appender based on the options set
 		/// </summary>
 		virtual public void ActivateOptions() 
 		{
@@ -351,7 +351,7 @@ namespace log4net.Appender
 		{
 			if (filter == null)
 			{
-				throw new ArgumentNullException("filter param nust not be null");
+				throw new ArgumentNullException("filter param must not be null");
 			}
 
 			if (m_headFilter == null) 
@@ -482,7 +482,7 @@ namespace log4net.Appender
 		/// Where possible use the alternative version of this method
 		/// <see cref="RenderLoggingEvent(TextWriter,LoggingEvent)"/>.
 		/// That method streams the rendering onto an existing Writer
-		/// which can give better performace if the caller already has
+		/// which can give better performance if the caller already has
 		/// a <see cref="TextWriter"/> open and ready for writing.
 		/// </para>
 		/// </remarks>
@@ -521,7 +521,7 @@ namespace log4net.Appender
 		/// Use this method in preference to <see cref="RenderLoggingEvent(LoggingEvent)"/>
 		/// where possible. If, however, the caller needs to render the event
 		/// to a string then <see cref="RenderLoggingEvent(LoggingEvent)"/> does
-		/// provide an efficent mecanisum for doing so.
+		/// provide an efficient mechanism for doing so.
 		/// </para>
 		/// </remarks>
 		protected void RenderLoggingEvent(TextWriter writer, LoggingEvent loggingEvent)

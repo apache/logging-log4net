@@ -44,7 +44,7 @@ namespace log4net.Util
 				throw new ArgumentOutOfRangeException("Parameter: maxSize, Value: [" + maxSize + "] out of range. Non zero positive integer required");
 			}
 			m_maxSize = maxSize;
-			m_ea = new LoggingEvent[maxSize];
+			m_events = new LoggingEvent[maxSize];
 			m_first = 0;
 			m_last = 0;
 			m_numElems = 0;
@@ -71,10 +71,10 @@ namespace log4net.Util
 			lock(this)
 			{
 				// save the discarded event
-				discardedLoggingEvent = m_ea[m_last];
+				discardedLoggingEvent = m_events[m_last];
 
 				// overwrite the last event position
-				m_ea[m_last] = loggingEvent;	
+				m_events[m_last] = loggingEvent;	
 				if (++m_last == m_maxSize)
 				{
 					m_last = 0;
@@ -106,8 +106,8 @@ namespace log4net.Util
 				if (m_numElems > 0) 
 				{
 					m_numElems--;
-					ret = m_ea[m_first];
-					m_ea[m_first] = null;
+					ret = m_events[m_first];
+					m_events[m_first] = null;
 					if (++m_first == m_maxSize)
 					{
 						m_first = 0;
@@ -131,17 +131,17 @@ namespace log4net.Util
 				{
 					if (m_first < m_last)
 					{
-						Array.Copy(m_ea, m_first, ret, 0, m_numElems);
+						Array.Copy(m_events, m_first, ret, 0, m_numElems);
 					}
 					else
 					{
-						Array.Copy(m_ea, m_first, ret, 0, m_maxSize - m_first);
-						Array.Copy(m_ea, 0, ret, m_maxSize - m_first, m_last);
+						Array.Copy(m_events, m_first, ret, 0, m_maxSize - m_first);
+						Array.Copy(m_events, 0, ret, m_maxSize - m_first, m_last);
 					}
 				}
 
 				// Set all the elements to null
-				Array.Clear(m_ea, 0, m_ea.Length);
+				Array.Clear(m_events, 0, m_events.Length);
 
 				m_first = 0;
 				m_last = 0;
@@ -175,8 +175,8 @@ namespace log4net.Util
 	
 				for(int i = 0; i < loopLen; i++) 
 				{
-					temp[i] = m_ea[m_first];
-					m_ea[m_first] = null;
+					temp[i] = m_events[m_first];
+					m_events[m_first] = null;
 
 					if (++m_first == m_numElems) 
 					{
@@ -184,7 +184,7 @@ namespace log4net.Util
 					}
 				}
 
-				m_ea = temp;
+				m_events = temp;
 				m_first = 0;
 				m_numElems = loopLen;
 				m_maxSize = newSize;
@@ -223,7 +223,7 @@ namespace log4net.Util
 						return null;
 					}
 
-					return m_ea[(m_first + i) % m_maxSize];
+					return m_events[(m_first + i) % m_maxSize];
 				}
 			}
 		}
@@ -267,7 +267,7 @@ namespace log4net.Util
 
 		#region Private Instance Fields
 
-		private LoggingEvent[] m_ea;
+		private LoggingEvent[] m_events;
 		private int m_first; 
 		private int m_last; 
 		private int m_numElems;

@@ -29,7 +29,7 @@ namespace log4net.Util
 	/// </summary>
 	/// <remarks>
 	/// Only member objects that are serializable will
-	/// be serialized allong with this collection.
+	/// be serialized along with this collection.
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>

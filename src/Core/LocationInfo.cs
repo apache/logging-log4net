@@ -68,7 +68,7 @@ namespace log4net.Core
 		/// <param name="fullNameOfCallingClass">The fully name of the calling class (not assembly qualified).</param>
 		public LocationInfo(string fullNameOfCallingClass) 
 		{
-			// Initialise all fields
+			// Initialize all fields
 			m_className = NA;
 			m_fileName = NA;
 			m_lineNumber = NA;

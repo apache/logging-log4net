@@ -236,7 +236,7 @@ namespace log4net.Repository
 		/// Repository specific properties
 		/// </summary>
 		/// <remarks>
-		/// These properties can be specified on a reporitory specific basis
+		/// These properties can be specified on a repository specific basis
 		/// </remarks>
 		PropertiesDictionary Properties { get; }
 	}

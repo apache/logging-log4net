@@ -33,7 +33,7 @@ namespace log4net.Repository
 	public interface IBasicRepositoryConfigurator
 	{
 		/// <summary>
-		/// Initialise the log4net system using the specified appender
+		/// Initialize the log4net system using the specified appender
 		/// </summary>
 		/// <param name="appender">the appender to use to log all logging events</param>
 		void Configure(log4net.Appender.IAppender appender);

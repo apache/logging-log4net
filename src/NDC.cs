@@ -117,7 +117,7 @@ namespace log4net
 		/// </summary>
 		/// <remarks>
 		/// This thread will use the context information from the stack
-		/// supplied. This can be used to initialise child threads with
+		/// supplied. This can be used to initialize child threads with
 		/// the same contextual information as their parent threads. These
 		/// contexts will <b>NOT</b> be shared. Any further contexts that
 		/// are pushed onto the stack will not be visible to the other.

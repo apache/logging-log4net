@@ -41,9 +41,9 @@ namespace log4net.Appender
 	/// <para>
 	/// NOTE: This appender writes each message to the <c>System.Console.Out</c> or 
 	/// <c>System.Console.Error</c> that is set at the time the event is appended.
-	/// Therefore it is possible to progamatically redirect the output of this appender 
-	/// (for example NUnit does this to capture program ouput). While this is the desired
-	/// behaviour of this appender it may have security implications in your application. 
+	/// Therefore it is possible to programmatically redirect the output of this appender 
+	/// (for example NUnit does this to capture program output). While this is the desired
+	/// behavior of this appender it may have security implications in your application. 
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>

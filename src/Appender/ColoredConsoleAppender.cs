@@ -42,9 +42,9 @@ namespace log4net.Appender
 	/// NOTE: This appender writes directly to the application's attached console
 	/// not to the <c>System.Console.Out</c> or <c>System.Console.Error</c> <c>TextWriter</c>.
 	/// The <c>System.Console.Out</c> and <c>System.Console.Error</c> streams can be
-	/// programatically redirected (for example NUnit does this to capture program ouput).
+	/// programmatically redirected (for example NUnit does this to capture program output).
 	/// This appender will ignore these redirections because it needs to use Win32
-	/// API calls to colorise the output. To respect these redirections the <see cref="ConsoleAppender"/>
+	/// API calls to colorize the output. To respect these redirections the <see cref="ConsoleAppender"/>
 	/// must be used.
 	/// </para>
 	/// <para>
@@ -125,7 +125,7 @@ namespace log4net.Appender
 			Cyan = Green | Blue,
 
 			/// <summary>
-			/// color is inensified
+			/// color is intensified
 			/// </summary>
 			HighIntensity = 0x0008,
 		}
@@ -272,48 +272,48 @@ namespace log4net.Appender
 		/// </remarks>
 		override protected void Append(log4net.Core.LoggingEvent loggingEvent) 
 		{
-			IntPtr iConsoleHandle = IntPtr.Zero;
+			IntPtr consoleHandle = IntPtr.Zero;
 			if (m_writeToErrorStream)
 			{
 				// Write to the error stream
-				iConsoleHandle = GetStdHandle(STD_ERROR_HANDLE);
+				consoleHandle = GetStdHandle(STD_ERROR_HANDLE);
 			}
 			else
 			{
 				// Write to the output stream
-				iConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+				consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 			}
 
 			// set the output parameters
 			// Default to white on black
-			ushort uiColorInfo = (UInt16)(Colors.Red | Colors.Blue | Colors.Green);
+			ushort colorInfo = (UInt16)(Colors.Red | Colors.Blue | Colors.Green);
 
 			// see if there is a lookup.
 			Object colLookup = m_Level2ColorMap[loggingEvent.Level];
 			if(colLookup != null)
 			{
-				uiColorInfo = (ushort)colLookup;
+				colorInfo = (ushort)colLookup;
 			}
 
-			// get the current console colour.
+			// get the current console color.
 			CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-			GetConsoleScreenBufferInfo(iConsoleHandle, out bufferInfo);
+			GetConsoleScreenBufferInfo(consoleHandle, out bufferInfo);
 
 			// set the console.
-			SetConsoleTextAttribute(iConsoleHandle, uiColorInfo);
+			SetConsoleTextAttribute(consoleHandle, colorInfo);
 
 			string strLoggingMessage = RenderLoggingEvent(loggingEvent);
 
 			// write the output.
-			UInt32 uiWritten = 0;
-			WriteConsoleW(	iConsoleHandle,
+			UInt32 ignoreWrittenCount = 0;
+			WriteConsoleW(	consoleHandle,
 							strLoggingMessage,
 							(UInt32)strLoggingMessage.Length,
-							out (UInt32)uiWritten,
+							out (UInt32)ignoreWrittenCount,
 							IntPtr.Zero);
 
-			// reset the console back to its previous colour scheme.
-			SetConsoleTextAttribute(iConsoleHandle, bufferInfo.wAttributes);
+			// reset the console back to its previous color scheme.
+			SetConsoleTextAttribute(consoleHandle, bufferInfo.wAttributes);
 		}
 
 		/// <summary>
@@ -351,7 +351,7 @@ namespace log4net.Appender
 		private bool m_writeToErrorStream = false;
 
 		/// <summary>
-		/// Mapping from level object to colour value
+		/// Mapping from level object to color value
 		/// </summary>
 		private System.Collections.Hashtable m_Level2ColorMap = new System.Collections.Hashtable();
 
@@ -361,21 +361,21 @@ namespace log4net.Appender
 
 		[DllImport("Kernel32.dll", SetLastError=true, CharSet=CharSet.Auto)]
 		private static extern bool SetConsoleTextAttribute(
-			IntPtr hConsoleHandle,
-			ushort uiAttributes);
+			IntPtr consoleHandle,
+			ushort attributes);
 
 		[DllImport("Kernel32.dll", SetLastError=true, CharSet=CharSet.Auto)]
 		private static extern bool GetConsoleScreenBufferInfo(
-			IntPtr hConsoleHandle,
-			out  CONSOLE_SCREEN_BUFFER_INFO bufferInfo);
+			IntPtr consoleHandle,
+			out CONSOLE_SCREEN_BUFFER_INFO bufferInfo);
 
 		[DllImport("Kernel32.dll", SetLastError=true, CharSet=CharSet.Unicode)]
 		private static extern bool WriteConsoleW(
 			IntPtr hConsoleHandle,
 			[MarshalAs(UnmanagedType.LPWStr)] string strBuffer,
-			UInt32 uiBufferLen,
-			out UInt32 uiWritten,
-			IntPtr pReserved);
+			UInt32 bufferLen,
+			out UInt32 written,
+			IntPtr reserved);
 
 		//private static readonly UInt32 STD_INPUT_HANDLE = unchecked((UInt32)(-10));
 		private static readonly UInt32 STD_OUTPUT_HANDLE = unchecked((UInt32)(-11));
@@ -383,7 +383,7 @@ namespace log4net.Appender
 
 		[DllImport("Kernel32.dll", SetLastError=true, CharSet=CharSet.Auto)]
 		private static extern IntPtr GetStdHandle(
-			UInt32 uiType);
+			UInt32 type);
 
 		[StructLayout(LayoutKind.Sequential)]
 		private struct COORD 

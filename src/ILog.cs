@@ -314,7 +314,7 @@ namespace log4net
 		/// This way the debug enabled state is only queried once
 		/// when the class is loaded. Using a <c>private static readonly</c>
 		/// variable is the most efficient because it is a run time constant
-		/// and can be heavily optimised by the JIT compiler.
+		/// and can be heavily optimized by the JIT compiler.
 		/// </para>
 		/// <para>
 		/// Of course if you use a static readonly variable to

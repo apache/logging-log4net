@@ -44,20 +44,20 @@ namespace log4net.Appender
 	/// the machine on which the event is logged.</para>
 	/// <para>
 	/// The RemotingAppender buffers events before sending them. This allows it to 
-	/// make more efficent use of the remoting infrastructure.</para>
+	/// make more efficient use of the remoting infrastructure.</para>
 	/// <para>
-	/// Once the buffer is full the events are still not sent immediatly. 
+	/// Once the buffer is full the events are still not sent immediately. 
 	/// They are scheduled to be sent using a pool thread. The effect is that 
 	/// the send occurs asynchronously. This is very important for a 
 	/// number of non obvious reasons. The remoting infrastructure will 
 	/// flow thread local variables (stored in the <see cref="CallContext"/>),
-	/// if they are marked as <see cref="ILogicalThreadAffinative"/>, accross the 
-	/// remoting boundary. This means that a large ammount of unessasary data could
-	/// be flowed accross the remoting boundary. If the server is not contactable then
+	/// if they are marked as <see cref="ILogicalThreadAffinative"/>, across the 
+	/// remoting boundary. This means that a large amount of unnecessary data could
+	/// be flowed across the remoting boundary. If the server is not contactable then
 	/// the remoting infrastructure will clear the <see cref="ILogicalThreadAffinative"/>
 	/// objects from the <see cref="CallContext"/>. To prevent a logging failure from
 	/// having side effects on the calling application the remoting call must be made
-	/// from a seperate thread to the use used by the application. A <see cref="ThreadPool"/>
+	/// from a separate thread to the use used by the application. A <see cref="ThreadPool"/>
 	/// thread is used for this. If no <see cref="ThreadPool"/> thread is available then
 	/// the events will block in the thread pool manager until a thread is available.</para>
 	/// <para>
@@ -73,7 +73,7 @@ namespace log4net.Appender
 	/// the queued events have been sent then they will be lost. To ensure that all events
 	/// are sent the appender must be closed before the application exits. See 
 	/// <see cref="log4net.Core.LoggerManager.Shutdown"/> for details on how to shutdown
-	/// log4net programatically.</para>
+	/// log4net programmatically.</para>
 	/// </remarks>
 	/// <seealso cref="IRemoteLoggingSink" />
 	/// <author>Nicko Cadell</author>
@@ -112,7 +112,7 @@ namespace log4net.Appender
 		#region Implementation of IOptionHandler
 
 		/// <summary>
-		/// Initialise the appender based on the options set
+		/// Initialize the appender based on the options set
 		/// </summary>
 		override public void ActivateOptions() 
 		{
@@ -132,17 +132,17 @@ namespace log4net.Appender
 		/// Send the contents of the buffer to the remote sink.
 		/// </summary>
 		/// <remarks>
-		/// The events are not sent immediatly. They are scheduled to be sent
+		/// The events are not sent immediately. They are scheduled to be sent
 		/// using a pool thread. The effect is that the send occurs asynchronously.
 		/// This is very important for a number of non obvious reasons. The remoting
 		/// infrastructure will flow thread local variables (stored in the <see cref="CallContext"/>),
-		/// if they are marked as <see cref="ILogicalThreadAffinative"/>, accross the 
-		/// remoting boundary. This means that a large ammount of unessasary data could
-		/// be flowed accross the remoting boundary. If the server is not contactable then
+		/// if they are marked as <see cref="ILogicalThreadAffinative"/>, across the 
+		/// remoting boundary. This means that a large amount of unnecessary data could
+		/// be flowed across the remoting boundary. If the server is not contactable then
 		/// the remoting infrastructure will clear the <see cref="ILogicalThreadAffinative"/>
 		/// objects from the <see cref="CallContext"/>. To prevent a logging failure from
 		/// having side effects on the calling application the remoting call must be made
-		/// from a seperate thread to the use used by the application. A <see cref="ThreadPool"/>
+		/// from a separate thread to the use used by the application. A <see cref="ThreadPool"/>
 		/// thread is used for this. If no <see cref="ThreadPool"/> thread is available then
 		/// the events will block in the thread pool manager until a thread is available.
 		/// </remarks>
@@ -168,7 +168,7 @@ namespace log4net.Appender
 		/// <remarks>
 		/// <para>
 		/// This method waits while there are queued work items. The events are
-		/// sent asynchnously using <see cref="ThreadPool"/> work items. These items
+		/// sent asynchronously using <see cref="ThreadPool"/> work items. These items
 		/// will be sent once a thread pool thread is available to send them, therefore
 		/// it is possible to close the appender before all the queued events have been
 		/// sent.</para>
@@ -224,7 +224,7 @@ namespace log4net.Appender
 		/// </summary>
 		/// <remarks>
 		/// This method is designed to be used with the <see cref="ThreadPool"/>.
-		/// This method exepects to be passed an array of <see cref="LoggingEvent"/>
+		/// This method expects to be passed an array of <see cref="LoggingEvent"/>
 		/// objects in the state param.
 		/// </remarks>
 		/// <param name="state">the logging events to send</param>

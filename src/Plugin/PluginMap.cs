@@ -38,13 +38,13 @@ namespace log4net.Plugin
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initiazlies a new instance of the <see cref="PluginMap" /> class with a 
+		/// Initialize a new instance of the <see cref="PluginMap" /> class with a 
 		/// repository that the plugins should be attached to.
 		/// </summary>
-		/// <param name="reporitory">The repository that the plugins should be attached to.</param>
-		public PluginMap(ILoggerRepository reporitory)
+		/// <param name="repository">The repository that the plugins should be attached to.</param>
+		public PluginMap(ILoggerRepository repository)
 		{
-			m_reporitory = reporitory;
+			m_repository = repository;
 		}
 
 		#endregion Public Instance Constructors
@@ -126,7 +126,7 @@ namespace log4net.Plugin
 			}
 
 			// Attach new plugin to repository
-			plugin.Attach(m_reporitory);
+			plugin.Attach(m_repository);
 		}
 
 		/// <summary>
@@ -150,7 +150,7 @@ namespace log4net.Plugin
 		#region Private Instance Fields
 
 		private Hashtable m_mapName2Plugin = new Hashtable();
-		private ILoggerRepository m_reporitory;
+		private ILoggerRepository m_repository;
 
 		#endregion Private Instance Fields
 	}

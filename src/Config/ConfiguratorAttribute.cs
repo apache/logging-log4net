@@ -29,7 +29,7 @@ namespace log4net.Config
 	/// <remarks>
 	/// This is an abstract class that must be extended by 
 	/// specific configurators. This attribute allows the
-	/// configurator to be parameterised by an assembly level
+	/// configurator to be parameterized by an assembly level
 	/// attribute.
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
