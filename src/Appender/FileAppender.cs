@@ -88,6 +88,8 @@ namespace log4net.Appender
 
 			private Stream m_realStream=null;
 			private LockingModelBase m_lockingModel=null;
+			private int m_readTotal=-1;
+			private int m_lockLevel=0;
 
 			public LockingStream(LockingModelBase locking) : base()
 			{
@@ -103,7 +105,10 @@ namespace log4net.Appender
 			// Methods
 			public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
 			{
-				throw new NotSupportedException("Read operations are not supported on the LockingStream");
+				AssertLocked();
+				IAsyncResult ret=m_realStream.BeginRead(buffer,offset,count,callback,state);
+				m_readTotal=EndRead(ret);
+				return ret;
 			}
 
 			/// <summary>
@@ -124,12 +129,12 @@ namespace log4net.Appender
 
 			public override int EndRead(IAsyncResult asyncResult) 
 			{
-				throw new NotSupportedException("Read operations are not supported on the LockingStream");
+				AssertLocked();
+				return m_readTotal;
 			}
 			public override void EndWrite(IAsyncResult asyncResult) 
 			{
-				AssertLocked();
-				m_realStream.EndWrite(asyncResult);
+				//No-op, it's already been handled
 			}
 			public override void Flush() 
 			{
@@ -138,11 +143,11 @@ namespace log4net.Appender
 			}
 			public override int Read(byte[] buffer, int offset, int count) 
 			{
-				throw new NotSupportedException("Read operations are not supported on the LockingStream");
+				return m_realStream.Read(buffer,offset,count);
 			}
 			public override int ReadByte() 
 			{
-				throw new NotSupportedException("Read operations are not supported on the LockingStream");
+				return m_realStream.ReadByte();
 			}
 			public override long Seek(long offset, SeekOrigin origin) 
 			{
@@ -224,23 +229,31 @@ namespace log4net.Appender
 				}
 			}
 
-			public void AcquireLock()
+			public bool AcquireLock()
 			{
+				bool ret=false;
 				lock(this)
 				{
-					if (m_realStream == null)
+					if (m_lockLevel==0)
 					{
 						// If lock is already acquired, nop
 						m_realStream=m_lockingModel.AcquireLock();
 					}
+					if (m_realStream!=null)
+					{
+						m_lockLevel++;
+						ret=true;
+					}
 				}
+				return ret;
 			}
 
 			public void ReleaseLock()
 			{
 				lock(this)
 				{
-					if (m_realStream != null)
+					m_lockLevel--;
+					if (m_lockLevel==0)
 					{
 						// If already unlocked, nop
 						m_lockingModel.ReleaseLock();
@@ -266,7 +279,7 @@ namespace log4net.Appender
 		/// </remarks>
 		public abstract class LockingModelBase
 		{
-			private IErrorHandler m_errorHandler=null;
+			private FileAppender m_appender=null;
 
 			/// <summary>
 			/// Open the output file
@@ -319,34 +332,12 @@ namespace log4net.Appender
 			public abstract void ReleaseLock();
 
 			/// <summary>
-			/// Gets or sets the <see cref="IErrorHandler"/> for this appender.
+			/// The appender we are related to. Used to identify the security context to work within, and the error handler to use.
 			/// </summary>
-			/// <value>The <see cref="IErrorHandler"/> of the appender</value>
-			/// <remarks>
-			/// <para>
-			/// The <see cref="AppenderSkeleton"/> provides a default 
-			/// implementation for the <see cref="ErrorHandler"/> property. 
-			/// </para>
-			/// </remarks>
-			virtual public IErrorHandler ErrorHandler 
+			public FileAppender CurrentAppender
 			{
-				get { return this.m_errorHandler; }
-				set 
-				{
-					lock(this) 
-					{
-						if (value == null) 
-						{
-							// We do not throw exception here since the cause is probably a
-							// bad config file.
-							LogLog.Warn("AppenderSkeleton: You have tried to set a null error-handler.");
-						} 
-						else 
-						{
-							m_errorHandler = value;
-						}
-					}
-				}
+				get { return m_appender; }
+				set { m_appender=value; }
 			}
 		}
 
@@ -381,22 +372,25 @@ namespace log4net.Appender
 			{
 				try
 				{
-					// Ensure that the directory structure exists
-					string directoryFullName = Path.GetDirectoryName(filename);
-
-					// Only create the directory if it does not exist
-					// doing this check here resolves some permissions failures
-					if (!Directory.Exists(directoryFullName))
+					using(CurrentAppender.SecurityContext.Impersonate(this))
 					{
-						Directory.CreateDirectory(directoryFullName);
-					}
+						// Ensure that the directory structure exists
+						string directoryFullName = Path.GetDirectoryName(filename);
 
-					FileMode fileOpenMode = append ? FileMode.Append : FileMode.Create;
-					m_stream = new FileStream(filename, fileOpenMode, FileAccess.Write, FileShare.Read);
+						// Only create the directory if it does not exist
+						// doing this check here resolves some permissions failures
+						if (!Directory.Exists(directoryFullName))
+						{
+							Directory.CreateDirectory(directoryFullName);
+						}
+
+						FileMode fileOpenMode = append ? FileMode.Append : FileMode.Create;
+						m_stream = new FileStream(filename, fileOpenMode, FileAccess.Write, FileShare.Read);
+					}
 				}
 				catch (Exception e1)
 				{
-					ErrorHandler.Error("Unable to acquire lock on file "+filename+". "+e1.Message);
+					CurrentAppender.ErrorHandler.Error("Unable to acquire lock on file "+filename+". "+e1.Message);
 				}
 			}
 
@@ -410,7 +404,10 @@ namespace log4net.Appender
 			/// </remarks>
 			public override void CloseFile()
 			{
-				m_stream.Close();
+				using(CurrentAppender.SecurityContext.Impersonate(this))
+				{
+					m_stream.Close();
+				}
 			}
 
 			/// <summary>
@@ -508,23 +505,26 @@ namespace log4net.Appender
 				{
 					try
 					{
-						// Ensure that the directory structure exists
-						string directoryFullName = Path.GetDirectoryName(m_filename);
-
-						// Only create the directory if it does not exist
-						// doing this check here resolves some permissions failures
-						if (!Directory.Exists(directoryFullName))
+						using(CurrentAppender.SecurityContext.Impersonate(this))
 						{
-							Directory.CreateDirectory(directoryFullName);
-						}
+							// Ensure that the directory structure exists
+							string directoryFullName = Path.GetDirectoryName(m_filename);
 
-						FileMode fileOpenMode = m_append ? FileMode.Append : FileMode.Create;
-						m_stream = new FileStream(m_filename, fileOpenMode, FileAccess.Write, FileShare.Read);
-						m_append=true;
+							// Only create the directory if it does not exist
+							// doing this check here resolves some permissions failures
+							if (!Directory.Exists(directoryFullName))
+							{
+								Directory.CreateDirectory(directoryFullName);
+							}
+
+							FileMode fileOpenMode = m_append ? FileMode.Append : FileMode.Create;
+							m_stream = new FileStream(m_filename, fileOpenMode, FileAccess.Write, FileShare.Read);
+							m_append=true;
+						}
 					}
 					catch (Exception e1)
 					{
-						ErrorHandler.Error("Unable to acquire lock on file "+m_filename+". "+e1.Message);
+						CurrentAppender.ErrorHandler.Error("Unable to acquire lock on file "+m_filename+". "+e1.Message);
 					}
 				}
 				return m_stream;
@@ -541,8 +541,11 @@ namespace log4net.Appender
 			/// </remarks>
 			public override void ReleaseLock()
 			{
-				m_stream.Close();
-				m_stream=null;
+				using(CurrentAppender.SecurityContext.Impersonate(this))
+				{
+					m_stream.Close();
+					m_stream=null;
+				}
 			}
 		}
 
@@ -740,7 +743,7 @@ namespace log4net.Appender
 				m_lockingModel = new FileAppender.ExclusiveLock();
 			}
 
-			m_lockingModel.ErrorHandler = this.ErrorHandler;
+			m_lockingModel.CurrentAppender=this;
 
 			using(SecurityContext.Impersonate(this))
 			{
@@ -806,14 +809,16 @@ namespace log4net.Appender
 		/// </remarks>
 		override protected void Append(LoggingEvent loggingEvent) 
 		{
-			m_stream.AcquireLock();
-			try
+			if (m_stream.AcquireLock())
 			{
-				base.Append(loggingEvent);
-			}
-			finally
-			{
-				m_stream.ReleaseLock();
+				try
+				{
+					base.Append(loggingEvent);
+				}
+				finally
+				{
+					m_stream.ReleaseLock();
+				}
 			}
 		}
 
@@ -854,14 +859,16 @@ namespace log4net.Appender
 		{
 			if (m_stream!=null)
 			{
-				m_stream.AcquireLock();
-				try
+				if (m_stream.AcquireLock())
 				{
-					base.WriteHeader();
-				}
-				finally
-				{
-					m_stream.ReleaseLock();
+					try
+					{
+						base.WriteHeader();
+					}
+					finally
+					{
+						m_stream.ReleaseLock();
+					}
 				}
 			}
 		}
@@ -976,12 +983,9 @@ namespace log4net.Appender
 				m_fileName = fileName;
 				m_appendToFile = append;
 
-				using(SecurityContext.Impersonate(this))
-				{
-					LockingModel.ErrorHandler=this.ErrorHandler;
-					LockingModel.OpenFile(fileName,append,m_encoding);
-					m_stream=new LockingStream(LockingModel);
-				}
+				LockingModel.CurrentAppender=this;
+				LockingModel.OpenFile(fileName,append,m_encoding);
+				m_stream=new LockingStream(LockingModel);
 
 				if (m_stream != null)
 				{
