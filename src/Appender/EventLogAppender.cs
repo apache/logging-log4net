@@ -331,16 +331,17 @@ namespace log4net.Appender
 				else
 				{
 					string eventIDPropertyString = eventIDPropertyObj as string;
-					if (eventIDPropertyString != null)
+					if (eventIDPropertyString != null && eventIDPropertyString.Length > 0)
 					{
 						// Read the string property into a number
-						try
+						int intVal;
+						if (SystemInfo.TryParse(eventIDPropertyString, out intVal))
 						{
-							eventID = int.Parse(eventIDPropertyString, CultureInfo.InvariantCulture);
+							eventID = intVal;
 						}
-						catch(Exception ex)
+						else
 						{
-							ErrorHandler.Error("Unable to parse event ID property [" + eventIDPropertyString + "].", ex);
+							ErrorHandler.Error("Unable to parse event ID property [" + eventIDPropertyString + "].");
 						}
 					}
 				}

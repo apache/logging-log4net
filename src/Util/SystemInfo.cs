@@ -652,6 +652,75 @@ namespace log4net.Util
 #endif
 		}
 
+
+		/// <summary>
+		/// Parse a string into an <see cref="Int32"/> value
+		/// </summary>
+		/// <param name="s">the string to parse</param>
+		/// <param name="val">out param where the parsed value is placed</param>
+		/// <returns><c>true</c> if the string was able to be parsed into an integer</returns>
+		/// <remarks>
+		/// <para>
+		/// Attempts to parse the string into an integer. If the string cannot
+		/// be parsed then this method returns <c>false</c>. The method does not throw an exception.
+		/// </para>
+		/// </remarks>
+		public static bool TryParse(string s, out int val)
+		{
+			// Initialise out param
+			val = 0;
+
+			try
+			{
+				double doubleVal;
+				if (Double.TryParse(s, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out doubleVal))
+				{
+					val = Convert.ToInt32(doubleVal);
+					return true;
+				}
+			}
+			catch
+			{
+				// Ignore exception, just return false
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Parse a string into an <see cref="Int64"/> value
+		/// </summary>
+		/// <param name="s">the string to parse</param>
+		/// <param name="val">out param where the parsed value is placed</param>
+		/// <returns><c>true</c> if the string was able to be parsed into an integer</returns>
+		/// <remarks>
+		/// <para>
+		/// Attempts to parse the string into an integer. If the string cannot
+		/// be parsed then this method returns <c>false</c>. The method does not throw an exception.
+		/// </para>
+		/// </remarks>
+		public static bool TryParse(string s, out long val)
+		{
+			// Initialise out param
+			val = 0;
+
+			try
+			{
+				double doubleVal;
+				if (Double.TryParse(s, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out doubleVal))
+				{
+					val = Convert.ToInt64(doubleVal);
+					return true;
+				}
+			}
+			catch
+			{
+				// Ignore exception, just return false
+			}
+
+			return false;
+		}
+
 		#endregion Public Static Methods
 
 		#region Private Static Methods

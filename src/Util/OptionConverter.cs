@@ -234,14 +234,15 @@ namespace log4net.Util
 			{
 				// Try again to remove whitespace between the number and the size specifier
 				s = s.Trim();
-
-				try 
+				
+				long longVal;
+				if (SystemInfo.TryParse(s, out longVal))
 				{
-					return long.Parse(s, NumberStyles.Integer, NumberFormatInfo.InvariantInfo) * multiplier;
+					return longVal * multiplier;
 				}
-				catch (Exception e) 
+				else
 				{
-					LogLog.Error("OptionConverter: [" + s + "] is not in the proper file size form.", e);
+					LogLog.Error("OptionConverter: ["+ s +"] is not in the correct file size syntax.");
 				}
 			}
 			return defaultValue;

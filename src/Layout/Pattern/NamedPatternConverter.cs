@@ -65,32 +65,28 @@ namespace log4net.Layout.Pattern
 		/// </remarks>
 		public void ActivateOptions()
 		{
-			if (Option == null) 
-			{
-				m_precision = 0;
-			}
-			else
+			m_precision = 0;
+
+			if (Option != null) 
 			{
 				string optStr = Option.Trim();
-				if (optStr.Length == 0)
+				if (optStr.Length > 0)
 				{
-					m_precision = 0;
-				}
-				else
-				{
-					try 
+					int precisionVal;
+					if (SystemInfo.TryParse(optStr, out precisionVal))
 					{
-						m_precision = int.Parse(optStr, NumberFormatInfo.InvariantInfo);
-						if (m_precision <= 0) 
+						if (precisionVal <= 0) 
 						{
 							LogLog.Error("NamedPatternConverter: Precision option (" + optStr + ") isn't a positive integer.");
-							m_precision = 0;
+						}
+						else
+						{
+							m_precision = precisionVal;
 						}
 					} 
-					catch (Exception e) 
+					else
 					{
-						LogLog.Error("NamedPatternConverter: Precision option \"" + optStr + "\" not a decimal integer.", e);
-						m_precision = 0;
+						LogLog.Error("NamedPatternConverter: Precision option \"" + optStr + "\" not a decimal integer.");
 					}
 				}
 			}

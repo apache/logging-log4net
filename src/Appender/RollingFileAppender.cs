@@ -800,36 +800,40 @@ namespace log4net.Appender
 			try 
 			{
 				// Bump the counter up to the highest count seen so far
-				int backup = int.Parse(curFileName.Substring(index + 1), System.Globalization.NumberFormatInfo.InvariantInfo);
-				if (backup > m_curSizeRollBackups)
+//				int backup = int.Parse(curFileName.Substring(index + 1), System.Globalization.NumberFormatInfo.InvariantInfo);
+				int backup;
+				if (SystemInfo.TryParse(curFileName.Substring(index + 1), out backup))
 				{
-					if (0 == m_maxSizeRollBackups)
+					if (backup > m_curSizeRollBackups)
 					{
-						// Stay at zero when zero backups are desired
-					}
-					else if (-1 == m_maxSizeRollBackups)
-					{
-						// Infinite backups, so go as high as the highest value
-						m_curSizeRollBackups = backup;
-					}
-					else
-					{
-						// Backups limited to a finite number
-						if (m_countDirection >= 0) 
+						if (0 == m_maxSizeRollBackups)
 						{
-							// Go with the highest file when counting up
+							// Stay at zero when zero backups are desired
+						}
+						else if (-1 == m_maxSizeRollBackups)
+						{
+							// Infinite backups, so go as high as the highest value
 							m_curSizeRollBackups = backup;
-						} 
+						}
 						else
 						{
-							// Clip to the limit when counting down
-							if (backup <= m_maxSizeRollBackups)
+							// Backups limited to a finite number
+							if (m_countDirection >= 0) 
 							{
+								// Go with the highest file when counting up
 								m_curSizeRollBackups = backup;
+							} 
+							else
+							{
+								// Clip to the limit when counting down
+								if (backup <= m_maxSizeRollBackups)
+								{
+									m_curSizeRollBackups = backup;
+								}
 							}
 						}
+						LogLog.Debug("RollingFileAppender: File name ["+curFileName+"] moves current count to ["+m_curSizeRollBackups+"]");
 					}
-					LogLog.Debug("RollingFileAppender: File name ["+curFileName+"] moves current count to ["+m_curSizeRollBackups+"]");
 				}
 			} 
 			catch(FormatException) 

@@ -79,13 +79,14 @@ namespace log4net.Util.PatternStringConverters
 			string optionStr = Option;
 			if (optionStr != null && optionStr.Length > 0)
 			{
-				try 
+				int lengthVal;
+				if (SystemInfo.TryParse(optionStr, out lengthVal))
 				{
-					m_length = int.Parse(optionStr, System.Globalization.CultureInfo.InvariantCulture);
+					m_length = lengthVal;
 				}
-				catch (Exception e) 
+				else
 				{
-					LogLog.Error("RandomStringPatternConverter: Could not convert Option ["+optionStr+"] to Length Int32", e);
+					LogLog.Error("RandomStringPatternConverter: Could not convert Option ["+optionStr+"] to Length Int32");
 				}	
 			}
 		}
