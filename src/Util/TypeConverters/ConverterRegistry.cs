@@ -60,6 +60,7 @@ namespace log4net.Util.TypeConverters
 			AddConverter(typeof(bool), typeof(BooleanConverter));
 			AddConverter(typeof(System.Text.Encoding), typeof(EncodingConverter));
 			AddConverter(typeof(System.Type), typeof(TypeConverter));
+			AddConverter(typeof(log4net.Layout.PatternLayout), typeof(PatternLayoutConverter));
 			AddConverter(typeof(log4net.Util.PatternString), typeof(PatternStringConverter));
 		}
 
@@ -104,14 +105,8 @@ namespace log4net.Util.TypeConverters
 			// TODO: Support inheriting type converters.
 
 			// i.e. getting a type converter for a base of destinationType
-			IConvertTo converter = null;
-
 			// Lookup in the static registry
-			object obj = s_registry.m_type2converter[sourceType];
-			if ((obj != null) && (obj is IConvertTo))
-			{
-				converter = (IConvertTo)obj;
-			}
+			IConvertTo converter = s_registry.m_type2converter[sourceType] as IConvertTo;
 
 			if (converter == null)
 			{
@@ -141,14 +136,8 @@ namespace log4net.Util.TypeConverters
 			// TODO: Support inheriting type converters.
 
 			// i.e. getting a type converter for a base of destinationType
-			IConvertFrom converter = null;
-
 			// Lookup in the static registry
-			object obj = s_registry.m_type2converter[destinationType];
-			if ((obj != null) && (obj is IConvertFrom))
-			{
-				converter = (IConvertFrom)obj;
-			}
+			IConvertFrom converter = s_registry.m_type2converter[destinationType] as IConvertFrom;
 
 			if (converter == null)
 			{
