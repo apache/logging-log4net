@@ -69,11 +69,12 @@ limitations under the License.
 					log4net supports the following frameworks:
 				</p>
 				<ul>
-					<li>Microsoft .Net Framework 1.0 (1.0.3705)</li>
-					<li>Microsoft .Net Framework 1.1 (1.1.4322)</li>
-					<li>Microsoft .Net Compact Framework 1.0 (1.0.5000)</li>
+					<li>Microsoft .NET Framework 1.0 (1.0.3705)</li>
+					<li>Microsoft .NET Framework 1.1 (1.1.4322)</li>
+					<li>Microsoft .NET Compact Framework 1.0 (1.0.5000)</li>
 					<li>Mono 1.0</li>
 					<li>Microsoft Shared Source CLI 1.0</li>
+					<li>CLI 1.0 Compatible</li>
 				</ul>
 			</section>
 

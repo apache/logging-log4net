@@ -30,7 +30,7 @@ limitations under the License.
 			
 			<section name="Summary of .NET frameworks supported by log4net">
 				<p>
-					log4net now builds on 5 frameworks:
+					log4net now builds on 6 frameworks:
 				</p>
 				
 				<div class="table">
@@ -44,24 +44,28 @@ limitations under the License.
 							<th>Website</th>
 						</tr>
 						<tr style="vertical-align: top;">
-							<td>Microsoft .Net Framework 1.0 (1.0.3705)</td>
+							<td>Microsoft .NET Framework 1.0 (1.0.3705)</td>
 							<td><a href="http://msdn.microsoft.com/net">http://msdn.microsoft.com/net</a></td>
 						</tr>
 						<tr style="vertical-align: top;">
-							<td>Microsoft .Net Framework 1.1 (1.1.4322)</td>
+							<td>Microsoft .NET Framework 1.1 (1.1.4322)</td>
 							<td><a href="http://msdn.microsoft.com/net">http://msdn.microsoft.com/net</a></td>
 						</tr>
 						<tr style="vertical-align: top;">
-							<td>Microsoft .Net Compact Framework 1.0 (1.0.5000)</td>
+							<td>Microsoft .NET Compact Framework 1.0 (1.0.5000)</td>
 							<td><a href="http://msdn.microsoft.com/vstudio/device/compactfx.asp">http://msdn.microsoft.com/vstudio/device/compactfx.asp</a></td>
 						</tr>
 						<tr style="vertical-align: top;">
 							<td>Mono 1.0</td>
-							<td><a href="http://www.go-mono.org">http://www.go-mono.org</a></td>
+							<td><a href="http://www.mono-project.com">http://www.mono-project.com</a></td>
 						</tr>
 						<tr style="vertical-align: top;">
 							<td>Microsoft Shared Source CLI 1.0</td>
 							<td><a href="http://msdn.microsoft.com/library/en-us/dndotnet/html/mssharsourcecli.asp">http://msdn.microsoft.com/library/en-us/dndotnet/html/mssharsourcecli.asp</a></td>
+						</tr>
+						<tr style="vertical-align: top;">
+							<td>CLI 1.0 Compatible</td>
+							<td><a href="http://msdn.microsoft.com/net/ecma/">http://msdn.microsoft.com/net/ecma/</a></td>
 						</tr>
 					</table>
 				</div>
@@ -88,6 +92,7 @@ limitations under the License.
 							<col style="text-align: center;" />
 							<col style="text-align: center;" />
 							<col style="text-align: center;" />
+							<col style="text-align: center;" />
 						</colgroup>
 						<tr>
 							<th>Appender</th>
@@ -96,6 +101,7 @@ limitations under the License.
 							<th>.NET Compact Framework 1.0</th>
 							<th>Mono 1.0</th>
 							<th>Shared Source CLI 1.0</th>
+							<th>CLI 1.0 Compatible</th>
 						</tr>
 						<tr>
 							<td>AdoNetAppender</td>
@@ -104,9 +110,11 @@ limitations under the License.
 							<td>x</td>
 							<td>x</td>
 							<td></td>
+							<td>x</td>
 						</tr>
 						<tr>
 							<td>AnsiColorTerminalAppender</td>
+							<td>x</td>
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
@@ -120,9 +128,11 @@ limitations under the License.
 							<td></td>
 							<td>x</td>
 							<td></td>
+							<td>x</td>
 						</tr>
 						<tr>
 							<td>BufferingForwardingAppender</td>
+							<td>x</td>
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
@@ -136,9 +146,11 @@ limitations under the License.
 							<td></td>
 							<td></td>
 							<td></td>
+							<td></td>
 						</tr>
 						<tr>
 							<td>ConsoleAppender</td>
+							<td>x</td>
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
@@ -152,6 +164,7 @@ limitations under the License.
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
+							<td>x</td>
 						</tr>
 						<tr>
 							<td>EventLogAppender</td>
@@ -160,9 +173,11 @@ limitations under the License.
 							<td></td>
 							<td></td>
 							<td></td>
+							<td></td>
 						</tr>
 						<tr>
 							<td>FileAppender</td>
+							<td>x</td>
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
@@ -176,6 +191,7 @@ limitations under the License.
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
+							<td>x</td>
 						</tr>
 						<tr>
 							<td>LocalSyslogAppender</td>
@@ -184,9 +200,11 @@ limitations under the License.
 							<td></td>
 							<td>x</td>
 							<td></td>
+							<td>x</td>
 						</tr>
 						<tr>
 							<td>MemoryAppender</td>
+							<td>x</td>
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
@@ -200,6 +218,7 @@ limitations under the License.
 							<td></td>
 							<td></td>
 							<td></td>
+							<td></td>
 						</tr>
 						<tr>
 							<td>OutputDebugStringAppender</td>
@@ -208,9 +227,11 @@ limitations under the License.
 							<td>x</td>
 							<td></td>
 							<td></td>
+							<td></td>
 						</tr>
 						<tr>
 							<td>RemoteSyslogAppender</td>
+							<td>x</td>
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
@@ -224,9 +245,11 @@ limitations under the License.
 							<td></td>
 							<td>x</td>
 							<td>x</td>
+							<td>x</td>
 						</tr>
 						<tr>
 							<td>RollingFileAppender</td>
+							<td>x</td>
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
@@ -240,9 +263,11 @@ limitations under the License.
 							<td></td>
 							<td>x</td>
 							<td></td>
+							<td>x</td>
 						</tr>
 						<tr>
 							<td>SmtpPickupDirAppender</td>
+							<td>x</td>
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
@@ -256,9 +281,11 @@ limitations under the License.
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
+							<td>x</td>
 						</tr>
 						<tr>
 							<td>TraceAppender</td>
+							<td>x</td>
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
@@ -272,25 +299,26 @@ limitations under the License.
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
+							<td>x</td>
 						</tr>
 					</table>
 				</div>
 			</section>
 			
 			<section name="Framework Specific Notes">
-				<section name="Microsoft .Net Framework 1.0 (1.0.3705)">
+				<section name="Microsoft .NET Framework 1.0 (1.0.3705)">
 					<p>
 						none
 					</p>
 				</section>
 				
-				<section name="Microsoft .Net Framework 1.1 (1.1.4322)">
+				<section name="Microsoft .NET Framework 1.1 (1.1.4322)">
 					<p>
 						none
 					</p>
 				</section>
 				
-				<section name="Microsoft .Net Compact Framework 1.0 (1.0.5000)">
+				<section name="Microsoft .NET Compact Framework 1.0 (1.0.5000)">
 					<ul>
 						<li>
 							<h4>Assembly attributes</h4>
@@ -453,6 +481,26 @@ namespace TestApp
 							</p>
 						</li>
 					</ul>
+				</section>
+				
+				<section name="CLI 1.0 Compatible">
+					<p>
+						This build of log4net is designed to run on any ECMA CLI 1.0 compatible runtime.
+						The assembly does not support any platform specific features. The build includes
+						the common subset of functionality found in the .NET 1.0 and Mono 1.0 builds.
+						The output assembly is built using the Microsoft .NET 1.0 compiler and library.
+					</p>
+					<p>
+						The log4net CLI 1.0 assembly is runtime compatible with the following frameworks:
+					</p>
+					<ul>
+						<li>Microsoft .NET Framework 1.0 (and higher)</li>
+						<li>Mono 1.0 (and higher)</li>
+					</ul>
+					<p>
+						Only a Release build is generated for this configuration because the assembly
+						debugging information has not been standardized.
+					</p>
 				</section>
 				
 			</section>

@@ -28,7 +28,7 @@ limitations under the License.
 		
 			<sectionMenu name="Contents" />
 
-			<section name="1.2.XXXX">
+			<section name="1.2.9 Beta">
 			
 				<section name="Breaking Changes">
 					<ul>
@@ -409,7 +409,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 					<li>
 						<h3>Updated to support the Microsoft .NET Framework 1.1 Final</h3>
 						<p>
-							Updated to support the Microsoft .Net Framework 1.1 Final Beta (1.1.4322).
+							Updated to support the Microsoft .NET Framework 1.1 Final Beta (1.1.4322).
 						</p>
 					</li>
 					<li>
@@ -484,11 +484,11 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 										Website</th>
 								</tr>
 								<tr style="vertical-align: top;">
-									<td>Microsoft .Net Framework 1.1 Final Beta (1.1.4322)</td>
+									<td>Microsoft .NET Framework 1.1 Final Beta (1.1.4322)</td>
 									<td><a href="http://msdn.microsoft.com/net">http://msdn.microsoft.com/net</a></td>
 								</tr>
 								<tr style="vertical-align: top;">
-									<td>Microsoft .Net Compact Framework 1.0 (1.0.5000)</td>
+									<td>Microsoft .NET Compact Framework 1.0 (1.0.5000)</td>
 									<td><a href="http://msdn.microsoft.com/vstudio/device/compactfx.asp">http://msdn.microsoft.com/vstudio/device/compactfx.asp</a></td>
 								</tr>
 								<tr style="vertical-align: top;">
