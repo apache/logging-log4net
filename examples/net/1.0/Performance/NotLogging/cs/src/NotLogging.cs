@@ -92,7 +92,10 @@ namespace NotLogging
 				Usage();
 			}      
     
-			ConsoleAppender appender = new ConsoleAppender(new SimpleLayout());
+			ConsoleAppender appender = new ConsoleAppender();
+			appender.Layout = new SimpleLayout();
+			((SimpleLayout)appender.Layout).ActivateOptions();
+			appender.ActivateOptions();
 	    
 			if("false" == args[0]) 
 			{

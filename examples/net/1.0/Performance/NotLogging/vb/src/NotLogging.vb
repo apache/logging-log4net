@@ -83,7 +83,11 @@ Namespace NotLogging
 				Usage()
 			End Try
     
-			Dim appender As ConsoleAppender = new ConsoleAppender(New SimpleLayout())
+			Dim layout As SimpleLayout = new SimpleLayout()
+			layout.ActivateOptions
+			Dim appender As ConsoleAppender = new ConsoleAppender()
+			appender.Layout = layout
+			appender.ActivateOptions
 	    
 			If "false" = args(0) Then
 				' nothing to do
