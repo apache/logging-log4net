@@ -75,6 +75,7 @@ namespace log4net.Util.TypeConverters
 			AddConverter(typeof(System.Type), typeof(TypeConverter));
 			AddConverter(typeof(log4net.Layout.PatternLayout), typeof(PatternLayoutConverter));
 			AddConverter(typeof(log4net.Util.PatternString), typeof(PatternStringConverter));
+			AddConverter(typeof(System.Net.IPAddress), typeof(IPAddressConverter));
 		}
 
 		#endregion Static Constructor
