@@ -31,7 +31,7 @@ namespace log4net.Repository.Hierarchy
 	/// create new <see cref="Logger"/> objects.
 	/// </para>
 	/// <para>
-	/// The <see cref="MakeNewLoggerInstance"/> method is called
+	/// The <see cref="CreateLogger"/> method is called
 	/// to create a named <see cref="Logger" />.
 	/// </para>
 	/// <para>
@@ -57,6 +57,6 @@ namespace log4net.Repository.Hierarchy
 		/// new named <see cref="Logger"/> instances.
 		/// </para>
 		/// </remarks>
-		Logger MakeNewLoggerInstance(string name);
+		Logger CreateLogger(string name);
 	}
 }

@@ -682,7 +682,7 @@ namespace log4net.Repository.Hierarchy
 				Object node = m_ht[key];
 				if (node == null) 
 				{
-					logger = factory.MakeNewLoggerInstance(name);
+					logger = factory.CreateLogger(name);
 					logger.Hierarchy = this;
 					m_ht[key] = logger;	  
 					UpdateParents(logger);
@@ -695,7 +695,7 @@ namespace log4net.Repository.Hierarchy
 				} 
 				else if (node is ProvisionNode) 
 				{
-					logger = factory.MakeNewLoggerInstance(name);
+					logger = factory.CreateLogger(name);
 					logger.Hierarchy = this; 
 					m_ht[key] = logger;
 					UpdateChildren((ProvisionNode)node, logger);

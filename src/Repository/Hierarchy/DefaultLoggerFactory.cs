@@ -69,7 +69,7 @@ namespace log4net.Repository.Hierarchy
 		/// new named <see cref="Logger"/> instances.
 		/// </para>
 		/// </remarks>
-		public Logger MakeNewLoggerInstance(string name) 
+		public Logger CreateLogger(string name) 
 		{
 			return new LoggerImpl(name);
 		}
