@@ -26,3 +26,4 @@
 ' by using the '*' as shown below:
 
 <Assembly:System.Reflection.AssemblyVersion("1.2.0.30714")>
+<Assembly:System.Reflection.AssemblyInformationalVersionAttribute("1.2")>

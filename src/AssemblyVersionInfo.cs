@@ -28,3 +28,4 @@
 // by using the '*' as shown below:
 
 [assembly: System.Reflection.AssemblyVersion("1.2.1.40216")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.2")]

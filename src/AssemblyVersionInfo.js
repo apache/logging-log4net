@@ -31,3 +31,4 @@
 import System.Reflection;
 
 [assembly:AssemblyVersion("1.2.0.30714")]
+[assembly:AssemblyInformationalVersionAttribute("1.2")]

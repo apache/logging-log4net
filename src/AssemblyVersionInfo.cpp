@@ -30,3 +30,4 @@ using namespace System::Runtime::CompilerServices;
 // by using the '*' as shown below:
 
 [assembly:AssemblyVersionAttribute("1.2.0.30714")];
+[assembly:AssemblyInformationalVersionAttribute("1.2")];
