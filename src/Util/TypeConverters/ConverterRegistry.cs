@@ -59,6 +59,7 @@ namespace log4net.Util.TypeConverters
 			// Add predefined converters here
 			AddConverter(typeof(bool), typeof(BooleanConverter));
 			AddConverter(typeof(System.Text.Encoding), typeof(EncodingConverter));
+			AddConverter(typeof(System.Type), typeof(TypeConverter));
 			AddConverter(typeof(log4net.Util.PatternString), typeof(PatternStringConverter));
 		}
 
