@@ -77,7 +77,8 @@ namespace log4net.Appender
 		/// <remarks>
 		/// <para>
 		/// Write the logging event to the ASP.NET trace
-		/// <see cref="HttpContext.Current.Trace"/>.
+		/// <c>HttpContext.Current.Trace</c> 
+		/// (<see cref="System.Web.TraceContext"/>).
 		/// </para>
 		/// </remarks>
 		override protected void Append(LoggingEvent loggingEvent) 
