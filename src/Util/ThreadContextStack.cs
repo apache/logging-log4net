@@ -42,7 +42,7 @@ namespace log4net.Util
 		/// <summary>
 		/// The stack store.
 		/// </summary>
-		private readonly Stack m_stack = new Stack();
+		private Stack m_stack = new Stack();
 
 		#endregion Private Static Fields
 
@@ -61,6 +61,28 @@ namespace log4net.Util
 		}
 
 		#endregion Public Instance Constructors
+
+		#region Public Properties
+
+		/// <summary>
+		/// The number of messages in the stack
+		/// </summary>
+		/// <value>
+		/// The current number of messages in the stack
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The current number of messages in the stack. That is
+		/// the number of times <see cref="Push"/> has been called
+		/// minus the number of times <see cref="Pop"/> has been called.
+		/// </para>
+		/// </remarks>
+		public int Count
+		{
+			get { return m_stack.Count; }
+		}
+
+		#endregion // Public Properties
 
 		#region Public Methods
 
@@ -152,6 +174,23 @@ namespace log4net.Util
 				return ((StackFrame)(stack.Peek())).FullMessage;
 			}
 			return null;
+		}
+
+		/// <summary>
+		/// Gets and sets the internal stack used by this <see cref="ThreadContextStack"/>
+		/// </summary>
+		/// <value>The internal storage stack</value>
+		/// <remarks>
+		/// <para>
+		/// This property is provided only to support backward compatability 
+		/// of the <see cref="NDC"/>. Tytpically the internal stack should not
+		/// be modified.
+		/// </para>
+		/// </remarks>
+		internal Stack InternalStack
+		{
+			get { return m_stack; }
+			set { m_stack = value; }
 		}
   
 		#endregion Internal Methods
