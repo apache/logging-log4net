@@ -158,6 +158,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Util\RandomStringPatternConverterTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Util\SystemInfoTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
