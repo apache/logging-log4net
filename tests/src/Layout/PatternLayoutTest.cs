@@ -41,30 +41,57 @@ namespace log4net.Tests.Layout
 	/// </remarks>
 	[TestFixture] public class PatternLayoutTest
 	{
-		[Test] public void TestMdcPattern()
+		[Test] public void TestThreadPropertiesPattern()
 		{
 			StringAppender stringAppender = new StringAppender();
-			stringAppender.Layout = new PatternLayout("%mdc{prop1}");
+			stringAppender.Layout = new PatternLayout("%property{prop1}");
 
 			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 			BasicConfigurator.Configure(rep, stringAppender);
 
-			ILog log1 = LogManager.GetLogger(rep.Name, "TestMdcPattern");
+			ILog log1 = LogManager.GetLogger(rep.Name, "TestThreadProperiesPattern");
 
 			log1.Info("TestMessage");
-			Assertion.AssertEquals("Test no mdc value set", "(null)", stringAppender.GetString());
+			Assertion.AssertEquals("Test no thread properties value set", "(null)", stringAppender.GetString());
 			stringAppender.Reset();
 
-			MDC.Set("prop1", "val1");
+			ThreadContext.Properties["prop1"] = "val1";
 
 			log1.Info("TestMessage");
-			Assertion.AssertEquals("Test thread mdc value set", "val1", stringAppender.GetString());
+			Assertion.AssertEquals("Test thread properties value set", "val1", stringAppender.GetString());
 			stringAppender.Reset();
 
-			MDC.Remove("prop1");
+			ThreadContext.Properties.Remove("prop1");
 
 			log1.Info("TestMessage");
-			Assertion.AssertEquals("Test mdc value removed", "(null)", stringAppender.GetString());
+			Assertion.AssertEquals("Test thread properties value removed", "(null)", stringAppender.GetString());
+			stringAppender.Reset();
+		}
+
+		[Test] public void TestGlobalPropertiesPattern()
+		{
+			StringAppender stringAppender = new StringAppender();
+			stringAppender.Layout = new PatternLayout("%property{prop1}");
+
+			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+			BasicConfigurator.Configure(rep, stringAppender);
+
+			ILog log1 = LogManager.GetLogger(rep.Name, "TestGlobalProperiesPattern");
+
+			log1.Info("TestMessage");
+			Assertion.AssertEquals("Test no global properties value set", "(null)", stringAppender.GetString());
+			stringAppender.Reset();
+
+			GlobalContext.Properties["prop1"] = "val1";
+
+			log1.Info("TestMessage");
+			Assertion.AssertEquals("Test global properties value set", "val1", stringAppender.GetString());
+			stringAppender.Reset();
+
+			GlobalContext.Properties.Remove("prop1");
+
+			log1.Info("TestMessage");
+			Assertion.AssertEquals("Test global properties value removed", "(null)", stringAppender.GetString());
 			stringAppender.Reset();
 		}
 
