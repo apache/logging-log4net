@@ -451,8 +451,8 @@ namespace log4net.Core
 
 		#region Private Instance Fields
 
-		private int m_level;
-		private string m_levelStr;
+		private readonly int m_level;
+		private readonly string m_levelStr;
 
 		#endregion Private Instance Fields
 
