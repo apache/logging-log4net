@@ -218,12 +218,18 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
-		/// Open te file once for writing and hold it open until CloseFile is called. Maintains an exclusive lock on the file during this time.
+		/// Open the file once for writing and hold it open until CloseFile is called. Maintains an exclusive lock on the file during this time.
 		/// </summary>
 		public class ExclusiveLock : LockingModelBase
 		{
 			private Stream m_stream=null;
 
+			/// <summary>
+			/// Open the file specified and prepare for logging.
+			/// </summary>
+			/// <param name="filename">The filename to use</param>
+			/// <param name="append">Whether to append to the file, or overwrite</param>
+			/// <param name="encoding">The encoding to use</param>
 			public override void OpenFile(string filename, bool append,Encoding encoding)
 			{
 				try
@@ -247,16 +253,26 @@ namespace log4net.Appender
 				}
 			}
 
+			/// <summary>
+			/// Close the file. 
+			/// </summary>
 			public override void CloseFile()
 			{
 				m_stream.Close();
 			}
 
+			/// <summary>
+			/// Does nothing. The lock is already taken
+			/// </summary>
+			/// <returns>A stream that is ready to be written to.</returns>
 			public override Stream AquireLock()
 			{
 				return m_stream;
 			}
 
+			/// <summary>
+			/// Does nothing. The lock will be released when the file is closed.
+			/// </summary>
 			public override void ReleaseLock()
 			{
 				//NOP
@@ -274,17 +290,30 @@ namespace log4net.Appender
 			private bool m_append;
 			private Stream m_stream=null;
 
+			/// <summary>
+			/// Prepares to open the file when the first message is logged.
+			/// </summary>
+			/// <param name="filename">The filename to use</param>
+			/// <param name="append">Whether to append to the file, or overwrite</param>
+			/// <param name="encoding">The encoding to use</param>
 			public override void OpenFile(string filename, bool append, Encoding encoding)
 			{
 				m_filename=filename;
 				m_append=append;
 			}
 
+			/// <summary>
+			/// Ensures the file is closed.
+			/// </summary>
 			public override void CloseFile()
 			{
 				//NOP
 			}
 
+			/// <summary>
+			/// Aquire the lock on the file in preparation for writing to it. Return a stream pointing to the file.
+			/// </summary>
+			/// <returns>A stream that is ready to be written to.</returns>
 			public override Stream AquireLock()
 			{
 				if (m_stream==null)
@@ -313,6 +342,9 @@ namespace log4net.Appender
 				return m_stream;
 			}
 
+			/// <summary>
+			/// Release the lock on the file. No further writes will be made to the stream until AquireLock is called again.
+			/// </summary>
 			public override void ReleaseLock()
 			{
 				m_stream.Close();
