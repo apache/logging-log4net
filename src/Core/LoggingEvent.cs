@@ -902,10 +902,26 @@ namespace log4net.Core
 		/// Returns this event's exception's rendered using the 
 		/// <see cref="ILoggerRepository.RendererMap" />.
 		/// </summary>
+		/// <remarks>
+		/// <b>Obsolete. Use <see cref="GetExceptionString"/> instead.</b>
+		/// </remarks>
 		/// <returns>
 		/// This event's exception's rendered using the <see cref="ILoggerRepository.RendererMap" />.
 		/// </returns>
+		[Obsolete("Use GetExceptionString instead")]
 		public string GetExceptionStrRep() 
+		{
+			return GetExceptionString();
+		}
+
+		/// <summary>
+		/// Returns this event's exception's rendered using the 
+		/// <see cref="ILoggerRepository.RendererMap" />.
+		/// </summary>
+		/// <returns>
+		/// This event's exception's rendered using the <see cref="ILoggerRepository.RendererMap" />.
+		/// </returns>
+		public string GetExceptionString() 
 		{
 			if (m_data.ExceptionString == null)
 			{
@@ -1087,7 +1103,7 @@ namespace log4net.Core
 				if ((updateFlags & FixFlags.Exception) != 0)
 				{
 					// Force the exception text to be loaded
-					string tmp = GetExceptionStrRep();
+					string tmp = GetExceptionString();
 
 					m_fixFlags |= FixFlags.Exception;
 				}
