@@ -626,9 +626,7 @@ namespace log4net.Core
 					}
 					else if (m_repository != null)
 					{
-						StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
-						m_repository.RendererMap.FindAndRender(m_message, writer);
-						m_data.Message = writer.ToString();
+						m_data.Message = m_repository.RendererMap.FindAndRender(m_message);
 					}
 					else
 					{
@@ -1067,9 +1065,7 @@ namespace log4net.Core
 					if (m_repository != null)
 					{
 						// Render exception using the repositories renderer map
-						StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
-						m_repository.RendererMap.FindAndRender(m_thrownException, writer);
-						m_data.ExceptionString = writer.ToString();
+						m_data.ExceptionString = m_repository.RendererMap.FindAndRender(m_thrownException);
 					}
 					else
 					{
