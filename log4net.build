@@ -154,8 +154,7 @@
     <target name="compile-build" description="Compile current build configurations for all runtime configurations">
         <echo message="Compiling all framework versions for the ${current.build.config} build configuration." />
         <if test="${framework::exists('netcf-1.0')}">
-            <call target="set-netcf-1.0-runtime-configuration" />
-            <call target="compile-${framework::get-target-framework()}" />
+            <call target="compile-netcf-1.0" />
         </if>
         <if test="${not framework::exists('netcf-1.0')}">
             <if test="${property::exists('project.build.package') and project.build.package}">
@@ -167,8 +166,8 @@
             </if>
         </if>
         <if test="${framework::exists('net-1.0')}">
-            <call target="set-net-1.0-runtime-configuration" />
-            <call target="compile-${framework::get-target-framework()}" />
+            <call target="compile-net-1.0" />
+            <call target="compile-core" />
         </if>
         <if test="${not framework::exists('net-1.0')}">
             <if test="${property::exists('project.build.package') and project.build.package}">
@@ -179,8 +178,7 @@
             </if>
         </if>
         <if test="${framework::exists('net-1.1')}">
-            <call target="set-net-1.1-runtime-configuration" />
-            <call target="compile-${framework::get-target-framework()}" />
+            <call target="compile-net-1.1" />
         </if>
         <if test="${not framework::exists('net-1.1')}">
             <if test="${property::exists('project.build.package') and project.build.package}">
@@ -191,8 +189,7 @@
             </if>
         </if>
         <if test="${framework::exists('mono-1.0')}">
-            <call target="set-mono-1.0-runtime-configuration" />
-            <call target="compile-${framework::get-target-framework()}" />
+            <call target="compile-mono-1.0" />
         </if>
         <if test="${not framework::exists('mono-1.0')}">
             <if test="${property::exists('project.build.package') and project.build.package}">
@@ -203,8 +200,7 @@
             </if>
         </if>
         <if test="${framework::exists('sscli-1.0')}">
-            <call target="set-sscli-1.0-runtime-configuration" />
-            <call target="compile-${framework::get-target-framework()}" />
+            <call target="compile-sscli-1.0" />
         </if>
         <if test="${not framework::exists('sscli-1.0')}">
             <if test="${property::exists('project.build.package') and project.build.package}">
@@ -236,7 +232,7 @@
             </if>
             <if test="${file::exists(log4net.basedir + '/log4net.snk')}">
                 <!-- copy the log4net key file to the location where the compiler expects it to be -->
-                <copy file="${log4net.basedir}/log4net.snk" todir="${current.bin.dir}/../../../" if="${current.build.config.release}" />
+                <copy file="${log4net.basedir}/log4net.snk" todir="${current.bin.dir}/../../../" />
             </if>
         </if>
         <if test="${not temp.build.skip}">
@@ -273,7 +269,7 @@
             </if>
             <if test="${file::exists(log4net.basedir + '/log4net.snk')}">
                 <!-- copy the log4net key file to the location where the compiler expects it to be -->
-                <copy file="${log4net.basedir}/log4net.snk" todir="${current.bin.dir}/../../../" if="${current.build.config.release}" />
+                <copy file="${log4net.basedir}/log4net.snk" todir="${current.bin.dir}/../../../" />
             </if>
         </if>
         <if test="${not temp.build.skip}">
@@ -311,7 +307,7 @@
             </if>
             <if test="${file::exists(log4net.basedir + '/log4net.snk')}">
                 <!-- copy the log4net key file to the location where the compiler expects it to be -->
-                <copy file="${log4net.basedir}/log4net.snk" todir="${current.bin.dir}/../../../" if="${current.build.config.release}" />
+                <copy file="${log4net.basedir}/log4net.snk" todir="${current.bin.dir}/../../../" />
             </if>
         </if>
         <if test="${not temp.build.skip}">
@@ -349,7 +345,7 @@
             </if>
             <if test="${file::exists(log4net.basedir + '/log4net.snk')}">
                 <!-- copy the log4net key file to the location where the compiler expects it to be -->
-                <copy file="${log4net.basedir}/log4net.snk" todir="${current.bin.dir}/../../../" if="${current.build.config.release}" />
+                <copy file="${log4net.basedir}/log4net.snk" todir="${current.bin.dir}/../../../" />
             </if>
         </if>
         <if test="${not temp.build.skip}">
@@ -390,7 +386,7 @@
             </if>
             <if test="${file::exists(log4net.basedir + '/log4net.snk')}">
                 <!-- copy the log4net key file to the location where the compiler expects it to be -->
-                <copy file="${log4net.basedir}/log4net.snk" todir="${current.bin.dir}/../../../" if="${current.build.config.release}" />
+                <copy file="${log4net.basedir}/log4net.snk" todir="${current.bin.dir}/../../../" />
             </if>
         </if>
         <if test="${not temp.build.skip}">
@@ -401,6 +397,60 @@
                 <references>
                     <include name="mscorlib.dll" />
                     <include name="System.dll" />
+                    <include name="System.Xml.dll" />
+                    <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework family>/<framework version>/<build configuration> directory -->
+                    <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
+                </references>
+            </csc>
+        </if>
+    </target>
+    <!--
+        This version is built targeting .NET 1.0, but does not contain any 
+        classes that are .NET 1.0 or Windows-specific.
+        
+        Therefore, the log4net Core is runtime compatible with the following 
+        frameworks :
+        * Microsoft .NET Framework 1.0 (and higher)
+        * Mono 1.0 (and higher)
+        
+        We only provide this "flavor" of log4net in release configuration.
+    -->
+    <target name="compile-core" description="Builds Core version" depends="set-core-configuration, check-log4net-basedir" if="${current.build.config.release}">
+        <delete>
+            <fileset basedir="${current.bin.dir}">
+                <include name="log4net.*" />
+            </fileset>
+        </delete>
+        <!-- initialize the temp.build.skip property to false -->
+        <property name="temp.build.skip" value="false" />
+        <if test="${current.build.config.release}">
+            <!-- check if the log4net key file is available -->
+            <if test="${not file::exists(log4net.basedir + '/log4net.snk')}">
+                <if test="${property::exists('project.build.package') and project.build.package}">
+                    <fail message="Key file not found." />
+                </if>
+                <if test="${not(property::exists('project.build.package') and project.build.package)}">
+                    <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
+                    <echo message="The generated key file should be stored in the log4net base directory." />
+                    <echo message="The release build will be skipped." />
+                    <property name="temp.build.skip" value="true" />
+                </if>
+            </if>
+            <if test="${file::exists(log4net.basedir + '/log4net.snk')}">
+                <!-- copy the log4net key file to the location where the compiler expects it to be -->
+                <copy file="${log4net.basedir}/log4net.snk" todir="${current.bin.dir}/../../../" />
+            </if>
+        </if>
+        <if test="${not temp.build.skip}">
+            <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+                <sources basedir="${log4net.basedir}/src">
+                    <include name="**/*.cs" />
+                </sources>
+                <references>
+                    <include name="mscorlib.dll" />
+                    <include name="System.dll" />
+                    <include name="System.Data.dll" />
+                    <include name="System.Web.dll" />
                     <include name="System.Xml.dll" />
                     <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework family>/<framework version>/<build configuration> directory -->
                     <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />

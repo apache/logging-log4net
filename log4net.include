@@ -225,4 +225,16 @@
         <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />
         <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
     </target>
+    <target name="set-core-configuration">
+        <property name="nant.settings.currentframework" value="net-1.0" />
+        <property name="current.build.debug" value="${build.debug}" dynamic="true" />
+        <property name="current.build.defines.csc" value="${build.defines.csc},CORE" dynamic="true" />
+        <property name="current.build.defines.jsc" value="${build.defines.jsc},CORE" dynamic="true" />
+        <property name="current.build.defines.vbc" value="${build.defines.vbc},CORE=True" dynamic="true" />
+        <property name="current.build.defines.vjc" value="${build.defines.vjc},CORE" dynamic="true" />
+        <property name="current.build.defines.cl" value="${build.defines.cl} /D CORE" dynamic="true" />
+        <property name="current.bin.dir" value="${bin.dir}" />
+        <property name="current.sdkdoc.dir" value="${sdkdoc.dir}" />
+        <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
+    </target>
 </project>
