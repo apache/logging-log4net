@@ -31,13 +31,16 @@ namespace log4net.Util
 	/// <author>Nicko Cadell</author>
 	public sealed class ThreadContextLists
 	{
+		private readonly ContextPropertiesBase m_properties;
+
 		#region Public Instance Constructors
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ThreadContextLists" /> class.
 		/// </summary>
-		internal ThreadContextLists()
+		internal ThreadContextLists(ContextPropertiesBase properties)
 		{
+			m_properties = properties;
 		}
 
 		#endregion Public Instance Constructors
@@ -56,12 +59,12 @@ namespace log4net.Util
 			{
 				ThreadContextList list = null;
 
-				object propertyValue = ThreadContext.Properties[key];
+				object propertyValue = m_properties[key];
 				if (propertyValue == null)
 				{
 					// List does not exist, create
 					list = new ThreadContextList();
-					ThreadContext.Properties[key] = list;
+					m_properties[key] = list;
 				}
 				else
 				{

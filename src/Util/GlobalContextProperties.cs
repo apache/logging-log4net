@@ -35,7 +35,7 @@ namespace log4net.Util
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
-	public sealed class GlobalContextProperties
+	public sealed class GlobalContextProperties : ContextPropertiesBase
 	{
 		#region Private Instance Fields
 
@@ -87,7 +87,7 @@ namespace log4net.Util
 		/// the properties is created.
 		/// </para>
 		/// </remarks>
-		public object this[string key]
+		override public object this[string key]
 		{
 			get 
 			{ 

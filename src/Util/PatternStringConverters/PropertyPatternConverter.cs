@@ -57,7 +57,19 @@ namespace log4net.Util.PatternStringConverters
 		{
 			CompositeProperties compositeProperties = new CompositeProperties();
 
-			compositeProperties.Add(ThreadContext.Properties.GetProperties());
+#if !NETCF
+			PropertiesDictionary logicalThreadProperties = LogicalThreadContext.Properties.GetProperties(false);
+			if (logicalThreadProperties != null)
+			{
+				compositeProperties.Add(logicalThreadProperties);
+			}
+#endif
+			PropertiesDictionary threadProperties = ThreadContext.Properties.GetProperties(false);
+			if (threadProperties != null)
+			{
+				compositeProperties.Add(threadProperties);
+			}
+
 			// TODO: Add Repository Properties
 			compositeProperties.Add(GlobalContext.Properties.GetReadOnlyProperties());
 

@@ -1156,7 +1156,18 @@ namespace log4net.Core
 			{
 				m_compositeProperties.Add(m_eventProperties);
 			}
-			m_compositeProperties.Add(ThreadContext.Properties.GetProperties());
+#if !NETCF
+			PropertiesDictionary logicalThreadProperties = LogicalThreadContext.Properties.GetProperties(false);
+			if (logicalThreadProperties != null)
+			{
+				m_compositeProperties.Add(logicalThreadProperties);
+			}
+#endif
+			PropertiesDictionary threadProperties = ThreadContext.Properties.GetProperties(false);
+			if (threadProperties != null)
+			{
+				m_compositeProperties.Add(threadProperties);
+			}
 
 			// TODO: Add Repository Properties
 

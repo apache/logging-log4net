@@ -31,13 +31,16 @@ namespace log4net.Util
 	/// <author>Nicko Cadell</author>
 	public sealed class ThreadContextStacks
 	{
+		private readonly ContextPropertiesBase m_properties;
+
 		#region Public Instance Constructors
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ThreadContextStacks" /> class.
 		/// </summary>
-		internal ThreadContextStacks()
+		internal ThreadContextStacks(ContextPropertiesBase properties)
 		{
+			m_properties = properties;
 		}
 
 		#endregion Public Instance Constructors
@@ -56,12 +59,12 @@ namespace log4net.Util
 			{
 				ThreadContextStack stack = null;
 
-				object propertyValue = ThreadContext.Properties[key];
+				object propertyValue = m_properties[key];
 				if (propertyValue == null)
 				{
 					// Stack does not exist, create
 					stack = new ThreadContextStack();
-					ThreadContext.Properties[key] = stack;
+					m_properties[key] = stack;
 				}
 				else
 				{

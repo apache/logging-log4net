@@ -98,6 +98,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "LogicalThreadContext.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "LogManager.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -783,6 +788,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Util\ContextPropertiesBase.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Util\CountingQuietTextWriter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -819,6 +829,11 @@
                 />
                 <File
                     RelPath = "Util\LevelMappingEntry.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Util\LogicalThreadContextProperties.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

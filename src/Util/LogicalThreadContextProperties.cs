@@ -16,13 +16,18 @@
 //
 #endregion
 
+// .NET Compact Framework 1.0 has no support for System.Runtime.Remoting.Messaging.CallContext
+#if !NETCF
+
 using System;
 using System.Collections;
+
+using System.Runtime.Remoting.Messaging;
 
 namespace log4net.Util
 {
 	/// <summary>
-	/// Implementation of Properties collection for the <see cref="log4net.ThreadContext"/>
+	/// Implementation of Properties collection for the <see cref="log4net.LogicalThreadContext"/>
 	/// </summary>
 	/// <remarks>
 	/// <para>
@@ -31,23 +36,14 @@ namespace log4net.Util
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
-	public sealed class ThreadContextProperties : ContextPropertiesBase
+	public sealed class LogicalThreadContextProperties : ContextPropertiesBase
 	{
-		#region Private Instance Fields
-
-		/// <summary>
-		/// The thread local data slot to use to store a PropertiesDictionary.
-		/// </summary>
-		private readonly static LocalDataStoreSlot s_threadLocalSlot = System.Threading.Thread.AllocateDataSlot();
-
-		#endregion Private Instance Fields
-
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ThreadContextProperties" /> class.
+		/// Initializes a new instance of the <see cref="LogicalThreadContextProperties" /> class.
 		/// </summary>
-		internal ThreadContextProperties()
+		internal LogicalThreadContextProperties()
 		{
 		}
 
@@ -125,11 +121,11 @@ namespace log4net.Util
 		/// </remarks>
 		internal PropertiesDictionary GetProperties(bool create)
 		{
-			PropertiesDictionary properties = (PropertiesDictionary)System.Threading.Thread.GetData(s_threadLocalSlot);
+			PropertiesDictionary properties = (PropertiesDictionary)CallContext.GetData("log4net.Util.LogicalThreadContextProperties");
 			if (properties == null && create)
 			{
 				properties  = new PropertiesDictionary();
-				System.Threading.Thread.SetData(s_threadLocalSlot, properties);
+				CallContext.SetData("log4net.Util.LogicalThreadContextProperties", properties);
 			}
 			return properties;
 		}
@@ -138,4 +134,4 @@ namespace log4net.Util
 	}
 }
 
-
+#endif

@@ -16,6 +16,9 @@
 //
 #endregion
 
+// .NET Compact Framework 1.0 has no support for System.Runtime.Remoting.Messaging.CallContext
+#if !NETCF
+
 using System;
 using System.Collections;
 
@@ -24,48 +27,48 @@ using log4net.Util;
 namespace log4net
 {
 	/// <summary>
-	/// The log4net Thread Context.
+	/// The log4net Logical Thread Context.
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// The <c>ThreadContext</c> provides a location for thread specific debugging 
+	/// The <c>LogicalThreadContext</c> provides a location for <see cref="System.Runtime.Remoting.Messaging.CallContext"/> specific debugging 
 	/// information to be stored.
-	/// The <c>ThreadContext</c> properties override any <see cref="GlobalContext"/>
+	/// The <c>LogicalThreadContext</c> properties override any <see cref="ThreadContext"/> or <see cref="GlobalContext"/>
 	/// properties with the same name.
 	/// </para>
 	/// <para>
-	/// The thread context has a properties map and a stack.
+	/// The Logical Thread Context has a properties map and a stack.
 	/// The properties and stack can 
 	/// be included in the output of log messages. The <see cref="log4net.Layout.PatternLayout"/>
 	/// supports selecting and outputting these properties.
 	/// </para>
 	/// <para>
-	/// The Thread Context provides a diagnostic context for the current thread. 
+	/// The Logical Thread Context provides a diagnostic context for the current call context. 
 	/// This is an instrument for distinguishing interleaved log
 	/// output from different sources. Log output is typically interleaved
 	/// when a server handles multiple clients near-simultaneously.
 	/// </para>
 	/// <para>
-	/// The Thread Context is managed on a per thread basis.
+	/// The Logical Thread Context is managed on a per <see cref="System.Runtime.Remoting.Messaging.CallContext"/> basis.
 	/// </para>
 	/// </remarks>
 	/// <example>Example of using the thread context properties to store a username.
 	/// <code>
-	/// ThreadContext.Properties["user"] = userName;
-	///	log.Info("This log message has a ThreadContext Property called 'user'");
+	/// LogicalThreadContext.Properties["user"] = userName;
+	///	log.Info("This log message has a LogicalThreadContext Property called 'user'");
 	/// </code>
 	/// </example>
 	/// <example>Example of how to push a message into the context stack
 	/// <code>
-	///	using(ThreadContext.Stack.Push("my context message"))
+	///	using(LogicalThreadContext.Stack.Push("my context message"))
 	///	{
-	///		log.Info("This log message has a ThreadContext Stack message that includes 'my context message'");
+	///		log.Info("This log message has a LogicalThreadContext Stack message that includes 'my context message'");
 	///	
 	///	} // at the end of the using block the message is automatically popped 
 	/// </code>
 	/// </example>
 	/// <author>Nicko Cadell</author>
-	public sealed class ThreadContext
+	public sealed class LogicalThreadContext
 	{
 		#region Private Instance Constructors
 
@@ -75,7 +78,7 @@ namespace log4net
 		/// <remarks>
 		/// Uses a private access modifier to prevent instantiation of this class.
 		/// </remarks>
-		private ThreadContext()
+		private LogicalThreadContext()
 		{
 		}
 
@@ -90,10 +93,10 @@ namespace log4net
 		/// The thread properties map
 		/// </value>
 		/// <remarks>
-		/// The <c>ThreadContext</c> properties override any <see cref="GlobalContext"/>
+		/// The <c>LogicalThreadContext</c> properties override any <see cref="ThreadContext"/> or <see cref="GlobalContext"/>
 		/// properties with the same name.
 		/// </remarks>
-		public static ThreadContextProperties Properties
+		public static LogicalThreadContextProperties Properties
 		{
 			get { return s_properties; }
 		}
@@ -127,7 +130,7 @@ namespace log4net
 		/// <summary>
 		/// The thread context properties instance
 		/// </summary>
-		private readonly static ThreadContextProperties s_properties = new ThreadContextProperties();
+		private readonly static LogicalThreadContextProperties s_properties = new LogicalThreadContextProperties();
 
 		/// <summary>
 		/// The thread context stacks instance
@@ -142,3 +145,5 @@ namespace log4net
 		#endregion Private Static Fields
 	}
 }
+
+#endif
