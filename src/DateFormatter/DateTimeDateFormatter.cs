@@ -23,7 +23,7 @@ using System.Globalization;
 namespace log4net.DateFormatter
 {
 	/// <summary>
-	/// Formats a <see cref="DateTime"/> in the format "dd MMM YYYY HH:mm:ss,SSS" for example, "06 Nov 1994 15:49:37,459".
+	/// Formats a <see cref="DateTime"/> in the format <c>"dd MMM YYYY HH:mm:ss,SSS"</c> for example, <c>"06 Nov 1994 15:49:37,459"</c>.
 	/// </summary>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>

@@ -116,7 +116,9 @@ namespace log4net.Layout
 	///			<term>date</term> 
 	///			<description>
 	/// 			<para>
-	/// 			Used to output the date of the logging event. The date conversion 
+	/// 			Used to output the date of the logging event in the local time zone. 
+	/// 			To output the date in universal time use the <c>%utcDate</c> pattern.
+	/// 			The date conversion 
 	/// 			specifier may be followed by a <i>date format specifier</i> enclosed 
 	/// 			between braces. For example, <b>%date{HH:mm:ss,fff}</b> or
 	/// 			<b>%date{dd MMM yyyy HH:mm:ss,fff}</b>.  If no date format specifier is 
@@ -151,7 +153,7 @@ namespace log4net.Layout
 	///				<para>
 	/// 			If an exception object is stored in the logging event
 	/// 			it will be rendered into the pattern output with a
-	/// 			trainling newline.
+	/// 			trailing newline.
 	/// 			If there is no exception then nothing will be output
 	/// 			and no trailing newline will be appended.
 	/// 			It is typical to put a newline before the exception
@@ -473,6 +475,37 @@ namespace log4net.Layout
 	///			</description>
 	///		</item>
 	///     <item>
+	///			<term>utcDate</term> 
+	///			<description>
+	/// 			<para>
+	/// 			Used to output the date of the logging event in universal time. 
+	/// 			The date conversion 
+	/// 			specifier may be followed by a <i>date format specifier</i> enclosed 
+	/// 			between braces. For example, <b>%utcDate{HH:mm:ss,fff}</b> or
+	/// 			<b>%utcDate{dd MMM yyyy HH:mm:ss,fff}</b>.  If no date format specifier is 
+	/// 			given then ISO8601 format is
+	/// 			assumed (<see cref="log4net.DateFormatter.Iso8601DateFormatter"/>).
+	/// 			</para>
+	/// 			<para>
+	/// 			The date format specifier admits the same syntax as the
+	/// 			time pattern string of the <see cref="DateTime.ToString"/>.
+	/// 			</para>
+	/// 			<para>
+	/// 			For better results it is recommended to use the log4net date
+	/// 			formatters. These can be specified using one of the strings
+	/// 			"ABSOLUTE", "DATE" and "ISO8601" for specifying 
+	/// 			<see cref="log4net.DateFormatter.AbsoluteTimeDateFormatter"/>, 
+	/// 			<see cref="log4net.DateFormatter.DateTimeDateFormatter"/> and respectively 
+	/// 			<see cref="log4net.DateFormatter.Iso8601DateFormatter"/>. For example, 
+	/// 			<b>%utcDate{ISO8601}</b> or <b>%utcDate{ABSOLUTE}</b>.
+	/// 			</para>
+	/// 			<para>
+	/// 			These dedicated date formatters perform significantly
+	/// 			better than <see cref="DateTime.ToString(string)"/>.
+	/// 			</para>
+	///			</description>
+	///		</item>
+	///     <item>
 	///         <term>w</term>
 	///         <description>Equivalent to <b>username</b></description>
 	///     </item>
@@ -778,6 +811,10 @@ namespace log4net.Layout
 
 			s_globalRulesRegistry.Add("u", typeof(IdentityPatternConverter));
 			s_globalRulesRegistry.Add("identity", typeof(IdentityPatternConverter));
+
+			s_globalRulesRegistry.Add("utcdate", typeof(UtcDatePatternConverter));
+			s_globalRulesRegistry.Add("utcDate", typeof(UtcDatePatternConverter));
+			s_globalRulesRegistry.Add("UtcDate", typeof(UtcDatePatternConverter));
 
 			s_globalRulesRegistry.Add("w", typeof(UserNamePatternConverter));
 			s_globalRulesRegistry.Add("username", typeof(UserNamePatternConverter));

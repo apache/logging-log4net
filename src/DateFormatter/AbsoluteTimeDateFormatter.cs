@@ -23,7 +23,7 @@ using System.Text;
 namespace log4net.DateFormatter
 {
 	/// <summary>
-	/// Formats a <see cref="DateTime"/> in the format "HH:mm:ss,SSS" for example, "15:49:37,459".
+	/// Formats a <see cref="DateTime"/> in the format <c>"HH:mm:ss,SSS"</c> for example, <c>"15:49:37,459"</c>.
 	/// </summary>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>

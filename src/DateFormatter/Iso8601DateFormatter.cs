@@ -22,7 +22,7 @@ using System.Text;
 namespace log4net.DateFormatter
 {
 	/// <summary>
-	/// Formats the <see cref="DateTime"/> specified as a string: 'YYYY-MM-dd HH:mm:ss,SSS'.
+	/// Formats the <see cref="DateTime"/> specified as a string: <c>"YYYY-MM-dd HH:mm:ss,SSS"</c>.
 	/// </summary>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
