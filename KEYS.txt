@@ -1,0 +1,50 @@
+This file contains the PGP keys of various Apache developers.
+These keys are primarily used for code signing.
+
+These keys can be verified using any OpenPGP compatible system,
+for example, http://www.gnupg.org.
+
+Developers: To add key information use:
+  gpg --listlkeys UID
+  gpg --export -a UID
+
+User: To import this key file into your keyring use:
+  gpg --import KEYS.txt
+
+
+
+
+pub   1024D/914A4D28 2005-03-07
+uid                  Nicko Cadell <nicko@apache.org>
+sub   2048g/6923CBDA 2005-03-07
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.4.0 (MingW32)
+
+mQGiBEIsjHURBAC9JqRzMEh6pEZuuyqHGwfBkQZnvOuj0Yp88lDsJtNl62cRaQJk
+7eP+kVxCbl12qr1EDz1z/ZON7/+vF9YoiRh7Cydck6wLe/kQcJtUevm00q35pUQJ
+7c2TSY+QbTKWriUKueOyRR6p2lpscUHhbCPB9NOLfQmJvZsa47gDZSybCwCgh0+u
+8KkkcovlV55K/WrSGg16o8kEAKFGmpDKDnv0Sg1rRnvBGJv5WZFR/57p1SArMXHi
+oBkj71wlWz9Ia4tonfc12TXUwoVs3WbIFOoLz1Iw31cGnwUsNkvEclaZigG9iYhx
+S6+2i7jrQIivO5iXJtTuePb4zFgLwZcaoFySvLIKRm8+X6KXvoslKAYM/F/Yd0jm
+OebkA/4uwIt7cGOWGIaiH2n/80QgXN6FyOhNsgCihZZcPwXo7c/gtszpJ74CwtXD
+SVghIwTQ0zK4wtWcHSjf7FelPmeDSga7dLgnxQmmhjIK+sBnPIcBrNiUc3jFnRzK
+o3ZIBPsGoo0jUsemgkiQA4ptVybeak/SmrTsRgxWkT4Paw41zrQfTmlja28gQ2Fk
+ZWxsIDxuaWNrb0BhcGFjaGUub3JnPoheBBMRAgAeBQJCLIx1AhsDBgsJCAcDAgMV
+AgMDFgIBAh4BAheAAAoJEA3R7CqRSk0ooTIAnRZ+vUY+ZN8CgL0fvDbZv76kgQG+
+AJ9vp4BwPLU5jM+YOY3hJPp1bNw1RLkCDQRCLIx/EAgArSrXU4kkXNLCTBIAMaIx
+diiVvQ2JqzrFkXf4yAlE+xiy19bqGewmslt+dLmLUEtt1UFMU5b2kAiZLNMvdBWQ
+OStwK0SABRESjb5sAjAcFXUeqBzjVBDvsSGxJZZa5He1pQMjFzm4hG6GNl3+vOx6
+r6fly9W5Ddc8wqfDb8JU0c6gG8s10D4gthWWyJ2K1u3BcvpggoGyqyxisvF/QM68
+KnXf8/wp+5sOfl6glyluR/OyGMCU3c38eHYU2XMzlcT3fh1VcU5MvPastp+76vUy
+ImrAfb7RhS3sDrmRd9ZS8FE5JRB3967hETRSLjHW+/TZeyvxaGMJkBPdv2BdwnD8
+6wADBQf+NaK8teolegPc1LdmX3bAhR2bhfqIpuUwPBRHqIU2OtWsMJ9sEsVZY4LC
+OLOHMHI1spWHEo39mx3fz5MR4x2z3+HzZRq8tzMFn5PC3c7yb06CMfqRf8pvYWVP
+0cMvEctViAc+xwSpZgXQGLkwZ37KtqWncfBVocxQMj4CVUx3PeyozWGEG+bpGSso
+Mrvnch41AGL3NA9bA2cgTVuOYSXZLK9TOgh4gXCM4jWTI4BqTY5w0riDwqwt5+qH
+e8/HBowGa4jNopl9kWaQuEoXH7GGOTJsc9eKMK+k++iqSWiqVXFTLd7/UhUPv6Oj
+7Pqm7+oSumphn00rC2DVeAAWDt7umohJBBgRAgAJBQJCLIx/AhsMAAoJEA3R7CqR
+Sk0ouF4An1sFuJ+/kJlvKRs+nNjFqrQdsuDCAJ9WDNgUqnAkdLVTRJq8UeK0AjOq
+oQ==
+=4aNz
+-----END PGP PUBLIC KEY BLOCK-----
