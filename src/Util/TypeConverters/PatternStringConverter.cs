@@ -24,20 +24,37 @@ using log4net.Util;
 namespace log4net.Util.TypeConverters
 {
 	/// <summary>
-	/// Implementation of <see cref="IConvertFrom"/> that converts 
-	/// a <see cref="PatternString"/> to a string and a string into
-	/// a <see cref="PatternString"/>.
+	/// Convert between string and <see cref="PatternString"/>
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Supports conversion from string to <see cref="PatternString"/> type, 
+	/// and from a <see cref="PatternString"/> type to a string.
+	/// </para>
+	/// <para>
+	/// The string is used as the <see cref="PatternString.ConversionPattern"/> 
+	/// of the <see cref="PatternString"/>.
+	/// </para>
+	/// </remarks>
+	/// <seealso cref="ConverterRegistry"/>
+	/// <seealso cref="IConvertFrom"/>
+	/// <seealso cref="IConvertTo"/>
 	/// <author>Nicko Cadell</author>
 	public class PatternStringConverter : IConvertTo, IConvertFrom
 	{
 		#region Implementation of IConvertTo
 
 		/// <summary>
-		/// Returns whether this converter can convert the object to the specified type
+		/// Can the target type be converted to the type supported by this object
 		/// </summary>
-		/// <param name="targetType">A Type that represents the type you want to convert to</param>
+		/// <param name="targetType">A <see cref="Type"/> that represents the type you want to convert to</param>
 		/// <returns>true if the conversion is possible</returns>
+		/// <remarks>
+		/// <para>
+		/// Returns <c>true</c> if the <paramref name="targetType"/> is
+		/// assignable from a <see cref="String"/> type.
+		/// </para>
+		/// </remarks>
 		public bool CanConvertTo(Type targetType)
 		{
 			return (typeof(string).IsAssignableFrom(targetType));
@@ -49,6 +66,17 @@ namespace log4net.Util.TypeConverters
 		/// <param name="source">the object to convert</param>
 		/// <param name="targetType">The Type to convert the value parameter to</param>
 		/// <returns>the converted object</returns>
+		/// <remarks>
+		/// <para>
+		/// Uses the <see cref="PatternString.Format"/> method to convert the
+		/// <see cref="PatternString"/> argument to a <see cref="String"/>.
+		/// </para>
+		/// </remarks>
+		/// <exception cref="ConversionNotSupportedException">
+		/// The <paramref name="source"/> object cannot be converted to the
+		/// <paramref name="targetType"/>. To check for this condition use the 
+		/// <see cref="CanConvertTo"/> method.
+		/// </exception>
 		public object ConvertTo(object source, Type targetType)
 		{
 			PatternString patternString = source as PatternString;
@@ -64,13 +92,16 @@ namespace log4net.Util.TypeConverters
 		#region Implementation of IConvertFrom
 
 		/// <summary>
-		/// Overrides the CanConvertFrom method of IConvertFrom.
-		/// The ITypeDescriptorContext interface provides the context for the
-		/// conversion. Typically this interface is used at design time to 
-		/// provide information about the design-time container.
+		/// Can the source type be converted to the type supported by this object
 		/// </summary>
-		/// <param name="sourceType"></param>
-		/// <returns>true if the source is a string</returns>
+		/// <param name="sourceType">the type to convert</param>
+		/// <returns>true if the conversion is possible</returns>
+		/// <remarks>
+		/// <para>
+		/// Returns <c>true</c> if the <paramref name="sourceType"/> is
+		/// the <see cref="String"/> type.
+		/// </para>
+		/// </remarks>
 		public bool CanConvertFrom(System.Type sourceType)
 		{
 			return (sourceType == typeof(string));
@@ -81,6 +112,18 @@ namespace log4net.Util.TypeConverters
 		/// </summary>
 		/// <param name="source">the object to convert to a PatternString</param>
 		/// <returns>the PatternString</returns>
+		/// <remarks>
+		/// <para>
+		/// Creates and returns a new <see cref="PatternString"/> using
+		/// the <paramref name="source"/> <see cref="String"/> as the
+		/// <see cref="PatternString.ConversionPattern"/>.
+		/// </para>
+		/// </remarks>
+		/// <exception cref="ConversionNotSupportedException">
+		/// The <paramref name="source"/> object cannot be converted to the
+		/// target type. To check for this condition use the <see cref="CanConvertFrom"/>
+		/// method.
+		/// </exception>
 		public object ConvertFrom(object source) 
 		{
 			string str = source as string;

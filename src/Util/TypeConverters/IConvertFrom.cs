@@ -24,8 +24,10 @@ namespace log4net.Util.TypeConverters
 	/// Interface supported by type converters
 	/// </summary>
 	/// <remarks>
+	/// <para>
 	/// This interface supports conversion from arbitrary types
 	/// to a single target type. See <see cref="TypeConverterAttribute"/>.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
@@ -36,6 +38,12 @@ namespace log4net.Util.TypeConverters
 		/// </summary>
 		/// <param name="sourceType">the type to convert</param>
 		/// <returns>true if the conversion is possible</returns>
+		/// <remarks>
+		/// <para>
+		/// Test if the <paramref name="sourceType"/> can be converted to the
+		/// type supported by this converter.
+		/// </para>
+		/// </remarks>
 		bool CanConvertFrom(Type sourceType);
 
 		/// <summary>
@@ -43,6 +51,12 @@ namespace log4net.Util.TypeConverters
 		/// </summary>
 		/// <param name="source">the object to convert</param>
 		/// <returns>the converted object</returns>
+		/// <remarks>
+		/// <para>
+		/// Converts the <paramref name="source"/> to the type supported
+		/// by this converter.
+		/// </para>
+		/// </remarks>
 		object ConvertFrom(object source);
 	}
 }

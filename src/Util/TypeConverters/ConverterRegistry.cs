@@ -26,22 +26,36 @@ namespace log4net.Util.TypeConverters
 	/// <summary>
 	/// Register of type converters for specific types.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Maintains a registry of type converters used to convert between
+	/// types.
+	/// </para>
+	/// <para>
+	/// Use the <see cref="AddConverter"/> methods to register new converters.
+	/// The <see cref="GetConvertTo"/> and <see cref="GetConvertFrom"/> methods
+	/// lookup appropriate converters to use.
+	/// </para>
+	/// </remarks>
+	/// <seealso cref="IConvertFrom"/>
+	/// <seealso cref="IConvertTo"/>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	public sealed class ConverterRegistry
 	{
-		#region Internal Instance Constructors
+		#region Private Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ConverterRegistry" /> class.
+		/// Private constructor
 		/// </summary>
+		/// <remarks>
+		/// Initializes a new instance of the <see cref="ConverterRegistry" /> class.
+		/// </remarks>
 		private ConverterRegistry() 
 		{
-			// Initialize the type2converter hashtable
-			m_type2converter = new Hashtable();
 		}
 
-		#endregion Internal Instance Constructors
+		#endregion Private Constructors
 
 		#region Static Constructor
 
@@ -49,13 +63,12 @@ namespace log4net.Util.TypeConverters
 		/// Static constructor.
 		/// </summary>
 		/// <remarks>
-		/// This constructor defines the intrinsic type converters
+		/// <para>
+		/// This constructor defines the intrinsic type converters.
+		/// </para>
 		/// </remarks>
 		static ConverterRegistry()
 		{
-			// Create the registry
-			s_registry = new ConverterRegistry();
-
 			// Add predefined converters here
 			AddConverter(typeof(bool), typeof(BooleanConverter));
 			AddConverter(typeof(System.Text.Encoding), typeof(EncodingConverter));
@@ -73,11 +86,19 @@ namespace log4net.Util.TypeConverters
 		/// </summary>
 		/// <param name="destinationType">The type being converted to.</param>
 		/// <param name="converter">The type converter to use to convert to the destination type.</param>
+		/// <remarks>
+		/// <para>
+		/// Adds a converter instance for a specific type.
+		/// </para>
+		/// </remarks>
 		public static void AddConverter(Type destinationType, object converter)
 		{
 			if (destinationType != null && converter != null)
 			{
-				s_registry.m_type2converter[destinationType] = converter;
+				lock(s_type2converter)
+				{
+					s_type2converter[destinationType] = converter;
+				}
 			}
 		}
 
@@ -86,6 +107,11 @@ namespace log4net.Util.TypeConverters
 		/// </summary>
 		/// <param name="destinationType">The type being converted to.</param>
 		/// <param name="converterType">The type of the type converter to use to convert to the destination type.</param>
+		/// <remarks>
+		/// <para>
+		/// Adds a converter <see cref="Type"/> for a specific type.
+		/// </para>
+		/// </remarks>
 		public static void AddConverter(Type destinationType, Type converterType)
 		{
 			AddConverter(destinationType, CreateConverterInstance(converterType));
@@ -100,6 +126,11 @@ namespace log4net.Util.TypeConverters
 		/// The type converter instance to use for type conversions or <c>null</c> 
 		/// if no type converter is found.
 		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// Gets the type converter to use to convert values to the destination type.
+		/// </para>
+		/// </remarks>
 		public static IConvertTo GetConvertTo(Type sourceType, Type destinationType)
 		{
 			// TODO: Support inheriting type converters.
@@ -107,22 +138,25 @@ namespace log4net.Util.TypeConverters
 
 			// TODO: Is destinationType required? We don't use it for anything.
 
-			// Lookup in the static registry
-			IConvertTo converter = s_registry.m_type2converter[sourceType] as IConvertTo;
-
-			if (converter == null)
+			lock(s_type2converter)
 			{
-				// Lookup using attributes
-				converter = GetConverterFromAttribute(sourceType) as IConvertTo;
+				// Lookup in the static registry
+				IConvertTo converter = s_type2converter[sourceType] as IConvertTo;
 
-				if (converter != null)
+				if (converter == null)
 				{
-					// Store in registry
-					s_registry.m_type2converter[sourceType] = converter;
-				}
-			}
+					// Lookup using attributes
+					converter = GetConverterFromAttribute(sourceType) as IConvertTo;
 
-			return converter;
+					if (converter != null)
+					{
+						// Store in registry
+						s_type2converter[sourceType] = converter;
+					}
+				}
+
+				return converter;
+			}
 		}
 
 		/// <summary>
@@ -133,27 +167,35 @@ namespace log4net.Util.TypeConverters
 		/// The type converter instance to use for type conversions or <c>null</c> 
 		/// if no type converter is found.
 		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// Gets the type converter to use to convert values to the destination type.
+		/// </para>
+		/// </remarks>
 		public static IConvertFrom GetConvertFrom(Type destinationType)
 		{
 			// TODO: Support inheriting type converters.
 			// i.e. getting a type converter for a base of destinationType
 
-			// Lookup in the static registry
-			IConvertFrom converter = s_registry.m_type2converter[destinationType] as IConvertFrom;
-
-			if (converter == null)
+			lock(s_type2converter)
 			{
-				// Lookup using attributes
-				converter = GetConverterFromAttribute(destinationType) as IConvertFrom;
+				// Lookup in the static registry
+				IConvertFrom converter = s_type2converter[destinationType] as IConvertFrom;
 
-				if (converter != null)
+				if (converter == null)
 				{
-					// Store in registry
-					s_registry.m_type2converter[destinationType] = converter;
-				}
-			}
+					// Lookup using attributes
+					converter = GetConverterFromAttribute(destinationType) as IConvertFrom;
 
-			return converter;
+					if (converter != null)
+					{
+						// Store in registry
+						s_type2converter[destinationType] = converter;
+					}
+				}
+
+				return converter;
+			}
 		}
 		
 		/// <summary>
@@ -187,24 +229,40 @@ namespace log4net.Util.TypeConverters
 		/// Creates the instance of the type converter.
 		/// </summary>
 		/// <param name="converterType">The type of the type converter.</param>
+		/// <returns>
+		/// The type converter instance to use for type conversions or <c>null</c> 
+		/// if no type converter is found.
+		/// </returns>
 		/// <remarks>
+		/// <para>
 		/// The type specified for the type converter must implement 
 		/// the <see cref="IConvertFrom"/> or <see cref="IConvertTo"/> interfaces 
 		/// and must have a public default (no argument) constructor.
+		/// </para>
 		/// </remarks>
-		/// <returns>
-		/// The type converter instance to use for type conversions or <c>null</c> 
-		/// if no type converter is found.</returns>
 		private static object CreateConverterInstance(Type converterType)
 		{
-			if (converterType != null)
+			if (converterType == null)
 			{
-				// Check type is a converter
-				if (typeof(IConvertFrom).IsAssignableFrom(converterType) || typeof(IConvertTo).IsAssignableFrom(converterType))
+				throw new ArgumentNullException("converterType", "CreateConverterInstance cannot create instance, converterType is null");
+			}
+
+			// Check type is a converter
+			if (typeof(IConvertFrom).IsAssignableFrom(converterType) || typeof(IConvertTo).IsAssignableFrom(converterType))
+			{
+				try
 				{
 					// Create the type converter
 					return Activator.CreateInstance(converterType);
 				}
+				catch(Exception ex)
+				{
+					LogLog.Error("ConverterRegistry: Cannot CreateConverterInstance of type ["+converterType.FullName+"], Exception in call to Activator.CreateInstance", ex);
+				}
+			}
+			else
+			{
+				LogLog.Error("ConverterRegistry: Cannot CreateConverterInstance of type ["+converterType.FullName+"], type does not implement IConvertFrom or IConvertTo");
 			}
 			return null;
 		}
@@ -214,18 +272,9 @@ namespace log4net.Util.TypeConverters
 		#region Private Static Fields
 
 		/// <summary>
-		/// The singleton registry.
-		/// </summary>
-		private static ConverterRegistry s_registry;
-
-		#endregion
-
-		#region Private Instance Fields
-
-		/// <summary>
 		/// Mapping from <see cref="Type" /> to type converter.
 		/// </summary>
-		private Hashtable m_type2converter;
+		private static Hashtable s_type2converter = new Hashtable();
 
 		#endregion
 	}

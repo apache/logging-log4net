@@ -21,13 +21,18 @@ using System;
 namespace log4net.Util.TypeConverters
 {
 	/// <summary>
-	/// Class and Interface level attribute that specifies a type converter
-	/// to use with the associated type.
+	/// Attribute used to associate a type converter
 	/// </summary>
 	/// <remarks>
+	/// <para>
+	/// Class and Interface level attribute that specifies a type converter
+	/// to use with the associated type.
+	/// </para>
+	/// <para>
 	/// To associate a type converter with a target type apply a
 	/// <c>TypeConverterAttribute</c> to the target type. Specify the
 	/// type of the type converter on the attribute.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
@@ -48,6 +53,11 @@ namespace log4net.Util.TypeConverters
 		/// <summary>
 		/// Default constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Default constructor
+		/// </para>
+		/// </remarks>
 		public TypeConverterAttribute()
 		{
 		}
@@ -57,8 +67,10 @@ namespace log4net.Util.TypeConverters
 		/// </summary>
 		/// <param name="typeName">The string type name of the type converter</param>
 		/// <remarks>
+		/// <para>
 		/// The type specified must implement the <see cref="IConvertFrom"/> 
 		/// or the <see cref="IConvertTo"/> interfaces.
+		/// </para>
 		/// </remarks>
 		public TypeConverterAttribute(string typeName)
 		{
@@ -70,8 +82,10 @@ namespace log4net.Util.TypeConverters
 		/// </summary>
 		/// <param name="converterType">The type of the type converter</param>
 		/// <remarks>
+		/// <para>
 		/// The type specified must implement the <see cref="IConvertFrom"/> 
 		/// or the <see cref="IConvertTo"/> interfaces.
+		/// </para>
 		/// </remarks>
 		public TypeConverterAttribute(Type converterType)
 		{
@@ -87,8 +101,10 @@ namespace log4net.Util.TypeConverters
 		/// The string type name of the type converter 
 		/// </value>
 		/// <remarks>
+		/// <para>
 		/// The type specified must implement the <see cref="IConvertFrom"/> 
 		/// or the <see cref="IConvertTo"/> interfaces.
+		/// </para>
 		/// </remarks>
 		public string ConverterTypeName
 		{

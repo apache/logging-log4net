@@ -24,22 +24,36 @@ using log4net.Layout;
 namespace log4net.Util.TypeConverters
 {
 	/// <summary>
-	/// Implementation of <see cref="IConvertFrom"/> that converts 
-	/// a string into a <see cref="PatternLayout"/>.
+	/// Supports conversion from string to <see cref="PatternLayout"/> type.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Supports conversion from string to <see cref="PatternLayout"/> type.
+	/// </para>
+	/// <para>
+	/// The string is used as the <see cref="PatternLayout.ConversionPattern"/> 
+	/// of the <see cref="PatternLayout"/>.
+	/// </para>
+	/// </remarks>
+	/// <seealso cref="ConverterRegistry"/>
+	/// <seealso cref="IConvertFrom"/>
+	/// <seealso cref="IConvertTo"/>
 	/// <author>Nicko Cadell</author>
 	public class PatternLayoutConverter : IConvertFrom
 	{
 		#region Implementation of IConvertFrom
 
 		/// <summary>
-		/// Overrides the CanConvertFrom method of IConvertFrom.
-		/// The ITypeDescriptorContext interface provides the context for the
-		/// conversion. Typically this interface is used at design time to 
-		/// provide information about the design-time container.
+		/// Can the source type be converted to the type supported by this object
 		/// </summary>
-		/// <param name="sourceType"></param>
-		/// <returns>true if the source is a string</returns>
+		/// <param name="sourceType">the type to convert</param>
+		/// <returns>true if the conversion is possible</returns>
+		/// <remarks>
+		/// <para>
+		/// Returns <c>true</c> if the <paramref name="sourceType"/> is
+		/// the <see cref="String"/> type.
+		/// </para>
+		/// </remarks>
 		public bool CanConvertFrom(System.Type sourceType)
 		{
 			return (sourceType == typeof(string));
@@ -50,6 +64,18 @@ namespace log4net.Util.TypeConverters
 		/// </summary>
 		/// <param name="source">the object to convert to a PatternLayout</param>
 		/// <returns>the PatternLayout</returns>
+		/// <remarks>
+		/// <para>
+		/// Creates and returns a new <see cref="PatternLayout"/> using
+		/// the <paramref name="source"/> <see cref="String"/> as the
+		/// <see cref="PatternLayout.ConversionPattern"/>.
+		/// </para>
+		/// </remarks>
+		/// <exception cref="ConversionNotSupportedException">
+		/// The <paramref name="source"/> object cannot be converted to the
+		/// target type. To check for this condition use the <see cref="CanConvertFrom"/>
+		/// method.
+		/// </exception>
 		public object ConvertFrom(object source) 
 		{
 			string str = source as string;

@@ -22,9 +22,16 @@ using System.Text;
 namespace log4net.Util.TypeConverters
 {
 	/// <summary>
-	/// Implementation of <see cref="IConvertFrom"/> that converts an <see cref="Encoding"/>
-	/// instance from a string.
+	/// Supports conversion from string to <see cref="Encoding"/> type.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Supports conversion from string to <see cref="Encoding"/> type.
+	/// </para>
+	/// </remarks>
+	/// <seealso cref="ConverterRegistry"/>
+	/// <seealso cref="IConvertFrom"/>
+	/// <seealso cref="IConvertTo"/>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	public class EncodingConverter : IConvertFrom 
@@ -32,13 +39,16 @@ namespace log4net.Util.TypeConverters
 		#region Implementation of IConvertFrom
 
 		/// <summary>
-		/// Overrides the CanConvertFrom method of IConvertFrom.
-		/// The ITypeDescriptorContext interface provides the context for the
-		/// conversion. Typically this interface is used at design time to 
-		/// provide information about the design-time container.
+		/// Can the source type be converted to the type supported by this object
 		/// </summary>
-		/// <param name="sourceType"></param>
-		/// <returns>true if the source is a string</returns>
+		/// <param name="sourceType">the type to convert</param>
+		/// <returns>true if the conversion is possible</returns>
+		/// <remarks>
+		/// <para>
+		/// Returns <c>true</c> if the <paramref name="sourceType"/> is
+		/// the <see cref="String"/> type.
+		/// </para>
+		/// </remarks>
 		public bool CanConvertFrom(Type sourceType) 
 		{
 			return (sourceType == typeof(string));
@@ -49,6 +59,17 @@ namespace log4net.Util.TypeConverters
 		/// </summary>
 		/// <param name="source">the object to convert to an encoding</param>
 		/// <returns>the encoding</returns>
+		/// <remarks>
+		/// <para>
+		/// Uses the <see cref="Encoding.GetEncoding"/> method to convert the
+		/// <see cref="String"/> argument to an <see cref="Encoding"/>.
+		/// </para>
+		/// </remarks>
+		/// <exception cref="ConversionNotSupportedException">
+		/// The <paramref name="source"/> object cannot be converted to the
+		/// target type. To check for this condition use the <see cref="CanConvertFrom"/>
+		/// method.
+		/// </exception>
 		public object ConvertFrom(object source) 
 		{
 			string str = source as string;

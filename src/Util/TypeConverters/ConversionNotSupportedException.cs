@@ -41,28 +41,42 @@ namespace log4net.Util.TypeConverters
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ConversionNotSupportedException" /> class.
+		/// Constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="ConversionNotSupportedException" /> class.
+		/// </para>
+		/// </remarks>
 		public ConversionNotSupportedException()
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ConversionNotSupportedException" /> class
-		/// with the specified message.
+		/// Constructor
 		/// </summary>
 		/// <param name="message">A message to include with the exception.</param>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="ConversionNotSupportedException" /> class
+		/// with the specified message.
+		/// </para>
+		/// </remarks>
 		public ConversionNotSupportedException(String message) : base(message) 
 		{
 		}
-
 		
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ConversionNotSupportedException" /> class
-		/// with the specified message and inner exception.
+		/// Constructor
 		/// </summary>
 		/// <param name="message">A message to include with the exception.</param>
 		/// <param name="innerException">A nested exception to include.</param>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="ConversionNotSupportedException" /> class
+		/// with the specified message and inner exception.
+		/// </para>
+		/// </remarks>
 		public ConversionNotSupportedException(String message, Exception innerException) : base(message, innerException) 
 		{
 		}
@@ -73,11 +87,16 @@ namespace log4net.Util.TypeConverters
 
 #if !NETCF
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ConversionNotSupportedException" /> class 
-		/// with serialized data.
+		/// Serialization constructor
 		/// </summary>
 		/// <param name="info">The <see cref="SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
 		/// <param name="context">The <see cref="StreamingContext" /> that contains contextual information about the source or destination.</param>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="ConversionNotSupportedException" /> class 
+		/// with serialized data.
+		/// </para>
+		/// </remarks>
 		protected ConversionNotSupportedException(SerializationInfo info, StreamingContext context) : base(info, context) 
 		{
 		}
@@ -93,6 +112,11 @@ namespace log4net.Util.TypeConverters
 		/// <param name="destinationType">The conversion destination type.</param>
 		/// <param name="sourceValue">The value to convert.</param>
 		/// <returns>An instance of the <see cref="ConversionNotSupportedException" />.</returns>
+		/// <remarks>
+		/// <para>
+		/// Creates a new instance of the <see cref="ConversionNotSupportedException" /> class.
+		/// </para>
+		/// </remarks>
 		public static ConversionNotSupportedException Create(Type destinationType, object sourceValue)
 		{
 			if (sourceValue == null)
