@@ -31,7 +31,7 @@ namespace log4net.Layout
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// Formats the log events according to the http://jakarta.apache.org/log4j schema.
+	/// Formats the log events according to the http://logging.apache.org/log4j schema.
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
