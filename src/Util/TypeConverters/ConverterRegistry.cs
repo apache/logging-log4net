@@ -103,8 +103,10 @@ namespace log4net.Util.TypeConverters
 		public static IConvertTo GetConvertTo(Type sourceType, Type destinationType)
 		{
 			// TODO: Support inheriting type converters.
+			// i.e. getting a type converter for a base of sourceType
 
-			// i.e. getting a type converter for a base of destinationType
+			// TODO: Is destinationType required? We don't use it for anything.
+
 			// Lookup in the static registry
 			IConvertTo converter = s_registry.m_type2converter[sourceType] as IConvertTo;
 
@@ -134,8 +136,8 @@ namespace log4net.Util.TypeConverters
 		public static IConvertFrom GetConvertFrom(Type destinationType)
 		{
 			// TODO: Support inheriting type converters.
-
 			// i.e. getting a type converter for a base of destinationType
+
 			// Lookup in the static registry
 			IConvertFrom converter = s_registry.m_type2converter[destinationType] as IConvertFrom;
 

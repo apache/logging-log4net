@@ -51,9 +51,10 @@ namespace log4net.Util.TypeConverters
 		/// <returns>the encoding</returns>
 		public object ConvertFrom(object source) 
 		{
-			if (source is string) 
+			string str = source as string;
+			if (str != null) 
 			{
-				return Encoding.GetEncoding((string)source);
+				return Encoding.GetEncoding(str);
 			}
 			throw ConversionNotSupportedException.Create(typeof(Encoding), source);
 		}

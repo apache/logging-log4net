@@ -961,9 +961,10 @@ namespace log4net.Layout
 			PatternConverter curConverter = m_head;
 			while(curConverter != null)
 			{
-				if (curConverter is PatternLayoutConverter)
+				PatternLayoutConverter layoutConverter = curConverter as PatternLayoutConverter;
+				if (layoutConverter != null)
 				{
-					if (!((PatternLayoutConverter)curConverter).IgnoresException)
+					if (!layoutConverter.IgnoresException)
 					{
 						// Found converter that handles the exception
 						this.IgnoresException = false;

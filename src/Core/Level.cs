@@ -289,9 +289,10 @@ namespace log4net.Core
 		/// <exception cref="ArgumentException"><paramref name="r" /> is not a <see cref="Level" />.</exception>
 		public int CompareTo(object r)
 		{
-			if (r is Level)
+			Level target = r as Level;
+			if (target != null)
 			{
-				return Compare(this, (Level) r);
+				return Compare(this, target);
 			}
 			throw new ArgumentException("Parameter: r, Value: [" + r + "] is not an instance of Level");
 		}
@@ -465,6 +466,12 @@ namespace log4net.Core
 		/// </remarks>
 		public static int Compare(Level l, Level r)
 		{
+			// Reference equals
+			if ((object)l == (object)r)
+			{
+				return 0;
+			}
+
 			if (l == null && r == null)
 			{
 				return 0;

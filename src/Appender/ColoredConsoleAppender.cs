@@ -403,9 +403,9 @@ namespace log4net.Appender
 			out UInt32 written,
 			IntPtr reserved);
 
-		//private static readonly UInt32 STD_INPUT_HANDLE = unchecked((UInt32)(-10));
-		private static readonly UInt32 STD_OUTPUT_HANDLE = unchecked((UInt32)(-11));
-		private static readonly UInt32 STD_ERROR_HANDLE = unchecked((UInt32)(-12));
+		//private const UInt32 STD_INPUT_HANDLE = unchecked((UInt32)(-10));
+		private const UInt32 STD_OUTPUT_HANDLE = unchecked((UInt32)(-11));
+		private const UInt32 STD_ERROR_HANDLE = unchecked((UInt32)(-12));
 
 		[DllImport("Kernel32.dll", SetLastError=true, CharSet=CharSet.Auto)]
 		private static extern IntPtr GetStdHandle(

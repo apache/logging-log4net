@@ -51,9 +51,10 @@ namespace log4net.Util.TypeConverters
 		/// <returns>the converted object</returns>
 		public object ConvertTo(object source, Type targetType)
 		{
-			if (typeof(string).IsAssignableFrom(targetType) && source is PatternString)
+			PatternString patternString = source as PatternString;
+			if (patternString != null && CanConvertTo(targetType))
 			{
-				return ((PatternString)source).Format();
+				return patternString.Format();
 			}
 			throw ConversionNotSupportedException.Create(targetType, source);
 		}
@@ -82,9 +83,10 @@ namespace log4net.Util.TypeConverters
 		/// <returns>the PatternString</returns>
 		public object ConvertFrom(object source) 
 		{
-			if (source is string) 
+			string str = source as string;
+			if (str != null)
 			{
-				return new PatternString((string)source);
+				return new PatternString(str);
 			}
 			throw ConversionNotSupportedException.Create(typeof(PatternString), source);
 		}

@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Globalization;
 
 using log4net.Repository;
 
@@ -196,8 +197,13 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behavior
+		/// <c>String.Format</c> for details of the syntax of the format string and the behavior
 		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// The string is formatted using the <see cref="CultureInfo.InvariantCulture"/>
+		/// format provider. To specify a localized provider use the
+		/// <see cref="DebugFormat(IFormatProvider,string,object[])"/> method.
 		/// </para>
 		/// <para>
 		/// This method does not take an <see cref="Exception"/> object to include in the
@@ -207,7 +213,7 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void DebugFormat(string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelDebug, String.Format(format, args), null);
+			Logger.Log(ThisDeclaringType, m_levelDebug, String.Format(CultureInfo.InvariantCulture, format, args), null);
 		}
 
 		/// <summary>
@@ -219,7 +225,7 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behavior
+		/// <c>String.Format</c> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
@@ -290,8 +296,13 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behavior
+		/// <c>String.Format</c> for details of the syntax of the format string and the behavior
 		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// The string is formatted using the <see cref="CultureInfo.InvariantCulture"/>
+		/// format provider. To specify a localized provider use the
+		/// <see cref="InfoFormat(IFormatProvider,string,object[])"/> method.
 		/// </para>
 		/// <para>
 		/// This method does not take an <see cref="Exception"/> object to include in the
@@ -301,7 +312,7 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void InfoFormat(string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelInfo, String.Format(format, args), null);
+			Logger.Log(ThisDeclaringType, m_levelInfo, String.Format(CultureInfo.InvariantCulture, format, args), null);
 		}
 
 		/// <summary>
@@ -313,7 +324,7 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behavior
+		/// <c>String.Format</c> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
@@ -384,8 +395,13 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behavior
+		/// <c>String.Format</c> for details of the syntax of the format string and the behavior
 		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// The string is formatted using the <see cref="CultureInfo.InvariantCulture"/>
+		/// format provider. To specify a localized provider use the
+		/// <see cref="WarnFormat(IFormatProvider,string,object[])"/> method.
 		/// </para>
 		/// <para>
 		/// This method does not take an <see cref="Exception"/> object to include in the
@@ -395,7 +411,7 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void WarnFormat(string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelWarn, String.Format(format, args), null);
+			Logger.Log(ThisDeclaringType, m_levelWarn, String.Format(CultureInfo.InvariantCulture, format, args), null);
 		}
 
 		/// <summary>
@@ -407,7 +423,7 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behavior
+		/// <c>String.Format</c> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
@@ -478,8 +494,13 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behavior
+		/// <c>String.Format</c> for details of the syntax of the format string and the behavior
 		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// The string is formatted using the <see cref="CultureInfo.InvariantCulture"/>
+		/// format provider. To specify a localized provider use the
+		/// <see cref="ErrorFormat(IFormatProvider,string,object[])"/> method.
 		/// </para>
 		/// <para>
 		/// This method does not take an <see cref="Exception"/> object to include in the
@@ -489,7 +510,7 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void ErrorFormat(string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelError, String.Format(format, args), null);
+			Logger.Log(ThisDeclaringType, m_levelError, String.Format(CultureInfo.InvariantCulture, format, args), null);
 		}
 
 		/// <summary>
@@ -501,7 +522,7 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behavior
+		/// <c>String.Format</c> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
@@ -572,8 +593,13 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behavior
+		/// <c>String.Format</c> for details of the syntax of the format string and the behavior
 		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// The string is formatted using the <see cref="CultureInfo.InvariantCulture"/>
+		/// format provider. To specify a localized provider use the
+		/// <see cref="FatalFormat(IFormatProvider,string,object[])"/> method.
 		/// </para>
 		/// <para>
 		/// This method does not take an <see cref="Exception"/> object to include in the
@@ -583,7 +609,7 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void FatalFormat(string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelFatal, String.Format(format, args), null);
+			Logger.Log(ThisDeclaringType, m_levelFatal, String.Format(CultureInfo.InvariantCulture, format, args), null);
 		}
 
 		/// <summary>
@@ -595,7 +621,7 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// The message is formatted using the <see cref="String.Format"/> method. See
-		/// String.Format for details of the syntax of the format string and the behavior
+		/// <c>String.Format</c> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>

@@ -510,9 +510,10 @@ namespace log4net.Repository.Hierarchy
 			{
 				appenderList.Add(appender);
 
-				if (appender is IAppenderAttachable)
+				IAppenderAttachable container = appender as IAppenderAttachable;
+				if (container != null)
 				{
-					CollectAppenders(appenderList, (IAppenderAttachable)appender);
+					CollectAppenders(appenderList, container);
 				}
 			}
 		}
@@ -704,25 +705,27 @@ namespace log4net.Repository.Hierarchy
 					OnLoggerCreationEvent(logger);
 					return logger;
 				} 
-				else if (node is Logger) 
+				
+				Logger nodeLogger = node as Logger;
+				if (nodeLogger != null) 
 				{
-					return (Logger)node;
+					return nodeLogger;
 				} 
-				else if (node is ProvisionNode) 
+				
+				ProvisionNode nodeProvisionNode = node as ProvisionNode;
+				if (nodeProvisionNode != null) 
 				{
 					logger = factory.CreateLogger(name);
 					logger.Hierarchy = this; 
 					m_ht[key] = logger;
-					UpdateChildren((ProvisionNode)node, logger);
+					UpdateChildren(nodeProvisionNode, logger);
 					UpdateParents(logger);	
 					OnLoggerCreationEvent(logger);
 					return logger;
 				}
-				else 
-				{
-					// It should be impossible to arrive here
-					return null;  // but let's keep the compiler happy.
-				}
+
+				// It should be impossible to arrive here but let's keep the compiler happy.
+				return null;
 			}
 		}
 
@@ -804,20 +807,28 @@ namespace log4net.Repository.Hierarchy
 					ProvisionNode pn = new ProvisionNode(log);
 					m_ht[key] = pn;
 				} 
-				else if (node is Logger) 
-				{
-					parentFound = true;
-					log.Parent = (Logger)node;
-					break; // no need to update the ancestors of the closest ancestor
-				} 
-				else if (node is ProvisionNode) 
-				{
-					((ProvisionNode)node).Add(log);
-				} 
 				else
 				{
-					LogLog.Error("unexpected object type ["+node.GetType()+"] in ht.", new LogException());
-				}
+					Logger nodeLogger = node as Logger;
+					if (nodeLogger != null)
+					{
+						parentFound = true;
+						log.Parent = nodeLogger;
+						break; // no need to update the ancestors of the closest ancestor
+					}
+					else
+					{
+						ProvisionNode nodeProvisionNode = node as ProvisionNode;
+						if (nodeProvisionNode != null)
+						{
+							nodeProvisionNode.Add(log);
+						}
+						else
+						{
+							LogLog.Error("unexpected object type ["+node.GetType()+"] in ht.", new LogException());
+						}
+					} 
+				} 
 			}
 
 			// If we could not find any existing parents, then link with root.

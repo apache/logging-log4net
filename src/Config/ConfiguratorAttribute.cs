@@ -85,23 +85,23 @@ namespace log4net.Config
 		/// </remarks>
 		public int CompareTo(object obj)
 		{
+			// Reference equals
+			if ((object)this == obj)
+			{
+				return 0;
+			}
+
 			int result = -1;
 
-			if (obj != null && obj is ConfiguratorAttribute)
+			ConfiguratorAttribute target = obj as ConfiguratorAttribute;
+			if (target != null)
 			{
-				if (obj == (object)this)
+				// Compare the priorities
+				result = target.m_priority.CompareTo(m_priority);
+				if (result == 0)
 				{
-					result = 0;
-				}
-				else
-				{
-					// Compare the priorities
-					result = ((ConfiguratorAttribute)obj).m_priority.CompareTo(m_priority);
-					if (result == 0)
-					{
-						// Same priority, so have to provider some ordering
-						result = -1;
-					}
+					// Same priority, so have to provide some ordering
+					result = -1;
 				}
 			}
 			return result;

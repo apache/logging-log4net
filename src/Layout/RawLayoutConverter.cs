@@ -74,9 +74,10 @@ namespace log4net.Layout
 		/// </remarks>
 		public object ConvertFrom(object source) 
 		{
-			if (source is ILayout) 
+			ILayout layout = source as ILayout;
+			if (layout != null) 
 			{
-				return new Layout2RawLayoutAdapter((ILayout)source);
+				return new Layout2RawLayoutAdapter(layout);
 			}
 			throw ConversionNotSupportedException.Create(typeof(IRawLayout), source);
 		}

@@ -469,7 +469,20 @@ namespace log4net.Appender
 		/// </remarks>
 		public static int GeneratePriority(SyslogFacility facility, SyslogSeverity severity)
 		{
-			return ((int)facility * 8) + (int)severity;
+			if (facility < SyslogFacility.Kernel || facility > SyslogFacility.Local7)
+			{
+				throw new ArgumentException("SyslogFacility out of range", "facility");
+			}
+
+			if (severity < SyslogSeverity.Emergency || severity > SyslogSeverity.Debug)
+			{
+				throw new ArgumentException("SyslogSeverity out of range", "severity");
+			}
+
+			unchecked
+			{
+				return ((int)facility * 8) + (int)severity;
+			}
 		}
 
 		#endregion Public Static Members

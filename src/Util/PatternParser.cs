@@ -310,9 +310,10 @@ namespace log4net.Util
 				pc.FormattingInfo = formattingInfo;
 				pc.Option = option;
 
-				if (pc is IOptionHandler)
+				IOptionHandler optionHandler = pc as IOptionHandler;
+				if (optionHandler != null)
 				{
-					((IOptionHandler)pc).ActivateOptions();
+					optionHandler.ActivateOptions();
 				}
 
 				AddConverter(pc);

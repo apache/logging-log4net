@@ -242,11 +242,11 @@ namespace log4net.Repository.Hierarchy
 
 				if (appenderName != null && appenderName.Length > 0)
 				{
-					foreach (XmlNode node in appenderRef.OwnerDocument.GetElementsByTagName(APPENDER_TAG))
+					foreach (XmlElement curAppenderElement in appenderRef.OwnerDocument.GetElementsByTagName(APPENDER_TAG))
 					{
-						if (((XmlElement)node).GetAttribute("name") == appenderName)
+						if (curAppenderElement.GetAttribute("name") == appenderName)
 						{
-							element = (XmlElement)node;
+							element = curAppenderElement;
 							break;
 						}
 					}
@@ -302,14 +302,16 @@ namespace log4net.Repository.Hierarchy
 						if (currentElement.LocalName == APPENDER_REF_TAG)
 						{
 							string refName = currentElement.GetAttribute(REF_ATTR);
-							if (appender is IAppenderAttachable) 
+
+							IAppenderAttachable appenderContainer = appender as IAppenderAttachable;
+							if (appenderContainer != null) 
 							{
-								IAppenderAttachable aa = (IAppenderAttachable) appender;
 								LogLog.Debug("XmlConfigurator: Attaching appender named [" + refName + "] to appender named [" + appender.Name + "].");
-								IAppender a = FindAppenderByReference(currentElement);
-								if (a != null)
+
+								IAppender referencedAppender = FindAppenderByReference(currentElement);
+								if (referencedAppender != null)
 								{
-									aa.AddAppender(a);
+									appenderContainer.AddAppender(referencedAppender);
 								}
 							} 
 							else 
@@ -324,17 +326,20 @@ namespace log4net.Repository.Hierarchy
 						}
 					}
 				}
-				if (appender is IOptionHandler) 
+
+				IOptionHandler optionHandler = appender as IOptionHandler;
+				if (optionHandler != null) 
 				{
-					((IOptionHandler) appender).ActivateOptions();
+					optionHandler.ActivateOptions();
 				}
 
 				LogLog.Debug("XmlConfigurator: Created Appender [" + appenderName + "]");	
 				return appender;
 			}
-				/* Yes, it's ugly.  But all of these exceptions point to the same problem: we can't create an Appender */
 			catch (Exception ex) 
 			{
+				// Yes, it's ugly.  But all exceptions point to the same problem: we can't create an Appender
+
 				LogLog.Error("XmlConfigurator: Could not create Appender [" + appenderName + "] of type [" + typeName + "]. Reported error follows.", ex);
 				return null;
 			}
@@ -436,9 +441,11 @@ namespace log4net.Repository.Hierarchy
 					}
 				}
 			}
-			if (log is IOptionHandler) 
+
+			IOptionHandler optionHandler = log as IOptionHandler;
+			if (optionHandler != null) 
 			{
-				((IOptionHandler) log).ActivateOptions();
+				optionHandler.ActivateOptions();
 			}
 		}
 
@@ -889,7 +896,7 @@ namespace log4net.Repository.Hierarchy
 				}
 			}
 
-			// Look for the default constructor
+			// Create using the default constructor
 			object createdObject = null;
 			try
 			{
@@ -910,9 +917,10 @@ namespace log4net.Repository.Hierarchy
 			}
 
 			// Check if we need to call ActivateOptions
-			if (createdObject is IOptionHandler)
+			IOptionHandler optionHandler = createdObject as IOptionHandler;
+			if (optionHandler != null)
 			{
-				((IOptionHandler) createdObject).ActivateOptions();
+				optionHandler.ActivateOptions();
 			}
 
 			// Ok object should be initialized

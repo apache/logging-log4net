@@ -56,7 +56,7 @@ namespace log4net.Util
 		/// See the <see cref="WindowsSecurityContext.Credentials"/> property for
 		/// details.
 		/// </remarks>
-		public enum ImpersonationModes
+		public enum ImpersonationMode
 		{
 			/// <summary>
 			/// Impersonate a user using the credentials supplied
@@ -71,7 +71,7 @@ namespace log4net.Util
 
 		#region Member Variables
 
-		private ImpersonationModes m_impersonationMode = ImpersonationModes.User;
+		private ImpersonationMode m_impersonationMode = ImpersonationMode.User;
 		private string m_userName;
 		private string m_domainName = Environment.MachineName;
 		private string m_password;
@@ -99,25 +99,25 @@ namespace log4net.Util
 		/// <para>
 		/// Impersonate either a user with user credentials or
 		/// revert this thread to the credentials of the process.
-		/// The value is one of the <see cref="ImpersonationModes"/>
+		/// The value is one of the <see cref="ImpersonationMode"/>
 		/// enum.
 		/// </para>
 		/// <para>
-		/// The default value is <see cref="ImpersonationModes.User"/>
+		/// The default value is <see cref="ImpersonationMode.User"/>
 		/// </para>
 		/// <para>
-		/// When the mode is set to <see cref="ImpersonationModes.User"/>
+		/// When the mode is set to <see cref="ImpersonationMode.User"/>
 		/// the user's credentials are established using the
 		/// <see cref="UserName"/>, <see cref="DomainName"/> and <see cref="Password"/>
 		/// values.
 		/// </para>
 		/// <para>
-		/// When the mode is set to <see cref="ImpersonationModes.Process"/>
+		/// When the mode is set to <see cref="ImpersonationMode.Process"/>
 		/// no other properties need to be set. If the calling thread is 
 		/// impersonating then it will be reverted back to the process credentials.
 		/// </para>
 		/// </remarks>
-		public ImpersonationModes Credentials
+		public ImpersonationMode Credentials
 		{
 			get { return m_impersonationMode; }
 			set { m_impersonationMode = value; }
@@ -129,7 +129,7 @@ namespace log4net.Util
 		/// <remarks>
 		/// <para>
 		/// This property must be set if <see cref="Credentials"/>
-		/// is set to <see cref="ImpersonationModes.User"/> (the default setting).
+		/// is set to <see cref="ImpersonationMode.User"/> (the default setting).
 		/// </para>
 		/// </remarks>
 		public string UserName
@@ -148,7 +148,7 @@ namespace log4net.Util
 		/// </para>
 		/// <para>
 		/// This property must be set if <see cref="Credentials"/>
-		/// is set to <see cref="ImpersonationModes.User"/> (the default setting).
+		/// is set to <see cref="ImpersonationMode.User"/> (the default setting).
 		/// </para>
 		/// </remarks>
 		public string DomainName
@@ -163,7 +163,7 @@ namespace log4net.Util
 		/// <remarks>
 		/// <para>
 		/// This property must be set if <see cref="Credentials"/>
-		/// is set to <see cref="ImpersonationModes.User"/> (the default setting).
+		/// is set to <see cref="ImpersonationMode.User"/> (the default setting).
 		/// </para>
 		/// </remarks>
 		public string Password
@@ -200,7 +200,7 @@ namespace log4net.Util
 		/// <see cref="DomainName" /> or <see cref="Password" /> properties were not specified.</exception>
 		public void ActivateOptions()
 		{
-			if (m_impersonationMode == ImpersonationModes.User)
+			if (m_impersonationMode == ImpersonationMode.User)
 			{
 				if (m_userName == null) throw new ArgumentNullException("m_userName");
 				if (m_domainName == null) throw new ArgumentNullException("m_domainName");
@@ -225,14 +225,14 @@ namespace log4net.Util
 		/// </remarks>
 		public override IDisposable Impersonate(object state)
 		{
-			if (m_impersonationMode == ImpersonationModes.User)
+			if (m_impersonationMode == ImpersonationMode.User)
 			{
 				if (m_identity != null)
 				{
 					return new DisposableImpersonationContext(m_identity.Impersonate());
 				}
 			}
-			else if (m_impersonationMode == ImpersonationModes.Process)
+			else if (m_impersonationMode == ImpersonationMode.Process)
 			{
 				// Impersonate(0) will revert to the process credentials
 				return new DisposableImpersonationContext(WindowsIdentity.Impersonate(IntPtr.Zero));

@@ -623,7 +623,7 @@ namespace log4net.Config
 				{
 					// Create a watch handler that will reload the
 					// configuration whenever the config file is modified.
-					new ConfigureAndWatchHandler(repository, configFile);
+					ConfigureAndWatchHandler.StartWatching(repository, configFile);
 				}
 				catch(Exception ex)
 				{
@@ -657,6 +657,21 @@ namespace log4net.Config
 		private sealed class ConfigureAndWatchHandler
 		{
 			/// <summary>
+			/// Watch a specified config file used to configure a repository
+			/// </summary>
+			/// <param name="repository">The repository to configure.</param>
+			/// <param name="configFile">The configuration file to watch.</param>
+			/// <remarks>
+			/// <para>
+			/// Watch a specified config file used to configure a repository
+			/// </para>
+			/// </remarks>
+			internal static void StartWatching(ILoggerRepository repository, FileInfo configFile)
+			{
+				ConfigureAndWatchHandler watcher = new ConfigureAndWatchHandler(repository, configFile);
+			}
+
+			/// <summary>
 			/// Holds the FileInfo used to configure the XmlConfigurator
 			/// </summary>
 			private FileInfo m_configFile;
@@ -687,7 +702,7 @@ namespace log4net.Config
 			/// Initializes a new instance of the <see cref="ConfigureAndWatchHandler" /> class.
 			/// </para>
 			/// </remarks>
-			internal ConfigureAndWatchHandler(ILoggerRepository repository, FileInfo configFile)
+			private ConfigureAndWatchHandler(ILoggerRepository repository, FileInfo configFile)
 			{
 				m_repository = repository;
 				m_configFile = configFile;
@@ -796,22 +811,22 @@ namespace log4net.Config
 			{
 				LogLog.Debug("XmlConfigurator: Configuring Repository [" + repository.Name + "]");
 
-				// Copy the xml data into the root of a new document
-				// this isolates the xml config data from the rest of
-				// the document
-				XmlDocument newDoc = new XmlDocument();
-				XmlElement newElement = (XmlElement) newDoc.AppendChild(newDoc.ImportNode(element, true));
-
-				// Check the type of the repository
-				if (repository is IXmlRepositoryConfigurator)
-				{
-					// Pass the configurator the config element
-					((IXmlRepositoryConfigurator) repository).Configure(newElement);
-				}
-				else
+				IXmlRepositoryConfigurator configurableRepository = repository as IXmlRepositoryConfigurator;
+				if (configurableRepository == null)
 				{
 					LogLog.Warn("Repository [" + repository + "] does not support the XmlConfigurator");
 				}
+				else
+				{
+					// Copy the xml data into the root of a new document
+					// this isolates the xml config data from the rest of
+					// the document
+					XmlDocument newDoc = new XmlDocument();
+					XmlElement newElement = (XmlElement)newDoc.AppendChild(newDoc.ImportNode(element, true));
+
+					// Pass the configurator the config element
+					configurableRepository.Configure(newElement);
+				}			
 			}
 		}
 

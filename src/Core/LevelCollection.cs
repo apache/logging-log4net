@@ -25,12 +25,10 @@ namespace log4net.Core
 	/// A strongly-typed collection of <see cref="Level"/> objects.
 	/// </summary>
 	/// <author>Nicko Cadell</author>
-#if !NETCF
-	[Serializable]
-#endif
 	public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
 	{
 		#region Interfaces
+
 		/// <summary>
 		/// Supports type-safe iteration over a <see cref="LevelCollection"/>.
 		/// </summary>
@@ -58,6 +56,7 @@ namespace log4net.Core
 			/// </summary>
 			void Reset();
 		}
+
 		#endregion
 
 		private const int DEFAULT_CAPACITY = 16;
@@ -65,29 +64,12 @@ namespace log4net.Core
 		#region Implementation (data)
 
 		private Level[] m_array;
-
 		private int m_count = 0;
-
-#if !NETCF
-		[NonSerialized]
-#endif
 		private int m_version = 0;
+
 		#endregion
 	
 		#region Static Wrappers
-		/// <summary>
-		/// Creates a synchronized (thread-safe) wrapper for a <c>LevelCollection</c> instance.
-		/// </summary>
-		/// <param name="list">list to create a synchronized wrapper arround</param>
-		/// <returns>
-		/// A <c>LevelCollection</c> wrapper that is synchronized (thread-safe).
-		/// </returns>
-		public static LevelCollection Synchronized(LevelCollection list)
-		{
-			if(list==null) throw new ArgumentNullException("list");
-
-			return new SyncLevelCollection(list);
-		}
 
 		/// <summary>
 		/// Creates a read-only wrapper for a <c>LevelCollection</c> instance.
@@ -102,9 +84,11 @@ namespace log4net.Core
 
 			return new ReadOnlyLevelCollection(list);
 		}
+
 		#endregion
 
-		#region Construction
+		#region Constructors
+
 		/// <summary>
 		/// Initializes a new instance of the <c>LevelCollection</c> class
 		/// that is empty and has the default initial capacity.
@@ -163,7 +147,7 @@ namespace log4net.Core
 		/// Type visible only to our subclasses
 		/// Used to access protected constructor
 		/// </summary>
-		protected enum Tag 
+		protected internal enum Tag 
 		{
 			/// <summary>
 			/// A value
@@ -175,13 +159,14 @@ namespace log4net.Core
 		/// Allow subclasses to avoid our default constructors
 		/// </summary>
 		/// <param name="tag"></param>
-		protected LevelCollection(Tag tag)
+		protected internal LevelCollection(Tag tag)
 		{
 			m_array = null;
 		}
 		#endregion
 		
 		#region Operations (type-safe ICollection)
+
 		/// <summary>
 		/// Gets the number of elements actually contained in the <c>LevelCollection</c>.
 		/// </summary>
@@ -434,6 +419,7 @@ namespace log4net.Core
 		{
 			get { return false; }
 		}
+
 		#endregion
 
 		#region Operations (type-safe IEnumerable)
@@ -446,6 +432,7 @@ namespace log4net.Core
 		{
 			return new Enumerator(this);
 		}
+
 		#endregion
 
 		#region Public helpers (just to mimic some nice features of ArrayList)
@@ -539,7 +526,6 @@ namespace log4net.Core
 
 			return m_count;
 		}
-
 		
 		/// <summary>
 		/// Sets the capacity to the actual number of elements.
@@ -649,6 +635,7 @@ namespace log4net.Core
 		#endregion
 
 		#region Nested enumerator class
+
 		/// <summary>
 		/// Supports simple iteration over a <see cref="LevelCollection"/>.
 		/// </summary>
@@ -656,7 +643,7 @@ namespace log4net.Core
 		{
 			#region Implementation (data)
 			
-			private LevelCollection m_collection;
+			private readonly LevelCollection m_collection;
 			private int m_index;
 			private int m_version;
 			
@@ -705,7 +692,7 @@ namespace log4net.Core
 				}
 
 				++m_index;
-				return (m_index < m_collection.Count) ? true : false;
+				return (m_index < m_collection.Count);
 			}
 
 			/// <summary>
@@ -722,7 +709,7 @@ namespace log4net.Core
 			
 			object IEnumerator.Current
 			{
-				get { return (object)(this.Current); }
+				get { return this.Current; }
 			}
 			
 			#endregion
@@ -730,214 +717,27 @@ namespace log4net.Core
 
 		#endregion
 
-		#region Nested Synchronized Wrapper class
-
-		private sealed class SyncLevelCollection : LevelCollection
-		{
-			#region Implementation (data)
-			private LevelCollection m_collection;
-			private object m_root;
-			#endregion
-
-			#region Construction
-			internal SyncLevelCollection(LevelCollection list) : base(Tag.Default)
-			{
-				m_root = list.SyncRoot;
-				m_collection = list;
-			}
-			#endregion
-
-			#region Type-safe ICollection
-
-			public override void CopyTo(Level[] array)
-			{
-				lock(this.m_root)
-				{
-					m_collection.CopyTo(array);
-				}
-			}
-
-			public override void CopyTo(Level[] array, int start)
-			{
-				lock(this.m_root)
-				{
-					m_collection.CopyTo(array,start);
-				}
-			}
-			public override int Count
-			{
-				get
-				{ 
-					lock(this.m_root)
-					{
-						return m_collection.Count;
-					}
-				}
-			}
-
-			public override bool IsSynchronized
-			{
-				get { return true; }
-			}
-
-			public override object SyncRoot
-			{
-				get { return this.m_root; }
-			}
-
-			#endregion
-
-			#region Type-safe IList
-
-			public override Level this[int i]
-			{
-				get
-				{
-					lock(this.m_root)
-					{
-						return m_collection[i];
-					}
-				}
-				set
-				{
-					lock(this.m_root)
-					{
-						m_collection[i] = value; 
-					}
-				}
-			}
-
-			public override int Add(Level x)
-			{
-				lock(this.m_root)
-				{
-					return m_collection.Add(x);
-				}
-			}
-
-			public override void Clear()
-			{
-				lock(this.m_root)
-				{
-					m_collection.Clear();
-				}
-			}
-
-			public override bool Contains(Level x)
-			{
-				lock(this.m_root)
-				{
-					return m_collection.Contains(x);
-				}
-			}
-
-			public override int IndexOf(Level x)
-			{
-				lock(this.m_root)
-				{
-					return m_collection.IndexOf(x);
-				}
-			}
-
-			public override void Insert(int pos, Level x)
-			{
-				lock(this.m_root)
-				{
-					m_collection.Insert(pos,x);
-				}
-			}
-
-			public override void Remove(Level x)
-			{
-				lock(this.m_root)
-				{
-					m_collection.Remove(x);
-				}
-			}
-
-			public override void RemoveAt(int pos)
-			{
-				lock(this.m_root)
-				{
-					m_collection.RemoveAt(pos);
-				}
-			}
-
-			public override bool IsFixedSize
-			{
-				get { return m_collection.IsFixedSize; }
-			}
-
-			public override bool IsReadOnly
-			{
-				get { return m_collection.IsReadOnly; }
-			}
-			#endregion
-
-			#region Type-safe IEnumerable
-			public override ILevelCollectionEnumerator GetEnumerator()
-			{
-				lock(m_root)
-				{
-					return m_collection.GetEnumerator();
-				}
-			}
-			#endregion
-
-			#region Public Helpers
-			// (just to mimic some nice features of ArrayList)
-			public override int Capacity
-			{
-				get
-				{
-					lock(this.m_root)
-					{
-						return m_collection.Capacity;
-					}
-				}
-				set
-				{
-					lock(this.m_root)
-					{
-						m_collection.Capacity = value;
-					}
-				}
-			}
-
-			public override int AddRange(LevelCollection x)
-			{
-				lock(this.m_root)
-				{
-					return m_collection.AddRange(x);
-				}
-			}
-
-			public override int AddRange(Level[] x)
-			{
-				lock(this.m_root)
-				{
-					return m_collection.AddRange(x);
-				}
-			}
-			#endregion
-		}
-		#endregion
-
 		#region Nested Read Only Wrapper class
+
 		private sealed class ReadOnlyLevelCollection : LevelCollection
 		{
 			#region Implementation (data)
-			private LevelCollection m_collection;
+
+			private readonly LevelCollection m_collection;
+
 			#endregion
 
 			#region Construction
+
 			internal ReadOnlyLevelCollection(LevelCollection list) : base(Tag.Default)
 			{
 				m_collection = list;
 			}
+
 			#endregion
 
 			#region Type-safe ICollection
+
 			public override void CopyTo(Level[] array)
 			{
 				m_collection.CopyTo(array);
@@ -1016,16 +816,20 @@ namespace log4net.Core
 			{
 				get { return true; }
 			}
+
 			#endregion
 
 			#region Type-safe IEnumerable
+
 			public override ILevelCollectionEnumerator GetEnumerator()
 			{
 				return m_collection.GetEnumerator();
 			}
+
 			#endregion
 
 			#region Public Helpers
+
 			// (just to mimic some nice features of ArrayList)
 			public override int Capacity
 			{
@@ -1042,8 +846,10 @@ namespace log4net.Core
 			{
 				throw new NotSupportedException("This is a Read Only Collection and can not be modified");
 			}
+
 			#endregion
 		}
+
 		#endregion
 	}
 

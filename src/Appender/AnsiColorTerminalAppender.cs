@@ -164,7 +164,7 @@ namespace log4net.Appender
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="AnsiColorTerminalAppender" />
-		public enum AnsiColors : int
+		public enum AnsiColor : int
 		{
 			/// <summary>
 			/// color is black
@@ -440,8 +440,8 @@ namespace log4net.Appender
 		/// </remarks>
 		public class LevelColors : LevelMappingEntry
 		{
-			private AnsiColors m_foreColor;
-			private AnsiColors m_backColor;
+			private AnsiColor m_foreColor;
+			private AnsiColor m_backColor;
 			private AnsiAttributes m_attributes;
 			private string m_combinedColor = "";
 
@@ -454,7 +454,7 @@ namespace log4net.Appender
 			/// The mapped foreground color for the specified level
 			/// </para>
 			/// </remarks>
-			public AnsiColors ForeColor
+			public AnsiColor ForeColor
 			{
 				get { return m_foreColor; }
 				set { m_foreColor = value; }
@@ -469,7 +469,7 @@ namespace log4net.Appender
 			/// The mapped background color for the specified level
 			/// </para>
 			/// </remarks>
-			public AnsiColors BackColor
+			public AnsiColor BackColor
 			{
 				get { return m_backColor; }
 				set { m_backColor = value; }

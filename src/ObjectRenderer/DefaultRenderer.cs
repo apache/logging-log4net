@@ -145,24 +145,31 @@ namespace log4net.ObjectRenderer
 			if (obj == null)
 			{
 				writer.Write("(null)");
+				return;
 			}
-			else if (obj is Array)
+			
+			Array objArray = obj as Array;
+			if (objArray != null)
 			{
-				RenderArray(rendererMap, (Array)obj, writer);
+				RenderArray(rendererMap, objArray, writer);
+				return;
 			}
-			else if (obj is ICollection)
+			
+			ICollection objCollection = obj as ICollection;
+			if (objCollection != null)
 			{
-				RenderCollection(rendererMap, (ICollection)obj, writer);
+				RenderCollection(rendererMap, objCollection, writer);
+				return;
 			}
-			else if (obj is DictionaryEntry)
+			
+			if (obj is DictionaryEntry)
 			{
 				RenderDictionaryEntry(rendererMap, (DictionaryEntry)obj, writer);
+				return;
 			}
-			else
-			{
-				string str = obj.ToString();
-				writer.Write( (str==null) ? "(null)" : str );
-			}
+
+			string str = obj.ToString();
+			writer.Write( (str==null) ? "(null)" : str );
 		}
 
 		#endregion

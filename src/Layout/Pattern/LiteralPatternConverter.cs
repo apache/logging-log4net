@@ -56,10 +56,11 @@ namespace log4net.Layout.Pattern
 		/// </remarks>
 		public override PatternConverter SetNext(PatternConverter pc)
 		{
-			if (pc is LiteralPatternConverter)
+			LiteralPatternConverter literalPc = pc as LiteralPatternConverter;
+			if (literalPc != null)
 			{
 				// Combine the two adjacent literals together
-				Option = Option + ((LiteralPatternConverter)pc).Option;
+				Option = Option + literalPc.Option;
 
 				// We are the next converter now
 				return this;

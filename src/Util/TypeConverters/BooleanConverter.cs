@@ -49,9 +49,10 @@ namespace log4net.Util.TypeConverters
 		/// <returns>the converted object</returns>
 		public object ConvertFrom(object source)
 		{
-			if (source is string)
+			string str = source as string;
+			if (str != null)
 			{
-				return bool.Parse((string)source);
+				return bool.Parse(str);
 			}
 			throw ConversionNotSupportedException.Create(typeof(bool), source);
 		}

@@ -98,13 +98,14 @@ namespace log4net.Layout.Pattern
 		/// <param name="state">The state object on which the pattern converter should be executed.</param>
 		override protected void Convert(TextWriter writer, object state)
 		{
-			if (state is LoggingEvent)
+			LoggingEvent loggingEvent = state as LoggingEvent;
+			if (loggingEvent != null)
 			{
-				Convert(writer, (LoggingEvent)state);
+				Convert(writer, loggingEvent);
 			}
 			else
 			{
-				throw new ArgumentException("state must be a LoggingEvent", "state");
+				throw new ArgumentException("state must be of type ["+typeof(LoggingEvent).FullName+"]", "state");
 			}
 		}
 

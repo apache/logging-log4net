@@ -104,39 +104,49 @@ namespace log4net.ObjectRenderer
 			}
 			else 
 			{
-				try
+				// Optimisation for strings
+				string str = obj as string;
+				if (str != null)
 				{
-					Get(obj.GetType()).RenderObject(this, obj, writer);
+					writer.Write(str);
 				}
-				catch(Exception ex)
+				else
 				{
-					// Exception rendering the object
-					log4net.Util.LogLog.Error("RendererMap: Exception while rendering object of type ["+obj.GetType().FullName+"]", ex);
-
-					// return default message
-					string objectTypeName = "";
-					if (obj != null && obj.GetType() != null)
+					// Lookup the renderer for the specific type
+					try
 					{
-						objectTypeName = obj.GetType().FullName;
+						Get(obj.GetType()).RenderObject(this, obj, writer);
 					}
-
-					writer.Write("<log4net.Error>Exception rendering object type ["+objectTypeName+"]");
-					if (ex != null)
+					catch(Exception ex)
 					{
-						string exceptionText = null;
+						// Exception rendering the object
+						log4net.Util.LogLog.Error("RendererMap: Exception while rendering object of type ["+obj.GetType().FullName+"]", ex);
 
-						try
+						// return default message
+						string objectTypeName = "";
+						if (obj != null && obj.GetType() != null)
 						{
-							exceptionText = ex.ToString();
-						}
-						catch
-						{
-							// Ignore exception
+							objectTypeName = obj.GetType().FullName;
 						}
 
-						writer.Write("<stackTrace>" + exceptionText + "</stackTrace>");
+						writer.Write("<log4net.Error>Exception rendering object type ["+objectTypeName+"]");
+						if (ex != null)
+						{
+							string exceptionText = null;
+
+							try
+							{
+								exceptionText = ex.ToString();
+							}
+							catch
+							{
+								// Ignore exception
+							}
+
+							writer.Write("<stackTrace>" + exceptionText + "</stackTrace>");
+						}
+						writer.Write("</log4net.Error>");
 					}
-					writer.Write("</log4net.Error>");
 				}
 			}
 		}

@@ -719,7 +719,7 @@ namespace log4net.Core
 							LogLog.Debug("LoggingEvent: Security exception while trying to get current thread ID. Error Ignored. Empty thread name.");
 
 							// As a last resort use the hash code of the Thread object
-							m_data.ThreadName = System.Threading.Thread.CurrentThread.GetHashCode().ToString();
+							m_data.ThreadName = System.Threading.Thread.CurrentThread.GetHashCode().ToString(System.Globalization.CultureInfo.InvariantCulture);
 						}
 					}
 #endif
@@ -967,7 +967,7 @@ namespace log4net.Core
 		/// </para>
 		/// </remarks>
 		[System.Security.Permissions.SecurityPermissionAttribute(System.Security.Permissions.SecurityAction.Demand, SerializationFormatter=true)]
-		public void GetObjectData(SerializationInfo info, StreamingContext context)
+		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			// The caller must call FixVolatileData before this object
 			// can be serialized.
@@ -1177,21 +1177,21 @@ namespace log4net.Core
 				if ((updateFlags & FixFlags.Message) != 0)
 				{
 					// Force the message to be rendered
-					string tmp = this.RenderedMessage;
+					string forceCreation = this.RenderedMessage;
 
 					m_fixFlags |= FixFlags.Message;
 				}
 				if ((updateFlags & FixFlags.Message) != 0)
 				{
 					// Force the message to be rendered
-					string tmp = this.RenderedMessage;
+					string forceCreation = this.RenderedMessage;
 
 					m_fixFlags |= FixFlags.Message;
 				}
 				if ((updateFlags & FixFlags.ThreadName) != 0)
 				{
 					// Grab the thread name
-					string tmp = this.ThreadName;
+					string forceCreation = this.ThreadName;
 
 					m_fixFlags |= FixFlags.ThreadName;
 				}
@@ -1199,28 +1199,28 @@ namespace log4net.Core
 				if ((updateFlags & FixFlags.LocationInfo) != 0)
 				{
 					// Force the location information to be loaded
-					LocationInfo lo = this.LocationInformation;
+					LocationInfo forceCreation = this.LocationInformation;
 
 					m_fixFlags |= FixFlags.LocationInfo;
 				}
 				if ((updateFlags & FixFlags.UserName) != 0)
 				{
 					// Grab the user name
-					string tmp = this.UserName;
+					string forceCreation = this.UserName;
 
 					m_fixFlags |= FixFlags.UserName;
 				}
 				if ((updateFlags & FixFlags.Domain) != 0)
 				{
 					// Grab the domain name
-					string tmp = this.Domain;
+					string forceCreation = this.Domain;
 
 					m_fixFlags |= FixFlags.Domain;
 				}
 				if ((updateFlags & FixFlags.Identity) != 0)
 				{
 					// Grab the identity
-					string tmp = this.Identity;
+					string forceCreation = this.Identity;
 
 					m_fixFlags |= FixFlags.Identity;
 				}
@@ -1228,7 +1228,7 @@ namespace log4net.Core
 				if ((updateFlags & FixFlags.Exception) != 0)
 				{
 					// Force the exception text to be loaded
-					string tmp = GetExceptionString();
+					string forceCreation = GetExceptionString();
 
 					m_fixFlags |= FixFlags.Exception;
 				}

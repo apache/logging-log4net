@@ -486,9 +486,11 @@ namespace log4net.Appender
 		/// <param name="dbTran">The transaction that the events will be executed under.</param>
 		/// <param name="events">The array of events to insert into the database.</param>
 		/// <remarks>
+		/// <para>
 		/// The transaction argument can be <c>null</c> if the appender has been
 		/// configured not to use transactions. See <see cref="UseTransactions"/>
 		/// property for more information.
+		/// </para>
 		/// </remarks>
 		virtual protected void SendBuffer(IDbTransaction dbTran, LoggingEvent[] events)
 		{
@@ -712,6 +714,31 @@ namespace log4net.Appender
 
 		#endregion // Protected Instance Methods
 
+		#region Protected Instance Fields
+
+		/// <summary>
+		/// Flag to indicate if we are using a command object
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Set to <c>true</c> when the appender is to use a prepared
+		/// statement or stored procedure to insert into the database.
+		/// </para>
+		/// </remarks>
+		protected bool m_usePreparedCommand;
+
+		/// <summary>
+		/// The list of <see cref="AdoNetAppenderParameter"/> objects.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The list of <see cref="AdoNetAppenderParameter"/> objects.
+		/// </para>
+		/// </remarks>
+		protected ArrayList m_parameters;
+
+		#endregion // Protected Instance Fields
+
 		#region Private Instance Fields
 
 		/// <summary>
@@ -729,11 +756,6 @@ namespace log4net.Appender
 		/// The database command.
 		/// </summary>
 		private IDbCommand m_dbCommand;
-
-		/// <summary>
-		/// Flag to indicate if we are using a command object
-		/// </summary>
-		private bool m_usePreparedCommand;
 
 		/// <summary>
 		/// Database connection string.
@@ -759,14 +781,6 @@ namespace log4net.Appender
 		/// Indicates whether to use transactions when writing to the database.
 		/// </summary>
 		private bool m_useTransactions;
-
-		/// <summary>
-		/// The list of <see cref="AdoNetAppenderParameter"/> objects.
-		/// </summary>
-		/// <remarks>
-		/// The list of <see cref="AdoNetAppenderParameter"/> objects.
-		/// </remarks>
-		private ArrayList m_parameters;
 
 		#endregion // Private Instance Fields
 	}

@@ -226,10 +226,11 @@ namespace log4net.Core
 		/// <param name="e">The event args.</param>
 		private void ILoggerRepository_Shutdown(object sender, EventArgs e)
 		{
-			if (sender is ILoggerRepository)
+			ILoggerRepository repository = sender as ILoggerRepository;
+			if (repository != null)
 			{
 				// Remove all repository from map
-				RepositoryShutdown((ILoggerRepository)sender);
+				RepositoryShutdown(repository);
 			}
 		}
 
