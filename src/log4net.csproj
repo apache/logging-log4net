@@ -238,6 +238,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Appender\TelnetAppender.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Appender\TextWriterAppender.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -563,6 +568,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Layout\RawUtcTimeStampLayout.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Layout\SimpleLayout.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -684,6 +694,11 @@
                 />
                 <File
                     RelPath = "Layout\Pattern\UserNamePatternConverter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Layout\Pattern\UtcDatePatternConverter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
