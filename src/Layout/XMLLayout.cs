@@ -62,6 +62,9 @@ namespace log4net.Layout
 	/// <para>
 	/// Alternatively the <c>Header</c> and <c>Footer</c> properties can be
 	/// configured to output the correct XML header, open tag and close tag.
+	/// When setting the <c>Header</c> and <c>Footer</c> properties it is essential
+	/// that the underlying data store not be appendable otherwise the data
+	/// will become invalid XML.
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
