@@ -72,6 +72,11 @@ namespace log4net.Core
 		/// <summary>
 		/// The time the event was logged
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The TimeStamp is stored in the local time zone for this computer.
+		/// </para>
+		/// </remarks>
 		public DateTime TimeStamp;
 
 		/// <summary>
@@ -273,6 +278,8 @@ namespace log4net.Core
 
 			m_data.LoggerName = loggerName;
 			m_data.Level = level;
+
+			// Store the event creation time
 			m_data.TimeStamp = DateTime.Now;
 
 			// Lookup the global properties as soon as possible
@@ -367,16 +374,29 @@ namespace log4net.Core
 		#region Public Instance Properties
 	
 		/// <summary>
-		/// Gets the time when the application started, in milliseconds elapsed 
-		/// since 01.01.1970.
+		/// Gets the time when the current process started.
 		/// </summary>
 		/// <value>
-		/// The time when the application started, in milliseconds elapsed 
-		/// since 01.01.1970.
+		/// This is the time when this process started.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The TimeStamp is stored in the local time zone for this computer.
+		/// </para>
+		/// <para>
+		/// Tries to get the start time for the current process.
+		/// Failing that it returns the time of the first call to
+		/// this property.
+		/// </para>
+		/// <para>
+		/// Note that AppDomains may be loaded and unloaded within the
+		/// same process without the process terminating and therefore
+		/// without the process start time being reset.
+		/// </para>
+		/// </remarks>
 		public static DateTime StartTime
 		{
-			get { return s_startTime; }
+			get { return SystemInfo.ProcessStartTime; }
 		}
 
 		/// <summary>
@@ -396,6 +416,11 @@ namespace log4net.Core
 		/// <value>
 		/// The time of the logging event.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The TimeStamp is stored in the local time zone for this computer.
+		/// </para>
+		/// </remarks>
 		public DateTime TimeStamp
 		{
 			get { return m_data.TimeStamp; }
@@ -831,7 +856,7 @@ namespace log4net.Core
 		/// Gets the global properties defined when this event was created.
 		/// </summary>
 		/// <value>
-		/// Globally diefined properties.
+		/// Globally defined properties.
 		/// </value>
 		/// <remarks>
 		/// Global properties are defined by the <see cref="GlobalContext"/>
@@ -841,7 +866,7 @@ namespace log4net.Core
 			get 
 			{ 
 				// The global properties are captured in the constructor
-				// because they are global shareed state they must be captured as soon as possible
+				// because they are global shared state they must be captured as soon as possible
 
 				if (m_data.GlobalProperties == null)
 				{
@@ -1197,19 +1222,6 @@ namespace log4net.Core
 		}
 
 		#endregion Public Instance Methods
-
-		#region Private Static Fields
-
-		/// <summary>
-		/// Stores the time when this class is loaded.
-		/// </summary>
-		/// <remarks>
-		/// This is used to provide times relative to the
-		/// application start.
-		/// </remarks>
-		private static readonly DateTime s_startTime = DateTime.Now;
-
-		#endregion Private Static Fields
 
 		#region Private Instance Fields
 
