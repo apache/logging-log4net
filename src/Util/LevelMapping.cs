@@ -1,0 +1,115 @@
+#region Copyright & License
+//
+// Copyright 2001-2004 The Apache Software Foundation
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+#endregion
+
+using System;
+using System.Collections;
+
+using log4net.Core;
+
+namespace log4net.Util
+{
+	/// <summary>
+	/// Manages a mapping from levels to <see cref="LevelMappingEntry"/>
+	/// </summary>
+	/// <author>Nicko Cadell</author>
+	public sealed class LevelMapping : IOptionHandler
+	{
+		#region Public Instance Constructors
+
+		/// <summary>
+		/// Default constructor
+		/// </summary>
+		public LevelMapping() 
+		{
+		}
+
+		#endregion // Public Instance Constructors
+
+		#region Public Instance Methods
+	
+		/// <summary>
+		/// Add a <see cref="LevelMappingEntry"/> to this mapping
+		/// </summary>
+		/// <param name="entry">the entry to add</param>
+		/// <remarks>
+		/// <para>
+		/// If a <see cref="LevelMappingEntry"/> has previously been added
+		/// for the same <see cref="Level"/> then that entry will be 
+		/// overwritten.
+		/// </para>
+		/// </remarks>
+		public void Add(LevelMappingEntry entry)
+		{
+			if (m_entriesList.ContainsKey(entry.Level))
+			{
+				m_entriesList.Remove(entry.Level);
+			}
+			m_entriesList.Add(entry.Level, entry);
+		}
+
+		/// <summary>
+		/// Lookup the mapping for the specified level
+		/// </summary>
+		/// <param name="level">the level to lookup</param>
+		/// <returns>the <see cref="LevelMappingEntry"/> for the level or <c>null</c> if no mapping found</returns>
+		public LevelMappingEntry Lookup(Level level)
+		{
+			foreach(LevelMappingEntry entry in m_entries)
+			{
+				if (level >= entry.Level)
+				{
+					return entry;
+				}
+			}
+			return null;
+		}
+
+		#endregion // Public Instance Methods
+
+		#region IOptionHandler Members
+
+		/// <summary>
+		/// Initialize options
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Caches the sorted list of <see cref="LevelMappingEntry"/> in an array
+		/// </para>
+		/// </remarks>
+		public void ActivateOptions()
+		{
+			m_entries = new LevelMappingEntry[m_entriesList.Count];
+			m_entriesList.GetValueList().CopyTo(m_entries, 0);
+			Array.Reverse(m_entries);
+
+			foreach(LevelMappingEntry entry in m_entries)
+			{
+				entry.ActivateOptions();
+			}
+		}
+
+		#endregion // IOptionHandler Members
+
+		#region Private Instance Fields
+
+		private SortedList m_entriesList = new SortedList();
+		private LevelMappingEntry[] m_entries = null;
+
+		#endregion // Private Instance Fields
+	}
+}

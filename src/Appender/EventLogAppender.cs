@@ -18,11 +18,11 @@
 
 // MONO 1.0 Beta mcs does not like #if !A && !B && !C syntax
 
-// .NET Compact Framework 1.0 has no support for System.Diagnostics.EventLog
+// .NET Compact Framework 1.0 has no support for EventLog
 #if !NETCF 
-// .Mono 1.0 has no support for System.Diagnostics.EventLog
+// .Mono 1.0 has no support for EventLog
 #if !MONO 
-// SSCLI 1.0 has no support for System.Diagnostics.EventLog
+// SSCLI 1.0 has no support for EventLog
 #if !SSCLI
 // We don't want framework or platform specific code in the Core version of
 // log4net
@@ -49,6 +49,29 @@ namespace log4net.Appender
 	/// </para>
 	/// <para>
 	/// There is a limit of 32K characters for an event log message
+	/// </para>
+	/// <para>
+	/// When configuring the EventLogAppender a mapping can be
+	/// specified to map a logging level to an event log entry type. For example:
+	/// </para>
+	/// <code>
+	/// &lt;mapping&gt;
+	/// 	&lt;level value="ERROR" /&gt;
+	/// 	&lt;eventLogEntryType value="Error" /&gt;
+	/// &lt;/mapping&gt;
+	/// &lt;mapping&gt;
+	/// 	&lt;level value="DEBUG" /&gt;
+	/// 	&lt;eventLogEntryType value="Information" /&gt;
+	/// &lt;/mapping&gt;
+	/// </code>
+	/// <para>
+	/// The Level is the standard log4net logging level and eventLogEntryType can be any value
+	/// from the <see cref="EventLogEntryType"/> enum, i.e.:
+	/// <list type="bullet">
+	/// <item><term>Error</term><description>an error event</description></item>
+	/// <item><term>Warning</term><description>a warning event</description></item>
+	/// <item><term>Information</term><description>an informational event</description></item>
+	/// </list>
 	/// </para>
 	/// </remarks>
 	/// <author>Aspi Havewala</author>
@@ -144,6 +167,15 @@ namespace log4net.Appender
 			set { /* Currently we do not allow the machine name to be changed */; }
 		}
 
+		/// <summary>
+		/// Add a mapping of level to <see cref="EventLogEntryType"/> - done by the config file
+		/// </summary>
+		/// <param name="mapping">The mapping to add</param>
+		public void AddMapping(Level2EventLogEntryType mapping)
+		{
+			m_levelMapping.Add(mapping);
+		}
+
 		#endregion // Public Instance Properties
 
 		#region Implementation of IOptionHandler
@@ -186,6 +218,8 @@ namespace log4net.Appender
 				LogLog.Debug("EventLogAppender: Creating event source Source [" + m_applicationName + "] in log " + m_logName + "]");
 				EventLog.CreateEventSource(m_applicationName, m_logName, m_machineName);
 			}
+
+			m_levelMapping.ActivateOptions();
 
 			LogLog.Debug("EventLogAppender: Source [" + m_applicationName + "] is registered to log [" + EventLog.LogNameFromSourceName(m_applicationName, m_machineName) + "]");		
 		}
@@ -282,18 +316,28 @@ namespace log4net.Appender
 		/// <see cref="Level"/> this is a one way mapping. There is
 		/// a loss of information during the conversion.
 		/// </remarks>
-		virtual protected System.Diagnostics.EventLogEntryType GetEntryType(Level level)
+		virtual protected EventLogEntryType GetEntryType(Level level)
 		{
+			// see if there is a specified lookup.
+			Level2EventLogEntryType entryType = m_levelMapping.Lookup(level) as Level2EventLogEntryType;
+			if (entryType != null)
+			{
+				return entryType.EventLogEntryType;
+			}
+
+			// Use default behaviour
+
 			if (level >= Level.Error) 
 			{
-				return System.Diagnostics.EventLogEntryType.Error;
+				return EventLogEntryType.Error;
 			}
 			else if (level == Level.Warn) 
 			{
-				return System.Diagnostics.EventLogEntryType.Warning;
+				return EventLogEntryType.Warning;
 			} 
+
 			// Default setting
-			return System.Diagnostics.EventLogEntryType.Information;
+			return EventLogEntryType.Information;
 		}
 
 		#endregion // Protected Instance Methods
@@ -318,7 +362,34 @@ namespace log4net.Appender
 		/// </summary>
 		private string m_machineName;
 
+		/// <summary>
+		/// Mapping from level object to EventLogEntryType
+		/// </summary>
+		private LevelMapping m_levelMapping = new LevelMapping();
+
 		#endregion // Private Instance Fields
+
+		#region Level2EventLogEntryType LevelMapping Entry
+
+		/// <summary>
+		/// A class to act as a mapping between the level that a logging call is made at and
+		/// the color it should be displayed as.
+		/// </summary>
+		public class Level2EventLogEntryType : LevelMappingEntry
+		{
+			private EventLogEntryType m_entryType;
+
+			/// <summary>
+			/// The <see cref="EventLogEntryType"/> for this entry
+			/// </summary>
+			public EventLogEntryType EventLogEntryType
+			{
+				get { return m_entryType; }
+				set { m_entryType = value; }
+			}
+		}
+
+		#endregion // LevelColors LevelMapping Entry
 	}
 }
 

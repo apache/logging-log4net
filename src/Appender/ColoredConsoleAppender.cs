@@ -33,6 +33,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 
 using log4net.Layout;
+using log4net.Util;
 
 namespace log4net.Appender
 {
@@ -142,7 +143,7 @@ namespace log4net.Appender
 			HighIntensity = 0x0008,
 		}
 
-		#endregion
+		#endregion // Colors Enum
 
 		#region Public Instance Constructors
 
@@ -225,57 +226,7 @@ namespace log4net.Appender
 		/// <param name="mapping">The mapping to add</param>
 		public void AddMapping(LevelColors mapping)
 		{
-			AddMapping(mapping.Level, mapping.ForeColor, mapping.BackColor);
-		}
-
-		/// <summary>
-		/// Add a mapping of level to color
-		/// </summary>
-		/// <param name="level">The level to map to a color</param>
-		/// <param name="foreColor">The mapped foreground color for the specified level</param>
-		/// <param name="backColor">The mapped background color for the specified level</param>
-		public void AddMapping(log4net.Core.Level level, Colors foreColor, Colors backColor)
-		{
-			ushort usMapping = (ushort)((int)foreColor + (((int)backColor) << 4) );
-			m_Level2ColorMap[level] = usMapping;
-		}
-
-		/// <summary>
-		/// A class to act as a mapping between the level that a logging call is made at and
-		/// the color it should be displayed as.
-		/// </summary>
-		public class LevelColors
-		{
-			private log4net.Core.Level m_level;
-			private Colors m_foreColor;
-			private Colors m_backColor;
-
-			/// <summary>
-			/// The level to map to a color
-			/// </summary>
-			public log4net.Core.Level Level
-			{
-				get { return m_level; }
-				set { m_level = value; }
-			}
-
-			/// <summary>
-			/// The mapped foreground color for the specified level
-			/// </summary>
-			public Colors ForeColor
-			{
-				get { return m_foreColor; }
-				set { m_foreColor = value; }
-			}
-
-			/// <summary>
-			/// The mapped background color for the specified level
-			/// </summary>
-			public Colors BackColor
-			{
-				get { return m_backColor; }
-				set { m_backColor = value; }
-			}
+			m_levelMapping.Add(mapping);
 		}
 
 		#endregion // Public Instance Properties
@@ -310,13 +261,13 @@ namespace log4net.Appender
 
 			// set the output parameters
 			// Default to white on black
-			ushort colorInfo = (UInt16)(Colors.Red | Colors.Blue | Colors.Green);
+			ushort colorInfo = (ushort)Colors.White;
 
-			// see if there is a lookup.
-			Object colLookup = m_Level2ColorMap[loggingEvent.Level];
-			if(colLookup != null)
+			// see if there is a specified lookup.
+			LevelColors levelColors = m_levelMapping.Lookup(loggingEvent.Level) as LevelColors;
+			if (levelColors != null)
 			{
-				colorInfo = (ushort)colLookup;
+				colorInfo = levelColors.CombinedColor;
 			}
 
 			// get the current console color.
@@ -349,6 +300,20 @@ namespace log4net.Appender
 			get { return true; }
 		}
 
+		/// <summary>
+		/// Initialise the options for this appender
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Initialise the level to color mappings set on this appender.
+		/// </para>
+		/// </remarks>
+		public override void ActivateOptions()
+		{
+			base.ActivateOptions();
+			m_levelMapping.ActivateOptions();
+		}
+
 		#endregion // Override implementation of AppenderSkeleton
 
 		#region Public Static Fields
@@ -377,7 +342,7 @@ namespace log4net.Appender
 		/// <summary>
 		/// Mapping from level object to color value
 		/// </summary>
-		private System.Collections.Hashtable m_Level2ColorMap = new System.Collections.Hashtable();
+		private LevelMapping m_levelMapping = new LevelMapping();
 
 		#endregion // Private Instances Fields
 
@@ -435,7 +400,63 @@ namespace log4net.Appender
 			public COORD      dwMaximumWindowSize; 
 		}
 
-		#endregion
+		#endregion // Win32 Methods
+
+		#region LevelColors LevelMapping Entry
+
+		/// <summary>
+		/// A class to act as a mapping between the level that a logging call is made at and
+		/// the color it should be displayed as.
+		/// </summary>
+		public class LevelColors : LevelMappingEntry
+		{
+			private Colors m_foreColor;
+			private Colors m_backColor;
+			private ushort m_combinedColor = 0;
+
+			/// <summary>
+			/// The mapped foreground color for the specified level
+			/// </summary>
+			public Colors ForeColor
+			{
+				get { return m_foreColor; }
+				set { m_foreColor = value; }
+			}
+
+			/// <summary>
+			/// The mapped background color for the specified level
+			/// </summary>
+			public Colors BackColor
+			{
+				get { return m_backColor; }
+				set { m_backColor = value; }
+			}
+
+			/// <summary>
+			/// Initialise the options for the object
+			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// Combine the <see cref="ForeColor"/> and <see cref="BackColor"/> together.
+			/// </para>
+			/// </remarks>
+			public override void ActivateOptions()
+			{
+				base.ActivateOptions();
+				m_combinedColor = (ushort)( (int)m_foreColor + (((int)m_backColor) << 4) );
+			}
+
+			/// <summary>
+			/// The combined <see cref="ForeColor"/> and <see cref="BackColor"/> suitable for 
+			/// setting the console color.
+			/// </summary>
+			internal ushort CombinedColor
+			{
+				get { return m_combinedColor; }
+			}
+		}
+
+		#endregion // LevelColors LevelMapping Entry
 	}
 }
 
