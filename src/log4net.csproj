@@ -88,6 +88,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "GlobalContext.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "ILog.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -548,6 +553,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Layout\Pattern\GlobalPropertyPatternConverter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Layout\Pattern\IdentityPatternConverter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -768,6 +778,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Util\GlobalContextProperties.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Util\LogLog.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -829,6 +844,11 @@
                 />
                 <File
                     RelPath = "Util\ReaderWriterLock.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Util\ReadOnlyPropertiesDictionary.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -924,6 +944,11 @@
                 />
                 <File
                     RelPath = "Util\TypeConverters\PatternStringConverter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Util\TypeConverters\TypeConverter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
