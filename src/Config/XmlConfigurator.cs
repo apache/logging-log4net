@@ -57,12 +57,21 @@ namespace log4net.Config
 		/// application's configuration settings.
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// Each application has a configuration file. This has the
 		/// same name as the application with '.config' appended.
 		/// This file is XML and calling this function prompts the
 		/// configurator to look in that file for a section called
 		/// <c>log4net</c> that contains the configuration data.
+		/// </para>
+		/// <para>
+		/// To use this method to configure log4net you must specify 
+		/// the <see cref="Log4NetConfigurationSectionHandler"/> section
+		/// handler for the <c>log4net</c> configuration section. See the
+		/// <see cref="Log4NetConfigurationSectionHandler"/> for an example.
+		/// </para>
 		/// </remarks>
+		/// <seealso cref="Log4NetConfigurationSectionHandler"/>
 		static public void Configure() 
 		{
 			Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()));
@@ -73,11 +82,19 @@ namespace log4net.Config
 		/// stored in the application's configuration file.
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// Each application has a configuration file. This has the
 		/// same name as the application with '.config' appended.
 		/// This file is XML and calling this function prompts the
 		/// configurator to look in that file for a section called
 		/// <c>log4net</c> that contains the configuration data.
+		/// </para>
+		/// <para>
+		/// To use this method to configure log4net you must specify 
+		/// the <see cref="Log4NetConfigurationSectionHandler"/> section
+		/// handler for the <c>log4net</c> configuration section. See the
+		/// <see cref="Log4NetConfigurationSectionHandler"/> for an example.
+		/// </para>
 		/// </remarks>
 		/// <param name="repository">The repository to configure.</param>
 		static public void Configure(ILoggerRepository repository) 
@@ -104,7 +121,7 @@ namespace log4net.Config
 				if (configElement == null)
 				{
 					// Failed to load the xml config using configuration settings handler
-					LogLog.Error("XmlConfigurator: Failed to find configuration section 'log4net' in the application's .config file. Check your .config file for the <log4net> and <configSections> elements.");
+					LogLog.Error("XmlConfigurator: Failed to find configuration section 'log4net' in the application's .config file. Check your .config file for the <log4net> and <configSections> elements. The configuration section should look like: <section name=\"log4net\" type=\"log4net.Config.Log4NetConfigurationSectionHandler,log4net\" />");
 				}
 				else
 				{
@@ -174,6 +191,17 @@ namespace log4net.Config
 		/// configuration file (either <c>MyAppName.exe.config</c> for a
 		/// normal application on <c>Web.config</c> for an ASP.NET application).
 		/// </para>
+		/// <para>
+		/// The first element matching <c>&lt;configuration&gt;</c> will be read as the 
+		/// configuration. If this file is also a .NET .config file then you must specify 
+		/// a configuration section for the <c>log4net</c> element otherwise .NET will 
+		/// complain. Set the type for the section handler to <see cref="System.Configuration.IgnoreSectionHandler"/>, for example:
+		/// <code>
+		/// &lt;configSections&gt;
+		///		&lt;section name="log4net" type="System.Configuration.IgnoreSectionHandler" /&gt;
+		///	&lt;/configSections&gt;
+		/// </code>
+		/// </para>
 		/// <example>
 		/// The following example configures log4net using a configuration file, of which the 
 		/// location is stored in the application's configuration file :
@@ -238,6 +266,17 @@ namespace log4net.Config
 		/// The log4net configuration file can possible be specified in the application's
 		/// configuration file (either <c>MyAppName.exe.config</c> for a
 		/// normal application on <c>Web.config</c> for an ASP.NET application).
+		/// </para>
+		/// <para>
+		/// The first element matching <c>&lt;configuration&gt;</c> will be read as the 
+		/// configuration. If this file is also a .NET .config file then you must specify 
+		/// a configuration section for the <c>log4net</c> element otherwise .NET will 
+		/// complain. Set the type for the section handler to <see cref="System.Configuration.IgnoreSectionHandler"/>, for example:
+		/// <code>
+		/// &lt;configSections&gt;
+		///		&lt;section name="log4net" type="System.Configuration.IgnoreSectionHandler" /&gt;
+		///	&lt;/configSections&gt;
+		/// </code>
 		/// </para>
 		/// <example>
 		/// The following example configures log4net using a configuration file, of which the 
