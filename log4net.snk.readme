@@ -1,0 +1,20 @@
+log4net Strong Name Key Readme
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The log4net release builds are strongly named using the log4net.snk key 
+file. This file is not distributed as part of the log4net source or 
+binary downloads. See the log4net documentation for more details.
+
+Before you can build your own release builds you will need to generate 
+a strong name key that identifies your assemblies.
+
+Generating your own strong name key.
+
+Run the SN utility from the .NET Framework SDK as follows:
+
+	sn -k log4net.snk
+
+A new strong name key pair will be created and written to the log4net.snk 
+file.
+
+
