@@ -127,7 +127,33 @@ namespace log4net.Core
 		/// <para>Gets the <see cref="ILoggerRepository"/> for the repository specified
 		/// by the <paramref name="repository"/> argument.</para>
 		/// </remarks>
+		[Obsolete("Use GetRepository instead of GetLoggerRepository")]
 		public static ILoggerRepository GetLoggerRepository(string repository)
+		{
+			return GetRepository(repository);
+		}
+
+		/// <summary>
+		/// Returns the default <see cref="ILoggerRepository"/> instance.
+		/// </summary>
+		/// <param name="repositoryAssembly">The assembly to use to lookup the repository.</param>
+		/// <returns>The default <see cref="ILoggerRepository"/> instance.</returns>
+		[Obsolete("Use GetRepository instead of GetLoggerRepository")]
+		public static ILoggerRepository GetLoggerRepository(Assembly repositoryAssembly)
+		{
+			return GetRepository(repositoryAssembly);
+		}
+
+		/// <summary>
+		/// Return the default <see cref="ILoggerRepository"/> instance.
+		/// </summary>
+		/// <param name="repository">the repository to lookup in</param>
+		/// <returns>Return the default <see cref="ILoggerRepository"/> instance</returns>
+		/// <remarks>
+		/// <para>Gets the <see cref="ILoggerRepository"/> for the repository specified
+		/// by the <paramref name="repository"/> argument.</para>
+		/// </remarks>
+		public static ILoggerRepository GetRepository(string repository)
 		{
 			if (repository == null)
 			{
@@ -141,7 +167,7 @@ namespace log4net.Core
 		/// </summary>
 		/// <param name="repositoryAssembly">The assembly to use to lookup the repository.</param>
 		/// <returns>The default <see cref="ILoggerRepository"/> instance.</returns>
-		public static ILoggerRepository GetLoggerRepository(Assembly repositoryAssembly)
+		public static ILoggerRepository GetRepository(Assembly repositoryAssembly)
 		{
 			if (repositoryAssembly == null)
 			{

@@ -65,7 +65,7 @@ namespace log4net.Config
 		/// </remarks>
 		static public void Configure() 
 		{
-			Configure(LogManager.GetLoggerRepository(Assembly.GetCallingAssembly()));
+			Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()));
 		}
 
 		/// <summary>
@@ -129,7 +129,7 @@ namespace log4net.Config
 		/// <param name="element">The element to parse.</param>
 		static public void Configure(XmlElement element) 
 		{
-			ConfigureFromXml(LogManager.GetLoggerRepository(Assembly.GetCallingAssembly()), element);
+			ConfigureFromXml(LogManager.GetRepository(Assembly.GetCallingAssembly()), element);
 		}
 
 		/// <summary>
@@ -190,7 +190,7 @@ namespace log4net.Config
 		/// </remarks>
 		static public void Configure(FileInfo configFile)
 		{
-			Configure(LogManager.GetLoggerRepository(Assembly.GetCallingAssembly()), configFile);
+			Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()), configFile);
 		}
 
 		/// <summary>
@@ -209,7 +209,7 @@ namespace log4net.Config
 		/// </remarks>
 		static public void Configure(Stream configStream)
 		{
-			Configure(LogManager.GetLoggerRepository(Assembly.GetCallingAssembly()), configStream);
+			Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()), configStream);
 		}
 
 		/// <summary>
@@ -418,7 +418,7 @@ namespace log4net.Config
 		/// <seealso cref="Configure(FileInfo)"/>
 		static public void ConfigureAndWatch(FileInfo configFile)
 		{
-			ConfigureAndWatch(LogManager.GetLoggerRepository(Assembly.GetCallingAssembly()), configFile);
+			ConfigureAndWatch(LogManager.GetRepository(Assembly.GetCallingAssembly()), configFile);
 		}
 
 		/// <summary>

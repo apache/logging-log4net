@@ -78,7 +78,7 @@ namespace log4net.Config
 		/// </remarks>
 		static public void Configure() 
 		{
-			BasicConfigurator.Configure(LogManager.GetLoggerRepository(Assembly.GetCallingAssembly()));
+			BasicConfigurator.Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()));
 		}
 
 		/// <summary>
@@ -87,7 +87,7 @@ namespace log4net.Config
 		/// <param name="appender">The appender to use to log all logging events.</param>
 		static public void Configure(IAppender appender) 
 		{
-			BasicConfigurator.Configure(LogManager.GetLoggerRepository(Assembly.GetCallingAssembly()), appender);
+			BasicConfigurator.Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()), appender);
 		}
 
 		/// <summary>
