@@ -668,7 +668,7 @@ namespace log4net.Plugin
 		/// Supports simple iteration over a <see cref="PluginCollection"/>.
 		/// </summary>
 		/// <exclude/>
-		private class Enumerator : IEnumerator, IPluginCollectionEnumerator
+		private sealed class Enumerator : IEnumerator, IPluginCollectionEnumerator
 		{
 			#region Implementation (data)
 			
@@ -751,7 +751,7 @@ namespace log4net.Plugin
 		#region Nested Synchronized Wrapper class
 
 		/// <exclude/>
-		private class SyncPluginCollection : PluginCollection
+		private sealed class SyncPluginCollection : PluginCollection
 		{
 			#region Implementation (data)
 			private PluginCollection m_collection;
@@ -952,7 +952,7 @@ namespace log4net.Plugin
 		#region Nested Read Only Wrapper class
 
 		/// <exclude/>
-		private class ReadOnlyPluginCollection : PluginCollection
+		private sealed class ReadOnlyPluginCollection : PluginCollection
 		{
 			#region Implementation (data)
 
