@@ -283,6 +283,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Core\CompactRepositorySelector.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Core\DefaultRepositorySelector.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
