@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<project name="appender-examples" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <!-- compile Tutorials examples -->
+    <target name="compile" description="Builds Appender examples">
+        <nant target="compile">
+            <buildfiles>
+                <include name="*/nant.build" />
+                <!-- exclude current build file -->
+                <exclude name="exclude.build" />
+            </buildfiles>
+        </nant>
+    </target>
+</project>

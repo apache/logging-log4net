@@ -1,0 +1,5 @@
+obj
+*.csproj.user
+bin
+doc
+

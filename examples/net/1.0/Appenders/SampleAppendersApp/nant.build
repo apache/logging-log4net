@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<project name="sampleappendersapp-example" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <!-- compile ConsoleApp example -->
+    <target name="compile" description="Builds SampleAppendersApp example">
+        <nant target="compile">
+            <buildfiles>
+                <include name="*/nant.build" />
+                <!-- exclude current build file -->
+                <exclude name="exclude.build" />
+            </buildfiles>
+        </nant>
+    </target>
+</project>
