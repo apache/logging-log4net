@@ -42,6 +42,8 @@ namespace log4net.ObjectRenderer
 		#region Member Variables
 
 		private System.Collections.Hashtable m_map;
+		private System.Collections.Hashtable m_cache = new System.Collections.Hashtable();
+
 		private static IObjectRenderer s_defaultRenderer = new DefaultRenderer();
 
 		#endregion
@@ -77,6 +79,13 @@ namespace log4net.ObjectRenderer
 		/// </remarks>
 		public string FindAndRender(object obj)
 		{
+			// Optimisation for strings
+			string strData = obj as String;
+			if (strData != null)
+			{
+				return strData;
+			}
+
 			StringWriter stringWriter = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
 			FindAndRender(obj, stringWriter);
 			return stringWriter.ToString();
@@ -198,27 +207,29 @@ namespace log4net.ObjectRenderer
 
 			IObjectRenderer result = null;
 
-			for(Type cur = type; cur != null; cur = cur.BaseType)
-			{
-				// Look for the specific type in the map
-				result = (IObjectRenderer)m_map[cur];
-				if (result != null) 
-				{
-					break;
-				}
+			// Check cache
+			result = (IObjectRenderer)m_cache[type];
 
-				// Search the type's interfaces
-				result = SearchInterfaces(cur);
-				if (result != null)
-				{
-					break;
-				}
-			}
-
-			// if not set then use the default renderer
 			if (result == null)
 			{
-				result = s_defaultRenderer;
+				for(Type cur = type; cur != null; cur = cur.BaseType)
+				{
+					// Search the type's interfaces
+					result = SearchTypeAndInterfaces(cur);
+					if (result != null)
+					{
+						break;
+					}
+				}
+
+				// if not set then use the default renderer
+				if (result == null)
+				{
+					result = s_defaultRenderer;
+				}
+
+				// Add to cache
+				m_cache[type] = result;
 			}
 
 			return result;
@@ -229,7 +240,7 @@ namespace log4net.ObjectRenderer
 		/// </summary>
 		/// <param name="type">the type to lookup the renderer for</param>
 		/// <returns>the renderer for the specified type</returns>
-		private IObjectRenderer SearchInterfaces(Type type) 
+		private IObjectRenderer SearchTypeAndInterfaces(Type type) 
 		{
 			IObjectRenderer r = (IObjectRenderer)m_map[type];
 			if (r != null) 
@@ -240,7 +251,7 @@ namespace log4net.ObjectRenderer
 			{
 				foreach(Type t in type.GetInterfaces())
 				{
-					r = SearchInterfaces(t);
+					r = SearchTypeAndInterfaces(t);
 					if (r != null)
 					{
 						return r; 
@@ -277,6 +288,7 @@ namespace log4net.ObjectRenderer
 		public void Clear() 
 		{
 			m_map.Clear();
+			m_cache.Clear();
 		}
 
 		/// <summary>
@@ -293,6 +305,8 @@ namespace log4net.ObjectRenderer
 		/// </remarks>
 		public void Put(Type typeToRender, IObjectRenderer renderer) 
 		{
+			m_cache.Clear();
+
 			if (typeToRender == null)
 			{
 				throw new ArgumentNullException("typeToRender");
