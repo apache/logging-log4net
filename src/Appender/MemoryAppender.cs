@@ -45,7 +45,7 @@ namespace log4net.Appender
 	/// <author>Gert Driesen</author>
 	public class MemoryAppender : AppenderSkeleton
 	{
-		#region Protected Instance Constructors
+		#region Public Instance Constructors
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MemoryAppender" /> class.
