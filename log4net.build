@@ -725,7 +725,9 @@
                 <include name="log4net.include" />
                 <!-- <include name="releasenotes.html" /> -->
                 <include name="LICENSE.txt" />
+                <include name="NOTICE.txt" />
                 <include name="log4net.snk" />
+                <include name="log4net.snk.readme" />
             </fileset>
         </copy>
     </target>
