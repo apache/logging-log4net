@@ -37,7 +37,7 @@ namespace log4net.Tests
 
 		public static object CreateInstance(Type targetType)
 		{
-			return targetType.GetConstructor(BindingFlags.NonPublic|BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance, null, new Type[0], null).Invoke(null);
+			return targetType.GetConstructor(BindingFlags.NonPublic|BindingFlags.Public|BindingFlags.Instance, null, new Type[0], null).Invoke(null);
 		}
 
 		public static object InvokeMethod(object target, string name, params object[] args)
