@@ -223,7 +223,7 @@ namespace log4net.Appender
 			{
 				if (value < IPEndPoint.MinPort || value > IPEndPoint.MaxPort) 
 				{
-					throw new ArgumentOutOfRangeException(
+					throw new ArgumentOutOfRangeException("value", (object)value,
 						"The value specified is less than " + 
 						IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo) + 
 						" or greater than " + 
@@ -258,7 +258,7 @@ namespace log4net.Appender
 			{
 				if (value != 0 && (value < IPEndPoint.MinPort || value > IPEndPoint.MaxPort))
 				{
-					throw new ArgumentOutOfRangeException(
+					throw new ArgumentOutOfRangeException("value", (object)value,
 						"The value specified is less than " + 
 						IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo) + 
 						" or greater than " + 
@@ -336,6 +336,17 @@ namespace log4net.Appender
 		/// </summary>
 		/// <remarks>
 		/// <para>
+		/// This is part of the <see cref="IOptionHandler"/> delayed object
+		/// activation scheme. The <see cref="ActivateOptions"/> method must 
+		/// be called on this object after the configuration properties have
+		/// been set. Until <see cref="ActivateOptions"/> is called this
+		/// object is in an undefined state and must not be used. 
+		/// </para>
+		/// <para>
+		/// If any of the configuration properties are modified then 
+		/// <see cref="ActivateOptions"/> must be called again.
+		/// </para>
+		/// <para>
 		/// The appender will be ignored if no <see cref="RemoteAddress" /> was specified or 
 		/// an invalid remote or local TCP port number was specified.
 		/// </para>
@@ -352,7 +363,7 @@ namespace log4net.Appender
 			} 
 			else if (this.RemotePort < IPEndPoint.MinPort || this.RemotePort > IPEndPoint.MaxPort) 
 			{
-				throw new ArgumentOutOfRangeException(
+				throw new ArgumentOutOfRangeException("this.RemotePort", (object)this.RemotePort,
 					"The RemotePort is less than " + 
 					IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo) + 
 					" or greater than " + 
@@ -360,7 +371,7 @@ namespace log4net.Appender
 			} 
 			else if (this.LocalPort != 0 && (this.LocalPort < IPEndPoint.MinPort || this.LocalPort > IPEndPoint.MaxPort))
 			{
-				throw new ArgumentOutOfRangeException(
+				throw new ArgumentOutOfRangeException("this.LocalPort", (object)this.LocalPort,
 					"The LocalPort is less than " + 
 					IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo) + 
 					" or greater than " + 
