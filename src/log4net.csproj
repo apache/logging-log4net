@@ -148,11 +148,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Appender\CountingAppender.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Appender\DebugAppender.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
