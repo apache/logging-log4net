@@ -101,7 +101,7 @@ namespace NotLogging
 			else if ("true" == args[0]) 
 			{
 				System.Console.WriteLine("Flagging as shipped code.");
-				((Hierarchy)LogManager.GetLoggerRepository()).Threshold = log4net.Core.Level.Warn;
+				((Hierarchy)LogManager.GetRepository()).Threshold = log4net.Core.Level.Warn;
 			} 
 			else 
 			{
@@ -109,8 +109,8 @@ namespace NotLogging
 			}
 
 			((Logger)SHORT_LOG.Logger).Level = log4net.Core.Level.Info;
-			((Hierarchy)LogManager.GetLoggerRepository()).Root.Level = log4net.Core.Level.Info;
-			((Hierarchy)LogManager.GetLoggerRepository()).Root.AddAppender(appender);
+			((Hierarchy)LogManager.GetRepository()).Root.Level = log4net.Core.Level.Info;
+			((Hierarchy)LogManager.GetRepository()).Root.AddAppender(appender);
 
 			return runLength;
 		}    

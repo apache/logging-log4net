@@ -89,14 +89,14 @@ Namespace NotLogging
 				' nothing to do
 			Else If "true" = args(0) Then
 				System.Console.WriteLine("Flagging as shipped code.")
-				CType(LogManager.GetLoggerRepository(), log4net.Repository.Hierarchy.Hierarchy).Threshold = log4net.Core.Level.Warn
+				CType(LogManager.GetRepository(), log4net.Repository.Hierarchy.Hierarchy).Threshold = log4net.Core.Level.Warn
 			Else
 				Usage()
 			End If
 
 			CType(SHORT_LOG.Logger, Logger).Level = log4net.Core.Level.Info
-			CType(LogManager.GetLoggerRepository(), log4net.Repository.Hierarchy.Hierarchy).Root.Level = log4net.Core.Level.Info
-			CType(LogManager.GetLoggerRepository(), log4net.Repository.Hierarchy.Hierarchy).Root.AddAppender(appender)
+			CType(LogManager.GetRepository(), log4net.Repository.Hierarchy.Hierarchy).Root.Level = log4net.Core.Level.Info
+			CType(LogManager.GetRepository(), log4net.Repository.Hierarchy.Hierarchy).Root.AddAppender(appender)
 
 			Return runLength
 		End Function

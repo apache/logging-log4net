@@ -45,7 +45,7 @@ namespace RemotingServer
 			RemotingConfiguration.Configure(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile);
 
 			// Publish the remote logging server. This is done using the log4net plugin.
-			log4net.LogManager.GetLoggerRepository().PluginMap.Add(new log4net.Plugin.RemoteLoggingServerPlugin("LoggingSink"));
+			log4net.LogManager.GetRepository().PluginMap.Add(new log4net.Plugin.RemoteLoggingServerPlugin("LoggingSink"));
 
 			// Wait for the user to exit
 			Console.WriteLine("Press 0 and ENTER to Exit");
