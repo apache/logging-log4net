@@ -760,6 +760,11 @@ namespace log4net.Layout
 		/// <see cref="CreatePatternParser"/>. If you override this method be
 		/// aware that it will be called before your is called constructor.
 		/// </para>
+		/// <para>
+		/// As per the <see cref="IOptionHandler"/> contract the <see cref="ActivateOptions"/>
+		/// method must be called after the properties on this object have been
+		/// configured.
+		/// </para>
 		/// </remarks>
 		public PatternLayout() : this(DefaultConversionPattern)
 		{
@@ -775,6 +780,10 @@ namespace log4net.Layout
 		/// <see cref="CreatePatternParser"/>. If you override this method be
 		/// aware that it will be called before your is called constructor.
 		/// </para>
+		/// <para>
+		/// When using this constructor the <see cref="ActivateOptions"/> method 
+		/// need not be called. This may not be the case when using a subclass.
+		/// </para>
 		/// </remarks>
 		public PatternLayout(string pattern) 
 		{
@@ -782,7 +791,13 @@ namespace log4net.Layout
 			SetIgnoresException(true);
 
 			m_pattern = pattern;
-			m_head = CreatePatternParser((pattern == null) ? DefaultConversionPattern : pattern).Parse();
+
+			if (m_pattern == null)
+			{
+				m_pattern = DefaultConversionPattern;
+			}
+
+			m_head = CreatePatternParser(pattern).Parse();
 		}
 
 		#endregion
