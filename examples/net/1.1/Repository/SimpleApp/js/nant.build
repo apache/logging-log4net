@@ -1,0 +1,52 @@
+<?xml version="1.0" ?>
+<project name="log4net-samples" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <!-- Include configuration file -->
+    <include buildfile="nant.config" />
+    <!-- Include log4net helpers -->
+    <include buildfile="${log4net.basedir}/log4net.include" />
+    <!-- Targets that should always be executed -->
+    <call target="set-build-configuration" />
+    <call target="set-${project.runtime.config}-${project.runtime.version}-runtime-configuration" />
+    <!-- Target for compiling the example -->
+    <target name="compile" description="Builds the example" depends="check-current-bin-dir, clean-current-bin-dir, check-current-build-defines, check-current-build-config, check-current-build-debug, check-current-runtime-config, check-current-runtime-version, check-log4net-assembly">
+        <!-- copy log4net build output  -->
+        <copy todir="${current.bin.dir}">
+            <fileset basedir="${log4net.basedir}/${current.bin.dir}">
+                <includes name="*.*" />
+            </fileset>
+        </copy>
+        <!-- build SharedModule assembly -->
+        <nant buildfile="../../SharedModule/js/nant.build" target="compile" inheritall="true" />
+        <!-- build SimpleModule assembly -->
+        <nant buildfile="../../SimpleModule/js/nant.build" target="compile" inheritall="true" />
+        <!-- copy SharedModule build output -->
+        <copy todir="${current.bin.dir}">
+            <fileset basedir="../../SharedModule/js/${current.bin.dir}">
+                <includes name="*.*" />
+            </fileset>
+        </copy>
+        <!-- copy SimpleModule build output -->
+        <copy todir="${current.bin.dir}">
+            <fileset basedir="../../SimpleModule/js/${current.bin.dir}">
+                <includes name="*.*" />
+            </fileset>
+        </copy>
+        <!-- compile the example -->
+        <jsc target="exe" warnaserror="true" debug="${current.build.debug}" define="${current.build.defines.jsc}"
+            output="${current.bin.dir}/SimpleApp.exe">
+            <sources defaultexcludes="true">
+                <includes name="src/**/*.js" />
+                <includes name="${log4net.basedir}/src/AssemblyVersionInfo.js" />
+            </sources>
+            <references basedir="${current.bin.dir}" defaultexcludes="true">
+                <includes name="SharedModule.dll" frompath="false" />
+                <includes name="SimpleModule.dll" frompath="false" />
+                <includes name="log4net.dll" frompath="false" />
+            </references>
+        </jsc>
+        <!-- copy the SimpleApp log4net configuration file -->
+        <copy file="src/SimpleApp.exe.log4net" todir="${current.bin.dir}" />
+        <!-- copy the SimpleApp application configuration file -->
+        <copy file="src/App.config" tofile="${current.bin.dir}/SimpleApp.exe.config" />
+    </target>
+</project>

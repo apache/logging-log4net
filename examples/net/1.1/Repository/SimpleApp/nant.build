@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<project name="simpleapp-example" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <!-- compile SimpleApp example -->
+    <target name="compile" description="Builds SimpleApp example">
+        <nant buildfile="js/nant.build" target="compile" />
+    </target>
+</project>
