@@ -260,7 +260,7 @@ namespace log4net.Repository.Hierarchy
 			LogLog.Debug("XmlConfigurator: Loading Appender [" + appenderName + "] type: [" + typeName + "]");
 			try 
 			{
-				IAppender appender = (IAppender)SystemInfo.GetTypeFromString(typeName, true, true).GetConstructor(SystemInfo.EmptyTypes).Invoke(BindingFlags.Public | BindingFlags.Instance, null, new object[0], CultureInfo.InvariantCulture);
+				IAppender appender = (IAppender)Activator.CreateInstance(SystemInfo.GetTypeFromString(typeName, true, true));
 				appender.Name = appenderName;
 
 				foreach (XmlNode currentNode in appenderElement.ChildNodes)
@@ -793,15 +793,15 @@ namespace log4net.Repository.Hierarchy
 			}
 
 			// Look for the default constructor
-			ConstructorInfo constInfo = objectType.GetConstructor(SystemInfo.EmptyTypes);
-			if (constInfo == null)
+			object createdObject = null;
+			try
 			{
-				LogLog.Error("XmlConfigurator: Failed to find default constructor for type [" + objectType.FullName + "]");
-				return null;
+				createdObject = Activator.CreateInstance(objectType);
 			}
-
-			// Call the constructor
-			object createdObject = constInfo.Invoke(BindingFlags.Public | BindingFlags.Instance, null, new object[0], CultureInfo.InvariantCulture);
+			catch(Exception createInstanceEx)
+			{
+				LogLog.Error("XmlConfigurator: Failed to construct object of type [" + objectType.FullName + "] Exception: "+createInstanceEx.ToString());
+			}
 
 			// Set any params on object
 			foreach (XmlNode currentNode in element.ChildNodes)

@@ -295,27 +295,27 @@ namespace log4net.Util
 			else
 			{
 				// Create the pattern converter
-				ConstructorInfo constructor = converterType.GetConstructor(SystemInfo.EmptyTypes);
-				if (constructor == null)
+				PatternConverter pc = null;
+				try
 				{
-					LogLog.Error("PatternParser: Converter Type ["+converterType.FullName+"] does not have a default constructor.");
+					pc = (PatternConverter)Activator.CreateInstance(converterType);
 				}
-				else
+				catch(Exception createInstanceEx)
 				{
-					PatternConverter pc = (PatternConverter)constructor.Invoke(BindingFlags.Public | BindingFlags.Instance, null, new object[0], CultureInfo.InvariantCulture);
-
-					// formattingInfo variable is an instance variable, occasionally reset 
-					// and used over and over again
-					pc.FormattingInfo = formattingInfo;
-					pc.Option = option;
-
-					if (pc is IOptionHandler)
-					{
-						((IOptionHandler)pc).ActivateOptions();
-					}
-
-					AddConverter(pc);
+					LogLog.Error("PatternParser: Failed to create instance of Type ["+converterType.FullName+"] using default constructor. Exception: "+createInstanceEx.ToString());
 				}
+
+				// formattingInfo variable is an instance variable, occasionally reset 
+				// and used over and over again
+				pc.FormattingInfo = formattingInfo;
+				pc.Option = option;
+
+				if (pc is IOptionHandler)
+				{
+					((IOptionHandler)pc).ActivateOptions();
+				}
+
+				AddConverter(pc);
 			}
 		}
 

@@ -91,7 +91,7 @@ namespace log4net.Config
 			}
 
 			// Create an instance of the plugin using the default constructor
-			IPlugin plugin = (IPlugin) pluginType.GetConstructor(SystemInfo.EmptyTypes).Invoke(BindingFlags.Public | BindingFlags.Instance, null, new object[0], CultureInfo.InvariantCulture);
+			IPlugin plugin = (IPlugin)Activator.CreateInstance(pluginType);
 
 			return plugin;
 		}

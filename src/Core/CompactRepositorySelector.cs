@@ -195,7 +195,7 @@ namespace log4net.Core
 					LogLog.Debug("DefaultRepositorySelector: Creating repository ["+repository+"] using type ["+repositoryType+"]");
 
 					// Call the no arg constructor for the repositoryType
-					rep = (ILoggerRepository)repositoryType.GetConstructor(SystemInfo.EmptyTypes).Invoke(null);
+					rep = (ILoggerRepository)Activator.CreateInstance(repositoryType);
 
 					// Set the name of the repository
 					rep.Name = repository;

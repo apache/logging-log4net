@@ -201,11 +201,7 @@ namespace log4net.Util.TypeConverters
 				if (typeof(IConvertFrom).IsAssignableFrom(converterType) || typeof(IConvertTo).IsAssignableFrom(converterType))
 				{
 					// Create the type converter
-					ConstructorInfo ci = converterType.GetConstructor(log4net.Util.SystemInfo.EmptyTypes);
-					if (ci != null)
-					{
-						return ci.Invoke(BindingFlags.Public | BindingFlags.Instance, null, new object[0], CultureInfo.InvariantCulture);
-					}
+					return Activator.CreateInstance(converterType);
 				}
 			}
 			return null;
