@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 #if !NETCF
 using System.Runtime.Serialization;
+using System.Xml;
 #endif
 
 namespace log4net.Util
@@ -66,7 +67,7 @@ namespace log4net.Util
 		{
 			foreach(SerializationEntry entry in info)
 			{
-				m_ht[entry.Name] = entry.Value;
+				m_ht[XmlConvert.EncodeLocalName(entry.Name)] = entry.Value;
 			}
 		}
 #endif
@@ -123,7 +124,7 @@ namespace log4net.Util
 				// If value is serializable then we add it to the list
 				if (entry.Value.GetType().IsSerializable)
 				{
-					info.AddValue(entry.Key as string, entry.Value);
+					info.AddValue(XmlConvert.EncodeLocalName(entry.Key as string), entry.Value);
 				}
 			}
 		}
