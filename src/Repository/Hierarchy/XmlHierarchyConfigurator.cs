@@ -517,23 +517,11 @@ namespace log4net.Repository.Hierarchy
 				propInfo = null;
 
 				// look for a method with the signature Add<property>(type)
+				methInfo = FindMethodInfo(targetType, name);
 
-				methInfo = targetType.GetMethod("Add" + name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
-				if (methInfo != null && methInfo.IsPublic && !methInfo.IsStatic)
+				if (methInfo != null)
 				{
-					System.Reflection.ParameterInfo[] methParams = methInfo.GetParameters();
-					if (methParams.Length == 1)
-					{
-						propertyType = methParams[0].ParameterType;
-					}
-					else
-					{
-						methInfo = null;
-					}
-				}
-				else
-				{
-					methInfo = null;
+					propertyType = methInfo.GetParameters()[0].ParameterType;
 				}
 			}
 
@@ -631,6 +619,45 @@ namespace log4net.Repository.Hierarchy
 		}
 
 		/// <summary>
+		/// Look for a method on the targetType that matches the name supplied
+		/// </summary>
+		/// <param name="targetType">the type that has the method</param>
+		/// <param name="name">the name of the method</param>
+		/// <returns>the method info found</returns>
+		/// <remarks>
+		/// The method must be a public instance method on the targetType.
+		/// The method must be named <c>name</c> or "Add" followed by <c>name</c>.
+		/// The method must take a single parameter.
+		/// </remarks>
+		private MethodInfo FindMethodInfo(Type targetType, string name)
+		{
+			string requiredMethodNameA = name;
+			string requiredMethodNameB = "Add" + name;
+
+			MethodInfo[] methods = targetType.GetMethods(BindingFlags.Instance | BindingFlags.Public);
+
+			foreach(MethodInfo methInfo in methods)
+			{
+				if (methInfo.IsPublic && !methInfo.IsStatic)
+				{
+					if (string.Compare(methInfo.Name, requiredMethodNameA, true, System.Globalization.CultureInfo.InvariantCulture) == 0 ||
+						string.Compare(methInfo.Name, requiredMethodNameB, true, System.Globalization.CultureInfo.InvariantCulture) == 0)
+					{
+						// Found matching method name
+
+						// Look for version with one arg only
+						System.Reflection.ParameterInfo[] methParams = methInfo.GetParameters();
+						if (methParams.Length == 1)
+						{
+							return methInfo;
+						}
+					}
+				}
+			}
+			return null;
+		}
+
+		/// <summary>
 		/// Converts a string value to a target type.
 		/// </summary>
 		/// <param name="type">The type of object to convert the string to.</param>
@@ -645,7 +672,14 @@ namespace log4net.Repository.Hierarchy
 			if (type.IsAssignableFrom(typeof(Level)))
 			{
 				// Property wants a level
-				return m_hierarchy.LevelMap[value];
+				Level levelValue = m_hierarchy.LevelMap[value];
+
+				if (levelValue == null)
+				{
+					LogLog.Error("XmlConfigurator: Unknown Level Specifed ["+ value +"]");
+				}
+
+				return levelValue;
 			}
 			return OptionConverter.ConvertStringTo(type, value);
 		}
