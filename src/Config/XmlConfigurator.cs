@@ -527,6 +527,7 @@ namespace log4net.Config
 				}
 				else
 				{
+					// NETCF dose not support WebClient
 					WebRequest configRequest = null;
 
 					try
@@ -540,6 +541,17 @@ namespace log4net.Config
 
 					if (configRequest != null)
 					{
+#if !NETCF
+						// authentication may be required, set client to use default credentials
+						try
+						{
+							configRequest.Credentials = CredentialCache.DefaultCredentials;
+						}
+						catch
+						{
+							// ignore security exception
+						}
+#endif
 						try
 						{
 							WebResponse response = configRequest.GetResponse();
@@ -547,6 +559,7 @@ namespace log4net.Config
 							{
 								try
 								{
+									// Open stream on config URI
 									using(Stream configStream = response.GetResponseStream())
 									{
 										Configure(repository, configStream);
