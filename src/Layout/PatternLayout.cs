@@ -585,11 +585,11 @@ namespace log4net.Layout
 	/// </para>
 	/// </remarks>
 	/// <example>
-	/// This is essentially the TTCC layout
+	/// This is a more detailed pattern.
 	/// <code><b>%timestamp [%thread] %level %logger %ndc - %message%newline</b></code>
 	/// </example>
 	/// <example>
-	/// Similar to the TTCC layout except that the relative time is
+	/// A similar pattern except that the relative time is
 	/// right padded if less than 6 digits, thread name is right padded if
 	/// less than 15 characters and truncated if longer and the logger
 	/// name is left padded if shorter than 30 characters and truncated if
@@ -607,19 +607,18 @@ namespace log4net.Layout
 		/// <summary>
 		/// Default pattern string for log output. 
 		/// Currently set to the string <b>"%message%newline"</b> 
-		/// which just prints the application supplied	message. 
+		/// which just prints the application supplied message. 
 		/// </summary>
 		public const string DefaultConversionPattern ="%message%newline";
 
 		/// <summary>
-		/// A conversion pattern equivalent to the TTCCLayout.
+		/// A detailed conversion pattern
 		/// </summary>
 		/// <remarks>
-		/// A conversion pattern equivalent to the TTCCLayout. Which stood for Time, Thread, Category, and Context.
-		/// Now this is Time, Thread, Logger, and Nested Context.
+		/// A conversion pattern which includes Time, Thread, Logger, and Nested Context.
 		/// Current value is <b>%timestamp [%thread] %level %logger %ndc - %message%newline</b>.
 		/// </remarks>
-		public const string TtlnConversionPattern = "%timestamp [%thread] %level %logger %ndc - %message%newline";
+		public const string DetailConversionPattern = "%timestamp [%thread] %level %logger %ndc - %message%newline";
 
 		#endregion
 
@@ -782,8 +781,21 @@ namespace log4net.Layout
 		#region Implementation of IOptionHandler
 
 		/// <summary>
-		/// Does not do anything as options become effective immediately.
+		/// Initialize layout options
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This is part of the <see cref="IOptionHandler"/> delayed object
+		/// activation scheme. The <see cref="ActivateOptions"/> method must 
+		/// be called on this object after the configuration properties have
+		/// been set. Until <see cref="ActivateOptions"/> is called this
+		/// object is in an undefined state and must not be used. 
+		/// </para>
+		/// <para>
+		/// If any of the configuration properties are modified then 
+		/// <see cref="ActivateOptions"/> must be called again.
+		/// </para>
+		/// </remarks>
 		override public void ActivateOptions() 
 		{
 			// nothing to do.
@@ -833,18 +845,24 @@ namespace log4net.Layout
 	/// <summary>
 	/// Implementation shim class used by the PatternLayout
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// This class is used to allow the <see cref="PatternLayout"/> to
+	/// provide a new implementation of the <see cref="PatternLayout.IgnoresException"/>
+	/// property that has a setter as well as the getter. This class
+	/// is needed because there muse be an implementation of the 
+	/// <see cref="LayoutSkeleton.IgnoresException"/> property before
+	/// it can be hidden by a new property.
+	/// </para>
+	/// <para>
+	/// This class stores the value and overrides the base class required property.
+	/// </para>
+	/// </remarks>
+	/// <exclude/>
 	public abstract class PatternLayoutShim : LayoutSkeleton
 	{
-		//
-		// This class is used to allow the PatternLayout to
-		// provide a new implementation of the IgnoresException
-		// property that has a setter as well as the getter.
-		// This class stores the value and overrides the base class
-		// required property.
-		//
-
 		#region Member Variables
-    
+	
 		/// <summary>
 		/// Store IgnoresException state
 		/// </summary>
@@ -855,19 +873,18 @@ namespace log4net.Layout
 		#region Constructors
 
 		/// <summary>
+		/// Default protected constructor
 		/// </summary>
-		/// <remarks>
-		/// </remarks>
 		protected PatternLayoutShim()
 		{
 		}
 
 		#endregion
-  
+	
 		#region Override implementation of LayoutSkeleton
 
 		/// <summary>
-		/// The <see cref="IgnoresException"/> value
+		/// The <see cref="LayoutSkeleton.IgnoresException"/> value
 		/// </summary>
 		override public bool IgnoresException
 		{
