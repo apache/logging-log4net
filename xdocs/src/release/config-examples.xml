@@ -703,13 +703,52 @@ IN "LRGTABLES";
 <appender name="RollingLogFileAppender" type="log4net.Appender.RollingFileAppender">
 	<file value="logfile" />
 	<appendToFile value="true" />
-	<datePattern value="yyyyMMdd-HHmm" />
 	<rollingStyle value="Date" />
+	<datePattern value="yyyyMMdd-HHmm" />
 	<layout type="log4net.Layout.PatternLayout">
 		<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
 	</layout>
 </appender>
-				]]></source>	
+				]]></source>
+				<p>
+					This example show how to configure the <span class="code">RollingFileAppender</span>
+					to roll log files on a date period and within a date period on file size. For each day
+					only the last 10 files of 1MB will be kept.
+				</p>
+				<source language="xml"><![CDATA[
+<appender name="RollingLogFileAppender" type="log4net.Appender.RollingFileAppender">
+	<file value="logfile" />
+	<appendToFile value="true" />
+	<rollingStyle value="Composite" />
+	<datePattern value="yyyyMMdd" />
+	<maxSizeRollBackups value="10" />
+	<maximumFileSize value="1MB" />
+	<layout type="log4net.Layout.PatternLayout">
+		<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+	</layout>
+</appender>
+				]]></source>
+				<p>
+					This example show how to configure the <span class="code">RollingFileAppender</span>
+					to roll log files once per program execution. The <span class="code">appendToFile</span>
+					property is set to <span class="code">false</span> to prevent the appender from overwriting
+					the existing files. The <span class="code">maxSizeRollBackups</span> is set to negative
+					1 to allow an infinite number of backup files. The file size does have to be limited but
+					here it is set to 50 Gigabytes which, if a log file exceeds this size limit during a single
+					run then it will also be rolled.
+				</p>
+				<source language="xml"><![CDATA[
+<appender name="RollingLogFileAppender" type="log4net.Appender.RollingFileAppender">
+	<file value="logfile.txt" />
+	<appendToFile value="false" />
+	<rollingStyle value="Size" />
+	<maxSizeRollBackups value="-1" />
+	<maximumFileSize value="50GB" />
+	<layout type="log4net.Layout.PatternLayout">
+		<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+	</layout>
+</appender>
+				]]></source>
 			</section>
 			
 			<section name="SmtpAppender">
