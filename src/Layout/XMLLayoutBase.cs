@@ -50,6 +50,7 @@ namespace log4net.Layout
 		/// </summary>
 		protected XmlLayoutBase() : this(false)
 		{
+			IgnoresException = false;
 		}
 
 		/// <summary>
@@ -71,6 +72,7 @@ namespace log4net.Layout
 		/// </remarks>
 		protected XmlLayoutBase(bool locationInfo)
 		{
+			IgnoresException = false;
 			m_locationInfo = locationInfo;
 		}
 
@@ -140,15 +142,6 @@ namespace log4net.Layout
 		override public string ContentType
 		{
 			get { return "text/xml"; }
-		}
-
-		/// <summary>
-		/// The XMLLayout does handle the exception contained within
-		/// LoggingEvents. Thus, it returns <c>false</c>.
-		/// </summary>
-		override public bool IgnoresException
-		{
-			get { return false; }
 		}
 
 		/// <summary>

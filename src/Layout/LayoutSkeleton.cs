@@ -31,6 +31,18 @@ namespace log4net.Layout
 	/// <para>This is the base implementation of the <see cref="ILayout"/>
 	/// interface. Most layout objects should extend this class.</para>
 	/// </remarks>
+	/// <remarks>
+	/// <note type="inheritinfo">
+	/// <para>
+	/// Subclasses must implement the <see cref="Format(TextWriter,LoggingEvent)"/>
+	/// method.
+	/// </para>
+	/// <para>
+	/// Subclasses should set the <see cref="IgnoresException"/> in their default
+	/// constructor.
+	/// </para>
+	/// </note>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	public abstract class LayoutSkeleton : ILayout, IOptionHandler
@@ -52,6 +64,14 @@ namespace log4net.Layout
 		/// <para>See <see cref="Footer"/> for more information.</para>
 		/// </remarks>
 		private string m_footer = null;
+
+		/// <summary>
+		/// Flag indicating if this layout handles exceptions
+		/// </summary>
+		/// <remarks>
+		/// <c>false</c> if this layout handles exceptions
+		/// </remarks>
+		private bool m_ignoresException = true;
 
 		#endregion
 
@@ -174,14 +194,21 @@ namespace log4net.Layout
 		/// </summary>
 		/// <value><c>false</c> if this layout handles exceptions</value>
 		/// <remarks>
-		/// <para>If this layout handles the exception object contained within
+		/// <para>
+		/// If this layout handles the exception object contained within
 		/// <see cref="LoggingEvent"/>, then the layout should return
 		/// <c>false</c>. Otherwise, if the layout ignores the exception
-		/// object, then the layout should return <c>true</c>.</para>
-		/// 
-		/// <para>This method must be implemented by the subclass.</para>
+		/// object, then the layout should return <c>true</c>.
+		/// </para>
+		/// <para>
+		/// Set this value to override a this default setting.
+		/// </para>
 		/// </remarks>
-		abstract public	bool IgnoresException { get; }
+		virtual public bool IgnoresException 
+		{ 
+			get { return m_ignoresException; }
+			set { m_ignoresException = value; }
+		}
 
 		#endregion
 	}

@@ -48,6 +48,7 @@ namespace log4net.Layout
 		/// </remarks>
 		public SimpleLayout()
 		{
+			IgnoresException = true;
 		}
 
 		#endregion
@@ -78,15 +79,6 @@ namespace log4net.Layout
 		#endregion
 
 		#region Override implementation of LayoutSkeleton
-
-		/// <summary>
-		/// The SimpleLayout does not handle the exception contained within
-		/// LoggingEvents. Thus, it returns <c>true</c>.
-		/// </summary>
-		override public bool IgnoresException
-		{
-			get { return true; }
-		}
 
 		/// <summary>
 		/// Produces a formatted string.

@@ -634,7 +634,7 @@ namespace log4net.Layout
 	/// <author>Gert Driesen</author>
 	/// <author>Douglas de la Torre</author>
 	/// <author>Daniel Cazzulino</author>
-	public class PatternLayout : PatternLayoutShim
+	public class PatternLayout : LayoutSkeleton
 	{
 		#region Constants
 
@@ -797,7 +797,7 @@ namespace log4net.Layout
 		public PatternLayout(string pattern) 
 		{
 			// By default we do not process the exception
-			SetIgnoresException(true);
+			IgnoresException = true;
 
 			m_pattern = pattern;
 
@@ -870,18 +870,6 @@ namespace log4net.Layout
 		}
 
 		#endregion
-
-		/// <summary>
-		/// The <see cref="LayoutSkeleton.IgnoresException"/> value for this layout
-		/// </summary>
-		/// <remarks>
-		/// The default value is <c>true</c>, i.e. that this layout ignores the exception
-		/// </remarks>
-		new public bool IgnoresException
-		{
-			get { return base.IgnoresException; }
-			set { base.SetIgnoresException(value); }
-		}
 
 		#region Override implementation of LayoutSkeleton
 
@@ -971,67 +959,6 @@ namespace log4net.Layout
 				get { return m_type; }
 				set { m_type = value; }
 			}
-		}
-	}
-
-	/// <summary>
-	/// Implementation shim class used by the PatternLayout
-	/// </summary>
-	/// <remarks>
-	/// <para>
-	/// This class is used to allow the <see cref="PatternLayout"/> to
-	/// provide a new implementation of the <see cref="PatternLayout.IgnoresException"/>
-	/// property that has a setter as well as the getter. This class
-	/// is needed because there muse be an implementation of the 
-	/// <see cref="LayoutSkeleton.IgnoresException"/> property before
-	/// it can be hidden by a new property.
-	/// </para>
-	/// <para>
-	/// This class stores the value and overrides the base class required property.
-	/// </para>
-	/// </remarks>
-	/// <exclude/>
-	public abstract class PatternLayoutShim : LayoutSkeleton
-	{
-		#region Member Variables
-	
-		/// <summary>
-		/// Store IgnoresException state
-		/// </summary>
-		private bool m_ignoresException;
-
-		#endregion
-
-		#region Constructors
-
-		/// <summary>
-		/// Default protected constructor
-		/// </summary>
-		protected PatternLayoutShim()
-		{
-		}
-
-		#endregion
-	
-		#region Override implementation of LayoutSkeleton
-
-		/// <summary>
-		/// The <see cref="LayoutSkeleton.IgnoresException"/> value
-		/// </summary>
-		override public bool IgnoresException
-		{
-			get { return m_ignoresException; }
-		}
-
-		#endregion
-
-		/// <summary>
-		/// Set the <see cref="IgnoresException"/> value
-		/// </summary>
-		/// <param name="value">the value to set</param>
-		protected void SetIgnoresException(bool value)
-		{
-			m_ignoresException = value;
 		}
 	}
 }

@@ -46,6 +46,7 @@ namespace log4net.Layout
 		/// </remarks>
 		public ExceptionLayout()
 		{
+			this.IgnoresException = false;
 		}
 
 		#endregion
@@ -63,20 +64,6 @@ namespace log4net.Layout
 		#endregion
 
 		#region Override implementation of LayoutSkeleton
-
-		/// <summary>
-		/// The ExceptionLayout only handles the exception. Thus, it returns <c>false</c>.
-		/// </summary>
-		/// <value>
-		/// The ExceptionLayout only handles the exception. Thus, it returns <c>false</c>.
-		/// </value>
-		/// <remarks>
-		/// The ExceptionLayout only handles the exception. Thus, it returns <c>false</c>.
-		/// </remarks>
-		override public bool IgnoresException
-		{
-			get { return false; }
-		}
 
 		/// <summary>
 		/// Gets the exception text from the logging event
