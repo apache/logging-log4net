@@ -232,10 +232,10 @@
         <if test="${current.build.config.release}">
             <!-- check if the log4net key file is available -->
             <if test="${not file::exists(log4net.basedir + '/log4net.snk')}">
-            	<if test="${property::exists('project.build.package') and project.build.package=true}">
+                <if test="${property::exists('project.build.package') and project.build.package=true}">
                     <fail message="Key file not found." />
                 </if>
-            	<if test="${not(property::exists('project.build.package') and project.build.package=true)}">
+                <if test="${not(property::exists('project.build.package') and project.build.package=true)}">
                     <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
                     <echo message="The generated key file should be stored in the log4net base directory." />
                     <echo message="The release build will be skipped." />
@@ -269,10 +269,10 @@
         <if test="${current.build.config.release}">
             <!-- check if the log4net key file is available -->
             <if test="${not file::exists(log4net.basedir + '/log4net.snk')}">
-            	<if test="${property::exists('project.build.package') and project.build.package=true}">
+                <if test="${property::exists('project.build.package') and project.build.package=true}">
                     <fail message="Key file not found." />
                 </if>
-            	<if test="${not(property::exists('project.build.package') and project.build.package=true)}">
+                <if test="${not(property::exists('project.build.package') and project.build.package=true)}">
                     <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
                     <echo message="The generated key file should be stored in the log4net base directory." />
                     <echo message="The release build will be skipped." />
@@ -290,7 +290,7 @@
                     <include name="**/*.cs" />
                 </sources>
                 <references>
-                    <include name="mscorlib.dll" />                
+                    <include name="mscorlib.dll" />
                     <include name="System.dll" />
                     <include name="System.Data.dll" />
                     <include name="System.Web.dll" />
@@ -307,10 +307,10 @@
         <if test="${current.build.config.release}">
             <!-- check if the log4net key file is available -->
             <if test="${not file::exists(log4net.basedir + '/log4net.snk')}">
-            	<if test="${property::exists('project.build.package') and project.build.package=true}">
+                <if test="${property::exists('project.build.package') and project.build.package=true}">
                     <fail message="Key file not found." />
                 </if>
-            	<if test="${not(property::exists('project.build.package') and project.build.package=true)}">
+                <if test="${not(property::exists('project.build.package') and project.build.package=true)}">
                     <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
                     <echo message="The generated key file should be stored in the log4net base directory." />
                     <echo message="The release build will be skipped." />
@@ -328,7 +328,7 @@
                     <include name="**/*.cs" />
                 </sources>
                 <references>
-                    <include name="mscorlib.dll" />                
+                    <include name="mscorlib.dll" />
                     <include name="System.dll" />
                     <include name="System.Data.dll" />
                     <include name="System.Web.dll" />
@@ -345,10 +345,10 @@
         <if test="${current.build.config.release}">
             <!-- check if the log4net key file is available -->
             <if test="${not file::exists(log4net.basedir + '/log4net.snk')}">
-            	<if test="${property::exists('project.build.package') and project.build.package=true}">
+                <if test="${property::exists('project.build.package') and project.build.package=true}">
                     <fail message="Key file not found." />
                 </if>
-            	<if test="${not(property::exists('project.build.package') and project.build.package=true)}">
+                <if test="${not(property::exists('project.build.package') and project.build.package=true)}">
                     <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
                     <echo message="The generated key file should be stored in the log4net base directory." />
                     <echo message="The release build will be skipped." />
@@ -362,6 +362,10 @@
         </if>
         <if test="${not temp.build.skip}">
             <csc nostdlib="false" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll">
+                <nowarn>
+                    <!-- workaround for Mono bug #61902 -->
+                    <warning number="0618" />
+                </nowarn>
                 <sources basedir="${log4net.basedir}/src">
                     <include name="**/*.cs" />
                 </sources>
@@ -382,10 +386,10 @@
         <if test="${current.build.config.release}">
             <!-- check if the log4net key file is available -->
             <if test="${not file::exists(log4net.basedir + '/log4net.snk')}">
-            	<if test="${property::exists('project.build.package') and project.build.package=true}">
+                <if test="${property::exists('project.build.package') and project.build.package=true}">
                     <fail message="Key file not found." />
                 </if>
-            	<if test="${not(property::exists('project.build.package') and project.build.package=true)}">
+                <if test="${not(property::exists('project.build.package') and project.build.package=true)}">
                     <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
                     <echo message="The generated key file should be stored in the log4net base directory." />
                     <echo message="The release build will be skipped." />
@@ -467,7 +471,7 @@
                     <property name="GetExternalSummaries" value="true" />
                     <property name="IncludeAssemblyVersion" value="false" />
                     <property name="CopyrightText" value="Copyright 2001-2004 The Apache Software Foundation." />
-		    <property name="CopyrightHref" value="http://logging.apache.org/log4net" />
+                    <property name="CopyrightHref" value="http://logging.apache.org/log4net" />
                 </documenter>
             </documenters>
         </ndoc>
