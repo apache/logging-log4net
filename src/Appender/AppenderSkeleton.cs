@@ -65,6 +65,12 @@ namespace log4net.Appender
 		/// Finalizes this appender by calling the implementation's 
 		/// <see cref="AppenderSkeleton.Close"/> method.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// If this appender has not been closed then the <c>Finalize</c> method
+		/// will call <see cref="AppenderSkeleton.Close"/>.
+		/// </para>
+		/// </remarks>
 		~AppenderSkeleton() 
 		{
 			// An appender might be closed then garbage collected. 
@@ -172,6 +178,19 @@ namespace log4net.Appender
 		/// <summary>
 		/// Initialize the appender based on the options set
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This is part of the <see cref="IOptionHandler"/> delayed object
+		/// activation scheme. The <see cref="ActivateOptions"/> method must 
+		/// be called on this object after the configuration properties have
+		/// been set. Until <see cref="ActivateOptions"/> is called this
+		/// object is in an undefined state and must not be used. 
+		/// </para>
+		/// <para>
+		/// If any of the configuration properties are modified then 
+		/// <see cref="ActivateOptions"/> must be called again.
+		/// </para>
+		/// </remarks>
 		virtual public void ActivateOptions() 
 		{
 		}
@@ -338,6 +357,7 @@ namespace log4net.Appender
 		/// <summary>
 		/// Adds a filter to the end of the filter chain.
 		/// </summary>
+		/// <param name="filter">the filter to add to this appender</param>
 		/// <remarks>
 		/// <para>
 		/// The Filters are organized in a linked list.
@@ -368,6 +388,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Clears the filter list for this appender.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Clears the filter list for this appender.
+		/// </para>
+		/// </remarks>
 		virtual public void ClearFilters()
 		{
 			m_headFilter = m_tailFilter = null;
@@ -533,7 +558,7 @@ namespace log4net.Appender
 
 			if (m_layout.IgnoresException) 
 			{
-				string exceptionStr = loggingEvent.GetExceptionStrRep();
+				string exceptionStr = loggingEvent.GetExceptionString();
 				if (exceptionStr != null && exceptionStr.Length > 0) 
 				{
 					// render the event and the exception
