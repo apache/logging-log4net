@@ -1,157 +1,125 @@
 <?xml version="1.0" ?>
 <project name="log4net-helpers" xmlnds="http://tempuri.org/nant-vs.xsd">
     <target name="check-bin-dir">
-        <ifnot propertyexists="bin.dir">
+        <if test="${not property::exists('bin.dir')}">
             <property name="bin.dir" value="bin" readonly="false" />
-        </ifnot>
+        </if>
         <mkdir dir="${bin.dir}" />
     </target>
     <target name="check-build-debug">
-        <ifnot propertyexists="build.debug">
+        <if test="${not property::exists('build.debug')}">
             <fail message="The build debug setting has not been specified." />
-        </ifnot>
+        </if>
     </target>
     <target name="check-build-defines">
-        <ifnot propertyexists="build.defines.csc">
+        <if test="${not property::exists('build.defines.csc')}">
             <fail message="The build defines for the csc task have not been specified." />
-        </ifnot>
-        <ifnot propertyexists="build.defines.jsc">
+        </if>
+        <if test="${not property::exists('build.defines.jsc')}">
             <fail message="The build defines for the jsc task have not been specified." />
-        </ifnot>
-        <ifnot propertyexists="build.defines.vbc">
+        </if>
+        <if test="${not property::exists('build.defines.vbc')}">
             <fail message="The build defines for the vbc task have not been specified." />
-        </ifnot>
-        <ifnot propertyexists="build.defines.vjc">
+        </if>
+        <if test="${not property::exists('build.defines.vjc')}">
             <fail message="The build defines for the vjc task have not been specified." />
-        </ifnot>
-        <ifnot propertyexists="build.defines.cl">
+        </if>
+        <if test="${not property::exists('build.defines.cl')}">
             <fail message="The build defines for the cl task have not been specified." />
-        </ifnot>
+        </if>
     </target>
     <target name="check-doc-dir">
-        <ifnot propertyexists="doc.dir">
+        <if test="${not property::exists('doc.dir')}">
             <property name="doc.dir" value="doc" readonly="false" />
-        </ifnot>
+        </if>
         <mkdir dir="${doc.dir}" />
     </target>
     <target name="check-sdkdoc-dir" depends="check-doc-dir">
-        <ifnot propertyexists="sdkdoc.dir">
+        <if test="${not property::exists('sdkdoc.dir')}">
             <property name="sdkdoc.dir" value="${doc.dir}/sdk" readonly="false" />
-        </ifnot>
+        </if>
         <mkdir dir="${sdkdoc.dir}" />
     </target>
     <target name="check-sdkdoc-debug">
-        <ifnot propertyexists="sdkdoc.debug">
+        <if test="${not property::exists('sdkdoc.debug')}">
             <fail message="The sdk documentation debug setting has not been specified." />
-        </ifnot>
+        </if>
     </target>
     <target name="check-current-bin-dir">
-        <ifnot propertyexists="current.bin.dir">
+        <if test="${not property::exists('current.bin.dir')}">
             <fail message="The current binaries directory has not been specified." />
-        </ifnot>
+        </if>
         <mkdir dir="${current.bin.dir}" />
     </target>
     <target name="check-current-build-debug">
-        <ifnot propertyexists="current.build.debug">
+        <if test="${not property::exists('current.build.debug')}">
             <fail message="The current build debug setting has not been specified." />
-        </ifnot>
+        </if>
     </target>
     <target name="check-current-build-defines">
-        <ifnot propertyexists="current.build.defines.csc">
+        <if test="${not property::exists('current.build.defines.csc')}">
             <fail message="The current build defines for the csc task have not been specified." />
-        </ifnot>
-        <ifnot propertyexists="current.build.defines.jsc">
+        </if>
+        <if test="${not property::exists('current.build.defines.jsc')}">
             <fail message="The current build defines for the jsc task have not been specified." />
-        </ifnot>
-        <ifnot propertyexists="current.build.defines.vbc">
+        </if>
+        <if test="${not property::exists('current.build.defines.vbc')}">
             <fail message="The current build defines for the vbc task have not been specified." />
-        </ifnot>
-        <ifnot propertyexists="current.build.defines.vjc">
+        </if>
+        <if test="${not property::exists('current.build.defines.vjc')}">
             <fail message="The current build defines for the vjc task have not been specified." />
-        </ifnot>
-        <ifnot propertyexists="current.build.defines.cl">
+        </if>
+        <if test="${not property::exists('current.build.defines.cl')}">
             <fail message="The current build defines for the cl task have not been specified." />
-        </ifnot>
+        </if>
     </target>
     <target name="check-current-sdkdoc-dir">
-        <ifnot propertyexists="current.sdkdoc.dir">
+        <if test="${not property::exists('current.sdkdoc.dir')}">
             <fail message="The current sdk document directory has not been specified." />
-        </ifnot>
+        </if>
         <mkdir dir="${sdkdoc.dir}" />
     </target>
     <target name="check-current-sdkdoc-debug">
-        <ifnot propertyexists="current.sdkdoc.debug">
+        <if test="${not property::exists('current.sdkdoc.debug')}">
             <fail message="The curernt sdk documentation debug setting has not been specified." />
-        </ifnot>
-    </target>
-    <target name="check-current-runtime-config">
-        <ifnot propertyexists="current.runtime.config">
-            <fail message="The current runtime configuration has not been specified." />
-        </ifnot>
-    </target>
-    <target name="check-current-runtime-version">
-        <ifnot propertyexists="current.runtime.config">
-            <fail message="The current runtime version has not been specified." />
-        </ifnot>
-    </target>
-    <target name="check-current-runtime-description">
-        <ifnot propertyexists="current.runtime.description">
-            <ifnot propertyexists="project.runtime.description">
-                <fail message="The runtime description has not been specified and no default runtime description is available." />
-            </ifnot>
-            <if propertyexists="project.runtime.description">
-                <property name="current.runtime.description" value="${project.runtime.description}" readonly="false" />
-            </if>
-        </ifnot>
+        </if>
     </target>
     <target name="check-current-build-config">
-        <ifnot propertyexists="current.build.config">
-            <ifnot propertyexists="project.build.config">
+        <if test="${not property::exists('current.build.config')}">
+            <if test="${not property::exists('project.build.config')}">
                 <fail message="The build configuration has not been specified and no default build configuration is available." />
-            </ifnot>
-            <if propertyexists="project.build.config">
+            </if>
+            <if test="${property::exists('project.build.config')}">
                 <property name="current.build.config" value="${project.build.config}" readonly="false" />
             </if>
-        </ifnot>
+        </if>
     </target>
     <target name="check-log4net-basedir">
-        <ifnot propertyexists="log4net.basedir">
+        <if test="${not property::exists('log4net.basedir')}">
             <fail message="The log4net base directory has not been specified." />
-        </ifnot>
+        </if>
     </target>
-    <target name="check-log4net-assembly" depends="check-current-runtime-config, check-current-runtime-version, check-current-build-config, check-log4net-basedir">
-        <available type="File" resource="${log4net.basedir}/bin/${current.runtime.config}/${current.runtime.version}/${current.build.config}/log4net.dll"
-            property="temp.log4net.assembly.available" />
-        <ifnot propertytrue="temp.log4net.assembly.available">
-            <fail message="The log4net '${current.build.config}' assembly for runtime '${current.runtime.config}-${current.runtime.version}' is not available." />
-        </ifnot>
-    </target>
-    <target name="check-current-runtime-available" depends="check-current-runtime-config, check-current-runtime-version">
-        <available type="Framework" resource="${current.runtime.config}-${current.runtime.version}"
-            property="current.runtime.available" />
+    <target name="check-log4net-assembly" depends="check-current-build-config, check-log4net-basedir">
+        <if test="${not file:exists(log4net.assembly)}">
+            <fail message="The log4net '${current.build.config}' assembly for ${framework::get-description(framework::get-target-framework())} is not available." />
+        </if>
     </target>
     <!-- Targets for cleaning up -->
     <target name="clean-current-bin-dir" depends="check-current-bin-dir" description="Cleans the current binaries directory">
         <echo message="Cleaning the ${current.bin.dir} binaries directory." />
-        <available type="Directory" resource="${current.bin.dir}" property="temp.current.bin.dir.available" />
-        <if propertytrue="temp.current.bin.dir.available">
-            <delete dir="${current.bin.dir}" />
-        </if>
+        <delete dir="${current.bin.dir}" if="${directory::exists(current.bin.dir)}" />
         <mkdir dir="${current.bin.dir}" />
     </target>
     <target name="clean-current-sdkdoc-dir" depends="check-current-sdkdoc-dir" description="cleaning the current SDK documentation directory">
         <echo message="Cleaning the ${current.sdkdoc.dir} SDK documentation directory." />
-        <available type="Directory" resource="${current.sdkdoc.dir}" property="temp.current.sdkdoc.dir.available" />
-        <if propertytrue="temp.current.sdkdoc.dir.available">
-            <delete dir="${current.sdkdoc.dir}" />
-        </if>
+        <delete dir="${current.sdkdoc.dir}" if="${directory::exists(current.sdkdoc.dir)}" />
         <mkdir dir="${current.sdkdoc.dir}" />
     </target>
     <!-- Targets for setting up the environment -->
     <target name="set-build-configuration" depends="check-current-build-config">
-        <ifnot targetexists="set-${current.build.config}-build-configuration">
+        <if test="${not target::exists('set-' + current.build.config + '-build-configuration')}">
             <fail message="The ${current.build.config} build configuration is not supported by log4net." />
-        </ifnot>
+        </if>
         <call target="set-${current.build.config}-build-configuration" />
     </target>
     <target name="set-debug-build-configuration">
@@ -181,103 +149,70 @@
         <property name="current.build.config.release" value="false" readonly="false" />
         <property name="current.build.config.${current.build.config}" value="true" readonly="false" />
     </target>
-    <target name="set-runtime-configuration" depends="check-current-build-config">
-        <ifnot propertyexists="current.runtime.config">
-            <ifnot propertyexists="nant.settings.currentframework">
-                <fail message="No runtime configuration was specified and the default NAnt runtime is not available." />
-            </ifnot>
-            <ifnot targetexists="set-${nant.settings.currentframework}-runtime-configuration">
-                <fail message="No runtime configuration was specified and the current runtime (${nant.settings.currentframework}) is not supported by log4net." />
-            </ifnot>
-            <call target="set-${nant.settings.currentframework}-runtime-configuration" />
-        </ifnot>
-        <ifnot propertyexists="current.runtime.version">
-            <ifnot propertyexists="nant.settings.currentframework">
-                <fail message="No runtime configuration was specified and the default NAnt runtime is not available." />
-            </ifnot>
-            <ifnot targetexists="set-${nant.settings.currentframework}-runtime-configuration">
-                <fail message="No runtime configuration was specified and the current runtime (${nant.settings.currentframework}) is not supported by log4net." />
-            </ifnot>
-            <call target="set-${nant.settings.currentframework}-runtime-configuration" />
-        </ifnot>
-        <ifnot targetexists="set-${current.runtime.config}-${current.runtime.version}-runtime-configuration">
-            <fail message="The ${current.runtime.config}-${current.runtime.version} runtime is not supported by log4net." />
-        </ifnot>
-        <call target="set-${current.runtime.config}-${current.runtime.version}-runtime-configuration" />
+    <target name="set-framework-configuration" depends="check-current-build-config">
+        <if test="${not target::exists('set-' + framework::get-target-framework() + '-runtime-configuration')}">
+            <fail message="The current target framework (${framework::get-description(framework::get-target-framework())}) is not supported by log4net." />
+        </if>
+        <call target="set-${framework::get-target-framework()}-runtime-configuration" />
     </target>
     <target name="set-net-1.0-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
-        <property name="current.runtime.config" value="net" readonly="false" />
-        <property name="current.runtime.version" value="1.0" readonly="false" />
-        <property name="current.runtime.description" value="Microsoft .NET Framework 1.0" readonly="false" />
+        <property name="nant.settings.currentframework" value="net-1.0" />
         <property name="current.build.debug" value="${build.debug}" dynamic="true" readonly="false" />
         <property name="current.build.defines.csc" value="${build.defines.csc},NET,NET_1_0" dynamic="true" readonly="false" />
         <property name="current.build.defines.jsc" value="${build.defines.jsc},NET,NET_1_0" dynamic="true" readonly="false" />
         <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_1_0=True" dynamic="true" readonly="false" />
         <property name="current.build.defines.vjc" value="${build.defines.vjc},NET,NET_1_0" dynamic="true" readonly="false" />
         <property name="current.build.defines.cl" value="${build.defines.cl} /D NET /D NET_1_0" dynamic="true" readonly="false" />
-        <property name="current.bin.dir" value="${bin.dir}/${current.runtime.config}/${current.runtime.version}/${current.build.config}" readonly="false" />
-        <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${current.runtime.config}/${current.runtime.version}" readonly="false" />
+        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" readonly="false" />
+        <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" readonly="false" />
         <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" readonly="false" />
-        <property name="nant.settings.currentframework" value="${current.runtime.config}-${current.runtime.version}" />
     </target>
     <target name="set-net-1.1-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
-        <property name="current.runtime.config" value="net" readonly="false" />
-        <property name="current.runtime.version" value="1.1" readonly="false" />
-        <property name="current.runtime.description" value="Microsoft .NET Framework 1.1" readonly="false" />
+        <property name="nant.settings.currentframework" value="net-1.1" />
         <property name="current.build.debug" value="${build.debug}" dynamic="true" readonly="false" />
         <property name="current.build.defines.csc" value="${build.defines.csc},NET,NET_1_1" dynamic="true" readonly="false" />
         <property name="current.build.defines.jsc" value="${build.defines.jsc},NET,NET_1_1" dynamic="true" readonly="false" />
         <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_1_1=True" dynamic="true" readonly="false" />
         <property name="current.build.defines.vjc" value="${build.defines.vjc},NET,NET_1_1" dynamic="true" readonly="false" />
         <property name="current.build.defines.cl" value="${build.defines.cl} /D NET /D NET_1_1" dynamic="true" readonly="false" />
-        <property name="current.bin.dir" value="${bin.dir}/${current.runtime.config}/${current.runtime.version}/${current.build.config}" readonly="false" />
-        <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${current.runtime.config}/${current.runtime.version}" readonly="false" />
+        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" readonly="false" />
+        <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" readonly="false" />
         <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" readonly="false" />
-        <property name="nant.settings.currentframework" value="${current.runtime.config}-${current.runtime.version}" />
     </target>
     <target name="set-netcf-1.0-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
-        <property name="current.runtime.config" value="netcf" readonly="false" />
-        <property name="current.runtime.version" value="1.0" readonly="false" />
-        <property name="current.runtime.description" value="Microsoft .NET Compact Framework 1.0" readonly="false" />
+        <property name="nant.settings.currentframework" value="netcf-1.0" />
         <property name="current.build.debug" value="${build.debug}" dynamic="true" readonly="false" />
         <property name="current.build.defines.csc" value="${build.defines.csc},NETCF,NETCF_1_0" dynamic="true" readonly="false" />
         <property name="current.build.defines.jsc" value="${build.defines.jsc},NETCF,NETCF_1_0" dynamic="true" readonly="false" />
         <property name="current.build.defines.vbc" value="${build.defines.vbc},NETCF=True" dynamic="true" readonly="false" />
         <property name="current.build.defines.vjc" value="${build.defines.vjc},NETCF" dynamic="true" readonly="false" />
         <property name="current.build.defines.cl" value="${build.defines.cl} /D NETCF /D NETCF_1_0" dynamic="true" readonly="false" />
-        <property name="current.bin.dir" value="${bin.dir}/${current.runtime.config}/${current.runtime.version}/${current.build.config}" readonly="false" />
-        <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${current.runtime.config}/${current.runtime.version}" readonly="false" />
+        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" readonly="false" />
+        <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" readonly="false" />
         <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" readonly="false" />
-        <property name="nant.settings.currentframework" value="${current.runtime.config}-${current.runtime.version}" />
     </target>
     <target name="set-mono-1.0-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
-        <property name="current.runtime.config" value="mono" readonly="false" />
-        <property name="current.runtime.version" value="1.0" readonly="false" />
-        <property name="current.runtime.description" value="Mono 1.0" readonly="false" />
+        <property name="nant.settings.currentframework" value="mono-1.0" />
         <property name="current.build.debug" value="${build.debug}" dynamic="true" readonly="false" />
         <property name="current.build.defines.csc" value="${build.defines.csc},MONO,MONO_1_0" dynamic="true" readonly="false" />
         <property name="current.build.defines.jsc" value="${build.defines.jsc},MONO,MONO_1_0" dynamic="true" readonly="false" />
         <property name="current.build.defines.vbc" value="${build.defines.vbc},MONO=True,MONO_1_0=True" dynamic="true" readonly="false" />
         <property name="current.build.defines.vjc" value="${build.defines.vjc},MONO,MONO_1_0" dynamic="true" readonly="false" />
         <property name="current.build.defines.cl" value="${build.defines.cl} /D MONO /D MONO_1_0" dynamic="true" readonly="false" />
-        <property name="current.bin.dir" value="${bin.dir}/${current.runtime.config}/${current.runtime.version}/${current.build.config}" readonly="false" />
-        <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${current.runtime.config}/${current.runtime.version}" readonly="false" />
+        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" readonly="false" />
+        <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" readonly="false" />
         <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" readonly="false" />
-        <property name="nant.settings.currentframework" value="${current.runtime.config}-${current.runtime.version}" />
     </target>
     <target name="set-sscli-1.0-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
-        <property name="current.runtime.config" value="sscli" readonly="false" />
-        <property name="current.runtime.version" value="1.0" readonly="false" />
-        <property name="current.runtime.description" value="Microsoft Shared Source CLI 1.0" readonly="false" />
+        <property name="nant.settings.currentframework" value="sscli-1.0" />
         <property name="current.build.debug" value="${build.debug}" dynamic="true" readonly="false" />
         <property name="current.build.defines.csc" value="${build.defines.csc},SSCLI,SSCLI_1_0" dynamic="true" readonly="false" />
         <property name="current.build.defines.jsc" value="${build.defines.jsc},SSCLI,SSCLI_1_0" dynamic="true" readonly="false" />
         <property name="current.build.defines.vbc" value="${build.defines.vbc},SSCLI=True,SSCLI_1_0=True" dynamic="true" readonly="false" />
         <property name="current.build.defines.vjc" value="${build.defines.vjc},SSCLI,SSCLI_1_0" dynamic="true" readonly="false" />
         <property name="current.build.defines.cl" value="${build.defines.cl} /D SSCLI /D SSCLI_1_0" dynamic="true" readonly="false" />
-        <property name="current.bin.dir" value="${bin.dir}/${current.runtime.config}/${current.runtime.version}/${current.build.config}" readonly="false" />
-        <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${current.runtime.config}/${current.runtime.version}" readonly="false" />
+        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" readonly="false" />
+        <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" readonly="false" />
         <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" readonly="false" />
-        <property name="nant.settings.currentframework" value="${current.runtime.config}-${current.runtime.version}" />
     </target>
 </project>
