@@ -49,42 +49,42 @@ namespace log4net.Util
 		/// Write a string to an XmlWriter
 		/// </summary>
 		/// <param name="writer">the writer to write to</param>
-		/// <param name="text">the string to write</param>
+		/// <param name="stringData">the string to write</param>
 		/// <remarks>
 		/// The test is escaped either using XML escape entities
 		/// or using CDATA sections.
 		/// </remarks>
-		public static void WriteEscapedXmlString(XmlWriter writer, string text)
+		public static void WriteEscapedXmlString(XmlWriter writer, string stringData)
 		{
 			// Write either escaped text or CDATA sections
 
-			int weightCData = 12 * (1 + CountSubstrings(text, CDATA_END));
-			int weightStringEscapes = 3*(CountSubstrings(text, "<") + CountSubstrings(text, ">")) + 4*CountSubstrings(text, "&");
+			int weightCData = 12 * (1 + CountSubstrings(stringData, CDATA_END));
+			int weightStringEscapes = 3*(CountSubstrings(stringData, "<") + CountSubstrings(stringData, ">")) + 4*CountSubstrings(stringData, "&");
 
 			if (weightStringEscapes <= weightCData)
 			{
 				// Write string using string escapes
-				writer.WriteString(text);
+				writer.WriteString(stringData);
 			}
 			else
 			{
 				// Write string using CDATA section
 
-				int end = text.IndexOf(CDATA_END);
+				int end = stringData.IndexOf(CDATA_END);
 	
 				if (end < 0) 
 				{
-					writer.WriteCData(text);
+					writer.WriteCData(stringData);
 				}
 				else
 				{
 					int start = 0;
 					while (end > -1) 
 					{
-						writer.WriteCData(text.Substring(start, end - start));
-						if (end == text.Length - 3)
+						writer.WriteCData(stringData.Substring(start, end - start));
+						if (end == stringData.Length - 3)
 						{
-							start = text.Length;
+							start = stringData.Length;
 							writer.WriteString(CDATA_END);
 							break;
 						}
@@ -92,13 +92,13 @@ namespace log4net.Util
 						{
 							writer.WriteString(CDATA_UNESCAPABLE_TOKEN);
 							start = end + 2;
-							end = text.IndexOf(CDATA_END, start);
+							end = stringData.IndexOf(CDATA_END, start);
 						}
 					}
 	
-					if (start < text.Length)
+					if (start < stringData.Length)
 					{
-						writer.WriteCData(text.Substring(start));
+						writer.WriteCData(stringData.Substring(start));
 					}
 				}
 			}

@@ -353,26 +353,26 @@ namespace log4net.Util
 		/// <summary>
 		/// Converts an object to the target type.
 		/// </summary>
-		/// <param name="sourceObject">The object to convert to the target type.</param>
+		/// <param name="sourceInstance">The object to convert to the target type.</param>
 		/// <param name="targetType">The type to convert to.</param>
 		/// <returns>The converted object.</returns>
-		public static object ConvertTypeTo(object sourceObject, Type targetType)
+		public static object ConvertTypeTo(object sourceInstance, Type targetType)
 		{
-			Type sourceType = sourceObject.GetType();
+			Type sourceType = sourceInstance.GetType();
 
 			// Check if we can assign directly from the source type to the target type
 			if (targetType.IsAssignableFrom(sourceType))
 			{
-				return sourceObject;
+				return sourceInstance;
 			}
 
 			// Look for a TO converter
-			IConvertTo tcSource = ConverterRegistry.GetConvertTo(sourceObject.GetType(), targetType);
+			IConvertTo tcSource = ConverterRegistry.GetConvertTo(sourceType, targetType);
 			if (tcSource != null)
 			{
 				if (tcSource.CanConvertTo(targetType))
 				{
-					return tcSource.ConvertTo(sourceObject, targetType);
+					return tcSource.ConvertTo(sourceInstance, targetType);
 				}
 			}
 
@@ -382,11 +382,11 @@ namespace log4net.Util
 			{
 				if (tcTarget.CanConvertFrom(sourceType))
 				{
-					return tcTarget.ConvertFrom(sourceObject);
+					return tcTarget.ConvertFrom(sourceInstance);
 				}
 			}
 
-			throw new ArgumentException("Cannot convert source object [" + sourceObject.ToString() + "] to target type [" + targetType.Name + "]", "sourceObject");
+			throw new ArgumentException("Cannot convert source object [" + sourceInstance.ToString() + "] to target type [" + targetType.Name + "]", "sourceObject");
 		}
 
 //		/// <summary>
