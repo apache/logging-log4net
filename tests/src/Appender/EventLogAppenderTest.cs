@@ -44,6 +44,7 @@ namespace log4net.Tests.Appender
 		[Test] public void TestGetEntryType()
 		{
 			EventLogAppender eventAppender = new EventLogAppender();
+			eventAppender.ActivateOptions();
 
 			Assertion.AssertEquals( 
 				System.Diagnostics.EventLogEntryType.Information,
