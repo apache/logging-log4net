@@ -553,6 +553,8 @@ namespace log4net.Repository.Hierarchy
 					}
 #endif
 
+					Type parsedObjectConversionTargetType = null;
+
 					// Check if a specific subtype is specified on the element using the 'type' attribute
 					string subTypeString = element.GetAttribute(TYPE_ATTR);
 					if (subTypeString != null && subTypeString.Length > 0)
@@ -566,7 +568,19 @@ namespace log4net.Repository.Hierarchy
 
 							if (!propertyType.IsAssignableFrom(subType))
 							{
-								LogLog.Error("XmlConfigurator: Subtype ["+subType.FullName+"] set on ["+name+"] is not a subclass of property type ["+propertyType.FullName+"]");
+								// Check if there is an appropriate type converter
+								if (OptionConverter.CanConvertTypeTo(subType, propertyType))
+								{
+									// Must reconvert to real property type
+									parsedObjectConversionTargetType = propertyType;
+
+									// Use sub type as intermediary type
+									propertyType = subType;
+								}
+								else
+								{
+									LogLog.Error("XmlConfigurator: Subtype ["+subType.FullName+"] set on ["+name+"] is not a subclass of property type ["+propertyType.FullName+"] and there are no acceptable type conversions.");
+								}
 							}
 							else
 							{
@@ -585,6 +599,14 @@ namespace log4net.Repository.Hierarchy
 					// to pass to this property.
 
 					object convertedValue = ConvertStringTo(propertyType, propertyValue);
+					
+					// Check if we need to do an additional conversion
+					if (convertedValue != null && parsedObjectConversionTargetType != null)
+					{
+						LogLog.Debug("XmlConfigurator: Performing additional conversion of value from [" + convertedValue.GetType().Name + "] to [" + parsedObjectConversionTargetType.Name + "]");
+						convertedValue = OptionConverter.ConvertTypeTo(convertedValue, parsedObjectConversionTargetType);
+					}
+
 					if (convertedValue != null)
 					{
 						if (propInfo != null)
