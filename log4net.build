@@ -741,6 +741,7 @@ limitations under the License.
                 <!-- <include name="releasenotes.html" /> -->
                 <include name="LICENSE.txt" />
                 <include name="NOTICE.txt" />
+                <include name="README.txt" />
                 <include name="log4net.snk" />
                 <include name="log4net.snk.readme" />
             </fileset>
