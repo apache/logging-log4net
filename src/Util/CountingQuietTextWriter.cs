@@ -54,17 +54,20 @@ namespace log4net.Util
 		/// <param name="str">The string data to write to the output.</param>
 		override public void Write(string str) 
 		{
-			try 
+			if (str != null && str.Length > 0)
 			{
-				base.Write(str);
+				try 
+				{
+					base.Write(str);
 
-				// get the number of bytes needed to represent the 
-				// string using the supplied encoding.
-				m_countBytes += this.Encoding.GetByteCount(str);
-			}
-			catch(Exception e) 
-			{
-				this.ErrorHandler.Error("Failed to write [" + str + "].", e, ErrorCode.WriteFailure);
+					// get the number of bytes needed to represent the 
+					// string using the supplied encoding.
+					m_countBytes += this.Encoding.GetByteCount(str);
+				}
+				catch(Exception e) 
+				{
+					this.ErrorHandler.Error("Failed to write [" + str + "].", e, ErrorCode.WriteFailure);
+				}
 			}
 		}
 
