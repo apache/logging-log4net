@@ -74,7 +74,9 @@ namespace log4net
 		/// Private Constructor. 
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// Uses a private access modifier to prevent instantiation of this class.
+		/// </para>
 		/// </remarks>
 		private ThreadContext()
 		{
@@ -91,8 +93,10 @@ namespace log4net
 		/// The thread properties map
 		/// </value>
 		/// <remarks>
+		/// <para>
 		/// The <c>ThreadContext</c> properties override any <see cref="GlobalContext"/>
 		/// properties with the same name.
+		/// </para>
 		/// </remarks>
 		public static ThreadContextProperties Properties
 		{
