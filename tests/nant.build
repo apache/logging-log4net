@@ -1,0 +1,122 @@
+<?xml version="1.0" ?>
+<project name="log4net-samples" default="compile-all" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <property name="log4net.basedir" value="../" readonly="false" />
+    <property name="project.build.config" value="debug" readonly="false" />
+    <property name="project.build.package" value="false" readonly="false" />
+    <!-- Include log4net helpers -->
+    <include buildfile="${log4net.basedir}/log4net.include" />
+    <!-- Targets that should always be executed -->
+    <call target="set-build-configuration" />
+    <call target="set-runtime-configuration" />
+
+    <!-- Target for compiling the tests on all frameworks -->
+    <target name="compile-all" description="Builds all log4net tests">
+        <echo message="Compiling all runtime configurations for the ${current.build.config} build configuration." />
+
+        <available type="Framework" resource="net-1.0" property="temp.framework.available" />
+        <if propertytrue="temp.framework.available">
+            <call target="set-net-1.0-runtime-configuration" />
+            <call target="compile-${current.runtime.config}-${current.runtime.version}" />
+        </if>
+        <ifnot propertytrue="temp.framework.available">
+            <if propertyexists="project.build.package" propertytrue="project.build.package">
+                <fail message="The .NET Framework 1.0 is not available." />
+            </if>
+            <ifnot propertyexists="project.build.package" propertytrue="project.build.package">
+                <echo message="The .NET Framework 1.0 is not available. Build skipped." />
+            </ifnot>
+        </ifnot>
+
+        <available type="Framework" resource="net-1.1" property="temp.framework.available" />
+        <if propertytrue="temp.framework.available">
+            <call target="set-net-1.1-runtime-configuration" />
+            <call target="compile-${current.runtime.config}-${current.runtime.version}" />
+        </if>
+        <ifnot propertytrue="temp.framework.available">
+            <if propertyexists="project.build.package" propertytrue="project.build.package">
+                <fail message="The .NET Framework 1.1 is not available." />
+            </if>
+            <ifnot propertyexists="project.build.package" propertytrue="project.build.package">
+                <echo message="The .NET Framework 1.1 is not available. Build skipped." />
+            </ifnot>
+        </ifnot>	    
+    </target>
+
+    <!-- Target for compiling the tests on net-1.0 -->
+    <target name="compile-net-1.0" description="Builds log4net tests .NET Framework 1.0 version" depends="set-net-1.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir">
+        <!-- copy log4net build output  -->
+        <copy todir="${current.bin.dir}">
+            <fileset basedir="${log4net.basedir}/${current.bin.dir}">
+                <includes name="*.*" />
+            </fileset>
+        </copy>
+        <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Tests.dll">
+            <sources basedir="${log4net.basedir}/tests/src">
+                <includes name="**/*.cs" />
+                <includes name="${log4net.basedir}/src/AssemblyVersionInfo.cs" />
+            </sources>
+            <references defaultexcludes="true">
+                <includes name="mscorlib.dll" />                
+                <includes name="System.dll" />
+                <includes name="System.Data.dll" />
+                <includes name="System.Web.dll" />
+                <includes name="System.Xml.dll" />
+                <includes name="System.Runtime.Remoting.dll" />
+		<includes name="${current.bin.dir}/log4net.dll" frompath="false" />
+		<includes name="lib/nunit.framework.dll" />
+                <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework>/<framework version>/<build configuration> directory -->
+                <includes name="lib/${current.runtime.config}/${current.runtime.version}/${current.build.config}/*.dll" />
+		<includes name="${log4net.basedir}/lib/${current.runtime.config}/${current.runtime.version}/${current.build.config}/*.dll" />
+            </references>
+        </csc>
+    </target>
+
+    <!-- Target for compiling the tests on net-1.1 -->
+    <target name="compile-net-1.1" description="Builds log4net tests .NET Framework 1.1 version" depends="set-net-1.1-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly">
+        <!-- copy log4net build output  -->
+        <copy todir="${current.bin.dir}">
+            <fileset basedir="${log4net.basedir}/${current.bin.dir}">
+                <includes name="*.*" />
+            </fileset>
+        </copy>
+        <copy todir="${current.bin.dir}">
+	    <fileset basedir="${log4net.basedir}/tests/lib">
+                <includes name="nunit.framework.dll" />
+            </fileset>
+        </copy>
+        <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Tests.dll">
+            <sources basedir="${log4net.basedir}/tests/src">
+                <includes name="**/*.cs" />
+                <includes name="${log4net.basedir}/src/AssemblyVersionInfo.cs" />
+            </sources>
+            <references defaultexcludes="true">
+                <includes name="mscorlib.dll" />                
+                <includes name="System.dll" />
+                <includes name="System.Data.dll" />
+                <includes name="System.Web.dll" />
+                <includes name="System.Xml.dll" />
+                <includes name="System.Runtime.Remoting.dll" />
+		<includes name="${current.bin.dir}/log4net.dll" frompath="false" />
+		<includes name="${current.bin.dir}/nunit.framework.dll" frompath="false" />
+                <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework>/<framework version>/<build configuration> directory -->
+                <includes name="lib/${current.runtime.config}/${current.runtime.version}/${current.build.config}/*.dll" />
+		<includes name="${log4net.basedir}/lib/${current.runtime.config}/${current.runtime.version}/${current.build.config}/*.dll" />
+            </references>
+        </csc>
+    </target>
+
+    <!-- Currently we cannot run the tests in the environment of the target framework only in the host framework -->
+
+    <target name="runtests" description="Runs log4net tests">
+        <call target="runtests-net-1.0" />
+    </target>
+    
+    <target name="runtests-net-1.0" description="Runs log4net tests on .NET Framework 1.0 version" depends="compile-net-1.0">
+        <nunit2>
+            <formatter type="Plain" />
+            <test assemblyname="${current.bin.dir}/log4net.Tests.dll" />
+        </nunit2>
+    </target>
+
+    
+</project>
