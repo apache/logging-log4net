@@ -372,26 +372,66 @@ namespace log4net.Repository.Hierarchy
 		}
 
 		/// <summary>
-		/// Returns all the Appenders that are configured as an Array.
+		/// Returns all the Appenders that are currently configured
 		/// </summary>
-		/// <returns>All the Appenders</returns>
+		/// <returns>An array containing all the currently configured appenders</returns>
 		/// <remarks>
-		/// <para>Returns all the Appenders that are configured as an Array.</para>
+		/// <para>
+		/// Returns all the <see cref="log4net.Appender.IAppender"/> instances that are currently configured.
+		/// All the loggers are searched for appenders. The appenders may also be containers
+		/// for appenders and these are also searched for additional loggers.
+		/// </para>
+		/// <para>
+		/// The list returned is unordered but does not contain duplicates.
+		/// </para>
 		/// </remarks>
 		override public log4net.Appender.IAppender[] GetAppenders()
 		{
-			System.Collections.ArrayList appenders = new System.Collections.ArrayList();
+			System.Collections.ArrayList appenderList = new System.Collections.ArrayList();
 
-			appenders.AddRange(Root.Appenders);
+			CollectAppenders(appenderList, Root);
+
 			foreach(Logger logger in GetCurrentLoggers())
 			{
-				appenders.AddRange(logger.Appenders);
+				CollectAppenders(appenderList, logger);
 			}
 
-			return (log4net.Appender.IAppender[])appenders.ToArray(typeof(log4net.Appender.IAppender));
+			return (log4net.Appender.IAppender[])appenderList.ToArray(typeof(log4net.Appender.IAppender));
 		}
 
 		#endregion Override Implementation of LoggerRepositorySkeleton
+
+		/// <summary>
+		/// Collect the appenders from an <see cref="IAppenderAttachable"/>.
+		/// The appender may also be a container.
+		/// </summary>
+		/// <param name="appenderList"></param>
+		/// <param name="appender"></param>
+		private static void CollectAppender(System.Collections.ArrayList appenderList, log4net.Appender.IAppender appender)
+		{
+			if (!appenderList.Contains(appender))
+			{
+				appenderList.Add(appender);
+
+				if (appender is IAppenderAttachable)
+				{
+					CollectAppenders(appenderList, (IAppenderAttachable)appender);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Collect the appenders from an <see cref="IAppenderAttachable"/> container
+		/// </summary>
+		/// <param name="appenderList"></param>
+		/// <param name="container"></param>
+		private static void CollectAppenders(System.Collections.ArrayList appenderList, IAppenderAttachable container)
+		{
+			foreach(log4net.Appender.IAppender appender in container.Appenders)
+			{
+				CollectAppender(appenderList, appender);
+			}
+		}
 
 		#region Implementation of IBasicRepositoryConfigurator
 
