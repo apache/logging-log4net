@@ -55,6 +55,14 @@ namespace log4net.Appender
 	/// If the file cannot be opened for writing when a message is logged then
 	/// the message will be discarded by this appender.
 	/// </para>
+	/// <para>
+	/// The <see cref="FileAppender"/> supports pluggable file locking models via
+	/// the <see cref="LockingModel"/> property.
+	/// The default behaviour, implemented by <see cref="FileAppender.ExclusiveLock"/> 
+	/// is to obtain an exclusive write lock on the file until this appender is closed.
+	/// The alternative model, <see cref="FileAppender.MinimalLock"/>, only holds a
+	/// write lock while the appender is writing a logging event.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
@@ -81,9 +89,6 @@ namespace log4net.Appender
 			private Stream m_realStream=null;
 			private LockingModelBase m_lockingModel=null;
 
-			#region Override Implementation of Stream
-
-			// Methods
 			public LockingStream(LockingModelBase locking) : base()
 			{
 				if (locking==null)
@@ -93,6 +98,9 @@ namespace log4net.Appender
 				m_lockingModel=locking;
 			}
 
+			#region Override Implementation of Stream
+
+			// Methods
 			public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
 			{
 				throw new NotSupportedException("Read operations are not supported on the LockingStream");
@@ -537,8 +545,8 @@ namespace log4net.Appender
 				m_stream=null;
 			}
 		}
-		#endregion
 
+		#endregion Locking Models
 
 		#region Public Instance Constructors
 
