@@ -42,14 +42,17 @@ limitations under the License.
 				</p>
 			</section>
 			
-			<section name="ADONetAppender">
+			<section name="AdoNetAppender">
 				<p>
-					The configuration of the <span class="code">ADONetAppender</span> depends on the
+					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.AdoNetAppender.html">log4net.Appender.AdoNetAppender</a>.
+				</p>
+				<p>
+					The configuration of the <span class="code">AdoNetAppender</span> depends on the
 					provider selected for the target database. Here are some examples.
 				</p>
 				<section name="MS SQL Server">
 					<p>
-						The following example shows how to configure the <span class="code">ADONetAppender</span> 
+						The following example shows how to configure the <span class="code">AdoNetAppender</span> 
 						to log messages to a SQL Server database. The events are written in batches of 100
 						(<i>BufferSize</i>). The <i>ConnectionType</i> specifies the fully qualified type name
 						for the <span class="code">System.Data.IDbConnection</span> to use to connect to the
@@ -77,7 +80,7 @@ CREATE TABLE [dbo].[Log] (
 						The appender configuration is:
 					</p>
 					<source language="xml"><![CDATA[
-<appender name="ADONetAppender" type="log4net.Appender.ADONetAppender">
+<appender name="AdoNetAppender" type="log4net.Appender.AdoNetAppender">
 	<bufferSize value="100" />
 	<connectionType value="System.Data.SqlClient.SqlConnection, System.Data, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
 	<connectionString value="data source=[database server];initial catalog=[database name];integrated security=false;persist security info=True;User ID=[user];Password=[password]" />
@@ -134,7 +137,7 @@ CREATE TABLE [dbo].[Log] (
 						This example shows how to write events to an Access Database.
 					</p>
 					<source language="xml"><![CDATA[
-<appender name="ADONetAppender_Access" type="log4net.Appender.ADONetAppender">
+<appender name="AdoNetAppender_Access" type="log4net.Appender.AdoNetAppender">
 	<connectionString value="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\\log\\access.mdb;User Id=;Password=;" />
 	<commandText value="INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message]) VALUES (@log_date, @thread, @log_level, @logger, @message)" />
 	<parameter>
@@ -201,7 +204,7 @@ create table log (
 						The appender configuration is:
 					</p>
 					<source language="xml"><![CDATA[
-<appender name="ADONetAppender_Oracle" type="log4net.Appender.ADONetAppender">
+<appender name="AdoNetAppender_Oracle" type="log4net.Appender.AdoNetAppender">
     <connectionType value="System.Data.OracleClient.OracleConnection, System.Data.OracleClient, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <connectionString value="data source=[mydatabase];User ID=[user];Password=[password]" />
     <commandText value="INSERT INTO Log (Datetime,Thread,Log_Level,Logger,Message) VALUES (:log_date, :thread, :log_level, :logger, :message)" />
@@ -268,7 +271,7 @@ TABLESPACE CSAX30D LOGGING
 						The appender configuration is:
 					</p>
 					<source language="xml"><![CDATA[
-<appender name="ADONetAppender_Oracle" type="log4net.Appender.ADONetAppender">
+<appender name="AdoNetAppender_Oracle" type="log4net.Appender.AdoNetAppender">
 	<connectionType value ="System.Data.OracleClient.OracleConnection, System.Data.OracleClient, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
 	<connectionString value="data source=<dsname>;User ID=<userid>;Password=<password>" />
 	<commandText value="INSERT INTO Log (Log_Level,Logger,Message) VALUES (:log_level, :logger, :message)" />
@@ -328,7 +331,7 @@ IN "LRGTABLES";
 						The appender configuration is:
 					</p>
 					<source language="xml"><![CDATA[
-<appender name="ADONetAppender" type="log4net.Appender.ADONetAppender">
+<appender name="AdoNetAppender" type="log4net.Appender.AdoNetAppender">
 	<bufferSize value="100" />
 	<connectionType value="IBM.Data.DB2.DB2Connection,IBM.Data.DB2, Version=8.1.2.1" />
 	<connectionString value="server=192.168.0.0;database=dbuser;user Id=username;password=password;persist security info=true" />
@@ -383,16 +386,19 @@ IN "LRGTABLES";
 			</section>
 				
 			
-			<section name="ASPNetTraceAppender">
+			<section name="AspNetTraceAppender">
 				<p>
-					The following example shows how to configure the <span class="code">ASPNetTraceAppender</span> 
+					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.AspNetTraceAppender.html">log4net.Appender.AspNetTraceAppender</a>.
+				</p>
+				<p>
+					The following example shows how to configure the <span class="code">AspNetTraceAppender</span> 
 					to log messages to the ASP.NET TraceContext. The messages are written to the 
 					<span class="code">System.Web.TraceContext.Write</span> method if they are below
 					level <span class="code">WARN</span>. If they are <span class="code">WARN</span> or above they are written to the 
 					<span class="code">System.Web.TraceContext.Warn</span> method.
 				</p>
 				<source language="xml"><![CDATA[
-<appender name="ASPNetTraceAppender" type="log4net.Appender.ASPNetTraceAppender" >
+<appender name="AspNetTraceAppender" type="log4net.Appender.AspNetTraceAppender" >
 	<layout type="log4net.Layout.PatternLayout">
 		<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
 	</layout>
@@ -401,6 +407,9 @@ IN "LRGTABLES";
 			</section>
 			
 			<section name="BufferingForwardingAppender">
+				<p>
+					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.BufferingForwardingAppender.html">log4net.Appender.BufferingForwardingAppender</a>.
+				</p>
 				<p>
 					The following example shows how to configure the <span class="code">BufferingForwardingAppender</span> 
 					to buffer 100 messages before delivering them to the <i>ConsoleAppender</i>.
@@ -431,6 +440,9 @@ IN "LRGTABLES";
 			</section>
 			
 			<section name="ColoredConsoleAppender">
+				<p>
+					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.ColoredConsoleAppender.html">log4net.Appender.ColoredConsoleAppender</a>.
+				</p>
 				<p>
 					The following example shows how to configure the <span class="code">ColoredConsoleAppender</span> 
 					to log messages to the console. By default the messages are sent to the console
@@ -471,6 +483,9 @@ IN "LRGTABLES";
 			
 			<section name="ConsoleAppender">
 				<p>
+					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.ConsoleAppender.html">log4net.Appender.ConsoleAppender</a>.
+				</p>
+				<p>
 					The following example shows how to configure the <span class="code">ConsoleAppender</span> 
 					to log messages to the console. By default the messages are sent to the console
 					standard output stream.
@@ -496,6 +511,9 @@ IN "LRGTABLES";
 			</section>
 			
 			<section name="EventLogAppender">
+				<p>
+					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.EventLogAppender.html">log4net.Appender.EventLogAppender</a>.
+				</p>
 				<p>
 					The following example shows how to configure the <span class="code">EventLogAppender</span> to log
 					to the <i>Application</i> event log on the local machine using the
@@ -529,6 +547,9 @@ IN "LRGTABLES";
 			
 			<section name="FileAppender">
 				<p>
+					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.FileAppender.html">log4net.Appender.FileAppender</a>.
+				</p>
+				<p>
 					The following example shows how to configure the <span class="code">FileAppender</span>
 					to write messages to a file. The file specified is <i>log-file.txt</i>. The file will
 					be appended to rather than overwritten each time the logging process starts.
@@ -561,6 +582,9 @@ IN "LRGTABLES";
 			
 			<section name="ForwardingAppender">
 				<p>
+					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.ForwardingAppender.html">log4net.Appender.ForwardingAppender</a>.
+				</p>
+				<p>
 					The following example shows how to configure the <span class="code">ForwardingAppender</span>.
 					The forwarding appender allows a set of constraints to be used to decorate an appender.
 					In this example the <i>ConsoleAppender</i> is decorated with a <i>Threshold</i> of
@@ -579,6 +603,9 @@ IN "LRGTABLES";
 			
 			<section name="MemoryAppender">
 				<p>
+					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.MemoryAppender.html">log4net.Appender.MemoryAppender</a>.
+				</p>
+				<p>
 					It is unlikely that the <span class="code">MemoryAppender</span> will be configured
 					using a config file, but if you want to do it here's how.
 				</p>
@@ -590,6 +617,9 @@ IN "LRGTABLES";
 			</section>
 			
 			<section name="NetSendAppender">
+				<p>
+					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.NetSendAppender.html">log4net.Appender.NetSendAppender</a>.
+				</p>
 				<p>
 					The following example shows how to configure the <span class="code">NetSendAppender</span>
 					to deliver messages to a specific user's screen. As this appender is typically only
@@ -615,6 +645,9 @@ IN "LRGTABLES";
 			
 			<section name="OutputDebugStringAppender">
 				<p>
+					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.OutputDebugStringAppender.html">log4net.Appender.OutputDebugStringAppender</a>.
+				</p>
+				<p>
 					The following example shows how to configure the <span class="code">OutputDebugStringAppender</span>
 					to write logging messages to the <span class="code">OutputDebugString</span> API.
 				</p>
@@ -628,6 +661,9 @@ IN "LRGTABLES";
 			</section>
 			
 			<section name="RemotingAppender">
+				<p>
+					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.RemotingAppender.html">log4net.Appender.RemotingAppender</a>.
+				</p>
 				<p>
 					The following example shows how to configure the <span class="code">RemotingAppender</span>
 					to deliver logging events to a specified <i>Sink</i> (in this example
@@ -666,6 +702,9 @@ IN "LRGTABLES";
 			</section>
 			
 			<section name="RollingFileAppender">
+				<p>
+					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.RollingFileAppender.html">log4net.Appender.RollingFileAppender</a>.
+				</p>
 				<p>
 					The <span class="code">RollingFileAppender</span> builds on the
 					<span class="code">FileAppender</span> and has the same options
@@ -753,6 +792,9 @@ IN "LRGTABLES";
 			
 			<section name="SmtpAppender">
 				<p>
+					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.SmtpAppender.html">log4net.Appender.SmtpAppender</a>.
+				</p>
+				<p>
 					The following example shows how to configure the <span class="code">SmtpAppender</span>
 					to deliver log events via SMTP email. The <i>To</i>, <i>From</i>, <i>Subject</i> and
 					<i>SmtpHost</i> are required parameters.
@@ -819,6 +861,9 @@ IN "LRGTABLES";
 			
 			<section name="SmtpPickupDirAppender">
 				<p>
+					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.SmtpPickupDirAppender.html">log4net.Appender.SmtpPickupDirAppender</a>.
+				</p>
+				<p>
 					The <span class="code">SmtpPickupDirAppender</span> is configured similarly
 					to the <span class="code">SmtpAppender</span>. The only difference is that rather
 					than specify a <i>SmtpHost</i> parameter a <i>PickupDir</i> must be specified.
@@ -858,6 +903,9 @@ IN "LRGTABLES";
 			
 			<section name="TraceAppender">
 				<p>
+					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.TraceAppender.html">log4net.Appender.TraceAppender</a>.
+				</p>
+				<p>
 					The following example shows how to configure the <span class="code">TraceAppender</span>
 					to log messages to the <span class="code">System.Diagnostics.Trace</span> system.
 					This is the tracing system supplied with the .net base class libraries.
@@ -874,6 +922,9 @@ IN "LRGTABLES";
 			</section>
 			
 			<section name="UdpAppender">
+				<p>
+					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.UdpAppender.html">log4net.Appender.UdpAppender</a>.
+				</p>
 				<p>
 					The following example shows how to configure the <span class="code">UdpAppender</span>
 					to send events to a <i>RemoteAddress</i> on the specified <i>RemotePort</i>.

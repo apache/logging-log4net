@@ -105,7 +105,10 @@ limitations under the License.
 								which is bound to the <span class="code">TestApp.MyPatternConverter, TestApp</span>
 								type. This type must extend the <span class="code">log4net.Util.PatternConverter</span>
 								base class. The custom pattern can then be used in the pattern string.
-							</p>			
+							</p>
+							<p>
+								For full details see the SDK Reference entry: <a href="sdk/log4net.Layout.PatternLayout.html">log4net.Layout.PatternLayout</a>.
+							</p>
 						</li>
 						<li>
 							<h3><span class="code">PatternString</span> for pattern based configuration</h3>
@@ -139,7 +142,9 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
     writer.Write(Environment.GetFolderPath(specialFolder));
   }
 }</pre></div>
-							
+							<p>
+								For full details see the SDK Reference entry: <a href="sdk/log4net.Util.PatternString.html">log4net.Util.PatternString</a>.
+							</p>
 						</li>
 						<li>
 							<h3>Added new appenders</h3>
