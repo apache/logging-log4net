@@ -26,7 +26,7 @@ using System.Xml;
 namespace log4net.Util
 {
 	/// <summary>
-	/// String keyed object map.
+	/// String keyed object map that is read only.
 	/// </summary>
 	/// <remarks>
 	/// Only member objects that are serializable will
@@ -35,26 +35,39 @@ namespace log4net.Util
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 #if NETCF
-	public sealed class PropertiesDictionary : ReadOnlyPropertiesDictionary, IDictionary
+	public class ReadOnlyPropertiesDictionary : IDictionary
 #else
-	[Serializable] public sealed class PropertiesDictionary : ReadOnlyPropertiesDictionary, ISerializable, IDictionary
+	[Serializable] public class ReadOnlyPropertiesDictionary : ISerializable, IDictionary
 #endif
 	{
+		#region Private Instance Fields
+
+		/// <summary>
+		/// The Hashtable used to store the properties data
+		/// </summary>
+		protected Hashtable m_ht = new Hashtable();
+
+		#endregion Private Instance Fields
+
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PropertiesDictionary" /> class.
+		/// Initializes a new instance of the <see cref="ReadOnlyPropertiesDictionary" /> class.
 		/// </summary>
-		public PropertiesDictionary()
+		public ReadOnlyPropertiesDictionary()
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PropertiesDictionary" /> class.
+		/// Initializes a new instance of the <see cref="ReadOnlyPropertiesDictionary" /> class.
 		/// </summary>
 		/// <param name="propertiesDictionary">properties to copy</param>
-		public PropertiesDictionary(ReadOnlyPropertiesDictionary propertiesDictionary) : base(propertiesDictionary)
+		public ReadOnlyPropertiesDictionary(ReadOnlyPropertiesDictionary propertiesDictionary)
 		{
+			foreach(DictionaryEntry entry in propertiesDictionary)
+			{
+				m_ht.Add(entry.Key, entry.Value);
+			}
 		}
 
 		#endregion Public Instance Constructors
@@ -63,22 +76,36 @@ namespace log4net.Util
 
 #if !NETCF
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PropertiesDictionary" /> class 
+		/// Initializes a new instance of the <see cref="ReadOnlyPropertiesDictionary" /> class 
 		/// with serialized data.
 		/// </summary>
 		/// <param name="info">The <see cref="SerializationInfo" /> that holds the serialized object data.</param>
 		/// <param name="context">The <see cref="StreamingContext" /> that contains contextual information about the source or destination.</param>
-		/// <remarks>
-		/// Because this class is sealed the serialization constructor is private.
-		/// </remarks>
-		private PropertiesDictionary(SerializationInfo info, StreamingContext context) : base(info, context)
+		protected ReadOnlyPropertiesDictionary(SerializationInfo info, StreamingContext context)
 		{
+			foreach(SerializationEntry entry in info)
+			{
+				// The keys are stored as Xml encoded names
+				m_ht[XmlConvert.DecodeName(entry.Name)] = entry.Value;
+			}
 		}
 #endif
 
 		#endregion Protected Instance Constructors
 
 		#region Public Instance Properties
+
+		/// <summary>
+		/// Gets the key names.
+		/// </summary>
+		/// <value>An array of key names.</value>
+		/// <returns>An array of all the keys.</returns>
+		public string[] GetKeys()
+		{
+			string[] keys = new String[m_ht.Count];
+			m_ht.Keys.CopyTo(keys, 0);
+			return keys;
+		}
 
 		/// <summary>
 		/// Gets or sets the value of the  property with the specified key.
@@ -92,10 +119,10 @@ namespace log4net.Util
 		/// If it cannot be serialized it will be silently ignored if
 		/// a serialization operation is performed.
 		/// </remarks>
-		override public object this[string key]
+		public virtual object this[string key]
 		{
 			get { return m_ht[key]; }
-			set { m_ht[key] = value; }
+			set { throw new NotSupportedException("This is a Read Only Dictionary and can not be modified"); }
 		}
 
 		#endregion Public Instance Properties
@@ -103,15 +130,42 @@ namespace log4net.Util
 		#region Public Instance Methods
 
 		/// <summary>
-		/// Remove the entry with the specified key from this dictionary
+		/// Test if the dictionary contains a specified key
 		/// </summary>
-		/// <param name="key">the key for the entry to remove</param>
-		public void Remove(string key)
+		/// <param name="key">the key to look for</param>
+		/// <returns>true if the dictionary contains the specified key</returns>
+		public bool Contains(string key)
 		{
-			m_ht.Remove(key);
+			return m_ht.Contains(key);
 		}
 
-		#endregion Public Instance Methods
+		#endregion
+
+		#region Implementation of ISerializable
+
+#if !NETCF
+		/// <summary>
+		/// Serializes this object into the <see cref="SerializationInfo" /> provided.
+		/// </summary>
+		/// <param name="info">The <see cref="SerializationInfo" /> to populate with data.</param>
+		/// <param name="context">The destination for this serialization.</param>
+		[System.Security.Permissions.SecurityPermissionAttribute(System.Security.Permissions.SecurityAction.Demand, SerializationFormatter=true)]
+		public void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			foreach(DictionaryEntry entry in m_ht)
+			{
+				// If value is serializable then we add it to the list
+				if (entry.Value.GetType().IsSerializable)
+				{
+					// Store the keys as an Xml encoded local name as it may contain colons (':') 
+					// which are not escaped by the Xml Serialization framework
+					info.AddValue(XmlConvert.EncodeLocalName(entry.Key as string), entry.Value);
+				}
+			}
+		}
+#endif
+
+		#endregion Implementation of ISerializable
 
 		#region Implementation of IDictionary
 
@@ -129,7 +183,7 @@ namespace log4net.Util
 		/// <param name="key"></param>
 		void IDictionary.Remove(object key)
 		{
-			m_ht.Remove(key);
+			throw new NotSupportedException("This is a Read Only Dictionary and can not be modified");
 		}
 
 		/// <summary>
@@ -145,9 +199,9 @@ namespace log4net.Util
 		/// <summary>
 		/// Remove all properties from the properties collection
 		/// </summary>
-		public override void Clear()
+		public virtual void Clear()
 		{
-			m_ht.Clear();
+			throw new NotSupportedException("This is a Read Only Dictionary and can not be modified");
 		}
 
 		/// <summary>
@@ -157,11 +211,7 @@ namespace log4net.Util
 		/// <param name="value"></param>
 		void IDictionary.Add(object key, object value)
 		{
-			if (!(key is string))
-			{
-				throw new ArgumentException("key must be a string", "key");
-			}
-			m_ht.Add(key, value);
+			throw new NotSupportedException("This is a Read Only Dictionary and can not be modified");
 		}
 
 		/// <summary>
@@ -169,7 +219,7 @@ namespace log4net.Util
 		/// </summary>
 		bool IDictionary.IsReadOnly
 		{
-			get { return false; }
+			get { return true; }
 		}
 
 		/// <summary>
@@ -179,19 +229,12 @@ namespace log4net.Util
 		{
 			get
 			{
-				if (!(key is string))
-				{
-					throw new ArgumentException("key must be a string", "key");
-				}
+				if (!(key is string)) throw new ArgumentException("key must be a string");
 				return m_ht[key];
 			}
 			set
 			{
-				if (!(key is string))
-				{
-					throw new ArgumentException("key must be a string", "key");
-				}
-				m_ht[key] = value;
+				throw new NotSupportedException("This is a Read Only Dictionary and can not be modified");
 			}
 		}
 
@@ -216,7 +259,7 @@ namespace log4net.Util
 		/// </summary>
 		bool IDictionary.IsFixedSize
 		{
-			get { return false; }
+			get { return m_ht.IsFixedSize; }
 		}
 
 		#endregion
@@ -239,6 +282,14 @@ namespace log4net.Util
 		bool ICollection.IsSynchronized
 		{
 			get { return m_ht.IsSynchronized; }
+		}
+
+		/// <summary>
+		/// The number of properties in this collection
+		/// </summary>
+		public int Count
+		{
+			get { return m_ht.Count; }
 		}
 
 		/// <summary>
