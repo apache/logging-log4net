@@ -201,7 +201,8 @@ namespace log4net.Layout
 		/// object, then the layout should return <c>true</c>.
 		/// </para>
 		/// <para>
-		/// Set this value to override a this default setting.
+		/// Set this value to override a this default setting. The default
+		/// value is <c>true</c>, this layout does not handle the exception.
 		/// </para>
 		/// </remarks>
 		virtual public bool IgnoresException 
