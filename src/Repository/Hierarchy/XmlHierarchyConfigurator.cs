@@ -550,7 +550,7 @@ namespace log4net.Repository.Hierarchy
 					try
 					{
 						// Expand environment variables in the string.
-						propertyValue = OptionConverter.SubstVars(propertyValue, Environment.GetEnvironmentVariables());
+						propertyValue = OptionConverter.SubstituteVariables(propertyValue, Environment.GetEnvironmentVariables());
 					}
 					catch(System.Security.SecurityException)
 					{
