@@ -99,7 +99,7 @@ pre.code
 {
 	font-family: Monospace, Courier New, Courier;
 	background-color: inherit;
-	color: #0000AA;
+	color: black;
 	font-size: 100%;
 	margin-left: 20px;
 }
@@ -108,7 +108,7 @@ span.code
 {
 	font-family: Monospace, Courier New, Courier;
 	background-color: inherit;
-	color: #0000AA;
+	color: #00E;
 	font-size: 100%;
 }
 
@@ -116,7 +116,7 @@ span.code
 {
 	font-family: Monospace, Courier New, Courier;
 	letter-spacing: .1em;
-	background-color: #e0e0e0;
+	background-color: #f5f5ff;
 	color: white;
 	font-size: 100%;
 	font-weight: inherit;
@@ -219,3 +219,25 @@ a:hover
 	color: #3366ff;
 	background-color: inherit;
 }
+
+
+/* Override site.css */
+
+.centercol {
+	margin-left: 190px;
+	margin-right:20px;
+	max-width: 100%;
+}
+
+.leftcol {
+	width: 160px;
+}
+
+.menu_header, .menu_item {
+	font-size: inherit;
+}
+
+.menu_item:hover {
+  background: #EEEEEE; 
+}
+
