@@ -73,7 +73,7 @@ namespace log4net.Tests.Hierarchy
 			a1.Name = "testAppender1";			 
 			log.AddAppender(a1);
 		
-			IEnumerator enumAppenders = log.Appenders.GetEnumerator();
+			IEnumerator enumAppenders = ((IEnumerable)log.Appenders).GetEnumerator();
 			Assertion.Assert( enumAppenders.MoveNext() );
 			CountingAppender aHat = (CountingAppender) enumAppenders.Current;	
 			Assertion.AssertEquals(a1, aHat);	
@@ -102,7 +102,7 @@ namespace log4net.Tests.Hierarchy
 
 			log.RemoveAppender("testAppender2.1");
 
-			IEnumerator enumAppenders = log.Appenders.GetEnumerator();
+			IEnumerator enumAppenders = ((IEnumerable)log.Appenders).GetEnumerator();
 			Assertion.Assert( enumAppenders.MoveNext() );
 			aHat = (CountingAppender) enumAppenders.Current;	
 			Assertion.AssertEquals(a2, aHat);	
