@@ -134,7 +134,7 @@ namespace log4net.Config
 		/// the <b>assembly file name</b> and the config file extension.
 		/// </para>
 		/// <para>
-		/// If the <see cref="ConfigFileExtension"/> is set to <c>MyExt</co> then
+		/// If the <see cref="ConfigFileExtension"/> is set to <c>MyExt</c> then
 		/// possible config file names would be: <c>MyConsoleApp.exe.MyExt</c> or
 		/// <c>MyClassLibrary.dll.MyExt</c>.
 		/// </para>
