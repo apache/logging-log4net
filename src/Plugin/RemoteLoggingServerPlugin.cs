@@ -50,7 +50,8 @@ namespace log4net.Plugin
 		/// Initializes a new instance of the <see cref="RemoteLoggingServerPlugin" /> class
 		/// with specified name.
 		/// </summary>
-		/// <param name="sinkUri">The name to publish the sink under in the remoting infrastructure.</param>
+		/// <param name="sinkUri">The name to publish the sink under in the remoting infrastructure. 
+		/// See <see cref="SinkUri"/> for more details.</param>
 		public RemoteLoggingServerPlugin(string sinkUri) : base("RemoteLoggingServerPlugin:"+sinkUri)
 		{
 			m_sinkUri = sinkUri;
@@ -66,6 +67,12 @@ namespace log4net.Plugin
 		/// <value>
 		/// The URI of this sink.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// This is the name under which the object is marshaled.
+		/// <see cref="RemotingServices.Marshal(MarshalByRefObject,String,Type)"/>
+		/// </para>
+		/// </remarks>
 		public virtual string SinkUri 
 		{ 
 			get { return m_sinkUri; }
@@ -129,9 +136,8 @@ namespace log4net.Plugin
 		/// <summary>
 		/// Delivers <see cref="LoggingEvent"/> objects to a remote sink.
 		/// </summary>
-		public class RemoteLoggingSinkImpl : MarshalByRefObject, IRemoteLoggingSink
+		private class RemoteLoggingSinkImpl : MarshalByRefObject, IRemoteLoggingSink
 		{
-
 			#region Public Instance Constructors
 
 			/// <summary>
@@ -146,24 +152,6 @@ namespace log4net.Plugin
 
 			#endregion Public Instance Constructors
 
-			#region Protected Instance Properties
-
-			/// <summary>
-			/// Gets or sets the underlying <see cref="ILoggerRepository" /> that 
-			/// events should be logged to.
-			/// </summary>
-			/// <value>
-			/// The underlying <see cref="ILoggerRepository" /> that events should
-			/// be logged to.
-			/// </value>
-			protected ILoggerRepository LoggerRepository 
-			{
-				get { return this.m_repository; }
-				set { this.m_repository = value; }
-			}
-
-			#endregion Protected Instance Properties
-
 			#region Implementation of IRemoteLoggingSink
 
 			/// <summary>
@@ -171,7 +159,7 @@ namespace log4net.Plugin
 			/// </summary>
 			/// <param name="events">The events to log.</param>
 			/// <remarks>
-			/// The events passed are logged to the <see cref="LoggerRepository"/>
+			/// The events passed are logged to the <see cref="ILoggerRepository"/>
 			/// </remarks>
 			public void LogEvents(LoggingEvent[] events)
 			{
@@ -212,7 +200,7 @@ namespace log4net.Plugin
 			/// The underlying <see cref="ILoggerRepository" /> that events should
 			/// be logged to.
 			/// </summary>
-			private ILoggerRepository m_repository;
+			private readonly ILoggerRepository m_repository;
 
 			#endregion Private Instance Fields
 		}
