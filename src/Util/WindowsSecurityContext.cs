@@ -32,9 +32,6 @@ using System.Security.Permissions;
 
 using log4net.Core;
 
-/*
- * Custom Logging Classes to support additional logging levels.
- */
 namespace log4net.Util
 {
 	/// <summary>
@@ -43,13 +40,38 @@ namespace log4net.Util
 	/// <remarks>
 	/// <para>
 	/// This <see cref="SecurityContext"/> impersonates a Windows account.
-	/// The account is specified using username, domain name and password.
+	/// </para>
+	/// <para>
+	/// How the impersonation is done depends on the value of <see cref="Impersonate"/>.
+	/// This allows the context to either impersonate a set of user credentials specified 
+	/// using username, domain name and password or to revert to the process credentials.
 	/// </para>
 	/// </remarks>
 	public class WindowsSecurityContext : SecurityContext, IOptionHandler
 	{
+		/// <summary>
+		/// The impersonation modes for the <see cref="WindowsSecurityContext"/>
+		/// </summary>
+		/// <remarks>
+		/// See the <see cref="WindowsSecurityContext.Credentials"/> property for
+		/// details.
+		/// </remarks>
+		public enum ImpersonationModes
+		{
+			/// <summary>
+			/// Impersonate a user using the credentials supplied
+			/// </summary>
+			User,
+
+			/// <summary>
+			/// Revert this the thread to the credentials of the process
+			/// </summary>
+			Process
+		}
+
 		#region Member Variables
 
+		private ImpersonationModes m_impersonationMode = ImpersonationModes.User;
 		private string m_userName;
 		private string m_domainName = Environment.MachineName;
 		private string m_password;
@@ -71,8 +93,45 @@ namespace log4net.Util
 		#region Public Properties
 
 		/// <summary>
+		/// The impersonation mode for this security context
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Impersonate either a user with user credentials or
+		/// revert this thread to the credentials of the process.
+		/// The value is one of the <see cref="ImpersonationModes"/>
+		/// enum.
+		/// </para>
+		/// <para>
+		/// The default value is <see cref="ImpersonationModes.User"/>
+		/// </para>
+		/// <para>
+		/// When the mode is set to <see cref="ImpersonationModes.User"/>
+		/// the user's credentials are established using the
+		/// <see cref="UserName"/>, <see cref="DomainName"/> and <see cref="Password"/>
+		/// values.
+		/// </para>
+		/// <para>
+		/// When the mode is set to <see cref="ImpersonationModes.Process"/>
+		/// no other properties need to be set. If the calling thread is 
+		/// impersonating then it will be reverted back to the process credentials.
+		/// </para>
+		/// </remarks>
+		public ImpersonationModes Credentials
+		{
+			get { return m_impersonationMode; }
+			set { m_impersonationMode = value; }
+		}
+
+		/// <summary>
 		/// The Windows username for this security context
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This property must be set if <see cref="Credentials"/>
+		/// is set to <see cref="ImpersonationModes.User"/> (the default setting).
+		/// </para>
+		/// </remarks>
 		public string UserName
 		{
 			get { return m_userName; }
@@ -87,6 +146,10 @@ namespace log4net.Util
 		/// The default value for <see cref="DomainName"/> is the local machine name
 		/// taken from the <see cref="Environment.MachineName"/> property.
 		/// </para>
+		/// <para>
+		/// This property must be set if <see cref="Credentials"/>
+		/// is set to <see cref="ImpersonationModes.User"/> (the default setting).
+		/// </para>
 		/// </remarks>
 		public string DomainName
 		{
@@ -97,6 +160,12 @@ namespace log4net.Util
 		/// <summary>
 		/// The password for the Windows account specified by the <see cref="UserName"/> and <see cref="DomainName"/> properties.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This property must be set if <see cref="Credentials"/>
+		/// is set to <see cref="ImpersonationModes.User"/> (the default setting).
+		/// </para>
+		/// </remarks>
 		public string Password
 		{
 			get { return m_password; }
@@ -131,11 +200,14 @@ namespace log4net.Util
 		/// <see cref="DomainName" /> or <see cref="Password" /> properties were not specified.</exception>
 		public void ActivateOptions()
 		{
-			if (m_userName == null) throw new ArgumentNullException("m_userName");
-			if (m_domainName == null) throw new ArgumentNullException("m_domainName");
-			if (m_password == null) throw new ArgumentNullException("m_password");
+			if (m_impersonationMode == ImpersonationModes.User)
+			{
+				if (m_userName == null) throw new ArgumentNullException("m_userName");
+				if (m_domainName == null) throw new ArgumentNullException("m_domainName");
+				if (m_password == null) throw new ArgumentNullException("m_password");
 
-			m_identity = LogonUser(m_userName, m_domainName, m_password);
+				m_identity = LogonUser(m_userName, m_domainName, m_password);
+			}
 		}
 
 		#endregion
@@ -146,11 +218,24 @@ namespace log4net.Util
 		/// <param name="state">caller provided state</param>
 		/// <returns>An <see cref="IDisposable"/> instance that will
 		/// revoke the impersonation of this SecurityContext</returns>
+		/// <remarks>
+		/// Depending on the <see cref="Credentials"/> property either
+		/// impersonate a user using credentials supplied or revert 
+		/// to the process credentials.
+		/// </remarks>
 		public override IDisposable Impersonate(object state)
 		{
-			if (m_identity != null)
+			if (m_impersonationMode == ImpersonationModes.User)
 			{
-				return new DisposableImpersonationContext(m_identity.Impersonate());
+				if (m_identity != null)
+				{
+					return new DisposableImpersonationContext(m_identity.Impersonate());
+				}
+			}
+			else if (m_impersonationMode == ImpersonationModes.Process)
+			{
+				// Impersonate(0) will revert to the process credentials
+				return new DisposableImpersonationContext(WindowsIdentity.Impersonate(IntPtr.Zero));
 			}
 			return null;
 		}
