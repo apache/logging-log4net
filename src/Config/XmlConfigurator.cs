@@ -33,7 +33,9 @@ namespace log4net.Config
 	/// Use this class to initialize the log4net environment using an Xml tree.
 	/// </summary>
 	/// <remarks>
+	/// <para>
 	/// Configures a <see cref="ILoggerRepository"/> using an Xml tree.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
@@ -183,8 +185,10 @@ namespace log4net.Config
 		/// Configures log4net using a <c>log4net</c> element
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// Loads the log4net configuration from the XML element
 		/// supplied as <paramref name="element"/>.
+		/// </para>
 		/// </remarks>
 		/// <param name="element">The element to parse.</param>
 		static public void Configure(XmlElement element) 
@@ -252,12 +256,12 @@ namespace log4net.Config
 		/// <para>
 		/// In the <c>.config</c> file, the path to the log4net can be specified like this :
 		/// </para>
-		/// <code>
-		/// &lt;configuration&gt;
-		///		&lt;appSettings&gt;
-		///			&lt;add key="log4net-config-file" value="log.config"/&gt;
-		///		&lt;/appSettings&gt;
-		///	&lt;/configuration&gt;
+		/// <code lang="XML" escaped="true">
+		/// <configuration>
+		///		<appSettings>
+		///			<add key="log4net-config-file" value="log.config"/>
+		///		</appSettings>
+		///	</configuration>
 		/// </code>
 		/// </remarks>
 #else
@@ -287,12 +291,12 @@ namespace log4net.Config
 		/// <para>
 		/// In the <c>.config</c> file, the path to the log4net can be specified like this :
 		/// </para>
-		/// <code>
-		/// &lt;configuration&gt;
-		///		&lt;appSettings&gt;
-		///			&lt;add key="log4net-config-file" value="log.config"/&gt;
-		///		&lt;/appSettings&gt;
-		///	&lt;/configuration&gt;
+		/// <code lang="XML" escaped="true">
+		/// <configuration>
+		///		<appSettings>
+		///			<add key="log4net-config-file" value="log.config"/>
+		///		</appSettings>
+		///	</configuration>
 		/// </code>
 		/// </remarks>
 #endif
@@ -365,12 +369,12 @@ namespace log4net.Config
 		/// <para>
 		/// In the <c>.config</c> file, the path to the log4net can be specified like this :
 		/// </para>
-		/// <code>
-		/// &lt;configuration&gt;
-		///		&lt;appSettings&gt;
-		///			&lt;add key="log4net-config-file" value="log.config"/&gt;
-		///		&lt;/appSettings&gt;
-		///	&lt;/configuration&gt;
+		/// <code lang="XML" escaped="true">
+		/// <configuration>
+		///		<appSettings>
+		///			<add key="log4net-config-file" value="log.config"/>
+		///		</appSettings>
+		///	</configuration>
 		/// </code>
 		/// </remarks>
 #else
@@ -402,12 +406,12 @@ namespace log4net.Config
 		/// <para>
 		/// In the <c>.config</c> file, the path to the log4net can be specified like this :
 		/// </para>
-		/// <code>
-		/// &lt;configuration&gt;
-		///		&lt;appSettings&gt;
-		///			&lt;add key="log4net-config-file" value="log.config"/&gt;
-		///		&lt;/appSettings&gt;
-		///	&lt;/configuration&gt;
+		/// <code lang="XML" escaped="true">
+		/// <configuration>
+		///		<appSettings>
+		///			<add key="log4net-config-file" value="log.config"/>
+		///		</appSettings>
+		///	</configuration>
 		/// </code>
 		/// </remarks>
 #endif
@@ -638,6 +642,7 @@ namespace log4net.Config
 		/// Class used to watch config files.
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// Uses the <see cref="FileSystemWatcher"/> to monitor
 		/// changes to a specified file. Because multiple change notifications
 		/// may be raised when the file is modified, a timer is used to
@@ -647,6 +652,7 @@ namespace log4net.Config
 		/// change notifications arrive while the timer is waiting it
 		/// is reset and waits again for <see cref="TimeoutMillis"/> to
 		/// elapse.
+		/// </para>
 		/// </remarks>
 		private sealed class ConfigureAndWatchHandler
 		{
@@ -676,6 +682,11 @@ namespace log4net.Config
 			/// </summary>
 			/// <param name="repository">The repository to configure.</param>
 			/// <param name="configFile">The configuration file to watch.</param>
+			/// <remarks>
+			/// <para>
+			/// Initializes a new instance of the <see cref="ConfigureAndWatchHandler" /> class.
+			/// </para>
+			/// </remarks>
 			internal ConfigureAndWatchHandler(ILoggerRepository repository, FileInfo configFile)
 			{
 				m_repository = repository;
@@ -709,7 +720,9 @@ namespace log4net.Config
 			/// <param name="source">The <see cref="FileSystemWatcher"/> firing the event.</param>
 			/// <param name="e">The argument indicates the file that caused the event to be fired.</param>
 			/// <remarks>
+			/// <para>
 			/// This handler reloads the configuration from the file when the event is fired.
+			/// </para>
 			/// </remarks>
 			private void ConfigureAndWatchHandler_OnChanged(object source, FileSystemEventArgs e)
 			{
@@ -726,7 +739,9 @@ namespace log4net.Config
 			/// <param name="source">The <see cref="FileSystemWatcher"/> firing the event.</param>
 			/// <param name="e">The argument indicates the file that caused the event to be fired.</param>
 			/// <remarks>
+			/// <para>
 			/// This handler reloads the configuration from the file when the event is fired.
+			/// </para>
 			/// </remarks>
 			private void ConfigureAndWatchHandler_OnRenamed(object source, RenamedEventArgs e)
 			{

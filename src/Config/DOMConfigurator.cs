@@ -169,12 +169,12 @@ namespace log4net.Config
 		/// <para>
 		/// In the <c>.config</c> file, the path to the log4net can be specified like this :
 		/// </para>
-		/// <code>
-		/// &lt;configuration&gt;
-		///		&lt;appSettings&gt;
-		///			&lt;add key="log4net-config-file" value="log.config"/&gt;
-		///		&lt;/appSettings&gt;
-		///	&lt;/configuration&gt;
+		/// <code lang="XML" escaped="true">
+		/// <configuration>
+		///		<appSettings>
+		///			<add key="log4net-config-file" value="log.config"/>
+		///		</appSettings>
+		///	</configuration>
 		/// </code>
 		/// </remarks>
 		[Obsolete("Use XmlConfigurator.Configure instead of DOMConfigurator.Configure")]
@@ -242,12 +242,12 @@ namespace log4net.Config
 		/// <para>
 		/// In the <c>.config</c> file, the path to the log4net can be specified like this :
 		/// </para>
-		/// <code>
-		/// &lt;configuration&gt;
-		///		&lt;appSettings&gt;
-		///			&lt;add key="log4net-config-file" value="log.config"/&gt;
-		///		&lt;/appSettings&gt;
-		///	&lt;/configuration&gt;
+		/// <code lang="XML" escaped="true">
+		/// <configuration>
+		///		<appSettings>
+		///			<add key="log4net-config-file" value="log.config"/>
+		///		</appSettings>
+		///	</configuration>
 		/// </code>
 		/// </remarks>
 		[Obsolete("Use XmlConfigurator.Configure instead of DOMConfigurator.Configure")]

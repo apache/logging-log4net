@@ -54,7 +54,9 @@ namespace log4net.Config
 		/// Initializes a new instance of the <see cref="BasicConfigurator" /> class. 
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// Uses a private access modifier to prevent instantiation of this class.
+		/// </para>
 		/// </remarks>
 		private BasicConfigurator()
 		{
@@ -85,6 +87,11 @@ namespace log4net.Config
 		/// Initializes the log4net system using the specified appender.
 		/// </summary>
 		/// <param name="appender">The appender to use to log all logging events.</param>
+		/// <remarks>
+		/// <para>
+		/// Initializes the log4net system using the specified appender.
+		/// </para>
+		/// </remarks>
 		static public void Configure(IAppender appender) 
 		{
 			BasicConfigurator.Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()), appender);
@@ -123,6 +130,11 @@ namespace log4net.Config
 		/// </summary>
 		/// <param name="repository">The repository to configure.</param>
 		/// <param name="appender">The appender to use to log all logging events.</param>
+		/// <remarks>
+		/// <para>
+		/// Initializes the <see cref="ILoggerRepository"/> using the specified appender.
+		/// </para>
+		/// </remarks>
 		static public void Configure(ILoggerRepository repository, IAppender appender) 
 		{
 			if (repository is IBasicRepositoryConfigurator)

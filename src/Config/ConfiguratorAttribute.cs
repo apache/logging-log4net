@@ -63,6 +63,12 @@ namespace log4net.Config
 		/// </summary>
 		/// <param name="sourceAssembly">The assembly that this attribute was defined on.</param>
 		/// <param name="targetRepository">The repository to configure.</param>
+		/// <remarks>
+		/// <para>
+		/// Abstract method implemented by a subclass. When this method is called
+		/// the subclass should configure the <paramref name="targetRepository"/>.
+		/// </para>
+		/// </remarks>
 		public abstract void Configure(Assembly sourceAssembly, ILoggerRepository targetRepository);
 
 		/// <summary>

@@ -57,6 +57,11 @@ namespace log4net.Config
 		/// the specified domain to alias to this assembly's repository.
 		/// </summary>
 		/// <param name="name">The domain to alias to this assemby's repository.</param>
+		/// <remarks>
+		/// <para>
+		/// Obsolete. Use <see cref="AliasRepositoryAttribute"/> instead of <see cref="AliasDomainAttribute"/>.
+		/// </para>
+		/// </remarks>
 		public AliasDomainAttribute(string name) : base(name)
 		{
 		}

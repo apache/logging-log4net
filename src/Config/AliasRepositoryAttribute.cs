@@ -57,6 +57,12 @@ namespace log4net.Config
 		/// the specified repository to alias to this assembly's repository.
 		/// </summary>
 		/// <param name="name">The repository to alias to this assemby's repository.</param>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="AliasRepositoryAttribute" /> class with 
+		/// the specified repository to alias to this assembly's repository.
+		/// </para>
+		/// </remarks>
 		public AliasRepositoryAttribute(string name)
 		{
 			Name = name;
@@ -72,6 +78,11 @@ namespace log4net.Config
 		/// <value>
 		/// The repository to alias to this assemby's repository.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The name of the repository to alias to this assemby's repository.
+		/// </para>
+		/// </remarks>
 		public string Name
 		{
 			get { return m_name; }

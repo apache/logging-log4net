@@ -56,6 +56,11 @@ namespace log4net.Config
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DomainAttribute" /> class.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Obsolete. Use RepositoryAttribute instead of DomainAttribute.
+		/// </para>
+		/// </remarks>
 		public DomainAttribute() : base()
 		{
 		}
@@ -65,6 +70,11 @@ namespace log4net.Config
 		/// with the name of the domain.
 		/// </summary>
 		/// <param name="name">The name of the domain.</param>
+		/// <remarks>
+		/// <para>
+		/// Obsolete. Use RepositoryAttribute instead of DomainAttribute.
+		/// </para>
+		/// </remarks>
 		public DomainAttribute(string name) : base(name)
 		{
 		}

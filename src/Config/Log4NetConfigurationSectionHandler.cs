@@ -34,16 +34,15 @@ namespace log4net.Config
 	/// </remarks>
 	/// <example>
 	/// Example of registering the log4net section handler :
-	/// <code>
-	/// &lt;?xml version="1.0" encoding="utf-8" ?&gt;
-	/// &lt;configuration&gt;
-	///		&lt;configSections&gt;
-	///			&lt;section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler, log4net" /&gt;
-	///		&lt;/configSections&gt;
-	///		&lt;log4net&gt;
+	/// <code lang="XML" escaped="true">
+	/// <configuration>
+	///		<configSections>
+	///			<section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler, log4net" />
+	///		</configSections>
+	///		<log4net>
 	///			log4net configuration XML goes here
-	///		&lt;/log4net&gt;
-	/// &lt;/configuration&gt;
+	///		</log4net>
+	/// </configuration>
 	/// </code>
 	/// </example>
 	/// <author>Nicko Cadell</author>
@@ -55,6 +54,11 @@ namespace log4net.Config
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Log4NetConfigurationSectionHandler"/> class.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Default constructor.
+		/// </para>
+		/// </remarks>
 		public Log4NetConfigurationSectionHandler()
 		{
 		}
@@ -70,6 +74,11 @@ namespace log4net.Config
 		/// <param name="configContext">The configuration context when called from the ASP.NET configuration system. Otherwise, this parameter is reserved and is a null reference.</param>
 		/// <param name="section">The <see cref="XmlNode" /> for the log4net section.</param>
 		/// <returns>The <see cref="XmlNode" /> for the log4net section.</returns>
+		/// <remarks>
+		/// <para>
+		/// Returns the <see cref="XmlNode"/> containing the configuration data,
+		/// </para>
+		/// </remarks>
 		public object Create(object parent, object configContext, XmlNode section)
 		{
 			return section;

@@ -56,6 +56,11 @@ namespace log4net.Config
 		/// <summary>
 		/// Initializes a new instance of the <see cref="RepositoryAttribute" /> class.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Default constructor.
+		/// </para>
+		/// </remarks>
 		public RepositoryAttribute()
 		{
 		}
@@ -65,6 +70,11 @@ namespace log4net.Config
 		/// with the name of the repository.
 		/// </summary>
 		/// <param name="name">The name of the repository.</param>
+		/// <remarks>
+		/// <para>
+		/// Initialize the attribute with the name for the assembly's repository.
+		/// </para>
+		/// </remarks>
 		public RepositoryAttribute(string name)
 		{
 			m_name = name;
@@ -82,8 +92,10 @@ namespace log4net.Config
 		/// assembly.
 		/// </value>
 		/// <remarks>
+		/// <para>
 		/// This value does not have to be unique. Several assemblies can share the
 		/// same repository. They will share the logging configuration of the repository.
+		/// </para>
 		/// </remarks>
 		public string Name
 		{

@@ -33,6 +33,13 @@ namespace log4net.Config
 	/// Assembly level attribute that specifies a plugin to attach to 
 	/// the repository.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Specifies the type of a plugin to create and attach to the
+	/// assembly's repository. The plugin type must implement the
+	/// <see cref="IPlugin"/> interface.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	[AttributeUsage(AttributeTargets.Assembly,AllowMultiple=true)]
@@ -46,6 +53,11 @@ namespace log4net.Config
 		/// with the specified type.
 		/// </summary>
 		/// <param name="type">The type of plugin to create.</param>
+		/// <remarks>
+		/// <para>
+		/// Create the attribute with the plugin type specified.
+		/// </para>
+		/// </remarks>
 		public PluginAttribute(string type)
 		{
 			m_type = type;
@@ -61,6 +73,11 @@ namespace log4net.Config
 		/// <value>
 		/// The type name for the plugin.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The type name for the plugin.
+		/// </para>
+		/// </remarks>
 		public string Type
 		{
 			get { return m_type; }
@@ -75,8 +92,10 @@ namespace log4net.Config
 		/// Creates the plugin object defined by this attribute.
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// Creates the instance of the <see cref="IPlugin"/> object as 
 		/// specified by this attribute.
+		/// </para>
 		/// </remarks>
 		/// <returns>The plugin object.</returns>
 		public IPlugin CreatePlugin()
@@ -104,8 +123,10 @@ namespace log4net.Config
 		/// Returns a representation of the properties of this object.
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// Overrides base class <see cref="Object.ToString()" /> method to 
 		/// return a representation of the properties of this object.
+		/// </para>
 		/// </remarks>
 		/// <returns>A representation of the properties of this object</returns>
 		override public string ToString()
