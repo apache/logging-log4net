@@ -59,7 +59,7 @@ namespace log4net.Util.PatternStringConverters
 				// This security exception will occur if the caller does not have 
 				// unrestricted environment permission. If this occurs the expansion 
 				// will be skipped with the following warning message.
-				LogLog.Debug("DOMConfigurator: Security exception while trying to expand environment variables. Error Ignored. No Expansion.", secEx);
+				LogLog.Debug("EnvironmentPatternConverter: Security exception while trying to expand environment variables. Error Ignored. No Expansion.", secEx);
 			}
 			catch (Exception ex) 
 			{
