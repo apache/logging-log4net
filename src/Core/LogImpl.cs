@@ -213,7 +213,10 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void DebugFormat(string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelDebug, String.Format(CultureInfo.InvariantCulture, format, args), null);
+			if (IsDebugEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelDebug, String.Format(CultureInfo.InvariantCulture, format, args), null);
+			}
 		}
 
 		/// <summary>
@@ -236,7 +239,10 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void DebugFormat(IFormatProvider provider, string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelDebug, String.Format(provider, format, args), null);
+			if (IsDebugEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelDebug, String.Format(provider, format, args), null);
+			}
 		}
 
 		/// <summary>
@@ -312,7 +318,10 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void InfoFormat(string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelInfo, String.Format(CultureInfo.InvariantCulture, format, args), null);
+			if (IsInfoEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelInfo, String.Format(CultureInfo.InvariantCulture, format, args), null);
+			}
 		}
 
 		/// <summary>
@@ -335,7 +344,10 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void InfoFormat(IFormatProvider provider, string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelInfo, String.Format(provider, format, args), null);
+			if (IsInfoEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelInfo, String.Format(provider, format, args), null);
+			}
 		}
 
 		/// <summary>
@@ -411,7 +423,10 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void WarnFormat(string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelWarn, String.Format(CultureInfo.InvariantCulture, format, args), null);
+			if (IsWarnEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelWarn, String.Format(CultureInfo.InvariantCulture, format, args), null);
+			}
 		}
 
 		/// <summary>
@@ -434,7 +449,10 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void WarnFormat(IFormatProvider provider, string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelWarn, String.Format(provider, format, args), null);
+			if (IsWarnEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelWarn, String.Format(provider, format, args), null);
+			}
 		}
 
 		/// <summary>
@@ -510,7 +528,10 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void ErrorFormat(string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelError, String.Format(CultureInfo.InvariantCulture, format, args), null);
+			if (IsErrorEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelError, String.Format(CultureInfo.InvariantCulture, format, args), null);
+			}
 		}
 
 		/// <summary>
@@ -533,7 +554,10 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void ErrorFormat(IFormatProvider provider, string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelError, String.Format(provider, format, args), null);
+			if (IsErrorEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelError, String.Format(provider, format, args), null);
+			}
 		}
 
 		/// <summary>
@@ -609,7 +633,10 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void FatalFormat(string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelFatal, String.Format(CultureInfo.InvariantCulture, format, args), null);
+			if (IsFatalEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelFatal, String.Format(CultureInfo.InvariantCulture, format, args), null);
+			}
 		}
 
 		/// <summary>
@@ -632,7 +659,10 @@ namespace log4net.Core
 		/// </remarks>
 		virtual public void FatalFormat(IFormatProvider provider, string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelFatal, String.Format(provider, format, args), null);
+			if (IsFatalEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelFatal, String.Format(provider, format, args), null);
+			}
 		}
 
 		/// <summary>
