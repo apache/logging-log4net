@@ -69,55 +69,50 @@ namespace log4net.Core
 		/// <summary>
 		/// Gets the wrapper object for the specified logger.
 		/// </summary>
-		/// <value>
-		/// The wrapper object for the specified logger.
-		/// </value>
 		/// <remarks>
 		/// If the logger is null then the corresponding wrapper is null
 		/// </remarks>
-		virtual public ILoggerWrapper this[ILogger logger]
+		/// <returns>The wrapper object for the specified logger</returns>
+		virtual public ILoggerWrapper GetWrapper(ILogger logger)
 		{
-			get
+			// If the logger is null then the corresponding wrapper is null
+			if (logger == null)
 			{
-				// If the logger is null then the corresponding wrapper is null
-				if (logger == null)
+				return null;
+			}
+
+			lock(this)
+			{
+				// Lookup hierarchy in map.
+				Hashtable wrappersMap = (Hashtable)m_repositories[logger.Repository];
+
+				if (wrappersMap == null)
 				{
-					return null;
+					// Hierarchy does not exist in map.
+					// Must register with hierarchy
+
+					wrappersMap = new Hashtable();
+					m_repositories[logger.Repository] = wrappersMap;
+
+					// Register for config reset & shutdown on repository
+					logger.Repository.ShutdownEvent += m_shutdownHandler;
 				}
 
-				lock(this)
+				// Look for the wrapper object in the map
+				ILoggerWrapper wrapperObject = wrappersMap[logger] as ILoggerWrapper;
+
+				if (wrapperObject == null)
 				{
-					// Lookup hierarchy in map.
-					Hashtable wrappersMap = (Hashtable)m_repositories[logger.Repository];
+					// No wrapper object exists for the specified logger
 
-					if (wrappersMap == null)
-					{
-						// Hierarchy does not exist in map.
-						// Must register with hierarchy
-
-						wrappersMap = new Hashtable();
-						m_repositories[logger.Repository] = wrappersMap;
-
-						// Register for config reset & shutdown on repository
-						logger.Repository.ShutdownEvent += m_shutdownHandler;
-					}
-
-					// Look for the wrapper object in the map
-					ILoggerWrapper wrapperObject = wrappersMap[logger] as ILoggerWrapper;
-
-					if (wrapperObject == null)
-					{
-						// No wrapper object exists for the specified logger
-
-						// Create a new wrapper wrapping the logger
-						wrapperObject = CreateNewWrapperObject(logger);
+					// Create a new wrapper wrapping the logger
+					wrapperObject = CreateNewWrapperObject(logger);
 					
-						// Store wrapper logger in map
-						wrappersMap[logger] = wrapperObject;
-					}
-
-					return wrapperObject;
+					// Store wrapper logger in map
+					wrappersMap[logger] = wrapperObject;
 				}
+
+				return wrapperObject;
 			}
 		}
 
