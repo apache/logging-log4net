@@ -275,35 +275,37 @@ namespace log4net.Util
 				return txt;
 			}
 
-			if (target.IsEnum)
+			// First lets try to find a type converter
+			IConvertFrom typeConverter = ConverterRegistry.GetConvertFrom(target);
+			if (typeConverter != null && typeConverter.CanConvertFrom(typeof(string)))
 			{
-				// Target type is an enum.
-
-				// Use the Enum.Parse(EnumType, string) method to get the enum value
-				return ParseEnum(target, txt, true);
+				// Found appropriate converter
+				return typeConverter.ConvertFrom(txt);
 			}
 			else
 			{
-				// We essentially make a guess that to convert from a string
-				// to an arbitrary type T there will be a static method defined on type T called Parse
-				// that will take an argument of type string. i.e. T.Parse(string)->T we call this
-				// method to convert the string to the type required by the property.
-				System.Reflection.MethodInfo meth = target.GetMethod("Parse", new Type[] {typeof(string)});
-				if (meth != null)
+				if (target.IsEnum)
 				{
-					// Call the Parse method
-					return meth.Invoke(null, BindingFlags.InvokeMethod, null, new object[] {txt}, CultureInfo.InvariantCulture);
+					// Target type is an enum.
+
+					// Use the Enum.Parse(EnumType, string) method to get the enum value
+					return ParseEnum(target, txt, true);
 				}
 				else
 				{
-					// Ok no Parse() method found.
-
-					// Lets try to find a type converter
-					IConvertFrom typeConverter = ConverterRegistry.GetConvertFrom(target);
-					if (typeConverter != null && typeConverter.CanConvertFrom(typeof(string)))
+					// We essentially make a guess that to convert from a string
+					// to an arbitrary type T there will be a static method defined on type T called Parse
+					// that will take an argument of type string. i.e. T.Parse(string)->T we call this
+					// method to convert the string to the type required by the property.
+					System.Reflection.MethodInfo meth = target.GetMethod("Parse", new Type[] {typeof(string)});
+					if (meth != null)
 					{
-						// Found appropriate converter
-						return typeConverter.ConvertFrom(txt);
+						// Call the Parse method
+						return meth.Invoke(null, BindingFlags.InvokeMethod, null, new object[] {txt}, CultureInfo.InvariantCulture);
+					}
+					else
+					{
+						// No Parse() method found.
 					}
 				}
 			}
