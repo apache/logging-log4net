@@ -341,13 +341,72 @@ namespace log4net.Appender
 				// See the ActivateOptions method below for the code that
 				// retrieves and wraps the stream.
 
+
+				// The windows console uses ScrollConsoleScreenBuffer internally to
+				// scroll the console buffer when the display buffer of the console
+				// has been used up. ScrollConsoleScreenBuffer fills the area uncovered
+				// by moving the current content with the background color 
+				// currently specified on the console. This means that it fills the
+				// whole line in front of the cursor position with the current 
+				// background color.
+				// This causes an issue when writing out text with a non default
+				// background color. For example; We write a message with a Blue
+				// background color and the scrollable area of the console is full.
+				// When we write the newline at the end of the message the console
+				// needs to scroll the buffer to make space available for the new line.
+				// The ScrollConsoleScreenBuffer internals will fill the newly created
+				// space with the current background color: Blue.
+				// We then change the console color back to default (White text on a
+				// Black background). We write some text to the console, the text is
+				// written correctly in White with a Black background, however the
+				// remainder of the line still has a Blue background.
+				// 
+				// This causes a disjointed appearance to the output where the background
+				// colors change.
+				//
+				// This can be remedied by restoring the console colors before causing
+				// the buffer to scroll, i.e. before writing the last newline. This does
+				// assume that the rendered message will end with a newline.
+				//
+				// Therefore we identify a trailing newline in the message and don't
+				// write this to the output, then we restore the console color and write
+				// a newline. Note that we must AutoFlush before we restore the console
+				// color otherwise we will have no effect.
+				//
+				// There will still be a slight artefact for the last line of the message
+				// will have the background extended to the end of the line, however this
+				// is unlikely to cause any user issues.
+				//
+				// Note that none of the above is visible while the console buffer is scrollable
+				// within the console window viewport, the effects only arise when the actual
+				// buffer is full and needs to be scrolled.
+
+				char[] messageCharArray = strLoggingMessage.ToCharArray();
+				int arrayLength = messageCharArray.Length;
+				bool appendNewline = false;
+
+				// Trim off last newline, if it exists
+				if (arrayLength > 1 && messageCharArray[arrayLength-2] == '\r' && messageCharArray[arrayLength-1] == '\n')
+				{
+					arrayLength -= 2;
+					appendNewline = true;
+				}
+
 				// Write to the output stream
-				m_consoleOutputWriter.Write(strLoggingMessage);
+				m_consoleOutputWriter.Write(messageCharArray, 0, arrayLength);
 
 				// Restore the console back to its previous color scheme
 				SetConsoleTextAttribute(consoleHandle, bufferInfo.wAttributes);
+
+				if (appendNewline)
+				{
+					// Write the newline, after changing the color scheme
+					m_consoleOutputWriter.Write(s_windowsNewline, 0, 2);
+				}
 			}
 		}
+
+		private static readonly char[] s_windowsNewline = {'\r', '\n'};
 
 		/// <summary>
 		/// This appender requires a <see cref="Layout"/> to be set.
