@@ -129,6 +129,15 @@ method="run" file="Generator.java" line="94"/>
 		{
 			// Translate logging events for log4j
 
+			// Copy global properties
+			if (loggingEvent.GlobalProperties != null)
+			{
+				foreach(System.Collections.DictionaryEntry entry in loggingEvent.GlobalProperties)
+				{
+					loggingEvent.Properties[(string)entry.Key] = entry.Value;
+				}
+			}
+
 			// Translate hostname property
 			if (loggingEvent.Properties[LoggingEvent.HostNameProperty] != null && 
 				loggingEvent.Properties["log4jmachinename"] == null)
@@ -190,7 +199,9 @@ method="run" file="Generator.java" line="94"/>
 				foreach(System.Collections.DictionaryEntry entry in loggingEvent.MappedContext)
 				{
 					writer.WriteStartElement("log4j:data");
-					writer.WriteAttributeString("name", entry.Key.ToString());
+					writer.WriteAttributeString("name", (string)entry.Key);
+
+					// TODO: Use an ObjectRenderer to convert the object to a string
 					writer.WriteAttributeString("value", entry.Value.ToString());
 					writer.WriteEndElement();
 				}
@@ -208,6 +219,8 @@ method="run" file="Generator.java" line="94"/>
 					{
 						writer.WriteStartElement("log4j:data");
 						writer.WriteAttributeString("name", key);
+
+						// TODO: Use an ObjectRenderer to convert the object to a string
 						writer.WriteAttributeString("value", loggingEvent.Properties[key].ToString());
 						writer.WriteEndElement();
 					}

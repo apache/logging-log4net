@@ -92,7 +92,7 @@ namespace log4net.Layout
 		/// at the origin of the log statement will be output. 
 		/// </para>
 		/// <para>
-		/// If you are embedding this layout within an SMTPAppender
+		/// If you are embedding this layout within an SmtpAppender
 		/// then make sure to set the <b>LocationInfo</b> option of that 
 		/// appender as well.
 		/// </para>
@@ -156,6 +156,7 @@ namespace log4net.Layout
 				m_elmNdc = m_prefix + ":" + ELM_NDC;
 				m_elmMdc = m_prefix + ":" + ELM_MDC;
 				m_elmProperties = m_prefix + ":" + ELM_PROPERTIES;
+				m_elmGlobalProperties = m_prefix + ":" + ELM_GLOBAL_PROPERTIES;
 				m_elmData = m_prefix + ":" + ELM_DATA;
 				m_elmException = m_prefix + ":" + ELM_EXCEPTION;
 				m_elmLocation = m_prefix + ":" + ELM_LOCATION;
@@ -212,7 +213,9 @@ namespace log4net.Layout
 				foreach(System.Collections.DictionaryEntry entry in loggingEvent.MappedContext)
 				{
 					writer.WriteStartElement(m_elmData);
-					writer.WriteAttributeString(ATTR_NAME, entry.Key.ToString());
+					writer.WriteAttributeString(ATTR_NAME, (string)entry.Key);
+
+					// TODO Should use an ObjectRenderer to convert to a string
 					writer.WriteAttributeString(ATTR_VALUE, entry.Value.ToString());
 					writer.WriteEndElement();
 				}
@@ -230,7 +233,36 @@ namespace log4net.Layout
 					{
 						writer.WriteStartElement(m_elmData);
 						writer.WriteAttributeString(ATTR_NAME, key);
+
+						// TODO Should use an ObjectRenderer to convert to a string
 						writer.WriteAttributeString(ATTR_VALUE, loggingEvent.Properties[key].ToString());
+						writer.WriteEndElement();
+					}
+					writer.WriteEndElement();
+				}
+			}
+
+			if (loggingEvent.GlobalProperties != null)
+			{
+				// Append the properties text
+				string[] propKeys = loggingEvent.Properties.GetKeys();
+				if (loggingEvent.GlobalProperties.Count > 0)
+				{
+					writer.WriteStartElement(m_elmGlobalProperties);
+					foreach(System.Collections.DictionaryEntry entry in loggingEvent.GlobalProperties)
+					{
+						writer.WriteStartElement(m_elmData);
+						writer.WriteAttributeString(ATTR_NAME, (string)entry.Key);
+
+						if (entry.Value == null)
+						{
+							writer.WriteAttributeString(ATTR_VALUE, "null");
+						}
+						else
+						{
+							// TODO Should use an ObjectRenderer to convert to a string
+							writer.WriteAttributeString(ATTR_VALUE, entry.Value.ToString());
+						}
 						writer.WriteEndElement();
 					}
 					writer.WriteEndElement();
@@ -276,6 +308,7 @@ namespace log4net.Layout
 		private string m_elmMdc = ELM_MDC;
 		private string m_elmData = ELM_DATA;
 		private string m_elmProperties = ELM_PROPERTIES;
+		private string m_elmGlobalProperties = ELM_GLOBAL_PROPERTIES;
 		private string m_elmException = ELM_EXCEPTION;
 		private string m_elmLocation = ELM_LOCATION;
 
@@ -290,6 +323,7 @@ namespace log4net.Layout
 		private const string ELM_NDC = "ndc";
 		private const string ELM_MDC = "mdc";
 		private const string ELM_PROPERTIES = "properties";
+		private const string ELM_GLOBAL_PROPERTIES = "global-properties";
 		private const string ELM_DATA = "data";
 		private const string ELM_EXCEPTION = "exception";
 		private const string ELM_LOCATION = "locationInfo";
