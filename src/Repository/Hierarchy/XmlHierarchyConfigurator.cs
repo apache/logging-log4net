@@ -453,6 +453,7 @@ namespace log4net.Repository.Hierarchy
 				} 
 				else 
 				{
+					LogLog.Debug("XmlConfigurator: Logger [" + loggerName + "] level set to inherit from parent.");	
 					log.Level = null;
 				}
 			} 
@@ -461,10 +462,13 @@ namespace log4net.Repository.Hierarchy
 				log.Level = log.Hierarchy.LevelMap[levelStr];
 				if (log.Level == null)
 				{
-					LogLog.Error("XmlConfigurator: Undefined level [" + levelStr + "] on Logger [" + log.Name + "].");
+					LogLog.Error("XmlConfigurator: Undefined level [" + levelStr + "] on Logger [" + loggerName + "].");
+				}
+				else
+				{
+					LogLog.Debug("XmlConfigurator: Logger [" + loggerName + "] level set to [name=\"" + log.Level.Name + "\",value=" + log.Level.Value + "].");	
 				}
 			}
-			LogLog.Debug("XmlConfigurator: Logger [" + loggerName + "] level set to [name=\"" + log.Level.Name + "\",value=" + log.Level.Value + "].");	
 		}
 
 		/// <summary>
