@@ -1493,7 +1493,10 @@ namespace log4net.Tests.Appender
 
 		private static ArrayList GetExistingFiles(string baseFilePath)
 		{
-			return (ArrayList)Utils.InvokeMethod(typeof(RollingFileAppender), "GetExistingFiles", baseFilePath);
+			RollingFileAppender appender = new RollingFileAppender();
+			appender.SecurityContext = log4net.Util.NullSecurityContext.Instance;
+
+			return (ArrayList)Utils.InvokeMethod(appender, "GetExistingFiles", baseFilePath);
 		}
 
 		private void InitializeRollBackups(RollingFileAppender appender, string baseFile, ArrayList arrayFiles)

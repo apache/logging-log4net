@@ -652,10 +652,12 @@ namespace log4net.Appender
 
 			using(SecurityContext.Impersonate(this))
 			{
-				directory = Path.GetDirectoryName(baseFilePath);
+				string fullPath = Path.GetFullPath(baseFilePath);
+
+				directory = Path.GetDirectoryName(fullPath);
 				if (Directory.Exists(directory))
 				{
-					string baseFileName = Path.GetFileName(baseFilePath);
+					string baseFileName = Path.GetFileName(fullPath);
 
 					string[] files = Directory.GetFiles(directory, GetWildcardPatternForFile(baseFileName));
 	
