@@ -27,7 +27,8 @@ using log4net.DateFormatter;
 namespace log4net.Layout.Pattern
 {
 	/// <summary>
-	/// Date pattern converter, uses a <see cref="IDateFormatter"/> to format the date
+	/// Date pattern converter, uses a <see cref="IDateFormatter"/> to format 
+	/// the date of a <see cref="LoggingEvent"/>.
 	/// </summary>
 	/// <author>Nicko Cadell</author>
 	internal sealed class DatePatternConverter : PatternLayoutConverter, IOptionHandler

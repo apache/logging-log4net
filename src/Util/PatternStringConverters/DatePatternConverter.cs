@@ -27,7 +27,8 @@ using log4net.Core;
 namespace log4net.Util.PatternStringConverters
 {
 	/// <summary>
-	/// Date pattern converter, uses a <see cref="IDateFormatter"/> to format the date
+	/// Date pattern converter, uses a <see cref="IDateFormatter"/> to 
+	/// format the current local date and time for this computer.
 	/// </summary>
 	/// <author>Nicko Cadell</author>
 	internal sealed class DatePatternConverter : PatternConverter, IOptionHandler
