@@ -7,39 +7,36 @@
     <include buildfile="${log4net.basedir}/log4net.include" />
     <!-- Targets that should always be executed -->
     <call target="set-build-configuration" />
-    <call target="set-runtime-configuration" />
+    <call target="set-framework-configuration" />
 
     <!-- Target for compiling the tests on all frameworks -->
     <target name="compile-all" description="Builds all log4net tests">
         <echo message="Compiling all runtime configurations for the ${current.build.config} build configuration." />
 
-        <available type="Framework" resource="net-1.0" property="temp.framework.available" />
-        <if propertytrue="temp.framework.available">
-            <call target="set-net-1.0-runtime-configuration" />
-            <call target="compile-${current.runtime.config}-${current.runtime.version}" />
+        <if test="${framework::exists('net-1.0')}">
+            <call target="compile-net-1.0" />
         </if>
-        <ifnot propertytrue="temp.framework.available">
-            <if propertyexists="project.build.package" propertytrue="project.build.package">
+        <if test="${not framework::exists('net-1.0')}">
+            <if test="${property::exists('project.build.package') and project.build.package}">
                 <fail message="The .NET Framework 1.0 is not available." />
             </if>
-            <ifnot propertyexists="project.build.package" propertytrue="project.build.package">
+            <if test="${not(property::exists('project.build.package') and project.build.package)}">
                 <echo message="The .NET Framework 1.0 is not available. Build skipped." />
-            </ifnot>
-        </ifnot>
-
-        <available type="Framework" resource="net-1.1" property="temp.framework.available" />
-        <if propertytrue="temp.framework.available">
-            <call target="set-net-1.1-runtime-configuration" />
-            <call target="compile-${current.runtime.config}-${current.runtime.version}" />
+            </if>
         </if>
-        <ifnot propertytrue="temp.framework.available">
-            <if propertyexists="project.build.package" propertytrue="project.build.package">
+
+        <if test="${framework::exists('net-1.1')}">
+            <call target="compile-net-1.1" />
+        </if>
+        <if test="${not framework::exists('net-1.1')}">
+            <if test="${property::exists('project.build.package') and project.build.package}">
                 <fail message="The .NET Framework 1.1 is not available." />
             </if>
-            <ifnot propertyexists="project.build.package" propertytrue="project.build.package">
+            <if test="${not(property::exists('project.build.package') and project.build.package)}">
                 <echo message="The .NET Framework 1.1 is not available. Build skipped." />
-            </ifnot>
-        </ifnot>	    
+            </if>
+        </if>
+
     </target>
 
     <!-- Target for compiling the tests on net-1.0 -->
@@ -47,26 +44,31 @@
         <!-- copy log4net build output  -->
         <copy todir="${current.bin.dir}">
             <fileset basedir="${log4net.basedir}/${current.bin.dir}">
-                <includes name="*.*" />
+                <include name="*.*" />
             </fileset>
         </copy>
-        <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Tests.dll">
+        <copy todir="${current.bin.dir}">
+	    <fileset basedir="${log4net.basedir}/tests/lib">
+                <include name="nunit.framework.dll" />
+            </fileset>
+	</copy>
+	<csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Tests.dll">
             <sources basedir="${log4net.basedir}/tests/src">
-                <includes name="**/*.cs" />
-                <includes name="${log4net.basedir}/src/AssemblyVersionInfo.cs" />
+                <include name="**/*.cs" />
+                <include name="${log4net.basedir}/src/AssemblyVersionInfo.cs" />
             </sources>
             <references defaultexcludes="true">
-                <includes name="mscorlib.dll" />                
-                <includes name="System.dll" />
-                <includes name="System.Data.dll" />
-                <includes name="System.Web.dll" />
-                <includes name="System.Xml.dll" />
-                <includes name="System.Runtime.Remoting.dll" />
-		<includes name="${current.bin.dir}/log4net.dll" frompath="false" />
-		<includes name="lib/nunit.framework.dll" />
+                <include name="mscorlib.dll" />                
+                <include name="System.dll" />
+                <include name="System.Data.dll" />
+                <include name="System.Web.dll" />
+                <include name="System.Xml.dll" />
+                <include name="System.Runtime.Remoting.dll" />
+		<include name="${current.bin.dir}/log4net.dll" frompath="false" />
+		<include name="${current.bin.dir}/nunit.framework.dll" frompath="false" />
                 <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework>/<framework version>/<build configuration> directory -->
-                <includes name="lib/${current.runtime.config}/${current.runtime.version}/${current.build.config}/*.dll" />
-		<includes name="${log4net.basedir}/lib/${current.runtime.config}/${current.runtime.version}/${current.build.config}/*.dll" />
+                <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
+		<include name="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
             </references>
         </csc>
     </target>
@@ -76,31 +78,31 @@
         <!-- copy log4net build output  -->
         <copy todir="${current.bin.dir}">
             <fileset basedir="${log4net.basedir}/${current.bin.dir}">
-                <includes name="*.*" />
+                <include name="*.*" />
             </fileset>
         </copy>
         <copy todir="${current.bin.dir}">
 	    <fileset basedir="${log4net.basedir}/tests/lib">
-                <includes name="nunit.framework.dll" />
+                <include name="nunit.framework.dll" />
             </fileset>
         </copy>
         <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Tests.dll">
             <sources basedir="${log4net.basedir}/tests/src">
-                <includes name="**/*.cs" />
-                <includes name="${log4net.basedir}/src/AssemblyVersionInfo.cs" />
+                <include name="**/*.cs" />
+                <include name="${log4net.basedir}/src/AssemblyVersionInfo.cs" />
             </sources>
             <references defaultexcludes="true">
-                <includes name="mscorlib.dll" />                
-                <includes name="System.dll" />
-                <includes name="System.Data.dll" />
-                <includes name="System.Web.dll" />
-                <includes name="System.Xml.dll" />
-                <includes name="System.Runtime.Remoting.dll" />
-		<includes name="${current.bin.dir}/log4net.dll" frompath="false" />
-		<includes name="${current.bin.dir}/nunit.framework.dll" frompath="false" />
+                <include name="mscorlib.dll" />                
+                <include name="System.dll" />
+                <include name="System.Data.dll" />
+                <include name="System.Web.dll" />
+                <include name="System.Xml.dll" />
+                <include name="System.Runtime.Remoting.dll" />
+		<include name="${current.bin.dir}/log4net.dll" frompath="false" />
+		<include name="${current.bin.dir}/nunit.framework.dll" frompath="false" />
                 <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework>/<framework version>/<build configuration> directory -->
-                <includes name="lib/${current.runtime.config}/${current.runtime.version}/${current.build.config}/*.dll" />
-		<includes name="${log4net.basedir}/lib/${current.runtime.config}/${current.runtime.version}/${current.build.config}/*.dll" />
+                <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
+		<include name="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
             </references>
         </csc>
     </target>
