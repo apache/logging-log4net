@@ -132,7 +132,27 @@ namespace log4net.Appender
 		public string PickupDir
 		{
 			get { return m_pickupDir; }
-			set { m_pickupDir = ConvertToFullPath(value.Trim()); }
+			set { m_pickupDir = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the <see cref="SecurityContext"/> used to write to the pickup directory.
+		/// </summary>
+		/// <value>
+		/// The <see cref="SecurityContext"/> used to write to the pickup directory.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Unless a <see cref="SecurityContext"/> specified here for this appender
+		/// the <see cref="SecurityContextProvider.DefaultProvider"/> is queried for the
+		/// security context to use. The default behavior is to use the security context
+		/// of the current thread.
+		/// </para>
+		/// </remarks>
+		public SecurityContext SecurityContext 
+		{
+			get { return m_securityContext; }
+			set { m_securityContext = value; }
 		}
 
 		#endregion Public Instance Properties
@@ -153,34 +173,51 @@ namespace log4net.Appender
 			// Note: this code already owns the monitor for this
 			// appender. This frees us from needing to synchronize again.
 			try 
-			{	  
-				using(StreamWriter writer = File.CreateText(Path.Combine(m_pickupDir, SystemInfo.NewGuid().ToString("N"))))
+			{
+				string filePath = null;
+				StreamWriter writer = null;
+
+				// Impersonate to open the file
+				using(SecurityContext.Impersonate(this))
 				{
-					writer.WriteLine("To: " + m_to);
-					writer.WriteLine("From: " + m_from);
-					writer.WriteLine("Subject: " + m_subject);
-					writer.WriteLine("");
+					filePath = Path.Combine(m_pickupDir, SystemInfo.NewGuid().ToString("N"));
+					writer = File.CreateText(filePath);
+				}
 
-					string t = Layout.Header;
-					if (t != null)
+				if (writer == null)
+				{
+					ErrorHandler.Error("Failed to create output file for writing ["+filePath+"]", null, ErrorCode.FileOpenFailure);
+				}
+				else
+				{
+					using(writer)
 					{
-						writer.Write(t);
-					}
+						writer.WriteLine("To: " + m_to);
+						writer.WriteLine("From: " + m_from);
+						writer.WriteLine("Subject: " + m_subject);
+						writer.WriteLine("");
 
-					for(int i = 0; i < events.Length; i++) 
-					{
-						// Render the event and append the text to the buffer
-						RenderLoggingEvent(writer, events[i]);
-					}
+						string t = Layout.Header;
+						if (t != null)
+						{
+							writer.Write(t);
+						}
 
-					t = Layout.Footer;
-					if (t != null)
-					{
-						writer.Write(t);
-					}
+						for(int i = 0; i < events.Length; i++) 
+						{
+							// Render the event and append the text to the buffer
+							RenderLoggingEvent(writer, events[i]);
+						}
 
-					writer.WriteLine("");
-					writer.WriteLine(".");
+						t = Layout.Footer;
+						if (t != null)
+						{
+							writer.Write(t);
+						}
+
+						writer.WriteLine("");
+						writer.WriteLine(".");
+					}
 				}
 			} 
 			catch(Exception e) 
@@ -192,6 +229,37 @@ namespace log4net.Appender
 		#endregion Override implementation of BufferingAppenderSkeleton
 
 		#region Override implementation of AppenderSkeleton
+
+		/// <summary>
+		/// Activate the options on this appender. 
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This is part of the <see cref="IOptionHandler"/> delayed object
+		/// activation scheme. The <see cref="ActivateOptions"/> method must 
+		/// be called on this object after the configuration properties have
+		/// been set. Until <see cref="ActivateOptions"/> is called this
+		/// object is in an undefined state and must not be used. 
+		/// </para>
+		/// <para>
+		/// If any of the configuration properties are modified then 
+		/// <see cref="ActivateOptions"/> must be called again.
+		/// </para>
+		/// </remarks>
+		override public void ActivateOptions() 
+		{	
+			base.ActivateOptions();
+
+			if (m_securityContext == null)
+			{
+				m_securityContext = SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
+			}
+
+			using(SecurityContext.Impersonate(this))
+			{
+				m_pickupDir = ConvertToFullPath(m_pickupDir.Trim());
+			}
+		}
 
 		/// <summary>
 		/// This appender requires a <see cref="Layout"/> to be set.
@@ -247,6 +315,11 @@ namespace log4net.Appender
 		private string m_from;
 		private string m_subject;
 		private string m_pickupDir;
+
+		/// <summary>
+		/// The security context to use for privileged calls
+		/// </summary>
+		private SecurityContext m_securityContext;
 
 		#endregion Private Instance Fields
 	}
