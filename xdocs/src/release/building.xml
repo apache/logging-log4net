@@ -1,0 +1,56 @@
+<?xml version="1.0" ?>
+<!--
+Copyright 2004 The Apache Software Foundation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<document>
+
+	<properties>
+		<author email="nicko at apache dot org">Nicko Cadell</author>
+		<title>Building log4net</title>
+	</properties>
+
+	<meta name="keywords" content="building log4net, log4net" />
+
+	<body>
+		<section name="Building log4net">
+			<sectionMenu name="Contents" />
+		
+			<section name="Visual Studio .NET" id="id_1">
+				<p>
+					TODO
+				</p>
+
+				<section name="Visual Studio .NET 2002" id="id_2">
+					<p>
+						TODO
+					</p>
+				</section>
+
+				<section name="Visual Studio .NET 2003" id="id_3">
+					<p>
+						TODO
+					</p>
+				</section>
+			</section>
+			
+			<section name="NAnt">
+				<p>
+					TODO
+				</p>
+			</section>
+
+		</section>
+	</body>
+</document>

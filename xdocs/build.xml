@@ -1,0 +1,52 @@
+<?xml version="1.0" ?>
+<project name="xdocs" default="site" basedir=".">
+
+	<property name="docs.src" value="./src" />
+	<property name="docs.dest" value="./www" />
+
+	<property name="logging-site" value="../../logging-site" />
+
+	<!-- Construct classpath for building the html pages -->
+	<path id="site.classpath">
+		<fileset dir="${logging-site}/lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<!-- ============================ -->
+	<!-- ======= New targets ======== -->
+	<!-- ============================ -->
+
+	<target name="prepareSite">
+		<available classname="org.apache.velocity.anakia.AnakiaTask" property="AnakiaTask.present">
+			<classpath refid="site.classpath" />
+		</available>
+	</target>
+
+	<target name="checkSite" depends="prepareSite" unless="AnakiaTask.present">
+		<echo>AnakiaTask is not present! Please check to make sure that velocity.jar is in your classpath.</echo>
+	</target>
+
+	<target name="site" depends="checkSite" if="AnakiaTask.present">
+		<taskdef name="anakia" classname="org.apache.velocity.anakia.AnakiaTask">
+			<classpath refid="site.classpath" />
+		</taskdef>
+
+		<mkdir dir="${docs.dest}/css" />
+		<copy file="${logging-site}/docs/css/site.css" tofile="${docs.dest}/css/site.css" />
+		
+		<anakia 
+			basedir="${docs.src}" 
+			destdir="${docs.dest}/" 
+			extension=".html" 
+			style="site.vsl" 
+			projectFile="stylesheets/project.xml" 
+			excludes="empty.xml, anakia-project.xml, **/stylesheets/**" 
+			includes="**/*.xml" 
+			lastModifiedCheck="true" 
+			templatePath="${docs.src}/stylesheets">
+		</anakia>
+		
+	</target>
+
+</project>

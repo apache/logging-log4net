@@ -1,0 +1,48 @@
+H1, H2, H3 {
+ color: #101099;
+}
+
+
+
+
+A, A:visited {
+  text-decoration: none;
+  color: #006699;
+}
+
+A:hover {
+  text-decoration: underline;
+  color: #006699;
+}
+
+table#main {
+  width: 900;
+  max-width: 900;
+}
+
+table#navbar {
+  background: #EEEEEE;
+  border-top:    1px solid #909090;
+  border-left:   1px solid #909090;
+  border-right:  1px solid #909090; 
+  border-bottom: 1px solid #909090; 
+}
+
+td.navbarItem {
+  border-top: 1px solid #DDDDDD;
+  padding-left:  1em;
+  padding-right: 1ex;
+}
+
+td.navbarHeader {
+  background: #E4E4E4;
+  border-bottom: 1px solid #CCCCCC;
+  border-top: 1px solid #CCCCCC;
+  padding-left:  1ex;
+  padding-right: 1ex;
+}
+
+td#mainContents {
+  padding-left:  1em;
+  padding-right: 1em;
+}

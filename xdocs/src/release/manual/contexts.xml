@@ -1,0 +1,165 @@
+<?xml version="1.0" ?>
+<!--
+Copyright 2004 The Apache Software Foundation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<document>
+
+	<properties>
+		<author email="nicko at apache dot org">Nicko Cadell</author>
+		<title>log4net Manual - Contexts</title>
+	</properties>
+
+	<meta name="keywords" content="building log4net, log4net" />
+
+	<body>
+		<section name="log4net Manual - Contexts">
+			<sectionMenu name="Contents" />
+
+			<section name="Nested Diagnostic Contexts">
+				<p>
+					Most real-world systems have to deal with multiple clients simultaneously. In a 
+					typical multithreaded implementation of such a system, different threads will 
+					handle different clients. Logging is especially well suited to trace and debug 
+					complex distributed applications. A common approach to differentiate the 
+					logging output of one client from another is to instantiate a new separate 
+					logger for each client. This promotes the proliferation of loggers and 
+					increases the management overhead of logging.
+				</p>
+				<p>
+					A lighter technique is to uniquely stamp each log request initiated from the 
+					same client interaction.
+				</p>
+				<p>
+					To uniquely stamp each request, the user pushes contextual information into the
+					<span class="code">NDC</span>, the abbreviation of <i>Nested Diagnostic Context</i>. 
+					The outline of the <span class="code">NDC</span> class is shown below.
+				</p>
+				<source language="c#"><![CDATA[
+namespace log4net
+{
+	public class NDC
+	{
+		/// Removes the top context from the stack.
+		public static string Pop();
+
+		/// Pushes a new context message.
+		public static IDisposable Push(string message);
+
+		/// Gets the current context information.
+		internal static string Get();
+	}
+}]]></source>
+				<p>
+					The <span class="code">NDC</span> is managed per thread as a <i>stack</i> of contextual information. Note 
+					that all methods of the
+					<span class="code">log4net.NDC</span>
+					class are static. Assuming that <span class="code">NDC</span> printing is turned on, every time a log 
+					request is made, the appropriate log4net component will include the <i>entire</i>
+					<span class="code">NDC</span> stack for the current thread in the log output. This is done without the 
+					intervention of the user, who is responsible only for placing the correct 
+					information in the <span class="code">NDC</span> by using the
+					<span class="code">Push</span>
+					and
+					<span class="code">Pop</span>
+					methods at a few well-defined points in the code. In contrast, the per-client 
+					logger approach commands extensive changes in the code.
+				</p>
+				<p>
+					The
+					<span class="code">NDC.Push</span>
+					method returns an
+					<span class="code">IDisposable</span>
+					object that can be used to clean up the <span class="code">NDC</span> stack. This means that the user 
+					does not have to manually match up a
+					<span class="code">Pop</span>
+					call for each
+					<span class="code">Push</span>
+					call. The
+					<span class="code">using</span>
+					syntax can be used to modify the <span class="code">NDC</span> only for a specific block of code. For 
+					example:
+				</p>
+				<source language="c#"><![CDATA[
+NDC.Push("context");
+log.Info("Message");
+NDC.Pop();
+]]></source>
+				<p>
+					Is equivalent to:
+				</p>
+				<source language="c#"><![CDATA[
+using(NDC.Push("context"))
+{
+	log.Info("Message");
+}
+]]></source>
+				<p>
+					The
+					<span class="code">using</span>
+					syntax is recommended because it removes some work load from the developer and 
+					reduces errors in matching up the Push and Pop calls, especially when exceptions
+					can occur.
+				</p>
+				<p>
+					To illustrate this point, let us take the example of a web service delivering 
+					content to numerous clients. The web service can build the <span class="code">NDC</span> at the very 
+					beginning of the request before executing other code. The contextual 
+					information can be the client's host name and other information inherent to the 
+					request, typically information contained in cookies. Hence, even if the web 
+					service is serving multiple clients simultaneously, the logs initiated by the 
+					same code, i.e. belonging to the same logger, can still be distinguished 
+					because each client request will have a different <span class="code">NDC</span> stack. Contrast this with 
+					the complexity of passing a freshly instantiated logger to all code exercised 
+					during the client's request.
+				</p>
+				<p>
+					Nevertheless, some sophisticated applications, such as virtual hosting web 
+					servers, must log differently depending on the virtual host context and also 
+					depending on the software component issuing the request. Log4net supports 
+					multiple hierarchy trees. This allows each virtual host to possess its own copy 
+					of the logger hierarchy. Configuring multiple logger hierarchies is beyond the 
+					scope of this document.
+				</p>
+			</section>
+			
+			<section name="Mapped Diagnostic Contexts">
+				<p>
+					The <span class="code">MDC</span> (Mapped Diagnostic Context) is used to set thread specific named 
+					properties. These properties can be rendered by the
+					<span class="code">PatternLayout</span>.
+				</p>
+				<p>
+					The outline of the <span class="code">MDC</span> class is shown below.
+				</p>
+				<source language="c#"><![CDATA[
+namespace log4net
+{
+	public class MDC
+	{
+		/// Gets the context identified by the key parameter.
+		public static string Get(string key);
+
+		/// Puts a context value (the val parameter) as identified with 
+		/// the key parameter into the current thread's context map.
+		public static void Set(string key, string value);
+
+		/// Removes the key value mapping for the key specified.
+		public static void Remove(string key);
+	}
+}]]></source>
+			</section>
+		</section>
+	</body>
+</document>

@@ -1,0 +1,324 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<!-- Content Stylesheet for Site -->
+
+    
+    
+
+        
+<!-- start the processing -->
+    <!-- ====================================================================== -->
+    <!-- GENERATED FILE, DO NOT EDIT, EDIT THE XML FILE IN xdocs INSTEAD! -->
+    <!-- Main Page Section -->
+    <!-- ====================================================================== -->
+    <html>
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+
+                                                    <meta name="author" value="Nicko Cadell">
+            <meta name="email" value="nicko at apache dot org">
+            
+           
+                                     <meta  name="keywords"  content="building log4net, log4net"  />
+ 
+                         
+            <link href="../../css/site.css" rel="stylesheet" type="text/css"/>
+            
+							<link href="../../css/style.css" rel="stylesheet" type="text/css"/>
+			
+            <title>log4net - log4net Manual - Contexts</title>
+        </head>
+
+        <body bgcolor="#ffffff" text="#000000" link="#525D76">        
+           <!-- START Header table --> 
+           <table border="0" cellspacing="0" width="100%">
+                <!-- TOP IMAGE -->
+                <tr>
+                          <td colspan="2">
+      <a href="http://logging.apache.org">
+        <img src="http://logging.apache.org/images/ls-logo.jpg" align="left" border="0"/>
+      </a>
+    </td>
+  
+                </tr>
+            </table>
+           <!-- END Header table --> 
+
+           <!-- START main table --> 
+            <table id="main" border="0" width="100%" cellspacing="2" cellpadding="0">
+                <tr><td colspan="2">
+                    <hr noshade="" size="1"/>
+                </td></tr>
+                
+                <tr>
+                    <!-- LEFT SIDE NAVIGATION -->
+                    <td id="navbar" valign="top" align="left" width="1">
+                      <!-- ============================================================ -->
+  <table id="navbar" border="0" cellspacing="0" cellpadding="0">
+                      <tr >
+       	 <td class="navbarHeader" nowrap="true">
+           <strong>Apache</strong>
+         </td>
+       </tr>
+              	 <tr><td class="navbarItem"><small>    <a href="http://www.apache.org">Apache Home</a>
+</small></td></tr>
+              	 <tr><td class="navbarItem"><small>    <a href="http://logging.apache.org/">Logging Services</a>
+</small></td></tr>
+                                <tr >
+       	 <td class="navbarHeader" nowrap="true">
+           <strong>log4net Project</strong>
+         </td>
+       </tr>
+              	 <tr><td class="navbarItem"><small>    <a href="../../index.html">About</a>
+</small></td></tr>
+              	 <tr><td class="navbarItem"><small>    <a href="../../license.html">License</a>
+</small></td></tr>
+              	 <tr><td class="navbarItem"><small>    <a href="../../support.html">Support</a>
+</small></td></tr>
+              	 <tr><td class="navbarItem"><small>    <a href="../../roadmap.html">Roadmap</a>
+</small></td></tr>
+              	 <tr><td class="navbarItem"><small>    <a href="../../contributing.html">Contributing</a>
+</small></td></tr>
+              	 <tr><td class="navbarItem"><small>    <a href="../../history.html">History</a>
+</small></td></tr>
+                                <tr >
+       	 <td class="navbarHeader" nowrap="true">
+           <strong>log4net 1.2 Documentation</strong>
+         </td>
+       </tr>
+              	 <tr><td class="navbarItem"><small>    <a href="../../release/features.html">Features</a>
+</small></td></tr>
+              	 <tr><td class="navbarItem"><small>    <a href="../../release/framework-support.html">Supported Frameworks</a>
+</small></td></tr>
+              	 <tr><td class="navbarItem"><small>    <a href="../../release/config-examples.html">Config Examples</a>
+</small></td></tr>
+              	 <tr><td class="navbarItem"><small>    <a href="../../release/building.html">Building</a>
+</small></td></tr>
+                                <tr >
+       	 <td class="navbarHeader" nowrap="true">
+           <strong>log4net 1.2 Manual</strong>
+         </td>
+       </tr>
+              	 <tr><td class="navbarItem"><small>    <a href="../../release/manual/introduction.html">Introduction</a>
+</small></td></tr>
+              	 <tr><td class="navbarItem"><small>    <a href="../../release/manual/configuration.html">Configuration</a>
+</small></td></tr>
+              	 <tr><td class="navbarItem"><small>    <a href="../../release/manual/contexts.html">Contexts</a>
+</small></td></tr>
+              	 <tr><td class="navbarItem"><small>    <a href="../../release/manual/plugins.html">Plugins</a>
+</small></td></tr>
+              	 <tr><td class="navbarItem"><small>    <a href="../../release/manual/repositories.html">Repositories</a>
+</small></td></tr>
+              	 <tr><td class="navbarItem"><small>    <a href="../../release/manual/internals.html">Internals</a>
+</small></td></tr>
+              	 <tr><td class="navbarItem"><small>    <a href="../../release/manual/faq.html">FAQ</a>
+</small></td></tr>
+                                <tr >
+       	 <td class="navbarHeader" nowrap="true">
+           <strong>log4net Releases</strong>
+         </td>
+       </tr>
+              	 <tr><td class="navbarItem"><small>    <a href="http://sourceforge.net/project/showfiles.php?group_id=31983&release_id=171808">download at sourceforge.net</a>
+</small></td></tr>
+             </table> 
+   
+                    </td>
+                    <td id="mainContents" align="left" valign="top" width="*">
+	                                                                       <h1><a id="HC-32215117"></a>log4net Manual - Contexts</h1>
+    <div class="i1">
+                                    			<h2>Contents</h2>
+		<div class="i1">
+																			    <a href="#HC-176713">Nested Diagnostic Contexts</a><br/>
+    <div class="i1">
+                                                                                                                                                                                                                                                          </div>
+																    <a href="#HC-23361497">Mapped Diagnostic Contexts</a><br/>
+    <div class="i1">
+                                                                      </div>
+									</div>
+	                                                    <h2><a id="HC-176713"></a>Nested Diagnostic Contexts</h2>
+    <div class="i1">
+                                    <p>
+					Most real-world systems have to deal with multiple clients simultaneously. In a 
+					typical multithreaded implementation of such a system, different threads will 
+					handle different clients. Logging is especially well suited to trace and debug 
+					complex distributed applications. A common approach to differentiate the 
+					logging output of one client from another is to instantiate a new separate 
+					logger for each client. This promotes the proliferation of loggers and 
+					increases the management overhead of logging.
+				</p>
+                                                <p>
+					A lighter technique is to uniquely stamp each log request initiated from the 
+					same client interaction.
+				</p>
+                                                <p>
+					To uniquely stamp each request, the user pushes contextual information into the
+					<span class="code">NDC</span>, the abbreviation of <i>Nested Diagnostic Context</i>. 
+					The outline of the <span class="code">NDC</span> class is shown below.
+				</p>
+                                                
+    <div class="syntax"><pre class="code">
+namespace log4net
+{
+	public class NDC
+	{
+		/// Removes the top context from the stack.
+		public static string Pop();
+
+		/// Pushes a new context message.
+		public static IDisposable Push(string message);
+
+		/// Gets the current context information.
+		internal static string Get();
+	}
+}</pre></div>
+
+                                                <p>
+					The <span class="code">NDC</span> is managed per thread as a <i>stack</i> of contextual information. Note 
+					that all methods of the
+					<span class="code">log4net.NDC</span>
+					class are static. Assuming that <span class="code">NDC</span> printing is turned on, every time a log 
+					request is made, the appropriate log4net component will include the <i>entire</i>
+					<span class="code">NDC</span> stack for the current thread in the log output. This is done without the 
+					intervention of the user, who is responsible only for placing the correct 
+					information in the <span class="code">NDC</span> by using the
+					<span class="code">Push</span>
+					and
+					<span class="code">Pop</span>
+					methods at a few well-defined points in the code. In contrast, the per-client 
+					logger approach commands extensive changes in the code.
+				</p>
+                                                <p>
+					The
+					<span class="code">NDC.Push</span>
+					method returns an
+					<span class="code">IDisposable</span>
+					object that can be used to clean up the <span class="code">NDC</span> stack. This means that the user 
+					does not have to manually match up a
+					<span class="code">Pop</span>
+					call for each
+					<span class="code">Push</span>
+					call. The
+					<span class="code">using</span>
+					syntax can be used to modify the <span class="code">NDC</span> only for a specific block of code. For 
+					example:
+				</p>
+                                                
+    <div class="syntax"><pre class="code">
+NDC.Push(&quot;context&quot;);
+log.Info(&quot;Message&quot;);
+NDC.Pop();
+</pre></div>
+
+                                                <p>
+					Is equivalent to:
+				</p>
+                                                
+    <div class="syntax"><pre class="code">
+using(NDC.Push(&quot;context&quot;))
+{
+	log.Info(&quot;Message&quot;);
+}
+</pre></div>
+
+                                                <p>
+					The
+					<span class="code">using</span>
+					syntax is recommended because it removes some work load from the developer and 
+					reduces errors in matching up the Push and Pop calls, especially when exceptions
+					can occur.
+				</p>
+                                                <p>
+					To illustrate this point, let us take the example of a web service delivering 
+					content to numerous clients. The web service can build the <span class="code">NDC</span> at the very 
+					beginning of the request before executing other code. The contextual 
+					information can be the client's host name and other information inherent to the 
+					request, typically information contained in cookies. Hence, even if the web 
+					service is serving multiple clients simultaneously, the logs initiated by the 
+					same code, i.e. belonging to the same logger, can still be distinguished 
+					because each client request will have a different <span class="code">NDC</span> stack. Contrast this with 
+					the complexity of passing a freshly instantiated logger to all code exercised 
+					during the client's request.
+				</p>
+                                                <p>
+					Nevertheless, some sophisticated applications, such as virtual hosting web 
+					servers, must log differently depending on the virtual host context and also 
+					depending on the software component issuing the request. Log4net supports 
+					multiple hierarchy trees. This allows each virtual host to possess its own copy 
+					of the logger hierarchy. Configuring multiple logger hierarchies is beyond the 
+					scope of this document.
+				</p>
+                      </div>
+                                                    <h2><a id="HC-23361497"></a>Mapped Diagnostic Contexts</h2>
+    <div class="i1">
+                                    <p>
+					The <span class="code">MDC</span> (Mapped Diagnostic Context) is used to set thread specific named 
+					properties. These properties can be rendered by the
+					<span class="code">PatternLayout</span>.
+				</p>
+                                                <p>
+					The outline of the <span class="code">MDC</span> class is shown below.
+				</p>
+                                                
+    <div class="syntax"><pre class="code">
+namespace log4net
+{
+	public class MDC
+	{
+		/// Gets the context identified by the key parameter.
+		public static string Get(string key);
+
+		/// Puts a context value (the val parameter) as identified with 
+		/// the key parameter into the current thread's context map.
+		public static void Set(string key, string value);
+
+		/// Removes the key value mapping for the key specified.
+		public static void Remove(string key);
+	}
+}</pre></div>
+
+                      </div>
+                      </div>
+                                                
+                    </td>
+                </tr>
+             
+                <!-- FOOTER -->
+                <tr><td colspan="2">
+                    <hr noshade="" size="1"/>
+                </td></tr>
+                <tr><td colspan="2">
+                    <div align="center"><font color="#525D76" size="-1"><em>
+                    Copyright &#169; 
+		    			2004,
+		    		    		    	Apache Software Foundation
+		                        </em></font></div>
+                </td></tr>
+            </table>
+           <!-- END main table --> 
+        </body>
+    </html>
+<!-- end the processing -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

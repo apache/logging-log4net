@@ -1,0 +1,196 @@
+<?xml version="1.0" ?>
+<!--
+Copyright 2004 The Apache Software Foundation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<document>
+
+	<properties>
+		<author email="nicko at apache dot org">Nicko Cadell</author>
+		<title>Contributing to log4net Development</title>
+	</properties>
+
+	<meta name="keywords" content="contributing to log4net development, contributing log4net, log4net cvs, log4net" />
+
+	<body>
+		<section name="Contributing to log4net Development">
+		
+<!--
+			<p>
+				blah blah mailing list, cvs, issues, blah
+			</p>
+-->
+		
+			<section name="Developer Mailing List">
+				<p>
+					All discussion relating to log4net development takes place on this list. All CVS checkin 
+					notifications are also copied to this list.
+				</p>
+			
+				<section name="Mailing List Archives">
+					<p>
+						You can browse the mailing list archives at the following locations:
+					</p>
+					
+					<ul>
+						<li><a href="http://nagoya.apache.org/eyebrowse/SummarizeList?listId=214">eyebrowse</a></li>
+						<!-- <li><a href="TODO">MARC</a></li> -->
+						<li><a href="http://sourceforge.net/mailarchive/forum.php?forum=log4net-devel">Old Mailing List at sourceforge</a></li>
+					</ul>
+				</section>
+
+				<section name="Subscribe">
+					<p>
+						Subscribe to either the list or to the digest list:
+					</p>
+					
+					<ul>
+						<li>
+							<p>
+								To subscribe to this list send an e-mail to <br />
+								<a href="mailto:log4net-dev-subscribe@logging.apache.org">log4net-dev-subscribe@logging.apache.org</a>.
+							</p>
+						</li>
+							
+						<li>
+							<p>
+								To subscribe to the digest list sent an e-mail to <br />
+								<a href="mailto:log4net-dev-digest-subscribe@logging.apache.org">log4net-dev-digest-subscribe@logging.apache.org</a>.
+							</p>
+						</li>
+					</ul>
+				</section>
+
+				<section name="Unsubscribe">
+					<p>
+						To unsubscribe send an email to the relevant email address:
+					</p>
+					
+					<ul>
+						<li>
+							<p>
+								To unsubscribe from this list send an e-mail to <br />
+								<a href="mailto:log4net-dev-unsubscribe@logging.apache.org">log4net-dev-unsubscribe@logging.apache.org</a>.
+							</p>
+						</li>
+							
+						<li>
+							<p>
+								To unsubscribe from the digest list sent an e-mail to <br />
+								<a href="mailto:log4net-dev-digest-unsubscribe@logging.apache.org">log4net-dev-digest-unsubscribe@logging.apache.org</a>.
+							</p>
+						</li>
+					</ul>
+				</section>
+
+				<section name="Posting">
+					<p>
+						Most of the guidelines for the log4net-user list also apply to the dev list.
+						Please have a quick read through the <a href="support.html">guidelines</a>, thanks.
+					</p>
+					
+					<p>
+						<strong>To prevent spam, we expect you to be subscribed to the list before posting to it. 
+						Otherwise, your mail needs to be approved by an administrator which delays your 
+						posting and creates needless additional work for the administrators.</strong>
+					</p>
+					
+					<p>
+						<em>This is the log4net developer list, it holds discussions relating to the
+						development of log4net not the use of log4net. If you have a question that begins
+						with the word "How" or you are unsure as the the appropriate list to post to then
+						you probably want to start with the <a href="support.html">log4net-user list</a>.</em>
+					</p>
+					
+					<p>
+						Post to the list by sending mail to 
+						<a href="mailto:log4net-dev@logging.apache.org">log4net-dev@logging.apache.org</a>.
+					</p>
+				</section>
+			</section>
+
+			<section name="CVS Access">
+
+				<section name="Browsing CVS">
+					<p>
+						<a href="http://cvs.apache.org/viewcvs/logging-log4net/">Browse log4net</a> 
+						CVS repository using ViewCVS.
+					</p>
+				</section>
+
+				<section name="Anonymous CVS Access">
+					<p>
+						Anyone can checkout source code from our anonymous CVS
+						server. To do so, simply use the following commands (if you are
+						using a GUI CVS client, configure it appropriately).
+					</p>
+					
+					<p>
+						First login to the CVS server as the anonymous user.
+					</p>
+					
+					<source language="shell">
+cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic login
+password: anoncvs</source>
+
+					<p>
+						Then checkout the logging-log4net module.
+					</p>
+					
+					<source language="shell">
+cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic checkout logging-log4net</source>
+
+					<p>
+						If you are not familiar with CVS, 
+						<a href="http://jakarta.apache.org/site/cvsindex.html">Jakarta's CVS page</a> 
+						may hold many helpful hints.
+					</p>
+				</section>
+			
+<!-- TODO: Work out how to generate nightly snapshots of the CVS tree
+				<section name="Nightly Snapshots">
+					<p>
+						Nightly snapshots of the CVS tree are available at 
+						<a href="http://cvs.apache.org/snapshots/log4net/">http://cvs.apache.org/snapshots/log4net/</a>.
+					</p>
+				</section>
+-->	
+			</section>
+			
+			<section name="Issue Tracking">
+				<p>
+					Issue tracking is not yet available for the log4net project.
+				</p>
+			</section>
+			
+<!-- TODO: Add guidelines for contributors
+			<section name="Guidelines for Contributors">
+				<p>
+					To contribute code to the log4net project follow the following
+					guidelines:
+				</p>
+				
+				<ul>
+					<li>
+						<p>
+							TODO
+						</p>
+					</li>
+				</ul>
+			</section>
+-->
+		</section>
+	</body>
+
+</document>
