@@ -55,11 +55,11 @@ namespace log4net.Util
 		/// </remarks>
 		public void Add(LevelMappingEntry entry)
 		{
-			if (m_entriesList.ContainsKey(entry.Level))
+			if (m_entriesMap.ContainsKey(entry.Level))
 			{
-				m_entriesList.Remove(entry.Level);
+				m_entriesMap.Remove(entry.Level);
 			}
-			m_entriesList.Add(entry.Level, entry);
+			m_entriesMap.Add(entry.Level, entry);
 		}
 
 		/// <summary>
@@ -93,21 +93,31 @@ namespace log4net.Util
 		/// </remarks>
 		public void ActivateOptions()
 		{
-			m_entries = new LevelMappingEntry[m_entriesList.Count];
-			m_entriesList.GetValueList().CopyTo(m_entries, 0);
-			Array.Reverse(m_entries);
+			Level[] sortKeys = new Level[m_entriesMap.Count];
+			LevelMappingEntry[] sortValues = new LevelMappingEntry[m_entriesMap.Count];
 
-			foreach(LevelMappingEntry entry in m_entries)
+			m_entriesMap.Keys.CopyTo(sortKeys, 0);
+			m_entriesMap.Values.CopyTo(sortValues, 0);
+
+			// Sort in level order
+			Array.Sort(sortKeys, sortValues, 0, sortKeys.Length, null);
+
+			// Reverse list so that highest level is first
+			Array.Reverse(sortValues, 0, sortValues.Length);
+
+			foreach(LevelMappingEntry entry in sortValues)
 			{
 				entry.ActivateOptions();
 			}
+
+			 m_entries = sortValues;
 		}
 
 		#endregion // IOptionHandler Members
 
 		#region Private Instance Fields
 
-		private SortedList m_entriesList = new SortedList();
+		private Hashtable m_entriesMap = new Hashtable();
 		private LevelMappingEntry[] m_entries = null;
 
 		#endregion // Private Instance Fields
