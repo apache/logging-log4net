@@ -130,10 +130,19 @@ sn -k log4net.snk
 				</p>
 			</section>
 
-			<section name="NDoc">
+			<section name="SDK Reference">
 				<p>
 					NDoc is used to build the log4net SDK documentation.
 					NDoc is available from <a href="http://ndoc.sourceforge.net">ndoc.sourceforge.net</a>.
+				</p>
+			</section>
+
+			<section name="HTML Documentation">
+				<p>
+					The log4net HTML documentation is built using Velocity.
+					The source are XML files in the <span class="code">xdcos/src</span> directory.
+					Building the documentation requires Java, Ant, and Velocity.
+					Run ant from within the <span class="code">xdocs</span> directory.
 				</p>
 			</section>
 
