@@ -1281,19 +1281,28 @@ namespace log4net.Core
 
 				PropertiesDictionary fixedProperties = new PropertiesDictionary();
 
-				// Fix any IFixingRequired objects
+				// Validate properties
 				foreach(DictionaryEntry entry in flattenedProperties)
 				{
-					string key = (string)entry.Key;
-					object val = entry.Value;
+					string key = entry.Key as string;
 
-					IFixingRequired fixingRequired = val as IFixingRequired;
-					if (fixingRequired != null)
+					if (key != null)
 					{
-						val = fixingRequired.GetFixedObject();
-					}
+						object val = entry.Value;
 
-					fixedProperties[key] = val;
+						// Fix any IFixingRequired objects
+						IFixingRequired fixingRequired = val as IFixingRequired;
+						if (fixingRequired != null)
+						{
+							val = fixingRequired.GetFixedObject();
+						}
+
+						// Strip keys with null values
+						if (val != null)
+						{
+							fixedProperties[key] = val;
+						}
+					}
 				}
 
 				m_data.Properties = fixedProperties;
