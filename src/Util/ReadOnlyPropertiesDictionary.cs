@@ -207,14 +207,17 @@ namespace log4net.Util
 		{
 			foreach(DictionaryEntry entry in InnerHashtable)
 			{
+				string entryKey = entry.Key as string;
+				object entryValue = entry.Value;
+
 				// If value is serializable then we add it to the list
-				if (entry.Value.GetType().IsSerializable)
+				if (entryKey != null && entryValue != null && entryValue.GetType().IsSerializable)
 				{
 					// Store the keys as an Xml encoded local name as it may contain colons (':') 
 					// which are NOT escaped by the Xml Serialization framework.
 					// This must be a bug in the serialization framework as we cannot be expected
 					// to know the implementation details of all the possible transport layers.
-					info.AddValue(XmlConvert.EncodeLocalName(entry.Key as string), entry.Value);
+					info.AddValue(XmlConvert.EncodeLocalName(entryKey), entryValue);
 				}
 			}
 		}
