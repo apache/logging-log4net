@@ -160,7 +160,7 @@ limitations under the License.
 						Here is an example output using <span class="code">PatternLayout</span> with the conversion 
 						pattern <span class="code">%timestamp [%thread] %-5level %logger{2} %ndc - %message%newline</span>
 					</p>
-					<pre class="code">
+					<source language="text"><![CDATA[
 176 [main] INFO  examples.Sort - Populating an array of 2 elements in reverse order.
 225 [main] INFO  examples.SortAlgo - Entered the sort method.
 262 [main] DEBUG SortAlgo.OUTER i=1 - Outer loop.
@@ -171,8 +171,7 @@ limitations under the License.
 331 [main] INFO  SortAlgo.DUMP - Element [1] = 1
 343 [main] INFO  examples.Sort - The next log statement should be an error message.
 346 [main] ERROR SortAlgo.DUMP - Tried to dump an uninitialized array.
-467 [main] INFO  examples.Sort - Exiting main method.
-					</pre>
+467 [main] INFO  examples.Sort - Exiting main method.]]></source>
 					<p>
 						The first field is the number of milliseconds elapsed since the start of the 
 						program. The second field is the thread outputting the log statement. The third 
@@ -316,9 +315,8 @@ limitations under the License.
 						by setting the "threshold" attribute on the log4net configuration element to "OFF".
 						For example:
 					</p>
-					<pre class="code">
-&lt;log4net threshold="OFF" /&gt;
-					</pre>
+					<source language="xml"><![CDATA[
+<log4net threshold="OFF" />]]></source>
 				</section>
 				<p><a href="#top">Back to Top</a></p>
 				
@@ -378,7 +376,41 @@ limitations under the License.
 				</section>
 				<p><a href="#top">Back to Top</a></p>
 
-								
+
+				<section name="Can I load an appender from another assembly?">
+					<p>
+						Yes. When specifying the type in the configuration file you can give the assembly
+						qualified name of the type. For example:
+					</p>
+					<source language="xml"><![CDATA[
+<appender name="..." type="MyNamespace.MyAppender, MyAssembly">]]></source>
+					<p>
+						The .NET runtime will try to locate the assembly called <i>MyAssembly</i>.
+						How .NET locates assemblies is beyond the scope of this FAQ.
+					</p>
+					<p>
+						When loading an assembly from the GAC the fully qualified assembly name,
+						including the version, culture and public key must be specified. This is 
+						in the standard syntax supported by <span class="code">System.Type.GetType</span>.
+						See the next FAQ on how to get the version and public key for an assembly.
+					</p>
+				</section>
+				<p><a href="#top">Back to Top</a></p>
+
+				
+				<section name="How do I get the Public Key for an assembly?">
+					<p>
+						The fully qualified name for an assembly includes the version, culture and
+						public key. The public key is derived from the strong name used to identify
+						the publisher. When referencing an assembly from the GAC the fully qualified
+						name must be used. To get the version, culture and public key you can use a
+						tool like the excellent .NET Reflector from Lutz Roeder available from
+						<a href="http://www.aisto.com/roeder/dotnet">http://www.aisto.com/roeder/dotnet</a>.
+					</p>
+				</section>
+				<p><a href="#top">Back to Top</a></p>
+				
+		
 			</section>
 
 			<section name="Implementing Logging">
@@ -443,24 +475,22 @@ limitations under the License.
 					<p>
 						Here is the suggested usage template:
 					</p>
-					<pre class="code">
+					<source language="C#"><![CDATA[
 public class Foo
 {
 	private static readonly ILog log = LogManager.GetLogger(typeof(Foo));
 	... other code
-}
-					</pre>
+}]]></source>
 					<p>
 						An equivalent and more portable solution, though slightly longer, is to use the declaring type 
 						of the static constructor.
 					</p>
-					<pre class="code">
+					<source language="C#"><![CDATA[
 public class Foo
 {
 	private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 	... other code
-}
-					</pre>
+}]]></source>
 					<p>
 						<b>Note:</b> the .NET Compact Framework 1.0 does not support <span class="code">System.Reflection.MethodBase.GetCurrentMethod()</span>.
 					</p>
@@ -472,9 +502,8 @@ public class Foo
 					<p>
 						For some logger <span class="code">log</span>, writing,
 					</p>
-					<pre class="code">
-log.Debug("Entry number: " + i + " is " + entry[i]);
-					</pre>
+					<source language="C#"><![CDATA[
+log.Debug("Entry number: " + i + " is " + entry[i]);]]></source>
 					<p>
 						incurs the cost of constructing the message parameter, that is converting both 
 						integer <span class="code">i</span> and <span class="code">entry[i]</span> to 
@@ -484,12 +513,11 @@ log.Debug("Entry number: " + i + " is " + entry[i]);
 					<p>
 						If you are worried about speed, then write
 					</p>
-					<pre class="code">
+					<source language="C#"><![CDATA[
 if(log.IsDebugEnabled) 
 {
 	log.Debug("Entry number: " + i + " is " + entry[i]);
-}
-					</pre>
+}]]></source>
 					<p>
 						This way you will not incur the cost of parameter construction if debugging is 
 						disabled for logger <span class="code">log</span>. On the other hand, if the logger is 
@@ -508,19 +536,18 @@ if(log.IsDebugEnabled)
 						of not logging? Well there is a faster way but it does have some
 						drawbacks. Starting from: 
 					</p>
-					<pre class="code">
+					<source language="C#"><![CDATA[
 if(log.IsDebugEnabled) 
 {
 	log.Debug("Entry number: " + i + " is " + entry[i]);
-}
-					</pre>
+}]]></source>
 					<p>
 						It is possible to further eliminate the calls to <span class="code">IsDebugEnabled</span>
 						so that the call is only made once per logger. If you are using one logger 
 						for each class then you can store the enabled state for the logger in a static
 						variable in the class and then test against this variable:
 					</p>
-					<pre class="code">
+					<source language="C#"><![CDATA[
 public class FastLogger
 {
 	private static readonly ILog log = LogManager.GetLogger(typeof(FastLogger));
@@ -533,8 +560,7 @@ public class FastLogger
 			log.Debug("Entry number: " + i + " is " + entry[i]);
 		}
 	}
-}
-					</pre>
+}]]></source>
 					<p>
 						So why exactly is this faster? Well to start with the <span class="code">IsDebugEnabled</span>
 						is not called for each log statement, it is called once per logger. Furthermore as the
@@ -625,17 +651,65 @@ public class FastLogger
 				<p><a href="#top">Back to Top</a></p>
 				
 				
+				<section name="When should I log my first message?">
+					<p>
+						The simple answer is as soon as possible. The long answer is more complex.
+					</p>
+					<p>
+						If you are configuring log4net programmatically, i.e. by calling the 
+						<span class="code">XmlConfigurator.Configure</span> method then you should do so
+						before you begin logging and it is reasonable to do this very soon after application
+						start.
+					</p>
+					<p>
+						If you are configuring log4net by specifying assembly level attributes on 
+						your assembly then the configuration will be loaded once the first call to
+						the <span class="code">LogManager.GetLogger</span> is made. It is necessary
+						that the first call to <span class="code">LogManager.GetLogger</span> made
+						during the process (or AppDomain) is made from the assembly that has the
+						configuration attributes. Log4net will look only once and only on the first 
+						calling assembly for the configuration attributes.
+					</p>
+				</section>
+				<p><a href="#top">Back to Top</a></p>
+				
+				
 			</section>
 			
 			<section name="Customization">
 
 				<section name="Can the log output format be customized?">
 					<p>
-						Yes. You can implement the <span class="code">ILayout</span> interface to 
-						create you own customized log format, or you can extend the 
+						Yes. You can implement the <span class="code">log4net.Layout.ILayout</span> 
+						interface to create you own customized log format, or you can extend the 
 						<span class="code">LayoutSkeleton</span> class which provides a default
 						implementation of the <span class="code">ILayout</span> interface.
 						Appenders can be parameterized to use the layout of your choice.
+					</p>
+				</section>
+				<p><a href="#top">Back to Top</a></p>
+				
+				
+				<section name="Can I write a custom appender?">
+					<p>
+						Yes. You can implement the <span class="code">log4net.Appender.IAppender</span> 
+						interface to create you own customized appender. We recommend that you extend the
+						<span class="code">log4net.Appender.AppenderSkeleton</span> class rather than
+						starting from scratch. You should implement your custom code in a assembly
+						separate from the log4net assembly. To get started it is worth looking at the
+						source of the <span class="code">log4net.Appender.TraceAppender</span> as an
+						example of the minimum amount of code required to get an appender working.
+					</p>
+					<p>
+						To configure log4net to use your custom appender you need to specify the
+						assembly qualified name of the appender type in the config file. For
+						example:
+					</p>
+					<source language="xml"><![CDATA[
+<appender name="..." type="MyNamespace.MyAppender, MyAssembly">]]></source>
+					<p>
+						The .NET runtime will try to locate the assembly called <i>MyAssembly</i>.
+						How .NET locates assemblies is beyond the scope of this FAQ.
 					</p>
 				</section>
 				<p><a href="#top">Back to Top</a></p>
@@ -668,14 +742,13 @@ public class FastLogger
 								application setting must be set to the value <span class="code">true</span>.
 								For example:
 							</p>
-							<pre class="code">
-&lt;?xml version="1.0" encoding="utf-8" ?&gt;
-&lt;configuration&gt;
-	&lt;appSettings&gt;
-		&lt;add key="log4net.Internal.Debug" value="true"/&gt;
-	&lt;/appSettings&gt;
-&lt;/configuration&gt;
-							</pre>
+							<source language="xml"><![CDATA[
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+	<appSettings>
+		<add key="log4net.Internal.Debug" value="true"/>
+	</appSettings>
+</configuration>]]></source>
 							<p>
 								This setting is read immediately on startup an will cause all internal
 								debugging messages to be emitted.
@@ -688,13 +761,12 @@ public class FastLogger
 								configuration element can be set to the value <span class="code">true</span>. 
 								For example:
 							</p>
-							<pre class="code">
-&lt;log4net debug="true"&gt;
+							<source language="xml"><![CDATA[
+<log4net debug="true">
 
 	... configuration ...
 	
-&lt;/log4net&gt;
-							</pre>
+</log4net>]]></source>
 							<p>
 								Using this method does require that your configuration file is located
 								and loaded, otherwise the attribute will not be read. If you need to
@@ -792,6 +864,21 @@ public class FastLogger
 				</section>
 				<p><a href="#top">Back to Top</a></p>
 
+				
+				<section name="I am having trouble using the AdoNetAppender to connect to my database?">
+					<p>
+						For details on the different ways in which ADO.NET can connect to a database see:
+						<a href="http://msdn.microsoft.com/library/en-us/cpguide/html/cpconadonetconnections.asp">Connecting to a Data Source Using ADO.NET</a>.
+					</p>
+					<p>
+						If you need to use ODBC to connect to your database then please note that the
+						ADO.NET ODBC drivers are not included in the standard .NET framework redistributable.
+						You can download the drivers from microsoft download at: 
+						<a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=6ccd8427-1017-4f33-a062-d165078e32b1">ODBC .NET Data Provider</a>.
+					</p>
+				</section>
+				<p><a href="#top">Back to Top</a></p>
+
 
 				<section name="How do I report bugs?">
 					<p>
@@ -802,6 +889,19 @@ public class FastLogger
 
 
 			</section>
+			
+			<section name="Miscellaneous">
+			
+				<section name="How do I make log4net appear in the Visual Studio Add References dialog?">
+					<p>
+						There is a good discussion of this topic on Robert GcLaws blog:
+						<a href="http://weblogs.asp.net/rmclaws/archive/2003/11/15/37743.aspx">Building a Better Server Control Experience, Part 2</a>.
+					</p>
+				</section>
+				<p><a href="#top">Back to Top</a></p>
+				
+			</section>
+			
 		</section>
 
 	</body>
