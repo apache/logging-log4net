@@ -166,7 +166,10 @@ namespace log4net.Util
 						// Lookup the host name
 						s_hostName = System.Net.Dns.GetHostName();
 					}
-					catch
+					catch(System.Net.Sockets.SocketException)
+					{
+					}
+					catch(System.Security.SecurityException)
 					{
 						// We may get a security exception looking up the hostname
 						// You must have Unrestricted DnsPermission to access resource
@@ -181,7 +184,10 @@ namespace log4net.Util
 							s_hostName = Environment.MachineName;
 #endif
 						}
-						catch
+						catch(InvalidOperationException)
+						{
+						}
+						catch(System.Security.SecurityException)
 						{
 							// We may get a security exception looking up the machine name
 							// You must have Unrestricted EnvironmentPermission to access resource
@@ -520,6 +526,31 @@ namespace log4net.Util
 				return PocketGuid.NewGuid();
 #else
 				return Guid.NewGuid();
+#endif
+		}
+
+		/// <summary>
+		/// Create a new instance of the <see cref="ArgumentOutOfRangeException"/> class 
+		/// with a specified error message, the parameter name, and the value 
+		/// of the argument.
+		/// </summary>
+		/// <param name="parameterName">The name of the parameter that caused the exception</param>
+		/// <param name="actualValue">The value of the argument that causes this exception</param>
+		/// <param name="message">The message that describes the error</param>
+		/// <returns>the ArgumentOutOfRangeException object</returns>
+		/// <remarks>
+		/// <para>
+		/// The Compact Framework does not support the 3 parameter constructor for the
+		/// <see cref="ArgumentOutOfRangeException"/> type. This method provides an
+		/// implementation that works for all platforms.
+		/// </para>
+		/// </remarks>
+		public static ArgumentOutOfRangeException CreateArgumentOutOfRangeException(string parameterName, object actualValue, string message)
+		{
+#if NETCF
+			return new ArgumentOutOfRangeException(message + " param: " + parameterName + " value: " + actualValue);
+#else
+			return new ArgumentOutOfRangeException(parameterName, actualValue, message);
 #endif
 		}
 
