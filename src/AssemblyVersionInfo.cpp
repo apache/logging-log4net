@@ -1,5 +1,5 @@
 //
-// Copyright 2001-2004 The Apache Software Foundation
+// Copyright 2001-2005 The Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,5 +29,13 @@ using namespace System::Runtime::CompilerServices;
 // You can specify all the value or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly:AssemblyVersionAttribute("1.2.0.30714")];
-[assembly:AssemblyInformationalVersionAttribute("1.2")];
+[assembly: AssemblyVersionAttribute("1.2.0.30714")];
+[assembly: AssemblyInformationalVersionAttribute("1.2")];
+
+//
+// Shared assembly settings
+//
+
+[assembly: AssemblyCompany("The Apache Software Foundation")]
+[assembly: AssemblyCopyright("Copyright 2001-2005 The Apache Software Foundation.")]
+[assembly: AssemblyTrademark("Copyright 2001-2005 The Apache Software Foundation.")]

@@ -1,6 +1,6 @@
 #region Copyright & License
 //
-// Copyright 2001-2004 The Apache Software Foundation
+// Copyright 2001-2005 The Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,3 +29,11 @@
 
 [assembly: System.Reflection.AssemblyVersion("1.2.1.40216")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.2")]
+
+//
+// Shared assembly settings
+//
+
+[assembly: System.Reflection.AssemblyCompany("The Apache Software Foundation")]
+[assembly: System.Reflection.AssemblyCopyright("Copyright 2001-2005 The Apache Software Foundation.")]
+[assembly: System.Reflection.AssemblyTrademark("Copyright 2001-2005 The Apache Software Foundation.")]

@@ -1,5 +1,5 @@
 //
-// Copyright 2001-2004 The Apache Software Foundation
+// Copyright 2001-2005 The Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,5 +30,13 @@
 // an import functions as a workaround for this issue.
 import System.Reflection;
 
-[assembly:AssemblyVersion("1.2.0.30714")]
-[assembly:AssemblyInformationalVersionAttribute("1.2")]
+[assembly: AssemblyVersion("1.2.0.30714")]
+[assembly: AssemblyInformationalVersionAttribute("1.2")]
+
+//
+// Shared assembly settings
+//
+
+[assembly: AssemblyCompany("The Apache Software Foundation")]
+[assembly: AssemblyCopyright("Copyright 2001-2005 The Apache Software Foundation.")]
+[assembly: AssemblyTrademark("Copyright 2001-2005 The Apache Software Foundation.")]
