@@ -16,7 +16,7 @@
             </fileset>
         </copy>
         <!-- compile the example -->
-        <csc noconfig="true" target="exe" warnaserror="true" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/ConsoleApp.exe">
+        <csc noconfig="true" target="exe" warnaserror="true" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/SampleAppendersApp.exe">
             <sources>
                 <include name="src/**/*.cs" />
                 <include name="${log4net.basedir}/src/AssemblyVersionInfo.cs" />
@@ -29,6 +29,6 @@
             </references>
         </csc>
         <!-- copy the ConsoleApp application configuration file -->
-        <copy file="src/App.config" tofile="${current.bin.dir}/ConsoleApp.exe.config" />
+        <copy file="src/App.config" tofile="${current.bin.dir}/SampleAppendersApp.exe.config" />
     </target>
 </project>
