@@ -805,7 +805,7 @@ namespace log4net.Core
 		}
 
 		/// <summary>
-		/// Gets additional event specific properties.
+		/// Additional event specific properties.
 		/// </summary>
 		/// <value>
 		/// Additional event specific properties.
@@ -822,11 +822,24 @@ namespace log4net.Core
 		/// event properties) can be retrieved using <see cref="LookupProperty"/>
 		/// and <see cref="GetProperties"/>.
 		/// </para>
+		/// <para>
+		/// Once the properties have been fixed <see cref="Fix"/> this property
+		/// returns the combined cached properties. This ensures that updates to
+		/// this property are always reflected in the underlying storage. When
+		/// returning the combined properties there may be more keys in the
+		/// Dictionary than expected.
+		/// </para>
 		/// </remarks>
-		public PropertiesDictionary EventProperties
+		public PropertiesDictionary Properties
 		{
 			get 
 			{ 
+				// If we have cached properties then return that otherwise changes will be lost
+				if (m_data.Properties != null)
+				{
+					return m_data.Properties;
+				}
+
 				if (m_eventProperties == null)
 				{
 					m_eventProperties = new PropertiesDictionary();
@@ -1219,7 +1232,7 @@ namespace log4net.Core
 		///		<item>
 		/// 		<term>this events properties</term>
 		/// 		<description>
-		/// 		This event has <see cref="EventProperties"/> that can be set. These 
+		/// 		This event has <see cref="Properties"/> that can be set. These 
 		/// 		properties are specific to this event only.
 		/// 		</description>
 		/// 	</item>

@@ -378,7 +378,7 @@ namespace log4net.Layout
 	/// 				<item>
 	/// 					<term>the event properties</term>
 	/// 					<description>
-	/// 					The event has <see cref="LoggingEvent.EventProperties"/> that can be set. These 
+	/// 					The event has <see cref="LoggingEvent.Properties"/> that can be set. These 
 	/// 					properties are specific to this event only.
 	/// 					</description>
 	/// 				</item>
