@@ -183,6 +183,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Appender\LocalSyslogAppender.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Appender\MemoryAppender.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -194,6 +199,11 @@
                 />
                 <File
                     RelPath = "Appender\OutputDebugStringAppender.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Appender\RemoteSyslogAppender.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
