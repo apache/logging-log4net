@@ -105,7 +105,17 @@ namespace log4net.Config
 		/// </remarks>
 		static public void Configure(ILoggerRepository repository) 
 		{
-			BasicConfigurator.Configure(repository, new ConsoleAppender(new PatternLayout(PatternLayout.DetailConversionPattern)));
+			// Create the layout
+			PatternLayout layout = new PatternLayout();
+			layout.ConversionPattern = PatternLayout.DetailConversionPattern;
+			layout.ActivateOptions();
+
+			// Create the appender
+			ConsoleAppender appender = new ConsoleAppender();
+			appender.Layout = layout;
+			appender.ActivateOptions();
+
+			BasicConfigurator.Configure(repository, appender);
 		}
 
 		/// <summary>
