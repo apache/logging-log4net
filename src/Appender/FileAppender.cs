@@ -133,9 +133,24 @@ namespace log4net.Appender
 		#region Override implementation of AppenderSkeleton
 
 		/// <summary>
-		/// Activate the options on the file appender. This will
-		/// case the file to be opened.
+		/// Activate the options on the file appender. 
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This is part of the <see cref="IOptionHandler"/> delayed object
+		/// activation scheme. The <see cref="ActivateOptions"/> method must 
+		/// be called on this object after the configuration properties have
+		/// been set. Until <see cref="ActivateOptions"/> is called this
+		/// object is in an undefined state and must not be used. 
+		/// </para>
+		/// <para>
+		/// If any of the configuration properties are modified then 
+		/// <see cref="ActivateOptions"/> must be called again.
+		/// </para>
+		/// <para>
+		/// This will cause the file to be opened.
+		/// </para>
+		/// </remarks>
 		override public void ActivateOptions() 
 		{	
 			base.ActivateOptions();
