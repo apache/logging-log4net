@@ -742,13 +742,13 @@ public class FastLogger
 								application setting must be set to the value <span class="code">true</span>.
 								For example:
 							</p>
-							<source language="xml"><![CDATA[
-<?xml version="1.0" encoding="utf-8" ?>
-<configuration>
-	<appSettings>
-		<add key="log4net.Internal.Debug" value="true"/>
-	</appSettings>
-</configuration>]]></source>
+							<div class="syntax"><pre class="code">
+&lt;?xml version="1.0" encoding="utf-8" ?&gt;
+&lt;configuration&gt;
+	&lt;appSettings&gt;
+		&lt;add key="log4net.Internal.Debug" value="true"/&gt;
+	&lt;/appSettings&gt;
+&lt;/configuration&gt;</pre></div>
 							<p>
 								This setting is read immediately on startup an will cause all internal
 								debugging messages to be emitted.
@@ -761,12 +761,12 @@ public class FastLogger
 								configuration element can be set to the value <span class="code">true</span>. 
 								For example:
 							</p>
-							<source language="xml"><![CDATA[
-<log4net debug="true">
+							<div class="syntax"><pre class="code">
+&lt;log4net debug="true"&gt;
 
 	... configuration ...
 	
-</log4net>]]></source>
+&lt;/log4net&gt;</pre></div>
 							<p>
 								Using this method does require that your configuration file is located
 								and loaded, otherwise the attribute will not be read. If you need to

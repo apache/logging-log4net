@@ -108,7 +108,8 @@ span.code
 {
 	font-family: Monospace, Courier New, Courier;
 	background-color: inherit;
-	color: #00E;
+	/* color: #0000EE; */
+	color: #101080;
 	font-size: 100%;
 }
 

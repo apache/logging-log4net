@@ -89,26 +89,23 @@ limitations under the License.
 					log4net distribution, ensure that the nant executable is in the
 					PATH, and then run the following command:
 				</p>
-				<pre class="code">
-nant -buildfile:log4net.build compile-all
-				</pre>
+				<div class="syntax"><pre class="code">
+nant -buildfile:log4net.build compile-all</pre></div>
 				<p>
 					This command will build log4net for all the supported frameworks
 					that are available on the current machine. To list all the build
 					targets that are available run the following command:
 				</p>
-				<pre class="code">
-nant -buildfile:log4net.build -projecthelp
-				</pre>
+				<div class="syntax"><pre class="code">
+nant -buildfile:log4net.build -projecthelp</pre></div>
 				<p>
 					Under windows the <span class="code">build.cmd</span> can be used 
 					to script the nant build. This can be called from a different
 					directory and will locate the correct log4net.build file to use.
 					For example:
 				</p>
-				<pre class="code">
-build.cmd compile-all
-				</pre>
+				<div class="syntax"><pre class="code">
+build.cmd compile-all</pre></div>
 			</section>
 
 			<section name="Strong Name">
@@ -120,9 +117,8 @@ build.cmd compile-all
 					Use the <span class="code">sn.exe</span> tool in the 
 					.NET Framework SDK to generate a strong name key pair.
 				</p>
-				<pre class="code">
-sn -k log4net.snk
-				</pre>
+				<div class="syntax"><pre class="code">
+sn -k log4net.snk</pre></div>
 				<p>
 					The log4net.snk file should be placed in the root of the
 					log4net distribution, in the same folder as the log4net.build

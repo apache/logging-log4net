@@ -65,18 +65,18 @@ limitations under the License.
            <!-- START main table --> 
                 
 
-	                                                                       <h1><a id="HC-7225781"></a>log4net Manual - Internals</h1>
+	                                                                       <h1><a id="HC-9936523"></a>log4net Manual - Internals</h1>
     <div class="i1">
                                     			<h2>Contents</h2>
 		<div class="i1">
-																			    <a href="#HC-29796765">Performance</a><br/>
+																			    <a href="#HC-12644844">Performance</a><br/>
     <div class="i1">
                                                                                           </div>
-																    <a href="#HC-24522695">Logging Event Flow</a><br/>
+																    <a href="#HC-5514537">Logging Event Flow</a><br/>
     <div class="i1">
                                                                                                                                   </div>
 									</div>
-	                                                    <h2><a id="HC-29796765"></a>Performance</h2>
+	                                                    <h2><a id="HC-12644844"></a>Performance</h2>
     <div class="i1">
                                     <p>
 					One of the often-cited arguments against logging is its computational cost. 
@@ -103,8 +103,8 @@ limitations under the License.
 							For example, for some logger
 							<span class="code">log</span>, writing,
 						</p>
-						<source language="C#"><![CDATA[
-log.Debug("Entry number: " + i + " is " + entry[i].ToString());]]></source>
+						<div class="syntax"><pre class="code">
+log.Debug("Entry number: " + i + " is " + entry[i].ToString());</pre></div>
 						<p>
 							incurs the cost of constructing the message parameter, i.e. converting both 
 							integer
@@ -118,11 +118,11 @@ log.Debug("Entry number: " + i + " is " + entry[i].ToString());]]></source>
 						<p>
 							To avoid the parameter construction cost write:
 						</p>
-						<source language="C#"><![CDATA[
+						<div class="syntax"><pre class="code">
 if(log.IsDebugEnabled)
 {
 	log.Debug("Entry number: " + i + " is " + entry[i].ToString());
-}]]></source>
+}</pre></div>
 						<p>
 							This will not incur the cost of parameter construction if debugging is 
 							disabled. On the other hand, if the logger is debug-enabled, it will incur 
@@ -189,7 +189,7 @@ if(log.IsDebugEnabled)
 					<span class="code">System.Console.WriteLine</span>.
 				</p>
                       </div>
-                                                    <h2><a id="HC-24522695"></a>Logging Event Flow</h2>
+                                                    <h2><a id="HC-5514537"></a>Logging Event Flow</h2>
     <div class="i1">
                                     <p>
 					The following is the series of steps and checks that a messages goes through while being logged.

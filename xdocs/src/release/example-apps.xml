@@ -29,6 +29,10 @@ limitations under the License.
 			<sectionMenu name="Contents" />
 
 			<section name="Overview">
+				<p>
+					The following examples are only available in the log4net release download, not
+					on-line. To obtain the examples <a href="../downloads.html">download</a> one of the log4net releases.
+				</p>
 			</section>
 			
 			<section name="Building Examples">

@@ -48,7 +48,7 @@ limitations under the License.
 					<span class="code">MyApp</span>
 					that uses log4net.
 				</p>
-				<pre class="code">
+				<div class="syntax"><pre class="code">
 using Com.Foo;
 
 // Import log4net classes.
@@ -71,7 +71,7 @@ public class MyApp
 		bar.DoIt();
 		log.Info("Exiting application.");
 	}
-}</pre>
+}</pre></div>
 				<p>
 					<span class="code">MyApp</span>
 					begins by importing log4net related classes. It then defines a static logger 
@@ -85,7 +85,7 @@ public class MyApp
 					<span class="code">Bar</span>
 					class:
 				</p>
-				<pre class="code">
+				<div class="syntax"><pre class="code">
 // Import log4net classes.
 using log4net;
 
@@ -100,7 +100,7 @@ using log4net;
 			log.Debug("Did it again!");
 		}
 	}
-}</pre>
+}</pre></div>
 				<p>
 					The invocation of the
 					<span class="code">BasicConfigurator.Configure()</span>
@@ -151,7 +151,7 @@ using log4net;
 					so that the log output can be controlled at run-time. Here is a slightly 
 					modified version.
 				</p>
-				<pre class="code">
+				<div class="syntax"><pre class="code">
 using Com.Foo;
 
 // Import log4net classes.
@@ -172,7 +172,7 @@ public class MyApp
 		bar.DoIt();
 		log.Info("Exiting application.");
 	}
-}</pre>
+}</pre></div>
 				<p>
 					This version of
 					<span class="code">MyApp</span>
@@ -377,22 +377,22 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 							<p>
 								Example usage:
 							</p>
-							<pre class="code">
+							<div class="syntax"><pre class="code">
 // Configure log4net using the .config file
 <b>[assembly: log4net.Config.XmlConfigurator(Watch=true)]</b>
 // This will cause log4net to look for a configuration file
 // called TestApp.exe.config in the application base
 // directory (i.e. the directory containing TestApp.exe)
 // The config file will be watched for changes.
-							</pre>
-							<pre class="code">
+							</pre></div>
+							<div class="syntax"><pre class="code">
 // Configure log4net using the .log4net file
 <b>[assembly: log4net.Config.XmlConfigurator(ConfigFileExtension="log4net",Watch=true)]</b>
 // This will cause log4net to look for a configuration file
 // called TestApp.exe.log4net in the application base
 // directory (i.e. the directory containing TestApp.exe)
 // The config file will be watched for changes.
-							</pre>
+							</pre></div>
 							<p>
 								This attribute may only be used once per assembly.
 							</p>

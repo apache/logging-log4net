@@ -53,8 +53,8 @@ limitations under the License.
 							For example, for some logger
 							<span class="code">log</span>, writing,
 						</p>
-						<source language="C#"><![CDATA[
-log.Debug("Entry number: " + i + " is " + entry[i].ToString());]]></source>
+						<div class="syntax"><pre class="code">
+log.Debug("Entry number: " + i + " is " + entry[i].ToString());</pre></div>
 						<p>
 							incurs the cost of constructing the message parameter, i.e. converting both 
 							integer
@@ -68,11 +68,11 @@ log.Debug("Entry number: " + i + " is " + entry[i].ToString());]]></source>
 						<p>
 							To avoid the parameter construction cost write:
 						</p>
-						<source language="C#"><![CDATA[
+						<div class="syntax"><pre class="code">
 if(log.IsDebugEnabled)
 {
 	log.Debug("Entry number: " + i + " is " + entry[i].ToString());
-}]]></source>
+}</pre></div>
 						<p>
 							This will not incur the cost of parameter construction if debugging is 
 							disabled. On the other hand, if the logger is debug-enabled, it will incur 

@@ -578,6 +578,20 @@ IN "LRGTABLES";
 	</layout>
 </appender>
 				]]></source>				
+				<p>
+					This example shows how to configure the appender to use the minimal locking
+					model that allows multiple processes to write to the same file.
+				</p>
+				<source language="xml"><![CDATA[
+<appender name="FileAppender" type="log4net.Appender.FileAppender">
+	<file value="${TMP}\log-file.txt" />
+	<appendToFile value="true" />
+	<lockingModel type="log4net.Appender.FileAppender+MinimalLock" />
+	<layout type="log4net.Layout.PatternLayout">
+		<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+	</layout>
+</appender>
+				]]></source>				
 			</section>
 			
 			<section name="ForwardingAppender">
