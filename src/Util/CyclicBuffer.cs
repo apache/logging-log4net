@@ -41,7 +41,7 @@ namespace log4net.Util
 		{
 			if (maxSize < 1) 
 			{
-				throw new ArgumentOutOfRangeException("Parameter: maxSize, Value: [" + maxSize + "] out of range. Non zero positive integer required");
+				throw new ArgumentOutOfRangeException("maxSize", (object)maxSize, "Parameter: maxSize, Value: [" + maxSize + "] out of range. Non zero positive integer required");
 			}
 			m_maxSize = maxSize;
 			m_events = new LoggingEvent[maxSize];
@@ -162,7 +162,7 @@ namespace log4net.Util
 			{
 				if (newSize < 0) 
 				{
-					throw new ArgumentOutOfRangeException("Parameter: newSize, Value: [" + newSize + "] out of range. Non zero positive integer required");
+					throw new ArgumentOutOfRangeException("newSize", (object)newSize, "Parameter: newSize, Value: [" + newSize + "] out of range. Non zero positive integer required");
 				}
 				if (newSize == m_numElems)
 				{
