@@ -26,18 +26,18 @@ namespace log4net.Tests
 	/// </summary>
 	public class Utils
 	{
-		public Utils()
+		private Utils()
 		{
 		}
 
 		public static object InvokeMethod(object target, string name, params object[] args)
 		{
-			return target.GetType().GetMethod(name, BindingFlags.NonPublic|BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).Invoke(target, args);
+			return target.GetType().GetMethod(name, BindingFlags.NonPublic|BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance, null, GetTypesArray(args), null).Invoke(target, args);
 		}
 
 		public static object InvokeMethod(Type target, string name, params object[] args)
 		{
-			return target.GetMethod(name, BindingFlags.NonPublic|BindingFlags.Public|BindingFlags.Static).Invoke(null, args);
+			return target.GetMethod(name, BindingFlags.NonPublic|BindingFlags.Public|BindingFlags.Static, null, GetTypesArray(args), null).Invoke(null, args);
 		}
 
 		public static object GetField(object target, string name)
@@ -48,6 +48,25 @@ namespace log4net.Tests
 		public static void SetField(object target, string name, object val)
 		{
 			target.GetType().GetField(name, BindingFlags.NonPublic|BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).SetValue(target, val);
+		}
+
+		private static Type[] GetTypesArray(object[] args)
+		{
+			Type[] types = new Type[args.Length];
+
+			for(int i=0; i<args.Length; i++)
+			{
+				if (args[i] == null)
+				{
+					types[i] = typeof(object);
+				}
+				else
+				{
+					types[i] = args[i].GetType();
+				}
+			}
+
+			return types;
 		}
 	}
 }

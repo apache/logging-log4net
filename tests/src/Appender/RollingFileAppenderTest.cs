@@ -1514,5 +1514,28 @@ namespace log4net.Tests.Appender
 		{
 			Utils.SetField(appender, "m_maxSizeRollBackups", val);
 		}
-	} 
+	}
+
+	[TestFixture] public class RollingFileAppenderSubClassTest : RollingFileAppender
+	{
+		[Test] public void TestComputeCheckPeriod()
+		{
+			RollingFileAppender rfa = new RollingFileAppender();
+
+			Assertion.AssertEquals("TopOfMinute pattern", RollPoint.TopOfMinute, InvokeComputeCheckPeriod(rfa, ".yyyy-MM-dd HH:mm"));
+			Assertion.AssertEquals("TopOfHour pattern", RollPoint.TopOfHour, InvokeComputeCheckPeriod(rfa, ".yyyy-MM-dd HH"));
+			Assertion.AssertEquals("HalfDay pattern", RollPoint.HalfDay, InvokeComputeCheckPeriod(rfa, ".yyyy-MM-dd tt"));
+			Assertion.AssertEquals("TopOfDay pattern", RollPoint.TopOfDay, InvokeComputeCheckPeriod(rfa, ".yyyy-MM-dd"));
+			Assertion.AssertEquals("TopOfMonth pattern", RollPoint.TopOfMonth, InvokeComputeCheckPeriod(rfa, ".yyyy-MM"));
+
+			// Test invalid roll point
+			Assertion.AssertEquals("TopOfMonth pattern", RollPoint.InvalidRollPoint, InvokeComputeCheckPeriod(rfa, "..."));
+		}
+
+		private static RollPoint InvokeComputeCheckPeriod(RollingFileAppender rollingFileAppender, string datePattern) 
+		{
+			return (RollPoint)Utils.InvokeMethod(rollingFileAppender, "ComputeCheckPeriod", datePattern);
+		}
+	}
+
 }

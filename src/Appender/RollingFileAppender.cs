@@ -101,37 +101,37 @@ namespace log4net.Appender
 			/// <summary>
 			/// Roll the log not based on the date
 			/// </summary>
-			TopOfTrouble	=-1,
+			InvalidRollPoint	=-1,
 
 			/// <summary>
 			/// Roll the log for each minute
 			/// </summary>
-			TopOfMinute		= 0,
+			TopOfMinute			= 0,
 
 			/// <summary>
 			/// Roll the log for each hour
 			/// </summary>
-			TopOfHour		= 1,
+			TopOfHour			= 1,
 
 			/// <summary>
 			/// Roll the log twice a day (midday and midnight)
 			/// </summary>
-			HalfDay			= 2,
+			HalfDay				= 2,
 
 			/// <summary>
 			/// Roll the log each day (midnight)
 			/// </summary>
-			TopOfDay		= 3,
+			TopOfDay			= 3,
 
 			/// <summary>
 			/// Roll the log each week
 			/// </summary>
-			TopOfWeek		= 4,
+			TopOfWeek			= 4,
 
 			/// <summary>
 			/// Roll the log each month
 			/// </summary>
-			TopOfMonth		= 5
+			TopOfMonth			= 5
 		}
 
 		#endregion Protected Enums
@@ -399,7 +399,7 @@ namespace log4net.Appender
 				if (n >= m_nextCheck) 
 				{
 					m_now = n;
-					m_nextCheck = NextCheckDate(m_now);
+					m_nextCheck = NextCheckDate(m_now, m_rollPoint);
 	
 					RollOverTime();
 				}
@@ -692,8 +692,9 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
-		/// Calculates the RollPoint for the m_datePattern supplied.
+		/// Calculates the RollPoint for the datePattern supplied.
 		/// </summary>
+		/// <param name="datePattern">the date pattern to caluculate the check period for</param>
 		/// <returns>The RollPoint that is most accurate for the date pattern supplied</returns>
 		/// <remarks>
 		/// Essentially the date pattern is examined to determine what the
@@ -703,35 +704,33 @@ namespace log4net.Appender
 		/// and hour then the smallest roll point that can be detected would be
 		/// and hourly roll point as minutes could not be detected.
 		/// </remarks>
-		private RollPoint ComputeCheckPeriod() 
+		private RollPoint ComputeCheckPeriod(string datePattern) 
 		{
-			if (m_datePattern != null) 
+			// set date to 1970-01-01 00:00:00 this is UniversalSortableDateTimePattern 
+			// (based on ISO 8601) using universal time. This date is used for reference
+			// purposes to calculate the resolution of the date pattern.
+			DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+
+			// Get string representation of base line date
+			string r0 = epoch.ToString(datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo);
+
+			// Check each type of rolling mode starting with the smallest increment.
+			for(int i = (int)RollPoint.TopOfMinute; i <= (int)RollPoint.TopOfMonth; i++) 
 			{
-				// set date to 1970-01-01 00:00:00Z this is UniversalSortableDateTimePattern 
-				// (based on ISO 8601) using universal time. This date is used for reference
-				// purposes to calculate the resolution of the date pattern.
-				DateTime epoch = DateTime.Parse("1970-01-01 00:00:00Z", System.Globalization.DateTimeFormatInfo.InvariantInfo);
+				// Get string representation of next pattern
+				string r1 = NextCheckDate(epoch, (RollPoint)i).ToString(datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo);
 
-				// Get string representation of base line date
-				string r0 = epoch.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo);
+				LogLog.Debug("RollingFileAppender: Type = ["+i+"], r0 = ["+r0+"], r1 = ["+r1+"]");
 
-				// Check each type of rolling mode starting with the smallest increment.
-				for(int i = (int)RollPoint.TopOfMinute; i <= (int)RollPoint.TopOfMonth; i++) 
+				// Check if the string representations are different
+				if (r0 != null && r1 != null && !r0.Equals(r1)) 
 				{
-					// Get string representation of next pattern
-					string r1 = NextCheckDate(epoch, (RollPoint)i).ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo);
-
-					LogLog.Debug("RollingFileAppender: Type = ["+i+"], r0 = ["+r0+"], r1 = ["+r1+"]");
-
-					// Check if the string representations are different
-					if (r0 != null && r1 != null && !r0.Equals(r1)) 
-					{
-						// Found highest precision roll point
-						return (RollPoint)i;
-					}
+					// Found highest precision roll point
+					return (RollPoint)i;
 				}
 			}
-			return RollPoint.TopOfTrouble; // Deliberately head for trouble...
+
+			return RollPoint.InvalidRollPoint; // Deliberately head for trouble...
 		}
 
 		/// <summary>
@@ -744,10 +743,15 @@ namespace log4net.Appender
 			if (m_rollDate && m_datePattern != null) 
 			{
 				m_now = m_dateTime.Now;
-				m_rollPoint = ComputeCheckPeriod();
+				m_rollPoint = ComputeCheckPeriod(m_datePattern);
+
+				if (m_rollPoint == RollPoint.InvalidRollPoint)
+				{
+					throw new ArgumentException("Invalid RollPoint, unable to parse ["+m_datePattern+"]");
+				}
 
 				// next line added as this removes the name check in rollOver
-				m_nextCheck = NextCheckDate(m_now);
+				m_nextCheck = NextCheckDate(m_now, m_rollPoint);
 			} 
 			else 
 			{
@@ -976,20 +980,6 @@ namespace log4net.Appender
 		/// Roll on to the next interval after the date passed
 		/// </summary>
 		/// <param name="currentDateTime">the current date</param>
-		/// <returns>the next roll point an interval after the currentDateTime date</returns>
-		/// <remarks>
-		/// Advances the date to the next roll point after the 
-		/// currentDateTime date passed to the method.
-		/// </remarks>
-		protected DateTime NextCheckDate(DateTime currentDateTime) 
-		{
-			return NextCheckDate(currentDateTime, m_rollPoint);
-		}
-
-		/// <summary>
-		/// Roll on to the next interval after the date passed
-		/// </summary>
-		/// <param name="currentDateTime">the current date</param>
 		/// <param name="rollPoint">the type of roll point we are working with</param>
 		/// <returns>the next roll point an interval after the currentDateTime date</returns>
 		/// <remarks>
@@ -1054,7 +1044,7 @@ namespace log4net.Appender
 					current = current.AddSeconds(-current.Second);
 					current = current.AddMinutes(-current.Minute);
 					current = current.AddHours(-current.Hour);
-					current = current.AddDays(DateTime.DaysInMonth(current.Year, current.Month) - current.Day);
+					current = current.AddMonths(1);
 					break;
 			}	  
 			return current;
