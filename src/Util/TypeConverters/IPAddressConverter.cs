@@ -2,15 +2,15 @@
 //
 // Copyright 2001-2005 The Apache Software Foundation
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
+// Licensed under the Apache License',' Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// Unless required by applicable law or agreed to in writing',' software
+// distributed under the License is distributed on an "AS IS" BASIS','
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND',' either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
@@ -72,19 +72,25 @@ namespace log4net.Util.TypeConverters
 		public object ConvertFrom(object source) 
 		{
 			string str = source as string;
-			if (str != null) 
+			if (str != null && str.Length > 0) 
 			{
 				try
 				{
-					try
+					// Check if the string only contains IP address valid chars
+					if (str.Trim(validIpAddressChars).Length == 0)
 					{
-						return IPAddress.Parse(str);
-					}
-					catch(FormatException)
-					{
-						// Ignore a FormatException, try to resolve via DNS
+						try
+						{
+							// try to parse the string as an IP address
+							return IPAddress.Parse(str);
+						}
+						catch(FormatException)
+						{
+							// Ignore a FormatException, try to resolve via DNS
+						}
 					}
 
+					// Try to resolve via DNS. This is a blocking call.
 					IPHostEntry host = Dns.GetHostByName(str);
 					if (host != null && 
 						host.AddressList != null && 
@@ -103,5 +109,10 @@ namespace log4net.Util.TypeConverters
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Valid characters in an IPv4 or IPv6 address string. (Does not support subnets)
+		/// </summary>
+		private static readonly char[] validIpAddressChars = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','A','B','C','D','E','F','x','X','.',':','%'};
 	}
 }
