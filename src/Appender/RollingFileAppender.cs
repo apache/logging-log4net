@@ -510,9 +510,12 @@ namespace log4net.Appender
 				long currentCount = 0;
 				if (append) 
 				{
-					if (System.IO.File.Exists(fileName))
+					using(SecurityContext.Impersonate(this))
 					{
-						currentCount = (new FileInfo(fileName)).Length;
+						if (System.IO.File.Exists(fileName))
+						{
+							currentCount = (new FileInfo(fileName)).Length;
+						}
 					}
 				}
 
@@ -545,8 +548,14 @@ namespace log4net.Appender
 				sName = m_scheduledFilename;
 			}
 
-			string fullPath = System.IO.Path.GetFullPath(sName);
-			string fileName = System.IO.Path.GetFileName(fullPath);
+			string fullPath = null;
+			string fileName = null;
+
+			using(SecurityContext.Impersonate(this))
+			{
+				fullPath = System.IO.Path.GetFullPath(sName);
+				fileName = System.IO.Path.GetFileName(fullPath);
+			}
 
 			ArrayList arrayFiles = GetExistingFiles(fullPath);
 			InitializeRollBackups(fileName, arrayFiles);
@@ -571,31 +580,35 @@ namespace log4net.Appender
 		/// </summary>
 		/// <param name="baseFilePath"></param>
 		/// <returns></returns>
-		private static ArrayList GetExistingFiles(string baseFilePath)
+		private ArrayList GetExistingFiles(string baseFilePath)
 		{
 			ArrayList alFiles = new ArrayList();
 
-			string directory = Path.GetDirectoryName(baseFilePath);
-			LogLog.Debug("RollingFileAppender: Searching for existing files in ["+directory+"]");
+			string directory = null;
 
-			if (Directory.Exists(directory))
+			using(SecurityContext.Impersonate(this))
 			{
-				string baseFileName = Path.GetFileName(baseFilePath);
-
-				string[] files = Directory.GetFiles(directory, GetWildcardPatternForFile(baseFileName));
-	
-				if (files != null)
+				directory = Path.GetDirectoryName(baseFilePath);
+				if (Directory.Exists(directory))
 				{
-					for (int i = 0; i < files.Length; i++) 
+					string baseFileName = Path.GetFileName(baseFilePath);
+
+					string[] files = Directory.GetFiles(directory, GetWildcardPatternForFile(baseFileName));
+	
+					if (files != null)
 					{
-						string curFileName = Path.GetFileName(files[i]);
-						if (curFileName.StartsWith(baseFileName))
+						for (int i = 0; i < files.Length; i++) 
 						{
-							alFiles.Add(curFileName);
+							string curFileName = Path.GetFileName(files[i]);
+							if (curFileName.StartsWith(baseFileName))
+							{
+								alFiles.Add(curFileName);
+							}
 						}
 					}
 				}
 			}
+			LogLog.Debug("RollingFileAppender: Searched for existing files in ["+directory+"]");
 			return alFiles;
 		}
 
@@ -606,9 +619,13 @@ namespace log4net.Appender
 		{
 			if (m_staticLogFileName && m_rollDate) 
 			{
-				if (System.IO.File.Exists(m_baseFileName)) 
+				if (FileExists(m_baseFileName)) 
 				{
-					DateTime last = System.IO.File.GetLastWriteTime(m_baseFileName);
+					DateTime last;
+					using(SecurityContext.Impersonate(this))
+					{
+						last = System.IO.File.GetLastWriteTime(m_baseFileName);
+					}
 					LogLog.Debug("RollingFileAppender: ["+last.ToString(m_datePattern,System.Globalization.DateTimeFormatInfo.InvariantInfo)+"] vs. ["+m_now.ToString(m_datePattern,System.Globalization.DateTimeFormatInfo.InvariantInfo)+"]");
 
 					if (!(last.ToString(m_datePattern,System.Globalization.DateTimeFormatInfo.InvariantInfo).Equals(m_now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo)))) 
@@ -843,6 +860,11 @@ namespace log4net.Appender
 				m_scheduledFilename = File + m_now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo);
 			}
 
+			if (SecurityContext == null)
+			{
+				SecurityContext = SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
+			}
+
 			ExistingInit();
 	
 			base.ActivateOptions();
@@ -910,7 +932,7 @@ namespace log4net.Appender
 		/// <param name="toFile">New name for file.</param>
 		protected void RollFile(string fromFile, string toFile) 
 		{
-			if (System.IO.File.Exists(fromFile))
+			if (FileExists(fromFile))
 			{
 				// Delete the toFile if it exists
 				DeleteFile(toFile);
@@ -919,7 +941,10 @@ namespace log4net.Appender
 				try
 				{
 					LogLog.Debug("RollingFileAppender: Moving [" + fromFile + "] -> [" + toFile + "]");
-					System.IO.File.Move(fromFile, toFile);
+					using(SecurityContext.Impersonate(this))
+					{
+						System.IO.File.Move(fromFile, toFile);
+					}
 				}
 				catch(Exception moveEx)
 				{
@@ -931,6 +956,19 @@ namespace log4net.Appender
 				LogLog.Warn("RollingFileAppender: Cannot RollFile [" + fromFile + "] -> [" + toFile + "]. Source does not exist");
 			}
 		}
+
+		/// <summary>
+		/// Test if a file exists at a specified path
+		/// </summary>
+		/// <param name="path">the path to the file</param>
+		/// <returns>true if the file exists</returns>
+		protected bool FileExists(string path)
+		{
+			using(SecurityContext.Impersonate(this))
+			{
+				return System.IO.File.Exists(path);
+			}
+		}
   
 		/// <summary>
 		/// Deletes the specified file if it exists.
@@ -938,7 +976,7 @@ namespace log4net.Appender
 		/// <param name="fileName">The file to delete.</param>
 		protected void DeleteFile(string fileName) 
 		{
-			if (System.IO.File.Exists(fileName)) 
+			if (FileExists(fileName)) 
 			{
 				// We may not have permission to delete the file, or the file may be locked
 
@@ -949,7 +987,10 @@ namespace log4net.Appender
 				string tempFileName = fileName + "." + Environment.TickCount + ".DeletePending";
 				try
 				{
-					System.IO.File.Move(fileName, tempFileName);
+					using(SecurityContext.Impersonate(this))
+					{
+						System.IO.File.Move(fileName, tempFileName);
+					}
 					fileToDelete = tempFileName;
 				}
 				catch(Exception moveEx)
@@ -960,7 +1001,10 @@ namespace log4net.Appender
 				// Try to delete the file (either the original or the moved file)
 				try
 				{
-					System.IO.File.Delete(fileToDelete);
+					using(SecurityContext.Impersonate(this))
+					{
+						System.IO.File.Delete(fileToDelete);
+					}
 					LogLog.Debug("RollingFileAppender: Deleted file [" + fileName + "]");
 				}
 				catch(Exception deleteEx)

@@ -44,7 +44,7 @@ namespace log4net.Appender
 	/// <remarks>
 	/// <para>
 	/// The <c>EventID</c> of the event log entry can be
-	/// set using the <c>EventLogEventID</c> property (<see cref="LoggingEvent.EventProperties"/>)
+	/// set using the <c>EventLogEventID</c> property (<see cref="LoggingEvent.Properties"/>)
 	/// on the <see cref="LoggingEvent"/>.
 	/// </para>
 	/// <para>
@@ -176,6 +176,26 @@ namespace log4net.Appender
 			m_levelMapping.Add(mapping);
 		}
 
+		/// <summary>
+		/// Gets or sets the <see cref="SecurityContext"/> used to write to the EventLog.
+		/// </summary>
+		/// <value>
+		/// The <see cref="SecurityContext"/> used to write to the EventLog.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Unless a <see cref="SecurityContext"/> specified here for this appender
+		/// the <see cref="SecurityContextProvider.DefaultProvider"/> is queried for the
+		/// security context to use. The default behaviour is to use the security context
+		/// of the current thread.
+		/// </para>
+		/// </remarks>
+		public SecurityContext SecurityContext 
+		{
+			get { return m_securityContext; }
+			set { m_securityContext = value; }
+		}
+
 		#endregion // Public Instance Properties
 
 		#region Implementation of IOptionHandler
@@ -199,29 +219,59 @@ namespace log4net.Appender
 		override public void ActivateOptions() 
 		{
 			base.ActivateOptions();
-			if (EventLog.SourceExists(m_applicationName))
+
+			if (m_securityContext == null)
 			{
-				//
-				// Re-register this to the current application if the user has changed
-				// the application / logfile association
-				//
-				string logName = EventLog.LogNameFromSourceName(m_applicationName, m_machineName);
-				if (logName != m_logName)
+				m_securityContext = SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
+			}
+
+			bool sourceAlreadyExists = false;
+			string currentLogName = null;
+
+			using(SecurityContext.Impersonate(this))
+			{
+				sourceAlreadyExists = EventLog.SourceExists(m_applicationName);
+				if (sourceAlreadyExists)
 				{
-					LogLog.Debug("EventLogAppender: Changing event source [" + m_applicationName + "] from log [" + logName + "] to log [" + m_logName + "]");
-					EventLog.DeleteEventSource(m_applicationName, m_machineName);
-					EventLog.CreateEventSource(m_applicationName, m_logName, m_machineName);
+					currentLogName = EventLog.LogNameFromSourceName(m_applicationName, m_machineName);
 				}
 			}
-			else
+
+			if (sourceAlreadyExists && currentLogName != m_logName)
+			{
+				LogLog.Debug("EventLogAppender: Changing event source [" + m_applicationName + "] from log [" + currentLogName + "] to log [" + m_logName + "]");
+			}
+			else if (!sourceAlreadyExists)
 			{
 				LogLog.Debug("EventLogAppender: Creating event source Source [" + m_applicationName + "] in log " + m_logName + "]");
-				EventLog.CreateEventSource(m_applicationName, m_logName, m_machineName);
+			}
+
+			string registeredLogName = null;
+
+			using(SecurityContext.Impersonate(this))
+			{
+				if (sourceAlreadyExists && currentLogName != m_logName)
+				{
+					//
+					// Re-register this to the current application if the user has changed
+					// the application / logfile association
+					//
+					EventLog.DeleteEventSource(m_applicationName, m_machineName);
+					EventLog.CreateEventSource(m_applicationName, m_logName, m_machineName);
+
+					registeredLogName = EventLog.LogNameFromSourceName(m_applicationName, m_machineName);
+				}
+				else if (!sourceAlreadyExists)
+				{
+					EventLog.CreateEventSource(m_applicationName, m_logName, m_machineName);
+
+					registeredLogName = EventLog.LogNameFromSourceName(m_applicationName, m_machineName);
+				}
 			}
 
 			m_levelMapping.ActivateOptions();
 
-			LogLog.Debug("EventLogAppender: Source [" + m_applicationName + "] is registered to log [" + EventLog.LogNameFromSourceName(m_applicationName, m_machineName) + "]");		
+			LogLog.Debug("EventLogAppender: Source [" + m_applicationName + "] is registered to log [" + registeredLogName + "]");		
 		}
 
 		#endregion // Implementation of IOptionHandler
@@ -237,7 +287,7 @@ namespace log4net.Appender
 		/// <para>Writes the event to the system event log using the 
 		/// <see cref="ApplicationName"/>.</para>
 		/// 
-		/// <para>If the event has an <c>EventID</c> property (see <see cref="LoggingEvent.EventProperties"/>)
+		/// <para>If the event has an <c>EventID</c> property (see <see cref="LoggingEvent.Properties"/>)
 		/// set then this integer will be used as the event log event id.</para>
 		/// 
 		/// <para>
@@ -284,7 +334,12 @@ namespace log4net.Appender
 					eventTxt = eventTxt.Substring(0, 32000);
 				}
 
-				EventLog.WriteEntry(m_applicationName, eventTxt, GetEntryType(loggingEvent.Level), eventID);
+				EventLogEntryType entryType = GetEntryType(loggingEvent.Level);
+
+				using(SecurityContext.Impersonate(this))
+				{
+					EventLog.WriteEntry(m_applicationName, eventTxt, entryType, eventID);
+				}
 			}
 			catch(Exception ex)
 			{
@@ -366,6 +421,11 @@ namespace log4net.Appender
 		/// Mapping from level object to EventLogEntryType
 		/// </summary>
 		private LevelMapping m_levelMapping = new LevelMapping();
+
+		/// <summary>
+		/// The security context to use for privileged calls
+		/// </summary>
+		private SecurityContext m_securityContext;
 
 		#endregion // Private Instance Fields
 

@@ -114,7 +114,7 @@ namespace log4net.Appender
 		virtual public string File
 		{
 			get { return m_fileName; }
-			set { m_fileName = ConvertToFullPath(value.Trim()); }
+			set { m_fileName = value; }
 		}
 
 		/// <summary>
@@ -155,6 +155,26 @@ namespace log4net.Appender
 			set { m_encoding = value; }
 		}
 
+		/// <summary>
+		/// Gets or sets the <see cref="SecurityContext"/> used to write to the file.
+		/// </summary>
+		/// <value>
+		/// The <see cref="SecurityContext"/> used to write to the file.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Unless a <see cref="SecurityContext"/> specified here for this appender
+		/// the <see cref="SecurityContextProvider.DefaultProvider"/> is queried for the
+		/// security context to use. The default behaviour is to use the security context
+		/// of the current thread.
+		/// </para>
+		/// </remarks>
+		public SecurityContext SecurityContext 
+		{
+			get { return m_securityContext; }
+			set { m_securityContext = value; }
+		}
+
 		#endregion Public Instance Properties
 
 		#region Override implementation of AppenderSkeleton
@@ -181,6 +201,17 @@ namespace log4net.Appender
 		override public void ActivateOptions() 
 		{	
 			base.ActivateOptions();
+
+			if (m_securityContext == null)
+			{
+				m_securityContext = SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
+			}
+
+			using(SecurityContext.Impersonate(this))
+			{
+				m_fileName = ConvertToFullPath(m_fileName.Trim());
+			}
+
 			if (m_fileName != null) 
 			{
 				SafeOpenFile(m_fileName, m_appendToFile);
@@ -284,18 +315,28 @@ namespace log4net.Appender
 				// Save these for later, allowing retries if file open fails
 				m_fileName = fileName;
 				m_appendToFile = append;
+				FileStream fileStream = null;
 
-				// Ensure that the directory structure exists
-				string directoryFullName = Path.GetDirectoryName(fileName);
-
-				// Only create the directory if it does not exist
-				// doing this check here resolves some permissions failures
-				if (!Directory.Exists(directoryFullName))
+				using(SecurityContext.Impersonate(this))
 				{
-					Directory.CreateDirectory(directoryFullName);
+					// Ensure that the directory structure exists
+					string directoryFullName = Path.GetDirectoryName(fileName);
+
+					// Only create the directory if it does not exist
+					// doing this check here resolves some permissions failures
+					if (!Directory.Exists(directoryFullName))
+					{
+						Directory.CreateDirectory(directoryFullName);
+					}
+
+					FileMode fileOpenMode = append ? FileMode.Append : FileMode.Create;
+					fileStream = new FileStream(fileName, fileOpenMode, FileAccess.Write, FileShare.Read);
 				}
 
-				SetQWForFiles(new StreamWriter(fileName, append, m_encoding));
+				if (fileStream != null)
+				{
+					SetQWForFiles(new StreamWriter(fileStream, m_encoding));
+				}
 
 				WriteHeader();
 			}
@@ -312,7 +353,6 @@ namespace log4net.Appender
 		{
 			QuietWriter = new QuietTextWriter(writer, ErrorHandler);
 		}
-
 
 		#endregion Protected Instance Methods
 
@@ -366,6 +406,11 @@ namespace log4net.Appender
 		/// The encoding to use for the file stream.
 		/// </summary>
 		private Encoding m_encoding = Encoding.Default;
+
+		/// <summary>
+		/// The security context to use for privileged calls
+		/// </summary>
+		private SecurityContext m_securityContext;
 
 		#endregion Private Instance Fields
 	}

@@ -161,6 +161,11 @@ namespace log4net.Appender
 		/// </summary>
 		private string m_recipient;
 
+		/// <summary>
+		/// The security context to use for privileged calls
+		/// </summary>
+		private SecurityContext m_securityContext;
+
 		#endregion
 
 		#region Constructors
@@ -229,6 +234,26 @@ namespace log4net.Appender
 			set { m_server = value; }
 		}
 
+		/// <summary>
+		/// Gets or sets the <see cref="SecurityContext"/> used to call the NetSend method.
+		/// </summary>
+		/// <value>
+		/// The <see cref="SecurityContext"/> used to call the NetSend method.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Unless a <see cref="SecurityContext"/> specified here for this appender
+		/// the <see cref="SecurityContextProvider.DefaultProvider"/> is queried for the
+		/// security context to use. The default behaviour is to use the security context
+		/// of the current thread.
+		/// </para>
+		/// </remarks>
+		public SecurityContext SecurityContext 
+		{
+			get { return m_securityContext; }
+			set { m_securityContext = value; }
+		}
+
 		#endregion
 
 		#region Implementation of IOptionHandler
@@ -261,6 +286,11 @@ namespace log4net.Appender
 			{
 				throw new ArgumentNullException("Recipient", "The required property 'Recipient' was not specified.");
 			}
+
+			if (m_securityContext == null)
+			{
+				m_securityContext = SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
+			}
 		}
 
 		#endregion
@@ -278,17 +308,26 @@ namespace log4net.Appender
 		/// </remarks>
 		protected override void Append(LoggingEvent loggingEvent) 
 		{
+			NativeError nativeError = null;
+
+			// Render the event in the callers security context
 			string renderedLoggingEvent = RenderLoggingEvent(loggingEvent);
 
-			// Send the message
-			int returnValue = NetMessageBufferSend(this.Server, this.Recipient, this.Sender, renderedLoggingEvent, renderedLoggingEvent.Length * Marshal.SystemDefaultCharSize);   
-
-			// Log the error if the message could not be sent
-			if (returnValue != 0) 
+			using(m_securityContext.Impersonate(this))
 			{
-				// Lookup the native error
-				NativeError nativeError = NativeError.GetError(returnValue);
+				// Send the message
+				int returnValue = NetMessageBufferSend(this.Server, this.Recipient, this.Sender, renderedLoggingEvent, renderedLoggingEvent.Length * Marshal.SystemDefaultCharSize);   
 
+				// Log the error if the message could not be sent
+				if (returnValue != 0) 
+				{
+					// Lookup the native error
+					nativeError = NativeError.GetError(returnValue);
+				}
+			}
+
+			if (nativeError != null)
+			{
 				// Handle the error over to the ErrorHandler
 				ErrorHandler.Error(nativeError.ToString() + " (Params: Server=" + this.Server + ", Recipient=" + this.Recipient + ", Sender=" + this.Sender + ")");
 			}

@@ -292,6 +292,26 @@ namespace log4net.Appender
 			set { m_useTransactions = value; }
 		}
 
+		/// <summary>
+		/// Gets or sets the <see cref="SecurityContext"/> used to call the NetSend method.
+		/// </summary>
+		/// <value>
+		/// The <see cref="SecurityContext"/> used to call the NetSend method.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Unless a <see cref="SecurityContext"/> specified here for this appender
+		/// the <see cref="SecurityContextProvider.DefaultProvider"/> is queried for the
+		/// security context to use. The default behaviour is to use the security context
+		/// of the current thread.
+		/// </para>
+		/// </remarks>
+		public SecurityContext SecurityContext 
+		{
+			get { return m_securityContext; }
+			set { m_securityContext = value; }
+		}
+
 		#endregion // Public Instance Properties
 
 		#region Protected Instance Properties
@@ -338,6 +358,12 @@ namespace log4net.Appender
 		override public void ActivateOptions() 
 		{
 			base.ActivateOptions();
+
+			if (m_securityContext == null)
+			{
+				m_securityContext = SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
+			}
+
 			InitializeDatabaseConnection();
 
 			// Are we using a command object
@@ -565,8 +591,11 @@ namespace log4net.Appender
 				// Set the connection string
 				m_dbConnection.ConnectionString = m_connectionString;
 
-				// Open the database connection
-				m_dbConnection.Open();
+				using(SecurityContext.Impersonate(this))
+				{
+					// Open the database connection
+					m_dbConnection.Open();
+				}
 			}
 			catch (System.Exception e)
 			{
@@ -694,6 +723,11 @@ namespace log4net.Appender
 		#endregion // Protected Instance Methods
 
 		#region Private Instance Fields
+
+		/// <summary>
+		/// The security context to use for privileged calls
+		/// </summary>
+		private SecurityContext m_securityContext;
 
 		/// <summary>
 		/// The <see cref="IDbConnection" /> that will be used
