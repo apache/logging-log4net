@@ -88,7 +88,7 @@ namespace log4net.Core
 					while (frameIndex < st.FrameCount)
 					{
 						StackFrame frame = st.GetFrame(frameIndex);
-						if (frame.GetMethod().DeclaringType == callerStackBoundaryDeclaringType)
+						if (frame != null && frame.GetMethod().DeclaringType == callerStackBoundaryDeclaringType)
 						{
 							break;
 						}
@@ -99,7 +99,7 @@ namespace log4net.Core
 					while (frameIndex < st.FrameCount)
 					{
 						StackFrame frame = st.GetFrame(frameIndex);
-						if (frame.GetMethod().DeclaringType != callerStackBoundaryDeclaringType)
+						if (frame != null && frame.GetMethod().DeclaringType != callerStackBoundaryDeclaringType)
 						{
 							break;
 						}
@@ -111,12 +111,24 @@ namespace log4net.Core
 						// now frameIndex is the first 'user' caller frame
 						StackFrame locationFrame = st.GetFrame(frameIndex);
 
-						m_className = locationFrame.GetMethod().DeclaringType.FullName;
-						m_fileName = locationFrame.GetFileName();
-						m_lineNumber = locationFrame.GetFileLineNumber().ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
-						m_methodName =  locationFrame.GetMethod().Name;
-						m_fullInfo =  m_className + '.' + m_methodName + '(' + 
-							m_fileName + ':' + m_lineNumber + ')';
+						if (locationFrame != null)
+						{
+							System.Reflection.MethodBase method = locationFrame.GetMethod();
+
+							if (method != null)
+							{
+								m_methodName =  method.Name;
+								if (method.DeclaringType != null)
+								{
+									m_className = method.DeclaringType.FullName;
+								}
+							}
+							m_fileName = locationFrame.GetFileName();
+							m_lineNumber = locationFrame.GetFileLineNumber().ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
+
+							// Combine all location info
+							m_fullInfo =  m_className + '.' + m_methodName + '(' + m_fileName + ':' + m_lineNumber + ')';
+						}
 					}
 				}
 				catch(System.Security.SecurityException)
