@@ -357,11 +357,8 @@ namespace log4net.Appender
 				// volatile data in the event.
 				loggingEvent.Fix = this.Fix;
 
-				// catch the event discarded from the buffer
-				LoggingEvent discardedLoggingEvent;
-
-				// Add to the buffer, returns true if there is space remaining after the append
-				bool space = m_cb.Append(loggingEvent, out discardedLoggingEvent);
+				// Add to the buffer, returns the event discarded from the buffer if there is no space remaining after the append
+				LoggingEvent discardedLoggingEvent = m_cb.Append(loggingEvent);
 
 				// Check if the discarded event should be logged
 				if (discardedLoggingEvent != null && m_lossyEvaluator != null && m_lossyEvaluator.IsTriggeringEvent(discardedLoggingEvent))
@@ -371,7 +368,7 @@ namespace log4net.Appender
 
 				// If the buffer is full & not lossy then send the buffer, otherwise check if
 				// the event will trigger the whole buffer to be sent
-				if ((!space && !m_lossy) || (m_evaluator != null && m_evaluator.IsTriggeringEvent(loggingEvent)) )
+				if ((discardedLoggingEvent!=null && !m_lossy) || (m_evaluator != null && m_evaluator.IsTriggeringEvent(loggingEvent)) )
 				{
 					SendBuffer(m_cb);
 				}
