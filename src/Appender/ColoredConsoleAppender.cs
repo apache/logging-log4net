@@ -64,7 +64,7 @@ namespace log4net.Appender
 	/// When configuring the colored console appender, mapping should be
 	/// specified to map a logging level to a color. For example:
 	/// </para>
-	/// <code lang="XML" excaped="true">
+	/// <code lang="XML" escaped="true">
 	/// <mapping>
 	/// 	<level value="ERROR" />
 	/// 	<foreColor value="White" />
@@ -240,7 +240,7 @@ namespace log4net.Appender
 		/// <remarks>
 		/// <para>
 		/// Add a <see cref="LevelColors"/> mapping to this appender.
-		/// Each mapping defines the foreground and background colours
+		/// Each mapping defines the foreground and background colors
 		/// for a level.
 		/// </para>
 		/// </remarks>
@@ -267,48 +267,86 @@ namespace log4net.Appender
 		/// </remarks>
 		override protected void Append(log4net.Core.LoggingEvent loggingEvent) 
 		{
-			IntPtr consoleHandle = IntPtr.Zero;
-			if (m_writeToErrorStream)
+			if (m_consoleOutputWriter != null)
 			{
-				// Write to the error stream
-				consoleHandle = GetStdHandle(STD_ERROR_HANDLE);
-			}
-			else
-			{
+				IntPtr consoleHandle = IntPtr.Zero;
+				if (m_writeToErrorStream)
+				{
+					// Write to the error stream
+					consoleHandle = GetStdHandle(STD_ERROR_HANDLE);
+				}
+				else
+				{
+					// Write to the output stream
+					consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+				}
+
+				// Default to white on black
+				ushort colorInfo = (ushort)Colors.White;
+
+				// see if there is a specified lookup
+				LevelColors levelColors = m_levelMapping.Lookup(loggingEvent.Level) as LevelColors;
+				if (levelColors != null)
+				{
+					colorInfo = levelColors.CombinedColor;
+				}
+
+				// Render the event to a string
+				string strLoggingMessage = RenderLoggingEvent(loggingEvent);
+
+				// get the current console color - to restore later
+				CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
+				GetConsoleScreenBufferInfo(consoleHandle, out bufferInfo);
+
+				// set the console colors
+				SetConsoleTextAttribute(consoleHandle, colorInfo);
+
+				// Using WriteConsoleW seems to be unreliable.
+				// If a large buffer is written, say 15,000 chars
+				// Followed by a larger buffer, say 20,000 chars
+				// then WriteConsoleW will fail, last error 8
+				// 'Not enough storage is available to process this command.'
+				// 
+				// Although the documentation states that the buffer must
+				// be less that 64KB (i.e. 32,000 WCHARs) the longest string
+				// that I can write out a the first call to WriteConsoleW
+				// is only 30,704 chars.
+				//
+				// Unlike the WriteFile API the WriteConsoleW method does not 
+				// seem to be able to partially write out from the input buffer.
+				// It does have a lpNumberOfCharsWritten parameter, but this is
+				// either the length of the input buffer if any output was written,
+				// or 0 when an error occurs.
+				//
+				// All results above were observed on Windows XP SP1 running
+				// .NET runtime 1.1 SP1.
+				//
+				// Old call to WriteConsoleW:
+				//
+				// WriteConsoleW(
+				//     consoleHandle,
+				//     strLoggingMessage,
+				//     (UInt32)strLoggingMessage.Length,
+				//     out (UInt32)ignoreWrittenCount,
+				//     IntPtr.Zero);
+				//
+				// Instead of calling WriteConsoleW we use WriteFile which 
+				// handles large buffers correctly. Because WriteFile does not
+				// handle the codepage conversion as WriteConsoleW does we 
+				// need to use a System.IO.StreamWriter with the appropriate
+				// Encoding. The WriteFile calls are wrapped up in the
+				// System.IO.__ConsoleStream internal class obtained through
+				// the System.Console.OpenStandardOutput method.
+				//
+				// See the ActivateOptions method below for the code that
+				// retrieves and wraps the stream.
+
 				// Write to the output stream
-				consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+				m_consoleOutputWriter.Write(strLoggingMessage);
+
+				// Restore the console back to its previous color scheme
+				SetConsoleTextAttribute(consoleHandle, bufferInfo.wAttributes);
 			}
-
-			// set the output parameters
-			// Default to white on black
-			ushort colorInfo = (ushort)Colors.White;
-
-			// see if there is a specified lookup.
-			LevelColors levelColors = m_levelMapping.Lookup(loggingEvent.Level) as LevelColors;
-			if (levelColors != null)
-			{
-				colorInfo = levelColors.CombinedColor;
-			}
-
-			// get the current console color.
-			CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-			GetConsoleScreenBufferInfo(consoleHandle, out bufferInfo);
-
-			// set the console.
-			SetConsoleTextAttribute(consoleHandle, colorInfo);
-
-			string strLoggingMessage = RenderLoggingEvent(loggingEvent);
-
-			// write the output.
-			UInt32 ignoreWrittenCount = 0;
-			WriteConsoleW(	consoleHandle,
-							strLoggingMessage,
-							(UInt32)strLoggingMessage.Length,
-							out (UInt32)ignoreWrittenCount,
-							IntPtr.Zero);
-
-			// reset the console back to its previous color scheme.
-			SetConsoleTextAttribute(consoleHandle, bufferInfo.wAttributes);
 		}
 
 		/// <summary>
@@ -337,6 +375,34 @@ namespace log4net.Appender
 		{
 			base.ActivateOptions();
 			m_levelMapping.ActivateOptions();
+
+			System.IO.Stream consoleOutputStream = null;
+
+			// Use the Console methods to open a Stream over the console std handle
+			if (m_writeToErrorStream)
+			{
+				// Write to the error stream
+				consoleOutputStream = Console.OpenStandardError();
+			}
+			else
+			{
+				// Write to the output stream
+				consoleOutputStream = Console.OpenStandardOutput();
+			}
+
+			// Lookup the codepage encoding for the console
+			System.Text.Encoding consoleEncoding = System.Text.Encoding.GetEncoding(GetConsoleOutputCP());
+
+			// Create a writer around the console stream
+			m_consoleOutputWriter = new System.IO.StreamWriter(consoleOutputStream, consoleEncoding, 0x100);
+
+			m_consoleOutputWriter.AutoFlush = true;
+
+			// SuppressFinalize on m_consoleOutputWriter because all it will do is flush
+			// and close the file handle. Because we have set AutoFlush the additional flush
+			// is not required. The console file handle should not be closed, so we don't call
+			// Dispose, Close or the finalizer.
+			GC.SuppressFinalize(m_consoleOutputWriter);
 		}
 
 		#endregion // Override implementation of AppenderSkeleton
@@ -381,9 +447,22 @@ namespace log4net.Appender
 		/// </summary>
 		private LevelMapping m_levelMapping = new LevelMapping();
 
+		/// <summary>
+		/// The console output stream writer to write to
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This writer is not thread safe.
+		/// </para>
+		/// </remarks>
+		private System.IO.StreamWriter m_consoleOutputWriter = null;
+
 		#endregion // Private Instances Fields
 
 		#region Win32 Methods
+
+		[DllImport("Kernel32.dll", SetLastError=true, CharSet=CharSet.Auto)]
+		private static extern int GetConsoleOutputCP();
 
 		[DllImport("Kernel32.dll", SetLastError=true, CharSet=CharSet.Auto)]
 		private static extern bool SetConsoleTextAttribute(
@@ -395,13 +474,13 @@ namespace log4net.Appender
 			IntPtr consoleHandle,
 			out CONSOLE_SCREEN_BUFFER_INFO bufferInfo);
 
-		[DllImport("Kernel32.dll", SetLastError=true, CharSet=CharSet.Unicode)]
-		private static extern bool WriteConsoleW(
-			IntPtr hConsoleHandle,
-			[MarshalAs(UnmanagedType.LPWStr)] string strBuffer,
-			UInt32 bufferLen,
-			out UInt32 written,
-			IntPtr reserved);
+//		[DllImport("Kernel32.dll", SetLastError=true, CharSet=CharSet.Unicode)]
+//		private static extern bool WriteConsoleW(
+//			IntPtr hConsoleHandle,
+//			[MarshalAs(UnmanagedType.LPWStr)] string strBuffer,
+//			UInt32 bufferLen,
+//			out UInt32 written,
+//			IntPtr reserved);
 
 		//private const UInt32 STD_INPUT_HANDLE = unchecked((UInt32)(-10));
 		private const UInt32 STD_OUTPUT_HANDLE = unchecked((UInt32)(-11));
