@@ -115,22 +115,6 @@ namespace log4net
 			get { return s_stacks; }
 		}
 
-		/// <summary>
-		/// The thread lists
-		/// </summary>
-		/// <value>
-		/// list map
-		/// </value>
-		/// <remarks>
-		/// <para>
-		/// The thread local lists.
-		/// </para>
-		/// </remarks>
-		public static ThreadContextLists Lists
-		{
-			get { return s_lists; }
-		}
-
 		#endregion Public Static Properties
 
 		#region Private Static Fields
@@ -144,11 +128,6 @@ namespace log4net
 		/// The thread context stacks instance
 		/// </summary>
 		private readonly static ThreadContextStacks s_stacks = new ThreadContextStacks(s_properties);
-
-		/// <summary>
-		/// The thread context lists instance
-		/// </summary>
-		private readonly static ThreadContextLists s_lists = new ThreadContextLists(s_properties);
 
 		#endregion Private Static Fields
 	}

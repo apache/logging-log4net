@@ -948,16 +948,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Util\ThreadContextList.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Util\ThreadContextLists.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Util\ThreadContextProperties.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
