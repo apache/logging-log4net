@@ -50,6 +50,25 @@ namespace log4net.ObjectRenderer
 		/// <summary>
 		/// Render <paramref name="obj"/> using the appropriate renderer.
 		/// </summary>
+		/// <param name="obj">the object to render to a string</param>
+		/// <returns>the object rendered as a string</returns>
+		/// <remarks>
+		/// <para>
+		/// This is a convenience method used to render an object to a string.
+		/// The alternative method <see cref="FindAndRender(object,TextWriter)"/>
+		/// should be used when streaming output to a <see cref="TextWriter"/>.
+		/// </para>
+		/// </remarks>
+		public string FindAndRender(object obj)
+		{
+			StringWriter stringWriter = new StringWriter();
+			FindAndRender(obj, stringWriter);
+			return stringWriter.ToString();
+		}
+
+		/// <summary>
+		/// Render <paramref name="obj"/> using the appropriate renderer.
+		/// </summary>
 		/// <remarks>
 		/// <para>Find the appropriate renderer for the type of the
 		/// <paramref name="obj"/> parameter. This is accomplished by calling the
