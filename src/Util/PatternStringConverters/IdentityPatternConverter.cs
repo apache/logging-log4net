@@ -54,7 +54,7 @@ namespace log4net.Util.PatternStringConverters
 			{
 				// This security exception will occur if the caller does not have 
 				// some undefined set of SecurityPermission flags.
-				LogLog.Debug("LoggingEvent: Security exception while trying to get current thread principal. Error Ignored.");
+				LogLog.Debug("IdentityPatternConverter: Security exception while trying to get current thread principal. Error Ignored.");
 
 				writer.Write( "NOT AVAILABLE" );
 			}

@@ -377,22 +377,26 @@ namespace log4net.Repository.Hierarchy
 		/// </remarks>
 		override public void Shutdown() 
 		{
+			LogLog.Debug("Hierarchy: Shutdown called on Hierarchy ["+this.Name+"]");
+
 			// begin by closing nested appenders
 			Root.CloseNestedAppenders();
 
 			lock(m_ht) 
 			{
-				foreach(Logger l in this.GetCurrentLoggers())
+				ILogger[] currentLoggers = this.GetCurrentLoggers();
+
+				foreach(Logger logger in currentLoggers)
 				{
-					l.CloseNestedAppenders();
+					logger.CloseNestedAppenders();
 				}
 
 				// then, remove all appenders
 				Root.RemoveAllAppenders();
 
-				foreach(Logger l in this.GetCurrentLoggers())
+				foreach(Logger logger in currentLoggers)
 				{
-					l.RemoveAllAppenders();
+					logger.RemoveAllAppenders();
 				}
 			}
 
@@ -825,7 +829,7 @@ namespace log4net.Repository.Hierarchy
 						}
 						else
 						{
-							LogLog.Error("unexpected object type ["+node.GetType()+"] in ht.", new LogException());
+							LogLog.Error("Hierarchy: Unexpected object type ["+node.GetType()+"] in ht.", new LogException());
 						}
 					} 
 				} 

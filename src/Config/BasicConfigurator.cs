@@ -144,7 +144,7 @@ namespace log4net.Config
 			}
 			else
 			{
-				LogLog.Warn("Repository [" + repository + "] does not support the BasicConfigurator");
+				LogLog.Warn("BasicConfigurator: Repository [" + repository + "] does not support the BasicConfigurator");
 			}
 		}
 

@@ -284,7 +284,7 @@ namespace log4net.Util
 		/// <param name="formattingInfo">the formatting info for the converter</param>
 		private void ProcessConverter(string converterName, string option, FormattingInfo formattingInfo)
 		{
-			LogLog.Debug("Converter: ["+converterName+"] Option: ["+option+"] Format: [min="+formattingInfo.Min+",max="+formattingInfo.Max+",leftAlign="+formattingInfo.LeftAlign+"]");
+			LogLog.Debug("PatternParser: Converter ["+converterName+"] Option ["+option+"] Format [min="+formattingInfo.Min+",max="+formattingInfo.Max+",leftAlign="+formattingInfo.LeftAlign+"]");
 
 			// Lookup the converter type
 			Type converterType = (Type)m_patternConverters[converterName];

@@ -535,7 +535,7 @@ namespace log4net.Appender
 						// Get the command text from the Layout
 						string logStatement = GetLogStatement(e);
 
-						LogLog.Debug("ADOAppender: LogStatement ["+logStatement+"]");
+						LogLog.Debug("AdoNetAppender: LogStatement ["+logStatement+"]");
 
 						dbCmd.CommandText = logStatement;
 						dbCmd.ExecuteNonQuery();

@@ -49,7 +49,7 @@ namespace log4net.Util.PatternStringConverters
 			{
 				// This security exception will occur if the caller does not have 
 				// some undefined set of SecurityPermission flags.
-				LogLog.Debug("LoggingEvent: Security exception while trying to get current process id. Error Ignored.");
+				LogLog.Debug("ProcessIdPatternConverter: Security exception while trying to get current process id. Error Ignored.");
 
 				writer.Write( "NOT AVAILABLE" );
 			}

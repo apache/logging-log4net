@@ -83,13 +83,13 @@ namespace log4net.Layout.Pattern
 						m_precision = int.Parse(optStr, NumberFormatInfo.InvariantInfo);
 						if (m_precision <= 0) 
 						{
-							LogLog.Error("Precision option (" + optStr + ") isn't a positive integer.");
+							LogLog.Error("NamedPatternConverter: Precision option (" + optStr + ") isn't a positive integer.");
 							m_precision = 0;
 						}
 					} 
 					catch (Exception e) 
 					{
-						LogLog.Error("Precision option \"" + optStr + "\" not a decimal integer.", e);
+						LogLog.Error("NamedPatternConverter: Precision option \"" + optStr + "\" not a decimal integer.", e);
 						m_precision = 0;
 					}
 				}

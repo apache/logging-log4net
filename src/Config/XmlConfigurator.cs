@@ -627,7 +627,7 @@ namespace log4net.Config
 				}
 				catch(Exception ex)
 				{
-					LogLog.Error("Failed to initialize configuration file watcher for file ["+configFile.FullName+"]", ex);
+					LogLog.Error("XmlConfigurator: Failed to initialize configuration file watcher for file ["+configFile.FullName+"]", ex);
 				}
 			}
 		}
@@ -814,7 +814,7 @@ namespace log4net.Config
 				IXmlRepositoryConfigurator configurableRepository = repository as IXmlRepositoryConfigurator;
 				if (configurableRepository == null)
 				{
-					LogLog.Warn("Repository [" + repository + "] does not support the XmlConfigurator");
+					LogLog.Warn("XmlConfigurator: Repository [" + repository + "] does not support the XmlConfigurator");
 				}
 				else
 				{

@@ -80,7 +80,7 @@ namespace log4net.Core
 			}
 			catch(System.Security.SecurityException)
 			{
-				LogLog.Debug("Security Exception (ControlAppDomain LinkDemand) while trying "+
+				LogLog.Debug("LoggerMAnager: Security Exception (ControlAppDomain LinkDemand) while trying "+
 					"to register Shutdown handler with the AppDomain. LoggerManager.Shutdown() "+
 					"will not be called automatically when the AppDomain exits. It must be called "+
 					"programmatically.");
