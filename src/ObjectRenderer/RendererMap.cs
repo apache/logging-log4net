@@ -77,16 +77,27 @@ namespace log4net.ObjectRenderer
 					log4net.Util.LogLog.Error("RendererMap: Exception while rendering object of type ["+obj.GetType().FullName+"]", ex);
 
 					// return default message
-					writer.Write("<log4net.Error>Exception rendering object type ["+obj.GetType().FullName+"]");
+					string objectTypeName = "";
+					if (obj != null && obj.GetType() != null)
+					{
+						objectTypeName = obj.GetType().FullName;
+					}
+
+					writer.Write("<log4net.Error>Exception rendering object type ["+objectTypeName+"]");
 					if (ex != null)
 					{
+						string exceptionText = null;
+
 						try
 						{
-							writer.Write("<stackTrace>" + ex.ToString() + "</stackTrace>");
+							exceptionText = ex.ToString();
 						}
-						catch(Exception)
+						catch
 						{
+							// Ignore exception
 						}
+
+						writer.Write("<stackTrace>" + exceptionText + "</stackTrace>");
 					}
 					writer.Write("</log4net.Error>");
 				}
