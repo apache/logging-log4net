@@ -343,6 +343,11 @@ namespace log4net.Appender
 				{
 					ErrorHandler.Error("Failed in DoAppend", ex);
 				}
+				catch
+				{
+					// Catch handler for non System.Exception types
+					ErrorHandler.Error("Failed in DoAppend (unknown exception)");
+				}
 				finally
 				{
 					m_recursiveGuard = false;
