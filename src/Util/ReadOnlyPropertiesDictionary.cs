@@ -45,7 +45,7 @@ namespace log4net.Util
 		/// <summary>
 		/// The Hashtable used to store the properties data
 		/// </summary>
-		protected Hashtable m_ht = new Hashtable();
+		private Hashtable m_hashtable = new Hashtable();
 
 		#endregion Private Instance Fields
 
@@ -66,7 +66,7 @@ namespace log4net.Util
 		{
 			foreach(DictionaryEntry entry in propertiesDictionary)
 			{
-				m_ht.Add(entry.Key, entry.Value);
+				InnerHashtable.Add(entry.Key, entry.Value);
 			}
 		}
 
@@ -86,7 +86,7 @@ namespace log4net.Util
 			foreach(SerializationEntry entry in info)
 			{
 				// The keys are stored as Xml encoded names
-				m_ht[XmlConvert.DecodeName(entry.Name)] = entry.Value;
+				InnerHashtable[XmlConvert.DecodeName(entry.Name)] = entry.Value;
 			}
 		}
 #endif
@@ -102,8 +102,8 @@ namespace log4net.Util
 		/// <returns>An array of all the keys.</returns>
 		public string[] GetKeys()
 		{
-			string[] keys = new String[m_ht.Count];
-			m_ht.Keys.CopyTo(keys, 0);
+			string[] keys = new String[InnerHashtable.Count];
+			InnerHashtable.Keys.CopyTo(keys, 0);
 			return keys;
 		}
 
@@ -121,7 +121,7 @@ namespace log4net.Util
 		/// </remarks>
 		public virtual object this[string key]
 		{
-			get { return m_ht[key]; }
+			get { return InnerHashtable[key]; }
 			set { throw new NotSupportedException("This is a Read Only Dictionary and can not be modified"); }
 		}
 
@@ -136,10 +136,18 @@ namespace log4net.Util
 		/// <returns>true if the dictionary contains the specified key</returns>
 		public bool Contains(string key)
 		{
-			return m_ht.Contains(key);
+			return InnerHashtable.Contains(key);
 		}
 
 		#endregion
+
+		/// <summary>
+		/// The hashtable used to store the properties
+		/// </summary>
+		protected Hashtable InnerHashtable
+		{
+			get { return m_hashtable; }
+		}
 
 		#region Implementation of ISerializable
 
@@ -152,7 +160,7 @@ namespace log4net.Util
 		[System.Security.Permissions.SecurityPermissionAttribute(System.Security.Permissions.SecurityAction.Demand, SerializationFormatter=true)]
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			foreach(DictionaryEntry entry in m_ht)
+			foreach(DictionaryEntry entry in InnerHashtable)
 			{
 				// If value is serializable then we add it to the list
 				if (entry.Value.GetType().IsSerializable)
@@ -174,7 +182,7 @@ namespace log4net.Util
 		/// </summary>
 		IDictionaryEnumerator IDictionary.GetEnumerator()
 		{
-			return m_ht.GetEnumerator();
+			return InnerHashtable.GetEnumerator();
 		}
 
 		/// <summary>
@@ -193,7 +201,7 @@ namespace log4net.Util
 		/// <returns></returns>
 		bool IDictionary.Contains(object key)
 		{
-			return m_ht.Contains(key);
+			return InnerHashtable.Contains(key);
 		}
 
 		/// <summary>
@@ -230,7 +238,7 @@ namespace log4net.Util
 			get
 			{
 				if (!(key is string)) throw new ArgumentException("key must be a string");
-				return m_ht[key];
+				return InnerHashtable[key];
 			}
 			set
 			{
@@ -243,7 +251,7 @@ namespace log4net.Util
 		/// </summary>
 		ICollection IDictionary.Values
 		{
-			get { return m_ht.Values; }
+			get { return InnerHashtable.Values; }
 		}
 
 		/// <summary>
@@ -251,7 +259,7 @@ namespace log4net.Util
 		/// </summary>
 		ICollection IDictionary.Keys
 		{
-			get { return m_ht.Keys; }
+			get { return InnerHashtable.Keys; }
 		}
 
 		/// <summary>
@@ -259,7 +267,7 @@ namespace log4net.Util
 		/// </summary>
 		bool IDictionary.IsFixedSize
 		{
-			get { return m_ht.IsFixedSize; }
+			get { return InnerHashtable.IsFixedSize; }
 		}
 
 		#endregion
@@ -273,7 +281,7 @@ namespace log4net.Util
 		/// <param name="index"></param>
 		void ICollection.CopyTo(Array array, int index)
 		{
-			m_ht.CopyTo(array, index);
+			InnerHashtable.CopyTo(array, index);
 		}
 
 		/// <summary>
@@ -281,7 +289,7 @@ namespace log4net.Util
 		/// </summary>
 		bool ICollection.IsSynchronized
 		{
-			get { return m_ht.IsSynchronized; }
+			get { return InnerHashtable.IsSynchronized; }
 		}
 
 		/// <summary>
@@ -289,7 +297,7 @@ namespace log4net.Util
 		/// </summary>
 		public int Count
 		{
-			get { return m_ht.Count; }
+			get { return InnerHashtable.Count; }
 		}
 
 		/// <summary>
@@ -297,7 +305,7 @@ namespace log4net.Util
 		/// </summary>
 		object ICollection.SyncRoot
 		{
-			get { return m_ht.SyncRoot; }
+			get { return InnerHashtable.SyncRoot; }
 		}
 
 		#endregion
@@ -309,7 +317,7 @@ namespace log4net.Util
 		/// </summary>
 		IEnumerator IEnumerable.GetEnumerator()
 		{
-			return ((IEnumerable)m_ht).GetEnumerator();
+			return ((IEnumerable)InnerHashtable).GetEnumerator();
 		}
 
 		#endregion

@@ -94,8 +94,8 @@ namespace log4net.Util
 		/// </remarks>
 		override public object this[string key]
 		{
-			get { return m_ht[key]; }
-			set { m_ht[key] = value; }
+			get { return InnerHashtable[key]; }
+			set { InnerHashtable[key] = value; }
 		}
 
 		#endregion Public Instance Properties
@@ -108,7 +108,7 @@ namespace log4net.Util
 		/// <param name="key">the key for the entry to remove</param>
 		public void Remove(string key)
 		{
-			m_ht.Remove(key);
+			InnerHashtable.Remove(key);
 		}
 
 		#endregion Public Instance Methods
@@ -120,7 +120,7 @@ namespace log4net.Util
 		/// </summary>
 		IDictionaryEnumerator IDictionary.GetEnumerator()
 		{
-			return m_ht.GetEnumerator();
+			return InnerHashtable.GetEnumerator();
 		}
 
 		/// <summary>
@@ -129,7 +129,7 @@ namespace log4net.Util
 		/// <param name="key"></param>
 		void IDictionary.Remove(object key)
 		{
-			m_ht.Remove(key);
+			InnerHashtable.Remove(key);
 		}
 
 		/// <summary>
@@ -139,7 +139,7 @@ namespace log4net.Util
 		/// <returns></returns>
 		bool IDictionary.Contains(object key)
 		{
-			return m_ht.Contains(key);
+			return InnerHashtable.Contains(key);
 		}
 
 		/// <summary>
@@ -147,7 +147,7 @@ namespace log4net.Util
 		/// </summary>
 		public override void Clear()
 		{
-			m_ht.Clear();
+			InnerHashtable.Clear();
 		}
 
 		/// <summary>
@@ -161,7 +161,7 @@ namespace log4net.Util
 			{
 				throw new ArgumentException("key must be a string", "key");
 			}
-			m_ht.Add(key, value);
+			InnerHashtable.Add(key, value);
 		}
 
 		/// <summary>
@@ -183,7 +183,7 @@ namespace log4net.Util
 				{
 					throw new ArgumentException("key must be a string", "key");
 				}
-				return m_ht[key];
+				return InnerHashtable[key];
 			}
 			set
 			{
@@ -191,7 +191,7 @@ namespace log4net.Util
 				{
 					throw new ArgumentException("key must be a string", "key");
 				}
-				m_ht[key] = value;
+				InnerHashtable[key] = value;
 			}
 		}
 
@@ -200,7 +200,7 @@ namespace log4net.Util
 		/// </summary>
 		ICollection IDictionary.Values
 		{
-			get { return m_ht.Values; }
+			get { return InnerHashtable.Values; }
 		}
 
 		/// <summary>
@@ -208,7 +208,7 @@ namespace log4net.Util
 		/// </summary>
 		ICollection IDictionary.Keys
 		{
-			get { return m_ht.Keys; }
+			get { return InnerHashtable.Keys; }
 		}
 
 		/// <summary>
@@ -230,7 +230,7 @@ namespace log4net.Util
 		/// <param name="index"></param>
 		void ICollection.CopyTo(Array array, int index)
 		{
-			m_ht.CopyTo(array, index);
+			InnerHashtable.CopyTo(array, index);
 		}
 
 		/// <summary>
@@ -238,7 +238,7 @@ namespace log4net.Util
 		/// </summary>
 		bool ICollection.IsSynchronized
 		{
-			get { return m_ht.IsSynchronized; }
+			get { return InnerHashtable.IsSynchronized; }
 		}
 
 		/// <summary>
@@ -246,7 +246,7 @@ namespace log4net.Util
 		/// </summary>
 		object ICollection.SyncRoot
 		{
-			get { return m_ht.SyncRoot; }
+			get { return InnerHashtable.SyncRoot; }
 		}
 
 		#endregion
@@ -258,7 +258,7 @@ namespace log4net.Util
 		/// </summary>
 		IEnumerator IEnumerable.GetEnumerator()
 		{
-			return ((IEnumerable)m_ht).GetEnumerator();
+			return ((IEnumerable)InnerHashtable).GetEnumerator();
 		}
 
 		#endregion
