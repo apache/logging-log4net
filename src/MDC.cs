@@ -27,7 +27,7 @@ namespace log4net
 	/// <remarks>
 	/// <para>
 	/// The MDC is deprecated and has been replaced by the <see cref="ThreadContext.Properties"/>.
-	/// The current MDC implementation forwards to the ThreadContext.Properties.
+	/// The current MDC implementation forwards to the <c>ThreadContext.Properties</c>.
 	/// </para>
 	/// <para>
 	/// The MDC class is similar to the <see cref="NDC"/> class except that it is

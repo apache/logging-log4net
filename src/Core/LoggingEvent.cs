@@ -467,7 +467,7 @@ namespace log4net.Core
 //			{
 //				if (m_data.Ndc == null) 
 //				{
-//					m_data.Ndc = ThreadContext.Stack.GetFullMessage();
+//					m_data.Ndc = ThreadContext.Stacks["NDC"].GetFullMessage();
 //					if (m_data.Ndc == null)
 //					{
 //						m_data.Ndc = "";

@@ -50,14 +50,14 @@ namespace log4net
 	/// </para>
 	/// </remarks>
 	/// <example>Example of using the thread context properties to store a username.
-	/// <code>
+	/// <code lang="C#">
 	/// ThreadContext.Properties["user"] = userName;
 	///	log.Info("This log message has a ThreadContext Property called 'user'");
 	/// </code>
 	/// </example>
 	/// <example>Example of how to push a message into the context stack
-	/// <code>
-	///	using(ThreadContext.Stack.Push("my context message"))
+	/// <code lang="C#">
+	///	using(ThreadContext.Stacks["NDC"].Push("my context message"))
 	///	{
 	///		log.Info("This log message has a ThreadContext Stack message that includes 'my context message'");
 	///	
