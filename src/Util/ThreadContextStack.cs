@@ -58,13 +58,25 @@ namespace log4net.Util
 
 		#region Public Methods
 
-//		/// <summary>
-//		/// Clears all the contextual information held in this stack.
-//		/// </summary>
-//		public void Clear() 
-//		{
-//			m_stack.Clear();
-//		}
+		/// <summary>
+		/// Clears all the contextual information held in this stack.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Clears all the contextual information held in this stack.
+		/// Only call this if you think that this tread is being reused after
+		/// a previous call execution which may not have completed correctly.
+		/// You do not need to use this method if you always guarantee to call
+		/// the <see cref="IDisposable.Dispose"/> method of the <see cref="IDisposable"/>
+		/// returned from <see cref="Push"/> even in exceptional circumstances,
+		/// for example by using the <c>using(log4net.ThreadContext.Stacks["NDC"].Push("Stack_Message"))</c> 
+		/// syntax.
+		/// </para>
+		/// </remarks>
+		public void Clear() 
+		{
+			m_stack.Clear();
+		}
 
 		/// <summary>
 		/// Removes the top context from this stack.

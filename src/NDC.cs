@@ -27,7 +27,7 @@ namespace log4net
 	/// <remarks>
 	/// <para>
 	/// The NDC is deprecated and has been replaced by the <see cref="ThreadContext.Stacks"/>.
-	/// The current NDC implementation forwards to the ThreadContext.Stacks["NDC"].
+	/// The current NDC implementation forwards to the <c>ThreadContext.Stacks["NDC"]</c>.
 	/// </para>
 	/// <para>
 	/// A Nested Diagnostic Context, or NDC in short, is an instrument
@@ -47,7 +47,7 @@ namespace log4net
 	/// </para>
 	/// </remarks>
 	/// <example>How to push a message into the context
-	/// <code>
+	/// <code lang="C#">
 	///	using(NDC.Push("my context message"))
 	///	{
 	///		... all log calls will have 'my context message' included ...
@@ -102,27 +102,26 @@ namespace log4net
 		#region Public Static Methods
 
 		/// <summary>
-		/// Clears all the contextual information held on the 
-		/// current thread.
+		/// Clears all the contextual information held on the current thread.
 		/// </summary>
 		/// <remarks>
-		/// After calling this method the <see cref="Depth"/> will be <c>0</c>.
+		/// Clears the stack of NDC data held on the current thread.
 		/// </remarks>
-		[Obsolete("NDC has been replaced by ThreadContext.Stacks", true)]
+		/*[Obsolete("NDC has been replaced by ThreadContext.Stacks", true)]*/
 		public static void Clear() 
 		{
-			throw new NotSupportedException("NDC has been replaced by ThreadContext.Stacks");
+			ThreadContext.Stacks["NDC"].Clear();
 		}
 
 		/// <summary>
 		/// Creates a clone of the stack of context information.
 		/// </summary>
+		/// <returns>A clone of the context info for this thread.</returns>
 		/// <remarks>
 		/// The results of this method can be passed to the <see cref="Inherit"/> 
 		/// method to allow child threads to inherit the context of their 
 		/// parent thread.
 		/// </remarks>
-		/// <returns>A clone of the context info for this thread.</returns>
 		[Obsolete("NDC has been replaced by ThreadContext.Stacks", true)]
 		public static Stack CloneStack() 
 		{
@@ -132,6 +131,7 @@ namespace log4net
 		/// <summary>
 		/// Inherits the contextual information from another thread.
 		/// </summary>
+		/// <param name="stack">The context stack to inherit.</param>
 		/// <remarks>
 		/// This thread will use the context information from the stack
 		/// supplied. This can be used to initialize child threads with
@@ -141,7 +141,6 @@ namespace log4net
 		/// Call <see cref="CloneStack"/> to obtain a stack to pass to
 		/// this method.
 		/// </remarks>
-		/// <param name="stack">The context stack to inherit.</param>
 		[Obsolete("NDC has been replaced by ThreadContext.Stacks", true)]
 		public static void Inherit(Stack stack) 
 		{
@@ -209,6 +208,7 @@ namespace log4net
 		/// <summary>
 		/// Forces the stack depth to be at most <paramref name="maxDepth"/>.
 		/// </summary>
+		/// <param name="maxDepth">The maximum depth of the stack</param>
 		/// <remarks>
 		/// Forces the stack depth to be at most <paramref name="maxDepth"/>.
 		/// This may truncate the head of the stack. This only affects the 
@@ -216,7 +216,6 @@ namespace log4net
 		/// growing, it only sets the maximum depth at the time of the
 		/// call. This can be used to return to a known context depth.
 		/// </remarks>
-		/// <param name="maxDepth">The maximum depth of the stack</param>
 		[Obsolete("NDC has been replaced by ThreadContext.Stacks", true)]
 		static public void SetMaxDepth(int maxDepth) 
 		{
