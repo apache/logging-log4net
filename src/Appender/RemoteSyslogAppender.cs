@@ -329,7 +329,7 @@ namespace log4net.Appender
 		{
 			try 
 			{
-				System.IO.StringWriter writer = new System.IO.StringWriter();
+				System.IO.StringWriter writer = new System.IO.StringWriter(System.Globalization.CultureInfo.InvariantCulture);
 
 				// Priority
 				int priority = GeneratePriority(m_facility, GetSeverity(loggingEvent.Level));

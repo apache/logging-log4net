@@ -81,7 +81,7 @@ namespace log4net.Util.PatternStringConverters
 			{
 				try 
 				{
-					m_length = int.Parse(optionStr);
+					m_length = int.Parse(optionStr, System.Globalization.CultureInfo.InvariantCulture);
 				}
 				catch (Exception e) 
 				{

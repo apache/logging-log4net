@@ -61,7 +61,7 @@ namespace log4net.ObjectRenderer
 		/// </remarks>
 		public string FindAndRender(object obj)
 		{
-			StringWriter stringWriter = new StringWriter();
+			StringWriter stringWriter = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
 			FindAndRender(obj, stringWriter);
 			return stringWriter.ToString();
 		}
