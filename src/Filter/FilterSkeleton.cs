@@ -74,9 +74,25 @@ namespace log4net.Filter
 		#region Implementation of IOptionHandler
 
 		/// <summary>
-		/// Usually filters options become active when set. 
-		/// We provide a default do-nothing implementation for convenience.
+		/// Initialize the filter with the options set
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This is part of the <see cref="IOptionHandler"/> delayed object
+		/// activation scheme. The <see cref="ActivateOptions"/> method must 
+		/// be called on this object after the configuration properties have
+		/// been set. Until <see cref="ActivateOptions"/> is called this
+		/// object is in an undefined state and must not be used. 
+		/// </para>
+		/// <para>
+		/// If any of the configuration properties are modified then 
+		/// <see cref="ActivateOptions"/> must be called again.
+		/// </para>
+		/// <para>
+		/// Typically filter's options become active immediatly on set, 
+		/// however this method must still be called. 
+		/// </para>
+		/// </remarks>
 		virtual public void ActivateOptions() 
 		{
 		}

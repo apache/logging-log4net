@@ -27,12 +27,18 @@ namespace log4net.Core
 	public interface IOptionHandler
 	{
 		/// <summary>
-		/// Activate the options that were previously set with calls to option setters.
+		/// Activate the options that were previously set with calls to properties.
 		/// </summary>
 		/// <remarks>
-		/// This allows to defer activation of the options until all
+		/// <para>
+		/// This allows an object to defer activation of its options until all
 		/// options have been set. This is required for components which have
 		/// related options that remain ambiguous until all are set.
+		/// </para>
+		/// <para>
+		/// If a component implements this interface then this method must be called
+		/// after its properties have been set before the component can be used.
+		/// </para>
 		/// </remarks>
 		void ActivateOptions();
 	}

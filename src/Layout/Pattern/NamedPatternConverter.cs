@@ -36,6 +36,22 @@ namespace log4net.Layout.Pattern
 
 		#region Implementation of IOptionHandler
 
+		/// <summary>
+		/// Initialise the converter 
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This is part of the <see cref="IOptionHandler"/> delayed object
+		/// activation scheme. The <see cref="ActivateOptions"/> method must 
+		/// be called on this object after the configuration properties have
+		/// been set. Until <see cref="ActivateOptions"/> is called this
+		/// object is in an undefined state and must not be used. 
+		/// </para>
+		/// <para>
+		/// If any of the configuration properties are modified then 
+		/// <see cref="ActivateOptions"/> must be called again.
+		/// </para>
+		/// </remarks>
 		public void ActivateOptions()
 		{
 			if (Option == null) 
@@ -84,32 +100,31 @@ namespace log4net.Layout.Pattern
 		/// </summary>
 		/// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
 		/// <param name="loggingEvent">the event being logged</param>
-		/// <returns>the precision of the fully qualified name specified</returns>
 		override protected void Convert(TextWriter writer, LoggingEvent loggingEvent)
 		{
-			string n = GetFullyQualifiedName(loggingEvent);
+			string name = GetFullyQualifiedName(loggingEvent);
 			if (m_precision <= 0)
 			{
-				writer.Write( n );
+				writer.Write(name);
 			}
 			else 
 			{
-				int len = n.Length;
+				int len = name.Length;
 
 				// We subtract 1 from 'len' when assigning to 'end' to avoid out of
-				// bounds exception in return r.substring(end+1, len). This can happen if
+				// bounds exception in return name.Substring(end+1, len). This can happen if
 				// precision is 1 and the logger name ends with a dot. 
-				int end = len -1 ;
-				for(int i = m_precision; i > 0; i--) 
+				int end = len - 1;
+				for(int i=m_precision; i>0; i--) 
 				{	  
-					end = n.LastIndexOf('.', end-1);
+					end = name.LastIndexOf('.', end-1);
 					if (end == -1)
 					{
-						writer.Write( n );
+						writer.Write(name);
 						return;
 					}
 				}
-				writer.Write( n.Substring(end+1, len-end-1) );
+				writer.Write(name.Substring(end+1, len-end-1));
 			}	  
 		}
 	}
