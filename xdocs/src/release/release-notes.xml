@@ -43,16 +43,16 @@ limitations under the License.
 							<h3>Renamed config classes and attributes</h3>
 							<p>
 								In the <span class="code">log4net.Config</span> namespace the <span class="code">DOMConfigurator</span>, 
-								<span class="code">DOMConfiguratorAttribute</span>, <span class="code">RepositoryAttribute</span>, 
-								and <span class="code">AliasRepositoryAttribute</span> have been marked as obsolete. These types are
+								<span class="code">DOMConfiguratorAttribute</span>, <span class="code">DomainAttribute</span>, 
+								and <span class="code">AliasDomainAttribute</span> have been marked as obsolete. These types are
 								still available and functional in this release.
 							</p>
 							<p>	
 								The <span class="code">XmlConfigurator</span> and <span class="code">XmlConfiguratorAttribute</span> 
 								types replace <span class="code">DOMConfigurator</span> and 
-								<span class="code">DOMConfiguratorAttribute</span>. The <span class="code">DomainAttribute</span> 
-								and <span class="code">AliasDomainAttribute</span> types replace 
-								<span class="code">RepositoryAttribute</span> and <span class="code">AliasRepositoryAttribute</span>. 
+								<span class="code">DOMConfiguratorAttribute</span>. The <span class="code">RepositoryAttribute</span> 
+								and <span class="code">AliasRepositoryAttribute</span> types replace 
+								<span class="code">DomainAttribute</span> and <span class="code">AliasDomainAttribute</span>. 
 							</p>
 						</li>
 						<li>
