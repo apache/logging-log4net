@@ -81,7 +81,7 @@ namespace log4net.Tests.Appender
 
 		private static System.Diagnostics.EventLogEntryType GetEntryType(EventLogAppender appender, Level level)
 		{
-			return (System.Diagnostics.EventLogEntryType)Util.InvokeMethod(appender, "GetEntryType", level);
+			return (System.Diagnostics.EventLogEntryType)Utils.InvokeMethod(appender, "GetEntryType", level);
 		}
 	}
 }

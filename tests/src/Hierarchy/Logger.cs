@@ -24,6 +24,7 @@ using log4net.Util;
 using log4net.Core;
 using log4net.Repository;
 using log4net.Repository.Hierarchy;
+using log4net.Tests.Appender;
 
 using NUnit.Framework;
 
@@ -57,9 +58,9 @@ namespace log4net.Tests.Hierarchy
 		[TearDown] public void TearDown() 
 		{
 			// Regular users should not use the clear method lightly!
-			LogManager.GetLoggerRepository().ResetConfiguration();
-			LogManager.GetLoggerRepository().Shutdown();
-			((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetLoggerRepository()).Clear();
+			LogManager.GetRepository().ResetConfiguration();
+			LogManager.GetRepository().Shutdown();
+			((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Clear();
 		}
 
 		/// <summary>
@@ -168,7 +169,7 @@ namespace log4net.Tests.Hierarchy
 		/// </summary>
 		[Test] public void TestAdditivity3() 
 		{
-			Logger root = ((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetLoggerRepository()).Root;	
+			Logger root = ((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Root;	
 			Logger a = LogManager.GetLogger("a").Logger as Logger;
 			Logger ab = LogManager.GetLogger("a.b").Logger as Logger;
 			Logger abc = LogManager.GetLogger("a.b.c").Logger as Logger;
@@ -211,10 +212,10 @@ namespace log4net.Tests.Hierarchy
 		[Test] public void TestDisable1() 
 		{
 			CountingAppender caRoot = new CountingAppender();
-			Logger root = ((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetLoggerRepository()).Root;	
+			Logger root = ((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Root;	
 			root.AddAppender(caRoot);
 
-			log4net.Repository.Hierarchy.Hierarchy h = ((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetLoggerRepository());
+			log4net.Repository.Hierarchy.Hierarchy h = ((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository());
 			h.Threshold = Level.Info;
 			h.Configured = true;
 

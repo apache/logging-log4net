@@ -67,9 +67,9 @@ namespace log4net.Tests.Appender
 		private void ResetAndDeleteTestFiles()
 		{
 			// Regular users should not use the clear method lightly!
-			LogManager.GetLoggerRepository().ResetConfiguration();
-			LogManager.GetLoggerRepository().Shutdown();
-			((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetLoggerRepository()).Clear();
+			LogManager.GetRepository().ResetConfiguration();
+			LogManager.GetRepository().Shutdown();
+			((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Clear();
 
 			DeleteTestFiles();
 		}
@@ -1044,7 +1044,7 @@ namespace log4net.Tests.Appender
 		/// </summary>
 		private void ConfigureRootAppender()
 		{
-			_root = ((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetLoggerRepository()).Root;	
+			_root = ((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Root;	
 			_root.Level = Level.Debug;
 			_caRoot = new CountingAppender();
 			_root.AddAppender(_caRoot);
@@ -1493,26 +1493,26 @@ namespace log4net.Tests.Appender
 
 		private static ArrayList GetExistingFiles(string baseFilePath)
 		{
-			return (ArrayList)Util.InvokeMethod(typeof(RollingFileAppender), "GetExistingFiles", baseFilePath);
+			return (ArrayList)Utils.InvokeMethod(typeof(RollingFileAppender), "GetExistingFiles", baseFilePath);
 		}
 
 		private void InitializeRollBackups(RollingFileAppender appender, string baseFile, ArrayList arrayFiles)
 		{
-			Util.InvokeMethod(appender, "InitializeRollBackups", baseFile, arrayFiles);
+			Utils.InvokeMethod(appender, "InitializeRollBackups", baseFile, arrayFiles);
 		}
 
 		private int GetFieldCurSizeRollBackups(RollingFileAppender appender)
 		{
-			return (int)Util.GetField(appender, "m_curSizeRollBackups");
+			return (int)Utils.GetField(appender, "m_curSizeRollBackups");
 		}
 
 		private void SetFieldCurSizeRollBackups(RollingFileAppender appender, int val)
 		{
-			Util.SetField(appender, "m_curSizeRollBackups", val);
+			Utils.SetField(appender, "m_curSizeRollBackups", val);
 		}
 		private void SetFieldMaxSizeRollBackups(RollingFileAppender appender, int val)
 		{
-			Util.SetField(appender, "m_maxSizeRollBackups", val);
+			Utils.SetField(appender, "m_maxSizeRollBackups", val);
 		}
 	} 
 }
