@@ -2,7 +2,7 @@
 <project name="xdocs" default="site" basedir=".">
 
 	<property name="docs.src" value="./src" />
-	<property name="docs.dest" value="./www" />
+	<property name="docs.dest" value="../doc" />
 
 	<property name="logging-site" value="../../logging-site" />
 

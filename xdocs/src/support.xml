@@ -198,7 +198,7 @@ limitations under the License.
 					<li>
 						<p>
 							If possible please reproduce your issue with the 
-							<a href="release/manual/faq.html#internalDebug">internal log4net debugging</a> 
+							<a href="release/faq.html#internalDebug">internal log4net debugging</a> 
 							enabled. Include this debug output in your post, it is usually the first thing we ask for in diagnosing issues.
 						</p>
 					</li>
