@@ -29,10 +29,18 @@ namespace log4net.Appender
 	/// Sends logging events to a <see cref="TextWriter"/>.
 	/// </summary>
 	/// <remarks>
+	/// <para>
 	/// An Appender that writes to a <see cref="TextWriter"/>.
+	/// </para>
+	/// <para>
+	/// This appender may be used stand alone if initialized with an appropriate
+	/// writer, however it is typically used as a base class for an appender that
+	/// can open a <see cref="TextWriter"/> to write to.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
+	/// <author>Douglas de la Torre</author>
 	public class TextWriterAppender : AppenderSkeleton
 	{
 		#region Public Instance Constructors
@@ -128,8 +136,11 @@ namespace log4net.Appender
 				lock(this) 
 				{
 					Reset();
-					m_qtw = new QuietTextWriter(value, ErrorHandler);
-					WriteHeader();
+					if (value != null)
+					{
+						m_qtw = new QuietTextWriter(value, ErrorHandler);
+						WriteHeader();
+					}
 				}
 			}
 		}
@@ -157,15 +168,21 @@ namespace log4net.Appender
 
 			if (m_qtw == null) 
 			{
-				ErrorHandler.Error("No output stream or file set for the appender named ["+ Name +"].");
-				return false;
+				// Allow subclass to lazily create the writer
+				PrepareWriter();
+
+				if (m_qtw == null) 
+				{
+					ErrorHandler.Error("No output stream or file set for the appender named ["+ Name +"].");
+					return false;
+				}
 			}
 			if (m_qtw.Closed) 
 			{
 				ErrorHandler.Error("Output stream for appender named ["+ Name +"] has been closed.");
 				return false;
 			}
-	
+
 			return true;
 		}
 
@@ -320,7 +337,21 @@ namespace log4net.Appender
 					m_qtw.Write(h);
 				}
 			}
-		}	
+		}
+
+		/// <summary>
+		/// Called to allow a subclass to lazily initialize the writer
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This method is called when an event is logged and the <see cref="Writer"/> or
+		/// <see cref="QuietWriter"/> have not been set. This allows a subclass to
+		/// attempt to initialize the writer multiple times.
+		/// </para>
+		/// </remarks>
+		virtual protected void PrepareWriter()
+		{
+		}
 
 		#endregion Protected Instance Methods
 

@@ -31,16 +31,35 @@ namespace log4net.Appender
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// Logging events are sent to the specified file.
+	/// Logging events are sent to the file specified by
+	/// the <see cref="File"/> property.
 	/// </para>
 	/// <para>
-	/// The file can be opened in either append or
-	/// overwrite mode.
+	/// The file can be opened in either append or overwrite mode 
+	/// by specifying the <see cref="AppendToFile"/> property.
+	/// If the file path is relative it is taken as relative from 
+	/// the application base directory. The file encoding can be
+	/// specified by setting the <see cref="Encoding"/> property.
+	/// </para>
+	/// <para>
+	/// The layout's <see cref="ILayout.Header"/> and <see cref="ILayout.Footer"/>
+	/// values will be written each time the file is opened and closed
+	/// respectively. If the <see cref="AppendToFile"/> property is <see langword="true"/>
+	/// then the file may contain multiple copies of the header and footer.
+	/// </para>
+	/// <para>
+	/// This appender will first try to open the file for writing when <see cref="ActivateOptions"/>
+	/// is called. This will typically be during configuration.
+	/// If the file cannot be opened for writing the appender will attempt
+	/// to open the file again each time a message is logged to the appender.
+	/// If the file cannot be opened for writing when a message is logged then
+	/// the message will be discarded by this appender.
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	/// <author>Rodrigo B. de Oliveira</author>
+	/// <author>Douglas de la Torre</author>
 	public class FileAppender : TextWriterAppender
 	{
 		#region Public Instance Constructors
@@ -62,7 +81,7 @@ namespace log4net.Appender
 		public FileAppender(ILayout layout, string filename, bool append) 
 		{
 			Layout = layout;
-			OpenFile(filename, append);
+			SafeOpenFile(filename, append);
 		}
 
 		/// <summary>
@@ -71,7 +90,7 @@ namespace log4net.Appender
 		/// </summary>
 		/// <param name="layout">the layout to use with this appender</param>
 		/// <param name="filename">the full path to the file to write to</param>
-		[Obsolete("Instead use the default constructor and set the Layout & File propertes")]
+		[Obsolete("Instead use the default constructor and set the Layout & File properties")]
 		public FileAppender(ILayout layout, string filename) : this(layout, filename, true)
 		{
 		}
@@ -124,6 +143,12 @@ namespace log4net.Appender
 		/// <value>
 		/// The <see cref="Encoding"/> used to write to the file.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The default encoding set is <see cref="System.Text.Encoding.Default"/>
+		/// which is the encoding for the system's current ANSI code page.
+		/// </para>
+		/// </remarks>
 		public Encoding Encoding
 		{
 			get { return m_encoding; }
@@ -158,21 +183,7 @@ namespace log4net.Appender
 			base.ActivateOptions();
 			if (m_fileName != null) 
 			{
-				// We must cache the params locally because OpenFile will call
-				// Reset which will clear the class fields. We need to remember the
-				// values in case of an error.
-
-				string fileName = m_fileName;
-				bool appendToFile = m_appendToFile;
-
-				try 
-				{
-					OpenFile(fileName, appendToFile);
-				}
-				catch(Exception e) 
-				{
-					ErrorHandler.Error("OpenFile("+fileName+","+appendToFile+") call failed.", e, ErrorCode.FileOpenFailure);
-				}
+				SafeOpenFile(m_fileName, m_appendToFile);
 			} 
 			else 
 			{
@@ -194,6 +205,20 @@ namespace log4net.Appender
 			m_fileName = null;
 		}
 
+ 		/// <summary>
+ 		/// Called to initialize the file writer
+ 		/// </summary>
+ 		/// <remarks>
+ 		/// <para>
+ 		/// Will be called for each logged message until the file is
+ 		/// successfully opened.
+ 		/// </para>
+ 		/// </remarks>
+ 		override protected void PrepareWriter()
+ 		{
+			SafeOpenFile(m_fileName, m_appendToFile);
+ 		}
+
 		#endregion Override implementation of TextWriterAppender
 
 		#region Public Instance Methods
@@ -211,17 +236,42 @@ namespace log4net.Appender
 		#region Protected Instance Methods
 
 		/// <summary>
-		/// Sets and <i>opens</i> the file where the log output will
-		/// go. The specified file must be writable.
+		/// Sets and <i>opens</i> the file where the log output will go. The specified file must be writable.
 		/// </summary>
 		/// <param name="fileName">The path to the log file</param>
 		/// <param name="append">If true will append to fileName. Otherwise will truncate fileName</param>
 		/// <remarks>
-		/// <para>If there was already an opened file, then the previous file
-		/// is closed first.</para>
-		/// 
-		/// <para>This method will ensure that the directory structure
-		/// for the <paramref name="fileName"/> specified exists.</para>
+		/// <para>
+		/// Calls <see cref="OpenFile"/> but guarantees not to throw an exception.
+		/// Errors are passed to the <see cref="TextWriterAppender.ErrorHandler"/>.
+		/// </para>
+		/// </remarks>
+		virtual protected void SafeOpenFile(string fileName, bool append)
+		{
+			try 
+			{
+				OpenFile(fileName, append);
+			}
+			catch(Exception e) 
+			{
+				ErrorHandler.Error("OpenFile("+fileName+","+append+") call failed.", e, ErrorCode.FileOpenFailure);
+			}
+		}
+
+		/// <summary>
+		/// Sets and <i>opens</i> the file where the log output will go. The specified file must be writable.
+		/// </summary>
+		/// <param name="fileName">The path to the log file</param>
+		/// <param name="append">If true will append to fileName. Otherwise will truncate fileName</param>
+		/// <remarks>
+		/// <para>
+		/// If there was already an opened file, then the previous file
+		/// is closed first.
+		/// </para>
+		/// <para>
+		/// This method will ensure that the directory structure
+		/// for the <paramref name="fileName"/> specified exists.
+		/// </para>
 		/// </remarks>
 		virtual protected void OpenFile(string fileName, bool append)
 		{
@@ -231,8 +281,12 @@ namespace log4net.Appender
 
 				LogLog.Debug("FileAppender: Opening file for writing ["+fileName+"] append ["+append+"]");
 
+				// Save these for later, allowing retries if file open fails
+				m_fileName = fileName;
+				m_appendToFile = append;
+
 				// Ensure that the directory structure exists
-				string directoryFullName = (new FileInfo(fileName)).DirectoryName;
+				string directoryFullName = Path.GetDirectoryName(fileName);
 
 				// Only create the directory if it does not exist
 				// doing this check here resolves some permissions failures
@@ -242,9 +296,6 @@ namespace log4net.Appender
 				}
 
 				SetQWForFiles(new StreamWriter(fileName, append, m_encoding));
-
-				m_fileName = fileName;
-				m_appendToFile = append;
 
 				WriteHeader();
 			}
@@ -287,10 +338,11 @@ namespace log4net.Appender
 				throw new ArgumentNullException("path");
 			}
 
-			if (SystemInfo.ApplicationBaseDirectory != null)
+			string applicationBaseDirectory = SystemInfo.ApplicationBaseDirectory;
+			if (applicationBaseDirectory != null)
 			{
 				// Note that Path.Combine will return the second path if it is rooted
-				return Path.GetFullPath(Path.Combine(SystemInfo.ApplicationBaseDirectory, path));
+				return Path.GetFullPath(Path.Combine(applicationBaseDirectory, path));
 			}
 			return Path.GetFullPath(path);
 		}
