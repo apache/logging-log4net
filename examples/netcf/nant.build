@@ -2,6 +2,12 @@
 <project name="netcf-examples" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
     <!-- compile .NET Compact Framework examples -->
     <target name="compile" description="Builds .NET Compact Framework examples">
-        <nant buildfile="1.0/nant.build" target="compile" />
+        <nant target="compile">
+            <buildfiles>
+                <include name="*/nant.build" />
+                <!-- exclude current build file -->
+                <exclude name="exclude.build" />
+            </buildfiles>
+        </nant>
     </target>
 </project>

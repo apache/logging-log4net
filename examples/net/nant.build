@@ -2,8 +2,13 @@
 <project name="net-examples" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
     <!-- compile .NET Framework examples -->
     <target name="compile" description="Builds .NET Framework examples">
-        <nant buildfile="1.0/nant.build" target="compile" />
-        <nant buildfile="1.1/nant.build" target="compile" />
+        <nant target="compile">
+            <buildfiles>
+                <include name="*/nant.build" />
+                <!-- exclude current build file -->
+                <exclude name="exclude.build" />
+            </buildfiles>
+        </nant>
     </target>
     <!-- update the version of .NET Framework examples -->
     <target name="update-version-info" description="Update AssemblyVersionInfo of .NET Framework examples">

@@ -2,7 +2,12 @@
 <project name="consoleapp-example" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
     <!-- compile ConsoleApp example -->
     <target name="compile" description="Builds ConsoleApp example">
-        <nant buildfile="cs/nant.build" target="compile" />
-        <nant buildfile="vb/nant.build" target="compile" />
+        <nant target="compile">
+            <buildfiles>
+                <include name="*/nant.build" />
+                <!-- exclude current build file -->
+                <exclude name="exclude.build" />
+            </buildfiles>
+        </nant>
     </target>
 </project>

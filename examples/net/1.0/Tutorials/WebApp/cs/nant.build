@@ -8,17 +8,14 @@
     <call target="set-build-configuration" />
     <call target="set-${project.runtime.config}-${project.runtime.version}-runtime-configuration" />
     <!-- Target for compiling the example -->
-    <target name="compile" description="Builds the example" depends="check-current-bin-dir, check-current-build-defines, check-current-build-config, check-current-build-debug, check-current-runtime-config, check-current-runtime-version, check-log4net-assembly">
+    <target name="compile" description="Builds the example" depends="check-current-bin-dir, check-current-build-defines, check-current-build-config, check-current-build-debug, check-log4net-assembly">
         <!-- make sure the binaries directory for the WebApp exists and is cleaned -->
-        <available type="Directory" resource="src/bin" property="temp.webbin.dir.available" />
-        <if propertyexists="temp.webbin.dir.available" propertytrue="temp.webbin.dir.available">
-            <delete dir="src/bin" />
-        </if>
+        <delete dir="src/bin" if="${directory::exists('src/bin')}" />
         <mkdir dir="src/bin" />
-        <!-- copy log4net build output  -->
+        <!-- copy log4net build output -->
         <copy todir="src/bin">
-            <fileset basedir="${log4net.basedir}/${current.bin.dir}">
-                <includes name="*.*" />
+            <fileset basedir="${log4net.output.dir}">
+                <include name="*.*" />
             </fileset>
         </copy>
         <!-- build SharedModule assembly -->
@@ -28,29 +25,28 @@
         <!-- copy SharedModule build output -->
         <copy todir="src/bin">
             <fileset basedir="../../../Repository/SharedModule/cs/${current.bin.dir}">
-                <includes name="*.*" />
+                <include name="*.*" />
             </fileset>
         </copy>
         <!-- copy SimpleModule build output -->
         <copy todir="src/bin">
             <fileset basedir="../../../Repository/SimpleModule/cs/${current.bin.dir}">
-                <includes name="*.*" />
+                <include name="*.*" />
             </fileset>
         </copy>
         <!-- compile the example -->
-        <csc noconfig="true" target="library" warnaserror="true" debug="${current.build.debug}"
-            define="${current.build.defines.csc}" output="src/bin/WebApp.dll">
-            <sources defaultexcludes="true">
-                <includes name="src/**/*.cs" />
+        <csc noconfig="true" target="library" warnaserror="true" debug="${current.build.debug}" define="${current.build.defines.csc}" output="src/bin/WebApp.dll">
+            <sources>
+                <include name="src/**/*.cs" />
             </sources>
-            <references defaultexcludes="true">
-                <includes name="src/bin/SharedModule.dll" frompath="false" />
-                <includes name="src/bin/SimpleModule.dll" frompath="false" />
-                <includes name="src/bin/log4net.dll" frompath="false" />
-                <includes name="System.dll" frompath="false" />
-                <includes name="System.Data.dll" frompath="false" />
-                <includes name="System.Drawing.dll" frompath="false" />
-                <includes name="System.Web.dll" frompath="false" />
+            <references>
+                <include name="src/bin/SharedModule.dll" />
+                <include name="src/bin/SimpleModule.dll" />
+                <include name="src/bin/log4net.dll" />
+                <include name="System.dll" />
+                <include name="System.Data.dll" />
+                <include name="System.Drawing.dll" />
+                <include name="System.Web.dll" />
             </references>
         </csc>
     </target>

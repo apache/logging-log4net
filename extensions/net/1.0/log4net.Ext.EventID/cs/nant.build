@@ -8,30 +8,28 @@
     <call target="set-build-configuration" />
     <call target="set-${project.runtime.config}-${project.runtime.version}-runtime-configuration" />
     <!-- Target for compiling the example -->
-    <target name="compile" description="Builds the example" depends="check-current-bin-dir, clean-current-bin-dir, check-current-build-defines, check-current-build-config, check-current-build-debug, check-current-runtime-config, check-current-runtime-version, check-log4net-assembly">
+    <target name="compile" description="Builds the example" depends="check-current-bin-dir, clean-current-bin-dir, check-current-build-defines, check-current-build-config, check-current-build-debug, check-log4net-assembly">
         <!-- make sure the log4net key file is available to the compiler in a release build -->
-        <if propertytrue="current.build.config.release">
+        <if test="${current.build.config.release}">
             <!-- check if the log4net key file is available -->
-            <available type="File" resource="${log4net.basedir}/log4net.snk" property="temp.log4net.keyfile.available" />
-            <ifnot propertytrue="temp.log4net.keyfile.available">
+            <if test="${not file::exists(log4net.basedir + '/log4net.snk')}">
                 <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
                 <echo message="The generated key file should be stored in the log4net base directory." />
                 <fail message="The release build could not be built." />
-            </ifnot>
-            <if propertytrue="temp.log4net.keyfile.available">
+            </if>
+            <if test="${file::exists(log4net.basedir + '/log4net.snk')}">
                 <!-- copy the log4net key file to the location where the compiler expects it to be -->
-                <copy file="${log4net.basedir}/log4net.snk" todir="${current.bin.dir}/../../../../" />
+                <copy file="${log4net.basedir}/log4net.snk" todir="${current.bin.dir}/../../../" />
             </if>
         </if>
         <!-- compile the example -->
-        <csc noconfig="true" target="library" warnaserror="true" debug="${current.build.debug}"
-            define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Ext.EventID.dll">
-            <sources defaultexcludes="true">
-                <includes name="src/**/*.cs" />
-                <includes name="${log4net.basedir}/src/AssemblyVersionInfo.cs" />
+        <csc noconfig="true" target="library" warnaserror="true" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Ext.EventID.dll">
+            <sources>
+                <include name="src/**/*.cs" />
+                <include name="${log4net.basedir}/src/AssemblyVersionInfo.cs" />
             </sources>
-            <references defaultexcludes="true">
-                <includes name="${log4net.basedir}/${current.bin.dir}/log4net.dll" frompath="false" />
+            <references basedir="${log4net.output.dir}">
+                <include name="log4net.dll" />
             </references>
         </csc>
     </target>

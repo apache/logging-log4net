@@ -8,11 +8,11 @@
     <call target="set-build-configuration" />
     <call target="set-${project.runtime.config}-${project.runtime.version}-runtime-configuration" />
     <!-- Target for compiling the example -->
-    <target name="compile" description="Builds the example" depends="check-current-bin-dir, clean-current-bin-dir, check-current-build-defines, check-current-build-config, check-current-build-debug, check-current-runtime-config, check-current-runtime-version, check-log4net-assembly">
+    <target name="compile" description="Builds the example" depends="check-current-bin-dir, clean-current-bin-dir, check-current-build-defines, check-current-build-config, check-current-build-debug, check-log4net-assembly">
         <!-- copy log4net build output  -->
         <copy todir="${current.bin.dir}">
-            <fileset basedir="${log4net.basedir}/bin/${current.runtime.config}/${current.runtime.version}/${current.build.config}">
-                <includes name="*.*" />
+            <fileset basedir="${log4net.output.dir}">
+                <include name="*.*" />
             </fileset>
         </copy>
         <!-- build SharedModule assembly -->
@@ -22,26 +22,25 @@
         <!-- copy SharedModule build output -->
         <copy todir="${current.bin.dir}">
             <fileset basedir="../../SharedModule/cs/${current.bin.dir}">
-                <includes name="*.*" />
+                <include name="*.*" />
             </fileset>
         </copy>
         <!-- copy SimpleModule build output -->
         <copy todir="${current.bin.dir}">
             <fileset basedir="../../SimpleModule/cs/${current.bin.dir}">
-                <includes name="*.*" />
+                <include name="*.*" />
             </fileset>
         </copy>
         <!-- compile the example -->
-        <csc noconfig="true" warnaserror="true" target="exe" debug="${current.build.debug}" define="${current.build.defines.csc}"
-            output="${current.bin.dir}/SimpleApp.exe">
-            <sources defaultexcludes="true">
-                <includes name="src/**/*.cs" />
-                <includes name="${log4net.basedir}/src/AssemblyVersionInfo.cs" />
+        <csc noconfig="true" warnaserror="true" target="exe" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/SimpleApp.exe">
+            <sources>
+                <include name="src/**/*.cs" />
+                <include name="${log4net.basedir}/src/AssemblyVersionInfo.cs" />
             </sources>
-            <references defaultexcludes="true">
-                <includes name="${current.bin.dir}/SimpleModule.dll" fromPath="false" />
-                <includes name="${current.bin.dir}/SharedModule.dll" fromPath="false" />
-                <includes name="${current.bin.dir}/log4net.dll" fromPath="false" />
+            <references>
+                <include name="${current.bin.dir}/SimpleModule.dll" />
+                <include name="${current.bin.dir}/SharedModule.dll" />
+                <include name="${current.bin.dir}/log4net.dll" />
             </references>
         </csc>
         <!-- copy the SimpleApp log4net configuration file -->

@@ -2,12 +2,22 @@
 <project name="consoleapp-example" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
     <!-- compile WebApp example -->
     <target name="compile" description="Builds WebApp example">
-        <nant buildfile="cs/nant.build" target="compile" />
-        <nant buildfile="vb/nant.build" target="compile" />
+        <nant target="compile">
+            <buildfiles>
+                <include name="*/nant.build" />
+                <!-- exclude current build file -->
+                <exclude name="exclude.build" />
+            </buildfiles>
+        </nant>
     </target>
     <!-- update the version of WebApp example -->
     <target name="update-version-info" description="Update AssemblyVersionInfo of WebApp example">
-        <nant buildfile="cs/nant.build" target="update-version-info" />
-        <nant buildfile="vb/nant.build" target="update-version-info" />
+        <nant target="compile">
+            <buildfiles>
+                <include name="*/nant.build" />
+                <!-- exclude current build file -->
+                <exclude name="exclude.build" />
+            </buildfiles>
+        </nant>
     </target>
 </project>

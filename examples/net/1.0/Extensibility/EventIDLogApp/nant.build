@@ -2,6 +2,12 @@
 <project name="eventidlogapp-example" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
     <!-- compile EventIDLogApp example -->
     <target name="compile" description="Builds EventIDLogApp example">
-        <nant buildfile="cs/nant.build" target="compile" />
+        <nant target="compile">
+            <buildfiles>
+                <include name="*/nant.build" />
+                <!-- exclude current build file -->
+                <exclude name="exclude.build" />
+            </buildfiles>
+        </nant>
     </target>
 </project>

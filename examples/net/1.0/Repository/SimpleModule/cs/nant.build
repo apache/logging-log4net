@@ -8,16 +8,15 @@
     <call target="set-build-configuration" />
     <call target="set-${project.runtime.config}-${project.runtime.version}-runtime-configuration" />
     <!-- Target for compiling the example -->
-    <target name="compile" description="Builds the example" depends="check-current-bin-dir, clean-current-bin-dir, check-current-build-defines, check-current-build-config, check-current-build-debug, check-current-runtime-config, check-current-runtime-version, check-log4net-assembly">
+    <target name="compile" description="Builds the example" depends="check-current-bin-dir, clean-current-bin-dir, check-current-build-defines, check-current-build-config, check-current-build-debug, check-log4net-assembly">
         <!-- compile the example -->
-        <csc noconfig="true" target="library" warnaserror="true" debug="${current.build.debug}"
-            define="${current.build.defines.csc}" output="${current.bin.dir}/SimpleModule.dll">
-            <sources defaultexcludes="true">
-                <includes name="src/**/*.cs" />
-                <includes name="${log4net.basedir}/src/AssemblyVersionInfo.cs" />
+        <csc noconfig="true" target="library" warnaserror="true" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/SimpleModule.dll">
+            <sources>
+                <include name="src/**/*.cs" />
+                <include name="${log4net.basedir}/src/AssemblyVersionInfo.cs" />
             </sources>
-            <references defaultexcludes="true">
-                <includes name="${log4net.basedir}/${current.bin.dir}/log4net.dll" frompath="false" />
+            <references basedir="${log4net.output.dir}">
+                <include name="log4net.dll" />
             </references>
         </csc>
         <!-- copy the log4net configuration file to the output directory -->

@@ -2,8 +2,13 @@
 <project name="tutorials-examples" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
     <!-- compile Tutorials examples -->
     <target name="compile" description="Builds Tutorials examples">
-        <nant buildfile="ConsoleApp/nant.build" target="compile" />
-        <nant buildfile="WebApp/nant.build" target="compile" />
+        <nant target="compile">
+            <buildfiles>
+                <include name="*/nant.build" />
+                <!-- exclude current build file -->
+                <exclude name="exclude.build" />
+            </buildfiles>
+        </nant>
     </target>
     <!-- update the version of Tutorials examples -->
     <target name="update-version-info" description="Update AssemblyVersionInfo of Tutorials examples">

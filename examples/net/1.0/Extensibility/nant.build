@@ -2,7 +2,12 @@
 <project name="extensibility-examples" default="compile" xmlnds="http://tempuri.org/nant-vs.xsd">
     <!-- compile Extensibility examples -->
     <target name="compile" description="Builds Extensibility examples">
-        <nant buildfile="EventIDLogApp/nant.build" target="compile" />
-        <nant buildfile="TraceLogApp/nant.build" target="compile" />
+        <nant target="compile">
+            <buildfiles>
+                <include name="*/nant.build" />
+                <!-- exclude current build file -->
+                <exclude name="exclude.build" />
+            </buildfiles>
+        </nant>
     </target>
 </project>
