@@ -16,6 +16,10 @@
 //
 #endregion
 
+// .NET Compact Framework 1.0 has no support for reading assembly attributes
+// and uses the CompactRepositorySelector instead
+#if !NETCF
+
 using System;
 using System.Collections;
 using System.Globalization;
@@ -672,3 +676,5 @@ namespace log4net.Core
 		#endregion Private Instance Fields
 	}
 }
+
+#endif // !NETCF

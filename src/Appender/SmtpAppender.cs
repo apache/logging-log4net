@@ -16,6 +16,10 @@
 //
 #endregion
 
+// .NET Compact Framework 1.0 has no support for System.Web.Mail
+// SSCLI 1.0 has no support for System.Web.Mail
+#if !NETCF && !SSCLI
+
 using System;
 using System.IO;
 using System.Web.Mail;
@@ -57,7 +61,7 @@ namespace log4net.Appender
 		{	
 		}
 
-		#endregion Public Instance Constructors
+		#endregion // Public Instance Constructors
 
 		#region Public Instance Properties
 
@@ -124,7 +128,7 @@ namespace log4net.Appender
 			set { ; }
 		}
 
-		#endregion Public Instance Properties
+		#endregion // Public Instance Properties
 
 		#region Override implementation of BufferingAppenderSkeleton
 
@@ -186,7 +190,7 @@ namespace log4net.Appender
 			}
 		}
 
-		#endregion Override implementation of BufferingAppenderSkeleton
+		#endregion // Override implementation of BufferingAppenderSkeleton
 
 		#region Override implementation of AppenderSkeleton
 
@@ -199,7 +203,7 @@ namespace log4net.Appender
 			get { return true; }
 		}
 
-		#endregion Override implementation of AppenderSkeleton
+		#endregion // Override implementation of AppenderSkeleton
 
 		#region Private Instance Fields
 
@@ -208,6 +212,8 @@ namespace log4net.Appender
 		private string m_subject;
 		private string m_smtpHost;
 
-		#endregion Private Instance Fields
+		#endregion // Private Instance Fields
 	}
 }
+
+#endif // !NETCF && !SSCLI

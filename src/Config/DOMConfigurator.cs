@@ -75,7 +75,7 @@ namespace log4net.Config
 		[Obsolete("Use XmlConfigurator.Configure instead of DOMConfigurator.Configure")]
 		static public void Configure() 
 		{
-			XmlConfigurator.Configure(LogManager.GetLoggerRepository(Assembly.GetCallingAssembly()));
+			XmlConfigurator.Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()));
 		}
 
 		/// <summary>
@@ -113,7 +113,7 @@ namespace log4net.Config
 		[Obsolete("Use XmlConfigurator.Configure instead of DOMConfigurator.Configure")]
 		static public void Configure(XmlElement element) 
 		{
-			XmlConfigurator.Configure(LogManager.GetLoggerRepository(Assembly.GetCallingAssembly()), element);
+			XmlConfigurator.Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()), element);
 		}
 
 		/// <summary>
@@ -180,7 +180,7 @@ namespace log4net.Config
 		[Obsolete("Use XmlConfigurator.Configure instead of DOMConfigurator.Configure")]
 		static public void Configure(FileInfo configFile)
 		{
-			XmlConfigurator.Configure(LogManager.GetLoggerRepository(Assembly.GetCallingAssembly()), configFile);
+			XmlConfigurator.Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()), configFile);
 		}
 
 		/// <summary>
@@ -203,7 +203,7 @@ namespace log4net.Config
 		[Obsolete("Use XmlConfigurator.Configure instead of DOMConfigurator.Configure")]
 		static public void Configure(Stream configStream)
 		{
-			XmlConfigurator.Configure(LogManager.GetLoggerRepository(Assembly.GetCallingAssembly()), configStream);
+			XmlConfigurator.Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()), configStream);
 		}
 
 		/// <summary>
@@ -315,7 +315,7 @@ namespace log4net.Config
 		[Obsolete("Use XmlConfigurator.ConfigureAndWatch instead of DOMConfigurator.ConfigureAndWatch")]
 		static public void ConfigureAndWatch(FileInfo configFile)
 		{
-			XmlConfigurator.ConfigureAndWatch(LogManager.GetLoggerRepository(Assembly.GetCallingAssembly()), configFile);
+			XmlConfigurator.ConfigureAndWatch(LogManager.GetRepository(Assembly.GetCallingAssembly()), configFile);
 		}
 
 		/// <summary>

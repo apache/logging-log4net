@@ -538,7 +538,7 @@ namespace log4net
 		/// </para>
 		/// <para>
 		/// The <see cref="ILoggerRepository"/> created will be associated with the repository
-		/// specified such that a call to <see cref="GetLoggerRepository()"/> will return 
+		/// specified such that a call to <see cref="GetRepository()"/> will return 
 		/// the same repository instance.
 		/// </para>
 		/// </remarks>
@@ -562,7 +562,7 @@ namespace log4net
 		/// <remarks>
 		/// <para>
 		/// The <see cref="ILoggerRepository"/> created will be associated with the repository
-		/// specified such that a call to <see cref="GetLoggerRepository()"/> will return 
+		/// specified such that a call to <see cref="GetRepository()"/> will return 
 		/// the same repository instance.
 		/// </para>
 		/// </remarks>
@@ -670,7 +670,7 @@ namespace log4net
 		/// </para>
 		/// <para>
 		/// The <see cref="ILoggerRepository"/> created will be associated with the repository
-		/// specified such that a call to <see cref="GetLoggerRepository(Assembly)"/> with the
+		/// specified such that a call to <see cref="GetRepository(Assembly)"/> with the
 		/// same assembly specified will return the same repository instance.
 		/// </para>
 		/// <param name="repositoryAssembly">The assembly to use to get the name of the repository.</param>
@@ -691,7 +691,7 @@ namespace log4net
 		/// <remarks>
 		/// <para>
 		/// The <see cref="ILoggerRepository"/> created will be associated with the repository
-		/// specified such that a call to <see cref="GetLoggerRepository(Assembly)"/> with the
+		/// specified such that a call to <see cref="GetRepository(Assembly)"/> with the
 		/// same assembly specified will return the same repository instance.
 		/// </para>
 		/// <param name="repositoryAssembly">The assembly to use to get the name of the repository.</param>

@@ -16,6 +16,10 @@
 //
 #endregion
 
+// MONO 1.0 has no support for Win32 OutputDebugString API
+// SSCLI 1.0 has no support for Win32 OutputDebugString API
+#if !MONO && !SSCLI
+
 using System.Runtime.InteropServices;
 
 using log4net.Layout;
@@ -49,7 +53,7 @@ namespace log4net.Appender
 		{
 		}
 
-		#endregion Public Instance Constructors
+		#endregion // Public Instance Constructors
 
 		#region Override implementation of AppenderSkeleton
 
@@ -72,7 +76,7 @@ namespace log4net.Appender
 			get { return true; }
 		}
 
-		#endregion Override implementation of AppenderSkeleton
+		#endregion // Override implementation of AppenderSkeleton
 
 		#region Protected Static Methods
 
@@ -87,6 +91,8 @@ namespace log4net.Appender
 #endif
 		protected static extern void OutputDebugString(string message);
 
-		#endregion Protected Static Methods
+		#endregion // Protected Static Methods
 	}
 }
+
+#endif // !MONO && !SSCLI

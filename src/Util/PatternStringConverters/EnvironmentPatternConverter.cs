@@ -16,6 +16,9 @@
 //
 #endregion
 
+// .NET Compact Framework 1.0 has no support for Environment.GetEnvironmentVariable()
+#if !NETCF
+
 using System;
 using System.Text;
 using System.IO;
@@ -65,3 +68,5 @@ namespace log4net.Util.PatternStringConverters
 		}
 	}
 }
+
+#endif // !NETCF

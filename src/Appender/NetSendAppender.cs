@@ -16,6 +16,16 @@
 //
 #endregion
 
+// MONO 1.0 Beta mcs does not like #if !A && !B && !C syntax
+
+// .NET Compact Framework 1.0 has no support for Win32 NetMessageBufferSend API
+#if !NETCF 
+// MONO 1.0 has no support for Win32 NetMessageBufferSend API
+#if !MONO 
+// SSCLI 1.0 has no support for Win32 NetMessageBufferSend API
+#if !SSCLI
+
+
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
@@ -349,3 +359,7 @@ namespace log4net.Appender
 		#endregion
 	}
 }
+
+#endif // !SSCLI
+#endif // !MONO
+#endif // !NETCF

@@ -16,6 +16,9 @@
 //
 #endregion
 
+// .NET Compact Framework 1.0 has no support for System.Runtime.Remoting
+#if !NETCF
+
 using System;
 using System.Collections;
 using System.Threading;
@@ -304,3 +307,5 @@ namespace log4net.Appender
 		}
 	}
 }
+
+#endif // !NETCF

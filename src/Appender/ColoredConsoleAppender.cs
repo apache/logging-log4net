@@ -16,6 +16,15 @@
 //
 #endregion
 
+// MONO 1.0 Beta mcs does not like #if !A && !B && !C syntax
+
+// .NET Compact Framework 1.0 has no support for Win32 Console API's
+#if !NETCF 
+// .Mono 1.0 has no support for Win32 Console API's
+#if !MONO 
+// SSCLI 1.0 has no support for Win32 Console API's
+#if !SSCLI
+
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
@@ -130,7 +139,6 @@ namespace log4net.Appender
 			HighIntensity = 0x0008,
 		}
 
-
 		#endregion
 
 		#region Public Instance Constructors
@@ -176,7 +184,7 @@ namespace log4net.Appender
 			m_writeToErrorStream = writeToErrorStream;
 		}
 
-		#endregion Public Instance Constructors
+		#endregion // Public Instance Constructors
 
 		#region Public Instance Properties
 
@@ -254,7 +262,7 @@ namespace log4net.Appender
 			}
 		}
 
-		#endregion Public Instance Properties
+		#endregion // Public Instance Properties
 
 		#region Override implementation of AppenderSkeleton
 
@@ -325,7 +333,7 @@ namespace log4net.Appender
 			get { return true; }
 		}
 
-		#endregion Override implementation of AppenderSkeleton
+		#endregion // Override implementation of AppenderSkeleton
 
 		#region Public Static Fields
 
@@ -341,7 +349,7 @@ namespace log4net.Appender
 		/// </summary>
 		public const string ConsoleError = "Console.Error";
 
-		#endregion Public Static Fields
+		#endregion // Public Static Fields
 
 		#region Private Instances Fields
 
@@ -355,7 +363,7 @@ namespace log4net.Appender
 		/// </summary>
 		private System.Collections.Hashtable m_Level2ColorMap = new System.Collections.Hashtable();
 
-		#endregion Private Instances Fields
+		#endregion // Private Instances Fields
 
 		#region Win32 Methods
 
@@ -414,3 +422,7 @@ namespace log4net.Appender
 		#endregion
 	}
 }
+
+#endif // !SSCLI
+#endif // !MONO
+#endif // !NETCF

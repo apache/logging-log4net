@@ -260,42 +260,6 @@
             <csc warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
                 <sources basedir="${log4net.basedir}/src">
                     <includes name="**/*.cs" />
-                    <!-- .NET Compact Framework 1.0 has no support for ASP.NET -->
-                    <excludes name="Appender/AspNetTraceAppender.cs" />
-                    <!-- .NET Compact Framework 1.0 has no support for Win32 API's -->
-                    <excludes name="Appender/ColoredConsoleAppender.cs" />
-                    <!-- .NET Compact Framework 1.0 has no support for System.Diagnostics.EventLog -->
-                    <excludes name="Appender/EventLogAppender.cs" />
-                    <!-- .NET Compact Framework 1.0 has no support for Win32 NetMessageBufferSend function -->
-                    <excludes name="Appender/NetSendAppender.cs" />
-                    <!-- .NET Compact Framework 1.0 has no support for System.Runtime.Remoting -->
-                    <excludes name="Appender/RemotingAppender.cs" />
-                    <!-- .NET Compact Framework 1.0 has no support for System.Web.Mail -->
-                    <excludes name="Appender/SmtpAppender.cs" />
-                    <!-- 
-                        do not include attributes in the .NET Compact Framework 1.0 version
-                        because reading attributes is not supported anyway
-
-                        including these attributes would confuse developers and would possible
-                        cause issues when reading these attribute would eventually become
-                        available
-                    -->
-                    <excludes name="Config/AliasDomainAttribute.cs" />
-                    <excludes name="Config/AliasRepositoryAttribute.cs" />
-                    <excludes name="Config/ConfiguratorAttribute.cs" />
-                    <excludes name="Config/DomainAttribute.cs" />
-                    <excludes name="Config/RepositoryAttribute.cs" />
-                    <excludes name="Config/DOMConfiguratorAttribute.cs" />
-                    <excludes name="Config/XmlConfiguratorAttribute.cs" />
-                    <excludes name="Config/PluginAttribute.cs" />
-                    <!-- .NET Compact Framework 1.0 has no support for application configuration files -->
-                    <excludes name="Config/Log4NetConfigurationSectionHandler.cs" />
-                    <!-- .NET Compact Framework 1.0 has no support for Environment.GetEnvironmentVariable() -->
-                    <excludes name="Util/PatternStringConverters/EnvironmentPatternConverter.cs" />
-                    <!-- .NET Compact Framework 1.0 has no support for System.Runtime.Remoting -->
-                    <excludes name="Plugin/RemoteLoggingServerPlugin.cs" />
-                    <!-- .NET Compact Framework 1.0 uses the CompactRepositorySelector implementation of IRepositorySelector -->
-                    <excludes name="Core/DefaultRepositorySelector.cs" />
                 </sources>
                 <references>
                     <includes name="mscorlib.dll" />
@@ -334,8 +298,6 @@
             <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
                 <sources basedir="${log4net.basedir}/src">
                     <includes name="**/*.cs" />
-                    <!-- .NET Framework 1.0 uses the DefaultRepositorSelector implementation of IRepositorySelector -->
-                    <excludes name="spi/CompactRepositorySelector.cs" />
                 </sources>
                 <references>
                     <includes name="mscorlib.dll" />                
@@ -375,8 +337,6 @@
             <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
                 <sources basedir="${log4net.basedir}/src">
                     <includes name="**/*.cs" />
-                    <!-- .NET Framework 1.0 uses the DefaultRepositorSelector implementation of IRepositorySelector -->
-                    <excludes name="spi/CompactRepositorySelector.cs" />
                 </sources>
                 <references>
                     <includes name="mscorlib.dll" />                
@@ -416,18 +376,6 @@
             <csc nostdlib="false" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll">
                 <sources basedir="${log4net.basedir}/src">
                     <includes name="**/*.cs" />
-                    <!-- Mono 1.0 has no support for Win32 API's -->
-                    <excludes name="Appender/ColoredConsoleAppender.cs" />
-                    <!-- Mono 1.0 has no full support for System.Diagnostics.EventLog -->
-                    <excludes name="Appender/EventLogAppender.cs" />
-                    <!-- Mono 1.0 has no support for Win32 NetMessageBufferSend function -->
-                    <excludes name="Appender/NetSendAppender.cs" />
-                    <!-- Mono 1.0 has no support for Win32 OutputDebugString function -->
-                    <excludes name="Appender/OutputDebugStringAppender.cs" />
-                    <!-- Mono 1.0 uses no native Win32 functions -->
-                    <excludes name="helpers/NativeError.cs" />
-                    <!-- Mono 1.0 uses the DefaultRepositorSelector implementation of IRepositorySelector -->
-                    <excludes name="spi/CompactRepositorySelector.cs" />
                 </sources>
                 <references>
                     <includes name="System.dll" />
@@ -467,24 +415,6 @@
                 define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll">
                 <sources basedir="${log4net.basedir}/src">
                     <includes name="**/*.cs" />
-                    <!-- SSCLI 1.0 has no support for ADO.NET -->
-                    <excludes name="Appender/ADONetAppender.cs" />
-                    <!-- SSCLI 1.0 has no support for ASP.NET -->
-                    <excludes name="Appender/ASPNetTraceAppender.cs" />
-                    <!-- SSCLI 1.0 has no support for Win32 API's -->
-                    <excludes name="Appender/ColoredConsoleAppender.cs" />
-                    <!-- SSCLI 1.0 has no support for System.Diagnostics.EventLog -->
-                    <excludes name="Appender/EventLogAppender.cs" />
-                    <!-- SSCLI 1.0 has no support for Win32 NetMessageBufferSend function -->
-                    <excludes name="Appender/NetSendAppender.cs" />
-                    <!-- SSCLI 1.0 has no support for Win32 OutputDebugString function -->
-                    <excludes name="Appender/OutputDebugStringAppender.cs" />
-                    <!-- SSCLI 1.0 has no support for System.Web.Mail -->
-                    <excludes name="Appender/SMTPAppender.cs" />
-                    <!-- SSCLI uses no native Win32 functions -->
-                    <excludes name="helpers/NativeError.cs" />
-                    <!-- SSCLI 1.0 uses the DefaultRepositorSelector implementation of IRepositorySelector -->
-                    <excludes name="spi/CompactRepositorySelector.cs" />
                 </sources>
                 <references>
                     <includes name="mscorlib.dll" />

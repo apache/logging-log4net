@@ -16,6 +16,10 @@
 //
 #endregion
 
+// MONO 1.0 has no support for Win32 Error APIs
+// SSCLI 1.0 has no support for Win32 Error APIs
+#if !MONO && !SSCLI
+
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
@@ -43,7 +47,7 @@ namespace log4net.Util
 			m_message = message;
 		}
 
-		#endregion Protected Instance Constructors
+		#endregion // Protected Instance Constructors
 
 		#region Public Instance Properties
 
@@ -69,7 +73,7 @@ namespace log4net.Util
 			get { return m_message; }
 		}
 
-		#endregion Public Instance Properties
+		#endregion // Public Instance Properties
 
 		#region Public Static Methods
 
@@ -145,7 +149,7 @@ namespace log4net.Util
 			return msgBuf;
 		}
 
-		#endregion Public Static Methods
+		#endregion // Public Static Methods
 
 		#region Override Object Implementation
 
@@ -158,7 +162,7 @@ namespace log4net.Util
 			return string.Format(CultureInfo.InvariantCulture, "0x{0:x8}", this.Number) + (this.Message != null ? ": " + this.Message : "");
 		}
 
-		#endregion Override Object Implementation
+		#endregion // Override Object Implementation
 
 		#region Stubs For Native Function Calls
 
@@ -210,13 +214,15 @@ namespace log4net.Util
 			int nSize,
 			IntPtr Arguments);
 
-		#endregion Stubs For Native Function Calls
+		#endregion // Stubs For Native Function Calls
 
 		#region Private Instance Fields
 
 		private int m_number;
 		private string m_message;
 
-		#endregion Member Variables
+		#endregion
 	}
 }
+
+#endif // !MONO && !SSCLI

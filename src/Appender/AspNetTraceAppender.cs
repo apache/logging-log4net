@@ -16,6 +16,10 @@
 //
 #endregion
 
+// .NET Compact Framework 1.0 has no support for ASP.NET
+// SSCLI 1.0 has no support for ASP.NET
+#if !NETCF && !SSCLI
+
 using System.Web;
 
 using log4net.Layout;
@@ -57,7 +61,7 @@ namespace log4net.Appender
 		{
 		}
 
-		#endregion Public Instances Constructors
+		#endregion // Public Instances Constructors
 
 		#region Override implementation of AppenderSkeleton
 
@@ -96,6 +100,8 @@ namespace log4net.Appender
 			get { return true; }
 		}
 
-		#endregion Override implementation of AppenderSkeleton
+		#endregion // Override implementation of AppenderSkeleton
 	}
 }
+
+#endif // !NETCF && !SSCLI
