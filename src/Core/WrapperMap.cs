@@ -59,7 +59,7 @@ namespace log4net.Core
 			m_createWrapperHandler = createWrapperHandler;
 
 			// Create the delegates for the event callbacks
-			m_shutdownHandler = new LoggerRepositoryShutdownEventHandler(OnShutdown);
+			m_shutdownHandler = new LoggerRepositoryShutdownEventHandler(ILoggerRepository_Shutdown);
 		}
 
 		#endregion Public Instance Constructors
@@ -160,22 +160,32 @@ namespace log4net.Core
 		}
 
 		/// <summary>
+		/// Called when a monitored repository shutdown event is received.
+		/// </summary>
+		/// <param name="repository">The <see cref="ILoggerRepository"/> that is shutting down</param>
+		virtual protected void RepositoryShutdown(ILoggerRepository repository)
+		{
+			lock(this)
+			{
+				// Remove all repository from map
+				m_repositories.Remove(repository);
+
+				// Unhook all events from the repository
+				repository.ShutdownEvent -= m_shutdownHandler;
+			}
+		}
+
+		/// <summary>
 		/// Event handler for repository shutdown event.
 		/// </summary>
 		/// <param name="sender">The sender of the event.</param>
 		/// <param name="e">The event args.</param>
-		virtual protected void OnShutdown(object sender, EventArgs e)
+		private void ILoggerRepository_Shutdown(object sender, EventArgs e)
 		{
-			lock(this)
+			if (sender is ILoggerRepository)
 			{
-				if (sender is ILoggerRepository)
-				{
-					// Remove all repository from map
-					m_repositories.Remove(sender);
-
-					// Unhook all events from the repository
-					((ILoggerRepository)sender).ShutdownEvent -= m_shutdownHandler;
-				}
+				// Remove all repository from map
+				RepositoryShutdown((ILoggerRepository)sender);
 			}
 		}
 
