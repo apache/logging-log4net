@@ -58,11 +58,13 @@ namespace log4net
 		#region Public Static Methods
 
 		/// <summary>
-		/// Gets the context identified by the <paramref name="key" /> parameter.
+		/// Gets the context value identified by the <paramref name="key" /> parameter.
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// If the <paramref name="key" /> parameter does not look up to a
 		/// previously defined context then <c>null</c> will be returned.
+		/// </para>
 		/// </remarks>
 		/// <param name="key">The key to lookup in the MDC.</param>
 		/// <returns>The string value held for the key, or a <c>null</c> reference if no corresponding value is found.</returns>
@@ -76,14 +78,19 @@ namespace log4net
 		}
 
 		/// <summary>
+		/// Add an entry to the MDC
+		/// </summary>
+		/// <remarks>
+		/// <para>
 		/// Puts a context value (the <paramref name="val" /> parameter) as identified
 		/// with the <paramref name="key" /> parameter into the current thread's
 		/// context map.
-		/// </summary>
-		/// <remarks>
+		/// </para>
+		/// <para>
 		/// If a value is already defined for the <paramref name="key" />
-		/// specified then the value will be replaced.  If the <paramref name="val" /> 
+		/// specified then the value will be replaced. If the <paramref name="val" /> 
 		/// is specified as <c>null</c> then the key value mapping will be removed.
+		/// </para>
 		/// </remarks>
 		/// <param name="key">The key to store the value under.</param>
 		/// <param name="value">The value to store.</param>
@@ -107,6 +114,11 @@ namespace log4net
 		/// <summary>
 		/// Removes the key value mapping for the key specified.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Remove the specified entry from this thread's MDC
+		/// </para>
+		/// </remarks>
 		/// <param name="key">The key to remove.</param>
 		public static void Remove(string key)
 		{
@@ -121,6 +133,11 @@ namespace log4net
 		/// <summary>
 		/// Clear all entries in the MDC
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Remove all the entries from this thread's MDC
+		/// </para>
+		/// </remarks>
 		public static void Clear()
 		{
 			Hashtable map = (Hashtable)System.Threading.Thread.GetData(s_slot);
