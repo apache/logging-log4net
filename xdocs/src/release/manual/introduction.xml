@@ -36,8 +36,8 @@ limitations under the License.
 						http://logging.apache.org/log4j</a> for more information on log4j.<br />
 					The log4net framework, source code, binaries, documentation, examples and related 
 					materials are published under the terms of the 
-					Apache Software License version 1.1, a copy of which has been included with 
-					this distribution in the LICENSE.txt file.
+					<a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>, 
+					a copy of which has been included with this distribution in the LICENSE.txt file.
 				</p>
 				<p>
 					This document is an introduction to the log4net API, its unique features and 
@@ -85,7 +85,7 @@ limitations under the License.
 					<li>Microsoft .Net Framework 1.0 (1.0.3705)</li>
 					<li>Microsoft .Net Framework 1.1 (1.1.4322)</li>
 					<li>Microsoft .Net Compact Framework 1.0 (1.0.5000)</li>
-					<li>Mono 0.25</li>
+					<li>Mono 1.0</li>
 					<li>Microsoft Shared Source CLI 1.0</li>
 				</ul>
 				<p>
@@ -116,7 +116,7 @@ limitations under the License.
 					</p>
 					<p>
 						Loggers are named entities. Logger names are case-sensitive and they follow the 
-						hierarchical naming rule:
+						following hierarchical naming rule:
 					</p>
 					<dl class="rule">
 						<dt>Named Hierarchy</dt>
@@ -197,23 +197,40 @@ namespace log4net
 {
 	public interface ILog
 	{
+		/* Test if a level is enabled for logging */
+		bool IsDebugEnabled { get; }
+		bool IsInfoEnabled { get; }
+		bool IsWarnEnabled { get; }
+		bool IsErrorEnabled { get; }
+		bool IsFatalEnabled { get; }
+		
+		/* Log a message object */
 		void Debug(object message);
 		void Info(object message);
 		void Warn(object message);
 		void Error(object message);
 		void Fatal(object message);
 		
+		/* Log a message object and exception */
 		void Debug(object message, Exception t);
 		void Info(object message, Exception t);
 		void Warn(object message, Exception t);
 		void Error(object message, Exception t);
 		void Fatal(object message, Exception t);
-
-		bool IsDebugEnabled { get; }
-		bool IsInfoEnabled { get; }
-		bool IsWarnEnabled { get; }
-		bool IsErrorEnabled { get; }
-		bool IsFatalEnabled { get; }
+		
+		/* Log a message string using the System.String.Format syntax */
+		void DebugFormat(string format, params object[] args);
+		void InfoFormat(string format, params object[] args);
+		void WarnFormat(string format, params object[] args);
+		void ErrorFormat(string format, params object[] args);
+		void FatalFormat(string format, params object[] args);
+		
+		/* Log a message string using the System.String.Format syntax */
+		void DebugFormat(IFormatProvider provider, string format, params object[] args);
+		void InfoFormat(IFormatProvider provider, string format, params object[] args);
+		void WarnFormat(IFormatProvider provider, string format, params object[] args);
+		void ErrorFormat(IFormatProvider provider, string format, params object[] args);
+		void FatalFormat(IFormatProvider provider, string format, params object[] args);
 	}
 }]]></source>
 					<p>
@@ -557,6 +574,12 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
 								</td>
 							</tr>
 							<tr>
+								<td>log4net.Appender.AnsiColorTerminalAppender</td>
+								<td>
+									Writes color highlighted logging events to a an ANSI terminal window.
+								</td>
+							</tr>
+							<tr>
 								<td>log4net.Appender.AspNetTraceAppender</td>
 								<td>
 									Writes logging events to the ASP trace context. These can then be rendered at 
@@ -603,6 +626,12 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
 								</td>
 							</tr>
 							<tr>
+								<td>log4net.LocalSyslogAppender</td>
+								<td>
+									Writes logging events to the local syslog service (UNIX only).
+								</td>
+							</tr>
+							<tr>
 								<td>log4net.Appender.MemoryAppender</td>
 								<td>
 									Stores logging events in an in memory buffer.
@@ -621,6 +650,12 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
 									Writes logging events to the debugger. If the application has no 
 									debugger, the system debugger displays the string. If the application has no 
 									debugger and the system debugger is not active, the message is ignored.
+								</td>
+							</tr>
+							<tr>
+								<td>log4net.Appender.RemoteSyslogAppender</td>
+								<td>
+									Writes logging events to a remote syslog service using UDP networking.
 								</td>
 							</tr>
 							<tr>
@@ -649,6 +684,12 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
 									Writes SMTP messages as files into a pickup directory.
 									These files can then be read and sent by an SMTP agent
 									such as the IIS SMTP agent.
+								</td>
+							</tr>
+							<tr>
+								<td>log4net.Appender.TelnetAppender</td>
+								<td>
+									Clients connect via Telnet to receive logging events.
 								</td>
 							</tr>
 							<tr>
@@ -790,7 +831,7 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
 					<p>
 						More complex and custom event filtering can be done using the filter chain 
 						defined on each appender. Filters must implement the
-						<span class="code">IFilter</span>.
+						<span class="code">log4net.Filter.IFilter</span> interface.
 					</p>
 					<p>
 						The following filters are defined in the log4net package:
@@ -816,6 +857,18 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
 								</td>
 							</tr>
 							<tr>
+								<td>log4net.Filter.LevelRangeFilter</td>
+								<td>
+									Matches against a range of levels.
+								</td>
+							</tr>
+							<tr>
+								<td>log4net.Filter.LoggerMatchFilter</td>
+								<td>
+									Matches against a the start of the logger name.
+								</td>
+							</tr>
+							<tr>
 								<td>log4net.Filter.MdcFilter</td>
 								<td>
 									Matches a substring from a specific <span class="code">MDC</span> value.
@@ -828,9 +881,9 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
 								</td>
 							</tr>
 							<tr>
-								<td>log4net.Filter.LevelRangeFilter</td>
+								<td>log4net.Filter.PropertyFilter</td>
 								<td>
-									Matches against a range of levels.
+									Matches a substring from a specific property value.
 								</td>
 							</tr>
 							<tr>
@@ -862,7 +915,7 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
 					</p>
 					<p>
 						For example, the PatternLayout with the conversion pattern
-						<span class="code">"%r [%t] %-5p %c - %m%n"</span>
+						<span class="code">"%timestamp [%thread] %-5level %logger - %message%newline"</span>
 						will output something akin to:
 					</p>
 					<source language="text"><![CDATA[
@@ -903,6 +956,12 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
 								<td>log4net.Layout.RawTimeStampLayout</td>
 								<td>
 									Extracts the timestamp from the logging event.
+								</td>
+							</tr>
+							<tr>
+								<td>log4net.Layout.RawUtcTimeStampLayout</td>
+								<td>
+									Extracts the timestamp from the logging event in Universal Time.
 								</td>
 							</tr>
 							<tr>

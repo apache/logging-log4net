@@ -74,7 +74,7 @@ limitations under the License.
 							Example usage:
 						</p>
 						<source language="C#"><![CDATA[
-LogManager.GetLoggerRepository().PluginMap.Add(new RemoteLoggingServerPlugin("LoggingSink"));]]></source>
+LogManager.GetRepository().PluginMap.Add(new RemoteLoggingServerPlugin("LoggingSink"));]]></source>
 					</li>
 				</ul>
 

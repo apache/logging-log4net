@@ -72,7 +72,7 @@ limitations under the License.
 					<li>Microsoft .Net Framework 1.0 (1.0.3705)</li>
 					<li>Microsoft .Net Framework 1.1 (1.1.4322)</li>
 					<li>Microsoft .Net Compact Framework 1.0 (1.0.5000)</li>
-					<li>Mono 0.25 or higher</li>
+					<li>Mono 1.0</li>
 					<li>Microsoft Shared Source CLI 1.0</li>
 				</ul>
 			</section>
@@ -90,17 +90,29 @@ limitations under the License.
 								Description</th>
 						</tr>
 						<tr>
-							<td>log4net.Appender.ADONetAppender</td>
+							<td>log4net.Appender.AdoNetAppender</td>
 							<td>
 								Writes logging events to a database using either prepared statements or stored 
 								procedures.
 							</td>
 						</tr>
 						<tr>
-							<td>log4net.Appender.ASPNetTraceAppender</td>
+							<td>log4net.Appender.AnsiColorTerminalAppender</td>
+							<td>
+								Writes color highlighted logging events to a an ANSI terminal window.
+							</td>
+						</tr>
+						<tr>
+							<td>log4net.Appender.AspNetTraceAppender</td>
 							<td>
 								Writes logging events to the ASP trace context. These can then be rendered at 
 								the end of the ASP page or on the ASP trace page.
+							</td>
+						</tr>
+						<tr>
+							<td>log4net.Appender.ColoredConsoleAppender</td>
+							<td>
+								Writes color highlighted logging events to the application's Windows Console.
 							</td>
 						</tr>
 						<tr>
@@ -120,6 +132,12 @@ limitations under the License.
 							<td>log4net.Appender.FileAppender</td>
 							<td>
 								Writes logging events to a file in the file system.
+							</td>
+						</tr>
+						<tr>
+							<td>log4net.LocalSyslogAppender</td>
+							<td>
+								Writes logging events to the local syslog service (UNIX only).
 							</td>
 						</tr>
 						<tr>
@@ -144,6 +162,12 @@ limitations under the License.
 							</td>
 						</tr>
 						<tr>
+							<td>log4net.Appender.RemoteSyslogAppender</td>
+							<td>
+								Writes logging events to a remote syslog service using UDP networking.
+							</td>
+						</tr>
+						<tr>
 							<td>log4net.Appender.RemotingAppender</td>
 							<td>
 								Writes logging events to a remoting sink using .NET remoting.
@@ -158,9 +182,15 @@ limitations under the License.
 							</td>
 						</tr>
 						<tr>
-							<td>log4net.Appender.SMTPAppender</td>
+							<td>log4net.Appender.SmtpAppender</td>
 							<td>
 								Sends logging events to an email address.
+							</td>
+						</tr>
+						<tr>
+							<td>log4net.Appender.TelnetAppender</td>
+							<td>
+								Clients connect via Telnet to receive logging events.
 							</td>
 						</tr>
 						<tr>
@@ -185,7 +215,7 @@ limitations under the License.
 				<p>
 					Hierarchical logging is an ideal fit with component based development. 
 					Each component has its own of logger. When individually tested, the 
-					properties of these categories may be set however the developer wishes. 
+					properties of these loggers may be set as the developer requires. 
 					When combined with other components, the loggers inherit the properties 
 					determined by the integrator of the components. One can selectively elevate 
 					logging priorities on one component without affecting the other components. 
@@ -203,6 +233,9 @@ limitations under the License.
 					configuration is easily readable and updateable while retaining the
 					flexibility to express all configurations.
 				</p>
+				<p>
+					Alternatively log4net can be configured programmatically.
+				</p>
 			</section>
 
 			<section name="Dynamic Configuration">
@@ -219,12 +252,12 @@ limitations under the License.
 			<section name="Logging Context">
 				<p>
 					log4net can collect logging context data in a way that is transparent 
-					to the developer at the point of logging. The NDC (Nested Diagnostic Context) 
-					and the MDC (Mapped Diagnostic Context) capture contextual data and attach
-					it to logging messages. For instance, in a web service, the 
-					authentication ID of the caller is stored in the MDC once the caller is 
-					authenticated. This ID is then logged as part of each logging message
-					automatically.
+					to the developer at the point of logging. The GlobalContext and the 
+					ThreadContext allow the application to capture contextual data and for it
+					to be attached to logging messages. For instance, in a web service, 
+					once the caller is authenticated the username of the caller is can be 
+					stored in a ThreadContext property. This property is then automatically 
+					logged as part of each logging message.
 				</p>
 			</section>
 

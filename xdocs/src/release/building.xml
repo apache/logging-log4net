@@ -26,28 +26,114 @@ limitations under the License.
 	<body>
 		<section name="Building log4net">
 			<sectionMenu name="Contents" />
+			
+			<p>
+				The log4net release builds are built using NAnt. Log4net can also be built
+				using Visual Studio .NET 2002 or 2003.
+			</p>
+			<p>
+				To build a release build of log4net you will need to create a strong
+				name key file. See the Strong Name section below. 
+			</p>
 		
 			<section name="Visual Studio .NET" id="id_1">
 				<p>
-					TODO
+					Visual Studio .NET 2002 and 2003 are supported build platforms for log4net.
 				</p>
 
 				<section name="Visual Studio .NET 2002" id="id_2">
 					<p>
-						TODO
+						The log4net distribution includes a solution and project file
+						for Visual Studio .NET 2002. Open the <span class="code">log4net.sln</span>
+						from the src directory in the distribution.
 					</p>
+					<p>
+						The log4net project requires only the following references:
+					</p>
+					<ul>
+						<li>System</li>
+						<li>System.Data</li>
+						<li>System.Web</li>
+						<li>System.XML</li>
+					</ul>
 				</section>
 
 				<section name="Visual Studio .NET 2003" id="id_3">
 					<p>
-						TODO
+						Open the Visual Studio .NET 2002 solution file as above. 
+						Visual Studio will convert the solution and project files
+						to Visual Studio .NET 2003 format.
+					</p>
+					<p>
+						The log4net project file is not suitable for building log4net
+						for the .NET Compact Framework. To build for the Compact Framework
+						you must create a new C# project for Smart Devices. Configure the
+						project as a library project. Add all the C# files from the 
+						src directory in the distribution.
 					</p>
 				</section>
 			</section>
 			
 			<section name="NAnt">
 				<p>
-					TODO
+					The log4net distribution is built using the NAnt tool.
+					NAnt version 0.85 is required to build log4net, it is 
+					available from <a href="http://nat.sourceforge.net">nant.sourceforge.net</a>.
+				</p>
+				<p>
+					To support building log4net for the SSCLI framework the NAnt configuration
+					files need to be updated to specify the SSCLI framework directory.
+				</p>
+				<p>
+					To build log4net from the command line, change directory to the root of the
+					log4net distribution, ensure that the nant executable is in the
+					PATH, and then run the following command:
+				</p>
+				<pre class="code">
+nant -buildfile:log4net.build compile-all
+				</pre>
+				<p>
+					This command will build log4net for all the supported frameworks
+					that are available on the current machine. To list all the build
+					targets that are available run the following command:
+				</p>
+				<pre class="code">
+nant -buildfile:log4net.build -projecthelp
+				</pre>
+				<p>
+					Under windows the <span class="code">build.cmd</span> can be used 
+					to script the nant build. This can be called from a different
+					directory and will locate the correct log4net.build file to use.
+					For example:
+				</p>
+				<pre class="code">
+build.cmd compile-all
+				</pre>
+			</section>
+
+			<section name="Strong Name">
+				<p>
+					In order to build the Release builds of log4net a Strong
+					Name key is required. 
+				</p>
+				<p>
+					Use the <span class="code">sn.exe</span> tool in the 
+					.NET Framework SDK to generate a strong name key pair.
+				</p>
+				<pre class="code">
+sn -k log4net.snk
+				</pre>
+				<p>
+					The log4net.snk file should be placed in the root of the
+					log4net distribution, in the same folder as the log4net.build
+					file.
+				</p>
+			</section>
+
+			<section name="NDoc">
+				<p>
+					NDoc is used to build the log4net SDK documentation.
+					NDoc is available from <a href="http://ndoc.sourceforge.net">ndoc.sourceforge.net</a>.
 				</p>
 			</section>
 

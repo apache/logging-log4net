@@ -38,13 +38,14 @@ limitations under the License.
 						In case of problems with an application, it is helpful to enable logging so 
 						that the problem can be located. With log4net it is possible to enable logging at 
 						runtime without modifying the application binary. The log4net package is designed 
-						so that log statements can remain in <i>shipped</i> code without incurring a 
+						so that log statements can remain in <i>production</i> code without incurring a 
 						high performance cost. It follows that the speed of logging (or rather not 
 						logging) is crucial.
 					</p>
 					<p>
 						At the same time, log output can be so voluminous that it quickly becomes 
-						overwhelming. One of the distinctive features of log4net is the notion of <i>hierarchical 
+						overwhelming. One of the distinctive features of log4net (and common to all of
+						the log4x libraries) is the notion of <i>hierarchical 
 						loggers</i>. Using these loggers it is possible to selectively control 
 						which log statements are output at arbitrary granularity.
 					</p>
@@ -75,7 +76,8 @@ limitations under the License.
 						output stream is not opened, is not writable or becomes full. This avoids 
 						corrupting an otherwise working program by flooding the user's terminal because 
 						logging fails. However, log4net will output a single message to 
-						<span class="code">System.Console.Error</span> indicating that logging can not be performed.
+						<span class="code">System.Console.Error</span> and <span>System.Diagnostics.Trace</span>
+						indicating that logging can not be performed.
 					</p>
 				</section>
 				<p><a href="#top">Back to Top</a></p>
@@ -125,7 +127,7 @@ limitations under the License.
 						<li>
 							log4net can direct its output to many sinks including: a file, the console, the NT EventLog or even e-mail.</li>
 						<li>
-							log4net uses 5 levels, namely DEBUG, INFO, WARN, ERROR and FATAL.</li>
+							log4net categorizes logging into levels: DEBUG, INFO, WARN, ERROR and FATAL.</li>
 						<li>
 							The format of the log output can be easily changed by implementing a new layout class.</li>
 						<li>
@@ -186,8 +188,8 @@ limitations under the License.
 
 				<section name="What are Loggers?">
 					<p>
-						The notion of loggers lies at the heart of log4net's configuration. Loggers define a 
-						hierarchy and give the programmer <em>run-time</em> control on which statements 
+						The logger concept lies at the heart of log4net's configuration. Loggers are organized into a 
+						hierarchy and give the programmer <em>run-time</em> control on which logging statements 
 						are printed or not.
 					</p>
 					<p>
@@ -202,16 +204,17 @@ limitations under the License.
 					<p>
 						Contrary to the GNU Public License (GPL) the Apache Software License does not 
 						make any claims over your extensions. By extensions, we mean totally new code 
-						that invokes existing log4net classes. <em>You are free to do whatever you wish with 
+						that invokes existing log4net code. <em>You are free to do whatever you wish with 
 						your proprietary log4net extensions.</em> In particular, you may choose to 
-						never release your extensions to the wider public.
+						never release your extensions to the wider public. For details see the
+						<a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.
 					</p>
 					<p>
-						We are very careful not to change the log4net client API so that newer log4net 
+						We are very careful not to unnecessarily change the log4net client API so that newer log4net 
 						releases are backward compatible with previous versions. We are a lot less 
 						scrupulous with the internal log4net API. Thus, if your extension is designed to 
-						work with log4net version <span class="code">n</span>, then when log4net release version <span class="code">n+1</span>
-						comes out, you will probably need to adapt your proprietary extensions to the 
+						work with the internals of a specific log4net version, then when the next release
+						of log4net comes out, you will probably need to adapt your proprietary extensions to the 
 						new release. Thus, you will be forced to spend precious resources in order to 
 						keep up with log4net changes. This is commonly referred to as the "stupid-tax". 
 						By donating the code and making it part of the standard distribution, you save 
@@ -536,8 +539,8 @@ public class FastLogger
 						So why exactly is this faster? Well to start with the <span class="code">IsDebugEnabled</span>
 						is not called for each log statement, it is called once per logger. Furthermore as the
 						<span class="code">isDebugEnabled</span> variable is <span class="code">private static readonly</span>
-						the JIT compiler can at <em>run-time</em> optimize out the <span class="code">if</span> test altogether. This means that
-						at runtime the JIT compiler won't even compile the logging statements into native code, i.e.
+						the JIT compiler can at <em>run-time</em> optimize out the <span class="code">if</span> test altogether. 
+						This means that at runtime the JIT compiler won't even compile the logging statements into native code, i.e.
 						all the logging just disappears.
 					</p>
 					<p>
@@ -545,7 +548,7 @@ public class FastLogger
 						you can change the logging configuration while your program is running. If you need to 
 						investigate an issue in your application, you don't have to stop the application, setup the
 						logging and restart the application, you can change the logging configuration and the
-						log4net will reload it (see <span class="code">ConfigureAndWatch</span> APIs for more 
+						log4net will reload it (see <span class="code">XmlConfigurator.ConfigureAndWatch</span> APIs for more 
 						information). However if the JIT has compiled out all of the logging statements
 						then they are gone and you can't get them back by reloading the configuration file. Effectively
 						this means that the logging configuration can only be set when the application loads and

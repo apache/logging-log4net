@@ -1162,10 +1162,23 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 <param name="evaluator" type="log4net.spi.LevelEvaluator">
 	<param name="Threshold" value="WARN"/>
 <param>]]></source>
-					
+
+						<section name="Extension Parameters">
+							<p>
+								Configuration parameters map directly to writable properties on an object.
+								The properties available depend on the actual type of the object being
+								configured. The log4net SDK documentation contains the API reference for
+								all the components included in the log4net assembly.
+							</p>
+							<p>
+								For 3rd party components please see their relevant API reference for 
+								details of the properties available.
+							</p>
+						</section>
+
 						<section name="Compact Parameter Syntax">
 							<p>
-								Parameters may also be specified using the parameter name as the element name
+								All parameters may alternately be specified using the parameter name as the element name
 								rather than using the <i>param</i> element and <i>name</i> attribute.
 							</p>
 							<p>

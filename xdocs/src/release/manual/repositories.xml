@@ -47,7 +47,7 @@ limitations under the License.
 				<p>
 					Named logging repositories can be created using the <span class="code">LogManager.CreateRepository</span>
 					method. The repository for can be retrieved using the 
-					<span class="code">LogManager.GetLoggerRepository</span> method.
+					<span class="code">LogManager.GetRepository</span> method.
 					A repository created in this way will need to be configured programmatically.
 				</p>
 

@@ -56,7 +56,7 @@ limitations under the License.
 							<td><a href="http://msdn.microsoft.com/vstudio/device/compactfx.asp">http://msdn.microsoft.com/vstudio/device/compactfx.asp</a></td>
 						</tr>
 						<tr style="vertical-align: top;">
-							<td>Mono 0.25 or higher</td>
+							<td>Mono 1.0</td>
 							<td><a href="http://www.go-mono.org">http://www.go-mono.org</a></td>
 						</tr>
 						<tr style="vertical-align: top;">
@@ -94,7 +94,7 @@ limitations under the License.
 							<th>.NET Framework 1.0</th>
 							<th>.NET Framework 1.1</th>
 							<th>.NET Compact Framework 1.0</th>
-							<th>Mono 0.25 or higher</th>
+							<th>Mono 1.0</th>
 							<th>Shared Source CLI 1.0</th>
 						</tr>
 						<tr>
@@ -104,6 +104,14 @@ limitations under the License.
 							<td>x</td>
 							<td>x</td>
 							<td></td>
+						</tr>
+						<tr>
+							<td>AnsiColorTerminalAppender</td>
+							<td>x</td>
+							<td>x</td>
+							<td>x</td>
+							<td>x</td>
+							<td>x</td>
 						</tr>
 						<tr>
 							<td>AspNetTraceAppender</td>
@@ -138,7 +146,7 @@ limitations under the License.
 							<td>x</td>
 						</tr>
 						<tr>
-							<td>CountingAppender</td>
+							<td>DebugAppender</td>
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
@@ -170,6 +178,14 @@ limitations under the License.
 							<td>x</td>
 						</tr>
 						<tr>
+							<td>LocalSyslogAppender</td>
+							<td>x</td>
+							<td>x</td>
+							<td></td>
+							<td>x</td>
+							<td></td>
+						</tr>
+						<tr>
 							<td>MemoryAppender</td>
 							<td>x</td>
 							<td>x</td>
@@ -192,6 +208,14 @@ limitations under the License.
 							<td>x</td>
 							<td></td>
 							<td></td>
+						</tr>
+						<tr>
+							<td>RemoteSyslogAppender</td>
+							<td>x</td>
+							<td>x</td>
+							<td>x</td>
+							<td>x</td>
+							<td>x</td>
 						</tr>
 						<tr>
 							<td>RemotingAppender</td>
@@ -219,6 +243,14 @@ limitations under the License.
 						</tr>
 						<tr>
 							<td>SmtpPickupDirAppender</td>
+							<td>x</td>
+							<td>x</td>
+							<td>x</td>
+							<td>x</td>
+							<td>x</td>
+						</tr>
+						<tr>
+							<td>TelnetAppender</td>
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
@@ -263,7 +295,7 @@ limitations under the License.
 						<li>
 							<h4>Assembly attributes</h4>
 							<p>
-								The .NET Compact Framework 1.0 does not support retrieving assembly-level 
+								The .NET Compact Framework 1.0 does not support retrieving assembly level 
 								attributes, therefore all log4net configuration attributes were removed from 
 								the .NET Compact Framework 1.0 version of log4net.
 							</p>
@@ -379,7 +411,7 @@ namespace TestApp
 					</ul>
 				</section>
 				
-				<section name="Mono 0.25 or higher">
+				<section name="Mono 1.0">
 					<p>
 						none
 					</p>
