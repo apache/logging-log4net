@@ -67,6 +67,7 @@ namespace log4net
 		/// <summary>
 		/// Log a message object with the <see cref="Level.Debug"/> level.
 		/// </summary>
+		/// <param name="message">The message object to log.</param>
 		/// <remarks>
 		/// <para>
 		/// This method first checks if this logger is <c>DEBUG</c>
@@ -85,7 +86,6 @@ namespace log4net
 		/// <see cref="Debug(object,Exception)"/> form instead.
 		/// </para>
 		/// </remarks>
-		/// <param name="message">The message object to log.</param>
 		/// <seealso cref="Debug(object,Exception)"/>
 		/// <seealso cref="IsDebugEnabled"/>
 		void Debug(object message);
@@ -95,14 +95,16 @@ namespace log4net
 		/// the stack trace of the <see cref="Exception"/> passed
 		/// as a parameter.
 		/// </summary>
-		/// <remarks>
-		/// See the <see cref="Debug(object)"/> form for more detailed information.
-		/// </remarks>
 		/// <param name="message">The message object to log.</param>
-		/// <param name="t">The exception to log, including its stack trace.</param>
+		/// <param name="exception">The exception to log, including its stack trace.</param>
+		/// <remarks>
+		/// <para>
+		/// See the <see cref="Debug(object)"/> form for more detailed information.
+		/// </para>
+		/// </remarks>
 		/// <seealso cref="Debug(object)"/>
 		/// <seealso cref="IsDebugEnabled"/>
-		void Debug(object message, Exception t);
+		void Debug(object message, Exception exception);
 
 		/// <overloads>Log a formatted string with the <see cref="Level.Debug"/> level.</overloads>
 		/// <summary>
@@ -180,14 +182,16 @@ namespace log4net
 		/// the stack trace of the <see cref="Exception"/> passed
 		/// as a parameter.
 		/// </summary>
-		/// <remarks>
-		/// See the <see cref="Info(object)"/> form for more detailed information.
-		/// </remarks>
 		/// <param name="message">The message object to log.</param>
-		/// <param name="t">The exception to log, including its stack trace.</param>
+		/// <param name="exception">The exception to log, including its stack trace.</param>
+		/// <remarks>
+		/// <para>
+		/// See the <see cref="Info(object)"/> form for more detailed information.
+		/// </para>
+		/// </remarks>
 		/// <seealso cref="Info(object)"/>
 		/// <seealso cref="IsInfoEnabled"/>
-		void Info(object message, Exception t);
+		void Info(object message, Exception exception);
 
 		/// <overloads>Log a formatted message string with the <see cref="Level.Info"/> level.</overloads>
 		/// <summary>
@@ -265,14 +269,16 @@ namespace log4net
 		/// the stack trace of the <see cref="Exception"/> passed
 		/// as a parameter.
 		/// </summary>
-		/// <remarks>
-		/// See the <see cref="Warn(object)"/> form for more detailed information.
-		/// </remarks>
 		/// <param name="message">The message object to log.</param>
-		/// <param name="t">The exception to log, including its stack trace.</param>
+		/// <param name="exception">The exception to log, including its stack trace.</param>
+		/// <remarks>
+		/// <para>
+		/// See the <see cref="Warn(object)"/> form for more detailed information.
+		/// </para>
+		/// </remarks>
 		/// <seealso cref="Warn(object)"/>
 		/// <seealso cref="IsWarnEnabled"/>
-		void Warn(object message, Exception t);
+		void Warn(object message, Exception exception);
 
 		/// <overloads>Log a formatted message string with the <see cref="Level.Warn"/> level.</overloads>
 		/// <summary>
@@ -322,6 +328,7 @@ namespace log4net
 		/// <summary>
 		/// Logs a message object with the <see cref="Level.Error"/> level.
 		/// </summary>
+		/// <param name="message">The message object to log.</param>
 		/// <remarks>
 		/// <para>
 		/// This method first checks if this logger is <c>ERROR</c>
@@ -340,7 +347,6 @@ namespace log4net
 		/// <see cref="Error(object,Exception)"/> form instead.
 		/// </para>
 		/// </remarks>
-		/// <param name="message">The message object to log.</param>
 		/// <seealso cref="Error(object,Exception)"/>
 		/// <seealso cref="IsErrorEnabled"/>
 		void Error(object message);
@@ -350,14 +356,16 @@ namespace log4net
 		/// the stack trace of the <see cref="Exception"/> passed
 		/// as a parameter.
 		/// </summary>
-		/// <remarks>
-		/// See the <see cref="Error(object)"/> form for more detailed information.
-		/// </remarks>
 		/// <param name="message">The message object to log.</param>
-		/// <param name="t">The exception to log, including its stack trace.</param>
+		/// <param name="exception">The exception to log, including its stack trace.</param>
+		/// <remarks>
+		/// <para>
+		/// See the <see cref="Error(object)"/> form for more detailed information.
+		/// </para>
+		/// </remarks>
 		/// <seealso cref="Error(object)"/>
 		/// <seealso cref="IsErrorEnabled"/>
-		void Error(object message, Exception t);
+		void Error(object message, Exception exception);
 
 		/// <overloads>Log a formatted message string with the <see cref="Level.Error"/> level.</overloads>
 		/// <summary>
@@ -435,14 +443,16 @@ namespace log4net
 		/// the stack trace of the <see cref="Exception"/> passed
 		/// as a parameter.
 		/// </summary>
-		/// <remarks>
-		/// See the <see cref="Fatal(object)"/> form for more detailed information.
-		/// </remarks>
 		/// <param name="message">The message object to log.</param>
-		/// <param name="t">The exception to log, including its stack trace.</param>
+		/// <param name="exception">The exception to log, including its stack trace.</param>
+		/// <remarks>
+		/// <para>
+		/// See the <see cref="Fatal(object)"/> form for more detailed information.
+		/// </para>
+		/// </remarks>
 		/// <seealso cref="Fatal(object)"/>
 		/// <seealso cref="IsFatalEnabled"/>
-		void Fatal(object message, Exception t);
+		void Fatal(object message, Exception exception);
 
 		/// <overloads>Log a formatted message string with the <see cref="Level.Fatal"/> level.</overloads>
 		/// <summary>

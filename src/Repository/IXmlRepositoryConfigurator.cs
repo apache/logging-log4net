@@ -21,20 +21,31 @@ using System;
 namespace log4net.Repository
 {
 	/// <summary>
-	/// Interface used by Xml configurator to configure a <see cref="ILoggerRepository"/>.
+	/// Configure repository using XML
 	/// </summary>
 	/// <remarks>
+	/// <para>
+	/// Interface used by Xml configurator to configure a <see cref="ILoggerRepository"/>.
+	/// </para>
+	/// <para>
 	/// A <see cref="ILoggerRepository"/> should implement this interface to support
 	/// configuration by the <see cref="log4net.Config.XmlConfigurator"/>.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	public interface IXmlRepositoryConfigurator
 	{
 		/// <summary>
-		/// Initialize the log4net system using the specified config
+		/// Initialize the repository using the specified config
 		/// </summary>
 		/// <param name="element">the element containing the root of the config</param>
+		/// <remarks>
+		/// <para>
+		/// The schema for the XML configuration data is defined by
+		/// the implementation.
+		/// </para>
+		/// </remarks>
 		void Configure(System.Xml.XmlElement element);
 	}
 }

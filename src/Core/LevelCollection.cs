@@ -174,8 +174,8 @@ namespace log4net.Core
 		/// <summary>
 		/// Allow subclasses to avoid our default constructors
 		/// </summary>
-		/// <param name="t"></param>
-		protected LevelCollection(Tag t)
+		/// <param name="tag"></param>
+		protected LevelCollection(Tag tag)
 		{
 			m_array = null;
 		}

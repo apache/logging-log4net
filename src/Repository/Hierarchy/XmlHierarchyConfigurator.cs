@@ -32,24 +32,35 @@ using log4net.ObjectRenderer;
 namespace log4net.Repository.Hierarchy
 {
 	/// <summary>
-	/// Initializes the log4net environment using an Xml tree.
+	/// Initializes the log4net environment using an XML DOM.
 	/// </summary>
 	/// <remarks>
-	/// Configures a <see cref="Hierarchy"/> using an Xml tree.
+	/// <para>
+	/// Configures a <see cref="Hierarchy"/> using an XML DOM.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	public class XmlHierarchyConfigurator
 	{
-		private enum ConfigUpdateMode {Merge, Overwrite};
+		private enum ConfigUpdateMode
+		{
+			Merge, 
+			Overwrite
+		}
 
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="XmlHierarchyConfigurator" /> class
-		/// with the specified <see cref="Hierarchy" />.
+		/// Construct the configurator for a hierarchy
 		/// </summary>
 		/// <param name="hierarchy">The hierarchy to build.</param>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="XmlHierarchyConfigurator" /> class
+		/// with the specified <see cref="Hierarchy" />.
+		/// </para>
+		/// </remarks>
 		public XmlHierarchyConfigurator(Hierarchy hierarchy) 
 		{
 			m_hierarchy = hierarchy;
@@ -61,9 +72,14 @@ namespace log4net.Repository.Hierarchy
 		#region Public Instance Methods
 
 		/// <summary>
-		/// Configures the log4net framework by parsing a DOM tree of XML elements.
+		/// Configure the hierarchy by parsing a DOM tree of XML elements.
 		/// </summary>
 		/// <param name="element">The root element to parse.</param>
+		/// <remarks>
+		/// <para>
+		/// Configure the hierarchy by parsing a DOM tree of XML elements.
+		/// </para>
+		/// </remarks>
 		public void Configure(XmlElement element) 
 		{
 			if (element == null || m_hierarchy == null)
@@ -204,6 +220,12 @@ namespace log4net.Repository.Hierarchy
 		/// </summary>
 		/// <param name="appenderRef">The appender ref element.</param>
 		/// <returns>The instance of the appender that the ref refers to.</returns>
+		/// <remarks>
+		/// <para>
+		/// Parse an XML element that represents an appender and return 
+		/// the appender.
+		/// </para>
+		/// </remarks>
 		protected IAppender FindAppenderByReference(XmlElement appenderRef) 
 		{	
 			string appenderName = appenderRef.GetAttribute(REF_ATTR);
@@ -252,6 +274,12 @@ namespace log4net.Repository.Hierarchy
 		/// </summary>
 		/// <param name="appenderElement">The appender element.</param>
 		/// <returns>The appender instance or <c>null</c> when parsing failed.</returns>
+		/// <remarks>
+		/// <para>
+		/// Parse an XML element that represents an appender and return
+		/// the appender instance.
+		/// </para>
+		/// </remarks>
 		protected IAppender ParseAppender(XmlElement appenderElement) 
 		{
 			string appenderName = appenderElement.GetAttribute(NAME_ATTR);
@@ -316,6 +344,11 @@ namespace log4net.Repository.Hierarchy
 		/// Parses a logger element.
 		/// </summary>
 		/// <param name="loggerElement">The logger element.</param>
+		/// <remarks>
+		/// <para>
+		/// Parse an XML element that represents a logger.
+		/// </para>
+		/// </remarks>
 		protected void ParseLogger(XmlElement loggerElement) 
 		{
 			// Create a new log4net.Logger object from the <logger> element.
@@ -341,7 +374,12 @@ namespace log4net.Repository.Hierarchy
 		/// Parses the root logger element.
 		/// </summary>
 		/// <param name="rootElement">The root element.</param>
-		protected  void ParseRoot(XmlElement rootElement) 
+		/// <remarks>
+		/// <para>
+		/// Parse an XML element that represents the root logger.
+		/// </para>
+		/// </remarks>
+		protected void ParseRoot(XmlElement rootElement) 
 		{
 			Logger root = m_hierarchy.Root;
 			// logger configuration needs to be atomic
@@ -357,6 +395,11 @@ namespace log4net.Repository.Hierarchy
 		/// <param name="catElement">The category element.</param>
 		/// <param name="log">The logger instance.</param>
 		/// <param name="isRoot">Flag to indicate if the logger is the root logger.</param>
+		/// <remarks>
+		/// <para>
+		/// Parse the child elements of a &lt;logger&gt; element.
+		/// </para>
+		/// </remarks>
 		protected void ParseChildrenOfLoggerElement(XmlElement catElement, Logger log, bool isRoot) 
 		{
 			// Remove all existing appenders from log. They will be
@@ -403,6 +446,11 @@ namespace log4net.Repository.Hierarchy
 		/// Parses an object renderer.
 		/// </summary>
 		/// <param name="element">The renderer element.</param>
+		/// <remarks>
+		/// <para>
+		/// Parse an XML element that represents a renderer.
+		/// </para>
+		/// </remarks>
 		protected void ParseRenderer(XmlElement element) 
 		{
 			string renderingClassName = element.GetAttribute(RENDERING_TYPE_ATTR);
@@ -434,6 +482,11 @@ namespace log4net.Repository.Hierarchy
 		/// <param name="element">The level element.</param>
 		/// <param name="log">The logger object to set the level on.</param>
 		/// <param name="isRoot">Flag to indicate if the logger is the root logger.</param>
+		/// <remarks>
+		/// <para>
+		/// Parse an XML element that represents a level.
+		/// </para>
+		/// </remarks>
 		protected void ParseLevel(XmlElement element, Logger log, bool isRoot) 
 		{
 			string loggerName = log.Name;
@@ -474,19 +527,19 @@ namespace log4net.Repository.Hierarchy
 		/// <summary>
 		/// Sets a parameter on an object.
 		/// </summary>
+		/// <param name="element">The parameter element.</param>
+		/// <param name="target">The object to set the parameter on.</param>
 		/// <remarks>
 		/// The parameter name must correspond to a writable property
 		/// on the object. The value of the parameter is a string,
 		/// therefore this function will attempt to set a string
 		/// property first. If unable to set a string property it
 		/// will inspect the property and its argument type. It will
-		/// attempt to call a static method called 'Parse' on the
+		/// attempt to call a static method called <c>Parse</c> on the
 		/// type of the property. This method will take a single
 		/// string argument and return a value that can be used to
 		/// set the property.
 		/// </remarks>
-		/// <param name="element">The parameter element.</param>
-		/// <param name="target">The object to set the parameter on.</param>
 		protected void SetParameter(XmlElement element, object target) 
 		{
 			// Get the property name
@@ -568,7 +621,7 @@ namespace log4net.Repository.Hierarchy
 								// Check if there is an appropriate type converter
 								if (OptionConverter.CanConvertTypeTo(subType, propertyType))
 								{
-									// Must reconvert to real property type
+									// Must re-convert to the real property type
 									parsedObjectConversionTargetType = propertyType;
 
 									// Use sub type as intermediary type
@@ -695,15 +748,17 @@ namespace log4net.Repository.Hierarchy
 		}
 
 		/// <summary>
-		/// Look for a method on the targetType that matches the name supplied
+		/// Look for a method on the <paramref name="targetType"/> that matches the <paramref name="name"/> supplied
 		/// </summary>
 		/// <param name="targetType">the type that has the method</param>
 		/// <param name="name">the name of the method</param>
 		/// <returns>the method info found</returns>
 		/// <remarks>
-		/// The method must be a public instance method on the targetType.
-		/// The method must be named <c>name</c> or "Add" followed by <c>name</c>.
+		/// <para>
+		/// The method must be a public instance method on the <paramref name="targetType"/>.
+		/// The method must be named <paramref name="name"/> or "Add" followed by <paramref name="name"/>.
 		/// The method must take a single parameter.
+		/// </para>
 		/// </remarks>
 		private MethodInfo FindMethodInfo(Type targetType, string name)
 		{
@@ -739,8 +794,10 @@ namespace log4net.Repository.Hierarchy
 		/// <param name="type">The type of object to convert the string to.</param>
 		/// <param name="value">The string value to use as the value of the object.</param>
 		/// <returns>
+		/// <para>
 		/// An object of type <paramref name="type"/> with value <paramref name="value"/> or 
 		/// <c>null</c> when the conversion could not be performed.
+		/// </para>
 		/// </returns>
 		protected object ConvertStringTo(Type type, string value)
 		{
@@ -767,6 +824,18 @@ namespace log4net.Repository.Hierarchy
 		/// <param name="defaultTargetType">The object type to use if not explicitly specified.</param>
 		/// <param name="typeConstraint">The type that the returned object must be or must inherit from.</param>
 		/// <returns>The object or <c>null</c></returns>
+		/// <remarks>
+		/// <para>
+		/// Parse an XML element and create an object instance based on the configuration
+		/// data.
+		/// </para>
+		/// <para>
+		/// The type of the instance may be specified in the XML. If not
+		/// specified then the <paramref name="defaultTargetType"/> is used
+		/// as the type. However the type is specified it must support the
+		/// <paramref name="typeConstraint"/> type.
+		/// </para>
+		/// </remarks>
 		protected object CreateObjectFromXml(XmlElement element, Type defaultTargetType, Type typeConstraint) 
 		{
 			Type objectType = null;
@@ -862,7 +931,7 @@ namespace log4net.Repository.Hierarchy
 
 		#endregion Protected Instance Methods
 
-		#region Private Static Fields
+		#region Private Constants
 
 		// String constants used while parsing the XML data
 		private const string CONFIGURATION_TAG			= "log4net";
@@ -894,7 +963,7 @@ namespace log4net.Repository.Hierarchy
 		// flag used on the level element
 		private const string INHERITED = "inherited";
 
-		#endregion Private Static Fields
+		#endregion Private Constants
 
 		#region Private Instance Fields
 

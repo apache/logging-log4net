@@ -28,8 +28,10 @@ namespace log4net.Plugin
 	/// Map of repository plugins.
 	/// </summary>
 	/// <remarks>
+	/// <para>
 	/// This class is a name keyed map of the plugins that are
 	/// attached to a repository.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
@@ -38,10 +40,15 @@ namespace log4net.Plugin
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initialize a new instance of the <see cref="PluginMap" /> class with a 
-		/// repository that the plugins should be attached to.
+		/// Constructor
 		/// </summary>
 		/// <param name="repository">The repository that the plugins should be attached to.</param>
+		/// <remarks>
+		/// <para>
+		/// Initialize a new instance of the <see cref="PluginMap" /> class with a 
+		/// repository that the plugins should be attached to.
+		/// </para>
+		/// </remarks>
 		public PluginMap(ILoggerRepository repository)
 		{
 			m_repository = repository;
@@ -59,6 +66,12 @@ namespace log4net.Plugin
 		/// The <see cref="IPlugin" /> from the map with the name specified, or 
 		/// <c>null</c> if no plugin is found.
 		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// Lookup a plugin by name. If the plugin is not found <c>null</c>
+		/// will be returned.
+		/// </para>
+		/// </remarks>
 		public IPlugin this[string name]
 		{
 			get
@@ -79,6 +92,11 @@ namespace log4net.Plugin
 		/// Gets all possible plugins as a list of <see cref="IPlugin" /> objects.
 		/// </summary>
 		/// <value>All possible plugins as a list of <see cref="IPlugin" /> objects.</value>
+		/// <remarks>
+		/// <para>
+		/// Get a collection of all the plugins defined in this map.
+		/// </para>
+		/// </remarks>
 		public PluginCollection AllPlugins
 		{
 			get
@@ -99,7 +117,15 @@ namespace log4net.Plugin
 		/// </summary>
 		/// <param name="plugin">The <see cref="IPlugin" /> to add to the map.</param>
 		/// <remarks>
+		/// <para>
 		/// The <see cref="IPlugin" /> will be attached to the repository when added.
+		/// </para>
+		/// <para>
+		/// If there already exists a plugin with the same name 
+		/// attached to the repository then the old plugin will
+		/// be <see cref="IPlugin.Shutdown"/> and replaced with
+		/// the new plugin.
+		/// </para>
 		/// </remarks>
 		public void Add(IPlugin plugin)
 		{
@@ -133,6 +159,11 @@ namespace log4net.Plugin
 		/// Removes a <see cref="IPlugin" /> from the map.
 		/// </summary>
 		/// <param name="plugin">The <see cref="IPlugin" /> to remove from the map.</param>
+		/// <remarks>
+		/// <para>
+		/// Remove a specific plugin from this map.
+		/// </para>
+		/// </remarks>
 		public void Remove(IPlugin plugin)
 		{
 			if (plugin == null)
@@ -149,8 +180,8 @@ namespace log4net.Plugin
 
 		#region Private Instance Fields
 
-		private Hashtable m_mapName2Plugin = new Hashtable();
-		private ILoggerRepository m_repository;
+		private readonly Hashtable m_mapName2Plugin = new Hashtable();
+		private readonly ILoggerRepository m_repository;
 
 		#endregion Private Instance Fields
 	}

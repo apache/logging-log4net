@@ -21,8 +21,15 @@ using log4net.Repository;
 namespace log4net.Plugin
 {
 	/// <summary>
-	/// Class from which logger repository plugins derive.
+	/// Base implementation of <see cref="IPlugin"/>
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Default abstract implementation of the <see cref="IPlugin"/>
+	/// interface. This base class can be used by implementors
+	/// of the <see cref="IPlugin"/> interface.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	public abstract class PluginSkeleton : IPlugin
@@ -30,8 +37,12 @@ namespace log4net.Plugin
 		#region Protected Instance Constructors
 
 		/// <summary>
-		/// Initializes a new Plugin with the specified name.
+		/// Constructor
 		/// </summary>
+		/// <param name="name">the name of the plugin</param>
+		/// <remarks>
+		/// Initializes a new Plugin with the specified name.
+		/// </remarks>
 		protected PluginSkeleton(string name)
 		{
 			m_name = name;
@@ -42,11 +53,22 @@ namespace log4net.Plugin
 		#region Implementation of IPlugin
 
 		/// <summary>
-		/// Gets or sets the name of this plugin.
+		/// Gets or sets the name of the plugin.
 		/// </summary>
 		/// <value>
-		/// The name of this plugin.
+		/// The name of the plugin.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Plugins are stored in the <see cref="PluginMap"/>
+		/// keyed by name. Each plugin instance attached to a
+		/// repository must be a unique name.
+		/// </para>
+		/// <para>
+		/// The name of the plugin must not change one the 
+		/// plugin has been attached to a repository.
+		/// </para>
+		/// </remarks>
 		public virtual string Name 
 		{ 
 			get { return m_name; }
@@ -73,6 +95,13 @@ namespace log4net.Plugin
 		/// <summary>
 		/// Is called when the plugin is to shutdown.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This method is called to notify the plugin that 
+		/// it should stop operating and should detach from
+		/// the repository.
+		/// </para>
+		/// </remarks>
 		public virtual void Shutdown()
 		{
 		}
@@ -82,12 +111,17 @@ namespace log4net.Plugin
 		#region Protected Instance Properties
 
 		/// <summary>
-		/// Gets or sets the <see cref="ILoggerRepository" /> that this plugin is 
-		/// attached to.
+		/// The repository for this plugin
 		/// </summary>
 		/// <value>
 		/// The <see cref="ILoggerRepository" /> that this plugin is attached to.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets or sets the <see cref="ILoggerRepository" /> that this plugin is 
+		/// attached to.
+		/// </para>
+		/// </remarks>
 		protected virtual ILoggerRepository LoggerRepository 
 		{
 			get { return this.m_repository;	}

@@ -662,7 +662,7 @@ namespace log4net.Core
 			}
 
 			// Look for the PluginAttribute on the assembly
-			object[] configAttributes = Attribute.GetCustomAttributes(assembly, typeof(log4net.Config.PluginAttribute), false);
+			object[] configAttributes = Attribute.GetCustomAttributes(assembly, typeof(log4net.Plugin.IPluginFactory), false);
 			if (configAttributes != null && configAttributes.Length > 0)
 			{
 				foreach(log4net.Plugin.IPluginFactory configAttr in configAttributes)

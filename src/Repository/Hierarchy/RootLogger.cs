@@ -24,7 +24,7 @@ using log4net.Core;
 namespace log4net.Repository.Hierarchy
 {
 	/// <summary>
-	/// The <see cref="RootLogger" /> sits at the top of the logger hierarchy. 
+	/// The <see cref="RootLogger" /> sits at the root of the logger hierarchy tree. 
 	/// </summary>
 	/// <remarks>
 	/// <para>
@@ -45,13 +45,18 @@ namespace log4net.Repository.Hierarchy
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="RootLogger" /> class with
-		/// the specified logging level.
+		/// Construct a <see cref="RootLogger"/>
 		/// </summary>
 		/// <param name="level">The level to assign to the root logger.</param>
 		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="RootLogger" /> class with
+		/// the specified logging level.
+		/// </para>
+		/// <para>
 		/// The root logger names itself as "root". However, the root
 		/// logger cannot be retrieved by name.
+		/// </para>
 		/// </remarks>
 		public RootLogger(Level level) : base("root")
 		{
@@ -66,6 +71,13 @@ namespace log4net.Repository.Hierarchy
 		/// Gets the assigned level value without walking the logger hierarchy.
 		/// </summary>
 		/// <value>The assigned level value without walking the logger hierarchy.</value>
+		/// <remarks>
+		/// <para>
+		/// Because the root logger cannot have a parent and its level
+		/// must not be <c>null</c> this property just returns the
+		/// value of <see cref="Logger.Level"/>.
+		/// </para>
+		/// </remarks>
 		override public Level EffectiveLevel 
 		{
 			get 
@@ -75,16 +87,17 @@ namespace log4net.Repository.Hierarchy
 		}
 
 		/// <summary>
-		/// Gets or sets the assigned <see cref="Level"/>, if any, for the root
-		/// logger.  
+		/// Gets or sets the assigned <see cref="Level"/> for the root logger.  
 		/// </summary>
 		/// <value>
 		/// The <see cref="Level"/> of the root logger.
 		/// </value>
-		/// <summary>
-		/// Setting the level of the root logger to a null reference
+		/// <remarks>
+		/// <para>
+		/// Setting the level of the root logger to a <c>null</c> reference
 		/// may have catastrophic results. We prevent this here.
-		/// </summary>
+		/// </para>
+		/// </remarks>
 		override public Level Level
 		{
 			get { return base.Level; }

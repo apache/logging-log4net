@@ -180,9 +180,9 @@ namespace log4net.Plugin
 		/// <summary>
 		/// Allow subclasses to avoid our default constructors
 		/// </summary>
-		/// <param name="t"></param>
+		/// <param name="tag"></param>
 		/// <exclude/>
-		protected PluginCollection(Tag t)
+		protected PluginCollection(Tag tag)
 		{
 			m_array = null;
 		}

@@ -171,11 +171,11 @@ namespace log4net.Core
 		/// Logs a message object with the <c>DEBUG</c> level
 		/// </summary>
 		/// <param name="message">The message object to log.</param>
-		/// <param name="t">The exception to log, including its stack trace.</param>
+		/// <param name="exception">The exception to log, including its stack trace.</param>
 		/// <remarks>
 		/// <para>
 		/// Logs a message object with the <c>DEBUG</c> level including
-		/// the stack trace of the <see cref="Exception"/> <paramref name="t"/> passed
+		/// the stack trace of the <see cref="Exception"/> <paramref name="exception"/> passed
 		/// as a parameter.
 		/// </para>
 		/// <para>
@@ -183,9 +183,9 @@ namespace log4net.Core
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="Debug(object)"/>
-		virtual public void Debug(object message, Exception t) 
+		virtual public void Debug(object message, Exception exception) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelDebug, message, t);
+			Logger.Log(ThisDeclaringType, m_levelDebug, message, exception);
 		}
 
 		/// <summary>
@@ -265,11 +265,11 @@ namespace log4net.Core
 		/// Logs a message object with the <c>INFO</c> level.
 		/// </summary>
 		/// <param name="message">The message object to log.</param>
-		/// <param name="t">The exception to log, including its stack trace.</param>
+		/// <param name="exception">The exception to log, including its stack trace.</param>
 		/// <remarks>
 		/// <para>
 		/// Logs a message object with the <c>INFO</c> level including
-		/// the stack trace of the <see cref="Exception"/> <paramref name="t"/> 
+		/// the stack trace of the <see cref="Exception"/> <paramref name="exception"/> 
 		/// passed as a parameter.
 		/// </para>
 		/// <para>
@@ -277,9 +277,9 @@ namespace log4net.Core
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="Info(object)"/>
-		virtual public void Info(object message, Exception t) 
+		virtual public void Info(object message, Exception exception) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelInfo, message, t);
+			Logger.Log(ThisDeclaringType, m_levelInfo, message, exception);
 		}
 
 		/// <summary>
@@ -359,11 +359,11 @@ namespace log4net.Core
 		/// Logs a message object with the <c>WARN</c> level
 		/// </summary>
 		/// <param name="message">The message object to log.</param>
-		/// <param name="t">The exception to log, including its stack trace.</param>
+		/// <param name="exception">The exception to log, including its stack trace.</param>
 		/// <remarks>
 		/// <para>
 		/// Logs a message object with the <c>WARN</c> level including
-		/// the stack trace of the <see cref="Exception"/> <paramref name="t"/> 
+		/// the stack trace of the <see cref="Exception"/> <paramref name="exception"/> 
 		/// passed as a parameter.
 		/// </para>
 		/// <para>
@@ -371,9 +371,9 @@ namespace log4net.Core
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="Warn(object)"/>
-		virtual public void Warn(object message, Exception t) 
+		virtual public void Warn(object message, Exception exception) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelWarn, message, t);
+			Logger.Log(ThisDeclaringType, m_levelWarn, message, exception);
 		}
 
 		/// <summary>
@@ -453,11 +453,11 @@ namespace log4net.Core
 		/// Logs a message object with the <c>ERROR</c> level
 		/// </summary>
 		/// <param name="message">The message object to log.</param>
-		/// <param name="t">The exception to log, including its stack trace.</param>
+		/// <param name="exception">The exception to log, including its stack trace.</param>
 		/// <remarks>
 		/// <para>
 		/// Logs a message object with the <c>ERROR</c> level including
-		/// the stack trace of the <see cref="Exception"/> <paramref name="t"/> 
+		/// the stack trace of the <see cref="Exception"/> <paramref name="exception"/> 
 		/// passed as a parameter.
 		/// </para>
 		/// <para>
@@ -465,9 +465,9 @@ namespace log4net.Core
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="Error(object)"/>
-		virtual public void Error(object message, Exception t) 
+		virtual public void Error(object message, Exception exception) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelError, message, t);
+			Logger.Log(ThisDeclaringType, m_levelError, message, exception);
 		}
 
 		/// <summary>
@@ -547,11 +547,11 @@ namespace log4net.Core
 		/// Logs a message object with the <c>FATAL</c> level
 		/// </summary>
 		/// <param name="message">The message object to log.</param>
-		/// <param name="t">The exception to log, including its stack trace.</param>
+		/// <param name="exception">The exception to log, including its stack trace.</param>
 		/// <remarks>
 		/// <para>
 		/// Logs a message object with the <c>FATAL</c> level including
-		/// the stack trace of the <see cref="Exception"/> <paramref name="t"/> 
+		/// the stack trace of the <see cref="Exception"/> <paramref name="exception"/> 
 		/// passed as a parameter.
 		/// </para>
 		/// <para>
@@ -559,9 +559,9 @@ namespace log4net.Core
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="Fatal(object)"/>
-		virtual public void Fatal(object message, Exception t) 
+		virtual public void Fatal(object message, Exception exception) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelFatal, message, t);
+			Logger.Log(ThisDeclaringType, m_levelFatal, message, exception);
 		}
 
 		/// <summary>

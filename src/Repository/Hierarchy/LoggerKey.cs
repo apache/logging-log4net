@@ -23,16 +23,43 @@ namespace log4net.Repository.Hierarchy
 	/// <summary>
 	/// Used internally to accelerate hash table searches.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Internal class used to improve performance of 
+	/// string keyed hashtables.
+	/// </para>
+	/// <para>
+	/// The hashcode of the string is cached for reuse.
+	/// The string is stored as an interned value.
+	/// When comparing two <see cref="LoggerKey"/> objects for equality 
+	/// the reference equality of the interned strings is compared.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
-	internal class LoggerKey
+	internal sealed class LoggerKey
 	{
 		#region Internal Instance Constructors
 
 		/// <summary>
+		/// Construct key with string name
+		/// </summary>
+		/// <remarks>
+		/// <para>
 		/// Initializes a new instance of the <see cref="LoggerKey" /> class 
 		/// with the specified name.
-		/// </summary>
+		/// </para>
+		/// <para>
+		/// Stores the hashcode of the string and interns
+		/// the string key to optimize comparisons.
+		/// </para>
+		/// <note>
+		/// The Compact Framework 1.0 the <see cref="String.Intern"/>
+		/// method does not work. On the Compact Framework
+		/// the string keys are not interned nor are they
+		/// compared by reference.
+		/// </note>
+		/// </remarks>
 		/// <param name="name">The name of the logger.</param>
 		internal LoggerKey(string name) 
 		{
@@ -53,6 +80,11 @@ namespace log4net.Repository.Hierarchy
 		/// Returns a hash code for the current instance.
 		/// </summary>
 		/// <returns>A hash code for the current instance.</returns>
+		/// <remarks>
+		/// <para>
+		/// Returns the cached hashcode.
+		/// </para>
+		/// </remarks>
 		override public int GetHashCode() 
 		{
 			return m_hashCache;
@@ -64,7 +96,13 @@ namespace log4net.Repository.Hierarchy
 		/// </summary>
 		/// <param name="obj">The <see cref="object" /> to compare with the current <see cref="LoggerKey" />.</param>
 		/// <returns>
-		/// <c>true</c> if the specified <see cref="object" /> is equal to the current <see cref="LoggerKey" />; otherwise, <c>false</c>.</returns>
+		/// <c>true</c> if the specified <see cref="object" /> is equal to the current <see cref="LoggerKey" />; otherwise, <c>false</c>.
+		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// Compares the references of the interned strings.
+		/// </para>
+		/// </remarks>
 		override public bool Equals(object obj) 
 		{
 			// Compare reference type of this against argument

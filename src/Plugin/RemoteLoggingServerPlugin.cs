@@ -30,9 +30,19 @@ using IRemoteLoggingSink = log4net.Appender.RemotingAppender.IRemoteLoggingSink;
 namespace log4net.Plugin
 {
 	/// <summary>
-	/// Publishes an instance of <see cref="IRemoteLoggingSink"/> 
-	/// on the specified URI.
+	/// Plugin that listens for events from the <see cref="log4net.Appender.RemotingAppender"/>
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// This plugin publishes an instance of <see cref="IRemoteLoggingSink"/> 
+	/// on a specified <see cref="SinkUri"/>. This listens for logging events delivered from
+	/// a remote <see cref="log4net.Appender.RemotingAppender"/>.
+	/// </para>
+	/// <para>
+	/// When an event is received it is relogged within the attached repository
+	/// as if it had been raised locally.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	public class RemoteLoggingServerPlugin : PluginSkeleton
@@ -40,18 +50,31 @@ namespace log4net.Plugin
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="RemoteLoggingServerPlugin" /> class.
+		/// Default constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="RemoteLoggingServerPlugin" /> class.
+		/// </para>
+		/// <para>
+		/// The <see cref="SinkUri"/> property must be set.
+		/// </para>
+		/// </remarks>
 		public RemoteLoggingServerPlugin() : base("RemoteLoggingServerPlugin:Unset URI")
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="RemoteLoggingServerPlugin" /> class
-		/// with specified name.
+		/// Construct with sink Uri.
 		/// </summary>
 		/// <param name="sinkUri">The name to publish the sink under in the remoting infrastructure. 
 		/// See <see cref="SinkUri"/> for more details.</param>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="RemoteLoggingServerPlugin" /> class
+		/// with specified name.
+		/// </para>
+		/// </remarks>
 		public RemoteLoggingServerPlugin(string sinkUri) : base("RemoteLoggingServerPlugin:"+sinkUri)
 		{
 			m_sinkUri = sinkUri;
@@ -115,6 +138,12 @@ namespace log4net.Plugin
 		/// <summary>
 		/// Is called when the plugin is to shutdown.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// When the plugin is shutdown the remote logging
+		/// sink is disconnected.
+		/// </para>
+		/// </remarks>
 		override public void Shutdown()
 		{
 			// Stops the sink from receiving messages
@@ -136,15 +165,26 @@ namespace log4net.Plugin
 		/// <summary>
 		/// Delivers <see cref="LoggingEvent"/> objects to a remote sink.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Internal class used to listen for logging events
+		/// and deliver them to the local repository.
+		/// </para>
+		/// </remarks>
 		private class RemoteLoggingSinkImpl : MarshalByRefObject, IRemoteLoggingSink
 		{
 			#region Public Instance Constructors
 
 			/// <summary>
-			/// Initializes a new instance of the <see cref="RemoteLoggingSinkImpl"/> for the
-			/// specified <see cref="ILoggerRepository"/>.
+			/// Constructor
 			/// </summary>
 			/// <param name="repository">The repository to log to.</param>
+			/// <remarks>
+			/// <para>
+			/// Initializes a new instance of the <see cref="RemoteLoggingSinkImpl"/> for the
+			/// specified <see cref="ILoggerRepository"/>.
+			/// </para>
+			/// </remarks>
 			public RemoteLoggingSinkImpl(ILoggerRepository repository)
 			{
 				m_repository = repository;
@@ -159,7 +199,9 @@ namespace log4net.Plugin
 			/// </summary>
 			/// <param name="events">The events to log.</param>
 			/// <remarks>
+			/// <para>
 			/// The events passed are logged to the <see cref="ILoggerRepository"/>
+			/// </para>
 			/// </remarks>
 			public void LogEvents(LoggingEvent[] events)
 			{
@@ -183,10 +225,14 @@ namespace log4net.Plugin
 			/// Obtains a lifetime service object to control the lifetime 
 			/// policy for this instance.
 			/// </summary>
-			/// <returns>
-			/// <c>null</c> to indicate that this instance should live
-			/// forever.
-			/// </returns>
+			/// <returns><c>null</c> to indicate that this instance should live forever.</returns>
+			/// <remarks>
+			/// <para>
+			/// Obtains a lifetime service object to control the lifetime 
+			/// policy for this instance. This object should live forever
+			/// therefore this implementation returns <c>null</c>.
+			/// </para>
+			/// </remarks>
 			public override object InitializeLifetimeService()
 			{
 				return null;

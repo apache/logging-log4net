@@ -21,21 +21,32 @@ using System;
 namespace log4net.Repository
 {
 	/// <summary>
-	/// Interface used by basic configurator to configure a <see cref="ILoggerRepository"/>
-	/// with a default <see cref="log4net.Appender.IAppender"/>.
+	/// Basic Configurator interface for repositories
 	/// </summary>
 	/// <remarks>
+	/// <para>
+	/// Interface used by basic configurator to configure a <see cref="ILoggerRepository"/>
+	/// with a default <see cref="log4net.Appender.IAppender"/>.
+	/// </para>
+	/// <para>
 	/// A <see cref="ILoggerRepository"/> should implement this interface to support
 	/// configuration by the <see cref="log4net.Config.BasicConfigurator"/>.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	public interface IBasicRepositoryConfigurator
 	{
 		/// <summary>
-		/// Initialize the log4net system using the specified appender
+		/// Initialize the repository using the specified appender
 		/// </summary>
 		/// <param name="appender">the appender to use to log all logging events</param>
+		/// <remarks>
+		/// <para>
+		/// Configure the repository to route all logging events to the
+		/// specified appender.
+		/// </para>
+		/// </remarks>
 		void Configure(log4net.Appender.IAppender appender);
 	}
 }

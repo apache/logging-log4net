@@ -185,9 +185,9 @@ namespace log4net.Appender
 		/// <summary>
 		/// Allow subclasses to avoid our default constructors
 		/// </summary>
-		/// <param name="t"></param>
+		/// <param name="tag"></param>
 		/// <exclude/>
-		protected AppenderCollection(Tag t)
+		protected AppenderCollection(Tag tag)
 		{
 			m_array = null;
 		}

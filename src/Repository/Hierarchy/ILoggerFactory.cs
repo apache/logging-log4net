@@ -23,8 +23,7 @@ using log4net;
 namespace log4net.Repository.Hierarchy
 {
 	/// <summary>
-	/// Implement this interface to create new instances of <see cref="Logger" /> 
-	/// or a sub-class of <see cref="Logger" />.
+	/// Interface abstracts creation of <see cref="Logger"/> instances
 	/// </summary>
 	/// <remarks>
 	/// <para>
@@ -35,18 +34,24 @@ namespace log4net.Repository.Hierarchy
 	/// The <see cref="MakeNewLoggerInstance"/> method is called
 	/// to create a named <see cref="Logger" />.
 	/// </para>
+	/// <para>
+	/// Implement this interface to create new subclasses of <see cref="Logger" />.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	public interface ILoggerFactory
 	{
 		/// <summary>
-		/// Constructs a new <see cref="Logger" /> instance with the 
-		/// specified name.
+		/// Create a new <see cref="Logger" /> instance
 		/// </summary>
 		/// <param name="name">The name of the <see cref="Logger" />.</param>
 		/// <returns>The <see cref="Logger" /> instance for the specified name.</returns>
 		/// <remarks>
+		/// <para>
+		/// Create a new <see cref="Logger" /> instance with the 
+		/// specified name.
+		/// </para>
 		/// <para>
 		/// Called by the <see cref="Hierarchy"/> to create
 		/// new named <see cref="Logger"/> instances.
