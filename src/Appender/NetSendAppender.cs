@@ -24,7 +24,9 @@
 #if !MONO 
 // SSCLI 1.0 has no support for Win32 NetMessageBufferSend API
 #if !SSCLI
-
+// We don't want framework or platform specific code in the Core version of
+// log4net
+#if !CORE
 
 using System;
 using System.Globalization;
@@ -371,6 +373,7 @@ namespace log4net.Appender
 	}
 }
 
+#endif // !CORE
 #endif // !SSCLI
 #endif // !MONO
 #endif // !NETCF
