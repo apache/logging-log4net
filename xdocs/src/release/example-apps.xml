@@ -1,0 +1,403 @@
+<?xml version="1.0" ?>
+<!--
+Copyright 2004-2005 The Apache Software Foundation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<document>
+
+	<properties>
+		<author email="nicko at apache dot org">Nicko Cadell</author>
+		<title>log4net Examples</title>
+	</properties>
+
+	<meta name="keywords" content="log4net examples, log4net" />
+
+	<body>
+		<section name="log4net Examples">
+		
+			<sectionMenu name="Contents" />
+
+			<section name="Overview">
+			</section>
+			
+			<section name="Building Examples">
+				<section name="Building An Example">
+					<p>
+						A single example can be build by running <span class="code">nant</span> from
+						the example directory.
+					</p>
+					<p>
+						For example running <span class="code">nant</span> in the 
+						<span class="code">examples\net\1.0\Tutorials\ConsoleApp\cs</span> directory
+						will build the C# version of the .NET 1.0 ConsoleApp example.
+					</p>
+					<p>
+						<span class="code">nant</span> can be run in any directory containing a
+						<span class="code">nant.build</span> file. The typical behaviour of the build file
+						is to build all projects under the current directory.
+					</p>
+					<p>
+						For example running <span class="code">nant</span> in the 
+						<span class="code">examples\net\1.1</span> directory
+						will build all the examples for the .NET 1.1 platform.
+					</p>
+				</section>
+				
+				<section name="Building All Examples">
+					<p>
+						To build all the examples either run <span class="code">nant</span> in the 
+						<span class="code">examples</span> directory or you can specify the
+						<span class="code">compile-examples</span> target to the main log4net nant build.
+					</p>
+				</section>
+				
+				<section name="Visual Studio .NET 2002">
+					<p>
+						There are Visual Studio .NET 2002 project files for the .NET 1.0 framework.
+						The solution files for C++, C# and VB are in the <a href="../../../examples/net/1.0">examples\net\1.0</a>
+						folder.
+					</p>
+				</section>
+			</section>
+			
+			<section name="Examples">
+			
+				<section name="Tutorial - ConsoleApp">
+					<p>
+						ConsoleApp shows how to write a simple console application that initializes 
+						logging and logs various events.
+					</p>
+					<p>
+						This example is available for the following platforms and languages. If a version
+						is not available for your chosen platform and language combination then select the
+						nearest platform for the appropriate language.
+					</p>
+					<ul>
+						<li>
+							<b>MONO 1.0</b>: 
+							<a href="../../../examples/mono/1.0/Tutorials/ConsoleApp/cs">C#</a>
+						</li>
+						<li>
+							<b>.NET 1.0</b>: 
+							<a href="../../../examples/net/1.0/Tutorials/ConsoleApp/cpp">C++</a>, 
+							<a href="../../../examples/net/1.0/Tutorials/ConsoleApp/cs">C#</a>, 
+							<a href="../../../examples/net/1.0/Tutorials/ConsoleApp/vb">VB</a>
+						</li>
+						<li>
+							<b>.NET 1.1</b>: 
+							<a href="../../../examples/net/1.1/Tutorials/ConsoleApp/js">JavaScript</a>
+						</li>
+						<li>
+							<b>.NET Compact Framework 1.0</b>: 
+							<a href="../../../examples/netcf/1.0/Tutorials/ConsoleApp/cs">C#</a>, 
+							<a href="../../../examples/netcf/1.0/Tutorials/ConsoleApp/vb">VB</a>
+						</li>
+						<li>
+							<b>SSCLI 1.0</b>: 
+							<a href="../../../examples/sscli/1.0/Tutorials/ConsoleApp/js">JavaScript</a>
+						</li>
+					</ul>
+					<p>
+						To run this example execute the <span class="code">ConsoleApp.exe</span> from the build output directory.
+					</p>
+				</section>
+				
+				<section name="Tutorial - WebApp">
+					<p>
+						ConsoleApp shows how to write a simple ASP.NET web application that initializes 
+						logging and logs various events.
+					</p>
+					<p>
+						This example is available for the following platforms and languages. If a version
+						is not available for your chosen platform and language combination then select the
+						nearest platform for the appropriate language.
+					</p>
+					<ul>
+						<li>
+							<b>.NET 1.0</b>: 
+							<a href="../../../examples/net/1.0/Tutorials/WebApp/cs">C#</a>, 
+							<a href="../../../examples/net/1.0/Tutorials/WebApp/vb">VB</a>
+						</li>
+					</ul>
+					<p>
+						To run this example you need to have an ASP.NET container application to
+						host the web application, for example IIS. In IIS create a new virtual
+						directory pointing to the WebApp src directory. Configure IIS to recognize
+						this virtual directory as an application. Open up a webrowser, navigate to
+						the virtual directory and to the <span class="code">WebForm1.aspx</span> page within it.
+					</p>
+				</section>
+				
+				<section name="Remoting - RemotingClient">
+					<p>
+						The RemotingClient application is a simple console application that configures
+						log4net with the RemotingAppender. This appender will attempt to deliver the
+						logging events to a remoting listener. This example should be run in conjunction 
+						with the RemotingServer.
+					</p>
+					<p>
+						This example is available for the following platforms and languages. If a version
+						is not available for your chosen platform and language combination then select the
+						nearest platform for the appropriate language.
+					</p>
+					<ul>
+						<li>
+							<b>.NET 1.0</b>: 
+							<a href="../../../examples/net/1.0/Remoting/RemotingClient/cs">C#</a>
+						</li>
+					</ul>
+					<p>
+						To run this example execute the <span class="code">RemotingClient.exe</span> from the build output directory.
+					</p>
+				</section>
+				
+				<section name="Remoting - RemotingServer">
+					<p>
+						The RemotingServer application is a simple console application that listens for
+						logging events from a remote RemotingAppender and then logs them through the
+						local log4net instance. This example should be run in conjunction 
+						with the RemotingClient.
+					</p>
+					<p>
+						This example is available for the following platforms and languages. If a version
+						is not available for your chosen platform and language combination then select the
+						nearest platform for the appropriate language.
+					</p>
+					<ul>
+						<li>
+							<b>.NET 1.0</b>: 
+							<a href="../../../examples/net/1.0/Remoting/RemotingServer/cs">C#</a>
+						</li>
+					</ul>
+					<p>
+						To run this example execute the <span class="code">RemotingServer.exe</span> from the build output directory.
+						While this process is running execute the <span class="code">RemotingClient.exe</span> program on
+						the same machine. The logging events from the client are transferred to the server.
+					</p>
+				</section>
+				
+				<section name="Repository - SimpleModule">
+					<p>
+						The SimpleModule is a class library that is intended to be used as part of
+						the SimpleApp example,
+						This class library uses the <span class="code">log4net.Config.Repository</span>
+						attribute to create a separate configuration space from other assemblies.
+					</p>
+					<p>
+						This example is available for the following platforms and languages. If a version
+						is not available for your chosen platform and language combination then select the
+						nearest platform for the appropriate language.
+					</p>
+					<ul>
+						<li>
+							<b>MONO 1.0</b>: 
+							<a href="../../../examples/mono/1.0/Repository/SimpleModule/cs">C#</a>
+						</li>
+						<li>
+							<b>.NET 1.0</b>: 
+							<a href="../../../examples/net/1.0/Repository/SimpleModule/cs">C#</a>, 
+							<a href="../../../examples/net/1.0/Repository/SimpleModule/vb">VB</a>
+						</li>
+						<li>
+							<b>.NET 1.1</b>: 
+							<a href="../../../examples/net/1.1/Repository/SimpleModule/js">JavaScript</a>
+						</li>
+						<li>
+							<b>SSCLI 1.0</b>: 
+							<a href="../../../examples/sscli/1.0/Repository/SimpleModule/cs">C#</a>
+						</li>
+					</ul>
+					<p>
+						This library is intended to be used as part of the SimpleApp example.
+					</p>
+				</section>
+				
+				<section name="Repository - SharedModule">
+					<p>
+						The SharedModule is a class library that is intended to be used as part of
+						the SimpleApp example,
+						This class library uses log4net but does not attempt to configure logging.
+					</p>
+					<p>
+						This example is available for the following platforms and languages. If a version
+						is not available for your chosen platform and language combination then select the
+						nearest platform for the appropriate language.
+					</p>
+					<ul>
+						<li>
+							<b>MONO 1.0</b>: 
+							<a href="../../../examples/mono/1.0/Repository/SharedModule/cs">C#</a>
+						</li>
+						<li>
+							<b>.NET 1.0</b>: 
+							<a href="../../../examples/net/1.0/Repository/SharedModule/cs">C#</a>, 
+							<a href="../../../examples/net/1.0/Repository/SharedModule/vb">VB</a>
+						</li>
+						<li>
+							<b>.NET 1.1</b>: 
+							<a href="../../../examples/net/1.1/Repository/SharedModule/js">JavaScript</a>
+						</li>
+						<li>
+							<b>SSCLI 1.0</b>: 
+							<a href="../../../examples/sscli/1.0/Repository/SharedModule/cs">C#</a>
+						</li>
+					</ul>
+					<p>
+						This library is intended to be used as part of the SimpleApp example.
+					</p>
+				</section>
+				
+				<section name="Repository - SimpleApp">
+					<p>
+						The SimpleApp example uses the SimpleModule and SharedModule to demonstrate
+						the ways in which multiple assemblies within the same process may be 
+						separately configured.
+					</p>
+					<p>
+						This example is available for the following platforms and languages. If a version
+						is not available for your chosen platform and language combination then select the
+						nearest platform for the appropriate language.
+					</p>
+					<ul>
+						<li>
+							<b>MONO 1.0</b>: 
+							<a href="../../../examples/mono/1.0/Repository/SimpleApp/cs">C#</a>
+						</li>
+						<li>
+							<b>.NET 1.0</b>: 
+							<a href="../../../examples/net/1.0/Repository/SimpleApp/cs">C#</a>, 
+							<a href="../../../examples/net/1.0/Repository/SimpleApp/vb">VB</a>
+						</li>
+						<li>
+							<b>.NET 1.1</b>: 
+							<a href="../../../examples/net/1.1/Repository/SimpleApp/js">JavaScript</a>
+						</li>
+						<li>
+							<b>SSCLI 1.0</b>: 
+							<a href="../../../examples/sscli/1.0/Repository/SimpleApp/cs">C#</a>
+						</li>
+					</ul>
+					<p>
+						To run this example execute the <span class="code">SimpleApp.exe</span> from the build output directory.
+					</p>
+				</section>
+				
+				<section name="Extensibility - EventIDLogApp">
+					<p>
+						The EventIDLogApp example demonstrates using the log4net.Ext.EventID extension.
+						The extension needs to be built separately from the 
+						<span class="code">extensions\net\1.0\log4net.Ext.EventID</span> directory.
+					</p>
+					<p>
+						This example is available for the following platforms and languages. If a version
+						is not available for your chosen platform and language combination then select the
+						nearest platform for the appropriate language.
+					</p>
+					<ul>
+						<li>
+							<b>.NET 1.0</b>: 
+							<a href="../../../examples/net/1.0/Extensibility/EventIDLogApp/cs">C#</a>
+						</li>
+					</ul>
+					<p>
+						To run this example execute the <span class="code">EventIDLogApp.exe</span> from the build output directory.
+					</p>
+				</section>
+				
+				<section name="Extensibility - TraceLogApp">
+					<p>
+						The TraceLogApp example demonstrates using the log4net.Ext.Trace extension.
+						The extension needs to be built separately from the 
+						<span class="code">extensions\net\1.0\log4net.Ext.Trace</span> directory.
+					</p>
+					<p>
+						This example is available for the following platforms and languages. If a version
+						is not available for your chosen platform and language combination then select the
+						nearest platform for the appropriate language.
+					</p>
+					<ul>
+						<li>
+							<b>.NET 1.0</b>: 
+							<a href="../../../examples/net/1.0/Extensibility/TraceLogApp/cs">C#</a>
+						</li>
+					</ul>
+					<p>
+						To run this example execute the <span class="code">TraceLogApp.exe</span> from the build output directory.
+					</p>
+				</section>
+				
+				<section name="SampleAppenders">
+					<p>
+						This project includes the following example appenders.
+					</p>
+					<ul>
+						<li>
+							FireEventAppender
+						</li>
+						<li>
+							MessageBoxAppender
+						</li>
+						<li>
+							MessageObjectExpanderAppender
+						</li>
+						<li>
+							SimpleSmtpAppender
+						</li>
+					</ul>
+					<p>
+						This example is available for the following platforms and languages. If a version
+						is not available for your chosen platform and language combination then select the
+						nearest platform for the appropriate language.
+					</p>
+					<ul>
+						<li>
+							<b>.NET 1.0</b>: 
+							<a href="../../../examples/net/1.0/Appenders/SampleAppendersApp/cs">C#</a>
+						</li>
+					</ul>
+					<p>
+						To run this example execute the <span class="code">SampleAppendersApp.exe</span> from the build output directory.
+					</p>
+				</section>
+				
+				<section name="Performance - NotLogging">
+					<p>
+						The NotLogging example benchmarks the performance of log4net logging statements in
+						user code in various scenarios including when logging is disabled. 
+					</p>
+					<p>
+						This example is available for the following platforms and languages. If a version
+						is not available for your chosen platform and language combination then select the
+						nearest platform for the appropriate language.
+					</p>
+					<ul>
+						<li>
+							<b>MONO 1.0</b>: 
+							<a href="../../../examples/mono/1.0/Performance/NotLogging/cs">C#</a>
+						</li>
+						<li>
+							<b>.NET 1.0</b>: 
+							<a href="../../../examples/net/1.0/Performance/NotLogging/cs">C#</a>, 
+							<a href="../../../examples/net/1.0/Performance/NotLogging/vb">VB</a>
+						</li>
+					</ul>
+					<p>
+					</p>
+				</section>
+				
+			</section>
+			
+		</section>
+	</body>
+</document>

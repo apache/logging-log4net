@@ -41,6 +41,7 @@ limitations under the License.
 		<menu name="log4net 1.2 Documentation">
 			<item name="Features" href="/release/features.html" />
 			<item name="Supported Frameworks" href="/release/framework-support.html" />
+			<item name="Example Apps" href="/release/example-apps.html" />
 			<item name="Config Examples" href="/release/config-examples.html" />
 			<item name="Building" href="/release/building.html" />
 		</menu>
