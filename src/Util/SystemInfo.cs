@@ -667,6 +667,19 @@ namespace log4net.Util
 		/// </remarks>
 		public static bool TryParse(string s, out int val)
 		{
+#if NETCF
+			val = 0;
+			try
+			{
+				val = int.Parse(s, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture);
+				return true;
+			}
+			catch
+			{
+			}
+
+			return false;
+#else
 			// Initialise out param
 			val = 0;
 
@@ -685,6 +698,7 @@ namespace log4net.Util
 			}
 
 			return false;
+#endif
 		}
 
 		/// <summary>
@@ -701,6 +715,19 @@ namespace log4net.Util
 		/// </remarks>
 		public static bool TryParse(string s, out long val)
 		{
+#if NETCF
+			val = 0;
+			try
+			{
+				val = long.Parse(s, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture);
+				return true;
+			}
+			catch
+			{
+			}
+
+			return false;
+#else
 			// Initialise out param
 			val = 0;
 
@@ -719,6 +746,7 @@ namespace log4net.Util
 			}
 
 			return false;
+#endif
 		}
 
 		#endregion Public Static Methods
