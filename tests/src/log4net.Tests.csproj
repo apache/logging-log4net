@@ -82,6 +82,11 @@
                     Project = "{F6A02431-167E-4347-BC43-65532C31CDB7}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "System.Runtime.Remoting"
+                    AssemblyName = "System.Runtime.Remoting"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.0.3705\System.Runtime.Remoting.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -113,6 +118,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Appender\RemotingAppenderTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Appender\RollingFileAppenderTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -129,6 +139,11 @@
                 />
                 <File
                     RelPath = "Layout\PatternLayoutTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Util\PropertiesDictionaryTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
