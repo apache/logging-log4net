@@ -662,7 +662,7 @@ namespace log4net.Appender
 		/// Supports simple iteration over a <see cref="AppenderCollection"/>.
 		/// </summary>
 		/// <exclude/>
-		private class Enumerator : IEnumerator, IAppenderCollectionEnumerator
+		private sealed class Enumerator : IEnumerator, IAppenderCollectionEnumerator
 		{
 			#region Implementation (data)
 			
@@ -742,7 +742,7 @@ namespace log4net.Appender
 		#region Nested Synchronized Wrapper class
 
 		/// <exclude/>
-		private class SyncAppenderCollection : AppenderCollection
+		private sealed class SyncAppenderCollection : AppenderCollection
 		{
 			#region Implementation (data)
 			private AppenderCollection m_collection;
@@ -940,7 +940,7 @@ namespace log4net.Appender
 		#region Nested Read Only Wrapper class
 
 		/// <exclude/>
-		private class ReadOnlyAppenderCollection : AppenderCollection
+		private sealed class ReadOnlyAppenderCollection : AppenderCollection
 		{
 			#region Implementation (data)
 

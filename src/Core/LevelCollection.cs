@@ -652,7 +652,7 @@ namespace log4net.Core
 		/// <summary>
 		/// Supports simple iteration over a <see cref="LevelCollection"/>.
 		/// </summary>
-		private class Enumerator : IEnumerator, ILevelCollectionEnumerator
+		private sealed class Enumerator : IEnumerator, ILevelCollectionEnumerator
 		{
 			#region Implementation (data)
 			
@@ -732,7 +732,7 @@ namespace log4net.Core
 
 		#region Nested Synchronized Wrapper class
 
-		private class SyncLevelCollection : LevelCollection
+		private sealed class SyncLevelCollection : LevelCollection
 		{
 			#region Implementation (data)
 			private LevelCollection m_collection;
@@ -924,7 +924,7 @@ namespace log4net.Core
 		#endregion
 
 		#region Nested Read Only Wrapper class
-		private class ReadOnlyLevelCollection : LevelCollection
+		private sealed class ReadOnlyLevelCollection : LevelCollection
 		{
 			#region Implementation (data)
 			private LevelCollection m_collection;
