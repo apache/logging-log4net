@@ -51,12 +51,11 @@ namespace log4net.Appender
 	/// number of non obvious reasons. The remoting infrastructure will 
 	/// flow thread local variables (stored in the <see cref="CallContext"/>),
 	/// if they are marked as <see cref="ILogicalThreadAffinative"/>, across the 
-	/// remoting boundary. This means that a large amount of unnecessary data could
-	/// be flowed across the remoting boundary. If the server is not contactable then
+	/// remoting boundary. If the server is not contactable then
 	/// the remoting infrastructure will clear the <see cref="ILogicalThreadAffinative"/>
 	/// objects from the <see cref="CallContext"/>. To prevent a logging failure from
 	/// having side effects on the calling application the remoting call must be made
-	/// from a separate thread to the use used by the application. A <see cref="ThreadPool"/>
+	/// from a separate thread to the one used by the application. A <see cref="ThreadPool"/>
 	/// thread is used for this. If no <see cref="ThreadPool"/> thread is available then
 	/// the events will block in the thread pool manager until a thread is available.</para>
 	/// <para>
@@ -161,12 +160,11 @@ namespace log4net.Appender
 		/// This is very important for a number of non obvious reasons. The remoting
 		/// infrastructure will flow thread local variables (stored in the <see cref="CallContext"/>),
 		/// if they are marked as <see cref="ILogicalThreadAffinative"/>, across the 
-		/// remoting boundary. This means that a large amount of unnecessary data could
-		/// be flowed across the remoting boundary. If the server is not contactable then
+		/// remoting boundary. If the server is not contactable then
 		/// the remoting infrastructure will clear the <see cref="ILogicalThreadAffinative"/>
 		/// objects from the <see cref="CallContext"/>. To prevent a logging failure from
 		/// having side effects on the calling application the remoting call must be made
-		/// from a separate thread to the use used by the application. A <see cref="ThreadPool"/>
+		/// from a separate thread to the one used by the application. A <see cref="ThreadPool"/>
 		/// thread is used for this. If no <see cref="ThreadPool"/> thread is available then
 		/// the events will block in the thread pool manager until a thread is available.
 		/// </remarks>
