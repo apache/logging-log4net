@@ -541,14 +541,12 @@ namespace log4net.Util
 					moduleName = new StringBuilder(255);
 					if (GetModuleFileName(moduleHandle, moduleName,	moduleName.Capacity) == 0) 
 					{
-						NativeError nativeError = NativeError.GetError(Marshal.GetLastWin32Error());
-						throw new NotSupportedException(nativeError.ToString());
+						throw new NotSupportedException(NativeError.GetLastError().ToString());
 					}
 				} 
 				else 
 				{
-					NativeError nativeError = NativeError.GetError(Marshal.GetLastWin32Error());
-					throw new NotSupportedException(nativeError.ToString());
+					throw new NotSupportedException(NativeError.GetLastError().ToString());
 				}
 
 				return moduleName.ToString();

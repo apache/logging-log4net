@@ -78,6 +78,24 @@ namespace log4net.Util
 		#region Public Static Methods
 
 		/// <summary>
+		/// Create a new instance of the <see cref="NativeError" /> class for the last Windows error.
+		/// </summary>
+		/// <returns>
+		/// An instance of the <see cref="NativeError" /> class for the last windows error.
+		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// The message for the <see cref="Marshal.GetLastWin32Error"/> error number is lookup up using the 
+		/// native Win32 <c>FormatMessage</c> function.
+		/// </para>
+		/// </remarks>
+		public static NativeError GetLastError() 
+		{
+			int number = Marshal.GetLastWin32Error();
+			return new NativeError(number, NativeError.GetErrorMessage(number));
+		}
+
+		/// <summary>
 		/// Create a new instance of the <see cref="NativeError" /> class.
 		/// </summary>
 		/// <param name="number">the error number for the native error</param>
