@@ -28,10 +28,20 @@ namespace log4net
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// The GlobalContext provides a global properties map. These
-	/// properties can be included in the output of log messages.
+	/// The <c>GlobalContext</c> provides a location for global debugging 
+	/// information to be stored.
+	/// </para>
+	/// <para>
+	/// The global context has a properties map and these properties can 
+	/// be included in the output of log messages. The <see cref="log4net.Layout.PatternLayout"/>
+	/// supports selecting and outputing these properties.
 	/// </para>
 	/// </remarks>
+	/// <example>
+	/// <code>
+	/// GlobalContext.Properties["hostname"] = Environment.MachineName;
+	/// </code>
+	/// </example>
 	/// <author>Nicko Cadell</author>
 	public sealed class GlobalContext
 	{
@@ -52,8 +62,11 @@ namespace log4net
 		#region Public Static Properties
 
 		/// <summary>
-		/// Get the global properties map
+		/// The global properties map
 		/// </summary>
+		/// <value>
+		/// The global properties map
+		/// </value>
 		public static GlobalContextProperties Properties
 		{
 			get { return s_properties; }
