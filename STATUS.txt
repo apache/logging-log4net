@@ -1,0 +1,35 @@
+APACHE LOG4NET PROJECT STATUS
+=============================
+
+Project Status
+==============
+
+log4net is an effort undergoing incubation at the Apache Software Foundation 
+(ASF), sponsored by the Apache Logging Services project. Incubation is required 
+of all newly accepted projects until a further review indicates that the 
+infrastructure, communications, and decision making process have stabilized in 
+a manner consistent with other successful ASF projects. While incubation status 
+is not necessarily a reflection of the completeness or stability of the code, 
+it does indicate that the project has yet to be fully endorsed by the ASF.
+
+
+Project Details
+===============
+
+Web site: http://logging.apache.org/log4net
+Incubator Status: http://incubator.apache.org/projects/log4net.html
+Issue Tracking: http://issues.apache.org/jira/browse/LOG4NET
+Source Code: http://cvs.apache.org/viewcvs/logging-log4net/
+Mailing Lists:
+  User: log4net-user@logging.apache.org
+  Dev:  log4net-dev@logging.apache.org
+
+
+Active Committers
+=================
+
+* Nicko Cadell (nicko)
+* Niall Daley (niall)
+* Gert Driesen (drieseng)
+
+
