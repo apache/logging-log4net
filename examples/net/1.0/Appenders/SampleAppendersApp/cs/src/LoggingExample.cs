@@ -60,6 +60,9 @@ namespace SampleAppendersApp
 			// can make running without logging faster.
 			if (log.IsDebugEnabled) log.Debug("This is a debug message");
 
+			// Log a custom object as the log message
+			log.Warn(new MsgObj(42, "So long and thanks for all the fish"));
+
 			try
 			{
 				Bar();
@@ -106,6 +109,28 @@ namespace SampleAppendersApp
 		private static void FireEventAppender_MessageLoggedEventHandler(object sender, MessageLoggedEventArgs e)
 		{
 			System.Diagnostics.Trace.WriteLine("EVENT ****" + e.LoggingEvent.RenderedMessage + "****");
+		}
+
+		public class MsgObj
+		{
+			private readonly int _type;
+			private readonly string _error;
+
+			public MsgObj(int type, string error)
+			{
+				_type = type;
+				_error = error;
+			}
+
+			public int MessageType
+			{
+				get { return _type; }
+			}
+
+			public string ErrorText
+			{
+				get { return _error; }
+			}
 		}
 	}
 }
