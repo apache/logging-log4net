@@ -217,9 +217,9 @@ namespace log4net.Tests.Appender
 		/// Returns a RollingFileAppender using all the internal settings for maximum
 		/// file size and number of backups
 		/// </summary>
-		/// <param name="lockmodel">The locking model to test</param>
+		/// <param name="lockModel">The locking model to test</param>
 		/// <returns></returns>
-		private RollingFileAppender CreateAppender(FileAppender.LockingModelBase lockmodel)
+		private RollingFileAppender CreateAppender(FileAppender.LockingModelBase lockModel)
 		{
 			//
 			// Use a basic pattern that
@@ -237,7 +237,7 @@ namespace log4net.Tests.Appender
 			appender.MaxSizeRollBackups  = _MaxSizeRollBackups;
 			appender.CountDirection	  = _iCountDirection;
 			appender.RollingStyle		= RollingFileAppender.RollingMode.Size;
-			appender.LockingModel		=lockmodel;
+			appender.LockingModel		=lockModel;
 			
 			appender.ActivateOptions();
 
@@ -1338,10 +1338,10 @@ namespace log4net.Tests.Appender
 		/// Creates a logger hierarchy, configures a rolling file appender and returns an ILogger
 		/// </summary>
 		/// <param name="filename">The filename to log to</param>
-		/// <param name="lockmodel">The locking model to use.</param>
+		/// <param name="lockModel">The locking model to use.</param>
 		/// <param name="handler">The error handler to use.</param>
 		/// <returns>A configured ILogger</returns>
-		private ILogger CreateLogger(string filename,FileAppender.LockingModelBase lockmodel, IErrorHandler handler)
+		private ILogger CreateLogger(string filename,FileAppender.LockingModelBase lockModel, IErrorHandler handler)
 		{
 			log4net.Repository.Hierarchy.Hierarchy h = (log4net.Repository.Hierarchy.Hierarchy)log4net.LogManager.CreateRepository("TestRepository");
 
@@ -1353,7 +1353,7 @@ namespace log4net.Tests.Appender
 			appender.MaxFileSize=100000;
 			appender.Encoding=System.Text.Encoding.ASCII;
 			appender.ErrorHandler=handler;
-			if (lockmodel!=null) {appender.LockingModel=lockmodel;}
+			if (lockModel!=null) {appender.LockingModel=lockModel;}
 			
 			log4net.Layout.PatternLayout layout = new log4net.Layout.PatternLayout();
 			layout.ConversionPattern = "%m%n";
@@ -1376,7 +1376,7 @@ namespace log4net.Tests.Appender
 		{
 			log4net.Repository.Hierarchy.Hierarchy h = (log4net.Repository.Hierarchy.Hierarchy)log4net.LogManager.GetRepository("TestRepository");
 			h.ResetConfiguration();
-			//Replace the repository selector so that we can recreate the hierarchy with the same name if necesary
+			//Replace the repository selector so that we can recreate the hierarchy with the same name if necessary
 			LoggerManager.RepositorySelector=new DefaultRepositorySelector(log4net.Util.SystemInfo.GetTypeFromString("log4net.Repository.Hierarchy.Hierarchy",true,true));
 		}
 
@@ -1392,7 +1392,7 @@ namespace log4net.Tests.Appender
 		}
 
 		/// <summary>
-		/// Verifies that logging a messsage actually produces output
+		/// Verifies that logging a message actually produces output
 		/// </summary>
 		[Test] public void TestLogOutput()
 		{
@@ -1404,7 +1404,7 @@ namespace log4net.Tests.Appender
 			DestroyLogger();
 
 			AssertFileEquals(filename,"This is a message"+Environment.NewLine+"This is a message 2"+Environment.NewLine);
-			Assertion.AssertEquals("Unexpeced error message","",sh.Message);
+			Assertion.AssertEquals("Unexpected error message","",sh.Message);
 		}
 
 		/// <summary>
@@ -1425,7 +1425,7 @@ namespace log4net.Tests.Appender
 			fs.Close();
 
 			AssertFileEquals(filename,"Test");
-			Assertion.AssertEquals("Expecting an error message","Unable to aquire lock on file",sh.Message.Substring(0,29));
+			Assertion.AssertEquals("Expecting an error message","Unable to acquire lock on file",sh.Message.Substring(0,30));
 		}
 
 		/// <summary>
@@ -1446,7 +1446,7 @@ namespace log4net.Tests.Appender
 			DestroyLogger();
 
 			AssertFileEquals(filename,"This is a message 2"+Environment.NewLine);
-			Assertion.AssertEquals("Expecting an error message","Unable to aquire lock on file",sh.Message.Substring(0,29));
+			Assertion.AssertEquals("Expecting an error message","Unable to acquire lock on file",sh.Message.Substring(0,30));
 		}
 
 		/// <summary>
@@ -1500,7 +1500,7 @@ namespace log4net.Tests.Appender
 			fs.Close();
 
 			AssertFileEquals(filename,"Test");
-			Assertion.AssertEquals("Expecting an error message","Unable to aquire lock on file",sh.Message.Substring(0,29));
+			Assertion.AssertEquals("Expecting an error message","Unable to acquire lock on file",sh.Message.Substring(0,30));
 		}
 
 		/// <summary>
@@ -1521,7 +1521,7 @@ namespace log4net.Tests.Appender
 			DestroyLogger();
 
 			AssertFileEquals(filename,"This is a message 2"+Environment.NewLine);
-			Assertion.AssertEquals("Expecting an error message","Unable to aquire lock on file",sh.Message.Substring(0,29));
+			Assertion.AssertEquals("Expecting an error message","Unable to acquire lock on file",sh.Message.Substring(0,30));
 		}
 
 		/// <summary>
@@ -1550,7 +1550,7 @@ namespace log4net.Tests.Appender
 		}
 
 		/// <summary>
-		/// Verify that the default LockModel is ExclusiveLock, to maintain backwards compatability with previous behaviour
+		/// Verify that the default LockModel is ExclusiveLock, to maintain backwards compatibility with previous behaviour
 		/// </summary>
 		[Test] public void TestDefaultLockingModel()
 		{
