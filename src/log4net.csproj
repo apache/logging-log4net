@@ -1043,6 +1043,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Util\PatternStringConverters\UtcDatePatternConverter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Util\TypeConverters\BooleanConverter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
