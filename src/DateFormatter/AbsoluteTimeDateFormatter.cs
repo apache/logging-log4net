@@ -121,8 +121,16 @@ namespace log4net.DateFormatter
 						// Calculate the new string for this second
 						FormatDateWithoutMillis(dateToFormat, s_lastTimeBuf);
 
+						// Render the string buffer to a string
+						string currentDateWithoutMillis = s_lastTimeBuf.ToString();
+
+#if NET_1_1
+						// Ensure that the above string is written into the variable NOW on all threads.
+						// This is only required on multiprocessor machines with weak memeory models
+						System.Threading.Thread.MemoryBarrier();
+#endif
 						// Store the time as a string (we only have to do this once per second)
-						s_lastTimeString = s_lastTimeBuf.ToString();
+						s_lastTimeString = currentDateWithoutMillis;
 						s_lastTimeToTheSecond = currentTimeToTheSecond;
 					}
 				}
