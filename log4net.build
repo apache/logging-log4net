@@ -570,7 +570,7 @@
                     <property name="AutoDocumentConstructors" value="true" />
                     <property name="GetExternalSummaries" value="true" />
                     <property name="IncludeAssemblyVersion" value="false" />
-                    <property name="CopyrightText" value="Copyright 2001-2004 The Apache Software Foundation." />
+                    <property name="CopyrightText" value="Copyright 2001-2005 The Apache Software Foundation." />
                     <property name="CopyrightHref" value="http://logging.apache.org/log4net" />
                 </documenter>
             </documenters>
