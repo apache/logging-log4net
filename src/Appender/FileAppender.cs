@@ -344,7 +344,7 @@ namespace log4net.Appender
 				}
 				if (!isPathRooted)
 				{
-					LogLog.Error("FileAppender: INTERNAL ERROR. SafeOpenFile("+fileName+"): File name is not fully qualified.");
+					LogLog.Error("FileAppender: INTERNAL ERROR. OpenFile("+fileName+"): File name is not fully qualified.");
 				}
 			}
 
