@@ -77,7 +77,7 @@ namespace log4net.Repository
 			AddBuiltinLevels();
 
 			// Don't disable any levels by default.
-			Threshold = Level.All;
+			m_threshold = Level.All;
 		}
 
 		#endregion
