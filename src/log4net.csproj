@@ -123,6 +123,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Appender\AnsiColorTerminalAppender.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Appender\AppenderCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
