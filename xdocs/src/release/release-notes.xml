@@ -28,6 +28,273 @@ limitations under the License.
 		
 			<sectionMenu name="Contents" />
 
+			<section name="1.2.XXXX">
+			
+				<section name="Breaking Changes">
+					<ul>
+						<li>
+							<h3>Renamed namespaces</h3>
+							<p>
+								Renamed namespace <span class="code">log4net.spi</span> to <span class="code">log4net.Core</span>. 
+								Renamed namespace <span class="code">log4net.helpers</span> to <span class="code">log4net.Util</span>.
+							</p>
+						</li>
+						<li>
+							<h3>Renamed config classes and attributes</h3>
+							<p>
+								The <span class="code">XmlConfigurator</span> and <span class="code">XmlConfiguratorAttribute</span> 
+								types replace <span class="code">DOMConfigurator</span> and 
+								<span class="code">DOMConfiguratorAttribute</span>. The <span class="code">DomainAttribute</span> 
+								and <span class="code">AliasDomainAttribute</span> types replace 
+								<span class="code">RepositoryAttribute</span> and <span class="code">AliasRepositoryAttribute</span>. 
+								The old types are obsolete but functional.
+							</p>
+						</li>
+						<li>
+							<h3>Fixed pascal casing of several types</h3>
+							<p>
+								Renamed <span class="code">AdoNetAppender</span>, <span class="code">AspNetTraceAppender</span>, 
+								<span class="code">SmtpAppender</span>, <span class="code">Iso8601DateFormatter</span>, 
+								<span class="code">MdcFilter</span>, and <span class="code">NdcFilter</span>.
+								Note that the config file type resolver is case insensitive so this is only a breaking change 
+								for code that programmatically creates a type that has been renamed.
+							</p>
+						</li>
+						<li>
+							<h3>Layouts changed to stream their output to a <span class="code">TextWriter</span></h3>
+							<p>
+								Layouts have been changed to format their output to a <span class="code">TextWriter</span>
+								rather than return a string. This increases performance and reduces temporary object creation.
+							</p>
+						</li>
+						<li>
+							<h3>C style string escapes no longer supported by config parser</h3>
+							<p>
+								The XML config parser no longer supports decoding C style escape sequences in strings.
+								Previously sequences like <span class="code">\n</span> and <span class="code">\\</span> 
+								where decoded. Instead use the appropriate XML encodings as required.
+							</p>
+						</li>
+					</ul>
+				</section>
+				
+				<section name="New Features">
+					<ul>
+						<li>
+							<h3><span class="code">PatternLayout</span> customization and long pattern names</h3>
+							<p>
+								The <span class="code">PatternLayout</span> now supports long pattern names.
+								These pattern names are significantly more readable than the single character patterns.
+							</p>
+							<p>
+								The <span class="code">PatternLayout</span> now supports custom patterns. New patterns
+								can be defined in the config file:
+							</p>
+							<div class="syntax"><pre class="code">
+&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
+
+  &lt;converter&gt;
+    &lt;name value=&quot;myConverter&quot; /&gt;
+    &lt;type value=&quot;TestApp.MyPatternConverter, TestApp&quot; /&gt;
+  &lt;/converter&gt;
+
+  &lt;conversionPattern value=&quot;%-5level %logger - %myConverter - %message%newline&quot; /&gt;
+&lt;/layout&gt;</pre></div>
+							<p>
+								The above config defines a custom pattern called <span class="code">myConverter</span>
+								which is bound to the <span class="code">TestApp.MyPatternConverter, TestApp</span>
+								type. This type must extend the <span class="code">log4net.Util.PatternConverter</span>
+								base class. The custom pattern can then be used in the pattern string.
+							</p>			
+						</li>
+						<li>
+							<h3><span class="code">PatternString</span> for pattern based configuration</h3>
+							<p>
+								A new pattern based type, <span class="code">PatternString</span>, can be used in
+								the config file to set string properties using a pattern syntax. For example the
+								File property of the FileAppender could be set as follows:
+							</p>
+							<div class="syntax"><pre class="code">
+&lt;file type=&quot;log4net.Util.PatternString&quot;&gt;
+
+  &lt;converter&gt;
+    &lt;name value=&quot;folder&quot; /&gt;
+    &lt;type value=&quot;TestApp.SpecialFolderPatternConverter,TestApp&quot; /&gt;
+  &lt;/converter&gt;
+
+  &lt;conversionPattern value=&quot;%folder{LocalApplicationData}\log-file.txt&quot; /&gt;
+&lt;/file&gt;</pre></div>
+							<p>
+								The code for the <span class="code">SpecialFolderPatternConverter</span>
+								is as follows:
+							</p>			
+							<div class="syntax"><pre class="code">
+public class SpecialFolderPatternConverter : log4net.Util.PatternConverter 
+{
+  override protected void Convert(System.IO.TextWriter writer, object state) 
+  {
+    Environment.SpecialFolder specialFolder = 
+      (Environment.SpecialFolder)Enum.Parse(typeof(Environment.SpecialFolder), base.Option, true);
+      
+    writer.Write(Environment.GetFolderPath(specialFolder));
+  }
+}</pre></div>
+							
+						</li>
+						<li>
+							<h3>Added new appenders</h3>
+							<dl>
+								<dt><span class="code">AnsiColorTerminalAppender</span></dt>
+								<dd>
+									<p>
+										The <span class="code">AnsiColorTerminalAppender</span> writes events to 
+										the application's ANSI terminal window. It can be configured to specify 
+										the text and background colors for different level events. Note that Console
+										applications running on Windows do not have an ANSI terminal window and
+										should use the <span class="code">ColoredConsoleAppender</span> instead.
+									</p>
+								</dd>
+								<dt><span class="code">LocalSyslogAppender</span></dt>
+								<dd>
+									<p>
+										Logs events to a local syslog service. This appender uses the POSIX libc syslog 
+										library functions. If these functions are not available on the local system then 
+										this appender will not work!
+									</p>
+								</dd>
+								<dt><span class="code">RemoteSyslogAppender</span></dt>
+								<dd>
+									<p>
+										The <span class="code">RemoteSyslogAppender</span> uses the BSD syslog protocol to 
+										log to a syslog daemon. The syslogd listens for for messages on UDP port 514.
+									</p>
+								</dd>
+								<dt><span class="code">TelnetAppender</span></dt>
+								<dd>
+									<p>
+										The <span class="code">TelnetAppender</span> accepts socket connections and streams 
+										logging messages back to the client. The output is provided in a telnet-friendly way 
+										so that a log can be monitored over a TCP/IP socket. 
+										This allows simple remote monitoring of application logging.
+									</p>
+								</dd>
+							</dl>
+						</li>
+						<li>
+							<h3>Added new filter</h3>
+							<p>
+								Added <span class="code">LoggerMatchFilter</span> which matches a string against
+								the event's logger name.
+							</p>
+						</li>
+						<li>
+							<h3><span class="code">RollingFileAppender</span> roll once</h3>
+							<p>
+								The <span class="code">RollingFileAppender</span> now supports a new
+								rolling style, <span class="code">Once</span>. In this mode the appender
+								will roll the file once per run.
+							</p>
+						</li>
+						<li>
+							<h3>Logging contexts</h3>
+							<p>
+								Logging contexts can be used to record contextual data that is relevant to the current
+								process. The contexts are layered in the following order of narrowing scope: 
+								<span class="code">GlobalContext</span>, <span class="code">ThreadContext</span>, 
+								<span class="code">LogicalThreadContext</span>, and <span class="code">LoggingEvent</span>.
+								Context values specified in a narrower scope hide the matching value in a wider scope.
+							</p>
+						</li>
+						<li>
+							<h3><span class="code">SmtpAppender</span> authentication</h3>
+							<p>
+								On the .NET 1.1 platform only, the <span class="code">SmtpAppender</span> supports authenticating
+								against the mail server using either username and password or integrated NTLM authentication.
+							</p>
+						</li>
+						<li>
+							<h3>Config file parser enhancements</h3>
+							<p>
+								The config file parser has been enhanced to support specifying the property subtype, or intermediate type, 
+								directly on the property element, for example:
+							</p>
+							<div class="syntax"><pre class="code">
+&lt;layout type=&quot;log4net.Layout.PatternLayout&quot; value=&quot;%message%newline&quot; /&gt;</pre></div>
+							<p>
+								Implicit conversion will be attempted between the value string and the type specified, 
+								and then again between the type and the target property type.
+							</p>
+						</li>
+						<li>
+							<h3>.NET string formatting syntax</h3>
+							<p>
+								Added .NET <span class="code">String.Format</span> style formatting syntax methods to 
+								the <span class="code">ILog</span> interface. The new methods are: 
+								<span class="code">DebugFormat</span>, <span class="code">InfoFormat</span>, 
+								<span class="code">WarnFormat</span>, <span class="code">ErrorFormat</span> 
+								and <span class="code">FatalFormat</span>.
+							</p>
+						</li>
+						<li>
+							<h3>Customizable Levels</h3>
+							<p>
+								Levels are defined by the repository <span class="code">LevelMap</span>. The defined 
+								levels, the relative ordering of levels and level display names can be configured on 
+								a per-repository basis.
+							</p>
+						</li>
+						<li>
+							<h3>Per-appender security contexts</h3>
+							<p>
+								Appenders that interact with controlled platform resources, e.g. files, can be
+								configured to use a separate security context when accessing these resources.
+								The calling thread may not have appropriate privileges to access the resource a
+								custom <span class="code">SecurityContext</span> can be used to elevate the
+								privileges of the appender. The <span class="code">WindowsSecurityContext</span> 
+								is used to specify alternative credentials on the Windows platform.
+							</p>
+						</li>
+					</ul>
+				</section>
+				
+				<section name="Other Changes">
+					<ul>
+						<li>
+							<h3>FxCop compliance</h3>
+							<p>
+								Updates to bring the internal code in line with the current FxCop rules.
+							</p>
+						</li>
+						<li>
+							<h3>Separate NUnit tests</h3>
+							<p>
+								Moved the NUnit tests into a separate project, <span class="code">log4net.Tests</span>.
+							</p>
+						</li>
+						<li>
+							<h3>Bug Fixes</h3>
+							<dl>
+								<dt><span class="code">RemotingAppender</span></dt>
+								<dd>
+									<p>
+										Sends events from a <span class="code">ThreadPool</span> thread 
+										rather than the calling thread to prevent transfer, 
+										and potential loss, of the <span class="code">CallContext</span>.
+									</p>
+								</dd>
+								<dt><span class="code">RollingFileAppender</span></dt>
+								<dd>
+									<p>
+										Fixed date rolling period detection for non UTC timezones.
+									</p>
+								</dd>
+							</dl>
+						</li>
+					</ul>
+				</section>
+				
+			</section>
+			
 			<section name="1.2.0 Beta 8">
 				<ul>
 					<li>
