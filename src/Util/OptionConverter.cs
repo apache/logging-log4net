@@ -386,7 +386,7 @@ namespace log4net.Util
 				}
 			}
 
-			throw new ArgumentException("Cannot convert source object [" + sourceInstance.ToString() + "] to target type [" + targetType.Name + "]", "sourceObject");
+			throw new ArgumentException("Cannot convert source object [" + sourceInstance.ToString() + "] to target type [" + targetType.Name + "]", "sourceInstance");
 		}
 
 //		/// <summary>

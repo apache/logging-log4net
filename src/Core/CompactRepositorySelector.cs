@@ -18,7 +18,6 @@
 
 using System;
 using System.Collections;
-
 using System.Reflection;
 
 using log4net.Appender;
@@ -66,7 +65,7 @@ namespace log4net.Core
 			// Check that the type is a repository
 			if (! (typeof(ILoggerRepository).IsAssignableFrom(defaultRepositoryType)) )
 			{
-				throw new ArgumentOutOfRangeException("defaultRepositoryType", (object)defaultRepositoryType, "Parameter: defaultRepositoryType, Value: ["+defaultRepositoryType+"] out of range. Argument must implement the ILoggerRepository interface");
+				throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("defaultRepositoryType", (object)defaultRepositoryType, "Parameter: defaultRepositoryType, Value: ["+defaultRepositoryType+"] out of range. Argument must implement the ILoggerRepository interface");
 			}
 
 			m_defaultRepositoryType = defaultRepositoryType;

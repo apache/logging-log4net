@@ -223,7 +223,7 @@ namespace log4net.Appender
 			{
 				if (value < IPEndPoint.MinPort || value > IPEndPoint.MaxPort) 
 				{
-					throw new ArgumentOutOfRangeException("value", (object)value,
+					throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("value", (object)value,
 						"The value specified is less than " + 
 						IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo) + 
 						" or greater than " + 
@@ -258,7 +258,7 @@ namespace log4net.Appender
 			{
 				if (value != 0 && (value < IPEndPoint.MinPort || value > IPEndPoint.MaxPort))
 				{
-					throw new ArgumentOutOfRangeException("value", (object)value,
+					throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("value", (object)value,
 						"The value specified is less than " + 
 						IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo) + 
 						" or greater than " + 
@@ -363,7 +363,7 @@ namespace log4net.Appender
 			} 
 			else if (this.RemotePort < IPEndPoint.MinPort || this.RemotePort > IPEndPoint.MaxPort) 
 			{
-				throw new ArgumentOutOfRangeException("this.RemotePort", (object)this.RemotePort,
+				throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("this.RemotePort", (object)this.RemotePort,
 					"The RemotePort is less than " + 
 					IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo) + 
 					" or greater than " + 
@@ -371,7 +371,7 @@ namespace log4net.Appender
 			} 
 			else if (this.LocalPort != 0 && (this.LocalPort < IPEndPoint.MinPort || this.LocalPort > IPEndPoint.MaxPort))
 			{
-				throw new ArgumentOutOfRangeException("this.LocalPort", (object)this.LocalPort,
+				throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("this.LocalPort", (object)this.LocalPort,
 					"The LocalPort is less than " + 
 					IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo) + 
 					" or greater than " + 

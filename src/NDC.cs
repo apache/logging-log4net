@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+
 #if !NETCF
 using System.Collections;
 #endif
@@ -223,7 +224,7 @@ namespace log4net
 		{
 			if (maxDepth < 0)
 			{
-				throw new ArgumentOutOfRangeException("maxDepth", (object)maxDepth, "Parameter: maxDepth, Value: ["+maxDepth+"] out of range. Nonnegative number required");
+				throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("maxDepth", (object)maxDepth, "Parameter: maxDepth, Value: ["+maxDepth+"] out of range. Nonnegative number required");
 			}
 
 			Stack stack = GetStack();
