@@ -77,6 +77,16 @@ namespace log4net
 		/// Gets the current context depth.
 		/// </summary>
 		/// <value>The current context depth.</value>
+		/// <remarks>
+		/// <para>
+		/// The number of context values pushed onto the context stack.
+		/// </para>
+		/// <para>
+		/// Used to record the current depth of the context. This can then 
+		/// be restored using the <see cref="SetMaxDepth"/> method.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="SetMaxDepth"/>
 		public static int Depth
 		{
 			get { return GetStack().Count; }
@@ -213,7 +223,7 @@ namespace log4net
 		{
 			if (maxDepth < 0)
 			{
-				throw new ArgumentOutOfRangeException("Parameter: maxDepth, Value: ["+maxDepth+"] out of range. Nonnegative number required");
+				throw new ArgumentOutOfRangeException("maxDepth", (object)maxDepth, "Parameter: maxDepth, Value: ["+maxDepth+"] out of range. Nonnegative number required");
 			}
 
 			Stack stack = GetStack();
