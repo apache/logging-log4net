@@ -374,7 +374,7 @@ namespace log4net.Core
 						m_name2repositoryMap[repository] = rep;
 
 						// Notify listeners that the repository has been created
-						FireLoggerRepositoryCreatedEvent(rep);
+						OnLoggerRepositoryCreatedEvent(rep);
 					}
 				}
 
@@ -470,11 +470,12 @@ namespace log4net.Core
 		/// Notifies the registered listeners that the repository has been created.
 		/// </summary>
 		/// <param name="repository">The repository that has been created.</param>
-		protected void FireLoggerRepositoryCreatedEvent(ILoggerRepository repository) 
+		protected virtual void OnLoggerRepositoryCreatedEvent(ILoggerRepository repository) 
 		{
-			if (m_loggerRepositoryCreatedEvent != null) 
+			LoggerRepositoryCreationEventHandler handler = m_loggerRepositoryCreatedEvent;
+			if (handler != null) 
 			{
-				m_loggerRepositoryCreatedEvent(this, new LoggerRepositoryCreationEventArgs(repository));
+				handler(this, new LoggerRepositoryCreationEventArgs(repository));
 			}
 		}
 

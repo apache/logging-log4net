@@ -215,7 +215,7 @@ namespace log4net.Repository
 			}
 
 			// Notify listeners
-			FireShutdownEvent();
+			OnShutdownEvent();
 		}
 
 		/// <summary>
@@ -242,7 +242,7 @@ namespace log4net.Repository
 			Configured = false;
 
 			// Notify listeners
-			FireConfigurationResetEvent();
+			OnConfigurationResetEvent();
 		}
 
 		/// <summary>
@@ -365,23 +365,24 @@ namespace log4net.Repository
 		/// <summary>
 		/// Notify the registered listeners that the repository is shutting down
 		/// </summary>
-		protected void FireShutdownEvent()
+		protected virtual void OnShutdownEvent()
 		{
-			LoggerRepositoryShutdownEventHandler tmp = m_shutdownEvent;
-			if (tmp != null)
+			LoggerRepositoryShutdownEventHandler handler = m_shutdownEvent;
+			if (handler != null)
 			{
-				tmp(this, EventArgs.Empty);
+				handler(this, EventArgs.Empty);
 			}
 		}
 
 		/// <summary>
 		/// Notify the registered listeners that the repository has had its configuration reset
 		/// </summary>
-		protected void FireConfigurationResetEvent()
+		protected virtual void OnConfigurationResetEvent()
 		{
-			if (m_configurationResetEvent != null)
+			LoggerRepositoryConfigurationResetEventHandler handler = m_configurationResetEvent;
+			if (handler != null)
 			{
-				m_configurationResetEvent(this, EventArgs.Empty);
+				handler(this, EventArgs.Empty);
 			}
 		}
 	}

@@ -422,7 +422,7 @@ namespace log4net.Repository.Hierarchy
 			Configured = true;
 
 			// Notify listeners
-			FireConfigurationChangedEvent();
+			OnConfigurationChangedEvent();
 		}
 
 		#endregion Implementation of IBasicRepositoryConfigurator
@@ -457,7 +457,7 @@ namespace log4net.Repository.Hierarchy
 			Configured = true;
 
 			// Notify listeners
-			FireConfigurationChangedEvent();
+			OnConfigurationChangedEvent();
 		}
 
 		#endregion Implementation of IXmlRepositoryConfigurator
@@ -559,7 +559,7 @@ namespace log4net.Repository.Hierarchy
 					logger.Hierarchy = this;
 					m_ht[key] = logger;	  
 					UpdateParents(logger);
-					FireLoggerCreationEvent(logger);
+					OnLoggerCreationEvent(logger);
 					return logger;
 				} 
 				else if (node is Logger) 
@@ -573,7 +573,7 @@ namespace log4net.Repository.Hierarchy
 					m_ht[key] = logger;
 					UpdateChildren((ProvisionNode)node, logger);
 					UpdateParents(logger);	
-					FireLoggerCreationEvent(logger);
+					OnLoggerCreationEvent(logger);
 					return logger;
 				}
 				else 
@@ -591,29 +591,31 @@ namespace log4net.Repository.Hierarchy
 		/// <summary>
 		/// Notify the registered listeners that the hierarchy has had its configuration changed
 		/// </summary>
-		protected void FireConfigurationChangedEvent()
+		protected virtual void OnConfigurationChangedEvent()
 		{
-			if (m_configurationChangedEvent != null)
+			HierarchyConfigurationChangedEventHandler handler = m_configurationChangedEvent;
+			if (handler != null)
 			{
-				m_configurationChangedEvent(this, EventArgs.Empty);
+				handler(this, EventArgs.Empty);
+			}
+		}
+
+		/// <summary>
+		/// Sends a logger creation event to all registered listeners
+		/// </summary>
+		/// <param name="logger">The newly created logger</param>
+		protected virtual void OnLoggerCreationEvent(Logger logger) 
+		{
+			LoggerCreationEventHandler handler = m_loggerCreatedEvent;
+			if (handler != null)
+			{
+				handler(this, new LoggerCreationEventArgs(logger));
 			}
 		}
 
 		#endregion Protected Instance Methods
 
 		#region Private Instance Methods
-
-		/// <summary>
-		/// Sends a logger creation event to all registered listeners
-		/// </summary>
-		/// <param name="logger">The newly created logger</param>
-		private void FireLoggerCreationEvent(Logger logger) 
-		{
-			if (m_loggerCreatedEvent != null)
-			{
-				m_loggerCreatedEvent(this, new LoggerCreationEventArgs(logger));
-			}
-		}
 
 		/// <summary>
 		/// Updates all the parents of the specified logger
