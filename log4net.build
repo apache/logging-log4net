@@ -553,8 +553,8 @@
                     <property name="AutoDocumentConstructors" value="true" />
                     <property name="GetExternalSummaries" value="true" />
                     <property name="IncludeAssemblyVersion" value="false" />
-                    <property name="CopyrightText" value="Copyright (C) 2001-2003 Neoworks Limited. All Rights Reserved." />
-                    <property name="CopyrightHref" value="http://www.sourceforge.net/projects/log4net" />
+                    <property name="CopyrightText" value="Copyright 2001-2004 The Apache Software Foundation." />
+		    <property name="CopyrightHref" value="http://logging.apache.org/log4net" />
                 </documenter>
             </documenters>
         </ndoc>
