@@ -148,6 +148,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Util\CyclicBufferTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Util\PropertiesDictionaryTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
