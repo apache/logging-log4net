@@ -73,9 +73,8 @@ namespace log4net.Util
 		/// <param name="errorCode">The internal error code.</param>
 		public void Error(string message, Exception e, ErrorCode errorCode) 
 		{ 
-			if (m_firstTime) 
+			if (IsEnabled) 
 			{
-				m_firstTime = false;
 				LogLog.Error("[" + m_prefix + "] " + message, e);
 			}
 		}
@@ -88,9 +87,8 @@ namespace log4net.Util
 		/// <param name="e">The exception.</param>
 		public void Error(string message, Exception e) 
 		{ 
-			if (m_firstTime) 
+			if (IsEnabled) 
 			{
-				m_firstTime = false;
 				LogLog.Error("[" + m_prefix + "] " + message, e);
 			}
 		}
@@ -102,14 +100,36 @@ namespace log4net.Util
 		/// <param name="message">The error message.</param>
 		public void Error(string message) 
 		{
-			if (m_firstTime) 
+			if (IsEnabled) 
 			{
-				m_firstTime = false;
 				LogLog.Error("[" + m_prefix + "] " + message);
 			}
 		}
 
 		#endregion Implementation of IErrorHandler
+
+		/// <summary>
+		/// Is error logging enabled
+		/// </summary>
+		private bool IsEnabled
+		{
+			get
+			{
+				// Allow first error message to be logged
+				if (m_firstTime)
+				{
+					m_firstTime = false;
+					return true;
+				}
+
+				// Check if InternalDebugging is enabled
+				if (LogLog.InternalDebugging && !LogLog.QuietMode)
+				{
+					return true;
+				}
+				return false;
+			}
+		}
 
 		#region Private Instance Fields
 
