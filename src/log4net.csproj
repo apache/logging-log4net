@@ -908,6 +908,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Util\PatternStringConverters\RandomStringPatternConverter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Util\PatternStringConverters\UserNamePatternConverter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -939,6 +944,11 @@
                 />
                 <File
                     RelPath = "Util\TypeConverters\IConvertTo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Util\TypeConverters\PatternLayoutConverter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
