@@ -56,6 +56,10 @@ namespace log4net.Repository.Hierarchy
 		/// Called by the <see cref="Hierarchy"/> to create
 		/// new named <see cref="Logger"/> instances.
 		/// </para>
+		/// <para>
+		/// If the <paramref name="name"/> is <c>null</c> then the root logger
+		/// must be returned.
+		/// </para>
 		/// </remarks>
 		Logger CreateLogger(string name);
 	}

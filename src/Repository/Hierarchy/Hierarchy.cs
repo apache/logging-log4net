@@ -199,9 +199,6 @@ namespace log4net.Repository.Hierarchy
 			m_defaultFactory = loggerFactory;
 
 			m_ht = System.Collections.Hashtable.Synchronized(new System.Collections.Hashtable());
-			m_root = new RootLogger(Level.Debug);
-
-			m_root.Hierarchy = this;
 		}
 
 		#endregion Public Instance Constructors
@@ -233,7 +230,25 @@ namespace log4net.Repository.Hierarchy
 		/// </remarks>
 		public Logger Root
 		{
-			get { return m_root; }
+			get 
+			{ 
+				if (m_root == null)
+				{
+					lock(this)
+					{
+						if (m_root == null)
+						{
+							// Create the root logger
+							Logger root = m_defaultFactory.CreateLogger(null);
+							root.Hierarchy = this;
+
+							// Store root
+							m_root = root;
+						}
+					}
+				}
+				return m_root; 
+			}
 		}
 
 		/// <summary>
@@ -808,7 +823,7 @@ namespace log4net.Repository.Hierarchy
 			// If we could not find any existing parents, then link with root.
 			if (!parentFound) 
 			{
-				log.Parent = m_root;
+				log.Parent = this.Root;
 			}
 		}
 
