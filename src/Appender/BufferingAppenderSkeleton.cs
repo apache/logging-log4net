@@ -239,7 +239,14 @@ namespace log4net.Appender
 				ErrorHandler.Error("Appender ["+Name+"] is Lossy but has no Evaluator. The buffer will never be sent!"); 
 			}
 
-			m_cb = new CyclicBuffer(m_bufferSize);
+			if (m_bufferSize > 1)
+			{
+				m_cb = new CyclicBuffer(m_bufferSize);
+			}
+			else
+			{
+				m_cb = null;
+			}
 		}
 
 		#endregion Implementation of IOptionHandler
@@ -313,7 +320,7 @@ namespace log4net.Appender
 			// sent immediately because there is not enough space in the buffer
 			// to buffer up more than 1 event. Therefore as a special case
 			// we don't use the buffer at all.
-			if (m_bufferSize <= 1)
+			if (m_cb == null || m_bufferSize <= 1)
 			{
 				// Only send the event if we are in non lossy mode or the event is a triggering event
 				if ((!m_lossy) || 
