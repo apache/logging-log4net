@@ -16,6 +16,10 @@
  */
 #endregion
 
+// .NET Compact Framework 1.0 has no support for Marshal.StringToHGlobalAnsi
+// SSCLI 1.0 has no support for Marshal.StringToHGlobalAnsi
+#if !NETCF && !SSCLI
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -235,7 +239,7 @@ namespace log4net.Appender
 			Local7 = 23
 		}
 
-		#endregion Enumerations
+		#endregion // Enumerations
 
 		#region Public Instance Constructors
 
@@ -250,7 +254,7 @@ namespace log4net.Appender
 		{
 		}
 
-		#endregion Public Instance Constructors
+		#endregion // Public Instance Constructors
 
 		#region Public Instance Properties
 		
@@ -285,7 +289,7 @@ namespace log4net.Appender
 			set { m_facility = value; }
 		}
 		
-		#endregion Public Instance Properties
+		#endregion // Public Instance Properties
 
 		/// <summary>
 		/// Add a mapping of level to severity
@@ -336,7 +340,7 @@ namespace log4net.Appender
 			openlog(m_handleToIdentity, 1, m_facility);
 		}
 
-		#endregion IOptionHandler Implementation
+		#endregion // IOptionHandler Implementation
 
 		#region AppenderSkeleton Implementation
 
@@ -393,7 +397,7 @@ namespace log4net.Appender
 			get { return true; }
 		}
 
-		#endregion AppenderSkeleton Implementation
+		#endregion // AppenderSkeleton Implementation
 
 		#region Protected Members
 
@@ -442,7 +446,7 @@ namespace log4net.Appender
 			return SyslogSeverity.Debug;
 		}
 
-		#endregion Protected Members
+		#endregion // Protected Members
 
 		#region Public Static Members
 
@@ -457,7 +461,7 @@ namespace log4net.Appender
 			return ((int)facility * 8) + (int)severity;
 		}
 
-		#endregion Public Static Members
+		#endregion // Public Static Members
 
 		#region Private Instances Fields
 
@@ -483,7 +487,7 @@ namespace log4net.Appender
 		/// </summary>
 		private LevelMapping m_levelMapping = new LevelMapping();
 
-		#endregion Private Instances Fields
+		#endregion // Private Instances Fields
 
 		#region External Members
 		
@@ -505,7 +509,7 @@ namespace log4net.Appender
 		[DllImport("libc")]
 		public static extern void closelog();
 
-		#endregion 
+		#endregion // External Members
 
 		#region LevelSeverity LevelMapping Entry
 
@@ -530,3 +534,5 @@ namespace log4net.Appender
 		#endregion // LevelSeverity LevelMapping Entry
 	}
 }
+
+#endif
