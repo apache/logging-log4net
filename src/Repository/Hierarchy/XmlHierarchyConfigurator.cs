@@ -552,6 +552,35 @@ namespace log4net.Repository.Hierarchy
 						LogLog.Debug("XmlConfigurator: Security exception while trying to expand environment variables. Error Ignored. No Expansion.");
 					}
 #endif
+
+					// Check if a specific subtype is specified on the element using the 'type' attribute
+					string subTypeString = element.GetAttribute(TYPE_ATTR);
+					if (subTypeString != null && subTypeString.Length > 0)
+					{
+						// Read the explicit subtype
+						try
+						{
+							Type subType = SystemInfo.GetTypeFromString(subTypeString, true, true);
+
+							LogLog.Debug("XmlConfigurator: Parameter ["+name+"] specified subtype ["+subType.FullName+"]");
+
+							if (!propertyType.IsAssignableFrom(subType))
+							{
+								LogLog.Error("XmlConfigurator: Subtype ["+subType.FullName+"] set on ["+name+"] is not a subclass of property type ["+propertyType.FullName+"]");
+							}
+							else
+							{
+								// The subtype specified is found and is actually a subtype of the property
+								// type, therefore we can switch to using this type.
+								propertyType = subType;
+							}
+						}
+						catch(Exception ex)
+						{
+							LogLog.Error("XmlConfigurator: Failed to find type ["+subTypeString+"] set on ["+name+"]", ex);
+						}
+					}
+
 					// Now try to convert the string value to an acceptable type
 					// to pass to this property.
 
