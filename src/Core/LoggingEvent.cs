@@ -110,6 +110,14 @@ namespace log4net.Core
 		/// </remarks>
 		public PropertiesDictionary Properties;
 
+		/// <summary>
+		/// Global properties
+		/// </summary>
+		/// <remarks>
+		/// Global properties are defined on the <see cref="GlobalContext"/>
+		/// </remarks>
+		public ReadOnlyPropertiesDictionary GlobalProperties;
+
 		#endregion Public Instance Fields
 	}
 
@@ -266,6 +274,9 @@ namespace log4net.Core
 			m_data.LoggerName = loggerName;
 			m_data.Level = level;
 			m_data.TimeStamp = DateTime.Now;
+
+			// Lookup the global properties as soon as possible
+			m_data.GlobalProperties = log4net.GlobalContext.Properties.GetReadOnlyProperties();
 		}
 
 		/// <summary>
@@ -344,6 +355,7 @@ namespace log4net.Core
 			m_data.UserName = info.GetString("UserName");
 			m_data.ExceptionString = info.GetString("ExceptionString");
 			m_data.Properties = (PropertiesDictionary) info.GetValue("Properties", typeof(PropertiesDictionary));
+			m_data.GlobalProperties = (ReadOnlyPropertiesDictionary) info.GetValue("GlobalProperties", typeof(ReadOnlyPropertiesDictionary));
 			m_data.Domain = info.GetString("Domain");
 			m_data.Identity = info.GetString("Identity");
 		}
@@ -812,6 +824,32 @@ namespace log4net.Core
 					m_data.Properties = new PropertiesDictionary();
 				}
 				return m_data.Properties; 
+			}
+		}
+
+		/// <summary>
+		/// Gets the global properties defined when this event was created.
+		/// </summary>
+		/// <value>
+		/// Globally diefined properties.
+		/// </value>
+		/// <remarks>
+		/// Global properties are defined by the <see cref="GlobalContext"/>
+		/// </remarks>
+		public ReadOnlyPropertiesDictionary GlobalProperties
+		{
+			get 
+			{ 
+				// The global properties are captured in the constructor
+				// because they are global shareed state they must be captured as soon as possible
+
+				if (m_data.GlobalProperties == null)
+				{
+					// Just in case for some reason this is null set it to an empty collection
+					// callers do not expect this property to return null
+					m_data.GlobalProperties = new ReadOnlyPropertiesDictionary();
+				}
+				return m_data.GlobalProperties; 
 			}
 		}
 

@@ -164,6 +164,24 @@ namespace log4net.Layout
 	///			</description>
 	///		</item>
 	///		<item>
+	///			<term>global</term>
+	///			<description>
+	/// 			<para>
+	/// 			Used to output the a global property. The key to 
+	/// 			lookup must be specified within braces and directly following the
+	/// 			pattern specifier, e.g. <b>%global{user}</b> would include the value
+	/// 			from the property that is keyed by the string 'user'. Each property value
+	/// 			that is to be included in the log must be specified separately.
+	/// 			Properties are added to events by loggers or appenders. By default
+	/// 			no properties are defined.
+	/// 			</para>
+	/// 			<para>
+	/// 			If no key is specified, e.g. <b>%global</b> then all the keys and their
+	/// 			values are printed in a comma separated list.
+	/// 			</para>
+	///			</description>
+	///		</item>
+	///		<item>
 	///			<term>identity</term>
 	///			<description>
 	///				<para>
@@ -281,6 +299,10 @@ namespace log4net.Layout
 	/// 			from the MDC that is keyed by the string 'user'. Each MDC value
 	/// 			that is to be included in the log must be specified separately.
 	/// 			</para>
+	/// 			<para>
+	/// 			If no key is specified, e.g. <b>%mdc</b> then all the keys and their
+	/// 			values are printed in a comma separated list.
+	/// 			</para>
 	///			</description>
 	///		</item>
 	///		<item>
@@ -346,6 +368,10 @@ namespace log4net.Layout
 	/// 			that is to be included in the log must be specified separately.
 	/// 			Properties are added to events by loggers or appenders. By default
 	/// 			no properties are defined.
+	/// 			</para>
+	/// 			<para>
+	/// 			If no key is specified, e.g. <b>%property</b> then all the keys and their
+	/// 			values are printed in a comma separated list.
 	/// 			</para>
 	///			</description>
 	///		</item>
@@ -676,6 +702,8 @@ namespace log4net.Layout
 			s_globalRulesRegistry.Add("F", typeof(FileLocationPatternConverter));
 			s_globalRulesRegistry.Add("file", typeof(FileLocationPatternConverter));
 
+			s_globalRulesRegistry.Add("global", typeof(GlobalPropertyPatternConverter));
+
 			s_globalRulesRegistry.Add("l", typeof(FullLocationPatternConverter));
 			s_globalRulesRegistry.Add("location", typeof(FullLocationPatternConverter));
 
@@ -863,7 +891,7 @@ namespace log4net.Layout
 		/// <param name="converterInfo">the converter info</param>
 		/// <remarks>
 		/// This version of the method is used by the configurator.
-		/// Programatic users should use the alternative <see cref="AddConverter(string,Type)"/> method.
+		/// Programmatic users should use the alternative <see cref="AddConverter(string,Type)"/> method.
 		/// </remarks>
 		public void AddConverter(ConverterInfo converterInfo)
 		{
