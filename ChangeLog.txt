@@ -1,9 +1,202 @@
 
-
 =============================================================================
-Version 1.2.XXXX
+Version 1.2.9 BETA
 =============================================================================
 
+
+2005-02-15 18:56  nicko
+
+	* Util/TypeConverters/IPAddressConverter.cs:
+
+	Only attempt to IPAddress.Parse if the string contains valid IP address characters
+
+2005-02-14 19:45  nicko
+
+	* Appender/AppenderSkeleton.cs:
+
+	Added anonymous catch handler
+
+2005-02-14 10:41  nicko
+
+	* NDC.cs:
+
+	Fixed Stack reference on NETCF
+
+	* Config/XmlConfigurator.cs:
+
+	Added DefaultCredential authentication support to loading config from web request
+
+2005-02-14 03:45  nicko
+
+	* LogicalThreadContext.cs, MDC.cs, ThreadContext.cs:
+
+	Updated doc comments
+
+	* NDC.cs, Util/ThreadContextStack.cs:
+
+	Added support for all old methods in NDC - Depth, SetMaxDepth, CloneStack, Inherit
+
+2005-02-14 03:24  nicko
+
+	* LogicalThreadContext.cs, ThreadContext.cs, log4net.csproj,
+	  Util/ThreadContextList.cs, Util/ThreadContextLists.cs:
+
+	Removed Context Lists. The Context Stacks give essentially the same functionality
+
+	* AssemblyInfo.cs:
+
+	Renamed CORE build to CLI_1_0
+
+	* Config/XmlConfiguratorAttribute.cs:
+
+	Added support for locating the config file when the app is deployed from a web server, i.e. via no-touch deployment
+
+	* Config/XmlConfigurator.cs:
+
+	Added support for loading the configuration data via a URI
+
+	* Appender/FileAppender.cs, Appender/SmtpPickupDirAppender.cs,
+	  Util/SystemInfo.cs:
+
+	Moved ConvertToFullPath method to SystemInfo
+
+	* Appender/ColoredConsoleAppender.cs, Appender/EventLogAppender.cs,
+	  Appender/NetSendAppender.cs,
+	  Appender/OutputDebugStringAppender.cs, Util/NativeError.cs,
+	  Util/WindowsSecurityContext.cs:
+
+	Renamed CORE build to CLI_1_0
+
+2005-02-07 23:27  nicko
+
+	* Util/SystemInfo.cs:
+
+	Fixed TryParse on NETCF
+
+	* Layout/XmlLayoutSchemaLog4j.cs:
+
+	Updated link to log4j site
+
+2005-02-07 22:41  nicko
+
+	* DateFormatter/AbsoluteTimeDateFormatter.cs,
+	  DateFormatter/DateTimeDateFormatter.cs,
+	  DateFormatter/Iso8601DateFormatter.cs,
+	  Layout/Pattern/DatePatternConverter.cs,
+	  Util/PatternStringConverters/DatePatternConverter.cs:
+
+	Updated date patterns in doc comments to use .NET DateTime.ToString formatting patterns rather than Java syntax
+
+	* Appender/EventLogAppender.cs, Appender/RollingFileAppender.cs,
+	  Layout/Pattern/NamedPatternConverter.cs, Util/OptionConverter.cs,
+	  Util/SystemInfo.cs,
+	  Util/PatternStringConverters/RandomStringPatternConverter.cs:
+
+	Added SystemInfo.TryParse methods for parsing strings to integers. These methods give a performance boost when the string cannot be parsed.
+
+2005-02-07 04:05  nicko
+
+	* Util/: PropertiesDictionary.cs, ProtectCloseTextWriter.cs,
+	  QuietTextWriter.cs, ReadOnlyPropertiesDictionary.cs,
+	  ReaderWriterLock.cs, ReusableStringWriter.cs, SystemInfo.cs,
+	  TextWriterAdapter.cs, ThreadContextList.cs,
+	  ThreadContextLists.cs, ThreadContextProperties.cs,
+	  ThreadContextStack.cs, ThreadContextStacks.cs, Transform.cs,
+	  WindowsSecurityContext.cs:
+
+	Tidied up doc comments
+
+	* Util/TypeConverters/: BooleanConverter.cs, EncodingConverter.cs,
+	  IPAddressConverter.cs, PatternLayoutConverter.cs,
+	  PatternStringConverter.cs, TypeConverter.cs:
+
+	Made type converter implementations internal
+
+2005-02-04 03:06  nicko
+
+	* log4net.csproj:
+
+	Added IPAddressConverter
+
+	* Util/TypeConverters/: ConverterRegistry.cs,
+	  IPAddressConverter.cs:
+
+	Added IPAddressConverter that converts string IP addresses or DNS Hostnames into IPAddress objects
+
+	* Util/OptionConverter.cs:
+
+	Updated ConvertStringTo to check for a registered converter before looking for static Parse method
+
+	* Util/TypeConverters/ConversionNotSupportedException.cs:
+
+	Added support for passing nested exception to Create
+
+	* Appender/RollingFileAppender.cs:
+
+	Fixed issue where ExistingInit could open the output file if the current file is from previous date period. This could lead to double open. Fixed CountDirection when value is 0. Previously value had to be > or < 0 but not 0. Now must either be positive or negative, 0 is positive.
+
+	* Appender/FileAppender.cs:
+
+	Fixed incorrect internal log message
+
+2005-02-01 20:20  nicko
+
+	* Appender/ColoredConsoleAppender.cs:
+
+	Fixed background color overspill when changing background colors and the console buffer is scrolled - see comment in code
+
+2005-01-31 22:56  nicko
+
+	* Util/: AppenderAttachedImpl.cs, CompositeProperties.cs,
+	  ContextPropertiesBase.cs, CountingQuietTextWriter.cs,
+	  CyclicBuffer.cs, EmptyCollection.cs, EmptyDictionary.cs,
+	  FormattingInfo.cs, GlobalContextProperties.cs, LevelMapping.cs,
+	  LevelMappingEntry.cs, LogLog.cs,
+	  LogicalThreadContextProperties.cs, NativeError.cs,
+	  NullDictionaryEnumerator.cs, NullEnumerator.cs,
+	  NullSecurityContext.cs, OnlyOnceErrorHandler.cs,
+	  OptionConverter.cs, PatternConverter.cs, PatternParser.cs,
+	  PatternString.cs:
+
+	Tidied up doc comments
+
+	* Appender/ColoredConsoleAppender.cs:
+
+	Updated to support writing more than 30,000 chars. Changed to use Stream that calls WriteFile rather than WriteConsoleW
+
+2005-01-31 02:32  nicko
+
+	* Layout/PatternLayout.cs, Util/PatternString.cs:
+
+	Updated doc comments
+
+2005-01-28 22:18  nicko
+
+	* Appender/AdoNetAppender.cs:
+
+	Added ReconnectOnError property to AdoNetAppender
+
+2005-01-28 20:51  nicko
+
+	* Util/AppenderAttachedImpl.cs:
+
+	Cache the appenders list in an array for performance
+
+	* Repository/Hierarchy/: Hierarchy.cs, Logger.cs:
+
+	Added casting to improve performance when comparing Level object against null. Only reference equals is required
+
+	* ObjectRenderer/RendererMap.cs:
+
+	Added cache map to RenderMap to hold the renderer for queried types
+
+	* Core/LoggingEvent.cs:
+
+	Updated to use RendererMap.FindAndRender method that returns a string where appropriate
+
+	* Appender/AppenderCollection.cs:
+
+	Added ToArray() to AppenderCollection. Added missing ICollection.CopyTo to ReadOnlyAppenderCollection.
 
 2005-01-25 01:59  nicko
 
@@ -889,7 +1082,7 @@ Version 1.2.XXXX
 	* Appender/SmtpAppender.cs:
 
 	Update to the SmtpAppender from Al Little.
-	Added SMTP Basic (username & password) and NTML (Windows Integrated) authentication to the SmtpAppender.
+	Added SMTP Basic (username & password) and NTLM (Windows Integrated) authentication to the SmtpAppender.
 	Added property to allow the SMTP server port to be set.
 	These features are only available on .NET 1.1 runtime using CDO as the mail client implementation.
 

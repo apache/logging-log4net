@@ -81,6 +81,37 @@ limitations under the License.
 				<section name="New Features">
 					<ul>
 						<li>
+							<h3>New CLI build</h3>
+							<p>
+								A new log4net assembly is built that targets all CLI 1.0 compatible runtimes.
+								This build is essentially a common subset of the Mono 1.0 and .NET 1.0 builds.
+								It is built using the MS .NET 1.0 compiler and libraries but does not use any
+								platform specific APIs.
+							</p>
+							<p>
+								This build is only available in release configuration and can be found at
+								<span class="code">bin\cli\1.0\release</span>.
+							</p>
+						</li>
+						<li>
+							<h3>Logging contexts</h3>
+							<p>
+								Logging contexts can be used to record contextual data that is relevant to the current
+								process. Logging contexts are both an extension of the concepts embodied in the
+								<span class="code">MDC</span> and <span class="code">NDC</span> and a replacement for
+								them. The <span class="code">MDC</span> and <span class="code">NDC</span> have been
+								reimplemented to use the <span class="code">ThreadContext</span> as storage.
+							</p>
+							<p>
+								The logging contexts provide a single unified view that cuts across different
+								scopes within an application.
+								The contexts are layered in the following order of narrowing scope: 
+								<span class="code">GlobalContext</span>, <span class="code">ThreadContext</span>, 
+								<span class="code">LogicalThreadContext</span>, and <span class="code">LoggingEvent</span>.
+								Context values specified in a narrower scope hide the matching value in a wider scope.
+							</p>
+						</li>
+						<li>
 							<h3><span class="code">PatternLayout</span> customization and long pattern names</h3>
 							<p>
 								The <span class="code">PatternLayout</span> now supports long pattern names.
@@ -147,6 +178,65 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 							</p>
 						</li>
 						<li>
+							<h3>Loading configuration from a URI</h3>
+							<p>
+								The <span class="code">XmlConfigurator</span> methods now support loading the
+								configuration data from a URI. Config can be loaded from any URI supported by the 
+								<span class="code">System.Net.WebRequest</span> class.
+							</p>
+						</li>
+						<li>
+							<h3>Support for No-Touch deployment</h3>
+							<p>
+								Log4net supports configuring No-Touch deployment applications using the
+								<span class="code">XmlConfiguratorAttribute</span>. If a relative config file
+								or extension is specified then this is resolved relative to the deployment
+								URI.
+							</p>
+						</li>
+						<li>
+							<h3>Config file parser enhancements</h3>
+							<p>
+								The config file parser has been enhanced to support specifying the property subtype, or intermediate type, 
+								directly on the property element, for example:
+							</p>
+							<div class="syntax"><pre class="code">
+&lt;layout type=&quot;log4net.Layout.PatternLayout&quot; value=&quot;%message%newline&quot; /&gt;</pre></div>
+							<p>
+								Implicit conversion will be attempted between the value string and the type specified, 
+								and then again between the type and the target property type.
+							</p>
+						</li>
+						<li>
+							<h3>.NET string formatting syntax</h3>
+							<p>
+								Added .NET <span class="code">String.Format</span> style formatting syntax methods to 
+								the <span class="code">ILog</span> interface. The new methods are: 
+								<span class="code">DebugFormat</span>, <span class="code">InfoFormat</span>, 
+								<span class="code">WarnFormat</span>, <span class="code">ErrorFormat</span> 
+								and <span class="code">FatalFormat</span>.
+							</p>
+						</li>
+						<li>
+							<h3>Customizable levels</h3>
+							<p>
+								Levels are defined by the repository <span class="code">LevelMap</span>. The defined 
+								levels, the relative ordering of levels and level display names can be configured on 
+								a per-repository basis.
+							</p>
+						</li>
+						<li>
+							<h3>Per-appender security contexts</h3>
+							<p>
+								Appenders that interact with controlled platform resources, e.g. files, can be
+								configured to use a separate security context when accessing these resources.
+								The calling thread may not have appropriate privileges to access the resource a
+								custom <span class="code">SecurityContext</span> can be used to elevate the
+								privileges of the appender. The <span class="code">WindowsSecurityContext</span> 
+								is used to specify alternative credentials on the Windows platform.
+							</p>
+						</li>
+						<li>
 							<h3>Added new appenders</h3>
 							<dl>
 								<dt><span class="code">AnsiColorTerminalAppender</span></dt>
@@ -186,7 +276,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 							</dl>
 						</li>
 						<li>
-							<h3>Added new filter</h3>
+							<h3>Added new <span class="code">LoggerMatchFilter</span> filter</h3>
 							<p>
 								Added <span class="code">LoggerMatchFilter</span> which matches a string against
 								the event's logger name.
@@ -201,16 +291,6 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 							</p>
 						</li>
 						<li>
-							<h3>Logging contexts</h3>
-							<p>
-								Logging contexts can be used to record contextual data that is relevant to the current
-								process. The contexts are layered in the following order of narrowing scope: 
-								<span class="code">GlobalContext</span>, <span class="code">ThreadContext</span>, 
-								<span class="code">LogicalThreadContext</span>, and <span class="code">LoggingEvent</span>.
-								Context values specified in a narrower scope hide the matching value in a wider scope.
-							</p>
-						</li>
-						<li>
 							<h3><span class="code">SmtpAppender</span> authentication</h3>
 							<p>
 								On the .NET 1.1 platform only, the <span class="code">SmtpAppender</span> supports authenticating
@@ -218,45 +298,19 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 							</p>
 						</li>
 						<li>
-							<h3>Config file parser enhancements</h3>
+							<h3><span class="code">AdoNetAppender</span> ReconnectOnError</h3>
 							<p>
-								The config file parser has been enhanced to support specifying the property subtype, or intermediate type, 
-								directly on the property element, for example:
-							</p>
-							<div class="syntax"><pre class="code">
-&lt;layout type=&quot;log4net.Layout.PatternLayout&quot; value=&quot;%message%newline&quot; /&gt;</pre></div>
-							<p>
-								Implicit conversion will be attempted between the value string and the type specified, 
-								and then again between the type and the target property type.
+								Added new configuration property to <span class="code">AdoNetAppender</span>.
+								Setting <span class="code">ReconnectOnError</span> to <span class="code">true</span>
+								will force the appender to attempt to reconnect to the database if the connection
+								is lost.
 							</p>
 						</li>
 						<li>
-							<h3>.NET string formatting syntax</h3>
+							<h3><span class="code">UdpAppender</span> hostname support</h3>
 							<p>
-								Added .NET <span class="code">String.Format</span> style formatting syntax methods to 
-								the <span class="code">ILog</span> interface. The new methods are: 
-								<span class="code">DebugFormat</span>, <span class="code">InfoFormat</span>, 
-								<span class="code">WarnFormat</span>, <span class="code">ErrorFormat</span> 
-								and <span class="code">FatalFormat</span>.
-							</p>
-						</li>
-						<li>
-							<h3>Customizable Levels</h3>
-							<p>
-								Levels are defined by the repository <span class="code">LevelMap</span>. The defined 
-								levels, the relative ordering of levels and level display names can be configured on 
-								a per-repository basis.
-							</p>
-						</li>
-						<li>
-							<h3>Per-appender security contexts</h3>
-							<p>
-								Appenders that interact with controlled platform resources, e.g. files, can be
-								configured to use a separate security context when accessing these resources.
-								The calling thread may not have appropriate privileges to access the resource a
-								custom <span class="code">SecurityContext</span> can be used to elevate the
-								privileges of the appender. The <span class="code">WindowsSecurityContext</span> 
-								is used to specify alternative credentials on the Windows platform.
+								The <span class="code">UdpAppender</span> config property <span class="code">RemoteAddress</span>
+								can now be specified as a DNS hostname string. The hostname is resolved to an IP address.
 							</p>
 						</li>
 					</ul>
@@ -291,6 +345,14 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 								<dd>
 									<p>
 										Fixed date rolling period detection for non UTC timezones.
+									</p>
+								</dd>
+								<dt><span class="code">ColoredConsoleAppender</span></dt>
+								<dd>
+									<p>
+										Updated to support writing more than 30,000 chars in a single message.
+										Fixed background color overspill if the console window needs to
+										scroll the contents.
 									</p>
 								</dd>
 							</dl>
