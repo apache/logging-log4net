@@ -3,7 +3,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.Ext.Trace", "log4ne
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.Ext.EventID", "log4net.Ext.EventID\cs\src\log4net.Ext.EventID.csproj", "{CB985027-C009-4C0F-88C1-8CF11912EE4C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.Ext.MarshalByRef", "log4net.Ext.MarshalByRef\cs\src\log4net.Ext.MarshalByRef.csproj", "{CB985027-C009-4C0F-88C1-8CF11912AE4C}"
+EndProject
 Global
+	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
+		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
+	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		ConfigName.0 = Debug
 		ConfigName.1 = Release
@@ -24,6 +29,12 @@ Global
 		{CB985027-C009-4C0F-88C1-8CF11912EE4C}.Release.Build.0 = Release|.NET
 		{CB985027-C009-4C0F-88C1-8CF11912EE4C}.ReleaseStrong.ActiveCfg = ReleaseStrong|.NET
 		{CB985027-C009-4C0F-88C1-8CF11912EE4C}.ReleaseStrong.Build.0 = ReleaseStrong|.NET
+		{CB985027-C009-4C0F-88C1-8CF11912AE4C}.Debug.ActiveCfg = Debug|.NET
+		{CB985027-C009-4C0F-88C1-8CF11912AE4C}.Debug.Build.0 = Debug|.NET
+		{CB985027-C009-4C0F-88C1-8CF11912AE4C}.Release.ActiveCfg = Release|.NET
+		{CB985027-C009-4C0F-88C1-8CF11912AE4C}.Release.Build.0 = Release|.NET
+		{CB985027-C009-4C0F-88C1-8CF11912AE4C}.ReleaseStrong.ActiveCfg = Release|.NET
+		{CB985027-C009-4C0F-88C1-8CF11912AE4C}.ReleaseStrong.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
