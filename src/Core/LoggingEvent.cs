@@ -934,6 +934,7 @@ namespace log4net.Core
 			info.AddValue("UserName", m_data.UserName);
 			info.AddValue("ExceptionString", m_data.ExceptionString);
 			info.AddValue("Properties", m_data.Properties);
+			info.AddValue("GlobalProperties", m_data.GlobalProperties);
 			info.AddValue("Domain", m_data.Domain);
 			info.AddValue("Identity", m_data.Identity);
 		}
