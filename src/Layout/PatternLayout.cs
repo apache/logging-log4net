@@ -270,7 +270,7 @@ namespace log4net.Layout
 	/// 			Used to output the MDC (mapped diagnostic context) associated
 	/// 			with the thread that generated the logging event. The key to lookup
 	/// 			must be specified within braces and directly following the
-	/// 			pattern specifier, e.g. <c>%X{user}</c> would include the value
+	/// 			pattern specifier, e.g. <c>%mdc{user}</c> would include the value
 	/// 			from the MDC that is keyed by the string 'user'. Each MDC value
 	/// 			that is to be included in the log must be specified separately.
 	/// 			</para>
