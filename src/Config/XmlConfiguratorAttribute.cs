@@ -42,6 +42,37 @@ namespace log4net.Config
 	/// without calling one of the <see cref="XmlConfigurator.Configure()"/>
 	/// methods.
 	/// </para>
+	/// <para>
+	/// If neither of the <see cref="ConfigFile"/> or <see cref="ConfigFileExtension"/>
+	/// properties are set the configuration is loaded from the application's .config file.
+	/// If set the <see cref="ConfigFile"/> property takes priority over the
+	/// <see cref="ConfigFileExtension"/> property. The <see cref="ConfigFile"/> property
+	/// specifies a path to a file to load the config from. The path is relative to the
+	/// application's base directory; <see cref="AppDomain.BaseDirectory"/>.
+	/// The <see cref="ConfigFileExtension"/> property is used as a postfix to the assembly file name.
+	/// The config file must be located in the  application's base directory; <see cref="AppDomain.BaseDirectory"/>.
+	/// For example in a console application setting the <see cref="ConfigFileExtension"/> to
+	/// <c>config</c> has the same effect as not specifying the <see cref="ConfigFile"/> or 
+	/// <see cref="ConfigFileExtension"/> properties.
+	/// </para>
+	/// <para>
+	/// The <see cref="Watch"/> property can be set to cause the <see cref="XmlConfigurator"/>
+	/// to watch the configuration file for changes.
+	/// </para>
+	/// <note>
+	/// <para>
+	/// Log4net will only look for assembly level configuration attributes once.
+	/// When using the log4net assembly level attributes to control the configuration 
+	/// of log4net you must ensure that the first call to any of the 
+	/// <see cref="log4net.Core.LoggerManager"/> methods is made from the assembly with the configuration
+	/// attributes. 
+	/// </para>
+	/// <para>
+	/// If you cannot guarantee the order in which log4net calls will be made from 
+	/// different assemblies you must use programmatic configuration instead, i.e.
+	/// call the <see cref="XmlConfigurator.Configure"/> method directly.
+	/// </para>
+	/// </note>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
@@ -79,6 +110,9 @@ namespace log4net.Config
 		/// the <see cref="XmlConfigurator"/>. This file path is relative to the
 		/// <b>application base</b> directory (<see cref="AppDomain.BaseDirectory"/>).
 		/// </para>
+		/// <para>
+		/// The <see cref="ConfigFile"/> takes priority over the <see cref="ConfigFileExtension"/>.
+		/// </para>
 		/// </remarks>
 		public string ConfigFile
 		{
@@ -98,6 +132,9 @@ namespace log4net.Config
 		/// The path to the config file is built by using the <b>application 
 		/// base</b> directory (<see cref="AppDomain.BaseDirectory"/>),
 		/// the <b>assembly name</b> and the config file extension.
+		/// </para>
+		/// <para>
+		/// The <see cref="ConfigFile"/> takes priority over the <see cref="ConfigFileExtension"/>.
 		/// </para>
 		/// </remarks>
 		public string ConfigFileExtension
