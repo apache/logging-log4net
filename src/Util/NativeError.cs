@@ -31,7 +31,7 @@ namespace log4net.Util
 	/// </summary>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
-	public class NativeError 
+	public sealed class NativeError 
 	{
 		#region Protected Instance Constructors
 
@@ -41,7 +41,7 @@ namespace log4net.Util
 		/// </summary>
 		/// <param name="number">The number of the native error.</param>
 		/// <param name="message">The message of the native error.</param>
-		protected NativeError(int number, string message) 
+		private NativeError(int number, string message) 
 		{
 			m_number = number;
 			m_message = message;
