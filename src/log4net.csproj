@@ -793,6 +793,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Util\LevelMapping.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Util\LevelMappingEntry.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Util\LogLog.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
