@@ -113,6 +113,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "ThreadContext.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Appender\AdoNetAppender.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -313,6 +318,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Core\IFixingRequired.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Core\ILogger.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -463,6 +473,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Filter\PropertyFilter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Filter\StringMatchFilter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -553,11 +568,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Layout\Pattern\GlobalPropertyPatternConverter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Layout\Pattern\IdentityPatternConverter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -579,11 +589,6 @@
                 />
                 <File
                     RelPath = "Layout\Pattern\LoggerPatternConverter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Layout\Pattern\MdcPatternConverter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -753,6 +758,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Util\CompositeProperties.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Util\CountingQuietTextWriter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -868,6 +878,31 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Util\ThreadContextList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Util\ThreadContextLists.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Util\ThreadContextProperties.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Util\ThreadContextStack.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Util\ThreadContextStacks.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Util\Transform.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -904,6 +939,11 @@
                 />
                 <File
                     RelPath = "Util\PatternStringConverters\ProcessIdPatternConverter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Util\PatternStringConverters\PropertyPatternConverter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
