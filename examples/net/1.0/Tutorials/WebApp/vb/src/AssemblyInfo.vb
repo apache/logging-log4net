@@ -1,6 +1,6 @@
 #Region "Copyright"
 '
-' Copyright 2001-2004 The Apache Software Foundation
+' Copyright 2001-2005 The Apache Software Foundation
 '
 ' Licensed under the Apache License, Version 2.0 (the "License");
 ' you may not use this file except in compliance with the License.
@@ -27,10 +27,7 @@ Imports System.Runtime.CompilerServices
 <Assembly:AssemblyTitle("log4net - WebApp")>
 <Assembly:AssemblyDescription("log4net WebApp")>
 <Assembly:AssemblyConfiguration("")>
-<Assembly:AssemblyCompany("The Apache Software Foundation")>
 <Assembly:AssemblyProduct("log4net - WebApp")>
-<Assembly:AssemblyCopyright("Copyright 2001-2004 The Apache Software Foundation.")>
-<Assembly:AssemblyTrademark("Copyright 2001-2004 The Apache Software Foundation.")>
 <Assembly:AssemblyCulture("")>
 
 '

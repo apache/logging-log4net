@@ -1,6 +1,6 @@
 #region Copyright & License
 //
-// Copyright 2001-2004 The Apache Software Foundation
+// Copyright 2001-2005 The Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,10 +27,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("log4net - EventIDLogApp")]
 [assembly: AssemblyDescription("log4net extensibility test - EventIDLogApp")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("The Apache Software Foundation")]
 [assembly: AssemblyProduct("log4net - EventIDLogApp")]
-[assembly: AssemblyCopyright("Copyright 2001-2004 The Apache Software Foundation.")]
-[assembly: AssemblyTrademark("Copyright 2001-2004 The Apache Software Foundation.")]
 [assembly: AssemblyCulture("")]		
 
 //

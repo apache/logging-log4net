@@ -7,7 +7,7 @@
 
 	<appender name="ConsoleAppender" type="log4net.Appender.ConsoleAppender" >
 		<layout type="log4net.Layout.PatternLayout">
-			<param name="ConversionPattern" value="[SimpleModuleConfig] %d [%t] %-5p %c - %m%n" />
+			<conversionPattern value="[SimpleModuleConfig] %date [%thread] %-5level %logger - %message%newline" />
 		</layout>
 	</appender>
 
