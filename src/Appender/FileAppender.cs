@@ -385,12 +385,34 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
-		/// Sets the quiet writer being used.
+		/// Sets the quiet writer used for file output
 		/// </summary>
-		/// <param name="writer">the writer to set</param>
+		/// <param name="fileStream">the file stream that has been opened for writing</param>
 		/// <remarks>
 		/// <para>
-		/// This method can be overridden by sub classes.
+		/// This implementation of <see cref="SetQWForFiles"/> creates a <see cref="StreamWriter"/>
+		/// over the <paramref name="fileStream"/> and passes it to the 
+		/// <see cref="SetQWForFiles(TextWriter)"/> method.
+		/// </para>
+		/// <para>
+		/// This method can be overridden by sub classes that want to wrap the
+		/// <see cref="Stream"/> in some way, for example to encrypt the output
+		/// data using a <c>System.Security.Cryptography.CryptoStream</c>.
+		/// </para>
+		/// </remarks>
+		virtual protected void SetQWForFiles(Stream fileStream) 
+		{
+			SetQWForFiles(new StreamWriter(fileStream, m_encoding));
+		}
+
+		/// <summary>
+		/// Sets the quiet writer being used.
+		/// </summary>
+		/// <param name="writer">the writer over the file stream that has been opened for writing</param>
+		/// <remarks>
+		/// <para>
+		/// This method can be overridden by sub classes that want to
+		/// wrap the <see cref="TextWriter"/> in some way.
 		/// </para>
 		/// </remarks>
 		virtual protected void SetQWForFiles(TextWriter writer) 
