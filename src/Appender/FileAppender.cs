@@ -387,10 +387,12 @@ namespace log4net.Appender
 		/// <summary>
 		/// Sets the quiet writer being used.
 		/// </summary>
-		/// <remarks>
-		/// This method can be overridden by sub classes.
-		/// </remarks>
 		/// <param name="writer">the writer to set</param>
+		/// <remarks>
+		/// <para>
+		/// This method can be overridden by sub classes.
+		/// </para>
+		/// </remarks>
 		virtual protected void SetQWForFiles(TextWriter writer) 
 		{
 			QuietWriter = new QuietTextWriter(writer, ErrorHandler);
@@ -404,6 +406,7 @@ namespace log4net.Appender
 		/// Convert a path into a fully qualified path.
 		/// </summary>
 		/// <param name="path">The path to convert.</param>
+		/// <returns>The fully qualified path.</returns>
 		/// <remarks>
 		/// <para>
 		/// Converts the path specified to a fully
@@ -412,21 +415,9 @@ namespace log4net.Appender
 		/// directory.
 		/// </para>
 		/// </remarks>
-		/// <returns>The fully qualified path.</returns>
 		protected static string ConvertToFullPath(string path)
 		{
-			if (path == null)
-			{
-				throw new ArgumentNullException("path");
-			}
-
-			string applicationBaseDirectory = SystemInfo.ApplicationBaseDirectory;
-			if (applicationBaseDirectory != null)
-			{
-				// Note that Path.Combine will return the second path if it is rooted
-				return Path.GetFullPath(Path.Combine(applicationBaseDirectory, path));
-			}
-			return Path.GetFullPath(path);
+			return SystemInfo.ConvertToFullPath(path);
 		}
 
 		#endregion Protected Static Methods

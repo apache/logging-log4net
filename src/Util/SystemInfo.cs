@@ -19,6 +19,7 @@
 using System;
 using System.Reflection;
 using System.Text;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace log4net.Util
@@ -85,6 +86,9 @@ namespace log4net.Util
 		/// <para>
 		/// Gets the base directory for this <see cref="AppDomain"/>.
 		/// </para>
+		/// <para>
+		/// The value returned may be either a local file path or a URI.
+		/// </para>
 		/// </remarks>
 		public static string ApplicationBaseDirectory
 		{
@@ -107,6 +111,9 @@ namespace log4net.Util
 		/// The .NET Compact Framework 1.0 does not have a concept of a configuration
 		/// file. For this runtime, we use the entry assembly location as the root for
 		/// the configuration file name.
+		/// </para>
+		/// <para>
+		/// The value returned may be either a local file path or a URI.
 		/// </para>
 		/// </remarks>
 		public static string ConfigurationFileLocation
@@ -618,9 +625,9 @@ namespace log4net.Util
 		public static Guid NewGuid()
 		{
 #if NETCF
-				return PocketGuid.NewGuid();
+			return PocketGuid.NewGuid();
 #else
-				return Guid.NewGuid();
+			return Guid.NewGuid();
 #endif
 		}
 
@@ -747,6 +754,56 @@ namespace log4net.Util
 
 			return false;
 #endif
+		}
+
+		/// <summary>
+		/// Convert a path into a fully qualified local file path.
+		/// </summary>
+		/// <param name="path">The path to convert.</param>
+		/// <returns>The fully qualified path.</returns>
+		/// <remarks>
+		/// <para>
+		/// Converts the path specified to a fully
+		/// qualified path. If the path is relative it is
+		/// taken as relative from the application base 
+		/// directory.
+		/// </para>
+		/// <para>
+		/// The path specified must be a local file path, a URI is not supported.
+		/// </para>
+		/// </remarks>
+		public static string ConvertToFullPath(string path)
+		{
+			if (path == null)
+			{
+				throw new ArgumentNullException("path");
+			}
+
+			string baseDirectory = "";
+			try
+			{
+				string applicationBaseDirectory = SystemInfo.ApplicationBaseDirectory;
+				if (applicationBaseDirectory != null)
+				{
+					// applicationBaseDirectory may be a URI not a local file path
+					Uri applicationBaseDirectoryUri = new Uri(applicationBaseDirectory);
+					if (applicationBaseDirectoryUri.IsFile)
+					{
+						baseDirectory = applicationBaseDirectoryUri.LocalPath;
+					}
+				}
+			}
+			catch
+			{
+				// ignore uri exceptions
+			}
+
+			if (baseDirectory != null && baseDirectory.Length > 0)
+			{
+				// Note that Path.Combine will return the second path if it is rooted
+				return Path.GetFullPath(Path.Combine(baseDirectory, path));
+			}
+			return Path.GetFullPath(path);
 		}
 
 		#endregion Public Static Methods
