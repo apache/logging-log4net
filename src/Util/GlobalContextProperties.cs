@@ -22,8 +22,17 @@ using System.Collections;
 namespace log4net.Util
 {
 	/// <summary>
+	/// Implementation of Properties collection for the <see cref="log4net.GlobalContext"/>
 	/// </summary>
 	/// <remarks>
+	/// <para>
+	/// This class implements a properties collection that is thread safe and supports both
+	/// storing properties and capturing a read only copy of the current propertied.
+	/// </para>
+	/// <para>
+	/// This class is optimized to the scenario where the properties are read frequently
+	/// and are modified infrequently.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	public sealed class GlobalContextProperties

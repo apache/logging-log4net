@@ -103,15 +103,15 @@ namespace log4net.Util
 		/// <summary>
 		/// Set the next pattern converter in the chains
 		/// </summary>
-		/// <param name="pc">the pattern converter that should follow this converter in the chain</param>
+		/// <param name="patternConverter">the pattern converter that should follow this converter in the chain</param>
 		/// <returns>the next converter</returns>
 		/// <remarks>
 		/// The PatternConverter can merge with its neighbor during this method (or a sub class).
 		/// Therefore the return value may or may not be the value of the argument passed in.
 		/// </remarks>
-		public virtual PatternConverter SetNext(PatternConverter pc)
+		public virtual PatternConverter SetNext(PatternConverter patternConverter)
 		{
-			m_next = pc;
+			m_next = patternConverter;
 			return m_next;
 		}
 
@@ -133,29 +133,29 @@ namespace log4net.Util
 
 				Convert(m_formatWriter, state);
 
-				StringBuilder sb = m_formatWriter.GetStringBuilder();
-				int len = sb.Length;
+				StringBuilder buf = m_formatWriter.GetStringBuilder();
+				int len = buf.Length;
 
 				if (len > m_max)
 				{
-					writer.Write(sb.ToString(len - m_max, m_max));
+					writer.Write(buf.ToString(len - m_max, m_max));
 				}
 				else if (len < m_min) 
 				{
 					if (m_leftAlign) 
 					{	
-						writer.Write(sb.ToString());
+						writer.Write(buf.ToString());
 						SpacePad(writer, m_min - len);
 					}
 					else 
 					{
 						SpacePad(writer, m_min - len);
-						writer.Write(sb.ToString());
+						writer.Write(buf.ToString());
 					}
 				}
 				else
 				{
-					writer.Write(sb.ToString());
+					writer.Write(buf.ToString());
 				}
 			}
 		}	
@@ -245,7 +245,7 @@ namespace log4net.Util
 
 			bool first = true;
 
-			// Write out all the MDC key value pairs
+			// Write out all the dictionary key value pairs
 			foreach(DictionaryEntry entry in value)
 			{
 				if (first)
