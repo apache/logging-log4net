@@ -67,5 +67,43 @@ namespace log4net.Tests.Layout
 			Assertion.AssertEquals("Test mdc value removed", "(null)", stringAppender.GetString());
 			stringAppender.Reset();
 		}
+
+		[Test] public void TestAddingCustomPattern()
+		{
+			StringAppender stringAppender = new StringAppender();
+			PatternLayout layout = new PatternLayout();
+
+			layout.AddConverter("TestAddingCustomPattern", typeof(TestMessagePatternConverter));
+			layout.ConversionPattern = "%TestAddingCustomPattern";
+			layout.ActivateOptions();
+
+			stringAppender.Layout = layout;
+
+			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+			BasicConfigurator.Configure(rep, stringAppender);
+
+			ILog log1 = LogManager.GetLogger(rep.Name, "TestAddingCustomPattern");
+
+			log1.Info("TestMessage");
+			Assertion.AssertEquals("%TestAddingCustomPattern not registered", "TestMessage", stringAppender.GetString());
+			stringAppender.Reset();	
+		}
+
+		/// <summary>
+		/// Converter to include event message
+		/// </summary>
+		private class TestMessagePatternConverter : log4net.Layout.Pattern.PatternLayoutConverter 
+		{
+			/// <summary>
+			/// Convert the pattern to the rendered message
+			/// </summary>
+			/// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
+			/// <param name="loggingEvent">the event being logged</param>
+			/// <returns>the relevant location information</returns>
+			override protected void Convert(System.IO.TextWriter writer, LoggingEvent loggingEvent)
+			{
+				loggingEvent.WriteRenderedMessage(writer);
+			}
+		}
 	}
 }

@@ -646,6 +646,8 @@ namespace log4net.Layout
 		/// </summary>
 		private PatternConverter m_head;
 
+		private Hashtable m_instanceRulesRegistry = new Hashtable();
+
 		#endregion
 
 		#region Static Constructor
@@ -765,11 +767,7 @@ namespace log4net.Layout
 		public string ConversionPattern
 		{
 			get { return m_pattern;	}
-			set
-			{
-				m_pattern = value;
-				m_head = CreatePatternParser(m_pattern).Parse();
-			}
+			set { m_pattern = value; }
 		}
 
 		/// <summary>
@@ -786,7 +784,11 @@ namespace log4net.Layout
 			// Add all the builtin patterns
 			foreach(DictionaryEntry entry in s_globalRulesRegistry)
 			{
-				patternParser.PatternConverters.Add(entry.Key, entry.Value);
+				patternParser.PatternConverters[entry.Key] = entry.Value;
+			}
+			foreach(DictionaryEntry entry in m_instanceRulesRegistry)
+			{
+				patternParser.PatternConverters[entry.Key] = entry.Value;
 			}
 
 			return patternParser;
@@ -812,7 +814,7 @@ namespace log4net.Layout
 		/// </remarks>
 		override public void ActivateOptions() 
 		{
-			// nothing to do.
+			m_head = CreatePatternParser(m_pattern).Parse();
 		}
 
 		#endregion
@@ -854,6 +856,70 @@ namespace log4net.Layout
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Add a converter to this PatternLayout
+		/// </summary>
+		/// <param name="converterInfo">the converter info</param>
+		/// <remarks>
+		/// This version of the method is used by the configurator.
+		/// Programatic users should use the alternative <see cref="AddConverter(string,Type)"/> method.
+		/// </remarks>
+		public void AddConverter(ConverterInfo converterInfo)
+		{
+			AddConverter(converterInfo.Name, converterInfo.Type);
+		}
+
+		/// <summary>
+		/// Add a converter to this PatternLayout
+		/// </summary>
+		/// <param name="name">the name of the conversion pattern for this converter</param>
+		/// <param name="type">the type of the converter</param>
+		public void AddConverter(string name, Type type)
+		{
+			if (name == null) throw new ArgumentNullException("name");
+			if (type == null) throw new ArgumentNullException("type");
+
+			if (!typeof(PatternConverter).IsAssignableFrom(type))
+			{
+				throw new ArgumentException("The converter type specified ["+type+"] must be a subclass of log4net.Util.PatternConverter", "type");
+			}
+			m_instanceRulesRegistry[name] = type;
+		}
+
+		/// <summary>
+		/// Wrapper class used to map converter names to converter types
+		/// </summary>
+		public sealed class ConverterInfo
+		{
+			private string m_name;
+			private Type m_type;
+
+			/// <summary>
+			/// default constructor
+			/// </summary>
+			public ConverterInfo()
+			{
+			}
+
+			/// <summary>
+			/// Gets or sets the name of the conversion pattern
+			/// </summary>
+			public string Name
+			{
+				get { return m_name; }
+				set { m_name = value; }
+			}
+
+			/// <summary>
+			/// Gets or sets the type of the converter
+			/// </summary>
+			public Type Type
+			{
+				get { return m_type; }
+				set { m_type = value; }
+			}
+		}
 	}
 
 	/// <summary>
