@@ -38,6 +38,11 @@ namespace log4net.Util
 		/// <value>
 		/// The value for the property with the specified key
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets or sets the value of a property
+		/// </para>
+		/// </remarks>
 		public abstract object this[string key] { get; set; }
 	}
 }

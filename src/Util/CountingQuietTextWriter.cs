@@ -27,6 +27,11 @@ namespace log4net.Util
 	/// Subclass of <see cref="QuietTextWriter"/> that maintains a count of 
 	/// the number of bytes written.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// This writer counts the number of bytes written.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	public class CountingQuietTextWriter : QuietTextWriter 
@@ -34,11 +39,16 @@ namespace log4net.Util
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Creates a new instance of the <see cref="CountingQuietTextWriter" /> class 
-		/// with the specified <see cref="TextWriter" /> and <see cref="IErrorHandler" />.
+		/// Constructor
 		/// </summary>
 		/// <param name="writer">The <see cref="TextWriter" /> to actually write to.</param>
 		/// <param name="errorHandler">The <see cref="IErrorHandler" /> to report errors to.</param>
+		/// <remarks>
+		/// <para>
+		/// Creates a new instance of the <see cref="CountingQuietTextWriter" /> class 
+		/// with the specified <see cref="TextWriter" /> and <see cref="IErrorHandler" />.
+		/// </para>
+		/// </remarks>
 		public CountingQuietTextWriter(TextWriter writer, IErrorHandler errorHandler) : base(writer, errorHandler)
 		{
 			m_countBytes = 0;
@@ -52,6 +62,10 @@ namespace log4net.Util
 		/// Writes a string to the output and counts the number of bytes written.
 		/// </summary>
 		/// <param name="str">The string data to write to the output.</param>
+		/// <remarks>
+		/// Overrides implementation of <see cref="QuietTextWriter"/>. Counts
+		/// the number of bytes written.
+		/// </remarks>
 		override public void Write(string str) 
 		{
 			if (str != null && str.Length > 0)
@@ -81,6 +95,11 @@ namespace log4net.Util
 		/// <value>
 		/// The total number of bytes written.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets or sets the total number of bytes written.
+		/// </para>
+		/// </remarks>
 		public long Count 
 		{
 			get { return m_countBytes; }

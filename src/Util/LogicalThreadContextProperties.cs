@@ -41,8 +41,13 @@ namespace log4net.Util
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="LogicalThreadContextProperties" /> class.
+		/// Constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="LogicalThreadContextProperties" /> class.
+		/// </para>
+		/// </remarks>
 		internal LogicalThreadContextProperties()
 		{
 		}
@@ -57,10 +62,16 @@ namespace log4net.Util
 		/// <value>
 		/// The value for the property with the specified key
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Get or set the property value for the <paramref name="key"/> specified.
+		/// </para>
+		/// </remarks>
 		override public object this[string key]
 		{
 			get 
 			{ 
+				// Don't create the dictionary if it does not already exist
 				PropertiesDictionary dictionary = GetProperties(false);
 				if (dictionary != null)
 				{
@@ -70,6 +81,7 @@ namespace log4net.Util
 			}
 			set 
 			{ 
+				// Force the dictionary to be created
 				GetProperties(true)[key] = value; 
 			}
 		}
@@ -82,6 +94,11 @@ namespace log4net.Util
 		/// Remove a property
 		/// </summary>
 		/// <param name="key">the key for the entry to remove</param>
+		/// <remarks>
+		/// <para>
+		/// Remove the value for the specified <paramref name="key"/> from the context.
+		/// </para>
+		/// </remarks>
 		public void Remove(string key)
 		{
 			PropertiesDictionary dictionary = GetProperties(false);
@@ -92,8 +109,13 @@ namespace log4net.Util
 		}
 
 		/// <summary>
-		/// Clear the global context properties
+		/// Clear all the context properties
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Clear all the context properties
+		/// </para>
+		/// </remarks>
 		public void Clear()
 		{
 			PropertiesDictionary dictionary = GetProperties(false);

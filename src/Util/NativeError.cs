@@ -33,6 +33,11 @@ namespace log4net.Util
 	/// <summary>
 	/// Represents a native error code and message.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Represents a Win32 platform native error.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	public sealed class NativeError 
@@ -45,6 +50,12 @@ namespace log4net.Util
 		/// </summary>
 		/// <param name="number">The number of the native error.</param>
 		/// <param name="message">The message of the native error.</param>
+		/// <remarks>
+		/// <para>
+		/// Create an instance of the <see cref="NativeError" /> class with the specified 
+		/// error number and message.
+		/// </para>
+		/// </remarks>
 		private NativeError(int number, string message) 
 		{
 			m_number = number;
@@ -61,6 +72,11 @@ namespace log4net.Util
 		/// <value>
 		/// The number of the native error.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets the number of the native error.
+		/// </para>
+		/// </remarks>
 		public int Number 
 		{
 			get { return m_number; }
@@ -72,6 +88,11 @@ namespace log4net.Util
 		/// <value>
 		/// The message of the native error.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// </para>
+		/// Gets the message of the native error.
+		/// </remarks>
 		public string Message 
 		{
 			get { return m_message; }
@@ -122,13 +143,15 @@ namespace log4net.Util
 		/// Retrieves the message corresponding with a Win32 message identifier.
 		/// </summary>
 		/// <param name="messageId">Message identifier for the requested message.</param>
-		/// <remarks>
-		/// The message will be searched for in system message-table resource(s)
-		/// using the native <c>FormatMessage</c> function.
-		/// </remarks>
 		/// <returns>
 		/// The message corresponding with the specified message identifier.
 		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// The message will be searched for in system message-table resource(s)
+		/// using the native <c>FormatMessage</c> function.
+		/// </para>
+		/// </remarks>
 		public static string GetErrorMessage(int messageId) 
 		{
 			// Win32 constants
@@ -179,6 +202,11 @@ namespace log4net.Util
 		/// Return error information string
 		/// </summary>
 		/// <returns>error information string</returns>
+		/// <remarks>
+		/// <para>
+		/// Return error information string
+		/// </para>
+		/// </remarks>
 		public override string ToString() 
 		{
 			return string.Format(CultureInfo.InvariantCulture, "0x{0:x8}", this.Number) + (this.Message != null ? ": " + this.Message : "");

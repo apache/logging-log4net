@@ -24,6 +24,12 @@ namespace log4net.Util
 	/// <summary>
 	/// An always empty <see cref="ICollection"/>.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// A singleton implementation of the <see cref="ICollection"/>
+	/// interface that always represents an empty collection.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 #if !NETCF
@@ -37,7 +43,9 @@ namespace log4net.Util
 		/// Initializes a new instance of the <see cref="EmptyCollection" /> class. 
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// Uses a private access modifier to enforce the singleton pattern.
+		/// </para>
 		/// </remarks>
 		private EmptyCollection()
 		{
@@ -51,6 +59,11 @@ namespace log4net.Util
 		/// Gets the singleton instance of the empty collection.
 		/// </summary>
 		/// <returns>The singleton instance of the empty collection.</returns>
+		/// <remarks>
+		/// <para>
+		/// Gets the singleton instance of the empty collection.
+		/// </para>
+		/// </remarks>
 		public static EmptyCollection Instance
 		{
 			get { return s_instance; }
@@ -70,6 +83,11 @@ namespace log4net.Util
 		/// indexing.</param>
 		/// <param name="index">The zero-based index in array at which 
 		/// copying begins.</param>
+		/// <remarks>
+		/// <para>
+		/// As the collection is empty no values are copied into the array.
+		/// </para>
+		/// </remarks>
 		public void CopyTo(System.Array array, int index)
 		{
 			// copy nothing
@@ -82,7 +100,9 @@ namespace log4net.Util
 		/// <b>true</b> if access to the <see cref="ICollection"/> is synchronized (thread-safe); otherwise, <b>false</b>.
 		/// </value>
 		/// <remarks>
+		/// <para>
 		/// For the <see cref="EmptyCollection"/> this property is always <c>true</c>.
+		/// </para>
 		/// </remarks>
 		public bool IsSynchronized
 		{
@@ -95,6 +115,11 @@ namespace log4net.Util
 		/// <value>
 		/// The number of elements contained in the <see cref="ICollection"/>.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// As the collection is empty the <see cref="Count"/> is always <c>0</c>.
+		/// </para>
+		/// </remarks>
 		public int Count
 		{
 			get { return 0; }
@@ -106,6 +131,12 @@ namespace log4net.Util
 		/// <value>
 		/// An object that can be used to synchronize access to the <see cref="ICollection"/>.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// As the collection is empty and thread safe and synchronized this instance is also
+		/// the <see cref="SyncRoot"/> object.
+		/// </para>
+		/// </remarks>
 		public object SyncRoot
 		{
 			get { return this; }
@@ -122,6 +153,11 @@ namespace log4net.Util
 		/// An <see cref="IEnumerator"/> that can be used to 
 		/// iterate through the collection.
 		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// As the collection is empty a <see cref="NullEnumerator"/> is returned.
+		/// </para>
+		/// </remarks>
 		public IEnumerator GetEnumerator()
 		{
 			return NullEnumerator.Instance;

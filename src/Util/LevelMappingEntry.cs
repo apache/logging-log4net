@@ -40,6 +40,11 @@ namespace log4net.Util
 		/// <summary>
 		/// Default protected constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Default protected constructor
+		/// </para>
+		/// </remarks>
 		protected LevelMappingEntry() 
 		{
 		}
@@ -51,6 +56,15 @@ namespace log4net.Util
 		/// <summary>
 		/// The level that is the key for this mapping 
 		/// </summary>
+		/// <value>
+		/// The <see cref="Level"/> that is the key for this mapping 
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Get or set the <see cref="Level"/> that is the key for this
+		/// mapping subclass.
+		/// </para>
+		/// </remarks>
 		public Level Level
 		{
 			get { return m_level; }

@@ -24,6 +24,12 @@ namespace log4net.Util
 	/// <summary>
 	/// An always empty <see cref="IDictionaryEnumerator"/>.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// A singleton implementation of the <see cref="IDictionaryEnumerator"/> over a collection
+	/// that is empty and not modifiable.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	public sealed class NullDictionaryEnumerator : IDictionaryEnumerator
@@ -34,7 +40,9 @@ namespace log4net.Util
 		/// Initializes a new instance of the <see cref="NullDictionaryEnumerator" /> class. 
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// Uses a private access modifier to enforce the singleton pattern.
+		/// </para>
 		/// </remarks>
 		private NullDictionaryEnumerator()
 		{
@@ -48,6 +56,11 @@ namespace log4net.Util
 		/// Gets the singleton instance of the <see cref="NullDictionaryEnumerator" />.
 		/// </summary>
 		/// <returns>The singleton instance of the <see cref="NullDictionaryEnumerator" />.</returns>
+		/// <remarks>
+		/// <para>
+		/// Gets the singleton instance of the <see cref="NullDictionaryEnumerator" />.
+		/// </para>
+		/// </remarks>
 		public static NullDictionaryEnumerator Instance
 		{
 			get { return s_instance; }
@@ -64,6 +77,15 @@ namespace log4net.Util
 		/// Throws an <see cref="InvalidOperationException" /> because the 
 		/// <see cref="NullDictionaryEnumerator" /> never has a current value.
 		/// </remarks>
+		/// <remarks>
+		/// <para>
+		/// As the enumerator is over an empty collection its <see cref="Current"/>
+		/// value cannot be moved over a valid position, therefore <see cref="Current"/>
+		/// will throw an <see cref="InvalidOperationException"/>.
+		/// </para>
+		/// </remarks>
+		/// <exception cref="InvalidOperationException">The collection is empty and <see cref="Current"/> 
+		/// cannot be positioned over a valid location.</exception>
 		public object Current 
 		{
 			get	{ throw new InvalidOperationException(); }
@@ -73,6 +95,13 @@ namespace log4net.Util
 		/// Test if the enumerator can advance, if so advance.
 		/// </summary>
 		/// <returns><c>false</c> as the <see cref="NullDictionaryEnumerator" /> cannot advance.</returns>
+		/// <remarks>
+		/// <para>
+		/// As the enumerator is over an empty collection its <see cref="Current"/>
+		/// value cannot be moved over a valid position, therefore <see cref="MoveNext"/>
+		/// will always return <c>false</c>.
+		/// </para>
+		/// </remarks>
 		public bool MoveNext()
 		{
 			return false;
@@ -81,6 +110,11 @@ namespace log4net.Util
 		/// <summary>
 		/// Resets the enumerator back to the start.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// As the enumerator is over an empty collection <see cref="Reset"/> does nothing.
+		/// </para>
+		/// </remarks>
 		public void Reset() 
 		{
 		}
@@ -96,6 +130,15 @@ namespace log4net.Util
 		/// Throws an exception because the <see cref="NullDictionaryEnumerator" />
 		/// never has a current value.
 		/// </remarks>
+		/// <remarks>
+		/// <para>
+		/// As the enumerator is over an empty collection its <see cref="Current"/>
+		/// value cannot be moved over a valid position, therefore <see cref="Key"/>
+		/// will throw an <see cref="InvalidOperationException"/>.
+		/// </para>
+		/// </remarks>
+		/// <exception cref="InvalidOperationException">The collection is empty and <see cref="Current"/> 
+		/// cannot be positioned over a valid location.</exception>
 		public object Key 
 		{
 			get	{ throw new InvalidOperationException(); }
@@ -109,6 +152,15 @@ namespace log4net.Util
 		/// Throws an <see cref="InvalidOperationException" /> because the 
 		/// <see cref="NullDictionaryEnumerator" /> never has a current value.
 		/// </remarks>
+		/// <remarks>
+		/// <para>
+		/// As the enumerator is over an empty collection its <see cref="Current"/>
+		/// value cannot be moved over a valid position, therefore <see cref="Value"/>
+		/// will throw an <see cref="InvalidOperationException"/>.
+		/// </para>
+		/// </remarks>
+		/// <exception cref="InvalidOperationException">The collection is empty and <see cref="Current"/> 
+		/// cannot be positioned over a valid location.</exception>
 		public object Value 
 		{
 			get	{ throw new InvalidOperationException(); }
@@ -121,6 +173,15 @@ namespace log4net.Util
 		/// Throws an <see cref="InvalidOperationException" /> because the 
 		/// <see cref="NullDictionaryEnumerator" /> never has a current entry.
 		/// </remarks>
+		/// <remarks>
+		/// <para>
+		/// As the enumerator is over an empty collection its <see cref="Current"/>
+		/// value cannot be moved over a valid position, therefore <see cref="Entry"/>
+		/// will throw an <see cref="InvalidOperationException"/>.
+		/// </para>
+		/// </remarks>
+		/// <exception cref="InvalidOperationException">The collection is empty and <see cref="Current"/> 
+		/// cannot be positioned over a valid location.</exception>
 		public DictionaryEntry Entry 
 		{
 			get	{ throw new InvalidOperationException(); }

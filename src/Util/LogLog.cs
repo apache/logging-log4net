@@ -47,7 +47,9 @@ namespace log4net.Util
 		/// Initializes a new instance of the <see cref="LogLog" /> class. 
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// Uses a private access modifier to prevent instantiation of this class.
+		/// </para>
 		/// </remarks>
 		private LogLog()
 		{
@@ -367,8 +369,10 @@ namespace log4net.Util
 		/// </summary>
 		/// <param name="message">The message to log.</param>
 		/// <remarks>
+		/// <para>
 		/// Uses Console.Out for console output,
 		/// and Trace for OutputDebugString output.
+		/// </para>
 		/// </remarks>
 		private static void EmitOutLine(string message)
 		{
@@ -386,8 +390,10 @@ namespace log4net.Util
 		/// </summary>
 		/// <param name="message">The message to log.</param>
 		/// <remarks>
+		/// <para>
 		/// Use Console.Error for console output,
 		/// and Trace for OutputDebugString output.
+		/// </para>
 		/// </remarks>
 		private static void EmitErrorLine(string message)
 		{

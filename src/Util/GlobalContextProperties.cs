@@ -64,8 +64,13 @@ namespace log4net.Util
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="GlobalContextProperties" /> class.
+		/// Constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="GlobalContextProperties" /> class.
+		/// </para>
+		/// </remarks>
 		internal GlobalContextProperties()
 		{
 		}

@@ -43,18 +43,28 @@ namespace log4net.Util
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="OnlyOnceErrorHandler" /> class.
+		/// Default Constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="OnlyOnceErrorHandler" /> class.
+		/// </para>
+		/// </remarks>
 		public OnlyOnceErrorHandler()
 		{
 			m_prefix = "";
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="OnlyOnceErrorHandler" /> class
-		/// with the specified prefix.
+		/// Constructor
 		/// </summary>
 		/// <param name="prefix">The prefix to use for each message.</param>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="OnlyOnceErrorHandler" /> class
+		/// with the specified prefix.
+		/// </para>
+		/// </remarks>
 		public OnlyOnceErrorHandler(string prefix)
 		{
 			m_prefix = prefix;
@@ -65,12 +75,17 @@ namespace log4net.Util
 		#region Implementation of IErrorHandler
 
 		/// <summary>
-		/// Prints the message and the stack trace of the exception on the standard
-		/// error output stream.
+		/// Log an Error
 		/// </summary>
 		/// <param name="message">The error message.</param>
 		/// <param name="e">The exception.</param>
 		/// <param name="errorCode">The internal error code.</param>
+		/// <remarks>
+		/// <para>
+		/// Prints the message and the stack trace of the exception on the standard
+		/// error output stream.
+		/// </para>
+		/// </remarks>
 		public void Error(string message, Exception e, ErrorCode errorCode) 
 		{ 
 			if (IsEnabled) 
@@ -80,11 +95,16 @@ namespace log4net.Util
 		}
 
 		/// <summary>
-		/// Prints the message and the stack trace of the exception on the standard
-		/// error output stream.
+		/// Log an Error
 		/// </summary>
 		/// <param name="message">The error message.</param>
 		/// <param name="e">The exception.</param>
+		/// <remarks>
+		/// <para>
+		/// Prints the message and the stack trace of the exception on the standard
+		/// error output stream.
+		/// </para>
+		/// </remarks>
 		public void Error(string message, Exception e) 
 		{ 
 			if (IsEnabled) 
@@ -94,10 +114,15 @@ namespace log4net.Util
 		}
 
 		/// <summary>
-		/// Print a the error message passed as parameter on the standard
-		/// error output stream.
+		/// Log an error
 		/// </summary>
 		/// <param name="message">The error message.</param>
+		/// <remarks>
+		/// <para>
+		/// Print a the error message passed as parameter on the standard
+		/// error output stream.
+		/// </para>
+		/// </remarks>
 		public void Error(string message) 
 		{
 			if (IsEnabled) 
@@ -111,6 +136,12 @@ namespace log4net.Util
 		/// <summary>
 		/// Is error logging enabled
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Is error logging enabled. Logging is only enabled for the
+		/// first error delivered to the <see cref="OnlyOnceErrorHandler"/>.
+		/// </para>
+		/// </remarks>
 		private bool IsEnabled
 		{
 			get

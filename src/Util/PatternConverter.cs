@@ -32,9 +32,11 @@ namespace log4net.Util
 	/// derived classes need.
 	/// </summary>
 	/// <remarks>
+	/// <para>
 	/// Conversion specifiers in a conversion patterns are parsed to
 	/// individual PatternConverters. Each of which is responsible for
 	/// converting a logging event in a converter specific manner.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
@@ -43,8 +45,13 @@ namespace log4net.Util
 		#region Protected Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PatternConverter" /> class.
+		/// Protected constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="PatternConverter" /> class.
+		/// </para>
+		/// </remarks>
 		protected PatternConverter() 
 		{  
 		}
@@ -54,16 +61,32 @@ namespace log4net.Util
 		#region Public Instance Properties
 
 		/// <summary>
-		/// the next patter converter in the chain
+		/// Get the next pattern converter in the chain
 		/// </summary>
+		/// <value>
+		/// the next pattern converter in the chain
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Get the next pattern converter in the chain
+		/// </para>
+		/// </remarks>
 		public virtual PatternConverter Next
 		{
 			get { return m_next; }
 		}
 
 		/// <summary>
-		/// The formatting info for this converter
+		/// Gets or sets the formatting info for this converter
 		/// </summary>
+		/// <value>
+		/// The formatting info for this converter
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets or sets the formatting info for this converter
+		/// </para>
+		/// </remarks>
 		public virtual FormattingInfo FormattingInfo
 		{
 			get { return new FormattingInfo(m_min, m_max, m_leftAlign); }
@@ -76,8 +99,16 @@ namespace log4net.Util
 		}
 
 		/// <summary>
+		/// Gets or sets the option value for this converter
+		/// </summary>
+		/// <summary>
 		/// The option for this converter
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Gets or sets the option value for this converter
+		/// </para>
+		/// </remarks>
 		public virtual string Option
 		{
 			get { return m_option; }
@@ -89,11 +120,16 @@ namespace log4net.Util
 		#region Protected Abstract Methods
 
 		/// <summary>
-		/// Derived pattern converters must override this method in order to
-		/// convert conversion specifiers in the correct way.
+		/// Evaluate this pattern converter and write the output to a writer.
 		/// </summary>
 		/// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
 		/// <param name="state">The state object on which the pattern converter should be executed.</param>
+		/// <remarks>
+		/// <para>
+		/// Derived pattern converters must override this method in order to
+		/// convert conversion specifiers in the appropriate way.
+		/// </para>
+		/// </remarks>
 		abstract protected void Convert(TextWriter writer, object state);
 
 		#endregion Protected Abstract Methods
@@ -106,8 +142,10 @@ namespace log4net.Util
 		/// <param name="patternConverter">the pattern converter that should follow this converter in the chain</param>
 		/// <returns>the next converter</returns>
 		/// <remarks>
+		/// <para>
 		/// The PatternConverter can merge with its neighbor during this method (or a sub class).
 		/// Therefore the return value may or may not be the value of the argument passed in.
+		/// </para>
 		/// </remarks>
 		public virtual PatternConverter SetNext(PatternConverter patternConverter)
 		{
@@ -116,10 +154,18 @@ namespace log4net.Util
 		}
 
 		/// <summary>
-		/// A template method for formatting in a converter specific way.
+		/// Write the pattern converter to the writer with appropriate formatting
 		/// </summary>
 		/// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
 		/// <param name="state">The state object on which the pattern converter should be executed.</param>
+		/// <remarks>
+		/// <para>
+		/// This method calls <see cref="Convert"/> to allow the subclass to perform
+		/// appropriate conversion of the pattern converter. If formatting options have
+		/// been specified via the <see cref="FormattingInfo"/> then this method will
+		/// apply those formattings before writing the output.
+		/// </para>
+		/// </remarks>
 		virtual public void Format(TextWriter writer, object state) 
 		{
 			if (m_min < 0 && m_max == int.MaxValue)
@@ -169,6 +215,11 @@ namespace log4net.Util
 		/// </summary>
 		/// <param name="writer"><see cref="TextWriter" /> to which the spaces will be appended.</param>
 		/// <param name="length">The number of spaces to be padded.</param>
+		/// <remarks>
+		/// <para>
+		/// Fast space padding method.
+		/// </para>
+		/// </remarks>
 		protected static void SpacePad(TextWriter writer, int length) 
 		{
 			while(length >= 32) 

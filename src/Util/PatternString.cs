@@ -306,8 +306,13 @@ namespace log4net.Util
 		#region Constructors
 
 		/// <summary>
-		/// Constructs a PatternString
+		/// Default constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Initialize a new instance of <see cref="PatternString"/>
+		/// </para>
+		/// </remarks>
 		public PatternString()
 		{
 		}
@@ -316,6 +321,11 @@ namespace log4net.Util
 		/// Constructs a PatternString
 		/// </summary>
 		/// <param name="pattern">The pattern to use with this PatternString</param>
+		/// <remarks>
+		/// <para>
+		/// Initialize a new instance of <see cref="PatternString"/> with the pattern specified.
+		/// </para>
+		/// </remarks>
 		public PatternString(string pattern)
 		{
 			m_pattern = pattern;
@@ -325,10 +335,18 @@ namespace log4net.Util
 		#endregion
   
 		/// <summary>
+		/// Gets or sets the pattern formatting string
+		/// </summary>
+		/// <value>
+		/// The pattern formatting string
+		/// </value>
+		/// <remarks>
+		/// <para>
 		/// The <b>ConversionPattern</b> option. This is the string which
 		/// controls formatting and consists of a mix of literal content and
 		/// conversion specifiers.
-		/// </summary>
+		/// </para>
+		/// </remarks>
 		public string ConversionPattern
 		{
 			get { return m_pattern;	}
@@ -361,12 +379,17 @@ namespace log4net.Util
 		#endregion
 
 		/// <summary>
+		/// Create the <see cref="PatternParser"/> used to parse the pattern
+		/// </summary>
+		/// <param name="pattern">the pattern to parse</param>
+		/// <returns>The <see cref="PatternParser"/></returns>
+		/// <remarks>
+		/// <para>
 		/// Returns PatternParser used to parse the conversion string. Subclasses
 		/// may override this to return a subclass of PatternParser which recognize
 		/// custom conversion characters.
-		/// </summary>
-		/// <param name="pattern">the pattern to parse</param>
-		/// <returns></returns>
+		/// </para>
+		/// </remarks>
 		private PatternParser CreatePatternParser(string pattern) 
 		{
 			PatternParser patternParser = new PatternParser(pattern);
@@ -389,6 +412,11 @@ namespace log4net.Util
 		/// Produces a formatted string as specified by the conversion pattern.
 		/// </summary>
 		/// <param name="writer">The TextWriter to write the formatted event to</param>
+		/// <remarks>
+		/// <para>
+		/// Format the pattern to the <paramref name="writer"/>.
+		/// </para>
+		/// </remarks>
 		public void Format(TextWriter writer) 
 		{
 			if (writer == null)
@@ -410,6 +438,11 @@ namespace log4net.Util
 		/// Format the pattern as a string
 		/// </summary>
 		/// <returns>the pattern formatted as a string</returns>
+		/// <remarks>
+		/// <para>
+		/// Format the pattern to a string.
+		/// </para>
+		/// </remarks>
 		public string Format() 
 		{
 			StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
@@ -422,8 +455,10 @@ namespace log4net.Util
 		/// </summary>
 		/// <param name="converterInfo">the converter info</param>
 		/// <remarks>
+		/// <para>
 		/// This version of the method is used by the configurator.
 		/// Programmatic users should use the alternative <see cref="AddConverter(string,Type)"/> method.
+		/// </para>
 		/// </remarks>
 		public void AddConverter(ConverterInfo converterInfo)
 		{
@@ -435,6 +470,11 @@ namespace log4net.Util
 		/// </summary>
 		/// <param name="name">the name of the conversion pattern for this converter</param>
 		/// <param name="type">the type of the converter</param>
+		/// <remarks>
+		/// <para>
+		/// Add a converter to this PatternString
+		/// </para>
+		/// </remarks>
 		public void AddConverter(string name, Type type)
 		{
 			if (name == null) throw new ArgumentNullException("name");
@@ -450,6 +490,11 @@ namespace log4net.Util
 		/// <summary>
 		/// Wrapper class used to map converter names to converter types
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Wrapper class used to map converter names to converter types
+		/// </para>
+		/// </remarks>
 		public sealed class ConverterInfo
 		{
 			private string m_name;
@@ -465,6 +510,14 @@ namespace log4net.Util
 			/// <summary>
 			/// Gets or sets the name of the conversion pattern
 			/// </summary>
+			/// <value>
+			/// The name of the conversion pattern
+			/// </value>
+			/// <remarks>
+			/// <para>
+			/// Gets or sets the name of the conversion pattern
+			/// </para>
+			/// </remarks>
 			public string Name
 			{
 				get { return m_name; }
@@ -474,6 +527,14 @@ namespace log4net.Util
 			/// <summary>
 			/// Gets or sets the type of the converter
 			/// </summary>
+			/// <value>
+			/// The type of the converter
+			/// </value>
+			/// <remarks>
+			/// <para>
+			/// Gets or sets the type of the converter
+			/// </para>
+			/// </remarks>
 			public Type Type
 			{
 				get { return m_type; }

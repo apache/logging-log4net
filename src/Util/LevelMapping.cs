@@ -26,6 +26,12 @@ namespace log4net.Util
 	/// <summary>
 	/// Manages a mapping from levels to <see cref="LevelMappingEntry"/>
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Manages an ordered mapping from <see cref="Level"/> instances 
+	/// to <see cref="LevelMappingEntry"/> subclasses.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	public sealed class LevelMapping : IOptionHandler
 	{
@@ -34,6 +40,11 @@ namespace log4net.Util
 		/// <summary>
 		/// Default constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Initialise a new instance of <see cref="LevelMapping"/>.
+		/// </para>
+		/// </remarks>
 		public LevelMapping() 
 		{
 		}
@@ -67,6 +78,16 @@ namespace log4net.Util
 		/// </summary>
 		/// <param name="level">the level to lookup</param>
 		/// <returns>the <see cref="LevelMappingEntry"/> for the level or <c>null</c> if no mapping found</returns>
+		/// <remarks>
+		/// <para>
+		/// Lookup the value for the specified level. Finds the nearest
+		/// mapping value for the level that is equal to or less than the
+		/// <paramref name="level"/> specified.
+		/// </para>
+		/// <para>
+		/// If no mapping could be found then <c>null</c> is returned.
+		/// </para>
+		/// </remarks>
 		public LevelMappingEntry Lookup(Level level)
 		{
 			if (m_entries != null)

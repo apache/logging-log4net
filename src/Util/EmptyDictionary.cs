@@ -24,6 +24,12 @@ namespace log4net.Util
 	/// <summary>
 	/// An always empty <see cref="IDictionary"/>.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// A singleton implementation of the <see cref="IDictionary"/>
+	/// interface that always represents an empty collection.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 #if !NETCF
@@ -37,7 +43,9 @@ namespace log4net.Util
 		/// Initializes a new instance of the <see cref="EmptyDictionary" /> class. 
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// Uses a private access modifier to enforce the singleton pattern.
+		/// </para>
 		/// </remarks>
 		private EmptyDictionary()
 		{
@@ -51,6 +59,11 @@ namespace log4net.Util
 		/// Gets the singleton instance of the <see cref="EmptyDictionary" />.
 		/// </summary>
 		/// <returns>The singleton instance of the <see cref="EmptyDictionary" />.</returns>
+		/// <remarks>
+		/// <para>
+		/// Gets the singleton instance of the <see cref="EmptyDictionary" />.
+		/// </para>
+		/// </remarks>
 		public static EmptyDictionary Instance
 		{
 			get { return s_instance; }
@@ -70,6 +83,11 @@ namespace log4net.Util
 		/// indexing.</param>
 		/// <param name="index">The zero-based index in array at which 
 		/// copying begins.</param>
+		/// <remarks>
+		/// <para>
+		/// As the collection is empty no values are copied into the array.
+		/// </para>
+		/// </remarks>
 		public void CopyTo(System.Array array, int index)
 		{
 			// copy nothing
@@ -82,7 +100,9 @@ namespace log4net.Util
 		/// <b>true</b> if access to the <see cref="ICollection"/> is synchronized (thread-safe); otherwise, <b>false</b>.
 		/// </value>
 		/// <remarks>
+		/// <para>
 		/// For the <see cref="EmptyCollection"/> this property is always <b>true</b>.
+		/// </para>
 		/// </remarks>
 		public bool IsSynchronized
 		{
@@ -95,6 +115,11 @@ namespace log4net.Util
 		/// <value>
 		/// The number of elements contained in the <see cref="ICollection"/>.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// As the collection is empty the <see cref="Count"/> is always <c>0</c>.
+		/// </para>
+		/// </remarks>
 		public int Count
 		{
 			get { return 0; }
@@ -106,6 +131,12 @@ namespace log4net.Util
 		/// <value>
 		/// An object that can be used to synchronize access to the <see cref="ICollection"/>.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// As the collection is empty and thread safe and synchronized this instance is also
+		/// the <see cref="SyncRoot"/> object.
+		/// </para>
+		/// </remarks>
 		public object SyncRoot
 		{
 			get { return this; }
@@ -122,6 +153,11 @@ namespace log4net.Util
 		/// An <see cref="IEnumerator"/> that can be used to 
 		/// iterate through the collection.
 		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// As the collection is empty a <see cref="NullEnumerator"/> is returned.
+		/// </para>
+		/// </remarks>
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return NullEnumerator.Instance;
@@ -137,6 +173,13 @@ namespace log4net.Util
 		/// </summary>
 		/// <param name="key">The <see cref="object" /> to use as the key of the element to add.</param>
 		/// <param name="value">The <see cref="object" /> to use as the value of the element to add.</param>
+		/// <remarks>
+		/// <para>
+		/// As the collection is empty no new values can be added. A <see cref="InvalidOperationException"/>
+		/// is thrown if this method is called.
+		/// </para>
+		/// </remarks>
+		/// <exception cref="InvalidOperationException">This dictionary is always empty and cannot be modified.</exception>
 		public void Add(object key, object value)
 		{
 			throw new InvalidOperationException();
@@ -145,6 +188,13 @@ namespace log4net.Util
 		/// <summary>
 		/// Removes all elements from the <see cref="EmptyDictionary" />.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// As the collection is empty no values can be removed. A <see cref="InvalidOperationException"/>
+		/// is thrown if this method is called.
+		/// </para>
+		/// </remarks>
+		/// <exception cref="InvalidOperationException">This dictionary is always empty and cannot be modified.</exception>
 		public void Clear()
 		{
 			throw new InvalidOperationException();
@@ -156,6 +206,11 @@ namespace log4net.Util
 		/// </summary>
 		/// <param name="key">The key to locate in the <see cref="EmptyDictionary" />.</param>
 		/// <returns><c>false</c></returns>
+		/// <remarks>
+		/// <para>
+		/// As the collection is empty the <see cref="Contains"/> method always returns <c>false</c>.
+		/// </para>
+		/// </remarks>
 		public bool Contains(object key)
 		{
 			return false;
@@ -168,6 +223,11 @@ namespace log4net.Util
 		/// An <see cref="IEnumerator"/> that can be used to 
 		/// iterate through the collection.
 		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// As the collection is empty a <see cref="NullEnumerator"/> is returned.
+		/// </para>
+		/// </remarks>
 		public IDictionaryEnumerator GetEnumerator()
 		{
 			return NullDictionaryEnumerator.Instance;
@@ -177,6 +237,13 @@ namespace log4net.Util
 		/// Removes the element with the specified key from the <see cref="EmptyDictionary" />.
 		/// </summary>
 		/// <param name="key">The key of the element to remove.</param>
+		/// <remarks>
+		/// <para>
+		/// As the collection is empty no values can be removed. A <see cref="InvalidOperationException"/>
+		/// is thrown if this method is called.
+		/// </para>
+		/// </remarks>
+		/// <exception cref="InvalidOperationException">This dictionary is always empty and cannot be modified.</exception>
 		public void Remove(object key)
 		{
 			throw new InvalidOperationException();
@@ -186,6 +253,11 @@ namespace log4net.Util
 		/// Gets a value indicating whether the <see cref="EmptyDictionary" /> has a fixed size.
 		/// </summary>
 		/// <value><c>true</c></value>
+		/// <remarks>
+		/// <para>
+		/// As the collection is empty <see cref="IsFixedSize"/> always returns <c>true</c>.
+		/// </para>
+		/// </remarks>
 		public bool IsFixedSize
 		{
 			get { return true; }
@@ -195,6 +267,11 @@ namespace log4net.Util
 		/// Gets a value indicating whether the <see cref="EmptyDictionary" /> is read-only.
 		/// </summary>
 		/// <value><c>true</c></value>
+		/// <remarks>
+		/// <para>
+		/// As the collection is empty <see cref="IsReadOnly"/> always returns <c>true</c>.
+		/// </para>
+		/// </remarks>
 		public bool IsReadOnly
 		{
 			get	{ return true; }
@@ -204,6 +281,11 @@ namespace log4net.Util
 		/// Gets an <see cref="ICollection" /> containing the keys of the <see cref="EmptyDictionary" />.
 		/// </summary>
 		/// <value>An <see cref="ICollection" /> containing the keys of the <see cref="EmptyDictionary" />.</value>
+		/// <remarks>
+		/// <para>
+		/// As the collection is empty a <see cref="EmptyCollection"/> is returned.
+		/// </para>
+		/// </remarks>
 		public System.Collections.ICollection Keys
 		{
 			get { return EmptyCollection.Instance; }
@@ -213,6 +295,11 @@ namespace log4net.Util
 		/// Gets an <see cref="ICollection" /> containing the values of the <see cref="EmptyDictionary" />.
 		/// </summary>
 		/// <value>An <see cref="ICollection" /> containing the values of the <see cref="EmptyDictionary" />.</value>
+		/// <remarks>
+		/// <para>
+		/// As the collection is empty a <see cref="EmptyCollection"/> is returned.
+		/// </para>
+		/// </remarks>
 		public System.Collections.ICollection Values
 		{
 			get { return EmptyCollection.Instance; }
@@ -223,10 +310,18 @@ namespace log4net.Util
 		/// </summary>
 		/// <param name="key">The key of the element to get or set.</param>
 		/// <value><c>null</c></value>
+		/// <remarks>
+		/// <para>
+		/// As the collection is empty no values can be looked up or stored. 
+		/// If the index getter is called then <c>null</c> is returned.
+		/// A <see cref="InvalidOperationException"/> is thrown if the setter is called.
+		/// </para>
+		/// </remarks>
+		/// <exception cref="InvalidOperationException">This dictionary is always empty and cannot be modified.</exception>
 		public object this[object key]
 		{
 			get { return null; }
-			set { }
+			set { throw new InvalidOperationException(); }
 		}
 
 		#endregion Implementation of IDictionary

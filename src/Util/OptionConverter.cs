@@ -30,6 +30,11 @@ namespace log4net.Util
 	/// <summary>
 	/// A convenience class to convert property values to specific types.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Utility functions for converting types and parsing values.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	public sealed class OptionConverter
@@ -40,7 +45,9 @@ namespace log4net.Util
 		/// Initializes a new instance of the <see cref="OptionConverter" /> class. 
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// Uses a private access modifier to prevent instantiation of this class.
+		/// </para>
 		/// </remarks>
 		private OptionConverter()
 		{
@@ -128,12 +135,14 @@ namespace log4net.Util
 		/// </summary>
 		/// <param name="argValue">String to convert.</param>
 		/// <param name="defaultValue">The default value.</param>
+		/// <returns>The <see cref="bool" /> value of <paramref name="argValue" />.</returns>
 		/// <remarks>
+		/// <para>
 		/// If <paramref name="argValue"/> is "true", then <c>true</c> is returned. 
 		/// If <paramref name="argValue"/> is "false", then <c>false</c> is returned. 
 		/// Otherwise, <paramref name="defaultValue"/> is returned.
+		/// </para>
 		/// </remarks>
-		/// <returns>The <see cref="bool" /> value of <paramref name="argValue" />.</returns>
 		public static bool ToBoolean(string argValue, bool defaultValue) 
 		{
 			if (argValue != null && argValue.Length > 0)
@@ -155,11 +164,13 @@ namespace log4net.Util
 //		/// </summary>
 //		/// <param name="argValue">String to convert.</param>
 //		/// <param name="defaultValue">The default value.</param>
+//		/// <returns>The <see cref="int" /> value of <paramref name="argValue" />.</returns>
 //		/// <remarks>
+//		/// <para>
 //		/// <paramref name="defaultValue"/> is returned when <paramref name="argValue"/>
 //		/// cannot be converted to a <see cref="int" /> value.
+//		/// </para>
 //		/// </remarks>
-//		/// <returns>The <see cref="int" /> value of <paramref name="argValue" />.</returns>
 //		public static int ToInt(string argValue, int defaultValue) 
 //		{
 //			if (argValue != null) 
@@ -182,6 +193,7 @@ namespace log4net.Util
 		/// </summary>
 		/// <param name="argValue">String to parse.</param>
 		/// <param name="defaultValue">The default value.</param>
+		/// <returns>The <see cref="long" /> value of <paramref name="argValue" />.</returns>
 		/// <remarks>
 		/// <para>
 		/// Parses a file size of the form: number[KB|MB|GB] into a
@@ -192,7 +204,6 @@ namespace log4net.Util
 		/// cannot be converted to a <see cref="long" /> value.
 		/// </para>
 		/// </remarks>
-		/// <returns>The <see cref="long" /> value of <paramref name="argValue" />.</returns>
 		public static long ToFileSize(string argValue, long defaultValue) 
 		{
 			if (argValue == null)
@@ -245,6 +256,12 @@ namespace log4net.Util
 		/// The object converted from a string or <c>null</c> when the 
 		/// conversion failed.
 		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// Converts a string to an object. Uses the converter registry to try
+		/// to convert the string value into the specified target type.
+		/// </para>
+		/// </remarks>
 		public static object ConvertStringTo(Type target, string txt)
 		{
 			if (target == null)
@@ -314,6 +331,11 @@ namespace log4net.Util
 		/// <param name="sourceType">The type to convert from.</param>
 		/// <param name="targetType">The type to convert to.</param>
 		/// <returns><c>true</c> if there is a conversion from the source type to the target type.</returns>
+		/// <remarks>
+		/// Checks if there is an appropriate type conversion from the source type to the target type.
+		/// <para>
+		/// </para>
+		/// </remarks>
 		public static bool CanConvertTypeTo(Type sourceType, Type targetType)
 		{
 			if (sourceType == null || targetType == null)
@@ -356,6 +378,11 @@ namespace log4net.Util
 		/// <param name="sourceInstance">The object to convert to the target type.</param>
 		/// <param name="targetType">The type to convert to.</param>
 		/// <returns>The converted object.</returns>
+		/// <remarks>
+		/// <para>
+		/// Converts an object to the target type.
+		/// </para>
+		/// </remarks>
 		public static object ConvertTypeTo(object sourceInstance, Type targetType)
 		{
 			Type sourceType = sourceInstance.GetType();
@@ -427,15 +454,17 @@ namespace log4net.Util
 		/// <param name="className">The fully qualified class name of the object to instantiate.</param>
 		/// <param name="superClass">The class to which the new object should belong.</param>
 		/// <param name="defaultValue">The object to return in case of non-fulfillment.</param>
-		/// <remarks>
-		/// Checks that the <paramref name="className"/> is a subclass of
-		/// <paramref name="superClass"/>. If that test fails or the object could
-		/// not be instantiated, then <paramref name="defaultValue"/> is returned.
-		/// </remarks>
 		/// <returns>
 		/// An instance of the <paramref name="className"/> or <paramref name="defaultValue"/>
 		/// if the object could not be instantiated.
 		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// Checks that the <paramref name="className"/> is a subclass of
+		/// <paramref name="superClass"/>. If that test fails or the object could
+		/// not be instantiated, then <paramref name="defaultValue"/> is returned.
+		/// </para>
+		/// </remarks>
 		public static object InstantiateByClassName(string className, Type superClass, object defaultValue) 
 		{
 			if (className != null) 
@@ -464,6 +493,7 @@ namespace log4net.Util
 		/// </summary>
 		/// <param name="value">The string on which variable substitution is performed.</param>
 		/// <param name="props">The dictionary to use to lookup variables.</param>
+		/// <returns>The result of the substitutions.</returns>
 		/// <remarks>
 		/// <para>
 		/// The variable substitution delimiters are <b>${</b> and <b>}</b>.
@@ -500,7 +530,6 @@ namespace log4net.Util
 		/// delimiter "${" which is not balanced by a stop delimiter "}". 
 		/// </para>
 		/// </remarks>
-		/// <returns>The result of the substitutions.</returns>
 		public static string SubstituteVariables(string value, System.Collections.IDictionary props) 
 		{
 			StringBuilder buf = new StringBuilder();

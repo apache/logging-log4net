@@ -25,6 +25,11 @@ namespace log4net.Util
 	/// <summary>
 	/// A fixed size rolling buffer of logging events.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// An array backed fixed size leaky bucket.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	public class CyclicBuffer
@@ -32,17 +37,23 @@ namespace log4net.Util
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CyclicBuffer" /> class with 
-		/// the specified maximum number of buffered logging events.
+		/// Constructor
 		/// </summary>
 		/// <param name="maxSize">The maximum number of logging events in the buffer.</param>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="CyclicBuffer" /> class with 
+		/// the specified maximum number of buffered logging events.
+		/// </para>
+		/// </remarks>
 		/// <exception cref="ArgumentOutOfRangeException">The <paramref name="maxSize"/> argument is not a positive integer.</exception>
 		public CyclicBuffer(int maxSize) 
 		{
 			if (maxSize < 1) 
 			{
-				throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("maxSize", (object)maxSize, "Parameter: maxSize, Value: [" + maxSize + "] out of range. Non zero positive integer required");
+				throw SystemInfo.CreateArgumentOutOfRangeException("maxSize", (object)maxSize, "Parameter: maxSize, Value: [" + maxSize + "] out of range. Non zero positive integer required");
 			}
+
 			m_maxSize = maxSize;
 			m_events = new LoggingEvent[maxSize];
 			m_first = 0;
@@ -59,6 +70,13 @@ namespace log4net.Util
 		/// </summary>
 		/// <param name="loggingEvent">The event to append to the buffer.</param>
 		/// <returns>The event discarded from the buffer, if the buffer is full, otherwise <c>null</c>.</returns>
+		/// <remarks>
+		/// <para>
+		/// Append an event to the buffer. If the buffer still contains free space then
+		/// <c>null</c> is returned. If the buffer is full then an event will be dropped
+		/// to make space for the new event, the event dropped is returned.
+		/// </para>
+		/// </remarks>
 		public LoggingEvent Append(LoggingEvent loggingEvent)
 		{	
 			if (loggingEvent == null)
@@ -101,10 +119,15 @@ namespace log4net.Util
 		}
 
 		/// <summary>
-		/// Gets the oldest (first) logging event in the buffer and removes it 
-		/// from the buffer.
+		/// Get and remove the oldest event in the buffer.
 		/// </summary>
 		/// <returns>The oldest logging event in the buffer</returns>
+		/// <remarks>
+		/// <para>
+		/// Gets the oldest (first) logging event in the buffer and removes it 
+		/// from the buffer.
+		/// </para>
+		/// </remarks>
 		public LoggingEvent PopOldest() 
 		{
 			lock(this)
@@ -128,6 +151,11 @@ namespace log4net.Util
 		/// Pops all the logging events from the buffer into an array.
 		/// </summary>
 		/// <returns>An array of all the logging events in the buffer.</returns>
+		/// <remarks>
+		/// <para>
+		/// Get all the events in the buffer and clear the buffer.
+		/// </para>
+		/// </remarks>
 		public LoggingEvent[] PopAll()
 		{
 			lock(this)
@@ -158,10 +186,19 @@ namespace log4net.Util
 			}
 		}
 
+#if RESIZABLE_CYCLIC_BUFFER
 		/// <summary>
 		/// Resizes the cyclic buffer to <paramref name="newSize"/>.
 		/// </summary>
 		/// <param name="newSize">The new size of the buffer.</param>
+		/// <remarks>
+		/// <para>
+		/// Resize the cyclic buffer. Events in the buffer are copied into
+		/// the newly sized buffer. If the buffer is shrunk and there are
+		/// more events currently in the buffer than the new size of the
+		/// buffer then the newest events will be dropped from the buffer.
+		/// </para>
+		/// </remarks>
 		/// <exception cref="ArgumentOutOfRangeException">The <paramref name="newSize"/> argument is not a positive integer.</exception>
 		public void Resize(int newSize) 
 		{
@@ -206,6 +243,7 @@ namespace log4net.Util
 				}
 			}
 		}
+#endif
 
 		#endregion Public Instance Methods
 
@@ -216,8 +254,10 @@ namespace log4net.Util
 		/// </summary>
 		/// <value>The <paramref name="i"/>th oldest event currently in the buffer.</value>
 		/// <remarks>
+		/// <para>
 		/// If <paramref name="i"/> is outside the range 0 to the number of events
 		/// currently in the buffer, then <c>null</c> is returned.
+		/// </para>
 		/// </remarks>
 		public LoggingEvent this[int i] 
 		{
@@ -236,9 +276,14 @@ namespace log4net.Util
 		}
 
 		/// <summary>
-		/// Gets or sets the maximum size of the buffer.
+		/// Gets the maximum size of the buffer.
 		/// </summary>
 		/// <value>The maximum size of the buffer.</value>
+		/// <remarks>
+		/// <para>
+		/// Gets the maximum size of the buffer
+		/// </para>
+		/// </remarks>
 		public int MaxSize 
 		{
 			get 
@@ -248,7 +293,13 @@ namespace log4net.Util
 					return m_maxSize; 
 				}
 			}
-			set { Resize(value); }
+#if RESIZABLE_CYCLIC_BUFFER
+			set 
+			{ 
+				/// Setting the MaxSize will cause the buffer to resize.
+				Resize(value); 
+			}
+#endif
 		}
 
 		/// <summary>
@@ -256,8 +307,10 @@ namespace log4net.Util
 		/// </summary>
 		/// <value>The number of logging events in the buffer.</value>
 		/// <remarks>
+		/// <para>
 		/// This number is guaranteed to be in the range 0 to <see cref="MaxSize"/>
 		/// (inclusive).
+		/// </para>
 		/// </remarks>
 		public int Length
 		{

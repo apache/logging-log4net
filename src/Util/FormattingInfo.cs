@@ -25,6 +25,13 @@ namespace log4net.Util
 	/// Contain the information obtained when parsing formatting modifiers 
 	/// in conversion modifiers.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Holds the formatting information extracted from the format string by
+	/// the <see cref="PatternParser"/>. This is used by the <see cref="PatternConverter"/>
+	/// objects when rendering the output.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	public class FormattingInfo
@@ -32,15 +39,26 @@ namespace log4net.Util
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="FormattingInfo" /> class.
+		/// Defaut Constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="FormattingInfo" /> class.
+		/// </para>
+		/// </remarks>
 		public FormattingInfo() 
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="FormattingInfo" /> class.
+		/// Constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="FormattingInfo" /> class
+		/// with the specified parameters.
+		/// </para>
+		/// </remarks>
 		public FormattingInfo(int min, int max, bool leftAlign) 
 		{
 			m_min = min;
@@ -55,7 +73,14 @@ namespace log4net.Util
 		/// <summary>
 		/// Gets or sets the minimum value.
 		/// </summary>
-		/// <value>The minimum value.</value>
+		/// <value>
+		/// The minimum value.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets or sets the minimum value.
+		/// </para>
+		/// </remarks>
 		public int Min
 		{
 			get { return m_min; }
@@ -65,7 +90,14 @@ namespace log4net.Util
 		/// <summary>
 		/// Gets or sets the maximum value.
 		/// </summary>
-		/// <value>The maximum value.</value>
+		/// <value>
+		/// The maximum value.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets or sets the maximum value.
+		/// </para>
+		/// </remarks>
 		public int Max
 		{
 			get { return m_max; }
@@ -76,7 +108,14 @@ namespace log4net.Util
 		/// Gets or sets a flag indicating whether left align is enabled
 		/// or not.
 		/// </summary>
-		/// <value>A flag indicating whether left align is enabled or not.</value>
+		/// <value>
+		/// A flag indicating whether left align is enabled or not.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets or sets a flag indicating whether left align is enabled or not.
+		/// </para>
+		/// </remarks>
 		public bool LeftAlign
 		{
 			get { return m_leftAlign; }
@@ -84,28 +123,6 @@ namespace log4net.Util
 		}
 
 		#endregion Public Instance Properties
-
-		#region Public Instance Methods
-
-		/// <summary>
-		/// Resets all properties to their default values.
-		/// </summary>
-		public void Reset() 
-		{
-			m_min = -1;
-			m_max = int.MaxValue;
-			m_leftAlign = false;	  
-		}
-
-		/// <summary>
-		/// Dump debug info
-		/// </summary>
-		public void Dump() 
-		{
-			LogLog.Debug("FormattingInfo: min [" + m_min + "], max [" + m_max + "], leftAlign [" + m_leftAlign + "]");
-		}
-
-		#endregion Public Instance Methods
 
 		#region Private Instance Fields
 

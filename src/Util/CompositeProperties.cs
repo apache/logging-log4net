@@ -24,6 +24,12 @@ namespace log4net.Util
 	/// <summary>
 	/// This class aggregates several PropertiesDictionary collections together.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Provides a dictionary style lookup over an ordered list of
+	/// <see cref="PropertiesDictionary"/> collections.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	public sealed class CompositeProperties
 	{
@@ -37,8 +43,13 @@ namespace log4net.Util
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CompositeProperties" /> class.
+		/// Constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="CompositeProperties" /> class.
+		/// </para>
+		/// </remarks>
 		internal CompositeProperties()
 		{
 		}
@@ -53,6 +64,19 @@ namespace log4net.Util
 		/// <value>
 		/// The value for the property with the specified key
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Looks up the value for the <paramref name="key" /> specified.
+		/// The <see cref="PropertiesDictionary"/> collections are searched
+		/// in the order in which they were added to this collection. The value
+		/// returned is the value held by the first collection that contains
+		/// the specified key.
+		/// </para>
+		/// <para>
+		/// If none of the collections contain the specified key then
+		/// <c>null</c> is returned.
+		/// </para>
+		/// </remarks>
 		public object this[string key]
 		{
 			get 
@@ -99,6 +123,12 @@ namespace log4net.Util
 		/// Flatten this composite collection into a single properties dictionary
 		/// </summary>
 		/// <returns>the flattened dictionary</returns>
+		/// <remarks>
+		/// <para>
+		/// Reduces the collection of ordered dictionaries to a single dictionary
+		/// containing the resultant values for the keys.
+		/// </para>
+		/// </remarks>
 		public PropertiesDictionary Flatten()
 		{
 			if (m_flattened == null)

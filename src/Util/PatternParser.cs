@@ -35,8 +35,10 @@ namespace log4net.Util
 	/// is delegated to the PatternParser class.
 	/// </summary>
 	/// <remarks>
+	/// <para>
 	/// The <c>PatternParser</c> processes a pattern string and
 	/// returns a chain of <see cref="PatternConverter"/> objects.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
@@ -45,10 +47,15 @@ namespace log4net.Util
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PatternParser" /> class 
-		/// with the specified pattern string.
+		/// Constructor
 		/// </summary>
 		/// <param name="pattern">The pattern to parse.</param>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="PatternParser" /> class 
+		/// with the specified pattern string.
+		/// </para>
+		/// </remarks>
 		public PatternParser(string pattern) 
 		{
 			m_pattern = pattern;
@@ -62,6 +69,11 @@ namespace log4net.Util
 		/// Parses the pattern into a chain of pattern converters.
 		/// </summary>
 		/// <returns>The head of a chain of pattern converters.</returns>
+		/// <remarks>
+		/// <para>
+		/// Parses the pattern into a chain of pattern converters.
+		/// </para>
+		/// </remarks>
 		public PatternConverter Parse()
 		{
 			string[] converterNamesCache = BuildCache();
@@ -76,8 +88,16 @@ namespace log4net.Util
 		#region Public Instance Properties
 
 		/// <summary>
-		/// The converter registry used by this parser
+		/// Get the converter registry used by this parser
 		/// </summary>
+		/// <value>
+		/// The converter registry used by this parser
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Get the converter registry used by this parser
+		/// </para>
+		/// </remarks>
 		public Hashtable PatternConverters
 		{
 			get { return m_patternConverters; }
@@ -91,6 +111,11 @@ namespace log4net.Util
 		/// Build the unified cache of converters from the static and instance maps
 		/// </summary>
 		/// <returns>the list of all the converter names</returns>
+		/// <remarks>
+		/// <para>
+		/// Build the unified cache of converters from the static and instance maps
+		/// </para>
+		/// </remarks>
 		private string[] BuildCache()
 		{
 			string[] converterNamesCache = new string[m_patternConverters.Keys.Count];
@@ -102,10 +127,17 @@ namespace log4net.Util
 			return converterNamesCache;
 		}
 
+		#region StringLengthComparer
+
 		/// <summary>
-		/// IComparer that orders strings by string length.
-		/// The longest strings are placed first
+		/// Sort strings by length
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// <see cref="IComparer" /> that orders strings by string length.
+		/// The longest strings are placed first
+		/// </para>
+		/// </remarks>
 		private sealed class StringLengthComparer : IComparer
 		{
 			public static readonly StringLengthComparer Instance = new StringLengthComparer();
@@ -140,13 +172,17 @@ namespace log4net.Util
 			#endregion
 		}
 
+		#endregion // StringLengthComparer
+
 		/// <summary>
 		/// Internal method to parse the specified pattern to find specified matches
 		/// </summary>
 		/// <param name="pattern">the pattern to parse</param>
 		/// <param name="matches">the converter names to match in the pattern</param>
 		/// <remarks>
+		/// <para>
 		/// The matches param must be sorted such that longer strings come before shorter ones.
+		/// </para>
 		/// </remarks>
 		private void ParseInternal(string pattern, string[] matches)
 		{
@@ -369,10 +405,12 @@ namespace log4net.Util
 		private string m_pattern;
 
 		/// <summary>
-		/// Internal map of converter identifiers to converter types.
+		/// Internal map of converter identifiers to converter types
 		/// </summary>
 		/// <remarks>
-		/// This map overrides the static s_globalRulesRegistry map
+		/// <para>
+		/// This map overrides the static s_globalRulesRegistry map.
+		/// </para>
 		/// </remarks>
 		private Hashtable m_patternConverters = new Hashtable();
 

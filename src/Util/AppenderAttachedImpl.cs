@@ -26,6 +26,13 @@ namespace log4net.Util
 	/// <summary>
 	/// A straightforward implementation of the <see cref="IAppenderAttachable"/> interface.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// This is the default implementation of the <see cref="IAppenderAttachable"/>
+	/// interface. Implementors of the <see cref="IAppenderAttachable"/> interface
+	/// should aggregate an instance of this type.
+	/// </para>
+	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	public class AppenderAttachedImpl : IAppenderAttachable
@@ -33,8 +40,13 @@ namespace log4net.Util
 		#region Public Instance Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AppenderAttachedImpl"/> class.
+		/// Constructor
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Initializes a new instance of the <see cref="AppenderAttachedImpl"/> class.
+		/// </para>
+		/// </remarks>
 		public AppenderAttachedImpl()
 		{
 		}
@@ -44,11 +56,16 @@ namespace log4net.Util
 		#region Public Instance Methods
 
 		/// <summary>
-		/// Calls the <see cref="IAppender.DoAppend" /> method on all 
-		/// attached appenders.
+		/// Append on on all attached appenders.
 		/// </summary>
 		/// <param name="loggingEvent">The event being logged.</param>
 		/// <returns>The number of appenders called.</returns>
+		/// <remarks>
+		/// <para>
+		/// Calls the <see cref="IAppender.DoAppend" /> method on all 
+		/// attached appenders.
+		/// </para>
+		/// </remarks>
 		public int AppendLoopOnAppenders(LoggingEvent loggingEvent) 
 		{
 			if (loggingEvent == null)
@@ -90,7 +107,9 @@ namespace log4net.Util
 		/// </summary>
 		/// <param name="newAppender">The appender to add.</param>
 		/// <remarks>
+		/// <para>
 		/// If the appender is already in the list it won't be added again.
+		/// </para>
 		/// </remarks>
 		public void AddAppender(IAppender newAppender) 
 		{
@@ -118,6 +137,11 @@ namespace log4net.Util
 		/// A collection of attached appenders, or <c>null</c> if there
 		/// are no attached appenders.
 		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// The read only collection of all currently attached appenders.
+		/// </para>
+		/// </remarks>
 		public AppenderCollection Appenders 
 		{
 			get
@@ -142,6 +166,11 @@ namespace log4net.Util
 		/// The appender with the name specified, or <c>null</c> if no appender with the
 		/// specified name is found.
 		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// Lookup an attached appender by name.
+		/// </para>
+		/// </remarks>
 		public IAppender GetAppender(string name) 
 		{
 			if (m_appenderList != null && name != null)
@@ -161,7 +190,9 @@ namespace log4net.Util
 		/// Removes all attached appenders.
 		/// </summary>
 		/// <remarks>
+		/// <para>
 		/// Removes and closes all attached appenders
+		/// </para>
 		/// </remarks>
 		public void RemoveAllAppenders() 
 		{
@@ -189,9 +220,11 @@ namespace log4net.Util
 		/// <param name="appender">The appender to remove.</param>
 		/// <returns>The appender removed from the list</returns>
 		/// <remarks>
+		/// <para>
 		/// The appender removed is not closed.
 		/// If you are discarding the appender you must call
 		/// <see cref="IAppender.Close"/> on the appender removed.
+		/// </para>
 		/// </remarks>
 		public IAppender RemoveAppender(IAppender appender) 
 		{
@@ -213,9 +246,11 @@ namespace log4net.Util
 		/// <param name="name">The name of the appender to remove.</param>
 		/// <returns>The appender removed from the list</returns>
 		/// <remarks>
+		/// <para>
 		/// The appender removed is not closed.
 		/// If you are discarding the appender you must call
 		/// <see cref="IAppender.Close"/> on the appender removed.
+		/// </para>
 		/// </remarks>
 		public IAppender RemoveAppender(string name) 
 		{
