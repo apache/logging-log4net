@@ -57,6 +57,9 @@ namespace log4net.Appender
 	/// rolled once the date boundary specified in the <see cref="DatePattern"/> property
 	/// is crossed, but within a date boundary the file will also be rolled
 	/// once its size exceeds the <see cref="MaximumFileSize"/>.
+	/// When set to <see cref="RollingMode.Once"/> the log file will be rolled when
+	/// the appender is configured. This effectively means that the log file can be
+	/// rolled once per program execution.
 	/// </para>
 	/// <para>
 	/// A of few additional optional features have been added:
@@ -129,6 +132,23 @@ namespace log4net.Appender
 		/// </summary>
 		public enum RollingMode
 		{
+			/// <summary>
+			/// Roll files once per program execution
+			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// Roll files once per program execution.
+			/// Well really once each time this appender is
+			/// configured.
+			/// </para>
+			/// <para>
+			/// Setting this option also sets <c>AppendToFile</c> to
+			/// <c>false</c> on the <c>RollingFileAppender</c>, otherwise
+			/// this appender would just be a normal file appender.
+			/// </para>
+			/// </remarks>
+			Once		= 0,
+
 			/// <summary>
 			/// Roll files based only on the size of the file
 			/// </summary>
@@ -376,7 +396,15 @@ namespace log4net.Appender
 		/// </summary>
 		/// <value>The rolling style.</value>
 		/// <remarks>
+		/// <para>
 		/// The default rolling style is <see cref="RollingMode.Composite" />.
+		/// </para>
+		/// <para>
+		/// When set to <see cref="RollingMode.Once"/> this appender's
+		/// <see cref="FileAppender.AppendToFile"/> property is set to <c>false</c>, otherwise
+		/// the appender would append to a single file rather than rolling
+		/// the file each time it is opened.
+		/// </para>
 		/// </remarks>
 		public RollingMode RollingStyle
 		{
@@ -386,6 +414,13 @@ namespace log4net.Appender
 				m_rollingStyle = value;
 				switch (m_rollingStyle) 
 				{
+					case RollingMode.Once:
+						m_rollDate = false;
+						m_rollSize = false;
+
+						this.AppendToFile = false;
+						break;
+
 					case RollingMode.Size:
 						m_rollDate = false;
 						m_rollSize = true;
@@ -491,21 +526,8 @@ namespace log4net.Appender
 		{
 			lock(this)
 			{
-				if (!m_staticLogFileName) 
-				{
-					m_scheduledFilename = fileName = fileName.Trim();
+				fileName = GetNextOutputFileName(fileName);
 
-					if (m_rollDate)
-					{
-						m_scheduledFilename = fileName = fileName + m_now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo);
-					}
-
-					if (m_countDirection > 0) 
-					{
-						m_scheduledFilename = fileName = fileName + '.' + (++m_curSizeRollBackups);
-					}
-				}
-	
 				// Calculate the current size of the file
 				long currentCount = 0;
 				if (append) 
@@ -518,6 +540,26 @@ namespace log4net.Appender
 						}
 					}
 				}
+				else
+				{
+					// If not Appending to an existing file we should have rolled the file out of the
+					// way. Therefore we should not be overwirtting an existing file.
+					// The only exception is if we are not allowed to roll the existing file away.
+					if (m_maxSizeRollBackups != 0 && FileExists(fileName))
+					{
+						LogLog.Error("RollingFileAppender: INTERNAL ERROR. Append is False but OutputFile ["+fileName+"] already exists.");
+					}
+				}
+
+				if (!m_staticLogFileName) 
+				{
+					m_scheduledFilename = fileName;
+
+					if (m_countDirection > 0) 
+					{
+						m_curSizeRollBackups++;
+					}
+				}
 
 				// Open the file (call the base class to do it)
 				base.OpenFile(fileName, append);
@@ -525,6 +567,38 @@ namespace log4net.Appender
 				// Set the file size onto the counting writer
 				((CountingQuietTextWriter)QuietWriter).Count = currentCount;
 			}
+		}
+
+		/// <summary>
+		/// Get the current output file name
+		/// </summary>
+		/// <param name="fileName">the base file name</param>
+		/// <returns>the output file name</returns>
+		/// <remarks>
+		/// The output file name is based on the base fileName specified.
+		/// If <see cref="StaticLogFileName"/> is set then the output 
+		/// file name is the same as the base file passed in. Otherwise
+		/// the output file depends on the date pattern, on the count
+		/// direction or both.
+		/// </remarks>
+		protected string GetNextOutputFileName(string fileName)
+		{
+			if (!m_staticLogFileName) 
+			{
+				fileName = fileName.Trim();
+
+				if (m_rollDate)
+				{
+					fileName = fileName + m_now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo);
+				}
+
+				if (m_countDirection > 0) 
+				{
+					fileName = fileName + '.' + (m_curSizeRollBackups + 1);
+				}
+			}
+
+			return fileName;
 		}
 
 		#endregion
@@ -538,22 +612,12 @@ namespace log4net.Appender
 		{
 			m_curSizeRollBackups = 0;
 	
-			string sName = null;
-			if (m_staticLogFileName || !m_rollDate) 
-			{
-				sName = m_baseFileName;
-			} 
-			else 
-			{
-				sName = m_scheduledFilename;
-			}
-
 			string fullPath = null;
 			string fileName = null;
 
 			using(SecurityContext.Impersonate(this))
 			{
-				fullPath = System.IO.Path.GetFullPath(sName);
+				fullPath = System.IO.Path.GetFullPath(m_baseFileName);
 				fileName = System.IO.Path.GetFileName(fullPath);
 			}
 
@@ -656,6 +720,32 @@ namespace log4net.Appender
 		{
 			DetermineCurSizeRollBackups();
 			RollOverIfDateBoundaryCrossing();
+
+			// If file exists and we are not appending then roll it out of the way
+			if (AppendToFile == false)
+			{
+				bool fileExists = false;
+				string fileName = GetNextOutputFileName(m_baseFileName);
+
+				using(SecurityContext.Impersonate(this))
+				{
+					fileExists = System.IO.File.Exists(fileName);
+				}
+
+				if (fileExists)
+				{
+					if (m_maxSizeRollBackups == 0)
+					{
+						LogLog.Debug("RollingFileAppender: Output file ["+fileName+"] already exists. MaxSizeRollBackups is 0; cannot roll. Overwriting existing file.");
+					}
+					else
+					{
+						LogLog.Debug("RollingFileAppender: Output file ["+fileName+"] already exists. Not appending to file. Rolling existing file out of the way.");
+
+						RollOverRenameFiles(fileName);
+					}
+				}
+			}
 		}
 
 		/// <summary>
@@ -698,7 +788,7 @@ namespace log4net.Appender
 			}
 	
 			// Only look for files in the current roll point
-			if (m_rollDate)
+			if (m_rollDate && !m_staticLogFileName)
 			{
 				if (! curFileName.StartsWith(baseFile + m_dateTime.Now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo)))
 				{
@@ -863,6 +953,11 @@ namespace log4net.Appender
 			if (SecurityContext == null)
 			{
 				SecurityContext = SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
+			}
+
+			using(SecurityContext.Impersonate(this))
+			{
+				m_baseFileName = ConvertToFullPath(base.File.Trim());
 			}
 
 			ExistingInit();
@@ -1053,7 +1148,41 @@ namespace log4net.Appender
 			LogLog.Debug("RollingFileAppender: maxSizeRollBackups ["+m_maxSizeRollBackups+"]");
 			LogLog.Debug("RollingFileAppender: curSizeRollBackups ["+m_curSizeRollBackups+"]");
 			LogLog.Debug("RollingFileAppender: countDirection ["+m_countDirection+"]");
+
+			RollOverRenameFiles(File);
 	
+			// This will also close the file. This is OK since multiple close operations are safe.
+			SafeOpenFile(m_baseFileName, false);
+		}
+
+		/// <summary>
+		/// Implements file roll.
+		/// </summary>
+		/// <param name="baseFileName">the base name to rename</param>
+		/// <remarks>
+		/// <para>
+		/// If the maximum number of size based backups is reached
+		/// (<c>curSizeRollBackups == maxSizeRollBackups</c>) then the oldest
+		/// file is deleted -- it's index determined by the sign of countDirection.
+		/// If <c>countDirection</c> &lt; 0, then files
+		/// {<c>File.1</c>, ..., <c>File.curSizeRollBackups -1</c>}
+		/// are renamed to {<c>File.2</c>, ...,
+		/// <c>File.curSizeRollBackups</c>}. 
+		/// </para>
+		/// <para>
+		/// If <c>maxSizeRollBackups</c> is equal to zero, then the
+		/// <c>File</c> is truncated with no backup files created.
+		/// </para>
+		/// <para>
+		/// If <c>maxSizeRollBackups</c> &lt; 0, then <c>File</c> is
+		/// renamed if needed and no files are deleted.
+		/// </para>
+		/// <para>
+		/// This is called by <see cref="RollOverSize"/> to rename the files.
+		/// </para>
+		/// </remarks>
+		protected void RollOverRenameFiles(string baseFileName) 
+		{
 			// If maxBackups <= 0, then there is no file renaming to be done.
 			if (m_maxSizeRollBackups != 0) 
 			{
@@ -1062,40 +1191,38 @@ namespace log4net.Appender
 					// Delete the oldest file, to keep Windows happy.
 					if (m_curSizeRollBackups == m_maxSizeRollBackups) 
 					{
-						DeleteFile(File + '.' + m_maxSizeRollBackups);
+						DeleteFile(baseFileName + '.' + m_maxSizeRollBackups);
 						m_curSizeRollBackups--;
 					}
 	
 					// Map {(maxBackupIndex - 1), ..., 2, 1} to {maxBackupIndex, ..., 3, 2}
 					for (int i = m_curSizeRollBackups; i >= 1; i--) 
 					{
-						RollFile((File + "." + i), (File + '.' + (i + 1)));
+						RollFile((baseFileName + "." + i), (baseFileName + '.' + (i + 1)));
 					}
 	
 					m_curSizeRollBackups++;
 
 					// Rename fileName to fileName.1
-					RollFile(File, File + ".1");
+					RollFile(baseFileName, baseFileName + ".1");
 				} 
 				else 
-				{	//countDirection > 0
+				{
+					//countDirection > 0
 					if (m_curSizeRollBackups >= m_maxSizeRollBackups && m_maxSizeRollBackups > 0) 
 					{
 						//delete the first and keep counting up.
 						int oldestFileIndex = m_curSizeRollBackups - m_maxSizeRollBackups + 1;
-						DeleteFile(File + '.' + oldestFileIndex);
+						DeleteFile(baseFileName + '.' + oldestFileIndex);
 					}
 	
 					if (m_staticLogFileName) 
 					{
 						m_curSizeRollBackups++;
-						RollFile(File, File + '.' + m_curSizeRollBackups);
+						RollFile(baseFileName, baseFileName + '.' + m_curSizeRollBackups);
 					}
 				}
 			}
-	
-			// This will also close the file. This is OK since multiple close operations are safe.
-			SafeOpenFile(m_baseFileName, false);
 		}
 
 		#endregion
