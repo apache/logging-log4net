@@ -40,7 +40,7 @@ namespace log4net.Util
 	/// of the process in general.</para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
-	public class PatternString
+	public class PatternString : IOptionHandler
 	{
 		#region Static Fields
 
@@ -62,6 +62,11 @@ namespace log4net.Util
 		/// the head of the pattern converter chain
 		/// </summary>
 		private PatternConverter m_head;
+
+		/// <summary>
+		/// patterns defined on this PatternString only
+		/// </summary>
+		private Hashtable m_instanceRulesRegistry = new Hashtable();
 
 		#endregion
 
@@ -105,7 +110,8 @@ namespace log4net.Util
 		/// <param name="pattern">The pattern to use with this PatternString</param>
 		public PatternString(string pattern)
 		{
-			ConversionPattern = pattern;
+			m_pattern = pattern;
+			ActivateOptions();
 		}
 
 		#endregion
@@ -118,12 +124,33 @@ namespace log4net.Util
 		public string ConversionPattern
 		{
 			get { return m_pattern;	}
-			set
-			{
-				m_pattern = value;
-				m_head = CreatePatternParser(m_pattern).Parse();
-			}
+			set { m_pattern = value; }
 		}
+
+		#region Implementation of IOptionHandler
+
+		/// <summary>
+		/// Initialize object options
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This is part of the <see cref="IOptionHandler"/> delayed object
+		/// activation scheme. The <see cref="ActivateOptions"/> method must 
+		/// be called on this object after the configuration properties have
+		/// been set. Until <see cref="ActivateOptions"/> is called this
+		/// object is in an undefined state and must not be used. 
+		/// </para>
+		/// <para>
+		/// If any of the configuration properties are modified then 
+		/// <see cref="ActivateOptions"/> must be called again.
+		/// </para>
+		/// </remarks>
+		virtual public void ActivateOptions() 
+		{
+			m_head = CreatePatternParser(m_pattern).Parse();
+		}
+
+		#endregion
 
 		/// <summary>
 		/// Returns PatternParser used to parse the conversion string. Subclasses
@@ -141,6 +168,11 @@ namespace log4net.Util
 			{
 				patternParser.PatternConverters.Add(entry.Key, entry.Value);
 			}
+			// Add the instance patterns
+			foreach(DictionaryEntry entry in m_instanceRulesRegistry)
+			{
+				patternParser.PatternConverters[entry.Key] = entry.Value;
+			}
 
 			return patternParser;
 		}
@@ -151,6 +183,11 @@ namespace log4net.Util
 		/// <param name="writer">The TextWriter to write the formatted event to</param>
 		public void Format(TextWriter writer) 
 		{
+			if (writer == null)
+			{
+				throw new ArgumentNullException("writer");
+			}
+
 			PatternConverter c = m_head;
 
 			// loop through the chain of pattern converters
@@ -170,6 +207,70 @@ namespace log4net.Util
 			StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
 			Format(writer);
 			return writer.ToString();
+		}
+
+		/// <summary>
+		/// Add a converter to this PatternString
+		/// </summary>
+		/// <param name="converterInfo">the converter info</param>
+		/// <remarks>
+		/// This version of the method is used by the configurator.
+		/// Programmatic users should use the alternative <see cref="AddConverter(string,Type)"/> method.
+		/// </remarks>
+		public void AddConverter(ConverterInfo converterInfo)
+		{
+			AddConverter(converterInfo.Name, converterInfo.Type);
+		}
+
+		/// <summary>
+		/// Add a converter to this PatternString
+		/// </summary>
+		/// <param name="name">the name of the conversion pattern for this converter</param>
+		/// <param name="type">the type of the converter</param>
+		public void AddConverter(string name, Type type)
+		{
+			if (name == null) throw new ArgumentNullException("name");
+			if (type == null) throw new ArgumentNullException("type");
+
+			if (!typeof(PatternConverter).IsAssignableFrom(type))
+			{
+				throw new ArgumentException("The converter type specified ["+type+"] must be a subclass of log4net.Util.PatternConverter", "type");
+			}
+			m_instanceRulesRegistry[name] = type;
+		}
+
+		/// <summary>
+		/// Wrapper class used to map converter names to converter types
+		/// </summary>
+		public sealed class ConverterInfo
+		{
+			private string m_name;
+			private Type m_type;
+
+			/// <summary>
+			/// default constructor
+			/// </summary>
+			public ConverterInfo()
+			{
+			}
+
+			/// <summary>
+			/// Gets or sets the name of the conversion pattern
+			/// </summary>
+			public string Name
+			{
+				get { return m_name; }
+				set { m_name = value; }
+			}
+
+			/// <summary>
+			/// Gets or sets the type of the converter
+			/// </summary>
+			public Type Type
+			{
+				get { return m_type; }
+				set { m_type = value; }
+			}
 		}
 	}
 }
