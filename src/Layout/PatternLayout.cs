@@ -680,6 +680,9 @@ namespace log4net.Layout
 		/// </summary>
 		private PatternConverter m_head;
 
+		/// <summary>
+		/// patterns defined on this PatternLayout only
+		/// </summary>
 		private Hashtable m_instanceRulesRegistry = new Hashtable();
 
 		#endregion
@@ -800,13 +803,12 @@ namespace log4net.Layout
 			IgnoresException = true;
 
 			m_pattern = pattern;
-
 			if (m_pattern == null)
 			{
 				m_pattern = DefaultConversionPattern;
 			}
 
-			m_head = CreatePatternParser(pattern).Parse();
+			ActivateOptions();
 		}
 
 		#endregion
@@ -838,6 +840,7 @@ namespace log4net.Layout
 			{
 				patternParser.PatternConverters[entry.Key] = entry.Value;
 			}
+			// Add the instance patterns
 			foreach(DictionaryEntry entry in m_instanceRulesRegistry)
 			{
 				patternParser.PatternConverters[entry.Key] = entry.Value;
@@ -880,6 +883,10 @@ namespace log4net.Layout
 		/// <param name="writer">The TextWriter to write the formatted event to</param>
 		override public void Format(TextWriter writer, LoggingEvent loggingEvent) 
 		{
+			if (writer == null)
+			{
+				throw new ArgumentNullException("writer");
+			}
 			if (loggingEvent == null)
 			{
 				throw new ArgumentNullException("loggingEvent");
