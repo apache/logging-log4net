@@ -257,6 +257,42 @@ namespace log4net.Appender
 
 		#endregion Public Instance Properties
 
+		#region Public Methods
+
+		/// <summary>
+		/// Flush the currently buffered events
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Flushes any events that have been buffered.
+		/// </para>
+		/// <para>
+		/// If the appender is buffering in <see cref="Lossy"/> mode then the contents
+		/// of the buffer will NOT be flushed to the appender.
+		/// </para>
+		/// </remarks>
+		public virtual void Flush()
+		{
+			// This method will be called outside of the AppenderSkeleton DoAppend() method
+			// therefore it needs to be protected by its own lock. This will block any
+			// Appends while the buffer is flushed.
+			lock(this)
+			{
+				// Do nothing if the buffer does not exist, or we are not configured
+				// to buffer events, or if the buffer is full of lossy events (the
+				// evaluator should flush the buffer each time a significant event arrives).
+				// NOTE that there is an issue here with the m_lossyEvaluator which
+				// may trigger for some of the events in the lossy buffer, which we should
+				// really be checking for.
+				if (m_cb != null && m_bufferSize > 1 && !m_lossy)
+				{
+					SendBuffer(m_cb);
+				}
+			}
+		}
+
+		#endregion Public Methods
+
 		#region Implementation of IOptionHandler
 
 		/// <summary>
@@ -408,7 +444,7 @@ namespace log4net.Appender
 					SendBuffer(m_cb);
 				}
 			}
-		} 
+		}
 
 		#endregion Override implementation of AppenderSkeleton
 
