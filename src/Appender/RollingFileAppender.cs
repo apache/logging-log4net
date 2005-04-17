@@ -961,7 +961,13 @@ namespace log4net.Appender
 
 			using(SecurityContext.Impersonate(this))
 			{
-				m_baseFileName = ConvertToFullPath(base.File.Trim());
+				// Must convert the FileAppender's m_filePath to an absolute path before we
+				// call ExistingInit(). This will be done by the base.ActivateOptions() but
+				// we need to duplicate that functionality here first.
+				base.File = ConvertToFullPath(base.File.Trim());
+
+				// Store fully qualified base file name
+				m_baseFileName = base.File;
 			}
 
 			ExistingInit();
