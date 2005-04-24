@@ -32,6 +32,12 @@ using namespace System::Runtime::CompilerServices;
 [assembly: AssemblyVersionAttribute("1.2.9.0")];
 [assembly: AssemblyInformationalVersionAttribute("1.2")];
 
+#if !NETCF
+#if !SSCLI
+[assembly: AssemblyFileVersionAttribute("1.2.9.0")]
+#endif
+#endif
+
 //
 // Shared assembly settings
 //

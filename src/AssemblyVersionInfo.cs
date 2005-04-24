@@ -30,6 +30,12 @@
 [assembly: System.Reflection.AssemblyVersion("1.2.9.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.2")]
 
+#if !NETCF
+#if !SSCLI
+[assembly: System.Reflection.AssemblyFileVersion("1.2.9.0")]
+#endif
+#endif
+
 //
 // Shared assembly settings
 //

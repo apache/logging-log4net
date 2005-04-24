@@ -33,6 +33,12 @@ import System.Reflection;
 [assembly: AssemblyVersion("1.2.9.0")]
 [assembly: AssemblyInformationalVersionAttribute("1.2")]
 
+@if (!@NETCF)
+@if (!@SSCLI)
+[assembly: AssemblyFileVersion("1.2.9.0")]
+@end
+@end
+
 //
 // Shared assembly settings
 //
