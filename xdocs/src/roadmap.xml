@@ -24,7 +24,7 @@ limitations under the License.
 	<meta name="keywords" content="log4net development roadmap, log4net roadmap, log4net plan, log4net" />
 
 	<body>
-		<section name="log4net Development Roadmap">
+		<section id="main" name="log4net Development Roadmap">
 			<p>
 				Not yet available.
 			</p>

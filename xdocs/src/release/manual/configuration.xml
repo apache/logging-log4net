@@ -24,11 +24,11 @@ limitations under the License.
 	<meta name="keywords" content="log4net configuration, log4net" />
 
 	<body>
-		<section name="log4net Manual - Configuration">
+		<section id="main" name="log4net Manual - Configuration">
 			<sectionMenu name="Contents" />
 
 
-			<section name="Configuration">
+			<section id="config" name="Configuration">
 				<p>
 					Inserting log requests into the application code requires a fair amount of 
 					planning and effort. Observation shows that approximately 4 percent of code is 
@@ -314,7 +314,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 					document.
 				</p>
 				
-				<section name="Configuration Attributes">
+				<section id="attributes" name="Configuration Attributes">
 					<p>
 						The log4net configuration can be configured using assembly-level attributes rather than
 						specified programmatically.
@@ -410,7 +410,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 					</p>
 				</section>
 				
-				<section name="Configuration Files">
+				<section id="files" name="Configuration Files">
 					<p>
 						Typically the log4net configuration is specified using a file. This file can
 						be read in one of two ways:
@@ -420,7 +420,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 						<li>Reading the file contents directly</li>
 					</ul>
 					
-					<section name=".config Files">
+					<section id="dot-config" name=".config Files">
 						<p>	
 							The <span class="code">System.Configuration</span> API is only available if the
 							configuration data is in the application's config file; the file named 
@@ -477,7 +477,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 						</p>
 					</section>
 					
-					<section name="Reading Files Directly">
+					<section id="reading" name="Reading Files Directly">
 						<p>
 							The XmlConfigurator can directly read any XML file and use it to configure log4net. 
 							This includes the application's .config file; the file named <i>MyApp.exe.config</i> 
@@ -553,7 +553,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 					
 				</section>
 				
-				<section name="Configuration Syntax">
+				<section id="syntax" name="Configuration Syntax">
 					<p>
 						log4net includes a configuration reader that parses an XML DOM, the 
 						<span class="code">log4net.Config.XmlConfigurator</span>. This section defines the
@@ -663,7 +663,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 						</table>
 					</div>
 					
-					<section name="Appenders">
+					<section id="appenders" name="Appenders">
 						<p>
 							Appenders may only be defined as child elements of the <span class="code">&lt;log4net&gt;</span>
 							element. Each appender must be uniquely named. The implementing type for the appender must be specified.
@@ -756,7 +756,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 							document.
 						</p>
 												
-						<section name="Filters">
+						<section id="filters" name="Filters">
 							<p>
 								Filters elements may only be defined as children of <span class="code">&lt;appender&gt;</span> elements.
 							</p>
@@ -850,7 +850,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 <filter type="log4net.Filter.DenyAllFilter" />]]></source>
 						</section>
 						
-						<section name="Layouts">
+						<section id="layouts" name="Layouts">
 							<p>
 								Layout elements may only be defined as children of <span class="code">&lt;appender&gt;</span> elements.
 							</p>
@@ -908,7 +908,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 						</section>
 					</section>
 					
-					<section name="Root Logger">
+					<section id="root" name="Root Logger">
 						<p>
 							Only one root logger element may only be defined and it must be a child of <span class="code">&lt;log4net&gt;</span> element.
 							The root logger is the root of the logger hierarchy. All logger ultimately inherit from this logger.
@@ -961,7 +961,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 						</div>
 					</section>
 					
-					<section name="Loggers">
+					<section id="loggers" name="Loggers">
 						<p>
 							Logger elements may only be defined as children of the <span class="code">&lt;log4net&gt;</span> element.
 						</p>
@@ -1039,7 +1039,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 						</div>
 					</section>
 					
-					<section name="Renderers">
+					<section id="renderers" name="Renderers">
 						<p>
 							Renderer elements may only be defined as children of the <span class="code">&lt;log4net&gt;</span> element.
 						</p>
@@ -1086,7 +1086,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 						</p>
 					</section>
 					
-					<section name="Parameters">
+					<section id="param" name="Parameters">
 						<p>
 							Parameter elements may be children of many elements. See the specific elements above for details.
 						</p>
@@ -1163,7 +1163,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 	<param name="Threshold" value="WARN"/>
 <param>]]></source>
 
-						<section name="Extension Parameters">
+						<section id="extension" name="Extension Parameters">
 							<p>
 								Configuration parameters map directly to writable properties on an object.
 								The properties available depend on the actual type of the object being
@@ -1176,7 +1176,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 							</p>
 						</section>
 
-						<section name="Compact Parameter Syntax">
+						<section id="new-param" name="Compact Parameter Syntax">
 							<p>
 								All parameters may alternately be specified using the parameter name as the element name
 								rather than using the <i>param</i> element and <i>name</i> attribute.

@@ -24,9 +24,9 @@ limitations under the License.
 	<meta name="keywords" content="log4net downloads, log4net download, log4net" />
 
 	<body>
-		<section name="log4net Downloads">
+		<section id="main" name="log4net Downloads">
 			
-			<section name="Project Status">
+			<section id="status" name="Project Status">
 				<p>
 					log4net is an effort undergoing incubation at the Apache Software 
 					Foundation (ASF), sponsored by the Apache Logging Services project. 
@@ -43,7 +43,7 @@ limitations under the License.
 				</p>
 			</section>
 			
-			<section name="Stable Releases">
+			<section id="stable" name="Stable Releases">
 				<p>
 					The following stable releases are available:
 				</p>
@@ -53,7 +53,7 @@ limitations under the License.
 				</ul>
 			</section>
 			
-			<section name="Developer Releases">
+			<section id="developer" name="Developer Releases">
 				<p>
 					The following development snapshots are available:
 				</p>
@@ -67,7 +67,7 @@ limitations under the License.
 				</ul>
 			</section>
 			
-			<section name="Archive Releases">
+			<section id="archive" name="Archive Releases">
 				<p>
 					Previous releases of log4net are available from the sourceforge site:
 				</p>

@@ -24,10 +24,10 @@ limitations under the License.
 	<meta name="keywords" content="log4net plugins, log4net" />
 
 	<body>
-		<section name="log4net Manual - Plugins">
+		<section id="main" name="log4net Manual - Plugins">
 			<sectionMenu name="Contents" />
 
-			<section name="Plugins">
+			<section id="plugins" name="Plugins">
 				<p>
 					Plugins are additional modular components that are attached to a logger repository.
 				</p>
@@ -78,7 +78,7 @@ LogManager.GetRepository().PluginMap.Add(new RemoteLoggingServerPlugin("LoggingS
 					</li>
 				</ul>
 
-				<section name="Plugin Attributes">
+				<section id="attributes" name="Plugin Attributes">
 					<p>
 						Plugins can be configured using the following assembly-level attributes:
 					</p>

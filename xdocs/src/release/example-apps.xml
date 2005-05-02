@@ -24,19 +24,19 @@ limitations under the License.
 	<meta name="keywords" content="log4net examples, log4net" />
 
 	<body>
-		<section name="log4net Examples">
+		<section id="main" name="log4net Examples">
 		
 			<sectionMenu name="Contents" />
 
-			<section name="Overview">
+			<section id="overview" name="Overview">
 				<p>
 					The following examples are only available in the log4net release download, not
 					on-line. To obtain the examples <a href="../downloads.html">download</a> one of the log4net releases.
 				</p>
 			</section>
 			
-			<section name="Building Examples">
-				<section name="Building An Example">
+			<section id="building" name="Building Examples">
+				<section id="building-1" name="Building An Example">
 					<p>
 						A single example can be build by running <span class="code">nant</span> from
 						the example directory.
@@ -48,7 +48,7 @@ limitations under the License.
 					</p>
 					<p>
 						<span class="code">nant</span> can be run in any directory containing a
-						<span class="code">nant.build</span> file. The typical behaviour of the build file
+						<span class="code">nant.build</span> file. The typical behavior of the build file
 						is to build all projects under the current directory.
 					</p>
 					<p>
@@ -58,7 +58,7 @@ limitations under the License.
 					</p>
 				</section>
 				
-				<section name="Building All Examples">
+				<section id="building-all" name="Building All Examples">
 					<p>
 						To build all the examples either run <span class="code">nant</span> in the 
 						<span class="code">examples</span> directory or you can specify the
@@ -66,7 +66,7 @@ limitations under the License.
 					</p>
 				</section>
 				
-				<section name="Visual Studio .NET 2002">
+				<section id="building-vsnet" name="Visual Studio .NET 2002">
 					<p>
 						There are Visual Studio .NET 2002 project files for the .NET 1.0 framework.
 						The solution files for C++, C# and VB are in the <a href="../../examples/net/1.0">examples\net\1.0</a>
@@ -75,9 +75,9 @@ limitations under the License.
 				</section>
 			</section>
 			
-			<section name="Examples">
+			<section id="examples" name="Examples">
 			
-				<section name="Tutorial - ConsoleApp">
+				<section id="consoleapp" name="Tutorial - ConsoleApp">
 					<p>
 						ConsoleApp shows how to write a simple console application that initializes 
 						logging and logs various events.
@@ -117,7 +117,7 @@ limitations under the License.
 					</p>
 				</section>
 				
-				<section name="Tutorial - WebApp">
+				<section id="webapp" name="Tutorial - WebApp">
 					<p>
 						ConsoleApp shows how to write a simple ASP.NET web application that initializes 
 						logging and logs various events.
@@ -138,12 +138,12 @@ limitations under the License.
 						To run this example you need to have an ASP.NET container application to
 						host the web application, for example IIS. In IIS create a new virtual
 						directory pointing to the WebApp src directory. Configure IIS to recognize
-						this virtual directory as an application. Open up a webrowser, navigate to
+						this virtual directory as an application. Open up a web browser, navigate to
 						the virtual directory and to the <span class="code">WebForm1.aspx</span> page within it.
 					</p>
 				</section>
 				
-				<section name="Remoting - RemotingClient">
+				<section id="remotingclient" name="Remoting - RemotingClient">
 					<p>
 						The RemotingClient application is a simple console application that configures
 						log4net with the RemotingAppender. This appender will attempt to deliver the
@@ -166,7 +166,7 @@ limitations under the License.
 					</p>
 				</section>
 				
-				<section name="Remoting - RemotingServer">
+				<section id="remotingserver" name="Remoting - RemotingServer">
 					<p>
 						The RemotingServer application is a simple console application that listens for
 						logging events from a remote RemotingAppender and then logs them through the
@@ -191,7 +191,7 @@ limitations under the License.
 					</p>
 				</section>
 				
-				<section name="Repository - SimpleModule">
+				<section id="rep-simple" name="Repository - SimpleModule">
 					<p>
 						The SimpleModule is a class library that is intended to be used as part of
 						the SimpleApp example,
@@ -227,7 +227,7 @@ limitations under the License.
 					</p>
 				</section>
 				
-				<section name="Repository - SharedModule">
+				<section id="rep-shared" name="Repository - SharedModule">
 					<p>
 						The SharedModule is a class library that is intended to be used as part of
 						the SimpleApp example,
@@ -262,7 +262,7 @@ limitations under the License.
 					</p>
 				</section>
 				
-				<section name="Repository - SimpleApp">
+				<section id="rep-app" name="Repository - SimpleApp">
 					<p>
 						The SimpleApp example uses the SimpleModule and SharedModule to demonstrate
 						the ways in which multiple assemblies within the same process may be 
@@ -297,7 +297,7 @@ limitations under the License.
 					</p>
 				</section>
 				
-				<section name="Extensibility - EventIDLogApp">
+				<section id="eventidlogapp" name="Extensibility - EventIDLogApp">
 					<p>
 						The EventIDLogApp example demonstrates using the log4net.Ext.EventID extension.
 						The extension needs to be built separately from the 
@@ -319,7 +319,7 @@ limitations under the License.
 					</p>
 				</section>
 				
-				<section name="Extensibility - TraceLogApp">
+				<section id="tracelogapp" name="Extensibility - TraceLogApp">
 					<p>
 						The TraceLogApp example demonstrates using the log4net.Ext.Trace extension.
 						The extension needs to be built separately from the 
@@ -341,7 +341,7 @@ limitations under the License.
 					</p>
 				</section>
 				
-				<section name="SampleAppenders">
+				<section id="sampleappenders" name="SampleAppenders">
 					<p>
 						This project includes the following example appenders.
 					</p>
@@ -375,7 +375,7 @@ limitations under the License.
 					</p>
 				</section>
 				
-				<section name="Performance - NotLogging">
+				<section id="perf-notlogging" name="Performance - NotLogging">
 					<p>
 						The NotLogging example benchmarks the performance of log4net logging statements in
 						user code in various scenarios including when logging is disabled. 

@@ -24,11 +24,11 @@ limitations under the License.
 	<meta name="keywords" content="log4net supported frameworks, mono, sscli, .net, log4net" />
 
 	<body>
-		<section name="log4net Supported Frameworks">
+		<section id="main" name="log4net Supported Frameworks">
 		
 			<sectionMenu name="Contents" />
 			
-			<section name="Summary of .NET frameworks supported by log4net">
+			<section id="summary" name="Summary of .NET frameworks supported by log4net">
 				<p>
 					log4net now builds on 6 frameworks:
 				</p>
@@ -78,7 +78,7 @@ limitations under the License.
 				</p>
 			</section>
 			
-			<section name="Appenders">
+			<section id="appenders" name="Appenders">
 				<p>
 					The appenders available to each framework depend on the functionality of the 
 					framework and the platform it runs on:
@@ -305,20 +305,20 @@ limitations under the License.
 				</div>
 			</section>
 			
-			<section name="Framework Specific Notes">
-				<section name="Microsoft .NET Framework 1.0 (1.0.3705)">
+			<section id="notes" name="Framework Specific Notes">
+				<section id="net1.0" name="Microsoft .NET Framework 1.0 (1.0.3705)">
 					<p>
 						none
 					</p>
 				</section>
 				
-				<section name="Microsoft .NET Framework 1.1 (1.1.4322)">
+				<section id="net1.1" name="Microsoft .NET Framework 1.1 (1.1.4322)">
 					<p>
 						none
 					</p>
 				</section>
 				
-				<section name="Microsoft .NET Compact Framework 1.0 (1.0.5000)">
+				<section id="netcf1.0" name="Microsoft .NET Compact Framework 1.0 (1.0.5000)">
 					<ul>
 						<li>
 							<h4>Assembly attributes</h4>
@@ -439,13 +439,13 @@ namespace TestApp
 					</ul>
 				</section>
 				
-				<section name="Mono 1.0">
+				<section id="mono1.0" name="Mono 1.0">
 					<p>
 						none
 					</p>
 				</section>
 				
-				<section name="Microsoft Shared Source CLI 1.0">
+				<section id="sscli1.0" name="Microsoft Shared Source CLI 1.0">
 					<ul>
 						<li>
 							<h4>FileSystemWatcher</h4>
@@ -483,7 +483,7 @@ namespace TestApp
 					</ul>
 				</section>
 				
-				<section name="CLI 1.0 Compatible">
+				<section id="cli1.0" name="CLI 1.0 Compatible">
 					<p>
 						This build of log4net is designed to run on any ECMA CLI 1.0 compatible runtime.
 						The assembly does not support any platform specific features. The build includes

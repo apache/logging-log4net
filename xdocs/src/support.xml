@@ -24,7 +24,7 @@ limitations under the License.
 	<meta name="keywords" content="log4net support, log4net" />
 
 	<body>
-		<section name="log4net Support">
+		<section id="main" name="log4net Support">
 			
 			<p>
 				log4net user support is provided via a mailing list. Discussion on log4net is held on the
@@ -32,7 +32,7 @@ limitations under the License.
 				is likely that your question has been answered before.
 			</p>
 			
-			<section name="Mailing List Archives">
+			<section id="mlist-archive" name="Mailing List Archives">
 				<p>
 					You can browse the mailing list archives at the following locations:
 				</p>
@@ -45,7 +45,7 @@ limitations under the License.
 				</ul>
 			</section>
 			
-			<section name="Subscribe">
+			<section id="mlist-subscribe" name="Subscribe">
 				<p>
 					Subscribe to either the list or to the digest list:
 				</p>
@@ -67,7 +67,7 @@ limitations under the License.
 				</ul>
 			</section>
 			
-			<section name="Unsubscribe">
+			<section id="mlist-unsubscribe" name="Unsubscribe">
 				<p>
 					To unsubscribe send an email to the relevant email address:
 				</p>
@@ -89,7 +89,7 @@ limitations under the License.
 				</ul>
 			</section>
 
-			<section name="Posting">
+			<section id="mlist-posting" name="Posting">
 				<p>
 					Before posting please read the following guidelines:
 				</p>

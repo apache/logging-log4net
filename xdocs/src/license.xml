@@ -24,9 +24,9 @@ limitations under the License.
 	<meta name="keywords" content="log4net license, log4net" />
 
 	<body>
-		<section name="log4net License">
+		<section id="main" name="log4net License">
 
-			<section name="Current License">
+			<section id="current" name="Current License">
 				<p>
 					The Apache Software License Version 2.0 applies to all releases of 
 					log4net starting with log4net 1.2.1.
@@ -259,7 +259,7 @@ limitations under the License.
 				]]></source>
 			</section>
 
-			<section name="Previous License">
+			<section id="archive" name="Previous License">
 				<p>
 					Previous releases of log4net were released under the Apache Software License Version 1.1.
 				</p>

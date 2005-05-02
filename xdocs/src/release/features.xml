@@ -24,11 +24,11 @@ limitations under the License.
 	<meta name="keywords" content="log4net features, log4net" />
 
 	<body>
-		<section name="log4net Features">
+		<section id="main" name="log4net Features">
 		
 			<sectionMenu name="Contents" />
 
-			<section name="Overview">
+			<section id="overview" name="Overview">
 				<p>
 					log4net is a tool to help the programmer output log statements to a 
 					variety of output targets. In case of problems with an application, 
@@ -50,7 +50,7 @@ limitations under the License.
 				</p>
 			</section>
 			
-			<section name="Features">
+			<section id="features" name="Features">
 				<ul>
 					<li><h3>Support for multiple frameworks</h3></li>
 					<li><h3>Output to multiple logging targets</h3></li>
@@ -64,7 +64,7 @@ limitations under the License.
 				</ul>
 			</section>
 
-			<section name="Support for multiple frameworks">
+			<section id="frameworks" name="Support for multiple frameworks">
 				<p>
 					log4net supports the following frameworks:
 				</p>
@@ -78,7 +78,7 @@ limitations under the License.
 				</ul>
 			</section>
 
-			<section name="Output to multiple logging targets">
+			<section id="appenders" name="Output to multiple logging targets">
 				<p>
 					log4net ships with the following appenders (not on all frameworks):
 				</p>
@@ -212,7 +212,7 @@ limitations under the License.
 				<p />
 			</section>
 
-			<section name="Hierarchical logging architecture">
+			<section id="hierarchy" name="Hierarchical logging architecture">
 				<p>
 					Hierarchical logging is an ideal fit with component based development. 
 					Each component has its own of logger. When individually tested, the 
@@ -226,7 +226,7 @@ limitations under the License.
 				</p>
 			</section>
 
-			<section name="XML Configuration">
+			<section id="xml-config" name="XML Configuration">
 				<p>
 					log4net is configured using an XML configuration file. The configuration 
 					information can be embedded within other XML configuration files
@@ -239,7 +239,7 @@ limitations under the License.
 				</p>
 			</section>
 
-			<section name="Dynamic Configuration">
+			<section id="dynamic-config" name="Dynamic Configuration">
 				<p>
 					log4net can monitor its configuration file for changes and dynamically
 					apply changes made by the configurator. The logging levels, appenders, 
@@ -250,7 +250,7 @@ limitations under the License.
 				</p>
 			</section>
 
-			<section name="Logging Context">
+			<section id="context" name="Logging Context">
 				<p>
 					log4net can collect logging context data in a way that is transparent 
 					to the developer at the point of logging. The GlobalContext and the 
@@ -262,7 +262,7 @@ limitations under the License.
 				</p>
 			</section>
 
-			<section name="Proven architecture">
+			<section id="history" name="Proven architecture">
 				<p>
 					log4net is based on the highly successful log4j logging library,
 					in development since 1996. This popular and proven architecture has 

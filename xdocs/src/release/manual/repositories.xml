@@ -24,10 +24,10 @@ limitations under the License.
 	<meta name="keywords" content="building log4net, log4net" />
 
 	<body>
-		<section name="log4net Manual - Repositories">
+		<section id="main" name="log4net Manual - Repositories">
 			<sectionMenu name="Contents" />
 
-			<section name="Logging Repositories">
+			<section id="repository" name="Logging Repositories">
 				<p>
 					Logging repositories are considered advanced functionality. The default behavior
 					should be sufficient for most users.
@@ -51,7 +51,7 @@ limitations under the License.
 					A repository created in this way will need to be configured programmatically.
 				</p>
 
-				<section name="Attributes">
+				<section id="attributes" name="Attributes">
 					<p>
 						An assembly may choose to utilize a named logging repository rather than the default repository.
 						This completely separates the logging for the assembly from the rest of the application.

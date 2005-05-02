@@ -24,7 +24,7 @@ limitations under the License.
 	<meta name="keywords" content="contributing to log4net development, contributing log4net, log4net cvs, log4net" />
 
 	<body>
-		<section name="Contributing to log4net Development">
+		<section id="main" name="Contributing to log4net Development">
 		
 			<sectionMenu name="Contents" />
 
@@ -34,13 +34,13 @@ limitations under the License.
 			</p>
 -->
 		
-			<section name="Developer Mailing List">
+			<section id="mlist" name="Developer Mailing List">
 				<p>
 					All discussion relating to log4net development takes place on this list. All CVS checkin 
 					notifications are also copied to this list.
 				</p>
 			
-				<section name="Mailing List Archives">
+				<section id="mlist-archive" name="Mailing List Archives">
 					<p>
 						You can browse the mailing list archives at the following locations:
 					</p>
@@ -53,7 +53,7 @@ limitations under the License.
 					</ul>
 				</section>
 
-				<section name="Subscribe">
+				<section id="mlist-subscribe" name="Subscribe">
 					<p>
 						Subscribe to either the list or to the digest list:
 					</p>
@@ -75,7 +75,7 @@ limitations under the License.
 					</ul>
 				</section>
 
-				<section name="Unsubscribe">
+				<section id="mlist-unsubscribe" name="Unsubscribe">
 					<p>
 						To unsubscribe send an email to the relevant email address:
 					</p>
@@ -97,7 +97,7 @@ limitations under the License.
 					</ul>
 				</section>
 
-				<section name="Posting">
+				<section id="mlist-posting" name="Posting">
 					<p>
 						Most of the guidelines for the log4net-user list also apply to the dev list.
 						Please have a quick read through the <a href="support.html">guidelines</a>, thanks.
@@ -121,16 +121,16 @@ limitations under the License.
 				</section>
 			</section>
 
-			<section name="CVS Access">
+			<section id="cvs" name="CVS Access">
 
-				<section name="Browsing CVS">
+				<section id="cvs-view" name="Browsing CVS">
 					<p>
 						<a href="http://cvs.apache.org/viewcvs/logging-log4net/">Browse log4net</a> 
 						CVS repository using ViewCVS.
 					</p>
 				</section>
 
-				<section name="Anonymous CVS Access">
+				<section id="cvs-anon" name="Anonymous CVS Access">
 					<p>
 						Anyone can checkout source code from our anonymous CVS
 						server. To do so, simply use the following commands (if you are
@@ -166,7 +166,7 @@ cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic checkout logging-log4net<
 				</section>
 			
 <!-- TODO: Work out how to generate nightly snapshots of the CVS tree
-				<section name="Nightly Snapshots">
+				<section id="nightly" name="Nightly Snapshots">
 					<p>
 						Nightly snapshots of the CVS tree are available at 
 						<a href="http://cvs.apache.org/snapshots/log4net/">http://cvs.apache.org/snapshots/log4net/</a>.
@@ -175,7 +175,7 @@ cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic checkout logging-log4net<
 -->	
 			</section>
 			
-			<section name="Issue Tracking">
+			<section id="jira" name="Issue Tracking">
 				<p>
 					Many bugs reported end up not being a bug in the log4net code, 
 					but are due to incorrect configuration, problems caused by installed applications, 
@@ -204,7 +204,7 @@ cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic checkout logging-log4net<
 					you are seeing has already been reported. If it has been reported then you can vote for the issue.
 				</p>
 				
-				<section name="Reporting an Issue">
+				<section id="jira-reporting" name="Reporting an Issue">
 					<p>
 						If after you have exhausted all other resources to resolve a problem you may want to file a bug report.
 						Please make sure the problem is a bug in Logging and not a bug in your application.
@@ -238,7 +238,7 @@ cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic checkout logging-log4net<
 				</section>
 			</section>
 			
-			<section name="Contributing Patches">
+			<section id="patch" name="Contributing Patches">
 				<p>
 					Before starting to work on a patch it is probably a good idea to join the log4net-dev
 					mailing list to check that equivalent or complementary work is not already underway.
@@ -341,7 +341,7 @@ cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic checkout logging-log4net<
 			</section>
 			
 <!-- TODO: Add guidelines for contributors
-			<section name="Guidelines for Contributors">
+			<section id="guidelines" name="Guidelines for Contributors">
 				<p>
 					To contribute code to the log4net project follow the following
 					guidelines:

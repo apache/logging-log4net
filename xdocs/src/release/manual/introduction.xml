@@ -24,10 +24,10 @@ limitations under the License.
 	<meta name="keywords" content="log4net manual, log4net" />
 
 	<body>
-		<section name="log4net Manual - Introduction">
+		<section id="main" name="log4net Manual - Introduction">
 			<sectionMenu name="Contents" />
 
-			<section name="Overview">
+			<section id="overview" name="Overview">
 				<p>
 					This document is based on <i>Short introduction to log4j</i> by <i>Ceki G&#252;lc&#252;</i>.
 				</p>
@@ -76,7 +76,7 @@ limitations under the License.
 				</p>
 			</section>
 			
-			<section name="Frameworks">
+			<section id="frameworks" name="Frameworks">
 				<p>
 					Log4net is available for several frameworks. For each supported framework an 
 					assembly targeting that framework is built:
@@ -96,7 +96,7 @@ limitations under the License.
 				</p>
 			</section>
 			
-			<section name="Loggers and Appenders">
+			<section id="loggers" name="Loggers and Appenders">
 				<p>
 					Log4net has three main components: <i>loggers</i>, <i>appenders</i> and <i>layouts</i>. 
 					These three types of components work together to enable developers to log 
@@ -106,7 +106,7 @@ limitations under the License.
 					<i>object renderers</i> that turn objects into strings.
 				</p>
 				
-				<section name="Logger hierarchy">
+				<section id="hierarchy" name="Logger hierarchy">
 					<p>
 						The first and foremost advantage of any logging API over plain
 						<span class="code">System.Console.WriteLine</span>
@@ -548,7 +548,7 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
 					</p>
 				</section>
 				
-				<section name="Appenders">
+				<section id="appenders" name="Appenders">
 					<p>
 						The ability to selectively enable or disable logging requests based on their 
 						logger is only part of the picture. Log4net allows logging requests to print to 
@@ -817,7 +817,7 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
 					</div>
 				</section>
 				
-				<section name="Filters">
+				<section id="filters" name="Filters">
 					<p>
 						Appenders can filter the events that are delivered to them. The filters can be 
 						specified in the configuration to allow fine control of the events that are 
@@ -901,7 +901,7 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
 					</p>
 				</section>
 				
-				<section name="Layouts">
+				<section id="layouts" name="Layouts">
 					<p>
 						More often than not, users wish to customize not only the output destination 
 						but also the output format. This is accomplished by associating a <i>layout</i> 
@@ -989,7 +989,7 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
 					</div>
 				</section>
 				
-				<section name="Object Renderers">
+				<section id="renderers" name="Object Renderers">
 					<p>
 						Just as importantly, log4net will render the content of the log message 
 						according to user specified criteria. For example, if you frequently need to 

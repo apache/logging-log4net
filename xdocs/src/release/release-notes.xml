@@ -24,13 +24,13 @@ limitations under the License.
 	<meta name="keywords" content="log4net release notes, log4net" />
 
 	<body>
-		<section name="log4net Release Notes">
+		<section id="main" name="log4net Release Notes">
 		
 			<sectionMenu name="Contents" />
 
-			<section name="1.2.9 Beta">
+			<section id="1.2.9" name="1.2.9 Beta">
 			
-				<section name="Breaking Changes">
+				<section id="1.2.9-breaking" name="Breaking Changes">
 					<ul>
 						<li>
 							<h3>Renamed namespaces</h3>
@@ -83,7 +83,7 @@ limitations under the License.
 					</ul>
 				</section>
 				
-				<section name="New Features">
+				<section id="1.2.9-new" name="New Features">
 					<ul>
 						<li>
 							<h3>New CLI build</h3>
@@ -335,7 +335,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 					</ul>
 				</section>
 				
-				<section name="Other Changes">
+				<section id="1.2.9-other" name="Other Changes">
 					<ul>
 						<li>
 							<h3>FxCop compliance</h3>
@@ -381,7 +381,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 				
 			</section>
 			
-			<section name="1.2.0 Beta 8">
+			<section id="1.2.0b8" name="1.2.0 Beta 8">
 				<ul>
 					<li>
 						<h3>Changed assembly name to <span class="code">log4net</span></h3>
@@ -485,7 +485,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 				</ul>
 			</section>
 			
-			<section name="1.2.0 Beta 7">
+			<section id="1.2.0b7" name="1.2.0 Beta 7">
 				<ul>
 					<li>
 						<h3>Updated to support the Microsoft .NET Framework 1.1 Final</h3>
@@ -546,7 +546,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 				</ul>
 			</section>
 
-			<section name="1.2.0 Beta 6">
+			<section id="1.2.0b6" name="1.2.0 Beta 6">
 				<ul>
 					<li>
 						<h3>Added support for multiple frameworks</h3>
@@ -728,7 +728,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 				</ul>
 			</section>
 
-			<section name="1.2.0 Beta 5">
+			<section id="1.2.0b5" name="1.2.0 Beta 5">
 				<ul>
 					<li>
 						<h3>Fixed Exception thrown when DOM Configurator called with a null XML 
@@ -744,7 +744,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 				</ul>
 			</section>
 
-			<section name="1.2.0 Beta 4">
+			<section id="1.2.0b4" name="1.2.0 Beta 4">
 				<ul>
 					<li>
 						<h3>Added event specific properties to the logging event object</h3>
@@ -814,7 +814,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 				</ul>
 			</section>
 
-			<section name="1.2.0 Beta 3">
+			<section id="1.2.0b3" name="1.2.0 Beta 3">
 				<ul>
 					<li>
 						<h3>Added log4net.Ext.Trace extension</h3>
@@ -859,7 +859,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 				</ul>
 			</section>
 
-			<section name="1.2.0 Beta 2">
+			<section id="1.2.0b2" name="1.2.0 Beta 2">
 				<ul>
 					<li>
 						<h3>Added ADONetAppender</h3>
@@ -874,7 +874,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 				</ul>
 			</section>
 
-			<section name="1.2.0 Beta 1">
+			<section id="1.2.0b1" name="1.2.0 Beta 1">
 				<ul>
 					<li>
 						<h3>Added 6 new examples</h3>

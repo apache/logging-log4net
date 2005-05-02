@@ -24,11 +24,11 @@ limitations under the License.
 	<meta name="keywords" content="building log4net, log4net" />
 
 	<body>
-		<section name="log4net Config Examples">
+		<section id="main" name="log4net Config Examples">
 		
 			<sectionMenu name="Contents" />
 
-			<section name="Overview">
+			<section id="overview" name="Overview">
 				<p>
 					This document presents example configurations for the built-in appenders.
 					These configurations are designed to work with the 
@@ -42,7 +42,7 @@ limitations under the License.
 				</p>
 			</section>
 			
-			<section name="AdoNetAppender">
+			<section id="adonetappender" name="AdoNetAppender">
 				<p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.AdoNetAppender.html">log4net.Appender.AdoNetAppender</a>.
 				</p>
@@ -50,7 +50,7 @@ limitations under the License.
 					The configuration of the <span class="code">AdoNetAppender</span> depends on the
 					provider selected for the target database. Here are some examples.
 				</p>
-				<section name="MS SQL Server">
+				<section id="adonetappender-mssql" name="MS SQL Server">
 					<p>
 						The following example shows how to configure the <span class="code">AdoNetAppender</span> 
 						to log messages to a SQL Server database. The events are written in batches of 100
@@ -132,7 +132,7 @@ CREATE TABLE [dbo].[Log] (
 					]]></source>
 				</section>
 				
-				<section name="MS Access">
+				<section id="adonetappender-msa" name="MS Access">
 					<p>
 						This example shows how to write events to an Access Database.
 					</p>
@@ -184,7 +184,7 @@ CREATE TABLE [dbo].[Log] (
 					]]></source>
 				</section>
 				
-				<section name="Oracle9i">
+				<section id="adonetappender-o9" name="Oracle9i">
 					<p>
 						This example shows how to write events to an Oracle9i Database.
 					</p>
@@ -250,7 +250,7 @@ create table log (
 					]]></source>
 				</section>
 			
-				<section name="Oracle8i">
+				<section id="adonetappender-o8" name="Oracle8i">
 					<p>
 						This example shows how to write events to an Oracle8i Database.
 					</p>
@@ -299,7 +299,7 @@ TABLESPACE CSAX30D LOGGING
 					]]></source>
 				</section>
 				
-				<section name="IBM DB2">
+				<section id="adonetappender-db2" name="IBM DB2">
 					<p>
 						This example shows how to write events to an IBM DB2 8.2 Database.
 						The following syntax should also work with older DB2 database servers.
@@ -386,7 +386,7 @@ IN "LRGTABLES";
 			</section>
 				
 			
-			<section name="AspNetTraceAppender">
+			<section id="aspnettraceappender" name="AspNetTraceAppender">
 				<p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.AspNetTraceAppender.html">log4net.Appender.AspNetTraceAppender</a>.
 				</p>
@@ -406,7 +406,7 @@ IN "LRGTABLES";
 				]]></source>				
 			</section>
 			
-			<section name="BufferingForwardingAppender">
+			<section id="bufferingforwardingappender" name="BufferingForwardingAppender">
 				<p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.BufferingForwardingAppender.html">log4net.Appender.BufferingForwardingAppender</a>.
 				</p>
@@ -439,7 +439,7 @@ IN "LRGTABLES";
 				]]></source>				
 			</section>
 			
-			<section name="ColoredConsoleAppender">
+			<section id="coloredconsoleappender" name="ColoredConsoleAppender">
 				<p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.ColoredConsoleAppender.html">log4net.Appender.ColoredConsoleAppender</a>.
 				</p>
@@ -481,7 +481,7 @@ IN "LRGTABLES";
 				]]></source>				
 			</section>
 			
-			<section name="ConsoleAppender">
+			<section id="consoleappender" name="ConsoleAppender">
 				<p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.ConsoleAppender.html">log4net.Appender.ConsoleAppender</a>.
 				</p>
@@ -510,7 +510,7 @@ IN "LRGTABLES";
 				]]></source>				
 			</section>
 			
-			<section name="EventLogAppender">
+			<section id="eventlogappender" name="EventLogAppender">
 				<p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.EventLogAppender.html">log4net.Appender.EventLogAppender</a>.
 				</p>
@@ -545,7 +545,7 @@ IN "LRGTABLES";
 				</p>
 			</section>
 			
-			<section name="FileAppender">
+			<section id="fileappender" name="FileAppender">
 				<p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.FileAppender.html">log4net.Appender.FileAppender</a>.
 				</p>
@@ -594,7 +594,7 @@ IN "LRGTABLES";
 				]]></source>				
 			</section>
 			
-			<section name="ForwardingAppender">
+			<section id="forwardingappender" name="ForwardingAppender">
 				<p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.ForwardingAppender.html">log4net.Appender.ForwardingAppender</a>.
 				</p>
@@ -615,7 +615,7 @@ IN "LRGTABLES";
 				]]></source>				
 			</section>
 			
-			<section name="MemoryAppender">
+			<section id="memoryappender" name="MemoryAppender">
 				<p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.MemoryAppender.html">log4net.Appender.MemoryAppender</a>.
 				</p>
@@ -630,7 +630,7 @@ IN "LRGTABLES";
 				]]></source>				
 			</section>
 			
-			<section name="NetSendAppender">
+			<section id="netsendappender" name="NetSendAppender">
 				<p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.NetSendAppender.html">log4net.Appender.NetSendAppender</a>.
 				</p>
@@ -657,7 +657,7 @@ IN "LRGTABLES";
 				]]></source>				
 			</section>
 			
-			<section name="OutputDebugStringAppender">
+			<section id="outputdebugstringappender" name="OutputDebugStringAppender">
 				<p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.OutputDebugStringAppender.html">log4net.Appender.OutputDebugStringAppender</a>.
 				</p>
@@ -674,7 +674,7 @@ IN "LRGTABLES";
 				]]></source>				
 			</section>
 			
-			<section name="RemotingAppender">
+			<section id="remotingappender" name="RemotingAppender">
 				<p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.RemotingAppender.html">log4net.Appender.RemotingAppender</a>.
 				</p>
@@ -715,7 +715,7 @@ IN "LRGTABLES";
 				]]></source>				
 			</section>
 			
-			<section name="RollingFileAppender">
+			<section id="rollingfileappender" name="RollingFileAppender">
 				<p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.RollingFileAppender.html">log4net.Appender.RollingFileAppender</a>.
 				</p>
@@ -804,7 +804,7 @@ IN "LRGTABLES";
 				]]></source>
 			</section>
 			
-			<section name="SmtpAppender">
+			<section id="smtpappender" name="SmtpAppender">
 				<p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.SmtpAppender.html">log4net.Appender.SmtpAppender</a>.
 				</p>
@@ -873,7 +873,7 @@ IN "LRGTABLES";
 				]]></source>	
 			</section>
 			
-			<section name="SmtpPickupDirAppender">
+			<section id="smtppickupdirappender" name="SmtpPickupDirAppender">
 				<p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.SmtpPickupDirAppender.html">log4net.Appender.SmtpPickupDirAppender</a>.
 				</p>
@@ -915,7 +915,7 @@ IN "LRGTABLES";
 				]]></source>				
 			</section>
 			
-			<section name="TraceAppender">
+			<section id="traceappender" name="TraceAppender">
 				<p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.TraceAppender.html">log4net.Appender.TraceAppender</a>.
 				</p>
@@ -935,7 +935,7 @@ IN "LRGTABLES";
 				]]></source>				
 			</section>
 			
-			<section name="UdpAppender">
+			<section id="udpappender" name="UdpAppender">
 				<p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.UdpAppender.html">log4net.Appender.UdpAppender</a>.
 				</p>

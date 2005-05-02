@@ -24,9 +24,9 @@ limitations under the License.
 	<meta name="keywords" content=".net, C#, VB.NET, logging, tracing, component, framework, API, log4net" />
 
 	<body>
-		<section name="About log4net">
+		<section id="main" name="About log4net">
 
-			<section name="Introduction">
+			<section id="intro" name="Introduction">
 				<p>
 					log4net is a tool to help the programmer output log statements to a variety 
 					of output targets. log4net is a port of the excellent log4j framework to the 
@@ -42,7 +42,7 @@ limitations under the License.
 				</p>
 			</section>
 			
-			<section name="Project Status">
+			<section id="status" name="Project Status">
 				<p>
 					log4net is an effort undergoing incubation at the Apache Software 
 					Foundation (ASF), sponsored by the Apache Logging Services project. 
@@ -55,9 +55,9 @@ limitations under the License.
 				</p>
 			</section>
 			
-			<section name="Contributors">
+			<section id="contributors" name="Contributors">
 	
-				<section name="Active Committers">
+				<section id="active" name="Active Committers">
 
 					<ul>
 						<li>
@@ -79,7 +79,7 @@ limitations under the License.
 					
 				</section>
 			
-				<section name="Community Contributors">
+				<section id="community" name="Community Contributors">
 
 					<ul>
 						<li>

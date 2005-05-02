@@ -24,7 +24,7 @@ limitations under the License.
 	<meta name="keywords" content="building log4net, log4net" />
 
 	<body>
-		<section name="Building log4net">
+		<section id="main" name="Building log4net">
 			<sectionMenu name="Contents" />
 			
 			<p>
@@ -36,12 +36,12 @@ limitations under the License.
 				name key file. See the Strong Name section below. 
 			</p>
 		
-			<section name="Visual Studio .NET" id="id_1">
+			<section id="vsnet" name="Visual Studio .NET">
 				<p>
 					Visual Studio .NET 2002 and 2003 are supported build platforms for log4net.
 				</p>
 
-				<section name="Visual Studio .NET 2002" id="id_2">
+				<section id="vsnet-2002" name="Visual Studio .NET 2002">
 					<p>
 						The log4net distribution includes a solution and project file
 						for Visual Studio .NET 2002. Open the <span class="code">log4net.sln</span>
@@ -58,7 +58,7 @@ limitations under the License.
 					</ul>
 				</section>
 
-				<section name="Visual Studio .NET 2003" id="id_3">
+				<section id="vsnet-2003" name="Visual Studio .NET 2003">
 					<p>
 						Open the Visual Studio .NET 2002 solution file as above. 
 						Visual Studio will convert the solution and project files
@@ -74,7 +74,7 @@ limitations under the License.
 				</section>
 			</section>
 			
-			<section name="NAnt">
+			<section id="nant" name="NAnt">
 				<p>
 					The log4net distribution is built using the NAnt tool.
 					NAnt version 0.85 is required to build log4net, it is 
@@ -108,7 +108,7 @@ nant -buildfile:log4net.build -projecthelp</pre></div>
 build.cmd compile-all</pre></div>
 			</section>
 
-			<section name="Strong Name">
+			<section id="sn" name="Strong Name">
 				<p>
 					In order to build the Release builds of log4net a Strong
 					Name key is required. 
@@ -126,17 +126,17 @@ sn -k log4net.snk</pre></div>
 				</p>
 			</section>
 
-			<section name="SDK Reference">
+			<section id="sdk" name="SDK Reference">
 				<p>
 					NDoc is used to build the log4net SDK documentation.
 					NDoc is available from <a href="http://ndoc.sourceforge.net">ndoc.sourceforge.net</a>.
 				</p>
 			</section>
 
-			<section name="HTML Documentation">
+			<section id="html" name="HTML Documentation">
 				<p>
 					The log4net HTML documentation is built using Velocity.
-					The source are XML files in the <span class="code">xdcos/src</span> directory.
+					The source are XML files in the <span class="code">xdocs/src</span> directory.
 					Building the documentation requires Java, Ant, and Velocity.
 					Run ant from within the <span class="code">xdocs</span> directory.
 				</p>
