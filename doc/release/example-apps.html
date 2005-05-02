@@ -65,72 +65,73 @@ limitations under the License.
            <!-- START main table --> 
                 
 
-	                                                                       <h1><a id="HC-21621663"></a>log4net Examples</h1>
+	                                                                       <h1><a id="main"></a>log4net Examples</h1>
     <div class="i1">
                                     			<h2>Contents</h2>
 		<div class="i1">
-																			    <a href="#HC-9299042">Overview</a><br/>
+																			    <a href="#overview">Overview</a><br/>
     <div class="i1">
                               </div>
-																    <a href="#HC-17908832">Building Examples</a><br/>
+																    <a href="#building">Building Examples</a><br/>
     <div class="i1">
-                                        <a href="#HC-25857250">Building An Example</a><br/>
+                                        <a href="#building-1">Building An Example</a><br/>
     <div class="i1">
                                                                                           </div>
-                                                    <a href="#HC-16747636">Building All Examples</a><br/>
+                                                    <a href="#building-all">Building All Examples</a><br/>
     <div class="i1">
                               </div>
-                                                    <a href="#HC-22949069">Visual Studio .NET 2002</a><br/>
+                                                    <a href="#building-vsnet">Visual Studio .NET 2002</a><br/>
     <div class="i1">
                               </div>
                       </div>
-																    <a href="#HC-30373009">Examples</a><br/>
+																    <a href="#examples">Examples</a><br/>
     <div class="i1">
-                                        <a href="#HC-15595312">Tutorial - ConsoleApp</a><br/>
-    <div class="i1">
-                                                                                          </div>
-                                                    <a href="#HC-16749745">Tutorial - WebApp</a><br/>
+                                        <a href="#consoleapp">Tutorial - ConsoleApp</a><br/>
     <div class="i1">
                                                                                           </div>
-                                                    <a href="#HC-24840600">Remoting - RemotingClient</a><br/>
+                                                    <a href="#webapp">Tutorial - WebApp</a><br/>
     <div class="i1">
                                                                                           </div>
-                                                    <a href="#HC-11733267">Remoting - RemotingServer</a><br/>
+                                                    <a href="#remotingclient">Remoting - RemotingClient</a><br/>
     <div class="i1">
                                                                                           </div>
-                                                    <a href="#HC-1635615">Repository - SimpleModule</a><br/>
+                                                    <a href="#remotingserver">Remoting - RemotingServer</a><br/>
     <div class="i1">
                                                                                           </div>
-                                                    <a href="#HC-8703610">Repository - SharedModule</a><br/>
+                                                    <a href="#rep-simple">Repository - SimpleModule</a><br/>
     <div class="i1">
                                                                                           </div>
-                                                    <a href="#HC-17815542">Repository - SimpleApp</a><br/>
+                                                    <a href="#rep-shared">Repository - SharedModule</a><br/>
     <div class="i1">
                                                                                           </div>
-                                                    <a href="#HC-19623049">Extensibility - EventIDLogApp</a><br/>
+                                                    <a href="#rep-app">Repository - SimpleApp</a><br/>
     <div class="i1">
                                                                                           </div>
-                                                    <a href="#HC-31637242">Extensibility - TraceLogApp</a><br/>
+                                                    <a href="#eventidlogapp">Extensibility - EventIDLogApp</a><br/>
     <div class="i1">
                                                                                           </div>
-                                                    <a href="#HC-23602584">SampleAppenders</a><br/>
+                                                    <a href="#tracelogapp">Extensibility - TraceLogApp</a><br/>
+    <div class="i1">
+                                                                                          </div>
+                                                    <a href="#sampleappenders">SampleAppenders</a><br/>
     <div class="i1">
                                                                                                               </div>
-                                                    <a href="#HC-8140933">Performance - NotLogging</a><br/>
+                                                    <a href="#perf-notlogging">Performance - NotLogging</a><br/>
     <div class="i1">
                                                                                           </div>
                       </div>
 									</div>
-	                                                    <h2><a id="HC-9299042"></a>Overview</h2>
+	                                                    <h2><a id="overview"></a>Overview</h2>
     <div class="i1">
                                     <p>
-					The following examples are only available in the log4net release download, not
+					<strong>The following examples are only available in the log4net release download, not
 					on-line. To obtain the examples <a href="../downloads.html">download</a> one of the log4net releases.
+					</strong>
 				</p>
                       </div>
-                                                    <h2><a id="HC-17908832"></a>Building Examples</h2>
+                                                    <h2><a id="building"></a>Building Examples</h2>
     <div class="i1">
-                                        <h3><a id="HC-25857250"></a>Building An Example</h3>
+                                        <h3><a id="building-1"></a>Building An Example</h3>
     <div class="i1">
                                     <p>
 						A single example can be build by running <span class="code">nant</span> from
@@ -143,7 +144,7 @@ limitations under the License.
 					</p>
                                                 <p>
 						<span class="code">nant</span> can be run in any directory containing a
-						<span class="code">nant.build</span> file. The typical behaviour of the build file
+						<span class="code">nant.build</span> file. The typical behavior of the build file
 						is to build all projects under the current directory.
 					</p>
                                                 <p>
@@ -152,7 +153,7 @@ limitations under the License.
 						will build all the examples for the .NET 1.1 platform.
 					</p>
                       </div>
-                                                    <h3><a id="HC-16747636"></a>Building All Examples</h3>
+                                                    <h3><a id="building-all"></a>Building All Examples</h3>
     <div class="i1">
                                     <p>
 						To build all the examples either run <span class="code">nant</span> in the 
@@ -160,18 +161,18 @@ limitations under the License.
 						<span class="code">compile-examples</span> target to the main log4net nant build.
 					</p>
                       </div>
-                                                    <h3><a id="HC-22949069"></a>Visual Studio .NET 2002</h3>
+                                                    <h3><a id="building-vsnet"></a>Visual Studio .NET 2002</h3>
     <div class="i1">
                                     <p>
 						There are Visual Studio .NET 2002 project files for the .NET 1.0 framework.
-						The solution files for C++, C# and VB are in the <a href="../../../examples/net/1.0">examples\net\1.0</a>
+						The solution files for C++, C# and VB are in the <a href="../../examples/net/1.0">examples\net\1.0</a>
 						folder.
 					</p>
                       </div>
                       </div>
-                                                    <h2><a id="HC-30373009"></a>Examples</h2>
+                                                    <h2><a id="examples"></a>Examples</h2>
     <div class="i1">
-                                        <h3><a id="HC-15595312"></a>Tutorial - ConsoleApp</h3>
+                                        <h3><a id="consoleapp"></a>Tutorial - ConsoleApp</h3>
     <div class="i1">
                                     <p>
 						ConsoleApp shows how to write a simple console application that initializes 
@@ -185,33 +186,33 @@ limitations under the License.
                                                 <ul>
 						<li>
 							<b>MONO 1.0</b>: 
-							<a href="../../../examples/mono/1.0/Tutorials/ConsoleApp/cs">C#</a>
+							<a href="../../examples/mono/1.0/Tutorials/ConsoleApp/cs">C#</a>
 						</li>
 						<li>
 							<b>.NET 1.0</b>: 
-							<a href="../../../examples/net/1.0/Tutorials/ConsoleApp/cpp">C++</a>, 
-							<a href="../../../examples/net/1.0/Tutorials/ConsoleApp/cs">C#</a>, 
-							<a href="../../../examples/net/1.0/Tutorials/ConsoleApp/vb">VB</a>
+							<a href="../../examples/net/1.0/Tutorials/ConsoleApp/cpp">C++</a>, 
+							<a href="../../examples/net/1.0/Tutorials/ConsoleApp/cs">C#</a>, 
+							<a href="../../examples/net/1.0/Tutorials/ConsoleApp/vb">VB</a>
 						</li>
 						<li>
 							<b>.NET 1.1</b>: 
-							<a href="../../../examples/net/1.1/Tutorials/ConsoleApp/js">JavaScript</a>
+							<a href="../../examples/net/1.1/Tutorials/ConsoleApp/js">JavaScript</a>
 						</li>
 						<li>
 							<b>.NET Compact Framework 1.0</b>: 
-							<a href="../../../examples/netcf/1.0/Tutorials/ConsoleApp/cs">C#</a>, 
-							<a href="../../../examples/netcf/1.0/Tutorials/ConsoleApp/vb">VB</a>
+							<a href="../../examples/netcf/1.0/Tutorials/ConsoleApp/cs">C#</a>, 
+							<a href="../../examples/netcf/1.0/Tutorials/ConsoleApp/vb">VB</a>
 						</li>
 						<li>
 							<b>SSCLI 1.0</b>: 
-							<a href="../../../examples/sscli/1.0/Tutorials/ConsoleApp/js">JavaScript</a>
+							<a href="../../examples/sscli/1.0/Tutorials/ConsoleApp/js">JavaScript</a>
 						</li>
 					</ul>
                                                 <p>
 						To run this example execute the <span class="code">ConsoleApp.exe</span> from the build output directory.
 					</p>
                       </div>
-                                                    <h3><a id="HC-16749745"></a>Tutorial - WebApp</h3>
+                                                    <h3><a id="webapp"></a>Tutorial - WebApp</h3>
     <div class="i1">
                                     <p>
 						ConsoleApp shows how to write a simple ASP.NET web application that initializes 
@@ -225,19 +226,19 @@ limitations under the License.
                                                 <ul>
 						<li>
 							<b>.NET 1.0</b>: 
-							<a href="../../../examples/net/1.0/Tutorials/WebApp/cs">C#</a>, 
-							<a href="../../../examples/net/1.0/Tutorials/WebApp/vb">VB</a>
+							<a href="../../examples/net/1.0/Tutorials/WebApp/cs">C#</a>, 
+							<a href="../../examples/net/1.0/Tutorials/WebApp/vb">VB</a>
 						</li>
 					</ul>
                                                 <p>
 						To run this example you need to have an ASP.NET container application to
 						host the web application, for example IIS. In IIS create a new virtual
 						directory pointing to the WebApp src directory. Configure IIS to recognize
-						this virtual directory as an application. Open up a webrowser, navigate to
+						this virtual directory as an application. Open up a web browser, navigate to
 						the virtual directory and to the <span class="code">WebForm1.aspx</span> page within it.
 					</p>
                       </div>
-                                                    <h3><a id="HC-24840600"></a>Remoting - RemotingClient</h3>
+                                                    <h3><a id="remotingclient"></a>Remoting - RemotingClient</h3>
     <div class="i1">
                                     <p>
 						The RemotingClient application is a simple console application that configures
@@ -253,14 +254,14 @@ limitations under the License.
                                                 <ul>
 						<li>
 							<b>.NET 1.0</b>: 
-							<a href="../../../examples/net/1.0/Remoting/RemotingClient/cs">C#</a>
+							<a href="../../examples/net/1.0/Remoting/RemotingClient/cs">C#</a>
 						</li>
 					</ul>
                                                 <p>
 						To run this example execute the <span class="code">RemotingClient.exe</span> from the build output directory.
 					</p>
                       </div>
-                                                    <h3><a id="HC-11733267"></a>Remoting - RemotingServer</h3>
+                                                    <h3><a id="remotingserver"></a>Remoting - RemotingServer</h3>
     <div class="i1">
                                     <p>
 						The RemotingServer application is a simple console application that listens for
@@ -276,7 +277,7 @@ limitations under the License.
                                                 <ul>
 						<li>
 							<b>.NET 1.0</b>: 
-							<a href="../../../examples/net/1.0/Remoting/RemotingServer/cs">C#</a>
+							<a href="../../examples/net/1.0/Remoting/RemotingServer/cs">C#</a>
 						</li>
 					</ul>
                                                 <p>
@@ -285,7 +286,7 @@ limitations under the License.
 						the same machine. The logging events from the client are transferred to the server.
 					</p>
                       </div>
-                                                    <h3><a id="HC-1635615"></a>Repository - SimpleModule</h3>
+                                                    <h3><a id="rep-simple"></a>Repository - SimpleModule</h3>
     <div class="i1">
                                     <p>
 						The SimpleModule is a class library that is intended to be used as part of
@@ -301,27 +302,27 @@ limitations under the License.
                                                 <ul>
 						<li>
 							<b>MONO 1.0</b>: 
-							<a href="../../../examples/mono/1.0/Repository/SimpleModule/cs">C#</a>
+							<a href="../../examples/mono/1.0/Repository/SimpleModule/cs">C#</a>
 						</li>
 						<li>
 							<b>.NET 1.0</b>: 
-							<a href="../../../examples/net/1.0/Repository/SimpleModule/cs">C#</a>, 
-							<a href="../../../examples/net/1.0/Repository/SimpleModule/vb">VB</a>
+							<a href="../../examples/net/1.0/Repository/SimpleModule/cs">C#</a>, 
+							<a href="../../examples/net/1.0/Repository/SimpleModule/vb">VB</a>
 						</li>
 						<li>
 							<b>.NET 1.1</b>: 
-							<a href="../../../examples/net/1.1/Repository/SimpleModule/js">JavaScript</a>
+							<a href="../../examples/net/1.1/Repository/SimpleModule/js">JavaScript</a>
 						</li>
 						<li>
 							<b>SSCLI 1.0</b>: 
-							<a href="../../../examples/sscli/1.0/Repository/SimpleModule/cs">C#</a>
+							<a href="../../examples/sscli/1.0/Repository/SimpleModule/cs">C#</a>
 						</li>
 					</ul>
                                                 <p>
 						This library is intended to be used as part of the SimpleApp example.
 					</p>
                       </div>
-                                                    <h3><a id="HC-8703610"></a>Repository - SharedModule</h3>
+                                                    <h3><a id="rep-shared"></a>Repository - SharedModule</h3>
     <div class="i1">
                                     <p>
 						The SharedModule is a class library that is intended to be used as part of
@@ -336,27 +337,27 @@ limitations under the License.
                                                 <ul>
 						<li>
 							<b>MONO 1.0</b>: 
-							<a href="../../../examples/mono/1.0/Repository/SharedModule/cs">C#</a>
+							<a href="../../examples/mono/1.0/Repository/SharedModule/cs">C#</a>
 						</li>
 						<li>
 							<b>.NET 1.0</b>: 
-							<a href="../../../examples/net/1.0/Repository/SharedModule/cs">C#</a>, 
-							<a href="../../../examples/net/1.0/Repository/SharedModule/vb">VB</a>
+							<a href="../../examples/net/1.0/Repository/SharedModule/cs">C#</a>, 
+							<a href="../../examples/net/1.0/Repository/SharedModule/vb">VB</a>
 						</li>
 						<li>
 							<b>.NET 1.1</b>: 
-							<a href="../../../examples/net/1.1/Repository/SharedModule/js">JavaScript</a>
+							<a href="../../examples/net/1.1/Repository/SharedModule/js">JavaScript</a>
 						</li>
 						<li>
 							<b>SSCLI 1.0</b>: 
-							<a href="../../../examples/sscli/1.0/Repository/SharedModule/cs">C#</a>
+							<a href="../../examples/sscli/1.0/Repository/SharedModule/cs">C#</a>
 						</li>
 					</ul>
                                                 <p>
 						This library is intended to be used as part of the SimpleApp example.
 					</p>
                       </div>
-                                                    <h3><a id="HC-17815542"></a>Repository - SimpleApp</h3>
+                                                    <h3><a id="rep-app"></a>Repository - SimpleApp</h3>
     <div class="i1">
                                     <p>
 						The SimpleApp example uses the SimpleModule and SharedModule to demonstrate
@@ -371,27 +372,27 @@ limitations under the License.
                                                 <ul>
 						<li>
 							<b>MONO 1.0</b>: 
-							<a href="../../../examples/mono/1.0/Repository/SimpleApp/cs">C#</a>
+							<a href="../../examples/mono/1.0/Repository/SimpleApp/cs">C#</a>
 						</li>
 						<li>
 							<b>.NET 1.0</b>: 
-							<a href="../../../examples/net/1.0/Repository/SimpleApp/cs">C#</a>, 
-							<a href="../../../examples/net/1.0/Repository/SimpleApp/vb">VB</a>
+							<a href="../../examples/net/1.0/Repository/SimpleApp/cs">C#</a>, 
+							<a href="../../examples/net/1.0/Repository/SimpleApp/vb">VB</a>
 						</li>
 						<li>
 							<b>.NET 1.1</b>: 
-							<a href="../../../examples/net/1.1/Repository/SimpleApp/js">JavaScript</a>
+							<a href="../../examples/net/1.1/Repository/SimpleApp/js">JavaScript</a>
 						</li>
 						<li>
 							<b>SSCLI 1.0</b>: 
-							<a href="../../../examples/sscli/1.0/Repository/SimpleApp/cs">C#</a>
+							<a href="../../examples/sscli/1.0/Repository/SimpleApp/cs">C#</a>
 						</li>
 					</ul>
                                                 <p>
 						To run this example execute the <span class="code">SimpleApp.exe</span> from the build output directory.
 					</p>
                       </div>
-                                                    <h3><a id="HC-19623049"></a>Extensibility - EventIDLogApp</h3>
+                                                    <h3><a id="eventidlogapp"></a>Extensibility - EventIDLogApp</h3>
     <div class="i1">
                                     <p>
 						The EventIDLogApp example demonstrates using the log4net.Ext.EventID extension.
@@ -406,14 +407,14 @@ limitations under the License.
                                                 <ul>
 						<li>
 							<b>.NET 1.0</b>: 
-							<a href="../../../examples/net/1.0/Extensibility/EventIDLogApp/cs">C#</a>
+							<a href="../../examples/net/1.0/Extensibility/EventIDLogApp/cs">C#</a>
 						</li>
 					</ul>
                                                 <p>
 						To run this example execute the <span class="code">EventIDLogApp.exe</span> from the build output directory.
 					</p>
                       </div>
-                                                    <h3><a id="HC-31637242"></a>Extensibility - TraceLogApp</h3>
+                                                    <h3><a id="tracelogapp"></a>Extensibility - TraceLogApp</h3>
     <div class="i1">
                                     <p>
 						The TraceLogApp example demonstrates using the log4net.Ext.Trace extension.
@@ -428,14 +429,14 @@ limitations under the License.
                                                 <ul>
 						<li>
 							<b>.NET 1.0</b>: 
-							<a href="../../../examples/net/1.0/Extensibility/TraceLogApp/cs">C#</a>
+							<a href="../../examples/net/1.0/Extensibility/TraceLogApp/cs">C#</a>
 						</li>
 					</ul>
                                                 <p>
 						To run this example execute the <span class="code">TraceLogApp.exe</span> from the build output directory.
 					</p>
                       </div>
-                                                    <h3><a id="HC-23602584"></a>SampleAppenders</h3>
+                                                    <h3><a id="sampleappenders"></a>SampleAppenders</h3>
     <div class="i1">
                                     <p>
 						This project includes the following example appenders.
@@ -462,14 +463,14 @@ limitations under the License.
                                                 <ul>
 						<li>
 							<b>.NET 1.0</b>: 
-							<a href="../../../examples/net/1.0/Appenders/SampleAppendersApp/cs">C#</a>
+							<a href="../../examples/net/1.0/Appenders/SampleAppendersApp/cs">C#</a>
 						</li>
 					</ul>
                                                 <p>
 						To run this example execute the <span class="code">SampleAppendersApp.exe</span> from the build output directory.
 					</p>
                       </div>
-                                                    <h3><a id="HC-8140933"></a>Performance - NotLogging</h3>
+                                                    <h3><a id="perf-notlogging"></a>Performance - NotLogging</h3>
     <div class="i1">
                                     <p>
 						The NotLogging example benchmarks the performance of log4net logging statements in
@@ -483,12 +484,12 @@ limitations under the License.
                                                 <ul>
 						<li>
 							<b>MONO 1.0</b>: 
-							<a href="../../../examples/mono/1.0/Performance/NotLogging/cs">C#</a>
+							<a href="../../examples/mono/1.0/Performance/NotLogging/cs">C#</a>
 						</li>
 						<li>
 							<b>.NET 1.0</b>: 
-							<a href="../../../examples/net/1.0/Performance/NotLogging/cs">C#</a>, 
-							<a href="../../../examples/net/1.0/Performance/NotLogging/vb">VB</a>
+							<a href="../../examples/net/1.0/Performance/NotLogging/cs">C#</a>, 
+							<a href="../../examples/net/1.0/Performance/NotLogging/vb">VB</a>
 						</li>
 					</ul>
                                                 <p>

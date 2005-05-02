@@ -65,81 +65,81 @@ limitations under the License.
            <!-- START main table --> 
                 
 
-	                                                                       <h1><a id="HC-120224"></a>log4net Config Examples</h1>
+	                                                                       <h1><a id="main"></a>log4net Config Examples</h1>
     <div class="i1">
                                     			<h2>Contents</h2>
 		<div class="i1">
-																			    <a href="#HC-29774358">Overview</a><br/>
+																			    <a href="#overview">Overview</a><br/>
     <div class="i1">
                                                   </div>
-																    <a href="#HC-17738170">AdoNetAppender</a><br/>
+																    <a href="#adonetappender">AdoNetAppender</a><br/>
     <div class="i1">
-                                                                                <a href="#HC-22878167">MS SQL Server</a><br/>
+                                                                                <a href="#adonetappender-mssql">MS SQL Server</a><br/>
     <div class="i1">
                                                                                                               </div>
-                                                    <a href="#HC-4199273">MS Access</a><br/>
+                                                    <a href="#adonetappender-msa">MS Access</a><br/>
     <div class="i1">
                                                   </div>
-                                                    <a href="#HC-12213211">Oracle9i</a><br/>
+                                                    <a href="#adonetappender-o9">Oracle9i</a><br/>
     <div class="i1">
                                                                                                               </div>
-                                                    <a href="#HC-14982605">Oracle8i</a><br/>
+                                                    <a href="#adonetappender-o8">Oracle8i</a><br/>
     <div class="i1">
                                                                                                               </div>
-                                                    <a href="#HC-20201168">IBM DB2</a><br/>
+                                                    <a href="#adonetappender-db2">IBM DB2</a><br/>
     <div class="i1">
                                                                                                               </div>
                       </div>
-																    <a href="#HC-17298525">AspNetTraceAppender</a><br/>
+																    <a href="#aspnettraceappender">AspNetTraceAppender</a><br/>
     <div class="i1">
                                                                       </div>
-																    <a href="#HC-20712275">BufferingForwardingAppender</a><br/>
+																    <a href="#bufferingforwardingappender">BufferingForwardingAppender</a><br/>
     <div class="i1">
                                                                                                               </div>
-																    <a href="#HC-26388552">ColoredConsoleAppender</a><br/>
+																    <a href="#coloredconsoleappender">ColoredConsoleAppender</a><br/>
     <div class="i1">
                                                                                                               </div>
-																    <a href="#HC-23467239">ConsoleAppender</a><br/>
+																    <a href="#consoleappender">ConsoleAppender</a><br/>
     <div class="i1">
                                                                                                               </div>
-																    <a href="#HC-15101782">EventLogAppender</a><br/>
+																    <a href="#eventlogappender">EventLogAppender</a><br/>
     <div class="i1">
                                                                                                                                   </div>
-																    <a href="#HC-9936523">FileAppender</a><br/>
+																    <a href="#fileappender">FileAppender</a><br/>
     <div class="i1">
                                                                                                                                                       </div>
-																    <a href="#HC-2739852">ForwardingAppender</a><br/>
+																    <a href="#forwardingappender">ForwardingAppender</a><br/>
     <div class="i1">
                                                                       </div>
-																    <a href="#HC-12014770">MemoryAppender</a><br/>
+																    <a href="#memoryappender">MemoryAppender</a><br/>
     <div class="i1">
                                                                       </div>
-																    <a href="#HC-1670071">NetSendAppender</a><br/>
+																    <a href="#netsendappender">NetSendAppender</a><br/>
     <div class="i1">
                                                                       </div>
-																    <a href="#HC-17386824">OutputDebugStringAppender</a><br/>
+																    <a href="#outputdebugstringappender">OutputDebugStringAppender</a><br/>
     <div class="i1">
                                                                       </div>
-																    <a href="#HC-28360136">RemotingAppender</a><br/>
+																    <a href="#remotingappender">RemotingAppender</a><br/>
     <div class="i1">
                                                                                                               </div>
-																    <a href="#HC-11463270">RollingFileAppender</a><br/>
+																    <a href="#rollingfileappender">RollingFileAppender</a><br/>
     <div class="i1">
                                                                                                                                                                                                                   </div>
-																    <a href="#HC-27187756">SmtpAppender</a><br/>
+																    <a href="#smtpappender">SmtpAppender</a><br/>
     <div class="i1">
                                                                                                                                                       </div>
-																    <a href="#HC-367156">SmtpPickupDirAppender</a><br/>
+																    <a href="#smtppickupdirappender">SmtpPickupDirAppender</a><br/>
     <div class="i1">
                                                                                                               </div>
-																    <a href="#HC-30340343">TraceAppender</a><br/>
+																    <a href="#traceappender">TraceAppender</a><br/>
     <div class="i1">
                                                                       </div>
-																    <a href="#HC-3445873">UdpAppender</a><br/>
+																    <a href="#udpappender">UdpAppender</a><br/>
     <div class="i1">
                                                                       </div>
 									</div>
-	                                                    <h2><a id="HC-29774358"></a>Overview</h2>
+	                                                    <h2><a id="overview"></a>Overview</h2>
     <div class="i1">
                                     <p>
 					This document presents example configurations for the built-in appenders.
@@ -153,7 +153,7 @@ limitations under the License.
 					more details on each options see the SDK documentation for the appender.
 				</p>
                       </div>
-                                                    <h2><a id="HC-17738170"></a>AdoNetAppender</h2>
+                                                    <h2><a id="adonetappender"></a>AdoNetAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.AdoNetAppender.html">log4net.Appender.AdoNetAppender</a>.
@@ -162,7 +162,7 @@ limitations under the License.
 					The configuration of the <span class="code">AdoNetAppender</span> depends on the
 					provider selected for the target database. Here are some examples.
 				</p>
-                                                    <h3><a id="HC-22878167"></a>MS SQL Server</h3>
+                                                    <h3><a id="adonetappender-mssql"></a>MS SQL Server</h3>
     <div class="i1">
                                     <p>
 						The following example shows how to configure the <span class="code">AdoNetAppender</span> 
@@ -248,7 +248,7 @@ CREATE TABLE [dbo].[Log] (
 					</pre></div>
 
                       </div>
-                                                    <h3><a id="HC-4199273"></a>MS Access</h3>
+                                                    <h3><a id="adonetappender-msa"></a>MS Access</h3>
     <div class="i1">
                                     <p>
 						This example shows how to write events to an Access Database.
@@ -302,7 +302,7 @@ CREATE TABLE [dbo].[Log] (
 					</pre></div>
 
                       </div>
-                                                    <h3><a id="HC-12213211"></a>Oracle9i</h3>
+                                                    <h3><a id="adonetappender-o9"></a>Oracle9i</h3>
     <div class="i1">
                                     <p>
 						This example shows how to write events to an Oracle9i Database.
@@ -372,7 +372,7 @@ create table log (
 					</pre></div>
 
                       </div>
-                                                    <h3><a id="HC-14982605"></a>Oracle8i</h3>
+                                                    <h3><a id="adonetappender-o8"></a>Oracle8i</h3>
     <div class="i1">
                                     <p>
 						This example shows how to write events to an Oracle8i Database.
@@ -425,7 +425,7 @@ TABLESPACE CSAX30D LOGGING
 					</pre></div>
 
                       </div>
-                                                    <h3><a id="HC-20201168"></a>IBM DB2</h3>
+                                                    <h3><a id="adonetappender-db2"></a>IBM DB2</h3>
     <div class="i1">
                                     <p>
 						This example shows how to write events to an IBM DB2 8.2 Database.
@@ -514,7 +514,7 @@ IN &quot;LRGTABLES&quot;;
 
                       </div>
                       </div>
-                                                    <h2><a id="HC-17298525"></a>AspNetTraceAppender</h2>
+                                                    <h2><a id="aspnettraceappender"></a>AspNetTraceAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.AspNetTraceAppender.html">log4net.Appender.AspNetTraceAppender</a>.
@@ -530,13 +530,13 @@ IN &quot;LRGTABLES&quot;;
     <div class="syntax"><pre class="code">
 &lt;appender name=&quot;AspNetTraceAppender&quot; type=&quot;log4net.Appender.AspNetTraceAppender&quot; &gt;
 	&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
-		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%ndc] - %message%newline&quot; /&gt;
+		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%property{NDC}] - %message%newline&quot; /&gt;
 	&lt;/layout&gt;
 &lt;/appender&gt;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-20712275"></a>BufferingForwardingAppender</h2>
+                                                    <h2><a id="bufferingforwardingappender"></a>BufferingForwardingAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.BufferingForwardingAppender.html">log4net.Appender.BufferingForwardingAppender</a>.
@@ -573,7 +573,7 @@ IN &quot;LRGTABLES&quot;;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-26388552"></a>ColoredConsoleAppender</h2>
+                                                    <h2><a id="coloredconsoleappender"></a>ColoredConsoleAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.ColoredConsoleAppender.html">log4net.Appender.ColoredConsoleAppender</a>.
@@ -592,7 +592,7 @@ IN &quot;LRGTABLES&quot;;
 		&lt;backColor value=&quot;Red, HighIntensity&quot; /&gt;
 	&lt;/mapping&gt;
 	&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
-		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%ndc] - %message%newline&quot; /&gt;
+		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%property{NDC}] - %message%newline&quot; /&gt;
 	&lt;/layout&gt;
 &lt;/appender&gt;
 				</pre></div>
@@ -613,13 +613,13 @@ IN &quot;LRGTABLES&quot;;
 		&lt;backColor value=&quot;Green&quot; /&gt;
 	&lt;/mapping&gt;
 	&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
-		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%ndc] - %message%newline&quot; /&gt;
+		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%property{NDC}] - %message%newline&quot; /&gt;
 	&lt;/layout&gt;
 &lt;/appender&gt;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-23467239"></a>ConsoleAppender</h2>
+                                                    <h2><a id="consoleappender"></a>ConsoleAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.ConsoleAppender.html">log4net.Appender.ConsoleAppender</a>.
@@ -633,7 +633,7 @@ IN &quot;LRGTABLES&quot;;
     <div class="syntax"><pre class="code">
 &lt;appender name=&quot;ConsoleAppender&quot; type=&quot;log4net.Appender.ConsoleAppender&quot;&gt;
 	&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
-		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%ndc] - %message%newline&quot; /&gt;
+		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%property{NDC}] - %message%newline&quot; /&gt;
 	&lt;/layout&gt;
 &lt;/appender&gt;
 				</pre></div>
@@ -646,13 +646,13 @@ IN &quot;LRGTABLES&quot;;
 &lt;appender name=&quot;ConsoleAppender&quot; type=&quot;log4net.Appender.ConsoleAppender&quot;&gt;
 	&lt;target value=&quot;Console.Error&quot; /&gt;
 	&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
-		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%ndc] - %message%newline&quot; /&gt;
+		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%property{NDC}] - %message%newline&quot; /&gt;
 	&lt;/layout&gt;
 &lt;/appender&gt;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-15101782"></a>EventLogAppender</h2>
+                                                    <h2><a id="eventlogappender"></a>EventLogAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.EventLogAppender.html">log4net.Appender.EventLogAppender</a>.
@@ -666,7 +666,7 @@ IN &quot;LRGTABLES&quot;;
     <div class="syntax"><pre class="code">
 &lt;appender name=&quot;EventLogAppender&quot; type=&quot;log4net.Appender.EventLogAppender&quot; &gt;
 	&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
-		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%ndc] - %message%newline&quot; /&gt;
+		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%property{NDC}] - %message%newline&quot; /&gt;
 	&lt;/layout&gt;
 &lt;/appender&gt;
 				</pre></div>
@@ -680,7 +680,7 @@ IN &quot;LRGTABLES&quot;;
 &lt;appender name=&quot;EventLogAppender&quot; type=&quot;log4net.Appender.EventLogAppender&quot; &gt;
 	&lt;applicationName value=&quot;MyApp&quot; /&gt;
 	&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
-		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%ndc] - %message%newline&quot; /&gt;
+		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%property{NDC}] - %message%newline&quot; /&gt;
 	&lt;/layout&gt;
 &lt;/appender&gt;
 				</pre></div>
@@ -691,7 +691,7 @@ IN &quot;LRGTABLES&quot;;
 					FAQ: <a href="faq.html#trouble-EventLog">Why doesn't the EventLogAppender work?</a>.
 				</p>
                       </div>
-                                                    <h2><a id="HC-9936523"></a>FileAppender</h2>
+                                                    <h2><a id="fileappender"></a>FileAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.FileAppender.html">log4net.Appender.FileAppender</a>.
@@ -707,7 +707,7 @@ IN &quot;LRGTABLES&quot;;
 	&lt;file value=&quot;log-file.txt&quot; /&gt;
 	&lt;appendToFile value=&quot;true&quot; /&gt;
 	&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
-		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%ndc] - %message%newline&quot; /&gt;
+		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%property{NDC}] - %message%newline&quot; /&gt;
 	&lt;/layout&gt;
 &lt;/appender&gt;
 				</pre></div>
@@ -724,7 +724,7 @@ IN &quot;LRGTABLES&quot;;
 	&lt;appendToFile value=&quot;true&quot; /&gt;
 	&lt;encoding value=&quot;unicodeFFFE&quot; /&gt;
 	&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
-		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%ndc] - %message%newline&quot; /&gt;
+		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%property{NDC}] - %message%newline&quot; /&gt;
 	&lt;/layout&gt;
 &lt;/appender&gt;
 				</pre></div>
@@ -740,13 +740,13 @@ IN &quot;LRGTABLES&quot;;
 	&lt;appendToFile value=&quot;true&quot; /&gt;
 	&lt;lockingModel type=&quot;log4net.Appender.FileAppender+MinimalLock&quot; /&gt;
 	&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
-		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%ndc] - %message%newline&quot; /&gt;
+		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%property{NDC}] - %message%newline&quot; /&gt;
 	&lt;/layout&gt;
 &lt;/appender&gt;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-2739852"></a>ForwardingAppender</h2>
+                                                    <h2><a id="forwardingappender"></a>ForwardingAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.ForwardingAppender.html">log4net.Appender.ForwardingAppender</a>.
@@ -769,7 +769,7 @@ IN &quot;LRGTABLES&quot;;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-12014770"></a>MemoryAppender</h2>
+                                                    <h2><a id="memoryappender"></a>MemoryAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.MemoryAppender.html">log4net.Appender.MemoryAppender</a>.
@@ -786,7 +786,7 @@ IN &quot;LRGTABLES&quot;;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-1670071"></a>NetSendAppender</h2>
+                                                    <h2><a id="netsendappender"></a>NetSendAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.NetSendAppender.html">log4net.Appender.NetSendAppender</a>.
@@ -809,13 +809,13 @@ IN &quot;LRGTABLES&quot;;
 	&lt;server value=&quot;SQUARE&quot; /&gt;
 	&lt;recipient value=&quot;nicko&quot; /&gt;
 	&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
-		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%ndc] - %message%newline&quot; /&gt;
+		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%property{NDC}] - %message%newline&quot; /&gt;
 	&lt;/layout&gt;
 &lt;/appender&gt;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-17386824"></a>OutputDebugStringAppender</h2>
+                                                    <h2><a id="outputdebugstringappender"></a>OutputDebugStringAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.OutputDebugStringAppender.html">log4net.Appender.OutputDebugStringAppender</a>.
@@ -828,13 +828,13 @@ IN &quot;LRGTABLES&quot;;
     <div class="syntax"><pre class="code">
 &lt;appender name=&quot;OutputDebugStringAppender&quot; type=&quot;log4net.Appender.OutputDebugStringAppender&quot; &gt;
 	&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
-		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%ndc] - %message%newline&quot; /&gt;
+		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%property{NDC}] - %message%newline&quot; /&gt;
 	&lt;/layout&gt;
 &lt;/appender&gt;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-28360136"></a>RemotingAppender</h2>
+                                                    <h2><a id="remotingappender"></a>RemotingAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.RemotingAppender.html">log4net.Appender.RemotingAppender</a>.
@@ -879,7 +879,7 @@ IN &quot;LRGTABLES&quot;;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-11463270"></a>RollingFileAppender</h2>
+                                                    <h2><a id="rollingfileappender"></a>RollingFileAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.RollingFileAppender.html">log4net.Appender.RollingFileAppender</a>.
@@ -907,7 +907,7 @@ IN &quot;LRGTABLES&quot;;
 	&lt;maximumFileSize value=&quot;100KB&quot; /&gt;
 	&lt;staticLogFileName value=&quot;true&quot; /&gt;
 	&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
-		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%ndc] - %message%newline&quot; /&gt;
+		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%property{NDC}] - %message%newline&quot; /&gt;
 	&lt;/layout&gt;
 &lt;/appender&gt;
 				</pre></div>
@@ -927,7 +927,7 @@ IN &quot;LRGTABLES&quot;;
 	&lt;rollingStyle value=&quot;Date&quot; /&gt;
 	&lt;datePattern value=&quot;yyyyMMdd-HHmm&quot; /&gt;
 	&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
-		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%ndc] - %message%newline&quot; /&gt;
+		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%property{NDC}] - %message%newline&quot; /&gt;
 	&lt;/layout&gt;
 &lt;/appender&gt;
 				</pre></div>
@@ -947,7 +947,7 @@ IN &quot;LRGTABLES&quot;;
 	&lt;maxSizeRollBackups value=&quot;10&quot; /&gt;
 	&lt;maximumFileSize value=&quot;1MB&quot; /&gt;
 	&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
-		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%ndc] - %message%newline&quot; /&gt;
+		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%property{NDC}] - %message%newline&quot; /&gt;
 	&lt;/layout&gt;
 &lt;/appender&gt;
 				</pre></div>
@@ -970,13 +970,13 @@ IN &quot;LRGTABLES&quot;;
 	&lt;maxSizeRollBackups value=&quot;-1&quot; /&gt;
 	&lt;maximumFileSize value=&quot;50GB&quot; /&gt;
 	&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
-		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%ndc] - %message%newline&quot; /&gt;
+		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%property{NDC}] - %message%newline&quot; /&gt;
 	&lt;/layout&gt;
 &lt;/appender&gt;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-27187756"></a>SmtpAppender</h2>
+                                                    <h2><a id="smtpappender"></a>SmtpAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.SmtpAppender.html">log4net.Appender.SmtpAppender</a>.
@@ -1004,7 +1004,7 @@ IN &quot;LRGTABLES&quot;;
 		&lt;threshold value=&quot;WARN&quot;/&gt;
 	&lt;/evaluator&gt;
 	&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
-		&lt;conversionPattern value=&quot;%newline%date [%thread] %-5level %logger [%ndc] - %message%newline%newline%newline&quot; /&gt;
+		&lt;conversionPattern value=&quot;%newline%date [%thread] %-5level %logger [%property{NDC}] - %message%newline%newline%newline&quot; /&gt;
 	&lt;/layout&gt;
 &lt;/appender&gt;
 				</pre></div>
@@ -1024,7 +1024,7 @@ IN &quot;LRGTABLES&quot;;
 	&lt;bufferSize value=&quot;512&quot; /&gt;
 	&lt;lossy value=&quot;false&quot; /&gt;
 	&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
-		&lt;conversionPattern value=&quot;%newline%date [%thread] %-5level %logger [%ndc] - %message%newline%newline%newline&quot; /&gt;
+		&lt;conversionPattern value=&quot;%newline%date [%thread] %-5level %logger [%property{NDC}] - %message%newline%newline%newline&quot; /&gt;
 	&lt;/layout&gt;
 &lt;/appender&gt;
 				</pre></div>
@@ -1045,13 +1045,13 @@ IN &quot;LRGTABLES&quot;;
 		&lt;threshold value=&quot;WARN&quot; /&gt;
 	&lt;/evaluator&gt;
 	&lt;layout type=&quot;log4net.Layout.PatternLayout,log4net&quot;&gt;
-		&lt;conversionPattern value=&quot;%property{log4net:HostName} :: %level :: %message %newlineLogger: %logger%newlineThread: %thread%newlineDate: %date%newlineNDC: %ndc%newline%newline&quot; /&gt;
+		&lt;conversionPattern value=&quot;%property{log4net:HostName} :: %level :: %message %newlineLogger: %logger%newlineThread: %thread%newlineDate: %date%newlineNDC: %property{NDC}%newline%newline&quot; /&gt;
 	&lt;/layout&gt;
 &lt;/appender&gt;				
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-367156"></a>SmtpPickupDirAppender</h2>
+                                                    <h2><a id="smtppickupdirappender"></a>SmtpPickupDirAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.SmtpPickupDirAppender.html">log4net.Appender.SmtpPickupDirAppender</a>.
@@ -1089,13 +1089,13 @@ IN &quot;LRGTABLES&quot;;
 		&lt;threshold value=&quot;WARN&quot;/&gt;
 	&lt;/evaluator&gt;
 	&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
-		&lt;conversionPattern value=&quot;%newline%date [%thread] %-5level %logger [%ndc] - %message%newline%newline%newline&quot; /&gt;
+		&lt;conversionPattern value=&quot;%newline%date [%thread] %-5level %logger [%property{NDC}] - %message%newline%newline%newline&quot; /&gt;
 	&lt;/layout&gt;
 &lt;/appender&gt;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-30340343"></a>TraceAppender</h2>
+                                                    <h2><a id="traceappender"></a>TraceAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.TraceAppender.html">log4net.Appender.TraceAppender</a>.
@@ -1111,13 +1111,13 @@ IN &quot;LRGTABLES&quot;;
     <div class="syntax"><pre class="code">
 &lt;appender name=&quot;TraceAppender&quot; type=&quot;log4net.Appender.TraceAppender&quot;&gt;
 	&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
-		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%ndc] - %message%newline&quot; /&gt;
+		&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger [%property{NDC}] - %message%newline&quot; /&gt;
 	&lt;/layout&gt;
 &lt;/appender&gt;
 				</pre></div>
 
                       </div>
-                                                    <h2><a id="HC-3445873"></a>UdpAppender</h2>
+                                                    <h2><a id="udpappender"></a>UdpAppender</h2>
     <div class="i1">
                                     <p>
 					For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.UdpAppender.html">log4net.Appender.UdpAppender</a>.
@@ -1133,7 +1133,7 @@ IN &quot;LRGTABLES&quot;;
 	&lt;remoteAddress value=&quot;224.0.0.1&quot; /&gt;
 	&lt;remotePort value=&quot;8080&quot; /&gt;
 	&lt;layout type=&quot;log4net.Layout.PatternLayout, log4net&quot;&gt;
-		&lt;conversionPattern value=&quot;%-5level %logger [%ndc] - %message%newline&quot; /&gt;
+		&lt;conversionPattern value=&quot;%-5level %logger [%property{NDC}] - %message%newline&quot; /&gt;
 	&lt;/layout&gt;
 &lt;/appender&gt;
 				</pre></div>

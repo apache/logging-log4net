@@ -65,29 +65,29 @@ limitations under the License.
            <!-- START main table --> 
                 
 
-	                                                                       <h1><a id="HC-15079989"></a>Building log4net</h1>
+	                                                                       <h1><a id="main"></a>Building log4net</h1>
     <div class="i1">
                                     			<h2>Contents</h2>
 		<div class="i1">
-																																	    <a href="#id_1">Visual Studio .NET</a><br/>
+																																	    <a href="#vsnet">Visual Studio .NET</a><br/>
     <div class="i1">
-                                                            <a href="#id_2">Visual Studio .NET 2002</a><br/>
+                                                            <a href="#vsnet-2002">Visual Studio .NET 2002</a><br/>
     <div class="i1">
                                                                       </div>
-                                                    <a href="#id_3">Visual Studio .NET 2003</a><br/>
+                                                    <a href="#vsnet-2003">Visual Studio .NET 2003</a><br/>
     <div class="i1">
                                                   </div>
                       </div>
-																    <a href="#HC-28336193">NAnt</a><br/>
+																    <a href="#nant">NAnt</a><br/>
     <div class="i1">
                                                                                                                                                                           </div>
-																    <a href="#HC-29775659">Strong Name</a><br/>
+																    <a href="#sn">Strong Name</a><br/>
     <div class="i1">
                                                                                           </div>
-																    <a href="#HC-8702985">SDK Reference</a><br/>
+																    <a href="#sdk">SDK Reference</a><br/>
     <div class="i1">
                               </div>
-																    <a href="#HC-7314318">HTML Documentation</a><br/>
+																    <a href="#html">HTML Documentation</a><br/>
     <div class="i1">
                               </div>
 									</div>
@@ -99,12 +99,12 @@ limitations under the License.
 				To build a release build of log4net you will need to create a strong
 				name key file. See the Strong Name section below. 
 			</p>
-                                                    <h2><a id="id_1"></a>Visual Studio .NET</h2>
+                                                    <h2><a id="vsnet"></a>Visual Studio .NET</h2>
     <div class="i1">
                                     <p>
 					Visual Studio .NET 2002 and 2003 are supported build platforms for log4net.
 				</p>
-                                                    <h3><a id="id_2"></a>Visual Studio .NET 2002</h3>
+                                                    <h3><a id="vsnet-2002"></a>Visual Studio .NET 2002</h3>
     <div class="i1">
                                     <p>
 						The log4net distribution includes a solution and project file
@@ -121,7 +121,7 @@ limitations under the License.
 						<li>System.XML</li>
 					</ul>
                       </div>
-                                                    <h3><a id="id_3"></a>Visual Studio .NET 2003</h3>
+                                                    <h3><a id="vsnet-2003"></a>Visual Studio .NET 2003</h3>
     <div class="i1">
                                     <p>
 						Open the Visual Studio .NET 2002 solution file as above. 
@@ -137,7 +137,7 @@ limitations under the License.
 					</p>
                       </div>
                       </div>
-                                                    <h2><a id="HC-28336193"></a>NAnt</h2>
+                                                    <h2><a id="nant"></a>NAnt</h2>
     <div class="i1">
                                     <p>
 					The log4net distribution is built using the NAnt tool.
@@ -171,7 +171,7 @@ nant -buildfile:log4net.build -projecthelp</pre></div>
                                                 <div class="syntax"><pre class="code">
 build.cmd compile-all</pre></div>
                       </div>
-                                                    <h2><a id="HC-29775659"></a>Strong Name</h2>
+                                                    <h2><a id="sn"></a>Strong Name</h2>
     <div class="i1">
                                     <p>
 					In order to build the Release builds of log4net a Strong
@@ -189,18 +189,18 @@ sn -k log4net.snk</pre></div>
 					file.
 				</p>
                       </div>
-                                                    <h2><a id="HC-8702985"></a>SDK Reference</h2>
+                                                    <h2><a id="sdk"></a>SDK Reference</h2>
     <div class="i1">
                                     <p>
 					NDoc is used to build the log4net SDK documentation.
 					NDoc is available from <a href="http://ndoc.sourceforge.net">ndoc.sourceforge.net</a>.
 				</p>
                       </div>
-                                                    <h2><a id="HC-7314318"></a>HTML Documentation</h2>
+                                                    <h2><a id="html"></a>HTML Documentation</h2>
     <div class="i1">
                                     <p>
 					The log4net HTML documentation is built using Velocity.
-					The source are XML files in the <span class="code">xdcos/src</span> directory.
+					The source are XML files in the <span class="code">xdocs/src</span> directory.
 					Building the documentation requires Java, Ant, and Velocity.
 					Run ant from within the <span class="code">xdocs</span> directory.
 				</p>
