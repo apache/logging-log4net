@@ -400,7 +400,7 @@ IN "LRGTABLES";
 				<source language="xml"><![CDATA[
 <appender name="AspNetTraceAppender" type="log4net.Appender.AspNetTraceAppender" >
 	<layout type="log4net.Layout.PatternLayout">
-		<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+		<conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
 	</layout>
 </appender>
 				]]></source>				
@@ -456,7 +456,7 @@ IN "LRGTABLES";
 		<backColor value="Red, HighIntensity" />
 	</mapping>
 	<layout type="log4net.Layout.PatternLayout">
-		<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+		<conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
 	</layout>
 </appender>
 				]]></source>				
@@ -475,7 +475,7 @@ IN "LRGTABLES";
 		<backColor value="Green" />
 	</mapping>
 	<layout type="log4net.Layout.PatternLayout">
-		<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+		<conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
 	</layout>
 </appender>
 				]]></source>				
@@ -493,7 +493,7 @@ IN "LRGTABLES";
 				<source language="xml"><![CDATA[
 <appender name="ConsoleAppender" type="log4net.Appender.ConsoleAppender">
 	<layout type="log4net.Layout.PatternLayout">
-		<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+		<conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
 	</layout>
 </appender>
 				]]></source>				
@@ -504,7 +504,7 @@ IN "LRGTABLES";
 <appender name="ConsoleAppender" type="log4net.Appender.ConsoleAppender">
 	<target value="Console.Error" />
 	<layout type="log4net.Layout.PatternLayout">
-		<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+		<conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
 	</layout>
 </appender>
 				]]></source>				
@@ -522,7 +522,7 @@ IN "LRGTABLES";
 				<source language="xml"><![CDATA[
 <appender name="EventLogAppender" type="log4net.Appender.EventLogAppender" >
 	<layout type="log4net.Layout.PatternLayout">
-		<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+		<conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
 	</layout>
 </appender>
 				]]></source>				
@@ -534,7 +534,7 @@ IN "LRGTABLES";
 <appender name="EventLogAppender" type="log4net.Appender.EventLogAppender" >
 	<applicationName value="MyApp" />
 	<layout type="log4net.Layout.PatternLayout">
-		<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+		<conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
 	</layout>
 </appender>
 				]]></source>				
@@ -559,7 +559,7 @@ IN "LRGTABLES";
 	<file value="log-file.txt" />
 	<appendToFile value="true" />
 	<layout type="log4net.Layout.PatternLayout">
-		<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+		<conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
 	</layout>
 </appender>
 				]]></source>				
@@ -574,7 +574,7 @@ IN "LRGTABLES";
 	<appendToFile value="true" />
 	<encoding value="unicodeFFFE" />
 	<layout type="log4net.Layout.PatternLayout">
-		<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+		<conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
 	</layout>
 </appender>
 				]]></source>				
@@ -588,7 +588,7 @@ IN "LRGTABLES";
 	<appendToFile value="true" />
 	<lockingModel type="log4net.Appender.FileAppender+MinimalLock" />
 	<layout type="log4net.Layout.PatternLayout">
-		<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+		<conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
 	</layout>
 </appender>
 				]]></source>				
@@ -651,7 +651,7 @@ IN "LRGTABLES";
 	<server value="SQUARE" />
 	<recipient value="nicko" />
 	<layout type="log4net.Layout.PatternLayout">
-		<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+		<conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
 	</layout>
 </appender>
 				]]></source>				
@@ -668,7 +668,7 @@ IN "LRGTABLES";
 				<source language="xml"><![CDATA[
 <appender name="OutputDebugStringAppender" type="log4net.Appender.OutputDebugStringAppender" >
 	<layout type="log4net.Layout.PatternLayout">
-		<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+		<conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
 	</layout>
 </appender>
 				]]></source>				
@@ -741,7 +741,7 @@ IN "LRGTABLES";
 	<maximumFileSize value="100KB" />
 	<staticLogFileName value="true" />
 	<layout type="log4net.Layout.PatternLayout">
-		<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+		<conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
 	</layout>
 </appender>
 				]]></source>
@@ -759,7 +759,7 @@ IN "LRGTABLES";
 	<rollingStyle value="Date" />
 	<datePattern value="yyyyMMdd-HHmm" />
 	<layout type="log4net.Layout.PatternLayout">
-		<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+		<conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
 	</layout>
 </appender>
 				]]></source>
@@ -777,7 +777,7 @@ IN "LRGTABLES";
 	<maxSizeRollBackups value="10" />
 	<maximumFileSize value="1MB" />
 	<layout type="log4net.Layout.PatternLayout">
-		<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+		<conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
 	</layout>
 </appender>
 				]]></source>
@@ -798,7 +798,7 @@ IN "LRGTABLES";
 	<maxSizeRollBackups value="-1" />
 	<maximumFileSize value="50GB" />
 	<layout type="log4net.Layout.PatternLayout">
-		<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+		<conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
 	</layout>
 </appender>
 				]]></source>
@@ -830,7 +830,7 @@ IN "LRGTABLES";
 		<threshold value="WARN"/>
 	</evaluator>
 	<layout type="log4net.Layout.PatternLayout">
-		<conversionPattern value="%newline%date [%thread] %-5level %logger [%ndc] - %message%newline%newline%newline" />
+		<conversionPattern value="%newline%date [%thread] %-5level %logger [%property{NDC}] - %message%newline%newline%newline" />
 	</layout>
 </appender>
 				]]></source>				
@@ -848,7 +848,7 @@ IN "LRGTABLES";
 	<bufferSize value="512" />
 	<lossy value="false" />
 	<layout type="log4net.Layout.PatternLayout">
-		<conversionPattern value="%newline%date [%thread] %-5level %logger [%ndc] - %message%newline%newline%newline" />
+		<conversionPattern value="%newline%date [%thread] %-5level %logger [%property{NDC}] - %message%newline%newline%newline" />
 	</layout>
 </appender>
 				]]></source>
@@ -867,7 +867,7 @@ IN "LRGTABLES";
 		<threshold value="WARN" />
 	</evaluator>
 	<layout type="log4net.Layout.PatternLayout,log4net">
-		<conversionPattern value="%property{log4net:HostName} :: %level :: %message %newlineLogger: %logger%newlineThread: %thread%newlineDate: %date%newlineNDC: %ndc%newline%newline" />
+		<conversionPattern value="%property{log4net:HostName} :: %level :: %message %newlineLogger: %logger%newlineThread: %thread%newlineDate: %date%newlineNDC: %property{NDC}%newline%newline" />
 	</layout>
 </appender>				
 				]]></source>	
@@ -909,7 +909,7 @@ IN "LRGTABLES";
 		<threshold value="WARN"/>
 	</evaluator>
 	<layout type="log4net.Layout.PatternLayout">
-		<conversionPattern value="%newline%date [%thread] %-5level %logger [%ndc] - %message%newline%newline%newline" />
+		<conversionPattern value="%newline%date [%thread] %-5level %logger [%property{NDC}] - %message%newline%newline%newline" />
 	</layout>
 </appender>
 				]]></source>				
@@ -929,7 +929,7 @@ IN "LRGTABLES";
 				<source language="xml"><![CDATA[
 <appender name="TraceAppender" type="log4net.Appender.TraceAppender">
 	<layout type="log4net.Layout.PatternLayout">
-		<conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" />
+		<conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
 	</layout>
 </appender>
 				]]></source>				
@@ -949,7 +949,7 @@ IN "LRGTABLES";
 	<remoteAddress value="224.0.0.1" />
 	<remotePort value="8080" />
 	<layout type="log4net.Layout.PatternLayout, log4net">
-		<conversionPattern value="%-5level %logger [%ndc] - %message%newline" />
+		<conversionPattern value="%-5level %logger [%property{NDC}] - %message%newline" />
 	</layout>
 </appender>
 				]]></source>				

@@ -593,16 +593,16 @@ public class FastLogger
 						most cases, this is not the right approach.
 					</p>
 					<p>
-						It is simpler to use a nested diagnostic context (<span class="code">NDC</span>). 
-						Typically, one would <span class="code">NDC.Push()</span>
+						It is simpler to use a context property or stack (<span class="code">ThreadContext</span>). 
+						Typically, one would <span class="code">ThreadContext.Properties["ID"] = "XXX"</span>
 						client specific information, such as the client's hostname, ID or any other 
 						distinguishing information when starting to handle the client's request. 
-						Thereafter, log output will automatically include the nested diagnostic context 
+						Thereafter, log output will automatically include the context data
 						so that you can distinguish logs from different client requests even if they 
 						are output to the same file.
 					</p>
 					<p>
-						See the <span class="code">NDC</span> and the <span class="code">PatternLayout</span> classes for more 
+						See the <span class="code">ThreadContext</span> and the <span class="code">PatternLayout</span> classes for more 
 						information.
 					</p>
 				</section>

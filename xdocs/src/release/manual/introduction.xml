@@ -869,6 +869,7 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
 									Matches against a the start of the logger name.
 								</td>
 							</tr>
+							<!-- MDC and NDC replaced by context properties
 							<tr>
 								<td><a href="../sdk/log4net.Filter.MdcFilter.html">log4net.Filter.MdcFilter</a></td>
 								<td>
@@ -880,7 +881,8 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
 								<td>
 									Matches a substring from the event's <span class="code">NDC</span>.
 								</td>
-							</tr>
+							</tr> 
+							-->
 							<tr>
 								<td><a href="../sdk/log4net.Filter.PropertyFilter.html">log4net.Filter.PropertyFilter</a></td>
 								<td>
