@@ -620,29 +620,37 @@ public class FastLogger
 
 				<section id="single-file" name="How do I get multiple process to log to the same file?">
 					<p>
-						The <span class="code">FileAppender</span> holds a write lock on the log
-						file while it is logging. This prevents other processes from writing to the
-						file, therefore it is not possible to have multiple processes log directly 
-						to the same log file, even if they are on the same machine.
+						By default the <span class="code">FileAppender</span> holds an exclusive write 
+						lock on the log file while it is logging. This prevents other processes from 
+						writing to the file. The <span class="code">FileAppender</span> can be configured
+						to use a different locking model, <span class="code">MinimalLock</span>, that
+						only acquires the write lock while a log is being written. This allows multiple
+						processes to interleave writes to the same file, albeit with a loss in performance.
+						See the <a href="config-examples.html#fileappender">FileAppender config examples</a>
+						for an example <span class="code">MinimalLock</span> configuration.
 					</p>
 					<p>
-						You may have each process log to a <span class="code">RemotingAppender</span>. 
-						The receiving <span class="code">RemoteLoggingServerPlugin</span> (or 
-						<span class="code">IRemoteLoggingSink</span>) can receive all the events and 
-						send them to a single log file.
+						While the <span class="code">MinimalLock</span> model may be used to interleave
+						writes to a single file it may not be the optimal solution, especially when
+						logging from multiple machines. Alternatively you may have one or more processes
+						log to <span class="code">RemotingAppenders</span>. 
+						Using the <span class="code">RemoteLoggingServerPlugin</span> (or 
+						<span class="code">IRemoteLoggingSink</span>) a process can receive all the events and 
+						log them to a single log file.
 					</p>
 				</section>
 				<p><a href="#top">Back to Top</a></p>
 				
 
-				<section id="distributed" name="If I have many processes across multiple hosts (possibly across multiple time zones) logging to the same file using the method above, what happens to timestamps?">
+				<section id="distributed" name="If I have many processes across multiple hosts (possibly across multiple time zones) logging to the same file using the RemotingAppender, what happens to timestamps?">
 					<p>
 						The timestamp is created when the logging event is created. That is so say, 
 						when the <span class="code">Debug</span>, <span class="code">Info</span>, 
 						<span class="code">Warn</span>, <span class="code">Error</span>
 						or <span class="code">Fatal</span> method is invoked. This is unaffected by the time at 
 						which they may arrive at a remote server. Since the timestamps are 
-						stored in UTC format inside the event, they all appear in the same time zone as 
+						transmitted in UTC format by the <span class="code">RemotingAppender</span>, 
+						they all appear in the same time zone as 
 						the host creating the logfile. Since the clocks of various machines may not be 
 						synchronized, this may account for time interval inconsistencies between events 
 						generated on different hosts.
