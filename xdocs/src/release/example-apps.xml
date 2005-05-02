@@ -30,8 +30,9 @@ limitations under the License.
 
 			<section id="overview" name="Overview">
 				<p>
-					The following examples are only available in the log4net release download, not
+					<strong>The following examples are only available in the log4net release download, not
 					on-line. To obtain the examples <a href="../downloads.html">download</a> one of the log4net releases.
+					</strong>
 				</p>
 			</section>
 			
