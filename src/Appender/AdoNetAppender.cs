@@ -1059,7 +1059,16 @@ namespace log4net.Appender
 			// Lookup the parameter
 			IDbDataParameter param = (IDbDataParameter)command.Parameters[m_parameterName];
 
-			param.Value = Layout.Format(loggingEvent);
+			// Format the value
+			object formattedValue = Layout.Format(loggingEvent);
+
+			// If the value is null then convert to a DBNull
+			if (formattedValue == null)
+			{
+				formattedValue = DBNull.Value;
+			}
+
+			param.Value = formattedValue;
 		}
 
 		#endregion // Public Instance Methods
