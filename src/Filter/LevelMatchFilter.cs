@@ -35,7 +35,8 @@ namespace log4net.Filter
 	/// <see cref="LoggingEvent"/>, then the <see cref="Decide"/> method returns <see cref="FilterDecision.Accept"/> in 
 	/// case the <see cref="AcceptOnMatch"/> option value is set
 	/// to <c>true</c>, if it is <c>false</c> then 
-	/// <see cref="FilterDecision.Deny"/> is returned.
+	/// <see cref="FilterDecision.Deny"/> is returned. If the <see cref="Level"/> does not match then
+	/// the result will be <see cref="FilterDecision.Neutral"/>.
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
@@ -117,7 +118,7 @@ namespace log4net.Filter
 		/// value of <see cref="AcceptOnMatch"/>. If it is true then
 		/// the function will return <see cref="FilterDecision.Accept"/>, it it is false then it
 		/// will return <see cref="FilterDecision.Deny"/>. If the <see cref="Level"/> does not match then
-		/// the result will be the opposite of when it does match.
+		/// the result will be <see cref="FilterDecision.Neutral"/>.
 		/// </para>
 		/// </remarks>
 		override public FilterDecision Decide(LoggingEvent loggingEvent) 
@@ -127,25 +128,12 @@ namespace log4net.Filter
 				throw new ArgumentNullException("loggingEvent");
 			}
 
-			if (m_levelToMatch == null) 
+			if (m_levelToMatch != null && m_levelToMatch == loggingEvent.Level) 
 			{
-				return FilterDecision.Neutral;
+				// Found match
+				return m_acceptOnMatch ? FilterDecision.Accept : FilterDecision.Deny;
 			}
-    
-			bool matchOccurred = false;
-			if (m_levelToMatch == loggingEvent.Level) 
-			{
-				matchOccurred = true;
-			}
-
-			if (m_acceptOnMatch ^ matchOccurred) 
-			{
-				return FilterDecision.Deny;
-			} 
-			else 
-			{
-				return FilterDecision.Accept;
-			}
+			return FilterDecision.Neutral;
 		}
 
 		#endregion
