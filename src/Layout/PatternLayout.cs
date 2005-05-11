@@ -766,7 +766,7 @@ namespace log4net.Layout
 		/// </remarks>
 		static PatternLayout()
 		{
-			s_globalRulesRegistry = new Hashtable(35);
+			s_globalRulesRegistry = new Hashtable(45);
 
 			s_globalRulesRegistry.Add("literal", typeof(log4net.Util.PatternStringConverters.LiteralPatternConverter));
 			s_globalRulesRegistry.Add("newline", typeof(log4net.Util.PatternStringConverters.NewLinePatternConverter));

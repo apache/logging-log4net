@@ -39,7 +39,7 @@ namespace log4net.Util
 	/// This class functions similarly to the <see cref="log4net.Layout.PatternLayout"/>
 	/// in that it accepts a pattern and renders it to a string. Unlike the 
 	/// <see cref="log4net.Layout.PatternLayout"/> however the <c>PatternString</c>
-	/// does does not render properties of a specific <see cref="LoggingEvent"/> but
+	/// does not render the properties of a specific <see cref="LoggingEvent"/> but
 	/// of the process in general.
 	/// </para>
 	/// <para>
@@ -281,7 +281,7 @@ namespace log4net.Util
 		/// </summary>
 		static PatternString()
 		{
-			s_globalRulesRegistry = new Hashtable(10);
+			s_globalRulesRegistry = new Hashtable(15);
 
 			s_globalRulesRegistry.Add("appdomain", typeof(AppDomainPatternConverter));
 			s_globalRulesRegistry.Add("date", typeof(DatePatternConverter));
