@@ -89,6 +89,9 @@ limitations under the License.
                                                     <a href="#adonetappender-db2">IBM DB2</a><br/>
     <div class="i1">
                                                                                                               </div>
+                                                    <a href="#adonetappender-sqlite">SQLite</a><br/>
+    <div class="i1">
+                                                                                                              </div>
                       </div>
 																    <a href="#aspnettraceappender">AspNetTraceAppender</a><br/>
     <div class="i1">
@@ -508,6 +511,69 @@ IN &quot;LRGTABLES&quot;;
 		&lt;dbType value=&quot;String&quot; /&gt;
 		&lt;size value=&quot;2000&quot; /&gt;
 		&lt;layout type=&quot;log4net.Layout.ExceptionLayout&quot; /&gt;
+	&lt;/parameter&gt;
+&lt;/appender&gt;
+					</pre></div>
+
+                      </div>
+                                                    <h3><a id="adonetappender-sqlite"></a>SQLite</h3>
+    <div class="i1">
+                                    <p>
+						This example shows how to write events to a SQLite Database.
+						This was tested against v0.21 of the 
+						<a href="http://sourceforge.net/projects/adodotnetsqlite">SQLite .NET provider</a>.
+					</p>
+                                                <p>
+						SQLite doesn't have strongly-typed columns or field lengths but its 
+						recommended you still include this information for readability. 
+						The database table definition is:
+					</p>
+                                                
+    <div class="syntax"><pre class="code">
+CREATE TABLE Log (
+	LogId		INTEGER PRIMARY KEY,
+	Date		DATETIME NOT NULL,
+	Level		VARCHAR(50) NOT NULL,
+	Logger		VARCHAR(255) NOT NULL,
+	Message		TEXT DEFAULT NULL	
+);
+					</pre></div>
+
+                                                <p>
+						The appender configuration is:
+					</p>
+                                                
+    <div class="syntax"><pre class="code">
+&lt;appender name=&quot;AdoNetAppender&quot; type=&quot;log4net.Appender.AdoNetAppender&quot;&gt;
+	&lt;bufferSize value=&quot;100&quot; /&gt;
+	&lt;connectionType value=&quot;Finisar.SQLite.SQLiteConnection, SQLite.NET, Version=0.21.1869.3794, Culture=neutral, PublicKeyToken=c273bd375e695f9c&quot; /&gt;
+	&lt;connectionString value=&quot;Data Source=c:\\inetpub\\wwwroot\\logs\\log4net.db;Version=3;&quot; /&gt;
+	&lt;commandText value=&quot;INSERT INTO Log (Date, Level, Logger, Message) VALUES (@Date, @Level, @Logger, @Message)&quot; /&gt;
+	&lt;parameter&gt;
+		&lt;parameterName value=&quot;@Date&quot; /&gt;
+		&lt;dbType value=&quot;DateTime&quot; /&gt;
+		&lt;layout type=&quot;log4net.Layout.RawTimeStampLayout&quot; /&gt;
+	&lt;/parameter&gt;
+	&lt;parameter&gt;
+		&lt;parameterName value=&quot;@Level&quot; /&gt;
+		&lt;dbType value=&quot;String&quot; /&gt;
+		&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
+			&lt;conversionPattern value=&quot;%level&quot; /&gt;
+		&lt;/layout&gt;
+	&lt;/parameter&gt;
+	&lt;parameter&gt;
+		&lt;parameterName value=&quot;@Logger&quot; /&gt;
+		&lt;dbType value=&quot;String&quot; /&gt;
+		&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
+			&lt;conversionPattern value=&quot;%logger&quot; /&gt;
+		&lt;/layout&gt;
+	&lt;/parameter&gt;
+	&lt;parameter&gt;
+		&lt;parameterName value=&quot;@Message&quot; /&gt;
+		&lt;dbType value=&quot;String&quot; /&gt;
+		&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
+			&lt;conversionPattern value=&quot;%message&quot; /&gt;
+		&lt;/layout&gt;
 	&lt;/parameter&gt;
 &lt;/appender&gt;
 					</pre></div>

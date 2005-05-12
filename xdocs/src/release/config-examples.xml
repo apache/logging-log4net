@@ -383,6 +383,66 @@ IN "LRGTABLES";
 					]]></source>
 				</section>				
 				
+				
+				<section id="adonetappender-sqlite" name="SQLite">
+					<p>
+						This example shows how to write events to a SQLite Database.
+						This was tested against v0.21 of the 
+						<a href="http://sourceforge.net/projects/adodotnetsqlite">SQLite .NET provider</a>.
+					</p>
+					<p>
+						SQLite doesn't have strongly-typed columns or field lengths but its 
+						recommended you still include this information for readability. 
+						The database table definition is:
+					</p>
+					<source language="sql"><![CDATA[
+CREATE TABLE Log (
+	LogId		INTEGER PRIMARY KEY,
+	Date		DATETIME NOT NULL,
+	Level		VARCHAR(50) NOT NULL,
+	Logger		VARCHAR(255) NOT NULL,
+	Message		TEXT DEFAULT NULL	
+);
+					]]></source>
+					<p>
+						The appender configuration is:
+					</p>
+					<source language="xml"><![CDATA[
+<appender name="AdoNetAppender" type="log4net.Appender.AdoNetAppender">
+	<bufferSize value="100" />
+	<connectionType value="Finisar.SQLite.SQLiteConnection, SQLite.NET, Version=0.21.1869.3794, Culture=neutral, PublicKeyToken=c273bd375e695f9c" />
+	<connectionString value="Data Source=c:\\inetpub\\wwwroot\\logs\\log4net.db;Version=3;" />
+	<commandText value="INSERT INTO Log (Date, Level, Logger, Message) VALUES (@Date, @Level, @Logger, @Message)" />
+	<parameter>
+		<parameterName value="@Date" />
+		<dbType value="DateTime" />
+		<layout type="log4net.Layout.RawTimeStampLayout" />
+	</parameter>
+	<parameter>
+		<parameterName value="@Level" />
+		<dbType value="String" />
+		<layout type="log4net.Layout.PatternLayout">
+			<conversionPattern value="%level" />
+		</layout>
+	</parameter>
+	<parameter>
+		<parameterName value="@Logger" />
+		<dbType value="String" />
+		<layout type="log4net.Layout.PatternLayout">
+			<conversionPattern value="%logger" />
+		</layout>
+	</parameter>
+	<parameter>
+		<parameterName value="@Message" />
+		<dbType value="String" />
+		<layout type="log4net.Layout.PatternLayout">
+			<conversionPattern value="%message" />
+		</layout>
+	</parameter>
+</appender>
+					]]></source>
+				</section>
+								
 			</section>
 				
 			
