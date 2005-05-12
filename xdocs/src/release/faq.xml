@@ -737,7 +737,7 @@ public class FastLogger
 						<li>
 							<p>
 								To enable log4net's internal debug programmatically you need
-								to set the <span class="code">log4net.helpers.LogLog.InternalDebugging</span>
+								to set the <span class="code">log4net.Util.LogLog.InternalDebugging</span>
 								property to <span class="code">true</span>. Obviously the sooner this
 								is set the more debug will be produced.
 							</p>
