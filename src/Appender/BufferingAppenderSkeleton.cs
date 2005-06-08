@@ -431,17 +431,39 @@ namespace log4net.Appender
 				// Add to the buffer, returns the event discarded from the buffer if there is no space remaining after the append
 				LoggingEvent discardedLoggingEvent = m_cb.Append(loggingEvent);
 
-				// Check if the discarded event should be logged
-				if (discardedLoggingEvent != null && m_lossyEvaluator != null && m_lossyEvaluator.IsTriggeringEvent(discardedLoggingEvent))
+				if (discardedLoggingEvent != null)
 				{
-					SendBuffer(new LoggingEvent[] { discardedLoggingEvent } );
-				}
+					// Buffer is full and has had to discard an event
+					if (!m_lossy)
+					{
+						// Not lossy, must send all events
+						SendBuffer(new LoggingEvent[] { discardedLoggingEvent } );
+						SendBuffer(m_cb);
+					}
+					else
+					{
+						// Check if the discarded event should be logged
+						if (m_lossyEvaluator != null && m_lossyEvaluator.IsTriggeringEvent(discardedLoggingEvent))
+						{
+							SendBuffer(new LoggingEvent[] { discardedLoggingEvent } );
+						}
 
-				// If the buffer is full & not lossy then send the buffer, otherwise check if
-				// the event will trigger the whole buffer to be sent
-				if ((discardedLoggingEvent!=null && !m_lossy) || (m_evaluator != null && m_evaluator.IsTriggeringEvent(loggingEvent)) )
+						// Check if the event should trigger the whole buffer to be sent
+						if (m_evaluator != null && m_evaluator.IsTriggeringEvent(loggingEvent))
+						{
+							SendBuffer(m_cb);
+						}
+					}
+				}
+				else
 				{
-					SendBuffer(m_cb);
+					// Buffer is not yet full
+
+					// Check if the event should trigger the whole buffer to be sent
+					if (m_evaluator != null && m_evaluator.IsTriggeringEvent(loggingEvent))
+					{
+						SendBuffer(m_cb);
+					}
 				}
 			}
 		}

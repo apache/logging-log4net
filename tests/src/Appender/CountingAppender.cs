@@ -60,6 +60,14 @@ namespace log4net.Tests.Appender
 
 		#endregion Public Instance Properties
 
+		/// <summary>
+		/// Reset the counter to zero
+		/// </summary>
+		public void ResetCounter()
+		{
+			m_counter = 0;
+		}
+
 		#region Override implementation of AppenderSkeleton
 
 		/// <summary>
