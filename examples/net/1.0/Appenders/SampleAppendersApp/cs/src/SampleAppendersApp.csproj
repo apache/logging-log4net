@@ -84,6 +84,11 @@
                     AssemblyName = "System.Web"
                     HintPath = "..\..\..\..\..\..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Web.dll"
                 />
+                <Reference
+                    Name = "System.Messaging"
+                    AssemblyName = "System.Messaging"
+                    HintPath = "..\..\..\..\..\..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.0.3705\System.Messaging.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -109,6 +114,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Appender\FastDbAppender.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Appender\FireEventAppender.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -120,6 +130,11 @@
                 />
                 <File
                     RelPath = "Appender\MessageObjectExpanderAppender.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Appender\MsmqAppender.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
