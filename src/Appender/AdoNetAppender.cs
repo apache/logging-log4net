@@ -323,10 +323,8 @@ namespace log4net.Appender
 		/// <note>
 		/// When the appender attempts to connect to the database there may be a
 		/// delay of up to the connection timeout specified in the connection string.
-		/// If the appender is being used synchronously (the default behaviour for
-		/// this appender) then this delay will impact the calling application on
-		/// the current thread. Until the connection can be reestablished this
-		/// potential delay may occur multiple times.
+		/// This delay will block the calling application's thread. 
+		/// Until the connection can be reestablished this potential delay may occur multiple times.
 		/// </note>
 		/// </remarks>
 		public bool ReconnectOnError
