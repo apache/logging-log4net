@@ -348,6 +348,12 @@ limitations under the License.
 					</p>
 					<ul>
 						<li>
+							AsyncAppender
+						</li>
+						<li>
+							FastDbAppender
+						</li>
+						<li>
 							FireEventAppender
 						</li>
 						<li>
@@ -355,6 +361,12 @@ limitations under the License.
 						</li>
 						<li>
 							MessageObjectExpanderAppender
+						</li>
+						<li>
+							MsmqAppender
+						</li>
+						<li>
+							PatternFileAppender
 						</li>
 						<li>
 							SimpleSmtpAppender
