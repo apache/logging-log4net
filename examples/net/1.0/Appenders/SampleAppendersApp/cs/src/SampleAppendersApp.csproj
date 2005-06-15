@@ -114,6 +114,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Appender\AsyncAppender.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Appender\FastDbAppender.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -135,6 +140,11 @@
                 />
                 <File
                     RelPath = "Appender\MsmqAppender.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Appender\PatternFileAppender.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

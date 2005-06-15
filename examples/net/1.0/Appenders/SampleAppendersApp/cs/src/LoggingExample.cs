@@ -46,6 +46,8 @@ namespace SampleAppendersApp
 		/// <param name="args">command line arguments</param>
 		public static void Main(string[] args)
 		{
+			log4net.ThreadContext.Properties["session"] = 21;
+
 			// Hookup the FireEventAppender event
 			if (FireEventAppender.Instance != null)
 			{
