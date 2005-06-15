@@ -30,6 +30,9 @@ namespace SampleAppendersApp.Appender
 	/// </summary>
 	public class MessageObjectExpanderAppender : log4net.Appender.ForwardingAppender
 	{
+		private bool m_expandProperties = true;
+		private bool m_expandFields = true;
+
 		override protected void Append(LoggingEvent loggingEvent)
 		{
 			object messageObject = loggingEvent.MessageObject;
@@ -38,23 +41,42 @@ namespace SampleAppendersApp.Appender
 			{
 				Type messageType = messageObject.GetType();
 
-				// Get all public instance properties
-				foreach(PropertyInfo propertyInfo in messageType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+				if (m_expandProperties)
 				{
-					if (propertyInfo.CanRead)
+					// Get all public instance properties
+					foreach(PropertyInfo propertyInfo in messageType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
 					{
-						loggingEvent.Properties[propertyInfo.Name] = propertyInfo.GetValue(messageObject, null);
+						if (propertyInfo.CanRead)
+						{
+							loggingEvent.Properties[propertyInfo.Name] = propertyInfo.GetValue(messageObject, null);
+						}
 					}
 				}
-				// Get all public instance fields
-				foreach(FieldInfo fieldInfo in messageType.GetFields(BindingFlags.Instance | BindingFlags.Public))
+
+				if (m_expandFields)
 				{
-					loggingEvent.Properties[fieldInfo.Name] = fieldInfo.GetValue(messageObject);
+					// Get all public instance fields
+					foreach(FieldInfo fieldInfo in messageType.GetFields(BindingFlags.Instance | BindingFlags.Public))
+					{
+						loggingEvent.Properties[fieldInfo.Name] = fieldInfo.GetValue(messageObject);
+					}
 				}
 			}
 
 			// Delegate to base class which will forward
 			base.Append(loggingEvent);
+		}
+
+		public bool ExpandProperties
+		{
+			get { return m_expandProperties; }
+			set { m_expandProperties = value; }
+		}
+
+		public bool ExpandFields
+		{
+			get { return m_expandFields; }
+			set { m_expandFields = value; }
 		}
 	}
 }
