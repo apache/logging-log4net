@@ -23,8 +23,6 @@ using System.Reflection;
 using System.Xml;
 
 using log4net.Appender;
-using log4net.Layout;
-using log4net.Filter;
 using log4net.Util;
 using log4net.Core;
 using log4net.ObjectRenderer;
@@ -591,10 +589,33 @@ namespace log4net.Repository.Hierarchy
 			}
 			else
 			{
+				string propertyValue = null;
+
 				if (element.GetAttributeNode(VALUE_ATTR) != null)
 				{
-					string propertyValue = element.GetAttribute(VALUE_ATTR);
+					propertyValue = element.GetAttribute(VALUE_ATTR);
+				}
+				else if (element.HasChildNodes)
+				{
+					// Concatenate the CDATA and Text nodes together
+					foreach(XmlNode childNode in element.ChildNodes)
+					{
+						if (childNode.NodeType == XmlNodeType.CDATA || childNode.NodeType == XmlNodeType.Text)
+						{
+							if (propertyValue == null)
+							{
+								propertyValue = childNode.InnerText;
+							}
+							else
+							{
+								propertyValue += childNode.InnerText;
+							}
+						}
+					}
+				}
 
+				if(propertyValue != null)
+				{
 #if !NETCF	
 					try
 					{
