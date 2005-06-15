@@ -26,6 +26,17 @@ using log4net.Core;
 
 namespace SampleAppendersApp.Appender
 {
+	/// <summary>
+	/// Appender that writes to a file named using a pattern
+	/// </summary>
+	/// <remarks>
+	/// The file to write to is selected for each event using a
+	/// PatternLayout specified in the File property. This allows
+	/// each LoggingEvent to be written to a file based on properties
+	/// of the event.
+	/// The output file is opened to write each LoggingEvent as it arrives
+	/// and closed afterwards.
+	/// </remarks>
 	public class PatternFileAppender : AppenderSkeleton
 	{
 		public PatternFileAppender()

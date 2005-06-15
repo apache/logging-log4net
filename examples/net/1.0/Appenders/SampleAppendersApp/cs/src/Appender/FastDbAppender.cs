@@ -22,6 +22,15 @@ using log4net.Core;
 
 namespace SampleAppendersApp.Appender
 {
+	/// <summary>
+	/// Simple database appender
+	/// </summary>
+	/// <remarks>
+	/// This database appender is very simple and does not support a configurable
+	/// data schema. The schema supported is hardcoded into the appender.
+	/// Also by not extending the AppenderSkeleton base class this appender
+	/// avoids the serializable locking that it enforces.
+	/// </remarks>
 	public sealed class FastDbAppender : IAppender, IOptionHandler
 	{
 		private string m_name;

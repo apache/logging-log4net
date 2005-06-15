@@ -23,6 +23,15 @@ using log4net.Core;
 
 namespace SampleAppendersApp.Appender
 {
+	/// <summary>
+	/// Appender writes to a Microsoft Message Queue
+	/// </summary>
+	/// <remarks>
+	/// This appender sends log events via a specified MSMQ queue.
+	/// The queue specified in the QueueName (e.g. .\Private$\log-test) must already exist on
+	/// the source machine.
+	/// The message label and body are rendered using separate layouts.
+	/// </remarks>
 	public class MsmqAppender : log4net.Appender.AppenderSkeleton
 	{
 		private MessageQueue m_queue;

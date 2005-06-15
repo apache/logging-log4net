@@ -27,6 +27,13 @@ using log4net.Util;
 
 namespace SampleAppendersApp.Appender
 {
+	/// <summary>
+	/// Displays messages as message boxes
+	/// </summary>
+	/// <remarks>
+	/// Displays each LoggingEvent as a MessageBox. The message box is UI modal
+	/// and will block the calling thread until it is dismissed by the user.
+	/// </remarks>
 	public class MessageBoxAppender : AppenderSkeleton
 	{
 		private PatternLayout m_titleLayout;

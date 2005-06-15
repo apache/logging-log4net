@@ -24,6 +24,15 @@ using log4net.Util;
 
 namespace SampleAppendersApp.Appender
 {
+	/// <summary>
+	/// Appender that forwards LoggingEvents asynchronously
+	/// </summary>
+	/// <remarks>
+	/// This appender forwards LoggingEvents to a list of attached appenders.
+	/// The events are forwarded asynchronously using the ThreadPool.
+	/// This allows the calling thread to be released quickly, however it does
+	/// not guarantee the ordering of events delivered to the attached appenders.
+	/// </remarks>
 	public sealed class AsyncAppender : IAppender, IOptionHandler, IAppenderAttachable
 	{
 		private string m_name;

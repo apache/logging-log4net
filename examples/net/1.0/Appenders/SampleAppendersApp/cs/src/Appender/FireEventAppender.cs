@@ -38,6 +38,13 @@ namespace SampleAppendersApp.Appender
 		}
 	}
 
+	/// <summary>
+	/// Appender that raises an event for each LoggingEvent received
+	/// </summary>
+	/// <remarks>
+	/// Raises a MessageLoggedEvent for each LoggingEvent object received
+	/// by this appender.
+	/// </remarks>
 	public class FireEventAppender : log4net.Appender.AppenderSkeleton
 	{
 		private static FireEventAppender m_instance;

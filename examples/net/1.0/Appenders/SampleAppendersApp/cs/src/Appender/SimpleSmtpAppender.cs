@@ -22,11 +22,18 @@ using System.Web.Mail;
 
 using log4net.Layout;
 using log4net.Core;
-using log4net.Util;
 using log4net.Appender;
 
 namespace SampleAppendersApp.Appender
 {
+	/// <summary>
+	/// Simple mail appender that sends individual messages
+	/// </summary>
+	/// <remarks>
+	/// This SimpleSmtpAppender sends each LoggingEvent received as a
+	/// separate mail message.
+	/// The mail subject line can be specified using a pattern layout.
+	/// </remarks>
 	public class SimpleSmtpAppender : AppenderSkeleton
 	{
 		public SimpleSmtpAppender()

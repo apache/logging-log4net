@@ -46,7 +46,7 @@ namespace SampleAppendersApp.Appender
 						loggingEvent.Properties[propertyInfo.Name] = propertyInfo.GetValue(messageObject, null);
 					}
 				}
-				// Get all public instance fileds
+				// Get all public instance fields
 				foreach(FieldInfo fieldInfo in messageType.GetFields(BindingFlags.Instance | BindingFlags.Public))
 				{
 					loggingEvent.Properties[fieldInfo.Name] = fieldInfo.GetValue(messageObject);
