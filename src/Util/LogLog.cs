@@ -370,19 +370,32 @@ namespace log4net.Util
 		/// <param name="message">The message to log.</param>
 		/// <remarks>
 		/// <para>
-		/// Uses Console.Out for console output,
-		/// and Trace for OutputDebugString output.
+		/// Writes to both Console.Out and System.Diagnostics.Trace.
+		/// Note that the System.Diagnostics.Trace is not supported
+		/// on the Compact Framework.
+		/// </para>
+		/// <para>
+		/// If the AppDomain is not configured with a config file then
+		/// the call to System.Diagnostics.Trace may fail. This is only
+		/// an issue if you are programmatically creating your own AppDomains.
 		/// </para>
 		/// </remarks>
 		private static void EmitOutLine(string message)
 		{
+			try
+			{
 #if NETCF
-			Console.WriteLine(message);
-			//System.Diagnostics.Debug.WriteLine(message);
+				Console.WriteLine(message);
+				//System.Diagnostics.Debug.WriteLine(message);
 #else
-			Console.Out.WriteLine(message);
-			Trace.WriteLine(message);
+				Console.Out.WriteLine(message);
+				Trace.WriteLine(message);
 #endif
+			}
+			catch
+			{
+				// Ignore exception, what else can we do? Not really a good idea to propagate back to the caller
+			}
 		}
 
 		/// <summary>
@@ -391,19 +404,32 @@ namespace log4net.Util
 		/// <param name="message">The message to log.</param>
 		/// <remarks>
 		/// <para>
-		/// Use Console.Error for console output,
-		/// and Trace for OutputDebugString output.
+		/// Writes to both Console.Error and System.Diagnostics.Trace.
+		/// Note that the System.Diagnostics.Trace is not supported
+		/// on the Compact Framework.
+		/// </para>
+		/// <para>
+		/// If the AppDomain is not configured with a config file then
+		/// the call to System.Diagnostics.Trace may fail. This is only
+		/// an issue if you are programmatically creating your own AppDomains.
 		/// </para>
 		/// </remarks>
 		private static void EmitErrorLine(string message)
 		{
+			try
+			{
 #if NETCF
-			Console.WriteLine(message);
-			//System.Diagnostics.Debug.WriteLine(message);
+				Console.WriteLine(message);
+				//System.Diagnostics.Debug.WriteLine(message);
 #else
-			Console.Error.WriteLine(message);
-			Trace.WriteLine(message);
+				Console.Error.WriteLine(message);
+				Trace.WriteLine(message);
 #endif
+			}
+			catch
+			{
+				// Ignore exception, what else can we do? Not really a good idea to propagate back to the caller
+			}
 		}
 
 		#region Private Static Fields
