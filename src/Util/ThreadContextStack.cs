@@ -298,7 +298,7 @@ namespace log4net.Util
 			{
 				get 
 				{
-					if (m_fullMessage == null)
+					if (m_fullMessage == null && m_parent != null)
 					{
 						m_fullMessage = string.Concat(m_parent.FullMessage, " ", m_message);
 					}
