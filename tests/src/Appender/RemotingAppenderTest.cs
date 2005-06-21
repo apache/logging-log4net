@@ -18,14 +18,10 @@
 
 using System;
 using System.Collections;
-using System.Diagnostics;
-using System.Globalization;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
 
-using log4net.Util;
-using log4net.Layout;
 using log4net.Core;
 using log4net.Appender;
 using IRemoteLoggingSink = log4net.Appender.RemotingAppender.IRemoteLoggingSink;
@@ -158,6 +154,8 @@ namespace log4net.Tests.Appender
 
 		[Test] public void TestNestedNdc() 
 		{
+			// This test can suffer from timing and ordering issues as the RemotingAppender does dispatch events asynchronously
+
 			// Setup the remoting appender
 			ConfigureRootAppender(FixFlags.Partial);
 
@@ -168,7 +166,7 @@ namespace log4net.Tests.Appender
 			t.Test();
 
 			// Wait for the remoted objects to be delivered
-			System.Threading.Thread.Sleep(2000);
+			System.Threading.Thread.Sleep(3000);
 
 			LoggingEvent[] events = RemoteLoggingSinkImpl.Instance.Events;
 			Assertion.AssertEquals("Expect to receive 5 remoted event", 5, events.Length);
@@ -280,11 +278,13 @@ namespace log4net.Tests.Appender
 			#region Implementation of IRemoteLoggingSink
 
 			/// <summary>
-			/// Logs the events to the repository.
+			/// Logs the events to to an internal buffer
 			/// </summary>
 			/// <param name="events">The events to log.</param>
 			/// <remarks>
-			/// The events passed are logged to the <see cref="LoggerRepository"/>
+			/// Logs the events to to an internal buffer. The logged events can 
+			/// be retrieved via the <see cref="Events"/> property. To clear
+			/// the buffer call the <see cref="Reset"/> method.
 			/// </remarks>
 			public void LogEvents(LoggingEvent[] events)
 			{
@@ -345,9 +345,12 @@ namespace log4net.Tests.Appender.Remoting.UserInterfaces
 		public void Test() 
 		{
 			log.Info("begin test");
+			System.Threading.Thread.Sleep(100);
+
 			Feature f = new Feature();
 			f.Test();
 			log.Info("end test");
+			System.Threading.Thread.Sleep(100);
 		}
 	}
 }
@@ -363,9 +366,12 @@ namespace log4net.Tests.Appender.Remoting
 			using(NDC.Push("test1")) 
 			{
 				log.Info("feature");
+				System.Threading.Thread.Sleep(100);
+
 				log4net.Tests.Appender.Remoting.Data.Dal d = new log4net.Tests.Appender.Remoting.Data.Dal();
 				d.Test();
 				log.Info("return");
+				System.Threading.Thread.Sleep(100);
 			}
 		}
 	}
@@ -382,6 +388,7 @@ namespace log4net.Tests.Appender.Remoting.Data
 			using(NDC.Push("test2")) 
 			{
 				log.Info("return");
+				System.Threading.Thread.Sleep(100);
 			}
 		}
 	}
