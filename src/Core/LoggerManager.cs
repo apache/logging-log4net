@@ -17,7 +17,7 @@
 #endregion
 
 using System;
-using System.Collections;
+using System.Configuration;
 using System.Reflection;
 
 using log4net.Util;
@@ -35,6 +35,13 @@ namespace log4net.Core
 	/// <para>
 	/// This class is used by the wrapper managers (e.g. <see cref="log4net.LogManager"/>)
 	/// to provide access to the <see cref="ILogger"/> objects.
+	/// </para>
+	/// <para>
+	/// This manager also holds the <see cref="IRepositorySelector"/> that is used to
+	/// lookup and create repositories. The selector can be set either programmatically using
+	/// the <see cref="RepositorySelector"/> property, or by setting the <c>log4net.RepositorySelector</c>
+	/// AppSetting in the applications config file to the fully qualified type name of the
+	/// selector to use. 
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
@@ -80,7 +87,7 @@ namespace log4net.Core
 			}
 			catch(System.Security.SecurityException)
 			{
-				LogLog.Debug("LoggerMAnager: Security Exception (ControlAppDomain LinkDemand) while trying "+
+				LogLog.Debug("LoggerManager: Security Exception (ControlAppDomain LinkDemand) while trying "+
 					"to register Shutdown handler with the AppDomain. LoggerManager.Shutdown() "+
 					"will not be called automatically when the AppDomain exits. It must be called "+
 					"programmatically.");
@@ -93,7 +100,62 @@ namespace log4net.Core
 #if NETCF
 			s_repositorySelector = new CompactRepositorySelector(typeof(log4net.Repository.Hierarchy.Hierarchy));
 #else
-			s_repositorySelector = new DefaultRepositorySelector(typeof(log4net.Repository.Hierarchy.Hierarchy));
+
+			// Look for the RepositorySelector type specified in the AppSettings 'log4net.RepositorySelector'
+			string appRepositorySelectorTypeName = null;
+
+			try
+			{
+				appRepositorySelectorTypeName = ConfigurationSettings.AppSettings["log4net.RepositorySelector"];
+			}
+			catch(Exception ex)
+			{
+				// If an exception is thrown here then it looks like the config file does not parse correctly.
+				LogLog.Error("LoggerManager: Exception while reading ConfigurationSettings. Check your .config file is well formed XML.", ex);
+			}
+
+			if (appRepositorySelectorTypeName != null && appRepositorySelectorTypeName.Length > 0)
+			{
+				// Resolve the config string into a Type
+				Type appRepositorySelectorType = null;
+				try
+				{
+					appRepositorySelectorType = SystemInfo.GetTypeFromString(appRepositorySelectorTypeName, false, true);
+				}
+				catch(Exception ex)
+				{
+					LogLog.Error("LoggerManager: Exception while resolving RepositorySelector Type ["+appRepositorySelectorTypeName+"]", ex);
+				}
+
+				if (appRepositorySelectorType != null)
+				{
+					// Create an instance of the RepositorySelectorType
+					object appRepositorySelectorObj = null;
+					try
+					{
+						appRepositorySelectorObj = Activator.CreateInstance(appRepositorySelectorType);
+					}
+					catch(Exception ex)
+					{
+						LogLog.Error("LoggerManager: Exception while creating RepositorySelector ["+appRepositorySelectorType.FullName+"]", ex);
+					}
+
+					if (appRepositorySelectorObj != null && appRepositorySelectorObj is IRepositorySelector)
+					{
+						s_repositorySelector = (IRepositorySelector)appRepositorySelectorObj;
+					}
+					else
+					{
+						LogLog.Error("LoggerManager: RepositorySelector Type ["+appRepositorySelectorType.FullName+"] is not an IRepositorySelector");
+					}
+				}
+			}
+
+			// Create the DefaultRepositorySelector if not configured above 
+			if (s_repositorySelector == null)
+			{
+				s_repositorySelector = new DefaultRepositorySelector(typeof(log4net.Repository.Hierarchy.Hierarchy));
+			}
 #endif
 		}
 
