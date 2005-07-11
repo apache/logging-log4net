@@ -22,10 +22,10 @@
 
 using System;
 using System.Collections;
-using System.Globalization;
+using System.Configuration;
 using System.Reflection;
 
-using log4net.Appender;
+using log4net.Config;
 using log4net.Util;
 using log4net.Repository;
 
@@ -113,7 +113,7 @@ namespace log4net.Core
 		/// <para>
 		/// The type of the <see cref="ILoggerRepository"/> created and the repository 
 		/// to create can be overridden by specifying the <see cref="log4net.Config.RepositoryAttribute"/> 
-		/// attribute on the <paramref name="assembly"/>.
+		/// attribute on the <paramref name="repositoryAssembly"/>.
 		/// </para>
 		/// <para>
 		/// The default values are to use the <see cref="log4net.Repository.Hierarchy.Hierarchy"/> 
@@ -123,11 +123,11 @@ namespace log4net.Core
 		/// <para>
 		/// The <see cref="ILoggerRepository"/> created will be automatically configured using 
 		/// any <see cref="log4net.Config.ConfiguratorAttribute"/> attributes defined on
-		/// the <paramref name="assembly"/>.
+		/// the <paramref name="repositoryAssembly"/>.
 		/// </para>
 		/// </remarks>
 		/// <returns>The <see cref="ILoggerRepository"/> for the assembly</returns>
-		/// <exception cref="ArgumentNullException"><paramref name="assembly"/> is <see langword="null" />.</exception>
+		/// <exception cref="ArgumentNullException"><paramref name="repositoryAssembly"/> is <see langword="null" />.</exception>
 		public ILoggerRepository GetRepository(Assembly repositoryAssembly)
 		{
 			if (repositoryAssembly == null)
@@ -189,7 +189,7 @@ namespace log4net.Core
 		/// The type of the <see cref="ILoggerRepository"/> created and
 		/// the repository to create can be overridden by specifying the
 		/// <see cref="log4net.Config.RepositoryAttribute"/> attribute on the 
-		/// <paramref name="assembly"/>.  The default values are to use the 
+		/// <paramref name="repositoryAssembly"/>.  The default values are to use the 
 		/// <paramref name="repositoryType"/> implementation of the 
 		/// <see cref="ILoggerRepository"/> interface and to use the
 		/// <see cref="AssemblyName.Name"/> as the name of the repository.
@@ -232,7 +232,7 @@ namespace log4net.Core
 		/// The type of the <see cref="ILoggerRepository"/> created and
 		/// the repository to create can be overridden by specifying the
 		/// <see cref="log4net.Config.RepositoryAttribute"/> attribute on the 
-		/// <paramref name="assembly"/>.  The default values are to use the 
+		/// <paramref name="repositoryAssembly"/>.  The default values are to use the 
 		/// <paramref name="repositoryType"/> implementation of the 
 		/// <see cref="ILoggerRepository"/> interface and to use the
 		/// <see cref="AssemblyName.Name"/> as the name of the repository.
@@ -636,6 +636,51 @@ namespace log4net.Core
 				foreach(log4net.Config.ConfiguratorAttribute configAttr in configAttributes)
 				{
 					configAttr.Configure(assembly, repository);
+				}
+			}
+
+			if (repository.Name == DefaultRepositoryName)
+			{
+				// Try to configure the default repository using an AppSettings specified config file
+				// Do this even if the repository has been configured (or claims to be), this allows overriding
+				// of the default config files etc, if that is required.
+
+				string repositoryConfigFile = null;
+
+				try
+				{
+					repositoryConfigFile = ConfigurationSettings.AppSettings["log4net.Config"];
+				}
+				catch(Exception ex)
+				{
+					// If an exception is thrown here then it looks like the config file does not parse correctly.
+					LogLog.Error("DefaultRepositorySelector: Exception while reading ConfigurationSettings. Check your .config file is well formed XML.", ex);
+				}
+
+				if (repositoryConfigFile != null && repositoryConfigFile.Length > 0)
+				{
+					// Resolve the config path relative to the application base directory URI
+					Uri applicationBaseDirectoryUri = new Uri(SystemInfo.ApplicationBaseDirectory);
+
+					// As we are not going to watch the config file it is easiest to just resolve it as a 
+					// URI and pass that to the Configurator
+					Uri repositoryConfigUri = null;
+					try
+					{
+						repositoryConfigUri = new Uri(applicationBaseDirectoryUri, repositoryConfigFile);
+					}
+					catch(Exception ex)
+					{
+						LogLog.Error("DefaultRepositorySelector: Exception while parsing log4net.Config file path ["+repositoryConfigFile+"]", ex);
+					}
+
+					if (repositoryConfigUri != null)
+					{
+						LogLog.Debug("DefaultRepositorySelector: Loading configuration for default repository from AppSettings specified Config URI ["+repositoryConfigUri.ToString()+"]");
+
+						// TODO: Support other types of configurator
+						XmlConfigurator.Configure(repository, repositoryConfigUri);
+					}
 				}
 			}
 		}
