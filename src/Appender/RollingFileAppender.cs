@@ -20,17 +20,15 @@ using System;
 using System.Collections;
 using System.Globalization;
 using System.IO;
-using System.Text.RegularExpressions;
 
 using log4net.Util;
-using log4net.Layout;
 using log4net.Core;
 
 namespace log4net.Appender
 {
 #if CONFIRM_WIN32_FILE_SHAREMODES
-	The following sounds good, and I though it was the case, but after
-	further testing on Windows I have not been able to confirm it.
+	// The following sounds good, and I though it was the case, but after
+	// further testing on Windows I have not been able to confirm it.
 
 	/// On the Windows platform if another process has a write lock on the file 
 	/// that is to be deleted, but allows shared read access to the file then the
