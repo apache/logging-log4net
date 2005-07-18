@@ -550,11 +550,6 @@ namespace log4net.Appender
 				if (!m_staticLogFileName) 
 				{
 					m_scheduledFilename = fileName;
-
-					if (m_countDirection >= 0) 
-					{
-						m_curSizeRollBackups++;
-					}
 				}
 
 				// Open the file (call the base class to do it)
@@ -590,7 +585,7 @@ namespace log4net.Appender
 
 				if (m_countDirection >= 0) 
 				{
-					fileName = fileName + '.' + (m_curSizeRollBackups + 1);
+					fileName = fileName + '.' + m_curSizeRollBackups;
 				}
 			}
 
@@ -798,7 +793,6 @@ namespace log4net.Appender
 			try 
 			{
 				// Bump the counter up to the highest count seen so far
-//				int backup = int.Parse(curFileName.Substring(index + 1), System.Globalization.NumberFormatInfo.InvariantInfo);
 				int backup;
 				if (SystemInfo.TryParse(curFileName.Substring(index + 1), out backup))
 				{
@@ -1194,6 +1188,11 @@ namespace log4net.Appender
 
 			RollOverRenameFiles(File);
 	
+			if (!m_staticLogFileName && m_countDirection >= 0) 
+			{
+				m_curSizeRollBackups++;
+			}
+
 			// This will also close the file. This is OK since multiple close operations are safe.
 			SafeOpenFile(m_baseFileName, false);
 		}
@@ -1251,12 +1250,33 @@ namespace log4net.Appender
 				} 
 				else 
 				{
-					//countDirection > 0
+					//countDirection >= 0
 					if (m_curSizeRollBackups >= m_maxSizeRollBackups && m_maxSizeRollBackups > 0) 
 					{
 						//delete the first and keep counting up.
-						int oldestFileIndex = m_curSizeRollBackups - m_maxSizeRollBackups + 1;
-						DeleteFile(baseFileName + '.' + oldestFileIndex);
+						int oldestFileIndex = m_curSizeRollBackups - m_maxSizeRollBackups;
+
+						// If static then there is 1 file without a number, therefore 1 less archive
+						if (m_staticLogFileName)
+						{
+							oldestFileIndex++;
+						}
+
+						// If using a static log file then the base for the numbered sequence is the baseFileName passed in
+						// If not using a static log file then the baseFileName will already have a numbered postfix which
+						// we must remove, however it may have a date postfix which we must keep!
+						string archiveFileBaseName = baseFileName;
+						if (!m_staticLogFileName)
+						{
+							int lastDotIndex = archiveFileBaseName.LastIndexOf(".");
+							if (lastDotIndex >= 0) 
+							{
+								archiveFileBaseName = archiveFileBaseName.Substring(0, lastDotIndex);
+							}
+						}
+
+						// Delete the archive file
+						DeleteFile(archiveFileBaseName + '.' + oldestFileIndex);
 					}
 	
 					if (m_staticLogFileName) 
