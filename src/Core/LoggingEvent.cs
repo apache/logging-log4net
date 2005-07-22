@@ -340,6 +340,7 @@ namespace log4net.Core
 		/// the stack boundary into the logging system for this call.</param>
 		/// <param name="repository">The repository this event is logged in.</param>
 		/// <param name="data">Data used to initialize the logging event.</param>
+		/// <param name="fixedData">The fields in the <paranref name="data"/> struct that have already been fixed.</param>
 		/// <remarks>
 		/// <para>
 		/// This constructor is provided to allow a <see cref="LoggingEvent" />
@@ -348,14 +349,49 @@ namespace log4net.Core
 		/// </para>
 		/// <para>
 		/// Use the <see cref="GetLoggingEventData"/> method to obtain an 
-		/// instance of the <see cref="LoggingEventData"/> class.</para>
+		/// instance of the <see cref="LoggingEventData"/> class.
+		/// </para>
+		/// <para>
+		/// The <paramref name="fixedData"/> parameter should be used to specify which fields in the
+		/// <paramref name="data"/> struct have been preset. Fields not specified in the <paramref name="fixedData"/>
+		/// will be captured from the environment if requested or fixed.
+		/// </para>
 		/// </remarks>
-		public LoggingEvent(Type callerStackBoundaryDeclaringType, log4net.Repository.ILoggerRepository repository, LoggingEventData data) 
+		public LoggingEvent(Type callerStackBoundaryDeclaringType, log4net.Repository.ILoggerRepository repository, LoggingEventData data, FixFlags fixedData) 
 		{
 			m_callerStackBoundaryDeclaringType = callerStackBoundaryDeclaringType;
 			m_repository = repository;
 
 			m_data = data;
+			m_fixFlags = fixedData;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="LoggingEvent" /> class 
+		/// using specific data.
+		/// </summary>
+		/// <param name="callerStackBoundaryDeclaringType">The declaring type of the method that is
+		/// the stack boundary into the logging system for this call.</param>
+		/// <param name="repository">The repository this event is logged in.</param>
+		/// <param name="data">Data used to initialize the logging event.</param>
+		/// <remarks>
+		/// <para>
+		/// This constructor is provided to allow a <see cref="LoggingEvent" />
+		/// to be created independently of the log4net framework. This can
+		/// be useful if you require a custom serialization scheme.
+		/// </para>
+		/// <para>
+		/// Use the <see cref="GetLoggingEventData"/> method to obtain an 
+		/// instance of the <see cref="LoggingEventData"/> class.
+		/// </para>
+		/// <para>
+		/// This constructor sets this objects <see cref="Fix"/> flags to <see cref="FixFlags.All"/>,
+		/// this assumes that all the data relating to this event is passed in via the <paramref name="data"/>
+		/// parameter and no other data should be captured from the environment.
+		/// </para>
+		/// </remarks>
+		public LoggingEvent(Type callerStackBoundaryDeclaringType, log4net.Repository.ILoggerRepository repository, LoggingEventData data) : this(callerStackBoundaryDeclaringType, repository, data, FixFlags.All)
+		{
 		}
 
 		/// <summary>
@@ -371,7 +407,13 @@ namespace log4net.Core
 		/// </para>
 		/// <para>
 		/// Use the <see cref="GetLoggingEventData"/> method to obtain an 
-		/// instance of the <see cref="LoggingEventData"/> class.</para>
+		/// instance of the <see cref="LoggingEventData"/> class.
+		/// </para>
+		/// <para>
+		/// This constructor sets this objects <see cref="Fix"/> flags to <see cref="FixFlags.All"/>,
+		/// this assumes that all the data relating to this event is passed in via the <paramref name="data"/>
+		/// parameter and no other data should be captured from the environment.
+		/// </para>
 		/// </remarks>
 		public LoggingEvent(LoggingEventData data) : this(null, null, data)
 		{
@@ -414,6 +456,10 @@ namespace log4net.Core
 			m_data.Properties = (PropertiesDictionary) info.GetValue("Properties", typeof(PropertiesDictionary));
 			m_data.Domain = info.GetString("Domain");
 			m_data.Identity = info.GetString("Identity");
+
+			// We have restored all the values of this instance, i.e. all the values are fixed
+			// Set the fix flags otherwise the data values may be overwritten from the current environment.
+			m_fixFlags = FixFlags.All;
 		}
 
 #endif
