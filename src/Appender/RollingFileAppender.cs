@@ -940,11 +940,6 @@ namespace log4net.Appender
 					ErrorHandler.Error("Either DatePattern or rollingStyle options are not set for ["+Name+"].");
 				}
 			}
-	
-			if (m_rollDate && File != null && m_scheduledFilename == null)
-			{
-				m_scheduledFilename = File + m_now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo);
-			}
 
 			if (SecurityContext == null)
 			{
@@ -960,6 +955,11 @@ namespace log4net.Appender
 
 				// Store fully qualified base file name
 				m_baseFileName = base.File;
+			}
+
+			if (m_rollDate && File != null && m_scheduledFilename == null)
+			{
+				m_scheduledFilename = File + m_now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo);
 			}
 
 			ExistingInit();
