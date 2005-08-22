@@ -732,7 +732,15 @@ namespace log4net.Repository.Hierarchy
 						defaultObjectType = propertyType;
 					}
 
-					object createdObject = CreateObjectFromXml(element, defaultObjectType, propertyType);
+					object createdObject;
+					if (propertyType==System.Type.GetType("System.String"))
+					{
+						createdObject="";
+					}
+					else
+					{
+						createdObject = CreateObjectFromXml(element, defaultObjectType, propertyType);
+					}
 
 					if (createdObject == null)
 					{
