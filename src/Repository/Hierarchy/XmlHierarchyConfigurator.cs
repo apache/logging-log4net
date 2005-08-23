@@ -725,20 +725,26 @@ namespace log4net.Repository.Hierarchy
 				}
 				else
 				{
-					// No value specified
-					Type defaultObjectType = null;
-					if (propertyType.IsClass && !propertyType.IsAbstract)
-					{
-						defaultObjectType = propertyType;
-					}
+					object createdObject = null;
 
-					object createdObject;
-					if (propertyType==System.Type.GetType("System.String"))
+					if (propertyType == typeof(string) && !HasAttributesOrElements(element))
 					{
-						createdObject="";
+						// If the property is a string and the element is empty (no attributes
+						// or child elements) then we special case the object value to an empty string.
+						// This is necessary because while the String is a class it does not have
+						// a default constructor that creates an empty string, which is the behavior
+						// we are trying to simulate and would be expected from CreateObjectFromXml
+						createdObject = "";
 					}
 					else
 					{
+						// No value specified
+						Type defaultObjectType = null;
+						if (IsTypeConstructible(propertyType))
+						{
+							defaultObjectType = propertyType;
+						}
+
 						createdObject = CreateObjectFromXml(element, defaultObjectType, propertyType);
 					}
 
@@ -781,6 +787,41 @@ namespace log4net.Repository.Hierarchy
 					}
 				}
 			}
+		}
+
+		/// <summary>
+		/// Test if an element has no attributes or child elements
+		/// </summary>
+		/// <param name="element">the element to inspect</param>
+		/// <returns><c>true</c> if the element has any attributes or child elements, <c>false</c> otherwise</returns>
+		private bool HasAttributesOrElements(XmlElement element)
+		{
+			foreach(XmlNode node in element.ChildNodes)
+			{
+				if (node.NodeType == XmlNodeType.Attribute || node.NodeType == XmlNodeType.Element)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Test if a <see cref="Type"/> is constructible with <c>Activator.CreateInstance</c>.
+		/// </summary>
+		/// <param name="type">the type to inspect</param>
+		/// <returns><c>true</c> if the type is creatable using a default constructor, <c>false</c> otherwise</returns>
+		private static bool IsTypeConstructible(Type type)
+		{
+			if (type.IsClass && !type.IsAbstract)
+			{
+				ConstructorInfo defaultConstructor = type.GetConstructor(new Type[0]);
+				if (defaultConstructor != null && !defaultConstructor.IsAbstract && !defaultConstructor.IsPrivate)
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 
 		/// <summary>
@@ -882,7 +923,7 @@ namespace log4net.Repository.Hierarchy
 			{
 				if (defaultTargetType == null)
 				{
-					LogLog.Error("XmlHierarchyConfigurator: Object type not specified. Cannot create object.");
+					LogLog.Error("XmlHierarchyConfigurator: Object type not specified. Cannot create object of type ["+typeConstraint.FullName+"]. Missing Value or Type.");
 					return null;
 				}
 				else
