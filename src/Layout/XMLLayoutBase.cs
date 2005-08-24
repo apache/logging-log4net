@@ -110,7 +110,24 @@ namespace log4net.Layout
 			get { return m_locationInfo; }
 			set { m_locationInfo = value; }
 		}
-
+		/// <summary>
+		/// The string to replace characters that can not be expressed in XML with.
+		/// <remarks>
+		/// <para>
+		/// Not all characters may be expressed in XML. This property contains the
+		/// string to replace those that can not with. This defaults to a ?. Set it
+		/// to the empty string to simply remove offending characters. For more
+		/// details on the allowed character ranges see http://www.w3.org/TR/REC-xml/#charsets
+		/// Character replacement will occur in  the log message, the property names 
+		/// and the property values.
+		/// </para>
+		/// </remarks>
+		/// </summary>
+		public string InvalidCharReplacement
+		{
+			get {return m_invalidCharReplacement;}
+			set {m_invalidCharReplacement=value;}
+		}
 		#endregion
 
 		#region Implementation of IOptionHandler
@@ -230,6 +247,11 @@ namespace log4net.Layout
 		/// Writer adapter that ignores Close
 		/// </summary>
 		private readonly ProtectCloseTextWriter m_protectCloseTextWriter = new ProtectCloseTextWriter(null);
+
+		/// <summary>
+		/// The string to replace invalid chars with
+		/// </summary>
+		private string m_invalidCharReplacement="?";
 
 		#endregion Private Instance Fields
 	}

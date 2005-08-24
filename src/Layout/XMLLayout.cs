@@ -121,6 +121,46 @@ namespace log4net.Layout
 			set { m_prefix = value; }
 		}
 
+		
+		/// <summary>
+		/// Set whether or not to base64 encode the message.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// By default the log message will be written as text to the xml
+		/// output. This can cause problems when the message contains binary
+		/// data. By setting this to true the contents of the message will be
+		/// base64 encoded. If this is set then invalid character replacement
+		/// (see <see cref="InvalidCharReplacement"/>) will not be performed
+		/// on the log message.
+		/// </para>
+		/// </remarks>
+		public bool Base64EncodeMessage
+		{
+			get {return m_base64Message;}
+			set {m_base64Message=value;}
+		}
+
+		/// <summary>
+		/// Set whether or not to base64 encode the property values.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// By default the properties will be written as text to the xml
+		/// output. This can cause problems when one or more properties contain
+		/// binary data. By setting this to true the values of the properties
+		/// will be base64 encoded. If this is set then invalid character replacement
+		/// (see <see cref="InvalidCharReplacement"/>) will not be performed
+		/// on the property values.
+		/// </para>
+		/// </remarks>
+		public bool Base64EncodeProperties
+		{
+			get {return m_base64Properties;}
+			set {m_base64Properties=value;}
+		}
+
+
 		#endregion Public Instance Properties
 
 		#region Implementation of IOptionHandler
@@ -154,7 +194,6 @@ namespace log4net.Layout
 				m_elmEvent = m_prefix + ":" + ELM_EVENT;
 				m_elmMessage = m_prefix + ":" + ELM_MESSAGE;
 				m_elmProperties = m_prefix + ":" + ELM_PROPERTIES;
-				m_elmGlobalProperties = m_prefix + ":" + ELM_GLOBAL_PROPERTIES;
 				m_elmData = m_prefix + ":" + ELM_DATA;
 				m_elmException = m_prefix + ":" + ELM_EXCEPTION;
 				m_elmLocation = m_prefix + ":" + ELM_LOCATION;
@@ -199,7 +238,16 @@ namespace log4net.Layout
     
 			// Append the message text
 			writer.WriteStartElement(m_elmMessage);
-			Transform.WriteEscapedXmlString(writer, loggingEvent.RenderedMessage);
+			if (!this.Base64EncodeMessage)
+			{
+				string message=loggingEvent.RenderedMessage;
+				
+				Transform.WriteEscapedXmlString(writer, loggingEvent.RenderedMessage,this.InvalidCharReplacement);
+			}
+			else
+			{
+				Transform.WriteEscapedXmlString(writer, Convert.ToBase64String(Encoding.UTF8.GetBytes(loggingEvent.RenderedMessage)),this.InvalidCharReplacement);
+			}
 			writer.WriteEndElement();
 
 			PropertiesDictionary properties = loggingEvent.GetProperties();
@@ -207,14 +255,22 @@ namespace log4net.Layout
 			// Append the properties text
 			if (properties.Count > 0)
 			{
-				writer.WriteStartElement(m_elmGlobalProperties);
+				writer.WriteStartElement(m_elmProperties);
 				foreach(System.Collections.DictionaryEntry entry in properties)
 				{
 					writer.WriteStartElement(m_elmData);
-					writer.WriteAttributeString(ATTR_NAME, (string)entry.Key);
+					writer.WriteAttributeString(ATTR_NAME, Transform.MaskXMLInvalidCharacters((string)entry.Key,this.InvalidCharReplacement));
 
 					// Use an ObjectRenderer to convert the object to a string
-					string valueStr = loggingEvent.Repository.RendererMap.FindAndRender(entry.Value);
+					string valueStr =null;
+					if (!this.Base64EncodeProperties)
+					{
+						valueStr=Transform.MaskXMLInvalidCharacters(loggingEvent.Repository.RendererMap.FindAndRender(entry.Value),this.InvalidCharReplacement);
+					}
+					else
+					{
+						valueStr=Convert.ToBase64String(Encoding.UTF8.GetBytes(loggingEvent.Repository.RendererMap.FindAndRender(entry.Value)));
+					}
 					writer.WriteAttributeString(ATTR_VALUE, valueStr);
 
 					writer.WriteEndElement();
@@ -227,7 +283,7 @@ namespace log4net.Layout
 			{
 				// Append the stack trace line
 				writer.WriteStartElement(m_elmException);
-				Transform.WriteEscapedXmlString(writer, exceptionStr);
+				Transform.WriteEscapedXmlString(writer, exceptionStr,this.InvalidCharReplacement);
 				writer.WriteEndElement();
 			}
 
@@ -259,9 +315,11 @@ namespace log4net.Layout
 		private string m_elmMessage = ELM_MESSAGE;
 		private string m_elmData = ELM_DATA;
 		private string m_elmProperties = ELM_PROPERTIES;
-		private string m_elmGlobalProperties = ELM_GLOBAL_PROPERTIES;
 		private string m_elmException = ELM_EXCEPTION;
 		private string m_elmLocation = ELM_LOCATION;
+
+		private bool m_base64Message=false;
+		private bool m_base64Properties=false;
 
 		#endregion Private Instance Fields
 
@@ -290,6 +348,7 @@ namespace log4net.Layout
 		private const string ATTR_LINE = "line";
 		private const string ATTR_NAME = "name";
 		private const string ATTR_VALUE = "value";
+
 
 		#endregion Private Static Fields
 	}

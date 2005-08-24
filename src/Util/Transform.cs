@@ -19,6 +19,7 @@
 using System;
 using System.Text;
 using System.Xml;
+using System.Text.RegularExpressions;
 
 namespace log4net.Util
 {
@@ -56,15 +57,17 @@ namespace log4net.Util
 		/// Write a string to an <see cref="XmlWriter"/>
 		/// </summary>
 		/// <param name="writer">the writer to write to</param>
-		/// <param name="stringData">the string to write</param>
+		/// <param name="textData">the string to write</param>
+		/// <param name="invalidCharReplacement">The string to replace non XML compliant chars with</param>
 		/// <remarks>
 		/// <para>
 		/// The test is escaped either using XML escape entities
 		/// or using CDATA sections.
 		/// </para>
 		/// </remarks>
-		public static void WriteEscapedXmlString(XmlWriter writer, string stringData)
+		public static void WriteEscapedXmlString(XmlWriter writer, string textData, string invalidCharReplacement)
 		{
+			string stringData=MaskXMLInvalidCharacters(textData,invalidCharReplacement);
 			// Write either escaped text or CDATA sections
 
 			int weightCData = 12 * (1 + CountSubstrings(stringData, CDATA_END));
@@ -111,6 +114,11 @@ namespace log4net.Util
 					}
 				}
 			}
+		}
+
+		public static string MaskXMLInvalidCharacters(string textData,string mask)
+		{
+			return INVALIDCHARS.Replace(textData,mask);
 		}
 
 		#endregion Public Static Methods
@@ -166,6 +174,7 @@ namespace log4net.Util
 		private const string CDATA_END	= "]]>";
 		private const string CDATA_UNESCAPABLE_TOKEN	= "]]";
 
+		private static Regex INVALIDCHARS=new Regex(@"[^\x09\x0A\x0D\x20-\xFF\u00FF-\u07FF\uE000-\uFFFD]",RegexOptions.Compiled);
 		#endregion Private Static Fields
 	}
 }
