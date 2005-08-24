@@ -78,7 +78,7 @@ limitations under the License.
 				<p>
 					The log4net distribution is built using the NAnt tool.
 					NAnt version 0.85 is required to build log4net, it is 
-					available from <a href="http://nat.sourceforge.net">nant.sourceforge.net</a>.
+					available from <a href="http://nant.sourceforge.net">nant.sourceforge.net</a>.
 				</p>
 				<p>
 					To support building log4net for the SSCLI framework the NAnt configuration
