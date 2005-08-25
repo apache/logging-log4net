@@ -410,6 +410,46 @@ limitations under the License.
 				</section>
 				<p><a href="#top">Back to Top</a></p>
 				
+				
+				<section id="layout-header-xml-newlines" name="How do I insert newlines into the layout header?">
+					<p>
+						Newlines in the config file need to be escaped using an XML numeric character reference.
+						The sequence that represents a CR LF is &amp;#13; &amp;#10;. The following example adds
+						a header and footer to the output each followed by a newline.
+					</p>
+					<source language="xml"><![CDATA[
+<layout type="log4net.Layout.PatternLayout">
+	<header value="[Header]&#13;&#10;" />
+	<footer value="[Footer]&#13;&#10;" />
+	<conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
+</layout>]]></source>
+				</section>
+				<p><a href="#top">Back to Top</a></p>
+				
+				
+				<section id="pattern-string" name="How do I use a pattern to set the value of a string property?">
+					<p>
+						Log4net supports a pattern syntax for setting string properties similar to the 
+						<span class="code">PatternLayout</span> used to format the output messages.
+						This pattern syntax can be used by specifying <span class="code">type="log4net.Util.PatternString"</span>
+						on the string property in the config file. This tells the config parser to pass the
+						value to the <span class="code">PatternString</span> type before converting the result
+						to a string. For details on the patterns supported see the <a href="sdk/log4net.Util.PatternString.html">
+						PatternString SDK Reference</a>.
+					</p>
+					<p>
+						The following example sets the file name for a <span class="code">FileAppender</span> to include the 
+						current process id by specifying the <span class="code">%processid</span> pattern in the
+						<span class="code">File</span> property.
+					</p>
+					<source language="xml"><![CDATA[
+<appender name="LogFileAppender" type="log4net.Appender.FileAppender">
+	<file type="log4net.Util.PatternString" value="log-file-[%processid].txt" />
+	<layout type="log4net.Layout.PatternLayout" value="%date [%thread] %-5level %logger - %message%newline" />
+</appender>]]></source>
+				</section>
+				<p><a href="#top">Back to Top</a></p>
+		
 		
 			</section>
 
