@@ -19,7 +19,6 @@
 using System;
 using System.Text;
 using System.Xml;
-using System.IO;
 
 using log4net.Core;
 using log4net.Util;
@@ -240,9 +239,7 @@ namespace log4net.Layout
 			writer.WriteStartElement(m_elmMessage);
 			if (!this.Base64EncodeMessage)
 			{
-				string message=loggingEvent.RenderedMessage;
-				
-				Transform.WriteEscapedXmlString(writer, loggingEvent.RenderedMessage,this.InvalidCharReplacement);
+				Transform.WriteEscapedXmlString(writer, loggingEvent.RenderedMessage, this.InvalidCharReplacement);
 			}
 			else
 			{
