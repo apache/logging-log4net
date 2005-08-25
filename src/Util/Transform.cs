@@ -67,7 +67,7 @@ namespace log4net.Util
 		/// </remarks>
 		public static void WriteEscapedXmlString(XmlWriter writer, string textData, string invalidCharReplacement)
 		{
-			string stringData=MaskXMLInvalidCharacters(textData,invalidCharReplacement);
+			string stringData = MaskXmlInvalidCharacters(textData, invalidCharReplacement);
 			// Write either escaped text or CDATA sections
 
 			int weightCData = 12 * (1 + CountSubstrings(stringData, CDATA_END));
@@ -116,9 +116,25 @@ namespace log4net.Util
 			}
 		}
 
-		public static string MaskXMLInvalidCharacters(string textData,string mask)
+		/// <summary>
+		/// Replace invalid XML characters in text string
+		/// </summary>
+		/// <param name="textData">the XML text input string</param>
+		/// <param name="mask">the string to use in place of invalid characters</param>
+		/// <returns>A string that does not contain invalid XML characters.</returns>
+		/// <remarks>
+		/// <para>
+		/// Certain Unicode code points are not allowed in the XML InfoSet, for
+		/// details see: <a href="http://www.w3.org/TR/REC-xml/#charsets">http://www.w3.org/TR/REC-xml/#charsets</a>.
+		/// </para>
+		/// <para>
+		/// This method replaces any illegal characters in the input string
+		/// with the mask string specified.
+		/// </para>
+		/// </remarks>
+		public static string MaskXmlInvalidCharacters(string textData, string mask)
 		{
-			return INVALIDCHARS.Replace(textData,mask);
+			return INVALIDCHARS.Replace(textData, mask);
 		}
 
 		#endregion Public Static Methods

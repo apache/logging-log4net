@@ -131,7 +131,7 @@ namespace log4net.Layout
 		/// output. This can cause problems when the message contains binary
 		/// data. By setting this to true the contents of the message will be
 		/// base64 encoded. If this is set then invalid character replacement
-		/// (see <see cref="InvalidCharReplacement"/>) will not be performed
+		/// (see <see cref="XmlLayoutBase.InvalidCharReplacement"/>) will not be performed
 		/// on the log message.
 		/// </para>
 		/// </remarks>
@@ -150,7 +150,7 @@ namespace log4net.Layout
 		/// output. This can cause problems when one or more properties contain
 		/// binary data. By setting this to true the values of the properties
 		/// will be base64 encoded. If this is set then invalid character replacement
-		/// (see <see cref="InvalidCharReplacement"/>) will not be performed
+		/// (see <see cref="XmlLayoutBase.InvalidCharReplacement"/>) will not be performed
 		/// on the property values.
 		/// </para>
 		/// </remarks>
@@ -259,13 +259,13 @@ namespace log4net.Layout
 				foreach(System.Collections.DictionaryEntry entry in properties)
 				{
 					writer.WriteStartElement(m_elmData);
-					writer.WriteAttributeString(ATTR_NAME, Transform.MaskXMLInvalidCharacters((string)entry.Key,this.InvalidCharReplacement));
+					writer.WriteAttributeString(ATTR_NAME, Transform.MaskXmlInvalidCharacters((string)entry.Key,this.InvalidCharReplacement));
 
 					// Use an ObjectRenderer to convert the object to a string
 					string valueStr =null;
 					if (!this.Base64EncodeProperties)
 					{
-						valueStr=Transform.MaskXMLInvalidCharacters(loggingEvent.Repository.RendererMap.FindAndRender(entry.Value),this.InvalidCharReplacement);
+						valueStr=Transform.MaskXmlInvalidCharacters(loggingEvent.Repository.RendererMap.FindAndRender(entry.Value),this.InvalidCharReplacement);
 					}
 					else
 					{
