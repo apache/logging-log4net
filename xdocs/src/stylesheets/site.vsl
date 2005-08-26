@@ -286,9 +286,20 @@ limitations under the License.
 			#end
 
             <title>$project.getChild("title").getText() - $root.getChild("properties").getChild("title").getText()</title>
+            
+            #if ($root.getChild("head"))
+				$root.getChild("head").getContent()
+			#end
         </head>
 
-        <body bgcolor="$bodybg" text="$bodyfg" link="$bodylink">        
+        <body 
+            bgcolor="$bodybg"
+            text="$bodyfg"
+            link="$bodylink"
+        #foreach ( $a in $root.getChild("body").getAttributes() )
+			$a.getName()="$a.getValue()"
+		#end
+        >       
            <!-- START Header table --> 
 ##           <table border="0" cellspacing="0" width="100%">
 ##                <!-- TOP IMAGE -->
