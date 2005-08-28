@@ -243,7 +243,9 @@ namespace log4net.Layout
 			}
 			else
 			{
-				Transform.WriteEscapedXmlString(writer, Convert.ToBase64String(Encoding.UTF8.GetBytes(loggingEvent.RenderedMessage)),this.InvalidCharReplacement);
+				byte[] messageBytes = Encoding.UTF8.GetBytes(loggingEvent.RenderedMessage);
+				string base64Message = Convert.ToBase64String(messageBytes, 0, messageBytes.Length);
+				Transform.WriteEscapedXmlString(writer, base64Message,this.InvalidCharReplacement);
 			}
 			writer.WriteEndElement();
 
@@ -262,11 +264,12 @@ namespace log4net.Layout
 					string valueStr =null;
 					if (!this.Base64EncodeProperties)
 					{
-						valueStr=Transform.MaskXmlInvalidCharacters(loggingEvent.Repository.RendererMap.FindAndRender(entry.Value),this.InvalidCharReplacement);
+						valueStr = Transform.MaskXmlInvalidCharacters(loggingEvent.Repository.RendererMap.FindAndRender(entry.Value),this.InvalidCharReplacement);
 					}
 					else
 					{
-						valueStr=Convert.ToBase64String(Encoding.UTF8.GetBytes(loggingEvent.Repository.RendererMap.FindAndRender(entry.Value)));
+						byte[] propertyValueBytes = Encoding.UTF8.GetBytes(loggingEvent.Repository.RendererMap.FindAndRender(entry.Value));
+						valueStr = Convert.ToBase64String(propertyValueBytes, 0, propertyValueBytes.Length);
 					}
 					writer.WriteAttributeString(ATTR_VALUE, valueStr);
 
