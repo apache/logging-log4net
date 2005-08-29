@@ -145,7 +145,7 @@ links[i].href = "#overview";
 						</li>
 					</ul>
 					<p>
-						To run this example execute the <span class="code">ConsoleApp.exe</span> from the build output directory.
+						To run this example execute <span class="code">ConsoleApp.exe</span> from the build output directory.
 					</p>
 				</section>
 				
@@ -194,7 +194,7 @@ links[i].href = "#overview";
 						</li>
 					</ul>
 					<p>
-						To run this example execute the <span class="code">RemotingClient.exe</span> from the build output directory.
+						To run this example execute <span class="code">RemotingClient.exe</span> from the build output directory.
 					</p>
 				</section>
 				
@@ -217,7 +217,7 @@ links[i].href = "#overview";
 						</li>
 					</ul>
 					<p>
-						To run this example execute the <span class="code">RemotingServer.exe</span> from the build output directory.
+						To run this example execute <span class="code">RemotingServer.exe</span> from the build output directory.
 						While this process is running execute the <span class="code">RemotingClient.exe</span> program on
 						the same machine. The logging events from the client are transferred to the server.
 					</p>
@@ -325,7 +325,7 @@ links[i].href = "#overview";
 						</li>
 					</ul>
 					<p>
-						To run this example execute the <span class="code">SimpleApp.exe</span> from the build output directory.
+						To run this example execute <span class="code">SimpleApp.exe</span> from the build output directory.
 					</p>
 				</section>
 				
@@ -347,7 +347,7 @@ links[i].href = "#overview";
 						</li>
 					</ul>
 					<p>
-						To run this example execute the <span class="code">EventIDLogApp.exe</span> from the build output directory.
+						To run this example execute <span class="code">EventIDLogApp.exe</span> from the build output directory.
 					</p>
 				</section>
 				
@@ -369,7 +369,7 @@ links[i].href = "#overview";
 						</li>
 					</ul>
 					<p>
-						To run this example execute the <span class="code">TraceLogApp.exe</span> from the build output directory.
+						To run this example execute <span class="code">TraceLogApp.exe</span> from the build output directory.
 					</p>
 				</section>
 				
@@ -415,9 +415,37 @@ links[i].href = "#overview";
 						</li>
 					</ul>
 					<p>
-						To run this example execute the <span class="code">SampleAppendersApp.exe</span> from the build output directory.
+						To run this example execute <span class="code">SampleAppendersApp.exe</span> from the build output directory.
 					</p>
 				</section>
+				
+				<section id="samplelayouts" name="SampleLayouts">
+					<p>
+						This project includes the following example layouts.
+					</p>
+					<ul>
+						<li>
+							ForwardingLayout
+						</li>
+						<li>
+							LineWrappingLayout
+						</li>
+					</ul>
+					<p>
+						This example is available for the following platforms and languages. If a version
+						is not available for your chosen platform and language combination then select the
+						nearest platform for the appropriate language.
+					</p>
+					<ul>
+						<li>
+							<b>.NET 1.0</b>: 
+							<a class="localOnly" href="../../examples/net/1.0/Layouts/SampleLayoutsApp/cs">C#</a>
+						</li>
+					</ul>
+					<p>
+						To run this example execute <span class="code">SampleLayoutsApp.exe</span> from the build output directory.
+					</p>
+				</section>				
 				
 				<section id="perf-notlogging" name="Performance - NotLogging">
 					<p>

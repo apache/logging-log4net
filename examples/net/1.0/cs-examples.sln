@@ -21,6 +21,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.Ext.EventID", "..\.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventIDLogApp", "Extensibility\EventIDLogApp\cs\src\EventIDLogApp.csproj", "{B3DCF964-EAC8-46F2-AA11-151713141536}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleAppendersApp", "Appenders\SampleAppendersApp\cs\src\SampleAppendersApp.csproj", "{9E715F72-7F70-421B-A2BF-E9CB42F88F5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleLayoutsApp", "Layouts\SampleLayoutsApp\cs\src\SampleLayoutsApp.csproj", "{CD7A8094-D383-46BC-A75D-9F65F746E24F}"
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		ConfigName.0 = Debug
@@ -73,6 +77,14 @@ Global
 		{B3DCF964-EAC8-46F2-AA11-151713141536}.Debug.Build.0 = Debug|.NET
 		{B3DCF964-EAC8-46F2-AA11-151713141536}.Release.ActiveCfg = Release|.NET
 		{B3DCF964-EAC8-46F2-AA11-151713141536}.Release.Build.0 = Release|.NET
+		{9E715F72-7F70-421B-A2BF-E9CB42F88F5C}.Debug.ActiveCfg = Debug|.NET
+		{9E715F72-7F70-421B-A2BF-E9CB42F88F5C}.Debug.Build.0 = Debug|.NET
+		{9E715F72-7F70-421B-A2BF-E9CB42F88F5C}.Release.ActiveCfg = Release|.NET
+		{9E715F72-7F70-421B-A2BF-E9CB42F88F5C}.Release.Build.0 = Release|.NET
+		{CD7A8094-D383-46BC-A75D-9F65F746E24F}.Debug.ActiveCfg = Debug|.NET
+		{CD7A8094-D383-46BC-A75D-9F65F746E24F}.Debug.Build.0 = Debug|.NET
+		{CD7A8094-D383-46BC-A75D-9F65F746E24F}.Release.ActiveCfg = Release|.NET
+		{CD7A8094-D383-46BC-A75D-9F65F746E24F}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
