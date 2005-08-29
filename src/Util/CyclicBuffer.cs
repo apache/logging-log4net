@@ -175,14 +175,30 @@ namespace log4net.Util
 					}
 				}
 
+				Clear();
+
+				return ret;
+			}
+		}
+
+		/// <summary>
+		/// Clear the buffer
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Clear the buffer of all events. The events in the buffer are lost.
+		/// </para>
+		/// </remarks>
+		public void Clear()
+		{
+			lock(this)
+			{
 				// Set all the elements to null
 				Array.Clear(m_events, 0, m_events.Length);
 
 				m_first = 0;
 				m_last = 0;
 				m_numElems = 0;
-
-				return ret;
 			}
 		}
 

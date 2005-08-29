@@ -274,20 +274,76 @@ namespace log4net.Appender
 		/// </remarks>
 		public virtual void Flush()
 		{
+			Flush(false);
+		}
+
+		/// <summary>
+		/// Flush the currently buffered events
+		/// </summary>
+		/// <param name="flushLossyBuffer">set to <c>true</c> to flush the buffer of lossy events</param>
+		/// <remarks>
+		/// <para>
+		/// Flushes events that have been buffered. If <paramref name="flushLossyBuffer" /> is
+		/// <c>false</c> then events will only be flushed if this buffer is non-lossy mode.
+		/// </para>
+		/// <para>
+		/// If the appender is buffering in <see cref="Lossy"/> mode then the contents
+		/// of the buffer will only be flushed if <paramref name="flushLossyBuffer" /> is <c>true</c>.
+		/// In this case the contents of the buffer will be tested against the 
+		/// <see cref="LossyEvaluator"/> and if triggering will be output. All other buffered
+		/// events will be discarded.
+		/// </para>
+		/// <para>
+		/// If <paramref name="flushLossyBuffer" /> is <c>true</c> then the buffer will always
+		/// be emptied by calling this method.
+		/// </para>
+		/// </remarks>
+		public virtual void Flush(bool flushLossyBuffer)
+		{
 			// This method will be called outside of the AppenderSkeleton DoAppend() method
 			// therefore it needs to be protected by its own lock. This will block any
 			// Appends while the buffer is flushed.
 			lock(this)
 			{
-				// Do nothing if the buffer does not exist, or we are not configured
-				// to buffer events, or if the buffer is full of lossy events (the
-				// evaluator should flush the buffer each time a significant event arrives).
-				// NOTE that there is an issue here with the m_lossyEvaluator which
-				// may trigger for some of the events in the lossy buffer, which we should
-				// really be checking for.
-				if (m_cb != null && m_bufferSize > 1 && !m_lossy)
+				if (m_cb != null && m_cb.Length > 0)
 				{
-					SendFromBuffer(null, m_cb);
+					if (m_lossy)
+					{
+						// If we are allowed to eagerly flush from the lossy buffer
+						if (flushLossyBuffer)
+						{
+							if (m_lossyEvaluator != null)
+							{
+								// Test the contents of the buffer against the lossy evaluator
+								LoggingEvent[] bufferedEvents = m_cb.PopAll();
+								ArrayList filteredEvents = new ArrayList(bufferedEvents.Length);
+
+								foreach(LoggingEvent loggingEvent in bufferedEvents)
+								{
+									if (m_lossyEvaluator.IsTriggeringEvent(loggingEvent))
+									{
+										filteredEvents.Add(loggingEvent);
+									}
+								}
+
+								// Send the events that meet the lossy evaluator criteria
+								if (filteredEvents.Count > 0)
+								{
+									SendBuffer((LoggingEvent[])filteredEvents.ToArray(typeof(LoggingEvent)));
+								}
+							}
+							else
+							{
+								// No lossy evaluator, all buffered events are discarded
+								m_cb.Clear();
+							}
+						}
+					}
+					else
+					{
+						// Not lossy, send whole buffer
+						SendFromBuffer(null, m_cb);
+					}
 				}
 			}
 		}
@@ -342,42 +398,16 @@ namespace log4net.Appender
 		/// Close this appender instance.
 		/// </summary>
 		/// <remarks>
-		/// <para>Close this appender instance. If this appender is marked
+		/// <para>
+		/// Close this appender instance. If this appender is marked
 		/// as not <see cref="Lossy"/> then the remaining events in 
-		/// the buffer must be sent when the appender is closed.</para>
+		/// the buffer must be sent when the appender is closed.
+		/// </para>
 		/// </remarks>
 		override protected void OnClose() 
 		{
-			// If we are supposed to be non lossy then we had better
-			// flush our buffer now
-			if (m_cb != null && m_cb.Length > 0)
-			{
-				if (m_lossy)
-				{
-					if (m_lossyEvaluator != null)
-					{
-						LoggingEvent[] bufferedEvents = m_cb.PopAll();
-						ArrayList filteredEvents = new ArrayList(bufferedEvents.Length);
-
-						foreach(LoggingEvent loggingEvent in bufferedEvents)
-						{
-							if (m_lossyEvaluator.IsTriggeringEvent(loggingEvent))
-							{
-								filteredEvents.Add(loggingEvent);
-							}
-						}
-
-						if (filteredEvents.Count > 0)
-						{
-							SendBuffer((LoggingEvent[])filteredEvents.ToArray(typeof(LoggingEvent)));
-						}
-					}
-				}
-				else
-				{
-					SendFromBuffer(null, m_cb);
-				}
-			}
+			// Flush the buffer on close
+			Flush(true);
 		}
 
 		/// <summary>
@@ -385,11 +415,13 @@ namespace log4net.Appender
 		/// </summary>
 		/// <param name="loggingEvent">the event to log</param>
 		/// <remarks>
-		/// <para>Stores the <paramref name="loggingEvent"/> in the cyclic buffer.</para>
-		/// 
-		/// <para>The buffer will be sent (i.e. passed to the <see cref="SendBuffer"/> 
-		/// method) if one of the following conditions is met:</para>
-		/// 
+		/// <para>
+		/// Stores the <paramref name="loggingEvent"/> in the cyclic buffer.
+		/// </para>
+		/// <para>
+		/// The buffer will be sent (i.e. passed to the <see cref="SendBuffer"/> 
+		/// method) if one of the following conditions is met:
+		/// </para>
 		/// <list type="bullet">
 		///		<item>
 		///			<description>The cyclic buffer is full and this appender is
@@ -401,11 +433,12 @@ namespace log4net.Appender
 		///			specified.</description>
 		///		</item>
 		/// </list>
-		/// 
-		/// <para>Before the event is stored in the buffer it is fixed
+		/// <para>
+		/// Before the event is stored in the buffer it is fixed
 		/// (see <see cref="LoggingEvent.FixVolatileData()"/>) to ensure that
 		/// any data referenced by the event will be valid when the buffer
-		/// is processed.</para>
+		/// is processed.
+		/// </para>
 		/// </remarks>
 		override protected void Append(LoggingEvent loggingEvent) 
 		{
@@ -492,7 +525,9 @@ namespace log4net.Appender
 		/// <param name="firstLoggingEvent">The first logging event.</param>
 		/// <param name="buffer">The buffer containing the events that need to be send.</param>
 		/// <remarks>
+		/// <para>
 		/// The subclass must override <see cref="SendBuffer(LoggingEvent[])"/>.
+		/// </para>
 		/// </remarks>
 		virtual protected void SendFromBuffer(LoggingEvent firstLoggingEvent, CyclicBuffer buffer)
 		{
@@ -524,10 +559,11 @@ namespace log4net.Appender
 		/// </summary>
 		/// <param name="events">The events that need to be send.</param>
 		/// <remarks>
+		/// <para>
 		/// The subclass must override this method to process the buffered events.
+		/// </para>
 		/// </remarks>
 		abstract protected void SendBuffer(LoggingEvent[] events);
-
 
 		#region Private Static Fields
 
