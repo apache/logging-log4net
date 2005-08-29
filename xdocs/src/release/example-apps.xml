@@ -132,7 +132,7 @@ links[i].href = "#overview";
 						</li>
 						<li>
 							<b>.NET 1.1</b>: 
-							<a class="localOnly" href="../../examples/net/1.1/Tutorials/ConsoleApp/js">JavaScript</a>
+							<a class="localOnly" href="../../examples/net/1.1/Tutorials/ConsoleApp/js">JScript.NET</a>
 						</li>
 						<li>
 							<b>.NET Compact Framework 1.0</b>: 
@@ -141,7 +141,7 @@ links[i].href = "#overview";
 						</li>
 						<li>
 							<b>SSCLI 1.0</b>: 
-							<a class="localOnly" href="../../examples/sscli/1.0/Tutorials/ConsoleApp/js">JavaScript</a>
+							<a class="localOnly" href="../../examples/sscli/1.0/Tutorials/ConsoleApp/js">JScript.NET</a>
 						</li>
 					</ul>
 					<p>
@@ -247,7 +247,7 @@ links[i].href = "#overview";
 						</li>
 						<li>
 							<b>.NET 1.1</b>: 
-							<a class="localOnly" href="../../examples/net/1.1/Repository/SimpleModule/js">JavaScript</a>
+							<a class="localOnly" href="../../examples/net/1.1/Repository/SimpleModule/js">JScript.NET</a>
 						</li>
 						<li>
 							<b>SSCLI 1.0</b>: 
@@ -282,7 +282,7 @@ links[i].href = "#overview";
 						</li>
 						<li>
 							<b>.NET 1.1</b>: 
-							<a class="localOnly" href="../../examples/net/1.1/Repository/SharedModule/js">JavaScript</a>
+							<a class="localOnly" href="../../examples/net/1.1/Repository/SharedModule/js">JScript.NET</a>
 						</li>
 						<li>
 							<b>SSCLI 1.0</b>: 
@@ -317,7 +317,7 @@ links[i].href = "#overview";
 						</li>
 						<li>
 							<b>.NET 1.1</b>: 
-							<a class="localOnly" href="../../examples/net/1.1/Repository/SimpleApp/js">JavaScript</a>
+							<a class="localOnly" href="../../examples/net/1.1/Repository/SimpleApp/js">JScript.NET</a>
 						</li>
 						<li>
 							<b>SSCLI 1.0</b>: 
