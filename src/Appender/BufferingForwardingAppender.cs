@@ -106,11 +106,7 @@ namespace log4net.Appender
 			// Pass the logging event on to the attached appenders
 			if (m_appenderAttachedImpl != null)
 			{
-				// Send each event one at a time
-				foreach(LoggingEvent e in events)
-				{
-					m_appenderAttachedImpl.AppendLoopOnAppenders(e);
-				}
+				m_appenderAttachedImpl.AppendLoopOnAppenders(events);
 			}
 		}
 

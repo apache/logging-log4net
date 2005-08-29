@@ -839,6 +839,32 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
+		/// This method is called by the <see cref="AppenderSkeleton.DoAppend"/>
+		/// method. 
+		/// </summary>
+		/// <param name="loggingEvents">The array of events to log.</param>
+		/// <remarks>
+		/// <para>
+		/// Acquires the output file locks once before writing all the events to
+		/// the stream.
+		/// </para>
+		/// </remarks>
+		override protected void Append(LoggingEvent[] loggingEvents) 
+		{
+			if (m_stream.AcquireLock())
+			{
+				try
+				{
+					base.Append(loggingEvents);
+				}
+				finally
+				{
+					m_stream.ReleaseLock();
+				}
+			}
+		}
+
+		/// <summary>
 		/// Writes a footer as produced by the embedded layout's <see cref="ILayout.Footer"/> property.
 		/// </summary>
 		/// <remarks>

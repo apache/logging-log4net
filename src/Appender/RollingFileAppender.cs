@@ -473,12 +473,45 @@ namespace log4net.Appender
 		/// <param name="loggingEvent">the event to write to file.</param>
 		/// <remarks>
 		/// <para>
-		/// Handles append time behavior for CompositeRollingAppender.  This checks
+		/// Handles append time behavior for RollingFileAppender.  This checks
 		/// if a roll over either by date (checked first) or time (checked second)
 		/// is need and then appends to the file last.
 		/// </para>
 		/// </remarks>
 		override protected void Append(LoggingEvent loggingEvent) 
+		{
+			AdjustFileBeforeAppend();
+			base.Append(loggingEvent);
+		}
+  
+ 		/// <summary>
+		/// Write out an array of logging events.
+		/// </summary>
+		/// <param name="loggingEvents">the events to write to file.</param>
+		/// <remarks>
+		/// <para>
+		/// Handles append time behavior for RollingFileAppender.  This checks
+		/// if a roll over either by date (checked first) or time (checked second)
+		/// is need and then appends to the file last.
+		/// </para>
+		/// </remarks>
+		override protected void Append(LoggingEvent[] loggingEvents) 
+		{
+			AdjustFileBeforeAppend();
+			base.Append(loggingEvents);
+		}
+
+		/// <summary>
+		/// Performs any required rolling before outputting the next event
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Handles append time behavior for RollingFileAppender.  This checks
+		/// if a roll over either by date (checked first) or time (checked second)
+		/// is need and then appends to the file last.
+		/// </para>
+		/// </remarks>
+		virtual protected void AdjustFileBeforeAppend()
 		{
 			if (m_rollDate) 
 			{
@@ -499,11 +532,8 @@ namespace log4net.Appender
 					RollOverSize();
 				}
 			}
-
-			base.Append(loggingEvent);
 		}
-  
-  
+
 		/// <summary>
 		/// Creates and opens the file for logging.  If <see cref="StaticLogFileName"/>
 		/// is false then the fully qualified name is determined and used.

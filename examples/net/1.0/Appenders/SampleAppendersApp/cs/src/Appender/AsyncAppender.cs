@@ -33,7 +33,7 @@ namespace SampleAppendersApp.Appender
 	/// This allows the calling thread to be released quickly, however it does
 	/// not guarantee the ordering of events delivered to the attached appenders.
 	/// </remarks>
-	public sealed class AsyncAppender : IAppender, IOptionHandler, IAppenderAttachable
+	public sealed class AsyncAppender : IAppender, IBulkAppender, IOptionHandler, IAppenderAttachable
 	{
 		private string m_name;
 
@@ -71,13 +71,32 @@ namespace SampleAppendersApp.Appender
 			System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(AsyncAppend), loggingEvent);
 		}
 
+		public void DoAppend(LoggingEvent[] loggingEvents)
+		{
+			foreach(LoggingEvent loggingEvent in loggingEvents)
+			{
+				loggingEvent.Fix = m_fixFlags;
+			}
+			System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(AsyncAppend), loggingEvents);
+		}
+
 		private void AsyncAppend(object state)
 		{
-			LoggingEvent loggingEvent = state as LoggingEvent;
-
-			if (m_appenderAttachedImpl != null && loggingEvent != null)
+			if (m_appenderAttachedImpl != null)
 			{
-				m_appenderAttachedImpl.AppendLoopOnAppenders(loggingEvent);
+				LoggingEvent loggingEvent = state as LoggingEvent;
+				if (loggingEvent != null)
+				{
+					m_appenderAttachedImpl.AppendLoopOnAppenders(loggingEvent);
+				}
+				else
+				{
+					LoggingEvent[] loggingEvents = state as LoggingEvent[];
+					if (loggingEvents != null)
+					{
+						m_appenderAttachedImpl.AppendLoopOnAppenders(loggingEvents);
+					}
+				}
 			}
 		}
 

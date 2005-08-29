@@ -80,7 +80,7 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
-		/// Append the logging event. 
+		/// Forward the logging event to the attached appenders 
 		/// </summary>
 		/// <param name="loggingEvent">The event to log.</param>
 		/// <remarks>
@@ -94,6 +94,24 @@ namespace log4net.Appender
 			if (m_appenderAttachedImpl != null)
 			{
 				m_appenderAttachedImpl.AppendLoopOnAppenders(loggingEvent);
+			}
+		} 
+
+		/// <summary>
+		/// Forward the logging events to the attached appenders 
+		/// </summary>
+		/// <param name="loggingEvents">The array of events to log.</param>
+		/// <remarks>
+		/// <para>
+		/// Delivers the logging events to all the attached appenders.
+		/// </para>
+		/// </remarks>
+		override protected void Append(LoggingEvent[] loggingEvents) 
+		{
+			// Pass the logging event on the the attached appenders
+			if (m_appenderAttachedImpl != null)
+			{
+				m_appenderAttachedImpl.AppendLoopOnAppenders(loggingEvents);
 			}
 		} 
 

@@ -98,7 +98,89 @@ namespace log4net.Util
 			return m_appenderList.Count;
 		}
 
+		/// <summary>
+		/// Append on on all attached appenders.
+		/// </summary>
+		/// <param name="loggingEvents">The array of events being logged.</param>
+		/// <returns>The number of appenders called.</returns>
+		/// <remarks>
+		/// <para>
+		/// Calls the <see cref="IAppender.DoAppend" /> method on all 
+		/// attached appenders.
+		/// </para>
+		/// </remarks>
+		public int AppendLoopOnAppenders(LoggingEvent[] loggingEvents) 
+		{
+			if (loggingEvents == null)
+			{
+				throw new ArgumentNullException("loggingEvents");
+			}
+			if (loggingEvents.Length == 0)
+			{
+				throw new ArgumentException("loggingEvents array must not be empty", "loggingEvents");
+			}
+			if (loggingEvents.Length == 1)
+			{
+				// Fall back to single event path
+				return AppendLoopOnAppenders(loggingEvents[0]);
+			}
+
+			// m_appenderList is null when empty
+			if (m_appenderList == null) 
+			{
+				return 0;
+			}
+
+			if (m_appenderArray == null)
+			{
+				m_appenderArray = m_appenderList.ToArray();
+			}
+
+			foreach(IAppender appender in m_appenderArray)
+			{
+				try
+				{
+					CallAppend(appender, loggingEvents);
+				}
+				catch(Exception ex)
+				{
+					LogLog.Error("AppenderAttachedImpl: Failed to append to appender [" + appender.Name + "]", ex);
+				}
+			}
+			return m_appenderList.Count;
+		}
+
 		#endregion Public Instance Methods
+
+		/// <summary>
+		/// Calls the DoAppende method on the <see cref="IAppender"/> with 
+		/// the <see cref="LoggingEvent"/> objects supplied.
+		/// </summary>
+		/// <param name="appender">The appender</param>
+		/// <param name="loggingEvents">The events</param>
+		/// <remarks>
+		/// <para>
+		/// If the <paramref name="appender" /> supports the <see cref="IBulkAppender"/>
+		/// interface then the <paramref name="loggingEvents" /> will be passed 
+		/// through using that interface. Otherwise the <see cref="LoggingEvent"/>
+		/// objects in the array will be passed one at a time.
+		/// </para>
+		/// </remarks>
+		private static void CallAppend(IAppender appender, LoggingEvent[] loggingEvents)
+		{
+			IBulkAppender bulkAppender = appender as IBulkAppender;
+			if (bulkAppender != null)
+			{
+				bulkAppender.DoAppend(loggingEvents);
+			}
+			else
+			{
+				foreach(LoggingEvent loggingEvent in loggingEvents)
+				{
+					appender.DoAppend(loggingEvent);
+				}
+			}
+		}
 
 		#region Implementation of IAppenderAttachable
 

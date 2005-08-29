@@ -18,6 +18,7 @@
 
 using System;
 using System.IO;
+using System.Collections;
 
 using log4net.Filter;
 using log4net.Util;
@@ -42,7 +43,7 @@ namespace log4net.Appender
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
-	public abstract class AppenderSkeleton : IAppender, IOptionHandler
+	public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandler
 	{
 		#region Protected Instance Constructors
 
@@ -247,7 +248,7 @@ namespace log4net.Appender
 		/// <summary>
 		/// Performs threshold checks and invokes filters before 
 		/// delegating actual logging to the subclasses specific 
-		/// <see cref="AppenderSkeleton.Append"/> method.
+		/// <see cref="AppenderSkeleton.Append(LoggingEvent)"/> method.
 		/// </summary>
 		/// <param name="loggingEvent">The event to log.</param>
 		/// <remarks>
@@ -310,31 +311,7 @@ namespace log4net.Appender
 				{
 					m_recursiveGuard = true;
 
-					if (!IsAsSevereAsThreshold(loggingEvent.Level)) 
-					{
-						return;
-					}
-
-					IFilter f = this.FilterHead;
-
-					while(f != null) 
-					{
-						switch(f.Decide(loggingEvent)) 
-						{
-							case FilterDecision.Deny: 
-								return;		// Return without appending
-
-							case FilterDecision.Accept:
-								f = null;	// Break out of the loop
-								break;
-
-							case FilterDecision.Neutral:
-								f = f.Next;	// Move to next filter
-								break;
-						}
-					}
-
-					if (PreAppendCheck())
+					if (FilterEvent(loggingEvent) && PreAppendCheck())
 					{
 						this.Append(loggingEvent);
 					}
@@ -356,6 +333,167 @@ namespace log4net.Appender
 		}
 
 		#endregion Implementation of IAppender
+
+		#region Implementation of IBulkAppender
+
+		/// <summary>
+		/// Performs threshold checks and invokes filters before 
+		/// delegating actual logging to the subclasses specific 
+		/// <see cref="AppenderSkeleton.Append(LoggingEvent[])"/> method.
+		/// </summary>
+		/// <param name="loggingEvents">The array of events to log.</param>
+		/// <remarks>
+		/// <para>
+		/// This method cannot be overridden by derived classes. A
+		/// derived class should override the <see cref="Append"/> method
+		/// which is called by this method.
+		/// </para>
+		/// <para>
+		/// The implementation of this method is as follows:
+		/// </para>
+		/// <para>
+		/// <list type="bullet">
+		///		<item>
+		///			<description>
+		///			Checks that the severity of the <paramref name="loggingEvent"/>
+		///			is greater than or equal to the <see cref="Threshold"/> of this
+		///			appender.</description>
+		///		</item>
+		///		<item>
+		///			<description>
+		///			Checks that the <see cref="Filter"/> chain accepts the 
+		///			<paramref name="loggingEvent"/>.
+		///			</description>
+		///		</item>
+		///		<item>
+		///			<description>
+		///			Calls <see cref="PreAppendCheck()"/> and checks that 
+		///			it returns <c>true</c>.</description>
+		///		</item>
+		/// </list>
+		/// </para>
+		/// <para>
+		/// If all of the above steps succeed then the <paramref name="loggingEvents"/>
+		/// will be passed to the <see cref="Append"/> method.
+		/// </para>
+		/// </remarks>
+		public void DoAppend(LoggingEvent[] loggingEvents) 
+		{
+			// This lock is absolutely critical for correct formatting
+			// of the message in a multi-threaded environment.  Without
+			// this, the message may be broken up into elements from
+			// multiple thread contexts (like get the wrong thread ID).
+
+			lock(this)
+			{
+				if (m_closed)
+				{
+					ErrorHandler.Error("Attempted to append to closed appender named ["+m_name+"].");
+					return;
+				}
+
+				// prevent re-entry
+				if (m_recursiveGuard)
+				{
+					return;
+				}
+
+				try
+				{
+					m_recursiveGuard = true;
+
+					ArrayList filteredEvents = new ArrayList(loggingEvents.Length);
+
+					foreach(LoggingEvent loggingEvent in loggingEvents)
+					{
+						if (FilterEvent(loggingEvent))
+						{
+							filteredEvents.Add(loggingEvent);
+						}
+					}
+
+					if (filteredEvents.Count > 0 && PreAppendCheck())
+					{
+						this.Append((LoggingEvent[])filteredEvents.ToArray(typeof(LoggingEvent)));
+					}
+				}
+				catch(Exception ex)
+				{
+					ErrorHandler.Error("Failed in Bulk DoAppend", ex);
+				}
+				catch
+				{
+					// Catch handler for non System.Exception types
+					ErrorHandler.Error("Failed in Bulk DoAppend (unknown exception)");
+				}
+				finally
+				{
+					m_recursiveGuard = false;
+				}
+			}
+		}
+
+		#endregion Implementation of IBulkAppender
+
+		/// <summary>
+		/// Test if the logging event should we output by this appender
+		/// </summary>
+		/// <param name="loggingEvent">the event to test</param>
+		/// <returns><c>true</c> if the event should be output, <c>false</c> if the event should be ignored</returns>
+		/// <remarks>
+		/// <para>
+		/// This method checks the logging event against the threshold level set
+		/// on this appender and also against the filters specified on this
+		/// appender.
+		/// </para>
+		/// <para>
+		/// The implementation of this method is as follows:
+		/// </para>
+		/// <para>
+		/// <list type="bullet">
+		///		<item>
+		///			<description>
+		///			Checks that the severity of the <paramref name="loggingEvent"/>
+		///			is greater than or equal to the <see cref="Threshold"/> of this
+		///			appender.</description>
+		///		</item>
+		///		<item>
+		///			<description>
+		///			Checks that the <see cref="Filter"/> chain accepts the 
+		///			<paramref name="loggingEvent"/>.
+		///			</description>
+		///		</item>
+		/// </list>
+		/// </para>
+		/// </remarks>
+		virtual protected bool FilterEvent(LoggingEvent loggingEvent)
+		{
+			if (!IsAsSevereAsThreshold(loggingEvent.Level)) 
+			{
+				return false;
+			}
+
+			IFilter f = this.FilterHead;
+
+			while(f != null) 
+			{
+				switch(f.Decide(loggingEvent)) 
+				{
+					case FilterDecision.Deny: 
+						return false;	// Return without appending
+
+					case FilterDecision.Accept:
+						f = null;		// Break out of the loop
+						break;
+
+					case FilterDecision.Neutral:
+						f = f.Next;		// Move to next filter
+						break;
+				}
+			}
+
+			return true;
+		}
 
 		#region Public Instance Methods
 
@@ -462,6 +600,28 @@ namespace log4net.Appender
 		/// </para>
 		/// </remarks>
 		abstract protected void Append(LoggingEvent loggingEvent);
+
+		/// <summary>
+		/// Append a bulk array of logging events.
+		/// </summary>
+		/// <param name="loggingEvents">the array of logging events</param>
+		/// <remarks>
+		/// <para>
+		/// This base class implementation calls the <see cref="Append(LoggingEvent)"/>
+		/// method for each element in the bulk array.
+		/// </para>
+		/// <para>
+		/// A sub class that can better process a bulk array of events should
+		/// override this method in addition to <see cref="Append(LoggingEvent)"/>.
+		/// </para>
+		/// </remarks>
+		virtual protected void Append(LoggingEvent[] loggingEvents)
+		{
+			foreach(LoggingEvent loggingEvent in loggingEvents)
+			{
+				Append(loggingEvent);
+			}
+		}
 
 		/// <summary>
 		/// Called before <see cref="Append"/> as a precondition.

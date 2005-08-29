@@ -193,6 +193,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Appender\IBulkAppender.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Appender\LocalSyslogAppender.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

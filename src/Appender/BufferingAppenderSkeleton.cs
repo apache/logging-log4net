@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Collections;
 
 using log4net.Util;
 using log4net.Core;
@@ -286,7 +287,7 @@ namespace log4net.Appender
 				// really be checking for.
 				if (m_cb != null && m_bufferSize > 1 && !m_lossy)
 				{
-					SendBuffer(m_cb);
+					SendFromBuffer(null, m_cb);
 				}
 			}
 		}
@@ -355,18 +356,26 @@ namespace log4net.Appender
 				{
 					if (m_lossyEvaluator != null)
 					{
-						foreach(LoggingEvent loggingEvent in m_cb.PopAll())
+						LoggingEvent[] bufferedEvents = m_cb.PopAll();
+						ArrayList filteredEvents = new ArrayList(bufferedEvents.Length);
+
+						foreach(LoggingEvent loggingEvent in bufferedEvents)
 						{
 							if (m_lossyEvaluator.IsTriggeringEvent(loggingEvent))
 							{
-								SendBuffer(new LoggingEvent[] { loggingEvent } );
+								filteredEvents.Add(loggingEvent);
 							}
+						}
+
+						if (filteredEvents.Count > 0)
+						{
+							SendBuffer((LoggingEvent[])filteredEvents.ToArray(typeof(LoggingEvent)));
 						}
 					}
 				}
 				else
 				{
-					SendBuffer(m_cb);
+					SendFromBuffer(null, m_cb);
 				}
 			}
 		}
@@ -437,21 +446,26 @@ namespace log4net.Appender
 					if (!m_lossy)
 					{
 						// Not lossy, must send all events
-						SendBuffer(new LoggingEvent[] { discardedLoggingEvent } );
-						SendBuffer(m_cb);
+						SendFromBuffer(discardedLoggingEvent, m_cb);
 					}
 					else
 					{
-						// Check if the discarded event should be logged
-						if (m_lossyEvaluator != null && m_lossyEvaluator.IsTriggeringEvent(discardedLoggingEvent))
+						// Check if the discarded event should not be logged
+						if (m_lossyEvaluator == null || !m_lossyEvaluator.IsTriggeringEvent(discardedLoggingEvent))
 						{
-							SendBuffer(new LoggingEvent[] { discardedLoggingEvent } );
+							// Clear the discarded event as we should not forward it
+							discardedLoggingEvent = null;
 						}
 
 						// Check if the event should trigger the whole buffer to be sent
 						if (m_evaluator != null && m_evaluator.IsTriggeringEvent(loggingEvent))
 						{
-							SendBuffer(m_cb);
+							SendFromBuffer(discardedLoggingEvent, m_cb);
+						}
+						else if (discardedLoggingEvent != null)
+						{
+							// Just send the discarded event
+							SendBuffer(new LoggingEvent[] { discardedLoggingEvent } );
 						}
 					}
 				}
@@ -462,7 +476,7 @@ namespace log4net.Appender
 					// Check if the event should trigger the whole buffer to be sent
 					if (m_evaluator != null && m_evaluator.IsTriggeringEvent(loggingEvent))
 					{
-						SendBuffer(m_cb);
+						SendFromBuffer(null, m_cb);
 					}
 				}
 			}
@@ -475,29 +489,45 @@ namespace log4net.Appender
 		/// <summary>
 		/// Sends the contents of the buffer.
 		/// </summary>
+		/// <param name="firstLoggingEvent">The first logging event.</param>
 		/// <param name="buffer">The buffer containing the events that need to be send.</param>
 		/// <remarks>
-		/// The subclass must override either <see cref="SendBuffer(CyclicBuffer)"/>
-		/// or <see cref="SendBuffer(LoggingEvent[])"/>.
+		/// The subclass must override <see cref="SendBuffer(LoggingEvent[])"/>.
 		/// </remarks>
-		virtual protected void SendBuffer(CyclicBuffer buffer)
+		virtual protected void SendFromBuffer(LoggingEvent firstLoggingEvent, CyclicBuffer buffer)
 		{
-			SendBuffer(buffer.PopAll());
+			LoggingEvent[] bufferEvents = buffer.PopAll();
+
+			if (firstLoggingEvent == null)
+			{
+				SendBuffer(bufferEvents);
+			}
+			else if (bufferEvents.Length == 0)
+			{
+				SendBuffer(new LoggingEvent[] { firstLoggingEvent } );
+			}
+			else
+			{
+				// Create new array with the firstLoggingEvent at the head
+				LoggingEvent[] events = new LoggingEvent[bufferEvents.Length + 1];
+				Array.Copy(bufferEvents, 0, events, 1, bufferEvents.Length);
+				events[0] = firstLoggingEvent;
+
+				SendBuffer(events);
+			}
 		}
+
+		#endregion Protected Instance Methods
 
 		/// <summary>
 		/// Sends the events.
 		/// </summary>
 		/// <param name="events">The events that need to be send.</param>
 		/// <remarks>
-		/// The subclass must override either <see cref="SendBuffer(CyclicBuffer)"/>
-		/// or <see cref="SendBuffer(LoggingEvent[])"/>.
+		/// The subclass must override this method to process the buffered events.
 		/// </remarks>
-		virtual protected void SendBuffer(LoggingEvent[] events)
-		{
-		}
+		abstract protected void SendBuffer(LoggingEvent[] events);
 
-		#endregion Protected Instance Methods
 
 		#region Private Static Fields
 
