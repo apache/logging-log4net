@@ -16,6 +16,7 @@
 //
 #endregion
 
+using System.Data;
 using System.Data.SqlClient;
 using log4net.Appender;
 using log4net.Core;
@@ -26,16 +27,29 @@ namespace SampleAppendersApp.Appender
 	/// Simple database appender
 	/// </summary>
 	/// <remarks>
+	/// <para>
 	/// This database appender is very simple and does not support a configurable
 	/// data schema. The schema supported is hardcoded into the appender.
 	/// Also by not extending the AppenderSkeleton base class this appender
 	/// avoids the serializable locking that it enforces.
+	/// </para>
+	/// <para>
+	/// This appender can be subclassed to change the database connection
+	/// type, or the database schema supported.
+	/// </para>
+	/// <para>
+	/// To change the database connection type the <see cref="GetConnection"/>
+	/// method must be overridden.
+	/// </para>
+	/// <para>
+	/// To change the database schema supported by the appender the <see cref="InitializeCommand"/>
+	/// and <see cref="SetCommandValues"/> methods must be overridden.
+	/// </para>
 	/// </remarks>
-	public sealed class FastDbAppender : IAppender, IOptionHandler
+	public class FastDbAppender : IAppender, IBulkAppender, IOptionHandler
 	{
 		private string m_name;
 		private string m_connectionString;
-		private SqlConnection m_dbConnection;
 
 		public string Name
 		{
@@ -49,32 +63,135 @@ namespace SampleAppendersApp.Appender
 			set { m_connectionString = value; }
 		}
 
-		public void ActivateOptions() 
+		public virtual void ActivateOptions() 
 		{
-			m_dbConnection = new SqlConnection(m_connectionString);
-			m_dbConnection.Open();
 		}
 
-		public void Close()
+		public virtual void Close()
 		{
-			if (m_dbConnection != null)
+		}
+
+		public virtual void DoAppend(LoggingEvent loggingEvent)
+		{
+			using(IDbConnection connection = GetConnection())
 			{
-				m_dbConnection.Close();
+				// Open the connection for each event, this takes advantage
+				// of the builtin connection pooling
+				connection.Open();
+
+				using(IDbCommand command = connection.CreateCommand())
+				{
+					InitializeCommand(command);
+
+					SetCommandValues(command, loggingEvent);
+					command.ExecuteNonQuery();
+				}
 			}
 		}
 
-		public void DoAppend(LoggingEvent loggingEvent)
+		public virtual void DoAppend(LoggingEvent[] loggingEvents)
 		{
-			SqlCommand command = m_dbConnection.CreateCommand();
+			using(IDbConnection connection = GetConnection())
+			{
+				// Open the connection for each event, this takes advantage
+				// of the builtin connection pooling
+				connection.Open();
+
+				using(IDbCommand command = connection.CreateCommand())
+				{
+					InitializeCommand(command);
+
+					foreach(LoggingEvent loggingEvent in loggingEvents)
+					{
+						SetCommandValues(command, loggingEvent);
+						command.ExecuteNonQuery();
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Create the connection object
+		/// </summary>
+		/// <returns>the connection</returns>
+		/// <remarks>
+		/// <para>
+		/// This implementation returns a <see cref="SqlConnection"/>.
+		/// To change the connection subclass this appender and
+		/// return a different connection type.
+		/// </para>
+		/// </remarks>
+		virtual protected IDbConnection GetConnection()
+		{
+			return new SqlConnection(m_connectionString);
+		}
+
+		/// <summary>
+		/// Initialize the command object supplied
+		/// </summary>
+		/// <param name="command">the command to initialize</param>
+		/// <remarks>
+		/// <para>
+		/// This method must setup the database command and the
+		/// parameters.
+		/// </para>
+		/// </remarks>
+		virtual protected void InitializeCommand(IDbCommand command)
+		{
+			command.CommandType = CommandType.Text;
 			command.CommandText = "INSERT INTO [LogTable] ([Time],[Logger],[Level],[Thread],[Message]) VALUES (@Time,@Logger,@Level,@Thread,@Message)";
 
-			command.Parameters.Add("@Time", loggingEvent.TimeStamp);
-			command.Parameters.Add("@Logger", loggingEvent.LoggerName);
-			command.Parameters.Add("@Level", loggingEvent.Level.Name);
-			command.Parameters.Add("@Thread", loggingEvent.ThreadName);
-			command.Parameters.Add("@Message", loggingEvent.RenderedMessage);
+			IDbDataParameter param = null;
+			
+			// @Time
+			param = command.CreateParameter();
+			param.ParameterName = "@Time";
+			param.DbType = DbType.DateTime;
+			command.Parameters.Add(param);
+			
+			// @Logger
+			param = command.CreateParameter();
+			param.ParameterName = "@Logger";
+			param.DbType = DbType.String;
+			command.Parameters.Add(param);
+			
+			// @Level
+			param = command.CreateParameter();
+			param.ParameterName = "@Level";
+			param.DbType = DbType.String;
+			command.Parameters.Add(param);
+			
+			// @Thread
+			param = command.CreateParameter();
+			param.ParameterName = "@Thread";
+			param.DbType = DbType.String;
+			command.Parameters.Add(param);
+			
+			// @Message
+			param = command.CreateParameter();
+			param.ParameterName = "@Message";
+			param.DbType = DbType.String;
+			command.Parameters.Add(param);
+		}
 
-			command.ExecuteNonQuery();
+		/// <summary>
+		/// Set the values for the command parameters
+		/// </summary>
+		/// <param name="command">the command to update</param>
+		/// <param name="loggingEvent">the current logging event to retrieve the values from</param>
+		/// <remarks>
+		/// <para>
+		/// Set the values of the parameters created by the
+		/// <see cref="InitializeCommand"/> method.
+		/// </para>
+		/// </remarks>
+		virtual protected void SetCommandValues(IDbCommand command, LoggingEvent loggingEvent)
+		{
+			((IDbDataParameter)command.Parameters["@Time"]).Value = loggingEvent.TimeStamp;
+			((IDbDataParameter)command.Parameters["@Logger"]).Value = loggingEvent.LoggerName;
+			((IDbDataParameter)command.Parameters["@Level"]).Value = loggingEvent.Level.Name;
+			((IDbDataParameter)command.Parameters["@Thread"]).Value = loggingEvent.ThreadName;
+			((IDbDataParameter)command.Parameters["@Message"]).Value = loggingEvent.RenderedMessage;
 		}
 	}
 }
