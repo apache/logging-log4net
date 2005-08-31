@@ -59,12 +59,71 @@ namespace log4net.Util
 		#region Override implementation of QuietTextWriter
   
 		/// <summary>
+		/// Writes a character to the underlying writer and counts the number of bytes written.
+		/// </summary>
+		/// <param name="value">the char to write</param>
+		/// <remarks>
+		/// <para>
+		/// Overrides implementation of <see cref="QuietTextWriter"/>. Counts
+		/// the number of bytes written.
+		/// </para>
+		/// </remarks>
+		public override void Write(char value) 
+		{
+			try 
+			{
+				base.Write(value);
+
+				// get the number of bytes needed to represent the 
+				// char using the supplied encoding.
+				m_countBytes += this.Encoding.GetByteCount(new char[] { value });
+			} 
+			catch(Exception e) 
+			{
+				this.ErrorHandler.Error("Failed to write [" + value + "].", e, ErrorCode.WriteFailure);
+			}
+		}
+    
+		/// <summary>
+		/// Writes a buffer to the underlying writer and counts the number of bytes written.
+		/// </summary>
+		/// <param name="buffer">the buffer to write</param>
+		/// <param name="index">the start index to write from</param>
+		/// <param name="count">the number of characters to write</param>
+		/// <remarks>
+		/// <para>
+		/// Overrides implementation of <see cref="QuietTextWriter"/>. Counts
+		/// the number of bytes written.
+		/// </para>
+		/// </remarks>
+		public override void Write(char[] buffer, int index, int count) 
+		{
+			if (count > 0)
+			{
+				try 
+				{
+					base.Write(buffer, index, count);
+
+					// get the number of bytes needed to represent the 
+					// char array using the supplied encoding.
+					m_countBytes += this.Encoding.GetByteCount(buffer, index, count);
+				} 
+				catch(Exception e) 
+				{
+					this.ErrorHandler.Error("Failed to write buffer.", e, ErrorCode.WriteFailure);
+				}
+			}
+		}
+
+		/// <summary>
 		/// Writes a string to the output and counts the number of bytes written.
 		/// </summary>
 		/// <param name="str">The string data to write to the output.</param>
 		/// <remarks>
+		/// <para>
 		/// Overrides implementation of <see cref="QuietTextWriter"/>. Counts
 		/// the number of bytes written.
+		/// </para>
 		/// </remarks>
 		override public void Write(string str) 
 		{
@@ -84,7 +143,7 @@ namespace log4net.Util
 				}
 			}
 		}
-
+		
 		#endregion Override implementation of QuietTextWriter
 
 		#region Public Instance Properties
