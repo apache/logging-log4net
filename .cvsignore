@@ -1,6 +1,0 @@
-bin
-build
-*.zip
-gc.log
-log4net.snk
-
