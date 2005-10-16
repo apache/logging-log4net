@@ -4,7 +4,7 @@
 	<property name="docs.src" value="./src" />
 	<property name="docs.dest" value="../doc" />
 
-	<property name="logging-site" value="../../logging-site" />
+	<property name="logging-site" value="../../../site/trunk" />
 
 	<!-- Construct classpath for building the html pages -->
 	<path id="site.classpath">
