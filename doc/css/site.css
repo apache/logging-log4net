@@ -64,6 +64,7 @@ A:link:hover {
   border-bottom: 1px solid #DDDDDD;
   background:#eee;
   font-family: Courier, "MS Courier New", Prestige, Everson Monocourrier, monospace;
+  font-size: smaller;
   padding-bottom: 0.5ex;
   padding-top: 0.5ex;
   padding-left: 2ex;

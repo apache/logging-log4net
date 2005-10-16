@@ -34,7 +34,7 @@ limitations under the License.
             <meta name="email" value="nicko at apache dot org">
             
            
-                                     <meta  name="keywords"  content="contributing to log4net development, contributing log4net, log4net cvs, log4net"  />
+                                     <meta  name="keywords"  content="contributing to log4net development, contributing log4net, log4net svn, log4net cvs, log4net"  />
  
                          
             <link href="./css/site.css" rel="stylesheet" type="text/css"/>
@@ -42,9 +42,14 @@ limitations under the License.
 							<link href="./css/style.css" rel="stylesheet" type="text/css"/>
 			
             <title>log4net - Contributing to log4net Development</title>
-        </head>
+            
+                    </head>
 
-        <body bgcolor="#ffffff" text="#000000" link="#525D76">        
+        <body 
+            bgcolor="#ffffff"
+            text="#000000"
+            link="#525D76"
+                >       
            <!-- START Header table --> 
                              <table class="banner" border="0">
      <tr>
@@ -84,14 +89,14 @@ limitations under the License.
     <div class="i1">
                                                                                           </div>
                       </div>
-																    <a href="#cvs">CVS Access</a><br/>
+																    <a href="#svn">Source Access</a><br/>
     <div class="i1">
-                                        <a href="#cvs-view">Browsing CVS</a><br/>
+                                                            <a href="#svn-view">Browsing SVN</a><br/>
     <div class="i1">
                               </div>
-                                                    <a href="#cvs-anon">Anonymous CVS Access</a><br/>
+                                                    <a href="#svn-anon">Anonymous SVN Access</a><br/>
     <div class="i1">
-                                                                                                                                                      </div>
+                                                                                          </div>
                       </div>
 																    <a href="#jira">Issue Tracking</a><br/>
     <div class="i1">
@@ -106,7 +111,7 @@ limitations under the License.
 	                                                    <h2><a id="mlist"></a>Developer Mailing List</h2>
     <div class="i1">
                                     <p>
-					All discussion relating to log4net development takes place on this list. All CVS checkin 
+					All discussion relating to log4net development takes place on this list. All SVN checkin 
 					notifications are also copied to this list.
 				</p>
                                                     <h3><a id="mlist-archive"></a>Mailing List Archives</h3>
@@ -184,47 +189,36 @@ limitations under the License.
 					</p>
                       </div>
                       </div>
-                                                    <h2><a id="cvs"></a>CVS Access</h2>
-    <div class="i1">
-                                        <h3><a id="cvs-view"></a>Browsing CVS</h3>
+                                                    <h2><a id="svn"></a>Source Access</h2>
     <div class="i1">
                                     <p>
-						<a href="http://cvs.apache.org/viewcvs/logging-log4net/">Browse log4net</a> 
-						CVS repository using ViewCVS.
+					The source for log4net is held in the Apache Subversion source code control repository.
+				</p>
+                                                    <h3><a id="svn-view"></a>Browsing SVN</h3>
+    <div class="i1">
+                                    <p>
+						<a href="http://svn.apache.org/viewcvs.cgi/logging/log4net/">Browse log4net</a> 
+						SVN repository using ViewCVS.
 					</p>
                       </div>
-                                                    <h3><a id="cvs-anon"></a>Anonymous CVS Access</h3>
+                                                    <h3><a id="svn-anon"></a>Anonymous SVN Access</h3>
     <div class="i1">
                                     <p>
-						Anyone can checkout source code from our anonymous CVS
-						server. To do so, simply use the following commands (if you are
-						using a GUI CVS client, configure it appropriately).
+						Anyone can checkout source code from our anonymous SVN
+						server. To do so, simply use the following command (if you are
+						using a GUI SVN client, configure it appropriately).
 					</p>
                                                 <p>
-						Please ensure that your CVS client is operating in UNIX mode. This
-						is the mode where the client does <i>not</i> translate UNIX style newlines
-						into DOS style carriage return/linefeeds. Failing to do this will cause
-						compile errors in the log4net code.
-					</p>
-                                                <p>
-						First login to the CVS server as the anonymous user.
+						Checkout the logging/log4net module.
 					</p>
                                                 
     <div class="syntax"><pre class="code">
-cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic login
-password: anoncvs</pre></div>
+svn checkout http://svn.apache.org/repos/asf/logging/log4net/trunk log4net</pre></div>
 
                                                 <p>
-						Then checkout the logging-log4net module.
-					</p>
-                                                
-    <div class="syntax"><pre class="code">
-cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic checkout logging-log4net</pre></div>
-
-                                                <p>
-						If you are not familiar with CVS, 
-						<a href="http://jakarta.apache.org/site/cvsindex.html">Jakarta's CVS page</a> 
-						may hold many helpful hints.
+						If you are not familiar with SVN, the Apache 
+						<a href="http://www.apache.org/dev/version-control.html">Source Code Repositories</a> 
+						page has links to more information on SVN.
 					</p>
                       </div>
                       </div>
@@ -303,13 +297,13 @@ cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic checkout logging-log4net<
 				</p>
                                                 <p>
 					The preferred method of generating a patch is a unified context diff against
-					the latest development version in CVS. To do this you should do the following:
+					the latest development version in SVN. To do this you should do the following:
 				</p>
                                                 <ul>
 					<li>
 						<p>
-							Get the latest version of the code from CVS, see the section above on 
-							<i>Anonymous CVS Access</i> for details on how to obtain the CVS version. 
+							Get the latest version of the code from SVN, see the section above on 
+							<i>Anonymous SVN Access</i> for details on how to obtain the SVN version. 
 						</p>
 					</li>
 					<li>
@@ -325,7 +319,7 @@ cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic checkout logging-log4net<
 					<li>
 						<p>
 							Generate a unified context diff for the files you have changed. Run the
-							<span class="code">cvs diff -u &gt; patch-file</span> command from the root of the log4net
+							<span class="code">svn diff &gt; patch-file</span> command from the root of the log4net
 							codebase to generate a diff file. 
 						</p>
 					</li>
@@ -337,8 +331,9 @@ cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic checkout logging-log4net<
 					</li>
 				</ul>
                                                 <p>
-					If you are not using CVS then you can still generate a unified context diff
-					using the <i>diff</i> GNU tool. The GNU tools are available for Windows as part
+					If you are not using SVN then you can still generate a unified context diff
+					using the <i>diff</i> GNU tool with the <i>-u</i> command line options. 
+					The GNU tools are available for Windows as part
 					of the <a href="www.cygwin.com">Cygwin</a> package.
 				</p>
                                                 <p>
@@ -373,9 +368,10 @@ cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic checkout logging-log4net<
 							Once the issue has been created you can attach your patch file to the issue
 							by selecting the <i>Attach file to this issue</i> operation from the left hand
 							menu. When attaching your patch you must select the <b>Grant license to ASF for 
-							inclusion in ASF works</b> option. If attaching a patch please include in the
+							inclusion in ASF works</b> option. When attaching a patch please include in the
 							description the baseline version of log4net you used to build your patch, if against
-							a CVS version please include the date and branch (e.g. HEAD).
+							an SVN version please include the version number and if from a tag or branch include
+							the repository path.
 						</p>
 					</li>
 					<li>
