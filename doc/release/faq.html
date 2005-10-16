@@ -42,9 +42,14 @@ limitations under the License.
 							<link href="../css/style.css" rel="stylesheet" type="text/css"/>
 			
             <title>log4net - log4net Manual - Frequently Asked Questions</title>
-        </head>
+            
+                    </head>
 
-        <body bgcolor="#ffffff" text="#000000" link="#525D76">        
+        <body 
+            bgcolor="#ffffff"
+            text="#000000"
+            link="#525D76"
+                >       
            <!-- START Header table --> 
                              <table class="banner" border="0">
      <tr>
@@ -134,6 +139,12 @@ limitations under the License.
                                                                         <a href="#assembly-public-key">How do I get the Public Key for an assembly?</a><br/>
     <div class="i1">
                               </div>
+                                                                        <a href="#layout-header-xml-newlines">How do I insert newlines into the layout header?</a><br/>
+    <div class="i1">
+                                                  </div>
+                                                                        <a href="#pattern-string">How do I use a pattern to set the value of a string property?</a><br/>
+    <div class="i1">
+                                                                      </div>
                                           </div>
 																    <a href="#implementing">Implementing Logging</a><br/>
     <div class="i1">
@@ -178,10 +189,10 @@ limitations under the License.
     <div class="i1">
                                         <a href="#internalDebug">How do I enable log4net internal debugging?</a><br/>
     <div class="i1">
-                                                                      </div>
+                                                                                                                                  </div>
                                                                         <a href="#trouble-EventLog">Why doesn't the EventLogAppender work?</a><br/>
     <div class="i1">
-                                                                                          </div>
+                                                                                                              </div>
                                                                         <a href="#trouble-file-perm">Why can't I log to a FileAppender from a web application?</a><br/>
     <div class="i1">
                               </div>
@@ -572,6 +583,48 @@ limitations under the License.
 					</p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
+                                                    <h3><a id="layout-header-xml-newlines"></a>How do I insert newlines into the layout header?</h3>
+    <div class="i1">
+                                    <p>
+						Newlines in the config file need to be escaped using an XML numeric character reference.
+						The sequence that represents a CR LF is &amp;#13; &amp;#10;. The following example adds
+						a header and footer to the output each followed by a newline.
+					</p>
+                                                
+    <div class="syntax"><pre class="code">
+&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
+	&lt;header value=&quot;[Header]&amp;#13;&amp;#10;&quot; /&gt;
+	&lt;footer value=&quot;[Footer]&amp;#13;&amp;#10;&quot; /&gt;
+	&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger - %message%newline&quot; /&gt;
+&lt;/layout&gt;</pre></div>
+
+                      </div>
+                                                <p><a href="#top">Back to Top</a></p>
+                                                    <h3><a id="pattern-string"></a>How do I use a pattern to set the value of a string property?</h3>
+    <div class="i1">
+                                    <p>
+						Log4net supports a pattern syntax for setting string properties similar to the 
+						<span class="code">PatternLayout</span> used to format the output messages.
+						This pattern syntax can be used by specifying <span class="code">type="log4net.Util.PatternString"</span>
+						on the string property in the config file. This tells the config parser to pass the
+						value to the <span class="code">PatternString</span> type before converting the result
+						to a string. For details on the patterns supported see the <a href="sdk/log4net.Util.PatternString.html">
+						PatternString SDK Reference</a>.
+					</p>
+                                                <p>
+						The following example sets the file name for a <span class="code">FileAppender</span> to include the 
+						current process id by specifying the <span class="code">%processid</span> pattern in the
+						<span class="code">File</span> property.
+					</p>
+                                                
+    <div class="syntax"><pre class="code">
+&lt;appender name=&quot;LogFileAppender&quot; type=&quot;log4net.Appender.FileAppender&quot;&gt;
+	&lt;file type=&quot;log4net.Util.PatternString&quot; value=&quot;log-file-[%processid].txt&quot; /&gt;
+	&lt;layout type=&quot;log4net.Layout.PatternLayout&quot; value=&quot;%date [%thread] %-5level %logger - %message%newline&quot; /&gt;
+&lt;/appender&gt;</pre></div>
+
+                      </div>
+                                                <p><a href="#top">Back to Top</a></p>
                       </div>
                                                     <h2><a id="implementing"></a>Implementing Logging</h2>
     <div class="i1">
@@ -891,20 +944,12 @@ public class FastLogger
                                         <h3><a id="internalDebug"></a>How do I enable log4net internal debugging?</h3>
     <div class="i1">
                                     <p>
-						There are several different ways to enable internal debugging in log4net.
-						These different methods are listed below. The preferred method is to specify
+						There are 2 different ways to enable internal debugging in log4net.
+						These are listed below. The preferred method is to specify
 						the <span class="code">log4net.Internal.Debug</span> option in the application's
 						config file.
 					</p>
                                                 <ul>
-						<li>
-							<p>
-								To enable log4net's internal debug programmatically you need
-								to set the <span class="code">log4net.Util.LogLog.InternalDebugging</span>
-								property to <span class="code">true</span>. Obviously the sooner this
-								is set the more debug will be produced.
-							</p>
-						</li>
 						<li>
 							<p>
 								Internal debugging can also be enabled by setting a value in the application's
@@ -927,22 +972,10 @@ public class FastLogger
 						</li>
 						<li>
 							<p>
-								To enable internal debugging from a configuration file, the 
-								<span class="code">debug</span> attribute on the log4net
-								configuration element can be set to the value <span class="code">true</span>. 
-								For example:
-							</p>
-							<div class="syntax"><pre class="code">
-&lt;log4net debug="true"&gt;
-
-	... configuration ...
-	
-&lt;/log4net&gt;</pre></div>
-							<p>
-								Using this method does require that your configuration file is located
-								and loaded, otherwise the attribute will not be read. If you need to
-								debug the process of locating the configuration file then use one of the other
-								methods for enabling debugging.
+								To enable log4net's internal debug programmatically you need
+								to set the <span class="code">log4net.Util.LogLog.InternalDebugging</span>
+								property to <span class="code">true</span>. Obviously the sooner this
+								is set the more debug will be produced.
 							</p>
 						</li>
 					</ul>
@@ -958,6 +991,32 @@ public class FastLogger
 						system debugger. A utility like DebugView from 
 						<a href="http://www.sysinternals.com">http://www.sysinternals.com</a>
 						may be used to capture these messages.
+					</p>
+                                                <p>
+						As log4net internal debug messages are written to the <span class="code">System.Diagnostics.Trace</span>
+						system it is possible to redirect those messages to a local file. You can define
+						a trace listener by adding the following to your application's .config file:
+					</p>
+                                                <div class="syntax"><pre class="code">
+&lt;configuration&gt;
+	...
+	
+	&lt;system.diagnostics&gt;
+		&lt;trace autoflush="true"&gt;
+			&lt;listeners&gt;
+				&lt;add 
+					name="textWriterTraceListener" 
+					type="System.Diagnostics.TextWriterTraceListener" 
+					initializeData="C:\tmp\log4net.txt" /&gt;
+			&lt;/listeners&gt;
+		&lt;/trace&gt;
+	&lt;/system.diagnostics&gt;
+
+	...
+&lt;/configuration&gt;</pre></div>
+                                                <p>
+						Make sure that the process running your application has permission 
+						to write to this file.
 					</p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
@@ -984,7 +1043,8 @@ public class FastLogger
 						<li>
 							<p>
 								Make the ASPNET user a member of the Administrators group. This will work because the 
-								user will then have the required permissions. This is not recommended for production use.
+								user will then have the required permissions. This is <strong>not recommended</strong>
+								for production use.
 							</p>
 						</li>
 						<li>
@@ -997,6 +1057,12 @@ public class FastLogger
 							</p>
 						</li>
 					</ol>
+                                                <p>
+						There is a Microsoft Knowledge Base article that covers this issue and how to resolve
+						it. <a href="http://support.microsoft.com/default.aspx?scid=kb;en-us;329291">
+							PRB: "Requested Registry Access Is Not Allowed" Error Message When ASP.NET 
+							Application Tries to Write New EventSource in the EventLog</a>.
+					</p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="trouble-file-perm"></a>Why can't I log to a FileAppender from a web application?</h3>
@@ -1058,7 +1124,7 @@ public class FastLogger
                                         <h3><a id="vsnet-add-reference"></a>How do I make log4net appear in the Visual Studio Add References dialog?</h3>
     <div class="i1">
                                     <p>
-						There is a good discussion of this topic on Robert GcLaws blog:
+						There is a good discussion of this topic on Robert McLaws blog:
 						<a href="http://weblogs.asp.net/rmclaws/archive/2003/11/15/37743.aspx">Building a Better Server Control Experience, Part 2</a>.
 					</p>
                       </div>

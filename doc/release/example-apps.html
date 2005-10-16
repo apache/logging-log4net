@@ -42,9 +42,45 @@ limitations under the License.
 							<link href="../css/style.css" rel="stylesheet" type="text/css"/>
 			
             <title>log4net - log4net Examples</title>
-        </head>
+            
+            				
+		<script language="javascript">
+<!--
+function getElementsByClass(node,searchClass,tag) {
+var classElements = new Array();
+var els = node.getElementsByTagName(tag);
+var elsLen = els.length;
+var pattern = new RegExp("\\b"+searchClass+"\\b");
+for (i = 0, j = 0; i < elsLen; i++) {
+if ( pattern.test(els[i].className) ) {
+classElements[j] = els[i];
+j++;
+}
+}
+return classElements;
+}
+function BlockLocalOnlyLinks()
+{
+if (window.location.protocol!="file:")
+{
+var links = getElementsByClass(document,"localOnly","a");
+for(var i=0; i<links.length; i++)
+{
+links[i].href = "#overview";
+}
+}
+}
+-->
+		</script>
+	
+			        </head>
 
-        <body bgcolor="#ffffff" text="#000000" link="#525D76">        
+        <body 
+            bgcolor="#ffffff"
+            text="#000000"
+            link="#525D76"
+        			onload="BlockLocalOnlyLinks()"
+		        >       
            <!-- START Header table --> 
                              <table class="banner" border="0">
      <tr>
@@ -116,6 +152,9 @@ limitations under the License.
                                                     <a href="#sampleappenders">SampleAppenders</a><br/>
     <div class="i1">
                                                                                                               </div>
+                                                    <a href="#samplelayouts">SampleLayouts</a><br/>
+    <div class="i1">
+                                                                                                              </div>
                                                     <a href="#perf-notlogging">Performance - NotLogging</a><br/>
     <div class="i1">
                                                                                           </div>
@@ -165,7 +204,7 @@ limitations under the License.
     <div class="i1">
                                     <p>
 						There are Visual Studio .NET 2002 project files for the .NET 1.0 framework.
-						The solution files for C++, C# and VB are in the <a href="../../examples/net/1.0">examples\net\1.0</a>
+						The solution files for C++, C# and VB are in the <a class="localOnly" href="../../examples/net/1.0">examples\net\1.0</a>
 						folder.
 					</p>
                       </div>
@@ -186,30 +225,30 @@ limitations under the License.
                                                 <ul>
 						<li>
 							<b>MONO 1.0</b>: 
-							<a href="../../examples/mono/1.0/Tutorials/ConsoleApp/cs">C#</a>
+							<a class="localOnly" href="../../examples/mono/1.0/Tutorials/ConsoleApp/cs">C#</a>
 						</li>
 						<li>
 							<b>.NET 1.0</b>: 
-							<a href="../../examples/net/1.0/Tutorials/ConsoleApp/cpp">C++</a>, 
-							<a href="../../examples/net/1.0/Tutorials/ConsoleApp/cs">C#</a>, 
-							<a href="../../examples/net/1.0/Tutorials/ConsoleApp/vb">VB</a>
+							<a class="localOnly" href="../../examples/net/1.0/Tutorials/ConsoleApp/cpp">C++</a>, 
+							<a class="localOnly" href="../../examples/net/1.0/Tutorials/ConsoleApp/cs">C#</a>, 
+							<a class="localOnly" href="../../examples/net/1.0/Tutorials/ConsoleApp/vb">VB</a>
 						</li>
 						<li>
 							<b>.NET 1.1</b>: 
-							<a href="../../examples/net/1.1/Tutorials/ConsoleApp/js">JavaScript</a>
+							<a class="localOnly" href="../../examples/net/1.1/Tutorials/ConsoleApp/js">JScript.NET</a>
 						</li>
 						<li>
 							<b>.NET Compact Framework 1.0</b>: 
-							<a href="../../examples/netcf/1.0/Tutorials/ConsoleApp/cs">C#</a>, 
-							<a href="../../examples/netcf/1.0/Tutorials/ConsoleApp/vb">VB</a>
+							<a class="localOnly" href="../../examples/netcf/1.0/Tutorials/ConsoleApp/cs">C#</a>, 
+							<a class="localOnly" href="../../examples/netcf/1.0/Tutorials/ConsoleApp/vb">VB</a>
 						</li>
 						<li>
 							<b>SSCLI 1.0</b>: 
-							<a href="../../examples/sscli/1.0/Tutorials/ConsoleApp/js">JavaScript</a>
+							<a class="localOnly" href="../../examples/sscli/1.0/Tutorials/ConsoleApp/js">JScript.NET</a>
 						</li>
 					</ul>
                                                 <p>
-						To run this example execute the <span class="code">ConsoleApp.exe</span> from the build output directory.
+						To run this example execute <span class="code">ConsoleApp.exe</span> from the build output directory.
 					</p>
                       </div>
                                                     <h3><a id="webapp"></a>Tutorial - WebApp</h3>
@@ -226,8 +265,8 @@ limitations under the License.
                                                 <ul>
 						<li>
 							<b>.NET 1.0</b>: 
-							<a href="../../examples/net/1.0/Tutorials/WebApp/cs">C#</a>, 
-							<a href="../../examples/net/1.0/Tutorials/WebApp/vb">VB</a>
+							<a class="localOnly" href="../../examples/net/1.0/Tutorials/WebApp/cs">C#</a>, 
+							<a class="localOnly" href="../../examples/net/1.0/Tutorials/WebApp/vb">VB</a>
 						</li>
 					</ul>
                                                 <p>
@@ -254,11 +293,11 @@ limitations under the License.
                                                 <ul>
 						<li>
 							<b>.NET 1.0</b>: 
-							<a href="../../examples/net/1.0/Remoting/RemotingClient/cs">C#</a>
+							<a class="localOnly" href="../../examples/net/1.0/Remoting/RemotingClient/cs">C#</a>
 						</li>
 					</ul>
                                                 <p>
-						To run this example execute the <span class="code">RemotingClient.exe</span> from the build output directory.
+						To run this example execute <span class="code">RemotingClient.exe</span> from the build output directory.
 					</p>
                       </div>
                                                     <h3><a id="remotingserver"></a>Remoting - RemotingServer</h3>
@@ -277,11 +316,11 @@ limitations under the License.
                                                 <ul>
 						<li>
 							<b>.NET 1.0</b>: 
-							<a href="../../examples/net/1.0/Remoting/RemotingServer/cs">C#</a>
+							<a class="localOnly" href="../../examples/net/1.0/Remoting/RemotingServer/cs">C#</a>
 						</li>
 					</ul>
                                                 <p>
-						To run this example execute the <span class="code">RemotingServer.exe</span> from the build output directory.
+						To run this example execute <span class="code">RemotingServer.exe</span> from the build output directory.
 						While this process is running execute the <span class="code">RemotingClient.exe</span> program on
 						the same machine. The logging events from the client are transferred to the server.
 					</p>
@@ -302,20 +341,20 @@ limitations under the License.
                                                 <ul>
 						<li>
 							<b>MONO 1.0</b>: 
-							<a href="../../examples/mono/1.0/Repository/SimpleModule/cs">C#</a>
+							<a class="localOnly" href="../../examples/mono/1.0/Repository/SimpleModule/cs">C#</a>
 						</li>
 						<li>
 							<b>.NET 1.0</b>: 
-							<a href="../../examples/net/1.0/Repository/SimpleModule/cs">C#</a>, 
-							<a href="../../examples/net/1.0/Repository/SimpleModule/vb">VB</a>
+							<a class="localOnly" href="../../examples/net/1.0/Repository/SimpleModule/cs">C#</a>, 
+							<a class="localOnly" href="../../examples/net/1.0/Repository/SimpleModule/vb">VB</a>
 						</li>
 						<li>
 							<b>.NET 1.1</b>: 
-							<a href="../../examples/net/1.1/Repository/SimpleModule/js">JavaScript</a>
+							<a class="localOnly" href="../../examples/net/1.1/Repository/SimpleModule/js">JScript.NET</a>
 						</li>
 						<li>
 							<b>SSCLI 1.0</b>: 
-							<a href="../../examples/sscli/1.0/Repository/SimpleModule/cs">C#</a>
+							<a class="localOnly" href="../../examples/sscli/1.0/Repository/SimpleModule/cs">C#</a>
 						</li>
 					</ul>
                                                 <p>
@@ -337,20 +376,20 @@ limitations under the License.
                                                 <ul>
 						<li>
 							<b>MONO 1.0</b>: 
-							<a href="../../examples/mono/1.0/Repository/SharedModule/cs">C#</a>
+							<a class="localOnly" href="../../examples/mono/1.0/Repository/SharedModule/cs">C#</a>
 						</li>
 						<li>
 							<b>.NET 1.0</b>: 
-							<a href="../../examples/net/1.0/Repository/SharedModule/cs">C#</a>, 
-							<a href="../../examples/net/1.0/Repository/SharedModule/vb">VB</a>
+							<a class="localOnly" href="../../examples/net/1.0/Repository/SharedModule/cs">C#</a>, 
+							<a class="localOnly" href="../../examples/net/1.0/Repository/SharedModule/vb">VB</a>
 						</li>
 						<li>
 							<b>.NET 1.1</b>: 
-							<a href="../../examples/net/1.1/Repository/SharedModule/js">JavaScript</a>
+							<a class="localOnly" href="../../examples/net/1.1/Repository/SharedModule/js">JScript.NET</a>
 						</li>
 						<li>
 							<b>SSCLI 1.0</b>: 
-							<a href="../../examples/sscli/1.0/Repository/SharedModule/cs">C#</a>
+							<a class="localOnly" href="../../examples/sscli/1.0/Repository/SharedModule/cs">C#</a>
 						</li>
 					</ul>
                                                 <p>
@@ -372,24 +411,24 @@ limitations under the License.
                                                 <ul>
 						<li>
 							<b>MONO 1.0</b>: 
-							<a href="../../examples/mono/1.0/Repository/SimpleApp/cs">C#</a>
+							<a class="localOnly" href="../../examples/mono/1.0/Repository/SimpleApp/cs">C#</a>
 						</li>
 						<li>
 							<b>.NET 1.0</b>: 
-							<a href="../../examples/net/1.0/Repository/SimpleApp/cs">C#</a>, 
-							<a href="../../examples/net/1.0/Repository/SimpleApp/vb">VB</a>
+							<a class="localOnly" href="../../examples/net/1.0/Repository/SimpleApp/cs">C#</a>, 
+							<a class="localOnly" href="../../examples/net/1.0/Repository/SimpleApp/vb">VB</a>
 						</li>
 						<li>
 							<b>.NET 1.1</b>: 
-							<a href="../../examples/net/1.1/Repository/SimpleApp/js">JavaScript</a>
+							<a class="localOnly" href="../../examples/net/1.1/Repository/SimpleApp/js">JScript.NET</a>
 						</li>
 						<li>
 							<b>SSCLI 1.0</b>: 
-							<a href="../../examples/sscli/1.0/Repository/SimpleApp/cs">C#</a>
+							<a class="localOnly" href="../../examples/sscli/1.0/Repository/SimpleApp/cs">C#</a>
 						</li>
 					</ul>
                                                 <p>
-						To run this example execute the <span class="code">SimpleApp.exe</span> from the build output directory.
+						To run this example execute <span class="code">SimpleApp.exe</span> from the build output directory.
 					</p>
                       </div>
                                                     <h3><a id="eventidlogapp"></a>Extensibility - EventIDLogApp</h3>
@@ -407,11 +446,11 @@ limitations under the License.
                                                 <ul>
 						<li>
 							<b>.NET 1.0</b>: 
-							<a href="../../examples/net/1.0/Extensibility/EventIDLogApp/cs">C#</a>
+							<a class="localOnly" href="../../examples/net/1.0/Extensibility/EventIDLogApp/cs">C#</a>
 						</li>
 					</ul>
                                                 <p>
-						To run this example execute the <span class="code">EventIDLogApp.exe</span> from the build output directory.
+						To run this example execute <span class="code">EventIDLogApp.exe</span> from the build output directory.
 					</p>
                       </div>
                                                     <h3><a id="tracelogapp"></a>Extensibility - TraceLogApp</h3>
@@ -429,11 +468,11 @@ limitations under the License.
                                                 <ul>
 						<li>
 							<b>.NET 1.0</b>: 
-							<a href="../../examples/net/1.0/Extensibility/TraceLogApp/cs">C#</a>
+							<a class="localOnly" href="../../examples/net/1.0/Extensibility/TraceLogApp/cs">C#</a>
 						</li>
 					</ul>
                                                 <p>
-						To run this example execute the <span class="code">TraceLogApp.exe</span> from the build output directory.
+						To run this example execute <span class="code">TraceLogApp.exe</span> from the build output directory.
 					</p>
                       </div>
                                                     <h3><a id="sampleappenders"></a>SampleAppenders</h3>
@@ -443,6 +482,12 @@ limitations under the License.
 					</p>
                                                 <ul>
 						<li>
+							AsyncAppender
+						</li>
+						<li>
+							FastDbAppender
+						</li>
+						<li>
 							FireEventAppender
 						</li>
 						<li>
@@ -450,6 +495,12 @@ limitations under the License.
 						</li>
 						<li>
 							MessageObjectExpanderAppender
+						</li>
+						<li>
+							MsmqAppender
+						</li>
+						<li>
+							PatternFileAppender
 						</li>
 						<li>
 							SimpleSmtpAppender
@@ -463,11 +514,39 @@ limitations under the License.
                                                 <ul>
 						<li>
 							<b>.NET 1.0</b>: 
-							<a href="../../examples/net/1.0/Appenders/SampleAppendersApp/cs">C#</a>
+							<a class="localOnly" href="../../examples/net/1.0/Appenders/SampleAppendersApp/cs">C#</a>
 						</li>
 					</ul>
                                                 <p>
-						To run this example execute the <span class="code">SampleAppendersApp.exe</span> from the build output directory.
+						To run this example execute <span class="code">SampleAppendersApp.exe</span> from the build output directory.
+					</p>
+                      </div>
+                                                    <h3><a id="samplelayouts"></a>SampleLayouts</h3>
+    <div class="i1">
+                                    <p>
+						This project includes the following example layouts.
+					</p>
+                                                <ul>
+						<li>
+							ForwardingLayout
+						</li>
+						<li>
+							LineWrappingLayout
+						</li>
+					</ul>
+                                                <p>
+						This example is available for the following platforms and languages. If a version
+						is not available for your chosen platform and language combination then select the
+						nearest platform for the appropriate language.
+					</p>
+                                                <ul>
+						<li>
+							<b>.NET 1.0</b>: 
+							<a class="localOnly" href="../../examples/net/1.0/Layouts/SampleLayoutsApp/cs">C#</a>
+						</li>
+					</ul>
+                                                <p>
+						To run this example execute <span class="code">SampleLayoutsApp.exe</span> from the build output directory.
 					</p>
                       </div>
                                                     <h3><a id="perf-notlogging"></a>Performance - NotLogging</h3>
@@ -484,12 +563,12 @@ limitations under the License.
                                                 <ul>
 						<li>
 							<b>MONO 1.0</b>: 
-							<a href="../../examples/mono/1.0/Performance/NotLogging/cs">C#</a>
+							<a class="localOnly" href="../../examples/mono/1.0/Performance/NotLogging/cs">C#</a>
 						</li>
 						<li>
 							<b>.NET 1.0</b>: 
-							<a href="../../examples/net/1.0/Performance/NotLogging/cs">C#</a>, 
-							<a href="../../examples/net/1.0/Performance/NotLogging/vb">VB</a>
+							<a class="localOnly" href="../../examples/net/1.0/Performance/NotLogging/cs">C#</a>, 
+							<a class="localOnly" href="../../examples/net/1.0/Performance/NotLogging/vb">VB</a>
 						</li>
 					</ul>
                                                 <p>
