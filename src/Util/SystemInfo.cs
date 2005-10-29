@@ -302,49 +302,31 @@ namespace log4net.Util
 			}
 		}
 
-		private static DateTime s_processStartTime = DateTime.MinValue;
+		private static DateTime s_processStartTime = DateTime.Now;
 
 		/// <summary>
 		/// Get the start time for the current process.
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// Tries to get the start time for the current process.
-		/// Failing that it returns the time of the first call to
-		/// this property.
+		/// This is the time at which the log4net library was loaded into the
+		/// AppDomain. Due to reports of a hang in the call to <see cref="System.Diagnostics.Process.StartTime"/>
+		/// this is not the start time for the current process.
+		/// </para>
+		/// <para>
+		/// The log4net library should be loaded by an application early during its
+		/// startup, therefore this start time should be a good approximation for
+		/// the actual start time.
 		/// </para>
 		/// <para>
 		/// Note that AppDomains may be loaded and unloaded within the
-		/// same process without the process terminating and therefore
-		/// without the process start time being reset.
+		/// same process without the process terminating, however this start time
+		/// will be set per AppDomain.
 		/// </para>
 		/// </remarks>
 		public static DateTime ProcessStartTime
 		{
-			get
-			{
-				if (s_processStartTime == DateTime.MinValue)
-				{
-#if (NETCF || SSCLI)
-					// NETCF does not have the System.Diagnostics.Process class
-					// SSCLI does not support StartTime property in System.Diagnostics.Process
-
-					// Use the time of the first call as the start time
-					s_processStartTime = DateTime.Now;
-#else
-					try
-					{
-						s_processStartTime = System.Diagnostics.Process.GetCurrentProcess().StartTime;
-					}
-					catch
-					{
-						// Unable to get the start time, use now as the start time
-						s_processStartTime = DateTime.Now;
-					}
-#endif
-				}
-				return s_processStartTime;
-			}
+			get { return s_processStartTime; }
 		}
 
 		#endregion Public Static Properties
