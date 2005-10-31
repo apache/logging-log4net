@@ -879,7 +879,7 @@ namespace log4net.Repository.Hierarchy
 		protected object ConvertStringTo(Type type, string value)
 		{
 			// Hack to allow use of Level in property
-			if (type.IsAssignableFrom(typeof(Level)))
+			if (typeof(Level) == type)
 			{
 				// Property wants a level
 				Level levelValue = m_hierarchy.LevelMap[value];

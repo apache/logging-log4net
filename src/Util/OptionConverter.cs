@@ -271,7 +271,7 @@ namespace log4net.Util
 			}
 
 			// If we want a string we already have the correct type
-			if (target == typeof(string))
+			if (typeof(string) == target || typeof(object) == target)
 			{
 				return txt;
 			}
