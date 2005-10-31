@@ -472,6 +472,26 @@ links[i].href = "#overview";
 					</p>
 				</section>
 				
+				<section id="wmiappender" name="WmiAppender">
+					<p>
+						The WmiAppender sample shows an example appender that fires events through
+						Windows Management Instrumentation. 
+					</p>
+					<p>
+						This example is available for the following platforms and languages. If a version
+						is not available for your chosen platform and language combination then select the
+						nearest platform for the appropriate language.
+					</p>
+					<ul>
+						<li>
+							<b>.NET 1.0</b>: 
+							<a class="localOnly" href="../../examples/net/1.0/Appenders/WmiAppender/cs">C#</a>
+						</li>
+					</ul>
+					<p>
+					</p>
+				</section>
+				
 			</section>
 			
 		</section>
