@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleAppendersApp", "Appen
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleLayoutsApp", "Layouts\SampleLayoutsApp\cs\src\SampleLayoutsApp.csproj", "{CD7A8094-D383-46BC-A75D-9F65F746E24F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WmiAppender", "Appenders\WmiAppender\cs\src\WmiAppender.csproj", "{BE56F892-37BA-489C-A91D-F2761FDB96EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		ConfigName.0 = Debug
@@ -85,6 +87,10 @@ Global
 		{CD7A8094-D383-46BC-A75D-9F65F746E24F}.Debug.Build.0 = Debug|.NET
 		{CD7A8094-D383-46BC-A75D-9F65F746E24F}.Release.ActiveCfg = Release|.NET
 		{CD7A8094-D383-46BC-A75D-9F65F746E24F}.Release.Build.0 = Release|.NET
+		{BE56F892-37BA-489C-A91D-F2761FDB96EF}.Debug.ActiveCfg = Debug|.NET
+		{BE56F892-37BA-489C-A91D-F2761FDB96EF}.Debug.Build.0 = Debug|.NET
+		{BE56F892-37BA-489C-A91D-F2761FDB96EF}.Release.ActiveCfg = Release|.NET
+		{BE56F892-37BA-489C-A91D-F2761FDB96EF}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

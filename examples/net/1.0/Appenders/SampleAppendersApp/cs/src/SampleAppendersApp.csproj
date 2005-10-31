@@ -89,6 +89,11 @@
                     AssemblyName = "System.Messaging"
                     HintPath = "..\..\..\..\..\..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.0.3705\System.Messaging.dll"
                 />
+                <Reference
+                    Name = "WmiAppender"
+                    Project = "{BE56F892-37BA-489C-A91D-F2761FDB96EF}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>
