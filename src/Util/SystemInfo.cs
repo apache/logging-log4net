@@ -310,7 +310,7 @@ namespace log4net.Util
 		/// <remarks>
 		/// <para>
 		/// This is the time at which the log4net library was loaded into the
-		/// AppDomain. Due to reports of a hang in the call to <see cref="System.Diagnostics.Process.StartTime"/>
+		/// AppDomain. Due to reports of a hang in the call to <c>System.Diagnostics.Process.StartTime</c>
 		/// this is not the start time for the current process.
 		/// </para>
 		/// <para>
@@ -884,13 +884,13 @@ namespace log4net.Util
 				NameBased = 0x03,
 				Random = 0x04
 			}
-         
+
 			// constants that are used in the class
 			private class Const
 			{
 				// number of bytes in guid
 				public const int ByteArraySize = 16;
-         
+
 				// multiplex variant info
 				public const int VariantByte = 8;
 				public const int VariantByteMask = 0x3f;
@@ -921,12 +921,12 @@ namespace log4net.Util
 				public static extern bool CryptGenRandom(
 					IntPtr hProv, int dwLen, byte[] pbBuffer);
 			}
-      
+
 			// all static methods
 			private PocketGuid()
 			{
 			}
-      
+
 			/// <summary>
 			/// Return a new System.Guid object.
 			/// </summary>
@@ -934,7 +934,7 @@ namespace log4net.Util
 			{
 				IntPtr hCryptProv = IntPtr.Zero;
 				Guid guid = Guid.Empty;
-         
+
 				try
 				{
 					// holds random bits for guid
@@ -947,14 +947,14 @@ namespace log4net.Util
 						throw new SystemException(
 							"Failed to acquire cryptography handle.");
 					}
-      
+
 					// generate a 128 bit (16 byte) cryptographically random number
 					if (!WinApi.CryptGenRandom(hCryptProv, bits.Length, bits))
 					{
 						throw new SystemException(
 							"Failed to generate cryptography random bytes.");
 					}
-            
+
 					// set the variant
 					bits[Const.VariantByte] &= Const.VariantByteMask;
 					bits[Const.VariantByte] |= 
@@ -964,7 +964,7 @@ namespace log4net.Util
 					bits[Const.VersionByte] &= Const.VersionByteMask;
 					bits[Const.VersionByte] |= 
 						((int)GuidVersion.Random << Const.VersionByteShift);
-         
+
 					// create the new System.Guid object
 					guid = new Guid(bits);
 				}
@@ -974,7 +974,7 @@ namespace log4net.Util
 					if (hCryptProv != IntPtr.Zero)
 						WinApi.CryptReleaseContext(hCryptProv, 0);
 				}
-         
+
 				return guid;
 			}
 		}
