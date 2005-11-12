@@ -773,7 +773,7 @@ namespace log4net.Config
 			/// </remarks>
 			internal static void StartWatching(ILoggerRepository repository, FileInfo configFile)
 			{
-				ConfigureAndWatchHandler watcher = new ConfigureAndWatchHandler(repository, configFile);
+				new ConfigureAndWatchHandler(repository, configFile);
 			}
 
 			/// <summary>
