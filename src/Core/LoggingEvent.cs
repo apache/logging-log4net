@@ -1211,6 +1211,8 @@ namespace log4net.Core
 		/// </remarks>
 		protected void FixVolatileData(FixFlags flags)
 		{
+			object forceCreation = null;
+
 			// determine the flags that we are actually fixing
 			FixFlags updateFlags = (FixFlags)((flags ^ m_fixFlags) & flags);
 
@@ -1219,21 +1221,21 @@ namespace log4net.Core
 				if ((updateFlags & FixFlags.Message) != 0)
 				{
 					// Force the message to be rendered
-					string forceCreation = this.RenderedMessage;
+					forceCreation = this.RenderedMessage;
 
 					m_fixFlags |= FixFlags.Message;
 				}
 				if ((updateFlags & FixFlags.Message) != 0)
 				{
 					// Force the message to be rendered
-					string forceCreation = this.RenderedMessage;
+					forceCreation = this.RenderedMessage;
 
 					m_fixFlags |= FixFlags.Message;
 				}
 				if ((updateFlags & FixFlags.ThreadName) != 0)
 				{
 					// Grab the thread name
-					string forceCreation = this.ThreadName;
+					forceCreation = this.ThreadName;
 
 					m_fixFlags |= FixFlags.ThreadName;
 				}
@@ -1241,28 +1243,28 @@ namespace log4net.Core
 				if ((updateFlags & FixFlags.LocationInfo) != 0)
 				{
 					// Force the location information to be loaded
-					LocationInfo forceCreation = this.LocationInformation;
+					forceCreation = this.LocationInformation;
 
 					m_fixFlags |= FixFlags.LocationInfo;
 				}
 				if ((updateFlags & FixFlags.UserName) != 0)
 				{
 					// Grab the user name
-					string forceCreation = this.UserName;
+					forceCreation = this.UserName;
 
 					m_fixFlags |= FixFlags.UserName;
 				}
 				if ((updateFlags & FixFlags.Domain) != 0)
 				{
 					// Grab the domain name
-					string forceCreation = this.Domain;
+					forceCreation = this.Domain;
 
 					m_fixFlags |= FixFlags.Domain;
 				}
 				if ((updateFlags & FixFlags.Identity) != 0)
 				{
 					// Grab the identity
-					string forceCreation = this.Identity;
+					forceCreation = this.Identity;
 
 					m_fixFlags |= FixFlags.Identity;
 				}
@@ -1270,7 +1272,7 @@ namespace log4net.Core
 				if ((updateFlags & FixFlags.Exception) != 0)
 				{
 					// Force the exception text to be loaded
-					string forceCreation = GetExceptionString();
+					forceCreation = GetExceptionString();
 
 					m_fixFlags |= FixFlags.Exception;
 				}
@@ -1281,6 +1283,11 @@ namespace log4net.Core
 
 					m_fixFlags |= FixFlags.Properties;
 				}
+			}
+
+			// avoid warning CS0219
+			if (forceCreation != null) 
+			{
 			}
 		}
 
