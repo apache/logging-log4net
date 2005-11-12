@@ -40,8 +40,6 @@ namespace log4net.ObjectRenderer
 	/// <author>Gert Driesen</author>
 	public sealed class DefaultRenderer : IObjectRenderer
 	{
-		private static readonly string NewLine = SystemInfo.NewLine;
-
 		#region Constructors
 
 		/// <summary>
