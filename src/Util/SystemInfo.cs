@@ -17,6 +17,7 @@
 #endregion
 
 using System;
+using System.Configuration;
 using System.Reflection;
 using System.Text;
 using System.IO;
@@ -37,6 +38,13 @@ namespace log4net.Util
 	/// <author>Alexey Solofnenko</author>
 	public sealed class SystemInfo
 	{
+		#region Private Constants
+
+		private const string DEFAULT_NULL_TEXT = "(null)";
+		private const string DEFAULT_NOT_AVAILABLE_TEXT = "NOT AVAILABLE";
+
+		#endregion
+
 		#region Private Instance Constructors
 
 		/// <summary>
@@ -52,6 +60,44 @@ namespace log4net.Util
 		}
 
 		#endregion Private Instance Constructors
+
+		#region Public Static Constructor
+
+		/// <summary>
+		/// Initialize default values for private static fields.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Only static methods are exposed from this type.
+		/// </para>
+		/// </remarks>
+		static SystemInfo()
+		{
+			string nullText = DEFAULT_NULL_TEXT;
+			string notAvailableText = DEFAULT_NOT_AVAILABLE_TEXT;
+
+#if !NETCF
+			// Look for log4net.NullText in AppSettings
+			string nullTextAppSettingsKey = ConfigurationSettings.AppSettings["log4net.NullText"];
+			if (nullTextAppSettingsKey != null && nullTextAppSettingsKey.Length > 0)
+			{
+				LogLog.Debug("SystemInfo: Initializing NullText value to [" + nullTextAppSettingsKey + "].");
+				nullText = nullTextAppSettingsKey;
+			}
+
+			// Look for log4net.NotAvailableText in AppSettings
+			string notAvailableTextAppSettingsKey = ConfigurationSettings.AppSettings["log4net.NotAvailableText"];
+			if (notAvailableTextAppSettingsKey != null && notAvailableTextAppSettingsKey.Length > 0)
+			{
+				LogLog.Debug("SystemInfo: Initializing NotAvailableText value to [" + notAvailableTextAppSettingsKey + "].");
+				notAvailableText = notAvailableTextAppSettingsKey;
+			}
+#endif
+			s_notAvailableText = nullText;
+			s_nullText = notAvailableText;
+		}
+
+		#endregion
 
 		#region Public Static Properties
 
@@ -239,7 +285,7 @@ namespace log4net.Util
 					// Couldn't find a value
 					if (s_hostName == null || s_hostName.Length == 0)
 					{
-						s_hostName = "NOT AVAILABLE";
+						s_hostName = s_notAvailableText;
 					}
 				}
 				return s_hostName;
@@ -295,14 +341,12 @@ namespace log4net.Util
 
 					if (s_appFriendlyName == null || s_appFriendlyName.Length == 0)
 					{
-						s_appFriendlyName = "NOT AVAILABLE";
+						s_appFriendlyName = s_notAvailableText;
 					}
 				}
 				return s_appFriendlyName;
 			}
 		}
-
-		private static DateTime s_processStartTime = DateTime.Now;
 
 		/// <summary>
 		/// Get the start time for the current process.
@@ -327,6 +371,35 @@ namespace log4net.Util
 		public static DateTime ProcessStartTime
 		{
 			get { return s_processStartTime; }
+		}
+
+		/// <summary>
+		/// Text to output when a <c>null</c> is encountered.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Use this value to indicate a <c>null</c> has been encountered while
+		/// outputing a string representation of an item.
+		/// </para>
+		/// </remarks>
+		public static string NullText
+		{
+			get { return s_nullText; }
+			set { s_nullText = value; }
+		}
+
+		/// <summary>
+		/// Text to output when an unsupported feature is requested.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Use this value when an unsupported feature is requested.
+		/// </para>
+		/// </remarks>
+		public static string NotAvailableText
+		{
+			get { return s_notAvailableText; }
+			set { s_notAvailableText = value; }
 		}
 
 		#endregion Public Static Properties
@@ -857,6 +930,21 @@ namespace log4net.Util
 		/// Cache the application friendly name
 		/// </summary>
 		private static string s_appFriendlyName;
+
+		/// <summary>
+		/// Text to output when a <c>null</c> is encountered.
+		/// </summary>
+		private static string s_nullText;
+
+		/// <summary>
+		/// Text to output when an unsupported feature is requested.
+		/// </summary>
+		private static string s_notAvailableText;
+
+		/// <summary>
+		/// Start time for the current process.
+		/// </summary>
+		private static DateTime s_processStartTime = DateTime.Now;
 
 		#endregion
 

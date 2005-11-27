@@ -18,6 +18,7 @@
 
 using System;
 using System.IO;
+using log4net.Util;
 
 namespace log4net.ObjectRenderer
 {
@@ -109,7 +110,7 @@ namespace log4net.ObjectRenderer
 		{
 			if (obj == null)
 			{
-				writer.Write("(null)");
+				writer.Write(SystemInfo.NullText);
 			}
 			else 
 			{

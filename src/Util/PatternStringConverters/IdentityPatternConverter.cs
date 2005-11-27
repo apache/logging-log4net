@@ -49,7 +49,7 @@ namespace log4net.Util.PatternStringConverters
 		{
 #if (NETCF || SSCLI)
 			// On compact framework there's no notion of current thread principals
-			writer.Write( "NOT AVAILABLE" );
+			writer.Write( SystemInfo.NotAvailableText );
 #else
 			try
 			{
@@ -66,7 +66,7 @@ namespace log4net.Util.PatternStringConverters
 				// some undefined set of SecurityPermission flags.
 				LogLog.Debug("IdentityPatternConverter: Security exception while trying to get current thread principal. Error Ignored.");
 
-				writer.Write( "NOT AVAILABLE" );
+				writer.Write( SystemInfo.NotAvailableText );
 			}
 #endif
 		}

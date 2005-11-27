@@ -827,7 +827,7 @@ namespace log4net.Core
 				{
 #if (NETCF || SSCLI)
 					// On compact framework there's no notion of current Windows user
-					m_data.UserName = "NOT AVAILABLE";
+					m_data.UserName = SystemInfo.NotAvailableText;
 #else
 					try
 					{
@@ -875,7 +875,7 @@ namespace log4net.Core
 				{
 #if (NETCF || SSCLI)
 					// On compact framework there's no notion of current thread principals
-					m_data.Identity = "NOT AVAILABLE";
+					m_data.Identity = SystemInfo.NotAvailableText;
 #else
 					try
 					{

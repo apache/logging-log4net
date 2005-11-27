@@ -84,7 +84,7 @@ namespace log4net.Util
 					if (stack == null)
 					{
 						// Property is not set to a stack!
-						string propertyValueString = "(null)";
+						string propertyValueString = SystemInfo.NullText;
 
 						try
 						{

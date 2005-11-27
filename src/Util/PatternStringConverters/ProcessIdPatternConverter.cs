@@ -49,7 +49,7 @@ namespace log4net.Util.PatternStringConverters
 		{
 #if (NETCF || SSCLI)
 			// On compact framework there is no System.Diagnostics.Process class
-			writer.Write( "NOT AVAILABLE" );
+			writer.Write( SystemInfo.NotAvailableText );
 #else
 			try
 			{
@@ -61,7 +61,7 @@ namespace log4net.Util.PatternStringConverters
 				// some undefined set of SecurityPermission flags.
 				LogLog.Debug("ProcessIdPatternConverter: Security exception while trying to get current process id. Error Ignored.");
 
-				writer.Write( "NOT AVAILABLE" );
+				writer.Write( SystemInfo.NotAvailableText );
 			}
 #endif
 		}

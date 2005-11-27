@@ -142,7 +142,7 @@ namespace log4net.ObjectRenderer
 
 			if (obj == null)
 			{
-				writer.Write("(null)");
+				writer.Write(SystemInfo.NullText);
 				return;
 			}
 			
@@ -167,7 +167,7 @@ namespace log4net.ObjectRenderer
 			}
 
 			string str = obj.ToString();
-			writer.Write( (str==null) ? "(null)" : str );
+			writer.Write( (str==null) ? SystemInfo.NullText : str );
 		}
 
 		#endregion

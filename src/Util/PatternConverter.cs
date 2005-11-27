@@ -339,7 +339,7 @@ namespace log4net.Util
 				// Don't have a repository to render with so just have to rely on ToString
 				if (value == null)
 				{
-					writer.Write( "(null)" );
+					writer.Write( SystemInfo.NullText );
 				}
 				else
 				{
