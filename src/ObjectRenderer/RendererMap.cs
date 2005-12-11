@@ -32,7 +32,7 @@ namespace log4net.ObjectRenderer
 	/// is used to render them.
 	/// </para>
 	/// <para>
-	/// The <see cref="FindAndRender"/> method is used to render an
+	/// The <see cref="FindAndRender(object)"/> method is used to render an
 	/// <c>object</c> using the appropriate renderers defined in this map.
 	/// </para>
 	/// </remarks>
@@ -300,7 +300,7 @@ namespace log4net.ObjectRenderer
 		/// <remarks>
 		/// <para>
 		/// Register an object renderer for a specific source type.
-		/// This renderer will be returned from a call to <see cref="Get"/>
+		/// This renderer will be returned from a call to <see cref="Get(Type)"/>
 		/// specifying the same <paramref name="typeToRender"/> as an argument.
 		/// </para>
 		/// </remarks>

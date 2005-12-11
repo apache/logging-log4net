@@ -173,8 +173,8 @@ namespace log4net.Core
 		/// <returns><c>true</c> if the repository exists</returns>
 		/// <remarks>
 		/// <para>
-		/// Test if a named repository exists. Use <see cref="CreateRepository"/>
-		/// to create a new repository and <see cref="GetRepository"/> to retrieve 
+		/// Test if a named repository exists. Use <see cref="CreateRepository(Assembly, Type)"/>
+		/// to create a new repository and <see cref="GetRepository(Assembly)"/> to retrieve 
 		/// a repository.
 		/// </para>
 		/// </remarks>

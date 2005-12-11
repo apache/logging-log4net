@@ -281,7 +281,7 @@ namespace log4net.Util
 		}
 
 		/// <summary>
-		/// See <see cref="IDictionary.this"/>
+		/// See <see cref="IDictionary.this[object]"/>
 		/// </summary>
 		object IDictionary.this[object key]
 		{

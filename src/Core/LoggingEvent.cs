@@ -348,7 +348,7 @@ namespace log4net.Core
 		/// be useful if you require a custom serialization scheme.
 		/// </para>
 		/// <para>
-		/// Use the <see cref="GetLoggingEventData"/> method to obtain an 
+		/// Use the <see cref="GetLoggingEventData(FixFlags)"/> method to obtain an 
 		/// instance of the <see cref="LoggingEventData"/> class.
 		/// </para>
 		/// <para>
@@ -381,7 +381,7 @@ namespace log4net.Core
 		/// be useful if you require a custom serialization scheme.
 		/// </para>
 		/// <para>
-		/// Use the <see cref="GetLoggingEventData"/> method to obtain an 
+		/// Use the <see cref="GetLoggingEventData(FixFlags)"/> method to obtain an 
 		/// instance of the <see cref="LoggingEventData"/> class.
 		/// </para>
 		/// <para>
@@ -406,7 +406,7 @@ namespace log4net.Core
 		/// be useful if you require a custom serialization scheme.
 		/// </para>
 		/// <para>
-		/// Use the <see cref="GetLoggingEventData"/> method to obtain an 
+		/// Use the <see cref="GetLoggingEventData(FixFlags)"/> method to obtain an 
 		/// instance of the <see cref="LoggingEventData"/> class.
 		/// </para>
 		/// <para>
@@ -1005,7 +1005,7 @@ namespace log4net.Core
 		/// The data in this event must be fixed before it can be serialized.
 		/// </para>
 		/// <para>
-		/// The <see cref="FixVolatileData"/> method must be called during the
+		/// The <see cref="FixVolatileData()"/> method must be called during the
 		/// <see cref="log4net.Appender.IAppender.DoAppend"/> method call if this event 
 		/// is to be used outside that method.
 		/// </para>

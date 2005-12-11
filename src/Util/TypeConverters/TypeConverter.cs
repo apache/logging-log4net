@@ -60,7 +60,7 @@ namespace log4net.Util.TypeConverters
 		/// <returns>the Type</returns>
 		/// <remarks>
 		/// <para>
-		/// Uses the <see cref="Type.GetType"/> method to convert the
+		/// Uses the <see cref="Type.GetType(string,bool)"/> method to convert the
 		/// <see cref="String"/> argument to a <see cref="Type"/>.
 		/// Additional effort is made to locate partially specified types
 		/// by searching the loaded assemblies.

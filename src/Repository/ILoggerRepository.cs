@@ -80,7 +80,7 @@ namespace log4net.Repository
 	/// <remarks>
 	/// <para>
 	/// This interface is implemented by logger repositories. e.g. 
-	/// <see cref="Hierarchy"/>.
+	/// <see cref="Hierarchy.Hierarchy"/>.
 	/// </para>
 	/// <para>
 	/// This interface is used by the <see cref="LogManager"/>

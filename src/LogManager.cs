@@ -30,8 +30,8 @@ namespace log4net
 	/// <remarks>
 	/// <para>
 	/// This class has static methods that are used by a client to request
-	/// a logger instance. The <see cref="GetLogger"/> method is used to
-	/// retrieve a logger.
+	/// a logger instance. The <see cref="GetLogger(string)"/> method is 
+	/// used to retrieve a logger.
 	/// </para>
 	/// <para>
 	/// See the <see cref="ILog"/> interface for more details.

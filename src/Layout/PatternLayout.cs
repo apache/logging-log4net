@@ -127,7 +127,7 @@ namespace log4net.Layout
 	/// 			</para>
 	/// 			<para>
 	/// 			The date format specifier admits the same syntax as the
-	/// 			time pattern string of the <see cref="DateTime.ToString"/>.
+	/// 			time pattern string of the <see cref="DateTime.ToString(string)"/>.
 	/// 			</para>
 	/// 			<para>
 	/// 			For better results it is recommended to use the log4net date
@@ -488,7 +488,7 @@ namespace log4net.Layout
 	/// 			</para>
 	/// 			<para>
 	/// 			The date format specifier admits the same syntax as the
-	/// 			time pattern string of the <see cref="DateTime.ToString"/>.
+	/// 			time pattern string of the <see cref="DateTime.ToString(string)"/>.
 	/// 			</para>
 	/// 			<para>
 	/// 			For better results it is recommended to use the log4net date
@@ -673,7 +673,7 @@ namespace log4net.Layout
 	/// </note>
 	/// <para>
 	/// Additional pattern converters may be registered with a specific <see cref="PatternLayout"/>
-	/// instance using the <see cref="AddConverter"/> methods.
+	/// instance using the <see cref="AddConverter(string, Type)"/> method.
 	/// </para>
 	/// </remarks>
 	/// <example>

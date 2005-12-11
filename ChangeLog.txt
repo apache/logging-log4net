@@ -1,3 +1,157 @@
+2005-12-11 10:00 drieseng
+
+	* Repository/ILoggerRepository.cs:
+
+	Modified cref to point to Hierarchy class instead of Hierarchy 
+	namespace.
+
+	* Repository/Hierarchy/Hierarchy.cs:
+
+	Fixed ambiguous reference in XML doc.
+
+	* LogManager.cs:
+
+	Fixed ambiguous reference in XML doc.
+
+	* Filter/LoggerMatchFilter.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Core/ErrorCode.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Core/DefaultRepositorySelector.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Core/CompactRepositorySelector.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Core/LoggingEvent.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Core/IRepositorySelector.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Core/LogImpl.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* ObjectRenderer/DefaultRenderer.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* ObjectRenderer/RendererMap.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* ObjectRenderer/IObjectRenderer.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Appender/RemoteSyslogAppender.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Appender/ConsoleAppender.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Appender/MemoryAppender.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Appender/AspNetTraceAppender.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Appender/BufferingAppenderSkeleton.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Appender/FileAppender.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Appender/TextWriterAppender.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Appender/EventLogAppender.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Appender/AppenderSkeleton.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Appender/AnsiColorTerminalAppender.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Appender/UdpAppender.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Appender/LocalSyslogAppender.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* ILog.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* DateFormatter/SimpleDateFormatter.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Config/XmlConfiguratorAttribute.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Util/ReadOnlyPropertiesDictionary.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Util/TypeConverters/PatternStringConverter.cs:
+
+	Fixed ambiguous reference in XML doc.
+
+	* Util/TypeConverters/EncodingConverter.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Util/TypeConverters/ConverterRegistry.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Util/TypeConverters/TypeConverter.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Util/PatternString.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* Layout/PatternLayout.cs:
+
+	Fixed ambiguous references in XML doc.
+
+	* log4net.include:
+
+	Added support for Mono 2.0 profile.
+
+	* log4net.build:
+
+	-Added support for Mono 2.0 profile.
+	-Require .NET 2.0 and Mono 2.0 for building release.
+	-Use /keyfile compiler option introduced in .NET 2.0 and Mono 
+	 (1.0 & 2.0) to specify path to log4net.snk, as this is the only
+	 way to specify this path in a platform independent way.
 
 =============================================================================
 Version 1.2.9 BETA

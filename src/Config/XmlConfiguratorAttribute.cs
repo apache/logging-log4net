@@ -70,7 +70,7 @@ namespace log4net.Config
 	/// <para>
 	/// If you cannot guarantee the order in which log4net calls will be made from 
 	/// different assemblies you must use programmatic configuration instead, i.e.
-	/// call the <see cref="XmlConfigurator.Configure"/> method directly.
+	/// call the <see cref="XmlConfigurator.Configure()"/> method directly.
 	/// </para>
 	/// </note>
 	/// </remarks>

@@ -64,12 +64,12 @@ namespace log4net.Appender
 
 		/// <summary>
 		/// Finalizes this appender by calling the implementation's 
-		/// <see cref="AppenderSkeleton.Close"/> method.
+		/// <see cref="Close"/> method.
 		/// </summary>
 		/// <remarks>
 		/// <para>
 		/// If this appender has not been closed then the <c>Finalize</c> method
-		/// will call <see cref="AppenderSkeleton.Close"/>.
+		/// will call <see cref="Close"/>.
 		/// </para>
 		/// </remarks>
 		~AppenderSkeleton() 
@@ -248,13 +248,13 @@ namespace log4net.Appender
 		/// <summary>
 		/// Performs threshold checks and invokes filters before 
 		/// delegating actual logging to the subclasses specific 
-		/// <see cref="AppenderSkeleton.Append(LoggingEvent)"/> method.
+		/// <see cref="Append(LoggingEvent)"/> method.
 		/// </summary>
 		/// <param name="loggingEvent">The event to log.</param>
 		/// <remarks>
 		/// <para>
 		/// This method cannot be overridden by derived classes. A
-		/// derived class should override the <see cref="Append"/> method
+		/// derived class should override the <see cref="Append(LoggingEvent)"/> method
 		/// which is called by this method.
 		/// </para>
 		/// <para>
@@ -270,7 +270,7 @@ namespace log4net.Appender
 		///		</item>
 		///		<item>
 		///			<description>
-		///			Checks that the <see cref="Filter"/> chain accepts the 
+		///			Checks that the <see cref="IFilter"/> chain accepts the 
 		///			<paramref name="loggingEvent"/>.
 		///			</description>
 		///		</item>
@@ -283,7 +283,7 @@ namespace log4net.Appender
 		/// </para>
 		/// <para>
 		/// If all of the above steps succeed then the <paramref name="loggingEvent"/>
-		/// will be passed to the abstract <see cref="Append"/> method.
+		/// will be passed to the abstract <see cref="Append(LoggingEvent)"/> method.
 		/// </para>
 		/// </remarks>
 		public void DoAppend(LoggingEvent loggingEvent) 
@@ -345,13 +345,13 @@ namespace log4net.Appender
 		/// <summary>
 		/// Performs threshold checks and invokes filters before 
 		/// delegating actual logging to the subclasses specific 
-		/// <see cref="AppenderSkeleton.Append(LoggingEvent[])"/> method.
+		/// <see cref="Append(LoggingEvent[])"/> method.
 		/// </summary>
 		/// <param name="loggingEvents">The array of events to log.</param>
 		/// <remarks>
 		/// <para>
 		/// This method cannot be overridden by derived classes. A
-		/// derived class should override the <see cref="Append"/> method
+		/// derived class should override the <see cref="Append(LoggingEvent[])"/> method
 		/// which is called by this method.
 		/// </para>
 		/// <para>
@@ -367,7 +367,7 @@ namespace log4net.Appender
 		///		</item>
 		///		<item>
 		///			<description>
-		///			Checks that the <see cref="Filter"/> chain accepts the 
+		///			Checks that the <see cref="IFilter"/> chain accepts the 
 		///			<paramref name="loggingEvent"/>.
 		///			</description>
 		///		</item>
@@ -380,7 +380,7 @@ namespace log4net.Appender
 		/// </para>
 		/// <para>
 		/// If all of the above steps succeed then the <paramref name="loggingEvents"/>
-		/// will be passed to the <see cref="Append"/> method.
+		/// will be passed to the <see cref="Append(LoggingEvent[])"/> method.
 		/// </para>
 		/// </remarks>
 		public void DoAppend(LoggingEvent[] loggingEvents) 
@@ -471,7 +471,7 @@ namespace log4net.Appender
 		///		</item>
 		///		<item>
 		///			<description>
-		///			Checks that the <see cref="Filter"/> chain accepts the 
+		///			Checks that the <see cref="IFilter"/> chain accepts the 
 		///			<paramref name="loggingEvent"/>.
 		///			</description>
 		///		</item>
@@ -603,7 +603,7 @@ namespace log4net.Appender
 		/// A subclass must implement this method to perform
 		/// logging of the <paramref name="loggingEvent"/>.
 		/// </para>
-		/// <para>This method will be called by <see cref="AppenderSkeleton.DoAppend"/>
+		/// <para>This method will be called by <see cref="DoAppend(LoggingEvent)"/>
 		/// if all the conditions listed for that method are met.
 		/// </para>
 		/// <para>
@@ -636,23 +636,23 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
-		/// Called before <see cref="Append"/> as a precondition.
+		/// Called before <see cref="Append(LoggingEvent)"/> as a precondition.
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// This method is called by <see cref="AppenderSkeleton.DoAppend"/>
-		/// before the call to the abstract <see cref="Append"/> method.
+		/// This method is called by <see cref="DoAppend(LoggingEvent)"/>
+		/// before the call to the abstract <see cref="Append(LoggingEvent)"/> method.
 		/// </para>
 		/// <para>
 		/// This method can be overridden in a subclass to extend the checks 
-		/// made before the event is passed to the <see cref="Append"/> method.
+		/// made before the event is passed to the <see cref="Append(LoggingEvent)"/> method.
 		/// </para>
 		/// <para>
 		/// A subclass should ensure that they delegate this call to
 		/// this base class if it is overridden.
 		/// </para>
 		/// </remarks>
-		/// <returns><c>true</c> if the call to <see cref="Append"/> should proceed.</returns>
+		/// <returns><c>true</c> if the call to <see cref="Append(LoggingEvent)"/> should proceed.</returns>
 		virtual protected bool PreAppendCheck()
 		{
 			if ((m_layout == null) && RequiresLayout)
@@ -830,7 +830,7 @@ namespace log4net.Appender
 		/// Set to <c>null</c> initially.
 		/// </para>
 		/// <para>
-		/// See <see cref="Filter"/> for more information.
+		/// See <see cref="IFilter"/> for more information.
 		/// </para>
 		/// </remarks>
 		private IFilter m_headFilter;
@@ -839,7 +839,7 @@ namespace log4net.Appender
 		/// The last filter in the filter chain.
 		/// </summary>
 		/// <remarks>
-		/// See <see cref="Filter"/> for more information.
+		/// See <see cref="IFilter"/> for more information.
 		/// </remarks>
 		private IFilter m_tailFilter;
 

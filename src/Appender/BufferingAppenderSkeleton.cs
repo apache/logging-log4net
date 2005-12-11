@@ -216,7 +216,7 @@ namespace log4net.Appender
 		/// event data to be fixed and serialized. This will improve performance.
 		/// </para>
 		/// <para>
-		/// See <see cref="LoggingEvent.FixVolatileData(bool)"/> for more information.
+		/// See <see cref="LoggingEvent.FixVolatileData(FixFlags)"/> for more information.
 		/// </para>
 		/// </remarks>
 		[Obsolete("Use Fix property")]
@@ -411,7 +411,7 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
-		/// This method is called by the <see cref="AppenderSkeleton.DoAppend"/> method. 
+		/// This method is called by the <see cref="AppenderSkeleton.DoAppend(LoggingEvent)"/> method. 
 		/// </summary>
 		/// <param name="loggingEvent">the event to log</param>
 		/// <remarks>
@@ -435,7 +435,7 @@ namespace log4net.Appender
 		/// </list>
 		/// <para>
 		/// Before the event is stored in the buffer it is fixed
-		/// (see <see cref="LoggingEvent.FixVolatileData()"/>) to ensure that
+		/// (see <see cref="LoggingEvent.FixVolatileData(FixFlags)"/>) to ensure that
 		/// any data referenced by the event will be valid when the buffer
 		/// is processed.
 		/// </para>

@@ -202,7 +202,7 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
-		/// This method is called by the <see cref="AppenderSkeleton.DoAppend"/>
+		/// This method is called by the <see cref="AppenderSkeleton.DoAppend(LoggingEvent)"/>
 		/// method. 
 		/// </summary>
 		/// <param name="loggingEvent">The event to log.</param>
@@ -226,7 +226,7 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
-		/// This method is called by the <see cref="AppenderSkeleton.DoAppend"/>
+		/// This method is called by the <see cref="AppenderSkeleton.DoAppend(LoggingEvent[])"/>
 		/// method. 
 		/// </summary>
 		/// <param name="loggingEvents">The array of events to log.</param>

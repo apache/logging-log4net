@@ -39,7 +39,7 @@ namespace log4net.Core
 	///   <item>
 	///     <term>DEBUG</term>
 	///     <description>
-	///     The <see cref="Debug"/> and <see cref="DebugFormat"/> methods log messages
+	///     The <see cref="Debug(object)"/> and <see cref="DebugFormat(string, object[])"/> methods log messages
 	///     at the <c>DEBUG</c> level. That is the level with that name defined in the
 	///     repositories <see cref="ILoggerRepository.LevelMap"/>. The default value
 	///     for this level is <see cref="Level.Debug"/>. The <see cref="IsDebugEnabled"/>
@@ -49,7 +49,7 @@ namespace log4net.Core
 	///   <item>
 	///     <term>INFO</term>
 	///     <description>
-	///     The <see cref="Info"/> and <see cref="InfoFormat"/> methods log messages
+	///     The <see cref="Info(object)"/> and <see cref="InfoFormat(string, object[])"/> methods log messages
 	///     at the <c>INFO</c> level. That is the level with that name defined in the
 	///     repositories <see cref="ILoggerRepository.LevelMap"/>. The default value
 	///     for this level is <see cref="Level.Info"/>. The <see cref="IsInfoEnabled"/>
@@ -59,7 +59,7 @@ namespace log4net.Core
 	///   <item>
 	///     <term>WARN</term>
 	///     <description>
-	///     The <see cref="Warn"/> and <see cref="WarnFormat"/> methods log messages
+	///     The <see cref="Warn(object)"/> and <see cref="WarnFormat(string, object[])"/> methods log messages
 	///     at the <c>WARN</c> level. That is the level with that name defined in the
 	///     repositories <see cref="ILoggerRepository.LevelMap"/>. The default value
 	///     for this level is <see cref="Level.Warn"/>. The <see cref="IsWarnEnabled"/>
@@ -69,7 +69,7 @@ namespace log4net.Core
 	///   <item>
 	///     <term>ERROR</term>
 	///     <description>
-	///     The <see cref="Error"/> and <see cref="ErrorFormat"/> methods log messages
+	///     The <see cref="Error(object)"/> and <see cref="ErrorFormat(string, object[])"/> methods log messages
 	///     at the <c>ERROR</c> level. That is the level with that name defined in the
 	///     repositories <see cref="ILoggerRepository.LevelMap"/>. The default value
 	///     for this level is <see cref="Level.Error"/>. The <see cref="IsErrorEnabled"/>
@@ -79,7 +79,7 @@ namespace log4net.Core
 	///   <item>
 	///     <term>FATAL</term>
 	///     <description>
-	///     The <see cref="Fatal"/> and <see cref="FatalFormat"/> methods log messages
+	///     The <see cref="Fatal(object)"/> and <see cref="FatalFormat(string, object[])"/> methods log messages
 	///     at the <c>FATAL</c> level. That is the level with that name defined in the
 	///     repositories <see cref="ILoggerRepository.LevelMap"/>. The default value
 	///     for this level is <see cref="Level.Fatal"/>. The <see cref="IsFatalEnabled"/>
@@ -196,7 +196,7 @@ namespace log4net.Core
 		/// <param name="args">An Object array containing zero or more objects to format</param>
 		/// <remarks>
 		/// <para>
-		/// The message is formatted using the <see cref="String.Format"/> method. See
+		/// The message is formatted using the <see cref="String.Format(IFormatProvider, string, object[])"/> method. See
 		/// <c>String.Format</c> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
@@ -207,7 +207,7 @@ namespace log4net.Core
 		/// </para>
 		/// <para>
 		/// This method does not take an <see cref="Exception"/> object to include in the
-		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Debug"/>
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Debug(object)"/>
 		/// methods instead.
 		/// </para>
 		/// </remarks>
@@ -227,13 +227,13 @@ namespace log4net.Core
 		/// <param name="args">An Object array containing zero or more objects to format</param>
 		/// <remarks>
 		/// <para>
-		/// The message is formatted using the <see cref="String.Format"/> method. See
+		/// The message is formatted using the <see cref="String.Format(IFormatProvider, string, object[])"/> method. See
 		/// <c>String.Format</c> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
 		/// This method does not take an <see cref="Exception"/> object to include in the
-		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Debug"/>
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Debug(object)"/>
 		/// methods instead.
 		/// </para>
 		/// </remarks>
@@ -301,7 +301,7 @@ namespace log4net.Core
 		/// <param name="args">An Object array containing zero or more objects to format</param>
 		/// <remarks>
 		/// <para>
-		/// The message is formatted using the <see cref="String.Format"/> method. See
+		/// The message is formatted using the <see cref="String.Format(IFormatProvider, string, object[])"/> method. See
 		/// <c>String.Format</c> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
@@ -312,7 +312,7 @@ namespace log4net.Core
 		/// </para>
 		/// <para>
 		/// This method does not take an <see cref="Exception"/> object to include in the
-		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Info"/>
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Info(object)"/>
 		/// methods instead.
 		/// </para>
 		/// </remarks>
@@ -332,13 +332,13 @@ namespace log4net.Core
 		/// <param name="args">An Object array containing zero or more objects to format</param>
 		/// <remarks>
 		/// <para>
-		/// The message is formatted using the <see cref="String.Format"/> method. See
+		/// The message is formatted using the <see cref="String.Format(IFormatProvider, string, object[])"/> method. See
 		/// <c>String.Format</c> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
 		/// This method does not take an <see cref="Exception"/> object to include in the
-		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Info"/>
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Info(object)"/>
 		/// methods instead.
 		/// </para>
 		/// </remarks>
@@ -406,7 +406,7 @@ namespace log4net.Core
 		/// <param name="args">An Object array containing zero or more objects to format</param>
 		/// <remarks>
 		/// <para>
-		/// The message is formatted using the <see cref="String.Format"/> method. See
+		/// The message is formatted using the <see cref="String.Format(IFormatProvider, string, object[])"/> method. See
 		/// <c>String.Format</c> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
@@ -417,7 +417,7 @@ namespace log4net.Core
 		/// </para>
 		/// <para>
 		/// This method does not take an <see cref="Exception"/> object to include in the
-		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Warn"/>
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Warn(object)"/>
 		/// methods instead.
 		/// </para>
 		/// </remarks>
@@ -437,13 +437,13 @@ namespace log4net.Core
 		/// <param name="args">An Object array containing zero or more objects to format</param>
 		/// <remarks>
 		/// <para>
-		/// The message is formatted using the <see cref="String.Format"/> method. See
+		/// The message is formatted using the <see cref="String.Format(IFormatProvider, string, object[])"/> method. See
 		/// <c>String.Format</c> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
 		/// This method does not take an <see cref="Exception"/> object to include in the
-		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Warn"/>
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Warn(object)"/>
 		/// methods instead.
 		/// </para>
 		/// </remarks>
@@ -511,7 +511,7 @@ namespace log4net.Core
 		/// <param name="args">An Object array containing zero or more objects to format</param>
 		/// <remarks>
 		/// <para>
-		/// The message is formatted using the <see cref="String.Format"/> method. See
+		/// The message is formatted using the <see cref="String.Format(IFormatProvider, string, object[])"/> method. See
 		/// <c>String.Format</c> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
@@ -522,7 +522,7 @@ namespace log4net.Core
 		/// </para>
 		/// <para>
 		/// This method does not take an <see cref="Exception"/> object to include in the
-		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Error"/>
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Error(object)"/>
 		/// methods instead.
 		/// </para>
 		/// </remarks>
@@ -542,13 +542,13 @@ namespace log4net.Core
 		/// <param name="args">An Object array containing zero or more objects to format</param>
 		/// <remarks>
 		/// <para>
-		/// The message is formatted using the <see cref="String.Format"/> method. See
+		/// The message is formatted using the <see cref="String.Format(IFormatProvider, string, object[])"/> method. See
 		/// <c>String.Format</c> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
 		/// This method does not take an <see cref="Exception"/> object to include in the
-		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Error"/>
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Error(object)"/>
 		/// methods instead.
 		/// </para>
 		/// </remarks>
@@ -616,7 +616,7 @@ namespace log4net.Core
 		/// <param name="args">An Object array containing zero or more objects to format</param>
 		/// <remarks>
 		/// <para>
-		/// The message is formatted using the <see cref="String.Format"/> method. See
+		/// The message is formatted using the <see cref="String.Format(IFormatProvider, string, object[])"/> method. See
 		/// <c>String.Format</c> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
@@ -627,7 +627,7 @@ namespace log4net.Core
 		/// </para>
 		/// <para>
 		/// This method does not take an <see cref="Exception"/> object to include in the
-		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Fatal"/>
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Fatal(object)"/>
 		/// methods instead.
 		/// </para>
 		/// </remarks>
@@ -647,13 +647,13 @@ namespace log4net.Core
 		/// <param name="args">An Object array containing zero or more objects to format</param>
 		/// <remarks>
 		/// <para>
-		/// The message is formatted using the <see cref="String.Format"/> method. See
+		/// The message is formatted using the <see cref="String.Format(IFormatProvider, string, object[])"/> method. See
 		/// <c>String.Format</c> for details of the syntax of the format string and the behavior
 		/// of the formatting.
 		/// </para>
 		/// <para>
 		/// This method does not take an <see cref="Exception"/> object to include in the
-		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Fatal"/>
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Fatal(object)"/>
 		/// methods instead.
 		/// </para>
 		/// </remarks>

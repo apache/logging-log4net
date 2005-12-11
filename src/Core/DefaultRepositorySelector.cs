@@ -149,7 +149,7 @@ namespace log4net.Core
 		/// does not exist a <see cref="LogException"/> is thrown.
 		/// </para>
 		/// <para>
-		/// Use <see cref="CreateRepository(string,Type)"/> to create a repository.
+		/// Use <see cref="CreateRepository(string, Type)"/> to create a repository.
 		/// </para>
 		/// </remarks>
 		/// <exception cref="ArgumentNullException"><paramref name="repositoryName"/> is <see langword="null" />.</exception>
@@ -418,8 +418,8 @@ namespace log4net.Core
 		/// <returns><c>true</c> if the repository exists</returns>
 		/// <remarks>
 		/// <para>
-		/// Test if a named repository exists. Use <see cref="CreateRepository"/>
-		/// to create a new repository and <see cref="GetRepository"/> to retrieve 
+		/// Test if a named repository exists. Use <see cref="CreateRepository(string, Type)"/>
+		/// to create a new repository and <see cref="GetRepository(string)"/> to retrieve 
 		/// a repository.
 		/// </para>
 		/// </remarks>

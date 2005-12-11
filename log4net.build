@@ -16,7 +16,6 @@ limitations under the License.
 -->
 <project name="log4net" default="compile-all" xmlnds="http://tempuri.org/nant-vs.xsd">
     <!-- Global project settings -->
-    <!-- Global project settings -->
     <property name="log4net.basedir" value="." />
     <property name="project.build.config" value="debug" />
     <property name="project.build.package" value="false" />
@@ -113,6 +112,14 @@ limitations under the License.
         </if>
         <if test="${not framework::exists('mono-1.0')}">
             <echo message="Mono 1.0 runtime is not available." />
+        </if>
+        <!-- Mono 2.0 -->
+        <if test="${framework::exists('mono-2.0')}">
+            <property name="nant.settings.currentframework" value="mono-2.0" />
+            <call target="display-target-framework" />
+        </if>
+        <if test="${not framework::exists('mono-2.0')}">
+            <echo message="Mono 2.0 runtime is not available." />
         </if>
         <!-- SSCLI 1.0 -->
         <if test="${framework::exists('sscli-1.0')}">
@@ -217,10 +224,7 @@ limitations under the License.
         </if>
         <if test="${not framework::exists('net-2.0')}">
             <if test="${property::exists('project.build.package') and project.build.package}">
-                <!-- .NET 2.0 Build Skipped for Package
                 <fail message="The .NET Framework 2.0 is not available." />
-                -->
-                <echo message="The .NET Framework 2.0 is not available. Build skipped during package." />
             </if>
             <if test="${not(property::exists('project.build.package') and project.build.package)}">
                 <echo message="The .NET Framework 2.0 is not available. Build skipped." />
@@ -235,6 +239,17 @@ limitations under the License.
             </if>
             <if test="${not(property::exists('project.build.package') and project.build.package)}">
                 <echo message="Mono 1.0 is not available. Build skipped." />
+            </if>
+        </if>
+        <if test="${framework::exists('mono-2.0')}">
+            <call target="compile-mono-2.0" />
+        </if>
+        <if test="${not framework::exists('mono-2.0')}">
+            <if test="${property::exists('project.build.package') and project.build.package}">
+                <fail message="Mono 2.0 is not available." />
+            </if>
+            <if test="${not(property::exists('project.build.package') and project.build.package)}">
+                <echo message="Mono 2.0 is not available. Build skipped." />
             </if>
         </if>
         <if test="${framework::exists('sscli-1.0')}">
@@ -381,13 +396,9 @@ limitations under the License.
                     <property name="temp.build.skip" value="true" />
                 </if>
             </if>
-            <if test="${file::exists(log4net.basedir + '/log4net.snk')}">
-                <!-- copy the log4net key file to the location where the compiler expects it to be -->
-                <copy file="${log4net.basedir}/log4net.snk" todir="${current.bin.dir}/../../../" />
-            </if>
         </if>
         <if test="${not temp.build.skip}">
-            <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+            <csc keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
                 <sources basedir="${log4net.basedir}/src">
                     <include name="**/*.cs" />
                 </sources>
@@ -419,13 +430,9 @@ limitations under the License.
                     <property name="temp.build.skip" value="true" />
                 </if>
             </if>
-            <if test="${file::exists(log4net.basedir + '/log4net.snk')}">
-                <!-- copy the log4net key file to the location where the compiler expects it to be -->
-                <copy file="${log4net.basedir}/log4net.snk" todir="${current.bin.dir}/../../../" />
-            </if>
         </if>
         <if test="${not temp.build.skip}">
-            <csc nostdlib="false" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll">
+            <csc keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="false" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
                 <nowarn>
                     <!-- workaround for Mono bug #61902 -->
                     <warning number="0618" />
@@ -444,7 +451,44 @@ limitations under the License.
             </csc>
         </if>
     </target>
-    <target name="compile-sscli-1.0" description="Builds SSCLI 1.0 version" depends="set-sscli-1.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir">
+    <target name="compile-mono-2.0" description="Builds Mono 2.0 version" depends="set-mono-2.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir">
+        <!-- initialize the temp.build.skip property to false -->
+        <property name="temp.build.skip" value="false" />
+        <if test="${current.build.config.release}">
+            <!-- check if the log4net key file is available -->
+            <if test="${not file::exists(log4net.basedir + '/log4net.snk')}">
+                <if test="${property::exists('project.build.package') and project.build.package}">
+                    <fail message="Key file not found." />
+                </if>
+                <if test="${not(property::exists('project.build.package') and project.build.package)}">
+                    <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
+                    <echo message="The generated key file should be stored in the log4net base directory." />
+                    <echo message="The release build will be skipped." />
+                    <property name="temp.build.skip" value="true" />
+                </if>
+            </if>
+        </if>
+        <if test="${not temp.build.skip}">
+            <csc keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="false" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+                <nowarn>
+                    <!-- workaround for Mono bug #61902 -->
+                    <warning number="0618" />
+                </nowarn>
+                <sources basedir="${log4net.basedir}/src">
+                    <include name="**/*.cs" />
+                </sources>
+                <references>
+                    <include name="System.dll" />
+                    <include name="System.Data.dll" />
+                    <include name="System.Web.dll" />
+                    <include name="System.Xml.dll" />
+                    <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework family>/<framework version>/<build configuration> directory -->
+                    <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
+                </references>
+            </csc>
+        </if>
+  </target>
+  <target name="compile-sscli-1.0" description="Builds SSCLI 1.0 version" depends="set-sscli-1.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir">
         <!-- initialize the temp.build.skip property to false -->
         <property name="temp.build.skip" value="false" />
         <if test="${current.build.config.release}">

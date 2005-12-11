@@ -103,7 +103,7 @@ namespace log4net.Repository.Hierarchy
 	/// </para>
 	/// <para>
 	/// The structure of the logger hierarchy is maintained by the
-	/// <see cref="GetLogger"/> method. The hierarchy is such that children
+	/// <see cref="GetLogger(string)"/> method. The hierarchy is such that children
 	/// link to their parent but parents do not have any references to their
 	/// children. Moreover, loggers can be instantiated in any order, in
 	/// particular descendant before ancestor.

@@ -73,7 +73,7 @@ namespace log4net.Appender
 		/// <remarks>
 		/// <para>
 		/// The log4net Level maps to a syslog severity using the
-		/// <see cref="AddMapping"/> method and the <see cref="LevelSeverity"/>
+		/// <see cref="LocalSyslogAppender.AddMapping"/> method and the <see cref="LevelSeverity"/>
 		/// class. The severity is set on <see cref="LevelSeverity.Severity"/>.
 		/// </para>
 		/// </remarks>
@@ -363,7 +363,7 @@ namespace log4net.Appender
 		#region AppenderSkeleton Implementation
 
 		/// <summary>
-		/// This method is called by the <see cref="AppenderSkeleton.DoAppend"/> method.
+		/// This method is called by the <see cref="AppenderSkeleton.DoAppend(LoggingEvent)"/> method.
 		/// </summary>
 		/// <param name="loggingEvent">The event to log.</param>
 		/// <remarks>

@@ -29,7 +29,7 @@ namespace log4net.Appender
 {
 	/// <summary>
 	/// <para>
-	/// Appends log events to the ASP.NET <see cref="System.Web.TraceContext"/> system.
+	/// Appends log events to the ASP.NET <see cref="TraceContext"/> system.
 	/// </para>
 	/// </summary>
 	/// <remarks>
@@ -44,8 +44,8 @@ namespace log4net.Appender
 	/// whether tracing is displayed to a page, to the trace viewer, or both.
 	/// </para>
 	/// <para>
-	/// The logging event is passed to the <see cref="System.Web.TraceContext.Write"/> or 
-	/// <see cref="System.Web.TraceContext.Warn"/> method depending on the level of the logging event.
+	/// The logging event is passed to the <see cref="TraceContext.Write(string)"/> or 
+	/// <see cref="TraceContext.Warn(string)"/> method depending on the level of the logging event.
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
@@ -78,7 +78,7 @@ namespace log4net.Appender
 		/// <para>
 		/// Write the logging event to the ASP.NET trace
 		/// <c>HttpContext.Current.Trace</c> 
-		/// (<see cref="System.Web.TraceContext"/>).
+		/// (<see cref="TraceContext"/>).
 		/// </para>
 		/// </remarks>
 		override protected void Append(LoggingEvent loggingEvent) 

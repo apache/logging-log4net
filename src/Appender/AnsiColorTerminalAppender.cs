@@ -20,6 +20,7 @@ using System;
 using System.Text;
 using System.Globalization;
 
+using log4net.Core;
 using log4net.Layout;
 using log4net.Util;
 
@@ -278,7 +279,7 @@ namespace log4net.Appender
 		#region Override implementation of AppenderSkeleton
 
 		/// <summary>
-		/// This method is called by the <see cref="AppenderSkeleton.DoAppend"/> method.
+		/// This method is called by the <see cref="AppenderSkeleton.DoAppend(LoggingEvent)"/> method.
 		/// </summary>
 		/// <param name="loggingEvent">The event to log.</param>
 		/// <remarks>

@@ -61,8 +61,8 @@ namespace log4net.Util.TypeConverters
 		/// <returns>the encoding</returns>
 		/// <remarks>
 		/// <para>
-		/// Uses the <see cref="Encoding.GetEncoding"/> method to convert the
-		/// <see cref="String"/> argument to an <see cref="Encoding"/>.
+		/// Uses the <see cref="Encoding.GetEncoding(string)"/> method to 
+		/// convert the <see cref="String"/> argument to an <see cref="Encoding"/>.
 		/// </para>
 		/// </remarks>
 		/// <exception cref="ConversionNotSupportedException">
