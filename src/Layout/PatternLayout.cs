@@ -19,7 +19,6 @@
 using System;
 using System.Collections;
 using System.IO;
-using System.Text;
 
 using log4net.Core;
 using log4net.Layout.Pattern;
@@ -49,7 +48,7 @@ namespace log4net.Layout
 	/// <para>
 	/// Each conversion specifier starts with a percent sign (%) and is
 	/// followed by optional <i>format modifiers</i> and a <i>conversion
-	/// character</i>. The conversion character specifies the type of
+	/// pattern name</i>. The conversion pattern name specifies the type of
 	/// data, e.g. logger, level, date, thread name. The format
 	/// modifiers control such things as field width, padding, left and
 	/// right justification. The following is a simple example.
@@ -78,11 +77,11 @@ namespace log4net.Layout
 	/// justified to a width of five characters.
 	/// </para>
 	/// <para>
-	/// The recognized conversion characters are:
+	/// The recognized conversion pattern names are:
 	/// </para>
 	/// <list type="table">
 	///     <listheader>
-	///         <term>Conversion Character</term>
+	///         <term>Conversion Pattern Name</term>
 	///         <description>Effect</description>
 	///     </listheader>
 	///     <item>
@@ -328,7 +327,7 @@ namespace log4net.Layout
 	/// 			characters.
 	/// 			</para>
 	/// 			<para>
-	/// 			This conversion character offers the same performance as using 
+	/// 			This conversion pattern offers the same performance as using 
 	/// 			non-portable line separator strings such as	"\n", or "\r\n". 
 	/// 			Thus, it is the preferred way of specifying a line separator.
 	/// 			</para> 
@@ -528,7 +527,7 @@ namespace log4net.Layout
 	/// </list>
 	/// <para>
 	/// The single letter patterns are deprecated in favor of the 
-	/// longer more descriptive patterns.
+	/// longer more descriptive pattern names.
 	/// </para>
 	/// <para>
 	/// By default the relevant information is output as is. However,
@@ -537,7 +536,7 @@ namespace log4net.Layout
 	/// </para>
 	/// <para>
 	/// The optional format modifier is placed between the percent sign
-	/// and the conversion character.
+	/// and the conversion pattern name.
 	/// </para>
 	/// <para>
 	/// The first optional format modifier is the <i>left justification
