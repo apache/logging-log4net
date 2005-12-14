@@ -93,8 +93,8 @@ namespace log4net.Util
 				notAvailableText = notAvailableTextAppSettingsKey;
 			}
 #endif
-			s_notAvailableText = nullText;
-			s_nullText = notAvailableText;
+			s_notAvailableText = notAvailableText;
+			s_nullText = nullText;
 		}
 
 		#endregion
