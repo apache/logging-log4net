@@ -126,7 +126,7 @@ namespace log4net.Appender
 		/// <remarks>
 		/// <para>
 		/// The syslog facility defines which subsystem the logging comes from.
-		/// This is set on the <see cref="Facility"/> property.
+		/// This is set on the <see cref="LocalSyslogAppender.Facility"/> property.
 		/// </para>
 		/// </remarks>
 		public enum SyslogFacility
