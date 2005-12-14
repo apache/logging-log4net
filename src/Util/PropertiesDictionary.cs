@@ -231,7 +231,7 @@ namespace log4net.Util
 		}
 
 		/// <summary>
-		/// See <see cref="IDictionary"/> indexer property.
+		/// See <see cref="IDictionary.this"/>
 		/// </summary>
 		/// <value>
 		/// The value for the key specified.
