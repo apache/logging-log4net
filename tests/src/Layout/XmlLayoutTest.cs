@@ -20,7 +20,7 @@ using System;
 using System.IO;
 using System.Diagnostics;
 using System.Globalization;
-
+using System.Xml;
 using log4net.Config;
 using log4net.Util;
 using log4net.Layout;
@@ -51,11 +51,26 @@ namespace log4net.Tests.Layout
 			ed.LoggerName="TestLogger";
 			ed.Message="Test message";
 			ed.ThreadName="TestThread";
-			ed.TimeStamp=new DateTime(2005,8,24,12,0,0);
+			ed.TimeStamp=DateTime.Today;
 			ed.UserName="TestRunner";
 			ed.Properties=new PropertiesDictionary();
 
 			return ed;
+		}
+
+		private string createEventNode(string message)
+		{
+			return String.Format("<event logger=\"TestLogger\" timestamp=\"{0}\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message>{1}</message></event>\r\n", 
+			    XmlConvert.ToString(DateTime.Today),
+				message);
+		}
+
+		private string createEventNode(string key, string value)
+		{
+			return String.Format("<event logger=\"TestLogger\" timestamp=\"{0:s}\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message>Test message</message><properties><data name=\"{1}\" value=\"{2}\" /></properties></event>\r\n",
+				XmlConvert.ToString(DateTime.Today),
+				key,
+				value);
 		}
 
 		[Test] public void TestBasicEventLogging()
@@ -65,11 +80,10 @@ namespace log4net.Tests.Layout
 			LoggingEventData evt=createBaseEvent();
 
 			layout.Format(writer,new LoggingEvent(evt));
+
+			string expected = createEventNode("Test message");
 			
-			Assertion.AssertEquals	(
-				"<event logger=\"TestLogger\" timestamp=\"2005-08-24T12:00:00.0000000+01:00\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message>Test message</message></event>\r\n",
-				writer.ToString()
-				);
+			Assertion.AssertEquals	(expected, writer.ToString());
 		}
 
 		[Test] public void TestIllegalCharacterMasking()
@@ -81,11 +95,10 @@ namespace log4net.Tests.Layout
 			evt.Message="This is a masked char->\uFFFF";
 
 			layout.Format(writer,new LoggingEvent(evt));
+
+			string expected = createEventNode("This is a masked char-&gt;?");
 			
-			Assertion.AssertEquals	(
-									"<event logger=\"TestLogger\" timestamp=\"2005-08-24T12:00:00.0000000+01:00\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message>This is a masked char-&gt;?</message></event>\r\n",
-									writer.ToString()
-									);
+			Assertion.AssertEquals	(expected, writer.ToString());
 		}
 
 		[Test] public void TestCDATAEscaping1()
@@ -98,11 +111,10 @@ namespace log4net.Tests.Layout
 			evt.Message="&&&&&&&Escape this ]]>. End here.";
 
 			layout.Format(writer,new LoggingEvent(evt));
+
+			string expected = createEventNode("<![CDATA[&&&&&&&Escape this ]]>]]<![CDATA[>. End here.]]>");
 			
-			Assertion.AssertEquals	(
-				"<event logger=\"TestLogger\" timestamp=\"2005-08-24T12:00:00.0000000+01:00\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message><![CDATA[&&&&&&&Escape this ]]>]]<![CDATA[>. End here.]]></message></event>\r\n",
-				writer.ToString()
-				);
+			Assertion.AssertEquals	(expected, writer.ToString());
 		}
 
 		[Test] public void TestCDATAEscaping2()
@@ -115,11 +127,10 @@ namespace log4net.Tests.Layout
 			evt.Message="&&&&&&&Escape the end ]]>";
 
 			layout.Format(writer,new LoggingEvent(evt));
+
+			string expected = createEventNode("<![CDATA[&&&&&&&Escape the end ]]>]]&gt;");
 			
-			Assertion.AssertEquals	(
-				"<event logger=\"TestLogger\" timestamp=\"2005-08-24T12:00:00.0000000+01:00\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message><![CDATA[&&&&&&&Escape the end ]]>]]&gt;</message></event>\r\n",
-				writer.ToString()
-				);
+			Assertion.AssertEquals	(expected, writer.ToString());
 		}
 
 		[Test] public void TestCDATAEscaping3()
@@ -132,11 +143,10 @@ namespace log4net.Tests.Layout
 			evt.Message="]]>&&&&&&&Escape the begining";
 
 			layout.Format(writer,new LoggingEvent(evt));
+
+			string expected = createEventNode("<![CDATA[]]>]]<![CDATA[>&&&&&&&Escape the begining]]>");
 			
-			Assertion.AssertEquals	(
-				"<event logger=\"TestLogger\" timestamp=\"2005-08-24T12:00:00.0000000+01:00\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message><![CDATA[]]>]]<![CDATA[>&&&&&&&Escape the begining]]></message></event>\r\n",
-				writer.ToString()
-				);
+			Assertion.AssertEquals	(expected, writer.ToString());
 		}
 
 		[Test] public void TestBase64EventLogging()
@@ -147,11 +157,10 @@ namespace log4net.Tests.Layout
 
 			layout.Base64EncodeMessage=true;
 			layout.Format(writer,new LoggingEvent(evt));
+
+			string expected = createEventNode("VGVzdCBtZXNzYWdl");
 			
-			Assertion.AssertEquals	(
-				"<event logger=\"TestLogger\" timestamp=\"2005-08-24T12:00:00.0000000+01:00\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message>VGVzdCBtZXNzYWdl</message></event>\r\n",
-				writer.ToString()
-				);
+			Assertion.AssertEquals	(expected, writer.ToString());
 		}
 
 		[Test] public void TestPropertyEventLogging()
@@ -168,11 +177,10 @@ namespace log4net.Tests.Layout
 			ILog log1 = LogManager.GetLogger(rep.Name, "TestThreadProperiesPattern");
 
 			log1.Logger.Log(new LoggingEvent(evt));
+
+			string expected = createEventNode("Property1",  "prop1");
 			
-			Assertion.AssertEquals	(
-				"<event logger=\"TestLogger\" timestamp=\"2005-08-24T12:00:00.0000000+01:00\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message>Test message</message><properties><data name=\"Property1\" value=\"prop1\" /></properties></event>\r\n",
-				stringAppender.GetString()
-				);
+			Assertion.AssertEquals	(expected, stringAppender.GetString());
 		}
 
 		[Test] public void TestBase64PropertyEventLogging()
@@ -190,11 +198,10 @@ namespace log4net.Tests.Layout
 			ILog log1 = LogManager.GetLogger(rep.Name, "TestThreadProperiesPattern");
 
 			log1.Logger.Log(new LoggingEvent(evt));
+
+			string expected = createEventNode("Property1", "cHJvcDE=");
 			
-			Assertion.AssertEquals	(
-				"<event logger=\"TestLogger\" timestamp=\"2005-08-24T12:00:00.0000000+01:00\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message>Test message</message><properties><data name=\"Property1\" value=\"cHJvcDE=\" /></properties></event>\r\n",
-				stringAppender.GetString()
-				);
+			Assertion.AssertEquals	(expected, stringAppender.GetString());
 		}
 
 		[Test] public void TestPropertyCharacterEscaping()
@@ -211,11 +218,10 @@ namespace log4net.Tests.Layout
 			ILog log1 = LogManager.GetLogger(rep.Name, "TestThreadProperiesPattern");
 
 			log1.Logger.Log(new LoggingEvent(evt));
+
+			string expected = createEventNode("Property1", "prop1 &quot;quoted&quot;"); 
 			
-			Assertion.AssertEquals	(
-				"<event logger=\"TestLogger\" timestamp=\"2005-08-24T12:00:00.0000000+01:00\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message>Test message</message><properties><data name=\"Property1\" value=\"prop1 &quot;quoted&quot;\" /></properties></event>\r\n",
-				stringAppender.GetString()
-				);
+			Assertion.AssertEquals	(expected, stringAppender.GetString());
 		}
 
 		[Test] public void TestPropertyIllegalCharacterMasking()
@@ -232,11 +238,10 @@ namespace log4net.Tests.Layout
 			ILog log1 = LogManager.GetLogger(rep.Name, "TestThreadProperiesPattern");
 
 			log1.Logger.Log(new LoggingEvent(evt));
+
+			string expected = createEventNode("Property1", "mask this -&gt;?");
 			
-			Assertion.AssertEquals	(
-				"<event logger=\"TestLogger\" timestamp=\"2005-08-24T12:00:00.0000000+01:00\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message>Test message</message><properties><data name=\"Property1\" value=\"mask this -&gt;?\" /></properties></event>\r\n",
-				stringAppender.GetString()
-				);
+			Assertion.AssertEquals	(expected, stringAppender.GetString());
 		}
 
 		[Test] public void TestPropertyIllegalCharacterMaskingInName()
@@ -253,11 +258,10 @@ namespace log4net.Tests.Layout
 			ILog log1 = LogManager.GetLogger(rep.Name, "TestThreadProperiesPattern");
 
 			log1.Logger.Log(new LoggingEvent(evt));
+
+			string expected = createEventNode("Property?", "mask this -&gt;?");
 			
-			Assertion.AssertEquals	(
-				"<event logger=\"TestLogger\" timestamp=\"2005-08-24T12:00:00.0000000+01:00\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message>Test message</message><properties><data name=\"Property?\" value=\"mask this -&gt;?\" /></properties></event>\r\n",
-				stringAppender.GetString()
-				);
+			Assertion.AssertEquals	(expected, stringAppender.GetString());
 		}
 	}
 }
