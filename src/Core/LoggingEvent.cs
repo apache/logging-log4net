@@ -562,7 +562,7 @@ namespace log4net.Core
 		{
 			get
 			{
-				if (m_data.LocationInfo == null) 
+				if (m_data.LocationInfo == null  && this.m_cacheUpdatable) 
 				{
 					m_data.LocationInfo = new LocationInfo(m_callerStackBoundaryDeclaringType);
 				}
@@ -660,7 +660,7 @@ namespace log4net.Core
 		{
 			get 
 			{ 
-				if (m_data.Message == null)
+				if (m_data.Message == null && this.m_cacheUpdatable)
 				{
 					if (m_message == null)
 					{
@@ -740,7 +740,7 @@ namespace log4net.Core
 		{
 			get
 			{
-				if (m_data.ThreadName == null)
+				if (m_data.ThreadName == null && this.m_cacheUpdatable)
 				{
 #if NETCF
 					// Get thread ID only
@@ -823,7 +823,7 @@ namespace log4net.Core
 		{
 			get
 			{
-				if (m_data.UserName == null) 
+				if (m_data.UserName == null  && this.m_cacheUpdatable) 
 				{
 #if (NETCF || SSCLI)
 					// On compact framework there's no notion of current Windows user
@@ -871,7 +871,7 @@ namespace log4net.Core
 		{
 			get
 			{
-				if (m_data.Identity == null)
+				if (m_data.Identity == null  && this.m_cacheUpdatable)
 				{
 #if (NETCF || SSCLI)
 					// On compact framework there's no notion of current thread principals
@@ -919,7 +919,7 @@ namespace log4net.Core
 		{
 			get 
 			{ 
-				if (m_data.Domain == null)
+				if (m_data.Domain == null  && this.m_cacheUpdatable)
 				{
 					m_data.Domain = SystemInfo.ApplicationFriendlyName;
 				}
@@ -1104,7 +1104,7 @@ namespace log4net.Core
 		/// </remarks>
 		public string GetExceptionString() 
 		{
-			if (m_data.ExceptionString == null)
+			if (m_data.ExceptionString == null  && this.m_cacheUpdatable)
 			{
 				if (m_thrownException != null)
 				{
@@ -1213,18 +1213,16 @@ namespace log4net.Core
 		{
 			object forceCreation = null;
 
+			//Unlock the cache so that new values can be stored
+			//This may not be ideal if we are no longer in the correct context
+			//and someone calls fix. 
+			m_cacheUpdatable=true;
+
 			// determine the flags that we are actually fixing
 			FixFlags updateFlags = (FixFlags)((flags ^ m_fixFlags) & flags);
 
-			if (updateFlags > 0)
+			if (updateFlags > 0) 
 			{
-				if ((updateFlags & FixFlags.Message) != 0)
-				{
-					// Force the message to be rendered
-					forceCreation = this.RenderedMessage;
-
-					m_fixFlags |= FixFlags.Message;
-				}
 				if ((updateFlags & FixFlags.Message) != 0)
 				{
 					// Force the message to be rendered
@@ -1289,6 +1287,9 @@ namespace log4net.Core
 			if (forceCreation != null) 
 			{
 			}
+
+			//Finaly lock everything we've cached.
+			m_cacheUpdatable=false;
 		}
 
 		#endregion Public Instance Methods
@@ -1323,7 +1324,7 @@ namespace log4net.Core
 
 		private void CacheProperties()
 		{
-			if (m_data.Properties == null)
+			if (m_data.Properties == null  && this.m_cacheUpdatable)
 			{
 				if (m_compositeProperties == null)
 				{
@@ -1491,6 +1492,15 @@ namespace log4net.Core
 		/// Not serialized.
 		/// </remarks>
 		private FixFlags m_fixFlags = FixFlags.None;
+
+		/// <summary>
+		/// Indicated that the internal cache is updateable (ie not fixed)
+		/// </summary>
+		/// <remarks>
+		/// This is a seperate flag to m_fixFlags as it allows incrementel fixing and simpler
+		/// changes in the caching strategy.
+		/// </remarks>
+		private bool m_cacheUpdatable = true;
 
 		#endregion Private Instance Fields
 
