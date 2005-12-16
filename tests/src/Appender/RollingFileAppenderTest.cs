@@ -1563,6 +1563,8 @@ namespace log4net.Tests.Appender
 
 			RollingFileAppender rfa=(RollingFileAppender)(appenders[0]);
 			Assertion.AssertEquals("The LockingModel is of an unexpected type",log4net.Util.SystemInfo.GetTypeFromString("log4net.Appender.FileAppender+ExclusiveLock",true,true),rfa.LockingModel.GetType());
+
+			DestroyLogger();
 		}
 		
 		/// <summary>
