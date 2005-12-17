@@ -24,7 +24,7 @@ using log4net.Layout;
 using log4net.Core;
 using log4net.Repository;
 using log4net.Tests.Appender;
-
+using log4net.Util;
 using NUnit.Framework;
 
 namespace log4net.Tests.Layout
@@ -48,7 +48,7 @@ namespace log4net.Tests.Layout
 			ILog log1 = LogManager.GetLogger(rep.Name, "TestThreadProperiesPattern");
 
 			log1.Info("TestMessage");
-			Assert.AreEqual("(null)", stringAppender.GetString(), "Test no thread properties value set");
+			Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test no thread properties value set");
 			stringAppender.Reset();
 
 			ThreadContext.Properties["prop1"] = "val1";
@@ -60,7 +60,7 @@ namespace log4net.Tests.Layout
 			ThreadContext.Properties.Remove("prop1");
 
 			log1.Info("TestMessage");
-			Assert.AreEqual("(null)", stringAppender.GetString(), "Test thread properties value removed");
+			Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test thread properties value removed");
 			stringAppender.Reset();
 		}
 
@@ -75,7 +75,7 @@ namespace log4net.Tests.Layout
 			ILog log1 = LogManager.GetLogger(rep.Name, "TestGlobalProperiesPattern");
 
 			log1.Info("TestMessage");
-			Assert.AreEqual("(null)", stringAppender.GetString(), "Test no global properties value set");
+			Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test no global properties value set");
 			stringAppender.Reset();
 
 			GlobalContext.Properties["prop1"] = "val1";
@@ -87,7 +87,7 @@ namespace log4net.Tests.Layout
 			GlobalContext.Properties.Remove("prop1");
 
 			log1.Info("TestMessage");
-			Assert.AreEqual("(null)", stringAppender.GetString(), "Test global properties value removed");
+			Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test global properties value removed");
 			stringAppender.Reset();
 		}
 
