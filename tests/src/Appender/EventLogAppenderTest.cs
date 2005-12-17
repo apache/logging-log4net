@@ -16,12 +16,6 @@
 //
 #endregion
 
-using System;
-using System.Diagnostics;
-using System.Globalization;
-
-using log4net.Util;
-using log4net.Layout;
 using log4net.Core;
 using log4net.Appender;
 
@@ -46,31 +40,31 @@ namespace log4net.Tests.Appender
 			EventLogAppender eventAppender = new EventLogAppender();
 			eventAppender.ActivateOptions();
 
-			Assertion.AssertEquals( 
+			Assert.AreEqual(
 				System.Diagnostics.EventLogEntryType.Information,
 				GetEntryType( eventAppender, Level.All ) );
 
-			Assertion.AssertEquals( 
+			Assert.AreEqual(
 				System.Diagnostics.EventLogEntryType.Information,
 				GetEntryType( eventAppender, Level.Debug ) );
 
-			Assertion.AssertEquals( 
+			Assert.AreEqual(
 				System.Diagnostics.EventLogEntryType.Information,
 				GetEntryType( eventAppender, Level.Info ) );
 
-			Assertion.AssertEquals( 
+			Assert.AreEqual(
 				System.Diagnostics.EventLogEntryType.Warning,
 				GetEntryType( eventAppender, Level.Warn ) );
 
-			Assertion.AssertEquals( 
+			Assert.AreEqual(
 				System.Diagnostics.EventLogEntryType.Error,
 				GetEntryType( eventAppender, Level.Error ) );
 
-			Assertion.AssertEquals( 
+			Assert.AreEqual(
 				System.Diagnostics.EventLogEntryType.Error,
 				GetEntryType( eventAppender, Level.Fatal ) );
 
-			Assertion.AssertEquals( 
+			Assert.AreEqual(
 				System.Diagnostics.EventLogEntryType.Error,
 				GetEntryType( eventAppender, Level.Off ) );
 

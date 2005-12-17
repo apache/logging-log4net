@@ -52,19 +52,19 @@ namespace log4net.Tests.Layout
 			ILog log1 = LogManager.GetLogger(rep.Name, "TestThreadProperiesPattern");
 
 			log1.Info("TestMessage");
-			Assertion.AssertEquals("Test no thread properties value set", "(null)", stringAppender.GetString());
+			Assert.AreEqual("(null)", stringAppender.GetString(), "Test no thread properties value set");
 			stringAppender.Reset();
 
 			ThreadContext.Properties["prop1"] = "val1";
 
 			log1.Info("TestMessage");
-			Assertion.AssertEquals("Test thread properties value set", "val1", stringAppender.GetString());
+			Assert.AreEqual("val1", stringAppender.GetString(), "Test thread properties value set");
 			stringAppender.Reset();
 
 			ThreadContext.Properties.Remove("prop1");
 
 			log1.Info("TestMessage");
-			Assertion.AssertEquals("Test thread properties value removed", "(null)", stringAppender.GetString());
+			Assert.AreEqual("(null)", stringAppender.GetString(), "Test thread properties value removed");
 			stringAppender.Reset();
 		}
 
@@ -79,19 +79,19 @@ namespace log4net.Tests.Layout
 			ILog log1 = LogManager.GetLogger(rep.Name, "TestGlobalProperiesPattern");
 
 			log1.Info("TestMessage");
-			Assertion.AssertEquals("Test no global properties value set", "(null)", stringAppender.GetString());
+			Assert.AreEqual("(null)", stringAppender.GetString(), "Test no global properties value set");
 			stringAppender.Reset();
 
 			GlobalContext.Properties["prop1"] = "val1";
 
 			log1.Info("TestMessage");
-			Assertion.AssertEquals("Test global properties value set", "val1", stringAppender.GetString());
+			Assert.AreEqual("val1", stringAppender.GetString(), "Test global properties value set");
 			stringAppender.Reset();
 
 			GlobalContext.Properties.Remove("prop1");
 
 			log1.Info("TestMessage");
-			Assertion.AssertEquals("Test global properties value removed", "(null)", stringAppender.GetString());
+			Assert.AreEqual("(null)", stringAppender.GetString(), "Test global properties value removed");
 			stringAppender.Reset();
 		}
 
@@ -112,7 +112,7 @@ namespace log4net.Tests.Layout
 			ILog log1 = LogManager.GetLogger(rep.Name, "TestAddingCustomPattern");
 
 			log1.Info("TestMessage");
-			Assertion.AssertEquals("%TestAddingCustomPattern not registered", "TestMessage", stringAppender.GetString());
+			Assert.AreEqual("TestMessage", stringAppender.GetString(), "%TestAddingCustomPattern not registered");
 			stringAppender.Reset();	
 		}
 

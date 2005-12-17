@@ -62,9 +62,9 @@ namespace log4net.Tests.Appender
 			System.Threading.Thread.Sleep(1000);
 
 			LoggingEvent[] events = RemoteLoggingSinkImpl.Instance.Events;
-			Assertion.AssertEquals("Expect to receive 1 remoted event", 1, events.Length);
+			Assert.AreEqual(1, events.Length, "Expect to receive 1 remoted event");
 
-			Assertion.AssertEquals("Expect Message match after remoting event", testMessage, events[0].RenderedMessage);
+			Assert.AreEqual(testMessage, events[0].RenderedMessage, "Expect Message match after remoting event");
 		}
 
 		/// <summary>
@@ -87,12 +87,12 @@ namespace log4net.Tests.Appender
 			System.Threading.Thread.Sleep(1000);
 
 			LoggingEvent[] events = RemoteLoggingSinkImpl.Instance.Events;
-			Assertion.AssertEquals("Expect to receive 1 remoted event", 1, events.Length);
+			Assert.AreEqual(1, events.Length, "Expect to receive 1 remoted event");
 
 			// Grab the event data
 			LoggingEventData eventData = GetLoggingEventData(events[0]);
 
-			Assertion.AssertNull("Expect username to be null because only doing a partial fix", eventData.UserName);
+			Assert.IsNull(eventData.UserName, "Expect username to be null because only doing a partial fix");
 		}
 
 		/// <summary>
@@ -115,12 +115,12 @@ namespace log4net.Tests.Appender
 			System.Threading.Thread.Sleep(1000);
 
 			LoggingEvent[] events = RemoteLoggingSinkImpl.Instance.Events;
-			Assertion.AssertEquals("Expect to receive 1 remoted event", 1, events.Length);
+			Assert.AreEqual(1, events.Length, "Expect to receive 1 remoted event");
 
 			// Grab the event data
 			LoggingEventData eventData = GetLoggingEventData(events[0]);
 
-			Assertion.AssertNotNull("Expect username to not be null because doing a full fix", eventData.UserName);
+			Assert.IsNotNull(eventData.UserName, "Expect username to not be null because doing a full fix");
 		}
 
 		/// <summary>
@@ -147,9 +147,9 @@ namespace log4net.Tests.Appender
 			System.Threading.Thread.Sleep(1000);
 
 			LoggingEvent[] events = RemoteLoggingSinkImpl.Instance.Events;
-			Assertion.AssertEquals("Expect to receive 1 remoted event", 1, events.Length);
+			Assert.AreEqual(1, events.Length, "Expect to receive 1 remoted event");
 
-			Assertion.AssertEquals("Expect Message match after remoting event", testMessage, events[0].RenderedMessage);
+			Assert.AreEqual(testMessage, events[0].RenderedMessage, "Expect Message match after remoting event");
 		}
 
 		[Test] public void TestNestedNdc() 
@@ -169,19 +169,19 @@ namespace log4net.Tests.Appender
 			System.Threading.Thread.Sleep(3000);
 
 			LoggingEvent[] events = RemoteLoggingSinkImpl.Instance.Events;
-			Assertion.AssertEquals("Expect to receive 5 remoted event", 5, events.Length);
+			Assert.AreEqual(5, events.Length, "Expect to receive 5 remoted event");
 
-			Assertion.AssertEquals("Verify event 1 RenderedMessage", "begin test", events[0].RenderedMessage);
-			Assertion.AssertEquals("Verify event 2 RenderedMessage", "feature", events[1].RenderedMessage);
-			Assertion.AssertEquals("Verify event 3 RenderedMessage", "return", events[2].RenderedMessage);
-			Assertion.AssertEquals("Verify event 4 RenderedMessage", "return", events[3].RenderedMessage);
-			Assertion.AssertEquals("Verify event 5 RenderedMessage", "end test", events[4].RenderedMessage);
+			Assert.AreEqual("begin test", events[0].RenderedMessage, "Verify event 1 RenderedMessage");
+			Assert.AreEqual("feature", events[1].RenderedMessage, "Verify event 2 RenderedMessage");
+			Assert.AreEqual("return", events[2].RenderedMessage, "Verify event 3 RenderedMessage");
+			Assert.AreEqual("return", events[3].RenderedMessage, "Verify event 4 RenderedMessage");
+			Assert.AreEqual("end test", events[4].RenderedMessage, "Verify event 5 RenderedMessage");
 
-			Assertion.AssertNull("Verify event 1 Properties", events[0].Properties["NDC"]);
-			Assertion.AssertEquals("Verify event 2 Properties", "test1", events[1].Properties["NDC"]);
-			Assertion.AssertEquals("Verify event 3 Properties", "test1 test2", events[2].Properties["NDC"]);
-			Assertion.AssertEquals("Verify event 4 Properties", "test1", events[3].Properties["NDC"]);
-			Assertion.AssertNull("Verify event 5 Properties", events[4].Properties["NDC"]);
+			Assert.IsNull(events[0].Properties["NDC"], "Verify event 1 Properties");
+			Assert.AreEqual("test1", events[1].Properties["NDC"], "Verify event 2 Properties");
+			Assert.AreEqual("test1 test2", events[2].Properties["NDC"], "Verify event 3 Properties");
+			Assert.AreEqual("test1", events[3].Properties["NDC"], "Verify event 4 Properties");
+			Assert.IsNull(events[4].Properties["NDC"], "Verify event 5 Properties");
 		}
 
 

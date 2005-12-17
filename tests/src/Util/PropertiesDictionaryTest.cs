@@ -53,7 +53,7 @@ namespace log4net.Tests.Util
 				pd[i.ToString()] = i;
 			}
 
-			Assertion.AssertEquals("Dictionary should have 10 items", 10, pd.Count);
+			Assert.AreEqual(10, pd.Count, "Dictionary should have 10 items");
 
 			// Serialize the properties into a memory stream
 			BinaryFormatter formatter = new BinaryFormatter();
@@ -64,11 +64,11 @@ namespace log4net.Tests.Util
 			memory.Position = 0;
 			PropertiesDictionary pd2 = (PropertiesDictionary)formatter.Deserialize(memory);
 
-			Assertion.AssertEquals("Deserialized Dictionary should have 10 items", 10, pd2.Count);
+			Assert.AreEqual(10, pd2.Count, "Deserialized Dictionary should have 10 items");
 
 			foreach(string key in pd.GetKeys())
 			{
-				Assertion.AssertEquals("Check Value Persisted for key ["+key+"]", pd[key], pd2[key]);
+				Assert.AreEqual(pd[key], pd2[key], "Check Value Persisted for key [{0}]", key);
 			}
 		}
 

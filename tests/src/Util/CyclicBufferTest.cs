@@ -52,39 +52,39 @@ namespace log4net.Tests.Util
 		{
 			CyclicBuffer cb = new CyclicBuffer(1);
 
-			Assertion.AssertEquals("Empty Buffer should have length 0", 0, cb.Length);
-			Assertion.AssertEquals("Buffer should have max size 1", 1, cb.MaxSize);
+			Assert.AreEqual(0, cb.Length, "Empty Buffer should have length 0");
+			Assert.AreEqual(1, cb.MaxSize, "Buffer should have max size 1");
 
 			LoggingEvent event1 = new LoggingEvent(null, null, null, null, null, null);
 			LoggingEvent event2 = new LoggingEvent(null, null, null, null, null, null);
 
 			LoggingEvent discardedEvent = cb.Append(event1);
 
-			Assertion.AssertNull("No event should be discarded untill the buffer is full", discardedEvent);
-			Assertion.AssertEquals("Buffer should have length 1", 1, cb.Length);
-			Assertion.AssertEquals("Buffer should still have max size 1", 1, cb.MaxSize);
+			Assert.IsNull(discardedEvent, "No event should be discarded untill the buffer is full");
+			Assert.AreEqual(1, cb.Length, "Buffer should have length 1");
+			Assert.AreEqual(1, cb.MaxSize, "Buffer should still have max size 1");
 
 
 			discardedEvent = cb.Append(event2);
 
-			Assertion.AssertSame("Expect event1 to now be discarded", event1, discardedEvent);
-			Assertion.AssertEquals("Buffer should still have length 1", 1, cb.Length);
-			Assertion.AssertEquals("Buffer should really still have max size 1", 1, cb.MaxSize);
+			Assert.AreSame(event1, discardedEvent, "Expect event1 to now be discarded");
+			Assert.AreEqual(1, cb.Length, "Buffer should still have length 1");
+			Assert.AreEqual(1, cb.MaxSize, "Buffer should really still have max size 1");
 
 			LoggingEvent[] discardedEvents = cb.PopAll();
 
-			Assertion.AssertEquals("Poped events length should be 1", 1, discardedEvents.Length);
-			Assertion.AssertSame("Expect event2 to now be popped", event2, discardedEvents[0]);
-			Assertion.AssertEquals("Buffer should be back to length 0", 0, cb.Length);
-			Assertion.AssertEquals("Buffer should really really still have max size 1", 1, cb.MaxSize);
+			Assert.AreEqual(1, discardedEvents.Length, "Poped events length should be 1");
+			Assert.AreSame(event2, discardedEvents[0], "Expect event2 to now be popped");
+			Assert.AreEqual(0, cb.Length, "Buffer should be back to length 0");
+			Assert.AreEqual(1, cb.MaxSize, "Buffer should really really still have max size 1");
 		}
 
 		[Test] public void TestSize2()
 		{
 			CyclicBuffer cb = new CyclicBuffer(2);
 
-			Assertion.AssertEquals("Empty Buffer should have length 0", 0, cb.Length);
-			Assertion.AssertEquals("Buffer should have max size 2", 2, cb.MaxSize);
+			Assert.AreEqual(0, cb.Length, "Empty Buffer should have length 0");
+			Assert.AreEqual(2, cb.MaxSize, "Buffer should have max size 2");
 
 			LoggingEvent event1 = new LoggingEvent(null, null, null, null, null, null);
 			LoggingEvent event2 = new LoggingEvent(null, null, null, null, null, null);
@@ -93,22 +93,22 @@ namespace log4net.Tests.Util
 			LoggingEvent discardedEvent = null;
 			
 			discardedEvent = cb.Append(event1);
-			Assertion.AssertNull("No event should be discarded after append 1", discardedEvent);
+			Assert.IsNull(discardedEvent, "No event should be discarded after append 1");
 			discardedEvent = cb.Append(event2);
-			Assertion.AssertNull("No event should be discarded after append 2", discardedEvent);
+			Assert.IsNull(discardedEvent, "No event should be discarded after append 2");
 
 			discardedEvent = cb.Append(event3);
-			Assertion.AssertSame("Expect event1 to now be discarded", event1, discardedEvent);
+			Assert.AreSame(event1, discardedEvent, "Expect event1 to now be discarded");
 
 			discardedEvent = cb.PopOldest();
-			Assertion.AssertSame("Expect event2 to now be discarded", event2, discardedEvent);
+			Assert.AreSame(event2, discardedEvent, "Expect event2 to now be discarded");
 
 			LoggingEvent[] discardedEvents = cb.PopAll();
 
-			Assertion.AssertEquals("Poped events length should be 1", 1, discardedEvents.Length);
-			Assertion.AssertSame("Expect event3 to now be popped", event3, discardedEvents[0]);
-			Assertion.AssertEquals("Buffer should be back to length 0", 0, cb.Length);
-			Assertion.AssertEquals("Buffer should really really still have max size 2", 2, cb.MaxSize);
+			Assert.AreEqual(1, discardedEvents.Length, "Poped events length should be 1");
+			Assert.AreSame(event3, discardedEvents[0], "Expect event3 to now be popped");
+			Assert.AreEqual(0, cb.Length, "Buffer should be back to length 0");
+			Assert.AreEqual(2, cb.MaxSize, "Buffer should really really still have max size 2");
 		}
 	}
 }

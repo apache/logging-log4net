@@ -54,13 +54,13 @@ namespace log4net.Tests.Core
 			ILog log1 = LogManager.GetLogger(rep.Name, "logger1");
 
 			log1.Info("TestMessage1");
-			Assertion.AssertEquals("Test logging configured", "TestMessage1", stringAppender.GetString());
+			Assert.AreEqual("TestMessage1", stringAppender.GetString(), "Test logging configured");
 			stringAppender.Reset();
 
 			rep.Shutdown();
 
 			log1.Info("TestMessage2");
-			Assertion.AssertEquals("Test not logging while shutdown", "", stringAppender.GetString());
+			Assert.AreEqual("", stringAppender.GetString(), "Test not logging while shutdown");
 			stringAppender.Reset();
 
 			// Create new appender and configure
@@ -69,7 +69,7 @@ namespace log4net.Tests.Core
 			BasicConfigurator.Configure(rep, stringAppender);
 
 			log1.Info("TestMessage3");
-			Assertion.AssertEquals("Test logging re-configured", "TestMessage3", stringAppender.GetString());
+			Assert.AreEqual("TestMessage3", stringAppender.GetString(), "Test logging re-configured");
 			stringAppender.Reset();
 		}
 	}

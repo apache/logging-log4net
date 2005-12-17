@@ -74,9 +74,9 @@ namespace log4net.Tests.Hierarchy
 			log.AddAppender(a1);
 		
 			IEnumerator enumAppenders = ((IEnumerable)log.Appenders).GetEnumerator();
-			Assertion.Assert( enumAppenders.MoveNext() );
+			Assert.IsTrue( enumAppenders.MoveNext() );
 			CountingAppender aHat = (CountingAppender) enumAppenders.Current;	
-			Assertion.AssertEquals(a1, aHat);	
+			Assert.AreEqual(a1, aHat);	
 		}
 
 		/// <summary>
@@ -95,21 +95,21 @@ namespace log4net.Tests.Hierarchy
 			log.AddAppender(a2);	
 
 			CountingAppender aHat = (CountingAppender)log.GetAppender(a1.Name);
-			Assertion.AssertEquals(a1, aHat);	
+			Assert.AreEqual(a1, aHat);	
 
 			aHat = (CountingAppender)log.GetAppender(a2.Name);
-			Assertion.AssertEquals(a2, aHat);	
+			Assert.AreEqual(a2, aHat);	
 
 			log.RemoveAppender("testAppender2.1");
 
 			IEnumerator enumAppenders = ((IEnumerable)log.Appenders).GetEnumerator();
-			Assertion.Assert( enumAppenders.MoveNext() );
+			Assert.IsTrue( enumAppenders.MoveNext() );
 			aHat = (CountingAppender) enumAppenders.Current;	
-			Assertion.AssertEquals(a2, aHat);	
-			Assertion.Assert(!enumAppenders.MoveNext());
+			Assert.AreEqual(a2, aHat);	
+			Assert.IsTrue(!enumAppenders.MoveNext());
 
 			aHat = (CountingAppender)log.GetAppender(a2.Name);
-			Assertion.AssertEquals(a2, aHat);	
+			Assert.AreEqual(a2, aHat);	
 		}
 
 		/// <summary>
@@ -123,11 +123,11 @@ namespace log4net.Tests.Hierarchy
 			a.AddAppender(ca);
 			a.Repository.Configured = true;
 			
-			Assertion.AssertEquals(ca.Counter, 0);
-			ab.Log(Level.Debug, MSG, null); Assertion.AssertEquals(ca.Counter, 1);
-			ab.Log(Level.Info, MSG, null);  Assertion.AssertEquals(ca.Counter, 2);
-			ab.Log(Level.Warn, MSG, null);  Assertion.AssertEquals(ca.Counter, 3);
-			ab.Log(Level.Error, MSG, null); Assertion.AssertEquals(ca.Counter, 4);	
+			Assert.AreEqual(ca.Counter, 0);
+			ab.Log(Level.Debug, MSG, null); Assert.AreEqual(ca.Counter, 1);
+			ab.Log(Level.Info, MSG, null);  Assert.AreEqual(ca.Counter, 2);
+			ab.Log(Level.Warn, MSG, null);  Assert.AreEqual(ca.Counter, 3);
+			ab.Log(Level.Error, MSG, null); Assert.AreEqual(ca.Counter, 4);	
 		}
 
 		/// <summary>
@@ -148,20 +148,20 @@ namespace log4net.Tests.Hierarchy
 			abc.AddAppender(ca2);
 			a.Repository.Configured = true;
 
-			Assertion.AssertEquals(ca1.Counter, 0); 
-			Assertion.AssertEquals(ca2.Counter, 0);		
+			Assert.AreEqual(ca1.Counter, 0); 
+			Assert.AreEqual(ca2.Counter, 0);		
 		
 			ab.Log(Level.Debug, MSG, null);  
-			Assertion.AssertEquals(ca1.Counter, 1); 
-			Assertion.AssertEquals(ca2.Counter, 0);		
+			Assert.AreEqual(ca1.Counter, 1); 
+			Assert.AreEqual(ca2.Counter, 0);		
 
 			abc.Log(Level.Debug, MSG, null);
-			Assertion.AssertEquals(ca1.Counter, 2); 
-			Assertion.AssertEquals(ca2.Counter, 1);		
+			Assert.AreEqual(ca1.Counter, 2); 
+			Assert.AreEqual(ca2.Counter, 1);		
 
 			x.Log(Level.Debug, MSG, null);
-			Assertion.AssertEquals(ca1.Counter, 2); 
-			Assertion.AssertEquals(ca2.Counter, 1);	
+			Assert.AreEqual(ca1.Counter, 2); 
+			Assert.AreEqual(ca2.Counter, 1);	
 		}
 
 		/// <summary>
@@ -184,26 +184,26 @@ namespace log4net.Tests.Hierarchy
 			abc.AddAppender(caABC);
 			a.Repository.Configured = true;
 
-			Assertion.AssertEquals(caRoot.Counter, 0); 
-			Assertion.AssertEquals(caA.Counter, 0); 
-			Assertion.AssertEquals(caABC.Counter, 0);		
+			Assert.AreEqual(caRoot.Counter, 0); 
+			Assert.AreEqual(caA.Counter, 0); 
+			Assert.AreEqual(caABC.Counter, 0);		
 		
 			ab.Additivity = false;
 
 			a.Log(Level.Debug, MSG, null);  
-			Assertion.AssertEquals(caRoot.Counter, 1); 
-			Assertion.AssertEquals(caA.Counter, 1); 
-			Assertion.AssertEquals(caABC.Counter, 0);		
+			Assert.AreEqual(caRoot.Counter, 1); 
+			Assert.AreEqual(caA.Counter, 1); 
+			Assert.AreEqual(caABC.Counter, 0);		
 
 			ab.Log(Level.Debug, MSG, null);  
-			Assertion.AssertEquals(caRoot.Counter, 1); 
-			Assertion.AssertEquals(caA.Counter, 1); 
-			Assertion.AssertEquals(caABC.Counter, 0);		
+			Assert.AreEqual(caRoot.Counter, 1); 
+			Assert.AreEqual(caA.Counter, 1); 
+			Assert.AreEqual(caABC.Counter, 0);		
 
 			abc.Log(Level.Debug, MSG, null);  
-			Assertion.AssertEquals(caRoot.Counter, 1); 
-			Assertion.AssertEquals(caA.Counter, 1); 
-			Assertion.AssertEquals(caABC.Counter, 1);		
+			Assert.AreEqual(caRoot.Counter, 1); 
+			Assert.AreEqual(caA.Counter, 1); 
+			Assert.AreEqual(caABC.Counter, 1);		
 		}
 
 		/// <summary>
@@ -219,27 +219,27 @@ namespace log4net.Tests.Hierarchy
 			h.Threshold = Level.Info;
 			h.Configured = true;
 
-			Assertion.AssertEquals(caRoot.Counter, 0);	 
+			Assert.AreEqual(caRoot.Counter, 0);	 
 
-			root.Log(Level.Debug, MSG, null); Assertion.AssertEquals(caRoot.Counter, 0);  
-			root.Log(Level.Info, MSG, null); Assertion.AssertEquals(caRoot.Counter, 1);  
-			root.Log(Level.Warn, MSG, null); Assertion.AssertEquals(caRoot.Counter, 2);  
-			root.Log(Level.Warn, MSG, null); Assertion.AssertEquals(caRoot.Counter, 3);  
+			root.Log(Level.Debug, MSG, null); Assert.AreEqual(caRoot.Counter, 0);  
+			root.Log(Level.Info, MSG, null); Assert.AreEqual(caRoot.Counter, 1);  
+			root.Log(Level.Warn, MSG, null); Assert.AreEqual(caRoot.Counter, 2);  
+			root.Log(Level.Warn, MSG, null); Assert.AreEqual(caRoot.Counter, 3);  
 
 			h.Threshold = Level.Warn;
-			root.Log(Level.Debug, MSG, null); Assertion.AssertEquals(caRoot.Counter, 3);  
-			root.Log(Level.Info, MSG, null); Assertion.AssertEquals(caRoot.Counter, 3);  
-			root.Log(Level.Warn, MSG, null); Assertion.AssertEquals(caRoot.Counter, 4);  
-			root.Log(Level.Error, MSG, null); Assertion.AssertEquals(caRoot.Counter, 5);  
-			root.Log(Level.Error, MSG, null); Assertion.AssertEquals(caRoot.Counter, 6);  
+			root.Log(Level.Debug, MSG, null); Assert.AreEqual(caRoot.Counter, 3);  
+			root.Log(Level.Info, MSG, null); Assert.AreEqual(caRoot.Counter, 3);  
+			root.Log(Level.Warn, MSG, null); Assert.AreEqual(caRoot.Counter, 4);  
+			root.Log(Level.Error, MSG, null); Assert.AreEqual(caRoot.Counter, 5);  
+			root.Log(Level.Error, MSG, null); Assert.AreEqual(caRoot.Counter, 6);  
 
 			h.Threshold = Level.Off;
-			root.Log(Level.Debug, MSG, null); Assertion.AssertEquals(caRoot.Counter, 6);  
-			root.Log(Level.Info, MSG, null); Assertion.AssertEquals(caRoot.Counter, 6);  
-			root.Log(Level.Warn, MSG, null); Assertion.AssertEquals(caRoot.Counter, 6);  
-			root.Log(Level.Error, MSG, null); Assertion.AssertEquals(caRoot.Counter, 6);  
-			root.Log(Level.Fatal, MSG, null); Assertion.AssertEquals(caRoot.Counter, 6);  
-			root.Log(Level.Fatal, MSG, null); Assertion.AssertEquals(caRoot.Counter, 6);  
+			root.Log(Level.Debug, MSG, null); Assert.AreEqual(caRoot.Counter, 6);  
+			root.Log(Level.Info, MSG, null); Assert.AreEqual(caRoot.Counter, 6);  
+			root.Log(Level.Warn, MSG, null); Assert.AreEqual(caRoot.Counter, 6);  
+			root.Log(Level.Error, MSG, null); Assert.AreEqual(caRoot.Counter, 6);  
+			root.Log(Level.Fatal, MSG, null); Assert.AreEqual(caRoot.Counter, 6);  
+			root.Log(Level.Fatal, MSG, null); Assert.AreEqual(caRoot.Counter, 6);  
 		}
 
 		/// <summary>
@@ -252,10 +252,10 @@ namespace log4net.Tests.Hierarchy
 			object a_b_c = LogManager.GetLogger("a.b.c");
 		
 			object t;
-			t = LogManager.Exists("xx");	Assertion.AssertNull(t);
-			t = LogManager.Exists("a");		Assertion.AssertSame(a, t);
-			t = LogManager.Exists("a.b");	Assertion.AssertSame(a_b, t);
-			t = LogManager.Exists("a.b.c");	Assertion.AssertSame(a_b_c, t);
+			t = LogManager.Exists("xx");	Assert.IsNull(t);
+			t = LogManager.Exists("a");		Assert.AreSame(a, t);
+			t = LogManager.Exists("a.b");	Assert.AreSame(a_b, t);
+			t = LogManager.Exists("a.b.c");	Assert.AreSame(a_b_c, t);
 		}
 
 		/// <summary>
@@ -267,12 +267,12 @@ namespace log4net.Tests.Hierarchy
 			h.Root.Level = Level.Error;
 
 			Logger a0 = h.GetLogger("a") as Logger;
-			Assertion.AssertEquals("a", a0.Name);
-			Assertion.AssertNull(a0.Level);
-			Assertion.AssertSame(Level.Error, a0.EffectiveLevel);
+			Assert.AreEqual("a", a0.Name);
+			Assert.IsNull(a0.Level);
+			Assert.AreSame(Level.Error, a0.EffectiveLevel);
 
 			Logger a1 = h.GetLogger("a") as Logger;
-			Assertion.AssertSame(a0, a1);
+			Assert.AreSame(a0, a1);
 		}
 	}
 }

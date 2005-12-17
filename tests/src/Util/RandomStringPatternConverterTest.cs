@@ -45,7 +45,7 @@ namespace log4net.Tests.Util
 			StringWriter sw = new StringWriter();
 			converter.Convert(sw, null);
 
-			Assertion.AssertEquals("Default string length should be 4", 4, sw.ToString().Length);
+			Assert.AreEqual(4, sw.ToString().Length, "Default string length should be 4");
 
 			// Set string length to 7
 			converter.Option = "7";
@@ -55,14 +55,14 @@ namespace log4net.Tests.Util
 			converter.Convert(sw, null);
 
 			string string1 = sw.ToString();
-			Assertion.AssertEquals("string length should be 7", 7, string1.Length);
+			Assert.AreEqual(7, string1.Length, "string length should be 7");
 
 			// Check for duplicate result
 			sw = new StringWriter();
 			converter.Convert(sw, null);
 
 			string string2 = sw.ToString();
-			Assertion.Assert("strings should be different", string1 != string2);
+			Assert.IsTrue(string1 != string2, "strings should be different");
 		}
 
 		class RandomStringPatternConverter

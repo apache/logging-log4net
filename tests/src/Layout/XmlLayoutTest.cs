@@ -83,7 +83,7 @@ namespace log4net.Tests.Layout
 
 			string expected = createEventNode("Test message");
 			
-			Assertion.AssertEquals	(expected, writer.ToString());
+			Assert.AreEqual	(expected, writer.ToString());
 		}
 
 		[Test] public void TestIllegalCharacterMasking()
@@ -98,7 +98,7 @@ namespace log4net.Tests.Layout
 
 			string expected = createEventNode("This is a masked char-&gt;?");
 			
-			Assertion.AssertEquals	(expected, writer.ToString());
+			Assert.AreEqual	(expected, writer.ToString());
 		}
 
 		[Test] public void TestCDATAEscaping1()
@@ -114,7 +114,7 @@ namespace log4net.Tests.Layout
 
 			string expected = createEventNode("<![CDATA[&&&&&&&Escape this ]]>]]<![CDATA[>. End here.]]>");
 			
-			Assertion.AssertEquals	(expected, writer.ToString());
+			Assert.AreEqual	(expected, writer.ToString());
 		}
 
 		[Test] public void TestCDATAEscaping2()
@@ -130,7 +130,7 @@ namespace log4net.Tests.Layout
 
 			string expected = createEventNode("<![CDATA[&&&&&&&Escape the end ]]>]]&gt;");
 			
-			Assertion.AssertEquals	(expected, writer.ToString());
+			Assert.AreEqual	(expected, writer.ToString());
 		}
 
 		[Test] public void TestCDATAEscaping3()
@@ -146,7 +146,7 @@ namespace log4net.Tests.Layout
 
 			string expected = createEventNode("<![CDATA[]]>]]<![CDATA[>&&&&&&&Escape the begining]]>");
 			
-			Assertion.AssertEquals	(expected, writer.ToString());
+			Assert.AreEqual	(expected, writer.ToString());
 		}
 
 		[Test] public void TestBase64EventLogging()
@@ -160,7 +160,7 @@ namespace log4net.Tests.Layout
 
 			string expected = createEventNode("VGVzdCBtZXNzYWdl");
 			
-			Assertion.AssertEquals	(expected, writer.ToString());
+			Assert.AreEqual	(expected, writer.ToString());
 		}
 
 		[Test] public void TestPropertyEventLogging()
@@ -180,7 +180,7 @@ namespace log4net.Tests.Layout
 
 			string expected = createEventNode("Property1",  "prop1");
 			
-			Assertion.AssertEquals	(expected, stringAppender.GetString());
+			Assert.AreEqual	(expected, stringAppender.GetString());
 		}
 
 		[Test] public void TestBase64PropertyEventLogging()
@@ -201,7 +201,7 @@ namespace log4net.Tests.Layout
 
 			string expected = createEventNode("Property1", "cHJvcDE=");
 			
-			Assertion.AssertEquals	(expected, stringAppender.GetString());
+			Assert.AreEqual	(expected, stringAppender.GetString());
 		}
 
 		[Test] public void TestPropertyCharacterEscaping()
@@ -221,7 +221,7 @@ namespace log4net.Tests.Layout
 
 			string expected = createEventNode("Property1", "prop1 &quot;quoted&quot;"); 
 			
-			Assertion.AssertEquals	(expected, stringAppender.GetString());
+			Assert.AreEqual	(expected, stringAppender.GetString());
 		}
 
 		[Test] public void TestPropertyIllegalCharacterMasking()
@@ -241,7 +241,7 @@ namespace log4net.Tests.Layout
 
 			string expected = createEventNode("Property1", "mask this -&gt;?");
 			
-			Assertion.AssertEquals	(expected, stringAppender.GetString());
+			Assert.AreEqual	(expected, stringAppender.GetString());
 		}
 
 		[Test] public void TestPropertyIllegalCharacterMaskingInName()
@@ -261,7 +261,7 @@ namespace log4net.Tests.Layout
 
 			string expected = createEventNode("Property?", "mask this -&gt;?");
 			
-			Assertion.AssertEquals	(expected, stringAppender.GetString());
+			Assert.AreEqual	(expected, stringAppender.GetString());
 		}
 	}
 }

@@ -18,17 +18,13 @@
 
 using System;
 using System.Collections;
-using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 
-using log4net.Util;
 using log4net.Layout;
 using log4net.Core;
-using log4net.Config;
 
 using NUnit.Framework;
-using log4net.Repository;
 using log4net.Repository.Hierarchy;
 using log4net.Appender;
 
@@ -114,8 +110,8 @@ namespace log4net.Tests.Appender
 		private void VerifyFileCount( int iExpectedCount )
 		{
 			ArrayList alFiles = GetExistingFiles(_fileName);
-			Assertion.AssertNotNull(alFiles);
-			Assertion.AssertEquals(iExpectedCount, alFiles.Count);
+			Assert.IsNotNull(alFiles);
+			Assert.AreEqual(iExpectedCount, alFiles.Count);
 		}
 
 		/// <summary>
@@ -343,8 +339,8 @@ namespace log4net.Tests.Appender
 
 		private void VerifyExistenceAndRemoveFromList( ArrayList alExisting, string sFileName, FileInfo file, RollFileEntry entry )
 		{
-			Assertion.Assert( "filename " + sFileName + " not found in test directory", alExisting.Contains( sFileName ) );
-			Assertion.AssertEquals( "file length mismatch", entry.FileLength, file.Length );
+			Assert.IsTrue(alExisting.Contains( sFileName ), "filename {0} not found in test directory", sFileName);
+			Assert.AreEqual(entry.FileLength, file.Length, "file length mismatch");
 			// Remove this file from the list
 			alExisting.Remove( sFileName );
 		}
@@ -368,7 +364,7 @@ namespace log4net.Tests.Appender
 
 					if (rollFile.FileLength > 0 )
 					{
-						Assertion.Assert( "filename " + sFileName + " does not exist", file.Exists );
+						Assert.IsTrue(file.Exists, "filename {0} does not exist", sFileName );
 						VerifyExistenceAndRemoveFromList( alExisting, sFileName, file, rollFile );
 					}
 					else
@@ -385,12 +381,12 @@ namespace log4net.Tests.Appender
 			}
 			else
 			{
-				Assertion.AssertEquals( 0, alExisting.Count );
+				Assert.AreEqual(0, alExisting.Count);
 			}
 
 			// This check ensures no extra files matching the wildcard pattern exist.
 			// We only want the files we expect, and no others
-			Assertion.AssertEquals( 0, alExisting.Count );
+			Assert.AreEqual(0, alExisting.Count);
 		}
 
 		/// <summary>
@@ -425,9 +421,9 @@ namespace log4net.Tests.Appender
 		/// <param name="sMessageToLog"></param>
 		private void LogMessage( RollConditions entry, string sMessageToLog )
 		{
-			Assertion.AssertEquals(_caRoot.Counter, _iMessagesLogged++); 
+			Assert.AreEqual(_caRoot.Counter, _iMessagesLogged++);
 			_root.Log(Level.Debug, sMessageToLog, null);
-			Assertion.AssertEquals(_caRoot.Counter, _iMessagesLogged); 
+			Assert.AreEqual(_caRoot.Counter, _iMessagesLogged); 
 			_iMessagesLoggedThisFile++;
 		}
 
@@ -1075,7 +1071,7 @@ namespace log4net.Tests.Appender
 			_root.Level = Level.Debug;
 			_caRoot = new CountingAppender();
 			_root.AddAppender(_caRoot);
-			Assertion.AssertEquals(_caRoot.Counter, 0); 
+			Assert.AreEqual(_caRoot.Counter, 0); 
 
 			//
 			// Set the root appender with a RollingFileAppender
@@ -1235,7 +1231,7 @@ namespace log4net.Tests.Appender
 		private void InitializeAndVerifyExpectedValue( ArrayList alFiles, string sBaseFile, RollingFileAppender rfa, int iExpectedValue )
 		{
 			InitializeRollBackups( rfa, sBaseFile, alFiles );
-			Assertion.AssertEquals( iExpectedValue, GetFieldCurSizeRollBackups(rfa) );
+			Assert.AreEqual( iExpectedValue, GetFieldCurSizeRollBackups(rfa) );
 		}
 
 		/// <summary>
@@ -1386,7 +1382,7 @@ namespace log4net.Tests.Appender
 			string logcont=sr.ReadToEnd();
 			sr.Close();
 
-			Assertion.AssertEquals("Log contents is not what is expected",contents,logcont);
+			Assert.AreEqual(contents,logcont, "Log contents is not what is expected");
 
 			System.IO.File.Delete(filename);
 		}
@@ -1404,7 +1400,7 @@ namespace log4net.Tests.Appender
 			DestroyLogger();
 
 			AssertFileEquals(filename,"This is a message"+Environment.NewLine+"This is a message 2"+Environment.NewLine);
-			Assertion.AssertEquals("Unexpected error message","",sh.Message);
+			Assert.AreEqual("",sh.Message, "Unexpected error message");
 		}
 
 		/// <summary>
@@ -1425,7 +1421,7 @@ namespace log4net.Tests.Appender
 			fs.Close();
 
 			AssertFileEquals(filename,"Test");
-			Assertion.AssertEquals("Expecting an error message","Unable to acquire lock on file",sh.Message.Substring(0,30));
+			Assert.AreEqual(sh.Message.Substring(0,30), "Unable to acquire lock on file", "Expecting an error message");
 		}
 
 		/// <summary>
@@ -1446,7 +1442,7 @@ namespace log4net.Tests.Appender
 			DestroyLogger();
 
 			AssertFileEquals(filename,"This is a message 2"+Environment.NewLine);
-			Assertion.AssertEquals("Expecting an error message","Unable to acquire lock on file",sh.Message.Substring(0,30));
+			Assert.AreEqual("Unable to acquire lock on file",sh.Message.Substring(0,30), "Expecting an error message");
 		}
 
 		/// <summary>
@@ -1469,16 +1465,16 @@ namespace log4net.Tests.Appender
 			}
 			catch (System.IO.IOException e1)
 			{
-				Assertion.AssertEquals("Unexpected exception","The process cannot access the file ",e1.Message.Substring(0,35));
+				Assert.AreEqual("The process cannot access the file ",e1.Message.Substring(0,35), "Unexpected exception");
 				locked=true;
 			}
 
 			log.Log(this.GetType(),Level.Info,"This is a message 2",null);
 			DestroyLogger();
 
-			Assertion.Assert("File was not locked",locked);
+			Assert.IsTrue(locked, "File was not locked");
 			AssertFileEquals(filename,"This is a message"+Environment.NewLine+"This is a message 2"+Environment.NewLine);
-			Assertion.AssertEquals("Unexpected error message","",sh.Message);
+			Assert.AreEqual("",sh.Message, "Unexpected error message");
 		}
 
 
@@ -1500,7 +1496,7 @@ namespace log4net.Tests.Appender
 			fs.Close();
 
 			AssertFileEquals(filename,"Test");
-			Assertion.AssertEquals("Expecting an error message","Unable to acquire lock on file",sh.Message.Substring(0,30));
+			Assert.AreEqual("Unable to acquire lock on file",sh.Message.Substring(0,30), "Expecting an error message");
 		}
 
 		/// <summary>
@@ -1521,7 +1517,7 @@ namespace log4net.Tests.Appender
 			DestroyLogger();
 
 			AssertFileEquals(filename,"This is a message 2"+Environment.NewLine);
-			Assertion.AssertEquals("Expecting an error message","Unable to acquire lock on file",sh.Message.Substring(0,30));
+			Assert.AreEqual("Unable to acquire lock on file",sh.Message.Substring(0,30), "Expecting an error message");
 		}
 
 		/// <summary>
@@ -1544,9 +1540,9 @@ namespace log4net.Tests.Appender
 			log.Log(this.GetType(),Level.Info,"This is a message 2",null);
 			DestroyLogger();
 
-			Assertion.Assert("File was not locked",locked);
+			Assert.IsTrue(locked, "File was not locked");
 			AssertFileEquals(filename,"This is a message"+Environment.NewLine+"Test"+Environment.NewLine+"This is a message 2"+Environment.NewLine);
-			Assertion.AssertEquals("Unexpected error message","",sh.Message);
+			Assert.AreEqual("",sh.Message, "Unexpected error message");
 		}
 
 		/// <summary>
@@ -1559,10 +1555,10 @@ namespace log4net.Tests.Appender
 			ILogger log=CreateLogger(filename,null,sh);
 
 			IAppender[] appenders=log.Repository.GetAppenders();
-			Assertion.AssertEquals("The wrong number of appenders are configured",1,appenders.Length);
+			Assert.AreEqual(1,appenders.Length, "The wrong number of appenders are configured");
 
 			RollingFileAppender rfa=(RollingFileAppender)(appenders[0]);
-			Assertion.AssertEquals("The LockingModel is of an unexpected type",log4net.Util.SystemInfo.GetTypeFromString("log4net.Appender.FileAppender+ExclusiveLock",true,true),rfa.LockingModel.GetType());
+			Assert.AreEqual(log4net.Util.SystemInfo.GetTypeFromString("log4net.Appender.FileAppender+ExclusiveLock",true,true),rfa.LockingModel.GetType(), "The LockingModel is of an unexpected type");
 
 			DestroyLogger();
 		}
@@ -1677,11 +1673,11 @@ namespace log4net.Tests.Appender
 			if (0 == iBackups || 
 				1 == iBackups ) 
 			{
-				Assertion.AssertEquals( 0, GetFieldCurSizeRollBackups(rfa) );
+				Assert.AreEqual( 0, GetFieldCurSizeRollBackups(rfa) );
 			} 
 			else 
 			{
-				Assertion.AssertEquals( Math.Min( iBackups-1, iMaxSizeRollBackups), GetFieldCurSizeRollBackups(rfa) );
+				Assert.AreEqual( Math.Min( iBackups-1, iMaxSizeRollBackups), GetFieldCurSizeRollBackups(rfa) );
 			}
 		}
 
@@ -1783,14 +1779,14 @@ namespace log4net.Tests.Appender
 		{
 			RollingFileAppender rfa = new RollingFileAppender();
 
-			Assertion.AssertEquals("TopOfMinute pattern", RollPoint.TopOfMinute, InvokeComputeCheckPeriod(rfa, ".yyyy-MM-dd HH:mm"));
-			Assertion.AssertEquals("TopOfHour pattern", RollPoint.TopOfHour, InvokeComputeCheckPeriod(rfa, ".yyyy-MM-dd HH"));
-			Assertion.AssertEquals("HalfDay pattern", RollPoint.HalfDay, InvokeComputeCheckPeriod(rfa, ".yyyy-MM-dd tt"));
-			Assertion.AssertEquals("TopOfDay pattern", RollPoint.TopOfDay, InvokeComputeCheckPeriod(rfa, ".yyyy-MM-dd"));
-			Assertion.AssertEquals("TopOfMonth pattern", RollPoint.TopOfMonth, InvokeComputeCheckPeriod(rfa, ".yyyy-MM"));
+			Assert.AreEqual(RollPoint.TopOfMinute, InvokeComputeCheckPeriod(rfa, ".yyyy-MM-dd HH:mm"), "TopOfMinute pattern");
+			Assert.AreEqual(RollPoint.TopOfHour, InvokeComputeCheckPeriod(rfa, ".yyyy-MM-dd HH"), "TopOfHour pattern");
+			Assert.AreEqual(RollPoint.HalfDay, InvokeComputeCheckPeriod(rfa, ".yyyy-MM-dd tt"), "HalfDay pattern");
+			Assert.AreEqual(RollPoint.TopOfDay, InvokeComputeCheckPeriod(rfa, ".yyyy-MM-dd"), "TopOfDay pattern");
+			Assert.AreEqual(RollPoint.TopOfMonth, InvokeComputeCheckPeriod(rfa, ".yyyy-MM"), "TopOfMonth pattern");
 
 			// Test invalid roll point
-			Assertion.AssertEquals("TopOfMonth pattern", RollPoint.InvalidRollPoint, InvokeComputeCheckPeriod(rfa, "..."));
+			Assert.AreEqual(RollPoint.InvalidRollPoint, InvokeComputeCheckPeriod(rfa, "..."), "TopOfMonth pattern");
 		}
 
 		private static RollPoint InvokeComputeCheckPeriod(RollingFileAppender rollingFileAppender, string datePattern) 
