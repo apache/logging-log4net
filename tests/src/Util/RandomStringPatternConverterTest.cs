@@ -16,14 +16,7 @@
 //
 #endregion
 
-using System;
 using System.IO;
-using System.Diagnostics;
-using System.Globalization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization;
-
-using log4net.Tests.Appender;
 
 using NUnit.Framework;
 

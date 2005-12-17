@@ -18,16 +18,13 @@
 
 using System;
 using System.IO;
-using System.Diagnostics;
-using System.Globalization;
 using System.Xml;
+
 using log4net.Config;
 using log4net.Util;
 using log4net.Layout;
 using log4net.Core;
-using log4net.Appender;
 using log4net.Repository;
-
 using log4net.Tests.Appender;
 
 using NUnit.Framework;

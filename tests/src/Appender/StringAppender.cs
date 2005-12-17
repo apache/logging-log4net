@@ -17,9 +17,7 @@
 #endregion
 
 using System.Text;
-using System.Runtime.InteropServices;
 
-using log4net.Layout;
 using log4net.Core;
 using log4net.Appender;
 

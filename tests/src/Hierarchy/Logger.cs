@@ -16,13 +16,9 @@
 //
 #endregion
 
-using System;
 using System.Collections;
 
-using log4net.Appender;
-using log4net.Util;
 using log4net.Core;
-using log4net.Repository;
 using log4net.Repository.Hierarchy;
 using log4net.Tests.Appender;
 
@@ -173,7 +169,6 @@ namespace log4net.Tests.Hierarchy
 			Logger a = LogManager.GetLogger("a").Logger as Logger;
 			Logger ab = LogManager.GetLogger("a.b").Logger as Logger;
 			Logger abc = LogManager.GetLogger("a.b.c").Logger as Logger;
-			Logger x   = LogManager.GetLogger("x").Logger as Logger;
 
 			CountingAppender caRoot = new CountingAppender();
 			CountingAppender caA = new CountingAppender();
