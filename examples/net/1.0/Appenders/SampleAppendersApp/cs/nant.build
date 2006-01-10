@@ -39,8 +39,10 @@ limitations under the License.
             <references basedir="${current.bin.dir}">
                 <include name="log4net.dll" />
                 <include name="System.dll" />
+                <include name="System.Data.dll" />
                 <include name="System.Web.dll" />
                 <include name="System.Windows.Forms.dll" />
+                <include name="System.Messaging.dll" />
             </references>
         </csc>
         <!-- copy the ConsoleApp application configuration file -->

@@ -31,7 +31,7 @@ limitations under the License.
             </fileset>
         </copy>
         <!-- compile the example -->
-        <csc noconfig="true" target="exe" warnaserror="true" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/SampleAppendersApp.exe">
+        <csc noconfig="true" target="library" warnaserror="true" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Appender.WmiAppender.dll">
             <sources>
                 <include name="src/**/*.cs" />
                 <include name="${log4net.basedir}/src/AssemblyVersionInfo.cs" />
@@ -39,11 +39,9 @@ limitations under the License.
             <references basedir="${current.bin.dir}">
                 <include name="log4net.dll" />
                 <include name="System.dll" />
-                <include name="System.Web.dll" />
-                <include name="System.Windows.Forms.dll" />
+                <include name="System.Configuration.Install.dll" />
+                <include name="System.Management.dll" />
             </references>
         </csc>
-        <!-- copy the ConsoleApp application configuration file -->
-        <copy file="src/App.config" tofile="${current.bin.dir}/SampleAppendersApp.exe.config" />
     </target>
 </project>
