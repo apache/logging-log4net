@@ -645,18 +645,7 @@ namespace log4net.Core
 				// Do this even if the repository has been configured (or claims to be), this allows overriding
 				// of the default config files etc, if that is required.
 
-				string repositoryConfigFile = null;
-
-				try
-				{
-					repositoryConfigFile = ConfigurationSettings.AppSettings["log4net.Config"];
-				}
-				catch(Exception ex)
-				{
-					// If an exception is thrown here then it looks like the config file does not parse correctly.
-					LogLog.Error("DefaultRepositorySelector: Exception while reading ConfigurationSettings. Check your .config file is well formed XML.", ex);
-				}
-
+				string repositoryConfigFile = SystemInfo.GetAppSetting("log4net.Config");
 				if (repositoryConfigFile != null && repositoryConfigFile.Length > 0)
 				{
 					// Resolve the config path relative to the application base directory URI

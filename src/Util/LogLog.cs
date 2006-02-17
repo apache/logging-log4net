@@ -81,8 +81,8 @@ namespace log4net.Util
 #if !NETCF
 			try
 			{
-				InternalDebugging = OptionConverter.ToBoolean(ConfigurationSettings.AppSettings["log4net.Internal.Debug"], false);
-				QuietMode = OptionConverter.ToBoolean(ConfigurationSettings.AppSettings["log4net.Internal.Quiet"], false);
+				InternalDebugging = OptionConverter.ToBoolean(SystemInfo.GetAppSetting("log4net.Internal.Debug"), false);
+				QuietMode = OptionConverter.ToBoolean(SystemInfo.GetAppSetting("log4net.Internal.Quiet"), false);
 			}
 			catch(Exception ex)
 			{

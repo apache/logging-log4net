@@ -135,11 +135,8 @@ namespace log4net.Repository.Hierarchy
 				}
 			}
 
-#if (!NETCF)
-			LogLog.Debug("XmlHierarchyConfigurator: Configuration update mode [" + configUpdateMode.ToString(CultureInfo.InvariantCulture) + "].");
-#else
+			// IMPL: The IFormatProvider argument to Enum.ToString() is deprecated in .NET 2.0
 			LogLog.Debug("XmlHierarchyConfigurator: Configuration update mode [" + configUpdateMode.ToString() + "].");
-#endif
 
 			// Only reset configuration if overwrite flag specified
 			if (configUpdateMode == ConfigUpdateMode.Overwrite)

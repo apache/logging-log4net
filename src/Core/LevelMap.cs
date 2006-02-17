@@ -43,7 +43,7 @@ namespace log4net.Core
 		/// Mapping from level name to Level object. The
 		/// level name is case insensitive
 		/// </summary>
-		private Hashtable m_mapName2Level = new Hashtable(CaseInsensitiveHashCodeProvider.Default, CaseInsensitiveComparer.Default);
+		private Hashtable m_mapName2Level = SystemInfo.CreateCaseInsensitiveHashtable();
 
 		#endregion
 

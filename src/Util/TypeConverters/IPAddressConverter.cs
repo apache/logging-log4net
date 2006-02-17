@@ -76,6 +76,20 @@ namespace log4net.Util.TypeConverters
 			{
 				try
 				{
+#if NET_2_0
+					// Try to resolve via DNS. This is a blocking call. 
+					// GetHostEntry works with either an IPAddress string or a host name
+					IPHostEntry host = Dns.GetHostEntry(str);
+					if (host != null && 
+						host.AddressList != null && 
+						host.AddressList.Length > 0 &&
+						host.AddressList[0] != null)
+					{
+						return host.AddressList[0];
+					}
+#else
+					// Before .NET 2 we need to try to parse the IPAddress from the string first
+
 					// Check if the string only contains IP address valid chars
 					if (str.Trim(validIpAddressChars).Length == 0)
 					{
@@ -99,6 +113,7 @@ namespace log4net.Util.TypeConverters
 					{
 						return host.AddressList[0];
 					}
+#endif
 				}
 				catch(Exception ex)
 				{

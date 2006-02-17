@@ -22,6 +22,7 @@ using System.Reflection;
 using System.Text;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Collections;
 
 namespace log4net.Util
 {
@@ -78,7 +79,7 @@ namespace log4net.Util
 
 #if !NETCF
 			// Look for log4net.NullText in AppSettings
-			string nullTextAppSettingsKey = ConfigurationSettings.AppSettings["log4net.NullText"];
+			string nullTextAppSettingsKey = SystemInfo.GetAppSetting("log4net.NullText");
 			if (nullTextAppSettingsKey != null && nullTextAppSettingsKey.Length > 0)
 			{
 				LogLog.Debug("SystemInfo: Initializing NullText value to [" + nullTextAppSettingsKey + "].");
@@ -86,7 +87,7 @@ namespace log4net.Util
 			}
 
 			// Look for log4net.NotAvailableText in AppSettings
-			string notAvailableTextAppSettingsKey = ConfigurationSettings.AppSettings["log4net.NotAvailableText"];
+			string notAvailableTextAppSettingsKey = SystemInfo.GetAppSetting("log4net.NotAvailableText");
 			if (notAvailableTextAppSettingsKey != null && notAvailableTextAppSettingsKey.Length > 0)
 			{
 				LogLog.Debug("SystemInfo: Initializing NotAvailableText value to [" + notAvailableTextAppSettingsKey + "].");
@@ -211,6 +212,11 @@ namespace log4net.Util
 		/// <c>GetCurrentThreadId</c> is implemented inline in a header file
 		/// and cannot be called.
 		/// </para>
+		/// <para>
+		/// On the .NET Framework 2.0 the <c>Thread.ManagedThreadId</c> is used as this
+		/// gives a stable id unrelated to the operating system thread ID which may 
+		/// change if the runtime is using fibers.
+		/// </para>
 		/// </remarks>
 		public static int CurrentThreadId
 		{
@@ -218,6 +224,8 @@ namespace log4net.Util
 			{
 #if NETCF
 				return System.Threading.Thread.CurrentThread.GetHashCode();
+#elif NET_2_0
+				return System.Threading.Thread.CurrentThread.ManagedThreadId;
 #else
 				return AppDomain.GetCurrentThreadId();
 #endif
@@ -812,6 +820,36 @@ namespace log4net.Util
 		}
 
 		/// <summary>
+		/// Lookup an application setting
+		/// </summary>
+		/// <param name="key">the application settings key to lookup</param>
+		/// <returns>the value for the key, or <c>null</c></returns>
+		/// <remarks>
+		/// <para>
+		/// Configuration APIs are not suported under the Compact Framework
+		/// </para>
+		/// </remarks>
+		public static string GetAppSetting(string key)
+		{
+			try
+			{
+#if NETCF
+				// Configuration APIs are not suported under the Compact Framework
+#elif NET_2_0
+				return ConfigurationManager.AppSettings[key];
+#else
+				return ConfigurationSettings.AppSettings[key];
+#endif
+			}
+			catch(Exception ex)
+			{
+				// If an exception is thrown here then it looks like the config file does not parse correctly.
+				LogLog.Error("DefaultRepositorySelector: Exception while reading ConfigurationSettings. Check your .config file is well formed XML.", ex);
+			}
+			return null;
+		}
+
+		/// <summary>
 		/// Convert a path into a fully qualified local file path.
 		/// </summary>
 		/// <param name="path">The path to convert.</param>
@@ -859,6 +897,24 @@ namespace log4net.Util
 				return Path.GetFullPath(Path.Combine(baseDirectory, path));
 			}
 			return Path.GetFullPath(path);
+		}
+
+		/// <summary>
+		/// Creates a new case-insensitive instance of the <see cref="Hashtable"/> class with the default initial capacity. 
+		/// </summary>
+		/// <returns>A new case-insensitive instance of the <see cref="Hashtable"/> class with the default initial capacity</returns>
+		/// <remarks>
+		/// <para>
+		/// The new Hashtable instance uses the default load factor, the CaseInsensitiveHashCodeProvider, and the CaseInsensitiveComparer.
+		/// </para>
+		/// </remarks>
+		public static Hashtable CreateCaseInsensitiveHashtable()
+		{
+#if NETCF
+			return new Hashtable(CaseInsensitiveHashCodeProvider.Default, CaseInsensitiveComparer.Default);
+#else
+			return System.Collections.Specialized.CollectionsUtil.CreateCaseInsensitiveHashtable();
+#endif
 		}
 
 		#endregion Public Static Methods

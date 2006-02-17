@@ -153,7 +153,12 @@ namespace log4net.Config
 #else
 			try
 			{
-				XmlElement configElement = System.Configuration.ConfigurationSettings.GetConfig("log4net") as XmlElement;
+				XmlElement configElement = null;
+#if NET_2_0
+				configElement = System.Configuration.ConfigurationManager.GetSection("log4net") as XmlElement;
+#else
+				configElement = System.Configuration.ConfigurationSettings.GetConfig("log4net") as XmlElement;
+#endif
 				if (configElement == null)
 				{
 					// Failed to load the xml config using configuration settings handler
@@ -613,6 +618,13 @@ namespace log4net.Config
 #if (NETCF)
 					// Create a text reader for the file stream
 					XmlTextReader xmlReader = new XmlTextReader(configStream);
+#elif NET_2_0
+					// Allow the DTD to specify entity includes
+					XmlReaderSettings settings = new XmlReaderSettings();
+					settings.ProhibitDtd = false;
+
+					// Create a reader over the input stream
+					XmlReader xmlReader = XmlReader.Create(configStream, settings);
 #else
 					// Create a validating reader around a text reader for the file stream
 					XmlValidatingReader xmlReader = new XmlValidatingReader(new XmlTextReader(configStream));

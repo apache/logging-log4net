@@ -102,18 +102,7 @@ namespace log4net.Core
 #else
 
 			// Look for the RepositorySelector type specified in the AppSettings 'log4net.RepositorySelector'
-			string appRepositorySelectorTypeName = null;
-
-			try
-			{
-				appRepositorySelectorTypeName = ConfigurationSettings.AppSettings["log4net.RepositorySelector"];
-			}
-			catch(Exception ex)
-			{
-				// If an exception is thrown here then it looks like the config file does not parse correctly.
-				LogLog.Error("LoggerManager: Exception while reading ConfigurationSettings. Check your .config file is well formed XML.", ex);
-			}
-
+			string appRepositorySelectorTypeName = SystemInfo.GetAppSetting("log4net.RepositorySelector");
 			if (appRepositorySelectorTypeName != null && appRepositorySelectorTypeName.Length > 0)
 			{
 				// Resolve the config string into a Type

@@ -195,7 +195,11 @@ namespace log4net.Tests.Appender
 				// Setup remoting server
 				try
 				{
+#if NET_2_0
+					ChannelServices.RegisterChannel(m_remotingChannel, false);
+#else
 					ChannelServices.RegisterChannel(m_remotingChannel);
+#endif
 				}
 				catch(Exception)
 				{

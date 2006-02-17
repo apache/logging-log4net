@@ -22,7 +22,12 @@
 
 using System;
 using System.IO;
+
+#if NET_2_0
+using System.Net.Mail;
+#else
 using System.Web.Mail;
+#endif
 
 using log4net.Layout;
 using log4net.Core;
@@ -299,6 +304,44 @@ namespace log4net.Appender
 					writer.Write(t);
 				}
 
+#if NET_2_0
+				// .NET 2.0 has a new API for SMTP email System.Net.Mail
+				// This API supports credentials and multiple hosts correctly.
+				// The old API is deprecated.
+
+				// Create and configure the smtp client
+				SmtpClient smtpClient = new SmtpClient();
+				if (m_smtpHost != null && m_smtpHost.Length > 0)
+				{
+					smtpClient.Host = m_smtpHost;
+				}
+				smtpClient.Port = m_port;
+				smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+
+				if (m_authentication == SmtpAuthentication.Basic)
+				{
+					// Perform basic authentication
+					smtpClient.Credentials = new System.Net.NetworkCredential(m_username, m_password);
+				}
+				else if (m_authentication == SmtpAuthentication.Ntlm)
+				{
+					// Perform integrated authentication (NTLM)
+					smtpClient.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
+				}
+
+				MailMessage mailMessage = new MailMessage();
+				mailMessage.Body = writer.ToString();
+				mailMessage.From = new MailAddress(m_from);
+				mailMessage.To.Add(m_to);
+				mailMessage.Subject = m_subject;
+				mailMessage.Priority = m_mailPriority;
+
+				// TODO: Consider using SendAsync to send the message without blocking. This would be a change in
+				// behaviour compared to .NET 1.x. We would need a SendCompletedCallback to log errors.
+				smtpClient.Send(mailMessage);
+#else
+				// .NET 1.x uses the System.Web.Mail API for sending Mail
+
 				MailMessage mailMessage = new MailMessage();
 				mailMessage.Body = writer.ToString();
 				mailMessage.From = m_from;
@@ -345,14 +388,14 @@ namespace log4net.Appender
 #else
 				if (m_authentication != SmtpAuthentication.None)
 				{
-					ErrorHandler.Error("SmtpAppender: Authentication is only supported on the MS .NET 1.1 build of log4net");
+					ErrorHandler.Error("SmtpAppender: Authentication is only supported on the MS .NET 1.1 or MS .NET 2.0 builds of log4net");
 				}
 
 				if (m_port != 25)
 				{
-					ErrorHandler.Error("SmtpAppender: Server Port is only supported on the MS .NET 1.1 build of log4net");
+					ErrorHandler.Error("SmtpAppender: Server Port is only supported on the MS .NET 1.1 or MS .NET 2.0 builds of log4net");
 				}
-#endif
+#endif // if NET_1_1
 
 				if (m_smtpHost != null && m_smtpHost.Length > 0)
 				{
@@ -360,6 +403,7 @@ namespace log4net.Appender
 				}
 
 				SmtpMail.Send(mailMessage);
+#endif // if NET_2_0
 			} 
 			catch(Exception e) 
 			{
