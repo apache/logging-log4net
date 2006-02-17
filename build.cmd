@@ -14,12 +14,12 @@ REM Get path to NAnt.exe
 
 REM Try and determine if NAnt is in the PATH
 SET NANTEXE_PATH=nant.exe
-%NANTEXE_PATH% -help >NUL: 2>NUL:
+"%NANTEXE_PATH%" -help >NUL: 2>NUL:
 IF NOT ERRORLEVEL 1 goto FoundNAnt
 
 REM Try hard coded path for NAnt
-SET NANTEXE_PATH=C:\net\nant-0.85-rc1\bin\nant.exe
-%NANTEXE_PATH% -help >NUL: 2>NUL:
+SET NANTEXE_PATH=C:\Program Files\NAnt\nant-0.85-nightly-2005-12-13\bin\nant.exe
+"%NANTEXE_PATH%" -help >NUL: 2>NUL:
 IF NOT ERRORLEVEL 1 goto FoundNAnt
 
 REM We have not found NAnt
