@@ -290,20 +290,26 @@ namespace log4net.Core
 					rep = m_name2repositoryMap[actualRepositoryName] as ILoggerRepository;
 					if (rep == null)
 					{
-
 						// Create the repository
 						rep = CreateRepository(actualRepositoryName, actualRepositoryType);
 
 						if (readAssemblyAttributes)
 						{
-							// Look for aliasing attributes
-							LoadAliases(repositoryAssembly, rep);
+							try
+							{
+								// Look for aliasing attributes
+								LoadAliases(repositoryAssembly, rep);
 
-							// Look for plugins defined on the assembly
-							LoadPlugins(repositoryAssembly, rep);
+								// Look for plugins defined on the assembly
+								LoadPlugins(repositoryAssembly, rep);
 
-							// Configure the repository using the assembly attributes
-							ConfigureRepository(repositoryAssembly, rep);
+								// Configure the repository using the assembly attributes
+								ConfigureRepository(repositoryAssembly, rep);
+							}
+							catch (Exception ex)
+							{
+								LogLog.Error("DefaultRepositorySelector: Failed to configure repository [" + actualRepositoryName + "] from assembly attributes.", ex);
+							}
 						}
 					}
 					else
@@ -312,8 +318,15 @@ namespace log4net.Core
 
 						if (readAssemblyAttributes)
 						{
-							// Look for plugins defined on the assembly
-							LoadPlugins(repositoryAssembly, rep);
+							try
+							{
+								// Look for plugins defined on the assembly
+								LoadPlugins(repositoryAssembly, rep);
+							}
+							catch (Exception ex)
+							{
+								LogLog.Error("DefaultRepositorySelector: Failed to configure repository [" + actualRepositoryName + "] from assembly attributes.", ex);
+							}
 						}
 					}
 					m_assembly2repositoryMap[repositoryAssembly] = rep;
@@ -556,50 +569,64 @@ namespace log4net.Core
 				throw new ArgumentNullException("assembly");
 			}
 
-			LogLog.Debug("DefaultRepositorySelector: Assembly [" + assembly.FullName + "] Loaded From [" + SystemInfo.AssemblyLocationInfo(assembly) + "]");
-
-			// Look for the RepositoryAttribute on the assembly 
-			object[] repositoryAttributes = Attribute.GetCustomAttributes(assembly, typeof(log4net.Config.RepositoryAttribute), false);
-			if (repositoryAttributes == null || repositoryAttributes.Length == 0)
+			try
 			{
-				// This is not a problem, but its nice to know what is going on.
-				LogLog.Debug("DefaultRepositorySelector: Assembly [" + assembly + "] does not have a RepositoryAttribute specified.");
+				LogLog.Debug("DefaultRepositorySelector: Assembly [" + assembly.FullName + "] Loaded From [" + SystemInfo.AssemblyLocationInfo(assembly) + "]");
 			}
-			else
+			catch
 			{
-				if (repositoryAttributes.Length > 1)
-				{
-					LogLog.Error("DefaultRepositorySelector: Assembly [" + assembly + "] has multiple log4net.Config.RepositoryAttribute assembly attributes. Only using first occurrence.");
-				}
+				// Ignore exception from debug call
+			}
 
-				log4net.Config.RepositoryAttribute domAttr = repositoryAttributes[0] as log4net.Config.RepositoryAttribute;
-
-				if (domAttr == null)
+			try
+			{
+				// Look for the RepositoryAttribute on the assembly 
+				object[] repositoryAttributes = Attribute.GetCustomAttributes(assembly, typeof(log4net.Config.RepositoryAttribute), false);
+				if (repositoryAttributes == null || repositoryAttributes.Length == 0)
 				{
-					LogLog.Error("DefaultRepositorySelector: Assembly [" + assembly + "] has a RepositoryAttribute but it does not!.");
+					// This is not a problem, but its nice to know what is going on.
+					LogLog.Debug("DefaultRepositorySelector: Assembly [" + assembly + "] does not have a RepositoryAttribute specified.");
 				}
 				else
 				{
-					// If the Name property is set then override the default
-					if (domAttr.Name != null)
+					if (repositoryAttributes.Length > 1)
 					{
-						repositoryName = domAttr.Name;
+						LogLog.Error("DefaultRepositorySelector: Assembly [" + assembly + "] has multiple log4net.Config.RepositoryAttribute assembly attributes. Only using first occurrence.");
 					}
 
-					// If the RepositoryType property is set then override the default
-					if (domAttr.RepositoryType != null)
+					log4net.Config.RepositoryAttribute domAttr = repositoryAttributes[0] as log4net.Config.RepositoryAttribute;
+
+					if (domAttr == null)
 					{
-						// Check that the type is a repository
-						if (typeof(ILoggerRepository).IsAssignableFrom(domAttr.RepositoryType))
+						LogLog.Error("DefaultRepositorySelector: Assembly [" + assembly + "] has a RepositoryAttribute but it does not!.");
+					}
+					else
+					{
+						// If the Name property is set then override the default
+						if (domAttr.Name != null)
 						{
-							repositoryType = domAttr.RepositoryType;
+							repositoryName = domAttr.Name;
 						}
-						else
+
+						// If the RepositoryType property is set then override the default
+						if (domAttr.RepositoryType != null)
 						{
-							LogLog.Error("DefaultRepositorySelector: Repository Type [" + domAttr.RepositoryType + "] must implement the ILoggerRepository interface.");
+							// Check that the type is a repository
+							if (typeof(ILoggerRepository).IsAssignableFrom(domAttr.RepositoryType))
+							{
+								repositoryType = domAttr.RepositoryType;
+							}
+							else
+							{
+								LogLog.Error("DefaultRepositorySelector: Repository Type [" + domAttr.RepositoryType + "] must implement the ILoggerRepository interface.");
+							}
 						}
 					}
 				}
+			}
+			catch (Exception ex)
+			{
+				LogLog.Error("DefaultRepositorySelector: Unhandled exception in GetInfoForAssembly", ex);
 			}
 		}
 
@@ -625,7 +652,7 @@ namespace log4net.Core
 				throw new ArgumentNullException("repository");
 			}
 
-			// Look for the Configurator attributes (e.g. DOMConfiguratorAttribute) on the assembly
+			// Look for the Configurator attributes (e.g. XmlConfiguratorAttribute) on the assembly
 			object[] configAttributes = Attribute.GetCustomAttributes(assembly, typeof(log4net.Config.ConfiguratorAttribute), false);
 			if (configAttributes != null && configAttributes.Length > 0)
 			{
@@ -635,7 +662,17 @@ namespace log4net.Core
 				// Delegate to the attribute the job of configuring the repository
 				foreach(log4net.Config.ConfiguratorAttribute configAttr in configAttributes)
 				{
-					configAttr.Configure(assembly, repository);
+					if (configAttr != null)
+					{
+						try
+						{
+							configAttr.Configure(assembly, repository);
+						}
+						catch (Exception ex)
+						{
+							LogLog.Error("DefaultRepositorySelector: Exception calling ["+configAttr.GetType().FullName+"] .Configure method.", ex);
+						}
+					}
 				}
 			}
 
@@ -648,15 +685,30 @@ namespace log4net.Core
 				string repositoryConfigFile = SystemInfo.GetAppSetting("log4net.Config");
 				if (repositoryConfigFile != null && repositoryConfigFile.Length > 0)
 				{
-					// Resolve the config path relative to the application base directory URI
-					Uri applicationBaseDirectoryUri = new Uri(SystemInfo.ApplicationBaseDirectory);
+					string applicationBaseDirectory = null;
+					try
+					{
+						applicationBaseDirectory = SystemInfo.ApplicationBaseDirectory;
+					}
+					catch(Exception ex)
+					{
+						LogLog.Warn("DefaultRepositorySelector: Exception getting ApplicationBaseDirectory. appSettings log4net.Config path ["+repositoryConfigFile+"] will be treated as an absolute URI", ex);
+					}
 
 					// As we are not going to watch the config file it is easiest to just resolve it as a 
 					// URI and pass that to the Configurator
 					Uri repositoryConfigUri = null;
 					try
 					{
-						repositoryConfigUri = new Uri(applicationBaseDirectoryUri, repositoryConfigFile);
+						if (applicationBaseDirectory != null)
+						{
+							// Resolve the config path relative to the application base directory URI
+							repositoryConfigUri = new Uri(new Uri(applicationBaseDirectory), repositoryConfigFile);
+						}
+						else
+						{
+							repositoryConfigUri = new Uri(repositoryConfigFile);
+						}
 					}
 					catch(Exception ex)
 					{
@@ -667,8 +719,15 @@ namespace log4net.Core
 					{
 						LogLog.Debug("DefaultRepositorySelector: Loading configuration for default repository from AppSettings specified Config URI ["+repositoryConfigUri.ToString()+"]");
 
-						// TODO: Support other types of configurator
-						XmlConfigurator.Configure(repository, repositoryConfigUri);
+						try
+						{
+							// TODO: Support other types of configurator
+							XmlConfigurator.Configure(repository, repositoryConfigUri);
+						}
+						catch (Exception ex)
+						{
+							LogLog.Error("DefaultRepositorySelector: Exception calling XmlConfigurator.Configure method with ConfigUri ["+repositoryConfigUri+"]", ex);
+						}
 					}
 				}
 			}

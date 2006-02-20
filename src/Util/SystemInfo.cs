@@ -888,7 +888,7 @@ namespace log4net.Util
 			}
 			catch
 			{
-				// ignore uri exceptions
+				// Ignore URI exceptions & SecurityExceptions from SystemInfo.ApplicationBaseDirectory
 			}
 
 			if (baseDirectory != null && baseDirectory.Length > 0)

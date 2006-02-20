@@ -196,9 +196,18 @@ namespace log4net.Config
 		/// <exception cref="ArgumentOutOfRangeException">The <paramref name="repository" /> does not extend <see cref="Hierarchy"/>.</exception>
 		override public void Configure(Assembly sourceAssembly, ILoggerRepository targetRepository)
 		{
-			Uri applicationBaseDirectoryUri = new Uri(SystemInfo.ApplicationBaseDirectory);
+			string applicationBaseDirectory = null;
+			try
+			{
+				applicationBaseDirectory = SystemInfo.ApplicationBaseDirectory;
+			}
+			catch
+			{
+				// Ignore this exception because it is only thrown when ApplicationBaseDirectory is a file
+				// and the application does not have PathDiscovery permission
+			}
 
-			if (applicationBaseDirectoryUri.IsFile)
+			if (applicationBaseDirectory == null || (new Uri(applicationBaseDirectory)).IsFile)
 			{
 				ConfigureFromFile(sourceAssembly, targetRepository);
 			}
@@ -226,7 +235,14 @@ namespace log4net.Config
 				if (m_configFileExtension == null || m_configFileExtension.Length == 0)
 				{
 					// Use the default .config file for the AppDomain
-					fullPath2ConfigFile = SystemInfo.ConfigurationFileLocation;
+					try
+					{
+						fullPath2ConfigFile = SystemInfo.ConfigurationFileLocation;
+					}
+					catch(Exception ex)
+					{
+						LogLog.Error("XmlConfiguratorAttribute: Exception getting ConfigurationFileLocation. Must be able to resolve ConfigurationFileLocation when ConfigFile and ConfigFileExtension properties are not set.", ex);
+					}
 				}
 				else
 				{
@@ -236,16 +252,49 @@ namespace log4net.Config
 						m_configFileExtension = "." + m_configFileExtension;
 					}
 
-					fullPath2ConfigFile = Path.Combine(SystemInfo.ApplicationBaseDirectory, SystemInfo.AssemblyFileName(sourceAssembly) + m_configFileExtension);
+					string applicationBaseDirectory = null;
+					try
+					{
+						applicationBaseDirectory = SystemInfo.ApplicationBaseDirectory;
+					}
+					catch(Exception ex)
+					{
+						LogLog.Error("XmlConfiguratorAttribute: Exception getting ApplicationBaseDirectory. Must be able to resolve ApplicationBaseDirectory and AssemblyFileName when ConfigFileExtension property is set.", ex);
+					}
+
+					if (applicationBaseDirectory != null)
+					{
+						fullPath2ConfigFile = Path.Combine(applicationBaseDirectory, SystemInfo.AssemblyFileName(sourceAssembly) + m_configFileExtension);
+					}
 				}
 			}
 			else
 			{
-				// Just the base dir + the config file
-				fullPath2ConfigFile = Path.Combine(SystemInfo.ApplicationBaseDirectory, m_configFile);
+				string applicationBaseDirectory = null;
+				try
+				{
+					applicationBaseDirectory = SystemInfo.ApplicationBaseDirectory;
+				}
+				catch(Exception ex)
+				{
+					LogLog.Warn("XmlConfiguratorAttribute: Exception getting ApplicationBaseDirectory. ConfigFile property path ["+m_configFile+"] will be treated as an absolute path.", ex);
+				}
+
+				if (applicationBaseDirectory != null)
+				{
+					// Just the base dir + the config file
+					fullPath2ConfigFile = Path.Combine(applicationBaseDirectory, m_configFile);
+				}
+				else
+				{
+					fullPath2ConfigFile = m_configFile;
+				}
 			}
 
-			ConfigureFromFile(targetRepository, new FileInfo(fullPath2ConfigFile));
+			if (fullPath2ConfigFile != null)
+			{
+				ConfigureFromFile(targetRepository, new FileInfo(fullPath2ConfigFile));
+			}
 		}
 
 		/// <summary>
@@ -281,9 +330,6 @@ namespace log4net.Config
 		/// <param name="targetRepository">The repository to configure.</param>
 		private void ConfigureFromUri(Assembly sourceAssembly, ILoggerRepository targetRepository)
 		{
-			Uri applicationBaseDirectoryUri = new Uri(SystemInfo.ApplicationBaseDirectory);
-			Uri systemConfigFileUri = new Uri(SystemInfo.ConfigurationFileLocation);
-
 			// Work out the full path to the config file
 			Uri fullPath2ConfigFile = null;
 			
@@ -292,8 +338,23 @@ namespace log4net.Config
 			{
 				if (m_configFileExtension == null || m_configFileExtension.Length == 0)
 				{
-					// Use the default .config file for the AppDomain
-					fullPath2ConfigFile = systemConfigFileUri;
+					string systemConfigFilePath = null;
+					try
+					{
+						systemConfigFilePath = SystemInfo.ConfigurationFileLocation;
+					}
+					catch(Exception ex)
+					{
+						LogLog.Error("XmlConfiguratorAttribute: Exception getting ConfigurationFileLocation. Must be able to resolve ConfigurationFileLocation when ConfigFile and ConfigFileExtension properties are not set.", ex);
+					}
+
+					if (systemConfigFilePath != null)
+					{
+						Uri systemConfigFileUri = new Uri(systemConfigFilePath);
+
+						// Use the default .config file for the AppDomain
+						fullPath2ConfigFile = systemConfigFileUri;
+					}
 				}
 				else
 				{
@@ -303,40 +364,73 @@ namespace log4net.Config
 						m_configFileExtension = "." + m_configFileExtension;
 					}
 
-					UriBuilder builder = new UriBuilder(systemConfigFileUri);
-
-					// Remove the current extension from the systemConfigFileUri path
-					string path = builder.Path;
-                    int startOfExtension = path.LastIndexOf(".");
-					if (startOfExtension >= 0)
+					string systemConfigFilePath = null;
+					try
 					{
-						path = path.Substring(0, startOfExtension);
+						systemConfigFilePath = SystemInfo.ConfigurationFileLocation;
 					}
-					path += m_configFileExtension;
+					catch(Exception ex)
+					{
+						LogLog.Error("XmlConfiguratorAttribute: Exception getting ConfigurationFileLocation. Must be able to resolve ConfigurationFileLocation when the ConfigFile property are not set.", ex);
+					}
 
-					builder.Path = path;
-					fullPath2ConfigFile = builder.Uri;
+					if (systemConfigFilePath != null)
+					{
+						UriBuilder builder = new UriBuilder(new Uri(systemConfigFilePath));
+
+						// Remove the current extension from the systemConfigFileUri path
+						string path = builder.Path;
+						int startOfExtension = path.LastIndexOf(".");
+						if (startOfExtension >= 0)
+						{
+							path = path.Substring(0, startOfExtension);
+						}
+						path += m_configFileExtension;
+
+						builder.Path = path;
+						fullPath2ConfigFile = builder.Uri;
+					}
 				}
 			}
 			else
 			{
-				// Just the base dir + the config file
-				fullPath2ConfigFile = new Uri(applicationBaseDirectoryUri, m_configFile);
-			}
-
-			if (fullPath2ConfigFile.IsFile)
-			{
-				// The m_configFile could be an absolute local path, therefore we have to be
-				// prepared to switch back to using FileInfos here
-				ConfigureFromFile(targetRepository, new FileInfo(fullPath2ConfigFile.LocalPath));
-			}
-			else
-			{
-				if (m_configureAndWatch)
+				string applicationBaseDirectory = null;
+				try
 				{
-					LogLog.Warn("XmlConfiguratorAttribute: Unable to watch config file loaded from a URI");
+					applicationBaseDirectory = SystemInfo.ApplicationBaseDirectory;
 				}
-				XmlConfigurator.Configure(targetRepository, fullPath2ConfigFile);
+				catch(Exception ex)
+				{
+					LogLog.Warn("XmlConfiguratorAttribute: Exception getting ApplicationBaseDirectory. ConfigFile property path ["+m_configFile+"] will be treated as an absolute URI.", ex);
+				}
+
+				if (applicationBaseDirectory != null)
+				{
+					// Just the base dir + the config file
+					fullPath2ConfigFile = new Uri(new Uri(applicationBaseDirectory), m_configFile);
+				}
+				else
+				{
+					fullPath2ConfigFile = new Uri(m_configFile);
+				}
+			}
+
+			if (fullPath2ConfigFile != null)
+			{
+				if (fullPath2ConfigFile.IsFile)
+				{
+					// The m_configFile could be an absolute local path, therefore we have to be
+					// prepared to switch back to using FileInfos here
+					ConfigureFromFile(targetRepository, new FileInfo(fullPath2ConfigFile.LocalPath));
+				}
+				else
+				{
+					if (m_configureAndWatch)
+					{
+						LogLog.Warn("XmlConfiguratorAttribute: Unable to watch config file loaded from a URI");
+					}
+					XmlConfigurator.Configure(targetRepository, fullPath2ConfigFile);
+				}
 			}
 		}
 
