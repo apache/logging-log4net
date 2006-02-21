@@ -17,129 +17,111 @@
 #endregion
 
 using System;
-using System.Diagnostics;
-using System.Globalization;
-
-using log4net.Config;
-using log4net.Util;
-using log4net.Layout;
+using System.Threading;
 using log4net.Core;
-using log4net.Appender;
-using log4net.Repository;
-
-using log4net.Tests.Appender;
 
 using NUnit.Framework;
 
 namespace log4net.Tests.Core
 {
 	/// <summary>
-	/// </remarks>
+	/// </<summary>
 	[TestFixture] public class FixingTest
 	{
-		private LoggingEventData BuildStandardEventData()
-		{
-			LoggingEventData ed=new LoggingEventData();
-			ed.LoggerName=typeof(FixingTest).FullName;
-			ed.Level=Level.Warn;
-			ed.Message="Logging event works";
-			ed.Domain="ReallySimpleApp";
-			ed.LocationInfo=new LocationInfo(typeof(FixingTest).Name,"Main","Class1.cs","29");	//Completely arbitary
-			ed.ThreadName=System.Threading.Thread.CurrentThread.Name;
-			ed.TimeStamp=new DateTime(2005,12,14,14,07,35,0);									//Completely arbitary
-			ed.ExceptionString="Exception occured here";
-			ed.UserName="TestUser";
-			return ed;
-		}
-
 		static FixingTest()
 		{
-			log4net.LogManager.CreateRepository("Test Repository");
-			System.Threading.Thread.CurrentThread.Name="Test thread";
+			LogManager.CreateRepository("Test Repository");
+
+			// write-once
+			if (Thread.CurrentThread.Name == null)
+			{
+				Thread.CurrentThread.Name = "Log4Net Test thread";
+			}
+		}
+
+		private LoggingEventData buildStandardEventData()
+		{
+			LoggingEventData loggingEventData = new LoggingEventData();
+			loggingEventData.LoggerName = typeof(FixingTest).FullName;
+			loggingEventData.Level = Level.Warn;
+			loggingEventData.Message = "Logging event works";
+			loggingEventData.Domain = "ReallySimpleApp";
+			loggingEventData.LocationInfo = new LocationInfo(typeof(FixingTest).Name,"Main","Class1.cs","29"); //Completely arbitary
+			loggingEventData.ThreadName = Thread.CurrentThread.Name;
+			loggingEventData.TimeStamp = DateTime.Today;
+			loggingEventData.ExceptionString = "Exception occured here";
+			loggingEventData.UserName = "TestUser";
+			return loggingEventData;
 		}
 
 		[Test] public void TestUnfixedValues()
 		{
-			LoggingEventData ed=BuildStandardEventData();
+			LoggingEventData loggingEventData = buildStandardEventData();
 			
-			LoggingEvent evt=new LoggingEvent(
-				ed.LocationInfo.GetType(),
-				log4net.LogManager.GetRepository("Test Repository"),
-				ed.LoggerName,
-				ed.Level,
-				ed.Message,
-				new Exception("This is the exception")
-				);
+			LoggingEvent loggingEvent = new LoggingEvent(
+				loggingEventData.LocationInfo.GetType(),
+				LogManager.GetRepository("Test Repository"),
+				loggingEventData.LoggerName,
+				loggingEventData.Level,
+				loggingEventData.Message,
+				new Exception("This is the exception"));
 
+			assertStandardEventData(loggingEvent);
 
-			Assert.AreEqual("domain-NUnitAddin.NUnit.dll",evt.Domain,"Domain is incorrect");
-			Assert.AreEqual("System.Exception: This is the exception",evt.GetExceptionString(),"Exception is incorrect");
-			Assert.AreEqual(FixFlags.None,evt.Fix,"Fixed Fields is incorrect");
-			Assert.AreEqual("",evt.Identity,"Identity is incorrect");
-			Assert.AreEqual(Level.Warn,evt.Level,"Level is incorrect");
-			Assert.AreEqual("get_LocationInformation",evt.LocationInformation.MethodName,"Location Info is incorrect");
-			Assert.AreEqual("log4net.Tests.Core.FixingTest",evt.LoggerName,"LoggerName is incorrect");
-			Assert.AreEqual(log4net.LogManager.GetRepository("Test Repository"),evt.Repository,"Repository is incorrect");
-			Assert.AreEqual("Test thread",evt.ThreadName,"ThreadName is incorrect");
-			Assert.IsNotNull(evt.TimeStamp,"TimeStamp is incorrect");
-			Assert.AreEqual(System.Security.Principal.WindowsIdentity.GetCurrent().Name ,evt.UserName,"UserName is incorrect");
-			Assert.AreEqual("Logging event works",evt.RenderedMessage,"Message is incorrect");
+			Assert.AreEqual(FixFlags.None,loggingEvent.Fix,"Fixed Fields is incorrect");
 		}
 
 		[Test] public void TestAllFixedValues()
 		{
-			LoggingEventData ed=BuildStandardEventData();
+			LoggingEventData loggingEventData = buildStandardEventData();
 			
-			LoggingEvent evt=new LoggingEvent(
-				ed.LocationInfo.GetType(),
-				log4net.LogManager.GetRepository("Test Repository"),
-				ed.LoggerName,
-				ed.Level,
-				ed.Message,
-				new Exception("This is the exception")
-				);
-			evt.Fix=FixFlags.All;
+			LoggingEvent loggingEvent = new LoggingEvent(
+				loggingEventData.LocationInfo.GetType(),
+				LogManager.GetRepository("Test Repository"),
+				loggingEventData.LoggerName,
+				loggingEventData.Level,
+				loggingEventData.Message,
+				new Exception("This is the exception"));
 
-			Assert.AreEqual("domain-NUnitAddin.NUnit.dll",evt.Domain,"Domain is incorrect");
-			Assert.AreEqual("System.Exception: This is the exception",evt.GetExceptionString(),"Exception is incorrect");
-			Assert.AreEqual(FixFlags.LocationInfo| FixFlags.UserName| FixFlags.Identity| FixFlags.Partial|FixFlags.Message | FixFlags.ThreadName | FixFlags.Exception | FixFlags.Domain | FixFlags.Properties,evt.Fix,"Fixed Fields is incorrect");
-			Assert.AreEqual("",evt.Identity,"Identity is incorrect");
-			Assert.AreEqual(Level.Warn,evt.Level,"Level is incorrect");
-			Assert.AreEqual("get_LocationInformation",evt.LocationInformation.MethodName,"Location Info is incorrect");
-			Assert.AreEqual("log4net.Tests.Core.FixingTest",evt.LoggerName,"LoggerName is incorrect");
-			Assert.AreEqual(log4net.LogManager.GetRepository("Test Repository"),evt.Repository,"Repository is incorrect");
-			Assert.AreEqual("Test thread",evt.ThreadName,"ThreadName is incorrect");
-			Assert.IsNotNull(evt.TimeStamp,"TimeStamp is incorrect");
-			Assert.AreEqual(System.Security.Principal.WindowsIdentity.GetCurrent().Name ,evt.UserName,"UserName is incorrect");
-			Assert.AreEqual("Logging event works",evt.RenderedMessage,"Message is incorrect");
+			assertStandardEventData(loggingEvent);
+
+			loggingEvent.Fix = FixFlags.All;
+
+			Assert.AreEqual(FixFlags.LocationInfo| FixFlags.UserName| FixFlags.Identity| FixFlags.Partial|FixFlags.Message | FixFlags.ThreadName | FixFlags.Exception | FixFlags.Domain | FixFlags.Properties,loggingEvent.Fix,"Fixed Fields is incorrect");
 		}
 
 		[Test] public void TestNoFixedValues()
 		{
-			LoggingEventData ed=BuildStandardEventData();
+			LoggingEventData loggingEventData = buildStandardEventData();
 			
-			LoggingEvent evt=new LoggingEvent(
-				ed.LocationInfo.GetType(),
-				log4net.LogManager.GetRepository("Test Repository"),
-				ed.LoggerName,
-				ed.Level,
-				ed.Message,
-				new Exception("This is the exception")
-				);
-			evt.Fix=FixFlags.None;
+			LoggingEvent loggingEvent = new LoggingEvent(
+				loggingEventData.LocationInfo.GetType(),
+				LogManager.GetRepository("Test Repository"),
+				loggingEventData.LoggerName,
+				loggingEventData.Level,
+				loggingEventData.Message,
+				new Exception("This is the exception"));
 
-			Assert.IsNull(evt.Domain,"Domain is incorrect");
-			Assert.IsNull(evt.GetExceptionString(),"Exception is incorrect");
-			Assert.AreEqual(FixFlags.None,evt.Fix,"Fixed Fields is incorrect");
-			Assert.IsNull(evt.Identity,"Identity is incorrect");
-			Assert.AreEqual(Level.Warn,evt.Level,"Level is incorrect");
-			Assert.IsNull(evt.LocationInformation,"Location Info is incorrect");
-			Assert.AreEqual("log4net.Tests.Core.FixingTest",evt.LoggerName,"LoggerName is incorrect");
-			Assert.AreEqual(log4net.LogManager.GetRepository("Test Repository"),evt.Repository,"Repository is incorrect");
-			Assert.IsNull(evt.ThreadName,"ThreadName is incorrect");
-			Assert.IsNotNull(evt.TimeStamp,"TimeStamp is incorrect");
-			Assert.IsNull(evt.UserName,"UserName is incorrect");
-			Assert.IsNull(evt.RenderedMessage,"Message is incorrect");
+			assertStandardEventData(loggingEvent);
+
+			loggingEvent.Fix = FixFlags.None;
+
+			Assert.AreEqual(FixFlags.None,loggingEvent.Fix,"Fixed Fields is incorrect");
+		}
+
+		private void assertStandardEventData(LoggingEvent loggingEvent)
+		{
+			Assert.AreEqual("domain-log4net.Tests.dll",loggingEvent.Domain,"Domain is incorrect");
+			Assert.AreEqual("System.Exception: This is the exception",loggingEvent.GetExceptionString(),"Exception is incorrect");
+			Assert.AreEqual("",loggingEvent.Identity,"Identity is incorrect");
+			Assert.AreEqual(Level.Warn,loggingEvent.Level,"Level is incorrect");
+			Assert.AreEqual("get_LocationInformation",loggingEvent.LocationInformation.MethodName,"Location Info is incorrect");
+			Assert.AreEqual("log4net.Tests.Core.FixingTest",loggingEvent.LoggerName,"LoggerName is incorrect");
+			Assert.AreEqual(LogManager.GetRepository("Test Repository"),loggingEvent.Repository,"Repository is incorrect");
+			Assert.AreEqual(Thread.CurrentThread.Name,loggingEvent.ThreadName,"ThreadName is incorrect");
+			Assert.IsNotNull(loggingEvent.TimeStamp,"TimeStamp is incorrect");
+			Assert.AreEqual(System.Security.Principal.WindowsIdentity.GetCurrent().Name ,loggingEvent.UserName,"UserName is incorrect");
+			Assert.AreEqual("Logging event works",loggingEvent.RenderedMessage,"Message is incorrect");
 		}
 	}
 }
