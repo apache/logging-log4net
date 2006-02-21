@@ -81,7 +81,7 @@ limitations under the License.
         <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Tests.dll">
             <sources basedir="${log4net.basedir}/tests/src">
                 <include name="**/*.cs" />
-                <include name="${log4net.basedir}/src/AssemblyVersionInfo.cs" />
+                <include name="../../src/AssemblyVersionInfo.cs" />
             </sources>
             <references defaultexcludes="true">
                 <include name="mscorlib.dll" />
@@ -115,7 +115,7 @@ limitations under the License.
         <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Tests.dll">
             <sources basedir="${log4net.basedir}/tests/src">
                 <include name="**/*.cs" />
-                <include name="${log4net.basedir}/src/AssemblyVersionInfo.cs" />
+                <include name="../../src/AssemblyVersionInfo.cs" />
             </sources>
             <references defaultexcludes="true">
                 <include name="mscorlib.dll" />
@@ -148,7 +148,7 @@ limitations under the License.
         <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Tests.dll">
             <sources basedir="${log4net.basedir}/tests/src">
                 <include name="**/*.cs" />
-                <include name="${log4net.basedir}/src/AssemblyVersionInfo.cs" />
+                <include name="../../src/AssemblyVersionInfo.cs" />
             </sources>
             <references defaultexcludes="true">
                 <include name="mscorlib.dll" />
