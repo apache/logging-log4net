@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!--
-Copyright 2004-2005 The Apache Software Foundation
+Copyright 2004-2006 The Apache Software Foundation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -40,6 +40,18 @@ limitations under the License.
             </if>
         </if>
 
+        <if test="${framework::exists('net-2.0')}">
+            <call target="compile-net-2.0" />
+        </if>
+        <if test="${not framework::exists('net-2.0')}">
+            <if test="${property::exists('project.build.package') and project.build.package}">
+                <fail message="The .NET Framework 2.0 is not available." />
+            </if>
+            <if test="${not(property::exists('project.build.package') and project.build.package)}">
+                <echo message="The .NET Framework 2.0 is not available. Build skipped." />
+            </if>
+        </if>
+
         <if test="${framework::exists('net-1.1')}">
             <call target="compile-net-1.1" />
         </if>
@@ -51,53 +63,18 @@ limitations under the License.
                 <echo message="The .NET Framework 1.1 is not available. Build skipped." />
             </if>
         </if>
-
     </target>
 
     <!-- Target for compiling the tests on net-1.0 -->
     <target name="compile-net-1.0" description="Builds log4net tests .NET Framework 1.0 version" depends="set-net-1.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir">
-        <!-- copy log4net build output  -->
+        <!-- copy log4net build output -->
         <copy todir="${current.bin.dir}">
             <fileset basedir="${log4net.basedir}/${current.bin.dir}">
                 <include name="*.*" />
             </fileset>
         </copy>
         <copy todir="${current.bin.dir}">
-	    <fileset basedir="${log4net.basedir}/tests/lib">
-                <include name="nunit.framework.dll" />
-            </fileset>
-	</copy>
-	<csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Tests.dll">
-            <sources basedir="${log4net.basedir}/tests/src">
-                <include name="**/*.cs" />
-                <include name="${log4net.basedir}/src/AssemblyVersionInfo.cs" />
-            </sources>
-            <references defaultexcludes="true">
-                <include name="mscorlib.dll" />                
-                <include name="System.dll" />
-                <include name="System.Data.dll" />
-                <include name="System.Web.dll" />
-                <include name="System.Xml.dll" />
-                <include name="System.Runtime.Remoting.dll" />
-		<include name="${current.bin.dir}/log4net.dll" frompath="false" />
-		<include name="${current.bin.dir}/nunit.framework.dll" frompath="false" />
-                <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework>/<framework version>/<build configuration> directory -->
-                <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
-		<include name="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
-            </references>
-        </csc>
-    </target>
-
-    <!-- Target for compiling the tests on net-1.1 -->
-    <target name="compile-net-1.1" description="Builds log4net tests .NET Framework 1.1 version" depends="set-net-1.1-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly">
-        <!-- copy log4net build output  -->
-        <copy todir="${current.bin.dir}">
-            <fileset basedir="${log4net.basedir}/${current.bin.dir}">
-                <include name="*.*" />
-            </fileset>
-        </copy>
-        <copy todir="${current.bin.dir}">
-	    <fileset basedir="${log4net.basedir}/tests/lib">
+            <fileset basedir="${log4net.basedir}/tests/lib">
                 <include name="nunit.framework.dll" />
             </fileset>
         </copy>
@@ -107,17 +84,84 @@ limitations under the License.
                 <include name="${log4net.basedir}/src/AssemblyVersionInfo.cs" />
             </sources>
             <references defaultexcludes="true">
-                <include name="mscorlib.dll" />                
+                <include name="mscorlib.dll" />
                 <include name="System.dll" />
                 <include name="System.Data.dll" />
                 <include name="System.Web.dll" />
                 <include name="System.Xml.dll" />
                 <include name="System.Runtime.Remoting.dll" />
-		<include name="${current.bin.dir}/log4net.dll" frompath="false" />
-		<include name="${current.bin.dir}/nunit.framework.dll" frompath="false" />
+                <include name="${current.bin.dir}/log4net.dll" frompath="false" />
+                <include name="${current.bin.dir}/nunit.framework.dll" frompath="false" />
                 <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework>/<framework version>/<build configuration> directory -->
                 <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
-		<include name="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
+                <include name="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
+            </references>
+        </csc>
+    </target>
+
+    <!-- Target for compiling the tests on net-1.1 -->
+    <target name="compile-net-1.1" description="Builds log4net tests .NET Framework 1.1 version" depends="set-net-1.1-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly">
+        <!-- copy log4net build output -->
+        <copy todir="${current.bin.dir}">
+            <fileset basedir="${log4net.basedir}/${current.bin.dir}">
+                <include name="*.*" />
+            </fileset>
+        </copy>
+        <copy todir="${current.bin.dir}">
+            <fileset basedir="${log4net.basedir}/tests/lib">
+                <include name="nunit.framework.dll" />
+            </fileset>
+        </copy>
+        <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Tests.dll">
+            <sources basedir="${log4net.basedir}/tests/src">
+                <include name="**/*.cs" />
+                <include name="${log4net.basedir}/src/AssemblyVersionInfo.cs" />
+            </sources>
+            <references defaultexcludes="true">
+                <include name="mscorlib.dll" />
+                <include name="System.dll" />
+                <include name="System.Data.dll" />
+                <include name="System.Web.dll" />
+                <include name="System.Xml.dll" />
+                <include name="System.Runtime.Remoting.dll" />
+                <include name="${current.bin.dir}/log4net.dll" frompath="false" />
+                <include name="${current.bin.dir}/nunit.framework.dll" frompath="false" />
+                <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework>/<framework version>/<build configuration> directory -->
+                <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
+                <include name="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
+            </references>
+        </csc>
+    </target>
+
+    <target name="compile-net-2.0" description="Builds log4net tests .NET Framework 2.0 version" depends="set-net-2.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly">
+        <!-- copy log4net build output -->
+        <copy todir="${current.bin.dir}">
+            <fileset basedir="${log4net.basedir}/${current.bin.dir}">
+                <include name="*.*" />
+            </fileset>
+        </copy>
+        <copy todir="${current.bin.dir}">
+            <fileset basedir="${log4net.basedir}/tests/lib">
+                <include name="nunit.framework.dll" />
+            </fileset>
+        </copy>
+        <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Tests.dll">
+            <sources basedir="${log4net.basedir}/tests/src">
+                <include name="**/*.cs" />
+                <include name="${log4net.basedir}/src/AssemblyVersionInfo.cs" />
+            </sources>
+            <references defaultexcludes="true">
+                <include name="mscorlib.dll" />
+                <include name="System.dll" />
+                <include name="System.Data.dll" />
+                <include name="System.Web.dll" />
+                <include name="System.Xml.dll" />
+                <include name="System.Runtime.Remoting.dll" />
+                <include name="${current.bin.dir}/log4net.dll" frompath="false" />
+                <include name="${current.bin.dir}/nunit.framework.dll" frompath="false" />
+                <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework>/<framework version>/<build configuration> directory -->
+                <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
+                <include name="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
             </references>
         </csc>
     </target>
@@ -135,5 +179,4 @@ limitations under the License.
         </nunit2>
     </target>
 
-    
 </project>
