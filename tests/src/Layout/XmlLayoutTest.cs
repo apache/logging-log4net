@@ -58,14 +58,22 @@ namespace log4net.Tests.Layout
 		private string createEventNode(string message)
 		{
 			return String.Format("<event logger=\"TestLogger\" timestamp=\"{0}\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message>{1}</message></event>\r\n", 
+#if NET_2_0
 			    XmlConvert.ToString(DateTime.Today, XmlDateTimeSerializationMode.Local),
+#else
+			    XmlConvert.ToString(DateTime.Today),
+#endif
 				message);
 		}
 
 		private string createEventNode(string key, string value)
 		{
 			return String.Format("<event logger=\"TestLogger\" timestamp=\"{0:s}\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message>Test message</message><properties><data name=\"{1}\" value=\"{2}\" /></properties></event>\r\n",
-				XmlConvert.ToString(DateTime.Today, XmlDateTimeSerializationMode.Local),
+#if NET_2_0
+			    XmlConvert.ToString(DateTime.Today, XmlDateTimeSerializationMode.Local),
+#else
+			    XmlConvert.ToString(DateTime.Today),
+#endif
 				key,
 				value);
 		}
