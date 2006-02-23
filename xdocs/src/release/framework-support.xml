@@ -30,6 +30,29 @@ limitations under the License.
 			
 			<section id="summary" name="Summary of .NET frameworks supported by log4net">
 				<p>
+					log4net is built on a number of different frameworks. Each new version of the frameworks add
+					new features. To take advantage of these new features we must build log4net using the
+					appropriate framework. We also maintain builds compatible with older versions of the frameworks.
+				</p>
+				<p>
+					It is important to remember that the .NET frameworks support backward compatibility, that is
+					a new version of the framework will run binary assemblies that were targeted to previous versions
+					of the framework.
+				</p>
+				<p>
+					While the number of different builds available may seem confusing, you only need to select the
+					nearest build for your platform that is equal to or earlier than your chosen deployment framework.
+					If you intend to deploy your application on the Microsoft .NET Framework 1.0 don't pick the
+					log4net build that is built against the Microsoft .NET Framework 1.1 because the .NET framework
+					does not guarantee forward compatibility only backward compatibility.
+				</p>
+				<p>
+					The lowest common denominator build is the CLI 1.0 Compatible build. This build is compatible with
+					the ECMA/ISO CLI 1.0 standard APIs and will run on all frameworks that support the standard. (Note
+					that the Microsoft .NET Compact Framework does not support this standard). Use this build if you
+					intend to deploy you application on to either the Microsoft .NET Frameworks or the Mono frameworks.
+				</p>
+				<p>
 					log4net now builds on 6 frameworks:
 				</p>
 				
