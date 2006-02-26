@@ -19,7 +19,7 @@ Project Details
 Web site: http://logging.apache.org/log4net
 Incubator Status: http://incubator.apache.org/projects/log4net.html
 Issue Tracking: http://issues.apache.org/jira/browse/LOG4NET
-Source Code: http://cvs.apache.org/viewcvs/logging-log4net/
+Source Code: http://svn.apache.org/viewcvs.cgi/logging/log4net/
 Mailing Lists:
   User: log4net-user@logging.apache.org
   Dev:  log4net-dev@logging.apache.org
