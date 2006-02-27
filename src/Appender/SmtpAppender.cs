@@ -304,46 +304,82 @@ namespace log4net.Appender
 					writer.Write(t);
 				}
 
+				SendEmail(writer.ToString());
+			} 
+			catch(Exception e) 
+			{
+				ErrorHandler.Error("Error occurred while sending e-mail notification.", e);
+			}
+		}
+
+		#endregion // Override implementation of BufferingAppenderSkeleton
+
+		#region Override implementation of AppenderSkeleton
+
+		/// <summary>
+		/// This appender requires a <see cref="Layout"/> to be set.
+		/// </summary>
+		/// <value><c>true</c></value>
+		/// <remarks>
+		/// <para>
+		/// This appender requires a <see cref="Layout"/> to be set.
+		/// </para>
+		/// </remarks>
+		override protected bool RequiresLayout
+		{
+			get { return true; }
+		}
+
+		#endregion // Override implementation of AppenderSkeleton
+
+		#region Protected Methods
+
+		/// <summary>
+		/// Send the email message
+		/// </summary>
+		/// <param name="messageBody">the body text to include in the mail</param>
+		virtual protected void SendEmail(string messageBody)
+		{
 #if NET_2_0
-				// .NET 2.0 has a new API for SMTP email System.Net.Mail
-				// This API supports credentials and multiple hosts correctly.
-				// The old API is deprecated.
+			// .NET 2.0 has a new API for SMTP email System.Net.Mail
+			// This API supports credentials and multiple hosts correctly.
+			// The old API is deprecated.
 
-				// Create and configure the smtp client
-				SmtpClient smtpClient = new SmtpClient();
-				if (m_smtpHost != null && m_smtpHost.Length > 0)
-				{
-					smtpClient.Host = m_smtpHost;
-				}
-				smtpClient.Port = m_port;
-				smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+			// Create and configure the smtp client
+			SmtpClient smtpClient = new SmtpClient();
+			if (m_smtpHost != null && m_smtpHost.Length > 0)
+			{
+				smtpClient.Host = m_smtpHost;
+			}
+			smtpClient.Port = m_port;
+			smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
 
-				if (m_authentication == SmtpAuthentication.Basic)
-				{
-					// Perform basic authentication
-					smtpClient.Credentials = new System.Net.NetworkCredential(m_username, m_password);
-				}
-				else if (m_authentication == SmtpAuthentication.Ntlm)
-				{
-					// Perform integrated authentication (NTLM)
-					smtpClient.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
-				}
+			if (m_authentication == SmtpAuthentication.Basic)
+			{
+				// Perform basic authentication
+				smtpClient.Credentials = new System.Net.NetworkCredential(m_username, m_password);
+			}
+			else if (m_authentication == SmtpAuthentication.Ntlm)
+			{
+				// Perform integrated authentication (NTLM)
+				smtpClient.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
+			}
 
-				MailMessage mailMessage = new MailMessage();
-				mailMessage.Body = writer.ToString();
-				mailMessage.From = new MailAddress(m_from);
-				mailMessage.To.Add(m_to);
-				mailMessage.Subject = m_subject;
-				mailMessage.Priority = m_mailPriority;
+			MailMessage mailMessage = new MailMessage();
+			mailMessage.Body = messageBody;
+			mailMessage.From = new MailAddress(m_from);
+			mailMessage.To.Add(m_to);
+			mailMessage.Subject = m_subject;
+			mailMessage.Priority = m_mailPriority;
 
-				// TODO: Consider using SendAsync to send the message without blocking. This would be a change in
-				// behaviour compared to .NET 1.x. We would need a SendCompletedCallback to log errors.
-				smtpClient.Send(mailMessage);
+			// TODO: Consider using SendAsync to send the message without blocking. This would be a change in
+			// behaviour compared to .NET 1.x. We would need a SendCompletedCallback to log errors.
+			smtpClient.Send(mailMessage);
 #else
 				// .NET 1.x uses the System.Web.Mail API for sending Mail
 
 				MailMessage mailMessage = new MailMessage();
-				mailMessage.Body = writer.ToString();
+				mailMessage.Body = messageBody;
 				mailMessage.From = m_from;
 				mailMessage.To = m_to;
 				mailMessage.Subject = m_subject;
@@ -404,32 +440,9 @@ namespace log4net.Appender
 
 				SmtpMail.Send(mailMessage);
 #endif // if NET_2_0
-			} 
-			catch(Exception e) 
-			{
-				ErrorHandler.Error("Error occurred while sending e-mail notification.", e);
-			}
 		}
 
-		#endregion // Override implementation of BufferingAppenderSkeleton
-
-		#region Override implementation of AppenderSkeleton
-
-		/// <summary>
-		/// This appender requires a <see cref="Layout"/> to be set.
-		/// </summary>
-		/// <value><c>true</c></value>
-		/// <remarks>
-		/// <para>
-		/// This appender requires a <see cref="Layout"/> to be set.
-		/// </para>
-		/// </remarks>
-		override protected bool RequiresLayout
-		{
-			get { return true; }
-		}
-
-		#endregion // Override implementation of AppenderSkeleton
+		#endregion // Protected Methods
 
 		#region Private Instance Fields
 
