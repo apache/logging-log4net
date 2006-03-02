@@ -1,6 +1,6 @@
 #region Copyright & License
 //
-// Copyright 2001-2005 The Apache Software Foundation
+// Copyright 2001-2006 The Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -134,7 +134,7 @@ namespace log4net.Appender
 			}
 			public override void EndWrite(IAsyncResult asyncResult) 
 			{
-				//No-op, it's already been handled
+				//No-op, it has already been handled
 			}
 			public override void Flush() 
 			{

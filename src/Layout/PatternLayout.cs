@@ -1,6 +1,6 @@
 #region Copyright & License
 //
-// Copyright 2001-2005 The Apache Software Foundation
+// Copyright 2001-2006 The Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -173,7 +173,7 @@ namespace log4net.Layout
 	///				</para>
 	///				<para>
 	///				<b>WARNING</b> Generating caller location information is
-	///				extremely slow. It's use should be avoided unless execution speed
+	///				extremely slow. Its use should be avoided unless execution speed
 	///				is not an issue.
 	///				</para>
 	/// 			<para>
@@ -190,7 +190,7 @@ namespace log4net.Layout
 	///				</para>
 	///				<para>
 	///				<b>WARNING</b> Generating caller information is
-	///				extremely slow. It's use should be avoided unless execution speed
+	///				extremely slow. Its use should be avoided unless execution speed
 	///				is not an issue.
 	///				</para>
 	///			</description>
@@ -217,8 +217,8 @@ namespace log4net.Layout
 	/// 			number between parentheses.
 	/// 			</para>
 	/// 			<para>
-	/// 			The location information can be very useful. However, it's
-	/// 			generation is <b>extremely</b> slow. It's use should be avoided
+	/// 			The location information can be very useful. However, its
+	/// 			generation is <b>extremely</b> slow. Its use should be avoided
 	/// 			unless execution speed is not an issue.
 	/// 			</para>
 	/// 			<para>
@@ -243,7 +243,7 @@ namespace log4net.Layout
 	///				</para>
 	///				<para>
 	///				<b>WARNING</b> Generating caller location information is
-	///				extremely slow. It's use should be avoided unless execution speed
+	///				extremely slow. Its use should be avoided unless execution speed
 	///				is not an issue.
 	///				</para>
 	/// 			<para>
@@ -307,7 +307,7 @@ namespace log4net.Layout
 	///				</para>
 	///				<para>
 	///				<b>WARNING</b> Generating caller location information is
-	///				extremely slow. It's use should be avoided unless execution speed
+	///				extremely slow. Its use should be avoided unless execution speed
 	///				is not an issue.
 	///				</para>
 	/// 			<para>
@@ -447,7 +447,7 @@ namespace log4net.Layout
 	/// 			</para>
 	/// 			<para>
 	/// 			<b>WARNING</b> Generating the caller class information is
-	/// 			slow. Thus, it's use should be avoided unless execution speed is
+	/// 			slow. Thus, its use should be avoided unless execution speed is
 	/// 			not an issue.
 	/// 			</para>
 	/// 			<para>
@@ -468,7 +468,7 @@ namespace log4net.Layout
 	///				</para>
 	///				<para>
 	///				<b>WARNING</b> Generating caller WindowsIdentity information is
-	///				extremely slow. It's use should be avoided unless execution speed
+	///				extremely slow. Its use should be avoided unless execution speed
 	///				is not an issue.
 	///				</para>
 	///			</description>

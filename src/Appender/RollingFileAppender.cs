@@ -1,6 +1,6 @@
 #region Copyright & License
 //
-// Copyright 2001-2005 The Apache Software Foundation
+// Copyright 2001-2006 The Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -1188,7 +1188,7 @@ namespace log4net.Appender
 		/// <para>
 		/// If the maximum number of size based backups is reached
 		/// (<c>curSizeRollBackups == maxSizeRollBackups</c>) then the oldest
-		/// file is deleted -- it's index determined by the sign of countDirection.
+		/// file is deleted -- its index determined by the sign of countDirection.
 		/// If <c>countDirection</c> &lt; 0, then files
 		/// {<c>File.1</c>, ..., <c>File.curSizeRollBackups -1</c>}
 		/// are renamed to {<c>File.2</c>, ...,
@@ -1235,7 +1235,7 @@ namespace log4net.Appender
 		/// <para>
 		/// If the maximum number of size based backups is reached
 		/// (<c>curSizeRollBackups == maxSizeRollBackups</c>) then the oldest
-		/// file is deleted -- it's index determined by the sign of countDirection.
+		/// file is deleted -- its index determined by the sign of countDirection.
 		/// If <c>countDirection</c> &lt; 0, then files
 		/// {<c>File.1</c>, ..., <c>File.curSizeRollBackups -1</c>}
 		/// are renamed to {<c>File.2</c>, ...,

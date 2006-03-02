@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!--
-Copyright 2004-2005 The Apache Software Foundation
+Copyright 2004-2006 The Apache Software Foundation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -911,7 +911,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 					<section id="root" name="Root Logger">
 						<p>
 							Only one root logger element may only be defined and it must be a child of <span class="code">&lt;log4net&gt;</span> element.
-							The root logger is the root of the logger hierarchy. All logger ultimately inherit from this logger.
+							The root logger is the root of the logger hierarchy. All loggers ultimately inherit from this logger.
 						</p>
 						<p>
 							An example root logger:
@@ -996,7 +996,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
 								<tr>
 									<td>additivity</td>
 									<td>
-										Required attribute. Value must be either <span class="code">true</span> or <span class="code">false</span>.
+										Optional attribute. Value may be either <span class="code">true</span> or <span class="code">false</span>.
 										The default value is <span class="code">true</span>. Set this attribute to <span class="code">false</span>
 										to prevent this logger from inheriting the appenders defined on parent loggers.
 									</td>

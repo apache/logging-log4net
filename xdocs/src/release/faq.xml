@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!--
-Copyright 2004-2005 The Apache Software Foundation
+Copyright 2004-2006 The Apache Software Foundation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -272,7 +272,7 @@ limitations under the License.
 					<p>
 						log4net is a port of the popular <a href="http://logging.apache.org/log4j/">log4j</a> logging library.
 						The initial port was done in June 2001, since then we have tried to remain in the
-						spirit of the original log4j. See the log4net <a href="../../history.html">history</a> page for more details.
+						spirit of the original log4j. See the log4net <a href="../history.html">history</a> page for more details.
 					</p>
 				</section>
 				<p><a href="#top">Back to Top</a></p>
@@ -943,7 +943,7 @@ public class FastLogger
 
 				<section id="report-bugs" name="How do I report bugs?">
 					<p>
-						See the <a href="../../support.html">support</a> page for details.
+						See the <a href="../support.html">support</a> page for details.
 					</p>
 				</section>
 				<p><a href="#top">Back to Top</a></p>
