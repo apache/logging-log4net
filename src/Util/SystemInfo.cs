@@ -1,6 +1,6 @@
 #region Copyright & License
 //
-// Copyright 2001-2005 The Apache Software Foundation
+// Copyright 2001-2006 The Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -387,7 +387,12 @@ namespace log4net.Util
 		/// <remarks>
 		/// <para>
 		/// Use this value to indicate a <c>null</c> has been encountered while
-		/// outputing a string representation of an item.
+		/// outputting a string representation of an item.
+		/// </para>
+		/// <para>
+		/// The default value is <c>(null)</c>. This value can be overridden by specifying
+		/// a value for the <c>log4net.NullText</c> appSetting in the application's
+		/// .config file.
 		/// </para>
 		/// </remarks>
 		public static string NullText
@@ -402,6 +407,11 @@ namespace log4net.Util
 		/// <remarks>
 		/// <para>
 		/// Use this value when an unsupported feature is requested.
+		/// </para>
+		/// <para>
+		/// The default value is <c>NOT AVAILABLE</c>. This value can be overridden by specifying
+		/// a value for the <c>log4net.NotAvailableText</c> appSetting in the application's
+		/// .config file.
 		/// </para>
 		/// </remarks>
 		public static string NotAvailableText
@@ -826,7 +836,7 @@ namespace log4net.Util
 		/// <returns>the value for the key, or <c>null</c></returns>
 		/// <remarks>
 		/// <para>
-		/// Configuration APIs are not suported under the Compact Framework
+		/// Configuration APIs are not supported under the Compact Framework
 		/// </para>
 		/// </remarks>
 		public static string GetAppSetting(string key)
