@@ -108,7 +108,7 @@ namespace log4net.ObjectRenderer
 		///			</description>
 		///		</item>
 		///		<item>
-		///			<term><see cref="IEnumerable"/></term>
+		///			<term><see cref="IEnumerable"/>, <see cref="ICollection"/> &amp; <see cref="IEnumerator"/></term>
 		///			<description>
 		///			<para>
 		///			Rendered as an open brace, followed by a comma
@@ -190,6 +190,13 @@ namespace log4net.ObjectRenderer
 				}
 
 				RenderEnumerator(rendererMap, objEnumerable.GetEnumerator(), writer);
+				return;
+			}
+
+			IEnumerator objEnumerator = obj as IEnumerator;
+			if (objEnumerator != null)
+			{
+				RenderEnumerator(rendererMap, objEnumerator, writer);
 				return;
 			}
 			
