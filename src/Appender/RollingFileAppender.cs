@@ -1323,15 +1323,20 @@ namespace log4net.Appender
 		#region NextCheckDate
 
 		/// <summary>
-		/// Roll on to the next interval after the date passed
+		/// Get the start time of the next window for the current rollpoint
 		/// </summary>
 		/// <param name="currentDateTime">the current date</param>
 		/// <param name="rollPoint">the type of roll point we are working with</param>
-		/// <returns>the next roll point an interval after the currentDateTime date</returns>
+		/// <returns>the start time for the next roll point an interval after the currentDateTime date</returns>
 		/// <remarks>
 		/// <para>
-		/// Advances the date to the next roll point after the 
-		/// currentDateTime date passed to the method.
+		/// Returns the date of the next roll point after the currentDateTime date passed to the method.
+		/// </para>
+		/// <para>
+		/// The basic strategy is to subtract the time parts that are less significant
+		/// than the rollpoint from the current time. This should roll the time back to
+		/// the start of the time window for the current rollpoint. Then we add 1 window
+		/// worth of time and get the start time of the next window for the rollpoint.
 		/// </para>
 		/// </remarks>
 		protected DateTime NextCheckDate(DateTime currentDateTime, RollPoint rollPoint) 
@@ -1339,7 +1344,7 @@ namespace log4net.Appender
 			// Local variable to work on (this does not look very efficient)
 			DateTime current = currentDateTime;
 
-			// Do different things depending on what the type of roll point we are going for is
+			// Do slightly different things depending on what the type of roll point we want.
 			switch(rollPoint) 
 			{
 				case RollPoint.TopOfMinute:
@@ -1392,6 +1397,7 @@ namespace log4net.Appender
 					current = current.AddSeconds(-current.Second);
 					current = current.AddMinutes(-current.Minute);
 					current = current.AddHours(-current.Hour);
+					current = current.AddDays(-current.Day);
 					current = current.AddMonths(1);
 					break;
 			}	  
