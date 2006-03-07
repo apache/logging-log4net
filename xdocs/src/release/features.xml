@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!--
-Copyright 2004-2005 The Apache Software Foundation
+Copyright 2004-2006 The Apache Software Foundation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -66,16 +66,22 @@ limitations under the License.
 
 			<section id="frameworks" name="Support for multiple frameworks">
 				<p>
-					log4net supports the following frameworks:
+					log4net runs on all ECMA CLI 1.0 compatible runtimes.
+					log4net has specific builds for the following frameworks:
 				</p>
 				<ul>
 					<li>Microsoft .NET Framework 1.0 (1.0.3705)</li>
 					<li>Microsoft .NET Framework 1.1 (1.1.4322)</li>
+					<li>Microsoft .NET Framework 2.0 (2.0.50727)</li>
 					<li>Microsoft .NET Compact Framework 1.0 (1.0.5000)</li>
 					<li>Mono 1.0</li>
 					<li>Microsoft Shared Source CLI 1.0</li>
 					<li>CLI 1.0 Compatible</li>
 				</ul>
+				<p>
+					Note: Due to the .NET frameworks support for backward compatibility 
+					log4net will run on future versions of the runtimes listed above.
+				</p>
 			</section>
 
 			<section id="appenders" name="Output to multiple logging targets">
@@ -136,7 +142,7 @@ limitations under the License.
 							</td>
 						</tr>
 						<tr>
-							<td>log4net.LocalSyslogAppender</td>
+							<td>log4net.Appender.LocalSyslogAppender</td>
 							<td>
 								Writes logging events to the local syslog service (UNIX only).
 							</td>

@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!--
-Copyright 2004-2005 The Apache Software Foundation
+Copyright 2004-2006 The Apache Software Foundation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -98,11 +98,15 @@ links[i].href = "#overview";
 					</p>
 				</section>
 				
-				<section id="building-vsnet" name="Visual Studio .NET 2002">
+				<section id="building-vsnet" name="Visual Studio .NET">
 					<p>
 						There are Visual Studio .NET 2002 project files for the .NET 1.0 framework.
-						The solution files for C++, C# and VB are in the <a class="localOnly" href="../../examples/net/1.0">examples\net\1.0</a>
+						The solution files for C# and VB are in the <a class="localOnly" href="../../examples/net/1.0">examples\net\1.0</a>
 						folder.
+					</p>
+					<p>
+						For the Managed C++ project there is a Visual Studio .NET 2003 project file 
+						in the <a class="localOnly" href="../../examples/net/1.1">examples\net\1.1</a> folder.
 					</p>
 				</section>
 			</section>
@@ -126,12 +130,12 @@ links[i].href = "#overview";
 						</li>
 						<li>
 							<b>.NET 1.0</b>: 
-							<a class="localOnly" href="../../examples/net/1.0/Tutorials/ConsoleApp/cpp">C++</a>, 
 							<a class="localOnly" href="../../examples/net/1.0/Tutorials/ConsoleApp/cs">C#</a>, 
 							<a class="localOnly" href="../../examples/net/1.0/Tutorials/ConsoleApp/vb">VB</a>
 						</li>
 						<li>
 							<b>.NET 1.1</b>: 
+							<a class="localOnly" href="../../examples/net/1.1/Tutorials/ConsoleApp/cpp">C++</a>, 
 							<a class="localOnly" href="../../examples/net/1.1/Tutorials/ConsoleApp/js">JScript.NET</a>
 						</li>
 						<li>

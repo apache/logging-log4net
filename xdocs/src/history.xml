@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!--
-Copyright 2004-2005 The Apache Software Foundation
+Copyright 2004-2006 The Apache Software Foundation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ limitations under the License.
 			
 			<p>
 				The log4net project is currently incubating at Apache. The incubation project
-				mentor is Ceki G&#252;lc&#252;.
+				mentor is Mark Womack.
 			</p>
 			
 		</section>

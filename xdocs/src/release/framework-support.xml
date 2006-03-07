@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!--
-Copyright 2004-2005 The Apache Software Foundation
+Copyright 2004-2006 The Apache Software Foundation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ limitations under the License.
 					The lowest common denominator build is the CLI 1.0 Compatible build. This build is compatible with
 					the ECMA/ISO CLI 1.0 standard APIs and will run on all frameworks that support the standard. (Note
 					that the Microsoft .NET Compact Framework does not support this standard). Use this build if you
-					intend to deploy you application on to either the Microsoft .NET Frameworks or the Mono frameworks.
+					intend to deploy you application on both the Microsoft .NET Frameworks and the Mono frameworks.
 				</p>
 				<p>
 					log4net now builds on 6 frameworks:
@@ -75,11 +75,15 @@ limitations under the License.
 							<td><a href="http://msdn.microsoft.com/net">http://msdn.microsoft.com/net</a></td>
 						</tr>
 						<tr style="vertical-align: top;">
+							<td>Microsoft .NET Framework 2.0 (2.0.50727)</td>
+							<td><a href="http://msdn.microsoft.com/net">http://msdn.microsoft.com/net</a></td>
+						</tr>
+						<tr style="vertical-align: top;">
 							<td>Microsoft .NET Compact Framework 1.0 (1.0.5000)</td>
 							<td><a href="http://msdn.microsoft.com/vstudio/device/compactfx.asp">http://msdn.microsoft.com/vstudio/device/compactfx.asp</a></td>
 						</tr>
 						<tr style="vertical-align: top;">
-							<td>Mono 1.0</td>
+							<td>Mono 1.1.13</td>
 							<td><a href="http://www.mono-project.com">http://www.mono-project.com</a></td>
 						</tr>
 						<tr style="vertical-align: top;">
@@ -121,13 +125,15 @@ limitations under the License.
 							<th>Appender</th>
 							<th>.NET Framework 1.0</th>
 							<th>.NET Framework 1.1</th>
+							<th>.NET Framework 2.0</th>
 							<th>.NET Compact Framework 1.0</th>
-							<th>Mono 1.0</th>
+							<th>Mono 1.1</th>
 							<th>Shared Source CLI 1.0</th>
 							<th>CLI 1.0 Compatible</th>
 						</tr>
 						<tr>
 							<td>AdoNetAppender</td>
+							<td>x</td>
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
@@ -143,9 +149,11 @@ limitations under the License.
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
+							<td>x</td>
 						</tr>
 						<tr>
 							<td>AspNetTraceAppender</td>
+							<td>x</td>
 							<td>x</td>
 							<td>x</td>
 							<td></td>
@@ -161,9 +169,11 @@ limitations under the License.
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
+							<td>x</td>
 						</tr>
 						<tr>
 							<td>ColoredConsoleAppender</td>
+							<td>x</td>
 							<td>x</td>
 							<td>x</td>
 							<td></td>
@@ -179,6 +189,7 @@ limitations under the License.
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
+							<td>x</td>
 						</tr>
 						<tr>
 							<td>DebugAppender</td>
@@ -188,9 +199,11 @@ limitations under the License.
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
+							<td>x</td>
 						</tr>
 						<tr>
 							<td>EventLogAppender</td>
+							<td>x</td>
 							<td>x</td>
 							<td>x</td>
 							<td></td>
@@ -206,6 +219,7 @@ limitations under the License.
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
+							<td>x</td>
 						</tr>
 						<tr>
 							<td>ForwardingAppender</td>
@@ -215,9 +229,11 @@ limitations under the License.
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
+							<td>x</td>
 						</tr>
 						<tr>
 							<td>LocalSyslogAppender</td>
+							<td>x</td>
 							<td>x</td>
 							<td>x</td>
 							<td></td>
@@ -233,9 +249,11 @@ limitations under the License.
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
+							<td>x</td>
 						</tr>
 						<tr>
 							<td>NetSendAppender</td>
+							<td>x</td>
 							<td>x</td>
 							<td>x</td>
 							<td></td>
@@ -245,6 +263,7 @@ limitations under the License.
 						</tr>
 						<tr>
 							<td>OutputDebugStringAppender</td>
+							<td>x</td>
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
@@ -260,9 +279,11 @@ limitations under the License.
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
+							<td>x</td>
 						</tr>
 						<tr>
 							<td>RemotingAppender</td>
+							<td>x</td>
 							<td>x</td>
 							<td>x</td>
 							<td></td>
@@ -278,9 +299,11 @@ limitations under the License.
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
+							<td>x</td>
 						</tr>
 						<tr>
 							<td>SmtpAppender</td>
+							<td>x</td>
 							<td>x</td>
 							<td>x</td>
 							<td></td>
@@ -296,9 +319,11 @@ limitations under the License.
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
+							<td>x</td>
 						</tr>
 						<tr>
 							<td>TelnetAppender</td>
+							<td>x</td>
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
@@ -314,9 +339,11 @@ limitations under the License.
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
+							<td>x</td>
 						</tr>
 						<tr>
 							<td>UdpAppender</td>
+							<td>x</td>
 							<td>x</td>
 							<td>x</td>
 							<td>x</td>
@@ -336,6 +363,12 @@ limitations under the License.
 				</section>
 				
 				<section id="net1.1" name="Microsoft .NET Framework 1.1 (1.1.4322)">
+					<p>
+						none
+					</p>
+				</section>
+				
+				<section id="net2.0" name="Microsoft .NET Framework 2.0 (2.0.50727)">
 					<p>
 						none
 					</p>
@@ -462,10 +495,24 @@ namespace TestApp
 					</ul>
 				</section>
 				
-				<section id="mono1.0" name="Mono 1.0">
+				<section id="mono" name="Mono">
 					<p>
-						none
+						There are 2 separate builds of log4net for mono; Mono 1.0, built using the C# compiler in a mode 
+						which is compatible with the CLI 1.0 language specification, and; Mono 2.0, built using the .NET 
+						2.0 extensions to the C# language.
 					</p>
+				
+					<section id="mono1.0" name="Mono 1.0">
+						<p>
+							none
+						</p>
+					</section>
+					<section id="mono2.0" name="Mono 2.0">
+						<p>
+							none
+						</p>
+					</section>
+					
 				</section>
 				
 				<section id="sscli1.0" name="Microsoft Shared Source CLI 1.0">

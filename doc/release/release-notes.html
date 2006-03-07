@@ -74,7 +74,19 @@ limitations under the License.
     <div class="i1">
                                     			<h2>Contents</h2>
 		<div class="i1">
-																			    <a href="#1.2.9">1.2.9 Beta</a><br/>
+																			    <a href="#1.2.10">1.2.10 Beta</a><br/>
+    <div class="i1">
+                                        <a href="#1.2.10-bug">Bug</a><br/>
+    <div class="i1">
+                              </div>
+                                                    <a href="#1.2.10-new">New Feature</a><br/>
+    <div class="i1">
+                              </div>
+                                                    <a href="#1.2.10-enh">Improvement</a><br/>
+    <div class="i1">
+                              </div>
+                      </div>
+																    <a href="#1.2.9">1.2.9 Beta</a><br/>
     <div class="i1">
                                         <a href="#1.2.9-breaking">Breaking Changes</a><br/>
     <div class="i1">
@@ -111,7 +123,61 @@ limitations under the License.
     <div class="i1">
                               </div>
 									</div>
-	                                                    <h2><a id="1.2.9"></a>1.2.9 Beta</h2>
+	                                                    <h2><a id="1.2.10"></a>1.2.10 Beta</h2>
+    <div class="i1">
+                                        <h3><a id="1.2.10-bug"></a>Bug</h3>
+    <div class="i1">
+                                    <ul>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-21">LOG4NET-21</a>] - RemotingAppender fails once NDC becomes empty</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-22">LOG4NET-22</a>] - XmlLayout allows output of invalid control characters</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-23">LOG4NET-23</a>] - example-apps.html links are off by one folder level</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-25">LOG4NET-25</a>] - RollingFileAppender can fail if RollOverIfDateBoundaryCrossing required</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-28">LOG4NET-28</a>] - AdoNetAppender does not support inserting NULL into columns</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-29">LOG4NET-29</a>] - LevelMatchFilter should return Neutral when no match is found</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-32">LOG4NET-32</a>] - AdoNetAppender losing first entry</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-35">LOG4NET-35</a>] - Exception rendering ThreadContextStack if null value pushed into stack</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-36">LOG4NET-36</a>] - System.Diagnostics.Trace may throw exception if AppDomain does not have config file</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-40">LOG4NET-40</a>] - RollingFileAppender does not limit files to MaxSizeRollBackups when CountDirection is 1</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-41">LOG4NET-41</a>] - RollingFileAppender roll over date fail</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-42">LOG4NET-42</a>] - Serialised LoggingEvent does not preserve the Fix flags</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-43">LOG4NET-43</a>] - Specifying an empty string as a property in the config file results in an error</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-44">LOG4NET-44</a>] - XmlLayout emits all properties under a node named global-properties, rather than just properties.</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-49">LOG4NET-49</a>] - CountingQuietTextWriter does not count strings written with WriteLine</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-50">LOG4NET-50</a>] - Process.StartTime hangs on some systems</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-60">LOG4NET-60</a>] - Bug in RollingFileAppender.cs causing failure to timely roll files on monthly interval</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-63">LOG4NET-63</a>] - 1.2.9.0 Documentation typos</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-65">LOG4NET-65</a>] - Unhandled SecurityException exception for FileIOPermission while loading configuration file</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-67">LOG4NET-67</a>] - CVE-2006-0743 Security vulnerability in LocalSyslogAppender</li>
+					</ul>
+                      </div>
+                                                    <h3><a id="1.2.10-new"></a>New Feature</h3>
+    <div class="i1">
+                                    <ul>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-11">LOG4NET-11</a>] - Add Flush command to API</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-24">LOG4NET-24</a>] - Programmatic flush of BufferingAppenderSkeleton buffer</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-37">LOG4NET-37</a>] - Allow the RepositorySelector type to be specified using the AppSettings config</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-46">LOG4NET-46</a>] - Support appenders that can output multiple events efficiently</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-51">LOG4NET-51</a>] - WmiAppender</li>
+					</ul>
+                      </div>
+                                                    <h3><a id="1.2.10-enh"></a>Improvement</h3>
+    <div class="i1">
+                                    <ul>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-3">LOG4NET-3</a>] - Support per event patterns in FileAppender File name</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-13">LOG4NET-13</a>] - Allow SMTPAppender to have replaceable parameters in Subject</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-15">LOG4NET-15</a>] - Email high "importance" priority setting with SmtpAppender</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-17">LOG4NET-17</a>] - Line-wrapping Appender Layouts</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-33">LOG4NET-33</a>] - Ability to use global property to point to log4net configuration file</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-34">LOG4NET-34</a>] - Allow xml config values to be set via XmlNodeType.CDATA or XmlNodeType.Text rather than just value="foo"</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-45">LOG4NET-45</a>] - PluginAttribute does not allow plugin type to be specified as a Type, only as a string</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-52">LOG4NET-52</a>] - Allow XML configurator to set properties of type Object</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-53">LOG4NET-53</a>] - Allow repository properties to be set in the config file</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-56">LOG4NET-56</a>] - Support rendering IEnumerator objects as well as ICollections</li>
+					<li>[<a href="http://issues.apache.org/jira/browse/LOG4NET-58">LOG4NET-58</a>] - Support clean build on .NET 2.0</li>
+					</ul>
+                      </div>
+                      </div>
+                                                    <h2><a id="1.2.9"></a>1.2.9 Beta</h2>
     <div class="i1">
                                         <h3><a id="1.2.9-breaking"></a>Breaking Changes</h3>
     <div class="i1">
@@ -1111,7 +1177,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
 
                     <div align="center"><font color="#525D76" size="-1"><em>
                     Copyright &#169; 
-		    			2004-2005,
+		    			2004-2006,
 		    		    		    	Apache Software Foundation
 		                        </em></font></div>
              <!-- END main table --> 
@@ -1155,6 +1221,8 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
               	 <div class="menu_item">    <a href="../release/building.html">Building</a>
 </div>
               	 <div class="menu_item">    <a href="../release/faq.html">FAQ</a>
+</div>
+              	 <div class="menu_item">    <a href="../release/howto/index.html">How Tos</a>
 </div>
               	 <div class="menu_item">    <a href="../release/sdk/index.html">SDK Reference</a>
 </div>

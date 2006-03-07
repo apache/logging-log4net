@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!--
-Copyright 2004-2005 The Apache Software Foundation
+Copyright 2004-2006 The Apache Software Foundation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,6 +27,61 @@ limitations under the License.
 		<section id="main" name="log4net Release Notes">
 		
 			<sectionMenu name="Contents" />
+			
+			<section id="1.2.10" name="1.2.10 Beta">
+
+				<section id="1.2.10-bug" name="Bug">
+					<ul>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-21'>LOG4NET-21</a>] - RemotingAppender fails once NDC becomes empty</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-22'>LOG4NET-22</a>] - XmlLayout allows output of invalid control characters</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-23'>LOG4NET-23</a>] - example-apps.html links are off by one folder level</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-25'>LOG4NET-25</a>] - RollingFileAppender can fail if RollOverIfDateBoundaryCrossing required</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-28'>LOG4NET-28</a>] - AdoNetAppender does not support inserting NULL into columns</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-29'>LOG4NET-29</a>] - LevelMatchFilter should return Neutral when no match is found</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-32'>LOG4NET-32</a>] - AdoNetAppender losing first entry</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-35'>LOG4NET-35</a>] - Exception rendering ThreadContextStack if null value pushed into stack</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-36'>LOG4NET-36</a>] - System.Diagnostics.Trace may throw exception if AppDomain does not have config file</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-40'>LOG4NET-40</a>] - RollingFileAppender does not limit files to MaxSizeRollBackups when CountDirection is 1</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-41'>LOG4NET-41</a>] - RollingFileAppender roll over date fail</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-42'>LOG4NET-42</a>] - Serialised LoggingEvent does not preserve the Fix flags</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-43'>LOG4NET-43</a>] - Specifying an empty string as a property in the config file results in an error</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-44'>LOG4NET-44</a>] - XmlLayout emits all properties under a node named global-properties, rather than just properties.</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-49'>LOG4NET-49</a>] - CountingQuietTextWriter does not count strings written with WriteLine</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-50'>LOG4NET-50</a>] - Process.StartTime hangs on some systems</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-60'>LOG4NET-60</a>] - Bug in RollingFileAppender.cs causing failure to timely roll files on monthly interval</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-63'>LOG4NET-63</a>] - 1.2.9.0 Documentation typos</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-65'>LOG4NET-65</a>] - Unhandled SecurityException exception for FileIOPermission while loading configuration file</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-67'>LOG4NET-67</a>] - CVE-2006-0743 Security vulnerability in LocalSyslogAppender</li>
+					</ul>
+				</section>
+				    
+				<section id="1.2.10-new" name="New Feature">
+					<ul>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-11'>LOG4NET-11</a>] - Add Flush command to API</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-24'>LOG4NET-24</a>] - Programmatic flush of BufferingAppenderSkeleton buffer</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-37'>LOG4NET-37</a>] - Allow the RepositorySelector type to be specified using the AppSettings config</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-46'>LOG4NET-46</a>] - Support appenders that can output multiple events efficiently</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-51'>LOG4NET-51</a>] - WmiAppender</li>
+					</ul>
+				</section>
+					    
+				<section id="1.2.10-enh" name="Improvement">
+					<ul>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-3'>LOG4NET-3</a>] - Support per event patterns in FileAppender File name</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-13'>LOG4NET-13</a>] - Allow SMTPAppender to have replaceable parameters in Subject</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-15'>LOG4NET-15</a>] - Email high "importance" priority setting with SmtpAppender</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-17'>LOG4NET-17</a>] - Line-wrapping Appender Layouts</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-33'>LOG4NET-33</a>] - Ability to use global property to point to log4net configuration file</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-34'>LOG4NET-34</a>] - Allow xml config values to be set via XmlNodeType.CDATA or XmlNodeType.Text rather than just value="foo"</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-45'>LOG4NET-45</a>] - PluginAttribute does not allow plugin type to be specified as a Type, only as a string</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-52'>LOG4NET-52</a>] - Allow XML configurator to set properties of type Object</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-53'>LOG4NET-53</a>] - Allow repository properties to be set in the config file</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-56'>LOG4NET-56</a>] - Support rendering IEnumerator objects as well as ICollections</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-58'>LOG4NET-58</a>] - Support clean build on .NET 2.0</li>
+					</ul>
+ 				</section>
+           
+			</section>
 
 			<section id="1.2.9" name="1.2.9 Beta">
 			
