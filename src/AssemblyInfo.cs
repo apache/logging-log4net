@@ -1,6 +1,6 @@
 #region Copyright & License
 //
-// Copyright 2001-2005 The Apache Software Foundation
+// Copyright 2001-2006 The Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -50,10 +50,14 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("log4net for .NET Framework 1.0")]
 #elif (NET_1_1)
 [assembly: AssemblyTitle("log4net for .NET Framework 1.1")]
+#elif (NET_2_0)
+[assembly: AssemblyTitle("log4net for .NET Framework 2.0")]
 #elif (NETCF_1_0)
 [assembly: AssemblyTitle("log4net for .NET Compact Framework 1.0")]
 #elif (MONO_1_0)
 [assembly: AssemblyTitle("log4net for Mono 1.0")]
+#elif (MONO_2_0)
+[assembly: AssemblyTitle("log4net for Mono 2.0")]
 #elif (SSCLI_1_0)
 [assembly: AssemblyTitle("log4net for Shared Source CLI 1.0")]
 #elif (CLI_1_0)
@@ -106,7 +110,7 @@ using System.Runtime.CompilerServices;
 //   (*) Delay Signing is an advanced option - see the Microsoft .NET Framework
 //       documentation for more information on this.
 //
-#if STRONG && (CLI_1_0 || NET_1_0 || NET_1_1 || NETCF_1_0 || SSCLI)
+#if STRONG && (CLI_1_0 || NET_1_0 || NET_1_1 || NET_2_0 || NETCF_1_0 || SSCLI)
 [assembly: AssemblyDelaySign(false)]
 [assembly: AssemblyKeyFile(@"..\..\..\log4net.snk")]
 #endif

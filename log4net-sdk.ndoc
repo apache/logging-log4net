@@ -48,9 +48,8 @@
             <property name="ShowMissingReturns" value="True" />
             <property name="ShowMissingValues" value="True" />
             <property name="AssemblyVersionInfo" value="AssemblyVersion" />
-            <property name="CopyrightText" value="Copyright 2001-2005 The Apache Software Foundation." />
+            <property name="CopyrightText" value="Copyright 2001-2006 The Apache Software Foundation." />
             <property name="CopyrightHref" value="http://logging.apache.org/log4net" />
-            <property name="Preliminary" value="True" />
             <property name="StaticMembersDefaultToSafe" value="False" />
             <property name="CleanIntermediates" value="True" />
         </documenter>

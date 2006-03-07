@@ -1,5 +1,5 @@
 '
-' Copyright 2001-2005 The Apache Software Foundation
+' Copyright 2001-2006 The Apache Software Foundation
 '
 ' Licensed under the Apache License, Version 2.0 (the "License");
 ' you may not use this file except in compliance with the License.
@@ -25,12 +25,12 @@
 ' You can specify all the values or you can default the Revision and Build Numbers 
 ' by using the '*' as shown below:
 
-<Assembly: System.Reflection.AssemblyVersion("1.2.9.0")>
+<Assembly: System.Reflection.AssemblyVersion("1.2.10.0")>
 <Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.2")>
 
 #If NOT NETCF Then
 #If NOT SSCLI Then
-<Assembly: System.Reflection.AssemblyFileVersion("1.2.9.0")>
+<Assembly: System.Reflection.AssemblyFileVersion("1.2.10.0")>
 #End If
 #End If
 
@@ -39,5 +39,5 @@
 '
 
 <Assembly: System.Reflection.AssemblyCompany("The Apache Software Foundation")>
-<Assembly: System.Reflection.AssemblyCopyright("Copyright 2001-2005 The Apache Software Foundation.")>
-<Assembly: System.Reflection.AssemblyTrademark("Copyright 2001-2005 The Apache Software Foundation.")>
+<Assembly: System.Reflection.AssemblyCopyright("Copyright 2001-2006 The Apache Software Foundation.")>
+<Assembly: System.Reflection.AssemblyTrademark("Copyright 2001-2006 The Apache Software Foundation.")>

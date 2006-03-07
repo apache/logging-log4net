@@ -1,5 +1,5 @@
 //
-// Copyright 2001-2005 The Apache Software Foundation
+// Copyright 2001-2006 The Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,12 +29,12 @@ using namespace System::Runtime::CompilerServices;
 // You can specify all the value or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersionAttribute("1.2.9.0")];
+[assembly: AssemblyVersionAttribute("1.2.10.0")];
 [assembly: AssemblyInformationalVersionAttribute("1.2")];
 
 #if !NETCF
 #if !SSCLI
-[assembly: AssemblyFileVersionAttribute("1.2.9.0")]
+[assembly: AssemblyFileVersionAttribute("1.2.10.0")]
 #endif
 #endif
 
@@ -43,5 +43,5 @@ using namespace System::Runtime::CompilerServices;
 //
 
 [assembly: AssemblyCompany("The Apache Software Foundation")];
-[assembly: AssemblyCopyright("Copyright 2001-2005 The Apache Software Foundation.")];
-[assembly: AssemblyTrademark("Copyright 2001-2005 The Apache Software Foundation.")];
+[assembly: AssemblyCopyright("Copyright 2001-2006 The Apache Software Foundation.")];
+[assembly: AssemblyTrademark("Copyright 2001-2006 The Apache Software Foundation.")];
