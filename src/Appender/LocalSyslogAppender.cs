@@ -1,6 +1,6 @@
 #region Copyright & License
 /*
- * Copyright 2004-2005 The Apache Software Foundation
+ * Copyright 2004-2006 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -379,7 +379,9 @@ namespace log4net.Appender
 			int priority = GeneratePriority(m_facility, GetSeverity(loggingEvent.Level));
 			string message = RenderLoggingEvent(loggingEvent);
 
-			syslog(priority, message);
+			// Call the local libc syslog method
+			// The second argument is a printf style format string
+			syslog(priority, "%s", message);
 		}
 
 		/// <summary>
@@ -533,8 +535,17 @@ namespace log4net.Appender
 		/// <summary>
 		/// Generate a log message.
 		/// </summary>
-		[DllImport("libc")]
-		private static extern void syslog(int priority, string message);
+		/// <remarks>
+		/// <para>
+		/// The libc syslog method takes a format string and a variable argument list similar
+		/// to the classic printf function. As this type of vararg list is not supported
+		/// by C# we need to specify the arguments explicitly. Here we have specified the
+		/// format string with a single message argument. The caller must set the format 
+		/// string to <c>"%s"</c>.
+		/// </para>
+		/// </remarks>
+		[DllImport("libc", CharSet=CharSet.Ansi, CallingConvention=CallingConvention.Cdecl)]
+		private static extern void syslog(int priority, string format, string message);
 
 		/// <summary>
 		/// Close descriptor used to write to system logger.
