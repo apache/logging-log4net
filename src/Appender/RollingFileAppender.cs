@@ -1397,7 +1397,7 @@ namespace log4net.Appender
 					current = current.AddSeconds(-current.Second);
 					current = current.AddMinutes(-current.Minute);
 					current = current.AddHours(-current.Hour);
-					current = current.AddDays(-current.Day);
+					current = current.AddDays(1 - current.Day); /* first day of month is 1 not 0 */
 					current = current.AddMonths(1);
 					break;
 			}	  
