@@ -1,6 +1,6 @@
 #region Copyright & License
 //
-// Copyright 2001-2005 The Apache Software Foundation
+// Copyright 2001-2006 The Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ using System;
 using System.Globalization;
 
 using log4net.Repository;
+using log4net.Util;
 
 namespace log4net.Core
 {
@@ -215,7 +216,7 @@ namespace log4net.Core
 		{
 			if (IsDebugEnabled)
 			{
-				Logger.Log(ThisDeclaringType, m_levelDebug, String.Format(CultureInfo.InvariantCulture, format, args), null);
+				Logger.Log(ThisDeclaringType, m_levelDebug, Transform.StringFormat(CultureInfo.InvariantCulture, format, args), null);
 			}
 		}
 
@@ -241,7 +242,7 @@ namespace log4net.Core
 		{
 			if (IsDebugEnabled)
 			{
-				Logger.Log(ThisDeclaringType, m_levelDebug, String.Format(provider, format, args), null);
+				Logger.Log(ThisDeclaringType, m_levelDebug, Transform.StringFormat(provider, format, args), null);
 			}
 		}
 
@@ -320,7 +321,7 @@ namespace log4net.Core
 		{
 			if (IsInfoEnabled)
 			{
-				Logger.Log(ThisDeclaringType, m_levelInfo, String.Format(CultureInfo.InvariantCulture, format, args), null);
+				Logger.Log(ThisDeclaringType, m_levelInfo, Transform.StringFormat(CultureInfo.InvariantCulture, format, args), null);
 			}
 		}
 
@@ -346,7 +347,7 @@ namespace log4net.Core
 		{
 			if (IsInfoEnabled)
 			{
-				Logger.Log(ThisDeclaringType, m_levelInfo, String.Format(provider, format, args), null);
+				Logger.Log(ThisDeclaringType, m_levelInfo, Transform.StringFormat(provider, format, args), null);
 			}
 		}
 
@@ -425,7 +426,7 @@ namespace log4net.Core
 		{
 			if (IsWarnEnabled)
 			{
-				Logger.Log(ThisDeclaringType, m_levelWarn, String.Format(CultureInfo.InvariantCulture, format, args), null);
+				Logger.Log(ThisDeclaringType, m_levelWarn, Transform.StringFormat(CultureInfo.InvariantCulture, format, args), null);
 			}
 		}
 
@@ -451,7 +452,7 @@ namespace log4net.Core
 		{
 			if (IsWarnEnabled)
 			{
-				Logger.Log(ThisDeclaringType, m_levelWarn, String.Format(provider, format, args), null);
+				Logger.Log(ThisDeclaringType, m_levelWarn, Transform.StringFormat(provider, format, args), null);
 			}
 		}
 
@@ -530,7 +531,7 @@ namespace log4net.Core
 		{
 			if (IsErrorEnabled)
 			{
-				Logger.Log(ThisDeclaringType, m_levelError, String.Format(CultureInfo.InvariantCulture, format, args), null);
+				Logger.Log(ThisDeclaringType, m_levelError, Transform.StringFormat(CultureInfo.InvariantCulture, format, args), null);
 			}
 		}
 
@@ -556,7 +557,7 @@ namespace log4net.Core
 		{
 			if (IsErrorEnabled)
 			{
-				Logger.Log(ThisDeclaringType, m_levelError, String.Format(provider, format, args), null);
+				Logger.Log(ThisDeclaringType, m_levelError, Transform.StringFormat(provider, format, args), null);
 			}
 		}
 
@@ -635,7 +636,7 @@ namespace log4net.Core
 		{
 			if (IsFatalEnabled)
 			{
-				Logger.Log(ThisDeclaringType, m_levelFatal, String.Format(CultureInfo.InvariantCulture, format, args), null);
+				Logger.Log(ThisDeclaringType, m_levelFatal, Transform.StringFormat(CultureInfo.InvariantCulture, format, args), null);
 			}
 		}
 
@@ -661,7 +662,7 @@ namespace log4net.Core
 		{
 			if (IsFatalEnabled)
 			{
-				Logger.Log(ThisDeclaringType, m_levelFatal, String.Format(provider, format, args), null);
+				Logger.Log(ThisDeclaringType, m_levelFatal, Transform.StringFormat(provider, format, args), null);
 			}
 		}
 

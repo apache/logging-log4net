@@ -1,6 +1,6 @@
 #region Copyright & License
 //
-// Copyright 2001-2005 The Apache Software Foundation
+// Copyright 2001-2006 The Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,8 +17,10 @@
 #endregion
 
 using System;
+using System.Globalization;
 
 using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Ext.Trace
 {
@@ -68,7 +70,18 @@ namespace log4net.Ext.Trace
 
 		public void TraceFormat(string format, params object[] args)
 		{
-			Logger.Log(ThisDeclaringType, m_levelTrace, String.Format(format, args), null);
+			if (IsTraceEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelTrace, Transform.StringFormat(CultureInfo.InvariantCulture, format, args), null);
+			}
+		}
+
+		public void TraceFormat(IFormatProvider provider, string format, params object[] args)
+		{
+			if (IsTraceEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelTrace, Transform.StringFormat(provider, format, args), null);
+			}
 		}
 
 		public bool IsTraceEnabled

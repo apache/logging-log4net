@@ -1,6 +1,6 @@
 #region Copyright & License
 //
-// Copyright 2001-2005 The Apache Software Foundation
+// Copyright 2001-2006 The Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ namespace log4net.Util
 
 		#endregion Private Instance Constructors
 
-		#region Public Static Methods
+		#region XML String Methods
 
 		/// <summary>
 		/// Write a string to an <see cref="XmlWriter"/>
@@ -137,8 +137,158 @@ namespace log4net.Util
 			return INVALIDCHARS.Replace(textData, mask);
 		}
 
-		#endregion Public Static Methods
+		#endregion XML String Methods
 
+		#region StringFormat
+
+		/// <summary>
+		/// Replaces the format item in a specified <see cref="System.String"/> with the text equivalent 
+		/// of the value of a corresponding <see cref="System.Object"/> instance in a specified array.
+		/// A specified parameter supplies culture-specific formatting information.
+		/// </summary>
+		/// <param name="provider">An <see cref="System.IFormatProvider"/> that supplies culture-specific formatting information.</param>
+		/// <param name="format">A <see cref="System.String"/> containing zero or more format items.</param>
+		/// <param name="args">An <see cref="System.Object"/> array containing zero or more objects to format.</param>
+		/// <returns>
+		/// A copy of format in which the format items have been replaced by the <see cref="System.String"/> 
+		/// equivalent of the corresponding instances of <see cref="System.Object"/> in args.
+		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// This method does not throw exceptions. If an exception thrown while formatting the result the
+		/// exception and arguments are returned in the result string.
+		/// </para>
+		/// </remarks>
+		public static string StringFormat(IFormatProvider provider, string format, params object[] args)
+		{
+			try
+			{
+				// The format is missing, log null value
+				if (format == null)
+				{
+					return null;
+				}
+
+				// The args are missing - should not happen unless we are called explicitly with a null array
+				if (args == null)
+				{
+					return format;
+				}
+
+				// Try to format the string
+				return String.Format(provider, format, args);
+			}
+			catch(Exception ex)
+			{
+				log4net.Util.LogLog.Error("StringFormat: Exception while rendering format ["+format+"]", ex);
+				return StringFormatError(ex, format, args);
+			}
+			catch
+			{
+				log4net.Util.LogLog.Error("StringFormat: Exception while rendering format ["+format+"]");
+				return StringFormatError(null, format, args);
+			}
+		}
+
+		/// <summary>
+		/// Process an error during StringFormat
+		/// </summary>
+		private static string StringFormatError(Exception formatException, string format, object[] args)
+		{
+			try
+			{
+				StringBuilder buf = new StringBuilder("<log4net.Error>");
+
+				if (formatException != null)
+				{
+					buf.Append("Exception during StringFormat: ").Append(formatException.Message);
+				}
+				else
+				{
+					buf.Append("Exception during StringFormat");
+				}
+				buf.Append(" <format>").Append(format).Append("</format>");
+				buf.Append("<args>");
+				RenderArray(args, buf);
+				buf.Append("</args>");
+				buf.Append("</log4net.Error>");
+
+				return buf.ToString();
+			}
+			catch(Exception ex)
+			{
+				log4net.Util.LogLog.Error("StringFormat: INTERNAL ERROR during StringFormat error handling", ex);
+				return "<log4net.Error>Exception during StringFormat. See Internal Log.</log4net.Error>";
+			}
+			catch
+			{
+				log4net.Util.LogLog.Error("StringFormat: INTERNAL ERROR during StringFormat error handling");
+				return "<log4net.Error>Exception during StringFormat. See Internal Log.</log4net.Error>";
+			}
+		}
+
+		/// <summary>
+		/// Dump the contents of an array into a string builder
+		/// </summary>
+		private static void RenderArray(Array array, StringBuilder buffer)
+		{
+			if (array == null)
+			{
+				buffer.Append(SystemInfo.NullText);
+			}
+			else
+			{
+				if (array.Rank != 1)
+				{
+					buffer.Append(array.ToString());
+				}
+				else
+				{
+					buffer.Append("{");
+					int len = array.Length;
+
+					if (len > 0)
+					{
+						RenderObject(array.GetValue(0), buffer);
+						for (int i = 1; i < len; i++)
+						{
+							buffer.Append(", ");
+							RenderObject(array.GetValue(i), buffer);
+						}
+					}
+					buffer.Append("}");
+				}
+			}
+		}
+
+		/// <summary>
+		/// Dump an object to a string
+		/// </summary>
+		private static void RenderObject(Object obj, StringBuilder buffer)
+		{
+			if (obj == null)
+			{
+				buffer.Append(SystemInfo.NullText);
+			}
+			else
+			{
+				try
+				{
+					buffer.Append(obj);
+				}
+				catch(Exception ex)
+				{
+					buffer.Append("<Exception: ").Append(ex.Message).Append(">");
+				}
+				catch
+				{
+					buffer.Append("<Exception>");
+				}
+			}
+		}
+
+		#endregion StringFormat
+		
 		#region Private Helper Methods
 
 		/// <summary>

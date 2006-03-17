@@ -1,6 +1,6 @@
 #region Copyright & License
 //
-// Copyright 2001-2005 The Apache Software Foundation
+// Copyright 2001-2006 The Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -414,12 +414,26 @@ namespace log4net.Repository.Hierarchy
 		/// Generate a logging event for the specified <paramref name="level"/> using
 		/// the <paramref name="message"/> and <paramref name="exception"/>.
 		/// </para>
+		/// <para>
+		/// This method must not throw any exception to the caller.
+		/// </para>
 		/// </remarks>
 		virtual public void Log(Type callerStackBoundaryDeclaringType, Level level, object message, Exception exception) 
 		{
-			if (IsEnabledFor(level))
+			try
 			{
-				ForcedLog((callerStackBoundaryDeclaringType != null) ? callerStackBoundaryDeclaringType : ThisDeclaringType , level, message, exception);
+				if (IsEnabledFor(level))
+				{
+					ForcedLog((callerStackBoundaryDeclaringType != null) ? callerStackBoundaryDeclaringType : ThisDeclaringType, level, message, exception);
+				}
+			}
+			catch (Exception ex)
+			{
+				log4net.Util.LogLog.Error("Log: Exception while logging", ex);
+			}
+			catch
+			{
+				log4net.Util.LogLog.Error("Log: Exception while logging");
 			}
 		}
 
@@ -432,17 +446,29 @@ namespace log4net.Repository.Hierarchy
 		/// <para>
 		/// Logs the specified logging event through this logger.
 		/// </para>
+		/// <para>
+		/// This method must not throw any exception to the caller.
+		/// </para>
 		/// </remarks>
-		virtual public void Log(LoggingEvent logEvent) 
+		virtual public void Log(LoggingEvent logEvent)
 		{
-			if (logEvent == null)
+			try
 			{
-				throw new ArgumentNullException("logEvent");
+				if (logEvent != null)
+				{
+					if (IsEnabledFor(logEvent.Level))
+					{
+						ForcedLog(logEvent);
+					}
+				}
 			}
-
-			if (IsEnabledFor(logEvent.Level))
+			catch (Exception ex)
 			{
-				ForcedLog(logEvent);
+				log4net.Util.LogLog.Error("Log: Exception while logging", ex);
+			}
+			catch
+			{
+				log4net.Util.LogLog.Error("Log: Exception while logging");
 			}
 		}
 
@@ -457,14 +483,32 @@ namespace log4net.Repository.Hierarchy
 		/// <para>
 		/// Test if this logger is going to log events of the specified <paramref name="level"/>.
 		/// </para>
+		/// <para>
+		/// This method must not throw any exception to the caller.
+		/// </para>
 		/// </remarks>
-		virtual public bool IsEnabledFor(Level level) 
+		virtual public bool IsEnabledFor(Level level)
 		{
-			if (m_hierarchy.IsDisabled(level))
+			try
 			{
-				return false;
+				if (level != null)
+				{
+					if (m_hierarchy.IsDisabled(level))
+					{
+						return false;
+					}
+					return level >= this.EffectiveLevel;
+				}
 			}
-			return level >= this.EffectiveLevel;
+			catch (Exception ex)
+			{
+				log4net.Util.LogLog.Error("Log: Exception while logging", ex);
+			}
+			catch
+			{
+				log4net.Util.LogLog.Error("Log: Exception while logging");
+			}
+			return false;
 		}
 
 		/// <summary>

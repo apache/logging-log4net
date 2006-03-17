@@ -1,6 +1,6 @@
 #region Copyright & License
 //
-// Copyright 2001-2005 The Apache Software Foundation
+// Copyright 2001-2006 The Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,6 +30,11 @@ namespace log4net.Core
 	/// <para>
 	/// This interface supports logging events and testing if a level
 	/// is enabled for logging.
+	/// </para>
+	/// <para>
+	/// These methods will not throw exceptions. Note to implementor, ensure
+	/// that the implementation of these methods cannot allow an exception
+	/// to be thrown to the caller.
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
