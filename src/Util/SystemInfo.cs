@@ -1062,16 +1062,16 @@ namespace log4net.Util
 				public const uint PROV_RSA_FULL = 1;
 				public const uint CRYPT_VERIFYCONTEXT = 0xf0000000;
 
-				[DllImport("coredll.dll")] 
+				[DllImport("CoreDll.dll")] 
 				public static extern bool CryptAcquireContext(
 					ref IntPtr phProv, string pszContainer, string pszProvider,
 					uint dwProvType, uint dwFlags);
 
-				[DllImport("coredll.dll")] 
+				[DllImport("CoreDll.dll")] 
 				public static extern bool CryptReleaseContext( 
 					IntPtr hProv, uint dwFlags);
 
-				[DllImport("coredll.dll")] 
+				[DllImport("CoreDll.dll")] 
 				public static extern bool CryptGenRandom(
 					IntPtr hProv, int dwLen, byte[] pbBuffer);
 			}
