@@ -948,6 +948,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Util\SystemStringFormat.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Util\TextWriterAdapter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

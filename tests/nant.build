@@ -73,9 +73,30 @@ limitations under the License.
                 <include name="*.*" />
             </fileset>
         </copy>
+        <!-- copy referenced libraries to build output -->
         <copy todir="${current.bin.dir}">
             <fileset basedir="${log4net.basedir}/tests/lib">
-                <include name="nunit.framework.dll" />
+                <include name="/*.dll" />
+            </fileset>
+        </copy>
+        <copy todir="${current.bin.dir}">
+            <fileset basedir="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}">
+                <include name="*.dll" />
+            </fileset>
+        </copy>
+        <copy todir="${current.bin.dir}">
+            <fileset basedir="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}">
+                <include name="*.dll" />
+            </fileset>
+        </copy>
+        <copy todir="${current.bin.dir}">
+            <fileset basedir="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}">
+                <include name="*.dll" />
+            </fileset>
+        </copy>
+        <copy todir="${current.bin.dir}">
+            <fileset basedir="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}">
+                <include name="*.dll" />
             </fileset>
         </copy>
         <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Tests.dll">
@@ -91,10 +112,11 @@ limitations under the License.
                 <include name="System.Xml.dll" />
                 <include name="System.Runtime.Remoting.dll" />
                 <include name="${current.bin.dir}/log4net.dll" frompath="false" />
-                <include name="${current.bin.dir}/nunit.framework.dll" frompath="false" />
                 <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework>/<framework version>/<build configuration> directory -->
-                <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
-                <include name="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
+                <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" frompath="false" />
+                <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/*.dll" frompath="false" />
+                <include name="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" frompath="false" />
+                <include name="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/*.dll" frompath="false" />
             </references>
         </csc>
     </target>
@@ -107,9 +129,30 @@ limitations under the License.
                 <include name="*.*" />
             </fileset>
         </copy>
+        <!-- copy referenced libraries to build output -->
         <copy todir="${current.bin.dir}">
             <fileset basedir="${log4net.basedir}/tests/lib">
-                <include name="nunit.framework.dll" />
+                <include name="/*.dll" />
+            </fileset>
+        </copy>
+        <copy todir="${current.bin.dir}">
+            <fileset basedir="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}">
+                <include name="*.dll" />
+            </fileset>
+        </copy>
+        <copy todir="${current.bin.dir}">
+            <fileset basedir="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}">
+                <include name="*.dll" />
+            </fileset>
+        </copy>
+        <copy todir="${current.bin.dir}">
+            <fileset basedir="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}">
+                <include name="*.dll" />
+            </fileset>
+        </copy>
+        <copy todir="${current.bin.dir}">
+            <fileset basedir="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}">
+                <include name="*.dll" />
             </fileset>
         </copy>
         <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Tests.dll">
@@ -125,10 +168,11 @@ limitations under the License.
                 <include name="System.Xml.dll" />
                 <include name="System.Runtime.Remoting.dll" />
                 <include name="${current.bin.dir}/log4net.dll" frompath="false" />
-                <include name="${current.bin.dir}/nunit.framework.dll" frompath="false" />
                 <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework>/<framework version>/<build configuration> directory -->
-                <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
-                <include name="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
+                <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" frompath="false" />
+                <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/*.dll" frompath="false" />
+                <include name="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" frompath="false" />
+                <include name="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/*.dll" frompath="false" />
             </references>
         </csc>
     </target>
@@ -140,9 +184,30 @@ limitations under the License.
                 <include name="*.*" />
             </fileset>
         </copy>
+        <!-- copy referenced libraries to build output -->
         <copy todir="${current.bin.dir}">
             <fileset basedir="${log4net.basedir}/tests/lib">
-                <include name="nunit.framework.dll" />
+                <include name="/*.dll" />
+            </fileset>
+        </copy>
+        <copy todir="${current.bin.dir}">
+            <fileset basedir="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}">
+                <include name="*.dll" />
+            </fileset>
+        </copy>
+        <copy todir="${current.bin.dir}">
+            <fileset basedir="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}">
+                <include name="*.dll" />
+            </fileset>
+        </copy>
+        <copy todir="${current.bin.dir}">
+            <fileset basedir="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}">
+                <include name="*.dll" />
+            </fileset>
+        </copy>
+        <copy todir="${current.bin.dir}">
+            <fileset basedir="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}">
+                <include name="*.dll" />
             </fileset>
         </copy>
         <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Tests.dll">
@@ -158,10 +223,11 @@ limitations under the License.
                 <include name="System.Xml.dll" />
                 <include name="System.Runtime.Remoting.dll" />
                 <include name="${current.bin.dir}/log4net.dll" frompath="false" />
-                <include name="${current.bin.dir}/nunit.framework.dll" frompath="false" />
                 <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework>/<framework version>/<build configuration> directory -->
-                <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
-                <include name="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
+                <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" frompath="false" />
+                <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/*.dll" frompath="false" />
+                <include name="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" frompath="false" />
+                <include name="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/*.dll" frompath="false" />
             </references>
         </csc>
     </target>

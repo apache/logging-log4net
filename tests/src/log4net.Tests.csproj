@@ -73,11 +73,6 @@
                     HintPath = "..\..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.0.3705\System.XML.dll"
                 />
                 <Reference
-                    Name = "nunit.framework"
-                    AssemblyName = "nunit.framework"
-                    HintPath = "..\lib\nunit.framework.dll"
-                />
-                <Reference
                     Name = "log4net"
                     Project = "{F6A02431-167E-4347-BC43-65532C31CDB7}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
@@ -86,6 +81,11 @@
                     Name = "System.Runtime.Remoting"
                     AssemblyName = "System.Runtime.Remoting"
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.0.3705\System.Runtime.Remoting.dll"
+                />
+                <Reference
+                    Name = "nunit.framework"
+                    AssemblyName = "nunit.framework"
+                    HintPath = "..\lib\net\1.0\nunit.framework.dll"
                 />
             </References>
         </Build>
@@ -149,6 +149,11 @@
                 />
                 <File
                     RelPath = "Core\ShutdownTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Core\StringFormatTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
