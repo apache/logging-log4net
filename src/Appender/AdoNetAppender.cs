@@ -407,14 +407,30 @@ namespace log4net.Appender
 		override protected void OnClose() 
 		{
 			base.OnClose();
+
+			// Close the cached command and connection objects
 			if (m_dbCommand != null)
 			{
-				m_dbCommand.Dispose();
+				try
+				{
+					m_dbCommand.Dispose();
+				}
+				catch (Exception ex)
+				{
+					LogLog.Warn("AdoNetAppender: Exception while disposing cached command object", ex);
+				}
 				m_dbCommand = null;
 			}
 			if (m_dbConnection != null)
 			{
-				m_dbConnection.Close();
+				try
+				{
+					m_dbConnection.Close();
+				}
+				catch (Exception ex)
+				{
+					LogLog.Warn("AdoNetAppender: Exception while disposing cached connection object", ex);
+				}
 				m_dbConnection = null;
 			}
 		}
@@ -607,6 +623,32 @@ namespace log4net.Appender
 		{
 			try
 			{
+				// Cleanup any existing command or connection
+				if (m_dbCommand != null)
+				{
+					try
+					{
+						m_dbCommand.Dispose();
+					}
+					catch (Exception ex)
+					{
+						LogLog.Warn("AdoNetAppender: Exception while disposing cached command object", ex);
+					}
+					m_dbCommand = null;
+				}
+				if (m_dbConnection != null)
+				{
+					try
+					{
+						m_dbConnection.Close();
+					}
+					catch (Exception ex)
+					{
+						LogLog.Warn("AdoNetAppender: Exception while disposing cached connection object", ex);
+					}
+					m_dbConnection = null;
+				}
+
 				// Create the connection object
 				m_dbConnection = (IDbConnection)Activator.CreateInstance(ResolveConnectionType());
 			
@@ -665,6 +707,20 @@ namespace log4net.Appender
 			{
 				try
 				{
+					// Cleanup any existing command or connection
+					if (m_dbCommand != null)
+					{
+						try
+						{
+							m_dbCommand.Dispose();
+						}
+						catch (Exception ex)
+						{
+							LogLog.Warn("AdoNetAppender: Exception while disposing cached command object", ex);
+						}
+						m_dbCommand = null;
+					}
+
 					// Create the command object
 					m_dbCommand = m_dbConnection.CreateCommand();
 		
