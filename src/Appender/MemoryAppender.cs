@@ -1,6 +1,6 @@
 #region Copyright & License
 //
-// Copyright 2001-2005 The Apache Software Foundation
+// Copyright 2001-2006 The Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -113,7 +113,7 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
-		/// Gets or sets a the fields that will be fixed in the event
+		/// Gets or sets the fields that will be fixed in the event
 		/// </summary>
 		/// <remarks>
 		/// <para>
@@ -166,12 +166,12 @@ namespace log4net.Appender
 
 		#endregion Public Instance Methods
 
-		#region Private Instance Fields
+		#region Protected Instance Fields
 
 		/// <summary>
 		/// The list of events that have been appended.
 		/// </summary>
-		private ArrayList m_eventsList;
+		protected ArrayList m_eventsList;
 
 		/// <summary>
 		/// Value indicating which fields in the event should be fixed
@@ -179,8 +179,8 @@ namespace log4net.Appender
 		/// <remarks>
 		/// By default all fields are fixed
 		/// </remarks>
-		private FixFlags m_fixFlags = FixFlags.All;
+		protected FixFlags m_fixFlags = FixFlags.All;
 
-		#endregion Private Instance Fields
+		#endregion Protected Instance Fields
 	}
 }
