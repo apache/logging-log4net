@@ -1,6 +1,6 @@
 #region Copyright & License
 //
-// Copyright 2001-2005 The Apache Software Foundation
+// Copyright 2001-2006 The Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -121,13 +121,79 @@ namespace log4net
 		/// </para>
 		/// <para>
 		/// This method does not take an <see cref="Exception"/> object to include in the
-		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Debug(object)"/>
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Debug(object,Exception)"/>
 		/// methods instead.
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="Debug(object)"/>
 		/// <seealso cref="IsDebugEnabled"/>
 		void DebugFormat(string format, params object[] args); 
+
+		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Debug"/> level.
+		/// </summary>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="arg0">An Object to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Debug(object,Exception)"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="Debug(object)"/>
+		/// <seealso cref="IsDebugEnabled"/>
+		void DebugFormat(string format, object arg0); 
+
+		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Debug"/> level.
+		/// </summary>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="arg0">An Object to format</param>
+		/// <param name="arg1">An Object to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Debug(object,Exception)"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="Debug(object)"/>
+		/// <seealso cref="IsDebugEnabled"/>
+		void DebugFormat(string format, object arg0, object arg1); 
+
+		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Debug"/> level.
+		/// </summary>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="arg0">An Object to format</param>
+		/// <param name="arg1">An Object to format</param>
+		/// <param name="arg2">An Object to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Debug(object,Exception)"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="Debug(object)"/>
+		/// <seealso cref="IsDebugEnabled"/>
+		void DebugFormat(string format, object arg0, object arg1, object arg2); 
 
 		/// <summary>
 		/// Logs a formatted message string with the <see cref="Level.Debug"/> level.
@@ -143,7 +209,7 @@ namespace log4net
 		/// </para>
 		/// <para>
 		/// This method does not take an <see cref="Exception"/> object to include in the
-		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Debug(object)"/>
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Debug(object,Exception)"/>
 		/// methods instead.
 		/// </para>
 		/// </remarks>
@@ -215,6 +281,72 @@ namespace log4net
 		/// <seealso cref="Info(object,Exception)"/>
 		/// <seealso cref="IsInfoEnabled"/>
 		void InfoFormat(string format, params object[] args);
+
+		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Info"/> level.
+		/// </summary>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="arg0">An Object to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Info(object,Exception)"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="Info(object)"/>
+		/// <seealso cref="IsInfoEnabled"/>
+		void InfoFormat(string format, object arg0); 
+
+		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Info"/> level.
+		/// </summary>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="arg0">An Object to format</param>
+		/// <param name="arg1">An Object to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Info(object,Exception)"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="Info(object)"/>
+		/// <seealso cref="IsInfoEnabled"/>
+		void InfoFormat(string format, object arg0, object arg1); 
+
+		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Info"/> level.
+		/// </summary>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="arg0">An Object to format</param>
+		/// <param name="arg1">An Object to format</param>
+		/// <param name="arg2">An Object to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Info(object,Exception)"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="Info(object)"/>
+		/// <seealso cref="IsInfoEnabled"/>
+		void InfoFormat(string format, object arg0, object arg1, object arg2); 
 
 		/// <summary>
 		/// Logs a formatted message string with the <see cref="Level.Info"/> level.
@@ -306,6 +438,72 @@ namespace log4net
 		/// <summary>
 		/// Logs a formatted message string with the <see cref="Level.Warn"/> level.
 		/// </summary>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="arg0">An Object to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Warn(object,Exception)"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="Warn(object)"/>
+		/// <seealso cref="IsWarnEnabled"/>
+		void WarnFormat(string format, object arg0); 
+
+		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Warn"/> level.
+		/// </summary>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="arg0">An Object to format</param>
+		/// <param name="arg1">An Object to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Warn(object,Exception)"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="Warn(object)"/>
+		/// <seealso cref="IsWarnEnabled"/>
+		void WarnFormat(string format, object arg0, object arg1); 
+
+		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Warn"/> level.
+		/// </summary>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="arg0">An Object to format</param>
+		/// <param name="arg1">An Object to format</param>
+		/// <param name="arg2">An Object to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Warn(object,Exception)"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="Warn(object)"/>
+		/// <seealso cref="IsWarnEnabled"/>
+		void WarnFormat(string format, object arg0, object arg1, object arg2); 
+
+		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Warn"/> level.
+		/// </summary>
 		/// <param name="provider">An <see cref="IFormatProvider"/> that supplies culture-specific formatting information</param>
 		/// <param name="format">A String containing zero or more format items</param>
 		/// <param name="args">An Object array containing zero or more objects to format</param>
@@ -393,6 +591,72 @@ namespace log4net
 		/// <summary>
 		/// Logs a formatted message string with the <see cref="Level.Error"/> level.
 		/// </summary>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="arg0">An Object to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Error(object,Exception)"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="Error(object)"/>
+		/// <seealso cref="IsErrorEnabled"/>
+		void ErrorFormat(string format, object arg0); 
+
+		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Error"/> level.
+		/// </summary>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="arg0">An Object to format</param>
+		/// <param name="arg1">An Object to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Error(object,Exception)"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="Error(object)"/>
+		/// <seealso cref="IsErrorEnabled"/>
+		void ErrorFormat(string format, object arg0, object arg1); 
+
+		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Error"/> level.
+		/// </summary>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="arg0">An Object to format</param>
+		/// <param name="arg1">An Object to format</param>
+		/// <param name="arg2">An Object to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Error(object,Exception)"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="Error(object)"/>
+		/// <seealso cref="IsErrorEnabled"/>
+		void ErrorFormat(string format, object arg0, object arg1, object arg2); 
+
+		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Error"/> level.
+		/// </summary>
 		/// <param name="provider">An <see cref="IFormatProvider"/> that supplies culture-specific formatting information</param>
 		/// <param name="format">A String containing zero or more format items</param>
 		/// <param name="args">An Object array containing zero or more objects to format</param>
@@ -476,6 +740,72 @@ namespace log4net
 		/// <seealso cref="Fatal(object,Exception)"/>
 		/// <seealso cref="IsFatalEnabled"/>
 		void FatalFormat(string format, params object[] args);
+
+		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Fatal"/> level.
+		/// </summary>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="arg0">An Object to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Fatal(object,Exception)"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="Fatal(object)"/>
+		/// <seealso cref="IsFatalEnabled"/>
+		void FatalFormat(string format, object arg0); 
+
+		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Fatal"/> level.
+		/// </summary>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="arg0">An Object to format</param>
+		/// <param name="arg1">An Object to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Fatal(object,Exception)"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="Fatal(object)"/>
+		/// <seealso cref="IsFatalEnabled"/>
+		void FatalFormat(string format, object arg0, object arg1); 
+
+		/// <summary>
+		/// Logs a formatted message string with the <see cref="Level.Fatal"/> level.
+		/// </summary>
+		/// <param name="format">A String containing zero or more format items</param>
+		/// <param name="arg0">An Object to format</param>
+		/// <param name="arg1">An Object to format</param>
+		/// <param name="arg2">An Object to format</param>
+		/// <remarks>
+		/// <para>
+		/// The message is formatted using the <c>String.Format</c> method. See
+		/// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+		/// of the formatting.
+		/// </para>
+		/// <para>
+		/// This method does not take an <see cref="Exception"/> object to include in the
+		/// log event. To pass an <see cref="Exception"/> use one of the <see cref="Fatal(object,Exception)"/>
+		/// methods instead.
+		/// </para>
+		/// </remarks>
+		/// <seealso cref="Fatal(object)"/>
+		/// <seealso cref="IsFatalEnabled"/>
+		void FatalFormat(string format, object arg0, object arg1, object arg2); 
 
 		/// <summary>
 		/// Logs a formatted message string with the <see cref="Level.Fatal"/> level.
