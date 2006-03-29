@@ -145,7 +145,7 @@ namespace log4net.Tests.Core
 			stringAppender.Reset();
 
 			// ***
-			log1.DebugFormat(System.Globalization.CultureInfo.GetCultureInfo("en"), "Before {0} After {1}", "Middle", "End");
+			log1.DebugFormat(new System.Globalization.CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
 			Assert.AreEqual("DEBUG:Before Middle After End", stringAppender.GetString(), "Test formatting with 'en' provider");
 			stringAppender.Reset();
 		}
@@ -202,7 +202,7 @@ namespace log4net.Tests.Core
 			stringAppender.Reset();
 
 			// ***
-			log1.DebugFormat(System.Globalization.CultureInfo.GetCultureInfo("en"), "Before {0} After {1}", "Middle", "End");
+			log1.DebugFormat(new System.Globalization.CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
 			Assert.AreEqual("", stringAppender.GetString(), "Test formatting with 'en' provider");
 			stringAppender.Reset();
 		}
@@ -260,7 +260,7 @@ namespace log4net.Tests.Core
 			stringAppender.Reset();
 
 			// ***
-			log1.InfoFormat(System.Globalization.CultureInfo.GetCultureInfo("en"), "Before {0} After {1}", "Middle", "End");
+			log1.InfoFormat(new System.Globalization.CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
 			Assert.AreEqual("INFO:Before Middle After End", stringAppender.GetString(), "Test formatting with 'en' provider");
 			stringAppender.Reset();
 		}
@@ -317,7 +317,7 @@ namespace log4net.Tests.Core
 			stringAppender.Reset();
 
 			// ***
-			log1.InfoFormat(System.Globalization.CultureInfo.GetCultureInfo("en"), "Before {0} After {1}", "Middle", "End");
+			log1.InfoFormat(new System.Globalization.CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
 			Assert.AreEqual("", stringAppender.GetString(), "Test formatting with 'en' provider");
 			stringAppender.Reset();
 		}
@@ -375,7 +375,7 @@ namespace log4net.Tests.Core
 			stringAppender.Reset();
 
 			// ***
-			log1.WarnFormat(System.Globalization.CultureInfo.GetCultureInfo("en"), "Before {0} After {1}", "Middle", "End");
+			log1.WarnFormat(new System.Globalization.CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
 			Assert.AreEqual("WARN:Before Middle After End", stringAppender.GetString(), "Test formatting with 'en' provider");
 			stringAppender.Reset();
 		}
@@ -432,7 +432,7 @@ namespace log4net.Tests.Core
 			stringAppender.Reset();
 
 			// ***
-			log1.WarnFormat(System.Globalization.CultureInfo.GetCultureInfo("en"), "Before {0} After {1}", "Middle", "End");
+			log1.WarnFormat(new System.Globalization.CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
 			Assert.AreEqual("", stringAppender.GetString(), "Test formatting with 'en' provider");
 			stringAppender.Reset();
 		}
@@ -490,7 +490,7 @@ namespace log4net.Tests.Core
 			stringAppender.Reset();
 
 			// ***
-			log1.ErrorFormat(System.Globalization.CultureInfo.GetCultureInfo("en"), "Before {0} After {1}", "Middle", "End");
+			log1.ErrorFormat(new System.Globalization.CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
 			Assert.AreEqual("ERROR:Before Middle After End", stringAppender.GetString(), "Test formatting with 'en' provider");
 			stringAppender.Reset();
 		}
@@ -547,7 +547,7 @@ namespace log4net.Tests.Core
 			stringAppender.Reset();
 
 			// ***
-			log1.ErrorFormat(System.Globalization.CultureInfo.GetCultureInfo("en"), "Before {0} After {1}", "Middle", "End");
+			log1.ErrorFormat(new System.Globalization.CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
 			Assert.AreEqual("", stringAppender.GetString(), "Test formatting with 'en' provider");
 			stringAppender.Reset();
 		}
@@ -605,7 +605,7 @@ namespace log4net.Tests.Core
 			stringAppender.Reset();
 
 			// ***
-			log1.FatalFormat(System.Globalization.CultureInfo.GetCultureInfo("en"), "Before {0} After {1}", "Middle", "End");
+			log1.FatalFormat(new System.Globalization.CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
 			Assert.AreEqual("FATAL:Before Middle After End", stringAppender.GetString(), "Test formatting with 'en' provider");
 			stringAppender.Reset();
 		}
@@ -662,7 +662,7 @@ namespace log4net.Tests.Core
 			stringAppender.Reset();
 
 			// ***
-			log1.FatalFormat(System.Globalization.CultureInfo.GetCultureInfo("en"), "Before {0} After {1}", "Middle", "End");
+			log1.FatalFormat(new System.Globalization.CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
 			Assert.AreEqual("", stringAppender.GetString(), "Test formatting with 'en' provider");
 			stringAppender.Reset();
 		}
