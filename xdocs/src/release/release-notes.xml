@@ -25,12 +25,12 @@ limitations under the License.
 
 	<body>
 		<section id="main" name="log4net Release Notes">
-		
+
 			<sectionMenu name="Contents" />
 			
-			<section id="1.2.10" name="1.2.10 Beta">
+			<section id="1.2.10" name="1.2.10">
 
-				<section id="1.2.10-bug" name="Bug">
+				<section id="1.2.10-bug" name="Bug Fixes">
 					<ul>
 					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-21'>LOG4NET-21</a>] - RemotingAppender fails once NDC becomes empty</li>
 					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-22'>LOG4NET-22</a>] - XmlLayout allows output of invalid control characters</li>
@@ -52,10 +52,13 @@ limitations under the License.
 					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-63'>LOG4NET-63</a>] - 1.2.9.0 Documentation typos</li>
 					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-65'>LOG4NET-65</a>] - Unhandled SecurityException exception for FileIOPermission while loading configuration file</li>
 					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-67'>LOG4NET-67</a>] - CVE-2006-0743 Security vulnerability in LocalSyslogAppender</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-69'>LOG4NET-69</a>] - Exception thrown when *Format methods are given a malformed format string</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-70'>LOG4NET-70</a>] - CoreDll.dll referenced with different capitalisation</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-73'>LOG4NET-73</a>] - ADONetAppender.ActivateOptions() leaks database connection when called multiple times</li>
 					</ul>
 				</section>
 				    
-				<section id="1.2.10-new" name="New Feature">
+				<section id="1.2.10-new" name="New Features">
 					<ul>
 					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-11'>LOG4NET-11</a>] - Add Flush command to API</li>
 					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-24'>LOG4NET-24</a>] - Programmatic flush of BufferingAppenderSkeleton buffer</li>
@@ -65,7 +68,7 @@ limitations under the License.
 					</ul>
 				</section>
 					    
-				<section id="1.2.10-enh" name="Improvement">
+				<section id="1.2.10-enh" name="Improvements">
 					<ul>
 					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-3'>LOG4NET-3</a>] - Support per event patterns in FileAppender File name</li>
 					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-13'>LOG4NET-13</a>] - Allow SMTPAppender to have replaceable parameters in Subject</li>
@@ -78,6 +81,8 @@ limitations under the License.
 					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-53'>LOG4NET-53</a>] - Allow repository properties to be set in the config file</li>
 					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-56'>LOG4NET-56</a>] - Support rendering IEnumerator objects as well as ICollections</li>
 					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-58'>LOG4NET-58</a>] - Support clean build on .NET 2.0</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-72'>LOG4NET-72</a>] - Performance of ILog.xxxFormat methods</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/LOG4NET-74'>LOG4NET-74</a>] - Change MemoryAppender member variables to protected</li>
 					</ul>
  				</section>
            
