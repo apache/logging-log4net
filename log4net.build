@@ -152,7 +152,8 @@ limitations under the License.
     </target>
     <!-- Target for setting the package configuration -->
     <target name="set-package-configuration" depends="check-package-dir, check-package-version">
-        <property name="current.package.dir" value="${package.dir}/${nant.project.name}-${package.version}" />
+        <property name="current.package.name" value="${nant.project.name}-${package.version}" />
+        <property name="current.package.dir" value="${package.dir}/${current.package.name}" />
         <property name="log4net.basedir" value="${current.package.dir}" />
         <property name="current.package.zipfile" value="${project::get-name()}-${package.version}.zip" />
         <property name="bin.dir" value="${current.package.dir}/bin" />
@@ -809,7 +810,7 @@ limitations under the License.
             </fileset>
         </delete>
         <zip zipfile="${current.package.zipfile}" ziplevel="9">
-            <fileset basedir="${current.package.dir}">
+            <fileset basedir="${current.package.dir}" prefix="${current.package.name}">
                 <include name="**/*" />
                 <!-- do not include the log4net keyfiles -->
                 <exclude name="**/*.snk" />
