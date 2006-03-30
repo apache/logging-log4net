@@ -17,8 +17,11 @@
 #endregion
 
 using System;
+using System.Globalization;
+
 using log4net.Core;
 using log4net.Repository;
+using log4net.Util;
 
 namespace log4net.Ext.MarshalByRef
 {
@@ -90,12 +93,42 @@ namespace log4net.Ext.MarshalByRef
 
 		public void DebugFormat(string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelDebug, String.Format(format, args), null);
+			if (IsDebugEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelDebug, new SystemStringFormat(CultureInfo.InvariantCulture, format, args), null);
+			}
+		}
+
+		public void DebugFormat(string format, object arg0) 
+		{
+			if (IsDebugEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelDebug, new SystemStringFormat(CultureInfo.InvariantCulture, format, new object[] { arg0 }), null);
+			}
+		}
+
+		public void DebugFormat(string format, object arg0, object arg1) 
+		{
+			if (IsDebugEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelDebug, new SystemStringFormat(CultureInfo.InvariantCulture, format, new object[] { arg0, arg1 }), null);
+			}
+		}
+
+		public void DebugFormat(string format, object arg0, object arg1, object arg2) 
+		{
+			if (IsDebugEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelDebug, new SystemStringFormat(CultureInfo.InvariantCulture, format, new object[] { arg0, arg1, arg2 }), null);
+			}
 		}
 
 		public void DebugFormat(IFormatProvider provider, string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelDebug, String.Format(provider, format, args), null);
+			if (IsDebugEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelDebug, new SystemStringFormat(provider, format, args), null);
+			}
 		}
 
 		public void Info(object message) 
@@ -110,12 +143,42 @@ namespace log4net.Ext.MarshalByRef
 
 		public void InfoFormat(string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelInfo, String.Format(format, args), null);
+			if (IsInfoEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelInfo, new SystemStringFormat(CultureInfo.InvariantCulture, format, args), null);
+			}
+		}
+
+		public void InfoFormat(string format, object arg0) 
+		{
+			if (IsInfoEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelInfo, new SystemStringFormat(CultureInfo.InvariantCulture, format, new object[] { arg0 }), null);
+			}
+		}
+
+		public void InfoFormat(string format, object arg0, object arg1) 
+		{
+			if (IsInfoEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelInfo, new SystemStringFormat(CultureInfo.InvariantCulture, format, new object[] { arg0, arg1 }), null);
+			}
+		}
+
+		public void InfoFormat(string format, object arg0, object arg1, object arg2) 
+		{
+			if (IsInfoEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelInfo, new SystemStringFormat(CultureInfo.InvariantCulture, format, new object[] { arg0, arg1, arg2 }), null);
+			}
 		}
 
 		public void InfoFormat(IFormatProvider provider, string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelInfo, String.Format(provider, format, args), null);
+			if (IsInfoEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelInfo, new SystemStringFormat(provider, format, args), null);
+			}
 		}
 
 		public void Warn(object message) 
@@ -130,12 +193,42 @@ namespace log4net.Ext.MarshalByRef
 
 		public void WarnFormat(string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelWarn, String.Format(format, args), null);
+			if (IsWarnEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelWarn, new SystemStringFormat(CultureInfo.InvariantCulture, format, args), null);
+			}
+		}
+
+		public void WarnFormat(string format, object arg0) 
+		{
+			if (IsWarnEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelWarn, new SystemStringFormat(CultureInfo.InvariantCulture, format, new object[] { arg0 }), null);
+			}
+		}
+
+		public void WarnFormat(string format, object arg0, object arg1) 
+		{
+			if (IsWarnEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelWarn, new SystemStringFormat(CultureInfo.InvariantCulture, format, new object[] { arg0, arg1 }), null);
+			}
+		}
+
+		public void WarnFormat(string format, object arg0, object arg1, object arg2) 
+		{
+			if (IsWarnEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelWarn, new SystemStringFormat(CultureInfo.InvariantCulture, format, new object[] { arg0, arg1, arg2 }), null);
+			}
 		}
 
 		public void WarnFormat(IFormatProvider provider, string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelWarn, String.Format(provider, format, args), null);
+			if (IsWarnEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelWarn, new SystemStringFormat(provider, format, args), null);
+			}
 		}
 
 		public void Error(object message) 
@@ -150,12 +243,42 @@ namespace log4net.Ext.MarshalByRef
 
 		public void ErrorFormat(string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelError, String.Format(format, args), null);
+			if (IsErrorEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelError, new SystemStringFormat(CultureInfo.InvariantCulture, format, args), null);
+			}
+		}
+
+		public void ErrorFormat(string format, object arg0) 
+		{
+			if (IsErrorEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelError, new SystemStringFormat(CultureInfo.InvariantCulture, format, new object[] { arg0 }), null);
+			}
+		}
+
+		public void ErrorFormat(string format, object arg0, object arg1) 
+		{
+			if (IsErrorEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelError, new SystemStringFormat(CultureInfo.InvariantCulture, format, new object[] { arg0, arg1 }), null);
+			}
+		}
+
+		public void ErrorFormat(string format, object arg0, object arg1, object arg2) 
+		{
+			if (IsErrorEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelError, new SystemStringFormat(CultureInfo.InvariantCulture, format, new object[] { arg0, arg1, arg2 }), null);
+			}
 		}
 
 		public void ErrorFormat(IFormatProvider provider, string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelError, String.Format(provider, format, args), null);
+			if (IsErrorEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelError, new SystemStringFormat(provider, format, args), null);
+			}
 		}
 
 		public void Fatal(object message) 
@@ -170,12 +293,42 @@ namespace log4net.Ext.MarshalByRef
 
 		public void FatalFormat(string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelFatal, String.Format(format, args), null);
+			if (IsFatalEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelFatal, new SystemStringFormat(CultureInfo.InvariantCulture, format, args), null);
+			}
+		}
+
+		public void FatalFormat(string format, object arg0) 
+		{
+			if (IsFatalEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelFatal, new SystemStringFormat(CultureInfo.InvariantCulture, format, new object[] { arg0 }), null);
+			}
+		}
+
+		public void FatalFormat(string format, object arg0, object arg1) 
+		{
+			if (IsFatalEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelFatal, new SystemStringFormat(CultureInfo.InvariantCulture, format, new object[] { arg0, arg1 }), null);
+			}
+		}
+
+		public void FatalFormat(string format, object arg0, object arg1, object arg2) 
+		{
+			if (IsFatalEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelFatal, new SystemStringFormat(CultureInfo.InvariantCulture, format, new object[] { arg0, arg1, arg2 }), null);
+			}
 		}
 
 		public void FatalFormat(IFormatProvider provider, string format, params object[] args) 
 		{
-			Logger.Log(ThisDeclaringType, m_levelFatal, String.Format(provider, format, args), null);
+			if (IsFatalEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelFatal, new SystemStringFormat(provider, format, args), null);
+			}
 		}
 
 		public bool IsDebugEnabled

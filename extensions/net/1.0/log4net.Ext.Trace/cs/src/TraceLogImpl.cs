@@ -72,7 +72,7 @@ namespace log4net.Ext.Trace
 		{
 			if (IsTraceEnabled)
 			{
-				Logger.Log(ThisDeclaringType, m_levelTrace, Transform.StringFormat(CultureInfo.InvariantCulture, format, args), null);
+				Logger.Log(ThisDeclaringType, m_levelTrace, new SystemStringFormat(CultureInfo.InvariantCulture, format, args), null);
 			}
 		}
 
@@ -80,7 +80,7 @@ namespace log4net.Ext.Trace
 		{
 			if (IsTraceEnabled)
 			{
-				Logger.Log(ThisDeclaringType, m_levelTrace, Transform.StringFormat(provider, format, args), null);
+				Logger.Log(ThisDeclaringType, m_levelTrace, new SystemStringFormat(provider, format, args), null);
 			}
 		}
 
