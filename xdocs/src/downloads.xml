@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!--
-Copyright 2004-2005 The Apache Software Foundation
+Copyright 2004-2006 The Apache Software Foundation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -49,10 +49,15 @@ limitations under the License.
 				</p>
 				
 				<ul>
-					<li>none</li>
+					<li>
+						<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.10/incubating-log4net-1.2.10.zip">incubating-log4net-1.2.10.zip</a>
+						[<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.10/incubating-log4net-1.2.10.zip.asc">PGP</a>]
+						[<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.10/incubating-log4net-1.2.10.zip.md5">MD5</a>]
+					</li>
 				</ul>
 			</section>
 			
+			<!--
 			<section id="developer" name="Developer Releases">
 				<p>
 					The following development snapshots are available:
@@ -66,8 +71,17 @@ limitations under the License.
 					</li>
 				</ul>
 			</section>
+			-->
 			
 			<section id="archive" name="Archive Releases">
+				<ul>
+					<li>
+						<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip">incubating-log4net-1.2.9-beta.zip</a>
+						[<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip.asc">PGP</a>]
+						[<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip.md5">MD5</a>]
+					</li>
+				</ul>
+				
 				<p>
 					Previous releases of log4net are available from the sourceforge site:
 				</p>
