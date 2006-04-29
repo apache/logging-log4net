@@ -232,12 +232,38 @@ namespace log4net.Appender
 		/// </remarks>
 		public RollingFileAppender() 
 		{
-			m_dateTime = new DefaultDateTime();
 		}
 
 		#endregion Public Instance Constructors
 
 		#region Public Instance Properties
+
+		/// <summary>
+		/// Gets or sets the strategy for determining the current date and time. The default
+		/// implementation is to use LocalDateTime which internally calls through to DateTime.Now. 
+		/// DateTime.UtcNow may be used by specifying
+		/// <see cref="RollingFileAppender.UniversalDateTime"/>.
+		/// </summary>
+		/// <value>
+		/// An implementation of the <see cref="RollingFileAppender.IDateTime"/> interface which returns the current date and time.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets or sets the <see cref="RollingFileAppender.IDateTime"/> used to return the current date and time.
+		/// </para>
+		/// <para>
+		/// There are two built strategies for determining the current date and time, 
+		/// <see cref="RollingFileAppender.LocalDateTime"/> and <see cref="RollingFileAppender.UniversalDateTime"/>.
+		/// </para>
+		/// <para>
+		/// The default strategy is <see cref="RollingFileAppender.LocalDateTime"/>.
+		/// </para>
+		/// </remarks>
+		public IDateTime DateTimeStrategy
+		{
+			get { return m_dateTime; }
+			set { m_dateTime = value; }
+		}
 
 		/// <summary>
 		/// Gets or sets the date pattern to be used for generating file names
@@ -950,6 +976,11 @@ namespace log4net.Appender
 		/// </remarks>
 		override public void ActivateOptions() 
 		{
+			if (m_dateTime == null)
+			{
+				m_dateTime = new LocalDateTime();
+			}
+
 			if (m_rollDate && m_datePattern != null) 
 			{
 				m_now = m_dateTime.Now;
@@ -1410,7 +1441,8 @@ namespace log4net.Appender
 
 		/// <summary>
 		/// This object supplies the current date/time.  Allows test code to plug in
-		/// a method to control this class when testing date/time based rolling.
+		/// a method to control this class when testing date/time based rolling. The default
+		/// implementation uses the underlying value of DateTime.Now.
 		/// </summary>
 		private IDateTime m_dateTime = null;
 
@@ -1525,7 +1557,7 @@ namespace log4net.Appender
 		/// <summary>
 		/// Default implementation of <see cref="IDateTime"/> that returns the current time.
 		/// </summary>
-		private class DefaultDateTime : IDateTime
+		private class LocalDateTime : IDateTime
 		{
 			/// <summary>
 			/// Gets the <b>current</b> time.
@@ -1539,6 +1571,26 @@ namespace log4net.Appender
 			public DateTime Now
 			{
 				get { return DateTime.Now; }
+			}
+		}
+
+		/// <summary>
+		/// Implementation of <see cref="IDateTime"/> that returns the current time as the coordinated universal time (UTC).
+		/// </summary>
+		private class UniversalDateTime : IDateTime
+		{
+			/// <summary>
+			/// Gets the <b>current</b> time.
+			/// </summary>
+			/// <value>The <b>current</b> time.</value>
+			/// <remarks>
+			/// <para>
+			/// Gets the <b>current</b> time.
+			/// </para>
+			/// </remarks>
+			public DateTime Now
+			{
+				get { return DateTime.UtcNow; }
 			}
 		}
 
