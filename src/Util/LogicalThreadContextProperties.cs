@@ -19,10 +19,8 @@
 // .NET Compact Framework 1.0 has no support for System.Runtime.Remoting.Messaging.CallContext
 #if !NETCF
 
-using System;
-using System.Collections;
-
 using System.Runtime.Remoting.Messaging;
+using System.Security;
 
 namespace log4net.Util
 {
@@ -34,10 +32,28 @@ namespace log4net.Util
 	/// Class implements a collection of properties that is specific to each thread.
 	/// The class is not synchronized as each thread has its own <see cref="PropertiesDictionary"/>.
 	/// </para>
+	/// <para>
+	/// This class stores its properties in a slot on the <see cref="CallContext"/> named
+	/// <c>log4net.Util.LogicalThreadContextProperties</c>.
+	/// </para>
+	/// <para>
+	/// The <see cref="CallContext"/> requires a link time 
+	/// <see cref="System.Security.Permissions.SecurityPermission"/> for the
+	/// <see cref="System.Security.Permissions.SecurityPermissionFlag.Infrastructure"/>.
+	/// If the calling code does not have this permission then this context will be disabled.
+	/// It will not store any property values set on it.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	public sealed class LogicalThreadContextProperties : ContextPropertiesBase
 	{
+		private const string c_SlotName = "log4net.Util.LogicalThreadContextProperties";
+		
+		/// <summary>
+		/// Flag used to disable this context if we don't have permission to access the CallContext.
+		/// </summary>
+		private bool m_disabled = false;
+		
 		#region Public Instance Constructors
 
 		/// <summary>
@@ -143,16 +159,64 @@ namespace log4net.Util
 		/// </remarks>
 		internal PropertiesDictionary GetProperties(bool create)
 		{
-			PropertiesDictionary properties = (PropertiesDictionary)CallContext.GetData("log4net.Util.LogicalThreadContextProperties");
-			if (properties == null && create)
+			if (!m_disabled)
 			{
-				properties  = new PropertiesDictionary();
-				CallContext.SetData("log4net.Util.LogicalThreadContextProperties", properties);
+				try
+				{
+					PropertiesDictionary properties = GetCallContextData();
+					if (properties == null && create)
+					{
+						properties = new PropertiesDictionary();
+						SetCallContextData(properties);
+					}
+					return properties;
+				}
+				catch (SecurityException secEx)
+				{
+					m_disabled = true;
+					
+					// Thrown if we don't have permission to read or write the CallContext
+					LogLog.Warn("SecurityException while accessing CallContext. Disabling LogicalThreadContextProperties", secEx);
+				}
 			}
-			return properties;
+			
+			// Only get here is we are disabled because of a security exception
+			if (create)
+			{
+				return new PropertiesDictionary();
+			}
+			return null;
 		}
 
 		#endregion Internal Instance Methods
+
+		/// <summary>
+		/// Gets the call context get data.
+		/// </summary>
+		/// <returns>The peroperties dictionary stored in the call context</returns>
+		/// <remarks>
+		/// The <see cref="CallContext"/> method <see cref="CallContext.GetData"/> has a
+		/// security link demand, therfore we must put the method call in a seperate method
+		/// that we can wrap in an exception handler.
+		/// </remarks>
+		private static PropertiesDictionary GetCallContextData()
+		{
+			return CallContext.GetData(c_SlotName) as PropertiesDictionary;
+		}
+
+		/// <summary>
+		/// Sets the call context data.
+		/// </summary>
+		/// <param name="properties">The properties.</param>
+		/// <remarks>
+		/// The <see cref="CallContext"/> method <see cref="CallContext.SetData"/> has a
+		/// security link demand, therfore we must put the method call in a seperate method
+		/// that we can wrap in an exception handler.
+		/// </remarks>
+		private static void SetCallContextData(PropertiesDictionary properties)
+		{
+			CallContext.SetData(c_SlotName, properties);
+		}
 	}
 }
 

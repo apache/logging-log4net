@@ -51,6 +51,13 @@ namespace log4net
 	/// <para>
 	/// The Logical Thread Context is managed on a per <see cref="System.Runtime.Remoting.Messaging.CallContext"/> basis.
 	/// </para>
+	/// <para>
+	/// The <see cref="System.Runtime.Remoting.Messaging.CallContext"/> requires a link time 
+	/// <see cref="System.Security.Permissions.SecurityPermission"/> for the
+	/// <see cref="System.Security.Permissions.SecurityPermissionFlag.Infrastructure"/>.
+	/// If the calling code does not have this permission then this context will be disabled.
+	/// It will not store any property values set on it.
+	/// </para>
 	/// </remarks>
 	/// <example>Example of using the thread context properties to store a username.
 	/// <code lang="C#">
