@@ -17,8 +17,10 @@
 #endregion
 
 using System;
-
+using System.Collections;
+using System.Threading;
 using log4net.Config;
+using log4net.Core;
 using log4net.Layout;
 using log4net.Repository;
 
@@ -180,5 +182,40 @@ namespace log4net.Tests.Context
 			Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test thread stack value removed");
 			stringAppender.Reset();
 		}
+
+		[Test] public void TestBackgroundThreadContextProperty()
+		{
+			StringAppender stringAppender = new StringAppender();
+			stringAppender.Layout = new PatternLayout("%property{DateTimeTodayToString}");
+
+			ILoggerRepository rep = LogManager.CreateRepository("TestBackgroundThreadContextPropertyRepository");
+			BasicConfigurator.Configure(rep, stringAppender);
+
+			Thread thread = new Thread(new ThreadStart(executeBackgroundThread));
+			thread.Start();
+
+			Thread.CurrentThread.Join(2000);
+		}
+
+		private void executeBackgroundThread()
+		{
+			ILog log = LogManager.GetLogger(
+				"TestBackgroundThreadContextPropertyRepository", 
+				"ExecuteBackGroundThread");
+
+			ThreadContext.Properties["DateTimeTodayToString"] = DateTime.Today.ToString();
+			
+			log.Info("TestMessage");
+
+			Repository.Hierarchy.Hierarchy hierarchyLoggingRepository = 
+				(Repository.Hierarchy.Hierarchy)log.Logger.Repository;
+			
+			StringAppender stringAppender = 
+				(StringAppender)hierarchyLoggingRepository.Root.Appenders[0];
+
+			Assert.AreEqual(DateTime.Today.ToString(), stringAppender.GetString());
+		}
+
+
 	}
 }
