@@ -528,7 +528,7 @@ namespace log4net.Repository
 			LoggerRepositoryConfigurationChangedEventHandler handler = m_configurationChangedEvent;
 			if (handler != null)
 			{
-				handler(this, EventArgs.Empty);
+				handler(this, e);
 			}
 		}
 
