@@ -602,6 +602,31 @@
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
+		<File
+                    RelPath = "Layout\Pattern\AspNetCachePatternConverter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Layout\Pattern\AspNetContextPatternConverter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Layout\Pattern\AspNetPatternConverter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Layout\Pattern\AspNetRequestPatternConverter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Layout\Pattern\AspNetSessionPatternConverter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
                 <File
                     RelPath = "Layout\Pattern\DatePatternConverter.cs"
                     SubType = "Code"

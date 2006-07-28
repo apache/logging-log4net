@@ -23,6 +23,13 @@ using System.IO;
 using log4net.Core;
 using log4net.Layout.Pattern;
 using log4net.Util;
+using log4net.Util.PatternStringConverters;
+using AppDomainPatternConverter=log4net.Layout.Pattern.AppDomainPatternConverter;
+using DatePatternConverter=log4net.Layout.Pattern.DatePatternConverter;
+using IdentityPatternConverter=log4net.Layout.Pattern.IdentityPatternConverter;
+using PropertyPatternConverter=log4net.Layout.Pattern.PropertyPatternConverter;
+using UserNamePatternConverter=log4net.Layout.Pattern.UserNamePatternConverter;
+using UtcDatePatternConverter=log4net.Layout.Pattern.UtcDatePatternConverter;
 
 namespace log4net.Layout
 {
@@ -767,9 +774,13 @@ namespace log4net.Layout
 		{
 			s_globalRulesRegistry = new Hashtable(45);
 
-			s_globalRulesRegistry.Add("literal", typeof(log4net.Util.PatternStringConverters.LiteralPatternConverter));
-			s_globalRulesRegistry.Add("newline", typeof(log4net.Util.PatternStringConverters.NewLinePatternConverter));
-			s_globalRulesRegistry.Add("n", typeof(log4net.Util.PatternStringConverters.NewLinePatternConverter));
+			s_globalRulesRegistry.Add("literal", typeof(LiteralPatternConverter));
+			s_globalRulesRegistry.Add("newline", typeof(NewLinePatternConverter));
+			s_globalRulesRegistry.Add("n", typeof(NewLinePatternConverter));
+
+			s_globalRulesRegistry.Add("aspnet-cache", typeof(AspNetCachePatternConverter));
+			s_globalRulesRegistry.Add("aspnet-context", typeof(AspNetContextPatternConverter));
+			s_globalRulesRegistry.Add("aspnet-request", typeof(AspNetRequestPatternConverter));
 
 			s_globalRulesRegistry.Add("c", typeof(LoggerPatternConverter));
 			s_globalRulesRegistry.Add("logger", typeof(LoggerPatternConverter));
@@ -811,11 +822,11 @@ namespace log4net.Layout
 			s_globalRulesRegistry.Add("t", typeof(ThreadPatternConverter));
 			s_globalRulesRegistry.Add("thread", typeof(ThreadPatternConverter));
 
-			// For backwards compatibility the NDC patters
+			// For backwards compatibility the NDC patterns
 			s_globalRulesRegistry.Add("x", typeof(NdcPatternConverter));
 			s_globalRulesRegistry.Add("ndc", typeof(NdcPatternConverter));
 
-			// For backwards compatibility the MDC patters just do a property lookup
+			// For backwards compatibility the MDC patterns just do a property lookup
 			s_globalRulesRegistry.Add("X", typeof(PropertyPatternConverter));
 			s_globalRulesRegistry.Add("mdc", typeof(PropertyPatternConverter));
 
