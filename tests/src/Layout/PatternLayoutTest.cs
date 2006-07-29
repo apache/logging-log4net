@@ -128,5 +128,24 @@ namespace log4net.Tests.Layout
 				loggingEvent.WriteRenderedMessage(writer);
 			}
 		}
+
+		[Test] public void TestExceptionPattern()
+		{
+			StringAppender stringAppender = new StringAppender();
+			PatternLayout layout = new PatternLayout("%exception{stacktrace}");
+			stringAppender.Layout = layout;
+
+			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+			BasicConfigurator.Configure(rep, stringAppender);
+
+			ILog log1 = LogManager.GetLogger(rep.Name, "TestExceptionPattern");
+
+			Exception exception = new Exception("Oh no!");
+			log1.Info("TestMessage", exception);
+			
+			Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString());
+
+			stringAppender.Reset();	
+		}
 	}
 }

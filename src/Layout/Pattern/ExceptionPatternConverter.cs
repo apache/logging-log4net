@@ -1,6 +1,6 @@
 #region Copyright & License
 //
-// Copyright 2001-2005 The Apache Software Foundation
+// Copyright 2001-2006 The Apache Software Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,10 +16,8 @@
 //
 #endregion
 
-using System;
-using System.Text;
+using System.Diagnostics;
 using System.IO;
-
 using log4net.Core;
 
 namespace log4net.Layout.Pattern
@@ -49,7 +47,7 @@ namespace log4net.Layout.Pattern
 		public ExceptionPatternConverter()
 		{
 			// This converter handles the exception
-			this.IgnoresException = false;
+			IgnoresException = false;
 		}
 
 		/// <summary>
@@ -64,18 +62,69 @@ namespace log4net.Layout.Pattern
 		/// trailing newline.
 		/// </para>
 		/// <para>
-		/// If there is no exception then nothing will be output
+		/// If there is no exception or the exception property specified
+		/// by the Option value does not exist then nothing will be output
 		/// and no trailing newline will be appended.
 		/// It is typical to put a newline before the exception
 		/// and to have the exception as the last data in the pattern.
 		/// </para>
+		/// <para>Recognized values for the Option parameter are:</para>
+		/// <list type="bullet">
+		///		<item>
+		///			<description>Message</description>
+		///		</item>
+		///		<item>
+		///			<description>Source</description>
+		///		</item>
+		///		<item>
+		///			<description>StackTrace</description>
+		///		</item>
+		///		<item>
+		///			<description>TargetSite</description>
+		///		</item>
+		///		<item>
+		///			<description>HelpLink</description>
+		///		</item>		
+		/// </list>
+		/// </para>
 		/// </remarks>
 		override protected void Convert(TextWriter writer, LoggingEvent loggingEvent)
 		{
-			string exceptionString = loggingEvent.GetExceptionString();
-			if (exceptionString != null && exceptionString.Length > 0) 
+			if (loggingEvent.ExceptionObject != null && Option != null && Option.Length > 0)
 			{
-				writer.WriteLine(exceptionString);
+				switch (Option.ToLower())
+				{
+					case "message":
+						WriteObject(writer, loggingEvent.Repository, loggingEvent.ExceptionObject.Message);
+						break;
+					case "source":
+						WriteObject(writer, loggingEvent.Repository, loggingEvent.ExceptionObject.Source);
+						break;
+					case "stacktrace":
+						WriteObject(writer, loggingEvent.Repository, loggingEvent.ExceptionObject.StackTrace);
+						break;
+					case "targetsite":
+						WriteObject(writer, loggingEvent.Repository, loggingEvent.ExceptionObject.TargetSite);
+						break;
+					case "helplink":
+						WriteObject(writer, loggingEvent.Repository, loggingEvent.ExceptionObject.HelpLink);
+						break;
+					default:
+						// do not output SystemInfo.NotAvailableText
+						break;
+				}
+			}
+			else
+			{
+				string exceptionString = loggingEvent.GetExceptionString();
+				if (exceptionString != null && exceptionString.Length > 0) 
+				{
+					writer.WriteLine(exceptionString);
+				}
+				else
+				{
+					// do not output SystemInfo.NotAvailableText
+				}
 			}
 		}
 	}
