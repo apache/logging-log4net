@@ -16,6 +16,10 @@
 //
 #endregion
 
+// .NET Compact Framework 1.0 has no support for ASP.NET
+// SSCLI 1.0 has no support for ASP.NET
+#if !NETCF && !SSCLI 
+
 using System.IO;
 using System.Web;
 using log4net.Core;
@@ -27,11 +31,12 @@ namespace log4net.Layout.Pattern
 	{
 		protected override void Convert(TextWriter writer, LoggingEvent loggingEvent, HttpContext httpContext)
 		{
+			
 			if (httpContext.Session != null)
 			{
 				if (Option != null)
 				{
-					WriteObject(writer, loggingEvent.Repository, httpContext.Session[Option]);
+					WriteObject(writer, loggingEvent.Repository, httpContext.Session.Contents[Option]);
 				}
 				else
 				{
@@ -45,3 +50,5 @@ namespace log4net.Layout.Pattern
 		}
 	}
 }
+
+#endif
