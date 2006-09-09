@@ -223,7 +223,7 @@ create table log (
 		</layout>
     </parameter>
     <parameter>
-		<pParameterName value=":log_level" />
+		<parameterName value=":log_level" />
 		<dbType value="String" />
 		<size value="50" />
 		<layout type="log4net.Layout.PatternLayout">
