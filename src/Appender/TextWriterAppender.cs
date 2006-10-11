@@ -169,7 +169,7 @@ namespace log4net.Appender
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// This method checked if an output target has been set and if a
+		/// This method checks if an output target has been set and if a
 		/// layout has been set. 
 		/// </para>
 		/// </remarks>
