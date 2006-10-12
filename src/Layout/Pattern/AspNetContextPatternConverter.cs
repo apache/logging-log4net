@@ -52,7 +52,14 @@ namespace log4net.Layout.Pattern
 		/// </remarks>
 		protected override void Convert(TextWriter writer, LoggingEvent loggingEvent, HttpContext httpContext)
 		{
-			WriteObject(writer, loggingEvent.Repository, httpContext.Items[Option]);
+			if (Option != null)
+			{
+				WriteObject(writer, loggingEvent.Repository, httpContext.Items[Option]);
+			}
+			else
+			{
+				WriteObject(writer, loggingEvent.Repository, httpContext.Items);
+			}
 		}
 	}
 }

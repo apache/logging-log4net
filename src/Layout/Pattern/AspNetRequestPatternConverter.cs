@@ -61,7 +61,7 @@ namespace log4net.Layout.Pattern
 				}
 				else
 				{
-					WriteObject(writer, loggingEvent.Repository, httpContext.Request);
+					WriteObject(writer, loggingEvent.Repository, httpContext.Request.Params);
 				}
 			}
 			else

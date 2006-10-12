@@ -62,7 +62,7 @@ namespace log4net.Layout.Pattern
 				}
 				else
 				{
-					WriteObject(writer, loggingEvent.Repository, HttpRuntime.Cache);
+					WriteObject(writer, loggingEvent.Repository, HttpRuntime.Cache.GetEnumerator());
 				}
 			}
 			else
