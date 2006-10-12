@@ -28,15 +28,15 @@ using log4net.Util;
 namespace log4net.Layout.Pattern
 {
 	/// <summary>
-	/// Abstract class that provides access to the HttpContext.Current that 
+	/// Abstract class that provides access to the current HttpContext (<see cref="HttpContext.Current" />) that 
 	/// derived classes need.
 	/// </summary>
 	/// <remarks>
 	/// This class handles the case when HttpContext.Current is null by writing
-	/// SystemInfo.NotAvailableText to the writer.
+	/// <see cref="SystemInfo.NotAvailableText" /> to the writer.
 	/// </remarks>
 	/// <author>Ron Grabowski</author>
-	internal abstract class AspNetPatternConverter : PatternLayoutConverter
+	internal abstract class AspNetPatternLayoutConverter : PatternLayoutConverter
 	{
 		protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
 		{
