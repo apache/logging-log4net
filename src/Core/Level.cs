@@ -485,7 +485,7 @@ namespace log4net.Core
 				return 1;
 			}
 
-			return l.m_levelValue - r.m_levelValue;
+			return l.m_levelValue.CompareTo(r.m_levelValue);
 		}
 
 		#endregion Public Static Methods
