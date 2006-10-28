@@ -75,9 +75,12 @@ namespace SampleAppendersApp.Appender
 		{
 			using(IDbConnection connection = GetConnection())
 			{
-				// Open the connection for each event, this takes advantage
-				// of the builtin connection pooling
-				connection.Open();
+				if (connection.State == ConnectionState.Closed)
+				{
+					// Open the connection for each event, this takes advantage
+					// of the builtin connection pooling
+					connection.Open();
+				}
 
 				using(IDbCommand command = connection.CreateCommand())
 				{
@@ -141,7 +144,7 @@ namespace SampleAppendersApp.Appender
 			command.CommandType = CommandType.Text;
 			command.CommandText = "INSERT INTO [LogTable] ([Time],[Logger],[Level],[Thread],[Message]) VALUES (@Time,@Logger,@Level,@Thread,@Message)";
 
-			IDbDataParameter param = null;
+			IDbDataParameter param;
 			
 			// @Time
 			param = command.CreateParameter();
