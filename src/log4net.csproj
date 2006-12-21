@@ -343,6 +343,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Core\ExceptionEvaluator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Core\IAppenderAttachable.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

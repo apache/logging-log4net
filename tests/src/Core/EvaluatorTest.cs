@@ -49,11 +49,10 @@ namespace log4net.Tests.Core
 			Assert.AreEqual(3, m_countingAppender.Counter, "Test 3 events flushed on Info message.");
 		}
 
-		/*
 		[Test]
 		public void TestExceptionEvaluator()
 		{
-			m_bufferingForwardingAppender.Evaluator = new ExceptionEvaluator(typeof(ApplicationException));
+			m_bufferingForwardingAppender.Evaluator = new ExceptionEvaluator(typeof(ApplicationException), true);
 			m_bufferingForwardingAppender.ActivateOptions();
 			log4net.Config.BasicConfigurator.Configure(m_hierarchy, m_bufferingForwardingAppender);
 
@@ -105,7 +104,7 @@ namespace log4net.Tests.Core
 		public void TestInvalidExceptionEvaluator()
 		{
 			// warning: String is not a subclass of Exception
-			m_bufferingForwardingAppender.Evaluator = new ExceptionEvaluator(typeof(String));
+			m_bufferingForwardingAppender.Evaluator = new ExceptionEvaluator(typeof(String), false);
 			m_bufferingForwardingAppender.ActivateOptions();
 			log4net.Config.BasicConfigurator.Configure(m_hierarchy, m_bufferingForwardingAppender);
 
@@ -118,6 +117,5 @@ namespace log4net.Tests.Core
 			logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", new ApplicationException());
 			Assert.AreEqual(0, m_countingAppender.Counter, "Test 3 events buffered");
 		}
-		*/
 	}
 }
