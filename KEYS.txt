@@ -5,11 +5,15 @@ These keys can be verified using any OpenPGP compatible system,
 for example, http://www.gnupg.org.
 
 Developers: To add key information use:
-  gpg --listlkeys UID
+  gpg --list-keys UID
   gpg --export -a UID
+
+(Where UID is your email address)
+
 
 User: To import this key file into your keyring use:
   gpg --import KEYS.txt
+
 
 
 
