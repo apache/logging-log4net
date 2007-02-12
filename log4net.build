@@ -135,7 +135,7 @@ limitations under the License.
     <target name="display-target-framework">
         <echo message="" />
         <echo message="----------------------------------------------------------" />
-        <echo message=" ${nant.settings.currentframework.description}" />
+        <echo message=" ${framework::get-description(framework::get-target-framework())}" />
         <echo message="----------------------------------------------------------" />
         <echo message="" />
         <echo message="framework : ${framework::get-target-framework()}" />

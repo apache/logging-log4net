@@ -68,7 +68,9 @@ namespace log4net.Layout.Pattern
 		/// It is typical to put a newline before the exception
 		/// and to have the exception as the last data in the pattern.
 		/// </para>
-		/// <para>Recognized values for the Option parameter are:</para>
+		/// <para>
+		/// Recognized values for the Option parameter are:
+		/// </para>
 		/// <list type="bullet">
 		///		<item>
 		///			<description>Message</description>
@@ -86,7 +88,6 @@ namespace log4net.Layout.Pattern
 		///			<description>HelpLink</description>
 		///		</item>		
 		/// </list>
-		/// </para>
 		/// </remarks>
 		override protected void Convert(TextWriter writer, LoggingEvent loggingEvent)
 		{
@@ -97,6 +98,7 @@ namespace log4net.Layout.Pattern
 					case "message":
 						WriteObject(writer, loggingEvent.Repository, loggingEvent.ExceptionObject.Message);
 						break;
+#if !NETCF						
 					case "source":
 						WriteObject(writer, loggingEvent.Repository, loggingEvent.ExceptionObject.Source);
 						break;
@@ -109,6 +111,7 @@ namespace log4net.Layout.Pattern
 					case "helplink":
 						WriteObject(writer, loggingEvent.Repository, loggingEvent.ExceptionObject.HelpLink);
 						break;
+#endif						
 					default:
 						// do not output SystemInfo.NotAvailableText
 						break;
