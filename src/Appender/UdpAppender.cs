@@ -473,11 +473,19 @@ namespace log4net.Appender
 			{
 				if (this.LocalPort == 0)
 				{
+#if NETCF || NET_1_0 || SSCLI_1_0 || CLI_1_0
 					this.Client = new UdpClient();
+#else
+					this.Client = new UdpClient(RemoteAddress.AddressFamily);
+#endif
 				}
 				else
 				{
+#if NETCF || NET_1_0 || SSCLI_1_0 || CLI_1_0
 					this.Client = new UdpClient(this.LocalPort);
+#else
+					this.Client = new UdpClient(this.LocalPort, RemoteAddress.AddressFamily);
+#endif
 				}
 			} 
 			catch (Exception ex) 
