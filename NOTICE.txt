@@ -3,13 +3,11 @@
    **  Version 2.0, in this case for the Apache log4net distribution.
    **
 
-   This product includes software developed by
-   The Apache Software Foundation (http://www.apache.org/).
-
    Please read the LICENSE files present in the root directory of this 
    distribution.
 
-   The names "log4net" and "Apache Software Foundation" must not be used to
-   endorse  or promote  products derived  from this  software without prior
-   written permission. For written permission, please contact
-   apache@apache.org.
+   Apache log4net
+   Copyright 2001-2007 The Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
