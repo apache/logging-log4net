@@ -77,13 +77,16 @@ namespace log4net.Util.TypeConverters
 			{
 				try
 				{
-#if NET_2_0
+#if NET_2_0 || NETCF_2_0
+
+#if !NETCF_2_0
 					// Try an explicit parse of string representation of an IPAddress (v4 or v6)
 					IPAddress result;
 					if (IPAddress.TryParse(str, out result))
 					{
 						return result;
 					}
+#endif
 
 					// Try to resolve via DNS. This is a blocking call. 
 					// GetHostEntry works with either an IPAddress string or a host name

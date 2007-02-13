@@ -150,7 +150,7 @@ namespace log4net.Appender
 		/// </remarks>
 		override protected void Append(LoggingEvent loggingEvent) 
 		{
-#if NETCF
+#if NETCF_1_0
 			// Write to the output stream
 			Console.Write(RenderLoggingEvent(loggingEvent));
 #else

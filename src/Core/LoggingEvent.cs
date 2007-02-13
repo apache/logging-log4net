@@ -18,10 +18,10 @@
 #endregion
 
 using System;
-using System.Runtime.Serialization;
 using System.Collections;
 using System.IO;
 #if (!NETCF)
+using System.Runtime.Serialization;
 using System.Security.Principal;
 #endif
 

@@ -223,9 +223,9 @@ namespace log4net.Util
 		{
 			get 
 			{
-#if NETCF
+#if NETCF_1_0
 				return System.Threading.Thread.CurrentThread.GetHashCode();
-#elif NET_2_0
+#elif NET_2_0 || NETCF_2_0 || MONO_2_0
 				return System.Threading.Thread.CurrentThread.ManagedThreadId;
 #else
 				return AppDomain.GetCurrentThreadId();
@@ -678,7 +678,7 @@ namespace log4net.Util
 			{
 				// Includes explicit assembly name
 				//LogLog.Debug("SystemInfo: Loading type ["+typeName+"] from global Type");
-#if NETCF
+#if NETCF_1_0
 				return Type.GetType(typeName, throwOnError);
 #else
 				return Type.GetType(typeName, throwOnError, ignoreCase);
@@ -698,7 +698,7 @@ namespace log4net.Util
 		/// </remarks>
 		public static Guid NewGuid()
 		{
-#if NETCF
+#if NETCF_1_0
 			return PocketGuid.NewGuid();
 #else
 			return Guid.NewGuid();
@@ -726,8 +726,10 @@ namespace log4net.Util
 		/// </remarks>
 		public static ArgumentOutOfRangeException CreateArgumentOutOfRangeException(string parameterName, object actualValue, string message)
 		{
-#if NETCF
-			return new ArgumentOutOfRangeException(message + " param: " + parameterName + " value: " + actualValue);
+#if NETCF_1_0
+			return new ArgumentOutOfRangeException(message + " [param=" + parameterName + "] [value=" + actualValue + "]");
+#elif NETCF_2_0
+			return new ArgumentOutOfRangeException(parameterName, message + " [value=" + actualValue + "]");
 #else
 			return new ArgumentOutOfRangeException(parameterName, actualValue, message);
 #endif
@@ -921,8 +923,10 @@ namespace log4net.Util
 		/// </remarks>
 		public static Hashtable CreateCaseInsensitiveHashtable()
 		{
-#if NETCF
+#if NETCF_1_0
 			return new Hashtable(CaseInsensitiveHashCodeProvider.Default, CaseInsensitiveComparer.Default);
+#elif NETCF_2_0 || NET_2_0 || MONO_2_0
+			return new Hashtable(StringComparer.OrdinalIgnoreCase);
 #else
 			return System.Collections.Specialized.CollectionsUtil.CreateCaseInsensitiveHashtable();
 #endif
@@ -1016,7 +1020,7 @@ namespace log4net.Util
 		#endregion
 
 		#region Compact Framework Helper Classes
-#if NETCF
+#if NETCF_1_0
 		/// <summary>
 		/// Generate GUIDs on the .NET Compact Framework.
 		/// </summary>

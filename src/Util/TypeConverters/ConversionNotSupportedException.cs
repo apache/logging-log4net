@@ -18,7 +18,9 @@
 #endregion
 
 using System;
+#if !NETCF
 using System.Runtime.Serialization;
+#endif
 
 namespace log4net.Util.TypeConverters
 {

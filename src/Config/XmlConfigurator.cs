@@ -547,7 +547,7 @@ namespace log4net.Config
 
 					if (configRequest != null)
 					{
-#if !NETCF
+#if !NETCF_1_0
 						// authentication may be required, set client to use default credentials
 						try
 						{

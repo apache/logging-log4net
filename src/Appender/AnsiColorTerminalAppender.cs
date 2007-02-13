@@ -334,7 +334,7 @@ namespace log4net.Appender
 				}
 			}
 
-#if NETCF
+#if NETCF_1_0
 			// Write to the output stream
 			Console.Write(loggingMessage);
 #else

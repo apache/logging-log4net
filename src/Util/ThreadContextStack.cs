@@ -19,7 +19,7 @@
 
 using System;
 
-#if !NETCF
+#if !NETCF_1_0
 using System.Collections;
 #endif
 
@@ -380,7 +380,7 @@ namespace log4net.Util
 			#endregion Implementation of IDisposable
 		}
 
-#if NETCF
+#if NETCF_1_0
 		/// <summary>
 		/// Subclass of <see cref="System.Collections.Stack"/> to
 		/// provide missing methods.
