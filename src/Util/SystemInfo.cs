@@ -678,7 +678,10 @@ namespace log4net.Util
 			{
 				// Includes explicit assembly name
 				//LogLog.Debug("SystemInfo: Loading type ["+typeName+"] from global Type");
-#if NETCF_1_0
+
+#if NETCF
+				// In NETCF 2 and 3 arg versions seem to behave differently
+				// https://issues.apache.org/jira/browse/LOG4NET-113
 				return Type.GetType(typeName, throwOnError);
 #else
 				return Type.GetType(typeName, throwOnError, ignoreCase);
