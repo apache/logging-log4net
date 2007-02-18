@@ -55,6 +55,8 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("log4net for .NET Framework 2.0")]
 #elif (NETCF_1_0)
 [assembly: AssemblyTitle("log4net for .NET Compact Framework 1.0")]
+#elif (NETCF_2_0)
+[assembly: AssemblyTitle("log4net for .NET Compact Framework 2.0")]
 #elif (MONO_1_0)
 [assembly: AssemblyTitle("log4net for Mono 1.0")]
 #elif (MONO_2_0)
