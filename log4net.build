@@ -356,7 +356,20 @@ limitations under the License.
 			</if>
 		</if>
 		<if test="${not temp.build.skip}">
-			<csc warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+			<csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+				<sources basedir="${log4net.basedir}/src">
+					<include name="**/*.cs" />
+				</sources>
+				<references>
+					<include name="mscorlib.dll" />
+					<include name="System.dll" />
+					<include name="System.Data.dll" />
+					<include name="System.Xml.dll" />
+					<!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework family>/<framework version>/<build configuration> directory -->
+					<include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
+				</references>
+			</csc>
+			<csc if="${current.build.config.debug}" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
 				<sources basedir="${log4net.basedir}/src">
 					<include name="**/*.cs" />
 				</sources>
@@ -465,7 +478,26 @@ limitations under the License.
             </if>
         </if>
         <if test="${not temp.build.skip}">
-            <csc keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+            <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+                <nowarn>
+                    <!-- warning CS1058: A previous catch clause already catches all exceptions. All non-exceptions thrown will be wrapped in a System.Runtime.CompilerServices.RuntimeWrappedException -->
+                    <warning number="1058" />
+                </nowarn>
+                <sources basedir="${log4net.basedir}/src">
+                    <include name="**/*.cs" />
+                </sources>
+                <references>
+                    <include name="mscorlib.dll" />
+                    <include name="System.dll" />
+                    <include name="System.Data.dll" />
+                    <include name="System.Web.dll" />
+                    <include name="System.Xml.dll" />
+                    <include name="System.Configuration.dll" />
+                    <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework family>/<framework version>/<build configuration> directory -->
+                    <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
+                </references>
+            </csc>
+            <csc if="${current.build.config.debug}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
                 <nowarn>
                     <!-- warning CS1058: A previous catch clause already catches all exceptions. All non-exceptions thrown will be wrapped in a System.Runtime.CompilerServices.RuntimeWrappedException -->
                     <warning number="1058" />
@@ -504,7 +536,26 @@ limitations under the License.
             </if>
         </if>
         <if test="${not temp.build.skip}">
-            <csc keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="false" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+            <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="false" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+                <nowarn>
+                    <!-- workaround for Mono bug #61902 -->
+                    <warning number="0618" />
+                    <!-- warning CS1058: A previous catch clause already catches all exceptions. All non-exceptions thrown will be wrapped in a System.Runtime.CompilerServices.RuntimeWrappedException -->
+                    <warning number="1058" />
+                </nowarn>
+                <sources basedir="${log4net.basedir}/src">
+                    <include name="**/*.cs" />
+                </sources>
+                <references>
+                    <include name="System.dll" />
+                    <include name="System.Data.dll" />
+                    <include name="System.Web.dll" />
+                    <include name="System.Xml.dll" />
+                    <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework family>/<framework version>/<build configuration> directory -->
+                    <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
+                </references>
+            </csc>
+            <csc if="${current.build.config.debug}"  nostdlib="false" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
                 <nowarn>
                     <!-- workaround for Mono bug #61902 -->
                     <warning number="0618" />
@@ -543,7 +594,26 @@ limitations under the License.
             </if>
         </if>
         <if test="${not temp.build.skip}">
-            <csc keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="false" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+            <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="false" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+                <nowarn>
+                    <!-- workaround for Mono bug #61902 -->
+                    <warning number="0618" />
+                    <!-- warning CS1058: A previous catch clause already catches all exceptions. All non-exceptions thrown will be wrapped in a System.Runtime.CompilerServices.RuntimeWrappedException -->
+                    <warning number="1058" />
+                </nowarn>
+                <sources basedir="${log4net.basedir}/src">
+                    <include name="**/*.cs" />
+                </sources>
+                <references>
+                    <include name="System.dll" />
+                    <include name="System.Data.dll" />
+                    <include name="System.Web.dll" />
+                    <include name="System.Xml.dll" />
+                    <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework family>/<framework version>/<build configuration> directory -->
+                    <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
+                </references>
+            </csc>
+            <csc if="${current.build.config.debug}" nostdlib="false" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
                 <nowarn>
                     <!-- workaround for Mono bug #61902 -->
                     <warning number="0618" />
