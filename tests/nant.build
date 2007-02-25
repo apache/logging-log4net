@@ -15,7 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<project name="log4net-samples" default="runtests" xmlnds="http://tempuri.org/nant-vs.xsd">
+<project name="log4net-tests" default="runtests" xmlnds="http://tempuri.org/nant-vs.xsd">
     <property name="log4net.basedir" value="../" readonly="false" />
     <property name="project.build.config" value="debug" readonly="false" />
     <property name="project.build.package" value="false" readonly="false" />
@@ -305,6 +305,11 @@ limitations under the License.
     <!-- Currently we cannot run the tests in the environment of the target framework only in the host framework -->
 
     <target name="runtests" description="Runs log4net tests">
+		<!--
+			Because the <nunit2> task does not support multiple frameworks through the 
+			nant.settings.currentframework setting we cannot just run the tests for each framework.
+			Only the tests for the current framework are run.
+			
         <if test="${framework::exists('net-1.0')}">
         	<call target="runtests-net-1.0" />
         </if>
@@ -317,6 +322,11 @@ limitations under the License.
         <if test="${framework::exists('mono-2.0')}">
         	<call target="runtests-mono-2.0" />
         </if>
+		-->
+		<if test="${target::exists('runtests-' + nant.settings.currentframework)}">
+			<echo message="Running tests for ${framework::get-target-framework()}" />
+			<call target="runtests-${nant.settings.currentframework}" />
+		</if>
     </target>
     
     <target name="runtests-net-1.0" description="Runs log4net tests on .NET Framework 1.0 version" depends="compile-net-1.0">
