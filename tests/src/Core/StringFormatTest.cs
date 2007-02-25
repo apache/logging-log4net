@@ -18,14 +18,15 @@
 #endregion
 
 using System;
-using System.IO;
+using System.Globalization;
 
 using log4net.Config;
-using log4net.Layout;
 using log4net.Core;
+using log4net.Layout;
 using log4net.Repository;
 using log4net.Tests.Appender;
-using log4net.Util;
+using log4net.Tests.Layout;
+
 using NUnit.Framework;
 
 namespace log4net.Tests.Core
@@ -36,9 +37,11 @@ namespace log4net.Tests.Core
 	/// <remarks>
 	/// Used for internal unit testing the <see cref="PatternLayoutTest"/> class.
 	/// </remarks>
-	[TestFixture] public class StringFormatTest
+	[TestFixture]
+	public class StringFormatTest
 	{
-		[Test] public void TestFormatString()
+		[Test]
+		public void TestFormatString()
 		{
 			StringAppender stringAppender = new StringAppender();
 			stringAppender.Layout = new PatternLayout("%message");
@@ -94,7 +97,8 @@ namespace log4net.Tests.Core
 		private const string STRING_FORMAT_ERROR = "<log4net.Error>Exception during StringFormat: Index (zero based) must be greater than or equal to zero and less than the size of the argument list. <format>IGNORE THIS WARNING - EXCEPTION EXPECTED Before {0} After {1} {2}</format><args>{Middle, End}</args></log4net.Error>";
 
 
-		[Test] public void TestLogFormatApi_Debug()
+		[Test]
+		public void TestLogFormatApi_Debug()
 		{
 			StringAppender stringAppender = new StringAppender();
 			stringAppender.Layout = new PatternLayout("%level:%message");
@@ -146,11 +150,13 @@ namespace log4net.Tests.Core
 			stringAppender.Reset();
 
 			// ***
-			log1.DebugFormat(new System.Globalization.CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
+			log1.DebugFormat(new CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
 			Assert.AreEqual("DEBUG:Before Middle After End", stringAppender.GetString(), "Test formatting with 'en' provider");
 			stringAppender.Reset();
 		}
-		[Test] public void TestLogFormatApi_NoDebug()
+
+		[Test]
+		public void TestLogFormatApi_NoDebug()
 		{
 			StringAppender stringAppender = new StringAppender();
 			stringAppender.Threshold = Level.Info;
@@ -203,13 +209,14 @@ namespace log4net.Tests.Core
 			stringAppender.Reset();
 
 			// ***
-			log1.DebugFormat(new System.Globalization.CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
+			log1.DebugFormat(new CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
 			Assert.AreEqual("", stringAppender.GetString(), "Test formatting with 'en' provider");
 			stringAppender.Reset();
 		}
 
 
-		[Test] public void TestLogFormatApi_Info()
+		[Test]
+		public void TestLogFormatApi_Info()
 		{
 			StringAppender stringAppender = new StringAppender();
 			stringAppender.Layout = new PatternLayout("%level:%message");
@@ -261,11 +268,13 @@ namespace log4net.Tests.Core
 			stringAppender.Reset();
 
 			// ***
-			log1.InfoFormat(new System.Globalization.CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
+			log1.InfoFormat(new CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
 			Assert.AreEqual("INFO:Before Middle After End", stringAppender.GetString(), "Test formatting with 'en' provider");
 			stringAppender.Reset();
 		}
-		[Test] public void TestLogFormatApi_NoInfo()
+
+		[Test]
+		public void TestLogFormatApi_NoInfo()
 		{
 			StringAppender stringAppender = new StringAppender();
 			stringAppender.Threshold = Level.Warn;
@@ -318,13 +327,14 @@ namespace log4net.Tests.Core
 			stringAppender.Reset();
 
 			// ***
-			log1.InfoFormat(new System.Globalization.CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
+			log1.InfoFormat(new CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
 			Assert.AreEqual("", stringAppender.GetString(), "Test formatting with 'en' provider");
 			stringAppender.Reset();
 		}
 
 
-		[Test] public void TestLogFormatApi_Warn()
+		[Test]
+		public void TestLogFormatApi_Warn()
 		{
 			StringAppender stringAppender = new StringAppender();
 			stringAppender.Layout = new PatternLayout("%level:%message");
@@ -376,11 +386,13 @@ namespace log4net.Tests.Core
 			stringAppender.Reset();
 
 			// ***
-			log1.WarnFormat(new System.Globalization.CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
+			log1.WarnFormat(new CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
 			Assert.AreEqual("WARN:Before Middle After End", stringAppender.GetString(), "Test formatting with 'en' provider");
 			stringAppender.Reset();
 		}
-		[Test] public void TestLogFormatApi_NoWarn()
+
+		[Test]
+		public void TestLogFormatApi_NoWarn()
 		{
 			StringAppender stringAppender = new StringAppender();
 			stringAppender.Threshold = Level.Error;
@@ -433,13 +445,14 @@ namespace log4net.Tests.Core
 			stringAppender.Reset();
 
 			// ***
-			log1.WarnFormat(new System.Globalization.CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
+			log1.WarnFormat(new CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
 			Assert.AreEqual("", stringAppender.GetString(), "Test formatting with 'en' provider");
 			stringAppender.Reset();
 		}
 
 
-		[Test] public void TestLogFormatApi_Error()
+		[Test]
+		public void TestLogFormatApi_Error()
 		{
 			StringAppender stringAppender = new StringAppender();
 			stringAppender.Layout = new PatternLayout("%level:%message");
@@ -491,11 +504,13 @@ namespace log4net.Tests.Core
 			stringAppender.Reset();
 
 			// ***
-			log1.ErrorFormat(new System.Globalization.CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
+			log1.ErrorFormat(new CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
 			Assert.AreEqual("ERROR:Before Middle After End", stringAppender.GetString(), "Test formatting with 'en' provider");
 			stringAppender.Reset();
 		}
-		[Test] public void TestLogFormatApi_NoError()
+
+		[Test]
+		public void TestLogFormatApi_NoError()
 		{
 			StringAppender stringAppender = new StringAppender();
 			stringAppender.Threshold = Level.Fatal;
@@ -548,13 +563,14 @@ namespace log4net.Tests.Core
 			stringAppender.Reset();
 
 			// ***
-			log1.ErrorFormat(new System.Globalization.CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
+			log1.ErrorFormat(new CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
 			Assert.AreEqual("", stringAppender.GetString(), "Test formatting with 'en' provider");
 			stringAppender.Reset();
 		}
 
 
-		[Test] public void TestLogFormatApi_Fatal()
+		[Test]
+		public void TestLogFormatApi_Fatal()
 		{
 			StringAppender stringAppender = new StringAppender();
 			stringAppender.Layout = new PatternLayout("%level:%message");
@@ -606,11 +622,13 @@ namespace log4net.Tests.Core
 			stringAppender.Reset();
 
 			// ***
-			log1.FatalFormat(new System.Globalization.CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
+			log1.FatalFormat(new CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
 			Assert.AreEqual("FATAL:Before Middle After End", stringAppender.GetString(), "Test formatting with 'en' provider");
 			stringAppender.Reset();
 		}
-		[Test] public void TestLogFormatApi_NoFatal()
+
+		[Test]
+		public void TestLogFormatApi_NoFatal()
 		{
 			StringAppender stringAppender = new StringAppender();
 			stringAppender.Threshold = Level.Off;
@@ -663,7 +681,7 @@ namespace log4net.Tests.Core
 			stringAppender.Reset();
 
 			// ***
-			log1.FatalFormat(new System.Globalization.CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
+			log1.FatalFormat(new CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
 			Assert.AreEqual("", stringAppender.GetString(), "Test formatting with 'en' provider");
 			stringAppender.Reset();
 		}

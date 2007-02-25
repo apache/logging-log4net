@@ -17,8 +17,9 @@
 //
 #endregion
 
-using log4net.Core;
 using log4net.Appender;
+using log4net.Config;
+using log4net.Core;
 
 using NUnit.Framework;
 
@@ -30,11 +31,12 @@ namespace log4net.Tests.Appender
 	/// <remarks>
 	/// Used for internal unit testing the <see cref="BufferingAppenderSkeleton"/> class.
 	/// </remarks>
-	[TestFixture] public class BufferingAppenderTest
+	[TestFixture]
+	public class BufferingAppenderTest
 	{
 		private BufferingForwardingAppender m_bufferingForwardingAppender;
 		private CountingAppender m_countingAppender;
-		private log4net.Repository.Hierarchy.Hierarchy m_hierarchy;
+		private Repository.Hierarchy.Hierarchy m_hierarchy;
 
 
 		private void SetupRepository()
@@ -57,12 +59,13 @@ namespace log4net.Tests.Appender
 
 			m_bufferingForwardingAppender.ActivateOptions();
 
-			log4net.Config.BasicConfigurator.Configure(m_hierarchy, m_bufferingForwardingAppender);
+			BasicConfigurator.Configure(m_hierarchy, m_bufferingForwardingAppender);
 		}
 
 		/// <summary>
 		/// </summary>
-		[Test] public void TestSetupAppender()
+		[Test]
+		public void TestSetupAppender()
 		{
 			SetupRepository();
 
@@ -76,7 +79,8 @@ namespace log4net.Tests.Appender
 
 		/// <summary>
 		/// </summary>
-		[Test] public void TestBufferSize5()
+		[Test]
+		public void TestBufferSize5()
 		{
 			SetupRepository();
 

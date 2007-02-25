@@ -19,13 +19,17 @@
 
 using System;
 using System.Collections;
+using System.Reflection;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
+using System.Threading;
 
-using log4net.Core;
 using log4net.Appender;
-using IRemoteLoggingSink = log4net.Appender.RemotingAppender.IRemoteLoggingSink;
+using log4net.Core;
+using log4net.Repository.Hierarchy;
+using log4net.Tests.Appender.Remoting.Data;
+using log4net.Tests.Appender.Remoting.UserInterfaces;
 
 using NUnit.Framework;
 
@@ -37,22 +41,24 @@ namespace log4net.Tests.Appender
 	/// <remarks>
 	/// Used for internal unit testing the <see cref="RemotingAppender"/> class.
 	/// </remarks>
-	[TestFixture] public class RemotingAppenderTest
+	[TestFixture]
+	public class RemotingAppenderTest
 	{
 		private IChannel m_remotingChannel = null;
 
 		/// <summary>
 		/// Test that the Message property is correctly remoted
 		/// </summary>
-		[Test] public void TestRemotedMessage()
+		[Test]
+		public void TestRemotedMessage()
 		{
 			// Setup the remoting appender
 			ConfigureRootAppender(FixFlags.Partial);
 
 			RemoteLoggingSinkImpl.Instance.Reset();
 
-			log4net.Repository.Hierarchy.Logger root = null;
-			root = ((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Root;	
+			Logger root;
+			root = ((Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Root;
 
 			string testMessage = string.Format("test message [ {0} ]", (new Random()).Next());
 
@@ -60,7 +66,7 @@ namespace log4net.Tests.Appender
 			root.Log(Level.Debug, testMessage, null);
 
 			// Wait for the remoted object to be delivered
-			System.Threading.Thread.Sleep(1000);
+			Thread.Sleep(1000);
 
 			LoggingEvent[] events = RemoteLoggingSinkImpl.Instance.Events;
 			Assert.AreEqual(1, events.Length, "Expect to receive 1 remoted event");
@@ -71,21 +77,22 @@ namespace log4net.Tests.Appender
 		/// <summary>
 		/// Test that the UserName property is not remoted when doing a Fix.Partial
 		/// </summary>
-		[Test] public void TestPartialFix()
+		[Test]
+		public void TestPartialFix()
 		{
 			// Setup the remoting appender
 			ConfigureRootAppender(FixFlags.Partial);
 
 			RemoteLoggingSinkImpl.Instance.Reset();
 
-			log4net.Repository.Hierarchy.Logger root = null;
-			root = ((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Root;	
+			Logger root;
+			root = ((Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Root;
 
 			// Log a message that will be remoted
 			root.Log(Level.Debug, "test message", null);
 
 			// Wait for the remoted object to be delivered
-			System.Threading.Thread.Sleep(1000);
+			Thread.Sleep(1000);
 
 			LoggingEvent[] events = RemoteLoggingSinkImpl.Instance.Events;
 			Assert.AreEqual(1, events.Length, "Expect to receive 1 remoted event");
@@ -99,21 +106,22 @@ namespace log4net.Tests.Appender
 		/// <summary>
 		/// Test that the UserName property is remoted when doing a Fix.All
 		/// </summary>
-		[Test] public void TestFullFix()
+		[Test]
+		public void TestFullFix()
 		{
 			// Setup the remoting appender
 			ConfigureRootAppender(FixFlags.All);
 
 			RemoteLoggingSinkImpl.Instance.Reset();
 
-			log4net.Repository.Hierarchy.Logger root = null;
-			root = ((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Root;	
+			Logger root;
+			root = ((Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Root;
 
 			// Log a message that will be remoted
 			root.Log(Level.Debug, "test message", null);
 
 			// Wait for the remoted object to be delivered
-			System.Threading.Thread.Sleep(1000);
+			Thread.Sleep(1000);
 
 			LoggingEvent[] events = RemoteLoggingSinkImpl.Instance.Events;
 			Assert.AreEqual(1, events.Length, "Expect to receive 1 remoted event");
@@ -127,25 +135,28 @@ namespace log4net.Tests.Appender
 		/// <summary>
 		/// Test that the Message property is correctly remoted
 		/// </summary>
-		[Test] public void TestRemotedMessageNdcPushPop()
+		[Test]
+		public void TestRemotedMessageNdcPushPop()
 		{
 			// Setup the remoting appender
 			ConfigureRootAppender(FixFlags.Partial);
 
 			RemoteLoggingSinkImpl.Instance.Reset();
 
-			log4net.Repository.Hierarchy.Logger root = null;
-			root = ((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Root;	
+			Logger root;
+			root = ((Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Root;
 
 			string testMessage = string.Format("test message [ {0} ]", (new Random()).Next());
 
-			using(NDC.Push("value")) {}
+			using(NDC.Push("value"))
+			{
+			}
 
 			// Log a message that will be remoted
 			root.Log(Level.Debug, testMessage, null);
 
 			// Wait for the remoted object to be delivered
-			System.Threading.Thread.Sleep(1000);
+			Thread.Sleep(1000);
 
 			LoggingEvent[] events = RemoteLoggingSinkImpl.Instance.Events;
 			Assert.AreEqual(1, events.Length, "Expect to receive 1 remoted event");
@@ -153,7 +164,8 @@ namespace log4net.Tests.Appender
 			Assert.AreEqual(testMessage, events[0].RenderedMessage, "Expect Message match after remoting event");
 		}
 
-		[Test] public void TestNestedNdc() 
+		[Test]
+		public void TestNestedNdc()
 		{
 			// This test can suffer from timing and ordering issues as the RemotingAppender does dispatch events asynchronously
 
@@ -162,12 +174,12 @@ namespace log4net.Tests.Appender
 
 			RemoteLoggingSinkImpl.Instance.Reset();
 
-			log4net.Tests.Appender.Remoting.UserInterfaces.TestService t;
-			t = new log4net.Tests.Appender.Remoting.UserInterfaces.TestService();
+			TestService t;
+			t = new TestService();
 			t.Test();
 
 			// Wait for the remoted objects to be delivered
-			System.Threading.Thread.Sleep(3000);
+			Thread.Sleep(3000);
 
 			LoggingEvent[] events = RemoteLoggingSinkImpl.Instance.Events;
 			Assert.AreEqual(5, events.Length, "Expect to receive 5 remoted event");
@@ -186,7 +198,6 @@ namespace log4net.Tests.Appender
 		}
 
 
-
 		private void RegisterRemotingServerChannel()
 		{
 			if (m_remotingChannel == null)
@@ -196,7 +207,7 @@ namespace log4net.Tests.Appender
 				// Setup remoting server
 				try
 				{
-#if NET_2_0
+#if NET_2_0 || MONO_2_0
 					ChannelServices.RegisterChannel(m_remotingChannel, false);
 #else
 					ChannelServices.RegisterChannel(m_remotingChannel);
@@ -207,7 +218,7 @@ namespace log4net.Tests.Appender
 				}
 
 				// Marshal the sink object
-				RemotingServices.Marshal(RemoteLoggingSinkImpl.Instance, "LoggingSink", typeof(IRemoteLoggingSink));
+				RemotingServices.Marshal(RemoteLoggingSinkImpl.Instance, "LoggingSink", typeof(RemotingAppender.IRemoteLoggingSink));
 			}
 		}
 
@@ -215,19 +226,20 @@ namespace log4net.Tests.Appender
 		/// Shuts down any loggers in the hierarchy, along
 		/// with all appenders.
 		/// </summary>
-		private void ResetRepository()
+		private static void ResetRepository()
 		{
 			// Regular users should not use the clear method lightly!
 			LogManager.GetRepository().ResetConfiguration();
 			LogManager.GetRepository().Shutdown();
-			((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Clear();
+			((Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Clear();
 		}
 
 		/// <summary>
 		/// Any initialization that happens before each test can
 		/// go here
 		/// </summary>
-		[SetUp] public void SetUp() 
+		[SetUp]
+		public void SetUp()
 		{
 			ResetRepository();
 			RegisterRemotingServerChannel();
@@ -236,7 +248,8 @@ namespace log4net.Tests.Appender
 		/// <summary>
 		/// Any steps that happen after each test go here
 		/// </summary>
-		[TearDown] public void TearDown() 
+		[TearDown]
+		public void TearDown()
 		{
 			ResetRepository();
 		}
@@ -244,16 +257,16 @@ namespace log4net.Tests.Appender
 		/// <summary>
 		/// Configures the root appender for counting and rolling
 		/// </summary>
-		private void ConfigureRootAppender(FixFlags fixFlags)
+		private static void ConfigureRootAppender(FixFlags fixFlags)
 		{
-			log4net.Repository.Hierarchy.Logger root = null;
-			root = ((log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Root;	
+			Logger root;
+			root = ((Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Root;
 			root.Level = Level.Debug;
 			root.AddAppender(CreateAppender(fixFlags));
 			root.Repository.Configured = true;
 		}
 
-		private RemotingAppender CreateAppender(FixFlags fixFlags)
+		private static RemotingAppender CreateAppender(FixFlags fixFlags)
 		{
 			RemotingAppender appender = new RemotingAppender();
 			appender.Sink = "tcp://localhost:8085/LoggingSink";
@@ -266,22 +279,19 @@ namespace log4net.Tests.Appender
 			return appender;
 		}
 
-		public class RemoteLoggingSinkImpl : MarshalByRefObject, IRemoteLoggingSink
+		public class RemoteLoggingSinkImpl : MarshalByRefObject, RemotingAppender.IRemoteLoggingSink
 		{
 			public static readonly RemoteLoggingSinkImpl Instance = new RemoteLoggingSinkImpl();
 
 			private ArrayList m_events = new ArrayList();
 
 			#region Public Instance Constructors
-
 			private RemoteLoggingSinkImpl()
 			{
 			}
-
 			#endregion Public Instance Constructors
 
 			#region Implementation of IRemoteLoggingSink
-
 			/// <summary>
 			/// Logs the events to to an internal buffer
 			/// </summary>
@@ -295,11 +305,9 @@ namespace log4net.Tests.Appender
 			{
 				m_events.AddRange(events);
 			}
-
 			#endregion Implementation of IRemoteLoggingSink
 
 			#region Override implementation of MarshalByRefObject
-
 			/// <summary>
 			/// Obtains a lifetime service object to control the lifetime 
 			/// policy for this instance.
@@ -312,7 +320,6 @@ namespace log4net.Tests.Appender
 			{
 				return null;
 			}
-
 			#endregion Override implementation of MarshalByRefObject
 
 			public void Reset()
@@ -322,10 +329,7 @@ namespace log4net.Tests.Appender
 
 			public LoggingEvent[] Events
 			{
-				get
-				{
-					return (LoggingEvent[])m_events.ToArray(typeof(LoggingEvent));
-				}
+				get { return (LoggingEvent[])m_events.ToArray(typeof(LoggingEvent)); }
 			}
 		}
 
@@ -341,62 +345,65 @@ namespace log4net.Tests.Appender
 }
 
 // helper for TestNestedNdc
-namespace log4net.Tests.Appender.Remoting.UserInterfaces 
-{
-	public class TestService 
-	{
-		static ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		public void Test() 
+namespace log4net.Tests.Appender.Remoting.UserInterfaces
+{
+	public class TestService
+	{
+		private static ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		public void Test()
 		{
 			log.Info("begin test");
-			System.Threading.Thread.Sleep(100);
+			Thread.Sleep(100);
 
 			Feature f = new Feature();
 			f.Test();
 			log.Info("end test");
-			System.Threading.Thread.Sleep(100);
+			Thread.Sleep(100);
 		}
 	}
 }
-// helper for TestNestedNdc
-namespace log4net.Tests.Appender.Remoting 
-{
-	public class Feature 
-	{
-		static ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		public void Test() 
+// helper for TestNestedNdc
+
+namespace log4net.Tests.Appender.Remoting
+{
+	public class Feature
+	{
+		private static ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		public void Test()
 		{
-			using(NDC.Push("test1")) 
+			using(NDC.Push("test1"))
 			{
 				log.Info("feature");
-				System.Threading.Thread.Sleep(100);
+				Thread.Sleep(100);
 
-				log4net.Tests.Appender.Remoting.Data.Dal d = new log4net.Tests.Appender.Remoting.Data.Dal();
+				Dal d = new Dal();
 				d.Test();
 				log.Info("return");
-				System.Threading.Thread.Sleep(100);
+				Thread.Sleep(100);
 			}
 		}
 	}
 }
-// helper for TestNestedNdc
-namespace log4net.Tests.Appender.Remoting.Data 
-{
-	public class Dal 
-	{
-		static ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		public void Test() 
+// helper for TestNestedNdc
+
+namespace log4net.Tests.Appender.Remoting.Data
+{
+	public class Dal
+	{
+		private static ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		public void Test()
 		{
-			using(NDC.Push("test2")) 
+			using(NDC.Push("test2"))
 			{
 				log.Info("return");
-				System.Threading.Thread.Sleep(100);
+				Thread.Sleep(100);
 			}
 		}
 	}
 }
-
-

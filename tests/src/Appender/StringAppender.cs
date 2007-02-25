@@ -19,8 +19,8 @@
 
 using System.Text;
 
-using log4net.Core;
 using log4net.Appender;
+using log4net.Core;
 
 namespace log4net.Tests.Appender
 {
@@ -59,16 +59,16 @@ namespace log4net.Tests.Appender
 		/// <summary>
 		/// </summary>
 		/// <param name="loggingEvent">the event to log</param>
-		override protected void Append(LoggingEvent loggingEvent) 
+		protected override void Append(LoggingEvent loggingEvent)
 		{
 			m_buf.Append(RenderLoggingEvent(loggingEvent));
-		} 
+		}
 
 		/// <summary>
 		/// This appender requires a <see cref="Layout"/> to be set.
 		/// </summary>
 		/// <value><c>true</c></value>
-		override protected bool RequiresLayout
+		protected override bool RequiresLayout
 		{
 			get { return true; }
 		}

@@ -22,159 +22,167 @@ using System.IO;
 using System.Xml;
 
 using log4net.Config;
-using log4net.Util;
-using log4net.Layout;
 using log4net.Core;
+using log4net.Layout;
 using log4net.Repository;
 using log4net.Tests.Appender;
+using log4net.Util;
 
 using NUnit.Framework;
 
 namespace log4net.Tests.Layout
 {
-	[TestFixture] public class XmlLayoutTest
+	[TestFixture]
+	public class XmlLayoutTest
 	{
 		/// <summary>
 		/// Build a basic <see cref="LoggingEventData"/> object with some default values.
 		/// </summary>
 		/// <returns>A useful LoggingEventData object</returns>
-		private LoggingEventData createBaseEvent()
+		private LoggingEventData CreateBaseEvent()
 		{
-			LoggingEventData ed=new LoggingEventData();
-			ed.Domain="Tests";
-			ed.ExceptionString="";
-			ed.Identity="TestRunner";
-			ed.Level=Level.Info;
-			ed.LocationInfo=new LocationInfo(this.GetType());
-			ed.LoggerName="TestLogger";
-			ed.Message="Test message";
-			ed.ThreadName="TestThread";
-			ed.TimeStamp=DateTime.Today;
-			ed.UserName="TestRunner";
-			ed.Properties=new PropertiesDictionary();
+			LoggingEventData ed = new LoggingEventData();
+			ed.Domain = "Tests";
+			ed.ExceptionString = "";
+			ed.Identity = "TestRunner";
+			ed.Level = Level.Info;
+			ed.LocationInfo = new LocationInfo(GetType());
+			ed.LoggerName = "TestLogger";
+			ed.Message = "Test message";
+			ed.ThreadName = "TestThread";
+			ed.TimeStamp = DateTime.Today;
+			ed.UserName = "TestRunner";
+			ed.Properties = new PropertiesDictionary();
 
 			return ed;
 		}
 
-		private string createEventNode(string message)
+		private static string CreateEventNode(string message)
 		{
-			return String.Format("<event logger=\"TestLogger\" timestamp=\"{0}\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message>{1}</message></event>\r\n", 
-#if NET_2_0
-			    XmlConvert.ToString(DateTime.Today, XmlDateTimeSerializationMode.Local),
+			return String.Format("<event logger=\"TestLogger\" timestamp=\"{0}\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message>{1}</message></event>\r\n",
+#if NET_2_0 || MONO_2_0
+			                     XmlConvert.ToString(DateTime.Today, XmlDateTimeSerializationMode.Local),
 #else
-			    XmlConvert.ToString(DateTime.Today),
+			                     XmlConvert.ToString(DateTime.Today),
 #endif
-				message);
+			                     message);
 		}
 
-		private string createEventNode(string key, string value)
+		private static string CreateEventNode(string key, string value)
 		{
-			return String.Format("<event logger=\"TestLogger\" timestamp=\"{0:s}\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message>Test message</message><properties><data name=\"{1}\" value=\"{2}\" /></properties></event>\r\n",
-#if NET_2_0
-			    XmlConvert.ToString(DateTime.Today, XmlDateTimeSerializationMode.Local),
+			return String.Format("<event logger=\"TestLogger\" timestamp=\"{0}\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message>Test message</message><properties><data name=\"{1}\" value=\"{2}\" /></properties></event>\r\n",
+#if NET_2_0 || MONO_2_0
+			                     XmlConvert.ToString(DateTime.Today, XmlDateTimeSerializationMode.Local),
 #else
-			    XmlConvert.ToString(DateTime.Today),
+			                     XmlConvert.ToString(DateTime.Today),
 #endif
-				key,
-				value);
+			                     key,
+			                     value);
 		}
 
-		[Test] public void TestBasicEventLogging()
+		[Test]
+		public void TestBasicEventLogging()
 		{
-			TextWriter writer=new StringWriter();
-			XmlLayout layout=new XmlLayout();
-			LoggingEventData evt=createBaseEvent();
+			TextWriter writer = new StringWriter();
+			XmlLayout layout = new XmlLayout();
+			LoggingEventData evt = CreateBaseEvent();
 
-			layout.Format(writer,new LoggingEvent(evt));
+			layout.Format(writer, new LoggingEvent(evt));
 
-			string expected = createEventNode("Test message");
-			
-			Assert.AreEqual	(expected, writer.ToString());
+			string expected = CreateEventNode("Test message");
+
+			Assert.AreEqual(expected, writer.ToString());
 		}
 
-		[Test] public void TestIllegalCharacterMasking()
+		[Test]
+		public void TestIllegalCharacterMasking()
 		{
-			TextWriter writer=new StringWriter();
-			XmlLayout layout=new XmlLayout();
-			LoggingEventData evt=createBaseEvent();
+			TextWriter writer = new StringWriter();
+			XmlLayout layout = new XmlLayout();
+			LoggingEventData evt = CreateBaseEvent();
 
-			evt.Message="This is a masked char->\uFFFF";
+			evt.Message = "This is a masked char->\uFFFF";
 
-			layout.Format(writer,new LoggingEvent(evt));
+			layout.Format(writer, new LoggingEvent(evt));
 
-			string expected = createEventNode("This is a masked char-&gt;?");
-			
-			Assert.AreEqual	(expected, writer.ToString());
+			string expected = CreateEventNode("This is a masked char-&gt;?");
+
+			Assert.AreEqual(expected, writer.ToString());
 		}
 
-		[Test] public void TestCDATAEscaping1()
+		[Test]
+		public void TestCDATAEscaping1()
 		{
-			TextWriter writer=new StringWriter();
-			XmlLayout layout=new XmlLayout();
-			LoggingEventData evt=createBaseEvent();
+			TextWriter writer = new StringWriter();
+			XmlLayout layout = new XmlLayout();
+			LoggingEventData evt = CreateBaseEvent();
 
 			//The &'s trigger the use of a cdata block
-			evt.Message="&&&&&&&Escape this ]]>. End here.";
+			evt.Message = "&&&&&&&Escape this ]]>. End here.";
 
-			layout.Format(writer,new LoggingEvent(evt));
+			layout.Format(writer, new LoggingEvent(evt));
 
-			string expected = createEventNode("<![CDATA[&&&&&&&Escape this ]]>]]<![CDATA[>. End here.]]>");
-			
-			Assert.AreEqual	(expected, writer.ToString());
+			string expected = CreateEventNode("<![CDATA[&&&&&&&Escape this ]]>]]<![CDATA[>. End here.]]>");
+
+			Assert.AreEqual(expected, writer.ToString());
 		}
 
-		[Test] public void TestCDATAEscaping2()
+		[Test]
+		public void TestCDATAEscaping2()
 		{
-			TextWriter writer=new StringWriter();
-			XmlLayout layout=new XmlLayout();
-			LoggingEventData evt=createBaseEvent();
+			TextWriter writer = new StringWriter();
+			XmlLayout layout = new XmlLayout();
+			LoggingEventData evt = CreateBaseEvent();
 
 			//The &'s trigger the use of a cdata block
-			evt.Message="&&&&&&&Escape the end ]]>";
+			evt.Message = "&&&&&&&Escape the end ]]>";
 
-			layout.Format(writer,new LoggingEvent(evt));
+			layout.Format(writer, new LoggingEvent(evt));
 
-			string expected = createEventNode("<![CDATA[&&&&&&&Escape the end ]]>]]&gt;");
-			
-			Assert.AreEqual	(expected, writer.ToString());
+			string expected = CreateEventNode("<![CDATA[&&&&&&&Escape the end ]]>]]&gt;");
+
+			Assert.AreEqual(expected, writer.ToString());
 		}
 
-		[Test] public void TestCDATAEscaping3()
+		[Test]
+		public void TestCDATAEscaping3()
 		{
-			TextWriter writer=new StringWriter();
-			XmlLayout layout=new XmlLayout();
-			LoggingEventData evt=createBaseEvent();
+			TextWriter writer = new StringWriter();
+			XmlLayout layout = new XmlLayout();
+			LoggingEventData evt = CreateBaseEvent();
 
 			//The &'s trigger the use of a cdata block
-			evt.Message="]]>&&&&&&&Escape the begining";
+			evt.Message = "]]>&&&&&&&Escape the begining";
 
-			layout.Format(writer,new LoggingEvent(evt));
+			layout.Format(writer, new LoggingEvent(evt));
 
-			string expected = createEventNode("<![CDATA[]]>]]<![CDATA[>&&&&&&&Escape the begining]]>");
-			
-			Assert.AreEqual	(expected, writer.ToString());
+			string expected = CreateEventNode("<![CDATA[]]>]]<![CDATA[>&&&&&&&Escape the begining]]>");
+
+			Assert.AreEqual(expected, writer.ToString());
 		}
 
-		[Test] public void TestBase64EventLogging()
+		[Test]
+		public void TestBase64EventLogging()
 		{
-			TextWriter writer=new StringWriter();
-			XmlLayout layout=new XmlLayout();
-			LoggingEventData evt=createBaseEvent();
+			TextWriter writer = new StringWriter();
+			XmlLayout layout = new XmlLayout();
+			LoggingEventData evt = CreateBaseEvent();
 
-			layout.Base64EncodeMessage=true;
-			layout.Format(writer,new LoggingEvent(evt));
+			layout.Base64EncodeMessage = true;
+			layout.Format(writer, new LoggingEvent(evt));
 
-			string expected = createEventNode("VGVzdCBtZXNzYWdl");
-			
-			Assert.AreEqual	(expected, writer.ToString());
+			string expected = CreateEventNode("VGVzdCBtZXNzYWdl");
+
+			Assert.AreEqual(expected, writer.ToString());
 		}
 
-		[Test] public void TestPropertyEventLogging()
+		[Test]
+		public void TestPropertyEventLogging()
 		{
-			LoggingEventData evt=createBaseEvent();
-			evt.Properties["Property1"]="prop1";
+			LoggingEventData evt = CreateBaseEvent();
+			evt.Properties["Property1"] = "prop1";
 
-			XmlLayout layout=new XmlLayout();
+			XmlLayout layout = new XmlLayout();
 			StringAppender stringAppender = new StringAppender();
 			stringAppender.Layout = layout;
 
@@ -184,18 +192,19 @@ namespace log4net.Tests.Layout
 
 			log1.Logger.Log(new LoggingEvent(evt));
 
-			string expected = createEventNode("Property1",  "prop1");
-			
-			Assert.AreEqual	(expected, stringAppender.GetString());
+			string expected = CreateEventNode("Property1", "prop1");
+
+			Assert.AreEqual(expected, stringAppender.GetString());
 		}
 
-		[Test] public void TestBase64PropertyEventLogging()
+		[Test]
+		public void TestBase64PropertyEventLogging()
 		{
-			LoggingEventData evt=createBaseEvent();
-			evt.Properties["Property1"]="prop1";
+			LoggingEventData evt = CreateBaseEvent();
+			evt.Properties["Property1"] = "prop1";
 
-			XmlLayout layout=new XmlLayout();
-			layout.Base64EncodeProperties=true;
+			XmlLayout layout = new XmlLayout();
+			layout.Base64EncodeProperties = true;
 			StringAppender stringAppender = new StringAppender();
 			stringAppender.Layout = layout;
 
@@ -205,17 +214,18 @@ namespace log4net.Tests.Layout
 
 			log1.Logger.Log(new LoggingEvent(evt));
 
-			string expected = createEventNode("Property1", "cHJvcDE=");
-			
-			Assert.AreEqual	(expected, stringAppender.GetString());
+			string expected = CreateEventNode("Property1", "cHJvcDE=");
+
+			Assert.AreEqual(expected, stringAppender.GetString());
 		}
 
-		[Test] public void TestPropertyCharacterEscaping()
+		[Test]
+		public void TestPropertyCharacterEscaping()
 		{
-			LoggingEventData evt=createBaseEvent();
-			evt.Properties["Property1"]="prop1 \"quoted\"";
+			LoggingEventData evt = CreateBaseEvent();
+			evt.Properties["Property1"] = "prop1 \"quoted\"";
 
-			XmlLayout layout=new XmlLayout();
+			XmlLayout layout = new XmlLayout();
 			StringAppender stringAppender = new StringAppender();
 			stringAppender.Layout = layout;
 
@@ -225,17 +235,18 @@ namespace log4net.Tests.Layout
 
 			log1.Logger.Log(new LoggingEvent(evt));
 
-			string expected = createEventNode("Property1", "prop1 &quot;quoted&quot;"); 
-			
-			Assert.AreEqual	(expected, stringAppender.GetString());
+			string expected = CreateEventNode("Property1", "prop1 &quot;quoted&quot;");
+
+			Assert.AreEqual(expected, stringAppender.GetString());
 		}
 
-		[Test] public void TestPropertyIllegalCharacterMasking()
+		[Test]
+		public void TestPropertyIllegalCharacterMasking()
 		{
-			LoggingEventData evt=createBaseEvent();
-			evt.Properties["Property1"]="mask this ->\uFFFF";
+			LoggingEventData evt = CreateBaseEvent();
+			evt.Properties["Property1"] = "mask this ->\uFFFF";
 
-			XmlLayout layout=new XmlLayout();
+			XmlLayout layout = new XmlLayout();
 			StringAppender stringAppender = new StringAppender();
 			stringAppender.Layout = layout;
 
@@ -245,17 +256,18 @@ namespace log4net.Tests.Layout
 
 			log1.Logger.Log(new LoggingEvent(evt));
 
-			string expected = createEventNode("Property1", "mask this -&gt;?");
-			
-			Assert.AreEqual	(expected, stringAppender.GetString());
+			string expected = CreateEventNode("Property1", "mask this -&gt;?");
+
+			Assert.AreEqual(expected, stringAppender.GetString());
 		}
 
-		[Test] public void TestPropertyIllegalCharacterMaskingInName()
+		[Test]
+		public void TestPropertyIllegalCharacterMaskingInName()
 		{
-			LoggingEventData evt=createBaseEvent();
-			evt.Properties["Property\uFFFF"]="mask this ->\uFFFF";
+			LoggingEventData evt = CreateBaseEvent();
+			evt.Properties["Property\uFFFF"] = "mask this ->\uFFFF";
 
-			XmlLayout layout=new XmlLayout();
+			XmlLayout layout = new XmlLayout();
 			StringAppender stringAppender = new StringAppender();
 			stringAppender.Layout = layout;
 
@@ -265,9 +277,9 @@ namespace log4net.Tests.Layout
 
 			log1.Logger.Log(new LoggingEvent(evt));
 
-			string expected = createEventNode("Property?", "mask this -&gt;?");
-			
-			Assert.AreEqual	(expected, stringAppender.GetString());
+			string expected = CreateEventNode("Property?", "mask this -&gt;?");
+
+			Assert.AreEqual(expected, stringAppender.GetString());
 		}
 	}
 }

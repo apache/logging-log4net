@@ -17,8 +17,8 @@
 //
 #endregion
 
-using log4net.Core;
 using log4net.Appender;
+using log4net.Core;
 
 namespace log4net.Tests.Appender
 {
@@ -34,7 +34,6 @@ namespace log4net.Tests.Appender
 	public class CountingAppender : AppenderSkeleton
 	{
 		#region Public Instance Constructors
-
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CountingAppender" /> class.
 		/// </summary>
@@ -42,11 +41,9 @@ namespace log4net.Tests.Appender
 		{
 			m_counter = 0;
 		}
-
 		#endregion Public Instance Constructors
 
 		#region Public Instance Properties
-
 		/// <summary>
 		/// Returns the number of times <see cref="Append" /> has been called.
 		/// </summary>
@@ -57,7 +54,6 @@ namespace log4net.Tests.Appender
 		{
 			get { return m_counter; }
 		}
-
 		#endregion Public Instance Properties
 
 		/// <summary>
@@ -69,25 +65,21 @@ namespace log4net.Tests.Appender
 		}
 
 		#region Override implementation of AppenderSkeleton
-
 		/// <summary>
 		/// Registers how many times the method has been called.
 		/// </summary>
 		/// <param name="logEvent">The logging event.</param>
-		override protected void Append(LoggingEvent logEvent)
+		protected override void Append(LoggingEvent logEvent)
 		{
 			m_counter++;
 		}
-
 		#endregion Override implementation of AppenderSkeleton
 
 		#region Private Instance Fields
-
 		/// <summary>
 		/// The number of times <see cref="Append" /> has been called.
 		/// </summary>
 		private int m_counter;
-
 		#endregion Private Instance Fields
 	}
 }

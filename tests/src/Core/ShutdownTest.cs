@@ -30,12 +30,14 @@ namespace log4net.Tests.Core
 {
 	/// <summary>
 	/// </remarks>
-	[TestFixture] public class ShutdownTest
+	[TestFixture]
+	public class ShutdownTest
 	{
 		/// <summary>
 		/// Test that a repository can be shutdown and reconfigured
 		/// </summary>
-		[Test] public void TestShutdownAndReconfigure()
+		[Test]
+		public void TestShutdownAndReconfigure()
 		{
 			// Create unique repository
 			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());

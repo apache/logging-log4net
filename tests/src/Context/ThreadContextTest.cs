@@ -18,15 +18,14 @@
 #endregion
 
 using System;
-using System.Collections;
 using System.Threading;
+
 using log4net.Config;
-using log4net.Core;
 using log4net.Layout;
 using log4net.Repository;
-
 using log4net.Tests.Appender;
 using log4net.Util;
+
 using NUnit.Framework;
 
 namespace log4net.Tests.Context
@@ -37,9 +36,11 @@ namespace log4net.Tests.Context
 	/// <remarks>
 	/// Used for internal unit testing the <see cref="ThreadContext"/> class.
 	/// </remarks>
-	[TestFixture] public class ThreadContextTest
+	[TestFixture]
+	public class ThreadContextTest
 	{
-		[Test] public void TestThreadPropertiesPattern()
+		[Test]
+		public void TestThreadPropertiesPattern()
 		{
 			StringAppender stringAppender = new StringAppender();
 			stringAppender.Layout = new PatternLayout("%property{prop1}");
@@ -66,7 +67,8 @@ namespace log4net.Tests.Context
 			stringAppender.Reset();
 		}
 
-		[Test] public void TestThreadStackPattern()
+		[Test]
+		public void TestThreadStackPattern()
 		{
 			StringAppender stringAppender = new StringAppender();
 			stringAppender.Layout = new PatternLayout("%property{prop1}");
@@ -92,7 +94,8 @@ namespace log4net.Tests.Context
 			stringAppender.Reset();
 		}
 
-		[Test] public void TestThreadStackPattern2()
+		[Test]
+		public void TestThreadStackPattern2()
 		{
 			StringAppender stringAppender = new StringAppender();
 			stringAppender.Layout = new PatternLayout("%property{prop1}");
@@ -125,7 +128,8 @@ namespace log4net.Tests.Context
 			stringAppender.Reset();
 		}
 
-		[Test] public void TestThreadStackPatternNullVal()
+		[Test]
+		public void TestThreadStackPatternNullVal()
 		{
 			StringAppender stringAppender = new StringAppender();
 			stringAppender.Layout = new PatternLayout("%property{prop1}");
@@ -151,7 +155,8 @@ namespace log4net.Tests.Context
 			stringAppender.Reset();
 		}
 
-		[Test] public void TestThreadStackPatternNullVal2()
+		[Test]
+		public void TestThreadStackPatternNullVal2()
 		{
 			StringAppender stringAppender = new StringAppender();
 			stringAppender.Layout = new PatternLayout("%property{prop1}");
@@ -184,7 +189,8 @@ namespace log4net.Tests.Context
 			stringAppender.Reset();
 		}
 
-		[Test] public void TestBackgroundThreadContextProperty()
+		[Test]
+		public void TestBackgroundThreadContextProperty()
 		{
 			StringAppender stringAppender = new StringAppender();
 			stringAppender.Layout = new PatternLayout("%property{DateTimeTodayToString}");
@@ -192,31 +198,23 @@ namespace log4net.Tests.Context
 			ILoggerRepository rep = LogManager.CreateRepository("TestBackgroundThreadContextPropertyRepository");
 			BasicConfigurator.Configure(rep, stringAppender);
 
-			Thread thread = new Thread(new ThreadStart(executeBackgroundThread));
+			Thread thread = new Thread(new ThreadStart(ExecuteBackgroundThread));
 			thread.Start();
 
 			Thread.CurrentThread.Join(2000);
 		}
 
-		private void executeBackgroundThread()
+		private static void ExecuteBackgroundThread()
 		{
-			ILog log = LogManager.GetLogger(
-				"TestBackgroundThreadContextPropertyRepository", 
-				"ExecuteBackGroundThread");
-
+			ILog log = LogManager.GetLogger("TestBackgroundThreadContextPropertyRepository", "ExecuteBackGroundThread");
 			ThreadContext.Properties["DateTimeTodayToString"] = DateTime.Today.ToString();
-			
+
 			log.Info("TestMessage");
 
-			Repository.Hierarchy.Hierarchy hierarchyLoggingRepository = 
-				(Repository.Hierarchy.Hierarchy)log.Logger.Repository;
-			
-			StringAppender stringAppender = 
-				(StringAppender)hierarchyLoggingRepository.Root.Appenders[0];
+			Repository.Hierarchy.Hierarchy hierarchyLoggingRepository = (Repository.Hierarchy.Hierarchy)log.Logger.Repository;
+			StringAppender stringAppender = (StringAppender)hierarchyLoggingRepository.Root.Appenders[0];
 
 			Assert.AreEqual(DateTime.Today.ToString(), stringAppender.GetString());
 		}
-
-
 	}
 }

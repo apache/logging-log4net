@@ -18,8 +18,6 @@
 #endregion
 
 using System.Reflection;
-using System.Runtime.CompilerServices;
-
 //
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -27,10 +25,8 @@ using System.Runtime.CompilerServices;
 //
 
 [assembly: AssemblyTitle("log4net.Tests")]
-
 [assembly: AssemblyDescription("Unit Tests for log4net")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyProduct("log4net")]
 [assembly: AssemblyDefaultAlias("log4net")]
-[assembly: AssemblyCulture("")]		
-
+[assembly: AssemblyCulture("")]

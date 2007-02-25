@@ -38,54 +38,54 @@ namespace log4net.Tests
 
 		public static object CreateInstance(Type targetType)
 		{
-			return targetType.GetConstructor(BindingFlags.NonPublic|BindingFlags.Public|BindingFlags.Instance, null, new Type[0], null).Invoke(null);
+			return targetType.GetConstructor(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance, null, new Type[0], null).Invoke(null);
 		}
 
 		public static object InvokeMethod(object target, string name, params object[] args)
 		{
-			return target.GetType().GetMethod(name, BindingFlags.NonPublic|BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance, null, GetTypesArray(args), null).Invoke(target, args);
+			return target.GetType().GetMethod(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, null, GetTypesArray(args), null).Invoke(target, args);
 		}
 
 		public static object InvokeMethod(Type target, string name, params object[] args)
 		{
-			return target.GetMethod(name, BindingFlags.NonPublic|BindingFlags.Public|BindingFlags.Static, null, GetTypesArray(args), null).Invoke(null, args);
+			return target.GetMethod(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static, null, GetTypesArray(args), null).Invoke(null, args);
 		}
 
 		public static object GetField(object target, string name)
 		{
-			return target.GetType().GetField(name, BindingFlags.NonPublic|BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).GetValue(target);
+			return target.GetType().GetField(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance).GetValue(target);
 		}
 
 		public static void SetField(object target, string name, object val)
 		{
-			target.GetType().GetField(name, BindingFlags.NonPublic|BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).SetValue(target, val);
+			target.GetType().GetField(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance).SetValue(target, val);
 		}
 
 		public static object GetProperty(object target, string name)
 		{
-			return target.GetType().GetProperty(name, BindingFlags.NonPublic|BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).GetValue(target, null);
+			return target.GetType().GetProperty(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance).GetValue(target, null);
 		}
 
 		public static void SetProperty(object target, string name, object val)
 		{
-			target.GetType().GetProperty(name, BindingFlags.NonPublic|BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).SetValue(target, val, null);
+			target.GetType().GetProperty(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance).SetValue(target, val, null);
 		}
 
 		public static object GetProperty(object target, string name, params object[] index)
 		{
-			return target.GetType().GetProperty(name, BindingFlags.NonPublic|BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).GetValue(target, index);
+			return target.GetType().GetProperty(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance).GetValue(target, index);
 		}
 
 		public static void SetProperty(object target, string name, object val, params object[] index)
 		{
-			target.GetType().GetProperty(name, BindingFlags.NonPublic|BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).SetValue(target, val, index);
+			target.GetType().GetProperty(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance).SetValue(target, val, index);
 		}
 
 		private static Type[] GetTypesArray(object[] args)
 		{
 			Type[] types = new Type[args.Length];
 
-			for(int i=0; i<args.Length; i++)
+			for(int i = 0; i < args.Length; i++)
 			{
 				if (args[i] == null)
 				{

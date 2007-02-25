@@ -32,13 +32,15 @@ namespace log4net.Tests.Util
 	/// <remarks>
 	/// Used for internal unit testing the <see cref="PropertiesDictionary"/> class.
 	/// </remarks>
-	[TestFixture] public class PropertiesDictionaryTest
+	[TestFixture]
+	public class PropertiesDictionaryTest
 	{
-		[Test] public void TestSerialization()
+		[Test]
+		public void TestSerialization()
 		{
 			PropertiesDictionary pd = new PropertiesDictionary();
 
-			for(int i=0; i<10; i++)
+			for(int i = 0; i < 10; i++)
 			{
 				pd[i.ToString()] = i;
 			}
@@ -61,6 +63,5 @@ namespace log4net.Tests.Util
 				Assert.AreEqual(pd[key], pd2[key], "Check Value Persisted for key [{0}]", key);
 			}
 		}
-
 	}
 }

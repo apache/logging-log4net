@@ -19,8 +19,8 @@
 
 using System;
 
-using log4net.Util;
 using log4net.Core;
+using log4net.Util;
 
 using NUnit.Framework;
 
@@ -32,15 +32,18 @@ namespace log4net.Tests.Util
 	/// <remarks>
 	/// Used for internal unit testing the <see cref="PropertiesDictionary"/> class.
 	/// </remarks>
-	[TestFixture] public class CyclicBufferTest
+	[TestFixture]
+	public class CyclicBufferTest
 	{
 		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void TestConstructorSize0()
 		{
 			CyclicBuffer cb = new CyclicBuffer(0);
+			Assert.IsNotNull(cb);
 		}
 
-		[Test] public void TestSize1()
+		[Test]
+		public void TestSize1()
 		{
 			CyclicBuffer cb = new CyclicBuffer(1);
 
@@ -71,7 +74,8 @@ namespace log4net.Tests.Util
 			Assert.AreEqual(1, cb.MaxSize, "Buffer should really really still have max size 1");
 		}
 
-		[Test] public void TestSize2()
+		[Test]
+		public void TestSize2()
 		{
 			CyclicBuffer cb = new CyclicBuffer(2);
 
@@ -82,8 +86,8 @@ namespace log4net.Tests.Util
 			LoggingEvent event2 = new LoggingEvent(null, null, null, null, null, null);
 			LoggingEvent event3 = new LoggingEvent(null, null, null, null, null, null);
 
-			LoggingEvent discardedEvent = null;
-			
+			LoggingEvent discardedEvent;
+
 			discardedEvent = cb.Append(event1);
 			Assert.IsNull(discardedEvent, "No event should be discarded after append 1");
 			discardedEvent = cb.Append(event2);

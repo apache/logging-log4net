@@ -31,12 +31,14 @@ namespace log4net.Tests.Util
 	/// <remarks>
 	/// Used for internal unit testing the <see cref="SystemInfo"/> class.
 	/// </remarks>
-	[TestFixture] public class SystemInfoTest
+	[TestFixture]
+	public class SystemInfoTest
 	{
-		[Test] public void TestGetTypeFromStringFullyQualified()
+		[Test]
+		public void TestGetTypeFromStringFullyQualified()
 		{
-			Type t = null;
-			
+			Type t;
+
 			t = SystemInfo.GetTypeFromString("log4net.Tests.Util.SystemInfoTest,log4net.Tests", false, false);
 			Assert.AreSame(typeof(SystemInfoTest), t, "Test explicit case sensitive type load");
 
@@ -47,10 +49,11 @@ namespace log4net.Tests.Util
 			Assert.AreSame(typeof(SystemInfoTest), t, "Test explicit case in-sensitive type load lower");
 		}
 
-		[Test] public void TestGetTypeFromStringRelative()
+		[Test]
+		public void TestGetTypeFromStringRelative()
 		{
-			Type t = null;
-			
+			Type t;
+
 			t = SystemInfo.GetTypeFromString("log4net.Tests.Util.SystemInfoTest", false, false);
 			Assert.AreSame(typeof(SystemInfoTest), t, "Test explicit case sensitive type load");
 
@@ -61,10 +64,11 @@ namespace log4net.Tests.Util
 			Assert.AreSame(typeof(SystemInfoTest), t, "Test explicit case in-sensitive type load lower");
 		}
 
-		[Test] public void TestGetTypeFromStringSearch()
+		[Test]
+		public void TestGetTypeFromStringSearch()
 		{
-			Type t = null;
-			
+			Type t;
+
 			t = SystemInfo.GetTypeFromString("log4net.Util.SystemInfo", false, false);
 			Assert.AreSame(typeof(SystemInfo), t, "Test explicit case sensitive type load");
 
@@ -75,25 +79,26 @@ namespace log4net.Tests.Util
 			Assert.AreSame(typeof(SystemInfo), t, "Test explicit case in-sensitive type load lower");
 		}
 
-		[Test, ExpectedException(typeof(TypeLoadException))] public void TestGetTypeFromStringFails1()
+		[Test, ExpectedException(typeof(TypeLoadException))]
+		public void TestGetTypeFromStringFails1()
 		{
-			Type t = null;
-			
+			Type t;
+
 			t = SystemInfo.GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", false, false);
 			Assert.AreSame(null, t, "Test explicit case sensitive fails type load");
 
 			t = SystemInfo.GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", true, false);
 		}
 
-		[Test, ExpectedException(typeof(TypeLoadException))] public void TestGetTypeFromStringFails2()
+		[Test, ExpectedException(typeof(TypeLoadException))]
+		public void TestGetTypeFromStringFails2()
 		{
-			Type t = null;
-			
+			Type t;
+
 			t = SystemInfo.GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", false, false);
 			Assert.AreSame(null, t, "Test explicit case sensitive fails type load");
 
 			t = SystemInfo.GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", true, false);
 		}
-
 	}
 }
