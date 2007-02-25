@@ -120,7 +120,7 @@ namespace log4net.Tests.Core
 
 			// ***
 			log1.Debug("TestMessage", new Exception("Exception message"));
-			Assert.AreEqual("DEBUG:TestMessageSystem.Exception: Exception message\r\n", stringAppender.GetString(), "Test simple DEBUG event 3");
+			Assert.AreEqual("DEBUG:TestMessageSystem.Exception: Exception message" + Environment.NewLine, stringAppender.GetString(), "Test simple DEBUG event 3");
 			stringAppender.Reset();
 
 			// ***
@@ -238,7 +238,7 @@ namespace log4net.Tests.Core
 
 			// ***
 			log1.Info("TestMessage", new Exception("Exception message"));
-			Assert.AreEqual("INFO:TestMessageSystem.Exception: Exception message\r\n", stringAppender.GetString(), "Test simple INFO event 3");
+			Assert.AreEqual("INFO:TestMessageSystem.Exception: Exception message" + Environment.NewLine, stringAppender.GetString(), "Test simple INFO event 3");
 			stringAppender.Reset();
 
 			// ***
@@ -356,7 +356,7 @@ namespace log4net.Tests.Core
 
 			// ***
 			log1.Warn("TestMessage", new Exception("Exception message"));
-			Assert.AreEqual("WARN:TestMessageSystem.Exception: Exception message\r\n", stringAppender.GetString(), "Test simple WARN event 3");
+			Assert.AreEqual("WARN:TestMessageSystem.Exception: Exception message" + Environment.NewLine, stringAppender.GetString(), "Test simple WARN event 3");
 			stringAppender.Reset();
 
 			// ***
@@ -474,7 +474,7 @@ namespace log4net.Tests.Core
 
 			// ***
 			log1.Error("TestMessage", new Exception("Exception message"));
-			Assert.AreEqual("ERROR:TestMessageSystem.Exception: Exception message\r\n", stringAppender.GetString(), "Test simple ERROR event 3");
+			Assert.AreEqual("ERROR:TestMessageSystem.Exception: Exception message" + Environment.NewLine, stringAppender.GetString(), "Test simple ERROR event 3");
 			stringAppender.Reset();
 
 			// ***
@@ -592,7 +592,7 @@ namespace log4net.Tests.Core
 
 			// ***
 			log1.Fatal("TestMessage", new Exception("Exception message"));
-			Assert.AreEqual("FATAL:TestMessageSystem.Exception: Exception message\r\n", stringAppender.GetString(), "Test simple FATAL event 3");
+			Assert.AreEqual("FATAL:TestMessageSystem.Exception: Exception message" + Environment.NewLine, stringAppender.GetString(), "Test simple FATAL event 3");
 			stringAppender.Reset();
 
 			// ***

@@ -41,7 +41,8 @@ namespace log4net.Tests.Appender
 	public class RollingFileAppenderTest
 	{
 		private const string c_fileName = "test_41d3d834_4320f4da.log";
-		private const string c_testMessage = "01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567";
+		private const string c_testMessage98Chars = "01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567";
+		private const string c_testMessage99Chars = "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678";
 		private const int c_iMaximumFileSize = 450; // in bytes
 		private int _iMessagesLoggedThisFile = 0;
 		private int _iMessagesLogged = 0;
@@ -869,7 +870,8 @@ namespace log4net.Tests.Appender
 
 		/// <summary>
 		/// Uses the externally defined rolling table to verify rolling names/sizes
-		/// 
+		/// </summary>
+		/// <remarks>
 		/// Pattern is:  check pre-conditions.  Log messages, checking size of current file.
 		/// when size exceeds limit, check post conditions.  Can determine from message the
 		/// number of messages N that will cause a roll to occur.  Challenge is to verify the
@@ -886,12 +888,12 @@ namespace log4net.Tests.Appender
 		/// a 'roll', and the group between commas indicates the numbers for all backup files that
 		/// occur as a result of the roll.  It is assumed that no backup files exist before a roll 
 		/// occurs
-		/// </summary>
+		/// </remarks>
 		/// <param name="table"></param>
 		private void VerifyRolling(RollConditions[] table)
 		{
 			ConfigureRootAppender();
-			RollFromTableEntries(c_fileName, table, c_testMessage);
+			RollFromTableEntries(c_fileName, table, GetTestMessage());
 		}
 
 		/// <summary>
@@ -920,7 +922,7 @@ namespace log4net.Tests.Appender
 			//
 			int iMessagesToLog = 30;
 
-			VerifyRolling(MakeNumericTestEntries(c_testMessage, sBackupInfo, iMessagesToLog));
+			VerifyRolling(MakeNumericTestEntries(GetTestMessage(), sBackupInfo, iMessagesToLog));
 		}
 
 		/// <summary>
@@ -954,7 +956,7 @@ namespace log4net.Tests.Appender
 			//
 			int iMessagesToLog = 30;
 
-			VerifyRolling(MakeNumericTestEntries(c_testMessage, sBackupInfo, iMessagesToLog));
+			VerifyRolling(MakeNumericTestEntries(GetTestMessage(), sBackupInfo, iMessagesToLog));
 		}
 
 		/// <summary>
@@ -987,7 +989,7 @@ namespace log4net.Tests.Appender
 			//
 			int iMessagesToLog = 30;
 
-			VerifyRolling(MakeNumericTestEntries(c_testMessage, sBackupInfo, iMessagesToLog));
+			VerifyRolling(MakeNumericTestEntries(GetTestMessage(), sBackupInfo, iMessagesToLog));
 		}
 
 
@@ -1016,7 +1018,7 @@ namespace log4net.Tests.Appender
 			//
 			int iMessagesToLog = 30;
 
-			VerifyRolling(MakeNumericTestEntries(c_testMessage, sBackupInfo, iMessagesToLog));
+			VerifyRolling(MakeNumericTestEntries(GetTestMessage(), sBackupInfo, iMessagesToLog));
 		}
 
 		/// <summary>
@@ -1050,7 +1052,7 @@ namespace log4net.Tests.Appender
 			//
 			int iMessagesToLog = 30;
 
-			VerifyRolling(MakeNumericTestEntries(c_testMessage, sBackupInfo, iMessagesToLog));
+			VerifyRolling(MakeNumericTestEntries(GetTestMessage(), sBackupInfo, iMessagesToLog));
 		}
 
 		/// <summary>
@@ -1083,7 +1085,7 @@ namespace log4net.Tests.Appender
 			//
 			int iMessagesToLog = 30;
 
-			VerifyRolling(MakeNumericTestEntries(c_testMessage, sBackupInfo, iMessagesToLog));
+			VerifyRolling(MakeNumericTestEntries(GetTestMessage(), sBackupInfo, iMessagesToLog));
 		}
 
 		/// <summary>
@@ -1830,6 +1832,21 @@ namespace log4net.Tests.Appender
 		private static void SetFieldMaxSizeRollBackups(RollingFileAppender appender, int val)
 		{
 			Utils.SetField(appender, "m_maxSizeRollBackups", val);
+		}
+
+		private static string GetTestMessage()
+		{
+			switch (Environment.NewLine.Length)
+			{
+				case 2:
+					return c_testMessage98Chars;
+
+				case 1:
+					return c_testMessage99Chars;
+
+				default:
+					throw new Exception("Unexpected Environment.NewLine.Length");
+			}
 		}
 	}
 
