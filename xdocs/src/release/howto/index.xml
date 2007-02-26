@@ -17,37 +17,37 @@ limitations under the License.
 -->
 <document>
 
-	<properties>
-		<author email="nicko at apache dot org">Nicko Cadell</author>
-		<title>log4net How Tos</title>
-	</properties>
+    <properties>
+        <author email="nicko at apache dot org">Nicko Cadell</author>
+        <title>Apache log4net: How Tos</title>
+    </properties>
 
-	<meta name="keywords" content="howto log4net, log4net" />
+    <meta name="keywords" content="howto log4net, log4net" />
 
-	<body>
-		<section id="main" name="log4net How Tos">
-			
-			<p>
-				Below are presented, in no particular order, a series of documents
-				on how to get stuff done.
-			</p>
-			<p>
-				New documents can be contributed via the issue tracking system.
-				See the <a href="../../contributing.html">Contributing</a> page for
-				details.
-			</p>
+    <body>
+        <section id="main" name="log4net How Tos">
+            
+            <p>
+                Below are presented, in no particular order, a series of documents
+                on how to get stuff done.
+            </p>
+            <p>
+                New documents can be contributed via the issue tracking system.
+                See the <a href="../../contributing.html">Contributing</a> page for
+                details.
+            </p>
 
-			<ul>
-				<li>
-					<p><a href="chainsaw.html">How To view logging events using Apache log4j Chainsaw</a></p>
-				</li>
-				<!-- 
-				<li>
-					<p><a href="custom-appender.html">How To write your own appender</a></p>
-				</li>
-				-->
-			</ul>		
+            <ul>
+                <li>
+                    <p><a href="chainsaw.html">How To view logging events using Apache log4j Chainsaw</a></p>
+                </li>
+                <!-- 
+                <li>
+                    <p><a href="custom-appender.html">How To write your own appender</a></p>
+                </li>
+                -->
+            </ul>        
 
-		</section>
-	</body>
+        </section>
+    </body>
 </document>

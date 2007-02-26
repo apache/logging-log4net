@@ -122,13 +122,13 @@ limitations under the License.
             #elseif ($item.getName().equals("table"))
                 #table ($item)
             #elseif ($item.getName().equals("section"))
-			    #set ($nextLevel = $level + 1)
+                #set ($nextLevel = $level + 1)
                 #section ($item $nextLevel )
-			    #set ($nextLevel = $nextLevel - 1)
+                #set ($nextLevel = $nextLevel - 1)
             #elseif ($item.getName().equals("sectionMenu"))
-			    #set ($nextLevel = $level + 1)
+            #set ($nextLevel = $level + 1)
                 #sectionMenu1 ($item $item.getParent() $nextLevel)
-			    #set ($nextLevel = $nextLevel - 1)
+            #set ($nextLevel = $nextLevel - 1)
             #else
                 $item
             #end
@@ -140,22 +140,22 @@ limitations under the License.
 ##          sectionMenu1 macro
 ## ================================
 #macro ( sectionMenu1 $sectionMenu $section $level )
-	#if($sectionMenu.getAttributeValue("name"))
-		<h${level}>$sectionMenu.getAttributeValue("name")</h${level}>
-		<div class="i1">
-			#foreach ( $items in $section.getChildren() )
-				#if ($items.getName().equals("section"))
-					#sectionMenu2 ($items )
-				#end
-			#end
-		</div>
-	#else
-		#foreach ( $items in $section.getChildren() )
-			#if ($items.getName().equals("section"))
-				#sectionMenu2 ($items )
-			#end
-		#end
-	#end
+    #if($sectionMenu.getAttributeValue("name"))
+        <h${level}>$sectionMenu.getAttributeValue("name")</h${level}>
+        <div class="i1">
+            #foreach ( $items in $section.getChildren() )
+                #if ($items.getName().equals("section"))
+                    #sectionMenu2 ($items )
+                #end
+            #end
+        </div>
+    #else
+        #foreach ( $items in $section.getChildren() )
+            #if ($items.getName().equals("section"))
+                #sectionMenu2 ($items )
+            #end
+        #end
+    #end
 #end
 
 ## ================================
@@ -187,8 +187,8 @@ limitations under the License.
     #foreach ( $menu in $menus )
        <div class="menu_header">$menu.getAttributeValue("name")</div>
        #foreach ($item in $menu.getChildren() )
-       	 #set ($name = $item.getAttributeValue("name"))
-       	 <div class="menu_item">#projectanchor($name $item.getAttributeValue("href"))</div>
+         #set ($name = $item.getAttributeValue("name"))
+         <div class="menu_item">#projectanchor($name $item.getAttributeValue("href"))</div>
        #end  
     #end
   </div> 
@@ -212,14 +212,14 @@ limitations under the License.
            #if ($project.getChild("logo"))
              #set ( $logoString = $project.getChild("logo").getAttributeValue("href") )
              #if ( $logoString.startsWith("/") )
-     	       <a href="$project.getAttributeValue("href")">
-      	         <img src="$relativePath$logoString" 
-      	           alt="$project.getChild("logo").getText()" border="0"/>
-      	       </a>
+              <a href="$project.getAttributeValue("href")">
+                 <img src="$relativePath$logoString" 
+                   alt="$project.getChild("logo").getText()" border="0"/>
+               </a>
              #else
-      	       <a href="$project.getAttributeValue("href")">
+               <a href="$project.getAttributeValue("href")">
                  <img src="$relativePath/$logoString" alt="$project.getChild("logo").getText()" border="0"/>
-      	       </a>
+               </a>
              #end
            #end  
        </td>
@@ -279,18 +279,18 @@ limitations under the License.
               #set ($url = $root.getChild("properties").getChild("base").getAttributeValue("href"))
               <base href="$url"/>
             #end
- 
+
             <link href="$relativePath/css/site.css" rel="stylesheet" type="text/css"/>
             
-			#foreach ( $cssItem in $project.getChildren("css") )
-				<link href="$relativePath${cssItem.getAttributeValue("href")}" rel="stylesheet" type="text/css"/>
-			#end
+            #foreach ( $cssItem in $project.getChildren("css") )
+                <link href="$relativePath${cssItem.getAttributeValue("href")}" rel="stylesheet" type="text/css"/>
+            #end
 
-            <title>$project.getChild("title").getText() - $root.getChild("properties").getChild("title").getText()</title>
+            <title>$root.getChild("properties").getChild("title").getText()</title>
             
             #if ($root.getChild("head"))
-				$root.getChild("head").getContent()
-			#end
+                $root.getChild("head").getContent()
+            #end
         </head>
 
         <body 
@@ -298,9 +298,15 @@ limitations under the License.
             text="$bodyfg"
             link="$bodylink"
         #foreach ( $a in $root.getChild("body").getAttributes() )
-			$a.getName()="$a.getValue()"
-		#end
-        >       
+            $a.getName()="$a.getValue()"
+        #end
+        >
+          ## Google analytics code
+          <script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+          <script type="text/javascript">
+            _uacct = "UA-1416250-1";
+          </script>
+
            <!-- START Header table --> 
 ##           <table border="0" cellspacing="0" width="100%">
 ##                <!-- TOP IMAGE -->
@@ -311,7 +317,7 @@ limitations under the License.
            <!-- END Header table --> 
 
 
-	   <div class="centercol">
+       <div class="centercol">
         ##     <hr noshade="" size="1"/>
 
            <!-- START main table --> 
@@ -327,7 +333,7 @@ limitations under the License.
 ##                    </td>
 ##                    <td id="mainContents" align="left" valign="top" width="*">
 
-	               #foreach ( $item in $root.getChild("body").getChildren() )
+                   #foreach ( $item in $root.getChild("body").getChildren() )
                          #if ($item.getName().equals("img"))
                            #image ($item)
                          #elseif ($item.getName().equals("section"))
@@ -351,7 +357,7 @@ limitations under the License.
 ##                </tr>
 
 
-      #messages ($root)	
+      #messages ($root)
              
                 <!-- FOOTER -->
 <p>&nbsp;</p>
@@ -362,20 +368,20 @@ limitations under the License.
 ##                <tr><td colspan="2">
                     <div align="center"><font color="$bodylink" size="-1"><em>
                     Copyright &#169; 
-		    #if($root.getChild("properties").getChild("copyright").getAttributeValue("year"))
-		    	${root.getChild("properties").getChild("copyright").getAttributeValue("year")},
-		    #elseif($project.getChild("copyright").getAttributeValue("year"))
-			${project.getChild("copyright").getAttributeValue("year")},
-		    #else
-		    	1999-2006,
-		    #end
-		    #if($root.getChild("properties").getChild("copyright").getAttributeValue("holder"))
-		    	${root.getChild("properties").getChild("copyright").getAttributeValue("holder")}
-		    #elseif($project.getChild("copyright").getAttributeValue("holder"))
-			${project.getChild("copyright").getAttributeValue("holder")}
-		    #else
-		    	Apache Software Foundation
-		    #end
+            #if($root.getChild("properties").getChild("copyright").getAttributeValue("year"))
+                ${root.getChild("properties").getChild("copyright").getAttributeValue("year")},
+            #elseif($project.getChild("copyright").getAttributeValue("year"))
+                ${project.getChild("copyright").getAttributeValue("year")},
+            #else
+                1999-2007,
+            #end
+            #if($root.getChild("properties").getChild("copyright").getAttributeValue("holder"))
+                ${root.getChild("properties").getChild("copyright").getAttributeValue("holder")}
+            #elseif($project.getChild("copyright").getAttributeValue("holder"))
+                ${project.getChild("copyright").getAttributeValue("holder")}
+            #else
+                Apache Software Foundation
+            #end
                     </em></font></div>
  ##               </td></tr>
  ##           </table>
@@ -386,6 +392,10 @@ limitations under the License.
            <!-- LEFT SIDE NAVIGATION -->
            #makeNavigationBar()
 
+          ## Call the google analyticis code to register this page
+          <script type="text/javascript">
+            urchinTracker();
+          </script>
         </body>
     </html>
 #end

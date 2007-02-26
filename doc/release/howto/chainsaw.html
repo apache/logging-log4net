@@ -39,12 +39,12 @@ limitations under the License.
            
                                      <meta  name="keywords"  content="chainsaw log4net, log4net"  />
  
-                         
+                        
             <link href="../../css/site.css" rel="stylesheet" type="text/css"/>
             
-							<link href="../../css/style.css" rel="stylesheet" type="text/css"/>
-			
-            <title>log4net - How To view logging events using Apache log4j Chainsaw</title>
+                            <link href="../../css/style.css" rel="stylesheet" type="text/css"/>
+            
+            <title>Apache log4net: How To view logging events using Apache log4j Chainsaw</title>
             
                     </head>
 
@@ -52,7 +52,12 @@ limitations under the License.
             bgcolor="#ffffff"
             text="#000000"
             link="#525D76"
-                >       
+                >
+                    <script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+          <script type="text/javascript">
+            _uacct = "UA-1416250-1";
+          </script>
+
            <!-- START Header table --> 
                              <table class="banner" border="0">
      <tr>
@@ -68,16 +73,16 @@ limitations under the License.
               <!-- END Header table --> 
 
 
-	   <div class="centercol">
+       <div class="centercol">
         
            <!-- START main table --> 
                 
 
-	                                                                       <h1><a id="main"></a>How To view logging events using Apache log4j Chainsaw</h1>
+                                                                           <h1><a id="main"></a>How To view logging events using Apache log4j Chainsaw</h1>
     <div class="i1">
-                                    			<h2>Contents</h2>
-		<div class="i1">
-																																								    <a href="#udp">Logging via UDP</a><br/>
+                                                <h2>Contents</h2>
+        <div class="i1">
+                                                                                                                                                                    <a href="#udp">Logging via UDP</a><br/>
     <div class="i1">
                                                             <a href="#udp-conf">log4net UDP Configuration</a><br/>
     <div class="i1">
@@ -86,61 +91,61 @@ limitations under the License.
     <div class="i1">
                                                   </div>
                       </div>
-																    <a href="#xml-file">Logging to XML file</a><br/>
+                                                                    <a href="#xml-file">Logging to XML file</a><br/>
     <div class="i1">
                                                                       </div>
-									</div>
-	                                                <p>
-				Apache log4j includes <a href="http://logging.apache.org/log4j/docs/chainsaw.html">Chainsaw</a>
-				a graphical log viewer. 
-			</p>
+                                    </div>
+                                                    <p>
+                Apache log4j includes <a href="http://logging.apache.org/log4j/docs/chainsaw.html">Chainsaw</a>
+                a graphical log viewer. 
+            </p>
                                                 <p>
-				Chainsaw can either receive and display log events in realtime over 
-				the network, or it can load a previously created log file.
-			</p>
+                Chainsaw can either receive and display log events in realtime over 
+                the network, or it can load a previously created log file.
+            </p>
                                                 <p>
-				Before Chainsaw can display data, one or more receivers must be setup. 
-				This is usually done by specifying an xml config file when the program 
-				first starts up. <br />
-				Save one or more of the sample xml config files to your local system and 
-				load them when Chainsaw starts.
-			</p>
+                Before Chainsaw can display data, one or more receivers must be setup. 
+                This is usually done by specifying an xml config file when the program 
+                first starts up. <br />
+                Save one or more of the sample xml config files to your local system and 
+                load them when Chainsaw starts.
+            </p>
                                                     <h2><a id="udp"></a>Logging via UDP</h2>
     <div class="i1">
                                     <p>
-					log4net can be configured to log messages via UDP in such a way that Chainsaw
-					can receive and display them.
-				</p>
+                    log4net can be configured to log messages via UDP in such a way that Chainsaw
+                    can receive and display them.
+                </p>
                                                     <h3><a id="udp-conf"></a>log4net UDP Configuration</h3>
     <div class="i1">
                                     <p>
-						Configure log4net to use a UdpAppender with the following config snippet:
-					</p>
+                        Configure log4net to use a UdpAppender with the following config snippet:
+                    </p>
                                                 
     <div class="syntax"><pre class="code">
 &lt;appender name=&quot;UdpAppender&quot; type=&quot;log4net.Appender.UdpAppender&quot;&gt;
-	&lt;remoteAddress value=&quot;127.0.0.1&quot; /&gt;
-	&lt;remotePort value=&quot;8080&quot; /&gt;
-	&lt;layout type=&quot;log4net.Layout.XmlLayoutSchemaLog4j&quot;&gt;
-		&lt;locationInfo value=&quot;true&quot; /&gt;
-	&lt;/layout&gt;
+    &lt;remoteAddress value=&quot;127.0.0.1&quot; /&gt;
+    &lt;remotePort value=&quot;8080&quot; /&gt;
+    &lt;layout type=&quot;log4net.Layout.XmlLayoutSchemaLog4j&quot;&gt;
+        &lt;locationInfo value=&quot;true&quot; /&gt;
+    &lt;/layout&gt;
 &lt;/appender&gt;</pre></div>
 
                       </div>
                                                     <h3><a id="udp-chainsaw"></a>Chainsaw UDP receiver Configuration</h3>
     <div class="i1">
                                     <p>
-						Chainsaw should be configured to start a <c>UDPReceiver</c> using the 
-						following configuration document:
-					</p>
+                        Chainsaw should be configured to start a <c>UDPReceiver</c> using the 
+                        following configuration document:
+                    </p>
                                                 
     <div class="syntax"><pre class="code">
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
 &lt;!DOCTYPE log4j:configuration SYSTEM &quot;log4j.dtd&quot;&gt; 
 &lt;log4j:configuration xmlns:log4j=&quot;http://jakarta.apache.org/log4j/&quot; debug=&quot;true&quot;&gt;    
-	&lt;plugin name=&quot;UDPReceiver&quot; class=&quot;org.apache.log4j.net.UDPReceiver&quot;&gt;
-		&lt;param name=&quot;Port&quot; value=&quot;8080&quot; /&gt;
-	&lt;/plugin&gt;    
+    &lt;plugin name=&quot;UDPReceiver&quot; class=&quot;org.apache.log4j.net.UDPReceiver&quot;&gt;
+        &lt;param name=&quot;Port&quot; value=&quot;8080&quot; /&gt;
+    &lt;/plugin&gt;    
 &lt;/log4j:configuration&gt;</pre></div>
 
                       </div>
@@ -148,24 +153,24 @@ limitations under the License.
                                                     <h2><a id="xml-file"></a>Logging to XML file</h2>
     <div class="i1">
                                     <p>
-					Chainsaw can also load an XML log file if it is formatted according
-					to the log4j schema. Use the following log4net config to output
-					to file using the log4j schema:
-				</p>
+                    Chainsaw can also load an XML log file if it is formatted according
+                    to the log4j schema. Use the following log4net config to output
+                    to file using the log4j schema:
+                </p>
                                                 
     <div class="syntax"><pre class="code">
 &lt;appender name=&quot;FileAppender&quot; type=&quot;log4net.Appender.FileAppender&quot;&gt;
-	&lt;file value=&quot;log-file.txt&quot; /&gt;
-	&lt;appendToFile value=&quot;true&quot; /&gt;
-	&lt;layout type=&quot;log4net.Layout.XmlLayoutSchemaLog4j&quot;&gt;
-		&lt;locationInfo value=&quot;true&quot; /&gt;
-	&lt;/layout&gt;
+    &lt;file value=&quot;log-file.txt&quot; /&gt;
+    &lt;appendToFile value=&quot;true&quot; /&gt;
+    &lt;layout type=&quot;log4net.Layout.XmlLayoutSchemaLog4j&quot;&gt;
+        &lt;locationInfo value=&quot;true&quot; /&gt;
+    &lt;/layout&gt;
 &lt;/appender&gt;</pre></div>
 
                                                 <p>
-					To load the file into Chainsaw drag the file into the Chainsaw
-					app and drop it on the tab labeled <i>Drag &amp; Drop log files here</i>.
-				</p>
+                    To load the file into Chainsaw drag the file into the Chainsaw
+                    app and drop it on the tab labeled <i>Drag &amp; Drop log files here</i>.
+                </p>
                       </div>
                       </div>
                                                 
@@ -177,9 +182,9 @@ limitations under the License.
 
                     <div align="center"><font color="#525D76" size="-1"><em>
                     Copyright &#169; 
-		    			2004-2006,
-		    		    		    	Apache Software Foundation
-		                        </em></font></div>
+                            2004-2007,
+                                        Apache Software Foundation
+                                </em></font></div>
              <!-- END main table --> 
 
            </div>
@@ -188,60 +193,63 @@ limitations under the License.
              <!-- ============================================================ -->
   <div class="leftcol">
                <div class="menu_header">Apache</div>
-              	 <div class="menu_item">    <a href="http://www.apache.org">Apache Home</a>
+                <div class="menu_item">    <a href="http://www.apache.org">Apache Home</a>
 </div>
-              	 <div class="menu_item">    <a href="http://logging.apache.org/">Logging Services</a>
+                <div class="menu_item">    <a href="http://logging.apache.org/">Logging Services</a>
 </div>
                   <div class="menu_header">log4net Project</div>
-              	 <div class="menu_item">    <a href="../../index.html">About</a>
+                <div class="menu_item">    <a href="../../index.html">About</a>
 </div>
-              	 <div class="menu_item">    <a href="../../license.html">License</a>
+                <div class="menu_item">    <a href="../../license.html">License</a>
 </div>
-              	 <div class="menu_item">    <a href="../../support.html">Support</a>
+                <div class="menu_item">    <a href="../../support.html">Support</a>
 </div>
-              	 <div class="menu_item">    <a href="../../roadmap.html">Roadmap</a>
+                <div class="menu_item">    <a href="../../roadmap.html">Roadmap</a>
 </div>
-              	 <div class="menu_item">    <a href="../../contributing.html">Contributing</a>
+                <div class="menu_item">    <a href="../../contributing.html">Contributing</a>
 </div>
-              	 <div class="menu_item">    <a href="../../history.html">History</a>
+                <div class="menu_item">    <a href="../../history.html">History</a>
 </div>
-              	 <div class="menu_item">    <a href="../../downloads.html">Downloads</a>
+                <div class="menu_item">    <a href="../../downloads.html">Downloads</a>
 </div>
                   <div class="menu_header">log4net 1.2 Documentation</div>
-              	 <div class="menu_item">    <a href="../../release/features.html">Features</a>
+                <div class="menu_item">    <a href="../../release/features.html">Features</a>
 </div>
-              	 <div class="menu_item">    <a href="../../release/framework-support.html">Supported Frameworks</a>
+                <div class="menu_item">    <a href="../../release/framework-support.html">Supported Frameworks</a>
 </div>
-              	 <div class="menu_item">    <a href="../../release/release-notes.html">Release Notes</a>
+                <div class="menu_item">    <a href="../../release/release-notes.html">Release Notes</a>
 </div>
-              	 <div class="menu_item">    <a href="../../release/example-apps.html">Example Apps</a>
+                <div class="menu_item">    <a href="../../release/example-apps.html">Example Apps</a>
 </div>
-              	 <div class="menu_item">    <a href="../../release/config-examples.html">Config Examples</a>
+                <div class="menu_item">    <a href="../../release/config-examples.html">Config Examples</a>
 </div>
-              	 <div class="menu_item">    <a href="../../release/building.html">Building</a>
+                <div class="menu_item">    <a href="../../release/building.html">Building</a>
 </div>
-              	 <div class="menu_item">    <a href="../../release/faq.html">FAQ</a>
+                <div class="menu_item">    <a href="../../release/faq.html">FAQ</a>
 </div>
-              	 <div class="menu_item">    <a href="../../release/howto/index.html">How Tos</a>
+                <div class="menu_item">    <a href="../../release/howto/index.html">How Tos</a>
 </div>
-              	 <div class="menu_item">    <a href="../../release/sdk/index.html">SDK Reference</a>
+                <div class="menu_item">    <a href="../../release/sdk/index.html">SDK Reference</a>
 </div>
                   <div class="menu_header">log4net 1.2 Manual</div>
-              	 <div class="menu_item">    <a href="../../release/manual/introduction.html">Introduction</a>
+                <div class="menu_item">    <a href="../../release/manual/introduction.html">Introduction</a>
 </div>
-              	 <div class="menu_item">    <a href="../../release/manual/configuration.html">Configuration</a>
+                <div class="menu_item">    <a href="../../release/manual/configuration.html">Configuration</a>
 </div>
-              	 <div class="menu_item">    <a href="../../release/manual/contexts.html">Contexts</a>
+                <div class="menu_item">    <a href="../../release/manual/contexts.html">Contexts</a>
 </div>
-              	 <div class="menu_item">    <a href="../../release/manual/plugins.html">Plugins</a>
+                <div class="menu_item">    <a href="../../release/manual/plugins.html">Plugins</a>
 </div>
-              	 <div class="menu_item">    <a href="../../release/manual/repositories.html">Repositories</a>
+                <div class="menu_item">    <a href="../../release/manual/repositories.html">Repositories</a>
 </div>
-              	 <div class="menu_item">    <a href="../../release/manual/internals.html">Internals</a>
+                <div class="menu_item">    <a href="../../release/manual/internals.html">Internals</a>
 </div>
              </div> 
    
 
+                    <script type="text/javascript">
+            urchinTracker();
+          </script>
         </body>
     </html>
 <!-- end the processing -->

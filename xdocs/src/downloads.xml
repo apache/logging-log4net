@@ -17,83 +17,77 @@ limitations under the License.
 -->
 <document>
 
-	<properties>
-		<author email="nicko at apache dot org">Nicko Cadell</author>
-		<title>log4net Downloads</title>
-	</properties>
+    <properties>
+        <author email="nicko at apache dot org">Nicko Cadell</author>
+        <title>Apache log4net: Downloads</title>
+    </properties>
 
-	<meta name="keywords" content="log4net downloads, log4net download, log4net" />
+    <meta name="keywords" content="log4net downloads, log4net download, log4net" />
 
-	<body>
-		<section id="main" name="log4net Downloads">
-			
-			<section id="status" name="Project Status">
-				<p>
-					log4net is an effort undergoing incubation at the Apache Software 
-					Foundation (ASF), sponsored by the Apache Logging Services project. 
-					Incubation is required of all newly accepted projects until a further 
-					review indicates that the infrastructure, communications, and decision 
-					making process have stabilized in a manner consistent with other 
-					successful ASF projects. While incubation status is not necessarily a 
-					reflection of the completeness or stability of the code, it does 
-					indicate that the project has yet to be fully endorsed by the ASF.
-				</p>
-				<p>
-					As log4net is undergoing incubation these releases are <i>not</i>
-					officially endorsed by the ASF.
-				</p>
-			</section>
-			
-			<section id="stable" name="Stable Releases">
-				<p>
-					The following stable releases are available:
-				</p>
-				
-				<ul>
-					<li>
-						<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.10/incubating-log4net-1.2.10.zip">incubating-log4net-1.2.10.zip</a>
-						[<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.10/incubating-log4net-1.2.10.zip.asc">PGP</a>]
-						[<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.10/incubating-log4net-1.2.10.zip.md5">MD5</a>]
-					</li>
-				</ul>
-			</section>
-			
-			<!--
-			<section id="developer" name="Developer Releases">
-				<p>
-					The following development snapshots are available:
-				</p>
-				
-				<ul>
-					<li>
-						<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip">incubating-log4net-1.2.9-beta.zip</a>
-						[<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip.asc">PGP</a>]
-						[<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip.md5">MD5</a>]
-					</li>
-				</ul>
-			</section>
-			-->
-			
-			<section id="archive" name="Archive Releases">
-				<ul>
-					<li>
-						<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip">incubating-log4net-1.2.9-beta.zip</a>
-						[<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip.asc">PGP</a>]
-						[<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip.md5">MD5</a>]
-					</li>
-				</ul>
-				
-				<p>
-					Previous releases of log4net are available from the sourceforge site:
-				</p>
-				
-				<ul>
-					<li><a href="http://sourceforge.net/project/showfiles.php?group_id=31983&amp;release_id=171808">Download at sourceforge.net</a></li>
-				</ul>
-			</section>
-			
-		</section>
+    <body>
+        <section id="main" name="log4net Downloads">
+            
+            <section id="status" name="Project Status">
+                <p>
+                    log4net has graduated from the Incubator project, however at the time 
+                    the following releases were made, log4net was still undergoing incubation,
+                    therefore these releases are <i>not</i> officially endorsed by the ASF.
+                </p>
+                <p>
+                    Future releases of log4net will be officially endorsed by the ASF.
+                </p>
+            </section>
+            
+            <section id="stable" name="Stable Releases">
+                <p>
+                    The following stable releases are available:
+                </p>
+                
+                <ul>
+                    <li>
+                        <a href="http://cvs.apache.org/dist/incubator/log4net/1.2.10/incubating-log4net-1.2.10.zip" onclick="javascript:urchinTracker('/log4net/download/incubating-log4net-1.2.10.zip');">incubating-log4net-1.2.10.zip</a>
+                        [<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.10/incubating-log4net-1.2.10.zip.asc">PGP</a>]
+                        [<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.10/incubating-log4net-1.2.10.zip.md5">MD5</a>]
+                    </li>
+                </ul>
+            </section>
+            
+            <!--
+            <section id="developer" name="Developer Releases">
+                <p>
+                    The following development snapshots are available:
+                </p>
+                
+                <ul>
+                    <li>
+                        <a href="http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip">incubating-log4net-1.2.9-beta.zip</a>
+                        [<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip.asc">PGP</a>]
+                        [<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip.md5">MD5</a>]
+                    </li>
+                </ul>
+            </section>
+            -->
+            
+            <section id="archive" name="Archive Releases">
+                <ul>
+                    <li>
+                        <a href="http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip" onclick="javascript:urchinTracker('/log4net/download/incubating-log4net-1.2.9-beta.zip');">incubating-log4net-1.2.9-beta.zip</a>
+                        [<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip.asc">PGP</a>]
+                        [<a href="http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip.md5">MD5</a>]
+                    </li>
+                </ul>
+                
+                <p>
+                    Previous releases of log4net are available from the sourceforge site:
+                </p>
+                
+                <ul>
+                    <li><a href="http://sourceforge.net/project/showfiles.php?group_id=31983&amp;release_id=171808" onclick="javascript:urchinTracker('/log4net/download/sourceforge');">Download at sourceforge.net</a></li>
+                </ul>
+            </section>
+            
+        </section>
 
-	</body>
+    </body>
 
 </document>

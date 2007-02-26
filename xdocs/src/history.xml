@@ -17,42 +17,42 @@ limitations under the License.
 -->
 <document>
 
-	<properties>
-		<author email="nicko at apache dot org">Nicko Cadell</author>
-		<title>log4net Project History</title>
-	</properties>
+    <properties>
+        <author email="nicko at apache dot org">Nicko Cadell</author>
+        <title>Apache log4net: Project History</title>
+    </properties>
 
-	<meta name="keywords" content="log4net project history, log4net" />
+    <meta name="keywords" content="log4net project history, log4net" />
 
-	<body>
-		<section id="main" name="log4net Project History">
+    <body>
+        <section id="main" name="log4net Project History">
 
-			<p>
-				The log4net project was started by <a href="http://www.neoworks.com">NeoWorks Limited</a> 
-				in June 2001. It was created as an internal project within Neoworks to port the Apache 
-				log4j code base to the Microsoft .NET Framework. The code base was initially branched 
-				from a pre-alpha log4j 1.2.
-			</p>
+            <p>
+                The log4net project was started by <a href="http://www.neoworks.com">Neoworks Limited</a> 
+                in June 2001. It was created as an internal project within Neoworks to port the Apache 
+                log4j code base to the Microsoft .NET Framework. The code base was initially branched 
+                from a pre-alpha log4j 1.2.
+            </p>
 
-			<p>
-				In July 2001 a <a href="http://sourceforge.net">Sourceforge</a> project was started
-				and log4net was published under the Apache Software License. The first public release of
-				log4net was made in September 2001. A further 10 releases were made on the sourceforge
-				site.
-			</p>
+            <p>
+                In July 2001 a <a href="http://sourceforge.net">Sourceforge</a> project was started
+                and log4net was published under the Apache Software License. The first public release of
+                log4net was made in September 2001. A further 10 releases were made on the sourceforge
+                site.
+            </p>
 
-			<p>
-				In December 2003 the Apache Logging Services project was created. 
-				In February 2004 log4net was donated by Neoworks to the Apache Software Foundation
-				to become a member of the Logging Services project. 
-			</p>
-			
-			<p>
-				The log4net project is currently incubating at Apache. The incubation project
-				mentor is Mark Womack.
-			</p>
-			
-		</section>
-	</body>
+            <p>
+                In December 2003 the Apache Logging Services project was created. 
+                In February 2004 log4net was donated by Neoworks to the Apache Software Foundation
+                to become a member of the Logging Services project. 
+            </p>
+            
+            <p>
+                In February 2007 log4net graduated from the Apache Incubator project to become a
+                fully fledged Apache project. Apache log4net is a subproject of the Logging Services project.
+            </p>
+            
+        </section>
+    </body>
 
 </document>

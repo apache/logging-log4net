@@ -37,12 +37,12 @@ limitations under the License.
            
                                      <meta  name="keywords"  content="log4net frequently asked questions, log4net faq, log4net"  />
  
-                         
+                        
             <link href="../css/site.css" rel="stylesheet" type="text/css"/>
             
-							<link href="../css/style.css" rel="stylesheet" type="text/css"/>
-			
-            <title>log4net - log4net Manual - Frequently Asked Questions</title>
+                            <link href="../css/style.css" rel="stylesheet" type="text/css"/>
+            
+            <title>Apache log4net: Frequently Asked Questions</title>
             
                     </head>
 
@@ -50,7 +50,12 @@ limitations under the License.
             bgcolor="#ffffff"
             text="#000000"
             link="#525D76"
-                >       
+                >
+                    <script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+          <script type="text/javascript">
+            _uacct = "UA-1416250-1";
+          </script>
+
            <!-- START Header table --> 
                              <table class="banner" border="0">
      <tr>
@@ -66,16 +71,16 @@ limitations under the License.
               <!-- END Header table --> 
 
 
-	   <div class="centercol">
+       <div class="centercol">
         
            <!-- START main table --> 
                 
 
-	                                                                       <h1><a id="main"></a>log4net Manual - Frequently Asked Questions</h1>
+                                                                           <h1><a id="main"></a>Apache log4net Frequently Asked Questions</h1>
     <div class="i1">
-                                    			<h2>Contents</h2>
-		<div class="i1">
-																			    <a href="#information">Information</a><br/>
+                                                <h2>Contents</h2>
+        <div class="i1">
+                                                                                <a href="#information">Information</a><br/>
     <div class="i1">
                                         <a href="#what-is-log4net">What is log4net?</a><br/>
     <div class="i1">
@@ -117,7 +122,7 @@ limitations under the License.
     <div class="i1">
                               </div>
                                           </div>
-																    <a href="#configuration">Configuration</a><br/>
+                                                                    <a href="#configuration">Configuration</a><br/>
     <div class="i1">
                                         <a href="#dynamic">How can I change log behavior at runtime?</a><br/>
     <div class="i1">
@@ -147,7 +152,7 @@ limitations under the License.
     <div class="i1">
                                                                       </div>
                                           </div>
-																    <a href="#implementing">Implementing Logging</a><br/>
+                                                                    <a href="#implementing">Implementing Logging</a><br/>
     <div class="i1">
                                         <a href="#naming">Are there any suggested ways for naming loggers?</a><br/>
     <div class="i1">
@@ -177,7 +182,7 @@ limitations under the License.
     <div class="i1">
                                                                       </div>
                                           </div>
-																    <a href="#customization">Customization</a><br/>
+                                                                    <a href="#customization">Customization</a><br/>
     <div class="i1">
                                         <a href="#custom-output">Can the log output format be customized?</a><br/>
     <div class="i1">
@@ -186,7 +191,7 @@ limitations under the License.
     <div class="i1">
                                                                                           </div>
                                           </div>
-																    <a href="#troubleshooting">Troubleshooting</a><br/>
+                                                                    <a href="#troubleshooting">Troubleshooting</a><br/>
     <div class="i1">
                                         <a href="#internalDebug">How do I enable log4net internal debugging?</a><br/>
     <div class="i1">
@@ -207,141 +212,141 @@ limitations under the License.
     <div class="i1">
                               </div>
                                           </div>
-																    <a href="#misc">Miscellaneous</a><br/>
+                                                                    <a href="#misc">Miscellaneous</a><br/>
     <div class="i1">
                                         <a href="#vsnet-add-reference">How do I make log4net appear in the Visual Studio Add References dialog?</a><br/>
     <div class="i1">
                               </div>
                                           </div>
-									</div>
-	                                                    <h2><a id="information"></a>Information</h2>
+                                    </div>
+                                                        <h2><a id="information"></a>Information</h2>
     <div class="i1">
                                         <h3><a id="what-is-log4net"></a>What is log4net?</h3>
     <div class="i1">
                                     <p>
-						log4net is a tool to help the programmer output log statements to a variety of 
-						output targets.
-					</p>
+                        log4net is a tool to help the programmer output log statements to a variety of 
+                        output targets.
+                    </p>
                                                 <p>
-						In case of problems with an application, it is helpful to enable logging so 
-						that the problem can be located. With log4net it is possible to enable logging at 
-						runtime without modifying the application binary. The log4net package is designed 
-						so that log statements can remain in <i>production</i> code without incurring a 
-						high performance cost. It follows that the speed of logging (or rather not 
-						logging) is crucial.
-					</p>
+                        In case of problems with an application, it is helpful to enable logging so 
+                        that the problem can be located. With log4net it is possible to enable logging at 
+                        runtime without modifying the application binary. The log4net package is designed 
+                        so that log statements can remain in <i>production</i> code without incurring a 
+                        high performance cost. It follows that the speed of logging (or rather not 
+                        logging) is crucial.
+                    </p>
                                                 <p>
-						At the same time, log output can be so voluminous that it quickly becomes 
-						overwhelming. One of the distinctive features of log4net (and common to all of
-						the log4x libraries) is the notion of <i>hierarchical 
-						loggers</i>. Using these loggers it is possible to selectively control 
-						which log statements are output at arbitrary granularity.
-					</p>
+                        At the same time, log output can be so voluminous that it quickly becomes 
+                        overwhelming. One of the distinctive features of log4net (and common to all of
+                        the log4x libraries) is the notion of <i>hierarchical 
+                        loggers</i>. Using these loggers it is possible to selectively control 
+                        which log statements are output at arbitrary granularity.
+                    </p>
                                                 <p>
-						log4net is designed with two distinct goals in mind: speed and flexibility. There 
-						is a tight balance between these two requirements.
-					</p>
+                        log4net is designed with two distinct goals in mind: speed and flexibility. There 
+                        is a tight balance between these two requirements.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="reliability"></a>Is log4net a reliable logging system?</h3>
     <div class="i1">
                                     <p>
-						No. log4net is not reliable. It is a best-effort and <em>fail-stop</em> logging system.
-					</p>
+                        No. log4net is not reliable. It is a best-effort and <em>fail-stop</em> logging system.
+                    </p>
                                                 <p>
-						By fail-stop, we mean that log4net will not throw unexpected exceptions at 
-						run-time potentially causing your application to crash. <b>If for any reason, log4net 
-						throws an uncaught exception</b> (except for <span class="code">ArgumentException</span> and 
-						<span class="code">ArgumentNullException</span> which may be thrown), <b>please send an email 
-						to the <a href="mailto:log4net-user@logging.apache.org">
-						log4net-user@logging.apache.org</a> mailing list</b>. Uncaught exceptions 
-						are handled as serious bugs requiring immediate attention.
-					</p>
+                        By fail-stop, we mean that log4net will not throw unexpected exceptions at 
+                        run-time potentially causing your application to crash. <b>If for any reason, log4net 
+                        throws an uncaught exception</b> (except for <span class="code">ArgumentException</span> and 
+                        <span class="code">ArgumentNullException</span> which may be thrown), <b>please send an email 
+                        to the <a href="mailto:log4net-user@logging.apache.org">
+                        log4net-user@logging.apache.org</a> mailing list</b>. Uncaught exceptions 
+                        are handled as serious bugs requiring immediate attention.
+                    </p>
                                                 <p>
-						Moreover, log4net will not revert to <span class="code">System.Console.Out</span>
-						or <span class="code">System.Console.Error</span> when its designated 
-						output stream is not opened, is not writable or becomes full. This avoids 
-						corrupting an otherwise working program by flooding the user's terminal because 
-						logging fails. However, log4net will output a single message to 
-						<span class="code">System.Console.Error</span> and <span>System.Diagnostics.Trace</span>
-						indicating that logging can not be performed.
-					</p>
+                        Moreover, log4net will not revert to <span class="code">System.Console.Out</span>
+                        or <span class="code">System.Console.Error</span> when its designated 
+                        output stream is not opened, is not writable or becomes full. This avoids 
+                        corrupting an otherwise working program by flooding the user's terminal because 
+                        logging fails. However, log4net will output a single message to 
+                        <span class="code">System.Console.Error</span> and <span>System.Diagnostics.Trace</span>
+                        indicating that logging can not be performed.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="prerequisites"></a>What are the prerequisites for log4net?</h3>
     <div class="i1">
                                     <p>
-						log4net runs on many different frameworks and each framework has its own requirements.
-						As a rule of thumb you will need an ECMA-335 compliant CLI runtime, for example, 
-						the Microsoft .NET runtime 1.0 (1.0.3705) or 1.1 (1.1.4322).
-					</p>
+                        log4net runs on many different frameworks and each framework has its own requirements.
+                        As a rule of thumb you will need an ECMA-335 compliant CLI runtime, for example, 
+                        the Microsoft .NET runtime 1.0 (1.0.3705) or 1.1 (1.1.4322).
+                    </p>
                                                 <p>
-						Not all frameworks are created equal and some features have been excluded from 
-						some of the builds. See the <a href="../framework-support.html">Framework Support</a> 
-						document for more information.
-					</p>
+                        Not all frameworks are created equal and some features have been excluded from 
+                        some of the builds. See the <a href="../framework-support.html">Framework Support</a> 
+                        document for more information.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="examples"></a>Is there example code for using log4net?</h3>
     <div class="i1">
                                     <p>
-						There is a directory containing examples in <span class="code">log4net\examples</span>. 
-						The examples are broken down by framework.
-					</p>
+                        There is a directory containing examples in <span class="code">log4net\examples</span>. 
+                        The examples are broken down by framework.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="features"></a>What are the features of log4net?</h3>
     <div class="i1">
                                     <ul>
-						<li>
-							log4net is optimized for speed.</li>
-						<li>
-							log4net is based on a named logger hierarchy.</li>
-						<li>
-							log4net is fail-stop but not reliable.</li>
-						<li>
-							log4net is thread-safe.</li>
-						<li>
-							log4net is not restricted to a predefined set of facilities.</li>
-						<li>
-							Logging behavior can be set at runtime using a configuration file. 
-							Configuration files are in XML format.</li>
-						<li>
-							log4net is designed to handle exceptions from the start.</li>
-						<li>
-							log4net can direct its output to many sinks including: a file, the console, the NT EventLog or even e-mail.</li>
-						<li>
-							log4net categorizes logging into levels: DEBUG, INFO, WARN, ERROR and FATAL.</li>
-						<li>
-							The format of the log output can be easily changed by implementing a new layout class.</li>
-						<li>
-							The target of the log output as well as the writing strategy can be altered by 
-							writing a new appender class.</li>
-						<li>
-							log4net supports multiple output appenders per logger.</li>
-					</ul>
+                        <li>
+                            log4net is optimized for speed.</li>
+                        <li>
+                            log4net is based on a named logger hierarchy.</li>
+                        <li>
+                            log4net is fail-stop but not reliable.</li>
+                        <li>
+                            log4net is thread-safe.</li>
+                        <li>
+                            log4net is not restricted to a predefined set of facilities.</li>
+                        <li>
+                            Logging behavior can be set at runtime using a configuration file. 
+                            Configuration files are in XML format.</li>
+                        <li>
+                            log4net is designed to handle exceptions from the start.</li>
+                        <li>
+                            log4net can direct its output to many sinks including: a file, the console, the NT EventLog or even e-mail.</li>
+                        <li>
+                            log4net categorizes logging into levels: DEBUG, INFO, WARN, ERROR and FATAL.</li>
+                        <li>
+                            The format of the log output can be easily changed by implementing a new layout class.</li>
+                        <li>
+                            The target of the log output as well as the writing strategy can be altered by 
+                            writing a new appender class.</li>
+                        <li>
+                            log4net supports multiple output appenders per logger.</li>
+                    </ul>
                                                 <p>
-						See the <a href="../features.html">features</a> overview document for more information on the features of log4net.
-					</p>
+                        See the <a href="../features.html">features</a> overview document for more information on the features of log4net.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="thread-safe"></a>Is log4net thread-safe?</h3>
     <div class="i1">
                                     <p>
-						Yes, log4net is thread-safe.
-					</p>
+                        Yes, log4net is thread-safe.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="output"></a>What does log output look like?</h3>
     <div class="i1">
                                     <p>
-						The log output can be customized in many ways. Moreover, one can completely 
-						override the output format by implementing one's own <span class="code">ILayout</span>
-					</p>
+                        The log output can be customized in many ways. Moreover, one can completely 
+                        override the output format by implementing one's own <span class="code">ILayout</span>
+                    </p>
                                                 <p>
-						Here is an example output using <span class="code">PatternLayout</span> with the conversion 
-						pattern <span class="code">%timestamp [%thread] %-5level %logger{2} %ndc - %message%newline</span>
-					</p>
+                        Here is an example output using <span class="code">PatternLayout</span> with the conversion 
+                        pattern <span class="code">%timestamp [%thread] %-5level %logger{2} %ndc - %message%newline</span>
+                    </p>
                                                 
     <div class="syntax"><pre class="code">
 176 [main] INFO  examples.Sort - Populating an array of 2 elements in reverse order.
@@ -357,109 +362,109 @@ limitations under the License.
 467 [main] INFO  examples.Sort - Exiting main method.</pre></div>
 
                                                 <p>
-						The first field is the number of milliseconds elapsed since the start of the 
-						program. The second field is the thread outputting the log statement. The third 
-						field is the level of the log statement. The fourth field is the rightmost 
-						two components of the name of the logger making the log request. The fifth field (just 
-						before the '-') is the <em>nested diagnostic context</em> (<span class="code">NDC</span>). Note the 
-						nested diagnostic context may be empty as in the first two statements. The text 
-						after the '-' is the message of the statement.
-					</p>
+                        The first field is the number of milliseconds elapsed since the start of the 
+                        program. The second field is the thread outputting the log statement. The third 
+                        field is the level of the log statement. The fourth field is the rightmost 
+                        two components of the name of the logger making the log request. The fifth field (just 
+                        before the '-') is the <em>nested diagnostic context</em> (<span class="code">NDC</span>). Note the 
+                        nested diagnostic context may be empty as in the first two statements. The text 
+                        after the '-' is the message of the statement.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="loggers"></a>What are Loggers?</h3>
     <div class="i1">
                                     <p>
-						The logger concept lies at the heart of log4net's configuration. Loggers are organized into a 
-						hierarchy and give the programmer <em>run-time</em> control on which logging statements 
-						are printed or not.
-					</p>
+                        The logger concept lies at the heart of log4net's configuration. Loggers are organized into a 
+                        hierarchy and give the programmer <em>run-time</em> control on which logging statements 
+                        are printed or not.
+                    </p>
                                                 <p>
-						Loggers are assigned levels through the configuration of log4net. A log statement is 
-						routed through to the appender depending on its level <em>and</em> its logger.
-					</p>
+                        Loggers are assigned levels through the configuration of log4net. A log statement is 
+                        routed through to the appender depending on its level <em>and</em> its logger.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="contributing"></a>Why should I donate my extensions to log4net back to the project?</h3>
     <div class="i1">
                                     <p>
-						Contrary to the GNU Public License (GPL) the Apache Software License does not 
-						make any claims over your extensions. By extensions, we mean totally new code 
-						that invokes existing log4net code. <em>You are free to do whatever you wish with 
-						your proprietary log4net extensions.</em> In particular, you may choose to 
-						never release your extensions to the wider public. For details see the
-						<a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.
-					</p>
+                        Contrary to the GNU Public License (GPL) the Apache Software License does not 
+                        make any claims over your extensions. By extensions, we mean totally new code 
+                        that invokes existing log4net code. <em>You are free to do whatever you wish with 
+                        your proprietary log4net extensions.</em> In particular, you may choose to 
+                        never release your extensions to the wider public. For details see the
+                        <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.
+                    </p>
                                                 <p>
-						We are very careful not to unnecessarily change the log4net client API so that newer log4net 
-						releases are backward compatible with previous versions. We are a lot less 
-						scrupulous with the internal log4net API. Thus, if your extension is designed to 
-						work with the internals of a specific log4net version, then when the next release
-						of log4net comes out, you will probably need to adapt your proprietary extensions to the 
-						new release. Thus, you will be forced to spend precious resources in order to 
-						keep up with log4net changes. This is commonly referred to as the "stupid-tax". 
-						By donating the code and making it part of the standard distribution, you save 
-						yourself the unnecessary maintenance work.
-					</p>
+                        We are very careful not to unnecessarily change the log4net client API so that newer log4net 
+                        releases are backward compatible with previous versions. We are a lot less 
+                        scrupulous with the internal log4net API. Thus, if your extension is designed to 
+                        work with the internals of a specific log4net version, then when the next release
+                        of log4net comes out, you will probably need to adapt your proprietary extensions to the 
+                        new release. Thus, you will be forced to spend precious resources in order to 
+                        keep up with log4net changes. This is commonly referred to as the "stupid-tax". 
+                        By donating the code and making it part of the standard distribution, you save 
+                        yourself the unnecessary maintenance work.
+                    </p>
                                                 <p>
-						If your extensions are useful then someone will eventually write an extension 
-						providing the same or very similar functionality. Your development effort will 
-						be wasted.
-					</p>
+                        If your extensions are useful then someone will eventually write an extension 
+                        providing the same or very similar functionality. Your development effort will 
+                        be wasted.
+                    </p>
                                                 <p>
-						Unless the proprietary log4net extension is business critical, there is little 
-						reason for not donating your extensions back to the project.
-					</p>
+                        Unless the proprietary log4net extension is business critical, there is little 
+                        reason for not donating your extensions back to the project.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="contributing-guidelines"></a>What should I keep in mind when contributing code?</h3>
     <div class="i1">
                                     <ol>
-						<li>
-							Stick to the existing indentation style even if you hate it.
-							<p>
-								Alternating between indentation styles makes it hard to understand the source 
-								code. Make it hard on yourself but easier on others.
-							</p>
-						</li>
-						<li>
-							<b>Thoroughly test your code.</b>
-							<p>
-								There is nothing more irritating than finding the bugs in debugging (i.e. logging) code.
-							</p>
-						</li>
-						<li>
-							Keep it simple, small and fast.
-							<p>
-								It's all about the application not about logging.
-							</p>
-						</li>
-						<li>
-							Did I mention sticking with the indentation style?</li>
-					</ol>
+                        <li>
+                            Stick to the existing indentation style even if you hate it.
+                            <p>
+                                Alternating between indentation styles makes it hard to understand the source 
+                                code. Make it hard on yourself but easier on others.
+                            </p>
+                        </li>
+                        <li>
+                            <b>Thoroughly test your code.</b>
+                            <p>
+                                There is nothing more irritating than finding the bugs in debugging (i.e. logging) code.
+                            </p>
+                        </li>
+                        <li>
+                            Keep it simple, small and fast.
+                            <p>
+                                It's all about the application not about logging.
+                            </p>
+                        </li>
+                        <li>
+                            Did I mention sticking with the indentation style?</li>
+                    </ol>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="bug-fixes"></a>How fast do bugs in log4net get fixed?</h3>
     <div class="i1">
                                     <p>
-						As fast as they get reported ;-)
-					</p>
+                        As fast as they get reported ;-)
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="history"></a>What is the history of log4net?</h3>
     <div class="i1">
                                     <p>
-						log4net is a port of the popular <a href="http://logging.apache.org/log4j/">log4j</a> logging library.
-						The initial port was done in June 2001, since then we have tried to remain in the
-						spirit of the original log4j. See the log4net <a href="../history.html">history</a> page for more details.
-					</p>
+                        log4net is a port of the popular <a href="http://logging.apache.org/log4j/">log4j</a> logging library.
+                        The initial port was done in June 2001, since then we have tried to remain in the
+                        spirit of the original log4j. See the log4net <a href="../history.html">history</a> page for more details.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="download"></a>Where can I find the latest distribution of log4net?</h3>
     <div class="i1">
                                     <p>
-						The log4net <a href="http://logging.apache.org/log4net/">home page</a> is a good place to start.
-					</p>
+                        The log4net <a href="http://logging.apache.org/log4net/">home page</a> is a good place to start.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                       </div>
@@ -468,28 +473,28 @@ limitations under the License.
                                         <h3><a id="dynamic"></a>How can I change log behavior at runtime?</h3>
     <div class="i1">
                                     <p>
-						Logging behavior can be set using configuration files which are parsed at runtime. 
-						Using configuration files the programmer can define loggers and set their 
-						levels.
-					</p>
+                        Logging behavior can be set using configuration files which are parsed at runtime. 
+                        Using configuration files the programmer can define loggers and set their 
+                        levels.
+                    </p>
                                                 <p>
-						Configuration files are specified in XML. See <span class="code">log4net.Config.XmlConfigurator</span>
-						for more details.
-					</p>
+                        Configuration files are specified in XML. See <span class="code">log4net.Config.XmlConfigurator</span>
+                        for more details.
+                    </p>
                                                 <p>
-						See the various <span class="code">log4net.Layout</span> and <span class="code">log4net.Appender</span>
-						components for specific configuration options.
-					</p>
+                        See the various <span class="code">log4net.Layout</span> and <span class="code">log4net.Appender</span>
+                        components for specific configuration options.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="runtime-disable"></a>How do I completely disable all logging at runtime?</h3>
     <div class="i1">
                                     <p>
-						Setting the <span class="code">Threshold</span> on the Hierarchy to Level OFF will disable all
-						logging from that Hierarchy. This can be done in the log4net configuration file
-						by setting the "threshold" attribute on the log4net configuration element to "OFF".
-						For example:
-					</p>
+                        Setting the <span class="code">Threshold</span> on the Hierarchy to Level OFF will disable all
+                        logging from that Hierarchy. This can be done in the log4net configuration file
+                        by setting the "threshold" attribute on the log4net configuration element to "OFF".
+                        For example:
+                    </p>
                                                 
     <div class="syntax"><pre class="code">
 &lt;log4net threshold=&quot;OFF&quot; /&gt;</pre></div>
@@ -499,104 +504,104 @@ limitations under the License.
                                                     <h3><a id="appender-options"></a>What are the configurable options for an appender?</h3>
     <div class="i1">
                                     <p>
-						log4net uses public properties to configure components such as
-						Appenders, Layouts, Loggers etc.
-					</p>
+                        log4net uses public properties to configure components such as
+                        Appenders, Layouts, Loggers etc.
+                    </p>
                                                 <p>
-						Thus, any writable public property in on the appender corresponds to a 
-						configurable option. For example, in <span class="code">RollingFileAppender</span> the 
-						<span class="code">public int MaxSizeRollBackups { set; }</span> property corresponds to 
-						the <span class="code">MaxSizeRollBackups</span> option.
-					</p>
+                        Thus, any writable public property in on the appender corresponds to a 
+                        configurable option. For example, in <span class="code">RollingFileAppender</span> the 
+                        <span class="code">public int MaxSizeRollBackups { set; }</span> property corresponds to 
+                        the <span class="code">MaxSizeRollBackups</span> option.
+                    </p>
                                                 <p>
-						Layouts options are also defined by their writable properties. Same goes for most 
-						other log4net components. 
-					</p>
+                        Layouts options are also defined by their writable properties. Same goes for most 
+                        other log4net components. 
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="appender-level"></a>Is it possible to direct log output to different appenders by level?</h3>
     <div class="i1">
                                     <p>
-						Yes it is. Setting the <span class="code">Threshold</span> option of any appender extending 
-						<span class="code">AppenderSkeleton</span>, (most log4net appenders extend 
-						<span class="code">AppenderSkeleton</span>) will filter out all log events 
-						with a <em>lower</em> level than the value of the threshold option.
-					</p>
+                        Yes it is. Setting the <span class="code">Threshold</span> option of any appender extending 
+                        <span class="code">AppenderSkeleton</span>, (most log4net appenders extend 
+                        <span class="code">AppenderSkeleton</span>) will filter out all log events 
+                        with a <em>lower</em> level than the value of the threshold option.
+                    </p>
                                                 <p>
-						For example, setting the threshold of an appender to DEBUG will also allow INFO, 
-						WARN, ERROR and FATAL messages to log along with DEBUG messages. (DEBUG is the 
-						lowest level). This is usually acceptable as there is little use for DEBUG 
-						messages without the surrounding INFO, WARN, ERROR and FATAL messages. 
-						Similarly, setting the threshold of an appender to ERROR will filter out DEBUG, 
-						INFO and WARN messages but not ERROR or FATAL messages.
-					</p>
+                        For example, setting the threshold of an appender to DEBUG will also allow INFO, 
+                        WARN, ERROR and FATAL messages to log along with DEBUG messages. (DEBUG is the 
+                        lowest level). This is usually acceptable as there is little use for DEBUG 
+                        messages without the surrounding INFO, WARN, ERROR and FATAL messages. 
+                        Similarly, setting the threshold of an appender to ERROR will filter out DEBUG, 
+                        INFO and WARN messages but not ERROR or FATAL messages.
+                    </p>
                                                 <p>
-						This policy usually best encapsulates what the user actually wants to do, as 
-						opposed to her mind-projected solution.
-					</p>
+                        This policy usually best encapsulates what the user actually wants to do, as 
+                        opposed to her mind-projected solution.
+                    </p>
                                                 <p>
-						If you must filter events by exact level match, then you can attach a 
-						<span class="code">LevelMatchFilter</span> to any appender to filter out logging 
-						events by exact level match.
-					</p>
+                        If you must filter events by exact level match, then you can attach a 
+                        <span class="code">LevelMatchFilter</span> to any appender to filter out logging 
+                        events by exact level match.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="config-reload"></a>Is there a way to get log4net to automatically reload a configuration file if it changes?</h3>
     <div class="i1">
                                     <p>
-						Yes. The <span class="code">XmlConfigurator</span> supports automatic 
-						reloading through the <span class="code">ConfigureAndWatch</span> APIs. See the API 
-						documentation for more details.
-					</p>
+                        Yes. The <span class="code">XmlConfigurator</span> supports automatic 
+                        reloading through the <span class="code">ConfigureAndWatch</span> APIs. See the API 
+                        documentation for more details.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="appender-assembly"></a>Can I load an appender from another assembly?</h3>
     <div class="i1">
                                     <p>
-						Yes. When specifying the type in the configuration file you can give the assembly
-						qualified name of the type. For example:
-					</p>
+                        Yes. When specifying the type in the configuration file you can give the assembly
+                        qualified name of the type. For example:
+                    </p>
                                                 
     <div class="syntax"><pre class="code">
 &lt;appender name=&quot;...&quot; type=&quot;MyNamespace.MyAppender, MyAssembly&quot;&gt;</pre></div>
 
                                                 <p>
-						The .NET runtime will try to locate the assembly called <i>MyAssembly</i>.
-						How .NET locates assemblies is beyond the scope of this FAQ.
-					</p>
+                        The .NET runtime will try to locate the assembly called <i>MyAssembly</i>.
+                        How .NET locates assemblies is beyond the scope of this FAQ.
+                    </p>
                                                 <p>
-						When loading an assembly from the GAC the fully qualified assembly name,
-						including the version, culture and public key must be specified. This is 
-						in the standard syntax supported by <span class="code">System.Type.GetType</span>.
-						See the next FAQ on how to get the version and public key for an assembly.
-					</p>
+                        When loading an assembly from the GAC the fully qualified assembly name,
+                        including the version, culture and public key must be specified. This is 
+                        in the standard syntax supported by <span class="code">System.Type.GetType</span>.
+                        See the next FAQ on how to get the version and public key for an assembly.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="assembly-public-key"></a>How do I get the Public Key for an assembly?</h3>
     <div class="i1">
                                     <p>
-						The fully qualified name for an assembly includes the version, culture and
-						public key. The public key is derived from the strong name used to identify
-						the publisher. When referencing an assembly from the GAC the fully qualified
-						name must be used. To get the version, culture and public key you can use a
-						tool like the excellent .NET Reflector from Lutz Roeder available from
-						<a href="http://www.aisto.com/roeder/dotnet">http://www.aisto.com/roeder/dotnet</a>.
-					</p>
+                        The fully qualified name for an assembly includes the version, culture and
+                        public key. The public key is derived from the strong name used to identify
+                        the publisher. When referencing an assembly from the GAC the fully qualified
+                        name must be used. To get the version, culture and public key you can use a
+                        tool like the excellent .NET Reflector from Lutz Roeder available from
+                        <a href="http://www.aisto.com/roeder/dotnet">http://www.aisto.com/roeder/dotnet</a>.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="layout-header-xml-newlines"></a>How do I insert newlines into the layout header?</h3>
     <div class="i1">
                                     <p>
-						Newlines in the config file need to be escaped using an XML numeric character reference.
-						The sequence that represents a CR LF is &amp;#13; &amp;#10;. The following example adds
-						a header and footer to the output each followed by a newline.
-					</p>
+                        Newlines in the config file need to be escaped using an XML numeric character reference.
+                        The sequence that represents a CR LF is &amp;#13; &amp;#10;. The following example adds
+                        a header and footer to the output each followed by a newline.
+                    </p>
                                                 
     <div class="syntax"><pre class="code">
 &lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
-	&lt;header value=&quot;[Header]&amp;#13;&amp;#10;&quot; /&gt;
-	&lt;footer value=&quot;[Footer]&amp;#13;&amp;#10;&quot; /&gt;
-	&lt;conversionPattern value=&quot;%date [%thread] %-5level %logger - %message%newline&quot; /&gt;
+    &lt;header value=&quot;[Header]&amp;#13;&amp;#10;&quot; /&gt;
+    &lt;footer value=&quot;[Footer]&amp;#13;&amp;#10;&quot; /&gt;
+    &lt;conversionPattern value=&quot;%date [%thread] %-5level %logger - %message%newline&quot; /&gt;
 &lt;/layout&gt;</pre></div>
 
                       </div>
@@ -604,24 +609,24 @@ limitations under the License.
                                                     <h3><a id="pattern-string"></a>How do I use a pattern to set the value of a string property?</h3>
     <div class="i1">
                                     <p>
-						Log4net supports a pattern syntax for setting string properties similar to the 
-						<span class="code">PatternLayout</span> used to format the output messages.
-						This pattern syntax can be used by specifying <span class="code">type="log4net.Util.PatternString"</span>
-						on the string property in the config file. This tells the config parser to pass the
-						value to the <span class="code">PatternString</span> type before converting the result
-						to a string. For details on the patterns supported see the <a href="sdk/log4net.Util.PatternString.html">
-						PatternString SDK Reference</a>.
-					</p>
+                        Log4net supports a pattern syntax for setting string properties similar to the 
+                        <span class="code">PatternLayout</span> used to format the output messages.
+                        This pattern syntax can be used by specifying <span class="code">type="log4net.Util.PatternString"</span>
+                        on the string property in the config file. This tells the config parser to pass the
+                        value to the <span class="code">PatternString</span> type before converting the result
+                        to a string. For details on the patterns supported see the <a href="sdk/log4net.Util.PatternString.html">
+                        PatternString SDK Reference</a>.
+                    </p>
                                                 <p>
-						The following example sets the file name for a <span class="code">FileAppender</span> to include the 
-						current process id by specifying the <span class="code">%processid</span> pattern in the
-						<span class="code">File</span> property.
-					</p>
+                        The following example sets the file name for a <span class="code">FileAppender</span> to include the 
+                        current process id by specifying the <span class="code">%processid</span> pattern in the
+                        <span class="code">File</span> property.
+                    </p>
                                                 
     <div class="syntax"><pre class="code">
 &lt;appender name=&quot;LogFileAppender&quot; type=&quot;log4net.Appender.FileAppender&quot;&gt;
-	&lt;file type=&quot;log4net.Util.PatternString&quot; value=&quot;log-file-[%processid].txt&quot; /&gt;
-	&lt;layout type=&quot;log4net.Layout.PatternLayout&quot; value=&quot;%date [%thread] %-5level %logger - %message%newline&quot; /&gt;
+    &lt;file type=&quot;log4net.Util.PatternString&quot; value=&quot;log-file-[%processid].txt&quot; /&gt;
+    &lt;layout type=&quot;log4net.Layout.PatternLayout&quot; value=&quot;%date [%thread] %-5level %logger - %message%newline&quot; /&gt;
 &lt;/appender&gt;</pre></div>
 
                       </div>
@@ -632,271 +637,271 @@ limitations under the License.
                                         <h3><a id="naming"></a>Are there any suggested ways for naming loggers?</h3>
     <div class="i1">
                                     <p>
-						Yes, there are.
-					</p>
+                        Yes, there are.
+                    </p>
                                                 <p>
-						You can name logging loggers by <strong>locality</strong>. It turns out that 
-						instantiating a logger in each class, with the logger name equal to the 
-						fully-qualified name of the class, is a useful and straightforward approach of 
-						defining loggers. This approach has many benefits:
-					</p>
+                        You can name logging loggers by <strong>locality</strong>. It turns out that 
+                        instantiating a logger in each class, with the logger name equal to the 
+                        fully-qualified name of the class, is a useful and straightforward approach of 
+                        defining loggers. This approach has many benefits:
+                    </p>
                                                 <ul>
-						<li>
-							It is very simple to implement.</li>
-						<li>
-							It is very simple to explain to new developers.</li>
-						<li>
-							It automatically mirrors your application's own modular design.</li>
-						<li>
-							It can be further refined at will.</li>
-						<li>
-							Printing the logger automatically gives information on the locality of the 
-							log statement.</li>
-					</ul>
+                        <li>
+                            It is very simple to implement.</li>
+                        <li>
+                            It is very simple to explain to new developers.</li>
+                        <li>
+                            It automatically mirrors your application's own modular design.</li>
+                        <li>
+                            It can be further refined at will.</li>
+                        <li>
+                            Printing the logger automatically gives information on the locality of the 
+                            log statement.</li>
+                    </ul>
                                                 <p>
-						However, this is not the only way for naming loggers. A common alternative 
-						is to name loggers by <strong>functional areas</strong>. For example, the 
-						"database" logger, "remoting" logger, "security" logger, or the "XML" 
-						logger.
-					</p>
+                        However, this is not the only way for naming loggers. A common alternative 
+                        is to name loggers by <strong>functional areas</strong>. For example, the 
+                        "database" logger, "remoting" logger, "security" logger, or the "XML" 
+                        logger.
+                    </p>
                                                 <p>
-						You may choose to name loggers by functionality and subcategorize by 
-						locality, as in "DATABASE.MyApp.MyClass" or 
-						"DATABASE.MyApp.MyModule.MyOtherClass".
-					</p>
+                        You may choose to name loggers by functionality and subcategorize by 
+                        locality, as in "DATABASE.MyApp.MyClass" or 
+                        "DATABASE.MyApp.MyModule.MyOtherClass".
+                    </p>
                                                 <p>
-						<em>You are totally free in choosing the names of your loggers.</em> The 
-						log4net package merely allows you to manage your names in a hierarchy. However, 
-						it is your responsibility to define this hierarchy.
-					</p>
+                        <em>You are totally free in choosing the names of your loggers.</em> The 
+                        log4net package merely allows you to manage your names in a hierarchy. However, 
+                        it is your responsibility to define this hierarchy.
+                    </p>
                                                 <p>
-						<b>Note:</b> by naming loggers by locality one tends to name things by 
-						functionality, since in most cases the locality relates closely to 
-						functionality.
-					</p>
+                        <b>Note:</b> by naming loggers by locality one tends to name things by 
+                        functionality, since in most cases the locality relates closely to 
+                        functionality.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="static-class-name"></a>How do I get the fully-qualified name of a class in a static block?</h3>
     <div class="i1">
                                     <p>
-						You can easily retrieve the fully-qualified name of a class in a static block 
-						for class <span class="code">X</span>, with the statement <span class="code">typeof(X).Name</span>. 
-						Note that <span class="code">X</span> is the class name and span an instance.
-						However because the <span class="code">LogManager.GetLogger</span> method is overloaded
-						to take an instance of <span class="code">Type</span> as well as <span class="code">string</span>
-						usually only the type of the class is required.
-					</p>
+                        You can easily retrieve the fully-qualified name of a class in a static block 
+                        for class <span class="code">X</span>, with the statement <span class="code">typeof(X).Name</span>. 
+                        Note that <span class="code">X</span> is the class name and span an instance.
+                        However because the <span class="code">LogManager.GetLogger</span> method is overloaded
+                        to take an instance of <span class="code">Type</span> as well as <span class="code">string</span>
+                        usually only the type of the class is required.
+                    </p>
                                                 <p>
-						Here is the suggested usage template:
-					</p>
+                        Here is the suggested usage template:
+                    </p>
                                                 
     <div class="syntax"><pre class="code">
 public class Foo
 {
-	private static readonly ILog log = LogManager.GetLogger(typeof(Foo));
-	... other code
+    private static readonly ILog log = LogManager.GetLogger(typeof(Foo));
+    ... other code
 }</pre></div>
 
                                                 <p>
-						An equivalent and more portable solution, though slightly longer, is to use the declaring type 
-						of the static constructor.
-					</p>
+                        An equivalent and more portable solution, though slightly longer, is to use the declaring type 
+                        of the static constructor.
+                    </p>
                                                 
     <div class="syntax"><pre class="code">
 public class Foo
 {
-	private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-	... other code
+    private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    ... other code
 }</pre></div>
 
                                                 <p>
-						<b>Note:</b> the .NET Compact Framework 1.0 does not support <span class="code">System.Reflection.MethodBase.GetCurrentMethod()</span>.
-					</p>
+                        <b>Note:</b> the .NET Compact Framework 1.0 does not support <span class="code">System.Reflection.MethodBase.GetCurrentMethod()</span>.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="perf-not-logging"></a>What is the fastest way of (not) logging?</h3>
     <div class="i1">
                                     <p>
-						For some logger <span class="code">log</span>, writing,
-					</p>
+                        For some logger <span class="code">log</span>, writing,
+                    </p>
                                                 
     <div class="syntax"><pre class="code">
 log.Debug(&quot;Entry number: &quot; + i + &quot; is &quot; + entry[i]);</pre></div>
 
                                                 <p>
-						incurs the cost of constructing the message parameter, that is converting both 
-						integer <span class="code">i</span> and <span class="code">entry[i]</span> to 
-						a string, and concatenating intermediate strings. This, regardless of whether 
-						the message will be logged or not.
-					</p>
+                        incurs the cost of constructing the message parameter, that is converting both 
+                        integer <span class="code">i</span> and <span class="code">entry[i]</span> to 
+                        a string, and concatenating intermediate strings. This, regardless of whether 
+                        the message will be logged or not.
+                    </p>
                                                 <p>
-						If you are worried about speed, then write
-					</p>
+                        If you are worried about speed, then write
+                    </p>
                                                 
     <div class="syntax"><pre class="code">
 if(log.IsDebugEnabled) 
 {
-	log.Debug(&quot;Entry number: &quot; + i + &quot; is &quot; + entry[i]);
+    log.Debug(&quot;Entry number: &quot; + i + &quot; is &quot; + entry[i]);
 }</pre></div>
 
                                                 <p>
-						This way you will not incur the cost of parameter construction if debugging is 
-						disabled for logger <span class="code">log</span>. On the other hand, if the logger is 
-						debug enabled, you will incur the cost of evaluating whether the logger is 
-						enabled or not, twice: once in <span class="code">IsDebugEnabled</span> and once in <span class="code">Debug</span>. 
-						This is an insignificant overhead since evaluating a logger takes less than 
-						1% of the time it takes to actually log a statement.
-					</p>
+                        This way you will not incur the cost of parameter construction if debugging is 
+                        disabled for logger <span class="code">log</span>. On the other hand, if the logger is 
+                        debug enabled, you will incur the cost of evaluating whether the logger is 
+                        enabled or not, twice: once in <span class="code">IsDebugEnabled</span> and once in <span class="code">Debug</span>. 
+                        This is an insignificant overhead since evaluating a logger takes less than 
+                        1% of the time it takes to actually log a statement.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="perf-not-logging2"></a>What is REALLY the FASTEST way of (not) logging?</h3>
     <div class="i1">
                                     <p>
-						So you don't think that the previous FAQ is really the fastest way
-						of not logging? Well there is a faster way but it does have some
-						drawbacks. Starting from: 
-					</p>
+                        So you don't think that the previous FAQ is really the fastest way
+                        of not logging? Well there is a faster way but it does have some
+                        drawbacks. Starting from: 
+                    </p>
                                                 
     <div class="syntax"><pre class="code">
 if(log.IsDebugEnabled) 
 {
-	log.Debug(&quot;Entry number: &quot; + i + &quot; is &quot; + entry[i]);
+    log.Debug(&quot;Entry number: &quot; + i + &quot; is &quot; + entry[i]);
 }</pre></div>
 
                                                 <p>
-						It is possible to further eliminate the calls to <span class="code">IsDebugEnabled</span>
-						so that the call is only made once per logger. If you are using one logger 
-						for each class then you can store the enabled state for the logger in a static
-						variable in the class and then test against this variable:
-					</p>
+                        It is possible to further eliminate the calls to <span class="code">IsDebugEnabled</span>
+                        so that the call is only made once per logger. If you are using one logger 
+                        for each class then you can store the enabled state for the logger in a static
+                        variable in the class and then test against this variable:
+                    </p>
                                                 
     <div class="syntax"><pre class="code">
 public class FastLogger
 {
-	private static readonly ILog log = LogManager.GetLogger(typeof(FastLogger));
-	private static readonly bool isDebugEnabled = log.IsDebugEnabled;
+    private static readonly ILog log = LogManager.GetLogger(typeof(FastLogger));
+    private static readonly bool isDebugEnabled = log.IsDebugEnabled;
 
-	public void MyMethod()
-	{
-		if(isDebugEnabled) 
-		{
-			log.Debug(&quot;Entry number: &quot; + i + &quot; is &quot; + entry[i]);
-		}
-	}
+    public void MyMethod()
+    {
+        if(isDebugEnabled) 
+        {
+            log.Debug(&quot;Entry number: &quot; + i + &quot; is &quot; + entry[i]);
+        }
+    }
 }</pre></div>
 
                                                 <p>
-						So why exactly is this faster? Well to start with the <span class="code">IsDebugEnabled</span>
-						is not called for each log statement, it is called once per logger. Furthermore as the
-						<span class="code">isDebugEnabled</span> variable is <span class="code">private static readonly</span>
-						the JIT compiler can at <em>run-time</em> optimize out the <span class="code">if</span> test altogether. 
-						This means that at runtime the JIT compiler won't even compile the logging statements into native code, i.e.
-						all the logging just disappears.
-					</p>
+                        So why exactly is this faster? Well to start with the <span class="code">IsDebugEnabled</span>
+                        is not called for each log statement, it is called once per logger. Furthermore as the
+                        <span class="code">isDebugEnabled</span> variable is <span class="code">private static readonly</span>
+                        the JIT compiler can at <em>run-time</em> optimize out the <span class="code">if</span> test altogether. 
+                        This means that at runtime the JIT compiler won't even compile the logging statements into native code, i.e.
+                        all the logging just disappears.
+                    </p>
                                                 <p>
-						So what is the downside to using this? Well one of the clever features of log4net is that
-						you can change the logging configuration while your program is running. If you need to 
-						investigate an issue in your application, you don't have to stop the application, setup the
-						logging and restart the application, you can change the logging configuration and the
-						log4net will reload it (see <span class="code">XmlConfigurator.ConfigureAndWatch</span> APIs for more 
-						information). However if the JIT has compiled out all of the logging statements
-						then they are gone and you can't get them back by reloading the configuration file. Effectively
-						this means that the logging configuration can only be set when the application loads and
-						it cannot be changed at runtime. It is up to you to decide if you need ultimate speed or need
-						to be able to reload the logging configuration while the application is running.
-					</p>
+                        So what is the downside to using this? Well one of the clever features of log4net is that
+                        you can change the logging configuration while your program is running. If you need to 
+                        investigate an issue in your application, you don't have to stop the application, setup the
+                        logging and restart the application, you can change the logging configuration and the
+                        log4net will reload it (see <span class="code">XmlConfigurator.ConfigureAndWatch</span> APIs for more 
+                        information). However if the JIT has compiled out all of the logging statements
+                        then they are gone and you can't get them back by reloading the configuration file. Effectively
+                        this means that the logging configuration can only be set when the application loads and
+                        it cannot be changed at runtime. It is up to you to decide if you need ultimate speed or need
+                        to be able to reload the logging configuration while the application is running.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="multiple-files"></a>Can the outputs of multiple client request go to different log files?</h3>
     <div class="i1">
                                     <p>
-						Many developers are confronted with the problem of distinguishing the log 
-						output originating from the same class but different client requests. They come 
-						up with ingenious mechanisms to fan out the log output to different files. In 
-						most cases, this is not the right approach.
-					</p>
+                        Many developers are confronted with the problem of distinguishing the log 
+                        output originating from the same class but different client requests. They come 
+                        up with ingenious mechanisms to fan out the log output to different files. In 
+                        most cases, this is not the right approach.
+                    </p>
                                                 <p>
-						It is simpler to use a context property or stack (<span class="code">ThreadContext</span>). 
-						Typically, one would <span class="code">ThreadContext.Properties["ID"] = "XXX"</span>
-						client specific information, such as the client's hostname, ID or any other 
-						distinguishing information when starting to handle the client's request. 
-						Thereafter, log output will automatically include the context data
-						so that you can distinguish logs from different client requests even if they 
-						are output to the same file.
-					</p>
+                        It is simpler to use a context property or stack (<span class="code">ThreadContext</span>). 
+                        Typically, one would <span class="code">ThreadContext.Properties["ID"] = "XXX"</span>
+                        client specific information, such as the client's hostname, ID or any other 
+                        distinguishing information when starting to handle the client's request. 
+                        Thereafter, log output will automatically include the context data
+                        so that you can distinguish logs from different client requests even if they 
+                        are output to the same file.
+                    </p>
                                                 <p>
-						See the <span class="code">ThreadContext</span> and the <span class="code">PatternLayout</span> classes for more 
-						information.
-					</p>
+                        See the <span class="code">ThreadContext</span> and the <span class="code">PatternLayout</span> classes for more 
+                        information.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="remove-logger"></a>Logger instances seem to be create only. Why isn't there a method to remove logger instances?</h3>
     <div class="i1">
                                     <p>
-						It is quite nontrivial to define the semantics of a "removed" logger which is 
-						still referenced by the user.
-					</p>
+                        It is quite nontrivial to define the semantics of a "removed" logger which is 
+                        still referenced by the user.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="single-file"></a>How do I get multiple process to log to the same file?</h3>
     <div class="i1">
                                     <p>
-						By default the <span class="code">FileAppender</span> holds an exclusive write 
-						lock on the log file while it is logging. This prevents other processes from 
-						writing to the file. The <span class="code">FileAppender</span> can be configured
-						to use a different locking model, <span class="code">MinimalLock</span>, that
-						only acquires the write lock while a log is being written. This allows multiple
-						processes to interleave writes to the same file, albeit with a loss in performance.
-						See the <a href="config-examples.html#fileappender">FileAppender config examples</a>
-						for an example <span class="code">MinimalLock</span> configuration.
-					</p>
+                        By default the <span class="code">FileAppender</span> holds an exclusive write 
+                        lock on the log file while it is logging. This prevents other processes from 
+                        writing to the file. The <span class="code">FileAppender</span> can be configured
+                        to use a different locking model, <span class="code">MinimalLock</span>, that
+                        only acquires the write lock while a log is being written. This allows multiple
+                        processes to interleave writes to the same file, albeit with a loss in performance.
+                        See the <a href="config-examples.html#fileappender">FileAppender config examples</a>
+                        for an example <span class="code">MinimalLock</span> configuration.
+                    </p>
                                                 <p>
-						While the <span class="code">MinimalLock</span> model may be used to interleave
-						writes to a single file it may not be the optimal solution, especially when
-						logging from multiple machines. Alternatively you may have one or more processes
-						log to <span class="code">RemotingAppenders</span>. 
-						Using the <span class="code">RemoteLoggingServerPlugin</span> (or 
-						<span class="code">IRemoteLoggingSink</span>) a process can receive all the events and 
-						log them to a single log file.
-					</p>
+                        While the <span class="code">MinimalLock</span> model may be used to interleave
+                        writes to a single file it may not be the optimal solution, especially when
+                        logging from multiple machines. Alternatively you may have one or more processes
+                        log to <span class="code">RemotingAppenders</span>. 
+                        Using the <span class="code">RemoteLoggingServerPlugin</span> (or 
+                        <span class="code">IRemoteLoggingSink</span>) a process can receive all the events and 
+                        log them to a single log file.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="distributed"></a>If I have many processes across multiple hosts (possibly across multiple time zones) logging to the same file using the RemotingAppender, what happens to timestamps?</h3>
     <div class="i1">
                                     <p>
-						The timestamp is created when the logging event is created. That is so say, 
-						when the <span class="code">Debug</span>, <span class="code">Info</span>, 
-						<span class="code">Warn</span>, <span class="code">Error</span>
-						or <span class="code">Fatal</span> method is invoked. This is unaffected by the time at 
-						which they may arrive at a remote server. Since the timestamps are 
-						transmitted in UTC format by the <span class="code">RemotingAppender</span>, 
-						they all appear in the same time zone as 
-						the host creating the logfile. Since the clocks of various machines may not be 
-						synchronized, this may account for time interval inconsistencies between events 
-						generated on different hosts.
-					</p>
+                        The timestamp is created when the logging event is created. That is so say, 
+                        when the <span class="code">Debug</span>, <span class="code">Info</span>, 
+                        <span class="code">Warn</span>, <span class="code">Error</span>
+                        or <span class="code">Fatal</span> method is invoked. This is unaffected by the time at 
+                        which they may arrive at a remote server. Since the timestamps are 
+                        transmitted in UTC format by the <span class="code">RemotingAppender</span>, 
+                        they all appear in the same time zone as 
+                        the host creating the logfile. Since the clocks of various machines may not be 
+                        synchronized, this may account for time interval inconsistencies between events 
+                        generated on different hosts.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="first-log"></a>When should I log my first message?</h3>
     <div class="i1">
                                     <p>
-						The simple answer is as soon as possible. The long answer is more complex.
-					</p>
+                        The simple answer is as soon as possible. The long answer is more complex.
+                    </p>
                                                 <p>
-						If you are configuring log4net programmatically, i.e. by calling the 
-						<span class="code">XmlConfigurator.Configure</span> method then you should do so
-						before you begin logging and it is reasonable to do this very soon after application
-						start.
-					</p>
+                        If you are configuring log4net programmatically, i.e. by calling the 
+                        <span class="code">XmlConfigurator.Configure</span> method then you should do so
+                        before you begin logging and it is reasonable to do this very soon after application
+                        start.
+                    </p>
                                                 <p>
-						If you are configuring log4net by specifying assembly level attributes on 
-						your assembly then the configuration will be loaded once the first call to
-						the <span class="code">LogManager.GetLogger</span> is made. It is necessary
-						that the first call to <span class="code">LogManager.GetLogger</span> made
-						during the process (or AppDomain) is made from the assembly that has the
-						configuration attributes. Log4net will look only once and only on the first 
-						calling assembly for the configuration attributes.
-					</p>
+                        If you are configuring log4net by specifying assembly level attributes on 
+                        your assembly then the configuration will be loaded once the first call to
+                        the <span class="code">LogManager.GetLogger</span> is made. It is necessary
+                        that the first call to <span class="code">LogManager.GetLogger</span> made
+                        during the process (or AppDomain) is made from the assembly that has the
+                        configuration attributes. Log4net will look only once and only on the first 
+                        calling assembly for the configuration attributes.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                       </div>
@@ -905,38 +910,38 @@ public class FastLogger
                                         <h3><a id="custom-output"></a>Can the log output format be customized?</h3>
     <div class="i1">
                                     <p>
-						Yes. You can implement the <span class="code">log4net.Layout.ILayout</span> 
-						interface to create you own customized log format, or you can extend the 
-						<span class="code">LayoutSkeleton</span> class which provides a default
-						implementation of the <span class="code">ILayout</span> interface.
-						Appenders can be parameterized to use the layout of your choice.
-					</p>
+                        Yes. You can implement the <span class="code">log4net.Layout.ILayout</span> 
+                        interface to create you own customized log format, or you can extend the 
+                        <span class="code">LayoutSkeleton</span> class which provides a default
+                        implementation of the <span class="code">ILayout</span> interface.
+                        Appenders can be parameterized to use the layout of your choice.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="custom-appender"></a>Can I write a custom appender?</h3>
     <div class="i1">
                                     <p>
-						Yes. You can implement the <span class="code">log4net.Appender.IAppender</span> 
-						interface to create you own customized appender. We recommend that you extend the
-						<span class="code">log4net.Appender.AppenderSkeleton</span> class rather than
-						starting from scratch. You should implement your custom code in a assembly
-						separate from the log4net assembly. To get started it is worth looking at the
-						source of the <span class="code">log4net.Appender.TraceAppender</span> as an
-						example of the minimum amount of code required to get an appender working.
-					</p>
+                        Yes. You can implement the <span class="code">log4net.Appender.IAppender</span> 
+                        interface to create you own customized appender. We recommend that you extend the
+                        <span class="code">log4net.Appender.AppenderSkeleton</span> class rather than
+                        starting from scratch. You should implement your custom code in a assembly
+                        separate from the log4net assembly. To get started it is worth looking at the
+                        source of the <span class="code">log4net.Appender.TraceAppender</span> as an
+                        example of the minimum amount of code required to get an appender working.
+                    </p>
                                                 <p>
-						To configure log4net to use your custom appender you need to specify the
-						assembly qualified name of the appender type in the config file. For
-						example:
-					</p>
+                        To configure log4net to use your custom appender you need to specify the
+                        assembly qualified name of the appender type in the config file. For
+                        example:
+                    </p>
                                                 
     <div class="syntax"><pre class="code">
 &lt;appender name=&quot;...&quot; type=&quot;MyNamespace.MyAppender, MyAssembly&quot;&gt;</pre></div>
 
                                                 <p>
-						The .NET runtime will try to locate the assembly called <i>MyAssembly</i>.
-						How .NET locates assemblies is beyond the scope of this FAQ.
-					</p>
+                        The .NET runtime will try to locate the assembly called <i>MyAssembly</i>.
+                        How .NET locates assemblies is beyond the scope of this FAQ.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                       </div>
@@ -945,178 +950,178 @@ public class FastLogger
                                         <h3><a id="internalDebug"></a>How do I enable log4net internal debugging?</h3>
     <div class="i1">
                                     <p>
-						There are 2 different ways to enable internal debugging in log4net.
-						These are listed below. The preferred method is to specify
-						the <span class="code">log4net.Internal.Debug</span> option in the application's
-						config file.
-					</p>
+                        There are 2 different ways to enable internal debugging in log4net.
+                        These are listed below. The preferred method is to specify
+                        the <span class="code">log4net.Internal.Debug</span> option in the application's
+                        config file.
+                    </p>
                                                 <ul>
-						<li>
-							<p>
-								Internal debugging can also be enabled by setting a value in the application's
-								configuration file (not the log4net configuration file, unless the log4net config
-								data is embedded in the application's config file). The <span class="code">log4net.Internal.Debug</span>
-								application setting must be set to the value <span class="code">true</span>.
-								For example:
-							</p>
-							<div class="syntax"><pre class="code">
+                        <li>
+                            <p>
+                                Internal debugging can also be enabled by setting a value in the application's
+                                configuration file (not the log4net configuration file, unless the log4net config
+                                data is embedded in the application's config file). The <span class="code">log4net.Internal.Debug</span>
+                                application setting must be set to the value <span class="code">true</span>.
+                                For example:
+                            </p>
+                            <div class="syntax"><pre class="code">
 &lt;?xml version="1.0" encoding="utf-8" ?&gt;
 &lt;configuration&gt;
-	&lt;appSettings&gt;
-		&lt;add key="log4net.Internal.Debug" value="true"/&gt;
-	&lt;/appSettings&gt;
+    &lt;appSettings&gt;
+        &lt;add key="log4net.Internal.Debug" value="true"/&gt;
+    &lt;/appSettings&gt;
 &lt;/configuration&gt;</pre></div>
-							<p>
-								This setting is read immediately on startup an will cause all internal
-								debugging messages to be emitted.
-							</p>
-						</li>
-						<li>
-							<p>
-								To enable log4net's internal debug programmatically you need
-								to set the <span class="code">log4net.Util.LogLog.InternalDebugging</span>
-								property to <span class="code">true</span>. Obviously the sooner this
-								is set the more debug will be produced.
-							</p>
-						</li>
-					</ul>
+                            <p>
+                                This setting is read immediately on startup an will cause all internal
+                                debugging messages to be emitted.
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                To enable log4net's internal debug programmatically you need
+                                to set the <span class="code">log4net.Util.LogLog.InternalDebugging</span>
+                                property to <span class="code">true</span>. Obviously the sooner this
+                                is set the more debug will be produced.
+                            </p>
+                        </li>
+                    </ul>
                                                 <p>
-						Internal debugging messages are written to the console and to the 
-						<span class="code">System.Diagnostics.Trace</span>
-						system. If the application does not have a console the messages logged
-						there will be lost. Note that an application can redirect the console
-						stream by setting the <span class="code">System.Console.Out</span>. The
-						Trace system will by default send the message to an attached debugger
-						(where the messages will appear in the output window). If the process
-						does not have a debugger attached then the messages are sent to the 
-						system debugger. A utility like DebugView from 
-						<a href="http://www.sysinternals.com">http://www.sysinternals.com</a>
-						may be used to capture these messages.
-					</p>
+                        Internal debugging messages are written to the console and to the 
+                        <span class="code">System.Diagnostics.Trace</span>
+                        system. If the application does not have a console the messages logged
+                        there will be lost. Note that an application can redirect the console
+                        stream by setting the <span class="code">System.Console.Out</span>. The
+                        Trace system will by default send the message to an attached debugger
+                        (where the messages will appear in the output window). If the process
+                        does not have a debugger attached then the messages are sent to the 
+                        system debugger. A utility like DebugView from 
+                        <a href="http://www.sysinternals.com">http://www.sysinternals.com</a>
+                        may be used to capture these messages.
+                    </p>
                                                 <p>
-						As log4net internal debug messages are written to the <span class="code">System.Diagnostics.Trace</span>
-						system it is possible to redirect those messages to a local file. You can define
-						a trace listener by adding the following to your application's .config file:
-					</p>
+                        As log4net internal debug messages are written to the <span class="code">System.Diagnostics.Trace</span>
+                        system it is possible to redirect those messages to a local file. You can define
+                        a trace listener by adding the following to your application's .config file:
+                    </p>
                                                 <div class="syntax"><pre class="code">
 &lt;configuration&gt;
-	...
-	
-	&lt;system.diagnostics&gt;
-		&lt;trace autoflush="true"&gt;
-			&lt;listeners&gt;
-				&lt;add 
-					name="textWriterTraceListener" 
-					type="System.Diagnostics.TextWriterTraceListener" 
-					initializeData="C:\tmp\log4net.txt" /&gt;
-			&lt;/listeners&gt;
-		&lt;/trace&gt;
-	&lt;/system.diagnostics&gt;
+    ...
+    
+    &lt;system.diagnostics&gt;
+        &lt;trace autoflush="true"&gt;
+            &lt;listeners&gt;
+                &lt;add 
+                    name="textWriterTraceListener" 
+                    type="System.Diagnostics.TextWriterTraceListener" 
+                    initializeData="C:\tmp\log4net.txt" /&gt;
+            &lt;/listeners&gt;
+        &lt;/trace&gt;
+    &lt;/system.diagnostics&gt;
 
-	...
+    ...
 &lt;/configuration&gt;</pre></div>
                                                 <p>
-						Make sure that the process running your application has permission 
-						to write to this file.
-					</p>
+                        Make sure that the process running your application has permission 
+                        to write to this file.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="trouble-EventLog"></a>Why doesn't the EventLogAppender work?</h3>
     <div class="i1">
                                     <p>
-						If you are not getting events delivered to the event log this usually indicates 
-						a permissions problem. Basically if the event log does not exist the EventLogAppender 
-						tries to create it, but you need local administrator permissions to create event logs 
-						(just to write into the right bit of the registry). You don't need administrator 
-						permissions to log to an existing event log, but it must exist. If you are using the 
-						event log from a web application or service using the event log can be a little tricky. 
-					</p>
+                        If you are not getting events delivered to the event log this usually indicates 
+                        a permissions problem. Basically if the event log does not exist the EventLogAppender 
+                        tries to create it, but you need local administrator permissions to create event logs 
+                        (just to write into the right bit of the registry). You don't need administrator 
+                        permissions to log to an existing event log, but it must exist. If you are using the 
+                        event log from a web application or service using the event log can be a little tricky. 
+                    </p>
                                                 <p>
-						A web application will run as the user account ASPNET. This account deliberately has 
-						few permissions to reduce the chances of someone hacking into the web server. While the 
-						account has permission to write to the event log it does not have permission to create 
-						event sources (registry create and write access), which are needed to write to the event log.
-					</p>
+                        A web application will run as the user account ASPNET. This account deliberately has 
+                        few permissions to reduce the chances of someone hacking into the web server. While the 
+                        account has permission to write to the event log it does not have permission to create 
+                        event sources (registry create and write access), which are needed to write to the event log.
+                    </p>
                                                 <p>
-						There are a couple of solutions:
-					</p>
+                        There are a couple of solutions:
+                    </p>
                                                 <ol>
-						<li>
-							<p>
-								Make the ASPNET user a member of the Administrators group. This will work because the 
-								user will then have the required permissions. This is <strong>not recommended</strong>
-								for production use.
-							</p>
-						</li>
-						<li>
-							<p>
-								As the event source only needs to be created once for the machine, create an installer
-								and configure it to create the event source. 
-								The installer will need to be run as Administrator (don't they all). See 
-								<span class="code">System.Diagnostics.EventLogInstaller</span> in the Microsoft .NET 
-								Framework SDK for an example of how to create a simple event log installer.
-							</p>
-						</li>
-					</ol>
+                        <li>
+                            <p>
+                                Make the ASPNET user a member of the Administrators group. This will work because the 
+                                user will then have the required permissions. This is <strong>not recommended</strong>
+                                for production use.
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                As the event source only needs to be created once for the machine, create an installer
+                                and configure it to create the event source. 
+                                The installer will need to be run as Administrator (don't they all). See 
+                                <span class="code">System.Diagnostics.EventLogInstaller</span> in the Microsoft .NET 
+                                Framework SDK for an example of how to create a simple event log installer.
+                            </p>
+                        </li>
+                    </ol>
                                                 <p>
-						There is a Microsoft Knowledge Base article that covers this issue and how to resolve
-						it. <a href="http://support.microsoft.com/default.aspx?scid=kb;en-us;329291">
-							PRB: "Requested Registry Access Is Not Allowed" Error Message When ASP.NET 
-							Application Tries to Write New EventSource in the EventLog</a>.
-					</p>
+                        There is a Microsoft Knowledge Base article that covers this issue and how to resolve
+                        it. <a href="http://support.microsoft.com/default.aspx?scid=kb;en-us;329291">
+                            PRB: "Requested Registry Access Is Not Allowed" Error Message When ASP.NET 
+                            Application Tries to Write New EventSource in the EventLog</a>.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="trouble-file-perm"></a>Why can't I log to a FileAppender from a web application?</h3>
     <div class="i1">
                                     <p>
-						The web application runs as a special user account on the web server
-						called ASPNET. This account has restricted permissions to protect the 
-						web server from attacks. By default this account may not have permission
-						to write to the file system. Make sure that the ASPNET account has 
-						permission to create and write to files in the directory chosen for
-						logging.
-					</p>
+                        The web application runs as a special user account on the web server
+                        called ASPNET. This account has restricted permissions to protect the 
+                        web server from attacks. By default this account may not have permission
+                        to write to the file system. Make sure that the ASPNET account has 
+                        permission to create and write to files in the directory chosen for
+                        logging.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="trouble-service"></a>Why doesn't the logging in my service work?</h3>
     <div class="i1">
                                     <p>
-						A windows service runs as a user account specified in the services
-						control panel. This account may have restricted permissions, make 
-						sure that the account has permission to create and write to files 
-						in the directory chosen for logging.
-					</p>
+                        A windows service runs as a user account specified in the services
+                        control panel. This account may have restricted permissions, make 
+                        sure that the account has permission to create and write to files 
+                        in the directory chosen for logging.
+                    </p>
                                                 <p>
-						A windows service is launched by windows. The current directory in
-						a service is set to the windows system directory (e.g. 
-						<span class="code">C:\Windows\System32</span>). If you are loading
-						the configuration file from the current directory then be aware
-						that this path will not be the location of your assemblies.
-						The best way to get the path to your assemblies is to use
-						<span class="code">AppDomain.BaseDirectory</span>.
-						Note that the log4net internals never use the current directory.
-					</p>
+                        A windows service is launched by windows. The current directory in
+                        a service is set to the windows system directory (e.g. 
+                        <span class="code">C:\Windows\System32</span>). If you are loading
+                        the configuration file from the current directory then be aware
+                        that this path will not be the location of your assemblies.
+                        The best way to get the path to your assemblies is to use
+                        <span class="code">AppDomain.BaseDirectory</span>.
+                        Note that the log4net internals never use the current directory.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="trouble-db"></a>I am having trouble using the AdoNetAppender to connect to my database?</h3>
     <div class="i1">
                                     <p>
-						For details on the different ways in which ADO.NET can connect to a database see:
-						<a href="http://msdn.microsoft.com/library/en-us/cpguide/html/cpconadonetconnections.asp">Connecting to a Data Source Using ADO.NET</a>.
-					</p>
+                        For details on the different ways in which ADO.NET can connect to a database see:
+                        <a href="http://msdn.microsoft.com/library/en-us/cpguide/html/cpconadonetconnections.asp">Connecting to a Data Source Using ADO.NET</a>.
+                    </p>
                                                 <p>
-						If you need to use ODBC to connect to your database then please note that the
-						ADO.NET ODBC drivers are not included in the standard .NET framework redistributable.
-						You can download the drivers from microsoft download at: 
-						<a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=6ccd8427-1017-4f33-a062-d165078e32b1">ODBC .NET Data Provider</a>.
-					</p>
+                        If you need to use ODBC to connect to your database then please note that the
+                        ADO.NET ODBC drivers are not included in the standard .NET framework redistributable.
+                        You can download the drivers from microsoft download at: 
+                        <a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=6ccd8427-1017-4f33-a062-d165078e32b1">ODBC .NET Data Provider</a>.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                                                     <h3><a id="report-bugs"></a>How do I report bugs?</h3>
     <div class="i1">
                                     <p>
-						See the <a href="../support.html">support</a> page for details.
-					</p>
+                        See the <a href="../support.html">support</a> page for details.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                       </div>
@@ -1125,9 +1130,9 @@ public class FastLogger
                                         <h3><a id="vsnet-add-reference"></a>How do I make log4net appear in the Visual Studio Add References dialog?</h3>
     <div class="i1">
                                     <p>
-						There is a good discussion of this topic on Robert McLaws blog:
-						<a href="http://weblogs.asp.net/rmclaws/archive/2003/11/15/37743.aspx">Building a Better Server Control Experience, Part 2</a>.
-					</p>
+                        There is a good discussion of this topic on Robert McLaws blog:
+                        <a href="http://weblogs.asp.net/rmclaws/archive/2003/11/15/37743.aspx">Building a Better Server Control Experience, Part 2</a>.
+                    </p>
                       </div>
                                                 <p><a href="#top">Back to Top</a></p>
                       </div>
@@ -1141,9 +1146,9 @@ public class FastLogger
 
                     <div align="center"><font color="#525D76" size="-1"><em>
                     Copyright &#169; 
-		    			2004-2006,
-		    		    		    	Apache Software Foundation
-		                        </em></font></div>
+                            2004-2007,
+                                        Apache Software Foundation
+                                </em></font></div>
              <!-- END main table --> 
 
            </div>
@@ -1152,60 +1157,63 @@ public class FastLogger
              <!-- ============================================================ -->
   <div class="leftcol">
                <div class="menu_header">Apache</div>
-              	 <div class="menu_item">    <a href="http://www.apache.org">Apache Home</a>
+                <div class="menu_item">    <a href="http://www.apache.org">Apache Home</a>
 </div>
-              	 <div class="menu_item">    <a href="http://logging.apache.org/">Logging Services</a>
+                <div class="menu_item">    <a href="http://logging.apache.org/">Logging Services</a>
 </div>
                   <div class="menu_header">log4net Project</div>
-              	 <div class="menu_item">    <a href="../index.html">About</a>
+                <div class="menu_item">    <a href="../index.html">About</a>
 </div>
-              	 <div class="menu_item">    <a href="../license.html">License</a>
+                <div class="menu_item">    <a href="../license.html">License</a>
 </div>
-              	 <div class="menu_item">    <a href="../support.html">Support</a>
+                <div class="menu_item">    <a href="../support.html">Support</a>
 </div>
-              	 <div class="menu_item">    <a href="../roadmap.html">Roadmap</a>
+                <div class="menu_item">    <a href="../roadmap.html">Roadmap</a>
 </div>
-              	 <div class="menu_item">    <a href="../contributing.html">Contributing</a>
+                <div class="menu_item">    <a href="../contributing.html">Contributing</a>
 </div>
-              	 <div class="menu_item">    <a href="../history.html">History</a>
+                <div class="menu_item">    <a href="../history.html">History</a>
 </div>
-              	 <div class="menu_item">    <a href="../downloads.html">Downloads</a>
+                <div class="menu_item">    <a href="../downloads.html">Downloads</a>
 </div>
                   <div class="menu_header">log4net 1.2 Documentation</div>
-              	 <div class="menu_item">    <a href="../release/features.html">Features</a>
+                <div class="menu_item">    <a href="../release/features.html">Features</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/framework-support.html">Supported Frameworks</a>
+                <div class="menu_item">    <a href="../release/framework-support.html">Supported Frameworks</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/release-notes.html">Release Notes</a>
+                <div class="menu_item">    <a href="../release/release-notes.html">Release Notes</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/example-apps.html">Example Apps</a>
+                <div class="menu_item">    <a href="../release/example-apps.html">Example Apps</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/config-examples.html">Config Examples</a>
+                <div class="menu_item">    <a href="../release/config-examples.html">Config Examples</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/building.html">Building</a>
+                <div class="menu_item">    <a href="../release/building.html">Building</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/faq.html">FAQ</a>
+                <div class="menu_item">    <a href="../release/faq.html">FAQ</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/howto/index.html">How Tos</a>
+                <div class="menu_item">    <a href="../release/howto/index.html">How Tos</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/sdk/index.html">SDK Reference</a>
+                <div class="menu_item">    <a href="../release/sdk/index.html">SDK Reference</a>
 </div>
                   <div class="menu_header">log4net 1.2 Manual</div>
-              	 <div class="menu_item">    <a href="../release/manual/introduction.html">Introduction</a>
+                <div class="menu_item">    <a href="../release/manual/introduction.html">Introduction</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/manual/configuration.html">Configuration</a>
+                <div class="menu_item">    <a href="../release/manual/configuration.html">Configuration</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/manual/contexts.html">Contexts</a>
+                <div class="menu_item">    <a href="../release/manual/contexts.html">Contexts</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/manual/plugins.html">Plugins</a>
+                <div class="menu_item">    <a href="../release/manual/plugins.html">Plugins</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/manual/repositories.html">Repositories</a>
+                <div class="menu_item">    <a href="../release/manual/repositories.html">Repositories</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/manual/internals.html">Internals</a>
+                <div class="menu_item">    <a href="../release/manual/internals.html">Internals</a>
 </div>
              </div> 
    
 
+                    <script type="text/javascript">
+            urchinTracker();
+          </script>
         </body>
     </html>
 <!-- end the processing -->

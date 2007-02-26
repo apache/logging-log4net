@@ -37,12 +37,12 @@ limitations under the License.
            
                                      <meta  name="keywords"  content="log4net supported frameworks, mono, sscli, .net, log4net"  />
  
-                         
+                        
             <link href="../css/site.css" rel="stylesheet" type="text/css"/>
             
-							<link href="../css/style.css" rel="stylesheet" type="text/css"/>
-			
-            <title>log4net - log4net Supported Frameworks</title>
+                            <link href="../css/style.css" rel="stylesheet" type="text/css"/>
+            
+            <title>Apache log4net: Supported Frameworks</title>
             
                     </head>
 
@@ -50,7 +50,12 @@ limitations under the License.
             bgcolor="#ffffff"
             text="#000000"
             link="#525D76"
-                >       
+                >
+                    <script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+          <script type="text/javascript">
+            _uacct = "UA-1416250-1";
+          </script>
+
            <!-- START Header table --> 
                              <table class="banner" border="0">
      <tr>
@@ -66,22 +71,22 @@ limitations under the License.
               <!-- END Header table --> 
 
 
-	   <div class="centercol">
+       <div class="centercol">
         
            <!-- START main table --> 
                 
 
-	                                                                       <h1><a id="main"></a>log4net Supported Frameworks</h1>
+                                                                           <h1><a id="main"></a>log4net Supported Frameworks</h1>
     <div class="i1">
-                                    			<h2>Contents</h2>
-		<div class="i1">
-																			    <a href="#summary">Summary of .NET frameworks supported by log4net</a><br/>
+                                                <h2>Contents</h2>
+        <div class="i1">
+                                                                                <a href="#summary">Summary of .NET frameworks supported by log4net</a><br/>
     <div class="i1">
                                                                                                                                                       </div>
-																    <a href="#appenders">Appenders</a><br/>
+                                                                    <a href="#appenders">Appenders</a><br/>
     <div class="i1">
                                                   </div>
-																    <a href="#notes">Framework Specific Notes</a><br/>
+                                                                    <a href="#notes">Framework Specific Notes</a><br/>
     <div class="i1">
                                         <a href="#net1.0">Microsoft .NET Framework 1.0 (1.0.3705)</a><br/>
     <div class="i1">
@@ -92,7 +97,7 @@ limitations under the License.
                                                     <a href="#net2.0">Microsoft .NET Framework 2.0 (2.0.50727)</a><br/>
     <div class="i1">
                               </div>
-                                                    <a href="#netcf1.0">Microsoft .NET Compact Framework 1.0 (1.0.5000)</a><br/>
+                                                    <a href="#netcf1.0">Microsoft .NET Compact Framework 1.0</a><br/>
     <div class="i1">
                               </div>
                                                     <a href="#mono">Mono</a><br/>
@@ -111,551 +116,557 @@ limitations under the License.
     <div class="i1">
                                                                                           </div>
                       </div>
-									</div>
-	                                                    <h2><a id="summary"></a>Summary of .NET frameworks supported by log4net</h2>
+                                    </div>
+                                                        <h2><a id="summary"></a>Summary of .NET frameworks supported by log4net</h2>
     <div class="i1">
                                     <p>
-					log4net is built on a number of different frameworks. Each new version of the frameworks add
-					new features. To take advantage of these new features we must build log4net using the
-					appropriate framework. We also maintain builds compatible with older versions of the frameworks.
-				</p>
+                    log4net is built on a number of different frameworks. Each new version of the frameworks add
+                    new features. To take advantage of these new features we must build log4net using the
+                    appropriate framework. We also maintain builds compatible with older versions of the frameworks.
+                </p>
                                                 <p>
-					It is important to remember that the .NET frameworks support backward compatibility, that is
-					a new version of the framework will run binary assemblies that were targeted to previous versions
-					of the framework.
-				</p>
+                    It is important to remember that the .NET frameworks support backward compatibility, that is
+                    a new version of the framework will run binary assemblies that were targeted to previous versions
+                    of the framework.
+                </p>
                                                 <p>
-					While the number of different builds available may seem confusing, you only need to select the
-					nearest build for your platform that is equal to or earlier than your chosen deployment framework.
-					If you intend to deploy your application on the Microsoft .NET Framework 1.0 don't pick the
-					log4net build that is built against the Microsoft .NET Framework 1.1 because the .NET framework
-					does not guarantee forward compatibility only backward compatibility.
-				</p>
+                    While the number of different builds available may seem confusing, you only need to select the
+                    nearest build for your platform that is equal to or earlier than your chosen deployment framework.
+                    If you intend to deploy your application on the Microsoft .NET Framework 1.0 don't pick the
+                    log4net build that is built against the Microsoft .NET Framework 1.1 because the .NET framework
+                    does not guarantee forward compatibility only backward compatibility.
+                </p>
                                                 <p>
-					The lowest common denominator build is the CLI 1.0 Compatible build. This build is compatible with
-					the ECMA/ISO CLI 1.0 standard APIs and will run on all frameworks that support the standard. (Note
-					that the Microsoft .NET Compact Framework does not support this standard). Use this build if you
-					intend to deploy you application on both the Microsoft .NET Frameworks and the Mono frameworks.
-				</p>
+                    The lowest common denominator build is the CLI 1.0 Compatible build. This build is compatible with
+                    the ECMA/ISO CLI 1.0 standard APIs and will run on all frameworks that support the standard. (Note
+                    that the Microsoft .NET Compact Framework does not support this standard). Use this build if you
+                    intend to deploy you application on both the Microsoft .NET Frameworks and the Mono frameworks.
+                </p>
                                                 <p>
-					log4net now builds on 6 frameworks:
-				</p>
+                    log4net now builds on 6 frameworks:
+                </p>
                                                 <div class="table">
-					<table cellspacing="0">
-						<colgroup>
-							<col style="text-align: left; white-space: nowrap" />
-							<col style="text-align: left;" />
-						</colgroup>
-						<tr>
-							<th>Framework</th>
-							<th>Website</th>
-						</tr>
-						<tr style="vertical-align: top;">
-							<td>Microsoft .NET Framework 1.0 (1.0.3705)</td>
-							<td><a href="http://msdn.microsoft.com/net">http://msdn.microsoft.com/net</a></td>
-						</tr>
-						<tr style="vertical-align: top;">
-							<td>Microsoft .NET Framework 1.1 (1.1.4322)</td>
-							<td><a href="http://msdn.microsoft.com/net">http://msdn.microsoft.com/net</a></td>
-						</tr>
-						<tr style="vertical-align: top;">
-							<td>Microsoft .NET Framework 2.0 (2.0.50727)</td>
-							<td><a href="http://msdn.microsoft.com/net">http://msdn.microsoft.com/net</a></td>
-						</tr>
-						<tr style="vertical-align: top;">
-							<td>Microsoft .NET Compact Framework 1.0 (1.0.5000)</td>
-							<td><a href="http://msdn.microsoft.com/vstudio/device/compactfx.asp">http://msdn.microsoft.com/vstudio/device/compactfx.asp</a></td>
-						</tr>
-						<tr style="vertical-align: top;">
-							<td>Mono 1.1.13</td>
-							<td><a href="http://www.mono-project.com">http://www.mono-project.com</a></td>
-						</tr>
-						<tr style="vertical-align: top;">
-							<td>Microsoft Shared Source CLI 1.0</td>
-							<td><a href="http://msdn.microsoft.com/library/en-us/dndotnet/html/mssharsourcecli.asp">http://msdn.microsoft.com/library/en-us/dndotnet/html/mssharsourcecli.asp</a></td>
-						</tr>
-						<tr style="vertical-align: top;">
-							<td>CLI 1.0 Compatible</td>
-							<td><a href="http://msdn.microsoft.com/net/ecma/">http://msdn.microsoft.com/net/ecma/</a></td>
-						</tr>
-					</table>
-				</div>
+                    <table cellspacing="0">
+                        <colgroup>
+                            <col style="text-align: left; white-space: nowrap" />
+                            <col style="text-align: left;" />
+                        </colgroup>
+                        <tr>
+                            <th>Framework</th>
+                            <th>Website</th>
+                        </tr>
+                        <tr style="vertical-align: top;">
+                            <td>Microsoft .NET Framework 1.0 (1.0.3705)</td>
+                            <td><a href="http://msdn.microsoft.com/net">http://msdn.microsoft.com/net</a></td>
+                        </tr>
+                        <tr style="vertical-align: top;">
+                            <td>Microsoft .NET Framework 1.1 (1.1.4322)</td>
+                            <td><a href="http://msdn.microsoft.com/net">http://msdn.microsoft.com/net</a></td>
+                        </tr>
+                        <tr style="vertical-align: top;">
+                            <td>Microsoft .NET Framework 2.0 (2.0.50727)</td>
+                            <td><a href="http://msdn.microsoft.com/net">http://msdn.microsoft.com/net</a></td>
+                        </tr>
+                        <tr style="vertical-align: top;">
+                            <td>Microsoft .NET Compact Framework 1.0</td>
+                            <td><a href="http://msdn2.microsoft.com/en-us/netframework/aa497273.aspx">http://msdn2.microsoft.com/en-us/netframework/aa497273.aspx</a></td>
+                        </tr>
+                        <!--
+                        <tr style="vertical-align: top;">
+                            <td>Microsoft .NET Compact Framework 2.0</td>
+                            <td><a href="http://msdn2.microsoft.com/en-us/netframework/aa497273.aspx">http://msdn2.microsoft.com/en-us/netframework/aa497273.aspx</a></td>
+                        </tr>
+                        -->
+                        <tr style="vertical-align: top;">
+                            <td>Mono 1.2.3</td>
+                            <td><a href="http://www.mono-project.com">http://www.mono-project.com</a></td>
+                        </tr>
+                        <tr style="vertical-align: top;">
+                            <td>Microsoft Shared Source CLI 1.0</td>
+                            <td><a href="http://msdn.microsoft.com/library/en-us/dndotnet/html/mssharsourcecli.asp">http://msdn.microsoft.com/library/en-us/dndotnet/html/mssharsourcecli.asp</a></td>
+                        </tr>
+                        <tr style="vertical-align: top;">
+                            <td>CLI 1.0 Compatible</td>
+                            <td><a href="http://msdn.microsoft.com/net/ecma/">http://msdn.microsoft.com/net/ecma/</a></td>
+                        </tr>
+                    </table>
+                </div>
                                                 <p>
-					For each of these frameworks a log4net assembly targeting the framework is supplied.  Although it's 
-					perfectly possible to use the .NET Framework 1.0 version of log4net on the .NET Framework 1.1, having 
-					an assembly that really targets a specific framework allows us to use features in that framework that 
-					are not available in other frameworks or remove features from log4net that are not supported in a 
-					specific framework.
-				</p>
+                    For each of these frameworks a log4net assembly targeting the framework is supplied.  Although it's 
+                    perfectly possible to use the .NET Framework 1.0 version of log4net on the .NET Framework 1.1, having 
+                    an assembly that really targets a specific framework allows us to use features in that framework that 
+                    are not available in other frameworks or remove features from log4net that are not supported in a 
+                    specific framework.
+                </p>
                       </div>
                                                     <h2><a id="appenders"></a>Appenders</h2>
     <div class="i1">
                                     <p>
-					The appenders available to each framework depend on the functionality of the 
-					framework and the platform it runs on:
-				</p>
+                    The appenders available to each framework depend on the functionality of the 
+                    framework and the platform it runs on:
+                </p>
                                                 <div class="table">
-					<table cellspacing="0">
-						<colgroup>
-							<col style="text-align: left;" />
-							<col style="text-align: center;" />
-							<col style="text-align: center;" />
-							<col style="text-align: center;" />
-							<col style="text-align: center;" />
-							<col style="text-align: center;" />
-							<col style="text-align: center;" />
-						</colgroup>
-						<tr>
-							<th>Appender</th>
-							<th>.NET Framework 1.0</th>
-							<th>.NET Framework 1.1</th>
-							<th>.NET Framework 2.0</th>
-							<th>.NET Compact Framework 1.0</th>
-							<th>Mono 1.1</th>
-							<th>Shared Source CLI 1.0</th>
-							<th>CLI 1.0 Compatible</th>
-						</tr>
-						<tr>
-							<td>AdoNetAppender</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td />
-							<td>x</td>
-						</tr>
-						<tr>
-							<td>AnsiColorTerminalAppender</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-						</tr>
-						<tr>
-							<td>AspNetTraceAppender</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td />
-							<td>x</td>
-							<td />
-							<td>x</td>
-						</tr>
-						<tr>
-							<td>BufferingForwardingAppender</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-						</tr>
-						<tr>
-							<td>ColoredConsoleAppender</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td />
-							<td />
-							<td />
-							<td />
-						</tr>
-						<tr>
-							<td>ConsoleAppender</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-						</tr>
-						<tr>
-							<td>DebugAppender</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-						</tr>
-						<tr>
-							<td>EventLogAppender</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td />
-							<td>x</td>
-							<td />
-							<td>x</td>
-						</tr>
-						<tr>
-							<td>FileAppender</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-						</tr>
-						<tr>
-							<td>ForwardingAppender</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-						</tr>
-						<tr>
-							<td>LocalSyslogAppender</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td />
-							<td>x</td>
-							<td />
-							<td>x</td>
-						</tr>
-						<tr>
-							<td>MemoryAppender</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-						</tr>
-						<tr>
-							<td>NetSendAppender</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td />
-							<td />
-							<td />
-							<td />
-						</tr>
-						<tr>
-							<td>OutputDebugStringAppender</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td />
-							<td />
-							<td />
-						</tr>
-						<tr>
-							<td>RemoteSyslogAppender</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-						</tr>
-						<tr>
-							<td>RemotingAppender</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td />
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-						</tr>
-						<tr>
-							<td>RollingFileAppender</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-						</tr>
-						<tr>
-							<td>SmtpAppender</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td />
-							<td>x</td>
-							<td />
-							<td>x</td>
-						</tr>
-						<tr>
-							<td>SmtpPickupDirAppender</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-						</tr>
-						<tr>
-							<td>TelnetAppender</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-						</tr>
-						<tr>
-							<td>TraceAppender</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-						</tr>
-						<tr>
-							<td>UdpAppender</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-							<td>x</td>
-						</tr>
-					</table>
-				</div>
+                    <table cellspacing="0">
+                        <colgroup>
+                            <col style="text-align: left;" />
+                            <col style="text-align: center;" />
+                            <col style="text-align: center;" />
+                            <col style="text-align: center;" />
+                            <col style="text-align: center;" />
+                            <col style="text-align: center;" />
+                            <col style="text-align: center;" />
+                        </colgroup>
+                        <tr>
+                            <th>Appender</th>
+                            <th>.NET Framework 1.0</th>
+                            <th>.NET Framework 1.1</th>
+                            <th>.NET Framework 2.0</th>
+                            <th>.NET CF 1.0</th>
+                            <th>Mono 1.2</th>
+                            <th>Shared Source CLI 1.0</th>
+                            <th>CLI 1.0 Compatible</th>
+                        </tr>
+                        <tr>
+                            <td>AdoNetAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td />
+                            <td>x</td>
+                        </tr>
+                        <tr>
+                            <td>AnsiColorTerminalAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                        </tr>
+                        <tr>
+                            <td>AspNetTraceAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td />
+                            <td>x</td>
+                            <td />
+                            <td>x</td>
+                        </tr>
+                        <tr>
+                            <td>BufferingForwardingAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                        </tr>
+                        <tr>
+                            <td>ColoredConsoleAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td />
+                            <td />
+                            <td />
+                            <td />
+                        </tr>
+                        <tr>
+                            <td>ConsoleAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                        </tr>
+                        <tr>
+                            <td>DebugAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                        </tr>
+                        <tr>
+                            <td>EventLogAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td />
+                            <td>x</td>
+                            <td />
+                            <td>x</td>
+                        </tr>
+                        <tr>
+                            <td>FileAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                        </tr>
+                        <tr>
+                            <td>ForwardingAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                        </tr>
+                        <tr>
+                            <td>LocalSyslogAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td />
+                            <td>x</td>
+                            <td />
+                            <td>x</td>
+                        </tr>
+                        <tr>
+                            <td>MemoryAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                        </tr>
+                        <tr>
+                            <td>NetSendAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td />
+                            <td />
+                            <td />
+                            <td />
+                        </tr>
+                        <tr>
+                            <td>OutputDebugStringAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td />
+                            <td />
+                            <td />
+                        </tr>
+                        <tr>
+                            <td>RemoteSyslogAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                        </tr>
+                        <tr>
+                            <td>RemotingAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td />
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                        </tr>
+                        <tr>
+                            <td>RollingFileAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                        </tr>
+                        <tr>
+                            <td>SmtpAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td />
+                            <td>x</td>
+                            <td />
+                            <td>x</td>
+                        </tr>
+                        <tr>
+                            <td>SmtpPickupDirAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                        </tr>
+                        <tr>
+                            <td>TelnetAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                        </tr>
+                        <tr>
+                            <td>TraceAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                        </tr>
+                        <tr>
+                            <td>UdpAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                        </tr>
+                    </table>
+                </div>
                       </div>
                                                     <h2><a id="notes"></a>Framework Specific Notes</h2>
     <div class="i1">
                                         <h3><a id="net1.0"></a>Microsoft .NET Framework 1.0 (1.0.3705)</h3>
     <div class="i1">
                                     <p>
-						none
-					</p>
+                        none
+                    </p>
                       </div>
                                                     <h3><a id="net1.1"></a>Microsoft .NET Framework 1.1 (1.1.4322)</h3>
     <div class="i1">
                                     <p>
-						none
-					</p>
+                        none
+                    </p>
                       </div>
                                                     <h3><a id="net2.0"></a>Microsoft .NET Framework 2.0 (2.0.50727)</h3>
     <div class="i1">
                                     <p>
-						none
-					</p>
+                        none
+                    </p>
                       </div>
-                                                    <h3><a id="netcf1.0"></a>Microsoft .NET Compact Framework 1.0 (1.0.5000)</h3>
+                                                    <h3><a id="netcf1.0"></a>Microsoft .NET Compact Framework 1.0</h3>
     <div class="i1">
                                     <ul>
-						<li>
-							<h4>Assembly attributes</h4>
-							<p>
-								The .NET Compact Framework 1.0 does not support retrieving assembly level 
-								attributes, therefore all log4net configuration attributes were removed from 
-								the .NET Compact Framework 1.0 version of log4net.
-							</p>
-							<p>
-								For Smart-device applications, the log4net system can be configured by passing 
-								the location of the log4net configuration file to the
-								<span class="code">log4net.Config.XmlConfigurator.Configure(FileInfo)</span>
-								method in the entry point of the application.
-							</p>
-							<p>For example:</p>
-							<p />
-							<pre class="code">
+                        <li>
+                            <h4>Assembly attributes</h4>
+                            <p>
+                                The .NET Compact Framework 1.0 does not support retrieving assembly level 
+                                attributes, therefore all log4net configuration attributes were removed from 
+                                the .NET Compact Framework 1.0 version of log4net.
+                            </p>
+                            <p>
+                                For Smart-device applications, the log4net system can be configured by passing 
+                                the location of the log4net configuration file to the
+                                <span class="code">log4net.Config.XmlConfigurator.Configure(FileInfo)</span>
+                                method in the entry point of the application.
+                            </p>
+                            <p>For example:</p>
+                            <p />
+                            <pre class="code">
 namespace TestApp
 {
-	using System.IO;
+    using System.IO;
 
-	public class EntryPoint
-	{
-		/// &lt;summary&gt;
-		/// Application entry point.
-		/// &lt;/summary&gt;
-		public static void Main() 
-		{
-			// Uncomment the next line to enable log4net internal debugging
-			// log4net.Util.LogLog.InternalDebugging = true;
+    public class EntryPoint
+    {
+        /// &lt;summary&gt;
+        /// Application entry point.
+        /// &lt;/summary&gt;
+        public static void Main() 
+        {
+            // Uncomment the next line to enable log4net internal debugging
+            // log4net.Util.LogLog.InternalDebugging = true;
 
-			// This will instruct log4net to look for a configuration file
-			// called config.log4net in the root directory of the device
-			log4net.Config.XmlConfigurator.Configure(new FileInfo(@"\config.log4net"));
+            // This will instruct log4net to look for a configuration file
+            // called config.log4net in the root directory of the device
+            log4net.Config.XmlConfigurator.Configure(new FileInfo(@"\config.log4net"));
 
-			...
-			
-			// This will shutdown the log4net system
-			log4net.LogManager.Shutdown();
-		}
-	}
-}						
-							</pre>
-						</li>
-						<li>
-							<h4>Notification events</h4>
-							<p>
-								The .NET Compact Framework 1.0 does not support notification events during the 
-								application shutdown, therefore log4net cannot automatically hook the 
-								application shutdown notification.
-							</p>
-							<p>
-								Applications will need to programmatically shutdown the log4net system during 
-								the application's shutdown using the
-								<span class="code">log4net.LogManager.Shutdown()</span>
-								method in order to prevent losing logging events.
-								See the code above for an example.
-							</p>
-						</li>
-						<li>
-							<h4>FileSystemWatcher</h4>
-							<p>
-								The .NET Compact Framework 1.0 does not support the
-								<span class="code">System.IO.FileSystemWatcher</span>
-								class. As a result, the
-								<span class="code">XmlConfiguratorAttribute.Watch</span>
-								property and the 
-								<span class="code">XmlConfigurator.ConfigureAndWatch</span>
-								methods are not available. Watching changes to the log4net configuration 
-								file is not supported on the .NET Compact Framework 1.0.
-							</p>
-						</li>
-						<li>
-							<h4>UserName</h4>
-							<p>
-								The .NET Compact Framework 1.0 does not support the
-								<span class="code">System.Security.Principal.WindowsIdentity</span> class.
-								This is used to capture the current thread's user identity. Therefore
-								the <span class="code">LoggingEvent.UserName</span> property will return the value 
-								<span class="code">"NOT AVAILABLE"</span>.
-							</p>
-						</li>
-						<li>
-							<h4>Identity</h4>
-							<p>
-								The .NET Compact Framework 1.0 does not support the
-								<span class="code">System.Security.Principal.IPrincipal</span> interface.
-								This is used to capture the current thread's user identity. Therefore
-								the <span class="code">LoggingEvent.Identity</span> property will return the value 
-								<span class="code">"NOT AVAILABLE"</span>.
-							</p>
-						</li>
-						<li>
-							<h4>Environment variables</h4>
-							<p>
-								The .NET Compact Framework 1.0 does not support retrieving environment 
-								variables, therefore it's not possible to substitute environment variables in 
-								parameter values when using the .NET Compact Framework 1.0 version of log4net.
-							</p>
-						</li>
-						<li>
-							<h4>Serialization</h4>
-							<p>
-								The .NET Compact Framework 1.0 does not support serialization, therefore none of 
-								the log4net classes in the .NET Compact Framework 1.0 version are serializable.
-							</p>
-						</li>
-						<li>
-							<h4>LoggingEvent.Domain</h4>
-							<p>
-								The .NET Compact Framework 1.0 does not support AppDomain functionality. The
-								friendly name for the current AppDomain is stored in the <span class="code">LoggingEvent.Domain</span>
-								property and is accessed using the <span class="code">%a</span> pattern of the 
-								<span class="code">PatternLayout</span>. On the .NET Compact Framework 1.0 this
-								value is generated by taking the file name for the application's primary module.
-							</p>
-						</li>
-					</ul>
+            ...
+            
+            // This will shutdown the log4net system
+            log4net.LogManager.Shutdown();
+        }
+    }
+}                        
+                            </pre>
+                        </li>
+                        <li>
+                            <h4>Notification events</h4>
+                            <p>
+                                The .NET Compact Framework 1.0 does not support notification events during the 
+                                application shutdown, therefore log4net cannot automatically hook the 
+                                application shutdown notification.
+                            </p>
+                            <p>
+                                Applications will need to programmatically shutdown the log4net system during 
+                                the application's shutdown using the
+                                <span class="code">log4net.LogManager.Shutdown()</span>
+                                method in order to prevent losing logging events.
+                                See the code above for an example.
+                            </p>
+                        </li>
+                        <li>
+                            <h4>FileSystemWatcher</h4>
+                            <p>
+                                The .NET Compact Framework 1.0 does not support the
+                                <span class="code">System.IO.FileSystemWatcher</span>
+                                class. As a result, the
+                                <span class="code">XmlConfiguratorAttribute.Watch</span>
+                                property and the 
+                                <span class="code">XmlConfigurator.ConfigureAndWatch</span>
+                                methods are not available. Watching changes to the log4net configuration 
+                                file is not supported on the .NET Compact Framework 1.0.
+                            </p>
+                        </li>
+                        <li>
+                            <h4>UserName</h4>
+                            <p>
+                                The .NET Compact Framework 1.0 does not support the
+                                <span class="code">System.Security.Principal.WindowsIdentity</span> class.
+                                This is used to capture the current thread's user identity. Therefore
+                                the <span class="code">LoggingEvent.UserName</span> property will return the value 
+                                <span class="code">"NOT AVAILABLE"</span>.
+                            </p>
+                        </li>
+                        <li>
+                            <h4>Identity</h4>
+                            <p>
+                                The .NET Compact Framework 1.0 does not support the
+                                <span class="code">System.Security.Principal.IPrincipal</span> interface.
+                                This is used to capture the current thread's user identity. Therefore
+                                the <span class="code">LoggingEvent.Identity</span> property will return the value 
+                                <span class="code">"NOT AVAILABLE"</span>.
+                            </p>
+                        </li>
+                        <li>
+                            <h4>Environment variables</h4>
+                            <p>
+                                The .NET Compact Framework 1.0 does not support retrieving environment 
+                                variables, therefore it's not possible to substitute environment variables in 
+                                parameter values when using the .NET Compact Framework 1.0 version of log4net.
+                            </p>
+                        </li>
+                        <li>
+                            <h4>Serialization</h4>
+                            <p>
+                                The .NET Compact Framework 1.0 does not support serialization, therefore none of 
+                                the log4net classes in the .NET Compact Framework 1.0 version are serializable.
+                            </p>
+                        </li>
+                        <li>
+                            <h4>LoggingEvent.Domain</h4>
+                            <p>
+                                The .NET Compact Framework 1.0 does not support AppDomain functionality. The
+                                friendly name for the current AppDomain is stored in the <span class="code">LoggingEvent.Domain</span>
+                                property and is accessed using the <span class="code">%a</span> pattern of the 
+                                <span class="code">PatternLayout</span>. On the .NET Compact Framework 1.0 this
+                                value is generated by taking the file name for the application's primary module.
+                            </p>
+                        </li>
+                    </ul>
                       </div>
                                                     <h3><a id="mono"></a>Mono</h3>
     <div class="i1">
                                     <p>
-						There are 2 separate builds of log4net for mono; Mono 1.0, built using the C# compiler in a mode 
-						which is compatible with the CLI 1.0 language specification, and; Mono 2.0, built using the .NET 
-						2.0 extensions to the C# language.
-					</p>
+                        There are 2 separate builds of log4net for mono; Mono 1.0, built using the C# compiler in a mode 
+                        which is compatible with the CLI 1.0 language specification, and; Mono 2.0, built using the .NET 
+                        2.0 extensions to the C# language.
+                    </p>
                                                     <h4><a id="mono1.0"></a>Mono 1.0</h4>
     <div class="i1">
                                     <p>
-							none
-						</p>
+                            none
+                        </p>
                       </div>
                                                     <h4><a id="mono2.0"></a>Mono 2.0</h4>
     <div class="i1">
                                     <p>
-							none
-						</p>
+                            none
+                        </p>
                       </div>
                       </div>
                                                     <h3><a id="sscli1.0"></a>Microsoft Shared Source CLI 1.0</h3>
     <div class="i1">
                                     <ul>
-						<li>
-							<h4>FileSystemWatcher</h4>
-							<p>
-								SSCLI 1.0 does not support the
-								<span class="code">System.IO.FileSystemWatcher</span>
-								class. As a result, the
-								<span class="code">XmlConfiguratorAttribute.Watch</span>
-								property and the 
-								<span class="code">XmlConfigurator.ConfigureAndWatch</span>
-								methods are not available. Watching changes to the log4net configuration 
-								file is not supported on SSCLI 1.0.
-							</p>
-						</li>
-						<li>
-							<h4>UserName</h4>
-							<p>
-								SSCLI 1.0 does not support the
-								<span class="code">System.Security.Principal.WindowsIdentity</span> class.
-								This is used to capture the current thread's user identity. Therefore
-								the <span class="code">LoggingEvent.UserName</span> property will return the value 
-								<span class="code">"NOT AVAILABLE"</span>.
-							</p>
-						</li>
-						<li>
-							<h4>Identity</h4>
-							<p>
-								SSCLI 1.0 does not support the
-								<span class="code">System.Security.Principal.IPrincipal</span> interface.
-								This is used to capture the current thread's user identity. Therefore
-								the <span class="code">LoggingEvent.Identity</span> property will return the value 
-								<span class="code">"NOT AVAILABLE"</span>.
-							</p>
-						</li>
-					</ul>
+                        <li>
+                            <h4>FileSystemWatcher</h4>
+                            <p>
+                                SSCLI 1.0 does not support the
+                                <span class="code">System.IO.FileSystemWatcher</span>
+                                class. As a result, the
+                                <span class="code">XmlConfiguratorAttribute.Watch</span>
+                                property and the 
+                                <span class="code">XmlConfigurator.ConfigureAndWatch</span>
+                                methods are not available. Watching changes to the log4net configuration 
+                                file is not supported on SSCLI 1.0.
+                            </p>
+                        </li>
+                        <li>
+                            <h4>UserName</h4>
+                            <p>
+                                SSCLI 1.0 does not support the
+                                <span class="code">System.Security.Principal.WindowsIdentity</span> class.
+                                This is used to capture the current thread's user identity. Therefore
+                                the <span class="code">LoggingEvent.UserName</span> property will return the value 
+                                <span class="code">"NOT AVAILABLE"</span>.
+                            </p>
+                        </li>
+                        <li>
+                            <h4>Identity</h4>
+                            <p>
+                                SSCLI 1.0 does not support the
+                                <span class="code">System.Security.Principal.IPrincipal</span> interface.
+                                This is used to capture the current thread's user identity. Therefore
+                                the <span class="code">LoggingEvent.Identity</span> property will return the value 
+                                <span class="code">"NOT AVAILABLE"</span>.
+                            </p>
+                        </li>
+                    </ul>
                       </div>
                                                     <h3><a id="cli1.0"></a>CLI 1.0 Compatible</h3>
     <div class="i1">
                                     <p>
-						This build of log4net is designed to run on any ECMA CLI 1.0 compatible runtime.
-						The assembly does not support any platform specific features. The build includes
-						the common subset of functionality found in the .NET 1.0 and Mono 1.0 builds.
-						The output assembly is built using the Microsoft .NET 1.0 compiler and library.
-					</p>
+                        This build of log4net is designed to run on any ECMA CLI 1.0 compatible runtime.
+                        The assembly does not support any platform specific features. The build includes
+                        the common subset of functionality found in the .NET 1.0 and Mono 1.0 builds.
+                        The output assembly is built using the Microsoft .NET 1.0 compiler and library.
+                    </p>
                                                 <p>
-						The log4net CLI 1.0 assembly is runtime compatible with the following frameworks:
-					</p>
+                        The log4net CLI 1.0 assembly is runtime compatible with the following frameworks:
+                    </p>
                                                 <ul>
-						<li>Microsoft .NET Framework 1.0 (and higher)</li>
-						<li>Mono 1.0 (and higher)</li>
-					</ul>
+                        <li>Microsoft .NET Framework 1.0 (and higher)</li>
+                        <li>Mono 1.0 (and higher)</li>
+                    </ul>
                                                 <p>
-						Only a Release build is generated for this configuration because the assembly
-						debugging information has not been standardized.
-					</p>
+                        Only a Release build is generated for this configuration because the assembly
+                        debugging information has not been standardized.
+                    </p>
                       </div>
                       </div>
                       </div>
@@ -668,9 +679,9 @@ namespace TestApp
 
                     <div align="center"><font color="#525D76" size="-1"><em>
                     Copyright &#169; 
-		    			2004-2006,
-		    		    		    	Apache Software Foundation
-		                        </em></font></div>
+                            2004-2007,
+                                        Apache Software Foundation
+                                </em></font></div>
              <!-- END main table --> 
 
            </div>
@@ -679,60 +690,63 @@ namespace TestApp
              <!-- ============================================================ -->
   <div class="leftcol">
                <div class="menu_header">Apache</div>
-              	 <div class="menu_item">    <a href="http://www.apache.org">Apache Home</a>
+                <div class="menu_item">    <a href="http://www.apache.org">Apache Home</a>
 </div>
-              	 <div class="menu_item">    <a href="http://logging.apache.org/">Logging Services</a>
+                <div class="menu_item">    <a href="http://logging.apache.org/">Logging Services</a>
 </div>
                   <div class="menu_header">log4net Project</div>
-              	 <div class="menu_item">    <a href="../index.html">About</a>
+                <div class="menu_item">    <a href="../index.html">About</a>
 </div>
-              	 <div class="menu_item">    <a href="../license.html">License</a>
+                <div class="menu_item">    <a href="../license.html">License</a>
 </div>
-              	 <div class="menu_item">    <a href="../support.html">Support</a>
+                <div class="menu_item">    <a href="../support.html">Support</a>
 </div>
-              	 <div class="menu_item">    <a href="../roadmap.html">Roadmap</a>
+                <div class="menu_item">    <a href="../roadmap.html">Roadmap</a>
 </div>
-              	 <div class="menu_item">    <a href="../contributing.html">Contributing</a>
+                <div class="menu_item">    <a href="../contributing.html">Contributing</a>
 </div>
-              	 <div class="menu_item">    <a href="../history.html">History</a>
+                <div class="menu_item">    <a href="../history.html">History</a>
 </div>
-              	 <div class="menu_item">    <a href="../downloads.html">Downloads</a>
+                <div class="menu_item">    <a href="../downloads.html">Downloads</a>
 </div>
                   <div class="menu_header">log4net 1.2 Documentation</div>
-              	 <div class="menu_item">    <a href="../release/features.html">Features</a>
+                <div class="menu_item">    <a href="../release/features.html">Features</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/framework-support.html">Supported Frameworks</a>
+                <div class="menu_item">    <a href="../release/framework-support.html">Supported Frameworks</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/release-notes.html">Release Notes</a>
+                <div class="menu_item">    <a href="../release/release-notes.html">Release Notes</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/example-apps.html">Example Apps</a>
+                <div class="menu_item">    <a href="../release/example-apps.html">Example Apps</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/config-examples.html">Config Examples</a>
+                <div class="menu_item">    <a href="../release/config-examples.html">Config Examples</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/building.html">Building</a>
+                <div class="menu_item">    <a href="../release/building.html">Building</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/faq.html">FAQ</a>
+                <div class="menu_item">    <a href="../release/faq.html">FAQ</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/howto/index.html">How Tos</a>
+                <div class="menu_item">    <a href="../release/howto/index.html">How Tos</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/sdk/index.html">SDK Reference</a>
+                <div class="menu_item">    <a href="../release/sdk/index.html">SDK Reference</a>
 </div>
                   <div class="menu_header">log4net 1.2 Manual</div>
-              	 <div class="menu_item">    <a href="../release/manual/introduction.html">Introduction</a>
+                <div class="menu_item">    <a href="../release/manual/introduction.html">Introduction</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/manual/configuration.html">Configuration</a>
+                <div class="menu_item">    <a href="../release/manual/configuration.html">Configuration</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/manual/contexts.html">Contexts</a>
+                <div class="menu_item">    <a href="../release/manual/contexts.html">Contexts</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/manual/plugins.html">Plugins</a>
+                <div class="menu_item">    <a href="../release/manual/plugins.html">Plugins</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/manual/repositories.html">Repositories</a>
+                <div class="menu_item">    <a href="../release/manual/repositories.html">Repositories</a>
 </div>
-              	 <div class="menu_item">    <a href="../release/manual/internals.html">Internals</a>
+                <div class="menu_item">    <a href="../release/manual/internals.html">Internals</a>
 </div>
              </div> 
    
 
+                    <script type="text/javascript">
+            urchinTracker();
+          </script>
         </body>
     </html>
 <!-- end the processing -->

@@ -1,5 +1,5 @@
-log4net Strong Name Key Readme
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Apache log4net Strong Name Key Readme
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The log4net release builds are strongly named using the log4net.snk key 
 file. This file is not distributed as part of the log4net source or 
