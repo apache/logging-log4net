@@ -19,7 +19,6 @@
 
 using System;
 
-using log4net.ObjectRenderer;
 using log4net.Core;
 using log4net.Util;
 
@@ -240,7 +239,7 @@ namespace log4net.Repository.Hierarchy
 						if (m_root == null)
 						{
 							// Create the root logger
-							Logger root = m_defaultFactory.CreateLogger(null);
+							Logger root = m_defaultFactory.CreateLogger(this, null);
 							root.Hierarchy = this;
 
 							// Store root
@@ -426,8 +425,8 @@ namespace log4net.Repository.Hierarchy
 		/// </remarks>
 		override public void ResetConfiguration() 
 		{
-			Root.Level = Level.Debug;
-			Threshold = Level.All;
+			Root.Level = LevelMap.LookupWithDefault(Level.Debug);
+			Threshold = LevelMap.LookupWithDefault(Level.All);
 	
 			// the synchronization is needed to prevent hashtable surprises
 			lock(m_ht) 
@@ -487,7 +486,7 @@ namespace log4net.Repository.Hierarchy
 		/// The list returned is unordered but does not contain duplicates.
 		/// </para>
 		/// </remarks>
-		override public log4net.Appender.IAppender[] GetAppenders()
+		override public Appender.IAppender[] GetAppenders()
 		{
 			System.Collections.ArrayList appenderList = new System.Collections.ArrayList();
 
@@ -498,7 +497,7 @@ namespace log4net.Repository.Hierarchy
 				CollectAppenders(appenderList, logger);
 			}
 
-			return (log4net.Appender.IAppender[])appenderList.ToArray(typeof(log4net.Appender.IAppender));
+			return (Appender.IAppender[])appenderList.ToArray(typeof(Appender.IAppender));
 		}
 
 		#endregion Override Implementation of LoggerRepositorySkeleton
@@ -509,7 +508,7 @@ namespace log4net.Repository.Hierarchy
 		/// </summary>
 		/// <param name="appenderList"></param>
 		/// <param name="appender"></param>
-		private static void CollectAppender(System.Collections.ArrayList appenderList, log4net.Appender.IAppender appender)
+		private static void CollectAppender(System.Collections.ArrayList appenderList, Appender.IAppender appender)
 		{
 			if (!appenderList.Contains(appender))
 			{
@@ -530,7 +529,7 @@ namespace log4net.Repository.Hierarchy
 		/// <param name="container"></param>
 		private static void CollectAppenders(System.Collections.ArrayList appenderList, IAppenderAttachable container)
 		{
-			foreach(log4net.Appender.IAppender appender in container.Appenders)
+			foreach(Appender.IAppender appender in container.Appenders)
 			{
 				CollectAppender(appenderList, appender);
 			}
@@ -542,7 +541,7 @@ namespace log4net.Repository.Hierarchy
 		/// Initialize the log4net system using the specified appender
 		/// </summary>
 		/// <param name="appender">the appender to use to log all logging events</param>
-		void IBasicRepositoryConfigurator.Configure(log4net.Appender.IAppender appender)
+		void IBasicRepositoryConfigurator.Configure(Appender.IAppender appender)
 		{
 			BasicRepositoryConfigure(appender);
 		}
@@ -558,7 +557,7 @@ namespace log4net.Repository.Hierarchy
 		/// on this object, but it is protected and therefore can be called by subclasses.
 		/// </para>
 		/// </remarks>
-		protected void BasicRepositoryConfigure(log4net.Appender.IAppender appender)
+		protected void BasicRepositoryConfigure(Appender.IAppender appender)
 		{
 			Root.AddAppender(appender);
 
@@ -697,14 +696,15 @@ namespace log4net.Repository.Hierarchy
 			// Synchronize to prevent write conflicts. Read conflicts (in
 			// GetEffectiveLevel() method) are possible only if variable
 			// assignments are non-atomic.
-			Logger logger;
-	
+
 			lock(m_ht) 
 			{
+				Logger logger = null;
+
 				Object node = m_ht[key];
 				if (node == null) 
 				{
-					logger = factory.CreateLogger(name);
+					logger = factory.CreateLogger(this, name);
 					logger.Hierarchy = this;
 					m_ht[key] = logger;	  
 					UpdateParents(logger);
@@ -721,7 +721,7 @@ namespace log4net.Repository.Hierarchy
 				ProvisionNode nodeProvisionNode = node as ProvisionNode;
 				if (nodeProvisionNode != null) 
 				{
-					logger = factory.CreateLogger(name);
+					logger = factory.CreateLogger(this, name);
 					logger.Hierarchy = this; 
 					m_ht[key] = logger;
 					UpdateChildren(nodeProvisionNode, logger);
@@ -868,7 +868,7 @@ namespace log4net.Repository.Hierarchy
 		/// c's parent field to log.
 		/// </para>
 		/// </remarks>
-		private void UpdateChildren(ProvisionNode pn, Logger log) 
+		private static void UpdateChildren(ProvisionNode pn, Logger log) 
 		{
 			for(int i = 0; i < pn.Count; i++) 
 			{

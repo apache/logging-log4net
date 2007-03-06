@@ -17,8 +17,6 @@
 //
 #endregion
 
-using System;
-
 using log4net.Core;
 
 namespace log4net.Repository.Hierarchy
@@ -58,6 +56,7 @@ namespace log4net.Repository.Hierarchy
 		/// <summary>
 		/// Create a new <see cref="Logger" /> instance
 		/// </summary>
+		/// <param name="repository">The <see cref="ILoggerRepository" /> that will own the <see cref="Logger" />.</param>
 		/// <param name="name">The name of the <see cref="Logger" />.</param>
 		/// <returns>The <see cref="Logger" /> instance for the specified name.</returns>
 		/// <remarks>
@@ -74,11 +73,11 @@ namespace log4net.Repository.Hierarchy
 		/// must be returned.
 		/// </para>
 		/// </remarks>
-		public Logger CreateLogger(string name) 
+		public Logger CreateLogger(ILoggerRepository repository, string name) 
 		{
 			if (name == null)
 			{
-				return new RootLogger(Level.Debug);
+				return new RootLogger(repository.LevelMap.LookupWithDefault(Level.Debug));
 			}
 			return new LoggerImpl(name);
 		}
