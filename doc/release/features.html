@@ -341,13 +341,13 @@ limitations under the License.
                                                     <h2><a id="context"></a>Logging Context</h2>
     <div class="i1">
                                     <p>
-                    log4net can collect logging context data in a way that is transparent 
+                    log4net can be used to collect logging context data in a way that is transparent 
                     to the developer at the point of logging. The GlobalContext and the 
-                    ThreadContext allow the application to capture contextual data and for it
-                    to be attached to logging messages. For instance, in a web service, 
-                    once the caller is authenticated the username of the caller is can be 
-                    stored in a ThreadContext property. This property is then automatically 
-                    logged as part of each logging message.
+                    ThreadContext allow the application to store contextual data that is
+                    attached to logging messages. For instance, in a web service, 
+                    once the caller is authenticated the username of the caller could be 
+                    stored in a ThreadContext property. This property would then be automatically 
+                    logged as part of each subsequent logging message made from the same thread.
                 </p>
                       </div>
                                                     <h2><a id="history"></a>Proven architecture</h2>
