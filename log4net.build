@@ -20,7 +20,13 @@ limitations under the License.
     <property name="log4net.basedir" value="." />
     <property name="project.build.config" value="debug" />
     <property name="project.build.package" value="false" />
-    <!-- Include log4net helpers -->
+
+  <property name="svnrepo.url" value="https://svn.apache.org/repos/asf"/>
+  <property name="svnsite.url" value="${svnrepo.url}/logging/site/trunk/docs/log4net"/>
+  <property name="deploy.dir" value="/cygwin/tmp/log4net-deploy"/>
+
+
+  <!-- Include log4net helpers -->
     <include buildfile="${log4net.basedir}/log4net.include" />
     <!-- Targets that should always be executed -->
     <call target="set-build-configuration" />
@@ -1034,4 +1040,63 @@ limitations under the License.
     <target name="compile-extensions" description="Build all extensions">
         <nant buildfile="${log4net.basedir}/extensions/nant.build" target="compile" inheritall="false" />
     </target>
+
+  <target name="checkout-site" unless="${file::exists('/tmp/log4net-deploy/.svn')}">
+    <exec program="svn">
+      <arg value="co"/>
+      <arg value="${svnsite.url}"/>
+      <arg value="${deploy.dir}"/>
+    </exec>
+  </target>
+
+  <target name="update-site" if="${file::exists('/tmp/log4net-deploy/.svn')}">
+    <exec program="svn" dir="${deploy.dir}" failonerror="true">
+      <arg value="update"/>
+    </exec>
+  </target>
+
+  <target name="post-site" depends="checkout-site, update-site" description="checkout log4net web content prior to deployment"/>
+
+  <target name="site-deploy">
+    <exec program="svn" workingdir="${deploy.dir}" failonerror="true">
+      <arg value="add"/>
+      <arg value="--force"/>
+      <arg value="*"/>
+    </exec>
+    <foreach item="File" property="src.html">
+      <in>
+        <items basedir="${deploy.dir}">
+          <include name="**/*.html"/> 
+        </items>
+      </in>
+      <do>
+        <exec program="svn">
+          <arg value="propset"/>
+          <arg value="svn:mime-type"/>
+          <arg value="text/html"/>
+          <arg value="${src.html}"/>
+        </exec>
+      </do>
+    </foreach>
+    <foreach item="File" property="src.css">
+      <in>
+        <items basedir="${deploy.dir}">
+          <include name="**/*.css"/>
+        </items>
+      </in>
+      <do>
+        <exec program="svn">
+          <arg value="propset"/>
+          <arg value="svn:mime-type"/>
+          <arg value="text/css"/>
+          <arg value="${src.css}"/>
+        </exec>
+      </do>
+    </foreach>
+    <!--  requires that SVN_EDITOR, VISUAL or EDITOR being set to edit commit description -->
+    <exec program="svn" workingdir="${deploy.dir}" failonerror="true">
+      <arg value="commit"/>
+    </exec>
+  </target>
+
 </project>

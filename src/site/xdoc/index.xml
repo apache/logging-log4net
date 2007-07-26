@@ -1,0 +1,136 @@
+<?xml version="1.0" ?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one or more 
+contributor license agreements. See the NOTICE file distributed with
+this work for additional information regarding copyright ownership. 
+The ASF licenses this file to you under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with 
+the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<document>
+
+    <properties>
+        <author email="nicko at apache dot org">Nicko Cadell</author>
+        <title>Apache log4net: Home</title>
+    </properties>
+
+    <meta name="keywords" content=".net, C#, VB.NET, logging, tracing, component, framework, API, log4net" />
+
+    <body>
+        <section id="main" name="About Apache log4net">
+
+            <section id="intro" name="Introduction">
+                <p>
+                    log4net is a tool to help the programmer output log statements to a variety 
+                    of output targets. log4net is a port of the excellent log4j framework to the 
+                    .NET runtime. We have kept the framework similar in spirit to the original log4j 
+                    while taking advantage of new features in the .NET runtime.
+                    For more information on log4net see the <a href="release/features.html">features</a> document.
+                </p>
+
+                <p>
+                    log4net is part of the <a href="http://logging.apache.org">Apache Logging Services</a> 
+                    project. The Logging Services project is intended to provide cross-language logging 
+                    services for purposes of application debugging and auditing.
+                </p>
+            </section>
+                
+            <section id="contributors" name="Contributors">
+    
+                <section id="active" name="Active Committers">
+
+                    <ul>
+                        <li>
+                            <p>
+                                <strong>Curt Arnold</strong>
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                <strong>Nicko Cadell</strong>
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                <strong>Niall Daley</strong>
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                <strong>Gert Driesen</strong>
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                <strong>Ron Grabowski</strong>
+                            </p>
+                        </li>
+                    </ul>
+                    
+                </section>
+            
+                <section id="community" name="Community Contributors">
+
+                    <ul>
+                        <li>
+                            <p>
+                                <strong>Julian Biddle</strong><!-- julian_biddle@technologyonecorp.com -->
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                <strong>Daniel Cazzulino</strong><!-- yapcaz@siderar.com -->
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                <strong>Aspi Havewala</strong><!-- ahavewala@hotmail.com -->
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                <strong>Rick Hobbs</strong><!--  -->
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                <strong>Lance Nehring</strong><!-- nehring@newparticles.com -->
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                <strong>Angelika Schnagl</strong><!-- angelika.schnagl@sdm.de -->
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                <strong>Edward Smit</strong><!-- edwardsmit@xs4all.nl -->
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                <strong>Douglas de la Torre</strong><!-- res06xzj@gte.net -->
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                <strong>Thomas Voss</strong><!-- vossthomas@users.sourceforge.net -->
+                            </p>
+                        </li>
+                    </ul>
+                </section>
+                
+            </section>
+            
+        </section>
+    </body>
+
+</document>

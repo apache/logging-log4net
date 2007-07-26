@@ -1,0 +1,185 @@
+<?xml version="1.0" ?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one or more 
+contributor license agreements. See the NOTICE file distributed with
+this work for additional information regarding copyright ownership. 
+The ASF licenses this file to you under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with 
+the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<document>
+
+    <properties>
+        <author email="nicko at apache dot org">Nicko Cadell</author>
+        <title>Apache log4net: Building log4net</title>
+    </properties>
+
+    <meta name="keywords" content="building log4net, log4net" />
+
+    <body>
+        <section id="main" name="Building log4net">
+            <sectionMenu name="Contents" />
+            
+            <p>
+                The log4net release builds are built using NAnt. Log4net can also be built
+                using Visual Studio .NET 2002, 2003, or 2005.
+            </p>
+            <p>
+                To build a release build of log4net you will need to create a strong
+                name key file. See the Strong Name section below. 
+            </p>
+        
+            <section id="vsnet" name="Visual Studio">
+                <p>
+                    Visual Studio .NET 2002, 2003 and 2005 are supported build platforms for log4net.
+                </p>
+
+                <section id="vsnet-2002" name="Visual Studio .NET 2002">
+                    <p>
+                        The log4net distribution includes a solution and project file
+                        for Visual Studio .NET 2002. Open the <span class="code">log4net.sln</span>
+                        from the src directory in the distribution.
+                    </p>
+                    <p>
+                        The log4net project requires only the following references:
+                    </p>
+                    <ul>
+                        <li>System</li>
+                        <li>System.Data</li>
+                        <li>System.Web</li>
+                        <li>System.XML</li>
+                    </ul>
+                </section>
+
+                <section id="vsnet-2003" name="Visual Studio .NET 2003">
+                    <p>
+                        Open the Visual Studio .NET 2002 solution file as above. 
+                        Visual Studio will convert the solution and project files
+                        to Visual Studio .NET 2003 format.
+                    </p>
+                    <p>
+                        After converting the log4net project you must change the
+                        <i>Conditional Compilation Constants</i> specified for the
+                        log4net project. Open the project properties dialog and
+                        select the <i>Configuration Properties/Build</i> sheet.
+                        Replace the <c>NET_1_0</c> constant with <c>NET_1_1</c>.
+                        Remember to do this for both Debug and Release configurations.
+                    </p>
+                    <p>
+                        The log4net project file is not suitable for building log4net
+                        for the .NET Compact Framework. To build for the Compact Framework
+                        you must create a new C# project for Smart Devices. Configure the
+                        project as a library project. Add all the C# files from the 
+                        src directory in the distribution.
+                    </p>
+                </section>
+                
+                <section id="vsnet-2005" name="Visual Studio 2005">
+                    <p>
+                        Open the Visual Studio .NET 2002 solution file as above. 
+                        Visual Studio will convert the solution and project files
+                        to Visual Studio .NET 2003 format.
+                    </p>
+                    <p>
+                        After converting the log4net project you must change the
+                        <i>Conditional compilation symbols</i> specified for the
+                        log4net project. Open the project properties page and
+                        select the <i>Build</i> sheet.
+                        Replace the <c>NET_1_0</c> symbol with <c>NET_2_0</c>.
+                        Remember to do this for both Debug and Release configurations.
+                    </p>
+                    <p>
+                        In addition the log4net project requires the following new references:
+                    </p>
+                    <ul>
+                        <li>System.Configuration</li>
+                    </ul>
+                    <p>
+                        The log4net project file is not suitable for building log4net
+                        for the .NET Compact Framework. To build for the Compact Framework
+                        you must create a new C# project for Smart Devices. Configure the
+                        project as a library project. Add all the C# files from the 
+                        src directory in the distribution.
+                    </p>
+                </section>
+            </section>
+            
+            <section id="nant" name="NAnt">
+                <p>
+                    The log4net distribution is built using the NAnt tool.
+                    A recent NAnt version 0.85 nightly build is required to build log4net, this is 
+                    available from <a href="http://nant.sourceforge.net">nant.sourceforge.net</a>.
+                </p>
+                <p>
+                    To support building log4net for the SSCLI framework the NAnt configuration
+                    files need to be updated to specify the SSCLI framework directory.
+                </p>
+                <p>
+                    To build log4net from the command line, change directory to the root of the
+                    log4net distribution, ensure that the nant executable is in the
+                    PATH, and then run the following command:
+                </p>
+                <div class="syntax"><pre class="code">
+nant -buildfile:log4net.build compile-all</pre></div>
+                <p>
+                    This command will build log4net for all the supported frameworks
+                    that are available on the current machine. To list all the build
+                    targets that are available run the following command:
+                </p>
+                <div class="syntax"><pre class="code">
+nant -buildfile:log4net.build -projecthelp</pre></div>
+                <p>
+                    Under windows the <span class="code">build.cmd</span> can be used 
+                    to script the nant build. This can be called from a different
+                    directory and will locate the correct log4net.build file to use.
+                    For example:
+                </p>
+                <div class="syntax"><pre class="code">
+build.cmd compile-all</pre></div>
+            </section>
+
+            <section id="sn" name="Strong Name">
+                <p>
+                    In order to build the Release builds of log4net a Strong
+                    Name key is required. 
+                </p>
+                <p>
+                    Use the <span class="code">sn.exe</span> tool in the 
+                    .NET Framework SDK to generate a strong name key pair.
+                </p>
+                <div class="syntax"><pre class="code">
+sn -k log4net.snk</pre></div>
+                <p>
+                    The log4net.snk file should be placed in the root of the
+                    log4net distribution, in the same folder as the log4net.build
+                    file.
+                </p>
+            </section>
+
+            <section id="sdk" name="SDK Reference">
+                <p>
+                    NDoc 1.3 is used to build the log4net SDK documentation.
+                    NDoc is available from <a href="http://ndoc.sourceforge.net">ndoc.sourceforge.net</a>.
+                </p>
+            </section>
+
+            <section id="html" name="HTML Documentation">
+                <p>
+                    The log4net HTML documentation is built using Velocity.
+                    The source are XML files in the <span class="code">xdocs/src</span> directory.
+                    Building the documentation requires Java, Ant, and Velocity.
+                    Run ant from within the <span class="code">xdocs</span> directory.
+                </p>
+            </section>
+
+        </section>
+    </body>
+</document>

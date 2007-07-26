@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one or more 
+contributor license agreements. See the NOTICE file distributed with
+this work for additional information regarding copyright ownership. 
+The ASF licenses this file to you under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with 
+the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<project name="log4net" href="http://logging.apache.org/log4net/">
+
+    <title>log4net</title>
+    <!-- <logo href="images/logo.jpg">Apache Logging Services</logo> -->
+    <copyright year="2004-2007" />
+
+    <css href="/css/style.css" />
+
+    <body>
+
+        <menu name="Apache">
+            <item name="Apache Home" href="http://www.apache.org" />
+            <item name="Logging Services" href="http://logging.apache.org/" />
+        </menu>
+
+        <menu name="log4net Project">
+            <item name="About" href="/index.html" />
+            <item name="License" href="/license.html" />
+            <item name="Support" href="/support.html" />
+            <item name="Roadmap" href="/roadmap.html" />
+            <item name="Contributing" href="/contributing.html" />
+            <item name="History" href="/history.html" />
+            <item name="Downloads" href="/downloads.html" />
+        </menu>
+
+        <menu name="log4net 1.2 Documentation">
+            <item name="Features" href="/release/features.html" />
+            <item name="Supported Frameworks" href="/release/framework-support.html" />
+            <item name="Release Notes" href="/release/release-notes.html" />
+            <item name="Example Apps" href="/release/example-apps.html" />
+            <item name="Config Examples" href="/release/config-examples.html" />
+            <item name="Building" href="/release/building.html" />
+            <item name="FAQ" href="/release/faq.html" />
+            <item name="How Tos" href="/release/howto/index.html" />
+            <item name="SDK Reference" href="/release/sdk/index.html" />
+        </menu>
+        
+        <menu name="log4net 1.2 Manual">
+            <item name="Introduction" href="/release/manual/introduction.html" />
+            <item name="Configuration" href="/release/manual/configuration.html" />
+            <item name="Contexts" href="/release/manual/contexts.html" />
+            <item name="Plugins" href="/release/manual/plugins.html" />
+            <item name="Repositories" href="/release/manual/repositories.html" />
+            <item name="Internals" href="/release/manual/internals.html" />
+        </menu>
+
+    </body>
+</project>
