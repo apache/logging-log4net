@@ -1058,11 +1058,20 @@ limitations under the License.
   <target name="post-site" depends="checkout-site, update-site" description="checkout log4net web content prior to deployment"/>
 
   <target name="site-deploy">
-    <exec program="svn" workingdir="${deploy.dir}" failonerror="true">
-      <arg value="add"/>
-      <arg value="--force"/>
-      <arg value="*"/>
-    </exec>
+    <foreach item="File" property="src.star">
+      <in>
+        <items basedir="${deploy.dir}">
+          <include name="**/*"/>
+		  <exclude name=".*"/> 
+        </items>
+      </in>
+      <do>
+        <exec program="svn">
+          <arg value="add"/>
+          <arg value="${src.star}"/>
+        </exec>
+      </do>
+    </foreach>
     <foreach item="File" property="src.html">
       <in>
         <items basedir="${deploy.dir}">
