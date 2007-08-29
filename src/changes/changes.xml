@@ -22,8 +22,7 @@
     <title>Apache log4net</title>
   </properties>
   <body>
-    <release version="0.10.0" date="2007-07-30" description="First Apache release">
-      <action issue="LOGCXX-2">logger.h includes config.h</action>
+    <release version="1.2.11" date="TDB" description="First Apache release">
     </release>
   </body>
 </document>

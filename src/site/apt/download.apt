@@ -13,14 +13,18 @@
 ~~ See the License for the specific language governing permissions and
 ~~ limitations under the License.
  ------
-Download Apache log4net 1.2.10.0
+Download Apache log4net 1.2.10
  ------
  ------
  ------
 
-Download Apache log4net 1.2.10.0
+Download Apache log4net 1.2.10
 
-  Apache log4net 1.2.10.0 is distributed under the {{{http://www.apache.org/licenses/LICENSE-2.0.html} Apache License, version 2.0}}.
+  log4net 1.2.10 is distributed under the {{{http://www.apache.org/licenses/LICENSE-2.0.html} Apache License, version 2.0}}.
+
+  log4net has graduated from the Incubator project, however at the time the following releases were made, 
+  log4net was still undergoing incubation, therefore these releases are not officially endorsed by the ASF.
+  Future releases of log4net will be officially endorsed by the ASF.
 
   The link in the Mirrors column should display a list of available mirrors with a
   default selection based on your inferred location.  If you do not see that page,
@@ -30,9 +34,9 @@ Download Apache log4net 1.2.10.0
 *-------------------------+---------+----------+-----------+
 |                         | Mirrors | Checksum | Signature |
 *-------------------------+---------+----------+-----------+
-| Apache log4net 1.2.10.0 (tar.gz)      | {{{http://www.apache.org/dyn/closer.cgi/logging/log4net/1.2.10.0/apache-log4net-1.2.10.0.tar.gz} apache-log4net-1.2.10.0.tar.gz}} | {{{http://www.apache.org/dist/logging/log4net/1.2.10.0/apache-log4net-1.2.10.0.tar.gz.md5} apache-log4net-1.2.10.0.tar.gz.md5}} | {{{http://www.apache.org/dist/logging/log4net/1.2.10.0/apache-log4net-1.2.10.0.tar.gz.asc} apache-log4net-1.2.10.0.tar.gz.asc}} |
 *-------------------------+---------+----------+-----------+
-| Apache log4net 1.2.10.0 (zip)      | {{{http://www.apache.org/dyn/closer.cgi/logging/log4net/1.2.10.0/apache-log4net-1.2.10.0.zip} apache-log4net-1.2.10.0.zip}} | {{{http://www.apache.org/dist/logging/log4net/1.2.10.0/apache-log4net-1.2.10.0.zip.md5} apache-log4net-1.2.10.0.zip.md5}} | {{{http://www.apache.org/dist/logging/log4net/1.2.10.0/apache-log4net-1.2.10.0.zip.asc} apache-log4net-1.2.10.0.zip.asc}} |
+| log4net 1.2.10 (zip)      | {{{http://cvs.apache.org/dist/incubator/log4net/1.2.10/incubating-log4net-1.2.10.zip} incubating-log4net-1.2.10.zip}} | {{{http://cvs.apache.org/dist/incubator/log4net/1.2.10/incubating-log4net-1.2.10.zip.md5} incubating-log4net-1.2.10.zip.md5}} | {{{http://cvs.apache.org/dist/incubator/log4net/1.2.10/incubating-log4net-1.2.10.zip.asc} incubating-log4net-1.2.10.zip.asc}}|
+| log4net 1.2.9-beta (zip)      | {{{http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip} incubating-log4net-1.2.9-beta.zip}} | {{{http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip.md5} incubating-log4net-1.2.9-beta.zip.md5}} | {{{http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip.asc} incubating-log4net-1.2.9-beta.zip.asc}}|
 *-------------------------+---------+----------+-----------+
 
   Please read {{{http://httpd.apache.org/dev/verification.html}Verifying Apache HTTP Server Releases}}
@@ -41,4 +45,4 @@ Download Apache log4net 1.2.10.0
 
 * Previous Releases
 
-  All previous releases of Apache log4net can be found in the {{{http://archive.apache.org/dist/logging/log4net}archive repository}}.
+  Previous releases of log4net are available from the {{{http://sourceforge.net/project/showfiles.php?group_id=31983&release_id=171808}SourceForge Project Site}}.
