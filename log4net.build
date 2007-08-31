@@ -23,7 +23,7 @@ limitations under the License.
 
   <property name="svnrepo.url" value="https://svn.apache.org/repos/asf"/>
   <property name="svnsite.url" value="${svnrepo.url}/logging/site/trunk/docs/log4net"/>
-  <property name="deploy.dir" value="/cygwin/tmp/log4net-deploy"/>
+  <property name="deploy.dir" value="/tmp/log4net-deploy"/>
 
 
   <!-- Include log4net helpers -->

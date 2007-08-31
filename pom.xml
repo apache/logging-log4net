@@ -123,7 +123,7 @@
             <configuration>
                 <tasks>
                    <!-- exec executable="nant">
-                    <arg value="-D:current.sdkdoc.dir=target/site/apidocs"/>
+                    <arg value="-D:current.sdkdoc.dir=target/site/release/sdkdoc"/>
                     <arg value="generate-sdkdoc"/>
                    </exec -->
                    <taskdef name="replaceregexp" classname="org.apache.tools.ant.taskdefs.optional.ReplaceRegExp" />                
@@ -236,7 +236,7 @@
  <distributionManagement>
     <site>
       <id>logging.site</id>
-      <url>scp://localhost/tmp/log4net-deploy</url>
+      <url>file:///tmp/log4net-deploy</url>
     </site>
   </distributionManagement> 
 </project>
