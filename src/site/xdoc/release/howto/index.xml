@@ -33,13 +33,13 @@ limitations under the License.
             </p>
             <p>
                 New documents can be contributed via the issue tracking system.
-                See the <a href="../../contributing.html">Contributing</a> page for
+                See the <a href="../../issue-tracking.html">Issue Tracking</a> page for
                 details.
             </p>
 
             <ul>
                 <li>
-                    <p><a href="chainsaw.html">How To view logging events using Apache log4j Chainsaw</a></p>
+                    <p><a href="chainsaw.html">How To view logging events using Apache Chainsaw</a></p>
                 </li>
                 <!-- 
                 <li>

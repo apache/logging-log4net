@@ -30,14 +30,29 @@
   
 	<menu name="Get log4net">
 	   <item name="Download" href="/download.html"/>
-	   <item name="Changes" href="/changes-report.html"/>
+	   <item name="Changes" href="/release/release-notes.html"/>
 	   <item name="License" href="/license.html"/>
 	</menu>
 
-	<menu name="About log4net">
-	   <item name="What is log4net?" href="/index.html"/>
-	   <item name="FAQ" href="/faq.html"/>
-	   <item name="Roadmap" href="/roadmap.html"/>
+	<menu name="Documentation">
+	    <item name="About" href="/index.html"/>
+		<item name="Features" href="/release/features.html"/>
+		<item name="Supported Frameworks" href="/release/framework-support.html"/>
+		<item name="Example Apps" href="/release/example-apps.html"/>
+		<item name="Config Examples" href="/release/config-examples.html"/>
+		<item name="Building" href="/release/building.html"/>
+		<item name="FAQ" href="/release/faq.html"/>
+		<item name="How Tos" href="/release/howto/index.html"/>
+		<item name="SDK Reference" href="/release/sdk/index.html"/>
+	</menu>
+
+	<menu name="Manual">
+	    <item name="Introduction" href="/release/manual/introduction.html"/>
+		<item name="Configuration" href="/release/manual/configuration.html"/>
+		<item name="Contexts" href="/release/manual/contexts.html"/>
+		<item name="Plugins" href="/release/manual/plugins.html"/>
+		<item name="Repositories" href="/release/manual/repositories.html"/>
+		<item name="Internals" href="/release/manual/internals.html"/>
 	</menu>
 
 	<menu name="Community">
@@ -48,13 +63,6 @@
 	<menu name="Development">
 		<item name="Repository" href="/source-repository.html"/>
 		<item name="Continuous Integration" href="/integration.html"/>
-	</menu>
-	
-	<menu name="Documentation">
-		<item name="Introduction" href="/release/manual/introduction.html"/>
-		<!-- item name="API Doc" href="/apidocs/index.html"/ -->
-		<!-- item name="Publications" href="/publications.html"/ -->
-		<!-- item name="Wiki" href="http://wiki.apache.org/logging-log4net"/ -->
 	</menu>
 	
 	<menu name="Apache">
