@@ -127,7 +127,7 @@
                     <arg value="generate-sdkdoc"/>
                    </exec -->
                    <taskdef name="replaceregexp" classname="org.apache.tools.ant.taskdefs.optional.ReplaceRegExp" />                
-                   <replaceregexp file="target/site/source-repository.html" match="/tags/[^ ]*" replace="/trunk" flags="g" />
+                   <replaceregexp file="target/site/source-repository.html" match="/tags/[^ &quot;&apos;&lt;]*" replace="/trunk" flags="g"/>
                    <!-- replaceregexp match="Generated on .* for " replace="Generated for " flags="g">
                       <fileset dir="target/site/apidocs" includes="**/*.html"/>
 		               </replaceregexp -->
