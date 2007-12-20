@@ -99,11 +99,47 @@ namespace log4net.Appender
 		/// A semicolon-delimited list of recipient e-mail addresses.
 		/// </para>
 		/// </remarks>
-		public string To 
+		public string To
 		{
 			get { return m_to; }
 			set { m_to = value; }
 		}
+
+        /// <summary>
+        /// Gets or sets a semicolon-delimited list of recipient e-mail addresses 
+        /// that will be carbon copied.
+        /// </summary>
+        /// <value>
+        /// A semicolon-delimited list of e-mail addresses.
+        /// </value>
+        /// <remarks>
+        /// <para>
+        /// A semicolon-delimited list of recipient e-mail addresses.
+        /// </para>
+        /// </remarks>
+        public string Cc
+        {
+            get { return m_cc; }
+            set { m_cc = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a semicolon-delimited list of recipient e-mail addresses
+        /// that will be blind carbon copied.
+        /// </summary>
+        /// <value>
+        /// A semicolon-delimited list of e-mail addresses.
+        /// </value>
+        /// <remarks>
+        /// <para>
+        /// A semicolon-delimited list of recipient e-mail addresses.
+        /// </para>
+        /// </remarks>
+        public string Bcc
+        {
+            get { return m_bcc; }
+            set { m_bcc = value; }
+        }
 
 		/// <summary>
 		/// Gets or sets the e-mail address of the sender.
@@ -370,7 +406,15 @@ namespace log4net.Appender
 			mailMessage.Body = messageBody;
 			mailMessage.From = new MailAddress(m_from);
 			mailMessage.To.Add(m_to);
-			mailMessage.Subject = m_subject;
+            if (!String.IsNullOrEmpty(m_cc))
+            {
+                mailMessage.CC.Add(m_cc);
+            }
+            if (!String.IsNullOrEmpty(m_bcc))
+            {
+                mailMessage.Bcc.Add(m_bcc);
+            }
+		    mailMessage.Subject = m_subject;
 			mailMessage.Priority = m_mailPriority;
 
 			// TODO: Consider using SendAsync to send the message without blocking. This would be a change in
@@ -383,6 +427,14 @@ namespace log4net.Appender
 				mailMessage.Body = messageBody;
 				mailMessage.From = m_from;
 				mailMessage.To = m_to;
+                if (m_cc != null && m_cc.Length > 0)
+                {
+                    mailMessage.Cc = m_cc;
+                }
+                if (m_bcc != null && m_bcc.Length > 0)
+                {
+                    mailMessage.Bcc = m_bcc;
+                }
 				mailMessage.Subject = m_subject;
 				mailMessage.Priority = m_mailPriority;
 
@@ -441,13 +493,15 @@ namespace log4net.Appender
 
 				SmtpMail.Send(mailMessage);
 #endif // if NET_2_0
-		}
+        }
 
 		#endregion // Protected Methods
 
 		#region Private Instance Fields
 
 		private string m_to;
+        private string m_cc;
+        private string m_bcc;
 		private string m_from;
 		private string m_subject;
 		private string m_smtpHost;
