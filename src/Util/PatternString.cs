@@ -288,6 +288,7 @@ namespace log4net.Util
 			s_globalRulesRegistry.Add("date", typeof(DatePatternConverter));
 #if !NETCF
 			s_globalRulesRegistry.Add("env", typeof(EnvironmentPatternConverter));
+            s_globalRulesRegistry.Add("envFolderPath", typeof(EnvironmentFolderPathPatternConverter));
 #endif
 			s_globalRulesRegistry.Add("identity", typeof(IdentityPatternConverter));
 			s_globalRulesRegistry.Add("literal", typeof(LiteralPatternConverter));
