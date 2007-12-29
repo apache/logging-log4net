@@ -154,7 +154,7 @@ namespace log4net.Util
 				}
 				catch(Exception e)
 				{
-					LogLog.Error("OptionConverter: [" + argValue + "] is not in proper bool form.", e);
+					LogLog.Error(declaringType, "[" + argValue + "] is not in proper bool form.", e);
 				}
 			}
 			return defaultValue;
@@ -183,7 +183,7 @@ namespace log4net.Util
 //				}
 //				catch (Exception e) 
 //				{
-//					LogLog.Error("OptionConverter: [" + s + "] is not in proper int form.", e);
+//					LogLog.Error(declaringType, "OptionConverter: [" + s + "] is not in proper int form.", e);
 //				}
 //			}
 //			return defaultValue;
@@ -243,7 +243,7 @@ namespace log4net.Util
 				}
 				else
 				{
-					LogLog.Error("OptionConverter: ["+ s +"] is not in the correct file size syntax.");
+					LogLog.Error(declaringType, "OptionConverter: ["+ s +"] is not in the correct file size syntax.");
 				}
 			}
 			return defaultValue;
@@ -447,7 +447,7 @@ namespace log4net.Util
 //			} 
 //			catch(Exception e) 
 //			{
-//				LogLog.Error("OptionConverter: Bad option value [" + v + "].", e);
+//				LogLog.Error(declaringType, "OptionConverter: Bad option value [" + v + "].", e);
 //				return v;
 //			}	
 //		}
@@ -478,14 +478,14 @@ namespace log4net.Util
 					Type classObj = SystemInfo.GetTypeFromString(className, true, true);
 					if (!superClass.IsAssignableFrom(classObj)) 
 					{
-						LogLog.Error("OptionConverter: A [" + className + "] object is not assignable to a [" + superClass.FullName + "] variable.");
+						LogLog.Error(declaringType, "OptionConverter: A [" + className + "] object is not assignable to a [" + superClass.FullName + "] variable.");
 						return defaultValue;	  
 					}
 					return Activator.CreateInstance(classObj);
 				}
 				catch (Exception e) 
 				{
-					LogLog.Error("OptionConverter: Could not instantiate class [" + className + "].", e);
+					LogLog.Error(declaringType, "Could not instantiate class [" + className + "].", e);
 				}
 			}
 			return defaultValue;	
@@ -639,6 +639,15 @@ namespace log4net.Util
 		#endregion Private Static Methods
 
 		#region Private Static Fields
+
+        /// <summary>
+        /// The fully qualified type of the OptionConverter class.
+        /// </summary>
+        /// <remarks>
+        /// Used by the internal logger to record the Type of the
+        /// log message.
+        /// </remarks>
+        private readonly static Type declaringType = typeof(OptionConverter);
 
 		private const string DELIM_START = "${";
 		private const char   DELIM_STOP  = '}';

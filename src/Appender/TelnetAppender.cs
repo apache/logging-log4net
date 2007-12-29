@@ -70,6 +70,19 @@ namespace log4net.Appender
 
 		#endregion
 
+	    #region Private Static Fields
+
+	    /// <summary>
+	    /// The fully qualified type of the TelnetAppender class.
+	    /// </summary>
+	    /// <remarks>
+	    /// Used by the internal logger to record the Type of the
+	    /// log message.
+	    /// </remarks>
+	    private readonly static Type declaringType = typeof(TelnetAppender);
+
+	    #endregion Private Static Fields
+
 		/// <summary>
 		/// Gets or sets the TCP port number on which this <see cref="TelnetAppender"/> will listen for connections.
 		/// </summary>
@@ -166,12 +179,12 @@ namespace log4net.Appender
 			base.ActivateOptions();
 			try 
 			{
-				LogLog.Debug("TelnetAppender: Creating SocketHandler to listen on port ["+m_listeningPort+"]");
+				LogLog.Debug(declaringType, "Creating SocketHandler to listen on port ["+m_listeningPort+"]");
 				m_handler = new SocketHandler(m_listeningPort);
 			}
 			catch(Exception ex) 
 			{
-				LogLog.Error("TelnetAppender: Failed to create SocketHandler", ex);
+				LogLog.Error(declaringType, "Failed to create SocketHandler", ex);
 				throw;
 			}
 		}
@@ -423,7 +436,7 @@ namespace log4net.Appender
 					// Block until a client connects
 					Socket socket = m_serverSocket.EndAccept(asyncResult);
 
-					LogLog.Debug("TelnetAppender: Accepting connection from ["+socket.RemoteEndPoint.ToString()+"]");
+					LogLog.Debug(declaringType, "Accepting connection from ["+socket.RemoteEndPoint.ToString()+"]");
 					SocketClient client = new SocketClient(socket);
 
 					int currentActiveConnectionsCount = m_clients.Count;

@@ -18,6 +18,8 @@
 #endregion
 
 using System;
+using System.Collections;
+using log4net.Util;
 
 namespace log4net.Repository
 {
@@ -48,6 +50,6 @@ namespace log4net.Repository
 		/// specified appender.
 		/// </para>
 		/// </remarks>
-		void Configure(log4net.Appender.IAppender appender);
+        void Configure(log4net.Appender.IAppender appender);
 	}
 }

@@ -418,7 +418,7 @@ namespace log4net.Appender
 				}
 				catch (Exception ex)
 				{
-					LogLog.Warn("AdoNetAppender: Exception while disposing cached command object", ex);
+					LogLog.Warn(declaringType, "Exception while disposing cached command object", ex);
 				}
 				m_dbCommand = null;
 			}
@@ -430,7 +430,7 @@ namespace log4net.Appender
 				}
 				catch (Exception ex)
 				{
-					LogLog.Warn("AdoNetAppender: Exception while disposing cached connection object", ex);
+					LogLog.Warn(declaringType, "Exception while disposing cached connection object", ex);
 				}
 				m_dbConnection = null;
 			}
@@ -454,7 +454,7 @@ namespace log4net.Appender
 		{
 			if (m_reconnectOnError && (m_dbConnection == null || m_dbConnection.State != ConnectionState.Open))
 			{
-				LogLog.Debug("AdoNetAppender: Attempting to reconnect to database. Current Connection State: " + ((m_dbConnection==null)?"<null>":m_dbConnection.State.ToString()) );
+				LogLog.Debug(declaringType, "Attempting to reconnect to database. Current Connection State: " + ((m_dbConnection==null)?"<null>":m_dbConnection.State.ToString()) );
 
 				InitializeDatabaseConnection();
 				InitializeDatabaseCommand();
@@ -582,7 +582,7 @@ namespace log4net.Appender
 						// Get the command text from the Layout
 						string logStatement = GetLogStatement(e);
 
-						LogLog.Debug("AdoNetAppender: LogStatement ["+logStatement+"]");
+						LogLog.Debug(declaringType, "LogStatement ["+logStatement+"]");
 
 						dbCmd.CommandText = logStatement;
 						dbCmd.ExecuteNonQuery();
@@ -606,7 +606,7 @@ namespace log4net.Appender
 		{
 			if (Layout == null)
 			{
-				ErrorHandler.Error("ADOAppender: No Layout specified.");
+				ErrorHandler.Error("AdoNetAppender: No Layout specified.");
 				return "";
 			}
 			else
@@ -633,7 +633,7 @@ namespace log4net.Appender
 					}
 					catch (Exception ex)
 					{
-						LogLog.Warn("AdoNetAppender: Exception while disposing cached command object", ex);
+						LogLog.Warn(declaringType, "Exception while disposing cached command object", ex);
 					}
 					m_dbCommand = null;
 				}
@@ -645,7 +645,7 @@ namespace log4net.Appender
 					}
 					catch (Exception ex)
 					{
-						LogLog.Warn("AdoNetAppender: Exception while disposing cached connection object", ex);
+						LogLog.Warn(declaringType, "Exception while disposing cached connection object", ex);
 					}
 					m_dbConnection = null;
 				}
@@ -717,7 +717,7 @@ namespace log4net.Appender
 						}
 						catch (Exception ex)
 						{
-							LogLog.Warn("AdoNetAppender: Exception while disposing cached command object", ex);
+							LogLog.Warn(declaringType, "Exception while disposing cached command object", ex);
 						}
 						m_dbCommand = null;
 					}
@@ -880,6 +880,19 @@ namespace log4net.Appender
 		private bool m_reconnectOnError;
 
 		#endregion // Private Instance Fields
+
+        #region Private Static Fields
+
+        /// <summary>
+        /// The fully qualified type of the AdoNetAppender class.
+        /// </summary>
+        /// <remarks>
+        /// Used by the internal logger to record the Type of the
+        /// log message.
+        /// </remarks>
+        private readonly static Type declaringType = typeof(AdoNetAppender);
+
+        #endregion Private Static Fields
 	}
 
 	/// <summary>

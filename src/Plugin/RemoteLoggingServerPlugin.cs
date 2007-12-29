@@ -132,7 +132,7 @@ namespace log4net.Plugin
 			}
 			catch(Exception ex)
 			{
-				LogLog.Error("RemoteLoggingServerPlugin: Failed to Marshal remoting sink", ex);
+				LogLog.Error(declaringType, "Failed to Marshal remoting sink", ex);
 			}
 		}
 
@@ -162,6 +162,19 @@ namespace log4net.Plugin
 		private string m_sinkUri;
 
 		#endregion Private Instance Fields
+
+	    #region Private Static Fields
+
+	    /// <summary>
+	    /// The fully qualified type of the RemoteLoggingServerPlugin class.
+	    /// </summary>
+	    /// <remarks>
+	    /// Used by the internal logger to record the Type of the
+	    /// log message.
+	    /// </remarks>
+	    private readonly static Type declaringType = typeof(RemoteLoggingServerPlugin);
+
+	    #endregion Private Static Fields
 
 		/// <summary>
 		/// Delivers <see cref="LoggingEvent"/> objects to a remote sink.

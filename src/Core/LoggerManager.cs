@@ -88,14 +88,14 @@ namespace log4net.Core
 			}
 			catch(System.Security.SecurityException)
 			{
-				LogLog.Debug("LoggerManager: Security Exception (ControlAppDomain LinkDemand) while trying "+
+				LogLog.Debug(declaringType, "Security Exception (ControlAppDomain LinkDemand) while trying "+
 					"to register Shutdown handler with the AppDomain. LoggerManager.Shutdown() "+
 					"will not be called automatically when the AppDomain exits. It must be called "+
 					"programmatically.");
 			}
 
 			// Dump out our assembly version into the log if debug is enabled
-			LogLog.Debug(GetVersionInfo());
+            LogLog.Debug(declaringType, GetVersionInfo());
 
 			// Set the default repository selector
 #if NETCF
@@ -114,7 +114,7 @@ namespace log4net.Core
 				}
 				catch(Exception ex)
 				{
-					LogLog.Error("LoggerManager: Exception while resolving RepositorySelector Type ["+appRepositorySelectorTypeName+"]", ex);
+					LogLog.Error(declaringType, "Exception while resolving RepositorySelector Type ["+appRepositorySelectorTypeName+"]", ex);
 				}
 
 				if (appRepositorySelectorType != null)
@@ -127,7 +127,7 @@ namespace log4net.Core
 					}
 					catch(Exception ex)
 					{
-						LogLog.Error("LoggerManager: Exception while creating RepositorySelector ["+appRepositorySelectorType.FullName+"]", ex);
+						LogLog.Error(declaringType, "Exception while creating RepositorySelector ["+appRepositorySelectorType.FullName+"]", ex);
 					}
 
 					if (appRepositorySelectorObj != null && appRepositorySelectorObj is IRepositorySelector)
@@ -136,7 +136,7 @@ namespace log4net.Core
 					}
 					else
 					{
-						LogLog.Error("LoggerManager: RepositorySelector Type ["+appRepositorySelectorType.FullName+"] is not an IRepositorySelector");
+						LogLog.Error(declaringType, "RepositorySelector Type ["+appRepositorySelectorType.FullName+"] is not an IRepositorySelector");
 					}
 				}
 			}
@@ -853,6 +853,15 @@ namespace log4net.Core
 		#endregion Private Static Methods
 
 		#region Private Static Fields
+
+	    /// <summary>
+	    /// The fully qualified type of the LoggerManager class.
+	    /// </summary>
+	    /// <remarks>
+	    /// Used by the internal logger to record the Type of the
+	    /// log message.
+	    /// </remarks>
+	    private readonly static Type declaringType = typeof(LoggerManager);
 
 		/// <summary>
 		/// Initialize the default repository selector

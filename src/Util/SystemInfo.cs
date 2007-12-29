@@ -83,7 +83,7 @@ namespace log4net.Util
 			string nullTextAppSettingsKey = SystemInfo.GetAppSetting("log4net.NullText");
 			if (nullTextAppSettingsKey != null && nullTextAppSettingsKey.Length > 0)
 			{
-				LogLog.Debug("SystemInfo: Initializing NullText value to [" + nullTextAppSettingsKey + "].");
+				LogLog.Debug(declaringType, "Initializing NullText value to [" + nullTextAppSettingsKey + "].");
 				nullText = nullTextAppSettingsKey;
 			}
 
@@ -91,7 +91,7 @@ namespace log4net.Util
 			string notAvailableTextAppSettingsKey = SystemInfo.GetAppSetting("log4net.NotAvailableText");
 			if (notAvailableTextAppSettingsKey != null && notAvailableTextAppSettingsKey.Length > 0)
 			{
-				LogLog.Debug("SystemInfo: Initializing NotAvailableText value to [" + notAvailableTextAppSettingsKey + "].");
+				LogLog.Debug(declaringType, "Initializing NotAvailableText value to [" + notAvailableTextAppSettingsKey + "].");
 				notAvailableText = notAvailableTextAppSettingsKey;
 			}
 #endif
@@ -332,7 +332,7 @@ namespace log4net.Util
 					{
 						// This security exception will occur if the caller does not have 
 						// some undefined set of SecurityPermission flags.
-						LogLog.Debug("SystemInfo: Security exception while trying to get current domain friendly name. Error Ignored.");
+						LogLog.Debug(declaringType, "Security exception while trying to get current domain friendly name. Error Ignored.");
 					}
 
 					if (s_appFriendlyName == null || s_appFriendlyName.Length == 0)
@@ -628,7 +628,7 @@ namespace log4net.Util
 			// Check if the type name specifies the assembly name
 			if(typeName.IndexOf(',') == -1)
 			{
-				//LogLog.Debug("SystemInfo: Loading type ["+typeName+"] from assembly ["+relativeAssembly.FullName+"]");
+				//LogLog.Debug(declaringType, "SystemInfo: Loading type ["+typeName+"] from assembly ["+relativeAssembly.FullName+"]");
 #if NETCF
 				return relativeAssembly.GetType(typeName, throwOnError);
 #else
@@ -637,7 +637,7 @@ namespace log4net.Util
 				if (type != null)
 				{
 					// Found type in relative assembly
-					//LogLog.Debug("SystemInfo: Loaded type ["+typeName+"] from assembly ["+relativeAssembly.FullName+"]");
+					//LogLog.Debug(declaringType, "SystemInfo: Loaded type ["+typeName+"] from assembly ["+relativeAssembly.FullName+"]");
 					return type;
 				}
 
@@ -660,7 +660,7 @@ namespace log4net.Util
 						if (type != null)
 						{
 							// Found type in loaded assembly
-							LogLog.Debug("SystemInfo: Loaded type ["+typeName+"] from assembly ["+assembly.FullName+"] by searching loaded assemblies.");
+							LogLog.Debug(declaringType, "Loaded type ["+typeName+"] from assembly ["+assembly.FullName+"] by searching loaded assemblies.");
 							return type;
 						}
 					}
@@ -677,7 +677,7 @@ namespace log4net.Util
 			else
 			{
 				// Includes explicit assembly name
-				//LogLog.Debug("SystemInfo: Loading type ["+typeName+"] from global Type");
+				//LogLog.Debug(declaringType, "SystemInfo: Loading type ["+typeName+"] from global Type");
 
 #if NETCF
 				// In NETCF 2 and 3 arg versions seem to behave differently
@@ -860,7 +860,7 @@ namespace log4net.Util
 			catch(Exception ex)
 			{
 				// If an exception is thrown here then it looks like the config file does not parse correctly.
-				LogLog.Error("DefaultRepositorySelector: Exception while reading ConfigurationSettings. Check your .config file is well formed XML.", ex);
+				LogLog.Error(declaringType, "Exception while reading ConfigurationSettings. Check your .config file is well formed XML.", ex);
 			}
 			return null;
 		}
@@ -994,6 +994,15 @@ namespace log4net.Util
 		#endregion Public Static Fields
 
 		#region Private Static Fields
+
+	    /// <summary>
+	    /// The fully qualified type of the SystemInfo class.
+	    /// </summary>
+	    /// <remarks>
+	    /// Used by the internal logger to record the Type of the
+	    /// log message.
+	    /// </remarks>
+	    private readonly static Type declaringType = typeof(SystemInfo);
 
 		/// <summary>
 		/// Cache the host name for the current machine

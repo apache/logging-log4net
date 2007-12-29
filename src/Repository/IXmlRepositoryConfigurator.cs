@@ -18,6 +18,8 @@
 #endregion
 
 using System;
+using System.Collections;
+using log4net.Util;
 
 namespace log4net.Repository
 {

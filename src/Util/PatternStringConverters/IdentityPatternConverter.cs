@@ -65,11 +65,24 @@ namespace log4net.Util.PatternStringConverters
 			{
 				// This security exception will occur if the caller does not have 
 				// some undefined set of SecurityPermission flags.
-				LogLog.Debug("IdentityPatternConverter: Security exception while trying to get current thread principal. Error Ignored.");
+				LogLog.Debug(declaringType, "Security exception while trying to get current thread principal. Error Ignored.");
 
 				writer.Write( SystemInfo.NotAvailableText );
 			}
 #endif
 		}
+
+	    #region Private Static Fields
+
+	    /// <summary>
+	    /// The fully qualified type of the IdentityPatternConverter class.
+	    /// </summary>
+	    /// <remarks>
+	    /// Used by the internal logger to record the Type of the
+	    /// log message.
+	    /// </remarks>
+	    private readonly static Type declaringType = typeof(IdentityPatternConverter);
+
+	    #endregion Private Static Fields
 	}
 }

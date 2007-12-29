@@ -72,13 +72,26 @@ namespace log4net.Util.PatternStringConverters
                 // This security exception will occur if the caller does not have 
                 // unrestricted environment permission. If this occurs the expansion 
                 // will be skipped with the following warning message.
-                LogLog.Debug("EnvironmentPatternConverter: Security exception while trying to expand environment variables. Error Ignored. No Expansion.", secEx);
+                LogLog.Debug(declaringType, "Security exception while trying to expand environment variables. Error Ignored. No Expansion.", secEx);
             }
             catch (Exception ex)
             {
-                LogLog.Error("EnvironmentPatternConverter: Error occurred while converting environment variable.", ex);
+                LogLog.Error(declaringType, "Error occurred while converting environment variable.", ex);
             }
         }
+
+        #region Private Static Fields
+
+        /// <summary>
+        /// The fully qualified type of the EnvironmentFolderPathPatternConverter class.
+        /// </summary>
+        /// <remarks>
+        /// Used by the internal logger to record the Type of the
+        /// log message.
+        /// </remarks>
+        private readonly static Type declaringType = typeof(EnvironmentFolderPathPatternConverter);
+
+        #endregion Private Static Fields
     }
 }
 

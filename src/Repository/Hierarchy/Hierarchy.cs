@@ -18,7 +18,7 @@
 #endregion
 
 using System;
-
+using System.Collections;
 using log4net.Core;
 using log4net.Util;
 
@@ -377,7 +377,7 @@ namespace log4net.Repository.Hierarchy
 		/// </remarks>
 		override public void Shutdown() 
 		{
-			LogLog.Debug("Hierarchy: Shutdown called on Hierarchy ["+this.Name+"]");
+			LogLog.Debug(declaringType, "Shutdown called on Hierarchy ["+this.Name+"]");
 
 			// begin by closing nested appenders
 			Root.CloseNestedAppenders();
@@ -502,7 +502,9 @@ namespace log4net.Repository.Hierarchy
 
 		#endregion Override Implementation of LoggerRepositorySkeleton
 
-		/// <summary>
+        #region Private Static Methods
+
+        /// <summary>
 		/// Collect the appenders from an <see cref="IAppenderAttachable"/>.
 		/// The appender may also be a container.
 		/// </summary>
@@ -533,11 +535,13 @@ namespace log4net.Repository.Hierarchy
 			{
 				CollectAppender(appenderList, appender);
 			}
-		}
+        }
 
-		#region Implementation of IBasicRepositoryConfigurator
+        #endregion
 
-		/// <summary>
+        #region Implementation of IBasicRepositoryConfigurator
+
+        /// <summary>
 		/// Initialize the log4net system using the specified appender
 		/// </summary>
 		/// <param name="appender">the appender to use to log all logging events</param>
@@ -559,15 +563,22 @@ namespace log4net.Repository.Hierarchy
 		/// </remarks>
 		protected void BasicRepositoryConfigure(Appender.IAppender appender)
 		{
-			Root.AddAppender(appender);
+            ArrayList configurationMessages = new ArrayList();
 
-			Configured = true;
+            using (new LogLog.LogReceivedAdapter(configurationMessages))
+            {
+                Root.AddAppender(appender);
+            }
+
+		    Configured = true;
+
+            ConfigurationMessages = configurationMessages;
 
 			// Notify listeners
-			OnConfigurationChanged(null);
+            OnConfigurationChanged(new ConfigurationChangedEventArgs(configurationMessages));
 		}
 
-		#endregion Implementation of IBasicRepositoryConfigurator
+	    #endregion Implementation of IBasicRepositoryConfigurator
 
 		#region Implementation of IXmlRepositoryConfigurator
 
@@ -593,13 +604,20 @@ namespace log4net.Repository.Hierarchy
 		/// </remarks>
 		protected void XmlRepositoryConfigure(System.Xml.XmlElement element)
 		{
-			XmlHierarchyConfigurator config = new XmlHierarchyConfigurator(this);
-			config.Configure(element);
+            ArrayList configurationMessages = new ArrayList();
 
-			Configured = true;
+            using (new LogLog.LogReceivedAdapter(configurationMessages))
+		    {
+		        XmlHierarchyConfigurator config = new XmlHierarchyConfigurator(this);
+                config.Configure(element);
+		    }
+
+		    Configured = true;
+
+            ConfigurationMessages = configurationMessages;
 
 			// Notify listeners
-			OnConfigurationChanged(null);
+            OnConfigurationChanged(new ConfigurationChangedEventArgs(configurationMessages));
 		}
 
 		#endregion Implementation of IXmlRepositoryConfigurator
@@ -831,7 +849,7 @@ namespace log4net.Repository.Hierarchy
 						}
 						else
 						{
-							LogLog.Error("Hierarchy: Unexpected object type ["+node.GetType()+"] in ht.", new LogException());
+							LogLog.Error(declaringType, "Unexpected object type ["+node.GetType()+"] in ht.", new LogException());
 						}
 					} 
 				} 
@@ -1076,8 +1094,22 @@ namespace log4net.Repository.Hierarchy
 		private Logger m_root;
   
 		private bool m_emittedNoAppenderWarning = false;
-		private event LoggerCreationEventHandler m_loggerCreatedEvent;
+
+	    private event LoggerCreationEventHandler m_loggerCreatedEvent;
 
 		#endregion Private Instance Fields
+
+	    #region Private Static Fields
+
+	    /// <summary>
+	    /// The fully qualified type of the Hierarchy class.
+	    /// </summary>
+	    /// <remarks>
+	    /// Used by the internal logger to record the Type of the
+	    /// log message.
+	    /// </remarks>
+	    private readonly static Type declaringType = typeof(Hierarchy);
+
+	    #endregion Private Static Fields
 	}
 }

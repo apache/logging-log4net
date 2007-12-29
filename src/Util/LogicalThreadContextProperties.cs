@@ -20,6 +20,7 @@
 // .NET Compact Framework 1.0 has no support for System.Runtime.Remoting.Messaging.CallContext
 #if !NETCF
 
+using System;
 using System.Runtime.Remoting.Messaging;
 using System.Security;
 
@@ -177,7 +178,7 @@ namespace log4net.Util
 					m_disabled = true;
 					
 					// Thrown if we don't have permission to read or write the CallContext
-					LogLog.Warn("SecurityException while accessing CallContext. Disabling LogicalThreadContextProperties", secEx);
+					LogLog.Warn(declaringType, "SecurityException while accessing CallContext. Disabling LogicalThreadContextProperties", secEx);
 				}
 			}
 			
@@ -191,7 +192,9 @@ namespace log4net.Util
 
 		#endregion Internal Instance Methods
 
-		/// <summary>
+        #region Private Static Methods
+
+        /// <summary>
 		/// Gets the call context get data.
 		/// </summary>
 		/// <returns>The peroperties dictionary stored in the call context</returns>
@@ -217,8 +220,23 @@ namespace log4net.Util
 		private static void SetCallContextData(PropertiesDictionary properties)
 		{
 			CallContext.SetData(c_SlotName, properties);
-		}
-	}
+        }
+
+        #endregion
+
+	    #region Private Static Fields
+
+	    /// <summary>
+	    /// The fully qualified type of the LogicalThreadContextProperties class.
+	    /// </summary>
+	    /// <remarks>
+	    /// Used by the internal logger to record the Type of the
+	    /// log message.
+	    /// </remarks>
+	    private readonly static Type declaringType = typeof(LogicalThreadContextProperties);
+
+	    #endregion Private Static Fields
+    }
 }
 
 #endif

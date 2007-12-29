@@ -280,7 +280,7 @@ namespace log4net.Appender
 				{
 					if (value == null) 
 					{
-						LogLog.Warn("TextWriterAppender: You have tried to set a null error-handler.");
+						LogLog.Warn(declaringType, "TextWriterAppender: You have tried to set a null error-handler.");
 					} 
 					else 
 					{
@@ -420,8 +420,6 @@ namespace log4net.Appender
 		{
 		}
 
-		#endregion Protected Instance Methods
-
 		/// <summary>
 		/// Gets or sets the <see cref="log4net.Util.QuietTextWriter"/> where logging events
 		/// will be written to. 
@@ -439,11 +437,13 @@ namespace log4net.Appender
 		{
 			get { return m_qtw; }
 			set { m_qtw = value; }
-		}
+        }
 
-		#region Private Instance Fields
+        #endregion Protected Instance Methods
 
-		/// <summary>
+        #region Private Instance Fields
+
+        /// <summary>
 		/// This is the <see cref="log4net.Util.QuietTextWriter"/> where logging events
 		/// will be written to. 
 		/// </summary>
@@ -468,5 +468,18 @@ namespace log4net.Appender
 		private bool m_immediateFlush = true;
 
 		#endregion Private Instance Fields
+
+	    #region Private Static Fields
+
+	    /// <summary>
+	    /// The fully qualified type of the TextWriterAppender class.
+	    /// </summary>
+	    /// <remarks>
+	    /// Used by the internal logger to record the Type of the
+	    /// log message.
+	    /// </remarks>
+	    private readonly static Type declaringType = typeof(TextWriterAppender);
+
+	    #endregion Private Static Fields
 	}
 }

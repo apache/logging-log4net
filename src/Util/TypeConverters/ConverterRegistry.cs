@@ -260,12 +260,12 @@ namespace log4net.Util.TypeConverters
 				}
 				catch(Exception ex)
 				{
-					LogLog.Error("ConverterRegistry: Cannot CreateConverterInstance of type ["+converterType.FullName+"], Exception in call to Activator.CreateInstance", ex);
+					LogLog.Error(declaringType, "Cannot CreateConverterInstance of type ["+converterType.FullName+"], Exception in call to Activator.CreateInstance", ex);
 				}
 			}
 			else
 			{
-				LogLog.Error("ConverterRegistry: Cannot CreateConverterInstance of type ["+converterType.FullName+"], type does not implement IConvertFrom or IConvertTo");
+				LogLog.Error(declaringType, "Cannot CreateConverterInstance of type ["+converterType.FullName+"], type does not implement IConvertFrom or IConvertTo");
 			}
 			return null;
 		}
@@ -273,6 +273,15 @@ namespace log4net.Util.TypeConverters
 		#endregion Public Static Methods
 
 		#region Private Static Fields
+
+	    /// <summary>
+	    /// The fully qualified type of the ConverterRegistry class.
+	    /// </summary>
+	    /// <remarks>
+	    /// Used by the internal logger to record the Type of the
+	    /// log message.
+	    /// </remarks>
+	    private readonly static Type declaringType = typeof(ConverterRegistry);
 
 		/// <summary>
 		/// Mapping from <see cref="Type" /> to type converter.

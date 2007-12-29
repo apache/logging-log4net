@@ -41,6 +41,8 @@ namespace log4net.ObjectRenderer
 	/// <author>Gert Driesen</author>
 	public class RendererMap
 	{
+        private readonly static Type declaringType = typeof(RendererMap);
+
 		#region Member Variables
 
 		private System.Collections.Hashtable m_map;
@@ -131,7 +133,7 @@ namespace log4net.ObjectRenderer
 					catch(Exception ex)
 					{
 						// Exception rendering the object
-						log4net.Util.LogLog.Error("RendererMap: Exception while rendering object of type ["+obj.GetType().FullName+"]", ex);
+						log4net.Util.LogLog.Error(declaringType, "Exception while rendering object of type ["+obj.GetType().FullName+"]", ex);
 
 						// return default message
 						string objectTypeName = "";

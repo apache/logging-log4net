@@ -79,7 +79,7 @@ namespace log4net.Appender
 			// There is no point in closing twice.
 			if (!m_closed) 
 			{
-				LogLog.Debug("AppenderSkeleton: Finalizing appender named ["+m_name+"].");
+				LogLog.Debug(declaringType, "Finalizing appender named ["+m_name+"].");
 				Close();
 			}
 		}
@@ -132,7 +132,7 @@ namespace log4net.Appender
 					{
 						// We do not throw exception here since the cause is probably a
 						// bad config file.
-						LogLog.Warn("AppenderSkeleton: You have tried to set a null error-handler.");
+						LogLog.Warn(declaringType, "AppenderSkeleton: You have tried to set a null error-handler.");
 					} 
 					else 
 					{
@@ -877,5 +877,18 @@ namespace log4net.Appender
 		private const int c_renderBufferMaxCapacity = 1024;
 
 		#endregion
+
+	    #region Private Static Fields
+
+	    /// <summary>
+	    /// The fully qualified type of the AppenderSkeleton class.
+	    /// </summary>
+	    /// <remarks>
+	    /// Used by the internal logger to record the Type of the
+	    /// log message.
+	    /// </remarks>
+	    private readonly static Type declaringType = typeof(AppenderSkeleton);
+
+	    #endregion Private Static Fields
 	}
 }

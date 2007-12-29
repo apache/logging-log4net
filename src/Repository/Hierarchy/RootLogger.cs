@@ -106,7 +106,7 @@ namespace log4net.Repository.Hierarchy
 			{
 				if (value == null) 
 				{
-					LogLog.Error("RootLogger: You have tried to set a null level to root.", new LogException());
+					LogLog.Error(declaringType, "You have tried to set a null level to root.", new LogException());
 				}
 				else 
 				{
@@ -116,5 +116,18 @@ namespace log4net.Repository.Hierarchy
 		}
 
 		#endregion Override implementation of Logger
+
+	    #region Private Static Fields
+
+	    /// <summary>
+	    /// The fully qualified type of the RootLogger class.
+	    /// </summary>
+	    /// <remarks>
+	    /// Used by the internal logger to record the Type of the
+	    /// log message.
+	    /// </remarks>
+	    private readonly static Type declaringType = typeof(RootLogger);
+
+	    #endregion Private Static Fields
 	}
 }

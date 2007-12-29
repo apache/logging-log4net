@@ -773,8 +773,8 @@ namespace log4net.Appender
 			} 
 			else 
 			{
-				LogLog.Warn("FileAppender: File option not set for appender ["+Name+"].");
-				LogLog.Warn("FileAppender: Are you using FileAppender instead of ConsoleAppender?");
+				LogLog.Warn(declaringType, "FileAppender: File option not set for appender ["+Name+"].");
+				LogLog.Warn(declaringType, "FileAppender: Are you using FileAppender instead of ConsoleAppender?");
 			}
 		}
 
@@ -1012,7 +1012,7 @@ namespace log4net.Appender
 				}
 				if (!isPathRooted)
 				{
-					LogLog.Error("FileAppender: INTERNAL ERROR. OpenFile("+fileName+"): File name is not fully qualified.");
+					LogLog.Error(declaringType, "INTERNAL ERROR. OpenFile("+fileName+"): File name is not fully qualified.");
 				}
 			}
 
@@ -1020,7 +1020,7 @@ namespace log4net.Appender
 			{
 				Reset();
 
-				LogLog.Debug("FileAppender: Opening file for writing ["+fileName+"] append ["+append+"]");
+				LogLog.Debug(declaringType, "Opening file for writing ["+fileName+"] append ["+append+"]");
 
 				// Save these for later, allowing retries if file open fails
 				m_fileName = fileName;
@@ -1141,5 +1141,18 @@ namespace log4net.Appender
 		private FileAppender.LockingModelBase m_lockingModel = new FileAppender.ExclusiveLock();
 
 		#endregion Private Instance Fields
+
+	    #region Private Static Fields
+
+	    /// <summary>
+	    /// The fully qualified type of the FileAppender class.
+	    /// </summary>
+	    /// <remarks>
+	    /// Used by the internal logger to record the Type of the
+	    /// log message.
+	    /// </remarks>
+	    private readonly static Type declaringType = typeof(FileAppender);
+
+	    #endregion Private Static Fields
 	}
 }

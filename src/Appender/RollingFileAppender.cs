@@ -123,10 +123,10 @@ namespace log4net.Appender
 	/// <author>Douglas de la Torre</author>
 	/// <author>Edward Smit</author>
 	public class RollingFileAppender : FileAppender
-	{
-		#region Public Enums
+    {
+        #region Public Enums
 
-		/// <summary>
+        /// <summary>
 		/// Style of rolling to use
 		/// </summary>
 		/// <remarks>
@@ -480,6 +480,19 @@ namespace log4net.Appender
 
 		#endregion Public Instance Properties
 
+	    #region Private Static Fields
+
+	    /// <summary>
+	    /// The fully qualified type of the RollingFileAppender class.
+	    /// </summary>
+	    /// <remarks>
+	    /// Used by the internal logger to record the Type of the
+	    /// log message.
+	    /// </remarks>
+	    private readonly static Type declaringType = typeof(RollingFileAppender);
+
+	    #endregion Private Static Fields
+
 		#region Override implementation of FileAppender 
   
 		/// <summary>
@@ -599,7 +612,7 @@ namespace log4net.Appender
 						// The only exception is if we are not allowed to roll the existing file away.
 						if (m_maxSizeRollBackups != 0 && FileExists(fileName))
 						{
-							LogLog.Error("RollingFileAppender: INTERNAL ERROR. Append is False but OutputFile ["+fileName+"] already exists.");
+							LogLog.Error(declaringType, "RollingFileAppender: INTERNAL ERROR. Append is False but OutputFile ["+fileName+"] already exists.");
 						}
 					}
 				}
@@ -672,7 +685,7 @@ namespace log4net.Appender
 			ArrayList arrayFiles = GetExistingFiles(fullPath);
 			InitializeRollBackups(fileName, arrayFiles);
 
-			LogLog.Debug("RollingFileAppender: curSizeRollBackups starts at ["+m_curSizeRollBackups+"]");
+			LogLog.Debug(declaringType, "curSizeRollBackups starts at ["+m_curSizeRollBackups+"]");
 		}
 
 		/// <summary>
@@ -722,7 +735,7 @@ namespace log4net.Appender
 					}
 				}
 			}
-			LogLog.Debug("RollingFileAppender: Searched for existing files in ["+directory+"]");
+			LogLog.Debug(declaringType, "Searched for existing files in ["+directory+"]");
 			return alFiles;
 		}
 
@@ -740,14 +753,14 @@ namespace log4net.Appender
 					{
 						last = System.IO.File.GetLastWriteTime(m_baseFileName);
 					}
-					LogLog.Debug("RollingFileAppender: ["+last.ToString(m_datePattern,System.Globalization.DateTimeFormatInfo.InvariantInfo)+"] vs. ["+m_now.ToString(m_datePattern,System.Globalization.DateTimeFormatInfo.InvariantInfo)+"]");
+					LogLog.Debug(declaringType, "["+last.ToString(m_datePattern,System.Globalization.DateTimeFormatInfo.InvariantInfo)+"] vs. ["+m_now.ToString(m_datePattern,System.Globalization.DateTimeFormatInfo.InvariantInfo)+"]");
 
 					if (!(last.ToString(m_datePattern,System.Globalization.DateTimeFormatInfo.InvariantInfo).Equals(m_now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo)))) 
 					{
 						m_scheduledFilename = m_baseFileName + last.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo);
-						LogLog.Debug("RollingFileAppender: Initial roll over to ["+m_scheduledFilename+"]");
+						LogLog.Debug(declaringType, "Initial roll over to ["+m_scheduledFilename+"]");
 						RollOverTime(false);
-						LogLog.Debug("RollingFileAppender: curSizeRollBackups after rollOver at ["+m_curSizeRollBackups+"]");
+						LogLog.Debug(declaringType, "curSizeRollBackups after rollOver at ["+m_curSizeRollBackups+"]");
 					}
 				}
 			}
@@ -786,11 +799,11 @@ namespace log4net.Appender
 				{
 					if (m_maxSizeRollBackups == 0)
 					{
-						LogLog.Debug("RollingFileAppender: Output file ["+fileName+"] already exists. MaxSizeRollBackups is 0; cannot roll. Overwriting existing file.");
+						LogLog.Debug(declaringType, "Output file ["+fileName+"] already exists. MaxSizeRollBackups is 0; cannot roll. Overwriting existing file.");
 					}
 					else
 					{
-						LogLog.Debug("RollingFileAppender: Output file ["+fileName+"] already exists. Not appending to file. Rolling existing file out of the way.");
+						LogLog.Debug(declaringType, "Output file ["+fileName+"] already exists. Not appending to file. Rolling existing file out of the way.");
 
 						RollOverRenameFiles(fileName);
 					}
@@ -842,7 +855,7 @@ namespace log4net.Appender
 			{
 				if (! curFileName.StartsWith(baseFile + m_dateTime.Now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo)))
 				{
-					LogLog.Debug("RollingFileAppender: Ignoring file ["+curFileName+"] because it is from a different date period");
+					LogLog.Debug(declaringType, "Ignoring file ["+curFileName+"] because it is from a different date period");
 					return;
 				}
 			}
@@ -881,7 +894,7 @@ namespace log4net.Appender
 								}
 							}
 						}
-						LogLog.Debug("RollingFileAppender: File name ["+curFileName+"] moves current count to ["+m_curSizeRollBackups+"]");
+						LogLog.Debug(declaringType, "File name ["+curFileName+"] moves current count to ["+m_curSizeRollBackups+"]");
 					}
 				}
 			} 
@@ -889,7 +902,7 @@ namespace log4net.Appender
 			{
 				//this happens when file.log -> file.log.yyyy-mm-dd which is normal
 				//when staticLogFileName == false
-				LogLog.Debug("RollingFileAppender: Encountered a backup file not ending in .x ["+curFileName+"]");
+				LogLog.Debug(declaringType, "Encountered a backup file not ending in .x ["+curFileName+"]");
 			}
 		}
 
@@ -941,7 +954,7 @@ namespace log4net.Appender
 				// Get string representation of next pattern
 				string r1 = NextCheckDate(s_date1970, (RollPoint)i).ToString(datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo);
 
-				LogLog.Debug("RollingFileAppender: Type = ["+i+"], r0 = ["+r0+"], r1 = ["+r1+"]");
+				LogLog.Debug(declaringType, "Type = ["+i+"], r0 = ["+r0+"], r1 = ["+r1+"]");
 
 				// Check if the string representations are different
 				if (r0 != null && r1 != null && !r0.Equals(r1)) 
@@ -1116,7 +1129,7 @@ namespace log4net.Appender
 				// We may not have permission to move the file, or the file may be locked
 				try
 				{
-					LogLog.Debug("RollingFileAppender: Moving [" + fromFile + "] -> [" + toFile + "]");
+					LogLog.Debug(declaringType, "Moving [" + fromFile + "] -> [" + toFile + "]");
 					using(SecurityContext.Impersonate(this))
 					{
 						System.IO.File.Move(fromFile, toFile);
@@ -1129,7 +1142,7 @@ namespace log4net.Appender
 			}
 			else
 			{
-				LogLog.Warn("RollingFileAppender: Cannot RollFile [" + fromFile + "] -> [" + toFile + "]. Source does not exist");
+				LogLog.Warn(declaringType, "Cannot RollFile [" + fromFile + "] -> [" + toFile + "]. Source does not exist");
 			}
 		}
 
@@ -1184,7 +1197,7 @@ namespace log4net.Appender
 				}
 				catch(Exception moveEx)
 				{
-					LogLog.Debug("RollingFileAppender: Exception while moving file to be deleted [" + fileName + "] -> [" + tempFileName + "]", moveEx);
+					LogLog.Debug(declaringType, "Exception while moving file to be deleted [" + fileName + "] -> [" + tempFileName + "]", moveEx);
 				}
 
 				// Try to delete the file (either the original or the moved file)
@@ -1194,7 +1207,7 @@ namespace log4net.Appender
 					{
 						System.IO.File.Delete(fileToDelete);
 					}
-					LogLog.Debug("RollingFileAppender: Deleted file [" + fileName + "]");
+					LogLog.Debug(declaringType, "Deleted file [" + fileName + "]");
 				}
 				catch(Exception deleteEx)
 				{
@@ -1207,7 +1220,7 @@ namespace log4net.Appender
 					{
 						// Moved the file, but the delete failed. File is probably locked.
 						// The file should automatically be deleted when the lock is released.
-						LogLog.Debug("RollingFileAppender: Exception while deleting temp file [" + fileToDelete + "]", deleteEx);
+						LogLog.Debug(declaringType, "Exception while deleting temp file [" + fileToDelete + "]", deleteEx);
 					}
 				}
 			}
@@ -1243,10 +1256,10 @@ namespace log4net.Appender
 		{
 			this.CloseFile(); // keep windows happy.
 	
-			LogLog.Debug("RollingFileAppender: rolling over count ["+((CountingQuietTextWriter)QuietWriter).Count+"]");
-			LogLog.Debug("RollingFileAppender: maxSizeRollBackups ["+m_maxSizeRollBackups+"]");
-			LogLog.Debug("RollingFileAppender: curSizeRollBackups ["+m_curSizeRollBackups+"]");
-			LogLog.Debug("RollingFileAppender: countDirection ["+m_countDirection+"]");
+			LogLog.Debug(declaringType, "rolling over count ["+((CountingQuietTextWriter)QuietWriter).Count+"]");
+			LogLog.Debug(declaringType, "maxSizeRollBackups ["+m_maxSizeRollBackups+"]");
+			LogLog.Debug(declaringType, "curSizeRollBackups ["+m_curSizeRollBackups+"]");
+			LogLog.Debug(declaringType, "countDirection ["+m_countDirection+"]");
 
 			RollOverRenameFiles(File);
 	

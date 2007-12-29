@@ -71,8 +71,21 @@ namespace log4net.Layout.Pattern
 			}
 			catch (Exception ex) 
 			{
-				LogLog.Error("UtcDatePatternConverter: Error occurred while converting date.", ex);
+				LogLog.Error(declaringType, "Error occurred while converting date.", ex);
 			}
 		}
+
+	    #region Private Static Fields
+
+	    /// <summary>
+	    /// The fully qualified type of the UtcDatePatternConverter class.
+	    /// </summary>
+	    /// <remarks>
+	    /// Used by the internal logger to record the Type of the
+	    /// log message.
+	    /// </remarks>
+	    private readonly static Type declaringType = typeof(UtcDatePatternConverter);
+
+	    #endregion Private Static Fields
 	}
 }

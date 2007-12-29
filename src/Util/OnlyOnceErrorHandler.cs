@@ -40,10 +40,10 @@ namespace log4net.Util
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	public class OnlyOnceErrorHandler : IErrorHandler
-	{
-		#region Public Instance Constructors
+    {
+        #region Public Instance Constructors
 
-		/// <summary>
+        /// <summary>
 		/// Default Constructor
 		/// </summary>
 		/// <remarks>
@@ -91,7 +91,7 @@ namespace log4net.Util
 		{ 
 			if (IsEnabled) 
 			{
-				LogLog.Error("[" + m_prefix + "] " + message, e);
+				LogLog.Error(declaringType, "[" + m_prefix + "] " + message, e);
 			}
 		}
 
@@ -110,7 +110,7 @@ namespace log4net.Util
 		{ 
 			if (IsEnabled) 
 			{
-				LogLog.Error("[" + m_prefix + "] " + message, e);
+				LogLog.Error(declaringType, "[" + m_prefix + "] " + message, e);
 			}
 		}
 
@@ -128,13 +128,15 @@ namespace log4net.Util
 		{
 			if (IsEnabled) 
 			{
-				LogLog.Error("[" + m_prefix + "] " + message);
+				LogLog.Error(declaringType, "[" + m_prefix + "] " + message);
 			}
 		}
 
 		#endregion Implementation of IErrorHandler
 
-		/// <summary>
+        #region Private Instance Properties
+
+        /// <summary>
 		/// Is error logging enabled
 		/// </summary>
 		/// <remarks>
@@ -161,11 +163,13 @@ namespace log4net.Util
 				}
 				return false;
 			}
-		}
+        }
 
-		#region Private Instance Fields
+        #endregion
 
-		/// <summary>
+        #region Private Instance Fields
+
+        /// <summary>
 		/// Flag to indicate if it is the first error
 		/// </summary>
 		private bool m_firstTime = true;
@@ -176,5 +180,18 @@ namespace log4net.Util
 		private readonly string m_prefix;
 
 		#endregion Private Instance Fields
+
+	    #region Private Static Fields
+
+	    /// <summary>
+	    /// The fully qualified type of the OnlyOnceErrorHandler class.
+	    /// </summary>
+	    /// <remarks>
+	    /// Used by the internal logger to record the Type of the
+	    /// log message.
+	    /// </remarks>
+	    private readonly static Type declaringType = typeof(OnlyOnceErrorHandler);
+
+	    #endregion Private Static Fields
 	}
 }

@@ -78,7 +78,7 @@ namespace log4net.Layout.Pattern
 					{
 						if (precisionVal <= 0) 
 						{
-							LogLog.Error("NamedPatternConverter: Precision option (" + optStr + ") isn't a positive integer.");
+							LogLog.Error(declaringType, "NamedPatternConverter: Precision option (" + optStr + ") isn't a positive integer.");
 						}
 						else
 						{
@@ -87,7 +87,7 @@ namespace log4net.Layout.Pattern
 					} 
 					else
 					{
-						LogLog.Error("NamedPatternConverter: Precision option \"" + optStr + "\" not a decimal integer.");
+						LogLog.Error(declaringType, "NamedPatternConverter: Precision option \"" + optStr + "\" not a decimal integer.");
 					}
 				}
 			}
@@ -147,5 +147,18 @@ namespace log4net.Layout.Pattern
 				writer.Write(name.Substring(end+1, len-end-1));
 			}	  
 		}
+
+	    #region Private Static Fields
+
+	    /// <summary>
+	    /// The fully qualified type of the NamedPatternConverter class.
+	    /// </summary>
+	    /// <remarks>
+	    /// Used by the internal logger to record the Type of the
+	    /// log message.
+	    /// </remarks>
+	    private readonly static Type declaringType = typeof(NamedPatternConverter);
+
+	    #endregion Private Static Fields
 	}
 }

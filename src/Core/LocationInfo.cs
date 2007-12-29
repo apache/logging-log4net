@@ -141,7 +141,7 @@ namespace log4net.Core
 				{
 					// This security exception will occur if the caller does not have 
 					// some undefined set of SecurityPermission flags.
-					LogLog.Debug("LocationInfo: Security exception while trying to get caller stack frame. Error Ignored. Location Information Not Available.");
+					LogLog.Debug(declaringType, "Security exception while trying to get caller stack frame. Error Ignored. Location Information Not Available.");
 				}
 			}
 #endif
@@ -272,6 +272,15 @@ namespace log4net.Core
 		#endregion Private Instance Fields
 
 		#region Private Static Fields
+
+	    /// <summary>
+	    /// The fully qualified type of the LocationInfo class.
+	    /// </summary>
+	    /// <remarks>
+	    /// Used by the internal logger to record the Type of the
+	    /// log message.
+	    /// </remarks>
+	    private readonly static Type declaringType = typeof(LocationInfo);
 
 		/// <summary>
 		/// When location information is not available the constant

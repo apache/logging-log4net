@@ -106,12 +106,12 @@ namespace log4net.Util
 			}
 			catch(Exception ex)
 			{
-				log4net.Util.LogLog.Warn("StringFormat: Exception while rendering format ["+format+"]", ex);
+				log4net.Util.LogLog.Warn(declaringType, "Exception while rendering format ["+format+"]", ex);
 				return StringFormatError(ex, format, args);
 			}
 			catch
 			{
-				log4net.Util.LogLog.Warn("StringFormat: Exception while rendering format ["+format+"]");
+				log4net.Util.LogLog.Warn(declaringType, "Exception while rendering format ["+format+"]");
 				return StringFormatError(null, format, args);
 			}
 		}
@@ -143,12 +143,12 @@ namespace log4net.Util
 			}
 			catch(Exception ex)
 			{
-				log4net.Util.LogLog.Error("StringFormat: INTERNAL ERROR during StringFormat error handling", ex);
+				log4net.Util.LogLog.Error(declaringType, "INTERNAL ERROR during StringFormat error handling", ex);
 				return "<log4net.Error>Exception during StringFormat. See Internal Log.</log4net.Error>";
 			}
 			catch
 			{
-				log4net.Util.LogLog.Error("StringFormat: INTERNAL ERROR during StringFormat error handling");
+				log4net.Util.LogLog.Error(declaringType, "INTERNAL ERROR during StringFormat error handling");
 				return "<log4net.Error>Exception during StringFormat. See Internal Log.</log4net.Error>";
 			}
 		}
@@ -214,5 +214,18 @@ namespace log4net.Util
 		}
 
 		#endregion StringFormat
+
+	    #region Private Static Fields
+
+	    /// <summary>
+	    /// The fully qualified type of the SystemStringFormat class.
+	    /// </summary>
+	    /// <remarks>
+	    /// Used by the internal logger to record the Type of the
+	    /// log message.
+	    /// </remarks>
+	    private readonly static Type declaringType = typeof(SystemStringFormat);
+
+	    #endregion Private Static Fields
 	}
 }

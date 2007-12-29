@@ -18,11 +18,12 @@
 #endregion
 
 using System;
-
+using System.Collections;
 using log4net;
 using log4net.ObjectRenderer;
 using log4net.Core;
 using log4net.Plugin;
+using log4net.Repository.Hierarchy;
 using log4net.Util;
 
 namespace log4net.Repository
@@ -73,7 +74,7 @@ namespace log4net.Repository
 	/// </remarks>
 	public delegate void LoggerRepositoryConfigurationChangedEventHandler(object sender, EventArgs e);
 
-	#endregion
+    #endregion
 	
 	/// <summary>
 	/// Interface implemented by logger repositories.
@@ -81,7 +82,7 @@ namespace log4net.Repository
 	/// <remarks>
 	/// <para>
 	/// This interface is implemented by logger repositories. e.g. 
-	/// <see cref="Hierarchy.Hierarchy"/>.
+	/// <see cref="Hierarchy"/>.
 	/// </para>
 	/// <para>
 	/// This interface is used by the <see cref="LogManager"/>
@@ -274,6 +275,12 @@ namespace log4net.Repository
 		/// </para>
 		/// </remarks>
 		bool Configured { get; set; }
+
+        /// <summary>
+        /// Collection of internal messages captured during the most 
+        /// recent configuration process.
+        /// </summary>
+        ICollection ConfigurationMessages { get; set; }
 
 		/// <summary>
 		/// Event to notify that the repository has been shutdown.

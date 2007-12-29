@@ -87,7 +87,7 @@ namespace log4net.Util.PatternStringConverters
 				}
 				else
 				{
-					LogLog.Error("RandomStringPatternConverter: Could not convert Option ["+optionStr+"] to Length Int32");
+					LogLog.Error(declaringType, "RandomStringPatternConverter: Could not convert Option ["+optionStr+"] to Length Int32");
 				}	
 			}
 		}
@@ -136,8 +136,21 @@ namespace log4net.Util.PatternStringConverters
 			}
 			catch (Exception ex) 
 			{
-				LogLog.Error("RandomStringPatternConverter: Error occurred while converting.", ex);
+				LogLog.Error(declaringType, "Error occurred while converting.", ex);
 			}
 		}
+
+	    #region Private Static Fields
+
+	    /// <summary>
+	    /// The fully qualified type of the RandomStringPatternConverter class.
+	    /// </summary>
+	    /// <remarks>
+	    /// Used by the internal logger to record the Type of the
+	    /// log message.
+	    /// </remarks>
+	    private readonly static Type declaringType = typeof(RandomStringPatternConverter);
+
+	    #endregion Private Static Fields
 	}
 }

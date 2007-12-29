@@ -106,7 +106,7 @@ namespace log4net.Util
 
 		#endregion Public Instance Properties
 
-		#region Protected Instance Methods
+		#region Private Instance Methods
 
 		/// <summary>
 		/// Build the unified cache of converters from the static and instance maps
@@ -321,13 +321,13 @@ namespace log4net.Util
 		/// <param name="formattingInfo">the formatting info for the converter</param>
 		private void ProcessConverter(string converterName, string option, FormattingInfo formattingInfo)
 		{
-			LogLog.Debug("PatternParser: Converter ["+converterName+"] Option ["+option+"] Format [min="+formattingInfo.Min+",max="+formattingInfo.Max+",leftAlign="+formattingInfo.LeftAlign+"]");
+			LogLog.Debug(declaringType, "Converter ["+converterName+"] Option ["+option+"] Format [min="+formattingInfo.Min+",max="+formattingInfo.Max+",leftAlign="+formattingInfo.LeftAlign+"]");
 
 			// Lookup the converter type
 			Type converterType = (Type)m_patternConverters[converterName];
 			if (converterType == null)
 			{
-				LogLog.Error("PatternParser: Unknown converter name ["+converterName+"] in conversion pattern.");
+				LogLog.Error(declaringType, "Unknown converter name ["+converterName+"] in conversion pattern.");
 			}
 			else
 			{
@@ -339,7 +339,7 @@ namespace log4net.Util
 				}
 				catch(Exception createInstanceEx)
 				{
-					LogLog.Error("PatternParser: Failed to create instance of Type ["+converterType.FullName+"] using default constructor. Exception: "+createInstanceEx.ToString());
+					LogLog.Error(declaringType, "Failed to create instance of Type ["+converterType.FullName+"] using default constructor. Exception: "+createInstanceEx.ToString());
 				}
 
 				// formattingInfo variable is an instance variable, occasionally reset 
@@ -416,5 +416,18 @@ namespace log4net.Util
 		private Hashtable m_patternConverters = new Hashtable();
 
 		#endregion Private Instance Fields
+
+	    #region Private Static Fields
+
+	    /// <summary>
+	    /// The fully qualified type of the PatternParser class.
+	    /// </summary>
+	    /// <remarks>
+	    /// Used by the internal logger to record the Type of the
+	    /// log message.
+	    /// </remarks>
+	    private readonly static Type declaringType = typeof(PatternParser);
+
+	    #endregion Private Static Fields
 	}
 }
