@@ -30,7 +30,7 @@ namespace log4net.Util
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// The error message is printed on the standard error output stream.
+	/// The error message is processed using the LogLog sub-system.
 	/// </para>
 	/// <para>
 	/// This policy aims at protecting an otherwise working application
@@ -39,11 +39,12 @@ namespace log4net.Util
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
+	/// <author>Ron Grabowski</author>
 	public class OnlyOnceErrorHandler : IErrorHandler
-    {
-        #region Public Instance Constructors
+	{
+		#region Public Instance Constructors
 
-        /// <summary>
+		/// <summary>
 		/// Default Constructor
 		/// </summary>
 		/// <remarks>
@@ -73,6 +74,20 @@ namespace log4net.Util
 
 		#endregion Public Instance Constructors
 
+		#region Public Instance Methods
+
+		/// <summary>
+		/// Reset the error handler back to its initial disabled state.
+		/// </summary>
+		public void Reset()
+		{
+			m_enabledDate = DateTime.MinValue;
+			m_errorCode = ErrorCode.GenericFailure;
+			m_exception = null;
+			m_message = null;
+			m_firstTime = true;
+		}
+
 		#region Implementation of IErrorHandler
 
 		/// <summary>
@@ -83,15 +98,23 @@ namespace log4net.Util
 		/// <param name="errorCode">The internal error code.</param>
 		/// <remarks>
 		/// <para>
-		/// Prints the message and the stack trace of the exception on the standard
-		/// error output stream.
+		/// Sends the error information to <see cref="LogLog"/>'s Error method.
 		/// </para>
 		/// </remarks>
 		public void Error(string message, Exception e, ErrorCode errorCode) 
-		{ 
-			if (IsEnabled) 
+		{
+			if (m_firstTime)
 			{
-				LogLog.Error(declaringType, "[" + m_prefix + "] " + message, e);
+				m_enabledDate = DateTime.Now;
+				m_errorCode = errorCode;
+				m_exception = e;
+				m_message = message;
+				m_firstTime = false;
+
+				if (LogLog.InternalDebugging && !LogLog.QuietMode)
+				{
+					LogLog.Error(declaringType, "[" + m_prefix + "] ErrorCode: " + errorCode.ToString() + ". " + message, e);
+				}
 			}
 		}
 
@@ -107,11 +130,8 @@ namespace log4net.Util
 		/// </para>
 		/// </remarks>
 		public void Error(string message, Exception e) 
-		{ 
-			if (IsEnabled) 
-			{
-				LogLog.Error(declaringType, "[" + m_prefix + "] " + message, e);
-			}
+		{
+			Error(message, e, ErrorCode.GenericFailure);
 		}
 
 		/// <summary>
@@ -126,17 +146,16 @@ namespace log4net.Util
 		/// </remarks>
 		public void Error(string message) 
 		{
-			if (IsEnabled) 
-			{
-				LogLog.Error(declaringType, "[" + m_prefix + "] " + message);
-			}
+			Error(message, null, ErrorCode.GenericFailure);
 		}
 
 		#endregion Implementation of IErrorHandler
 
-        #region Private Instance Properties
+		#endregion
 
-        /// <summary>
+		#region Public Instance Properties
+
+		/// <summary>
 		/// Is error logging enabled
 		/// </summary>
 		/// <remarks>
@@ -145,34 +164,77 @@ namespace log4net.Util
 		/// first error delivered to the <see cref="OnlyOnceErrorHandler"/>.
 		/// </para>
 		/// </remarks>
-		private bool IsEnabled
+		public bool IsEnabled
 		{
-			get
-			{
-				// Allow first error message to be logged
-				if (m_firstTime)
-				{
-					m_firstTime = false;
-					return true;
-				}
+			get { return m_firstTime; }
+		}
 
-				// Check if InternalDebugging is enabled
-				if (LogLog.InternalDebugging && !LogLog.QuietMode)
-				{
-					return true;
-				}
-				return false;
-			}
-        }
+		/// <summary>
+		/// The date the first error that trigged this error handler occured.
+		/// </summary>
+		public DateTime EnabledDate
+		{
+			get { return m_enabledDate; }
+		}
 
-        #endregion
+		/// <summary>
+		/// The message from the first error that trigged this error handler.
+		/// </summary>
+		public string ErrorMessage
+		{
+			get { return m_message; }
+		}
 
-        #region Private Instance Fields
+		/// <summary>
+		/// The exception from the first error that trigged this error handler.
+		/// </summary>
+		/// <remarks>
+		/// May be <see langword="null" />.
+		/// </remarks>
+		public Exception Exception
+		{
+			get { return m_exception; }
+		}
 
-        /// <summary>
+		/// <summary>
+		/// The error code from the first error that trigged this error handler.
+		/// </summary>
+		/// <remarks>
+		/// Defaults to <see cref="log4net.Core.ErrorCode.GenericFailure"/>
+		/// </remarks>
+		public ErrorCode ErrorCode
+		{
+			get { return m_errorCode; }
+		}
+
+		#endregion
+
+		#region Private Instance Fields
+
+		/// <summary>
+		/// The date the error was recorded.
+		/// </summary>
+		private DateTime m_enabledDate;
+
+		/// <summary>
 		/// Flag to indicate if it is the first error
 		/// </summary>
 		private bool m_firstTime = true;
+
+		/// <summary>
+		/// The message recorded during the first error.
+		/// </summary>
+		private string m_message = null;
+
+		/// <summary>
+		/// The exception recorded during the first error.
+		/// </summary>
+		private Exception m_exception = null;
+
+		/// <summary>
+		/// The error code recorded during the first error.
+		/// </summary>
+		private ErrorCode m_errorCode = ErrorCode.GenericFailure;
 
 		/// <summary>
 		/// String to prefix each message with
@@ -181,7 +243,7 @@ namespace log4net.Util
 
 		#endregion Private Instance Fields
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
 	    /// <summary>
 	    /// The fully qualified type of the OnlyOnceErrorHandler class.
@@ -190,8 +252,8 @@ namespace log4net.Util
 	    /// Used by the internal logger to record the Type of the
 	    /// log message.
 	    /// </remarks>
-	    private readonly static Type declaringType = typeof(OnlyOnceErrorHandler);
+		private readonly static Type declaringType = typeof(OnlyOnceErrorHandler);
 
-	    #endregion Private Static Fields
+		#endregion
 	}
 }
