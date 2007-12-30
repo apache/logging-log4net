@@ -518,19 +518,6 @@ namespace log4net.Appender
 
 		#endregion // Private Instance Fields
 
-	    #region Private Static Fields
-
-	    /// <summary>
-	    /// The fully qualified type of the SmtpAppender class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(SmtpAppender);
-
-	    #endregion Private Static Fields
-
 		#region SmtpAuthentication Enum
 
 		/// <summary>
