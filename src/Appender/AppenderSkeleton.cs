@@ -132,7 +132,7 @@ namespace log4net.Appender
 					{
 						// We do not throw exception here since the cause is probably a
 						// bad config file.
-						LogLog.Warn(declaringType, "AppenderSkeleton: You have tried to set a null error-handler.");
+						LogLog.Warn(declaringType, "You have tried to set a null error-handler.");
 					} 
 					else 
 					{
