@@ -74,6 +74,7 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
@@ -89,6 +90,12 @@
       <Link>AssemblyVersionInfo.cs</Link>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Appender\AdoNetAppenderTest.cs" />
+    <Compile Include="Appender\AdoNet\Log4NetCommand.cs" />
+    <Compile Include="Appender\AdoNet\Log4NetConnection.cs" />
+    <Compile Include="Appender\AdoNet\Log4NetParameter.cs" />
+    <Compile Include="Appender\AdoNet\Log4NetParameterCollection.cs" />
+    <Compile Include="Appender\AdoNet\Log4NetTransaction.cs" />
     <Compile Include="Appender\BufferingAppenderTest.cs">
       <SubType>Code</SubType>
     </Compile>
