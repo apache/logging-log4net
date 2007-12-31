@@ -26,7 +26,7 @@ namespace log4net.Tests.Appender.AdoNet
         public object this[string parameterName]
         {
             get { return InnerList[IndexOf(parameterName)]; }
-            set { InnerList[InnerList.IndexOf(parameterName)] = value; }
+            set { InnerList[IndexOf(parameterName)] = value; }
         }
 
         #endregion
