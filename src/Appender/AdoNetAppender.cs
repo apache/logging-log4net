@@ -22,9 +22,9 @@
 
 using System;
 using System.Collections;
+using System.Configuration;
 using System.Data;
 using System.IO;
-using System.Reflection;
 
 using log4net.Util;
 using log4net.Layout;
@@ -173,7 +173,27 @@ namespace log4net.Appender
 			set { m_connectionString = value; }
 		}
 
-		/// <summary>
+	    /// <summary>
+	    /// 
+	    /// </summary>
+	    public string AppSettingsKey
+	    {
+	        get { return m_appSettingsKey; }
+	        set { m_appSettingsKey = value; }
+	    }
+
+#if NET_2_0
+	    /// <summary>
+	    /// 
+	    /// </summary>
+	    public string ConnectionStringName
+	    {
+	        get { return m_connectionStringName; }
+	        set { m_connectionStringName = value; }
+	    }
+#endif
+
+	    /// <summary>
 		/// Gets or sets the type name of the <see cref="IDbConnection"/> connection
 		/// that should be created.
 		/// </summary>
@@ -622,6 +642,9 @@ namespace log4net.Appender
 		/// </summary>		
 		private void InitializeDatabaseConnection()
 		{
+            string connectionStringContext = "Unable to determine connection string context.";
+            string resolvedConnectionString = string.Empty;
+
 			try
 			{
 				// Cleanup any existing command or connection
@@ -652,9 +675,10 @@ namespace log4net.Appender
 
 				// Create the connection object
 				m_dbConnection = (IDbConnection)Activator.CreateInstance(ResolveConnectionType());
-			
+
 				// Set the connection string
-				m_dbConnection.ConnectionString = m_connectionString;
+                resolvedConnectionString = ResolveConnectionString(out connectionStringContext);
+                m_dbConnection.ConnectionString = resolvedConnectionString;
 
 				using(SecurityContext.Impersonate(this))
 				{
@@ -665,13 +689,61 @@ namespace log4net.Appender
 			catch (System.Exception e)
 			{
 				// Sadly, your connection string is bad.
-				ErrorHandler.Error("Could not open database connection [" + m_connectionString + "]", e);
+                ErrorHandler.Error("Could not open database connection [" + resolvedConnectionString + "]. Connection string context [" + connectionStringContext + "].", e);
 	 
 				m_dbConnection = null;
 			}
 		}
 
-		/// <summary>
+        /// <summary>
+        /// Resolves the connection string from the ConnectionString, ConnectionStringName, or AppSettingsKey
+        /// property.
+        /// </summary>
+        /// <remarks>
+        /// ConnectiongStringName is only supported on .NET 2.0.
+        /// </remarks>
+        /// <param name="connectionStringContext">Additional information describing the connection string.</param>
+        /// <returns></returns>
+        virtual protected string ResolveConnectionString(out string connectionStringContext)
+        {
+            if (m_connectionString != null && m_connectionString.Length > 0)
+            {
+                connectionStringContext = "ConnectionString";
+                return m_connectionString;
+            }
+
+#if NET_2_0
+            if (!String.IsNullOrEmpty(m_connectionStringName))
+            {
+                ConnectionStringSettings settings = ConfigurationManager.ConnectionStrings[m_connectionStringName];
+                if (settings != null)
+                {
+                    connectionStringContext = "ConnectionStringName";
+                    return settings.ConnectionString;
+                }
+                else
+                {
+                    throw new LogException("Unable to find [" + m_connectionStringName + "] ConfigurationManager.ConnectionStrings item");
+                }
+            }
+#endif
+
+            if (m_appSettingsKey != null && m_appSettingsKey.Length > 0)
+            {
+                connectionStringContext = "AppSettingsKey";
+                string appSettingsConnectionString = SystemInfo.GetAppSetting(m_appSettingsKey);
+                if (appSettingsConnectionString == null || appSettingsConnectionString.Length == 0)
+                {
+                    throw new LogException("Unable to find [" + m_appSettingsKey + "] AppSettings key.");
+                }
+                return appSettingsConnectionString;
+            }
+
+            connectionStringContext = "Unable to resolve connection string from ConnectionString, ConnectionStrings, or AppSettings.";
+            return string.Empty;
+        }
+
+	    /// <summary>
 		/// Retrieves the class type of the ADO.NET provider.
 		/// </summary>
 		/// <remarks>
@@ -854,7 +926,19 @@ namespace log4net.Appender
 		/// </summary>
 		private string m_connectionString;
 
-		/// <summary>
+        /// <summary>
+        /// 
+        /// </summary>
+        private string m_appSettingsKey;
+
+#if NET_2_0
+        /// <summary>
+        /// 
+        /// </summary>
+        private string m_connectionStringName;
+#endif
+
+        /// <summary>
 		/// String type name of the <see cref="IDbConnection"/> type name.
 		/// </summary>
 		private string m_connectionType;
