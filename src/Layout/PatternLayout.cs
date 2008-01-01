@@ -39,7 +39,7 @@ namespace log4net.Layout
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// The goal of this class is to <see cref="PatternLayout.Format"/> a 
+	/// The goal of this class is to <see cref="PatternLayout.Format(TextWriter,LoggingEvent)"/> a 
 	/// <see cref="LoggingEvent"/> as a string. The results
 	/// depend on the <i>conversion pattern</i>.
 	/// </para>
