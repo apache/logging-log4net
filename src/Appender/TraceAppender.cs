@@ -36,7 +36,8 @@ namespace log4net.Appender
 	/// </para>
 	/// <para>
 	/// Events are written using the <c>System.Diagnostics.Trace.Write(string,string)</c>
-	/// method. The event's logger name is passed as the value for the category name to the Write method.
+	/// method. The event's logger name is the default value for the category parameter 
+    /// of the Write method. 
 	/// </para>
 	/// <para>
 	/// <b>Compact Framework</b><br />
@@ -49,6 +50,7 @@ namespace log4net.Appender
 	/// <author>Douglas de la Torre</author>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
+    /// <author>Ron Grabowski</author>
 	public class TraceAppender : AppenderSkeleton
 	{
 		#region Public Instance Constructors
@@ -109,7 +111,24 @@ namespace log4net.Appender
 			set { m_immediateFlush = value; }
 		}
 
-		#endregion Public Instance Properties
+        /// <summary>
+        /// The category parameter sent to the Trace method.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Defaults to %logger which will use the logger name of the current 
+        /// <see cref="LoggingEvent"/> as the category parameter.
+        /// </para>
+        /// <para>
+        /// </para> 
+        /// </remarks>
+	    public PatternLayout Category
+	    {
+	        get { return m_category; }
+	        set { m_category = value; }
+	    }
+
+	    #endregion Public Instance Properties
 
 		#region Override implementation of AppenderSkeleton
 
@@ -128,9 +147,9 @@ namespace log4net.Appender
 			// Write the string to the Trace system
 			//
 #if NETCF
-			System.Diagnostics.Debug.Write(RenderLoggingEvent(loggingEvent), loggingEvent.LoggerName);
+			System.Diagnostics.Debug.Write(RenderLoggingEvent(loggingEvent), m_category.Format(loggingEvent));
 #else
-			System.Diagnostics.Trace.Write(RenderLoggingEvent(loggingEvent), loggingEvent.LoggerName);
+            System.Diagnostics.Trace.Write(RenderLoggingEvent(loggingEvent), m_category.Format(loggingEvent));
 #endif
 	 
 			//
@@ -180,6 +199,11 @@ namespace log4net.Appender
 		/// The default value is <c>true</c>.</para>
 		/// </remarks>
 		private bool m_immediateFlush = true;
+
+        /// <summary>
+        /// Defaults to %logger
+        /// </summary>
+        private PatternLayout m_category = new PatternLayout("%logger");
 
 		#endregion Private Instance Fields
 	}

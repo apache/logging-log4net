@@ -114,6 +114,7 @@
     <Compile Include="Appender\StringAppender.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Appender\TraceAppenderTest.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

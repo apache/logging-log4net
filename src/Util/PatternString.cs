@@ -62,7 +62,7 @@ namespace log4net.Util
 	///         <term>date</term>
 	///         <description>
 	/// 			<para>
-	/// 			Used to output the date of the logging event in the local time zone. 
+	/// 			Used to output the current date and time in the local time zone. 
 	/// 			To output the date in universal time use the <c>%utcdate</c> pattern.
 	/// 			The date conversion 
 	/// 			specifier may be followed by a <i>date format specifier</i> enclosed 

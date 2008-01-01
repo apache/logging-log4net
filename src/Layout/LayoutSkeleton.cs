@@ -140,79 +140,91 @@ namespace log4net.Layout
 		/// </remarks>
 		abstract public void Format(TextWriter writer, LoggingEvent loggingEvent);
 
-		/// <summary>
-		/// The content type output by this layout. 
-		/// </summary>
-		/// <value>The content type is <c>"text/plain"</c></value>
-		/// <remarks>
-		/// <para>
-		/// The content type output by this layout.
-		/// </para>
-		/// <para>
-		/// This base class uses the value <c>"text/plain"</c>.
-		/// To change this value a subclass must override this
-		/// property.
-		/// </para>
-		/// </remarks>
-		virtual public string ContentType
-		{
-			get { return "text/plain"; }
-		}
+        /// <summary>
+        /// Convenience method for easily formatting the logging event into a string variable.
+        /// </summary>
+        /// <param name="loggingEvent"></param>
+        /// <returns></returns>
+        virtual public string Format(LoggingEvent loggingEvent)
+        {
+            StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
+            Format(writer, loggingEvent);
+            return writer.ToString();
+        }
 
-		/// <summary>
-		/// The header for the layout format.
-		/// </summary>
-		/// <value>the layout header</value>
-		/// <remarks>
-		/// <para>
-		/// The Header text will be appended before any logging events
-		/// are formatted and appended.
-		/// </para>
-		/// </remarks>
-		virtual public string Header
-		{
-			get { return m_header; }
-			set { m_header = value; }
-		}
+	    /// <summary>
+	    /// The content type output by this layout. 
+	    /// </summary>
+	    /// <value>The content type is <c>"text/plain"</c></value>
+	    /// <remarks>
+	    /// <para>
+	    /// The content type output by this layout.
+	    /// </para>
+	    /// <para>
+	    /// This base class uses the value <c>"text/plain"</c>.
+	    /// To change this value a subclass must override this
+	    /// property.
+	    /// </para>
+	    /// </remarks>
+	    virtual public string ContentType
+	    {
+	        get { return "text/plain"; }
+	    }
 
-		/// <summary>
-		/// The footer for the layout format.
-		/// </summary>
-		/// <value>the layout footer</value>
-		/// <remarks>
-		/// <para>
-		/// The Footer text will be appended after all the logging events
-		/// have been formatted and appended.
-		/// </para>
-		/// </remarks>
-		virtual public string Footer
-		{
-			get { return m_footer; }
-			set { m_footer = value; }
-		}
+	    /// <summary>
+	    /// The header for the layout format.
+	    /// </summary>
+	    /// <value>the layout header</value>
+	    /// <remarks>
+	    /// <para>
+	    /// The Header text will be appended before any logging events
+	    /// are formatted and appended.
+	    /// </para>
+	    /// </remarks>
+	    virtual public string Header
+	    {
+	        get { return m_header; }
+	        set { m_header = value; }
+	    }
 
-		/// <summary>
-		/// Flag indicating if this layout handles exceptions
-		/// </summary>
-		/// <value><c>false</c> if this layout handles exceptions</value>
-		/// <remarks>
-		/// <para>
-		/// If this layout handles the exception object contained within
-		/// <see cref="LoggingEvent"/>, then the layout should return
-		/// <c>false</c>. Otherwise, if the layout ignores the exception
-		/// object, then the layout should return <c>true</c>.
-		/// </para>
-		/// <para>
-		/// Set this value to override a this default setting. The default
-		/// value is <c>true</c>, this layout does not handle the exception.
-		/// </para>
-		/// </remarks>
-		virtual public bool IgnoresException 
-		{ 
-			get { return m_ignoresException; }
-			set { m_ignoresException = value; }
-		}
+	    /// <summary>
+	    /// The footer for the layout format.
+	    /// </summary>
+	    /// <value>the layout footer</value>
+	    /// <remarks>
+	    /// <para>
+	    /// The Footer text will be appended after all the logging events
+	    /// have been formatted and appended.
+	    /// </para>
+	    /// </remarks>
+	    virtual public string Footer
+	    {
+	        get { return m_footer; }
+	        set { m_footer = value; }
+	    }
 
-		#endregion
+	    /// <summary>
+	    /// Flag indicating if this layout handles exceptions
+	    /// </summary>
+	    /// <value><c>false</c> if this layout handles exceptions</value>
+	    /// <remarks>
+	    /// <para>
+	    /// If this layout handles the exception object contained within
+	    /// <see cref="LoggingEvent"/>, then the layout should return
+	    /// <c>false</c>. Otherwise, if the layout ignores the exception
+	    /// object, then the layout should return <c>true</c>.
+	    /// </para>
+	    /// <para>
+	    /// Set this value to override a this default setting. The default
+	    /// value is <c>true</c>, this layout does not handle the exception.
+	    /// </para>
+	    /// </remarks>
+	    virtual public bool IgnoresException 
+	    { 
+	        get { return m_ignoresException; }
+	        set { m_ignoresException = value; }
+	    }
+
+	    #endregion
 	}
 }
