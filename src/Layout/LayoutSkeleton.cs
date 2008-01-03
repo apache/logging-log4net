@@ -144,8 +144,10 @@ namespace log4net.Layout
         /// Convenience method for easily formatting the logging event into a string variable.
         /// </summary>
         /// <param name="loggingEvent"></param>
-        /// <returns></returns>
-        virtual public string Format(LoggingEvent loggingEvent)
+        /// <remarks>
+        /// Creates a new StringWriter instance to store the formatted logging event.
+        /// </remarks>
+        public string Format(LoggingEvent loggingEvent)
         {
             StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
             Format(writer, loggingEvent);
