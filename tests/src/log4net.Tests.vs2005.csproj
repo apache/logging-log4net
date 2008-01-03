@@ -33,7 +33,7 @@
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET_2_0</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
@@ -149,6 +149,7 @@
     <Compile Include="Util\CyclicBufferTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Util\EnvironmentPatternConverterTest.cs" />
     <Compile Include="Util\LogLogTest.cs" />
     <Compile Include="Util\PatternStringTest.cs" />
     <Compile Include="Util\PropertiesDictionaryTest.cs">

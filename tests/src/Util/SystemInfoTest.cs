@@ -28,9 +28,6 @@ namespace log4net.Tests.Util
 	/// <summary>
 	/// Used for internal unit testing the <see cref="SystemInfo"/> class.
 	/// </summary>
-	/// <remarks>
-	/// Used for internal unit testing the <see cref="SystemInfo"/> class.
-	/// </remarks>
 	[TestFixture]
 	public class SystemInfoTest
 	{
