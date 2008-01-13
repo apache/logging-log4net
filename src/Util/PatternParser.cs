@@ -27,6 +27,7 @@ using System.Text;
 using log4net.Layout;
 using log4net.Core;
 using log4net.DateFormatter;
+using log4net.Layout.Pattern;
 using log4net.Util;
 
 namespace log4net.Util
@@ -324,8 +325,8 @@ namespace log4net.Util
 			LogLog.Debug(declaringType, "Converter ["+converterName+"] Option ["+option+"] Format [min="+formattingInfo.Min+",max="+formattingInfo.Max+",leftAlign="+formattingInfo.LeftAlign+"]");
 
 			// Lookup the converter type
-			Type converterType = (Type)m_patternConverters[converterName];
-			if (converterType == null)
+            ConverterInfo converterInfo = (ConverterInfo)m_patternConverters[converterName];
+			if (converterInfo == null)
 			{
 				LogLog.Error(declaringType, "Unknown converter name ["+converterName+"] in conversion pattern.");
 			}
@@ -335,19 +336,20 @@ namespace log4net.Util
 				PatternConverter pc = null;
 				try
 				{
-					pc = (PatternConverter)Activator.CreateInstance(converterType);
+                    pc = (PatternConverter)Activator.CreateInstance(converterInfo.Type);
 				}
 				catch(Exception createInstanceEx)
 				{
-					LogLog.Error(declaringType, "Failed to create instance of Type ["+converterType.FullName+"] using default constructor. Exception: "+createInstanceEx.ToString());
+                    LogLog.Error(declaringType, "Failed to create instance of Type [" + converterInfo.Type.FullName + "] using default constructor. Exception: " + createInstanceEx.ToString());
 				}
 
 				// formattingInfo variable is an instance variable, occasionally reset 
 				// and used over and over again
 				pc.FormattingInfo = formattingInfo;
 				pc.Option = option;
+                pc.Properties = converterInfo.Properties;
 
-				IOptionHandler optionHandler = pc as IOptionHandler;
+			    IOptionHandler optionHandler = pc as IOptionHandler;
 				if (optionHandler != null)
 				{
 					optionHandler.ActivateOptions();

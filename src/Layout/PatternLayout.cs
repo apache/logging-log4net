@@ -965,7 +965,10 @@ namespace log4net.Layout
 			// Add all the builtin patterns
 			foreach(DictionaryEntry entry in s_globalRulesRegistry)
 			{
-				patternParser.PatternConverters[entry.Key] = entry.Value;
+                ConverterInfo converterInfo = new ConverterInfo();
+                converterInfo.Name = (string)entry.Key;
+                converterInfo.Type = (Type)entry.Value;
+                patternParser.PatternConverters[entry.Key] = converterInfo;
 			}
 			// Add the instance patterns
 			foreach(DictionaryEntry entry in m_instanceRulesRegistry)
@@ -1066,7 +1069,13 @@ namespace log4net.Layout
 		/// </remarks>
 		public void AddConverter(ConverterInfo converterInfo)
 		{
-			AddConverter(converterInfo.Name, converterInfo.Type);
+            if (converterInfo == null) throw new ArgumentNullException("converterInfo");
+
+            if (!typeof(PatternConverter).IsAssignableFrom(converterInfo.Type))
+            {
+                throw new ArgumentException("The converter type specified [" + converterInfo.Type + "] must be a subclass of log4net.Util.PatternConverter", "converterInfo");
+            }
+            m_instanceRulesRegistry[converterInfo.Name] = converterInfo;
 		}
 
 		/// <summary>
@@ -1087,66 +1096,14 @@ namespace log4net.Layout
 		/// </remarks>
 		public void AddConverter(string name, Type type)
 		{
-			if (name == null) throw new ArgumentNullException("name");
-			if (type == null) throw new ArgumentNullException("type");
+            if (name == null) throw new ArgumentNullException("name");
+            if (type == null) throw new ArgumentNullException("type");
 
-			if (!typeof(PatternConverter).IsAssignableFrom(type))
-			{
-				throw new ArgumentException("The converter type specified ["+type+"] must be a subclass of log4net.Util.PatternConverter", "type");
-			}
-			m_instanceRulesRegistry[name] = type;
-		}
+            ConverterInfo converterInfo = new ConverterInfo();
+            converterInfo.Name = name;
+            converterInfo.Type = type;
 
-		/// <summary>
-		/// Wrapper class used to map converter names to converter types
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// Pattern converter info class used during configuration to
-		/// pass to the <see cref="PatternLayout.AddConverter(ConverterInfo)"/>
-		/// method.
-		/// </para>
-		/// </remarks>
-		public sealed class ConverterInfo
-		{
-			private string m_name;
-			private Type m_type;
-
-			/// <summary>
-			/// default constructor
-			/// </summary>
-			public ConverterInfo()
-			{
-			}
-
-			/// <summary>
-			/// Gets or sets the name of the conversion pattern
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// The name of the pattern in the format string
-			/// </para>
-			/// </remarks>
-			public string Name
-			{
-				get { return m_name; }
-				set { m_name = value; }
-			}
-
-			/// <summary>
-			/// Gets or sets the type of the converter
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// The value specified must extend the 
-			/// <see cref="PatternConverter"/> type.
-			/// </para>
-			/// </remarks>
-			public Type Type
-			{
-				get { return m_type; }
-				set { m_type = value; }
-			}
+            AddConverter(converterInfo);
 		}
 	}
 }

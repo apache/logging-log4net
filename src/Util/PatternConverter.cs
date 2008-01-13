@@ -372,5 +372,16 @@ namespace log4net.Util
 		}
 
 		#endregion
+
+        private PropertiesDictionary properties;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public PropertiesDictionary Properties
+	    {
+	        get { return properties; }
+	        set { properties = value; }
+	    }
 	}
 }

@@ -543,6 +543,7 @@
     <Compile Include="Util\ContextPropertiesBase.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Util\ConverterInfo.cs" />
     <Compile Include="Util\CountingQuietTextWriter.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -637,6 +638,7 @@
     <Compile Include="Util\PropertiesDictionary.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Util\PropertyEntry.cs" />
     <Compile Include="Util\ProtectCloseTextWriter.cs">
       <SubType>Code</SubType>
     </Compile>
