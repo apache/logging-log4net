@@ -133,6 +133,7 @@
     <Compile Include="Core\StringFormatTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Hierarchy\Hierarchy.cs" />
     <Compile Include="Hierarchy\Logger.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -151,6 +152,7 @@
     </Compile>
     <Compile Include="Util\EnvironmentPatternConverterTest.cs" />
     <Compile Include="Util\LogLogTest.cs" />
+    <Compile Include="Util\PatternConverterTest.cs" />
     <Compile Include="Util\PatternStringTest.cs" />
     <Compile Include="Util\PropertiesDictionaryTest.cs">
       <SubType>Code</SubType>
