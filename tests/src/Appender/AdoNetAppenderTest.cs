@@ -4,8 +4,10 @@ using System.Xml;
 using log4net.Appender;
 using log4net.Config;
 using log4net.Core;
+using log4net.Layout;
 using log4net.Repository;
 using log4net.Tests.Appender.AdoNet;
+using log4net.Util;
 using NUnit.Framework;
 
 namespace log4net.Tests.Appender
@@ -117,6 +119,74 @@ namespace log4net.Tests.Appender
 
             param = (IDbDataParameter)command.Parameters["@exception"];
             Assert.IsEmpty((string)param.Value);
+        }
+
+        [Test]
+        public void NullPropertyXmlConfig()
+        {
+            XmlDocument log4netConfig = new XmlDocument();
+            #region Load log4netConfig
+            log4netConfig.LoadXml(@"
+                <log4net>
+                <appender name=""AdoNetAppender"" type=""log4net.Appender.AdoNetAppender"">
+                    <bufferSize value=""-1"" />
+                    <connectionType value=""log4net.Tests.Appender.AdoNet.Log4NetConnection"" />
+                    <connectionString value=""data source=[database server];initial catalog=[database name];integrated security=false;persist security info=True;User ID=[user];Password=[password]"" />
+                    <commandText value=""INSERT INTO Log ([ProductId]) VALUES (@productId)"" />
+                    <parameter>
+                        <parameterName value=""@productId"" />
+                        <dbType value=""String"" />
+                        <size value=""50"" />
+                        <layout type="" log4net.Layout.RawPropertyLayout"">
+                           <key value=""ProductId"" />
+                        </layout>
+                    </parameter>                    
+                </appender>
+                <root>
+                    <level value=""ALL"" />
+                    <appender-ref ref=""AdoNetAppender"" />
+                  </root>  
+                </log4net>");
+            #endregion
+
+            ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+            XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
+            ILog log = LogManager.GetLogger(rep.Name, "NullPropertyXmlConfig");
+            
+            log.Debug("Message");
+            IDbCommand command = Log4NetCommand.MostRecentInstance;
+            IDbDataParameter param = (IDbDataParameter)command.Parameters["@productId"];
+            Assert.AreNotEqual(SystemInfo.NullText, param.Value);
+            Assert.AreEqual(DBNull.Value, param.Value);
+        }
+
+        [Test]
+        public void NullPropertyProgmaticConfig()
+        {
+            AdoNetAppenderParameter productIdParam = new AdoNetAppenderParameter();
+            productIdParam.ParameterName = "@productId";
+            productIdParam.DbType = DbType.String;
+            productIdParam.Size = 50;
+            RawPropertyLayout rawPropertyLayout = new RawPropertyLayout();
+            rawPropertyLayout.Key = "ProductId";
+            productIdParam.Layout = rawPropertyLayout;
+
+            AdoNetAppender appender = new AdoNetAppender();
+            appender.ConnectionType = typeof(Log4NetConnection).FullName;
+            appender.BufferSize = -1;
+            appender.CommandText = "INSERT INTO Log ([productId]) VALUES (@productId)";
+            appender.AddParameter(productIdParam);
+            appender.ActivateOptions();
+
+            ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+            BasicConfigurator.Configure(rep, appender);
+            ILog log = LogManager.GetLogger(rep.Name, "NullPropertyProgmaticConfig");
+            
+            log.Debug("Message");
+            IDbCommand command = Log4NetCommand.MostRecentInstance;
+            IDbDataParameter param = (IDbDataParameter)command.Parameters["@productId"];
+            Assert.AreNotEqual(SystemInfo.NullText, param.Value);
+            Assert.AreEqual(DBNull.Value, param.Value);
         }
     }
 }
