@@ -35,8 +35,8 @@ Download Apache log4net 1.2.10
 |                         | Mirrors | Checksum | Signature |
 *-------------------------+---------+----------+-----------+
 *-------------------------+---------+----------+-----------+
-| log4net 1.2.10 (zip)      | {{{http://cvs.apache.org/dist/incubator/log4net/1.2.10/incubating-log4net-1.2.10.zip} incubating-log4net-1.2.10.zip}} | {{{http://cvs.apache.org/dist/incubator/log4net/1.2.10/incubating-log4net-1.2.10.zip.md5} incubating-log4net-1.2.10.zip.md5}} | {{{http://cvs.apache.org/dist/incubator/log4net/1.2.10/incubating-log4net-1.2.10.zip.asc} incubating-log4net-1.2.10.zip.asc}}|
-| log4net 1.2.9-beta (zip)      | {{{http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip} incubating-log4net-1.2.9-beta.zip}} | {{{http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip.md5} incubating-log4net-1.2.9-beta.zip.md5}} | {{{http://cvs.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip.asc} incubating-log4net-1.2.9-beta.zip.asc}}|
+| log4net 1.2.10 (zip)      | {{{http://archive.apache.org/dist/incubator/log4net/1.2.10/incubating-log4net-1.2.10.zip} incubating-log4net-1.2.10.zip}} | {{{http://archive.apache.org/dist/incubator/log4net/1.2.10/incubating-log4net-1.2.10.zip.md5} incubating-log4net-1.2.10.zip.md5}} | {{{http://archive.apache.org/dist/incubator/log4net/1.2.10/incubating-log4net-1.2.10.zip.asc} incubating-log4net-1.2.10.zip.asc}}|
+| log4net 1.2.9-beta (zip)      | {{{http://archive.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip} incubating-log4net-1.2.9-beta.zip}} | {{{http://archive.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip.md5} incubating-log4net-1.2.9-beta.zip.md5}} | {{{http://archive.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip.asc} incubating-log4net-1.2.9-beta.zip.asc}}|
 *-------------------------+---------+----------+-----------+
 
   Please read {{{http://httpd.apache.org/dev/verification.html}Verifying Apache HTTP Server Releases}}
