@@ -17,10 +17,6 @@
 //
 #endregion
 
-using System;
-using System.Collections;
-using log4net.Util;
-
 namespace log4net.Repository
 {
 	/// <summary>
@@ -50,6 +46,18 @@ namespace log4net.Repository
 		/// specified appender.
 		/// </para>
 		/// </remarks>
-        void Configure(log4net.Appender.IAppender appender);
+        void Configure(Appender.IAppender appender);
+
+        /// <summary>
+        /// Initialize the repository using the specified appenders
+        /// </summary>
+        /// <param name="appenders">the appenders to use to log all logging events</param>
+        /// <remarks>
+        /// <para>
+        /// Configure the repository to route all logging events to the
+        /// specified appenders.
+        /// </para>
+        /// </remarks>
+        void Configure(params Appender.IAppender[] appenders);
 	}
 }

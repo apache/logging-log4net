@@ -1,7 +1,10 @@
 using System;
 using System.Xml;
 using log4net.Config;
+using log4net.Core;
 using log4net.Repository;
+using log4net.Repository.Hierarchy;
+using log4net.Tests.Appender;
 using NUnit.Framework;
 
 namespace log4net.Tests.Hierarchy
@@ -34,6 +37,40 @@ namespace log4net.Tests.Hierarchy
 
             Assert.AreEqual("4", rep.Properties["two-plus-two"]);
             Assert.IsNull(rep.Properties["one-plus-one"]);
+        }
+
+        [Test]
+        public void AddingMultipleAppenders()
+        {
+            CountingAppender alpha = new CountingAppender();
+            CountingAppender beta = new CountingAppender();
+
+            Repository.Hierarchy.Hierarchy hierarchy = 
+                (Repository.Hierarchy.Hierarchy)LogManager.GetRepository();
+            hierarchy.Root.AddAppender(alpha);
+            hierarchy.Root.AddAppender(beta);
+            hierarchy.Configured = true;
+
+            ILog log = LogManager.GetLogger(GetType());
+            log.Debug("Hello World");
+
+            Assert.AreEqual(1, alpha.Counter);
+            Assert.AreEqual(1, beta.Counter);
+        }
+
+        [Test]
+        public void AddingMultipleAppenders2()
+        {
+            CountingAppender alpha = new CountingAppender();
+            CountingAppender beta = new CountingAppender();
+            
+            BasicConfigurator.Configure(alpha, beta);
+
+            ILog log = LogManager.GetLogger(GetType());
+            log.Debug("Hello World");
+
+            Assert.AreEqual(1, alpha.Counter);
+            Assert.AreEqual(1, beta.Counter);
         }
     }
 }

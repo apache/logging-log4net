@@ -19,7 +19,9 @@
 
 using System;
 using System.Collections;
+using log4net.Appender;
 using log4net.Core;
+using log4net.Repository;
 using log4net.Util;
 
 namespace log4net.Repository.Hierarchy
@@ -545,29 +547,41 @@ namespace log4net.Repository.Hierarchy
 		/// Initialize the log4net system using the specified appender
 		/// </summary>
 		/// <param name="appender">the appender to use to log all logging events</param>
-		void IBasicRepositoryConfigurator.Configure(Appender.IAppender appender)
+		void IBasicRepositoryConfigurator.Configure(IAppender appender)
 		{
 			BasicRepositoryConfigure(appender);
 		}
 
+        /// <summary>
+        /// Initialize the log4net system using the specified appenders
+        /// </summary>
+        /// <param name="appenders">the appenders to use to log all logging events</param>
+        void IBasicRepositoryConfigurator.Configure(params IAppender[] appenders)
+        {
+            BasicRepositoryConfigure(appenders);
+        }
+
 		/// <summary>
-		/// Initialize the log4net system using the specified appender
+		/// Initialize the log4net system using the specified appenders
 		/// </summary>
-		/// <param name="appender">the appender to use to log all logging events</param>
+		/// <param name="appenders">the appenders to use to log all logging events</param>
 		/// <remarks>
 		/// <para>
 		/// This method provides the same functionality as the 
-		/// <see cref="IBasicRepositoryConfigurator.Configure"/> method implemented
+		/// <see cref="IBasicRepositoryConfigurator.Configure(IAppender)"/> method implemented
 		/// on this object, but it is protected and therefore can be called by subclasses.
 		/// </para>
 		/// </remarks>
-		protected void BasicRepositoryConfigure(Appender.IAppender appender)
+		protected void BasicRepositoryConfigure(params IAppender[] appenders)
 		{
             ArrayList configurationMessages = new ArrayList();
 
             using (new LogLog.LogReceivedAdapter(configurationMessages))
             {
-                Root.AddAppender(appender);
+                foreach (IAppender appender in appenders)
+                {
+                    Root.AddAppender(appender);
+                }
             }
 
 		    Configured = true;
@@ -598,7 +612,7 @@ namespace log4net.Repository.Hierarchy
 		/// <remarks>
 		/// <para>
 		/// This method provides the same functionality as the 
-		/// <see cref="IBasicRepositoryConfigurator.Configure"/> method implemented
+		/// <see cref="IBasicRepositoryConfigurator.Configure(IAppender)"/> method implemented
 		/// on this object, but it is protected and therefore can be called by subclasses.
 		/// </para>
 		/// </remarks>
