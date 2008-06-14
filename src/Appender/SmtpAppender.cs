@@ -307,6 +307,20 @@ namespace log4net.Appender
 			set { m_mailPriority = value; }
 		}
 
+#if NET_2_0
+        /// <summary>
+        /// Enable or disable use of SSL when sending e-mail message
+        /// </summary>
+        /// <remarks>
+        /// This is available on MS .NET 2.0 runtime and higher
+        /// </remarks>
+        public bool EnableSsl
+        {
+            get { return m_enableSsl; }
+            set { m_enableSsl = value; }
+        }
+#endif
+
 		#endregion // Public Instance Properties
 
 		#region Override implementation of BufferingAppenderSkeleton
@@ -390,6 +404,7 @@ namespace log4net.Appender
 			}
 			smtpClient.Port = m_port;
 			smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+            smtpClient.EnableSsl = m_enableSsl;
 
 			if (m_authentication == SmtpAuthentication.Basic)
 			{
@@ -515,6 +530,10 @@ namespace log4net.Appender
 		private int m_port = 25;
 
 		private MailPriority m_mailPriority = MailPriority.Normal;
+
+#if NET_2_0
+        private bool m_enableSsl = false;
+#endif
 
 		#endregion // Private Instance Fields
 
