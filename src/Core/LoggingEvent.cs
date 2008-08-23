@@ -228,7 +228,7 @@ namespace log4net.Core
 		Exception = 0x100,
 
 		/// <summary>
-		/// Fix the event properties
+		/// Fix the event properties. Active properties must implement <see cref="IFixingRequired"/> in order to be eligible for fixing.
 		/// </summary>
 		Properties = 0x200,
 

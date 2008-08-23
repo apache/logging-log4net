@@ -149,9 +149,28 @@ log4net.GlobalContext.Properties["GCAllocatedBytes"] = new GCAllocatedBytesHelpe
                         string by calling the <span class="code">ToString</span> method the current number of bytes 
                         allocated by the garbage collector will be returned and included in the output.
                     </p>
-                    
-                </section>
-                
+					<p>
+						Note that the <span class="code">ToString</span>method will not be
+						called until the <span class="code">LoggingEvent</span>is rendered, as
+						explained in the <a href="#fixing">Fixing</a>section. An active property
+						is not eligible to be fixed unless it implements 
+						<a href="../sdk/log4net.Core.IFixingRequired.html"> IFixingRequired</a>.
+					</p>
+				</section>
+			</section>
+			
+			<section id="fixing" name="Fixing">
+				<p>
+					Some properties, e.g. the current thread property, or any 
+					<a href="#active">active properties</a>, are not realised
+					until their containing <span class="code">LoggingEvent</span>is rendered. If the 
+					<span class="code">LoggingEvent</span>is been sent to a buffering appender (such as 
+					<a href="../sdk/log4net.Appender.AdoNetAppender.html">AdoNetAppender</a>) then this rendering will not happen
+					unless the <a href="../sdk/log4net.Appender.BufferingAppenderSkeleton.html">
+					BufferingAppenderSkeleton</a>'s <a href="../sdk/log4net.Appender.BufferingAppenderSkeleton.Fix.html">
+					Fix property</a>has been set. In addition, an active property is not eligible to be fixed unless it implements 
+					<a href="../sdk/log4net.Core.IFixingRequired.html">IFixingRequired</a>.
+				</p>
             </section>
             
             <section id="stacks" name="Context Stacks">
