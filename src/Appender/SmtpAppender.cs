@@ -319,6 +319,18 @@ namespace log4net.Appender
             get { return m_enableSsl; }
             set { m_enableSsl = value; }
         }
+
+        /// <summary>
+        /// Gets or sets the reply-to e-mail address.
+        /// </summary>
+        /// <remarks>
+        /// This is available on MS .NET 2.0 runtime and higher
+        /// </remarks>
+        public string ReplyTo
+        {
+            get { return m_replyTo; }
+            set { m_replyTo = value; }
+        }
 #endif
 
 		#endregion // Public Instance Properties
@@ -398,7 +410,7 @@ namespace log4net.Appender
 
 			// Create and configure the smtp client
 			SmtpClient smtpClient = new SmtpClient();
-			if (m_smtpHost != null && m_smtpHost.Length > 0)
+			if (!String.IsNullOrEmpty(m_smtpHost))
 			{
 				smtpClient.Host = m_smtpHost;
 			}
@@ -428,6 +440,10 @@ namespace log4net.Appender
             if (!String.IsNullOrEmpty(m_bcc))
             {
                 mailMessage.Bcc.Add(m_bcc);
+            }
+            if (!String.IsNullOrEmpty(m_replyTo))
+            {
+                mailMessage.ReplyTo = new MailAddress(m_replyTo);
             }
 		    mailMessage.Subject = m_subject;
 			mailMessage.Priority = m_mailPriority;
@@ -533,6 +549,7 @@ namespace log4net.Appender
 
 #if NET_2_0
         private bool m_enableSsl = false;
+        private string m_replyTo;
 #endif
 
 		#endregion // Private Instance Fields
