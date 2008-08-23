@@ -92,12 +92,20 @@ namespace log4net.Appender
 		/// Gets or sets a semicolon-delimited list of recipient e-mail addresses.
 		/// </summary>
 		/// <value>
-		/// A semicolon-delimited list of e-mail addresses.
+        /// <para>
+        /// For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
+        /// </para>
+        /// <para>
+        /// For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
+        /// </para>
 		/// </value>
 		/// <remarks>
-		/// <para>
-		/// A semicolon-delimited list of recipient e-mail addresses.
-		/// </para>
+        /// <para>
+        /// For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
+        /// </para>
+        /// <para>
+        /// For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
+        /// </para>
 		/// </remarks>
 		public string To
 		{
@@ -110,11 +118,19 @@ namespace log4net.Appender
         /// that will be carbon copied.
         /// </summary>
         /// <value>
-        /// A semicolon-delimited list of e-mail addresses.
+        /// <para>
+        /// For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
+        /// </para>
+        /// <para>
+        /// For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
+        /// </para>
         /// </value>
         /// <remarks>
         /// <para>
-        /// A semicolon-delimited list of recipient e-mail addresses.
+        /// For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
+        /// </para>
+        /// <para>
+        /// For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
         /// </para>
         /// </remarks>
         public string Cc
