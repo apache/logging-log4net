@@ -870,9 +870,23 @@ namespace log4net.Config
 
 				try
 				{
-					// Create a watch handler that will reload the
-					// configuration whenever the config file is modified.
-					ConfigureAndWatchHandler.StartWatching(repository, configFile);
+                    lock (m_repositoryName2ConfigAndWatchHandler)
+                    {
+                        // support multiple repositories each having their own watcher
+                        ConfigureAndWatchHandler handler =
+                            (ConfigureAndWatchHandler)m_repositoryName2ConfigAndWatchHandler[repository.Name];
+
+                        if (handler != null)
+                        {
+                            m_repositoryName2ConfigAndWatchHandler.Remove(repository.Name);
+                            handler.Dispose();
+                        }
+
+                        // Create and start a watch handler that will reload the
+                        // configuration whenever the config file is modified.
+                        handler = new ConfigureAndWatchHandler(repository, configFile);
+                        m_repositoryName2ConfigAndWatchHandler[repository.Name] = handler;
+                    }
 				}
 				catch(Exception ex)
 				{
@@ -903,23 +917,8 @@ namespace log4net.Config
 		/// elapse.
 		/// </para>
 		/// </remarks>
-		private sealed class ConfigureAndWatchHandler
+		private sealed class ConfigureAndWatchHandler : IDisposable
 		{
-			/// <summary>
-			/// Watch a specified config file used to configure a repository
-			/// </summary>
-			/// <param name="repository">The repository to configure.</param>
-			/// <param name="configFile">The configuration file to watch.</param>
-			/// <remarks>
-			/// <para>
-			/// Watch a specified config file used to configure a repository
-			/// </para>
-			/// </remarks>
-			internal static void StartWatching(ILoggerRepository repository, FileInfo configFile)
-			{
-				new ConfigureAndWatchHandler(repository, configFile);
-			}
-
 			/// <summary>
 			/// Holds the FileInfo used to configure the XmlConfigurator
 			/// </summary>
@@ -941,8 +940,15 @@ namespace log4net.Config
 			/// </summary>
 			private const int TimeoutMillis = 500;
 
+            /// <summary>
+            /// Watches file for changes. This object should be disposed when no longer
+            /// needed to free system handles on the watched resources.
+            /// </summary>
+            private FileSystemWatcher m_watcher;
+
 			/// <summary>
-			/// Initializes a new instance of the <see cref="ConfigureAndWatchHandler" /> class.
+			/// Initializes a new instance of the <see cref="ConfigureAndWatchHandler" /> class to
+            /// watch a specified config file used to configure a repository.
 			/// </summary>
 			/// <param name="repository">The repository to configure.</param>
 			/// <param name="configFile">The configuration file to watch.</param>
@@ -951,31 +957,31 @@ namespace log4net.Config
 			/// Initializes a new instance of the <see cref="ConfigureAndWatchHandler" /> class.
 			/// </para>
 			/// </remarks>
-			private ConfigureAndWatchHandler(ILoggerRepository repository, FileInfo configFile)
+			public ConfigureAndWatchHandler(ILoggerRepository repository, FileInfo configFile)
 			{
 				m_repository = repository;
 				m_configFile = configFile;
 
 				// Create a new FileSystemWatcher and set its properties.
-				FileSystemWatcher watcher = new FileSystemWatcher();
+				m_watcher = new FileSystemWatcher();
 
-				watcher.Path = m_configFile.DirectoryName;
-				watcher.Filter = m_configFile.Name;
+				m_watcher.Path = m_configFile.DirectoryName;
+				m_watcher.Filter = m_configFile.Name;
 
 				// Set the notification filters
-				watcher.NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.LastWrite | NotifyFilters.FileName;
+				m_watcher.NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.LastWrite | NotifyFilters.FileName;
 
 				// Add event handlers. OnChanged will do for all event handlers that fire a FileSystemEventArgs
-				watcher.Changed += new FileSystemEventHandler(ConfigureAndWatchHandler_OnChanged);
-				watcher.Created += new FileSystemEventHandler(ConfigureAndWatchHandler_OnChanged);
-				watcher.Deleted += new FileSystemEventHandler(ConfigureAndWatchHandler_OnChanged);
-				watcher.Renamed += new RenamedEventHandler(ConfigureAndWatchHandler_OnRenamed);
+				m_watcher.Changed += new FileSystemEventHandler(ConfigureAndWatchHandler_OnChanged);
+				m_watcher.Created += new FileSystemEventHandler(ConfigureAndWatchHandler_OnChanged);
+				m_watcher.Deleted += new FileSystemEventHandler(ConfigureAndWatchHandler_OnChanged);
+				m_watcher.Renamed += new RenamedEventHandler(ConfigureAndWatchHandler_OnRenamed);
 
 				// Begin watching.
-				watcher.EnableRaisingEvents = true;
+				m_watcher.EnableRaisingEvents = true;
 
 				// Create the timer that will be used to deliver events. Set as disabled
-				m_timer = new Timer(new TimerCallback(OnWatchedFileChange), null, Timeout.Infinite, Timeout.Infinite);
+                m_timer = new Timer(new TimerCallback(OnWatchedFileChange), null, Timeout.Infinite, Timeout.Infinite);
 			}
 
 			/// <summary>
@@ -1024,6 +1030,16 @@ namespace log4net.Config
 			{
 				XmlConfigurator.InternalConfigure(m_repository, m_configFile);
 			}
+
+            /// <summary>
+            /// Release the handles held by the watcher and timer.
+            /// </summary>
+            public void Dispose()
+            {
+                m_watcher.EnableRaisingEvents = false;
+                m_watcher.Dispose();
+                m_timer.Dispose();
+            }
 		}
 #endif
 
@@ -1082,6 +1098,13 @@ namespace log4net.Config
 		#endregion Private Static Methods
 
 	    #region Private Static Fields
+
+        /// <summary>
+        /// Maps repository names to ConfigAndWatchHandler instances to allow a particular
+        /// ConfigAndWatchHandler to dispose of its FileSystemWatcher when a repository is 
+        /// reconfigured.
+        /// </summary>
+        private readonly static Hashtable m_repositoryName2ConfigAndWatchHandler = new Hashtable();
 
 	    /// <summary>
 	    /// The fully qualified type of the XmlConfigurator class.
