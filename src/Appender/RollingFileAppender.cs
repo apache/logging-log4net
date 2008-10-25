@@ -452,7 +452,27 @@ namespace log4net.Appender
 				}
 			}
 		}
-  
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to preserve the file name extension when rolling.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the file name extension should be preserved.
+        /// </value>
+        /// <remarks>
+        /// <para>
+        /// By default file.log is rolled to file.log.yyyy-MM-dd or file.log.curSizeRollBackup.
+        /// However, under Windows the new file name will loose any program associations as the
+        /// extension is changed. Optionally file.log can be renamed to file.yyyy-MM-dd.log or
+        /// file.curSizeRollBackup.log to maintain any program associations.
+        /// </para>
+        /// </remarks>
+        public bool PreserveLogFileNameExtension
+        {
+            get { return m_preserveLogFileNameExtension; }
+            set { m_preserveLogFileNameExtension = value; }
+        }
+
 		/// <summary>
 		/// Gets or sets a value indicating whether to always log to
 		/// the same file.
@@ -650,12 +670,12 @@ namespace log4net.Appender
 
 				if (m_rollDate)
 				{
-					fileName = fileName + m_now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo);
+                    fileName = CombinePath(fileName, m_now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo));
 				}
 
 				if (m_countDirection >= 0) 
 				{
-					fileName = fileName + '.' + m_curSizeRollBackups;
+                    fileName = CombinePath(fileName, "." + m_curSizeRollBackups);
 				}
 			}
 
@@ -694,9 +714,16 @@ namespace log4net.Appender
 		/// </summary>
 		/// <param name="baseFileName"></param>
 		/// <returns></returns>
-		private static string GetWildcardPatternForFile(string baseFileName)
+		private string GetWildcardPatternForFile(string baseFileName)
 		{
-			return baseFileName + '*';
+            if (m_preserveLogFileNameExtension)
+            {
+                return Path.GetFileNameWithoutExtension(baseFileName) + ".*" + Path.GetExtension(baseFileName);
+            }
+            else
+            {
+                return baseFileName + '*';
+            }
 		}
 
 		/// <summary>
@@ -727,7 +754,7 @@ namespace log4net.Appender
 						for (int i = 0; i < files.Length; i++) 
 						{
 							string curFileName = Path.GetFileName(files[i]);
-							if (curFileName.StartsWith(baseFileName))
+							if (curFileName.StartsWith(Path.GetFileNameWithoutExtension(baseFileName)))
 							{
 								alFiles.Add(curFileName);
 							}
@@ -822,7 +849,7 @@ namespace log4net.Appender
 		/// <param name="curFileName"></param>
 		private void InitializeFromOneFile(string baseFile, string curFileName)
 		{
-			if (! curFileName.StartsWith(baseFile) )
+            if (curFileName.StartsWith(Path.GetFileNameWithoutExtension(baseFile)) == false)
 			{
 				// This is not a log file, so ignore
 				return;
@@ -833,13 +860,7 @@ namespace log4net.Appender
 				return;
 			}
 	
-			int index = curFileName.LastIndexOf(".");
-			if (-1 == index) 
-			{
-				// This is not an incremented logfile (.1 or .2)
-				return;
-			}
-	
+            /*
 			if (m_staticLogFileName) 
 			{
 				int endLength = curFileName.Length - index;
@@ -849,64 +870,97 @@ namespace log4net.Appender
 					return;
 				}
 			}
+            */
 	
 			// Only look for files in the current roll point
 			if (m_rollDate && !m_staticLogFileName)
 			{
-				if (! curFileName.StartsWith(baseFile + m_dateTime.Now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo)))
+				if (! curFileName.StartsWith(CombinePath(baseFile, m_dateTime.Now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo))))
 				{
 					LogLog.Debug(declaringType, "Ignoring file ["+curFileName+"] because it is from a different date period");
 					return;
 				}
 			}
-
+            
 			try 
 			{
 				// Bump the counter up to the highest count seen so far
-				int backup;
-				if (SystemInfo.TryParse(curFileName.Substring(index + 1), out backup))
-				{
-					if (backup > m_curSizeRollBackups)
-					{
-						if (0 == m_maxSizeRollBackups)
-						{
-							// Stay at zero when zero backups are desired
-						}
-						else if (-1 == m_maxSizeRollBackups)
-						{
-							// Infinite backups, so go as high as the highest value
-							m_curSizeRollBackups = backup;
-						}
-						else
-						{
-							// Backups limited to a finite number
-							if (m_countDirection >= 0) 
-							{
-								// Go with the highest file when counting up
-								m_curSizeRollBackups = backup;
-							} 
-							else
-							{
-								// Clip to the limit when counting down
-								if (backup <= m_maxSizeRollBackups)
-								{
-									m_curSizeRollBackups = backup;
-								}
-							}
-						}
-						LogLog.Debug(declaringType, "File name ["+curFileName+"] moves current count to ["+m_curSizeRollBackups+"]");
-					}
-				}
+                int backup = GetBackUpIndex(curFileName);
+                
+                // caution: we might get a false positive when certain
+                // date patterns such as yyyyMMdd are used...those are
+                // valid number but aren't the kind of back up index
+                // we're looking for
+                if (backup > m_curSizeRollBackups)
+                {
+                    if (0 == m_maxSizeRollBackups)
+                    {
+                        // Stay at zero when zero backups are desired
+                    }
+                    else if (-1 == m_maxSizeRollBackups)
+                    {
+                        // Infinite backups, so go as high as the highest value
+                        m_curSizeRollBackups = backup;
+                    }
+                    else
+                    {
+                        // Backups limited to a finite number
+                        if (m_countDirection >= 0)
+                        {
+                            // Go with the highest file when counting up
+                            m_curSizeRollBackups = backup;
+                        }
+                        else
+                        {
+                            // Clip to the limit when counting down
+                            if (backup <= m_maxSizeRollBackups)
+                            {
+                                m_curSizeRollBackups = backup;
+                            }
+                        }
+                    }
+                    LogLog.Debug(declaringType, "File name [" + curFileName + "] moves current count to [" + m_curSizeRollBackups + "]");
+                }
 			} 
 			catch(FormatException) 
 			{
-				//this happens when file.log -> file.log.yyyy-mm-dd which is normal
+				//this happens when file.log -> file.log.yyyy-MM-dd which is normal
 				//when staticLogFileName == false
 				LogLog.Debug(declaringType, "Encountered a backup file not ending in .x ["+curFileName+"]");
 			}
 		}
 
-		/// <summary>
+        /// <summary>
+        /// Attempts to extract a number from the end of the file name that indicates
+        /// the number of the times the file has been rolled over.
+        /// </summary>
+        /// <remarks>
+        /// Certain date pattern extensions like yyyyMMdd will be parsed as valid backup indexes.
+        /// </remarks>
+        /// <param name="curFileName"></param>
+        /// <returns></returns>
+	    private int GetBackUpIndex(string curFileName)
+	    {
+            int backUpIndex = -1;
+            string fileName = curFileName;
+
+            if (m_preserveLogFileNameExtension)
+            {
+                fileName = Path.GetFileNameWithoutExtension(fileName);
+            }
+            
+            int index = fileName.LastIndexOf(".");
+            if (index > 0)
+            {
+                // if the "yyyy-MM-dd" component of file.log.yyyy-MM-dd is passed to TryParse
+                // it will gracefully fail and return backUpIndex will be 0
+                SystemInfo.TryParse(fileName.Substring(index + 1), out backUpIndex);
+            }
+
+            return backUpIndex;
+	    }
+
+	    /// <summary>
 		/// Takes a list of files and a base file name, and looks for 
 		/// 'incremented' versions of the base file.  Bumps the max
 		/// count up to the highest count seen.
@@ -1034,7 +1088,7 @@ namespace log4net.Appender
 
 			if (m_rollDate && File != null && m_scheduledFilename == null)
 			{
-				m_scheduledFilename = File + m_now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo);
+                m_scheduledFilename = CombinePath(File, m_now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo));
 			}
 
 			ExistingInit();
@@ -1045,6 +1099,25 @@ namespace log4net.Appender
 		#endregion
   
 		#region Roll File
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path1"></param>
+        /// <param name="path2">.1, .2, .3, etc.</param>
+        /// <returns></returns>
+        private string CombinePath(string path1, string path2)
+        {
+            string extension = Path.GetExtension(path1);
+            if (m_preserveLogFileNameExtension && extension.Length > 0)
+            {
+                return Path.Combine(Path.GetDirectoryName(path1), Path.GetFileNameWithoutExtension(path1) + path2 + extension);
+            }
+            else
+            {
+                return path1 + path2;
+            }
+        }
 
 		/// <summary>
 		/// Rollover the file(s) to date/time tagged file(s).
@@ -1072,9 +1145,9 @@ namespace log4net.Appender
 				//something has gone wrong if we hit this -- we should only
 				//roll over if the new file will be different from the old
 				string dateFormat = m_now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo);
-				if (m_scheduledFilename.Equals(File + dateFormat)) 
+                if (m_scheduledFilename.Equals(CombinePath(File, dateFormat))) 
 				{
-					ErrorHandler.Error("Compare " + m_scheduledFilename + " : " + File + dateFormat);
+                    ErrorHandler.Error("Compare " + m_scheduledFilename + " : " + CombinePath(File, dateFormat));
 					return;
 				}
 	  
@@ -1087,8 +1160,8 @@ namespace log4net.Appender
 				//we may have to roll over a large number of backups here
 				for (int i = 1; i <= m_curSizeRollBackups; i++) 
 				{
-					string from = File + '.' + i;
-					string to = m_scheduledFilename + '.' + i;
+                    string from = CombinePath(File, "." + i);
+                    string to = CombinePath(m_scheduledFilename, "." + i);
 					RollFile(from, to);
 				}
 	  
@@ -1099,7 +1172,7 @@ namespace log4net.Appender
 			m_curSizeRollBackups = 0; 
 	
 			//new scheduled name
-			m_scheduledFilename = File + m_now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo);
+            m_scheduledFilename = CombinePath(File, m_now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo));
 
 			if (fileIsOpen)
 			{
@@ -1308,20 +1381,20 @@ namespace log4net.Appender
 					// Delete the oldest file, to keep Windows happy.
 					if (m_curSizeRollBackups == m_maxSizeRollBackups) 
 					{
-						DeleteFile(baseFileName + '.' + m_maxSizeRollBackups);
+                        DeleteFile(CombinePath(baseFileName, "." + m_maxSizeRollBackups));
 						m_curSizeRollBackups--;
 					}
 	
 					// Map {(maxBackupIndex - 1), ..., 2, 1} to {maxBackupIndex, ..., 3, 2}
 					for (int i = m_curSizeRollBackups; i >= 1; i--) 
 					{
-						RollFile((baseFileName + "." + i), (baseFileName + '.' + (i + 1)));
+                        RollFile((CombinePath(baseFileName, "." + i)), (CombinePath(baseFileName, "." + (i + 1))));
 					}
 	
 					m_curSizeRollBackups++;
 
 					// Rename fileName to fileName.1
-					RollFile(baseFileName, baseFileName + ".1");
+                    RollFile(baseFileName, CombinePath(baseFileName, ".1"));
 				} 
 				else 
 				{
@@ -1351,13 +1424,13 @@ namespace log4net.Appender
 						}
 
 						// Delete the archive file
-						DeleteFile(archiveFileBaseName + '.' + oldestFileIndex);
+                        DeleteFile(CombinePath(archiveFileBaseName, "." + oldestFileIndex));
 					}
 	
 					if (m_staticLogFileName) 
 					{
 						m_curSizeRollBackups++;
-						RollFile(baseFileName, baseFileName + '.' + m_curSizeRollBackups);
+                        RollFile(baseFileName, CombinePath(baseFileName, "." + m_curSizeRollBackups));
 					}
 				}
 			}
@@ -1528,6 +1601,12 @@ namespace log4net.Appender
 		/// </summary>
 		private bool m_staticLogFileName = true;
   
+   		/// <summary>
+		/// Value indicating whether to preserve the file name extension when rolling.
+		/// </summary>
+		private bool m_preserveLogFileNameExtension = false;
+
+
 		/// <summary>
 		/// FileName provided in configuration.  Used for rolling properly
 		/// </summary>
