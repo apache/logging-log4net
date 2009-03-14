@@ -83,12 +83,10 @@ limitations under the License.
                             <td>Microsoft .NET Compact Framework 1.0</td>
                             <td><a href="http://msdn2.microsoft.com/en-us/netframework/aa497273.aspx">http://msdn2.microsoft.com/en-us/netframework/aa497273.aspx</a></td>
                         </tr>
-                        <!--
                         <tr style="vertical-align: top;">
-                            <td>Microsoft .NET Compact Framework 2.0</td>
-                            <td><a href="http://msdn2.microsoft.com/en-us/netframework/aa497273.aspx">http://msdn2.microsoft.com/en-us/netframework/aa497273.aspx</a></td>
-                        </tr>
-                        -->
+                          <td>Microsoft .NET Compact Framework 2.0</td>
+                          <td><a href="http://msdn2.microsoft.com/en-us/netframework/aa497273.aspx">http://msdn2.microsoft.com/en-us/netframework/aa497273.aspx</a></td>
+                      </tr>
                         <tr style="vertical-align: top;">
                             <td>Mono 1.2.3</td>
                             <td><a href="http://www.mono-project.com">http://www.mono-project.com</a></td>
