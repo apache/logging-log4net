@@ -445,28 +445,30 @@ namespace log4net.Appender
 				smtpClient.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
 			}
 
-			MailMessage mailMessage = new MailMessage();
-			mailMessage.Body = messageBody;
-			mailMessage.From = new MailAddress(m_from);
-			mailMessage.To.Add(m_to);
-            if (!String.IsNullOrEmpty(m_cc))
+            using (MailMessage mailMessage = new MailMessage())
             {
-                mailMessage.CC.Add(m_cc);
-            }
-            if (!String.IsNullOrEmpty(m_bcc))
-            {
-                mailMessage.Bcc.Add(m_bcc);
-            }
-            if (!String.IsNullOrEmpty(m_replyTo))
-            {
-                mailMessage.ReplyTo = new MailAddress(m_replyTo);
-            }
-		    mailMessage.Subject = m_subject;
-			mailMessage.Priority = m_mailPriority;
+                mailMessage.Body = messageBody;
+                mailMessage.From = new MailAddress(m_from);
+                mailMessage.To.Add(m_to);
+                if (!String.IsNullOrEmpty(m_cc))
+                {
+                    mailMessage.CC.Add(m_cc);
+                }
+                if (!String.IsNullOrEmpty(m_bcc))
+                {
+                    mailMessage.Bcc.Add(m_bcc);
+                }
+                if (!String.IsNullOrEmpty(m_replyTo))
+                {
+                    mailMessage.ReplyTo = new MailAddress(m_replyTo);
+                }
+                mailMessage.Subject = m_subject;
+                mailMessage.Priority = m_mailPriority;
 
-			// TODO: Consider using SendAsync to send the message without blocking. This would be a change in
-			// behaviour compared to .NET 1.x. We would need a SendCompletedCallback to log errors.
-			smtpClient.Send(mailMessage);
+                // TODO: Consider using SendAsync to send the message without blocking. This would be a change in
+                // behaviour compared to .NET 1.x. We would need a SendCompletedCallback to log errors.
+                smtpClient.Send(mailMessage);
+            }
 #else
 				// .NET 1.x uses the System.Web.Mail API for sending Mail
 
