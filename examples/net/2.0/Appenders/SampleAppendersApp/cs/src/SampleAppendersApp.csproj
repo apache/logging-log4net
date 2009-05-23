@@ -121,6 +121,8 @@
     <Compile Include="Appender\PatternFileAppender.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Appender\PatternLayoutAdoNetAppender.cs" />
+    <Compile Include="Appender\PatternLayoutAdoNetAppenderParameter.cs" />
     <Compile Include="Appender\SimpleSmtpAppender.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -101,6 +101,8 @@
     <Compile Include="Layout\ForwardingLayout.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Layout\LevelConversionPattern.cs" />
+    <Compile Include="Layout\LevelPatternLayout.cs" />
     <Compile Include="Layout\LineWrappingLayout.cs">
       <SubType>Code</SubType>
     </Compile>
