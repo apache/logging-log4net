@@ -170,7 +170,7 @@ namespace log4net.Appender
 				{
 					// We do not throw exception here since the cause is probably a
 					// bad config file.
-					log4net.Util.LogLog.Warn("WmiAppender: You have tried to set a null error-handler.");
+					log4net.Util.LogLog.Warn(GetType(), "WmiAppender: You have tried to set a null error-handler.");
 				} 
 				else 
 				{
