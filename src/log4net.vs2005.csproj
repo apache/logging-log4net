@@ -27,7 +27,7 @@
     </UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\build\bin\net\1.0\debug\</OutputPath>
+    <OutputPath>..\build\bin\net\2.0\debug\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
@@ -420,6 +420,7 @@
     <Compile Include="Layout\Pattern\RelativeTimePatternConverter.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Layout\Pattern\StackTracePatternConverter.cs" />
     <Compile Include="Layout\Pattern\ThreadPatternConverter.cs">
       <SubType>Code</SubType>
     </Compile>

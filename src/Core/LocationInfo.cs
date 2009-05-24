@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Diagnostics;
 
 using log4net.Util;
@@ -89,7 +90,7 @@ namespace log4net.Core
 				{
 					StackTrace st = new StackTrace(true);
 					int frameIndex = 0;
-
+																				
 					// skip frames not from fqnOfCallingClass
 					while (frameIndex < st.FrameCount)
 					{
@@ -114,6 +115,17 @@ namespace log4net.Core
 
 					if (frameIndex < st.FrameCount)
 					{
+						// take into account the frames we skip above
+						int adjustedFrameCount = st.FrameCount - frameIndex;
+                        ArrayList stackFramesList = new ArrayList(adjustedFrameCount);
+						m_stackFrames = new StackFrame[adjustedFrameCount];
+						for (int i=frameIndex; i < st.FrameCount; i++) 
+						{
+							stackFramesList.Add(st.GetFrame(i));
+						}
+												
+						stackFramesList.CopyTo(m_stackFrames, 0);
+						
 						// now frameIndex is the first 'user' caller frame
 						StackFrame locationFrame = st.GetFrame(frameIndex);
 
@@ -258,6 +270,14 @@ namespace log4net.Core
 		{
 			get { return m_fullInfo; }
 		}
+		
+		/// <summary>
+		/// Gets the stack frames from the stack trace of the caller making the log request
+		/// </summary>
+		public StackFrame[] StackFrames
+		{
+			get { return m_stackFrames; }
+		}
 
 		#endregion Public Instance Properties
 
@@ -268,6 +288,7 @@ namespace log4net.Core
 		private readonly string m_lineNumber;
 		private readonly string m_methodName;
 		private readonly string m_fullInfo;
+		private readonly StackFrame[] m_stackFrames;
 
 		#endregion Private Instance Fields
 

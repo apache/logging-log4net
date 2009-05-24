@@ -437,6 +437,17 @@ namespace log4net.Layout
 	///         <term>r</term>
 	///         <description>Equivalent to <b>timestamp</b></description>
 	///     </item>
+	/// 	<item>
+	///			<term>stacktrace</term> 
+	///			<description>
+	/// 			<para>
+	/// 			Used to output the stack trace of the logging event
+	/// 			The stack trace level specifier may be enclosed 
+	/// 			between braces. For example, <b>%stacktrace{level}</b>.  
+	/// 			If no stack trace level specifier is given then 1 is assumed 
+	/// 			</para>
+	///			</description>
+	///		</item>
 	///     <item>
 	///         <term>t</term>
 	///         <description>Equivalent to <b>thread</b></description>
@@ -848,7 +859,9 @@ namespace log4net.Layout
 
 			s_globalRulesRegistry.Add("r", typeof(RelativeTimePatternConverter));
 			s_globalRulesRegistry.Add("timestamp", typeof(RelativeTimePatternConverter));
-
+			
+			s_globalRulesRegistry.Add("stacktrace", typeof(StackTracePatternConverter));
+			
 			s_globalRulesRegistry.Add("t", typeof(ThreadPatternConverter));
 			s_globalRulesRegistry.Add("thread", typeof(ThreadPatternConverter));
 
