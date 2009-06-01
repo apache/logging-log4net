@@ -64,7 +64,7 @@ namespace log4net.Layout.Pattern
 				return;
 			
 			string optStr = Option.Trim();
-			if (!string.IsNullOrEmpty(optStr))
+			if (optStr.Length != 0)
 			{
 				int stackLevelVal;
 				if (SystemInfo.TryParse(optStr, out stackLevelVal))
