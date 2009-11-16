@@ -30,6 +30,7 @@ namespace log4net.Tests.Util
             Trace.Listeners.Add(listTraceListener);
             LogLog.Error(GetType(), "Hello");
             LogLog.Error(GetType(), "World");
+            Trace.Flush();
             Assert.AreEqual(2, listTraceListener.Count);
 
             LogLog.EmitInternalMessages = false;
