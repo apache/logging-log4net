@@ -18,8 +18,6 @@
 #endregion
 
 using System;
-using System.Globalization;
-using System.Text;
 using System.IO;
 using System.Diagnostics;
 
@@ -38,7 +36,7 @@ namespace log4net.Layout.Pattern
 	/// </para>
 	/// </remarks>
 	/// <author>Michael Cromwell</author>
-	internal sealed class StackTracePatternConverter : PatternLayoutConverter, IOptionHandler
+	internal class StackTracePatternConverter : PatternLayoutConverter, IOptionHandler
 	{
 		private int m_stackFrameLevel = 1;
 		
@@ -114,14 +112,26 @@ namespace log4net.Layout.Pattern
 				}
 				
 				StackFrame stackFrame = stackframes[stackFrameIndex];
-				writer.Write("{0}.{1}", stackFrame.GetMethod().DeclaringType.Name, stackFrame.GetMethod().Name);
+                writer.Write("{0}.{1}", stackFrame.GetMethod().DeclaringType.Name, GetMethodInformation(stackFrame.GetMethod()));
 				if (stackFrameIndex > 0)
 				{
+                    // TODO: make this user settable?
 					writer.Write(" > ");
 				}
 				stackFrameIndex--;
 			}
 		}
+
+                /// <summary>
+        /// Returns the Name of the method
+        /// </summary>
+        /// <param name="method"></param>
+        /// <remarks>This method was created, so this class could be used as a base class for StackTraceDetailPatternConverter</remarks>
+        /// <returns>string</returns>
+        internal virtual string GetMethodInformation(System.Reflection.MethodBase method)
+        {
+            return method.Name;
+        }
 		
 		#region Private Static Fields
 

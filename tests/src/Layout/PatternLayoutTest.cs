@@ -69,6 +69,22 @@ namespace log4net.Tests.Layout
 			stringAppender.Reset();
 		}
 
+        [Test]
+        public void TestStackTracePattern()
+        {
+            StringAppender stringAppender = new StringAppender();
+            stringAppender.Layout = new PatternLayout("%stacktrace{2}");
+
+            ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+            BasicConfigurator.Configure(rep, stringAppender);
+
+            ILog log1 = LogManager.GetLogger(rep.Name, "TestStackTracePattern");
+
+            log1.Info("TestMessage");
+            Assert.AreEqual("RuntimeMethodHandle._InvokeMethodFast > PatternLayoutTest.TestStackTracePattern", stringAppender.GetString(), "stack trace value set");
+            stringAppender.Reset();
+        }
+
 		[Test]
 		public void TestGlobalPropertiesPattern()
 		{

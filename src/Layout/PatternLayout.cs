@@ -861,7 +861,8 @@ namespace log4net.Layout
 			s_globalRulesRegistry.Add("timestamp", typeof(RelativeTimePatternConverter));
 			
 			s_globalRulesRegistry.Add("stacktrace", typeof(StackTracePatternConverter));
-			
+            s_globalRulesRegistry.Add("stacktracedetail", typeof(StackTraceDetailPatternConverter));
+
 			s_globalRulesRegistry.Add("t", typeof(ThreadPatternConverter));
 			s_globalRulesRegistry.Add("thread", typeof(ThreadPatternConverter));
 
