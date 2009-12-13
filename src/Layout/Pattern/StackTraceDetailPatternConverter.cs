@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Text;
 
 using log4net.Util;
@@ -53,17 +54,16 @@ namespace log4net.Layout.Pattern
 
         private string[] GetMethodParameterNames(System.Reflection.MethodBase methodBase)
         {
-            string[] returnValue = null;
+            ArrayList methodParameterNames = new ArrayList();
             try
             {
                 System.Reflection.ParameterInfo[] methodBaseGetParameters = methodBase.GetParameters();
                 
                 int methodBaseGetParametersCount = methodBaseGetParameters.GetUpperBound(0);
-                Array.Resize(ref returnValue, methodBaseGetParametersCount + 1);
 
                 for (int i = 0; i <= methodBaseGetParametersCount; i++)
                 {
-                    returnValue[i] = methodBaseGetParameters[i].ParameterType + " " + methodBaseGetParameters[i].Name;
+                    methodParameterNames.Add(methodBaseGetParameters[i].ParameterType + " " + methodBaseGetParameters[i].Name);
                 }
             }
             catch (Exception ex)
@@ -71,7 +71,7 @@ namespace log4net.Layout.Pattern
                 LogLog.Error(declaringType, "An exception ocurred while retreiving method parameters.", ex);
             }
 
-            return returnValue;
+            return (string[])methodParameterNames.ToArray(typeof (string));
         }
 
         #region Private Static Fields
