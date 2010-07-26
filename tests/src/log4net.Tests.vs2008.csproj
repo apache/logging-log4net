@@ -149,6 +149,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="LoggerRepository\ConfigurationMessages.cs" />
+    <Compile Include="Filter\FilterTest.cs" />
     <Compile Include="Utils.cs">
       <SubType>Code</SubType>
     </Compile>
