@@ -778,7 +778,14 @@ namespace log4net.Appender
 					DateTime last;
 					using(SecurityContext.Impersonate(this))
 					{
-						last = System.IO.File.GetLastWriteTime(m_baseFileName);
+						if (DateTimeStrategy is UniversalDateTime)
+						{
+							last = System.IO.File.GetLastWriteTimeUtc(m_baseFileName);
+						}
+						else
+						{
+							last = System.IO.File.GetLastWriteTime(m_baseFileName);
+						}
 					}
 					LogLog.Debug(declaringType, "["+last.ToString(m_datePattern,System.Globalization.DateTimeFormatInfo.InvariantInfo)+"] vs. ["+m_now.ToString(m_datePattern,System.Globalization.DateTimeFormatInfo.InvariantInfo)+"]");
 
