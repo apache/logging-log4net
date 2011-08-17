@@ -67,13 +67,15 @@ namespace log4net.Tests.Filter
             IAppender[] appenders = LogManager.GetRepository(rep.Name).GetAppenders();
             Assert.IsTrue(appenders.Length == 1);
 
-            IAppender appender = Array.Find(appenders, a => a.Name == "MemoryAppender");
+            IAppender appender = Array.Find(appenders, delegate(IAppender a) {
+                    return a.Name == "MemoryAppender";
+                });
             Assert.IsNotNull(appender);
 
             MultiplePropertyFilter multiplePropertyFilter = 
                 ((AppenderSkeleton)appender).FilterHead as MultiplePropertyFilter;
 
-            var conditions = multiplePropertyFilter.GetConditions();
+            MultiplePropertyFilter.Condition[] conditions = multiplePropertyFilter.GetConditions();
             Assert.AreEqual(2, conditions.Length);
             Assert.AreEqual("ABC", conditions[0].Key);
             Assert.AreEqual("123", conditions[0].StringToMatch);
@@ -103,8 +105,15 @@ namespace log4net.Tests.Filter
         
         public class Condition
         {
-            public string Key { get; set; }
-            public string StringToMatch { get; set; }
+            private string key, stringToMatch;
+            public string Key {
+                get { return key; }
+                set { key = value; }
+            }
+            public string StringToMatch {
+                get { return stringToMatch; }
+                set { stringToMatch = value; }
+            }
         }
     }
 }
