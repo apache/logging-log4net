@@ -460,7 +460,13 @@ namespace log4net.Appender
                 }
                 if (!String.IsNullOrEmpty(m_replyTo))
                 {
+                    // .NET 4.0 warning CS0618: 'System.Net.Mail.MailMessage.ReplyTo' is obsolete:
+                    // 'ReplyTo is obsoleted for this type.  Please use ReplyToList instead which can accept multiple addresses. http://go.microsoft.com/fwlink/?linkid=14202'
+#if !NET_4_0
                     mailMessage.ReplyTo = new MailAddress(m_replyTo);
+#else
+                    mailMessage.ReplyToList.Add(new MailAddress(m_replyTo));
+#endif
                 }
                 mailMessage.Subject = m_subject;
                 mailMessage.Priority = m_mailPriority;
