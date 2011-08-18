@@ -312,7 +312,7 @@ limitations under the License.
             <echo message="The .NET Framework 3.5 is not available. Build skipped." />
           </if>
         </if>
-        <!-- NET_3_5 -->
+        <!-- NET_4_0 -->
         <if test="${framework::exists('net-4.0')}">
           <call target="compile-net-4.0" />
         </if>
