@@ -492,7 +492,7 @@ namespace log4net.Util
 		}
 
 		/// <summary>
-		/// Performs variable substitution in string <paramref name="val"/> from the 
+		/// Performs variable substitution in string <paramref name="value"/> from the 
 		/// values of keys found in <paramref name="props"/>.
 		/// </summary>
 		/// <param name="value">The string on which variable substitution is performed.</param>

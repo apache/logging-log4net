@@ -403,10 +403,10 @@ namespace log4net.Appender
 		#region Protected Instance Methods
 
 		/// <summary>
-		/// Get the equivalent <see cref="EventLogEntryType"/> for a <see cref="Level"/> <paramref name="p"/>
+		/// Get the equivalent <see cref="EventLogEntryType"/> for a <see cref="Level"/> <paramref name="level"/>
 		/// </summary>
 		/// <param name="level">the Level to convert to an EventLogEntryType</param>
-		/// <returns>The equivalent <see cref="EventLogEntryType"/> for a <see cref="Level"/> <paramref name="p"/></returns>
+		/// <returns>The equivalent <see cref="EventLogEntryType"/> for a <see cref="Level"/> <paramref name="level"/></returns>
 		/// <remarks>
 		/// Because there are fewer applicable <see cref="EventLogEntryType"/>
 		/// values to use in logging levels than there are in the 

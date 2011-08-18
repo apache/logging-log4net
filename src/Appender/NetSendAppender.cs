@@ -68,10 +68,10 @@ namespace log4net.Appender
 	///         <term>Send a message to a user account on the local machine</term>
 	///         <description>
 	///             <para>
-	///             <paramref name="Server"/> = &lt;name of the local machine&gt;
+	///             <see cref="NetSendAppender.Server"/> = &lt;name of the local machine&gt;
 	///             </para>
 	///             <para>
-	///             <paramref name="Recipient"/> = &lt;user name&gt;
+	///             <see cref="NetSendAppender.Recipient"/> = &lt;user name&gt;
 	///             </para>
 	///         </description>
 	///     </item>
@@ -79,10 +79,10 @@ namespace log4net.Appender
 	///         <term>Send a message to a user account on a remote machine</term>
 	///         <description>
 	///             <para>
-	///             <paramref name="Server"/> = &lt;name of the remote machine&gt;
+	///             <see cref="NetSendAppender.Server"/> = &lt;name of the remote machine&gt;
 	///             </para>
 	///             <para>
-	///             <paramref name="Recipient"/> = &lt;user name&gt;
+	///             <see cref="NetSendAppender.Recipient"/> = &lt;user name&gt;
 	///             </para>
 	///         </description>
 	///     </item>
@@ -90,10 +90,10 @@ namespace log4net.Appender
 	///         <term>Send a message to a domain user account</term>
 	///         <description>
 	///             <para>
-	///             <paramref name="Server"/> = &lt;name of a domain controller | uninitialized&gt;
+	///             <see cref="NetSendAppender.Server"/> = &lt;name of a domain controller | uninitialized&gt;
 	///             </para>
 	///             <para>
-	///             <paramref name="Recipient"/> = &lt;user name&gt;
+	///             <see cref="NetSendAppender.Recipient"/> = &lt;user name&gt;
 	///             </para>
 	///         </description>
 	///     </item>
@@ -101,7 +101,7 @@ namespace log4net.Appender
 	///         <term>Send a message to all the names in a workgroup or domain</term>
 	///         <description>
 	///             <para>
-	///             <paramref name="Recipient"/> = &lt;workgroup name | domain name&gt;*
+	///             <see cref="NetSendAppender.Recipient"/> = &lt;workgroup name | domain name&gt;*
 	///             </para>
 	///         </description>
 	///     </item>
@@ -109,10 +109,10 @@ namespace log4net.Appender
 	///         <term>Send a message from the local machine to a remote machine</term>
 	///         <description>
 	///             <para>
-	///             <paramref name="Server"/> = &lt;name of the local machine | uninitialized&gt;
+	///             <see cref="NetSendAppender.Server"/> = &lt;name of the local machine | uninitialized&gt;
 	///             </para>
 	///             <para>
-	///             <paramref name="Recipient"/> = &lt;name of the remote machine&gt;
+	///             <see cref="NetSendAppender.Recipient"/> = &lt;name of the remote machine&gt;
 	///             </para>
 	///         </description>
 	///     </item>

@@ -107,13 +107,13 @@ namespace log4net
 		/// </para>
 		/// </note>
 		/// <para>
-		/// Puts a context value (the <paramref name="val" /> parameter) as identified
+		/// Puts a context value (the <paramref name="value" /> parameter) as identified
 		/// with the <paramref name="key" /> parameter into the current thread's
 		/// context map.
 		/// </para>
 		/// <para>
 		/// If a value is already defined for the <paramref name="key" />
-		/// specified then the value will be replaced. If the <paramref name="val" /> 
+		/// specified then the value will be replaced. If the <paramref name="value" /> 
 		/// is specified as <c>null</c> then the key value mapping will be removed.
 		/// </para>
 		/// </remarks>

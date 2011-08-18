@@ -566,9 +566,9 @@ namespace log4net.Appender
 		#region Implementation (helpers)
 
 		/// <exception cref="ArgumentOutOfRangeException">
-		/// <para><paramref name="index"/> is less than zero</para>
+		/// <para><paramref name="i"/> is less than zero</para>
 		/// <para>-or-</para>
-		/// <para><paramref name="index"/> is equal to or greater than <see cref="AppenderCollection.Count"/>.</para>
+		/// <para><paramref name="i"/> is equal to or greater than <see cref="AppenderCollection.Count"/>.</para>
 		/// </exception>
 		private void ValidateIndex(int i)
 		{
@@ -576,9 +576,9 @@ namespace log4net.Appender
 		}
 
 		/// <exception cref="ArgumentOutOfRangeException">
-		/// <para><paramref name="index"/> is less than zero</para>
+		/// <para><paramref name="i"/> is less than zero</para>
 		/// <para>-or-</para>
-		/// <para><paramref name="index"/> is equal to or greater than <see cref="AppenderCollection.Count"/>.</para>
+		/// <para><paramref name="i"/> is equal to or greater than <see cref="AppenderCollection.Count"/>.</para>
 		/// </exception>
 		private void ValidateIndex(int i, bool allowEqualEnd)
 		{

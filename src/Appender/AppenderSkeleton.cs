@@ -362,14 +362,14 @@ namespace log4net.Appender
 		/// <list type="bullet">
 		///		<item>
 		///			<description>
-		///			Checks that the severity of the <paramref name="loggingEvent"/>
+		///			Checks that the severity of the <paramref name="loggingEvents"/>
 		///			is greater than or equal to the <see cref="Threshold"/> of this
 		///			appender.</description>
 		///		</item>
 		///		<item>
 		///			<description>
 		///			Checks that the <see cref="IFilter"/> chain accepts the 
-		///			<paramref name="loggingEvent"/>.
+		///			<paramref name="loggingEvents"/>.
 		///			</description>
 		///		</item>
 		///		<item>
