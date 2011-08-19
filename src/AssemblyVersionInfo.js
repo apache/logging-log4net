@@ -31,12 +31,12 @@
 // an import functions as a workaround for this issue.
 import System.Reflection;
 
-[assembly: AssemblyVersion("1.2.10.0")]
+[assembly: AssemblyVersion("1.2.11.0")]
 [assembly: AssemblyInformationalVersionAttribute("1.2")]
 
 @if (!@NETCF)
 @if (!@SSCLI)
-[assembly: AssemblyFileVersion("1.2.10.0")]
+[assembly: AssemblyFileVersion("1.2.11.0")]
 @end
 @end
 
@@ -45,5 +45,5 @@ import System.Reflection;
 //
 
 [assembly: AssemblyCompany("The Apache Software Foundation")]
-[assembly: AssemblyCopyright("Copyright 2001-2007 The Apache Software Foundation.")]
-[assembly: AssemblyTrademark("Copyright 2001-2007 The Apache Software Foundation.")]
+[assembly: AssemblyCopyright("Copyright 2001-2011 The Apache Software Foundation.")]
+[assembly: AssemblyTrademark("Copyright 2001-2011 The Apache Software Foundation.")]

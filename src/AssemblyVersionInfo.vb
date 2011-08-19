@@ -28,12 +28,12 @@
 ' You can specify all the values or you can default the Revision and Build Numbers 
 ' by using the '*' as shown below:
 
-<Assembly: System.Reflection.AssemblyVersion("1.2.10.0")>
+<Assembly: System.Reflection.AssemblyVersion("1.2.11.0")>
 <Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.2")>
 
 #If NOT NETCF Then
 #If NOT SSCLI Then
-<Assembly: System.Reflection.AssemblyFileVersion("1.2.10.0")>
+<Assembly: System.Reflection.AssemblyFileVersion("1.2.11.0")>
 #End If
 #End If
 
@@ -42,5 +42,5 @@
 '
 
 <Assembly: System.Reflection.AssemblyCompany("The Apache Software Foundation")>
-<Assembly: System.Reflection.AssemblyCopyright("Copyright 2001-2007 The Apache Software Foundation.")> 
-<Assembly: System.Reflection.AssemblyTrademark("Copyright 2001-2007 The Apache Software Foundation.")> 
+<Assembly: System.Reflection.AssemblyCopyright("Copyright 2001-2011 The Apache Software Foundation.")> 
+<Assembly: System.Reflection.AssemblyTrademark("Copyright 2001-2011 The Apache Software Foundation.")> 

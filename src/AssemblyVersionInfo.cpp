@@ -31,12 +31,12 @@ using namespace System::Runtime::CompilerServices;
 // You can specify all the value or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersionAttribute("1.2.10.0")];
+[assembly: AssemblyVersionAttribute("1.2.11.0")];
 [assembly: AssemblyInformationalVersionAttribute("1.2")];
 
 #if !NETCF
 #if !SSCLI
-[assembly: AssemblyFileVersionAttribute("1.2.10.0")]
+[assembly: AssemblyFileVersionAttribute("1.2.11.0")]
 #endif
 #endif
 
@@ -45,5 +45,5 @@ using namespace System::Runtime::CompilerServices;
 //
 
 [assembly: AssemblyCompany("The Apache Software Foundation")];
-[assembly: AssemblyCopyright("Copyright 2001-2007 The Apache Software Foundation.")];
-[assembly: AssemblyTrademark("Copyright 2001-2007 The Apache Software Foundation.")];
+[assembly: AssemblyCopyright("Copyright 2001-2011 The Apache Software Foundation.")];
+[assembly: AssemblyTrademark("Copyright 2001-2011 The Apache Software Foundation.")];
