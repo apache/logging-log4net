@@ -32,5 +32,5 @@
 
 
 <Assembly: System.Reflection.AssemblyCompany("The Apache Software Foundation")> 
-<Assembly: System.Reflection.AssemblyCopyright("Copyright 2001-2007 The Apache Software Foundation.")> 
-<Assembly: System.Reflection.AssemblyTrademark("Copyright 2001-2007 The Apache Software Foundation.")> 
+<Assembly: System.Reflection.AssemblyCopyright("Copyright 2004-2011 The Apache Software Foundation.")> 
+<Assembly: System.Reflection.AssemblyTrademark("Copyright 2004-2011 The Apache Software Foundation.")> 

@@ -1105,7 +1105,7 @@ limitations under the License.
                     <property name="AutoDocumentConstructors" value="true" />
                     <property name="GetExternalSummaries" value="true" />
                     <property name="IncludeAssemblyVersion" value="false" />
-                    <property name="CopyrightText" value="Copyright 2001-2007 The Apache Software Foundation." />
+                    <property name="CopyrightText" value="Copyright 2004-2011 The Apache Software Foundation." />
                     <property name="CopyrightHref" value="http://logging.apache.org/log4net" />
                 </documenter>
             </documenters>
