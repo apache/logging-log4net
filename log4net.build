@@ -303,6 +303,7 @@ limitations under the License.
         <!-- NET_3_5 -->
         <if test="${framework::exists('net-3.5')}">
           <call target="compile-net-3.5" />
+          <call target="compile-net-3.5-cp" />
         </if>
         <if test="${not framework::exists('net-3.5')}">
           <if test="${property::exists('project.build.package') and project.build.package}">
@@ -315,6 +316,7 @@ limitations under the License.
         <!-- NET_4_0 -->
         <if test="${framework::exists('net-4.0')}">
           <call target="compile-net-4.0" />
+          <call target="compile-net-4.0-cp" />
         </if>
         <if test="${not framework::exists('net-4.0')}">
           <if test="${property::exists('project.build.package') and project.build.package}">
@@ -745,6 +747,70 @@ limitations under the License.
       </csc>
     </if>
   </target>
+  <target name="compile-net-3.5-cp" description="Builds .NET Framework 3.5 Client Profile version" depends="set-net-3.5-cp-runtime-configuration, check-log4net-basedir, clean-current-bin-dir">
+    <!-- initialize the temp.build.skip property to false -->
+    <property name="temp.build.skip" value="false" />
+    <if test="${current.build.config.release}">
+      <!-- check if the log4net key file is available -->
+      <if test="${not file::exists(log4net.basedir + '/log4net.snk')}">
+        <if test="${property::exists('project.build.package') and project.build.package}">
+          <fail message="Key file not found." />
+        </if>
+        <if test="${not(property::exists('project.build.package') and project.build.package)}">
+          <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
+          <echo message="The generated key file should be stored in the log4net base directory." />
+          <echo message="The release build will be skipped." />
+          <property name="temp.build.skip" value="true" />
+        </if>
+      </if>
+    </if>
+    <if test="${not temp.build.skip}">
+      <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+        <nowarn>
+          <!-- warning CS1058: A previous catch clause already catches all exceptions. All non-exceptions thrown will be wrapped in a System.Runtime.CompilerServices.RuntimeWrappedException -->
+          <warning number="1058" />
+        </nowarn>
+        <sources basedir="${log4net.basedir}/src">
+          <include name="**/*.cs" />
+        </sources>
+        <resources failonempty="true">
+          <include name="${log4net.basedir}/NOTICE" />
+          <include name="${log4net.basedir}/LICENSE" />
+        </resources>
+        <references>
+          <include name="mscorlib.dll" />
+          <include name="System.dll" />
+          <include name="System.Data.dll" />
+          <include name="System.Xml.dll" />
+          <include name="System.Configuration.dll" />
+          <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework family>/<framework version>/<build configuration> directory -->
+          <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
+        </references>
+      </csc>      
+      <csc if="${current.build.config.debug}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+        <nowarn>
+          <!-- warning CS1058: A previous catch clause already catches all exceptions. All non-exceptions thrown will be wrapped in a System.Runtime.CompilerServices.RuntimeWrappedException -->
+          <warning number="1058" />
+        </nowarn>
+        <sources basedir="${log4net.basedir}/src">
+          <include name="**/*.cs" />
+        </sources>
+        <resources failonempty="true">
+          <include name="${log4net.basedir}/NOTICE" />
+          <include name="${log4net.basedir}/LICENSE" />
+        </resources>
+        <references>
+          <include name="mscorlib.dll" />
+          <include name="System.dll" />
+          <include name="System.Data.dll" />
+          <include name="System.Xml.dll" />
+          <include name="System.Configuration.dll" />
+          <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework family>/<framework version>/<build configuration> directory -->
+          <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
+        </references>
+      </csc>
+    </if>
+  </target>
   <target name="compile-net-4.0" description="Builds .NET Framework 4.0 version" depends="set-net-4.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir">
     <!-- initialize the temp.build.skip property to false -->
     <property name="temp.build.skip" value="false" />
@@ -803,6 +869,70 @@ limitations under the License.
           <include name="System.dll" />
           <include name="System.Data.dll" />
           <include name="System.Web.dll" />
+          <include name="System.Xml.dll" />
+          <include name="System.Configuration.dll" />
+          <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework family>/<framework version>/<build configuration> directory -->
+          <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
+        </references>
+      </csc>
+    </if>
+  </target>
+  <target name="compile-net-4.0-cp" description="Builds .NET Framework 4.0 Client Profile version" depends="set-net-4.0-cp-runtime-configuration, check-log4net-basedir, clean-current-bin-dir">
+    <!-- initialize the temp.build.skip property to false -->
+    <property name="temp.build.skip" value="false" />
+    <if test="${current.build.config.release}">
+      <!-- check if the log4net key file is available -->
+      <if test="${not file::exists(log4net.basedir + '/log4net.snk')}">
+        <if test="${property::exists('project.build.package') and project.build.package}">
+          <fail message="Key file not found." />
+        </if>
+        <if test="${not(property::exists('project.build.package') and project.build.package)}">
+          <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
+          <echo message="The generated key file should be stored in the log4net base directory." />
+          <echo message="The release build will be skipped." />
+          <property name="temp.build.skip" value="true" />
+        </if>
+      </if>
+    </if>
+    <if test="${not temp.build.skip}">
+      <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+        <nowarn>
+          <!-- warning CS1058: A previous catch clause already catches all exceptions. All non-exceptions thrown will be wrapped in a System.Runtime.CompilerServices.RuntimeWrappedException -->
+          <warning number="1058" />
+        </nowarn>
+        <sources basedir="${log4net.basedir}/src">
+          <include name="**/*.cs" />
+        </sources>
+        <resources failonempty="true">
+          <include name="${log4net.basedir}/NOTICE" />
+          <include name="${log4net.basedir}/LICENSE" />
+        </resources>
+        <references>
+          <include name="mscorlib.dll" />
+          <include name="System.dll" />
+          <include name="System.Data.dll" />
+          <include name="System.Xml.dll" />
+          <include name="System.Configuration.dll" />
+          <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework family>/<framework version>/<build configuration> directory -->
+          <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
+        </references>
+      </csc>      
+      <csc if="${current.build.config.debug}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+        <nowarn>
+          <!-- warning CS1058: A previous catch clause already catches all exceptions. All non-exceptions thrown will be wrapped in a System.Runtime.CompilerServices.RuntimeWrappedException -->
+          <warning number="1058" />
+        </nowarn>
+        <sources basedir="${log4net.basedir}/src">
+          <include name="**/*.cs" />
+        </sources>
+        <resources failonempty="true">
+          <include name="${log4net.basedir}/NOTICE" />
+          <include name="${log4net.basedir}/LICENSE" />
+        </resources>
+        <references>
+          <include name="mscorlib.dll" />
+          <include name="System.dll" />
+          <include name="System.Data.dll" />
           <include name="System.Xml.dll" />
           <include name="System.Configuration.dll" />
           <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework family>/<framework version>/<build configuration> directory -->
