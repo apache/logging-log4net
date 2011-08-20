@@ -43,4 +43,4 @@
 
 <Assembly: System.Reflection.AssemblyCompany("The Apache Software Foundation")>
 <Assembly: System.Reflection.AssemblyCopyright("Copyright 2004-2011 The Apache Software Foundation.")> 
-<Assembly: System.Reflection.AssemblyTrademark("Copyright 2004-2011 The Apache Software Foundation.")> 
+<Assembly: System.Reflection.AssemblyTrademark("Apache and Apache log4net are trademarks of The Apache Software Foundation")> 

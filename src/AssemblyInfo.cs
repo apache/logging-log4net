@@ -46,35 +46,35 @@ using System.Runtime.CompilerServices;
 //
 
 #if (CLI_1_0)
-[assembly: AssemblyTitle("log4net for CLI 1.0 Compatible Frameworks")]
+[assembly: AssemblyTitle("Apache log4net for CLI 1.0 Compatible Frameworks")]
 #elif (NET_1_0)
-[assembly: AssemblyTitle("log4net for .NET Framework 1.0")]
+[assembly: AssemblyTitle("Apache log4net for .NET Framework 1.0")]
 #elif (NET_1_1)
-[assembly: AssemblyTitle("log4net for .NET Framework 1.1")]
+[assembly: AssemblyTitle("Apache log4net for .NET Framework 1.1")]
 #elif (NET_2_0)
-[assembly: AssemblyTitle("log4net for .NET Framework 2.0")]
+[assembly: AssemblyTitle("Apache log4net for .NET Framework 2.0")]
 #elif (NETCF_1_0)
-[assembly: AssemblyTitle("log4net for .NET Compact Framework 1.0")]
+[assembly: AssemblyTitle("Apache log4net for .NET Compact Framework 1.0")]
 #elif (NETCF_2_0)
-[assembly: AssemblyTitle("log4net for .NET Compact Framework 2.0")]
+[assembly: AssemblyTitle("Apache log4net for .NET Compact Framework 2.0")]
 #elif (MONO_1_0)
-[assembly: AssemblyTitle("log4net for Mono 1.0")]
+[assembly: AssemblyTitle("Apache log4net for Mono 1.0")]
 #elif (MONO_2_0)
-[assembly: AssemblyTitle("log4net for Mono 2.0")]
+[assembly: AssemblyTitle("Apache log4net for Mono 2.0")]
 #elif (SSCLI_1_0)
-[assembly: AssemblyTitle("log4net for Shared Source CLI 1.0")]
+[assembly: AssemblyTitle("Apache log4net for Shared Source CLI 1.0")]
 #elif (CLI_1_0)
-[assembly: AssemblyTitle("log4net for CLI Compatible Frameworks")]
+[assembly: AssemblyTitle("Apache log4net for CLI Compatible Frameworks")]
 #elif (NET)
-[assembly: AssemblyTitle("log4net for .NET Framework")]
+[assembly: AssemblyTitle("Apache log4net for .NET Framework")]
 #elif (NETCF)
-[assembly: AssemblyTitle("log4net for .NET Compact Framework")]
+[assembly: AssemblyTitle("Apache log4net for .NET Compact Framework")]
 #elif (MONO)
-[assembly: AssemblyTitle("log4net for Mono")]
+[assembly: AssemblyTitle("Apache log4net for Mono")]
 #elif (SSCLI)
-[assembly: AssemblyTitle("log4net for Shared Source CLI")]
+[assembly: AssemblyTitle("Apache log4net for Shared Source CLI")]
 #else
-[assembly: AssemblyTitle("log4net")]
+[assembly: AssemblyTitle("Apache log4net")]
 #endif
 
 #if DEBUG
