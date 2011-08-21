@@ -51,8 +51,18 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 1.0")]
 #elif (NET_1_1)
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 1.1")]
+#elif (NET_4_0)
+#if CLIENT_PROFILE
+[assembly: AssemblyTitle("Apache log4net for .NET Framework 4.0 Client Profile")]
+#else
+[assembly: AssemblyTitle("Apache log4net for .NET Framework 4.0")]
+#endif // Client Profile
 #elif (NET_2_0)
+#if CLIENT_PROFILE
+[assembly: AssemblyTitle("Apache log4net for .NET Framework 3.5 Client Profile")]
+#else
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 2.0")]
+#endif // Client Profile
 #elif (NETCF_1_0)
 [assembly: AssemblyTitle("Apache log4net for .NET Compact Framework 1.0")]
 #elif (NETCF_2_0)
