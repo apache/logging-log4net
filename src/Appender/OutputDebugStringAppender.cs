@@ -75,7 +75,11 @@ namespace log4net.Appender
 		/// Write the logging event to the output debug string API
 		/// </para>
 		/// </remarks>
-		override protected void Append(LoggingEvent loggingEvent) 
+#if NET_4_0
+        [System.Security.SecuritySafeCritical]
+#endif
+        [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
+        override protected void Append(LoggingEvent loggingEvent) 
 		{
 			OutputDebugString(RenderLoggingEvent(loggingEvent));
 		} 

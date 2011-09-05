@@ -265,7 +265,11 @@ namespace log4net.Appender
 		/// The format of the output will depend on the appender's layout.
 		/// </para>
 		/// </remarks>
-		override protected void Append(log4net.Core.LoggingEvent loggingEvent) 
+#if NET_4_0
+        [System.Security.SecuritySafeCritical]
+#endif
+        [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
+        override protected void Append(log4net.Core.LoggingEvent loggingEvent) 
 		{
 			if (m_consoleOutputWriter != null)
 			{
@@ -430,7 +434,11 @@ namespace log4net.Appender
 		/// Initialize the level to color mappings set on this appender.
 		/// </para>
 		/// </remarks>
-		public override void ActivateOptions()
+#if NET_4_0
+        [System.Security.SecuritySafeCritical]
+#endif
+        [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode=true)]
+        public override void ActivateOptions()
 		{
 			base.ActivateOptions();
 			m_levelMapping.ActivateOptions();

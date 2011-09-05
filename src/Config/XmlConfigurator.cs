@@ -963,7 +963,10 @@ namespace log4net.Config
 			/// Initializes a new instance of the <see cref="ConfigureAndWatchHandler" /> class.
 			/// </para>
 			/// </remarks>
-			public ConfigureAndWatchHandler(ILoggerRepository repository, FileInfo configFile)
+#if NET_4_0
+            [System.Security.SecuritySafeCritical]
+#endif
+            public ConfigureAndWatchHandler(ILoggerRepository repository, FileInfo configFile)
 			{
 				m_repository = repository;
 				m_configFile = configFile;
@@ -1040,6 +1043,9 @@ namespace log4net.Config
             /// <summary>
             /// Release the handles held by the watcher and timer.
             /// </summary>
+#if NET_4_0
+            [System.Security.SecuritySafeCritical]
+#endif
             public void Dispose()
             {
                 m_watcher.EnableRaisingEvents = false;

@@ -114,7 +114,11 @@ namespace log4net.Util
 		/// native Win32 <c>FormatMessage</c> function.
 		/// </para>
 		/// </remarks>
-		public static NativeError GetLastError() 
+#if NET_4_0
+        [System.Security.SecuritySafeCritical]
+#endif
+        [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode=true)]
+        public static NativeError GetLastError() 
 		{
 			int number = Marshal.GetLastWin32Error();
 			return new NativeError(number, NativeError.GetErrorMessage(number));
@@ -152,7 +156,11 @@ namespace log4net.Util
 		/// using the native <c>FormatMessage</c> function.
 		/// </para>
 		/// </remarks>
-		public static string GetErrorMessage(int messageId) 
+#if NET_4_0
+        [System.Security.SecuritySafeCritical]
+#endif
+        [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
+        public static string GetErrorMessage(int messageId) 
 		{
 			// Win32 constants
 			int FORMAT_MESSAGE_ALLOCATE_BUFFER = 0x00000100;	// The function should allocates a buffer large enough to hold the formatted message
