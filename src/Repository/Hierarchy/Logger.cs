@@ -432,10 +432,12 @@ namespace log4net.Repository.Hierarchy
 			{
 				log4net.Util.LogLog.Error(declaringType, "Exception while logging", ex);
 			}
+#if !NET_2_0
 			catch
 			{
 				log4net.Util.LogLog.Error(declaringType, "Exception while logging");
 			}
+#endif
 		}
 
 		/// <summary>
@@ -467,10 +469,12 @@ namespace log4net.Repository.Hierarchy
 			{
 				log4net.Util.LogLog.Error(declaringType, "Exception while logging", ex);
 			}
+#if !NET_2_0
 			catch
 			{
 				log4net.Util.LogLog.Error(declaringType, "Exception while logging");
 			}
+#endif
 		}
 
 		/// <summary>
@@ -505,10 +509,12 @@ namespace log4net.Repository.Hierarchy
 			{
 				log4net.Util.LogLog.Error(declaringType, "Exception while logging", ex);
 			}
+#if !NET_2_0
 			catch
 			{
 				log4net.Util.LogLog.Error(declaringType, "Exception while logging");
 			}
+#endif
 			return false;
 		}
 
