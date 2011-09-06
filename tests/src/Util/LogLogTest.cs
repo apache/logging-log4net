@@ -54,11 +54,16 @@ namespace log4net.Tests.Util
             Trace.Flush();
             Assert.AreEqual(2, listTraceListener.Count);
 
-            LogLog.EmitInternalMessages = false;
+            try {
+                LogLog.EmitInternalMessages = false;
 
-            LogLog.Error(GetType(), "Hello");
-            LogLog.Error(GetType(), "World");
-            Assert.AreEqual(2, listTraceListener.Count);
+                LogLog.Error(GetType(), "Hello");
+                LogLog.Error(GetType(), "World");
+                Assert.AreEqual(2, listTraceListener.Count);
+            }
+            finally {
+                LogLog.EmitInternalMessages = true;
+            }
         }
 
         [Test]

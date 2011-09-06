@@ -37,11 +37,12 @@ namespace log4net.Tests.LoggerRepository
         [Test]
         public void ConfigurationMessagesTest()
         {
-            LogLog.EmitInternalMessages = false;
-            LogLog.InternalDebugging = true;
+            try {
+                LogLog.EmitInternalMessages = false;
+                LogLog.InternalDebugging = true;
 
-            XmlDocument log4netConfig = new XmlDocument();
-            log4netConfig.LoadXml(@"
+                XmlDocument log4netConfig = new XmlDocument();
+                log4netConfig.LoadXml(@"
                 <log4net>
                   <appender name=""LogLogAppender"" type=""log4net.Tests.LoggerRepository.LogLogAppender, log4net.Tests"">
                     <layout type=""log4net.Layout.SimpleLayout"" />
@@ -56,12 +57,17 @@ namespace log4net.Tests.LoggerRepository
                   </root>  
                 </log4net>");
 
-            ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-            rep.ConfigurationChanged += new LoggerRepositoryConfigurationChangedEventHandler(rep_ConfigurationChanged);
+                ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+                rep.ConfigurationChanged += new LoggerRepositoryConfigurationChangedEventHandler(rep_ConfigurationChanged);
 
-            ICollection configurationMessages = XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
+                ICollection configurationMessages = XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
 
-            Assert.IsTrue(configurationMessages.Count > 0);
+                Assert.IsTrue(configurationMessages.Count > 0);
+            }
+            finally {
+                LogLog.EmitInternalMessages = true;
+                LogLog.InternalDebugging = false;
+            }
         }
 
         static void rep_ConfigurationChanged(object sender, EventArgs e)
