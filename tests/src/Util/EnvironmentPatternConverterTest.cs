@@ -42,7 +42,12 @@ namespace log4net.Tests.Util
         public void SystemLevelEnvironmentVariable()
         {
             EnvironmentPatternConverter converter = new EnvironmentPatternConverter();
-            Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, SYSTEM_LEVEL_VALUE, EnvironmentVariableTarget.Machine);
+            try {
+                Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, SYSTEM_LEVEL_VALUE, EnvironmentVariableTarget.Machine);
+            }
+            catch (System.Security.SecurityException) {
+                Assert.Ignore("Test skipped as current user must not set system level environment variables");
+            }
 
             converter.Option = ENVIRONMENT_VARIABLE_NAME;
 
