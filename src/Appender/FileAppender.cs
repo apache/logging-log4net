@@ -557,6 +557,7 @@ namespace log4net.Appender
 					try
 					{
                         m_stream = CreateStream(m_filename, m_append, FileShare.Read);
+                        m_append = true;
 					}
 					catch (Exception e1)
 					{
