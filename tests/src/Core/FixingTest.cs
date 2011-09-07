@@ -31,9 +31,24 @@ namespace log4net.Tests.Core
 	[TestFixture]
 	public class FixingTest
 	{
-		static FixingTest()
+        const string TEST_REPOSITORY = "Test Repository";
+
+        [TestFixtureSetUp]
+		public void CreateRepository()
 		{
-			LogManager.CreateRepository("Test Repository");
+            bool exists = false;
+            Repository.ILoggerRepository[] repositories = LogManager.GetAllRepositories();
+            if (repositories != null) {
+                foreach (Repository.ILoggerRepository r in repositories) {
+                    if (r.Name == TEST_REPOSITORY) {
+                        exists = true;
+                        break;
+                    }
+                }
+            }
+            if (!exists) {
+                LogManager.CreateRepository(TEST_REPOSITORY);
+            }
 
 			// write-once
 			if (Thread.CurrentThread.Name == null)
@@ -50,7 +65,7 @@ namespace log4net.Tests.Core
 			// LoggingEvents occur at distinct points in time
 			LoggingEvent loggingEvent = new LoggingEvent(
 				loggingEventData.LocationInfo.GetType(),
-				LogManager.GetRepository("Test Repository"),
+				LogManager.GetRepository(TEST_REPOSITORY),
 				loggingEventData.LoggerName,
 				loggingEventData.Level,
 				loggingEventData.Message,
@@ -69,7 +84,7 @@ namespace log4net.Tests.Core
 			// LoggingEvents occur at distinct points in time
 			LoggingEvent loggingEvent = new LoggingEvent(
 				loggingEventData.LocationInfo.GetType(),
-				LogManager.GetRepository("Test Repository"),
+				LogManager.GetRepository(TEST_REPOSITORY),
 				loggingEventData.LoggerName,
 				loggingEventData.Level,
 				loggingEventData.Message,
@@ -90,7 +105,7 @@ namespace log4net.Tests.Core
 			// LoggingEvents occur at distinct points in time
 			LoggingEvent loggingEvent = new LoggingEvent(
 				loggingEventData.LocationInfo.GetType(),
-				LogManager.GetRepository("Test Repository"),
+				LogManager.GetRepository(TEST_REPOSITORY),
 				loggingEventData.LoggerName,
 				loggingEventData.Level,
 				loggingEventData.Message,
@@ -126,7 +141,7 @@ namespace log4net.Tests.Core
 			Assert.AreEqual(Level.Warn, loggingEventData.Level, "Level is incorrect");
 			Assert.AreEqual("get_LocationInformation", loggingEvent.LocationInformation.MethodName, "Location Info is incorrect");
 			Assert.AreEqual("log4net.Tests.Core.FixingTest", loggingEventData.LoggerName, "LoggerName is incorrect");
-			Assert.AreEqual(LogManager.GetRepository("Test Repository"), loggingEvent.Repository, "Repository is incorrect");
+			Assert.AreEqual(LogManager.GetRepository(TEST_REPOSITORY), loggingEvent.Repository, "Repository is incorrect");
 			Assert.AreEqual(Thread.CurrentThread.Name, loggingEventData.ThreadName, "ThreadName is incorrect");
 			Assert.IsNotNull(loggingEventData.TimeStamp, "TimeStamp is incorrect");
 			Assert.AreEqual("TestUser", loggingEventData.UserName, "UserName is incorrect");
