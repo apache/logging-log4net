@@ -99,5 +99,12 @@ namespace log4net.Tests
 
 			return types;
 		}
+
+        internal const string PROPERTY_KEY = "prop1";
+
+        internal static void RemovePropertyFromAllContexts() {
+            GlobalContext.Properties.Remove(PROPERTY_KEY);
+            ThreadContext.Properties.Remove(PROPERTY_KEY);
+        }
 	}
 }

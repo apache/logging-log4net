@@ -41,11 +41,17 @@ namespace log4net.Tests.Layout
 	[TestFixture]
 	public class PatternLayoutTest
 	{
+
+        [TearDown]
+        public void TearDown() {
+            Utils.RemovePropertyFromAllContexts();
+        }
+
 		[Test]
 		public void TestThreadPropertiesPattern()
 		{
 			StringAppender stringAppender = new StringAppender();
-			stringAppender.Layout = new PatternLayout("%property{prop1}");
+            stringAppender.Layout = new PatternLayout("%property{" + Utils.PROPERTY_KEY + "}");
 
 			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 			BasicConfigurator.Configure(rep, stringAppender);
@@ -56,13 +62,13 @@ namespace log4net.Tests.Layout
 			Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test no thread properties value set");
 			stringAppender.Reset();
 
-			ThreadContext.Properties["prop1"] = "val1";
+			ThreadContext.Properties[Utils.PROPERTY_KEY] = "val1";
 
 			log1.Info("TestMessage");
 			Assert.AreEqual("val1", stringAppender.GetString(), "Test thread properties value set");
 			stringAppender.Reset();
 
-			ThreadContext.Properties.Remove("prop1");
+			ThreadContext.Properties.Remove(Utils.PROPERTY_KEY);
 
 			log1.Info("TestMessage");
 			Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test thread properties value removed");
@@ -89,7 +95,7 @@ namespace log4net.Tests.Layout
 		public void TestGlobalPropertiesPattern()
 		{
 			StringAppender stringAppender = new StringAppender();
-			stringAppender.Layout = new PatternLayout("%property{prop1}");
+            stringAppender.Layout = new PatternLayout("%property{" + Utils.PROPERTY_KEY + "}");
 
 			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 			BasicConfigurator.Configure(rep, stringAppender);
@@ -100,13 +106,13 @@ namespace log4net.Tests.Layout
 			Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test no global properties value set");
 			stringAppender.Reset();
 
-			GlobalContext.Properties["prop1"] = "val1";
+			GlobalContext.Properties[Utils.PROPERTY_KEY] = "val1";
 
 			log1.Info("TestMessage");
 			Assert.AreEqual("val1", stringAppender.GetString(), "Test global properties value set");
 			stringAppender.Reset();
 
-			GlobalContext.Properties.Remove("prop1");
+			GlobalContext.Properties.Remove(Utils.PROPERTY_KEY);
 
 			log1.Info("TestMessage");
 			Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test global properties value removed");
