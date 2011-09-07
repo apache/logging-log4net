@@ -1603,7 +1603,74 @@ namespace log4net.Tests.Appender
 			Assert.AreEqual("", sh.Message, "Unexpected error message");
 		}
 
-		/// <summary>
+        /// <summary>
+        /// Verifies that attempting to log to a locked file fails gracefully
+        /// </summary>
+        [Test]
+        public void TestMutexLockFails() {
+            String filename = "test.log";
+
+            FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
+            fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
+
+            SilentErrorHandler sh = new SilentErrorHandler();
+            ILogger log = CreateLogger(filename, new FileAppender.MutexLock(), sh);
+            log.Log(GetType(), Level.Info, "This is a message", null);
+            log.Log(GetType(), Level.Info, "This is a message 2", null);
+            DestroyLogger();
+            fs.Close();
+
+            AssertFileEquals(filename, "Test");
+            Assert.AreEqual("Unable to acquire lock on file", sh.Message.Substring(0, 30), "Expecting an error message");
+        }
+
+        /// <summary>
+        /// Verifies that attempting to log to a locked file recovers if the lock is released
+        /// </summary>
+        [Test]
+        public void TestMutexLockRecovers() {
+            String filename = "test.log";
+
+            FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
+            fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
+
+            SilentErrorHandler sh = new SilentErrorHandler();
+            ILogger log = CreateLogger(filename, new FileAppender.MutexLock(), sh);
+            log.Log(GetType(), Level.Info, "This is a message", null);
+            fs.Close();
+            log.Log(GetType(), Level.Info, "This is a message 2", null);
+            DestroyLogger();
+
+            AssertFileEquals(filename, "This is a message 2" + Environment.NewLine);
+            Assert.AreEqual("Unable to acquire lock on file", sh.Message.Substring(0, 30), "Expecting an error message");
+        }
+
+        /// <summary>
+        /// Verifies that attempting to log to a file with ExclusiveLock really locks the file
+        /// </summary>
+        [Test]
+        public void TestMutexLockUnlocks() {
+            String filename = "test.log";
+            bool locked;
+
+            SilentErrorHandler sh = new SilentErrorHandler();
+            ILogger log = CreateLogger(filename, new FileAppender.MutexLock(), sh);
+            log.Log(GetType(), Level.Info, "This is a message", null);
+
+            locked = true;
+            FileStream fs = new FileStream(filename, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+            fs.Write(Encoding.ASCII.GetBytes("Test" + Environment.NewLine), 0, 4 + Environment.NewLine.Length);
+            fs.Close();
+
+            log.Log(GetType(), Level.Info, "This is a message 2", null);
+            DestroyLogger();
+
+            Assert.IsTrue(locked, "File was not locked");
+            AssertFileEquals(filename, "This is a message" + Environment.NewLine + "Test" + Environment.NewLine + "This is a message 2" + Environment.NewLine);
+            Assert.AreEqual("", sh.Message, "Unexpected error message");
+        }
+
+        /// <summary>
 		/// Verify that the default LockModel is ExclusiveLock, to maintain backwards compatibility with previous behaviour
 		/// </summary>
 		[Test]

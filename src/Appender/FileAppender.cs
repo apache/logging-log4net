@@ -388,7 +388,7 @@ namespace log4net.Appender
                     }
 
                     FileMode fileOpenMode = append ? FileMode.Append : FileMode.Create;
-                    return new FileStream(filename, fileOpenMode, FileAccess.Write, FileShare.Read);
+                    return new FileStream(filename, fileOpenMode, FileAccess.Write, fileShare);
                 }
             }
 
@@ -640,12 +640,15 @@ namespace log4net.Appender
             /// </remarks>
             public override void CloseFile()
             {
-                CloseStream(m_stream);
-                m_stream = null;
-
-                m_mutex.ReleaseMutex();
-                m_mutex.Close();
-                m_mutexClosed = true;
+                try {
+                    CloseStream(m_stream);
+                    m_stream = null;
+                }
+                finally {
+                    m_mutex.ReleaseMutex();
+                    m_mutex.Close();
+                    m_mutexClosed = true;
+                }
             }
 
             /// <summary>
@@ -659,13 +662,14 @@ namespace log4net.Appender
             /// </remarks>
             public override Stream AcquireLock()
             {
-                // TODO: add timeout?
-                m_mutex.WaitOne();
+                if (m_mutex != null) {
+                    // TODO: add timeout?
+                    m_mutex.WaitOne();
 
-                // should always be true (and fast) for FileStream
-                if (m_stream.CanSeek)
-                {
-                    m_stream.Seek(0, SeekOrigin.End);
+                    // should always be true (and fast) for FileStream
+                    if (m_stream.CanSeek) {
+                        m_stream.Seek(0, SeekOrigin.End);
+                    }
                 }
 
                 return m_stream;
@@ -676,7 +680,7 @@ namespace log4net.Appender
             /// </summary>
             public override void ReleaseLock()
             {
-                if (m_mutexClosed == false)
+                if (m_mutexClosed == false && m_mutex != null)
                 {
                     m_mutex.ReleaseMutex();
                 }
