@@ -41,7 +41,9 @@ Download Apache log4net 1.2.10
 *------------------------+---------+----------+-----------+
 
   Please read {{{http://httpd.apache.org/dev/verification.html}Verifying Apache HTTP Server Releases}}
-   for more information on why you should verify our releases.
+   for more information on why you should verify our releases.  The
+   PGP keys used to sign our distributions are part of the
+   {{{http://www.apache.org/dist/logging/KEYS} KEYS file}}.
 
 
 * Previous Releases
