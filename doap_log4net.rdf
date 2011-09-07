@@ -26,13 +26,13 @@
     <created>2007-02-09</created>
     <license rdf:resource="http://usefulinc.com/doap/licenses/asl20" />
     <name>Apache log4net</name>
-    <homepage rdf:resource="http://logging.apache.org/log4net" />
+    <homepage rdf:resource="http://logging.apache.org/log4net/" />
     <asfext:pmc rdf:resource="http://logging.apache.org" />
     <shortdesc>Apache log4net provides logging services for .NET.</shortdesc>
-    <bug-database rdf:resource="http://issues.apache.org/jira" />
-    <mailing-list rdf:resource="http://logging.apache.org/site/mailing-lists.html" />
-    <download-page rdf:resource="http://logging.apache.org/site/binindex.cgi" />
-    <programming-language>C</programming-language>
+    <bug-database rdf:resource="http://issues.apache.org/jira/LO4NET" />
+    <mailing-list rdf:resource="http://logging.apache.org/log4net/site/mailing-lists.html" />
+    <download-page rdf:resource="http://logging.apache.org/log4net/download.html" />
+    <programming-language>C#</programming-language>
     <category rdf:resource="http://projects.apache.org/category/library" />
     <repository>
       <SVNRepository>
@@ -40,5 +40,19 @@
         <browse rdf:resource="http://svn.apache.org/viewvc/logging/log4net/trunk/"/>
       </SVNRepository>
     </repository>
+    <release>
+      <Version>
+        <name>Apache log4net 1.2.9</name>
+        <created>2005-03-21</created>
+        <revision>1.2.9</revision>
+      </Version>
+    </release>
+    <release>
+      <Version>
+        <name>Apache log4net 1.2.10</name>
+        <created>2006-04-19</created>
+        <revision>1.2.10</revision>
+      </Version>
+    </release>
   </Project>
 </rdf:RDF>

@@ -25,9 +25,7 @@ limitations under the License.
     <meta name="keywords" content="log4net internals, log4net" />
 
     <body>
-        <section id="main" name="log4net Manual - Internals">
-            <sectionMenu name="Contents" />
-
+        <section id="main" name="Apache log4net&#x2122; Manual - Internals">
             <section id="perf" name="Performance">
                 <p>
                     One of the often-cited arguments against logging is its computational cost. 

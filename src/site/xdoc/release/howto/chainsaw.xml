@@ -27,10 +27,8 @@ limitations under the License.
 
     <body>
         <section id="main" name="How To view logging events using Apache log4j Chainsaw">
-            <sectionMenu name="Contents" />
-            
             <p>
-                Apache log4j includes <a href="http://logging.apache.org/log4j/docs/chainsaw.html">Chainsaw</a>
+                Apache log4j&#x2122; includes <a href="http://logging.apache.org/log4j/docs/chainsaw.html">Chainsaw&#x2122;</a>
                 a graphical log viewer. 
             </p>
             <p>
@@ -48,7 +46,7 @@ limitations under the License.
             
             <section id="udp" name="Logging via UDP">
                 <p>
-                    log4net can be configured to log messages via UDP in such a way that Chainsaw
+                    Apache log4net&#x2122; can be configured to log messages via UDP in such a way that Chainsaw
                     can receive and display them.
                 </p>
             

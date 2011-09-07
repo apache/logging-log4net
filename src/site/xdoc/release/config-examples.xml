@@ -25,10 +25,8 @@ limitations under the License.
     <meta name="keywords" content="building log4net, log4net" />
 
     <body>
-        <section id="main" name="log4net Config Examples">
+        <section id="main" name="Apache log4net&#x2122; Config Examples">
         
-            <sectionMenu name="Contents" />
-
             <section id="overview" name="Overview">
                 <p>
                     This document presents example configurations for the built-in appenders.

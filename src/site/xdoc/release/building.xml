@@ -25,9 +25,7 @@ limitations under the License.
     <meta name="keywords" content="building log4net, log4net" />
 
     <body>
-        <section id="main" name="Building log4net">
-            <sectionMenu name="Contents" />
-            
+        <section id="main" name="Building Apache log4net&#x2122;">
             <p>
                 The log4net release builds are built using NAnt. Log4net can also be built
                 using Visual Studio .NET 2002, 2003, or 2005.

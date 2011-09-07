@@ -18,9 +18,9 @@ Download Apache log4net 1.2.10
  ------
  ------
 
-Download Apache log4net 1.2.10
+Download Apache log4net&#x2122; 1.2.10
 
-  log4net 1.2.10 is distributed under the {{{http://www.apache.org/licenses/LICENSE-2.0.html} Apache License, version 2.0}}.
+  Apache log4net 1.2.10 is distributed under the {{{http://www.apache.org/licenses/LICENSE-2.0.html} Apache License, version 2.0}}.
 
   log4net has graduated from the Incubator project, however at the time the following releases were made, 
   log4net was still undergoing incubation, therefore these releases are not officially endorsed by the ASF.

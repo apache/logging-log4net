@@ -25,9 +25,7 @@ limitations under the License.
     <meta name="keywords" content="log4net frequently asked questions, log4net faq, log4net" />
 
     <body>
-        <section id="main" name="Apache log4net Frequently Asked Questions">
-            <sectionMenu name="Contents" />
-            
+        <section id="main" name="Apache log4net&#x2122; Frequently Asked Questions">
             <section id="information" name="Information">
             
                 <section id="what-is-log4net" name="What is log4net?">

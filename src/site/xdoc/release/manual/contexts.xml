@@ -25,9 +25,7 @@ limitations under the License.
     <meta name="keywords" content="building log4net, log4net" />
 
     <body>
-        <section id="main" name="log4net Manual - Contexts">
-            <sectionMenu name="Contents" />
-
+        <section id="main" name="Apache log4net&#x2122; Manual - Contexts">
             <p>
                 Most real-world systems have to deal with multiple clients simultaneously. In a 
                 typical multithreaded implementation of such a system, different threads will 

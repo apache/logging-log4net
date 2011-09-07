@@ -25,9 +25,7 @@ limitations under the License.
     <meta name="keywords" content="building log4net, log4net" />
 
     <body>
-        <section id="main" name="log4net Manual - Repositories">
-            <sectionMenu name="Contents" />
-
+        <section id="main" name="Apache log4net&#x2122; Manual - Repositories">
             <section id="repository" name="Logging Repositories">
                 <p>
                     Logging repositories are considered advanced functionality. The default behavior

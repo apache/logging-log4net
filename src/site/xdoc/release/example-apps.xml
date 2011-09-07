@@ -25,10 +25,8 @@ limitations under the License.
     <meta name="keywords" content="log4net examples, log4net" />
     
     <body>
-        <section id="main" name="log4net Examples">
+        <section id="main" name="Apache log4net&#x2122; Examples">
         
-            <sectionMenu name="Contents" />
-
             <section id="overview" name="Overview">
                 <p>
                     <strong>The following examples are only available in the log4net release download, not

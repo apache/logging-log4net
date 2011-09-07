@@ -25,9 +25,7 @@ limitations under the License.
     <meta name="keywords" content="log4net manual, log4net" />
 
     <body>
-        <section id="main" name="log4net Manual - Introduction">
-            <sectionMenu name="Contents" />
-
+        <section id="main" name="Apache log4net&#x2122; Manual - Introduction">
             <section id="overview" name="Overview">
                 <p>
                     This document is based on <i>Short introduction to log4j</i> by <i>Ceki G&#252;lc&#252;</i>.

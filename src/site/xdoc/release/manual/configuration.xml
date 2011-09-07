@@ -25,9 +25,7 @@ limitations under the License.
     <meta name="keywords" content="log4net configuration, log4net" />
 
     <body>
-        <section id="main" name="log4net Manual - Configuration">
-            <sectionMenu name="Contents" />
-
+        <section id="main" name="Apache log4net&#x2122; Manual - Configuration">
 
             <section id="config" name="Configuration">
                 <p>
