@@ -66,7 +66,7 @@ namespace log4net.Tests.Appender
 			root.Log(Level.Debug, testMessage, null);
 
 			// Wait for the remoted object to be delivered
-			Thread.Sleep(1000);
+			Thread.Sleep(2000);
 
 			LoggingEvent[] events = RemoteLoggingSinkImpl.Instance.Events;
 			Assert.AreEqual(1, events.Length, "Expect to receive 1 remoted event");
@@ -92,7 +92,7 @@ namespace log4net.Tests.Appender
 			root.Log(Level.Debug, "test message", null);
 
 			// Wait for the remoted object to be delivered
-			Thread.Sleep(1000);
+			Thread.Sleep(2000);
 
 			LoggingEvent[] events = RemoteLoggingSinkImpl.Instance.Events;
 			Assert.AreEqual(1, events.Length, "Expect to receive 1 remoted event");
@@ -121,7 +121,7 @@ namespace log4net.Tests.Appender
 			root.Log(Level.Debug, "test message", null);
 
 			// Wait for the remoted object to be delivered
-			Thread.Sleep(1000);
+			Thread.Sleep(2000);
 
 			LoggingEvent[] events = RemoteLoggingSinkImpl.Instance.Events;
 			Assert.AreEqual(1, events.Length, "Expect to receive 1 remoted event");
@@ -156,7 +156,7 @@ namespace log4net.Tests.Appender
 			root.Log(Level.Debug, testMessage, null);
 
 			// Wait for the remoted object to be delivered
-			Thread.Sleep(1000);
+			Thread.Sleep(2000);
 
 			LoggingEvent[] events = RemoteLoggingSinkImpl.Instance.Events;
 			Assert.AreEqual(1, events.Length, "Expect to receive 1 remoted event");
