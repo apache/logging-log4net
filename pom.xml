@@ -136,18 +136,79 @@
                 <columnNames>Type,Key,Summary,Assignee,Status,Resolution,Fix Version</columnNames>
               </configuration>
             </plugin>
-
-            <!-- RAT report -->
-            <plugin>
-              <groupId>org.apache.rat</groupId>
-              <artifactId>apache-rat-plugin</artifactId>
-              <version>0.7</version>
-            </plugin>
           </reportPlugins>
         </configuration>
       </plugin>
     </plugins>
   </build>
+
+  <reporting>
+    <plugins>
+      <!-- RAT report -->
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <version>0.7</version>
+      </plugin>
+    </plugins>
+  </reporting>
+
+  <developers>
+    <developer>
+      <name>Curt Arnold</name>
+      <id>carnold</id>
+    </developer>
+    <developer>
+      <name>Stefan Bodewig</name>
+      <id>bodewig</id>
+    </developer>
+    <developer>
+      <name>Nicko Cadell</name>
+      <id>nicko</id>
+    </developer>
+    <developer>
+      <name>Niall Daley</name>
+      <id>niall</id>
+    </developer>
+    <developer>
+      <name>Gert Driesen</name>
+      <id>drieseng</id>
+    </developer>
+    <developer>
+      <name>Ron Grabowski</name>
+      <id>rgrabowski</id>
+    </developer>
+  </developers>
+
+  <contributors>
+    <contributor>
+      <name>Julian Biddle</name>
+    </contributor>
+    <contributor>
+      <name>Daniel Cazzulino</name>
+    </contributor>
+    <contributor>
+      <name>Aspi Havewala</name>
+    </contributor>
+    <contributor>
+      <name>Rick Hobbs</name>
+    </contributor>
+    <contributor>
+      <name>Lance Nehring</name>
+    </contributor>
+    <contributor>
+      <name>Angelika Schnagl</name>
+    </contributor>
+    <contributor>
+      <name>Edward Smit</name>
+    </contributor>
+    <contributor>
+      <name>Douglas de la Torre</name>
+    </contributor>
+    <contributor>
+      <name>Thomas Voss</name>
+    </contributor>
+  </contributors>
 
   <dependencies>
   </dependencies>

@@ -28,14 +28,14 @@
       <item name="log4net"  href="http://logging.apache.org/log4net/"/>
     </breadcrumbs>
   
-	<menu name="Get log4net">
+	<menu name="Apache log4net&#x2122;">
+           <item name="About" href="/index.html"/>
 	   <item name="Download" href="/download.html"/>
-	   <item name="Changes" href="/release/release-notes.html"/>
+	   <item name="Release Notes" href="/release/release-notes.html"/>
 	   <item name="License" href="/license.html"/>
 	</menu>
 
 	<menu name="Documentation">
-	    <item name="About" href="/index.html"/>
 		<item name="Features" href="/release/features.html"/>
 		<item name="Supported Frameworks" href="/release/framework-support.html"/>
 		<item name="Example Apps" href="/release/example-apps.html"/>
@@ -65,6 +65,8 @@
 		<item name="Continuous Integration" href="/integration.html"/>
 	</menu>
 	
+        <menu ref="reports"/>
+
 	<menu name="Apache">
 		<item name="Home" href="http://www.apache.org"/>	
 		<item name="Sponsorship" href="http://www.apache.org/foundation/sponsorship.html"/>
