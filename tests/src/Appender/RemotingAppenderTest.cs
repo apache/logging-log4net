@@ -222,7 +222,7 @@ namespace log4net.Tests.Appender
 			}
 		}
 
-		/// <summary>
+        /// <summary>
 		/// Shuts down any loggers in the hierarchy, along
 		/// with all appenders.
 		/// </summary>
@@ -253,6 +253,22 @@ namespace log4net.Tests.Appender
 		{
 			ResetRepository();
 		}
+
+        /// <summary>
+        /// Close down remoting infrastructure
+        /// </summary>
+        [TestFixtureTearDown]
+        public void UnregisterRemotingServerChannel() {
+            if (m_remotingChannel != null) {
+                ((TcpChannel) m_remotingChannel).StopListening(null);
+                try {
+                    ChannelServices.UnregisterChannel(m_remotingChannel);
+                }
+                catch (Exception) {
+                }
+                m_remotingChannel = null;
+            }
+        }
 
 		/// <summary>
 		/// Configures the root appender for counting and rolling
