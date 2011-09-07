@@ -27,8 +27,6 @@ limitations under the License.
     <body>
         <section id="main" name="log4net Supported Frameworks">
         
-            <sectionMenu name="Contents" />
-            
             <section id="summary" name="Summary of .NET frameworks supported by log4net">
                 <p>
                     log4net is built on a number of different frameworks. Each new version of the frameworks add
@@ -58,7 +56,7 @@ limitations under the License.
                 </p>
                 
                 <div class="table">
-                    <table cellspacing="0">
+                    <table>
                         <colgroup>
                             <col style="text-align: left; white-space: nowrap" />
                             <col style="text-align: left;" />
@@ -118,7 +116,7 @@ limitations under the License.
                     framework and the platform it runs on:
                 </p>
                 <div class="table">
-                    <table cellspacing="0">
+                    <table>
                         <colgroup>
                             <col style="text-align: left;" />
                             <col style="text-align: center;" />
@@ -382,8 +380,6 @@ limitations under the License.
                 </section>
                 
                 <section id="netcf1.0" name="Microsoft .NET Compact Framework 1.0">
-                    <ul>
-                        <li>
                             <h4>Assembly attributes</h4>
                             <p>
                                 The .NET Compact Framework 1.0 does not support retrieving assembly level 
@@ -425,8 +421,6 @@ namespace TestApp
     }
 }                        
                             </pre>
-                        </li>
-                        <li>
                             <h4>Notification events</h4>
                             <p>
                                 The .NET Compact Framework 1.0 does not support notification events during the 
@@ -440,8 +434,6 @@ namespace TestApp
                                 method in order to prevent losing logging events.
                                 See the code above for an example.
                             </p>
-                        </li>
-                        <li>
                             <h4>FileSystemWatcher</h4>
                             <p>
                                 The .NET Compact Framework 1.0 does not support the
@@ -453,8 +445,6 @@ namespace TestApp
                                 methods are not available. Watching changes to the log4net configuration 
                                 file is not supported on the .NET Compact Framework 1.0.
                             </p>
-                        </li>
-                        <li>
                             <h4>UserName</h4>
                             <p>
                                 The .NET Compact Framework 1.0 does not support the
@@ -463,8 +453,6 @@ namespace TestApp
                                 the <span class="code">LoggingEvent.UserName</span> property will return the value 
                                 <span class="code">"NOT AVAILABLE"</span>.
                             </p>
-                        </li>
-                        <li>
                             <h4>Identity</h4>
                             <p>
                                 The .NET Compact Framework 1.0 does not support the
@@ -473,23 +461,17 @@ namespace TestApp
                                 the <span class="code">LoggingEvent.Identity</span> property will return the value 
                                 <span class="code">"NOT AVAILABLE"</span>.
                             </p>
-                        </li>
-                        <li>
                             <h4>Environment variables</h4>
                             <p>
                                 The .NET Compact Framework 1.0 does not support retrieving environment 
                                 variables, therefore it's not possible to substitute environment variables in 
                                 parameter values when using the .NET Compact Framework 1.0 version of log4net.
                             </p>
-                        </li>
-                        <li>
                             <h4>Serialization</h4>
                             <p>
                                 The .NET Compact Framework 1.0 does not support serialization, therefore none of 
                                 the log4net classes in the .NET Compact Framework 1.0 version are serializable.
                             </p>
-                        </li>
-                        <li>
                             <h4>LoggingEvent.Domain</h4>
                             <p>
                                 The .NET Compact Framework 1.0 does not support AppDomain functionality. The
@@ -498,8 +480,6 @@ namespace TestApp
                                 <span class="code">PatternLayout</span>. On the .NET Compact Framework 1.0 this
                                 value is generated by taking the file name for the application's primary module.
                             </p>
-                        </li>
-                    </ul>
                 </section>
                 <!--
                 <section id="netcf2.0" name="Microsoft .NET Compact Framework 2.0">
@@ -529,8 +509,6 @@ namespace TestApp
                 </section>
                 
                 <section id="sscli1.0" name="Microsoft Shared Source CLI 1.0">
-                    <ul>
-                        <li>
                             <h4>FileSystemWatcher</h4>
                             <p>
                                 SSCLI 1.0 does not support the
@@ -542,8 +520,6 @@ namespace TestApp
                                 methods are not available. Watching changes to the log4net configuration 
                                 file is not supported on SSCLI 1.0.
                             </p>
-                        </li>
-                        <li>
                             <h4>UserName</h4>
                             <p>
                                 SSCLI 1.0 does not support the
@@ -552,8 +528,6 @@ namespace TestApp
                                 the <span class="code">LoggingEvent.UserName</span> property will return the value 
                                 <span class="code">"NOT AVAILABLE"</span>.
                             </p>
-                        </li>
-                        <li>
                             <h4>Identity</h4>
                             <p>
                                 SSCLI 1.0 does not support the
@@ -562,8 +536,6 @@ namespace TestApp
                                 the <span class="code">LoggingEvent.Identity</span> property will return the value 
                                 <span class="code">"NOT AVAILABLE"</span>.
                             </p>
-                        </li>
-                    </ul>
                 </section>
                 
                 <section id="cli1.0" name="CLI 1.0 Compatible">

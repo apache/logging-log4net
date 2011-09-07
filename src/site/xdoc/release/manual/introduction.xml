@@ -290,7 +290,7 @@ namespace log4net
                     </p>
                     <p> </p>
                     <div class="table">
-                        <table cellspacing="0">
+                        <table>
                             <tr>
                                 <th>
                                     Logger name</th>
@@ -332,7 +332,7 @@ namespace log4net
                     </p>
                     <p> </p>
                     <div class="table">
-                        <table cellspacing="0">
+                        <table>
                             <tr>
                                 <th>
                                     Logger name</th>
@@ -369,7 +369,7 @@ namespace log4net
                     </p>
                     <p> </p>
                     <div class="table">
-                        <table cellspacing="0">
+                        <table>
                             <tr>
                                 <th>
                                     Logger name</th>
@@ -418,7 +418,7 @@ namespace log4net
                     </p>
                     <p> </p>
                     <div class="table">
-                        <table cellspacing="0">
+                        <table>
                             <tr>
                                 <th>
                                     Logger name</th>
@@ -563,7 +563,7 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                         The following appenders are defined in the log4net package:
                     </p>
                     <div class="table">
-                        <table cellspacing="0">
+                        <table>
                             <tr>
                                 <th>
                                     Type</th>
@@ -758,7 +758,7 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                         The table below shows an example:
                     </p>
                     <div class="table">
-                        <table cellspacing="0">
+                        <table>
                             <tr>
                                 <th>
                                     Logger Name</th>
@@ -841,7 +841,7 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                         The following filters are defined in the log4net package:
                     </p>
                     <div class="table">
-                        <table cellspacing="0">
+                        <table>
                             <tr>
                                 <th>
                                     Type</th>
@@ -937,7 +937,7 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                         The following layouts are included in the log4net package:
                     </p>
                     <div class="table">
-                        <table cellspacing="0">
+                        <table>
                             <tr>
                                 <th>
                                     Type</th>

@@ -583,7 +583,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
                         The <span class="code">&lt;log4net&gt;</span> element supports the following attributes:
                     </p>
                     <div class="table">
-                        <table cellspacing="0">
+                        <table>
                             <colgroup>
                                 <col style="text-align: left; white-space: nowrap; width: 7em" />
                                 <col style="text-align: left;" />
@@ -622,7 +622,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
                         The <span class="code">&lt;log4net&gt;</span> element supports the following child elements:
                     </p>
                     <div class="table">
-                        <table cellspacing="0">
+                        <table>
                             <colgroup>
                                 <col style="text-align: left; white-space: nowrap; width: 7em" />
                                 <col style="text-align: left;" />
@@ -684,7 +684,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
                             The <span class="code">&lt;appender&gt;</span> element supports the following attributes:
                         </p>
                         <div class="table">
-                            <table cellspacing="0">
+                            <table>
                                 <colgroup>
                                     <col style="text-align: left; white-space: nowrap; width: 7em" />
                                     <col style="text-align: left;" />
@@ -714,7 +714,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
                             The <span class="code">&lt;appender&gt;</span> element supports the following child elements:
                         </p>
                         <div class="table">
-                            <table cellspacing="0">
+                            <table>
                                 <colgroup>
                                     <col style="text-align: left; white-space: nowrap; width: 7em" />
                                     <col style="text-align: left;" />
@@ -765,7 +765,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
                                 The <span class="code">&lt;filter&gt;</span> element supports the following attributes:
                             </p>
                             <div class="table">
-                                <table cellspacing="0">
+                                <table>
                                     <colgroup>
                                         <col style="text-align: left; white-space: nowrap; width: 7em" />
                                         <col style="text-align: left;" />
@@ -787,7 +787,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
                                 The <span class="code">&lt;filter&gt;</span> element supports the following child elements:
                             </p>
                             <div class="table">
-                                <table cellspacing="0">
+                                <table>
                                     <colgroup>
                                         <col style="text-align: left; white-space: nowrap; width: 7em" />
                                         <col style="text-align: left;" />
@@ -859,7 +859,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
                                 The <span class="code">&lt;layout&gt;</span> element supports the following attributes:
                             </p>
                             <div class="table">
-                                <table cellspacing="0">
+                                <table>
                                     <colgroup>
                                         <col style="text-align: left; white-space: nowrap; width: 7em" />
                                         <col style="text-align: left;" />
@@ -881,7 +881,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
                                 The <span class="code">&lt;layout&gt;</span> element supports the following child elements:
                             </p>
                             <div class="table">
-                                <table cellspacing="0">
+                                <table>
                                     <colgroup>
                                         <col style="text-align: left; white-space: nowrap; width: 7em" />
                                         <col style="text-align: left;" />
@@ -930,7 +930,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
                             The <span class="code">&lt;root&gt;</span> element supports the following child elements:
                         </p>
                         <div class="table">
-                            <table cellspacing="0">
+                            <table>
                                 <colgroup>
                                     <col style="text-align: left; white-space: nowrap; width: 7em" />
                                     <col style="text-align: left;" />
@@ -979,7 +979,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
                             The <span class="code">&lt;logger&gt;</span> element supports the following attributes.
                         </p>
                         <div class="table">
-                            <table cellspacing="0">
+                            <table>
                                 <colgroup>
                                     <col style="text-align: left; white-space: nowrap; width: 7em" />
                                     <col style="text-align: left;" />
@@ -1008,7 +1008,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
                             The <span class="code">&lt;logger&gt;</span> element supports the following child elements:
                         </p>
                         <div class="table">
-                            <table cellspacing="0">
+                            <table>
                                 <colgroup>
                                     <col style="text-align: left; white-space: nowrap; width: 7em" />
                                     <col style="text-align: left;" />
@@ -1054,7 +1054,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
                             The <span class="code">&lt;renderer&gt;</span> element supports the following attributes.
                         </p>
                         <div class="table">
-                            <table cellspacing="0">
+                            <table>
                                 <colgroup>
                                     <col style="text-align: left; white-space: nowrap; width: 7em" />
                                     <col style="text-align: left;" />
@@ -1101,7 +1101,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
                             The <span class="code">&lt;param&gt;</span> element supports the following attributes.
                         </p>
                         <div class="table">
-                            <table cellspacing="0">
+                            <table>
                                 <colgroup>
                                     <col style="text-align: left; white-space: nowrap; width: 7em" />
                                     <col style="text-align: left;" />
@@ -1139,7 +1139,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
                             The <span class="code">&lt;param&gt;</span> element supports the following child elements:
                         </p>
                         <div class="table">
-                            <table cellspacing="0">
+                            <table>
                                 <colgroup>
                                     <col style="text-align: left; white-space: nowrap; width: 7em" />
                                     <col style="text-align: left;" />

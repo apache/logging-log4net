@@ -27,8 +27,6 @@ limitations under the License.
     <body>
         <section id="main" name="log4net Features">
         
-            <sectionMenu name="Contents" />
-
             <section id="overview" name="Overview">
                 <p>
                     log4net is a tool to help the programmer output log statements to a 
@@ -53,15 +51,15 @@ limitations under the License.
             
             <section id="features" name="Features">
                 <ul>
-                    <li><h3>Support for multiple frameworks</h3></li>
-                    <li><h3>Output to multiple logging targets</h3></li>
-                    <li><h3>Hierarchical logging architecture</h3></li>
-                    <li><h3>XML Configuration</h3></li>
-                    <li><h3>Dynamic Configuration</h3></li>
-                    <li><h3>Logging Context</h3></li>
-                    <li><h3>Proven architecture</h3></li>
-                    <li><h3>Modular and extensible design</h3></li>
-                    <li><h3>High performance with flexibility</h3></li>
+                    <li>Support for multiple frameworks</li>
+                    <li>Output to multiple logging targets</li>
+                    <li>Hierarchical logging architecture</li>
+                    <li>XML Configuration</li>
+                    <li>Dynamic Configuration</li>
+                    <li>Logging Context</li>
+                    <li>Proven architecture</li>
+                    <li>Modular and extensible design</li>
+                    <li>High performance with flexibility</li>
                 </ul>
             </section>
 

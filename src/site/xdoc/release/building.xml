@@ -173,10 +173,10 @@ sn -k log4net.snk</pre></div>
 
             <section id="html" name="HTML Documentation">
                 <p>
-                    The log4net HTML documentation is built using Velocity.
-                    The source are XML files in the <span class="code">xdocs/src</span> directory.
-                    Building the documentation requires Java, Ant, and Velocity.
-                    Run ant from within the <span class="code">xdocs</span> directory.
+                    The log4net HTML documentation is built using Apache Maven.
+                    The source are files in various formats in the <span class="code">src/site</span> directory.
+                    Building the documentation requires Java 5 or newer and Maven 2.2.1 or newer.
+                    Run mvn from within the root directory.
                 </p>
             </section>
 

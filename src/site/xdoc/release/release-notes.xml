@@ -27,8 +27,6 @@ limitations under the License.
     <body>
         <section id="main" name="log4net Release Notes">
 
-            <sectionMenu name="Contents" />
-            
             <section id="1.2.10" name="1.2.10">
 
                 <section id="1.2.10-bug" name="Bug Fixes">
@@ -92,15 +90,11 @@ limitations under the License.
             <section id="1.2.9" name="1.2.9 Beta">
             
                 <section id="1.2.9-breaking" name="Breaking Changes">
-                    <ul>
-                        <li>
                             <h3>Renamed namespaces</h3>
                             <p>
                                 Renamed namespace <span class="code">log4net.spi</span> to <span class="code">log4net.Core</span>. 
                                 Renamed namespace <span class="code">log4net.helpers</span> to <span class="code">log4net.Util</span>.
                             </p>
-                        </li>
-                        <li>
                             <h3>Renamed config classes and attributes</h3>
                             <p>
                                 In the <span class="code">log4net.Config</span> namespace the <span class="code">DOMConfigurator</span>, 
@@ -115,8 +109,6 @@ limitations under the License.
                                 and <span class="code">AliasRepositoryAttribute</span> types replace 
                                 <span class="code">DomainAttribute</span> and <span class="code">AliasDomainAttribute</span>. 
                             </p>
-                        </li>
-                        <li>
                             <h3>Fixed pascal casing of type names</h3>
                             <p>
                                 Renamed <span class="code">AdoNetAppender</span>, <span class="code">AspNetTraceAppender</span>, 
@@ -125,28 +117,20 @@ limitations under the License.
                                 Note that the config file type resolver is case insensitive so this is only a breaking change 
                                 for code that programmatically creates a type that has been renamed.
                             </p>
-                        </li>
-                        <li>
                             <h3>Layouts changed to stream their output to a <span class="code">TextWriter</span></h3>
                             <p>
                                 Layouts have been changed to format their output to a <span class="code">TextWriter</span>
                                 rather than return a string. This increases performance and reduces temporary object creation.
                             </p>
-                        </li>
-                        <li>
                             <h3>C style string escapes no longer supported by config parser</h3>
                             <p>
                                 The XML config parser no longer supports decoding C style escape sequences in strings.
                                 Previously sequences like <span class="code">\n</span> and <span class="code">\\</span> 
                                 where decoded. Instead use the appropriate XML encodings as required.
                             </p>
-                        </li>
-                    </ul>
                 </section>
                 
                 <section id="1.2.9-new" name="New Features">
-                    <ul>
-                        <li>
                             <h3>New CLI build</h3>
                             <p>
                                 A new log4net assembly is built that targets all CLI 1.0 compatible runtimes.
@@ -158,8 +142,6 @@ limitations under the License.
                                 This build is only available in release configuration and can be found at
                                 <span class="code">bin\cli\1.0\release</span>.
                             </p>
-                        </li>
-                        <li>
                             <h3>Logging contexts</h3>
                             <p>
                                 Logging contexts can be used to record contextual data that is relevant to the current
@@ -176,8 +158,6 @@ limitations under the License.
                                 <span class="code">LogicalThreadContext</span>, and <span class="code">LoggingEvent</span>.
                                 Context values specified in a narrower scope hide the matching value in a wider scope.
                             </p>
-                        </li>
-                        <li>
                             <h3><span class="code">PatternLayout</span> customization and long pattern names</h3>
                             <p>
                                 The <span class="code">PatternLayout</span> now supports long pattern names.
@@ -206,8 +186,6 @@ limitations under the License.
                             <p>
                                 For full details see the SDK Reference entry: <a href="sdk/log4net.Layout.PatternLayout.html">log4net.Layout.PatternLayout</a>.
                             </p>
-                        </li>
-                        <li>
                             <h3><span class="code">PatternString</span> for pattern based configuration</h3>
                             <p>
                                 A new pattern based type, <span class="code">PatternString</span>, can be used in
@@ -242,16 +220,12 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                             <p>
                                 For full details see the SDK Reference entry: <a href="sdk/log4net.Util.PatternString.html">log4net.Util.PatternString</a>.
                             </p>
-                        </li>
-                        <li>
                             <h3>Loading configuration from a URI</h3>
                             <p>
                                 The <span class="code">XmlConfigurator</span> methods now support loading the
                                 configuration data from a URI. Config can be loaded from any URI supported by the 
                                 <span class="code">System.Net.WebRequest</span> class.
                             </p>
-                        </li>
-                        <li>
                             <h3>Support for No-Touch deployment</h3>
                             <p>
                                 Log4net supports configuring No-Touch deployment applications using the
@@ -259,8 +233,6 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                                 or extension is specified then this is resolved relative to the deployment
                                 URI.
                             </p>
-                        </li>
-                        <li>
                             <h3>Config file parser enhancements</h3>
                             <p>
                                 The config file parser has been enhanced to support specifying the property subtype, or intermediate type, 
@@ -272,8 +244,6 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                                 Implicit conversion will be attempted between the value string and the type specified, 
                                 and then again between the type and the target property type.
                             </p>
-                        </li>
-                        <li>
                             <h3>.NET string formatting syntax</h3>
                             <p>
                                 Added .NET <span class="code">String.Format</span> style formatting syntax methods to 
@@ -282,16 +252,12 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                                 <span class="code">WarnFormat</span>, <span class="code">ErrorFormat</span> 
                                 and <span class="code">FatalFormat</span>.
                             </p>
-                        </li>
-                        <li>
                             <h3>Customizable levels</h3>
                             <p>
                                 Levels are defined by the repository <span class="code">LevelMap</span>. The defined 
                                 levels, the relative ordering of levels and level display names can be configured on 
                                 a per-repository basis.
                             </p>
-                        </li>
-                        <li>
                             <h3>Per-appender security contexts</h3>
                             <p>
                                 Appenders that interact with controlled platform resources, e.g. files, can be
@@ -301,8 +267,6 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                                 privileges of the appender. The <span class="code">WindowsSecurityContext</span> 
                                 is used to specify alternative credentials on the Windows platform.
                             </p>
-                        </li>
-                        <li>
                             <h3>Added new appenders</h3>
                             <dl>
                                 <dt><span class="code">AnsiColorTerminalAppender</span></dt>
@@ -340,15 +304,11 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                                     </p>
                                 </dd>
                             </dl>
-                        </li>
-                        <li>
                             <h3>Added new <span class="code">LoggerMatchFilter</span> filter</h3>
                             <p>
                                 Added <span class="code">LoggerMatchFilter</span> which matches a string against
                                 the event's logger name.
                             </p>
-                        </li>
-                        <li>
                             <h3>Pluggable file locking models for the <span class="code">FileAppender</span></h3>
                             <p>
                                 The <span class="code">FileAppender</span> (and by extension the 
@@ -361,23 +321,17 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                             <p>
                                 For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.FileAppender.LockingModel.html">log4net.Appender.FileAppender.LockingModel</a>.
                             </p>
-                        </li>
-                        <li>
                             <h3><span class="code">RollingFileAppender</span> roll once</h3>
                             <p>
                                 The <span class="code">RollingFileAppender</span> now supports a new
                                 rolling style, <span class="code">Once</span>. In this mode the appender
                                 will roll the file once per run.
                             </p>
-                        </li>
-                        <li>
                             <h3><span class="code">SmtpAppender</span> authentication</h3>
                             <p>
                                 On the .NET 1.1 platform only, the <span class="code">SmtpAppender</span> supports authenticating
                                 against the mail server using either username and password or integrated NTLM authentication.
                             </p>
-                        </li>
-                        <li>
                             <h3><span class="code">AdoNetAppender</span> ReconnectOnError</h3>
                             <p>
                                 Added new configuration property to <span class="code">AdoNetAppender</span>.
@@ -385,32 +339,22 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                                 will force the appender to attempt to reconnect to the database if the connection
                                 is lost.
                             </p>
-                        </li>
-                        <li>
                             <h3><span class="code">UdpAppender</span> hostname support</h3>
                             <p>
                                 The <span class="code">UdpAppender</span> config property <span class="code">RemoteAddress</span>
                                 can now be specified as a DNS hostname string. The hostname is resolved to an IP address.
                             </p>
-                        </li>
-                    </ul>
                 </section>
                 
                 <section id="1.2.9-other" name="Other Changes">
-                    <ul>
-                        <li>
                             <h3>FxCop compliance</h3>
                             <p>
                                 Updates to bring the internal code in line with the current FxCop rules.
                             </p>
-                        </li>
-                        <li>
                             <h3>Separate NUnit tests</h3>
                             <p>
                                 Moved the NUnit tests into a separate project, <span class="code">log4net.Tests</span>.
                             </p>
-                        </li>
-                        <li>
                             <h3>Bug Fixes</h3>
                             <dl>
                                 <dt><span class="code">RemotingAppender</span></dt>
@@ -436,15 +380,11 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                                     </p>
                                 </dd>
                             </dl>
-                        </li>
-                    </ul>
                 </section>
                 
             </section>
             
             <section id="1.2.0b8" name="1.2.0 Beta 8">
-                <ul>
-                    <li>
                         <h3>Changed assembly name to <span class="code">log4net</span></h3>
                         <p>
                             The build output is now <span class="code">log4net.dll</span>
@@ -458,31 +398,23 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                             by the assembly title. This includes the name of the framework
                             that the assembly was built on. 
                         </p>
-                    </li>
-                    <li>
                         <h3>Combined Release and ReleaseStrong builds</h3>
                         <p>
                             The Release and ReleaseStrong builds have been consolidated into
                             a single build called Release. This Release build is strongly named.
                         </p>
-                    </li>
-                    <li>
                         <h3>New Appender: ColoredConsoleAppender</h3>
                         <p>
                             The <span class="code">ColoredConsoleAppender</span> writes events to the
                             application's console. It can be configured to specify the text and background
                             colors for different level events.
                         </p>
-                    </li>
-                    <li>
                         <h3>New Appender: SmtpPickupDirAppender</h3>
                         <p>
                             The <span class="code">SmtpPickupDirAppender</span> generates SMTP compliant
                             messages and writes them to a local directory. These files can then be read
                             by an SMTP agent (e.g. the IIS SMTP Agent) and delivered.
                         </p>
-                    </li>
-                    <li>
                         <h3>New Layout: XmlLayoutSchemaLog4j</h3>
                         <p>
                             This new layout formats the logging events as XML which complies with
@@ -490,8 +422,6 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                             to log4j. Currently the only appender that can communicate directly with
                             log4j is the <span class="code">UdpAppender</span>.
                         </p>
-                    </li>
-                    <li>
                         <h3>New PatternLayout conversion characters</h3>
                         <p>
                             Added support for capturing the current thread principal name and the
@@ -509,15 +439,11 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                                 (<span class="code">Principal.Identity.Name</span>).
                             </dd>
                         </dl>
-                    </li>
-                    <li>
                         <h3>Types specified in the config file are now loaded ignoring case</h3>
                         <p>
                             All types specified in the configuration files are now loaded
                             using a case insensitive method.
                         </p>
-                    </li>
-                    <li>
                         <h3>Fine grained fixing for buffered events</h3>
                         <p>
                             The <span class="code">LoggingEvent</span> now supports fine grained
@@ -526,43 +452,31 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                             property takes a combination of the <span class="code">FixFlags</span> 
                             enumeration values.
                         </p>
-                    </li>
-                    <li>
                         <h3>Code updated inline with FxCop 1.21</h3>
                         <p>
                             In line with the FxCop 1.21 guidelines:
                             Sealed utility classes. Added serialization security demand to GetObjectData.
                             Renamed parameters.
                         </p>
-                    </li>
-                    <li>
                         <h3>EventLogAppender 32K Limit</h3>
                         <p>
                             There is a limit of 32K characters in an EventLog message. Added a 
                             check that only logs the first 32000 characters from the rendered 
                             message.
                         </p>
-                    </li>
-                </ul>
             </section>
             
             <section id="1.2.0b7" name="1.2.0 Beta 7">
-                <ul>
-                    <li>
                         <h3>Updated to support the Microsoft .NET Framework 1.1 Final</h3>
                         <p>
                             Updated to support the Microsoft .NET Framework 1.1 Final Beta (1.1.4322).
                         </p>
-                    </li>
-                    <li>
                         <h3>Features document</h3>
                         <p>
                             Added a new document that covers the main features of log4net.
                             See the <a href="doc/features.html">features</a>
                             document for more information.
                         </p>
-                    </li>
-                    <li>
                         <h3>Hierarchy disabled until it is configured</h3>
                         <p>
                             The Hierarchy is now disabled until it has been configured.
@@ -582,34 +496,24 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                             displayed on the console by default. This message will only be 
                             displayed if internal debugging is enabled.
                         </p>
-                    </li>
-                    <li>
                         <h3>New examples in VisualBasic.NET, JScript and Managed C++</h3>
                         <p>
                             New examples in VisualBasic.NET, JScript and Managed C++.
                             TODO Link to document about examples.
                         </p>
-                    </li>
-                    <li>
                         <h3>Code and Documentation Updates</h3>
                         <p>
                             Code fixes. Documentation and manual updates. 
                             See the ChangeLog for more information.
                         </p>
-                    </li>
-                    <li>
                         <h3>Added document with example appender configurations</h3>
                         <p>
                             See the <a href="doc/manual/example-config-appender.html">Example Appender Configuration</a> 
                             document for more information.
                         </p>
-                    </li>
-                </ul>
             </section>
 
             <section id="1.2.0b6" name="1.2.0 Beta 6">
-                <ul>
-                    <li>
                         <h3>Added support for multiple frameworks</h3>
                         <p>
                             log4net 1.2.0 beta 6 adds support for the the following frameworks:
@@ -648,22 +552,16 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                             Not all frameworks are created equal and some features have been excluded from 
                             some of the builds. See the <a href="doc/manual/framework-support.html">Framework Support</a> document for more information.
                         </p>
-                    </li>
-                    <li>
                         <h3>New build system using NAnt</h3>
                         <p>
                             The new build system allows log4net to be built for all supported frameworks and 
                             in all build configurations in one go.
                         </p>
-                    </li>
-                    <li>
                         <h3>New source code &amp; distribution layout</h3>
                         <p>
                             The source code &amp; distribution layout has been updated to support the new 
                             build environment and multiple target frameworks.
                         </p>
-                    </li>
-                    <li>
                         <h3>Removed DomainAttribute.UseDefaultDomain property</h3>
                         <p>
                             Updated default behavior of <span class="code">DefaultRepositorySelector</span>. Assemblies 
@@ -673,8 +571,6 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                             property then you should remove it, and if the default behavior is now 
                             sufficient, you do not need to specify the <span class="code">DomainAttribute</span> at all.
                         </p>
-                    </li>
-                    <li>
                         <h3>Updated configuration file parser</h3>
                         <p>
                             Updated config file parser to use the element name as the property to set. Also 
@@ -703,16 +599,12 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
     &lt;threshold value=&quot;DEBUG&quot;/&gt;
   &lt;/evaluator&gt;
 &lt;/appender&gt;</pre></div>
-                    </li>
-                    <li>
                         <h3>Support for event ID</h3>
                         <p>
                             The <span class="code">EventLogAppender</span> now supports setting the event ID in the 
                             event log, this is taken from the <span class="code">EventID</span> property from the per 
                             event <span class="code">Properties</span> map on the <span class="code">LoggingEvent</span>.
                         </p>
-                    </li>
-                    <li>
                         <h3>Updated ADONetAppender</h3>
                         <p />
                         <ul>
@@ -725,8 +617,6 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                                 Added <span class="code">ExceptionLayout</span> to render the exception data</li>
                         </ul>
                         <p />
-                    </li>
-                    <li>
                         <h3>Support for front-end extension</h3>
                         <p>
                             This allows the logging API to be wrapped or adapted for specific purposes. Two 
@@ -755,59 +645,31 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                             </table>
                         </div>
                         <p />
-                    </li>
-                    <li>
                         <h3>Added ForwardingAppender</h3>
                         <p>Forwards events to multiple sub appenders after applying filter rules.</p>
-                    </li>
-                    <li>
                         <h3>Added BufferingForwardingAppender</h3>
                         <p>Forward events to sub appenders after buffering them.</p>
-                    </li>
-                    <li>
                         <h3>Added ASPNetTraceAppender</h3>
                         <p>Logs events to the ASP.NET trace system.</p>
-                    </li>
-                    <li>
                         <h3>Added NetSendAppender</h3>
                         <p>Delivers logging events using the Windows Messenger service.</p>
-                    </li>
-                    <li>
                         <h3>Added UdpAppender</h3>
                         <p>Sends logging events as connectionless UDP datagrams to a remote host or a 
                             multicast group.</p>
-                    </li>
-                    <li>
                         <h3>Removed obsolete methods</h3>
-                    </li>
-                    <li>
                         <h3>Lots of updates to improve our compliance with FxCop</h3>
-                    </li>
-                    <li>
                         <h3>Improved SDK documentation</h3>
-                    </li>
-                </ul>
             </section>
 
             <section id="1.2.0b5" name="1.2.0 Beta 5">
-                <ul>
-                    <li>
                         <h3>Fixed Exception thrown when DOM Configurator called with a null XML 
                             Element.</h3>
                         <p>This occurred if the configuration file did not have a log4net section defined.</p>
-                    </li>
-                    <li>
                         <h3>Made level lookup case insensitive</h3>
-                    </li>
-                    <li>
                         <h3>Prevented the Hierarchy's Threshold level from being set to a null reference</h3>
-                    </li>
-                </ul>
             </section>
 
             <section id="1.2.0b4" name="1.2.0 Beta 4">
-                <ul>
-                    <li>
                         <h3>Added event specific properties to the logging event object</h3>
                         <p>
                             Appenders can add additional information to the events they are logging. The <span class="code">RemotingAppender</span>
@@ -815,88 +677,50 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                             These properties can be accessed using the <span class="code">PatternLayout</span> with the 
                             %P{name} syntax.
                         </p>
-                    </li>
-                    <li>
                         <h3>Added a plugin framework</h3>
                         <p>An <span class="code">IPlugin</span> interface can be attached to any repository.</p>
-                    </li>
-                    <li>
                         <h3>A new RemoteLoggingServerPlugin plugin acts as the server for the 
                             RemotingAppender</h3>
-                    </li>
-                    <li>
                         <h3>Updated the core log4net framework to work in an environment with no 
                             permissions</h3>
                         <p>Specific appenders still require additional permissions to log correctly</p>
-                    </li>
-                    <li>
                         <h3>Added support for domain aliasing using the AliasDomainAttribute</h3>
                         <p>This allows a parent assembly to take control of the logging domain for child 
                             assemblies.</p>
-                    </li>
-                    <li>
                         <h3>Added events for repository creation, configuration change, configuration reset 
                             and repository shutdown</h3>
-                    </li>
-                    <li>
                         <h3>Added LevelMap to the ILoggerRepository interface</h3>
                         <p>The mapping from level name to level object is now repository specific, 
                             therefore each repository can have independent mappings.</p>
-                    </li>
-                    <li>
                         <h3>Moved hierarchy specific config file parser to new DOMHierarchyConfigurator class</h3>
                         <p>This is controlled by the <span class="code">Hierarchy</span> object and allows for better 
                             encapsulation.</p>
-                    </li>
-                    <li>
                         <h3>Added OnlyFixPartialEventData property to the buffered appenders</h3>
                         <p>This setting causes slow settings to be ignored. This significantly improves the 
                             performance of the buffered appenders.</p>
-                    </li>
-                    <li>
                         <h3>XML entity references are supported in the XML config file.</h3>
-                    </li>
-                    <li>
                         <h3>Added support for expanding environment variables in &lt;param&gt; values</h3>
                         <p>
                             The environment variables must be specified as <span class="code">${FOO}</span> where <span class="code">FOO</span>
                             is the name of the variable to expand.
                         </p>
-                    </li>
-                    <li>
                         <h3>Upgraded to use NUnit 2.0</h3>
-                    </li>
-                    <li>
                         <h3>File appenders can specify the encoding to use for the file</h3>
-                    </li>
-                    <li>
                         <h3>Added strong named configuration</h3>
-                    </li>
-                </ul>
             </section>
 
             <section id="1.2.0b3" name="1.2.0 Beta 3">
-                <ul>
-                    <li>
                         <h3>Added log4net.Ext.Trace extension</h3>
                         <p>This is a separate assembly that adds a trace level to log4net.</p>
-                    </li>
-                    <li>
                         <h3>The default log file output directory is now the application base directory not 
                             the current directory</h3>
-                    </li>
-                    <li>
                         <h3>Added MemoryAppender</h3>
                         <p>Stores all the logging events in an in-memory buffer.</p>
-                    </li>
-                    <li>
                         <h3>Moved the Hierarchy implementation into a separate namespace</h3>
                         <p>
                             The <span class="code">log4net.Repository.Hierarchy</span> namespace now contains all the 
                             code that is specific to the <span class="code">Hierarchy</span> implementation.
                         </p>
-                    </li>
-                    <li>
                         <h3>Refactored the DOMConfigurator and BasicConfigurator</h3>
                         <p>
                             The <span class="code">Hierarchy</span> specific data schema and implementation could be has 
@@ -904,8 +728,6 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                             bootstrap code for these configurators remains in the <span class="code">log4net.Config</span>
                             namespace.
                         </p>
-                    </li>
-                    <li>
                         <h3>Replaced the DOMConfiguratorAttribute UseExecutableDomain
                             property with UseDefaultDomain</h3>
                         <p>
@@ -913,34 +735,18 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                             allow the configuration of multiple assemblies to be accomplished more easily, 
                             especially when developing web applications (ASP.NET).
                         </p>
-                    </li>
-                    <li>
                         <h3>A few good bug fixes!</h3>
-                    </li>
-                </ul>
             </section>
 
             <section id="1.2.0b2" name="1.2.0 Beta 2">
-                <ul>
-                    <li>
                         <h3>Added ADONetAppender</h3>
                         <p>Thanks to TechnologyOneCorp.com.</p>
-                    </li>
-                    <li>
                         <h3>Added TraceLogAssembly extensibility example</h3>
-                    </li>
-                    <li>
                         <h3>Lots of bug fixes</h3>
-                    </li>
-                </ul>
             </section>
 
             <section id="1.2.0b1" name="1.2.0 Beta 1">
-                <ul>
-                    <li>
                         <h3>Added 6 new examples</h3>
-                    </li>
-                    <li>
                         <h3>Split Category class into Logger and LogManager classes</h3>
                         <p>
                             The instance methods from <span class="code">Category</span> have moved to the <span class="code">Logger</span>
@@ -949,8 +755,6 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                             compatibility only. Changed interface <span class="code">ICategoryFactory</span> to <span class="code">ILoggerFactory</span>
                             and the implementation class <span class="code">DefaultCategoryFactory</span> to <span class="code">DefaultLoggerFactory</span>.
                         </p>
-                    </li>
-                    <li>
                         <h3>Replaced Priority class with Level class</h3>
                         <p>
                             The <span class="code">Priority</span> class has been replaced by the <span class="code">Level</span> class. 
@@ -958,31 +762,23 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                             The <span class="code">Level</span> class implements a static pool of <span class="code">Level</span> objects. 
                             The <span class="code">Level</span> class is sealed and serializable.
                         </p>
-                    </li>
-                    <li>
                         <h3>Added ILoggerRepository interface implemented by Hierarchy</h3>
                         <p>
                             The <span class="code">Hierarchy</span> class implements the <span class="code">ILoggerRepository</span> interface. 
                             This interface is used by the <span class="code">LogManager</span> class and therefore 
                             allows different implementations of <span class="code">ILoggerRepository</span> to be used.
                         </p>
-                    </li>
-                    <li>
                         <h3>Enhanced NUnit tests</h3>
                         <p>
                             All the NUnit tests can be run using a single TestSuite: NUnitGUI 
                             log4net.LogManager+AllTests,log4net.dll.
                         </p>
-                    </li>
-                    <li>
                         <h3>Added support for serializing LoggingEvents</h3>
                         <p>
                             The <span class="code">LoggingEvent</span> class is serializable. All local state is 
                             captured before serialization occurs. This now allows <span class="code">LoggingEvent</span> 
                             objects to be serialized between applications or machines.
                         </p>
-                    </li>
-                    <li>
                         <h3>Added RemotingAppender</h3>
                         <p>
                             Delivers <span class="code">LoggingEvents</span> to a remote interface. This can be used to 
@@ -990,8 +786,6 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                             remoting sink that receives the logging events, see <span class="code">examples\net\remoting\RemotingServer</span>
                             for details.
                         </p>
-                    </li>
-                    <li>
                         <h3>Added support for rendering composite objects</h3>
                         <p>
                             The <span class="code">IObjectRenderer</span> interface method <span class="code">DoRender</span> now 
@@ -999,8 +793,6 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                             appropriate renderer from the <span class="code">RendererMap</span> to render any nested 
                             objects.
                         </p>
-                    </li>
-                    <li>
                         <h3>Added support for rendering exceptions</h3>
                         <p>
                             The <span class="code">DefaultRenderer</span> now has support for rendering exceptions to a 
@@ -1008,8 +800,6 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                             used to render exceptions in the <span class="code">LoggingEvent</span>. This allows the 
                             rendering of specific exceptions to be enhanced by specific renderers.
                         </p>
-                    </li>
-                    <li>
                         <h3>Added ITriggeringEventEvaluator interface</h3>
                         <p>
                             This interface is used by <span class="code">SMTPAppender</span> and <span class="code">RemotingAppender</span>
@@ -1019,24 +809,18 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                             implemented by the <span class="code">LevelEvaluator</span> class, which triggers above a 
                             set level.
                         </p>
-                    </li>
-                    <li>
                         <h3>Added regex matching to the MDCFilter, NDCFilter and StringMatchFilter</h3>
                         <p>
                             The <span class="code">MDCFilter</span>, <span class="code">NDCFilter</span> and <span class="code">StringMatchFilter</span>
                             can now be configured to use regex matches in addition to substring matches. 
                             Set the <span class="code">RegexToMatch</span> property to use this feature.
                         </p>
-                    </li>
-                    <li>
                         <h3>Added XMLLayout</h3>
                         <p>
                             emits an XML element for each <span class="code">LoggingEvent</span>. This allows logging 
                             events to be stored and manipulated as XML. The DTD for the XML emitted is in 
                             the <span class="code">log4net-events.dtd</span>
                         </p>
-                    </li>
-                    <li>
                         <h3>Added support for &lt;logger&gt; and &lt;level&gt; elements in the 
                             DOMConfigurator</h3>
                         <p>
@@ -1046,15 +830,11 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                             elements to be used in place of the <span class="code">&lt;category&gt;</span> and <span class="code">&lt;priority&gt;</span>
                             elements. The old elements are still accepted for backward compatibility.
                         </p>
-                    </li>
-                    <li>
                         <h3>Added Threshold property to Hierarchy</h3>
                         <p>
                             Changed <span class="code">DisableXXX()</span> methods on <span class="code">Hierarchy</span> to a <span class="code">Threshold</span>
                             property.
                         </p>
-                    </li>
-                    <li>
                         <h3>Added support for logging domains</h3>
                         <p>
                             The <span class="code">LogManager</span> supports multiple logging domains. The <span class="code">LogManager</span>
@@ -1069,15 +849,11 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                             without conflicting with other modules in the process. The domain for the 
                             assembly is configured using metadata attributes defined on the assembly.
                         </p>
-                    </li>
-                    <li>
                         <h3>DOMConfigurator can set params to arbitrary objects</h3>
                         <p>
                             Using a new <span class="code">&lt;object&gt;</span> element, params can now be set to any 
                             creatable object.
                         </p>
-                    </li>
-                </ul>
             </section>
             
         </section>
