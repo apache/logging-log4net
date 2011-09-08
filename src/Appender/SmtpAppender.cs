@@ -89,7 +89,7 @@ namespace log4net.Appender
 		#region Public Instance Properties
 
 		/// <summary>
-		/// Gets or sets a semicolon-delimited list of recipient e-mail addresses.
+		/// Gets or sets a comma- or semicolon-delimited list of recipient e-mail addresses (use semicolon on .NET 1.1 and comma for later versions).
 		/// </summary>
 		/// <value>
         /// <para>
@@ -114,8 +114,8 @@ namespace log4net.Appender
 		}
 
         /// <summary>
-        /// Gets or sets a semicolon-delimited list of recipient e-mail addresses 
-        /// that will be carbon copied.
+        /// Gets or sets a comma- or semicolon-delimited list of recipient e-mail addresses 
+        /// that will be carbon copied (use semicolon on .NET 1.1 and comma for later versions).
         /// </summary>
         /// <value>
         /// <para>
