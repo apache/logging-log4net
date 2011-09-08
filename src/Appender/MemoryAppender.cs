@@ -76,7 +76,10 @@ namespace log4net.Appender
 		/// </remarks>
 		virtual public LoggingEvent[] GetEvents()
 		{
-			return (LoggingEvent[])m_eventsList.ToArray(typeof(LoggingEvent));
+            lock (m_eventsList.SyncRoot)
+            {
+                return (LoggingEvent[]) m_eventsList.ToArray(typeof(LoggingEvent));
+            }
 		}
 
 		/// <summary>
@@ -147,7 +150,10 @@ namespace log4net.Appender
 			// volatile data in the event.
 			loggingEvent.Fix = this.Fix;
 
-			m_eventsList.Add(loggingEvent);
+            lock (m_eventsList.SyncRoot)
+            {
+                m_eventsList.Add(loggingEvent);
+            }
 		} 
 
 		#endregion Override implementation of AppenderSkeleton
@@ -162,7 +168,10 @@ namespace log4net.Appender
 		/// </remarks>
 		virtual public void Clear()
 		{
-			m_eventsList.Clear();
+            lock (m_eventsList.SyncRoot)
+            {
+                m_eventsList.Clear();
+            }
 		}
 
 		#endregion Public Instance Methods
