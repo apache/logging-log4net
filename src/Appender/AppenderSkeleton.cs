@@ -766,7 +766,7 @@ namespace log4net.Appender
 		/// then the appender should return <c>true</c>.
 		/// </para>
 		/// <para>
-		/// This default implementation always returns <c>true</c>.
+		/// This default implementation always returns <c>false</c>.
 		/// </para>
 		/// </remarks>
 		/// <returns>
