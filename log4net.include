@@ -139,8 +139,8 @@ limitations under the License.
     <!-- Targets for cleaning up -->
     <target name="clean-current-bin-dir" depends="check-current-bin-dir" description="Cleans the current binaries directory">
         <echo message="Cleaning the ${current.bin.dir} binaries directory." />
+        <delete dir="${current.bin.dir}/../oldkey" if="${directory::exists(current.bin.dir) and current.build.config.release}" />
         <delete dir="${current.bin.dir}" if="${directory::exists(current.bin.dir)}" />
-        <delete dir="${current.bin.dir}/../oldkey" if="${directory::exists(current.bin.dir)}" />
         <mkdir dir="${current.bin.dir}" />
     </target>
     <target name="clean-current-sdkdoc-dir" depends="check-current-sdkdoc-dir" description="cleaning the current SDK documentation directory">
