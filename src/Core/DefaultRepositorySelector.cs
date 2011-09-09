@@ -697,6 +697,12 @@ namespace log4net.Core
 						LogLog.Warn(declaringType, "Exception getting ApplicationBaseDirectory. appSettings log4net.Config path ["+repositoryConfigFile+"] will be treated as an absolute URI", ex);
 					}
 
+                    string repositoryConfigFilePath = repositoryConfigFile;
+                    if (applicationBaseDirectory != null)
+                    {
+                        repositoryConfigFilePath = Path.Combine(applicationBaseDirectory, repositoryConfigFile);
+                    }
+
                     // Determine whether to watch the file or not based on an app setting value:
 				    bool watchRepositoryConfigFile = false;
 				    Boolean.TryParse(SystemInfo.GetAppSetting("log4net.Config.Watch"), out watchRepositoryConfigFile);
@@ -705,11 +711,6 @@ namespace log4net.Core
 					{
  						// As we are going to watch the config file it is required to resolve it as a 
  						// physical file system path pass that in a FileInfo object to the Configurator
-                        string repositoryConfigFilePath = repositoryConfigFile;
-                        if (applicationBaseDirectory != null)
-                        {
-                            repositoryConfigFilePath = Path.Combine(applicationBaseDirectory, repositoryConfigFile);
-                        }
 						FileInfo repositoryConfigFileInfo = null;
 						try
 						{
@@ -737,15 +738,7 @@ namespace log4net.Core
 					Uri repositoryConfigUri = null;
 					try
 					{
-						if (applicationBaseDirectory != null)
-						{
-							// Resolve the config path relative to the application base directory URI
-							repositoryConfigUri = new Uri(new Uri(applicationBaseDirectory), repositoryConfigFile);
-						}
-						else
-						{
-							repositoryConfigUri = new Uri(repositoryConfigFile);
-						}
+					    repositoryConfigUri = new Uri(repositoryConfigFilePath);
 					}
 					catch(Exception ex)
 					{
