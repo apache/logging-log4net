@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.Configuration;
+using System.IO;
 using System.Reflection;
 
 using log4net.Config;
@@ -696,7 +697,42 @@ namespace log4net.Core
 						LogLog.Warn(declaringType, "Exception getting ApplicationBaseDirectory. appSettings log4net.Config path ["+repositoryConfigFile+"] will be treated as an absolute URI", ex);
 					}
 
-					// As we are not going to watch the config file it is easiest to just resolve it as a 
+                    // Determine whether to watch the file or not based on an app setting value:
+				    bool watchRepositoryConfigFile = false;
+				    Boolean.TryParse(SystemInfo.GetAppSetting("log4net.Config.Watch"), out watchRepositoryConfigFile);
+
+					if (watchRepositoryConfigFile)
+					{
+ 						// As we are going to watch the config file it is required to resolve it as a 
+ 						// physical file system path pass that in a FileInfo object to the Configurator
+                        string repositoryConfigFilePath = repositoryConfigFile;
+                        if (applicationBaseDirectory != null)
+                        {
+                            repositoryConfigFilePath = Path.Combine(applicationBaseDirectory, repositoryConfigFile);
+                        }
+						FileInfo repositoryConfigFileInfo = null;
+						try
+						{
+							repositoryConfigFileInfo = new FileInfo(repositoryConfigFilePath);
+						}
+						catch (Exception ex)
+						{
+                            LogLog.Error(declaringType, "DefaultRepositorySelector: Exception while parsing log4net.Config file physical path [" + repositoryConfigFilePath + "]", ex);
+						}
+						try
+						{
+                            LogLog.Debug(declaringType, "Loading and watching configuration for default repository from AppSettings specified Config path [" + repositoryConfigFilePath + "]");
+
+                            XmlConfigurator.ConfigureAndWatch(repository, repositoryConfigFileInfo);
+						}
+						catch (Exception ex)
+						{
+                            LogLog.Error(declaringType, "DefaultRepositorySelector: Exception calling XmlConfigurator.ConfigureAndWatch method with ConfigFilePath [" + repositoryConfigFilePath + "]", ex);
+						}
+					}
+					else
+					{
+                    // As we are not going to watch the config file it is easiest to just resolve it as a 
 					// URI and pass that to the Configurator
 					Uri repositoryConfigUri = null;
 					try
@@ -730,6 +766,7 @@ namespace log4net.Core
 							LogLog.Error(declaringType, "Exception calling XmlConfigurator.Configure method with ConfigUri ["+repositoryConfigUri+"]", ex);
 						}
 					}
+                    }
 				}
 			}
 		}
