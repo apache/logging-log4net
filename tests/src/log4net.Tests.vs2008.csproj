@@ -191,6 +191,9 @@
     <Compile Include="Util\SystemInfoTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Util\TransformTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\log4net.vs2008.csproj">

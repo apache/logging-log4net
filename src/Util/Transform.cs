@@ -191,7 +191,10 @@ namespace log4net.Util
 		private const string CDATA_END	= "]]>";
 		private const string CDATA_UNESCAPABLE_TOKEN	= "]]";
 
-		private static Regex INVALIDCHARS=new Regex(@"[^\x09\x0A\x0D\x20-\xFF\u00FF-\u07FF\uE000-\uFFFD]",RegexOptions.Compiled);
+        /// <summary>
+        /// Characters illegal in XML 1.0
+        /// </summary>
+		private static Regex INVALIDCHARS=new Regex(@"[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD]",RegexOptions.Compiled);
 		#endregion Private Static Fields
 	}
 }
