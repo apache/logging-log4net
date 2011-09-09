@@ -87,7 +87,11 @@ namespace log4net.Tests.Layout
             ILog log1 = LogManager.GetLogger(rep.Name, "TestStackTracePattern");
 
             log1.Info("TestMessage");
+#if !MONO
             Assert.AreEqual("RuntimeMethodHandle._InvokeMethodFast > PatternLayoutTest.TestStackTracePattern", stringAppender.GetString(), "stack trace value set");
+#else
+            Assert.AreEqual("MonoMethod.InternalInvoke > PatternLayoutTest.TestStackTracePattern", stringAppender.GetString(), "stack trace value set");
+#endif
             stringAppender.Reset();
         }
 
