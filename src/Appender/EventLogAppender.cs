@@ -350,6 +350,10 @@ namespace log4net.Appender
 				else
 				{
 					string eventIDPropertyString = eventIDPropertyObj as string;
+                    if (eventIDPropertyString == null)
+                    {
+                        eventIDPropertyString = eventIDPropertyObj.ToString();
+                    }
 					if (eventIDPropertyString != null && eventIDPropertyString.Length > 0)
 					{
 						// Read the string property into a number
