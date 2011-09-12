@@ -47,6 +47,11 @@ namespace log4net.Appender
 	/// set using the <c>EventID</c> property (<see cref="LoggingEvent.Properties"/>)
 	/// on the <see cref="LoggingEvent"/>.
 	/// </para>
+    /// <para>
+    /// The <c>Category</c> of the event log entry can be
+	/// set using the <c>Category</c> property (<see cref="LoggingEvent.Properties"/>)
+	/// on the <see cref="LoggingEvent"/>.
+	/// </para>
 	/// <para>
 	/// There is a limit of 32K characters for an event log message
 	/// </para>
@@ -231,7 +236,24 @@ namespace log4net.Appender
             set { m_eventId = value; }
         }
 
-		#endregion // Public Instance Properties
+
+        /// <summary>
+        /// Gets or sets the <c>Category</c> to use unless one is explicitly specified via the <c>LoggingEvent</c>'s properties.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The <c>Category</c> of the event log entry will normally be
+	    /// set using the <c>Category</c> property (<see cref="LoggingEvent.Properties"/>)
+	    /// on the <see cref="LoggingEvent"/>.
+        /// This property provides the fallback value which defaults to 0.
+        /// </para>
+        /// </remarks>
+        public short Category
+        {
+            get { return m_category; }
+            set { m_category = value; }
+        }
+        #endregion // Public Instance Properties
 
 		#region Implementation of IOptionHandler
 
@@ -355,7 +377,7 @@ namespace log4net.Appender
 			//
 			int eventID = m_eventId;
 
-			// Look for the EventLogEventID property
+			// Look for the EventID property
 			object eventIDPropertyObj = loggingEvent.LookupProperty("EventID");
 			if (eventIDPropertyObj != null)
 			{
@@ -386,6 +408,38 @@ namespace log4net.Appender
 				}
 			}
 
+            short category = m_category;
+            // Look for the Category property
+            object categoryPropertyObj = loggingEvent.LookupProperty("Category");
+            if (categoryPropertyObj != null)
+            {
+                if (categoryPropertyObj is short)
+                {
+                    category = (short) categoryPropertyObj;
+                }
+                else
+                {
+                    string categoryPropertyString = categoryPropertyObj as string;
+                    if (categoryPropertyString == null)
+                    {
+                        categoryPropertyString = categoryPropertyObj.ToString();
+                    }
+                    if (categoryPropertyString != null && categoryPropertyString.Length > 0)
+                    {
+                        // Read the string property into a number
+                        short shortVal;
+                        if (SystemInfo.TryParse(categoryPropertyString, out shortVal))
+                        {
+                            category = shortVal;
+                        }
+                        else
+                        {
+                            ErrorHandler.Error("Unable to parse event category property [" + categoryPropertyString + "].");
+                        }
+                    }
+                }
+            }
+
 			// Write to the event log
 			try
 			{
@@ -401,7 +455,7 @@ namespace log4net.Appender
 
 				using(SecurityContext.Impersonate(this))
 				{
-					EventLog.WriteEntry(m_applicationName, eventTxt, entryType, eventID);
+					EventLog.WriteEntry(m_applicationName, eventTxt, entryType, eventID, category);
 				}
 			}
 			catch(Exception ex)
@@ -500,7 +554,12 @@ namespace log4net.Appender
         /// </summary>
         private int m_eventId = 0;
 
-		#endregion // Private Instance Fields
+        /// <summary>
+        /// The event category to use unless one is explicitly specified via the <c>LoggingEvent</c>'s properties.
+        /// </summary>
+        private short m_category = 0;
+
+        #endregion // Private Instance Fields
 
 		#region Level2EventLogEntryType LevelMapping Entry
 

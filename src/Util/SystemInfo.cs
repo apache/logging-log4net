@@ -835,7 +835,55 @@ namespace log4net.Util
 #endif
 		}
 
-		/// <summary>
+        /// <summary>
+        /// Parse a string into an <see cref="Int16"/> value
+        /// </summary>
+        /// <param name="s">the string to parse</param>
+        /// <param name="val">out param where the parsed value is placed</param>
+        /// <returns><c>true</c> if the string was able to be parsed into an integer</returns>
+        /// <remarks>
+        /// <para>
+        /// Attempts to parse the string into an integer. If the string cannot
+        /// be parsed then this method returns <c>false</c>. The method does not throw an exception.
+        /// </para>
+        /// </remarks>
+        public static bool TryParse(string s, out short val)
+        {
+#if NETCF
+			val = 0;
+			try
+			{
+				val = short.Parse(s, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture);
+				return true;
+			}
+			catch
+			{
+			}
+
+			return false;
+#else
+            // Initialise out param
+            val = 0;
+
+            try 
+            {
+                double doubleVal;
+                if (Double.TryParse(s, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out doubleVal))
+                {
+                    val = Convert.ToInt16(doubleVal);
+                    return true;
+                }
+            }
+            catch
+            {
+                // Ignore exception, just return false
+            }
+
+            return false;
+#endif
+        }
+
+        /// <summary>
 		/// Lookup an application setting
 		/// </summary>
 		/// <param name="key">the application settings key to lookup</param>
