@@ -215,6 +215,22 @@ namespace log4net.Appender
 			set { m_securityContext = value; }
 		}
 
+        /// <summary>
+        /// Gets or sets the <c>EventId</c> to use unless one is explicitly specified via the <c>LoggingEvent</c>'s properties.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The <c>EventID</c> of the event log entry will normally be
+	    /// set using the <c>EventID</c> property (<see cref="LoggingEvent.Properties"/>)
+	    /// on the <see cref="LoggingEvent"/>.
+        /// This property provides the fallback value which defaults to 0.
+        /// </para>
+        /// </remarks>
+        public int EventId {
+            get { return m_eventId; }
+            set { m_eventId = value; }
+        }
+
 		#endregion // Public Instance Properties
 
 		#region Implementation of IOptionHandler
@@ -337,7 +353,7 @@ namespace log4net.Appender
 			//
 			// Write the resulting string to the event log system
 			//
-			int eventID = 0;
+			int eventID = m_eventId;
 
 			// Look for the EventLogEventID property
 			object eventIDPropertyObj = loggingEvent.LookupProperty("EventID");
@@ -478,6 +494,11 @@ namespace log4net.Appender
 		/// The security context to use for privileged calls
 		/// </summary>
 		private SecurityContext m_securityContext;
+
+        /// <summary>
+        /// The event ID to use unless one is explicitly specified via the <c>LoggingEvent</c>'s properties.
+        /// </summary>
+        private int m_eventId = 0;
 
 		#endregion // Private Instance Fields
 
