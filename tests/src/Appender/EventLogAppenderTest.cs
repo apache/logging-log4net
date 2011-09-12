@@ -40,9 +40,10 @@ namespace log4net.Tests.Appender
 		/// event log enumeration is returned
 		/// </summary>
 		[Test]
-		public void TestGetEntryType()
+		public void TestGetEntryTypeForExistingApplicationName()
 		{
 			EventLogAppender eventAppender = new EventLogAppender();
+            eventAppender.ApplicationName = "Winlogon";
 			eventAppender.ActivateOptions();
 
 			Assert.AreEqual(
@@ -74,6 +75,18 @@ namespace log4net.Tests.Appender
 				GetEntryType(eventAppender, Level.Off));
 		}
 
+        /// <summary>
+        /// ActivateOption tries to create an event source if it doesn't exist but this is going to fail on more modern Windows versions unless the code is run with local administrator privileges.
+        /// </summary>
+        [Test]
+        [Platform(Exclude = "Win2K,WinXP")]
+        public void ActivateOptionsDisablesAppenderIfSourceDoesntExist()
+        {
+            EventLogAppender eventAppender = new EventLogAppender();
+            eventAppender.ActivateOptions();
+            Assert.AreEqual(Level.Off, eventAppender.Threshold);
+        }
+
 		//
 		// Helper functions to dig into the appender
 		//
@@ -82,5 +95,6 @@ namespace log4net.Tests.Appender
 		{
 			return (EventLogEntryType)Utils.InvokeMethod(appender, "GetEntryType", level);
 		}
+
 	}
 }
