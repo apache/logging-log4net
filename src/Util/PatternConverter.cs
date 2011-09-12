@@ -174,33 +174,43 @@ namespace log4net.Util
 			}
 			else
 			{
-				m_formatWriter.Reset(c_renderBufferMaxCapacity, c_renderBufferSize);
+                string msg = null;
+                int len;
+                lock (m_formatWriter)
+                {
+                    m_formatWriter.Reset(c_renderBufferMaxCapacity, c_renderBufferSize);
 
-				Convert(m_formatWriter, state);
+                    Convert(m_formatWriter, state);
 
-				StringBuilder buf = m_formatWriter.GetStringBuilder();
-				int len = buf.Length;
+                    StringBuilder buf = m_formatWriter.GetStringBuilder();
+                    len = buf.Length;
+                    if (len > m_max)
+                    {
+                        msg = buf.ToString(len - m_max, m_max);
+                        len = m_max;
+                    }
+                    else
+                    {
+                        msg = buf.ToString();
+                    }
+                }
 
-				if (len > m_max)
-				{
-					writer.Write(buf.ToString(len - m_max, m_max));
-				}
-				else if (len < m_min) 
+				if (len < m_min) 
 				{
 					if (m_leftAlign) 
 					{	
-						writer.Write(buf.ToString());
+						writer.Write(msg);
 						SpacePad(writer, m_min - len);
 					}
 					else 
 					{
 						SpacePad(writer, m_min - len);
-						writer.Write(buf.ToString());
+						writer.Write(msg);
 					}
 				}
 				else
 				{
-					writer.Write(buf.ToString());
+					writer.Write(msg);
 				}
 			}
 		}	

@@ -697,11 +697,14 @@ namespace log4net.Appender
 				m_renderWriter = new ReusableStringWriter(System.Globalization.CultureInfo.InvariantCulture);
 			}
 
-			// Reset the writer so we can reuse it
-			m_renderWriter.Reset(c_renderBufferMaxCapacity, c_renderBufferSize);
+            lock (m_renderWriter)
+            {
+                // Reset the writer so we can reuse it
+                m_renderWriter.Reset(c_renderBufferMaxCapacity, c_renderBufferSize);
 
-			RenderLoggingEvent(m_renderWriter, loggingEvent);
-			return m_renderWriter.ToString();
+                RenderLoggingEvent(m_renderWriter, loggingEvent);
+                return m_renderWriter.ToString();
+            }
 		}
 
 		/// <summary>
