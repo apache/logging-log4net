@@ -14,7 +14,7 @@ The original source of this file is
 https://svn.apache.org/repos/asf/logging/log4net/trunk/KEYS
 
 User: To import this key file into your keyring use:
-  gpg --import KEYS.txt
+  gpg --import KEYS
 
 
 
