@@ -38,6 +38,10 @@ namespace log4net.Appender
 	/// Writes events to the system event log.
 	/// </summary>
 	/// <remarks>
+    /// <para>
+    /// The appender will fail if you try to write using an event source that doesn't exist unless it is running with local administrator privileges.
+    /// See also http://logging.apache.org/log4net/release/faq.html#trouble-EventLog
+    /// </para>
 	/// <para>
 	/// The <c>EventID</c> of the event log entry can be
 	/// set using the <c>EventLogEventID</c> property (<see cref="LoggingEvent.Properties"/>)
@@ -284,7 +288,9 @@ namespace log4net.Appender
             catch (System.Security.SecurityException ex) {
                 ErrorHandler.Error("Caught a SecurityException trying to access the EventLog.  Most likely the event source "
                     + m_applicationName
-                    + " doesn't exist and must be created by a local administrator.  Will disable EventLogAppender", ex);
+                    + " doesn't exist and must be created by a local administrator.  Will disable EventLogAppender."
+                    + "  See http://logging.apache.org/log4net/release/faq.html#trouble-EventLog",
+                    ex);
                 Threshold = Level.Off;
             }
 		}
