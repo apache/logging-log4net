@@ -44,7 +44,7 @@ namespace log4net.Appender
     /// </para>
 	/// <para>
 	/// The <c>EventID</c> of the event log entry can be
-	/// set using the <c>EventLogEventID</c> property (<see cref="LoggingEvent.Properties"/>)
+	/// set using the <c>EventID</c> property (<see cref="LoggingEvent.Properties"/>)
 	/// on the <see cref="LoggingEvent"/>.
 	/// </para>
 	/// <para>
