@@ -197,10 +197,7 @@ namespace log4net.Layout
 				throw new ArgumentNullException("loggingEvent");
 			}
 
-			// Attach the protected writer to the TextWriter passed in
-			m_protectCloseTextWriter.Attach(writer);
-
-			XmlTextWriter xmlWriter = new XmlTextWriter(m_protectCloseTextWriter);
+			XmlTextWriter xmlWriter = new XmlTextWriter(new ProtectCloseTextWriter(writer));
 			xmlWriter.Formatting = Formatting.None;
 			xmlWriter.Namespaces = false;
 
@@ -212,9 +209,6 @@ namespace log4net.Layout
 			// Close on xmlWriter will ensure xml is flushed
 			// the protected writer will ignore the actual close
 			xmlWriter.Close();
-
-			// detach from the writer
-			m_protectCloseTextWriter.Attach(null);
 		}
 
 		#endregion Override implementation of LayoutSkeleton
@@ -243,11 +237,6 @@ namespace log4net.Layout
 		/// the XML events.
 		/// </summary>
 		private bool m_locationInfo = false;
-
-		/// <summary>
-		/// Writer adapter that ignores Close
-		/// </summary>
-		private readonly ProtectCloseTextWriter m_protectCloseTextWriter = new ProtectCloseTextWriter(null);
 
 		/// <summary>
 		/// The string to replace invalid chars with
