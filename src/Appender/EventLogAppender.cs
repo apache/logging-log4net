@@ -275,34 +275,41 @@ namespace log4net.Appender
 		/// </remarks>
 		override public void ActivateOptions() 
 		{
-            try {
+            try
+            {
                 base.ActivateOptions();
 
-                if (m_securityContext == null) {
+                if (m_securityContext == null)
+                {
                     m_securityContext = SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
                 }
 
                 bool sourceAlreadyExists = false;
                 string currentLogName = null;
 
-                using (SecurityContext.Impersonate(this)) {
+                using (SecurityContext.Impersonate(this))
+                {
                     sourceAlreadyExists = EventLog.SourceExists(m_applicationName);
                     if (sourceAlreadyExists) {
                         currentLogName = EventLog.LogNameFromSourceName(m_applicationName, m_machineName);
                     }
                 }
 
-                if (sourceAlreadyExists && currentLogName != m_logName) {
+                if (sourceAlreadyExists && currentLogName != m_logName)
+                {
                     LogLog.Debug(declaringType, "Changing event source [" + m_applicationName + "] from log [" + currentLogName + "] to log [" + m_logName + "]");
                 }
-                else if (!sourceAlreadyExists) {
+                else if (!sourceAlreadyExists)
+                {
                     LogLog.Debug(declaringType, "Creating event source Source [" + m_applicationName + "] in log " + m_logName + "]");
                 }
 
                 string registeredLogName = null;
 
-                using (SecurityContext.Impersonate(this)) {
-                    if (sourceAlreadyExists && currentLogName != m_logName) {
+                using (SecurityContext.Impersonate(this))
+                {
+                    if (sourceAlreadyExists && currentLogName != m_logName)
+                    {
                         //
                         // Re-register this to the current application if the user has changed
                         // the application / logfile association
@@ -312,7 +319,8 @@ namespace log4net.Appender
 
                         registeredLogName = EventLog.LogNameFromSourceName(m_applicationName, m_machineName);
                     }
-                    else if (!sourceAlreadyExists) {
+                    else if (!sourceAlreadyExists)
+                    {
                         CreateEventSource(m_applicationName, m_logName, m_machineName);
 
                         registeredLogName = EventLog.LogNameFromSourceName(m_applicationName, m_machineName);
@@ -323,7 +331,8 @@ namespace log4net.Appender
 
                 LogLog.Debug(declaringType, "Source [" + m_applicationName + "] is registered to log [" + registeredLogName + "]");
             }
-            catch (System.Security.SecurityException ex) {
+            catch (System.Security.SecurityException ex)
+            {
                 ErrorHandler.Error("Caught a SecurityException trying to access the EventLog.  Most likely the event source "
                     + m_applicationName
                     + " doesn't exist and must be created by a local administrator.  Will disable EventLogAppender."
