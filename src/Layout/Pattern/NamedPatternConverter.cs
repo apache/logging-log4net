@@ -42,9 +42,9 @@ namespace log4net.Layout.Pattern
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
-	internal abstract class NamedPatternConverter : PatternLayoutConverter, IOptionHandler
+	public abstract class NamedPatternConverter : PatternLayoutConverter, IOptionHandler
 	{
-		protected int m_precision = 0;
+		private int m_precision = 0;
 
 		#region Implementation of IOptionHandler
 
@@ -120,31 +120,37 @@ namespace log4net.Layout.Pattern
 		/// Render the <see cref="GetFullyQualifiedName"/> to the precision
 		/// specified by the <see cref="PatternConverter.Option"/> property.
 		/// </remarks>
-		override protected void Convert(TextWriter writer, LoggingEvent loggingEvent)
+		sealed override protected void Convert(TextWriter writer, LoggingEvent loggingEvent)
 		{
 			string name = GetFullyQualifiedName(loggingEvent);
-			if (m_precision <= 0)
+			if (m_precision <= 0 || name == null || name.Length < 2)
 			{
 				writer.Write(name);
 			}
 			else 
 			{
 				int len = name.Length;
+                string trailingDot = string.Empty;
+                if (name.EndsWith(DOT))
+                {
+                    trailingDot = DOT;
+                    name = name.Substring(0, len - 1);
+                    len--;
+                }
 
-				// We subtract 1 from 'len' when assigning to 'end' to avoid out of
-				// bounds exception in return name.Substring(end+1, len). This can happen if
-				// precision is 1 and the logger name ends with a dot. 
-				int end = len - 1;
-				for(int i=m_precision; i>0; i--) 
-				{	  
-					end = name.LastIndexOf('.', end-1);
-					if (end == -1)
-					{
-						writer.Write(name);
-						return;
-					}
-				}
-				writer.Write(name.Substring(end+1, len-end-1));
+                int end = name.LastIndexOf(DOT);
+				for(int i = 1; end > 0 && i < m_precision; i++) 
+				{
+                    end = name.LastIndexOf('.', end - 1);
+                }
+                if (end == -1)
+                {
+                    writer.Write(name + trailingDot);
+                }
+                else
+                {
+                    writer.Write(name.Substring(end + 1, len - end - 1) + trailingDot);
+                }
 			}	  
 		}
 
@@ -159,6 +165,7 @@ namespace log4net.Layout.Pattern
 	    /// </remarks>
 	    private readonly static Type declaringType = typeof(NamedPatternConverter);
 
+        private const string DOT = ".";
 	    #endregion Private Static Fields
 	}
 }
