@@ -62,17 +62,17 @@ namespace log4net.Tests.Appender
 
 			public void Error(string message)
 			{
-				m_buffer.Append(message + Environment.NewLine);
+				m_buffer.Append(message + "\n");
 			}
 
 			public void Error(string message, Exception e)
 			{
-				m_buffer.Append(message + Environment.NewLine + e.Message + Environment.NewLine);
+				m_buffer.Append(message + "\n" + e.Message + "\n");
 			}
 
 			public void Error(string message, Exception e, ErrorCode errorCode)
 			{
-				m_buffer.Append(message + Environment.NewLine + e.Message + Environment.NewLine);
+				m_buffer.Append(message + "\n" + e.Message + "\n");
 			}
 		}
 
@@ -498,17 +498,16 @@ namespace log4net.Tests.Appender
 			}
 		}
 
-		static readonly int s_LengthNL = Environment.NewLine.Length;
-
 		/// <summary>
 		/// Returns the number of bytes logged per message, including
-		/// any newline characters in addition to the message length.
+		/// any CR/LF characters in addition to the message length.
 		/// </summary>
 		/// <param name="sMessage"></param>
 		/// <returns></returns>
 		private static int TotalMessageLength(string sMessage)
 		{
-			return sMessage.Length + s_LengthNL;
+			const int iLengthCRLF = 2;
+			return sMessage.Length + iLengthCRLF;
 		}
 
 		/// <summary>
@@ -656,7 +655,7 @@ namespace log4net.Tests.Appender
 			}
 
 			/// <summary>
-			/// The length of a message, including any newline characters.
+			/// The length of a message, including any CR/LF characters.
 			/// This length assumes all messages are a fixed length for
 			/// test purposes.
 			/// </summary>
