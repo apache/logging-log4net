@@ -499,16 +499,17 @@ namespace log4net.Tests.Appender
 			}
 		}
 
+        private static readonly int s_Newline_Length = Environment.NewLine.Length;
+
 		/// <summary>
 		/// Returns the number of bytes logged per message, including
-		/// any CR/LF characters in addition to the message length.
+		/// any newline characters in addition to the message length.
 		/// </summary>
 		/// <param name="sMessage"></param>
 		/// <returns></returns>
 		private static int TotalMessageLength(string sMessage)
 		{
-			const int iLengthCRLF = 2;
-			return sMessage.Length + iLengthCRLF;
+            return sMessage.Length + s_Newline_Length;
 		}
 
 		/// <summary>
