@@ -39,6 +39,18 @@ namespace log4net.Tests.Util
 			t = SystemInfo.GetTypeFromString("log4net.Tests.Util.SystemInfoTest,log4net.Tests", false, false);
 			Assert.AreSame(typeof(SystemInfoTest), t, "Test explicit case sensitive type load");
 
+			t = SystemInfo.GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,log4net.Tests", false, true);
+			Assert.AreSame(typeof(SystemInfoTest), t, "Test explicit case in-sensitive type load caps");
+
+			t = SystemInfo.GetTypeFromString("log4net.tests.util.systeminfotest,log4net.Tests", false, true);
+			Assert.AreSame(typeof(SystemInfoTest), t, "Test explicit case in-sensitive type load lower");
+		}
+
+                [Test][Platform(Include="Win")]
+		public void TestGetTypeFromStringCaseInsensitiveOnAssemblyName()
+		{
+			Type t;
+
 			t = SystemInfo.GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", false, true);
 			Assert.AreSame(typeof(SystemInfoTest), t, "Test explicit case in-sensitive type load caps");
 
