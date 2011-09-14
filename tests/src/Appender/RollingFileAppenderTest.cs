@@ -251,6 +251,7 @@ namespace log4net.Tests.Appender
 			RollingFileAppender appender = new RollingFileAppender();
 			appender.Layout = layout;
 			appender.File = c_fileName;
+                        appender.Encoding = Encoding.ASCII;
 			appender.MaximumFileSize = c_iMaximumFileSize.ToString();
 			appender.MaxSizeRollBackups = _MaxSizeRollBackups;
 			appender.CountDirection = _iCountDirection;
