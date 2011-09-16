@@ -290,7 +290,9 @@ namespace log4net.Core
 		private readonly string m_lineNumber;
 		private readonly string m_methodName;
 		private readonly string m_fullInfo;
+#if !NETCF
 		private readonly StackFrame[] m_stackFrames;
+#endif
 
 		#endregion Private Instance Fields
 
