@@ -1605,6 +1605,7 @@ namespace log4net.Tests.Appender
 			Assert.AreEqual("", sh.Message, "Unexpected error message");
 		}
 
+#if !NETCF
         /// <summary>
         /// Verifies that attempting to log to a locked file fails gracefully
         /// </summary>
@@ -1671,6 +1672,7 @@ namespace log4net.Tests.Appender
             AssertFileEquals(filename, "This is a message" + Environment.NewLine + "Test" + Environment.NewLine + "This is a message 2" + Environment.NewLine);
             Assert.AreEqual("", sh.Message, "Unexpected error message");
         }
+#endif
 
         /// <summary>
 		/// Verify that the default LockModel is ExclusiveLock, to maintain backwards compatibility with previous behaviour

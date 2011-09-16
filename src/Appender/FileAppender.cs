@@ -583,6 +583,7 @@ namespace log4net.Appender
 			}
 		}
 
+#if !NETCF
         /// <summary>
         /// Provides cross-process file locking.
         /// </summary>
@@ -686,6 +687,7 @@ namespace log4net.Appender
                 }
             }
         }
+#endif
 
 		#endregion Locking Models
 
