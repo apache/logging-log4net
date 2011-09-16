@@ -77,8 +77,9 @@ namespace log4net.Appender
 		/// </remarks>
 #if NET_4_0
         [System.Security.SecuritySafeCritical]
-#endif
+#elif !NETFC
         [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
+#endif
         override protected void Append(LoggingEvent loggingEvent) 
 		{
 			OutputDebugString(RenderLoggingEvent(loggingEvent));
