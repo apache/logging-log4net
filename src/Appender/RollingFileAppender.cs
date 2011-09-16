@@ -239,7 +239,7 @@ namespace log4net.Appender
 
 		#region Public Instance Properties
 
-#if !NET_1_0
+#if !NET_1_0 && !CLI_1_0
         /// <summary>
 		/// Gets or sets the strategy for determining the current date and time. The default
 		/// implementation is to use LocalDateTime which internally calls through to DateTime.Now. 
@@ -795,10 +795,9 @@ namespace log4net.Appender
 				if (FileExists(m_baseFileName)) 
 				{
 					DateTime last;
-					using(SecurityContext.Impersonate(this))
-					{
-#if !NET_1_0
-						if (DateTimeStrategy is UniversalDateTime)
+					using(SecurityContext.Impersonate(this)) {
+#if !NET_1_0 && !CLI_1_0
+                        if (DateTimeStrategy is UniversalDateTime)
 						{
 							last = System.IO.File.GetLastWriteTimeUtc(m_baseFileName);
 						}
@@ -806,8 +805,8 @@ namespace log4net.Appender
 						{
 #endif
 							last = System.IO.File.GetLastWriteTime(m_baseFileName);
-#if !NET_1_0
-						}
+#if !NET_1_0 && !CLI_1_0
+                        }
 #endif
                     }
 					LogLog.Debug(declaringType, "["+last.ToString(m_datePattern,System.Globalization.DateTimeFormatInfo.InvariantInfo)+"] vs. ["+m_now.ToString(m_datePattern,System.Globalization.DateTimeFormatInfo.InvariantInfo)+"]");
@@ -1697,8 +1696,8 @@ namespace log4net.Appender
 			}
 		}
 
-#if !NET_1_0
-		/// <summary>
+#if !NET_1_0 && !CLI_1_0
+        /// <summary>
 		/// Implementation of <see cref="IDateTime"/> that returns the current time as the coordinated universal time (UTC).
 		/// </summary>
 		private class UniversalDateTime : IDateTime
