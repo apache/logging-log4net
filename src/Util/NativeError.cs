@@ -116,7 +116,7 @@ namespace log4net.Util
 		/// </remarks>
 #if NET_4_0
         [System.Security.SecuritySafeCritical]
-#elif !NETFC
+#elif !NETCF
         [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode=true)]
 #endif
         public static NativeError GetLastError() 
@@ -159,7 +159,7 @@ namespace log4net.Util
 		/// </remarks>
 #if NET_4_0
         [System.Security.SecuritySafeCritical]
-#elif !NETFC
+#elif !NETCF
         [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
 #endif
         public static string GetErrorMessage(int messageId) 
