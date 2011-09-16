@@ -239,13 +239,12 @@ namespace log4net.Appender
 
 		#region Public Instance Properties
 
-		/// <summary>
+#if !NET_1_0
+        /// <summary>
 		/// Gets or sets the strategy for determining the current date and time. The default
 		/// implementation is to use LocalDateTime which internally calls through to DateTime.Now. 
-#if !NET_1_0
 		/// DateTime.UtcNow may be used on frameworks newer than .NET 1.0 by specifying
 		/// <see cref="RollingFileAppender.UniversalDateTime"/>.
-#endif
 		/// </summary>
 		/// <value>
 		/// An implementation of the <see cref="RollingFileAppender.IDateTime"/> interface which returns the current date and time.
@@ -254,18 +253,33 @@ namespace log4net.Appender
 		/// <para>
 		/// Gets or sets the <see cref="RollingFileAppender.IDateTime"/> used to return the current date and time.
 		/// </para>
-		/// <para>
-		/// There are two built strategies for determining the current date and time, 
+        /// <para>
+        /// There are two built strategies for determining the current date and time, 
 		/// <see cref="RollingFileAppender.LocalDateTime"/>
-#if !NET_1_0
         /// and <see cref="RollingFileAppender.UniversalDateTime"/>.
-#endif
         /// </para>
-		/// <para>
+        /// <para>
 		/// The default strategy is <see cref="RollingFileAppender.LocalDateTime"/>.
 		/// </para>
 		/// </remarks>
-		public IDateTime DateTimeStrategy
+#else
+        /// <summary>
+		/// Gets or sets the strategy for determining the current date and time. The default
+		/// implementation is to use LocalDateTime which internally calls through to DateTime.Now. 
+		/// </summary>
+		/// <value>
+		/// An implementation of the <see cref="RollingFileAppender.IDateTime"/> interface which returns the current date and time.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets or sets the <see cref="RollingFileAppender.IDateTime"/> used to return the current date and time.
+		/// </para>
+        /// <para>
+		/// The default strategy is <see cref="RollingFileAppender.LocalDateTime"/>.
+		/// </para>
+		/// </remarks>
+#endif
+        public IDateTime DateTimeStrategy
 		{
 			get { return m_dateTime; }
 			set { m_dateTime = value; }
