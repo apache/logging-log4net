@@ -271,6 +271,7 @@ namespace log4net.Core
 			get { return m_fullInfo; }
 		}
 		
+#if !NETCF
 		/// <summary>
 		/// Gets the stack frames from the stack trace of the caller making the log request
 		/// </summary>
@@ -278,6 +279,7 @@ namespace log4net.Core
 		{
 			get { return m_stackFrames; }
 		}
+#endif
 
 		#endregion Public Instance Properties
 

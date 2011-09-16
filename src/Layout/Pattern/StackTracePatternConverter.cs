@@ -16,7 +16,7 @@
 // limitations under the License.
 //
 #endregion
-
+#if !NETCF
 using System;
 using System.IO;
 using System.Diagnostics;
@@ -147,3 +147,4 @@ namespace log4net.Layout.Pattern
 	    #endregion Private Static Fields
 	}
 }
+#endif

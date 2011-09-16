@@ -18,6 +18,7 @@
  * under the License.
  *
 */
+#if !NETCF
 
 using System;
 using System.Collections;
@@ -109,3 +110,4 @@ namespace log4net.Layout.Pattern
         #endregion Private Static Fields
     }
 }
+#endif

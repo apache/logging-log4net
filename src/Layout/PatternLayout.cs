@@ -860,8 +860,10 @@ namespace log4net.Layout
 			s_globalRulesRegistry.Add("r", typeof(RelativeTimePatternConverter));
 			s_globalRulesRegistry.Add("timestamp", typeof(RelativeTimePatternConverter));
 			
+#if !NETCF
 			s_globalRulesRegistry.Add("stacktrace", typeof(StackTracePatternConverter));
             s_globalRulesRegistry.Add("stacktracedetail", typeof(StackTraceDetailPatternConverter));
+#endif
 
 			s_globalRulesRegistry.Add("t", typeof(ThreadPatternConverter));
 			s_globalRulesRegistry.Add("thread", typeof(ThreadPatternConverter));
