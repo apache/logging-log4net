@@ -1085,6 +1085,9 @@ limitations under the License.
                     <property name="temp.build.skip" value="true" />
                 </if>
             </if>
+            <if test="${file::exists(log4net.basedir + '/old-log4net.snk')}">
+              <mkdir dir="${current.bin.dir}/../oldkey" />
+            </if>
         </if>
         <if test="${not temp.build.skip}">
             <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'old-log4net.snk')}" nostdlib="false" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/../oldkey/log4net.dll" doc="${current.bin.dir}/../oldkey/log4net.xml">
@@ -1172,6 +1175,9 @@ limitations under the License.
                     <echo message="The release build using the old key will be skipped." />
                     <property name="temp.build.skip" value="true" />
                 </if>
+            </if>
+            <if test="${file::exists(log4net.basedir + '/old-log4net.snk')}">
+              <mkdir dir="${current.bin.dir}/../oldkey" />
             </if>
         </if>
         <if test="${not temp.build.skip}">
