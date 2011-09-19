@@ -488,7 +488,7 @@ limitations under the License.
             </if>
         </if>
         <if test="${not temp.build.skip}">
-            <csc if="${current.build.config.release}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+            <csc if="${current.build.config.release}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/../oldkey/log4net.dll" doc="${current.bin.dir}/../oldkey/log4net.xml">
                 <sources basedir="${log4net.basedir}/src">
                     <include name="**/*.cs" />
                 </sources>
