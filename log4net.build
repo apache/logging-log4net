@@ -1370,7 +1370,7 @@ limitations under the License.
     <!-- SSCLI 1.0 does not support extracting xml documentation -->
   </target>
   <!-- Target for generating docs for build configurations -->
-  <target name="generate-sdkdoc" depends="compile, check-htmlhelp-compiler, check-current-sdkdoc-dir, check-current-sdkdoc-debug, clean-current-sdkdoc-dir">
+  <target name="generate-sdkdoc-step1" depends="compile, check-htmlhelp-compiler, check-current-sdkdoc-dir, check-current-sdkdoc-debug, clean-current-sdkdoc-dir">
     <ndoc>
       <assemblies basedir="${current.bin.dir}">
         <include name="log4net.dll" />
@@ -1410,13 +1410,28 @@ limitations under the License.
         </documenter>
       </documenters>
     </ndoc>
-    <!-- Remove everything except the help file itself from the current SDK documentation directory -->
+  </target>
+  <!-- Remove everything except the help file itself from the current SDK documentation directory -->
+  <target name="generate-sdkdoc" depends="generate-sdkdoc-step1">
     <delete>
       <fileset basedir="${current.sdkdoc.dir}">
         <include name="**/*" />
         <exclude name="**/*.chm" />
       </fileset>
     </delete>
+  </target>
+  <!-- Build the SDK documentation for the website -->
+  <target name="generate-sdkdoc-for-site"
+          depends="set-release-build-configuration,generate-sdkdoc-step1">
+    <mkdir dir="target/site/release/sdk"/>
+    <copy todir="target/site/release/sdk">
+      <fileset basedir="${current.sdkdoc.dir}">
+        <include name="**/*" />
+        <exclude name="**/*.chm" />
+        <exclude name="**/*.hh?" />
+        <exclude name="**/*.log" />
+      </fileset>
+    </copy>
   </target>
   <target name="package" depends="set-package-configuration" description="Build and Package distribution">
     <!-- set flag to indicating that this is a package build -->

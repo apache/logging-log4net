@@ -164,7 +164,11 @@ sn -k log4net.snk</pre></div>
 
             <section id="sdk" name="SDK Reference">
                 <p>
-                    NDoc 1.3 is used to build the log4net SDK documentation.
+                    NDoc 1.3 is used to build the log4net SDK
+                    documentation using the <span
+                    class="code">generate-sdkdoc</span> target in
+                    log4net's Nant build file.
+
                     NDoc is available from <a href="http://ndoc.sourceforge.net">ndoc.sourceforge.net</a>.
                 </p>
             </section>
@@ -176,6 +180,13 @@ sn -k log4net.snk</pre></div>
                     Building the documentation requires Java 5 or newer and Maven 2.2.1 or newer.
                     Run mvn from within the root directory.
                 </p>
+                <p>SDK documentation for the site is built using the
+                <span class="code">generate-sdkdoc-for-site</span> target in
+                log4net's NAnt build file.</p>
+                <p>It is not recommended to use mvn's <span
+                class="code">site:deploy</span> goal but rather to
+                deploy the site generated to <span
+                class="code">target/site</span> manually.</p>
             </section>
 
         </section>

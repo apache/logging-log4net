@@ -152,16 +152,17 @@
         <configuration>
           <excludes>
             <!-- generated files -->
-            <exclude>bin/**</exclude>
-            <exclude>tests/bin/**</exclude>
-            <exclude>build/**</exclude>
-            <exclude>src/log4net.xml</exclude>
-            <exclude>**/obj/**</exclude>
-            <exclude>**/*.user</exclude>
             <exclude>**/*.suo</exclude>
+            <exclude>**/*.user</exclude>
+            <exclude>**/obj/**</exclude>
+            <exclude>bin/**</exclude>
+            <exclude>build/**</exclude>
+            <exclude>doc/sdk/**</exclude>
+            <exclude>src/log4net.xml</exclude>
+            <exclude>tests/bin/**</exclude>
 
             <!-- really README files -->
-            <exclude>*.snk.*</exclude>
+            <exclude>*.snk*</exclude>
             <exclude>tests/lib/prerequisites.txt</exclude>
           </excludes>
         </configuration>
