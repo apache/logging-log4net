@@ -13,39 +13,66 @@
 ~~ See the License for the specific language governing permissions and
 ~~ limitations under the License.
  ------
-Download Apache log4net 1.2.10
+Download Apache log4net
  ------
  ------
  ------
 
-Download Apache log4net&#x2122; 1.2.10
+Download Apache log4net&#x2122;
 
-  Apache log4net 1.2.10 is distributed under the {{{http://www.apache.org/licenses/LICENSE-2.0.html} Apache License, version 2.0}}.
+  Apache log4net is distributed under the {{{http://www.apache.org/licenses/LICENSE-2.0.html} Apache License, version 2.0}}.
 
-  log4net has graduated from the Incubator project, however at the time the following releases were made, 
-  log4net was still undergoing incubation, therefore these releases are not officially endorsed by the ASF.
-  Future releases of log4net will be officially endorsed by the ASF.
+  Starting with log4net 1.2.11 log4net is available as source only or
+  binary only release.
 
-  The link in the Mirrors column should display a list of available mirrors with a
-  default selection based on your inferred location.  If you do not see that page,
-  try a different browser.  The checksum and signature are links to
-  the originals on the main distribution server.
+  There are two different binary releases, <<<oldkey>>> and
+  <<<newkey>>>.  Both contain assemblies built for all supported
+  platforms and have been built from the same code base, they only
+  differ in the strong name key used to sign the assemblies.
+
+  The <<<oldkey>>> distribution contains assemblies signed with the
+  same strong name key that was used to sign the assemblies of log4net
+  1.2.10 and earlier.  This strong name key is only available to
+  log4net developers.
+
+  The <<<newkey>>> distribution contains assemblies signed with the
+  strong name key available from
+  {{{https://svn.apache.org/repos/asf/logging/log4net/trunk/log4net.snk}log4net's svn area}}.
+  Everybody can create assemblies that have the same strong name which
+  is important if you want to use your own patched version of log4net.
+
+  We recommend you use the assemblies signed with the "new" key
+  whenever possible.
+
+  The link in the Mirrors column will lead you to a list of available
+  mirrors with a default selection based on your inferred location.
+  If you do not see that page, try a different browser.  The checksum
+  and signature are links to the originals on the main distribution
+  server.
   
 *------------------------+---------+----------+-----------+
                          | Mirrors | Checksum | Signature |
 *------------------------+---------+----------+-----------+
 *------------------------+---------+----------+-----------+
- log4net 1.2.10 (zip)      | {{{http://archive.apache.org/dist/incubator/log4net/1.2.10/incubating-log4net-1.2.10.zip} incubating-log4net-1.2.10.zip}} | {{{http://archive.apache.org/dist/incubator/log4net/1.2.10/incubating-log4net-1.2.10.zip.md5} incubating-log4net-1.2.10.zip.md5}} | {{{http://archive.apache.org/dist/incubator/log4net/1.2.10/incubating-log4net-1.2.10.zip.asc} incubating-log4net-1.2.10.zip.asc}}|
+ log4net 1.2.10 Source Distribution      | {{{http://www.apache.org/dyn/closer.cgi/logging/log4net/1.2.11/source/log4net-src-1.2.11.zip} log4net-src-1.2.11.zip}} | {{{http://www.apache.org/dist/logging/log4net/1.2.11/source/log4net-src-1.2.11.zip.md5} log4net-src-1.2.11.zip.md5}} | {{{http://www.apache.org/dist/logging/log4net/1.2.11/source/log4net-src-1.2.11.zip.asc} log4net-src-1.2.11.zip.asc}}|
 *------------------------+---------+----------+-----------+
- log4net 1.2.9-beta (zip)      | {{{http://archive.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip} incubating-log4net-1.2.9-beta.zip}} | {{{http://archive.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip.md5} incubating-log4net-1.2.9-beta.zip.md5}} | {{{http://archive.apache.org/dist/incubator/log4net/1.2.9/incubating-log4net-1.2.9-beta.zip.asc} incubating-log4net-1.2.9-beta.zip.asc}}|
+ log4net 1.2.10 Binary Distribution New Strong Name | {{{http://www.apache.org/dyn/closer.cgi/logging/log4net/1.2.11/binaries/log4net-bin-newkey-1.2.11.zip} log4net-bin-newkey-1.2.11.zip}} | {{{http://www.apache.org/dist/logging/log4net/1.2.11/binaries/log4net-bin-newkey-1.2.11.zip.md5} log4net-bin-newkey-1.2.11.zip.md5}} | {{{http://www.apache.org/dist/logging/log4net/1.2.11/binaries/log4net-bin-newkey-1.2.11.zip.asc} log4net-bin-newkey-1.2.11.zip.asc}}|
+*------------------------+---------+----------+-----------+
+ log4net 1.2.10 Binary Distribution Old Strong Name | {{{http://www.apache.org/dyn/closer.cgi/logging/log4net/1.2.11/binaries/log4net-bin-oldkey-1.2.11.zip} log4net-bin-oldkey-1.2.11.zip}} | {{{http://www.apache.org/dist/logging/log4net/1.2.11/binaries/log4net-bin-oldkey-1.2.11.zip.md5} log4net-bin-oldkey-1.2.11.zip.md5}} | {{{http://www.apache.org/dist/logging/log4net/1.2.11/binaries/log4net-bin-oldkey-1.2.11.zip.asc} log4net-bin-oldkey-1.2.11.zip.asc}}|
 *------------------------+---------+----------+-----------+
 
   Please read {{{http://httpd.apache.org/dev/verification.html}Verifying Apache HTTP Server Releases}}
    for more information on why you should verify our releases.  The
    PGP keys used to sign our distributions are part of the
-   {{{http://www.apache.org/dist/logging/KEYS} KEYS file}}.
+   {{{http://www.apache.org/dist/logging/log4net/KEYS} KEYS file}}.
 
 
 * Previous Releases
+
+  The 1.2.10 and 1.2.9 releases have been created while log4net was
+  still undergoing incubation and those releases are available from
+  the Apache Software Foundation's
+  {{{http://archive.apache.org/dist/incubator/log4net/}distribution archive}}}
+  for the Incubator project.
 
   Previous releases of log4net are available from the {{{http://sourceforge.net/project/showfiles.php?group_id=31983&release_id=171808}SourceForge Project Site}}.

@@ -69,20 +69,25 @@ limitations under the License.
                     log4net has specific builds for the following frameworks:
                 </p>
                 <ul>
-                    <li>Microsoft .NET Framework 1.0 (1.0.3705)</li>
-                    <li>Microsoft .NET Framework 1.1 (1.1.4322)</li>
-                    <li>Microsoft .NET Framework 2.0 (2.0.50727)</li>
+                    <li>Microsoft .NET Framework 1.0</li>
+                    <li>Microsoft .NET Framework 1.1</li>
+                    <li>Microsoft .NET Framework 2.0</li>
+                    <li>Microsoft .NET Framework 3.5</li>
+                    <li>Microsoft .NET Framework 4.0</li>
+                    <li>Microsoft .NET Framework 3.5 Client Profile</li>
+                    <li>Microsoft .NET Framework 4.0 Client Profile</li>
                     <li>Microsoft .NET Compact Framework 1.0</li>
-                    <!--<li>Microsoft .NET Compact Framework 2.0</li>-->
+                    <li>Microsoft .NET Compact Framework 2.0</li>
                     <li>Mono 1.0</li>
                     <li>Mono 2.0</li>
                     <li>Microsoft Shared Source CLI 1.0</li>
                     <li>CLI 1.0 Compatible</li>
                 </ul>
-                <p>
-                    Note: Due to the .NET frameworks support for backward compatibility 
-                    log4net will run on future versions of the runtimes listed above.
-                </p>
+                <p>The "Client Profile" builds are stripped down
+                versions of the "normal" builds that don't contain any
+                ASP.NET releated code - which for example means the
+                <code>%aspnet-*</code> patterns and the
+                <code>AspNetTraceAppender</code> are not available.</p>
             </section>
 
             <section id="appenders" name="Output to multiple logging targets">
@@ -128,6 +133,12 @@ limitations under the License.
                             <td>
                                 Writes logging events to the application's Console. The events may go to either 
                                 the standard our stream or the standard error stream.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>log4net.Appender.DebugAppender</td>
+                            <td>
+                                Writes logging events to the .NET  system.
                             </td>
                         </tr>
                         <tr>
@@ -196,6 +207,15 @@ limitations under the License.
                             </td>
                         </tr>
                         <tr>
+                            <td>log4net.Appender.SmtpPickupDirAppender</td>
+                            <td>
+                                Sends logging events to an email
+                                address but writes the emails to a
+                                configurable directory rather than
+                                sending them directly via SMTP.
+                            </td>
+                        </tr>
+                        <tr>
                             <td>log4net.Appender.TelnetAppender</td>
                             <td>
                                 Clients connect via Telnet to receive logging events.
@@ -216,7 +236,9 @@ limitations under the License.
                         </tr>
                     </table>
                 </div>
-                <p />
+                <p>A special log4net.Appender.ForwardingAppender can
+                be used to wrap another appender, for example to
+                attach additional filters.</p>
             </section>
 
             <section id="hierarchy" name="Hierarchical logging architecture">
