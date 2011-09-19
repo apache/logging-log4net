@@ -471,22 +471,24 @@ limitations under the License.
             <!-- check if the log4net key file is available -->
             <if test="${not file::exists(log4net.basedir + '/log4net.snk')}">
                 <if test="${property::exists('project.build.package') and project.build.package}">
-                    <fail message="Key file not found." />
+                    <fail message="Old key file not found." />
                 </if>
                 <if test="${not(property::exists('project.build.package') and project.build.package)}">
-                    <echo message="Key file not found. You can generate a key file by running 'sn -k log4net.snk'." />
-                    <echo message="The generated key file should be stored in the log4net base directory." />
-                    <echo message="The release build will be skipped." />
+                    <echo message="Old key file not found."/>
+                    <echo message="The release build using the old key will be skipped." />
                     <property name="temp.build.skip" value="true" />
                 </if>
             </if>
-            <if test="${file::exists(log4net.basedir + '/log4net.snk')}">
-                <!-- copy the log4net key file to the location where the compiler expects it to be -->
-                <copy file="${log4net.basedir}/log4net.snk" todir="${current.bin.dir}/../../../" />
+            <if test="${file::exists(log4net.basedir + '/old-log4net.snk')}">
+                <!-- copy the log4net key file to the location where
+                     the compiler expects it to be -->
+                <copy file="${log4net.basedir}/old-log4net.snk"
+                      tofile="${current.bin.dir}/../../../log4net.snk"
+                      overwrite="true"/>
             </if>
         </if>
         <if test="${not temp.build.skip}">
-            <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+            <csc if="${current.build.config.release}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
                 <sources basedir="${log4net.basedir}/src">
                     <include name="**/*.cs" />
                 </sources>
@@ -505,6 +507,27 @@ limitations under the License.
                 </references>
             </csc>
         </if>
+        <copy file="${log4net.basedir}/log4net.snk"
+              todir="${current.bin.dir}/../../../"
+              overwrite="true"/>
+            <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+                <sources basedir="${log4net.basedir}/src">
+                    <include name="**/*.cs" />
+                </sources>
+                <resources failonempty="true">
+                    <include name="${log4net.basedir}/NOTICE" />
+                    <include name="${log4net.basedir}/LICENSE" />
+                </resources>
+                <references>
+                    <include name="mscorlib.dll" />
+                    <include name="System.dll" />
+                    <include name="System.Data.dll" />
+                    <include name="System.Web.dll" />
+                    <include name="System.Xml.dll" />
+                    <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework family>/<framework version>/<build configuration> directory -->
+                    <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
+                </references>
+            </csc>
     </target>
     <target name="compile-net-1.1" description="Builds .NET Framework 1.1 version" depends="set-net-1.1-runtime-configuration, check-log4net-basedir, clean-current-bin-dir">
         <!-- initialize the temp.build.skip property to false -->
