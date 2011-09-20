@@ -118,7 +118,7 @@ namespace log4net.Layout
 	///         <term>aspnet-context</term>
 	///         <description>
     ///             <para>
-    ///             Used to output all context items in the case of <b>%aspnet-context or just one named item if used as <b>%aspnet-context{key}</b>
+    ///             Used to output all context items in the case of <b>%aspnet-context</b> or just one named item if used as <b>%aspnet-context{key}</b>
     ///             </para>
     ///             <para>
     ///             This pattern is not available for Compact Framework or Client Profile assemblies.
@@ -140,7 +140,7 @@ namespace log4net.Layout
 	///         <term>aspnet-session</term>
 	///         <description>
     ///             <para>
-    ///             Used to output all session items in the case of <b>%aspnet-session or just one named item if used as <b>%aspnet-session{key}</b>
+    ///             Used to output all session items in the case of <b>%aspnet-session</b> or just one named item if used as <b>%aspnet-session{key}</b>
     ///             </para>
     ///             <para>
     ///             This pattern is not available for Compact Framework or Client Profile assemblies.
@@ -466,9 +466,34 @@ namespace log4net.Layout
 	/// 			between braces. For example, <b>%stacktrace{level}</b>.  
 	/// 			If no stack trace level specifier is given then 1 is assumed 
 	/// 			</para>
-	///			</description>
+    /// 			<para>
+    /// 			Output uses the format:
+    /// 			type3.MethodCall3 > type2.MethodCall2 > type1.MethodCall1
+    /// 			</para>
+    ///             <para>
+    ///             This pattern is not available for Compact Framework assemblies.
+    ///             </para>
+    ///			</description>
 	///		</item>
-	///     <item>
+    /// 	<item>
+    ///			<term>stacktracedetail</term> 
+    ///			<description>
+    /// 			<para>
+    /// 			Used to output the stack trace of the logging event
+    /// 			The stack trace level specifier may be enclosed 
+    /// 			between braces. For example, <b>%stacktracedetail{level}</b>.  
+    /// 			If no stack trace level specifier is given then 1 is assumed 
+    /// 			</para>
+    /// 			<para>
+    /// 			Output uses the format:
+    ///             type3.MethodCall3(type param,...) > type2.MethodCall2(type param,...) > type1.MethodCall1(type param,...)
+    /// 			</para>
+    ///             <para>
+    ///             This pattern is not available for Compact Framework assemblies.
+    ///             </para>
+    ///			</description>
+    ///		</item>
+    ///     <item>
 	///         <term>t</term>
 	///         <description>Equivalent to <b>thread</b></description>
 	///     </item>
