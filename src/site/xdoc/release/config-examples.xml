@@ -651,6 +651,25 @@ CREATE TABLE Log (
     </layout>
 </appender>
                 ]]></source>
+                <p>
+                    This example shows how to configure the appender to use the "inter process" locking
+                    model.
+                </p>
+                <source language="xml"><![CDATA[
+<appender name="FileAppender" type="log4net.Appender.FileAppender">
+    <file value="${TMP}\log-file.txt" />
+    <appendToFile value="true" />
+    <lockingModel type="log4net.Appender.FileAppender+InterProcessLock" />
+    <layout type="log4net.Layout.PatternLayout">
+        <conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
+    </layout>
+</appender>
+                ]]></source>
+                <p>
+                    Before you change the locking model so that
+                    multiple process may log to the same file, please
+                    read the <a href="faq.html#single-file">FAQ</a>.
+                </p>
             </section>
             
             <section id="forwardingappender" name="ForwardingAppender">

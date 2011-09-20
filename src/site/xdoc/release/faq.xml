@@ -657,24 +657,64 @@ public class FastLogger
 
 
                 <section id="single-file" name="How do I get multiple process to log to the same file?">
+                  <p>
+                    Before you even start trying any of the
+                    alternatives provided, ask yourself whether you
+                    really need to have multiple processes log to the
+                    same file, then don't do it ;-).
+                  </p>
+
+                  <p>
+                    FileAppender offers pluggable locking models for
+                    this usecase but all existing implementations have
+                    issues and drawbacks.
+                  </p>
+
                     <p>
-                        By default the <span class="code">FileAppender</span> holds an exclusive write 
-                        lock on the log file while it is logging. This prevents other processes from 
-                        writing to the file. The <span class="code">FileAppender</span> can be configured
-                        to use a different locking model, <span class="code">MinimalLock</span>, that
-                        only acquires the write lock while a log is being written. This allows multiple
-                        processes to interleave writes to the same file, albeit with a loss in performance.
-                        See the <a href="config-examples.html#fileappender">FileAppender config examples</a>
-                        for an example <span class="code">MinimalLock</span> configuration.
+                        By default the <span
+                        class="code">FileAppender</span> holds an
+                        exclusive write lock on the log file while it
+                        is logging. This prevents other processes from
+                        writing to the file.  This model is known to
+                        break down with (at least on some versions of)
+                        Mono on Linux and log files may get corrupted
+                        as soon as another process tries to access the
+                        log file.
+                    </p>
+
+                    <p>
+                      <span class="code">MinimalLock</span> only
+                      acquires the write lock while a log is being
+                      written. This allows multiple processes to
+                      interleave writes to the same file, albeit with
+                      a considerable loss in performance.
                     </p>
                     <p>
-                        While the <span class="code">MinimalLock</span> model may be used to interleave
-                        writes to a single file it may not be the optimal solution, especially when
-                        logging from multiple machines. Alternatively you may have one or more processes
-                        log to <span class="code">RemotingAppenders</span>. 
-                        Using the <span class="code">RemoteLoggingServerPlugin</span> (or 
-                        <span class="code">IRemoteLoggingSink</span>) a process can receive all the events and 
-                        log them to a single log file.
+                      <span class="code">InterProcessLock</span>
+                      doesn't lock the file at all but synchronizes
+                      using a system wide Mutex.  This will only work
+                      if all processes cooperate (and use the same
+                      locking model) and has also be paid for by a
+                      loss in performance.
+                    </p>
+                    <p>
+                      If you use <span
+                      class="code">RollingFileAppender</span> things
+                      become even worse as several process may try to
+                      start rolling the log file concurrently.
+                    </p>
+                    <p>
+                        A better alternative is to have your processes
+                        log to <span
+                        class="code">RemotingAppenders</span>.  Using
+                        the <span
+                        class="code">RemoteLoggingServerPlugin</span>
+                        (or <span
+                        class="code">IRemoteLoggingSink</span>) a
+                        process can receive all the events and log
+                        them to a single log file.  One of the
+                        examples shows how to use the <span
+                        class="code">RemoteLoggingServerPlugin</span>.
                     </p>
                 </section>
                 <p><a href="#top">Back to Top</a></p>

@@ -61,9 +61,14 @@ namespace log4net.Appender
 	/// the <see cref="LockingModel"/> property.
 	/// The default behavior, implemented by <see cref="FileAppender.ExclusiveLock"/> 
 	/// is to obtain an exclusive write lock on the file until this appender is closed.
-	/// The alternative model, <see cref="FileAppender.MinimalLock"/>, only holds a
-	/// write lock while the appender is writing a logging event.
+	/// The alternative models, only hold a
+    /// write lock while the appender is writing a logging event (<see cref="FileAppender.MinimalLock"/>)
+    /// or synchronize by using a named system wide Mutex (<see cref="FileAppender.InterProcessLock"/>).
 	/// </para>
+    /// <para>
+    /// All locking strategies have issues and you should seriously consider using a different strategy that
+    /// avoids having multiple processes logging to the same file.
+    /// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
@@ -589,7 +594,7 @@ namespace log4net.Appender
         /// </summary>
         /// <author>Ron Grabowski</author>
         /// <author>Steve Wranovsky</author>
-        public class MutexLock : LockingModelBase
+        public class InterProcessLock : LockingModelBase
         {
             private Mutex m_mutex = null;
             private bool m_mutexClosed = false;
@@ -832,9 +837,10 @@ namespace log4net.Appender
 		/// Gets or sets the <see cref="FileAppender.LockingModel"/> used to handle locking of the file.
 		/// </para>
 		/// <para>
-		/// There are two built in locking models, <see cref="FileAppender.ExclusiveLock"/> and <see cref="FileAppender.MinimalLock"/>.
-		/// The former locks the file from the start of logging to the end and the 
-		/// later lock only for the minimal amount of time when logging each message.
+        /// There are three built in locking models, <see cref="FileAppender.ExclusiveLock"/>, <see cref="FileAppender.MinimalLock"/> and <see cref="FileAppender.InterProcessLock"/> .
+		/// The first locks the file from the start of logging to the end, the 
+		/// second locks only for the minimal amount of time when logging each message
+        /// and the last synchronizes processes using a named system wide Mutex.
 		/// </para>
 		/// <para>
 		/// The default locking model is the <see cref="FileAppender.ExclusiveLock"/>.

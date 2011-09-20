@@ -1582,7 +1582,7 @@ namespace log4net.Tests.Appender
 		}
 
 		/// <summary>
-		/// Verifies that attempting to log to a file with ExclusiveLock really locks the file
+		/// Verifies that attempting to log to a file with MinimalLock doesn't lock the file
 		/// </summary>
 		[Test]
 		public void TestMinimalLockUnlocks()
@@ -1612,14 +1612,14 @@ namespace log4net.Tests.Appender
         /// Verifies that attempting to log to a locked file fails gracefully
         /// </summary>
         [Test]
-        public void TestMutexLockFails() {
+        public void TestInterProcessLockFails() {
             String filename = "test.log";
 
             FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
             fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
 
             SilentErrorHandler sh = new SilentErrorHandler();
-            ILogger log = CreateLogger(filename, new FileAppender.MutexLock(), sh);
+            ILogger log = CreateLogger(filename, new FileAppender.InterProcessLock(), sh);
             log.Log(GetType(), Level.Info, "This is a message", null);
             log.Log(GetType(), Level.Info, "This is a message 2", null);
             DestroyLogger();
@@ -1633,14 +1633,14 @@ namespace log4net.Tests.Appender
         /// Verifies that attempting to log to a locked file recovers if the lock is released
         /// </summary>
         [Test]
-        public void TestMutexLockRecovers() {
+        public void TestInterProcessLockRecovers() {
             String filename = "test.log";
 
             FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
             fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
 
             SilentErrorHandler sh = new SilentErrorHandler();
-            ILogger log = CreateLogger(filename, new FileAppender.MutexLock(), sh);
+            ILogger log = CreateLogger(filename, new FileAppender.InterProcessLock(), sh);
             log.Log(GetType(), Level.Info, "This is a message", null);
             fs.Close();
             log.Log(GetType(), Level.Info, "This is a message 2", null);
@@ -1651,15 +1651,15 @@ namespace log4net.Tests.Appender
         }
 
         /// <summary>
-        /// Verifies that attempting to log to a file with ExclusiveLock really locks the file
+        /// Verifies that attempting to log to a file with InterProcessLock really locks the file
         /// </summary>
         [Test]
-        public void TestMutexLockUnlocks() {
+        public void TestInterProcessLockUnlocks() {
             String filename = "test.log";
             bool locked;
 
             SilentErrorHandler sh = new SilentErrorHandler();
-            ILogger log = CreateLogger(filename, new FileAppender.MutexLock(), sh);
+            ILogger log = CreateLogger(filename, new FileAppender.InterProcessLock(), sh);
             log.Log(GetType(), Level.Info, "This is a message", null);
 
             locked = true;
