@@ -52,7 +52,7 @@ limitations under the License.
                     intend to deploy you application on both the Microsoft .NET Frameworks and the Mono frameworks.
                 </p>
                 <p>
-                    log4net now builds on 6 frameworks:
+                    log4net now builds on the following frameworks:
                 </p>
                 
                 <div class="table">
@@ -66,38 +66,52 @@ limitations under the License.
                             <th>Website</th>
                         </tr>
                         <tr style="vertical-align: top;">
-                            <td>Microsoft .NET Framework 1.0 (1.0.3705)</td>
-                            <td><a href="http://msdn.microsoft.com/net">http://msdn.microsoft.com/net</a></td>
+                            <td>Microsoft .NET Framework 1.0</td>
+                            <td><a href="http://msdn.microsoft.com/en-us/netframework/">http://msdn.microsoft.com/en-us/netframework/</a></td>
                         </tr>
                         <tr style="vertical-align: top;">
-                            <td>Microsoft .NET Framework 1.1 (1.1.4322)</td>
-                            <td><a href="http://msdn.microsoft.com/net">http://msdn.microsoft.com/net</a></td>
+                            <td>Microsoft .NET Framework 1.1</td>
+                            <td><a href="http://msdn.microsoft.com/en-us/netframework/">http://msdn.microsoft.com/en-us/netframework/</a></td>
                         </tr>
                         <tr style="vertical-align: top;">
-                            <td>Microsoft .NET Framework 2.0 (2.0.50727)</td>
-                            <td><a href="http://msdn.microsoft.com/net">http://msdn.microsoft.com/net</a></td>
+                            <td>Microsoft .NET Framework 2.0</td>
+                            <td><a href="http://msdn.microsoft.com/en-us/netframework/">http://msdn.microsoft.com/en-us/netframework/</a></td>
+                        </tr>
+                        <tr style="vertical-align: top;">
+                            <td>Microsoft .NET Framework 3.5</td>
+                            <td><a href="http://msdn.microsoft.com/en-us/netframework/">http://msdn.microsoft.com/en-us/netframework/</a></td>
+                        </tr>
+                        <tr style="vertical-align: top;">
+                            <td>Microsoft .NET Framework 4.0</td>
+                            <td><a href="http://msdn.microsoft.com/en-us/netframework/">http://msdn.microsoft.com/en-us/netframework/</a></td>
+                        </tr>
+                        <tr style="vertical-align: top;">
+                            <td>Microsoft .NET Framework 3.5 Client Profile</td>
+                            <td><a href="http://msdn.microsoft.com/en-us/library/cc656912.aspx">http://msdn.microsoft.com/en-us/library/cc656912.aspx</a></td>
+                        </tr>
+                        <tr style="vertical-align: top;">
+                            <td>Microsoft .NET Framework 4.0 Client Profile</td>
+                            <td><a href="http://msdn.microsoft.com/en-us/library/cc656912.aspx">http://msdn.microsoft.com/en-us/library/cc656912.aspx</a></td>
                         </tr>
                         <tr style="vertical-align: top;">
                             <td>Microsoft .NET Compact Framework 1.0</td>
                             <td><a href="http://msdn2.microsoft.com/en-us/netframework/aa497273.aspx">http://msdn2.microsoft.com/en-us/netframework/aa497273.aspx</a></td>
                         </tr>
-                        <!--
                         <tr style="vertical-align: top;">
                             <td>Microsoft .NET Compact Framework 2.0</td>
                             <td><a href="http://msdn2.microsoft.com/en-us/netframework/aa497273.aspx">http://msdn2.microsoft.com/en-us/netframework/aa497273.aspx</a></td>
                         </tr>
-                        -->
                         <tr style="vertical-align: top;">
-                            <td>Mono 1.2.3</td>
+                            <td>Mono</td>
                             <td><a href="http://www.mono-project.com">http://www.mono-project.com</a></td>
                         </tr>
                         <tr style="vertical-align: top;">
                             <td>Microsoft Shared Source CLI 1.0</td>
-                            <td><a href="http://msdn.microsoft.com/library/en-us/dndotnet/html/mssharsourcecli.asp">http://msdn.microsoft.com/library/en-us/dndotnet/html/mssharsourcecli.asp</a></td>
+                            <td><a href="http://msdn.microsoft.com/en-us/library/ms973879.aspx">http://msdn.microsoft.com/en-us/library/ms973879.aspx</a></td>
                         </tr>
                         <tr style="vertical-align: top;">
                             <td>CLI 1.0 Compatible</td>
-                            <td><a href="http://msdn.microsoft.com/net/ecma/">http://msdn.microsoft.com/net/ecma/</a></td>
+                            <td><a href="http://msdn.microsoft.com/en-us/netframework/aa569283.aspx">http://msdn.microsoft.com/en-us/netframework/aa569283.aspx</a></td>
                         </tr>
                     </table>
                 </div>
@@ -125,19 +139,34 @@ limitations under the License.
                             <col style="text-align: center;" />
                             <col style="text-align: center;" />
                             <col style="text-align: center;" />
+                            <col style="text-align: center;" />
+                            <col style="text-align: center;" />
+                            <col style="text-align: center;" />
+                            <col style="text-align: center;" />
+                            <col style="text-align: center;" />
                         </colgroup>
                         <tr>
                             <th>Appender</th>
                             <th>.NET Framework 1.0</th>
                             <th>.NET Framework 1.1</th>
                             <th>.NET Framework 2.0</th>
+                            <th>.NET Framework 3.5</th>
+                            <th>.NET Framework 4.0</th>
+                            <th>.NET Framework 3.5 Client Profile</th>
+                            <th>.NET Framework 4.0 Client Profile</th>
                             <th>.NET CF 1.0</th>
-                            <th>Mono 1.2</th>
+                            <th>.NET CF 2.0</th>
+                            <th>Mono</th>
                             <th>Shared Source CLI 1.0</th>
                             <th>CLI 1.0 Compatible</th>
                         </tr>
                         <tr>
                             <td>AdoNetAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
@@ -155,12 +184,22 @@ limitations under the License.
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
                         </tr>
                         <tr>
                             <td>AspNetTraceAppender</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                             <td></td>
                             <td>x</td>
                             <td></td>
@@ -175,12 +214,22 @@ limitations under the License.
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
                         </tr>
                         <tr>
                             <td>ColoredConsoleAppender</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -188,6 +237,11 @@ limitations under the License.
                         </tr>
                         <tr>
                             <td>ConsoleAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
@@ -205,12 +259,22 @@ limitations under the License.
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
                         </tr>
                         <tr>
                             <td>EventLogAppender</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td></td>
                             <td></td>
                             <td>x</td>
                             <td></td>
@@ -218,6 +282,11 @@ limitations under the License.
                         </tr>
                         <tr>
                             <td>FileAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
@@ -235,12 +304,22 @@ limitations under the License.
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
                         </tr>
                         <tr>
                             <td>LocalSyslogAppender</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td></td>
                             <td></td>
                             <td>x</td>
                             <td></td>
@@ -255,12 +334,22 @@ limitations under the License.
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
                         </tr>
                         <tr>
                             <td>NetSendAppender</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -268,6 +357,11 @@ limitations under the License.
                         </tr>
                         <tr>
                             <td>OutputDebugStringAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
@@ -285,12 +379,22 @@ limitations under the License.
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
                         </tr>
                         <tr>
                             <td>RemotingAppender</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td></td>
                             <td></td>
                             <td>x</td>
                             <td>x</td>
@@ -305,12 +409,22 @@ limitations under the License.
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
                         </tr>
                         <tr>
                             <td>SmtpAppender</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td></td>
                             <td></td>
                             <td>x</td>
                             <td></td>
@@ -318,6 +432,11 @@ limitations under the License.
                         </tr>
                         <tr>
                             <td>SmtpPickupDirAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
@@ -335,9 +454,19 @@ limitations under the License.
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
                         </tr>
                         <tr>
                             <td>TraceAppender</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
@@ -355,27 +484,61 @@ limitations under the License.
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
                         </tr>
                     </table>
                 </div>
             </section>
             
             <section id="notes" name="Framework Specific Notes">
-                <section id="net1.0" name="Microsoft .NET Framework 1.0 (1.0.3705)">
+                <section id="net1.0" name="Microsoft .NET Framework 1.0">
                     <p>
                         none
                     </p>
                 </section>
                 
-                <section id="net1.1" name="Microsoft .NET Framework 1.1 (1.1.4322)">
+                <section id="net1.1" name="Microsoft .NET Framework 1.1">
                     <p>
                         none
                     </p>
                 </section>
                 
-                <section id="net2.0" name="Microsoft .NET Framework 2.0 (2.0.50727)">
+                <section id="net2.0" name="Microsoft .NET Framework 2.0">
                     <p>
                         none
+                    </p>
+                </section>
+                
+                <section id="net3.5" name="Microsoft .NET Framework 3.5">
+                    <p>
+                        As of log4net 1.2.11 this version is identical
+                        to the .NET 2.0 version.
+                    </p>
+                </section>
+                
+                <section id="net4.0" name="Microsoft .NET Framework 4.0">
+                    <p>
+                        none
+                    </p>
+                </section>
+                
+                <section id="netcp3.5" name="Microsoft .NET Framework 3.5 Client Profile">
+                    <p>
+                        As of log4net 1.2.11 this version is identical
+                        to the .NET 3.5 version without support for
+                        ASP.NET specific appenders and patterns.
+                    </p>
+                </section>
+                
+                <section id="netcp4.0" name="Microsoft .NET Framework 4.0 Client Profile">
+                    <p>
+                        As of log4net 1.2.11 this version is identical
+                        to the .NET 4.0 version without support for
+                        ASP.NET specific appenders and patterns.
                     </p>
                 </section>
                 
@@ -481,13 +644,11 @@ namespace TestApp
                                 value is generated by taking the file name for the application's primary module.
                             </p>
                 </section>
-                <!--
                 <section id="netcf2.0" name="Microsoft .NET Compact Framework 2.0">
                     <p>
                         See notes for .NET Compact Framework 1.0
                     </p>
                 </section>
-                -->
                 <section id="mono" name="Mono">
                     <p>
                         There are 2 separate builds of log4net for mono; Mono 1.0, built using the C# compiler in a mode 

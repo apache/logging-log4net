@@ -941,7 +941,17 @@ public class FastLogger
 
                 <section id="report-bugs" name="How do I report bugs?">
                     <p>
-                        See the <a href="../support.html">support</a> page for details.
+                      First make sure it really is a bug and not a
+                      usage error.  When in doubt, ask on the <a
+                      href="../mail-lists.html">log4net-user mailing
+                      list</a> first.
+                    </p>
+                    <p>
+                      If you have identified a bug, please report it
+                      via our <a href="../issue-tracking.html">Issue
+                      Tracker</a>.  You may want to check it hasn't
+                      been reported before by searching the existing
+                      issues.
                     </p>
                 </section>
                 <p><a href="#top">Back to Top</a></p>

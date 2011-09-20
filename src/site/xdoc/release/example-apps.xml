@@ -29,8 +29,8 @@ limitations under the License.
         
             <section id="overview" name="Overview">
                 <p>
-                    <strong>The following examples are only available in the log4net release download, not
-                    on-line. To obtain the examples <a href="../download.html">download</a> one of the log4net releases.
+                    <strong>The following examples are only available in the log4net source download, not
+                    on-line. To obtain the examples <a href="../download.html">download</a> the log4net source release.
                     </strong>
                 </p>
             </section>
@@ -69,12 +69,12 @@ limitations under the License.
                 <section id="building-vsnet" name="Visual Studio .NET">
                     <p>
                         There are Visual Studio .NET 2002 project files for the .NET 1.0 framework.
-                        The solution files for C# and VB are in the <a class="localOnly" href="../../examples/net/1.0">examples\net\1.0</a>
+                        The solution files for C# and VB are in the examples\net\1.0
                         folder.
                     </p>
                     <p>
                         For the Managed C++ project there is a Visual Studio .NET 2003 project file 
-                        in the <a class="localOnly" href="../../examples/net/1.1">examples\net\1.1</a> folder.
+                        in the examples\net\1.1 folder.
                     </p>
                 </section>
             </section>
@@ -94,26 +94,26 @@ limitations under the License.
                     <ul>
                         <li>
                             <b>MONO 1.0</b>: 
-                            <a class="localOnly" href="../../examples/mono/1.0/Tutorials/ConsoleApp/cs">C#</a>
+                            C#
                         </li>
                         <li>
                             <b>.NET 1.0</b>: 
-                            <a class="localOnly" href="../../examples/net/1.0/Tutorials/ConsoleApp/cs">C#</a>, 
-                            <a class="localOnly" href="../../examples/net/1.0/Tutorials/ConsoleApp/vb">VB</a>
+                            C#, 
+                            VB
                         </li>
                         <li>
                             <b>.NET 1.1</b>: 
-                            <a class="localOnly" href="../../examples/net/1.1/Tutorials/ConsoleApp/cpp">C++</a>, 
-                            <a class="localOnly" href="../../examples/net/1.1/Tutorials/ConsoleApp/js">JScript.NET</a>
+                            C++, 
+                            JScript.NET
                         </li>
                         <li>
                             <b>.NET Compact Framework 1.0</b>: 
-                            <a class="localOnly" href="../../examples/netcf/1.0/Tutorials/ConsoleApp/cs">C#</a>, 
-                            <a class="localOnly" href="../../examples/netcf/1.0/Tutorials/ConsoleApp/vb">VB</a>
+                            C#, 
+                            VB
                         </li>
                         <li>
                             <b>SSCLI 1.0</b>: 
-                            <a class="localOnly" href="../../examples/sscli/1.0/Tutorials/ConsoleApp/js">JScript.NET</a>
+                            JScript.NET
                         </li>
                     </ul>
                     <p>
@@ -134,8 +134,8 @@ limitations under the License.
                     <ul>
                         <li>
                             <b>.NET 1.0</b>: 
-                            <a class="localOnly" href="../../examples/net/1.0/Tutorials/WebApp/cs">C#</a>, 
-                            <a class="localOnly" href="../../examples/net/1.0/Tutorials/WebApp/vb">VB</a>
+                            C#, 
+                            VB
                         </li>
                     </ul>
                     <p>
@@ -162,7 +162,7 @@ limitations under the License.
                     <ul>
                         <li>
                             <b>.NET 1.0</b>: 
-                            <a class="localOnly" href="../../examples/net/1.0/Remoting/RemotingClient/cs">C#</a>
+                            C#
                         </li>
                     </ul>
                     <p>
@@ -185,7 +185,7 @@ limitations under the License.
                     <ul>
                         <li>
                             <b>.NET 1.0</b>: 
-                            <a class="localOnly" href="../../examples/net/1.0/Remoting/RemotingServer/cs">C#</a>
+                            C#
                         </li>
                     </ul>
                     <p>
@@ -210,20 +210,20 @@ limitations under the License.
                     <ul>
                         <li>
                             <b>MONO 1.0</b>: 
-                            <a class="localOnly" href="../../examples/mono/1.0/Repository/SimpleModule/cs">C#</a>
+                            C#
                         </li>
                         <li>
                             <b>.NET 1.0</b>: 
-                            <a class="localOnly" href="../../examples/net/1.0/Repository/SimpleModule/cs">C#</a>, 
-                            <a class="localOnly" href="../../examples/net/1.0/Repository/SimpleModule/vb">VB</a>
+                            C#, 
+                            VB
                         </li>
                         <li>
                             <b>.NET 1.1</b>: 
-                            <a class="localOnly" href="../../examples/net/1.1/Repository/SimpleModule/js">JScript.NET</a>
+                            JScript.NET
                         </li>
                         <li>
                             <b>SSCLI 1.0</b>: 
-                            <a class="localOnly" href="../../examples/sscli/1.0/Repository/SimpleModule/cs">C#</a>
+                            C#
                         </li>
                     </ul>
                     <p>
@@ -245,20 +245,20 @@ limitations under the License.
                     <ul>
                         <li>
                             <b>MONO 1.0</b>: 
-                            <a class="localOnly" href="../../examples/mono/1.0/Repository/SharedModule/cs">C#</a>
+                            C#
                         </li>
                         <li>
                             <b>.NET 1.0</b>: 
-                            <a class="localOnly" href="../../examples/net/1.0/Repository/SharedModule/cs">C#</a>, 
-                            <a class="localOnly" href="../../examples/net/1.0/Repository/SharedModule/vb">VB</a>
+                            C#, 
+                            VB
                         </li>
                         <li>
                             <b>.NET 1.1</b>: 
-                            <a class="localOnly" href="../../examples/net/1.1/Repository/SharedModule/js">JScript.NET</a>
+                            JScript.NET
                         </li>
                         <li>
                             <b>SSCLI 1.0</b>: 
-                            <a class="localOnly" href="../../examples/sscli/1.0/Repository/SharedModule/cs">C#</a>
+                            C#
                         </li>
                     </ul>
                     <p>
@@ -280,20 +280,20 @@ limitations under the License.
                     <ul>
                         <li>
                             <b>MONO 1.0</b>: 
-                            <a class="localOnly" href="../../examples/mono/1.0/Repository/SimpleApp/cs">C#</a>
+                            C#
                         </li>
                         <li>
                             <b>.NET 1.0</b>: 
-                            <a class="localOnly" href="../../examples/net/1.0/Repository/SimpleApp/cs">C#</a>, 
-                            <a class="localOnly" href="../../examples/net/1.0/Repository/SimpleApp/vb">VB</a>
+                            C#, 
+                            VB
                         </li>
                         <li>
                             <b>.NET 1.1</b>: 
-                            <a class="localOnly" href="../../examples/net/1.1/Repository/SimpleApp/js">JScript.NET</a>
+                            JScript.NET
                         </li>
                         <li>
                             <b>SSCLI 1.0</b>: 
-                            <a class="localOnly" href="../../examples/sscli/1.0/Repository/SimpleApp/cs">C#</a>
+                            C#
                         </li>
                     </ul>
                     <p>
@@ -315,7 +315,7 @@ limitations under the License.
                     <ul>
                         <li>
                             <b>.NET 1.0</b>: 
-                            <a class="localOnly" href="../../examples/net/1.0/Extensibility/EventIDLogApp/cs">C#</a>
+                            C#
                         </li>
                     </ul>
                     <p>
@@ -337,7 +337,7 @@ limitations under the License.
                     <ul>
                         <li>
                             <b>.NET 1.0</b>: 
-                            <a class="localOnly" href="../../examples/net/1.0/Extensibility/TraceLogApp/cs">C#</a>
+                            C#
                         </li>
                     </ul>
                     <p>
@@ -383,7 +383,7 @@ limitations under the License.
                     <ul>
                         <li>
                             <b>.NET 1.0</b>: 
-                            <a class="localOnly" href="../../examples/net/1.0/Appenders/SampleAppendersApp/cs">C#</a>
+                            C#
                         </li>
                     </ul>
                     <p>
@@ -411,7 +411,7 @@ limitations under the License.
                     <ul>
                         <li>
                             <b>.NET 1.0</b>: 
-                            <a class="localOnly" href="../../examples/net/1.0/Layouts/SampleLayoutsApp/cs">C#</a>
+                            C#
                         </li>
                     </ul>
                     <p>
@@ -432,12 +432,12 @@ limitations under the License.
                     <ul>
                         <li>
                             <b>MONO 1.0</b>: 
-                            <a class="localOnly" href="../../examples/mono/1.0/Performance/NotLogging/cs">C#</a>
+                            C#
                         </li>
                         <li>
                             <b>.NET 1.0</b>: 
-                            <a class="localOnly" href="../../examples/net/1.0/Performance/NotLogging/cs">C#</a>, 
-                            <a class="localOnly" href="../../examples/net/1.0/Performance/NotLogging/vb">VB</a>
+                            C#, 
+                            VB
                         </li>
                     </ul>
                     <p>
@@ -457,7 +457,7 @@ limitations under the License.
                     <ul>
                         <li>
                             <b>.NET 1.0</b>: 
-                            <a class="localOnly" href="../../examples/net/1.0/Appenders/WmiAppender/cs">C#</a>
+                            C#
                         </li>
                     </ul>
                     <p>
@@ -467,6 +467,5 @@ limitations under the License.
             </section>
             
         </section>
-        <script language="javascript" src="../js/blockLocalOnlyLinks.js"/>
     </body>
 </document>

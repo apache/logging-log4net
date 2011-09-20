@@ -81,8 +81,13 @@ limitations under the License.
                     assembly targeting that framework is built:
                 </p>
                 <ul>
-                    <li>Microsoft .NET Framework 1.0 (1.0.3705)</li>
-                    <li>Microsoft .NET Framework 1.1 (1.1.4322)</li>
+                    <li>Microsoft .NET Framework 1.0</li>
+                    <li>Microsoft .NET Framework 1.1</li>
+                    <li>Microsoft .NET Framework 2.0</li>
+                    <li>Microsoft .NET Framework 3.5</li>
+                    <li>Microsoft .NET Framework 4.0</li>
+                    <li>Microsoft .NET Framework 3.5 Client Profile</li>
+                    <li>Microsoft .NET Framework 4.0 Client Profile</li>
                     <li>Microsoft .NET Compact Framework 1.0</li>
                     <li>Microsoft .NET Compact Framework 2.0</li>
                     <li>Mono 1.0</li>
@@ -610,6 +615,12 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                                 </td>
                             </tr>
                             <tr>
+                              <td><a href="../sdk/log4net.Appender.DebugAppender.html">log4net.Appender.DebugAppender</a></td>
+                              <td>
+                                Writes logging events to the .NET  system.
+                              </td>
+                            </tr>
+                            <tr>
                                 <td><a href="../sdk/log4net.Appender.EventLogAppender.html">log4net.Appender.EventLogAppender</a></td>
                                 <td>
                                     Writes logging events to the Windows Event Log.
@@ -628,7 +639,7 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/log4net.Appender.LocalSyslogAppender.html">log4net.LocalSyslogAppender</a></td>
+                                <td><a href="../sdk/log4net.Appender.LocalSyslogAppender.html">log4net.Appender.LocalSyslogAppender</a></td>
                                 <td>
                                     Writes logging events to the local syslog service (UNIX only).
                                 </td>

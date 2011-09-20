@@ -28,22 +28,18 @@ limitations under the License.
         <section id="main" name="Building Apache log4net&#x2122;">
             <p>
                 The log4net release builds are built using NAnt. Log4net can also be built
-                using Visual Studio .NET 2002, 2003, or 2005.
-            </p>
-            <p>
-                To build a release build of log4net you will need to create a strong
-                name key file. See the Strong Name section below. 
+                using Visual Studio .NET 2008 or 2010.
             </p>
         
             <section id="vsnet" name="Visual Studio">
                 <p>
-                    Visual Studio .NET 2002, 2003 and 2005 are supported build platforms for log4net.
+                    Visual Studio .NET 2008 and 2010 are supported build platforms for log4net.
                 </p>
 
-                <section id="vsnet-2002" name="Visual Studio .NET 2002">
+                <section id="vsnet-2008" name="Visual Studio .NET 2008">
                     <p>
                         The log4net distribution includes a solution and project file
-                        for Visual Studio .NET 2002. Open the <span class="code">log4net.sln</span>
+                        for Visual Studio .NET 2008. Open the <span class="code">log4net.vs2008.sln</span>
                         from the src directory in the distribution.
                     </p>
                     <p>
@@ -51,69 +47,36 @@ limitations under the License.
                     </p>
                     <ul>
                         <li>System</li>
+                        <li>System.Configuration</li>
                         <li>System.Data</li>
                         <li>System.Web</li>
                         <li>System.XML</li>
                     </ul>
                 </section>
 
-                <section id="vsnet-2003" name="Visual Studio .NET 2003">
+                <section id="vsnet-2010" name="Visual Studio .NET 2010">
                     <p>
-                        Open the Visual Studio .NET 2002 solution file as above. 
-                        Visual Studio will convert the solution and project files
-                        to Visual Studio .NET 2003 format.
+                        The log4net distribution includes a solution and project file
+                        for Visual Studio .NET 2010. Open the <span class="code">log4net.vs2010.sln</span>
+                        from the src directory in the distribution.
                     </p>
                     <p>
-                        After converting the log4net project you must change the
-                        <i>Conditional Compilation Constants</i> specified for the
-                        log4net project. Open the project properties dialog and
-                        select the <i>Configuration Properties/Build</i> sheet.
-                        Replace the <c>NET_1_0</c> constant with <c>NET_1_1</c>.
-                        Remember to do this for both Debug and Release configurations.
-                    </p>
-                    <p>
-                        The log4net project file is not suitable for building log4net
-                        for the .NET Compact Framework. To build for the Compact Framework
-                        you must create a new C# project for Smart Devices. Configure the
-                        project as a library project. Add all the C# files from the 
-                        src directory in the distribution.
-                    </p>
-                </section>
-                
-                <section id="vsnet-2005" name="Visual Studio 2005">
-                    <p>
-                        Open the Visual Studio .NET 2002 solution file as above. 
-                        Visual Studio will convert the solution and project files
-                        to Visual Studio .NET 2003 format.
-                    </p>
-                    <p>
-                        After converting the log4net project you must change the
-                        <i>Conditional compilation symbols</i> specified for the
-                        log4net project. Open the project properties page and
-                        select the <i>Build</i> sheet.
-                        Replace the <c>NET_1_0</c> symbol with <c>NET_2_0</c>.
-                        Remember to do this for both Debug and Release configurations.
-                    </p>
-                    <p>
-                        In addition the log4net project requires the following new references:
+                        The log4net project requires only the following references:
                     </p>
                     <ul>
+                        <li>System</li>
                         <li>System.Configuration</li>
+                        <li>System.Data</li>
+                        <li>System.Web</li>
+                        <li>System.XML</li>
                     </ul>
-                    <p>
-                        The log4net project file is not suitable for building log4net
-                        for the .NET Compact Framework. To build for the Compact Framework
-                        you must create a new C# project for Smart Devices. Configure the
-                        project as a library project. Add all the C# files from the 
-                        src directory in the distribution.
-                    </p>
                 </section>
             </section>
-            
+
             <section id="nant" name="NAnt">
                 <p>
                     The log4net distribution is built using the NAnt tool.
-                    A recent NAnt version 0.85 nightly build is required to build log4net, this is 
+                    A recent NAnt version 0.91 alph2 is required to build log4net, this is 
                     available from <a href="http://nant.sourceforge.net">nant.sourceforge.net</a>.
                 </p>
                 <p>
@@ -142,24 +105,6 @@ nant -buildfile:log4net.build -projecthelp</pre></div>
                 </p>
                 <div class="syntax"><pre class="code">
 build.cmd compile-all</pre></div>
-            </section>
-
-            <section id="sn" name="Strong Name">
-                <p>
-                    In order to build the Release builds of log4net a Strong
-                    Name key is required. 
-                </p>
-                <p>
-                    Use the <span class="code">sn.exe</span> tool in the 
-                    .NET Framework SDK to generate a strong name key pair.
-                </p>
-                <div class="syntax"><pre class="code">
-sn -k log4net.snk</pre></div>
-                <p>
-                    The log4net.snk file should be placed in the root of the
-                    log4net distribution, in the same folder as the log4net.build
-                    file.
-                </p>
             </section>
 
             <section id="sdk" name="SDK Reference">
