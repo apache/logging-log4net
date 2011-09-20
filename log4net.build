@@ -1615,4 +1615,22 @@ limitations under the License.
     <nant buildfile="${log4net.basedir}/extensions/nant.build" target="compile" inheritall="false" />
   </target>
 
+  <target name="set-build-number">
+    <if test="${not(property::exists('assembly.version.number'))}">
+      <property name="assembly.version.number" value="0"/>
+      <if test="${directory::exists('.svn')}">
+        <exec program="svn" workingdir="." verbose="false"
+              output="_svnrevision.xml" failonerror="true" >
+          <arg value="log" />
+          <arg line="--xml --limit 1 -q" />
+        </exec>
+        <sleep milliseconds="500" />
+        <xmlpeek file="_svnrevision.xml"
+                 xpath="/log/logentry/@revision"
+                 property="assembly.version.number"
+                 failonerror="true"/>
+        <delete file="_svnrevision.xml"/>
+      </if>
+    </if>
+  </target>
 </project>
