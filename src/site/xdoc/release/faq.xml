@@ -532,6 +532,18 @@ public class Foo
                     <p>
                         <b>Note:</b> the .NET Compact Framework 1.0 does not support <span class="code">System.Reflection.MethodBase.GetCurrentMethod()</span>.
                     </p>
+
+                    <p>
+                      <b>Note:</b> the two forms are only equivalent
+                      if <span class="code">Foo</span> is not a
+                      generic class.  For a generic class <span
+                      class="code">Foo&lt;T&gt;</span> the variant
+                      using <span class="code">typeof</span> generates
+                      a different logger for each different type
+                      parameter <span class="code">T</span> while the
+                      variant using reflection generates the same
+                      logger for all <span class="code">T</span>s.
+                    </p>
                 </section>
                 <p><a href="#top">Back to Top</a></p>
 
