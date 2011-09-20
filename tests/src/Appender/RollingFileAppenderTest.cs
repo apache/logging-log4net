@@ -1530,7 +1530,9 @@ namespace log4net.Tests.Appender
 			DestroyLogger();
 
 			Assert.IsTrue(locked, "File was not locked");
+#if !MONO // at least on Linux with Mono 2.4 exclusive locking doesn't work as one would expect
 			AssertFileEquals(filename, "This is a message" + Environment.NewLine + "This is a message 2" + Environment.NewLine);
+#endif
 			Assert.AreEqual("", sh.Message, "Unexpected error message");
 		}
 
