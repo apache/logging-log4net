@@ -106,26 +106,46 @@ namespace log4net.Layout
 	///     <item>
 	///         <term>aspnet-cache</term>
 	///         <description>
-	///				TODO
+    ///             <para>
+    ///             Used to output all cache items in the case of <b>%aspnet-cache</b> or just one named item if used as <b>%aspnet-cache{key}</b>
+    ///             </para>
+    ///             <para>
+    ///             This pattern is not available for Compact Framework or Client Profile assemblies.
+    ///             </para>
 	///         </description>
 	///     </item>
 	///     <item>
 	///         <term>aspnet-context</term>
 	///         <description>
-	///				TODO
-	///         </description>
+    ///             <para>
+    ///             Used to output all context items in the case of <b>%aspnet-context or just one named item if used as <b>%aspnet-context{key}</b>
+    ///             </para>
+    ///             <para>
+    ///             This pattern is not available for Compact Framework or Client Profile assemblies.
+    ///             </para>
+    ///         </description>
 	///     </item>
 	///     <item>
 	///         <term>aspnet-request</term>
 	///         <description>
-	///				TODO
-	///         </description>
+    ///             <para>
+    ///             Used to output all request parameters in the case of <b>%aspnet-request</b> or just one named param if used as <b>%aspnet-request{key}</b>
+    ///             </para>
+    ///             <para>
+    ///             This pattern is not available for Compact Framework or Client Profile assemblies.
+    ///             </para>
+    ///         </description>
 	///     </item>
 	///     <item>
 	///         <term>aspnet-session</term>
 	///         <description>
-	///				TODO
-	///         </description>
+    ///             <para>
+    ///             Used to output all session items in the case of <b>%aspnet-session or just one named item if used as <b>%aspnet-session{key}</b>
+    ///             </para>
+    ///             <para>
+    ///             This pattern is not available for Compact Framework or Client Profile assemblies.
+    ///             </para>
+    ///         </description>
 	///     </item>
 	///     <item>
 	///         <term>c</term>
