@@ -703,7 +703,11 @@ public class FastLogger
                       If you use <span
                       class="code">RollingFileAppender</span> things
                       become even worse as several process may try to
-                      start rolling the log file concurrently.
+                      start rolling the log file concurrently.  <span
+                      class="code">RollingFileAppender</span>
+                      completely ignores the locking model when
+                      rolling files, rolling files is simply not
+                      compatible with this scenario.
                     </p>
                     <p>
                         A better alternative is to have your processes
