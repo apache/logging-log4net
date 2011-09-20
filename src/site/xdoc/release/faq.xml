@@ -694,8 +694,10 @@ public class FastLogger
                       doesn't lock the file at all but synchronizes
                       using a system wide Mutex.  This will only work
                       if all processes cooperate (and use the same
-                      locking model) and has also be paid for by a
-                      loss in performance.
+                      locking model).  The acquisition and release of a
+                      Mutex for every log entry to be written will
+                      result in a loss of performance, but the Mutex
+                      is preferable to the use of MinimalLock.
                     </p>
                     <p>
                       If you use <span
