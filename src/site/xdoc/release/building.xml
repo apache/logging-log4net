@@ -76,7 +76,7 @@ limitations under the License.
             <section id="nant" name="NAnt">
                 <p>
                     The log4net distribution is built using the NAnt tool.
-                    A recent NAnt version 0.91 alph2 is required to build log4net, this is 
+                    A recent NAnt version 0.91 alpha2 is required to build log4net, this is 
                     available from <a href="http://nant.sourceforge.net">nant.sourceforge.net</a>.
                 </p>
                 <p>
