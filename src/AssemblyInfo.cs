@@ -93,7 +93,6 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyConfiguration("Retail")]
 #endif
 
-[assembly: AssemblyDescription("The Apache Software Foundation log4net Logging Framework")]
 [assembly: AssemblyProduct("log4net")]
 [assembly: AssemblyDefaultAlias("log4net")]
 [assembly: AssemblyCulture("")]		

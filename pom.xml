@@ -159,6 +159,7 @@
             <exclude>build/**</exclude>
             <exclude>doc/sdk/**</exclude>
             <exclude>src/log4net.xml</exclude>
+            <exclude>src/GeneratedAssemblyInfo.cs</exclude>
             <exclude>tests/bin/**</exclude>
 
             <!-- really README files -->

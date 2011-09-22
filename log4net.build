@@ -198,7 +198,8 @@ limitations under the License.
     <mkdir dir="${current.package.dir}" />
   </target>
   <!-- Target for compiling all build configurations for all runtime configurations -->
-  <target name="compile-all" description="Compile all build configurations for all runtime configurations">
+  <target name="compile-all" description="Compile all build configurations for all runtime configurations"
+          depends="generate-assembly-description">
     <echo message="Compiling all build configurations for all runtime configurations." />
     <call target="set-debug-build-configuration" />
     <call target="compile-build" />
@@ -1615,22 +1616,41 @@ limitations under the License.
     <nant buildfile="${log4net.basedir}/extensions/nant.build" target="compile" inheritall="false" />
   </target>
 
-  <target name="set-build-number">
-    <if test="${not(property::exists('assembly.version.number'))}">
-      <property name="assembly.version.number" value="0"/>
+  <target name="generate-assembly-description">
+    <if test="${not(property::exists('source.svn.revision'))}">
+      <property name="source.svn.revision" value="0"/>
+      <property name="source.svn.url" value=""/>
+      <property name="assembly.description"
+                value="The Apache Software Foundation log4net Logging Framework"/>
       <if test="${directory::exists('.svn')}">
         <exec program="svn" workingdir="." verbose="false"
               output="_svnrevision.xml" failonerror="true" >
-          <arg value="log" />
-          <arg line="--xml --limit 1 -q" />
+          <arg value="info" />
+          <arg line="--xml" />
         </exec>
         <sleep milliseconds="500" />
         <xmlpeek file="_svnrevision.xml"
-                 xpath="/log/logentry/@revision"
-                 property="assembly.version.number"
+                 xpath="/info/entry/@revision"
+                 property="source.svn.revision"
+                 failonerror="true"/>
+        <xmlpeek file="_svnrevision.xml"
+                 xpath="/info/entry/url"
+                 property="source.svn.url"
                  failonerror="true"/>
         <delete file="_svnrevision.xml"/>
+        <property name="assembly.description"
+                  value="The Apache Software Foundation log4net Logging Framework built from svn revision ${source.svn.revision} of ${source.svn.url}"/>
       </if>
+      <delete file="src/GeneratedAssemblyInfo.cs"/>
+      <asminfo language="CSharp" output="src/GeneratedAssemblyInfo.cs">
+        <imports>
+          <import namespace="System.Reflection"/>
+        </imports>
+        <attributes>
+          <attribute type="AssemblyDescriptionAttribute"
+                     value="${assembly.description}"/>
+        </attributes>
+      </asminfo>
     </if>
   </target>
 </project>
