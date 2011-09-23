@@ -27,6 +27,56 @@ using log4net.Core;
 
 namespace log4net.Appender
 {
+#if !NETCF
+	/// <summary>
+	/// Appends logging events to a file.
+	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Logging events are sent to the file specified by
+	/// the <see cref="File"/> property.
+	/// </para>
+	/// <para>
+	/// The file can be opened in either append or overwrite mode 
+	/// by specifying the <see cref="AppendToFile"/> property.
+	/// If the file path is relative it is taken as relative from 
+	/// the application base directory. The file encoding can be
+	/// specified by setting the <see cref="Encoding"/> property.
+	/// </para>
+	/// <para>
+	/// The layout's <see cref="ILayout.Header"/> and <see cref="ILayout.Footer"/>
+	/// values will be written each time the file is opened and closed
+	/// respectively. If the <see cref="AppendToFile"/> property is <see langword="true"/>
+	/// then the file may contain multiple copies of the header and footer.
+	/// </para>
+	/// <para>
+	/// This appender will first try to open the file for writing when <see cref="ActivateOptions"/>
+	/// is called. This will typically be during configuration.
+	/// If the file cannot be opened for writing the appender will attempt
+	/// to open the file again each time a message is logged to the appender.
+	/// If the file cannot be opened for writing when a message is logged then
+	/// the message will be discarded by this appender.
+	/// </para>
+    /// <para>
+    /// The <see cref="FileAppender"/> supports pluggable file locking models via
+    /// the <see cref="LockingModel"/> property.
+    /// The default behavior, implemented by <see cref="FileAppender.ExclusiveLock"/> 
+    /// is to obtain an exclusive write lock on the file until this appender is closed.
+    /// The alternative models only hold a
+    /// write lock while the appender is writing a logging event (<see cref="FileAppender.MinimalLock"/>)
+    /// or synchronize by using a named system wide Mutex (<see cref="FileAppender.InterProcessLock"/>).
+    /// </para>
+    /// <para>
+    /// All locking strategies have issues and you should seriously consider using a different strategy that
+    /// avoids having multiple processes logging to the same file.
+    /// </para>
+	/// </remarks>
+	/// <author>Nicko Cadell</author>
+	/// <author>Gert Driesen</author>
+	/// <author>Rodrigo B. de Oliveira</author>
+	/// <author>Douglas de la Torre</author>
+	/// <author>Niall Daley</author>
+#else
 	/// <summary>
 	/// Appends logging events to a file.
 	/// </summary>
@@ -61,9 +111,8 @@ namespace log4net.Appender
 	/// the <see cref="LockingModel"/> property.
 	/// The default behavior, implemented by <see cref="FileAppender.ExclusiveLock"/> 
 	/// is to obtain an exclusive write lock on the file until this appender is closed.
-	/// The alternative models, only hold a
-    /// write lock while the appender is writing a logging event (<see cref="FileAppender.MinimalLock"/>)
-    /// or synchronize by using a named system wide Mutex (<see cref="FileAppender.InterProcessLock"/>).
+	/// The alternative model only holds a
+    /// write lock while the appender is writing a logging event (<see cref="FileAppender.MinimalLock"/>).
 	/// </para>
     /// <para>
     /// All locking strategies have issues and you should seriously consider using a different strategy that
@@ -75,7 +124,8 @@ namespace log4net.Appender
 	/// <author>Rodrigo B. de Oliveira</author>
 	/// <author>Douglas de la Torre</author>
 	/// <author>Niall Daley</author>
-	public class FileAppender : TextWriterAppender 
+#endif
+    public class FileAppender : TextWriterAppender 
 	{
 		#region LockingStream Inner Class
 
@@ -826,7 +876,29 @@ namespace log4net.Appender
 			set { m_securityContext = value; }
 		}
 
+#if NETCF
 		/// <summary>
+		/// Gets or sets the <see cref="FileAppender.LockingModel"/> used to handle locking of the file.
+		/// </summary>
+		/// <value>
+		/// The <see cref="FileAppender.LockingModel"/> used to lock the file.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets or sets the <see cref="FileAppender.LockingModel"/> used to handle locking of the file.
+		/// </para>
+		/// <para>
+        /// There are two built in locking models, <see cref="FileAppender.ExclusiveLock"/> and <see cref="FileAppender.MinimalLock"/>.
+		/// The first locks the file from the start of logging to the end, the 
+		/// second locks only for the minimal amount of time when logging each message
+        /// and the last synchronizes processes using a named system wide Mutex.
+		/// </para>
+		/// <para>
+		/// The default locking model is the <see cref="FileAppender.ExclusiveLock"/>.
+		/// </para>
+		/// </remarks>
+#else
+        /// <summary>
 		/// Gets or sets the <see cref="FileAppender.LockingModel"/> used to handle locking of the file.
 		/// </summary>
 		/// <value>
@@ -846,6 +918,7 @@ namespace log4net.Appender
 		/// The default locking model is the <see cref="FileAppender.ExclusiveLock"/>.
 		/// </para>
 		/// </remarks>
+#endif
 		public FileAppender.LockingModelBase LockingModel
 		{
 			get { return m_lockingModel; }
