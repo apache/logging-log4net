@@ -20,6 +20,7 @@ limitations under the License.
   <property name="log4net.basedir" value="." />
   <property name="project.build.config" value="debug" />
   <property name="project.build.package" value="false" />
+  <property name="package.version" value="1.2.11"/>
 
   <!-- Include log4net helpers -->
   <include buildfile="${log4net.basedir}/log4net.include" />
@@ -27,26 +28,6 @@ limitations under the License.
   <call target="set-build-configuration" />
   <call target="set-framework-configuration" />
   <!-- Targets that check settings -->
-  <target name="check-package-version">
-    <fail 
-        message="A package version has not been specified." 
-        if="${not property::exists('package.version')}" />
-  </target>
-  <target name="check-package-dir">
-    <property name="package.dir" value="build/package" overwrite="false" />
-    <mkdir dir="${package.dir}" />
-  </target>
-  <target name="check-current-package-dir">
-    <fail 
-        message="The current package directory has not been specified."
-        if="${not property::exists('current.package.dir')}" />
-    <mkdir dir="${current.package.dir}" />
-  </target>
-  <target name="check-current-package-zipfile">
-    <fail 
-        message="The current package zipfile has not been specified."
-        if="${not property::exists('current.package.zipfile')}" />
-  </target>
   <target name="check-htmlhelp-compiler">
     <if test="${not property::exists('htmlhelp.compiler')}">
       <readregistry
@@ -67,12 +48,6 @@ limitations under the License.
           name="htmlhelp.compiler"
           value="${sys.os.folder.programfiles}/HTML Help Worshop/hhc.exe" />
     </if>
-  </target>
-  <!-- Target for cleaning up the current package directory -->
-  <target name="clean-current-package-dir" depends="check-current-package-dir" description="Cleans the current package directory">
-    <echo message="Cleaning the ${current.package.dir} package directory." />
-    <delete dir="${current.package.dir}" if="${directory::exists(current.package.dir)}" />
-    <mkdir dir="${current.package.dir}" />
   </target>
   <!-- Displays configuration info, usefull for working out why log4net doesn't build -->
   <target name="display-setup" depends="check-htmlhelp-compiler">
@@ -186,16 +161,12 @@ limitations under the License.
     <echo message="" />
   </target>
   <!-- Target for setting the package configuration -->
-  <target name="set-package-configuration" depends="check-package-dir, check-package-version">
+  <target name="set-package-configuration">
     <property name="current.package.name" value="${nant.project.name}-${package.version}" />
-    <property name="current.package.dir" value="${package.dir}/${current.package.name}" />
-    <property name="log4net.basedir" value="${current.package.dir}" />
-    <property name="current.package.zipfile" value="${project::get-name()}-${package.version}.zip" />
-    <property name="bin.dir" value="${current.package.dir}/bin" />
-    <property name="doc.dir" value="${current.package.dir}/doc" />
-    <property name="sdkdoc.dir" value="${doc.dir}/sdk" />
-    <delete dir="${current.package.dir}" if="${directory::exists(current.package.dir)}" />
-    <mkdir dir="${current.package.dir}" />
+    <property name="current.package.src.dir" value="build/${current.package.name}-src" />
+    <property name="current.package.src.zipfile" value="${project::get-name()}-${package.version}-src.zip" />
+    <delete dir="${current.package.src.dir}" if="${directory::exists(current.package.src.dir)}" />
+    <mkdir dir="${current.package.src.dir}" />
   </target>
   <!-- Target for compiling all build configurations for all runtime configurations -->
   <target name="compile-all" description="Compile all build configurations for all runtime configurations"
@@ -1437,183 +1408,64 @@ limitations under the License.
   <target name="package" depends="set-package-configuration" description="Build and Package distribution">
     <!-- set flag to indicating that this is a package build -->
     <property name="project.build.package" value="true" />
-    <!-- clean the current package directory -->
-    <call target="clean-current-package-dir" />
-    <!-- copies the examples to the current package directory -->
-    <call target="package-examples" />
     <!-- copies the sources to the current package directory -->
     <call target="package-src" />
-    <!-- copies the unit tests sources to the current package directory -->
-    <call target="package-tests-src" />
-    <!-- copies the extenstions to the current package directory -->
-    <call target="package-extensions" />
-    <!-- copies the documentation to the current package directory -->
-    <call target="package-doc" />
-    <!-- copies the release files to the current package directory -->
-    <call target="package-release-files" />
     <!-- compile all build configurations for all runtime configurations  -->
-    <call target="compile-all" />
-    <!-- compile all examples -->
-    <call target="compile-examples" />
-    <!-- compile all extensions -->
-    <call target="compile-extensions" />
+    <!--call target="compile-all" /-->
     <!-- generate the sdk docs using the release build configuration for all runtime configuration -->
     <call target="set-release-build-configuration" />
     <call target="generate-sdkdoc-all" />
     <!-- create the package distribution zipfile -->
-    <call target="create-package-zipfile" />
+    <call target="create-package-zipfiles" />
   </target>
-  <target name="package-examples" depends="check-current-package-dir, check-log4net-basedir">
-    <mkdir dir="${current.package.dir}/examples" />
-    <delete dir="${current.package.dir}/examples" />
-    <copy todir="${current.package.dir}/examples">
-      <fileset basedir="examples">
-        <include name="**/*" />
-        <exclude name="**/bin/**" />
-        <exclude name="**/build/**" />
-        <exclude name="**/doc/**" />
-        <exclude name="**/obj/**" />
-        <exclude name="**/*.csproj.user" />
-        <exclude name="**/*.csdproj.user" />
-        <exclude name="**/*.vbproj.user" />
-        <exclude name="**/*.vbdproj.user" />
-        <exclude name="**/*.suo" />
-        <exclude name="**/*.sln.old" />
-        <!-- file created by mono compiler -->
-        <exclude name="**/gc.log" />
-      </fileset>
-    </copy>
-  </target>
-  <target name="package-src" depends="check-current-package-dir, check-log4net-basedir">
-    <mkdir dir="${current.package.dir}/src" />
-    <delete dir="${current.package.dir}/src" />
-    <copy todir="${current.package.dir}/src">
-      <fileset basedir="src">
-        <include name="**/*" />
-        <exclude name="**/obj/**" />
-        <exclude name="*.csproj.user" />
-        <exclude name="*.suo" />
-        <exclude name="log4net.ndoc" />
-        <exclude name="log4net*.xml" />
-        <exclude name="**/*.sln.old" />
-      </fileset>
-    </copy>
-  </target>
-  <target name="package-tests-src" depends="check-current-package-dir, check-log4net-basedir">
-    <mkdir dir="${current.package.dir}/tests" />
-    <delete dir="${current.package.dir}/tests" />
-    <copy todir="${current.package.dir}/tests/src">
-      <fileset basedir="tests/src">
-        <include name="**/*" />
-        <exclude name="**/bin/**" />
-        <exclude name="**/obj/**" />
-        <exclude name="*.csproj.user" />
-        <exclude name="*.suo" />
-        <exclude name="log4net.ndoc" />
-        <exclude name="log4net*.xml" />
-        <exclude name="**/*.sln.old" />
-      </fileset>
-    </copy>
-    <copy todir="${current.package.dir}/tests/lib">
-      <fileset basedir="tests/lib">
-        <include name="**/*.dll" />
-      </fileset>
-    </copy>
-    <copy todir="${current.package.dir}/tests">
-      <fileset basedir="tests">
-        <include name="**/nant.*" />
-      </fileset>
-    </copy>
-  </target>
-  <target name="package-extensions" depends="check-current-package-dir, check-log4net-basedir">
-    <mkdir dir="${current.package.dir}/extensions" />
-    <delete dir="${current.package.dir}/extensions" />
-    <copy todir="${current.package.dir}/extensions">
-      <fileset basedir="extensions">
-        <include name="**/*" />
-        <exclude name="**/bin/**" />
-        <exclude name="**/build/**" />
-        <exclude name="**/doc/**" />
-        <exclude name="**/obj/**" />
-        <exclude name="**/*.csproj.user" />
-        <exclude name="**/*.vbproj.user" />
-        <exclude name="**/*.suo" />
-        <exclude name="**/*.sln.old" />
-      </fileset>
-    </copy>
-  </target>
-  <target name="package-doc" depends="check-current-package-dir, check-log4net-basedir">
-    <mkdir dir="${current.package.dir}/doc" />
-    <copy todir="${current.package.dir}/doc" includeemptydirs="false">
-      <fileset basedir="doc">
-        <include name="**/*" />
-        <exclude name="**/ndoc.log" />
-      </fileset>
-    </copy>
-    <mkdir dir="${current.package.dir}/xdocs" />
-    <copy todir="${current.package.dir}/xdocs" includeemptydirs="false">
-      <fileset basedir="xdocs">
-        <include name="**/*.xml" />
-        <include name="**/*.vsl" />
-      </fileset>
-    </copy>
-  </target>
-  <target name="package-release-files" depends="check-current-package-dir, check-log4net-basedir">
-    <copy todir="${current.package.dir}">
+  <target name="package-src" depends="set-package-configuration">
+    <copy todir="${current.package.src.dir}">
       <fileset basedir=".">
-        <!-- <include name="index.html" /> -->
-        <include name="build.cmd" />
-        <include name="ChangeLog.txt" />
-        <include name="log4net.build" />
-        <include name="log4net.include" />
-        <!-- <include name="releasenotes.html" /> -->
-        <include name="LICENSE" />
-        <include name="NOTICE" />
-        <include name="README.txt" />
-        <include name="log4net.snk" />
-        <include name="log4net.snk.readme" />
+        <include name="KEYS"/>
+        <include name="LICENSE"/>
+        <include name="NOTICE"/>
+        <include name="README.txt"/>
+        <include name="STATUS.txt"/>
+        <include name="build.cmd"/>
+        <include name="log4net-sdk.ndoc"/>
+        <include name="log4net.build"/>
+        <include name="log4net.include"/>
+        <include name="log4net.snk"/>
+        <include name="log4net.snk.readme"/>
+        <include name="old-log4net.snk.gpg"/>
+        <include name="pom.xml"/>
+
+        <include name="examples/**" />
+        <include name="extensions/**" />
+        <include name="src/**" />
+        <include name="tests/**" />
+
+        <exclude name="**/*.suo" />
+        <exclude name="**/bin/**" />
+        <exclude name="**/build/**" />
+        <exclude name="**/log4net*.xml" />
+        <exclude name="**/obj/**" />
+        <exclude name="**/*.csproj.user" />
+        <exclude name="**/*.vbproj.user" />
+
+        <exclude name="src/GeneratedAssemblyInfo.cs" />
+        <exclude name="tests/lib/**" />
       </fileset>
     </copy>
   </target>
-  <target name="create-package-zipfile" depends="check-current-package-dir, check-current-package-zipfile, check-log4net-basedir">
+  <target name="create-package-zipfiles">
     <!-- delete the specified zipfile if it already exists -->
     <delete>
-      <fileset basedir=".">
-        <include name="${current.package.zipfile}" />
+      <fileset basedir="build">
+        <include name="${current.package.src.zipfile}" />
       </fileset>
     </delete>
-    <zip zipfile="${current.package.zipfile}" ziplevel="9">
-      <fileset basedir="${current.package.dir}" prefix="${current.package.name}">
-        <include name="**/*" />
-        <!-- do not include the log4net keyfiles -->
-        <exclude name="**/*.snk" />
-        <!-- do not include the built examples -->
-        <exclude name="examples/**/bin/**" />
-        <!-- do not include the docs of examples -->
-        <exclude name="examples/**/doc/**" />
-        <!-- do not include the built extensions -->
-        <exclude name="extensions/**/bin/**" />
-        <!-- do not include the docs of extensions -->
-        <exclude name="extensions/**/doc/**" />
-        <!-- file created by mono compiler -->
-        <exclude name="**/gc.log" />
-        <!-- do not include the nunit binaries -->
-        <exclude name="tests/**/nunit*.dll" />
-        <!-- do not include the Visual Studio .NET 2003 project and solution files -->
-        <exclude name="**/*vs2003*" />
-        <!-- do not include old swp files (there shouldn't be any!) -->
-        <exclude name="**/*.swp" />
+    <zip zipfile="build/${current.package.src.zipfile}" ziplevel="9">
+      <fileset basedir="${current.package.src.dir}"
+               prefix="${current.package.name}">
+        <include name="**"/>
       </fileset>
     </zip>
-  </target>
-  <target name="update-version-info">
-    <nant buildfile="${log4net.basedir}/examples/nant.build" target="update-version-info" inheritall="false" />
-  </target>
-  <target name="compile-examples" description="Build all examples">
-    <nant buildfile="${log4net.basedir}/examples/nant.build" target="compile" inheritall="false" />
-  </target>
-  <target name="compile-extensions" description="Build all extensions">
-    <nant buildfile="${log4net.basedir}/extensions/nant.build" target="compile" inheritall="false" />
   </target>
 
   <target name="generate-assembly-description">
