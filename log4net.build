@@ -75,14 +75,6 @@ limitations under the License.
     <if test="${not framework::exists('net-2.0')}">
       <echo message=".NET Framework 2.0 runtime is not available." />
     </if>
-    <!-- .NET Framework 3.0 -->
-    <if test="${framework::exists('net-3.0')}">
-      <property name="nant.settings.currentframework" value="net-3.0" />
-      <call target="display-target-framework" />
-    </if>
-    <if test="${not framework::exists('net-3.0')}">
-      <echo message=".NET Framework 3.0 runtime is not available." />
-    </if> 
     <!-- .NET Framework 3.5 -->
     <if test="${framework::exists('net-3.5')}">
       <property name="nant.settings.currentframework" value="net-3.5" />
@@ -257,18 +249,6 @@ limitations under the License.
       </if>
       <if test="${not(property::exists('project.build.package') and project.build.package)}">
         <echo message="The .NET Framework 2.0 is not available. Build skipped." />
-      </if>
-    </if>
-    <!-- NET_3_0 -->
-    <if test="${framework::exists('net-3.0')}">
-      <call target="compile-net-3.0" />
-    </if>
-    <if test="${not framework::exists('net-3.0')}">
-      <if test="${property::exists('project.build.package') and project.build.package}">
-        <fail message="The .NET Framework 3.0 is not available." />
-      </if>
-      <if test="${not(property::exists('project.build.package') and project.build.package)}">
-        <echo message="The .NET Framework 3.0 is not available. Build skipped." />
       </if>
     </if>
     <!-- NET_3_5 -->
@@ -579,82 +559,6 @@ limitations under the License.
     </csc>
   </target>
   <target name="compile-net-2.0" description="Builds .NET Framework 2.0 version" depends="set-net-2.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir">
-    <!-- initialize the temp.build.skip property to false -->
-    <property name="temp.build.skip" value="false" />
-    <if test="${current.build.config.release}">
-      <!-- check if the old log4net key file is available -->
-      <if test="${not file::exists(log4net.basedir + '/old-log4net.snk')}">
-        <if test="${property::exists('project.build.package') and project.build.package}">
-          <fail message="Old key file not found." />
-        </if>
-        <if test="${not(property::exists('project.build.package') and project.build.package)}">
-          <echo message="Old key file not found."/>
-          <echo message="The release build using the old key will be skipped." />
-          <property name="temp.build.skip" value="true" />
-        </if>
-      </if>
-    </if>
-    <if test="${not temp.build.skip}">
-      <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'old-log4net.snk')}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/../oldkey/log4net.dll" doc="${current.bin.dir}/../oldkey/log4net.xml">
-        <sources basedir="${log4net.basedir}/src">
-          <include name="**/*.cs" />
-        </sources>
-        <resources failonempty="true">
-          <include name="${log4net.basedir}/NOTICE" />
-          <include name="${log4net.basedir}/LICENSE" />
-        </resources>
-        <references>
-          <include name="mscorlib.dll" />
-          <include name="System.dll" />
-          <include name="System.Data.dll" />
-          <include name="System.Web.dll" />
-          <include name="System.Xml.dll" />
-          <include name="System.Configuration.dll" />
-          <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework family>/<framework version>/<build configuration> directory -->
-          <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
-        </references>
-      </csc>
-    </if>
-    <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
-      <sources basedir="${log4net.basedir}/src">
-        <include name="**/*.cs" />
-      </sources>
-      <resources failonempty="true">
-        <include name="${log4net.basedir}/NOTICE" />
-        <include name="${log4net.basedir}/LICENSE" />
-      </resources>
-      <references>
-        <include name="mscorlib.dll" />
-        <include name="System.dll" />
-        <include name="System.Data.dll" />
-        <include name="System.Web.dll" />
-        <include name="System.Xml.dll" />
-        <include name="System.Configuration.dll" />
-        <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework family>/<framework version>/<build configuration> directory -->
-        <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
-      </references>
-    </csc>
-    <csc if="${current.build.config.debug}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
-      <sources basedir="${log4net.basedir}/src">
-        <include name="**/*.cs" />
-      </sources>
-      <resources failonempty="true">
-        <include name="${log4net.basedir}/NOTICE" />
-        <include name="${log4net.basedir}/LICENSE" />
-      </resources>
-      <references>
-        <include name="mscorlib.dll" />
-        <include name="System.dll" />
-        <include name="System.Data.dll" />
-        <include name="System.Web.dll" />
-        <include name="System.Xml.dll" />
-        <include name="System.Configuration.dll" />
-        <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework family>/<framework version>/<build configuration> directory -->
-        <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
-      </references>
-    </csc>
-  </target>
-  <target name="compile-net-3.0" description="Builds .NET Framework 3.0 version" depends="set-net-3.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir">
     <!-- initialize the temp.build.skip property to false -->
     <property name="temp.build.skip" value="false" />
     <if test="${current.build.config.release}">
