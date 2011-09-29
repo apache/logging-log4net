@@ -162,11 +162,15 @@ limitations under the License.
   </target>
   <!-- Target for setting the package configuration -->
   <target name="set-package-configuration">
-    <property name="current.package.name" value="${nant.project.name}-${package.version}" />
+    <property name="current.package.name" value="${project::get-name()}-${package.version}" />
     <property name="current.package.src.dir" value="build/${current.package.name}-src" />
     <property name="current.package.src.zipfile" value="${project::get-name()}-${package.version}-src.zip" />
     <delete dir="${current.package.src.dir}" if="${directory::exists(current.package.src.dir)}" />
     <mkdir dir="${current.package.src.dir}" />
+    <property name="current.package.bin.dir" value="build/${current.package.name}-bin" />
+    <property name="current.package.bin.zipfile" value="${project::get-name()}-${package.version}-bin.zip" />
+    <delete dir="${current.package.bin.dir}" if="${directory::exists(current.package.bin.dir)}" />
+    <mkdir dir="${current.package.bin.dir}" />
   </target>
   <!-- Target for compiling all build configurations for all runtime configurations -->
   <target name="compile-all" description="Compile all build configurations for all runtime configurations"
@@ -196,7 +200,7 @@ limitations under the License.
     <if test="${framework::exists('netcf-1.0')}">
       <call target="compile-netcf-1.0" />
     </if>
-    <if test="${not framework::exists('netcf-1.0')}">
+    <!--if test="${not framework::exists('netcf-1.0')}">
       <if test="${property::exists('project.build.package') and project.build.package}">
         <fail message="The .NET Compact Framework 1.0 is not available." />
       </if>
@@ -204,7 +208,7 @@ limitations under the License.
         <echo 
             message="The .NET Compact Framework 1.0 is not available. Build skipped." />
       </if>
-    </if>
+    </if-->
     <!-- NETCF_2_0 -->
     <if test="${framework::exists('netcf-2.0')}">
       <call target="compile-netcf-2.0" />
@@ -321,14 +325,14 @@ limitations under the License.
     <if test="${framework::exists('sscli-1.0')}">
       <call target="compile-sscli-1.0" />
     </if>
-    <if test="${not framework::exists('sscli-1.0')}">
+    <!--if test="${not framework::exists('sscli-1.0')}">
       <if test="${property::exists('project.build.package') and project.build.package}">
         <fail message="SSCLI 1.0 is not available." />
       </if>
       <if test="${not(property::exists('project.build.package') and project.build.package)}">
         <echo message="SSCLI 1.0 is not available. Build skipped." />
       </if>
-    </if>
+    </if-->
   </target>
   <target name="compile" description="Builds the current build configuration for the current target framework." depends="check-current-build-config">
     <call target="compile-${framework::get-target-framework()}" />
@@ -1411,7 +1415,7 @@ limitations under the License.
     <!-- copies the sources to the current package directory -->
     <call target="package-src" />
     <!-- compile all build configurations for all runtime configurations  -->
-    <!--call target="compile-all" /-->
+    <call target="compile-all" />
     <!-- generate the sdk docs using the release build configuration for all runtime configuration -->
     <call target="set-release-build-configuration" />
     <call target="generate-sdkdoc-all" />
