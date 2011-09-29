@@ -1313,9 +1313,10 @@ limitations under the License.
       </fileset>
     </copy>
   </target>
-  <target name="package" depends="set-package-configuration" description="Build and Package distribution">
+  <target name="package" description="Build and Package distribution">
     <!-- set flag to indicating that this is a package build -->
     <property name="project.build.package" value="true" />
+    <call target="set-package-configuration" />
     <!-- copies the sources to the current package directory -->
     <call target="package-src" />
     <!-- compile all build configurations for all runtime configurations  -->
@@ -1326,7 +1327,7 @@ limitations under the License.
     <!-- create the package distribution zipfile -->
     <call target="create-package-zipfiles" />
   </target>
-  <target name="package-src" depends="set-package-configuration">
+  <target name="package-src">
     <copy todir="${current.package.src.dir}">
       <fileset basedir=".">
         <include name="KEYS"/>
