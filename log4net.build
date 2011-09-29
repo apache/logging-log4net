@@ -206,7 +206,7 @@ limitations under the License.
       <call target="compile-netcf-2.0" />
     </if>
     <if test="${not framework::exists('netcf-2.0')}">
-      <if test="${property::exists('project.build.package') and project.build.package}">
+      <if test="${property::exists('project.build.package') and project.build.package and not(directory::exists(path::combine(bin.dir, 'netcf/2.0/debug')) and directory::exists(path::combine(bin.dir, 'netcf/2.0/release')) and directory::exists(path::combine(bin.dir, 'netcf/2.0/oldkey')))}">
         <fail message="The .NET Compact Framework 2.0 is not available." />
       </if>
       <if test="${not(property::exists('project.build.package') and project.build.package)}">
@@ -220,7 +220,7 @@ limitations under the License.
       <call target="compile-cli-1.0" />
     </if>
     <if test="${not framework::exists('net-1.0')}">
-      <if test="${property::exists('project.build.package') and project.build.package}">
+      <if test="${property::exists('project.build.package') and project.build.package and not(directory::exists(path::combine(bin.dir, 'net/1.0/debug')) and directory::exists(path::combine(bin.dir, 'net/1.0/release')) and directory::exists(path::combine(bin.dir, 'net/1.0/oldkey')))}">
         <fail message="The .NET Framework 1.0 is not available." />
       </if>
       <if test="${not(property::exists('project.build.package') and project.build.package)}">
@@ -232,7 +232,7 @@ limitations under the License.
       <call target="compile-net-1.1" />
     </if>
     <if test="${not framework::exists('net-1.1')}">
-      <if test="${property::exists('project.build.package') and project.build.package}">
+      <if test="${property::exists('project.build.package') and project.build.package and not(directory::exists(path::combine(bin.dir, 'net/1.1/debug')) and directory::exists(path::combine(bin.dir, 'net/1.1/release')) and directory::exists(path::combine(bin.dir, 'net/1.1/oldkey')))}">
         <fail message="The .NET Framework 1.1 is not available." />
       </if>
       <if test="${not(property::exists('project.build.package') and project.build.package)}">
@@ -244,7 +244,7 @@ limitations under the License.
       <call target="compile-net-2.0" />
     </if>
     <if test="${not framework::exists('net-2.0')}">
-      <if test="${property::exists('project.build.package') and project.build.package}">
+      <if test="${property::exists('project.build.package') and project.build.package and not(directory::exists(path::combine(bin.dir, 'net/2.0/debug')) and directory::exists(path::combine(bin.dir, 'net/2.0/release')) and directory::exists(path::combine(bin.dir, 'net/2.0/oldkey')))}">
         <fail message="The .NET Framework 2.0 is not available." />
       </if>
       <if test="${not(property::exists('project.build.package') and project.build.package)}">
@@ -257,7 +257,7 @@ limitations under the License.
       <call target="compile-net-3.5-cp" />
     </if>
     <if test="${not framework::exists('net-3.5')}">
-      <if test="${property::exists('project.build.package') and project.build.package}">
+      <if test="${property::exists('project.build.package') and project.build.package and not(directory::exists(path::combine(bin.dir, 'net/3.5/debug')) and directory::exists(path::combine(bin.dir, 'net/3.5/release')) and directory::exists(path::combine(bin.dir, 'net/3.5/oldkey')) and path::combine(bin.dir, 'net-cp/3.5/debug')) and directory::exists(path::combine(bin.dir, 'net-cp/3.5/release')) and directory::exists(path::combine(bin.dir, 'net-cp/3.5/oldkey')))}">
         <fail message="The .NET Framework 3.5 is not available." />
       </if>
       <if test="${not(property::exists('project.build.package') and project.build.package)}">
@@ -270,7 +270,7 @@ limitations under the License.
       <call target="compile-net-4.0-cp" />
     </if>
     <if test="${not framework::exists('net-4.0')}">
-      <if test="${property::exists('project.build.package') and project.build.package}">
+      <if test="${property::exists('project.build.package') and project.build.package and not(directory::exists(path::combine(bin.dir, 'net/4.0/debug')) and directory::exists(path::combine(bin.dir, 'net/4.0/release')) and directory::exists(path::combine(bin.dir, 'net/4.0/oldkey')) and path::combine(bin.dir, 'net-cp/4.0/debug')) and directory::exists(path::combine(bin.dir, 'net-cp/4.0/release')) and directory::exists(path::combine(bin.dir, 'net-cp/4.0/oldkey')))}">
         <fail message="The .NET Framework 4.0 is not available." />
       </if>
       <if test="${not(property::exists('project.build.package') and project.build.package)}">
@@ -282,7 +282,7 @@ limitations under the License.
       <call target="compile-mono-1.0" />
     </if>
     <if test="${not framework::exists('mono-1.0')}">
-      <if test="${property::exists('project.build.package') and project.build.package}">
+      <if test="${property::exists('project.build.package') and project.build.package and not(directory::exists(path::combine(bin.dir, 'mono/1.0/debug')) and directory::exists(path::combine(bin.dir, 'mono/1.0/release')) and directory::exists(path::combine(bin.dir, 'mono/1.0/oldkey')))}">
         <fail message="Mono 1.0 is not available." />
       </if>
       <if test="${not(property::exists('project.build.package') and project.build.package)}">
@@ -294,7 +294,7 @@ limitations under the License.
       <call target="compile-mono-2.0" />
     </if>
     <if test="${not framework::exists('mono-2.0')}">
-      <if test="${property::exists('project.build.package') and project.build.package}">
+      <if test="${property::exists('project.build.package') and project.build.package and not(directory::exists(path::combine(bin.dir, 'mono/2.0/debug')) and directory::exists(path::combine(bin.dir, 'mono/2.0/release')) and directory::exists(path::combine(bin.dir, 'mono/2.0/oldkey')))}">
         <fail message="Mono 2.0 is not available." />
       </if>
       <if test="${not(property::exists('project.build.package') and project.build.package)}">
