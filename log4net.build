@@ -1313,6 +1313,13 @@ limitations under the License.
       </fileset>
     </copy>
   </target>
+  <target name="generate-site">
+    <property name="mvn" value="mvn"/>
+    <if test="${platform::is-windows()}">
+      <property name="mvn" value="mvn.bat"/>
+    </if>
+    <exec program="${mvn}" commandline="site:site"/>
+  </target>
   <target name="package" description="Build and Package distribution">
     <!-- set flag to indicating that this is a package build -->
     <property name="project.build.package" value="true" />
@@ -1323,9 +1330,7 @@ limitations under the License.
     <call target="compile-all" />
     <!-- generate the sdk docs using the release build configuration for all runtime configuration -->
     <call target="set-release-build-configuration" />
-    <call target="generate-sdkdoc-all" />
-    <!-- create the package distribution zipfile -->
-    <call target="create-package-zipfiles" />
+    <call target="package-bin" />
   </target>
   <target name="package-src">
     <copy todir="${current.package.src.dir}">
@@ -1361,8 +1366,7 @@ limitations under the License.
         <exclude name="tests/lib/**" />
       </fileset>
     </copy>
-  </target>
-  <target name="create-package-zipfiles">
+
     <!-- delete the specified zipfile if it already exists -->
     <delete>
       <fileset basedir="build">
@@ -1371,6 +1375,74 @@ limitations under the License.
     </delete>
     <zip zipfile="build/${current.package.src.zipfile}" ziplevel="9">
       <fileset basedir="${current.package.src.dir}"
+               prefix="${current.package.name}">
+        <include name="**"/>
+      </fileset>
+    </zip>
+  </target>
+  <target name="package-bin" depends="generate-sdkdoc-step1,generate-site">
+    <copy todir="${current.package.bin.dir}">
+      <fileset basedir=".">
+        <include name="KEYS"/>
+        <include name="LICENSE"/>
+        <include name="NOTICE"/>
+        <include name="README.txt"/>
+        <include name="STATUS.txt"/>
+        <include name="bin/**/release/**"/>
+      </fileset>
+    </copy>
+    <copy todir="${current.package.bin.dir}">
+      <fileset basedir="${current.sdkdoc.dir}">
+        <include name="**/*.chm" />
+      </fileset>
+    </copy>
+    <property name="current.package.doc.dir"
+              value="${current.package.bin.dir}/doc"/>
+    <mkdir dir="${current.package.doc.dir}/release/sdk"/>
+    <copy todir="${current.package.doc.dir}/release/sdk">
+      <fileset basedir="${current.sdkdoc.dir}">
+        <include name="**/*" />
+        <exclude name="**/*.chm" />
+        <exclude name="**/*.hh?" />
+        <exclude name="**/*.log" />
+      </fileset>
+    </copy>
+    <copy todir="${current.package.doc.dir}">
+      <fileset basedir="target/site">
+        <include name="**"/>
+      </fileset>
+    </copy>
+
+    <delete>
+      <fileset basedir="build">
+        <include name="${current.package.bin.dir}-*key.zip" />
+      </fileset>
+    </delete>
+    <zip zipfile="${current.package.bin.dir}-newkey.zip" ziplevel="9">
+      <fileset basedir="${current.package.bin.dir}"
+               prefix="${current.package.name}">
+        <include name="**"/>
+      </fileset>
+    </zip>
+
+    <!-- binary dist with old strong name key -->
+    <foreach item="Folder" property="platform-and-version">
+      <in>
+        <items>
+          <include name="bin/*/*"/>
+        </items>
+      </in>
+      <do>
+        <copy todir="${current.package.bin.dir}/${string::replace(platform-and-version, project::get-base-directory(), '')}/release"
+              overwrite="true">
+          <fileset basedir="${platform-and-version}/oldkey">
+            <include name="**"/>
+          </fileset>
+        </copy>
+      </do>
+    </foreach>
+    <zip zipfile="${current.package.bin.dir}-oldkey.zip" ziplevel="9">
+      <fileset basedir="${current.package.bin.dir}"
                prefix="${current.package.name}">
         <include name="**"/>
       </fileset>
