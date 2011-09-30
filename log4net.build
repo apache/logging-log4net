@@ -257,7 +257,7 @@ limitations under the License.
       <call target="compile-net-3.5-cp" />
     </if>
     <if test="${not framework::exists('net-3.5')}">
-      <if test="${property::exists('project.build.package') and project.build.package and not(directory::exists(path::combine(bin.dir, 'net/3.5/debug')) and directory::exists(path::combine(bin.dir, 'net/3.5/release')) and directory::exists(path::combine(bin.dir, 'net/3.5/oldkey')) and path::combine(bin.dir, 'net-cp/3.5/debug')) and directory::exists(path::combine(bin.dir, 'net-cp/3.5/release')) and directory::exists(path::combine(bin.dir, 'net-cp/3.5/oldkey')))}">
+      <if test="${property::exists('project.build.package') and project.build.package and not(directory::exists(path::combine(bin.dir, 'net/3.5/debug')) and directory::exists(path::combine(bin.dir, 'net/3.5/release')) and directory::exists(path::combine(bin.dir, 'net/3.5/oldkey')) and directory::exists(path::combine(bin.dir, 'net-cp/3.5/debug')) and directory::exists(path::combine(bin.dir, 'net-cp/3.5/release')) and directory::exists(path::combine(bin.dir, 'net-cp/3.5/oldkey')))}">
         <fail message="The .NET Framework 3.5 is not available." />
       </if>
       <if test="${not(property::exists('project.build.package') and project.build.package)}">
@@ -270,7 +270,7 @@ limitations under the License.
       <call target="compile-net-4.0-cp" />
     </if>
     <if test="${not framework::exists('net-4.0')}">
-      <if test="${property::exists('project.build.package') and project.build.package and not(directory::exists(path::combine(bin.dir, 'net/4.0/debug')) and directory::exists(path::combine(bin.dir, 'net/4.0/release')) and directory::exists(path::combine(bin.dir, 'net/4.0/oldkey')) and path::combine(bin.dir, 'net-cp/4.0/debug')) and directory::exists(path::combine(bin.dir, 'net-cp/4.0/release')) and directory::exists(path::combine(bin.dir, 'net-cp/4.0/oldkey')))}">
+      <if test="${property::exists('project.build.package') and project.build.package and not(directory::exists(path::combine(bin.dir, 'net/4.0/debug')) and directory::exists(path::combine(bin.dir, 'net/4.0/release')) and directory::exists(path::combine(bin.dir, 'net/4.0/oldkey')) and directory::exists(path::combine(bin.dir, 'net-cp/4.0/debug')) and directory::exists(path::combine(bin.dir, 'net-cp/4.0/release')) and directory::exists(path::combine(bin.dir, 'net-cp/4.0/oldkey')))}">
         <fail message="The .NET Framework 4.0 is not available." />
       </if>
       <if test="${not(property::exists('project.build.package') and project.build.package)}">
