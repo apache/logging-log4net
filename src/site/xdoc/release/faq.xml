@@ -25,6 +25,8 @@ limitations under the License.
     <meta name="keywords" content="log4net frequently asked questions, log4net faq, log4net" />
 
     <body>
+      <a name="top">
+      </a>
         <section id="main" name="Apache log4net&#x2122; Frequently Asked Questions">
             <section id="information" name="Information">
             
@@ -1014,6 +1016,35 @@ public class FastLogger
                 </section>
                 <p><a href="#top">Back to Top</a></p>
 
+                <section id="log-early"
+                         name="log4net doesn't log when built in RELEASE mode">
+                    <p>
+                      If you use attributes to configure log4net then
+                      the order by which assemblies are loaded may
+                      determine whether you attributes are used or
+                      not.  Assembly load order may be different in
+                      DEBUG and RELEASE mode.
+                    </p>
+
+                    <p>
+                      As stated in <a
+                      href="manual/configuration.html#attributes">the
+                      manual</a> the attribute will only be read for
+                      the first assembly that tries to use log4net.
+                      So it is important that you obtain your
+                      <code>ILog</code> instance as early as possible.
+                    </p>
+
+                    <p>
+                      For a command line application "as early as
+                      possible" probably is the class holding the
+                      <code>Main</code> method, for a Web-Application
+                      it would be your <code>Global.asax</code> class
+                      and for a Windows Service it would be the class
+                      deriving from <code>ServiceBase</code>.
+                    </p>
+                </section>
+                <p><a href="#top">Back to Top</a></p>
 
             </section>
             
