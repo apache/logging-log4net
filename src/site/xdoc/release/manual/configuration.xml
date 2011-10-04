@@ -409,6 +409,48 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
                     </p>
                 </section>
                 
+                <section id="appSettings" name="appSettings">
+                  <p>
+                    If you use <a href="#attributes">attributes</a> to
+                    configure log4net, two settings of the
+                    <code>appSettings</code> section of your
+                    application's configuration file can be used to
+                    override the values given in your assembly's
+                    attributes.
+                  </p>
+                  <p>
+                    The setting with the key "log4net.Config"
+                    overrides the configuration file name (and is
+                    considered to be relative to your application's
+                    base directory), the setting with the key
+                    "log4net.Config.Watch" determines whether the file
+                    should be monitored for changes.
+                  </p>
+                  <p>
+                    Even though the assembly attribute
+                  </p>
+                  <div class="syntax"><pre class="code">
+<b>[assembly: log4net.Config.XmlConfigurator(Watch=false)]</b>
+                  </pre></div>
+                  <p>
+                    would configure your application to use a
+                    configuration file "TestApp.exe.config" and not
+                    monitor it for changes you can override this to
+                    use the file "log4net.config" and monitor it
+                    instead by adding
+                  </p>
+                  <div class="syntax"><pre class="code"><![CDATA[
+<appSettings>
+  <add key="log4net.Config" value="log4net.config"/>
+  <add key="log4net.Config.Watch" value="True"/>
+</appSettings>]]>
+                  </pre></div>
+
+                  <p>
+                    to your application's configuration file.
+                  </p>
+                </section>
+
                 <section id="files" name="Configuration Files">
                     <p>
                         Typically the log4net configuration is specified using a file. This file can
