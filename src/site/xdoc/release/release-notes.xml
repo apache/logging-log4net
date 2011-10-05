@@ -25,7 +25,181 @@ limitations under the License.
     <meta name="keywords" content="log4net release notes, log4net" />
 
     <body>
+
         <section id="main" name="Apache log4net&#x2122; Release Notes">
+
+          <section id="1.2.11" name="1.2.11">
+            <p>
+              log4net 1.2.11 is not only a bugfix release, it also
+              adds support for .NET 4.0 as well as the client profiles
+              of .NET 3.5 and .NET 4.0.
+            </p>
+
+            <p>
+              Starting with this release log4net uses a new strong
+              name key but we also provide a binary distribution using
+              the "old" strong name key of log4net 1.2.10 and earlier.
+              See <a href="faq.html#two-snks">the FAQ</a> for details.
+            </p>
+
+            <p>
+              The binary distributions no longer contain assemblies
+              built for the Compact Framework 1.0 or the Shared Source
+              CLI - you can build those yourself using the source
+              distribution.
+            </p>
+
+            <section id="1.2.11-breaking" name="Breaking Changes">
+              <p>
+                The signature of
+                <code>ILoggerFactory.CreateLogger</code> has changed.
+              </p>
+            </section>
+
+            <section id="1.2.11-bug" name="Bug Fixes">
+              <ul>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-76'>LOG4NET-76</a>] -         TextWriterAdapter is not thread safe
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-79'>LOG4NET-79</a>] -         SecurityException thrown in LogicalThreadContextProperties GetProperties
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-81'>LOG4NET-81</a>] -         LoggerRepositorySkeleton&#39;s OnConfigurationChanged method always raises its event with EventArgs.Empty instead of passing through its EventArgs parameter.
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-93'>LOG4NET-93</a>] -         Typos for node name in tutorial, excess quote, invalid XML
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-94'>LOG4NET-94</a>] -         Incorrect config file for ..\examples\net\1.0\Tutorials\ConsoleApp
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-95'>LOG4NET-95</a>] -         Level.CompareTo() may result a wrong Value -&gt; sorting of Levels does not work
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-113'>LOG4NET-113</a>] -         SystemInfo.GetTypeFromString() raises NotSupportedException
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-123'>LOG4NET-123</a>] -         EnvironmentPatternConverter does not expand User or System level environment variables under Windows
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-126'>LOG4NET-126</a>] -         Links on the log4net Examples page do not work, including the overview link explaining why the other links do not work
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-128'>LOG4NET-128</a>] -         Either documentation is incorrect or a bug in SmtpAppender
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-129'>LOG4NET-129</a>] -         EventLogAppender EventID parsing does not handle Active Properties properly
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-135'>LOG4NET-135</a>] -         Bad example code in documentation
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-137'>LOG4NET-137</a>] -         log4net.Filter.LevelMatchFilter does not work anymore
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-143'>LOG4NET-143</a>] -         Invalid Repository Config Uri composition from &quot;log4net.Config&quot; application setting
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-146'>LOG4NET-146</a>] -         System.NullReferenceException on FindAndRender object
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-158'>LOG4NET-158</a>] -         XMLConfigurator.ConfigureAndWatch() leaks resources if called multiple times
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-167'>LOG4NET-167</a>] -         ArrayOutOfBounds Exception in MemoryAppender.getEvents()
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-212'>LOG4NET-212</a>] -         Threading bug in the PatternConverter.cs
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-214'>LOG4NET-214</a>] -         EventLogAppender should also use config file to set EventId
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-215'>LOG4NET-215</a>] -         Exception on Convert for return %class{1} name
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-229'>LOG4NET-229</a>] -         Japanese characters get garbled with log4net.Layout.XmlLayoutSchemaLog4j 
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-241'>LOG4NET-241</a>] -         Issue tracking page does not link to project
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-242'>LOG4NET-242</a>] -         Download page does not have link to KEYS file
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-243'>LOG4NET-243</a>] -         broken link on http://logging.apache.org/log4net/release/example-apps.html
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-244'>LOG4NET-244</a>] -         SmtpAppender.To Property has incorrect delimiter
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-257'>LOG4NET-257</a>] -         Visual Studio 2010 .NET 4.0 Application does not copy log4net lib to bin directory
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-265'>LOG4NET-265</a>] -         RemoteFileAppender Tests fail on Windows 7
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-274'>LOG4NET-274</a>] -         log4net doesn&#39;t log when running a .Net 4.0 Windows application built in Release mode
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-297'>LOG4NET-297</a>] -         AppenderSkeleton.RequiresLayout docs and implementation don&#39;t match
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-300'>LOG4NET-300</a>] -         FilterTest doesn&#39;t compile for .Net 2.0
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-301'>LOG4NET-301</a>] -         Unit tests fail on a clean checkout on .NET 2.0 using NAnt
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-310'>LOG4NET-310</a>] -         EventLogAppender&#39;s ActivateOptions throws SecurityException on Vista/Win2k3 and later when not run as administrator
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-311'>LOG4NET-311</a>] -         MinimalLock and AppendToFile=false don&#39;t work together in trunk&#39;s FileAppender
+                </li>
+              </ul>
+            </section>
+
+            <section id="1.2.10-enh" name="Improvements">
+              <ul>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-31'>LOG4NET-31</a>] -         Allow user to pass in additional parameters to &lt;converter&gt; node via some kind of &lt;property&gt; tag
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-38'>LOG4NET-38</a>] -         EventLogAppender: Add support for setting the Category on Event Log messages.
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-66'>LOG4NET-66</a>] -         PreserveFileExtension with StaticFileName
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-77'>LOG4NET-77</a>] -         A small improvement of log4net.Layout.Pattern.ExceptionPatternConverter  - added &#39;Option&#39; propery support
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-88'>LOG4NET-88</a>] -         support .NET 2.0 connectionStrings configuration section
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-96'>LOG4NET-96</a>] -         Expose the Message, Exception, and ErrorCode properties of OnlyOnceErrorHandler.
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-97'>LOG4NET-97</a>] -         Make Hierarchy&#39;s ILoggerFactory aware of the repository&#39;s LevelMap
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-98'>LOG4NET-98</a>] -         Update header comment in files to be compliant with new Apache header requirements: http://www.apache.org/legal/src-headers.html for 11/1/2006 deadline
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-100'>LOG4NET-100</a>] -         IPAddressConverter improvement for .NET 2 or .NET 3
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-106'>LOG4NET-106</a>] -         TraceAppender : Add switch to disable using logger name as trace category
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-112'>LOG4NET-112</a>] -         Add support to the UdpAppender for IP v6 remote addresses
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-131'>LOG4NET-131</a>] -         Add Cc and Bcc support to SmtpAppender
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-141'>LOG4NET-141</a>] -         Add CreateConnection method to AdoNetAppender to allow subclasses to have control of IDbConnection.
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-153'>LOG4NET-153</a>] -         Make it easier to configure multiple appenders in code using BasicConfigurator
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-157'>LOG4NET-157</a>] -         FAQ for getting the fully-qualified name of a class
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-164'>LOG4NET-164</a>] -         using a named mutex for file appenders
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-170'>LOG4NET-170</a>] -         Documentation improvement re: fixing and active properties
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-246'>LOG4NET-246</a>] -         Make it possible to choose whether or not to watch configuration files specified using the &quot;log4net.Config&quot; appsetting key 
+                </li>
+              </ul>
+    
+            </section>
+            <section id="1.2.11-new" name="New Features">
+              <ul>
+                <li>The various static <code>Configure</code> methods of the <code>Configurator</code> classes now return collections of configuration messages rather than <code>void</code>.
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-59'>LOG4NET-59</a>] -       add the ability to roll files based on universal time (UTC).
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-64'>LOG4NET-64</a>] -         add the ability to preserve the log file name extension when rolling the log file.
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-87'>LOG4NET-87</a>] -         Support ASP.Net related PatternConverters to allow items from the HttpContext.Current.Session, Cache, Request, etc. to be captured.
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-92'>LOG4NET-92</a>] -         Build for Compact Framework 2.0
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-107'>LOG4NET-107</a>] -         Added ExceptionEvaluator
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-115'>LOG4NET-115</a>] -         Expand UserAppDataPath in filename
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-116'>LOG4NET-116</a>] -         allow smtp to ssl authenticate and with certificates.
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-154'>LOG4NET-154</a>] -         Add a StackTracePatternConverter to display method calls leading up to log message
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-155'>LOG4NET-155</a>] -         Add TimeEvaluator
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-168'>LOG4NET-168</a>] -         New property ReplyTo address for the SmtpAppender required
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-176'>LOG4NET-176</a>] -         Buildable with VS 2008 and .NET FW 3.5
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-233'>LOG4NET-233</a>] -         Support .NET 4.0 including Client Profile
+                </li>
+                </li>
+              </ul>
+            </section>
+
+          </section>
 
             <section id="1.2.10" name="1.2.10">
 
