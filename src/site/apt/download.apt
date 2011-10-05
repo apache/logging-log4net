@@ -61,7 +61,7 @@ Download Apache log4net&#x2122;
   The 1.2.10 and 1.2.9 releases have been created while log4net was
   still undergoing incubation and those releases are available from
   the Apache Software Foundation's
-  {{{http://archive.apache.org/dist/incubator/log4net/}distribution archive}}}
+  {{{http://archive.apache.org/dist/incubator/log4net/}distribution archive}}
   for the Incubator project.
 
   Previous releases of log4net are available from the {{{http://sourceforge.net/project/showfiles.php?group_id=31983&release_id=171808}SourceForge Project Site}}.
