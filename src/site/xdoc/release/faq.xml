@@ -286,6 +286,62 @@ limitations under the License.
                 </section>
                 <p><a href="#top">Back to Top</a></p>
                 
+                <section id="two-snks"
+                         name="Why are there two different strong name keys?">
+                  <p>
+                    Starting with log4net 1.2.11 there are two
+                    different binary distributions,
+                    <code>oldkey</code> and <code>newkey</code>.
+                  </p>
+
+                  <p>
+                    The <code>oldkey</code> distribution contains
+                    assemblies signed with the same strong name key
+                    that was used to sign the assemblies of log4net
+                    1.2.10 and earlier.  This strong name key is only
+                    available to log4net developers.
+                  </p>
+
+                  <p>
+                    The <code>newkey</code> distribution contains
+                    assemblies signed with the strong name key
+                    available from <a
+                    href="https://svn.apache.org/repos/asf/logging/log4net/trunk/log4net.snk">log4net's
+                    svn area</a> or inside the source distribution.
+                    Everybody can create assemblies that have the same
+                    strong name.
+                  </p>
+
+                  <p>
+                    For open source projects it is important that you
+                    can create your own patched version of a product
+                    and use it instead of the official release.  This
+                    is something that is now possible if the
+                    <code>newkey</code> is used throughout.
+                  </p>
+
+                  <p>
+                    The <code>oldkey</code> distribution is mostly
+                    only for people who work with third-party
+                    dependencies that require one of the earlier
+                    releases of log4net and can't be recompiled to use
+                    the new strong name.  If you start a new project
+                    or can recompile all your dependencies we strongly
+                    recommend you use the <code>newkey</code>
+                    assemblies.
+                  </p>
+
+                  <p>
+                    Note that the "new" strong name no longer provides
+                    any kind of authenticity.  If you want to be sure
+                    you have the "real" Apache log4net, download the binary
+                    release from one of the mirrors and verify the PGP
+                    signature.
+                  </p>
+
+                </section>
+                <p><a href="#top">Back to Top</a></p>
+
             </section>
 
             <section id="configuration" name="Configuration">
