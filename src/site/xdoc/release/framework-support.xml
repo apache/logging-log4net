@@ -116,11 +116,17 @@ limitations under the License.
                     </table>
                 </div>
                 <p>
-                    For each of these frameworks a log4net assembly targeting the framework is supplied.  Although it's 
+                    For most of these frameworks a log4net assembly targeting the framework is supplied.  Although it's 
                     perfectly possible to use the .NET Framework 1.0 version of log4net on the .NET Framework 1.1, having 
                     an assembly that really targets a specific framework allows us to use features in that framework that 
                     are not available in other frameworks or remove features from log4net that are not supported in a 
                     specific framework.
+                </p>
+                <p>
+                  There are no assemblies targeting the Compact
+                  Framework 1.0 or Microsoft Shared Source CLI 1.0 in
+                  the binary release, but they can be built from the
+                  source release.
                 </p>
             </section>
             
