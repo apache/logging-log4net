@@ -1340,7 +1340,6 @@ limitations under the License.
         <include name="README.txt"/>
         <include name="STATUS.txt"/>
         <include name="build.cmd"/>
-        <include name="log4net-sdk.ndoc"/>
         <include name="log4net.build"/>
         <include name="log4net.include"/>
         <include name="log4net.snk"/>
@@ -1362,7 +1361,10 @@ limitations under the License.
         <exclude name="**/*.vbproj.user" />
 
         <exclude name="src/GeneratedAssemblyInfo.cs" />
-        <exclude name="tests/lib/**" />
+        <exclude name="tests/doc/**" />
+        <exclude name="tests/lib/net/**" />
+        <exclude name="tests/lib/mono/**" />
+        <exclude name="tests/lib/netcf/**" />
       </fileset>
     </copy>
 
@@ -1372,7 +1374,8 @@ limitations under the License.
         <include name="${current.package.src.zipfile}" />
       </fileset>
     </delete>
-    <zip zipfile="build/${current.package.src.zipfile}" ziplevel="9">
+    <zip zipfile="build/${current.package.src.zipfile}" ziplevel="9"
+         includeemptydirs="true">
       <fileset basedir="${current.package.src.dir}"
                prefix="${current.package.name}">
         <include name="**"/>
