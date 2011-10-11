@@ -1262,7 +1262,7 @@ limitations under the License.
           <property name="HtmlHelpCompilerFilename" value="${htmlhelp.compiler}" />
           <property name="IncludeFavorites" value="true" />
           <property name="IncludeHierarchy" value="true" />
-          <property name="Title" value="log4net SDK Documentation - ${framework::get-description(framework::get-target-framework())}" />
+          <property name="Title" value="Apache log4net&#x2122; SDK Documentation - ${framework::get-description(framework::get-target-framework())}" />
           <property name="SplitTOCs" value="false" />
           <property name="DefaulTOC" value="" />
           <property name="ShowVisualBasic" value="true" />
@@ -1285,8 +1285,7 @@ limitations under the License.
           <property name="AutoDocumentConstructors" value="true" />
           <property name="GetExternalSummaries" value="true" />
           <property name="IncludeAssemblyVersion" value="false" />
-          <property name="CopyrightText" value="Copyright 2004-2011 The Apache Software Foundation." />
-          <property name="CopyrightHref" value="http://logging.apache.org/log4net" />
+          <property name="FooterHtml" value="&lt;a href='http://logging.apache.org/log4net/'&gt;Copyright 2004-2011 The Apache Software Foundation.&lt;/a&gt;&lt;br&gt;&lt;/br&gt;Apache log4net, Apache and log4net are trademarks of The Apache Software Foundation."/>
         </documenter>
       </documenters>
     </ndoc>
