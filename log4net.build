@@ -1146,7 +1146,7 @@ limitations under the License.
       The log4net CLI 1.0 assembly is runtime compatible with the
       following frameworks:
 
-      * Microsoft .NET Framework 1.0 (and higher)
+      * Microsoft(R) .NET Framework 1.0 (and higher)
       * Mono 1.0 (and higher)
 
       We only provide this "flavor" of log4net in release

@@ -31,7 +31,7 @@ limitations under the License.
           <section id="1.2.11" name="1.2.11">
             <p>
               log4net 1.2.11 is not only a bugfix release, it also
-              adds support for .NET 4.0 as well as the client profiles
+              adds support for Microsoft&#xae; .NET 4.0 as well as the client profiles
               of .NET 3.5 and .NET 4.0.
             </p>
 

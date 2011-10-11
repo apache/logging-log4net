@@ -88,7 +88,7 @@ limitations under the License.
                     <p>
                         log4net runs on many different frameworks and each framework has its own requirements.
                         As a rule of thumb you will need an ECMA-335 compliant CLI runtime, for example, 
-                        the Microsoft .NET runtime 1.0 (1.0.3705) or 1.1 (1.1.4322).
+                        the Microsoft&#xae; .NET runtime 1.0 (1.0.3705) or 1.1 (1.1.4322).
                     </p>
                     <p>
                         Not all frameworks are created equal and some features have been excluded from 

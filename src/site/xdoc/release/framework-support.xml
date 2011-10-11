@@ -41,7 +41,7 @@ limitations under the License.
                 <p>
                     While the number of different builds available may seem confusing, you only need to select the
                     nearest build for your platform that is equal to or earlier than your chosen deployment framework.
-                    If you intend to deploy your application on the Microsoft .NET Framework 1.0 don't pick the
+                    If you intend to deploy your application on the Microsoft&#xae; .NET Framework 1.0 don't pick the
                     log4net build that is built against the Microsoft .NET Framework 1.1 because the .NET framework
                     does not guarantee forward compatibility only backward compatibility.
                 </p>

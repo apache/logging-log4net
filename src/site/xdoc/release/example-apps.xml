@@ -44,7 +44,7 @@ limitations under the License.
                     <p>
                         For example running <span class="code">nant</span> in the 
                         <span class="code">examples\net\1.0\Tutorials\ConsoleApp\cs</span> directory
-                        will build the C# version of the .NET 1.0 ConsoleApp example.
+                        will build the C# version of the Microsoft&#xae; .NET 1.0 ConsoleApp example.
                     </p>
                     <p>
                         <span class="code">nant</span> can be run in any directory containing a
