@@ -28,7 +28,7 @@ limitations under the License.
     <body>
         <section id="main" name="How To view logging events using Apache log4j Chainsaw">
             <p>
-                Apache log4j&#x2122; includes <a href="http://logging.apache.org/log4j/docs/chainsaw.html">Chainsaw&#x2122;</a>
+                Apache log4j&#x2122; includes <a href="http://logging.apache.org/log4j/docs/chainsaw.html">Apache Chainsaw&#x2122;</a>
                 a graphical log viewer. 
             </p>
             <p>

@@ -592,7 +592,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                         <h3>New Layout: XmlLayoutSchemaLog4j</h3>
                         <p>
                             This new layout formats the logging events as XML which complies with
-                            the log4j event dtd. This can be used to transfer log event from log4net
+                            the Apache log4j&#x2122; event dtd. This can be used to transfer log event from log4net
                             to log4j. Currently the only appender that can communicate directly with
                             log4j is the <span class="code">UdpAppender</span>.
                         </p>

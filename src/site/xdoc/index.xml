@@ -29,7 +29,7 @@ limitations under the License.
 
                 <p>
                     The Apache log4net library is a tool to help the programmer output log statements to a variety 
-                    of output targets. log4net is a port of the excellent log4j framework to the 
+                    of output targets. log4net is a port of the excellent Apache log4j&#x2122; framework to the 
                     Microsoft&#xae; .NET runtime. We have kept the framework similar in spirit to the original log4j 
                     while taking advantage of new features in the .NET runtime.
                     For more information on log4net see the <a href="release/features.html">features</a> document.

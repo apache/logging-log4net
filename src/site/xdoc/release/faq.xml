@@ -271,7 +271,7 @@ limitations under the License.
 
                 <section id="history" name="What is the history of log4net?">
                     <p>
-                        log4net is a port of the popular <a href="http://logging.apache.org/log4j/">log4j</a> logging library.
+                        log4net is a port of the popular <a href="http://logging.apache.org/log4j/">Apache log4j&#x2122;</a> logging library.
                         The initial port was done in June 2001, since then we have tried to remain in the
                         spirit of the original log4j. See the log4net <a href="../history.html">history</a> page for more details.
                     </p>

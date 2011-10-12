@@ -31,8 +31,8 @@ limitations under the License.
                     This document is based on <i>Short introduction to log4j</i> by <i>Ceki G&#252;lc&#252;</i>.
                 </p>
                 <p>
-                    The log4net framework is based on log4j, see <a href="http://logging.apache.org/log4j">
-                        http://logging.apache.org/log4j</a> for more information on log4j.
+                    The log4net framework is based on Apache log4j&#x2122;, see <a href="http://logging.apache.org/log4j/">
+                        http://logging.apache.org/log4j/</a> for more information on log4j.
                     The log4net framework, source code, binaries, documentation, examples and related 
                     materials are published under the terms of the 
                     <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>, 

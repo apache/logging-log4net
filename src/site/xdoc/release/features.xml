@@ -299,7 +299,7 @@ limitations under the License.
 
             <section id="history" name="Proven architecture">
                 <p>
-                    log4net is based on the highly successful log4j logging library,
+                    log4net is based on the highly successful Apache log4j&#x2122; logging library,
                     in development since 1996. This popular and proven architecture has 
                     so far been ported to 12 languages.
                 </p>
