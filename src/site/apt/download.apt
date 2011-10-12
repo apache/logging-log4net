@@ -38,6 +38,10 @@ Download Apache log4net&#x2122;
   If you do not see that page, try a different browser.  The checksum
   and signature are links to the originals on the main distribution
   server.
+
+  Users who download the ZIP files to Windows may need to unblock the
+  archive (right click on the ZIP and press the "Unblock" button)
+  before extracting it.
   
 *------------------------+---------+----------+-----------+
                          | Mirrors | Checksum | Signature |
