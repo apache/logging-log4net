@@ -281,5 +281,56 @@ namespace log4net.Tests.Layout
 
 			Assert.AreEqual(expected, stringAppender.GetString());
 		}
+
+#if NET_4_0
+        [Test]
+        public void BracketsInStackTracesKeepLogWellFormed() {
+            XmlLayout layout = new XmlLayout();
+            StringAppender stringAppender = new StringAppender();
+            stringAppender.Layout = layout;
+
+            ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+            BasicConfigurator.Configure(rep, stringAppender);
+            ILog log1 = LogManager.GetLogger(rep.Name, "TestLogger");
+            Action<int> bar = foo => { 
+                try {
+                    throw new NullReferenceException();
+                } catch (Exception ex) {
+                    log1.Error(string.Format("Error {0}", foo), ex);
+                }
+            };
+            bar(42);
+
+            // really only asserts there is no exception
+            var loggedDoc = new XmlDocument();
+            loggedDoc.LoadXml(stringAppender.GetString());
+        }
+
+        [Test]
+        public void BracketsInStackTracesAreEscapedProperly() {
+            XmlLayout layout = new XmlLayout();
+            StringAppender stringAppender = new StringAppender();
+            stringAppender.Layout = layout;
+
+            ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+            BasicConfigurator.Configure(rep, stringAppender);
+            ILog log1 = LogManager.GetLogger(rep.Name, "TestLogger");
+            Action<int> bar = foo => {
+                try {
+                    throw new NullReferenceException();
+                }
+                catch (Exception ex) {
+                    log1.Error(string.Format("Error {0}", foo), ex);
+                }
+            };
+            bar(42);
+
+            var log = stringAppender.GetString();
+            var startOfExceptionElement = log.IndexOf("<exception>");
+            var sub = log.Substring(startOfExceptionElement + 11);
+            StringAssert.StartsWith("System.NullReferenceException: Object reference not set to an instance of an object", sub);
+            StringAssert.Contains("at log4net.Tests.Layout.XmlLayoutTest.&lt;&gt;c__DisplayClass4.&lt;BracketsInStackTracesAreEscapedProperly&gt;b__3(Int32 foo) in ", sub);
+        }
+#endif
 	}
 }
