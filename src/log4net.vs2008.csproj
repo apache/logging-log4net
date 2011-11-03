@@ -151,6 +151,9 @@
     <Compile Include="Appender\LocalSyslogAppender.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Appender\ManagedColoredConsoleAppender.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Appender\MemoryAppender.cs">
       <SubType>Code</SubType>
     </Compile>
