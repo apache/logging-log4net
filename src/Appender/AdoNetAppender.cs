@@ -1102,6 +1102,9 @@ namespace log4net.Appender
 		/// This property is optional. If not specified the ADO.NET provider 
 		/// will attempt to infer the size from the value.
 		/// </para>
+        /// <para>
+        /// For BLOB data types like VARCHAR(max) it may be impossible to infer the value automatically, use -1 as the size in this case.
+        /// </para>
 		/// </remarks>
 		/// <seealso cref="IDbDataParameter.Size" />
 		public int Size 
