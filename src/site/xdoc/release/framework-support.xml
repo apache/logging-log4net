@@ -332,6 +332,21 @@ limitations under the License.
                             <td>x</td>
                         </tr>
                         <tr>
+                            <td>ManagedColoredConsoleAppender</td>
+                            <td></td>
+                            <td></td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td>x</td>
+                            <td></td>
+                            <td></td>
+                            <td>x</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
                             <td>MemoryAppender</td>
                             <td>x</td>
                             <td>x</td>
