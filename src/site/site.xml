@@ -30,7 +30,7 @@
   
 	<menu name="Apache log4net">
            <item name="About" href="/index.html"/>
-	   <item name="Download" href="/download.html"/>
+	   <item name="Download" href="/download_log4net.cgi"/>
 	   <item name="Release Notes" href="/release/release-notes.html"/>
 	   <item name="License" href="/license.html"/>
 	</menu>
