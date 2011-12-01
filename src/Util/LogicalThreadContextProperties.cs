@@ -208,7 +208,7 @@ namespace log4net.Util
 #endif
         private static PropertiesDictionary GetCallContextData()
 		{
-#if NET_2_0
+#if NET_2_0 || MONO_2_0
             return CallContext.LogicalGetData(c_SlotName) as PropertiesDictionary;
 #else
 			return CallContext.GetData(c_SlotName) as PropertiesDictionary;
@@ -229,7 +229,7 @@ namespace log4net.Util
 #endif
         private static void SetCallContextData(PropertiesDictionary properties)
 		{
-#if NET_2_0
+#if NET_2_0 || MONO_2_0
 			CallContext.LogicalSetData(c_SlotName, properties);
 #else
 			CallContext.SetData(c_SlotName, properties);
