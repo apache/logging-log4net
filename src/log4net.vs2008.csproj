@@ -365,6 +365,9 @@
     <Compile Include="ILog.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Layout\DynamicPatternLayout.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Layout\ExceptionLayout.cs">
       <SubType>Code</SubType>
     </Compile>

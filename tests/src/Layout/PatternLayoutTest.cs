@@ -47,11 +47,19 @@ namespace log4net.Tests.Layout
             Utils.RemovePropertyFromAllContexts();
         }
 
-		[Test]
+        protected virtual PatternLayout NewPatternLayout() {
+            return new PatternLayout();
+        }
+
+        protected virtual PatternLayout NewPatternLayout(string pattern) {
+            return new PatternLayout(pattern);
+        }
+
+        [Test]
 		public void TestThreadPropertiesPattern()
 		{
 			StringAppender stringAppender = new StringAppender();
-            stringAppender.Layout = new PatternLayout("%property{" + Utils.PROPERTY_KEY + "}");
+            stringAppender.Layout = NewPatternLayout("%property{" + Utils.PROPERTY_KEY + "}");
 
 			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 			BasicConfigurator.Configure(rep, stringAppender);
@@ -79,7 +87,7 @@ namespace log4net.Tests.Layout
         public void TestStackTracePattern()
         {
             StringAppender stringAppender = new StringAppender();
-            stringAppender.Layout = new PatternLayout("%stacktrace{2}");
+            stringAppender.Layout = NewPatternLayout("%stacktrace{2}");
 
             ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
             BasicConfigurator.Configure(rep, stringAppender);
@@ -99,7 +107,7 @@ namespace log4net.Tests.Layout
 		public void TestGlobalPropertiesPattern()
 		{
 			StringAppender stringAppender = new StringAppender();
-            stringAppender.Layout = new PatternLayout("%property{" + Utils.PROPERTY_KEY + "}");
+            stringAppender.Layout = NewPatternLayout("%property{" + Utils.PROPERTY_KEY + "}");
 
 			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 			BasicConfigurator.Configure(rep, stringAppender);
@@ -127,7 +135,7 @@ namespace log4net.Tests.Layout
 		public void TestAddingCustomPattern()
 		{
 			StringAppender stringAppender = new StringAppender();
-			PatternLayout layout = new PatternLayout();
+			PatternLayout layout = NewPatternLayout();
 
 			layout.AddConverter("TestAddingCustomPattern", typeof(TestMessagePatternConverter));
 			layout.ConversionPattern = "%TestAddingCustomPattern";
@@ -149,7 +157,7 @@ namespace log4net.Tests.Layout
         public void NamedPatternConverterWithoutPrecisionShouldReturnFullName()
         {
             StringAppender stringAppender = new StringAppender();
-            PatternLayout layout = new PatternLayout();
+            PatternLayout layout = NewPatternLayout();
             layout.AddConverter("message-as-name", typeof(MessageAsNamePatternConverter));
             layout.ConversionPattern = "%message-as-name";
             layout.ActivateOptions();
@@ -196,7 +204,7 @@ namespace log4net.Tests.Layout
         public void NamedPatternConverterWithPrecision1ShouldStripLeadingStuffIfPresent()
         {
             StringAppender stringAppender = new StringAppender();
-            PatternLayout layout = new PatternLayout();
+            PatternLayout layout = NewPatternLayout();
             layout.AddConverter("message-as-name", typeof(MessageAsNamePatternConverter));
             layout.ConversionPattern = "%message-as-name{1}";
             layout.ActivateOptions();
@@ -242,7 +250,7 @@ namespace log4net.Tests.Layout
         [Test]
         public void NamedPatternConverterWithPrecision2ShouldStripLessLeadingStuffIfPresent() {
             StringAppender stringAppender = new StringAppender();
-            PatternLayout layout = new PatternLayout();
+            PatternLayout layout = NewPatternLayout();
             layout.AddConverter("message-as-name", typeof(MessageAsNamePatternConverter));
             layout.ConversionPattern = "%message-as-name{2}";
             layout.ActivateOptions();
@@ -306,7 +314,7 @@ namespace log4net.Tests.Layout
 		public void TestExceptionPattern()
 		{
 			StringAppender stringAppender = new StringAppender();
-			PatternLayout layout = new PatternLayout("%exception{stacktrace}");
+			PatternLayout layout = NewPatternLayout("%exception{stacktrace}");
 			stringAppender.Layout = layout;
 
 			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());

@@ -227,6 +227,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Layout\DynamicPatternLayoutTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Layout\PatternLayoutTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -164,6 +164,9 @@
     <Compile Include="Hierarchy\Logger.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Layout\DynamicPatternLayoutTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Layout\PatternLayoutTest.cs">
       <SubType>Code</SubType>
     </Compile>
