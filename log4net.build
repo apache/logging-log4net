@@ -1317,7 +1317,7 @@ limitations under the License.
     <if test="${platform::is-windows()}">
       <property name="mvn" value="mvn.bat"/>
     </if>
-    <exec program="${mvn}" commandline="site:site"/>
+    <exec program="${mvn}" commandline="site:site install"/>
   </target>
   <target name="package" description="Build and Package distribution">
     <!-- set flag to indicating that this is a package build -->
