@@ -866,7 +866,12 @@ namespace log4net.Repository.Hierarchy
 							LogLog.Error(declaringType, "Unexpected object type ["+node.GetType()+"] in ht.", new LogException());
 						}
 					} 
-				} 
+				}
+				if (i == 0) {
+				    // logger name starts with a dot
+				    // and we've hit the start
+				    break;
+				}
 			}
 
 			// If we could not find any existing parents, then link with root.
