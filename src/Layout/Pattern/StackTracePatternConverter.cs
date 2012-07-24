@@ -105,7 +105,7 @@ namespace log4net.Layout.Pattern
 			int stackFrameIndex = m_stackFrameLevel - 1;
 			while (stackFrameIndex >= 0)
 			{
-				if (stackFrameIndex > stackframes.Length)
+				if (stackFrameIndex >= stackframes.Length)
 				{
 					stackFrameIndex--;
 					continue;
