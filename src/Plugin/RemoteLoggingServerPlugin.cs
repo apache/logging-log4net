@@ -94,7 +94,7 @@ namespace log4net.Plugin
 		/// <remarks>
 		/// <para>
 		/// This is the name under which the object is marshaled.
-		/// <see cref="RemotingServices.Marshal(MarshalByRefObject,String,Type)"/>
+		/// <see cref="M:RemotingServices.Marshal(MarshalByRefObject,String,Type)"/>
 		/// </para>
 		/// </remarks>
 		public virtual string SinkUri 

@@ -38,7 +38,7 @@ namespace log4net.Appender
 	/// </para>
 	/// <para>
 	/// Appenders can also implement the <see cref="IOptionHandler"/> interface. Therefore
-	/// they would require that the <see cref="IOptionHandler.ActivateOptions()"/> method
+	/// they would require that the <see cref="M:IOptionHandler.ActivateOptions()"/> method
 	/// be called after the appenders properties have been configured.
 	/// </para>
 	/// </remarks>
@@ -249,13 +249,13 @@ namespace log4net.Appender
 		/// <summary>
 		/// Performs threshold checks and invokes filters before 
 		/// delegating actual logging to the subclasses specific 
-		/// <see cref="Append(LoggingEvent)"/> method.
+		/// <see cref="M:Append(LoggingEvent)"/> method.
 		/// </summary>
 		/// <param name="loggingEvent">The event to log.</param>
 		/// <remarks>
 		/// <para>
 		/// This method cannot be overridden by derived classes. A
-		/// derived class should override the <see cref="Append(LoggingEvent)"/> method
+		/// derived class should override the <see cref="M:Append(LoggingEvent)"/> method
 		/// which is called by this method.
 		/// </para>
 		/// <para>
@@ -277,14 +277,14 @@ namespace log4net.Appender
 		///		</item>
 		///		<item>
 		///			<description>
-		///			Calls <see cref="PreAppendCheck()"/> and checks that 
+		///			Calls <see cref="M:PreAppendCheck()"/> and checks that 
 		///			it returns <c>true</c>.</description>
 		///		</item>
 		/// </list>
 		/// </para>
 		/// <para>
 		/// If all of the above steps succeed then the <paramref name="loggingEvent"/>
-		/// will be passed to the abstract <see cref="Append(LoggingEvent)"/> method.
+		/// will be passed to the abstract <see cref="M:Append(LoggingEvent)"/> method.
 		/// </para>
 		/// </remarks>
 		public void DoAppend(LoggingEvent loggingEvent) 
@@ -346,13 +346,13 @@ namespace log4net.Appender
 		/// <summary>
 		/// Performs threshold checks and invokes filters before 
 		/// delegating actual logging to the subclasses specific 
-		/// <see cref="Append(LoggingEvent[])"/> method.
+		/// <see cref="M:Append(LoggingEvent[])"/> method.
 		/// </summary>
 		/// <param name="loggingEvents">The array of events to log.</param>
 		/// <remarks>
 		/// <para>
 		/// This method cannot be overridden by derived classes. A
-		/// derived class should override the <see cref="Append(LoggingEvent[])"/> method
+		/// derived class should override the <see cref="M:Append(LoggingEvent[])"/> method
 		/// which is called by this method.
 		/// </para>
 		/// <para>
@@ -374,14 +374,14 @@ namespace log4net.Appender
 		///		</item>
 		///		<item>
 		///			<description>
-		///			Calls <see cref="PreAppendCheck()"/> and checks that 
+		///			Calls <see cref="M:PreAppendCheck()"/> and checks that 
 		///			it returns <c>true</c>.</description>
 		///		</item>
 		/// </list>
 		/// </para>
 		/// <para>
 		/// If all of the above steps succeed then the <paramref name="loggingEvents"/>
-		/// will be passed to the <see cref="Append(LoggingEvent[])"/> method.
+		/// will be passed to the <see cref="M:Append(LoggingEvent[])"/> method.
 		/// </para>
 		/// </remarks>
 		public void DoAppend(LoggingEvent[] loggingEvents) 
@@ -604,12 +604,12 @@ namespace log4net.Appender
 		/// A subclass must implement this method to perform
 		/// logging of the <paramref name="loggingEvent"/>.
 		/// </para>
-		/// <para>This method will be called by <see cref="DoAppend(LoggingEvent)"/>
+		/// <para>This method will be called by <see cref="M:DoAppend(LoggingEvent)"/>
 		/// if all the conditions listed for that method are met.
 		/// </para>
 		/// <para>
 		/// To restrict the logging of events in the appender
-		/// override the <see cref="PreAppendCheck()"/> method.
+		/// override the <see cref="M:PreAppendCheck()"/> method.
 		/// </para>
 		/// </remarks>
 		abstract protected void Append(LoggingEvent loggingEvent);
@@ -620,12 +620,12 @@ namespace log4net.Appender
 		/// <param name="loggingEvents">the array of logging events</param>
 		/// <remarks>
 		/// <para>
-		/// This base class implementation calls the <see cref="Append(LoggingEvent)"/>
+		/// This base class implementation calls the <see cref="M:Append(LoggingEvent)"/>
 		/// method for each element in the bulk array.
 		/// </para>
 		/// <para>
 		/// A sub class that can better process a bulk array of events should
-		/// override this method in addition to <see cref="Append(LoggingEvent)"/>.
+		/// override this method in addition to <see cref="M:Append(LoggingEvent)"/>.
 		/// </para>
 		/// </remarks>
 		virtual protected void Append(LoggingEvent[] loggingEvents)
@@ -637,23 +637,23 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
-		/// Called before <see cref="Append(LoggingEvent)"/> as a precondition.
+		/// Called before <see cref="M:Append(LoggingEvent)"/> as a precondition.
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// This method is called by <see cref="DoAppend(LoggingEvent)"/>
-		/// before the call to the abstract <see cref="Append(LoggingEvent)"/> method.
+		/// This method is called by <see cref="M:DoAppend(LoggingEvent)"/>
+		/// before the call to the abstract <see cref="M:Append(LoggingEvent)"/> method.
 		/// </para>
 		/// <para>
 		/// This method can be overridden in a subclass to extend the checks 
-		/// made before the event is passed to the <see cref="Append(LoggingEvent)"/> method.
+		/// made before the event is passed to the <see cref="M:Append(LoggingEvent)"/> method.
 		/// </para>
 		/// <para>
 		/// A subclass should ensure that they delegate this call to
 		/// this base class if it is overridden.
 		/// </para>
 		/// </remarks>
-		/// <returns><c>true</c> if the call to <see cref="Append(LoggingEvent)"/> should proceed.</returns>
+		/// <returns><c>true</c> if the call to <see cref="M:Append(LoggingEvent)"/> should proceed.</returns>
 		virtual protected bool PreAppendCheck()
 		{
 			if ((m_layout == null) && RequiresLayout)
@@ -683,7 +683,7 @@ namespace log4net.Appender
 		/// </para>
 		/// <para>
 		/// Where possible use the alternative version of this method
-		/// <see cref="RenderLoggingEvent(TextWriter,LoggingEvent)"/>.
+		/// <see cref="M:RenderLoggingEvent(TextWriter,LoggingEvent)"/>.
 		/// That method streams the rendering onto an existing Writer
 		/// which can give better performance if the caller already has
 		/// a <see cref="TextWriter"/> open and ready for writing.
@@ -724,9 +724,9 @@ namespace log4net.Appender
 		/// will append the exception text to the rendered string.
 		/// </para>
 		/// <para>
-		/// Use this method in preference to <see cref="RenderLoggingEvent(LoggingEvent)"/>
+		/// Use this method in preference to <see cref="M:RenderLoggingEvent(LoggingEvent)"/>
 		/// where possible. If, however, the caller needs to render the event
-		/// to a string then <see cref="RenderLoggingEvent(LoggingEvent)"/> does
+		/// to a string then <see cref="M:RenderLoggingEvent(LoggingEvent)"/> does
 		/// provide an efficient mechanism for doing so.
 		/// </para>
 		/// </remarks>

@@ -167,7 +167,7 @@ namespace log4net.Config
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// Overrides base class <see cref="Object.ToString()" /> method to 
+		/// Overrides base class <see cref="M:Object.ToString()" /> method to 
 		/// return a representation of the properties of this object.
 		/// </para>
 		/// </remarks>

@@ -1013,7 +1013,7 @@ namespace log4net.Appender
  		}
 
 		/// <summary>
-		/// This method is called by the <see cref="AppenderSkeleton.DoAppend(LoggingEvent)"/>
+		/// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/>
 		/// method. 
 		/// </summary>
 		/// <param name="loggingEvent">The event to log.</param>
@@ -1042,7 +1042,7 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
-		/// This method is called by the <see cref="AppenderSkeleton.DoAppend(LoggingEvent[])"/>
+		/// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent[])"/>
 		/// method. 
 		/// </summary>
 		/// <param name="loggingEvents">The array of events to log.</param>
@@ -1255,9 +1255,9 @@ namespace log4net.Appender
 		/// <param name="fileStream">the file stream that has been opened for writing</param>
 		/// <remarks>
 		/// <para>
-		/// This implementation of <see cref="SetQWForFiles(Stream)"/> creates a <see cref="StreamWriter"/>
+		/// This implementation of <see cref="M:SetQWForFiles(Stream)"/> creates a <see cref="StreamWriter"/>
 		/// over the <paramref name="fileStream"/> and passes it to the 
-		/// <see cref="SetQWForFiles(TextWriter)"/> method.
+		/// <see cref="M:SetQWForFiles(TextWriter)"/> method.
 		/// </para>
 		/// <para>
 		/// This method can be overridden by sub classes that want to wrap the

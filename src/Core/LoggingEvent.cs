@@ -278,8 +278,8 @@ namespace log4net.Core
 	/// time the event is delivered to appenders, but will not be consistent
 	/// at any time afterwards. If an event is to be stored and then processed
 	/// at a later time these volatile values must be fixed by calling
-	/// <see cref="FixVolatileData()"/>. There is a performance penalty
-	/// for incurred by calling <see cref="FixVolatileData()"/> but it
+	/// <see cref="M:FixVolatileData()"/>. There is a performance penalty
+	/// for incurred by calling <see cref="M:FixVolatileData()"/> but it
 	/// is essential to maintaining data consistency.
 	/// </para>
 	/// </remarks>
@@ -314,7 +314,7 @@ namespace log4net.Core
 		/// <para>
 		/// Except <see cref="TimeStamp"/>, <see cref="Level"/> and <see cref="LoggerName"/>, 
 		/// all fields of <c>LoggingEvent</c> are filled when actually needed. Call
-		/// <see cref="FixVolatileData()"/> to cache all data locally
+		/// <see cref="M:FixVolatileData()"/> to cache all data locally
 		/// to prevent inconsistencies.
 		/// </para>
 		/// <para>This method is called by the log4net framework
@@ -351,7 +351,7 @@ namespace log4net.Core
 		/// be useful if you require a custom serialization scheme.
 		/// </para>
 		/// <para>
-		/// Use the <see cref="GetLoggingEventData(FixFlags)"/> method to obtain an 
+		/// Use the <see cref="M:GetLoggingEventData(FixFlags)"/> method to obtain an 
 		/// instance of the <see cref="LoggingEventData"/> class.
 		/// </para>
 		/// <para>
@@ -384,7 +384,7 @@ namespace log4net.Core
 		/// be useful if you require a custom serialization scheme.
 		/// </para>
 		/// <para>
-		/// Use the <see cref="GetLoggingEventData(FixFlags)"/> method to obtain an 
+		/// Use the <see cref="M:GetLoggingEventData(FixFlags)"/> method to obtain an 
 		/// instance of the <see cref="LoggingEventData"/> class.
 		/// </para>
 		/// <para>
@@ -409,7 +409,7 @@ namespace log4net.Core
 		/// be useful if you require a custom serialization scheme.
 		/// </para>
 		/// <para>
-		/// Use the <see cref="GetLoggingEventData(FixFlags)"/> method to obtain an 
+		/// Use the <see cref="M:GetLoggingEventData(FixFlags)"/> method to obtain an 
 		/// instance of the <see cref="LoggingEventData"/> class.
 		/// </para>
 		/// <para>
@@ -1008,7 +1008,7 @@ namespace log4net.Core
 		/// The data in this event must be fixed before it can be serialized.
 		/// </para>
 		/// <para>
-		/// The <see cref="FixVolatileData()"/> method must be called during the
+		/// The <see cref="M:FixVolatileData()"/> method must be called during the
 		/// <see cref="log4net.Appender.IAppender.DoAppend"/> method call if this event 
 		/// is to be used outside that method.
 		/// </para>
@@ -1144,17 +1144,17 @@ namespace log4net.Core
 		/// time the event is delivered to appenders, but will not be consistent
 		/// at any time afterwards. If an event is to be stored and then processed
 		/// at a later time these volatile values must be fixed by calling
-		/// <see cref="FixVolatileData()"/>. There is a performance penalty
-		/// incurred by calling <see cref="FixVolatileData()"/> but it
+		/// <see cref="M:FixVolatileData()"/>. There is a performance penalty
+		/// incurred by calling <see cref="M:FixVolatileData()"/> but it
 		/// is essential to maintaining data consistency.
 		/// </para>
 		/// <para>
-		/// Calling <see cref="FixVolatileData()"/> is equivalent to
-		/// calling <see cref="FixVolatileData(bool)"/> passing the parameter
+		/// Calling <see cref="M:FixVolatileData()"/> is equivalent to
+		/// calling <see cref="M:FixVolatileData(bool)"/> passing the parameter
 		/// <c>false</c>.
 		/// </para>
 		/// <para>
-		/// See <see cref="FixVolatileData(bool)"/> for more
+		/// See <see cref="M:FixVolatileData(bool)"/> for more
 		/// information.
 		/// </para>
 		/// </remarks>
@@ -1175,8 +1175,8 @@ namespace log4net.Core
 		/// time the event is delivered to appenders, but will not be consistent
 		/// at any time afterwards. If an event is to be stored and then processed
 		/// at a later time these volatile values must be fixed by calling
-		/// <see cref="FixVolatileData()"/>. There is a performance penalty
-		/// for incurred by calling <see cref="FixVolatileData()"/> but it
+		/// <see cref="M:FixVolatileData()"/>. There is a performance penalty
+		/// for incurred by calling <see cref="M:FixVolatileData()"/> but it
 		/// is essential to maintaining data consistency.
 		/// </para>
 		/// <para>

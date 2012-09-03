@@ -804,10 +804,10 @@ namespace log4net.Config
 		/// </para>
 		/// <para>
 		/// For more information on how to configure log4net using
-		/// a separate configuration file, see <see cref="Configure(FileInfo)"/>.
+		/// a separate configuration file, see <see cref="M:Configure(FileInfo)"/>.
 		/// </para>
 		/// </remarks>
-		/// <seealso cref="Configure(FileInfo)"/>
+		/// <seealso cref="M:Configure(FileInfo)"/>
 		static public ICollection ConfigureAndWatch(FileInfo configFile)
 		{
             ArrayList configurationMessages = new ArrayList();
@@ -843,10 +843,10 @@ namespace log4net.Config
         /// </para>
         /// <para>
         /// For more information on how to configure log4net using
-        /// a separate configuration file, see <see cref="Configure(FileInfo)"/>.
+        /// a separate configuration file, see <see cref="M:Configure(FileInfo)"/>.
         /// </para>
         /// </remarks>
-        /// <seealso cref="Configure(FileInfo)"/>
+        /// <seealso cref="M:Configure(FileInfo)"/>
         static public ICollection ConfigureAndWatch(ILoggerRepository repository, FileInfo configFile)
         {
             ArrayList configurationMessages = new ArrayList();

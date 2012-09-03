@@ -69,7 +69,7 @@ namespace log4net.Layout.Pattern
 	/// 		<description>
 	/// 		Any other pattern string uses the <see cref="SimpleDateFormatter"/> formatter. 
 	/// 		This formatter passes the pattern string to the <see cref="DateTime"/> 
-	/// 		<see cref="DateTime.ToString(string)"/> method.
+	/// 		<see cref="M:DateTime.ToString(string)"/> method.
 	/// 		For details on valid patterns see 
 	/// 		<a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/frlrfsystemglobalizationdatetimeformatinfoclasstopic.asp">DateTimeFormatInfo Class</a>.
 	/// 		</description>

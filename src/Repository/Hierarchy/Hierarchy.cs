@@ -105,7 +105,7 @@ namespace log4net.Repository.Hierarchy
 	/// </para>
 	/// <para>
 	/// The structure of the logger hierarchy is maintained by the
-	/// <see cref="GetLogger(string)"/> method. The hierarchy is such that children
+	/// <see cref="M:GetLogger(string)"/> method. The hierarchy is such that children
 	/// link to their parent but parents do not have any references to their
 	/// children. Moreover, loggers can be instantiated in any order, in
 	/// particular descendant before ancestor.
@@ -457,7 +457,7 @@ namespace log4net.Repository.Hierarchy
 		/// This method should not normally be used to log.
 		/// The <see cref="ILog"/> interface should be used 
 		/// for routine logging. This interface can be obtained
-		/// using the <see cref="log4net.LogManager.GetLogger(string)"/> method.
+		/// using the <see cref="M:log4net.LogManager.GetLogger(string)"/> method.
 		/// </para>
 		/// <para>
 		/// The <c>logEvent</c> is delivered to the appropriate logger and
@@ -568,7 +568,7 @@ namespace log4net.Repository.Hierarchy
 		/// <remarks>
 		/// <para>
 		/// This method provides the same functionality as the 
-		/// <see cref="IBasicRepositoryConfigurator.Configure(IAppender)"/> method implemented
+		/// <see cref="M:IBasicRepositoryConfigurator.Configure(IAppender)"/> method implemented
 		/// on this object, but it is protected and therefore can be called by subclasses.
 		/// </para>
 		/// </remarks>
@@ -612,7 +612,7 @@ namespace log4net.Repository.Hierarchy
 		/// <remarks>
 		/// <para>
 		/// This method provides the same functionality as the 
-		/// <see cref="IBasicRepositoryConfigurator.Configure(IAppender)"/> method implemented
+		/// <see cref="M:IBasicRepositoryConfigurator.Configure(IAppender)"/> method implemented
 		/// on this object, but it is protected and therefore can be called by subclasses.
 		/// </para>
 		/// </remarks>

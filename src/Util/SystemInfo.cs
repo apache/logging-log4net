@@ -566,7 +566,7 @@ namespace log4net.Util
 		/// <para>
 		/// If the type name is fully qualified, i.e. if contains an assembly name in 
 		/// the type name, the type will be loaded from the system using 
-		/// <see cref="Type.GetType(string,bool)"/>.
+		/// <see cref="M:Type.GetType(string,bool)"/>.
 		/// </para>
 		/// <para>
 		/// If the type name is not fully qualified, it will be loaded from the assembly
@@ -590,7 +590,7 @@ namespace log4net.Util
 		/// <para>
 		/// If the type name is fully qualified, i.e. if contains an assembly name in 
 		/// the type name, the type will be loaded from the system using 
-		/// <see cref="Type.GetType(string,bool)"/>.
+		/// <see cref="M:Type.GetType(string,bool)"/>.
 		/// </para>
 		/// <para>
 		/// If the type name is not fully qualified it will be loaded from the
@@ -615,7 +615,7 @@ namespace log4net.Util
 		/// <para>
 		/// If the type name is fully qualified, i.e. if contains an assembly name in 
 		/// the type name, the type will be loaded from the system using 
-		/// <see cref="Type.GetType(string,bool)"/>.
+		/// <see cref="M:Type.GetType(string,bool)"/>.
 		/// </para>
 		/// <para>
 		/// If the type name is not fully qualified it will be loaded from the specified

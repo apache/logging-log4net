@@ -31,7 +31,7 @@ namespace log4net
 	/// <remarks>
 	/// <para>
 	/// This class has static methods that are used by a client to request
-	/// a logger instance. The <see cref="GetLogger(string)"/> method is 
+	/// a logger instance. The <see cref="M:GetLogger(string)"/> method is 
 	/// used to retrieve a logger.
 	/// </para>
 	/// <para>
@@ -243,7 +243,7 @@ namespace log4net
 		}	
 
 		/// <summary>
-		/// Shorthand for <see cref="LogManager.GetLogger(string)"/>.
+		/// Shorthand for <see cref="M:LogManager.GetLogger(string)"/>.
 		/// </summary>
 		/// <remarks>
 		/// Get the logger for the fully qualified name of the type specified.
@@ -256,7 +256,7 @@ namespace log4net
 		}
 
 		/// <summary>
-		/// Shorthand for <see cref="LogManager.GetLogger(string)"/>.
+		/// Shorthand for <see cref="M:LogManager.GetLogger(string)"/>.
 		/// </summary>
 		/// <remarks>
 		/// Gets the logger for the fully qualified name of the type specified.
@@ -270,7 +270,7 @@ namespace log4net
 		}
 
 		/// <summary>
-		/// Shorthand for <see cref="LogManager.GetLogger(string)"/>.
+		/// Shorthand for <see cref="M:LogManager.GetLogger(string)"/>.
 		/// </summary>
 		/// <remarks>
 		/// Gets the logger for the fully qualified name of the type specified.
@@ -451,7 +451,7 @@ namespace log4net
 		/// <remarks>
 		/// <para>
 		/// Gets the <see cref="ILoggerRepository"/> for the repository specified
-		/// by the callers assembly (<see cref="Assembly.GetCallingAssembly()"/>).
+		/// by the callers assembly (<see cref="M:Assembly.GetCallingAssembly()"/>).
 		/// </para>
 		/// </remarks>
 		/// <returns>The <see cref="ILoggerRepository"/> instance for the default repository.</returns>
@@ -502,7 +502,7 @@ namespace log4net
 		/// <remarks>
 		/// <para>
 		/// Gets the <see cref="ILoggerRepository"/> for the repository specified
-		/// by the callers assembly (<see cref="Assembly.GetCallingAssembly()"/>).
+		/// by the callers assembly (<see cref="M:Assembly.GetCallingAssembly()"/>).
 		/// </para>
 		/// </remarks>
 		/// <returns>The <see cref="ILoggerRepository"/> instance for the default repository.</returns>
@@ -553,7 +553,7 @@ namespace log4net
 		/// </para>
 		/// <para>
 		/// The <see cref="ILoggerRepository"/> created will be associated with the repository
-		/// specified such that a call to <see cref="GetRepository()"/> will return 
+		/// specified such that a call to <see cref="M:GetRepository()"/> will return 
 		/// the same repository instance.
 		/// </para>
 		/// </remarks>
@@ -578,7 +578,7 @@ namespace log4net
 		/// <remarks>
 		/// <para>
 		/// The <see cref="ILoggerRepository"/> created will be associated with the repository
-		/// specified such that a call to <see cref="GetRepository()"/> will return 
+		/// specified such that a call to <see cref="M:GetRepository()"/> will return 
 		/// the same repository instance.
 		/// </para>
 		/// </remarks>
@@ -686,7 +686,7 @@ namespace log4net
 		/// </para>
 		/// <para>
 		/// The <see cref="ILoggerRepository"/> created will be associated with the repository
-		/// specified such that a call to <see cref="GetRepository(Assembly)"/> with the
+		/// specified such that a call to <see cref="M:GetRepository(Assembly)"/> with the
 		/// same assembly specified will return the same repository instance.
 		/// </para>
 		/// </remarks>
@@ -707,7 +707,7 @@ namespace log4net
 		/// <remarks>
 		/// <para>
 		/// The <see cref="ILoggerRepository"/> created will be associated with the repository
-		/// specified such that a call to <see cref="GetRepository(Assembly)"/> with the
+		/// specified such that a call to <see cref="M:GetRepository(Assembly)"/> with the
 		/// same assembly specified will return the same repository instance.
 		/// </para>
 		/// </remarks>

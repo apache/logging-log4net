@@ -165,7 +165,7 @@ namespace log4net.Appender
 
 		#region Override implementation of AppenderSkeleton
 		/// <summary>
-		/// This method is called by the <see cref="AppenderSkeleton.DoAppend(log4net.Core.LoggingEvent)"/> method.
+		/// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(log4net.Core.LoggingEvent)"/> method.
 		/// </summary>
 		/// <param name="loggingEvent">The event to log.</param>
 		/// <remarks>

@@ -73,7 +73,7 @@ namespace log4net.Util
 	/// 			</para>
 	/// 			<para>
 	/// 			The date format specifier admits the same syntax as the
-	/// 			time pattern string of the <see cref="DateTime.ToString(string)"/>.
+	/// 			time pattern string of the <see cref="M:DateTime.ToString(string)"/>.
 	/// 			</para>
 	/// 			<para>
 	/// 			For better results it is recommended to use the log4net date
@@ -86,7 +86,7 @@ namespace log4net.Util
 	/// 			</para>
 	/// 			<para>
 	/// 			These dedicated date formatters perform significantly
-	/// 			better than <see cref="DateTime.ToString(string)"/>.
+	/// 			better than <see cref="M:DateTime.ToString(string)"/>.
 	/// 			</para>
 	///         </description>
 	///     </item>
@@ -208,7 +208,7 @@ namespace log4net.Util
 	/// 			</para>
 	/// 			<para>
 	/// 			The date format specifier admits the same syntax as the
-	/// 			time pattern string of the <see cref="DateTime.ToString(string)"/>.
+	/// 			time pattern string of the <see cref="M:DateTime.ToString(string)"/>.
 	/// 			</para>
 	/// 			<para>
 	/// 			For better results it is recommended to use the log4net date
@@ -221,7 +221,7 @@ namespace log4net.Util
 	/// 			</para>
 	/// 			<para>
 	/// 			These dedicated date formatters perform significantly
-	/// 			better than <see cref="DateTime.ToString(string)"/>.
+	/// 			better than <see cref="M:DateTime.ToString(string)"/>.
 	/// 			</para>
 	///         </description>
 	///     </item>
@@ -236,8 +236,8 @@ namespace log4net.Util
 	/// </list>
 	/// <para>
 	/// Additional pattern converters may be registered with a specific <see cref="PatternString"/>
-	/// instance using <see cref="AddConverter(ConverterInfo)"/> or
-	/// <see cref="AddConverter(string, Type)" />.
+	/// instance using <see cref="M:AddConverter(ConverterInfo)"/> or
+	/// <see cref="M:AddConverter(string, Type)" />.
 	/// </para>
 	/// <para>
 	/// See the <see cref="log4net.Layout.PatternLayout"/> for details on the 
@@ -462,7 +462,7 @@ namespace log4net.Util
 		/// <remarks>
 		/// <para>
 		/// This version of the method is used by the configurator.
-		/// Programmatic users should use the alternative <see cref="AddConverter(string,Type)"/> method.
+		/// Programmatic users should use the alternative <see cref="M:AddConverter(string,Type)"/> method.
 		/// </para>
 		/// </remarks>
 		public void AddConverter(ConverterInfo converterInfo)

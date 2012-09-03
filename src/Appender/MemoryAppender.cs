@@ -37,7 +37,7 @@ namespace log4net.Appender
 	/// the current list of events that have been appended.
 	/// </para>
 	/// <para>
-	/// Use the <see cref="Clear()"/> method to clear the
+	/// Use the <see cref="M:Clear()"/> method to clear the
 	/// current list of events.
 	/// </para>
 	/// </remarks>
@@ -96,7 +96,7 @@ namespace log4net.Appender
 		/// data to be fixed and stored in the appender, hereby improving performance. 
 		/// </para>
 		/// <para>
-		/// See <see cref="LoggingEvent.FixVolatileData(bool)"/> for more information.
+		/// See <see cref="M:LoggingEvent.FixVolatileData(bool)"/> for more information.
 		/// </para>
 		/// </remarks>
 		[Obsolete("Use Fix property")]
@@ -137,7 +137,7 @@ namespace log4net.Appender
 		#region Override implementation of AppenderSkeleton
 
 		/// <summary>
-		/// This method is called by the <see cref="AppenderSkeleton.DoAppend(LoggingEvent)"/> method. 
+		/// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/> method. 
 		/// </summary>
 		/// <param name="loggingEvent">the event to log</param>
 		/// <remarks>

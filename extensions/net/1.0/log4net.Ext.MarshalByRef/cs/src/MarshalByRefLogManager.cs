@@ -204,7 +204,7 @@ namespace log4net.Ext.MarshalByRef
 		}	
 
 		/// <summary>
-		/// Shorthand for <see cref="LogManager.GetLogger(string)"/>.
+		/// Shorthand for <see cref="M:LogManager.GetLogger(string)"/>.
 		/// </summary>
 		/// <remarks>
 		/// Get the logger for the fully qualified name of the type specified.
@@ -218,7 +218,7 @@ namespace log4net.Ext.MarshalByRef
 		}
 
 		/// <summary>
-		/// Shorthand for <see cref="LogManager.GetLogger(string)"/>.
+		/// Shorthand for <see cref="M:LogManager.GetLogger(string)"/>.
 		/// </summary>
 		/// <remarks>
 		/// Get the logger for the fully qualified name of the type specified.
@@ -233,7 +233,7 @@ namespace log4net.Ext.MarshalByRef
 		}
 
 		/// <summary>
-		/// Shorthand for <see cref="LogManager.GetLogger(string)"/>.
+		/// Shorthand for <see cref="M:LogManager.GetLogger(string)"/>.
 		/// </summary>
 		/// <remarks>
 		/// Get the logger for the fully qualified name of the type specified.

@@ -257,7 +257,7 @@ namespace log4net.Util
 		/// </para>
 		/// <para>
 		/// If the function fails, the return value is zero. To get extended error information, 
-		/// call <see cref="Marshal.GetLastWin32Error()" />.
+		/// call <see cref="M:Marshal.GetLastWin32Error()" />.
 		/// </para>
 		/// </returns>
 #if NETCF

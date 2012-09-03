@@ -39,7 +39,7 @@ namespace log4net.Layout
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// The goal of this class is to <see cref="PatternLayout.Format(TextWriter,LoggingEvent)"/> a 
+	/// The goal of this class is to <see cref="M:PatternLayout.Format(TextWriter,LoggingEvent)"/> a 
 	/// <see cref="LoggingEvent"/> as a string. The results
 	/// depend on the <i>conversion pattern</i>.
 	/// </para>
@@ -178,7 +178,7 @@ namespace log4net.Layout
 	/// 			</para>
 	/// 			<para>
 	/// 			The date format specifier admits the same syntax as the
-	/// 			time pattern string of the <see cref="DateTime.ToString(string)"/>.
+	/// 			time pattern string of the <see cref="M:DateTime.ToString(string)"/>.
 	/// 			</para>
 	/// 			<para>
 	/// 			For better results it is recommended to use the log4net date
@@ -191,7 +191,7 @@ namespace log4net.Layout
 	/// 			</para>
 	/// 			<para>
 	/// 			These dedicated date formatters perform significantly
-	/// 			better than <see cref="DateTime.ToString(string)"/>.
+	/// 			better than <see cref="M:DateTime.ToString(string)"/>.
 	/// 			</para>
 	///			</description>
 	///		</item>
@@ -575,7 +575,7 @@ namespace log4net.Layout
 	/// 			</para>
 	/// 			<para>
 	/// 			The date format specifier admits the same syntax as the
-	/// 			time pattern string of the <see cref="DateTime.ToString(string)"/>.
+	/// 			time pattern string of the <see cref="M:DateTime.ToString(string)"/>.
 	/// 			</para>
 	/// 			<para>
 	/// 			For better results it is recommended to use the log4net date
@@ -588,7 +588,7 @@ namespace log4net.Layout
 	/// 			</para>
 	/// 			<para>
 	/// 			These dedicated date formatters perform significantly
-	/// 			better than <see cref="DateTime.ToString(string)"/>.
+	/// 			better than <see cref="M:DateTime.ToString(string)"/>.
 	/// 			</para>
 	///			</description>
 	///		</item>
@@ -760,7 +760,7 @@ namespace log4net.Layout
 	/// </note>
 	/// <para>
 	/// Additional pattern converters may be registered with a specific <see cref="PatternLayout"/>
-	/// instance using the <see cref="AddConverter(string, Type)"/> method.
+	/// instance using the <see cref="M:AddConverter(string, Type)"/> method.
 	/// </para>
 	/// </remarks>
 	/// <example>
@@ -1125,7 +1125,7 @@ namespace log4net.Layout
 		/// <remarks>
 		/// <para>
 		/// This version of the method is used by the configurator.
-		/// Programmatic users should use the alternative <see cref="AddConverter(string,Type)"/> method.
+		/// Programmatic users should use the alternative <see cref="M:AddConverter(string,Type)"/> method.
 		/// </para>
 		/// </remarks>
 		public void AddConverter(ConverterInfo converterInfo)

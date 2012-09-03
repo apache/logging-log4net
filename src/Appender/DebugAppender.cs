@@ -35,7 +35,7 @@ namespace log4net.Appender
 	/// debug system.
 	/// </para>
 	/// <para>
-	/// Events are written using the <see cref="System.Diagnostics.Debug.Write(string,string)"/>
+	/// Events are written using the <see cref="M:System.Diagnostics.Debug.Write(string,string)"/>
 	/// method. The event's logger name is passed as the value for the category name to the Write method.
 	/// </para>
 	/// </remarks>

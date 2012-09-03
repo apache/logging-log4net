@@ -404,7 +404,7 @@ namespace log4net.Core
 		}	
 
 		/// <summary>
-		/// Shorthand for <see cref="LogManager.GetLogger(string)"/>.
+		/// Shorthand for <see cref="M:LogManager.GetLogger(string)"/>.
 		/// </summary>
 		/// <param name="repository">The repository to lookup in.</param>
 		/// <param name="type">The <paramref name="type"/> of which the fullname will be used as the name of the logger to retrieve.</param>
@@ -428,7 +428,7 @@ namespace log4net.Core
 		}
 
 		/// <summary>
-		/// Shorthand for <see cref="LogManager.GetLogger(string)"/>.
+		/// Shorthand for <see cref="M:LogManager.GetLogger(string)"/>.
 		/// </summary>
 		/// <param name="repositoryAssembly">the assembly to use to lookup the repository</param>
 		/// <param name="type">The <paramref name="type"/> of which the fullname will be used as the name of the logger to retrieve.</param>
@@ -702,7 +702,7 @@ namespace log4net.Core
 		/// </para>
 		/// <para>
 		/// The <see cref="ILoggerRepository"/> created will be associated with the repository
-		/// specified such that a call to <see cref="GetRepository(Assembly)"/> with the
+		/// specified such that a call to <see cref="M:GetRepository(Assembly)"/> with the
 		/// same assembly specified will return the same repository instance.
 		/// </para>
 		/// </remarks>
@@ -723,7 +723,7 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// The <see cref="ILoggerRepository"/> created will be associated with the repository
-		/// specified such that a call to <see cref="GetRepository(Assembly)"/> with the
+		/// specified such that a call to <see cref="M:GetRepository(Assembly)"/> with the
 		/// same assembly specified will return the same repository instance.
 		/// </para>
 		/// </remarks>
@@ -769,7 +769,7 @@ namespace log4net.Core
 		/// <para>
 		/// The caller to <see cref="LogManager"/> supplies either a string name 
 		/// or an assembly (if not supplied the assembly is inferred using 
-		/// <see cref="Assembly.GetCallingAssembly()"/>).
+		/// <see cref="M:Assembly.GetCallingAssembly()"/>).
 		/// </para>
 		/// <para>
 		/// This context is used by the selector to lookup a specific repository.
@@ -823,7 +823,7 @@ namespace log4net.Core
 		/// Called when the <see cref="AppDomain.DomainUnload"/> event fires.
 		/// </para>
 		/// <para>
-		/// When the event is triggered the log4net system is <see cref="Shutdown()"/>.
+		/// When the event is triggered the log4net system is <see cref="M:Shutdown()"/>.
 		/// </para>
 		/// </remarks>
 		private static void OnDomainUnload(object sender, EventArgs e)
@@ -841,7 +841,7 @@ namespace log4net.Core
 		/// Called when the <see cref="AppDomain.ProcessExit"/> event fires.
 		/// </para>
 		/// <para>
-		/// When the event is triggered the log4net system is <see cref="Shutdown()"/>.
+		/// When the event is triggered the log4net system is <see cref="M:Shutdown()"/>.
 		/// </para>
 		/// </remarks>
 		private static void OnProcessExit(object sender, EventArgs e)
