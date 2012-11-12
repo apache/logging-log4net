@@ -455,7 +455,11 @@ namespace log4net.Util
 					// carry on.
 					return myAssembly.Location;
 				}
-				catch(System.Security.SecurityException)
+				catch (ArgumentException ex)
+				{
+					return "Location Detect Failed (" + ex.Message + ")";
+				}
+				catch (System.Security.SecurityException)
 				{
 					return "Location Permission Denied";
 				}
