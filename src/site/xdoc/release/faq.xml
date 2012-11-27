@@ -1038,6 +1038,33 @@ public class FastLogger
                     </p>
                 </section>
                 <p><a href="#top">Back to Top</a></p>
+                
+                
+                <section id="trouble-webapp-stops-logging" name="Why does my ASP.NET web application stop logging when deployed on an IIS?">
+                    <p>
+                        This problem has been reported by several people as issue 
+                        <a href="https://issues.apache.org/jira/browse/LOG4NET-178">LOG4NET-178</a>.
+                        The issue seems to be caused by a broken LOG4NET configuration
+                        or a timing problem caused by an application shutdown event that
+                        floats in late after an application start event and thus LOG4NET
+                        stops logging immediately after it has been started.
+                    </p>
+                    <p>
+                        The first thing step to troubleshoot problems is enabling
+                        the log4net internal debugging features as described
+                        <a href="http://logging.apache.org/log4net/release/faq.html#internalDebug">here</a>
+                        and fix all errors that pop up. If the problem still persists,
+                        <a href="https://issues.apache.org/jira/browse/LOG4NET-178?focusedCommentId=13504094&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-13504094">this comment</a>
+                        suggests to move the LOG4NET configuration out of the
+                        <span class="code">web.config</span> into a separate file
+                        like <span class="code">log4net.config</span>. Finally,
+                        if both previous steps did not help and the problem still
+                        occurs, you can try to work around the event timing problem
+                        by invoking the configuration call from the class constructor as described in
+                        <a href="https://issues.apache.org/jira/browse/LOG4NET-178?focusedCommentId=13504485&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-13504485">this comment</a>.
+                    </p>
+                </section>
+                <p><a href="#top">Back to Top</a></p>
 
                 
                 <section id="trouble-db" name="I am having trouble using the AdoNetAppender to connect to my database?">
