@@ -813,7 +813,7 @@ namespace log4net.Appender
 
 					if (!(last.ToString(m_datePattern,System.Globalization.DateTimeFormatInfo.InvariantInfo).Equals(m_now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo)))) 
 					{
-						m_scheduledFilename = m_baseFileName + last.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo);
+						m_scheduledFilename = CombinePath(m_baseFileName, last.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo));
 						LogLog.Debug(declaringType, "Initial roll over to ["+m_scheduledFilename+"]");
 						RollOverTime(false);
 						LogLog.Debug(declaringType, "curSizeRollBackups after rollOver at ["+m_curSizeRollBackups+"]");
