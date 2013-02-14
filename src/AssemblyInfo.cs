@@ -39,6 +39,14 @@ using System.Runtime.CompilerServices;
 [assembly: System.Security.AllowPartiallyTrustedCallers]
 #endif
 
+#if (NET_4_0)
+//
+// Allows partial trust applications (e.g. ASP.NET shared hosting) on .NET 4.0 to work
+// given our implementation of ISerializable.
+//
+[assembly: System.Security.SecurityRules(System.Security.SecurityRuleSet.Level1)]
+#endif
+
 //
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
