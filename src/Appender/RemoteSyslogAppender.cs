@@ -24,7 +24,7 @@ using log4net.Appender;
 using log4net.Util;
 using log4net.Layout;
 
-namespace log4net.Appender 
+namespace log4net.Appender
 {
 	/// <summary>
 	/// Logs events to a remote syslog daemon.
@@ -66,7 +66,7 @@ namespace log4net.Appender
 	/// </remarks>
 	/// <author>Rob Lyon</author>
 	/// <author>Nicko Cadell</author>
-	public class RemoteSyslogAppender : UdpAppender 
+	public class RemoteSyslogAppender : UdpAppender
 	{
 		/// <summary>
 		/// Syslog port 514
@@ -268,7 +268,7 @@ namespace log4net.Appender
 		/// This instance of the <see cref="RemoteSyslogAppender" /> class is set up to write 
 		/// to a remote syslog daemon.
 		/// </remarks>
-		public RemoteSyslogAppender() 
+		public RemoteSyslogAppender()
 		{
 			// syslog udp defaults
 			this.RemotePort = DefaultSyslogPort;
@@ -279,7 +279,7 @@ namespace log4net.Appender
 		#endregion Public Instance Constructors
 
 		#region Public Instance Properties
-		
+
 		/// <summary>
 		/// Message identity
 		/// </summary>
@@ -310,7 +310,7 @@ namespace log4net.Appender
 			get { return m_facility; }
 			set { m_facility = value; }
 		}
-		
+
 		#endregion Public Instance Properties
 
 		/// <summary>
@@ -341,46 +341,68 @@ namespace log4net.Appender
 		/// The format of the output will depend on the appender's layout.
 		/// </para>
 		/// </remarks>
-		protected override void Append(LoggingEvent loggingEvent) 
+		protected override void Append(LoggingEvent loggingEvent)
 		{
-			try 
+			try
 			{
-				System.IO.StringWriter writer = new System.IO.StringWriter(System.Globalization.CultureInfo.InvariantCulture);
-
-				// Priority
-				int priority = GeneratePriority(m_facility, GetSeverity(loggingEvent.Level));
-				writer.Write('<');
-				writer.Write(priority);
-				writer.Write('>');
-
-				// Identity
-				if (m_identity != null)
+				using (ReusableStringWriter writer = new ReusableStringWriter(System.Globalization.CultureInfo.InvariantCulture))
 				{
-					m_identity.Format(writer, loggingEvent);
+					// Priority
+					int priority = GeneratePriority(m_facility, GetSeverity(loggingEvent.Level));
+
+					// Identity
+					string identity;
+
+					if (m_identity != null)
+					{
+						identity = m_identity.Format(loggingEvent);
+					}
+					else
+					{
+						identity = loggingEvent.Domain;
+					}
+
+					// Message. The message goes after the tag/identity
+					string message = RenderLoggingEvent(loggingEvent);
+
+					// Split message by line to ensure that the syslog
+					// message is compliant to the RFC 
+					// http://www.ietf.org/rfc/rfc3164.txt in section 4.1.3
+					string[] lines = message.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+					Byte[] buffer;
+
+					foreach (string line in lines)
+					{
+						writer.Reset(c_renderBufferMaxCapacity, c_renderBufferSize);
+
+						// Write priority
+						writer.Write('<');
+						writer.Write(priority);
+						writer.Write('>');
+
+						// Write identity
+						writer.Write(identity);
+						writer.Write(": ");
+
+						// Write message line
+						writer.Write(line);
+
+						// Grab as a byte array
+						buffer = this.Encoding.GetBytes(writer.ToString());
+
+						this.Client.Send(buffer, buffer.Length, this.RemoteEndPoint);
+					}
 				}
-				else
-				{
-					writer.Write(loggingEvent.Domain);
-				}
-				writer.Write(": ");
-
-				// Message. The message goes after the tag/identity
-				RenderLoggingEvent(writer, loggingEvent);
-
-				// Grab as a byte array
-				string fullMessage = writer.ToString();
-				Byte [] buffer = this.Encoding.GetBytes(fullMessage.ToCharArray());
-
-				this.Client.Send(buffer, buffer.Length, this.RemoteEndPoint);
-			} 
-			catch (Exception e) 
+			}
+			catch (Exception e)
 			{
 				ErrorHandler.Error(
-					"Unable to send logging event to remote syslog " + 
-					this.RemoteAddress.ToString() + 
-					" on port " + 
-					this.RemotePort + ".", 
-					e, 
+					"Unable to send logging event to remote syslog " +
+					this.RemoteAddress.ToString() +
+					" on port " +
+					this.RemotePort + ".",
+					e,
 					ErrorCode.WriteFailure);
 			}
 		}
@@ -425,30 +447,30 @@ namespace log4net.Appender
 			// Fallback to sensible default values
 			//
 
-			if (level >= Level.Alert) 
+			if (level >= Level.Alert)
 			{
 				return SyslogSeverity.Alert;
-			} 
-			else if (level >= Level.Critical) 
+			}
+			else if (level >= Level.Critical)
 			{
 				return SyslogSeverity.Critical;
-			} 
-			else if (level >= Level.Error) 
+			}
+			else if (level >= Level.Error)
 			{
 				return SyslogSeverity.Error;
-			} 
-			else if (level >= Level.Warn) 
+			}
+			else if (level >= Level.Warn)
 			{
 				return SyslogSeverity.Warning;
-			} 
-			else if (level >= Level.Notice) 
+			}
+			else if (level >= Level.Notice)
 			{
 				return SyslogSeverity.Notice;
-			} 
-			else if (level >= Level.Info) 
+			}
+			else if (level >= Level.Info)
 			{
 				return SyslogSeverity.Informational;
-			} 
+			}
 			// Default setting
 			return SyslogSeverity.Debug;
 		}
@@ -504,6 +526,16 @@ namespace log4net.Appender
 		/// Mapping from level object to syslog severity
 		/// </summary>
 		private LevelMapping m_levelMapping = new LevelMapping();
+
+		/// <summary>
+		/// Initial buffer size
+		/// </summary>
+		private const int c_renderBufferSize = 256;
+
+		/// <summary>
+		/// Maximum buffer size before it is recycled
+		/// </summary>
+		private const int c_renderBufferMaxCapacity = 1024;
 
 		#endregion Private Instances Fields
 
