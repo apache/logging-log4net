@@ -1027,6 +1027,11 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                         <span class="code">log4net.ObjectRenderer.IObjectRenderer</span>
                         interface.
                     </p>
+                    <p>
+                        Please note that ObjectRenderers are not used by the <span class="code">DebugFormat</span>,
+                        <span class="code">InfoFormat</span>, <span class="code">WarnFormat</span>,
+                        <span class="code">ErrorFormat</span> and <span class="code">FatalFormat</span> methods.
+                    </p>
                 </section>
                 
             </section>
