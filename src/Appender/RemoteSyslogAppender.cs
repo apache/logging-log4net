@@ -23,6 +23,7 @@ using log4net.Core;
 using log4net.Appender;
 using log4net.Util;
 using log4net.Layout;
+using System.Text;
 
 namespace log4net.Appender
 {
@@ -343,68 +344,84 @@ namespace log4net.Appender
 		/// </remarks>
 		protected override void Append(LoggingEvent loggingEvent)
 		{
-			try
-			{
-				using (ReusableStringWriter writer = new ReusableStringWriter(System.Globalization.CultureInfo.InvariantCulture))
-				{
-					// Priority
-					int priority = GeneratePriority(m_facility, GetSeverity(loggingEvent.Level));
+            try
+            {
+                // Priority
+                int priority = GeneratePriority(m_facility, GetSeverity(loggingEvent.Level));
 
-					// Identity
-					string identity;
+                // Identity
+                string identity;
 
-					if (m_identity != null)
-					{
-						identity = m_identity.Format(loggingEvent);
-					}
-					else
-					{
-						identity = loggingEvent.Domain;
-					}
+                if (m_identity != null)
+                {
+                    identity = m_identity.Format(loggingEvent);
+                }
+                else
+                {
+                    identity = loggingEvent.Domain;
+                }
 
-					// Message. The message goes after the tag/identity
-					string message = RenderLoggingEvent(loggingEvent);
+                // Message. The message goes after the tag/identity
+                string message = RenderLoggingEvent(loggingEvent);
 
-					// Split message by line to ensure that the syslog
-					// message is compliant to the RFC 
-					// http://www.ietf.org/rfc/rfc3164.txt in section 4.1.3
-					string[] lines = message.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                Byte[] buffer;
+                int i = 0;
+                char c;
 
-					Byte[] buffer;
+                StringBuilder builder = new StringBuilder();
 
-					foreach (string line in lines)
-					{
-						writer.Reset(c_renderBufferMaxCapacity, c_renderBufferSize);
+                while (i < message.Length)
+                {
+                    // Clear StringBuilder
+                    builder.Length = 0;
 
-						// Write priority
-						writer.Write('<');
-						writer.Write(priority);
-						writer.Write('>');
+                    // Write priority
+                    builder.Append('<');
+                    builder.Append(priority);
+                    builder.Append('>');
 
-						// Write identity
-						writer.Write(identity);
-						writer.Write(": ");
+                    // Write identity
+                    builder.Append(identity);
+                    builder.Append(": ");
 
-						// Write message line
-						writer.Write(line);
+                    for (; i < message.Length; i++)
+                    {
+                        c = message[i];
 
-						// Grab as a byte array
-						buffer = this.Encoding.GetBytes(writer.ToString());
+                        // Accept only visible ASCII characters and space. See RFC 3164 section 4.1.3
+                        if (((int)c >= 32) && ((int)c <= 126))
+                        {
+                            builder.Append(c);
+                        }
+                        // If character is newline, break and send the current line
+                        else if ((c == '\r') || (c == '\n'))
+                        {
+                            // Check the next character to handle \r\n or \n\r
+                            if ((message.Length > i + 1) && ((message[i + 1] == '\r') || (message[i + 1] == '\n')))
+                            {
+                                i++;
+                            }
+                            i++;
+                            break;
+                        }
+                    }
 
-						this.Client.Send(buffer, buffer.Length, this.RemoteEndPoint);
-					}
-				}
-			}
-			catch (Exception e)
-			{
-				ErrorHandler.Error(
-					"Unable to send logging event to remote syslog " +
-					this.RemoteAddress.ToString() +
-					" on port " +
-					this.RemotePort + ".",
-					e,
-					ErrorCode.WriteFailure);
-			}
+                    // Grab as a byte array
+                    buffer = this.Encoding.GetBytes(builder.ToString());
+
+                    this.Client.Send(buffer, buffer.Length, this.RemoteEndPoint);
+                }
+            }
+            catch (Exception e)
+            {
+                ErrorHandler.Error(
+                    "Unable to send logging event to remote syslog " +
+                    this.RemoteAddress.ToString() +
+                    " on port " +
+                    this.RemotePort + ".",
+                    e,
+                    ErrorCode.WriteFailure);
+            }
 		}
 
 		/// <summary>
@@ -540,7 +557,6 @@ namespace log4net.Appender
 		#endregion Private Instances Fields
 
 		#region LevelSeverity LevelMapping Entry
-
 		/// <summary>
 		/// A class to act as a mapping between the level that a logging call is made at and
 		/// the syslog severity that is should be logged at.
