@@ -345,7 +345,7 @@ namespace log4net.Repository.Hierarchy
 					optionHandler.ActivateOptions();
 				}
 
-				LogLog.Debug(declaringType, "reated Appender [" + appenderName + "]");	
+				LogLog.Debug(declaringType, "Created Appender [" + appenderName + "]");	
 				return appender;
 			}
 			catch (Exception ex) 
