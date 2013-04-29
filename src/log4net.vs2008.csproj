@@ -594,6 +594,9 @@
     <Compile Include="Util\GlobalContextProperties.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Util\ILogExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Util\LevelMapping.cs">
       <SubType>Code</SubType>
     </Compile>
