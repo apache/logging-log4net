@@ -152,20 +152,20 @@ namespace log4net.DateFormatter
 					}
 				}
 				writer.Write(timeString);
+				
+				// Append the current millisecond info
+				writer.Write(',');
+				int millis = dateToFormat.Millisecond;
+				if (millis < 100)
+				{
+					writer.Write('0');
+				}
+				if (millis < 10)
+				{
+					writer.Write('0');
+				}
+				writer.Write(millis);
 			}
-			
-			// Append the current millisecond info
-			writer.Write(',');
-			int millis = dateToFormat.Millisecond;
-			if (millis < 100)
-			{
-				writer.Write('0');
-			}
-			if (millis < 10)
-			{
-				writer.Write('0');
-			}
-			writer.Write(millis);
 		}
 
 		#endregion Implementation of IDateFormatter
