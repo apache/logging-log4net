@@ -904,7 +904,10 @@ namespace log4net.Appender
 			// Only look for files in the current roll point
 			if (m_rollDate && !m_staticLogFileName)
 			{
-				if (! curFileName.StartsWith(CombinePath(baseFile, m_dateTime.Now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo))))
+				string date = m_dateTime.Now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo);
+				string prefix = m_preserveLogFileNameExtension ? Path.GetFileNameWithoutExtension(baseFile) + date : baseFile + date;
+				string suffix = m_preserveLogFileNameExtension ? Path.GetExtension(baseFile) : "";
+				if (!curFileName.StartsWith(prefix) || !curFileName.EndsWith(suffix))
 				{
 					LogLog.Debug(declaringType, "Ignoring file ["+curFileName+"] because it is from a different date period");
 					return;
