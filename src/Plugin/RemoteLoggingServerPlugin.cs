@@ -119,6 +119,9 @@ namespace log4net.Plugin
 		/// This method is called when the plugin is attached to the repository.
 		/// </para>
 		/// </remarks>
+#if NET_4_0
+		[System.Security.SecuritySafeCritical]
+#endif
 		override public void Attach(ILoggerRepository repository)
 		{
 			base.Attach(repository);
