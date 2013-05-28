@@ -118,10 +118,10 @@ namespace log4net.Core
 						// take into account the frames we skip above
 						int adjustedFrameCount = st.FrameCount - frameIndex;
                         ArrayList stackFramesList = new ArrayList(adjustedFrameCount);
-						m_stackFrames = new StackFrame[adjustedFrameCount];
+						m_stackFrames = new StackFrameItem[adjustedFrameCount];
 						for (int i=frameIndex; i < st.FrameCount; i++) 
 						{
-							stackFramesList.Add(st.GetFrame(i));
+							stackFramesList.Add(new StackFrameItem(st.GetFrame(i)));
 						}
 												
 						stackFramesList.CopyTo(m_stackFrames, 0);
@@ -275,7 +275,7 @@ namespace log4net.Core
 		/// <summary>
 		/// Gets the stack frames from the stack trace of the caller making the log request
 		/// </summary>
-		public StackFrame[] StackFrames
+		public StackFrameItem[] StackFrames
 		{
 			get { return m_stackFrames; }
 		}
@@ -291,7 +291,7 @@ namespace log4net.Core
 		private readonly string m_methodName;
 		private readonly string m_fullInfo;
 #if !NETCF
-		private readonly StackFrame[] m_stackFrames;
+		private readonly StackFrameItem[] m_stackFrames;
 #endif
 
 		#endregion Private Instance Fields

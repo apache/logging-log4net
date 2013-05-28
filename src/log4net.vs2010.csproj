@@ -317,10 +317,16 @@
     <Compile Include="Core\LogImpl.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Core\MethodItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Core\SecurityContext.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Core\SecurityContextProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Core\StackFrameItem.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Core\TimeEvaluator.cs" />
