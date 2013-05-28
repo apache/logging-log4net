@@ -963,14 +963,13 @@ namespace log4net.Appender
 			}
 
 			m_lockingModel.CurrentAppender=this;
-
-			using(SecurityContext.Impersonate(this))
-			{
-				m_fileName = ConvertToFullPath(m_fileName.Trim());
-			}
-
+			
 			if (m_fileName != null) 
 			{
+				using(SecurityContext.Impersonate(this))
+				{
+					m_fileName = ConvertToFullPath(m_fileName.Trim());
+				}
 				SafeOpenFile(m_fileName, m_appendToFile);
 			} 
 			else 
