@@ -893,7 +893,16 @@ namespace log4net.Core
 							m_data.Identity = "";
 						}
 					}
-					catch(System.Security.SecurityException)
+					catch (ObjectDisposedException)
+					{
+						// This exception will occur if System.Threading.Thread.CurrentPrincipal.Identity is not null but
+						// the getter of the property Name tries to access disposed objects.
+						// Seen to happen on IIS 7 or greater with windows authentication.
+						LogLog.Debug(declaringType, "Object disposed exception while trying to get current thread principal. Error Ignored. Empty identity name.");
+
+						m_data.Identity = "";
+					}
+					catch (System.Security.SecurityException)
 					{
 						// This security exception will occur if the caller does not have 
 						// some undefined set of SecurityPermission flags.
