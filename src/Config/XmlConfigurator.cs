@@ -880,18 +880,18 @@ namespace log4net.Config
                     {
                         // support multiple repositories each having their own watcher
                         ConfigureAndWatchHandler handler =
-                            (ConfigureAndWatchHandler)m_repositoryName2ConfigAndWatchHandler[repository.Name];
+							(ConfigureAndWatchHandler)m_repositoryName2ConfigAndWatchHandler[configFile.FullName];
 
                         if (handler != null)
                         {
-                            m_repositoryName2ConfigAndWatchHandler.Remove(repository.Name);
+							m_repositoryName2ConfigAndWatchHandler.Remove(configFile.FullName);
                             handler.Dispose();
                         }
 
                         // Create and start a watch handler that will reload the
                         // configuration whenever the config file is modified.
                         handler = new ConfigureAndWatchHandler(repository, configFile);
-                        m_repositoryName2ConfigAndWatchHandler[repository.Name] = handler;
+						m_repositoryName2ConfigAndWatchHandler[configFile.FullName] = handler;
                     }
 				}
 				catch(Exception ex)
