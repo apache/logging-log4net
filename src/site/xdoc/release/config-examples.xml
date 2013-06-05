@@ -1082,6 +1082,27 @@ CREATE TABLE Log (
 </appender>
                 ]]></source>
             </section>
+			
+			<section id="dynamicpatternlayout" name="DynamicPatternLayout">
+				<p>
+					For full details see the SDK Reference entry: <a href="sdk/log4net.Layout.DynamicPatternLayout.html">log4net.Layout.DynamicPatternLayout</a>.
+				</p>
+				<p>
+					The <span class="code">DynamicPatternLayout</span> should be used whenever the header or footer should contain information that could change over time.
+					Compared to the static <span class="code">PatternLayout</span> which does not re-evaluate on every invoke, the <span class="code">DynamicPatternLayout</span>
+					does re-evaluate the pattern on every invoke. It does, for example, allow to include the current DateTime in the header and/or the footer which was not possible
+					with the static <span class="code">PatternLayout</span>.
+				</p>
+				<p>
+					The following example shows how to configure the <span class="code">DynamicPatternLayout</span>.
+				</p>
+				<source language="xml"><![CDATA[
+<layout type="log4net.Layout.DynamicPatternLayout"> 
+  <param name="Header" value="%newline**** Trace Opened Local: %date{yyyy-MM-dd HH:mm:ss.fff} UTC: %utcdate{yyyy-MM-dd HH:mm:ss.fff} ****%newline"/> 
+  <param name="Footer" value="**** Trace Closed %date{yyyy-MM-dd HH:mm:ss.fff} ****%newline"/> 
+</layout>
+				]]></source>
+			</section>
         </section>
         
     </body>
