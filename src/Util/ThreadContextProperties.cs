@@ -18,7 +18,6 @@
 #endregion
 
 using System;
-using System.Collections;
 
 namespace log4net.Util
 {
@@ -37,9 +36,10 @@ namespace log4net.Util
 		#region Private Instance Fields
 
 		/// <summary>
-		/// The thread local data slot to use to store a PropertiesDictionary.
+		/// Each thread will automatically have its instance.
 		/// </summary>
-		private readonly static LocalDataStoreSlot s_threadLocalSlot = System.Threading.Thread.AllocateDataSlot();
+		[ThreadStatic]
+		private static PropertiesDictionary _dictionary;
 
 		#endregion Private Instance Fields
 
@@ -74,18 +74,21 @@ namespace log4net.Util
 		/// </remarks>
 		override public object this[string key]
 		{
-			get 
-			{ 
-				PropertiesDictionary dictionary = GetProperties(false);
-				if (dictionary != null)
+			get
+			{
+				if (_dictionary != null)
 				{
-					return dictionary[key]; 
+					return _dictionary[key];
 				}
 				return null;
 			}
-			set 
-			{ 
-				GetProperties(true)[key] = value; 
+			set
+			{
+				if (_dictionary == null)
+				{
+					_dictionary = new PropertiesDictionary();
+				}
+				_dictionary[key] = value;
 			}
 		}
 
@@ -104,10 +107,9 @@ namespace log4net.Util
 		/// </remarks>
 		public void Remove(string key)
 		{
-			PropertiesDictionary dictionary = GetProperties(false);
-			if (dictionary != null)
+			if (_dictionary != null)
 			{
-				dictionary.Remove(key);
+				_dictionary.Remove(key);
 			}
 		}
 
@@ -121,10 +123,9 @@ namespace log4net.Util
 		/// </remarks>
 		public void Clear()
 		{
-			PropertiesDictionary dictionary = GetProperties(false);
-			if (dictionary != null)
+			if (_dictionary != null)
 			{
-				dictionary.Clear();
+				_dictionary.Clear();
 			}
 		}
 
@@ -135,7 +136,7 @@ namespace log4net.Util
 		/// <summary>
 		/// Get the <c>PropertiesDictionary</c> for this thread.
 		/// </summary>
-		/// <param name="create">create the dictionary if it does not exist, otherwise return null if is does not exist</param>
+		/// <param name="create">create the dictionary if it does not exist, otherwise return null if does not exist</param>
 		/// <returns>the properties for this thread</returns>
 		/// <remarks>
 		/// <para>
@@ -146,17 +147,14 @@ namespace log4net.Util
 		/// </remarks>
 		internal PropertiesDictionary GetProperties(bool create)
 		{
-			PropertiesDictionary properties = (PropertiesDictionary)System.Threading.Thread.GetData(s_threadLocalSlot);
-			if (properties == null && create)
+			if (_dictionary != null && create)
 			{
-				properties  = new PropertiesDictionary();
-				System.Threading.Thread.SetData(s_threadLocalSlot, properties);
+				PropertiesDictionary properties = new PropertiesDictionary(_dictionary);
 			}
-			return properties;
+			return _dictionary;
 		}
 
 		#endregion Internal Instance Methods
 	}
 }
-
 
