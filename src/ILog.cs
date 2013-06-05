@@ -956,5 +956,18 @@ namespace log4net
 		/// <seealso cref="M:FatalFormat(IFormatProvider, string, object[])"/>
 		/// <seealso cref="ILog.IsDebugEnabled"/>
 		bool IsFatalEnabled { get; }
+
+		/// <summary>
+		/// Gets the falg that indicates if the repository of this Logger has been configured.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if the repository of this Logger has been configured.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Gets the falg that indicates if the repository of this Logger has been configured.
+		/// </para>
+		/// </remarks>
+		bool Configured { get; }
 	}
 }
