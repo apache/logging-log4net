@@ -263,13 +263,19 @@ namespace log4net.Util
 						// Lookup the host name
 						s_hostName = System.Net.Dns.GetHostName();
 					}
-					catch(System.Net.Sockets.SocketException)
+					catch (System.Net.Sockets.SocketException)
 					{
+						LogLog.Debug(declaringType, "Socket exception occurred while getting the dns hostname. Error Ignored.");
 					}
-					catch(System.Security.SecurityException)
+					catch (System.Security.SecurityException)
 					{
 						// We may get a security exception looking up the hostname
 						// You must have Unrestricted DnsPermission to access resource
+						LogLog.Debug(declaringType, "Security exception occurred while getting the dns hostname. Error Ignored.");
+					}
+					catch (Exception ex)
+					{
+						LogLog.Debug(declaringType, "Some other exception occurred while getting the dns hostname. Error Ignored.", ex);
 					}
 
 					// Get the NETBIOS machine name of the current machine
@@ -295,6 +301,7 @@ namespace log4net.Util
 					if (s_hostName == null || s_hostName.Length == 0)
 					{
 						s_hostName = s_notAvailableText;
+						LogLog.Debug(declaringType, "Could not determine the hostname. Error Ignored. Empty host name will be used");
 					}
 				}
 				return s_hostName;
