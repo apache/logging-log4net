@@ -43,6 +43,11 @@ limitations under the License.
                 Save one or more of the sample xml config files to your local system and 
                 load them when Chainsaw starts.
             </p>
+			
+			<p>
+				Please note also that it may be necessary to configure Chainsaw tabs as reported as
+				issue <a href="https://issues.apache.org/jira/browse/LOG4NET-259">LOG4NET-259</a>.
+			</p>
             
             <section id="udp" name="Logging via UDP">
                 <p>
