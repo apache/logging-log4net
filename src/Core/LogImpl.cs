@@ -1254,22 +1254,6 @@ namespace log4net.Core
 			get { return Logger.IsEnabledFor(m_levelFatal); }
 		}
 
-		/// <summary>
-		/// Gets the falg that indicates if the repository of this Logger has been configured.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if the repository of this Logger has been configured.
-		/// </value>
-		/// <remarks>
-		/// <para>
-		/// Gets the falg that indicates if the repository of this Logger has been configured.
-		/// </para>
-		/// </remarks>
-		virtual public bool Configured
-		{
-			get { return Logger.Repository.Configured; }
-		}
-
 		#endregion Implementation of ILog
 
 		#region Private Methods
