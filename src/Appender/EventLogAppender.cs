@@ -615,17 +615,6 @@ namespace log4net.Appender
 	    private readonly static Type declaringType = typeof(EventLogAppender);
 
 		/// <summary>
-		/// The maximum size that the operating system supports for
-		/// a event log message.
-		/// </summary>
-		/// <remarks>
-		/// Used to determine the maximum string length that can be written
-		/// to the operating system event log and eventually truncate a string
-		/// that exceeds the limits.
-		/// </remarks>
-		private readonly static int MAX_EVENTLOG_MESSAGE_SIZE = GetMaxEventLogMessageSize();
-
-		/// <summary>
 		/// The maximum size supported by default.
 		/// </summary>
 		/// <remarks>
@@ -669,6 +658,17 @@ namespace log4net.Appender
 		/// buffer, given enough time).
 		/// </remarks>
 		private readonly static int MAX_EVENTLOG_MESSAGE_SIZE_VISTA_OR_NEWER = 31839 - 2;
+
+		/// <summary>
+		/// The maximum size that the operating system supports for
+		/// a event log message.
+		/// </summary>
+		/// <remarks>
+		/// Used to determine the maximum string length that can be written
+		/// to the operating system event log and eventually truncate a string
+		/// that exceeds the limits.
+		/// </remarks>
+		private readonly static int MAX_EVENTLOG_MESSAGE_SIZE = GetMaxEventLogMessageSize();
 
 		/// <summary>
 		/// This method determines the maximum event log message size allowed for
