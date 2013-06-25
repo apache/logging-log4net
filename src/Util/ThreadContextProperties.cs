@@ -149,7 +149,7 @@ namespace log4net.Util
 		{
 			if (_dictionary != null && create)
 			{
-				PropertiesDictionary properties = new PropertiesDictionary(_dictionary);
+				return new PropertiesDictionary(_dictionary);
 			}
 			return _dictionary;
 		}
