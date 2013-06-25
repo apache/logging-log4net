@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 using System.Reflection;
+using log4net.Util;
 
 namespace log4net.Core
 {
@@ -49,16 +50,23 @@ namespace log4net.Core
             m_method = new MethodItem();
             m_className = NA;
 
-            // get frame values
-            m_lineNumber = frame.GetFileLineNumber().ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
-            m_fileName = frame.GetFileName();
-            // get method values
-            MethodBase method = frame.GetMethod();
-            if (method != null)
-            {
-				m_className = method.DeclaringType.FullName;
-				m_method = new MethodItem(method);
-            }
+			try
+			{
+				// get frame values
+				m_lineNumber = frame.GetFileLineNumber().ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
+				m_fileName = frame.GetFileName();
+				// get method values
+				MethodBase method = frame.GetMethod();
+				if (method != null)
+				{
+					m_className = method.DeclaringType.FullName;
+					m_method = new MethodItem(method);
+				}
+			}
+			catch (Exception ex)
+			{
+				LogLog.Error(declaringType, "An exception ocurred while retreiving stack frame information.", ex);
+			}
 
             // set full info
             m_fullInfo = m_className + '.' + m_method.Name + '(' + m_fileName + ':' + m_lineNumber + ')';
