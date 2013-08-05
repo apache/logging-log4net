@@ -519,7 +519,7 @@ namespace log4net.Appender
                     mailMessage.Bcc = m_bcc;
                 }
 				mailMessage.Subject = m_subject;
-#if !MONO
+#if !MONO && !NET_1_0 && !NET_1_1 && !CLI_1_0
 				mailMessage.SubjectEncoding = m_subjectEncoding;
 #endif
 				mailMessage.Priority = m_mailPriority;
