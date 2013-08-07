@@ -1270,7 +1270,7 @@ limitations under the License.
         <documenter name="MSDN">
           <property name="OutputDirectory" value="${current.sdkdoc.dir}" />
           <property name="HtmlHelpName" value="log4net-sdk-${framework::get-target-framework()}" />
-          <property name="HtmlHelpCompilerFilename" value="${htmlhelp.compiler}" />
+          <!--property name="HtmlHelpCompilerFilename" value="${htmlhelp.compiler}" /-->
           <property name="IncludeFavorites" value="true" />
           <property name="IncludeHierarchy" value="true" />
           <property name="Title" value="Apache log4net&#x2122; SDK Documentation - ${framework::get-description(framework::get-target-framework())}" />
