@@ -205,7 +205,7 @@ limitations under the License.
     <if test="${framework::exists('netcf-2.0')}">
       <call target="compile-netcf-2.0" />
     </if>
-    <if test="${not framework::exists('netcf-2.0')}">
+    <!--if test="${not framework::exists('netcf-2.0')}">
       <if test="${property::exists('project.build.package') and project.build.package and not(directory::exists(path::combine(bin.dir, 'netcf/2.0/debug')) and directory::exists(path::combine(bin.dir, 'netcf/2.0/release')) and directory::exists(path::combine(bin.dir, 'netcf/2.0/oldkey')))}">
         <fail message="The .NET Compact Framework 2.0 is not available." />
       </if>
@@ -213,7 +213,7 @@ limitations under the License.
         <echo 
             message="The .NET Compact Framework 2.0 is not available. Build skipped." />
       </if>
-    </if>
+    </if-->
     <!-- NET_1_0 -->
     <if test="${framework::exists('net-1.0')}">
       <call target="compile-net-1.0" />
