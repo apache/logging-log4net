@@ -1335,6 +1335,12 @@ namespace log4net.Core
 
 			// TODO: Add Repository Properties
 
+			// event properties
+			PropertiesDictionary eventProperties = new PropertiesDictionary();
+			eventProperties[UserNameProperty] = UserName;
+			eventProperties[IdentityProperty] = Identity;
+			m_compositeProperties.Add(eventProperties);
+
 			m_compositeProperties.Add(GlobalContext.Properties.GetReadOnlyProperties());
 		}
 
