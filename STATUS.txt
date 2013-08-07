@@ -27,4 +27,5 @@ Active Committers
 * Gert Driesen (drieseng)
 * Ron Grabowski (rgrabowski)
 * Stefan Bodewig (bodewig)
+* Dominik Psenner (dpsenner)
 
