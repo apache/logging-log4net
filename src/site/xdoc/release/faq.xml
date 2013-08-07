@@ -971,7 +971,7 @@ public class FastLogger
 if(!log4net.LogManager.GetRepository().Configured)
 {
 	// log4net not configured
-	foreach(log4net.Util.LogLog message in log4net.LogManager.GetRepository().ConfigurationMessages.Cast<log4net.Util.LogLog>())
+	foreach(log4net.Util.LogLog message in log4net.LogManager.GetRepository().ConfigurationMessages.Cast&lt;log4net.Util.LogLog&bg;())
 	{
 		// evaluate configuration message
 	}
