@@ -114,6 +114,22 @@ namespace log4net.Util
 		}
 
 		/// <summary>
+		/// Get the keys stored in the properties.
+		/// </summary>
+		/// <para>
+		/// Gets the keys stored in the properties.
+		/// </para>
+		/// <returns>a set of the defined keys</returns>
+		public string[] GetKeys()
+		{
+			if (_dictionary != null)
+			{
+				return _dictionary.GetKeys();
+			}
+			return null;
+		}
+
+		/// <summary>
 		/// Clear all properties
 		/// </summary>
 		/// <remarks>
