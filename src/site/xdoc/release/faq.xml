@@ -959,6 +959,27 @@ public class FastLogger
                 </section>
                 <p><a href="#top">Back to Top</a></p>
 
+                <section id="trouble-evaluate-configurationerrors-at-runtime" name="How can I evaluate configuration errors at runtime?">
+                    <p>
+                        To prevent silent failure of log4net as reported as <a href="http://issues.apache.org/jira/browse/LOG4NET-342">LOG4NET-342</a>,
+                        log4net supports a way to evaluate if it was configured and also to evaluate messages generated on startup since 1.2.11. To
+						check if log4net was started and configured properly one can check the property 
+						<span class="code">log4net.Repository.ILoggerRepository.Configured</span> and enumerate the configuration messages as follows:
+                    </p>
+                    <div class="syntax">
+                        <pre class="code">
+if(!log4net.LogManager.GetRepository().Configured)
+{
+	// log4net not configured
+	foreach(log4net.Util.LogLog message in log4net.LogManager.GetRepository().ConfigurationMessages.Cast<log4net.Util.LogLog>())
+	{
+		// evaluate configuration message
+	}
+}
+                        </pre>
+                    </div>
+                </section>
+                <p><a href="#top">Back to Top</a></p>
 
                 <section id="trouble-EventLog" name="Why doesn't the EventLogAppender work?">
                     <p>
