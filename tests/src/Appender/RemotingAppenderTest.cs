@@ -75,7 +75,7 @@ namespace log4net.Tests.Appender
 		}
 
 		/// <summary>
-		/// Test that the UserName property is not remoted when doing a Fix.Partial
+		/// Test that the LocationInfo property is not remoted when doing a Fix.Partial
 		/// </summary>
 		[Test]
 		public void TestPartialFix()
@@ -100,11 +100,11 @@ namespace log4net.Tests.Appender
 			// Grab the event data
 			LoggingEventData eventData = GetLoggingEventData(events[0]);
 
-			Assert.IsNull(eventData.UserName, "Expect username to be null because only doing a partial fix");
+			Assert.IsNull(eventData.LocationInfo, "Expect LocationInfo to be null because only doing a partial fix");
 		}
 
 		/// <summary>
-		/// Test that the UserName property is remoted when doing a Fix.All
+		/// Test that the LocationInfo property is remoted when doing a Fix.All
 		/// </summary>
 		[Test]
 		public void TestFullFix()
@@ -129,7 +129,7 @@ namespace log4net.Tests.Appender
 			// Grab the event data
 			LoggingEventData eventData = GetLoggingEventData(events[0]);
 
-			Assert.IsNotNull(eventData.UserName, "Expect username to not be null because doing a full fix");
+			Assert.IsNotNull(eventData.LocationInfo, "Expect LocationInfo to not be null because doing a full fix");
 		}
 
 		/// <summary>
