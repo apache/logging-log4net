@@ -124,7 +124,7 @@ limitations under the License.
                 </p>
                 <p>
                   There are no assemblies targeting the Compact
-                  Framework 1.0 or Microsoft Shared Source CLI 1.0 in
+                  Framework 1.0/2.0 or Microsoft Shared Source CLI 1.0 in
                   the binary release, but they can be built from the
                   source release.
                 </p>
