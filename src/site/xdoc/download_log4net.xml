@@ -77,14 +77,14 @@ limitations under the License.
       </subsection>
     </section>
 
-    <section name="log4net 1.2.11">
+    <section name="log4net 1.2.12">
 
       <subsection name="Source">
         <table>
           <tr>
-            <td><a href="[preferred]/logging/log4net/source/log4net-1.2.11-src.zip">log4net-1.2.11-src.zip</a></td>
-              <td><a href="http://www.apache.org/dist/logging/log4net/source/log4net-1.2.11-src.zip.md5">md5</a></td>
-              <td><a href="http://www.apache.org/dist/logging/log4net/source/log4net-1.2.11-src.zip.asc">pgp</a></td>
+            <td><a href="[preferred]/logging/log4net/source/log4net-1.2.12-src.zip">log4net-1.2.12-src.zip</a></td>
+              <td><a href="http://www.apache.org/dist/logging/log4net/source/log4net-1.2.12-src.zip.md5">md5</a></td>
+              <td><a href="http://www.apache.org/dist/logging/log4net/source/log4net-1.2.12-src.zip.asc">pgp</a></td>
           </tr>
         </table>
       </subsection>
@@ -103,14 +103,14 @@ limitations under the License.
 
         <table>
           <tr>
-            <td><a href="[preferred]/logging/log4net/binaries/log4net-1.2.11-bin-newkey.zip">log4net-1.2.11-bin-newkey.zip</a></td>
-              <td><a href="http://www.apache.org/dist/logging/log4net/binaries/log4net-1.2.11-bin-newkey.zip.md5">md5</a></td>
-              <td><a href="http://www.apache.org/dist/logging/log4net/binaries/log4net-1.2.11-bin-newkey.zip.asc">pgp</a></td>
+            <td><a href="[preferred]/logging/log4net/binaries/log4net-1.2.12-bin-newkey.zip">log4net-1.2.12-bin-newkey.zip</a></td>
+              <td><a href="http://www.apache.org/dist/logging/log4net/binaries/log4net-1.2.12-bin-newkey.zip.md5">md5</a></td>
+              <td><a href="http://www.apache.org/dist/logging/log4net/binaries/log4net-1.2.12-bin-newkey.zip.asc">pgp</a></td>
           </tr>
           <tr>
-            <td><a href="[preferred]/logging/log4net/binaries/log4net-1.2.11-bin-oldkey.zip">log4net-1.2.11-bin-oldkey.zip</a></td>
-              <td><a href="http://www.apache.org/dist/logging/log4net/binaries/log4net-1.2.11-bin-oldkey.zip.md5">md5</a></td>
-              <td><a href="http://www.apache.org/dist/logging/log4net/binaries/log4net-1.2.11-bin-oldkey.zip.asc">pgp</a></td>
+            <td><a href="[preferred]/logging/log4net/binaries/log4net-1.2.12-bin-oldkey.zip">log4net-1.2.12-bin-oldkey.zip</a></td>
+              <td><a href="http://www.apache.org/dist/logging/log4net/binaries/log4net-1.2.12-bin-oldkey.zip.md5">md5</a></td>
+              <td><a href="http://www.apache.org/dist/logging/log4net/binaries/log4net-1.2.12-bin-oldkey.zip.asc">pgp</a></td>
           </tr>
         </table>
       </subsection>
@@ -118,9 +118,14 @@ limitations under the License.
     </section>
 
     <section name="Archives">
+      <p>Release 1.2.11 and all more recent releases are available
+      from the Apache Software Foundation's <a
+      href="http://archive.apache.org/dist/logging/log4net/">distribution
+      archive</a>.</p>
+
       <p>The 1.2.10 and 1.2.9 releases have been created while log4net
       was still undergoing incubation and those releases are available
-      from the Apache Software Foundation's <a
+      from the <a
       href="http://archive.apache.org/dist/incubator/log4net/">distribution
       archive</a> for the Incubator project.</p>
 
