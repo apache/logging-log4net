@@ -31,6 +31,7 @@ using log4net.Repository.Hierarchy;
 using log4net.Util;
 
 using NUnit.Framework;
+using System.Globalization;
 
 namespace log4net.Tests.Appender
 {
@@ -50,6 +51,8 @@ namespace log4net.Tests.Appender
 		private int _MaxSizeRollBackups = 3;
 		private CountingAppender _caRoot;
 		private Logger _root;
+		private CultureInfo _currentCulture;
+		private CultureInfo _currentUICulture;
 
 		private class SilentErrorHandler : IErrorHandler
 		{
@@ -111,6 +114,11 @@ namespace log4net.Tests.Appender
 		{
 			ResetAndDeleteTestFiles();
 			InitializeVariables();
+
+			// set correct thread culture
+			_currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
+			_currentUICulture = System.Threading.Thread.CurrentThread.CurrentUICulture;
+			System.Threading.Thread.CurrentThread.CurrentCulture = System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
 		}
 
 		/// <summary>
@@ -120,6 +128,10 @@ namespace log4net.Tests.Appender
 		public void TearDown()
 		{
 			ResetAndDeleteTestFiles();
+			
+			// restore previous culture
+			System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture;
+			System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture;
 		}
 
 		/// <summary>

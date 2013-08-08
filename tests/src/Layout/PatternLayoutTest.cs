@@ -29,6 +29,7 @@ using log4net.Tests.Appender;
 using log4net.Util;
 
 using NUnit.Framework;
+using System.Globalization;
 
 namespace log4net.Tests.Layout
 {
@@ -41,10 +42,25 @@ namespace log4net.Tests.Layout
 	[TestFixture]
 	public class PatternLayoutTest
 	{
+		private CultureInfo _currentCulture;
+		private CultureInfo _currentUICulture;
+
+		[SetUp]
+		public void SetUp()
+		{
+			// set correct thread culture
+			_currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
+			_currentUICulture = System.Threading.Thread.CurrentThread.CurrentUICulture;
+			System.Threading.Thread.CurrentThread.CurrentCulture = System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
+		}
+
 
         [TearDown]
         public void TearDown() {
-            Utils.RemovePropertyFromAllContexts();
+			Utils.RemovePropertyFromAllContexts();
+			// restore previous culture
+			System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture;
+			System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture;
         }
 
         protected virtual PatternLayout NewPatternLayout() {
@@ -96,7 +112,7 @@ namespace log4net.Tests.Layout
 
             log1.Info("TestMessage");
 #if !MONO
-            Assert.AreEqual("RuntimeMethodHandle._InvokeMethodFast > PatternLayoutTest.TestStackTracePattern", stringAppender.GetString(), "stack trace value set");
+            Assert.AreEqual("System.RuntimeMethodHandle.InvokeMethod > log4net.Tests.Layout.PatternLayoutTest.TestStackTracePattern", stringAppender.GetString(), "stack trace value set");
 #else
             Assert.AreEqual("MonoMethod.InternalInvoke > PatternLayoutTest.TestStackTracePattern", stringAppender.GetString(), "stack trace value set");
 #endif

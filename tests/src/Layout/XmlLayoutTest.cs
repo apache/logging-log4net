@@ -29,12 +29,33 @@ using log4net.Tests.Appender;
 using log4net.Util;
 
 using NUnit.Framework;
+using System.Globalization;
 
 namespace log4net.Tests.Layout
 {
 	[TestFixture]
 	public class XmlLayoutTest
 	{
+		private CultureInfo _currentCulture;
+		private CultureInfo _currentUICulture;
+
+		[SetUp]
+		public void SetUp()
+		{
+			// set correct thread culture
+			_currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
+			_currentUICulture = System.Threading.Thread.CurrentThread.CurrentUICulture;
+			System.Threading.Thread.CurrentThread.CurrentCulture = System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			// restore previous culture
+			System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture;
+			System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture;
+		}
+
 		/// <summary>
 		/// Build a basic <see cref="LoggingEventData"/> object with some default values.
 		/// </summary>
@@ -329,7 +350,7 @@ namespace log4net.Tests.Layout
             var startOfExceptionElement = log.IndexOf("<exception>");
             var sub = log.Substring(startOfExceptionElement + 11);
             StringAssert.StartsWith("System.NullReferenceException: Object reference not set to an instance of an object", sub);
-            StringAssert.Contains("at log4net.Tests.Layout.XmlLayoutTest.&lt;&gt;c__DisplayClass4.&lt;BracketsInStackTracesAreEscapedProperly&gt;b__3(Int32 foo) in ", sub);
+            StringAssert.Contains("at log4net.Tests.Layout.XmlLayoutTest.&lt;&gt;c__DisplayClass4.&lt;BracketsInStackTracesAreEscapedProperly&gt;b__3(Int32 foo)", sub);
         }
 #endif
 	}

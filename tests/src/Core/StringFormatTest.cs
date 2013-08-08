@@ -40,6 +40,26 @@ namespace log4net.Tests.Core
 	[TestFixture]
 	public class StringFormatTest
 	{
+		private CultureInfo _currentCulture;
+		private CultureInfo _currentUICulture;
+
+		[SetUp]
+		public void SetUp()
+		{
+			// set correct thread culture
+			_currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
+			_currentUICulture = System.Threading.Thread.CurrentThread.CurrentUICulture;
+			System.Threading.Thread.CurrentThread.CurrentCulture = System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			// restore previous culture
+			System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture;
+			System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture;
+		}
+
 		[Test]
 		public void TestFormatString()
 		{
