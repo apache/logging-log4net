@@ -213,8 +213,9 @@ namespace log4net.Tests.Appender
 					ChannelServices.RegisterChannel(m_remotingChannel);
 #endif
 				}
-				catch(Exception)
+				catch(Exception ex)
 				{
+					Assert.Fail("Failed to set up LoggingSink: {0}", ex);
 				}
 
 				// Marshal the sink object
