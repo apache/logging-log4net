@@ -23,6 +23,11 @@ using log4net.Util;
 
 using NUnit.Framework;
 
+#if NET_4_0
+using System.Linq.Expressions;
+using System.Reflection;
+#endif
+
 namespace log4net.Tests.Util
 {
 	/// <summary>
@@ -31,6 +36,39 @@ namespace log4net.Tests.Util
 	[TestFixture]
 	public class SystemInfoTest
 	{
+
+#if NET_4_0
+		/// <summary>
+		/// It's "does not throw not supported exception" NOT
+		/// "returns 'Dynamic Assembly' string for dynamic assemblies" by purpose.
+		/// <see cref="Assembly.GetCallingAssembly"/> can be JITted and inlined in different release configurations,
+		/// thus we cannot determine what the exact result of this test will be.
+		/// In 'Debug' GetCallingAssembly should return dynamic assembly named: 'Anonymously Hosted DynamicMethods Assembly'
+		/// whereas in 'Release' this will be inlined and the result will be something like 'X:\Y\Z\log4net.Tests.dll'.
+		/// Therefore simple check against dynamic assembly
+		/// in <see cref="SystemInfo.AssemblyLocationInfo"/> to avoid <see cref="NotSupportedException"/> 'Debug' release.
+		/// </summary>
+		[Test]
+		public void TestAssemblyLocationInfoDoesNotThrowNotSupportedExceptionForDynamicAssembly()
+		{
+			var systemInfoAssemblyLocationMethod = GetAssemblyLocationInfoMethodCall();
+
+			Assert.DoesNotThrow(() => systemInfoAssemblyLocationMethod());
+		}
+
+		private static Func<string> GetAssemblyLocationInfoMethodCall()
+		{
+			var method = typeof(SystemInfoTest).GetMethod("TestAssemblyLocationInfoMethod", new Type[0]);
+			var methodCall = Expression.Call(null, method, new Expression[0]);
+			return Expression.Lambda<Func<string>>(methodCall, new ParameterExpression[0]).Compile();
+		}
+
+		public static string TestAssemblyLocationInfoMethod()
+		{
+			return SystemInfo.AssemblyLocationInfo(Assembly.GetCallingAssembly());
+		}
+#endif
+
 		[Test]
 		public void TestGetTypeFromStringFullyQualified()
 		{

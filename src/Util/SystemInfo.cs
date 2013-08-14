@@ -457,10 +457,38 @@ namespace log4net.Util
 			{
 				try
 				{
-					// This call requires FileIOPermission for access to the path
-					// if we don't have permission then we just ignore it and
-					// carry on.
-					return myAssembly.Location;
+#if NET_4_0
+					if (myAssembly.IsDynamic)
+					{
+						return "Dynamic Assembly";
+					}
+#else
+					if (myAssembly is System.Reflection.Emit.AssemblyBuilder)
+					{
+						return "Dynamic Assembly";
+					}
+					else if(myAssembly.GetType().FullName == "System.Reflection.Emit.InternalAssemblyBuilder")
+					{
+						return "Dynamic Assembly";
+					}
+#endif
+					else
+					{
+						// This call requires FileIOPermission for access to the path
+						// if we don't have permission then we just ignore it and
+						// carry on.
+						return myAssembly.Location;
+					}
+				}
+				catch (NotSupportedException)
+				{
+					// The location information may be unavailable for dynamic assemblies and a NotSupportedException
+					// is thrown in those cases. See: http://msdn.microsoft.com/de-de/library/system.reflection.assembly.location.aspx
+					return "Dynamic Assembly";
+				}
+				catch (TargetInvocationException ex)
+				{
+					return "Location Detect Failed (" + ex.Message + ")";
 				}
 				catch (ArgumentException ex)
 				{
