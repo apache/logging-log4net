@@ -140,6 +140,7 @@
     <Compile Include="Appender\AdoNet\Log4NetParameter.cs" />
     <Compile Include="Appender\AdoNet\Log4NetParameterCollection.cs" />
     <Compile Include="Appender\AdoNet\Log4NetTransaction.cs" />
+    <Compile Include="Appender\AppenderCollectionTest.cs" />
     <Compile Include="Appender\BufferingAppenderTest.cs">
       <SubType>Code</SubType>
     </Compile>
