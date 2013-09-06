@@ -853,11 +853,6 @@ namespace log4net.Appender
 				get { return true; }
 			}
 
-			public override IAppender[] ToArray()
-			{
-				return m_collection.ToArray();
-			}
-
 			#endregion
 
 			#region Type-safe IEnumerable
@@ -886,6 +881,11 @@ namespace log4net.Appender
 			public override int AddRange(IAppender[] x)
 			{
 				throw new NotSupportedException("This is a Read Only Collection and can not be modified");
+			}
+
+			public override IAppender[] ToArray()
+			{
+				return m_collection.ToArray();
 			}
 
 			#endregion
