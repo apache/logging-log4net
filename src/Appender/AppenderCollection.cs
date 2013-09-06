@@ -853,6 +853,11 @@ namespace log4net.Appender
 				get { return true; }
 			}
 
+			public override IAppender[] ToArray()
+			{
+				return m_collection.ToArray();
+			}
+
 			#endregion
 
 			#region Type-safe IEnumerable
