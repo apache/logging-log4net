@@ -888,6 +888,11 @@ namespace log4net.Appender
 				return m_collection.ToArray();
 			}
 
+			public override void TrimToSize()
+			{
+				throw new NotSupportedException("This is a Read Only Collection and can not be modified");
+			}
+
 			#endregion
 		}
 
