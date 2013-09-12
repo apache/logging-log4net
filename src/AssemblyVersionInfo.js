@@ -31,12 +31,12 @@
 // an import functions as a workaround for this issue.
 import System.Reflection;
 
-[assembly: AssemblyVersion("1.2.11.0")]
+[assembly: AssemblyVersion("1.2.12.0")]
 [assembly: AssemblyInformationalVersionAttribute("1.2")]
 
 @if (!@NETCF)
 @if (!@SSCLI)
-[assembly: AssemblyFileVersion("1.2.11.0")]
+[assembly: AssemblyFileVersion("1.2.12.0")]
 @end
 @end
 
@@ -45,5 +45,5 @@ import System.Reflection;
 //
 
 [assembly: AssemblyCompany("The Apache Software Foundation")]
-[assembly: AssemblyCopyright("Copyright 2004-2011 The Apache Software Foundation.")]
+[assembly: AssemblyCopyright("Copyright 2004-2013 The Apache Software Foundation.")]
 [assembly: AssemblyTrademark("Apache and Apache log4net are trademarks of The Apache Software Foundation")]

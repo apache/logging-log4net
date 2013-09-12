@@ -20,7 +20,7 @@
   <groupId>log4net</groupId>
   <artifactId>apache-log4net</artifactId>
   <packaging>pom</packaging>
-  <version>1.2.12-SNAPSHOT</version>
+  <version>1.2.12</version>
   <name>Apache log4net</name>
   <description>Logging framework for Microsoft .NET Framework.</description>
   <url>http://logging.apache.org/log4net/</url>
@@ -30,8 +30,8 @@
     <url>https://issues.apache.org/jira/browse/LOG4NET</url>
   </issueManagement>
   <ciManagement>
-    <system>Gump</system>
-    <url>http://vmgump.apache.org/gump/public/logging-log4net/logging-log4net/index.html</url>
+    <system>Jenkins</system>
+    <url>https://builds.apache.org/job/log4net-trunk-build/</url>
   </ciManagement>
   <mailingLists>
     <mailingList>
@@ -118,24 +118,6 @@
               </reportSets>
             </plugin>
 						
-            <!-- Changes report -->
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-changes-plugin</artifactId>
-              <version>2.6</version>
-              <reportSets>
-                <reportSet>
-                  <reports>
-                    <report>changes-report</report>
-                    <report>jira-report</report>
-                  </reports>
-                </reportSet>
-              </reportSets>
-              <configuration>
-                <statusIds>Resolved, Closed</statusIds>
-                <columnNames>Type,Key,Summary,Assignee,Status,Resolution,Fix Version</columnNames>
-              </configuration>
-            </plugin>
           </reportPlugins>
         </configuration>
       </plugin>
