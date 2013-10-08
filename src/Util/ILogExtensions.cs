@@ -55,7 +55,7 @@ namespace log4net.Util
 		/// </summary>
 		private readonly static Type declaringType = typeof(ILogExtensions);
 
-		#endregion Private Static Fields
+		#endregion //Private Static Fields
 
 		#region debug extensions
 
