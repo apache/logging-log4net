@@ -1180,6 +1180,20 @@ if(!log4net.LogManager.GetRepository().Configured)
                         <a href="http://weblogs.asp.net/rmclaws/archive/2003/11/15/37743.aspx">Building a Better Server Control Experience, Part 2</a>.
                     </p>
                 </section>
+            
+                <section id="nuget" name="Do you provide a Nuget package?">
+                    <p>
+                      No, the log4net project doesn't provide a Nuget
+                      package of its own, but <a
+                      href="http://blog.cincura.net/"
+                      rel="nofollow">Jiří Činčura</a> has kindly
+                      created a Nuget package he develops at <a
+                      href="https://github.com/cincuranet/log4net-nuget"
+                      rel="nofollow">https://github.com/cincuranet/log4net-nuget</a>.
+                      Please report any issues with the packaging at
+                      his github issue tracker.
+                    </p>
+                </section>
                 <p><a href="#top">Back to Top</a></p>
                 
             </section>

@@ -1296,7 +1296,7 @@ limitations under the License.
           <property name="AutoDocumentConstructors" value="true" />
           <property name="GetExternalSummaries" value="true" />
           <property name="IncludeAssemblyVersion" value="false" />
-          <property name="FooterHtml" value="&lt;a href='http://logging.apache.org/log4net/'&gt;Copyright 2004-2011 The Apache Software Foundation.&lt;/a&gt;&lt;br&gt;&lt;/br&gt;Apache log4net, Apache and log4net are trademarks of The Apache Software Foundation."/>
+          <property name="FooterHtml" value="&lt;a href='http://logging.apache.org/log4net/'&gt;Copyright 2004-2013 The Apache Software Foundation.&lt;/a&gt;&lt;br&gt;&lt;/br&gt;Apache log4net, Apache and log4net are trademarks of The Apache Software Foundation."/>
         </documenter>
       </documenters>
     </ndoc>
