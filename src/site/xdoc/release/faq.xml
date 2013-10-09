@@ -332,6 +332,26 @@ limitations under the License.
                   </p>
 
                   <p>
+                    If you are creating an assembly that is likely to
+                    be combined with other assemblies that depend on
+                    the old strong name, then it is better you use the
+                    oldkey assemblies as well.
+                  </p>
+
+                  <p>
+                    We currently plan to distribute the new-key
+                    assembly under a different name while providing
+                    old and newkey <code>log4net.dll</code> assemblies
+                    holding type forwards to the new assembly.  This
+                    may create a cleaner migration path for projects
+                    that have dependencies using both versions.
+                    At the moment such projects will either need to
+                    use the GAC or create sub-directories inside the
+                    application directory and configure assembly
+                    probing with a <code>privatePath</code>.
+                  </p>
+
+                  <p>
                     Note that the "new" strong name no longer provides
                     any kind of authenticity.  If you want to be sure
                     you have the "real" Apache log4net, download the binary
