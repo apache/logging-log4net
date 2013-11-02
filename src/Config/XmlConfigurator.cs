@@ -639,7 +639,6 @@ namespace log4net.Config
 
 					if (configRequest != null)
 					{
-#if !NETCF_1_0
 						// authentication may be required, set client to use default credentials
 						try
 						{
@@ -649,7 +648,7 @@ namespace log4net.Config
 						{
 							// ignore security exception
 						}
-#endif
+
 						try
 						{
 							WebResponse response = configRequest.GetResponse();
@@ -785,7 +784,7 @@ namespace log4net.Config
 
 		#region ConfigureAndWatch static methods
 
-#if (!NETCF && !SSCLI)
+#if !NETCF
 
 		/// <summary>
 		/// Configures log4net using the file specified, monitors the file for changes 
@@ -906,7 +905,7 @@ namespace log4net.Config
 
 		#region ConfigureAndWatchHandler
 
-#if (!NETCF && !SSCLI)
+#if !NETCF
 		/// <summary>
 		/// Class used to watch config files.
 		/// </summary>

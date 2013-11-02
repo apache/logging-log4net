@@ -17,14 +17,8 @@
 //
 #endregion
 
-// .NET Compact Framework 1.0 has no support for WindowsIdentity
+// .NET Compact Framework has no support for WindowsIdentity
 #if !NETCF 
-// MONO 1.0 has no support for Win32 Logon APIs
-#if !MONO
-// SSCLI 1.0 has no support for Win32 Logon APIs
-#if !SSCLI
-// We don't want framework or platform specific code in the CLI version of log4net
-#if !CLI_1_0
 
 using System;
 using System.Runtime.InteropServices;
@@ -380,8 +374,5 @@ namespace log4net.Util
 	}
 }
 
-#endif // !CLI_1_0
-#endif // !SSCLI
-#endif // !MONO
 #endif // !NETCF
 

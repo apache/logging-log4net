@@ -207,7 +207,7 @@ namespace log4net.Tests.Appender
 				// Setup remoting server
 				try
 				{
-#if NET_2_0 || MONO_2_0
+#if !NETCF
 					ChannelServices.RegisterChannel(m_remotingChannel, false);
 #else
 					ChannelServices.RegisterChannel(m_remotingChannel);

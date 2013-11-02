@@ -17,9 +17,7 @@
 //
 #endregion
 
-// .NET Compact Framework 1.0 has no support for ASP.NET
-// SSCLI 1.0 has no support for ASP.NET
-#if !NETCF && !SSCLI && !CLIENT_PROFILE
+#if !NETCF && !CLIENT_PROFILE
 
 using System.Web;
 
@@ -152,4 +150,4 @@ namespace log4net.Appender
 	}
 }
 
-#endif // !NETCF && !SSCLI
+#endif // !NETCF

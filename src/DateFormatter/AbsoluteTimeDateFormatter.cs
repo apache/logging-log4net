@@ -138,11 +138,6 @@ namespace log4net.DateFormatter
 						// Render the string buffer to a string
                                                 timeString = s_lastTimeBuf.ToString();
 
-#if NET_1_1
-						// Ensure that the above string is written into the variable NOW on all threads.
-						// This is only required on multiprocessor machines with weak memeory models
-						System.Threading.Thread.MemoryBarrier();
-#endif
 						// Store the time as a string (we only have to do this once per second)
                                                 s_lastTimeStrings[GetType()] = timeString;
 						s_lastTimeToTheSecond = currentTimeToTheSecond;

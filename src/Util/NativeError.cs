@@ -17,13 +17,6 @@
 //
 #endregion
 
-// MONO 1.0 has no support for Win32 Error APIs
-#if !MONO
-// SSCLI 1.0 has no support for Win32 Error APIs
-#if !SSCLI
-// We don't want framework or platform specific code in the CLI version of log4net
-#if !CLI_1_0
-
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
@@ -284,7 +277,3 @@ namespace log4net.Util
 		#endregion
 	}
 }
-
-#endif // !CLI_1_0
-#endif // !SSCLI
-#endif // !MONO

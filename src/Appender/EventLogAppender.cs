@@ -17,12 +17,7 @@
 //
 #endregion
 
-// MONO 1.0 Beta mcs does not like #if !A && !B && !C syntax
-
-// .NET Compact Framework 1.0 has no support for EventLog
 #if !NETCF 
-// SSCLI 1.0 has no support for EventLog
-#if !SSCLI
 
 using System;
 using System.Diagnostics;
@@ -686,5 +681,4 @@ namespace log4net.Appender
 	}
 }
 
-#endif // !SSCLI
 #endif // !NETCF

@@ -18,10 +18,7 @@
 #endregion
 
 using System;
-
-#if !NETCF_1_0
 using System.Collections;
-#endif
 
 using log4net.Core;
 
@@ -380,56 +377,5 @@ namespace log4net.Util
 			#endregion Implementation of IDisposable
 		}
 
-#if NETCF_1_0
-		/// <summary>
-		/// Subclass of <see cref="System.Collections.Stack"/> to
-		/// provide missing methods.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// The Compact Framework version of the <see cref="System.Collections.Stack"/>
-		/// class is missing the <c>Clear</c> and <c>Clone</c> methods.
-		/// This subclass adds implementations of those missing methods.
-		/// </para>
-		/// </remarks>
-		public class Stack : System.Collections.Stack
-		{
-			/// <summary>
-			/// Clears the stack of all elements.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// Clears the stack of all elements.
-			/// </para>
-			/// </remarks>
-			public void Clear()
-			{
-				while(Count > 0)
-				{
-					Pop();
-				}
-			}
-
-			/// <summary>
-			/// Makes a shallow copy of the stack's elements.
-			/// </summary>
-			/// <returns>A new stack that has a shallow copy of the stack's elements.</returns>
-			/// <remarks>
-			/// <para>
-			/// Makes a shallow copy of the stack's elements.
-			/// </para>
-			/// </remarks>
-			public Stack Clone()
-			{
-				Stack res = new Stack();
-				object[] items = ToArray();
-				foreach(object item in items)
-				{
-					res.Push(item);
-				}
-				return res;
-			}
-		}
-#endif
 	}
 }
