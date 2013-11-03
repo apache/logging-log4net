@@ -30,10 +30,10 @@ namespace log4net {
         /// <summary>Version of the framework targeted</summary>
 #if FRAMEWORK_4_0
         public const decimal TargetFrameworkVersion = 4.0M;
-#elif !CLIENT_PROFILE
-        public const decimal TargetFrameworkVersion = 2.0M;
-#else
+#elif FRAMEWORK_3_5
         public const decimal TargetFrameworkVersion = 3.5M;
+#else
+        public const decimal TargetFrameworkVersion = 2.0M;
 #endif
 
         /// <summary>Type of framework targeted</summary>

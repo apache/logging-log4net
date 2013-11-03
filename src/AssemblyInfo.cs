@@ -55,8 +55,12 @@ using System.Runtime.CompilerServices;
 #else
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 4.0")]
 #endif // Client Profile
-#elif CLIENT_PROFILE
+#elif FRAMEWORK_3_5
+#if CLIENT_PROFILE
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 3.5 Client Profile")]
+#else
+[assembly: AssemblyTitle("Apache log4net for .NET Framework 3.5")]
+#endif // Client Profile
 #else
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 2.0")]
 #endif // FW 4.0 
