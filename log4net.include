@@ -21,6 +21,13 @@ limitations under the License.
         name="log4net.output.dir" 
         value="${log4net.basedir}/bin/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}"
         dynamic="true" />
+
+    <!-- ========================================================
+         Targets that check various proprties and create directories
+    
+         All these targets are invoked as dependencies of the
+         set-*-runtime-confoguration targets
+         ========================================================= -->
     <target name="check-bin-dir">
         <if test="${not property::exists('bin.dir')}">
             <property name="bin.dir" value="bin" />
@@ -108,7 +115,7 @@ limitations under the License.
     </target>
     <target name="check-current-sdkdoc-debug">
         <if test="${not property::exists('current.sdkdoc.debug')}">
-            <fail message="The curernt sdk documentation debug setting has not been specified." />
+            <fail message="The current sdk documentation debug setting has not been specified." />
         </if>
     </target>
     <target name="check-current-build-config">
@@ -136,7 +143,10 @@ limitations under the License.
             <fail message="The log4net '${current.build.config}' assembly for ${framework::get-description(framework::get-target-framework())} is not available." />
         </if>
     </target>
-    <!-- Targets for cleaning up -->
+
+    <!-- ========================================================
+         Targets for cleaning up
+         ======================================================== -->
     <target name="clean-current-bin-dir" depends="check-current-bin-dir" description="Cleans the current binaries directory">
         <echo message="Cleaning the ${current.bin.dir} binaries directory." />
         <delete dir="${current.bin.dir}/../oldkey" if="${directory::exists(current.bin.dir) and current.build.config.release}" />
@@ -151,7 +161,11 @@ limitations under the License.
         <mkdir dir="${current.sdkdoc.dir}" />
         -->
     </target>
-    <!-- Targets for setting up the environment -->
+
+
+    <!-- ========================================================
+         Targets for setting up the environment
+         ======================================================== -->
     <target name="set-build-configuration" depends="check-current-build-config">
         <if test="${not target::exists('set-' + current.build.config + '-build-configuration')}">
             <fail message="The ${current.build.config} build configuration is not supported by log4net." />
@@ -258,11 +272,11 @@ limitations under the License.
     <target name="set-netcf-2.0-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
         <property name="nant.settings.currentframework" value="netcf-2.0" />
         <property name="current.build.debug" value="${build.debug}" dynamic="true" />
-        <property name="current.build.defines.csc" value="${build.defines.csc},NETCF,NETCF_2_0" dynamic="true" />
-        <property name="current.build.defines.jsc" value="${build.defines.jsc},NETCF,NETCF_2_0" dynamic="true" />
-        <property name="current.build.defines.vbc" value="${build.defines.vbc},NETCF=True,NETCF_2_0=True" dynamic="true" />
-        <property name="current.build.defines.vjc" value="${build.defines.vjc},NETCF,NETCF_2_0" dynamic="true" />
-        <property name="current.build.defines.cl" value="${build.defines.cl} /D NETCF /D NETCF_2_0" dynamic="true" />
+        <property name="current.build.defines.csc" value="${build.defines.csc},NETCF" dynamic="true" />
+        <property name="current.build.defines.jsc" value="${build.defines.jsc},NETCF" dynamic="true" />
+        <property name="current.build.defines.vbc" value="${build.defines.vbc},NETCF=True" dynamic="true" />
+        <property name="current.build.defines.vjc" value="${build.defines.vjc},NETCF" dynamic="true" />
+        <property name="current.build.defines.cl" value="${build.defines.cl} /D NETCF" dynamic="true" />
         <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
         <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />
         <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
@@ -270,11 +284,11 @@ limitations under the License.
     <target name="set-mono-2.0-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
         <property name="nant.settings.currentframework" value="mono-2.0" />
         <property name="current.build.debug" value="${build.debug}" dynamic="true" />
-        <property name="current.build.defines.csc" value="${build.defines.csc},MONO,MONO_2_0" dynamic="true" />
-        <property name="current.build.defines.jsc" value="${build.defines.jsc},MONO,MONO_2_0" dynamic="true" />
-        <property name="current.build.defines.vbc" value="${build.defines.vbc},MONO=True,MONO_2_0=True" dynamic="true" />
-        <property name="current.build.defines.vjc" value="${build.defines.vjc},MONO,MONO_2_0" dynamic="true" />
-        <property name="current.build.defines.cl" value="${build.defines.cl} /D MONO /D MONO_2_0" dynamic="true" />
+        <property name="current.build.defines.csc" value="${build.defines.csc},MONO" dynamic="true" />
+        <property name="current.build.defines.jsc" value="${build.defines.jsc},MONO" dynamic="true" />
+        <property name="current.build.defines.vbc" value="${build.defines.vbc},MONO=True" dynamic="true" />
+        <property name="current.build.defines.vjc" value="${build.defines.vjc},MONO" dynamic="true" />
+        <property name="current.build.defines.cl" value="${build.defines.cl} /D MONO" dynamic="true" />
         <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
         <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />
         <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />

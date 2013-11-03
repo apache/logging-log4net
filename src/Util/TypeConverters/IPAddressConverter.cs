@@ -77,7 +77,7 @@ namespace log4net.Util.TypeConverters
 			{
 				try
 				{
-#if !NETCF_2_0
+#if !NETCF
 					// Try an explicit parse of string representation of an IPAddress (v4 or v6)
 					IPAddress result;
 					if (IPAddress.TryParse(str, out result))

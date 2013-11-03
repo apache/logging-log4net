@@ -56,9 +56,9 @@ using System.Runtime.CompilerServices;
 #endif // Client Profile
 #elif CLIENT_PROFILE
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 3.5 Client Profile")]
-#elif (NETCF_2_0)
+#elif NETCF
 [assembly: AssemblyTitle("Apache log4net for .NET Compact Framework 2.0")]
-#elif (MONO_2_0)
+#elif MONO
 [assembly: AssemblyTitle("Apache log4net for Mono 2.0")]
 #else
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 2.0")]

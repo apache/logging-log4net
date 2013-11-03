@@ -758,7 +758,7 @@ namespace log4net.Util
 		/// </remarks>
 		public static ArgumentOutOfRangeException CreateArgumentOutOfRangeException(string parameterName, object actualValue, string message)
 		{
-#if NETCF_2_0
+#if NETCF
 			return new ArgumentOutOfRangeException(parameterName, message + " [value=" + actualValue + "]");
 #else
 			return new ArgumentOutOfRangeException(parameterName, actualValue, message);
