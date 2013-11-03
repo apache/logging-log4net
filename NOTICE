@@ -3,3 +3,7 @@
 
    This product includes software developed at
    The Apache Software Foundation (http://www.apache.org/).
+
+The source distribution of log4net contains nunit.framework.dll from
+NUnit <http://nunit.org/> which is distributed under the NUnit license
+<http://nunit.org/index.php?p=license&r=2.6.3>

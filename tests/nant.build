@@ -90,7 +90,7 @@ limitations under the License.
         </copy>
         <!-- copy referenced libraries to build output -->
         <copy todir="${current.bin.dir}">
-            <fileset basedir="${log4net.basedir}/tests/lib">
+            <fileset basedir="lib">
                 <include name="/*.dll" />
             </fileset>
         </copy>
@@ -115,7 +115,7 @@ limitations under the License.
             </fileset>
         </copy>
         <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Tests.dll">
-            <sources basedir="${log4net.basedir}/tests/src">
+            <sources basedir="src">
                 <include name="**/*.cs" />
                 <include name="../../src/AssemblyVersionInfo.cs" />
             </sources>
@@ -128,6 +128,7 @@ limitations under the License.
                 <include name="System.Runtime.Remoting.dll" />
                 <include name="${current.bin.dir}/log4net.dll" frompath="false" />
                 <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework>/<framework version>/<build configuration> directory -->
+                <include name="lib/*.dll" frompath="false" />
                 <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" frompath="false" />
                 <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/*.dll" frompath="false" />
                 <include name="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" frompath="false" />
@@ -145,7 +146,7 @@ limitations under the License.
         </copy>
         <!-- copy referenced libraries to build output -->
         <copy todir="${current.bin.dir}">
-            <fileset basedir="${log4net.basedir}/tests/lib">
+            <fileset basedir="lib">
                 <include name="/*.dll" />
             </fileset>
         </copy>
@@ -170,7 +171,7 @@ limitations under the License.
             </fileset>
         </copy>
         <csc noconfig="true" warnaserror="false" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Tests.dll">
-            <sources basedir="${log4net.basedir}/tests/src">
+            <sources basedir="src">
                 <include name="**/*.cs" />
                 <include name="../../src/AssemblyVersionInfo.cs" />
             </sources>
@@ -183,6 +184,7 @@ limitations under the License.
                 <include name="System.Runtime.Remoting.dll" />
                 <include name="${current.bin.dir}/log4net.dll" frompath="false" />
                 <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework>/<framework version>/<build configuration> directory -->
+                <include name="lib/*.dll" frompath="false" />
                 <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" frompath="false" />
                 <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/*.dll" frompath="false" />
                 <include name="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" frompath="false" />
@@ -200,7 +202,7 @@ limitations under the License.
         </copy>
         <!-- copy referenced libraries to build output -->
         <copy todir="${current.bin.dir}">
-            <fileset basedir="${log4net.basedir}/tests/lib">
+            <fileset basedir="lib">
                 <include name="/*.dll" />
             </fileset>
         </copy>
@@ -225,7 +227,7 @@ limitations under the License.
             </fileset>
         </copy>
         <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Tests.dll">
-            <sources basedir="${log4net.basedir}/tests/src">
+            <sources basedir="src">
                 <include name="**/*.cs" />
                 <include name="../../src/AssemblyVersionInfo.cs" />
             </sources>
@@ -238,6 +240,7 @@ limitations under the License.
                 <include name="System.Runtime.Remoting.dll" />
                 <include name="${current.bin.dir}/log4net.dll" frompath="false" />
                 <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework>/<framework version>/<build configuration> directory -->
+                <include name="lib/*.dll" frompath="false" />
                 <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" frompath="false" />
                 <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/*.dll" frompath="false" />
                 <include name="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" frompath="false" />
@@ -255,7 +258,7 @@ limitations under the License.
         </copy>
         <!-- copy referenced libraries to build output -->
         <copy todir="${current.bin.dir}">
-            <fileset basedir="${log4net.basedir}/tests/lib">
+            <fileset basedir="lib">
                 <include name="/*.dll" />
             </fileset>
         </copy>
@@ -280,7 +283,7 @@ limitations under the License.
             </fileset>
         </copy>
         <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Tests.dll">
-            <sources basedir="${log4net.basedir}/tests/src">
+            <sources basedir="src">
                 <include name="**/*.cs" />
                 <include name="../../src/AssemblyVersionInfo.cs" />
             </sources>
@@ -309,7 +312,7 @@ limitations under the License.
         </copy>
         <!-- copy referenced libraries to build output -->
         <copy todir="${current.bin.dir}">
-            <fileset basedir="${log4net.basedir}/tests/lib">
+            <fileset basedir="lib">
                 <include name="/*.dll" />
             </fileset>
         </copy>
@@ -334,7 +337,7 @@ limitations under the License.
             </fileset>
         </copy>
         <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Tests.dll">
-            <sources basedir="${log4net.basedir}/tests/src">
+            <sources basedir="src">
                 <include name="**/*.cs" />
                 <include name="../../src/AssemblyVersionInfo.cs" />
             </sources>
@@ -348,6 +351,7 @@ limitations under the License.
                 <include name="System.Runtime.Remoting.dll" />
                 <include name="${current.bin.dir}/log4net.dll" frompath="false" />
                 <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework>/<framework version>/<build configuration> directory -->
+                <include name="lib/*.dll" frompath="false" />
                 <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" frompath="false" />
                 <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/*.dll" frompath="false" />
                 <include name="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" frompath="false" />
@@ -365,7 +369,7 @@ limitations under the License.
         </copy>
         <!-- copy referenced libraries to build output -->
         <copy todir="${current.bin.dir}">
-            <fileset basedir="${log4net.basedir}/tests/lib">
+            <fileset basedir="lib">
                 <include name="/*.dll" />
             </fileset>
         </copy>
@@ -390,7 +394,7 @@ limitations under the License.
             </fileset>
         </copy>
         <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Tests.dll">
-            <sources basedir="${log4net.basedir}/tests/src">
+            <sources basedir="src">
                 <include name="**/*.cs" />
                 <include name="../../src/AssemblyVersionInfo.cs" />
             </sources>
