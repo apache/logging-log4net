@@ -17,7 +17,7 @@
 //
 #endregion
 
-#if NET_3_5 || NET_4_0
+#if NET_3_5 || FRAMEWORK_4_0
 
 using System;
 

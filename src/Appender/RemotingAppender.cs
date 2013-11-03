@@ -138,7 +138,7 @@ namespace log4net.Appender
 		/// <see cref="ActivateOptions"/> must be called again.
 		/// </para>
 		/// </remarks>
-#if NET_4_0
+#if FRAMEWORK_4_0
         [System.Security.SecuritySafeCritical]
 #endif
         override public void ActivateOptions() 

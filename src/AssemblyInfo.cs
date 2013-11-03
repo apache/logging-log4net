@@ -34,7 +34,7 @@ using System.Runtime.CompilerServices;
 [assembly: System.Security.AllowPartiallyTrustedCallers]
 #endif
 
-#if (NET_4_0)
+#if FRAMEWORK_4_0
 //
 // Allows partial trust applications (e.g. ASP.NET shared hosting) on .NET 4.0 to work
 // given our implementation of ISerializable.
@@ -48,7 +48,8 @@ using System.Runtime.CompilerServices;
 // associated with an assembly.
 //
 
-#if (NET_4_0)
+#if NET
+#if FRAMEWORK_4_0
 #if CLIENT_PROFILE
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 4.0 Client Profile")]
 #else
@@ -56,12 +57,13 @@ using System.Runtime.CompilerServices;
 #endif // Client Profile
 #elif CLIENT_PROFILE
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 3.5 Client Profile")]
+#else
+[assembly: AssemblyTitle("Apache log4net for .NET Framework 2.0")]
+#endif // FW 4.0 
 #elif NETCF
 [assembly: AssemblyTitle("Apache log4net for .NET Compact Framework 2.0")]
 #elif MONO
 [assembly: AssemblyTitle("Apache log4net for Mono 2.0")]
-#else
-[assembly: AssemblyTitle("Apache log4net for .NET Framework 2.0")]
 #endif
 
 #if DEBUG

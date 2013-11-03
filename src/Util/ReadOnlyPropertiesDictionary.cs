@@ -203,7 +203,7 @@ namespace log4net.Util
 		/// Serializes this object into the <see cref="SerializationInfo" /> provided.
 		/// </para>
 		/// </remarks>
-#if NET_4_0
+#if FRAMEWORK_4_0
         [System.Security.SecurityCritical]
 #else
 		[System.Security.Permissions.SecurityPermissionAttribute(System.Security.Permissions.SecurityAction.Demand, SerializationFormatter=true)]

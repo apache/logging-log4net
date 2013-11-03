@@ -243,28 +243,28 @@ limitations under the License.
       <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}-cp/${framework::get-version(framework::get-target-framework())}" />      
       <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
     </target>
-    <!-- uses NET_2_0 plus NET_4_0 defines -->
+    <!-- uses NET_2_0 plus FRAMEWORK_4_0 defines -->
     <target name="set-net-4.0-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
       <property name="nant.settings.currentframework" value="net-4.0" />
       <property name="current.build.debug" value="${build.debug}" dynamic="true" />
-      <property name="current.build.defines.csc" value="${build.defines.csc},NET,NET_4_0" dynamic="true" />
-      <property name="current.build.defines.jsc" value="${build.defines.jsc},NET,NET_4_0" dynamic="true" />
-      <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_4_0=True" dynamic="true" />
-      <property name="current.build.defines.vjc" value="${build.defines.vjc},NET,NET_4_0" dynamic="true" />
-      <property name="current.build.defines.cl" value="${build.defines.cl} /D NET /D NET_4_0" dynamic="true" />
+      <property name="current.build.defines.csc" value="${build.defines.csc},NET,FRAMEWORK_4_0" dynamic="true" />
+      <property name="current.build.defines.jsc" value="${build.defines.jsc},NET,FRAMEWORK_4_0" dynamic="true" />
+      <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,FRAMEWORK_4_0=True" dynamic="true" />
+      <property name="current.build.defines.vjc" value="${build.defines.vjc},NET,FRAMEWORK_4_0" dynamic="true" />
+      <property name="current.build.defines.cl" value="${build.defines.cl} /D NET /D FRAMEWORK_4_0" dynamic="true" />
       <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
       <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />      
       <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
     </target>
-    <!-- uses NET_2_0 plus NET_4_0 and CLIENT_PROFILE defines -->
+    <!-- uses NET_2_0 plus FRAMEWORK_4_0 and CLIENT_PROFILE defines -->
     <target name="set-net-4.0-cp-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
       <property name="nant.settings.currentframework" value="net-4.0" />
       <property name="current.build.debug" value="${build.debug}" dynamic="true" />
-      <property name="current.build.defines.csc" value="${build.defines.csc},NET,NET_4_0,CLIENT_PROFILE" dynamic="true" />
-      <property name="current.build.defines.jsc" value="${build.defines.jsc},NET,NET_4_0,CLIENT_PROFILE" dynamic="true" />
-      <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_4_0=True,CLIENT_PROFILE=True" dynamic="true" />
-      <property name="current.build.defines.vjc" value="${build.defines.vjc},NET,NET_4_0,CLIENT_PROFILE" dynamic="true" />
-      <property name="current.build.defines.cl" value="${build.defines.cl} /D NET /D NET_4_0 /D CLIENT_PROFILE" dynamic="true" />
+      <property name="current.build.defines.csc" value="${build.defines.csc},NET,FRAMEWORK_4_0,CLIENT_PROFILE" dynamic="true" />
+      <property name="current.build.defines.jsc" value="${build.defines.jsc},NET,FRAMEWORK_4_0,CLIENT_PROFILE" dynamic="true" />
+      <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,FRAMEWORK_4_0=True,CLIENT_PROFILE=True" dynamic="true" />
+      <property name="current.build.defines.vjc" value="${build.defines.vjc},NET,FRAMEWORK_4_0,CLIENT_PROFILE" dynamic="true" />
+      <property name="current.build.defines.cl" value="${build.defines.cl} /D NET /D FRAMEWORK_4_0 /D CLIENT_PROFILE" dynamic="true" />
       <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}-cp/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
       <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}-cp/${framework::get-version(framework::get-target-framework())}" />      
       <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />

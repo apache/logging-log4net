@@ -725,7 +725,7 @@ namespace log4net.Config
 					XmlReaderSettings settings = new XmlReaderSettings();
                                         // .NET 4.0 warning CS0618: 'System.Xml.XmlReaderSettings.ProhibitDtd'
                                         // is obsolete: 'Use XmlReaderSettings.DtdProcessing property instead.'
-#if !NET_4_0
+#if !FRAMEWORK_4_0
 					settings.ProhibitDtd = false;
 #else
 					settings.DtdProcessing = DtdProcessing.Parse;
@@ -950,7 +950,7 @@ namespace log4net.Config
 			/// Initializes a new instance of the <see cref="ConfigureAndWatchHandler" /> class.
 			/// </para>
 			/// </remarks>
-#if NET_4_0
+#if FRAMEWORK_4_0
             [System.Security.SecuritySafeCritical]
 #endif
             public ConfigureAndWatchHandler(ILoggerRepository repository, FileInfo configFile)
@@ -1030,7 +1030,7 @@ namespace log4net.Config
             /// <summary>
             /// Release the handles held by the watcher and timer.
             /// </summary>
-#if NET_4_0
+#if FRAMEWORK_4_0
             [System.Security.SecuritySafeCritical]
 #endif
             public void Dispose()

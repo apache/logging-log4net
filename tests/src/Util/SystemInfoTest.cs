@@ -23,7 +23,7 @@ using log4net.Util;
 
 using NUnit.Framework;
 
-#if NET_4_0
+#if FRAMEWORK_4_0
 using System.Linq.Expressions;
 using System.Reflection;
 #endif
@@ -37,7 +37,7 @@ namespace log4net.Tests.Util
 	public class SystemInfoTest
 	{
 
-#if NET_4_0
+#if FRAMEWORK_4_0
 		/// <summary>
 		/// It's "does not throw not supported exception" NOT
 		/// "returns 'Dynamic Assembly' string for dynamic assemblies" by purpose.

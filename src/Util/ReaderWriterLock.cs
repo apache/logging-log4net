@@ -17,11 +17,11 @@
 //
 #endregion
 
-#if (!NETCF)
+#if !NETCF
 #define HAS_READERWRITERLOCK
-#endif
-#if (NET_4_0)
+#if FRAMEWORK_4_0
 #define HAS_READERWRITERLOCKSLIM
+#endif
 #endif
 
 using System;

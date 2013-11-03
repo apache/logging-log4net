@@ -451,7 +451,7 @@ namespace log4net.Util
 			{
 				try
 				{
-#if NET_4_0
+#if FRAMEWORK_4_0
 					if (myAssembly.IsDynamic)
 					{
 						return "Dynamic Assembly";

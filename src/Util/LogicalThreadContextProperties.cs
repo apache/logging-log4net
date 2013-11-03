@@ -203,7 +203,7 @@ namespace log4net.Util
 		/// security link demand, therfore we must put the method call in a seperate method
 		/// that we can wrap in an exception handler.
 		/// </remarks>
-#if NET_4_0
+#if FRAMEWORK_4_0
         [System.Security.SecuritySafeCritical]
 #endif
         private static PropertiesDictionary GetCallContextData()
@@ -224,7 +224,7 @@ namespace log4net.Util
 		/// security link demand, therfore we must put the method call in a seperate method
 		/// that we can wrap in an exception handler.
 		/// </remarks>
-#if NET_4_0
+#if FRAMEWORK_4_0
         [System.Security.SecuritySafeCritical]
 #endif
         private static void SetCallContextData(PropertiesDictionary properties)

@@ -1022,7 +1022,7 @@ namespace log4net.Core
 		/// is to be used outside that method.
 		/// </para>
 		/// </remarks>
-#if NET_4_0
+#if FRAMEWORK_4_0
         [System.Security.SecurityCritical]
 #else
 		[System.Security.Permissions.SecurityPermissionAttribute(System.Security.Permissions.SecurityAction.Demand, SerializationFormatter=true)]
