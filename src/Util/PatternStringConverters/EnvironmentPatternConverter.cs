@@ -65,7 +65,6 @@ namespace log4net.Util.PatternStringConverters
 					// Lookup the environment variable
 					string envValue = Environment.GetEnvironmentVariable(this.Option);
 
-#if NET_2_0					
                     // If we didn't see it for the process, try a user level variable.
 				    if (envValue == null)
 				    {
@@ -77,7 +76,6 @@ namespace log4net.Util.PatternStringConverters
 				    {
 				        envValue = Environment.GetEnvironmentVariable(this.Option, EnvironmentVariableTarget.Machine);
 				    }
-#endif					
 
 					if (envValue != null && envValue.Length > 0)
 					{

@@ -342,18 +342,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// Create an event log source
 		/// </summary>
-		/// <remarks>
-		/// Uses different API calls under NET_2_0
-		/// </remarks>
 		private static void CreateEventSource(string source, string logName, string machineName)
 		{
-#if NET_2_0
 			EventSourceCreationData eventSourceCreationData = new EventSourceCreationData(source, logName);
 			eventSourceCreationData.MachineName = machineName;
 			EventLog.CreateEventSource(eventSourceCreationData);
-#else
-			EventLog.CreateEventSource(source, logName, machineName);
-#endif
 		}
  
 		#region Override implementation of AppenderSkeleton

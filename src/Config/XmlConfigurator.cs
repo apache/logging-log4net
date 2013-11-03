@@ -169,11 +169,7 @@ namespace log4net.Config
 			try
 			{
 				XmlElement configElement = null;
-#if NET_2_0
 				configElement = System.Configuration.ConfigurationManager.GetSection("log4net") as XmlElement;
-#else
-				configElement = System.Configuration.ConfigurationSettings.GetConfig("log4net") as XmlElement;
-#endif
 				if (configElement == null)
 				{
 					// Failed to load the xml config using configuration settings handler
@@ -724,7 +720,7 @@ namespace log4net.Config
 #if (NETCF)
 					// Create a text reader for the file stream
 					XmlTextReader xmlReader = new XmlTextReader(configStream);
-#elif NET_2_0
+#else
 					// Allow the DTD to specify entity includes
 					XmlReaderSettings settings = new XmlReaderSettings();
                                         // .NET 4.0 warning CS0618: 'System.Xml.XmlReaderSettings.ProhibitDtd'
@@ -737,14 +733,6 @@ namespace log4net.Config
 
 					// Create a reader over the input stream
 					XmlReader xmlReader = XmlReader.Create(configStream, settings);
-#else
-					// Create a validating reader around a text reader for the file stream
-					XmlValidatingReader xmlReader = new XmlValidatingReader(new XmlTextReader(configStream));
-
-					// Specify that the reader should not perform validation, but that it should
-					// expand entity refs.
-					xmlReader.ValidationType = ValidationType.None;
-					xmlReader.EntityHandling = EntityHandling.ExpandEntities;
 #endif
 					
 					// load the data into the document

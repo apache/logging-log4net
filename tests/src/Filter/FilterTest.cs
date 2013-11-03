@@ -19,7 +19,7 @@
  *
 */
 
-#if NET_2_0
+#if !NETCF
 using System;
 using System.Collections.Generic;
 using System.Xml;

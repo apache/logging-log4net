@@ -698,6 +698,7 @@ limitations under the License.
           <include name="System.Data.dll" />
           <include name="System.Web.dll" />
           <include name="System.Xml.dll" />
+          <include name="System.Configuration.dll" />
           <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework family>/<framework version>/<build configuration> directory -->
           <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
         </references>
@@ -720,6 +721,7 @@ limitations under the License.
         <include name="System.Data.dll" />
         <include name="System.Web.dll" />
         <include name="System.Xml.dll" />
+        <include name="System.Configuration.dll" />
         <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework family>/<framework version>/<build configuration> directory -->
         <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
       </references>
@@ -741,6 +743,7 @@ limitations under the License.
         <include name="System.Data.dll" />
         <include name="System.Web.dll" />
         <include name="System.Xml.dll" />
+        <include name="System.Configuration.dll" />
         <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework family>/<framework version>/<build configuration> directory -->
         <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
       </references>

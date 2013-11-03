@@ -922,21 +922,19 @@ namespace log4net.Util
 		/// </remarks>
 		public static string GetAppSetting(string key)
 		{
-			try
-			{
 #if NETCF
 				// Configuration APIs are not suported under the Compact Framework
-#elif NET_2_0
-				return ConfigurationManager.AppSettings[key];
 #else
-				return ConfigurationSettings.AppSettings[key];
-#endif
+			try
+			{
+				return ConfigurationManager.AppSettings[key];
 			}
 			catch(Exception ex)
 			{
 				// If an exception is thrown here then it looks like the config file does not parse correctly.
 				LogLog.Error(declaringType, "Exception while reading ConfigurationSettings. Check your .config file is well formed XML.", ex);
 			}
+#endif
 			return null;
 		}
 

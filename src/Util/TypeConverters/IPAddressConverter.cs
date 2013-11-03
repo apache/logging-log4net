@@ -77,8 +77,6 @@ namespace log4net.Util.TypeConverters
 			{
 				try
 				{
-#if NET_2_0 || NETCF_2_0
-
 #if !NETCF_2_0
 					// Try an explicit parse of string representation of an IPAddress (v4 or v6)
 					IPAddress result;
@@ -98,33 +96,6 @@ namespace log4net.Util.TypeConverters
 					{
 						return host.AddressList[0];
 					}
-#else
-					// Before .NET 2 we need to try to parse the IPAddress from the string first
-
-					// Check if the string only contains IP address valid chars
-					if (str.Trim(validIpAddressChars).Length == 0)
-					{
-						try
-						{
-							// try to parse the string as an IP address
-							return IPAddress.Parse(str);
-						}
-						catch(FormatException)
-						{
-							// Ignore a FormatException, try to resolve via DNS
-						}
-					}
-
-					// Try to resolve via DNS. This is a blocking call.
-					IPHostEntry host = Dns.GetHostByName(str);
-					if (host != null && 
-						host.AddressList != null && 
-						host.AddressList.Length > 0 &&
-						host.AddressList[0] != null)
-					{
-						return host.AddressList[0];
-					}
-#endif
 				}
 				catch(Exception ex)
 				{
@@ -136,9 +107,5 @@ namespace log4net.Util.TypeConverters
 
 		#endregion
 
-		/// <summary>
-		/// Valid characters in an IPv4 or IPv6 address string. (Does not support subnets)
-		/// </summary>
-		private static readonly char[] validIpAddressChars = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','A','B','C','D','E','F','x','X','.',':','%'};
 	}
 }

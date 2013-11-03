@@ -179,7 +179,6 @@ namespace log4net.Appender
 	        set { m_appSettingsKey = value; }
 	    }
 
-#if NET_2_0
 	    /// <summary>
         /// The connectionStrings key from App.Config that contains the connection string.
 	    /// </summary>
@@ -191,7 +190,6 @@ namespace log4net.Appender
 	        get { return m_connectionStringName; }
 	        set { m_connectionStringName = value; }
 	    }
-#endif
 
 	    /// <summary>
 		/// Gets or sets the type name of the <see cref="IDbConnection"/> connection
@@ -646,7 +644,6 @@ namespace log4net.Appender
                 return m_connectionString;
             }
 
-#if NET_2_0
             if (!String.IsNullOrEmpty(m_connectionStringName))
             {
                 ConnectionStringSettings settings = ConfigurationManager.ConnectionStrings[m_connectionStringName];
@@ -660,7 +657,6 @@ namespace log4net.Appender
                     throw new LogException("Unable to find [" + m_connectionStringName + "] ConfigurationManager.ConnectionStrings item");
                 }
             }
-#endif
 
             if (m_appSettingsKey != null && m_appSettingsKey.Length > 0)
             {
@@ -912,12 +908,10 @@ namespace log4net.Appender
         /// </summary>
         private string m_appSettingsKey;
 
-#if NET_2_0
         /// <summary>
         /// The connectionStrings key from App.Config that contains the connection string.
         /// </summary>
         private string m_connectionStringName;
-#endif
 
         /// <summary>
 		/// String type name of the <see cref="IDbConnection"/> type name.
