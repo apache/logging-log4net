@@ -303,7 +303,7 @@ namespace log4net.Tests.Layout
 			Assert.AreEqual(expected, stringAppender.GetString());
 		}
 
-#if FRAMEWORK_4_0
+#if FRAMEWORK_4_0_OR_ABOVE
         [Test]
         public void BracketsInStackTracesKeepLogWellFormed() {
             XmlLayout layout = new XmlLayout();

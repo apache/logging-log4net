@@ -664,7 +664,7 @@ namespace log4net.Appender
             /// -<see cref="ReleaseLock"/> and <see cref="CloseFile"/>.
             /// </para>
             /// </remarks>
-#if FRAMEWORK_4_0
+#if FRAMEWORK_4_0_OR_ABOVE
             [System.Security.SecuritySafeCritical]
 #endif
             public override void OpenFile(string filename, bool append, Encoding encoding)

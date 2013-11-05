@@ -257,7 +257,7 @@ namespace log4net.Appender
 		/// The format of the output will depend on the appender's layout.
 		/// </para>
 		/// </remarks>
-#if FRAMEWORK_4_0
+#if FRAMEWORK_4_0_OR_ABOVE
         [System.Security.SecuritySafeCritical]
 #endif
         [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
@@ -426,7 +426,7 @@ namespace log4net.Appender
 		/// Initialize the level to color mappings set on this appender.
 		/// </para>
 		/// </remarks>
-#if FRAMEWORK_4_0
+#if FRAMEWORK_4_0_OR_ABOVE
         [System.Security.SecuritySafeCritical]
 #endif
         [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode=true)]

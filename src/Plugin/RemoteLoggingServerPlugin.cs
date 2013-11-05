@@ -119,7 +119,7 @@ namespace log4net.Plugin
 		/// This method is called when the plugin is attached to the repository.
 		/// </para>
 		/// </remarks>
-#if FRAMEWORK_4_0
+#if FRAMEWORK_4_0_OR_ABOVE
 		[System.Security.SecuritySafeCritical]
 #endif
 		override public void Attach(ILoggerRepository repository)
@@ -148,7 +148,7 @@ namespace log4net.Plugin
 		/// sink is disconnected.
 		/// </para>
 		/// </remarks>
-#if FRAMEWORK_4_0
+#if FRAMEWORK_4_0_OR_ABOVE
         [System.Security.SecuritySafeCritical]
 #endif
         override public void Shutdown()
@@ -253,7 +253,7 @@ namespace log4net.Plugin
 			/// therefore this implementation returns <c>null</c>.
 			/// </para>
 			/// </remarks>
-#if FRAMEWORK_4_0
+#if FRAMEWORK_4_0_OR_ABOVE
             [System.Security.SecurityCritical]
 #endif
             public override object InitializeLifetimeService()

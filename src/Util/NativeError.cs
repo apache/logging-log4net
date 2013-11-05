@@ -107,7 +107,7 @@ namespace log4net.Util
 		/// native Win32 <c>FormatMessage</c> function.
 		/// </para>
 		/// </remarks>
-#if FRAMEWORK_4_0
+#if FRAMEWORK_4_0_OR_ABOVE
         [System.Security.SecuritySafeCritical]
 #elif !NETCF
         [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode=true)]
@@ -150,7 +150,7 @@ namespace log4net.Util
 		/// using the native <c>FormatMessage</c> function.
 		/// </para>
 		/// </remarks>
-#if FRAMEWORK_4_0
+#if FRAMEWORK_4_0_OR_ABOVE
         [System.Security.SecuritySafeCritical]
 #elif !NETCF
         [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]

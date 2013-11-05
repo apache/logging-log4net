@@ -296,7 +296,7 @@ namespace log4net.Appender
 		/// Sends the event using a network message.
 		/// </para>
 		/// </remarks>
-#if FRAMEWORK_4_0
+#if FRAMEWORK_4_0_OR_ABOVE
         [System.Security.SecuritySafeCritical]
 #endif
         [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
