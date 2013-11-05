@@ -37,7 +37,7 @@ namespace log4net {
 #endif
 
         /// <summary>Type of framework targeted</summary>
-#if NET
+#if DOTNET
         public const string TargetFramework = ".NET Framework";
 #elif NETCF
         public const string TargetFramework = ".NET Compact Framework";

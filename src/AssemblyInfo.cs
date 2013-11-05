@@ -48,7 +48,7 @@ using System.Runtime.CompilerServices;
 // associated with an assembly.
 //
 
-#if NET
+#if DOTNET
 #if FRAMEWORK_4_0_OR_ABOVE
 #if CLIENT_PROFILE
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 4.0 Client Profile")]

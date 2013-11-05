@@ -208,11 +208,11 @@ limitations under the License.
     <target name="set-net-2.0-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
         <property name="nant.settings.currentframework" value="net-2.0" />
         <property name="current.build.debug" value="${build.debug}" dynamic="true" />
-        <property name="current.build.defines.csc" value="${build.defines.csc},NET" dynamic="true" />
-        <property name="current.build.defines.jsc" value="${build.defines.jsc},NET" dynamic="true" />
-        <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True" dynamic="true" />
-        <property name="current.build.defines.vjc" value="${build.defines.vjc},NET" dynamic="true" />
-        <property name="current.build.defines.cl" value="${build.defines.cl} /D NET" dynamic="true" />
+        <property name="current.build.defines.csc" value="${build.defines.csc},DOTNET" dynamic="true" />
+        <property name="current.build.defines.jsc" value="${build.defines.jsc},DOTNET" dynamic="true" />
+        <property name="current.build.defines.vbc" value="${build.defines.vbc},DOTNET=True" dynamic="true" />
+        <property name="current.build.defines.vjc" value="${build.defines.vjc},DOTNET" dynamic="true" />
+        <property name="current.build.defines.cl" value="${build.defines.cl} /D DOTNET" dynamic="true" />
         <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
         <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />
         <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
@@ -221,11 +221,11 @@ limitations under the License.
     <target name="set-net-3.5-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
       <property name="nant.settings.currentframework" value="net-3.5" />
       <property name="current.build.debug" value="${build.debug}" dynamic="true" />
-      <property name="current.build.defines.csc" value="${build.defines.csc},NET,FRAMEWORK_3_5_OR_ABOVE" dynamic="true" />
-      <property name="current.build.defines.jsc" value="${build.defines.jsc},NET,FRAMEWORK_3_5_OR_ABOVE" dynamic="true" />
-      <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,FRAMEWORK_3_5_OR_ABOVE=True" dynamic="true" />
-      <property name="current.build.defines.vjc" value="${build.defines.vjc},NET,FRAMEWORK_3_5_OR_ABOVE" dynamic="true" />
-      <property name="current.build.defines.cl" value="${build.defines.cl} /D NET /D FRAMEWORK_3_5_OR_ABOVE" dynamic="true" />
+      <property name="current.build.defines.csc" value="${build.defines.csc},DOTNET,FRAMEWORK_3_5_OR_ABOVE" dynamic="true" />
+      <property name="current.build.defines.jsc" value="${build.defines.jsc},DOTNET,FRAMEWORK_3_5_OR_ABOVE" dynamic="true" />
+      <property name="current.build.defines.vbc" value="${build.defines.vbc},DOTNET=True,FRAMEWORK_3_5_OR_ABOVE=True" dynamic="true" />
+      <property name="current.build.defines.vjc" value="${build.defines.vjc},DOTNET,FRAMEWORK_3_5_OR_ABOVE" dynamic="true" />
+      <property name="current.build.defines.cl" value="${build.defines.cl} /D DOTNET /D FRAMEWORK_3_5_OR_ABOVE" dynamic="true" />
       <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
       <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />      
       <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
@@ -234,11 +234,11 @@ limitations under the License.
     <target name="set-net-3.5-cp-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
       <property name="nant.settings.currentframework" value="net-3.5" />
       <property name="current.build.debug" value="${build.debug}" dynamic="true" />
-      <property name="current.build.defines.csc" value="${build.defines.csc},NET,FRAMEWORK_3_5_OR_ABOVE,CLIENT_PROFILE" dynamic="true" />
-      <property name="current.build.defines.jsc" value="${build.defines.jsc},NET,FRAMEWORK_3_5_OR_ABOVE,CLIENT_PROFILE" dynamic="true" />
-      <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,FRAMEWORK_3_5_OR_ABOVE=True,CLIENT_PROFILE=True" dynamic="true" />
-      <property name="current.build.defines.vjc" value="${build.defines.vjc},NET,FRAMEWORK_3_5_OR_ABOVE,CLIENT_PROFILE" dynamic="true" />
-      <property name="current.build.defines.cl" value="${build.defines.cl} /D NET /D FRAMEWORK_3_5_OR_ABOVE /D CLIENT_PROFILE" dynamic="true" />
+      <property name="current.build.defines.csc" value="${build.defines.csc},DOTNET,FRAMEWORK_3_5_OR_ABOVE,CLIENT_PROFILE" dynamic="true" />
+      <property name="current.build.defines.jsc" value="${build.defines.jsc},DOTNET,FRAMEWORK_3_5_OR_ABOVE,CLIENT_PROFILE" dynamic="true" />
+      <property name="current.build.defines.vbc" value="${build.defines.vbc},DOTNET=True,FRAMEWORK_3_5_OR_ABOVE=True,CLIENT_PROFILE=True" dynamic="true" />
+      <property name="current.build.defines.vjc" value="${build.defines.vjc},DOTNET,FRAMEWORK_3_5_OR_ABOVE,CLIENT_PROFILE" dynamic="true" />
+      <property name="current.build.defines.cl" value="${build.defines.cl} /D DOTNET /D FRAMEWORK_3_5_OR_ABOVE /D CLIENT_PROFILE" dynamic="true" />
       <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}-cp/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
       <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}-cp/${framework::get-version(framework::get-target-framework())}" />      
       <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
@@ -247,11 +247,11 @@ limitations under the License.
     <target name="set-net-4.0-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
       <property name="nant.settings.currentframework" value="net-4.0" />
       <property name="current.build.debug" value="${build.debug}" dynamic="true" />
-      <property name="current.build.defines.csc" value="${build.defines.csc},NET,FRAMEWORK_3_5_OR_ABOVE,FRAMEWORK_4_0_OR_ABOVE" dynamic="true" />
-      <property name="current.build.defines.jsc" value="${build.defines.jsc},NET,FRAMEWORK_3_5_OR_ABOVE,FRAMEWORK_4_0_OR_ABOVE" dynamic="true" />
-      <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,FRAMEWORK_3_5_OR_ABOVE=True,FRAMEWORK_4_0_OR_ABOVE=True" dynamic="true" />
-      <property name="current.build.defines.vjc" value="${build.defines.vjc},NET,FRAMEWORK_3_5_OR_ABOVE,FRAMEWORK_4_0_OR_ABOVE" dynamic="true" />
-      <property name="current.build.defines.cl" value="${build.defines.cl} /D NET /D FRAMEWORK_3_5_OR_ABOVE /D FRAMEWORK_4_0_OR_ABOVE" dynamic="true" />
+      <property name="current.build.defines.csc" value="${build.defines.csc},DOTNET,FRAMEWORK_3_5_OR_ABOVE,FRAMEWORK_4_0_OR_ABOVE" dynamic="true" />
+      <property name="current.build.defines.jsc" value="${build.defines.jsc},DOTNET,FRAMEWORK_3_5_OR_ABOVE,FRAMEWORK_4_0_OR_ABOVE" dynamic="true" />
+      <property name="current.build.defines.vbc" value="${build.defines.vbc},DOTNET=True,FRAMEWORK_3_5_OR_ABOVE=True,FRAMEWORK_4_0_OR_ABOVE=True" dynamic="true" />
+      <property name="current.build.defines.vjc" value="${build.defines.vjc},DOTNET,FRAMEWORK_3_5_OR_ABOVE,FRAMEWORK_4_0_OR_ABOVE" dynamic="true" />
+      <property name="current.build.defines.cl" value="${build.defines.cl} /D DOTNET /D FRAMEWORK_3_5_OR_ABOVE /D FRAMEWORK_4_0_OR_ABOVE" dynamic="true" />
       <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
       <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />      
       <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
@@ -260,11 +260,11 @@ limitations under the License.
     <target name="set-net-4.0-cp-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
       <property name="nant.settings.currentframework" value="net-4.0" />
       <property name="current.build.debug" value="${build.debug}" dynamic="true" />
-      <property name="current.build.defines.csc" value="${build.defines.csc},NET,FRAMEWORK_3_5_OR_ABOVE,FRAMEWORK_4_0_OR_ABOVE,CLIENT_PROFILE" dynamic="true" />
-      <property name="current.build.defines.jsc" value="${build.defines.jsc},NET,FRAMEWORK_3_5_OR_ABOVE,FRAMEWORK_4_0_OR_ABOVE,CLIENT_PROFILE" dynamic="true" />
-      <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,FRAMEWORK_3_5_OR_ABOVE=True,FRAMEWORK_4_0_OR_ABOVE=True,CLIENT_PROFILE=True" dynamic="true" />
-      <property name="current.build.defines.vjc" value="${build.defines.vjc},NET,FRAMEWORK_3_5_OR_ABOVE,FRAMEWORK_4_0_OR_ABOVE,CLIENT_PROFILE" dynamic="true" />
-      <property name="current.build.defines.cl" value="${build.defines.cl} /D NET /D FRAMEWORK_3_5_OR_ABOVE /D FRAMEWORK_4_0_OR_ABOVE /D CLIENT_PROFILE" dynamic="true" />
+      <property name="current.build.defines.csc" value="${build.defines.csc},DOTNET,FRAMEWORK_3_5_OR_ABOVE,FRAMEWORK_4_0_OR_ABOVE,CLIENT_PROFILE" dynamic="true" />
+      <property name="current.build.defines.jsc" value="${build.defines.jsc},DOTNET,FRAMEWORK_3_5_OR_ABOVE,FRAMEWORK_4_0_OR_ABOVE,CLIENT_PROFILE" dynamic="true" />
+      <property name="current.build.defines.vbc" value="${build.defines.vbc},DOTNET=True,FRAMEWORK_3_5_OR_ABOVE=True,FRAMEWORK_4_0_OR_ABOVE=True,CLIENT_PROFILE=True" dynamic="true" />
+      <property name="current.build.defines.vjc" value="${build.defines.vjc},DOTNET,FRAMEWORK_3_5_OR_ABOVE,FRAMEWORK_4_0_OR_ABOVE,CLIENT_PROFILE" dynamic="true" />
+      <property name="current.build.defines.cl" value="${build.defines.cl} /D DOTNET /D FRAMEWORK_3_5_OR_ABOVE /D FRAMEWORK_4_0_OR_ABOVE /D CLIENT_PROFILE" dynamic="true" />
       <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}-cp/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
       <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}-cp/${framework::get-version(framework::get-target-framework())}" />      
       <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />

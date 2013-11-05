@@ -72,7 +72,7 @@
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>TRACE;DEBUG;NET;FRAMEWORK_3_5_OR_ABOVE;FRAMEWORK_4_0_OR_ABOVE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;DOTNET;FRAMEWORK_3_5_OR_ABOVE;FRAMEWORK_4_0_OR_ABOVE</DefineConstants>
     <DocumentationFile>log4net.xml</DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
@@ -92,7 +92,7 @@
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>TRACE;STRONG;NET;FRAMEWORK_3_5_OR_ABOVE;FRAMEWORK_4_0_OR_ABOVE</DefineConstants>
+    <DefineConstants>TRACE;STRONG;DOTNET;FRAMEWORK_3_5_OR_ABOVE;FRAMEWORK_4_0_OR_ABOVE</DefineConstants>
     <DocumentationFile>log4net.xml</DocumentationFile>
     <DebugSymbols>false</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
