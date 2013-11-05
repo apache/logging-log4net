@@ -211,8 +211,9 @@ limitations under the License.
       <include name="${log4net.basedir}/NOTICE" />
       <include name="${log4net.basedir}/LICENSE" />
     </resourcefileset>
-    <fileset id="sources" basedir="${log4net.basedir}/src">
-      <include name="**/*.cs" />
+    <fileset id="sources" basedir="${log4net.basedir}">
+      <include name="src/log4net/**/*.cs" />
+      <include name="${generated.src.dir}/**/*.cs" />
     </fileset>
     <assemblyfileset id="references">
       <include name="mscorlib.dll"/>
@@ -397,7 +398,6 @@ limitations under the License.
         <exclude name="**/*.csproj.user" />
         <exclude name="**/*.vbproj.user" />
 
-        <exclude name="src/GeneratedAssemblyInfo.cs" />
         <exclude name="tests/doc/**" />
         <exclude name="tests/lib/net/**" />
         <exclude name="tests/lib/mono/**" />
@@ -513,8 +513,9 @@ limitations under the License.
         <property name="assembly.description"
                   value="The Apache Software Foundation log4net Logging Framework built from svn revision ${source.svn.revision} of ${source.svn.url}"/>
       </if>
-      <delete file="src/GeneratedAssemblyInfo.cs"/>
-      <asminfo language="CSharp" output="src/GeneratedAssemblyInfo.cs">
+      <delete file="${generated.src.dir}/GeneratedAssemblyInfo.cs"/>
+      <mkdir dir="${generated.src.dir}"/>
+      <asminfo language="CSharp" output="${generated.src.dir}/GeneratedAssemblyInfo.cs">
         <imports>
           <import namespace="System.Reflection"/>
         </imports>

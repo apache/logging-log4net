@@ -87,7 +87,6 @@ limitations under the License.
 
       <fileset id="sources" basedir="src">
         <include name="**/*.cs" />
-        <include name="../../src/AssemblyVersionInfo.cs" />
       </fileset>
       <assemblyfileset id="references">
         <include name="mscorlib.dll"/>

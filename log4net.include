@@ -16,6 +16,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <project name="log4net-helpers" xmlnds="http://tempuri.org/nant-vs.xsd">
+    <property name="build.dir" value="${log4net.basedir}/build"/>
+    <property name="generated.src.dir" value="${build.dir}/generated-src"/>
+
     <!-- The path to the log4net output directory for current build/runtime -->
     <property 
         name="log4net.output.dir" 

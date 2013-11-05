@@ -130,7 +130,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\src\AssemblyVersionInfo.cs">
+    <Compile Include="..\..\src\log4net\AssemblyVersionInfo.cs">
       <Link>AssemblyVersionInfo.cs</Link>
       <SubType>Code</SubType>
     </Compile>
@@ -230,7 +230,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\log4net.vs2010.csproj">
+    <ProjectReference Include="..\..\src\lognet\log4net.vs2010.csproj">
       <Project>{181fe707-e161-4722-9f38-6aaab6faa106}</Project>
       <Name>log4net.vs2010</Name>
     </ProjectReference>
