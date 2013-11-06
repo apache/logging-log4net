@@ -31,12 +31,12 @@
 // an import functions as a workaround for this issue.
 import System.Reflection;
 
-[assembly: AssemblyVersion("1.2.12.0")]
+[assembly: AssemblyVersion("1.2.13.0")]
 [assembly: AssemblyInformationalVersionAttribute("1.2")]
 
 @if (!@NETCF)
 @if (!@SSCLI)
-[assembly: AssemblyFileVersion("1.2.12.0")]
+[assembly: AssemblyFileVersion("1.2.13.0")]
 @end
 @end
 
