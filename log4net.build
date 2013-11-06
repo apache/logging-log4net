@@ -1468,7 +1468,7 @@ limitations under the License.
       <property name="source.svn.url" value=""/>
       <property name="assembly.description"
                 value="The Apache Software Foundation log4net Logging Framework"/>
-      <if test="${directory::exists('.svn')}">
+      <if test="${directory::exists('.svn') or directory::exists('../.svn') or directory::exists('../../.svn')}">
         <exec program="svn" workingdir="." verbose="false"
               output="_svnrevision.xml" failonerror="true" >
           <arg value="info" />
