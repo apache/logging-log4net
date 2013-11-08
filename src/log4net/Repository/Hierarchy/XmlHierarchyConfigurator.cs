@@ -634,7 +634,11 @@ namespace log4net.Repository.Hierarchy
 					try
 					{
 						// Expand environment variables in the string.
-						propertyValue = OptionConverter.SubstituteVariables(propertyValue, Environment.GetEnvironmentVariables());
+					    IDictionary environmentVariables = Environment.GetEnvironmentVariables();
+					    if (HasCaseInsensitiveEnvironment) {
+						environmentVariables = CreateCaseInsensitiveWrapper(environmentVariables);
+					    }
+						propertyValue = OptionConverter.SubstituteVariables(propertyValue, environmentVariables);
 					}
 					catch(System.Security.SecurityException)
 					{
@@ -1022,6 +1026,30 @@ namespace log4net.Repository.Hierarchy
 		}
 
 		#endregion Protected Instance Methods
+
+#if !NETCF
+		private bool HasCaseInsensitiveEnvironment
+	        {
+		    get
+		    {
+			PlatformID platform = Environment.OSVersion.Platform;
+			return platform != PlatformID.Unix && platform != PlatformID.MacOSX;
+		    }
+		}
+
+	        private IDictionary CreateCaseInsensitiveWrapper(IDictionary dict)
+	        {
+		    if (dict == null)
+		    {
+			return dict;
+		    }
+		    Hashtable hash = SystemInfo.CreateCaseInsensitiveHashtable();
+		    foreach (DictionaryEntry entry in dict) {
+			hash[entry.Key] = entry.Value;
+		    }
+		    return hash;
+		}
+#endif
 
 		#region Private Constants
 
