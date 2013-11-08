@@ -32,6 +32,8 @@ limitations under the License.
 
             <section id="1.2.13-bug" name="Bug Fixes">
               <ul>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-132'>LOG4NET-132</a>] -         Environment variables are mistakenly case sensitive on windows
+                </li>
                 <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-393'>LOG4NET-393</a>] -         Using dynamic methods with log4net causes NullReferenceException in StackFrameItem
                 </li>
                 <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-399'>LOG4NET-399</a>] -         Does not build for Compact Framework 2.0
