@@ -1,0 +1,142 @@
+<?xml version="1.0" ?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one or more 
+contributor license agreements. See the NOTICE file distributed with
+this work for additional information regarding copyright ownership. 
+The ASF licenses this file to you under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with 
+the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<project name="log4net-helpers" xmlnds="http://tempuri.org/nant-vs.xsd">
+
+    <!-- ========================================================
+         Targets that check various proprties and create directories
+    
+         All these targets are invoked as dependencies of the
+         set-*-runtime-configuration targets
+         ========================================================= -->
+    <target name="-check-bin-dir">
+        <if test="${not property::exists('bin.dir')}">
+            <property name="bin.dir" value="bin" />
+        </if>
+        <mkdir dir="${bin.dir}" />
+    </target>
+    <target name="-check-build-debug">
+        <if test="${not property::exists('build.debug')}">
+            <fail message="The build debug setting has not been specified." />
+        </if>
+    </target>
+    <target name="-check-build-defines">
+        <if test="${not property::exists('build.defines.csc')}">
+            <fail message="The build defines for the csc task have not been specified." />
+        </if>
+        <if test="${not property::exists('build.defines.jsc')}">
+            <fail message="The build defines for the jsc task have not been specified." />
+        </if>
+        <if test="${not property::exists('build.defines.vbc')}">
+            <fail message="The build defines for the vbc task have not been specified." />
+        </if>
+        <if test="${not property::exists('build.defines.vjc')}">
+            <fail message="The build defines for the vjc task have not been specified." />
+        </if>
+        <if test="${not property::exists('build.defines.cl')}">
+            <fail message="The build defines for the cl task have not been specified." />
+        </if>
+    </target>
+    <target name="-check-doc-dir">
+        <if test="${not property::exists('doc.dir')}">
+            <property name="doc.dir" value="doc" />
+        </if>
+        <mkdir dir="${doc.dir}" />
+    </target>
+    <target name="-check-sdkdoc-dir" depends="-check-doc-dir">
+        <if test="${not property::exists('sdkdoc.dir')}">
+            <property name="sdkdoc.dir" value="${doc.dir}/sdk" />
+        </if>
+        <!-- 
+        Temporarily disabled SDK generation through NAnt build
+        <mkdir dir="${sdkdoc.dir}" />
+        -->
+    </target>
+    <target name="-check-sdkdoc-debug">
+        <if test="${not property::exists('sdkdoc.debug')}">
+            <fail message="The sdk documentation debug setting has not been specified." />
+        </if>
+    </target>
+    <target name="-check-current-bin-dir">
+        <if test="${not property::exists('current.bin.dir')}">
+            <fail message="The current binaries directory has not been specified." />
+        </if>
+        <mkdir dir="${current.bin.dir}" />
+    </target>
+    <target name="-check-current-build-debug">
+        <if test="${not property::exists('current.build.debug')}">
+            <fail message="The current build debug setting has not been specified." />
+        </if>
+    </target>
+    <target name="-check-current-build-defines">
+        <if test="${not property::exists('current.build.defines.csc')}">
+            <fail message="The current build defines for the csc task have not been specified." />
+        </if>
+        <if test="${not property::exists('current.build.defines.jsc')}">
+            <fail message="The current build defines for the jsc task have not been specified." />
+        </if>
+        <if test="${not property::exists('current.build.defines.vbc')}">
+            <fail message="The current build defines for the vbc task have not been specified." />
+        </if>
+        <if test="${not property::exists('current.build.defines.vjc')}">
+            <fail message="The current build defines for the vjc task have not been specified." />
+        </if>
+        <if test="${not property::exists('current.build.defines.cl')}">
+            <fail message="The current build defines for the cl task have not been specified." />
+        </if>
+    </target>
+    <target name="check-current-sdkdoc-dir">
+        <if test="${not property::exists('current.sdkdoc.dir')}">
+            <fail message="The current sdk document directory has not been specified." />
+        </if>
+        <!-- 
+        Temporarily disabled SDK generation through NAnt build
+        <mkdir dir="${sdkdoc.dir}" />
+        -->
+    </target>
+    <target name="check-current-sdkdoc-debug">
+        <if test="${not property::exists('current.sdkdoc.debug')}">
+            <fail message="The current sdk documentation debug setting has not been specified." />
+        </if>
+    </target>
+    <target name="check-current-build-config">
+        <if test="${not property::exists('current.build.config')}">
+            <if test="${not property::exists('project.build.config')}">
+                <fail message="The build configuration has not been specified and no default build configuration is available." />
+            </if>
+            <if test="${property::exists('project.build.config')}">
+                <property name="current.build.config" value="${project.build.config}" />
+            </if>
+        </if>
+    </target>
+    <target name="check-log4net-basedir">
+        <if test="${not property::exists('log4net.basedir')}">
+            <fail message="The log4net base directory has not been specified." />
+        </if>
+    </target>
+    <target name="-check-log4net-output-dir">
+        <if test="${not property::exists('log4net.output.dir')}">
+            <fail message="The log4net output directory has not been specified." />
+        </if>
+    </target>
+    <target name="check-log4net-assembly" depends="check-current-build-config, -check-log4net-output-dir">
+        <if test="${not file::exists(path::combine(log4net.output.dir, 'log4net.dll'))}">
+            <fail message="The log4net '${current.build.config}' assembly for ${framework::get-description(framework::get-target-framework())} is not available." />
+        </if>
+    </target>
+
+</project>

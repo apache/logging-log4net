@@ -20,7 +20,7 @@ limitations under the License.
     <property name="project.build.config" value="debug" readonly="false" />
     <property name="project.build.package" value="false" readonly="false" />
     <!-- Include log4net helpers -->
-    <include buildfile="${log4net.basedir}/log4net.include" />
+    <include buildfile="${log4net.basedir}/src/buildsupport/log4net.include" />
     <!-- Targets that should always be executed -->
     <call target="set-build-configuration" />
     <call target="set-framework-configuration" />
