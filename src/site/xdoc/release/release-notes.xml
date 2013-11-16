@@ -38,6 +38,10 @@ limitations under the License.
                 </li>
                 <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-399'>LOG4NET-399</a>] -         Does not build for Compact Framework 2.0
                 </li>
+		<li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-404'>LOG4NET-404</a>] -         assemblies for .NET 3.5 are missing ILogExtensions
+		</li>
+		<li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-405'>LOG4NET-405</a>] -         SmtpAppender encoding changes
+		</li>
               </ul>
 
             </section>

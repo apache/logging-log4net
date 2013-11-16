@@ -591,8 +591,8 @@ namespace log4net.Appender
 		private string m_from;
 		private string m_subject;
 		private string m_smtpHost;
-		private Encoding m_subjectEncoding = Encoding.Default;
-		private Encoding m_bodyEncoding = Encoding.Default;
+		private Encoding m_subjectEncoding = Encoding.UTF8;
+		private Encoding m_bodyEncoding = Encoding.UTF8;
 
 		// authentication fields
 		private SmtpAuthentication m_authentication = SmtpAuthentication.None;
