@@ -101,6 +101,8 @@ namespace log4net.DateFormatter
 		/// </remarks>
 		virtual public void FormatDate(DateTime dateToFormat, TextWriter writer)
 		{
+                    lock (s_lastTimeStrings)
+		    {
 			// Calculate the current time precise only to the second
 			long currentTimeToTheSecond = (dateToFormat.Ticks - (dateToFormat.Ticks % TimeSpan.TicksPerSecond));
 
@@ -163,6 +165,7 @@ namespace log4net.DateFormatter
 				writer.Write('0');
 			}
 			writer.Write(millis);
+                    }
 		}
 
 		#endregion Implementation of IDateFormatter
