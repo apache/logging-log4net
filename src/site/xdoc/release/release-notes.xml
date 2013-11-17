@@ -34,6 +34,8 @@ limitations under the License.
               <ul>
                 <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-132'>LOG4NET-132</a>] -         Environment variables are mistakenly case sensitive on windows
                 </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-376'>LOG4NET-376</a>] -         Race condition in AbsoluteTimeDateFormatter
+                </li>
                 <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-393'>LOG4NET-393</a>] -         Using dynamic methods with log4net causes NullReferenceException in StackFrameItem
                 </li>
                 <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-399'>LOG4NET-399</a>] -         Does not build for Compact Framework 2.0
@@ -117,8 +119,6 @@ limitations under the License.
                 <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-371'>LOG4NET-371</a>] -         Log with formatting doesn&#39;t call custom renderers (IObjectRenderer)
                 </li>
                 <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-375'>LOG4NET-375</a>] -         typo / misspelling in log message
-                </li>
-                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-376'>LOG4NET-376</a>] -         Race condition in AbsoluteTimeDateFormatter
                 </li>
                 <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-378'>LOG4NET-378</a>] -         Rolling log file is overwritten when application is restarted
                 </li>
