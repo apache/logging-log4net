@@ -15,7 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<project name="log4net-helpers" xmlnds="http://tempuri.org/nant-vs.xsd">
+<project name="log4net-checkss" xmlnds="http://tempuri.org/nant-vs.xsd">
 
     <!-- ========================================================
          Targets that check various proprties and create directories

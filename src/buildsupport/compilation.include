@@ -1,0 +1,65 @@
+<?xml version="1.0" ?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one or more 
+contributor license agreements. See the NOTICE file distributed with
+this work for additional information regarding copyright ownership. 
+The ASF licenses this file to you under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with 
+the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<project name="log4net-compilation" xmlnds="http://tempuri.org/nant-vs.xsd">
+
+    <resourcefileset id="nl-files" failonempty="true">
+      <include name="${log4net.basedir}/NOTICE" />
+      <include name="${log4net.basedir}/LICENSE" />
+    </resourcefileset>
+
+    <target name="parameterized-compilation">
+      <assemblyfileset id="references">
+        <include name="mscorlib.dll"/>
+        <include name="System.dll" />
+        <include name="System.Core.dll" if="${current.build.has.systemcore}"/>
+        <include name="System.Data.dll" />
+        <include name="System.Web.dll" if="${current.build.has.systemweb}"/>
+        <include name="System.Xml.dll" />
+        <include name="System.Configuration.dll" if="${current.build.has.systemconfiguration}"/>
+        <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework family>/<framework version>/<build configuration> directory -->
+        <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
+      </assemblyfileset>
+      <fileset id="sources" basedir="${log4net.basedir}">
+        <include name="src/${current.sources}/**/*.cs" />
+        <include name="${generated.src.dir}/**/*.cs" />
+      </fileset>
+
+      <csc if="${current.build.config.release}"
+           keyfile="${path::combine(log4net.basedir, current.keyfile)}"
+           nostdlib="true" noconfig="true" warnaserror="true" target="library"
+           debug="${current.build.debug}"
+           define="${current.build.defines.csc}"
+           output="${current.bin.dir}/${current.bin.subdir}${current.assembly}.dll"
+           doc="${current.bin.dir}/${current.bin.subdir}${current.assembly}.xml">
+        <sources refid="sources"/>
+        <resources refid="nl-files"/>
+        <references refid="references"/>
+      </csc>
+      <csc if="${current.build.config.debug}"
+           nostdlib="true" noconfig="true" warnaserror="true" target="library"
+           debug="${current.build.debug}"
+           define="${current.build.defines.csc}"
+           output="${current.bin.dir}/${current.assembly}.dll"
+           doc="${current.bin.dir}/${current.assembly}.xml">
+        <sources refid="sources"/>
+        <resources refid="nl-files"/>
+        <references refid="references"/>
+      </csc>
+    </target>
+
+</project>

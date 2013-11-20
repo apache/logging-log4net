@@ -207,25 +207,12 @@ limitations under the License.
   <target name="compile-mono-2.0" description="Builds Mono 2.0 version" depends="set-mono-2.0-runtime-configuration,-compile-specific-build"/>
 
   <target name="-compile-specific-build" depends="check-log4net-basedir, clean-current-bin-dir">
-    <resourcefileset id="nl-files" failonempty="true">
-      <include name="${log4net.basedir}/NOTICE" />
-      <include name="${log4net.basedir}/LICENSE" />
-    </resourcefileset>
-    <fileset id="sources" basedir="${log4net.basedir}">
-      <include name="src/log4net/**/*.cs" />
-      <include name="${generated.src.dir}/**/*.cs" />
-    </fileset>
-    <assemblyfileset id="references">
-      <include name="mscorlib.dll"/>
-      <include name="System.dll" />
-      <include name="System.Core.dll" if="${current.build.has.systemcore}"/>
-      <include name="System.Data.dll" />
-      <include name="System.Web.dll" if="${current.build.has.systemweb}"/>
-      <include name="System.Xml.dll" />
-      <include name="System.Configuration.dll" if="${current.build.has.systemconfiguration}"/>
-      <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework family>/<framework version>/<build configuration> directory -->
-      <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
-    </assemblyfileset>
+    <property name="current.sources" value="log4net"/>
+    <property name="current.keyfile" value="log4net.snk"/>
+    <property name="current.bin.subdir" value=""/>
+    <property name="current.assembly" value="log4net"/>
+
+    <call target="parameterized-compilation" />
 
     <!-- initialize the temp.build.skip property to false -->
     <property name="temp.build.skip" value="false" />
@@ -243,22 +230,10 @@ limitations under the License.
       </if>
     </if>
     <if test="${not temp.build.skip}">
-      <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'old-log4net.snk')}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/../oldkey/log4net.dll" doc="${current.bin.dir}/../oldkey/log4net.xml">
-        <sources refid="sources"/>
-        <resources refid="nl-files"/>
-        <references refid="references"/>
-      </csc>
+      <property name="current.keyfile" value="old-log4net.snk"/>
+      <property name="current.bin.subdir" value="../oldkey/"/>
+      <call target="parameterized-compilation" />
     </if>
-    <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
-      <sources refid="sources"/>
-      <resources refid="nl-files"/>
-      <references refid="references"/>
-    </csc>
-    <csc if="${current.build.config.debug}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
-      <sources refid="sources"/>
-      <resources refid="nl-files"/>
-      <references refid="references"/>
-    </csc>
   </target>
 
   <!-- Target for generating docs for all runtime configurations -->

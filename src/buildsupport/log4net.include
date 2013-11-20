@@ -84,5 +84,6 @@ limitations under the License.
     </target>
 
     <include buildfile="configure-framework.include" />
+    <include buildfile="compilation.include" />
 
 </project>
