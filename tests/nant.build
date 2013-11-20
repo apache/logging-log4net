@@ -69,11 +69,8 @@ limitations under the License.
             <!-- copy log4net build output -->
             <include name="${log4net.basedir}/${current.bin.dir}"/>
             <!-- copy referenced libraries to build output -->
-            <include name="lib"/>
-            <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}"/>
-            <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}"/>
-            <include name="lib/${framework::get-family(framework::get-target-framework())}/${current.build.config}"/>
-            <include name="${log4net.basedir}/lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}"/>
+            <include name="${log4net.basedir}/lib/test"/>
+            <include name="${log4net.basedir}/lib/test/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}"/>
           </items>
         </in>
         <do>
@@ -85,30 +82,14 @@ limitations under the License.
         </do>
       </foreach>
 
-      <fileset id="sources" basedir="src">
-        <include name="**/*.cs" />
-      </fileset>
-      <assemblyfileset id="references">
-        <include name="mscorlib.dll"/>
-        <include name="System.dll" />
-        <include name="System.Core.dll" if="${current.build.has.systemcore}"/>
-        <include name="System.Data.dll" />
-        <include name="System.Web.dll" if="${current.build.has.systemweb}"/>
-        <include name="System.Xml.dll" />
-        <include name="System.Configuration.dll" if="${current.build.has.systemconfiguration}"/>
-        <include name="System.Runtime.Remoting.dll" />
-        <include name="${current.bin.dir}/log4net.dll" frompath="false" />
-        <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework family>/<framework version>/<build configuration> directory -->
-        <include name="lib/*.dll" frompath="false" />
-        <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
-        <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/*.dll" />
-        <include name="lib/${framework::get-family(framework::get-target-framework())}/${current.build.config}/*.dll" />
-      </assemblyfileset>
+      <property name="current.sources" value="log4net.Tests"/>
+      <property name="current.keyfile" value="log4net.snk"/>
+      <property name="current.bin.subdir" value=""/>
+      <property name="current.assembly" value="log4net.Tests"/>
+      <property name="with.test.assemblies" value="true"/>
+      <property name="with.log4net" value="true"/>
 
-      <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.Tests.dll">
-        <sources refid="sources"/>
-        <references refid="references"/>
-      </csc>
+      <call target="parameterized-compilation" />
     </target>
 
     <!-- Currently we cannot run the tests in the environment of the target framework only in the host framework -->

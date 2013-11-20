@@ -211,6 +211,7 @@ limitations under the License.
     <property name="current.keyfile" value="log4net.snk"/>
     <property name="current.bin.subdir" value=""/>
     <property name="current.assembly" value="log4net"/>
+    <property name="warnaserror" value="true"/>
 
     <call target="parameterized-compilation" />
 

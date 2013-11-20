@@ -30,9 +30,17 @@ limitations under the License.
         <include name="System.Data.dll" />
         <include name="System.Web.dll" if="${current.build.has.systemweb}"/>
         <include name="System.Xml.dll" />
+        <include name="System.Runtime.Remoting.dll" />
         <include name="System.Configuration.dll" if="${current.build.has.systemconfiguration}"/>
-        <!-- allow for third party assemblies to be referenced by just storing them in the lib/<framework family>/<framework version>/<build configuration> directory -->
-        <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
+        <include name="${log4net.basedir}/lib/main/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/*.dll" />
+        <include name="${log4net.basedir}/lib/main/*.dll" />
+        <include
+            name="${log4net.basedir}/lib/test/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/*.dll" 
+            if="${property::exists('with.test.assemblies') and with.test.assemblies}"/>
+        <include name="${log4net.basedir}lib/test/*.dll"
+                 if="${property::exists('with.test.assemblies') and with.test.assemblies}"/>
+        <include name="${log4net.basedir}/${current.bin.dir}/log4net.dll" frompath="false"
+                 if="${property::exists('with.log4net') and with.log4net}"/>
       </assemblyfileset>
       <fileset id="sources" basedir="${log4net.basedir}">
         <include name="src/${current.sources}/**/*.cs" />
@@ -51,7 +59,9 @@ limitations under the License.
         <references refid="references"/>
       </csc>
       <csc if="${current.build.config.debug}"
-           nostdlib="true" noconfig="true" warnaserror="true" target="library"
+           nostdlib="true" noconfig="true"
+           warnaserror="${property::exists('warnaserror') and warnaserror}"
+           target="library"
            debug="${current.build.debug}"
            define="${current.build.defines.csc}"
            output="${current.bin.dir}/${current.assembly}.dll"
