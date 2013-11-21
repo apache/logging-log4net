@@ -28,6 +28,36 @@ limitations under the License.
 
         <section id="main" name="Apache log4net&#x2122; Release Notes">
 
+          <section id="1.2.13" name="1.2.13">
+
+            <section id="1.2.13-bug" name="Bug Fixes">
+              <ul>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-132'>LOG4NET-132</a>] -         Environment variables are mistakenly case sensitive on windows
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-376'>LOG4NET-376</a>] -         Race condition in AbsoluteTimeDateFormatter
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-393'>LOG4NET-393</a>] -         Using dynamic methods with log4net causes NullReferenceException in StackFrameItem
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-399'>LOG4NET-399</a>] -         Does not build for Compact Framework 2.0
+                </li>
+		<li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-404'>LOG4NET-404</a>] -         assemblies for .NET 3.5 are missing ILogExtensions
+		</li>
+		<li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-405'>LOG4NET-405</a>] -         SmtpAppender encoding changes
+		</li>
+              </ul>
+
+            </section>
+                
+            <section id="1.2.13-enh" name="Improvements">
+
+              <ul>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-394'>LOG4NET-394</a>] -         Lambda-based ILog-Extensions should catch errors
+                </li>
+              </ul>
+
+            </section>
+          </section>
+
           <section id="1.2.12" name="1.2.12">
 
             <p>
@@ -89,8 +119,6 @@ limitations under the License.
                 <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-371'>LOG4NET-371</a>] -         Log with formatting doesn&#39;t call custom renderers (IObjectRenderer)
                 </li>
                 <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-375'>LOG4NET-375</a>] -         typo / misspelling in log message
-                </li>
-                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-376'>LOG4NET-376</a>] -         Race condition in AbsoluteTimeDateFormatter
                 </li>
                 <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-378'>LOG4NET-378</a>] -         Rolling log file is overwritten when application is restarted
                 </li>
