@@ -105,7 +105,7 @@ limitations under the License.
     </target>
     <target name="-set-framework-configuration" depends="-check-bin-dir, -check-sdkdoc-dir, -check-sdkdoc-debug, check-current-build-config, -check-build-debug, -check-build-defines">
         <property name="current.build.debug" value="${build.debug}" dynamic="true" />
-        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.bin.dir" value="${bin.dir}/${current.assembly}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
         <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />
         <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
         <property name="current.build.defines.csc" value="${build.defines.csc},${current.build.platform}${current.build.api}" dynamic="true" />

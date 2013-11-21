@@ -37,14 +37,15 @@ limitations under the License.
         <include
             name="${log4net.basedir}/lib/test/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/*.dll" 
             if="${property::exists('with.test.assemblies') and with.test.assemblies}"/>
-        <include name="${log4net.basedir}lib/test/*.dll"
+        <include name="${log4net.basedir}/lib/test/*.dll"
                  if="${property::exists('with.test.assemblies') and with.test.assemblies}"/>
-        <include name="${log4net.basedir}/${current.bin.dir}/log4net.dll" frompath="false"
+        <include name="${log4net.main.output.dir}/log4net.dll" frompath="false"
                  if="${property::exists('with.log4net') and with.log4net}"/>
       </assemblyfileset>
       <fileset id="sources" basedir="${log4net.basedir}">
         <include name="src/${current.sources}/**/*.cs" />
-        <include name="${generated.src.dir}/**/*.cs" />
+        <include name="${generated.src.dir}/**/*.cs" if="${property::exists('with.generated.assemblyinfo') and with.generated.assemblyinfo}"/>
+        <include name="src/log4net/AssemblyVersionInfo.cs" if="${property::exists('with.assemblyversioninfo') and with.assemblyversioninfo}"/>
       </fileset>
 
       <csc if="${current.build.config.release}"

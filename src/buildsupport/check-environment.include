@@ -25,7 +25,7 @@ limitations under the License.
          ========================================================= -->
     <target name="-check-bin-dir">
         <if test="${not property::exists('bin.dir')}">
-            <property name="bin.dir" value="bin" />
+            <property name="bin.dir" value="${build.dir}/bin" />
         </if>
         <mkdir dir="${bin.dir}" />
     </target>
@@ -129,12 +129,12 @@ limitations under the License.
         </if>
     </target>
     <target name="-check-log4net-output-dir">
-        <if test="${not property::exists('log4net.output.dir')}">
+        <if test="${not property::exists('log4net.main.output.dir')}">
             <fail message="The log4net output directory has not been specified." />
         </if>
     </target>
     <target name="check-log4net-assembly" depends="check-current-build-config, -check-log4net-output-dir">
-        <if test="${not file::exists(path::combine(log4net.output.dir, 'log4net.dll'))}">
+        <if test="${not file::exists(path::combine(log4net.main.output.dir, 'log4net.dll'))}">
             <fail message="The log4net '${current.build.config}' assembly for ${framework::get-description(framework::get-target-framework())} is not available." />
         </if>
     </target>

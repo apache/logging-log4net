@@ -22,7 +22,11 @@ limitations under the License.
     <!-- The path to the log4net output directory for current build/runtime -->
     <property 
         name="log4net.output.dir" 
-        value="${log4net.basedir}/bin/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}"
+        value="${build.dir}/bin/${current.assembly}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}"
+        dynamic="true" />
+    <property 
+        name="log4net.main.output.dir" 
+        value="${build.dir}/bin/log4net/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}"
         dynamic="true" />
 
     <include buildfile="check-environment.include" />

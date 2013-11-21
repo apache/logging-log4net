@@ -66,7 +66,7 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\bin\Debug\</OutputPath>
+    <OutputPath>..\..\build\bin\log4net.Tests\net\4.0\debug\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
@@ -87,7 +87,7 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\bin\Release\</OutputPath>
+    <OutputPath>..\..\build\bin\log4net.Tests\net\4.0\release\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
@@ -110,7 +110,7 @@
   <ItemGroup>
     <Reference Include="nunit.framework, Version=2.5.2.9222, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ibatisnet-3\External-Bin\Net\2.0\nunit.framework.dll</HintPath>
+      <HintPath>..\..\lib\test\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -130,7 +130,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\src\log4net\AssemblyVersionInfo.cs">
+    <Compile Include="..\log4net\AssemblyVersionInfo.cs">
       <Link>AssemblyVersionInfo.cs</Link>
       <SubType>Code</SubType>
     </Compile>
@@ -230,7 +230,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\lognet\log4net.vs2010.csproj">
+    <ProjectReference Include="..\lognet\log4net.vs2010.csproj">
       <Project>{181fe707-e161-4722-9f38-6aaab6faa106}</Project>
       <Name>log4net.vs2010</Name>
     </ProjectReference>

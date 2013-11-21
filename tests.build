@@ -16,9 +16,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <project name="log4net-tests" default="runtests" xmlnds="http://tempuri.org/nant-vs.xsd">
-    <property name="log4net.basedir" value="../" readonly="false" />
+    <property name="log4net.basedir" value="." readonly="false" />
     <property name="project.build.config" value="debug" readonly="false" />
     <property name="project.build.package" value="false" readonly="false" />
+    <property name="current.assembly" value="log4net.Tests"/>
     <!-- Include log4net helpers -->
     <include buildfile="${log4net.basedir}/src/buildsupport/log4net.include" />
     <!-- Targets that should always be executed -->
@@ -67,7 +68,7 @@ limitations under the License.
         <in>
           <items>
             <!-- copy log4net build output -->
-            <include name="${log4net.basedir}/${current.bin.dir}"/>
+            <include name="${log4net.main.output.dir}"/>
             <!-- copy referenced libraries to build output -->
             <include name="${log4net.basedir}/lib/test"/>
             <include name="${log4net.basedir}/lib/test/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}"/>
@@ -85,9 +86,10 @@ limitations under the License.
       <property name="current.sources" value="log4net.Tests"/>
       <property name="current.keyfile" value="log4net.snk"/>
       <property name="current.bin.subdir" value=""/>
-      <property name="current.assembly" value="log4net.Tests"/>
+      <property name="warnaserror" value="false"/>
       <property name="with.test.assemblies" value="true"/>
       <property name="with.log4net" value="true"/>
+      <property name="with.assemblyversioninfo" value="true"/>
 
       <call target="parameterized-compilation" />
     </target>
