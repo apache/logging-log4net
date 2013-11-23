@@ -15,7 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<project name="log4net" default="compile-all" xmlnds="http://tempuri.org/nant-vs.xsd">
+<project name="log4net" default="compile-all" xmlns="http://tempuri.org/nant-vs.xsd">
   <!-- Global project settings -->
   <property name="log4net.basedir" value="." />
   <property name="project.build.config" value="debug" />

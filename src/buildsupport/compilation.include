@@ -15,7 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<project name="log4net-compilation" xmlnds="http://tempuri.org/nant-vs.xsd">
+<project name="log4net-compilation" xmlns="http://tempuri.org/nant-vs.xsd">
 
     <resourcefileset id="nl-files" failonempty="true">
       <include name="${log4net.basedir}/NOTICE" />
@@ -50,7 +50,8 @@ limitations under the License.
 
       <csc if="${current.build.config.release}"
            keyfile="${path::combine(log4net.basedir, current.keyfile)}"
-           nostdlib="true" noconfig="true" warnaserror="true" target="library"
+           nostdlib="true" noconfig="true" target="library"
+           warnaserror="${property::exists('warnaserror') and warnaserror}"
            debug="${current.build.debug}"
            define="${current.build.defines.csc}"
            output="${current.bin.dir}/${current.bin.subdir}${current.assembly}.dll"

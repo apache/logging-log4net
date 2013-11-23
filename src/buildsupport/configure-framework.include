@@ -15,7 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<project name="log4net-framework-config" xmlnds="http://tempuri.org/nant-vs.xsd">
+<project name="log4net-framework-config" xmlns="http://tempuri.org/nant-vs.xsd">
     <target name="set-framework-configuration" depends="check-current-build-config">
         <if test="${not target::exists('set-' + framework::get-target-framework() + '-runtime-configuration')}">
             <fail message="The current target framework (${framework::get-description(framework::get-target-framework())}) is not supported by log4net." />

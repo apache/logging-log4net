@@ -15,7 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<project name="log4net-helpers" xmlnds="http://tempuri.org/nant-vs.xsd">
+<project name="log4net-helpers" xmlns="http://tempuri.org/nant-vs.xsd">
     <property name="build.dir" value="${log4net.basedir}/build"/>
     <property name="generated.src.dir" value="${build.dir}/generated-src"/>
 

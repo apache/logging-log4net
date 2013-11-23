@@ -15,31 +15,40 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<project name="log4net-extensions" default="compile-all" xmlns="http://tempuri.org/nant-vs.xsd">
+<project name="log4net-examples" default="compile-all" xmlns="http://tempuri.org/nant-vs.xsd">
     <property name="log4net.basedir" value="." readonly="false" />
     <property name="project.build.config" value="debug" readonly="false" />
     <property name="project.build.package" value="false" readonly="false" />
-    <property name="current.assembly" value="log4net.Ext.EventID"/>
+    <property name="current.assembly" value="SampleAppendersApp"/>
     <!-- Include log4net helpers -->
     <include buildfile="${log4net.basedir}/src/buildsupport/log4net.include" />
     <include buildfile="${log4net.basedir}/src/buildsupport/multi-framework-compilation.include" />
     <!-- Targets that should always be executed -->
+    <property name="bin.dir" value="${build.dir}/bin/examples/cs"/>
     <call target="set-build-configuration" />
     <call target="set-framework-configuration" />
 
-    <!-- Target for compiling the extensions on all frameworks -->
+    <!-- Target for compiling the examples on all frameworks -->
     <target name="compile-all"
-            description="Builds all log4net extensions"
+            description="Builds all log4net extamples"
             depends="-compile-all"/>
 
     <target name="-compile-for-one-framework" depends="check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly">
 
       <foreach item="String" delim=","
-               in="log4net.Ext.EventID,log4net.Ext.MarshalByRef"
+               in="Appenders/SampleAppendersApp,Appenders/WmiAppender"
                property="dir">
         <do>
-          <property name="current.assembly" value="${dir}"/>
-          <property name="current.sources" value="extensions/${dir}"/>
+          <property name="lastSlash"
+                    value="${string::last-index-of(dir, '/')}"/>
+          <property name="start"
+                    value="${int::parse(lastSlash) + 1}"/>
+          <property name="len"
+                    value="${string::get-length(dir) - int::parse(lastSlash) - 1}"/>
+          <property name="current.assembly"
+                    value="${string::substring(dir, int::parse(start), len)}"/>
+          <echo message="${current.assembly}"/>
+          <property name="current.sources" value="examples/cs/${dir}"/>
           <property name="current.keyfile" value="log4net.snk"/>
           <property name="current.bin.subdir" value=""/>
           <property name="warnaserror" value="false"/>
