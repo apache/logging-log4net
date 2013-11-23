@@ -39,6 +39,7 @@ namespace log4net.Ext.MarshalByRef
 	{
 		private readonly static Type ThisDeclaringType = typeof(MarshalByRefLogImpl);
 		private readonly ILogger m_logger;
+		private Level m_levelTrace;
 		private Level m_levelDebug;
 		private Level m_levelInfo;
 		private Level m_levelWarn;
@@ -64,6 +65,7 @@ namespace log4net.Ext.MarshalByRef
 		{
 			LevelMap levelMap = repository.LevelMap;
 
+			m_levelTrace = levelMap.LookupWithDefault(Level.Trace);
 			m_levelDebug = levelMap.LookupWithDefault(Level.Debug);
 			m_levelInfo = levelMap.LookupWithDefault(Level.Info);
 			m_levelWarn = levelMap.LookupWithDefault(Level.Warn);
@@ -81,6 +83,56 @@ namespace log4net.Ext.MarshalByRef
 		}
 
 		#region Implementation of ILog
+
+		public void Trace(object message) 
+		{
+			Logger.Log(ThisDeclaringType, m_levelTrace, message, null);
+		}
+
+		public void Trace(object message, Exception t) 
+		{
+			Logger.Log(ThisDeclaringType, m_levelTrace, message, t);
+		}
+
+		public void TraceFormat(string format, params object[] args) 
+		{
+			if (IsTraceEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelTrace, new SystemStringFormat(CultureInfo.InvariantCulture, format, args), null);
+			}
+		}
+
+		public void TraceFormat(string format, object arg0) 
+		{
+			if (IsTraceEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelTrace, new SystemStringFormat(CultureInfo.InvariantCulture, format, new object[] { arg0 }), null);
+			}
+		}
+
+		public void TraceFormat(string format, object arg0, object arg1) 
+		{
+			if (IsTraceEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelTrace, new SystemStringFormat(CultureInfo.InvariantCulture, format, new object[] { arg0, arg1 }), null);
+			}
+		}
+
+		public void TraceFormat(string format, object arg0, object arg1, object arg2) 
+		{
+			if (IsTraceEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelTrace, new SystemStringFormat(CultureInfo.InvariantCulture, format, new object[] { arg0, arg1, arg2 }), null);
+			}
+		}
+
+		public void TraceFormat(IFormatProvider provider, string format, params object[] args) 
+		{
+			if (IsTraceEnabled)
+			{
+				Logger.Log(ThisDeclaringType, m_levelTrace, new SystemStringFormat(provider, format, args), null);
+			}
+		}
 
 		public void Debug(object message) 
 		{
@@ -332,6 +384,11 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
+		public bool IsTraceEnabled
+		{
+			get { return Logger.IsEnabledFor(m_levelTrace); }
+		}
+  
 		public bool IsDebugEnabled
 		{
 			get { return Logger.IsEnabledFor(m_levelDebug); }
