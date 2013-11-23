@@ -22,47 +22,17 @@ limitations under the License.
     <property name="current.assembly" value="log4net.Tests"/>
     <!-- Include log4net helpers -->
     <include buildfile="${log4net.basedir}/src/buildsupport/log4net.include" />
+    <include buildfile="${log4net.basedir}/src/buildsupport/multi-framework-compilation.include" />
     <!-- Targets that should always be executed -->
     <call target="set-build-configuration" />
     <call target="set-framework-configuration" />
 
     <!-- Target for compiling the tests on all frameworks -->
-    <target name="compile-all" description="Builds all log4net tests">
-        <echo message="Compiling all runtime configurations for the ${current.build.config} build configuration." />
+    <target name="compile-all"
+            description="Builds all log4net tests"
+            depends="-compile-all"/>
 
-        <if test="${framework::exists('net-2.0')}">
-            <call target="compile-net-2.0" />
-        </if>
-
-        <if test="${framework::exists('mono-2.0')}">
-            <call target="compile-mono-2.0" />
-        </if>
-
-        <if test="${framework::exists('net-3.5')}">
-            <call target="compile-net-3.5" />
-            <call target="compile-net-3.5-cp" />
-        </if>
-
-        <if test="${framework::exists('net-4.0')}">
-            <call target="compile-net-4.0" />
-            <call target="compile-net-4.0-cp" />
-        </if>
-
-    </target>
-
-    <target name="compile-net-2.0" description="Builds log4net tests .NET Framework 2.0 version" depends="set-net-2.0-runtime-configuration,-compile-tests"/>
-
-    <target name="compile-mono-2.0" description="Builds log4net tests Mono Framework 2.0 version" depends="set-mono-2.0-runtime-configuration,-compile-tests"/>
-
-    <target name="compile-net-3.5" description="Builds log4net tests .NET Framework 3.5 version" depends="set-net-3.5-runtime-configuration,-compile-tests"/>
-
-    <target name="compile-net-3.5-cp" description="Builds log4net tests .NET Framework 3.5 Client Profile version" depends="set-net-3.5-cp-runtime-configuration,-compile-tests"/>
-
-    <target name="compile-net-4.0" description="Builds log4net tests .NET Framework 4.0 version" depends="set-net-4.0-runtime-configuration,-compile-tests"/>
-
-    <target name="compile-net-4.0-cp" description="Builds log4net tests .NET Framework 4.0 Client Profile version" depends="set-net-4.0-cp-runtime-configuration,-compile-tests"/>
-
-    <target name="-compile-tests" depends="check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly">
+    <target name="-compile-for-one-framework" depends="check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly">
 
       <foreach item="Folder" property="dir">
         <in>
@@ -101,19 +71,6 @@ limitations under the License.
 			Because the <nunit2> task does not support multiple frameworks through the 
 			nant.settings.currentframework setting we cannot just run the tests for each framework.
 			Only the tests for the current framework are run.
-			
-        <if test="${framework::exists('net-1.0')}">
-        	<call target="runtests-net-1.0" />
-        </if>
-        <if test="${framework::exists('net-1.1')}">
-        	<call target="runtests-net-1.1" />
-        </if>
-        <if test="${framework::exists('net-2.0')}">
-        	<call target="runtests-net-2.0" />
-        </if>
-        <if test="${framework::exists('mono-2.0')}">
-        	<call target="runtests-mono-2.0" />
-        </if>
 		-->
 		<if test="${target::exists('runtests-' + nant.settings.currentframework)}">
 			<echo message="Running tests for ${framework::get-target-framework()}" />
@@ -121,17 +78,17 @@ limitations under the License.
 		</if>
     </target>
     
-    <target name="runtests-net-2.0" description="Runs log4net tests on .NET Framework 2.0 version" depends="compile-net-2.0,-runtests"/>
+    <target name="runtests-net-2.0" description="Runs log4net tests on .NET Framework 2.0 version" depends="-compile-net-2.0,-runtests"/>
 
-    <target name="runtests-mono-2.0" description="Runs log4net tests on Mono Framework 2.0 version" depends="compile-mono-2.0,-runtests"/>
+    <target name="runtests-mono-2.0" description="Runs log4net tests on Mono Framework 2.0 version" depends="-compile-mono-2.0,-runtests"/>
 
-    <target name="runtests-net-3.5" description="Runs log4net tests on .NET Framework 3.5 version" depends="compile-net-3.5,-runtests"/>
+    <target name="runtests-net-3.5" description="Runs log4net tests on .NET Framework 3.5 version" depends="-compile-net-3.5,-runtests"/>
 
-    <target name="runtests-net-3.5-cp" description="Runs log4net tests on .NET Framework 3.5 Client Profile version" depends="compile-net-3.5-cp,-runtests"/>
+    <target name="runtests-net-3.5-cp" description="Runs log4net tests on .NET Framework 3.5 Client Profile version" depends="-compile-net-3.5-cp,-runtests"/>
 
-    <target name="runtests-net-4.0" description="Runs log4net tests on .NET Framework 4.0 version" depends="compile-net-4.0,-runtests"/>
+    <target name="runtests-net-4.0" description="Runs log4net tests on .NET Framework 4.0 version" depends="-compile-net-4.0,-runtests"/>
 
-    <target name="runtests-net-4.0-cp" description="Runs log4net tests on .NET Framework 4.0 Client Profile version" depends="compile-net-4.0-cp,-runtests"/>
+    <target name="runtests-net-4.0-cp" description="Runs log4net tests on .NET Framework 4.0 Client Profile version" depends="-compile-net-4.0-cp,-runtests"/>
 
     <target name="-runtests">
         <nunit2>

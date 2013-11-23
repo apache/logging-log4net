@@ -1,0 +1,53 @@
+<?xml version="1.0" ?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one or more 
+contributor license agreements. See the NOTICE file distributed with
+this work for additional information regarding copyright ownership. 
+The ASF licenses this file to you under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with 
+the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<project name="log4net-multi-compilation" xmlns="http://tempuri.org/nant-vs.xsd">
+    <!-- Target for compiling on all frameworks -->
+    <target name="-compile-all">
+        <if test="${framework::exists('net-2.0')}">
+            <call target="-compile-net-2.0" />
+        </if>
+
+        <if test="${framework::exists('mono-2.0')}">
+            <call target="-compile-mono-2.0" />
+        </if>
+
+        <if test="${framework::exists('net-3.5')}">
+            <call target="-compile-net-3.5" />
+            <call target="-compile-net-3.5-cp" />
+        </if>
+
+        <if test="${framework::exists('net-4.0')}">
+            <call target="-compile-net-4.0" />
+            <call target="-compile-net-4.0-cp" />
+        </if>
+
+    </target>
+
+    <target name="-compile-net-2.0" description="Builds the .NET Framework 2.0 version" depends="set-net-2.0-runtime-configuration,-compile-for-one-framework"/>
+
+    <target name="-compile-mono-2.0" description="Builds the Mono Framework 2.0 version" depends="set-mono-2.0-runtime-configuration,-compile-for-one-framework"/>
+
+    <target name="-compile-net-3.5" description="Builds the .NET Framework 3.5 version" depends="set-net-3.5-runtime-configuration,-compile-for-one-framework"/>
+
+    <target name="-compile-net-3.5-cp" description="Builds the .NET Framework 3.5 Client Profile version" depends="set-net-3.5-cp-runtime-configuration,-compile-for-one-framework"/>
+
+    <target name="-compile-net-4.0" description="Builds the .NET Framework 4.0 version" depends="set-net-4.0-runtime-configuration,-compile-for-one-framework"/>
+
+    <target name="-compile-net-4.0-cp" description="Builds the .NET Framework 4.0 Client Profile version" depends="set-net-4.0-cp-runtime-configuration,-compile-for-one-framework"/>
+
+</project>

@@ -22,45 +22,17 @@ limitations under the License.
     <property name="current.assembly" value="log4net.Ext.EventID"/>
     <!-- Include log4net helpers -->
     <include buildfile="${log4net.basedir}/src/buildsupport/log4net.include" />
+    <include buildfile="${log4net.basedir}/src/buildsupport/multi-framework-compilation.include" />
     <!-- Targets that should always be executed -->
     <call target="set-build-configuration" />
     <call target="set-framework-configuration" />
 
-    <!-- Target for compiling the tests on all frameworks -->
-    <target name="compile-all" description="Builds all log4net extensions">
-        <if test="${framework::exists('net-2.0')}">
-            <call target="compile-net-2.0" />
-        </if>
+    <!-- Target for compiling the extensions on all frameworks -->
+    <target name="compile-all"
+            description="Builds all log4net extensions"
+            depends="-compile-all"/>
 
-        <if test="${framework::exists('mono-2.0')}">
-            <call target="compile-mono-2.0" />
-        </if>
-
-        <if test="${framework::exists('net-3.5')}">
-            <call target="compile-net-3.5" />
-            <call target="compile-net-3.5-cp" />
-        </if>
-
-        <if test="${framework::exists('net-4.0')}">
-            <call target="compile-net-4.0" />
-            <call target="compile-net-4.0-cp" />
-        </if>
-
-    </target>
-
-    <target name="compile-net-2.0" description="Builds log4net extensions .NET Framework 2.0 version" depends="set-net-2.0-runtime-configuration,-compile-extensions"/>
-
-    <target name="compile-mono-2.0" description="Builds log4net extensions Mono Framework 2.0 version" depends="set-mono-2.0-runtime-configuration,-compile-extensions"/>
-
-    <target name="compile-net-3.5" description="Builds log4net extensions .NET Framework 3.5 version" depends="set-net-3.5-runtime-configuration,-compile-extensions"/>
-
-    <target name="compile-net-3.5-cp" description="Builds log4net extensions .NET Framework 3.5 Client Profile version" depends="set-net-3.5-cp-runtime-configuration,-compile-extensions"/>
-
-    <target name="compile-net-4.0" description="Builds log4net extensions .NET Framework 4.0 version" depends="set-net-4.0-runtime-configuration,-compile-extensions"/>
-
-    <target name="compile-net-4.0-cp" description="Builds log4net extensions .NET Framework 4.0 Client Profile version" depends="set-net-4.0-cp-runtime-configuration,-compile-extensions"/>
-
-    <target name="-compile-extensions" depends="check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly">
+    <target name="-compile-for-one-framework" depends="check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly">
 
       <foreach item="String" delim=","
                in="log4net.Ext.EventID,log4net.Ext.MarshalByRef"
