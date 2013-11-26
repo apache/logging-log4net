@@ -16,10 +16,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <project name="log4net-examples" default="compile-all" xmlns="http://tempuri.org/nant-vs.xsd">
+
+  <!--
+  This buildfiles is there to compile all examples in log4net's
+  CI system to make we didn't break them, it will not create usable
+  executables.
+  -->
+
     <property name="log4net.basedir" value="." readonly="false" />
     <property name="project.build.config" value="debug" readonly="false" />
     <property name="project.build.package" value="false" readonly="false" />
-    <property name="current.assembly" value="SampleAppendersApp"/>
+    <property name="current.assembly" value=""/>
     <!-- Include log4net helpers -->
     <include buildfile="${log4net.basedir}/src/buildsupport/log4net.include" />
     <include buildfile="${log4net.basedir}/src/buildsupport/multi-framework-compilation.include" />
@@ -35,19 +42,25 @@ limitations under the License.
 
     <target name="-compile-for-one-framework" depends="check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly">
 
+      <!-- things that need extra references
+      Appenders/SampleAppendersApp,Appenders/WmiAppender,Extensibility/EventIDLogApp,Repository/SimpleApp,Tutorials/WebApp
+      -->
+
+      <!-- this compiles .exes as .dlls because all that matters is it
+           compiles --> 
+      <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}"/>
       <foreach item="String" delim=","
-               in="Appenders/SampleAppendersApp,Appenders/WmiAppender"
+               in="Layouts/SampleLayoutsApp,Tutorials/Console,AppPerformance/NotLogging,Remoting/RemotingClient,Remoting/RemotingServer,Repository/SharedModule,Repository/SimpleModule"
                property="dir">
         <do>
           <property name="lastSlash"
-                    value="${string::last-index-of(dir, '/')}"/>
+                    value="${string::last-index-of(dir, '/')}" />
           <property name="start"
                     value="${int::parse(lastSlash) + 1}"/>
           <property name="len"
                     value="${string::get-length(dir) - int::parse(lastSlash) - 1}"/>
           <property name="current.assembly"
                     value="${string::substring(dir, int::parse(start), len)}"/>
-          <echo message="${current.assembly}"/>
           <property name="current.sources" value="examples/cs/${dir}"/>
           <property name="current.keyfile" value="log4net.snk"/>
           <property name="current.bin.subdir" value=""/>
@@ -57,6 +70,10 @@ limitations under the License.
           <call target="parameterized-compilation" />
         </do>
       </foreach>
+
+      <!-- reset so clean-current-bin-dir will not create strange
+           subdirs when compiling the next framework -->
+      <property name="current.assembly" value=""/>
     </target>
 
 </project>
