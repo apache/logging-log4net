@@ -46,7 +46,7 @@ limitations under the License.
            compiles --> 
       <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}"/>
       <foreach item="String" delim=","
-               in="Layouts/SampleLayoutsApp,Tutorials/Console,AppPerformance/NotLogging,Remoting/RemotingClient,Remoting/RemotingServer,Repository/SharedModule,Repository/SimpleModule"
+               in="Layouts/SampleLayoutsApp,Tutorials/ConsoleApp,AppPerformance/NotLogging,Remoting/RemotingClient,Remoting/RemotingServer,Repository/SharedModule,Repository/SimpleModule"
                property="dir">
         <do>
           <property name="lastSlash"
@@ -208,10 +208,139 @@ limitations under the License.
           <include name="${current.bin.dir}/SharedModule.dll"/>
         </references>
       </csc>
+      <call target="-compile-js-examples"/>
 
       <!-- reset so clean-current-bin-dir will not create strange
            subdirs when compiling the next framework -->
       <property name="current.assembly" value=""/>
+      <property name="bin.dir" value="${build.dir}/bin/examples/cs"/>
     </target>
 
+    <target name="-compile-js-examples" if="${can.compile.js}">
+      <property name="current.assembly" value=""/>
+      <property name="bin.dir" value="${build.dir}/bin/examples/js"/>
+      <call target="-set-framework-configuration"/>
+      <call target="clean-current-bin-dir"/>
+      <jsc nostdlib="true" warnaserror="false" target="exe" debug="true"
+           define="${current.build.defines.jsc}"
+           output="${current.bin.dir}/ConsoleApp.exe">
+        <sources basedir="${log4net.basedir}">
+          <include name="src/examples/js/Tutorials/ConsoleApp/**/*.js" />
+          <include name="src/log4net/AssemblyVersionInfo.js"/>
+        </sources>
+        <references>
+          <include name="mscorlib.dll"/>
+          <include name="System.dll" />
+          <include name="System.Core.dll" if="${current.build.has.systemcore}"/>
+          <include name="System.Data.dll" />
+          <include name="System.Web.dll" if="${current.build.has.systemweb}"/>
+          <include name="System.Xml.dll" />
+          <include name="System.Runtime.Remoting.dll" />
+          <include name="System.Configuration.dll" if="${current.build.has.systemconfiguration}"/>
+          <include name="${log4net.basedir}/lib/main/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/*.dll" />
+          <include name="${log4net.basedir}/lib/main/*.dll" />
+          <include name="${log4net.main.output.dir}/log4net.dll" frompath="false"/>
+          <include name="System.Drawing.dll" />
+        </references>
+      </jsc>
+      <jsc nostdlib="true" warnaserror="false" target="library" debug="true"
+           define="${current.build.defines.jsc}"
+           output="${current.bin.dir}/SharedModule.dll">
+        <sources basedir="${log4net.basedir}">
+          <include name="src/examples/js/Repository/SharedModule/**/*.js" />
+          <include name="src/log4net/AssemblyVersionInfo.js"/>
+        </sources>
+        <references>
+          <include name="mscorlib.dll"/>
+          <include name="System.dll" />
+          <include name="System.Core.dll" if="${current.build.has.systemcore}"/>
+          <include name="System.Data.dll" />
+          <include name="System.Web.dll" if="${current.build.has.systemweb}"/>
+          <include name="System.Xml.dll" />
+          <include name="System.Runtime.Remoting.dll" />
+          <include name="System.Configuration.dll" if="${current.build.has.systemconfiguration}"/>
+          <include name="${log4net.basedir}/lib/main/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/*.dll" />
+          <include name="${log4net.basedir}/lib/main/*.dll" />
+          <include name="${log4net.main.output.dir}/log4net.dll" frompath="false"/>
+        </references>
+      </jsc>
+      <jsc nostdlib="true" warnaserror="false" target="library" debug="true"
+           define="${current.build.defines.jsc}"
+           output="${current.bin.dir}/SimpleModule.dll">
+        <sources basedir="${log4net.basedir}">
+          <include name="src/examples/js/Repository/SimpleModule/**/*.js" />
+          <include name="src/log4net/AssemblyVersionInfo.js"/>
+        </sources>
+        <references>
+          <include name="mscorlib.dll"/>
+          <include name="System.dll" />
+          <include name="System.Core.dll" if="${current.build.has.systemcore}"/>
+          <include name="System.Data.dll" />
+          <include name="System.Web.dll" if="${current.build.has.systemweb}"/>
+          <include name="System.Xml.dll" />
+          <include name="System.Runtime.Remoting.dll" />
+          <include name="System.Configuration.dll" if="${current.build.has.systemconfiguration}"/>
+          <include name="${log4net.basedir}/lib/main/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/*.dll" />
+          <include name="${log4net.basedir}/lib/main/*.dll" />
+          <include name="${log4net.main.output.dir}/log4net.dll" frompath="false"/>
+        </references>
+      </jsc>
+      <jsc nostdlib="true" warnaserror="false" target="exe" debug="true"
+           define="${current.build.defines.jsc}"
+           output="${current.bin.dir}/SimpleApp.exe">
+        <sources basedir="${log4net.basedir}">
+          <include name="src/examples/js/Repository/SimpleApp/**/*.js" />
+          <include name="src/log4net/AssemblyVersionInfo.js"/>
+        </sources>
+        <references>
+          <include name="mscorlib.dll"/>
+          <include name="System.dll" />
+          <include name="System.Core.dll" if="${current.build.has.systemcore}"/>
+          <include name="System.Data.dll" />
+          <include name="System.Web.dll" if="${current.build.has.systemweb}"/>
+          <include name="System.Xml.dll" />
+          <include name="System.Runtime.Remoting.dll" />
+          <include name="System.Configuration.dll" if="${current.build.has.systemconfiguration}"/>
+          <include name="${log4net.basedir}/lib/main/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/*.dll" />
+          <include name="${log4net.basedir}/lib/main/*.dll" />
+          <include name="${log4net.main.output.dir}/log4net.dll" frompath="false"/>
+          <include name="${current.bin.dir}/SimpleModule.dll"/>
+          <include name="${current.bin.dir}/SharedModule.dll"/>
+        </references>
+      </jsc>
+    </target>
+
+    <!--target name="-compile-cpp-examples">
+      <property name="bin.dir" value="${build.dir}/bin/examples/cpp"/>
+      <call target="clean-current-bin-dir"/>
+      <cl nostdlib="true" noconfig="true"
+           warnaserror="false"
+           target="library"
+           debug="true"
+           define="${current.build.defines.csc}"
+           output="${current.bin.dir}/WebApp.dll"
+           doc="${current.bin.dir}/WebApp.xml">
+        <sources basedir="${log4net.basedir}">
+          <include name="src/examples/cs/Tutorials/WebApp/**/*.cs" />
+          <include name="src/log4net/AssemblyVersionInfo.cs"/>
+        </sources>
+        <resources refid="nl-files"/>
+        <references>
+          <include name="mscorlib.dll"/>
+          <include name="System.dll" />
+          <include name="System.Core.dll" if="${current.build.has.systemcore}"/>
+          <include name="System.Data.dll" />
+          <include name="System.Web.dll" if="${current.build.has.systemweb}"/>
+          <include name="System.Xml.dll" />
+          <include name="System.Runtime.Remoting.dll" />
+          <include name="System.Configuration.dll" if="${current.build.has.systemconfiguration}"/>
+          <include name="${log4net.basedir}/lib/main/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/*.dll" />
+          <include name="${log4net.basedir}/lib/main/*.dll" />
+          <include name="${log4net.main.output.dir}/log4net.dll" frompath="false"/>
+          <include name="System.Drawing.dll" />
+          <include name="${current.bin.dir}/SimpleModule.dll"/>
+          <include name="${current.bin.dir}/SharedModule.dll"/>
+        </references>
+      </cl>
+    </target-->
 </project>
