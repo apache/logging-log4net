@@ -32,6 +32,7 @@ limitations under the License.
       <property name="current.build.has.systemweb" value="true"/>
       <property name="current.build.has.systemconfiguration" value="true"/>
       <property name="can.compile.js" value="true"/>
+      <property name="can.compile.vb" value="true"/>
       <call target="-set-framework-configuration"/>
     </target>
     <!-- uses NET_2_0 defines plus FRAMEWORK_3_5-->
@@ -45,6 +46,7 @@ limitations under the License.
       <property name="current.build.has.systemweb" value="true"/>
       <property name="current.build.has.systemconfiguration" value="true"/>
       <property name="can.compile.js" value="true"/>
+      <property name="can.compile.vb" value="true"/>
       <call target="-set-framework-configuration"/>
     </target>
     <!-- uses NET_2_0 defines plus FRAMEWORK_3_5 and CLIENT_PROFILE-->
@@ -58,6 +60,7 @@ limitations under the License.
       <property name="current.build.has.systemweb" value="false"/>
       <property name="current.build.has.systemconfiguration" value="true"/>
       <property name="can.compile.js" value="true"/>
+      <property name="can.compile.vb" value="true"/>
       <call target="-set-framework-configuration"/>
     </target>
     <!-- uses NET_3_5 plus FRAMEWORK_4_0_OR_ABOVE defines -->
@@ -71,6 +74,7 @@ limitations under the License.
       <property name="current.build.has.systemweb" value="true"/>
       <property name="current.build.has.systemconfiguration" value="true"/>
       <property name="can.compile.js" value="true"/>
+      <property name="can.compile.vb" value="true"/>
       <call target="-set-framework-configuration"/>
     </target>
     <!-- uses NET_3_5 plus FRAMEWORK_4_0_OR_ABOVE and CLIENT_PROFILE defines -->
@@ -84,6 +88,7 @@ limitations under the License.
       <property name="current.build.has.systemweb" value="false"/>
       <property name="current.build.has.systemconfiguration" value="true"/>
       <property name="can.compile.js" value="true"/>
+      <property name="can.compile.vb" value="true"/>
       <call target="-set-framework-configuration"/>
     </target>
     <target name="set-netcf-2.0-runtime-configuration">
@@ -96,6 +101,7 @@ limitations under the License.
       <property name="current.build.has.systemweb" value="false"/>
       <property name="current.build.has.systemconfiguration" value="false"/>
       <property name="can.compile.js" value="true"/>
+      <property name="can.compile.vb" value="true"/>
       <call target="-set-framework-configuration"/>
     </target>
     <target name="set-mono-2.0-runtime-configuration">
@@ -108,6 +114,7 @@ limitations under the License.
       <property name="current.build.has.systemweb" value="true"/>
       <property name="current.build.has.systemconfiguration" value="true"/>
       <property name="can.compile.js" value="false"/>
+      <property name="can.compile.vb" value="false"/>
       <call target="-set-framework-configuration"/>
     </target>
     <target name="-set-framework-configuration" depends="-check-bin-dir, -check-sdkdoc-dir, -check-sdkdoc-debug, check-current-build-config, -check-build-debug, -check-build-defines">
