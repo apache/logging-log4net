@@ -83,11 +83,6 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.rat</groupId>
-        <artifactId>apache-rat-plugin</artifactId>
-        <version>0.10</version>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
         <version>3.3</version>
@@ -96,7 +91,7 @@
           <!-- This can be removed once <footer> tag is supported in site.xml.  -->
           <templateFile>${basedir}/src/site.vm</templateFile>
           <siteDirectory>${basedir}/src</siteDirectory>
-          <siteDirectory>${basedir}/target</siteDirectory>
+          <outputDirectory>${basedir}/target</outputDirectory>
           <reportPlugins>
             <plugin>
               <groupId>org.apache.maven.plugins</groupId>
@@ -115,7 +110,26 @@
                 </reportSet>
               </reportSets>
             </plugin>
-						
+            <plugin>
+              <groupId>org.apache.rat</groupId>
+              <artifactId>apache-rat-plugin</artifactId>
+              <version>0.10</version>
+              <configuration>
+                <basedir>${basedir}/../..</basedir>
+                <excludes>
+                  <!-- generated files -->
+                  <exclude>**/*.suo</exclude>
+                  <exclude>**/*.user</exclude>
+                  <exclude>**/obj/**</exclude>
+                  <exclude>build/**</exclude>
+                  <exclude>doc/site/target/**</exclude>
+
+                  <!-- really README files -->
+                  <exclude>*.snk*</exclude>
+                </excludes>
+              </configuration>
+            </plugin>
+
           </reportPlugins>
         </configuration>
       </plugin>
@@ -145,31 +159,6 @@
       </plugin>
     </plugins>
   </build>
-
-  <reporting>
-    <plugins>
-      <!-- RAT report -->
-      <plugin>
-        <groupId>org.apache.rat</groupId>
-        <artifactId>apache-rat-plugin</artifactId>
-        <version>0.10</version>
-        <configuration>
-          <baseDir>${basedir}/../..</baseDir>
-          <excludes>
-            <!-- generated files -->
-            <exclude>**/*.suo</exclude>
-            <exclude>**/*.user</exclude>
-            <exclude>**/obj/**</exclude>
-            <exclude>build/**</exclude>
-            <exclude>doc/site/target/**</exclude>
-
-            <!-- really README files -->
-            <exclude>*.snk*</exclude>
-          </excludes>
-        </configuration>
-      </plugin>
-    </plugins>
-  </reporting>
 
   <developers>
     <developer>
