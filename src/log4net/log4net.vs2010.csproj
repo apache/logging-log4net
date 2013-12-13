@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 
  Licensed to the Apache Software Foundation (ASF) under one
@@ -143,6 +143,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Appender\ColoredConsoleAppender.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Appender\ColoredSmtpAppender.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Appender\ConsoleAppender.cs">
