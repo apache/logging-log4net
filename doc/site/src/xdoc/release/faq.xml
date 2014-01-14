@@ -138,7 +138,7 @@ limitations under the License.
                             log4net supports multiple output appenders per logger.</li>
                     </ul>
                     <p>
-                        See the <a href="../features.html">features</a> overview document for more information on the features of log4net.
+                        See the <a href="features.html">features</a> overview document for more information on the features of log4net.
                     </p>
                 </section>
                 <p><a href="#top">Back to Top</a></p>

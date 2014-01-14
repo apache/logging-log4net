@@ -790,7 +790,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                         <h3>Features document</h3>
                         <p>
                             Added a new document that covers the main features of log4net.
-                            See the <a href="doc/features.html">features</a>
+                            See the <a href="features.html">features</a>
                             document for more information.
                         </p>
                         <h3>Hierarchy disabled until it is configured</h3>
@@ -824,7 +824,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                         </p>
                         <h3>Added document with example appender configurations</h3>
                         <p>
-                            See the <a href="doc/manual/example-config-appender.html">Example Appender Configuration</a> 
+                            See the <a href="config-examples.html">Example Appender Configuration</a> 
                             document for more information.
                         </p>
             </section>
@@ -866,7 +866,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                         <br />
                         <p>
                             Not all frameworks are created equal and some features have been excluded from 
-                            some of the builds. See the <a href="doc/manual/framework-support.html">Framework Support</a> document for more information.
+                            some of the builds. See the <a href="framework-support.html">Framework Support</a> document for more information.
                         </p>
                         <h3>New build system using NAnt</h3>
                         <p>

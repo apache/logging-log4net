@@ -793,7 +793,7 @@ DEBUG [main] (Bar.cs:12) - Doing it again!
                         
                         <p>
                             For examples of configuring appenders see the 
-                            <a href="example-config-appender.html">Example Appender Configuration</a> 
+                            <a href="../config-examples.html">Example Appender Configuration</a> 
                             document.
                         </p>
                                                 
