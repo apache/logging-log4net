@@ -230,7 +230,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\lognet\log4net.vs2010.csproj">
+    <ProjectReference Include="..\log4net\log4net.vs2010.csproj">
       <Project>{181fe707-e161-4722-9f38-6aaab6faa106}</Project>
       <Name>log4net.vs2010</Name>
     </ProjectReference>
