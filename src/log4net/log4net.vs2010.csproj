@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 
  Licensed to the Apache Software Foundation (ASF) under one
@@ -179,6 +179,7 @@
     <Compile Include="Appender\OutputDebugStringAppender.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Appender\ProcMonAppender.cs" />
     <Compile Include="Appender\RemoteSyslogAppender.cs">
       <SubType>Code</SubType>
     </Compile>
