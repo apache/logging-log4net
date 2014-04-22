@@ -19,7 +19,9 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Xml;
 
@@ -986,13 +988,57 @@ namespace log4net.Repository.Hierarchy
 
 			// Create using the default constructor
 			object createdObject = null;
-			try
+
+			//Try parameterless constructor
+			if (objectType.GetConstructor(Type.EmptyTypes) != null)
 			{
-				createdObject = Activator.CreateInstance(objectType);
+				try
+				{
+					createdObject = Activator.CreateInstance(objectType);
+				}
+				catch (Exception createInstanceEx)
+				{
+					LogLog.Error(declaringType,
+						"XmlHierarchyConfigurator: Failed to construct object of type [" + objectType.FullName +
+						"] Exception: " + createInstanceEx.ToString());
+				}
+
 			}
-			catch(Exception createInstanceEx)
+			else
 			{
-				LogLog.Error(declaringType, "XmlHierarchyConfigurator: Failed to construct object of type [" + objectType.FullName + "] Exception: "+createInstanceEx.ToString());
+				//See if there is a constructor matching supplied values, most specific first.
+				Exception lastException = null;
+				foreach (var constructorInfo in objectType.GetConstructors().OrderByDescending(x => x.GetParameters().Count()))
+				{
+
+					try
+					{
+						var nodes = new List<XmlNode>(element.ChildNodes.Cast<XmlNode>());
+						var parameterInfos = constructorInfo.GetParameters();
+						LogLog.Debug(declaringType, "Trying constructor with parameters: " + string.Join(",", parameterInfos.Select(p => p.Name)));
+
+						var args = parameterInfos.Select(p => nodes.SingleOrDefault(n => n.Name == p.Name));
+						LogLog.Debug(declaringType, "Matching args from config: " + string.Join(",", args.Select(n => n.Name)));
+						LogLog.Debug(declaringType, "Matching arg values from config: " + string.Join(",", args.Select(a => a.Attributes["value"].Value)));
+						if (args.All(a => a != null))
+						{
+							createdObject = constructorInfo.Invoke(args.Select(a => a.Attributes["value"].Value).ToArray());
+							break;
+						}
+					}
+					catch (Exception e)
+					{
+						lastException = e;
+					}
+				}
+
+				if (createdObject == null)
+				{
+					LogLog.Error(declaringType,
+					   "XmlHierarchyConfigurator: Failed to construct object of type [" + objectType.FullName +
+					   "] No matching constructor found. LastException: " +
+					   (lastException != null ? lastException.ToString() : "None caught."));
+				}
 			}
 
 			// Set any params on object
