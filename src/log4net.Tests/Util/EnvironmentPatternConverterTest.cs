@@ -22,6 +22,7 @@
 #if !NETCF
 
 using System;
+using System.Collections;
 using System.IO;
 using System.Text;
 using NUnit.Framework;
@@ -51,11 +52,18 @@ namespace log4net.Tests.Util
 
 			StringWriter sw = new StringWriter();
 			converter.Convert(sw, null);
+			sw.Close();
 
-            Assert.AreEqual(SYSTEM_LEVEL_VALUE, sw.ToString(), "System level environment variable not expended correctly.");
-
-            Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, null, EnvironmentVariableTarget.Machine);
-        }
+	    try
+	    {
+		Assert.AreEqual(SYSTEM_LEVEL_VALUE, sw.ToString(),
+				string.Format("Process level environment variable not expanded correctly. Found {0}" , Dump(Environment.GetEnvironmentVariables(EnvironmentVariableTarget.Machine))));
+	    }
+	    finally
+	    {
+		Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, null, EnvironmentVariableTarget.Machine);
+	    }
+	}
 
         [Test]
         public void UserLevelEnvironmentVariable()
@@ -67,10 +75,17 @@ namespace log4net.Tests.Util
 
             StringWriter sw = new StringWriter();
             converter.Convert(sw, null);
+	    sw.Close();
 
-            Assert.AreEqual(USER_LEVEL_VALUE, sw.ToString(), "User level environment variable not expended correctly.");
-
-            Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, null, EnvironmentVariableTarget.User);
+            try
+	    {
+		Assert.AreEqual(USER_LEVEL_VALUE, sw.ToString(),
+				string.Format("Process level environment variable not expanded correctly. Found {0}" , Dump(Environment.GetEnvironmentVariables(EnvironmentVariableTarget.User))));
+	    }
+	    finally
+	    {
+		Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, null, EnvironmentVariableTarget.User);
+	    }
         }
 
         [Test]
@@ -83,19 +98,36 @@ namespace log4net.Tests.Util
 
             StringWriter sw = new StringWriter();
             converter.Convert(sw, null);
+	    sw.Close();
 
-            Assert.AreEqual(PROCESS_LEVEL_VALUE, sw.ToString(), "Process level environment variable not expended correctly.");
-
-            Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, null);
+            try
+	    {
+		Assert.AreEqual(PROCESS_LEVEL_VALUE, sw.ToString(),
+				string.Format("Process level environment variable not expanded correctly. Found {0}" , Dump(Environment.GetEnvironmentVariables())));
+	    }
+	    finally
+	    {
+		Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, null);
+	    }
         }
 
+	private string Dump(IDictionary d)
+	{
+	    StringBuilder sb = new StringBuilder();
+	    foreach (DictionaryEntry de in d)
+	    {
+		sb.Append(de.Key).Append("=").Append(de.Value).Append(",");
+	    }
+	    return sb.ToString();
+	}
+	
         private class EnvironmentPatternConverter
         {
             private object target = null;
 
             public EnvironmentPatternConverter()
             {
-                target = Utils.CreateInstance("log4net.Util.PatternStringConverters.EnvironmentPatternConverter,log4net");
+                target = Utils.CreateInstance("log4net.Util.PatternStringConverters.EnvironmentPatternConverter,log4net-1.3");
             }
 
             public string Option
