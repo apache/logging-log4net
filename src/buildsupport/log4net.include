@@ -26,7 +26,7 @@ limitations under the License.
         dynamic="true" />
     <property 
         name="log4net.main.output.dir" 
-        value="${build.dir}/bin/log4net/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}"
+        value="${build.dir}/bin/log4net-1.3/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}"
         dynamic="true" />
 
     <include buildfile="check-environment.include" />

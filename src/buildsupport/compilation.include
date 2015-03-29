@@ -39,7 +39,7 @@ limitations under the License.
             if="${property::exists('with.test.assemblies') and with.test.assemblies}"/>
         <include name="${log4net.basedir}/lib/test/*.dll"
                  if="${property::exists('with.test.assemblies') and with.test.assemblies}"/>
-        <include name="${log4net.main.output.dir}/log4net.dll" frompath="false"
+        <include name="${log4net.main.output.dir}/log4net-1.3.dll" frompath="false"
                  if="${property::exists('with.log4net') and with.log4net}"/>
       </assemblyfileset>
       <fileset id="sources" basedir="${log4net.basedir}">

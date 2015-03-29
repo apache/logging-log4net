@@ -134,7 +134,7 @@ limitations under the License.
         </if>
     </target>
     <target name="check-log4net-assembly" depends="check-current-build-config, -check-log4net-output-dir">
-        <if test="${not file::exists(path::combine(log4net.main.output.dir, 'log4net.dll'))}">
+        <if test="${not file::exists(path::combine(log4net.main.output.dir, 'log4net-1.3.dll'))}">
             <fail message="The log4net '${current.build.config}' assembly for ${framework::get-description(framework::get-target-framework())} is not available." />
         </if>
     </target>
