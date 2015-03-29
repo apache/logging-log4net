@@ -105,6 +105,7 @@ namespace log4net.Tests
         internal static void RemovePropertyFromAllContexts() {
             GlobalContext.Properties.Remove(PROPERTY_KEY);
             ThreadContext.Properties.Remove(PROPERTY_KEY);
+            LogicalThreadContext.Properties.Remove(PROPERTY_KEY);
         }
 	}
 }

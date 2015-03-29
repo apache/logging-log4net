@@ -49,7 +49,9 @@ using System.Runtime.CompilerServices;
 //
 
 #if DOTNET
-#if FRAMEWORK_4_0_OR_ABOVE
+#if FRAMEWORK_4_5_OR_ABOVE
+[assembly: AssemblyTitle("Apache log4net for .NET Framework 4.5")]
+#elif FRAMEWORK_4_0_OR_ABOVE
 #if CLIENT_PROFILE
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 4.0 Client Profile")]
 #else
