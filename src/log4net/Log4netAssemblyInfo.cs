@@ -28,7 +28,7 @@ namespace log4net {
         public const string Version = "1.3.0";
 
         /// <summary>Version of the framework targeted</summary>
-#if FRAMEWORK_4_0_OR_ABOVE
+#if FRAMEWORK_4_5_OR_ABOVE
         public const decimal TargetFrameworkVersion = 4.5M;
 #elif FRAMEWORK_4_0_OR_ABOVE
         public const decimal TargetFrameworkVersion = 4.0M;
