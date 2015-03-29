@@ -189,8 +189,6 @@ limitations under the License.
     <call target="-compile-or-fail"/>
     <if test="${framework::exists('net-4.0')}">
       <call target="compile-net-4.0-cp" />
-      <property name="required.target.name" value=".NET Framework 4.5"/>
-      <property name="required.target.dir" value="net/4.5"/>
       <call target="compile-net-4.5" />
     </if>
     <!-- MONO_2_0 -->

@@ -33,6 +33,7 @@ limitations under the License.
       <property name="current.build.has.systemconfiguration" value="true"/>
       <property name="can.compile.js" value="true"/>
       <property name="can.compile.vb" value="true"/>
+      <property name="current.subtype.dir" value=""/>
       <call target="-set-framework-configuration"/>
     </target>
     <!-- uses NET_2_0 defines plus FRAMEWORK_3_5-->
@@ -47,6 +48,7 @@ limitations under the License.
       <property name="current.build.has.systemconfiguration" value="true"/>
       <property name="can.compile.js" value="true"/>
       <property name="can.compile.vb" value="true"/>
+      <property name="current.subtype.dir" value=""/>
       <call target="-set-framework-configuration"/>
     </target>
     <!-- uses NET_2_0 defines plus FRAMEWORK_3_5 and CLIENT_PROFILE-->
@@ -61,6 +63,7 @@ limitations under the License.
       <property name="current.build.has.systemconfiguration" value="true"/>
       <property name="can.compile.js" value="true"/>
       <property name="can.compile.vb" value="true"/>
+      <property name="current.subtype.dir" value="net-cp/3.5"/>
       <call target="-set-framework-configuration"/>
     </target>
     <!-- uses NET_3_5 plus FRAMEWORK_4_0_OR_ABOVE defines -->
@@ -75,6 +78,7 @@ limitations under the License.
       <property name="current.build.has.systemconfiguration" value="true"/>
       <property name="can.compile.js" value="true"/>
       <property name="can.compile.vb" value="true"/>
+      <property name="current.subtype.dir" value=""/>
       <call target="-set-framework-configuration"/>
     </target>
     <!-- uses NET_3_5 plus FRAMEWORK_4_0_OR_ABOVE and CLIENT_PROFILE defines -->
@@ -89,6 +93,7 @@ limitations under the License.
       <property name="current.build.has.systemconfiguration" value="true"/>
       <property name="can.compile.js" value="true"/>
       <property name="can.compile.vb" value="true"/>
+      <property name="current.subtype.dir" value="net-cp/4.0"/>
       <call target="-set-framework-configuration"/>
     </target>
     <!-- uses NET_4_0 plus FRAMEWORK_4_5_OR_ABOVE defines -->
@@ -103,6 +108,7 @@ limitations under the License.
       <property name="current.build.has.systemconfiguration" value="true"/>
       <property name="can.compile.js" value="true"/>
       <property name="can.compile.vb" value="true"/>
+      <property name="current.subtype.dir" value="net/4.5"/>
       <call target="-set-framework-configuration"/>
     </target>
     <target name="set-netcf-2.0-runtime-configuration">
@@ -116,6 +122,7 @@ limitations under the License.
       <property name="current.build.has.systemconfiguration" value="false"/>
       <property name="can.compile.js" value="true"/>
       <property name="can.compile.vb" value="true"/>
+      <property name="current.subtype.dir" value=""/>
       <call target="-set-framework-configuration"/>
     </target>
     <target name="set-mono-2.0-runtime-configuration">
@@ -129,6 +136,7 @@ limitations under the License.
       <property name="current.build.has.systemconfiguration" value="true"/>
       <property name="can.compile.js" value="false"/>
       <property name="can.compile.vb" value="false"/>
+      <property name="current.subtype.dir" value=""/>
       <call target="-set-framework-configuration"/>
     </target>
     <target name="set-mono-3.5-runtime-configuration">
@@ -142,6 +150,7 @@ limitations under the License.
       <property name="current.build.has.systemconfiguration" value="true"/>
       <property name="can.compile.js" value="false"/>
       <property name="can.compile.vb" value="false"/>
+      <property name="current.subtype.dir" value=""/>
       <call target="-set-framework-configuration"/>
     </target>
     <target name="set-mono-4.0-runtime-configuration">
@@ -155,11 +164,17 @@ limitations under the License.
       <property name="current.build.has.systemconfiguration" value="true"/>
       <property name="can.compile.js" value="false"/>
       <property name="can.compile.vb" value="false"/>
+      <property name="current.subtype.dir" value=""/>
       <call target="-set-framework-configuration"/>
     </target>
     <target name="-set-framework-configuration" depends="-check-bin-dir, -check-sdkdoc-dir, -check-sdkdoc-debug, check-current-build-config, -check-build-debug, -check-build-defines">
         <property name="current.build.debug" value="${build.debug}" dynamic="true" />
         <property name="current.bin.dir" value="${bin.dir}/${current.assembly}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" dynamic="true"/>
+	<if test="${current.subtype.dir!=''}">
+          <property name="current.bin.dir"
+		    value="${bin.dir}/${current.assembly}/${current.subtype.dir}/${current.build.config}"
+		    />
+	</if>
         <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" dynamic="true"/>
         <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
         <property name="current.build.defines.csc" value="${build.defines.csc},${current.build.platform}${current.build.api}" dynamic="true" />
