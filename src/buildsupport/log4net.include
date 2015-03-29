@@ -36,7 +36,6 @@ limitations under the License.
          ======================================================== -->
     <target name="clean-current-bin-dir" depends="-check-current-bin-dir" description="Cleans the current binaries directory">
         <echo message="Cleaning the ${current.bin.dir} binaries directory." />
-        <delete dir="${current.bin.dir}/../oldkey" if="${directory::exists(current.bin.dir) and current.build.config.release}" />
         <delete dir="${current.bin.dir}" if="${directory::exists(current.bin.dir)}" />
         <mkdir dir="${current.bin.dir}" />
     </target>

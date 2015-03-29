@@ -214,7 +214,7 @@ limitations under the License.
       <call target="compile-${required.target}" />
     </if>
     <if test="${not framework::exists(required.target)}">
-      <if test="${property::exists('project.build.package') and project.build.package and not(directory::exists(path::combine(bin.dir, required.target.dir + '/debug')) and directory::exists(path::combine(bin.dir, required.target.dir + '/release')) and directory::exists(path::combine(bin.dir, required.target.dir + '/oldkey')))}">
+      <if test="${property::exists('project.build.package') and project.build.package and not(directory::exists(path::combine(bin.dir, required.target.dir + '/debug')) and directory::exists(path::combine(bin.dir, required.target.dir + '/release')))}">
         <fail message="The ${required.target.name} is not available." />
       </if>
       <if test="${not(property::exists('project.build.package') and project.build.package)}">
@@ -245,27 +245,6 @@ limitations under the License.
     <property name="with.generated.assemblyinfo" value="true"/>
 
     <call target="parameterized-compilation" />
-
-    <!-- initialize the temp.build.skip property to false -->
-    <property name="temp.build.skip" value="false" />
-    <if test="${current.build.config.release}">
-      <!-- check if the old log4net key file is available -->
-      <if test="${not file::exists(log4net.basedir + '/old-log4net.snk')}">
-        <if test="${property::exists('project.build.package') and project.build.package}">
-          <fail message="Old key file not found." />
-        </if>
-        <if test="${not(property::exists('project.build.package') and project.build.package)}">
-          <echo message="Old key file not found."/>
-          <echo message="The release build using the old key will be skipped." />
-          <property name="temp.build.skip" value="true" />
-        </if>
-      </if>
-    </if>
-    <if test="${not temp.build.skip}">
-      <property name="current.keyfile" value="old-log4net.snk"/>
-      <property name="current.bin.subdir" value="../oldkey/"/>
-      <call target="parameterized-compilation" />
-    </if>
   </target>
 
   <!-- Target for generating docs for all runtime configurations -->
@@ -465,29 +444,6 @@ limitations under the License.
       </fileset>
     </delete>
     <zip zipfile="${current.package.bin.dir}-newkey.zip" ziplevel="9">
-      <fileset basedir="${current.package.bin.dir}"
-               prefix="${current.package.name}">
-        <include name="**"/>
-      </fileset>
-    </zip>
-
-    <!-- binary dist with old strong name key -->
-    <foreach item="Folder" property="platform-and-version">
-      <in>
-        <items>
-          <include name="bin/*/*"/>
-        </items>
-      </in>
-      <do>
-        <copy todir="${current.package.bin.dir}/${string::replace(platform-and-version, project::get-base-directory(), '')}/release"
-              overwrite="true">
-          <fileset basedir="${platform-and-version}/oldkey">
-            <include name="**"/>
-          </fileset>
-        </copy>
-      </do>
-    </foreach>
-    <zip zipfile="${current.package.bin.dir}-oldkey.zip" ziplevel="9">
       <fileset basedir="${current.package.bin.dir}"
                prefix="${current.package.name}">
         <include name="**"/>
