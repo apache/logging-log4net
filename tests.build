@@ -82,6 +82,10 @@ limitations under the License.
 
     <target name="runtests-mono-2.0" description="Runs log4net tests on Mono Framework 2.0 version" depends="-compile-mono-2.0,-runtests"/>
 
+    <target name="runtests-mono-3.5" description="Runs log4net tests on Mono Framework 3.5 version" depends="-compile-mono-3.5,-runtests"/>
+
+    <target name="runtests-mono-4.0" description="Runs log4net tests on Mono Framework 4.0 version" depends="-compile-mono-4.0,-runtests"/>
+
     <target name="runtests-net-3.5" description="Runs log4net tests on .NET Framework 3.5 version" depends="-compile-net-3.5,-runtests"/>
 
     <target name="runtests-net-3.5-cp" description="Runs log4net tests on .NET Framework 3.5 Client Profile version" depends="-compile-net-3.5-cp,-runtests"/>
@@ -89,6 +93,8 @@ limitations under the License.
     <target name="runtests-net-4.0" description="Runs log4net tests on .NET Framework 4.0 version" depends="-compile-net-4.0,-runtests"/>
 
     <target name="runtests-net-4.0-cp" description="Runs log4net tests on .NET Framework 4.0 Client Profile version" depends="-compile-net-4.0-cp,-runtests"/>
+
+    <target name="runtests-net-4.5" description="Runs log4net tests on .NET Framework 4.5 version" depends="-compile-net-4.5,-runtests"/>
 
     <target name="-runtests">
         <nunit2>
