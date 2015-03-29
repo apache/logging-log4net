@@ -1434,7 +1434,7 @@ namespace log4net.Tests.Appender
 			Repository.Hierarchy.Hierarchy h = (Repository.Hierarchy.Hierarchy)LogManager.GetRepository("TestRepository");
 			h.ResetConfiguration();
 			//Replace the repository selector so that we can recreate the hierarchy with the same name if necessary
-			LoggerManager.RepositorySelector = new DefaultRepositorySelector(SystemInfo.GetTypeFromString("log4net.Repository.Hierarchy.Hierarchy", true, true));
+			LoggerManager.RepositorySelector = new DefaultRepositorySelector(typeof(log4net.Repository.Hierarchy.Hierarchy));
 		}
 
 		private static void AssertFileEquals(string filename, string contents)
@@ -1530,7 +1530,11 @@ namespace log4net.Tests.Appender
 			}
 			catch(IOException e1)
 			{
+#if NET
 				Assert.AreEqual("The process cannot access the file ", e1.Message.Substring(0, 35), "Unexpected exception");
+#else
+				Assert.AreEqual("Sharing violation on path ", e1.Message.Substring(0, 26), "Unexpected exception");
+#endif
 				locked = true;
 			}
 
@@ -1538,7 +1542,7 @@ namespace log4net.Tests.Appender
 			DestroyLogger();
 
 			Assert.IsTrue(locked, "File was not locked");
-#if !MONO // at least on Linux with Mono 2.4 exclusive locking doesn't work as one would expect
+#if !MONO || !FRAMEWORK_3_5_OR_ABOVE // at least on Linux with Mono 2.4 exclusive locking doesn't work as one would expect
 			AssertFileEquals(filename, "This is a message" + Environment.NewLine + "This is a message 2" + Environment.NewLine);
 #endif
 			Assert.AreEqual("", sh.Message, "Unexpected error message");
@@ -1698,7 +1702,7 @@ namespace log4net.Tests.Appender
 			Assert.AreEqual(1, appenders.Length, "The wrong number of appenders are configured");
 
 			RollingFileAppender rfa = (RollingFileAppender)(appenders[0]);
-			Assert.AreEqual(SystemInfo.GetTypeFromString("log4net.Appender.FileAppender+ExclusiveLock", true, true), rfa.LockingModel.GetType(), "The LockingModel is of an unexpected type");
+			Assert.AreEqual(typeof(log4net.Appender.FileAppender.ExclusiveLock), rfa.LockingModel.GetType(), "The LockingModel is of an unexpected type");
 
 			DestroyLogger();
 		}

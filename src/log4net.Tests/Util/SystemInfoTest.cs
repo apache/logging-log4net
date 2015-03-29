@@ -117,7 +117,9 @@ namespace log4net.Tests.Util
 			Type t;
 
 			t = SystemInfo.GetTypeFromString("log4net.Util.SystemInfo", false, false);
-			Assert.AreSame(typeof(SystemInfo), t, "Test explicit case sensitive type load");
+			Assert.AreSame(typeof(SystemInfo), t,
+                                       string.Format("Test explicit case sensitive type load found {0} rather than {1}",
+                                                     t.AssemblyQualifiedName, typeof(SystemInfo).AssemblyQualifiedName));
 
 			t = SystemInfo.GetTypeFromString("LOG4NET.UTIL.SYSTEMINFO", false, true);
 			Assert.AreSame(typeof(SystemInfo), t, "Test explicit case in-sensitive type load caps");
