@@ -92,6 +92,22 @@ limitations under the License.
     <if test="${not framework::exists('mono-2.0')}">
       <echo message="Mono 2.0 runtime is not available." />
     </if>
+    <!-- Mono 3.5 -->
+    <if test="${framework::exists('mono-3.5')}">
+      <property name="nant.settings.currentframework" value="mono-3.5" />
+      <call target="display-target-framework" />
+    </if>
+    <if test="${not framework::exists('mono-3.5')}">
+      <echo message="Mono 3.5 runtime is not available." />
+    </if>
+    <!-- Mono 4.0 -->
+    <if test="${framework::exists('mono-4.0')}">
+      <property name="nant.settings.currentframework" value="mono-4.0" />
+      <call target="display-target-framework" />
+    </if>
+    <if test="${not framework::exists('mono-4.0')}">
+      <echo message="Mono 4.0 runtime is not available." />
+    </if>
     <!-- HTML Help Compiler -->
     <echo message="htmlhelp.compiler: ${htmlhelp.compiler}" />
   </target>
@@ -173,11 +189,24 @@ limitations under the License.
     <call target="-compile-or-fail"/>
     <if test="${framework::exists('net-4.0')}">
       <call target="compile-net-4.0-cp" />
+      <property name="required.target.name" value=".NET Framework 4.5"/>
+      <property name="required.target.dir" value="net/4.5"/>
+      <call target="compile-net-4.5" />
     </if>
     <!-- MONO_2_0 -->
     <property name="required.target" value="mono-2.0"/>
     <property name="required.target.name" value="Mono 2.0"/>
     <property name="required.target.dir" value="mono/2.0"/>
+    <call target="-compile-or-fail"/>
+    <!-- MONO_3_5 -->
+    <property name="required.target" value="mono-3.5"/>
+    <property name="required.target.name" value="Mono 3.5"/>
+    <property name="required.target.dir" value="mono/3.5"/>
+    <call target="-compile-or-fail"/>
+    <!-- MONO_4_0 -->
+    <property name="required.target" value="mono-4.0"/>
+    <property name="required.target.name" value="Mono 4.0"/>
+    <property name="required.target.dir" value="mono/4.0"/>
     <call target="-compile-or-fail"/>
   </target>
 
@@ -205,7 +234,10 @@ limitations under the License.
   <target name="compile-net-3.5-cp" description="Builds .NET Framework 3.5 Client Profile version" depends="set-net-3.5-cp-runtime-configuration,-compile-specific-build"/>
   <target name="compile-net-4.0" description="Builds .NET Framework 4.0 version" depends="set-net-4.0-runtime-configuration,-compile-specific-build"/>
   <target name="compile-net-4.0-cp" description="Builds .NET Framework 4.0 Client Profile version" depends="set-net-4.0-cp-runtime-configuration,-compile-specific-build"/>
+  <target name="compile-net-4.5" description="Builds .NET Framework 4.5 version" depends="set-net-4.5-runtime-configuration,-compile-specific-build"/>
   <target name="compile-mono-2.0" description="Builds Mono 2.0 version" depends="set-mono-2.0-runtime-configuration,-compile-specific-build"/>
+  <target name="compile-mono-3.5" description="Builds Mono 3.5 version" depends="set-mono-3.5-runtime-configuration,-compile-specific-build"/>
+  <target name="compile-mono-4.0" description="Builds Mono 4.0 version" depends="set-mono-4.0-runtime-configuration,-compile-specific-build"/>
 
   <target name="-compile-specific-build" depends="check-log4net-basedir, clean-current-bin-dir">
     <property name="current.sources" value="log4net"/>

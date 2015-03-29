@@ -91,6 +91,20 @@ limitations under the License.
       <property name="can.compile.vb" value="true"/>
       <call target="-set-framework-configuration"/>
     </target>
+    <!-- uses NET_4_0 plus FRAMEWORK_4_5_OR_ABOVE defines -->
+    <target name="set-net-4.5-runtime-configuration">
+      <property name="nant.settings.currentframework" value="net-4.0" />
+      <property name="current.build.platform" value="DOTNET"/>
+      <property name="current.build.api" value=",FRAMEWORK_3_5_OR_ABOVE,FRAMEWORK_4_0_OR_ABOVE,FRAMEWORK_4_5_OR_ABOVE"/>
+      <property name="current.build.api.true" value=",FRAMEWORK_3_5_OR_ABOVE=True,FRAMEWORK_4_0_OR_ABOVE=True,FRAMEWORK_4_5_OR_ABOVE=True"/>
+      <property name="current.build.api.slash_d" value=" /D FRAMEWORK_3_5_OR_ABOVE /D FRAMEWORK_4_0_OR_ABOVE /D FRAMEWORK_4_0_OR_ABOVE"/>
+      <property name="current.build.has.systemcore" value="true"/>
+      <property name="current.build.has.systemweb" value="true"/>
+      <property name="current.build.has.systemconfiguration" value="true"/>
+      <property name="can.compile.js" value="true"/>
+      <property name="can.compile.vb" value="true"/>
+      <call target="-set-framework-configuration"/>
+    </target>
     <target name="set-netcf-2.0-runtime-configuration">
       <property name="nant.settings.currentframework" value="netcf-2.0" />
       <property name="current.build.platform" value="NETCF"/>
@@ -111,6 +125,32 @@ limitations under the License.
       <property name="current.build.api.true" value=""/>
       <property name="current.build.api.slash_d" value=""/>
       <property name="current.build.has.systemcore" value="false"/>
+      <property name="current.build.has.systemweb" value="true"/>
+      <property name="current.build.has.systemconfiguration" value="true"/>
+      <property name="can.compile.js" value="false"/>
+      <property name="can.compile.vb" value="false"/>
+      <call target="-set-framework-configuration"/>
+    </target>
+    <target name="set-mono-3.5-runtime-configuration">
+      <property name="nant.settings.currentframework" value="mono-3.5" />
+      <property name="current.build.platform" value="MONO"/>
+      <property name="current.build.api" value=",FRAMEWORK_3_5_OR_ABOVE"/>
+      <property name="current.build.api.true" value=",FRAMEWORK_3_5_OR_ABOVE=True"/>
+      <property name="current.build.api.slash_d" value=" /D FRAMEWORK_3_5_OR_ABOVE"/>
+      <property name="current.build.has.systemcore" value="true"/>
+      <property name="current.build.has.systemweb" value="true"/>
+      <property name="current.build.has.systemconfiguration" value="true"/>
+      <property name="can.compile.js" value="false"/>
+      <property name="can.compile.vb" value="false"/>
+      <call target="-set-framework-configuration"/>
+    </target>
+    <target name="set-mono-4.0-runtime-configuration">
+      <property name="nant.settings.currentframework" value="mono-4.0" />
+      <property name="current.build.platform" value="MONO"/>
+      <property name="current.build.api" value=",FRAMEWORK_3_5_OR_ABOVE,FRAMEWORK_4_0_OR_ABOVE"/>
+      <property name="current.build.api.true" value=",FRAMEWORK_3_5_OR_ABOVE=True,FRAMEWORK_4_0_OR_ABOVE=True"/>
+      <property name="current.build.api.slash_d" value=" /D FRAMEWORK_3_5_OR_ABOVE /D FRAMEWORK_4_0_OR_ABOVE"/>
+      <property name="current.build.has.systemcore" value="true"/>
       <property name="current.build.has.systemweb" value="true"/>
       <property name="current.build.has.systemconfiguration" value="true"/>
       <property name="can.compile.js" value="false"/>
