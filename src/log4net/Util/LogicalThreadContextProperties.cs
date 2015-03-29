@@ -100,10 +100,10 @@ namespace log4net.Util
 			set 
 			{
 				// Force the dictionary to be created
-				var props = GetProperties(true);
+				PropertiesDictionary props = GetProperties(true);
 				// Reason for cloning the dictionary below: object instances set on the CallContext
 				// need to be immutable to correctly flow through async/await
-				var immutableProps = new PropertiesDictionary(props);
+				PropertiesDictionary immutableProps = new PropertiesDictionary(props);
 				immutableProps[key] = value;
 				SetCallContextData(immutableProps);
 			}
@@ -127,7 +127,7 @@ namespace log4net.Util
 			PropertiesDictionary dictionary = GetProperties(false);
 			if (dictionary != null)
 			{
-				var immutableProps = new PropertiesDictionary(dictionary);
+				PropertiesDictionary immutableProps = new PropertiesDictionary(dictionary);
 				immutableProps.Remove(key);
 				SetCallContextData(immutableProps);
 			}
@@ -146,7 +146,7 @@ namespace log4net.Util
 			PropertiesDictionary dictionary = GetProperties(false);
 			if (dictionary != null)
 			{
-				var immutableProps = new PropertiesDictionary();
+				PropertiesDictionary immutableProps = new PropertiesDictionary();
 				SetCallContextData(immutableProps);
 			}
 		}
