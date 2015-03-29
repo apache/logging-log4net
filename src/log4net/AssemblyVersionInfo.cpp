@@ -43,5 +43,5 @@ using namespace System::Runtime::CompilerServices;
 //
 
 [assembly: AssemblyCompany("The Apache Software Foundation")];
-[assembly: AssemblyCopyright("Copyright 2004-2013 The Apache Software Foundation.")];
+[assembly: AssemblyCopyright("Copyright 2004-2015 The Apache Software Foundation.")];
 [assembly: AssemblyTrademark("Apache and Apache log4net are trademarks of The Apache Software Foundation")];
