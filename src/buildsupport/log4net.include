@@ -69,7 +69,7 @@ limitations under the License.
         <call target="-set-build-configuration-flags" />
     </target>
     <target name="set-release-build-configuration">
-        <property name="build.debug" value="false" />
+        <property name="build.debug" value="PdbOnly" />
         <property name="build.defines.csc" value="TRACE,STRONG" />
         <!-- FIXME: generate them from build.defines.csc -->
         <property name="build.defines.vbc" value="TRACE=True,STRONG=True" />
