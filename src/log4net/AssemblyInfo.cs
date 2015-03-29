@@ -69,7 +69,13 @@ using System.Runtime.CompilerServices;
 #elif NETCF
 [assembly: AssemblyTitle("Apache log4net for .NET Compact Framework 2.0")]
 #elif MONO
+#if FRAMEWORK_4_0_OR_ABOVE
+[assembly: AssemblyTitle("Apache log4net for Mono 4.0")]
+#elif FRAMEWORK_3_5_OR_ABOVE
+[assembly: AssemblyTitle("Apache log4net for Mono 3.5")]
+#else
 [assembly: AssemblyTitle("Apache log4net for Mono 2.0")]
+#endif // Mono subversions
 #endif
 
 #if DEBUG

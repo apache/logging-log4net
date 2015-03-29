@@ -347,10 +347,11 @@ namespace log4net.Tests.Layout
             bar(42);
 
             var log = stringAppender.GetString();
-            var startOfExceptionElement = log.IndexOf("<exception>");
-            var sub = log.Substring(startOfExceptionElement + 11);
-            StringAssert.StartsWith("System.NullReferenceException: Object reference not set to an instance of an object", sub);
-            StringAssert.Contains("at log4net.Tests.Layout.XmlLayoutTest.&lt;&gt;c__DisplayClass4.&lt;BracketsInStackTracesAreEscapedProperly&gt;b__3(Int32 foo)", sub);
+            var startOfExceptionText = log.IndexOf("<exception>", StringComparison.InvariantCulture) + 11;
+            var endOfExceptionText = log.IndexOf("</exception>", StringComparison.InvariantCulture);
+            var sub = log.Substring(startOfExceptionText, endOfExceptionText - startOfExceptionText);
+            StringAssert.DoesNotContain("<", sub);
+            StringAssert.DoesNotContain(">", sub);
         }
 #endif
 	}
