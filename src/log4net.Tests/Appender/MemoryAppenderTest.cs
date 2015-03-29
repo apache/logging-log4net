@@ -21,16 +21,16 @@
 
 #if FRAMEWORK_3_5_OR_ABOVE
 
+using System;
 using System.Linq;
 using System.Threading;
 using NUnit.Framework;
 using log4net;
 using log4net.Appender;
+using log4net.Config;
 using log4net.Core;
 using log4net.Layout;
-using log4net.Repository.Hierarchy;
-
-using Hier = log4net.Repository.Hierarchy.Hierarchy;
+using log4net.Repository;
 
 namespace log4net.Tests.Appender
 {
@@ -45,18 +45,16 @@ namespace log4net.Tests.Appender
         [Test]
         public void TestThreadSafety()
         {
-            var hierarchy = (Hier)LogManager.GetRepository();
+            ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
             var memoryAppender = new MemoryAppender();
             var patternLayout = new PatternLayout();
             memoryAppender.Layout = patternLayout;
             memoryAppender.ActivateOptions();
-            hierarchy.Root.AddAppender(memoryAppender);
-            hierarchy.Root.Level = Level.All;
-            hierarchy.Configured = true;
+            BasicConfigurator.Configure(rep, memoryAppender);
 
             cThreadsRunning = cThreadsMax;
             var threads = Enumerable.Range(0, cThreadsMax)
-                .Select(i => new Thread(LogMessages))
+                .Select(i => new Thread(LogMessages(rep.Name)))
                 .ToList();
 
             foreach (var thread in threads)
@@ -74,18 +72,21 @@ namespace log4net.Tests.Appender
             {
                 thread.Join();
             }
+	    cEventsRead += memoryAppender.PopAllEvents().Length;
             Assert.AreEqual(cEventsExpected, cEventsRead, "Log events were lost.");
         }
 
-        private static void LogMessages()
+        private static ThreadStart LogMessages(string repository)
         {
-            var logger = LogManager.GetLogger("LoggerThread");
-            for (var i = 0; i < cLogEntriesPerThread; i++)
-            {
-                logger.InfoFormat("Logging message {0}", i);
-            }
-            Interlocked.Decrement(ref cThreadsRunning);
-        }
+	    return () => {
+		var logger = LogManager.GetLogger(repository, "LoggerThread");
+		for (var i = 0; i < cLogEntriesPerThread; i++)
+		{
+		    logger.InfoFormat("Logging message {0}", i);
+		}
+		Interlocked.Decrement(ref cThreadsRunning);
+	    };
+	}
     }
 }
 #endif
