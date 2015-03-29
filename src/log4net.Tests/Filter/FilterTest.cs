@@ -42,7 +42,7 @@ namespace log4net.Tests.Filter
             #region Load log4netConfig
             log4netConfig.LoadXml(@"
             <log4net>
-            <appender name=""MemoryAppender"" type=""log4net.Appender.MemoryAppender, log4net"">
+            <appender name=""MemoryAppender"" type=""log4net.Appender.MemoryAppender, log4net-1.3"">
                 <filter type=""log4net.Tests.Filter.MultiplePropertyFilter, log4net.Tests"">
                     <condition>
                         <key value=""ABC"" />
@@ -65,7 +65,7 @@ namespace log4net.Tests.Filter
             XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
 
             IAppender[] appenders = LogManager.GetRepository(rep.Name).GetAppenders();
-            Assert.IsTrue(appenders.Length == 1);
+            Assert.AreEqual(1, appenders.Length);
 
             IAppender appender = Array.Find(appenders, delegate(IAppender a) {
                     return a.Name == "MemoryAppender";
