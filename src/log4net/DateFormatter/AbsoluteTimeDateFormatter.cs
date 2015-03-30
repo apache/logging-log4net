@@ -132,21 +132,21 @@ namespace log4net.DateFormatter
                             s_lastTimeStrings[GetType()] = timeString;
                             s_lastTimeToTheSecond = currentTimeToTheSecond;
                         }
-                    }
-                    writer.Write(timeString);
+                        writer.Write(timeString);
 	
-                    // Append the current millisecond info
-                    writer.Write(',');
-                    int millis = dateToFormat.Millisecond;
-                    if (millis < 100) 
-                    {
-                        writer.Write('0');
+                        // Append the current millisecond info
+                        writer.Write(',');
+                        int millis = dateToFormat.Millisecond;
+                        if (millis < 100) 
+                        {
+                            writer.Write('0');
+                        }
+                        if (millis < 10) 
+                        {
+                            writer.Write('0');
+                        }
+                        writer.Write(millis);
                     }
-                    if (millis < 10) 
-                    {
-                        writer.Write('0');
-                    }
-                    writer.Write(millis);
 		}
 
 		#endregion Implementation of IDateFormatter
