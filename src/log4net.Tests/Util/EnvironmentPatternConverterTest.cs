@@ -37,7 +37,7 @@ namespace log4net.Tests.Util
         const string USER_LEVEL_VALUE = "UserLevelEnvironmentValue";
         const string PROCESS_LEVEL_VALUE = "ProcessLevelEnvironmentValue";
 
-        [Test]
+        [Test][Platform("Win")]
         public void SystemLevelEnvironmentVariable()
         {
             EnvironmentPatternConverter converter = new EnvironmentPatternConverter();
@@ -65,7 +65,7 @@ namespace log4net.Tests.Util
 	    }
 	}
 
-        [Test]
+        [Test][Platform("Win")]
         public void UserLevelEnvironmentVariable()
         {
             EnvironmentPatternConverter converter = new EnvironmentPatternConverter();
