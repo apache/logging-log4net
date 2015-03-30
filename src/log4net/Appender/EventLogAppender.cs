@@ -98,22 +98,6 @@ namespace log4net.Appender
 			m_machineName		= ".";	// Only log on the local machine
 		}
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="EventLogAppender" /> class
-		/// with the specified <see cref="ILayout" />.
-		/// </summary>
-		/// <param name="layout">The <see cref="ILayout" /> to use with this appender.</param>
-		/// <remarks>
-		/// <para>
-		/// Obsolete constructor.
-		/// </para>
-		/// </remarks>
-		[Obsolete("Instead use the default constructor and set the Layout property")]
-		public EventLogAppender(ILayout layout) : this()
-		{
-			Layout = layout;
-		}
-
 		#endregion // Public Instance Constructors
 
 		#region Public Instance Properties

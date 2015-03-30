@@ -40,7 +40,6 @@ namespace log4net.Filter
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
-	/*[Obsolete("MdcFilter has been replaced by PropertyFilter")]*/
 	public class MdcFilter : PropertyFilter
 	{
 	}

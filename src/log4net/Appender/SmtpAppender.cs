@@ -174,24 +174,6 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
-		/// Obsolete
-		/// </summary>
-		/// <remarks>
-		/// Use the BufferingAppenderSkeleton Fix methods instead 
-		/// </remarks>
-		/// <remarks>
-		/// <para>
-		/// Obsolete property.
-		/// </para>
-		/// </remarks>
-		[Obsolete("Use the BufferingAppenderSkeleton Fix methods")]
-		public bool LocationInfo
-		{
-			get { return false; }
-			set { ; }
-		}
-
-		/// <summary>
 		/// The mode to use to authentication with the SMTP server
 		/// </summary>
 		/// <remarks>

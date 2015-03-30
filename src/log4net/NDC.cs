@@ -61,7 +61,6 @@ namespace log4net
 	/// <threadsafety static="true" instance="true" />
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
-	/*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
 	public sealed class NDC
 	{
 		#region Private Instance Constructors
@@ -100,7 +99,6 @@ namespace log4net
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="SetMaxDepth"/>
-		/*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
 		public static int Depth
 		{
 			get { return ThreadContext.Stacks["NDC"].Count; }
@@ -124,7 +122,6 @@ namespace log4net
 		/// Clears the stack of NDC data held on the current thread.
 		/// </para>
 		/// </remarks>
-		/*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
 		public static void Clear() 
 		{
 			ThreadContext.Stacks["NDC"].Clear();
@@ -147,7 +144,6 @@ namespace log4net
 		/// parent thread.
 		/// </para>
 		/// </remarks>
-		/*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
 		public static Stack CloneStack() 
 		{
 			return ThreadContext.Stacks["NDC"].InternalStack;
@@ -174,7 +170,6 @@ namespace log4net
 		/// this method.
 		/// </para>
 		/// </remarks>
-		/*[Obsolete("NDC has been replaced by ThreadContext.Stacks", true)]*/
 		public static void Inherit(Stack stack) 
 		{
 			ThreadContext.Stacks["NDC"].InternalStack = stack;
@@ -200,7 +195,6 @@ namespace log4net
 		/// empty string (not <c>null</c>) is returned.
 		/// </para>
 		/// </remarks>
-		/*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
 		public static string Pop() 
 		{
 			return ThreadContext.Stacks["NDC"].Pop();
@@ -236,7 +230,6 @@ namespace log4net
 		///	}
 		/// </code>
 		/// </example>
-		/*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
 		public static IDisposable Push(string message) 
 		{
 			return ThreadContext.Stacks["NDC"].Push(message);
@@ -257,7 +250,6 @@ namespace log4net
 		/// This method is not implemented.
 		/// </para>
 		/// </remarks>
-		/*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
 		public static void Remove() 
 		{
 		}
@@ -281,7 +273,6 @@ namespace log4net
 		/// call. This can be used to return to a known context depth.
 		/// </para>
 		/// </remarks>
-		/*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
 		public static void SetMaxDepth(int maxDepth) 
 		{
 			if (maxDepth >= 0)

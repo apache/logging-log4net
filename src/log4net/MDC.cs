@@ -47,7 +47,6 @@ namespace log4net
 	/// <threadsafety static="true" instance="true" />
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
-	/*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
 	public sealed class MDC
 	{
 		#region Private Instance Constructors
@@ -83,7 +82,6 @@ namespace log4net
 		/// previously defined context then <c>null</c> will be returned.
 		/// </para>
 		/// </remarks>
-		/*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
 		public static string Get(string key)
 		{
 			object obj = ThreadContext.Properties[key];
@@ -117,7 +115,6 @@ namespace log4net
 		/// is specified as <c>null</c> then the key value mapping will be removed.
 		/// </para>
 		/// </remarks>
-		/*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
 		public static void Set(string key, string value)
 		{
 			ThreadContext.Properties[key] = value;
@@ -138,7 +135,6 @@ namespace log4net
 		/// Remove the specified entry from this thread's MDC
 		/// </para>
 		/// </remarks>
-		/*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
 		public static void Remove(string key)
 		{
 			ThreadContext.Properties.Remove(key);
@@ -158,7 +154,6 @@ namespace log4net
 		/// Remove all the entries from this thread's MDC
 		/// </para>
 		/// </remarks>
-		/*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
 		public static void Clear()
 		{
 			ThreadContext.Properties.Clear();

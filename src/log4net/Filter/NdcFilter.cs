@@ -41,7 +41,6 @@ namespace log4net.Filter
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
-	/*[Obsolete("NdcFilter has been replaced by PropertyFilter")]*/
 	public class NdcFilter : PropertyFilter
 	{
 		/// <summary>

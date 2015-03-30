@@ -444,57 +444,6 @@ namespace log4net
 			LoggerManager.ResetConfiguration(repositoryAssembly);
 		}
 
-		/// <overloads>Get the logger repository.</overloads>
-		/// <summary>
-		/// Returns the default <see cref="ILoggerRepository"/> instance.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// Gets the <see cref="ILoggerRepository"/> for the repository specified
-		/// by the callers assembly (<see cref="M:Assembly.GetCallingAssembly()"/>).
-		/// </para>
-		/// </remarks>
-		/// <returns>The <see cref="ILoggerRepository"/> instance for the default repository.</returns>
-		[Obsolete("Use GetRepository instead of GetLoggerRepository")]
-		public static ILoggerRepository GetLoggerRepository()
-		{
-			return GetRepository(Assembly.GetCallingAssembly());
-		}
-
-		/// <summary>
-		/// Returns the default <see cref="ILoggerRepository"/> instance.
-		/// </summary>
-		/// <returns>The default <see cref="ILoggerRepository"/> instance.</returns>
-		/// <remarks>
-		/// <para>
-		/// Gets the <see cref="ILoggerRepository"/> for the repository specified
-		/// by the <paramref name="repository"/> argument.
-		/// </para>
-		/// </remarks>
-		/// <param name="repository">The repository to lookup in.</param>
-		[Obsolete("Use GetRepository instead of GetLoggerRepository")]
-		public static ILoggerRepository GetLoggerRepository(string repository)
-		{
-			return GetRepository(repository);
-		}
-
-		/// <summary>
-		/// Returns the default <see cref="ILoggerRepository"/> instance.
-		/// </summary>
-		/// <returns>The default <see cref="ILoggerRepository"/> instance.</returns>
-		/// <remarks>
-		/// <para>
-		/// Gets the <see cref="ILoggerRepository"/> for the repository specified
-		/// by the <paramref name="repositoryAssembly"/> argument.
-		/// </para>
-		/// </remarks>
-		/// <param name="repositoryAssembly">The assembly to use to lookup the repository.</param>
-		[Obsolete("Use GetRepository instead of GetLoggerRepository")]
-		public static ILoggerRepository GetLoggerRepository(Assembly repositoryAssembly)
-		{
-			return GetRepository(repositoryAssembly);
-		}
-
 		/// <overloads>Get a logger repository.</overloads>
 		/// <summary>
 		/// Returns the default <see cref="ILoggerRepository"/> instance.
@@ -543,30 +492,6 @@ namespace log4net
 			return LoggerManager.GetRepository(repositoryAssembly);
 		}
 
-		/// <overloads>Create a domain</overloads>
-		/// <summary>
-		/// Creates a repository with the specified repository type.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// <b>CreateDomain is obsolete. Use CreateRepository instead of CreateDomain.</b>
-		/// </para>
-		/// <para>
-		/// The <see cref="ILoggerRepository"/> created will be associated with the repository
-		/// specified such that a call to <see cref="M:GetRepository()"/> will return 
-		/// the same repository instance.
-		/// </para>
-		/// </remarks>
-		/// <param name="repositoryType">A <see cref="Type"/> that implements <see cref="ILoggerRepository"/>
-		/// and has a no arg constructor. An instance of this type will be created to act
-		/// as the <see cref="ILoggerRepository"/> for the repository specified.</param>
-		/// <returns>The <see cref="ILoggerRepository"/> created for the repository.</returns>
-		[Obsolete("Use CreateRepository instead of CreateDomain")]
-		public static ILoggerRepository CreateDomain(Type repositoryType)
-		{
-			return CreateRepository(Assembly.GetCallingAssembly(), repositoryType);
-		}
-
 		/// <overloads>Create a logger repository.</overloads>
 		/// <summary>
 		/// Creates a repository with the specified repository type.
@@ -585,31 +510,6 @@ namespace log4net
 		public static ILoggerRepository CreateRepository(Type repositoryType)
 		{
 			return CreateRepository(Assembly.GetCallingAssembly(), repositoryType);
-		}
-
-		/// <summary>
-		/// Creates a repository with the specified name.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// <b>CreateDomain is obsolete. Use CreateRepository instead of CreateDomain.</b>
-		/// </para>
-		/// <para>
-		/// Creates the default type of <see cref="ILoggerRepository"/> which is a
-		/// <see cref="log4net.Repository.Hierarchy.Hierarchy"/> object.
-		/// </para>
-		/// <para>
-		/// The <paramref name="repository"/> name must be unique. Repositories cannot be redefined.
-		/// An <see cref="Exception"/> will be thrown if the repository already exists.
-		/// </para>
-		/// </remarks>
-		/// <param name="repository">The name of the repository, this must be unique amongst repositories.</param>
-		/// <returns>The <see cref="ILoggerRepository"/> created for the repository.</returns>
-		/// <exception cref="LogException">The specified repository already exists.</exception>
-		[Obsolete("Use CreateRepository instead of CreateDomain")]
-		public static ILoggerRepository CreateDomain(string repository)
-		{
-			return LoggerManager.CreateRepository(repository);
 		}
 
 		/// <summary>
@@ -638,30 +538,6 @@ namespace log4net
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// <b>CreateDomain is obsolete. Use CreateRepository instead of CreateDomain.</b>
-		/// </para>
-		/// <para>
-		/// The <paramref name="repository"/> name must be unique. Repositories cannot be redefined.
-		/// An <see cref="Exception"/> will be thrown if the repository already exists.
-		/// </para>
-		/// </remarks>
-		/// <param name="repository">The name of the repository, this must be unique to the repository.</param>
-		/// <param name="repositoryType">A <see cref="Type"/> that implements <see cref="ILoggerRepository"/>
-		/// and has a no arg constructor. An instance of this type will be created to act
-		/// as the <see cref="ILoggerRepository"/> for the repository specified.</param>
-		/// <returns>The <see cref="ILoggerRepository"/> created for the repository.</returns>
-		/// <exception cref="LogException">The specified repository already exists.</exception>
-		[Obsolete("Use CreateRepository instead of CreateDomain")]
-		public static ILoggerRepository CreateDomain(string repository, Type repositoryType)
-		{
-			return LoggerManager.CreateRepository(repository, repositoryType);
-		}
-
-		/// <summary>
-		/// Creates a repository with the specified name and repository type.
-		/// </summary>
-		/// <remarks>
-		/// <para>
 		/// The <paramref name="repository"/> name must be unique. Repositories cannot be redefined.
 		/// An <see cref="Exception"/> will be thrown if the repository already exists.
 		/// </para>
@@ -675,30 +551,6 @@ namespace log4net
 		public static ILoggerRepository CreateRepository(string repository, Type repositoryType)
 		{
 			return LoggerManager.CreateRepository(repository, repositoryType);
-		}
-
-		/// <summary>
-		/// Creates a repository for the specified assembly and repository type.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// <b>CreateDomain is obsolete. Use CreateRepository instead of CreateDomain.</b>
-		/// </para>
-		/// <para>
-		/// The <see cref="ILoggerRepository"/> created will be associated with the repository
-		/// specified such that a call to <see cref="M:GetRepository(Assembly)"/> with the
-		/// same assembly specified will return the same repository instance.
-		/// </para>
-		/// </remarks>
-		/// <param name="repositoryAssembly">The assembly to use to get the name of the repository.</param>
-		/// <param name="repositoryType">A <see cref="Type"/> that implements <see cref="ILoggerRepository"/>
-		/// and has a no arg constructor. An instance of this type will be created to act
-		/// as the <see cref="ILoggerRepository"/> for the repository specified.</param>
-		/// <returns>The <see cref="ILoggerRepository"/> created for the repository.</returns>
-		[Obsolete("Use CreateRepository instead of CreateDomain")]
-		public static ILoggerRepository CreateDomain(Assembly repositoryAssembly, Type repositoryType)
-		{
-			return LoggerManager.CreateRepository(repositoryAssembly, repositoryType);
 		}
 
 		/// <summary>

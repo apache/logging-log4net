@@ -56,22 +56,6 @@ namespace log4net.Appender
 		{
 		}
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DebugAppender" /> 
-		/// with a specified layout.
-		/// </summary>
-		/// <param name="layout">The layout to use with this appender.</param>
-		/// <remarks>
-		/// <para>
-		/// Obsolete constructor.
-		/// </para>
-		/// </remarks>
-		[System.Obsolete("Instead use the default constructor and set the Layout property")]
-		public DebugAppender(ILayout layout)
-		{
-			Layout = layout;
-		}
-
 		#endregion Public Instance Constructors
 
 		#region Public Instance Properties
