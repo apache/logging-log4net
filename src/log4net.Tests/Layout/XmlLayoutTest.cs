@@ -350,8 +350,15 @@ namespace log4net.Tests.Layout
             var startOfExceptionText = log.IndexOf("<exception>", StringComparison.InvariantCulture) + 11;
             var endOfExceptionText = log.IndexOf("</exception>", StringComparison.InvariantCulture);
             var sub = log.Substring(startOfExceptionText, endOfExceptionText - startOfExceptionText);
-            StringAssert.DoesNotContain("<", sub);
-            StringAssert.DoesNotContain(">", sub);
+            if (sub.StartsWith("<![CDATA["))
+            {
+                StringAssert.EndsWith("]]>", sub);
+            }
+            else
+            {
+                StringAssert.DoesNotContain("<", sub);
+                StringAssert.DoesNotContain(">", sub);
+            }
         }
 #endif
 	}
