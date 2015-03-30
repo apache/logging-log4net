@@ -261,14 +261,6 @@ limitations under the License.
                 <p><a href="#top">Back to Top</a></p>
                 
 
-                <section id="bug-fixes" name="How fast do bugs in log4net get fixed?">
-                    <p>
-                        As fast as they get reported ;-)
-                    </p>
-                </section>
-                <p><a href="#top">Back to Top</a></p>
-
-
                 <section id="history" name="What is the history of log4net?">
                     <p>
                         log4net is a port of the popular <a href="http://logging.apache.org/log4j/">Apache log4j&#x2122;</a> logging library.
@@ -1170,6 +1162,58 @@ if(!log4net.LogManager.GetRepository().Configured)
                 </section>
                 <p><a href="#top">Back to Top</a></p>
 
+                <section id="no-explicit-configuration"
+                         name="log4net doesn't log at all">
+                    <p>
+                      You may have overlooked initialization code for
+                      log4net in your application. log4net can be
+                      initialized explicitly by calling one of the
+                      configurators
+                      (e.g. <code>BasicConfigurator</code> or
+                      <code>XmlConfigurator</code> in the
+                      <code>log4net.Config</code> namespace, or
+                      implicitly by including the
+                      <code>[XmlConfiguratorAttribute]</code> in the
+                      assembly where log4net is first used.
+                    </p>
+
+                    <p>
+                      See <a href="manual/configuration.html">the
+                      manual</a> for more information.  If you use
+                      attributes to configure log4net then the order
+                      by which assemblies are loaded may determine
+                      whether you attributes are used or not.
+                      Assembly load order may be different in DEBUG
+                      and RELEASE mode.  See also <a
+                      href="#log-early">log4net doesn't log when built
+                      in RELEASE mode</a>.
+                    </p>
+
+                </section>
+                <p><a href="#top">Back to Top</a></p>
+
+                <section id="adonet-doesnt-reconnect"
+                         name="The ADO.NET Appender doesn't reconnect
+                               after a DB failure on .NET 4.5.1">
+                  <p>
+                    Starting with .NET 4.5.1 ADO.NET has added
+                    connection resiliency which is supposed to
+                    re-establish the connection as part if the
+                    framework.  As a result log4net doesn't know the
+                    connection is broken and will never attempt to
+                    re-establish the connection.
+                  </p>
+                  <p>
+                    Unfortunately re-connecting doesn't seem to be
+                    working reliably.  A workaround may be to add
+                    <code>ConnectRetryCount=0</code> to your
+                    connection string.
+                  </p>
+                  <p>
+                      For details see <a
+                      href="https://issues.apache.org/jira/browse/LOG4NET-442">LOG4NET-442</a>
+                    </p>
+                </section>
             </section>
             
             <section id="misc" name="Miscellaneous">
