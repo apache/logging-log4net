@@ -17,7 +17,7 @@
 //
 #endregion
 
-// .NET Compact Framework has no support for System.Web.Mail
+// .NET Compact Framework has no support for System.Net.Mail
 #if !NETCF
 
 using System;
@@ -45,13 +45,6 @@ namespace log4net.Appender
 	/// cyclic buffer. This keeps memory requirements at a reasonable level while 
 	/// still delivering useful application context.
 	/// </para>
-	/// <note type="caution">
-	/// Authentication and setting the server Port are only available on the MS .NET 1.1 runtime.
-	/// For these features to be enabled you need to ensure that you are using a version of
-	/// the log4net assembly that is built against the MS .NET 1.1 framework and that you are
-	/// running the your application on the MS .NET 1.1 runtime. On all other platforms only sending
-	/// unauthenticated messages to a server listening on port 25 (the default) is supported.
-	/// </note>
 	/// <para>
 	/// Authentication is supported by setting the <see cref="Authentication"/> property to
 	/// either <see cref="SmtpAuthentication.Basic"/> or <see cref="SmtpAuthentication.Ntlm"/>.
@@ -85,24 +78,13 @@ namespace log4net.Appender
 		#region Public Instance Properties
 
 		/// <summary>
-		/// Gets or sets a comma- or semicolon-delimited list of recipient e-mail addresses (use semicolon on .NET 1.1 and comma for later versions).
+		/// Gets or sets a comma- or semicolon-delimited list of recipient e-mail addresses (comma is the preferred delimiter).
 		/// </summary>
 		/// <value>
-        /// <para>
-        /// For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
-        /// </para>
-        /// <para>
-        /// For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
-        /// </para>
+		/// <para>
+		/// A comma- or semicolon-delimited list of e-mail addresses.
+		/// </para>
 		/// </value>
-		/// <remarks>
-        /// <para>
-        /// For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
-        /// </para>
-        /// <para>
-        /// For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
-        /// </para>
-		/// </remarks>
 		public string To
 		{
 			get { return m_to; }
@@ -111,24 +93,13 @@ namespace log4net.Appender
 
         /// <summary>
         /// Gets or sets a comma- or semicolon-delimited list of recipient e-mail addresses 
-        /// that will be carbon copied (use semicolon on .NET 1.1 and comma for later versions).
+        /// that will be carbon copied (comma is the preferred delimiter).
         /// </summary>
         /// <value>
         /// <para>
-        /// For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
-        /// </para>
-        /// <para>
-        /// For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
-        /// </para>
+        /// A comma- or semicolon-delimited list of e-mail addresses.
+	/// </para>
         /// </value>
-        /// <remarks>
-        /// <para>
-        /// For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
-        /// </para>
-        /// <para>
-        /// For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
-        /// </para>
-        /// </remarks>
         public string Cc
         {
             get { return m_cc; }
@@ -140,13 +111,8 @@ namespace log4net.Appender
         /// that will be blind carbon copied.
         /// </summary>
         /// <value>
-        /// A semicolon-delimited list of e-mail addresses.
+        /// A comma- or semicolon-delimited list of e-mail addresses.
         /// </value>
-        /// <remarks>
-        /// <para>
-        /// A semicolon-delimited list of recipient e-mail addresses.
-        /// </para>
-        /// </remarks>
         public string Bcc
         {
             get { return m_bcc; }
@@ -229,7 +195,6 @@ namespace log4net.Appender
 		/// The mode to use to authentication with the SMTP server
 		/// </summary>
 		/// <remarks>
-		/// <note type="caution">Authentication is only available on the MS .NET 1.1 runtime.</note>
 		/// <para>
 		/// Valid Authentication mode values are: <see cref="SmtpAuthentication.None"/>, 
 		/// <see cref="SmtpAuthentication.Basic"/>, and <see cref="SmtpAuthentication.Ntlm"/>. 
@@ -250,7 +215,6 @@ namespace log4net.Appender
 		/// The username to use to authenticate with the SMTP server
 		/// </summary>
 		/// <remarks>
-		/// <note type="caution">Authentication is only available on the MS .NET 1.1 runtime.</note>
 		/// <para>
 		/// A <see cref="Username"/> and <see cref="Password"/> must be specified when 
 		/// <see cref="Authentication"/> is set to <see cref="SmtpAuthentication.Basic"/>, 
@@ -267,7 +231,6 @@ namespace log4net.Appender
 		/// The password to use to authenticate with the SMTP server
 		/// </summary>
 		/// <remarks>
-		/// <note type="caution">Authentication is only available on the MS .NET 1.1 runtime.</note>
 		/// <para>
 		/// A <see cref="Username"/> and <see cref="Password"/> must be specified when 
 		/// <see cref="Authentication"/> is set to <see cref="SmtpAuthentication.Basic"/>, 
@@ -284,11 +247,9 @@ namespace log4net.Appender
 		/// The port on which the SMTP server is listening
 		/// </summary>
 		/// <remarks>
-		/// <note type="caution">Server Port is only available on the MS .NET 1.1 runtime.</note>
 		/// <para>
 		/// The port on which the SMTP server is listening. The default
-		/// port is <c>25</c>. The Port can only be changed when running on
-		/// the MS .NET 1.1 runtime.
+		/// port is <c>25</c>.
 		/// </para>
 		/// </remarks>
 		public int Port
@@ -322,9 +283,6 @@ namespace log4net.Appender
         /// <summary>
         /// Enable or disable use of SSL when sending e-mail message
         /// </summary>
-        /// <remarks>
-        /// This is available on MS .NET 2.0 runtime and higher
-        /// </remarks>
         public bool EnableSsl
         {
             get { return m_enableSsl; }
@@ -334,9 +292,6 @@ namespace log4net.Appender
         /// <summary>
         /// Gets or sets the reply-to e-mail address.
         /// </summary>
-        /// <remarks>
-        /// This is available on MS .NET 2.0 runtime and higher
-        /// </remarks>
         public string ReplyTo
         {
             get { return m_replyTo; }
@@ -437,10 +392,6 @@ namespace log4net.Appender
 		/// <param name="messageBody">the body text to include in the mail</param>
 		virtual protected void SendEmail(string messageBody)
 		{
-			// .NET 2.0 has a new API for SMTP email System.Net.Mail
-			// This API supports credentials and multiple hosts correctly.
-			// The old API is deprecated.
-
 			// Create and configure the smtp client
 			SmtpClient smtpClient = new SmtpClient();
 			if (!String.IsNullOrEmpty(m_smtpHost))
@@ -490,8 +441,7 @@ namespace log4net.Appender
 				mailMessage.SubjectEncoding = m_subjectEncoding;
                 mailMessage.Priority = m_mailPriority;
 
-                // TODO: Consider using SendAsync to send the message without blocking. This would be a change in
-                // behaviour compared to .NET 1.x. We would need a SendCompletedCallback to log errors.
+                // TODO: Consider using SendAsync to send the message without blocking. We would need a SendCompletedCallback to log errors.
                 smtpClient.Send(mailMessage);
             }
 		}
