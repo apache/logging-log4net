@@ -18,7 +18,7 @@
 #endregion
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -101,12 +101,12 @@ namespace log4net.DateFormatter
 		/// </remarks>
 		virtual public void FormatDate(DateTime dateToFormat, TextWriter writer)
 		{
+                    string timeString = null;
                     lock (s_lastTimeStrings)
 		    {
 			// Calculate the current time precise only to the second
 			long currentTimeToTheSecond = (dateToFormat.Ticks - (dateToFormat.Ticks % TimeSpan.TicksPerSecond));
 
-                        string timeString = null;
 			// Compare this time with the stored last time
 			// If we are in the same second then append
 			// the previously calculated time string
@@ -116,51 +116,37 @@ namespace log4net.DateFormatter
                         }
                         else
                         {
-                            timeString = (string) s_lastTimeStrings[GetType()];
+                            s_lastTimeStrings.TryGetValue(GetType(), out timeString);
                         }
 
                         if (timeString == null)
                         {
-				// lock so that only one thread can use the buffer and
-				// update the s_lastTimeToTheSecond and s_lastTimeStrings
+                            StringBuilder sb = new StringBuilder();
+                            // Calculate the new string for this second
+                            FormatDateWithoutMillis(dateToFormat, sb);
 
-				// PERF: Try removing this lock and using a new StringBuilder each time
-				lock(s_lastTimeBuf)
-				{
-                                        timeString = (string) s_lastTimeStrings[GetType()];
+                            // Render the string buffer to a string
+                            timeString = sb.ToString();
 
-                                        if (timeString == null)
-                                        {
-						// We are in a new second.
-						s_lastTimeBuf.Length = 0;
-
-						// Calculate the new string for this second
-						FormatDateWithoutMillis(dateToFormat, s_lastTimeBuf);
-
-						// Render the string buffer to a string
-                                                timeString = s_lastTimeBuf.ToString();
-
-						// Store the time as a string (we only have to do this once per second)
-                                                s_lastTimeStrings[GetType()] = timeString;
-						s_lastTimeToTheSecond = currentTimeToTheSecond;
-					}
-				}
-			}
-			writer.Write(timeString);
-	
-			// Append the current millisecond info
-			writer.Write(',');
-			int millis = dateToFormat.Millisecond;
-			if (millis < 100) 
-			{
-				writer.Write('0');
-			}
-			if (millis < 10) 
-			{
-				writer.Write('0');
-			}
-			writer.Write(millis);
+                            // Store the time as a string (we only have to do this once per second)
+                            s_lastTimeStrings[GetType()] = timeString;
+                            s_lastTimeToTheSecond = currentTimeToTheSecond;
+                        }
                     }
+                    writer.Write(timeString);
+	
+                    // Append the current millisecond info
+                    writer.Write(',');
+                    int millis = dateToFormat.Millisecond;
+                    if (millis < 100) 
+                    {
+                        writer.Write('0');
+                    }
+                    if (millis < 10) 
+                    {
+                        writer.Write('0');
+                    }
+                    writer.Write(millis);
 		}
 
 		#endregion Implementation of IDateFormatter
@@ -195,13 +181,7 @@ namespace log4net.DateFormatter
 		/// Last stored time with precision up to the second, formatted
 		/// as a string.
 		/// </summary>
-		private static StringBuilder s_lastTimeBuf = new StringBuilder();
-
-		/// <summary>
-		/// Last stored time with precision up to the second, formatted
-		/// as a string.
-		/// </summary>
-		private static Hashtable s_lastTimeStrings = new Hashtable();
+		private static readonly IDictionary<Type, string> s_lastTimeStrings = new Dictionary<Type, string>();
 
 		#endregion Private Static Fields
 	}
