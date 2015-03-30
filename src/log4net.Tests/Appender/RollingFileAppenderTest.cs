@@ -1530,7 +1530,7 @@ namespace log4net.Tests.Appender
 			}
 			catch(IOException e1)
 			{
-#if NET
+#if DOTNET
 				Assert.AreEqual("The process cannot access the file ", e1.Message.Substring(0, 35), "Unexpected exception");
 #else
 				Assert.AreEqual("Sharing violation on path ", e1.Message.Substring(0, 26), "Unexpected exception");
