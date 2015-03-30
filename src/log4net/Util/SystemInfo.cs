@@ -686,17 +686,29 @@ namespace log4net.Util
 
 				if (loadedAssemblies != null)
 				{
+					Type fallback = null;
 					// Search the loaded assemblies for the type
 					foreach (Assembly assembly in loadedAssemblies) 
 					{
-						type = assembly.GetType(typeName, false, ignoreCase);
-						if (type != null)
+						Type t = assembly.GetType(typeName, false, ignoreCase);
+						if (t != null)
 						{
 							// Found type in loaded assembly
 							LogLog.Debug(declaringType, "Loaded type ["+typeName+"] from assembly ["+assembly.FullName+"] by searching loaded assemblies.");
-							return type;
+                                                        if (assembly.GlobalAssemblyCache)
+                                                        {
+                                                            fallback = t;
+                                                        }
+                                                        else
+                                                        {
+                                                            return t;
+                                                        }
 						}
 					}
+                                        if (fallback != null)
+                                        {
+                                            return fallback;
+                                        }
 				}
 
 				// Didn't find the type
