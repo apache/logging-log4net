@@ -152,6 +152,32 @@ limitations under the License.
           <include name="System.Configuration.Install.dll" />
         </references>
       </csc>
+      <if test="${current.build.has.systemweb}">
+        <csc nostdlib="true" noconfig="true"
+             warnaserror="false"
+             target="library"
+             debug="true"
+             define="${current.build.defines.csc}"
+             output="${current.bin.dir}/WebServiceAppender.dll"
+             doc="${current.bin.dir}/WebServiceAppender.xml">
+          <sources basedir="${log4net.basedir}">
+            <include name="src/examples/cs/Appenders/WebServiceAppender/**/*.cs" />
+            <include name="src/log4net/AssemblyVersionInfo.cs"/>
+          </sources>
+          <resources refid="nl-files"/>
+          <references>
+            <include name="mscorlib.dll"/>
+            <include name="System.dll" />
+            <include name="System.Web.dll" />
+            <include name="System.Web.Services.dll" />
+            <include name="System.Xml.dll" />
+            <include name="System.Configuration.dll" if="${current.build.has.systemconfiguration}"/>
+            <include name="${log4net.basedir}/lib/main/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/*.dll" />
+            <include name="${log4net.basedir}/lib/main/*.dll" />
+            <include name="${log4net.main.output.dir}/log4net-1.3.dll" frompath="false"/>
+          </references>
+        </csc>
+      </if>
       <csc nostdlib="true" noconfig="true"
            warnaserror="false"
            target="library"
