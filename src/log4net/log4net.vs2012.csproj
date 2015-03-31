@@ -212,9 +212,6 @@
     <Compile Include="AssemblyVersionInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Config\AliasDomainAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Config\AliasRepositoryAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -222,15 +219,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Config\ConfiguratorAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Config\DomainAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Config\DOMConfigurator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Config\DOMConfiguratorAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Config\Log4NetConfigurationSectionHandler.cs">
