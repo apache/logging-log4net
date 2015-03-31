@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 namespace log4net.DateFormatter
 {
@@ -102,36 +103,33 @@ namespace log4net.DateFormatter
 		virtual public void FormatDate(DateTime dateToFormat, TextWriter writer)
 		{
                     string timeString = null;
-                    lock (s_lastTimeStrings)
-		    {
-			// Calculate the current time precise only to the second
-			long currentTimeToTheSecond = (dateToFormat.Ticks - (dateToFormat.Ticks % TimeSpan.TicksPerSecond));
+                    // Calculate the current time precise only to the second
+                    long currentTimeToTheSecond = (dateToFormat.Ticks - (dateToFormat.Ticks % TimeSpan.TicksPerSecond));
 
-			// Compare this time with the stored last time
-			// If we are in the same second then append
-			// the previously calculated time string
-                        if (s_lastTimeToTheSecond != currentTimeToTheSecond)
-                        {
-                            s_lastTimeStrings.Clear();
-                        }
-                        else
-                        {
-                            s_lastTimeStrings.TryGetValue(GetType(), out timeString);
-                        }
+                    // Compare this time with the stored last time
+                    // If we are in the same second then append
+                    // the previously calculated time string
+                    if (s_lastTimeToTheSecond != currentTimeToTheSecond)
+                    {
+                        LastTimeStrings.Clear();
+                    }
+                    else
+                    {
+                        LastTimeStrings.TryGetValue(GetType(), out timeString);
+                    }
 
-                        if (timeString == null)
-                        {
-                            StringBuilder sb = new StringBuilder();
-                            // Calculate the new string for this second
-                            FormatDateWithoutMillis(dateToFormat, sb);
+                    if (timeString == null)
+                    {
+                        StringBuilder sb = new StringBuilder();
+                        // Calculate the new string for this second
+                        FormatDateWithoutMillis(dateToFormat, sb);
 
-                            // Render the string buffer to a string
-                            timeString = sb.ToString();
+                        // Render the string buffer to a string
+                        timeString = sb.ToString();
 
-                            // Store the time as a string (we only have to do this once per second)
-                            s_lastTimeStrings[GetType()] = timeString;
-                            s_lastTimeToTheSecond = currentTimeToTheSecond;
-                        }
+                        // Store the time as a string (we only have to do this once per second)
+                        LastTimeStrings[GetType()] = timeString;
+                        s_lastTimeToTheSecond = currentTimeToTheSecond;
                     }
                     writer.Write(timeString);
 	
@@ -175,13 +173,26 @@ namespace log4net.DateFormatter
 		/// <summary>
 		/// Last stored time with precision up to the second.
 		/// </summary>
-		private static long s_lastTimeToTheSecond = 0;
+		[ThreadStatic]
+		private static long s_lastTimeToTheSecond;
 
 		/// <summary>
 		/// Last stored time with precision up to the second, formatted
 		/// as a string.
 		/// </summary>
-		private static readonly IDictionary<Type, string> s_lastTimeStrings = new Dictionary<Type, string>();
+		[ThreadStatic]
+		private static IDictionary<Type, string> s_lastTimeStrings;
+
+		private IDictionary<Type, string> LastTimeStrings {
+		    get
+		    {
+		        if (s_lastTimeStrings == null)
+		        {
+		            s_lastTimeStrings = new Dictionary<Type, string>();
+		        }
+		        return s_lastTimeStrings;
+		    }
+		}
 
 		#endregion Private Static Fields
 	}
