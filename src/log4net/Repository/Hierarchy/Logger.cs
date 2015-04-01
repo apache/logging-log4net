@@ -143,9 +143,9 @@ namespace log4net.Repository.Hierarchy
 		{
 			get 
 			{
-				for(Logger c = this; c != null; c = c.m_parent) 
+				for(Logger c = this; c != null; c = c.Parent) 
 				{
-					Level level = c.m_level;
+					Level level = c.Level;
 
 					// Casting level to Object for performance, otherwise the overloaded operator is called
 					if ((object)level != null) 
@@ -498,7 +498,7 @@ namespace log4net.Repository.Hierarchy
 			{
 				if (level != null)
 				{
-					if (m_hierarchy.IsDisabled(level))
+					if (Hierarchy.IsDisabled(level))
 					{
 						return false;
 					}
@@ -533,7 +533,7 @@ namespace log4net.Repository.Hierarchy
 		/// </remarks>
 		public ILoggerRepository Repository
 		{ 
-			get { return m_hierarchy; }
+			get { return Hierarchy; }
 		}
 
   		#endregion Implementation of ILogger
@@ -563,7 +563,7 @@ namespace log4net.Repository.Hierarchy
 
 			int writes = 0;
 
-			for(Logger c=this; c != null; c=c.m_parent) 
+			for(Logger c=this; c != null; c=c.Parent) 
 			{
 				if (c.m_appenderAttachedImpl != null) 
 				{
@@ -582,7 +582,7 @@ namespace log4net.Repository.Hierarchy
 					}
 				}
 
-				if (!c.m_additive) 
+				if (!c.Additivity) 
 				{
 					break;
 				}
@@ -597,9 +597,9 @@ namespace log4net.Repository.Hierarchy
 			// or impossible to determine which .config file is missing appender
 			// definitions.
 			//
-			if (!m_hierarchy.EmittedNoAppenderWarning && writes == 0) 
+			if (!Hierarchy.EmittedNoAppenderWarning && writes == 0) 
 			{
-				m_hierarchy.EmittedNoAppenderWarning = true;
+				Hierarchy.EmittedNoAppenderWarning = true;
 				LogLog.Debug(declaringType, "No appenders could be found for logger [" + Name + "] repository [" + Repository.Name + "]");
 				LogLog.Debug(declaringType, "Please initialize the log4net system properly.");
 				try
