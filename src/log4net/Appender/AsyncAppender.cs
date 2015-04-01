@@ -19,7 +19,11 @@
 
 using System;
 using System.Collections.Generic;
+#if FRAMEWORK_4_0_OR_ABOVE
+using System.Threading.Tasks;
+#else
 using System.Threading;
+#endif
 using log4net.Appender;
 using log4net.Core;
 using log4net.Util;
@@ -37,6 +41,16 @@ namespace log4net.Appender
 	/// </remarks>
 	public sealed class AsyncAppender : ForwardingAppender
 	{
+		/// <summary>
+		///   Creates a new AsyncAppender.
+		/// </summary>
+		public AsyncAppender()
+		{
+#if FRAMEWORK_4_0_OR_ABOVE
+			logTask = new Task(() => { });
+			logTask.Start();
+#endif
+		}
 
 		/// <summary>
 		/// Gets or sets a the fields that will be fixed in the event
@@ -78,7 +92,11 @@ namespace log4net.Appender
 				}
 				events.Add(loggingEvent);
 			}
+#if FRAMEWORK_4_0_OR_ABOVE
+			logTask.ContinueWith(t => AsyncAppend(null));
+#else
 			ThreadPool.QueueUserWorkItem(AsyncAppend, null);
+#endif
 		}
 
 		/// <summary>
@@ -104,7 +122,11 @@ namespace log4net.Appender
 				}
 				events.AddRange(loggingEvents);
 			}
+#if FRAMEWORK_4_0_OR_ABOVE
+			logTask.ContinueWith(t => AsyncAppend(null));
+#else
 			ThreadPool.QueueUserWorkItem(AsyncAppend, null);
+#endif
 		}
 
 		/// <summary>
@@ -123,6 +145,12 @@ namespace log4net.Appender
 		{
 			lock (lockObject)
 			{
+#if FRAMEWORK_4_0_OR_ABOVE
+				if (!closed)
+				{
+					logTask.Wait();
+				}
+#endif
 				closed = true;
 			}
 			base.OnClose();
@@ -169,5 +197,8 @@ namespace log4net.Appender
 		private readonly List<LoggingEvent> events = new List<LoggingEvent>();
 		private bool inLoggingLoop = false;
 		private bool closed = false;
+#if FRAMEWORK_4_0_OR_ABOVE
+                private readonly Task logTask;
+#endif
 	}
 }
