@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using log4net.Appender;
 using log4net.Core;
@@ -69,7 +70,11 @@ namespace log4net.Appender
 		override protected void Append(LoggingEvent loggingEvent) 
 		{
 			loggingEvent.Fix = m_fixFlags;
-			ThreadPool.QueueUserWorkItem(AsyncAppend, loggingEvent);
+			lock (lockObject)
+			{
+				events.Add(loggingEvent);
+			}
+			ThreadPool.QueueUserWorkItem(AsyncAppend, null);
 		}
 
 		/// <summary>
@@ -87,23 +92,52 @@ namespace log4net.Appender
 			{
 				loggingEvent.Fix = m_fixFlags;
 			}
-			ThreadPool.QueueUserWorkItem(AsyncAppend, loggingEvents);
+			lock (lockObject)
+			{
+				events.AddRange(loggingEvents);
+			}
+			ThreadPool.QueueUserWorkItem(AsyncAppend, null);
 		}
 
 		private void AsyncAppend(object state)
 		{
-			LoggingEvent loggingEvent = state as LoggingEvent;
-			LoggingEvent[] loggingEvents = state as LoggingEvent[];
-			if (loggingEvent != null)
+			lock (lockObject)
 			{
-				base.Append(loggingEvent);
+				if (inLoggingLoop)
+				{
+					return;
+				}
+				inLoggingLoop = true;
 			}
-			else if (loggingEvents != null)
+			try
 			{
-				base.Append(loggingEvents);
+				while (true)
+				{
+					LoggingEvent[] loggingEvents = null;
+					lock (lockObject)
+					{
+						loggingEvents = events.ToArray();
+						events.Clear();
+					}
+					if (loggingEvents.Length == 0)
+					{
+						break;
+					}
+					base.Append(loggingEvents);
+				}
+			}
+			finally
+			{
+				lock (lockObject)
+				{
+					inLoggingLoop = false;
+				}
 			}
 		}
 
 		private FixFlags m_fixFlags = FixFlags.All;
+		private readonly object lockObject = new object();
+		private readonly List<LoggingEvent> events = new List<LoggingEvent>();
+		private bool inLoggingLoop = false;
 	}
 }
