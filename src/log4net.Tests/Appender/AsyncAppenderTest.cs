@@ -53,6 +53,8 @@ namespace log4net.Tests.Appender
         [TearDown]
         public void ResetRepository() {
             hierarchy.ResetConfiguration();
+            hierarchy.Shutdown();
+            hierarchy.Clear();
         }
 
         [Test]
