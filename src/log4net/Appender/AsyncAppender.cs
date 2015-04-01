@@ -72,6 +72,10 @@ namespace log4net.Appender
 			loggingEvent.Fix = m_fixFlags;
 			lock (lockObject)
 			{
+				if (closed)
+				{
+					return;
+				}
 				events.Add(loggingEvent);
 			}
 			ThreadPool.QueueUserWorkItem(AsyncAppend, null);
@@ -94,9 +98,34 @@ namespace log4net.Appender
 			}
 			lock (lockObject)
 			{
+				if (closed)
+				{
+					return;
+				}
 				events.AddRange(loggingEvents);
 			}
 			ThreadPool.QueueUserWorkItem(AsyncAppend, null);
+		}
+
+		/// <summary>
+		/// Closes the appender and releases resources.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Releases any resources allocated within the appender such as file handles, 
+		/// network connections, etc.
+		/// </para>
+		/// <para>
+		/// It is a programming error to append to a closed appender.
+		/// </para>
+		/// </remarks>
+		override protected void OnClose()
+		{
+			lock (lockObject)
+			{
+				closed = true;
+			}
+			base.OnClose();
 		}
 
 		private void AsyncAppend(object state)
@@ -139,5 +168,6 @@ namespace log4net.Appender
 		private readonly object lockObject = new object();
 		private readonly List<LoggingEvent> events = new List<LoggingEvent>();
 		private bool inLoggingLoop = false;
+		private bool closed = false;
 	}
 }

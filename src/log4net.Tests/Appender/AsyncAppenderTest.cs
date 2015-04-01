@@ -89,6 +89,17 @@ namespace log4net.Tests.Appender
             Assert.AreEqual("WARN - fooWARN - barWARN - bazWARN - xyzzy", log);
         }
 
+        [Test]
+        public void ShouldNotLogAfterClose() {
+            ILogger logger = hierarchy.GetLogger("test");
+            logger.Log(GetType(), Level.Warn, "foo", null);
+            Thread.Sleep(200);
+            hierarchy.Shutdown();
+            logger.Log(GetType(), Level.Warn, "bar", null);
+            string log = WaitSomeTimeAndReturnLogWithLineFeedsStripped();
+            Assert.AreEqual("WARN - foo", log);
+        }
+
         private string WaitSomeTimeAndReturnLogWithLineFeedsStripped() {
             Thread.Sleep(200);
             return stringAppender.GetString().Replace(Environment.NewLine, string.Empty);
