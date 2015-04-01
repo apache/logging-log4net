@@ -136,6 +136,9 @@
     <Compile Include="Appender\AspNetTraceAppender.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Appender\AsyncAppender.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Appender\BufferingAppenderSkeleton.cs">
       <SubType>Code</SubType>
     </Compile>

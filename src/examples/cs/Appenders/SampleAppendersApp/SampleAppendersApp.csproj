@@ -122,9 +122,6 @@
       <Link>AssemblyVersionInfo.cs</Link>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Appender\AsyncAppender.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Appender\FastDbAppender.cs">
       <SubType>Code</SubType>
     </Compile>
