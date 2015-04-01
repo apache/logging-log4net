@@ -34,7 +34,7 @@ namespace log4net.Appender
 	/// This allows the calling thread to be released quickly, however it does
 	/// not guarantee the ordering of events delivered to the attached appenders.
 	/// </remarks>
-	public sealed class AsyncAppender : ForwardingAppender, IBulkAppender
+	public sealed class AsyncAppender : ForwardingAppender
 	{
 
 		/// <summary>
