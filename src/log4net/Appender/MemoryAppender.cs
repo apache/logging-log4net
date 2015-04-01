@@ -18,7 +18,7 @@
 #endregion
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 
 using log4net.Core;
 
@@ -68,7 +68,7 @@ namespace log4net.Appender
 		/// </remarks>
 		public MemoryAppender() : base()
 		{
-			m_eventsList = new ArrayList();
+			m_eventsList = new List<LoggingEvent>();
 		}
 
 		#endregion Protected Instance Constructors
@@ -86,9 +86,9 @@ namespace log4net.Appender
 		/// </remarks>
 		virtual public LoggingEvent[] GetEvents()
 		{
-            lock (m_eventsList.SyncRoot)
+            lock (m_eventsList)
             {
-                return (LoggingEvent[]) m_eventsList.ToArray(typeof(LoggingEvent));
+                return m_eventsList.ToArray();
             }
 		}
 
@@ -126,7 +126,7 @@ namespace log4net.Appender
 			// volatile data in the event.
 			loggingEvent.Fix = this.Fix;
 
-            lock (m_eventsList.SyncRoot)
+            lock (m_eventsList)
             {
                 m_eventsList.Add(loggingEvent);
             }
@@ -144,7 +144,7 @@ namespace log4net.Appender
 		/// </remarks>
 		virtual public void Clear()
 		{
-            lock (m_eventsList.SyncRoot)
+            lock (m_eventsList)
             {
                 m_eventsList.Clear();
             }
@@ -161,9 +161,9 @@ namespace log4net.Appender
         /// </remarks>
         virtual public LoggingEvent[] PopAllEvents()
         {
-            lock (m_eventsList.SyncRoot)
+            lock (m_eventsList)
             {
-                LoggingEvent[] tmp = (LoggingEvent[]) m_eventsList.ToArray(typeof (LoggingEvent));
+                LoggingEvent[] tmp = m_eventsList.ToArray();
                 m_eventsList.Clear();
                 return tmp;
             }
@@ -171,12 +171,12 @@ namespace log4net.Appender
 
 		#endregion Public Instance Methods
 
-		#region Protected Instance Fields
-
 		/// <summary>
 		/// The list of events that have been appended.
 		/// </summary>
-		protected ArrayList m_eventsList;
+		private readonly List<LoggingEvent> m_eventsList;
+
+		#region Protected Instance Fields
 
 		/// <summary>
 		/// Value indicating which fields in the event should be fixed
