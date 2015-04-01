@@ -104,6 +104,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WmiAppender", "Appenders\Wm
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebServiceAppender", "Appenders\WebServiceAppender\cs\src\WebServiceAppender.csproj", "{BE56F892-37BA-489C-A91D-F2761FDB96EA}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -166,6 +172,10 @@ Global
 		{BE56F892-37BA-489C-A91D-F2761FDB96EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE56F892-37BA-489C-A91D-F2761FDB96EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE56F892-37BA-489C-A91D-F2761FDB96EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE56F892-37BA-489C-A91D-F2761FDB96EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE56F892-37BA-489C-A91D-F2761FDB96EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE56F892-37BA-489C-A91D-F2761FDB96EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE56F892-37BA-489C-A91D-F2761FDB96EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
