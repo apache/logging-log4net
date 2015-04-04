@@ -93,7 +93,7 @@ namespace log4net.Appender
 				events.Add(loggingEvent);
 			}
 #if FRAMEWORK_4_0_OR_ABOVE
-			logTask.ContinueWith(t => AsyncAppend(null));
+			logTask.ContinueWith(AsyncAppend);
 #else
 			ThreadPool.QueueUserWorkItem(AsyncAppend, null);
 #endif
@@ -123,7 +123,7 @@ namespace log4net.Appender
 				events.AddRange(loggingEvents);
 			}
 #if FRAMEWORK_4_0_OR_ABOVE
-			logTask.ContinueWith(t => AsyncAppend(null));
+			logTask.ContinueWith(AsyncAppend);
 #else
 			ThreadPool.QueueUserWorkItem(AsyncAppend, null);
 #endif
@@ -156,7 +156,7 @@ namespace log4net.Appender
 			base.OnClose();
 		}
 
-		private void AsyncAppend(object state)
+		private void AsyncAppend(object _ignored)
 		{
 #if FRAMEWORK_4_0_OR_ABOVE
 			LoggingEvent[] loggingEvents = null;
