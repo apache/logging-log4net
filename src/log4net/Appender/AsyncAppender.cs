@@ -158,6 +158,18 @@ namespace log4net.Appender
 
 		private void AsyncAppend(object state)
 		{
+#if FRAMEWORK_4_0_OR_ABOVE
+			LoggingEvent[] loggingEvents = null;
+			lock (lockObject)
+			{
+				loggingEvents = events.ToArray();
+				events.Clear();
+			}
+			if (loggingEvents.Length > 0)
+			{
+				base.Append(loggingEvents);
+			}
+#else
 			lock (lockObject)
 			{
 				if (inLoggingLoop)
@@ -190,15 +202,17 @@ namespace log4net.Appender
 					inLoggingLoop = false;
 				}
 			}
+#endif
 		}
 
 		private FixFlags m_fixFlags = FixFlags.All;
 		private readonly object lockObject = new object();
 		private readonly List<LoggingEvent> events = new List<LoggingEvent>();
-		private bool inLoggingLoop = false;
 		private bool closed = false;
 #if FRAMEWORK_4_0_OR_ABOVE
-                private readonly Task logTask;
+		private readonly Task logTask;
+#else
+		private bool inLoggingLoop = false;
 #endif
 	}
 }
