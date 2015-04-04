@@ -158,17 +158,8 @@ namespace log4net.Appender
 
 		private void AsyncAppend(object _ignored)
 		{
-#if FRAMEWORK_4_0_OR_ABOVE
-			LoggingEvent[] loggingEvents = null;
-			lock (lockObject)
-			{
-				loggingEvents = events.ToArray();
-				events.Clear();
-			}
-			if (loggingEvents.Length > 0)
-			{
-				base.Append(loggingEvents);
-			}
+#if FRAMEWORK_4_0_OR_ABOVE // ContinueWith already ensures there is only one thread executing this method at a time
+			ForwardEvents();
 #else
 			lock (lockObject)
 			{
@@ -182,17 +173,10 @@ namespace log4net.Appender
 			{
 				while (true)
 				{
-					LoggingEvent[] loggingEvents = null;
-					lock (lockObject)
-					{
-						loggingEvents = events.ToArray();
-						events.Clear();
-					}
-					if (loggingEvents.Length == 0)
+					if (!ForwardEvents())
 					{
 						break;
 					}
-					base.Append(loggingEvents);
 				}
 			}
 			finally
@@ -205,6 +189,26 @@ namespace log4net.Appender
 #endif
 		}
 
+		/// <summary>
+		///   Forwards the queued events to the nested appenders.
+		/// </summary>
+		/// <returns>whether there have been any events to forward.</returns>
+		private bool ForwardEvents()
+		{
+			LoggingEvent[] loggingEvents = null;
+			lock (lockObject)
+			{
+				loggingEvents = events.ToArray();
+				events.Clear();
+			}
+			if (loggingEvents.Length == 0)
+			{
+				return false;
+			}
+			base.Append(loggingEvents);
+			return true;
+                }
+                                    
 		private FixFlags m_fixFlags = FixFlags.All;
 		private readonly object lockObject = new object();
 		private readonly List<LoggingEvent> events = new List<LoggingEvent>();
