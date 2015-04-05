@@ -312,39 +312,19 @@ namespace log4net.Appender
 		/// Sends the contents of the cyclic buffer as an e-mail message.
 		/// </summary>
 		/// <param name="events">The logging events to send.</param>
-		override protected void SendBuffer(LoggingEvent[] events) 
-		{
-			// Note: this code already owns the monitor for this
-			// appender. This frees us from needing to synchronize again.
-			try 
-			{	  
-				StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
-
-				string t = Layout.Header;
-				if (t != null)
-				{
-					writer.Write(t);
-				}
-
-				for(int i = 0; i < events.Length; i++) 
-				{
-					// Render the event and append the text to the buffer
-					RenderLoggingEvent(writer, events[i]);
-				}
-
-				t = Layout.Footer;
-				if (t != null)
-				{
-					writer.Write(t);
-				}
-
-				SendEmail(writer.ToString());
-			} 
-			catch(Exception e) 
-			{
-				ErrorHandler.Error("Error occurred while sending e-mail notification.", e);
-			}
-		}
+        override protected void SendBuffer(LoggingEvent[] events)
+        {
+            // Note: this code already owns the monitor for this
+            // appender. This frees us from needing to synchronize again.
+            try
+            {
+                SendEmail(GetMailMessageBody(events));
+            }
+            catch (Exception e)
+            {
+                ErrorHandler.Error("Error occurred while sending e-mail notification.", e);
+            }
+        }
 
 		#endregion // Override implementation of BufferingAppenderSkeleton
 
@@ -368,7 +348,37 @@ namespace log4net.Appender
 
 		#region Protected Methods
 
-		/// <summary>
+        /// <summary>
+        /// Creates the body of the message to send
+        /// </summary>
+        /// <param name="events"></param>
+        /// <returns></returns>
+        virtual protected string GetMailMessageBody(LoggingEvent[] events)
+        {
+            StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
+
+            string t = Layout.Header;
+            if (t != null)
+            {
+                writer.Write(t);
+            }
+
+            for (int i = 0; i < events.Length; i++)
+            {
+                // Render the event and append the text to the buffer
+                RenderLoggingEvent(writer, events[i]);
+            }
+
+            t = Layout.Footer;
+            if (t != null)
+            {
+                writer.Write(t);
+            }
+
+            return writer.ToString();
+        }
+        
+        /// <summary>
 		/// Send the email message
 		/// </summary>
 		/// <param name="messageBody">the body text to include in the mail</param>
