@@ -304,7 +304,16 @@ namespace log4net.Appender
 			set { m_bodyEncoding = value; }
 		}
 
-		#endregion // Public Instance Properties
+        /// <summary>
+        /// Gets or sets a value indicating whether the mail message body is in HTML.
+        /// </summary>
+        virtual public bool IsBodyHTML
+        {
+            get { return isBodyHTML; }
+            set { isBodyHTML = value; }
+        }
+
+        #endregion // Public Instance Properties
 
 		#region Override implementation of BufferingAppenderSkeleton
 
@@ -377,7 +386,7 @@ namespace log4net.Appender
 
             return writer.ToString();
         }
-        
+
         /// <summary>
 		/// Send the email message
 		/// </summary>
@@ -409,6 +418,7 @@ namespace log4net.Appender
             {
                 mailMessage.Body = messageBody;
 				mailMessage.BodyEncoding = m_bodyEncoding;
+                mailMessage.IsBodyHtml = IsBodyHTML;
                 mailMessage.From = new MailAddress(m_from);
                 mailMessage.To.Add(m_to);
                 if (!String.IsNullOrEmpty(m_cc))
@@ -450,6 +460,7 @@ namespace log4net.Appender
 		private string m_smtpHost;
 		private Encoding m_subjectEncoding = Encoding.UTF8;
 		private Encoding m_bodyEncoding = Encoding.UTF8;
+        private bool isBodyHTML = false;
 
 		// authentication fields
 		private SmtpAuthentication m_authentication = SmtpAuthentication.None;
