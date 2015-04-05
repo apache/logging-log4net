@@ -30,13 +30,15 @@ namespace log4net.Tests.Appender
 {
 
     [TestFixture]
-    public class AsyncAppenderTest {
+    public class AsyncAppenderTest
+    {
         private AsyncAppender asyncAppender;
         private StringAppender stringAppender;
         private Repository.Hierarchy.Hierarchy hierarchy;
 
         [SetUp]
-        public void SetupRepository() {
+        public void SetupRepository()
+        {
             hierarchy = new Repository.Hierarchy.Hierarchy();
 
             stringAppender = new StringAppender();
@@ -51,14 +53,16 @@ namespace log4net.Tests.Appender
         }
 
         [TearDown]
-        public void ResetRepository() {
+        public void ResetRepository()
+        {
             hierarchy.ResetConfiguration();
             hierarchy.Shutdown();
             hierarchy.Clear();
         }
 
         [Test]
-        public void ShouldLogSingleEvent() {
+        public void ShouldLogSingleEvent()
+        {
             ILogger logger = hierarchy.GetLogger("test");
             logger.Log(GetType(), Level.Warn, "foo", null);
             string log = WaitSomeTimeAndReturnLogWithLineFeedsStripped();
@@ -66,7 +70,8 @@ namespace log4net.Tests.Appender
         }
 
         [Test]
-        public void ShouldMaintainOrderOfEvents() {
+        public void ShouldMaintainOrderOfEvents()
+        {
             ILogger logger = hierarchy.GetLogger("test");
             logger.Log(GetType(), Level.Warn, "foo", null);
             logger.Log(GetType(), Level.Warn, "bar", null);
@@ -77,7 +82,8 @@ namespace log4net.Tests.Appender
         }
 
         [Test]
-        public void ShouldForwardBulkOfEvents() {
+        public void ShouldForwardBulkOfEvents()
+        {
             LoggingEvent[] events = new LoggingEvent[] {
                 new LoggingEvent(GetType(), hierarchy, "test", Level.Warn, "foo", null),
                 new LoggingEvent(GetType(), hierarchy, "test", Level.Warn, "bar", null),
@@ -90,7 +96,8 @@ namespace log4net.Tests.Appender
         }
 
         [Test]
-        public void ShouldNotLogAfterClose() {
+        public void ShouldNotLogAfterClose()
+        {
             ILogger logger = hierarchy.GetLogger("test");
             logger.Log(GetType(), Level.Warn, "foo", null);
             Thread.Sleep(200);
@@ -100,7 +107,8 @@ namespace log4net.Tests.Appender
             Assert.AreEqual("WARN - foo", log);
         }
 
-        private string WaitSomeTimeAndReturnLogWithLineFeedsStripped() {
+        private string WaitSomeTimeAndReturnLogWithLineFeedsStripped()
+        {
             Thread.Sleep(200);
             return stringAppender.GetString().Replace(Environment.NewLine, string.Empty);
         }
