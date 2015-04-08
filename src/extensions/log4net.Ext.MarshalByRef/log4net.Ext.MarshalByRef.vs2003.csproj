@@ -25,13 +25,13 @@
         ProjectType = "Local"
         ProductVersion = "7.0.9466"
         SchemaVersion = "1.0"
-        ProjectGuid = "{CB985027-C009-4C0F-88C1-8CF11912EE4C}"
+        ProjectGuid = "{CB985027-C009-4C0F-88C1-8CF11912AE4C}"
     >
         <Build>
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "log4net.Ext.EventID"
+                AssemblyName = "log4net.Ext.MarshalByRef"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
@@ -40,7 +40,7 @@
                 OutputType = "Library"
                 PreBuildEvent = ""
                 PostBuildEvent = ""
-                RootNamespace = "log4net.Ext.EventID"
+                RootNamespace = "log4net.Ext.MarshalByRef"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
@@ -58,7 +58,7 @@
                     NoStdLib = "false"
                     NoWarn = ""
                     Optimize = "false"
-                    OutputPath = "..\build\debug\"
+                    OutputPath = "..\..\..\build\bin\extensions\log4net.Ext.MarschalByRef\net\2.0\debug\"
                     RegisterForComInterop = "false"
                     RemoveIntegerChecks = "false"
                     TreatWarningsAsErrors = "false"
@@ -78,7 +78,7 @@
                     NoStdLib = "false"
                     NoWarn = ""
                     Optimize = "true"
-                    OutputPath = "..\build\release\"
+                    OutputPath = "..\..\..\build\bin\extensions\log4net.Ext.MarschalByRef\net\2.0\release\"
                     RegisterForComInterop = "false"
                     RemoveIntegerChecks = "false"
                     TreatWarningsAsErrors = "false"
@@ -97,11 +97,6 @@
                     HintPath = "..\..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.0.3705\System.Data.dll"
                 />
                 <Reference
-                    Name = "System.XML"
-                    AssemblyName = "System.Xml"
-                    HintPath = "..\..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.0.3705\System.XML.dll"
-                />
-                <Reference
                     Name = "log4net"
                     AssemblyName = "log4net"
                     HintPath = "..\..\..\..\..\..\bin\net\1.0\release\log4net.dll"
@@ -117,22 +112,17 @@
                 />
                 <File
                     RelPath = "AssemblyVersionInfo.cs"
-                    Link = "..\..\..\..\..\..\src\AssemblyVersionInfo.cs"
+                    Link = "..\..\log4net\src\AssemblyVersionInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "EventIDLogImpl.cs"
+                    RelPath = "MarshalByRefLogImpl.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "EventIDLogManager.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "IEventIDLog.cs"
+                    RelPath = "MarshalByRefLogManager.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
