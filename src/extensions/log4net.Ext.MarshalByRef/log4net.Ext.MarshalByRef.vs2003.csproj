@@ -72,7 +72,7 @@
                     ConfigurationOverrideFile = ""
                     DefineConstants = "TRACE;STRONG"
                     DocumentationFile = ""
-                    DebugSymbols = "false"
+                    DebugSymbols = "true"
                     FileAlignment = "4096"
                     IncrementalBuild = "false"
                     NoStdLib = "false"
