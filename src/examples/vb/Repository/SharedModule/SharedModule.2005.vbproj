@@ -25,25 +25,25 @@
         ProjectType = "Local"
         ProductVersion = "7.0.9466"
         SchemaVersion = "1.0"
-        ProjectGuid = "{41B855A4-F3BF-43F8-BE6F-2ABD5E5C8D42}"
+        ProjectGuid = "{8F84B3EA-34F7-40ED-8A04-895EFC37C38D}"
     >
         <Build>
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "ConsoleApp"
+                AssemblyName = "SharedModule"
                 AssemblyOriginatorKeyFile = ""
                 AssemblyOriginatorKeyMode = "None"
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
                 DefaultTargetSchema = "IE50"
                 DelaySign = "false"
-                OutputType = "Exe"
+                OutputType = "Library"
                 OptionCompare = "Binary"
                 OptionExplicit = "On"
-                OptionStrict = "On"
+                OptionStrict = "Off"
                 RootNamespace = ""
-                StartupObject = "ConsoleApp.LoggingExample"
+                StartupObject = ""
             >
                 <Config
                     Name = "Debug"
@@ -94,7 +94,7 @@
                 <Reference
                     Name = "log4net"
                     AssemblyName = "log4net"
-                    HintPath = "..\..\..\..\..\..\..\bin\net\1.0\release\log4net.dll"
+                    HintPath = "..\..\..\..\..\build\bin\log4net\net\2.0\debug\log4net-1.3.dll"
                 />
             </References>
             <Imports>
@@ -108,22 +108,18 @@
         <Files>
             <Include>
                 <File
-                    RelPath = "App.config"
-                    BuildAction = "None"
-                />
-                <File
                     RelPath = "AssemblyInfo.vb"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "AssemblyVersionInfo.vb"
-                    Link = "..\..\..\..\..\..\..\src\AssemblyVersionInfo.vb"
+                    Link = "..\..\..\..\log4net\AssemblyVersionInfo.vb"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "LoggingExample.vb"
+                    RelPath = "Math.vb"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

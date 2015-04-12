@@ -102,7 +102,7 @@
                 <Reference
                     Name = "log4net"
                     AssemblyName = "log4net"
-                    HintPath = "..\..\..\..\..\..\..\bin\net\1.0\release\log4net.dll"
+                    HintPath = "..\..\..\..\..\build\bin\log4net\net\2.0\debug\log4net-1.3.dll"
                 />
                 <Reference
                     Name = "SharedModule"

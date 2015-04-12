@@ -48,7 +48,7 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="3"
-				ForcedUsingFiles="..\..\..\..\..\..\..\bin\net\1.1\release\log4net.dll"/>
+				ForcedUsingFiles="..\..\..\..\..\build\bin\log4net\net\2.0\debug\log4net-1.3.dll"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -94,7 +94,7 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="3"
-				ForcedUsingFiles="..\..\..\..\..\..\..\bin\net\1.1\release\log4net.dll"/>
+				ForcedUsingFiles="..\..\..\..\..\build\bin\log4net\net\2.0\release\log4net-1.3.dll"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -134,7 +134,7 @@
 				RelativePath="AssemblyInfo.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\..\..\src\AssemblyVersionInfo.cpp">
+				RelativePath="..\..\..\..\log4net\AssemblyVersionInfo.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool

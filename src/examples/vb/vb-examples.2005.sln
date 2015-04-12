@@ -19,17 +19,17 @@ Microsoft Visual Studio Solution File, Format Version 7.00
 # under the License.
 #
 #
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ConsoleApp", "Tutorials\ConsoleApp\vb\src\ConsoleApp.vbproj", "{41B855A4-F3BF-43F8-BE6F-2ABD5E5C8D42}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ConsoleApp", "Tutorials\ConsoleApp\ConsoleApp.2005.vbproj", "{41B855A4-F3BF-43F8-BE6F-2ABD5E5C8D42}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WebApp", "http://localhost/WebAppVB/WebApp.vbproj", "{4CEA8E96-BF74-488D-9967-EAB779EF430A}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SharedModule", "Repository\SharedModule\vb\src\SharedModule.vbproj", "{8F84B3EA-34F7-40ED-8A04-895EFC37C38D}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SharedModule", "Repository\SharedModule\SharedModule.2005.vbproj", "{8F84B3EA-34F7-40ED-8A04-895EFC37C38D}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SimpleApp", "Repository\SimpleApp\vb\src\SimpleApp.vbproj", "{912A9564-F435-444B-905F-1FD8B69C48D7}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SimpleApp", "Repository\SimpleApp\SimpleApp.2005.vbproj", "{912A9564-F435-444B-905F-1FD8B69C48D7}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SimpleModule", "Repository\SimpleModule\vb\src\SimpleModule.vbproj", "{2BDB262A-3B90-418E-9C6A-322A4B0C287A}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SimpleModule", "Repository\SimpleModule\SimpleModule.2005.vbproj", "{2BDB262A-3B90-418E-9C6A-322A4B0C287A}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "NotLogging", "Performance\NotLogging\vb\src\NotLogging.vbproj", "{4ED8A816-5051-4494-AEE5-C54E18F59FD8}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "NotLogging", "Performance\NotLogging\NotLogging.2005.vbproj", "{4ED8A816-5051-4494-AEE5-C54E18F59FD8}"
 EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
