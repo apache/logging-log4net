@@ -25,22 +25,22 @@
     <ProjectType>Local</ProjectType>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B3DCF964-EAC8-46F2-AA11-151713141536}</ProjectGuid>
+    <ProjectGuid>{9AACDC1A-84FB-4042-85A5-7095C66AD973}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ApplicationIcon>
     </ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
-    <AssemblyName>EventIDLogApp</AssemblyName>
+    <AssemblyName>SharedModule</AssemblyName>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>EventIDLogApp</RootNamespace>
+    <OutputType>Library</OutputType>
+    <RootNamespace>SharedModule</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
     </StartupObject>
@@ -96,9 +96,8 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\bin\net\2.0\debug\log4net.dll</HintPath>
+    <Reference Include="log4net-1.3">
+      <HintPath>..\..\..\..\..\build\bin\log4net\net\2.0\debug\log4net-1.3.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -109,22 +108,16 @@
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
-    <ProjectReference Include="..\..\..\..\..\..\..\extensions\net\1.0\log4net.Ext.EventID\cs\src\log4net.Ext.EventID.csproj">
-      <Name>log4net.Ext.EventID</Name>
-      <Project>{CB985027-C009-4C0F-88C1-8CF11912EE4C}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <Compile Include="..\..\..\..\..\..\..\src\AssemblyVersionInfo.cs">
+    <Compile Include="..\..\..\..\log4net\AssemblyVersionInfo.cs">
       <Link>AssemblyVersionInfo.cs</Link>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="EventIDLogApp.cs">
+    <Compile Include="Math.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

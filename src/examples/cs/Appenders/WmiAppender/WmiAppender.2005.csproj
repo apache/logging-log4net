@@ -25,30 +25,31 @@
     <ProjectType>Local</ProjectType>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{CD7A8094-D383-46BC-A75D-9F65F746E24F}</ProjectGuid>
+    <ProjectGuid>{BE56F892-37BA-489C-A91D-F2761FDB96EF}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ApplicationIcon>
     </ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
-    <AssemblyName>SampleLayoutsApp</AssemblyName>
+    <AssemblyName>log4net.Appender.WmiAppender</AssemblyName>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>SampleLayoutsApp</RootNamespace>
-    <StartupObject>SampleLayoutsApp.LoggingExample</StartupObject>
+    <OutputType>Library</OutputType>
+    <RootNamespace>log4net.Appender.WmiAppender</RootNamespace>
+    <StartupObject>
+    </StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\build\debug\</OutputPath>
+    <OutputPath>..\build\Debug\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
@@ -68,7 +69,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\build\release\</OutputPath>
+    <OutputPath>..\build\Release\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
@@ -88,47 +89,37 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\bin\net\2.0\debug\log4net.dll</HintPath>
+    <Reference Include="log4net-1.3">
+      <HintPath>..\..\..\..\..\build\bin\log4net\net\2.0\debug\log4net-1.3.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
-    <Reference Include="System.Data">
-      <Name>System.Data</Name>
+    <Reference Include="System.Configuration.Install">
+      <Name>System.Configuration.Install</Name>
     </Reference>
-    <Reference Include="System.Messaging">
-      <Name>System.Messaging</Name>
-    </Reference>
-    <Reference Include="System.Web">
-      <Name>System.Web</Name>
-    </Reference>
-    <Reference Include="System.Windows.Forms">
-      <Name>System.Windows.Forms</Name>
-    </Reference>
-    <Reference Include="System.Xml">
-      <Name>System.XML</Name>
+    <Reference Include="System.Management">
+      <Name>System.Management</Name>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <Compile Include="..\..\..\..\..\..\..\src\AssemblyVersionInfo.cs">
+    <Compile Include="..\..\..\..\log4net\AssemblyVersionInfo.cs">
       <Link>AssemblyVersionInfo.cs</Link>
+    </Compile>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="IWmiBoundEvent.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AssemblyInfo.cs">
+    <Compile Include="WmiAppender.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Layout\ForwardingLayout.cs">
+    <Compile Include="WmiInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WmiLayout.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Layout\LevelConversionPattern.cs" />
-    <Compile Include="Layout\LevelPatternLayout.cs" />
-    <Compile Include="Layout\LineWrappingLayout.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="LoggingExample.cs">
+    <Compile Include="WmiLoggingEvent.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
