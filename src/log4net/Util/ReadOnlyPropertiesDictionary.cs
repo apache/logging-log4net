@@ -52,7 +52,7 @@ namespace log4net.Util
 		/// <summary>
 		/// The Hashtable used to store the properties data
 		/// </summary>
-		private Hashtable m_hashtable = new Hashtable();
+		private readonly Hashtable m_hashtable = new Hashtable();
 
 		#endregion Private Instance Fields
 
@@ -210,7 +210,7 @@ namespace log4net.Util
 #endif
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			foreach(DictionaryEntry entry in InnerHashtable)
+			foreach(DictionaryEntry entry in InnerHashtable.Clone() as IDictionary)
 			{
 				string entryKey = entry.Key as string;
 				object entryValue = entry.Value;
