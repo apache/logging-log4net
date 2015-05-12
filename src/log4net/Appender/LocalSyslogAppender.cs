@@ -356,9 +356,6 @@ namespace log4net.Appender
 			// so we do not need to hold on to the string itself, holding on to the
 			// handle will keep the heap ansi string alive.
 			m_handleToIdentity = Marshal.StringToHGlobalAnsi(identString);
-
-			// open syslog
-			openlog(m_handleToIdentity, 1, m_facility);
 		}
 
 		#endregion // IOptionHandler Implementation
@@ -378,17 +375,28 @@ namespace log4net.Appender
 		/// </para>
 		/// </remarks>
 #if FRAMEWORK_4_0_OR_ABOVE
-        [System.Security.SecuritySafeCritical]
+		[System.Security.SecuritySafeCritical]
 #endif
-        [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
-        protected override void Append(LoggingEvent loggingEvent) 
+		[System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
+		protected override void Append(LoggingEvent loggingEvent) 
 		{
 			int priority = GeneratePriority(m_facility, GetSeverity(loggingEvent.Level));
 			string message = RenderLoggingEvent(loggingEvent);
 
 			// Call the local libc syslog method
 			// The second argument is a printf style format string
-			syslog(priority, "%s", message);
+                        lock (SYSLOG_LOCK)
+                        {
+                            if (m_handleToIdentity != LAST_IDENTITY)
+                            {
+                                if (LAST_IDENTITY != IntPtr.Zero)
+                                {
+                                    closelog();
+                                }
+                                openlog(LAST_IDENTITY = m_handleToIdentity, 1, m_facility);
+                            }
+                            syslog(priority, "%s", message);
+                        }
 		}
 
 		/// <summary>
@@ -531,6 +539,18 @@ namespace log4net.Appender
 		/// Mapping from level object to syslog severity
 		/// </summary>
 		private LevelMapping m_levelMapping = new LevelMapping();
+
+		/// <summary>
+		///   lock object that ensures openlog and syslog
+		///   actually use the identity configured.
+		/// </summary>
+		private static readonly object SYSLOG_LOCK = new object();
+
+		/// <summary>
+		///   Holds the last identity used for openlog in
+		///   order to avoid redundant calss to openlog.
+		/// </summary>
+		private static IntPtr LAST_IDENTITY = IntPtr.Zero;
 
 		#endregion // Private Instances Fields
 
