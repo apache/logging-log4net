@@ -67,7 +67,7 @@ namespace log4net.Tests.Util
 
 			public RandomStringPatternConverter()
 			{
-				target = Utils.CreateInstance("log4net.Util.PatternStringConverters.RandomStringPatternConverter,log4net");
+				target = Utils.CreateInstance("log4net.Util.PatternStringConverters.RandomStringPatternConverter,log4net-1.3");
 			}
 
 			public string Option
