@@ -1,0 +1,28 @@
+Apache log4net Strong Name Key Readme
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The log4net release builds are strongly named using the log4net.snk key 
+file.  This key is different from the key used to sign log4net 1.2.10
+and earlier releases.
+
+Starting with log4net 1.2.11 we've decided to use a key that we don't
+keep secret so you can build a drop-in replacement for an official
+release yourself.  This means that the strong name of a log4net
+assembly no longer provides any means of checking its authenticity.
+The only way to ensure you are using an official release by the Apache
+Software Foundation is by downloading the distribution from the Apache
+log4net download page and verifying the PGP signature of the ZIP
+archive.
+
+The key used to sign those older releases is not and has never been
+distributed as part of the log4net source or binary downloads.
+
+In order to make it easier to migrate from log4net 1.2.10 to newer
+releases log4net 1.2.11 we also provide builds using the key used to
+sign 1.2.10.  We may stop distributing these alternative builds in the
+future.
+
+You should use the binary builds signed with log4net.snk for new
+projects and only use the ones signed with "the old key" if switching
+to the newer builds is not possible because other parts of your
+project depend on the old strong name.

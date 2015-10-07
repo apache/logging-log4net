@@ -1,0 +1,173 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+#
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+#
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "Tutorials\ConsoleApp\cs\src\ConsoleApp.csproj", "{933969DF-2BC5-44E6-8B1A-400FC276A23F}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotLogging", "Performance\NotLogging\cs\src\NotLogging.csproj", "{79B1930A-63AE-4640-B130-084687B3EDD7}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemotingClient", "Remoting\RemotingClient\cs\src\RemotingClient.csproj", "{F4CE6810-1C1B-4178-B637-4B05E3F6DE3C}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemotingServer", "Remoting\RemotingServer\cs\src\RemotingServer.csproj", "{3A9BCF6F-FA1B-409A-93E9-7028F9A2A91F}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleModule", "Repository\SimpleModule\cs\src\SimpleModule.csproj", "{F82AA1D9-5B52-4890-8838-7AAAF7D8F0EE}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleApp", "Repository\SimpleApp\cs\src\SimpleApp.csproj", "{D49EB32C-B25F-4E25-BF6D-62EE38FC1A1F}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TraceLogApp", "Extensibility\TraceLogApp\cs\src\TraceLogApp.csproj", "{EB508341-D73A-4165-846D-E7E317E12518}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedModule", "Repository\SharedModule\cs\src\SharedModule.csproj", "{9AACDC1A-84FB-4042-85A5-7095C66AD973}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.Ext.Trace", "..\..\..\extensions\net\1.0\log4net.Ext.Trace\cs\src\log4net.Ext.Trace.csproj", "{8C73DF1C-AB2B-4309-A3EC-1ED594239E15}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.Ext.EventID", "..\..\..\extensions\net\1.0\log4net.Ext.EventID\cs\src\log4net.Ext.EventID.csproj", "{CB985027-C009-4C0F-88C1-8CF11912EE4C}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventIDLogApp", "Extensibility\EventIDLogApp\cs\src\EventIDLogApp.csproj", "{B3DCF964-EAC8-46F2-AA11-151713141536}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleAppendersApp", "Appenders\SampleAppendersApp\cs\src\SampleAppendersApp.csproj", "{9E715F72-7F70-421B-A2BF-E9CB42F88F5C}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleLayoutsApp", "Layouts\SampleLayoutsApp\cs\src\SampleLayoutsApp.csproj", "{CD7A8094-D383-46BC-A75D-9F65F746E24F}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WmiAppender", "Appenders\WmiAppender\cs\src\WmiAppender.csproj", "{BE56F892-37BA-489C-A91D-F2761FDB96EF}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{933969DF-2BC5-44E6-8B1A-400FC276A23F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{933969DF-2BC5-44E6-8B1A-400FC276A23F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{933969DF-2BC5-44E6-8B1A-400FC276A23F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{933969DF-2BC5-44E6-8B1A-400FC276A23F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79B1930A-63AE-4640-B130-084687B3EDD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79B1930A-63AE-4640-B130-084687B3EDD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79B1930A-63AE-4640-B130-084687B3EDD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79B1930A-63AE-4640-B130-084687B3EDD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4CE6810-1C1B-4178-B637-4B05E3F6DE3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4CE6810-1C1B-4178-B637-4B05E3F6DE3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4CE6810-1C1B-4178-B637-4B05E3F6DE3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4CE6810-1C1B-4178-B637-4B05E3F6DE3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A9BCF6F-FA1B-409A-93E9-7028F9A2A91F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A9BCF6F-FA1B-409A-93E9-7028F9A2A91F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A9BCF6F-FA1B-409A-93E9-7028F9A2A91F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A9BCF6F-FA1B-409A-93E9-7028F9A2A91F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F82AA1D9-5B52-4890-8838-7AAAF7D8F0EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F82AA1D9-5B52-4890-8838-7AAAF7D8F0EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F82AA1D9-5B52-4890-8838-7AAAF7D8F0EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F82AA1D9-5B52-4890-8838-7AAAF7D8F0EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D49EB32C-B25F-4E25-BF6D-62EE38FC1A1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D49EB32C-B25F-4E25-BF6D-62EE38FC1A1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D49EB32C-B25F-4E25-BF6D-62EE38FC1A1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D49EB32C-B25F-4E25-BF6D-62EE38FC1A1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB508341-D73A-4165-846D-E7E317E12518}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB508341-D73A-4165-846D-E7E317E12518}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB508341-D73A-4165-846D-E7E317E12518}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB508341-D73A-4165-846D-E7E317E12518}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AACDC1A-84FB-4042-85A5-7095C66AD973}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AACDC1A-84FB-4042-85A5-7095C66AD973}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AACDC1A-84FB-4042-85A5-7095C66AD973}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AACDC1A-84FB-4042-85A5-7095C66AD973}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C73DF1C-AB2B-4309-A3EC-1ED594239E15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C73DF1C-AB2B-4309-A3EC-1ED594239E15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C73DF1C-AB2B-4309-A3EC-1ED594239E15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C73DF1C-AB2B-4309-A3EC-1ED594239E15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB985027-C009-4C0F-88C1-8CF11912EE4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB985027-C009-4C0F-88C1-8CF11912EE4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB985027-C009-4C0F-88C1-8CF11912EE4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB985027-C009-4C0F-88C1-8CF11912EE4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3DCF964-EAC8-46F2-AA11-151713141536}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3DCF964-EAC8-46F2-AA11-151713141536}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3DCF964-EAC8-46F2-AA11-151713141536}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3DCF964-EAC8-46F2-AA11-151713141536}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E715F72-7F70-421B-A2BF-E9CB42F88F5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E715F72-7F70-421B-A2BF-E9CB42F88F5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E715F72-7F70-421B-A2BF-E9CB42F88F5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E715F72-7F70-421B-A2BF-E9CB42F88F5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD7A8094-D383-46BC-A75D-9F65F746E24F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD7A8094-D383-46BC-A75D-9F65F746E24F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD7A8094-D383-46BC-A75D-9F65F746E24F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD7A8094-D383-46BC-A75D-9F65F746E24F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE56F892-37BA-489C-A91D-F2761FDB96EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE56F892-37BA-489C-A91D-F2761FDB96EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE56F892-37BA-489C-A91D-F2761FDB96EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE56F892-37BA-489C-A91D-F2761FDB96EF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

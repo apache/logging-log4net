@@ -1,0 +1,245 @@
+<?xml version="1.0" ?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one or more 
+contributor license agreements. See the NOTICE file distributed with
+this work for additional information regarding copyright ownership. 
+The ASF licenses this file to you under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with 
+the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<document>
+
+    <properties>
+        <author email="nicko at apache dot org">Nicko Cadell</author>
+        <title>Apache log4net Manual: Contexts</title>
+    </properties>
+
+    <meta name="keywords" content="building log4net, log4net" />
+
+    <body>
+        <section id="main" name="Apache log4net&#x2122; Manual - Contexts">
+            <p>
+                Most real-world systems have to deal with multiple clients simultaneously. In a 
+                typical multithreaded implementation of such a system, different threads will 
+                handle different clients. Logging is especially well suited to trace and debug 
+                complex distributed applications. An approach to differentiate the 
+                logging output of one client from another is to instantiate a new separate 
+                logger for each client. However this promotes the proliferation of loggers and 
+                increases the management overhead of logging.
+            </p>
+            <p>
+                A lighter technique is to uniquely stamp each log request initiated from the 
+                same client interaction.
+            </p>
+            <p>
+                Log4net supports different types of contextual logging and contexts with different scopes.
+            </p>
+            
+            <section id="scopes" name="Scopes">
+                <p>
+                    Contextual data can be set in different scopes. These contexts have progressively narrower visibility.
+                    In the logging event itself the values from all of the contexts are combined together such that
+                    values specified in a lower scoped context hide values from a higher context.
+                </p>
+                
+                <div class="table">
+                    <table>
+                        <tr>
+                            <th>Scope</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr align="left">
+                            <td>Global</td>
+                            <td><span class="code">log4net.GlobalContext</span></td>
+                            <td>
+                                The global context is shared by all threads in the current AppDomain.
+                                This context is thread safe for use by multiple threads concurrently.
+                            </td>
+                        </tr>
+                        <tr align="left">
+                            <td>Thread</td>
+                            <td><span class="code">log4net.ThreadContext</span></td>
+                            <td>
+                                The thread context is visible only to the current managed thread.
+                            </td>
+                        </tr>
+                        <tr align="left">
+                            <td>Logical Thread</td>
+                            <td><span class="code">log4net.ThreadLogicalContext</span></td>
+                            <td>
+                                The logical thread context is visible to a logical thread. Logical
+                                threads can jump from one managed thread to another. For more details
+                                see the .NET API <span class="code">System.Runtime.Remoting.Messaging.CallContext</span>.
+                            </td>
+                        </tr>
+                        <tr align="left">
+                            <td>Event</td>
+                            <td><span class="code">log4net.Core.LoggingEvent</span></td>
+                            <td>
+                                Each event captures the current contextual state at the time the event
+                                is generated. Contextual data can be set on the event itself. This context
+                                is only visible to the code generating the event itself.
+                            </td>
+                        </tr>
+                    </table>
+                </div>                
+            </section>
+            
+            <section id="properties" name="Context Properties">
+                <p>
+                    The log4net contexts store properties, i.e. name value pairs. The name is a string
+                    the value is any object. A property can be set as follows:
+                </p>
+                <source language="c#"><![CDATA[
+log4net.GlobalContext.Properties["name"] = value;
+]]></source>
+                <p>
+                    If properties with the same name are set in more than one context scope then
+                    the value in the narrowest scope (lower down in the list above) will hide the
+                    other values.
+                </p>
+                <p>
+                    The property values are stored as objects within the <span class="code">LoggingEvent</span>. 
+                    The <span class="code">PatternLayout</span> supports rendering the value of a named
+                    property using the <span class="code">%property{name}</span> syntax. The value is 
+                    converted to a string by passing it to the <span class="code">log4net.ObjectRenderer.RendererMap</span>
+                    which will locate any custom renderer for the value type. The default behavior for
+                    custom types is to call the object's <span class="code">ToString()</span> method.
+                </p>
+                
+                <section id="active" name="Active Property Values">
+                    <p>
+                        An active property value is one who's value changes over time.
+                    </p>
+                    <p>
+                        For example, imagine a custom type that implemented the 
+                        <span class="code">ToString()</span> method to return the
+                        number of bytes allocated by the runtime garbage collector. 
+                    </p>
+                <source language="c#"><![CDATA[
+public class GCAllocatedBytesHelper
+{
+    public override string ToString()
+    {
+        return GC.GetTotalMemory(true).ToString();
+    }
+}]]></source>
+                    <p>
+                        An instance of this type can be added to the <span class="code">log4net.GlobalContext</span> 
+                        during application startup: 
+                    </p>
+                <source language="c#"><![CDATA[
+log4net.GlobalContext.Properties["GCAllocatedBytes"] = new GCAllocatedBytesHelper();
+]]></source>
+                    <p>
+                        Once this property is set in the context all subsequent logging events will have a property
+                        called <i>GCAllocatedBytes</i>. The value of the property will be an instance of the
+                        <span class="code">GCAllocatedBytesHelper</span> type. When this value is rendered to a 
+                        string by calling the <span class="code">ToString</span> method the current number of bytes 
+                        allocated by the garbage collector will be returned and included in the output.
+                    </p>
+                    
+                </section>
+                
+            </section>
+            
+            <section id="stacks" name="Context Stacks">
+                <p>
+                    Sometimes simple key value pairs are not the most convenient way of capturing contextual
+                    information. A stack of information is a very convenient way of storing data especially
+                    as our applications tend to be stack based.
+                </p>
+                <p>
+                    The <span class="code">ThreadContext</span> and <span class="code">LogicalThreadContext</span>
+                    also support storing contextual data in a stack. The stack is stored in context property,
+                    therefore stacks have names and more than one stack can exist in the same context. A property
+                    value set in a narrower context would override a stack with the same property name set in a
+                    wider scoped context.
+                </p>
+                <p>
+                    The stack supports <span class="code">Push</span> and <span class="code">Pop</span> methods.
+                    As more contextual data is pushed onto the stack the stack grows. When the stack is rendered
+                    all the data pushed onto the stack is output with the most recent data to the right hand
+                    end of the string.
+                </p>
+                <p>
+                    As the stack is just an object stored in the context properties it is also rendered
+                    using the same <span class="code">PatternLayout</span> syntax: <span class="code">%property{name}</span>.
+                    Where <i>name</i> is the name of the stack.
+                </p>
+                <p>
+                    Calls the the stack's <span class="code">Push</span> and <span class="code">Pop</span>
+                    methods must be matched up so that each push has a corresponding pop. The 
+                    <span class="code">Push</span> method also returns an <span class="code">IDisposable</span>
+                    object that will perform the required pop operation when it is disposed. This allows
+                    the C# <i>using</i> syntax to be used to automate the stack management.
+                </p>
+                <source language="c#"><![CDATA[
+using(log4net.ThreadContext.Stacks["NDC"].Push("context"))
+{
+    log.Info("Message");
+}
+]]></source>
+                <p>
+                    The INFO level log has a stack stored in its <i>NDC</i> property. The top item in the
+                    stack is the string <i>context</i>.
+                    The <i>using</i> syntax ensures that the value <i>context</i> is popped off the stack
+                    at the end of the block.
+                </p>
+                <p>
+                    The <span class="code">using</span>
+                    syntax is recommended because it removes some work load from the developer and 
+                    reduces errors in matching up the Push and Pop calls, especially when exceptions
+                    can occur.
+                </p>
+            </section>
+            
+            <section id="ndc" name="Nested Diagnostic Contexts">
+                <p>
+                    The <span class="code">NDC</span> (Nested Diagnostic Context) exists for compatibility
+                    with older versions of log4net. This helper class implements a stack which is stored
+                    in the thread context property named <i>NDC</i>.
+                </p>
+            </section>
+            
+            <section id="mdc" name="Mapped Diagnostic Contexts">
+                <p>
+                    The <span class="code">MDC</span> (MappedDiagnostic Context) exists for compatibility
+                    with older versions of log4net. This helper class implements a properties map which is 
+                    mapped directly through to the thread context properties.
+                </p>
+            </section>
+                
+            <p>
+                To illustrate this point, let us take the example of a web service delivering 
+                content to numerous clients. The web service can build the <span class="code">NDC</span> at the very 
+                beginning of the request before executing other code. The contextual 
+                information can be the client's host name and other information inherent to the 
+                request, typically information contained in cookies. Hence, even if the web 
+                service is serving multiple clients simultaneously, the logs initiated by the 
+                same code, i.e. belonging to the same logger, can still be distinguished 
+                because each client request will have a different <span class="code">NDC</span> stack. Contrast this with 
+                the complexity of passing a freshly instantiated logger to all code exercised 
+                during the client's request.
+            </p>
+            <p>
+                Nevertheless, some sophisticated applications, such as virtual hosting web 
+                servers, must log differently depending on the virtual host context and also 
+                depending on the software component issuing the request. Log4net supports 
+                multiple logger repositories. This would allow each virtual host to possess its own copy 
+                of the logger hierarchy. Configuring multiple logger hierarchies is beyond the 
+                scope of this document.
+            </p>
+
+        </section>
+    </body>
+</document>

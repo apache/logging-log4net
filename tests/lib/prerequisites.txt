@@ -1,0 +1,37 @@
+Prerequisites for log4net tests
+===============================
+
+
+The nunit.framework.dll assembly version 2.2.7 is required to build 
+the log4net tests.
+
+NAnt 0.85 includes the 2.2.7 version of the nunit.framework.dll.
+
+The nunit.framework.dll is available as different builds for each 
+version of the .net runtime. To build multiple versions of the
+log4net tests you will need several different copies of the
+nunit.framework.dll.
+
+The log4net tests are currently built for the following runtimes:
+
+Microsoft .NET Framework 1.0
+Microsoft .NET Framework 1.1
+Microsoft .NET Framework 2.0
+Mono Framework 2.0
+
+Under the tests/lib directory you must create the following directory
+structure containing the nunit.framework.dll assembly built for the
+appropriate version of the runtime:
+
+lib\
+  net\
+    1.0\
+      nunit.framework.dll
+    1.1\
+      nunit.framework.dll
+    2.0\
+      nunit.framework.dll
+  mono\
+    2.0\
+      nunit.framework.dll
+    

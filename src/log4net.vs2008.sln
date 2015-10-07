@@ -1,0 +1,45 @@
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+#
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+#
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.vs2008", "log4net.vs2008.csproj", "{181FE707-E161-4722-9F38-6AAAB6FAA106}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.Tests.vs2008", "..\tests\src\log4net.Tests.vs2008.csproj", "{B0530F10-0238-49A9-93B0-8EF412E90BCF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{181FE707-E161-4722-9F38-6AAAB6FAA106}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{181FE707-E161-4722-9F38-6AAAB6FAA106}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{181FE707-E161-4722-9F38-6AAAB6FAA106}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{181FE707-E161-4722-9F38-6AAAB6FAA106}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0530F10-0238-49A9-93B0-8EF412E90BCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0530F10-0238-49A9-93B0-8EF412E90BCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0530F10-0238-49A9-93B0-8EF412E90BCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0530F10-0238-49A9-93B0-8EF412E90BCF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

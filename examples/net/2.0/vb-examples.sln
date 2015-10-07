@@ -1,0 +1,71 @@
+Microsoft Visual Studio Solution File, Format Version 7.00
+#
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+#
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ConsoleApp", "Tutorials\ConsoleApp\vb\src\ConsoleApp.vbproj", "{41B855A4-F3BF-43F8-BE6F-2ABD5E5C8D42}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WebApp", "http://localhost/WebAppVB/WebApp.vbproj", "{4CEA8E96-BF74-488D-9967-EAB779EF430A}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SharedModule", "Repository\SharedModule\vb\src\SharedModule.vbproj", "{8F84B3EA-34F7-40ED-8A04-895EFC37C38D}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SimpleApp", "Repository\SimpleApp\vb\src\SimpleApp.vbproj", "{912A9564-F435-444B-905F-1FD8B69C48D7}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SimpleModule", "Repository\SimpleModule\vb\src\SimpleModule.vbproj", "{2BDB262A-3B90-418E-9C6A-322A4B0C287A}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "NotLogging", "Performance\NotLogging\vb\src\NotLogging.vbproj", "{4ED8A816-5051-4494-AEE5-C54E18F59FD8}"
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		ConfigName.0 = Debug
+		ConfigName.1 = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{41B855A4-F3BF-43F8-BE6F-2ABD5E5C8D42}.Debug.ActiveCfg = Debug|.NET
+		{41B855A4-F3BF-43F8-BE6F-2ABD5E5C8D42}.Debug.Build.0 = Debug|.NET
+		{41B855A4-F3BF-43F8-BE6F-2ABD5E5C8D42}.Release.ActiveCfg = Release|.NET
+		{41B855A4-F3BF-43F8-BE6F-2ABD5E5C8D42}.Release.Build.0 = Release|.NET
+		{4CEA8E96-BF74-488D-9967-EAB779EF430A}.Debug.ActiveCfg = Debug|.NET
+		{4CEA8E96-BF74-488D-9967-EAB779EF430A}.Debug.Build.0 = Debug|.NET
+		{4CEA8E96-BF74-488D-9967-EAB779EF430A}.Release.ActiveCfg = Release|.NET
+		{4CEA8E96-BF74-488D-9967-EAB779EF430A}.Release.Build.0 = Release|.NET
+		{8F84B3EA-34F7-40ED-8A04-895EFC37C38D}.Debug.ActiveCfg = Debug|.NET
+		{8F84B3EA-34F7-40ED-8A04-895EFC37C38D}.Debug.Build.0 = Debug|.NET
+		{8F84B3EA-34F7-40ED-8A04-895EFC37C38D}.Release.ActiveCfg = Release|.NET
+		{8F84B3EA-34F7-40ED-8A04-895EFC37C38D}.Release.Build.0 = Release|.NET
+		{912A9564-F435-444B-905F-1FD8B69C48D7}.Debug.ActiveCfg = Debug|.NET
+		{912A9564-F435-444B-905F-1FD8B69C48D7}.Debug.Build.0 = Debug|.NET
+		{912A9564-F435-444B-905F-1FD8B69C48D7}.Release.ActiveCfg = Release|.NET
+		{912A9564-F435-444B-905F-1FD8B69C48D7}.Release.Build.0 = Release|.NET
+		{2BDB262A-3B90-418E-9C6A-322A4B0C287A}.Debug.ActiveCfg = Debug|.NET
+		{2BDB262A-3B90-418E-9C6A-322A4B0C287A}.Debug.Build.0 = Debug|.NET
+		{2BDB262A-3B90-418E-9C6A-322A4B0C287A}.Release.ActiveCfg = Release|.NET
+		{2BDB262A-3B90-418E-9C6A-322A4B0C287A}.Release.Build.0 = Release|.NET
+		{4ED8A816-5051-4494-AEE5-C54E18F59FD8}.Debug.ActiveCfg = Debug|.NET
+		{4ED8A816-5051-4494-AEE5-C54E18F59FD8}.Debug.Build.0 = Debug|.NET
+		{4ED8A816-5051-4494-AEE5-C54E18F59FD8}.Release.ActiveCfg = Release|.NET
+		{4ED8A816-5051-4494-AEE5-C54E18F59FD8}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

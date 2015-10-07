@@ -1,0 +1,1041 @@
+<?xml version="1.0" ?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one or more 
+contributor license agreements. See the NOTICE file distributed with
+this work for additional information regarding copyright ownership. 
+The ASF licenses this file to you under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with 
+the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<document>
+
+    <properties>
+        <author email="nicko at apache dot org">Nicko Cadell</author>
+        <title>Apache log4net Manual: Introduction</title>
+    </properties>
+
+    <meta name="keywords" content="log4net manual, log4net" />
+
+    <body>
+        <section id="main" name="Apache log4net&#x2122; Manual - Introduction">
+            <section id="overview" name="Overview">
+                <p>
+                    This document is based on <i>Short introduction to log4j</i> by <i>Ceki G&#252;lc&#252;</i>.
+                </p>
+                <p>
+                    The log4net framework is based on Apache log4j&#x2122;, see <a href="http://logging.apache.org/log4j/">
+                        http://logging.apache.org/log4j/</a> for more information on log4j.
+                    The log4net framework, source code, binaries, documentation, examples and related 
+                    materials are published under the terms of the 
+                    <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>, 
+                    a copy of which has been included with this distribution in the LICENSE.txt file.
+                </p>
+                <p>
+                    This document is an introduction to the log4net API, its unique features and 
+                    design rationale. Log4net is an open source project based on the work of many 
+                    authors. It allows the developer to control which log statements are output 
+                    with arbitrary granularity. It is fully configurable at runtime using external 
+                    configuration files.
+                </p>
+                <p>
+                    Almost every large application includes its own logging or tracing API. 
+                    Inserting log statements into code is a low-tech method for debugging it. It 
+                    may also be the only way because debuggers are not always available or 
+                    applicable. This is usually the case for multithreaded applications and 
+                    distributed applications at large.
+                </p>
+                <p>
+                    Once an application has been deployed it may not be possible to utilize 
+                    development and debugging tools. An administrator can use effective logging 
+                    systems to diagnose and fix many configuration issues.
+                </p>
+                <p>
+                    Experience indicates that logging is an important component of the development 
+                    cycle. It offers several advantages. It provides precise <i>context</i> about the 
+                    execution of the application. Once inserted into the code, the generation of 
+                    logging output requires no human intervention. Moreover, log output can be 
+                    saved in persistent medium to be studied at a later time. In addition to its 
+                    use in the development cycle, a sufficiently rich logging package can also be 
+                    viewed as an auditing tool.
+                </p>
+                <p>
+                    Logging does have its drawbacks. It can slow down an application. If too 
+                    verbose, it can cause scrolling blindness. To alleviate these concerns, log4net 
+                    is designed to be reliable, fast and extensible. Since logging is rarely the 
+                    main focus of an application, the log4net API strives to be simple to 
+                    understand and to use.
+                </p>
+            </section>
+            
+            <section id="frameworks" name="Frameworks">
+                <p>
+                    Log4net is available for several frameworks. For each supported framework an 
+                    assembly targeting that framework is built:
+                </p>
+                <ul>
+                    <li>Microsoft&#xae; .NET Framework 1.0</li>
+                    <li>Microsoft .NET Framework 1.1</li>
+                    <li>Microsoft .NET Framework 2.0</li>
+                    <li>Microsoft .NET Framework 3.5</li>
+                    <li>Microsoft .NET Framework 4.0</li>
+                    <li>Microsoft .NET Framework 3.5 Client Profile</li>
+                    <li>Microsoft .NET Framework 4.0 Client Profile</li>
+                    <li>Microsoft .NET Compact Framework 1.0</li>
+                    <li>Microsoft .NET Compact Framework 2.0</li>
+                    <li>Mono 1.0</li>
+                    <li>Mono 2.0</li>
+                    <li>Microsoft Shared Source CLI 1.0</li>
+                    <li>CLI 1.0 Compatible</li>
+                </ul>
+                <p>
+                    Not all frameworks are created equal and some features have been excluded from 
+                    some of the builds. See the <a href="../framework-support.html">Framework Support</a> 
+                    document for more information.
+                </p>
+            </section>
+            
+            <section id="loggers" name="Loggers and Appenders">
+                <p>
+                    Log4net has three main components: <i>loggers</i>, <i>appenders</i> and <i>layouts</i>. 
+                    These three types of components work together to enable developers to log 
+                    messages according to message type and level, and to control at runtime how 
+                    these messages are formatted and where they are reported. These components are
+                    helped by <i>filters</i> that control the actions of the appender and
+                    <i>object renderers</i> that turn objects into strings.
+                </p>
+                
+                <section id="hierarchy" name="Logger hierarchy">
+                    <p>
+                        The first and foremost advantage of any logging API over plain
+                        <span class="code">System.Console.WriteLine</span>
+                        resides in its ability to disable certain log statements while allowing others 
+                        to print unhindered. This capability assumes that the logging space, that is, 
+                        the space of all possible logging statements, is categorized according to some 
+                        developer-chosen criteria.
+                    </p>
+                    <p>
+                        Loggers are named entities. Logger names are case-sensitive and they follow the 
+                        following hierarchical naming rule:
+                    </p>
+                    <dl class="rule">
+                        <dt>Named Hierarchy</dt>
+                        <dd>
+                            <p>
+                                A logger is said to be an <i>ancestor</i> of another logger if its name 
+                                followed by a dot is a prefix of the <i>descendant</i> logger name. A logger is 
+                                said to be a <i>parent</i> of a <i>child</i> logger if there are no ancestors 
+                                between itself and the descendant logger.
+                            </p>
+                            <p>
+                                The hierarchy works very much in the same way as the namespace and class 
+                                hierarchy in .NET. This is very convenient as we shall soon see.
+                            </p>
+                        </dd>
+                    </dl>
+                    <p>
+                        For example, the logger named
+                        <span class="code">"Foo.Bar"</span>
+                        is a parent of the logger named
+                        <span class="code">"Foo.Bar.Baz"</span>. Similarly,
+                        <span class="code">"System"</span>
+                        is a parent of
+                        <span class="code">"System.Text"</span>
+                        and an ancestor of
+                        <span class="code">"System.Text.StringBuilder"</span>. This naming scheme 
+                        should be familiar to most developers.
+                    </p>
+                    <p>
+                        The <i>root</i> logger resides at the top of the logger hierarchy. It is exceptional 
+                        in three ways:
+                    </p>
+                    <ol>
+                        <li>
+                            It always exists</li>
+                        <li>
+                            It cannot be retrieved by name</li>
+                        <li>
+                            It always has an assigned level</li>
+                    </ol>
+                    <p>
+                        Loggers are retrieved using the static method from the
+                        <span class="code">log4net.LogManager</span>
+                        class. The
+                        <span class="code">GetLogger</span>
+                        methods take the name of the desired logger as a parameter. They are listed 
+                        below:
+                    </p>
+                    <source language="C#"><![CDATA[
+namespace log4net
+{
+    public class LogManager
+    {
+        public static ILog GetLogger(string name);
+        public static ILog GetLogger(Type type);
+    }
+}]]></source>
+                    <p>
+                        The
+                        <span class="code">GetLogger</span>
+                        methods that takes a
+                        <span class="code">Type</span>
+                        parameter uses the fully qualified type name as the name of the logger to 
+                        retrieve.
+                    </p>
+                    <p>
+                        These
+                        <span class="code">GetLogger</span>
+                        methods return an
+                        <span class="code">ILog</span>
+                        interface. That is the representation of the <i>Logger</i> passed back to the 
+                        developer. The
+                        <span class="code">ILog</span>
+                        interface is defined below:
+                    </p>
+                    <source language="C#"><![CDATA[
+namespace log4net
+{
+    public interface ILog
+    {
+        /* Test if a level is enabled for logging */
+        bool IsDebugEnabled { get; }
+        bool IsInfoEnabled { get; }
+        bool IsWarnEnabled { get; }
+        bool IsErrorEnabled { get; }
+        bool IsFatalEnabled { get; }
+        
+        /* Log a message object */
+        void Debug(object message);
+        void Info(object message);
+        void Warn(object message);
+        void Error(object message);
+        void Fatal(object message);
+        
+        /* Log a message object and exception */
+        void Debug(object message, Exception t);
+        void Info(object message, Exception t);
+        void Warn(object message, Exception t);
+        void Error(object message, Exception t);
+        void Fatal(object message, Exception t);
+        
+        /* Log a message string using the System.String.Format syntax */
+        void DebugFormat(string format, params object[] args);
+        void InfoFormat(string format, params object[] args);
+        void WarnFormat(string format, params object[] args);
+        void ErrorFormat(string format, params object[] args);
+        void FatalFormat(string format, params object[] args);
+        
+        /* Log a message string using the System.String.Format syntax */
+        void DebugFormat(IFormatProvider provider, string format, params object[] args);
+        void InfoFormat(IFormatProvider provider, string format, params object[] args);
+        void WarnFormat(IFormatProvider provider, string format, params object[] args);
+        void ErrorFormat(IFormatProvider provider, string format, params object[] args);
+        void FatalFormat(IFormatProvider provider, string format, params object[] args);
+    }
+}]]></source>
+                    <p>
+                        Loggers <i>may</i> be assigned levels. Levels are instances of the
+                        <span class="code">log4net.Core.Level</span>
+                        class. The following levels are defined in order of increasing priority:
+                    </p>
+                    <ul>
+                        <li>
+                            <span class="code">ALL</span>
+                        </li>
+                        <li>
+                            <span class="code">DEBUG</span>
+                        </li>
+                        <li>
+                            <span class="code">INFO</span>
+                        </li>
+                        <li>
+                            <span class="code">WARN</span>
+                        </li>
+                        <li>
+                            <span class="code">ERROR</span>
+                        </li>
+                        <li>
+                            <span class="code">FATAL</span>
+                        </li>
+                        <li>
+                            <span class="code">OFF</span>
+                        </li>
+                    </ul>
+                    <p>
+                        If a given logger is not assigned a level, then it inherits one from its 
+                        closest ancestor with an assigned level. More formally:
+                    </p>
+                    <dl class="rule">
+                        <dt>Level Inheritance</dt>
+                        <dd>
+                            <p>
+                                The <i>inherited level</i> for a given logger <i>X</i>, is equal to the first 
+                                non-null level in the logger hierarchy, starting at <i>X</i> and proceeding 
+                                upwards in the hierarchy towards the <i>root</i> logger.
+                            </p>
+                        </dd>
+                    </dl>
+                    <p>
+                        To ensure that all loggers can eventually inherit a level, the <i>root</i> logger 
+                        always has an assigned level. The default value for the <i>root</i> logger is
+                        <span class="code">DEBUG</span>.
+                    </p>
+                    <p>
+                        Below are four tables with various assigned level values and the resulting 
+                        inherited levels according to the above rule.
+                    </p>
+                    <p> </p>
+                    <div class="table">
+                        <table>
+                            <tr>
+                                <th>
+                                    Logger name</th>
+                                <th>
+                                    Assigned level</th>
+                                <th>
+                                    Inherited level</th>
+                            </tr>
+                            <tr align="left">
+                                <td><i>root</i></td>
+                                <td>Proot</td>
+                                <td>Proot</td>
+                            </tr>
+                            <tr align="left">
+                                <td>X</td>
+                                <td>none</td>
+                                <td>Proot</td>
+                            </tr>
+                            <tr align="left">
+                                <td>X.Y</td>
+                                <td>none</td>
+                                <td>Proot</td>
+                            </tr>
+                            <tr align="left">
+                                <td>X.Y.Z</td>
+                                <td>none</td>
+                                <td>Proot</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <p>
+                        In <i>Example 1</i> above, only the <i>root</i> logger is assigned a level. This level 
+                        value,
+                        <span class="code">Proot</span>, is inherited by the other loggers
+                        <span class="code">X</span>,
+                        <span class="code">X.Y</span>
+                        and
+                        <span class="code">X.Y.Z</span>.
+                    </p>
+                    <p> </p>
+                    <div class="table">
+                        <table>
+                            <tr>
+                                <th>
+                                    Logger name</th>
+                                <th>
+                                    Assigned level</th>
+                                <th>
+                                    Inherited level</th>
+                            </tr>
+                            <tr align="left">
+                                <td><i>root</i></td>
+                                <td>Proot</td>
+                                <td>Proot</td>
+                            </tr>
+                            <tr align="left">
+                                <td>X</td>
+                                <td>Px</td>
+                                <td>Px</td>
+                            </tr>
+                            <tr align="left">
+                                <td>X.Y</td>
+                                <td>Pxy</td>
+                                <td>Pxy</td>
+                            </tr>
+                            <tr align="left">
+                                <td>X.Y.Z</td>
+                                <td>Pxyz</td>
+                                <td>Pxyz</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <p>
+                        In <i>Example 2</i> above, all loggers have an assigned level value. There is 
+                        no need for level inheritance.
+                    </p>
+                    <p> </p>
+                    <div class="table">
+                        <table>
+                            <tr>
+                                <th>
+                                    Logger name</th>
+                                <th>
+                                    Assigned level</th>
+                                <th>
+                                    Inherited level</th>
+                            </tr>
+                            <tr align="left">
+                                <td><i>root</i></td>
+                                <td>Proot</td>
+                                <td>Proot</td>
+                            </tr>
+                            <tr align="left">
+                                <td>X</td>
+                                <td>Px</td>
+                                <td>Px</td>
+                            </tr>
+                            <tr align="left">
+                                <td>X.Y</td>
+                                <td>none</td>
+                                <td>Px</td>
+                            </tr>
+                            <tr align="left">
+                                <td>X.Y.Z</td>
+                                <td>Pxyz</td>
+                                <td>Pxyz</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <p>
+                        In <i>Example 3</i> above, the loggers
+                        <i>root</i>,
+                        <span class="code">X</span>
+                        and
+                        <span class="code">X.Y.Z</span>
+                        are assigned the levels
+                        <span class="code">Proot</span>,
+                        <span class="code">Px</span>
+                        and
+                        <span class="code">Pxyz</span>
+                        respectively. The logger
+                        <span class="code">X.Y</span>
+                        inherits its level value from its parent
+                        <span class="code">X</span>.
+                    </p>
+                    <p> </p>
+                    <div class="table">
+                        <table>
+                            <tr>
+                                <th>
+                                    Logger name</th>
+                                <th>
+                                    Assigned level</th>
+                                <th>
+                                    Inherited level</th>
+                            </tr>
+                            <tr align="left">
+                                <td><i>root</i></td>
+                                <td>Proot</td>
+                                <td>Proot</td>
+                            </tr>
+                            <tr align="left">
+                                <td>X</td>
+                                <td>Px</td>
+                                <td>Px</td>
+                            </tr>
+                            <tr align="left">
+                                <td>X.Y</td>
+                                <td>none</td>
+                                <td>Px</td>
+                            </tr>
+                            <tr align="left">
+                                <td>X.Y.Z</td>
+                                <td>none</td>
+                                <td>Px</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <p>
+                        In <i>Example 4</i> above, the loggers <i>root</i> and
+                        <span class="code">X</span>
+                        and are assigned the levels
+                        <span class="code">Proot</span>
+                        and
+                        <span class="code">Px</span>
+                        respectively. The loggers
+                        <span class="code">X.Y</span>
+                        and
+                        <span class="code">X.Y.Z</span>
+                        inherits their level value from their nearest parent
+                        <span class="code">X</span>
+                        having an assigned level.
+                    </p>
+                    <p>
+                        Logging requests are made by invoking one of the printing methods of a logger 
+                        instance (through the <span class="code">log4net.ILog</span>). These printing methods are
+                        <span class="code">Debug</span>,
+                        <span class="code">Info</span>,
+                        <span class="code">Warn</span>,
+                        <span class="code">Error</span>, and
+                        <span class="code">Fatal</span>.
+                    </p>
+                    <p>
+                        By definition, the printing method determines the level of a logging request. 
+                        For example, if
+                        <span class="code">log</span>
+                        is a logger instance, then the statement
+                        <span class="code">log.Info("..")</span>
+                        is a logging request of level <span class="code">INFO</span>.
+                    </p>
+                    <p>
+                        A logging request is said to be <i>enabled</i> if its level is higher than or 
+                        equal to the level of its logger. Otherwise, the request is said to be <i>disabled</i>. 
+                        A logger without an assigned level will inherit one from the hierarchy. This 
+                        rule is summarized below.
+                    </p>
+                    <dl class="rule">
+                        <dt>Basic Selection Rule</dt>
+                        <dd>
+                            <p>
+                                A log request of level <i>L</i> in a logger with (either assigned or inherited, 
+                                whichever is appropriate) level <i>K</i>, is enabled if <i>L &gt;= K</i>.
+                            </p>
+                        </dd>
+                    </dl>
+                    <p>
+                        This rule is at the heart of log4net. It assumes that levels are ordered. For 
+                        the standard levels, we have
+                        <span class="code">DEBUG &lt; INFO &lt; WARN &lt; ERROR &lt; FATAL</span>.
+                    </p>
+                    <p>
+                        Calling the
+                        <span class="code">log4net.LogManager.GetLogger</span>
+                        method with the same name will always return a reference to the exact same 
+                        logger object.
+                    </p>
+                    <p>
+                        For example, in:
+                    </p>
+                    <source language="C#"><![CDATA[
+ILog x = LogManager.GetLogger("wombat");
+ILog y = LogManager.GetLogger("wombat");]]></source>
+                    <p>
+                        <span class="code">x</span>
+                        and
+                        <span class="code">y</span>
+                        refer to <i>exactly</i> the same logger object.
+                    </p>
+                    <p>
+                        Thus, it is possible to configure a logger and then to retrieve the same 
+                        instance somewhere else in the code without passing around references. In 
+                        fundamental contradiction to biological parenthood, where parents always 
+                        precede their children, log4net loggers can be created and configured in any 
+                        order. In particular, a "parent" logger will find and link to its descendants 
+                        even if it is instantiated after them.
+                    </p>
+                    <p>
+                        Configuration of the log4net environment is typically done at application 
+                        initialization. The preferred way is by reading a configuration file. This 
+                        approach will be discussed shortly.
+                    </p>
+                    <p>
+                        Log4net makes it easy to name loggers by <i>software component</i>. This can be 
+                        accomplished by statically instantiating a logger in each class, with the 
+                        logger name equal to the fully qualified name of the class. This is a useful 
+                        and straightforward method of defining loggers. As the log output bears the 
+                        name of the generating logger, this naming strategy makes it easy to identify 
+                        the origin of a log message. However, this is only one possible, albeit common, 
+                        strategy for naming loggers. Log4net does not restrict the possible set of 
+                        loggers. The developer is free to name the loggers as desired.
+                    </p>
+                    <p>
+                        Nevertheless, naming loggers after the class where they are located seems to be 
+                        the best strategy known so far. It is simple an obvious to the developers where 
+                        each log message came from. Most importantly it leverages the design of the 
+                        application to produce the design of the logger hierarchy. Hopefully some 
+                        thought has gone into the design of the application.
+                    </p>
+                </section>
+                
+                <section id="appenders" name="Appenders">
+                    <p>
+                        The ability to selectively enable or disable logging requests based on their 
+                        logger is only part of the picture. Log4net allows logging requests to print to 
+                        multiple destinations. In log4net speak, an output destination is called an <i>appender</i>.
+                        Appenders must implement the <span class="code">log4net.Appenders.IAppender</span>
+                        interface.
+                    </p>
+                    <p>
+                        The following appenders are defined in the log4net package:
+                    </p>
+                    <div class="table">
+                        <table>
+                            <tr>
+                                <th>
+                                    Type</th>
+                                <th>
+                                    Description</th>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Appender.AdoNetAppender.html">log4net.Appender.AdoNetAppender</a></td>
+                                <td>
+                                    Writes logging events to a database using either prepared statements or stored 
+                                    procedures.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Appender.AnsiColorTerminalAppender.html">log4net.Appender.AnsiColorTerminalAppender</a></td>
+                                <td>
+                                    Writes color highlighted logging events to a an ANSI terminal window.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Appender.AspNetTraceAppender.html">log4net.Appender.AspNetTraceAppender</a></td>
+                                <td>
+                                    Writes logging events to the ASP trace context. These can then be rendered at 
+                                    the end of the ASP page or on the ASP trace page.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Appender.BufferingForwardingAppender.html">log4net.Appender.BufferingForwardingAppender</a></td>
+                                <td>
+                                    Buffers logging events before forwarding them to child appenders.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Appender.ColoredConsoleAppender.html">log4net.Appender.ColoredConsoleAppender</a></td>
+                                <td>
+                                    Writes logging events to the application's Console. The events may go to either 
+                                    the standard our stream or the standard error stream. The events may have configurable
+                                    text and background colors defined for each level.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Appender.ConsoleAppender.html">log4net.Appender.ConsoleAppender</a></td>
+                                <td>
+                                    Writes logging events to the application's Console. The events may go to either 
+                                    the standard our stream or the standard error stream.
+                                </td>
+                            </tr>
+                            <tr>
+                              <td><a href="../sdk/log4net.Appender.DebugAppender.html">log4net.Appender.DebugAppender</a></td>
+                              <td>
+                                Writes logging events to the .NET  system.
+                              </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Appender.EventLogAppender.html">log4net.Appender.EventLogAppender</a></td>
+                                <td>
+                                    Writes logging events to the Windows Event Log.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Appender.FileAppender.html">log4net.Appender.FileAppender</a></td>
+                                <td>
+                                    Writes logging events to a file in the file system.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Appender.ForwardingAppender.html">log4net.Appender.ForwardingAppender</a></td>
+                                <td>
+                                    Forwards logging events to child appenders.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Appender.LocalSyslogAppender.html">log4net.Appender.LocalSyslogAppender</a></td>
+                                <td>
+                                    Writes logging events to the local syslog service (UNIX only).
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Appender.MemoryAppender.html">log4net.Appender.MemoryAppender</a></td>
+                                <td>
+                                    Stores logging events in an in memory buffer.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Appender.NetSendAppender.html">log4net.Appender.NetSendAppender</a></td>
+                                <td>
+                                    Writes logging events to the Windows Messenger service. These messages are 
+                                    displayed in a dialog on a users terminal.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Appender.OutputDebugStringAppender.html">log4net.Appender.OutputDebugStringAppender</a></td>
+                                <td>
+                                    Writes logging events to the debugger. If the application has no 
+                                    debugger, the system debugger displays the string. If the application has no 
+                                    debugger and the system debugger is not active, the message is ignored.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Appender.RemoteSyslogAppender.html">log4net.Appender.RemoteSyslogAppender</a></td>
+                                <td>
+                                    Writes logging events to a remote syslog service using UDP networking.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Appender.RemotingAppender.html">log4net.Appender.RemotingAppender</a></td>
+                                <td>
+                                    Writes logging events to a remoting sink using .NET remoting.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Appender.RollingFileAppender.html">log4net.Appender.RollingFileAppender</a></td>
+                                <td>
+                                    Writes logging events to a file in the file system. The RollingFileAppender can 
+                                    be configured to log to multiple files based upon date or file size 
+                                    constraints.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Appender.SmtpAppender.html">log4net.Appender.SmtpAppender</a></td>
+                                <td>
+                                    Sends logging events to an email address.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Appender.SmtpPickupDirAppender.html">log4net.Appender.SmtpPickupDirAppender</a></td>
+                                <td>
+                                    Writes SMTP messages as files into a pickup directory.
+                                    These files can then be read and sent by an SMTP agent
+                                    such as the IIS SMTP agent.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Appender.TelnetAppender.html">log4net.Appender.TelnetAppender</a></td>
+                                <td>
+                                    Clients connect via Telnet to receive logging events.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Appender.TraceAppender.html">log4net.Appender.TraceAppender</a></td>
+                                <td>
+                                    Writes logging events to the .NET trace system.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Appender.UdpAppender.html">log4net.Appender.UdpAppender</a></td>
+                                <td>
+                                    Sends logging events as connectionless UDP datagrams to a remote host or a 
+                                    multicast group using a UdpClient.
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <p>
+                        More than one appender can be attached to a logger.
+                    </p>
+                    <p>
+                        <strong>
+                            Each enabled logging request for a given logger will be forwarded to all 
+                            the appenders in that logger as well as the appenders higher in the hierarchy.
+                        </strong>
+                        In other words, appenders are inherited additively from the logger hierarchy. 
+                        For example, if a console appender is added to the <i>root</i> logger, then all 
+                        enabled logging requests will at least print on the console. If in addition a 
+                        file appender is added to a logger, say <i>X</i>, then enabled logging requests 
+                        for <i>X</i> and <i>X</i>'s children will print on a file <i>and</i> on the 
+                        console. It is possible to override this default behavior so that appender 
+                        accumulation is no longer additive by setting the additivity flag on the logger 
+                        to
+                        <span class="code">false</span>.
+                    </p>
+                    <p>
+                        The rules governing appender additivity are summarized below.
+                    </p>
+                    <dl class="rule">
+                        <dt>Appender Additivity</dt>
+                        <dd>
+                            <p>
+                                The output of a log statement of logger <i>X</i> will go to all the appenders 
+                                in <i>X</i> and its ancestors. This is the meaning of the term "appender 
+                                additivity".
+                            </p>
+                            <p>
+                                However, if an ancestor of logger <i>X</i>, say <i>Y</i>, has the additivity 
+                                flag set to
+                                <span class="code">false</span>, then <i>X</i>'s output will be directed to all 
+                                the appenders in <i>X</i> and it's ancestors up to and including <i>Y</i> but 
+                                not the appenders in any of the ancestors of <i>Y</i>.
+                            </p>
+                            <p>
+                                Loggers have their additivity flag set to
+                                <span class="code">true</span>
+                                by default.
+                            </p>
+                        </dd>
+                    </dl>
+                    <p>
+                        The table below shows an example:
+                    </p>
+                    <div class="table">
+                        <table>
+                            <tr>
+                                <th>
+                                    Logger Name</th>
+                                <th>
+                                    Added Appenders</th>
+                                <th>
+                                    Additivity Flag</th>
+                                <th>
+                                    Output Targets</th>
+                                <th>
+                                    Comment</th>
+                            </tr>
+                            <tr>
+                                <td><i>root</i></td>
+                                <td>A1</td>
+                                <td>not applicable</td>
+                                <td>A1</td>
+                                <td>There is no default appender attached to <i>root</i>.</td>
+                            </tr>
+                            <tr>
+                                <td>x</td>
+                                <td>A-x1, A-x2</td>
+                                <td>true</td>
+                                <td>A1, A-x1, A-x2</td>
+                                <td>Appenders of "x" and <i>root</i>.</td>
+                            </tr>
+                            <tr>
+                                <td>x.y</td>
+                                <td>none</td>
+                                <td>true</td>
+                                <td>A1, A-x1, A-x2</td>
+                                <td>Appenders of "x" and <i>root</i>.</td>
+                            </tr>
+                            <tr>
+                                <td>x.y.z</td>
+                                <td>A-xyz1</td>
+                                <td>true</td>
+                                <td>A1, A-x1, A-x2, A-xyz1</td>
+                                <td>Appenders in "x.y.z", "x" and <i>root</i>.</td>
+                            </tr>
+                            <tr>
+                                <td>security</td>
+                                <td>A-sec</td>
+                                <td><span class="code">false</span></td>
+                                <td>A-sec</td>
+                                <td>No appender accumulation since the additivity flag is set to
+                                    <span class="code">false</span>.</td>
+                            </tr>
+                            <tr>
+                                <td>security.access</td>
+                                <td>none</td>
+                                <td>true</td>
+                                <td>A-sec</td>
+                                <td>Only appenders of "security" because the additivity flag in "security" is set 
+                                    to
+                                    <span class="code">false</span>.</td>
+                            </tr>
+                        </table>
+                    </div>
+                </section>
+                
+                <section id="filters" name="Filters">
+                    <p>
+                        Appenders can filter the events that are delivered to them. The filters can be 
+                        specified in the configuration to allow fine control of the events that are 
+                        logged through different appenders.
+                    </p>
+                    <p>
+                        The simplest form of control is to specify a
+                        <span class="code">Threshold</span>
+                        on the appender. This works by logging only the events that have a level that 
+                        is greater than or equal to the threshold.
+                    </p>
+                    <p>
+                        More complex and custom event filtering can be done using the filter chain 
+                        defined on each appender. Filters must implement the
+                        <span class="code">log4net.Filter.IFilter</span> interface.
+                    </p>
+                    <p>
+                        The following filters are defined in the log4net package:
+                    </p>
+                    <div class="table">
+                        <table>
+                            <tr>
+                                <th>
+                                    Type</th>
+                                <th>
+                                    Description</th>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Filter.DenyAllFilter.html">log4net.Filter.DenyAllFilter</a></td>
+                                <td>
+                                    Drops all logging events.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Filter.LevelMatchFilter.html">log4net.Filter.LevelMatchFilter</a></td>
+                                <td>
+                                    An exact match to the event's level.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Filter.LevelRangeFilter.html">log4net.Filter.LevelRangeFilter</a></td>
+                                <td>
+                                    Matches against a range of levels.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Filter.LoggerMatchFilter.html">log4net.Filter.LoggerMatchFilter</a></td>
+                                <td>
+                                    Matches against a the start of the logger name.
+                                </td>
+                            </tr>
+                            <!-- MDC and NDC replaced by context properties
+                            <tr>
+                                <td><a href="../sdk/log4net.Filter.MdcFilter.html">log4net.Filter.MdcFilter</a></td>
+                                <td>
+                                    Matches a substring from a specific <span class="code">MDC</span> value.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Filter.NdcFilter.html">log4net.Filter.NdcFilter</a></td>
+                                <td>
+                                    Matches a substring from the event's <span class="code">NDC</span>.
+                                </td>
+                            </tr> 
+                            -->
+                            <tr>
+                                <td><a href="../sdk/log4net.Filter.PropertyFilter.html">log4net.Filter.PropertyFilter</a></td>
+                                <td>
+                                    Matches a substring from a specific property value.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Filter.StringMatchFilter.html">log4net.Filter.StringMatchFilter</a></td>
+                                <td>
+                                    Matches a substring from the event's message.
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <p>
+                        The filters can be configured to either accept or reject the event based upon 
+                        the match.
+                    </p>
+                </section>
+                
+                <section id="layouts" name="Layouts">
+                    <p>
+                        More often than not, users wish to customize not only the output destination 
+                        but also the output format. This is accomplished by associating a <i>layout</i> 
+                        with an appender. The layout is responsible for formatting the logging request 
+                        according to the user's wishes, whereas an appender takes care of sending the 
+                        formatted output to its destination. The
+                        <span class="code">PatternLayout</span>, part of the standard log4net 
+                        distribution, lets the user specify the output format according to conversion 
+                        patterns similar to the C language
+                        <span class="code">printf</span>
+                        function.
+                    </p>
+                    <p>
+                        For example, the PatternLayout with the conversion pattern
+                        <span class="code">"%timestamp [%thread] %-5level %logger - %message%newline"</span>
+                        will output something akin to:
+                    </p>
+                    <source language="text"><![CDATA[
+176 [main] INFO  Com.Foo.Bar - Located nearest gas station.]]></source>
+                    <p>
+                        The first field is the number of milliseconds elapsed since the start of the 
+                        program. The second field is the thread making the log request. The third field 
+                        is the level of the log statement. The fourth field is the name of the logger 
+                        associated with the log request. The text after the '-' is the message of the 
+                        statement.
+                    </p>
+                    <p>
+                        The following layouts are included in the log4net package:
+                    </p>
+                    <div class="table">
+                        <table>
+                            <tr>
+                                <th>
+                                    Type</th>
+                                <th>
+                                    Description</th>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Layout.ExceptionLayout.html">log4net.Layout.ExceptionLayout</a></td>
+                                <td>
+                                    Renders the exception text from the logging 
+                                    event.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Layout.PatternLayout.html">log4net.Layout.PatternLayout</a></td>
+                                <td>
+                                    Formats the logging event according to a flexible 
+                                    set of formatting flags.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Layout.RawTimeStampLayout.html">log4net.Layout.RawTimeStampLayout</a></td>
+                                <td>
+                                    Extracts the timestamp from the logging event.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Layout.RawUtcTimeStampLayout.html">log4net.Layout.RawUtcTimeStampLayout</a></td>
+                                <td>
+                                    Extracts the timestamp from the logging event in Universal Time.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Layout.SimpleLayout.html">log4net.Layout.SimpleLayout</a></td>
+                                <td>
+                                    Formats the logging event very simply:
+                                    <span class="code">[level] - [message]</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Layout.XmlLayout.html">log4net.Layout.XmlLayout</a></td>
+                                <td>
+                                    Formats the logging event as an XML element.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../sdk/log4net.Layout.XmlLayoutSchemaLog4j.html">log4net.Layout.XmlLayoutSchemaLog4j</a></td>
+                                <td>
+                                    Formats the logging event as an XML element that
+                                    complies with the log4j event dtd.
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </section>
+                
+                <section id="renderers" name="Object Renderers">
+                    <p>
+                        Just as importantly, log4net will render the content of the log message 
+                        according to user specified criteria. For example, if you frequently need to 
+                        log
+                        <span class="code">Oranges</span>, an object type used in your current project, 
+                        then you can register an
+                        <span class="code">OrangeRenderer</span>
+                        that will be invoked whenever an orange needs to be logged.
+                    </p>
+                    <p>
+                        Object rendering follows the class hierarchy. For example, assuming oranges are 
+                        fruits, if you register an
+                        <span class="code">FruitRenderer</span>, all fruits including oranges will be 
+                        rendered by the
+                        <span class="code">FruitRenderer</span>, unless of course you registered an 
+                        orange specific
+                        <span class="code">OrangeRenderer</span>.
+                    </p>
+                    <p>
+                        Object renderers have to implement the
+                        <span class="code">log4net.ObjectRenderer.IObjectRenderer</span>
+                        interface.
+                    </p>
+                    <p>
+                        Please note that ObjectRenderers are not used by the <span class="code">DebugFormat</span>,
+                        <span class="code">InfoFormat</span>, <span class="code">WarnFormat</span>,
+                        <span class="code">ErrorFormat</span> and <span class="code">FatalFormat</span> methods.
+                    </p>
+                </section>
+                
+            </section>
+
+        </section>
+    </body>
+</document>
