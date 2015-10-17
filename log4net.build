@@ -331,10 +331,10 @@ limitations under the License.
       </if>
     </if>
     <!-- MONO_4_0 -->
-    <if test="${framework::exists('mono-2.0')}">
+    <if test="${framework::exists('mono-4.0')}">
       <call target="compile-mono-4.0" />
     </if>
-    <if test="${not framework::exists('mono-2.0')}">
+    <if test="${not framework::exists('mono-4.0')}">
       <if test="${property::exists('project.build.package') and project.build.package and not(directory::exists(path::combine(bin.dir, 'mono/4.0/debug')) and directory::exists(path::combine(bin.dir, 'mono/4.0/release')) and directory::exists(path::combine(bin.dir, 'mono/4.0/oldkey')))}">
         <fail message="Mono 4.0 is not available." />
       </if>
