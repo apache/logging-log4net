@@ -75,7 +75,11 @@ namespace log4net.Util
 				if (propertyValue == null)
 				{
 					// Stack does not exist, create
+#if NET_2_0 || MONO_2_0
 					stack = new LogicalThreadContextStack(key, registerNew);
+#else
+					stack = new LogicalThreadContextStack(key, new TwoArgAction(registerNew));
+#endif
 					m_properties[key] = stack;
 				}
 				else
@@ -97,7 +101,11 @@ namespace log4net.Util
 
 						LogLog.Error(declaringType, "ThreadContextStacks: Request for stack named [" + key + "] failed because a property with the same name exists which is a [" + propertyValue.GetType().Name + "] with value [" + propertyValueString + "]");
 
+#if NET_2_0 || MONO_2_0
 						stack = new LogicalThreadContextStack(key, registerNew);
+#else
+						stack = new LogicalThreadContextStack(key, new TwoArgAction(registerNew));
+#endif
 					}
 				}
 
