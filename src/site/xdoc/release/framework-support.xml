@@ -94,6 +94,10 @@ limitations under the License.
                             <td><a href="http://msdn.microsoft.com/en-us/library/cc656912.aspx">http://msdn.microsoft.com/en-us/library/cc656912.aspx</a></td>
                         </tr>
                         <tr style="vertical-align: top;">
+                            <td>Microsoft .NET Framework 4.5</td>
+                            <td><a href="http://msdn.microsoft.com/en-us/netframework/">http://msdn.microsoft.com/en-us/netframework/</a></td>
+                        </tr>
+                        <tr style="vertical-align: top;">
                             <td>Microsoft .NET Compact Framework 1.0</td>
                             <td><a href="http://msdn2.microsoft.com/en-us/netframework/aa497273.aspx">http://msdn2.microsoft.com/en-us/netframework/aa497273.aspx</a></td>
                         </tr>
@@ -150,6 +154,9 @@ limitations under the License.
                             <col style="text-align: center;" />
                             <col style="text-align: center;" />
                             <col style="text-align: center;" />
+                            <col style="text-align: center;" />
+                            <col style="text-align: center;" />
+                            <col style="text-align: center;" />
                         </colgroup>
                         <tr>
                             <th>Appender</th>
@@ -158,6 +165,7 @@ limitations under the License.
                             <th>.NET Framework 2.0</th>
                             <th>.NET Framework 3.5</th>
                             <th>.NET Framework 4.0</th>
+                            <th>.NET Framework 4.5</th>
                             <th>.NET Framework 3.5 Client Profile</th>
                             <th>.NET Framework 4.0 Client Profile</th>
                             <th>.NET CF 1.0</th>
@@ -168,6 +176,7 @@ limitations under the License.
                         </tr>
                         <tr>
                             <td>AdoNetAppender</td>
+                            <td>x</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
@@ -195,9 +204,11 @@ limitations under the License.
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
                         </tr>
                         <tr>
                             <td>AspNetTraceAppender</td>
+                            <td>x</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
@@ -225,9 +236,11 @@ limitations under the License.
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
                         </tr>
                         <tr>
                             <td>ColoredConsoleAppender</td>
+                            <td>x</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
@@ -255,6 +268,7 @@ limitations under the License.
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
                         </tr>
                         <tr>
                             <td>DebugAppender</td>
@@ -270,9 +284,11 @@ limitations under the License.
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
                         </tr>
                         <tr>
                             <td>EventLogAppender</td>
+                            <td>x</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
@@ -300,9 +316,11 @@ limitations under the License.
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
                         </tr>
                         <tr>
                             <td>ForwardingAppender</td>
+                            <td>x</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
@@ -325,6 +343,7 @@ limitations under the License.
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
                             <td></td>
                             <td></td>
                             <td>x</td>
@@ -335,6 +354,7 @@ limitations under the License.
                             <td>ManagedColoredConsoleAppender</td>
                             <td></td>
                             <td></td>
+                            <td>x</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
@@ -360,9 +380,11 @@ limitations under the License.
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
                         </tr>
                         <tr>
                             <td>NetSendAppender</td>
+                            <td>x</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
@@ -378,6 +400,7 @@ limitations under the License.
                         </tr>
                         <tr>
                             <td>OutputDebugStringAppender</td>
+                            <td>x</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
@@ -405,9 +428,11 @@ limitations under the License.
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
                         </tr>
                         <tr>
                             <td>RemotingAppender</td>
+                            <td>x</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
@@ -435,9 +460,11 @@ limitations under the License.
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
                         </tr>
                         <tr>
                             <td>SmtpAppender</td>
+                            <td>x</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
@@ -465,9 +492,11 @@ limitations under the License.
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
                         </tr>
                         <tr>
                             <td>TelnetAppender</td>
+                            <td>x</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
@@ -495,9 +524,11 @@ limitations under the License.
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
+                            <td>x</td>
                         </tr>
                         <tr>
                             <td>UdpAppender</td>
+                            <td>x</td>
                             <td>x</td>
                             <td>x</td>
                             <td>x</td>
@@ -541,6 +572,12 @@ limitations under the License.
                 </section>
                 
                 <section id="net4.0" name="Microsoft .NET Framework 4.0">
+                    <p>
+                        none
+                    </p>
+                </section>
+                
+                <section id="net4.5" name="Microsoft .NET Framework 4.5">
                     <p>
                         none
                     </p>
@@ -682,6 +719,16 @@ namespace TestApp
                         </p>
                     </section>
                     <section id="mono2.0" name="Mono 2.0">
+                        <p>
+                            none
+                        </p>
+                    </section>
+                    <section id="mono3.5" name="Mono 3.5">
+                        <p>
+                            none
+                        </p>
+                    </section>
+                    <section id="mono4.0" name="Mono 4.0">
                         <p>
                             none
                         </p>

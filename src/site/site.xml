@@ -43,7 +43,7 @@
 		<item name="Building" href="/release/building.html"/>
 		<item name="FAQ" href="/release/faq.html"/>
 		<item name="How Tos" href="/release/howto/index.html"/>
-		<item name="SDK Reference" href="/release/sdk/index.html"/>
+		<item name="SDK Reference" href="/release/sdk/Documentation.chm"/>
 	</menu>
 
 	<menu name="Manual">

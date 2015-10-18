@@ -1690,7 +1690,7 @@ limitations under the License.
       </fileset>
     </zip>
   </target>
-  <target name="package-bin" depends="generate-sdkdoc-step1,generate-site">
+  <target name="package-bin" depends="generate-site">
     <copy todir="${current.package.bin.dir}">
       <fileset basedir=".">
         <include name="KEYS"/>
