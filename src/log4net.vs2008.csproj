@@ -707,7 +707,13 @@
     <Compile Include="Util\ThreadContextProperties.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Util\LogicalThreadContextStack.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Util\ThreadContextStack.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Util\LogicalThreadContextStacks.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Util\ThreadContextStacks.cs">
