@@ -74,12 +74,15 @@ limitations under the License.
                     <li>Microsoft .NET Framework 2.0</li>
                     <li>Microsoft .NET Framework 3.5</li>
                     <li>Microsoft .NET Framework 4.0</li>
+                    <li>Microsoft .NET Framework 4.5</li>
                     <li>Microsoft .NET Framework 3.5 Client Profile</li>
                     <li>Microsoft .NET Framework 4.0 Client Profile</li>
                     <li>Microsoft .NET Compact Framework 1.0<sup><a href="#no-bin-support">*</a></sup></li>
                     <li>Microsoft .NET Compact Framework 2.0<sup><a href="#no-bin-support">*</a></sup></li>
                     <li>Mono 1.0</li>
                     <li>Mono 2.0</li>
+                    <li>Mono 3.5</li>
+                    <li>Mono 4.0</li>
                     <li>Microsoft Shared Source CLI 1.0<sup><a href="#no-bin-support">*</a></sup></li>
                     <li>CLI 1.0 Compatible</li>
                 </ul>
