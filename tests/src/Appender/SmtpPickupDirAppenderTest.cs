@@ -203,6 +203,30 @@ namespace log4net.Tests.Appender
 		}
 
 		/// <summary>
+		/// Verifies that file extension is applied to output file name.
+		/// </summary>
+		[Test]
+		public void TestConfigurableFileExtension()
+		{
+			const string fileExtension = "eml";
+			SilentErrorHandler sh = new SilentErrorHandler();
+			SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(sh);
+			appender.FileExtension = fileExtension;
+			ILogger log = CreateLogger(appender);
+			log.Log(GetType(), Level.Info, "This is a message", null);
+			log.Log(GetType(), Level.Info, "This is a message 2", null);
+			DestroyLogger();
+
+			Assert.AreEqual(1, Directory.GetFiles(_testPickupDir).Length);
+			var fileInfo = new FileInfo(Directory.GetFiles(_testPickupDir)[0]);
+			Assert.AreEqual("." + fileExtension, fileInfo.Extension);
+			Guid tmpGuid;
+			Assert.IsTrue(Guid.TryParse(fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length), out tmpGuid)); // Assert that filename before extension is a guid
+
+			Assert.AreEqual("", sh.Message, "Unexpected error message");
+		}
+
+		/// <summary>
 		/// Verifies that logging a message actually produces output
 		/// </summary>
 		[Test]

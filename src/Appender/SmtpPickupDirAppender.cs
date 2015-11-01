@@ -64,6 +64,7 @@ namespace log4net.Appender
 		/// </remarks>
 		public SmtpPickupDirAppender()
 		{
+			m_fileExtension = string.Empty; // Default to empty string, not null
 		}
 
 		#endregion Public Instance Constructors
@@ -136,6 +137,35 @@ namespace log4net.Appender
 			set { m_pickupDir = value; }
 		}
 
+ 		/// <summary>
+		/// Gets or sets the file extension for the generated files
+		/// </summary>
+		/// <value>
+		/// The file extension for the generated files
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// The file extension for the generated files
+		/// </para>
+		/// </remarks>
+		public string FileExtension
+		{
+			get { return m_fileExtension; }
+			set
+			{
+				m_fileExtension = value;
+				if (m_fileExtension == null)
+				{
+					m_fileExtension = string.Empty;
+				}
+				// Make sure any non empty extension starts with a dot
+				if (!string.IsNullOrEmpty(m_fileExtension) && !m_fileExtension.StartsWith("."))
+				{
+					m_fileExtension = "." + m_fileExtension;
+				}
+			}
+		}
+
 		/// <summary>
 		/// Gets or sets the <see cref="SecurityContext"/> used to write to the pickup directory.
 		/// </summary>
@@ -181,7 +211,7 @@ namespace log4net.Appender
 				// Impersonate to open the file
 				using(SecurityContext.Impersonate(this))
 				{
-					filePath = Path.Combine(m_pickupDir, SystemInfo.NewGuid().ToString("N"));
+					filePath = Path.Combine(m_pickupDir, SystemInfo.NewGuid().ToString("N") + m_fileExtension);
 					writer = File.CreateText(filePath);
 				}
 
@@ -307,6 +337,7 @@ namespace log4net.Appender
 		private string m_from;
 		private string m_subject;
 		private string m_pickupDir;
+		private string m_fileExtension;
 
 		/// <summary>
 		/// The security context to use for privileged calls
