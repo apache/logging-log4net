@@ -535,7 +535,8 @@ namespace log4net.Appender
 		/// </remarks>
 		virtual protected void SendBuffer(IDbTransaction dbTran, LoggingEvent[] events)
 		{
-			if (!string.IsNullOrWhiteSpace(CommandText))
+			// string.IsNotNullOrWhiteSpace() does not exist in ancient .NET frameworks
+			if (CommandText != null && CommandText.Trim() != "")
 			{
 				using (IDbCommand dbCmd = Connection.CreateCommand())
 				{
