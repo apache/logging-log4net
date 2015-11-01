@@ -196,6 +196,7 @@ namespace log4net.Appender
 						writer.WriteLine("To: " + m_to);
 						writer.WriteLine("From: " + m_from);
 						writer.WriteLine("Subject: " + m_subject);
+						writer.WriteLine("Date: " + DateTime.UtcNow.ToString("r"));
 						writer.WriteLine("");
 
 						string t = Layout.Header;
