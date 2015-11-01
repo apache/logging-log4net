@@ -767,7 +767,7 @@ namespace log4net.Appender
 		{
             if (m_preserveLogFileNameExtension)
             {
-                return Path.GetFileNameWithoutExtension(baseFileName) + ".*" + Path.GetExtension(baseFileName);
+                return Path.GetFileNameWithoutExtension(baseFileName) + "*" + Path.GetExtension(baseFileName);
             }
             else
             {
