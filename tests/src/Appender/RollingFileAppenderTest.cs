@@ -1397,6 +1397,20 @@ namespace log4net.Tests.Appender
 		/// <returns>A configured ILogger</returns>
 		private static ILogger CreateLogger(string filename, FileAppender.LockingModelBase lockModel, IErrorHandler handler)
 		{
+			return CreateLogger(filename, lockModel, handler, 100000, 0);
+		}
+
+		/// <summary>
+		/// Creates a logger hierarchy, configures a rolling file appender and returns an ILogger
+		/// </summary>
+		/// <param name="filename">The filename to log to</param>
+		/// <param name="lockModel">The locking model to use.</param>
+		/// <param name="handler">The error handler to use.</param>
+		/// <param name="maxFileSize">Maximum file size for roll</param>
+		/// <param name="maxSizeRollBackups">Maximum number of roll backups</param>
+		/// <returns>A configured ILogger</returns>
+		private static ILogger CreateLogger(string filename, FileAppender.LockingModelBase lockModel, IErrorHandler handler, int maxFileSize, int maxSizeRollBackups)
+		{
 			Repository.Hierarchy.Hierarchy h = (Repository.Hierarchy.Hierarchy)LogManager.CreateRepository("TestRepository");
 
 			RollingFileAppender appender = new RollingFileAppender();
@@ -1404,9 +1418,10 @@ namespace log4net.Tests.Appender
 			appender.AppendToFile = false;
 			appender.CountDirection = 0;
 			appender.RollingStyle = RollingFileAppender.RollingMode.Size;
-			appender.MaxFileSize = 100000;
+			appender.MaxFileSize = maxFileSize;
 			appender.Encoding = Encoding.ASCII;
 			appender.ErrorHandler = handler;
+			appender.MaxSizeRollBackups = maxSizeRollBackups;
 			if (lockModel != null)
 			{
 				appender.LockingModel = lockModel;
@@ -1686,6 +1701,28 @@ namespace log4net.Tests.Appender
             AssertFileEquals(filename, "This is a message" + Environment.NewLine + "Test" + Environment.NewLine + "This is a message 2" + Environment.NewLine);
             Assert.AreEqual("", sh.Message, "Unexpected error message");
         }
+
+		/// <summary>
+		/// Verifies that rolling file works
+		/// </summary>
+		[Test]
+		public void TestInterProcessLockRoll()
+		{
+			String filename = "test.log";
+			bool locked;
+
+			SilentErrorHandler sh = new SilentErrorHandler();
+			ILogger log = CreateLogger(filename, new FileAppender.InterProcessLock(), sh, 1, 2);
+
+			Assert.DoesNotThrow(delegate { log.Log(GetType(), Level.Info, "A", null); });
+			Assert.DoesNotThrow(delegate { log.Log(GetType(), Level.Info, "A", null); });
+			
+			DestroyLogger();
+
+			AssertFileEquals(filename, "A" + Environment.NewLine);
+			AssertFileEquals(filename + ".1", "A" + Environment.NewLine);
+			Assert.IsEmpty(sh.Message);
+		}
 #endif
 
         /// <summary>

@@ -647,7 +647,6 @@ namespace log4net.Appender
         public class InterProcessLock : LockingModelBase
         {
             private Mutex m_mutex = null;
-            private bool m_mutexClosed = false;
             private Stream m_stream = null;
 
             /// <summary>
@@ -673,13 +672,12 @@ namespace log4net.Appender
                 {
                     m_stream = CreateStream(filename, append, FileShare.ReadWrite);
 
-                    string mutextFriendlyFilename = filename
+                    string mutexFriendlyFilename = filename
                             .Replace("\\", "_")
                             .Replace(":", "_")
                             .Replace("/", "_");
 
-                    m_mutex = new Mutex(false, mutextFriendlyFilename); 
-                    m_mutexClosed = false;
+                    m_mutex = new Mutex(false, mutexFriendlyFilename); 
                 }
                 catch (Exception e1)
                 {
@@ -702,9 +700,9 @@ namespace log4net.Appender
                     m_stream = null;
                 }
                 finally {
-                    m_mutex.ReleaseMutex();
+					ReleaseLock();
                     m_mutex.Close();
-                    m_mutexClosed = true;
+					m_mutex = null;
                 }
             }
 
@@ -719,7 +717,8 @@ namespace log4net.Appender
             /// </remarks>
             public override Stream AcquireLock()
             {
-                if (m_mutex != null) {
+                if (m_mutex != null)
+				{
                     // TODO: add timeout?
                     m_mutex.WaitOne();
 
@@ -727,20 +726,27 @@ namespace log4net.Appender
                     if (m_stream.CanSeek) {
                         m_stream.Seek(0, SeekOrigin.End);
                     }
-                }
-
+				}
+				else
+				{
+					CurrentAppender.ErrorHandler.Error("Programming error, no mutex available to acquire lock! From here on things will be dangerous!");
+				}
                 return m_stream;
             }
 
             /// <summary>
-            /// 
+            /// Releases the lock and allows others to acquire a lock.
             /// </summary>
             public override void ReleaseLock()
             {
-                if (m_mutexClosed == false && m_mutex != null)
+                if (m_mutex != null)
                 {
                     m_mutex.ReleaseMutex();
-                }
+				}
+				else
+				{
+					CurrentAppender.ErrorHandler.Error("Programming error, no mutex available to release the lock!");
+				}
             }
         }
 #endif
