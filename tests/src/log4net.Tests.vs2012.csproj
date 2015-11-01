@@ -156,6 +156,9 @@
     <Compile Include="Appender\RemotingAppenderTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Appender\SmtpPickupDirAppenderTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Appender\RollingFileAppenderTest.cs">
       <SubType>Code</SubType>
     </Compile>
