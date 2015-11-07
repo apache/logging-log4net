@@ -60,8 +60,10 @@ limitations under the License.
             </section>
 
             <section id="1.2.14-new" name="New Features">
-	      <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-473'>LOG4NET-473</a>] -         Option for file extension in SmtpPickupDirAppender
-	      </li>
+              <ul>
+	        <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-473'>LOG4NET-473</a>] -         Option for file extension in SmtpPickupDirAppender
+	        </li>
+              </ul>
 	    </section>
           </section>
 
