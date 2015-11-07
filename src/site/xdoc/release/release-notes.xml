@@ -31,25 +31,38 @@ limitations under the License.
           <section id="1.2.14" name="1.2.14">
             <section id="1.2.14-bug" name="Bug Fixes">
               <ul>
-                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-408'>LOG4NET-408</a>] -         Correction on InterProcessLock
-                </li>
-                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-443'>LOG4NET-443</a>] -         Logger.CallAppenders
-                </li>
-                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-447'>LOG4NET-447</a>] -         MemoryAppender class is not thread safe
-                </li>
-                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-455'>LOG4NET-455</a>] -         LogicalThreadContext does not flow correctly through async/await 
-                </li>
+		<li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-408'>LOG4NET-408</a>] -         Correction on InterProcessLock
+		</li>
+		<li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-443'>LOG4NET-443</a>] -         Logger.CallAppenders
+		</li>
+		<li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-447'>LOG4NET-447</a>] -         MemoryAppender class is not thread safe
+		</li>
+		<li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-455'>LOG4NET-455</a>] -         LogicalThreadContext does not flow correctly through async/await 
+		</li>
+		<li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-479'>LOG4NET-479</a>] -         Cannot compile log4net.vs2008
+		</li>
+		<li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-484'>LOG4NET-484</a>] -         System.ObjectDisposedException with FileAppender+InterProcessLock
+		</li>
+		<li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-485'>LOG4NET-485</a>] -         RollingFileAppender cannot be used by multiple process
+		</li>
+		<li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-486'>LOG4NET-486</a>] -         Rolling File Appender with &#39;maxSizeRollBackups&#39; and &#39;datePattern&#39; does not detect existing logs initially
+		</li>
               </ul>
             </section>
 
             <section id="1.2.14-enh" name="Improvements">
               <ul>
-                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-456'>LOG4NET-456</a>] -         Include debug symbol files in release  packages
-                </li>
-                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-457'>LOG4NET-457</a>] -         SMTP Appender should trim leading and trailing separators from address fields
-                </li>
+		<li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-456'>LOG4NET-456</a>] -         Include debug symbol files in release  packages
+		</li>
+		<li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-457'>LOG4NET-457</a>] -         SMTP Appender should trim leading and trailing separators from address fields
+		</li>
               </ul>
             </section>
+
+            <section id="1.2.14-new" name="New Features">
+	      <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-473'>LOG4NET-473</a>] -         Option for file extension in SmtpPickupDirAppender
+	      </li>
+	    </section>
           </section>
 
           <section id="1.2.13" name="1.2.13">
