@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 Licensed to the Apache Software Foundation (ASF) under one or more 
 contributor license agreements. See the NOTICE file distributed with
@@ -32,18 +32,18 @@ limitations under the License.
     <Name>Documentation</Name>
     <!-- SHFB properties -->
     <FrameworkVersion>.NET Framework 2.0</FrameworkVersion>
-    <OutputPath>.\doc\skd\</OutputPath>
-    <HtmlHelpName>Documentation</HtmlHelpName>
+    <OutputPath>doc\sdk\net\4.0\</OutputPath>
+    <HtmlHelpName>log4net-sdk-1.2.14</HtmlHelpName>
     <Language>en-US</Language>
     <SyntaxFilters>Standard</SyntaxFilters>
     <SdkLinkTarget>Blank</SdkLinkTarget>
     <RootNamespaceContainer>False</RootNamespaceContainer>
-    <PresentationStyle>VS2005</PresentationStyle>
+    <PresentationStyle>VS2010</PresentationStyle>
     <Preliminary>False</Preliminary>
-    <NamingMethod>Guid</NamingMethod>
-    <HelpTitle>Apache log4net 1.2.14</HelpTitle>
+    <NamingMethod>MemberName</NamingMethod>
+    <HelpTitle>Apache log4net™ SDK Documentation</HelpTitle>
     <CopyrightText>Copyright 2004-2015 The Apache Software Foundation</CopyrightText>
-    <CopyrightHref>http://www.apache.org/</CopyrightHref>
+    <CopyrightHref>http://logging.apache.org/log4net/</CopyrightHref>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <DocumentationSources>
       <DocumentationSource sourceFile="bin\net\4.0\release\log4net.dll" xmlns="" />
@@ -56,6 +56,13 @@ limitations under the License.
     <DisableCodeBlockComponent>False</DisableCodeBlockComponent>
     <CppCommentsFixup>False</CppCommentsFixup>
     <CleanIntermediates>True</CleanIntermediates>
+    <FooterText>Apache log4net, Apache and log4net are trademarks of The Apache Software Foundation.</FooterText>
+    <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, TypeParameter, AutoDocumentDispose</MissingTags>
+    <FeedbackEMailAddress>http://logging.apache.org/log4net/mail-lists.html</FeedbackEMailAddress>
+    <WebsiteSdkLinkType>Msdn</WebsiteSdkLinkType>
+    <HtmlSdkLinkType>Msdn</HtmlSdkLinkType>
+    <IncludeFavorites>False</IncludeFavorites>
+    <BinaryTOC>True</BinaryTOC>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in
        order for Visual Studio to perform the build.  The others are optional
