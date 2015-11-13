@@ -220,8 +220,7 @@ namespace log4net.Tests.Appender
 			Assert.AreEqual(1, Directory.GetFiles(_testPickupDir).Length);
 			var fileInfo = new FileInfo(Directory.GetFiles(_testPickupDir)[0]);
 			Assert.AreEqual("." + fileExtension, fileInfo.Extension);
-			Guid tmpGuid;
-			Assert.IsTrue(Guid.TryParse(fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length), out tmpGuid)); // Assert that filename before extension is a guid
+			Assert.DoesNotThrow(delegate { new Guid(fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length)); }); // Assert that filename before extension is a guid
 
 			Assert.AreEqual("", sh.Message, "Unexpected error message");
 		}
@@ -242,8 +241,7 @@ namespace log4net.Tests.Appender
 			Assert.AreEqual(1, Directory.GetFiles(_testPickupDir).Length);
 			var fileInfo = new FileInfo(Directory.GetFiles(_testPickupDir)[0]);
 			Assert.IsEmpty(fileInfo.Extension);
-			Guid tmpGuid;
-			Assert.IsTrue(Guid.TryParse(fileInfo.Name, out tmpGuid)); // Assert that filename is a guid
+			Assert.DoesNotThrow(delegate { new Guid(fileInfo.Name); }); // Assert that filename is a guid
 
 			Assert.AreEqual("", sh.Message, "Unexpected error message");
 		}
