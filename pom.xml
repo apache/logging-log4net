@@ -92,33 +92,7 @@
         <artifactId>maven-site-plugin</artifactId>
         <version>3.4</version>
         <configuration>
-
-          <!-- Override default rendering (only required to add a custom footer) -->
-          <!-- This can be removed once <footer> tag is supported in site.xml.  -->
           <templateFile>${basedir}/src/site/site.vm</templateFile>
-          <!-- Configure additional reports on the site -->
-          <reportPlugins>
-            <!-- Project info report -->
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-project-info-reports-plugin</artifactId>
-              <version>2.8</version>
-              <reportSets>
-                <reportSet>
-                  <reports>
-                    <report>cim</report>	
-                    <report>scm</report>
-                    <report>dependencies</report>
-                    <report>license</report>
-                    <report>project-team</report>
-                    <report>issue-tracking</report>
-                    <report>mailing-list</report>
-                  </reports>
-                </reportSet>
-              </reportSets>
-            </plugin>
-						
-          </reportPlugins>
         </configuration>
       </plugin>
       <plugin>
@@ -150,6 +124,14 @@
 
   <reporting>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.4</version>
+        <configuration>
+          <templateFile>${basedir}/src/site/site.vm</templateFile>
+        </configuration>
+      </plugin>
       <!-- RAT report -->
       <plugin>
         <groupId>org.apache.rat</groupId>
@@ -173,6 +155,33 @@
             <exclude>tests/lib/prerequisites.txt</exclude>
           </excludes>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>${commons.project-info.version}</version>
+        <!--
+            Unfortunately it does not appear to be possible to override
+            reports configured in a parent POM.
+            See https://jira.codehaus.org/browse/MPIR-241
+            and https://issues.apache.org/jira/browse/MPOM-32
+            So we define here all those reports that are suitable for
+            all components.
+            Components can add extra reports if they wish, but cannot disable any.
+        -->
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>cim</report>	
+              <report>scm</report>
+              <report>dependencies</report>
+              <report>license</report>
+              <report>project-team</report>
+              <report>issue-tracking</report>
+              <report>mailing-list</report>
+            </reports>
+          </reportSet>
+        </reportSets>
       </plugin>
     </plugins>
   </reporting>
