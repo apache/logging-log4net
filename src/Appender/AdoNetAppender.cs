@@ -558,6 +558,7 @@ namespace log4net.Appender
 						// Set the parameter values
 						foreach (AdoNetAppenderParameter param in m_parameters)
 						{
+							param.Prepare(dbCmd);
 							param.FormatValue(dbCmd, e);
 						}
 
