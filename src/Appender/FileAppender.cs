@@ -366,6 +366,16 @@ namespace log4net.Appender
 			public abstract void CloseFile();
 
 			/// <summary>
+			/// Initializes all resources used by this locking model.
+			/// </summary>
+			public abstract void ActivateOptions();
+
+			/// <summary>
+			/// Disposes all resources that were initialized by this locking model.
+			/// </summary>
+			public abstract void OnClose();
+
+			/// <summary>
 			/// Acquire the lock on the file
 			/// </summary>
 			/// <returns>A stream that is ready to be written to.</returns>
@@ -544,6 +554,22 @@ namespace log4net.Appender
 			{
 				//NOP
 			}
+
+			/// <summary>
+			/// Initializes all resources used by this locking model.
+			/// </summary>
+			public override void ActivateOptions()
+			{
+				//NOP
+			}
+
+			/// <summary>
+			/// Disposes all resources that were initialized by this locking model.
+			/// </summary>
+			public override void OnClose()
+			{
+				//NOP
+			}
 		}
 
 		/// <summary>
@@ -638,6 +664,22 @@ namespace log4net.Appender
 				CloseStream(m_stream);
 				m_stream = null;
 			}
+
+			/// <summary>
+			/// Initializes all resources used by this locking model.
+			/// </summary>
+			public override void ActivateOptions()
+			{
+				//NOP
+			}
+
+			/// <summary>
+			/// Disposes all resources that were initialized by this locking model.
+			/// </summary>
+			public override void OnClose()
+			{
+				//NOP
+			}
 		}
 
 #if !NETCF
@@ -650,6 +692,7 @@ namespace log4net.Appender
 		{
 			private Mutex m_mutex = null;
 			private Stream m_stream = null;
+			private int m_recursiveWatch = 0;
 
 			/// <summary>
 			/// Open the file specified and prepare for logging.
@@ -673,13 +716,6 @@ namespace log4net.Appender
 				try
 				{
 					m_stream = CreateStream(filename, append, FileShare.ReadWrite);
-
-					string mutexFriendlyFilename = filename
-							.Replace("\\", "_")
-							.Replace(":", "_")
-							.Replace("/", "_");
-
-					m_mutex = new Mutex(false, mutexFriendlyFilename);
 				}
 				catch (Exception e1)
 				{
@@ -705,8 +741,6 @@ namespace log4net.Appender
 				finally
 				{
 					ReleaseLock();
-					m_mutex.Close();
-					m_mutex = null;
 				}
 			}
 
@@ -726,10 +760,20 @@ namespace log4net.Appender
 					// TODO: add timeout?
 					m_mutex.WaitOne();
 
+					// increment recursive watch
+					m_recursiveWatch++;
+
 					// should always be true (and fast) for FileStream
-					if (m_stream.CanSeek)
+					if (m_stream != null)
 					{
-						m_stream.Seek(0, SeekOrigin.End);
+						if (m_stream.CanSeek)
+						{
+							m_stream.Seek(0, SeekOrigin.End);
+						}
+					}
+					else
+					{
+						// this can happen when the file appender cannot open a file for writing
 					}
 				}
 				else
@@ -746,11 +790,51 @@ namespace log4net.Appender
 			{
 				if (m_mutex != null)
 				{
-					m_mutex.ReleaseMutex();
+					if (m_recursiveWatch > 0)
+					{
+						m_recursiveWatch--;
+						m_mutex.ReleaseMutex();
+					}
 				}
 				else
 				{
 					CurrentAppender.ErrorHandler.Error("Programming error, no mutex available to release the lock!");
+				}
+			}
+
+			/// <summary>
+			/// Initializes all resources used by this locking model.
+			/// </summary>
+			public override void ActivateOptions()
+			{
+				if (m_mutex == null)
+				{
+					string mutexFriendlyFilename = CurrentAppender.File
+							.Replace("\\", "_")
+							.Replace(":", "_")
+							.Replace("/", "_");
+
+					m_mutex = new Mutex(false, mutexFriendlyFilename);
+				}
+				else
+				{
+					CurrentAppender.ErrorHandler.Error("Programming error, mutex already initialized!");
+				}
+			}
+
+			/// <summary>
+			/// Disposes all resources that were initialized by this locking model.
+			/// </summary>
+			public override void OnClose()
+			{
+				if (m_mutex != null)
+				{
+					m_mutex.Close();
+					m_mutex.Dispose();
+				}
+				else
+				{
+					CurrentAppender.ErrorHandler.Error("Programming error, mutex not initialized!");
 				}
 			}
 		}
@@ -976,6 +1060,7 @@ namespace log4net.Appender
 			}
 
 			m_lockingModel.CurrentAppender = this;
+			m_lockingModel.ActivateOptions();
 
 			if (m_fileName != null)
 			{
@@ -1008,6 +1093,12 @@ namespace log4net.Appender
 		{
 			base.Reset();
 			m_fileName = null;
+		}
+
+		protected override void OnClose()
+		{
+			base.OnClose();
+			m_lockingModel.OnClose();
 		}
 
 		/// <summary>
