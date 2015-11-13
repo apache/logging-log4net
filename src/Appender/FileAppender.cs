@@ -830,7 +830,7 @@ namespace log4net.Appender
 				if (m_mutex != null)
 				{
 					m_mutex.Close();
-					m_mutex.Dispose();
+					m_mutex = null;
 				}
 				else
 				{
@@ -1095,7 +1095,10 @@ namespace log4net.Appender
 			m_fileName = null;
 		}
 
-		protected override void OnClose()
+		/// <summary>
+		/// Close this appender instance. The underlying stream or writer is also closed.
+		/// </summary>
+		override protected void OnClose()
 		{
 			base.OnClose();
 			m_lockingModel.OnClose();
