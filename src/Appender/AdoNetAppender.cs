@@ -564,6 +564,12 @@ namespace log4net.Appender
 
 						// Execute the query
 						dbCmd.ExecuteNonQuery();
+
+						// clear parameters that have been set
+						if (events.Length > 0)
+						{
+							dbCmd.Parameters.Clear();
+						}
 					}
 				}
 			}
