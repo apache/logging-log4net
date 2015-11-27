@@ -555,6 +555,9 @@ namespace log4net.Appender
 					// run for all events
 					foreach (LoggingEvent e in events)
 					{
+						// clear parameters that have been set
+						dbCmd.Parameters.Clear();
+
 						// Set the parameter values
 						foreach (AdoNetAppenderParameter param in m_parameters)
 						{
@@ -564,12 +567,6 @@ namespace log4net.Appender
 
 						// Execute the query
 						dbCmd.ExecuteNonQuery();
-
-						// clear parameters that have been set
-						if (events.Length > 0)
-						{
-							dbCmd.Parameters.Clear();
-						}
 					}
 				}
 			}
