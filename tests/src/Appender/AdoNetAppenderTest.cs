@@ -54,6 +54,30 @@ namespace log4net.Tests.Appender
         }
 
         [Test]
+        public void BufferingTest()
+        {
+            ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+
+            int bufferSize = 5;
+
+            AdoNetAppender adoNetAppender = new AdoNetAppender();
+            adoNetAppender.BufferSize = bufferSize;
+            adoNetAppender.ConnectionType = "log4net.Tests.Appender.AdoNet.Log4NetConnection";
+            adoNetAppender.ActivateOptions();
+
+            BasicConfigurator.Configure(rep, adoNetAppender);
+
+            ILog log = LogManager.GetLogger(rep.Name, "BufferingTest");
+            for (int i = 0; i < bufferSize; i++)
+            {
+                log.Debug("Message");
+                Assert.IsNull(Log4NetCommand.MostRecentInstance);
+            }
+            log.Debug("Message");
+            Assert.AreEqual(bufferSize+1, Log4NetCommand.MostRecentInstance.ExecuteNonQueryCount);
+        }
+
+        [Test]
         public void WebsiteExample()
         {
             XmlDocument log4netConfig = new XmlDocument();
