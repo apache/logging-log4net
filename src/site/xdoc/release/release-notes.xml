@@ -28,6 +28,27 @@ limitations under the License.
 
         <section id="main" name="Apache log4net&#x2122; Release Notes">
 
+          <section id="1.2.15" name="1.2.15">
+            <section id="1.2.15-bug" name="Bug Fixes">
+              <ul>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-462'>LOG4NET-462</a>] -         ReadOnlyPropertiesDictionary not thread safe
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-488'>LOG4NET-488</a>] -         Fix tests build
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-489'>LOG4NET-489</a>] -         AdoNetAppender fails after upgrade to 2.0.4
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-490'>LOG4NET-490</a>] -         InterProcessLock Tests fail
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-493'>LOG4NET-493</a>] -         Log4net 1.2.14/ADO.NET appender throws exception when starting (1.2.13 with same config works fine)
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-494'>LOG4NET-494</a>] -         ArgumentOutOfRange with SQLite
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-495'>LOG4NET-495</a>] -         Error when BufferSize is &gt;1, parameter already defined
+                </li>
+              </ul>
+	    </section>
+          </section>
+
           <section id="1.2.14" name="1.2.14">
             <section id="1.2.14-bug" name="Bug Fixes">
               <ul>
