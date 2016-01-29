@@ -867,100 +867,75 @@ namespace log4net.Appender
 			}
 		}
 
-		/// <summary>
-		/// Does the work of bumping the 'current' file counter higher
-		/// to the highest count when an incremental file name is seen.
-		/// The highest count is either the first file (when count direction
-		/// is greater than 0) or the last file (when count direction less than 0).
-		/// In either case, we want to know the highest count that is present.
-		/// </summary>
-		/// <param name="baseFile"></param>
-		/// <param name="curFileName"></param>
-		private void InitializeFromOneFile(string baseFile, string curFileName)
-		{
-            if (curFileName.StartsWith(Path.GetFileNameWithoutExtension(baseFile)) == false)
-			{
-				// This is not a log file, so ignore
-				return;
-			}
-			if (curFileName.Equals(baseFile)) 
-			{
-				// Base log file is not an incremented logfile (.1 or .2, etc)
-				return;
-			}
-	
-            /*
-			if (m_staticLogFileName) 
-			{
-				int endLength = curFileName.Length - index;
-				if (baseFile.Length + endLength != curFileName.Length) 
-				{
-					// file is probably scheduledFilename + .x so I don't care
-					return;
-				}
-			}
-            */
-	
-			// Only look for files in the current roll point
-			if (m_rollDate && !m_staticLogFileName)
-			{
-				string date = m_dateTime.Now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo);
-				string prefix = m_preserveLogFileNameExtension ? Path.GetFileNameWithoutExtension(baseFile) + date : baseFile + date;
-				string suffix = m_preserveLogFileNameExtension ? Path.GetExtension(baseFile) : "";
-				if (!curFileName.StartsWith(prefix) || !curFileName.EndsWith(suffix))
-				{
-					LogLog.Debug(declaringType, "Ignoring file ["+curFileName+"] because it is from a different date period");
-					return;
-				}
-			}
-            
-			try 
-			{
-				// Bump the counter up to the highest count seen so far
-                int backup = GetBackUpIndex(curFileName);
-                
-                // caution: we might get a false positive when certain
-                // date patterns such as yyyyMMdd are used...those are
-                // valid number but aren't the kind of back up index
-                // we're looking for
-                if (backup > m_curSizeRollBackups)
-                {
-                    if (0 == m_maxSizeRollBackups)
-                    {
-                        // Stay at zero when zero backups are desired
+        /// <summary>
+        /// Does the work of bumping the 'current' file counter higher
+        /// to the highest count when an incremental file name is seen.
+        /// The highest count is either the first file (when count direction
+        /// is greater than 0) or the last file (when count direction less than 0).
+        /// In either case, we want to know the highest count that is present.
+        /// </summary>
+        /// <param name="origBaseFile"></param>
+        /// <param name="origCurFileName"></param>
+        private void InitializeFromOneFile(string origBaseFile, string origCurFileName)
+        {
+            // keep originals for logging
+            string baseFile = origBaseFile;
+            string curFileName = origCurFileName;
+
+            if (m_preserveLogFileNameExtension) {
+                curFileName = Path.GetFileNameWithoutExtension (curFileName);
+                baseFile = Path.GetFileNameWithoutExtension (baseFile);
+            }
+
+            if (!m_staticLogFileName) {
+                // Generate expected target file name
+                string date = m_dateTime.Now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo);
+                baseFile = baseFile + date;
+
+                // Only look for files in the current roll point
+                if (m_rollDate) {
+                    if (!origCurFileName.StartsWith (baseFile) || (m_preserveLogFileNameExtension && !origCurFileName.EndsWith (Path.GetExtension (origBaseFile)))) {
+                        LogLog.Debug (declaringType, "Ignoring file [" + origCurFileName + "] because it is from a different date period");
+                        return;
                     }
-                    else if (-1 == m_maxSizeRollBackups)
-                    {
-                        // Infinite backups, so go as high as the highest value
-                        m_curSizeRollBackups = backup;
-                    }
-                    else
-                    {
-                        // Backups limited to a finite number
-                        if (m_countDirection >= 0)
-                        {
-                            // Go with the highest file when counting up
+                }
+            }
+
+            // remove baseFile prefix
+            string datePatternOrBackup = curFileName.Substring (baseFile.Length);
+
+            if (datePatternOrBackup.Length == 0) {
+                LogLog.Debug (declaringType, "Encountered the base file [" + origCurFileName + "]");
+            } else if (datePatternOrBackup [0] != '.') {
+                LogLog.Debug (declaringType, "Encountered a file that definitely isn't a size backup for the current log file [" + origCurFileName + "]");
+            } else {
+                int backup;
+                if (!int.TryParse (datePatternOrBackup.Substring (1), out backup)) {
+                    LogLog.Debug (declaringType, "Encountered a backup file not ending in .N [" + origCurFileName + "]");
+                } else {
+                    if (backup > m_curSizeRollBackups) {
+                        if (0 == m_maxSizeRollBackups) {
+                            // Stay at zero when zero backups are desired
+                        } else if (-1 == m_maxSizeRollBackups) {
+                            // Infinite backups, so go as high as the highest value
                             m_curSizeRollBackups = backup;
-                        }
-                        else
-                        {
-                            // Clip to the limit when counting down
-                            if (backup <= m_maxSizeRollBackups)
-                            {
+                        } else {
+                            // Backups limited to a finite number
+                            if (m_countDirection >= 0) {
+                                // Go with the highest file when counting up
                                 m_curSizeRollBackups = backup;
+                            } else {
+                                // Clip to the limit when counting down
+                                if (backup <= m_maxSizeRollBackups) {
+                                    m_curSizeRollBackups = backup;
+                                }
                             }
                         }
+                        LogLog.Debug (declaringType, "File name [" + origCurFileName + "] moves current count to [" + m_curSizeRollBackups + "]");
                     }
-                    LogLog.Debug(declaringType, "File name [" + curFileName + "] moves current count to [" + m_curSizeRollBackups + "]");
                 }
-			} 
-			catch(FormatException) 
-			{
-				//this happens when file.log -> file.log.yyyy-MM-dd which is normal
-				//when staticLogFileName == false
-				LogLog.Debug(declaringType, "Encountered a backup file not ending in .x ["+curFileName+"]");
-			}
-		}
+            }
+        }
 
         /// <summary>
         /// Attempts to extract a number from the end of the file name that indicates
