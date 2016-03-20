@@ -160,6 +160,7 @@ limitations under the License.
     </target>
     <target name="set-debug-build-configuration">
         <property name="build.debug" value="true" />
+        <property name="build.optimize" value="false" />
         <property name="build.defines.csc" value="DEBUG,TRACE" />
         <property name="build.defines.jsc" value="DEBUG,TRACE" />
         <property name="build.defines.vbc" value="DEBUG=True,TRACE=True" />
@@ -171,6 +172,7 @@ limitations under the License.
     </target>
     <target name="set-release-build-configuration">
         <property name="build.debug" value="PdbOnly" />
+        <property name="build.optimize" value="true" />
         <property name="build.defines.csc" value="TRACE,STRONG" />
         <property name="build.defines.jsc" value="TRACE,STRONG" />
         <property name="build.defines.vbc" value="TRACE=True,STRONG=True" />
@@ -194,6 +196,7 @@ limitations under the License.
     <target name="set-net-1.0-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
         <property name="nant.settings.currentframework" value="net-1.0" />
         <property name="current.build.debug" value="${build.debug}" dynamic="true" />
+        <property name="current.build.optimize" value="${build.optimize}" dynamic="true" />
         <property name="current.build.defines.csc" value="${build.defines.csc},NET,NET_1_0" dynamic="true" />
         <property name="current.build.defines.jsc" value="${build.defines.jsc},NET,NET_1_0" dynamic="true" />
         <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_1_0=True" dynamic="true" />
@@ -206,6 +209,7 @@ limitations under the License.
     <target name="set-net-1.1-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
         <property name="nant.settings.currentframework" value="net-1.1" />
         <property name="current.build.debug" value="${build.debug}" dynamic="true" />
+        <property name="current.build.optimize" value="${build.optimize}" dynamic="true" />
         <property name="current.build.defines.csc" value="${build.defines.csc},NET,NET_1_1" dynamic="true" />
         <property name="current.build.defines.jsc" value="${build.defines.jsc},NET,NET_1_1" dynamic="true" />
         <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_1_1=True" dynamic="true" />
@@ -218,6 +222,7 @@ limitations under the License.
     <target name="set-net-2.0-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
         <property name="nant.settings.currentframework" value="net-2.0" />
         <property name="current.build.debug" value="${build.debug}" dynamic="true" />
+        <property name="current.build.optimize" value="${build.optimize}" dynamic="true" />
         <property name="current.build.defines.csc" value="${build.defines.csc},NET,NET_2_0" dynamic="true" />
         <property name="current.build.defines.jsc" value="${build.defines.jsc},NET,NET_2_0" dynamic="true" />
         <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_2_0=True" dynamic="true" />
@@ -231,6 +236,7 @@ limitations under the License.
     <target name="set-net-3.5-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
       <property name="nant.settings.currentframework" value="net-3.5" />
       <property name="current.build.debug" value="${build.debug}" dynamic="true" />
+      <property name="current.build.optimize" value="${build.optimize}" dynamic="true" />
       <property name="current.build.defines.csc" value="${build.defines.csc},NET,NET_2_0,NET_3_5" dynamic="true" />
       <property name="current.build.defines.jsc" value="${build.defines.jsc},NET,NET_2_0,NET_3_5" dynamic="true" />
       <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_2_0=True,NET_3_5=True" dynamic="true" />
@@ -244,6 +250,7 @@ limitations under the License.
     <target name="set-net-3.5-cp-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
       <property name="nant.settings.currentframework" value="net-3.5" />
       <property name="current.build.debug" value="${build.debug}" dynamic="true" />
+      <property name="current.build.optimize" value="${build.optimize}" dynamic="true" />
       <property name="current.build.defines.csc" value="${build.defines.csc},NET,NET_2_0,NET_3_5,CLIENT_PROFILE" dynamic="true" />
       <property name="current.build.defines.jsc" value="${build.defines.jsc},NET,NET_2_0,NET_3_5,CLIENT_PROFILE" dynamic="true" />
       <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_2_0=True,NET_3_5=True,CLIENT_PROFILE=True" dynamic="true" />
@@ -257,6 +264,7 @@ limitations under the License.
     <target name="set-net-4.0-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
       <property name="nant.settings.currentframework" value="net-4.0" />
       <property name="current.build.debug" value="${build.debug}" dynamic="true" />
+      <property name="current.build.optimize" value="${build.optimize}" dynamic="true" />
       <property name="current.build.defines.csc" value="${build.defines.csc},NET,NET_2_0,NET_4_0" dynamic="true" />
       <property name="current.build.defines.jsc" value="${build.defines.jsc},NET,NET_2_0,NET_4_0" dynamic="true" />
       <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_2_0=True,NET_4_0=True" dynamic="true" />
@@ -270,6 +278,7 @@ limitations under the License.
     <target name="set-net-4.0-cp-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
       <property name="nant.settings.currentframework" value="net-4.0" />
       <property name="current.build.debug" value="${build.debug}" dynamic="true" />
+      <property name="current.build.optimize" value="${build.optimize}" dynamic="true" />
       <property name="current.build.defines.csc" value="${build.defines.csc},NET,NET_2_0,NET_4_0,CLIENT_PROFILE" dynamic="true" />
       <property name="current.build.defines.jsc" value="${build.defines.jsc},NET,NET_2_0,NET_4_0,CLIENT_PROFILE" dynamic="true" />
       <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_2_0=True,NET_4_0=True,CLIENT_PROFILE=True" dynamic="true" />
@@ -283,6 +292,7 @@ limitations under the License.
     <target name="set-net-4.5-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
       <property name="nant.settings.currentframework" value="net-4.0" />
       <property name="current.build.debug" value="${build.debug}" dynamic="true" />
+      <property name="current.build.optimize" value="${build.optimize}" dynamic="true" />
       <property name="current.build.defines.csc" value="${build.defines.csc},NET,NET_2_0,NET_4_0,NET_4_5" dynamic="true" />
       <property name="current.build.defines.jsc" value="${build.defines.jsc},NET,NET_2_0,NET_4_0,NET_4_5" dynamic="true" />
       <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_2_0=True,NET_4_0=True,NET_4_5=True" dynamic="true" />
@@ -295,6 +305,7 @@ limitations under the License.
     <target name="set-netcf-1.0-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
         <property name="nant.settings.currentframework" value="netcf-1.0" />
         <property name="current.build.debug" value="${build.debug}" dynamic="true" />
+        <property name="current.build.optimize" value="${build.optimize}" dynamic="true" />
         <property name="current.build.defines.csc" value="${build.defines.csc},NETCF,NETCF_1_0" dynamic="true" />
         <property name="current.build.defines.jsc" value="${build.defines.jsc},NETCF,NETCF_1_0" dynamic="true" />
         <property name="current.build.defines.vbc" value="${build.defines.vbc},NETCF=True,NETCF_1_0=True" dynamic="true" />
@@ -307,6 +318,7 @@ limitations under the License.
 	<target name="set-netcf-2.0-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
         <property name="nant.settings.currentframework" value="netcf-2.0" />
         <property name="current.build.debug" value="${build.debug}" dynamic="true" />
+        <property name="current.build.optimize" value="${build.optimize}" dynamic="true" />
         <property name="current.build.defines.csc" value="${build.defines.csc},NETCF,NETCF_2_0" dynamic="true" />
         <property name="current.build.defines.jsc" value="${build.defines.jsc},NETCF,NETCF_2_0" dynamic="true" />
         <property name="current.build.defines.vbc" value="${build.defines.vbc},NETCF=True,NETCF_2_0=True" dynamic="true" />
@@ -319,6 +331,7 @@ limitations under the License.
     <target name="set-mono-1.0-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
         <property name="nant.settings.currentframework" value="mono-1.0" />
         <property name="current.build.debug" value="${build.debug}" dynamic="true" />
+        <property name="current.build.optimize" value="${build.optimize}" dynamic="true" />
         <property name="current.build.defines.csc" value="${build.defines.csc},MONO,MONO_1_0" dynamic="true" />
         <property name="current.build.defines.jsc" value="${build.defines.jsc},MONO,MONO_1_0" dynamic="true" />
         <property name="current.build.defines.vbc" value="${build.defines.vbc},MONO=True,MONO_1_0=True" dynamic="true" />
@@ -331,6 +344,7 @@ limitations under the License.
     <target name="set-mono-2.0-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
         <property name="nant.settings.currentframework" value="mono-2.0" />
         <property name="current.build.debug" value="${build.debug}" dynamic="true" />
+        <property name="current.build.optimize" value="${build.optimize}" dynamic="true" />
         <property name="current.build.defines.csc" value="${build.defines.csc},MONO,MONO_2_0" dynamic="true" />
         <property name="current.build.defines.jsc" value="${build.defines.jsc},MONO,MONO_2_0" dynamic="true" />
         <property name="current.build.defines.vbc" value="${build.defines.vbc},MONO=True,MONO_2_0=True" dynamic="true" />
@@ -343,6 +357,7 @@ limitations under the License.
     <target name="set-mono-3.5-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
         <property name="nant.settings.currentframework" value="mono-3.5" />
         <property name="current.build.debug" value="${build.debug}" dynamic="true" />
+        <property name="current.build.optimize" value="${build.optimize}" dynamic="true" />
         <property name="current.build.defines.csc" value="${build.defines.csc},MONO,MONO_2_0" dynamic="true" />
         <property name="current.build.defines.jsc" value="${build.defines.jsc},MONO,MONO_2_0" dynamic="true" />
         <property name="current.build.defines.vbc" value="${build.defines.vbc},MONO=True,MONO_2_0=True" dynamic="true" />
@@ -355,6 +370,7 @@ limitations under the License.
     <target name="set-mono-4.0-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
         <property name="nant.settings.currentframework" value="mono-4.0" />
         <property name="current.build.debug" value="${build.debug}" dynamic="true" />
+        <property name="current.build.optimize" value="${build.optimize}" dynamic="true" />
         <property name="current.build.defines.csc" value="${build.defines.csc},MONO,MONO_2_0,MONO_4_0" dynamic="true" />
         <property name="current.build.defines.jsc" value="${build.defines.jsc},MONO,MONO_2_0,MONO_4_0" dynamic="true" />
         <property name="current.build.defines.vbc" value="${build.defines.vbc},MONO=True,MONO_2_0=True,MONO_4_0=True" dynamic="true" />
@@ -367,6 +383,7 @@ limitations under the License.
     <target name="set-sscli-1.0-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
         <property name="nant.settings.currentframework" value="sscli-1.0" />
         <property name="current.build.debug" value="${build.debug}" dynamic="true" />
+        <property name="current.build.optimize" value="${build.optimize}" dynamic="true" />
         <property name="current.build.defines.csc" value="${build.defines.csc},SSCLI,SSCLI_1_0" dynamic="true" />
         <property name="current.build.defines.jsc" value="${build.defines.jsc},SSCLI,SSCLI_1_0" dynamic="true" />
         <property name="current.build.defines.vbc" value="${build.defines.vbc},SSCLI=True,SSCLI_1_0=True" dynamic="true" />
@@ -379,6 +396,7 @@ limitations under the License.
     <target name="set-cli-1.0-configuration" depends="check-bin-dir">
         <property name="nant.settings.currentframework" value="net-1.0" />
         <property name="current.build.debug" value="${build.debug}" dynamic="true" />
+        <property name="current.build.optimize" value="${build.optimize}" dynamic="true" />
         <property name="current.build.defines.csc" value="${build.defines.csc},CLI,CLI_1_0" dynamic="true" />
         <property name="current.build.defines.jsc" value="${build.defines.jsc},CLI,CLI_1_0" dynamic="true" />
         <property name="current.build.defines.vbc" value="${build.defines.vbc},CLI=True,CLI_1_0=True" dynamic="true" />
