@@ -1335,11 +1335,15 @@ namespace log4net.Core
 
 			// TODO: Add Repository Properties
 
-			// event properties
+			/* Event properties. PERFORMANCE ISSUE:
+			*   The "LoggingEvent" object has this options and we are able to include them using Layout if needed.
+			*   Initializing the "UserName" and "Identity" properties are quite expensive time cost operations.
+			*   So please do not need to duplicate the data in the properties if no needed in order to be fast as possible.
 			PropertiesDictionary eventProperties = new PropertiesDictionary();
 			eventProperties[UserNameProperty] = UserName;
 			eventProperties[IdentityProperty] = Identity;
 			m_compositeProperties.Add(eventProperties);
+			*/
 
 			m_compositeProperties.Add(GlobalContext.Properties.GetReadOnlyProperties());
 		}
