@@ -22,6 +22,7 @@ using System.Collections;
 using System.Globalization;
 
 using log4net.Core;
+using log4net.Layout;
 
 namespace log4net.Util
 {
