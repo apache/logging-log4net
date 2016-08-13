@@ -145,7 +145,9 @@ namespace log4net.Appender
 
 			private Stream m_realStream = null;
 			private LockingModelBase m_lockingModel = null;
+#if !NETSTANDARD1_3 // only used in unavailable Stream overrides
 			private int m_readTotal = -1;
+#endif
 			private int m_lockLevel = 0;
 
 			public LockingStream(LockingModelBase locking)
@@ -160,6 +162,13 @@ namespace log4net.Appender
 
 			#region Override Implementation of Stream
 
+#if NETSTANDARD1_3
+			protected override void Dispose(bool disposing)
+			{
+				m_lockingModel.CloseFile();
+				base.Dispose(disposing);
+			}
+#else
 			// Methods
 			public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
 			{
@@ -194,6 +203,8 @@ namespace log4net.Appender
 			{
 				//No-op, it has already been handled
 			}
+#endif
+
 			public override void Flush()
 			{
 				AssertLocked();
@@ -219,7 +230,11 @@ namespace log4net.Appender
 			}
 			void IDisposable.Dispose()
 			{
+#if NETSTANDARD1_3
+				Dispose(true);
+#else
 				Close();
+#endif
 			}
 			public override void Write(byte[] buffer, int offset, int count)
 			{
@@ -708,7 +723,7 @@ namespace log4net.Appender
 			/// -<see cref="ReleaseLock"/> and <see cref="CloseFile"/>.
 			/// </para>
 			/// </remarks>
-#if NET_4_0 || MONO_4_0
+#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
 			[System.Security.SecuritySafeCritical]
 #endif
 			public override void OpenFile(string filename, bool append, Encoding encoding)
@@ -829,7 +844,7 @@ namespace log4net.Appender
 			{
 				if (m_mutex != null)
 				{
-					m_mutex.Close();
+					m_mutex.Dispose();
 					m_mutex = null;
 				}
 				else
@@ -1431,7 +1446,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// The encoding to use for the file stream.
 		/// </summary>
+#if NETSTANDARD1_3
+		private Encoding m_encoding = Encoding.Unicode;
+#else
 		private Encoding m_encoding = Encoding.Default;
+#endif
 
 		/// <summary>
 		/// The security context to use for privileged calls
