@@ -119,7 +119,7 @@ namespace log4net.Util.PatternStringConverters
 				dateFormatStr = AbsoluteTimeDateFormatter.Iso8601TimeDateFormat;
 			}
 			
-			var dateFormatStrUpper = dateFormatStr.ToUpperInvariant();
+			string dateFormatStrUpper = dateFormatStr.ToUpperInvariant();
 
 			if (dateFormatStrUpper == AbsoluteTimeDateFormatter.Iso8601TimeDateFormat.ToUpperInvariant())
 			{
