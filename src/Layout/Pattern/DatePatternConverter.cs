@@ -119,15 +119,16 @@ namespace log4net.Layout.Pattern
 				dateFormatStr = AbsoluteTimeDateFormatter.Iso8601TimeDateFormat;
 			}
 
-			if (dateFormatStr.ToUpperInvariant() == AbsoluteTimeDateFormatter.Iso8601TimeDateFormat.ToUpperInvariant())
+			string dateFormatStrUpper = dateFormatStr.ToUpperInvariant();
+			if (dateFormatStrUpper == AbsoluteTimeDateFormatter.Iso8601TimeDateFormat.ToUpperInvariant())
 			{
 				m_dateFormatter = new Iso8601DateFormatter();
 			}
-			else if (dateFormatStr.ToUpperInvariant() == AbsoluteTimeDateFormatter.AbsoluteTimeDateFormat.ToUpperInvariant())
+			else if (dateFormatStrUpper == AbsoluteTimeDateFormatter.AbsoluteTimeDateFormat.ToUpperInvariant())
 			{
 				m_dateFormatter = new AbsoluteTimeDateFormatter();
 			}
-			else if (dateFormatStr.ToUpperInvariant() == AbsoluteTimeDateFormatter.DateAndTimeDateFormat.ToUpperInvariant())
+			else if (dateFormatStrUpper == AbsoluteTimeDateFormatter.DateAndTimeDateFormat.ToUpperInvariant())
 			{
 				m_dateFormatter = new DateTimeDateFormatter();
 			}
