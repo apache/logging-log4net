@@ -844,7 +844,11 @@ namespace log4net.Appender
 			{
 				if (m_mutex != null)
 				{
+#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
 					m_mutex.Dispose();
+#else
+					m_mutex.Close();
+#endif
 					m_mutex = null;
 				}
 				else
