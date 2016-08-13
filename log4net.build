@@ -236,36 +236,21 @@ limitations under the License.
       <call target="compile-cli-1.0" />
     </if>
     <if test="${not framework::exists('net-1.0')}">
-      <if test="${property::exists('project.build.package') and project.build.package and not(directory::exists(path::combine(bin.dir, 'net/1.0/debug')) and directory::exists(path::combine(bin.dir, 'net/1.0/release')) and directory::exists(path::combine(bin.dir, 'net/1.0/oldkey')))}">
-        <fail message="The .NET Framework 1.0 is not available." />
-      </if>
-      <if test="${not(property::exists('project.build.package') and project.build.package)}">
         <echo message="The .NET Framework 1.0 is not available. Build skipped." />
-      </if>
     </if>
     <!-- NET_1_1 -->
     <if test="${framework::exists('net-1.1')}">
       <call target="compile-net-1.1" />
     </if>
     <if test="${not framework::exists('net-1.1')}">
-      <if test="${property::exists('project.build.package') and project.build.package and not(directory::exists(path::combine(bin.dir, 'net/1.1/debug')) and directory::exists(path::combine(bin.dir, 'net/1.1/release')) and directory::exists(path::combine(bin.dir, 'net/1.1/oldkey')))}">
-        <fail message="The .NET Framework 1.1 is not available." />
-      </if>
-      <if test="${not(property::exists('project.build.package') and project.build.package)}">
         <echo message="The .NET Framework 1.1 is not available. Build skipped." />
-      </if>
     </if>
     <!-- NET_2_0 -->
     <if test="${framework::exists('net-2.0')}">
       <call target="compile-net-2.0" />
     </if>
     <if test="${not framework::exists('net-2.0')}">
-      <if test="${property::exists('project.build.package') and project.build.package and not(directory::exists(path::combine(bin.dir, 'net/2.0/debug')) and directory::exists(path::combine(bin.dir, 'net/2.0/release')) and directory::exists(path::combine(bin.dir, 'net/2.0/oldkey')))}">
-        <fail message="The .NET Framework 2.0 is not available." />
-      </if>
-      <if test="${not(property::exists('project.build.package') and project.build.package)}">
         <echo message="The .NET Framework 2.0 is not available. Build skipped." />
-      </if>
     </if>
     <!-- NET_3_5 -->
     <if test="${framework::exists('net-3.5')}">
