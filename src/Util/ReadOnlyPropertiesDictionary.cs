@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.Reflection;
 #if !NETCF
 using System.Runtime.Serialization;
 using System.Xml;
@@ -91,7 +92,7 @@ namespace log4net.Util
 
 		#region Private Instance Constructors
 
-#if !NETCF
+#if !(NETCF || NETSTANDARD1_3)
 		/// <summary>
 		/// Deserialization constructor
 		/// </summary>
@@ -203,7 +204,7 @@ namespace log4net.Util
 		/// Serializes this object into the <see cref="SerializationInfo" /> provided.
 		/// </para>
 		/// </remarks>
-#if NET_4_0 || MONO_4_0
+#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
         [System.Security.SecurityCritical]
 #else
 		[System.Security.Permissions.SecurityPermissionAttribute(System.Security.Permissions.SecurityAction.Demand, SerializationFormatter=true)]
@@ -215,8 +216,13 @@ namespace log4net.Util
 				string entryKey = entry.Key as string;
 				object entryValue = entry.Value;
 
-				// If value is serializable then we add it to the list
-				if (entryKey != null && entryValue != null && entryValue.GetType().IsSerializable)
+                // If value is serializable then we add it to the list
+#if NETSTANDARD1_3
+                bool isSerializable = entryValue.GetType().GetTypeInfo().IsSerializable;
+#else
+                bool isSerializable = entryValue.GetType().IsSerializable;
+#endif
+				if (entryKey != null && entryValue != null && isSerializable)
 				{
 					// Store the keys as an Xml encoded local name as it may contain colons (':') 
 					// which are NOT escaped by the Xml Serialization framework.

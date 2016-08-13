@@ -40,6 +40,7 @@ namespace log4net.Tests.Core
 	[TestFixture]
 	public class StringFormatTest
 	{
+#if !NETSTANDARD1_3
 		private CultureInfo _currentCulture;
 		private CultureInfo _currentUICulture;
 
@@ -59,6 +60,7 @@ namespace log4net.Tests.Core
 			System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture;
 			System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture;
 		}
+#endif
 
 		[Test]
 		public void TestFormatString()

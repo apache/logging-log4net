@@ -232,7 +232,11 @@ namespace log4net.Util
 							{
 								formattingInfo.Min = 0;
 							}
+#if NETSTANDARD1_3
+							formattingInfo.Min = (formattingInfo.Min * 10) + int.Parse(pattern[offset].ToString(), System.Globalization.NumberFormatInfo.InvariantInfo);
+#else
 							formattingInfo.Min = (formattingInfo.Min * 10) + int.Parse(pattern[offset].ToString(CultureInfo.InvariantCulture), System.Globalization.NumberFormatInfo.InvariantInfo);
+#endif
 							offset++;
 						}
 						// Look for the separator between min and max
@@ -252,7 +256,11 @@ namespace log4net.Util
 							{
 								formattingInfo.Max = 0;
 							}
+#if NETSTANDARD1_3
+							formattingInfo.Max = (formattingInfo.Max * 10) + int.Parse(pattern[offset].ToString(), System.Globalization.NumberFormatInfo.InvariantInfo);
+#else
 							formattingInfo.Max = (formattingInfo.Max * 10) + int.Parse(pattern[offset].ToString(CultureInfo.InvariantCulture), System.Globalization.NumberFormatInfo.InvariantInfo);
+#endif
 							offset++;
 						}
 
@@ -263,7 +271,11 @@ namespace log4net.Util
 						{
 							if (matches[m].Length <= remainingStringLength)
 							{
+#if NETSTANDARD1_3
+								if (CultureInfo.InvariantCulture.CompareInfo.Compare(pattern, offset, matches[m].Length, matches[m], 0, matches[m].Length) == 0)
+#else
 								if (String.Compare(pattern, offset, matches[m], 0, matches[m].Length, false, System.Globalization.CultureInfo.InvariantCulture) == 0)
+#endif
 								{
 									// Found match
 									offset = offset + matches[m].Length;

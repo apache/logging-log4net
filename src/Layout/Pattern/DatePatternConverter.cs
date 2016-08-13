@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Globalization;
 using System.Text;
 using System.IO;
 
@@ -119,20 +120,34 @@ namespace log4net.Layout.Pattern
 			{
 				dateFormatStr = AbsoluteTimeDateFormatter.Iso8601TimeDateFormat;
 			}
-			
-			if (string.Compare(dateFormatStr, AbsoluteTimeDateFormatter.Iso8601TimeDateFormat, true, System.Globalization.CultureInfo.InvariantCulture) == 0) 
+#if NETSTANDARD1_3
+			if (CultureInfo.InvariantCulture.CompareInfo.Compare(dateFormatStr, AbsoluteTimeDateFormatter.Iso8601TimeDateFormat, CompareOptions.IgnoreCase) == 0)
 			{
 				m_dateFormatter = new Iso8601DateFormatter();
 			}
-			else if (string.Compare(dateFormatStr, AbsoluteTimeDateFormatter.AbsoluteTimeDateFormat, true, System.Globalization.CultureInfo.InvariantCulture) == 0)
+			else if (CultureInfo.InvariantCulture.CompareInfo.Compare(dateFormatStr, AbsoluteTimeDateFormatter.AbsoluteTimeDateFormat, CompareOptions.IgnoreCase) == 0)
 			{
 				m_dateFormatter = new AbsoluteTimeDateFormatter();
 			}
-			else if (string.Compare(dateFormatStr, AbsoluteTimeDateFormatter.DateAndTimeDateFormat, true, System.Globalization.CultureInfo.InvariantCulture) == 0)
+			else if (CultureInfo.InvariantCulture.CompareInfo.Compare(dateFormatStr, AbsoluteTimeDateFormatter.DateAndTimeDateFormat, CompareOptions.IgnoreCase) == 0)
 			{
 				m_dateFormatter = new DateTimeDateFormatter();
 			}
-			else 
+#else
+			if (string.Compare(dateFormatStr, AbsoluteTimeDateFormatter.Iso8601TimeDateFormat, true, CultureInfo.InvariantCulture) == 0)
+			{
+				m_dateFormatter = new Iso8601DateFormatter();
+			}
+			else if (string.Compare(dateFormatStr, AbsoluteTimeDateFormatter.AbsoluteTimeDateFormat, true, CultureInfo.InvariantCulture) == 0)
+			{
+				m_dateFormatter = new AbsoluteTimeDateFormatter();
+			}
+			else if (string.Compare(dateFormatStr, AbsoluteTimeDateFormatter.DateAndTimeDateFormat, true, CultureInfo.InvariantCulture) == 0)
+			{
+				m_dateFormatter = new DateTimeDateFormatter();
+			}
+#endif
+			else
 			{
 				try 
 				{

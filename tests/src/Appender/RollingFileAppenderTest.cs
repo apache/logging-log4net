@@ -51,9 +51,10 @@ namespace log4net.Tests.Appender
 		private int _MaxSizeRollBackups = 3;
 		private CountingAppender _caRoot;
 		private Logger _root;
+#if !NETSTANDARD1_3
 		private CultureInfo _currentCulture;
 		private CultureInfo _currentUICulture;
-
+#endif
 		private class SilentErrorHandler : IErrorHandler
 		{
 			private StringBuilder m_buffer = new StringBuilder();
@@ -98,9 +99,9 @@ namespace log4net.Tests.Appender
 		private static void ResetAndDeleteTestFiles()
 		{
 			// Regular users should not use the clear method lightly!
-			LogManager.GetRepository().ResetConfiguration();
-			LogManager.GetRepository().Shutdown();
-			((Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Clear();
+			Utils.GetRepository().ResetConfiguration();
+			Utils.GetRepository().Shutdown();
+			((Repository.Hierarchy.Hierarchy)Utils.GetRepository()).Clear();
 
 			DeleteTestFiles();
 		}
@@ -115,10 +116,12 @@ namespace log4net.Tests.Appender
 			ResetAndDeleteTestFiles();
 			InitializeVariables();
 
+#if !NETSTANDARD1_3
 			// set correct thread culture
 			_currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
 			_currentUICulture = System.Threading.Thread.CurrentThread.CurrentUICulture;
 			System.Threading.Thread.CurrentThread.CurrentCulture = System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
+#endif
 		}
 
 		/// <summary>
@@ -128,10 +131,12 @@ namespace log4net.Tests.Appender
 		public void TearDown()
 		{
 			ResetAndDeleteTestFiles();
-			
+
+#if !NETSTANDARD1_3
 			// restore previous culture
 			System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture;
 			System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture;
+#endif
 		}
 
 		/// <summary>
@@ -1107,7 +1112,7 @@ namespace log4net.Tests.Appender
 		/// </summary>
 		private void ConfigureRootAppender()
 		{
-			_root = ((Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Root;
+			_root = ((Repository.Hierarchy.Hierarchy)Utils.GetRepository()).Root;
 			_root.Level = Level.Debug;
 			_caRoot = new CountingAppender();
 			_root.AddAppender(_caRoot);
@@ -1454,7 +1459,11 @@ namespace log4net.Tests.Appender
 
 		private static void AssertFileEquals(string filename, string contents)
 		{
+#if NETSTANDARD1_3
+			StreamReader sr = new StreamReader(new FileStream(filename, FileMode.Open));
+#else
 			StreamReader sr = new StreamReader(filename);
+#endif
 			string logcont = sr.ReadToEnd();
 			sr.Close();
 
@@ -1709,7 +1718,6 @@ namespace log4net.Tests.Appender
 		public void TestInterProcessLockRoll()
 		{
 			String filename = "test.log";
-			bool locked;
 
 			SilentErrorHandler sh = new SilentErrorHandler();
 			ILogger log = CreateLogger(filename, new FileAppender.InterProcessLock(), sh, 1, 2);

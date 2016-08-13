@@ -84,9 +84,9 @@ namespace log4net.Tests.Appender
 		private void ResetLogger()
 		{
 			// Regular users should not use the clear method lightly!
-			LogManager.GetRepository().ResetConfiguration();
-			LogManager.GetRepository().Shutdown();
-			((Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Clear();
+			Utils.GetRepository().ResetConfiguration();
+			Utils.GetRepository().Shutdown();
+			((Repository.Hierarchy.Hierarchy)Utils.GetRepository()).Clear();
 		}
 
 		/// <summary>

@@ -91,6 +91,8 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("Apache log4net for CLI Compatible Frameworks")]
 #elif (NET)
 [assembly: AssemblyTitle("Apache log4net for .NET Framework")]
+#elif (NETSTANDARD1_3)
+[assembly: AssemblyTitle("Apache log4net for .NET Core")]
 #elif (NETCF)
 [assembly: AssemblyTitle("Apache log4net for .NET Compact Framework")]
 #elif (MONO)

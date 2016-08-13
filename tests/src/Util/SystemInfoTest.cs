@@ -23,7 +23,7 @@ using log4net.Util;
 
 using NUnit.Framework;
 
-#if NET_4_0 || MONO_4_0
+#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
 using System.Linq.Expressions;
 using System.Reflection;
 #endif
@@ -37,7 +37,7 @@ namespace log4net.Tests.Util
 	public class SystemInfoTest
 	{
 
-#if NET_4_0 || MONO_4_0
+#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
 		/// <summary>
 		/// It's "does not throw not supported exception" NOT
 		/// "returns 'Dynamic Assembly' string for dynamic assemblies" by purpose.
@@ -65,7 +65,11 @@ namespace log4net.Tests.Util
 
 		public static string TestAssemblyLocationInfoMethod()
 		{
+#if NETSTANDARD1_3
+			return SystemInfo.AssemblyLocationInfo(typeof(SystemInfoTest).GetTypeInfo().Assembly);
+#else
 			return SystemInfo.AssemblyLocationInfo(Assembly.GetCallingAssembly());
+#endif
 		}
 #endif
 
@@ -74,57 +78,62 @@ namespace log4net.Tests.Util
 		{
 			Type t;
 
-			t = SystemInfo.GetTypeFromString("log4net.Tests.Util.SystemInfoTest,log4net.Tests", false, false);
+			t = GetTypeFromString("log4net.Tests.Util.SystemInfoTest,log4net.Tests", false, false);
 			Assert.AreSame(typeof(SystemInfoTest), t, "Test explicit case sensitive type load");
 
-			t = SystemInfo.GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,log4net.Tests", false, true);
+			t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,log4net.Tests", false, true);
 			Assert.AreSame(typeof(SystemInfoTest), t, "Test explicit case in-sensitive type load caps");
 
-			t = SystemInfo.GetTypeFromString("log4net.tests.util.systeminfotest,log4net.Tests", false, true);
+			t = GetTypeFromString("log4net.tests.util.systeminfotest,log4net.Tests", false, true);
 			Assert.AreSame(typeof(SystemInfoTest), t, "Test explicit case in-sensitive type load lower");
 		}
 
-                [Test][Platform(Include="Win")]
+#if !NETSTANDARD1_3
+		[Test][Platform(Include="Win")]
 		public void TestGetTypeFromStringCaseInsensitiveOnAssemblyName()
 		{
 			Type t;
 
-			t = SystemInfo.GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", false, true);
+			t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", false, true);
 			Assert.AreSame(typeof(SystemInfoTest), t, "Test explicit case in-sensitive type load caps");
 
-			t = SystemInfo.GetTypeFromString("log4net.tests.util.systeminfotest,log4net.tests", false, true);
+			t = GetTypeFromString("log4net.tests.util.systeminfotest,log4net.tests", false, true);
 			Assert.AreSame(typeof(SystemInfoTest), t, "Test explicit case in-sensitive type load lower");
 		}
+#endif
 
 		[Test]
 		public void TestGetTypeFromStringRelative()
 		{
 			Type t;
 
-			t = SystemInfo.GetTypeFromString("log4net.Tests.Util.SystemInfoTest", false, false);
+			t = GetTypeFromString("log4net.Tests.Util.SystemInfoTest", false, false);
 			Assert.AreSame(typeof(SystemInfoTest), t, "Test explicit case sensitive type load");
 
-			t = SystemInfo.GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", false, true);
+			t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", false, true);
 			Assert.AreSame(typeof(SystemInfoTest), t, "Test explicit case in-sensitive type load caps");
 
-			t = SystemInfo.GetTypeFromString("log4net.tests.util.systeminfotest", false, true);
+			t = GetTypeFromString("log4net.tests.util.systeminfotest", false, true);
 			Assert.AreSame(typeof(SystemInfoTest), t, "Test explicit case in-sensitive type load lower");
 		}
 
+#if NETSTANDARD1_3
+		[Ignore("This test relies on enumerating loaded assemblies, which is presently impossible in CoreFX (https://github.com/dotnet/corefx/issues/1784).")]
+#endif
 		[Test]
 		public void TestGetTypeFromStringSearch()
 		{
 			Type t;
 
-			t = SystemInfo.GetTypeFromString("log4net.Util.SystemInfo", false, false);
+			t = GetTypeFromString("log4net.Util.SystemInfo", false, false);
 			Assert.AreSame(typeof(SystemInfo), t,
                                        string.Format("Test explicit case sensitive type load found {0} rather than {1}",
                                                      t.AssemblyQualifiedName, typeof(SystemInfo).AssemblyQualifiedName));
 
-			t = SystemInfo.GetTypeFromString("LOG4NET.UTIL.SYSTEMINFO", false, true);
+			t = GetTypeFromString("LOG4NET.UTIL.SYSTEMINFO", false, true);
 			Assert.AreSame(typeof(SystemInfo), t, "Test explicit case in-sensitive type load caps");
 
-			t = SystemInfo.GetTypeFromString("log4net.util.systeminfo", false, true);
+			t = GetTypeFromString("log4net.util.systeminfo", false, true);
 			Assert.AreSame(typeof(SystemInfo), t, "Test explicit case in-sensitive type load lower");
 		}
 
@@ -133,10 +142,10 @@ namespace log4net.Tests.Util
 		{
 			Type t;
 
-			t = SystemInfo.GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", false, false);
+			t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", false, false);
 			Assert.AreSame(null, t, "Test explicit case sensitive fails type load");
 
-			t = SystemInfo.GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", true, false);
+			t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", true, false);
 		}
 
 		[Test, ExpectedException(typeof(TypeLoadException))]
@@ -144,10 +153,22 @@ namespace log4net.Tests.Util
 		{
 			Type t;
 
-			t = SystemInfo.GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", false, false);
+			t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", false, false);
 			Assert.AreSame(null, t, "Test explicit case sensitive fails type load");
 
-			t = SystemInfo.GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", true, false);
+			t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", true, false);
+		}
+
+		// Wraps SystemInfo.GetTypeFromString because the method relies on GetCallingAssembly, which is
+		// unavailable in CoreFX. As a workaround, only overloads which explicitly take a Type or Assembly
+		// are exposed for NETSTANDARD1_3.
+		private Type GetTypeFromString(string typeName, bool throwOnError, bool ignoreCase)
+		{
+#if NETSTANDARD1_3
+			return SystemInfo.GetTypeFromString(GetType().GetTypeInfo().Assembly, typeName, throwOnError, ignoreCase);
+#else
+			return SystemInfo.GetTypeFromString(typeName, throwOnError, ignoreCase);
+#endif
 		}
 	}
 }

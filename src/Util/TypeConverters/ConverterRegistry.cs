@@ -19,6 +19,9 @@
 
 using System;
 using System.Globalization;
+#if NETSTANDARD1_3
+using System.Linq;
+#endif
 using System.Reflection;
 using System.Collections;
 

@@ -1,0 +1,3 @@
+{
+    "projects": [ "log4net", "log4net.tests" ]
+}

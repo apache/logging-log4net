@@ -33,7 +33,11 @@ namespace log4net.Tests.Core
 	{
         const string TEST_REPOSITORY = "Test Repository";
 
+#if NETSTANDARD1_3
+        [OneTimeSetUp]
+#else
         [TestFixtureSetUp]
+#endif
 		public void CreateRepository()
 		{
             bool exists = false;
@@ -139,7 +143,9 @@ namespace log4net.Tests.Core
 			Assert.AreEqual("System.Exception: This is the exception", loggingEvent.GetExceptionString(), "Exception is incorrect");
 			Assert.AreEqual(null, loggingEventData.Identity, "Identity is incorrect");
 			Assert.AreEqual(Level.Warn, loggingEventData.Level, "Level is incorrect");
+#if !NETSTANDARD1_3 // NETSTANDARD1_3: LocationInfo can't get method names
 			Assert.AreEqual("get_LocationInformation", loggingEvent.LocationInformation.MethodName, "Location Info is incorrect");
+#endif
 			Assert.AreEqual("log4net.Tests.Core.FixingTest", loggingEventData.LoggerName, "LoggerName is incorrect");
 			Assert.AreEqual(LogManager.GetRepository(TEST_REPOSITORY), loggingEvent.Repository, "Repository is incorrect");
 			Assert.AreEqual(Thread.CurrentThread.Name, loggingEventData.ThreadName, "ThreadName is incorrect");

@@ -17,6 +17,9 @@
 //
 #endregion
 
+#if NETSTANDARD1_3
+using System.Globalization;
+#endif
 using System;
 using System.Text;
 using System.IO;
@@ -72,6 +75,16 @@ namespace log4net.Util.PatternStringConverters
 		/// </remarks>
 		public void ActivateOptions()
 		{
+#if NETSTANDARD1_3
+			if (CultureInfo.InvariantCulture.CompareInfo.Compare(Option, "DOS", CompareOptions.IgnoreCase) == 0)
+			{
+				Option = "\r\n";
+			}
+			else if (CultureInfo.InvariantCulture.CompareInfo.Compare(Option, "UNIX", CompareOptions.IgnoreCase) == 0)
+			{
+				Option = "\n";
+			}
+#else
 			if (string.Compare(Option, "DOS", true, System.Globalization.CultureInfo.InvariantCulture) == 0)
 			{
 				Option = "\r\n";
@@ -80,6 +93,7 @@ namespace log4net.Util.PatternStringConverters
 			{
 				Option = "\n";
 			}
+#endif
 			else
 			{
 				Option = SystemInfo.NewLine;

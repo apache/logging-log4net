@@ -23,7 +23,11 @@
 
 using System;
 using System.Collections;
+#if !NETSTANDARD1_3
 using System.Configuration;
+#else
+using System.Linq;
+#endif
 using System.IO;
 using System.Reflection;
 
@@ -583,7 +587,11 @@ namespace log4net.Core
 			try
 			{
 				// Look for the RepositoryAttribute on the assembly 
+#if NETSTANDARD1_3
+				object[] repositoryAttributes = assembly.GetCustomAttributes(typeof(log4net.Config.RepositoryAttribute)).ToArray();
+#else
 				object[] repositoryAttributes = Attribute.GetCustomAttributes(assembly, typeof(log4net.Config.RepositoryAttribute), false);
+#endif
 				if (repositoryAttributes == null || repositoryAttributes.Length == 0)
 				{
 					// This is not a problem, but its nice to know what is going on.
@@ -655,7 +663,11 @@ namespace log4net.Core
 			}
 
 			// Look for the Configurator attributes (e.g. XmlConfiguratorAttribute) on the assembly
+#if NETSTANDARD1_3
+			object[] configAttributes = assembly.GetCustomAttributes(typeof(log4net.Config.ConfiguratorAttribute)).ToArray();
+#else
 			object[] configAttributes = Attribute.GetCustomAttributes(assembly, typeof(log4net.Config.ConfiguratorAttribute), false);
+#endif
 			if (configAttributes != null && configAttributes.Length > 0)
 			{
 				// Sort the ConfiguratorAttributes in priority order
@@ -705,7 +717,7 @@ namespace log4net.Core
 
                     // Determine whether to watch the file or not based on an app setting value:
 				    bool watchRepositoryConfigFile = false;
-#if NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0
+#if NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0 || NETSTANDARD1_3
 				    Boolean.TryParse(SystemInfo.GetAppSetting("log4net.Config.Watch"), out watchRepositoryConfigFile);
 #else
                                     {
@@ -803,7 +815,11 @@ namespace log4net.Core
 			}
 
 			// Look for the PluginAttribute on the assembly
+#if NETSTANDARD1_3
+			object[] configAttributes = assembly.GetCustomAttributes(typeof(log4net.Config.PluginAttribute)).ToArray();
+#else
 			object[] configAttributes = Attribute.GetCustomAttributes(assembly, typeof(log4net.Config.PluginAttribute), false);
+#endif
 			if (configAttributes != null && configAttributes.Length > 0)
 			{
 				foreach(log4net.Plugin.IPluginFactory configAttr in configAttributes)
@@ -843,7 +859,11 @@ namespace log4net.Core
 			}
 
 			// Look for the AliasRepositoryAttribute on the assembly
+#if NETSTANDARD1_3
+			object[] configAttributes = assembly.GetCustomAttributes(typeof(log4net.Config.AliasRepositoryAttribute)).ToArray();
+#else
 			object[] configAttributes = Attribute.GetCustomAttributes(assembly, typeof(log4net.Config.AliasRepositoryAttribute), false);
+#endif
 			if (configAttributes != null && configAttributes.Length > 0)
 			{
 				foreach(log4net.Config.AliasRepositoryAttribute configAttr in configAttributes)

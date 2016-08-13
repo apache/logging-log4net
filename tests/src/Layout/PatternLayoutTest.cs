@@ -42,6 +42,7 @@ namespace log4net.Tests.Layout
 	[TestFixture]
 	public class PatternLayoutTest
 	{
+#if !NETSTANDARD1_3
 		private CultureInfo _currentCulture;
 		private CultureInfo _currentUICulture;
 
@@ -62,6 +63,7 @@ namespace log4net.Tests.Layout
 			System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture;
 			System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture;
         }
+#endif
 
         protected virtual PatternLayout NewPatternLayout() {
             return new PatternLayout();
@@ -99,7 +101,11 @@ namespace log4net.Tests.Layout
 			stringAppender.Reset();
 		}
 
+#if NETSTANDARD1_3
+        [Test, Ignore("System.Diagnostics.StackTrace isn't fully implemented on NETSTANDARD1_3")]
+#else
         [Test]
+#endif
         public void TestStackTracePattern()
         {
             StringAppender stringAppender = new StringAppender();

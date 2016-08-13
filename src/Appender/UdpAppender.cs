@@ -403,7 +403,11 @@ namespace log4net.Appender
 			try 
 			{
 				Byte [] buffer = m_encoding.GetBytes(RenderLoggingEvent(loggingEvent).ToCharArray());
+#if NETSTANDARD1_3
+				Client.SendAsync(buffer, buffer.Length, RemoteEndPoint).Wait();
+#else
 				this.Client.Send(buffer, buffer.Length, this.RemoteEndPoint);
+#endif
 			} 
 			catch (Exception ex) 
 			{
@@ -536,7 +540,11 @@ namespace log4net.Appender
 		/// <summary>
 		/// The encoding to use for the packet.
 		/// </summary>
+#if NETSTANDARD1_3
+		private Encoding m_encoding = Encoding.Unicode;
+#else
 		private Encoding m_encoding = Encoding.Default;
+#endif
 
 		#endregion Private Instance Fields
 	}

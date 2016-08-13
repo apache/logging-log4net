@@ -20,6 +20,9 @@
 using System;
 using System.Collections;
 using System.IO;
+#if NETSTANDARD1_3
+using System.Reflection;
+#endif
 
 using log4net.Core;
 using log4net.Layout.Pattern;
@@ -861,7 +864,7 @@ namespace log4net.Layout
 
 // .NET Compact Framework 1.0 has no support for ASP.NET
 // SSCLI 1.0 has no support for ASP.NET
-#if !NETCF && !SSCLI && !CLIENT_PROFILE
+#if !NETCF && !SSCLI && !CLIENT_PROFILE && !NETSTANDARD1_3
 			s_globalRulesRegistry.Add("aspnet-cache", typeof(AspNetCachePatternConverter));
 			s_globalRulesRegistry.Add("aspnet-context", typeof(AspNetContextPatternConverter));
 			s_globalRulesRegistry.Add("aspnet-request", typeof(AspNetRequestPatternConverter));
@@ -905,7 +908,7 @@ namespace log4net.Layout
 			s_globalRulesRegistry.Add("r", typeof(RelativeTimePatternConverter));
 			s_globalRulesRegistry.Add("timestamp", typeof(RelativeTimePatternConverter));
 			
-#if !NETCF
+#if !(NETCF || NETSTANDARD1_3)
 			s_globalRulesRegistry.Add("stacktrace", typeof(StackTracePatternConverter));
             s_globalRulesRegistry.Add("stacktracedetail", typeof(StackTraceDetailPatternConverter));
 #endif
