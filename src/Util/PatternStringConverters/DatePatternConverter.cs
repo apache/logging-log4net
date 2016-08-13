@@ -18,11 +18,8 @@
 #endregion
 
 using System;
-using System.Globalization;
-using System.Text;
 using System.IO;
 
-using log4net.Util;
 using log4net.DateFormatter;
 using log4net.Core;
 
@@ -116,37 +113,26 @@ namespace log4net.Util.PatternStringConverters
 		public void ActivateOptions()
 		{
 			string dateFormatStr = Option;
+
 			if (dateFormatStr == null)
 			{
 				dateFormatStr = AbsoluteTimeDateFormatter.Iso8601TimeDateFormat;
 			}
-#if NETSTANDARD1_3
-			if (CultureInfo.InvariantCulture.CompareInfo.Compare(dateFormatStr, AbsoluteTimeDateFormatter.Iso8601TimeDateFormat, CompareOptions.IgnoreCase) == 0)
+			
+			var dateFormatStrUpper = dateFormatStr.ToUpperInvariant();
+
+			if (dateFormatStrUpper == AbsoluteTimeDateFormatter.Iso8601TimeDateFormat.ToUpperInvariant())
 			{
 				m_dateFormatter = new Iso8601DateFormatter();
 			}
-			else if (CultureInfo.InvariantCulture.CompareInfo.Compare(dateFormatStr, AbsoluteTimeDateFormatter.AbsoluteTimeDateFormat, CompareOptions.IgnoreCase) == 0)
+			else if (dateFormatStrUpper == AbsoluteTimeDateFormatter.AbsoluteTimeDateFormat.ToUpperInvariant())
 			{
 				m_dateFormatter = new AbsoluteTimeDateFormatter();
 			}
-			else if (CultureInfo.InvariantCulture.CompareInfo.Compare(dateFormatStr, AbsoluteTimeDateFormatter.DateAndTimeDateFormat, CompareOptions.IgnoreCase) == 0)
+			else if (dateFormatStrUpper == AbsoluteTimeDateFormatter.DateAndTimeDateFormat.ToUpperInvariant())
 			{
 				m_dateFormatter = new DateTimeDateFormatter();
 			}
-#else
-			if (string.Compare(dateFormatStr, AbsoluteTimeDateFormatter.Iso8601TimeDateFormat, true, CultureInfo.InvariantCulture) == 0)
-			{
-				m_dateFormatter = new Iso8601DateFormatter();
-			}
-			else if (string.Compare(dateFormatStr, AbsoluteTimeDateFormatter.AbsoluteTimeDateFormat, true, CultureInfo.InvariantCulture) == 0)
-			{
-				m_dateFormatter = new AbsoluteTimeDateFormatter();
-			}
-			else if (string.Compare(dateFormatStr, AbsoluteTimeDateFormatter.DateAndTimeDateFormat, true, CultureInfo.InvariantCulture) == 0)
-			{
-				m_dateFormatter = new DateTimeDateFormatter();
-			}
-#endif
 			else
 			{
 				try 

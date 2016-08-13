@@ -20,15 +20,8 @@
 using System;
 using System.Collections;
 using System.Globalization;
-using System.IO;
-using System.Reflection;
-using System.Text;
 
-using log4net.Layout;
 using log4net.Core;
-using log4net.DateFormatter;
-using log4net.Layout.Pattern;
-using log4net.Util;
 
 namespace log4net.Util
 {
@@ -232,11 +225,9 @@ namespace log4net.Util
 							{
 								formattingInfo.Min = 0;
 							}
-#if NETSTANDARD1_3
-							formattingInfo.Min = (formattingInfo.Min * 10) + int.Parse(pattern[offset].ToString(), System.Globalization.NumberFormatInfo.InvariantInfo);
-#else
-							formattingInfo.Min = (formattingInfo.Min * 10) + int.Parse(pattern[offset].ToString(CultureInfo.InvariantCulture), System.Globalization.NumberFormatInfo.InvariantInfo);
-#endif
+
+							formattingInfo.Min = (formattingInfo.Min * 10) + int.Parse(pattern[offset].ToString(), NumberFormatInfo.InvariantInfo);
+
 							offset++;
 						}
 						// Look for the separator between min and max
@@ -256,11 +247,9 @@ namespace log4net.Util
 							{
 								formattingInfo.Max = 0;
 							}
-#if NETSTANDARD1_3
-							formattingInfo.Max = (formattingInfo.Max * 10) + int.Parse(pattern[offset].ToString(), System.Globalization.NumberFormatInfo.InvariantInfo);
-#else
-							formattingInfo.Max = (formattingInfo.Max * 10) + int.Parse(pattern[offset].ToString(CultureInfo.InvariantCulture), System.Globalization.NumberFormatInfo.InvariantInfo);
-#endif
+
+							formattingInfo.Max = (formattingInfo.Max * 10) + int.Parse(pattern[offset].ToString(), NumberFormatInfo.InvariantInfo);
+
 							offset++;
 						}
 
@@ -269,13 +258,11 @@ namespace log4net.Util
 						// Look for pattern
 						for(int m=0; m<matches.Length; m++)
 						{
-							if (matches[m].Length <= remainingStringLength)
+							string key = matches[m];
+
+							if (key.Length <= remainingStringLength)
 							{
-#if NETSTANDARD1_3
-								if (CultureInfo.InvariantCulture.CompareInfo.Compare(pattern, offset, matches[m].Length, matches[m], 0, matches[m].Length) == 0)
-#else
-								if (String.Compare(pattern, offset, matches[m], 0, matches[m].Length, false, System.Globalization.CultureInfo.InvariantCulture) == 0)
-#endif
+								if (string.Compare(pattern, offset, key, 0, key.Length) == 0)
 								{
 									// Found match
 									offset = offset + matches[m].Length;

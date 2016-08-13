@@ -33,7 +33,7 @@
             "../../src/Util/WindowsSecurityContext.cs"
           ]
         },
-        "define": [ "HAS_READERWRITERLOCKSLIM", "NETSTANDARD1_3" ]
+        "define": [ "HAS_READERWRITERLOCKSLIM" ]
       },
       "dependencies": {
         "System.AppContext": "4.1.0",

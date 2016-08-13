@@ -899,13 +899,10 @@ namespace log4net.Repository.Hierarchy
 			{
 				if (!methInfo.IsStatic)
 				{
-#if NETSTANDARD1_3
-					if (CultureInfo.InvariantCulture.CompareInfo.Compare(methInfo.Name, requiredMethodNameA, CompareOptions.IgnoreCase) == 0 ||
-						CultureInfo.InvariantCulture.CompareInfo.Compare(methInfo.Name, requiredMethodNameB, CompareOptions.IgnoreCase) == 0)
-#else
-					if (string.Compare(methInfo.Name, requiredMethodNameA, true, System.Globalization.CultureInfo.InvariantCulture) == 0 ||
-						string.Compare(methInfo.Name, requiredMethodNameB, true, System.Globalization.CultureInfo.InvariantCulture) == 0)
-#endif
+					string methodInfoName = methInfo.Name.ToUpperInvariant();
+
+					if (methodInfoName == requiredMethodNameA.ToUpperInvariant() ||
+					    methodInfoName == requiredMethodNameB.ToUpperInvariant())
 					{
 						// Found matching method name
 

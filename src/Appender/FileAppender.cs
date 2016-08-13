@@ -24,6 +24,9 @@ using System.Threading;
 using log4net.Util;
 using log4net.Layout;
 using log4net.Core;
+#if NET_4_5 || NETSTANDARD1_3
+using System.Threading.Tasks;
+#endif
 
 namespace log4net.Appender
 {
@@ -145,9 +148,6 @@ namespace log4net.Appender
 
 			private Stream m_realStream = null;
 			private LockingModelBase m_lockingModel = null;
-#if !NETSTANDARD1_3 // only used in unavailable Stream overrides
-			private int m_readTotal = -1;
-#endif
 			private int m_lockLevel = 0;
 
 			public LockingStream(LockingModelBase locking)
@@ -169,6 +169,9 @@ namespace log4net.Appender
 				base.Dispose(disposing);
 			}
 #else
+
+			private int m_readTotal = -1;
+
 			// Methods
 			public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
 			{
@@ -203,6 +206,20 @@ namespace log4net.Appender
 			{
 				//No-op, it has already been handled
 			}
+#endif
+
+#if NET_4_5 || NETSTANDARD1_3
+			public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+			{
+				AssertLocked();
+ 				return m_realStream.ReadAsync(buffer, offset, count, cancellationToken);
+ 			}
+
+ 			public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+ 			{
+ 				AssertLocked(); 
+ 				return base.WriteAsync(buffer, offset, count, cancellationToken);
+   			}
 #endif
 
 			public override void Flush()
@@ -1450,11 +1467,7 @@ namespace log4net.Appender
 		/// <summary>
 		/// The encoding to use for the file stream.
 		/// </summary>
-#if NETSTANDARD1_3
-		private Encoding m_encoding = Encoding.Unicode;
-#else
-		private Encoding m_encoding = Encoding.Default;
-#endif
+		private Encoding m_encoding = Encoding.GetEncoding(0);
 
 		/// <summary>
 		/// The security context to use for privileged calls

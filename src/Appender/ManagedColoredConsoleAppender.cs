@@ -44,9 +44,7 @@
 // isn't set if ommited).
 
 using System;
-using log4net.Layout;
 using log4net.Util;
-using System.Globalization;
 
 namespace log4net.Appender
 {
@@ -135,11 +133,7 @@ namespace log4net.Appender
 			{
 				string v = value.Trim();
 
-#if NETSTANDARD1_3
-                if (CultureInfo.InvariantCulture.CompareInfo.Compare(ConsoleError, v, CompareOptions.IgnoreCase) == 0)
-#else
-                if (string.Compare(ConsoleError, v, true, CultureInfo.InvariantCulture) == 0) 
-#endif
+				if (ConsoleError.ToUpperInvariant() == v.ToUpperInvariant())
 				{
 					m_writeToErrorStream = true;
 				} 

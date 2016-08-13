@@ -1460,7 +1460,7 @@ namespace log4net.Tests.Appender
 		private static void AssertFileEquals(string filename, string contents)
 		{
 #if NETSTANDARD1_3
-			StreamReader sr = new StreamReader(new FileStream(filename, FileMode.Open));
+			StreamReader sr = new StreamReader(File.Open(filename, FileMode.Open));
 #else
 			StreamReader sr = new StreamReader(filename);
 #endif
