@@ -1,0 +1,6 @@
+<log4net>
+    <!-- Set root logger level to DEBUG and its only appender to A1 -->
+    <root>
+        <level value="DEBUG" />
+    </root>
+</log4net>
