@@ -1,0 +1,30 @@
+{
+  "version": "1.0.0-*",
+
+  "packOptions": {
+    "requireLicenseAcceptance": false,
+    "tags": [ "logging", "log", "tracing", "logfiles", "apache", "aspnet" ],
+    "iconUrl": "https://logging.apache.org/img/feather.gif",
+    "licenseUrl": "https://raw.githubusercontent.com/apache/log4net/trunk/LICENSE",
+    "projectUrl": "https://github.com/apache/log4net",
+    "repository": {
+      "type": "git",
+      "url": "git://git.apache.org/log4net.git"
+    }
+  },
+
+  "buildOptions": {
+    "debugType": "portable"
+  },
+
+  "dependencies": {
+      "log4net": { "target": "project" },
+      "Microsoft.Extensions.Logging": "1.0.0",
+      "Microsoft.AspNetCore.Hosting": "1.0.0"
+  },
+
+  "frameworks": {
+    "net451": {},
+    "netstandard1.3": {}
+  }
+}
