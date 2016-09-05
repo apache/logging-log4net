@@ -63,32 +63,6 @@
         "System.Xml.ReaderWriter": "4.0.11",
         "System.Xml.XmlDocument": "4.0.1"
       }
-    },
-    "net40": {
-      "buildOptions": {
-        "compile": "../../src/**/*.cs",
-        "define": [ "TRACE", "STRONG", "NET", "NET_2_0", "NET_4_0" ]
-      },
-      "frameworkAssemblies": {
-        "System": { "type": "build" },
-        "System.Configuration": { "type": "build" },
-        "System.Data": { "type": "build" },
-        "System.Web": { "type": "build" },
-        "System.Xml": { "type": "build" }
-      }
-    },
-    "net45": {
-      "buildOptions": {
-        "compile": "../../src/**/*.cs",
-        "define": [ "TRACE", "STRONG", "NET", "NET_2_0", "NET_4_0", "NET_4_5" ]
-      },
-      "frameworkAssemblies": {
-        "System": { "type": "build" },
-        "System.Configuration": { "type": "build" },
-        "System.Data": { "type": "build" },
-        "System.Web": { "type": "build" },
-        "System.Xml": { "type": "build" }
-      }
     }
   }
 }
