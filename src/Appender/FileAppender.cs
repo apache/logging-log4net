@@ -1379,7 +1379,7 @@ namespace log4net.Appender
 					m_stream.AcquireLock();
 					try
 					{
-						SetQWForFiles(new StreamWriter(m_stream, m_encoding));
+						SetQWForFiles(m_stream);
 					}
 					finally
 					{
