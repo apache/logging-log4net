@@ -1,6 +1,8 @@
 ﻿{
   "name": "log4net",
   "version": "3.0.0",
+  "title": "Apache log4net for .NET Core",
+  "copyright": "Copyright 2004-2016 The Apache Software Foundation.",
   "frameworks": {
     "netstandard1.3": {
       "buildOptions": {
@@ -33,7 +35,9 @@
             "../../src/Util/WindowsSecurityContext.cs"
           ]
         },
-        "define": [ "HAS_READERWRITERLOCKSLIM" ]
+        "define": [ "HAS_READERWRITERLOCKSLIM" ],
+	"publicSign": true,
+	"keyFile": "../../log4net.snk"
       },
       "dependencies": {
         "System.AppContext": "4.1.0",
