@@ -170,5 +170,41 @@ namespace log4net.Tests.Util
 			return SystemInfo.GetTypeFromString(typeName, throwOnError, ignoreCase);
 #endif
 		}
+
+        [Test]
+        public void EqualsIgnoringCase_BothNull_true()
+        {
+            Assert.True(SystemInfo.EqualsIgnoringCase(null, null));
+        }
+
+        [Test]
+        public void EqualsIgnoringCase_LeftNull_false()
+        {
+            Assert.False(SystemInfo.EqualsIgnoringCase(null, "foo"));
+        }
+
+        [Test]
+        public void EqualsIgnoringCase_RightNull_false()
+        {
+            Assert.False(SystemInfo.EqualsIgnoringCase("foo", null));
+        }
+
+        [Test]
+        public void EqualsIgnoringCase_SameStringsSameCase_true()
+        {
+            Assert.True(SystemInfo.EqualsIgnoringCase("foo", "foo"));
+        }
+
+        [Test]
+        public void EqualsIgnoringCase_SameStringsDifferentCase_true()
+        {
+            Assert.True(SystemInfo.EqualsIgnoringCase("foo", "FOO"));
+        }
+
+        [Test]
+        public void EqualsIgnoringCase_DifferentStrings_false()
+        {
+            Assert.False(SystemInfo.EqualsIgnoringCase("foo", "foobar"));
+        }
 	}
 }

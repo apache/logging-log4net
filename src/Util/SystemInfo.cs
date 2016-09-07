@@ -18,7 +18,9 @@
 #endregion
 
 using System;
-#if !NETSTANDARD1_3
+#if NETSTANDARD1_3
+using System.Globalization;
+#else
 using System.Configuration;
 #endif
 using System.Reflection;
@@ -1056,6 +1058,29 @@ namespace log4net.Util
 			return System.Collections.Specialized.CollectionsUtil.CreateCaseInsensitiveHashtable();
 #endif
 		}
+
+        /// <summary>
+        /// Tests two strings for equality, the ignoring case.
+        /// </summary>
+        /// <remarks>
+        /// If the platform permits, culture information is ignored completely (ordinal comparison).
+        /// The aim of this method is to provide a fast comparison that deals with <c>null</c> and ignores different casing.
+        /// It is not supposed to deal with various, culture-specific habits.
+        /// Use it to compare against pure ASCII constants, like keywords etc.
+        /// </remarks>
+        /// <param name="a">The one string.</param>
+        /// <param name="b">The other string.</param>
+        /// <returns><c>true</c> if the strings are equal, <c>false</c> otherwise.</returns>
+        public static Boolean EqualsIgnoringCase(String a, String b)
+        {
+#if NET_1_0 || NET_1_1 || NETCF_1_0
+            return string.Compare(a, b, true, System.Globalization.CultureInfo.InvariantCulture) == 0
+#elif NETSTANDARD1_3
+            return CultureInfo.InvariantCulture.CompareInfo.Compare(a, b, CompareOptions.IgnoreCase) == 0;
+#else // >= .NET-2.0
+            return String.Equals(a, b, StringComparison.OrdinalIgnoreCase);
+#endif
+        }
 
 		#endregion Public Static Methods
 

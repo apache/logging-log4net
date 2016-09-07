@@ -67,11 +67,11 @@ namespace log4net.Util.PatternStringConverters
 		/// </remarks>
 		public void ActivateOptions()
 		{
-			if (Option.ToUpperInvariant() == "DOS")
+			if (SystemInfo.EqualsIgnoringCase(Option, "DOS"))
 			{
 				Option = "\r\n";
 			}
-			else if (Option.ToUpperInvariant() == "UNIX")
+			else if (SystemInfo.EqualsIgnoringCase(Option, "UNIX"))
 			{
 				Option = "\n";
 			}
