@@ -253,7 +253,7 @@ namespace log4net.Appender
 			{
 				string trimmedTargetName = value.Trim();
 
-				if (ConsoleError.ToUpperInvariant() == trimmedTargetName.ToUpperInvariant())
+				if (SystemInfo.EqualsIgnoringCase(ConsoleError, trimmedTargetName))
 				{
 					m_writeToErrorStream = true;
 				} 

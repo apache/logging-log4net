@@ -133,7 +133,7 @@ namespace log4net.Appender
 			{
 				string v = value.Trim();
 
-				if (ConsoleError.ToUpperInvariant() == v.ToUpperInvariant())
+				if (SystemInfo.EqualsIgnoringCase(ConsoleError, v))
 				{
 					m_writeToErrorStream = true;
 				} 

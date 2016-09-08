@@ -22,6 +22,7 @@ using System.Globalization;
 
 using log4net.Layout;
 using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Appender
 {
@@ -121,7 +122,7 @@ namespace log4net.Appender
 			{
 				string v = value.Trim();
 
-				if (ConsoleError.ToUpperInvariant() == v.ToUpperInvariant())
+				if (SystemInfo.EqualsIgnoringCase(ConsoleError, v))
 				{
 					m_writeToErrorStream = true;
 				} 
