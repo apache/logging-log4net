@@ -25,8 +25,19 @@ limitations under the License.
     <call target="set-build-configuration" />
     <call target="set-framework-configuration" />
 
+    <target name="install-nunit">
+      <if test="${not file::exists('lib/' + framework::get-family(framework::get-target-framework()) + '/' + version::to-string(framework::get-version(framework::get-target-framework())) + '/nunit.framework.dll')}">
+	<get src="https://github.com/nunit/nunitv2/releases/download/2.6.4/NUnit-2.6.4.zip"
+	     dest="${environment::get-folder-path('InternetCache')}/nunit.zip"/>
+	<unzip zipfile="${environment::get-folder-path('InternetCache')}/nunit.zip"
+	       todir="${environment::get-folder-path('InternetCache')}/nunit.tmp"/>
+	<copy file="${environment::get-folder-path('InternetCache')}/nunit.tmp/NUnit-2.6.4/bin/nunit.framework.dll"
+	      todir="lib/${framework::get-family(framework::get-target-framework())}/${version::to-string(framework::get-version(framework::get-target-framework()))}"/>
+      </if>
+    </target>
+
     <!-- Target for compiling the tests on all frameworks -->
-    <target name="compile-all" description="Builds all log4net tests">
+    <target name="compile-all" description="Builds all log4net tests" >
         <echo message="Compiling all runtime configurations for the ${current.build.config} build configuration." />
 
         <if test="${framework::exists('net-1.0')}">
@@ -742,7 +753,8 @@ limitations under the License.
 
     <!-- Currently we cannot run the tests in the environment of the target framework only in the host framework -->
 
-    <target name="runtests" description="Runs log4net tests">
+    <target name="runtests" description="Runs log4net tests"
+	    depends="install-nunit">
 		<!--
 			Because the <nunit2> task does not support multiple frameworks through the 
 			nant.settings.currentframework setting we cannot just run the tests for each framework.
