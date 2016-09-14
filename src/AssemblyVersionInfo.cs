@@ -29,7 +29,6 @@
 // by using the '*' as shown below:
 
 [assembly: System.Reflection.AssemblyVersion("1.2.15.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.2")]
 
 #if !NETCF
 #if !SSCLI

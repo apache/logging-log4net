@@ -367,6 +367,10 @@ limitations under the License.
     </if>
     <if test="${not temp.build.skip}">
       <csc warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+	<nowarn>
+          <!-- informational assembly version uses a free form text -->
+          <warning number="1607" />
+	</nowarn>
         <sources basedir="${log4net.basedir}/src">
           <include name="**/*.cs" />
         </sources>
@@ -403,6 +407,10 @@ limitations under the License.
     </if>
     <if test="${not temp.build.skip}">
       <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'old-log4net.snk')}" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/../oldkey/log4net.dll" doc="${current.bin.dir}/../oldkey/log4net.xml">
+	<nowarn>
+          <!-- informational assembly version uses a free form text -->
+          <warning number="1607" />
+	</nowarn>
         <sources basedir="${log4net.basedir}/src">
           <include name="**/*.cs" />
         </sources>
@@ -421,6 +429,10 @@ limitations under the License.
       </csc>
     </if>
     <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+      <nowarn>
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
+      </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
       </sources>
@@ -438,6 +450,10 @@ limitations under the License.
       </references>
     </csc>
     <csc if="${current.build.config.debug}" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+      <nowarn>
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
+      </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
       </sources>
@@ -480,6 +496,10 @@ limitations under the License.
     </if>
     <if test="${not temp.build.skip}">
       <csc if="${current.build.config.release}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/../oldkey/log4net.dll" doc="${current.bin.dir}/../oldkey/log4net.xml">
+	<nowarn>
+          <!-- informational assembly version uses a free form text -->
+          <warning number="1607" />
+	</nowarn>
         <sources basedir="${log4net.basedir}/src">
           <include name="**/*.cs" />
         </sources>
@@ -502,6 +522,10 @@ limitations under the License.
           todir="${current.bin.dir}/../../../"
           overwrite="true"/>
     <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+      <nowarn>
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
+      </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
       </sources>
@@ -545,6 +569,10 @@ limitations under the License.
     </if>
     <if test="${not temp.build.skip}">
       <csc if="${current.build.config.release}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/../oldkey/log4net.dll" doc="${current.bin.dir}/../oldkey/log4net.xml">
+	<nowarn>
+          <!-- informational assembly version uses a free form text -->
+          <warning number="1607" />
+	</nowarn>
         <sources basedir="${log4net.basedir}/src">
           <include name="**/*.cs" />
         </sources>
@@ -567,6 +595,10 @@ limitations under the License.
           todir="${current.bin.dir}/../../../"
           overwrite="true"/>
     <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+      <nowarn>
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
+      </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
       </sources>
@@ -603,6 +635,10 @@ limitations under the License.
     </if>
     <if test="${not temp.build.skip}">
       <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'old-log4net.snk')}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/../oldkey/log4net.dll" doc="${current.bin.dir}/../oldkey/log4net.xml">
+	<nowarn>
+          <!-- informational assembly version uses a free form text -->
+          <warning number="1607" />
+	</nowarn>
         <sources basedir="${log4net.basedir}/src">
           <include name="**/*.cs" />
         </sources>
@@ -623,6 +659,10 @@ limitations under the License.
       </csc>
     </if>
     <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+      <nowarn>
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
+      </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
       </sources>
@@ -642,6 +682,10 @@ limitations under the License.
       </references>
     </csc>
     <csc if="${current.build.config.debug}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+      <nowarn>
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
+      </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
       </sources>
@@ -679,6 +723,10 @@ limitations under the License.
     </if>
     <if test="${not temp.build.skip}">
       <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'old-log4net.snk')}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/../oldkey/log4net.dll" doc="${current.bin.dir}/../oldkey/log4net.xml">
+	<nowarn>
+          <!-- informational assembly version uses a free form text -->
+          <warning number="1607" />
+	</nowarn>
         <sources basedir="${log4net.basedir}/src">
           <include name="**/*.cs" />
         </sources>
@@ -700,6 +748,10 @@ limitations under the License.
       </csc>
     </if>
     <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+      <nowarn>
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
+      </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
       </sources>
@@ -720,6 +772,10 @@ limitations under the License.
       </references>
     </csc>
     <csc if="${current.build.config.debug}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+      <nowarn>
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
+      </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
       </sources>
@@ -758,6 +814,10 @@ limitations under the License.
     </if>
     <if test="${not temp.build.skip}">
       <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'old-log4net.snk')}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/../oldkey/log4net.dll" doc="${current.bin.dir}/../oldkey/log4net.xml">
+	<nowarn>
+          <!-- informational assembly version uses a free form text -->
+          <warning number="1607" />
+	</nowarn>
         <sources basedir="${log4net.basedir}/src">
           <include name="**/*.cs" />
         </sources>
@@ -778,6 +838,10 @@ limitations under the License.
       </csc>
     </if>
     <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+      <nowarn>
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
+      </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
       </sources>
@@ -797,6 +861,10 @@ limitations under the License.
       </references>
     </csc>
     <csc if="${current.build.config.debug}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+      <nowarn>
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
+      </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
       </sources>
@@ -834,6 +902,10 @@ limitations under the License.
     </if>
     <if test="${not temp.build.skip}">
       <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'old-log4net.snk')}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/../oldkey/log4net.dll" doc="${current.bin.dir}/../oldkey/log4net.xml">
+	<nowarn>
+          <!-- informational assembly version uses a free form text -->
+          <warning number="1607" />
+	</nowarn>
         <sources basedir="${log4net.basedir}/src">
           <include name="**/*.cs" />
         </sources>
@@ -855,6 +927,10 @@ limitations under the License.
       </csc>
     </if>
     <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+      <nowarn>
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
+      </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
       </sources>
@@ -875,6 +951,10 @@ limitations under the License.
       </references>
     </csc>
     <csc if="${current.build.config.debug}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+      <nowarn>
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
+      </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
       </sources>
@@ -913,6 +993,10 @@ limitations under the License.
     </if>
     <if test="${not temp.build.skip}">
       <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'old-log4net.snk')}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/../oldkey/log4net.dll" doc="${current.bin.dir}/../oldkey/log4net.xml">
+	<nowarn>
+          <!-- informational assembly version uses a free form text -->
+          <warning number="1607" />
+	</nowarn>
         <sources basedir="${log4net.basedir}/src">
           <include name="**/*.cs" />
         </sources>
@@ -933,6 +1017,10 @@ limitations under the License.
       </csc>
     </if>
     <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+      <nowarn>
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
+      </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
       </sources>
@@ -952,6 +1040,10 @@ limitations under the License.
       </references>
     </csc>
     <csc if="${current.build.config.debug}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+      <nowarn>
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
+      </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
       </sources>
@@ -989,6 +1081,10 @@ limitations under the License.
     </if>
     <if test="${not temp.build.skip}">
       <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'old-log4net.snk')}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/../oldkey/log4net.dll" doc="${current.bin.dir}/../oldkey/log4net.xml">
+	<nowarn>
+          <!-- informational assembly version uses a free form text -->
+          <warning number="1607" />
+	</nowarn>
         <sources basedir="${log4net.basedir}/src">
           <include name="**/*.cs" />
         </sources>
@@ -1010,6 +1106,10 @@ limitations under the License.
       </csc>
     </if>
     <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+      <nowarn>
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
+      </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
       </sources>
@@ -1030,6 +1130,10 @@ limitations under the License.
       </references>
     </csc>
     <csc if="${current.build.config.debug}" nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+      <nowarn>
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
+      </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
       </sources>
@@ -1071,6 +1175,10 @@ limitations under the License.
     </if>
     <if test="${not temp.build.skip}">
       <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'old-log4net.snk')}" nostdlib="false" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/../oldkey/log4net.dll" doc="${current.bin.dir}/../oldkey/log4net.xml">
+	<nowarn>
+          <!-- informational assembly version uses a free form text -->
+          <warning number="1607" />
+	</nowarn>
         <sources basedir="${log4net.basedir}/src">
           <include name="**/*.cs" />
         </sources>
@@ -1092,6 +1200,8 @@ limitations under the License.
       <nowarn>
         <!-- workaround for Mono bug #61902 -->
         <warning number="0618" />
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
       </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
@@ -1113,6 +1223,8 @@ limitations under the License.
       <nowarn>
         <!-- workaround for Mono bug #61902 -->
         <warning number="0618" />
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
       </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
@@ -1155,6 +1267,8 @@ limitations under the License.
         <nowarn>
           <!-- workaround for Mono bug #61902 -->
           <warning number="0618" />
+          <!-- informational assembly version uses a free form text -->
+          <warning number="1607" />
         </nowarn>
         <sources basedir="${log4net.basedir}/src">
           <include name="**/*.cs" />
@@ -1177,6 +1291,8 @@ limitations under the License.
       <nowarn>
         <!-- workaround for Mono bug #61902 -->
         <warning number="0618" />
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
       </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
@@ -1198,6 +1314,8 @@ limitations under the License.
       <nowarn>
         <!-- workaround for Mono bug #61902 -->
         <warning number="0618" />
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
       </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
@@ -1240,6 +1358,8 @@ limitations under the License.
         <nowarn>
           <!-- workaround for Mono bug #61902 -->
           <warning number="0618" />
+          <!-- informational assembly version uses a free form text -->
+          <warning number="1607" />
         </nowarn>
         <sources basedir="${log4net.basedir}/src">
           <include name="**/*.cs" />
@@ -1263,6 +1383,8 @@ limitations under the License.
       <nowarn>
         <!-- workaround for Mono bug #61902 -->
         <warning number="0618" />
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
       </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
@@ -1285,6 +1407,8 @@ limitations under the License.
       <nowarn>
         <!-- workaround for Mono bug #61902 -->
         <warning number="0618" />
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
       </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
@@ -1328,6 +1452,8 @@ limitations under the License.
         <nowarn>
           <!-- workaround for Mono bug #61902 -->
           <warning number="0618" />
+          <!-- informational assembly version uses a free form text -->
+          <warning number="1607" />
         </nowarn>
         <sources basedir="${log4net.basedir}/src">
           <include name="**/*.cs" />
@@ -1351,6 +1477,8 @@ limitations under the License.
       <nowarn>
         <!-- workaround for Mono bug #61902 -->
         <warning number="0618" />
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
       </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
@@ -1373,6 +1501,8 @@ limitations under the License.
       <nowarn>
         <!-- workaround for Mono bug #61902 -->
         <warning number="0618" />
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
       </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
@@ -1415,6 +1545,10 @@ limitations under the License.
     </if>
     <if test="${not temp.build.skip}">
       <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll">
+	<nowarn>
+          <!-- informational assembly version uses a free form text -->
+          <warning number="1607" />
+	</nowarn>
         <sources basedir="${log4net.basedir}/src">
           <include name="**/*.cs" />
         </sources>
@@ -1477,6 +1611,10 @@ limitations under the License.
     </if>
     <if test="${not temp.build.skip}">
       <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/../oldkey/log4net.dll" doc="${current.bin.dir}/../oldkey/log4net.xml">
+	<nowarn>
+          <!-- informational assembly version uses a free form text -->
+          <warning number="1607" />
+	</nowarn>
         <sources basedir="${log4net.basedir}/src">
           <include name="**/*.cs" />
         </sources>
@@ -1499,6 +1637,10 @@ limitations under the License.
           todir="${current.bin.dir}/../../../"
           overwrite="true"/>
     <csc nostdlib="true" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+      <nowarn>
+        <!-- informational assembly version uses a free form text -->
+        <warning number="1607" />
+      </nowarn>
       <sources basedir="${log4net.basedir}/src">
         <include name="**/*.cs" />
       </sources>
