@@ -78,7 +78,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyInformationalVersionAttribute("1.2.15.0-.NET 3.5 CP")]
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 3.5 Client Profile")]
 #else
-[assembly: AssemblyInformationalVersionAttribute("1.2.15.0-.NET 3.5")]
+[assembly: AssemblyInformationalVersionAttribute("1.2.15.0-.NET 2.0")]
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 2.0")]
 #endif // Client Profile
 #elif (NETCF_1_0)
