@@ -1727,6 +1727,7 @@ limitations under the License.
     <!-- generate the sdk docs using the release build configuration for all runtime configuration -->
     <call target="set-release-build-configuration" />
     <call target="package-bin" />
+    <call target="create-nuget-package" />
   </target>
   <target name="package-src">
     <copy todir="${current.package.src.dir}">
@@ -1847,7 +1848,10 @@ limitations under the License.
       </fileset>
     </zip>
   </target>
-
+  <target name="create-nuget-package">
+    <exec program="nuget.exe" commandline="pack log4net.nuspec"/>
+  </target>
+  
   <target name="generate-assembly-description">
     <if test="${not(property::exists('source.svn.revision'))}">
       <property name="source.svn.revision" value="0"/>
