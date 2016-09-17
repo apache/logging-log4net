@@ -284,9 +284,6 @@ limitations under the License.
       <call target="compile-mono-1.0" />
     </if>
     <if test="${not framework::exists('mono-1.0')}">
-      <if test="${property::exists('project.build.package') and project.build.package and not(directory::exists(path::combine(bin.dir, 'mono/1.0/debug')) and directory::exists(path::combine(bin.dir, 'mono/1.0/release')) and directory::exists(path::combine(bin.dir, 'mono/1.0/oldkey')))}">
-        <fail message="Mono 1.0 is not available." />
-      </if>
       <if test="${not(property::exists('project.build.package') and project.build.package)}">
         <echo message="Mono 1.0 is not available. Build skipped." />
       </if>
