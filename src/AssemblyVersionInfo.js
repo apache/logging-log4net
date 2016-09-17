@@ -45,5 +45,5 @@ import System.Reflection;
 //
 
 [assembly: AssemblyCompany("The Apache Software Foundation")]
-[assembly: AssemblyCopyright("Copyright 2004-2015 The Apache Software Foundation.")]
+[assembly: AssemblyCopyright("Copyright 2004-2016 The Apache Software Foundation.")]
 [assembly: AssemblyTrademark("Apache and Apache log4net are trademarks of The Apache Software Foundation")]
