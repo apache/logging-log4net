@@ -1737,6 +1737,7 @@ limitations under the License.
         <include name="build.cmd"/>
         <include name="log4net.build"/>
         <include name="log4net.include"/>
+        <include name="log4net.nuspec"/>
         <include name="log4net.snk"/>
         <include name="log4net.snk.readme"/>
         <include name="old-log4net.snk.gpg"/>
@@ -1744,6 +1745,7 @@ limitations under the License.
 
         <include name="examples/**" />
         <include name="extensions/**" />
+        <include name="netstandard/**" />
         <include name="src/**" />
         <include name="tests/**" />
 
