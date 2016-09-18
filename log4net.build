@@ -1709,7 +1709,7 @@ limitations under the License.
   <target name="generate-site">
     <property name="mvn" value="mvn"/>
     <if test="${platform::is-windows()}">
-      <property name="mvn" value="mvn.bat"/>
+      <property name="mvn" value="mvn.cmd"/>
     </if>
     <exec program="${mvn}" commandline="site:site install"/>
   </target>
