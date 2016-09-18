@@ -28,7 +28,36 @@ limitations under the License.
 
         <section id="main" name="Apache log4net&#x2122; Release Notes">
 
-          <section id="1.2.15" name="1.2.15">
+        <section id="2.0.6" name="2.0.6">
+
+          <p>
+            The Apache log4net team is now responsible for the nuget
+            package, we've changed the version number to align it with
+            the version numbers. Release 2.0.6 is supposed to be
+            compatible with 1.2.15.
+          </p>
+
+          <p>
+            The binary distributions no longer contain assemblies
+            built for the .NET Framework 1.x or Mono 1.x - you can
+            build those yourself using the source distribution.
+          </p>
+
+          <section id="2.0.6-bug" name="Bug Fixes">
+              <ul>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-508'>LOG4NET-508</a>] -         NAnt release build is not optimized
+                </li>
+              </ul>
+	    </section>
+            <section id="2.0.6-enh" name="Improvements">
+              <ul>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-467'>LOG4NET-467</a>] -         Is .NET Core, will be supported in the near future, or not
+                </li>
+              </ul>
+            </section>
+        </section>
+
+        <section id="1.2.15" name="1.2.15">
             <section id="1.2.15-bug" name="Bug Fixes">
               <ul>
                 <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-462'>LOG4NET-462</a>] -         ReadOnlyPropertiesDictionary not thread safe
