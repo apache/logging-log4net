@@ -1758,6 +1758,8 @@ limitations under the License.
         <exclude name="**/*.vbproj.user" />
 
         <exclude name="src/GeneratedAssemblyInfo.cs" />
+	<exclude name="netstandard/TestResult.xml"/>
+	<exclude name="netstandard/**/project.lock.json"/>
         <exclude name="tests/doc/**" />
         <exclude name="tests/lib/net/**" />
         <exclude name="tests/lib/mono/**" />
