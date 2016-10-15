@@ -297,7 +297,10 @@ namespace log4net.Repository.Hierarchy
 				throw new ArgumentNullException("name");
 			}
 
-			return m_ht[new LoggerKey(name)] as Logger;
+			lock(m_ht) 
+			{
+				return m_ht[new LoggerKey(name)] as Logger;
+			}
 		}
 
 		/// <summary>
@@ -316,17 +319,20 @@ namespace log4net.Repository.Hierarchy
 			// The accumulation in loggers is necessary because not all elements in
 			// ht are Logger objects as there might be some ProvisionNodes
 			// as well.
-			System.Collections.ArrayList loggers = new System.Collections.ArrayList(m_ht.Count);
-	
-			// Iterate through m_ht values
-			foreach(object node in m_ht.Values)
+			lock(m_ht) 
 			{
-				if (node is Logger) 
+				System.Collections.ArrayList loggers = new System.Collections.ArrayList(m_ht.Count);
+	
+				// Iterate through m_ht values
+				foreach(object node in m_ht.Values)
 				{
-					loggers.Add(node);
+					if (node is Logger) 
+					{
+						loggers.Add(node);
+					}
 				}
+				return (Logger[])loggers.ToArray(typeof(Logger));
 			}
-			return (Logger[])loggers.ToArray(typeof(Logger));
 		}
 
 		/// <summary>
@@ -694,7 +700,10 @@ namespace log4net.Repository.Hierarchy
 		/// </remarks>
 		public void Clear() 
 		{
-			m_ht.Clear();
+			lock(m_ht) 
+			{
+				m_ht.Clear();
+			}
 		}
 
 		/// <summary>
