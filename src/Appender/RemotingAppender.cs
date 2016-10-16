@@ -218,6 +218,17 @@ namespace log4net.Appender
 			}
 		}
 
+		/// <summary>
+		/// Flushes any buffered log data.
+		/// </summary>
+		/// <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
+		/// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+		public override bool Flush(int millisecondsTimeout)
+		{
+			base.Flush();
+			return m_workQueueEmptyEvent.WaitOne(millisecondsTimeout, false);
+		}
+
 		#endregion
 
 		/// <summary>

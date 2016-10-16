@@ -68,7 +68,7 @@ namespace log4net.Appender
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
-	public abstract class BufferingAppenderSkeleton : AppenderSkeleton
+    public abstract class BufferingAppenderSkeleton : AppenderSkeleton, IFlushable
 	{
 		#region Protected Instance Constructors
 
@@ -260,6 +260,17 @@ namespace log4net.Appender
 		#endregion Public Instance Properties
 
 		#region Public Methods
+
+        /// <summary>
+        /// Flushes any buffered log data.
+        /// </summary>
+        /// <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
+        /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+        public virtual bool Flush(int millisecondsTimeout)
+        {
+            Flush();
+            return true;
+        }
 
 		/// <summary>
 		/// Flush the currently buffered events

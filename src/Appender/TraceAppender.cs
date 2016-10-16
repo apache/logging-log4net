@@ -51,7 +51,7 @@ namespace log4net.Appender
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
     /// <author>Ron Grabowski</author>
-	public class TraceAppender : AppenderSkeleton
+	public class TraceAppender : AppenderSkeleton, IFlushable
 	{
 		#region Public Instance Constructors
 
@@ -206,5 +206,24 @@ namespace log4net.Appender
         private PatternLayout m_category = new PatternLayout("%logger");
 
 		#endregion Private Instance Fields
-	}
+
+        /// <summary>
+        /// Flushes any buffered log data.
+        /// </summary>
+        /// <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
+        /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+        public bool Flush(int millisecondsTimeout)
+        {
+            // Nothing to do if ImmediateFlush is true
+            if (m_immediateFlush) return true;
+
+            // System.Diagnostics.Trace and System.Diagnostics.Debug are thread-safe, so no need for lock(this).
+#if NETCF
+			System.Diagnostics.Debug.Flush();
+#else
+            System.Diagnostics.Trace.Flush();
+#endif
+            return true;
+        }
+    }
 }

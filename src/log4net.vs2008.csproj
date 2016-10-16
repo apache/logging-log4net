@@ -148,6 +148,9 @@
     <Compile Include="Appender\IBulkAppender.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Appender\IFlushable.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Appender\LocalSyslogAppender.cs">
       <SubType>Code</SubType>
     </Compile>

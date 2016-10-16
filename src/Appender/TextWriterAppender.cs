@@ -42,7 +42,7 @@ namespace log4net.Appender
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	/// <author>Douglas de la Torre</author>
-	public class TextWriterAppender : AppenderSkeleton
+    public class TextWriterAppender : AppenderSkeleton, IFlushable
 	{
 		#region Public Instance Constructors
 
@@ -481,5 +481,24 @@ namespace log4net.Appender
 	    private readonly static Type declaringType = typeof(TextWriterAppender);
 
 	    #endregion Private Static Fields
+
+            /// <summary>
+            /// Flushes any buffered log data.
+            /// </summary>
+            /// <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
+            /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+            public bool Flush(int millisecondsTimeout)
+            {
+                // Nothing to do if ImmediateFlush is true
+                if (m_immediateFlush) return true;
+
+                // lock(this) will block any Appends while the buffer is flushed.
+                lock (this)
+                {
+                    m_qtw.Flush();
+                }
+
+                return true;
+            }
 	}
 }

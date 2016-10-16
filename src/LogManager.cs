@@ -751,6 +751,25 @@ namespace log4net
 			return LoggerManager.GetAllRepositories();
 		}
 
+            /// <summary>
+            /// Flushes logging events buffered in all configured appenders in the default repository.
+            /// </summary>
+            /// <param name="millisecondsTimeout">The maximum time in milliseconds to wait for logging events from asycnhronous appenders to be flushed,
+            /// or <see cref="Timeout.Infinite"/> to wait indefinitely.</param>
+            /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+            public static bool Flush(int millisecondsTimeout)
+            {
+                Appender.IFlushable flushableRepository = LoggerManager.GetRepository(Assembly.GetCallingAssembly()) as Appender.IFlushable;
+                if (flushableRepository == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return flushableRepository.Flush(millisecondsTimeout);
+                }
+            }
+
 		#endregion Domain & Repository Manager Methods
 
 		#region Extension Handlers
