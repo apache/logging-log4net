@@ -40,7 +40,10 @@ namespace log4net.Appender
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
-    public class DebugAppender : AppenderSkeleton, IFlushable
+    public class DebugAppender : AppenderSkeleton
+#if !NETSTANDARD1_3
+				, IFlushable
+#endif
 	{
 		#region Public Instance Constructors
 
@@ -102,7 +105,7 @@ namespace log4net.Appender
 
 		#endregion Public Instance Properties
 
-
+#if !NETSTANDARD1_3
             /// <summary>
             /// Flushes any buffered log data.
             /// </summary>
@@ -118,6 +121,7 @@ namespace log4net.Appender
 
                 return true;
             }
+#endif
 
 		#region Override implementation of AppenderSkeleton
 

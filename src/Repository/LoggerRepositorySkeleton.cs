@@ -603,7 +603,7 @@ namespace log4net.Repository
             DateTime startTimeUtc = DateTime.UtcNow;
 
             // Do buffering appenders first.  These may be forwarding to other appenders
-            foreach(var appender in GetAppenders())
+            foreach(log4net.Appender.IAppender appender in GetAppenders())
             {
                 log4net.Appender.IFlushable flushable = appender as log4net.Appender.IFlushable;
                 if (flushable == null) continue;
@@ -615,7 +615,7 @@ namespace log4net.Repository
             }
 
             // Do non-buffering appenders.
-            foreach (var appender in GetAppenders())
+            foreach (log4net.Appender.IAppender appender in GetAppenders())
             {
                 log4net.Appender.IFlushable flushable = appender as log4net.Appender.IFlushable;
                 if (flushable == null) continue;
