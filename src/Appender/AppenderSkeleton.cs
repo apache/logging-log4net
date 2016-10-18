@@ -786,12 +786,12 @@ namespace log4net.Appender
         	/// Flushes any buffered log data.
         	/// </summary>
 		/// <remarks>
-		/// This implementation doesn't flush anything and always returns false
+		/// This implementation doesn't flush anything and always returns true
 		/// </remarks>
         	/// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
         	public virtual bool Flush(int millisecondsTimeout)
         	{
-		    return false;
+		    return true;
         	}
 
 		#region Private Instance Fields
