@@ -42,7 +42,7 @@ namespace log4net.Appender
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	/// <author>Douglas de la Torre</author>
-    public class TextWriterAppender : AppenderSkeleton, IFlushable
+    public class TextWriterAppender : AppenderSkeleton
 	{
 		#region Public Instance Constructors
 
@@ -487,7 +487,7 @@ namespace log4net.Appender
             /// </summary>
             /// <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
             /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
-            public bool Flush(int millisecondsTimeout)
+            public override bool Flush(int millisecondsTimeout)
             {
                 // Nothing to do if ImmediateFlush is true
                 if (m_immediateFlush) return true;

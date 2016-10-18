@@ -44,7 +44,7 @@ namespace log4net.Appender
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
-	public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandler
+	public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandler, IFlushable
 	{
 		#region Protected Instance Constructors
 
@@ -781,6 +781,18 @@ namespace log4net.Appender
 		}
 
 		#endregion
+
+		/// <summary>
+        	/// Flushes any buffered log data.
+        	/// </summary>
+		/// <remarks>
+		/// This implementation doesn't flush anything and always returns false
+		/// </remarks>
+        	/// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+        	public virtual bool Flush(int millisecondsTimeout)
+        	{
+		    return false;
+        	}
 
 		#region Private Instance Fields
 
