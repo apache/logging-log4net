@@ -62,6 +62,15 @@ namespace log4net.Util
 	///         </description>
 	///     </item>
 	///     <item>
+	///         <term>appsetting</term>
+	///         <description>
+	///             <para>
+	///             Used to output the value of a specific appSetting key in the application
+	///             configuration file.
+	///             </para>
+	///         </description>
+	///     </item>
+	///     <item>
 	///         <term>date</term>
 	///         <description>
 	/// 			<para>
@@ -285,7 +294,7 @@ namespace log4net.Util
 		/// </summary>
 		static PatternString()
 		{
-			s_globalRulesRegistry = new Hashtable(15);
+			s_globalRulesRegistry = new Hashtable(18);
 
 			s_globalRulesRegistry.Add("appdomain", typeof(AppDomainPatternConverter));
 			s_globalRulesRegistry.Add("date", typeof(DatePatternConverter));
@@ -306,6 +315,13 @@ namespace log4net.Util
 			s_globalRulesRegistry.Add("utcdate", typeof(UtcDatePatternConverter));
 			s_globalRulesRegistry.Add("utcDate", typeof(UtcDatePatternConverter));
 			s_globalRulesRegistry.Add("UtcDate", typeof(UtcDatePatternConverter));
+#if !NETCF && !NETSTANDARD1_3
+			// TODO - have added common variants of casing like utcdate above.
+			// Wouldn't it be better to use a case-insensitive Hashtable?
+			s_globalRulesRegistry.Add("appsetting", typeof(AppSettingPatternConverter));
+			s_globalRulesRegistry.Add("appSetting", typeof(AppSettingPatternConverter));
+			s_globalRulesRegistry.Add("AppSetting", typeof(AppSettingPatternConverter));
+#endif
 		}
 
 		#endregion Static Constructor

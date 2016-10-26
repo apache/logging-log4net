@@ -28,6 +28,7 @@
             "../../src/Layout/Pattern/StackTraceDetailPatternConverter.cs",
             "../../src/Layout/Pattern/StackTracePatternConverter.cs",
             "../../src/Plugin/RemoteLoggingServerPlugin.cs",
+            "../../src/Util/PatternStringConverters/AppSettingPatternConverter.cs",
             "../../src/Util/PatternStringConverters/EnvironmentFolderPathPatternConverter.cs",
             "../../src/Util/LogicalThreadContextProperties.cs",
             "../../src/Util/LogicalThreadContextStacks.cs",

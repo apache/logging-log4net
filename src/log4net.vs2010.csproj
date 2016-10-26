@@ -664,6 +664,9 @@
     <Compile Include="Util\PatternStringConverters\AppDomainPatternConverter.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Util\PatternStringConverters\AppSettingPatternConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Util\PatternStringConverters\DatePatternConverter.cs">
       <SubType>Code</SubType>
     </Compile>
