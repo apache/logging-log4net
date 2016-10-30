@@ -1,13 +1,25 @@
+*.apt    text
+*.asax   text
+*.aspx   text
 *.build  text
+*.cgi    eol=lf
+*.config text
+*.cpp    text
 *.cs     text diff=csharp
+*.csdproj text
 *.csproj text
+*.css    text
 *.dll    binary
 *.dtd    text
 *.html   text diff=html
 *.include text
+*.js     text
 *.json   text
+*.log4net text
 *.md     text
 *.nuspec text
+*.readme text
+*.resx   text
 *.rng    text
 *.rngc   text
 *.sh     eol=lf
@@ -15,9 +27,20 @@
 *.sln    text
 *.snk    binary
 *.txt    text
+*.vb     text
+*.vbdproj text
+*.vbproj text
+*.vcproj text
+*.vm      text
+*.vsdisco text
+*.webinfo text
 *.xml    text
+*.xproj  text
 *.xsd    text
 *.xsl    text
 *.yml    text
-NOTICE   text
+.gitattributes text
+.gitignore text
+KEYS     text
 LICENSE  text
+NOTICE   text
