@@ -1276,6 +1276,7 @@ limitations under the License.
         </resources>
         <references>
           <include name="System.dll" />
+          <include name="System.Configuration.dll" />
           <include name="System.Data.dll" />
           <include name="System.Web.dll" />
           <include name="System.Xml.dll" />
@@ -1300,6 +1301,7 @@ limitations under the License.
       </resources>
       <references>
         <include name="System.dll" />
+        <include name="System.Configuration.dll" />
         <include name="System.Data.dll" />
         <include name="System.Web.dll" />
         <include name="System.Xml.dll" />
@@ -1323,6 +1325,7 @@ limitations under the License.
       </resources>
       <references>
         <include name="System.dll" />
+        <include name="System.Configuration.dll" />
         <include name="System.Data.dll" />
         <include name="System.Web.dll" />
         <include name="System.Xml.dll" />
@@ -1367,6 +1370,7 @@ limitations under the License.
         </resources>
         <references>
           <include name="System.dll" />
+          <include name="System.Configuration.dll" />
           <include name="System.Core.dll" />
           <include name="System.Data.dll" />
           <include name="System.Web.dll" />
@@ -1392,6 +1396,7 @@ limitations under the License.
       </resources>
       <references>
         <include name="System.dll" />
+        <include name="System.Configuration.dll" />
         <include name="System.Core.dll" />
         <include name="System.Data.dll" />
         <include name="System.Web.dll" />
@@ -1416,6 +1421,7 @@ limitations under the License.
       </resources>
       <references>
         <include name="System.dll" />
+        <include name="System.Configuration.dll" />
         <include name="System.Core.dll" />
         <include name="System.Data.dll" />
         <include name="System.Web.dll" />
@@ -1462,6 +1468,7 @@ limitations under the License.
         <references>
           <include name="System.dll" />
           <include name="System.Core.dll" />
+          <include name="System.Configuration.dll" />
           <include name="System.Data.dll" />
           <include name="System.Web.dll" />
           <include name="System.Xml.dll" />
@@ -1486,6 +1493,7 @@ limitations under the License.
       </resources>
       <references>
         <include name="System.dll" />
+        <include name="System.Configuration.dll" />
         <include name="System.Core.dll" />
         <include name="System.Data.dll" />
         <include name="System.Web.dll" />
@@ -1510,6 +1518,7 @@ limitations under the License.
       </resources>
       <references>
         <include name="System.dll" />
+        <include name="System.Configuration.dll" />
         <include name="System.Core.dll" />
         <include name="System.Data.dll" />
         <include name="System.Web.dll" />
