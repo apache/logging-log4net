@@ -1316,23 +1316,23 @@ namespace log4net.Core
 
 		private void CreateCompositeProperties()
 		{
-			m_compositeProperties = new CompositeProperties();
+			CompositeProperties compositeProperties = new CompositeProperties();
 
 			if (m_eventProperties != null)
 			{
-				m_compositeProperties.Add(m_eventProperties);
+				compositeProperties.Add(m_eventProperties);
 			}
 #if !(NETCF || NETSTANDARD1_3)
 			PropertiesDictionary logicalThreadProperties = LogicalThreadContext.Properties.GetProperties(false);
 			if (logicalThreadProperties != null)
 			{
-				m_compositeProperties.Add(logicalThreadProperties);
+				compositeProperties.Add(logicalThreadProperties);
 			}
 #endif
 			PropertiesDictionary threadProperties = ThreadContext.Properties.GetProperties(false);
 			if (threadProperties != null)
 			{
-				m_compositeProperties.Add(threadProperties);
+				compositeProperties.Add(threadProperties);
 			}
 
 			// TODO: Add Repository Properties
@@ -1341,9 +1341,10 @@ namespace log4net.Core
 			PropertiesDictionary eventProperties = new PropertiesDictionary();
 			eventProperties[UserNameProperty] = UserName;
 			eventProperties[IdentityProperty] = Identity;
-			m_compositeProperties.Add(eventProperties);
+			compositeProperties.Add(eventProperties);
 
-			m_compositeProperties.Add(GlobalContext.Properties.GetReadOnlyProperties());
+			compositeProperties.Add(GlobalContext.Properties.GetReadOnlyProperties());
+                        m_compositeProperties = compositeProperties;
 		}
 
 		private void CacheProperties()
