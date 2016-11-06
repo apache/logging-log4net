@@ -58,7 +58,7 @@ namespace log4net.Util
         public static event LogReceivedEventHandler LogReceived;
 
         private readonly Type source;
-        private readonly DateTime timeStamp;
+        private readonly DateTime timeStampUtc;
         private readonly string prefix;
         private readonly string message;
         private readonly Exception exception;
@@ -76,7 +76,15 @@ namespace log4net.Util
         /// </summary>
 	    public DateTime TimeStamp
 	    {
-            get { return timeStamp; }
+            get { return timeStampUtc.ToLocalTime(); }
+	    }
+
+        /// <summary>
+        /// The UTC DateTime stamp of when the internal message was received.
+        /// </summary>
+        public DateTime TimeStampUtc
+        {
+            get { return timeStampUtc; }
 	    }
 
         /// <summary>
@@ -132,7 +140,7 @@ namespace log4net.Util
         /// <param name="exception"></param>
 	    public LogLog(Type source, string prefix, string message, Exception exception)
 	    {
-            timeStamp = DateTime.Now;
+            timeStampUtc = DateTime.UtcNow;
 	        
             this.source = source;
 	        this.prefix = prefix;

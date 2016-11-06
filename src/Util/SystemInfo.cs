@@ -394,9 +394,35 @@ namespace log4net.Util
 		/// will be set per AppDomain.
 		/// </para>
 		/// </remarks>
+        [Obsolete("Use ProcessStartTimeUtc and convert to local time if needed.")]
 		public static DateTime ProcessStartTime
 		{
-			get { return s_processStartTime; }
+			get { return s_processStartTimeUtc.ToLocalTime(); }
+		}
+
+        /// <summary>
+        /// Get the UTC start time for the current process.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// This is the UTC time at which the log4net library was loaded into the
+        /// AppDomain. Due to reports of a hang in the call to <c>System.Diagnostics.Process.StartTime</c>
+        /// this is not the start time for the current process.
+        /// </para>
+        /// <para>
+        /// The log4net library should be loaded by an application early during its
+        /// startup, therefore this start time should be a good approximation for
+        /// the actual start time.
+        /// </para>
+        /// <para>
+        /// Note that AppDomains may be loaded and unloaded within the
+        /// same process without the process terminating, however this start time
+        /// will be set per AppDomain.
+        /// </para>
+        /// </remarks>
+        public static DateTime ProcessStartTimeUtc
+        {
+            get { return s_processStartTimeUtc; }
 		}
 
 		/// <summary>
@@ -1174,7 +1200,7 @@ namespace log4net.Util
 		/// <summary>
 		/// Start time for the current process.
 		/// </summary>
-		private static DateTime s_processStartTime = DateTime.Now;
+		private static DateTime s_processStartTimeUtc = DateTime.UtcNow;
 
 		#endregion
 

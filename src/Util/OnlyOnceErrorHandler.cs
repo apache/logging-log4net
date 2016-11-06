@@ -81,7 +81,7 @@ namespace log4net.Util
 		/// </summary>
 		public void Reset()
 		{
-			m_enabledDate = DateTime.MinValue;
+			m_enabledDateUtc = DateTime.MinValue;
 			m_errorCode = ErrorCode.GenericFailure;
 			m_exception = null;
 			m_message = null;
@@ -121,7 +121,7 @@ namespace log4net.Util
         /// </para>
         /// </remarks>
         public virtual void FirstError(string message, Exception e, ErrorCode errorCode) {
-            m_enabledDate = DateTime.Now;
+            m_enabledDateUtc = DateTime.UtcNow;
             m_errorCode = errorCode;
             m_exception = e;
             m_message = message;
@@ -182,12 +182,24 @@ namespace log4net.Util
 		}
 
 		/// <summary>
-		/// The date the first error that trigged this error handler occured.
+		/// The date the first error that trigged this error handler occurred, or <see cref="DateTime.MinValue"/> if it has not been triggered.
 		/// </summary>
 		public DateTime EnabledDate
 		{
-			get { return m_enabledDate; }
+			get 
+            {
+                if (m_enabledDateUtc == DateTime.MinValue) return DateTime.MinValue;
+                return m_enabledDateUtc.ToLocalTime(); 
+            }
 		}
+
+        /// <summary>
+        /// The UTC date the first error that trigged this error handler occured, or <see cref="DateTime.MinValue"/> if it has not been triggered.
+        /// </summary>
+        public DateTime EnabledDateUtc
+        {
+            get { return m_enabledDateUtc; }
+        }
 
 		/// <summary>
 		/// The message from the first error that trigged this error handler.
@@ -224,9 +236,9 @@ namespace log4net.Util
 		#region Private Instance Fields
 
 		/// <summary>
-		/// The date the error was recorded.
+		/// The UTC date the error was recorded.
 		/// </summary>
-		private DateTime m_enabledDate;
+		private DateTime m_enabledDateUtc;
 
 		/// <summary>
 		/// Flag to indicate if it is the first error

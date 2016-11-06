@@ -88,16 +88,49 @@ namespace log4net.Core
 		public string ThreadName;
 
 		/// <summary>
-		/// The time the event was logged
+		/// Gets or sets the local time the event was logged
 		/// </summary>
 		/// <remarks>
-		/// <para>
-		/// The TimeStamp is stored in the local time zone for this computer.
+        /// <para>
+        /// Prefer using the <see cref="TimeStampUtc"/> setter, since local time can be ambiguous.
 		/// </para>
 		/// </remarks>
-		public DateTime TimeStamp;
+        [Obsolete("Prefer using TimeStampUtc, since local time can be ambiguous in time zones with daylight savings time.")]
+        public DateTime TimeStamp;
 
-		/// <summary>
+        /// <summary>
+        /// Gets or sets the UTC time the event was logged
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The TimeStamp is stored in the UTC time zone.
+        /// </para>
+        /// </remarks>
+#pragma warning disable 618 // Suppress warnings that TimeStamp field is obsolete
+        public DateTime TimeStampUtc
+        {
+            get
+            {
+                if (TimeStamp != default(DateTime) && 
+                    _timeStampUtc == default(DateTime))
+                {
+                    // TimeStamp field has been set explicitly but TimeStampUtc hasn't
+                    // => use TimeStamp
+                    return TimeStamp.ToUniversalTime();
+                }
+                return _timeStampUtc;
+            }
+            set
+            {
+                _timeStampUtc = value;
+                // For backwards compatibility
+                TimeStamp = _timeStampUtc.ToLocalTime();
+            }
+        }
+        private DateTime _timeStampUtc;
+#pragma warning restore 618
+
+        /// <summary>
 		/// Location information for the caller.
 		/// </summary>
 		/// <remarks>
@@ -334,7 +367,7 @@ namespace log4net.Core
 			m_data.Level = level;
 
 			// Store the event creation time
-			m_data.TimeStamp = DateTime.Now;
+			m_data.TimeStampUtc = DateTime.UtcNow;
 		}
 
 		/// <summary>
@@ -454,7 +487,7 @@ namespace log4net.Core
 
 			m_data.Message = info.GetString("Message");
 			m_data.ThreadName = info.GetString("ThreadName");
-			m_data.TimeStamp = info.GetDateTime("TimeStamp");
+			m_data.TimeStampUtc = info.GetDateTime("TimeStamp").ToUniversalTime();
 			m_data.LocationInfo = (LocationInfo) info.GetValue("LocationInfo", typeof(LocationInfo));
 			m_data.UserName = info.GetString("UserName");
 			m_data.ExceptionString = info.GetString("ExceptionString");
@@ -481,7 +514,7 @@ namespace log4net.Core
 		/// </value>
 		/// <remarks>
 		/// <para>
-		/// The TimeStamp is stored in the local time zone for this computer.
+		/// The TimeStamp is stored internally in UTC and converted to the local time zone for this computer.
 		/// </para>
 		/// <para>
 		/// Tries to get the start time for the current process.
@@ -496,7 +529,30 @@ namespace log4net.Core
 		/// </remarks>
 		public static DateTime StartTime
 		{
-			get { return SystemInfo.ProcessStartTime; }
+			get { return SystemInfo.ProcessStartTimeUtc.ToLocalTime(); }
+		}
+
+        /// <summary>
+        /// Gets the UTC time when the current process started.
+        /// </summary>
+        /// <value>
+        /// This is the UTC time when this process started.
+        /// </value>
+        /// <remarks>
+        /// <para>
+        /// Tries to get the start time for the current process.
+        /// Failing that it returns the time of the first call to
+        /// this property.
+        /// </para>
+        /// <para>
+        /// Note that AppDomains may be loaded and unloaded within the
+        /// same process without the process terminating and therefore
+        /// without the process start time being reset.
+        /// </para>
+        /// </remarks>
+        public static DateTime StartTimeUtc
+        {
+            get { return SystemInfo.ProcessStartTimeUtc; }
 		}
 
 		/// <summary>
@@ -523,12 +579,23 @@ namespace log4net.Core
 		/// </value>
 		/// <remarks>
 		/// <para>
-		/// The TimeStamp is stored in the local time zone for this computer.
+		/// The TimeStamp is stored in UTC and converted to the local time zone for this computer.
 		/// </para>
 		/// </remarks>
 		public DateTime TimeStamp
 		{
-			get { return m_data.TimeStamp; }
+			get { return m_data.TimeStampUtc.ToLocalTime(); }
+		}
+
+        /// <summary>
+        /// Gets UTC the time of the logging event.
+        /// </summary>
+        /// <value>
+        /// The UTC time of the logging event.
+        /// </value>
+        public DateTime TimeStampUtc
+        {
+            get { return m_data.TimeStampUtc; }
 		}
 
 		/// <summary>
@@ -1038,8 +1105,13 @@ namespace log4net.Core
 			info.AddValue("Level", m_data.Level);
 			info.AddValue("Message", m_data.Message);
 			info.AddValue("ThreadName", m_data.ThreadName);
+            // TODO: consider serializing UTC rather than local time.  Not implemented here because it
+            // would give an unexpected result if client and server have different versions of this class.
+            // info.AddValue("TimeStamp", m_data.TimeStampUtc);
+#pragma warning disable 618
 			info.AddValue("TimeStamp", m_data.TimeStamp);
-			info.AddValue("LocationInfo", m_data.LocationInfo);
+#pragma warning restore 618
+            info.AddValue("LocationInfo", m_data.LocationInfo);
 			info.AddValue("UserName", m_data.UserName);
 			info.AddValue("ExceptionString", m_data.ExceptionString);
 			info.AddValue("Properties", m_data.Properties);

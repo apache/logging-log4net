@@ -73,7 +73,7 @@ namespace log4net.Tests.Layout
 			ed.LoggerName = "TestLogger";
 			ed.Message = "Test message";
 			ed.ThreadName = "TestThread";
-			ed.TimeStamp = DateTime.Today;
+			ed.TimeStampUtc = DateTime.Today.ToUniversalTime();
 			ed.UserName = "TestRunner";
 			ed.Properties = new PropertiesDictionary();
 

@@ -131,7 +131,7 @@ namespace log4net.Tests.Core
 			loggingEventData.Domain = "ReallySimpleApp";
 			loggingEventData.LocationInfo = new LocationInfo(typeof(FixingTest).Name, "Main", "Class1.cs", "29"); //Completely arbitary
 			loggingEventData.ThreadName = Thread.CurrentThread.Name;
-			loggingEventData.TimeStamp = DateTime.Today;
+			loggingEventData.TimeStampUtc = DateTime.UtcNow.Date;
 			loggingEventData.ExceptionString = "Exception occured here";
 			loggingEventData.UserName = "TestUser";
 			return loggingEventData;
@@ -149,7 +149,8 @@ namespace log4net.Tests.Core
 			Assert.AreEqual("log4net.Tests.Core.FixingTest", loggingEventData.LoggerName, "LoggerName is incorrect");
 			Assert.AreEqual(LogManager.GetRepository(TEST_REPOSITORY), loggingEvent.Repository, "Repository is incorrect");
 			Assert.AreEqual(Thread.CurrentThread.Name, loggingEventData.ThreadName, "ThreadName is incorrect");
-			Assert.IsNotNull(loggingEventData.TimeStamp, "TimeStamp is incorrect");
+            // This test is redundant as loggingEventData.TimeStamp is a value type and cannot be null
+            // Assert.IsNotNull(loggingEventData.TimeStampUtc, "TimeStamp is incorrect");
 			Assert.AreEqual("TestUser", loggingEventData.UserName, "UserName is incorrect");
 			Assert.AreEqual("Logging event works", loggingEvent.RenderedMessage, "Message is incorrect");
 		}
