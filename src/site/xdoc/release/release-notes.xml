@@ -32,9 +32,9 @@ limitations under the License.
 
           <p>
             The Apache log4net team is now responsible for the nuget
-            package, we've changed the version number to align it with
-            the version numbers. Release 2.0.6 is supposed to be
-            compatible with 1.2.15.
+            package, we've changed the version number of this release
+            to align the version numbers. Release 2.0.6 is supposed to
+            be compatible with 1.2.15.
           </p>
 
           <p>
@@ -47,14 +47,31 @@ limitations under the License.
               <ul>
                 <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-508'>LOG4NET-508</a>] -         NAnt release build is not optimized
                 </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-512'>LOG4NET-512</a>] -         Thread safety issue in Hierarchy.cs
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-527'>LOG4NET-527</a>] -         broken link on config-examples.html
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-529'>LOG4NET-529</a>] -         Possible thread-safety bug in LoggingEvent
+                </li>
               </ul>
 	    </section>
             <section id="2.0.6-enh" name="Improvements">
               <ul>
-                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-467'>LOG4NET-467</a>] -         Is .NET Core, will be supported in the near future, or not
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-530'>LOG4NET-530</a>] -         Use UTC internally to avoid ambiguous timestamps
                 </li>
               </ul>
             </section>
+
+            <section id="2.0.6-new" name="New Features">
+              <ul>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-467'>LOG4NET-467</a>] -         Is .NET Core, will be supported in the near future, or not
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-511'>LOG4NET-511</a>] -         API to flush appenders
+                </li>
+                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-526'>LOG4NET-526</a>] -         Add appSetting conversion pattern to PatternString
+                </li>
+              </ul>
+	    </section>
         </section>
 
         <section id="1.2.15" name="1.2.15">
