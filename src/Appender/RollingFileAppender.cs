@@ -241,11 +241,17 @@ namespace log4net.Appender
 		/// </summary>
 		~RollingFileAppender()
 		{
+#if !NETCF
 			if (m_mutexForRolling != null)
 			{
+#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+				m_mutexForRolling.Dispose();
+#else
 				m_mutexForRolling.Close();
+#endif
 				m_mutexForRolling = null;
 			}
+#endif
 		}
 
 		#endregion Public Instance Constructors
@@ -606,6 +612,7 @@ namespace log4net.Appender
 		virtual protected void AdjustFileBeforeAppend()
 		{
 			// reuse the file appenders locking model to lock the rolling
+#if !NETCF
 			try
 			{
 				// if rolling should be locked, acquire the lock
@@ -613,6 +620,7 @@ namespace log4net.Appender
 				{
 					m_mutexForRolling.WaitOne();
 				}
+#endif
 				if (m_rollDate)
 				{
 					DateTime n = m_dateTime.Now;
@@ -632,6 +640,7 @@ namespace log4net.Appender
 						RollOverSize();
 					}
 				}
+#if !NETCF
 			}
 			finally
 			{
@@ -641,6 +650,7 @@ namespace log4net.Appender
 					m_mutexForRolling.ReleaseMutex();
 				}
 			}
+#endif
 		}
 
 		/// <summary>
@@ -1148,8 +1158,10 @@ namespace log4net.Appender
 				m_baseFileName = base.File;
 			}
 
+#if !NETCF
 			// initialize the mutex that is used to lock rolling
 			m_mutexForRolling = new Mutex(false, m_baseFileName.Replace("\\", "_").Replace(":", "_").Replace("/", "_"));
+#endif
 
 			if (m_rollDate && File != null && m_scheduledFilename == null)
 			{
@@ -1677,11 +1689,13 @@ namespace log4net.Appender
 		/// </summary>
 		private string m_baseFileName;
 
+#if !NETCF
 		/// <summary>
 		/// A mutex that is used to lock rolling of files.
 		/// </summary>
 		private Mutex m_mutexForRolling;
-  
+#endif
+
 		#endregion Private Instance Fields
 
 		#region Static Members
