@@ -38,6 +38,36 @@ log4net is designed with two distinct goals in mind: speed and flexibility</desc
     <copyright>Copyright 2004-2016 The Apache Software Foundation</copyright>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <tags>logging log tracing logfiles</tags>
+    <dependencies>
+      <group targetFramework=".NETStandard1.3">
+        <dependency id="System.AppContext" version="[4.1.0, )" />
+        <dependency id="System.Collections.NonGeneric" version="[4.0.1, )" />
+        <dependency id="System.Console" version="[4.0.0, )" />
+        <dependency id="System.Diagnostics.Debug" version="[4.0.11, )" />
+        <dependency id="System.Diagnostics.Process" version="[4.1.0, )" />
+        <dependency id="System.Diagnostics.StackTrace" version="[4.0.1, )" />
+        <dependency id="System.Diagnostics.TraceSource" version="[4.0.0, )" />
+        <dependency id="System.IO.FileSystem" version="[4.0.1, )" />
+        <dependency id="System.IO.FileSystem.Watcher" version="[4.0.0, )" />
+        <dependency id="System.Linq" version="[4.1.0, )" />
+        <dependency id="System.Net.NameResolution" version="[4.0.0, )" />
+        <dependency id="System.Net.Requests" version="[4.0.11, )" />
+        <dependency id="System.Net.Sockets" version="[4.1.0, )" />
+        <dependency id="System.Reflection" version="[4.1.0, )" />
+        <dependency id="System.Reflection.Extensions" version="[4.0.1, )" />
+        <dependency id="System.Reflection.TypeExtensions" version="[4.1.0, )" />
+        <dependency id="System.Runtime.Extensions" version="[4.1.0, )" />
+        <dependency id="System.Runtime.InteropServices" version="[4.1.0, )" />
+        <dependency id="System.Runtime.InteropServices.RuntimeInformation" version="[4.0.0, )" />
+        <dependency id="System.Runtime.Serialization.Formatters" version="[4.0.0-rc3-24212-01, )" />
+        <dependency id="System.Text.RegularExpressions" version="[4.1.0, )" />
+        <dependency id="System.Threading" version="[4.0.11, )" />
+        <dependency id="System.Threading.Thread" version="[4.0.0, )" />
+        <dependency id="System.Threading.Timer" version="[4.0.1, )" />
+        <dependency id="System.Xml.ReaderWriter" version="[4.0.11, )" />
+        <dependency id="System.Xml.XmlDocument" version="[4.0.1, )" />
+      </group>
+    </dependencies>
   </metadata>
   <files>
     <file src="bin\net\2.0\release\log4net.dll" target="lib\net20-full" />
