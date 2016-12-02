@@ -1260,10 +1260,10 @@ limitations under the License.
       </if>
     </if>
     <if test="${not temp.build.skip}">
-      <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'old-log4net.snk')}" nostdlib="false" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/../oldkey/log4net.dll" doc="${current.bin.dir}/../oldkey/log4net.xml">
+      <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'old-log4net.snk')}" nostdlib="false" noconfig="true" warnaserror="false" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/../oldkey/log4net.dll" doc="${current.bin.dir}/../oldkey/log4net.xml">
         <nowarn>
           <!-- workaround for Mono bug #61902 -->
-          <warning number="0618" />
+          <!--warning number="0618" /-->
           <!-- informational assembly version uses a free form text -->
           <warning number="1607" />
         </nowarn>
@@ -1285,10 +1285,10 @@ limitations under the License.
         </references>
       </csc>
     </if>
-    <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="false" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+    <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="false" noconfig="true" warnaserror="false" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
       <nowarn>
         <!-- workaround for Mono bug #61902 -->
-        <warning number="0618" />
+        <!--warning number="0618" /-->
         <!-- informational assembly version uses a free form text -->
         <warning number="1607" />
       </nowarn>
@@ -1309,10 +1309,10 @@ limitations under the License.
         <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
       </references>
     </csc>
-    <csc if="${current.build.config.debug}" nostdlib="false" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+    <csc if="${current.build.config.debug}" nostdlib="false" noconfig="true" warnaserror="false" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
       <nowarn>
         <!-- workaround for Mono bug #61902 -->
-        <warning number="0618" />
+        <!--warning number="0618" /-->
         <!-- informational assembly version uses a free form text -->
         <warning number="1607" />
       </nowarn>
@@ -1354,10 +1354,10 @@ limitations under the License.
       </if>
     </if>
     <if test="${not temp.build.skip}">
-      <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'old-log4net.snk')}" nostdlib="false" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/../oldkey/log4net.dll" doc="${current.bin.dir}/../oldkey/log4net.xml">
+      <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'old-log4net.snk')}" nostdlib="false" noconfig="true" warnaserror="false" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/../oldkey/log4net.dll" doc="${current.bin.dir}/../oldkey/log4net.xml">
         <nowarn>
           <!-- workaround for Mono bug #61902 -->
-          <warning number="0618" />
+          <!--warning number="0618" /-->
           <!-- informational assembly version uses a free form text -->
           <warning number="1607" />
         </nowarn>
@@ -1380,10 +1380,10 @@ limitations under the License.
         </references>
       </csc>
     </if>
-    <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="false" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+    <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="false" noconfig="true" warnaserror="false" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
       <nowarn>
         <!-- workaround for Mono bug #61902 -->
-        <warning number="0618" />
+        <!--warning number="0618" /-->
         <!-- informational assembly version uses a free form text -->
         <warning number="1607" />
       </nowarn>
@@ -1405,10 +1405,10 @@ limitations under the License.
         <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
       </references>
     </csc>
-    <csc if="${current.build.config.debug}" nostdlib="false" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+    <csc if="${current.build.config.debug}" nostdlib="false" noconfig="true" warnaserror="false" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
       <nowarn>
         <!-- workaround for Mono bug #61902 -->
-        <warning number="0618" />
+        <!--warning number="0618" /-->
         <!-- informational assembly version uses a free form text -->
         <warning number="1607" />
       </nowarn>
@@ -1451,10 +1451,10 @@ limitations under the License.
       </if>
     </if>
     <if test="${not temp.build.skip}">
-      <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'old-log4net.snk')}" nostdlib="false" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/../oldkey/log4net.dll" doc="${current.bin.dir}/../oldkey/log4net.xml">
+      <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'old-log4net.snk')}" nostdlib="false" noconfig="true" warnaserror="false" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/../oldkey/log4net.dll" doc="${current.bin.dir}/../oldkey/log4net.xml">
         <nowarn>
           <!-- workaround for Mono bug #61902 -->
-          <warning number="0618" />
+          <!--warning number="0618" /-->
           <!-- informational assembly version uses a free form text -->
           <warning number="1607" />
         </nowarn>
@@ -1477,10 +1477,10 @@ limitations under the License.
         </references>
       </csc>
     </if>
-    <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="false" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+    <csc if="${current.build.config.release}" keyfile="${path::combine(log4net.basedir, 'log4net.snk')}" nostdlib="false" noconfig="true" warnaserror="false" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
       <nowarn>
         <!-- workaround for Mono bug #61902 -->
-        <warning number="0618" />
+        <!--warning number="0618" /-->
         <!-- informational assembly version uses a free form text -->
         <warning number="1607" />
       </nowarn>
@@ -1502,10 +1502,10 @@ limitations under the License.
         <include name="lib/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}/*.dll" />
       </references>
     </csc>
-    <csc if="${current.build.config.debug}" nostdlib="false" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
+    <csc if="${current.build.config.debug}" nostdlib="false" noconfig="true" warnaserror="false" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines.csc}" output="${current.bin.dir}/log4net.dll" doc="${current.bin.dir}/log4net.xml">
       <nowarn>
         <!-- workaround for Mono bug #61902 -->
-        <warning number="0618" />
+        <!--warning number="0618" /-->
         <!-- informational assembly version uses a free form text -->
         <warning number="1607" />
       </nowarn>
