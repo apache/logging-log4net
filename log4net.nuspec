@@ -59,7 +59,7 @@ log4net is designed with two distinct goals in mind: speed and flexibility</desc
         <dependency id="System.Runtime.Extensions" version="[4.1.0, )" />
         <dependency id="System.Runtime.InteropServices" version="[4.1.0, )" />
         <dependency id="System.Runtime.InteropServices.RuntimeInformation" version="[4.0.0, )" />
-        <dependency id="System.Runtime.Serialization.Formatters" version="[4.0.0-rc3-24212-01, )" />
+        <dependency id="System.Runtime.Serialization.Formatters" version="[4.0.0, )" />
         <dependency id="System.Text.RegularExpressions" version="[4.1.0, )" />
         <dependency id="System.Threading" version="[4.0.11, )" />
         <dependency id="System.Threading.Thread" version="[4.0.0, )" />
