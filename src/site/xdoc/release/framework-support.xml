@@ -585,12 +585,14 @@ limitations under the License.
                     <p>Things that are not supported in log4net
                     for .NET Core:</p>
                     <ul>
-                      <li>the ADO.NET Appender</li>
+                      <li>the ADO.NET appender</li>
                       <li>anything related to ASP.NET (trace appender
                       and several pattern converters)</li>
                       <li>.NET Remoting</li>
+                      <li>the colored console appender</li>
+                      <li>the event log appender</li>
                       <li>The <code>NetSendAppender</code></li>
-                      <li>The SMTP Appender</li>
+                      <li>The SMTP appender</li>
                       <li><code>DOMConfigurator</code></li>
                       <li>stack trace patterns</li>
                       <li>access to <code>appSettings</code> (neither
