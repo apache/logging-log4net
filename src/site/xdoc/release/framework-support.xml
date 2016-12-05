@@ -579,11 +579,27 @@ limitations under the License.
                 <section id="net-core1.0" name=".NET Core 1.0">
                     <p>
                       Targets netstandard-1.3 and thus doesn't support
-                      .NET Remoting, anything related to ASP.NET or
-                      ADO.NET, logical thread contexts, stack trace
-                      patterns or using the log4net section in a
-                      configuration file.
+                      a few things that work on Mono or the classical
+                      .NET platform.
                     </p>
+                    <p>Things that are not supported in log4net
+                    for .NET Core:</p>
+                    <ul>
+                      <li>the ADO.NET Appender</li>
+                      <li>anything related to ASP.NET (trace appender
+                      and several pattern converters)</li>
+                      <li>.NET Remoting</li>
+                      <li>The <code>NetSendAppender</code></li>
+                      <li>The SMTP Appender</li>
+                      <li><code>DOMConfigurator</code></li>
+                      <li>stack trace patterns</li>
+                      <li>access to <code>appSettings</code> (neither
+                      the log4net section itself nor using the
+                      <code>AppSettingsPatternConverter</code></li>
+                      <li>Access to "special paths" using the
+                      <code>EnvironmentFolderPathPatternConverter</code></li>
+                      <li>Impersonation of Windows accounts</li>
+                    </ul>
                 </section>
 
                 <section id="net1.0" name="Microsoft .NET Framework 1.0">
