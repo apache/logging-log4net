@@ -140,6 +140,7 @@
         <configuration>
           <excludes>
             <!-- generated files -->
+            <exclude>**/TestResult.xml</exclude>
             <exclude>**/*.suo</exclude>
             <exclude>**/*.user</exclude>
             <exclude>**/obj/**</exclude>
@@ -149,11 +150,16 @@
             <exclude>src/log4net.xml</exclude>
             <exclude>src/GeneratedAssemblyInfo.cs</exclude>
             <exclude>tests/bin/**</exclude>
+            <exclude>netstandard/*/bin/**</exclude>
 
             <!-- really README files -->
             <exclude>*.snk*</exclude>
             <exclude>tests/lib/prerequisites.txt</exclude>
-          </excludes>
+            <exclude>CONTRIBUTING.md</exclude>
+
+	    <!-- can't have comments in JSON -->
+	    <exclude>**/*.json</exclude>
+	  </excludes>
         </configuration>
       </plugin>
       <plugin>
