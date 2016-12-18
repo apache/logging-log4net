@@ -46,13 +46,7 @@ limitations under the License.
                     does not guarantee forward compatibility only backward compatibility.
                 </p>
                 <p>
-                    The lowest common denominator build is the CLI 1.0 Compatible build. This build is compatible with
-                    the ECMA/ISO CLI 1.0 standard APIs and will run on all frameworks that support the standard. (Note
-                    that the Microsoft .NET Compact Framework does not support this standard). Use this build if you
-                    intend to deploy you application on both the Microsoft .NET Frameworks and the Mono frameworks.
-                </p>
-                <p>
-                    log4net now builds on the following frameworks:
+                    log4net is regularly built by its developers on the following frameworks:
                 </p>
                 
                 <div class="table">
@@ -66,16 +60,8 @@ limitations under the License.
                             <th>Website</th>
                         </tr>
                         <tr style="vertical-align: top;">
-                            <td>.NET Core 1.0</td>
-                            <td><a href="http://www.dotnetfoundation.org/netcore">http://www.dotnetfoundation.org/netcore</a></td>
-                        </tr>
-                        <tr style="vertical-align: top;">
-                            <td>Microsoft .NET Framework 1.0</td>
-                            <td><a href="http://msdn.microsoft.com/en-us/netframework/">http://msdn.microsoft.com/en-us/netframework/</a></td>
-                        </tr>
-                        <tr style="vertical-align: top;">
-                            <td>Microsoft .NET Framework 1.1</td>
-                            <td><a href="http://msdn.microsoft.com/en-us/netframework/">http://msdn.microsoft.com/en-us/netframework/</a></td>
+                            <td>.NET Core 1.0 providing .NET Standard 1.3</td>
+                            <td><a href="https://dotnet.github.io/">https://dotnet.github.io/</a></td>
                         </tr>
                         <tr style="vertical-align: top;">
                             <td>Microsoft .NET Framework 2.0</td>
@@ -102,6 +88,44 @@ limitations under the License.
                             <td><a href="http://msdn.microsoft.com/en-us/netframework/">http://msdn.microsoft.com/en-us/netframework/</a></td>
                         </tr>
                         <tr style="vertical-align: top;">
+                            <td>Mono 2.0</td>
+                            <td><a href="http://www.mono-project.com">http://www.mono-project.com</a></td>
+                        </tr>
+                        <tr style="vertical-align: top;">
+                            <td>Mono 3.5</td>
+                            <td><a href="http://www.mono-project.com">http://www.mono-project.com</a></td>
+                        </tr>
+                        <tr style="vertical-align: top;">
+                            <td>Mono 4.0</td>
+                            <td><a href="http://www.mono-project.com">http://www.mono-project.com</a></td>
+                        </tr>
+                    </table>
+                </div>
+                <p>
+                  log4net should also build on the following
+                  frameworks but binaries are not created by the
+                  developers and source compatibility can not be
+                  guaranteed:
+                </p>
+                <div class="table">
+                    <table>
+                        <colgroup>
+                            <col style="text-align: left; white-space: nowrap" />
+                            <col style="text-align: left;" />
+                        </colgroup>
+                        <tr>
+                            <th>Framework</th>
+                            <th>Website</th>
+                        </tr>
+                        <tr style="vertical-align: top;">
+                            <td>Microsoft .NET Framework 1.0</td>
+                            <td><a href="http://msdn.microsoft.com/en-us/netframework/">http://msdn.microsoft.com/en-us/netframework/</a></td>
+                        </tr>
+                        <tr style="vertical-align: top;">
+                            <td>Microsoft .NET Framework 1.1</td>
+                            <td><a href="http://msdn.microsoft.com/en-us/netframework/">http://msdn.microsoft.com/en-us/netframework/</a></td>
+                        </tr>
+                        <tr style="vertical-align: top;">
                             <td>Microsoft .NET Compact Framework 1.0</td>
                             <td><a href="http://msdn2.microsoft.com/en-us/netframework/aa497273.aspx">http://msdn2.microsoft.com/en-us/netframework/aa497273.aspx</a></td>
                         </tr>
@@ -110,7 +134,7 @@ limitations under the License.
                             <td><a href="http://msdn2.microsoft.com/en-us/netframework/aa497273.aspx">http://msdn2.microsoft.com/en-us/netframework/aa497273.aspx</a></td>
                         </tr>
                         <tr style="vertical-align: top;">
-                            <td>Mono</td>
+                            <td>Mono 1.0</td>
                             <td><a href="http://www.mono-project.com">http://www.mono-project.com</a></td>
                         </tr>
                         <tr style="vertical-align: top;">
@@ -125,16 +149,17 @@ limitations under the License.
                 </div>
                 <p>
                     For most of these frameworks a log4net assembly targeting the framework is supplied.  Although it's 
-                    perfectly possible to use the .NET Framework 1.0 version of log4net on the .NET Framework 1.1, having 
+                    perfectly possible to use the .NET Framework 3.5 version of log4net on the .NET Framework 4.0, having 
                     an assembly that really targets a specific framework allows us to use features in that framework that 
                     are not available in other frameworks or remove features from log4net that are not supported in a 
                     specific framework.
                 </p>
                 <p>
                   There are no assemblies targeting the Compact
-                  Framework 1.0/2.0 or Microsoft Shared Source CLI 1.0 in
-                  the binary release, but they can be built from the
-                  source release.
+                  Framework 1.0/2.0, .NET Framework or Mono 1.x or
+                  Microsoft Shared Source CLI 1.0 in the binary
+                  release, but they can be built from the source
+                  release.
                 </p>
             </section>
             
@@ -173,7 +198,7 @@ limitations under the License.
                             <th>.NET Framework 4.5</th>
                             <th>.NET Framework 3.5 Client Profile</th>
                             <th>.NET Framework 4.0 Client Profile</th>
-                            <th>.NET Core 1.0</th>
+                            <th>.NET Standard 1.3</th>
                             <th>.NET CF 1.0</th>
                             <th>.NET CF 2.0</th>
                             <th>Mono</th>
@@ -576,14 +601,14 @@ limitations under the License.
             </section>
             
             <section id="notes" name="Framework Specific Notes">
-                <section id="net-core1.0" name=".NET Core 1.0">
+                <section id="netstandard-1.3" name=".NET Core 1.0 / .NET Standard 1.3">
                     <p>
                       Targets netstandard-1.3 and thus doesn't support
                       a few things that work on Mono or the classical
                       .NET platform.
                     </p>
                     <p>Things that are not supported in log4net
-                    for .NET Core:</p>
+                    for .NET Standard 1.3:</p>
                     <ul>
                       <li>the ADO.NET appender</li>
                       <li>anything related to ASP.NET (trace appender
@@ -597,7 +622,7 @@ limitations under the License.
                       <li>stack trace patterns</li>
                       <li>access to <code>appSettings</code> (neither
                       the log4net section itself nor using the
-                      <code>AppSettingsPatternConverter</code></li>
+                      <code>AppSettingsPatternConverter</code>)</li>
                       <li>Access to "special paths" using the
                       <code>EnvironmentFolderPathPatternConverter</code></li>
                       <li>Impersonation of Windows accounts</li>

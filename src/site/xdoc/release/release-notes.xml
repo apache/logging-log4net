@@ -43,16 +43,27 @@ limitations under the License.
             build those yourself using the source distribution.
           </p>
 
-          <section id="2.0.6-bug" name="Bug Fixes">
+	  <p>
+	    Starting with 2.0.6 .NET Core - or more precisely
+	    .NET Standard 1.3 - has become a supported platform. Please
+	    note that several features of log4net are not available
+	    when using the .NET Core version, see <a
+	    href="framework-support.html#netstandard-1.3">framework
+	    support</a> for details.
+	  </p>
+
+	  <section id="2.0.6-bug" name="Bug Fixes">
               <ul>
-                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-508'>LOG4NET-508</a>] -         NAnt release build is not optimized
-                </li>
-                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-512'>LOG4NET-512</a>] -         Thread safety issue in Hierarchy.cs
-                </li>
-                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-527'>LOG4NET-527</a>] -         broken link on config-examples.html
-                </li>
-                <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-529'>LOG4NET-529</a>] -         Possible thread-safety bug in LoggingEvent
-                </li>
+		<li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-508'>LOG4NET-508</a>] -         NAnt release build is not optimized
+		</li>
+		<li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-512'>LOG4NET-512</a>] -         Thread safety issue in Hierarchy.cs
+		</li>
+		<li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-527'>LOG4NET-527</a>] -         broken link on config-examples.html
+		</li>
+		<li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-529'>LOG4NET-529</a>] -         Possible thread-safety bug in LoggingEvent
+		</li>
+		<li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-536'>LOG4NET-536</a>] -         Can&#39;t build for NETCF-2.0
+		</li>
               </ul>
 	    </section>
             <section id="2.0.6-enh" name="Improvements">
