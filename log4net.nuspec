@@ -53,7 +53,7 @@ log4net is designed with two distinct goals in mind: speed and flexibility</desc
         <dependency id="System.Net.NameResolution" version="[4.0.0, )" />
         <dependency id="System.Net.Requests" version="[4.0.11, )" />
         <dependency id="System.Net.Sockets" version="[4.1.0, )" />
-        <dependency id="System.Reflection" version="[4.1.0, )" />
+        <dependency id="System.Reflection" version="[4.3.0, )" />
         <dependency id="System.Reflection.Extensions" version="[4.0.1, )" />
         <dependency id="System.Reflection.TypeExtensions" version="[4.1.0, )" />
         <dependency id="System.Runtime.Extensions" version="[4.1.0, )" />
