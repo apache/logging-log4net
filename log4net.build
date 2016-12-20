@@ -1912,12 +1912,16 @@ limitations under the License.
         <arg if="${current.build.config.release}" value="Release"/>
       </exec>
       <mkdir dir="${log4net.basedir}/bin/netstandard/1.3"/>
-      <move todir="${log4net.basedir}/bin/netstandard/1.3/Release">
-        <fileset basedir="netstandard/log4net/bin/Release/netstandard1.3"/>
-      </move>
-      <move todir="${log4net.basedir}/bin/netstandard/1.3/Debug">
-        <fileset basedir="netstandard/log4net/bin/Debug/netstandard1.3"/>
-      </move>
+      <if test="${current.build.config.release}">
+	<move todir="${log4net.basedir}/bin/netstandard/1.3/Release">
+          <fileset basedir="netstandard/log4net/bin/Release/netstandard1.3"/>
+	</move>
+      </if>
+      <ifnot test="${current.build.config.release}">
+	<move todir="${log4net.basedir}/bin/netstandard/1.3/Debug">
+          <fileset basedir="netstandard/log4net/bin/Debug/netstandard1.3"/>
+	</move>
+      </ifnot>
     </if>
     <if test="${dotnet.available != '0'}">
       <echo message=".NET Core is not available." />
