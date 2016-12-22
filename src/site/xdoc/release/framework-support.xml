@@ -614,6 +614,9 @@ limitations under the License.
                       <li>anything related to ASP.NET (trace appender
                       and several pattern converters)</li>
                       <li>.NET Remoting</li>
+                      <li><code>log4net.LogicalThreadContext</code>
+                      and the associated properties and stack
+                      classes</li>
                       <li>the colored console appender</li>
                       <li>the event log appender</li>
                       <li>The <code>NetSendAppender</code></li>
