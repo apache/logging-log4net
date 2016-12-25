@@ -1,6 +1,6 @@
 ﻿{
   "name": "log4net",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "title": "Apache log4net for .NET Core",
   "copyright": "Copyright 2004-2016 The Apache Software Foundation.",
   "frameworks": {
