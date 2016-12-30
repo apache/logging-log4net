@@ -39,6 +39,12 @@ log4net is designed with two distinct goals in mind: speed and flexibility</desc
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <tags>logging log tracing logfiles</tags>
     <dependencies>
+      <group targetFramework="net20-full" />
+      <group targetFramework="net35-full" />
+      <group targetFramework="net40-full" />
+      <group targetFramework="net45-full" />
+      <group targetFramework="net35-client" />
+      <group targetFramework="net40-client" />
       <group targetFramework=".NETStandard1.3">
         <dependency id="System.AppContext" version="[4.1.0, )" />
         <dependency id="System.Collections.NonGeneric" version="[4.0.1, )" />
