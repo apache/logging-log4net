@@ -35,7 +35,7 @@ log4net is designed with two distinct goals in mind: speed and flexibility</desc
     <licenseUrl>http://logging.apache.org/log4net/license.html</licenseUrl>
     <projectUrl>http://logging.apache.org/log4net/</projectUrl>
     <iconUrl>https://www.apache.org/images/feather.png</iconUrl>
-    <copyright>Copyright 2004-2016 The Apache Software Foundation</copyright>
+    <copyright>Copyright 2004-2017 The Apache Software Foundation</copyright>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <tags>logging log tracing logfiles</tags>
     <dependencies>
