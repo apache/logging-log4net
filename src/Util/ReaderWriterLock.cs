@@ -64,7 +64,7 @@ namespace log4net.Util
 
 #if HAS_READERWRITERLOCK
 #if HAS_READERWRITERLOCKSLIM
-			m_lock = new System.Threading.ReaderWriterLockSlim();
+			m_lock = new System.Threading.ReaderWriterLockSlim(System.Threading.LockRecursionPolicy.SupportsRecursion);
 #else
 			m_lock = new System.Threading.ReaderWriterLock();
 #endif

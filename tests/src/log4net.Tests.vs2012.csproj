@@ -150,9 +150,11 @@
     <Compile Include="Appender\EventLogAppenderTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Appender\EventRaisingAppender.cs" />
     <Compile Include="Appender\MemoryAppenderTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Appender\RecursiveLoggingTest.cs" />
     <Compile Include="Appender\RemotingAppenderTest.cs">
       <SubType>Code</SubType>
     </Compile>
