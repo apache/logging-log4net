@@ -32,7 +32,6 @@ using namespace System::Runtime::CompilerServices;
 // by using the '*' as shown below:
 
 [assembly: AssemblyVersionAttribute("2.0.8.0")];
-[assembly: AssemblyInformationalVersionAttribute("1.2")];
 
 #if !NETCF
 #if !SSCLI
