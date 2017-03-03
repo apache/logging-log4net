@@ -461,7 +461,7 @@ namespace log4net.Core
 
 		#region Protected Instance Constructors
 
-#if !(NETCF || NETSTANDARD1_3)
+#if !NETCF
 
 		/// <summary>
 		/// Serialization constructor
@@ -814,7 +814,7 @@ namespace log4net.Core
 			{
 				if (m_data.ThreadName == null && this.m_cacheUpdatable)
 				{
-#if NETCF || NETSTANDARD1_3
+#if NETCF
 					// Get thread ID only
 					m_data.ThreadName = SystemInfo.CurrentThreadId.ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
 #else
@@ -1394,7 +1394,7 @@ namespace log4net.Core
 			{
 				compositeProperties.Add(m_eventProperties);
 			}
-#if !(NETCF || NETSTANDARD1_3)
+#if !NETCF
 			PropertiesDictionary logicalThreadProperties = LogicalThreadContext.Properties.GetProperties(false);
 			if (logicalThreadProperties != null)
 			{

@@ -161,7 +161,7 @@ limitations under the License.
     <Compile Include="../../src/Layout/XmlLayout.cs" />
     <Compile Include="../../src/Layout/XmlLayoutBase.cs" />
     <Compile Include="../../src/Layout/XmlLayoutSchemaLog4j.cs" />
-    <!--<Compile Include="../../src/LogicalThreadContext.cs" />-->
+    <Compile Include="../../src/LogicalThreadContext.cs" />
     <Compile Include="../../src/LogManager.cs" />
     <Compile Include="../../src/MDC.cs" />
     <Compile Include="../../src/NDC.cs" />
@@ -201,9 +201,9 @@ limitations under the License.
     <Compile Include="../../src/Util/ILogExtensions.cs" />
     <Compile Include="../../src/Util/LevelMapping.cs" />
     <Compile Include="../../src/Util/LevelMappingEntry.cs" />
-    <!--<Compile Include="../../src/Util/LogicalThreadContextProperties.cs" />-->
+    <Compile Include="../../src/Util/LogicalThreadContextProperties.cs" />
     <Compile Include="../../src/Util/LogicalThreadContextStack.cs" />
-    <!--<Compile Include="../../src/Util/LogicalThreadContextStacks.cs" />-->
+    <Compile Include="../../src/Util/LogicalThreadContextStacks.cs" />
     <Compile Include="../../src/Util/LogLog.cs" />
     <!--<Compile Include="../../src/Util/NativeError.cs" />-->
     <Compile Include="../../src/Util/NullDictionaryEnumerator.cs" />

@@ -36,6 +36,7 @@ limitations under the License.
     <Compile Include="../../tests/src/Appender/SmtpPickupDirAppenderTest.cs" />
     <Compile Include="../../tests/src/Appender/StringAppender.cs" />
     <Compile Include="../../tests/src/Appender/TraceAppenderTest.cs" />
+    <Compile Include="../../tests/src/Context/LogicalThreadContextTest.cs" />
     <Compile Include="../../tests/src/Context/ThreadContextTest.cs" />
     <Compile Include="../../tests/src/Core/**/*.cs" />
     <Compile Include="../../tests/src/DateFormatter/**/*.cs" />

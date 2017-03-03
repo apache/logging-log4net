@@ -114,7 +114,7 @@ namespace log4net.Tests
         internal static void RemovePropertyFromAllContexts() {
             GlobalContext.Properties.Remove(PROPERTY_KEY);
             ThreadContext.Properties.Remove(PROPERTY_KEY);
-#if !(NETCF || NETSTANDARD1_3)
+#if !NETCF
             LogicalThreadContext.Properties.Remove(PROPERTY_KEY);
 #endif
         }

@@ -21,8 +21,13 @@
 #if !NETCF
 
 using System;
+#if !NETSTANDARD1_3
 using System.Runtime.Remoting.Messaging;
+#endif
 using System.Security;
+#if NETSTANDARD1_3
+using System.Threading;
+#endif
 
 namespace log4net.Util
 {
@@ -49,7 +54,11 @@ namespace log4net.Util
 	/// <author>Nicko Cadell</author>
 	public sealed class LogicalThreadContextProperties : ContextPropertiesBase
 	{
+		#if NETSTANDARD1_3
+		private static readonly AsyncLocal<PropertiesDictionary> AsyncLocalDictionary = new AsyncLocal<PropertiesDictionary>();
+		#else
 		private const string c_SlotName = "log4net.Util.LogicalThreadContextProperties";
+		#endif
 		
 		/// <summary>
 		/// Flag used to disable this context if we don't have permission to access the CallContext.
@@ -105,7 +114,7 @@ namespace log4net.Util
 				// need to be immutable to correctly flow through async/await
 				PropertiesDictionary immutableProps = new PropertiesDictionary(props);
 				immutableProps[key] = value;
-				SetCallContextData(immutableProps);
+				SetLogicalProperties(immutableProps);
 			}
 		}
 
@@ -129,7 +138,7 @@ namespace log4net.Util
 			{
 				PropertiesDictionary immutableProps = new PropertiesDictionary(dictionary);
 				immutableProps.Remove(key);
-				SetCallContextData(immutableProps);
+				SetLogicalProperties(immutableProps);
 			}
 		}
 
@@ -147,7 +156,7 @@ namespace log4net.Util
 			if (dictionary != null)
 			{
 				PropertiesDictionary immutableProps = new PropertiesDictionary();
-				SetCallContextData(immutableProps);
+				SetLogicalProperties(immutableProps);
 			}
 		}
 
@@ -173,11 +182,11 @@ namespace log4net.Util
 			{
 				try
 				{
-					PropertiesDictionary properties = GetCallContextData();
+					PropertiesDictionary properties = GetLogicalProperties();
 					if (properties == null && create)
 					{
 						properties = new PropertiesDictionary();
-						SetCallContextData(properties);
+						SetLogicalProperties(properties);
 					}
 					return properties;
 				}
@@ -214,9 +223,11 @@ namespace log4net.Util
 #if NET_4_0 || MONO_4_0
         [System.Security.SecuritySafeCritical]
 #endif
-        private static PropertiesDictionary GetCallContextData()
+        private static PropertiesDictionary GetLogicalProperties()
 		{
-#if NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0
+#if NETSTANDARD1_3
+            return AsyncLocalDictionary.Value;
+#elif NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0
             return CallContext.LogicalGetData(c_SlotName) as PropertiesDictionary;
 #else
 			return CallContext.GetData(c_SlotName) as PropertiesDictionary;
@@ -235,9 +246,11 @@ namespace log4net.Util
 #if NET_4_0 || MONO_4_0
         [System.Security.SecuritySafeCritical]
 #endif
-        private static void SetCallContextData(PropertiesDictionary properties)
+        private static void SetLogicalProperties(PropertiesDictionary properties)
 		{
-#if NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0
+#if NETSTANDARD1_3
+			AsyncLocalDictionary.Value = properties;
+#elif NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0
 			CallContext.LogicalSetData(c_SlotName, properties);
 #else
 			CallContext.SetData(c_SlotName, properties);

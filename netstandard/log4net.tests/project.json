@@ -11,6 +11,7 @@
       "../../tests/src/Appender/SmtpPickupDirAppenderTest.cs",
       "../../tests/src/Appender/StringAppender.cs",
       "../../tests/src/Appender/TraceAppenderTest.cs",
+      "../../tests/src/Context/LogicalThreadContextTest.cs",
       "../../tests/src/Context/ThreadContextTest.cs",
       "../../tests/src/Core/**/*.cs",
       "../../tests/src/DateFormatter/**/*.cs",

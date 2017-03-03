@@ -16,7 +16,6 @@
             "../../src/Appender/NetSendAppender.cs",
             "../../src/Appender/RemotingAppender.cs",
             "../../src/Appender/SmtpAppender.cs",
-            "../../src/LogicalThreadContext.cs",
             "../../src/Config/DOMConfigurator.cs",
             "../../src/Config/DOMConfiguratorAttribute.cs",
             "../../src/Config/Log4NetConfigurationSectionHandler.cs",
@@ -30,8 +29,6 @@
             "../../src/Plugin/RemoteLoggingServerPlugin.cs",
             "../../src/Util/PatternStringConverters/AppSettingPatternConverter.cs",
             "../../src/Util/PatternStringConverters/EnvironmentFolderPathPatternConverter.cs",
-            "../../src/Util/LogicalThreadContextProperties.cs",
-            "../../src/Util/LogicalThreadContextStacks.cs",
             "../../src/Util/NativeError.cs",
             "../../src/Util/WindowsSecurityContext.cs"
           ]
