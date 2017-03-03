@@ -44,6 +44,11 @@ namespace log4net.Util
 	/// <c>log4net.Util.LogicalThreadContextProperties</c>.
 	/// </para>
 	/// <para>
+	/// For .NET Standard 1.3 this class uses
+	/// System.Threading.AsyncLocal rather than <see
+	/// cref="System.Runtime.Remoting.Messaging.CallContext"/>.
+	/// </para>
+	/// <para>
 	/// The <see cref="CallContext"/> requires a link time 
 	/// <see cref="System.Security.Permissions.SecurityPermission"/> for the
 	/// <see cref="System.Security.Permissions.SecurityPermissionFlag.Infrastructure"/>.

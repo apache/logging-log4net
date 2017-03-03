@@ -38,6 +38,11 @@ namespace log4net
 	/// properties with the same name.
 	/// </para>
 	/// <para>
+	/// For .NET Standard 1.3 this class uses
+	/// System.Threading.AsyncLocal rather than <see
+	/// cref="System.Runtime.Remoting.Messaging.CallContext"/>.
+	/// </para>
+	/// <para>
 	/// The Logical Thread Context has a properties map and a stack.
 	/// The properties and stack can 
 	/// be included in the output of log messages. The <see cref="log4net.Layout.PatternLayout"/>
