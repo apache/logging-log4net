@@ -78,7 +78,11 @@ limitations under the License.
                             <td>
                                 The logical thread context is visible to a logical thread. Logical
                                 threads can jump from one managed thread to another. For more details
-                                see the .NET API <span class="code">System.Runtime.Remoting.Messaging.CallContext</span>.
+                                see the .NET API <span
+                                class="code">System.Runtime.Remoting.Messaging.CallContext</span>.<br></br>
+                                For .NET Standard this uses <span
+                                class="code">AsyncLocal</span> rather
+                                than <span class="code">CallContext</span>.
                             </td>
                         </tr>
                         <tr align="left">
