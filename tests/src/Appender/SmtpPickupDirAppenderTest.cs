@@ -190,9 +190,9 @@ namespace log4net.Tests.Appender
 			{
 				if(line.StartsWith(dateHeaderStart))
 				{
-					var datePart = line.Substring(dateHeaderStart.Length);
-					var date = DateTime.ParseExact(datePart, "r", System.Globalization.CultureInfo.InvariantCulture);
-					var diff = Math.Abs( (DateTime.UtcNow - date).TotalMilliseconds);
+					string datePart = line.Substring(dateHeaderStart.Length);
+					DateTime date = DateTime.ParseExact(datePart, "r", System.Globalization.CultureInfo.InvariantCulture);
+					double diff = Math.Abs( (DateTime.UtcNow - date).TotalMilliseconds);
 					Assert.LessOrEqual(diff, 1000, "Times should be equal, allowing a diff of one second to make test robust");
 					hasDateHeader = true;
 				}
@@ -218,7 +218,7 @@ namespace log4net.Tests.Appender
 			DestroyLogger();
 
 			Assert.AreEqual(1, Directory.GetFiles(_testPickupDir).Length);
-			var fileInfo = new FileInfo(Directory.GetFiles(_testPickupDir)[0]);
+			FileInfo fileInfo = new FileInfo(Directory.GetFiles(_testPickupDir)[0]);
 			Assert.AreEqual("." + fileExtension, fileInfo.Extension);
 			Assert.DoesNotThrow(delegate { new Guid(fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length)); }); // Assert that filename before extension is a guid
 
@@ -239,7 +239,7 @@ namespace log4net.Tests.Appender
 			DestroyLogger();
 
 			Assert.AreEqual(1, Directory.GetFiles(_testPickupDir).Length);
-			var fileInfo = new FileInfo(Directory.GetFiles(_testPickupDir)[0]);
+			FileInfo fileInfo = new FileInfo(Directory.GetFiles(_testPickupDir)[0]);
 			Assert.IsEmpty(fileInfo.Extension);
 			Assert.DoesNotThrow(delegate { new Guid(fileInfo.Name); }); // Assert that filename is a guid
 
