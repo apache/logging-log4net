@@ -19,6 +19,7 @@
  *
 */
 
+#if !NET_2_0 && !MONO_2_0
 using System;
 using System.Data;
 using System.Xml;
@@ -82,3 +83,4 @@ namespace log4net.Tests.Appender
 
     }
 }
+#endif
