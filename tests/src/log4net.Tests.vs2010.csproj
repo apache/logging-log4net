@@ -147,6 +147,9 @@
     <Compile Include="Appender\CountingAppender.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Appender\DebugAppenderTest.cs">
+    	<SubType>Code</SubType>
+    </Compile>
     <Compile Include="Appender\EventLogAppenderTest.cs">
       <SubType>Code</SubType>
     </Compile>

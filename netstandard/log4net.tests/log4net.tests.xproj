@@ -32,6 +32,7 @@ limitations under the License.
     <Compile Include="../../tests/src/Appender/AppenderCollectionTest.cs" />
     <Compile Include="../../tests/src/Appender/BufferingAppenderTest.cs" />
     <Compile Include="../../tests/src/Appender/CountingAppender.cs" />
+    <Compile Include="../../tests/src/Appender/DebugAppenderTest.cs" />
     <Compile Include="../../tests/src/Appender/RollingFileAppenderTest.cs" />
     <Compile Include="../../tests/src/Appender/SmtpPickupDirAppenderTest.cs" />
     <Compile Include="../../tests/src/Appender/StringAppender.cs" />
