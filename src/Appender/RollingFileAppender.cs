@@ -1026,7 +1026,14 @@ namespace log4net.Appender
             {
                 // if the "yyyy-MM-dd" component of file.log.yyyy-MM-dd is passed to TryParse
                 // it will gracefully fail and return backUpIndex will be 0
+                // If the date format does not contina any -'s then we have to do additional checks.
                 SystemInfo.TryParse(fileName.Substring(index + 1), out backUpIndex);
+
+                // We may have picked up a date in a format without "-" eg. yyyyMMdd...
+                if (backUpIndex > m_maxSizeRollBackups && m_rollDate)
+                {
+                    backUpIndex = 0;
+                }            
             }
 
             return backUpIndex;
