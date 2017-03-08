@@ -28,6 +28,38 @@ limitations under the License.
 
         <section id="main" name="Apache log4net&#x2122; Release Notes">
 
+        <section id="2.0.8" name="2.0.8">
+          <p>
+            Apache log4net 2.0.8 fixes a
+            <code>LockRecursionException</code> that could happen
+            inside the <code>FileAppender</code> under certain
+            circumstances. It also adds support for
+            <code>LogicalThreadContext</code> to the .NET Standard
+            build based on <code>AsyncLocal</code> rather than
+            <code>CallContext</code>.
+          </p>
+          
+	  <section id="2.0.8-bug" name="Bug Fixes">
+            <ul>
+              <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-466'>LOG4NET-466</a>] -         &quot;LockRecursionException: A read lock may not be acquired with the write lock held in this mode.&quot; exception
+              </li>
+              <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-550'>LOG4NET-550</a>] -         Logging recursively from an Appender not supported for NET_4_0 and MONO_4_0
+              </li>
+              <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-551'>LOG4NET-551</a>] -         LockRecursionException when using File Appenders
+              </li>
+              <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-554'>LOG4NET-554</a>] -         LogicalThreadContext was removed in .NETStandard
+              </li>
+            </ul>
+          </section>
+
+          <section id="2.0.8-new" name="New Features">
+            <ul>
+              <li>[<a href='https://issues.apache.org/jira/browse/LOG4NET-553'>LOG4NET-553</a>] -         DebugAppender configuration should give the possibility to disable outputting loggerName as category
+              </li>
+            </ul>
+	  </section>
+        </section>
+
         <section id="2.0.7" name="2.0.7">
           <p>
             Apache log4net 2.0.7 fixes a glitch in nuget packaging and
