@@ -53,7 +53,7 @@ namespace log4net.Layout.Pattern
 				return string.Empty;
 			}
 			
-			if (logigngEvent.LocationInformation == null)
+			if (loggingEvent.LocationInformation == null)
 			{
 				return string.Empty;
 			}
