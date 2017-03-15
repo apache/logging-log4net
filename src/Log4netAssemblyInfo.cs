@@ -25,7 +25,7 @@ namespace log4net {
     /// </summary>
     public sealed class AssemblyInfo {
         /// <summary>Version of the assembly</summary>
-        public const string Version = "2.0.8";
+        public const string Version = "2.0.9";
 
         /// <summary>Version of the framework targeted</summary>
 #if NET_1_1

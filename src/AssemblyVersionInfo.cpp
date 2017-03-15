@@ -31,11 +31,11 @@ using namespace System::Runtime::CompilerServices;
 // You can specify all the value or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersionAttribute("2.0.8.0")];
+[assembly: AssemblyVersionAttribute("2.0.9.0")];
 
 #if !NETCF
 #if !SSCLI
-[assembly: AssemblyFileVersionAttribute("2.0.8.0")]
+[assembly: AssemblyFileVersionAttribute("2.0.9.0")]
 #endif
 #endif
 

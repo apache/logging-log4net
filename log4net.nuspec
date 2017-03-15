@@ -22,7 +22,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>log4net</id>
-    <version>2.0.8</version>
+    <version>2.0.9</version>
     <title>Apache log4net</title>
     <summary>The Apache log4net library is a tool to help the programmer output log statements to a variety of output targets.</summary>
     <description>log4net is a tool to help the programmer output log statements to a variety of output targets. In case of problems with an application, it is helpful to enable logging so that the problem can be located. With log4net it is possible to enable logging at runtime without modifying the application binary. The log4net package is designed so that log statements can remain in shipped code without incurring a high performance cost. It follows that the speed of logging (or rather not logging) is crucial. 

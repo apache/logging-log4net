@@ -28,12 +28,12 @@
 ' You can specify all the values or you can default the Revision and Build Numbers 
 ' by using the '*' as shown below:
 
-<Assembly: System.Reflection.AssemblyVersion("2.0.8.0")>
+<Assembly: System.Reflection.AssemblyVersion("2.0.9.0")>
 <Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.2")>
 
 #If NOT NETCF Then
 #If NOT SSCLI Then
-<Assembly: System.Reflection.AssemblyFileVersion("2.0.8.0")>
+<Assembly: System.Reflection.AssemblyFileVersion("2.0.9.0")>
 #End If
 #End If
 
