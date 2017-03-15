@@ -48,6 +48,16 @@ namespace log4net.Layout.Pattern
 		/// </remarks>
 		override protected string GetFullyQualifiedName(LoggingEvent loggingEvent) 
 		{
+			if (loggingEvent == null)
+			{
+				return string.Empty;
+			}
+			
+			if (logigngEvent.LocationInformation == null)
+			{
+				return string.Empty;
+			}
+			
 			return loggingEvent.LocationInformation.ClassName;
 		}
 	}
