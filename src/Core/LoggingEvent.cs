@@ -22,9 +22,6 @@ using System.Collections;
 using System.IO;
 #if (!NETCF)
 using System.Runtime.Serialization;
-#if !NETSTANDARD1_3
-using System.Security.Principal;
-#endif
 #endif
 
 using log4net.Util;
@@ -852,45 +849,6 @@ namespace log4net.Core
 		/// underlying runtime has no support for retrieving the name of the 
 		/// current user.
 		/// </value>
-		/// <remarks>
-		/// <para>
-		/// Calls <c>WindowsIdentity.GetCurrent().Name</c> to get the name of
-		/// the current windows user.
-		/// </para>
-		/// <para>
-		/// To improve performance, we could cache the string representation of 
-		/// the name, and reuse that as long as the identity stayed constant.  
-		/// Once the identity changed, we would need to re-assign and re-render 
-		/// the string.
-		/// </para>
-		/// <para>
-		/// However, the <c>WindowsIdentity.GetCurrent()</c> call seems to 
-		/// return different objects every time, so the current implementation 
-		/// doesn't do this type of caching.
-		/// </para>
-		/// <para>
-		/// Timing for these operations:
-		/// </para>
-		/// <list type="table">
-		///   <listheader>
-		///     <term>Method</term>
-		///     <description>Results</description>
-		///   </listheader>
-		///   <item>
-		///	    <term><c>WindowsIdentity.GetCurrent()</c></term>
-		///	    <description>10000 loops, 00:00:00.2031250 seconds</description>
-		///   </item>
-		///   <item>
-		///	    <term><c>WindowsIdentity.GetCurrent().Name</c></term>
-		///	    <description>10000 loops, 00:00:08.0468750 seconds</description>
-		///   </item>
-		/// </list>
-		/// <para>
-		/// This means we could speed things up almost 40 times by caching the 
-		/// value of the <c>WindowsIdentity.GetCurrent().Name</c> property, since 
-		/// this takes (8.04-0.20) = 7.84375 seconds.
-		/// </para>
-		/// </remarks>
 		public string UserName
 		{
 			get
@@ -903,15 +861,8 @@ namespace log4net.Core
 #else
 					try
 					{
-						WindowsIdentity windowsIdentity = WindowsIdentity.GetCurrent();
-						if (windowsIdentity != null && windowsIdentity.Name != null)
-						{
-							m_data.UserName = windowsIdentity.Name;
-						}
-						else
-						{
-							m_data.UserName = "";
-						}
+						var currentIdentityName = WindowsIdentityProvider.CurrentIdentityName;
+						m_data.UserName = currentIdentityName ?? "";
 					}
 					catch(System.Security.SecurityException)
 					{

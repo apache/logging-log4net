@@ -333,6 +333,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Core\TimeEvaluator.cs" />
+    <Compile Include="Core\WindowsIdentityProvider.cs" />
     <Compile Include="Core\WrapperMap.cs">
       <SubType>Code</SubType>
     </Compile>
