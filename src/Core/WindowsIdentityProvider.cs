@@ -106,7 +106,7 @@ namespace log4net.Core
 		/// <summary>
 		/// Interval for current Identity Name updates.
 		/// </summary>
-		private readonly static TimeSpan s_updateCurrentIdentityNameInterval = TimeSpan.FromSeconds(1);
+		private readonly static TimeSpan s_updateCurrentIdentityNameInterval = TimeSpan.FromSeconds(15);
 
 		/// <summary>
 		/// Timer for current Identity Name updates.
