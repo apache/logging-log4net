@@ -1,4 +1,4 @@
-#region Apache License
+﻿#region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more 
 // contributor license agreements. See the NOTICE file distributed with
@@ -19,15 +19,15 @@
 
 #if (NET_4_5 && PARALLEL_APPENDERS)
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using log4net.Appender;
-using log4net.Core;
-
 namespace log4net.Util
 {
+	using System;
+	using System.Collections.Generic;
+	using System.Threading;
+
+	using log4net.Appender;
+	using log4net.Core;
+
 	/// <summary>
 	/// This class allows AppenderAttachedImpl class to call appenders in "parallel".
 	/// </summary>
@@ -43,14 +43,20 @@ namespace log4net.Util
 	public class ParallelIAppender : IAppender
 	{
 		private static readonly Type declaringType = typeof(ParallelIAppender);
+
 		private IAppender appender;
+
 		private object synchObject = new object();
+		private AutoResetEvent synchEvent = new AutoResetEvent(false);
 		private PulseCode pulseCode = PulseCode.NotSignaled;
+
 		private Queue<LoggingEvent> events = new Queue<LoggingEvent>();
 		private LoggingEvent[] arrayOfEvents;
-		private Task appenderTask;
+
+		private Thread appenderThread;
 
 		#region Public Instance Constructors
+
 		/// <summary>
 		/// Constructor
 		/// </summary>
@@ -59,22 +65,29 @@ namespace log4net.Util
 		/// Initializes a new instance of the <see cref="ParallelIAppender"/> class.
 		/// </para>
 		/// </remarks>
+
 		public ParallelIAppender(IAppender appender)
 		{
 			this.appender = appender;
-			this.appenderTask = Task.Run(() => this.Append());
+
+			this.appenderThread = new Thread(this.Append);
+			this.appenderThread.IsBackground = false;
+			this.appenderThread.Name = string.Format("{0}-{1}", appender.Name, Guid.NewGuid().ToString("N"));
+
+			this.appenderThread.Start();
 		}
+
 		#endregion Public Instance Constructors
 
 		[Flags]
 		internal enum PulseCode : int
 		{
-			NotSignaled,
-			QueueIsNotEmpty,
+			NotSignaled = 0,
 			ExitThread
 		}
 
 		#region Override implementation of Object
+
 		/// <summary>
 		/// Determines whether two <see cref="ParallelIAppender" /> instances 
 		/// are equal.
@@ -111,6 +124,7 @@ namespace log4net.Util
 			{
 				return false;
 			}
+
 			return this.appender.Equals(obj);
 		}
 
@@ -131,15 +145,18 @@ namespace log4net.Util
 		{
 			return this.appender.GetHashCode();
 		}
+
 		#endregion Override implementation of Object
 
 		#region Implementation of IAppender
+
 		string IAppender.Name
 		{
 			get
 			{
 				return this.appender.Name;
 			}
+
 			set
 			{
 				this.appender.Name = value;
@@ -151,9 +168,13 @@ namespace log4net.Util
 			lock (this.synchObject)
 			{
 				this.pulseCode |= PulseCode.ExitThread;
-				Monitor.Pulse(this.synchObject);
+
+				// This call will put Append() thread to the scheduling state:
+				this.synchEvent.Set();
 			}
-			this.appenderTask.Wait();
+
+			this.appenderThread.Join();
+
 			this.appender.Close();
 		}
 
@@ -162,34 +183,38 @@ namespace log4net.Util
 			lock (this.synchObject)
 			{
 				this.events.Enqueue(loggingEvent);
-				this.pulseCode |= PulseCode.QueueIsNotEmpty;
-				Monitor.Pulse(this.synchObject);
+
+				// This call will put Append() thread to the scheduling state:
+				this.synchEvent.Set();
 			}
 		}
+
 		#endregion Implementation of IAppender
 
 		private void Append()
 		{
+			// Have to keep this thread running till log4net shutdown:
 			bool keepRunning = true;
+
 			do
 			{
+				// Have to wait for the data to be queued by log4net:
+				this.synchEvent.WaitOne();
+
 				lock (this.synchObject)
 				{
-					if (this.pulseCode == PulseCode.NotSignaled)
-					{
-						Monitor.Wait(this.synchObject);
-					}
-					if ((this.pulseCode & PulseCode.QueueIsNotEmpty) == PulseCode.QueueIsNotEmpty)
-					{
-						this.pulseCode ^= PulseCode.QueueIsNotEmpty;
-					}
+					this.CopyEvents();
+
 					if ((this.pulseCode & PulseCode.ExitThread) == PulseCode.ExitThread)
 					{
-						this.pulseCode ^= PulseCode.ExitThread;
+						// Setting keepRunning to <false> will exit the thread function:
 						keepRunning = false;
+
+						// Clean up:
+						this.pulseCode ^= PulseCode.ExitThread;
 					}
-					this.CopyEvents();
 				}
+
 				this.CallDoAppend();
 			}
 			while (keepRunning);
@@ -211,4 +236,5 @@ namespace log4net.Util
 		}
 	}
 }
+
 #endif
