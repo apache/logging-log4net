@@ -46,18 +46,19 @@
       </otherArchives>
     </mailingList>
     <mailingList>
-      <name>log4net-dev : log4net development</name>
-      <subscribe>log4net-dev-subscribe@logging.apache.org</subscribe>
-      <unsubscribe>log4net-dev-unsubscribe@logging.apache.org</unsubscribe>
-      <post>log4net-dev@logging.apache.org</post>
-      <archive>http://mail-archives.apache.org/mod_mbox/logging-log4net-dev/</archive>
+      <name>dev : development of the logging projects including log4net</name>
+      <subscribe>dev-subscribe@logging.apache.org</subscribe>
+      <unsubscribe>dev-unsubscribe@logging.apache.org</unsubscribe>
+      <post>dev@logging.apache.org</post>
+      <archive>https://lists.apache.org/list.html?dev@logging.apache.org</archive>
       <otherArchives>
-        <otherArchive>http://marc.info/?l=log4net-dev</otherArchive>
-        <otherArchive>http://dir.gmane.org/gmane.comp.apache.logging.log4net.devel</otherArchive>
+        <otherArchive>http://mail-archives.apache.org/mod_mbox/logging-dev/</otherArchive>
+        <!--otherArchive>http://marc.info/?l=log4net-dev</otherArchive>
+        <otherArchive>http://dir.gmane.org/gmane.comp.apache.logging.log4net.devel</otherArchive-->
       </otherArchives>
     </mailingList>
     <mailingList>
-      <name>logging commits : all svn commits of the logging projects including log4net</name>
+      <name>logging commits : all svn/git commits of the logging projects including log4net</name>
       <subscribe>commits-subscribe@logging.apache.org</subscribe>
       <unsubscribe>commits-unsubscribe@logging.apache.org</unsubscribe>
       <post>Read-Only List</post>
