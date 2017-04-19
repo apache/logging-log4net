@@ -665,7 +665,7 @@ limitations under the License.
                                 base class. The custom pattern can then be used in the pattern string.
                             </p>
                             <p>
-                                For full details see the SDK Reference entry: <a href="sdk/log4net.Layout.PatternLayout.html">log4net.Layout.PatternLayout</a>.
+                                For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Layout_PatternLayout.htm">log4net.Layout.PatternLayout</a>.
                             </p>
                             <h3><span class="code">PatternString</span> for pattern based configuration</h3>
                             <p>
@@ -699,7 +699,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
   }
 }</pre></div>
                             <p>
-                                For full details see the SDK Reference entry: <a href="sdk/log4net.Util.PatternString.html">log4net.Util.PatternString</a>.
+                                For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Util_PatternString_htm">log4net.Util.PatternString</a>.
                             </p>
                             <h3>Loading configuration from a URI</h3>
                             <p>
@@ -800,7 +800,7 @@ public class SpecialFolderPatternConverter : log4net.Util.PatternConverter
                                 a single output file from multiple processes. 
                             </p>
                             <p>
-                                For full details see the SDK Reference entry: <a href="sdk/log4net.Appender.FileAppender.LockingModel.html">log4net.Appender.FileAppender.LockingModel</a>.
+                                For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_FileAppender_LockingModel.htm">log4net.Appender.FileAppender.LockingModel</a>.
                             </p>
                             <h3><span class="code">RollingFileAppender</span> roll once</h3>
                             <p>

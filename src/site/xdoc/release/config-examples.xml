@@ -43,7 +43,7 @@ limitations under the License.
             
             <section id="adonetappender" name="AdoNetAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/AllMembers_T_log4net_Appender_AdoNetAppender.htm">log4net.Appender.AdoNetAppender</a>.
+                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_AdoNetAppender.htm">log4net.Appender.AdoNetAppender</a>.
                 </p>
                 <p>
                     The configuration of the <span class="code">AdoNetAppender</span> depends on the
@@ -447,7 +447,7 @@ CREATE TABLE Log (
             
             <section id="aspnettraceappender" name="AspNetTraceAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/AllMembers_T_log4net_Appender_AspNetTraceAppender.htm">log4net.Appender.AspNetTraceAppender</a>.
+                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_AspNetTraceAppender.htm">log4net.Appender.AspNetTraceAppender</a>.
                 </p>
                 <p>
                     The following example shows how to configure the <span class="code">AspNetTraceAppender</span> 
@@ -467,7 +467,7 @@ CREATE TABLE Log (
             
             <section id="bufferingforwardingappender" name="BufferingForwardingAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/AllMembers_T_log4net_Appender_BufferingForwardingAppender.htm">log4net.Appender.BufferingForwardingAppender</a>.
+                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_BufferingForwardingAppender.htm">log4net.Appender.BufferingForwardingAppender</a>.
                 </p>
                 <p>
                     The following example shows how to configure the <span class="code">BufferingForwardingAppender</span> 
@@ -500,7 +500,7 @@ CREATE TABLE Log (
             
             <section id="coloredconsoleappender" name="ColoredConsoleAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/AllMembers_T_log4net_Appender_ColoredConsoleAppender.htm">log4net.Appender.ColoredConsoleAppender</a>.
+                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_ColoredConsoleAppender.htm">log4net.Appender.ColoredConsoleAppender</a>.
                 </p>
                 <p>
                     The following example shows how to configure the <span class="code">ColoredConsoleAppender</span> 
@@ -542,7 +542,7 @@ CREATE TABLE Log (
             
             <section id="consoleappender" name="ConsoleAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/AllMembers_T_log4net_Appender_ConsoleAppender.htm">log4net.Appender.ConsoleAppender</a>.
+                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_ConsoleAppender.htm">log4net.Appender.ConsoleAppender</a>.
                 </p>
                 <p>
                     The following example shows how to configure the <span class="code">ConsoleAppender</span> 
@@ -571,7 +571,7 @@ CREATE TABLE Log (
             
             <section id="eventlogappender" name="EventLogAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/AllMembers_T_log4net_Appender_EventLogAppender.htm">log4net.Appender.EventLogAppender</a>.
+                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_EventLogAppender.htm">log4net.Appender.EventLogAppender</a>.
                 </p>
                 <p>
                     The following example shows how to configure the <span class="code">EventLogAppender</span> to log
@@ -606,7 +606,7 @@ CREATE TABLE Log (
             
             <section id="fileappender" name="FileAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/AllMembers_T_log4net_Appender_FileAppender.htm">log4net.Appender.FileAppender</a>.
+                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_FileAppender.htm">log4net.Appender.FileAppender</a>.
                 </p>
                 <p>
                     The following example shows how to configure the <span class="code">FileAppender</span>
@@ -674,7 +674,7 @@ CREATE TABLE Log (
             
             <section id="forwardingappender" name="ForwardingAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/AllMembers_T_log4net_Appender_ForwardingAppender.htm">log4net.Appender.ForwardingAppender</a>.
+                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_ForwardingAppender.htm">log4net.Appender.ForwardingAppender</a>.
                 </p>
                 <p>
                     The following example shows how to configure the <span class="code">ForwardingAppender</span>.
@@ -695,7 +695,7 @@ CREATE TABLE Log (
             
             <section id="managedcoloredconsoleappender" name="ManagedColoredConsoleAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/AllMembers_T_log4net_Appender_ManagedColoredConsoleAppender.htm">log4net.Appender.ManagedColoredConsoleAppender</a>.
+                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_ManagedColoredConsoleAppender.htm">log4net.Appender.ManagedColoredConsoleAppender</a>.
                 </p>
                 <p>
                     The following example shows how to configure the <span class="code">ManagedColoredConsoleAppender</span> 
@@ -745,7 +745,7 @@ CREATE TABLE Log (
             
             <section id="memoryappender" name="MemoryAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/AllMembers_T_log4net_Appender_MemoryAppender.htm">log4net.Appender.MemoryAppender</a>.
+                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_MemoryAppender.htm">log4net.Appender.MemoryAppender</a>.
                 </p>
                 <p>
                     It is unlikely that the <span class="code">MemoryAppender</span> will be configured
@@ -760,7 +760,7 @@ CREATE TABLE Log (
             
             <section id="netsendappender" name="NetSendAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/AllMembers_T_log4net_Appender_NetSendAppender.htm">log4net.Appender.NetSendAppender</a>.
+                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_NetSendAppender.htm">log4net.Appender.NetSendAppender</a>.
                 </p>
                 <p>
                     The following example shows how to configure the <span class="code">NetSendAppender</span>
@@ -787,7 +787,7 @@ CREATE TABLE Log (
             
             <section id="outputdebugstringappender" name="OutputDebugStringAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/AllMembers_T_log4net_Appender_OutputDebugStringAppender.htm">log4net.Appender.OutputDebugStringAppender</a>.
+                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_OutputDebugStringAppender.htm">log4net.Appender.OutputDebugStringAppender</a>.
                 </p>
                 <p>
                     The following example shows how to configure the <span class="code">OutputDebugStringAppender</span>
@@ -804,7 +804,7 @@ CREATE TABLE Log (
             
             <section id="remotingappender" name="RemotingAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/AllMembers_T_log4net_Appender_RemotingAppender.htm">log4net.Appender.RemotingAppender</a>.
+                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_RemotingAppender.htm">log4net.Appender.RemotingAppender</a>.
                 </p>
                 <p>
                     The following example shows how to configure the <span class="code">RemotingAppender</span>
@@ -845,7 +845,7 @@ CREATE TABLE Log (
             
             <section id="rollingfileappender" name="RollingFileAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/AllMembers_T_log4net_Appender_RollingFileAppender.htm">log4net.Appender.RollingFileAppender</a>.
+                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_RollingFileAppender.htm">log4net.Appender.RollingFileAppender</a>.
                 </p>
                 <p>
                     The <span class="code">RollingFileAppender</span> builds on the
@@ -934,7 +934,7 @@ CREATE TABLE Log (
             
             <section id="smtpappender" name="SmtpAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/AllMembers_T_log4net_Appender_SmtpAppender.htm">log4net.Appender.SmtpAppender</a>.
+                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_SmtpAppender.htm">log4net.Appender.SmtpAppender</a>.
                 </p>
                 <p>
                     The following example shows how to configure the <span class="code">SmtpAppender</span>
@@ -1003,7 +1003,7 @@ CREATE TABLE Log (
             
             <section id="smtppickupdirappender" name="SmtpPickupDirAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/AllMembers_T_log4net_Appender_SmtpPickupDirAppender.htm">log4net.Appender.SmtpPickupDirAppender</a>.
+                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_SmtpPickupDirAppender.htm">log4net.Appender.SmtpPickupDirAppender</a>.
                 </p>
                 <p>
                     The <span class="code">SmtpPickupDirAppender</span> is configured similarly
@@ -1045,7 +1045,7 @@ CREATE TABLE Log (
             
             <section id="traceappender" name="TraceAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/AllMembers_T_log4net_Appender_TraceAppender.htm">log4net.Appender.TraceAppender</a>.
+                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_TraceAppender.htm">log4net.Appender.TraceAppender</a>.
                 </p>
                 <p>
                     The following example shows how to configure the <span class="code">TraceAppender</span>
@@ -1065,7 +1065,7 @@ CREATE TABLE Log (
             
             <section id="udpappender" name="UdpAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/AllMembers_T_log4net_Appender_UdpAppender.htm">log4net.Appender.UdpAppender</a>.
+                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_UdpAppender.htm">log4net.Appender.UdpAppender</a>.
                 </p>
                 <p>
                     The following example shows how to configure the <span class="code">UdpAppender</span>
@@ -1085,7 +1085,7 @@ CREATE TABLE Log (
 			
 			<section id="dynamicpatternlayout" name="DynamicPatternLayout">
 				<p>
-					For full details see the SDK Reference entry: <a href="sdk/html/AllMembers_T_log4net_Appender_DynamicPatternLayout.htm">log4net.Layout.DynamicPatternLayout</a>.
+					For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_DynamicPatternLayout.htm">log4net.Layout.DynamicPatternLayout</a>.
 				</p>
 				<p>
 					The <span class="code">DynamicPatternLayout</span> should be used whenever the header or footer should contain information that could change over time.
