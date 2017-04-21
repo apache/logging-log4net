@@ -15,27 +15,26 @@
  limitations under the License.
 
 -->
-<project name="Apache log4net">
-	<bannerLeft>
-		<name>Apache Logging Services Project</name>
-		<src>images/ls-logo.jpg</src>
-		<href>http://logging.apache.org/</href>
-	</bannerLeft>
-	<body>
-		<breadcrumbs>
-			<item name="Apache" href="http://www.apache.org/"/>
-			<item name="Logging Services" href="http://logging.apache.org/"/>
-			<item name="log4net"  href="http://logging.apache.org/log4net/"/>
-		</breadcrumbs>
+<project name="Apache log4net"
+         xmlns="http://maven.apache.org/DECORATION/1.4.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/DECORATION/1.4.0 http://maven.apache.org/xsd/decoration-1.4.0.xsd">
+  <body>
+    <links>
+      <item name="Logging Wiki" href="https://wiki.apache.org/logging"/>
+      <item name="Apache" href="https://www.apache.org/"/>
+      <item name="Logging Services" href="https://logging.apache.org/"/>
+      <item name="GitHub" href="https://github.com/apache/log4net"/>
+    </links>
 
-		<menu name="Apache log4net">
+		<menu name="Apache log4net" inherit="top" img="icon-home">
 			<item name="About" href="/index.html"/>
 			<item name="Download" href="/download_log4net.cgi"/>
 			<item name="Release Notes" href="/release/release-notes.html"/>
 			<item name="License" href="/license.html"/>
 		</menu>
 
-		<menu name="Documentation">
+		<menu name="Documentation" inherit="top" img="icon-file">
 			<item name="Features" href="/release/features.html"/>
 			<item name="Supported Frameworks" href="/release/framework-support.html"/>
 			<item name="Example Apps" href="/release/example-apps.html"/>
@@ -46,7 +45,7 @@
 			<item name="SDK Reference" href="/release/sdk/index.html"/>
 		</menu>
 
-		<menu name="Manual">
+		<menu name="Manual" inherit="top" img="icon-book">
 			<item name="Introduction" href="/release/manual/introduction.html"/>
 			<item name="Configuration" href="/release/manual/configuration.html"/>
 			<item name="Contexts" href="/release/manual/contexts.html"/>
@@ -55,19 +54,16 @@
 			<item name="Internals" href="/release/manual/internals.html"/>
 		</menu>
 
-		<menu name="Community">
+                <menu name="For Contributors" inherit="top" img="icon-pencil">
 			<item name="Mailing Lists" href="/mail-lists.html"/>
 			<item name="Issue Tracking" href="/issue-tracking.html"/>
-		</menu>
-		
-		<menu name="Development">
 			<item name="Repository" href="/source-repository.html"/>
 			<item name="Continuous Integration" href="/integration.html"/>
 		</menu>
 
-		<menu ref="reports"/>
+		<menu ref="reports"  img="icon-cog"/>
 
-		<menu name="Apache">
+		<menu name="Apache" inherit="top" img="icon-info-sign">
 			<item name="Home" href="http://www.apache.org/"/>	
 			<item name="License" href="http://www.apache.org/licenses/"/>	
 			<item name="Sponsorship" href="http://www.apache.org/foundation/sponsorship.html"/>
