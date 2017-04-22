@@ -77,14 +77,14 @@ limitations under the License.
       </subsection>
     </section>
 
-    <section name="log4net 2.0.7">
+    <section name="log4net 2.0.8">
 
       <subsection name="Source">
         <table>
           <tr>
-            <td><a href="[preferred]/logging/log4net/source/log4net-2.0.7-src.zip">log4net-2.0.7-src.zip</a></td>
-              <td><a href="http://www.apache.org/dist/logging/log4net/source/log4net-2.0.7-src.zip.md5">md5</a></td>
-              <td><a href="http://www.apache.org/dist/logging/log4net/source/log4net-2.0.7-src.zip.asc">pgp</a></td>
+            <td><a href="[preferred]/logging/log4net/source/log4net-2.0.8-src.zip">log4net-2.0.8-src.zip</a></td>
+              <td><a href="http://www.apache.org/dist/logging/log4net/source/log4net-2.0.8-src.zip.md5">md5</a></td>
+              <td><a href="http://www.apache.org/dist/logging/log4net/source/log4net-2.0.8-src.zip.asc">pgp</a></td>
           </tr>
         </table>
       </subsection>
@@ -103,14 +103,14 @@ limitations under the License.
 
         <table>
           <tr>
-            <td><a href="[preferred]/logging/log4net/binaries/log4net-2.0.7-bin-newkey.zip">log4net-2.0.7-bin-newkey.zip</a></td>
-              <td><a href="http://www.apache.org/dist/logging/log4net/binaries/log4net-2.0.7-bin-newkey.zip.md5">md5</a></td>
-              <td><a href="http://www.apache.org/dist/logging/log4net/binaries/log4net-2.0.7-bin-newkey.zip.asc">pgp</a></td>
+            <td><a href="[preferred]/logging/log4net/binaries/log4net-2.0.8-bin-newkey.zip">log4net-2.0.8-bin-newkey.zip</a></td>
+              <td><a href="http://www.apache.org/dist/logging/log4net/binaries/log4net-2.0.8-bin-newkey.zip.md5">md5</a></td>
+              <td><a href="http://www.apache.org/dist/logging/log4net/binaries/log4net-2.0.8-bin-newkey.zip.asc">pgp</a></td>
           </tr>
           <tr>
-            <td><a href="[preferred]/logging/log4net/binaries/log4net-2.0.7-bin-oldkey.zip">log4net-2.0.7-bin-oldkey.zip</a></td>
-              <td><a href="http://www.apache.org/dist/logging/log4net/binaries/log4net-2.0.7-bin-oldkey.zip.md5">md5</a></td>
-              <td><a href="http://www.apache.org/dist/logging/log4net/binaries/log4net-2.0.7-bin-oldkey.zip.asc">pgp</a></td>
+            <td><a href="[preferred]/logging/log4net/binaries/log4net-2.0.8-bin-oldkey.zip">log4net-2.0.8-bin-oldkey.zip</a></td>
+              <td><a href="http://www.apache.org/dist/logging/log4net/binaries/log4net-2.0.8-bin-oldkey.zip.md5">md5</a></td>
+              <td><a href="http://www.apache.org/dist/logging/log4net/binaries/log4net-2.0.8-bin-oldkey.zip.asc">pgp</a></td>
           </tr>
         </table>
       </subsection>
