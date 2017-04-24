@@ -61,7 +61,9 @@
 			<item name="Continuous Integration" href="/integration.html"/>
 		</menu>
 
-		<menu ref="reports"  img="icon-cog"/>
+                <menu name="Project Reports" inherit="top" img="icon-cog">
+                  <item name="RAT Report" href="/rat-report.html" />
+                </menu>
 
 		<menu name="Apache" inherit="top" img="icon-info-sign">
 			<item name="Home" href="http://www.apache.org/"/>	

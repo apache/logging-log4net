@@ -137,7 +137,7 @@
       <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
-        <version>0.11</version>
+        <version>0.12</version>
         <configuration>
           <excludes>
             <!-- generated files -->
@@ -167,22 +167,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>${commons.project-info.version}</version>
-        <!--
-            Unfortunately it does not appear to be possible to override
-            reports configured in a parent POM.
-            See https://jira.codehaus.org/browse/MPIR-241
-            and https://issues.apache.org/jira/browse/MPOM-32
-            So we define here all those reports that are suitable for
-            all components.
-            Components can add extra reports if they wish, but cannot disable any.
-        -->
+        <version>2.8.1</version>
         <reportSets>
           <reportSet>
             <reports>
               <report>cim</report>	
               <report>scm</report>
-              <report>dependencies</report>
               <report>license</report>
               <report>project-team</report>
               <report>issue-tracking</report>
