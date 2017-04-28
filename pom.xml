@@ -158,6 +158,7 @@
             <exclude>*.snk*</exclude>
             <exclude>tests/lib/prerequisites.txt</exclude>
             <exclude>CONTRIBUTING.md</exclude>
+            <exclude>ReleaseInstructions.txt</exclude>
 
 	    <!-- can't have comments in JSON -->
 	    <exclude>**/*.json</exclude>
