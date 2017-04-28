@@ -24,7 +24,7 @@
       <item name="Logging Wiki" href="https://wiki.apache.org/logging"/>
       <item name="Apache" href="https://www.apache.org/"/>
       <item name="Logging Services" href="https://logging.apache.org/"/>
-      <item name="GitHub" href="https://github.com/apache/log4net"/>
+      <item name="GitHub" href="https://github.com/apache/logging-log4net/"/>
     </links>
 
 		<menu name="Apache log4net" inherit="top" img="icon-home">

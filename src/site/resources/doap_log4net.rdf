@@ -35,10 +35,10 @@
     <programming-language>C#</programming-language>
     <category rdf:resource="http://projects.apache.org/category/library" />
     <repository>
-      <SVNRepository>
-        <location rdf:resource="http://svn.apache.org/repos/asf/logging/log4net/trunk/"/>
-        <browse rdf:resource="http://svn.apache.org/viewvc/logging/log4net/trunk/"/>
-      </SVNRepository>
+      <GITRepository>
+        <location rdf:resource="https://git-wip-us.apache.org/repos/asf/logging-log4net.git"/>
+        <browse rdf:resource="https://git-wip-us.apache.org/repos/asf/logging-log4net.git"/>
+      </GITRepository>
     </repository>
     <release>
       <Version>
