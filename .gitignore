@@ -228,4 +228,10 @@ _Pvt_Extensions
 
 # FAKE - F# Make
 .fake/
+
+# Maven target dir created during site build
 target
+
+# other files to ignore
+old-log4net.snk
+src/GeneratedAssemblyInfo.cs
