@@ -1863,29 +1863,30 @@ limitations under the License.
   </target>
   
   <target name="generate-assembly-description">
-    <if test="${not(property::exists('source.svn.revision'))}">
-      <property name="source.svn.revision" value="0"/>
-      <property name="source.svn.url" value=""/>
+    <if test="${not(property::exists('source.git.revision'))}">
+      <property name="source.git.revision" value="0"/>
+      <property name="source.git.url" value="https://git-wip-us.apache.org/repos/asf/logging-log4net.git"/>
       <property name="assembly.description"
                 value="The Apache Software Foundation log4net Logging Framework"/>
-      <if test="${directory::exists('.svn') or directory::exists('../.svn') or directory::exists('../../.svn')}">
-        <exec program="svn" workingdir="." verbose="false"
-              output="_svnrevision.xml" failonerror="true" >
-          <arg value="info" />
-          <arg line="--xml" />
+      <if test="${directory::exists('.git')}">
+        <exec program="git" workingdir="." verbose="false"
+              output="_gitrevision" failonerror="true" >
+          <arg value="log"/>
+          <arg value="-1" />
+          <arg line="--pretty=format:%h" />
+        </exec>
+        <exec program="git" workingdir="." verbose="false"
+              output="_giturl" failonerror="true" >
+          <arg value="config" />
+          <arg line="remote.origin.url" />
         </exec>
         <sleep milliseconds="500" />
-        <xmlpeek file="_svnrevision.xml"
-                 xpath="/info/entry/@revision"
-                 property="source.svn.revision"
-                 failonerror="true"/>
-        <xmlpeek file="_svnrevision.xml"
-                 xpath="/info/entry/url"
-                 property="source.svn.url"
-                 failonerror="true"/>
-        <delete file="_svnrevision.xml"/>
+        <loadfile property="source.git.revision" file="_gitrevision"/>
+        <loadfile property="source.git.url" file="_giturl"/>
+        <delete file="_gitrevision"/>
+        <delete file="_giturl"/>
         <property name="assembly.description"
-                  value="The Apache Software Foundation log4net Logging Framework built from svn revision ${source.svn.revision} of ${source.svn.url}"/>
+                  value="The Apache Software Foundation log4net Logging Framework built from git revision ${string::trim(source.git.revision)} of ${string::trim(source.git.url)}"/>
       </if>
       <delete file="src/GeneratedAssemblyInfo.cs"/>
       <asminfo language="CSharp" output="src/GeneratedAssemblyInfo.cs">
@@ -1913,14 +1914,14 @@ limitations under the License.
       </exec>
       <mkdir dir="${log4net.basedir}/bin/netstandard/1.3"/>
       <if test="${current.build.config.release}">
-	<move todir="${log4net.basedir}/bin/netstandard/1.3/Release">
+        <move todir="${log4net.basedir}/bin/netstandard/1.3/Release">
           <fileset basedir="netstandard/log4net/bin/Release/netstandard1.3"/>
-	</move>
+        </move>
       </if>
       <ifnot test="${current.build.config.release}">
-	<move todir="${log4net.basedir}/bin/netstandard/1.3/Debug">
+        <move todir="${log4net.basedir}/bin/netstandard/1.3/Debug">
           <fileset basedir="netstandard/log4net/bin/Debug/netstandard1.3"/>
-	</move>
+        </move>
       </ifnot>
     </if>
     <if test="${dotnet.available != '0'}">
