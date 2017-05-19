@@ -191,6 +191,11 @@
     <Compile Include="Appender\RollingFileAppender.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Appender\RollingFileAppenderNG.cs" />
+    <Compile Include="Appender\Rolling\CronRollingCondition.cs" />
+    <Compile Include="Appender\Rolling\IndexRollingStrategy.cs" />
+    <Compile Include="Appender\Rolling\IRollingCondition.cs" />
+    <Compile Include="Appender\Rolling\IRollingStrategy.cs" />
     <Compile Include="Appender\SmtpAppender.cs">
       <SubType>Code</SubType>
     </Compile>
