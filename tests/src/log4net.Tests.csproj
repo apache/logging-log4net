@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 
  Licensed to the Apache Software Foundation (ASF) under one
@@ -47,7 +47,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -72,7 +72,7 @@
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>TRACE;DEBUG;NET;NET_2_0;NET_4_0</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET;NET_2_0;NET_4_0;NET_4_5</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
@@ -93,7 +93,7 @@
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>TRACE;NET;NET_2_0;NET_4_0</DefineConstants>
+    <DefineConstants>TRACE;NET;NET_2_0;NET_4_0;NET_4_5</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
     <DebugSymbols>false</DebugSymbols>
@@ -108,9 +108,9 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.5.2.9222, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ibatisnet-3\External-Bin\Net\2.0\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\..\src\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -147,18 +147,20 @@
     <Compile Include="Appender\CountingAppender.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Appender\DebugAppenderTest.cs">
-    	<SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Appender\DebugAppenderTest.cs" />
     <Compile Include="Appender\EventLogAppenderTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Appender\EventRaisingAppender.cs" />
     <Compile Include="Appender\MemoryAppenderTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Appender\RecursiveLoggingTest.cs" />
     <Compile Include="Appender\RemotingAppenderTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Appender\Rolling\CronRollingConditionTest.cs" />
+    <Compile Include="Appender\Rolling\IndexRollingStrategyTest.cs" />
     <Compile Include="Appender\SmtpPickupDirAppenderTest.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -242,10 +244,16 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\log4net.vs2010.csproj">
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\log4net.csproj">
       <Project>{181fe707-e161-4722-9f38-6aaab6faa106}</Project>
-      <Name>log4net.vs2010</Name>
+      <Name>log4net.vs2012</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
