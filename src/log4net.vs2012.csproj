@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 
  Licensed to the Apache Software Foundation (ASF) under one
@@ -163,6 +163,7 @@
     <Compile Include="Appender\IAppender.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Appender\IAppenderServiceLocator.cs" />
     <Compile Include="Appender\IBulkAppender.cs">
       <SubType>Code</SubType>
     </Compile>

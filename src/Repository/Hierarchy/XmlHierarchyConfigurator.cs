@@ -296,14 +296,32 @@ namespace log4net.Repository.Hierarchy
 		{
 			string appenderName = appenderElement.GetAttribute(NAME_ATTR);
 			string typeName = appenderElement.GetAttribute(TYPE_ATTR);
+			string serviceLocatorTypeName = appenderElement.GetAttribute(APPENDER_SERVICELOCATOR_TYPE_ATTR);
 
-			LogLog.Debug(declaringType, "Loading Appender [" + appenderName + "] type: [" + typeName + "]");
+			if (!string.IsNullOrWhiteSpace(serviceLocatorTypeName))
+				LogLog.Debug(declaringType, "Loading Appender [" + appenderName + "] type: [" + typeName + "] using service locator type: [" + serviceLocatorTypeName + "]");
+			else
+				LogLog.Debug(declaringType, "Loading Appender [" + appenderName + "] type: [" + typeName + "]");
 			try 
 			{
 #if NETSTANDARD1_3
-				IAppender appender = (IAppender)Activator.CreateInstance(SystemInfo.GetTypeFromString(this.GetType().GetTypeInfo().Assembly, typeName, true, true));
+				IAppender appender=default(IAppender);
+                if(serviceLocatorTypeName != "" && serviceLocatorTypeName != null)
+                {                
+                var serviceLocator = (IAppenderServiceLocator)Activator.CreateInstance(SystemInfo.GetTypeFromString(this.GetType().GetTypeInfo().Assembly, serviceLocatorTypeName, true, true));
+				 appender = serviceLocator.GetInstance(appenderName);
+                }                
+                else
+                appender = (IAppender)Activator.CreateInstance(SystemInfo.GetTypeFromString(this.GetType().GetTypeInfo().Assembly, typeName, true, true));
 #else
-				IAppender appender = (IAppender)Activator.CreateInstance(SystemInfo.GetTypeFromString(typeName, true, true));
+				IAppender appender = default(IAppender);
+				if (!string.IsNullOrWhiteSpace(serviceLocatorTypeName))
+				{
+					var serviceLocator = (IAppenderServiceLocator)Activator.CreateInstance(SystemInfo.GetTypeFromString(serviceLocatorTypeName, true, true));
+					appender = serviceLocator.GetInstance(appenderName);
+				}
+				else
+					appender = (IAppender)Activator.CreateInstance(SystemInfo.GetTypeFromString(typeName, true, true));
 #endif
 				appender.Name = appenderName;
 
@@ -1115,6 +1133,7 @@ namespace log4net.Repository.Hierarchy
 		private const string LOGGER_TAG					= "logger";
 		private const string NAME_ATTR					= "name";
 		private const string TYPE_ATTR					= "type";
+		private const string APPENDER_SERVICELOCATOR_TYPE_ATTR = "serviceLocatorType";
 		private const string VALUE_ATTR					= "value";
 		private const string ROOT_TAG					= "root";
 		private const string LEVEL_TAG					= "level";
