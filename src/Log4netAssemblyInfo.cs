@@ -59,8 +59,8 @@ namespace log4net {
 		public const string TargetFramework = "Mono";
 #elif SSCLI
 		public const string TargetFramework = "Shared Source CLI";
-#elif NETSTANDARD1_3
-		public const string TargetFramework = ".NET Core";
+#elif NETSTANDARD1_3 || NETSTANDARD2_0
+		public const string TargetFramework = ".NET Standard";
 #else
 		public const string TargetFramework = "Unknown";
 #endif
