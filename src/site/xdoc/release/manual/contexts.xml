@@ -74,7 +74,7 @@ limitations under the License.
                         </tr>
                         <tr align="left">
                             <td>Logical Thread</td>
-                            <td><span class="code">log4net.ThreadLogicalContext</span></td>
+                            <td><span class="code">log4net.LogicalThreadContext</span></td>
                             <td>
                                 The logical thread context is visible to a logical thread. Logical
                                 threads can jump from one managed thread to another. For more details
