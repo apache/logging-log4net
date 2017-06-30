@@ -19,6 +19,8 @@
 
 node('Windows')
 {
+	def NANT_LATEST=tool name: 'NAnt (latest)', type: 'hudson.tasks.NAnt$NAntInstallation'
+	echo NANT_LATEST
 	dir('build')
 	{
 		stage('Checkout')
@@ -28,10 +30,10 @@ node('Windows')
 
 		stage('Build')
 		{
-			withEnv(["Path+ANT=$ANT_LATEST\\bin","ANT_HOME=$ANT_LATEST"])
+			/*withEnv(["Path+NANT=$NANT_LATEST\\bin"])
 			{
-                		bat "ant -version"
-                	}
+                		bat "NAnt.exe -version"
+                	}*/
 		}
 	}
 }
