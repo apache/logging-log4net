@@ -23,12 +23,12 @@ node('Windows')
 	{
 		stage('Checkout')
 		{
-			echo "checkout"
 			checkout scm
 		}
+
 		stage('Build')
 		{
-			echo "build"
+			cmd "dir"
 		}
 	}
 }
