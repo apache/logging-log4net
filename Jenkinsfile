@@ -18,22 +18,57 @@
  */
 
 pipeline {
-	agent { label 'Windows' }
+	/*
+	TODO: eventually enable timeouts for the entire pipeline
+	options {
+		timeout(time: 1, unit 'HOURS')
+	}*/
 	stages {
 		// TODO: find a better way to determine nant latest
 		def NANT_LATEST="F:\\jenkins\\tools\\nant\\nant-0.92\\bin"
 		stage('Checkout') {
-			checkout scm
+			agent { label 'Windows' }
+			steps {
+				checkout scm
+			}
 		}
 		stage('Build') {
+			agent { label 'Windows' }
 			withEnv(["Path+NANT=$NANT_LATEST"]) {
-				bat "NAnt.exe -buildfile:log4net.build"
+				steps {
+					bat "NAnt.exe -buildfile:log4net.build"
+				}
 			}
 		}
 		stage('Test') {
+			agent { label 'Windows' }
 			withEnv(["Path+NANT=$NANT_LATEST"]) {
-				bat "NAnt.exe -buildfile:tests\\nant.build"
+				steps {
+					bat "NAnt.exe -buildfile:tests\\nant.build"
+				}
 			}
+		}
+		stage('Build-Site') {
+			agent { label 'ubuntu' }
+			steps {
+				echo 'Ths is a placeholder for the build of the site'
+			}
+		}
+		stage('Deploy-Site') {
+			agent { label 'ubuntu' }
+			when {
+				branch 'master'
+			}
+			steps {
+				echo 'This is a placeholder for the deployment of the site'
+			}
+		}
+	}
+	post {
+		failed {
+			echo 'Failed build'
+			// TODO: send email as soon as the entire building is more stable
+			//step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'dev@logging.apache.org'])
 		}
 	}
 }
