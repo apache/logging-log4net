@@ -28,7 +28,7 @@ node('Windows')
 
 		stage('Build')
 		{
-			bat "build.cmd"
+			bat "echo %ANT_HOME%"
 		}
 	}
 }
