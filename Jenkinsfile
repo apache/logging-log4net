@@ -19,8 +19,8 @@
 
 node('Windows')
 {
-	def NANT_LATEST=tool name: 'NAnt (latest)', type: 'hudson.tasks.NAnt$NAntInstallation'
-	echo NANT_LATEST
+	// TODO: find a better way to determine nant latest
+	def NANT_LATEST="F:\\jenkins\\tools\\nant\\nant-0.92\\bin"
 	dir('build')
 	{
 		stage('Checkout')
@@ -30,10 +30,10 @@ node('Windows')
 
 		stage('Build')
 		{
-			/*withEnv(["Path+NANT=$NANT_LATEST\\bin"])
+			withEnv(["Path+NANT=$NANT_LATEST"])
 			{
                 		bat "NAnt.exe -version"
-                	}*/
+                	}
 		}
 	}
 }
