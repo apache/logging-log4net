@@ -23,6 +23,7 @@ pipeline {
 	options {
 		timeout(time: 1, unit 'HOURS')
 	}*/
+	agent any
 	environment {
 		NAnt = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 	}
