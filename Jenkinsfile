@@ -23,6 +23,9 @@ pipeline {
 	options {
 		timeout(time: 1, unit 'HOURS')
 	}*/
+	environment {
+		NAnt = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
+	}
 	stages {
 		// TODO: find a better way to determine nant latest
 		def NANT_LATEST="F:\\jenkins\\tools\\nant\\nant-0.92\\bin"
@@ -35,17 +38,13 @@ pipeline {
 		stage('Build') {
 			agent { label 'Windows' }
 			steps {
-				withEnv(["Path+NANT=$NANT_LATEST"]) {
-					bat "NAnt.exe -buildfile:log4net.build"
-				}
+				bat "${NAnt} -buildfile:log4net.build"
 			}
 		}
-		stage('Test') {
+		stage('Test on Windows') {
 			agent { label 'Windows' }
 			steps {
-				withEnv(["Path+NANT=$NANT_LATEST"]) {
-					bat "NAnt.exe -buildfile:tests\\nant.build"
-				}
+				bat "${NAnt} -buildfile:tests\\nant.build"
 			}
 		}
 		stage('Build-Site') {
@@ -65,7 +64,7 @@ pipeline {
 		}
 	}
 	post {
-		failed {
+		failure {
 			echo 'Failed build'
 			// TODO: send email as soon as the entire building is more stable
 			//step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'dev@logging.apache.org'])
