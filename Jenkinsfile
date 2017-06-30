@@ -29,7 +29,6 @@ pipeline {
 	}
 	stages {
 		// TODO: find a better way to determine nant latest
-		def NANT_LATEST="F:\\jenkins\\tools\\nant\\nant-0.92\\bin"
 		stage('Checkout') {
 			agent { label 'Windows' }
 			steps {
