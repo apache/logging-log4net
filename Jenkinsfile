@@ -32,7 +32,7 @@ node('Windows')
 		{
 			withEnv(["Path+NANT=$NANT_LATEST"])
 			{
-                		bat "NAnt.exe -version"
+                		bat "build.cmd"
                 	}
 		}
 	}
