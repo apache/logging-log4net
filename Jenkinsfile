@@ -28,7 +28,10 @@ node('Windows')
 
 		stage('Build')
 		{
-			bat "echo %ANT_HOME%"
+			withEnv(["Path+ANT=$ANT_LATEST\\bin","ANT_HOME=$ANT_LATEST"])
+			{
+                		bat "ant -version"
+                	}
 		}
 	}
 }
