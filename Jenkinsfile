@@ -17,7 +17,7 @@
  * under the License.
  */
 
-node('windows')
+node('windows-2012-2')
 {
 	dir('build')
 	{
