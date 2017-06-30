@@ -28,7 +28,7 @@ node('Windows')
 
 		stage('Build')
 		{
-			cmd "dir"
+			bat "dir"
 		}
 	}
 }
