@@ -34,16 +34,16 @@ pipeline {
 		}
 		stage('Build') {
 			agent { label 'Windows' }
-			withEnv(["Path+NANT=$NANT_LATEST"]) {
-				steps {
+			steps {
+				withEnv(["Path+NANT=$NANT_LATEST"]) {
 					bat "NAnt.exe -buildfile:log4net.build"
 				}
 			}
 		}
 		stage('Test') {
 			agent { label 'Windows' }
-			withEnv(["Path+NANT=$NANT_LATEST"]) {
-				steps {
+			steps {
+				withEnv(["Path+NANT=$NANT_LATEST"]) {
 					bat "NAnt.exe -buildfile:tests\\nant.build"
 				}
 			}
