@@ -32,7 +32,14 @@ node('Windows')
 		{
 			withEnv(["Path+NANT=$NANT_LATEST"])
 			{
-                		bat "build.cmd"
+                		bat "NAnt.exe -buildfile:log4net.build"
+                	}
+		}
+		stage('Test')
+		{
+			withEnv(["Path+NANT=$NANT_LATEST"])
+			{
+                		bat "NAnt.exe -buildfile:tests\\nant.build"
                 	}
 		}
 	}
