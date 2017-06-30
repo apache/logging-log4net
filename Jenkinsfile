@@ -18,11 +18,9 @@
  */
 
 pipeline {
-	/*
-	TODO: eventually enable timeouts for the entire pipeline
 	options {
 		timeout(time: 1, unit 'HOURS')
-	}*/
+	}
 	agent any
 	environment {
 		NAnt = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
@@ -48,9 +46,9 @@ pipeline {
 			}
 		}
 		stage('Build-Site') {
-			agent { label 'ubuntu' }
+			agent { label 'Windodws' }
 			steps {
-				echo 'Ths is a placeholder for the build of the site'
+				bat "${NAnt} -buildfile:log4net.build generate-site"
 			}
 		}
 		stage('Deploy-Site') {
