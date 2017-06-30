@@ -17,30 +17,23 @@
  * under the License.
  */
 
-node('Windows')
-{
-	// TODO: find a better way to determine nant latest
-	def NANT_LATEST="F:\\jenkins\\tools\\nant\\nant-0.92\\bin"
-	dir('build')
-	{
-		stage('Checkout')
-		{
+pipeline {
+	agent { label 'Windows' }
+	stages {
+		// TODO: find a better way to determine nant latest
+		def NANT_LATEST="F:\\jenkins\\tools\\nant\\nant-0.92\\bin"
+		stage('Checkout') {
 			checkout scm
 		}
-
-		stage('Build')
-		{
-			withEnv(["Path+NANT=$NANT_LATEST"])
-			{
-                		bat "NAnt.exe -buildfile:log4net.build"
-                	}
+		stage('Build') {
+			withEnv(["Path+NANT=$NANT_LATEST"]) {
+				bat "NAnt.exe -buildfile:log4net.build"
+			}
 		}
-		stage('Test')
-		{
-			withEnv(["Path+NANT=$NANT_LATEST"])
-			{
-                		bat "NAnt.exe -buildfile:tests\\nant.build"
-                	}
+		stage('Test') {
+			withEnv(["Path+NANT=$NANT_LATEST"]) {
+				bat "NAnt.exe -buildfile:tests\\nant.build"
+			}
 		}
 	}
 }
