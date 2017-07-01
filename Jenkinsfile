@@ -22,8 +22,12 @@ pipeline {
 		timeout(time: 1, unit: 'HOURS')
 	}
 	agent { label 'Windows' }
+	tools {
+		maven 'Maven 3.3.9 (Windows)'
+		jdk 'jdk8'
+	}
 	environment {
-		// TODO: find a better way to determine nant latest
+		// TODO: find a better way to determine nant installation path
 		NAnt = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 	}
 	stages {
@@ -44,7 +48,8 @@ pipeline {
 		}
 		stage('Build-Site') {
 			steps {
-				bat "${NAnt} -buildfile:log4net.build generate-site"
+				bat "set"
+				// bat "${NAnt} -buildfile:log4net.build generate-site"
 			}
 		}
 		stage('Deploy-Site') {
