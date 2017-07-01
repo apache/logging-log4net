@@ -48,7 +48,6 @@ pipeline {
 		}
 		stage('Build-Site') {
 			steps {
-				bat "set"
 				bat "${NAnt} -buildfile:log4net.build generate-site"
 			}
 		}
@@ -63,9 +62,7 @@ pipeline {
 	}
 	post {
 		failure {
-			echo 'Failed build'
-			// TODO: send email as soon as the entire building is more stable
-			//step([$class: 'Mailer', notifyEveryUnstableBuild: false, recipients: 'dev@logging.apache.org'])
+			step([$class: 'Mailer', notifyEveryUnstableBuild: false, recipients: 'dev@logging.apache.org'])
 		}
 	}
 }
