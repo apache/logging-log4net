@@ -23,36 +23,38 @@ pipeline {
 	}
 	agent { label 'Windows' }
 	environment {
+		// TODO: find a better way to determine nant latest
 		NAnt = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 	}
-	stages {
-		// TODO: find a better way to determine nant latest
-		stage('Checkout') {
-			steps {
-				checkout scm
+	node {
+		stages {
+			stage('Checkout') {
+				steps {
+					checkout scm
+				}
 			}
-		}
-		stage('Build') {
-			steps {
-				bat "${NAnt} -buildfile:log4net.build"
+			stage('Build') {
+				steps {
+					bat "${NAnt} -buildfile:log4net.build"
+				}
 			}
-		}
-		stage('Test on Windows') {
-			steps {
-				bat "${NAnt} -buildfile:tests\\nant.build"
+			stage('Test on Windows') {
+				steps {
+					bat "${NAnt} -buildfile:tests\\nant.build"
+				}
 			}
-		}
-		stage('Build-Site') {
-			steps {
-				bat "${NAnt} -buildfile:log4net.build generate-site"
+			stage('Build-Site') {
+				steps {
+					bat "${NAnt} -buildfile:log4net.build generate-site"
+				}
 			}
-		}
-		stage('Deploy-Site') {
-			when {
-				branch 'master'
-			}
-			steps {
-				echo 'This is a placeholder for the deployment of the site'
+			stage('Deploy-Site') {
+				when {
+					branch 'master'
+				}
+				steps {
+					echo 'This is a placeholder for the deployment of the site'
+				}
 			}
 		}
 	}
