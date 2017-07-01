@@ -28,41 +28,31 @@ pipeline {
 	}
 	stages {
 		stage('Checkout') {
-			node {
-				steps {
-					checkout scm
-				}
+			steps {
+				checkout scm
 			}
 		}
 		stage('Build') {
-			node {
-				steps {
-					bat "${NAnt} -buildfile:log4net.build"
-				}
+			steps {
+				bat "${NAnt} -buildfile:log4net.build"
 			}
 		}
 		stage('Test on Windows') {
-			node {
-				steps {
-					bat "${NAnt} -buildfile:tests\\nant.build"
-				}
+			steps {
+				bat "${NAnt} -buildfile:tests\\nant.build"
 			}
 		}
 		stage('Build-Site') {
-			node {
-				steps {
-					bat "${NAnt} -buildfile:log4net.build generate-site"
-				}
+			steps {
+				bat "${NAnt} -buildfile:log4net.build generate-site"
 			}
 		}
 		stage('Deploy-Site') {
 			when {
 				branch 'master'
 			}
-			node {
-				steps {
-					echo 'This is a placeholder for the deployment of the site'
-				}
+			steps {
+				echo 'This is a placeholder for the deployment of the site'
 			}
 		}
 	}
