@@ -24,7 +24,7 @@ pipeline {
 	agent { label 'Windows' }
 	tools {
 		maven 'Maven 3.3.9 (Windows)'
-		jdk 'jdk8'
+		jdk 'JDK 1.8 (latest)'
 	}
 	environment {
 		// TODO: find a better way to determine nant installation path
