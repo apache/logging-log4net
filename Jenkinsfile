@@ -17,30 +17,55 @@
  * under the License.
  */
 
-node('Windows')
-{
-	// TODO: find a better way to determine nant latest
-	def NANT_LATEST="F:\\jenkins\\tools\\nant\\nant-0.92\\bin"
-	dir('build')
-	{
-		stage('Checkout')
-		{
-			checkout scm
+pipeline {
+	options {
+		timeout(time: 1, unit: 'HOURS')
+	}
+	agent { label 'Windows' }
+	tools {
+		maven 'Maven 3.3.9 (Windows)'
+		jdk 'JDK 1.8 (latest)'
+	}
+	environment {
+		// TODO: find a better way to determine nant installation path
+		NAnt = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
+	}
+	stages {
+		stage('Checkout') {
+			steps {
+				checkout scm
+			}
 		}
-
-		stage('Build')
-		{
-			withEnv(["Path+NANT=$NANT_LATEST"])
-			{
-                		bat "NAnt.exe -buildfile:log4net.build"
-                	}
+		stage('Build') {
+			steps {
+				bat "${NAnt} -buildfile:log4net.build"
+			}
 		}
-		stage('Test')
-		{
-			withEnv(["Path+NANT=$NANT_LATEST"])
-			{
-                		bat "NAnt.exe -buildfile:tests\\nant.build"
-                	}
+		stage('Test on Windows') {
+			steps {
+				bat "${NAnt} -buildfile:tests\\nant.build"
+			}
+		}
+		stage('Build-Site') {
+			steps {
+				bat "set"
+				bat "${NAnt} -buildfile:log4net.build generate-site"
+			}
+		}
+		stage('Deploy-Site') {
+			when {
+				branch 'master'
+			}
+			steps {
+				echo 'This is a placeholder for the deployment of the site'
+			}
+		}
+	}
+	post {
+		failure {
+			echo 'Failed build'
+			// TODO: send email as soon as the entire building is more stable
+			//step([$class: 'Mailer', notifyEveryUnstableBuild: false, recipients: 'dev@logging.apache.org'])
 		}
 	}
 }
