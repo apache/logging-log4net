@@ -21,38 +21,33 @@ pipeline {
 	options {
 		timeout(time: 1, unit: 'HOURS')
 	}
-	agent any
+	agent { label 'Windows' }
 	environment {
 		NAnt = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 	}
 	stages {
 		// TODO: find a better way to determine nant latest
 		stage('Checkout') {
-			agent { label 'Windows' }
 			steps {
 				checkout scm
 			}
 		}
 		stage('Build') {
-			agent { label 'Windows' }
 			steps {
 				bat "${NAnt} -buildfile:log4net.build"
 			}
 		}
 		stage('Test on Windows') {
-			agent { label 'Windows' }
 			steps {
 				bat "${NAnt} -buildfile:tests\\nant.build"
 			}
 		}
 		stage('Build-Site') {
-			agent { label 'Windodws' }
 			steps {
 				bat "${NAnt} -buildfile:log4net.build generate-site"
 			}
 		}
 		stage('Deploy-Site') {
-			agent { label 'ubuntu' }
 			when {
 				branch 'master'
 			}
