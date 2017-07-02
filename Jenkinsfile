@@ -48,7 +48,7 @@ pipeline {
 				}
 			}
 			steps {
-				sh "apt-get install -y nant"
+				sh "sudo apt-get install -y nant"
 				sh "nant -buildfile:log4net.build"
 			}
 		}
