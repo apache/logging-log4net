@@ -36,9 +36,19 @@ pipeline {
 				checkout scm
 			}
 		}
-		stage('Build') {
+		stage('Build on Windows') {
 			steps {
 				bat "${NAnt} -buildfile:log4net.build"
+			}
+		}
+		stage('Build on ubuntu') {
+			agent {
+				docker {
+					image 'ubuntu:16.04'
+				}
+			}
+			steps {
+				sh "uname -a"
 			}
 		}
 		stage('Test on Windows') {
