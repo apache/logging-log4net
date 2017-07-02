@@ -42,14 +42,11 @@ pipeline {
 			}
 		}
 		stage('Build on ubuntu') {
-			agent {
-				docker {
-					image 'ubuntu:latest'
-				}
-			}
+			agent { label 'ubuntu' }
 			steps {
-				sh "sudo apt-get install -y nant"
-				sh "nant -buildfile:log4net.build"
+				docker.build("buildtools/docker/nant/").inside() {
+					sh "nant -buildfile:log4net.build"
+				}
 			}
 		}
 		stage('Test on Windows') {
