@@ -44,11 +44,13 @@ pipeline {
 		stage('Build on ubuntu') {
 			agent {
 				docker {
-					image 'ubuntu:16.04'
+					image 'ubuntu:latest'
 				}
 			}
 			steps {
-				sh "uname -a"
+				sh "apt update"
+				sh "apt install nant"
+				sh "nant -buildfile:log4net.build"
 			}
 		}
 		stage('Test on Windows') {
