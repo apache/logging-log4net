@@ -163,7 +163,8 @@ pipeline {
 	}
 	post {
 		always {
-			archive '**/*.*'
+			archive 'bin/**/*.*'
+			archive 'site/**/*.*'
 		}
 		failure {
 			step([$class: 'Mailer', notifyEveryUnstableBuild: false, recipients: 'dev@logging.apache.org'])
