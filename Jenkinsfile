@@ -49,7 +49,7 @@ pipeline {
 				}
 			}
 			steps {
-				sh "nant -buildfile:log4net.build compile-momo-2.0"
+				sh "nant -buildfile:log4net.build compile-mono-2.0"
 			}
 		}
 		stage('Build mono-3.5') {
@@ -60,7 +60,7 @@ pipeline {
 				}
 			}
 			steps {
-				sh "nant -buildfile:log4net.build compile-momo-3.5"
+				sh "nant -buildfile:log4net.build compile-mono-3.5"
 			}
 		}
 		stage('Build mono-4.0') {
@@ -71,7 +71,7 @@ pipeline {
 				}
 			}
 			steps {
-				sh "nant -buildfile:log4net.build compile-momo-4.0"
+				sh "nant -buildfile:log4net.build compile-mono-4.0"
 			}
 		}
 		stage('Test on Windows') {
