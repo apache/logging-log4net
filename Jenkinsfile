@@ -21,12 +21,15 @@ pipeline {
 	options {
 		timeout(time: 1, unit: 'HOURS')
 		buildDiscarder(logRotator(numToKeepStr: '3'))
-		//skipDefaultCheckout()
+		skipDefaultCheckout()
 	}
 	agent {
 		label 'ubuntu'
 	}
 	stages {
+		stage('checkout') {
+			checkout scm
+		}
 		stage('build net-4.0') {
 			agent { label 'Windows' }
 			environment {
