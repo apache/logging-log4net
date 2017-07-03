@@ -99,6 +99,18 @@ pipeline {
 				stash includes: 'bin/**/*.*', name: 'mono-4.0-assemblies'
 			}
 		}
+		stage('build netstandard') {
+			agent {
+				dockerfile {
+					dir 'buildtools/docker/builder-netstandard'
+				}
+			}
+			steps {
+				checkout scm
+				sh 'nant compile-netstandard'
+				stash includes 'bin/**/*.*', name: 'netstandard-assemblies'
+			}
+		}
 		stage('build site') {
 			agent { label 'Windows' }
 			tools {
@@ -134,6 +146,7 @@ pipeline {
 				unstash 'mono-2.0-assemblies'
 				unstash 'mono-3.5-assemblies'
 				unstash 'mono-4.0-assemblies'
+				unstash 'netstandard-assemblies'
 				unstash 'site'
 				sh 'mv target/site site'
 				sh 'rmdir target'
