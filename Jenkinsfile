@@ -35,7 +35,7 @@ pipeline {
 			steps {
 				checkout scm
 				bat "${NANT_BIN} -buildfile:log4net.build compile-net-4.0"
-				stash includes: 'bin/**/*.*', name: 'net-4.0-assemblies'
+				stash includes: 'bin/**.*', name: 'net-4.0-assemblies'
 			}
 		}
 		stage('build net-4.0-cp') {
@@ -46,7 +46,7 @@ pipeline {
 			steps {
 				checkout scm
 				bat "${NANT_BIN} -buildfile:log4net.build compile-net-4.0-cp"
-				stash includes: 'bin/**/*.*', name: 'net-4.0-cp-assemblies'
+				stash includes: 'bin/**.*', name: 'net-4.0-cp-assemblies'
 			}
 		}
 		stage('build net-4.5') {
@@ -57,7 +57,7 @@ pipeline {
 			steps {
 				checkout scm
 				bat "${NANT_BIN} -buildfile:log4net.build compile-net-4.5"
-				stash includes: 'bin/**/*.*', name: 'net-4.5-assemblies'
+				stash includes: 'bin/**.*', name: 'net-4.5-assemblies'
 			}
 		}
 		stage('build mono-2.0') {
@@ -70,7 +70,7 @@ pipeline {
 			steps {
 				checkout scm
 				sh "nant -t:mono-2.0 -buildfile:log4net.build compile-mono-2.0"
-				stash includes: 'bin/**/*.*', name: 'mono-2.0-assemblies'
+				stash includes: 'bin/**.*', name: 'mono-2.0-assemblies'
 			}
 		}
 		stage('build mono-3.5') {
@@ -83,7 +83,7 @@ pipeline {
 			steps {
 				checkout scm
 				sh "nant -t:mono-3.5 -buildfile:log4net.build compile-mono-3.5"
-				stash includes: 'bin/**/*.*', name: 'mono-3.5-assemblies'
+				stash includes: 'bin/**.*', name: 'mono-3.5-assemblies'
 			}
 		}
 		stage('build mono-4.0') {
@@ -96,7 +96,7 @@ pipeline {
 			steps {
 				checkout scm
 				sh "nant -t:mono-4.0 -buildfile:log4net.build compile-mono-4.0"
-				stash includes: 'bin/**/*.*', name: 'mono-4.0-assemblies'
+				stash includes: 'bin/**.*', name: 'mono-4.0-assemblies'
 			}
 		}
 		stage('build site') {
@@ -111,7 +111,7 @@ pipeline {
 			steps {
 				checkout scm
 				bat "${NANT_BIN} -buildfile:log4net.build generate-site"
-				stash includes: 'target/site-deploy/**/*.*', name: 'site'
+				stash includes: 'target/site/**.*', name: 'site'
 			}
 		}
 		// TODO: testing needs to be refactored
@@ -148,7 +148,7 @@ pipeline {
 	}
 	post {
 		always {
-			archive '**/*.*'
+			archive '**.*'
 		}
 		failure {
 			step([$class: 'Mailer', notifyEveryUnstableBuild: false, recipients: 'dev@logging.apache.org'])
