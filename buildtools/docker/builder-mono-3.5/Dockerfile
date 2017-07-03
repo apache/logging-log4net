@@ -1,5 +1,5 @@
 # Name of container: docker-ubuntu-latest-nant
-FROM ubuntu-latest
+FROM ubuntu:latest
 
 # set the maintainer of this docker image
 MAINTAINER "dev@logging.apache.org"
