@@ -60,7 +60,7 @@ pipeline {
 			}
 			steps {
 				sh "nant -t:mono-2.0 -buildfile:log4net.build compile-mono-2.0"
-				archive 'bin/**/*.*'
+				stash includes: 'bin/**/*.*', name: 'mono-2.0-assemblies'
 			}
 		}
 		stage('build mono-3.5') {
@@ -72,7 +72,7 @@ pipeline {
 			}
 			steps {
 				sh "nant -t:mono-3.5 -buildfile:log4net.build compile-mono-3.5"
-				archive 'bin/**/*.*'
+				stash includes: 'bin/**/*.*', name: 'mono-3.5-assemblies'
 			}
 		}
 		stage('build mono-4.0') {
@@ -84,18 +84,25 @@ pipeline {
 			}
 			steps {
 				sh "nant -t:mono-4.0 -buildfile:log4net.build compile-mono-4.0"
-				archive 'bin/**/*.*'
+				stash includes: 'bin/**/*.*', name: 'mono-4.0-assemblies'
+			}
+		}
+		stage('prepare package') {
+			steps {
+				unstash 'mono-2.0-assemblies'
+				unstash 'mono-3.5-assemblies'
+				unstash 'mono-4.0-assemblies'
+			}
+		}
+		stage('build site') {
+			steps {
+				bat "${NAnt} -buildfile:log4net.build generate-site"
 			}
 		}
 		// TODO: testing needs to be refactored
 		stage('test on Windows') {
 			steps {
 				bat "${NAnt} -buildfile:tests\\nant.build"
-			}
-		}
-		stage('build site') {
-			steps {
-				bat "${NAnt} -buildfile:log4net.build generate-site"
 			}
 		}
 		stage('deploy site') {
