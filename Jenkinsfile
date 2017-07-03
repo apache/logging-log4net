@@ -112,6 +112,11 @@ pipeline {
 			}
 			steps {
 				checkout scm
+				
+				// workaround: https://github.com/NuGet/Home/issues/5106
+				sh 'export HOME=/home'
+				
+				// compile 
 				sh 'nant compile-netstandard'
 				stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
 			}
