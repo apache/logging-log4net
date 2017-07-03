@@ -44,7 +44,7 @@ pipeline {
 		stage('Build on builder-mono3') {
 			agent { dockerfile { dir 'buildtools/docker/builder-mono3' } }
 			steps {
-				sh "nant -buildfile:log4net.build"
+				sh "nant -buildfile:log4net.build compile-momo-3.5"
 			}
 		}
 		stage('Test on Windows') {
