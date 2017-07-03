@@ -154,6 +154,7 @@ pipeline {
 		}
 		stage('prepare package') {
 			steps {
+				// assemble package by unstashing components
 				dir('package') {
 					unstash 'net-4.0-assemblies'
 					unstash 'net-4.0-cp-assemblies'
@@ -163,9 +164,13 @@ pipeline {
 					unstash 'mono-4.0-assemblies'
 					unstash 'netstandard-assemblies'
 					unstash 'site'
-					sh 'mv target/site site'
-					sh 'rmdir target'
 				}
+				
+				// move site
+				sh 'mv package/target/site package/site'
+				sh 'rmdir package/target'
+				
+				// archive package
 				archive 'package/**/*.*'
 			}
 		}
