@@ -26,7 +26,9 @@ pipeline {
 		skipDefaultCheckout()
 	}
 	// TODO: find a better way to determine nant installation path
-	def NANT = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
+	def getPathToNAntOnWindows() {
+		return 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
+	}
 	stages {
 		stage('checkout') {
 			steps {
@@ -36,7 +38,7 @@ pipeline {
 		stage('build net-4.0') {
 			agent { label 'Windows' }
 			environment {
-				NANT_BIN = NANT
+				NANT_BIN = getPathToNAntOnWindows()
 			}
 			steps {
 				bat "${NANT_BIN} -buildfile:log4net.build compile-net-4.0"
@@ -46,7 +48,7 @@ pipeline {
 		stage('build net-4.0-cp') {
 			agent { label 'Windows' }
 			environment {
-				NANT_BIN = NANT
+				NANT_BIN = getPathToNAntOnWindows()
 			}
 			steps {
 				bat "${NANT_BIN} -buildfile:log4net.build compile-net-4.0-cp"
@@ -56,7 +58,7 @@ pipeline {
 		stage('build net-4.5') {
 			agent { label 'Windows' }
 			environment {
-				NANT_BIN = NANT
+				NANT_BIN = getPathToNAntOnWindows()
 			}
 			steps {
 				bat "${NANT_BIN} -buildfile:log4net.build compile-net-4.5"
@@ -106,7 +108,7 @@ pipeline {
 				jdk 'JDK 1.8 (latest)'
 			}
 			environment {
-				NANT_BIN = NANT
+				NANT_BIN = getPathToNAntOnWindows()
 			}
 			steps {
 				bat "${NANT_BIN} -buildfile:log4net.build generate-site"
@@ -117,7 +119,7 @@ pipeline {
 		stage('test on Windows') {
 			agent { label 'Windows' }
 			environment {
-				NANT_BIN = NANT
+				NANT_BIN = getPathToNAntOnWindows()
 			}
 			steps {
 				bat "${NANT_BIN} -buildfile:tests\\nant.build"
