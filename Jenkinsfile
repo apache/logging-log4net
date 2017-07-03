@@ -175,6 +175,9 @@ pipeline {
 		}
 	}
 	post {
+		always {
+			step([$class: 'WsCleanup'])
+		}
 		failure {
 			step([$class: 'Mailer', notifyEveryUnstableBuild: false, recipients: 'dev@logging.apache.org'])
 		}
