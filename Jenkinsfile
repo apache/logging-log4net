@@ -31,17 +31,22 @@ pipeline {
 		NAnt = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 	}
 	stages {
-		stage('Checkout') {
+		stage('checkout') {
 			steps {
 				checkout scm
 			}
 		}
-		stage('Build net-4.0') {
+		stage('build net-4.0') {
 			steps {
 				bat "${NAnt} -buildfile:log4net.build compile-net-4.0"
 			}
 		}
-		stage('Build mono-2.0') {
+		stage('build net-4.5') {
+			steps {
+				bat "${NAnt} -buildfile:log4net.build compile-net-4.5"
+			}
+		}
+		stage('build mono-2.0') {
 			agent {
 				dockerfile {
 					dir 'buildtools/docker/builder-mono-2.0'
@@ -52,7 +57,7 @@ pipeline {
 				sh "nant -buildfile:log4net.build compile-mono-2.0"
 			}
 		}
-		stage('Build mono-3.5') {
+		stage('build mono-3.5') {
 			agent {
 				dockerfile {
 					dir 'buildtools/docker/builder-mono-3.5'
@@ -63,7 +68,7 @@ pipeline {
 				sh "nant -buildfile:log4net.build compile-mono-3.5"
 			}
 		}
-		stage('Build mono-4.0') {
+		stage('build mono-4.0') {
 			agent {
 				dockerfile {
 					dir 'buildtools/docker/builder-mono-4.0'
@@ -74,17 +79,17 @@ pipeline {
 				sh "nant -buildfile:log4net.build compile-mono-4.0"
 			}
 		}
-		stage('Test on Windows') {
+		stage('test on Windows') {
 			steps {
 				bat "${NAnt} -buildfile:tests\\nant.build"
 			}
 		}
-		stage('Build-Site') {
+		stage('build site') {
 			steps {
 				bat "${NAnt} -buildfile:log4net.build generate-site"
 			}
 		}
-		stage('Deploy-Site') {
+		stage('deploy site') {
 			when {
 				branch 'master'
 			}
