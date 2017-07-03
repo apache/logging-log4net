@@ -193,7 +193,7 @@ pipeline {
 				
 				// move site
 				sh 'mv package/target/site/ package/site/'
-				sh 'rmdir -p package/target'
+				sh 'rmdir -p --ignore-fail-on-non-empty package/target'
 				
 				// archive package
 				archive 'package/**/*.*'
