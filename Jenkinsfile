@@ -70,6 +70,7 @@ pipeline {
 				dockerfile {
 					dir 'buildtools/docker/builder-mono-2.0'
 					args '-v /etc/localtime:/etc/localtime:ro'
+					reuseNode true
 				}
 			}
 			steps {
@@ -83,6 +84,7 @@ pipeline {
 				dockerfile {
 					dir 'buildtools/docker/builder-mono-3.5'
 					args '-v /etc/localtime:/etc/localtime:ro'
+					reuseNode true
 				}
 			}
 			steps {
@@ -96,6 +98,7 @@ pipeline {
 				dockerfile {
 					dir 'buildtools/docker/builder-mono-4.0'
 					args '-v /etc/localtime:/etc/localtime:ro'
+					reuseNode true
 				}
 			}
 			steps {
@@ -108,6 +111,7 @@ pipeline {
 			agent {
 				dockerfile {
 					dir 'buildtools/docker/builder-netstandard'
+					reuseNode true
 				}
 			}
 			steps {
