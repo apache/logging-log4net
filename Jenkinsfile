@@ -41,6 +41,11 @@ pipeline {
 				bat "${NAnt} -buildfile:log4net.build compile-net-4.0"
 			}
 		}
+		stage('build net-4.0-cp') {
+			steps {
+				bat "${NAnt} -buildfile:log4net.build compile-net-4.0-cp"
+			}
+		}
 		stage('build net-4.5') {
 			steps {
 				bat "${NAnt} -buildfile:log4net.build compile-net-4.5"
@@ -55,6 +60,7 @@ pipeline {
 			}
 			steps {
 				sh "nant -buildfile:log4net.build compile-mono-2.0"
+				archive 'bin/**/*.*'
 			}
 		}
 		stage('build mono-3.5') {
@@ -66,6 +72,7 @@ pipeline {
 			}
 			steps {
 				sh "nant -buildfile:log4net.build compile-mono-3.5"
+				archive 'bin/**/*.*'
 			}
 		}
 		stage('build mono-4.0') {
@@ -77,8 +84,10 @@ pipeline {
 			}
 			steps {
 				sh "nant -buildfile:log4net.build compile-mono-4.0"
+				archive 'bin/**/*.*'
 			}
 		}
+		# TODO: testing needs to be refactored
 		stage('test on Windows') {
 			steps {
 				bat "${NAnt} -buildfile:tests\\nant.build"
