@@ -42,19 +42,34 @@ pipeline {
 			}
 		}
 		stage('Build mono-2.0') {
-			agent { dockerfile { dir 'buildtools/docker/builder-mono-2.0' } }
+			agent {
+				dockerfile {
+					dir 'buildtools/docker/builder-mono-2.0'
+					args '-v /etc/localtime:/etc/localtime:ro'
+				}
+			}
 			steps {
 				sh "nant -buildfile:log4net.build compile-momo-2.0"
 			}
 		}
 		stage('Build mono-3.5') {
-			agent { dockerfile { dir 'buildtools/docker/builder-mono-3.5' } }
+			agent {
+				dockerfile {
+					dir 'buildtools/docker/builder-mono-3.5'
+					args '-v /etc/localtime:/etc/localtime:ro'
+				}
+			}
 			steps {
 				sh "nant -buildfile:log4net.build compile-momo-3.5"
 			}
 		}
 		stage('Build mono-4.0') {
-			agent { dockerfile { dir 'buildtools/docker/builder-mono-4.0' } }
+			agent {
+				dockerfile {
+					dir 'buildtools/docker/builder-mono-4.0'
+					args '-v /etc/localtime:/etc/localtime:ro'
+				}
+			}
 			steps {
 				sh "nant -buildfile:log4net.build compile-momo-4.0"
 			}
