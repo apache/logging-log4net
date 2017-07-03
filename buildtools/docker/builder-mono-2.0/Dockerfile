@@ -4,6 +4,9 @@ FROM ubuntu:latest
 # set the maintainer of this docker image
 MAINTAINER "dev@logging.apache.org"
 
-# install nant
+# set up utc timezone
+RUN timedatectl set-timezone Etc/UTC
+
+# install dependencies
 RUN apt-get update && apt-get install -y nant git mono-complete mono-reference-assemblies-2.0
 
