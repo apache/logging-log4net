@@ -29,6 +29,7 @@ pipeline {
 	stages {
 		stage('checkout') {
 			steps {
+				deleteDir()
 				checkout scm
 			}
 		}
@@ -174,7 +175,7 @@ pipeline {
 				archive 'package/**/*.*'
 			}
 		}
-		stage('deploy site') {
+		stage('publish site') {
 			when {
 				branch 'master'
 			}
@@ -184,9 +185,6 @@ pipeline {
 		}
 	}
 	post {
-		always {
-			step([$class: 'WsCleanup'])
-		}
 		failure {
 			step([$class: 'Mailer', notifyEveryUnstableBuild: false, recipients: 'dev@logging.apache.org'])
 		}
