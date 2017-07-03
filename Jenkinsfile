@@ -59,7 +59,7 @@ pipeline {
 				}
 			}
 			steps {
-				sh "nant -buildfile:log4net.build compile-mono-2.0"
+				sh "nant -t:mono-2.0 -buildfile:log4net.build compile-mono-2.0"
 				archive 'bin/**/*.*'
 			}
 		}
@@ -71,7 +71,7 @@ pipeline {
 				}
 			}
 			steps {
-				sh "nant -buildfile:log4net.build compile-mono-3.5"
+				sh "nant -t:mono-3.5 -buildfile:log4net.build compile-mono-3.5"
 				archive 'bin/**/*.*'
 			}
 		}
@@ -83,7 +83,7 @@ pipeline {
 				}
 			}
 			steps {
-				sh "nant -buildfile:log4net.build compile-mono-4.0"
+				sh "nant -t:mono-4.0 -buildfile:log4net.build compile-mono-4.0"
 				archive 'bin/**/*.*'
 			}
 		}
