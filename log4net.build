@@ -1999,7 +1999,13 @@ limitations under the License.
       </asminfo>
     </if>
   </target>
-  <target name="compile-netstandard">
+  <target name="compile-netstandard" description="Builds .NET Core">
+    <call target="set-debug-build-configuration"/>
+    <call target="compile-netstandard-current-configuration"/>
+    <call target="set-release-build-configuration"/>
+    <call target="compile-netstandard-current-configuration"/>
+  </target>
+  <target name="compile-netstandard-current-configuration">
     <exec program="dotnet" workingdir="netstandard" failonerror="false" resultproperty="dotnet.available">
       <arg value="restore"/>
     </exec>
