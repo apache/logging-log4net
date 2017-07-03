@@ -192,7 +192,7 @@ pipeline {
 				}
 				
 				// TODO move site
-				//sh 'mv package/target/site package/site'
+				sh 'mv package/target/site/ package/site/'
 				//sh 'rmdir package/target'
 				
 				// archive package
