@@ -143,16 +143,19 @@ pipeline {
 		}
 		stage('prepare package') {
 			steps {
-				unstash 'net-4.0-assemblies'
-				unstash 'net-4.0-cp-assemblies'
-				unstash 'net-4.5-assemblies'
-				unstash 'mono-2.0-assemblies'
-				unstash 'mono-3.5-assemblies'
-				unstash 'mono-4.0-assemblies'
-				unstash 'netstandard-assemblies'
-				unstash 'site'
-				sh 'mv target/site site'
-				sh 'rmdir target'
+				dir('package') {
+					unstash 'net-4.0-assemblies'
+					unstash 'net-4.0-cp-assemblies'
+					unstash 'net-4.5-assemblies'
+					unstash 'mono-2.0-assemblies'
+					unstash 'mono-3.5-assemblies'
+					unstash 'mono-4.0-assemblies'
+					unstash 'netstandard-assemblies'
+					unstash 'site'
+					sh 'mv target/site site'
+					sh 'rmdir target'
+				}
+				archive 'package/**.*'
 			}
 		}
 		stage('deploy site') {
@@ -165,10 +168,6 @@ pipeline {
 		}
 	}
 	post {
-		always {
-			archive 'bin/**/*.*'
-			archive 'site/**/*.*'
-		}
 		failure {
 			step([$class: 'Mailer', notifyEveryUnstableBuild: false, recipients: 'dev@logging.apache.org'])
 		}
