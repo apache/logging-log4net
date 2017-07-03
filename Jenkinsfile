@@ -87,7 +87,7 @@ pipeline {
 				archive 'bin/**/*.*'
 			}
 		}
-		# TODO: testing needs to be refactored
+		// TODO: testing needs to be refactored
 		stage('test on Windows') {
 			steps {
 				bat "${NAnt} -buildfile:tests\\nant.build"
