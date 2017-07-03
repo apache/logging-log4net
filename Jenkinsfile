@@ -33,6 +33,17 @@ pipeline {
 				checkout scm
 			}
 		}
+		stage('build net-3.5') {
+			agent { label 'Windows' }
+			environment {
+				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
+			}
+			steps {
+				checkout scm
+				bat "${NANT_BIN} -t:net-3.5 -buildfile:log4net.build compile-net-3.5"
+				stash includes: 'bin/**/*.*', name: 'net-3.5-assemblies'
+			}
+		}
 		stage('build net-4.0') {
 			agent { label 'Windows' }
 			environment {
