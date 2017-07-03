@@ -99,6 +99,9 @@ pipeline {
 		}
 	}
 	post {
+		always {
+			archive 'bin/**/*.*'
+		}
 		failure {
 			step([$class: 'Mailer', notifyEveryUnstableBuild: false, recipients: 'dev@logging.apache.org'])
 		}
