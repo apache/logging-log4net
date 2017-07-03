@@ -135,6 +135,8 @@ pipeline {
 				unstash 'mono-3.5-assemblies'
 				unstash 'mono-4.0-assemblies'
 				unstash 'site'
+				sh 'mv target/site site'
+				sh 'rmdir target'
 			}
 		}
 		stage('deploy site') {
