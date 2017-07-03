@@ -158,6 +158,6 @@ pipeline {
 
 // TODO: find a better way to determine nant installation path
 def getPathToNAntOnWindows() {
-	return 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
+	'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 }
 
