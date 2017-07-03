@@ -20,23 +20,20 @@
 pipeline {
 	options {
 		timeout(time: 1, unit: 'HOURS')
+		buildDiscarder(logRotator(numToKeepStr: '1'))
+		skipDefaultCheckout()
 	}
 	agent {
 		label 'ubuntu'
-		skipDefaultCheckout()
 	}
 	stages {
-		stage('checkout') {
-			steps {
-				checkout scm
-			}
-		}
 		stage('build net-4.0') {
 			agent { label 'Windows' }
 			environment {
 				NANT_BIN = getPathToNAntOnWindows()
 			}
 			steps {
+				checkout scm
 				bat "${NANT_BIN} -buildfile:log4net.build compile-net-4.0"
 				stash includes: 'bin/**/*.*', name: 'net-4.0-assemblies'
 			}
@@ -47,6 +44,7 @@ pipeline {
 				NANT_BIN = getPathToNAntOnWindows()
 			}
 			steps {
+				checkout scm
 				bat "${NANT_BIN} -buildfile:log4net.build compile-net-4.0-cp"
 				stash includes: 'bin/**/*.*', name: 'net-4.0-cp-assemblies'
 			}
@@ -57,6 +55,7 @@ pipeline {
 				NANT_BIN = getPathToNAntOnWindows()
 			}
 			steps {
+				checkout scm
 				bat "${NANT_BIN} -buildfile:log4net.build compile-net-4.5"
 				stash includes: 'bin/**/*.*', name: 'net-4.5-assemblies'
 			}
@@ -69,6 +68,7 @@ pipeline {
 				}
 			}
 			steps {
+				checkout scm
 				sh "nant -t:mono-2.0 -buildfile:log4net.build compile-mono-2.0"
 				stash includes: 'bin/**/*.*', name: 'mono-2.0-assemblies'
 			}
@@ -81,6 +81,7 @@ pipeline {
 				}
 			}
 			steps {
+				checkout scm
 				sh "nant -t:mono-3.5 -buildfile:log4net.build compile-mono-3.5"
 				stash includes: 'bin/**/*.*', name: 'mono-3.5-assemblies'
 			}
@@ -93,6 +94,7 @@ pipeline {
 				}
 			}
 			steps {
+				checkout scm
 				sh "nant -t:mono-4.0 -buildfile:log4net.build compile-mono-4.0"
 				stash includes: 'bin/**/*.*', name: 'mono-4.0-assemblies'
 			}
@@ -107,6 +109,7 @@ pipeline {
 				NANT_BIN = getPathToNAntOnWindows()
 			}
 			steps {
+				checkout scm
 				bat "${NANT_BIN} -buildfile:log4net.build generate-site"
 				stash includes: 'target/site-deploy/**/*.*', name: 'site'
 			}
@@ -118,6 +121,7 @@ pipeline {
 				NANT_BIN = getPathToNAntOnWindows()
 			}
 			steps {
+				checkout scm
 				bat "${NANT_BIN} -buildfile:tests\\nant.build"
 				// TODO: stash test results
 			}
