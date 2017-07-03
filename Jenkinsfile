@@ -157,7 +157,7 @@ pipeline {
 					sh 'mv target/site site'
 					sh 'rmdir target'
 				}
-				archive 'package/**.*'
+				archive 'package/**/*.*'
 			}
 		}
 		stage('deploy site') {
