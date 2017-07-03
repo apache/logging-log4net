@@ -190,6 +190,9 @@ pipeline {
 			steps {
 				// assemble package by unstashing components
 				dir('package') {
+					unstash 'net-2.0-assemblies'
+					unstash 'net-3.5-assemblies'
+					unstash 'net-3.5-cp-assemblies'
 					unstash 'net-4.0-assemblies'
 					unstash 'net-4.0-cp-assemblies'
 					unstash 'net-4.5-assemblies'
