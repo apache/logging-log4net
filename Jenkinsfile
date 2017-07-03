@@ -39,6 +39,7 @@ pipeline {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
 			steps {
+				deleteDir()
 				checkout scm
 				bat "${NANT_BIN} -t:net-3.5 -buildfile:log4net.build compile-net-3.5"
 				stash includes: 'bin/**/*.*', name: 'net-3.5-assemblies'
@@ -50,6 +51,7 @@ pipeline {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
 			steps {
+				deleteDir()
 				checkout scm
 				bat "${NANT_BIN} -t:net-3.5 -buildfile:log4net.build compile-net-3.5-cp"
 				stash includes: 'bin/**/*.*', name: 'net-3.5-cp-assemblies'
@@ -61,6 +63,7 @@ pipeline {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
 			steps {
+				deleteDir()
 				checkout scm
 				bat "${NANT_BIN} -buildfile:log4net.build compile-net-4.0"
 				stash includes: 'bin/**/*.*', name: 'net-4.0-assemblies'
@@ -72,6 +75,7 @@ pipeline {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
 			steps {
+				deleteDir()
 				checkout scm
 				bat "${NANT_BIN} -buildfile:log4net.build compile-net-4.0-cp"
 				stash includes: 'bin/**/*.*', name: 'net-4.0-cp-assemblies'
@@ -83,6 +87,7 @@ pipeline {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
 			steps {
+				deleteDir()
 				checkout scm
 				bat "${NANT_BIN} -buildfile:log4net.build compile-net-4.5"
 				stash includes: 'bin/**/*.*', name: 'net-4.5-assemblies'
@@ -158,6 +163,7 @@ pipeline {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
 			steps {
+				deleteDir()
 				checkout scm
 				bat "${NANT_BIN} -buildfile:log4net.build generate-site"
 				stash includes: 'target/site/**/*.*', name: 'site'
