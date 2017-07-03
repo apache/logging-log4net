@@ -108,7 +108,7 @@ pipeline {
 			steps {
 				checkout scm
 				sh 'nant compile-netstandard'
-				stash includes 'bin/**/*.*', name: 'netstandard-assemblies'
+				stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
 			}
 		}
 		stage('build site') {
