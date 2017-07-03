@@ -214,10 +214,8 @@ limitations under the License.
   </target>
   <target name="compile-netcf-1.0" description="Builds .NET Compact Framework 1.0 version">
     <call target="set-debug-build-configuration"/>
-    <call target="set-runtime-configuration"/>
     <call target="compile-netcf-1.0-current-configuration"/>
     <call target="set-release-build-configuration"/>
-    <call target="set-runtime-configuration"/>
     <call target="compile-netcf-1.0-current-configuration"/>
   </target>
   <target name="compile-netcf-1.0-current-configuration">
@@ -275,10 +273,8 @@ limitations under the License.
   </target>
   <target name="compile-netcf-2.0" description="Builds .NET Compact Framework 2.0 version">
     <call target="set-debug-build-configuration"/>
-    <call target="set-runtime-configuration"/>
     <call target="compile-netcf-2.0-current-configuration"/>
     <call target="set-release-build-configuration"/>
-    <call target="set-runtime-configuration"/>
     <call target="compile-netcf-2.0-current-configuration"/>
   </target>
   <target name="compile-netcf-2.0-current-configuration">
@@ -373,10 +369,8 @@ limitations under the License.
   </target>
   <target name="compile-net-1.0" description="Builds .NET Framework 1.0 version">
     <call target="set-debug-build-configuration"/>
-    <call target="set-runtime-configuration"/>
     <call target="compile-net-1.0-current-configuration"/>
     <call target="set-release-build-configuration"/>
-    <call target="set-runtime-configuration"/>
     <call target="compile-net-1.0-current-configuration"/>
   </target>
   <target name="compile-net-1.0-current-configuration">
@@ -458,10 +452,8 @@ limitations under the License.
   </target>
   <target name="compile-net-1.1" description="Builds .NET Framework 1.1 version">
     <call target="set-debug-build-configuration"/>
-    <call target="set-runtime-configuration"/>
     <call target="compile-net-1.1-current-configuration"/>
     <call target="set-release-build-configuration"/>
-    <call target="set-runtime-configuration"/>
     <call target="compile-net-1.1-current-configuration"/>
   </target>
   <target name="compile-net-1.1-current-configuration">
@@ -543,10 +535,8 @@ limitations under the License.
   </target>
   <target name="compile-net-2.0" description="Builds .NET Framework 2.0 version">
     <call target="set-debug-build-configuration"/>
-    <call target="set-runtime-configuration"/>
     <call target="compile-net-2.0-current-configuration"/>
     <call target="set-release-build-configuration"/>
-    <call target="set-runtime-configuration"/>
     <call target="compile-net-2.0-current-configuration"/>
   </target>
   <target name="compile-net-2.0-current-configuration">
@@ -647,10 +637,8 @@ limitations under the License.
   </target>
   <target name="compile-net-3.5" description="Builds .NET Framework 3.5 version">
     <call target="set-debug-build-configuration"/>
-    <call target="set-runtime-configuration"/>
     <call target="compile-net-3.5-current-configuration"/>
     <call target="set-release-build-configuration"/>
-    <call target="set-runtime-configuration"/>
     <call target="compile-net-3.5-current-configuration"/>
   </target>
   <target name="compile-net-3.5-current-configuration">
@@ -754,10 +742,8 @@ limitations under the License.
   </target>
   <target name="compile-net-3.5-cp" description="Builds .NET Framework 3.5 Client Profile version">
     <call target="set-debug-build-configuration"/>
-    <call target="set-runtime-configuration"/>
     <call target="compile-net-3.5-cp-current-configuration"/>
     <call target="set-release-build-configuration"/>
-    <call target="set-runtime-configuration"/>
     <call target="compile-net-3.5-cp-current-configuration"/>
   </target>
   <target name="compile-net-3.5-cp-current-configuration">
@@ -858,10 +844,8 @@ limitations under the License.
   </target>
   <target name="compile-net-4.0" description="Builds .NET Framework 4.0 version">
     <call target="set-debug-build-configuration"/>
-    <call target="set-runtime-configuration"/>
     <call target="compile-net-4.0-current-configuration"/>
     <call target="set-release-build-configuration"/>
-    <call target="set-runtime-configuration"/>
     <call target="compile-net-4.0-current-configuration"/>
   </target>
   <target name="compile-net-4.0-current-configuration">
@@ -965,10 +949,8 @@ limitations under the License.
   </target>
   <target name="compile-net-4.0-cp" description="Builds .NET Framework 4.0 Client Profile version">
     <call target="set-debug-build-configuration"/>
-    <call target="set-runtime-configuration"/>
     <call target="compile-net-4.0-cp-current-configuration"/>
     <call target="set-release-build-configuration"/>
-    <call target="set-runtime-configuration"/>
     <call target="compile-net-4.0-cp-current-configuration"/>
   </target>
   <target name="compile-net-4.0-cp-current-configuration">
@@ -1069,10 +1051,8 @@ limitations under the License.
   </target>
   <target name="compile-net-4.5" description="Builds .NET Framework 4.5 version">
     <call target="set-debug-build-configuration"/>
-    <call target="set-runtime-configuration"/>
     <call target="compile-net-4.5-current-configuration"/>
     <call target="set-release-build-configuration"/>
-    <call target="set-runtime-configuration"/>
     <call target="compile-net-4.5-current-configuration"/>
   </target>
   <target name="compile-net-4.5-current-configuration">
