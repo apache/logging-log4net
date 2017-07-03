@@ -41,12 +41,10 @@ pipeline {
 				bat "${NAnt} -buildfile:log4net.build"
 			}
 		}
-		stage('Build on ubuntu') {
-			agent { label 'ubuntu' }
+		stage('Build on builder-mono3') {
+			agent { dockerfile 'buildtools/docker/builder-mono3' }
 			steps {
-				docker.build("buildtools/docker/nant/").inside() {
-					sh "nant -buildfile:log4net.build"
-				}
+				sh "nant -buildfile:log4net.build"
 			}
 		}
 		stage('Test on Windows') {
