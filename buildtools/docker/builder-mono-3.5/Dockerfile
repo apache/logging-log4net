@@ -5,5 +5,5 @@ FROM ubuntu:latest
 MAINTAINER "dev@logging.apache.org"
 
 # install nant
-RUN apt-get update && apt-get install -y nant git mono-complete mono-reference-assemblies-3.5
+RUN apt-get update && apt-get install -y nant git mono-complete mono-reference-assemblies-2.0 mono-reference-assemblies-3.5
 
