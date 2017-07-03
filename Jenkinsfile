@@ -38,7 +38,7 @@ pipeline {
 		}
 		stage('Build on Windows') {
 			steps {
-				bat "${NAnt} -buildfile:log4net.build"
+				bat "${NAnt} -buildfile:log4net.build compile-net-4.0"
 			}
 		}
 		stage('Build on builder-mono-2.0') {
