@@ -21,15 +21,12 @@ pipeline {
 	options {
 		timeout(time: 1, unit: 'HOURS')
 	}
-	agent { label 'Windows' }
-	tools {
-		maven 'Maven 3.3.9 (Windows)'
-		jdk 'JDK 1.8 (latest)'
+	agent {
+		label 'ubuntu'
+		skipDefaultCheckout()
 	}
-	environment {
-		// TODO: find a better way to determine nant installation path
-		NAnt = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
-	}
+	// TODO: find a better way to determine nant installation path
+	def NANT = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 	stages {
 		stage('checkout') {
 			steps {
@@ -37,18 +34,33 @@ pipeline {
 			}
 		}
 		stage('build net-4.0') {
+			agent { label 'Windows' }
+			environment {
+				NANT_BIN = NANT
+			}
 			steps {
-				bat "${NAnt} -buildfile:log4net.build compile-net-4.0"
+				bat "${NANT_BIN} -buildfile:log4net.build compile-net-4.0"
+				stash includes: 'bin/**/*.*', name 'net-4.0-assemblies'
 			}
 		}
 		stage('build net-4.0-cp') {
+			agent { label 'Windows' }
+			environment {
+				NANT_BIN = NANT
+			}
 			steps {
-				bat "${NAnt} -buildfile:log4net.build compile-net-4.0-cp"
+				bat "${NANT_BIN} -buildfile:log4net.build compile-net-4.0-cp"
+				stash includes: 'bin/**/*.*', name 'net-4.0-cp-assemblies'
 			}
 		}
 		stage('build net-4.5') {
+			agent { label 'Windows' }
+			environment {
+				NANT_BIN = NANT
+			}
 			steps {
-				bat "${NAnt} -buildfile:log4net.build compile-net-4.5"
+				bat "${NANT_BIN} -buildfile:log4net.build compile-net-4.5"
+				stash includes: 'bin/**/*.*', name 'net-4.5-assemblies'
 			}
 		}
 		stage('build mono-2.0') {
@@ -87,22 +99,40 @@ pipeline {
 				stash includes: 'bin/**/*.*', name: 'mono-4.0-assemblies'
 			}
 		}
-		stage('prepare package') {
-			steps {
-				unstash 'mono-2.0-assemblies'
-				unstash 'mono-3.5-assemblies'
-				unstash 'mono-4.0-assemblies'
-			}
-		}
 		stage('build site') {
+			agent { label 'Windows' }
+			tools {
+				maven 'Maven 3.3.9 (Windows)'
+				jdk 'JDK 1.8 (latest)'
+			}
+			environment {
+				NANT_BIN = NANT
+			}
 			steps {
-				bat "${NAnt} -buildfile:log4net.build generate-site"
+				bat "${NANT_BIN} -buildfile:log4net.build generate-site"
+				stash includes: 'target/site-deploy/**/*.*', name: 'site'
 			}
 		}
 		// TODO: testing needs to be refactored
 		stage('test on Windows') {
+			agent { label 'Windows' }
+			environment {
+				NANT_BIN = NANT
+			}
 			steps {
-				bat "${NAnt} -buildfile:tests\\nant.build"
+				bat "${NANT_BIN} -buildfile:tests\\nant.build"
+				// TODO: stash test results
+			}
+		}
+		stage('prepare package') {
+			steps {
+				unstash 'net-4.0-assemblies'
+				unstash 'net-4.0-cp-assemblies'
+				unstash 'net-4.5-assemblies'
+				unstash 'mono-2.0-assemblies'
+				unstash 'mono-3.5-assemblies'
+				unstash 'mono-4.0-assemblies'
+				unstash 'site'
 			}
 		}
 		stage('deploy site') {
@@ -116,7 +146,7 @@ pipeline {
 	}
 	post {
 		always {
-			archive 'bin/**/*.*'
+			archive '**/*.*'
 		}
 		failure {
 			step([$class: 'Mailer', notifyEveryUnstableBuild: false, recipients: 'dev@logging.apache.org'])
