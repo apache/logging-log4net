@@ -20,7 +20,7 @@
 pipeline {
 	options {
 		timeout(time: 1, unit: 'HOURS')
-		buildDiscarder(logRotator(numToKeepStr: '1'))
+		buildDiscarder(logRotator(numToKeepStr: '3'))
 		skipDefaultCheckout()
 	}
 	agent {
@@ -30,7 +30,7 @@ pipeline {
 		stage('build net-4.0') {
 			agent { label 'Windows' }
 			environment {
-				NANT_BIN = getPathToNAntOnWindows()
+				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
 			steps {
 				checkout scm
@@ -41,7 +41,7 @@ pipeline {
 		stage('build net-4.0-cp') {
 			agent { label 'Windows' }
 			environment {
-				NANT_BIN = getPathToNAntOnWindows()
+				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
 			steps {
 				checkout scm
@@ -52,7 +52,7 @@ pipeline {
 		stage('build net-4.5') {
 			agent { label 'Windows' }
 			environment {
-				NANT_BIN = getPathToNAntOnWindows()
+				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
 			steps {
 				checkout scm
@@ -106,7 +106,7 @@ pipeline {
 				jdk 'JDK 1.8 (latest)'
 			}
 			environment {
-				NANT_BIN = getPathToNAntOnWindows()
+				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
 			steps {
 				checkout scm
@@ -118,7 +118,7 @@ pipeline {
 		stage('test on Windows') {
 			agent { label 'Windows' }
 			environment {
-				NANT_BIN = getPathToNAntOnWindows()
+				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
 			steps {
 				checkout scm
@@ -154,10 +154,5 @@ pipeline {
 			step([$class: 'Mailer', notifyEveryUnstableBuild: false, recipients: 'dev@logging.apache.org'])
 		}
 	}
-}
-
-// TODO: find a better way to determine nant installation path
-def getPathToNAntOnWindows() {
-	'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 }
 
