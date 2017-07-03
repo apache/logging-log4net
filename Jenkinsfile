@@ -33,17 +33,6 @@ pipeline {
 				checkout scm
 			}
 		}
-		/*stage('build net-2.0') {
-			agent { label 'Windows' }
-			environment {
-				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
-			}
-			steps {
-				checkout scm
-				bat "${NANT_BIN} -t:net-2.0 -buildfile:log4net.build compile-net-2.0"
-				stash includes: 'bin/**/*.*', name: 'net-2.0-assemblies'
-			}
-		}*/
 		stage('build net-3.5') {
 			agent { label 'Windows' }
 			environment {
@@ -190,7 +179,6 @@ pipeline {
 			steps {
 				// assemble package by unstashing components
 				dir('package') {
-					//unstash 'net-2.0-assemblies'
 					unstash 'net-3.5-assemblies'
 					unstash 'net-3.5-cp-assemblies'
 					unstash 'net-4.0-assemblies'
