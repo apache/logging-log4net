@@ -187,12 +187,6 @@ limitations under the License.
         <property name="current.build.config.release" value="false" />
         <property name="current.build.config.${current.build.config}" value="true" />
     </target>
-    <target name="set-framework-configuration" depends="check-current-build-config">
-        <if test="${not target::exists('set-' + framework::get-target-framework() + '-runtime-configuration')}">
-            <fail message="The current target framework (${framework::get-description(framework::get-target-framework())}) is not supported by log4net." />
-        </if>
-        <call target="set-${framework::get-target-framework()}-runtime-configuration" />
-    </target>
     <target name="set-net-1.0-runtime-configuration" depends="check-bin-dir, check-sdkdoc-dir, check-sdkdoc-debug, check-current-build-config, check-build-debug, check-build-defines">
         <property name="nant.settings.currentframework" value="net-1.0" />
         <property name="current.build.debug" value="${build.debug}" dynamic="true" />

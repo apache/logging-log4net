@@ -41,10 +41,22 @@ pipeline {
 				bat "${NAnt} -buildfile:log4net.build"
 			}
 		}
-		stage('Build on builder-mono3') {
-			agent { dockerfile { dir 'buildtools/docker/builder-mono3' } }
+		stage('Build on builder-mono-2.0') {
+			agent { dockerfile { dir 'buildtools/docker/builder-mono-2.0' } }
+			steps {
+				sh "nant -buildfile:log4net.build compile-momo-2.0"
+			}
+		}
+		stage('Build on builder-mono-3.5') {
+			agent { dockerfile { dir 'buildtools/docker/builder-mono-3.5' } }
 			steps {
 				sh "nant -buildfile:log4net.build compile-momo-3.5"
+			}
+		}
+		stage('Build on builder-mono-4.0') {
+			agent { dockerfile { dir 'buildtools/docker/builder-mono-4.0' } }
+			steps {
+				sh "nant -buildfile:log4net.build compile-momo-4.0"
 			}
 		}
 		stage('Test on Windows') {
