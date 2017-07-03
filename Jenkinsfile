@@ -21,7 +21,7 @@ pipeline {
 	options {
 		timeout(time: 1, unit: 'HOURS')
 		buildDiscarder(logRotator(numToKeepStr: '3'))
-		skipDefaultCheckout()
+		//skipDefaultCheckout()
 	}
 	agent {
 		label 'ubuntu'
