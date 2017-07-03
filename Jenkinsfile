@@ -166,9 +166,9 @@ pipeline {
 					unstash 'site'
 				}
 				
-				// move site
-				sh 'mv package/target/site package/site'
-				sh 'rmdir package/target'
+				// TODO move site
+				//sh 'mv package/target/site package/site'
+				//sh 'rmdir package/target'
 				
 				// archive package
 				archive 'package/**/*.*'
