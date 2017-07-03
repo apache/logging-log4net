@@ -1,5 +1,5 @@
 # Name of container: docker-ubuntu-latest-nant
-from mono:3
+FROM mono:3
 
 # set the maintainer of this docker image
 MAINTAINER "dev@logging.apache.org"
