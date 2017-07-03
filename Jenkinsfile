@@ -40,7 +40,7 @@ pipeline {
 			}
 			steps {
 				bat "${NANT_BIN} -buildfile:log4net.build compile-net-4.0"
-				stash includes: 'bin/**/*.*', name 'net-4.0-assemblies'
+				stash includes: 'bin/**/*.*', name: 'net-4.0-assemblies'
 			}
 		}
 		stage('build net-4.0-cp') {
@@ -50,7 +50,7 @@ pipeline {
 			}
 			steps {
 				bat "${NANT_BIN} -buildfile:log4net.build compile-net-4.0-cp"
-				stash includes: 'bin/**/*.*', name 'net-4.0-cp-assemblies'
+				stash includes: 'bin/**/*.*', name: 'net-4.0-cp-assemblies'
 			}
 		}
 		stage('build net-4.5') {
@@ -60,7 +60,7 @@ pipeline {
 			}
 			steps {
 				bat "${NANT_BIN} -buildfile:log4net.build compile-net-4.5"
-				stash includes: 'bin/**/*.*', name 'net-4.5-assemblies'
+				stash includes: 'bin/**/*.*', name: 'net-4.5-assemblies'
 			}
 		}
 		stage('build mono-2.0') {
