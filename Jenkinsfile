@@ -25,10 +25,6 @@ pipeline {
 		label 'ubuntu'
 		skipDefaultCheckout()
 	}
-	// TODO: find a better way to determine nant installation path
-	def getPathToNAntOnWindows() {
-		return 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
-	}
 	stages {
 		stage('checkout') {
 			steps {
@@ -154,5 +150,10 @@ pipeline {
 			step([$class: 'Mailer', notifyEveryUnstableBuild: false, recipients: 'dev@logging.apache.org'])
 		}
 	}
+}
+
+// TODO: find a better way to determine nant installation path
+def getPathToNAntOnWindows() {
+	return 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 }
 
