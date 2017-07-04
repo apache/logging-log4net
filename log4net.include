@@ -197,7 +197,8 @@ limitations under the License.
         <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_1_0=True" dynamic="true" />
         <property name="current.build.defines.vjc" value="${build.defines.vjc},NET,NET_1_0" dynamic="true" />
         <property name="current.build.defines.cl" value="${build.defines.cl} /D NET /D NET_1_0" dynamic="true" />
-        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.build.configuration.dir" value="${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.bin.dir" value="${bin.dir}/${current.build.configuration.dir}"/>
         <property name="log4net.output.dir" value="${log4net.basedir}/${current.bin.dir}" />
         <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />
         <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
@@ -211,7 +212,8 @@ limitations under the License.
         <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_1_1=True" dynamic="true" />
         <property name="current.build.defines.vjc" value="${build.defines.vjc},NET,NET_1_1" dynamic="true" />
         <property name="current.build.defines.cl" value="${build.defines.cl} /D NET /D NET_1_1" dynamic="true" />
-        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.build.configuration.dir" value="${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.bin.dir" value="${bin.dir}/${current.build.configuration.dir}"/>
         <property name="log4net.output.dir" value="${log4net.basedir}/${current.bin.dir}" />
         <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />
         <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
@@ -225,7 +227,8 @@ limitations under the License.
         <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_2_0=True" dynamic="true" />
         <property name="current.build.defines.vjc" value="${build.defines.vjc},NET,NET_2_0" dynamic="true" />
         <property name="current.build.defines.cl" value="${build.defines.cl} /D NET /D NET_2_0" dynamic="true" />
-        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.build.configuration.dir" value="${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.bin.dir" value="${bin.dir}/${current.build.configuration.dir}"/>
         <property name="log4net.output.dir" value="${log4net.basedir}/${current.bin.dir}" />
         <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />
         <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
@@ -240,7 +243,8 @@ limitations under the License.
       <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_2_0=True,NET_3_5=True" dynamic="true" />
       <property name="current.build.defines.vjc" value="${build.defines.vjc},NET,NET_2_0,NET_3_5" dynamic="true" />
       <property name="current.build.defines.cl" value="${build.defines.cl} /D NET /D NET_2_0 /D NET_3_5" dynamic="true" />
-      <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+      <property name="current.build.configuration.dir" value="${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.bin.dir" value="${bin.dir}/${current.build.configuration.dir}"/>
       <property name="log4net.output.dir" value="${log4net.basedir}/${current.bin.dir}" />
       <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />      
       <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
@@ -255,7 +259,8 @@ limitations under the License.
       <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_2_0=True,NET_3_5=True,CLIENT_PROFILE=True" dynamic="true" />
       <property name="current.build.defines.vjc" value="${build.defines.vjc},NET,NET_2_0,NET_3_5,CLIENT_PROFILE" dynamic="true" />
       <property name="current.build.defines.cl" value="${build.defines.cl} /D NET /D NET_2_0 /D NET_3_5 /D CLIENT_PROFILE" dynamic="true" />
-      <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}-cp/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+      <property name="current.build.configuration.dir" value="${framework::get-family(framework::get-target-framework())}-cp/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.bin.dir" value="${bin.dir}/${current.build.configuration.dir}"/>
       <property name="log4net.output.dir" value="${log4net.basedir}/${current.bin.dir}" />
       <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}-cp/${framework::get-version(framework::get-target-framework())}" />      
       <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
@@ -270,7 +275,8 @@ limitations under the License.
       <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_2_0=True,NET_4_0=True" dynamic="true" />
       <property name="current.build.defines.vjc" value="${build.defines.vjc},NET,NET_2_0,NET_4_0" dynamic="true" />
       <property name="current.build.defines.cl" value="${build.defines.cl} /D NET /D NET_2_0 /D NET_4_0" dynamic="true" />
-      <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+      <property name="current.build.configuration.dir" value="${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.bin.dir" value="${bin.dir}/${current.build.configuration.dir}"/>
       <property name="log4net.output.dir" value="${log4net.basedir}/${current.bin.dir}" />
       <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />      
       <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
@@ -285,7 +291,8 @@ limitations under the License.
       <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_2_0=True,NET_4_0=True,CLIENT_PROFILE=True" dynamic="true" />
       <property name="current.build.defines.vjc" value="${build.defines.vjc},NET,NET_2_0,NET_4_0,CLIENT_PROFILE" dynamic="true" />
       <property name="current.build.defines.cl" value="${build.defines.cl} /D NET /D NET_2_0 /D NET_4_0 /D CLIENT_PROFILE" dynamic="true" />
-      <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}-cp/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+      <property name="current.build.configuration.dir" value="${framework::get-family(framework::get-target-framework())}-cp/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.bin.dir" value="${bin.dir}/${current.build.configuration.dir}"/>
       <property name="log4net.output.dir" value="${log4net.basedir}/${current.bin.dir}" />
       <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}-cp/${framework::get-version(framework::get-target-framework())}" />      
       <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
@@ -300,7 +307,8 @@ limitations under the License.
       <property name="current.build.defines.vbc" value="${build.defines.vbc},NET=True,NET_2_0=True,NET_4_0=True,NET_4_5=True" dynamic="true" />
       <property name="current.build.defines.vjc" value="${build.defines.vjc},NET,NET_2_0,NET_4_0,NET_4_5" dynamic="true" />
       <property name="current.build.defines.cl" value="${build.defines.cl} /D NET /D NET_2_0 /D NET_4_0 /D NET_4_5" dynamic="true" />
-      <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/4.5/${current.build.config}" />
+      <property name="current.build.configuration.dir" value="${framework::get-family(framework::get-target-framework())}/4.5/${current.build.config}" />
+        <property name="current.bin.dir" value="${bin.dir}/${current.build.configuration.dir}"/>
       <property name="log4net.output.dir" value="${log4net.basedir}/${current.bin.dir}" />
       <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/4.5" />      
       <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
@@ -314,7 +322,8 @@ limitations under the License.
         <property name="current.build.defines.vbc" value="${build.defines.vbc},NETCF=True,NETCF_1_0=True" dynamic="true" />
         <property name="current.build.defines.vjc" value="${build.defines.vjc},NETCF,NETCF_1_0" dynamic="true" />
         <property name="current.build.defines.cl" value="${build.defines.cl} /D NETCF /D NETCF_1_0" dynamic="true" />
-        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.build.configuration.dir" value="${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.bin.dir" value="${bin.dir}/${current.build.configuration.dir}"/>
       <property name="log4net.output.dir" value="${log4net.basedir}/${current.bin.dir}" />
         <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />
         <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
@@ -328,7 +337,8 @@ limitations under the License.
         <property name="current.build.defines.vbc" value="${build.defines.vbc},NETCF=True,NETCF_2_0=True" dynamic="true" />
         <property name="current.build.defines.vjc" value="${build.defines.vjc},NETCF,NETCF_2_0" dynamic="true" />
         <property name="current.build.defines.cl" value="${build.defines.cl} /D NETCF /D NETCF_2_0" dynamic="true" />
-        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.build.configuration.dir" value="${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.bin.dir" value="${bin.dir}/${current.build.configuration.dir}"/>
       <property name="log4net.output.dir" value="${log4net.basedir}/${current.bin.dir}" />
         <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />
         <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
@@ -342,7 +352,8 @@ limitations under the License.
         <property name="current.build.defines.vbc" value="${build.defines.vbc},MONO=True,MONO_1_0=True" dynamic="true" />
         <property name="current.build.defines.vjc" value="${build.defines.vjc},MONO,MONO_1_0" dynamic="true" />
         <property name="current.build.defines.cl" value="${build.defines.cl} /D MONO /D MONO_1_0" dynamic="true" />
-        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.build.configuration.dir" value="${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.bin.dir" value="${bin.dir}/${current.build.configuration.dir}"/>
       <property name="log4net.output.dir" value="${log4net.basedir}/${current.bin.dir}" />
         <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />
         <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
@@ -356,7 +367,8 @@ limitations under the License.
         <property name="current.build.defines.vbc" value="${build.defines.vbc},MONO=True,MONO_2_0=True" dynamic="true" />
         <property name="current.build.defines.vjc" value="${build.defines.vjc},MONO,MONO_2_0" dynamic="true" />
         <property name="current.build.defines.cl" value="${build.defines.cl} /D MONO /D MONO_2_0" dynamic="true" />
-        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.build.configuration.dir" value="${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.bin.dir" value="${bin.dir}/${current.build.configuration.dir}"/>
       <property name="log4net.output.dir" value="${log4net.basedir}/${current.bin.dir}" />
         <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />
         <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
@@ -370,7 +382,8 @@ limitations under the License.
         <property name="current.build.defines.vbc" value="${build.defines.vbc},MONO=True,MONO_2_0=True" dynamic="true" />
         <property name="current.build.defines.vjc" value="${build.defines.vjc},MONO,MONO_2_0" dynamic="true" />
         <property name="current.build.defines.cl" value="${build.defines.cl} /D MONO /D MONO_2_0" dynamic="true" />
-        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.build.configuration.dir" value="${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.bin.dir" value="${bin.dir}/${current.build.configuration.dir}"/>
       <property name="log4net.output.dir" value="${log4net.basedir}/${current.bin.dir}" />
         <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />
         <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
@@ -384,7 +397,8 @@ limitations under the License.
         <property name="current.build.defines.vbc" value="${build.defines.vbc},MONO=True,MONO_2_0=True,MONO_4_0=True" dynamic="true" />
         <property name="current.build.defines.vjc" value="${build.defines.vjc},MONO,MONO_2_0,MONO_4_0" dynamic="true" />
         <property name="current.build.defines.cl" value="${build.defines.cl} /D MONO /D MONO_2_0 /D MONO_4_0" dynamic="true" />
-        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.build.configuration.dir" value="${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.bin.dir" value="${bin.dir}/${current.build.configuration.dir}"/>
       <property name="log4net.output.dir" value="${log4net.basedir}/${current.bin.dir}" />
         <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />
         <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
@@ -398,7 +412,8 @@ limitations under the License.
         <property name="current.build.defines.vbc" value="${build.defines.vbc},MONO=True,MONO_2_0=True,MONO_4_0=True,MONO_4_5=True" dynamic="true" />
         <property name="current.build.defines.vjc" value="${build.defines.vjc},MONO,MONO_2_0,MONO_4_0,MONO_4_5" dynamic="true" />
         <property name="current.build.defines.cl" value="${build.defines.cl} /D MONO /D MONO_2_0 /D MONO_4_0 /D MONO_4_5" dynamic="true" />
-        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.build.configuration.dir" value="${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.bin.dir" value="${bin.dir}/${current.build.configuration.dir}"/>
       <property name="log4net.output.dir" value="${log4net.basedir}/${current.bin.dir}" />
         <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />
         <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
@@ -412,7 +427,8 @@ limitations under the License.
         <property name="current.build.defines.vbc" value="${build.defines.vbc},SSCLI=True,SSCLI_1_0=True" dynamic="true" />
         <property name="current.build.defines.vjc" value="${build.defines.vjc},SSCLI,SSCLI_1_0" dynamic="true" />
         <property name="current.build.defines.cl" value="${build.defines.cl} /D SSCLI /D SSCLI_1_0" dynamic="true" />
-        <property name="current.bin.dir" value="${bin.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.build.configuration.dir" value="${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}/${current.build.config}" />
+        <property name="current.bin.dir" value="${bin.dir}/${current.build.configuration.dir}"/>
       <property name="log4net.output.dir" value="${log4net.basedir}/${current.bin.dir}" />
         <property name="current.sdkdoc.dir" value="${sdkdoc.dir}/${framework::get-family(framework::get-target-framework())}/${framework::get-version(framework::get-target-framework())}" />
         <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
@@ -426,7 +442,8 @@ limitations under the License.
         <property name="current.build.defines.vbc" value="${build.defines.vbc},CLI=True,CLI_1_0=True" dynamic="true" />
         <property name="current.build.defines.vjc" value="${build.defines.vjc},CLI,CLI_1_0" dynamic="true" />
         <property name="current.build.defines.cl" value="${build.defines.cl} /D CLI /D CLI_1_0" dynamic="true" />
-        <property name="current.bin.dir" value="${bin.dir}/cli/1.0/${current.build.config}" />
+        <property name="current.build.configuration.dir" value="cli/1.0/${current.build.config}" />
+        <property name="current.bin.dir" value="${bin.dir}/${current.build.configuration.dir}"/>
       <property name="log4net.output.dir" value="${log4net.basedir}/${current.bin.dir}" />
         <property name="current.sdkdoc.dir" value="${sdkdoc.dir}" />
         <property name="current.sdkdoc.debug" value="${sdkdoc.debug}" dynamic="true" />
