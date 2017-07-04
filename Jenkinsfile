@@ -33,8 +33,7 @@ pipeline {
 				checkout scm
 			}
 		}
-		def builds = [:]
-		builds[0] = stage('build net-3.5') {
+		stage('build net-3.5') {
 			agent { label 'Windows' }
 			environment {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
@@ -46,7 +45,7 @@ pipeline {
 				stash includes: 'bin/**/*.*', name: 'net-3.5-assemblies'
 			}
 		}
-		builds[1] = stage('build net-3.5-cp') {
+		stage('build net-3.5-cp') {
 			agent { label 'Windows' }
 			environment {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
@@ -58,7 +57,7 @@ pipeline {
 				stash includes: 'bin/**/*.*', name: 'net-3.5-cp-assemblies'
 			}
 		}
-		builds[2] = stage('build net-4.0') {
+		stage('build net-4.0') {
 			agent { label 'Windows' }
 			environment {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
@@ -70,7 +69,7 @@ pipeline {
 				stash includes: 'bin/**/*.*', name: 'net-4.0-assemblies'
 			}
 		}
-		builds[3] = stage('build net-4.0-cp') {
+		stage('build net-4.0-cp') {
 			agent { label 'Windows' }
 			environment {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
@@ -82,7 +81,7 @@ pipeline {
 				stash includes: 'bin/**/*.*', name: 'net-4.0-cp-assemblies'
 			}
 		}
-		builds[4] = stage('build net-4.5') {
+		stage('build net-4.5') {
 			agent { label 'Windows' }
 			environment {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
@@ -94,7 +93,7 @@ pipeline {
 				stash includes: 'bin/**/*.*', name: 'net-4.5-assemblies'
 			}
 		}
-		builds[5] = stage('build mono-2.0') {
+		stage('build mono-2.0') {
 			agent {
 				dockerfile {
 					dir 'buildtools/docker/builder-mono-2.0'
@@ -108,7 +107,7 @@ pipeline {
 				stash includes: 'bin/**/*.*', name: 'mono-2.0-assemblies'
 			}
 		}
-		builds[6] = stage('build mono-3.5') {
+		stage('build mono-3.5') {
 			agent {
 				dockerfile {
 					dir 'buildtools/docker/builder-mono-3.5'
@@ -122,7 +121,7 @@ pipeline {
 				stash includes: 'bin/**/*.*', name: 'mono-3.5-assemblies'
 			}
 		}
-		builds[7] = stage('build mono-4.0') {
+		stage('build mono-4.0') {
 			agent {
 				dockerfile {
 					dir 'buildtools/docker/builder-mono-4.0'
@@ -136,7 +135,7 @@ pipeline {
 				stash includes: 'bin/**/*.*', name: 'mono-4.0-assemblies'
 			}
 		}
-		builds[8] = stage('build netstandard') {
+		stage('build netstandard') {
 			agent {
 				dockerfile {
 					dir 'buildtools/docker/builder-netstandard'
@@ -154,7 +153,7 @@ pipeline {
 				stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
 			}
 		}
-		builds[9] = stage('build site') {
+		stage('build site') {
 			agent { label 'Windows' }
 			tools {
 				maven 'Maven 3.3.9 (Windows)'
@@ -170,26 +169,18 @@ pipeline {
 				stash includes: 'target/site/**/*.*', name: 'site'
 			}
 		}
-
-		// run all builds in parallel
-		parallel builds
-
 		// TODO: testing needs to be refactored
-		stage('test net-4.0') {
+		stage('test on Windows') {
 			agent { label 'Windows' }
 			environment {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
 			steps {
-				deleteDir()
 				checkout scm
-				unstash 'net-4.0-assemblies'
 				bat "${NANT_BIN} -buildfile:tests\\nant.build"
 				// TODO: stash test results
 			}
 		}
-
-		// prepare package
 		stage('prepare package') {
 			steps {
 				// assemble package by unstashing components
