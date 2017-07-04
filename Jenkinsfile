@@ -46,7 +46,7 @@ pipeline {
 				checkout scm
 				bat "${NANT_BIN} -t:net-3.5 -buildfile:log4net.build compile-net-3.5"
 				stash includes: 'bin/**/*.*', name: 'net-3.5-assemblies'
-				bat "${NANT_BIN} -t:net-3.5 -buildfile:tests/nant.build runtests-net-3.5"
+				bat "${NANT_BIN} -t:net-3.5 -buildfile:tests/nant.build runtests-net-3.5 || true"
 				stash includes: 'tests/bin/**/results/*.*', name: 'net-3.5-testresults'
 			}
 		}
@@ -60,7 +60,7 @@ pipeline {
 				checkout scm
 				bat "${NANT_BIN} -t:net-3.5 -buildfile:log4net.build compile-net-3.5-cp"
 				stash includes: 'bin/**/*.*', name: 'net-3.5-cp-assemblies'
-				bat "${NANT_BIN} -t:net-3.5 -buildfile:tests/nant.build runtests-net-3.5-cp"
+				bat "${NANT_BIN} -t:net-3.5 -buildfile:tests/nant.build runtests-net-3.5-cp || true"
 				stash includes: 'tests/bin/**/results/*.*', name: 'net-3.5-cp-testresults'
 			}
 		}
@@ -74,7 +74,7 @@ pipeline {
 				checkout scm
 				bat "${NANT_BIN} -t:net-4.0 -buildfile:log4net.build compile-net-4.0"
 				stash includes: 'bin/**/*.*', name: 'net-4.0-assemblies'
-				bat "${NANT_BIN} -t:net-4.0 -buildfile:tests/nant.build runtests-net-4.0"
+				bat "${NANT_BIN} -t:net-4.0 -buildfile:tests/nant.build runtests-net-4.0 || true"
 				stash includes: 'tests/bin/**/results/*.*', name: 'net-4.0-testresults'
 			}
 		}
@@ -88,7 +88,7 @@ pipeline {
 				checkout scm
 				bat "${NANT_BIN} -t:net-4.0 -buildfile:log4net.build compile-net-4.0-cp"
 				stash includes: 'bin/**/*.*', name: 'net-4.0-cp-assemblies'
-				bat "${NANT_BIN} -t:net-4.0 -buildfile:tests/nant.build runtests-net-4.0-cp"
+				bat "${NANT_BIN} -t:net-4.0 -buildfile:tests/nant.build runtests-net-4.0-cp || true"
 				stash includes: 'tests/bin/**/results/*.*', name: 'net-4.0-cp-testresults'
 			}
 		}
@@ -102,7 +102,7 @@ pipeline {
 				checkout scm
 				bat "${NANT_BIN} -t:net-4.0 -buildfile:log4net.build compile-net-4.5"
 				stash includes: 'bin/**/*.*', name: 'net-4.5-assemblies'
-				bat "${NANT_BIN} -t:net-4.0 -buildfile:tests/nant.build runtests-net-4.5"
+				bat "${NANT_BIN} -t:net-4.0 -buildfile:tests/nant.build runtests-net-4.5 || true"
 				stash includes: 'tests/bin/**/results/*.*', name: 'net-4.5-testresults'
 			}
 		}
