@@ -47,7 +47,7 @@ pipeline {
 				bat "${NANT_BIN} -t:net-3.5 -buildfile:log4net.build compile-net-3.5"
 				stash includes: 'bin/**/*.*', name: 'net-3.5-assemblies'
 				bat "${NANT_BIN} -t:net-3.5 -buildfile:tests/nant.build runtests-net-3.5 || true"
-				stash includes: 'tests/bin/**/results/*.*', name: 'net-3.5-testresults'
+				junit 'tests/bin/**/results/*.*'
 			}
 		}
 		stage('build net-3.5-cp') {
@@ -61,7 +61,7 @@ pipeline {
 				bat "${NANT_BIN} -t:net-3.5 -buildfile:log4net.build compile-net-3.5-cp"
 				stash includes: 'bin/**/*.*', name: 'net-3.5-cp-assemblies'
 				bat "${NANT_BIN} -t:net-3.5 -buildfile:tests/nant.build runtests-net-3.5-cp || true"
-				stash includes: 'tests/bin/**/results/*.*', name: 'net-3.5-cp-testresults'
+				junit 'tests/bin/**/results/*.*'
 			}
 		}
 		stage('build net-4.0') {
@@ -75,7 +75,7 @@ pipeline {
 				bat "${NANT_BIN} -t:net-4.0 -buildfile:log4net.build compile-net-4.0"
 				stash includes: 'bin/**/*.*', name: 'net-4.0-assemblies'
 				bat "${NANT_BIN} -t:net-4.0 -buildfile:tests/nant.build runtests-net-4.0 || true"
-				stash includes: 'tests/bin/**/results/*.*', name: 'net-4.0-testresults'
+				junit 'tests/bin/**/results/*.*'
 			}
 		}
 		stage('build net-4.0-cp') {
@@ -89,7 +89,7 @@ pipeline {
 				bat "${NANT_BIN} -t:net-4.0 -buildfile:log4net.build compile-net-4.0-cp"
 				stash includes: 'bin/**/*.*', name: 'net-4.0-cp-assemblies'
 				bat "${NANT_BIN} -t:net-4.0 -buildfile:tests/nant.build runtests-net-4.0-cp || true"
-				stash includes: 'tests/bin/**/results/*.*', name: 'net-4.0-cp-testresults'
+				junit 'tests/bin/**/results/*.*'
 			}
 		}
 		stage('build net-4.5') {
@@ -103,7 +103,7 @@ pipeline {
 				bat "${NANT_BIN} -t:net-4.0 -buildfile:log4net.build compile-net-4.5"
 				stash includes: 'bin/**/*.*', name: 'net-4.5-assemblies'
 				bat "${NANT_BIN} -t:net-4.0 -buildfile:tests/nant.build runtests-net-4.5 || true"
-				stash includes: 'tests/bin/**/results/*.*', name: 'net-4.5-testresults'
+				junit 'tests/bin/**/results/*.*'
 			}
 		}
 		stage('build mono-2.0') {
@@ -201,13 +201,6 @@ pipeline {
 
 					// unstash site
 					unstash 'site'
-
-					// unstash test results
-					unstash 'net-3.5-testresults'
-					unstash 'net-3.5-cp-testresults'
-					unstash 'net-4.0-testresults'
-					unstash 'net-4.0-cp-testresults'
-					unstash 'net-4.5-testresults'
 				}
 				
 				// move site
@@ -216,9 +209,6 @@ pipeline {
 				
 				// archive package
 				archive 'package/**/*.*'
-
-				// generate unittest reports
-				junit 'package/tests/**/*.xml'
 			}
 		}
 		stage('publish site') {
