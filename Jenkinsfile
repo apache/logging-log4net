@@ -170,13 +170,14 @@ pipeline {
 			}
 		}
 		// TODO: testing needs to be refactored
-		stage('test on Windows') {
+		stage('test net-4.0') {
 			agent { label 'Windows' }
 			environment {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
 			steps {
 				checkout scm
+				unstash 'net-4.0-assemblies'
 				bat "${NANT_BIN} -buildfile:tests\\nant.build"
 				// TODO: stash test results
 			}
