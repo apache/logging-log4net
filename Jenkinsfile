@@ -210,7 +210,7 @@ pipeline {
 				archive 'package/**/*.*'
 
 				// generate unittest reports
-				junit 'package/tests/**/*.xml
+				junit 'package/tests/**/*.xml'
 			}
 		}
 		stage('publish site') {
