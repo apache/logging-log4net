@@ -47,7 +47,7 @@ pipeline {
 				bat "${NANT_BIN} -t:net-3.5 -buildfile:log4net.build compile-net-3.5"
 				stash includes: 'bin/**/*.*', name: 'net-3.5-assemblies'
 				bat "${NANT_BIN} -t:net-3.5 -buildfile:tests/nant.build runtests-net-3.5 && exit 0"
-				nunit 'testresults/**/*.xml'
+				archive 'testresults/**/*.xml'
 			}
 		}
 		stage('build net-3.5-cp') {
@@ -61,7 +61,7 @@ pipeline {
 				bat "${NANT_BIN} -t:net-3.5 -buildfile:log4net.build compile-net-3.5-cp"
 				stash includes: 'bin/**/*.*', name: 'net-3.5-cp-assemblies'
 				bat "${NANT_BIN} -t:net-3.5 -buildfile:tests/nant.build runtests-net-3.5-cp && exit 0"
-				nunit 'testresults/**/*.xml'
+				archive 'testresults/**/*.xml'
 			}
 		}
 		stage('build net-4.0') {
@@ -75,7 +75,7 @@ pipeline {
 				bat "${NANT_BIN} -t:net-4.0 -buildfile:log4net.build compile-net-4.0"
 				stash includes: 'bin/**/*.*', name: 'net-4.0-assemblies'
 				bat "${NANT_BIN} -t:net-4.0 -buildfile:tests/nant.build runtests-net-4.0 && exit 0"
-				nunit 'testresults/**/*.xml'
+				archive 'testresults/**/*.xml'
 			}
 		}
 		stage('build net-4.0-cp') {
@@ -89,7 +89,7 @@ pipeline {
 				bat "${NANT_BIN} -t:net-4.0 -buildfile:log4net.build compile-net-4.0-cp"
 				stash includes: 'bin/**/*.*', name: 'net-4.0-cp-assemblies'
 				bat "${NANT_BIN} -t:net-4.0 -buildfile:tests/nant.build runtests-net-4.0-cp && exit 0"
-				nunit 'testresults/**/*.xml'
+				archive 'testresults/**/*.xml'
 			}
 		}
 		stage('build net-4.5') {
@@ -103,7 +103,7 @@ pipeline {
 				bat "${NANT_BIN} -t:net-4.0 -buildfile:log4net.build compile-net-4.5"
 				stash includes: 'bin/**/*.*', name: 'net-4.5-assemblies'
 				bat "${NANT_BIN} -t:net-4.0 -buildfile:tests/nant.build runtests-net-4.5 && exit 0"
-				nunit 'testresults/**/*.xml'
+				archive 'testresults/**/*.xml'
 			}
 		}
 		stage('build mono-2.0') {
