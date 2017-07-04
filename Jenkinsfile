@@ -27,12 +27,15 @@ pipeline {
 		label 'ubuntu'
 	}
 	stages {
+		// prepare node for builds
 		stage('checkout') {
 			steps {
 				deleteDir()
 				checkout scm
 			}
 		}
+
+		// builds
 		stage('build net-3.5') {
 			agent { label 'Windows' }
 			environment {
@@ -43,6 +46,7 @@ pipeline {
 				checkout scm
 				bat "${NANT_BIN} -t:net-3.5 -buildfile:log4net.build compile-net-3.5"
 				stash includes: 'bin/**/*.*', name: 'net-3.5-assemblies'
+				bat "${NANT_BIN} -t:net-3.5 -buildfile:tests/nant.build runtests-net-3.5"
 			}
 		}
 		stage('build net-3.5-cp') {
@@ -55,6 +59,7 @@ pipeline {
 				checkout scm
 				bat "${NANT_BIN} -t:net-3.5 -buildfile:log4net.build compile-net-3.5-cp"
 				stash includes: 'bin/**/*.*', name: 'net-3.5-cp-assemblies'
+				bat "${NANT_BIN} -t:net-3.5 -buildfile:tests/nant.build runtests-net-3.5-cp"
 			}
 		}
 		stage('build net-4.0') {
@@ -65,8 +70,9 @@ pipeline {
 			steps {
 				deleteDir()
 				checkout scm
-				bat "${NANT_BIN} -buildfile:log4net.build compile-net-4.0"
+				bat "${NANT_BIN} -t:net-4.0 -buildfile:log4net.build compile-net-4.0"
 				stash includes: 'bin/**/*.*', name: 'net-4.0-assemblies'
+				bat "${NANT_BIN} -t:net-4.0 -buildfile:tests/nant.build runtests-net-4.0"
 			}
 		}
 		stage('build net-4.0-cp') {
@@ -77,8 +83,9 @@ pipeline {
 			steps {
 				deleteDir()
 				checkout scm
-				bat "${NANT_BIN} -buildfile:log4net.build compile-net-4.0-cp"
+				bat "${NANT_BIN} -t:net-4.0 -buildfile:log4net.build compile-net-4.0-cp"
 				stash includes: 'bin/**/*.*', name: 'net-4.0-cp-assemblies'
+				bat "${NANT_BIN} -t:net-4.0 -buildfile:tests/nant.build runtests-net-4.0-cp"
 			}
 		}
 		stage('build net-4.5') {
@@ -89,8 +96,9 @@ pipeline {
 			steps {
 				deleteDir()
 				checkout scm
-				bat "${NANT_BIN} -buildfile:log4net.build compile-net-4.5"
+				bat "${NANT_BIN} -t:net-4.5 -buildfile:log4net.build compile-net-4.5"
 				stash includes: 'bin/**/*.*', name: 'net-4.5-assemblies'
+				bat "${NANT_BIN} -t:net-4.5 -buildfile:tests/nant.build runtests-net-4.5"
 			}
 		}
 		stage('build mono-2.0') {
@@ -169,19 +177,8 @@ pipeline {
 				stash includes: 'target/site/**/*.*', name: 'site'
 			}
 		}
-		// TODO: testing needs to be refactored
-		stage('test net-4.0') {
-			agent { label 'Windows' }
-			environment {
-				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
-			}
-			steps {
-				checkout scm
-				unstash 'net-4.0-assemblies'
-				bat "${NANT_BIN} -buildfile:tests\\nant.build"
-				// TODO: stash test results
-			}
-		}
+
+		// prepare package
 		stage('prepare package') {
 			steps {
 				// assemble package by unstashing components
