@@ -58,9 +58,9 @@ pipeline {
 			steps {
 				deleteDir()
 				checkout scm
-				bat "${NANT_BIN} -t:net-3.5-cp -buildfile:log4net.build compile-net-3.5-cp"
+				bat "${NANT_BIN} -t:net-3.5 -buildfile:log4net.build compile-net-3.5-cp"
 				stash includes: 'bin/**/*.*', name: 'net-3.5-cp-assemblies'
-				bat "${NANT_BIN} -t:net-3.5-cp -buildfile:tests/nant.build runtests-net-3.5-cp"
+				bat "${NANT_BIN} -t:net-3.5 -buildfile:tests/nant.build runtests-net-3.5-cp"
 			}
 		}
 		stage('build net-4.0') {
@@ -84,9 +84,9 @@ pipeline {
 			steps {
 				deleteDir()
 				checkout scm
-				bat "${NANT_BIN} -t:net-4.0-cp -buildfile:log4net.build compile-net-4.0-cp"
+				bat "${NANT_BIN} -t:net-4.0 -buildfile:log4net.build compile-net-4.0-cp"
 				stash includes: 'bin/**/*.*', name: 'net-4.0-cp-assemblies'
-				bat "${NANT_BIN} -t:net-4.0-cp -buildfile:tests/nant.build runtests-net-4.0-cp"
+				bat "${NANT_BIN} -t:net-4.0 -buildfile:tests/nant.build runtests-net-4.0-cp"
 			}
 		}
 		stage('build net-4.5') {
