@@ -47,6 +47,7 @@ pipeline {
 				bat "${NANT_BIN} -t:net-3.5 -buildfile:log4net.build compile-net-3.5"
 				stash includes: 'bin/**/*.*', name: 'net-3.5-assemblies'
 				bat "${NANT_BIN} -t:net-3.5 -buildfile:tests/nant.build runtests-net-3.5"
+				stash includes: 'tests/bin/**/results/*.*', name: 'net-3.5-testresults'
 			}
 		}
 		stage('build net-3.5-cp') {
@@ -183,6 +184,7 @@ pipeline {
 			steps {
 				// assemble package by unstashing components
 				dir('package') {
+					// unstash assemblies
 					unstash 'net-3.5-assemblies'
 					unstash 'net-3.5-cp-assemblies'
 					unstash 'net-4.0-assemblies'
@@ -192,7 +194,12 @@ pipeline {
 					unstash 'mono-3.5-assemblies'
 					unstash 'mono-4.0-assemblies'
 					unstash 'netstandard-assemblies'
+
+					// unstash site
 					unstash 'site'
+
+					// unstash test results
+					unstash 'net-3.5-testresults'
 				}
 				
 				// move site
@@ -201,6 +208,9 @@ pipeline {
 				
 				// archive package
 				archive 'package/**/*.*'
+
+				// generate unittest reports
+				junit 'package/tests/**/*.xml
 			}
 		}
 		stage('publish site') {
