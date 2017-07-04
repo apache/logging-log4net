@@ -102,7 +102,7 @@ pipeline {
 				checkout scm
 				bat "${NANT_BIN} -t:net-4.0 -buildfile:log4net.build compile-net-4.5"
 				stash includes: 'bin/**/*.*', name: 'net-4.5-assemblies'
-				bat "${NANT_BIN} -t:net-4.0 -buildfile:tests/nant.build runtests-net-4.5 && exit 0"
+				bat "${NANT_BIN} -t:net-4.0 -buildfile:tests/nant.build runtests-net-4.5 && exit /B 0"
 				archive 'testresults/**/*.xml'
 			}
 		}
