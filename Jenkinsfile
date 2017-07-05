@@ -162,12 +162,10 @@ pipeline {
 				dockerfile {
 					dir 'buildtools/docker/builder-netstandard'
 					reuseNode true
+
+					// workaround: https://github.com/NuGet/Home/issues/5106
+					args '-e HOME=/home/jenkins -e USER=jenkins'
 				}
-			}
-			environment {
-				// workaround: https://github.com/NuGet/Home/issues/5106
-				HOME = "/home/jenkins"
-				USER = "jenkins"
 			}
 			steps {
 				sh "rm -rf bin/ tests/"
