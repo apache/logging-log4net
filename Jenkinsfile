@@ -134,6 +134,8 @@ pipeline {
 				checkout scm
 				sh "nant -t:mono-3.5 -buildfile:log4net.build compile-mono-3.5"
 				stash includes: 'bin/**/*.*', name: 'mono-3.5-assemblies'
+				sh "nant -t:mono-3.5 -buildfile:tests/nant.build runtests-mono-3.5"
+				stash includes: 'tests/bin/**/*.nunit.xml', name: 'mono-3.5-testresults'
 			}
 		}
 		stage('build mono-4.0') {
@@ -148,6 +150,8 @@ pipeline {
 				checkout scm
 				sh "nant -t:mono-4.0 -buildfile:log4net.build compile-mono-4.0"
 				stash includes: 'bin/**/*.*', name: 'mono-4.0-assemblies'
+				sh "nant -t:mono-4.0 -buildfile:tests/nant.build runtests-mono-4.0"
+				stash includes: 'tests/bin/**/*.nunit.xml', name: 'mono-4.0-testresults'
 			}
 		}
 		stage('build netstandard') {
@@ -208,6 +212,8 @@ pipeline {
 					unstash 'net-4.0-cp-testresults'
 					unstash 'net-4.5-testresults'
 					unstash 'mono-2.0-testresults'
+					unstash 'mono-3.5-testresults'
+					unstash 'mono-4.0-testresults'
 
 					// unstash site
 					unstash 'site'
