@@ -216,10 +216,12 @@ pipeline {
 
 				// archive package
 				archive 'package/**/*.*'
+			}
 		}
 
 		// archive the tests (this also checks if tests failed; if that's the case this stage should fail)
 		stage('check test results') {
+			steps {
 				// record test results
 				step([
 					$class        : 'XUnitBuilder',
@@ -234,6 +236,7 @@ pipeline {
 						]
 					]
 				])
+			}
 		}
 
 		stage('publish site') {
