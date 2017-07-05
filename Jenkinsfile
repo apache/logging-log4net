@@ -47,7 +47,7 @@ pipeline {
 				bat "${NANT_BIN} -t:net-3.5 -buildfile:log4net.build compile-net-3.5"
 				stash includes: 'bin/**/*.*', name: 'net-3.5-assemblies'
 				bat "${NANT_BIN} -t:net-3.5 -buildfile:tests/nant.build runtests-net-3.5"
-				archive 'testresults/**/*.xml'
+				step([$class: 'NUnitPublisher', testResultsPattern: 'testresults/**/*.xml', debug: false, keepJUnitReports: true, skipJUnitArchiver:false, failIfNoResults: falsee])
 			}
 		}
 		stage('build net-3.5-cp') {
