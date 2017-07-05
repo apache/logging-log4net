@@ -214,6 +214,12 @@ pipeline {
 				sh 'mv package/target/site/ package/site/'
 				sh 'rmdir -p --ignore-fail-on-non-empty package/target'
 
+				// archive package
+				archive 'package/**/*.*'
+		}
+
+		// archive the tests (this also checks if tests failed; if that's the case this stage should fail)
+		stage('check test results') {
 				// record test results
 				step([
 					$class        : 'XUnitBuilder',
@@ -224,15 +230,12 @@ pipeline {
 							failIfNotNew         : true,
 							pattern              : 'package/tests/bin/**/*.xml',
 							skipNoTestFiles      : true,
-							stopProcessingIfError: false
+							stopProcessingIfError: true
 						]
 					]
 				])
-
-				// archive package
-				archive 'package/**/*.*'
-			}
 		}
+
 		stage('publish site') {
 			when {
 				branch 'master'
