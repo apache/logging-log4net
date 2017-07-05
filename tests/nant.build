@@ -789,77 +789,77 @@ limitations under the License.
     
     <target name="runtests-net-1.0" description="Runs log4net tests on .NET Framework 1.0 version" depends="compile-net-1.0">
         <nunit2 failonerror="false">
-            <formatter type="Xml" usefile="true" extension=".xml" outputdir="${current.bin.dir}" />
+            <formatter type="Xml" usefile="true" extension=".nunit.xml" outputdir="${current.bin.dir}" />
             <test assemblyname="${current.bin.dir}/log4net.Tests.dll" />
         </nunit2>
     </target>
 
     <target name="runtests-net-1.1" description="Runs log4net tests on .NET Framework 1.1 version" depends="compile-net-1.1">
         <nunit2 failonerror="false">
-            <formatter type="Xml" usefile="true" extension=".xml" outputdir="${current.bin.dir}" />
+            <formatter type="Xml" usefile="true" extension=".nunit.xml" outputdir="${current.bin.dir}" />
             <test assemblyname="${current.bin.dir}/log4net.Tests.dll" />
         </nunit2>
     </target>
 
     <target name="runtests-net-2.0" description="Runs log4net tests on .NET Framework 2.0 version" depends="compile-net-2.0">
         <nunit2 failonerror="false">
-            <formatter type="Xml" usefile="true" extension=".xml" outputdir="${current.bin.dir}" />
+            <formatter type="Xml" usefile="true" extension=".nunit.xml" outputdir="${current.bin.dir}" />
             <test assemblyname="${current.bin.dir}/log4net.Tests.dll" />
         </nunit2>
     </target>
 
     <target name="runtests-mono-2.0" description="Runs log4net tests on Mono Framework 2.0 version" depends="compile-mono-2.0">
         <nunit2 failonerror="false">
-            <formatter type="Xml" usefile="true" extension=".xml" outputdir="${current.bin.dir}" />
+            <formatter type="Xml" usefile="true" extension=".nunit.xml" outputdir="${current.bin.dir}" />
             <test assemblyname="${current.bin.dir}/log4net.Tests.dll" />
         </nunit2>
     </target>
 
     <target name="runtests-mono-3.5" description="Runs log4net tests on Mono Framework 3.5 version" depends="compile-mono-3.5">
         <nunit2 failonerror="false">
-            <formatter type="Xml" usefile="true" extension=".xml" outputdir="${current.bin.dir}" />
+            <formatter type="Xml" usefile="true" extension=".nunit.xml" outputdir="${current.bin.dir}" />
             <test assemblyname="${current.bin.dir}/log4net.Tests.dll" />
         </nunit2>
     </target>
 
     <target name="runtests-mono-4.0" description="Runs log4net tests on Mono Framework 4.0 version" depends="compile-mono-4.0">
         <nunit2 failonerror="false">
-            <formatter type="Xml" usefile="true" extension=".xml" outputdir="${current.bin.dir}" />
+            <formatter type="Xml" usefile="true" extension=".nunit.xml" outputdir="${current.bin.dir}" />
             <test assemblyname="${current.bin.dir}/log4net.Tests.dll" />
         </nunit2>
     </target>
 
     <target name="runtests-net-3.5" description="Runs log4net tests on .NET Framework 3.5 version" depends="compile-net-3.5">
         <nunit2 failonerror="false">
-            <formatter type="Xml" usefile="true" extension=".xml" outputdir="${current.bin.dir}" />
+            <formatter type="Xml" usefile="true" extension=".nunit.xml" outputdir="${current.bin.dir}" />
             <test assemblyname="${current.bin.dir}/log4net.Tests.dll" />
         </nunit2>
     </target>
 
     <target name="runtests-net-3.5-cp" description="Runs log4net tests on .NET Framework 3.5 Client Profile version" depends="compile-net-3.5-cp">
         <nunit2 failonerror="false">
-            <formatter type="Xml" usefile="true" extension=".xml" outputdir="${current.bin.dir}" />
+            <formatter type="Xml" usefile="true" extension=".nunit.xml" outputdir="${current.bin.dir}" />
             <test assemblyname="${current.bin.dir}/log4net.Tests.dll" />
         </nunit2>
     </target>
 
     <target name="runtests-net-4.0" description="Runs log4net tests on .NET Framework 4.0 version" depends="compile-net-4.0">
         <nunit2 failonerror="false">
-            <formatter type="Xml" usefile="true" extension=".xml" outputdir="${current.bin.dir}" />
+            <formatter type="Xml" usefile="true" extension=".nunit.xml" outputdir="${current.bin.dir}" />
             <test assemblyname="${current.bin.dir}/log4net.Tests.dll" />
         </nunit2>
     </target>
 
     <target name="runtests-net-4.0-cp" description="Runs log4net tests on .NET Framework 4.0 Client Profile version" depends="compile-net-4.0-cp">
         <nunit2 failonerror="false">
-            <formatter type="Xml" usefile="true" extension=".xml" outputdir="${current.bin.dir}" />
+            <formatter type="Xml" usefile="true" extension=".nunit.xml" outputdir="${current.bin.dir}" />
             <test assemblyname="${current.bin.dir}/log4net.Tests.dll" />
         </nunit2>
     </target>
 
     <target name="runtests-net-4.5" description="Runs log4net tests on .NET Framework 4.5 version" depends="compile-net-4.5">
         <nunit2 failonerror="false">
-            <formatter type="Xml" usefile="true" extension=".xml" outputdir="${current.bin.dir}" />
+            <formatter type="Xml" usefile="true" extension=".nunit.xml" outputdir="${current.bin.dir}" />
             <test assemblyname="${current.bin.dir}/log4net.Tests.dll" />
         </nunit2>
     </target>
