@@ -115,6 +115,7 @@ pipeline {
 				}
 			}
 			steps {
+				deleteDir()
 				checkout scm
 				sh "nant -t:mono-2.0 -buildfile:log4net.build compile-mono-2.0"
 				stash includes: 'bin/**/*.*', name: 'mono-2.0-assemblies'
@@ -131,6 +132,7 @@ pipeline {
 				}
 			}
 			steps {
+				deleteDir()
 				checkout scm
 				sh "nant -t:mono-3.5 -buildfile:log4net.build compile-mono-3.5"
 				stash includes: 'bin/**/*.*', name: 'mono-3.5-assemblies'
@@ -147,6 +149,7 @@ pipeline {
 				}
 			}
 			steps {
+				deleteDir()
 				checkout scm
 				sh "nant -t:mono-4.0 -buildfile:log4net.build compile-mono-4.0"
 				stash includes: 'bin/**/*.*', name: 'mono-4.0-assemblies'
@@ -162,6 +165,7 @@ pipeline {
 				}
 			}
 			steps {
+				deleteDir()
 				checkout scm
 				
 				// workaround: https://github.com/NuGet/Home/issues/5106
