@@ -164,12 +164,14 @@ pipeline {
 					reuseNode true
 				}
 			}
+			environment {
+				// workaround: https://github.com/NuGet/Home/issues/5106
+				HOME = "/home/jenkins"
+				USER = "jenkins"
+			}
 			steps {
 				sh "rm -rf bin/ tests/"
 				checkout scm
-				
-				// workaround: https://github.com/NuGet/Home/issues/5106
-				sh 'export HOME=/home/jenkins'
 				
 				// compile 
 				sh 'nant compile-netstandard'
