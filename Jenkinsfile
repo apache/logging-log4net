@@ -47,19 +47,7 @@ pipeline {
 				bat "${NANT_BIN} -t:net-3.5 -buildfile:log4net.build compile-net-3.5"
 				stash includes: 'bin/**/*.*', name: 'net-3.5-assemblies'
 				bat "${NANT_BIN} -t:net-3.5 -buildfile:tests/nant.build runtests-net-3.5"
-				step([
-					$class        : 'XUnitBuilder',
-					tools         : [
-						[
-							$class               : 'NUnitType',
-							deleteOutputFiles    : false,
-							failIfNotNew         : true,
-							pattern              : 'tests/bin/**/*.xml',
-							skipNoTestFiles      : true,
-							stopProcessingIfError: false
-						]
-					]
-				])
+				stash includes: 'tests/bin/**/*.xml', name: 'net-3.5-testresults'
 			}
 		}
 		stage('build net-3.5-cp') {
@@ -211,6 +199,9 @@ pipeline {
 					unstash 'mono-4.0-assemblies'
 					unstash 'netstandard-assemblies'
 
+					// unstash test results
+					unstash 'net-3.5-testresults'
+
 					// unstash site
 					unstash 'site'
 				}
@@ -218,7 +209,22 @@ pipeline {
 				// move site
 				sh 'mv package/target/site/ package/site/'
 				sh 'rmdir -p --ignore-fail-on-non-empty package/target'
-				
+
+				// record test results
+				step([
+					$class        : 'XUnitBuilder',
+					tools         : [
+						[
+							$class               : 'NUnit',
+							deleteOutputFiles    : false,
+							failIfNotNew         : true,
+							pattern              : 'tests/bin/**/*.xml',
+							skipNoTestFiles      : true,
+							stopProcessingIfError: false
+						]
+					]
+				])
+
 				// archive package
 				archive 'package/**/*.*'
 			}
