@@ -2015,7 +2015,6 @@ limitations under the License.
     <if test="${dotnet.available == '0'}">
       <exec program="dotnet" workingdir="netstandard" resultproperty="dotnet.available">
         <arg value="restore"/>
-        <arg value="--no-cache"/>
       </exec>
       <exec program="dotnet" workingdir="netstandard">
         <arg value="build"/>
