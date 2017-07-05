@@ -222,7 +222,7 @@ pipeline {
 							$class               : 'NUnitJunitHudsonTestType',
 							deleteOutputFiles    : false,
 							failIfNotNew         : true,
-							pattern              : 'tests/bin/**/*.xml',
+							pattern              : 'package/tests/bin/**/*.xml',
 							skipNoTestFiles      : true,
 							stopProcessingIfError: false
 						]
