@@ -162,12 +162,11 @@ pipeline {
 				dockerfile {
 					dir 'buildtools/docker/builder-netstandard'
 					reuseNode true
-
-					// workaround: https://github.com/NuGet/Home/issues/5106
-					args '-e HOME=/home/jenkins -e USER=jenkins'
 				}
 			}
 			steps {
+				// workaround: https://github.com/NuGet/Home/issues/5106
+				sh 'set HOME=$(pwd)'
 				sh "rm -rf bin/ tests/"
 				checkout scm
 				
