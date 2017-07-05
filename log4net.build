@@ -2007,12 +2007,15 @@ limitations under the License.
   </target>
   <target name="compile-netstandard-current-configuration">
     <exec program="dotnet" workingdir="netstandard" failonerror="false" resultproperty="dotnet.available">
-      <arg value="restore"/>
+      <arg value="--version"/>
     </exec>
     <if test="${dotnet.available != '0'}">
       <echo message="Skipping build; required framework is not available: netstandard"/>
     </if>
     <if test="${dotnet.available == '0'}">
+      <exec program="dotnet" workingdir="netstandard" resultproperty="dotnet.available">
+        <arg value="restore"/>
+      </exec>
       <exec program="dotnet" workingdir="netstandard">
         <arg value="build"/>
         <arg value="log4net"/>
