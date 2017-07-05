@@ -118,7 +118,7 @@ pipeline {
 				checkout scm
 				sh "nant -t:mono-2.0 -buildfile:log4net.build compile-mono-2.0"
 				stash includes: 'bin/**/*.*', name: 'mono-2.0-assemblies'
-				sh 'nant -t:mono-2.0 -buildfile:tests/nant.build runtests-mono-2.0"
+				sh "nant -t:mono-2.0 -buildfile:tests/nant.build runtests-mono-2.0"
 				stash includes: 'tests/bin/**/*.nunit.xml', name: 'mono-2.0-testresults'
 			}
 		}
