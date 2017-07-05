@@ -166,7 +166,7 @@ pipeline {
 			}
 			steps {
 				// workaround: https://github.com/NuGet/Home/issues/5106
-				sh 'set HOME=$(pwd)'
+				sh 'export HOME=$(pwd)'
 				sh "rm -rf bin/ tests/"
 				checkout scm
 				
