@@ -217,6 +217,9 @@ pipeline {
 				sh 'mv package/target/site/ package/site/'
 				sh 'rmdir -p --ignore-fail-on-non-empty package/target'
 
+				// record git status into the package
+				sh 'git log -1 > package/git.commit'
+
 				// archive package
 				archive 'package/**/*.*'
 			}
