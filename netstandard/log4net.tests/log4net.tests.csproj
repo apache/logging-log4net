@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <VersionPrefix>2.0.9</VersionPrefix>
+    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <DefineConstants>$(DefineConstants);NETSTANDARD1_3</DefineConstants>
+    <AssemblyName>log4net.tests</AssemblyName>
+    <PackageId>log4net.tests</PackageId>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8</PackageTargetFallback>
+    <RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\tests\src\*.cs;..\..\tests\src\Appender\AppenderCollectionTest.cs;..\..\tests\src\Appender\BufferingAppenderTest.cs;..\..\tests\src\Appender\CountingAppender.cs;..\..\tests\src\Appender\MemoryAppenderTest.cs;..\..\tests\src\Appender\RollingFileAppenderTest.cs;..\..\tests\src\Appender\SmtpPickupDirAppenderTest.cs;..\..\tests\src\Appender\StringAppender.cs;..\..\tests\src\Appender\TraceAppenderTest.cs;..\..\tests\src\Context\LogicalThreadContextTest.cs;..\..\tests\src\Context\ThreadContextTest.cs;..\..\tests\src\Core\**\*.cs;..\..\tests\src\DateFormatter\**\*.cs;..\..\tests\src\Hierarchy\**\*.cs;..\..\tests\src\Layout\**\*.cs;..\..\tests\src\LoggerRepository\**\*.cs;..\..\tests\src\Util\CyclicBufferTest.cs;..\..\tests\src\Util\LogLogTest.cs;..\..\tests\src\Util\PatternConverterTest.cs;..\..\tests\src\Util\RandomStringPatternConverterTest.cs;..\..\tests\src\Util\SystemInfoTest.cs;..\..\tests\src\Util\TransformTest.cs" Exclude="bin\**;obj\**;**\*.xproj;packages\**" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
+    <ProjectReference Include="../log4net/log4net.csproj" />
+    <PackageReference Include="dotnet-test-nunit" Version="3.4.0-beta-2" />
+    <PackageReference Include="NUnit" Version="3.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0-preview-20170106-08" />
+  </ItemGroup>
+
+</Project>
