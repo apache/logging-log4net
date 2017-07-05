@@ -219,7 +219,7 @@ pipeline {
 					$class        : 'XUnitBuilder',
 					tools         : [
 						[
-							$class               : 'NUnit',
+							$class               : 'NUnitJunitHudsonTestType',
 							deleteOutputFiles    : false,
 							failIfNotNew         : true,
 							pattern              : 'tests/bin/**/*.xml',
