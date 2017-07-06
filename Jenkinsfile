@@ -239,6 +239,11 @@ pipeline {
 				// record test results
 				step([
 					$class        : 'XUnitBuilder',
+					thresholds    : [
+						[
+							$class: 'FailedThreshold', unstableThreshold: '1'
+						]
+					],
 					tools         : [
 						[
 							$class               : 'NUnitJunitHudsonTestType',
