@@ -1763,11 +1763,13 @@ limitations under the License.
       <echo message="Skipping build; required framework is not available: netstandard"/>
     </if>
     <if test="${dotnet.available == '0'}">
-      <exec program="dotnet" workingdir="netstandard" resultproperty="dotnet.available">
+      <exec program="dotnet" workingdir="netstandard">
+        <arg value="--configfile NuGet.Config"/>
         <arg value="restore"/>
         <arg value="log4net.netstandard.sln"/>
       </exec>
       <exec program="dotnet" workingdir="netstandard">
+        <arg value="--configfile NuGet.Config"/>
         <arg value="build"/>
         <arg value="log4net"/>
         <arg if="${current.build.config.release}" value="-c"/>
