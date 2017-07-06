@@ -1773,7 +1773,6 @@ limitations under the License.
         <arg value="log4net"/>
         <arg if="${current.build.config.release}" value="-c"/>
         <arg if="${current.build.config.release}" value="Release"/>
-        <arg value="--configfile NuGet.Config"/>
       </exec>
       <mkdir dir="${log4net.basedir}/bin/netstandard/1.3"/>
       <if test="${current.build.config.release}">
