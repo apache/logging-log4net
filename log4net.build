@@ -1756,6 +1756,7 @@ limitations under the License.
     <call target="compile-netstandard-current-configuration"/>
   </target>
   <target name="compile-netstandard-current-configuration">
+    <echo message="dotnet --version"/>
     <exec program="dotnet" workingdir="netstandard" failonerror="false" resultproperty="dotnet.available">
       <arg value="--version"/>
     </exec>
@@ -1766,8 +1767,8 @@ limitations under the License.
       <echo message="dotnet restore --configfile NuGet.Config"/>
       <exec program="dotnet" workingdir="netstandard">
         <arg value="restore"/>
-        <arg value="log4net.netstandard.sln"/>
         <arg value="--configfile NuGet.Config"/>
+        <arg value="log4net.netstandard.sln"/>
       </exec>
       <if test="${current.build.config.release != '-c}">
         <echo message="dotnet build log4net"/>
