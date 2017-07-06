@@ -1769,10 +1769,10 @@ limitations under the License.
         <arg value="log4net.netstandard.sln"/>
         <arg value="--configfile NuGet.Config"/>
       </exec>
-      <if="${current.build.config.release != '-c}">
+      <if test="${current.build.config.release != '-c}">
         <echo message="dotnet build log4net"/>
       </if>
-      <if="${current.build.config.release == '-c'}">
+      <if test="${current.build.config.release == '-c'}">
         <echo message="dotnet build log4net -c Release"/>
       </if>
       <exec program="dotnet" workingdir="netstandard">
