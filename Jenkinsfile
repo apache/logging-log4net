@@ -165,7 +165,7 @@ pipeline {
 				}
 			}
 			steps {
-				sh "export PACKAGEHOME=$(pwd)/.nuget/"
+				sh 'export PACKAGEHOME="$(pwd)/.nuget/"'
 				sh "rm -rf bin/ tests/"
 				checkout scm
 				
