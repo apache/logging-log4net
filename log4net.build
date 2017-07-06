@@ -1783,12 +1783,12 @@ limitations under the License.
       </exec>
       <mkdir dir="${log4net.basedir}/bin/netstandard/1.3"/>
       <if test="${current.build.config.release}">
-        <move todir="${log4net.basedir}/bin/netstandard/1.3/Release">
+        <move todir="${log4net.basedir}/bin/netstandard/1.3/release">
           <fileset basedir="netstandard/log4net/bin/Release/netstandard1.3"/>
         </move>
       </if>
       <ifnot test="${current.build.config.release}">
-        <move todir="${log4net.basedir}/bin/netstandard/1.3/Debug">
+        <move todir="${log4net.basedir}/bin/netstandard/1.3/debug">
           <fileset basedir="netstandard/log4net/bin/Debug/netstandard1.3"/>
         </move>
       </ifnot>
@@ -1938,7 +1938,7 @@ limitations under the License.
     <!-- check if required netstandard binaries are available -->
     <foreach item="String" in="netstandard" delim="," property="framework">
       <foreach item="String" in="1.3" delim="," property="frameworkversion">
-        <foreach item="String" in="Debug,Release" delim="," property="configuration">
+        <foreach item="String" in="debug,release" delim="," property="configuration">
           <property name="item" value="${framework}/${frameworkversion}/${configuration}"/>
           <if test="${not(directory::exists(path::combine(bin.dir, '${item}')))}">
             <fail message="Missing binaries: ${item}"/>
