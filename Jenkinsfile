@@ -165,12 +165,11 @@ pipeline {
 				}
 			}
 			steps {
-				sh 'cat /etc/passwd'
-				// checkout scm
+				checkout scm
 				
 				// compile 
-				// sh 'nant compile-netstandard'
-				// stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
+				sh 'nant compile-netstandard'
+				stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
 			}
 		}
 		stage('build site') {
@@ -204,8 +203,7 @@ pipeline {
 					unstash 'mono-2.0-assemblies'
 					unstash 'mono-3.5-assemblies'
 					unstash 'mono-4.0-assemblies'
-					// TODO FIXME
-					// unstash 'netstandard-assemblies'
+					unstash 'netstandard-assemblies'
 
 					// unstash test results
 					unstash 'net-3.5-testresults'
