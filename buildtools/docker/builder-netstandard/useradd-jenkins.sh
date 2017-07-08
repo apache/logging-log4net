@@ -1,5 +1,7 @@
 #!/bin/bash
-USER="jenkins"
-HOME="/home/jenkins"
-groupadd --gid `id -g` $USER
-useradd --home-dir "$HOME" --shell /bin/bash --uid `id -u` --gid `id -g` --groups `id -g` -p -M "$USER"
+L_USER="jenkins"
+L_HOME="/home/jenkins"
+L_UID=10025
+L_GID=12040
+groupadd --gid $L_GID $USER
+useradd --home-dir "$HOME" --shell /bin/bash --uid $L_UID --gid $L_GID --groups $L_GID -p -M $L_USER
