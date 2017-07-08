@@ -164,13 +164,9 @@ pipeline {
 					reuseNode true
 				}
 			}
-			environment {
-				USER='jenkins'
-			}
 			steps {
 				// TODO FIXME
-				sh 'export HOME=$(pwd)'
-				sh 'useradd --home-dir $HOME --shell /bin/bash --uid $(uid -u) --gid $(uid -g) --groups $(uid -g) -p -M $USER'
+				sh 'echo "useradd --home-dir `pwd` --shell /bin/bash --uid `uid -u` --gid `uid -g` --groups `uid -g` -p -M jenkins"'
 				sh 'echo user=$USER'
 				sh 'echo pwd=$PWD'
 				sh 'echo home=$HOME'
