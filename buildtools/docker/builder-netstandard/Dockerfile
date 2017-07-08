@@ -22,5 +22,5 @@ RUN apt-get update && apt-get install -y nant git
 
 # set up an entry point for the image that allows customization
 # before anything else is run on the container
-RUN bash -c entrypoint.sh
-#ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+COPY "useradd-jenkins.sh" /usr/local/bin/useradd-jenkins.sh
+RUN /usr/local/bin/useradd-jenkins.sh
