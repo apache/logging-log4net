@@ -165,6 +165,7 @@ pipeline {
 				}
 			}
 			steps {
+				sh 'export HOME=`pwd`'
 				checkout scm
 				
 				// compile 
