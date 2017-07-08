@@ -169,7 +169,7 @@ pipeline {
 			}
 			steps {
 				// TODO FIXME
-				sh 'export HOME=$(pwd)
+				sh 'export HOME=$(pwd)'
 				sh 'useradd --home-dir $HOME --shell /bin/bash --uid $(uid -u) --gid $(uid -g) --groups $(uid -g) -p -M $USER'
 				sh 'echo user=$USER'
 				sh 'echo pwd=$PWD'
