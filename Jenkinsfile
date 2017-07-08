@@ -166,7 +166,7 @@ pipeline {
 			}
 			steps {
 				// TODO FIXME
-				sh 'echo "useradd --home-dir `pwd` --shell /bin/bash --uid `uid -u` --gid `uid -g` --groups `uid -g` -p -M jenkins"'
+				sh 'useradd --home-dir `pwd` --shell /bin/bash --uid `uid -u` --gid `uid -g` --groups `uid -g` -p -M jenkins'
 				sh 'echo user=$USER'
 				sh 'echo pwd=$PWD'
 				sh 'echo home=$HOME'
