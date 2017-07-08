@@ -10,3 +10,7 @@ RUN apt-get update && apt-get install -y nant git
 # add user jenkins, otherwise dotnet will not be able to find a place to cache artifacts
 RUN groupadd -r -g 12040 jenkins-slave
 RUN useradd --home-dir /home/jenkins --shell /bin/bash --uid 10025 --gid 12040 --groups 12040 -p -M jenkins
+
+# include entrypoint to update the home directory of jenkins when docker starts
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
