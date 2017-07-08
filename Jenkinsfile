@@ -164,8 +164,11 @@ pipeline {
 					reuseNode true
 				}
 			}
+			environment {
+				HOME="$(pwd)"
+			}
 			steps {
-				sh 'export HOME=`pwd`'
+				sh 'echo "home=$HOME"'
 				checkout scm
 				
 				// compile 
