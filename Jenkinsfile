@@ -162,15 +162,18 @@ pipeline {
 				dockerfile {
 					dir 'buildtools/docker/builder-netstandard'
 					reuseNode true
-					customWorkspace '/home/user'
 				}
 			}
 			steps {
-				checkout scm
+				// TODO FIXME
+				sh 'id'
+				sh 'pwd'
+				sh 'cat /etc/passwd'
+				// checkout scm
 				
 				// compile 
-				sh 'nant compile-netstandard'
-				stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
+				// sh 'nant compile-netstandard'
+				// stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
 			}
 		}
 		stage('build site') {
@@ -204,7 +207,8 @@ pipeline {
 					unstash 'mono-2.0-assemblies'
 					unstash 'mono-3.5-assemblies'
 					unstash 'mono-4.0-assemblies'
-					unstash 'netstandard-assemblies'
+					// TODO FIXME
+					// unstash 'netstandard-assemblies'
 
 					// unstash test results
 					unstash 'net-3.5-testresults'
