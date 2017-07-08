@@ -164,16 +164,20 @@ pipeline {
 					reuseNode true
 				}
 			}
+			environment {
+				USER='jenkins'
+			}
 			steps {
 				// TODO FIXME
-				sh 'echo $UID'
-				sh 'echo $USER'
-				sh 'echo $PWD'
-				sh 'echo $HOME'
-				sh 'id'
-				sh 'pwd'
+				sh 'export HOME=$(pwd)
+				sh 'useradd --home-dir $HOME --shell /bin/bash --uid $(uid -u) --gid $(uid -g) --groups $(uid -g) -p -M $USER'
+				sh 'echo user=$USER'
+				sh 'echo pwd=$PWD'
+				sh 'echo home=$HOME'
+				sh 'echo `whoami`'
+				sh 'echo id=`id`'
+				sh 'echo pwd=`pwd`'
 				sh 'cat /etc/passwd'
-				sh ''
 				// checkout scm
 				
 				// compile 
