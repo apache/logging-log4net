@@ -161,18 +161,11 @@ pipeline {
 			agent {
 				dockerfile {
 					dir 'buildtools/docker/builder-netstandard'
+					args '-a USER=jenkins'
 					reuseNode true
 				}
 			}
 			steps {
-				// TODO FIXME
-				sh 'useradd --home-dir `pwd` --shell /bin/bash --uid `id -u` --gid `id -g` --groups `id -g` -p -M jenkins'
-				sh 'echo user=$USER'
-				sh 'echo pwd=$PWD'
-				sh 'echo home=$HOME'
-				sh 'echo `whoami`'
-				sh 'echo id=`id`'
-				sh 'echo pwd=`pwd`'
 				sh 'cat /etc/passwd'
 				// checkout scm
 				
