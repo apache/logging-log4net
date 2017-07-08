@@ -162,11 +162,10 @@ pipeline {
 				dockerfile {
 					dir 'buildtools/docker/builder-netstandard'
 					reuseNode true
+					customWorkspace '/home/user'
 				}
 			}
 			steps {
-				sh 'export PACKAGEHOME="$(pwd)/.nuget/"'
-				sh "rm -rf bin/ tests/"
 				checkout scm
 				
 				// compile 
