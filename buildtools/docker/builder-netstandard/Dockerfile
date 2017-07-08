@@ -22,5 +22,5 @@ RUN apt-get update && apt-get install -y nant git
 
 # set up an entry point for the image that allows customization
 # before anything else is run on the container
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+RUN bash -c entrypoint.sh
+#ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

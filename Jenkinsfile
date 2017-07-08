@@ -161,7 +161,6 @@ pipeline {
 			agent {
 				dockerfile {
 					dir 'buildtools/docker/builder-netstandard'
-					args '-a USER=jenkins'
 					reuseNode true
 				}
 			}
