@@ -22,5 +22,7 @@ RUN apt-get update && apt-get install -y nant git
 
 # set up an entry point for the image that allows customization
 # before anything else is run on the container
-COPY "useradd-jenkins.sh" /usr/local/bin/useradd-jenkins.sh
-RUN /usr/local/bin/useradd-jenkins.sh
+# COPY "useradd-jenkins.sh" /usr/local/bin/useradd-jenkins.sh
+#RUN /usr/local/bin/useradd-jenkins.sh
+RUN groupadd -f -r -g 12040 jenkins-slave
+RUN useradd --home-dir /home/jenkins --shell /bin/bash --uid 10025 --gid 12040 --groups 12040 -p -M jenkins
