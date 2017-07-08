@@ -166,9 +166,14 @@ pipeline {
 			}
 			steps {
 				// TODO FIXME
+				sh 'echo $UID'
+				sh 'echo $USER'
+				sh 'echo $PWD'
+				sh 'echo $HOME'
 				sh 'id'
 				sh 'pwd'
 				sh 'cat /etc/passwd'
+				sh ''
 				// checkout scm
 				
 				// compile 
