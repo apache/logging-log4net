@@ -36,6 +36,26 @@ pipeline {
 		}
 
 		// builds
+		stage('build netstandard') {
+			agent {
+				dockerfile {
+					dir 'buildtools/docker/builder-netstandard'
+					reuseNode true
+				}
+			}
+			steps {
+				sh 'export HOME=`pwd`'
+				sh 'echo home=$HOME'
+				sh 'echo user=$USER'
+				sh 'cat /etc/passwd'
+
+				checkout scm
+				
+				// compile 
+				sh 'nant compile-netstandard'
+				stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
+			}
+		}
 		stage('build net-3.5') {
 			agent { label 'Windows' }
 			environment {
@@ -155,26 +175,6 @@ pipeline {
 				stash includes: 'bin/**/*.*', name: 'mono-4.0-assemblies'
 				sh "nant -t:mono-4.0 -buildfile:tests/nant.build runtests-mono-4.0"
 				stash includes: 'tests/bin/**/*.nunit.xml', name: 'mono-4.0-testresults'
-			}
-		}
-		stage('build netstandard') {
-			agent {
-				dockerfile {
-					dir 'buildtools/docker/builder-netstandard'
-					reuseNode true
-				}
-			}
-			steps {
-				sh 'export HOME=`pwd`'
-				sh 'echo home=$HOME'
-				sh 'echo user=$USER'
-				sh 'cat /etc/passwd'
-
-				checkout scm
-				
-				// compile 
-				sh 'nant compile-netstandard'
-				stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
 			}
 		}
 		stage('build site') {
