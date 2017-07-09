@@ -42,7 +42,11 @@ pipeline {
 					dir 'buildtools/docker/builder-netstandard'
 				}
 			}
+			environment {
+				WORKSPACE = '/var/workspaces/jenkins'
+			}
 			steps {
+				sh 'cd $WORKSPACE'
 				sh 'export HOME=`pwd`'
 				sh 'echo home=$HOME'
 				sh 'echo user=$USER'
