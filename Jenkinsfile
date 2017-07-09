@@ -54,9 +54,7 @@ pipeline {
 				stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
 
 				// test
-				dir('netstandard') {
-					sh 'dotnet test'
-				}
+				sh 'cd netstandard && dotnet test'
 			}
 		}
 		stage('build net-3.5') {
