@@ -38,11 +38,13 @@ pipeline {
 		// builds
 		stage('build netstandard') {
 			agent {
-				dockerfile {
-					dir 'buildtools/docker/builder-netstandard'
-					reuseNode true
+				node {
+					dockerfile {
+						dir 'buildtools/docker/builder-netstandard'
+						reuseNode true
+					}
+					customWorkspace '/home/jenkins'
 				}
-				customWorkspace '/home/jenkins'
 			}
 			steps {
 				sh 'export HOME=`pwd`'
