@@ -164,11 +164,9 @@ pipeline {
 					reuseNode true
 				}
 			}
-			environment {
-				HOME="$(pwd)"
-			}
 			steps {
 				sh 'echo "home=$HOME"'
+				sh 'echo "user=$USER"'
 				checkout scm
 				
 				// compile 
