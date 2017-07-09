@@ -38,13 +38,8 @@ pipeline {
 		// builds
 		stage('build netstandard') {
 			agent {
-				node {
-					label {
-						dockerfile {
-							dir '/home/jenkins/workspace/buildtools/docker/builder-netstandard'
-						}
-					}
-					customWorkspace '/home/jenkins/workspace'
+				dockerfile {
+					dir 'buildtools/docker/builder-netstandard'
 				}
 			}
 			steps {
