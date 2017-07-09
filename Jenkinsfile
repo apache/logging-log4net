@@ -52,6 +52,11 @@ pipeline {
 				// compile 
 				sh 'nant compile-netstandard'
 				stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
+
+				// test
+				dir('netstandard') {
+					sh 'dotnet test'
+				}
 			}
 		}
 		stage('build net-3.5') {
