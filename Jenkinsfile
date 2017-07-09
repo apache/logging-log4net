@@ -165,8 +165,12 @@ pipeline {
 				}
 			}
 			steps {
+				sh 'usermod -m -d `pwd` jenkins'
+				sh 'export HOME=`pwd`'
 				sh 'echo home=$HOME'
 				sh 'echo user=$USER'
+				sh 'cat /etc/passwd'
+
 				checkout scm
 				
 				// compile 
