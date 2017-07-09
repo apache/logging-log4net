@@ -41,26 +41,23 @@ pipeline {
 				node {
 					label {
 						dockerfile {
-							dir 'buildtools/docker/builder-netstandard'
-							reuseNode true
+							dir '/home/jenkins/workspace/buildtools/docker/builder-netstandard'
 						}
 					}
+					customWorkspace '/home/jenkins/workspace'
 				}
 			}
-			node {
-				customWorkspace '/home/jenkins/workspace'
-				steps {
-					sh 'export HOME=`pwd`'
-					sh 'echo home=$HOME'
-					sh 'echo user=$USER'
-					sh 'cat /etc/passwd'
-	
-					checkout scm
-					
-					// compile 
-					sh 'nant compile-netstandard'
-					stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
-				}
+			steps {
+				sh 'export HOME=`pwd`'
+				sh 'echo home=$HOME'
+				sh 'echo user=$USER'
+				sh 'cat /etc/passwd'
+
+				checkout scm
+
+				// compile 
+				sh 'nant compile-netstandard'
+				stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
 			}
 		}
 		stage('build net-3.5') {
