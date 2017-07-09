@@ -52,6 +52,9 @@ pipeline {
 				// compile 
 				sh 'nant compile-netstandard'
 				stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
+
+				// test
+				sh 'cd netstandard/log4net.tests && dotnet test'
 			}
 		}
 		stage('build net-3.5') {
