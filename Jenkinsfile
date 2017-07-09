@@ -165,8 +165,8 @@ pipeline {
 				}
 			}
 			steps {
-				sh 'echo "home=$HOME"'
-				sh 'echo "user=$USER"'
+				sh 'echo home=$HOME'
+				sh 'echo user=$USER'
 				checkout scm
 				
 				// compile 
