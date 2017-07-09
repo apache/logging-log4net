@@ -47,12 +47,6 @@ pipeline {
 				WORKSPACE = '/var/workspaces/jenkins'
 			}
 			steps {
-				sh 'cd $WORKSPACE'
-				sh 'export HOME=`pwd`'
-				sh 'echo home=$HOME'
-				sh 'echo user=$USER'
-				sh 'cat /etc/passwd'
-
 				checkout scm
 
 				// compile 
