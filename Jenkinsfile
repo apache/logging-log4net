@@ -40,6 +40,7 @@ pipeline {
 			agent {
 				dockerfile {
 					dir 'buildtools/docker/builder-netstandard'
+					reuseNode true
 				}
 			}
 			environment {
