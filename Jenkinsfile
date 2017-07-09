@@ -45,20 +45,22 @@ pipeline {
 							reuseNode true
 						}
 					}
-					customWorkspace '/home/jenkins/workspace'
 				}
 			}
-			steps {
-				sh 'export HOME=`pwd`'
-				sh 'echo home=$HOME'
-				sh 'echo user=$USER'
-				sh 'cat /etc/passwd'
-
-				checkout scm
-				
-				// compile 
-				sh 'nant compile-netstandard'
-				stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
+			node {
+				customWorkspace '/home/jenkins/workspace'
+				steps {
+					sh 'export HOME=`pwd`'
+					sh 'echo home=$HOME'
+					sh 'echo user=$USER'
+					sh 'cat /etc/passwd'
+	
+					checkout scm
+					
+					// compile 
+					sh 'nant compile-netstandard'
+					stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
+				}
 			}
 		}
 		stage('build net-3.5') {
