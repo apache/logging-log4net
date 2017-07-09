@@ -47,11 +47,6 @@ pipeline {
 				WORKSPACE = '/var/workspaces/jenkins'
 			}
 			steps {
-				// create a jenkins user for dotnet to consume
-				sh 'sudo groupadd -r -g `id -g` jenkins-slave'
-				sh 'sudo useradd --base-dir /var/workspaces --create-home --shell /bin/bash --uid `id -u` --gid `id -g` --groups `id -g` -p jenkins'
-
-				// checkout
 				checkout scm
 
 				// compile 
