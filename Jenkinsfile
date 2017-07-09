@@ -45,7 +45,7 @@ pipeline {
 							reuseNode true
 						}
 					}
-					customWorkspace '/home/jenkins'
+					customWorkspace '/home/jenkins/workspace'
 				}
 			}
 			steps {
