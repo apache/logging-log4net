@@ -36,6 +36,24 @@ pipeline {
 		}
 
 		// builds
+		stage('build netstandard') {
+			agent {
+				dockerfile {
+					dir 'buildtools/docker/builder-netstandard'
+					reuseNode true
+				}
+			}
+			environment {
+				WORKSPACE = '/var/workspaces/jenkins'
+			}
+			steps {
+				checkout scm
+
+				// compile 
+				sh 'nant compile-netstandard'
+				stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
+			}
+		}
 		stage('build net-3.5') {
 			agent { label 'Windows' }
 			environment {
@@ -115,9 +133,12 @@ pipeline {
 				}
 			}
 			steps {
+				sh "rm -rf bin/ tests/"
 				checkout scm
 				sh "nant -t:mono-2.0 -buildfile:log4net.build compile-mono-2.0"
 				stash includes: 'bin/**/*.*', name: 'mono-2.0-assemblies'
+				sh "nant -t:mono-2.0 -buildfile:tests/nant.build runtests-mono-2.0"
+				stash includes: 'tests/bin/**/*.nunit.xml', name: 'mono-2.0-testresults'
 			}
 		}
 		stage('build mono-3.5') {
@@ -129,9 +150,12 @@ pipeline {
 				}
 			}
 			steps {
+				sh "rm -rf bin/ tests/"
 				checkout scm
 				sh "nant -t:mono-3.5 -buildfile:log4net.build compile-mono-3.5"
 				stash includes: 'bin/**/*.*', name: 'mono-3.5-assemblies'
+				sh "nant -t:mono-3.5 -buildfile:tests/nant.build runtests-mono-3.5"
+				stash includes: 'tests/bin/**/*.nunit.xml', name: 'mono-3.5-testresults'
 			}
 		}
 		stage('build mono-4.0') {
@@ -143,27 +167,12 @@ pipeline {
 				}
 			}
 			steps {
+				sh "rm -rf bin/ tests/"
 				checkout scm
 				sh "nant -t:mono-4.0 -buildfile:log4net.build compile-mono-4.0"
 				stash includes: 'bin/**/*.*', name: 'mono-4.0-assemblies'
-			}
-		}
-		stage('build netstandard') {
-			agent {
-				dockerfile {
-					dir 'buildtools/docker/builder-netstandard'
-					reuseNode true
-				}
-			}
-			steps {
-				checkout scm
-				
-				// workaround: https://github.com/NuGet/Home/issues/5106
-				sh 'export HOME=/home'
-				
-				// compile 
-				sh 'nant compile-netstandard'
-				stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
+				sh "nant -t:mono-4.0 -buildfile:tests/nant.build runtests-mono-4.0"
+				stash includes: 'tests/bin/**/*.nunit.xml', name: 'mono-4.0-testresults'
 			}
 		}
 		stage('build site') {
@@ -205,6 +214,9 @@ pipeline {
 					unstash 'net-4.0-testresults'
 					unstash 'net-4.0-cp-testresults'
 					unstash 'net-4.5-testresults'
+					unstash 'mono-2.0-testresults'
+					unstash 'mono-3.5-testresults'
+					unstash 'mono-4.0-testresults'
 
 					// unstash site
 					unstash 'site'
@@ -213,6 +225,9 @@ pipeline {
 				// move site
 				sh 'mv package/target/site/ package/site/'
 				sh 'rmdir -p --ignore-fail-on-non-empty package/target'
+
+				// record git status into the package
+				sh 'git log -1 > package/git.commit'
 
 				// archive package
 				archive 'package/**/*.*'
@@ -225,6 +240,11 @@ pipeline {
 				// record test results
 				step([
 					$class        : 'XUnitBuilder',
+					thresholds    : [
+						[
+							$class: 'FailedThreshold', unstableThreshold: '1'
+						]
+					],
 					tools         : [
 						[
 							$class               : 'NUnitJunitHudsonTestType',
@@ -250,7 +270,8 @@ pipeline {
 	}
 	post {
 		failure {
-			step([$class: 'Mailer', notifyEveryUnstableBuild: false, recipients: 'dev@logging.apache.org'])
+			// TODO: change this to dev@
+			step([$class: 'Mailer', notifyEveryUnstableBuild: false, recipients: 'commits@logging.apache.org'])
 		}
 	}
 }

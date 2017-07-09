@@ -1748,6 +1748,52 @@ limitations under the License.
       </csc>
     </if>
   </target>
+  <!-- these targets build lognet assemblies against .NET Core (.net standard 1.0.4)-->
+  <target name="compile-netstandard" description="Builds .NET Core">
+    <call target="set-debug-build-configuration"/>
+    <call target="compile-netstandard-current-configuration"/>
+    <call target="set-release-build-configuration"/>
+    <call target="compile-netstandard-current-configuration"/>
+  </target>
+  <target name="compile-netstandard-current-configuration">
+    <echo message="dotnet --version"/>
+    <exec program="dotnet" workingdir="netstandard" failonerror="false" resultproperty="dotnet.available">
+      <arg value="--version"/>
+    </exec>
+    <if test="${dotnet.available != '0'}">
+      <echo message="Skipping build; required framework is not available: netstandard"/>
+    </if>
+    <if test="${dotnet.available == '0'}">
+      <echo message="dotnet restore log4net.netstandard.sln"/>
+      <exec program="dotnet" workingdir="netstandard">
+        <arg value="restore"/>
+        <arg value="log4net.netstandard.sln"/>
+      </exec>
+      <if test="${current.build.config.release != '-c'}">
+        <echo message="dotnet build log4net"/>
+      </if>
+      <if test="${current.build.config.release == '-c'}">
+        <echo message="dotnet build log4net -c Release"/>
+      </if>
+      <exec program="dotnet" workingdir="netstandard">
+        <arg value="build"/>
+        <arg value="log4net"/>
+        <arg if="${current.build.config.release}" value="-c"/>
+        <arg if="${current.build.config.release}" value="Release"/>
+      </exec>
+      <mkdir dir="${log4net.basedir}/bin/netstandard/1.3"/>
+      <if test="${current.build.config.release}">
+        <move todir="${log4net.basedir}/bin/netstandard/1.3/release">
+          <fileset basedir="netstandard/log4net/bin/Release/netstandard1.3"/>
+        </move>
+      </if>
+      <ifnot test="${current.build.config.release}">
+        <move todir="${log4net.basedir}/bin/netstandard/1.3/debug">
+          <fileset basedir="netstandard/log4net/bin/Debug/netstandard1.3"/>
+        </move>
+      </ifnot>
+    </if>
+  </target>
   <!-- Target for generating docs for all runtime configurations -->
   <target name="generate-sdkdoc-all" depends="check-current-build-config">
     <echo message="Generating SDK documentation temporarily disabled."/>
@@ -1892,7 +1938,7 @@ limitations under the License.
     <!-- check if required netstandard binaries are available -->
     <foreach item="String" in="netstandard" delim="," property="framework">
       <foreach item="String" in="1.3" delim="," property="frameworkversion">
-        <foreach item="String" in="Debug,Release" delim="," property="configuration">
+        <foreach item="String" in="debug,release" delim="," property="configuration">
           <property name="item" value="${framework}/${frameworkversion}/${configuration}"/>
           <if test="${not(directory::exists(path::combine(bin.dir, '${item}')))}">
             <fail message="Missing binaries: ${item}"/>
@@ -1997,39 +2043,6 @@ limitations under the License.
           <attribute type="AssemblyDescriptionAttribute" value="${assembly.description}"/>
         </attributes>
       </asminfo>
-    </if>
-  </target>
-  <target name="compile-netstandard" description="Builds .NET Core">
-    <call target="set-debug-build-configuration"/>
-    <call target="compile-netstandard-current-configuration"/>
-    <call target="set-release-build-configuration"/>
-    <call target="compile-netstandard-current-configuration"/>
-  </target>
-  <target name="compile-netstandard-current-configuration">
-    <exec program="dotnet" workingdir="netstandard" failonerror="false" resultproperty="dotnet.available">
-      <arg value="restore"/>
-    </exec>
-    <if test="${dotnet.available != '0'}">
-      <echo message="Skipping build; required framework is not available: netstandard"/>
-    </if>
-    <if test="${dotnet.available == '0'}">
-      <exec program="dotnet" workingdir="netstandard">
-        <arg value="build"/>
-        <arg value="log4net"/>
-        <arg if="${current.build.config.release}" value="-c"/>
-        <arg if="${current.build.config.release}" value="Release"/>
-      </exec>
-      <mkdir dir="${log4net.basedir}/bin/netstandard/1.3"/>
-      <if test="${current.build.config.release}">
-        <move todir="${log4net.basedir}/bin/netstandard/1.3/Release">
-          <fileset basedir="netstandard/log4net/bin/Release/netstandard1.3"/>
-        </move>
-      </if>
-      <ifnot test="${current.build.config.release}">
-        <move todir="${log4net.basedir}/bin/netstandard/1.3/Debug">
-          <fileset basedir="netstandard/log4net/bin/Debug/netstandard1.3"/>
-        </move>
-      </ifnot>
     </if>
   </target>
 </project>
