@@ -38,6 +38,7 @@ pipeline {
 		// builds
 		stage('build netstandard') {
 			agent {
+				customWorkspace '/home/jenkins'
 				dockerfile {
 					dir 'buildtools/docker/builder-netstandard'
 					reuseNode true

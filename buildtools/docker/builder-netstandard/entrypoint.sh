@@ -1,4 +1,4 @@
 #!/bin/bash
 
-usermod -m -d `pwd` jenkins
+#usermod -m -d `pwd` jenkins
 
