@@ -40,6 +40,7 @@ pipeline {
 			agent {
 				dockerfile {
 					dir 'buildtools/docker/builder-netstandard'
+					args "--build-arg JENKINS_UID=`stat -c \"%u\" buildtools` --build-arg JENKINS_UID=`stat -c \"%g\" buildtools`"
 					reuseNode true
 				}
 			}
