@@ -763,8 +763,7 @@ limitations under the License.
 
     <!-- Currently we cannot run the tests in the environment of the target framework only in the host framework -->
 
-    <target name="runtests" description="Runs log4net tests"
-	    depends="install-nunit">
+    <target name="runtests" description="Runs log4net tests">
 		<!--
 			Because the <nunit2> task does not support multiple frameworks through the 
 			nant.settings.currentframework setting we cannot just run the tests for each framework.
