@@ -22,6 +22,7 @@ pipeline {
 		timeout(time: 1, unit: 'HOURS')
 		buildDiscarder(logRotator(numToKeepStr: '3'))
 		skipDefaultCheckout()
+		disableConcurrentBuilds()
 	}
 	agent {
 		label 'ubuntu'
@@ -37,24 +38,44 @@ pipeline {
 
 		// builds
 		stage('build netstandard') {
-			agent {
-				dockerfile {
-					dir 'buildtools/docker/builder-netstandard'
-					reuseNode true
-				}
-			}
-			environment {
-				WORKSPACE = '/var/workspaces/jenkins'
-			}
 			steps {
-				checkout scm
+				script {
+					checkout scm
+					def builder_dir = "buildtools/docker/builder-netstandard"
+
+					// calculate args required to build the docker container
+					def JENKINS_UID = sh (
+						script: "stat -c \"%u\" $builder_dir",
+						returnStdout: true
+					).trim()
+					def JENKINS_GID = sh (
+						script: "stat -c \"%g\" $builder_dir",
+						returnStdout: true
+					).trim()
+					echo "$JENKINS_UID"
+					echo "$JENKINS_GID"
+
+					// build docker container
+					def builder = docker.build 'builder-netstandard:latest', "--file $builder_dir/Dockerfile --build-arg JENKINS_UID=$JENKINS_UID --build-arg JENKINS_GID=$JENKINS_GID $builder_dir"
+
+					// run docker container
+					builder.inside {
+						// compile
+						sh "nant compile-netstandard"
+						stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
+
+						// test
+						sh 'cd netstandard/log4net.tests && dotnet test'
+					}
+				}
+
 
 				// compile 
-				sh 'nant compile-netstandard'
-				stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
+				// sh 'nant compile-netstandard'
+				// stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
 
 				// test
-				sh 'cd netstandard/log4net.tests && dotnet test'
+				// sh 'cd netstandard/log4net.tests && dotnet test'
 			}
 		}
 		stage('build net-3.5') {

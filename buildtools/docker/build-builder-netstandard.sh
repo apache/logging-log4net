@@ -8,5 +8,16 @@ if [ -z "$MY_PATH" ] ; then
   exit 1  # fail
 fi
 
-$MY_PATH/build.sh "builder-netstandard"
+NAME="builder-netstandard"
+JENKINS_UID=$2
+if [ -z "$JENKINS_UID" ] ; then
+  JENKINS_UID="`stat -c \"%u\" $0`"
+fi
+
+JENKINS_GID=$3
+if [ -z "$JENKINS_GID" ] ; then
+  JENKINS_GID="`stat -c \"%g\" $0`"
+fi
+
+docker build --build-arg JENKINS_UID=$JENKINS_UID --build-arg JENKINS_GID=$JENKINS_GID --tag $NAME:latest $MY_PATH/$NAME
 
