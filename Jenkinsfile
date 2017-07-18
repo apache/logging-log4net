@@ -32,8 +32,8 @@ pipeline {
 			steps {
 				deleteDir()
 				checkout scm
-				def JENKINS_UID = sh(returnStdout: true, script: 'stat -c "%u" ${env.WORKSPACE}').trim()
-				def JENKINS_GID = sh(returnStdout: true, script: 'stat -c "%g" ${env.WORKSPACE}').trim()
+				def JENKINS_UID = sh(returnStdout: true, script: 'stat -c "%u" .').trim()
+				def JENKINS_GID = sh(returnStdout: true, script: 'stat -c "%g" .').trim()
 				echo $JENKINS_UID
 				echo $JENKINS_GID
 			}
