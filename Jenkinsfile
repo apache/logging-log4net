@@ -38,12 +38,6 @@ pipeline {
 
 		// builds
 		stage('build netstandard') {
-			agent {
-				dockerfile {
-					dir 'buildtools/docker/builder-netstandard'
-					reuseNode true
-				}
-			}
 			steps {
 				script {
 					checkout scm
