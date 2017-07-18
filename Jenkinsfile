@@ -22,6 +22,7 @@ pipeline {
 		timeout(time: 1, unit: 'HOURS')
 		buildDiscarder(logRotator(numToKeepStr: '3'))
 		skipDefaultCheckout()
+		disableConcurrentBuilds()
 	}
 	agent {
 		label 'ubuntu'
@@ -36,12 +37,10 @@ pipeline {
 			steps {
 				deleteDir()
 				checkout scm
-				script {
-					JENKINS_UID = sh(returnStdout: true, script: 'stat -c "%u" .').trim()
-					JENKINS_GID = sh(returnStdout: true, script: 'stat -c "%g" .').trim()
-					echo $JENKINS_UID
-					echo $JENKINS_GID
-				}
+				sh '''
+					export JENKINS_UID=`stat -c "%u" .`
+					export JENKINS_GID=`stat -c "%g" .`
+				'''
 			}
 		}
 
@@ -50,15 +49,12 @@ pipeline {
 			agent {
 				dockerfile {
 					dir 'buildtools/docker/builder-netstandard'
-					args "--build-arg JENKINS_UID=$JENKINS_UID --build-arg JENKINS_GID=$JENKINS_GID"
 					reuseNode true
 				}
 			}
 			steps {
-				echo $JENKINS_UID
-				echo $JENKINS_GID
-				sh 'echo ${env.JENKINS_UID}'
-				sh 'echo ${env.JENKINS_GID}'
+				sh 'echo ${JENKINS_UID}'
+				sh 'echo ${JENKINS_GID}'
 
 				checkout scm
 

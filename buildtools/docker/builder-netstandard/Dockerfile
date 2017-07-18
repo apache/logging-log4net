@@ -1,14 +1,13 @@
 # Name of container: docker-ubuntu-latest-nant
 FROM microsoft/dotnet
 
-# define arguments
-ARG JENKINS_UID
-ARG JENKINS_GID
+# define arguments passed in as environment variables
+ENV JENKINS_UID
+ENV JENKINS_GID
 
 # set the maintainer of this docker image
 MAINTAINER "dev@logging.apache.org"
 
-RUN echo "$(pwd)"
 RUN echo $JENKINS_UID
 RUN echo $JENKINS_GID
 
