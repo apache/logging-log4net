@@ -32,6 +32,10 @@ pipeline {
 			steps {
 				deleteDir()
 				checkout scm
+				sh 'export JENKINS_UID="$(stat -c \"%u\" .)"'
+				sh 'export JENKINS_GID="$(stat -c \"%g\" .)"'
+				sh 'echo $JENKINS_UID'
+				sh 'echo $JENKINS_GID'
 			}
 		}
 
@@ -40,7 +44,7 @@ pipeline {
 			agent {
 				dockerfile {
 					dir 'buildtools/docker/builder-netstandard'
-					args "--build-arg JENKINS_UID=`stat -c \"%u\" buildtools` --build-arg JENKINS_UID=`stat -c \"%g\" buildtools`"
+					args "--build-arg JENKINS_UID=$JENKINS_UID --build-arg JENKINS_GID=$JENKINS_GID"
 					reuseNode true
 				}
 			}
