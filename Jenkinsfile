@@ -27,20 +27,12 @@ pipeline {
 	agent {
 		label 'ubuntu'
 	}
-	environment {
-		JENKINS_UID = "null"
-		JENKINS_GID = "null"
-	}
 	stages {
 		// prepare node for builds
 		stage('checkout') {
 			steps {
 				deleteDir()
 				checkout scm
-				sh '''
-					export JENKINS_UID=`stat -c "%u" .`
-					export JENKINS_GID=`stat -c "%g" .`
-				'''
 			}
 		}
 
@@ -53,17 +45,33 @@ pipeline {
 				}
 			}
 			steps {
-				sh 'echo ${JENKINS_UID}'
-				sh 'echo ${JENKINS_GID}'
+				script {
+					checkout scm
 
-				checkout scm
+					// calculate args required to build the docker container
+					def JENKINS_UID = sh (
+						script: 'stat -c "%u" .',
+						returnStdout: true
+					).trim()
+					def JENKINS_GID = sh (
+						script: 'stat -c "%g" .',
+						returnStdout: true
+					).trim()
+
+					// build docker container
+					docker.build 'builder-netstandard:latest', "-f buildtools/docker/builder-netstandard/Dockerfile --build-arg JENKINS_UID=$JENKINS_UID --build-arg JENKINS_GID=$JENKINS_GID"
+
+					// run docker container
+					// sh "docker run builder-netstandard:latest nant compile-netstandard"
+				}
+
 
 				// compile 
-				sh 'nant compile-netstandard'
-				stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
+				// sh 'nant compile-netstandard'
+				// stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
 
 				// test
-				sh 'cd netstandard/log4net.tests && dotnet test'
+				// sh 'cd netstandard/log4net.tests && dotnet test'
 			}
 		}
 		stage('build net-3.5') {
@@ -218,7 +226,7 @@ pipeline {
 					unstash 'mono-2.0-assemblies'
 					unstash 'mono-3.5-assemblies'
 					unstash 'mono-4.0-assemblies'
-					unstash 'netstandard-assemblies'
+					// unstash 'netstandard-assemblies'
 
 					// unstash test results
 					unstash 'net-3.5-testresults'

@@ -2,8 +2,8 @@
 FROM microsoft/dotnet
 
 # define arguments passed in as environment variables
-ENV JENKINS_UID
-ENV JENKINS_GID
+ARG JENKINS_UID
+ARG JENKINS_GID
 
 # set the maintainer of this docker image
 MAINTAINER "dev@logging.apache.org"
