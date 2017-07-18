@@ -26,8 +26,10 @@ pipeline {
 	agent {
 		label 'ubuntu'
 	}
-	def JENKINS_UID
-	def JENKINS_GID
+	environment {
+		JENKINS_UID = "null"
+		JENKINS_GID = "null"
+	}
 	stages {
 		// prepare node for builds
 		stage('checkout') {
