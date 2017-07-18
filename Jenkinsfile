@@ -32,10 +32,16 @@ pipeline {
 			steps {
 				deleteDir()
 				checkout scm
-				sh 'export JENKINS_UID="$(stat -c \"%u\" .)"'
-				sh 'export JENKINS_GID="$(stat -c \"%g\" .)"'
-				sh 'echo $JENKINS_UID'
-				sh 'echo $JENKINS_GID'
+				env.JENKINS_UID=sh (
+					script: 'stat -c "%u" ${env.WORKSPACE}'
+					returnStdout: true
+				)
+				env.JENKINS_GID=sh (
+					script: 'stat -c "%g" ${env.WORKSPACE}'
+					returnStdout: true
+				)
+				sh 'echo ${env.JENKINS_UID}'
+				sh 'echo ${env.JENKINS_GID}'
 			}
 		}
 
@@ -44,14 +50,14 @@ pipeline {
 			agent {
 				dockerfile {
 					dir 'buildtools/docker/builder-netstandard'
-					args "--build-arg JENKINS_UID=$JENKINS_UID --build-arg JENKINS_GID=$JENKINS_GID"
+					args '--build-arg JENKINS_UID=${env.JENKINS_UID} --build-arg JENKINS_GID=${env.JENKINS_GID}'
 					reuseNode true
 				}
 			}
-			environment {
-				WORKSPACE = '/var/workspaces/jenkins'
-			}
 			steps {
+				sh 'echo ${env.JENKINS_UID}'
+				sh 'echo ${env.JENKINS_GID}'
+
 				checkout scm
 
 				// compile 
