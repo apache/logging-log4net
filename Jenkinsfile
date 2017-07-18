@@ -56,7 +56,7 @@ pipeline {
 						echo "$JENKINS_GID"
 
 						// build docker container
-						def docker_container = docker.build 'builder-netstandard:latest', "--build-arg JENKINS_UID=$JENKINS_UID --build-arg JENKINS_GID=$JENKINS_GID buildtools/docker/netstandard"
+						def docker_container = docker.build 'builder-netstandard:latest', "--build-arg JENKINS_UID=$JENKINS_UID --build-arg JENKINS_GID=$JENKINS_GID ."
 
 						// run docker container
 						docker_container.inside {
