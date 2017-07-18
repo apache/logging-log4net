@@ -55,10 +55,17 @@ pipeline {
 					echo "$JENKINS_GID"
 
 					// build docker container
-					docker.build 'builder-netstandard:latest', "--build-arg JENKINS_UID=$JENKINS_UID --build-arg JENKINS_GID=$JENKINS_GID buildtools/docker/netstandard/"
+					def docker_container = docker.build 'builder-netstandard:latest', "-f buildtools/docker/netstandard/Dockerfile --build-arg JENKINS_UID=$JENKINS_UID --build-arg JENKINS_GID=$JENKINS_GID buildtools/docker/netstandard"
 
 					// run docker container
-					// sh "docker run builder-netstandard:latest nant compile-netstandard"
+					docker_container.inside {
+						// compile
+						sh "nant compile-netstandard"
+						stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
+
+						// test
+						sh 'cd netstandard/log4net.tests && dotnet test'
+					}
 				}
 
 
