@@ -44,15 +44,15 @@ pipeline {
 
 					// calculate args required to build the docker container
 					def JENKINS_UID = sh (
-						script: 'stat -c "%u" .',
+						script: 'stat -c \"%u\" .',
 						returnStdout: true
 					).trim()
 					def JENKINS_GID = sh (
-						script: 'stat -c "%g" .',
+						script: 'stat -c \"%g\" .',
 						returnStdout: true
 					).trim()
-					echo $JENKINS_UID
-					echo $JENKINS_GID
+					echo "$JENKINS_UID"
+					echo "$JENKINS_GID"
 
 					// build docker container
 					docker.build 'builder-netstandard:latest', "-f buildtools/docker/builder-netstandard/Dockerfile --build-arg JENKINS_UID=$JENKINS_UID --build-arg JENKINS_GID=$JENKINS_GID"
