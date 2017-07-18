@@ -42,7 +42,7 @@ pipeline {
 				script {
 					checkout scm
 
-					dir ('buildtools/docker/netstandard') {
+					dir ('buildtools/docker/builder-netstandard') {
 						// calculate args required to build the docker container
 						def JENKINS_UID = sh (
 							script: 'stat -c \"%u\" .',
