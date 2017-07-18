@@ -55,7 +55,9 @@ pipeline {
 					echo "$JENKINS_GID"
 
 					// build docker container
-					docker.build 'builder-netstandard:latest', "-f buildtools/docker/builder-netstandard/Dockerfile --build-arg JENKINS_UID=$JENKINS_UID --build-arg JENKINS_GID=$JENKINS_GID"
+					dir ('buildtools/docker/netstandard/') {
+						docker.build 'builder-netstandard:latest', "--build-arg JENKINS_UID=$JENKINS_UID --build-arg JENKINS_GID=$JENKINS_GID"
+					}
 
 					// run docker container
 					// sh "docker run builder-netstandard:latest nant compile-netstandard"
