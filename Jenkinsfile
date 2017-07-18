@@ -230,7 +230,7 @@ pipeline {
 					unstash 'mono-2.0-assemblies'
 					unstash 'mono-3.5-assemblies'
 					unstash 'mono-4.0-assemblies'
-					// unstash 'netstandard-assemblies'
+					unstash 'netstandard-assemblies'
 
 					// unstash test results
 					unstash 'net-3.5-testresults'
