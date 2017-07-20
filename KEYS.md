@@ -23,7 +23,7 @@ gpg --export -a $EMAIL
 ```
 
 EOT
-</code>
+````
 
 The original source of this file is https://git-wip-us.apache.org/repos/asf?p=logging-log4net.git;a=blob;f=KEYS.md;hb=refs/heads/master
 
