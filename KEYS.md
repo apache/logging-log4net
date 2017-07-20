@@ -6,7 +6,7 @@ This file contains the PGP keys of various Apache developers. These keys are pri
 
 This information is for the developers. To add your key information use the following shell script by setting the variables NAME and EMAIL to your name and email respectively:
 
-````
+```
 #!/bin/bash
 
 # put your name and email address here
@@ -17,7 +17,7 @@ EMAIL="your@email"
 cat <<EOT >> KEYS.md
 ## $NAME $EMAIL
 
-```
+\`\`\`
 EOT
 
 # export key information
@@ -25,9 +25,9 @@ gpg --list-keys $EMAIL >> KEYS.md
 
 # add spacer
 cat <<EOT >> KEYS.md
-```
+\`\`\`
 
-```
+\`\`\`
 EOT
 
 # export key
@@ -35,12 +35,12 @@ gpg --export -a $EMAIL >> KEYS.md
 
 # add ending
 cat <<EOT >> KEYS.md
-```
+\`\`\`
 
 EOT
 
 # done
-````
+```
 
 The original source of this file is https://git-wip-us.apache.org/repos/asf?p=logging-log4net.git;a=blob;f=KEYS.md;hb=refs/heads/master
 
