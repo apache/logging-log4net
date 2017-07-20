@@ -6,23 +6,24 @@ This file contains the PGP keys of various Apache developers. These keys are pri
 
 This information is for the developers. To add your key information use the following shell script by setting the variables NAME and EMAIL to your name and email respectively:
 
-```
+<code>
 #!/bin/bash
 NAME="your name"
 EMAIL="your@email"
 
-cat <<EOT >> KEYS.md
-## $NAME <$EMAIL>
+cat &lt;&lt;EOT &gt;&gt; KEYS.md
+## $NAME $EMAIL
 
-\`\`\`
+&#96;&#96;&#96;
 gpg --list-keys $EMAIL
-\`\`\`
+&#96;&#96;&#96;
 
-\`\`\`
+&#96;&#96;&#96;
 gpg --export -a $EMAIL
-\`\`\`
+&#96;&#96;&#96;
+
 EOT
-```
+</code>
 
 The original source of this file is https://git-wip-us.apache.org/repos/asf?p=logging-log4net.git;a=blob;f=KEYS.md;hb=refs/heads/master
 
