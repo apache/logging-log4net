@@ -72,6 +72,16 @@ There are many ways to contribute changes to the codebase. One is to file a pull
 * Make sure you write tests for your changes!
 * Please note that not all targets can be built on a single machine and therefore only a subset of the actual targets can be built and tested easily on the machine of a developer. The good thing is, all branches and pull requests are built by the continuous deployment pipeline. Please continue reading [that section](#continuous-deployment-pipeline) for further information.
 
+### Contributor license agreement
+
+It is ok to contribute trivial patches without signing a contributor license agreement. Patches are considered to be trivial if they could be repeated trivially by anyone. Non trivial modifications however require you to sign a contributor license agreement. More information about this topic can be found [here](https://www.apache.org/licenses/#clas).
+
+### Code style
+
+Respect the original code style and whitespace rules. If you think that a file needs whitespace cleanup do so in separate commits.
+
+* Run all the tests with `nant` inside the `tests` directory to assure nothing else was accidentally broken. Please note that not all targets can be built on a single machine and therefore only a subset of the actual targets is built and tested.
+
 ### Commit messages
 
 Each commit should be an atomar modification and the commit message is the story that backs it up. The commit message explains the changes that the commit is about. This story greatly helps to understand what a modification is about, why it is there and can include further considerations and decisions that would not fit into the codebase as comments. Doing this further allows easier reviews of a modification. The easier reviews are, the faster they can be completed and the more time is spent with actually fixing stuff rather than only trying to understand a modification.
@@ -113,22 +123,29 @@ is written.
 
 Pull requests are typically a set of commits. As with commit messages, a pull request should have a one liner summary and a longer description explaining what the pull request is about, what it improves and how it does so. If possible, back it up with background information and considerations that the author had thought about but decided to implement otherwise.
 
-Please note that pull requests are built and tested automatically by our continuous deployment pipe
-line. All pull request builds are listed [here](https://builds.apache.org/job/logging-log4net/view/change-requests/).
-
 ### Continuous deployment pipeline
 
 We use Jenkins to build our codebase and the pipeline configuration is checked in into the repository codebase. The job can be found [here](https://builds.apache.org/job/logging-log4net).
 
-### Contributor license agreement
+#### Branches
 
-It is ok to contribute trivial patches without signing a contributor license agreement. Patches are considered to be trivial if they could be repeated trivially by anyone. Non trivial modifications however require you to sign a contributor license agreement. More information about this topic can be found [here](https://www.apache.org/licenses/#clas).
+All branches are built and tested automatically by our continuous deployment pipeline. Some branches however have a special meaning to the pipeline.
 
-### Code style
+##### Branch: master
 
-Respect the original code style and whitespace rules. If you think that a file needs whitespace cleanup do so in separate commits.
+A commit on the master branch triggers the pipeline to publish the codebase as a release. This updates the site, publishes the assemblies, ..
 
-* Run all the tests with `nant` inside the `tests` directory to assure nothing else was accidentally broken. Please note that not all targets can be built on a single machine and therefore only a subset of the actual targets is built and tested.
+__REMARK: this part of the pipeline is still work in progress.__
+
+##### Branch: release/$version
+
+A commit on a release branch triggers the pipeline to publish the codebase as a release candidate. This gives the possibility to review and do the last few steps to get a release done. Typical changes made in this branch are updates of the version tags.
+
+__REMARK: this part of the pipeline is still work in progress.__
+
+#### Pull requests
+
+Pull requests are built and tested automatically by our continuous deployment pipeline. All pull request builds are listed [here](https://builds.apache.org/job/logging-log4net/view/change-requests/).
 
 # Additional resources
 
