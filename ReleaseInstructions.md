@@ -1,10 +1,10 @@
+# Important remark
+
+Note that we invest a great deal of effort into automating the release process by building a continuous delivery pipeline that runs on Jenkins. Further we have moved our codebase from SVN over to GIT and therefore large parts of this howto are no longer up do date!
+
 # Introduction
 
 This document is a work in progress and was created in parallel to the release of Apache log4net 1.2.11 and adapted for 2.0.6.
-
-## Important remark
-
-Note that we invest a great deal of effort into automating the release process by building a continuous delivery pipeline that runs on Jenkins. Further we have moved our codebase from SVN over to GIT and therefore large parts of this howto are no longer up do date!
 
 # Requirements
 
