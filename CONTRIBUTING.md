@@ -133,7 +133,7 @@ Respect the original code style and whitespace rules. If you think that a file n
 # Additional resources
 
 * [Log4Net mailing lists](https://logging.apache.org/log4net/mail-lists.html)
-* [Apache log4net JIRA project page](https://issues.apache.org/jira/browse/LOG4NET)
+* [Apache log4net JIRA project page](https://issues.apache.org/jira/projects/LOG4NET)
 * [Contributor License Agreement](https://www.apache.org/licenses/#clas)
 * [General GitHub documentation](https://help.github.com/)
 * [GitHub pull request documentation](https://help.github.com/send-pull-requests/)
