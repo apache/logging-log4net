@@ -70,7 +70,7 @@ There are many ways to contribute changes to the codebase. One is to file a pull
 * Make your modifications in the form of commits. Please read the section about commit messages for further information about how commit messages should be written.
 * Please check for unnecessary whitespace with git diff --check before committing.
 * Make sure you write tests for your changes!
-* Please note that not all targets can be built on a single machine and therefore only a subset of the actual targets can be built and tested easily on the machine of a developer. The good thing is, all branches and pull requests are built by the continuous deployment pipeline. Please continue reading [that section](#Continuous-deployment-pipeline) for further information.
+* Please note that not all targets can be built on a single machine and therefore only a subset of the actual targets can be built and tested easily on the machine of a developer. The good thing is, all branches and pull requests are built by the continuous deployment pipeline. Please continue reading [that section](#continuous-deployment-pipeline) for further information.
 
 ### Commit messages
 
