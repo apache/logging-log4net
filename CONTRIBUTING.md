@@ -78,7 +78,7 @@ Each commit should be an atomar modification and the commit message is the story
 
 A commit messages first line represents the summary. The summary should start with the module where the modification is made and the issue(s) a modification is made should be appended to the summary. Any line in a commit message should not exceed about 80 characters. If you would like to provide more information to the commit, add an empty line after the summary and write more about the modification.
 
-If you have a hard time to write a summary, your commit is probably too large and you should consider to split up your modifications into several commits, each being doing more atomar modifications.
+If you have a hard time to write a summary, your commit is probably too large and you should consider to split up your modifications into several commits, each doing more atomar modifications.
 
 The following are good examples of great commit messages:
 
@@ -111,7 +111,7 @@ is written.
 
 ### Pull requests
 
-Pull requests are typically a set of commits. As with commit messages, a pull request should have a one liner summary and a longer description explaining what the pull request is about, what it improves and how it improves. If possible, it is good to back it up with background information and considerations that the author had thought about but decided to do implement otherwise.
+Pull requests are typically a set of commits. As with commit messages, a pull request should have a one liner summary and a longer description explaining what the pull request is about, what it improves and how it does so. If possible, back it up with background information and considerations that the author had thought about but decided to implement otherwise.
 
 Please note that pull requests are built and tested automatically by our continuous deployment pipe
 line. All pull request builds are listed [here](https://builds.apache.org/job/logging-log4net/view/change-requests/).
