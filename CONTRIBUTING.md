@@ -40,38 +40,95 @@ This Code of Conduct applies both within project spaces and in public spaces whe
 
 This Code of Conduct is adapted from the Contributor Covenant, version 1.4, available [here](http://contributor-covenant.org/version/1/4).
 
-# Getting started
+## Mailing lists
 
-* Make sure you have a [JIRA account](https://issues.apache.org/jira/).
-* Make sure you have a [GitHub account](https://github.com/signup/free).
-* If you're planning to implement a new feature it makes sense to discuss the changes on the [development mailing list](https://logging.apache.org/log4net/mail-lists.html) first. This way you can make sure you are not wasting your time on something that isn't considered to be in Apache log4net's scope.
-* Submit a ticket for your issue, assuming one does not already exist.
-  * Clearly describe the issue including steps to reproduce when it is a bug.
-  * Make sure you fill in the earliest version that you know has the issue.
+The major part of discussion happens on the mailing lists. The mailing lists are documented [here](https://logging.apache.org/log4net/mail-lists.html).
+
+## Issues
+
+Please use the official JIRA issue tracker. It can be found [here](https://issues.apache.org/jira/projects/LOG4NET/). Even though it is possible to track issues on GitHub we prefer to have them all there. To add, update or comment on issues you will need a [JIRA account](https://issues.apache.org/jira/secure/Signup!default.jspa).
+
+Check if there exists already another issue that matches your situation. Only write a new issue if you cannot find any. Doing so the maintainers of the project spend less time in managing issues and therefore have more time to actually work on the issues.
+
+Please backup your issues with as much information as you have. The more screenshots, logfiles or steps to reproduce a bug there are, the easier it is to track down an actual culprit.
+
+Please try to be as clear as possible when submitting a new issue or updating an existing issue. Consider yourself to be a story teller and you are telling your story to someone who has never even heard of it. The easier it is to follow the story, the better it is to the reader of the story and the more likely it is that a reader of the story will invest time to work on it. All the time that the reader of an issue spends with figuring out what an issue is about, the more time he has to fix the issue.
+
+When an issue is about a regression, please try to find out in which release the regression was introduced. This again greatly helps the maintainers to hunt down the actual culprit.
+
+Often it is wise to write to one of the mailing lists about a problem. You reach a much larger audience by sending a mail on a mailing list and you will likely receive helpful feedback faster. Further the maintainers of the project are subscribed to those mailing lists too and they can guide you on what to do next.
+
+## Patches
+
+There are many ways to contribute changes to the codebase. One is to file a pull request on GitHub, another is to attach a patch to a JIRA issue. Pull requests provide a way to review modifications and are built and tested automatically. Therefore we prefer code contributions to go through GitHub pull requests. This can be done by following these steps:
+
+* Make sure you have a [Github account](https://github.com/signup/free).
+* If you're planning to implement a new feature, it makes sense to discuss the changes first on the [development mailing list](https://logging.apache.org/log4net/mail-lists.html). This way you can make sure you are not wasting your time on something that isn't considered to be in Apache Log4Net's scope.
+* Eventually file a new ticket if there is and assign an the issue to you to make clear that you are working on it.
 * Fork the repository on GitHub.
+* If the modifications will take a considerable amount of time, it could make sense to create a feature branch that branches from `develop`. This allows you to separate your modifications from future modifications in the ´develop´ branch.
+* Make your modifications in the form of commits. Please read the section about commit messages for further information about how commit messages should be written.
+* Please check for unnecessary whitespace with git diff --check before committing.
+* Make sure you write tests for your changes!
+* Please note that not all targets can be built on a single machine and therefore only a subset of the actual targets is built and tested.
 
-# Contributing changes
+### Commit messages
 
-* Create a topic branch from where you want to base your work (this is usually the develop branch).
-* Make commits of logical units.
-* Respect the original code style:
-  * Create minimal diffs - disable on save actions like reformat source code or organize imports. If you feel the source code should be reformatted create a separate PR for this change.
-  * Check for unnecessary whitespace with git diff --check before committing.
-* Make sure your commit messages are in the proper format. Your commit message should contain the key of the JIRA issue.
-* Make sure you have added the necessary tests for your changes.
+Each commit should be an atomar modification and the commit message is the story that backs it up. The commit message explains the changes that the commit is about. This story greatly helps to understand what a modification is about, why it is there and can include further considerations and decisions that would not fit into the codebase as comments. Doing this further allows easier reviews of a modification. The easier reviews are, the faster they can be completed and the more time is spent with actually fixing stuff rather than only trying to understand a modification.
+
+A commit messages first line represents the summary. The summary should start with the module where the modification is made and the issue(s) a modification is made should be appended to the summary. Any line in a commit message should not exceed about 80 characters. If you would like to provide more information to the commit, add an empty line after the summary and write more about the modification.
+
+If you have a hard time to write a summary, your commit is probably too large and you should consider to split up your modifications into several commits, each being doing more atomar modifications.
+
+The following are good examples of great commit messages:
+
+```
+Readme: add documentation to new methods [LOG4NET-404]
+
+The following methods are now well documented:
+* method1
+* method2
+* method3
+```
+
+```
+Submodule1: removed a few trailing whitespaces and fixed a typo in a comment
+```
+
+```
+RollingFileAppender: fixed rolling to work on Sundays [LOG4NET-404]
+
+This patch fixes a race condition that happened only on Sundays. In that case
+the rolling did not work and an internal error log message "Error writing the
+log message" was written.
+
+We considered fixing the race condition by injecting a strategy class but
+did not implement that because it was too much effort for this easy fix.
+
+Note that the fix has a performance impact of 0.1ms each time a log message
+is written.
+```
+
+### Pull requests
+
+Pull requests are typically a set of commits. As with commit messages, a pull request should have a one liner summary and a longer description explaining what the pull request is about, what it improves and how it improves. If possible, it is good to back it up with background information and considerations that the author had thought about but decided to do implement otherwise.
+
+Please note that pull requests are built and tested automatically by our continuous deployment pipe
+line. All pull request builds are listed [here](https://builds.apache.org/job/logging-log4net/view/change-requests/).
+
+### Continuous deployment pipeline
+
+We use Jenkins to build our codebase and the pipeline configuration is checked in into the repository codebase. The job can be found [here](https://builds.apache.org/job/logging-log4net).
+
+### Contributor license agreement
+
+It is ok to contribute trivial patches without signing a contributor license agreement. Patches are considered to be trivial if they could be repeated trivially by anyone. Non trivial modifications however require you to sign a contributor license agreement. More information about this topic can be found [here](https://www.apache.org/licenses/#clas).
+
+### Code style
+
+Respect the original code style and whitespace rules. If you think that a file needs whitespace cleanup do so in separate commits.
+
 * Run all the tests with `nant` inside the `tests` directory to assure nothing else was accidentally broken. Please note that not all targets can be built on a single machine and therefore only a subset of the actual targets is built and tested.
-
-## Trivial changes
-
-For changes of a trivial nature to comments and documentation, it is not always necessary to create a new ticket in JIRA. In this case, it is appropriate to start the first line of a commit with '(doc)' instead of a ticket number.
-
-## Submitting changes
-
-* For non trivial changes, please sign the [Contributor License Agreement](https://www.apache.org/licences/#clas) if you haven't already.
-* Push your changes to a topic branch in your fork of the repository.
-* Submit a pull request to the repository in the apache organization.
-* Update your JIRA ticket and include a link to the pull request in the ticket.
-* A Jenkins [job](https://builds.apache.org/job/logging-log4net) should automatically attempt to merge, build and test your pull request and you can check the outcome [here](https://builds.apache.org/job/logging-log4net/view/change-requests/).
 
 # Additional resources
 
