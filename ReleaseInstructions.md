@@ -111,7 +111,7 @@ Votes, please. This vote will close in 72 hours, 1000 GMT 24-Dec 2016
  [ ] -1 I oppose this release because...
  
 Thanks!
-´´´
+```
 * If the vote doesn't pass, adapt trunk and start over with tagging the next release candidate
 * Once the vote passes:
 
@@ -124,7 +124,7 @@ Thanks!
   $ svn cp -m "1.2.14 release has been accepted" \
         https://svn.apache.org/repos/asf/logging/log4net/tags/1.2.14RC1 \
         https://svn.apache.org/repos/asf/logging/log4net/tags/1.2.14
-´´´
+```
 * publish the nuget package
 * wait for the mirrors to catch up before proceeding, this takes several hours
 
@@ -133,7 +133,7 @@ Thanks!
 * publish the website by copying it to <https://svn.apache.org/repos/infra/websites/production/logging/content/log4net> by convention create a directory named after the release, e.g. copy site to <https://svn.apache.org/repos/infra/websites/production/logging/content/log4net/log4net-1.2.14>
 * Ensure line-feeds are consistent and that the cgi script has the svn:executable property set.
 * Change the `.htaccess` files and 2.x/2.0.x symlinks in <https://svn.apache.org/repos/infra/websites/production/logging/content/log4net> so they point at your new directory.
-* Copy ´download_log4net.html´ file from the new directory to <https://svn.apache.org/repos/infra/websites/production/logging/content/log4net>
+* Copy `download_log4net.html` file from the new directory to <https://svn.apache.org/repos/infra/websites/production/logging/content/log4net>
 * Send an announcement mail at least to using your user@apache.org email address. PGP sign the announcement email.
   * log4net-dev@logging.apache.org
   * log4net-user@logging.apache.org
