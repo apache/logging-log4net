@@ -1,24 +1,29 @@
-This file contains the PGP keys of various Apache developers.
-These keys are primarily used for code signing.
+# Introduction
 
-These keys can be verified using any OpenPGP compatible system,
-for example, http://www.gnupg.org.
+This file contains the PGP keys of various Apache developers. These keys are primarily used for code signing. These keys can be verified using any OpenPGP compatible system, for example, http://www.gnupg.org.
 
-Developers: To add key information use:
+# Add keys
+
+This information is for the developers. To add your key information use do the following, replacing UID with your email address:
+
+```
   gpg --list-keys UID
   gpg --export -a UID
+```
 
-(Where UID is your email address)
+The original source of this file is https://git-wip-us.apache.org/repos/asf?p=logging-log4net.git;a=blob;f=KEYS;hb=refs/heads/master
 
-The original source of this file is
-https://svn.apache.org/repos/asf/logging/log4net/trunk/KEYS
+# Import
 
-User: To import this key file into your keyring use:
+This information is for the user. To import this key file into your keyring use:
+
+```
   gpg --import KEYS
+```
 
+# Keys
 
-
-
+## Nicko Cadell <nicko@apache.org>
 
 pub   1024D/914A4D28 2005-03-07
 uid                  Nicko Cadell <nicko@apache.org>
@@ -54,6 +59,8 @@ Sk0ouF4An1sFuJ+/kJlvKRs+nNjFqrQdsuDCAJ9WDNgUqnAkdLVTRJq8UeK0AjOq
 oQ==
 =4aNz
 -----END PGP PUBLIC KEY BLOCK-----
+
+## Stefan Bodewig <bodewig@apache.org>
 
 pub   1024D/5F6B8B72 2001-05-28
 uid                  Stefan Bodewig <bodewig@apache.org>
@@ -600,6 +607,8 @@ ABIJEKIRWuFfa4tyB2VHUEcAAQENMgCgnc22kj8TfjktU6u4SUUqud25ZZcAn0B2
 b0zPjKjGuiwdKSnkFbNcFS3g
 =UxMc
 -----END PGP PUBLIC KEY BLOCK-----
+
+## Dominik Psenner <dpsenner@apache.org>
 
 pub   2048R/5497A907 2016-08-21
 uid                  Dominik Psenner <dpsenner@apache.org>
