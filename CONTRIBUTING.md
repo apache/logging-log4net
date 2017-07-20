@@ -29,7 +29,7 @@ For changes of a trivial nature to comments and documentation, it is not always 
 
 ## Submitting changes
 
-* For non trivial changes, please sign the [Contributor License Agreement][https://www.apache.org/licences/#clas] if you haven't already.
+* For non trivial changes, please sign the [Contributor License Agreement](https://www.apache.org/licences/#clas) if you haven't already.
 * Push your changes to a topic branch in your fork of the repository.
 * Submit a pull request to the repository in the apache organization.
 * Update your JIRA ticket and include a link to the pull request in the ticket.
@@ -39,7 +39,7 @@ For changes of a trivial nature to comments and documentation, it is not always 
 
 * [Log4Net mailing lists](https://logging.apache.org/log4net/mail-lists.html)
 * [Apache log4net JIRA project page](https://issues.apache.org/jira/browse/LOG4NET)
-* [Contributor License Agreement][https://www.apache.org/licenses/#clas]
+* [Contributor License Agreement](https://www.apache.org/licenses/#clas)
 * [General GitHub documentation](https://help.github.com/)
 * [GitHub pull request documentation](https://help.github.com/send-pull-requests/)
 
