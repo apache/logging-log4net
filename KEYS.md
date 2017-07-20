@@ -4,13 +4,24 @@ This file contains the PGP keys of various Apache developers. These keys are pri
 
 # Add keys
 
-This information is for the developers. To add your key information use do the following, replacing UID with your email address:
+This information is for the developers. To add your key information use the following shell script by setting the variables NAME and EMAIL to your name and email respectively:
 
 ```
-echo "" >> KEYS.md
-echo "## your name <UID>" >> KEYS.md
-gpg --list-keys UID >> KEYS.md
-gpg --export -a UID >> KEYS.md
+#!/bin/bash
+NAME="your name"
+EMAIL="your@email"
+
+cat <<EOT >> KEYS.md
+## $NAME <$EMAIL>
+
+``````
+gpg --list-keys $EMAIL
+``````
+
+``````
+gpg --export -a $EMAIL
+``````
+EOT
 ```
 
 The original source of this file is https://git-wip-us.apache.org/repos/asf?p=logging-log4net.git;a=blob;f=KEYS.md;hb=refs/heads/master
@@ -27,10 +38,12 @@ This information is for the user. To import this key file into your keyring use:
 
 ## Nicko Cadell <nicko@apache.org>
 
+```
 pub   1024D/914A4D28 2005-03-07
 uid                  Nicko Cadell <nicko@apache.org>
 sub   2048g/6923CBDA 2005-03-07
-
+```
+```
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v1.4.0 (MingW32)
 
@@ -61,9 +74,11 @@ Sk0ouF4An1sFuJ+/kJlvKRs+nNjFqrQdsuDCAJ9WDNgUqnAkdLVTRJq8UeK0AjOq
 oQ==
 =4aNz
 -----END PGP PUBLIC KEY BLOCK-----
+```
 
 ## Stefan Bodewig <bodewig@apache.org>
 
+```
 pub   1024D/5F6B8B72 2001-05-28
 uid                  Stefan Bodewig <bodewig@apache.org>
 sig 3        5F6B8B72 2001-05-28  Stefan Bodewig <bodewig@apache.org>
@@ -206,7 +221,8 @@ sig        3 01530235 2007-05-02  Luc Maisonobe (SpaceRoots) <luc@spaceroots.org
 sig          40581837 2007-05-08  Nick Kew <nick@webthing.com>
 sub   1024g/24774157 2001-05-28
 sig          5F6B8B72 2001-05-28  Stefan Bodewig <bodewig@apache.org>
-
+```
+```
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v1.4.2 (GNU/Linux)
 
@@ -609,14 +625,18 @@ ABIJEKIRWuFfa4tyB2VHUEcAAQENMgCgnc22kj8TfjktU6u4SUUqud25ZZcAn0B2
 b0zPjKjGuiwdKSnkFbNcFS3g
 =UxMc
 -----END PGP PUBLIC KEY BLOCK-----
+```
 
 ## Dominik Psenner <dpsenner@apache.org>
 
+```
 pub   2048R/5497A907 2016-08-21
 uid                  Dominik Psenner <dpsenner@apache.org>
 uid                  Dominik Psenner <dpsenner@gmail.com>
 sub   2048R/09136DF3 2016-08-21
+```
 
+```
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v1
 
@@ -655,3 +675,5 @@ gaPrYff+KSRAPmNl/oRE8qySEimDO3u+UqYKJHKGOqKcQCxwsbhPOYniakR09UMc
 agG4idE=
 =w70J
 -----END PGP PUBLIC KEY BLOCK-----
+```
+
