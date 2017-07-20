@@ -14,13 +14,13 @@ EMAIL="your@email"
 cat <<EOT >> KEYS.md
 ## $NAME <$EMAIL>
 
-``````
+\`\`\`
 gpg --list-keys $EMAIL
-``````
+\`\`\`
 
-``````
+\`\`\`
 gpg --export -a $EMAIL
-``````
+\`\`\`
 EOT
 ```
 
