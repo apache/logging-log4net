@@ -129,15 +129,15 @@ We use Jenkins to build our codebase and the pipeline configuration is checked i
 
 #### Branches
 
-All branches are built and tested automatically by our continuous deployment pipeline. Some branches however have a special meaning to the pipeline.
+All branches are built and tested automatically by our continuous deployment pipeline. Some branches however have a special meaning to the pipeline. All branches build and test assemblies and further provide the built artifacts as downloadable resources.
 
-##### Branch: master
+#### Branch: master
 
 A commit on the master branch triggers the pipeline to publish the codebase as a release. This updates the site, publishes the assemblies, ..
 
 __REMARK: this part of the pipeline is still work in progress.__
 
-##### Branch: release/$version
+#### Branch: release/$version
 
 A commit on a release branch triggers the pipeline to publish the codebase as a release candidate. This gives the possibility to review and do the last few steps to get a release done. Typical changes made in this branch are updates of the version tags.
 
@@ -145,7 +145,7 @@ __REMARK: this part of the pipeline is still work in progress.__
 
 #### Pull requests
 
-Pull requests are built and tested automatically by our continuous deployment pipeline. All pull request builds are listed [here](https://builds.apache.org/job/logging-log4net/view/change-requests/).
+Pull requests are built and tested automatically by our continuous deployment pipeline. All pull request build jobs are listed [here](https://builds.apache.org/job/logging-log4net/view/change-requests/). When a build passes, the built assemblies can be downloaded from the Jenkins job. Use this feature to test your changes against our build server.
 
 # Additional resources
 
