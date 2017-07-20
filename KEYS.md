@@ -8,21 +8,38 @@ This information is for the developers. To add your key information use the foll
 
 ````
 #!/bin/bash
+
+# put your name and email address here
 NAME="your name"
 EMAIL="your@email"
 
+# add heading
 cat <<EOT >> KEYS.md
 ## $NAME $EMAIL
 
 ```
-gpg --list-keys $EMAIL
+EOT
+
+# export key information
+gpg --list-keys $EMAIL >> KEYS.md
+
+# add spacer
+cat <<EOT >> KEYS.md
 ```
 
 ```
-gpg --export -a $EMAIL
+EOT
+
+# export key
+gpg --export -a $EMAIL >> KEYS.md
+
+# add ending
+cat <<EOT >> KEYS.md
 ```
 
 EOT
+
+# done
 ````
 
 The original source of this file is https://git-wip-us.apache.org/repos/asf?p=logging-log4net.git;a=blob;f=KEYS.md;hb=refs/heads/master
