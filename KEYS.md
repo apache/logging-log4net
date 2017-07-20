@@ -7,18 +7,20 @@ This file contains the PGP keys of various Apache developers. These keys are pri
 This information is for the developers. To add your key information use do the following, replacing UID with your email address:
 
 ```
-  gpg --list-keys UID
-  gpg --export -a UID
+echo "" >> KEYS.md
+echo "## your name <UID>" >> KEYS.md
+gpg --list-keys UID >> KEYS.md
+gpg --export -a UID >> KEYS.md
 ```
 
-The original source of this file is https://git-wip-us.apache.org/repos/asf?p=logging-log4net.git;a=blob;f=KEYS;hb=refs/heads/master
+The original source of this file is https://git-wip-us.apache.org/repos/asf?p=logging-log4net.git;a=blob;f=KEYS.md;hb=refs/heads/master
 
 # Import
 
 This information is for the user. To import this key file into your keyring use:
 
 ```
-  gpg --import KEYS
+  gpg --import KEYS.md
 ```
 
 # Keys
