@@ -50,17 +50,17 @@ Please use the official JIRA issue tracker. It can be found [here](https://issue
 
 Check if there exists already another issue that matches your situation. Only write a new issue if you cannot find any. Doing so the maintainers of the project spend less time in managing issues and therefore have more time to actually work on the issues.
 
-Please backup your issues with as much information as you have. The more screenshots, logfiles or steps to reproduce a bug there are, the easier it is to track down an actual culprit.
+Please backup your issues with as much information as you have. The more screenshots, logfiles or steps to reproduce a bug there are, the easier it is to track down the actual culprit.
 
-Please try to be as clear as possible when submitting a new issue or updating an existing issue. Consider yourself to be a story teller and you are telling your story to someone who has never even heard of it. The easier it is to follow the story, the better it is to the reader of the story and the more likely it is that a reader of the story will invest time to work on it. All the time that the reader of an issue spends with figuring out what an issue is about, the more time he has to fix the issue.
+Please try to be as clear as possible when submitting a new issue or updating an existing issue. Consider yourself to be a story teller and you are telling your story to someone who has never even heard of it. The easier it is to follow the story, the better it is to the reader of the story and the more likely it is that a reader of the story will invest time to work on it. The less time the reader of an issue spends with figuring out what an issue is about, the more time he has to fix the issue.
 
 When an issue is about a regression, please try to find out in which release the regression was introduced. This again greatly helps the maintainers to hunt down the actual culprit.
 
-Often it is wise to write to one of the mailing lists about a problem. You reach a much larger audience by sending a mail on a mailing list and you will likely receive helpful feedback faster. Further the maintainers of the project are subscribed to those mailing lists too and they can guide you on what to do next.
+Often it is wise to write to one of the mailing lists about a problem before you file an issue. You reach a much larger audience by sending an email to one of the mailing list and therefore it is more likely for you to receive helpful feedback faster. Further the maintainers of the project are subscribed to those mailing lists too and they can guide you on what to do next.
 
 ## Patches
 
-There are many ways to contribute changes to the codebase. One is to file a pull request on GitHub, another is to attach a patch to a JIRA issue. Pull requests provide a way to review modifications and are built and tested automatically. Therefore we prefer code contributions to go through GitHub pull requests. This can be done by following these steps:
+There are many ways to contribute changes to the codebase. One is to file a pull request on GitHub, another is to attach a patch to a JIRA issue. While both work fine, pull requests provide ways to review modifications and are built and tested automatically. Therefore we prefer code contributions to go through GitHub pull requests. This can be done by following these steps:
 
 * Make sure you have a [Github account](https://github.com/signup/free).
 * If you're planning to implement a new feature, it makes sense to discuss the changes first on the [development mailing list](https://logging.apache.org/log4net/mail-lists.html). This way you can make sure you are not wasting your time on something that isn't considered to be in Apache Log4Net's scope.
@@ -70,7 +70,7 @@ There are many ways to contribute changes to the codebase. One is to file a pull
 * Make your modifications in the form of commits. Please read the section about commit messages for further information about how commit messages should be written.
 * Please check for unnecessary whitespace with git diff --check before committing.
 * Make sure you write tests for your changes!
-* Please note that not all targets can be built on a single machine and therefore only a subset of the actual targets is built and tested.
+* Please note that not all targets can be built on a single machine and therefore only a subset of the actual targets can be built and tested easily on the machine of a developer. The good thing is, all branches and pull requests are built by the continuous deployment pipeline. Please read that section for further information.
 
 ### Commit messages
 
