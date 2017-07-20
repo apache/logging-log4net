@@ -33,7 +33,7 @@ For changes of a trivial nature to comments and documentation, it is not always 
 * Push your changes to a topic branch in your fork of the repository.
 * Submit a pull request to the repository in the apache organization.
 * Update your JIRA ticket and include a link to the pull request in the ticket.
-* The build system should automatically attempt to merge, build and test your pull request. Please navigate to [jenkins](https://builds.apache.org/job/logging-log4net) to check the outcome.
+* A Jenkins [job](https://builds.apache.org/job/logging-log4net) should automatically attempt to merge, build and test your pull request and you can check the outcome [here](https://builds.apache.org/job/logging-log4net/view/change-requests/).
 
 # Additional resources
 
