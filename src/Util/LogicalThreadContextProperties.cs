@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -49,7 +49,7 @@ namespace log4net.Util
 	/// cref="System.Runtime.Remoting.Messaging.CallContext"/>.
 	/// </para>
 	/// <para>
-	/// The <see cref="CallContext"/> requires a link time 
+	/// The <see cref="CallContext"/> requires a link time
 	/// <see cref="System.Security.Permissions.SecurityPermission"/> for the
 	/// <see cref="System.Security.Permissions.SecurityPermissionFlag.Infrastructure"/>.
 	/// If the calling code does not have this permission then this context will be disabled.
@@ -64,12 +64,12 @@ namespace log4net.Util
 		#else
 		private const string c_SlotName = "log4net.Util.LogicalThreadContextProperties";
 		#endif
-		
+
 		/// <summary>
 		/// Flag used to disable this context if we don't have permission to access the CallContext.
 		/// </summary>
 		private bool m_disabled = false;
-		
+
 		#region Public Instance Constructors
 
 		/// <summary>
@@ -101,17 +101,17 @@ namespace log4net.Util
 		/// </remarks>
 		override public object this[string key]
 		{
-			get 
-			{ 
+			get
+			{
 				// Don't create the dictionary if it does not already exist
 				PropertiesDictionary dictionary = GetProperties(false);
 				if (dictionary != null)
 				{
-					return dictionary[key]; 
+					return dictionary[key];
 				}
 				return null;
 			}
-			set 
+			set
 			{
 				// Force the dictionary to be created
 				PropertiesDictionary props = GetProperties(true);
@@ -177,7 +177,7 @@ namespace log4net.Util
 		/// <remarks>
 		/// <para>
 		/// The collection returned is only to be used on the calling thread. If the
-		/// caller needs to share the collection between different threads then the 
+		/// caller needs to share the collection between different threads then the
 		/// caller must clone the collection before doings so.
 		/// </para>
 		/// </remarks>
@@ -198,12 +198,12 @@ namespace log4net.Util
 				catch (SecurityException secEx)
 				{
 					m_disabled = true;
-					
+
 					// Thrown if we don't have permission to read or write the CallContext
 					LogLog.Warn(declaringType, "SecurityException while accessing CallContext. Disabling LogicalThreadContextProperties", secEx);
 				}
 			}
-			
+
 			// Only get here is we are disabled because of a security exception
 			if (create)
 			{
@@ -214,9 +214,9 @@ namespace log4net.Util
 
 		#endregion Internal Instance Methods
 
-        #region Private Static Methods
+		#region Private Static Methods
 
-        /// <summary>
+		/// <summary>
 		/// Gets the call context get data.
 		/// </summary>
 		/// <returns>The peroperties dictionary stored in the call context</returns>
@@ -226,14 +226,14 @@ namespace log4net.Util
 		/// that we can wrap in an exception handler.
 		/// </remarks>
 #if NET_4_0 || MONO_4_0
-        [System.Security.SecuritySafeCritical]
+		[System.Security.SecuritySafeCritical]
 #endif
-        private static PropertiesDictionary GetLogicalProperties()
+		private static PropertiesDictionary GetLogicalProperties()
 		{
 #if NETSTANDARD1_3
-            return AsyncLocalDictionary.Value;
+			return AsyncLocalDictionary.Value;
 #elif NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0
-            return CallContext.LogicalGetData(c_SlotName) as PropertiesDictionary;
+			return CallContext.LogicalGetData(c_SlotName) as PropertiesDictionary;
 #else
 			return CallContext.GetData(c_SlotName) as PropertiesDictionary;
 #endif
@@ -249,9 +249,9 @@ namespace log4net.Util
 		/// that we can wrap in an exception handler.
 		/// </remarks>
 #if NET_4_0 || MONO_4_0
-        [System.Security.SecuritySafeCritical]
+		[System.Security.SecuritySafeCritical]
 #endif
-        private static void SetLogicalProperties(PropertiesDictionary properties)
+		private static void SetLogicalProperties(PropertiesDictionary properties)
 		{
 #if NETSTANDARD1_3
 			AsyncLocalDictionary.Value = properties;
@@ -260,23 +260,23 @@ namespace log4net.Util
 #else
 			CallContext.SetData(c_SlotName, properties);
 #endif
-        }
+		}
 
-        #endregion
+		#endregion
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the LogicalThreadContextProperties class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(LogicalThreadContextProperties);
+		/// <summary>
+		/// The fully qualified type of the LogicalThreadContextProperties class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(LogicalThreadContextProperties);
 
-	    #endregion Private Static Fields
-    }
+		#endregion Private Static Fields
+	}
 }
 
 #endif

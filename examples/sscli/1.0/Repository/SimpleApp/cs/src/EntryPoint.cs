@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -20,8 +20,8 @@
 // Configure logging for this assembly using the 'SimpleApp.exe.log4net' file
 [assembly: log4net.Config.XmlConfigurator(ConfigFileExtension="log4net")]
 
-// The following alias attribute can be used to capture the logging 
-// repository for the 'SimpleModule' assembly. Without specifying this 
+// The following alias attribute can be used to capture the logging
+// repository for the 'SimpleModule' assembly. Without specifying this
 // attribute the logging configuration for the 'SimpleModule' assembly
 // will be read from the 'SimpleModule.dll.log4net' file. When this
 // attribute is specified the configuration will be shared with this

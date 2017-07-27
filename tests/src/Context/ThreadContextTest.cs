@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -39,12 +39,12 @@ namespace log4net.Tests.Context
 	[TestFixture]
 	public class ThreadContextTest
 	{
-        [TearDown]
-        public void TearDown() {
-            Utils.RemovePropertyFromAllContexts();
-        }
+		[TearDown]
+		public void TearDown() {
+			Utils.RemovePropertyFromAllContexts();
+		}
 
-        [Test]
+		[Test]
 		public void TestThreadPropertiesPattern()
 		{
 			StringAppender stringAppender = new StringAppender();
@@ -76,7 +76,7 @@ namespace log4net.Tests.Context
 		public void TestThreadStackPattern()
 		{
 			StringAppender stringAppender = new StringAppender();
-            stringAppender.Layout = new PatternLayout("%property{" + Utils.PROPERTY_KEY + "}");
+			stringAppender.Layout = new PatternLayout("%property{" + Utils.PROPERTY_KEY + "}");
 
 			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 			BasicConfigurator.Configure(rep, stringAppender);
@@ -103,7 +103,7 @@ namespace log4net.Tests.Context
 		public void TestThreadStackPattern2()
 		{
 			StringAppender stringAppender = new StringAppender();
-            stringAppender.Layout = new PatternLayout("%property{" + Utils.PROPERTY_KEY + "}");
+			stringAppender.Layout = new PatternLayout("%property{" + Utils.PROPERTY_KEY + "}");
 
 			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 			BasicConfigurator.Configure(rep, stringAppender);
@@ -137,7 +137,7 @@ namespace log4net.Tests.Context
 		public void TestThreadStackPatternNullVal()
 		{
 			StringAppender stringAppender = new StringAppender();
-            stringAppender.Layout = new PatternLayout("%property{" + Utils.PROPERTY_KEY + "}");
+			stringAppender.Layout = new PatternLayout("%property{" + Utils.PROPERTY_KEY + "}");
 
 			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 			BasicConfigurator.Configure(rep, stringAppender);
@@ -164,7 +164,7 @@ namespace log4net.Tests.Context
 		public void TestThreadStackPatternNullVal2()
 		{
 			StringAppender stringAppender = new StringAppender();
-            stringAppender.Layout = new PatternLayout("%property{" + Utils.PROPERTY_KEY + "}");
+			stringAppender.Layout = new PatternLayout("%property{" + Utils.PROPERTY_KEY + "}");
 
 			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 			BasicConfigurator.Configure(rep, stringAppender);
@@ -194,7 +194,7 @@ namespace log4net.Tests.Context
 			stringAppender.Reset();
 		}
 
-        private static string TestBackgroundThreadContextPropertyRepository;
+		private static string TestBackgroundThreadContextPropertyRepository;
 
 		[Test]
 		public void TestBackgroundThreadContextProperty()
@@ -202,7 +202,7 @@ namespace log4net.Tests.Context
 			StringAppender stringAppender = new StringAppender();
 			stringAppender.Layout = new PatternLayout("%property{DateTimeTodayToString}");
 
-            ILoggerRepository rep = LogManager.CreateRepository(TestBackgroundThreadContextPropertyRepository = "TestBackgroundThreadContextPropertyRepository" + Guid.NewGuid().ToString());
+			ILoggerRepository rep = LogManager.CreateRepository(TestBackgroundThreadContextPropertyRepository = "TestBackgroundThreadContextPropertyRepository" + Guid.NewGuid().ToString());
 			BasicConfigurator.Configure(rep, stringAppender);
 
 			Thread thread = new Thread(new ThreadStart(ExecuteBackgroundThread));
@@ -213,7 +213,7 @@ namespace log4net.Tests.Context
 
 		private static void ExecuteBackgroundThread()
 		{
-            ILog log = LogManager.GetLogger(TestBackgroundThreadContextPropertyRepository, "ExecuteBackGroundThread");
+			ILog log = LogManager.GetLogger(TestBackgroundThreadContextPropertyRepository, "ExecuteBackGroundThread");
 			ThreadContext.Properties["DateTimeTodayToString"] = DateTime.Today.ToString();
 
 			log.Info("TestMessage");

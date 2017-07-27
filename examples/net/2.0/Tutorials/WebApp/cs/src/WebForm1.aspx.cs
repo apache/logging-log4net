@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -56,7 +56,7 @@ namespace WebApp
 
 		protected SimpleModule.Math m_MathAdd = new SimpleModule.Math();
 		protected SharedModule.Math m_MathSub = new SharedModule.Math();
-	
+
 		private void Page_Load(object sender, System.EventArgs e)
 		{
 			// Put user code to initialize the page here
@@ -81,13 +81,13 @@ namespace WebApp
 			txtSub2.Text = "0";
 			txtSub3.Text = "0";
 		}
-		
+
 		/// <summary>
 		/// Required method for Designer support - do not modify
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent()
-		{    
+		{
 			this.btnCalcAdd.Click += new System.EventHandler(this.btnCalcAdd_Click);
 			this.btnCalcSub.Click += new System.EventHandler(this.btnCalcSub_Click);
 			this.Load += new System.EventHandler(this.Page_Load);
@@ -101,7 +101,7 @@ namespace WebApp
 			int result = m_MathAdd.Add(int.Parse(txtAdd1.Text), int.Parse(txtAdd2.Text));
 
 			if (log.IsInfoEnabled) log.Info("result=[" + result + "]");
-			
+
 			txtAdd3.Text = result.ToString();
 		}
 
@@ -112,7 +112,7 @@ namespace WebApp
 			int result = m_MathSub.Subtract(int.Parse(txtSub1.Text), int.Parse(txtSub2.Text));
 
 			if (log.IsInfoEnabled) log.Info("result=[" + result + "]");
-			
+
 			txtSub3.Text = result.ToString();
 		}
 	}

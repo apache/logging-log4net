@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -97,13 +97,13 @@ namespace log4net.ObjectRenderer
 		///			For a one dimensional array this is the
 		///			array type name, an open brace, followed by a comma
 		///			separated list of the elements (using the appropriate
-		///			renderer), followed by a close brace. 
+		///			renderer), followed by a close brace.
 		///			</para>
 		///			<para>
 		///			For example: <c>int[] {1, 2, 3}</c>.
 		///			</para>
 		///			<para>
-		///			If the array is not one dimensional the 
+		///			If the array is not one dimensional the
 		///			<c>Array.ToString()</c> is returned.
 		///			</para>
 		///			</description>
@@ -120,23 +120,23 @@ namespace log4net.ObjectRenderer
 		///			For example: <c>{a, b, c}</c>.
 		///			</para>
 		///			<para>
-		///			All collection classes that implement <see cref="ICollection"/> its subclasses, 
+		///			All collection classes that implement <see cref="ICollection"/> its subclasses,
 		///			or generic equivalents all implement the <see cref="IEnumerable"/> interface.
 		///			</para>
 		///			</description>
-		///		</item>		
+		///		</item>
 		///		<item>
 		///			<term><see cref="DictionaryEntry"/></term>
 		///			<description>
 		///			<para>
 		///			Rendered as the key, an equals sign ('='), and the value (using the appropriate
-		///			renderer). 
+		///			renderer).
 		///			</para>
 		///			<para>
 		///			For example: <c>key=value</c>.
 		///			</para>
 		///			</description>
-		///		</item>		
+		///		</item>
 		///		<item>
 		///			<term>other</term>
 		///			<description>
@@ -157,7 +157,7 @@ namespace log4net.ObjectRenderer
 				writer.Write(SystemInfo.NullText);
 				return;
 			}
-			
+
 			Array objArray = obj as Array;
 			if (objArray != null)
 			{
@@ -177,11 +177,11 @@ namespace log4net.ObjectRenderer
 					writer.Write("{}");
 					return;
 				}
-				
+
 				// This is a special check to allow us to get the enumerator from the IDictionary
 				// interface as this guarantees us DictionaryEntry objects. Note that in .NET 2.0
 				// the generic IDictionary<> interface enumerates KeyValuePair objects rather than
-				// DictionaryEntry ones. However the implementation of the plain IDictionary 
+				// DictionaryEntry ones. However the implementation of the plain IDictionary
 				// interface on the generic Dictionary<> still returns DictionaryEntry objects.
 				IDictionary objDictionary = obj as IDictionary;
 				if (objDictionary != null)
@@ -200,7 +200,7 @@ namespace log4net.ObjectRenderer
 				RenderEnumerator(rendererMap, objEnumerator, writer);
 				return;
 			}
-			
+
 			if (obj is DictionaryEntry)
 			{
 				RenderDictionaryEntry(rendererMap, (DictionaryEntry)obj, writer);
@@ -228,7 +228,7 @@ namespace log4net.ObjectRenderer
 		///	<c>int[] {1, 2, 3}</c>.
 		///	</para>
 		///	<para>
-		///	If the array is not one dimensional the 
+		///	If the array is not one dimensional the
 		///	<c>Array.ToString()</c> is returned.
 		///	</para>
 		/// </remarks>
@@ -305,6 +305,6 @@ namespace log4net.ObjectRenderer
 			rendererMap.FindAndRender(entry.Key, writer);
 			writer.Write("=");
 			rendererMap.FindAndRender(entry.Value, writer);
-		}	
+		}
 	}
 }

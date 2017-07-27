@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -23,7 +23,7 @@ using log4net.Util;
 namespace log4net.Util
 {
 	/// <summary>
-	/// Contain the information obtained when parsing formatting modifiers 
+	/// Contain the information obtained when parsing formatting modifiers
 	/// in conversion modifiers.
 	/// </summary>
 	/// <remarks>
@@ -47,7 +47,7 @@ namespace log4net.Util
 		/// Initializes a new instance of the <see cref="FormattingInfo" /> class.
 		/// </para>
 		/// </remarks>
-		public FormattingInfo() 
+		public FormattingInfo()
 		{
 		}
 
@@ -60,7 +60,7 @@ namespace log4net.Util
 		/// with the specified parameters.
 		/// </para>
 		/// </remarks>
-		public FormattingInfo(int min, int max, bool leftAlign) 
+		public FormattingInfo(int min, int max, bool leftAlign)
 		{
 			m_min = min;
 			m_max = max;

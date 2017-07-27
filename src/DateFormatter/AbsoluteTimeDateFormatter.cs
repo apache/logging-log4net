@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -54,7 +54,7 @@ namespace log4net.DateFormatter
 		virtual protected void FormatDateWithoutMillis(DateTime dateToFormat, StringBuilder buffer)
 		{
 			int hour = dateToFormat.Hour;
-			if (hour < 10) 
+			if (hour < 10)
 			{
 				buffer.Append('0');
 			}
@@ -62,15 +62,15 @@ namespace log4net.DateFormatter
 			buffer.Append(':');
 
 			int mins = dateToFormat.Minute;
-			if (mins < 10) 
+			if (mins < 10)
 			{
 				buffer.Append('0');
 			}
 			buffer.Append(mins);
 			buffer.Append(':');
-	
+
 			int secs = dateToFormat.Second;
-			if (secs < 10) 
+			if (secs < 10)
 			{
 				buffer.Append('0');
 			}
@@ -101,36 +101,36 @@ namespace log4net.DateFormatter
 		/// </remarks>
 		virtual public void FormatDate(DateTime dateToFormat, TextWriter writer)
 		{
-                    lock (s_lastTimeStrings)
-		    {
+					lock (s_lastTimeStrings)
+			{
 			// Calculate the current time precise only to the second
 			long currentTimeToTheSecond = (dateToFormat.Ticks - (dateToFormat.Ticks % TimeSpan.TicksPerSecond));
 
-                        string timeString = null;
+						string timeString = null;
 			// Compare this time with the stored last time
 			// If we are in the same second then append
 			// the previously calculated time string
-                        if (s_lastTimeToTheSecond != currentTimeToTheSecond)
-                        {
-                            s_lastTimeStrings.Clear();
-                        }
-                        else
-                        {
-                            timeString = (string) s_lastTimeStrings[GetType()];
-                        }
+						if (s_lastTimeToTheSecond != currentTimeToTheSecond)
+						{
+							s_lastTimeStrings.Clear();
+						}
+						else
+						{
+							timeString = (string) s_lastTimeStrings[GetType()];
+						}
 
-                        if (timeString == null)
-                        {
+						if (timeString == null)
+						{
 				// lock so that only one thread can use the buffer and
 				// update the s_lastTimeToTheSecond and s_lastTimeStrings
 
 				// PERF: Try removing this lock and using a new StringBuilder each time
 				lock(s_lastTimeBuf)
 				{
-                                        timeString = (string) s_lastTimeStrings[GetType()];
+										timeString = (string) s_lastTimeStrings[GetType()];
 
-                                        if (timeString == null)
-                                        {
+										if (timeString == null)
+										{
 						// We are in a new second.
 						s_lastTimeBuf.Length = 0;
 
@@ -138,7 +138,7 @@ namespace log4net.DateFormatter
 						FormatDateWithoutMillis(dateToFormat, s_lastTimeBuf);
 
 						// Render the string buffer to a string
-                                                timeString = s_lastTimeBuf.ToString();
+												timeString = s_lastTimeBuf.ToString();
 
 #if NET_1_1
 						// Ensure that the above string is written into the variable NOW on all threads.
@@ -146,26 +146,26 @@ namespace log4net.DateFormatter
 						System.Threading.Thread.MemoryBarrier();
 #endif
 						// Store the time as a string (we only have to do this once per second)
-                                                s_lastTimeStrings[GetType()] = timeString;
+												s_lastTimeStrings[GetType()] = timeString;
 						s_lastTimeToTheSecond = currentTimeToTheSecond;
 					}
 				}
 			}
 			writer.Write(timeString);
-	
+
 			// Append the current millisecond info
 			writer.Write(',');
 			int millis = dateToFormat.Millisecond;
-			if (millis < 100) 
+			if (millis < 100)
 			{
 				writer.Write('0');
 			}
-			if (millis < 10) 
+			if (millis < 10)
 			{
 				writer.Write('0');
 			}
 			writer.Write(millis);
-                    }
+					}
 		}
 
 		#endregion Implementation of IDateFormatter

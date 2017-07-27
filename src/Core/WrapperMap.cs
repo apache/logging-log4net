@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -51,7 +51,7 @@ namespace log4net.Core
 	/// <remarks>
 	/// <para>
 	/// This class maintains a mapping between <see cref="ILogger"/> objects and
-	/// <see cref="ILoggerWrapper"/> objects. Use the <see cref="GetWrapper"/> method to 
+	/// <see cref="ILoggerWrapper"/> objects. Use the <see cref="GetWrapper"/> method to
 	/// lookup the <see cref="ILoggerWrapper"/> for the specified <see cref="ILogger"/>.
 	/// </para>
 	/// <para>
@@ -74,11 +74,11 @@ namespace log4net.Core
 		/// <param name="createWrapperHandler">The handler to use to create the wrapper objects.</param>
 		/// <remarks>
 		/// <para>
-		/// Initializes a new instance of the <see cref="WrapperMap" /> class with 
+		/// Initializes a new instance of the <see cref="WrapperMap" /> class with
 		/// the specified handler to create the wrapper objects.
 		/// </para>
 		/// </remarks>
-		public WrapperMap(WrapperCreationHandler createWrapperHandler) 
+		public WrapperMap(WrapperCreationHandler createWrapperHandler)
 		{
 			m_createWrapperHandler = createWrapperHandler;
 
@@ -139,7 +139,7 @@ namespace log4net.Core
 
 					// Create a new wrapper wrapping the logger
 					wrapperObject = CreateNewWrapperObject(logger);
-					
+
 					// Store wrapper logger in map
 					wrappersMap[logger] = wrapperObject;
 				}
@@ -165,7 +165,7 @@ namespace log4net.Core
 		/// value being the corresponding <see cref="ILoggerWrapper"/>.
 		/// </para>
 		/// </remarks>
-		protected Hashtable Repositories 
+		protected Hashtable Repositories
 		{
 			get { return this.m_repositories; }
 		}
@@ -253,7 +253,7 @@ namespace log4net.Core
 		/// Internal reference to the delegate used to register for repository shutdown events.
 		/// </summary>
 		private readonly LoggerRepositoryShutdownEventHandler m_shutdownHandler;
- 
+
 		#endregion Private Instance Variables
 	}
 }

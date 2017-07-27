@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -51,8 +51,8 @@ namespace log4net.Config
 		/// <summary>
 		/// Private constructor
 		/// </summary>
-		private DOMConfigurator() 
-		{ 
+		private DOMConfigurator()
+		{
 		}
 
 		#endregion Protected Instance Constructors
@@ -60,7 +60,7 @@ namespace log4net.Config
 		#region Configure static methods
 
 		/// <summary>
-		/// Automatically configures the log4net system based on the 
+		/// Automatically configures the log4net system based on the
 		/// application's configuration settings.
 		/// </summary>
 		/// <remarks>
@@ -74,7 +74,7 @@ namespace log4net.Config
 		/// <c>log4net</c> that contains the configuration data.
 		/// </remarks>
 		[Obsolete("Use XmlConfigurator.Configure instead of DOMConfigurator.Configure")]
-		static public void Configure() 
+		static public void Configure()
 		{
 			XmlConfigurator.Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()));
 		}
@@ -95,7 +95,7 @@ namespace log4net.Config
 		/// </remarks>
 		/// <param name="repository">The repository to configure.</param>
 		[Obsolete("Use XmlConfigurator.Configure instead of DOMConfigurator.Configure")]
-		static public void Configure(ILoggerRepository repository) 
+		static public void Configure(ILoggerRepository repository)
 		{
 			XmlConfigurator.Configure(repository);
 		}
@@ -112,13 +112,13 @@ namespace log4net.Config
 		/// </remarks>
 		/// <param name="element">The element to parse.</param>
 		[Obsolete("Use XmlConfigurator.Configure instead of DOMConfigurator.Configure")]
-		static public void Configure(XmlElement element) 
+		static public void Configure(XmlElement element)
 		{
 			XmlConfigurator.Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()), element);
 		}
 
 		/// <summary>
-		/// Configures the <see cref="ILoggerRepository"/> using the specified XML 
+		/// Configures the <see cref="ILoggerRepository"/> using the specified XML
 		/// element.
 		/// </summary>
 		/// <remarks>
@@ -131,7 +131,7 @@ namespace log4net.Config
 		/// <param name="repository">The repository to configure.</param>
 		/// <param name="element">The element to parse.</param>
 		[Obsolete("Use XmlConfigurator.Configure instead of DOMConfigurator.Configure")]
-		static public void Configure(ILoggerRepository repository, XmlElement element) 
+		static public void Configure(ILoggerRepository repository, XmlElement element)
 		{
 			XmlConfigurator.Configure(repository, element);
 		}
@@ -155,16 +155,16 @@ namespace log4net.Config
 		/// normal application on <c>Web.config</c> for an ASP.NET application).
 		/// </para>
 		/// <example>
-		/// The following example configures log4net using a configuration file, of which the 
+		/// The following example configures log4net using a configuration file, of which the
 		/// location is stored in the application's configuration file :
 		/// </example>
 		/// <code lang="C#">
 		/// using log4net.Config;
 		/// using System.IO;
 		/// using System.Configuration;
-		/// 
+		///
 		/// ...
-		/// 
+		///
 		/// DOMConfigurator.Configure(new FileInfo(ConfigurationSettings.AppSettings["log4net-config-file"]));
 		/// </code>
 		/// <para>
@@ -208,7 +208,7 @@ namespace log4net.Config
 		}
 
 		/// <summary>
-		/// Configures the <see cref="ILoggerRepository"/> using the specified configuration 
+		/// Configures the <see cref="ILoggerRepository"/> using the specified configuration
 		/// file.
 		/// </summary>
 		/// <param name="repository">The repository to configure.</param>
@@ -228,16 +228,16 @@ namespace log4net.Config
 		/// normal application on <c>Web.config</c> for an ASP.NET application).
 		/// </para>
 		/// <example>
-		/// The following example configures log4net using a configuration file, of which the 
+		/// The following example configures log4net using a configuration file, of which the
 		/// location is stored in the application's configuration file :
 		/// </example>
 		/// <code lang="C#">
 		/// using log4net.Config;
 		/// using System.IO;
 		/// using System.Configuration;
-		/// 
+		///
 		/// ...
-		/// 
+		///
 		/// DOMConfigurator.Configure(new FileInfo(ConfigurationSettings.AppSettings["log4net-config-file"]));
 		/// </code>
 		/// <para>
@@ -259,7 +259,7 @@ namespace log4net.Config
 
 
 		/// <summary>
-		/// Configures the <see cref="ILoggerRepository"/> using the specified configuration 
+		/// Configures the <see cref="ILoggerRepository"/> using the specified configuration
 		/// file.
 		/// </summary>
 		/// <param name="repository">The repository to configure.</param>
@@ -290,7 +290,7 @@ namespace log4net.Config
 #if (!NETCF && !SSCLI)
 
 		/// <summary>
-		/// Configures log4net using the file specified, monitors the file for changes 
+		/// Configures log4net using the file specified, monitors the file for changes
 		/// and reloads the configuration if a change is detected.
 		/// </summary>
 		/// <param name="configFile">The XML file to load the configuration from.</param>
@@ -320,8 +320,8 @@ namespace log4net.Config
 		}
 
 		/// <summary>
-		/// Configures the <see cref="ILoggerRepository"/> using the file specified, 
-		/// monitors the file for changes and reloads the configuration if a change 
+		/// Configures the <see cref="ILoggerRepository"/> using the file specified,
+		/// monitors the file for changes and reloads the configuration if a change
 		/// is detected.
 		/// </summary>
 		/// <param name="repository">The repository to configure.</param>

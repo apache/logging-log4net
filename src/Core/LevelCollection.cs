@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -47,7 +47,7 @@ namespace log4net.Core
 			/// Advances the enumerator to the next element in the collection.
 			/// </summary>
 			/// <returns>
-			/// <c>true</c> if the enumerator was successfully advanced to the next element; 
+			/// <c>true</c> if the enumerator was successfully advanced to the next element;
 			/// <c>false</c> if the enumerator has passed the end of the collection.
 			/// </returns>
 			/// <exception cref="InvalidOperationException">
@@ -72,7 +72,7 @@ namespace log4net.Core
 		private int m_version = 0;
 
 		#endregion
-	
+
 		#region Static Wrappers
 
 		/// <summary>
@@ -101,7 +101,7 @@ namespace log4net.Core
 		{
 			m_array = new Level[DEFAULT_CAPACITY];
 		}
-		
+
 		/// <summary>
 		/// Initializes a new instance of the <c>LevelCollection</c> class
 		/// that has the specified initial capacity.
@@ -146,12 +146,12 @@ namespace log4net.Core
 			m_array = new Level[col.Count];
 			AddRange(col);
 		}
-		
+
 		/// <summary>
 		/// Type visible only to our subclasses
 		/// Used to access protected constructor
 		/// </summary>
-		protected internal enum Tag 
+		protected internal enum Tag
 		{
 			/// <summary>
 			/// A value
@@ -168,7 +168,7 @@ namespace log4net.Core
 			m_array = null;
 		}
 		#endregion
-		
+
 		#region Operations (type-safe ICollection)
 
 		/// <summary>
@@ -201,8 +201,8 @@ namespace log4net.Core
 			{
 				throw new System.ArgumentException("Destination array was not long enough.");
 			}
-			
-			Array.Copy(m_array, 0, array, start, m_count); 
+
+			Array.Copy(m_array, 0, array, start, m_count);
 		}
 
 		/// <summary>
@@ -223,7 +223,7 @@ namespace log4net.Core
 		}
 
 		#endregion
-		
+
 		#region Operations (type-safe IList)
 
 		/// <summary>
@@ -240,13 +240,13 @@ namespace log4net.Core
 			get
 			{
 				ValidateIndex(index); // throws
-				return m_array[index]; 
+				return m_array[index];
 			}
 			set
 			{
 				ValidateIndex(index); // throws
-				++m_version; 
-				m_array[index] = value; 
+				++m_version;
+				m_array[index] = value;
 			}
 		}
 
@@ -267,7 +267,7 @@ namespace log4net.Core
 
 			return m_count++;
 		}
-		
+
 		/// <summary>
 		/// Removes all elements from the <c>LevelCollection</c>.
 		/// </summary>
@@ -277,7 +277,7 @@ namespace log4net.Core
 			m_array = new Level[DEFAULT_CAPACITY];
 			m_count = 0;
 		}
-		
+
 		/// <summary>
 		/// Creates a shallow copy of the <see cref="LevelCollection"/>.
 		/// </summary>
@@ -315,7 +315,7 @@ namespace log4net.Core
 		/// </summary>
 		/// <param name="item">The <see cref="Level"/> to locate in the <c>LevelCollection</c>.</param>
 		/// <returns>
-		/// The zero-based index of the first occurrence of <paramref name="item"/> 
+		/// The zero-based index of the first occurrence of <paramref name="item"/>
 		/// in the entire <c>LevelCollection</c>, if found; otherwise, -1.
 		///	</returns>
 		public virtual int IndexOf(Level item)
@@ -343,7 +343,7 @@ namespace log4net.Core
 		public virtual void Insert(int index, Level item)
 		{
 			ValidateIndex(index, true); // throws
-			
+
 			if (m_count == m_array.Length)
 			{
 				EnsureCapacity(m_count + 1);
@@ -367,13 +367,13 @@ namespace log4net.Core
 		/// The specified <see cref="Level"/> was not found in the <c>LevelCollection</c>.
 		/// </exception>
 		public virtual void Remove(Level item)
-		{		   
+		{
 			int i = IndexOf(item);
 			if (i < 0)
 			{
 				throw new System.ArgumentException("Cannot remove the specified item because it was not found in the specified Collection.");
 			}
-			
+
 			++m_version;
 			RemoveAt(i);
 		}
@@ -390,16 +390,16 @@ namespace log4net.Core
 		public virtual void RemoveAt(int index)
 		{
 			ValidateIndex(index); // throws
-			
+
 			m_count--;
 
 			if (index < m_count)
 			{
 				Array.Copy(m_array, index + 1, m_array, index, m_count - index);
 			}
-			
+
 			// We can't set the deleted entry equal to null, because it might be a value type.
-			// Instead, we'll create an empty single-element array of the right type and copy it 
+			// Instead, we'll create an empty single-element array of the right type and copy it
 			// over the entry we want to erase.
 			Level[] temp = new Level[1];
 			Array.Copy(temp, 0, m_array, m_count, 1);
@@ -427,7 +427,7 @@ namespace log4net.Core
 		#endregion
 
 		#region Operations (type-safe IEnumerable)
-		
+
 		/// <summary>
 		/// Returns an enumerator that can iterate through the <c>LevelCollection</c>.
 		/// </summary>
@@ -440,15 +440,15 @@ namespace log4net.Core
 		#endregion
 
 		#region Public helpers (just to mimic some nice features of ArrayList)
-		
+
 		/// <summary>
 		/// Gets or sets the number of elements the <c>LevelCollection</c> can contain.
 		/// </summary>
 		public virtual int Capacity
 		{
-			get 
-			{ 
-				return m_array.Length; 
+			get
+			{
+				return m_array.Length;
 			}
 			set
 			{
@@ -484,7 +484,7 @@ namespace log4net.Core
 			{
 				EnsureCapacity(m_count + x.Count);
 			}
-			
+
 			Array.Copy(x.m_array, 0, m_array, m_count, x.Count);
 			m_count += x.Count;
 			m_version++;
@@ -530,7 +530,7 @@ namespace log4net.Core
 
 			return m_count;
 		}
-		
+
 		/// <summary>
 		/// Sets the capacity to the actual number of elements.
 		/// </summary>
@@ -579,7 +579,7 @@ namespace log4net.Core
 		}
 
 		#endregion
-		
+
 		#region Implementation (ICollection)
 
 		void ICollection.CopyTo(Array array, int start)
@@ -646,15 +646,15 @@ namespace log4net.Core
 		private sealed class Enumerator : IEnumerator, ILevelCollectionEnumerator
 		{
 			#region Implementation (data)
-			
+
 			private readonly LevelCollection m_collection;
 			private int m_index;
 			private int m_version;
-			
+
 			#endregion
-		
+
 			#region Construction
-			
+
 			/// <summary>
 			/// Initializes a new instance of the <c>Enumerator</c> class.
 			/// </summary>
@@ -665,11 +665,11 @@ namespace log4net.Core
 				m_index = -1;
 				m_version = tc.m_version;
 			}
-			
+
 			#endregion
-	
+
 			#region Operations (type-safe IEnumerator)
-			
+
 			/// <summary>
 			/// Gets the current element in the collection.
 			/// </summary>
@@ -682,7 +682,7 @@ namespace log4net.Core
 			/// Advances the enumerator to the next element in the collection.
 			/// </summary>
 			/// <returns>
-			/// <c>true</c> if the enumerator was successfully advanced to the next element; 
+			/// <c>true</c> if the enumerator was successfully advanced to the next element;
 			/// <c>false</c> if the enumerator has passed the end of the collection.
 			/// </returns>
 			/// <exception cref="InvalidOperationException">
@@ -708,14 +708,14 @@ namespace log4net.Core
 			}
 
 			#endregion
-	
+
 			#region Implementation (IEnumerator)
-			
+
 			object IEnumerator.Current
 			{
 				get { return this.Current; }
 			}
-			
+
 			#endregion
 		}
 
@@ -802,7 +802,7 @@ namespace log4net.Core
 			}
 
 			public override void Remove(Level x)
-			{           
+			{
 				throw new NotSupportedException("This is a Read Only Collection and can not be modified");
 			}
 

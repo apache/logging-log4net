@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -29,11 +29,11 @@ using log4net.Core;
 namespace log4net.Appender
 {
 	/// <summary>
-	/// Abstract base class implementation of <see cref="IAppender"/>. 
+	/// Abstract base class implementation of <see cref="IAppender"/>.
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// This class provides the code for common functionality, such 
+	/// This class provides the code for common functionality, such
 	/// as support for threshold filtering and support for general filters.
 	/// </para>
 	/// <para>
@@ -64,7 +64,7 @@ namespace log4net.Appender
 		#region Finalizer
 
 		/// <summary>
-		/// Finalizes this appender by calling the implementation's 
+		/// Finalizes this appender by calling the implementation's
 		/// <see cref="Close"/> method.
 		/// </summary>
 		/// <remarks>
@@ -73,11 +73,11 @@ namespace log4net.Appender
 		/// will call <see cref="Close"/>.
 		/// </para>
 		/// </remarks>
-		~AppenderSkeleton() 
+		~AppenderSkeleton()
 		{
-			// An appender might be closed then garbage collected. 
+			// An appender might be closed then garbage collected.
 			// There is no point in closing twice.
-			if (!m_closed) 
+			if (!m_closed)
 			{
 				LogLog.Debug(declaringType, "Finalizing appender named ["+m_name+"].");
 				Close();
@@ -92,11 +92,11 @@ namespace log4net.Appender
 		/// Gets or sets the threshold <see cref="Level"/> of this appender.
 		/// </summary>
 		/// <value>
-		/// The threshold <see cref="Level"/> of the appender. 
+		/// The threshold <see cref="Level"/> of the appender.
 		/// </value>
 		/// <remarks>
 		/// <para>
-		/// All log events with lower level than the threshold level are ignored 
+		/// All log events with lower level than the threshold level are ignored
 		/// by the appender.
 		/// </para>
 		/// <para>
@@ -105,7 +105,7 @@ namespace log4net.Appender
 		/// string, such as "DEBUG", "INFO" and so on.
 		/// </para>
 		/// </remarks>
-		public Level Threshold 
+		public Level Threshold
 		{
 			get { return m_threshold; }
 			set { m_threshold = value; }
@@ -117,24 +117,24 @@ namespace log4net.Appender
 		/// <value>The <see cref="IErrorHandler"/> of the appender</value>
 		/// <remarks>
 		/// <para>
-		/// The <see cref="AppenderSkeleton"/> provides a default 
-		/// implementation for the <see cref="ErrorHandler"/> property. 
+		/// The <see cref="AppenderSkeleton"/> provides a default
+		/// implementation for the <see cref="ErrorHandler"/> property.
 		/// </para>
 		/// </remarks>
-		virtual public IErrorHandler ErrorHandler 
+		virtual public IErrorHandler ErrorHandler
 		{
 			get { return this.m_errorHandler; }
-			set 
+			set
 			{
-				lock(this) 
+				lock(this)
 				{
-					if (value == null) 
+					if (value == null)
 					{
 						// We do not throw exception here since the cause is probably a
 						// bad config file.
 						LogLog.Warn(declaringType, "You have tried to set a null error-handler.");
-					} 
-					else 
+					}
+					else
 					{
 						m_errorHandler = value;
 					}
@@ -167,7 +167,7 @@ namespace log4net.Appender
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="RequiresLayout"/>
-		virtual public ILayout Layout 
+		virtual public ILayout Layout
 		{
 			get { return m_layout; }
 			set { m_layout = value; }
@@ -183,17 +183,17 @@ namespace log4net.Appender
 		/// <remarks>
 		/// <para>
 		/// This is part of the <see cref="IOptionHandler"/> delayed object
-		/// activation scheme. The <see cref="ActivateOptions"/> method must 
+		/// activation scheme. The <see cref="ActivateOptions"/> method must
 		/// be called on this object after the configuration properties have
 		/// been set. Until <see cref="ActivateOptions"/> is called this
-		/// object is in an undefined state and must not be used. 
+		/// object is in an undefined state and must not be used.
 		/// </para>
 		/// <para>
-		/// If any of the configuration properties are modified then 
+		/// If any of the configuration properties are modified then
 		/// <see cref="ActivateOptions"/> must be called again.
 		/// </para>
 		/// </remarks>
-		virtual public void ActivateOptions() 
+		virtual public void ActivateOptions()
 		{
 		}
 
@@ -210,7 +210,7 @@ namespace log4net.Appender
 		/// The name uniquely identifies the appender.
 		/// </para>
 		/// </remarks>
-		public string Name 
+		public string Name
 		{
 			get { return m_name; }
 			set { m_name = value; }
@@ -221,14 +221,14 @@ namespace log4net.Appender
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// Release any resources allocated within the appender such as file handles, 
+		/// Release any resources allocated within the appender such as file handles,
 		/// network connections, etc.
 		/// </para>
 		/// <para>
 		/// It is a programming error to append to a closed appender.
 		/// </para>
 		/// <para>
-		/// This method cannot be overridden by subclasses. This method 
+		/// This method cannot be overridden by subclasses. This method
 		/// delegates the closing of the appender to the <see cref="OnClose"/>
 		/// method which must be overridden in the subclass.
 		/// </para>
@@ -247,8 +247,8 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
-		/// Performs threshold checks and invokes filters before 
-		/// delegating actual logging to the subclasses specific 
+		/// Performs threshold checks and invokes filters before
+		/// delegating actual logging to the subclasses specific
 		/// <see cref="M:Append(LoggingEvent)"/> method.
 		/// </summary>
 		/// <param name="loggingEvent">The event to log.</param>
@@ -271,13 +271,13 @@ namespace log4net.Appender
 		///		</item>
 		///		<item>
 		///			<description>
-		///			Checks that the <see cref="IFilter"/> chain accepts the 
+		///			Checks that the <see cref="IFilter"/> chain accepts the
 		///			<paramref name="loggingEvent"/>.
 		///			</description>
 		///		</item>
 		///		<item>
 		///			<description>
-		///			Calls <see cref="M:PreAppendCheck()"/> and checks that 
+		///			Calls <see cref="M:PreAppendCheck()"/> and checks that
 		///			it returns <c>true</c>.</description>
 		///		</item>
 		/// </list>
@@ -287,7 +287,7 @@ namespace log4net.Appender
 		/// will be passed to the abstract <see cref="M:Append(LoggingEvent)"/> method.
 		/// </para>
 		/// </remarks>
-		public void DoAppend(LoggingEvent loggingEvent) 
+		public void DoAppend(LoggingEvent loggingEvent)
 		{
 			// This lock is absolutely critical for correct formatting
 			// of the message in a multi-threaded environment.  Without
@@ -322,7 +322,7 @@ namespace log4net.Appender
 					ErrorHandler.Error("Failed in DoAppend", ex);
 				}
 #if !MONO && !NET_2_0 && !NETSTANDARD1_3
-				// on .NET 2.0 (and higher) and Mono (all profiles), 
+				// on .NET 2.0 (and higher) and Mono (all profiles),
 				// exceptions that do not derive from System.Exception will be
 				// wrapped in a RuntimeWrappedException by the runtime, and as
 				// such will be catched by the catch clause above
@@ -344,8 +344,8 @@ namespace log4net.Appender
 		#region Implementation of IBulkAppender
 
 		/// <summary>
-		/// Performs threshold checks and invokes filters before 
-		/// delegating actual logging to the subclasses specific 
+		/// Performs threshold checks and invokes filters before
+		/// delegating actual logging to the subclasses specific
 		/// <see cref="M:Append(LoggingEvent[])"/> method.
 		/// </summary>
 		/// <param name="loggingEvents">The array of events to log.</param>
@@ -368,13 +368,13 @@ namespace log4net.Appender
 		///		</item>
 		///		<item>
 		///			<description>
-		///			Checks that the <see cref="IFilter"/> chain accepts the 
+		///			Checks that the <see cref="IFilter"/> chain accepts the
 		///			<paramref name="loggingEvents"/>.
 		///			</description>
 		///		</item>
 		///		<item>
 		///			<description>
-		///			Calls <see cref="M:PreAppendCheck()"/> and checks that 
+		///			Calls <see cref="M:PreAppendCheck()"/> and checks that
 		///			it returns <c>true</c>.</description>
 		///		</item>
 		/// </list>
@@ -384,7 +384,7 @@ namespace log4net.Appender
 		/// will be passed to the <see cref="M:Append(LoggingEvent[])"/> method.
 		/// </para>
 		/// </remarks>
-		public void DoAppend(LoggingEvent[] loggingEvents) 
+		public void DoAppend(LoggingEvent[] loggingEvents)
 		{
 			// This lock is absolutely critical for correct formatting
 			// of the message in a multi-threaded environment.  Without
@@ -429,7 +429,7 @@ namespace log4net.Appender
 					ErrorHandler.Error("Failed in Bulk DoAppend", ex);
 				}
 #if !MONO && !NET_2_0 && !NETSTANDARD1_3
-				// on .NET 2.0 (and higher) and Mono (all profiles), 
+				// on .NET 2.0 (and higher) and Mono (all profiles),
 				// exceptions that do not derive from System.Exception will be
 				// wrapped in a RuntimeWrappedException by the runtime, and as
 				// such will be catched by the catch clause above
@@ -472,7 +472,7 @@ namespace log4net.Appender
 		///		</item>
 		///		<item>
 		///			<description>
-		///			Checks that the <see cref="IFilter"/> chain accepts the 
+		///			Checks that the <see cref="IFilter"/> chain accepts the
 		///			<paramref name="loggingEvent"/>.
 		///			</description>
 		///		</item>
@@ -481,18 +481,18 @@ namespace log4net.Appender
 		/// </remarks>
 		virtual protected bool FilterEvent(LoggingEvent loggingEvent)
 		{
-			if (!IsAsSevereAsThreshold(loggingEvent.Level)) 
+			if (!IsAsSevereAsThreshold(loggingEvent.Level))
 			{
 				return false;
 			}
 
 			IFilter f = this.FilterHead;
 
-			while(f != null) 
+			while(f != null)
 			{
-				switch(f.Decide(loggingEvent)) 
+				switch(f.Decide(loggingEvent))
 				{
-					case FilterDecision.Deny: 
+					case FilterDecision.Deny:
 						return false;	// Return without appending
 
 					case FilterDecision.Accept:
@@ -519,7 +519,7 @@ namespace log4net.Appender
 		/// The Filters are organized in a linked list.
 		/// </para>
 		/// <para>
-		/// Setting this property causes the new filter to be pushed onto the 
+		/// Setting this property causes the new filter to be pushed onto the
 		/// back of the filter chain.
 		/// </para>
 		/// </remarks>
@@ -530,14 +530,14 @@ namespace log4net.Appender
 				throw new ArgumentNullException("filter param must not be null");
 			}
 
-			if (m_headFilter == null) 
+			if (m_headFilter == null)
 			{
 				m_headFilter = m_tailFilter = filter;
-			} 
-			else 
+			}
+			else
 			{
 				m_tailFilter.Next = filter;
-				m_tailFilter = filter;	
+				m_tailFilter = filter;
 			}
 		}
 
@@ -568,34 +568,34 @@ namespace log4net.Appender
 		/// </para>
 		/// </remarks>
 		/// <returns>
-		/// <c>true</c> if the <paramref name="level"/> meets the <see cref="Threshold"/> 
+		/// <c>true</c> if the <paramref name="level"/> meets the <see cref="Threshold"/>
 		/// requirements of this appender.
 		/// </returns>
-		virtual protected bool IsAsSevereAsThreshold(Level level) 
+		virtual protected bool IsAsSevereAsThreshold(Level level)
 		{
 			return ((m_threshold == null) || level >= m_threshold);
 		}
 
 		/// <summary>
-		/// Is called when the appender is closed. Derived classes should override 
+		/// Is called when the appender is closed. Derived classes should override
 		/// this method if resources need to be released.
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// Releases any resources allocated within the appender such as file handles, 
+		/// Releases any resources allocated within the appender such as file handles,
 		/// network connections, etc.
 		/// </para>
 		/// <para>
 		/// It is a programming error to append to a closed appender.
 		/// </para>
 		/// </remarks>
-		virtual protected void OnClose() 
+		virtual protected void OnClose()
 		{
 			// Do nothing by default
 		}
 
 		/// <summary>
-		/// Subclasses of <see cref="AppenderSkeleton"/> should implement this method 
+		/// Subclasses of <see cref="AppenderSkeleton"/> should implement this method
 		/// to perform actual logging.
 		/// </summary>
 		/// <param name="loggingEvent">The event to append.</param>
@@ -645,7 +645,7 @@ namespace log4net.Appender
 		/// before the call to the abstract <see cref="M:Append(LoggingEvent)"/> method.
 		/// </para>
 		/// <para>
-		/// This method can be overridden in a subclass to extend the checks 
+		/// This method can be overridden in a subclass to extend the checks
 		/// made before the event is passed to the <see cref="M:Append(LoggingEvent)"/> method.
 		/// </para>
 		/// <para>
@@ -672,13 +672,13 @@ namespace log4net.Appender
 		/// <returns>The event rendered as a string.</returns>
 		/// <remarks>
 		/// <para>
-		/// Helper method to render a <see cref="LoggingEvent"/> to 
+		/// Helper method to render a <see cref="LoggingEvent"/> to
 		/// a string. This appender must have a <see cref="Layout"/>
-		/// set to render the <paramref name="loggingEvent"/> to 
+		/// set to render the <paramref name="loggingEvent"/> to
 		/// a string.
 		/// </para>
-		/// <para>If there is exception data in the logging event and 
-		/// the layout does not process the exception, this method 
+		/// <para>If there is exception data in the logging event and
+		/// the layout does not process the exception, this method
 		/// will append the exception text to the rendered string.
 		/// </para>
 		/// <para>
@@ -697,14 +697,14 @@ namespace log4net.Appender
 				m_renderWriter = new ReusableStringWriter(System.Globalization.CultureInfo.InvariantCulture);
 			}
 
-            lock (m_renderWriter)
-            {
-                // Reset the writer so we can reuse it
-                m_renderWriter.Reset(c_renderBufferMaxCapacity, c_renderBufferSize);
+			lock (m_renderWriter)
+			{
+				// Reset the writer so we can reuse it
+				m_renderWriter.Reset(c_renderBufferMaxCapacity, c_renderBufferSize);
 
-                RenderLoggingEvent(m_renderWriter, loggingEvent);
-                return m_renderWriter.ToString();
-            }
+				RenderLoggingEvent(m_renderWriter, loggingEvent);
+				return m_renderWriter.ToString();
+			}
 		}
 
 		/// <summary>
@@ -714,13 +714,13 @@ namespace log4net.Appender
 		/// <param name="writer">The TextWriter to write the formatted event to</param>
 		/// <remarks>
 		/// <para>
-		/// Helper method to render a <see cref="LoggingEvent"/> to 
+		/// Helper method to render a <see cref="LoggingEvent"/> to
 		/// a string. This appender must have a <see cref="Layout"/>
-		/// set to render the <paramref name="loggingEvent"/> to 
+		/// set to render the <paramref name="loggingEvent"/> to
 		/// a string.
 		/// </para>
-		/// <para>If there is exception data in the logging event and 
-		/// the layout does not process the exception, this method 
+		/// <para>If there is exception data in the logging event and
+		/// the layout does not process the exception, this method
 		/// will append the exception text to the rendered string.
 		/// </para>
 		/// <para>
@@ -732,27 +732,27 @@ namespace log4net.Appender
 		/// </remarks>
 		protected void RenderLoggingEvent(TextWriter writer, LoggingEvent loggingEvent)
 		{
-			if (m_layout == null) 
+			if (m_layout == null)
 			{
 				throw new InvalidOperationException("A layout must be set");
 			}
 
-			if (m_layout.IgnoresException) 
+			if (m_layout.IgnoresException)
 			{
 				string exceptionStr = loggingEvent.GetExceptionString();
-				if (exceptionStr != null && exceptionStr.Length > 0) 
+				if (exceptionStr != null && exceptionStr.Length > 0)
 				{
 					// render the event and the exception
 					m_layout.Format(writer, loggingEvent);
 					writer.WriteLine(exceptionStr);
 				}
-				else 
+				else
 				{
 					// there is no exception to render
 					m_layout.Format(writer, loggingEvent);
 				}
 			}
-			else 
+			else
 			{
 				// The layout will render the exception
 				m_layout.Format(writer, loggingEvent);
@@ -764,8 +764,8 @@ namespace log4net.Appender
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// In the rather exceptional case, where the appender 
-		/// implementation admits a layout but can also work without it, 
+		/// In the rather exceptional case, where the appender
+		/// implementation admits a layout but can also work without it,
 		/// then the appender should return <c>true</c>.
 		/// </para>
 		/// <para>
@@ -783,16 +783,16 @@ namespace log4net.Appender
 		#endregion
 
 		/// <summary>
-        	/// Flushes any buffered log data.
-        	/// </summary>
+			/// Flushes any buffered log data.
+			/// </summary>
 		/// <remarks>
 		/// This implementation doesn't flush anything and always returns true
 		/// </remarks>
-        	/// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
-        	public virtual bool Flush(int millisecondsTimeout)
-        	{
-		    return true;
-        	}
+			/// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+			public virtual bool Flush(int millisecondsTimeout)
+			{
+			return true;
+			}
 
 		#region Private Instance Fields
 
@@ -893,17 +893,17 @@ namespace log4net.Appender
 
 		#endregion
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the AppenderSkeleton class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(AppenderSkeleton);
+		/// <summary>
+		/// The fully qualified type of the AppenderSkeleton class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(AppenderSkeleton);
 
-	    #endregion Private Static Fields
+		#endregion Private Static Fields
 	}
 }

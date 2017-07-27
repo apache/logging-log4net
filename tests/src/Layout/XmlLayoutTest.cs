@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -84,23 +84,23 @@ namespace log4net.Tests.Layout
 		{
 			return String.Format("<event logger=\"TestLogger\" timestamp=\"{0}\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message>{1}</message></event>" + Environment.NewLine,
 #if NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0 || NETSTANDARD1_3
-			                     XmlConvert.ToString(DateTime.Today, XmlDateTimeSerializationMode.Local),
+								 XmlConvert.ToString(DateTime.Today, XmlDateTimeSerializationMode.Local),
 #else
-			                     XmlConvert.ToString(DateTime.Today),
+								 XmlConvert.ToString(DateTime.Today),
 #endif
-			                     message);
+								 message);
 		}
 
 		private static string CreateEventNode(string key, string value)
 		{
 			return String.Format("<event logger=\"TestLogger\" timestamp=\"{0}\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message>Test message</message><properties><data name=\"{1}\" value=\"{2}\" /></properties></event>" + Environment.NewLine,
 #if NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0 || NETSTANDARD1_3
-			                     XmlConvert.ToString(DateTime.Today, XmlDateTimeSerializationMode.Local),
+								 XmlConvert.ToString(DateTime.Today, XmlDateTimeSerializationMode.Local),
 #else
-			                     XmlConvert.ToString(DateTime.Today),
+								 XmlConvert.ToString(DateTime.Today),
 #endif
-			                     key,
-			                     value);
+								 key,
+								 value);
 		}
 
 		[Test]
@@ -306,67 +306,67 @@ namespace log4net.Tests.Layout
 		}
 
 #if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
-        [Test]
-        public void BracketsInStackTracesKeepLogWellFormed() {
-            XmlLayout layout = new XmlLayout();
-            StringAppender stringAppender = new StringAppender();
-            stringAppender.Layout = layout;
+		[Test]
+		public void BracketsInStackTracesKeepLogWellFormed() {
+			XmlLayout layout = new XmlLayout();
+			StringAppender stringAppender = new StringAppender();
+			stringAppender.Layout = layout;
 
-            ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-            BasicConfigurator.Configure(rep, stringAppender);
-            ILog log1 = LogManager.GetLogger(rep.Name, "TestLogger");
-            Action<int> bar = foo => { 
-                try {
-                    throw new NullReferenceException();
-                } catch (Exception ex) {
-                    log1.Error(string.Format("Error {0}", foo), ex);
-                }
-            };
-            bar(42);
+			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+			BasicConfigurator.Configure(rep, stringAppender);
+			ILog log1 = LogManager.GetLogger(rep.Name, "TestLogger");
+			Action<int> bar = foo => {
+				try {
+					throw new NullReferenceException();
+				} catch (Exception ex) {
+					log1.Error(string.Format("Error {0}", foo), ex);
+				}
+			};
+			bar(42);
 
-            // really only asserts there is no exception
-            var loggedDoc = new XmlDocument();
-            loggedDoc.LoadXml(stringAppender.GetString());
-        }
+			// really only asserts there is no exception
+			var loggedDoc = new XmlDocument();
+			loggedDoc.LoadXml(stringAppender.GetString());
+		}
 
-        [Test]
-        public void BracketsInStackTracesAreEscapedProperly() {
-            XmlLayout layout = new XmlLayout();
-            StringAppender stringAppender = new StringAppender();
-            stringAppender.Layout = layout;
+		[Test]
+		public void BracketsInStackTracesAreEscapedProperly() {
+			XmlLayout layout = new XmlLayout();
+			StringAppender stringAppender = new StringAppender();
+			stringAppender.Layout = layout;
 
-            ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-            BasicConfigurator.Configure(rep, stringAppender);
-            ILog log1 = LogManager.GetLogger(rep.Name, "TestLogger");
-            Action<int> bar = foo => {
-                try {
-                    throw new NullReferenceException();
-                }
-                catch (Exception ex) {
-                    log1.Error(string.Format("Error {0}", foo), ex);
-                }
-            };
-            bar(42);
+			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+			BasicConfigurator.Configure(rep, stringAppender);
+			ILog log1 = LogManager.GetLogger(rep.Name, "TestLogger");
+			Action<int> bar = foo => {
+				try {
+					throw new NullReferenceException();
+				}
+				catch (Exception ex) {
+					log1.Error(string.Format("Error {0}", foo), ex);
+				}
+			};
+			bar(42);
 
-            var log = stringAppender.GetString();
+			var log = stringAppender.GetString();
 #if NETSTANDARD1_3
-            var startOfExceptionText = log.IndexOf("<exception>", StringComparison.Ordinal) + 11;
-            var endOfExceptionText = log.IndexOf("</exception>", StringComparison.Ordinal);
+			var startOfExceptionText = log.IndexOf("<exception>", StringComparison.Ordinal) + 11;
+			var endOfExceptionText = log.IndexOf("</exception>", StringComparison.Ordinal);
 #else
-            var startOfExceptionText = log.IndexOf("<exception>", StringComparison.InvariantCulture) + 11;
-            var endOfExceptionText = log.IndexOf("</exception>", StringComparison.InvariantCulture);
+			var startOfExceptionText = log.IndexOf("<exception>", StringComparison.InvariantCulture) + 11;
+			var endOfExceptionText = log.IndexOf("</exception>", StringComparison.InvariantCulture);
 #endif
-            var sub = log.Substring(startOfExceptionText, endOfExceptionText - startOfExceptionText);
-            if (sub.StartsWith("<![CDATA["))
-            {
-                StringAssert.EndsWith("]]>", sub);
-            }
-            else
-            {
-                StringAssert.DoesNotContain("<", sub);
-                StringAssert.DoesNotContain(">", sub);
-            }
-        }
+			var sub = log.Substring(startOfExceptionText, endOfExceptionText - startOfExceptionText);
+			if (sub.StartsWith("<![CDATA["))
+			{
+				StringAssert.EndsWith("]]>", sub);
+			}
+			else
+			{
+				StringAssert.DoesNotContain("<", sub);
+				StringAssert.DoesNotContain(">", sub);
+			}
+		}
 #endif
 	}
 }

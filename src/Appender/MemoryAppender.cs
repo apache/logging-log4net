@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -86,24 +86,24 @@ namespace log4net.Appender
 		/// </remarks>
 		virtual public LoggingEvent[] GetEvents()
 		{
-            lock (m_eventsList.SyncRoot)
-            {
-                return (LoggingEvent[]) m_eventsList.ToArray(typeof(LoggingEvent));
-            }
+			lock (m_eventsList.SyncRoot)
+			{
+				return (LoggingEvent[]) m_eventsList.ToArray(typeof(LoggingEvent));
+			}
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether only part of the logging event 
+		/// Gets or sets a value indicating whether only part of the logging event
 		/// data should be fixed.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if the appender should only fix part of the logging event 
+		/// <c>true</c> if the appender should only fix part of the logging event
 		/// data, otherwise <c>false</c>. The default is <c>false</c>.
 		/// </value>
 		/// <remarks>
 		/// <para>
-		/// Setting this property to <c>true</c> will cause only part of the event 
-		/// data to be fixed and stored in the appender, hereby improving performance. 
+		/// Setting this property to <c>true</c> will cause only part of the event
+		/// data to be fixed and stored in the appender, hereby improving performance.
 		/// </para>
 		/// <para>
 		/// See <see cref="M:LoggingEvent.FixVolatileData(bool)"/> for more information.
@@ -113,8 +113,8 @@ namespace log4net.Appender
 		virtual public bool OnlyFixPartialEventData
 		{
 			get { return (Fix == FixFlags.Partial); }
-			set 
-			{ 
+			set
+			{
 				if (value)
 				{
 					Fix = FixFlags.Partial;
@@ -131,7 +131,7 @@ namespace log4net.Appender
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// The logging event needs to have certain thread specific values 
+		/// The logging event needs to have certain thread specific values
 		/// captured before it can be buffered. See <see cref="LoggingEvent.Fix"/>
 		/// for details.
 		/// </para>
@@ -147,24 +147,24 @@ namespace log4net.Appender
 		#region Override implementation of AppenderSkeleton
 
 		/// <summary>
-		/// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/> method. 
+		/// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/> method.
 		/// </summary>
 		/// <param name="loggingEvent">the event to log</param>
 		/// <remarks>
 		/// <para>Stores the <paramref name="loggingEvent"/> in the events list.</para>
 		/// </remarks>
-		override protected void Append(LoggingEvent loggingEvent) 
+		override protected void Append(LoggingEvent loggingEvent)
 		{
 			// Because we are caching the LoggingEvent beyond the
 			// lifetime of the Append() method we must fix any
 			// volatile data in the event.
 			loggingEvent.Fix = this.Fix;
 
-            lock (m_eventsList.SyncRoot)
-            {
-                m_eventsList.Add(loggingEvent);
-            }
-		} 
+			lock (m_eventsList.SyncRoot)
+			{
+				m_eventsList.Add(loggingEvent);
+			}
+		}
 
 		#endregion Override implementation of AppenderSkeleton
 
@@ -178,30 +178,30 @@ namespace log4net.Appender
 		/// </remarks>
 		virtual public void Clear()
 		{
-            lock (m_eventsList.SyncRoot)
-            {
-                m_eventsList.Clear();
-            }
+			lock (m_eventsList.SyncRoot)
+			{
+				m_eventsList.Clear();
+			}
 		}
 
-        /// <summary>
-        /// Gets the events that have been logged and clears the list of events.
-        /// </summary>
-        /// <returns>The events that have been logged</returns>
-        /// <remarks>
-        /// <para>
-        /// Gets the events that have been logged and clears the list of events.
-        /// </para>
-        /// </remarks>
-        virtual public LoggingEvent[] PopAllEvents()
-        {
-            lock (m_eventsList.SyncRoot)
-            {
-                LoggingEvent[] tmp = (LoggingEvent[]) m_eventsList.ToArray(typeof (LoggingEvent));
-                m_eventsList.Clear();
-                return tmp;
-            }
-        }
+		/// <summary>
+		/// Gets the events that have been logged and clears the list of events.
+		/// </summary>
+		/// <returns>The events that have been logged</returns>
+		/// <remarks>
+		/// <para>
+		/// Gets the events that have been logged and clears the list of events.
+		/// </para>
+		/// </remarks>
+		virtual public LoggingEvent[] PopAllEvents()
+		{
+			lock (m_eventsList.SyncRoot)
+			{
+				LoggingEvent[] tmp = (LoggingEvent[]) m_eventsList.ToArray(typeof (LoggingEvent));
+				m_eventsList.Clear();
+				return tmp;
+			}
+		}
 
 		#endregion Public Instance Methods
 

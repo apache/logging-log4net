@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -26,16 +26,16 @@ using log4net.Core;
 namespace log4net.Util
 {
 
-        /// <summary>
+		/// <summary>
 	/// Delegate type used for LogicalThreadContextStack's callbacks.
 	/// </summary>
-    #if NET_2_0 || MONO_2_0
+	#if NET_2_0 || MONO_2_0
 	public delegate void TwoArgAction<T1, T2>(T1 t1, T2 t2);
-    #else
+	#else
 	public delegate void TwoArgAction(string t1, LogicalThreadContextStack t2);
-    #endif
+	#endif
 
-        /// <summary>
+		/// <summary>
 	/// Implementation of Stack for the <see cref="log4net.LogicalThreadContext"/>
 	/// </summary>
 	/// <remarks>
@@ -65,7 +65,7 @@ namespace log4net.Util
 		/// </summary>
 		#if NET_2_0 || MONO_2_0
 		private TwoArgAction<string, LogicalThreadContextStack> m_registerNew;
-                #else
+				#else
 		private TwoArgAction m_registerNew;
 		#endif
 
@@ -78,12 +78,12 @@ namespace log4net.Util
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// Initializes a new instance of the <see cref="LogicalThreadContextStack" /> class. 
+		/// Initializes a new instance of the <see cref="LogicalThreadContextStack" /> class.
 		/// </para>
 		/// </remarks>
 		#if NET_2_0 || MONO_2_0
 		internal LogicalThreadContextStack(string propertyKey, TwoArgAction<string, LogicalThreadContextStack> registerNew)
-                #else
+				#else
 		internal LogicalThreadContextStack(string propertyKey, TwoArgAction registerNew)
 		#endif
 		{
@@ -128,7 +128,7 @@ namespace log4net.Util
 		/// You do not need to use this method if you always guarantee to call
 		/// the <see cref="IDisposable.Dispose"/> method of the <see cref="IDisposable"/>
 		/// returned from <see cref="Push"/> even in exceptional circumstances,
-		/// for example by using the <c>using(log4net.LogicalThreadContext.Stacks["NDC"].Push("Stack_Message"))</c> 
+		/// for example by using the <c>using(log4net.LogicalThreadContext.Stacks["NDC"].Push("Stack_Message"))</c>
 		/// syntax.
 		/// </para>
 		/// </remarks>
@@ -222,7 +222,7 @@ namespace log4net.Util
 		/// <value>The internal storage stack</value>
 		/// <remarks>
 		/// <para>
-		/// This property is provided only to support backward compatability 
+		/// This property is provided only to support backward compatability
 		/// of the <see cref="NDC"/>. Tytpically the internal stack should not
 		/// be modified.
 		/// </para>
