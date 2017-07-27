@@ -518,27 +518,6 @@ namespace log4net.Tests.Appender
 			_iMessagesLoggedThisFile++;
 		}
 
-		//private void DumpFileEntry( RollFileEntry entry )
-		//{
-		//	  System.Diagnostics.Debug.WriteLine( "\tfile	name: " + entry.FileName );
-		//	  System.Diagnostics.Debug.WriteLine( "\tfile length: " + entry.FileLength );
-		//}
-
-		//private void DumpTableEntry( RollConditions entry )
-		//{
-		//	  System.Diagnostics.Debug.WriteLine( "Pre-Conditions" );
-		//	  foreach( RollFileEntry file in entry.GetPreLogFileEntries() )
-		//	  {
-		//		  DumpFileEntry( file );
-		//	  }
-		//	  System.Diagnostics.Debug.WriteLine( "Post-Conditions" );
-		//	  foreach( RollFileEntry file in entry.GetPostLogFileEntries() )
-		//	  {
-		//		  DumpFileEntry( file );
-		//	  }
-		//	  //				System.Diagnostics.Debug.WriteLine("");
-		//}
-
 		/// <summary>
 		/// Runs through all table entries, logging messages.  Before each message is logged,
 		/// pre-conditions are checked to ensure the expected files exist and they are the
@@ -649,40 +628,6 @@ namespace log4net.Tests.Appender
 			string[] sGroups = sBackupGroups.Split(',');
 			return sGroups[iGroup];
 		}
-
-		///// <summary>
-		///// Builds a collection of file entries based on the file names
-		///// specified in a groups string and the max file size from the
-		///// stats object
-		///// </summary>
-		///// <param name="sBackupGroups"></param>
-		///// <param name="stats"></param>
-		///// <returns></returns>
-		//private RollFileEntry[] MakeBackupFileEntriesForPreCondition( string sBackupGroups, RollingStats stats )
-		//{
-		//	  if (0 == stats.NumberOfFileRolls )
-		//	  {
-		//		  return null;	// first round has no previous backups
-		//	  }
-		//	  string sGroup;
-		//	  if (0 == stats.MessagesThisFile )
-		//	  {
-		//		  // first file has special pattern...since rolling doesn't occur when message
-		//		  // is logged, rather before next message is logged.
-		//		  if (stats.NumberOfFileRolls <= 1 )
-		//		  {
-		//			  return null;
-		//		  }
-		//		  // Use backup files from previous round.	The minus 2 is because we have already
-		//		  // rolled, and the first round uses null instead of the string
-		//		  sGroup = GetBackupGroup( sBackupGroups, stats.NumberOfFileRolls-2 );
-		//	  }
-		//	  else
-		//	  {
-		//		  sGroup = GetBackupGroup( sBackupGroups, stats.NumberOfFileRolls-1 );
-		//	  }
-		//	  return MakeBackupFileEntriesFromBackupGroup( sGroup, stats.MaximumFileSize );
-		//}
 
 		/// <summary>
 		/// Builds a collection of file entries based on the file names
