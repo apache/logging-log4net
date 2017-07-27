@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -481,8 +481,8 @@ namespace log4net.Tests.Appender
 		}
 
 		/// <summary>
-		/// Called before logging a message to check that all the expected files exist, 
-		/// and only the expected files.  Also verifies the length of all files against 
+		/// Called before logging a message to check that all the expected files exist,
+		/// and only the expected files.  Also verifies the length of all files against
 		/// the expected length
 		/// </summary>
 		/// <param name="sBaseFileName"></param>
@@ -493,8 +493,8 @@ namespace log4net.Tests.Appender
 		}
 
 		/// <summary>
-		/// Called after logging a message to check that all the expected files exist, 
-		/// and only the expected files.  Also verifies the length of all files against 
+		/// Called after logging a message to check that all the expected files exist,
+		/// and only the expected files.  Also verifies the length of all files against
 		/// the expected length
 		/// </summary>
 		/// <param name="sBaseFileName"></param>
@@ -505,7 +505,7 @@ namespace log4net.Tests.Appender
 		}
 
 		/// <summary>
-		/// Logs a message, verifying the expected message counts against the 
+		/// Logs a message, verifying the expected message counts against the
 		/// current running totals.
 		/// </summary>
 		/// <param name="entry"></param>
@@ -671,7 +671,7 @@ namespace log4net.Tests.Appender
 		//		  // is logged, rather before next message is logged.
 		//		  if (stats.NumberOfFileRolls <= 1 )
 		//		  {
-		//			  return null;	 
+		//			  return null;
 		//		  }
 		//		  // Use backup files from previous round.	The minus 2 is because we have already
 		//		  // rolled, and the first round uses null instead of the string
@@ -896,8 +896,8 @@ namespace log4net.Tests.Appender
 
 		/// <summary>
 		/// This routine takes a list of backup file names and a message that will be logged
-		/// repeatedly, and generates a collection of objects containing pre-condition and 
-		/// post-condition information.  This pre/post information shows the names and expected 
+		/// repeatedly, and generates a collection of objects containing pre-condition and
+		/// post-condition information.  This pre/post information shows the names and expected
 		/// file sizes for all files just before and just after a message is logged.
 		/// </summary>
 		/// <param name="sTestMessage">A message to log repeatedly</param>
@@ -947,14 +947,14 @@ namespace log4net.Tests.Appender
 		/// will be of size (N * L), and the current file will be of size (K * L), where K is
 		/// the number of messages that have been logged to this file.
 		///
-		/// File sizes can be checked algorithmically.	
-		/// 
+		/// File sizes can be checked algorithmically.
+		///
 		/// File names are generated using a table driven algorithm, where a number is turned into
 		/// the actual filename.
-		/// 
+		///
 		/// The entries are comma-separated, with spaces between the names.  Each comma indicates
 		/// a 'roll', and the group between commas indicates the numbers for all backup files that
-		/// occur as a result of the roll.	It is assumed that no backup files exist before a roll 
+		/// occur as a result of the roll.	It is assumed that no backup files exist before a roll
 		/// occurs
 		/// </remarks>
 		/// <param name="table"></param>
@@ -985,7 +985,7 @@ namespace log4net.Tests.Appender
 			_iCountDirection = +1;
 
 			//
-			// Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500 
+			// Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500
 			// bytes for current file as messages are logged.
 			//
 			int iMessagesToLog = 30;
@@ -996,7 +996,7 @@ namespace log4net.Tests.Appender
 		/// <summary>
 		/// Validates rolling using an infinite number of backup files, with
 		/// count direction set to up, so that newer files have higher counts.
-		/// Newest = N, Oldest = 1, where N is the number of times rolling has 
+		/// Newest = N, Oldest = 1, where N is the number of times rolling has
 		/// occurred.
 		/// </summary>
 		[Test]
@@ -1019,7 +1019,7 @@ namespace log4net.Tests.Appender
 			_MaxSizeRollBackups = -1;
 
 			//
-			// Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500 
+			// Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500
 			// bytes for current file as messages are logged.
 			//
 			int iMessagesToLog = 30;
@@ -1052,7 +1052,7 @@ namespace log4net.Tests.Appender
 			_MaxSizeRollBackups = 0;
 
 			//
-			// Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500 
+			// Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500
 			// bytes for current file as messages are logged.
 			//
 			int iMessagesToLog = 30;
@@ -1081,7 +1081,7 @@ namespace log4net.Tests.Appender
 			_iCountDirection = -1;
 
 			//
-			// Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500 
+			// Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500
 			// bytes for current file as messages are logged.
 			//
 			int iMessagesToLog = 30;
@@ -1115,7 +1115,7 @@ namespace log4net.Tests.Appender
 			_MaxSizeRollBackups = -1;
 
 			//
-			// Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500 
+			// Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500
 			// bytes for current file as messages are logged.
 			//
 			int iMessagesToLog = 30;
@@ -1148,7 +1148,7 @@ namespace log4net.Tests.Appender
 			_MaxSizeRollBackups = 0;
 
 			//
-			// Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500 
+			// Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500
 			// bytes for current file as messages are logged.
 			//
 			int iMessagesToLog = 30;
@@ -1773,7 +1773,6 @@ namespace log4net.Tests.Appender
 
 			Assert.DoesNotThrow(delegate { log.Log(GetType(), Level.Info, "A", null); });
 			Assert.DoesNotThrow(delegate { log.Log(GetType(), Level.Info, "A", null); });
-			
 			DestroyLogger();
 
 			AssertFileEquals(filename, "A" + Environment.NewLine);
@@ -1828,10 +1827,10 @@ namespace log4net.Tests.Appender
 
 		/// <summary>
 		/// Turns a string of comma separated numbers into a collection of filenames
-		/// generated from the numbers.  
-		/// 
+		/// generated from the numbers.
+		///
 		/// Defaults to filename in _fileName variable.
-		/// 
+		///
 		/// </summary>
 		/// <param name="sFileNumbers">Comma separated list of numbers for counted file names</param>
 		/// <returns></returns>
@@ -1843,7 +1842,7 @@ namespace log4net.Tests.Appender
 		/// <summary>
 		/// Turns a string of comma separated numbers into a collection of filenames
 		/// generated from the numbers
-		/// 
+		///
 		/// Uses the input filename.
 		/// </summary>
 		/// <param name="sFileName">Name of file to combine with numbers when generating counted file names</param>
@@ -1941,7 +1940,7 @@ namespace log4net.Tests.Appender
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		[Test, Ignore("Not Implemented: Want to test counted files limited up, to see that others are ?? ignored? deleted?")]
 		public void TestInitialization3()
@@ -1949,7 +1948,7 @@ namespace log4net.Tests.Appender
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		[Test, Ignore("Not Implemented: Want to test counted files limited down, to see that others are ?? ignored? deleted?")]
 		public void TestInitialization4()
@@ -1957,7 +1956,7 @@ namespace log4net.Tests.Appender
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		[Test, Ignore("Not Implemented: Want to test dated files with a limit, to see that others are ?? ignored? deleted?")]
 		public void TestInitialization5()
@@ -1965,7 +1964,7 @@ namespace log4net.Tests.Appender
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		[Test, Ignore("Not Implemented: Want to test dated files with no limit, to see that others are ?? ignored? deleted?")]
 		public void TestInitialization6()
@@ -1973,7 +1972,7 @@ namespace log4net.Tests.Appender
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		[Test, Ignore("Not Implemented: Want to test dated files with mixed dates existing, to see that other dates do not matter")]
 		public void TestInitialization7()
