@@ -420,7 +420,7 @@ namespace log4net.Appender
 			{
 				ErrorHandler.Error(
 					"Unable to send logging event to remote syslog " +
-					this.RemoteAddress.ToString(),
+					this.RemoteAddress.ToString() +
 					" on port " +
 					this.RemotePort + ".",
 					e,
