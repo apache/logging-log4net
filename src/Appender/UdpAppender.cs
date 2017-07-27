@@ -219,9 +219,9 @@ namespace log4net.Appender
 				if (value < IPEndPoint.MinPort || value > IPEndPoint.MaxPort)
 				{
 					throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("value", (object)value,
-						"The value specified is less than "
-						IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo)
-						" or greater than "
+						"The value specified is less than " +
+						IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo) +
+						" or greater than " +
 						IPEndPoint.MaxPort.ToString(NumberFormatInfo.InvariantInfo) + ".");
 				}
 				else
