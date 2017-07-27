@@ -85,18 +85,20 @@ namespace log4net.Util
 				m_appenderArray = m_appenderList.ToArray();
 			}
 
-			foreach(IAppender appender in m_appenderArray)
+			int count = m_appenderArray.Length;
+			for (int i = 0; i < count; ++i)
 			{
 				try
 				{
-					appender.DoAppend(loggingEvent);
+					m_appenderArray[i].DoAppend(loggingEvent);
 				}
 				catch(Exception ex)
 				{
-					LogLog.Error(declaringType, "Failed to append to appender [" + appender.Name + "]", ex);
+					LogLog.Error(declaringType, "Failed to append to appender [" + m_appenderArray[i].Name + "]", ex);
 				}
 			}
-			return m_appenderList.Count;
+
+			return count;
 		}
 
 		/// <summary>
@@ -153,9 +155,9 @@ namespace log4net.Util
 
 		#endregion Public Instance Methods
 
-        #region Private Static Methods
+		#region Private Static Methods
 
-        /// <summary>
+		/// <summary>
 		/// Calls the DoAppende method on the <see cref="IAppender"/> with 
 		/// the <see cref="LoggingEvent"/> objects supplied.
 		/// </summary>
@@ -183,13 +185,13 @@ namespace log4net.Util
 					appender.DoAppend(loggingEvent);
 				}
 			}
-        }
+		}
 
-        #endregion
+		#endregion
 
-        #region Implementation of IAppenderAttachable
+		#region Implementation of IAppenderAttachable
 
-        /// <summary>
+		/// <summary>
 		/// Attaches an appender.
 		/// </summary>
 		/// <param name="newAppender">The appender to add.</param>
@@ -211,10 +213,19 @@ namespace log4net.Util
 			{
 				m_appenderList = new AppenderCollection(1);
 			}
+
+#if (NET_4_5 && PARALLEL_APPENDERS)
+			var newParallelIAppender = new ParallelIAppender(newAppender);
+			if (!m_appenderList.Contains(newParallelIAppender))
+			{
+				m_appenderList.Add(newParallelIAppender);
+			}
+#else
 			if (!m_appenderList.Contains(newAppender))
 			{
 				m_appenderList.Add(newAppender);
 			}
+#endif
 		}
 
 		/// <summary>
@@ -270,7 +281,8 @@ namespace log4net.Util
 					}
 				}
 			}
-			return null;   
+
+			return null;
 		}
 
 		/// <summary>
@@ -360,17 +372,17 @@ namespace log4net.Util
 
 		#endregion Private Instance Fields
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the AppenderAttachedImpl class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(AppenderAttachedImpl);
+		/// <summary>
+		/// The fully qualified type of the AppenderAttachedImpl class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(AppenderAttachedImpl);
 
-	    #endregion Private Static Fields
+		#endregion Private Static Fields
 	}
 }
