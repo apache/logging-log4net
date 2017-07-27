@@ -929,18 +929,6 @@ namespace log4net.Appender
 				return;
 			}
 
-			/*
-			if (m_staticLogFileName)
-			{
-				int endLength = curFileName.Length - index;
-				if (baseFile.Length + endLength != curFileName.Length)
-				{
-					// file is probably scheduledFilename + .x so I don't care
-					return;
-				}
-			}
-			*/
-
 			// Only look for files in the current roll point
 			if (m_rollDate && !m_staticLogFileName)
 			{
