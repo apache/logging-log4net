@@ -31,28 +31,28 @@ namespace log4net.Tests.Core
 	[TestFixture]
 	public class FixingTest
 	{
-        const string TEST_REPOSITORY = "Test Repository";
+		const string TEST_REPOSITORY = "Test Repository";
 
 #if NETSTANDARD1_3
-        [OneTimeSetUp]
+		[OneTimeSetUp]
 #else
-        [TestFixtureSetUp]
+		[TestFixtureSetUp]
 #endif
 		public void CreateRepository()
 		{
-            bool exists = false;
-            Repository.ILoggerRepository[] repositories = LogManager.GetAllRepositories();
-            if (repositories != null) {
-                foreach (Repository.ILoggerRepository r in repositories) {
-                    if (r.Name == TEST_REPOSITORY) {
-                        exists = true;
-                        break;
-                    }
-                }
-            }
-            if (!exists) {
-                LogManager.CreateRepository(TEST_REPOSITORY);
-            }
+			bool exists = false;
+			Repository.ILoggerRepository[] repositories = LogManager.GetAllRepositories();
+			if (repositories != null) {
+				foreach (Repository.ILoggerRepository r in repositories) {
+					if (r.Name == TEST_REPOSITORY) {
+						exists = true;
+						break;
+					}
+				}
+			}
+			if (!exists) {
+				LogManager.CreateRepository(TEST_REPOSITORY);
+			}
 
 			// write-once
 			if (Thread.CurrentThread.Name == null)
@@ -149,8 +149,8 @@ namespace log4net.Tests.Core
 			Assert.AreEqual("log4net.Tests.Core.FixingTest", loggingEventData.LoggerName, "LoggerName is incorrect");
 			Assert.AreEqual(LogManager.GetRepository(TEST_REPOSITORY), loggingEvent.Repository, "Repository is incorrect");
 			Assert.AreEqual(Thread.CurrentThread.Name, loggingEventData.ThreadName, "ThreadName is incorrect");
-            // This test is redundant as loggingEventData.TimeStamp is a value type and cannot be null
-            // Assert.IsNotNull(loggingEventData.TimeStampUtc, "TimeStamp is incorrect");
+			// This test is redundant as loggingEventData.TimeStamp is a value type and cannot be null
+			// Assert.IsNotNull(loggingEventData.TimeStampUtc, "TimeStamp is incorrect");
 			Assert.AreEqual("TestUser", loggingEventData.UserName, "UserName is incorrect");
 			Assert.AreEqual("Logging event works", loggingEvent.RenderedMessage, "Message is incorrect");
 		}

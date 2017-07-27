@@ -214,9 +214,9 @@ namespace log4net.Util
 
 		#endregion Internal Instance Methods
 
-        #region Private Static Methods
+		#region Private Static Methods
 
-        /// <summary>
+		/// <summary>
 		/// Gets the call context get data.
 		/// </summary>
 		/// <returns>The peroperties dictionary stored in the call context</returns>
@@ -226,14 +226,14 @@ namespace log4net.Util
 		/// that we can wrap in an exception handler.
 		/// </remarks>
 #if NET_4_0 || MONO_4_0
-        [System.Security.SecuritySafeCritical]
+		[System.Security.SecuritySafeCritical]
 #endif
-        private static PropertiesDictionary GetLogicalProperties()
+		private static PropertiesDictionary GetLogicalProperties()
 		{
 #if NETSTANDARD1_3
-            return AsyncLocalDictionary.Value;
+			return AsyncLocalDictionary.Value;
 #elif NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0
-            return CallContext.LogicalGetData(c_SlotName) as PropertiesDictionary;
+			return CallContext.LogicalGetData(c_SlotName) as PropertiesDictionary;
 #else
 			return CallContext.GetData(c_SlotName) as PropertiesDictionary;
 #endif
@@ -249,9 +249,9 @@ namespace log4net.Util
 		/// that we can wrap in an exception handler.
 		/// </remarks>
 #if NET_4_0 || MONO_4_0
-        [System.Security.SecuritySafeCritical]
+		[System.Security.SecuritySafeCritical]
 #endif
-        private static void SetLogicalProperties(PropertiesDictionary properties)
+		private static void SetLogicalProperties(PropertiesDictionary properties)
 		{
 #if NETSTANDARD1_3
 			AsyncLocalDictionary.Value = properties;
@@ -260,23 +260,23 @@ namespace log4net.Util
 #else
 			CallContext.SetData(c_SlotName, properties);
 #endif
-        }
+		}
 
-        #endregion
+		#endregion
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the LogicalThreadContextProperties class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(LogicalThreadContextProperties);
+		/// <summary>
+		/// The fully qualified type of the LogicalThreadContextProperties class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(LogicalThreadContextProperties);
 
-	    #endregion Private Static Fields
-    }
+		#endregion Private Static Fields
+	}
 }
 
 #endif

@@ -47,9 +47,9 @@ namespace log4net.Util.PatternStringConverters
 		/// </para>
 		/// </remarks>
 #if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
-        [System.Security.SecuritySafeCritical]
+		[System.Security.SecuritySafeCritical]
 #endif
-        override protected void Convert(TextWriter writer, object state)
+		override protected void Convert(TextWriter writer, object state)
 		{
 #if (NETCF || SSCLI)
 			// On compact framework there is no System.Diagnostics.Process class
@@ -70,17 +70,17 @@ namespace log4net.Util.PatternStringConverters
 #endif
 		}
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the ProcessIdPatternConverter class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(ProcessIdPatternConverter);
+		/// <summary>
+		/// The fully qualified type of the ProcessIdPatternConverter class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(ProcessIdPatternConverter);
 
-	    #endregion Private Static Fields
+		#endregion Private Static Fields
 	}
 }

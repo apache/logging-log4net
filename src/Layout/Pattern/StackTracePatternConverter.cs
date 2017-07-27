@@ -112,39 +112,39 @@ namespace log4net.Layout.Pattern
 				}
 
 				StackFrameItem stackFrame = stackframes[stackFrameIndex];
-                writer.Write("{0}.{1}", stackFrame.ClassName, GetMethodInformation(stackFrame.Method));
+				writer.Write("{0}.{1}", stackFrame.ClassName, GetMethodInformation(stackFrame.Method));
 				if (stackFrameIndex > 0)
 				{
-                    // TODO: make this user settable?
+					// TODO: make this user settable?
 					writer.Write(" > ");
 				}
 				stackFrameIndex--;
 			}
 		}
 
-                /// <summary>
-        /// Returns the Name of the method
-        /// </summary>
-        /// <param name="method"></param>
-        /// <remarks>This method was created, so this class could be used as a base class for StackTraceDetailPatternConverter</remarks>
-        /// <returns>string</returns>
-        internal virtual string GetMethodInformation(MethodItem method)
-        {
-            return method.Name;
-        }
+				/// <summary>
+		/// Returns the Name of the method
+		/// </summary>
+		/// <param name="method"></param>
+		/// <remarks>This method was created, so this class could be used as a base class for StackTraceDetailPatternConverter</remarks>
+		/// <returns>string</returns>
+		internal virtual string GetMethodInformation(MethodItem method)
+		{
+			return method.Name;
+		}
 
 		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the StackTracePatternConverter class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(StackTracePatternConverter);
+		/// <summary>
+		/// The fully qualified type of the StackTracePatternConverter class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(StackTracePatternConverter);
 
-	    #endregion Private Static Fields
+		#endregion Private Static Fields
 	}
 }
 #endif

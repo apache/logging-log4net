@@ -195,35 +195,35 @@ namespace log4net.Config
 		/// configure it.
 		/// </para>
 		/// </remarks>
-        /// <exception cref="ArgumentOutOfRangeException">The <paramref name="targetRepository" /> does not extend <see cref="Hierarchy"/>.</exception>
+		/// <exception cref="ArgumentOutOfRangeException">The <paramref name="targetRepository" /> does not extend <see cref="Hierarchy"/>.</exception>
 		override public void Configure(Assembly sourceAssembly, ILoggerRepository targetRepository)
 		{
-            IList configurationMessages = new ArrayList();
+			IList configurationMessages = new ArrayList();
 
-            using (new LogLog.LogReceivedAdapter(configurationMessages))
-            {
-                string applicationBaseDirectory = null;
-                try
-                {
-                    applicationBaseDirectory = SystemInfo.ApplicationBaseDirectory;
-                }
-                catch
-                {
-                    // Ignore this exception because it is only thrown when ApplicationBaseDirectory is a file
-                    // and the application does not have PathDiscovery permission
-                }
+			using (new LogLog.LogReceivedAdapter(configurationMessages))
+			{
+				string applicationBaseDirectory = null;
+				try
+				{
+					applicationBaseDirectory = SystemInfo.ApplicationBaseDirectory;
+				}
+				catch
+				{
+					// Ignore this exception because it is only thrown when ApplicationBaseDirectory is a file
+					// and the application does not have PathDiscovery permission
+				}
 
-                if (applicationBaseDirectory == null || (new Uri(applicationBaseDirectory)).IsFile)
-                {
-                    ConfigureFromFile(sourceAssembly, targetRepository);
-                }
-                else
-                {
-                    ConfigureFromUri(sourceAssembly, targetRepository);
-                }
-            }
+				if (applicationBaseDirectory == null || (new Uri(applicationBaseDirectory)).IsFile)
+				{
+					ConfigureFromFile(sourceAssembly, targetRepository);
+				}
+				else
+				{
+					ConfigureFromUri(sourceAssembly, targetRepository);
+				}
+			}
 
-            targetRepository.ConfigurationMessages = configurationMessages;
+			targetRepository.ConfigurationMessages = configurationMessages;
 		}
 
 		#endregion
@@ -451,18 +451,18 @@ namespace log4net.Config
 
 		#endregion Private Instance Fields
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the XmlConfiguratorAttribute class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(XmlConfiguratorAttribute);
+		/// <summary>
+		/// The fully qualified type of the XmlConfiguratorAttribute class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(XmlConfiguratorAttribute);
 
-	    #endregion Private Static Fields
+		#endregion Private Static Fields
 	}
 }
 

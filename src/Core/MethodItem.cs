@@ -66,13 +66,13 @@ namespace log4net.Core
 			m_parameters = parameters;
 		}
 
-        /// <summary>
-        /// constructs a method item from a method base by determining the method name and its parameters.
-        /// </summary>
-        /// <param name="methodBase"></param>
+		/// <summary>
+		/// constructs a method item from a method base by determining the method name and its parameters.
+		/// </summary>
+		/// <param name="methodBase"></param>
 		public MethodItem(System.Reflection.MethodBase methodBase)
 			: this(methodBase.Name, GetMethodParameterNames(methodBase))
-        {
+		{
 		}
 
 		#endregion

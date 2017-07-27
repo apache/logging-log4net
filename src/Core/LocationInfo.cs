@@ -117,7 +117,7 @@ namespace log4net.Core
 					{
 						// take into account the frames we skip above
 						int adjustedFrameCount = st.FrameCount - frameIndex;
-                        ArrayList stackFramesList = new ArrayList(adjustedFrameCount);
+						ArrayList stackFramesList = new ArrayList(adjustedFrameCount);
 						m_stackFrames = new StackFrameItem[adjustedFrameCount];
 						for (int i=frameIndex; i < st.FrameCount; i++)
 						{
@@ -298,14 +298,14 @@ namespace log4net.Core
 
 		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the LocationInfo class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(LocationInfo);
+		/// <summary>
+		/// The fully qualified type of the LocationInfo class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(LocationInfo);
 
 		/// <summary>
 		/// When location information is not available the constant

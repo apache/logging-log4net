@@ -72,18 +72,18 @@ namespace log4net.Appender
 
 		#endregion
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the TelnetAppender class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(TelnetAppender);
+		/// <summary>
+		/// The fully qualified type of the TelnetAppender class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(TelnetAppender);
 
-	    #endregion Private Static Fields
+		#endregion Private Static Fields
 
 		/// <summary>
 		/// Gets or sets the TCP port number on which this <see cref="TelnetAppender"/> will listen for connections.

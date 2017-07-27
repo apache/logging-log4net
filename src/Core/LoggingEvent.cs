@@ -91,46 +91,46 @@ namespace log4net.Core
 		/// Gets or sets the local time the event was logged
 		/// </summary>
 		/// <remarks>
-        /// <para>
-        /// Prefer using the <see cref="TimeStampUtc"/> setter, since local time can be ambiguous.
+		/// <para>
+		/// Prefer using the <see cref="TimeStampUtc"/> setter, since local time can be ambiguous.
 		/// </para>
 		/// </remarks>
-        [Obsolete("Prefer using TimeStampUtc, since local time can be ambiguous in time zones with daylight savings time.")]
-        public DateTime TimeStamp;
+		[Obsolete("Prefer using TimeStampUtc, since local time can be ambiguous in time zones with daylight savings time.")]
+		public DateTime TimeStamp;
 
-        /// <summary>
-        /// Gets or sets the UTC time the event was logged
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// The TimeStamp is stored in the UTC time zone.
-        /// </para>
-        /// </remarks>
+		/// <summary>
+		/// Gets or sets the UTC time the event was logged
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The TimeStamp is stored in the UTC time zone.
+		/// </para>
+		/// </remarks>
 #pragma warning disable 618 // Suppress warnings that TimeStamp field is obsolete
-        public DateTime TimeStampUtc
-        {
-            get
-            {
-                if (TimeStamp != default(DateTime) &&
-                    _timeStampUtc == default(DateTime))
-                {
-                    // TimeStamp field has been set explicitly but TimeStampUtc hasn't
-                    // => use TimeStamp
-                    return TimeStamp.ToUniversalTime();
-                }
-                return _timeStampUtc;
-            }
-            set
-            {
-                _timeStampUtc = value;
-                // For backwards compatibility
-                TimeStamp = _timeStampUtc.ToLocalTime();
-            }
-        }
-        private DateTime _timeStampUtc;
+		public DateTime TimeStampUtc
+		{
+			get
+			{
+				if (TimeStamp != default(DateTime) &&
+					_timeStampUtc == default(DateTime))
+				{
+					// TimeStamp field has been set explicitly but TimeStampUtc hasn't
+					// => use TimeStamp
+					return TimeStamp.ToUniversalTime();
+				}
+				return _timeStampUtc;
+			}
+			set
+			{
+				_timeStampUtc = value;
+				// For backwards compatibility
+				TimeStamp = _timeStampUtc.ToLocalTime();
+			}
+		}
+		private DateTime _timeStampUtc;
 #pragma warning restore 618
 
-        /// <summary>
+		/// <summary>
 		/// Location information for the caller.
 		/// </summary>
 		/// <remarks>
@@ -330,7 +330,7 @@ namespace log4net.Core
 		: ISerializable
 #endif
 	{
-	    private readonly static Type declaringType = typeof(LoggingEvent);
+		private readonly static Type declaringType = typeof(LoggingEvent);
 
 		#region Public Instance Constructors
 
@@ -532,27 +532,27 @@ namespace log4net.Core
 			get { return SystemInfo.ProcessStartTimeUtc.ToLocalTime(); }
 		}
 
-        /// <summary>
-        /// Gets the UTC time when the current process started.
-        /// </summary>
-        /// <value>
-        /// This is the UTC time when this process started.
-        /// </value>
-        /// <remarks>
-        /// <para>
-        /// Tries to get the start time for the current process.
-        /// Failing that it returns the time of the first call to
-        /// this property.
-        /// </para>
-        /// <para>
-        /// Note that AppDomains may be loaded and unloaded within the
-        /// same process without the process terminating and therefore
-        /// without the process start time being reset.
-        /// </para>
-        /// </remarks>
-        public static DateTime StartTimeUtc
-        {
-            get { return SystemInfo.ProcessStartTimeUtc; }
+		/// <summary>
+		/// Gets the UTC time when the current process started.
+		/// </summary>
+		/// <value>
+		/// This is the UTC time when this process started.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Tries to get the start time for the current process.
+		/// Failing that it returns the time of the first call to
+		/// this property.
+		/// </para>
+		/// <para>
+		/// Note that AppDomains may be loaded and unloaded within the
+		/// same process without the process terminating and therefore
+		/// without the process start time being reset.
+		/// </para>
+		/// </remarks>
+		public static DateTime StartTimeUtc
+		{
+			get { return SystemInfo.ProcessStartTimeUtc; }
 		}
 
 		/// <summary>
@@ -587,15 +587,15 @@ namespace log4net.Core
 			get { return m_data.TimeStampUtc.ToLocalTime(); }
 		}
 
-        /// <summary>
-        /// Gets UTC the time of the logging event.
-        /// </summary>
-        /// <value>
-        /// The UTC time of the logging event.
-        /// </value>
-        public DateTime TimeStampUtc
-        {
-            get { return m_data.TimeStampUtc; }
+		/// <summary>
+		/// Gets UTC the time of the logging event.
+		/// </summary>
+		/// <value>
+		/// The UTC time of the logging event.
+		/// </value>
+		public DateTime TimeStampUtc
+		{
+			get { return m_data.TimeStampUtc; }
 		}
 
 		/// <summary>
@@ -1092,7 +1092,7 @@ namespace log4net.Core
 		/// </para>
 		/// </remarks>
 #if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
-        [System.Security.SecurityCritical]
+		[System.Security.SecurityCritical]
 #else
 		[System.Security.Permissions.SecurityPermissionAttribute(System.Security.Permissions.SecurityAction.Demand, SerializationFormatter=true)]
 #endif
@@ -1105,13 +1105,13 @@ namespace log4net.Core
 			info.AddValue("Level", m_data.Level);
 			info.AddValue("Message", m_data.Message);
 			info.AddValue("ThreadName", m_data.ThreadName);
-            // TODO: consider serializing UTC rather than local time.  Not implemented here because it
-            // would give an unexpected result if client and server have different versions of this class.
-            // info.AddValue("TimeStamp", m_data.TimeStampUtc);
+			// TODO: consider serializing UTC rather than local time.  Not implemented here because it
+			// would give an unexpected result if client and server have different versions of this class.
+			// info.AddValue("TimeStamp", m_data.TimeStampUtc);
 #pragma warning disable 618
 			info.AddValue("TimeStamp", m_data.TimeStamp);
 #pragma warning restore 618
-            info.AddValue("LocationInfo", m_data.LocationInfo);
+			info.AddValue("LocationInfo", m_data.LocationInfo);
 			info.AddValue("UserName", m_data.UserName);
 			info.AddValue("ExceptionString", m_data.ExceptionString);
 			info.AddValue("Properties", m_data.Properties);
@@ -1416,7 +1416,7 @@ namespace log4net.Core
 			compositeProperties.Add(eventProperties);
 
 			compositeProperties.Add(GlobalContext.Properties.GetReadOnlyProperties());
-                        m_compositeProperties = compositeProperties;
+						m_compositeProperties = compositeProperties;
 		}
 
 		private void CacheProperties()

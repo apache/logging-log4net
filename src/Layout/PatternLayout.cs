@@ -109,46 +109,46 @@ namespace log4net.Layout
 	///     <item>
 	///         <term>aspnet-cache</term>
 	///         <description>
-    ///             <para>
-    ///             Used to output all cache items in the case of <b>%aspnet-cache</b> or just one named item if used as <b>%aspnet-cache{key}</b>
-    ///             </para>
-    ///             <para>
-    ///             This pattern is not available for Compact Framework or Client Profile assemblies.
-    ///             </para>
+	///             <para>
+	///             Used to output all cache items in the case of <b>%aspnet-cache</b> or just one named item if used as <b>%aspnet-cache{key}</b>
+	///             </para>
+	///             <para>
+	///             This pattern is not available for Compact Framework or Client Profile assemblies.
+	///             </para>
 	///         </description>
 	///     </item>
 	///     <item>
 	///         <term>aspnet-context</term>
 	///         <description>
-    ///             <para>
-    ///             Used to output all context items in the case of <b>%aspnet-context</b> or just one named item if used as <b>%aspnet-context{key}</b>
-    ///             </para>
-    ///             <para>
-    ///             This pattern is not available for Compact Framework or Client Profile assemblies.
-    ///             </para>
-    ///         </description>
+	///             <para>
+	///             Used to output all context items in the case of <b>%aspnet-context</b> or just one named item if used as <b>%aspnet-context{key}</b>
+	///             </para>
+	///             <para>
+	///             This pattern is not available for Compact Framework or Client Profile assemblies.
+	///             </para>
+	///         </description>
 	///     </item>
 	///     <item>
 	///         <term>aspnet-request</term>
 	///         <description>
-    ///             <para>
-    ///             Used to output all request parameters in the case of <b>%aspnet-request</b> or just one named param if used as <b>%aspnet-request{key}</b>
-    ///             </para>
-    ///             <para>
-    ///             This pattern is not available for Compact Framework or Client Profile assemblies.
-    ///             </para>
-    ///         </description>
+	///             <para>
+	///             Used to output all request parameters in the case of <b>%aspnet-request</b> or just one named param if used as <b>%aspnet-request{key}</b>
+	///             </para>
+	///             <para>
+	///             This pattern is not available for Compact Framework or Client Profile assemblies.
+	///             </para>
+	///         </description>
 	///     </item>
 	///     <item>
 	///         <term>aspnet-session</term>
 	///         <description>
-    ///             <para>
-    ///             Used to output all session items in the case of <b>%aspnet-session</b> or just one named item if used as <b>%aspnet-session{key}</b>
-    ///             </para>
-    ///             <para>
-    ///             This pattern is not available for Compact Framework or Client Profile assemblies.
-    ///             </para>
-    ///         </description>
+	///             <para>
+	///             Used to output all session items in the case of <b>%aspnet-session</b> or just one named item if used as <b>%aspnet-session{key}</b>
+	///             </para>
+	///             <para>
+	///             This pattern is not available for Compact Framework or Client Profile assemblies.
+	///             </para>
+	///         </description>
 	///     </item>
 	///     <item>
 	///         <term>c</term>
@@ -469,34 +469,34 @@ namespace log4net.Layout
 	/// 			between braces. For example, <b>%stacktrace{level}</b>.
 	/// 			If no stack trace level specifier is given then 1 is assumed
 	/// 			</para>
-    /// 			<para>
-    /// 			Output uses the format:
-    /// 			type3.MethodCall3 > type2.MethodCall2 > type1.MethodCall1
-    /// 			</para>
-    ///             <para>
-    ///             This pattern is not available for Compact Framework assemblies.
-    ///             </para>
-    ///			</description>
+	/// 			<para>
+	/// 			Output uses the format:
+	/// 			type3.MethodCall3 > type2.MethodCall2 > type1.MethodCall1
+	/// 			</para>
+	///             <para>
+	///             This pattern is not available for Compact Framework assemblies.
+	///             </para>
+	///			</description>
 	///		</item>
-    /// 	<item>
-    ///			<term>stacktracedetail</term>
-    ///			<description>
-    /// 			<para>
-    /// 			Used to output the stack trace of the logging event
-    /// 			The stack trace level specifier may be enclosed
-    /// 			between braces. For example, <b>%stacktracedetail{level}</b>.
-    /// 			If no stack trace level specifier is given then 1 is assumed
-    /// 			</para>
-    /// 			<para>
-    /// 			Output uses the format:
-    ///             type3.MethodCall3(type param,...) > type2.MethodCall2(type param,...) > type1.MethodCall1(type param,...)
-    /// 			</para>
-    ///             <para>
-    ///             This pattern is not available for Compact Framework assemblies.
-    ///             </para>
-    ///			</description>
-    ///		</item>
-    ///     <item>
+	/// 	<item>
+	///			<term>stacktracedetail</term>
+	///			<description>
+	/// 			<para>
+	/// 			Used to output the stack trace of the logging event
+	/// 			The stack trace level specifier may be enclosed
+	/// 			between braces. For example, <b>%stacktracedetail{level}</b>.
+	/// 			If no stack trace level specifier is given then 1 is assumed
+	/// 			</para>
+	/// 			<para>
+	/// 			Output uses the format:
+	///             type3.MethodCall3(type param,...) > type2.MethodCall2(type param,...) > type1.MethodCall1(type param,...)
+	/// 			</para>
+	///             <para>
+	///             This pattern is not available for Compact Framework assemblies.
+	///             </para>
+	///			</description>
+	///		</item>
+	///     <item>
 	///         <term>t</term>
 	///         <description>Equivalent to <b>thread</b></description>
 	///     </item>
@@ -910,7 +910,7 @@ namespace log4net.Layout
 
 #if !(NETCF || NETSTANDARD1_3)
 			s_globalRulesRegistry.Add("stacktrace", typeof(StackTracePatternConverter));
-            s_globalRulesRegistry.Add("stacktracedetail", typeof(StackTraceDetailPatternConverter));
+			s_globalRulesRegistry.Add("stacktracedetail", typeof(StackTraceDetailPatternConverter));
 #endif
 
 			s_globalRulesRegistry.Add("t", typeof(ThreadPatternConverter));
@@ -1029,10 +1029,10 @@ namespace log4net.Layout
 			// Add all the builtin patterns
 			foreach(DictionaryEntry entry in s_globalRulesRegistry)
 			{
-                ConverterInfo converterInfo = new ConverterInfo();
-                converterInfo.Name = (string)entry.Key;
-                converterInfo.Type = (Type)entry.Value;
-                patternParser.PatternConverters[entry.Key] = converterInfo;
+				ConverterInfo converterInfo = new ConverterInfo();
+				converterInfo.Name = (string)entry.Key;
+				converterInfo.Type = (Type)entry.Value;
+				patternParser.PatternConverters[entry.Key] = converterInfo;
 			}
 			// Add the instance patterns
 			foreach(DictionaryEntry entry in m_instanceRulesRegistry)
@@ -1133,13 +1133,13 @@ namespace log4net.Layout
 		/// </remarks>
 		public void AddConverter(ConverterInfo converterInfo)
 		{
-            if (converterInfo == null) throw new ArgumentNullException("converterInfo");
+			if (converterInfo == null) throw new ArgumentNullException("converterInfo");
 
-            if (!typeof(PatternConverter).IsAssignableFrom(converterInfo.Type))
-            {
-                throw new ArgumentException("The converter type specified [" + converterInfo.Type + "] must be a subclass of log4net.Util.PatternConverter", "converterInfo");
-            }
-            m_instanceRulesRegistry[converterInfo.Name] = converterInfo;
+			if (!typeof(PatternConverter).IsAssignableFrom(converterInfo.Type))
+			{
+				throw new ArgumentException("The converter type specified [" + converterInfo.Type + "] must be a subclass of log4net.Util.PatternConverter", "converterInfo");
+			}
+			m_instanceRulesRegistry[converterInfo.Name] = converterInfo;
 		}
 
 		/// <summary>
@@ -1160,14 +1160,14 @@ namespace log4net.Layout
 		/// </remarks>
 		public void AddConverter(string name, Type type)
 		{
-            if (name == null) throw new ArgumentNullException("name");
-            if (type == null) throw new ArgumentNullException("type");
+			if (name == null) throw new ArgumentNullException("name");
+			if (type == null) throw new ArgumentNullException("type");
 
-            ConverterInfo converterInfo = new ConverterInfo();
-            converterInfo.Name = name;
-            converterInfo.Type = type;
+			ConverterInfo converterInfo = new ConverterInfo();
+			converterInfo.Name = name;
+			converterInfo.Type = type;
 
-            AddConverter(converterInfo);
+			AddConverter(converterInfo);
 		}
 	}
 }

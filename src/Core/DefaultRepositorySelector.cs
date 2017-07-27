@@ -709,37 +709,37 @@ namespace log4net.Core
 						LogLog.Warn(declaringType, "Exception getting ApplicationBaseDirectory. appSettings log4net.Config path ["+repositoryConfigFile+"] will be treated as an absolute URI", ex);
 					}
 
-                    string repositoryConfigFilePath = repositoryConfigFile;
-                    if (applicationBaseDirectory != null)
-                    {
-                        repositoryConfigFilePath = Path.Combine(applicationBaseDirectory, repositoryConfigFile);
-                    }
+					string repositoryConfigFilePath = repositoryConfigFile;
+					if (applicationBaseDirectory != null)
+					{
+						repositoryConfigFilePath = Path.Combine(applicationBaseDirectory, repositoryConfigFile);
+					}
 
-                    // Determine whether to watch the file or not based on an app setting value:
-				    bool watchRepositoryConfigFile = false;
+					// Determine whether to watch the file or not based on an app setting value:
+					bool watchRepositoryConfigFile = false;
 #if NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0 || NETSTANDARD1_3
-				    Boolean.TryParse(SystemInfo.GetAppSetting("log4net.Config.Watch"), out watchRepositoryConfigFile);
+					Boolean.TryParse(SystemInfo.GetAppSetting("log4net.Config.Watch"), out watchRepositoryConfigFile);
 #else
-                                    {
-                                        string watch = SystemInfo.GetAppSetting("log4net.Config.Watch");
-                                        if (watch != null && watch.Length > 0)
-                                        {
-                                            try
-                                            {
-                                                watchRepositoryConfigFile = Boolean.Parse(watch);
-                                            }
-                                            catch (FormatException)
-                                            {
-                                                // simply not a Boolean
-                                            }
-                                        }
-                                    }
+									{
+										string watch = SystemInfo.GetAppSetting("log4net.Config.Watch");
+										if (watch != null && watch.Length > 0)
+										{
+											try
+											{
+												watchRepositoryConfigFile = Boolean.Parse(watch);
+											}
+											catch (FormatException)
+											{
+												// simply not a Boolean
+											}
+										}
+									}
 #endif
 
 					if (watchRepositoryConfigFile)
 					{
- 						// As we are going to watch the config file it is required to resolve it as a
- 						// physical file system path pass that in a FileInfo object to the Configurator
+						// As we are going to watch the config file it is required to resolve it as a
+						// physical file system path pass that in a FileInfo object to the Configurator
 						FileInfo repositoryConfigFileInfo = null;
 						try
 						{
@@ -747,27 +747,27 @@ namespace log4net.Core
 						}
 						catch (Exception ex)
 						{
-                            LogLog.Error(declaringType, "DefaultRepositorySelector: Exception while parsing log4net.Config file physical path [" + repositoryConfigFilePath + "]", ex);
+							LogLog.Error(declaringType, "DefaultRepositorySelector: Exception while parsing log4net.Config file physical path [" + repositoryConfigFilePath + "]", ex);
 						}
 						try
 						{
-                            LogLog.Debug(declaringType, "Loading and watching configuration for default repository from AppSettings specified Config path [" + repositoryConfigFilePath + "]");
+							LogLog.Debug(declaringType, "Loading and watching configuration for default repository from AppSettings specified Config path [" + repositoryConfigFilePath + "]");
 
-                            XmlConfigurator.ConfigureAndWatch(repository, repositoryConfigFileInfo);
+							XmlConfigurator.ConfigureAndWatch(repository, repositoryConfigFileInfo);
 						}
 						catch (Exception ex)
 						{
-                            LogLog.Error(declaringType, "DefaultRepositorySelector: Exception calling XmlConfigurator.ConfigureAndWatch method with ConfigFilePath [" + repositoryConfigFilePath + "]", ex);
+							LogLog.Error(declaringType, "DefaultRepositorySelector: Exception calling XmlConfigurator.ConfigureAndWatch method with ConfigFilePath [" + repositoryConfigFilePath + "]", ex);
 						}
 					}
 					else
 					{
-                    // As we are not going to watch the config file it is easiest to just resolve it as a
+					// As we are not going to watch the config file it is easiest to just resolve it as a
 					// URI and pass that to the Configurator
 					Uri repositoryConfigUri = null;
 					try
 					{
-					    repositoryConfigUri = new Uri(repositoryConfigFilePath);
+						repositoryConfigUri = new Uri(repositoryConfigFilePath);
 					}
 					catch(Exception ex)
 					{
@@ -788,7 +788,7 @@ namespace log4net.Core
 							LogLog.Error(declaringType, "Exception calling XmlConfigurator.Configure method with ConfigUri ["+repositoryConfigUri+"]", ex);
 						}
 					}
-                    }
+					}
 				}
 			}
 		}
@@ -884,14 +884,14 @@ namespace log4net.Core
 
 		#region Private Static Fields
 
-        /// <summary>
-        /// The fully qualified type of the DefaultRepositorySelector class.
-        /// </summary>
-        /// <remarks>
-        /// Used by the internal logger to record the Type of the
-        /// log message.
-        /// </remarks>
-        private readonly static Type declaringType = typeof(DefaultRepositorySelector);
+		/// <summary>
+		/// The fully qualified type of the DefaultRepositorySelector class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(DefaultRepositorySelector);
 
 		private const string DefaultRepositoryName = "log4net-default-repository";
 

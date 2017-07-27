@@ -109,33 +109,33 @@ namespace log4net.Tests
 			return types;
 		}
 
-        internal const string PROPERTY_KEY = "prop1";
+		internal const string PROPERTY_KEY = "prop1";
 
-        internal static void RemovePropertyFromAllContexts() {
-            GlobalContext.Properties.Remove(PROPERTY_KEY);
-            ThreadContext.Properties.Remove(PROPERTY_KEY);
+		internal static void RemovePropertyFromAllContexts() {
+			GlobalContext.Properties.Remove(PROPERTY_KEY);
+			ThreadContext.Properties.Remove(PROPERTY_KEY);
 #if !NETCF
-            LogicalThreadContext.Properties.Remove(PROPERTY_KEY);
+			LogicalThreadContext.Properties.Remove(PROPERTY_KEY);
 #endif
-        }
+		}
 
-        // Wrappers because repository/logger retrieval APIs require an Assembly argument on NETSTANDARD1_3
-        internal static ILog GetLogger(string name)
-        {
+		// Wrappers because repository/logger retrieval APIs require an Assembly argument on NETSTANDARD1_3
+		internal static ILog GetLogger(string name)
+		{
 #if NETSTANDARD1_3
-            return LogManager.GetLogger(typeof(Utils).GetTypeInfo().Assembly, name);
+			return LogManager.GetLogger(typeof(Utils).GetTypeInfo().Assembly, name);
 #else
-            return LogManager.GetLogger(name);
+			return LogManager.GetLogger(name);
 #endif
-        }
+		}
 
-        internal static ILoggerRepository GetRepository()
-        {
+		internal static ILoggerRepository GetRepository()
+		{
 #if NETSTANDARD1_3
-            return LogManager.GetRepository(typeof(Utils).GetTypeInfo().Assembly);
+			return LogManager.GetRepository(typeof(Utils).GetTypeInfo().Assembly);
 #else
-            return LogManager.GetRepository();
+			return LogManager.GetRepository();
 #endif
-        }
-    }
+		}
+	}
 }

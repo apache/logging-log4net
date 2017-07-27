@@ -76,11 +76,11 @@ namespace log4net.Appender
 		/// </para>
 		/// </remarks>
 #if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
-        [System.Security.SecuritySafeCritical]
+		[System.Security.SecuritySafeCritical]
 #elif !NETCF
-        [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
+		[System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
 #endif
-        override protected void Append(LoggingEvent loggingEvent)
+		override protected void Append(LoggingEvent loggingEvent)
 		{
 #if NETSTANDARD1_3
 			if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))

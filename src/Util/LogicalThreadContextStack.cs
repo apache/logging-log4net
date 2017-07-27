@@ -26,16 +26,16 @@ using log4net.Core;
 namespace log4net.Util
 {
 
-        /// <summary>
+		/// <summary>
 	/// Delegate type used for LogicalThreadContextStack's callbacks.
 	/// </summary>
-    #if NET_2_0 || MONO_2_0
+	#if NET_2_0 || MONO_2_0
 	public delegate void TwoArgAction<T1, T2>(T1 t1, T2 t2);
-    #else
+	#else
 	public delegate void TwoArgAction(string t1, LogicalThreadContextStack t2);
-    #endif
+	#endif
 
-        /// <summary>
+		/// <summary>
 	/// Implementation of Stack for the <see cref="log4net.LogicalThreadContext"/>
 	/// </summary>
 	/// <remarks>
@@ -65,7 +65,7 @@ namespace log4net.Util
 		/// </summary>
 		#if NET_2_0 || MONO_2_0
 		private TwoArgAction<string, LogicalThreadContextStack> m_registerNew;
-                #else
+				#else
 		private TwoArgAction m_registerNew;
 		#endif
 
@@ -83,7 +83,7 @@ namespace log4net.Util
 		/// </remarks>
 		#if NET_2_0 || MONO_2_0
 		internal LogicalThreadContextStack(string propertyKey, TwoArgAction<string, LogicalThreadContextStack> registerNew)
-                #else
+				#else
 		internal LogicalThreadContextStack(string propertyKey, TwoArgAction registerNew)
 		#endif
 		{

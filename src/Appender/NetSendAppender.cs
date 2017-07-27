@@ -305,12 +305,12 @@ namespace log4net.Appender
 		/// </para>
 		/// </remarks>
 #if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
-        [System.Security.SecuritySafeCritical]
+		[System.Security.SecuritySafeCritical]
 #endif
 #if !NETSTANDARD1_3
-        [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
+		[System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
 #endif
-        protected override void Append(LoggingEvent loggingEvent)
+		protected override void Append(LoggingEvent loggingEvent)
 		{
 			NativeError nativeError = null;
 

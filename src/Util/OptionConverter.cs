@@ -652,14 +652,14 @@ namespace log4net.Util
 
 		#region Private Static Fields
 
-        /// <summary>
-        /// The fully qualified type of the OptionConverter class.
-        /// </summary>
-        /// <remarks>
-        /// Used by the internal logger to record the Type of the
-        /// log message.
-        /// </remarks>
-        private readonly static Type declaringType = typeof(OptionConverter);
+		/// <summary>
+		/// The fully qualified type of the OptionConverter class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(OptionConverter);
 
 		private const string DELIM_START = "${";
 		private const char   DELIM_STOP  = '}';

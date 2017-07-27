@@ -130,42 +130,42 @@ namespace log4net.Layout.Pattern
 			else
 			{
 				int len = name.Length;
-                string trailingDot = string.Empty;
-                if (name.EndsWith(DOT))
-                {
-                    trailingDot = DOT;
-                    name = name.Substring(0, len - 1);
-                    len--;
-                }
+				string trailingDot = string.Empty;
+				if (name.EndsWith(DOT))
+				{
+					trailingDot = DOT;
+					name = name.Substring(0, len - 1);
+					len--;
+				}
 
-                int end = name.LastIndexOf(DOT);
+				int end = name.LastIndexOf(DOT);
 				for(int i = 1; end > 0 && i < m_precision; i++)
 				{
-                    end = name.LastIndexOf('.', end - 1);
-                }
-                if (end == -1)
-                {
-                    writer.Write(name + trailingDot);
-                }
-                else
-                {
-                    writer.Write(name.Substring(end + 1, len - end - 1) + trailingDot);
-                }
+					end = name.LastIndexOf('.', end - 1);
+				}
+				if (end == -1)
+				{
+					writer.Write(name + trailingDot);
+				}
+				else
+				{
+					writer.Write(name.Substring(end + 1, len - end - 1) + trailingDot);
+				}
 			}
 		}
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the NamedPatternConverter class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(NamedPatternConverter);
+		/// <summary>
+		/// The fully qualified type of the NamedPatternConverter class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(NamedPatternConverter);
 
-        private const string DOT = ".";
-	    #endregion Private Static Fields
+		private const string DOT = ".";
+		#endregion Private Static Fields
 	}
 }

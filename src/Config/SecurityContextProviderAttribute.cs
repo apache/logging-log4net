@@ -133,18 +133,18 @@ namespace log4net.Config
 
 		#endregion Private Instance Fields
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the SecurityContextProviderAttribute class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(SecurityContextProviderAttribute);
+		/// <summary>
+		/// The fully qualified type of the SecurityContextProviderAttribute class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(SecurityContextProviderAttribute);
 
-	    #endregion Private Static Fields
+		#endregion Private Static Fields
 	}
 }
 

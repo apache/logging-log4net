@@ -83,7 +83,7 @@ namespace log4net.Repository.Hierarchy
 		{
 			if (element == null || m_hierarchy == null)
 			{
-                return;
+				return;
 			}
 
 			string rootElementName = element.LocalName;
@@ -91,26 +91,26 @@ namespace log4net.Repository.Hierarchy
 			if (rootElementName != CONFIGURATION_TAG)
 			{
 				LogLog.Error(declaringType, "Xml element is - not a <" + CONFIGURATION_TAG + "> element.");
-                return;
+				return;
 			}
 
-            if (!LogLog.EmitInternalMessages)
-            {
-                // Look for a emitDebug attribute to enable internal debug
-                string emitDebugAttribute = element.GetAttribute(EMIT_INTERNAL_DEBUG_ATTR);
-                LogLog.Debug(declaringType, EMIT_INTERNAL_DEBUG_ATTR + " attribute [" + emitDebugAttribute + "].");
+			if (!LogLog.EmitInternalMessages)
+			{
+				// Look for a emitDebug attribute to enable internal debug
+				string emitDebugAttribute = element.GetAttribute(EMIT_INTERNAL_DEBUG_ATTR);
+				LogLog.Debug(declaringType, EMIT_INTERNAL_DEBUG_ATTR + " attribute [" + emitDebugAttribute + "].");
 
-                if (emitDebugAttribute.Length > 0 && emitDebugAttribute != "null")
-                {
-                    LogLog.EmitInternalMessages = OptionConverter.ToBoolean(emitDebugAttribute, true);
-                }
-                else
-                {
-                    LogLog.Debug(declaringType, "Ignoring " + EMIT_INTERNAL_DEBUG_ATTR + " attribute.");
-                }
-            }
+				if (emitDebugAttribute.Length > 0 && emitDebugAttribute != "null")
+				{
+					LogLog.EmitInternalMessages = OptionConverter.ToBoolean(emitDebugAttribute, true);
+				}
+				else
+				{
+					LogLog.Debug(declaringType, "Ignoring " + EMIT_INTERNAL_DEBUG_ATTR + " attribute.");
+				}
+			}
 
-		    if (!LogLog.InternalDebugging)
+			if (!LogLog.InternalDebugging)
 			{
 				// Look for a debug attribute to enable internal debug
 				string debugAttribute = element.GetAttribute(INTERNAL_DEBUG_ATTR);
@@ -223,7 +223,7 @@ namespace log4net.Repository.Hierarchy
 			// Done reading config
 		}
 
-	    #endregion Public Instance Methods
+		#endregion Public Instance Methods
 
 		#region Protected Instance Methods
 
@@ -642,10 +642,10 @@ namespace log4net.Repository.Hierarchy
 					try
 					{
 						// Expand environment variables in the string.
-					    IDictionary environmentVariables = Environment.GetEnvironmentVariables();
-					    if (HasCaseInsensitiveEnvironment) {
+						IDictionary environmentVariables = Environment.GetEnvironmentVariables();
+						if (HasCaseInsensitiveEnvironment) {
 						environmentVariables = CreateCaseInsensitiveWrapper(environmentVariables);
-					    }
+						}
 						propertyValue = OptionConverter.SubstituteVariables(propertyValue, environmentVariables);
 					}
 					catch(System.Security.SecurityException)
@@ -902,7 +902,7 @@ namespace log4net.Repository.Hierarchy
 					string methodInfoName = methInfo.Name;
 
 					if (SystemInfo.EqualsIgnoringCase(methodInfoName, requiredMethodNameA) ||
-					    SystemInfo.EqualsIgnoringCase(methodInfoName, requiredMethodNameB))
+						SystemInfo.EqualsIgnoringCase(methodInfoName, requiredMethodNameB))
 					{
 						// Found matching method name
 
@@ -1068,9 +1068,9 @@ namespace log4net.Repository.Hierarchy
 
 #if !(NETCF || NETSTANDARD1_3) // NETSTANDARD1_3: System.Runtime.InteropServices.RuntimeInformation not available on desktop 4.6
 		private bool HasCaseInsensitiveEnvironment
-	        {
-		    get
-		    {
+			{
+			get
+			{
 #if NET_1_0 || NET_1_1 || CLI_1_0
 			// actually there is no guarantee, but we don't know better
 			return true;
@@ -1081,20 +1081,20 @@ namespace log4net.Repository.Hierarchy
 			PlatformID platform = Environment.OSVersion.Platform;
 			return platform != PlatformID.Unix && platform != PlatformID.MacOSX;
 #endif
-		    }
+			}
 		}
 
-	        private IDictionary CreateCaseInsensitiveWrapper(IDictionary dict)
-	        {
-		    if (dict == null)
-		    {
+			private IDictionary CreateCaseInsensitiveWrapper(IDictionary dict)
+			{
+			if (dict == null)
+			{
 			return dict;
-		    }
-		    Hashtable hash = SystemInfo.CreateCaseInsensitiveHashtable();
-		    foreach (DictionaryEntry entry in dict) {
+			}
+			Hashtable hash = SystemInfo.CreateCaseInsensitiveHashtable();
+			foreach (DictionaryEntry entry in dict) {
 			hash[entry.Key] = entry.Value;
-		    }
-		    return hash;
+			}
+			return hash;
 		}
 #endif
 
@@ -1147,17 +1147,17 @@ namespace log4net.Repository.Hierarchy
 
 		#endregion Private Instance Fields
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the XmlHierarchyConfigurator class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(XmlHierarchyConfigurator);
+		/// <summary>
+		/// The fully qualified type of the XmlHierarchyConfigurator class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(XmlHierarchyConfigurator);
 
-	    #endregion Private Static Fields
+		#endregion Private Static Fields
 	}
 }

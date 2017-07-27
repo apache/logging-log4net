@@ -117,17 +117,17 @@ namespace log4net.Repository.Hierarchy
 
 		#endregion Override implementation of Logger
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the RootLogger class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(RootLogger);
+		/// <summary>
+		/// The fully qualified type of the RootLogger class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(RootLogger);
 
-	    #endregion Private Static Fields
+		#endregion Private Static Fields
 	}
 }

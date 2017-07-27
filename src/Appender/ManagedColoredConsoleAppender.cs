@@ -304,11 +304,11 @@ namespace log4net.Appender
 			}
 			private ConsoleColor foreColor;
 			private bool hasForeColor;
-            internal bool HasForeColor {
-                get {
-                    return hasForeColor;
-                }
-            }
+			internal bool HasForeColor {
+				get {
+					return hasForeColor;
+				}
+			}
 
 			/// <summary>
 			/// The mapped background color for the specified level
@@ -327,12 +327,12 @@ namespace log4net.Appender
 				set { this.backColor = value; this.hasBackColor = true; }
 			}
 			private ConsoleColor backColor;
-            private bool hasBackColor;
-            internal bool HasBackColor {
-                get {
-                    return hasBackColor;
-                }
-            }
+			private bool hasBackColor;
+			internal bool HasBackColor {
+				get {
+					return hasBackColor;
+				}
+			}
 		}
 		#endregion // LevelColors LevelMapping Entry
 	}

@@ -100,41 +100,41 @@ namespace log4net.Appender
 			set { m_immediateFlush = value; }
 		}
 
-        /// <summary>
-        /// Formats the category parameter sent to the Debug method.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// Defaults to a <see cref="Layout.PatternLayout"/> with %logger as the pattern which will use the logger name of the current
-        /// <see cref="LoggingEvent"/> as the category parameter.
-        /// </para>
-        /// <para>
-        /// </para>
-        /// </remarks>
-        public PatternLayout Category
-        {
-            get { return m_category; }
-            set { m_category = value; }
-        }
+		/// <summary>
+		/// Formats the category parameter sent to the Debug method.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Defaults to a <see cref="Layout.PatternLayout"/> with %logger as the pattern which will use the logger name of the current
+		/// <see cref="LoggingEvent"/> as the category parameter.
+		/// </para>
+		/// <para>
+		/// </para>
+		/// </remarks>
+		public PatternLayout Category
+		{
+			get { return m_category; }
+			set { m_category = value; }
+		}
 
 		#endregion Public Instance Properties
 
 #if !NETSTANDARD1_3
-            /// <summary>
-            /// Flushes any buffered log data.
-            /// </summary>
-            /// <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
-            /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
-            public override bool Flush(int millisecondsTimeout)
-            {
-                // Nothing to do if ImmediateFlush is true
-                if (m_immediateFlush) return true;
+			/// <summary>
+			/// Flushes any buffered log data.
+			/// </summary>
+			/// <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
+			/// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+			public override bool Flush(int millisecondsTimeout)
+			{
+				// Nothing to do if ImmediateFlush is true
+				if (m_immediateFlush) return true;
 
-                // System.Diagnostics.Debug is thread-safe, so no need for lock(this).
-                System.Diagnostics.Debug.Flush();
+				// System.Diagnostics.Debug is thread-safe, so no need for lock(this).
+				System.Diagnostics.Debug.Flush();
 
-                return true;
-            }
+				return true;
+			}
 #endif
 
 		#region Override implementation of AppenderSkeleton
@@ -155,22 +155,22 @@ namespace log4net.Appender
 			//
 			// Write the string to the Debug system
 			//
-            if(m_category == null)
-            {
-                System.Diagnostics.Debug.Write(RenderLoggingEvent(loggingEvent));
-            }
-            else
-            {
-                string category = m_category.Format(loggingEvent);
-                if (string.IsNullOrEmpty(category))
-                {
-                    System.Diagnostics.Debug.Write(RenderLoggingEvent(loggingEvent));
-                }
-                else
-                {
-                    System.Diagnostics.Debug.Write(RenderLoggingEvent(loggingEvent), category);
-                }
-            }
+			if(m_category == null)
+			{
+				System.Diagnostics.Debug.Write(RenderLoggingEvent(loggingEvent));
+			}
+			else
+			{
+				string category = m_category.Format(loggingEvent);
+				if (string.IsNullOrEmpty(category))
+				{
+					System.Diagnostics.Debug.Write(RenderLoggingEvent(loggingEvent));
+				}
+				else
+				{
+					System.Diagnostics.Debug.Write(RenderLoggingEvent(loggingEvent), category);
+				}
+			}
 #if !NETSTANDARD1_3
 			//
 			// Flush the Debug system if needed
@@ -217,10 +217,10 @@ namespace log4net.Appender
 		/// </remarks>
 		private bool m_immediateFlush = true;
 
-        /// <summary>
-        /// Defaults to a <see cref="Layout.PatternLayout"/> with %logger as the pattern.
-        /// </summary>
-        private PatternLayout m_category = new PatternLayout("%logger");
+		/// <summary>
+		/// Defaults to a <see cref="Layout.PatternLayout"/> with %logger as the pattern.
+		/// </summary>
+		private PatternLayout m_category = new PatternLayout("%logger");
 
 		#endregion Private Instance Fields
 	}

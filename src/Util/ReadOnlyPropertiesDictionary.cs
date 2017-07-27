@@ -205,22 +205,22 @@ namespace log4net.Util
 		/// </para>
 		/// </remarks>
 #if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
-        [System.Security.SecurityCritical]
+		[System.Security.SecurityCritical]
 #else
 		[System.Security.Permissions.SecurityPermissionAttribute(System.Security.Permissions.SecurityAction.Demand, SerializationFormatter=true)]
 #endif
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			foreach(DictionaryEntry entry in InnerHashtable.Clone() as IDictionary)
 			{
 				string entryKey = entry.Key as string;
 				object entryValue = entry.Value;
 
-                // If value is serializable then we add it to the list
+				// If value is serializable then we add it to the list
 #if NETSTANDARD1_3
-                bool isSerializable = entryValue.GetType().GetTypeInfo().IsSerializable;
+				bool isSerializable = entryValue.GetType().GetTypeInfo().IsSerializable;
 #else
-                bool isSerializable = entryValue.GetType().IsSerializable;
+				bool isSerializable = entryValue.GetType().IsSerializable;
 #endif
 				if (entryKey != null && entryValue != null && isSerializable)
 				{

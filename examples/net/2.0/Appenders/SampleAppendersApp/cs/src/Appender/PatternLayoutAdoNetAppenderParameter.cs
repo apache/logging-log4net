@@ -21,14 +21,14 @@ using log4net.Appender;
 
 namespace SampleAppendersApp.Appender
 {
-    public class PatternLayoutAdoNetAppenderParameter : AdoNetAppenderParameter
-    {
-        private string conversionPattern;
+	public class PatternLayoutAdoNetAppenderParameter : AdoNetAppenderParameter
+	{
+		private string conversionPattern;
 
-        public string ConversionPattern
-        {
-            get { return conversionPattern; }
-            set { conversionPattern = value; }
-        }
-    }
+		public string ConversionPattern
+		{
+			get { return conversionPattern; }
+			set { conversionPattern = value; }
+		}
+	}
 }

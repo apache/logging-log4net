@@ -697,14 +697,14 @@ namespace log4net.Appender
 				m_renderWriter = new ReusableStringWriter(System.Globalization.CultureInfo.InvariantCulture);
 			}
 
-            lock (m_renderWriter)
-            {
-                // Reset the writer so we can reuse it
-                m_renderWriter.Reset(c_renderBufferMaxCapacity, c_renderBufferSize);
+			lock (m_renderWriter)
+			{
+				// Reset the writer so we can reuse it
+				m_renderWriter.Reset(c_renderBufferMaxCapacity, c_renderBufferSize);
 
-                RenderLoggingEvent(m_renderWriter, loggingEvent);
-                return m_renderWriter.ToString();
-            }
+				RenderLoggingEvent(m_renderWriter, loggingEvent);
+				return m_renderWriter.ToString();
+			}
 		}
 
 		/// <summary>
@@ -783,16 +783,16 @@ namespace log4net.Appender
 		#endregion
 
 		/// <summary>
-        	/// Flushes any buffered log data.
-        	/// </summary>
+			/// Flushes any buffered log data.
+			/// </summary>
 		/// <remarks>
 		/// This implementation doesn't flush anything and always returns true
 		/// </remarks>
-        	/// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
-        	public virtual bool Flush(int millisecondsTimeout)
-        	{
-		    return true;
-        	}
+			/// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+			public virtual bool Flush(int millisecondsTimeout)
+			{
+			return true;
+			}
 
 		#region Private Instance Fields
 
@@ -893,17 +893,17 @@ namespace log4net.Appender
 
 		#endregion
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the AppenderSkeleton class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(AppenderSkeleton);
+		/// <summary>
+		/// The fully qualified type of the AppenderSkeleton class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(AppenderSkeleton);
 
-	    #endregion Private Static Fields
+		#endregion Private Static Fields
 	}
 }

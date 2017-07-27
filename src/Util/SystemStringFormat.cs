@@ -221,17 +221,17 @@ namespace log4net.Util
 
 		#endregion StringFormat
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the SystemStringFormat class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(SystemStringFormat);
+		/// <summary>
+		/// The fully qualified type of the SystemStringFormat class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(SystemStringFormat);
 
-	    #endregion Private Static Fields
+		#endregion Private Static Fields
 	}
 }

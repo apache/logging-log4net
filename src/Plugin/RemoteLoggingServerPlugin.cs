@@ -149,9 +149,9 @@ namespace log4net.Plugin
 		/// </para>
 		/// </remarks>
 #if NET_4_0 || MONO_4_0
-        [System.Security.SecuritySafeCritical]
+		[System.Security.SecuritySafeCritical]
 #endif
-        override public void Shutdown()
+		override public void Shutdown()
 		{
 			// Stops the sink from receiving messages
 			RemotingServices.Disconnect(m_sink);
@@ -169,18 +169,18 @@ namespace log4net.Plugin
 
 		#endregion Private Instance Fields
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the RemoteLoggingServerPlugin class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(RemoteLoggingServerPlugin);
+		/// <summary>
+		/// The fully qualified type of the RemoteLoggingServerPlugin class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(RemoteLoggingServerPlugin);
 
-	    #endregion Private Static Fields
+		#endregion Private Static Fields
 
 		/// <summary>
 		/// Delivers <see cref="LoggingEvent"/> objects to a remote sink.
@@ -254,9 +254,9 @@ namespace log4net.Plugin
 			/// </para>
 			/// </remarks>
 #if NET_4_0 || MONO_4_0
-            [System.Security.SecurityCritical]
+			[System.Security.SecurityCritical]
 #endif
-            public override object InitializeLifetimeService()
+			public override object InitializeLifetimeService()
 			{
 				return null;
 			}

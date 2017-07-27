@@ -46,18 +46,18 @@ namespace log4net.Repository
 		/// specified appender.
 		/// </para>
 		/// </remarks>
-        void Configure(Appender.IAppender appender);
+		void Configure(Appender.IAppender appender);
 
-        /// <summary>
-        /// Initialize the repository using the specified appenders
-        /// </summary>
-        /// <param name="appenders">the appenders to use to log all logging events</param>
-        /// <remarks>
-        /// <para>
-        /// Configure the repository to route all logging events to the
-        /// specified appenders.
-        /// </para>
-        /// </remarks>
-        void Configure(params Appender.IAppender[] appenders);
+		/// <summary>
+		/// Initialize the repository using the specified appenders
+		/// </summary>
+		/// <param name="appenders">the appenders to use to log all logging events</param>
+		/// <remarks>
+		/// <para>
+		/// Configure the repository to route all logging events to the
+		/// specified appenders.
+		/// </para>
+		/// </remarks>
+		void Configure(params Appender.IAppender[] appenders);
 	}
 }

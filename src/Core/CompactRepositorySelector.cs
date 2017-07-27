@@ -302,18 +302,18 @@ namespace log4net.Core
 
 		#endregion
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the CompactRepositorySelector class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(CompactRepositorySelector);
+		/// <summary>
+		/// The fully qualified type of the CompactRepositorySelector class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(CompactRepositorySelector);
 
-	    #endregion Private Static Fields
+		#endregion Private Static Fields
 
 		/// <summary>
 		/// Event to notify that a logger repository has been created.

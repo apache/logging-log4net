@@ -174,26 +174,26 @@ namespace log4net.Util
 			}
 			else
 			{
-                string msg = null;
-                int len;
-                lock (m_formatWriter)
-                {
-                    m_formatWriter.Reset(c_renderBufferMaxCapacity, c_renderBufferSize);
+				string msg = null;
+				int len;
+				lock (m_formatWriter)
+				{
+					m_formatWriter.Reset(c_renderBufferMaxCapacity, c_renderBufferSize);
 
-                    Convert(m_formatWriter, state);
+					Convert(m_formatWriter, state);
 
-                    StringBuilder buf = m_formatWriter.GetStringBuilder();
-                    len = buf.Length;
-                    if (len > m_max)
-                    {
-                        msg = buf.ToString(len - m_max, m_max);
-                        len = m_max;
-                    }
-                    else
-                    {
-                        msg = buf.ToString();
-                    }
-                }
+					StringBuilder buf = m_formatWriter.GetStringBuilder();
+					len = buf.Length;
+					if (len > m_max)
+					{
+						msg = buf.ToString(len - m_max, m_max);
+						len = m_max;
+					}
+					else
+					{
+						msg = buf.ToString();
+					}
+				}
 
 				if (len < m_min)
 				{
@@ -383,15 +383,15 @@ namespace log4net.Util
 
 		#endregion
 
-        private PropertiesDictionary properties;
+		private PropertiesDictionary properties;
 
-        /// <summary>
-        ///
-        /// </summary>
-        public PropertiesDictionary Properties
-	    {
-	        get { return properties; }
-	        set { properties = value; }
-	    }
+		/// <summary>
+		///
+		/// </summary>
+		public PropertiesDictionary Properties
+		{
+			get { return properties; }
+			set { properties = value; }
+		}
 	}
 }

@@ -21,21 +21,21 @@ using log4net.Core;
 
 namespace SampleLayoutsApp.Layout
 {
-    public class LevelConversionPattern
-    {
-        private Level level;
-        private string conversionPattern;
+	public class LevelConversionPattern
+	{
+		private Level level;
+		private string conversionPattern;
 
-        public Level Level
-        {
-            get { return level; }
-            set { level = value; }
-        }
+		public Level Level
+		{
+			get { return level; }
+			set { level = value; }
+		}
 
-        public string ConversionPattern
-        {
-            get { return conversionPattern; }
-            set { conversionPattern = value; }
-        }
-    }
+		public string ConversionPattern
+		{
+			get { return conversionPattern; }
+			set { conversionPattern = value; }
+		}
+	}
 }

@@ -153,9 +153,9 @@ namespace log4net.Util
 
 		#endregion Public Instance Methods
 
-        #region Private Static Methods
+		#region Private Static Methods
 
-        /// <summary>
+		/// <summary>
 		/// Calls the DoAppende method on the <see cref="IAppender"/> with
 		/// the <see cref="LoggingEvent"/> objects supplied.
 		/// </summary>
@@ -183,13 +183,13 @@ namespace log4net.Util
 					appender.DoAppend(loggingEvent);
 				}
 			}
-        }
+		}
 
-        #endregion
+		#endregion
 
-        #region Implementation of IAppenderAttachable
+		#region Implementation of IAppenderAttachable
 
-        /// <summary>
+		/// <summary>
 		/// Attaches an appender.
 		/// </summary>
 		/// <param name="newAppender">The appender to add.</param>
@@ -360,17 +360,17 @@ namespace log4net.Util
 
 		#endregion Private Instance Fields
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the AppenderAttachedImpl class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(AppenderAttachedImpl);
+		/// <summary>
+		/// The fully qualified type of the AppenderAttachedImpl class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(AppenderAttachedImpl);
 
-	    #endregion Private Static Fields
+		#endregion Private Static Fields
 	}
 }

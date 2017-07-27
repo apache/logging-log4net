@@ -510,9 +510,9 @@ namespace log4net.Repository.Hierarchy
 
 		#endregion Override Implementation of LoggerRepositorySkeleton
 
-        #region Private Static Methods
+		#region Private Static Methods
 
-        /// <summary>
+		/// <summary>
 		/// Collect the appenders from an <see cref="IAppenderAttachable"/>.
 		/// The appender may also be a container.
 		/// </summary>
@@ -543,13 +543,13 @@ namespace log4net.Repository.Hierarchy
 			{
 				CollectAppender(appenderList, appender);
 			}
-        }
+		}
 
-        #endregion
+		#endregion
 
-        #region Implementation of IBasicRepositoryConfigurator
+		#region Implementation of IBasicRepositoryConfigurator
 
-        /// <summary>
+		/// <summary>
 		/// Initialize the log4net system using the specified appender
 		/// </summary>
 		/// <param name="appender">the appender to use to log all logging events</param>
@@ -558,14 +558,14 @@ namespace log4net.Repository.Hierarchy
 			BasicRepositoryConfigure(appender);
 		}
 
-        /// <summary>
-        /// Initialize the log4net system using the specified appenders
-        /// </summary>
-        /// <param name="appenders">the appenders to use to log all logging events</param>
-        void IBasicRepositoryConfigurator.Configure(params IAppender[] appenders)
-        {
-            BasicRepositoryConfigure(appenders);
-        }
+		/// <summary>
+		/// Initialize the log4net system using the specified appenders
+		/// </summary>
+		/// <param name="appenders">the appenders to use to log all logging events</param>
+		void IBasicRepositoryConfigurator.Configure(params IAppender[] appenders)
+		{
+			BasicRepositoryConfigure(appenders);
+		}
 
 		/// <summary>
 		/// Initialize the log4net system using the specified appenders
@@ -580,25 +580,25 @@ namespace log4net.Repository.Hierarchy
 		/// </remarks>
 		protected void BasicRepositoryConfigure(params IAppender[] appenders)
 		{
-            ArrayList configurationMessages = new ArrayList();
+			ArrayList configurationMessages = new ArrayList();
 
-            using (new LogLog.LogReceivedAdapter(configurationMessages))
-            {
-                foreach (IAppender appender in appenders)
-                {
-                    Root.AddAppender(appender);
-                }
-            }
+			using (new LogLog.LogReceivedAdapter(configurationMessages))
+			{
+				foreach (IAppender appender in appenders)
+				{
+					Root.AddAppender(appender);
+				}
+			}
 
-		    Configured = true;
+			Configured = true;
 
-            ConfigurationMessages = configurationMessages;
+			ConfigurationMessages = configurationMessages;
 
 			// Notify listeners
-            OnConfigurationChanged(new ConfigurationChangedEventArgs(configurationMessages));
+			OnConfigurationChanged(new ConfigurationChangedEventArgs(configurationMessages));
 		}
 
-	    #endregion Implementation of IBasicRepositoryConfigurator
+		#endregion Implementation of IBasicRepositoryConfigurator
 
 		#region Implementation of IXmlRepositoryConfigurator
 
@@ -624,20 +624,20 @@ namespace log4net.Repository.Hierarchy
 		/// </remarks>
 		protected void XmlRepositoryConfigure(System.Xml.XmlElement element)
 		{
-            ArrayList configurationMessages = new ArrayList();
+			ArrayList configurationMessages = new ArrayList();
 
-            using (new LogLog.LogReceivedAdapter(configurationMessages))
-		    {
-		        XmlHierarchyConfigurator config = new XmlHierarchyConfigurator(this);
-                config.Configure(element);
-		    }
+			using (new LogLog.LogReceivedAdapter(configurationMessages))
+			{
+				XmlHierarchyConfigurator config = new XmlHierarchyConfigurator(this);
+				config.Configure(element);
+			}
 
-		    Configured = true;
+			Configured = true;
 
-            ConfigurationMessages = configurationMessages;
+			ConfigurationMessages = configurationMessages;
 
 			// Notify listeners
-            OnConfigurationChanged(new ConfigurationChangedEventArgs(configurationMessages));
+			OnConfigurationChanged(new ConfigurationChangedEventArgs(configurationMessages));
 		}
 
 		#endregion Implementation of IXmlRepositoryConfigurator
@@ -877,9 +877,9 @@ namespace log4net.Repository.Hierarchy
 					}
 				}
 				if (i == 0) {
-				    // logger name starts with a dot
-				    // and we've hit the start
-				    break;
+					// logger name starts with a dot
+					// and we've hit the start
+					break;
 				}
 			}
 
@@ -1066,21 +1066,21 @@ namespace log4net.Repository.Hierarchy
 
 		private bool m_emittedNoAppenderWarning = false;
 
-	    private event LoggerCreationEventHandler m_loggerCreatedEvent;
+		private event LoggerCreationEventHandler m_loggerCreatedEvent;
 
 		#endregion Private Instance Fields
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the Hierarchy class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(Hierarchy);
+		/// <summary>
+		/// The fully qualified type of the Hierarchy class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(Hierarchy);
 
-	    #endregion Private Static Fields
+		#endregion Private Static Fields
 	}
 }

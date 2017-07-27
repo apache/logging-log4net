@@ -394,35 +394,35 @@ namespace log4net.Util
 		/// will be set per AppDomain.
 		/// </para>
 		/// </remarks>
-        [Obsolete("Use ProcessStartTimeUtc and convert to local time if needed.")]
+		[Obsolete("Use ProcessStartTimeUtc and convert to local time if needed.")]
 		public static DateTime ProcessStartTime
 		{
 			get { return s_processStartTimeUtc.ToLocalTime(); }
 		}
 
-        /// <summary>
-        /// Get the UTC start time for the current process.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// This is the UTC time at which the log4net library was loaded into the
-        /// AppDomain. Due to reports of a hang in the call to <c>System.Diagnostics.Process.StartTime</c>
-        /// this is not the start time for the current process.
-        /// </para>
-        /// <para>
-        /// The log4net library should be loaded by an application early during its
-        /// startup, therefore this start time should be a good approximation for
-        /// the actual start time.
-        /// </para>
-        /// <para>
-        /// Note that AppDomains may be loaded and unloaded within the
-        /// same process without the process terminating, however this start time
-        /// will be set per AppDomain.
-        /// </para>
-        /// </remarks>
-        public static DateTime ProcessStartTimeUtc
-        {
-            get { return s_processStartTimeUtc; }
+		/// <summary>
+		/// Get the UTC start time for the current process.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This is the UTC time at which the log4net library was loaded into the
+		/// AppDomain. Due to reports of a hang in the call to <c>System.Diagnostics.Process.StartTime</c>
+		/// this is not the start time for the current process.
+		/// </para>
+		/// <para>
+		/// The log4net library should be loaded by an application early during its
+		/// startup, therefore this start time should be a good approximation for
+		/// the actual start time.
+		/// </para>
+		/// <para>
+		/// Note that AppDomains may be loaded and unloaded within the
+		/// same process without the process terminating, however this start time
+		/// will be set per AppDomain.
+		/// </para>
+		/// </remarks>
+		public static DateTime ProcessStartTimeUtc
+		{
+			get { return s_processStartTimeUtc; }
 		}
 
 		/// <summary>
@@ -485,7 +485,7 @@ namespace log4net.Util
 #if NETCF
 			return "Not supported on Microsoft .NET Compact Framework";
 #elif NETSTANDARD1_3  // TODO Assembly.Location available in netstandard1.5
-            return "Not supported on .NET Core";
+			return "Not supported on .NET Core";
 #else
 			if (myAssembly.GlobalAssemblyCache)
 			{
@@ -752,20 +752,20 @@ namespace log4net.Util
 						{
 							// Found type in loaded assembly
 							LogLog.Debug(declaringType, "Loaded type ["+typeName+"] from assembly ["+assembly.FullName+"] by searching loaded assemblies.");
-                                                        if (assembly.GlobalAssemblyCache)
-                                                        {
-                                                            fallback = t;
-                                                        }
-                                                        else
-                                                        {
-                                                            return t;
-                                                        }
+														if (assembly.GlobalAssemblyCache)
+														{
+															fallback = t;
+														}
+														else
+														{
+															return t;
+														}
 						}
 					}
-                                        if (fallback != null)
-                                        {
-                                            return fallback;
-                                        }
+										if (fallback != null)
+										{
+											return fallback;
+										}
 				}
 
 				// Didn't find the type
@@ -937,20 +937,20 @@ namespace log4net.Util
 #endif
 		}
 
-        /// <summary>
-        /// Parse a string into an <see cref="Int16"/> value
-        /// </summary>
-        /// <param name="s">the string to parse</param>
-        /// <param name="val">out param where the parsed value is placed</param>
-        /// <returns><c>true</c> if the string was able to be parsed into an integer</returns>
-        /// <remarks>
-        /// <para>
-        /// Attempts to parse the string into an integer. If the string cannot
-        /// be parsed then this method returns <c>false</c>. The method does not throw an exception.
-        /// </para>
-        /// </remarks>
-        public static bool TryParse(string s, out short val)
-        {
+		/// <summary>
+		/// Parse a string into an <see cref="Int16"/> value
+		/// </summary>
+		/// <param name="s">the string to parse</param>
+		/// <param name="val">out param where the parsed value is placed</param>
+		/// <returns><c>true</c> if the string was able to be parsed into an integer</returns>
+		/// <remarks>
+		/// <para>
+		/// Attempts to parse the string into an integer. If the string cannot
+		/// be parsed then this method returns <c>false</c>. The method does not throw an exception.
+		/// </para>
+		/// </remarks>
+		public static bool TryParse(string s, out short val)
+		{
 #if NETCF
 			val = 0;
 			try
@@ -964,28 +964,28 @@ namespace log4net.Util
 
 			return false;
 #else
-            // Initialise out param
-            val = 0;
+			// Initialise out param
+			val = 0;
 
-            try
-            {
-                double doubleVal;
-                if (Double.TryParse(s, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out doubleVal))
-                {
-                    val = Convert.ToInt16(doubleVal);
-                    return true;
-                }
-            }
-            catch
-            {
-                // Ignore exception, just return false
-            }
+			try
+			{
+				double doubleVal;
+				if (Double.TryParse(s, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out doubleVal))
+				{
+					val = Convert.ToInt16(doubleVal);
+					return true;
+				}
+			}
+			catch
+			{
+				// Ignore exception, just return false
+			}
 
-            return false;
+			return false;
 #endif
-        }
+		}
 
-        /// <summary>
+		/// <summary>
 		/// Lookup an application setting
 		/// </summary>
 		/// <param name="key">the application settings key to lookup</param>
@@ -1085,28 +1085,28 @@ namespace log4net.Util
 #endif
 		}
 
-        /// <summary>
-        /// Tests two strings for equality, the ignoring case.
-        /// </summary>
-        /// <remarks>
-        /// If the platform permits, culture information is ignored completely (ordinal comparison).
-        /// The aim of this method is to provide a fast comparison that deals with <c>null</c> and ignores different casing.
-        /// It is not supposed to deal with various, culture-specific habits.
-        /// Use it to compare against pure ASCII constants, like keywords etc.
-        /// </remarks>
-        /// <param name="a">The one string.</param>
-        /// <param name="b">The other string.</param>
-        /// <returns><c>true</c> if the strings are equal, <c>false</c> otherwise.</returns>
-        public static Boolean EqualsIgnoringCase(String a, String b)
-        {
+		/// <summary>
+		/// Tests two strings for equality, the ignoring case.
+		/// </summary>
+		/// <remarks>
+		/// If the platform permits, culture information is ignored completely (ordinal comparison).
+		/// The aim of this method is to provide a fast comparison that deals with <c>null</c> and ignores different casing.
+		/// It is not supposed to deal with various, culture-specific habits.
+		/// Use it to compare against pure ASCII constants, like keywords etc.
+		/// </remarks>
+		/// <param name="a">The one string.</param>
+		/// <param name="b">The other string.</param>
+		/// <returns><c>true</c> if the strings are equal, <c>false</c> otherwise.</returns>
+		public static Boolean EqualsIgnoringCase(String a, String b)
+		{
 #if NET_1_0 || NET_1_1 || NETCF_1_0
-            return string.Compare(a, b, true, System.Globalization.CultureInfo.InvariantCulture) == 0
+			return string.Compare(a, b, true, System.Globalization.CultureInfo.InvariantCulture) == 0
 #elif NETSTANDARD1_3
-            return CultureInfo.InvariantCulture.CompareInfo.Compare(a, b, CompareOptions.IgnoreCase) == 0;
+			return CultureInfo.InvariantCulture.CompareInfo.Compare(a, b, CompareOptions.IgnoreCase) == 0;
 #else // >= .NET-2.0
-            return String.Equals(a, b, StringComparison.OrdinalIgnoreCase);
+			return String.Equals(a, b, StringComparison.OrdinalIgnoreCase);
 #endif
-        }
+		}
 
 		#endregion Public Static Methods
 
@@ -1168,14 +1168,14 @@ namespace log4net.Util
 
 		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the SystemInfo class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(SystemInfo);
+		/// <summary>
+		/// The fully qualified type of the SystemInfo class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(SystemInfo);
 
 		/// <summary>
 		/// Cache the host name for the current machine

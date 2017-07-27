@@ -128,23 +128,23 @@ namespace log4net
 		}
 #endif // !NETSTANDARD1_3
 
-        /// <summary>
-        /// Returns the named logger if it exists.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// If the named logger exists (in the specified repository) then it
-        /// returns a reference to the logger, otherwise it returns
-        /// <c>null</c>.
-        /// </para>
-        /// </remarks>
-        /// <param name="repository">The repository to lookup in.</param>
-        /// <param name="name">The fully qualified logger name to look for.</param>
-        /// <returns>
-        /// The logger found, or <c>null</c> if the logger doesn't exist in the specified
-        /// repository.
-        /// </returns>
-        public static ILog Exists(string repository, string name)
+		/// <summary>
+		/// Returns the named logger if it exists.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// If the named logger exists (in the specified repository) then it
+		/// returns a reference to the logger, otherwise it returns
+		/// <c>null</c>.
+		/// </para>
+		/// </remarks>
+		/// <param name="repository">The repository to lookup in.</param>
+		/// <param name="name">The fully qualified logger name to look for.</param>
+		/// <returns>
+		/// The logger found, or <c>null</c> if the logger doesn't exist in the specified
+		/// repository.
+		/// </returns>
+		public static ILog Exists(string repository, string name)
 		{
 			return WrapLogger(LoggerManager.Exists(repository, name));
 		}
@@ -751,27 +751,27 @@ namespace log4net
 			return LoggerManager.GetAllRepositories();
 		}
 
-            /// <summary>
-            /// Flushes logging events buffered in all configured appenders in the default repository.
-            /// </summary>
-            /// <param name="millisecondsTimeout">The maximum time in milliseconds to wait for logging events from asycnhronous appenders to be flushed.</param>
-            /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
-            public static bool Flush(int millisecondsTimeout)
-            {
+			/// <summary>
+			/// Flushes logging events buffered in all configured appenders in the default repository.
+			/// </summary>
+			/// <param name="millisecondsTimeout">The maximum time in milliseconds to wait for logging events from asycnhronous appenders to be flushed.</param>
+			/// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+			public static bool Flush(int millisecondsTimeout)
+			{
 #if !NETSTANDARD1_3 // Excluded because GetCallingAssembly() is not available in CoreFX (https://github.com/dotnet/corefx/issues/2221).
-                Appender.IFlushable flushableRepository = LoggerManager.GetRepository(Assembly.GetCallingAssembly()) as Appender.IFlushable;
-                if (flushableRepository == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    return flushableRepository.Flush(millisecondsTimeout);
-                }
+				Appender.IFlushable flushableRepository = LoggerManager.GetRepository(Assembly.GetCallingAssembly()) as Appender.IFlushable;
+				if (flushableRepository == null)
+				{
+					return false;
+				}
+				else
+				{
+					return flushableRepository.Flush(millisecondsTimeout);
+				}
 #else
-                return false;
+				return false;
 #endif
-            }
+			}
 
 		#endregion Domain & Repository Manager Methods
 

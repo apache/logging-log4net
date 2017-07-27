@@ -137,7 +137,7 @@ namespace log4net.Appender
 			set { m_pickupDir = value; }
 		}
 
- 		/// <summary>
+		/// <summary>
 		/// Gets or sets the file extension for the generated files
 		/// </summary>
 		/// <value>

@@ -24,27 +24,27 @@ using log4net.Layout;
 
 namespace SampleLayoutsApp.Layout
 {
-    public class LevelPatternLayout : PatternLayout
-    {
-        private readonly Hashtable m_levelToPatternLayout = new Hashtable();
+	public class LevelPatternLayout : PatternLayout
+	{
+		private readonly Hashtable m_levelToPatternLayout = new Hashtable();
 
-        public override void Format(TextWriter writer, LoggingEvent loggingEvent)
-        {
-            PatternLayout patternLayout = m_levelToPatternLayout[loggingEvent.Level] as PatternLayout;
+		public override void Format(TextWriter writer, LoggingEvent loggingEvent)
+		{
+			PatternLayout patternLayout = m_levelToPatternLayout[loggingEvent.Level] as PatternLayout;
 
-            if (patternLayout == null)
-            {
-                base.Format(writer, loggingEvent);
-            }
-            else
-            {
-                patternLayout.Format(writer, loggingEvent);
-            }
-        }
+			if (patternLayout == null)
+			{
+				base.Format(writer, loggingEvent);
+			}
+			else
+			{
+				patternLayout.Format(writer, loggingEvent);
+			}
+		}
 
-        public void AddLevelConversionPattern(LevelConversionPattern levelLayout)
-        {
-            m_levelToPatternLayout[levelLayout.Level] = new PatternLayout(levelLayout.ConversionPattern);
-        }
-    }
+		public void AddLevelConversionPattern(LevelConversionPattern levelLayout)
+		{
+			m_levelToPatternLayout[levelLayout.Level] = new PatternLayout(levelLayout.ConversionPattern);
+		}
+	}
 }

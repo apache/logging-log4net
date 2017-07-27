@@ -425,7 +425,7 @@ namespace log4net.Repository.Hierarchy
 			{
 				if (IsEnabledFor(level))
 				{
-                    ForcedLog((callerStackBoundaryDeclaringType != null) ? callerStackBoundaryDeclaringType : declaringType, level, message, exception);
+					ForcedLog((callerStackBoundaryDeclaringType != null) ? callerStackBoundaryDeclaringType : declaringType, level, message, exception);
 				}
 			}
 			catch (Exception ex)
@@ -536,7 +536,7 @@ namespace log4net.Repository.Hierarchy
 			get { return m_hierarchy; }
 		}
 
-  		#endregion Implementation of ILogger
+		#endregion Implementation of ILogger
 
 		/// <summary>
 		/// Deliver the <see cref="LoggingEvent"/> to the attached appenders.
@@ -665,7 +665,7 @@ namespace log4net.Repository.Hierarchy
 		{
 			if (IsEnabledFor(level))
 			{
-                ForcedLog(declaringType, level, message, exception);
+				ForcedLog(declaringType, level, message, exception);
 			}
 		}
 
@@ -709,10 +709,10 @@ namespace log4net.Repository.Hierarchy
 
 		#region Private Static Fields
 
-        /// <summary>
-        /// The fully qualified type of the Logger class.
-        /// </summary>
-        private readonly static Type declaringType = typeof(Logger);
+		/// <summary>
+		/// The fully qualified type of the Logger class.
+		/// </summary>
+		private readonly static Type declaringType = typeof(Logger);
 
 		#endregion Private Static Fields
 

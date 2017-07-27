@@ -420,10 +420,10 @@ namespace log4net.Util
 			// Add all the builtin patterns
 			foreach(DictionaryEntry entry in s_globalRulesRegistry)
 			{
-                ConverterInfo converterInfo = new ConverterInfo();
-                converterInfo.Name = (string)entry.Key;
-                converterInfo.Type = (Type)entry.Value;
-                patternParser.PatternConverters.Add(entry.Key, converterInfo);
+				ConverterInfo converterInfo = new ConverterInfo();
+				converterInfo.Name = (string)entry.Key;
+				converterInfo.Type = (Type)entry.Value;
+				patternParser.PatternConverters.Add(entry.Key, converterInfo);
 			}
 			// Add the instance patterns
 			foreach(DictionaryEntry entry in m_instanceRulesRegistry)
@@ -488,13 +488,13 @@ namespace log4net.Util
 		/// </remarks>
 		public void AddConverter(ConverterInfo converterInfo)
 		{
-            if (converterInfo == null) throw new ArgumentNullException("converterInfo");
+			if (converterInfo == null) throw new ArgumentNullException("converterInfo");
 
-            if (!typeof(PatternConverter).IsAssignableFrom(converterInfo.Type))
-            {
-                throw new ArgumentException("The converter type specified [" + converterInfo.Type + "] must be a subclass of log4net.Util.PatternConverter", "converterInfo");
-            }
-            m_instanceRulesRegistry[converterInfo.Name] = converterInfo;
+			if (!typeof(PatternConverter).IsAssignableFrom(converterInfo.Type))
+			{
+				throw new ArgumentException("The converter type specified [" + converterInfo.Type + "] must be a subclass of log4net.Util.PatternConverter", "converterInfo");
+			}
+			m_instanceRulesRegistry[converterInfo.Name] = converterInfo;
 		}
 
 		/// <summary>
@@ -512,11 +512,11 @@ namespace log4net.Util
 			if (name == null) throw new ArgumentNullException("name");
 			if (type == null) throw new ArgumentNullException("type");
 
-            ConverterInfo converterInfo = new ConverterInfo();
-            converterInfo.Name = name;
-            converterInfo.Type = type;
+			ConverterInfo converterInfo = new ConverterInfo();
+			converterInfo.Name = name;
+			converterInfo.Type = type;
 
-            AddConverter(converterInfo);
+			AddConverter(converterInfo);
 		}
 	}
 }

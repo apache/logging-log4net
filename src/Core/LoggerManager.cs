@@ -99,7 +99,7 @@ namespace log4net.Core
 			}
 
 			// Dump out our assembly version into the log if debug is enabled
-            LogLog.Debug(declaringType, GetVersionInfo());
+			LogLog.Debug(declaringType, GetVersionInfo());
 
 			// Set the default repository selector
 #if NETCF
@@ -812,7 +812,7 @@ namespace log4net.Core
 			sb.Append("Loaded from [").Append(SystemInfo.AssemblyLocationInfo(myAssembly)).Append("]. ");
 			sb.Append("(.NET Runtime [").Append(Environment.Version.ToString()).Append("]");
 #if (!SSCLI)
-            sb.Append(" on ").Append(Environment.OSVersion.ToString());
+			sb.Append(" on ").Append(Environment.OSVersion.ToString());
 #endif
 #endif // NETSTANDARD1_3
 			sb.Append(")");
@@ -861,14 +861,14 @@ namespace log4net.Core
 
 		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the LoggerManager class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(LoggerManager);
+		/// <summary>
+		/// The fully qualified type of the LoggerManager class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(LoggerManager);
 
 		/// <summary>
 		/// Initialize the default repository selector

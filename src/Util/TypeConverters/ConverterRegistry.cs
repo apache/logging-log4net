@@ -277,14 +277,14 @@ namespace log4net.Util.TypeConverters
 
 		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the ConverterRegistry class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(ConverterRegistry);
+		/// <summary>
+		/// The fully qualified type of the ConverterRegistry class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(ConverterRegistry);
 
 		/// <summary>
 		/// Mapping from <see cref="Type" /> to type converter.

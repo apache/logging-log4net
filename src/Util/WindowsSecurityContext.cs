@@ -276,10 +276,10 @@ namespace log4net.Util
 		/// </para>
 		/// </remarks>
 #if NET_4_0 || MONO_4_0
-        [System.Security.SecuritySafeCritical]
+		[System.Security.SecuritySafeCritical]
 #endif
-        [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
-        private static WindowsIdentity LogonUser(string userName, string domainName, string password)
+		[System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
+		private static WindowsIdentity LogonUser(string userName, string domainName, string password)
 		{
 			const int LOGON32_PROVIDER_DEFAULT = 0;
 			//This parameter causes LogonUser to create a primary token.

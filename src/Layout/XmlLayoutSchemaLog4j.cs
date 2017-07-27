@@ -109,16 +109,16 @@ namespace log4net.Layout
   <log4j:message><![CDATA[errormsg 3]]></log4j:message>
   <log4j:NDC><![CDATA[third]]></log4j:NDC>
   <log4j:MDC>
-    <log4j:data name="some string" value="some valuethird"/>
+	<log4j:data name="some string" value="some valuethird"/>
   </log4j:MDC>
   <log4j:throwable><![CDATA[java.lang.Exception: someexception-third
- 	at org.apache.log4j.chainsaw.Generator.run(Generator.java:94)
+	at org.apache.log4j.chainsaw.Generator.run(Generator.java:94)
 ]]></log4j:throwable>
   <log4j:locationInfo class="org.apache.log4j.chainsaw.Generator"
 method="run" file="Generator.java" line="94"/>
   <log4j:properties>
-    <log4j:data name="log4jmachinename" value="windows"/>
-    <log4j:data name="log4japp" value="udp-generator"/>
+	<log4j:data name="log4jmachinename" value="windows"/>
+	<log4j:data name="log4japp" value="udp-generator"/>
   </log4j:properties>
 </log4j:event>
 

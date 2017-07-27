@@ -173,17 +173,17 @@ namespace log4net.Util.PatternStringConverters
 			}
 		}
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the DatePatternConverter class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(DatePatternConverter);
+		/// <summary>
+		/// The fully qualified type of the DatePatternConverter class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(DatePatternConverter);
 
-	    #endregion Private Static Fields
+		#endregion Private Static Fields
 	}
 }

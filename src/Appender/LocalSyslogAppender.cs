@@ -338,9 +338,9 @@ namespace log4net.Appender
 		/// </para>
 		/// </remarks>
 #if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
-        [System.Security.SecuritySafeCritical]
+		[System.Security.SecuritySafeCritical]
 #endif
-        public override void ActivateOptions()
+		public override void ActivateOptions()
 		{
 			base.ActivateOptions();
 
@@ -379,12 +379,12 @@ namespace log4net.Appender
 		/// </para>
 		/// </remarks>
 #if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
-        [System.Security.SecuritySafeCritical]
+		[System.Security.SecuritySafeCritical]
 #endif
 #if !NETSTANDARD1_3
-        [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
+		[System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
 #endif
-        protected override void Append(LoggingEvent loggingEvent)
+		protected override void Append(LoggingEvent loggingEvent)
 		{
 			int priority = GeneratePriority(m_facility, GetSeverity(loggingEvent.Level));
 			string message = RenderLoggingEvent(loggingEvent);
@@ -403,9 +403,9 @@ namespace log4net.Appender
 		/// </para>
 		/// </remarks>
 #if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
-        [System.Security.SecuritySafeCritical]
+		[System.Security.SecuritySafeCritical]
 #endif
-        protected override void OnClose()
+		protected override void OnClose()
 		{
 			base.OnClose();
 

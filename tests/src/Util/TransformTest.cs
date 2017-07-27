@@ -25,21 +25,21 @@ using NUnit.Framework;
 
 namespace log4net.Tests.Util {
 
-    [TestFixture]
-    public class TransformTest
-    {
-        [Test]
-        public void MaskXmlInvalidCharactersAllowsJapaneseCharacters()
-        {
-            string kome = "\u203B";
-            Assert.AreEqual(kome, Transform.MaskXmlInvalidCharacters(kome, "?"));
-        }
+	[TestFixture]
+	public class TransformTest
+	{
+		[Test]
+		public void MaskXmlInvalidCharactersAllowsJapaneseCharacters()
+		{
+			string kome = "\u203B";
+			Assert.AreEqual(kome, Transform.MaskXmlInvalidCharacters(kome, "?"));
+		}
 
-        [Test]
-        public void MaskXmlInvalidCharactersMasks0Char()
-        {
-            string c = "\u0000";
-            Assert.AreEqual("?", Transform.MaskXmlInvalidCharacters(c, "?"));
-        }
-    }
+		[Test]
+		public void MaskXmlInvalidCharactersMasks0Char()
+		{
+			string c = "\u0000";
+			Assert.AreEqual("?", Transform.MaskXmlInvalidCharacters(c, "?"));
+		}
+	}
 }

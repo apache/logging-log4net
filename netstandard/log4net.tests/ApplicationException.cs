@@ -21,7 +21,7 @@ using System;
 
 namespace log4net.Tests
 {
-    public class ApplicationException : Exception
-    {
-    }
+	public class ApplicationException : Exception
+	{
+	}
 }
