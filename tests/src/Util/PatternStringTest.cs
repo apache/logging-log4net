@@ -44,7 +44,7 @@ namespace log4net.Tests.Util
 
                 string evaluatedPattern = patternString.Format();
 
-                Environment.SpecialFolder specialFolder = 
+                Environment.SpecialFolder specialFolder =
                     (Environment.SpecialFolder)Enum.Parse(typeof(Environment.SpecialFolder), specialFolderName);
 
                 Assert.AreEqual(Environment.GetFolderPath(specialFolder), evaluatedPattern);

@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -24,8 +24,8 @@ using log4net.Core;
 namespace log4net.Util
 {
 	/// <summary>
-	/// Implements log4net's default error handling policy which consists 
-	/// of emitting a message for the first error in an appender and 
+	/// Implements log4net's default error handling policy which consists
+	/// of emitting a message for the first error in an appender and
 	/// ignoring all subsequent errors.
 	/// </summary>
 	/// <remarks>
@@ -101,7 +101,7 @@ namespace log4net.Util
 		/// Invokes <see cref="FirstError"/> if and only if this is the first error or the first error after <see cref="Reset"/> has been called.
 		/// </para>
 		/// </remarks>
-		public void Error(string message, Exception e, ErrorCode errorCode) 
+		public void Error(string message, Exception e, ErrorCode errorCode)
 		{
 			if (m_firstTime)
 			{
@@ -142,7 +142,7 @@ namespace log4net.Util
         /// Invokes <see cref="FirstError"/> if and only if this is the first error or the first error after <see cref="Reset"/> has been called.
         /// </para>
         /// </remarks>
-		public void Error(string message, Exception e) 
+		public void Error(string message, Exception e)
 		{
 			Error(message, e, ErrorCode.GenericFailure);
 		}
@@ -156,7 +156,7 @@ namespace log4net.Util
         /// Invokes <see cref="FirstError"/> if and only if this is the first error or the first error after <see cref="Reset"/> has been called.
         /// </para>
         /// </remarks>
-		public void Error(string message) 
+		public void Error(string message)
 		{
 			Error(message, null, ErrorCode.GenericFailure);
 		}
@@ -186,10 +186,10 @@ namespace log4net.Util
 		/// </summary>
 		public DateTime EnabledDate
 		{
-			get 
+			get
             {
                 if (m_enabledDateUtc == DateTime.MinValue) return DateTime.MinValue;
-                return m_enabledDateUtc.ToLocalTime(); 
+                return m_enabledDateUtc.ToLocalTime();
             }
 		}
 

@@ -47,7 +47,7 @@ namespace log4net.Tests.Appender
             debugAppender.Category = null;
 
             TestErrorHandler testErrHandler = new TestErrorHandler();
-            debugAppender.ErrorHandler = testErrHandler;            
+            debugAppender.ErrorHandler = testErrHandler;
 
             BasicConfigurator.Configure(rep, debugAppender);
 
@@ -147,7 +147,7 @@ namespace log4net.Tests.Appender
             private bool m_errorOccured = false;
 
             public bool ErrorOccured
-            { 
+            {
                 get { return m_errorOccured; }
             }
             #region IErrorHandler Members

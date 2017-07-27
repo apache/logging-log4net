@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -35,7 +35,7 @@ namespace log4net.Plugin
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// This plugin publishes an instance of <see cref="IRemoteLoggingSink"/> 
+	/// This plugin publishes an instance of <see cref="IRemoteLoggingSink"/>
 	/// on a specified <see cref="SinkUri"/>. This listens for logging events delivered from
 	/// a remote <see cref="log4net.Appender.RemotingAppender"/>.
 	/// </para>
@@ -68,7 +68,7 @@ namespace log4net.Plugin
 		/// <summary>
 		/// Construct with sink Uri.
 		/// </summary>
-		/// <param name="sinkUri">The name to publish the sink under in the remoting infrastructure. 
+		/// <param name="sinkUri">The name to publish the sink under in the remoting infrastructure.
 		/// See <see cref="SinkUri"/> for more details.</param>
 		/// <remarks>
 		/// <para>
@@ -97,8 +97,8 @@ namespace log4net.Plugin
 		/// <see cref="M:RemotingServices.Marshal(MarshalByRefObject,String,Type)"/>
 		/// </para>
 		/// </remarks>
-		public virtual string SinkUri 
-		{ 
+		public virtual string SinkUri
+		{
 			get { return m_sinkUri; }
 			set { m_sinkUri = value; }
 		}
@@ -127,11 +127,11 @@ namespace log4net.Plugin
 			base.Attach(repository);
 
 			// Create the sink and marshal it
-			m_sink = new RemoteLoggingSinkImpl(repository); 
+			m_sink = new RemoteLoggingSinkImpl(repository);
 
 			try
 			{
-				RemotingServices.Marshal(m_sink, m_sinkUri, typeof(IRemoteLoggingSink));		
+				RemotingServices.Marshal(m_sink, m_sinkUri, typeof(IRemoteLoggingSink));
 			}
 			catch(Exception ex)
 			{
@@ -242,13 +242,13 @@ namespace log4net.Plugin
 			#region Override implementation of MarshalByRefObject
 
 			/// <summary>
-			/// Obtains a lifetime service object to control the lifetime 
+			/// Obtains a lifetime service object to control the lifetime
 			/// policy for this instance.
 			/// </summary>
 			/// <returns><c>null</c> to indicate that this instance should live forever.</returns>
 			/// <remarks>
 			/// <para>
-			/// Obtains a lifetime service object to control the lifetime 
+			/// Obtains a lifetime service object to control the lifetime
 			/// policy for this instance. This object should live forever
 			/// therefore this implementation returns <c>null</c>.
 			/// </para>

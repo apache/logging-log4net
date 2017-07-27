@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -48,7 +48,7 @@ namespace log4net.Plugin
 			///	Advances the enumerator to the next element in the collection.
 			/// </summary>
 			/// <returns>
-			///	<c>true</c> if the enumerator was successfully advanced to the next element; 
+			///	<c>true</c> if the enumerator was successfully advanced to the next element;
 			///	<c>false</c> if the enumerator has passed the end of the collection.
 			/// </returns>
 			/// <exception cref="InvalidOperationException">
@@ -73,7 +73,7 @@ namespace log4net.Plugin
 		private int m_version = 0;
 
 		#endregion Implementation (data)
-	
+
 		#region Static Wrappers
 
 		/// <summary>
@@ -102,7 +102,7 @@ namespace log4net.Plugin
 		{
 			m_array = new IPlugin[DEFAULT_CAPACITY];
 		}
-		
+
 		/// <summary>
 		/// Initializes a new instance of the <c>PluginCollection</c> class
 		/// that has the specified initial capacity.
@@ -136,7 +136,7 @@ namespace log4net.Plugin
 			m_array = new IPlugin[a.Length];
 			AddRange(a);
 		}
-		
+
 		/// <summary>
 		/// Initializes a new instance of the <c>PluginCollection</c> class
 		/// that contains elements copied from the specified <see cref="IPlugin"/> collection.
@@ -153,7 +153,7 @@ namespace log4net.Plugin
 		/// Used to access protected constructor
 		/// </summary>
 		/// <exclude/>
-		protected internal enum Tag 
+		protected internal enum Tag
 		{
 			/// <summary>
 			/// A value
@@ -172,7 +172,7 @@ namespace log4net.Plugin
 		}
 
 		#endregion
-		
+
 		#region Operations (type-safe ICollection)
 
 		/// <summary>
@@ -205,8 +205,8 @@ namespace log4net.Plugin
 			{
 				throw new System.ArgumentException("Destination array was not long enough.");
 			}
-			
-			Array.Copy(m_array, 0, array, start, m_count); 
+
+			Array.Copy(m_array, 0, array, start, m_count);
 		}
 
 		/// <summary>
@@ -230,7 +230,7 @@ namespace log4net.Plugin
 		}
 
 		#endregion
-		
+
 		#region Operations (type-safe IList)
 
 		/// <summary>
@@ -250,13 +250,13 @@ namespace log4net.Plugin
 			get
 			{
 				ValidateIndex(index); // throws
-				return m_array[index]; 
+				return m_array[index];
 			}
 			set
 			{
 				ValidateIndex(index); // throws
-				++m_version; 
-				m_array[index] = value; 
+				++m_version;
+				m_array[index] = value;
 			}
 		}
 
@@ -277,7 +277,7 @@ namespace log4net.Plugin
 
 			return m_count++;
 		}
-		
+
 		/// <summary>
 		/// Removes all elements from the <c>PluginCollection</c>.
 		/// </summary>
@@ -287,7 +287,7 @@ namespace log4net.Plugin
 			m_array = new IPlugin[DEFAULT_CAPACITY];
 			m_count = 0;
 		}
-		
+
 		/// <summary>
 		/// Creates a shallow copy of the <see cref="PluginCollection"/>.
 		/// </summary>
@@ -325,7 +325,7 @@ namespace log4net.Plugin
 		/// </summary>
 		/// <param name="item">The <see cref="IPlugin"/> to locate in the <c>PluginCollection</c>.</param>
 		/// <returns>
-		/// The zero-based index of the first occurrence of <paramref name="item"/> 
+		/// The zero-based index of the first occurrence of <paramref name="item"/>
 		/// in the entire <c>PluginCollection</c>, if found; otherwise, -1.
 		/// </returns>
 		public virtual int IndexOf(IPlugin item)
@@ -353,7 +353,7 @@ namespace log4net.Plugin
 		public virtual void Insert(int index, IPlugin item)
 		{
 			ValidateIndex(index, true); // throws
-			
+
 			if (m_count == m_array.Length)
 			{
 				EnsureCapacity(m_count + 1);
@@ -377,7 +377,7 @@ namespace log4net.Plugin
 		/// The specified <see cref="IPlugin"/> was not found in the <c>PluginCollection</c>.
 		/// </exception>
 		public virtual void Remove(IPlugin item)
-		{		   
+		{
 			int i = IndexOf(item);
 			if (i < 0)
 			{
@@ -399,16 +399,16 @@ namespace log4net.Plugin
 		public virtual void RemoveAt(int index)
 		{
 			ValidateIndex(index); // throws
-			
+
 			m_count--;
 
 			if (index < m_count)
 			{
 				Array.Copy(m_array, index + 1, m_array, index, m_count - index);
 			}
-			
+
 			// We can't set the deleted entry equal to null, because it might be a value type.
-			// Instead, we'll create an empty single-element array of the right type and copy it 
+			// Instead, we'll create an empty single-element array of the right type and copy it
 			// over the entry we want to erase.
 			IPlugin[] temp = new IPlugin[1];
 			Array.Copy(temp, 0, m_array, m_count, 1);
@@ -436,7 +436,7 @@ namespace log4net.Plugin
 		#endregion
 
 		#region Operations (type-safe IEnumerable)
-		
+
 		/// <summary>
 		/// Returns an enumerator that can iterate through the <c>PluginCollection</c>.
 		/// </summary>
@@ -449,7 +449,7 @@ namespace log4net.Plugin
 		#endregion
 
 		#region Public helpers (just to mimic some nice features of ArrayList)
-		
+
 		/// <summary>
 		/// Gets or sets the number of elements the <c>PluginCollection</c> can contain.
 		/// </summary>
@@ -458,9 +458,9 @@ namespace log4net.Plugin
 		/// </value>
 		public virtual int Capacity
 		{
-			get 
-			{ 
-				return m_array.Length; 
+			get
+			{
+				return m_array.Length;
 			}
 			set
 			{
@@ -496,7 +496,7 @@ namespace log4net.Plugin
 			{
 				EnsureCapacity(m_count + x.Count);
 			}
-			
+
 			Array.Copy(x.m_array, 0, m_array, m_count, x.Count);
 			m_count += x.Count;
 			m_version++;
@@ -542,7 +542,7 @@ namespace log4net.Plugin
 
 			return m_count;
 		}
-		
+
 		/// <summary>
 		/// Sets the capacity to the actual number of elements.
 		/// </summary>
@@ -591,7 +591,7 @@ namespace log4net.Plugin
 		}
 
 		#endregion
-		
+
 		#region Implementation (ICollection)
 
 		void ICollection.CopyTo(Array array, int start)
@@ -659,15 +659,15 @@ namespace log4net.Plugin
 		private sealed class Enumerator : IEnumerator, IPluginCollectionEnumerator
 		{
 			#region Implementation (data)
-			
+
 			private readonly PluginCollection m_collection;
 			private int m_index;
 			private int m_version;
-			
+
 			#endregion Implementation (data)
-		
+
 			#region Construction
-			
+
 			/// <summary>
 			/// Initializes a new instance of the <c>Enumerator</c> class.
 			/// </summary>
@@ -678,11 +678,11 @@ namespace log4net.Plugin
 				m_index = -1;
 				m_version = tc.m_version;
 			}
-			
+
 			#endregion
-	
+
 			#region Operations (type-safe IEnumerator)
-			
+
 			/// <summary>
 			/// Gets the current element in the collection.
 			/// </summary>
@@ -698,7 +698,7 @@ namespace log4net.Plugin
 			/// Advances the enumerator to the next element in the collection.
 			/// </summary>
 			/// <returns>
-			/// <c>true</c> if the enumerator was successfully advanced to the next element; 
+			/// <c>true</c> if the enumerator was successfully advanced to the next element;
 			/// <c>false</c> if the enumerator has passed the end of the collection.
 			/// </returns>
 			/// <exception cref="InvalidOperationException">
@@ -724,14 +724,14 @@ namespace log4net.Plugin
 			}
 
 			#endregion
-	
+
 			#region Implementation (IEnumerator)
-			
+
 			object IEnumerator.Current
 			{
 				get { return this.Current; }
 			}
-			
+
 			#endregion
 		}
 
@@ -797,7 +797,7 @@ namespace log4net.Plugin
 			{
 				throw new NotSupportedException("This is a Read Only Collection and can not be modified");
 			}
-            
+
 			public override void Clear()
 			{
 				throw new NotSupportedException("This is a Read Only Collection and can not be modified");
@@ -819,7 +819,7 @@ namespace log4net.Plugin
 			}
 
 			public override void Remove(IPlugin x)
-			{           
+			{
 				throw new NotSupportedException("This is a Read Only Collection and can not be modified");
 			}
 

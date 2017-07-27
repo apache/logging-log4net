@@ -136,7 +136,7 @@ namespace log4net.Tests.Appender
                 <root>
                     <level value=""ALL"" />
                     <appender-ref ref=""AdoNetAppender"" />
-                  </root>  
+                  </root>
                 </log4net>");
             #endregion
 
@@ -146,11 +146,11 @@ namespace log4net.Tests.Appender
             log.Debug("Message");
 
             IDbCommand command = Log4NetCommand.MostRecentInstance;
-            
+
             Assert.AreEqual(
                 "INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message],[Exception]) VALUES (@log_date, @thread, @log_level, @logger, @message, @exception)",
                 command.CommandText);
-            
+
             Assert.AreEqual(6, command.Parameters.Count);
 
             IDbDataParameter param = (IDbDataParameter)command.Parameters["@message"];
@@ -225,7 +225,7 @@ namespace log4net.Tests.Appender
                 <root>
                     <level value=""ALL"" />
                     <appender-ref ref=""AdoNetAppender"" />
-                  </root>  
+                  </root>
                 </log4net>");
             #endregion
 
@@ -278,19 +278,19 @@ namespace log4net.Tests.Appender
                         <layout type="" log4net.Layout.RawPropertyLayout"">
                            <key value=""ProductId"" />
                         </layout>
-                    </parameter>                    
+                    </parameter>
                 </appender>
                 <root>
                     <level value=""ALL"" />
                     <appender-ref ref=""AdoNetAppender"" />
-                  </root>  
+                  </root>
                 </log4net>");
             #endregion
 
             ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
             XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
             ILog log = LogManager.GetLogger(rep.Name, "NullPropertyXmlConfig");
-            
+
             log.Debug("Message");
             IDbCommand command = Log4NetCommand.MostRecentInstance;
             IDbDataParameter param = (IDbDataParameter)command.Parameters["@productId"];
@@ -319,7 +319,7 @@ namespace log4net.Tests.Appender
             ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
             BasicConfigurator.Configure(rep, appender);
             ILog log = LogManager.GetLogger(rep.Name, "NullPropertyProgmaticConfig");
-            
+
             log.Debug("Message");
             IDbCommand command = Log4NetCommand.MostRecentInstance;
             IDbDataParameter param = (IDbDataParameter)command.Parameters["@productId"];

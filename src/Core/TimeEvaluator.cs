@@ -1,10 +1,10 @@
 #region Copyright & License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -26,7 +26,7 @@ namespace log4net.Core
     /// </summary>
     /// <remarks>
     /// <para>
-    /// This evaluator will trigger if the specified time period 
+    /// This evaluator will trigger if the specified time period
     /// <see cref="Interval"/> has passed since last check.
     /// </para>
     /// </remarks>
@@ -56,7 +56,7 @@ namespace log4net.Core
         /// Create a new evaluator using the <see cref="DEFAULT_INTERVAL"/> time threshold in seconds.
         /// </para>
         /// <para>
-        /// This evaluator will trigger if the specified time period 
+        /// This evaluator will trigger if the specified time period
         /// <see cref="Interval"/> has passed since last check.
         /// </para>
         /// </remarks>
@@ -77,7 +77,7 @@ namespace log4net.Core
         /// Create a new evaluator using the specified time threshold in seconds.
         /// </para>
         /// <para>
-        /// This evaluator will trigger if the specified time period 
+        /// This evaluator will trigger if the specified time period
         /// <see cref="Interval"/> has passed since last check.
         /// </para>
         /// </remarks>
@@ -96,7 +96,7 @@ namespace log4net.Core
         /// </value>
         /// <remarks>
         /// <para>
-        /// This evaluator will trigger if the specified time period 
+        /// This evaluator will trigger if the specified time period
         /// <see cref="Interval"/> has passed since last check.
         /// </para>
         /// </remarks>
@@ -110,12 +110,12 @@ namespace log4net.Core
         /// Is this <paramref name="loggingEvent"/> the triggering event?
         /// </summary>
         /// <param name="loggingEvent">The event to check</param>
-        /// <returns>This method returns <c>true</c>, if the specified time period 
-        /// <see cref="Interval"/> has passed since last check.. 
+        /// <returns>This method returns <c>true</c>, if the specified time period
+        /// <see cref="Interval"/> has passed since last check..
         /// Otherwise it returns <c>false</c></returns>
         /// <remarks>
         /// <para>
-        /// This evaluator will trigger if the specified time period 
+        /// This evaluator will trigger if the specified time period
         /// <see cref="Interval"/> has passed since last check.
         /// </para>
         /// </remarks>

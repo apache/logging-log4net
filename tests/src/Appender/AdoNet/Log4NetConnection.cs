@@ -45,7 +45,7 @@ namespace log4net.Tests.Appender.AdoNet
 
         public ConnectionState State
         {
-            get 
+            get
             {
                 return open ? ConnectionState.Open : ConnectionState.Closed;
             }

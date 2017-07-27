@@ -66,7 +66,7 @@ namespace log4net.Tests.Hierarchy
             CountingAppender alpha = new CountingAppender();
             CountingAppender beta = new CountingAppender();
 
-            Repository.Hierarchy.Hierarchy hierarchy = 
+            Repository.Hierarchy.Hierarchy hierarchy =
                 (Repository.Hierarchy.Hierarchy)Utils.GetRepository();
 
             hierarchy.Root.AddAppender(alpha);

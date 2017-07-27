@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -54,13 +54,13 @@ namespace log4net.Appender
 	/// <para>
 	/// Syslog messages must have a facility and and a severity. The severity
 	/// is derived from the Level of the logging event.
-	/// The facility must be chosen from the set of defined syslog 
+	/// The facility must be chosen from the set of defined syslog
 	/// <see cref="SyslogFacility"/> values. The facilities list is predefined
 	/// and cannot be extended.
 	/// </para>
 	/// <para>
 	/// An identifier is specified with each log message. This can be specified
-	/// by setting the <see cref="Identity"/> property. The identity (also know 
+	/// by setting the <see cref="Identity"/> property. The identity (also know
 	/// as the tag) must not contain white space. The default value for the
 	/// identity is the application name (from <see cref="LoggingEvent.Domain"/>).
 	/// </para>
@@ -266,7 +266,7 @@ namespace log4net.Appender
 		/// Initializes a new instance of the <see cref="RemoteSyslogAppender" /> class.
 		/// </summary>
 		/// <remarks>
-		/// This instance of the <see cref="RemoteSyslogAppender" /> class is set up to write 
+		/// This instance of the <see cref="RemoteSyslogAppender" /> class is set up to write
 		/// to a remote syslog daemon.
 		/// </remarks>
 		public RemoteSyslogAppender()
@@ -287,7 +287,7 @@ namespace log4net.Appender
 		/// <remarks>
 		/// <para>
 		/// An identifier is specified with each log message. This can be specified
-		/// by setting the <see cref="Identity"/> property. The identity (also know 
+		/// by setting the <see cref="Identity"/> property. The identity (also know
 		/// as the tag) must not contain white space. The default value for the
 		/// identity is the application name (from <see cref="LoggingEvent.Domain"/>).
 		/// </para>
@@ -419,9 +419,9 @@ namespace log4net.Appender
             catch (Exception e)
             {
                 ErrorHandler.Error(
-                    "Unable to send logging event to remote syslog " +
-                    this.RemoteAddress.ToString() +
-                    " on port " +
+                    "Unable to send logging event to remote syslog "
+                    this.RemoteAddress.ToString()
+                    " on port "
                     this.RemotePort + ".",
                     e,
                     ErrorCode.WriteFailure);

@@ -53,15 +53,15 @@ namespace log4net.Tests.Util
                             <property>
                                <key value=""two-plus-two"" />
                                <value value=""4"" />
-                            </property> 
+                            </property>
                         </converter>
                         <conversionPattern value=""%propertyKeyCount"" />
                     </layout>
                   </appender>
                   <root>
-                    <level value=""ALL"" />                  
+                    <level value=""ALL"" />
                     <appender-ref ref=""StringAppender"" />
-                  </root>  
+                  </root>
                 </log4net>");
 
             ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
@@ -70,12 +70,12 @@ namespace log4net.Tests.Util
             ILog log = LogManager.GetLogger(rep.Name, "PatternLayoutConverterProperties");
             log.Debug("Message");
 
-            PropertyKeyCountPatternLayoutConverter converter = 
+            PropertyKeyCountPatternLayoutConverter converter =
                 PropertyKeyCountPatternLayoutConverter.MostRecentInstance;
             Assert.AreEqual(2, converter.Properties.Count);
             Assert.AreEqual("4", converter.Properties["two-plus-two"]);
 
-            StringAppender appender = 
+            StringAppender appender =
                 (StringAppender)LogManager.GetRepository(rep.Name).GetAppenders()[0];
             Assert.AreEqual("2", appender.GetString());
         }
@@ -99,15 +99,15 @@ namespace log4net.Tests.Util
                             <property>
                                <key value=""two-plus-two"" />
                                <value value=""4"" />
-                            </property> 
+                            </property>
                         </converter>
                         <conversionPattern value=""%propertyKeyCount"" />
                     </setting>
                   </appender>
                   <root>
-                    <level value=""ALL"" />                  
+                    <level value=""ALL"" />
                     <appender-ref ref=""PatternStringAppender"" />
-                  </root>  
+                  </root>
                 </log4net>");
 
             ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());

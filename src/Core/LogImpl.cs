@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -90,7 +90,7 @@ namespace log4net.Core
 	///   </item>
 	/// </list>
 	/// <para>
-	/// The values for these levels and their semantic meanings can be changed by 
+	/// The values for these levels and their semantic meanings can be changed by
 	/// configuring the <see cref="ILoggerRepository.LevelMap"/> for the repository.
 	/// </para>
 	/// </remarks>
@@ -149,23 +149,23 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// This method first checks if this logger is <c>DEBUG</c>
-		/// enabled by comparing the level of this logger with the 
+		/// enabled by comparing the level of this logger with the
 		/// <c>DEBUG</c> level. If this logger is
 		/// <c>DEBUG</c> enabled, then it converts the message object
 		/// (passed as parameter) to a string by invoking the appropriate
-		/// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then 
-		/// proceeds to call all the registered appenders in this logger 
-		/// and also higher in the hierarchy depending on the value of the 
+		/// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then
+		/// proceeds to call all the registered appenders in this logger
+		/// and also higher in the hierarchy depending on the value of the
 		/// additivity flag.
 		/// </para>
 		/// <para>
-		/// <b>WARNING</b> Note that passing an <see cref="Exception"/> 
-		/// to this method will print the name of the <see cref="Exception"/> 
-		/// but no stack trace. To print a stack trace use the 
+		/// <b>WARNING</b> Note that passing an <see cref="Exception"/>
+		/// to this method will print the name of the <see cref="Exception"/>
+		/// but no stack trace. To print a stack trace use the
 		/// <see cref="M:Debug(object,Exception)"/> form instead.
 		/// </para>
 		/// </remarks>
-		virtual public void Debug(object message) 
+		virtual public void Debug(object message)
 		{
 			Logger.Log(ThisDeclaringType, m_levelDebug, message, null);
 		}
@@ -186,7 +186,7 @@ namespace log4net.Core
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="M:Debug(object)"/>
-		virtual public void Debug(object message, Exception exception) 
+		virtual public void Debug(object message, Exception exception)
 		{
 			Logger.Log(ThisDeclaringType, m_levelDebug, message, exception);
 		}
@@ -213,7 +213,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void DebugFormat(string format, params object[] args) 
+		virtual public void DebugFormat(string format, params object[] args)
 		{
 			if (IsDebugEnabled)
 			{
@@ -243,7 +243,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void DebugFormat(string format, object arg0) 
+		virtual public void DebugFormat(string format, object arg0)
 		{
 			if (IsDebugEnabled)
 			{
@@ -274,7 +274,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void DebugFormat(string format, object arg0, object arg1) 
+		virtual public void DebugFormat(string format, object arg0, object arg1)
 		{
 			if (IsDebugEnabled)
 			{
@@ -306,7 +306,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void DebugFormat(string format, object arg0, object arg1, object arg2) 
+		virtual public void DebugFormat(string format, object arg0, object arg1, object arg2)
 		{
 			if (IsDebugEnabled)
 			{
@@ -332,7 +332,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void DebugFormat(IFormatProvider provider, string format, params object[] args) 
+		virtual public void DebugFormat(IFormatProvider provider, string format, params object[] args)
 		{
 			if (IsDebugEnabled)
 			{
@@ -347,27 +347,27 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// This method first checks if this logger is <c>INFO</c>
-		/// enabled by comparing the level of this logger with the 
+		/// enabled by comparing the level of this logger with the
 		/// <c>INFO</c> level. If this logger is
 		/// <c>INFO</c> enabled, then it converts the message object
 		/// (passed as parameter) to a string by invoking the appropriate
-		/// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then 
-		/// proceeds to call all the registered appenders in this logger 
-		/// and also higher in the hierarchy depending on the value of 
+		/// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then
+		/// proceeds to call all the registered appenders in this logger
+		/// and also higher in the hierarchy depending on the value of
 		/// the additivity flag.
 		/// </para>
 		/// <para>
-		/// <b>WARNING</b> Note that passing an <see cref="Exception"/> 
-		/// to this method will print the name of the <see cref="Exception"/> 
-		/// but no stack trace. To print a stack trace use the 
+		/// <b>WARNING</b> Note that passing an <see cref="Exception"/>
+		/// to this method will print the name of the <see cref="Exception"/>
+		/// but no stack trace. To print a stack trace use the
 		/// <see cref="M:Info(object,Exception)"/> form instead.
 		/// </para>
 		/// </remarks>
-		virtual public void Info(object message) 
+		virtual public void Info(object message)
 		{
 			Logger.Log(ThisDeclaringType, m_levelInfo, message, null);
 		}
-  
+
 		/// <summary>
 		/// Logs a message object with the <c>INFO</c> level.
 		/// </summary>
@@ -376,7 +376,7 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// Logs a message object with the <c>INFO</c> level including
-		/// the stack trace of the <see cref="Exception"/> <paramref name="exception"/> 
+		/// the stack trace of the <see cref="Exception"/> <paramref name="exception"/>
 		/// passed as a parameter.
 		/// </para>
 		/// <para>
@@ -384,7 +384,7 @@ namespace log4net.Core
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="M:Info(object)"/>
-		virtual public void Info(object message, Exception exception) 
+		virtual public void Info(object message, Exception exception)
 		{
 			Logger.Log(ThisDeclaringType, m_levelInfo, message, exception);
 		}
@@ -411,7 +411,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void InfoFormat(string format, params object[] args) 
+		virtual public void InfoFormat(string format, params object[] args)
 		{
 			if (IsInfoEnabled)
 			{
@@ -441,7 +441,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void InfoFormat(string format, object arg0) 
+		virtual public void InfoFormat(string format, object arg0)
 		{
 			if (IsInfoEnabled)
 			{
@@ -472,7 +472,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void InfoFormat(string format, object arg0, object arg1) 
+		virtual public void InfoFormat(string format, object arg0, object arg1)
 		{
 			if (IsInfoEnabled)
 			{
@@ -504,7 +504,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void InfoFormat(string format, object arg0, object arg1, object arg2) 
+		virtual public void InfoFormat(string format, object arg0, object arg1, object arg2)
 		{
 			if (IsInfoEnabled)
 			{
@@ -530,7 +530,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void InfoFormat(IFormatProvider provider, string format, params object[] args) 
+		virtual public void InfoFormat(IFormatProvider provider, string format, params object[] args)
 		{
 			if (IsInfoEnabled)
 			{
@@ -545,27 +545,27 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// This method first checks if this logger is <c>WARN</c>
-		/// enabled by comparing the level of this logger with the 
+		/// enabled by comparing the level of this logger with the
 		/// <c>WARN</c> level. If this logger is
 		/// <c>WARN</c> enabled, then it converts the message object
 		/// (passed as parameter) to a string by invoking the appropriate
-		/// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then 
-		/// proceeds to call all the registered appenders in this logger and 
-		/// also higher in the hierarchy depending on the value of the 
+		/// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then
+		/// proceeds to call all the registered appenders in this logger and
+		/// also higher in the hierarchy depending on the value of the
 		/// additivity flag.
 		/// </para>
 		/// <para>
 		/// <b>WARNING</b> Note that passing an <see cref="Exception"/> to this
 		/// method will print the name of the <see cref="Exception"/> but no
-		/// stack trace. To print a stack trace use the 
+		/// stack trace. To print a stack trace use the
 		/// <see cref="M:Warn(object,Exception)"/> form instead.
 		/// </para>
 		/// </remarks>
-		virtual public void Warn(object message) 
+		virtual public void Warn(object message)
 		{
 			Logger.Log(ThisDeclaringType, m_levelWarn, message, null);
 		}
-  
+
 		/// <summary>
 		/// Logs a message object with the <c>WARN</c> level
 		/// </summary>
@@ -574,7 +574,7 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// Logs a message object with the <c>WARN</c> level including
-		/// the stack trace of the <see cref="Exception"/> <paramref name="exception"/> 
+		/// the stack trace of the <see cref="Exception"/> <paramref name="exception"/>
 		/// passed as a parameter.
 		/// </para>
 		/// <para>
@@ -582,7 +582,7 @@ namespace log4net.Core
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="M:Warn(object)"/>
-		virtual public void Warn(object message, Exception exception) 
+		virtual public void Warn(object message, Exception exception)
 		{
 			Logger.Log(ThisDeclaringType, m_levelWarn, message, exception);
 		}
@@ -609,7 +609,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void WarnFormat(string format, params object[] args) 
+		virtual public void WarnFormat(string format, params object[] args)
 		{
 			if (IsWarnEnabled)
 			{
@@ -639,7 +639,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void WarnFormat(string format, object arg0) 
+		virtual public void WarnFormat(string format, object arg0)
 		{
 			if (IsWarnEnabled)
 			{
@@ -670,7 +670,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void WarnFormat(string format, object arg0, object arg1) 
+		virtual public void WarnFormat(string format, object arg0, object arg1)
 		{
 			if (IsWarnEnabled)
 			{
@@ -702,7 +702,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void WarnFormat(string format, object arg0, object arg1, object arg2) 
+		virtual public void WarnFormat(string format, object arg0, object arg1, object arg2)
 		{
 			if (IsWarnEnabled)
 			{
@@ -728,7 +728,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void WarnFormat(IFormatProvider provider, string format, params object[] args) 
+		virtual public void WarnFormat(IFormatProvider provider, string format, params object[] args)
 		{
 			if (IsWarnEnabled)
 			{
@@ -743,23 +743,23 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// This method first checks if this logger is <c>ERROR</c>
-		/// enabled by comparing the level of this logger with the 
+		/// enabled by comparing the level of this logger with the
 		/// <c>ERROR</c> level. If this logger is
 		/// <c>ERROR</c> enabled, then it converts the message object
 		/// (passed as parameter) to a string by invoking the appropriate
-		/// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then 
-		/// proceeds to call all the registered appenders in this logger and 
-		/// also higher in the hierarchy depending on the value of the 
+		/// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then
+		/// proceeds to call all the registered appenders in this logger and
+		/// also higher in the hierarchy depending on the value of the
 		/// additivity flag.
 		/// </para>
 		/// <para>
 		/// <b>WARNING</b> Note that passing an <see cref="Exception"/> to this
 		/// method will print the name of the <see cref="Exception"/> but no
-		/// stack trace. To print a stack trace use the 
+		/// stack trace. To print a stack trace use the
 		/// <see cref="M:Error(object,Exception)"/> form instead.
 		/// </para>
 		/// </remarks>
-		virtual public void Error(object message) 
+		virtual public void Error(object message)
 		{
 			Logger.Log(ThisDeclaringType, m_levelError, message, null);
 		}
@@ -772,7 +772,7 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// Logs a message object with the <c>ERROR</c> level including
-		/// the stack trace of the <see cref="Exception"/> <paramref name="exception"/> 
+		/// the stack trace of the <see cref="Exception"/> <paramref name="exception"/>
 		/// passed as a parameter.
 		/// </para>
 		/// <para>
@@ -780,7 +780,7 @@ namespace log4net.Core
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="M:Error(object)"/>
-		virtual public void Error(object message, Exception exception) 
+		virtual public void Error(object message, Exception exception)
 		{
 			Logger.Log(ThisDeclaringType, m_levelError, message, exception);
 		}
@@ -807,7 +807,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void ErrorFormat(string format, params object[] args) 
+		virtual public void ErrorFormat(string format, params object[] args)
 		{
 			if (IsErrorEnabled)
 			{
@@ -837,7 +837,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void ErrorFormat(string format, object arg0) 
+		virtual public void ErrorFormat(string format, object arg0)
 		{
 			if (IsErrorEnabled)
 			{
@@ -868,7 +868,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void ErrorFormat(string format, object arg0, object arg1) 
+		virtual public void ErrorFormat(string format, object arg0, object arg1)
 		{
 			if (IsErrorEnabled)
 			{
@@ -900,7 +900,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void ErrorFormat(string format, object arg0, object arg1, object arg2) 
+		virtual public void ErrorFormat(string format, object arg0, object arg1, object arg2)
 		{
 			if (IsErrorEnabled)
 			{
@@ -926,7 +926,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void ErrorFormat(IFormatProvider provider, string format, params object[] args) 
+		virtual public void ErrorFormat(IFormatProvider provider, string format, params object[] args)
 		{
 			if (IsErrorEnabled)
 			{
@@ -941,27 +941,27 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// This method first checks if this logger is <c>FATAL</c>
-		/// enabled by comparing the level of this logger with the 
+		/// enabled by comparing the level of this logger with the
 		/// <c>FATAL</c> level. If this logger is
 		/// <c>FATAL</c> enabled, then it converts the message object
 		/// (passed as parameter) to a string by invoking the appropriate
-		/// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then 
-		/// proceeds to call all the registered appenders in this logger and 
-		/// also higher in the hierarchy depending on the value of the 
+		/// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then
+		/// proceeds to call all the registered appenders in this logger and
+		/// also higher in the hierarchy depending on the value of the
 		/// additivity flag.
 		/// </para>
 		/// <para>
 		/// <b>WARNING</b> Note that passing an <see cref="Exception"/> to this
 		/// method will print the name of the <see cref="Exception"/> but no
-		/// stack trace. To print a stack trace use the 
+		/// stack trace. To print a stack trace use the
 		/// <see cref="M:Fatal(object,Exception)"/> form instead.
 		/// </para>
 		/// </remarks>
-		virtual public void Fatal(object message) 
+		virtual public void Fatal(object message)
 		{
 			Logger.Log(ThisDeclaringType, m_levelFatal, message, null);
 		}
-  
+
 		/// <summary>
 		/// Logs a message object with the <c>FATAL</c> level
 		/// </summary>
@@ -970,7 +970,7 @@ namespace log4net.Core
 		/// <remarks>
 		/// <para>
 		/// Logs a message object with the <c>FATAL</c> level including
-		/// the stack trace of the <see cref="Exception"/> <paramref name="exception"/> 
+		/// the stack trace of the <see cref="Exception"/> <paramref name="exception"/>
 		/// passed as a parameter.
 		/// </para>
 		/// <para>
@@ -978,7 +978,7 @@ namespace log4net.Core
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="M:Fatal(object)"/>
-		virtual public void Fatal(object message, Exception exception) 
+		virtual public void Fatal(object message, Exception exception)
 		{
 			Logger.Log(ThisDeclaringType, m_levelFatal, message, exception);
 		}
@@ -1005,7 +1005,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void FatalFormat(string format, params object[] args) 
+		virtual public void FatalFormat(string format, params object[] args)
 		{
 			if (IsFatalEnabled)
 			{
@@ -1035,7 +1035,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void FatalFormat(string format, object arg0) 
+		virtual public void FatalFormat(string format, object arg0)
 		{
 			if (IsFatalEnabled)
 			{
@@ -1066,7 +1066,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void FatalFormat(string format, object arg0, object arg1) 
+		virtual public void FatalFormat(string format, object arg0, object arg1)
 		{
 			if (IsFatalEnabled)
 			{
@@ -1098,7 +1098,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void FatalFormat(string format, object arg0, object arg1, object arg2) 
+		virtual public void FatalFormat(string format, object arg0, object arg1, object arg2)
 		{
 			if (IsFatalEnabled)
 			{
@@ -1124,7 +1124,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void FatalFormat(IFormatProvider provider, string format, params object[] args) 
+		virtual public void FatalFormat(IFormatProvider provider, string format, params object[] args)
 		{
 			if (IsFatalEnabled)
 			{
@@ -1160,7 +1160,7 @@ namespace log4net.Core
 		/// </para>
 		/// <code lang="C#">
 		/// if (log.IsDebugEnabled())
-		/// { 
+		/// {
 		///	 log.Debug("This is entry number: " + i );
 		/// }
 		/// </code>
@@ -1179,7 +1179,7 @@ namespace log4net.Core
 		{
 			get { return Logger.IsEnabledFor(m_levelDebug); }
 		}
-  
+
 		/// <summary>
 		/// Checks if this logger is enabled for the <c>INFO</c> level.
 		/// </summary>
@@ -1189,7 +1189,7 @@ namespace log4net.Core
 		/// </value>
 		/// <remarks>
 		/// <para>
-		/// See <see cref="IsDebugEnabled"/> for more information and examples 
+		/// See <see cref="IsDebugEnabled"/> for more information and examples
 		/// of using this method.
 		/// </para>
 		/// </remarks>
@@ -1208,7 +1208,7 @@ namespace log4net.Core
 		/// </value>
 		/// <remarks>
 		/// <para>
-		/// See <see cref="IsDebugEnabled"/> for more information and examples 
+		/// See <see cref="IsDebugEnabled"/> for more information and examples
 		/// of using this method.
 		/// </para>
 		/// </remarks>

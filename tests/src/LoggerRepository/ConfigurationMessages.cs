@@ -54,7 +54,7 @@ namespace log4net.Tests.LoggerRepository
                     <level value=""ALL"" />
                     <appender-ref ref=""LogLogAppender"" />
                     <appender-ref ref=""MemoryAppender"" />
-                  </root>  
+                  </root>
                 </log4net>");
 
                 ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());

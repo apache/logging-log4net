@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -321,7 +321,7 @@ namespace log4net.Tests.Appender
 			/// </summary>
 			/// <param name="events">The events to log.</param>
 			/// <remarks>
-			/// Logs the events to to an internal buffer. The logged events can 
+			/// Logs the events to to an internal buffer. The logged events can
 			/// be retrieved via the <see cref="Events"/> property. To clear
 			/// the buffer call the <see cref="Reset"/> method.
 			/// </remarks>
@@ -333,7 +333,7 @@ namespace log4net.Tests.Appender
 
 			#region Override implementation of MarshalByRefObject
 			/// <summary>
-			/// Obtains a lifetime service object to control the lifetime 
+			/// Obtains a lifetime service object to control the lifetime
 			/// policy for this instance.
 			/// </summary>
 			/// <returns>

@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -38,7 +38,7 @@ using log4net.Util;
 namespace log4net.Appender
 {
 	/// <summary>
-	/// Send an e-mail when a specific logging event occurs, typically on errors 
+	/// Send an e-mail when a specific logging event occurs, typically on errors
 	/// or fatal errors.
 	/// </summary>
 	/// <remarks>
@@ -46,8 +46,8 @@ namespace log4net.Appender
 	/// The number of logging events delivered in this e-mail depend on
 	/// the value of <see cref="BufferingAppenderSkeleton.BufferSize"/> option. The
 	/// <see cref="SmtpAppender"/> keeps only the last
-	/// <see cref="BufferingAppenderSkeleton.BufferSize"/> logging events in its 
-	/// cyclic buffer. This keeps memory requirements at a reasonable level while 
+	/// <see cref="BufferingAppenderSkeleton.BufferSize"/> logging events in its
+	/// cyclic buffer. This keeps memory requirements at a reasonable level while
 	/// still delivering useful application context.
 	/// </para>
 	/// <note type="caution">
@@ -82,7 +82,7 @@ namespace log4net.Appender
 		/// </para>
 		/// </remarks>
 		public SmtpAppender()
-		{	
+		{
 		}
 
 		#endregion // Public Instance Constructors
@@ -115,7 +115,7 @@ namespace log4net.Appender
 		}
 
         /// <summary>
-        /// Gets or sets a comma- or semicolon-delimited list of recipient e-mail addresses 
+        /// Gets or sets a comma- or semicolon-delimited list of recipient e-mail addresses
         /// that will be carbon copied (use semicolon on .NET 1.1 and comma for later versions).
         /// </summary>
         /// <value>
@@ -169,7 +169,7 @@ namespace log4net.Appender
 		/// The e-mail address of the sender.
 		/// </para>
 		/// </remarks>
-		public string From 
+		public string From
 		{
 			get { return m_from; }
 			set { m_from = value; }
@@ -186,23 +186,23 @@ namespace log4net.Appender
 		/// The subject line of the e-mail message.
 		/// </para>
 		/// </remarks>
-		public string Subject 
+		public string Subject
 		{
 			get { return m_subject; }
 			set { m_subject = value; }
 		}
-  
+
 		/// <summary>
-		/// Gets or sets the name of the SMTP relay mail server to use to send 
+		/// Gets or sets the name of the SMTP relay mail server to use to send
 		/// the e-mail messages.
 		/// </summary>
 		/// <value>
-		/// The name of the e-mail relay server. If SmtpServer is not set, the 
+		/// The name of the e-mail relay server. If SmtpServer is not set, the
 		/// name of the local SMTP server is used.
 		/// </value>
 		/// <remarks>
 		/// <para>
-		/// The name of the e-mail relay server. If SmtpServer is not set, the 
+		/// The name of the e-mail relay server. If SmtpServer is not set, the
 		/// name of the local SMTP server is used.
 		/// </para>
 		/// </remarks>
@@ -216,7 +216,7 @@ namespace log4net.Appender
 		/// Obsolete
 		/// </summary>
 		/// <remarks>
-		/// Use the BufferingAppenderSkeleton Fix methods instead 
+		/// Use the BufferingAppenderSkeleton Fix methods instead
 		/// </remarks>
 		/// <remarks>
 		/// <para>
@@ -236,13 +236,13 @@ namespace log4net.Appender
 		/// <remarks>
 		/// <note type="caution">Authentication is only available on the MS .NET 1.1 runtime.</note>
 		/// <para>
-		/// Valid Authentication mode values are: <see cref="SmtpAuthentication.None"/>, 
-		/// <see cref="SmtpAuthentication.Basic"/>, and <see cref="SmtpAuthentication.Ntlm"/>. 
-		/// The default value is <see cref="SmtpAuthentication.None"/>. When using 
-		/// <see cref="SmtpAuthentication.Basic"/> you must specify the <see cref="Username"/> 
+		/// Valid Authentication mode values are: <see cref="SmtpAuthentication.None"/>,
+		/// <see cref="SmtpAuthentication.Basic"/>, and <see cref="SmtpAuthentication.Ntlm"/>.
+		/// The default value is <see cref="SmtpAuthentication.None"/>. When using
+		/// <see cref="SmtpAuthentication.Basic"/> you must specify the <see cref="Username"/>
 		/// and <see cref="Password"/> to use to authenticate.
 		/// When using <see cref="SmtpAuthentication.Ntlm"/> the Windows credentials for the current
-		/// thread, if impersonating, or the process will be used to authenticate. 
+		/// thread, if impersonating, or the process will be used to authenticate.
 		/// </para>
 		/// </remarks>
 		public SmtpAuthentication Authentication
@@ -257,9 +257,9 @@ namespace log4net.Appender
 		/// <remarks>
 		/// <note type="caution">Authentication is only available on the MS .NET 1.1 runtime.</note>
 		/// <para>
-		/// A <see cref="Username"/> and <see cref="Password"/> must be specified when 
-		/// <see cref="Authentication"/> is set to <see cref="SmtpAuthentication.Basic"/>, 
-		/// otherwise the username will be ignored. 
+		/// A <see cref="Username"/> and <see cref="Password"/> must be specified when
+		/// <see cref="Authentication"/> is set to <see cref="SmtpAuthentication.Basic"/>,
+		/// otherwise the username will be ignored.
 		/// </para>
 		/// </remarks>
 		public string Username
@@ -274,9 +274,9 @@ namespace log4net.Appender
 		/// <remarks>
 		/// <note type="caution">Authentication is only available on the MS .NET 1.1 runtime.</note>
 		/// <para>
-		/// A <see cref="Username"/> and <see cref="Password"/> must be specified when 
-		/// <see cref="Authentication"/> is set to <see cref="SmtpAuthentication.Basic"/>, 
-		/// otherwise the password will be ignored. 
+		/// A <see cref="Username"/> and <see cref="Password"/> must be specified when
+		/// <see cref="Authentication"/> is set to <see cref="SmtpAuthentication.Basic"/>,
+		/// otherwise the password will be ignored.
 		/// </para>
 		/// </remarks>
 		public string Password
@@ -382,12 +382,12 @@ namespace log4net.Appender
 		/// Sends the contents of the cyclic buffer as an e-mail message.
 		/// </summary>
 		/// <param name="events">The logging events to send.</param>
-		override protected void SendBuffer(LoggingEvent[] events) 
+		override protected void SendBuffer(LoggingEvent[] events)
 		{
 			// Note: this code already owns the monitor for this
 			// appender. This frees us from needing to synchronize again.
-			try 
-			{	  
+			try
+			{
 				StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
 
 				string t = Layout.Header;
@@ -396,7 +396,7 @@ namespace log4net.Appender
 					writer.Write(t);
 				}
 
-				for(int i = 0; i < events.Length; i++) 
+				for(int i = 0; i < events.Length; i++)
 				{
 					// Render the event and append the text to the buffer
 					RenderLoggingEvent(writer, events[i]);
@@ -409,8 +409,8 @@ namespace log4net.Appender
 				}
 
 				SendEmail(writer.ToString());
-			} 
-			catch(Exception e) 
+			}
+			catch(Exception e)
 			{
 				ErrorHandler.Error("Error occurred while sending e-mail notification.", e);
 			}
@@ -530,7 +530,7 @@ namespace log4net.Appender
 				// the CDO properties. For details of the fields available in CDO see:
 				//
 				// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cdosys/html/_cdosys_configuration_coclass.asp
-				// 
+				//
 
 				try
 				{
@@ -548,7 +548,7 @@ namespace log4net.Appender
 					}
 
 					// Set the port if not the default value
-					if (m_port != 25) 
+					if (m_port != 25)
 					{
 						mailMessage.Fields.Add("http://schemas.microsoft.com/cdo/configuration/smtpserverport", m_port);
 					}
@@ -648,7 +648,7 @@ namespace log4net.Appender
 		#endregion // SmtpAuthentication Enum
 
             private static readonly char[] ADDRESS_DELIMITERS = new char[] { ',', ';' };
-            
+
             /// <summary>
             ///   trims leading and trailing commas or semicolons
             /// </summary>

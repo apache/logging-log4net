@@ -49,14 +49,14 @@ namespace log4net.Tests.Hierarchy
 	[Test][Platform(Include="Win")]
 	public void EnvironmentOnWindowsIsCaseInsensitive()
 	{
-	    SetTestPropWithPath();	    
+	    SetTestPropWithPath();
 	    Assert.AreNotEqual("Path=", TestProp);
 	}
 
 	[Test][Platform(Include="Unix")]
 	public void EnvironmentOnUnixIsCaseSensitive()
 	{
-	    SetTestPropWithPath();	    
+	    SetTestPropWithPath();
 	    Assert.AreEqual("Path=", TestProp);
 	}
 #endif
@@ -75,7 +75,7 @@ namespace log4net.Tests.Hierarchy
 	    public TestConfigurator() : base(null)
 	    {
 	    }
-	    public void PublicSetParameter(XmlElement element, object target) 
+	    public void PublicSetParameter(XmlElement element, object target)
 	    {
 		SetParameter(element, target);
 	    }

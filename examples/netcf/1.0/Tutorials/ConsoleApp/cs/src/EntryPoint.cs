@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -34,7 +34,7 @@ namespace ConsoleApp
 	/// </para>
 	/// <para>
 	/// The .NET Compact Framework does not support hooking up the <c>AppDomain.ProcessExit</c>
-	/// and <c>AppDomain.DomainUnload</c> events, so log4net must be shutdown manually to 
+	/// and <c>AppDomain.DomainUnload</c> events, so log4net must be shutdown manually to
 	/// free all resources.
 	/// </para>
 	/// </remarks>
@@ -43,7 +43,7 @@ namespace ConsoleApp
 		/// <summary>
 		/// Application entry point.
 		/// </summary>
-		public static void Main() 
+		public static void Main()
 		{
 			// Uncomment the next line to enable log4net internal debugging
 			// log4net.helpers.LogLog.InternalDebugging = true;
@@ -60,7 +60,7 @@ namespace ConsoleApp
 			if (log.IsInfoEnabled) log.Info("Application [ConsoleApp] Start");
 
 			// Invoke static LogEvents method on LoggingExample class
-			LoggingExample.LogEvents(); 
+			LoggingExample.LogEvents();
 
 			Console.Write("Press Enter to exit...");
 			Console.ReadLine();

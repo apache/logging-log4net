@@ -72,7 +72,7 @@ namespace log4net.Tests.Filter
                 });
             Assert.IsNotNull(appender);
 
-            MultiplePropertyFilter multiplePropertyFilter = 
+            MultiplePropertyFilter multiplePropertyFilter =
                 ((AppenderSkeleton)appender).FilterHead as MultiplePropertyFilter;
 
             MultiplePropertyFilter.Condition[] conditions = multiplePropertyFilter.GetConditions();
@@ -102,7 +102,7 @@ namespace log4net.Tests.Filter
         {
             _conditions.Add(condition);
         }
-        
+
         public class Condition
         {
             private string key, stringToMatch;
