@@ -419,9 +419,9 @@ namespace log4net.Appender
 			catch (Exception e)
 			{
 				ErrorHandler.Error(
-					"Unable to send logging event to remote syslog "
-					this.RemoteAddress.ToString()
-					" on port "
+					"Unable to send logging event to remote syslog " +
+					this.RemoteAddress.ToString(),
+					" on port " +
 					this.RemotePort + ".",
 					e,
 					ErrorCode.WriteFailure);

@@ -256,9 +256,9 @@ namespace log4net.Appender
 				if (value != 0 && (value < IPEndPoint.MinPort || value > IPEndPoint.MaxPort))
 				{
 					throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("value", (object)value,
-						"The value specified is less than "
-						IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo)
-						" or greater than "
+						"The value specified is less than " +
+						IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo) +
+						" or greater than " +
 						IPEndPoint.MaxPort.ToString(NumberFormatInfo.InvariantInfo) + ".");
 				}
 				else
@@ -362,17 +362,17 @@ namespace log4net.Appender
 			else if (this.RemotePort < IPEndPoint.MinPort || this.RemotePort > IPEndPoint.MaxPort)
 			{
 				throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("this.RemotePort", (object)this.RemotePort,
-					"The RemotePort is less than "
-					IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo)
-					" or greater than "
+					"The RemotePort is less than " +
+					IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo) +
+					" or greater than " +
 					IPEndPoint.MaxPort.ToString(NumberFormatInfo.InvariantInfo) + ".");
 			}
 			else if (this.LocalPort != 0 && (this.LocalPort < IPEndPoint.MinPort || this.LocalPort > IPEndPoint.MaxPort))
 			{
 				throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("this.LocalPort", (object)this.LocalPort,
-					"The LocalPort is less than "
-					IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo)
-					" or greater than "
+					"The LocalPort is less than " +
+					IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo) +
+					" or greater than " +
 					IPEndPoint.MaxPort.ToString(NumberFormatInfo.InvariantInfo) + ".");
 			}
 			else
@@ -412,9 +412,9 @@ namespace log4net.Appender
 			catch (Exception ex)
 			{
 				ErrorHandler.Error(
-					"Unable to send logging event to remote host "
-					this.RemoteAddress.ToString()
-					" on port "
+					"Unable to send logging event to remote host " +
+					this.RemoteAddress.ToString() +
+					" on port " +
 					this.RemotePort + ".",
 					ex,
 					ErrorCode.WriteFailure);
@@ -496,7 +496,7 @@ namespace log4net.Appender
 			catch (Exception ex)
 			{
 				ErrorHandler.Error(
-					"Could not initialize the UdpClient connection on port "
+					"Could not initialize the UdpClient connection on port " +
 					this.LocalPort.ToString(NumberFormatInfo.InvariantInfo) + ".",
 					ex,
 					ErrorCode.GenericFailure);
