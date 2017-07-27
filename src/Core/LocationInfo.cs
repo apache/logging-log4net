@@ -178,7 +178,7 @@ namespace log4net.Core
 			m_fileName = fileName;
 			m_lineNumber = lineNumber;
 			m_methodName = methodName;
-			m_fullInfo = m_className + '.' + m_methodName + '(' + m_fileName
+			m_fullInfo = m_className + '.' + m_methodName + '(' + m_fileName +
 				':' + m_lineNumber + ')';
 		}
 
