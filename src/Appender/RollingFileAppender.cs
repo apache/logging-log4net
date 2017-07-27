@@ -1488,7 +1488,8 @@ namespace log4net.Appender
 								int lastDotIndex = baseName.LastIndexOf(".");
 								if (lastDotIndex >= 0)
 								{
-									archiveFileBaseName = baseName.Substring(0, lastDotIndex) + extension;
+									string dir = Path.GetDirectoryName(archiveFileBaseName);
+									archiveFileBaseName = Path.Combine(dir, baseName.Substring(0, lastDotIndex) + extension);
 								}
 							}
 							else

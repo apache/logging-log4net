@@ -42,6 +42,7 @@ namespace log4net.Tests.Appender
 	public class RollingFileAppenderTest
 	{
 		private const string c_fileName = "test_41d3d834_4320f4da.log";
+		private const string c_fileNameWithFolder = "Folder/" + c_fileName;
 		private const string c_testMessage98Chars = "01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567";
 		private const string c_testMessage99Chars = "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678";
 		private const int c_iMaximumFileSize = 450; // in bytes
@@ -103,7 +104,8 @@ namespace log4net.Tests.Appender
 			Utils.GetRepository().Shutdown();
 			((Repository.Hierarchy.Hierarchy)Utils.GetRepository()).Clear();
 
-			DeleteTestFiles();
+			DeleteTestFiles(c_fileName);
+			DeleteTestFiles(c_fileNameWithFolder);
 		}
 
 		/// <summary>
@@ -155,7 +157,17 @@ namespace log4net.Tests.Appender
 		/// <param name="iExpectedCount"></param>
 		private static void VerifyFileCount(int iExpectedCount, bool preserveLogFileNameExtension)
 		{
-			ArrayList alFiles = GetExistingFiles(c_fileName, preserveLogFileNameExtension);
+			VerifyFileCount(c_fileName, iExpectedCount, preserveLogFileNameExtension);	
+		}
+
+		/// <summary>
+		/// Finds the number of files that match the base file name,
+		/// and matches the result against an expected count
+		/// </summary>
+		/// <param name="iExpectedCount"></param>
+		private static void VerifyFileCount(string baseFileName, int iExpectedCount, bool preserveLogFileNameExtension)
+		{
+			ArrayList alFiles = GetExistingFiles(baseFileName, preserveLogFileNameExtension);
 			Assert.IsNotNull(alFiles);
 			Assert.AreEqual(iExpectedCount, alFiles.Count);
 		}
@@ -240,13 +252,52 @@ namespace log4net.Tests.Appender
 			VerifyFileCount(2, true);
 		}
 
+		[Test]
+		public void RollingBySizePreserveExtensionAndWithFolder()
+		{
+			_root = ((Repository.Hierarchy.Hierarchy)Utils.GetRepository()).Root;
+			_root.Level = Level.All;
+			PatternLayout patternLayout = new PatternLayout();
+			patternLayout.ActivateOptions();
+
+			RollingFileAppender roller = new RollingFileAppender();
+			roller.StaticLogFileName = false;
+			roller.Layout = patternLayout;
+			roller.AppendToFile = true;
+			roller.RollingStyle = RollingFileAppender.RollingMode.Size;
+			roller.MaxSizeRollBackups = 2;
+			roller.CountDirection = 1;
+			roller.PreserveLogFileNameExtension = true;
+			roller.MaximumFileSize = "5KB";
+			roller.File = c_fileNameWithFolder; 
+			roller.ActivateOptions();
+			_root.AddAppender(roller);
+
+			_root.Repository.Configured = true;
+
+			for (int i = 0; i < 1000; i++)
+			{
+				StringBuilder s = new StringBuilder();
+				for (int j = 50; j < 100; j++)
+				{
+					if (j > 50)
+					{
+						s.Append(" ");
+					}
+					s.Append(j);
+				}
+				_root.Log(Level.Debug, s.ToString(), null);
+			}
+			VerifyFileCount(c_fileNameWithFolder, roller.MaxSizeRollBackups + 1, true);
+		}
+
 		/// <summary>
 		/// Removes all test files that exist
 		/// </summary>
-		private static void DeleteTestFiles()
+		private static void DeleteTestFiles(string baseFileName)
 		{
-			ArrayList alFiles = GetExistingFiles(c_fileName);
-						alFiles.AddRange(GetExistingFiles(c_fileName, true));
+			ArrayList alFiles = GetExistingFiles(baseFileName);
+			alFiles.AddRange(GetExistingFiles(baseFileName, true));
 			foreach(string sFile in alFiles)
 			{
 				try
