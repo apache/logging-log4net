@@ -61,21 +61,14 @@ pipeline {
 					// run docker container
 					builder.inside {
 						// compile
-						sh "nant compile-netstandard"
+						sh "dotnet build src/log4net.csproj -c Release -f netstandard1.3 -o ../bin/netstandard1.3"
+						sh "dotnet build src/log4net.csproj -c Release -f netstandard2.0 -o ../bin/netstandard2.0"
 						stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
 
 						// test
-						sh 'cd netstandard/log4net.tests && dotnet test'
+						sh "dotnet test tests/src/log4net.Tests.csproj"
 					}
 				}
-
-
-				// compile 
-				// sh 'nant compile-netstandard'
-				// stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
-
-				// test
-				// sh 'cd netstandard/log4net.tests && dotnet test'
 			}
 		}
 		stage('build net-3.5') {
@@ -245,7 +238,7 @@ pipeline {
 					// unstash site
 					unstash 'site'
 				}
-				
+
 				// move site
 				sh 'mv package/target/site/ package/site/'
 				sh 'rmdir -p --ignore-fail-on-non-empty package/target'
