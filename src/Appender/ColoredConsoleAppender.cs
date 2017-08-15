@@ -163,6 +163,12 @@ namespace log4net.Appender
 		/// </remarks>
 		public ColoredConsoleAppender()
 		{
+#if NETSTANDARD2_0
+			if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				throw new PlatformNotSupportedException($"{nameof(ColoredConsoleAppender)} is only available on Windows");
+			}
+#endif
 		}
 
 		/// <summary>
@@ -193,6 +199,12 @@ namespace log4net.Appender
 		[Obsolete("Instead use the default constructor and set the Layout & Target properties")]
 		public ColoredConsoleAppender(ILayout layout, bool writeToErrorStream)
 		{
+#if NETSTANDARD2_0
+			if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				throw new PlatformNotSupportedException($"{nameof(ColoredConsoleAppender)} is only available on Windows");
+			}
+#endif
 			Layout = layout;
 			m_writeToErrorStream = writeToErrorStream;
 		}

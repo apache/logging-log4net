@@ -176,6 +176,12 @@ namespace log4net.Appender
 		/// </remarks>
 		public NetSendAppender()
 		{
+#if NETSTANDARD2_0
+			if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				throw new PlatformNotSupportedException($"{nameof(NetSendAppender)} is only available on Windows");
+			}
+#endif
 		}
 
 		#endregion

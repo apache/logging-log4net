@@ -121,6 +121,12 @@ namespace log4net.Util
 #endif
 		public static NativeError GetLastError()
 		{
+#if NETSTANDARD2_0
+			if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				throw new PlatformNotSupportedException($"{nameof(NativeError)} is only available on Windows");
+			}
+#endif
 			int number = Marshal.GetLastWin32Error();
 			return new NativeError(number, NativeError.GetErrorMessage(number));
 		}
