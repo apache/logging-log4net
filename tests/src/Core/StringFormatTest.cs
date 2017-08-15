@@ -40,7 +40,7 @@ namespace log4net.Tests.Core
 	[TestFixture]
 	public class StringFormatTest
 	{
-#if !NETSTANDARD1_3
+#if !NETCOREAPP1_0
 		private CultureInfo _currentCulture;
 		private CultureInfo _currentUICulture;
 

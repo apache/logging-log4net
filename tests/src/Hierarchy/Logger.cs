@@ -25,7 +25,7 @@ using log4net.Tests.Appender;
 
 using NUnit.Framework;
 
-#if NETSTANDARD1_3
+#if NETCOREAPP1_0
 using System.Reflection;
 #endif
 
@@ -280,7 +280,7 @@ namespace log4net.Tests.Hierarchy
 			object a_b_c = Utils.GetLogger("a.b.c");
 
 			object t;
-#if NETSTANDARD1_3
+#if NETCOREAPP1_0
 			Assert.IsNull(LogManager.Exists(GetType().GetTypeInfo().Assembly, "xx"));
 			t = LogManager.Exists(GetType().GetTypeInfo().Assembly, "a");
 			Assert.AreSame(a, t);
