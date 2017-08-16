@@ -48,7 +48,7 @@ namespace log4net.Util.PatternStringConverters
 		/// </remarks>
 		override protected void Convert(TextWriter writer, object state)
 		{
-#if (NETCF || SSCLI || NETSTANDARD1_3 || NETSTANDARD2_0)
+#if (NETCF || SSCLI || NETSTANDARD1_3)
 			// On compact framework there's no notion of current Windows user
 			writer.Write( SystemInfo.NotAvailableText );
 #else
@@ -69,6 +69,12 @@ namespace log4net.Util.PatternStringConverters
 
 				writer.Write( SystemInfo.NotAvailableText );
 			}
+#if NETSTANDARD2_0
+			catch(PlatformNotSupportedException)
+			{
+				writer.Write("WindowsIdentity is not available on this platform");
+			}
+#endif
 #endif
 		}
 

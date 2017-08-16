@@ -111,6 +111,7 @@
     <Compile Remove="Appender\EventLogAppender.cs;Appender\RemotingAppender.cs;**\AspNet*.cs;Util\WindowsSecurityContext.cs;Plugin\RemoteLoggingServerPlugin.cs" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.0" />
     <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
+    <PackageReference Include="System.Security.Principal.Windows" Version="4.4.0" />
   </ItemGroup>
 
 </Project>
