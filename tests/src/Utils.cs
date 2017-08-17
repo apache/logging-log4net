@@ -44,7 +44,7 @@ namespace log4net.Tests
 
 		public static object InvokeMethod(object target, string name, params object[] args)
 		{
-#if NETSTANDARD1_3
+#if NETCOREAPP1_0
 			return target.GetType().GetTypeInfo().GetDeclaredMethod(name).Invoke(target, args);
 #else
 			return target.GetType().GetMethod(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, null, GetTypesArray(args), null).Invoke(target, args);
@@ -53,7 +53,7 @@ namespace log4net.Tests
 
 		public static object InvokeMethod(Type target, string name, params object[] args)
 		{
-#if NETSTANDARD1_3
+#if NETCOREAPP1_0
 			return target.GetTypeInfo().GetDeclaredMethod(name).Invoke(null, args);
 #else
 			return target.GetMethod(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static, null, GetTypesArray(args), null).Invoke(null, args);
@@ -122,7 +122,7 @@ namespace log4net.Tests
 		// Wrappers because repository/logger retrieval APIs require an Assembly argument on NETSTANDARD1_3
 		internal static ILog GetLogger(string name)
 		{
-#if NETSTANDARD1_3
+#if NETCOREAPP1_0
 			return LogManager.GetLogger(typeof(Utils).GetTypeInfo().Assembly, name);
 #else
 			return LogManager.GetLogger(name);
@@ -131,7 +131,7 @@ namespace log4net.Tests
 
 		internal static ILoggerRepository GetRepository()
 		{
-#if NETSTANDARD1_3
+#if NETCOREAPP1_0
 			return LogManager.GetRepository(typeof(Utils).GetTypeInfo().Assembly);
 #else
 			return LogManager.GetRepository();

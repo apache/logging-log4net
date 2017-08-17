@@ -69,6 +69,12 @@ namespace log4net.Util.PatternStringConverters
 
 				writer.Write( SystemInfo.NotAvailableText );
 			}
+#if NETSTANDARD2_0
+			catch(PlatformNotSupportedException)
+			{
+				writer.Write($"{nameof(System.Security.Principal.WindowsIdentity)} is not available on this platform");
+			}
+#endif
 #endif
 		}
 

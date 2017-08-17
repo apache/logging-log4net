@@ -45,7 +45,7 @@ namespace log4net.Tests.Hierarchy
 		}
 	}
 
-#if !NETSTANDARD1_3 // TODO write replacement test
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0) // TODO write replacement test
 	[Test][Platform(Include="Win")]
 	public void EnvironmentOnWindowsIsCaseInsensitive()
 	{

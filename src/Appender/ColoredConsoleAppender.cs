@@ -163,6 +163,12 @@ namespace log4net.Appender
 		/// </remarks>
 		public ColoredConsoleAppender()
 		{
+#if NETSTANDARD2_0
+			if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				throw new PlatformNotSupportedException($"{nameof(ColoredConsoleAppender)} is only available on Windows");
+			}
+#endif
 		}
 
 		/// <summary>
@@ -193,6 +199,12 @@ namespace log4net.Appender
 		[Obsolete("Instead use the default constructor and set the Layout & Target properties")]
 		public ColoredConsoleAppender(ILayout layout, bool writeToErrorStream)
 		{
+#if NETSTANDARD2_0
+			if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				throw new PlatformNotSupportedException($"{nameof(ColoredConsoleAppender)} is only available on Windows");
+			}
+#endif
 			Layout = layout;
 			m_writeToErrorStream = writeToErrorStream;
 		}
@@ -265,7 +277,7 @@ namespace log4net.Appender
 		/// The format of the output will depend on the appender's layout.
 		/// </para>
 		/// </remarks>
-#if NET_4_0 || MONO_4_0
+#if NET_4_0 || MONO_4_0 || NETSTANDARD2_0
 		[System.Security.SecuritySafeCritical]
 #endif
 		[System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
@@ -434,7 +446,7 @@ namespace log4net.Appender
 		/// Initialize the level to color mappings set on this appender.
 		/// </para>
 		/// </remarks>
-#if NET_4_0 || MONO_4_0
+#if NET_4_0 || MONO_4_0 || NETSTANDARD2_0
 		[System.Security.SecuritySafeCritical]
 #endif
 		[System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode=true)]

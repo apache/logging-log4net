@@ -86,7 +86,7 @@ namespace log4net.Tests.Hierarchy
 			CountingAppender alpha = new CountingAppender();
 			CountingAppender beta = new CountingAppender();
 
-#if NETSTANDARD1_3
+#if NETCOREAPP1_0
 			BasicConfigurator.Configure(Utils.GetRepository(), alpha, beta);
 #else
 			BasicConfigurator.Configure(alpha, beta);

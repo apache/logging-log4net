@@ -114,13 +114,19 @@ namespace log4net.Util
 		/// native Win32 <c>FormatMessage</c> function.
 		/// </para>
 		/// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3 || NETSTANDARD2_0
 		[System.Security.SecuritySafeCritical]
 #elif !NETCF
 		[System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode=true)]
 #endif
 		public static NativeError GetLastError()
 		{
+#if NETSTANDARD2_0
+			if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				throw new PlatformNotSupportedException($"{nameof(NativeError)} is only available on Windows");
+			}
+#endif
 			int number = Marshal.GetLastWin32Error();
 			return new NativeError(number, NativeError.GetErrorMessage(number));
 		}
@@ -157,7 +163,7 @@ namespace log4net.Util
 		/// using the native <c>FormatMessage</c> function.
 		/// </para>
 		/// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3 || NETSTANDARD2_0
 		[System.Security.SecuritySafeCritical]
 #elif !NETCF
 		[System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]

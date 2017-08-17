@@ -55,7 +55,7 @@ namespace log4net.Tests.Appender
 				categoryTraceListener.Category);
 		}
 
-#if !NETSTANDARD1_3 // "LocationInfo can't get method names on NETSTANDARD1_3 due to unavailable stack frame APIs"
+#if !NETCOREAPP1_0 // "LocationInfo can't get method names on NETCOREAPP1_0 due to unavailable stack frame APIs"
 		[Test]
 		public void MethodNameCategoryTest()
 		{

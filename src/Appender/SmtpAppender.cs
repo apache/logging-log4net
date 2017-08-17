@@ -25,7 +25,7 @@ using System;
 using System.IO;
 using System.Text;
 
-#if NET_2_0 || MONO_2_0
+#if NET_2_0 || MONO_2_0 || NETSTANDARD2_0
 using System.Net.Mail;
 #else
 using System.Web.Mail;
@@ -324,7 +324,7 @@ namespace log4net.Appender
 			set { m_mailPriority = value; }
 		}
 
-#if NET_2_0 || MONO_2_0
+#if NET_2_0 || MONO_2_0 || NETSTANDARD2_0
 		/// <summary>
 		/// Enable or disable use of SSL when sending e-mail message
 		/// </summary>
@@ -444,7 +444,7 @@ namespace log4net.Appender
 		/// <param name="messageBody">the body text to include in the mail</param>
 		virtual protected void SendEmail(string messageBody)
 		{
-#if NET_2_0 || MONO_2_0
+#if NET_2_0 || MONO_2_0 || NETSTANDARD2_0
 			// .NET 2.0 has a new API for SMTP email System.Net.Mail
 			// This API supports credentials and multiple hosts correctly.
 			// The old API is deprecated.
@@ -488,7 +488,7 @@ namespace log4net.Appender
 				{
 					// .NET 4.0 warning CS0618: 'System.Net.Mail.MailMessage.ReplyTo' is obsolete:
 					// 'ReplyTo is obsoleted for this type.  Please use ReplyToList instead which can accept multiple addresses. http://go.microsoft.com/fwlink/?linkid=14202'
-#if !NET_4_0 && !MONO_4_0
+#if !(NET_4_0 || MONO_4_0 || NETSTANDARD2_0)
 					mailMessage.ReplyTo = new MailAddress(m_replyTo);
 #else
 					mailMessage.ReplyToList.Add(new MailAddress(m_replyTo));
@@ -604,7 +604,7 @@ namespace log4net.Appender
 
 		private MailPriority m_mailPriority = MailPriority.Normal;
 
-#if NET_2_0 || MONO_2_0
+#if NET_2_0 || MONO_2_0 || NETSTANDARD2_0
 		private bool m_enableSsl = false;
 		private string m_replyTo;
 #endif

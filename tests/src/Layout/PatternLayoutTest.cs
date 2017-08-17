@@ -42,7 +42,7 @@ namespace log4net.Tests.Layout
 	[TestFixture]
 	public class PatternLayoutTest
 	{
-#if !NETSTANDARD1_3
+#if !NETCOREAPP1_0
 		private CultureInfo _currentCulture;
 		private CultureInfo _currentUICulture;
 
@@ -101,8 +101,8 @@ namespace log4net.Tests.Layout
 			stringAppender.Reset();
 		}
 
-#if NETSTANDARD1_3
-		[Test, Ignore("System.Diagnostics.StackTrace isn't fully implemented on NETSTANDARD1_3")]
+#if NETCOREAPP1_0
+		[Test, Ignore("System.Diagnostics.StackTrace isn't fully implemented on NETCOREAPP1_0")]
 #else
 		[Test]
 #endif

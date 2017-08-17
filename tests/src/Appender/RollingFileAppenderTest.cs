@@ -51,7 +51,7 @@ namespace log4net.Tests.Appender
 		private int _MaxSizeRollBackups = 3;
 		private CountingAppender _caRoot;
 		private Logger _root;
-#if !NETSTANDARD1_3
+#if !NETCOREAPP1_0
 		private CultureInfo _currentCulture;
 		private CultureInfo _currentUICulture;
 #endif
@@ -116,7 +116,7 @@ namespace log4net.Tests.Appender
 			ResetAndDeleteTestFiles();
 			InitializeVariables();
 
-#if !NETSTANDARD1_3
+#if !NETCOREAPP1_0
 			// set correct thread culture
 			_currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
 			_currentUICulture = System.Threading.Thread.CurrentThread.CurrentUICulture;
@@ -132,7 +132,7 @@ namespace log4net.Tests.Appender
 		{
 			ResetAndDeleteTestFiles();
 
-#if !NETSTANDARD1_3
+#if !NETCOREAPP1_0
 			// restore previous culture
 			System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture;
 			System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture;
@@ -1453,7 +1453,7 @@ namespace log4net.Tests.Appender
 
 		private static void AssertFileEquals(string filename, string contents)
 		{
-#if NETSTANDARD1_3
+#if NETCOREAPP1_0
 			StreamReader sr = new StreamReader(File.Open(filename, FileMode.Open));
 #else
 			StreamReader sr = new StreamReader(filename);

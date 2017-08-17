@@ -337,7 +337,7 @@ namespace log4net.Appender
 		/// <see cref="ActivateOptions"/> must be called again.
 		/// </para>
 		/// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3 || NETSTANDARD2_0
 		[System.Security.SecuritySafeCritical]
 #endif
 		public override void ActivateOptions()
@@ -378,7 +378,7 @@ namespace log4net.Appender
 		/// The format of the output will depend on the appender's layout.
 		/// </para>
 		/// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3 || NETSTANDARD2_0
 		[System.Security.SecuritySafeCritical]
 #endif
 #if !NETSTANDARD1_3
@@ -402,7 +402,7 @@ namespace log4net.Appender
 		/// Close the syslog when the appender is closed
 		/// </para>
 		/// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3 || NETSTANDARD2_0
 		[System.Security.SecuritySafeCritical]
 #endif
 		protected override void OnClose()
