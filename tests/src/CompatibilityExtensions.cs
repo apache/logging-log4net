@@ -25,6 +25,9 @@ using System.Threading;
 
 namespace log4net
 {
+	/// <summary>
+	/// Extension methods for simple API substitutions for compatibility with .NET Standard 1.3.
+	/// </summary>
 	internal static class CompatibilityExtensions
 	{
 		public static void Close(this Mutex mutex) => mutex.Dispose();

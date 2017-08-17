@@ -1,4 +1,4 @@
-﻿#region Apache License
+#region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more 
 // contributor license agreements. See the NOTICE file distributed with
@@ -31,23 +31,26 @@ using System.Xml;
 
 namespace log4net
 {
-    internal static class CompatibilityExtensions
-    {
-        public static void Close(this Mutex mutex) => mutex.Dispose();
-        public static void Close(this Socket socket) => socket.Dispose();
-        public static void Close(this Stream stream) => stream.Dispose();
-        public static void Close(this StreamWriter streamWriter) => streamWriter.Dispose();
-        public static void Close(this UdpClient client) => client.Dispose();
-        public static void Close(this WebResponse response) => response.Dispose();
-        public static void Close(this XmlWriter xmlWriter) => xmlWriter.Dispose();
+	/// <summary>
+	/// Extension methods for simple API substitutions for compatibility with .NET Standard 1.3.
+	/// </summary>
+	internal static class CompatibilityExtensions
+	{
+		public static void Close(this Mutex mutex) => mutex.Dispose();
+		public static void Close(this Socket socket) => socket.Dispose();
+		public static void Close(this Stream stream) => stream.Dispose();
+		public static void Close(this StreamWriter streamWriter) => streamWriter.Dispose();
+		public static void Close(this UdpClient client) => client.Dispose();
+		public static void Close(this WebResponse response) => response.Dispose();
+		public static void Close(this XmlWriter xmlWriter) => xmlWriter.Dispose();
 
-        public static Attribute[] GetCustomAttributes(this Type type, Type other, bool inherit) => type.GetTypeInfo().GetCustomAttributes(other, inherit).ToArray();
-        public static bool IsAssignableFrom(this Type type, Type other) => type.GetTypeInfo().IsAssignableFrom(other.GetTypeInfo());
-        public static bool IsSubclassOf(this Type type, Type t) => type.GetTypeInfo().IsSubclassOf(t);
+		public static Attribute[] GetCustomAttributes(this Type type, Type other, bool inherit) => type.GetTypeInfo().GetCustomAttributes(other, inherit).ToArray();
+		public static bool IsAssignableFrom(this Type type, Type other) => type.GetTypeInfo().IsAssignableFrom(other.GetTypeInfo());
+		public static bool IsSubclassOf(this Type type, Type t) => type.GetTypeInfo().IsSubclassOf(t);
 
-        public static string ToLower(this string s, CultureInfo cultureInfo) => cultureInfo.TextInfo.ToLower(s);
-        public static string ToUpper(this string s, CultureInfo cultureInfo) => cultureInfo.TextInfo.ToUpper(s);
-    }
+		public static string ToLower(this string s, CultureInfo cultureInfo) => cultureInfo.TextInfo.ToLower(s);
+		public static string ToUpper(this string s, CultureInfo cultureInfo) => cultureInfo.TextInfo.ToUpper(s);
+	}
 }
 
 #endif
