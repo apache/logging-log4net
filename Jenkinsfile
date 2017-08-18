@@ -37,7 +37,7 @@ pipeline {
 		}
 
 		// builds
-		stage('build netstandard') {
+		stage('build netstandard-1.3') {
 			steps {
 				script {
 					checkout scm
@@ -62,8 +62,40 @@ pipeline {
 					builder.inside {
 						// compile
 						sh "dotnet build src/log4net.csproj -c Release -f netstandard1.3 -o ../bin/netstandard1.3"
+						stash includes: 'bin/**/*.*', name: 'netstandard-1.3-assemblies'
+
+						// test
+						sh "dotnet test tests/src/log4net.Tests.csproj"
+					}
+				}
+			}
+		}
+		stage('build netstandard-2.0') {
+			steps {
+				script {
+					checkout scm
+					def builder_dir = "buildtools/docker/builder-netstandard"
+
+					// calculate args required to build the docker container
+					def JENKINS_UID = sh (
+						script: "stat -c \"%u\" $builder_dir",
+						returnStdout: true
+					).trim()
+					def JENKINS_GID = sh (
+						script: "stat -c \"%g\" $builder_dir",
+						returnStdout: true
+					).trim()
+					echo "$JENKINS_UID"
+					echo "$JENKINS_GID"
+
+					// build docker container
+					def builder = docker.build 'builder-netstandard:latest', "--file $builder_dir/Dockerfile --build-arg JENKINS_UID=$JENKINS_UID --build-arg JENKINS_GID=$JENKINS_GID $builder_dir"
+
+					// run docker container
+					builder.inside {
+						// compile
 						sh "dotnet build src/log4net.csproj -c Release -f netstandard2.0 -o ../bin/netstandard2.0"
-						stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
+						stash includes: 'bin/**/*.*', name: 'netstandard-2.0-assemblies'
 
 						// test
 						sh "dotnet test tests/src/log4net.Tests.csproj"
@@ -223,7 +255,8 @@ pipeline {
 					unstash 'mono-2.0-assemblies'
 					unstash 'mono-3.5-assemblies'
 					unstash 'mono-4.0-assemblies'
-					unstash 'netstandard-assemblies'
+					unstash 'netstandard-1.3-assemblies'
+					unstash 'netstandard-2.0-assemblies'
 
 					// unstash test results
 					unstash 'net-3.5-testresults'
