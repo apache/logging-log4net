@@ -1481,24 +1481,24 @@ namespace log4net.Appender
 						string archiveFileBaseName = baseFileName;
 						if (!m_staticLogFileName)
 						{
-													if (m_preserveLogFileNameExtension)
-													{
-														string extension = Path.GetExtension(archiveFileBaseName);
-														string baseName = Path.GetFileNameWithoutExtension(archiveFileBaseName);
-							int lastDotIndex = baseName.LastIndexOf(".");
-							if (lastDotIndex >= 0)
+							if (m_preserveLogFileNameExtension)
 							{
-								archiveFileBaseName = baseName.Substring(0, lastDotIndex) + extension;
+								string extension = Path.GetExtension(archiveFileBaseName);
+								string baseName = Path.GetFileNameWithoutExtension(archiveFileBaseName);
+								int lastDotIndex = baseName.LastIndexOf(".");
+								if (lastDotIndex >= 0)
+								{
+									archiveFileBaseName = baseName.Substring(0, lastDotIndex) + extension;
+								}
 							}
-													}
-													else
-													{
-							int lastDotIndex = archiveFileBaseName.LastIndexOf(".");
-							if (lastDotIndex >= 0)
+							else
 							{
-								archiveFileBaseName = archiveFileBaseName.Substring(0, lastDotIndex);
+								int lastDotIndex = archiveFileBaseName.LastIndexOf(".");
+								if (lastDotIndex >= 0)
+								{
+									archiveFileBaseName = archiveFileBaseName.Substring(0, lastDotIndex);
+								}
 							}
-													}
 						}
 
 						// Delete the archive file
