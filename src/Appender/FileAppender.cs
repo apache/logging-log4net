@@ -620,22 +620,23 @@ namespace log4net.Appender
 			private string m_filename;
 			private bool m_append;
 			private Stream m_stream = null;
-
-			/// <summary>
-			/// Prepares to open the file when the first message is logged.
-			/// </summary>
-			/// <param name="filename">The filename to use</param>
-			/// <param name="append">Whether to append to the file, or overwrite</param>
-			/// <param name="encoding">The encoding to use</param>
-			/// <remarks>
-			/// <para>
-			/// Open the file specified and prepare for logging.
-			/// No writes will be made until <see cref="AcquireLock"/> is called.
-			/// Must be called before any calls to <see cref="AcquireLock"/>,
-			/// <see cref="ReleaseLock"/> and <see cref="CloseFile"/>.
-			/// </para>
-			/// </remarks>
-			public override void OpenFile(string filename, bool append, Encoding encoding)
+            private Mutex m_appendMutex = null;
+            private string m_appendMutexFriendlyName = "MUTEX_INTERPROCESS_COMMUNICATION_ACROSS_PROCESSES";
+            /// <summary>
+            /// Prepares to open the file when the first message is logged.
+            /// </summary>
+            /// <param name="filename">The filename to use</param>
+            /// <param name="append">Whether to append to the file, or overwrite</param>
+            /// <param name="encoding">The encoding to use</param>
+            /// <remarks>
+            /// <para>
+            /// Open the file specified and prepare for logging.
+            /// No writes will be made until <see cref="AcquireLock"/> is called.
+            /// Must be called before any calls to <see cref="AcquireLock"/>,
+            /// <see cref="ReleaseLock"/> and <see cref="CloseFile"/>.
+            /// </para>
+            /// </remarks>
+            public override void OpenFile(string filename, bool append, Encoding encoding)
 			{
 				m_filename = filename;
 				m_append = append;
@@ -671,7 +672,15 @@ namespace log4net.Appender
 				{
 					try
 					{
-						m_stream = CreateStream(m_filename, m_append, FileShare.Read);
+                        if (m_appendMutex == null)
+                        {
+                            if (!Mutex.TryOpenExisting(m_appendMutexFriendlyName, out m_appendMutex))
+                                m_appendMutex = new Mutex(false, m_appendMutexFriendlyName);
+                        }
+
+                        m_appendMutex.WaitOne();
+
+                        m_stream = CreateStream(m_filename, m_append, FileShare.Read);
 						m_append = true;
 					}
 					catch (Exception e1)
@@ -695,7 +704,10 @@ namespace log4net.Appender
 			{
 				CloseStream(m_stream);
 				m_stream = null;
-			}
+
+                if (m_appendMutex != null)
+                    m_appendMutex.ReleaseMutex();
+            }
 
 			/// <summary>
 			/// Initializes all resources used by this locking model.
