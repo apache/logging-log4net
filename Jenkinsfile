@@ -41,7 +41,7 @@ pipeline {
 			steps {
 				script {
 					checkout scm
-					def builder_dir = "buildtools/docker/builder-netstandard"
+					def builder_dir = "buildtools/docker/builder-netstandard-1.3"
 
 					// calculate args required to build the docker container
 					def JENKINS_UID = sh (
