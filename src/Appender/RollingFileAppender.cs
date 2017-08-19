@@ -536,18 +536,18 @@ namespace log4net.Appender
 			set { m_staticLogFileName = value; }
 		}
 
-		#endregion Public Instance Properties
+        #endregion Public Instance Properties
 
-		#region Private Static Fields
+        #region Private Static Fields
 
-		/// <summary>
-		/// The fully qualified type of the RollingFileAppender class.
-		/// </summary>
-		/// <remarks>
-		/// Used by the internal logger to record the Type of the
-		/// log message.
-		/// </remarks>
-		private readonly static Type declaringType = typeof(RollingFileAppender);
+        /// <summary>
+        /// The fully qualified type of the RollingFileAppender class.
+        /// </summary>
+        /// <remarks>
+        /// Used by the internal logger to record the Type of the
+        /// log message.
+        /// </remarks>
+        private readonly static Type declaringType = typeof(RollingFileAppender);
 
 		#endregion Private Static Fields
 
@@ -626,8 +626,8 @@ namespace log4net.Appender
 					DateTime n = m_dateTime.Now;
 					if (n >= m_nextCheck)
 					{
-						m_now = n;
-						m_nextCheck = NextCheckDate(m_now, m_rollPoint);
+                        m_now = n;
+                        m_nextCheck = NextCheckDate(m_now, m_rollPoint);
 
                         if (!FileExists(m_scheduledFilename))
                         {
@@ -639,7 +639,7 @@ namespace log4net.Appender
                             m_scheduledFilename = CombinePath(File, m_now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo));
                         }
                     }
-				}
+                }
 
 				if (m_rollSize)
 				{
@@ -1687,10 +1687,10 @@ namespace log4net.Appender
 		/// </summary>
 		private bool m_staticLogFileName = true;
 
-		/// <summary>
-		/// Value indicating whether to preserve the file name extension when rolling.
-		/// </summary>
-		private bool m_preserveLogFileNameExtension = false;
+        /// <summary>
+        /// Value indicating whether to preserve the file name extension when rolling.
+        /// </summary>
+        private bool m_preserveLogFileNameExtension = false;
 
 
 		/// <summary>
