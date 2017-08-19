@@ -60,7 +60,7 @@ pipeline {
 					builder.inside {
 						// compile
 						sh "nant compile-netstandard-1.3"
-						stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
+						stash includes: 'bin/**/*.*', name: 'netstandard-1.3-assemblies'
 
 						// test
 						sh 'cd netstandard/log4net.tests && dotnet test'
@@ -220,7 +220,7 @@ pipeline {
 					unstash 'mono-2.0-assemblies'
 					unstash 'mono-3.5-assemblies'
 					unstash 'mono-4.0-assemblies'
-					unstash 'netstandard-assemblies'
+					unstash 'netstandard-1.3-assemblies'
 
 					// unstash test results
 					unstash 'net-3.5-testresults'
