@@ -17,7 +17,7 @@ RUN useradd --base-dir /var/workspaces --create-home --shell /bin/bash --uid $JE
 
 # HACK: add apt source to make nant available;
 # the docker image is now based on debian stretch which no longer includes the nant package
-echo "deb http://ftp.de.debian.org/debian sid main" >> /etc/apt/sources.list
+RUN echo "deb http://ftp.de.debian.org/debian sid main" >> /etc/apt/sources.list
 
 # install dependencies
 RUN apt-get update && apt-get install -y nant git
