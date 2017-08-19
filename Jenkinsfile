@@ -37,7 +37,7 @@ pipeline {
 		}
 
 		// builds
-		stage('build netstandard') {
+		stage('build netstandard-1.3') {
 			steps {
 				script {
 					checkout scm
