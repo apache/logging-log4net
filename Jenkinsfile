@@ -52,8 +52,6 @@ pipeline {
 						script: "stat -c \"%g\" $builder_dir",
 						returnStdout: true
 					).trim()
-					echo "$JENKINS_UID"
-					echo "$JENKINS_GID"
 
 					// build docker container
 					def builder = docker.build 'builder-netstandard:latest', "--file $builder_dir/Dockerfile --build-arg JENKINS_UID=$JENKINS_UID --build-arg JENKINS_GID=$JENKINS_GID $builder_dir"
@@ -68,14 +66,6 @@ pipeline {
 						sh 'cd netstandard/log4net.tests && dotnet test'
 					}
 				}
-
-
-				// compile 
-				// sh 'nant compile-netstandard'
-				// stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
-
-				// test
-				// sh 'cd netstandard/log4net.tests && dotnet test'
 			}
 		}
 		stage('build net-3.5') {
@@ -245,7 +235,7 @@ pipeline {
 					// unstash site
 					unstash 'site'
 				}
-				
+
 				// move site
 				sh 'mv package/target/site/ package/site/'
 				sh 'rmdir -p --ignore-fail-on-non-empty package/target'
