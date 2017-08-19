@@ -59,7 +59,7 @@ pipeline {
 					// run docker container
 					builder.inside {
 						// compile
-						sh "nant compile-netstandard"
+						sh "nant compile-netstandard-1.3"
 						stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
 
 						// test
