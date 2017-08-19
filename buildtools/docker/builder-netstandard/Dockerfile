@@ -18,6 +18,10 @@ RUN mkdir -p /var/workspaces && chmod 0777 /var/workspaces
 RUN groupadd -r -g $JENKINS_GID jenkins-slave
 RUN useradd --base-dir /var/workspaces --create-home --shell /bin/bash --uid $JENKINS_UID --gid $JENKINS_GID --groups $JENKINS_GID -p -M jenkins
 
+# HACK: add apt source to make nant available;
+# the docker image is now based on debian stretch which no longer includes the nant package
+echo "deb http://ftp.de.debian.org/debian sid main" >> /etc/apt/sources.list
+
 # install dependencies
 RUN apt-get update && apt-get install -y nant git
 
