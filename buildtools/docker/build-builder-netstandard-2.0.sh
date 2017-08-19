@@ -8,7 +8,7 @@ if [ -z "$MY_PATH" ] ; then
   exit 1  # fail
 fi
 
-NAME="builder-netstandard"
+NAME="builder-netstandard-2.0"
 JENKINS_UID=$2
 if [ -z "$JENKINS_UID" ] ; then
   JENKINS_UID="`stat -c \"%u\" $0`"

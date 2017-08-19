@@ -19,7 +19,7 @@
 
 pipeline {
 	options {
-		timeout(time: 1, unit: 'HOURS')
+		timeout(time: 4, unit: 'HOURS')
 		buildDiscarder(logRotator(numToKeepStr: '3'))
 		skipDefaultCheckout()
 		disableConcurrentBuilds()
@@ -41,7 +41,7 @@ pipeline {
 			steps {
 				script {
 					checkout scm
-					def builder_dir = "buildtools/docker/builder-netstandard"
+					def builder_dir = "buildtools/docker/builder-netstandard-1.3"
 
 					// calculate args required to build the docker container
 					def JENKINS_UID = sh (
@@ -52,8 +52,6 @@ pipeline {
 						script: "stat -c \"%g\" $builder_dir",
 						returnStdout: true
 					).trim()
-					echo "$JENKINS_UID"
-					echo "$JENKINS_GID"
 
 					// build docker container
 					def builder = docker.build 'builder-netstandard:latest', "--file $builder_dir/Dockerfile --build-arg JENKINS_UID=$JENKINS_UID --build-arg JENKINS_GID=$JENKINS_GID $builder_dir"
@@ -61,11 +59,11 @@ pipeline {
 					// run docker container
 					builder.inside {
 						// compile
-						sh "dotnet build src/log4net.csproj -c Release -f netstandard1.3 -o ../bin/netstandard1.3"
+						sh "nant compile-netstandard-1.3"
 						stash includes: 'bin/**/*.*', name: 'netstandard-1.3-assemblies'
 
 						// test
-						sh "dotnet test tests/src/log4net.Tests.csproj"
+						sh "dotnet test tests/src/log4net.Tests.csproj --verbosity detailed"
 					}
 				}
 			}
@@ -74,7 +72,7 @@ pipeline {
 			steps {
 				script {
 					checkout scm
-					def builder_dir = "buildtools/docker/builder-netstandard"
+					def builder_dir = "buildtools/docker/builder-netstandard-2.0"
 
 					// calculate args required to build the docker container
 					def JENKINS_UID = sh (
@@ -94,11 +92,11 @@ pipeline {
 					// run docker container
 					builder.inside {
 						// compile
-						sh "dotnet build src/log4net.csproj -c Release -f netstandard2.0 -o ../bin/netstandard2.0"
+						sh "nant compile-netstandard-2.0"
 						stash includes: 'bin/**/*.*', name: 'netstandard-2.0-assemblies'
 
 						// test
-						sh "dotnet test tests/src/log4net.Tests.csproj"
+						sh "dotnet test tests/src/log4net.Tests.csproj --verbosity detailed"
 					}
 				}
 			}
