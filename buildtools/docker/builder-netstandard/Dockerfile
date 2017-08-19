@@ -8,9 +8,6 @@ ARG JENKINS_GID
 # set the maintainer of this docker image
 MAINTAINER "dev@logging.apache.org"
 
-RUN echo $JENKINS_UID
-RUN echo $JENKINS_GID
-
 # add custom workspace that can be written by anyone
 RUN mkdir -p /var/workspaces && chmod 0777 /var/workspaces
 
