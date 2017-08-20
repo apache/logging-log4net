@@ -63,7 +63,8 @@ pipeline {
 						stash includes: 'bin/**/*.*', name: 'netstandard-1.3-assemblies'
 
 						// test
-						sh 'cd netstandard/log4net.tests && dotnet test --verbosity detailed'
+						bat "nant -buildfile:tests/nant.build runtests-netstandard-1.3"
+						stash includes: 'tests/bin/**/*.nunit.xml', name: 'netstandard-1.3-testresults'
 					}
 				}
 			}
@@ -231,6 +232,7 @@ pipeline {
 					unstash 'mono-2.0-testresults'
 					unstash 'mono-3.5-testresults'
 					unstash 'mono-4.0-testresults'
+					unstash 'netstandard-1.3-testresults'
 
 					// unstash site
 					unstash 'site'
