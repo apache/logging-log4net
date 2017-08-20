@@ -62,8 +62,8 @@ pipeline {
 						sh "nant compile-netstandard-1.3"
 						stash includes: 'bin/**/*.*', name: 'netstandard-1.3-assemblies'
 
-						// test
-						sh "dotnet test tests/src/log4net.Tests.csproj --verbosity detailed"
+						// TODO: test; it currently does not work because the test project targets netstandard-2.0 only
+						// sh "dotnet test tests/src/log4net.Tests.csproj --verbosity detailed"
 					}
 				}
 			}
