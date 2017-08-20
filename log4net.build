@@ -1766,6 +1766,10 @@ limitations under the License.
       <echo message="Skipping build; required framework is not available: netstandard"/>
     </if>
     <if test="${dotnet.available == '0'}">
+      <echo message="dotnet restore"/>
+      <exec program="dotnet" workingdir="${log4net.basedir}/src">
+        <arg value="restore"/>
+      </exec>
       <if test="${current.build.config.release != '-c'}">
         <echo message="dotnet build log4net.csproj"/>
       </if>
@@ -1809,6 +1813,10 @@ limitations under the License.
       <echo message="Skipping build; required framework is not available: netstandard"/>
     </if>
     <if test="${dotnet.available == '0'}">
+      <echo message="dotnet restore"/>
+      <exec program="dotnet" workingdir="${log4net.basedir}/src">
+        <arg value="restore"/>
+      </exec>
       <if test="${current.build.config.release != '-c'}">
         <echo message="dotnet build log4net.csproj"/>
       </if>
