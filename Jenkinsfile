@@ -62,8 +62,9 @@ pipeline {
 						sh "nant compile-netstandard-1.3"
 						stash includes: 'bin/**/*.*', name: 'netstandard-1.3-assemblies'
 
-						// TODO: test; it currently does not work because the test project targets netstandard-2.0 only
-						// sh "dotnet test tests/src/log4net.Tests.csproj --verbosity detailed"
+						// test
+						sh "nant -buildfile:tests/nant.build runtests-netstandard-1.3"
+						stash includes: 'tests/bin/**/*.nunit.xml', name: 'netstandard-1.3-testresults'
 					}
 				}
 			}
@@ -265,6 +266,7 @@ pipeline {
 					unstash 'mono-2.0-testresults'
 					unstash 'mono-3.5-testresults'
 					unstash 'mono-4.0-testresults'
+					unstash 'netstandard-1.3-testresults'
 
 					// unstash site
 					unstash 'site'

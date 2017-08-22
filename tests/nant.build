@@ -865,4 +865,12 @@ limitations under the License.
         </nunit2>
     </target>
 
+    <target name="runtests-netstandard-1.3" description="Runs log4net tests on .NET Standard 1.3">
+        <exec program="dotnet" workingdir="${log4net.basedir}/netstandard/log4net.tests">
+            <arg value="test"/>
+            <arg value="--verbosity"/>
+		    <arg value="detailed"/>
+        </exec>
+    </target>
+
 </project>
