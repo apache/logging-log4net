@@ -64,7 +64,7 @@ pipeline {
 
 						// test
 						sh "nant -buildfile:tests/nant.build runtests-netstandard-1.3"
-						stash includes: 'tests/bin/**/*.nunit.xml', name: 'netstandard-1.3-testresults'
+						stash includes: 'tests/bin/**/*.mstests.xml', name: 'netstandard-1.3-testresults'
 					}
 				}
 			}
