@@ -1,4 +1,4 @@
-#region Apache License
+﻿#region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
@@ -25,6 +25,7 @@ using System.IO;
 using log4net.Util;
 using log4net.Core;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace log4net.Appender
 {
@@ -761,7 +762,7 @@ namespace log4net.Appender
 				fileName = System.IO.Path.GetFileName(fullPath);
 			}
 
-			ArrayList arrayFiles = GetExistingFiles(fullPath);
+			IList<FileInfo> arrayFiles = GetExistingFiles(fullPath);
 			InitializeRollBackups(fileName, arrayFiles);
 
 			LogLog.Debug(declaringType, "curSizeRollBackups starts at ["+m_curSizeRollBackups+"]");
@@ -791,9 +792,9 @@ namespace log4net.Appender
 		/// </summary>
 		/// <param name="baseFilePath"></param>
 		/// <returns></returns>
-		private ArrayList GetExistingFiles(string baseFilePath)
+		private List<FileInfo> GetExistingFiles(string baseFilePath)
 		{
-			ArrayList alFiles = new ArrayList();
+			List<FileInfo> alFiles = new List<FileInfo>();
 
 			string directory = null;
 
@@ -805,17 +806,17 @@ namespace log4net.Appender
 				if (Directory.Exists(directory))
 				{
 					string baseFileName = Path.GetFileName(fullPath);
-
-					string[] files = Directory.GetFiles(directory, GetWildcardPatternForFile(baseFileName));
+					DirectoryInfo directoryInfo = new DirectoryInfo(directory);
+					FileInfo[] files = directoryInfo.GetFiles(GetWildcardPatternForFile(baseFileName));
 
 					if (files != null)
 					{
 						for (int i = 0; i < files.Length; i++)
 						{
-							string curFileName = Path.GetFileName(files[i]);
+							string curFileName = files[i].Name;
 							if (curFileName.StartsWith(Path.GetFileNameWithoutExtension(baseFileName)))
 							{
-								alFiles.Add(curFileName);
+								alFiles.Add(files[i]);
 							}
 						}
 					}
@@ -1027,15 +1028,15 @@ namespace log4net.Appender
 		/// </summary>
 		/// <param name="baseFile"></param>
 		/// <param name="arrayFiles"></param>
-		private void InitializeRollBackups(string baseFile, ArrayList arrayFiles)
+		private void InitializeRollBackups(string baseFile, IList<FileInfo> arrayFiles)
 		{
 			if (null != arrayFiles)
 			{
 				string baseFileLower = baseFile.ToLower(System.Globalization.CultureInfo.InvariantCulture);
 
-				foreach(string curFileName in arrayFiles)
+				foreach(FileInfo curFile in arrayFiles)
 				{
-					InitializeFromOneFile(baseFileLower, curFileName.ToLower(System.Globalization.CultureInfo.InvariantCulture));
+					InitializeFromOneFile(baseFileLower, curFile.Name.ToLower(System.Globalization.CultureInfo.InvariantCulture));
 				}
 			}
 		}
@@ -1488,8 +1489,8 @@ namespace log4net.Appender
 								int lastDotIndex = baseName.LastIndexOf(".");
 								if (lastDotIndex >= 0)
 								{
-									string dir = Path.GetDirectoryName(archiveFileBaseName);
-									archiveFileBaseName = Path.Combine(dir, baseName.Substring(0, lastDotIndex) + extension);
+									string archiveFileBaseDir = Path.GetDirectoryName(archiveFileBaseName);
+									archiveFileBaseName = Path.Combine(archiveFileBaseDir, baseName.Substring(0, lastDotIndex) + extension);
 								}
 							}
 							else

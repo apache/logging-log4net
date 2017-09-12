@@ -32,6 +32,8 @@ using log4net.Util;
 
 using NUnit.Framework;
 using System.Globalization;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace log4net.Tests.Appender
 {
@@ -142,34 +144,34 @@ namespace log4net.Tests.Appender
 		}
 
 		/// <summary>
-		/// Finds the number of files that match the base file name,
-		/// and matches the result against an expected count
+		/// Finds the number of log files which match the result against an expected count
 		/// </summary>
 		/// <param name="iExpectedCount"></param>
 		private static void VerifyFileCount(int iExpectedCount)
 		{
-					VerifyFileCount(iExpectedCount, false);
-				}
+			VerifyFileCount(iExpectedCount, preserveLogFileNameExtension: false);
+		}
 		/// <summary>
-		/// Finds the number of files that match the base file name,
-		/// and matches the result against an expected count
+		/// Finds the number of log files which match the result against an expected count
 		/// </summary>
 		/// <param name="iExpectedCount"></param>
 		private static void VerifyFileCount(int iExpectedCount, bool preserveLogFileNameExtension)
 		{
-			VerifyFileCount(c_fileName, iExpectedCount, preserveLogFileNameExtension);	
+			int files = GetNumberOfLogFiles(c_fileName, preserveLogFileNameExtension);
+			files += GetNumberOfLogFiles(c_fileNameWithFolder, preserveLogFileNameExtension);
+			Assert.AreEqual(iExpectedCount, files);
 		}
 
 		/// <summary>
-		/// Finds the number of files that match the base file name,
-		/// and matches the result against an expected count
+		/// Finds the number of files that match the base file name
 		/// </summary>
 		/// <param name="iExpectedCount"></param>
-		private static void VerifyFileCount(string baseFileName, int iExpectedCount, bool preserveLogFileNameExtension)
+		private static int GetNumberOfLogFiles(string baseFileName, bool preserveLogFileNameExtension)
 		{
-			ArrayList alFiles = GetExistingFiles(baseFileName, preserveLogFileNameExtension);
+			var alFiles = GetExistingFiles(baseFileName, preserveLogFileNameExtension);
 			Assert.IsNotNull(alFiles);
-			Assert.AreEqual(iExpectedCount, alFiles.Count);
+			
+			return alFiles.Count;
 		}
 
 		/// <summary>
@@ -288,7 +290,7 @@ namespace log4net.Tests.Appender
 				}
 				_root.Log(Level.Debug, s.ToString(), null);
 			}
-			VerifyFileCount(c_fileNameWithFolder, roller.MaxSizeRollBackups + 1, true);
+			VerifyFileCount(roller.MaxSizeRollBackups + 1, preserveLogFileNameExtension: true);
 		}
 
 		/// <summary>
@@ -296,14 +298,14 @@ namespace log4net.Tests.Appender
 		/// </summary>
 		private static void DeleteTestFiles(string baseFileName)
 		{
-			ArrayList alFiles = GetExistingFiles(baseFileName);
+			var alFiles = GetExistingFiles(baseFileName);
 			alFiles.AddRange(GetExistingFiles(baseFileName, true));
-			foreach(string sFile in alFiles)
+			foreach(FileInfo sFile in alFiles)
 			{
 				try
 				{
-					Debug.WriteLine("Deleting test file " + sFile);
-					File.Delete(sFile);
+					Debug.WriteLine("Deleting test file " + sFile.FullName);
+					sFile.Delete();
 				}
 				catch(Exception ex)
 				{
@@ -479,12 +481,13 @@ namespace log4net.Tests.Appender
 			}
 		}
 
-		private static void VerifyExistenceAndRemoveFromList(ArrayList alExisting, string sFileName, FileInfo file, RollFileEntry entry)
+		private static void VerifyExistenceAndRemoveFromList(List<FileInfo> alExisting, string sFileName, FileInfo file, RollFileEntry entry)
 		{
-			Assert.IsTrue(alExisting.Contains(sFileName), "filename {0} not found in test directory", sFileName);
+			int index = alExisting.FindIndex(f => f.Name == sFileName);
+			Assert.IsTrue(index != -1, "filename {0} not found in test directory", sFileName);
 			Assert.AreEqual(entry.FileLength, file.Length, "file length mismatch");
 			// Remove this file from the list
-			alExisting.Remove(sFileName);
+			alExisting.RemoveAt(index);
 		}
 
 		/// <summary>
@@ -495,7 +498,7 @@ namespace log4net.Tests.Appender
 		/// <param name="fileEntries"></param>
 		private static void VerifyFileConditions(string sBaseFileName, RollFileEntry[] fileEntries)
 		{
-			ArrayList alExisting = GetExistingFiles(sBaseFileName);
+			List<FileInfo> alExisting = GetExistingFiles(sBaseFileName);
 			if (null != fileEntries)
 			{
 				//					AssertEquals( "File count mismatch", alExisting.Count, fileEntries.Length );
@@ -653,19 +656,8 @@ namespace log4net.Tests.Appender
 		private static RollFileEntry[] MakeBackupFileEntriesFromBackupGroup(string sBackupGroup, int iBackupFileLength)
 		{
 			string[] sFiles = sBackupGroup.Split(' ');
-
-			ArrayList alEntries = new ArrayList();
-
-			for(int i = 0; i < sFiles.Length; i++)
-			{
-				// Weed out any whitespace entries from the array
-				if (sFiles[i].Trim().Length > 0)
-				{
-					alEntries.Add(new RollFileEntry(sFiles[i], iBackupFileLength));
-				}
-			}
-
-			return (RollFileEntry[])alEntries.ToArray(typeof(RollFileEntry));
+			return sFiles.Where(x => x.Trim().Length > 0)
+				.Select(x => new RollFileEntry(x, iBackupFileLength)).ToArray();
 		}
 
 		/// <summary>
@@ -1177,7 +1169,7 @@ namespace log4net.Tests.Appender
 		/// <param name="sBaseFile"></param>
 		/// <param name="alFiles"></param>
 		/// <param name="iExpectedCurSizeRollBackups"></param>
-		private static void VerifyInitializeRollBackupsFromBaseFile(string sBaseFile, ArrayList alFiles, int iExpectedCurSizeRollBackups)
+		private static void VerifyInitializeRollBackupsFromBaseFile(string sBaseFile, List<FileInfo> alFiles, int iExpectedCurSizeRollBackups)
 		{
 			InitializeAndVerifyExpectedValue(alFiles, sBaseFile, CreateRollingFileAppender("5,0,1"), iExpectedCurSizeRollBackups);
 		}
@@ -1190,12 +1182,12 @@ namespace log4net.Tests.Appender
 		public void TestInitializeRollBackups1()
 		{
 			string sBaseFile = "LogFile.log";
-			ArrayList arrFiles = new ArrayList();
-			arrFiles.Add("junk1");
-			arrFiles.Add("junk1.log");
-			arrFiles.Add("junk2.log");
-			arrFiles.Add("junk.log.1");
-			arrFiles.Add("junk.log.2");
+			List<FileInfo> arrFiles = new List<FileInfo>();
+			arrFiles.Add(new FileInfo("junk1"));
+			arrFiles.Add(new FileInfo("junk1.log"));
+			arrFiles.Add(new FileInfo("junk2.log"));
+			arrFiles.Add(new FileInfo("junk.log.1"));
+			arrFiles.Add(new FileInfo("junk.log.2"));
 
 			int iExpectedCurSizeRollBackups = 0;
 			VerifyInitializeRollBackupsFromBaseFile(sBaseFile, arrFiles, iExpectedCurSizeRollBackups);
@@ -1207,7 +1199,7 @@ namespace log4net.Tests.Appender
 		/// <param name="sBaseFile"></param>
 		private static void VerifyInitializeRollBackupsFromBaseFile(string sBaseFile)
 		{
-			ArrayList alFiles = MakeTestDataFromString(sBaseFile, "0,1,2");
+			List<FileInfo> alFiles = MakeTestDataFromString(sBaseFile, "0,1,2");
 
 			int iExpectedCurSizeRollBackups = 2;
 			VerifyInitializeRollBackupsFromBaseFile(sBaseFile, alFiles, iExpectedCurSizeRollBackups);
@@ -1219,7 +1211,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestInitializeCountUpFixed()
 		{
-			ArrayList alFiles = MakeTestDataFromString("3,4,5");
+			List<FileInfo> alFiles = MakeTestDataFromString("3,4,5");
 			int iExpectedValue = 5;
 			InitializeAndVerifyExpectedValue(alFiles, c_fileName, CreateRollingFileAppender("3,0,1"), iExpectedValue);
 		}
@@ -1230,7 +1222,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestInitializeCountUpFixed2()
 		{
-			ArrayList alFiles = MakeTestDataFromString("0,3");
+			var alFiles = MakeTestDataFromString("0,3");
 			int iExpectedValue = 3;
 			InitializeAndVerifyExpectedValue(alFiles, c_fileName, CreateRollingFileAppender("3,0,1"), iExpectedValue);
 		}
@@ -1242,7 +1234,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestInitializeCountUpZeroBackups()
 		{
-			ArrayList alFiles = MakeTestDataFromString("0,3");
+			var alFiles = MakeTestDataFromString("0,3");
 			int iExpectedValue = 0;
 			InitializeAndVerifyExpectedValue(alFiles, c_fileName, CreateRollingFileAppender("0,0,1"), iExpectedValue);
 		}
@@ -1254,7 +1246,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestInitializeCountDownZeroBackups()
 		{
-			ArrayList alFiles = MakeTestDataFromString("0,3");
+			var alFiles = MakeTestDataFromString("0,3");
 			int iExpectedValue = 0;
 			InitializeAndVerifyExpectedValue(alFiles, c_fileName, CreateRollingFileAppender("0,0,-1"), iExpectedValue);
 		}
@@ -1266,7 +1258,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestInitializeCountDownFixed()
 		{
-			ArrayList alFiles = MakeTestDataFromString("4,5,6");
+			var alFiles = MakeTestDataFromString("4,5,6");
 			VerifyInitializeDownFixedExpectedValue(alFiles, c_fileName, 0);
 		}
 
@@ -1276,7 +1268,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestInitializeCountDownFixed2()
 		{
-			ArrayList alFiles = MakeTestDataFromString("1,5,6");
+			var alFiles = MakeTestDataFromString("1,5,6");
 			VerifyInitializeDownFixedExpectedValue(alFiles, c_fileName, 1);
 		}
 
@@ -1286,7 +1278,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestInitializeCountDownFixed3()
 		{
-			ArrayList alFiles = MakeTestDataFromString("2,5,6");
+			var alFiles = MakeTestDataFromString("2,5,6");
 			VerifyInitializeDownFixedExpectedValue(alFiles, c_fileName, 2);
 		}
 
@@ -1296,7 +1288,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestInitializeCountDownFixed4()
 		{
-			ArrayList alFiles = MakeTestDataFromString("3,5,6");
+			var alFiles = MakeTestDataFromString("3,5,6");
 			VerifyInitializeDownFixedExpectedValue(alFiles, c_fileName, 3);
 		}
 
@@ -1306,7 +1298,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestInitializeCountDownFixed5()
 		{
-			ArrayList alFiles = MakeTestDataFromString("1,2,3");
+			var alFiles = MakeTestDataFromString("1,2,3");
 			VerifyInitializeDownFixedExpectedValue(alFiles, c_fileName, 3);
 		}
 
@@ -1316,7 +1308,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestInitializeCountDownFixed6()
 		{
-			ArrayList alFiles = MakeTestDataFromString("1,2");
+			var alFiles = MakeTestDataFromString("1,2");
 			VerifyInitializeDownFixedExpectedValue(alFiles, c_fileName, 2);
 		}
 
@@ -1326,11 +1318,11 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestInitializeCountDownFixed7()
 		{
-			ArrayList alFiles = MakeTestDataFromString("2,3");
+			var alFiles = MakeTestDataFromString("2,3");
 			VerifyInitializeDownFixedExpectedValue(alFiles, c_fileName, 3);
 		}
 
-		private static void InitializeAndVerifyExpectedValue(ArrayList alFiles, string sBaseFile, RollingFileAppender rfa, int iExpectedValue)
+		private static void InitializeAndVerifyExpectedValue(List<FileInfo> alFiles, string sBaseFile, RollingFileAppender rfa, int iExpectedValue)
 		{
 			InitializeRollBackups(rfa, sBaseFile, alFiles);
 			Assert.AreEqual(iExpectedValue, GetFieldCurSizeRollBackups(rfa));
@@ -1343,7 +1335,7 @@ namespace log4net.Tests.Appender
 		/// <param name="alFiles"></param>
 		/// <param name="sBaseFile"></param>
 		/// <param name="iExpectedValue"></param>
-		private static void VerifyInitializeDownInfiniteExpectedValue(ArrayList alFiles, string sBaseFile, int iExpectedValue)
+		private static void VerifyInitializeDownInfiniteExpectedValue(List<FileInfo> alFiles, string sBaseFile, int iExpectedValue)
 		{
 			InitializeAndVerifyExpectedValue(alFiles, sBaseFile, CreateRollingFileAppender("-1,0,-1"), iExpectedValue);
 		}
@@ -1379,7 +1371,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestInitializeCountDownInfinite()
 		{
-			ArrayList alFiles = MakeTestDataFromString("2,3");
+			var alFiles = MakeTestDataFromString("2,3");
 			VerifyInitializeDownInfiniteExpectedValue(alFiles, c_fileName, 3);
 		}
 
@@ -1390,7 +1382,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestInitializeCountDownInfinite2()
 		{
-			ArrayList alFiles = MakeTestDataFromString("2,3,4,5,6,7,8,9,10");
+			var alFiles = MakeTestDataFromString("2,3,4,5,6,7,8,9,10");
 			VerifyInitializeDownInfiniteExpectedValue(alFiles, c_fileName, 10);
 		}
 
@@ -1401,7 +1393,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestInitializeCountDownInfinite3()
 		{
-			ArrayList alFiles = MakeTestDataFromString("9,10,3,4,5,7,9,6,1,2,8");
+			var alFiles = MakeTestDataFromString("9,10,3,4,5,7,9,6,1,2,8");
 			VerifyInitializeDownInfiniteExpectedValue(alFiles, c_fileName, 10);
 		}
 
@@ -1412,7 +1404,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestInitializeCountUpInfinite()
 		{
-			ArrayList alFiles = MakeTestDataFromString("2,3");
+			var alFiles = MakeTestDataFromString("2,3");
 			VerifyInitializeUpInfiniteExpectedValue(alFiles, c_fileName, 3);
 		}
 
@@ -1423,7 +1415,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestInitializeCountUpInfinite2()
 		{
-			ArrayList alFiles = MakeTestDataFromString("2,3,4,5,6,7,8,9,10");
+			var alFiles = MakeTestDataFromString("2,3,4,5,6,7,8,9,10");
 			VerifyInitializeUpInfiniteExpectedValue(alFiles, c_fileName, 10);
 		}
 
@@ -1434,7 +1426,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestInitializeCountUpInfinite3()
 		{
-			ArrayList alFiles = MakeTestDataFromString("9,10,3,4,5,7,9,6,1,2,8");
+			var alFiles = MakeTestDataFromString("9,10,3,4,5,7,9,6,1,2,8");
 			VerifyInitializeUpInfiniteExpectedValue(alFiles, c_fileName, 10);
 		}
 
@@ -1803,7 +1795,7 @@ namespace log4net.Tests.Appender
 		/// <param name="alFiles"></param>
 		/// <param name="sBaseFile"></param>
 		/// <param name="iExpectedValue"></param>
-		private static void VerifyInitializeUpInfiniteExpectedValue(ArrayList alFiles, string sBaseFile, int iExpectedValue)
+		private static void VerifyInitializeUpInfiniteExpectedValue(List<FileInfo> alFiles, string sBaseFile, int iExpectedValue)
 		{
 			InitializeAndVerifyExpectedValue(alFiles, sBaseFile, CreateRollingFileAppender("-1,0,1"), iExpectedValue);
 		}
@@ -1816,7 +1808,7 @@ namespace log4net.Tests.Appender
 		/// <param name="alFiles"></param>
 		/// <param name="sBaseFile"></param>
 		/// <param name="iExpectedValue"></param>
-		private static void VerifyInitializeDownFixedExpectedValue(ArrayList alFiles, string sBaseFile, int iExpectedValue)
+		private static void VerifyInitializeDownFixedExpectedValue(List<FileInfo> alFiles, string sBaseFile, int iExpectedValue)
 		{
 			InitializeAndVerifyExpectedValue(alFiles, sBaseFile, CreateRollingFileAppender("3,0,-1"), iExpectedValue);
 		}
@@ -1830,7 +1822,7 @@ namespace log4net.Tests.Appender
 		/// </summary>
 		/// <param name="sFileNumbers">Comma separated list of numbers for counted file names</param>
 		/// <returns></returns>
-		private static ArrayList MakeTestDataFromString(string sFileNumbers)
+		private static List<FileInfo> MakeTestDataFromString(string sFileNumbers)
 		{
 			return MakeTestDataFromString(c_fileName, sFileNumbers);
 		}
@@ -1844,15 +1836,15 @@ namespace log4net.Tests.Appender
 		/// <param name="sFileName">Name of file to combine with numbers when generating counted file names</param>
 		/// <param name="sFileNumbers">Comma separated list of numbers for counted file names</param>
 		/// <returns></returns>
-		private static ArrayList MakeTestDataFromString(string sFileName, string sFileNumbers)
+		private static List<FileInfo> MakeTestDataFromString(string sFileName, string sFileNumbers)
 		{
-			ArrayList alFiles = new ArrayList();
+			List<FileInfo> alFiles = new List<FileInfo>();
 
 			string[] sNumbers = sFileNumbers.Split(',');
 			foreach(string sNumber in sNumbers)
 			{
 				Int32 iValue = Int32.Parse(sNumber.Trim());
-				alFiles.Add(MakeFileName(sFileName, iValue));
+				alFiles.Add(new FileInfo(MakeFileName(sFileName, iValue)));
 			}
 
 			return alFiles;
@@ -1887,11 +1879,11 @@ namespace log4net.Tests.Appender
 		public void VerifyInitializeRollBackups(int iBackups, int iMaxSizeRollBackups)
 		{
 			string sBaseFile = "LogFile.log";
-			ArrayList arrFiles = new ArrayList();
-			arrFiles.Add("junk1");
+			List<FileInfo> arrFiles = new List<FileInfo>();
+			arrFiles.Add(new FileInfo("junk1"));
 			for(int i = 0; i < iBackups; i++)
 			{
-				arrFiles.Add(MakeFileName(sBaseFile, i));
+				arrFiles.Add(new FileInfo(MakeFileName(sBaseFile, i)));
 			}
 			RollingFileAppender rfa = new RollingFileAppender();
 			rfa.RollingStyle = RollingFileAppender.RollingMode.Size;
@@ -1980,21 +1972,21 @@ namespace log4net.Tests.Appender
 		// Helper functions to dig into the appender
 		//
 
-		private static ArrayList GetExistingFiles(string baseFilePath)
+		private static List<FileInfo> GetExistingFiles(string baseFilePath)
 		{
 			return GetExistingFiles(baseFilePath, false);
 		}
 
-		private static ArrayList GetExistingFiles(string baseFilePath, bool preserveLogFileNameExtension)
+		private static List<FileInfo> GetExistingFiles(string baseFilePath, bool preserveLogFileNameExtension)
 		{
 			RollingFileAppender appender = new RollingFileAppender();
 						appender.PreserveLogFileNameExtension = preserveLogFileNameExtension;
 			appender.SecurityContext = NullSecurityContext.Instance;
 
-			return (ArrayList)Utils.InvokeMethod(appender, "GetExistingFiles", baseFilePath);
+			return (List<FileInfo>)Utils.InvokeMethod(appender, "GetExistingFiles", baseFilePath);
 		}
 
-		private static void InitializeRollBackups(RollingFileAppender appender, string baseFile, ArrayList arrayFiles)
+		private static void InitializeRollBackups(RollingFileAppender appender, string baseFile, List<FileInfo> arrayFiles)
 		{
 			Utils.InvokeMethod(appender, "InitializeRollBackups", baseFile, arrayFiles);
 		}
