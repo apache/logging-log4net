@@ -726,9 +726,9 @@ namespace log4net.Config
 #if NETSTANDARD1_3 // TODO DtdProcessing.Parse not yet available (https://github.com/dotnet/corefx/issues/4376)
 					settings.DtdProcessing = DtdProcessing.Ignore;
 #elif !NET_4_0 && !MONO_4_0
-					settings.ProhibitDtd = false;
+					settings.ProhibitDtd = true;
 #else
-					settings.DtdProcessing = DtdProcessing.Parse;
+					settings.DtdProcessing = DtdProcessing.Ignore;
 #endif
 
 					// Create a reader over the input stream
