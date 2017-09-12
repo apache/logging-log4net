@@ -255,7 +255,7 @@ namespace log4net.Tests.Appender
 		}
 
 		[Test]
-		public void RollingBySizePreserveExtensionAndWithFolder()
+		public void RollingBySizeAndPreserveExtensionShouldWorkWithSubFolders()
 		{
 			_root = ((Repository.Hierarchy.Hierarchy)Utils.GetRepository()).Root;
 			_root.Level = Level.All;
