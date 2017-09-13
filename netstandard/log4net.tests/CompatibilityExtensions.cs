@@ -1,10 +1,10 @@
 ﻿#region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -24,15 +24,15 @@ using System.Threading;
 
 namespace log4net
 {
-    internal static class CompatibilityExtensions
-    {
-        public static void Close(this Mutex mutex) => mutex.Dispose();
-        public static void Close(this Stream stream) => stream.Dispose();
-        public static void Close(this StreamReader streamReader) => streamReader.Dispose();
+	internal static class CompatibilityExtensions
+	{
+		public static void Close(this Mutex mutex) => mutex.Dispose();
+		public static void Close(this Stream stream) => stream.Dispose();
+		public static void Close(this StreamReader streamReader) => streamReader.Dispose();
 
-        public static ConstructorInfo GetConstructor(this Type type, BindingFlags bindingAttr, object binder, Type[] types, object[] modifiers)
-        {
-            return type.GetConstructor(types);
-        }
-    }
+		public static ConstructorInfo GetConstructor(this Type type, BindingFlags bindingAttr, object binder, Type[] types, object[] modifiers)
+		{
+			return type.GetConstructor(types);
+		}
+	}
 }

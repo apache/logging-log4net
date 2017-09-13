@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -37,7 +37,7 @@ namespace log4net.Appender
 	/// each <see cref="LoggingEvent"/>.
 	/// </para>
 	/// <para>
-	/// By default this appender fires <see cref="WmiLoggingEvent"/> objects, however 
+	/// By default this appender fires <see cref="WmiLoggingEvent"/> objects, however
 	/// this can be overridden by specifying a custom <see cref="Layout"/> or by setting
 	/// the <see cref="LoggingEvent"/>.<see cref="LoggingEvent.MessageObject"/> to an
 	/// <see cref="IEvent"/> instance.
@@ -107,7 +107,7 @@ namespace log4net.Appender
 		/// The name uniquely identifies the appender.
 		/// </para>
 		/// </remarks>
-		public string Name 
+		public string Name
 		{
 			get { return m_name; }
 			set { m_name = value; }
@@ -117,11 +117,11 @@ namespace log4net.Appender
 		/// Gets or sets the threshold <see cref="Level"/> of this appender.
 		/// </summary>
 		/// <value>
-		/// The threshold <see cref="Level"/> of the appender. 
+		/// The threshold <see cref="Level"/> of the appender.
 		/// </value>
 		/// <remarks>
 		/// <para>
-		/// All log events with lower level than the threshold level are ignored 
+		/// All log events with lower level than the threshold level are ignored
 		/// by the appender.
 		/// </para>
 		/// <para>
@@ -130,7 +130,7 @@ namespace log4net.Appender
 		/// string, such as "DEBUG", "INFO" and so on.
 		/// </para>
 		/// </remarks>
-		public Level Threshold 
+		public Level Threshold
 		{
 			get { return m_threshold; }
 			set { m_threshold = value; }
@@ -161,18 +161,18 @@ namespace log4net.Appender
 		/// The default value is a <see cref="OnlyOnceErrorHandler"/>.
 		/// </para>
 		/// </remarks>
-		public IErrorHandler ErrorHandler 
+		public IErrorHandler ErrorHandler
 		{
 			get { return m_errorHandler; }
-			set 
+			set
 			{
-				if (value == null) 
+				if (value == null)
 				{
 					// We do not throw exception here since the cause is probably a
 					// bad config file.
 					log4net.Util.LogLog.Warn(GetType(), "WmiAppender: You have tried to set a null error-handler.");
-				} 
-				else 
+				}
+				else
 				{
 					m_errorHandler = value;
 				}
@@ -190,7 +190,7 @@ namespace log4net.Appender
 		/// method will create a default <see cref="WmiLayout"/> instance.
 		/// </para>
 		/// </remarks>
-		public void ActivateOptions() 
+		public void ActivateOptions()
 		{
 			if (m_layout == null)
 			{
@@ -247,7 +247,7 @@ namespace log4net.Appender
 		/// <summary>
 		/// Checks if the message level is below this appender's threshold.
 		/// </summary>
-		private bool IsAsSevereAsThreshold(Level level) 
+		private bool IsAsSevereAsThreshold(Level level)
 		{
 			return ((m_threshold == null) || level >= m_threshold);
 		}

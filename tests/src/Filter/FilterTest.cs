@@ -32,89 +32,89 @@ using NUnit.Framework;
 
 namespace log4net.Tests.Filter
 {
-    [TestFixture]
-    public class FilterTest
-    {
-        [Test]
-        public void FilterConfigurationTest()
-        {
-            XmlDocument log4netConfig = new XmlDocument();
-            #region Load log4netConfig
-            log4netConfig.LoadXml(@"
-            <log4net>
-            <appender name=""MemoryAppender"" type=""log4net.Appender.MemoryAppender, log4net"">
-                <filter type=""log4net.Tests.Filter.MultiplePropertyFilter, log4net.Tests"">
-                    <condition>
-                        <key value=""ABC"" />
-                        <stringToMatch value=""123"" />
-                    </condition>
-                    <condition>
-                        <key value=""DEF"" />
-                        <stringToMatch value=""456"" />
-                    </condition>
-                </filter>
-            </appender>
-            <root>
-                <level value=""ALL"" />
-                <appender-ref ref=""MemoryAppender"" />
-            </root>
-            </log4net>");
-            #endregion
+	[TestFixture]
+	public class FilterTest
+	{
+		[Test]
+		public void FilterConfigurationTest()
+		{
+			XmlDocument log4netConfig = new XmlDocument();
+			#region Load log4netConfig
+			log4netConfig.LoadXml(@"
+			<log4net>
+			<appender name=""MemoryAppender"" type=""log4net.Appender.MemoryAppender, log4net"">
+				<filter type=""log4net.Tests.Filter.MultiplePropertyFilter, log4net.Tests"">
+					<condition>
+						<key value=""ABC"" />
+						<stringToMatch value=""123"" />
+					</condition>
+					<condition>
+						<key value=""DEF"" />
+						<stringToMatch value=""456"" />
+					</condition>
+				</filter>
+			</appender>
+			<root>
+				<level value=""ALL"" />
+				<appender-ref ref=""MemoryAppender"" />
+			</root>
+			</log4net>");
+			#endregion
 
-            ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-            XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
+			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+			XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
 
-            IAppender[] appenders = LogManager.GetRepository(rep.Name).GetAppenders();
-            Assert.IsTrue(appenders.Length == 1);
+			IAppender[] appenders = LogManager.GetRepository(rep.Name).GetAppenders();
+			Assert.IsTrue(appenders.Length == 1);
 
-            IAppender appender = Array.Find(appenders, delegate(IAppender a) {
-                    return a.Name == "MemoryAppender";
-                });
-            Assert.IsNotNull(appender);
+			IAppender appender = Array.Find(appenders, delegate(IAppender a) {
+					return a.Name == "MemoryAppender";
+				});
+			Assert.IsNotNull(appender);
 
-            MultiplePropertyFilter multiplePropertyFilter = 
-                ((AppenderSkeleton)appender).FilterHead as MultiplePropertyFilter;
+			MultiplePropertyFilter multiplePropertyFilter =
+				((AppenderSkeleton)appender).FilterHead as MultiplePropertyFilter;
 
-            MultiplePropertyFilter.Condition[] conditions = multiplePropertyFilter.GetConditions();
-            Assert.AreEqual(2, conditions.Length);
-            Assert.AreEqual("ABC", conditions[0].Key);
-            Assert.AreEqual("123", conditions[0].StringToMatch);
-            Assert.AreEqual("DEF", conditions[1].Key);
-            Assert.AreEqual("456", conditions[1].StringToMatch);
-        }
-    }
+			MultiplePropertyFilter.Condition[] conditions = multiplePropertyFilter.GetConditions();
+			Assert.AreEqual(2, conditions.Length);
+			Assert.AreEqual("ABC", conditions[0].Key);
+			Assert.AreEqual("123", conditions[0].StringToMatch);
+			Assert.AreEqual("DEF", conditions[1].Key);
+			Assert.AreEqual("456", conditions[1].StringToMatch);
+		}
+	}
 
-    public class MultiplePropertyFilter : FilterSkeleton
-    {
-        private readonly List<Condition> _conditions = new List<Condition>();
+	public class MultiplePropertyFilter : FilterSkeleton
+	{
+		private readonly List<Condition> _conditions = new List<Condition>();
 
-        public override FilterDecision Decide(LoggingEvent loggingEvent)
-        {
-            return FilterDecision.Accept;
-        }
+		public override FilterDecision Decide(LoggingEvent loggingEvent)
+		{
+			return FilterDecision.Accept;
+		}
 
-        public Condition[] GetConditions()
-        {
-            return _conditions.ToArray();
-        }
+		public Condition[] GetConditions()
+		{
+			return _conditions.ToArray();
+		}
 
-        public void AddCondition(Condition condition)
-        {
-            _conditions.Add(condition);
-        }
-        
-        public class Condition
-        {
-            private string key, stringToMatch;
-            public string Key {
-                get { return key; }
-                set { key = value; }
-            }
-            public string StringToMatch {
-                get { return stringToMatch; }
-                set { stringToMatch = value; }
-            }
-        }
-    }
+		public void AddCondition(Condition condition)
+		{
+			_conditions.Add(condition);
+		}
+
+		public class Condition
+		{
+			private string key, stringToMatch;
+			public string Key {
+				get { return key; }
+				set { key = value; }
+			}
+			public string StringToMatch {
+				get { return stringToMatch; }
+				set { stringToMatch = value; }
+			}
+		}
+	}
 }
 #endif

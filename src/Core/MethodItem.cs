@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -28,7 +28,7 @@ namespace log4net.Core
 	/// provides method information without actually referencing a System.Reflection.MethodBase
 	/// as that would require that the containing assembly is loaded.
 	/// </summary>
-	/// 
+	///
 #if !NETCF
 	[Serializable]
 #endif
@@ -66,13 +66,13 @@ namespace log4net.Core
 			m_parameters = parameters;
 		}
 
-        /// <summary>
-        /// constructs a method item from a method base by determining the method name and its parameters.
-        /// </summary>
-        /// <param name="methodBase"></param>
+		/// <summary>
+		/// constructs a method item from a method base by determining the method name and its parameters.
+		/// </summary>
+		/// <param name="methodBase"></param>
 		public MethodItem(System.Reflection.MethodBase methodBase)
 			: this(methodBase.Name, GetMethodParameterNames(methodBase))
-        {
+		{
 		}
 
 		#endregion
@@ -102,16 +102,16 @@ namespace log4net.Core
 		#region Public Instance Properties
 
 		/// <summary>
-		/// Gets the method name of the caller making the logging 
+		/// Gets the method name of the caller making the logging
 		/// request.
 		/// </summary>
 		/// <value>
-		/// The method name of the caller making the logging 
+		/// The method name of the caller making the logging
 		/// request.
 		/// </value>
 		/// <remarks>
 		/// <para>
-		/// Gets the method name of the caller making the logging 
+		/// Gets the method name of the caller making the logging
 		/// request.
 		/// </para>
 		/// </remarks>

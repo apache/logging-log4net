@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -39,20 +39,20 @@ namespace log4net.Layout.Pattern
 	internal class StackTracePatternConverter : PatternLayoutConverter, IOptionHandler
 	{
 		private int m_stackFrameLevel = 1;
-		
+
 		/// <summary>
 		/// Initialize the converter
 		/// </summary>
 		/// <remarks>
 		/// <para>
 		/// This is part of the <see cref="IOptionHandler"/> delayed object
-		/// activation scheme. The <see cref="ActivateOptions"/> method must 
+		/// activation scheme. The <see cref="ActivateOptions"/> method must
 		/// be called on this object after the configuration properties have
 		/// been set. Until <see cref="ActivateOptions"/> is called this
-		/// object is in an undefined state and must not be used. 
+		/// object is in an undefined state and must not be used.
 		/// </para>
 		/// <para>
-		/// If any of the configuration properties are modified then 
+		/// If any of the configuration properties are modified then
 		/// <see cref="ActivateOptions"/> must be called again.
 		/// </para>
 		/// </remarks>
@@ -60,14 +60,14 @@ namespace log4net.Layout.Pattern
 		{
 			if (Option == null)
 				return;
-			
+
 			string optStr = Option.Trim();
 			if (optStr.Length != 0)
 			{
 				int stackLevelVal;
 				if (SystemInfo.TryParse(optStr, out stackLevelVal))
 				{
-					if (stackLevelVal <= 0) 
+					if (stackLevelVal <= 0)
 					{
 						LogLog.Error(declaringType, "StackTracePatternConverter: StackeFrameLevel option (" + optStr + ") isn't a positive integer.");
 					}
@@ -75,14 +75,14 @@ namespace log4net.Layout.Pattern
 					{
 						m_stackFrameLevel = stackLevelVal;
 					}
-				} 
+				}
 				else
 				{
 					LogLog.Error(declaringType, "StackTracePatternConverter: StackFrameLevel option \"" + optStr + "\" not a decimal integer.");
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Write the strack frames to the output
 		/// </summary>
@@ -101,7 +101,7 @@ namespace log4net.Layout.Pattern
 				LogLog.Error(declaringType, "loggingEvent.LocationInformation.StackFrames was null or empty.");
 				return;
 			}
-			
+
 			int stackFrameIndex = m_stackFrameLevel - 1;
 			while (stackFrameIndex >= 0)
 			{
@@ -110,41 +110,41 @@ namespace log4net.Layout.Pattern
 					stackFrameIndex--;
 					continue;
 				}
-				
+
 				StackFrameItem stackFrame = stackframes[stackFrameIndex];
-                writer.Write("{0}.{1}", stackFrame.ClassName, GetMethodInformation(stackFrame.Method));
+				writer.Write("{0}.{1}", stackFrame.ClassName, GetMethodInformation(stackFrame.Method));
 				if (stackFrameIndex > 0)
 				{
-                    // TODO: make this user settable?
+					// TODO: make this user settable?
 					writer.Write(" > ");
 				}
 				stackFrameIndex--;
 			}
 		}
 
-                /// <summary>
-        /// Returns the Name of the method
-        /// </summary>
-        /// <param name="method"></param>
-        /// <remarks>This method was created, so this class could be used as a base class for StackTraceDetailPatternConverter</remarks>
-        /// <returns>string</returns>
-        internal virtual string GetMethodInformation(MethodItem method)
-        {
-            return method.Name;
-        }
-		
+				/// <summary>
+		/// Returns the Name of the method
+		/// </summary>
+		/// <param name="method"></param>
+		/// <remarks>This method was created, so this class could be used as a base class for StackTraceDetailPatternConverter</remarks>
+		/// <returns>string</returns>
+		internal virtual string GetMethodInformation(MethodItem method)
+		{
+			return method.Name;
+		}
+
 		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the StackTracePatternConverter class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(StackTracePatternConverter);
+		/// <summary>
+		/// The fully qualified type of the StackTracePatternConverter class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(StackTracePatternConverter);
 
-	    #endregion Private Static Fields
+		#endregion Private Static Fields
 	}
 }
 #endif

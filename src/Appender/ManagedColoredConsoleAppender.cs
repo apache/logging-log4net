@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -20,7 +20,7 @@
 // Compatibility:
 //	http://msdn.microsoft.com/en-us/library/system.console.foregroundcolor.aspx
 // Disable for unsupported targets
-#if !NETCF 
+#if !NETCF
 #if !SSCLI
 #if !CLI_1_0
 #if !MONO_1_0
@@ -55,7 +55,7 @@ namespace log4net.Appender
 	/// <remarks>
 	/// <para>
 	/// ManagedColoredConsoleAppender appends log events to the standard output stream
-	/// or the error output stream using a layout specified by the 
+	/// or the error output stream using a layout specified by the
 	/// user. It also allows the color of a specific type of message to be set.
 	/// </para>
 	/// <para>
@@ -104,13 +104,13 @@ namespace log4net.Appender
 		/// Initializes a new instance of the <see cref="ManagedColoredConsoleAppender" /> class.
 		/// </summary>
 		/// <remarks>
-		/// The instance of the <see cref="ManagedColoredConsoleAppender" /> class is set up to write 
+		/// The instance of the <see cref="ManagedColoredConsoleAppender" /> class is set up to write
 		/// to the standard output stream.
 		/// </remarks>
-		public ManagedColoredConsoleAppender() 
+		public ManagedColoredConsoleAppender()
 		{
 		}
-		
+
 		#region Public Instance Properties
 		/// <summary>
 		/// Target is the value of the console output stream.
@@ -136,8 +136,8 @@ namespace log4net.Appender
 				if (SystemInfo.EqualsIgnoringCase(ConsoleError, v))
 				{
 					m_writeToErrorStream = true;
-				} 
-				else 
+				}
+				else
 				{
 					m_writeToErrorStream = false;
 				}
@@ -174,18 +174,18 @@ namespace log4net.Appender
 		/// The format of the output will depend on the appender's layout.
 		/// </para>
 		/// </remarks>
-		override protected void Append(log4net.Core.LoggingEvent loggingEvent) 
+		override protected void Append(log4net.Core.LoggingEvent loggingEvent)
 		{
 			System.IO.TextWriter writer;
-			
+
 			if (m_writeToErrorStream)
 				writer = Console.Error;
 			else
 				writer = Console.Out;
-			
+
 			// Reset color
 			Console.ResetColor();
-			
+
 			// see if there is a specified lookup
 			LevelColors levelColors = m_levelMapping.Lookup(loggingEvent.Level) as LevelColors;
 			if (levelColors != null)
@@ -197,7 +197,7 @@ namespace log4net.Appender
 				if (levelColors.HasForeColor)
 					Console.ForegroundColor = levelColors.ForeColor;
 			}
-			
+
 			// Render the event to a string
 			string strLoggingMessage = RenderLoggingEvent(loggingEvent);
 			// and write it
@@ -238,24 +238,24 @@ namespace log4net.Appender
 
 		#region Public Static Fields
 		/// <summary>
-		/// The <see cref="ManagedColoredConsoleAppender.Target"/> to use when writing to the Console 
+		/// The <see cref="ManagedColoredConsoleAppender.Target"/> to use when writing to the Console
 		/// standard output stream.
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// The <see cref="ManagedColoredConsoleAppender.Target"/> to use when writing to the Console 
+		/// The <see cref="ManagedColoredConsoleAppender.Target"/> to use when writing to the Console
 		/// standard output stream.
 		/// </para>
 		/// </remarks>
 		public const string ConsoleOut = "Console.Out";
 
 		/// <summary>
-		/// The <see cref="ManagedColoredConsoleAppender.Target"/> to use when writing to the Console 
+		/// The <see cref="ManagedColoredConsoleAppender.Target"/> to use when writing to the Console
 		/// standard error output stream.
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// The <see cref="ManagedColoredConsoleAppender.Target"/> to use when writing to the Console 
+		/// The <see cref="ManagedColoredConsoleAppender.Target"/> to use when writing to the Console
 		/// standard error output stream.
 		/// </para>
 		/// </remarks>
@@ -304,11 +304,11 @@ namespace log4net.Appender
 			}
 			private ConsoleColor foreColor;
 			private bool hasForeColor;
-            internal bool HasForeColor {
-                get {
-                    return hasForeColor;
-                }
-            }
+			internal bool HasForeColor {
+				get {
+					return hasForeColor;
+				}
+			}
 
 			/// <summary>
 			/// The mapped background color for the specified level
@@ -327,12 +327,12 @@ namespace log4net.Appender
 				set { this.backColor = value; this.hasBackColor = true; }
 			}
 			private ConsoleColor backColor;
-            private bool hasBackColor;
-            internal bool HasBackColor {
-                get {
-                    return hasBackColor;
-                }
-            }
+			private bool hasBackColor;
+			internal bool HasBackColor {
+				get {
+					return hasBackColor;
+				}
+			}
 		}
 		#endregion // LevelColors LevelMapping Entry
 	}

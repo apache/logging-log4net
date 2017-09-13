@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -56,28 +56,28 @@ namespace log4net.Tests.Layout
 		}
 
 
-        [TearDown]
-        public void TearDown() {
+		[TearDown]
+		public void TearDown() {
 			Utils.RemovePropertyFromAllContexts();
 			// restore previous culture
 			System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture;
 			System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture;
-        }
+		}
 #endif
 
-        protected virtual PatternLayout NewPatternLayout() {
-            return new PatternLayout();
-        }
+		protected virtual PatternLayout NewPatternLayout() {
+			return new PatternLayout();
+		}
 
-        protected virtual PatternLayout NewPatternLayout(string pattern) {
-            return new PatternLayout(pattern);
-        }
+		protected virtual PatternLayout NewPatternLayout(string pattern) {
+			return new PatternLayout(pattern);
+		}
 
-        [Test]
+		[Test]
 		public void TestThreadPropertiesPattern()
 		{
 			StringAppender stringAppender = new StringAppender();
-            stringAppender.Layout = NewPatternLayout("%property{" + Utils.PROPERTY_KEY + "}");
+			stringAppender.Layout = NewPatternLayout("%property{" + Utils.PROPERTY_KEY + "}");
 
 			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 			BasicConfigurator.Configure(rep, stringAppender);
@@ -102,30 +102,30 @@ namespace log4net.Tests.Layout
 		}
 
 #if NETSTANDARD1_3
-        [Test, Ignore("System.Diagnostics.StackTrace isn't fully implemented on NETSTANDARD1_3")]
+		[Test, Ignore("System.Diagnostics.StackTrace isn't fully implemented on NETSTANDARD1_3")]
 #else
-        [Test]
+		[Test]
 #endif
-        public void TestStackTracePattern()
-        {
-            StringAppender stringAppender = new StringAppender();
-            stringAppender.Layout = NewPatternLayout("%stacktrace{2}");
+		public void TestStackTracePattern()
+		{
+			StringAppender stringAppender = new StringAppender();
+			stringAppender.Layout = NewPatternLayout("%stacktrace{2}");
 
-            ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-            BasicConfigurator.Configure(rep, stringAppender);
+			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+			BasicConfigurator.Configure(rep, stringAppender);
 
-            ILog log1 = LogManager.GetLogger(rep.Name, "TestStackTracePattern");
+			ILog log1 = LogManager.GetLogger(rep.Name, "TestStackTracePattern");
 
-            log1.Info("TestMessage");
-            StringAssert.EndsWith("PatternLayoutTest.TestStackTracePattern", stringAppender.GetString(), "stack trace value set");
-            stringAppender.Reset();
-        }
+			log1.Info("TestMessage");
+			StringAssert.EndsWith("PatternLayoutTest.TestStackTracePattern", stringAppender.GetString(), "stack trace value set");
+			stringAppender.Reset();
+		}
 
 		[Test]
 		public void TestGlobalPropertiesPattern()
 		{
 			StringAppender stringAppender = new StringAppender();
-            stringAppender.Layout = NewPatternLayout("%property{" + Utils.PROPERTY_KEY + "}");
+			stringAppender.Layout = NewPatternLayout("%property{" + Utils.PROPERTY_KEY + "}");
 
 			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 			BasicConfigurator.Configure(rep, stringAppender);
@@ -171,147 +171,147 @@ namespace log4net.Tests.Layout
 			stringAppender.Reset();
 		}
 
-        [Test]
-        public void NamedPatternConverterWithoutPrecisionShouldReturnFullName()
-        {
-            StringAppender stringAppender = new StringAppender();
-            PatternLayout layout = NewPatternLayout();
-            layout.AddConverter("message-as-name", typeof(MessageAsNamePatternConverter));
-            layout.ConversionPattern = "%message-as-name";
-            layout.ActivateOptions();
-            stringAppender.Layout = layout;
-            ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-            BasicConfigurator.Configure(rep, stringAppender);
-            ILog log1 = LogManager.GetLogger(rep.Name, "TestAddingCustomPattern");
+		[Test]
+		public void NamedPatternConverterWithoutPrecisionShouldReturnFullName()
+		{
+			StringAppender stringAppender = new StringAppender();
+			PatternLayout layout = NewPatternLayout();
+			layout.AddConverter("message-as-name", typeof(MessageAsNamePatternConverter));
+			layout.ConversionPattern = "%message-as-name";
+			layout.ActivateOptions();
+			stringAppender.Layout = layout;
+			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+			BasicConfigurator.Configure(rep, stringAppender);
+			ILog log1 = LogManager.GetLogger(rep.Name, "TestAddingCustomPattern");
 
-            log1.Info("NoDots");
-            Assert.AreEqual("NoDots", stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
+			log1.Info("NoDots");
+			Assert.AreEqual("NoDots", stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
 
-            log1.Info("One.Dot");
-            Assert.AreEqual("One.Dot", stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
+			log1.Info("One.Dot");
+			Assert.AreEqual("One.Dot", stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
 
-            log1.Info("Tw.o.Dots");
-            Assert.AreEqual("Tw.o.Dots", stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
+			log1.Info("Tw.o.Dots");
+			Assert.AreEqual("Tw.o.Dots", stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
 
-            log1.Info("TrailingDot.");
-            Assert.AreEqual("TrailingDot.", stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
+			log1.Info("TrailingDot.");
+			Assert.AreEqual("TrailingDot.", stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
 
-            log1.Info(".LeadingDot");
-            Assert.AreEqual(".LeadingDot", stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
+			log1.Info(".LeadingDot");
+			Assert.AreEqual(".LeadingDot", stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
 
-            // empty string and other evil combinations as tests for of-by-one mistakes in index calculations
-            log1.Info(string.Empty);
-            Assert.AreEqual(string.Empty, stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
+			// empty string and other evil combinations as tests for of-by-one mistakes in index calculations
+			log1.Info(string.Empty);
+			Assert.AreEqual(string.Empty, stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
 
-            log1.Info(".");
-            Assert.AreEqual(".", stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
+			log1.Info(".");
+			Assert.AreEqual(".", stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
 
-            log1.Info("x");
-            Assert.AreEqual("x", stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
-        }
+			log1.Info("x");
+			Assert.AreEqual("x", stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
+		}
 
-        [Test]
-        public void NamedPatternConverterWithPrecision1ShouldStripLeadingStuffIfPresent()
-        {
-            StringAppender stringAppender = new StringAppender();
-            PatternLayout layout = NewPatternLayout();
-            layout.AddConverter("message-as-name", typeof(MessageAsNamePatternConverter));
-            layout.ConversionPattern = "%message-as-name{1}";
-            layout.ActivateOptions();
-            stringAppender.Layout = layout;
-            ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-            BasicConfigurator.Configure(rep, stringAppender);
-            ILog log1 = LogManager.GetLogger(rep.Name, "TestAddingCustomPattern");
+		[Test]
+		public void NamedPatternConverterWithPrecision1ShouldStripLeadingStuffIfPresent()
+		{
+			StringAppender stringAppender = new StringAppender();
+			PatternLayout layout = NewPatternLayout();
+			layout.AddConverter("message-as-name", typeof(MessageAsNamePatternConverter));
+			layout.ConversionPattern = "%message-as-name{1}";
+			layout.ActivateOptions();
+			stringAppender.Layout = layout;
+			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+			BasicConfigurator.Configure(rep, stringAppender);
+			ILog log1 = LogManager.GetLogger(rep.Name, "TestAddingCustomPattern");
 
-            log1.Info("NoDots");
-            Assert.AreEqual("NoDots", stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
+			log1.Info("NoDots");
+			Assert.AreEqual("NoDots", stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
 
-            log1.Info("One.Dot");
-            Assert.AreEqual("Dot", stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
+			log1.Info("One.Dot");
+			Assert.AreEqual("Dot", stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
 
-            log1.Info("Tw.o.Dots");
-            Assert.AreEqual("Dots", stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
+			log1.Info("Tw.o.Dots");
+			Assert.AreEqual("Dots", stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
 
-            log1.Info("TrailingDot.");
-            Assert.AreEqual("TrailingDot.", stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
+			log1.Info("TrailingDot.");
+			Assert.AreEqual("TrailingDot.", stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
 
-            log1.Info(".LeadingDot");
-            Assert.AreEqual("LeadingDot", stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
+			log1.Info(".LeadingDot");
+			Assert.AreEqual("LeadingDot", stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
 
-            // empty string and other evil combinations as tests for of-by-one mistakes in index calculations
-            log1.Info(string.Empty);
-            Assert.AreEqual(string.Empty, stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
+			// empty string and other evil combinations as tests for of-by-one mistakes in index calculations
+			log1.Info(string.Empty);
+			Assert.AreEqual(string.Empty, stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
 
-            log1.Info("x");
-            Assert.AreEqual("x", stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
+			log1.Info("x");
+			Assert.AreEqual("x", stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
 
-            log1.Info(".");
-            Assert.AreEqual(".", stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
-        }
+			log1.Info(".");
+			Assert.AreEqual(".", stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
+		}
 
-        [Test]
-        public void NamedPatternConverterWithPrecision2ShouldStripLessLeadingStuffIfPresent() {
-            StringAppender stringAppender = new StringAppender();
-            PatternLayout layout = NewPatternLayout();
-            layout.AddConverter("message-as-name", typeof(MessageAsNamePatternConverter));
-            layout.ConversionPattern = "%message-as-name{2}";
-            layout.ActivateOptions();
-            stringAppender.Layout = layout;
-            ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-            BasicConfigurator.Configure(rep, stringAppender);
-            ILog log1 = LogManager.GetLogger(rep.Name, "TestAddingCustomPattern");
+		[Test]
+		public void NamedPatternConverterWithPrecision2ShouldStripLessLeadingStuffIfPresent() {
+			StringAppender stringAppender = new StringAppender();
+			PatternLayout layout = NewPatternLayout();
+			layout.AddConverter("message-as-name", typeof(MessageAsNamePatternConverter));
+			layout.ConversionPattern = "%message-as-name{2}";
+			layout.ActivateOptions();
+			stringAppender.Layout = layout;
+			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+			BasicConfigurator.Configure(rep, stringAppender);
+			ILog log1 = LogManager.GetLogger(rep.Name, "TestAddingCustomPattern");
 
-            log1.Info("NoDots");
-            Assert.AreEqual("NoDots", stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
+			log1.Info("NoDots");
+			Assert.AreEqual("NoDots", stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
 
-            log1.Info("One.Dot");
-            Assert.AreEqual("One.Dot", stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
+			log1.Info("One.Dot");
+			Assert.AreEqual("One.Dot", stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
 
-            log1.Info("Tw.o.Dots");
-            Assert.AreEqual("o.Dots", stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
+			log1.Info("Tw.o.Dots");
+			Assert.AreEqual("o.Dots", stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
 
-            log1.Info("TrailingDot.");
-            Assert.AreEqual("TrailingDot.", stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
+			log1.Info("TrailingDot.");
+			Assert.AreEqual("TrailingDot.", stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
 
-            log1.Info(".LeadingDot");
-            Assert.AreEqual("LeadingDot", stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
+			log1.Info(".LeadingDot");
+			Assert.AreEqual("LeadingDot", stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
 
-            // empty string and other evil combinations as tests for of-by-one mistakes in index calculations
-            log1.Info(string.Empty);
-            Assert.AreEqual(string.Empty, stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
+			// empty string and other evil combinations as tests for of-by-one mistakes in index calculations
+			log1.Info(string.Empty);
+			Assert.AreEqual(string.Empty, stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
 
-            log1.Info("x");
-            Assert.AreEqual("x", stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
+			log1.Info("x");
+			Assert.AreEqual("x", stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
 
-            log1.Info(".");
-            Assert.AreEqual(".", stringAppender.GetString(), "%message-as-name not registered");
-            stringAppender.Reset();
-        }
+			log1.Info(".");
+			Assert.AreEqual(".", stringAppender.GetString(), "%message-as-name not registered");
+			stringAppender.Reset();
+		}
 
-        /// <summary>
+		/// <summary>
 		/// Converter to include event message
 		/// </summary>
 		private class TestMessagePatternConverter : PatternLayoutConverter
@@ -348,12 +348,12 @@ namespace log4net.Tests.Layout
 			stringAppender.Reset();
 		}
 
-        private class MessageAsNamePatternConverter : NamedPatternConverter
-        {
-            protected override string GetFullyQualifiedName(LoggingEvent loggingEvent)
-            {
-                return loggingEvent.MessageObject.ToString();
-            }
-        }
-    }
+		private class MessageAsNamePatternConverter : NamedPatternConverter
+		{
+			protected override string GetFullyQualifiedName(LoggingEvent loggingEvent)
+			{
+				return loggingEvent.MessageObject.ToString();
+			}
+		}
+	}
 }

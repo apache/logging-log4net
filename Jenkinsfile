@@ -19,39 +19,261 @@
 
 pipeline {
 	options {
-		timeout(time: 1, unit: 'HOURS')
+		timeout(time: 4, unit: 'HOURS')
+		buildDiscarder(logRotator(numToKeepStr: '3'))
+		skipDefaultCheckout()
+		disableConcurrentBuilds()
 	}
-	agent { label 'Windows' }
-	tools {
-		maven 'Maven 3.3.9 (Windows)'
-		jdk 'JDK 1.8 (latest)'
-	}
-	environment {
-		// TODO: find a better way to determine nant installation path
-		NAnt = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
+	agent {
+		label 'ubuntu'
 	}
 	stages {
-		stage('Checkout') {
+		// prepare node for builds
+		stage('checkout') {
 			steps {
+				deleteDir()
 				checkout scm
 			}
 		}
-		stage('Build') {
+
+		// builds
+		stage('build netstandard-1.3') {
 			steps {
-				bat "${NAnt} -buildfile:log4net.build"
+				script {
+					checkout scm
+					def builder_dir = "buildtools/docker/builder-netstandard-1.3"
+
+					// calculate args required to build the docker container
+					def JENKINS_UID = sh (
+						script: "stat -c \"%u\" $builder_dir",
+						returnStdout: true
+					).trim()
+					def JENKINS_GID = sh (
+						script: "stat -c \"%g\" $builder_dir",
+						returnStdout: true
+					).trim()
+
+					// build docker container
+					def builder = docker.build 'builder-netstandard:latest', "--file $builder_dir/Dockerfile --build-arg JENKINS_UID=$JENKINS_UID --build-arg JENKINS_GID=$JENKINS_GID $builder_dir"
+
+					// run docker container
+					builder.inside {
+						// compile
+						sh "nant compile-netstandard-1.3"
+						stash includes: 'bin/**/*.*', name: 'netstandard-1.3-assemblies'
+
+						// test
+						sh 'cd netstandard/log4net.tests && dotnet test --verbosity detailed'
+					}
+				}
 			}
 		}
-		stage('Test on Windows') {
+		stage('build net-3.5') {
+			agent { label 'Windows' }
+			environment {
+				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
+			}
 			steps {
-				bat "${NAnt} -buildfile:tests\\nant.build"
+				deleteDir()
+				checkout scm
+				bat "${NANT_BIN} -t:net-3.5 -buildfile:log4net.build compile-net-3.5"
+				stash includes: 'bin/**/*.*', name: 'net-3.5-assemblies'
+				bat "${NANT_BIN} -t:net-3.5 -buildfile:tests/nant.build runtests-net-3.5"
+				stash includes: 'tests/bin/**/*.nunit.xml', name: 'net-3.5-testresults'
 			}
 		}
-		stage('Build-Site') {
+		stage('build net-3.5-cp') {
+			agent { label 'Windows' }
+			environment {
+				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
+			}
 			steps {
-				bat "${NAnt} -buildfile:log4net.build generate-site"
+				deleteDir()
+				checkout scm
+				bat "${NANT_BIN} -t:net-3.5 -buildfile:log4net.build compile-net-3.5-cp"
+				stash includes: 'bin/**/*.*', name: 'net-3.5-cp-assemblies'
+				bat "${NANT_BIN} -t:net-3.5 -buildfile:tests/nant.build runtests-net-3.5-cp"
+				stash includes: 'tests/bin/**/*.nunit.xml', name: 'net-3.5-cp-testresults'
 			}
 		}
-		stage('Deploy-Site') {
+		stage('build net-4.0') {
+			agent { label 'Windows' }
+			environment {
+				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
+			}
+			steps {
+				deleteDir()
+				checkout scm
+				bat "${NANT_BIN} -t:net-4.0 -buildfile:log4net.build compile-net-4.0"
+				stash includes: 'bin/**/*.*', name: 'net-4.0-assemblies'
+				bat "${NANT_BIN} -t:net-4.0 -buildfile:tests/nant.build runtests-net-4.0"
+				stash includes: 'tests/bin/**/*.nunit.xml', name: 'net-4.0-testresults'
+			}
+		}
+		stage('build net-4.0-cp') {
+			agent { label 'Windows' }
+			environment {
+				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
+			}
+			steps {
+				deleteDir()
+				checkout scm
+				bat "${NANT_BIN} -t:net-4.0 -buildfile:log4net.build compile-net-4.0-cp"
+				stash includes: 'bin/**/*.*', name: 'net-4.0-cp-assemblies'
+				bat "${NANT_BIN} -t:net-4.0 -buildfile:tests/nant.build runtests-net-4.0-cp"
+				stash includes: 'tests/bin/**/*.nunit.xml', name: 'net-4.0-cp-testresults'
+			}
+		}
+		stage('build net-4.5') {
+			agent { label 'Windows' }
+			environment {
+				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
+			}
+			steps {
+				deleteDir()
+				checkout scm
+				bat "${NANT_BIN} -t:net-4.0 -buildfile:log4net.build compile-net-4.5"
+				stash includes: 'bin/**/*.*', name: 'net-4.5-assemblies'
+				bat "${NANT_BIN} -t:net-4.0 -buildfile:tests/nant.build runtests-net-4.5"
+				stash includes: 'tests/bin/**/*.nunit.xml', name: 'net-4.5-testresults'
+			}
+		}
+		stage('build mono-2.0') {
+			agent {
+				dockerfile {
+					dir 'buildtools/docker/builder-mono-2.0'
+					args '-v /etc/localtime:/etc/localtime:ro'
+					reuseNode true
+				}
+			}
+			steps {
+				sh "rm -rf bin/ tests/"
+				checkout scm
+				sh "nant -t:mono-2.0 -buildfile:log4net.build compile-mono-2.0"
+				stash includes: 'bin/**/*.*', name: 'mono-2.0-assemblies'
+				sh "nant -t:mono-2.0 -buildfile:tests/nant.build runtests-mono-2.0"
+				stash includes: 'tests/bin/**/*.nunit.xml', name: 'mono-2.0-testresults'
+			}
+		}
+		stage('build mono-3.5') {
+			agent {
+				dockerfile {
+					dir 'buildtools/docker/builder-mono-3.5'
+					args '-v /etc/localtime:/etc/localtime:ro'
+					reuseNode true
+				}
+			}
+			steps {
+				sh "rm -rf bin/ tests/"
+				checkout scm
+				sh "nant -t:mono-3.5 -buildfile:log4net.build compile-mono-3.5"
+				stash includes: 'bin/**/*.*', name: 'mono-3.5-assemblies'
+				sh "nant -t:mono-3.5 -buildfile:tests/nant.build runtests-mono-3.5"
+				stash includes: 'tests/bin/**/*.nunit.xml', name: 'mono-3.5-testresults'
+			}
+		}
+		stage('build mono-4.0') {
+			agent {
+				dockerfile {
+					dir 'buildtools/docker/builder-mono-4.0'
+					args '-v /etc/localtime:/etc/localtime:ro'
+					reuseNode true
+				}
+			}
+			steps {
+				sh "rm -rf bin/ tests/"
+				checkout scm
+				sh "nant -t:mono-4.0 -buildfile:log4net.build compile-mono-4.0"
+				stash includes: 'bin/**/*.*', name: 'mono-4.0-assemblies'
+				sh "nant -t:mono-4.0 -buildfile:tests/nant.build runtests-mono-4.0"
+				stash includes: 'tests/bin/**/*.nunit.xml', name: 'mono-4.0-testresults'
+			}
+		}
+		stage('build site') {
+			agent { label 'Windows' }
+			tools {
+				maven 'Maven 3.3.9 (Windows)'
+				jdk 'JDK 1.8 (latest)'
+			}
+			environment {
+				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
+			}
+			steps {
+				deleteDir()
+				checkout scm
+				bat "${NANT_BIN} -buildfile:log4net.build generate-site"
+				stash includes: 'target/site/**/*.*', name: 'site'
+			}
+		}
+
+		// prepare package
+		stage('prepare package') {
+			steps {
+				// assemble package by unstashing components
+				dir('package') {
+					// unstash assemblies
+					unstash 'net-3.5-assemblies'
+					unstash 'net-3.5-cp-assemblies'
+					unstash 'net-4.0-assemblies'
+					unstash 'net-4.0-cp-assemblies'
+					unstash 'net-4.5-assemblies'
+					unstash 'mono-2.0-assemblies'
+					unstash 'mono-3.5-assemblies'
+					unstash 'mono-4.0-assemblies'
+					unstash 'netstandard-1.3-assemblies'
+
+					// unstash test results
+					unstash 'net-3.5-testresults'
+					unstash 'net-3.5-cp-testresults'
+					unstash 'net-4.0-testresults'
+					unstash 'net-4.0-cp-testresults'
+					unstash 'net-4.5-testresults'
+					unstash 'mono-2.0-testresults'
+					unstash 'mono-3.5-testresults'
+					unstash 'mono-4.0-testresults'
+
+					// unstash site
+					unstash 'site'
+				}
+
+				// move site
+				sh 'mv package/target/site/ package/site/'
+				sh 'rmdir -p --ignore-fail-on-non-empty package/target'
+
+				// record git status into the package
+				sh 'git log -1 > package/git.commit'
+
+				// archive package
+				archive 'package/**/*.*'
+			}
+		}
+
+		// archive the tests (this also checks if tests failed; if that's the case this stage should fail)
+		stage('check test results') {
+			steps {
+				// record test results
+				step([
+					$class        : 'XUnitBuilder',
+					thresholds    : [
+						[
+							$class: 'FailedThreshold', unstableThreshold: '1'
+						]
+					],
+					tools         : [
+						[
+							$class               : 'NUnitJunitHudsonTestType',
+							deleteOutputFiles    : false,
+							failIfNotNew         : true,
+							pattern              : 'package/tests/bin/**/*.nunit.xml',
+							skipNoTestFiles      : true,
+							stopProcessingIfError: true
+						]
+					]
+				])
+			}
+		}
+
+		stage('publish site') {
 			when {
 				branch 'master'
 			}
@@ -62,7 +284,8 @@ pipeline {
 	}
 	post {
 		failure {
-			step([$class: 'Mailer', notifyEveryUnstableBuild: false, recipients: 'dev@logging.apache.org'])
+			// TODO: change this to dev@
+			step([$class: 'Mailer', notifyEveryUnstableBuild: false, recipients: 'commits@logging.apache.org'])
 		}
 	}
 }

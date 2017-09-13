@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -28,7 +28,7 @@ using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace log4net.Util 
+namespace log4net.Util
 {
 	/// <summary>
 	/// Represents a native error code and message.
@@ -40,23 +40,23 @@ namespace log4net.Util
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
-	public sealed class NativeError 
+	public sealed class NativeError
 	{
 		#region Protected Instance Constructors
 
 		/// <summary>
-		/// Create an instance of the <see cref="NativeError" /> class with the specified 
+		/// Create an instance of the <see cref="NativeError" /> class with the specified
 		/// error number and message.
 		/// </summary>
 		/// <param name="number">The number of the native error.</param>
 		/// <param name="message">The message of the native error.</param>
 		/// <remarks>
 		/// <para>
-		/// Create an instance of the <see cref="NativeError" /> class with the specified 
+		/// Create an instance of the <see cref="NativeError" /> class with the specified
 		/// error number and message.
 		/// </para>
 		/// </remarks>
-		private NativeError(int number, string message) 
+		private NativeError(int number, string message)
 		{
 			m_number = number;
 			m_message = message;
@@ -77,7 +77,7 @@ namespace log4net.Util
 		/// Gets the number of the native error.
 		/// </para>
 		/// </remarks>
-		public int Number 
+		public int Number
 		{
 			get { return m_number; }
 		}
@@ -93,7 +93,7 @@ namespace log4net.Util
 		/// </para>
 		/// Gets the message of the native error.
 		/// </remarks>
-		public string Message 
+		public string Message
 		{
 			get { return m_message; }
 		}
@@ -110,16 +110,16 @@ namespace log4net.Util
 		/// </returns>
 		/// <remarks>
 		/// <para>
-		/// The message for the <see cref="Marshal.GetLastWin32Error"/> error number is lookup up using the 
+		/// The message for the <see cref="Marshal.GetLastWin32Error"/> error number is lookup up using the
 		/// native Win32 <c>FormatMessage</c> function.
 		/// </para>
 		/// </remarks>
 #if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
-        [System.Security.SecuritySafeCritical]
+		[System.Security.SecuritySafeCritical]
 #elif !NETCF
-        [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode=true)]
+		[System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode=true)]
 #endif
-        public static NativeError GetLastError() 
+		public static NativeError GetLastError()
 		{
 			int number = Marshal.GetLastWin32Error();
 			return new NativeError(number, NativeError.GetErrorMessage(number));
@@ -130,16 +130,16 @@ namespace log4net.Util
 		/// </summary>
 		/// <param name="number">the error number for the native error</param>
 		/// <returns>
-		/// An instance of the <see cref="NativeError" /> class for the specified 
+		/// An instance of the <see cref="NativeError" /> class for the specified
 		/// error number.
 		/// </returns>
 		/// <remarks>
 		/// <para>
-		/// The message for the specified error number is lookup up using the 
+		/// The message for the specified error number is lookup up using the
 		/// native Win32 <c>FormatMessage</c> function.
 		/// </para>
 		/// </remarks>
-		public static NativeError GetError(int number) 
+		public static NativeError GetError(int number)
 		{
 			return new NativeError(number, NativeError.GetErrorMessage(number));
 		}
@@ -158,11 +158,11 @@ namespace log4net.Util
 		/// </para>
 		/// </remarks>
 #if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
-        [System.Security.SecuritySafeCritical]
+		[System.Security.SecuritySafeCritical]
 #elif !NETCF
-        [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
+		[System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
 #endif
-        public static string GetErrorMessage(int messageId) 
+		public static string GetErrorMessage(int messageId)
 		{
 			// Win32 constants
 			int FORMAT_MESSAGE_ALLOCATE_BUFFER = 0x00000100;	// The function should allocates a buffer large enough to hold the formatted message
@@ -173,30 +173,30 @@ namespace log4net.Util
 			IntPtr sourcePtr = new IntPtr();	// Location of the message definition, will be ignored
 			IntPtr argumentsPtr = new IntPtr();	// Pointer to array of values to insert, not supported as it requires unsafe code
 
-			if (messageId != 0) 
+			if (messageId != 0)
 			{
 				// If the function succeeds, the return value is the number of TCHARs stored in the output buffer, excluding the terminating null character
 				int messageSize = FormatMessage(
-					FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, 
-					ref sourcePtr, 
-					messageId, 
-					0, 
-					ref msgBuf, 
-					255, 
+					FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+					ref sourcePtr,
+					messageId,
+					0,
+					ref msgBuf,
+					255,
 					argumentsPtr);
 
-				if (messageSize > 0) 
+				if (messageSize > 0)
 				{
 					// Remove trailing null-terminating characters (\r\n) from the message
 					msgBuf = msgBuf.TrimEnd(new char[] {'\r', '\n'});
 				}
-				else 
+				else
 				{
 					// A message could not be located.
 					msgBuf = null;
 				}
-			} 
-			else 
+			}
+			else
 			{
 				msgBuf = null;
 			}
@@ -217,7 +217,7 @@ namespace log4net.Util
 		/// Return error information string
 		/// </para>
 		/// </remarks>
-		public override string ToString() 
+		public override string ToString()
 		{
 			return string.Format(CultureInfo.InvariantCulture, "0x{0:x8}", this.Number) + (this.Message != null ? ": " + this.Message : "");
 		}
@@ -238,12 +238,12 @@ namespace log4net.Util
 		/// <param name="Arguments">Pointer to an array of values that are used as insert values in the formatted message.</param>
 		/// <remarks>
 		/// <para>
-		/// The function requires a message definition as input. The message definition can come from a 
-		/// buffer passed into the function. It can come from a message table resource in an 
-		/// already-loaded module. Or the caller can ask the function to search the system's message 
-		/// table resource(s) for the message definition. The function finds the message definition 
-		/// in a message table resource based on a message identifier and a language identifier. 
-		/// The function copies the formatted message text to an output buffer, processing any embedded 
+		/// The function requires a message definition as input. The message definition can come from a
+		/// buffer passed into the function. It can come from a message table resource in an
+		/// already-loaded module. Or the caller can ask the function to search the system's message
+		/// table resource(s) for the message definition. The function finds the message definition
+		/// in a message table resource based on a message identifier and a language identifier.
+		/// The function copies the formatted message text to an output buffer, processing any embedded
 		/// insert sequences if requested.
 		/// </para>
 		/// <para>
@@ -252,11 +252,11 @@ namespace log4net.Util
 		/// </remarks>
 		/// <returns>
 		/// <para>
-		/// If the function succeeds, the return value is the number of TCHARs stored in the output 
+		/// If the function succeeds, the return value is the number of TCHARs stored in the output
 		/// buffer, excluding the terminating null character.
 		/// </para>
 		/// <para>
-		/// If the function fails, the return value is zero. To get extended error information, 
+		/// If the function fails, the return value is zero. To get extended error information,
 		/// call <see cref="M:Marshal.GetLastWin32Error()" />.
 		/// </para>
 		/// </returns>
@@ -266,11 +266,11 @@ namespace log4net.Util
 		[DllImport("Kernel32.dll", SetLastError=true, CharSet=CharSet.Auto)]
 #endif
 		private static extern int FormatMessage(
-			int dwFlags, 
-			ref IntPtr lpSource, 
+			int dwFlags,
+			ref IntPtr lpSource,
 			int dwMessageId,
-			int dwLanguageId, 
-			ref String lpBuffer, 
+			int dwLanguageId,
+			ref String lpBuffer,
 			int nSize,
 			IntPtr Arguments);
 

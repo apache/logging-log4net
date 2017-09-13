@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -63,11 +63,11 @@ namespace log4net.Util
 		/// <returns>The number of appenders called.</returns>
 		/// <remarks>
 		/// <para>
-		/// Calls the <see cref="IAppender.DoAppend" /> method on all 
+		/// Calls the <see cref="IAppender.DoAppend" /> method on all
 		/// attached appenders.
 		/// </para>
 		/// </remarks>
-		public int AppendLoopOnAppenders(LoggingEvent loggingEvent) 
+		public int AppendLoopOnAppenders(LoggingEvent loggingEvent)
 		{
 			if (loggingEvent == null)
 			{
@@ -75,7 +75,7 @@ namespace log4net.Util
 			}
 
 			// m_appenderList is null when empty
-			if (m_appenderList == null) 
+			if (m_appenderList == null)
 			{
 				return 0;
 			}
@@ -106,11 +106,11 @@ namespace log4net.Util
 		/// <returns>The number of appenders called.</returns>
 		/// <remarks>
 		/// <para>
-		/// Calls the <see cref="IAppender.DoAppend" /> method on all 
+		/// Calls the <see cref="IAppender.DoAppend" /> method on all
 		/// attached appenders.
 		/// </para>
 		/// </remarks>
-		public int AppendLoopOnAppenders(LoggingEvent[] loggingEvents) 
+		public int AppendLoopOnAppenders(LoggingEvent[] loggingEvents)
 		{
 			if (loggingEvents == null)
 			{
@@ -127,7 +127,7 @@ namespace log4net.Util
 			}
 
 			// m_appenderList is null when empty
-			if (m_appenderList == null) 
+			if (m_appenderList == null)
 			{
 				return 0;
 			}
@@ -153,10 +153,10 @@ namespace log4net.Util
 
 		#endregion Public Instance Methods
 
-        #region Private Static Methods
+		#region Private Static Methods
 
-        /// <summary>
-		/// Calls the DoAppende method on the <see cref="IAppender"/> with 
+		/// <summary>
+		/// Calls the DoAppende method on the <see cref="IAppender"/> with
 		/// the <see cref="LoggingEvent"/> objects supplied.
 		/// </summary>
 		/// <param name="appender">The appender</param>
@@ -164,7 +164,7 @@ namespace log4net.Util
 		/// <remarks>
 		/// <para>
 		/// If the <paramref name="appender" /> supports the <see cref="IBulkAppender"/>
-		/// interface then the <paramref name="loggingEvents" /> will be passed 
+		/// interface then the <paramref name="loggingEvents" /> will be passed
 		/// through using that interface. Otherwise the <see cref="LoggingEvent"/>
 		/// objects in the array will be passed one at a time.
 		/// </para>
@@ -183,13 +183,13 @@ namespace log4net.Util
 					appender.DoAppend(loggingEvent);
 				}
 			}
-        }
+		}
 
-        #endregion
+		#endregion
 
-        #region Implementation of IAppenderAttachable
+		#region Implementation of IAppenderAttachable
 
-        /// <summary>
+		/// <summary>
 		/// Attaches an appender.
 		/// </summary>
 		/// <param name="newAppender">The appender to add.</param>
@@ -198,16 +198,16 @@ namespace log4net.Util
 		/// If the appender is already in the list it won't be added again.
 		/// </para>
 		/// </remarks>
-		public void AddAppender(IAppender newAppender) 
+		public void AddAppender(IAppender newAppender)
 		{
 			// Null values for newAppender parameter are strictly forbidden.
 			if (newAppender == null)
 			{
 				throw new ArgumentNullException("newAppender");
 			}
-	
+
 			m_appenderArray = null;
-			if (m_appenderList == null) 
+			if (m_appenderList == null)
 			{
 				m_appenderList = new AppenderCollection(1);
 			}
@@ -229,7 +229,7 @@ namespace log4net.Util
 		/// The read only collection of all currently attached appenders.
 		/// </para>
 		/// </remarks>
-		public AppenderCollection Appenders 
+		public AppenderCollection Appenders
 		{
 			get
 			{
@@ -238,7 +238,7 @@ namespace log4net.Util
 					// We must always return a valid collection
 					return AppenderCollection.EmptyCollection;
 				}
-				else 
+				else
 				{
 					return AppenderCollection.ReadOnly(m_appenderList);
 				}
@@ -258,7 +258,7 @@ namespace log4net.Util
 		/// Lookup an attached appender by name.
 		/// </para>
 		/// </remarks>
-		public IAppender GetAppender(string name) 
+		public IAppender GetAppender(string name)
 		{
 			if (m_appenderList != null && name != null)
 			{
@@ -270,7 +270,7 @@ namespace log4net.Util
 					}
 				}
 			}
-			return null;   
+			return null;
 		}
 
 		/// <summary>
@@ -281,9 +281,9 @@ namespace log4net.Util
 		/// Removes and closes all attached appenders
 		/// </para>
 		/// </remarks>
-		public void RemoveAllAppenders() 
+		public void RemoveAllAppenders()
 		{
-			if (m_appenderList != null) 
+			if (m_appenderList != null)
 			{
 				foreach(IAppender appender in m_appenderList)
 				{
@@ -296,7 +296,7 @@ namespace log4net.Util
 						LogLog.Error(declaringType, "Failed to Close appender ["+appender.Name+"]", ex);
 					}
 				}
-				m_appenderList = null;	  
+				m_appenderList = null;
 				m_appenderArray = null;
 			}
 		}
@@ -313,9 +313,9 @@ namespace log4net.Util
 		/// <see cref="IAppender.Close"/> on the appender removed.
 		/// </para>
 		/// </remarks>
-		public IAppender RemoveAppender(IAppender appender) 
+		public IAppender RemoveAppender(IAppender appender)
 		{
-			if (appender != null && m_appenderList != null) 
+			if (appender != null && m_appenderList != null)
 			{
 				m_appenderList.Remove(appender);
 				if (m_appenderList.Count == 0)
@@ -339,7 +339,7 @@ namespace log4net.Util
 		/// <see cref="IAppender.Close"/> on the appender removed.
 		/// </para>
 		/// </remarks>
-		public IAppender RemoveAppender(string name) 
+		public IAppender RemoveAppender(string name)
 		{
 			return RemoveAppender(GetAppender(name));
 		}
@@ -360,17 +360,17 @@ namespace log4net.Util
 
 		#endregion Private Instance Fields
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the AppenderAttachedImpl class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(AppenderAttachedImpl);
+		/// <summary>
+		/// The fully qualified type of the AppenderAttachedImpl class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(AppenderAttachedImpl);
 
-	    #endregion Private Static Fields
+		#endregion Private Static Fields
 	}
 }

@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -44,7 +44,7 @@ namespace SampleAppendersApp.Appender
 			set { m_name = value; }
 		}
 
-		public void ActivateOptions() 
+		public void ActivateOptions()
 		{
 		}
 
@@ -103,7 +103,7 @@ namespace SampleAppendersApp.Appender
 
 		#region IAppenderAttachable Members
 
-		public void AddAppender(IAppender newAppender) 
+		public void AddAppender(IAppender newAppender)
 		{
 			if (newAppender == null)
 			{
@@ -111,7 +111,7 @@ namespace SampleAppendersApp.Appender
 			}
 			lock(this)
 			{
-				if (m_appenderAttachedImpl == null) 
+				if (m_appenderAttachedImpl == null)
 				{
 					m_appenderAttachedImpl = new log4net.Util.AppenderAttachedImpl();
 				}
@@ -129,7 +129,7 @@ namespace SampleAppendersApp.Appender
 					{
 						return AppenderCollection.EmptyCollection;
 					}
-					else 
+					else
 					{
 						return m_appenderAttachedImpl.Appenders;
 					}
@@ -137,7 +137,7 @@ namespace SampleAppendersApp.Appender
 			}
 		}
 
-		public IAppender GetAppender(string name) 
+		public IAppender GetAppender(string name)
 		{
 			lock(this)
 			{
@@ -150,11 +150,11 @@ namespace SampleAppendersApp.Appender
 			}
 		}
 
-		public void RemoveAllAppenders() 
+		public void RemoveAllAppenders()
 		{
 			lock(this)
 			{
-				if (m_appenderAttachedImpl != null) 
+				if (m_appenderAttachedImpl != null)
 				{
 					m_appenderAttachedImpl.RemoveAllAppenders();
 					m_appenderAttachedImpl = null;
@@ -162,11 +162,11 @@ namespace SampleAppendersApp.Appender
 			}
 		}
 
-		public IAppender RemoveAppender(IAppender appender) 
+		public IAppender RemoveAppender(IAppender appender)
 		{
 			lock(this)
 			{
-				if (appender != null && m_appenderAttachedImpl != null) 
+				if (appender != null && m_appenderAttachedImpl != null)
 				{
 					return m_appenderAttachedImpl.RemoveAppender(appender);
 				}
@@ -174,7 +174,7 @@ namespace SampleAppendersApp.Appender
 			return null;
 		}
 
-		public IAppender RemoveAppender(string name) 
+		public IAppender RemoveAppender(string name)
 		{
 			lock(this)
 			{
