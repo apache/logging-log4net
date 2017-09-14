@@ -33,6 +33,8 @@ using NUnit.Framework;
 using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
+using static log4net.Appender.RollingFileAppender;
+using NSubstitute;
 
 namespace log4net.Tests.Appender
 {
@@ -260,20 +262,69 @@ namespace log4net.Tests.Appender
 			}
 		}
 
-		[Test]
-		public void RollingBySizeAndPreserveExtensionShouldWorkWithSubFolders()
+		[TestCase(true)]
+		[TestCase(false)]
+		public void RollingBySizeShouldWorkWithSubFolders(bool preserveExt)
 		{
 			ConfigureRootWithNoAppender();
 
 			RollingFileAppender roller = CreateAppenderWithoutActivate();
 			roller.RollingStyle = RollingFileAppender.RollingMode.Size;
-			roller.PreserveLogFileNameExtension = true;
+			roller.PreserveLogFileNameExtension = preserveExt;
 			roller.File = c_fileNameWithFolder; 
 			roller.ActivateOptions();
 			_root.AddAppender(roller);
 
 			WriteLotsOfLogs();
-			VerifyFileCount(_MaxSizeRollBackups + 1, preserveLogFileNameExtension: true);
+			VerifyFileCount(_MaxSizeRollBackups + 1, preserveLogFileNameExtension: preserveExt);
+		}
+
+		[TestCase(true)]
+		[TestCase(false)]
+		public void RollingByDateShouldWorkWithSubFolders(bool preserveExt)
+		{
+			ConfigureRootWithNoAppender();
+
+			RollingFileAppender roller = CreateAppenderWithoutActivate();
+			roller.RollingStyle = RollingFileAppender.RollingMode.Date;
+			roller.File = c_fileNameWithFolder;
+			roller.PreserveLogFileNameExtension = preserveExt;
+			roller.ActivateOptions();
+			_root.AddAppender(roller);
+			roller.DateTimeStrategy = Substitute.For<IDateTime>();
+
+			int days = 5;
+			for (int i = 1; i <= days; ++i)
+			{
+				var mockDate = DateTime.Today.AddDays(i);
+				roller.DateTimeStrategy.Now.Returns(mockDate);
+				_root.Log(Level.Debug, "test", null);
+			}
+			VerifyFileCount(days, preserveExt);
+		}
+
+		[TestCase(true)]
+		[TestCase(false)]
+		public void RollingByCompositeShouldWorkWithSubFolders(bool preserveExt)
+		{
+			ConfigureRootWithNoAppender();
+
+			RollingFileAppender roller = CreateAppenderWithoutActivate();
+			roller.RollingStyle = RollingFileAppender.RollingMode.Composite;
+			roller.File = c_fileNameWithFolder;
+			roller.PreserveLogFileNameExtension = preserveExt;
+			roller.ActivateOptions();
+			_root.AddAppender(roller);
+			roller.DateTimeStrategy = Substitute.For<IDateTime>();
+
+			int days = 5;
+			for (int i = 1; i <= days; ++i)
+			{
+				var mockDate = DateTime.Today.AddDays(i);
+				roller.DateTimeStrategy.Now.Returns(mockDate);
+				WriteLotsOfLogs();
+			}
+			VerifyFileCount(days * (_MaxSizeRollBackups + 1), preserveExt);
 		}
 
 		/// <summary>
