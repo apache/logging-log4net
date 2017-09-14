@@ -218,8 +218,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void RollingCombinedWithPreserveExtension()
 		{
-			_root = ((Repository.Hierarchy.Hierarchy)Utils.GetRepository()).Root;
-			_root.Level = Level.All;
+			ConfigureRootWithNoAppender();
 
 			RollingFileAppender roller = new RollingFileAppender();
 			roller.StaticLogFileName = false;
@@ -239,6 +238,13 @@ namespace log4net.Tests.Appender
 
 			WriteLotsOfLogs();
 			VerifyFileCount(2, true);
+		}
+
+		private void ConfigureRootWithNoAppender()
+		{
+			_root = ((Repository.Hierarchy.Hierarchy)Utils.GetRepository()).Root;
+			_root.Level = Level.All;
+			_root.Repository.Configured = true;
 		}
 
 		private static PatternLayout CreateAndActivatePatternLayout()
@@ -268,8 +274,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void RollingBySizeAndPreserveExtensionShouldWorkWithSubFolders()
 		{
-			_root = ((Repository.Hierarchy.Hierarchy)Utils.GetRepository()).Root;
-			_root.Level = Level.All;
+			ConfigureRootWithNoAppender();
 
 			RollingFileAppender roller = new RollingFileAppender();
 			roller.StaticLogFileName = false;
@@ -939,7 +944,7 @@ namespace log4net.Tests.Appender
 		/// <param name="table"></param>
 		private void VerifyRolling(RollConditions[] table)
 		{
-			ConfigureRootAppender();
+			ConfigureRootWithCountingAppender();
 			RollFromTableEntries(c_fileName, table, GetTestMessage());
 		}
 
@@ -1138,7 +1143,7 @@ namespace log4net.Tests.Appender
 		/// <summary>
 		/// Configures the root appender for counting and rolling
 		/// </summary>
-		private void ConfigureRootAppender()
+		private void ConfigureRootWithCountingAppender()
 		{
 			_root = ((Repository.Hierarchy.Hierarchy)Utils.GetRepository()).Root;
 			_root.Level = Level.Debug;
