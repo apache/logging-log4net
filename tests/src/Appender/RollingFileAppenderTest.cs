@@ -220,12 +220,10 @@ namespace log4net.Tests.Appender
 		{
 			_root = ((Repository.Hierarchy.Hierarchy)Utils.GetRepository()).Root;
 			_root.Level = Level.All;
-			PatternLayout patternLayout = new PatternLayout();
-			patternLayout.ActivateOptions();
 
 			RollingFileAppender roller = new RollingFileAppender();
 			roller.StaticLogFileName = false;
-			roller.Layout = patternLayout;
+			roller.Layout = CreateAndActivatePatternLayout();
 			roller.AppendToFile = true;
 			roller.RollingStyle = RollingFileAppender.RollingMode.Composite;
 			roller.DatePattern = "dd_MM_yyyy";
@@ -241,6 +239,13 @@ namespace log4net.Tests.Appender
 
 			WriteLotsOfLogs();
 			VerifyFileCount(2, true);
+		}
+
+		private static PatternLayout CreateAndActivatePatternLayout()
+		{
+			PatternLayout layout = new PatternLayout("%m%n");
+			layout.ActivateOptions();
+			return layout;
 		}
 
 		private void WriteLotsOfLogs()
@@ -265,12 +270,10 @@ namespace log4net.Tests.Appender
 		{
 			_root = ((Repository.Hierarchy.Hierarchy)Utils.GetRepository()).Root;
 			_root.Level = Level.All;
-			PatternLayout patternLayout = new PatternLayout();
-			patternLayout.ActivateOptions();
 
 			RollingFileAppender roller = new RollingFileAppender();
 			roller.StaticLogFileName = false;
-			roller.Layout = patternLayout;
+			roller.Layout = CreateAndActivatePatternLayout();
 			roller.AppendToFile = true;
 			roller.RollingStyle = RollingFileAppender.RollingMode.Size;
 			roller.MaxSizeRollBackups = 2;
@@ -353,16 +356,10 @@ namespace log4net.Tests.Appender
 		private RollingFileAppender CreateAppender(FileAppender.LockingModelBase lockModel)
 		{
 			//
-			// Use a basic pattern that
-			// includes just the message and a CR/LF.
-			//
-			PatternLayout layout = new PatternLayout("%m%n");
-
-			//
 			// Create the new appender
 			//
 			RollingFileAppender appender = new RollingFileAppender();
-			appender.Layout = layout;
+			appender.Layout = CreateAndActivatePatternLayout();
 			appender.File = c_fileName;
 			appender.Encoding = Encoding.ASCII;
 			appender.MaximumFileSize = c_iMaximumFileSize.ToString();
@@ -1463,9 +1460,7 @@ namespace log4net.Tests.Appender
 				appender.LockingModel = lockModel;
 			}
 
-			PatternLayout layout = new PatternLayout();
-			layout.ConversionPattern = "%m%n";
-			layout.ActivateOptions();
+			PatternLayout layout = CreateAndActivatePatternLayout();
 
 			appender.Layout = layout;
 			appender.ActivateOptions();
@@ -1974,7 +1969,7 @@ namespace log4net.Tests.Appender
 		private static List<FileInfo> GetExistingFiles(string baseFilePath, bool preserveLogFileNameExtension)
 		{
 			RollingFileAppender appender = new RollingFileAppender();
-						appender.PreserveLogFileNameExtension = preserveLogFileNameExtension;
+			appender.PreserveLogFileNameExtension = preserveLogFileNameExtension;
 			appender.SecurityContext = NullSecurityContext.Instance;
 
 			return (List<FileInfo>)Utils.InvokeMethod(appender, "GetExistingFiles", baseFilePath);
