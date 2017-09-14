@@ -18,7 +18,6 @@
 #endregion
 
 using System;
-using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -220,24 +219,14 @@ namespace log4net.Tests.Appender
 		{
 			ConfigureRootWithNoAppender();
 
-			RollingFileAppender roller = new RollingFileAppender();
-			roller.StaticLogFileName = false;
-			roller.Layout = CreateAndActivatePatternLayout();
-			roller.AppendToFile = true;
+			RollingFileAppender roller = CreateAppenderWithoutActivate();
 			roller.RollingStyle = RollingFileAppender.RollingMode.Composite;
-			roller.DatePattern = "dd_MM_yyyy";
-			roller.MaxSizeRollBackups = 1;
-			roller.CountDirection = 1;
 			roller.PreserveLogFileNameExtension = true;
-			roller.MaximumFileSize = "10KB";
-			roller.File = c_fileName;
 			roller.ActivateOptions();
 			_root.AddAppender(roller);
 
-			_root.Repository.Configured = true;
-
 			WriteLotsOfLogs();
-			VerifyFileCount(2, true);
+			VerifyFileCount(_MaxSizeRollBackups + 1, true);
 		}
 
 		private void ConfigureRootWithNoAppender()
@@ -276,23 +265,15 @@ namespace log4net.Tests.Appender
 		{
 			ConfigureRootWithNoAppender();
 
-			RollingFileAppender roller = new RollingFileAppender();
-			roller.StaticLogFileName = false;
-			roller.Layout = CreateAndActivatePatternLayout();
-			roller.AppendToFile = true;
+			RollingFileAppender roller = CreateAppenderWithoutActivate();
 			roller.RollingStyle = RollingFileAppender.RollingMode.Size;
-			roller.MaxSizeRollBackups = 2;
-			roller.CountDirection = 1;
 			roller.PreserveLogFileNameExtension = true;
-			roller.MaximumFileSize = "5KB";
 			roller.File = c_fileNameWithFolder; 
 			roller.ActivateOptions();
 			_root.AddAppender(roller);
 
-			_root.Repository.Configured = true;
-
 			WriteLotsOfLogs();
-			VerifyFileCount(roller.MaxSizeRollBackups + 1, preserveLogFileNameExtension: true);
+			VerifyFileCount(_MaxSizeRollBackups + 1, preserveLogFileNameExtension: true);
 		}
 
 		/// <summary>
@@ -342,23 +323,19 @@ namespace log4net.Tests.Appender
 			return sBaseFile + "." + iFileCount;
 		}
 
-		/// <summary>
-		/// Returns a RollingFileAppender using all the internal settings for maximum
-		/// file size and number of backups
-		/// </summary>
-		/// <returns></returns>
-		private RollingFileAppender CreateAppender()
+		private RollingFileAppender CreateAppenderAndActivateIt()
 		{
-			return CreateAppender(new FileAppender.ExclusiveLock());
+			var ret = CreateAppenderWithoutActivate();
+			ret.ActivateOptions();
+			return ret;
 		}
 
 		/// <summary>
-		/// Returns a RollingFileAppender using all the internal settings for maximum
+		/// Returns a basic RollingFileAppender using all the internal settings for maximum
 		/// file size and number of backups
 		/// </summary>
-		/// <param name="lockModel">The locking model to test</param>
 		/// <returns></returns>
-		private RollingFileAppender CreateAppender(FileAppender.LockingModelBase lockModel)
+		private RollingFileAppender CreateAppenderWithoutActivate()
 		{
 			//
 			// Create the new appender
@@ -371,9 +348,7 @@ namespace log4net.Tests.Appender
 			appender.MaxSizeRollBackups = _MaxSizeRollBackups;
 			appender.CountDirection = _iCountDirection;
 			appender.RollingStyle = RollingFileAppender.RollingMode.Size;
-			appender.LockingModel = lockModel;
-
-			appender.ActivateOptions();
+			appender.LockingModel = new FileAppender.ExclusiveLock();
 
 			return appender;
 		}
@@ -1154,7 +1129,7 @@ namespace log4net.Tests.Appender
 			//
 			// Set the root appender with a RollingFileAppender
 			//
-			_root.AddAppender(CreateAppender());
+			_root.AddAppender(CreateAppenderAndActivateIt());
 
 			_root.Repository.Configured = true;
 		}
