@@ -239,19 +239,25 @@ namespace log4net.Tests.Appender
 
 			_root.Repository.Configured = true;
 
-			for (int i = 0; i < 1000; i++)
+			WriteLotsOfLogs();
+			VerifyFileCount(2, true);
+		}
+
+		private void WriteLotsOfLogs()
+		{
+			for (int i = 0; i < 10; i++)
 			{
 				StringBuilder s = new StringBuilder();
 				for (int j = 50; j < 100; j++)
 				{
-					if (j > 50) {
+					if (j > 50)
+					{
 						s.Append(" ");
 					}
 					s.Append(j);
 				}
 				_root.Log(Level.Debug, s.ToString(), null);
 			}
-			VerifyFileCount(2, true);
 		}
 
 		[Test]
@@ -277,19 +283,7 @@ namespace log4net.Tests.Appender
 
 			_root.Repository.Configured = true;
 
-			for (int i = 0; i < 1000; i++)
-			{
-				StringBuilder s = new StringBuilder();
-				for (int j = 50; j < 100; j++)
-				{
-					if (j > 50)
-					{
-						s.Append(" ");
-					}
-					s.Append(j);
-				}
-				_root.Log(Level.Debug, s.ToString(), null);
-			}
+			WriteLotsOfLogs();
 			VerifyFileCount(roller.MaxSizeRollBackups + 1, preserveLogFileNameExtension: true);
 		}
 
