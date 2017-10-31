@@ -734,12 +734,12 @@ namespace log4net.Repository.Hierarchy
 
 			if (name == string.Empty)
 			{
-				throw new ArgumentException(nameof(name), "Invalid logger name: a logger name must not be empty.");
+				throw new ArgumentException("name", "Invalid logger name: a logger name must not be empty.");
 			}
 
 			if (name != name.Trim())
 			{
-				throw new ArgumentException(nameof(name), "Invalid logger name: a logger name must not be prefixed or suffixed by whitespaces.");
+				throw new ArgumentException("name", "Invalid logger name: a logger name must not be prefixed or suffixed by whitespaces.");
 			}
 
 			LoggerKey key = new LoggerKey(name);
