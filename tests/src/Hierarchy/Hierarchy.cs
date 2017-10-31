@@ -22,11 +22,8 @@
 using System;
 using System.Xml;
 using log4net.Config;
-using log4net.Core;
 using log4net.Repository;
-using log4net.Repository.Hierarchy;
 using log4net.Tests.Appender;
-using NUnit.Framework;
 
 namespace log4net.Tests.Hierarchy
 {
@@ -100,7 +97,7 @@ namespace log4net.Tests.Hierarchy
 		}
 
 		[Test]
-	// LOG4NET-343
+		// LOG4NET-343
 		public void LoggerNameCanConsistOfASingleDot()
 		{
 			XmlDocument log4netConfig = new XmlDocument();
