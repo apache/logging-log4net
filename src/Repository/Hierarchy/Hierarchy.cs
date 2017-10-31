@@ -734,12 +734,12 @@ namespace log4net.Repository.Hierarchy
 
 			if (name == string.Empty)
 			{
-				throw new ArgumentException("name", "Invalid logger name: a logger name must not be empty.");
+				throw new ArgumentException("Invalid logger name: a logger name must not be empty.", "name");
 			}
 
 			if (name != name.Trim())
 			{
-				throw new ArgumentException("name", "Invalid logger name: a logger name must not be prefixed or suffixed by whitespaces.");
+				throw new ArgumentException("Invalid logger name: a logger name must not be prefixed or suffixed by whitespaces.", "name");
 			}
 
 			LoggerKey key = new LoggerKey(name);
@@ -853,17 +853,17 @@ namespace log4net.Repository.Hierarchy
 
 			if (name == null)
 			{
-				throw new ArgumentException("log", "Invalid logger name: a logger name must not be null.");
+				throw new ArgumentException("Invalid logger name: a logger name must not be null.", "log");
 			}
 
 			if (name == string.Empty)
 			{
-				throw new ArgumentException("log", "Invalid logger name: a logger name must not be empty.");
+				throw new ArgumentException("Invalid logger name: a logger name must not be empty.", "log");
 			}
 
 			if (name != name.Trim())
 			{
-				throw new ArgumentException("log", "Invalid logger name: a logger name must not be prefixed or suffixed with whitespaces.");
+				throw new ArgumentException("Invalid logger name: a logger name must not be prefixed or suffixed with whitespaces.", "log");
 			}
 
 			string[] nameParts = name.Split('.');
@@ -873,12 +873,12 @@ namespace log4net.Repository.Hierarchy
 
 				if (namePart == string.Empty)
 				{
-					throw new ArgumentException("log", "Invalid logger name: a logger name must not contain a substring of two dots or more.");
+					throw new ArgumentException("Invalid logger name: a logger name must not contain a substring of two dots or more.", "log");
 				}
 
 				if (namePart != namePart.Trim())
 				{
-					throw new ArgumentException("log", "Invalid logger name: each part in a logger name when split by a dot must not be prefixed or suffixed with whitespaces.");
+					throw new ArgumentException("Invalid logger name: each part in a logger name when split by a dot must not be prefixed or suffixed with whitespaces.", "log");
 				}
 			}
 
