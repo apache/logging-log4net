@@ -24,6 +24,7 @@ using System.Xml;
 using log4net.Config;
 using log4net.Repository;
 using log4net.Tests.Appender;
+using NUnit.Framework;
 
 namespace log4net.Tests.Hierarchy
 {
