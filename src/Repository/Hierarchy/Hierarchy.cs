@@ -853,17 +853,17 @@ namespace log4net.Repository.Hierarchy
 
 			if (name == null)
 			{
-				throw new ArgumentException(nameof(log), "Invalid logger name: a logger name must not be null.");
+				throw new ArgumentException("log", "Invalid logger name: a logger name must not be null.");
 			}
 
 			if (name == string.Empty)
 			{
-				throw new ArgumentException(nameof(log), "Invalid logger name: a logger name must not be empty.");
+				throw new ArgumentException("log", "Invalid logger name: a logger name must not be empty.");
 			}
 
 			if (name != name.Trim())
 			{
-				throw new ArgumentException(nameof(log), "Invalid logger name: a logger name must not be prefixed or suffixed with whitespaces.");
+				throw new ArgumentException("log", "Invalid logger name: a logger name must not be prefixed or suffixed with whitespaces.");
 			}
 
 			string[] nameParts = name.Split('.');
@@ -873,12 +873,12 @@ namespace log4net.Repository.Hierarchy
 
 				if (namePart == string.Empty)
 				{
-					throw new ArgumentException(nameof(log), "Invalid logger name: a logger name must not contain a substring of two dots or more.");
+					throw new ArgumentException("log", "Invalid logger name: a logger name must not contain a substring of two dots or more.");
 				}
 
 				if (namePart != namePart.Trim())
 				{
-					throw new ArgumentException(nameof(log), "Invalid logger name: each part in a logger name when split by a dot must not be prefixed or suffixed with whitespaces.");
+					throw new ArgumentException("log", "Invalid logger name: each part in a logger name when split by a dot must not be prefixed or suffixed with whitespaces.");
 				}
 			}
 
