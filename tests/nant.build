@@ -869,7 +869,7 @@ limitations under the License.
         <exec program="dotnet" workingdir="${log4net.basedir}/netstandard/log4net.tests">
             <arg value="test"/>
 			<arg value="-xml"/>
-			<arg value="${current.bin.dir}/log4net.Tests.dll-results.mstest.xml"/>
+			<arg value="${log4net.basedir}/tests/bin/log4net.Tests.dll-results.mstest.xml"/>
             <arg value="--verbosity"/>
 		    <arg value="detailed"/>
         </exec>
