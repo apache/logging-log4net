@@ -726,9 +726,20 @@ namespace log4net.Repository.Hierarchy
 			{
 				throw new ArgumentNullException("name");
 			}
+
 			if (factory == null)
 			{
 				throw new ArgumentNullException("factory");
+			}
+
+			if (name == string.Empty)
+			{
+				throw new ArgumentException(nameof(name), "Invalid logger name: a logger name must not be empty.");
+			}
+
+			if (name != name.Trim())
+			{
+				throw new ArgumentException(nameof(name), "Invalid logger name: a logger name must not be prefixed or suffixed by whitespaces.");
 			}
 
 			LoggerKey key = new LoggerKey(name);
@@ -839,6 +850,37 @@ namespace log4net.Repository.Hierarchy
 			string name = log.Name;
 			int length = name.Length;
 			bool parentFound = false;
+
+			if (name == null)
+			{
+				throw new ArgumentException(nameof(log), "Invalid logger name: a logger name must not be null.");
+			}
+
+			if (name == string.Empty)
+			{
+				throw new ArgumentException(nameof(log), "Invalid logger name: a logger name must not be empty.");
+			}
+
+			if (name != name.Trim())
+			{
+				throw new ArgumentException(nameof(log), "Invalid logger name: a logger name must not be prefixed or suffixed with whitespaces.");
+			}
+
+			string[] nameParts = name.Split('.');
+			for (int i = 0; i < nameParts.Length; i++)
+			{
+				string namePart = nameParts[i];
+
+				if (namePart == string.Empty)
+				{
+					throw new ArgumentException(nameof(log), "Invalid logger name: a logger name must not contain a substring of two dots or more.");
+				}
+
+				if (namePart != namePart.Trim())
+				{
+					throw new ArgumentException(nameof(log), "Invalid logger name: each part in a logger name when split by a dot must not be prefixed or suffixed with whitespaces.");
+				}
+			}
 
 			// if name = "w.x.y.z", loop through "w.x.y", "w.x" and "w", but not "w.x.y.z"
 			for (int i = name.LastIndexOf('.', length - 1); i >= 0; i = name.LastIndexOf('.', i - 1))
