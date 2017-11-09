@@ -95,11 +95,11 @@ namespace log4net.Core
 					while (frameIndex < st.FrameCount)
 					{
 						StackFrame frame = st.GetFrame(frameIndex);
+						frameIndex++;
 						if (frame != null && frame.GetMethod().DeclaringType == callerStackBoundaryDeclaringType)
 						{
 							break;
 						}
-						frameIndex++;
 					}
 
 					// skip frames from fqnOfCallingClass
