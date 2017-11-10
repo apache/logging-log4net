@@ -64,7 +64,7 @@ pipeline {
 
 						// test
 						sh "nant -buildfile:tests/nant.build runtests-netstandard-1.3"
-						stash includes: 'tests/bin/**/*.mstests.xml', name: 'netstandard-1.3-testresults'
+						stash includes: 'tests/bin/**/*.mstests.trx', name: 'netstandard-1.3-testresults'
 					}
 				}
 			}
@@ -267,6 +267,14 @@ pipeline {
 							deleteOutputFiles    : false,
 							failIfNotNew         : true,
 							pattern              : 'package/tests/bin/**/*.nunit.xml',
+							skipNoTestFiles      : true,
+							stopProcessingIfError: true
+						],
+						[
+							$class               : 'MSTestJunitHudsonTestType',
+							deleteOutputFiles    : false,
+							failIfNotNew         : true,
+							pattern              : 'package/tests/bin/**/*.nunit.trx',
 							skipNoTestFiles      : true,
 							stopProcessingIfError: true
 						]

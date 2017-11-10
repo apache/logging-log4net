@@ -868,8 +868,7 @@ limitations under the License.
     <target name="runtests-netstandard-1.3" description="Runs log4net tests on .NET Standard 1.3">
         <exec program="dotnet" workingdir="${log4net.basedir}/netstandard/log4net.tests">
             <arg value="test"/>
-            <arg value="-xml"/>
-            <arg value="${log4net.basedir}/tests/bin/log4net.Tests.dll-results.mstest.xml"/>
+            <arg value="--logger:trx;LogFileName=${log4net.basedir}/tests/bin/log4net.Tests.dll-results.mstest.trx"/>
             <arg value="--verbosity"/>
             <arg value="detailed"/>
         </exec>
