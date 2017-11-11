@@ -274,7 +274,7 @@ pipeline {
 							$class               : 'MSTestJunitHudsonTestType',
 							deleteOutputFiles    : false,
 							failIfNotNew         : true,
-							pattern              : 'package/tests/bin/**/*.nunit.trx',
+							pattern              : 'package/tests/bin/**/*.mstest.trx',
 							skipNoTestFiles      : true,
 							stopProcessingIfError: true
 						]
