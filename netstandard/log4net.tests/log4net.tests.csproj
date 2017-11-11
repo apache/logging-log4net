@@ -21,7 +21,7 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
     <ProjectReference Include="../log4net/log4net.csproj" />
-    <PackageReference Include="dotnet-test-nunit" Version="3.4.0-beta-2" />
+    <PackageReference Include="dotnet-test-nunit" Version="3.5.0" />
     <PackageReference Include="NUnit" Version="3.4.1" />
   </ItemGroup>
 
