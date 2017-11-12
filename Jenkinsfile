@@ -295,7 +295,7 @@ pipeline {
 	post {
 		failure {
 			// TODO: change this to dev@
-			step([$class: 'Mailer', notifyEveryUnstableBuild: false, recipients: 'commits@logging.apache.org'])
+			step([$class: 'Mailer', notifyEveryUnstableBuild: false, recipients: 'notifications@logging.apache.org'])
 		}
 	}
 }
