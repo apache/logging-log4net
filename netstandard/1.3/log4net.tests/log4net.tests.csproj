@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
-    <ProjectReference Include="../../log4net/log4net.csproj" />
+    <ProjectReference Include="../log4net/log4net.csproj" />
     <PackageReference Include="NUnit" Version="3.9.0" />
   </ItemGroup>
 
