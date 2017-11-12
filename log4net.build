@@ -1784,12 +1784,12 @@ limitations under the License.
       <mkdir dir="${log4net.basedir}/bin/netstandard/1.3"/>
       <if test="${current.build.config.release}">
         <move todir="${log4net.basedir}/bin/netstandard/1.3/release">
-          <fileset basedir="netstandard/log4net/bin/Release/netstandard1.3"/>
+          <fileset basedir="netstandard/1.3/log4net/bin/Release/netstandard1.3"/>
         </move>
       </if>
       <ifnot test="${current.build.config.release}">
         <move todir="${log4net.basedir}/bin/netstandard/1.3/debug">
-          <fileset basedir="netstandard/log4net/bin/Debug/netstandard1.3"/>
+          <fileset basedir="netstandard/1.3/log4net/bin/Debug/netstandard1.3"/>
         </move>
       </ifnot>
     </if>

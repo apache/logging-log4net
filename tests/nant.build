@@ -1,10 +1,10 @@
 <?xml version="1.0" ?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one or more 
+Licensed to the Apache Software Foundation (ASF) under one or more
 contributor license agreements. See the NOTICE file distributed with
-this work for additional information regarding copyright ownership. 
+this work for additional information regarding copyright ownership.
 The ASF licenses this file to you under the Apache License, Version 2.0
-(the "License"); you may not use this file except in compliance with 
+(the "License"); you may not use this file except in compliance with
 the License. You may obtain a copy of the License at
 
 http://www.apache.org/licenses/LICENSE-2.0
@@ -765,10 +765,10 @@ limitations under the License.
 
     <target name="runtests" description="Runs log4net tests">
         <!--
-            Because the <nunit2> task does not support multiple frameworks through the 
+            Because the <nunit2> task does not support multiple frameworks through the
             nant.settings.currentframework setting we cannot just run the tests for each framework.
             Only the tests for the current framework are run.
-            
+
         <if test="${framework::exists('net-1.0')}">
             <call target="runtests-net-1.0" />
         </if>
@@ -787,7 +787,7 @@ limitations under the License.
             <call target="runtests-${nant.settings.currentframework}" />
         </if>
     </target>
-    
+
     <target name="runtests-net-1.0" description="Runs log4net tests on .NET Framework 1.0 version" depends="compile-net-1.0">
         <nunit2 failonerror="false">
             <formatter type="Xml" usefile="true" extension=".nunit.xml" outputdir="${current.bin.dir}" />
@@ -866,7 +866,7 @@ limitations under the License.
     </target>
 
     <target name="runtests-netstandard-1.3" description="Runs log4net tests on .NET Standard 1.3">
-        <exec program="dotnet" workingdir="${log4net.basedir}/netstandard/log4net.tests" failonerror="false">
+		<exec program="dotnet" workingdir="${log4net.basedir}/netstandard/1.3/log4net.tests" failonerror="false">
             <arg value="test"/>
             <arg value="--logger:trx"/>
         </exec>
