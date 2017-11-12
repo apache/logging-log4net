@@ -1765,7 +1765,7 @@ limitations under the License.
     </if>
     <if test="${dotnet.available == '0'}">
       <echo message="dotnet restore log4net.netstandard.sln"/>
-      <exec program="dotnet" workingdir="netstandard">
+	  <exec program="dotnet" workingdir="netstandard/1.3">
         <arg value="restore"/>
         <arg value="log4net.netstandard.sln"/>
       </exec>
@@ -1775,7 +1775,7 @@ limitations under the License.
       <if test="${current.build.config.release == '-c'}">
         <echo message="dotnet build log4net -c Release"/>
       </if>
-      <exec program="dotnet" workingdir="netstandard">
+	  <exec program="dotnet" workingdir="netstandard/1.3">
         <arg value="build"/>
         <arg value="log4net"/>
         <arg if="${current.build.config.release}" value="-c"/>
