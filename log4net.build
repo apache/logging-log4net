@@ -1787,11 +1787,11 @@ limitations under the License.
           <fileset basedir="netstandard/1.3/log4net/bin/Release/netstandard1.3"/>
         </move>
       </if>
-      <ifnot test="${current.build.config.release}">
+      <if test="${current.build.config.debug}">
         <move todir="${log4net.basedir}/bin/netstandard/1.3/debug">
           <fileset basedir="netstandard/1.3/log4net/bin/Debug/netstandard1.3"/>
         </move>
-      </ifnot>
+      </if>
     </if>
   </target>
   <!-- Target for generating docs for all runtime configurations -->
