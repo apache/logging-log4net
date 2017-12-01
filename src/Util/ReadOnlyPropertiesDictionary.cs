@@ -216,13 +216,18 @@ namespace log4net.Util
 				string entryKey = entry.Key as string;
 				object entryValue = entry.Value;
 
+				if (entryKey == null || entryValue == null)
+				{
+					continue;
+				}
+
 				// If value is serializable then we add it to the list
 #if NETSTANDARD1_3
 				bool isSerializable = entryValue.GetType().GetTypeInfo().IsSerializable;
 #else
 				bool isSerializable = entryValue.GetType().IsSerializable;
 #endif
-				if (entryKey != null && entryValue != null && isSerializable)
+				if (isSerializable)
 				{
 					// Store the keys as an Xml encoded local name as it may contain colons (':')
 					// which are NOT escaped by the Xml Serialization framework.

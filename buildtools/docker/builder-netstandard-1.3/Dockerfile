@@ -1,5 +1,4 @@
-# Name of container: docker-ubuntu-latest-nant
-FROM microsoft/dotnet
+FROM microsoft/dotnet:1.1.2-sdk-jessie
 
 # define arguments passed in as environment variables
 ARG JENKINS_UID
@@ -7,9 +6,6 @@ ARG JENKINS_GID
 
 # set the maintainer of this docker image
 MAINTAINER "dev@logging.apache.org"
-
-RUN echo $JENKINS_UID
-RUN echo $JENKINS_GID
 
 # add custom workspace that can be written by anyone
 RUN mkdir -p /var/workspaces && chmod 0777 /var/workspaces

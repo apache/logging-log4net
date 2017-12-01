@@ -21,7 +21,6 @@ using System;
 using System.Collections;
 using log4net.Appender;
 using log4net.Core;
-using log4net.Repository;
 using log4net.Util;
 
 namespace log4net.Repository.Hierarchy
@@ -236,7 +235,7 @@ namespace log4net.Repository.Hierarchy
 			{
 				if (m_root == null)
 				{
-					lock(this)
+					lock (this)
 					{
 						if (m_root == null)
 						{
@@ -297,7 +296,7 @@ namespace log4net.Repository.Hierarchy
 				throw new ArgumentNullException("name");
 			}
 
-			lock(m_ht)
+			lock (m_ht)
 			{
 				return m_ht[new LoggerKey(name)] as Logger;
 			}
@@ -319,12 +318,12 @@ namespace log4net.Repository.Hierarchy
 			// The accumulation in loggers is necessary because not all elements in
 			// ht are Logger objects as there might be some ProvisionNodes
 			// as well.
-			lock(m_ht)
+			lock (m_ht)
 			{
 				System.Collections.ArrayList loggers = new System.Collections.ArrayList(m_ht.Count);
 
 				// Iterate through m_ht values
-				foreach(object node in m_ht.Values)
+				foreach (object node in m_ht.Values)
 				{
 					if (node is Logger)
 					{
@@ -385,16 +384,16 @@ namespace log4net.Repository.Hierarchy
 		/// </remarks>
 		override public void Shutdown()
 		{
-			LogLog.Debug(declaringType, "Shutdown called on Hierarchy ["+this.Name+"]");
+			LogLog.Debug(declaringType, "Shutdown called on Hierarchy [" + this.Name + "]");
 
 			// begin by closing nested appenders
 			Root.CloseNestedAppenders();
 
-			lock(m_ht)
+			lock (m_ht)
 			{
 				ILogger[] currentLoggers = this.GetCurrentLoggers();
 
-				foreach(Logger logger in currentLoggers)
+				foreach (Logger logger in currentLoggers)
 				{
 					logger.CloseNestedAppenders();
 				}
@@ -402,7 +401,7 @@ namespace log4net.Repository.Hierarchy
 				// then, remove all appenders
 				Root.RemoveAllAppenders();
 
-				foreach(Logger logger in currentLoggers)
+				foreach (Logger logger in currentLoggers)
 				{
 					logger.RemoveAllAppenders();
 				}
@@ -437,11 +436,11 @@ namespace log4net.Repository.Hierarchy
 			Threshold = LevelMap.LookupWithDefault(Level.All);
 
 			// the synchronization is needed to prevent hashtable surprises
-			lock(m_ht)
+			lock (m_ht)
 			{
 				Shutdown(); // nested locks are OK
 
-				foreach(Logger l in this.GetCurrentLoggers())
+				foreach (Logger l in this.GetCurrentLoggers())
 				{
 					l.Level = null;
 					l.Additivity = true;
@@ -500,7 +499,7 @@ namespace log4net.Repository.Hierarchy
 
 			CollectAppenders(appenderList, Root);
 
-			foreach(Logger logger in GetCurrentLoggers())
+			foreach (Logger logger in GetCurrentLoggers())
 			{
 				CollectAppenders(appenderList, logger);
 			}
@@ -539,7 +538,7 @@ namespace log4net.Repository.Hierarchy
 		/// <param name="container"></param>
 		private static void CollectAppenders(System.Collections.ArrayList appenderList, IAppenderAttachable container)
 		{
-			foreach(Appender.IAppender appender in container.Appenders)
+			foreach (Appender.IAppender appender in container.Appenders)
 			{
 				CollectAppender(appenderList, appender);
 			}
@@ -700,7 +699,7 @@ namespace log4net.Repository.Hierarchy
 		/// </remarks>
 		public void Clear()
 		{
-			lock(m_ht)
+			lock (m_ht)
 			{
 				m_ht.Clear();
 			}
@@ -738,7 +737,7 @@ namespace log4net.Repository.Hierarchy
 			// GetEffectiveLevel() method) are possible only if variable
 			// assignments are non-atomic.
 
-			lock(m_ht)
+			lock (m_ht)
 			{
 				Logger logger = null;
 
@@ -842,7 +841,7 @@ namespace log4net.Repository.Hierarchy
 			bool parentFound = false;
 
 			// if name = "w.x.y.z", loop through "w.x.y", "w.x" and "w", but not "w.x.y.z"
-			for(int i = name.LastIndexOf('.', length-1); i >= 0; i = name.LastIndexOf('.', i-1))
+			for (int i = name.LastIndexOf('.', length - 1); i >= 0; i = name.LastIndexOf('.', i - 1))
 			{
 				string substr = name.Substring(0, i);
 
@@ -872,11 +871,12 @@ namespace log4net.Repository.Hierarchy
 						}
 						else
 						{
-							LogLog.Error(declaringType, "Unexpected object type ["+node.GetType()+"] in ht.", new LogException());
+							LogLog.Error(declaringType, "Unexpected object type [" + node.GetType() + "] in ht.", new LogException());
 						}
 					}
 				}
-				if (i == 0) {
+				if (i == 0)
+				{
 					// logger name starts with a dot
 					// and we've hit the start
 					break;
@@ -916,7 +916,7 @@ namespace log4net.Repository.Hierarchy
 		/// </remarks>
 		private static void UpdateChildren(ProvisionNode pn, Logger log)
 		{
-			for(int i = 0; i < pn.Count; i++)
+			for (int i = 0; i < pn.Count; i++)
 			{
 				Logger childLogger = (Logger)pn[i];
 
@@ -953,7 +953,7 @@ namespace log4net.Repository.Hierarchy
 				Level previousLevel = LevelMap[levelEntry.Name];
 				if (previousLevel == null)
 				{
-					throw new InvalidOperationException("Cannot redefine level ["+levelEntry.Name+"] because it is not defined in the LevelMap. To define the level supply the level value.");
+					throw new InvalidOperationException("Cannot redefine level [" + levelEntry.Name + "] because it is not defined in the LevelMap. To define the level supply the level value.");
 				}
 
 				levelEntry.Value = previousLevel.Value;
@@ -1031,7 +1031,7 @@ namespace log4net.Repository.Hierarchy
 			/// <returns>string info about this object</returns>
 			public override string ToString()
 			{
-				return "LevelEntry(Value="+m_levelValue+", Name="+m_levelName+", DisplayName="+m_levelDisplayName+")";
+				return "LevelEntry(Value=" + m_levelValue + ", Name=" + m_levelName + ", DisplayName=" + m_levelDisplayName + ")";
 			}
 		}
 

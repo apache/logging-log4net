@@ -19,7 +19,7 @@
 
 pipeline {
 	options {
-		timeout(time: 1, unit: 'HOURS')
+		timeout(time: 4, unit: 'HOURS')
 		buildDiscarder(logRotator(numToKeepStr: '3'))
 		skipDefaultCheckout()
 		disableConcurrentBuilds()
@@ -37,11 +37,11 @@ pipeline {
 		}
 
 		// builds
-		stage('build netstandard') {
+		stage('build netstandard-1.3') {
 			steps {
 				script {
 					checkout scm
-					def builder_dir = "buildtools/docker/builder-netstandard"
+					def builder_dir = "buildtools/docker/builder-netstandard-1.3"
 
 					// calculate args required to build the docker container
 					def JENKINS_UID = sh (
@@ -52,8 +52,6 @@ pipeline {
 						script: "stat -c \"%g\" $builder_dir",
 						returnStdout: true
 					).trim()
-					echo "$JENKINS_UID"
-					echo "$JENKINS_GID"
 
 					// build docker container
 					def builder = docker.build 'builder-netstandard:latest', "--file $builder_dir/Dockerfile --build-arg JENKINS_UID=$JENKINS_UID --build-arg JENKINS_GID=$JENKINS_GID $builder_dir"
@@ -61,21 +59,13 @@ pipeline {
 					// run docker container
 					builder.inside {
 						// compile
-						sh "nant compile-netstandard"
-						stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
+						sh "nant compile-netstandard-1.3"
+						stash includes: 'bin/**/*.*', name: 'netstandard-1.3-assemblies'
 
 						// test
-						sh 'cd netstandard/log4net.tests && dotnet test'
+						sh 'cd netstandard/log4net.tests && dotnet test --verbosity detailed'
 					}
 				}
-
-
-				// compile 
-				// sh 'nant compile-netstandard'
-				// stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
-
-				// test
-				// sh 'cd netstandard/log4net.tests && dotnet test'
 			}
 		}
 		stage('build net-3.5') {
@@ -230,7 +220,7 @@ pipeline {
 					unstash 'mono-2.0-assemblies'
 					unstash 'mono-3.5-assemblies'
 					unstash 'mono-4.0-assemblies'
-					unstash 'netstandard-assemblies'
+					unstash 'netstandard-1.3-assemblies'
 
 					// unstash test results
 					unstash 'net-3.5-testresults'
@@ -245,7 +235,7 @@ pipeline {
 					// unstash site
 					unstash 'site'
 				}
-				
+
 				// move site
 				sh 'mv package/target/site/ package/site/'
 				sh 'rmdir -p --ignore-fail-on-non-empty package/target'
