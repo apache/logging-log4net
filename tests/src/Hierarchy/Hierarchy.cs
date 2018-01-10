@@ -22,9 +22,7 @@
 using System;
 using System.Xml;
 using log4net.Config;
-using log4net.Core;
 using log4net.Repository;
-using log4net.Repository.Hierarchy;
 using log4net.Tests.Appender;
 using NUnit.Framework;
 
@@ -100,7 +98,7 @@ namespace log4net.Tests.Hierarchy
 		}
 
 		[Test]
-	// LOG4NET-343
+		// LOG4NET-343
 		public void LoggerNameCanConsistOfASingleDot()
 		{
 			XmlDocument log4netConfig = new XmlDocument();
@@ -114,6 +112,52 @@ namespace log4net.Tests.Hierarchy
 					<appender-ref ref=""StringAppender"" />
 				  </root>
 				  <logger name=""."">
+					<level value=""WARN"" />
+				  </logger>
+				</log4net>");
+
+			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+			XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
+		}
+
+		[Test]
+		// LOG4NET-580
+		public void LoggerNameCanConsistOfANameStartingWithADot()
+		{
+			XmlDocument log4netConfig = new XmlDocument();
+			log4netConfig.LoadXml(@"
+				<log4net>
+				  <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
+					<layout type=""log4net.Layout.SimpleLayout"" />
+				  </appender>
+				  <root>
+					<level value=""ALL"" />
+					<appender-ref ref=""StringAppender"" />
+				  </root>
+				  <logger name="".Name"">
+					<level value=""WARN"" />
+				  </logger>
+				</log4net>");
+
+			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+			XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
+		}
+
+		[Test]
+		// LOG4NET-580
+		public void LoggerNameCanConsistOfANameEndingWithADot()
+		{
+			XmlDocument log4netConfig = new XmlDocument();
+			log4netConfig.LoadXml(@"
+				<log4net>
+				  <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
+					<layout type=""log4net.Layout.SimpleLayout"" />
+				  </appender>
+				  <root>
+					<level value=""ALL"" />
+					<appender-ref ref=""StringAppender"" />
+				  </root>
+				  <logger name=""Name."">
 					<level value=""WARN"" />
 				  </logger>
 				</log4net>");
