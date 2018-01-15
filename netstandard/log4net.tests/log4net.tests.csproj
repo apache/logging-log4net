@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <VersionPrefix>2.0.9</VersionPrefix>
@@ -21,8 +21,9 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
     <ProjectReference Include="../log4net/log4net.csproj" />
-    <PackageReference Include="dotnet-test-nunit" Version="3.4.0-beta-2" />
-    <PackageReference Include="NUnit" Version="3.4.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
+    <PackageReference Include="NUnit" Version="3.9.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.*" />
   </ItemGroup>
 
   <ItemGroup>
