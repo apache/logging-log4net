@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Copyright>Copyright 2004-2017 The Apache Software Foundation.</Copyright>
+    <Copyright>Copyright 2004-2018 The Apache Software Foundation.</Copyright>
     <AssemblyTitle>Apache log4net for .NET Core</AssemblyTitle>
     <VersionPrefix>2.0.9</VersionPrefix>
     <TargetFramework>netstandard1.3</TargetFramework>
