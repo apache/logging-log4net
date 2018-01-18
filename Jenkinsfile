@@ -65,6 +65,7 @@ pipeline {
 						// test
 						sh "nant -buildfile:tests/nant.build runtests-netstandard-1.3"
 						stash includes: '**/*.trx', name: 'netstandard-1.3-testresults'
+						stash includes: '**/*.log', name: 'netstandard-1.3-testlogs'
 					}
 				}
 			}
@@ -233,6 +234,7 @@ pipeline {
 					unstash 'mono-3.5-testresults'
 					unstash 'mono-4.0-testresults'
 					unstash 'netstandard-1.3-testresults'
+					unstash 'netstandard-1.3-testlogs'
 
 					// unstash site
 					unstash 'site'
