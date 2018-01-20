@@ -68,7 +68,7 @@ pipeline {
 				}
 			}
 		}
-		stage('build net-3.5') {
+		stage('build net-2.0') {
 			agent { label 'Windows' }
 			environment {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
