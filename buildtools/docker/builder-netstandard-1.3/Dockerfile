@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:1.1.2-sdk-jessie
+FROM microsoft/dotnet:1.1-sdk
 
 # define arguments passed in as environment variables
 ARG JENKINS_UID
@@ -16,4 +16,3 @@ RUN useradd --base-dir /var/workspaces --create-home --shell /bin/bash --uid $JE
 
 # install dependencies
 RUN apt-get update && apt-get install -y nant git
-

@@ -70,6 +70,20 @@ pipeline {
 				}
 			}
 		}
+		stage('build net-2.0') {
+			agent { label 'Windows' }
+			environment {
+				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
+			}
+			steps {
+				deleteDir()
+				checkout scm
+				bat "${NANT_BIN} -t:net-2.0 -buildfile:log4net.build compile-net-2.0"
+				stash includes: 'bin/**/*.*', name: 'net-2.0-assemblies'
+				bat "${NANT_BIN} -t:net-2.0 -buildfile:tests/nant.build runtests-net-2.0"
+				stash includes: 'tests/bin/**/*.nunit.xml', name: 'net-2.0-testresults'
+			}
+		}
 		stage('build net-3.5') {
 			agent { label 'Windows' }
 			environment {
@@ -301,4 +315,3 @@ pipeline {
 		}
 	}
 }
-
