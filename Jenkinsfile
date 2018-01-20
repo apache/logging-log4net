@@ -63,7 +63,7 @@ pipeline {
 						stash includes: 'bin/**/*.*', name: 'netstandard-1.3-assemblies'
 
 						// test
-						sh 'cd netstandard/log4net.tests && dotnet test --verbosity detailed'
+						sh 'cd netstandard/log4net.tests && dotnet test'
 					}
 				}
 			}
