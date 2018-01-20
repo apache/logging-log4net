@@ -544,12 +544,12 @@ limitations under the License.
       <echo message="Skipping build; required framework is not available: .NET Framework 2.0"/>
     </if>
     <if test="${framework::exists('net-2.0')}">
+      <call target="set-net-2.0-runtime-configuration"/>
+      <call target="check-log4net-basedir"/>
+      <call target="clean-current-bin-dir"/>
       <!-- initialize the temp.build.skip property to false -->
       <property name="temp.build.skip" value="false"/>
       <if test="${current.build.config.release}">
-        <call target="set-net-2.0-runtime-configuration"/>
-        <call target="check-log4net-basedir"/>
-        <call target="clean-current-bin-dir"/>
         <!-- check if the old log4net key file is available -->
         <if test="${not file::exists(log4net.basedir + '/old-log4net.snk')}">
           <if test="${property::exists('project.build.package') and project.build.package}">
