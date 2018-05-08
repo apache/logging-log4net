@@ -1,4 +1,5 @@
-﻿#region Apache License
+#if NETCOREAPP1_0
+#region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more 
 // contributor license agreements. See the NOTICE file distributed with
@@ -24,15 +25,19 @@ using System.Threading;
 
 namespace log4net
 {
-    internal static class CompatibilityExtensions
-    {
-        public static void Close(this Mutex mutex) => mutex.Dispose();
-        public static void Close(this Stream stream) => stream.Dispose();
-        public static void Close(this StreamReader streamReader) => streamReader.Dispose();
+	/// <summary>
+	/// Extension methods for simple API substitutions for compatibility with .NET Standard 1.3.
+	/// </summary>
+	internal static class CompatibilityExtensions
+	{
+		public static void Close(this Mutex mutex) => mutex.Dispose();
+		public static void Close(this Stream stream) => stream.Dispose();
+		public static void Close(this StreamReader streamReader) => streamReader.Dispose();
 
-        public static ConstructorInfo GetConstructor(this Type type, BindingFlags bindingAttr, object binder, Type[] types, object[] modifiers)
-        {
-            return type.GetConstructor(types);
-        }
-    }
+		public static ConstructorInfo GetConstructor(this Type type, BindingFlags bindingAttr, object binder, Type[] types, object[] modifiers)
+		{
+			return type.GetConstructor(types);
+		}
+	}
 }
+#endif

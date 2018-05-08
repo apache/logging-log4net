@@ -23,16 +23,17 @@ limitations under the License.
     <include buildfile="${log4net.basedir}/log4net.include" />
     <!-- Targets that should always be executed -->
     <call target="set-build-configuration" />
-    <call target="set-framework-configuration" />
 
     <target name="install-nunit">
-      <if test="${not file::exists('lib/' + framework::get-family(framework::get-target-framework()) + '/' + version::to-string(framework::get-version(framework::get-target-framework())) + '/nunit.framework.dll')}">
-	<get src="https://github.com/nunit/nunitv2/releases/download/2.6.4/NUnit-2.6.4.zip"
-	     dest="${environment::get-folder-path('InternetCache')}/nunit.zip"/>
-	<unzip zipfile="${environment::get-folder-path('InternetCache')}/nunit.zip"
-	       todir="${environment::get-folder-path('InternetCache')}/nunit.tmp"/>
-	<copy file="${environment::get-folder-path('InternetCache')}/nunit.tmp/NUnit-2.6.4/bin/nunit.framework.dll"
-	      todir="lib/${framework::get-family(framework::get-target-framework())}/${version::to-string(framework::get-version(framework::get-target-framework()))}"/>
+      <if test="${not file::exists('lib/${current.build.configuration.dir}/nunit.framework.dll')}">
+    <get src="https://github.com/nunit/nunitv2/releases/download/2.6.4/NUnit-2.6.4.zip"
+         dest=".tmp-nunit.zip"/>
+    <unzip zipfile=".tmp-nunit.zip"
+           todir=".tmp-nunit"/>
+    <copy file=".tmp-nunit/NUnit-2.6.4/bin/nunit.framework.dll"
+          todir="lib/${current.build.configuration.dir}"/>
+    <delete file=".tmp-nunit.zip"/>
+    <delete dir=".tmp-nunit"/>
       </if>
     </target>
 
@@ -142,7 +143,7 @@ limitations under the License.
     </target>
 
     <!-- Target for compiling the tests on net-1.0 -->
-    <target name="compile-net-1.0" description="Builds log4net tests .NET Framework 1.0 version" depends="set-net-1.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir">
+    <target name="compile-net-1.0" description="Builds log4net tests .NET Framework 1.0 version" depends="set-net-1.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, install-nunit">
         <!-- copy log4net build output -->
         <copy todir="${current.bin.dir}">
             <fileset basedir="${log4net.basedir}/${current.bin.dir}">
@@ -198,7 +199,7 @@ limitations under the License.
     </target>
 
     <!-- Target for compiling the tests on net-1.1 -->
-    <target name="compile-net-1.1" description="Builds log4net tests .NET Framework 1.1 version" depends="set-net-1.1-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly">
+    <target name="compile-net-1.1" description="Builds log4net tests .NET Framework 1.1 version" depends="set-net-1.1-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly, install-nunit">
         <!-- copy log4net build output -->
         <copy todir="${current.bin.dir}">
             <fileset basedir="${log4net.basedir}/${current.bin.dir}">
@@ -253,7 +254,7 @@ limitations under the License.
         </csc>
     </target>
 
-    <target name="compile-net-2.0" description="Builds log4net tests .NET Framework 2.0 version" depends="set-net-2.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly">
+    <target name="compile-net-2.0" description="Builds log4net tests .NET Framework 2.0 version" depends="set-net-2.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly, install-nunit">
         <!-- copy log4net build output -->
         <copy todir="${current.bin.dir}">
             <fileset basedir="${log4net.basedir}/${current.bin.dir}">
@@ -294,7 +295,7 @@ limitations under the License.
             <references defaultexcludes="true">
                 <include name="mscorlib.dll" />
                 <include name="System.dll" />
-		<include name="System.Configuration.dll" />
+        <include name="System.Configuration.dll" />
                 <include name="System.Data.dll" />
                 <include name="System.Web.dll" />
                 <include name="System.Xml.dll" />
@@ -309,7 +310,7 @@ limitations under the License.
         </csc>
     </target>
 
-    <target name="compile-mono-2.0" description="Builds log4net tests Mono Framework 2.0 version" depends="set-mono-2.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly">
+    <target name="compile-mono-2.0" description="Builds log4net tests Mono Framework 2.0 version" depends="set-mono-2.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly, install-nunit">
         <!-- copy log4net build output -->
         <copy todir="${current.bin.dir}">
             <fileset basedir="${log4net.basedir}/${current.bin.dir}">
@@ -350,7 +351,7 @@ limitations under the License.
             <references defaultexcludes="true">
                 <!-- include name="mscorlib.dll" / -->
                 <include name="System.dll" />
-		<include name="System.Configuration.dll" />
+        <include name="System.Configuration.dll" />
                 <include name="System.Data.dll" />
                 <include name="System.Web.dll" />
                 <include name="System.Xml.dll" />
@@ -365,7 +366,7 @@ limitations under the License.
         </csc>
     </target>
 
-    <target name="compile-mono-3.5" description="Builds log4net tests Mono Framework 3.5 version" depends="set-mono-3.5-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly">
+    <target name="compile-mono-3.5" description="Builds log4net tests Mono Framework 3.5 version" depends="set-mono-3.5-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly, install-nunit">
         <!-- copy log4net build output -->
         <copy todir="${current.bin.dir}">
             <fileset basedir="${log4net.basedir}/${current.bin.dir}">
@@ -406,7 +407,7 @@ limitations under the License.
             <references defaultexcludes="true">
                 <!-- include name="mscorlib.dll" / -->
                 <include name="System.dll" />
-		<include name="System.Configuration.dll" />
+        <include name="System.Configuration.dll" />
                 <include name="System.Core.dll" />
                 <include name="System.Data.dll" />
                 <include name="System.Web.dll" />
@@ -422,7 +423,7 @@ limitations under the License.
         </csc>
     </target>
 
-    <target name="compile-mono-4.0" description="Builds log4net tests Mono Framework 4.0 version" depends="set-mono-4.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly">
+    <target name="compile-mono-4.0" description="Builds log4net tests Mono Framework 4.0 version" depends="set-mono-4.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly, install-nunit">
         <!-- copy log4net build output -->
         <copy todir="${current.bin.dir}">
             <fileset basedir="${log4net.basedir}/${current.bin.dir}">
@@ -463,7 +464,7 @@ limitations under the License.
             <references defaultexcludes="true">
                 <!-- include name="mscorlib.dll" / -->
                 <include name="System.dll" />
-		<include name="System.Configuration.dll" />
+        <include name="System.Configuration.dll" />
                 <include name="System.Core.dll" />
                 <include name="System.Data.dll" />
                 <include name="System.Web.dll" />
@@ -479,7 +480,7 @@ limitations under the License.
         </csc>
     </target>
 
-    <target name="compile-net-3.5" description="Builds log4net tests .NET Framework 3.5 version" depends="set-net-3.5-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly">
+    <target name="compile-net-3.5" description="Builds log4net tests .NET Framework 3.5 version" depends="set-net-3.5-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly, install-nunit">
         <!-- copy log4net build output -->
         <copy todir="${current.bin.dir}">
             <fileset basedir="${log4net.basedir}/${current.bin.dir}">
@@ -520,7 +521,7 @@ limitations under the License.
             <references defaultexcludes="true">
                 <include name="mscorlib.dll" />
                 <include name="System.dll" />
-		<include name="System.Configuration.dll" />
+        <include name="System.Configuration.dll" />
                 <include name="System.Data.dll" />
                 <include name="System.Web.dll" />
                 <include name="System.Xml.dll" />
@@ -535,7 +536,7 @@ limitations under the License.
         </csc>
     </target>
 
-    <target name="compile-net-3.5-cp" description="Builds log4net tests .NET Framework 3.5 Client Profile version" depends="set-net-3.5-cp-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly">
+    <target name="compile-net-3.5-cp" description="Builds log4net tests .NET Framework 3.5 Client Profile version" depends="set-net-3.5-cp-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly, install-nunit">
         <!-- copy log4net build output -->
         <copy todir="${current.bin.dir}">
             <fileset basedir="${log4net.basedir}/${current.bin.dir}">
@@ -576,7 +577,7 @@ limitations under the License.
             <references defaultexcludes="true">
                 <include name="mscorlib.dll" />
                 <include name="System.dll" />
-		<include name="System.Configuration.dll" />
+        <include name="System.Configuration.dll" />
                 <include name="System.Data.dll" />
                 <include name="System.Xml.dll" />
                 <include name="System.Runtime.Remoting.dll" />
@@ -590,7 +591,7 @@ limitations under the License.
         </csc>
     </target>
 
-    <target name="compile-net-4.0" description="Builds log4net tests .NET Framework 4.0 version" depends="set-net-4.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly">
+    <target name="compile-net-4.0" description="Builds log4net tests .NET Framework 4.0 version" depends="set-net-4.0-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly, install-nunit">
         <!-- copy log4net build output -->
         <copy todir="${current.bin.dir}">
             <fileset basedir="${log4net.basedir}/${current.bin.dir}">
@@ -631,7 +632,7 @@ limitations under the License.
             <references defaultexcludes="true">
                 <include name="mscorlib.dll" />
                 <include name="System.dll" />
-		<include name="System.Configuration.dll" />
+        <include name="System.Configuration.dll" />
                 <include name="System.Core.dll" />
                 <include name="System.Data.dll" />
                 <include name="System.Web.dll" />
@@ -647,7 +648,7 @@ limitations under the License.
         </csc>
     </target>
 
-    <target name="compile-net-4.0-cp" description="Builds log4net tests .NET Framework 4.0 Client Profile version" depends="set-net-4.0-cp-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly">
+    <target name="compile-net-4.0-cp" description="Builds log4net tests .NET Framework 4.0 Client Profile version" depends="set-net-4.0-cp-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly, install-nunit">
         <!-- copy log4net build output -->
         <copy todir="${current.bin.dir}">
             <fileset basedir="${log4net.basedir}/${current.bin.dir}">
@@ -688,7 +689,7 @@ limitations under the License.
             <references defaultexcludes="true">
                 <include name="mscorlib.dll" />
                 <include name="System.dll" />
-		<include name="System.Configuration.dll" />
+        <include name="System.Configuration.dll" />
                 <include name="System.Core.dll" />
                 <include name="System.Data.dll" />
                 <include name="System.Xml.dll" />
@@ -703,7 +704,7 @@ limitations under the License.
         </csc>
     </target>
 
-    <target name="compile-net-4.5" description="Builds log4net tests .NET Framework 4.5 version" depends="set-net-4.5-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly">
+    <target name="compile-net-4.5" description="Builds log4net tests .NET Framework 4.5 version" depends="set-net-4.5-runtime-configuration, check-log4net-basedir, clean-current-bin-dir, check-log4net-assembly, install-nunit">
         <!-- copy log4net build output -->
         <copy todir="${current.bin.dir}">
             <fileset basedir="${log4net.basedir}/${current.bin.dir}">
@@ -744,7 +745,7 @@ limitations under the License.
             <references defaultexcludes="true">
                 <include name="mscorlib.dll" />
                 <include name="System.dll" />
-		<include name="System.Configuration.dll" />
+        <include name="System.Configuration.dll" />
                 <include name="System.Core.dll" />
                 <include name="System.Data.dll" />
                 <include name="System.Web.dll" />
@@ -762,107 +763,116 @@ limitations under the License.
 
     <!-- Currently we cannot run the tests in the environment of the target framework only in the host framework -->
 
-    <target name="runtests" description="Runs log4net tests"
-	    depends="install-nunit">
-		<!--
-			Because the <nunit2> task does not support multiple frameworks through the 
-			nant.settings.currentframework setting we cannot just run the tests for each framework.
-			Only the tests for the current framework are run.
-			
+    <target name="runtests" description="Runs log4net tests">
+        <!--
+            Because the <nunit2> task does not support multiple frameworks through the 
+            nant.settings.currentframework setting we cannot just run the tests for each framework.
+            Only the tests for the current framework are run.
+            
         <if test="${framework::exists('net-1.0')}">
-        	<call target="runtests-net-1.0" />
+            <call target="runtests-net-1.0" />
         </if>
         <if test="${framework::exists('net-1.1')}">
-        	<call target="runtests-net-1.1" />
+            <call target="runtests-net-1.1" />
         </if>
         <if test="${framework::exists('net-2.0')}">
-        	<call target="runtests-net-2.0" />
+            <call target="runtests-net-2.0" />
         </if>
         <if test="${framework::exists('mono-2.0')}">
-        	<call target="runtests-mono-2.0" />
+            <call target="runtests-mono-2.0" />
         </if>
-		-->
-		<if test="${target::exists('runtests-' + nant.settings.currentframework)}">
-			<echo message="Running tests for ${framework::get-target-framework()}" />
-			<call target="runtests-${nant.settings.currentframework}" />
-		</if>
+        -->
+        <if test="${target::exists('runtests-' + nant.settings.currentframework)}">
+            <echo message="Running tests for ${framework::get-target-framework()}" />
+            <call target="runtests-${nant.settings.currentframework}" />
+        </if>
     </target>
     
     <target name="runtests-net-1.0" description="Runs log4net tests on .NET Framework 1.0 version" depends="compile-net-1.0">
-        <nunit2>
-            <formatter type="Plain" />
+        <nunit2 failonerror="false">
+            <formatter type="Xml" usefile="true" extension=".nunit.xml" outputdir="${current.bin.dir}" />
             <test assemblyname="${current.bin.dir}/log4net.Tests.dll" />
         </nunit2>
     </target>
 
     <target name="runtests-net-1.1" description="Runs log4net tests on .NET Framework 1.1 version" depends="compile-net-1.1">
-        <nunit2>
-            <formatter type="Plain" />
+        <nunit2 failonerror="false">
+            <formatter type="Xml" usefile="true" extension=".nunit.xml" outputdir="${current.bin.dir}" />
             <test assemblyname="${current.bin.dir}/log4net.Tests.dll" />
         </nunit2>
     </target>
 
     <target name="runtests-net-2.0" description="Runs log4net tests on .NET Framework 2.0 version" depends="compile-net-2.0">
-        <nunit2>
-            <formatter type="Plain" />
+        <nunit2 failonerror="false">
+            <formatter type="Xml" usefile="true" extension=".nunit.xml" outputdir="${current.bin.dir}" />
             <test assemblyname="${current.bin.dir}/log4net.Tests.dll" />
         </nunit2>
     </target>
 
     <target name="runtests-mono-2.0" description="Runs log4net tests on Mono Framework 2.0 version" depends="compile-mono-2.0">
-        <nunit2>
-            <formatter type="Plain" />
+        <nunit2 failonerror="false">
+            <formatter type="Xml" usefile="true" extension=".nunit.xml" outputdir="${current.bin.dir}" />
             <test assemblyname="${current.bin.dir}/log4net.Tests.dll" />
         </nunit2>
     </target>
 
     <target name="runtests-mono-3.5" description="Runs log4net tests on Mono Framework 3.5 version" depends="compile-mono-3.5">
-        <nunit2>
-            <formatter type="Plain" />
+        <nunit2 failonerror="false">
+            <formatter type="Xml" usefile="true" extension=".nunit.xml" outputdir="${current.bin.dir}" />
             <test assemblyname="${current.bin.dir}/log4net.Tests.dll" />
         </nunit2>
     </target>
 
     <target name="runtests-mono-4.0" description="Runs log4net tests on Mono Framework 4.0 version" depends="compile-mono-4.0">
-        <nunit2>
-            <formatter type="Plain" />
+        <nunit2 failonerror="false">
+            <formatter type="Xml" usefile="true" extension=".nunit.xml" outputdir="${current.bin.dir}" />
             <test assemblyname="${current.bin.dir}/log4net.Tests.dll" />
         </nunit2>
     </target>
 
     <target name="runtests-net-3.5" description="Runs log4net tests on .NET Framework 3.5 version" depends="compile-net-3.5">
-        <nunit2>
-            <formatter type="Plain" />
+        <nunit2 failonerror="false">
+            <formatter type="Xml" usefile="true" extension=".nunit.xml" outputdir="${current.bin.dir}" />
             <test assemblyname="${current.bin.dir}/log4net.Tests.dll" />
         </nunit2>
     </target>
 
     <target name="runtests-net-3.5-cp" description="Runs log4net tests on .NET Framework 3.5 Client Profile version" depends="compile-net-3.5-cp">
-        <nunit2>
-            <formatter type="Plain" />
+        <nunit2 failonerror="false">
+            <formatter type="Xml" usefile="true" extension=".nunit.xml" outputdir="${current.bin.dir}" />
             <test assemblyname="${current.bin.dir}/log4net.Tests.dll" />
         </nunit2>
     </target>
 
     <target name="runtests-net-4.0" description="Runs log4net tests on .NET Framework 4.0 version" depends="compile-net-4.0">
-        <nunit2>
-            <formatter type="Plain" />
+        <nunit2 failonerror="false">
+            <formatter type="Xml" usefile="true" extension=".nunit.xml" outputdir="${current.bin.dir}" />
             <test assemblyname="${current.bin.dir}/log4net.Tests.dll" />
         </nunit2>
     </target>
 
     <target name="runtests-net-4.0-cp" description="Runs log4net tests on .NET Framework 4.0 Client Profile version" depends="compile-net-4.0-cp">
-        <nunit2>
-            <formatter type="Plain" />
+        <nunit2 failonerror="false">
+            <formatter type="Xml" usefile="true" extension=".nunit.xml" outputdir="${current.bin.dir}" />
             <test assemblyname="${current.bin.dir}/log4net.Tests.dll" />
         </nunit2>
     </target>
 
     <target name="runtests-net-4.5" description="Runs log4net tests on .NET Framework 4.5 version" depends="compile-net-4.5">
-        <nunit2>
-            <formatter type="Plain" />
+        <nunit2 failonerror="false">
+            <formatter type="Xml" usefile="true" extension=".nunit.xml" outputdir="${current.bin.dir}" />
             <test assemblyname="${current.bin.dir}/log4net.Tests.dll" />
         </nunit2>
+    </target>
+
+    <target name="runtests-netstandard-1.3" description="Runs log4net tests on .NET Standard 1.3">
+        <exec program="dotnet" workingdir="${log4net.basedir}/netstandard/log4net.tests">
+            <arg value="test"/>
+            <arg value="-xml"/>
+            <arg value="${log4net.basedir}/tests/bin/log4net.Tests.dll-results.mstest.xml"/>
+            <arg value="--verbosity"/>
+            <arg value="detailed"/>
+        </exec>
     </target>
 
 </project>

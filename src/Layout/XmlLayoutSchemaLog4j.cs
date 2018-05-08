@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -65,11 +65,11 @@ namespace log4net.Layout
 		/// default, it is set to false which means there will be no location
 		/// information output by this layout. If the the option is set to
 		/// true, then the file name and line number of the statement
-		/// at the origin of the log statement will be output. 
+		/// at the origin of the log statement will be output.
 		/// </para>
 		/// <para>
 		/// If you are embedding this layout within an SMTPAppender
-		/// then make sure to set the <b>LocationInfo</b> option of that 
+		/// then make sure to set the <b>LocationInfo</b> option of that
 		/// appender as well.
 		/// </para>
 		/// </remarks>
@@ -92,8 +92,8 @@ namespace log4net.Layout
 		public string Version
 		{
 			get { return "1.2"; }
-			set 
-			{ 
+			set
+			{
 				if (value != "1.2")
 				{
 					throw new ArgumentException("Only version 1.2 of the log4j schema is currently supported");
@@ -109,16 +109,16 @@ namespace log4net.Layout
   <log4j:message><![CDATA[errormsg 3]]></log4j:message>
   <log4j:NDC><![CDATA[third]]></log4j:NDC>
   <log4j:MDC>
-    <log4j:data name="some string" value="some valuethird"/>
+	<log4j:data name="some string" value="some valuethird"/>
   </log4j:MDC>
   <log4j:throwable><![CDATA[java.lang.Exception: someexception-third
- 	at org.apache.log4j.chainsaw.Generator.run(Generator.java:94)
+	at org.apache.log4j.chainsaw.Generator.run(Generator.java:94)
 ]]></log4j:throwable>
   <log4j:locationInfo class="org.apache.log4j.chainsaw.Generator"
 method="run" file="Generator.java" line="94"/>
   <log4j:properties>
-    <log4j:data name="log4jmachinename" value="windows"/>
-    <log4j:data name="log4japp" value="udp-generator"/>
+	<log4j:data name="log4jmachinename" value="windows"/>
+	<log4j:data name="log4japp" value="udp-generator"/>
   </log4j:properties>
 </log4j:event>
 
@@ -141,31 +141,31 @@ method="run" file="Generator.java" line="94"/>
 			// Translate logging events for log4j
 
 			// Translate hostname property
-			if (loggingEvent.LookupProperty(LoggingEvent.HostNameProperty) != null && 
+			if (loggingEvent.LookupProperty(LoggingEvent.HostNameProperty) != null &&
 				loggingEvent.LookupProperty("log4jmachinename") == null)
 			{
 				loggingEvent.GetProperties()["log4jmachinename"] = loggingEvent.LookupProperty(LoggingEvent.HostNameProperty);
 			}
 
 			// translate appdomain name
-			if (loggingEvent.LookupProperty("log4japp") == null && 
-				loggingEvent.Domain != null && 
+			if (loggingEvent.LookupProperty("log4japp") == null &&
+				loggingEvent.Domain != null &&
 				loggingEvent.Domain.Length > 0)
 			{
 				loggingEvent.GetProperties()["log4japp"] = loggingEvent.Domain;
 			}
 
 			// translate identity name
-			if (loggingEvent.Identity != null && 
-				loggingEvent.Identity.Length > 0 && 
+			if (loggingEvent.Identity != null &&
+				loggingEvent.Identity.Length > 0 &&
 				loggingEvent.LookupProperty(LoggingEvent.IdentityProperty) == null)
 			{
 				loggingEvent.GetProperties()[LoggingEvent.IdentityProperty] = loggingEvent.Identity;
 			}
 
 			// translate user name
-			if (loggingEvent.UserName != null && 
-				loggingEvent.UserName.Length > 0 && 
+			if (loggingEvent.UserName != null &&
+				loggingEvent.UserName.Length > 0 &&
 				loggingEvent.LookupProperty(LoggingEvent.UserNameProperty) == null)
 			{
 				loggingEvent.GetProperties()[LoggingEvent.UserNameProperty] = loggingEvent.UserName;
@@ -176,7 +176,7 @@ method="run" file="Generator.java" line="94"/>
 			writer.WriteAttributeString("logger", loggingEvent.LoggerName);
 
 			// Calculate the timestamp as the number of milliseconds since january 1970
-			// 
+			//
 			// We must convert the TimeStamp to UTC before performing any mathematical
 			// operations. This allows use to take into account discontinuities
 			// caused by daylight savings time transitions.
@@ -185,7 +185,7 @@ method="run" file="Generator.java" line="94"/>
 			writer.WriteAttributeString("timestamp", XmlConvert.ToString((long)timeSince1970.TotalMilliseconds));
 			writer.WriteAttributeString("level", loggingEvent.Level.DisplayName);
 			writer.WriteAttributeString("thread", loggingEvent.ThreadName);
-    
+
 			// Append the message text
 			writer.WriteStartElement("log4j:message");
 			Transform.WriteEscapedXmlString(writer, loggingEvent.RenderedMessage,this.InvalidCharReplacement);
@@ -234,7 +234,7 @@ method="run" file="Generator.java" line="94"/>
 			}
 
 			if (LocationInfo)
-			{ 
+			{
 				LocationInfo locationInfo = loggingEvent.LocationInformation;
 
 				writer.WriteStartElement("log4j:locationInfo");

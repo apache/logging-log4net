@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -18,7 +18,7 @@
 #endregion
 
 // .NET Compact Framework 1.0 has no support for WindowsIdentity
-#if !NETCF 
+#if !NETCF
 // MONO 1.0 has no support for Win32 Logon APIs
 #if !MONO
 // SSCLI 1.0 has no support for Win32 Logon APIs
@@ -44,7 +44,7 @@ namespace log4net.Util
 	/// </para>
 	/// <para>
 	/// How the impersonation is done depends on the value of <see cref="Impersonate"/>.
-	/// This allows the context to either impersonate a set of user credentials specified 
+	/// This allows the context to either impersonate a set of user credentials specified
 	/// using username, domain name and password or to revert to the process credentials.
 	/// </para>
 	/// </remarks>
@@ -124,7 +124,7 @@ namespace log4net.Util
 		/// </para>
 		/// <para>
 		/// When the mode is set to <see cref="ImpersonationMode.Process"/>
-		/// no other properties need to be set. If the calling thread is 
+		/// no other properties need to be set. If the calling thread is
 		/// impersonating then it will be reverted back to the process credentials.
 		/// </para>
 		/// </remarks>
@@ -201,13 +201,13 @@ namespace log4net.Util
 		/// <remarks>
 		/// <para>
 		/// This is part of the <see cref="IOptionHandler"/> delayed object
-		/// activation scheme. The <see cref="ActivateOptions"/> method must 
+		/// activation scheme. The <see cref="ActivateOptions"/> method must
 		/// be called on this object after the configuration properties have
 		/// been set. Until <see cref="ActivateOptions"/> is called this
-		/// object is in an undefined state and must not be used. 
+		/// object is in an undefined state and must not be used.
 		/// </para>
 		/// <para>
-		/// If any of the configuration properties are modified then 
+		/// If any of the configuration properties are modified then
 		/// <see cref="ActivateOptions"/> must be called again.
 		/// </para>
 		/// <para>
@@ -215,7 +215,7 @@ namespace log4net.Util
 		/// capture a primary token for impersonation.
 		/// </para>
 		/// </remarks>
-		/// <exception cref="ArgumentNullException">The required <see cref="UserName" />, 
+		/// <exception cref="ArgumentNullException">The required <see cref="UserName" />,
 		/// <see cref="DomainName" /> or <see cref="Password" /> properties were not specified.</exception>
 		public void ActivateOptions()
 		{
@@ -241,7 +241,7 @@ namespace log4net.Util
 		/// <remarks>
 		/// <para>
 		/// Depending on the <see cref="Credentials"/> property either
-		/// impersonate a user using credentials supplied or revert 
+		/// impersonate a user using credentials supplied or revert
 		/// to the process credentials.
 		/// </para>
 		/// </remarks>
@@ -276,10 +276,10 @@ namespace log4net.Util
 		/// </para>
 		/// </remarks>
 #if NET_4_0 || MONO_4_0
-        [System.Security.SecuritySafeCritical]
+		[System.Security.SecuritySafeCritical]
 #endif
-        [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
-        private static WindowsIdentity LogonUser(string userName, string domainName, string password)
+		[System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
+		private static WindowsIdentity LogonUser(string userName, string domainName, string password)
 		{
 			const int LOGON32_PROVIDER_DEFAULT = 0;
 			//This parameter causes LogonUser to create a primary token.
@@ -308,7 +308,7 @@ namespace log4net.Util
 			WindowsIdentity identity = new WindowsIdentity(dupeTokenHandle);
 
 			// Free the tokens.
-			if (dupeTokenHandle != IntPtr.Zero) 
+			if (dupeTokenHandle != IntPtr.Zero)
 			{
 				CloseHandle(dupeTokenHandle);
 			}

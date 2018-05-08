@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -17,7 +17,7 @@
 //
 #endregion
 
-namespace NotLogging 
+namespace NotLogging
 {
 	using System;
 	using System.Collections;
@@ -28,7 +28,7 @@ namespace NotLogging
 	using log4net.Repository;
 	using log4net.Repository.Hierarchy;
 
-	public class NotLogging 
+	public class NotLogging
 	{
 		#region Init Code
 
@@ -44,9 +44,9 @@ namespace NotLogging
 
 
 		static readonly ILog[] LOG_ARRAY = new ILog[] {
-														  SHORT_LOG, 
-														  MEDIUM_LOG, 
-														  LONG_LOG, 
+														  SHORT_LOG,
+														  MEDIUM_LOG,
+														  LONG_LOG,
 														  INEXISTENT_SHORT_LOG,
 														  INEXISTENT_MEDIUM_LOG,
 														  INEXISTENT_LONG_LOG};
@@ -63,13 +63,13 @@ namespace NotLogging
 																	  new ComplexMessage_MemberGuard_Bare(),
 																	  new ComplexMessage_LocalGuard_Bare()};
 
-		private static void Usage() 
+		private static void Usage()
 		{
 			System.Console.WriteLine(
-				"Usage: NotLogging <true|false> <runLength>" + Environment.NewLine +
-				"\t true indicates shipped code" + Environment.NewLine +
-				"\t false indicates code in development" + Environment.NewLine +
-				"\t runLength is an int representing the run length of loops"  + Environment.NewLine +
+				"Usage: NotLogging <true|false> <runLength>" + Environment.NewLine
+				"\t true indicates shipped code" + Environment.NewLine
+				"\t false indicates code in development" + Environment.NewLine
+				"\t runLength is an int representing the run length of loops"  + Environment.NewLine
 				"\t We suggest that runLength be at least 1000000 (1 million).");
 			Environment.Exit(1);
 		}
@@ -79,35 +79,35 @@ namespace NotLogging
 		/// Program wide initialization method
 		/// </summary>
 		/// <param name="args"></param>
-		private static int ProgramInit(String[] args) 
+		private static int ProgramInit(String[] args)
 		{
 			int runLength = 0;
 
-			try 
+			try
 			{
-				runLength = int.Parse(args[1]);      
+				runLength = int.Parse(args[1]);
 			}
-			catch(Exception e) 
+			catch(Exception e)
 			{
 				System.Console.Error.WriteLine(e);
 				Usage();
-			}      
-    
+			}
+
 			ConsoleAppender appender = new ConsoleAppender();
 			appender.Layout = new SimpleLayout();
 			((SimpleLayout)appender.Layout).ActivateOptions();
 			appender.ActivateOptions();
-	    
-			if("false" == args[0]) 
+
+			if("false" == args[0])
 			{
 				// nothing to do
-			} 
-			else if ("true" == args[0]) 
+			}
+			else if ("true" == args[0])
 			{
 				System.Console.WriteLine("Flagging as shipped code.");
 				((Hierarchy)LogManager.GetRepository()).Threshold = log4net.Core.Level.Warn;
-			} 
-			else 
+			}
+			else
 			{
 				Usage();
 			}
@@ -117,22 +117,22 @@ namespace NotLogging
 			((Hierarchy)LogManager.GetRepository()).Root.AddAppender(appender);
 
 			return runLength;
-		}    
-	  
+		}
+
 		#endregion
 
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
 		[STAThread]
-		static void Main(string[] argv) 
+		static void Main(string[] argv)
 		{
-			if (System.Diagnostics.Debugger.IsAttached) 
+			if (System.Diagnostics.Debugger.IsAttached)
 			{
 				WARM_UP_CYCLES = 0;
 				argv = new string[] { "false", "2" };
 			}
-			if(argv.Length != 2) 
+			if(argv.Length != 2)
 			{
 				Usage();
 			}
@@ -142,11 +142,11 @@ namespace NotLogging
 			System.Console.WriteLine();
 			System.Console.Write("Warming Up...");
 
-			if (WARM_UP_CYCLES > 0) 
+			if (WARM_UP_CYCLES > 0)
 			{
-				foreach(ILog logger in LOG_ARRAY) 
+				foreach(ILog logger in LOG_ARRAY)
 				{
-					foreach(TimedTest timedTest in TIMED_TESTS) 
+					foreach(TimedTest timedTest in TIMED_TESTS)
 					{
 						timedTest.Run(logger, WARM_UP_CYCLES);
 					}
@@ -157,7 +157,7 @@ namespace NotLogging
 
 			// Calculate maximum description length
 			int maxDescLen = 0;
-			foreach(TimedTest timedTest in TIMED_TESTS) 
+			foreach(TimedTest timedTest in TIMED_TESTS)
 			{
 				maxDescLen = Math.Max(maxDescLen, timedTest.Description.Length);
 			}
@@ -167,10 +167,10 @@ namespace NotLogging
 
 			ArrayList averageData = new ArrayList();
 
-			foreach(TimedTest timedTest in TIMED_TESTS) 
+			foreach(TimedTest timedTest in TIMED_TESTS)
 			{
 				double total = 0;
-				foreach(ILog logger in LOG_ARRAY) 
+				foreach(ILog logger in LOG_ARRAY)
 				{
 					delta = timedTest.Run(logger, runLength);
 					System.Console.WriteLine(string.Format(formatString, timedTest.Description, delta, ((Logger)logger.Logger).Name));
@@ -185,7 +185,7 @@ namespace NotLogging
 			System.Console.WriteLine("Averages:");
 			System.Console.WriteLine();
 
-			foreach(object[] pair in averageData) 
+			foreach(object[] pair in averageData)
 			{
 				string avgFormatString = "{0,-"+(maxDescLen+1)+"} {1,9:G} ticks.";
 				System.Console.WriteLine(string.Format(avgFormatString, ((TimedTest)pair[0]).Description, ((double)pair[1])));
@@ -193,7 +193,7 @@ namespace NotLogging
 		}
 	}
 
-	abstract class TimedTest 
+	abstract class TimedTest
 	{
 		abstract public double Run(ILog log, long runLength);
 		abstract public string Description {get;}
@@ -201,12 +201,12 @@ namespace NotLogging
 
 	#region Tests calling Debug(string)
 
-	class SimpleMessage_Bare : TimedTest 
+	class SimpleMessage_Bare : TimedTest
 	{
-		override public double Run(ILog log, long runLength) 
+		override public double Run(ILog log, long runLength)
 		{
 			DateTime before = DateTime.Now;
-			for(int i = 0; i < runLength; i++) 
+			for(int i = 0; i < runLength; i++)
 			{
 				log.Debug("msg");
 			}
@@ -215,39 +215,39 @@ namespace NotLogging
 			return ((double)diff.Ticks)/((double)runLength);
 		}
 
-		override public string Description 
+		override public string Description
 		{
 			get { return "log.Debug(\"msg\");"; }
 		}
 	}
-	class ComplexMessage_MethodGuard_Bare : TimedTest 
+	class ComplexMessage_MethodGuard_Bare : TimedTest
 	{
-		override public double Run(ILog log, long runLength) 
+		override public double Run(ILog log, long runLength)
 		{
 			DateTime before = DateTime.Now;
-			for(int i = 0; i < runLength; i++) 
+			for(int i = 0; i < runLength; i++)
 			{
-				if(log.IsDebugEnabled) 
+				if(log.IsDebugEnabled)
 				{
 					log.Debug("msg" + i + "msg");
 				}
-			}    
+			}
 			DateTime after = DateTime.Now;
 			TimeSpan diff = after - before;
 			return ((double)diff.Ticks)/((double)runLength);
 		}
 
-		override public string Description 
+		override public string Description
 		{
 			get { return "if(log.IsDebugEnabled) log.Debug(\"msg\" + i + \"msg\");"; }
 		}
 	}
-	class ComplexMessage_Bare : TimedTest 
+	class ComplexMessage_Bare : TimedTest
 	{
-		override public double Run(ILog log, long runLength) 
+		override public double Run(ILog log, long runLength)
 		{
 			DateTime before = DateTime.Now;
-			for(int i = 0; i < runLength; i++) 
+			for(int i = 0; i < runLength; i++)
 			{
 				log.Debug("msg" + i + "msg");
 			}
@@ -256,7 +256,7 @@ namespace NotLogging
 			return ((double)diff.Ticks)/((double)runLength);
 		}
 
-		override public string Description 
+		override public string Description
 		{
 			get { return "log.Debug(\"msg\" + i + \"msg\");"; }
 		}
@@ -266,12 +266,12 @@ namespace NotLogging
 
 	#region Tests calling Debug(new object[] { ... })
 
-	class SimpleMessage_Array : TimedTest 
+	class SimpleMessage_Array : TimedTest
 	{
-		override public double Run(ILog log, long runLength) 
+		override public double Run(ILog log, long runLength)
 		{
 			DateTime before = DateTime.Now;
-			for(int i = 0; i < runLength; i++) 
+			for(int i = 0; i < runLength; i++)
 			{
 				log.Debug(new object[] { "msg" });
 			}
@@ -280,39 +280,39 @@ namespace NotLogging
 			return ((double)diff.Ticks)/((double)runLength);
 		}
 
-		override public string Description 
+		override public string Description
 		{
 			get { return "log.Debug(new object[] { \"msg\" });"; }
 		}
 	}
-	class ComplexMessage_MethodGuard_Array : TimedTest 
+	class ComplexMessage_MethodGuard_Array : TimedTest
 	{
-		override public double Run(ILog log, long runLength) 
+		override public double Run(ILog log, long runLength)
 		{
 			DateTime before = DateTime.Now;
-			for(int i = 0; i < runLength; i++) 
+			for(int i = 0; i < runLength; i++)
 			{
-				if(log.IsDebugEnabled) 
+				if(log.IsDebugEnabled)
 				{
 					log.Debug(new object[] { "msg" , i , "msg" });
 				}
-			}    
+			}
 			DateTime after = DateTime.Now;
 			TimeSpan diff = after - before;
 			return ((double)diff.Ticks)/((double)runLength);
 		}
 
-		override public string Description 
+		override public string Description
 		{
 			get { return "if(log.IsDebugEnabled) log.Debug(new object[] { \"msg\" , i , \"msg\" });"; }
 		}
 	}
-	class ComplexMessage_Array : TimedTest 
+	class ComplexMessage_Array : TimedTest
 	{
-		override public double Run(ILog log, long runLength) 
+		override public double Run(ILog log, long runLength)
 		{
 			DateTime before = DateTime.Now;
-			for(int i = 0; i < runLength; i++) 
+			for(int i = 0; i < runLength; i++)
 			{
 				log.Debug(new object[] { "msg" , i , "msg" });
 			}
@@ -321,7 +321,7 @@ namespace NotLogging
 			return ((double)diff.Ticks)/((double)runLength);
 		}
 
-		override public string Description 
+		override public string Description
 		{
 			get { return "log.Debug(new object[] { \"msg\" , i , \"msg\" });"; }
 		}
@@ -331,54 +331,54 @@ namespace NotLogging
 
 	#region Tests calling Debug(string) (using class members)
 
-	class ComplexMessage_MemberGuard_Bare : TimedTest 
+	class ComplexMessage_MemberGuard_Bare : TimedTest
 	{
-		override public double Run(ILog log, long runLength) 
+		override public double Run(ILog log, long runLength)
 		{
 			return (new Impl(log)).Run(runLength);
 		}
 
-		override public string Description 
+		override public string Description
 		{
 			get { return "if(m_isEnabled) m_log.Debug(\"msg\" + i + \"msg\");"; }
 		}
 
-		class Impl 
+		class Impl
 		{
 			private readonly ILog m_log;
 			private readonly bool m_isEnabled;
 
-			public Impl(ILog log) 
+			public Impl(ILog log)
 			{
 				m_log = log;
 				m_isEnabled = m_log.IsDebugEnabled;
 			}
 
-			public double Run(long runLength) 
+			public double Run(long runLength)
 			{
 
 				DateTime before = DateTime.Now;
-				for(int i = 0; i < runLength; i++) 
+				for(int i = 0; i < runLength; i++)
 				{
-					if(m_isEnabled) 
+					if(m_isEnabled)
 					{
 						m_log.Debug("msg" + i + "msg");
 					}
-				}    
+				}
 				DateTime after = DateTime.Now;
 				TimeSpan diff = after - before;
 				return ((double)diff.Ticks)/((double)runLength);
 			}
 		}
 	}
-	class SimpleMessage_LocalGuard_Bare : TimedTest 
+	class SimpleMessage_LocalGuard_Bare : TimedTest
 	{
-		override public double Run(ILog log, long runLength) 
+		override public double Run(ILog log, long runLength)
 		{
 			bool isEnabled = log.IsDebugEnabled;
 
 			DateTime before = DateTime.Now;
-			for(int i = 0; i < runLength; i++) 
+			for(int i = 0; i < runLength; i++)
 			{
 				if (isEnabled) log.Debug("msg");
 			}
@@ -387,17 +387,17 @@ namespace NotLogging
 			return ((double)diff.Ticks)/((double)runLength);
 		}
 
-		override public string Description 
+		override public string Description
 		{
 			get { return "if (isEnabled) log.Debug(\"msg\");"; }
 		}
 	}
-	class SimpleMessage_MethodGuard_Bare : TimedTest 
+	class SimpleMessage_MethodGuard_Bare : TimedTest
 	{
-		override public double Run(ILog log, long runLength) 
+		override public double Run(ILog log, long runLength)
 		{
 			DateTime before = DateTime.Now;
-			for(int i = 0; i < runLength; i++) 
+			for(int i = 0; i < runLength; i++)
 			{
 				if (log.IsDebugEnabled) log.Debug("msg");
 			}
@@ -406,32 +406,32 @@ namespace NotLogging
 			return ((double)diff.Ticks)/((double)runLength);
 		}
 
-		override public string Description 
+		override public string Description
 		{
 			get { return "if (log.IsDebugEnabled) log.Debug(\"msg\");"; }
 		}
 	}
-	class ComplexMessage_LocalGuard_Bare : TimedTest 
+	class ComplexMessage_LocalGuard_Bare : TimedTest
 	{
-		override public double Run(ILog log, long runLength) 
+		override public double Run(ILog log, long runLength)
 		{
 			bool isEnabled = log.IsDebugEnabled;
 
 			DateTime before = DateTime.Now;
-			for(int i = 0; i < runLength; i++) 
+			for(int i = 0; i < runLength; i++)
 			{
 				if(isEnabled) log.Debug("msg" + i + "msg");
-			}    
+			}
 			DateTime after = DateTime.Now;
 			TimeSpan diff = after - before;
 			return ((double)diff.Ticks)/((double)runLength);
 		}
 
-		override public string Description 
+		override public string Description
 		{
 			get { return "if (isEnabled) log.Debug(\"msg\" + i + \"msg\");"; }
 		}
 	}
-	#endregion 
+	#endregion
 
 }

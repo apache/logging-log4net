@@ -24,39 +24,39 @@ using System.Data;
 
 namespace log4net.Tests.Appender.AdoNet
 {
-    public class Log4NetTransaction : IDbTransaction
-    {
-        #region AdoNetAppender
+	public class Log4NetTransaction : IDbTransaction
+	{
+		#region AdoNetAppender
 
-        public void Commit()
-        {
-            // empty
-        }
+		public void Commit()
+		{
+			// empty
+		}
 
-        public void Rollback()
-        {
-            // empty
-        }
+		public void Rollback()
+		{
+			// empty
+		}
 
-        #endregion
+		#endregion
 
-        #region Not Implemented
+		#region Not Implemented
 
-        public IDbConnection Connection
-        {
-            get { throw new NotImplementedException(); }
-        }
+		public IDbConnection Connection
+		{
+			get { throw new NotImplementedException(); }
+		}
 
-        public IsolationLevel IsolationLevel
-        {
-            get { throw new NotImplementedException(); }
-        }
+		public IsolationLevel IsolationLevel
+		{
+			get { throw new NotImplementedException(); }
+		}
 
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
+		public void Dispose()
+		{
+			throw new NotImplementedException();
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

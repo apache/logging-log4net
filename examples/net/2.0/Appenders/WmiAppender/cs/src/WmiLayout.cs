@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -32,7 +32,7 @@ namespace log4net.Appender
 		/// <returns>an instrumentation event that can be fired</returns>
 		/// <remarks>
 		/// <para>
-		/// If the <see cref="LoggingEvent.MessageObject"/> of the 
+		/// If the <see cref="LoggingEvent.MessageObject"/> of the
 		/// <paramref name="loggingEvent" /> is an <see cref="IEvent"/> then
 		/// that instance is returned. If the instance also implements the
 		/// <see cref="IWmiBoundEvent"/> interface then the <see cref="IWmiBoundEvent.Bind"/>
@@ -40,7 +40,7 @@ namespace log4net.Appender
 		/// parameter.
 		/// </para>
 		/// <para>
-		/// If the <see cref="LoggingEvent.MessageObject"/> of the 
+		/// If the <see cref="LoggingEvent.MessageObject"/> of the
 		/// <paramref name="loggingEvent" /> is not an <see cref="IEvent"/>
 		/// then the <see cref="CreateEvent"/> method will be called
 		/// to create an appropriate instrumentation event object.
@@ -78,7 +78,7 @@ namespace log4net.Appender
 		/// instance using the data from the <paramref name="loggingEvent" />.
 		/// </para>
 		/// <para>
-		/// Subclasses should override this method to return their own custom 
+		/// Subclasses should override this method to return their own custom
 		/// instrumentation event object.
 		/// </para>
 		/// </remarks>

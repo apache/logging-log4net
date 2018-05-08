@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -63,7 +63,7 @@ namespace log4net.Ext.EventID
 		/// </remarks>
 		/// <param name="name">The fully qualified logger name to look for</param>
 		/// <returns>The logger found, or null</returns>
-		public static IEventIDLog Exists(string name) 
+		public static IEventIDLog Exists(string name)
 		{
 			return Exists(Assembly.GetCallingAssembly(), name);
 		}
@@ -79,7 +79,7 @@ namespace log4net.Ext.EventID
 		/// <param name="domain">the domain to lookup in</param>
 		/// <param name="name">The fully qualified logger name to look for</param>
 		/// <returns>The logger found, or null</returns>
-		public static IEventIDLog Exists(string domain, string name) 
+		public static IEventIDLog Exists(string domain, string name)
 		{
 			return WrapLogger(LoggerManager.Exists(domain, name));
 		}
@@ -95,7 +95,7 @@ namespace log4net.Ext.EventID
 		/// <param name="assembly">the assembly to use to lookup the domain</param>
 		/// <param name="name">The fully qualified logger name to look for</param>
 		/// <returns>The logger found, or null</returns>
-		public static IEventIDLog Exists(Assembly assembly, string name) 
+		public static IEventIDLog Exists(Assembly assembly, string name)
 		{
 			return WrapLogger(LoggerManager.Exists(assembly, name));
 		}
@@ -146,7 +146,7 @@ namespace log4net.Ext.EventID
 		/// parameter. If the named logger already exists, then the
 		/// existing instance will be returned. Otherwise, a new instance is
 		/// created.</para>
-		/// 
+		///
 		/// <para>By default, loggers do not have a set level but inherit
 		/// it from the hierarchy. This is one of the central features of
 		/// log4net.</para>
@@ -166,7 +166,7 @@ namespace log4net.Ext.EventID
 		/// parameter. If the named logger already exists, then the
 		/// existing instance will be returned. Otherwise, a new instance is
 		/// created.</para>
-		/// 
+		///
 		/// <para>By default, loggers do not have a set level but inherit
 		/// it from the hierarchy. This is one of the central features of
 		/// log4net.</para>
@@ -187,7 +187,7 @@ namespace log4net.Ext.EventID
 		/// parameter. If the named logger already exists, then the
 		/// existing instance will be returned. Otherwise, a new instance is
 		/// created.</para>
-		/// 
+		///
 		/// <para>By default, loggers do not have a set level but inherit
 		/// it from the hierarchy. This is one of the central features of
 		/// log4net.</para>
@@ -198,7 +198,7 @@ namespace log4net.Ext.EventID
 		public static IEventIDLog GetLogger(Assembly assembly, string name)
 		{
 			return WrapLogger(LoggerManager.GetLogger(assembly, name));
-		}	
+		}
 
 		/// <summary>
 		/// Shorthand for <see cref="M:LogManager.GetLogger(string)"/>.
@@ -206,10 +206,10 @@ namespace log4net.Ext.EventID
 		/// <remarks>
 		/// Get the logger for the fully qualified name of the type specified.
 		/// </remarks>
-		/// <param name="type">The full name of <paramref name="type"/> will 
+		/// <param name="type">The full name of <paramref name="type"/> will
 		/// be used as the name of the logger to retrieve.</param>
 		/// <returns>the logger with the name specified</returns>
-		public static IEventIDLog GetLogger(Type type) 
+		public static IEventIDLog GetLogger(Type type)
 		{
 			return GetLogger(Assembly.GetCallingAssembly(), type.FullName);
 		}
@@ -221,10 +221,10 @@ namespace log4net.Ext.EventID
 		/// Get the logger for the fully qualified name of the type specified.
 		/// </remarks>
 		/// <param name="domain">the domain to lookup in</param>
-		/// <param name="type">The full name of <paramref name="type"/> will 
+		/// <param name="type">The full name of <paramref name="type"/> will
 		/// be used as the name of the logger to retrieve.</param>
 		/// <returns>the logger with the name specified</returns>
-		public static IEventIDLog GetLogger(string domain, Type type) 
+		public static IEventIDLog GetLogger(string domain, Type type)
 		{
 			return WrapLogger(LoggerManager.GetLogger(domain, type));
 		}
@@ -236,10 +236,10 @@ namespace log4net.Ext.EventID
 		/// Get the logger for the fully qualified name of the type specified.
 		/// </remarks>
 		/// <param name="assembly">the assembly to use to lookup the domain</param>
-		/// <param name="type">The full name of <paramref name="type"/> will 
+		/// <param name="type">The full name of <paramref name="type"/> will
 		/// be used as the name of the logger to retrieve.</param>
 		/// <returns>the logger with the name specified</returns>
-		public static IEventIDLog GetLogger(Assembly assembly, Type type) 
+		public static IEventIDLog GetLogger(Assembly assembly, Type type)
 		{
 			return WrapLogger(LoggerManager.GetLogger(assembly, type));
 		}

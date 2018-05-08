@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -23,7 +23,7 @@ using log4net.Util;
 
 using NUnit.Framework;
 
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETCOREAPP1_0 || NETCOREAPP2_0
 using System.Linq.Expressions;
 using System.Reflection;
 #endif
@@ -37,7 +37,7 @@ namespace log4net.Tests.Util
 	public class SystemInfoTest
 	{
 
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETCOREAPP1_0 || NETCOREAPP2_0
 		/// <summary>
 		/// It's "does not throw not supported exception" NOT
 		/// "returns 'Dynamic Assembly' string for dynamic assemblies" by purpose.
@@ -65,7 +65,7 @@ namespace log4net.Tests.Util
 
 		public static string TestAssemblyLocationInfoMethod()
 		{
-#if NETSTANDARD1_3
+#if NETCOREAPP1_0
 			return SystemInfo.AssemblyLocationInfo(typeof(SystemInfoTest).GetTypeInfo().Assembly);
 #else
 			return SystemInfo.AssemblyLocationInfo(Assembly.GetCallingAssembly());
@@ -88,7 +88,7 @@ namespace log4net.Tests.Util
 			Assert.AreSame(typeof(SystemInfoTest), t, "Test explicit case in-sensitive type load lower");
 		}
 
-#if !NETSTANDARD1_3
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
 		[Test][Platform(Include="Win")]
 		public void TestGetTypeFromStringCaseInsensitiveOnAssemblyName()
 		{
@@ -117,7 +117,7 @@ namespace log4net.Tests.Util
 			Assert.AreSame(typeof(SystemInfoTest), t, "Test explicit case in-sensitive type load lower");
 		}
 
-#if NETSTANDARD1_3
+#if NETCOREAPP1_0
 		[Ignore("This test relies on enumerating loaded assemblies, which is presently impossible in CoreFX (https://github.com/dotnet/corefx/issues/1784).")]
 #endif
 		[Test]
@@ -127,8 +127,8 @@ namespace log4net.Tests.Util
 
 			t = GetTypeFromString("log4net.Util.SystemInfo", false, false);
 			Assert.AreSame(typeof(SystemInfo), t,
-                                       string.Format("Test explicit case sensitive type load found {0} rather than {1}",
-                                                     t.AssemblyQualifiedName, typeof(SystemInfo).AssemblyQualifiedName));
+									   string.Format("Test explicit case sensitive type load found {0} rather than {1}",
+													 t.AssemblyQualifiedName, typeof(SystemInfo).AssemblyQualifiedName));
 
 			t = GetTypeFromString("LOG4NET.UTIL.SYSTEMINFO", false, true);
 			Assert.AreSame(typeof(SystemInfo), t, "Test explicit case in-sensitive type load caps");
@@ -161,50 +161,50 @@ namespace log4net.Tests.Util
 
 		// Wraps SystemInfo.GetTypeFromString because the method relies on GetCallingAssembly, which is
 		// unavailable in CoreFX. As a workaround, only overloads which explicitly take a Type or Assembly
-		// are exposed for NETSTANDARD1_3.
+		// are exposed for NETCOREAPP1_0.
 		private Type GetTypeFromString(string typeName, bool throwOnError, bool ignoreCase)
 		{
-#if NETSTANDARD1_3
+#if NETCOREAPP1_0
 			return SystemInfo.GetTypeFromString(GetType().GetTypeInfo().Assembly, typeName, throwOnError, ignoreCase);
 #else
 			return SystemInfo.GetTypeFromString(typeName, throwOnError, ignoreCase);
 #endif
 		}
 
-        [Test]
-        public void EqualsIgnoringCase_BothNull_true()
-        {
-            Assert.True(SystemInfo.EqualsIgnoringCase(null, null));
-        }
+		[Test]
+		public void EqualsIgnoringCase_BothNull_true()
+		{
+			Assert.True(SystemInfo.EqualsIgnoringCase(null, null));
+		}
 
-        [Test]
-        public void EqualsIgnoringCase_LeftNull_false()
-        {
-            Assert.False(SystemInfo.EqualsIgnoringCase(null, "foo"));
-        }
+		[Test]
+		public void EqualsIgnoringCase_LeftNull_false()
+		{
+			Assert.False(SystemInfo.EqualsIgnoringCase(null, "foo"));
+		}
 
-        [Test]
-        public void EqualsIgnoringCase_RightNull_false()
-        {
-            Assert.False(SystemInfo.EqualsIgnoringCase("foo", null));
-        }
+		[Test]
+		public void EqualsIgnoringCase_RightNull_false()
+		{
+			Assert.False(SystemInfo.EqualsIgnoringCase("foo", null));
+		}
 
-        [Test]
-        public void EqualsIgnoringCase_SameStringsSameCase_true()
-        {
-            Assert.True(SystemInfo.EqualsIgnoringCase("foo", "foo"));
-        }
+		[Test]
+		public void EqualsIgnoringCase_SameStringsSameCase_true()
+		{
+			Assert.True(SystemInfo.EqualsIgnoringCase("foo", "foo"));
+		}
 
-        [Test]
-        public void EqualsIgnoringCase_SameStringsDifferentCase_true()
-        {
-            Assert.True(SystemInfo.EqualsIgnoringCase("foo", "FOO"));
-        }
+		[Test]
+		public void EqualsIgnoringCase_SameStringsDifferentCase_true()
+		{
+			Assert.True(SystemInfo.EqualsIgnoringCase("foo", "FOO"));
+		}
 
-        [Test]
-        public void EqualsIgnoringCase_DifferentStrings_false()
-        {
-            Assert.False(SystemInfo.EqualsIgnoringCase("foo", "foobar"));
-        }
+		[Test]
+		public void EqualsIgnoringCase_DifferentStrings_false()
+		{
+			Assert.False(SystemInfo.EqualsIgnoringCase("foo", "foobar"));
+		}
 	}
 }

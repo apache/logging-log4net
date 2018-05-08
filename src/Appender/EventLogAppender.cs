@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -20,7 +20,7 @@
 // MONO 1.0 Beta mcs does not like #if !A && !B && !C syntax
 
 // .NET Compact Framework 1.0 has no support for EventLog
-#if !NETCF 
+#if !NETCF
 // SSCLI 1.0 has no support for EventLog
 #if !SSCLI
 
@@ -38,17 +38,17 @@ namespace log4net.Appender
 	/// Writes events to the system event log.
 	/// </summary>
 	/// <remarks>
-    /// <para>
-    /// The appender will fail if you try to write using an event source that doesn't exist unless it is running with local administrator privileges.
-    /// See also http://logging.apache.org/log4net/release/faq.html#trouble-EventLog
-    /// </para>
+	/// <para>
+	/// The appender will fail if you try to write using an event source that doesn't exist unless it is running with local administrator privileges.
+	/// See also http://logging.apache.org/log4net/release/faq.html#trouble-EventLog
+	/// </para>
 	/// <para>
 	/// The <c>EventID</c> of the event log entry can be
 	/// set using the <c>EventID</c> property (<see cref="LoggingEvent.Properties"/>)
 	/// on the <see cref="LoggingEvent"/>.
 	/// </para>
-    /// <para>
-    /// The <c>Category</c> of the event log entry can be
+	/// <para>
+	/// The <c>Category</c> of the event log entry can be
 	/// set using the <c>Category</c> property (<see cref="LoggingEvent.Properties"/>)
 	/// on the <see cref="LoggingEvent"/>.
 	/// </para>
@@ -137,7 +137,7 @@ namespace log4net.Appender
 		/// then you should set the <see cref="LogName"/> appropriately.</para>
 		/// <para>This should not be used to distinguish your event log messages
 		/// from those of other applications, the <see cref="ApplicationName"/>
-		/// property should be used to distinguish events. This property should be 
+		/// property should be used to distinguish events. This property should be
 		/// used to group together events into a single log.
 		/// </para>
 		/// </remarks>
@@ -169,7 +169,7 @@ namespace log4net.Appender
 		/// computer, denoted by a dot "."
 		/// </summary>
 		/// <value>
-		/// The string name of the machine holding the event log that 
+		/// The string name of the machine holding the event log that
 		/// will be logged into.
 		/// </value>
 		/// <remarks>
@@ -214,46 +214,46 @@ namespace log4net.Appender
 		/// of the current thread.
 		/// </para>
 		/// </remarks>
-		public SecurityContext SecurityContext 
+		public SecurityContext SecurityContext
 		{
 			get { return m_securityContext; }
 			set { m_securityContext = value; }
 		}
 
-        /// <summary>
-        /// Gets or sets the <c>EventId</c> to use unless one is explicitly specified via the <c>LoggingEvent</c>'s properties.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// The <c>EventID</c> of the event log entry will normally be
-	    /// set using the <c>EventID</c> property (<see cref="LoggingEvent.Properties"/>)
-	    /// on the <see cref="LoggingEvent"/>.
-        /// This property provides the fallback value which defaults to 0.
-        /// </para>
-        /// </remarks>
-        public int EventId {
-            get { return m_eventId; }
-            set { m_eventId = value; }
-        }
+		/// <summary>
+		/// Gets or sets the <c>EventId</c> to use unless one is explicitly specified via the <c>LoggingEvent</c>'s properties.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The <c>EventID</c> of the event log entry will normally be
+		/// set using the <c>EventID</c> property (<see cref="LoggingEvent.Properties"/>)
+		/// on the <see cref="LoggingEvent"/>.
+		/// This property provides the fallback value which defaults to 0.
+		/// </para>
+		/// </remarks>
+		public int EventId {
+			get { return m_eventId; }
+			set { m_eventId = value; }
+		}
 
 
-        /// <summary>
-        /// Gets or sets the <c>Category</c> to use unless one is explicitly specified via the <c>LoggingEvent</c>'s properties.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// The <c>Category</c> of the event log entry will normally be
-	    /// set using the <c>Category</c> property (<see cref="LoggingEvent.Properties"/>)
-	    /// on the <see cref="LoggingEvent"/>.
-        /// This property provides the fallback value which defaults to 0.
-        /// </para>
-        /// </remarks>
-        public short Category
-        {
-            get { return m_category; }
-            set { m_category = value; }
-        }
-        #endregion // Public Instance Properties
+		/// <summary>
+		/// Gets or sets the <c>Category</c> to use unless one is explicitly specified via the <c>LoggingEvent</c>'s properties.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// The <c>Category</c> of the event log entry will normally be
+		/// set using the <c>Category</c> property (<see cref="LoggingEvent.Properties"/>)
+		/// on the <see cref="LoggingEvent"/>.
+		/// This property provides the fallback value which defaults to 0.
+		/// </para>
+		/// </remarks>
+		public short Category
+		{
+			get { return m_category; }
+			set { m_category = value; }
+		}
+		#endregion // Public Instance Properties
 
 		#region Implementation of IOptionHandler
 
@@ -263,83 +263,83 @@ namespace log4net.Appender
 		/// <remarks>
 		/// <para>
 		/// This is part of the <see cref="IOptionHandler"/> delayed object
-		/// activation scheme. The <see cref="ActivateOptions"/> method must 
+		/// activation scheme. The <see cref="ActivateOptions"/> method must
 		/// be called on this object after the configuration properties have
 		/// been set. Until <see cref="ActivateOptions"/> is called this
-		/// object is in an undefined state and must not be used. 
+		/// object is in an undefined state and must not be used.
 		/// </para>
 		/// <para>
-		/// If any of the configuration properties are modified then 
+		/// If any of the configuration properties are modified then
 		/// <see cref="ActivateOptions"/> must be called again.
 		/// </para>
 		/// </remarks>
-		override public void ActivateOptions() 
+		override public void ActivateOptions()
 		{
-            try
-            {
-                base.ActivateOptions();
+			try
+			{
+				base.ActivateOptions();
 
-                if (m_securityContext == null)
-                {
-                    m_securityContext = SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
-                }
+				if (m_securityContext == null)
+				{
+					m_securityContext = SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
+				}
 
-                bool sourceAlreadyExists = false;
-                string currentLogName = null;
+				bool sourceAlreadyExists = false;
+				string currentLogName = null;
 
-                using (SecurityContext.Impersonate(this))
-                {
-                    sourceAlreadyExists = EventLog.SourceExists(m_applicationName);
-                    if (sourceAlreadyExists) {
-                        currentLogName = EventLog.LogNameFromSourceName(m_applicationName, m_machineName);
-                    }
-                }
+				using (SecurityContext.Impersonate(this))
+				{
+					sourceAlreadyExists = EventLog.SourceExists(m_applicationName);
+					if (sourceAlreadyExists) {
+						currentLogName = EventLog.LogNameFromSourceName(m_applicationName, m_machineName);
+					}
+				}
 
-                if (sourceAlreadyExists && currentLogName != m_logName)
-                {
-                    LogLog.Debug(declaringType, "Changing event source [" + m_applicationName + "] from log [" + currentLogName + "] to log [" + m_logName + "]");
-                }
-                else if (!sourceAlreadyExists)
-                {
-                    LogLog.Debug(declaringType, "Creating event source Source [" + m_applicationName + "] in log " + m_logName + "]");
-                }
+				if (sourceAlreadyExists && currentLogName != m_logName)
+				{
+					LogLog.Debug(declaringType, "Changing event source [" + m_applicationName + "] from log [" + currentLogName + "] to log [" + m_logName + "]");
+				}
+				else if (!sourceAlreadyExists)
+				{
+					LogLog.Debug(declaringType, "Creating event source Source [" + m_applicationName + "] in log " + m_logName + "]");
+				}
 
-                string registeredLogName = null;
+				string registeredLogName = null;
 
-                using (SecurityContext.Impersonate(this))
-                {
-                    if (sourceAlreadyExists && currentLogName != m_logName)
-                    {
-                        //
-                        // Re-register this to the current application if the user has changed
-                        // the application / logfile association
-                        //
-                        EventLog.DeleteEventSource(m_applicationName, m_machineName);
-                        CreateEventSource(m_applicationName, m_logName, m_machineName);
+				using (SecurityContext.Impersonate(this))
+				{
+					if (sourceAlreadyExists && currentLogName != m_logName)
+					{
+						//
+						// Re-register this to the current application if the user has changed
+						// the application / logfile association
+						//
+						EventLog.DeleteEventSource(m_applicationName, m_machineName);
+						CreateEventSource(m_applicationName, m_logName, m_machineName);
 
-                        registeredLogName = EventLog.LogNameFromSourceName(m_applicationName, m_machineName);
-                    }
-                    else if (!sourceAlreadyExists)
-                    {
-                        CreateEventSource(m_applicationName, m_logName, m_machineName);
+						registeredLogName = EventLog.LogNameFromSourceName(m_applicationName, m_machineName);
+					}
+					else if (!sourceAlreadyExists)
+					{
+						CreateEventSource(m_applicationName, m_logName, m_machineName);
 
-                        registeredLogName = EventLog.LogNameFromSourceName(m_applicationName, m_machineName);
-                    }
-                }
+						registeredLogName = EventLog.LogNameFromSourceName(m_applicationName, m_machineName);
+					}
+				}
 
-                m_levelMapping.ActivateOptions();
+				m_levelMapping.ActivateOptions();
 
-                LogLog.Debug(declaringType, "Source [" + m_applicationName + "] is registered to log [" + registeredLogName + "]");
-            }
-            catch (System.Security.SecurityException ex)
-            {
-                ErrorHandler.Error("Caught a SecurityException trying to access the EventLog.  Most likely the event source "
-                    + m_applicationName
-                    + " doesn't exist and must be created by a local administrator.  Will disable EventLogAppender."
-                    + "  See http://logging.apache.org/log4net/release/faq.html#trouble-EventLog",
-                    ex);
-                Threshold = Level.Off;
-            }
+				LogLog.Debug(declaringType, "Source [" + m_applicationName + "] is registered to log [" + registeredLogName + "]");
+			}
+			catch (System.Security.SecurityException ex)
+			{
+				ErrorHandler.Error("Caught a SecurityException trying to access the EventLog.  Most likely the event source "
+					+ m_applicationName
+					+ " doesn't exist and must be created by a local administrator.  Will disable EventLogAppender."
+					+ "  See http://logging.apache.org/log4net/release/faq.html#trouble-EventLog",
+					ex);
+				Threshold = Level.Off;
+			}
 		}
 
 		#endregion // Implementation of IOptionHandler
@@ -360,26 +360,26 @@ namespace log4net.Appender
 			EventLog.CreateEventSource(source, logName, machineName);
 #endif
 		}
- 
+
 		#region Override implementation of AppenderSkeleton
 
 		/// <summary>
 		/// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/>
-		/// method. 
+		/// method.
 		/// </summary>
 		/// <param name="loggingEvent">the event to log</param>
 		/// <remarks>
-		/// <para>Writes the event to the system event log using the 
+		/// <para>Writes the event to the system event log using the
 		/// <see cref="ApplicationName"/>.</para>
-		/// 
+		///
 		/// <para>If the event has an <c>EventID</c> property (see <see cref="LoggingEvent.Properties"/>)
 		/// set then this integer will be used as the event log event id.</para>
-		/// 
+		///
 		/// <para>
 		/// There is a limit of 32K characters for an event log message
 		/// </para>
 		/// </remarks>
-		override protected void Append(LoggingEvent loggingEvent) 
+		override protected void Append(LoggingEvent loggingEvent)
 		{
 			//
 			// Write the resulting string to the event log system
@@ -397,10 +397,10 @@ namespace log4net.Appender
 				else
 				{
 					string eventIDPropertyString = eventIDPropertyObj as string;
-                    if (eventIDPropertyString == null)
-                    {
-                        eventIDPropertyString = eventIDPropertyObj.ToString();
-                    }
+					if (eventIDPropertyString == null)
+					{
+						eventIDPropertyString = eventIDPropertyObj.ToString();
+					}
 					if (eventIDPropertyString != null && eventIDPropertyString.Length > 0)
 					{
 						// Read the string property into a number
@@ -417,37 +417,37 @@ namespace log4net.Appender
 				}
 			}
 
-            short category = m_category;
-            // Look for the Category property
-            object categoryPropertyObj = loggingEvent.LookupProperty("Category");
-            if (categoryPropertyObj != null)
-            {
-                if (categoryPropertyObj is short)
-                {
-                    category = (short) categoryPropertyObj;
-                }
-                else
-                {
-                    string categoryPropertyString = categoryPropertyObj as string;
-                    if (categoryPropertyString == null)
-                    {
-                        categoryPropertyString = categoryPropertyObj.ToString();
-                    }
-                    if (categoryPropertyString != null && categoryPropertyString.Length > 0)
-                    {
-                        // Read the string property into a number
-                        short shortVal;
-                        if (SystemInfo.TryParse(categoryPropertyString, out shortVal))
-                        {
-                            category = shortVal;
-                        }
-                        else
-                        {
-                            ErrorHandler.Error("Unable to parse event category property [" + categoryPropertyString + "].");
-                        }
-                    }
-                }
-            }
+			short category = m_category;
+			// Look for the Category property
+			object categoryPropertyObj = loggingEvent.LookupProperty("Category");
+			if (categoryPropertyObj != null)
+			{
+				if (categoryPropertyObj is short)
+				{
+					category = (short) categoryPropertyObj;
+				}
+				else
+				{
+					string categoryPropertyString = categoryPropertyObj as string;
+					if (categoryPropertyString == null)
+					{
+						categoryPropertyString = categoryPropertyObj.ToString();
+					}
+					if (categoryPropertyString != null && categoryPropertyString.Length > 0)
+					{
+						// Read the string property into a number
+						short shortVal;
+						if (SystemInfo.TryParse(categoryPropertyString, out shortVal))
+						{
+							category = shortVal;
+						}
+						else
+						{
+							ErrorHandler.Error("Unable to parse event category property [" + categoryPropertyString + "].");
+						}
+					}
+				}
+			}
 
 			// Write to the event log
 			try
@@ -471,7 +471,7 @@ namespace log4net.Appender
 			{
 				ErrorHandler.Error("Unable to write to event log [" + m_logName + "] using source [" + m_applicationName + "]", ex);
 			}
-		} 
+		}
 
 		/// <summary>
 		/// This appender requires a <see cref="Layout"/> to be set.
@@ -498,7 +498,7 @@ namespace log4net.Appender
 		/// <returns>The equivalent <see cref="EventLogEntryType"/> for a <see cref="Level"/> <paramref name="level"/></returns>
 		/// <remarks>
 		/// Because there are fewer applicable <see cref="EventLogEntryType"/>
-		/// values to use in logging levels than there are in the 
+		/// values to use in logging levels than there are in the
 		/// <see cref="Level"/> this is a one way mapping. There is
 		/// a loss of information during the conversion.
 		/// </remarks>
@@ -513,14 +513,14 @@ namespace log4net.Appender
 
 			// Use default behavior
 
-			if (level >= Level.Error) 
+			if (level >= Level.Error)
 			{
 				return EventLogEntryType.Error;
 			}
-			else if (level == Level.Warn) 
+			else if (level == Level.Warn)
 			{
 				return EventLogEntryType.Warning;
-			} 
+			}
 
 			// Default setting
 			return EventLogEntryType.Information;
@@ -558,17 +558,17 @@ namespace log4net.Appender
 		/// </summary>
 		private SecurityContext m_securityContext;
 
-        /// <summary>
-        /// The event ID to use unless one is explicitly specified via the <c>LoggingEvent</c>'s properties.
-        /// </summary>
-        private int m_eventId = 0;
+		/// <summary>
+		/// The event ID to use unless one is explicitly specified via the <c>LoggingEvent</c>'s properties.
+		/// </summary>
+		private int m_eventId = 0;
 
-        /// <summary>
-        /// The event category to use unless one is explicitly specified via the <c>LoggingEvent</c>'s properties.
-        /// </summary>
-        private short m_category = 0;
+		/// <summary>
+		/// The event category to use unless one is explicitly specified via the <c>LoggingEvent</c>'s properties.
+		/// </summary>
+		private short m_category = 0;
 
-        #endregion // Private Instance Fields
+		#endregion // Private Instance Fields
 
 		#region Level2EventLogEntryType LevelMapping Entry
 
@@ -603,27 +603,27 @@ namespace log4net.Appender
 
 		#endregion // LevelColors LevelMapping Entry
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the EventLogAppender class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(EventLogAppender);
+		/// <summary>
+		/// The fully qualified type of the EventLogAppender class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(EventLogAppender);
 
 		/// <summary>
 		/// The maximum size supported by default.
 		/// </summary>
 		/// <remarks>
 		/// http://msdn.microsoft.com/en-us/library/xzwc042w(v=vs.100).aspx
-		/// The 32766 documented max size is two bytes shy of 32K (I'm assuming 32766 
-		/// may leave space for a two byte null terminator of #0#0). The 32766 max 
-		/// length is what the .NET 4.0 source code checks for, but this is WRONG! 
-		/// Strings with a length > 31839 on Windows Vista or higher can CORRUPT 
-		/// the event log! See: System.Diagnostics.EventLogInternal.InternalWriteEvent() 
+		/// The 32766 documented max size is two bytes shy of 32K (I'm assuming 32766
+		/// may leave space for a two byte null terminator of #0#0). The 32766 max
+		/// length is what the .NET 4.0 source code checks for, but this is WRONG!
+		/// Strings with a length > 31839 on Windows Vista or higher can CORRUPT
+		/// the event log! See: System.Diagnostics.EventLogInternal.InternalWriteEvent()
 		/// for the use of the 32766 max size.
 		/// </remarks>
 		private readonly static int MAX_EVENTLOG_MESSAGE_SIZE_DEFAULT = 32766;
@@ -636,22 +636,22 @@ namespace log4net.Appender
 		/// See ReportEvent API:
 		///		http://msdn.microsoft.com/en-us/library/aa363679(VS.85).aspx
 		/// ReportEvent's lpStrings parameter:
-		/// "A pointer to a buffer containing an array of 
-		/// null-terminated strings that are merged into the message before Event Viewer 
-		/// displays the string to the user. This parameter must be a valid pointer 
+		/// "A pointer to a buffer containing an array of
+		/// null-terminated strings that are merged into the message before Event Viewer
+		/// displays the string to the user. This parameter must be a valid pointer
 		/// (or NULL), even if wNumStrings is zero. Each string is limited to 31,839 characters."
-		/// 
+		///
 		/// Going beyond the size of 31839 will (at some point) corrupt the event log on Windows
 		/// Vista or higher! It may succeed for a while...but you will eventually run into the
 		/// error: "System.ComponentModel.Win32Exception : A device attached to the system is
-		/// not functioning", and the event log will then be corrupt (I was able to corrupt 
+		/// not functioning", and the event log will then be corrupt (I was able to corrupt
 		/// an event log using a length of 31877 on Windows 7).
-		/// 
+		///
 		/// The max size for Windows Vista or higher is documented here:
 		///		http://msdn.microsoft.com/en-us/library/xzwc042w(v=vs.100).aspx.
-		/// Going over this size may succeed a few times but the buffer will overrun and 
+		/// Going over this size may succeed a few times but the buffer will overrun and
 		/// eventually corrupt the log (based on testing).
-		/// 
+		///
 		/// The maxEventMsgSize size is based on the max buffer size of the lpStrings parameter of the ReportEvent API.
 		/// The documented max size for EventLog.WriteEntry for Windows Vista and higher is 31839, but I'm leaving room for a
 		/// terminator of #0#0, as we cannot see the source of ReportEvent (though we could use an API monitor to examine the
@@ -682,7 +682,7 @@ namespace log4net.Appender
 			return MAX_EVENTLOG_MESSAGE_SIZE_DEFAULT;
 		}
 
-	    #endregion Private Static Fields
+		#endregion Private Static Fields
 	}
 }
 

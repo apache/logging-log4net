@@ -1,6 +1,6 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-#
+# Visual Studio 15
 #
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
@@ -19,10 +19,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # specific language governing permissions and limitations
 # under the License.
 #
-#
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net", "log4net.csproj", "{181FE707-E161-4722-9F38-6AAAB6FAA106}"
+VisualStudioVersion = 15.0.26801.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "log4net", "log4net.csproj", "{5C1DC5A1-A943-40B5-9270-A65286B4978D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.Tests", "..\tests\src\log4net.Tests.csproj", "{B0530F10-0238-49A9-93B0-8EF412E90BCF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "log4net.Tests", "..\tests\src\log4net.Tests.csproj", "{DBF648C3-AA35-48C6-9F3C-05669BAABA63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,16 +31,19 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{181FE707-E161-4722-9F38-6AAAB6FAA106}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{181FE707-E161-4722-9F38-6AAAB6FAA106}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{181FE707-E161-4722-9F38-6AAAB6FAA106}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{181FE707-E161-4722-9F38-6AAAB6FAA106}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B0530F10-0238-49A9-93B0-8EF412E90BCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B0530F10-0238-49A9-93B0-8EF412E90BCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B0530F10-0238-49A9-93B0-8EF412E90BCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B0530F10-0238-49A9-93B0-8EF412E90BCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C1DC5A1-A943-40B5-9270-A65286B4978D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C1DC5A1-A943-40B5-9270-A65286B4978D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C1DC5A1-A943-40B5-9270-A65286B4978D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C1DC5A1-A943-40B5-9270-A65286B4978D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBF648C3-AA35-48C6-9F3C-05669BAABA63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBF648C3-AA35-48C6-9F3C-05669BAABA63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBF648C3-AA35-48C6-9F3C-05669BAABA63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBF648C3-AA35-48C6-9F3C-05669BAABA63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8655E3DC-898A-49DA-960F-0AD7DB2DFD93}
 	EndGlobalSection
 EndGlobal

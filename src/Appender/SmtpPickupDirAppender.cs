@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -28,7 +28,7 @@ using log4net.Util;
 namespace log4net.Appender
 {
 	/// <summary>
-	/// Send an email when a specific logging event occurs, typically on errors 
+	/// Send an email when a specific logging event occurs, typically on errors
 	/// or fatal errors. Rather than sending via smtp it writes a file into the
 	/// directory specified by <see cref="PickupDir"/>. This allows services such
 	/// as the IIS SMTP agent to manage sending the messages.
@@ -43,8 +43,8 @@ namespace log4net.Appender
 	/// The number of logging events delivered in this e-mail depend on
 	/// the value of <see cref="BufferingAppenderSkeleton.BufferSize"/> option. The
 	/// <see cref="SmtpPickupDirAppender"/> keeps only the last
-	/// <see cref="BufferingAppenderSkeleton.BufferSize"/> logging events in its 
-	/// cyclic buffer. This keeps memory requirements at a reasonable level while 
+	/// <see cref="BufferingAppenderSkeleton.BufferSize"/> logging events in its
+	/// cyclic buffer. This keeps memory requirements at a reasonable level while
 	/// still delivering useful application context.
 	/// </para>
 	/// </remarks>
@@ -82,7 +82,7 @@ namespace log4net.Appender
 		/// A semicolon-delimited list of e-mail addresses.
 		/// </para>
 		/// </remarks>
-		public string To 
+		public string To
 		{
 			get { return m_to; }
 			set { m_to = value; }
@@ -99,7 +99,7 @@ namespace log4net.Appender
 		/// The e-mail address of the sender.
 		/// </para>
 		/// </remarks>
-		public string From 
+		public string From
 		{
 			get { return m_from; }
 			set { m_from = value; }
@@ -116,12 +116,12 @@ namespace log4net.Appender
 		/// The subject line of the e-mail message.
 		/// </para>
 		/// </remarks>
-		public string Subject 
+		public string Subject
 		{
 			get { return m_subject; }
 			set { m_subject = value; }
 		}
-  
+
 		/// <summary>
 		/// Gets or sets the path to write the messages to.
 		/// </summary>
@@ -137,7 +137,7 @@ namespace log4net.Appender
 			set { m_pickupDir = value; }
 		}
 
- 		/// <summary>
+		/// <summary>
 		/// Gets or sets the file extension for the generated files
 		/// </summary>
 		/// <value>
@@ -184,7 +184,7 @@ namespace log4net.Appender
 		/// of the current thread.
 		/// </para>
 		/// </remarks>
-		public SecurityContext SecurityContext 
+		public SecurityContext SecurityContext
 		{
 			get { return m_securityContext; }
 			set { m_securityContext = value; }
@@ -203,11 +203,11 @@ namespace log4net.Appender
 		/// Sends the contents of the cyclic buffer as an e-mail message.
 		/// </para>
 		/// </remarks>
-		override protected void SendBuffer(LoggingEvent[] events) 
+		override protected void SendBuffer(LoggingEvent[] events)
 		{
 			// Note: this code already owns the monitor for this
 			// appender. This frees us from needing to synchronize again.
-			try 
+			try
 			{
 				string filePath = null;
 				StreamWriter writer = null;
@@ -239,7 +239,7 @@ namespace log4net.Appender
 							writer.Write(t);
 						}
 
-						for(int i = 0; i < events.Length; i++) 
+						for(int i = 0; i < events.Length; i++)
 						{
 							// Render the event and append the text to the buffer
 							RenderLoggingEvent(writer, events[i]);
@@ -255,8 +255,8 @@ namespace log4net.Appender
 						writer.WriteLine(".");
 					}
 				}
-			} 
-			catch(Exception e) 
+			}
+			catch(Exception e)
 			{
 				ErrorHandler.Error("Error occurred while sending e-mail notification.", e);
 			}
@@ -267,23 +267,23 @@ namespace log4net.Appender
 		#region Override implementation of AppenderSkeleton
 
 		/// <summary>
-		/// Activate the options on this appender. 
+		/// Activate the options on this appender.
 		/// </summary>
 		/// <remarks>
 		/// <para>
 		/// This is part of the <see cref="IOptionHandler"/> delayed object
-		/// activation scheme. The <see cref="ActivateOptions"/> method must 
+		/// activation scheme. The <see cref="ActivateOptions"/> method must
 		/// be called on this object after the configuration properties have
 		/// been set. Until <see cref="ActivateOptions"/> is called this
-		/// object is in an undefined state and must not be used. 
+		/// object is in an undefined state and must not be used.
 		/// </para>
 		/// <para>
-		/// If any of the configuration properties are modified then 
+		/// If any of the configuration properties are modified then
 		/// <see cref="ActivateOptions"/> must be called again.
 		/// </para>
 		/// </remarks>
-		override public void ActivateOptions() 
-		{	
+		override public void ActivateOptions()
+		{
 			base.ActivateOptions();
 
 			if (m_securityContext == null)
@@ -324,7 +324,7 @@ namespace log4net.Appender
 		/// <para>
 		/// Converts the path specified to a fully
 		/// qualified path. If the path is relative it is
-		/// taken as relative from the application base 
+		/// taken as relative from the application base
 		/// directory.
 		/// </para>
 		/// </remarks>

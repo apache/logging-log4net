@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -64,7 +64,7 @@ namespace SampleAppendersApp.Appender
 			set { m_connectionString = value; }
 		}
 
-		public virtual void ActivateOptions() 
+		public virtual void ActivateOptions()
 		{
 		}
 
@@ -146,31 +146,31 @@ namespace SampleAppendersApp.Appender
 			command.CommandText = "INSERT INTO [LogTable] ([Time],[Logger],[Level],[Thread],[Message]) VALUES (@Time,@Logger,@Level,@Thread,@Message)";
 
 			IDbDataParameter param;
-			
+
 			// @Time
 			param = command.CreateParameter();
 			param.ParameterName = "@Time";
 			param.DbType = DbType.DateTime;
 			command.Parameters.Add(param);
-			
+
 			// @Logger
 			param = command.CreateParameter();
 			param.ParameterName = "@Logger";
 			param.DbType = DbType.String;
 			command.Parameters.Add(param);
-			
+
 			// @Level
 			param = command.CreateParameter();
 			param.ParameterName = "@Level";
 			param.DbType = DbType.String;
 			command.Parameters.Add(param);
-			
+
 			// @Thread
 			param = command.CreateParameter();
 			param.ParameterName = "@Thread";
 			param.DbType = DbType.String;
 			command.Parameters.Add(param);
-			
+
 			// @Message
 			param = command.CreateParameter();
 			param.ParameterName = "@Message";

@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -48,11 +48,11 @@ namespace log4net.Util
 		/// <param name="pattern">The pattern to parse.</param>
 		/// <remarks>
 		/// <para>
-		/// Initializes a new instance of the <see cref="PatternParser" /> class 
+		/// Initializes a new instance of the <see cref="PatternParser" /> class
 		/// with the specified pattern string.
 		/// </para>
 		/// </remarks>
-		public PatternParser(string pattern) 
+		public PatternParser(string pattern)
 		{
 			m_pattern = pattern;
 		}
@@ -164,7 +164,7 @@ namespace log4net.Util
 
 				return s2.Length.CompareTo(s1.Length);
 			}
-		
+
 			#endregion
 		}
 
@@ -277,7 +277,7 @@ namespace log4net.Util
 										{
 											// Seen option start
 											offset++;
-											
+
 											int optEnd = pattern.IndexOf('}', offset);
 											if (optEnd < 0)
 											{
@@ -325,7 +325,7 @@ namespace log4net.Util
 			LogLog.Debug(declaringType, "Converter ["+converterName+"] Option ["+option+"] Format [min="+formattingInfo.Min+",max="+formattingInfo.Max+",leftAlign="+formattingInfo.LeftAlign+"]");
 
 			// Lookup the converter type
-            ConverterInfo converterInfo = (ConverterInfo)m_patternConverters[converterName];
+			ConverterInfo converterInfo = (ConverterInfo)m_patternConverters[converterName];
 			if (converterInfo == null)
 			{
 				LogLog.Error(declaringType, "Unknown converter name ["+converterName+"] in conversion pattern.");
@@ -336,20 +336,20 @@ namespace log4net.Util
 				PatternConverter pc = null;
 				try
 				{
-                    pc = (PatternConverter)Activator.CreateInstance(converterInfo.Type);
+					pc = (PatternConverter)Activator.CreateInstance(converterInfo.Type);
 				}
 				catch(Exception createInstanceEx)
 				{
-                    LogLog.Error(declaringType, "Failed to create instance of Type [" + converterInfo.Type.FullName + "] using default constructor. Exception: " + createInstanceEx.ToString());
+					LogLog.Error(declaringType, "Failed to create instance of Type [" + converterInfo.Type.FullName + "] using default constructor. Exception: " + createInstanceEx.ToString());
 				}
 
-				// formattingInfo variable is an instance variable, occasionally reset 
+				// formattingInfo variable is an instance variable, occasionally reset
 				// and used over and over again
 				pc.FormattingInfo = formattingInfo;
 				pc.Option = option;
-                pc.Properties = converterInfo.Properties;
+				pc.Properties = converterInfo.Properties;
 
-			    IOptionHandler optionHandler = pc as IOptionHandler;
+				IOptionHandler optionHandler = pc as IOptionHandler;
 				if (optionHandler != null)
 				{
 					optionHandler.ActivateOptions();
@@ -360,19 +360,19 @@ namespace log4net.Util
 		}
 
 		/// <summary>
-		/// Resets the internal state of the parser and adds the specified pattern converter 
+		/// Resets the internal state of the parser and adds the specified pattern converter
 		/// to the chain.
 		/// </summary>
 		/// <param name="pc">The pattern converter to add.</param>
-		private void AddConverter(PatternConverter pc) 
+		private void AddConverter(PatternConverter pc)
 		{
 			// Add the pattern converter to the list.
 
-			if (m_head == null) 
+			if (m_head == null)
 			{
 				m_head = m_tail = pc;
 			}
-			else 
+			else
 			{
 				// Set the next converter on the tail
 				// Update the tail reference
@@ -387,7 +387,7 @@ namespace log4net.Util
 		#region Private Constants
 
 		private const char ESCAPE_CHAR = '%';
-  
+
 		#endregion Private Constants
 
 		#region Private Instance Fields
@@ -419,17 +419,17 @@ namespace log4net.Util
 
 		#endregion Private Instance Fields
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the PatternParser class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(PatternParser);
+		/// <summary>
+		/// The fully qualified type of the PatternParser class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(PatternParser);
 
-	    #endregion Private Static Fields
+		#endregion Private Static Fields
 	}
 }

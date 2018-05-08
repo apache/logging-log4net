@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -38,27 +38,27 @@ namespace SampleAppendersApp.Appender
 	public class SimpleSmtpAppender : AppenderSkeleton
 	{
 		public SimpleSmtpAppender()
-		{	
+		{
 		}
 
-		public string To 
+		public string To
 		{
 			get { return m_to; }
 			set { m_to = value; }
 		}
 
-		public string From 
+		public string From
 		{
 			get { return m_from; }
 			set { m_from = value; }
 		}
 
-		public PatternLayout Subject 
+		public PatternLayout Subject
 		{
 			get { return m_subjectLayout; }
 			set { m_subjectLayout = value; }
 		}
-  
+
 		public string SmtpHost
 		{
 			get { return m_smtpHost; }
@@ -67,10 +67,10 @@ namespace SampleAppendersApp.Appender
 
 		#region Override implementation of AppenderSkeleton
 
-		override protected void Append(LoggingEvent loggingEvent) 
+		override protected void Append(LoggingEvent loggingEvent)
 		{
-			try 
-			{	  
+			try
+			{
 				StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
 
 				string t = Layout.Header;
@@ -110,11 +110,11 @@ namespace SampleAppendersApp.Appender
 				}
 
 				SmtpMail.Send(mailMessage);
-			} 
-			catch(Exception e) 
+			}
+			catch(Exception e)
 			{
 				ErrorHandler.Error("Error occurred while sending e-mail notification.", e);
-			}		
+			}
 		}
 
 		override protected bool RequiresLayout

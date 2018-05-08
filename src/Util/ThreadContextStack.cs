@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -54,7 +54,7 @@ namespace log4net.Util
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// Initializes a new instance of the <see cref="ThreadContextStack" /> class. 
+		/// Initializes a new instance of the <see cref="ThreadContextStack" /> class.
 		/// </para>
 		/// </remarks>
 		internal ThreadContextStack()
@@ -98,11 +98,11 @@ namespace log4net.Util
 		/// You do not need to use this method if you always guarantee to call
 		/// the <see cref="IDisposable.Dispose"/> method of the <see cref="IDisposable"/>
 		/// returned from <see cref="Push"/> even in exceptional circumstances,
-		/// for example by using the <c>using(log4net.ThreadContext.Stacks["NDC"].Push("Stack_Message"))</c> 
+		/// for example by using the <c>using(log4net.ThreadContext.Stacks["NDC"].Push("Stack_Message"))</c>
 		/// syntax.
 		/// </para>
 		/// </remarks>
-		public void Clear() 
+		public void Clear()
 		{
 			m_stack.Clear();
 		}
@@ -118,7 +118,7 @@ namespace log4net.Util
 		/// empty string (not <see langword="null"/>) is returned.
 		/// </para>
 		/// </remarks>
-		public string Pop() 
+		public string Pop()
 		{
 			Stack stack = m_stack;
 			if (stack.Count > 0)
@@ -151,7 +151,7 @@ namespace log4net.Util
 		///	}
 		/// </code>
 		/// </example>
-		public IDisposable Push(string message) 
+		public IDisposable Push(string message)
 		{
 			Stack stack = m_stack;
 			stack.Push(new StackFrame(message, (stack.Count>0) ? (StackFrame)stack.Peek() : null));
@@ -167,7 +167,7 @@ namespace log4net.Util
 		/// Gets the current context information for this stack.
 		/// </summary>
 		/// <returns>The current context information.</returns>
-		internal string GetFullMessage() 
+		internal string GetFullMessage()
 		{
 			Stack stack = m_stack;
 			if (stack.Count > 0)
@@ -183,7 +183,7 @@ namespace log4net.Util
 		/// <value>The internal storage stack</value>
 		/// <remarks>
 		/// <para>
-		/// This property is provided only to support backward compatability 
+		/// This property is provided only to support backward compatability
 		/// of the <see cref="NDC"/>. Tytpically the internal stack should not
 		/// be modified.
 		/// </para>
@@ -193,7 +193,7 @@ namespace log4net.Util
 			get { return m_stack; }
 			set { m_stack = value; }
 		}
-  
+
 		#endregion Internal Methods
 
 		/// <summary>
@@ -232,14 +232,14 @@ namespace log4net.Util
 		/// Inner class used to represent a single context frame in the stack.
 		/// </para>
 		/// </remarks>
-		private sealed class StackFrame 
+		private sealed class StackFrame
 		{
 			#region Private Instance Fields
 
 			private readonly string m_message;
 			private readonly StackFrame m_parent;
 			private string m_fullMessage = null;
-    
+
 			#endregion
 
 			#region Internal Instance Constructors
@@ -255,15 +255,15 @@ namespace log4net.Util
 			/// with the specified message and parent context.
 			/// </para>
 			/// </remarks>
-			internal StackFrame(string message, StackFrame parent) 
+			internal StackFrame(string message, StackFrame parent)
 			{
 				m_message = message;
 				m_parent = parent;
 
-				if (parent == null) 
+				if (parent == null)
 				{
 					m_fullMessage = message;
-				} 
+				}
 			}
 
 			#endregion Internal Instance Constructors
@@ -297,13 +297,13 @@ namespace log4net.Util
 			/// </remarks>
 			internal string FullMessage
 			{
-				get 
+				get
 				{
 					if (m_fullMessage == null && m_parent != null)
 					{
 						m_fullMessage = string.Concat(m_parent.FullMessage, " ", m_message);
 					}
-					return m_fullMessage; 
+					return m_fullMessage;
 				}
 			}
 

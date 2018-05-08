@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -54,13 +54,13 @@ namespace log4net.Appender
 	/// <para>
 	/// Syslog messages must have a facility and and a severity. The severity
 	/// is derived from the Level of the logging event.
-	/// The facility must be chosen from the set of defined syslog 
+	/// The facility must be chosen from the set of defined syslog
 	/// <see cref="SyslogFacility"/> values. The facilities list is predefined
 	/// and cannot be extended.
 	/// </para>
 	/// <para>
 	/// An identifier is specified with each log message. This can be specified
-	/// by setting the <see cref="Identity"/> property. The identity (also know 
+	/// by setting the <see cref="Identity"/> property. The identity (also know
 	/// as the tag) must not contain white space. The default value for the
 	/// identity is the application name (from <see cref="LoggingEvent.Domain"/>).
 	/// </para>
@@ -266,7 +266,7 @@ namespace log4net.Appender
 		/// Initializes a new instance of the <see cref="RemoteSyslogAppender" /> class.
 		/// </summary>
 		/// <remarks>
-		/// This instance of the <see cref="RemoteSyslogAppender" /> class is set up to write 
+		/// This instance of the <see cref="RemoteSyslogAppender" /> class is set up to write
 		/// to a remote syslog daemon.
 		/// </remarks>
 		public RemoteSyslogAppender()
@@ -287,7 +287,7 @@ namespace log4net.Appender
 		/// <remarks>
 		/// <para>
 		/// An identifier is specified with each log message. This can be specified
-		/// by setting the <see cref="Identity"/> property. The identity (also know 
+		/// by setting the <see cref="Identity"/> property. The identity (also know
 		/// as the tag) must not contain white space. The default value for the
 		/// identity is the application name (from <see cref="LoggingEvent.Domain"/>).
 		/// </para>
@@ -344,88 +344,88 @@ namespace log4net.Appender
 		/// </remarks>
 		protected override void Append(LoggingEvent loggingEvent)
 		{
-            try
-            {
-                // Priority
-                int priority = GeneratePriority(m_facility, GetSeverity(loggingEvent.Level));
+			try
+			{
+				// Priority
+				int priority = GeneratePriority(m_facility, GetSeverity(loggingEvent.Level));
 
-                // Identity
-                string identity;
+				// Identity
+				string identity;
 
-                if (m_identity != null)
-                {
-                    identity = m_identity.Format(loggingEvent);
-                }
-                else
-                {
-                    identity = loggingEvent.Domain;
-                }
+				if (m_identity != null)
+				{
+					identity = m_identity.Format(loggingEvent);
+				}
+				else
+				{
+					identity = loggingEvent.Domain;
+				}
 
-                // Message. The message goes after the tag/identity
-                string message = RenderLoggingEvent(loggingEvent);
+				// Message. The message goes after the tag/identity
+				string message = RenderLoggingEvent(loggingEvent);
 
-                Byte[] buffer;
-                int i = 0;
-                char c;
+				Byte[] buffer;
+				int i = 0;
+				char c;
 
-                StringBuilder builder = new StringBuilder();
+				StringBuilder builder = new StringBuilder();
 
-                while (i < message.Length)
-                {
-                    // Clear StringBuilder
-                    builder.Length = 0;
+				while (i < message.Length)
+				{
+					// Clear StringBuilder
+					builder.Length = 0;
 
-                    // Write priority
-                    builder.Append('<');
-                    builder.Append(priority);
-                    builder.Append('>');
+					// Write priority
+					builder.Append('<');
+					builder.Append(priority);
+					builder.Append('>');
 
-                    // Write identity
-                    builder.Append(identity);
-                    builder.Append(": ");
+					// Write identity
+					builder.Append(identity);
+					builder.Append(": ");
 
-                    for (; i < message.Length; i++)
-                    {
-                        c = message[i];
+					for (; i < message.Length; i++)
+					{
+						c = message[i];
 
-                        // Accept only visible ASCII characters and space. See RFC 3164 section 4.1.3
-                        if (((int)c >= 32) && ((int)c <= 126))
-                        {
-                            builder.Append(c);
-                        }
-                        // If character is newline, break and send the current line
-                        else if ((c == '\r') || (c == '\n'))
-                        {
-                            // Check the next character to handle \r\n or \n\r
-                            if ((message.Length > i + 1) && ((message[i + 1] == '\r') || (message[i + 1] == '\n')))
-                            {
-                                i++;
-                            }
-                            i++;
-                            break;
-                        }
-                    }
+						// Accept only visible ASCII characters and space. See RFC 3164 section 4.1.3
+						if (((int)c >= 32) && ((int)c <= 126))
+						{
+							builder.Append(c);
+						}
+						// If character is newline, break and send the current line
+						else if ((c == '\r') || (c == '\n'))
+						{
+							// Check the next character to handle \r\n or \n\r
+							if ((message.Length > i + 1) && ((message[i + 1] == '\r') || (message[i + 1] == '\n')))
+							{
+								i++;
+							}
+							i++;
+							break;
+						}
+					}
 
-                    // Grab as a byte array
-                    buffer = this.Encoding.GetBytes(builder.ToString());
+					// Grab as a byte array
+					buffer = this.Encoding.GetBytes(builder.ToString());
 
 #if NETSTANDARD1_3
-                    Client.SendAsync(buffer, buffer.Length, RemoteEndPoint).Wait();
+					Client.SendAsync(buffer, buffer.Length, RemoteEndPoint).Wait();
 #else
-                    this.Client.Send(buffer, buffer.Length, this.RemoteEndPoint);
+					this.Client.Send(buffer, buffer.Length, this.RemoteEndPoint);
 #endif
-                }
-            }
-            catch (Exception e)
-            {
-                ErrorHandler.Error(
-                    "Unable to send logging event to remote syslog " +
-                    this.RemoteAddress.ToString() +
-                    " on port " +
-                    this.RemotePort + ".",
-                    e,
-                    ErrorCode.WriteFailure);
-            }
+				}
+			}
+			catch (Exception e)
+			{
+				ErrorHandler.Error(
+					"Unable to send logging event to remote syslog " +
+					this.RemoteAddress.ToString() +
+					" on port " +
+					this.RemotePort + ".",
+					e,
+					ErrorCode.WriteFailure);
+			}
 		}
 
 		/// <summary>

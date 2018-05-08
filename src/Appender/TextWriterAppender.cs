@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -42,7 +42,7 @@ namespace log4net.Appender
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
 	/// <author>Douglas de la Torre</author>
-    public class TextWriterAppender : AppenderSkeleton
+	public class TextWriterAppender : AppenderSkeleton
 	{
 		#region Public Instance Constructors
 
@@ -54,13 +54,13 @@ namespace log4net.Appender
 		/// Default constructor.
 		/// </para>
 		/// </remarks>
-		public TextWriterAppender() 
+		public TextWriterAppender()
 		{
 		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="TextWriterAppender" /> class and
-		/// sets the output destination to a new <see cref="StreamWriter"/> initialized 
+		/// sets the output destination to a new <see cref="StreamWriter"/> initialized
 		/// with the specified <see cref="Stream"/>.
 		/// </summary>
 		/// <param name="layout">The layout to use with this appender.</param>
@@ -90,7 +90,7 @@ namespace log4net.Appender
 		/// </para>
 		/// </remarks>
 		[Obsolete("Instead use the default constructor and set the Layout & Writer properties")]
-		public TextWriterAppender(ILayout layout, TextWriter writer) 
+		public TextWriterAppender(ILayout layout, TextWriter writer)
 		{
 			Layout = layout;
 			Writer = writer;
@@ -101,17 +101,17 @@ namespace log4net.Appender
 		#region Public Instance Properties
 
 		/// <summary>
-		/// Gets or set whether the appender will flush at the end 
+		/// Gets or set whether the appender will flush at the end
 		/// of each append operation.
 		/// </summary>
 		/// <value>
 		/// <para>
-		/// The default behavior is to flush at the end of each 
+		/// The default behavior is to flush at the end of each
 		/// append operation.
 		/// </para>
 		/// <para>
-		/// If this option is set to <c>false</c>, then the underlying 
-		/// stream can defer persisting the logging event to a later 
+		/// If this option is set to <c>false</c>, then the underlying
+		/// stream can defer persisting the logging event to a later
 		/// time.
 		/// </para>
 		/// </value>
@@ -123,7 +123,7 @@ namespace log4net.Appender
 		/// be recorded on disk when the application exits. This is a high
 		/// price to pay even for a 20% performance gain.
 		/// </remarks>
-		public bool ImmediateFlush 
+		public bool ImmediateFlush
 		{
 			get { return m_immediateFlush; }
 			set { m_immediateFlush = value; }
@@ -137,19 +137,19 @@ namespace log4net.Appender
 		/// The specified <see cref="TextWriter"/> must be open and writable.
 		/// </para>
 		/// <para>
-		/// The <see cref="TextWriter"/> will be closed when the appender 
+		/// The <see cref="TextWriter"/> will be closed when the appender
 		/// instance is closed.
 		/// </para>
 		/// <para>
 		/// <b>Note:</b> Logging to an unopened <see cref="TextWriter"/> will fail.
 		/// </para>
 		/// </remarks>
-		virtual public TextWriter Writer 
+		virtual public TextWriter Writer
 		{
 			get { return m_qtw; }
-			set 
+			set
 			{
-				lock(this) 
+				lock(this)
 				{
 					Reset();
 					if (value != null)
@@ -171,29 +171,29 @@ namespace log4net.Appender
 		/// <remarks>
 		/// <para>
 		/// This method checks if an output target has been set and if a
-		/// layout has been set. 
+		/// layout has been set.
 		/// </para>
 		/// </remarks>
 		/// <returns><c>false</c> if any of the preconditions fail.</returns>
-		override protected bool PreAppendCheck() 
+		override protected bool PreAppendCheck()
 		{
-			if (!base.PreAppendCheck()) 
+			if (!base.PreAppendCheck())
 			{
 				return false;
 			}
 
-			if (m_qtw == null) 
+			if (m_qtw == null)
 			{
 				// Allow subclass to lazily create the writer
 				PrepareWriter();
 
-				if (m_qtw == null) 
+				if (m_qtw == null)
 				{
 					ErrorHandler.Error("No output stream or file set for the appender named ["+ Name +"].");
 					return false;
 				}
 			}
-			if (m_qtw.Closed) 
+			if (m_qtw.Closed)
 			{
 				ErrorHandler.Error("Output stream for appender named ["+ Name +"] has been closed.");
 				return false;
@@ -204,31 +204,31 @@ namespace log4net.Appender
 
 		/// <summary>
 		/// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/>
-		/// method. 
+		/// method.
 		/// </summary>
 		/// <param name="loggingEvent">The event to log.</param>
 		/// <remarks>
 		/// <para>
-		/// Writes a log statement to the output stream if the output stream exists 
-		/// and is writable.  
+		/// Writes a log statement to the output stream if the output stream exists
+		/// and is writable.
 		/// </para>
 		/// <para>
 		/// The format of the output will depend on the appender's layout.
 		/// </para>
 		/// </remarks>
-		override protected void Append(LoggingEvent loggingEvent) 
+		override protected void Append(LoggingEvent loggingEvent)
 		{
 			RenderLoggingEvent(m_qtw, loggingEvent);
 
-			if (m_immediateFlush) 
+			if (m_immediateFlush)
 			{
 				m_qtw.Flush();
-			} 
+			}
 		}
 
 		/// <summary>
 		/// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent[])"/>
-		/// method. 
+		/// method.
 		/// </summary>
 		/// <param name="loggingEvents">The array of events to log.</param>
 		/// <remarks>
@@ -237,17 +237,17 @@ namespace log4net.Appender
 		/// before flushing the stream.
 		/// </para>
 		/// </remarks>
-		override protected void Append(LoggingEvent[] loggingEvents) 
+		override protected void Append(LoggingEvent[] loggingEvents)
 		{
 			foreach(LoggingEvent loggingEvent in loggingEvents)
 			{
 				RenderLoggingEvent(m_qtw, loggingEvent);
 			}
 
-			if (m_immediateFlush) 
+			if (m_immediateFlush)
 			{
 				m_qtw.Flush();
-			} 
+			}
 		}
 
 		/// <summary>
@@ -256,7 +256,7 @@ namespace log4net.Appender
 		/// <remarks>
 		/// Closed appenders cannot be reused.
 		/// </remarks>
-		override protected void OnClose() 
+		override protected void OnClose()
 		{
 			lock(this)
 			{
@@ -265,8 +265,8 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
-		/// Gets or set the <see cref="IErrorHandler"/> and the underlying 
-		/// <see cref="QuietTextWriter"/>, if any, for this appender. 
+		/// Gets or set the <see cref="IErrorHandler"/> and the underlying
+		/// <see cref="QuietTextWriter"/>, if any, for this appender.
 		/// </summary>
 		/// <value>
 		/// The <see cref="IErrorHandler"/> for this appender.
@@ -278,18 +278,18 @@ namespace log4net.Appender
 			{
 				lock(this)
 				{
-					if (value == null) 
+					if (value == null)
 					{
 						LogLog.Warn(declaringType, "TextWriterAppender: You have tried to set a null error-handler.");
-					} 
-					else 
+					}
+					else
 					{
 						base.ErrorHandler = value;
-						if (m_qtw != null) 
+						if (m_qtw != null)
 						{
 							m_qtw.ErrorHandler = value;
 						}
-					}	
+					}
 				}
 			}
 		}
@@ -334,17 +334,17 @@ namespace log4net.Appender
 		/// Closes the underlying <see cref="TextWriter"/>.
 		/// </para>
 		/// </remarks>
-		virtual protected void CloseWriter() 
+		virtual protected void CloseWriter()
 		{
-			if (m_qtw != null) 
+			if (m_qtw != null)
 			{
-				try 
+				try
 				{
 					m_qtw.Close();
-				} 
-				catch(Exception e) 
+				}
+				catch(Exception e)
 				{
-					ErrorHandler.Error("Could not close writer ["+m_qtw+"]", e); 
+					ErrorHandler.Error("Could not close writer ["+m_qtw+"]", e);
 					// do need to invoke an error handler
 					// at this late stage
 				}
@@ -352,7 +352,7 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
-		/// Clears internal references to the underlying <see cref="TextWriter" /> 
+		/// Clears internal references to the underlying <see cref="TextWriter" />
 		/// and other variables.
 		/// </summary>
 		/// <remarks>
@@ -360,7 +360,7 @@ namespace log4net.Appender
 		/// Subclasses can override this method for an alternate closing behavior.
 		/// </para>
 		/// </remarks>
-		virtual protected void Reset() 
+		virtual protected void Reset()
 		{
 			WriteFooterAndCloseWriter();
 			m_qtw = null;
@@ -374,9 +374,9 @@ namespace log4net.Appender
 		/// Writes a footer as produced by the embedded layout's <see cref="ILayout.Footer"/> property.
 		/// </para>
 		/// </remarks>
-		virtual protected void WriteFooter() 
+		virtual protected void WriteFooter()
 		{
-			if (Layout != null && m_qtw != null && !m_qtw.Closed) 
+			if (Layout != null && m_qtw != null && !m_qtw.Closed)
 			{
 				string f = Layout.Footer;
 				if (f != null)
@@ -394,9 +394,9 @@ namespace log4net.Appender
 		/// Writes a header produced by the embedded layout's <see cref="ILayout.Header"/> property.
 		/// </para>
 		/// </remarks>
-		virtual protected void WriteHeader() 
+		virtual protected void WriteHeader()
 		{
-			if (Layout != null && m_qtw != null && !m_qtw.Closed) 
+			if (Layout != null && m_qtw != null && !m_qtw.Closed)
 			{
 				string h = Layout.Header;
 				if (h != null)
@@ -422,7 +422,7 @@ namespace log4net.Appender
 
 		/// <summary>
 		/// Gets or sets the <see cref="log4net.Util.QuietTextWriter"/> where logging events
-		/// will be written to. 
+		/// will be written to.
 		/// </summary>
 		/// <value>
 		/// The <see cref="log4net.Util.QuietTextWriter"/> where logging events are written.
@@ -430,35 +430,35 @@ namespace log4net.Appender
 		/// <remarks>
 		/// <para>
 		/// This is the <see cref="log4net.Util.QuietTextWriter"/> where logging events
-		/// will be written to. 
+		/// will be written to.
 		/// </para>
 		/// </remarks>
 		protected QuietTextWriter QuietWriter
 		{
 			get { return m_qtw; }
 			set { m_qtw = value; }
-        }
+		}
 
-        #endregion Protected Instance Methods
+		#endregion Protected Instance Methods
 
-        #region Private Instance Fields
+		#region Private Instance Fields
 
-        /// <summary>
+		/// <summary>
 		/// This is the <see cref="log4net.Util.QuietTextWriter"/> where logging events
-		/// will be written to. 
+		/// will be written to.
 		/// </summary>
 		private QuietTextWriter m_qtw;
 
 		/// <summary>
-		/// Immediate flush means that the underlying <see cref="TextWriter" /> 
+		/// Immediate flush means that the underlying <see cref="TextWriter" />
 		/// or output stream will be flushed at the end of each append operation.
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// Immediate flush is slower but ensures that each append request is 
+		/// Immediate flush is slower but ensures that each append request is
 		/// actually written. If <see cref="ImmediateFlush"/> is set to
 		/// <c>false</c>, then there is a good chance that the last few
-		/// logging events are not actually persisted if and when the application 
+		/// logging events are not actually persisted if and when the application
 		/// crashes.
 		/// </para>
 		/// <para>
@@ -469,36 +469,36 @@ namespace log4net.Appender
 
 		#endregion Private Instance Fields
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the TextWriterAppender class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private readonly static Type declaringType = typeof(TextWriterAppender);
+		/// <summary>
+		/// The fully qualified type of the TextWriterAppender class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private readonly static Type declaringType = typeof(TextWriterAppender);
 
-	    #endregion Private Static Fields
+		#endregion Private Static Fields
 
-            /// <summary>
-            /// Flushes any buffered log data.
-            /// </summary>
-            /// <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
-            /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
-            public override bool Flush(int millisecondsTimeout)
-            {
-                // Nothing to do if ImmediateFlush is true
-                if (m_immediateFlush) return true;
+			/// <summary>
+			/// Flushes any buffered log data.
+			/// </summary>
+			/// <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
+			/// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+			public override bool Flush(int millisecondsTimeout)
+			{
+				// Nothing to do if ImmediateFlush is true
+				if (m_immediateFlush) return true;
 
-                // lock(this) will block any Appends while the buffer is flushed.
-                lock (this)
-                {
-                    m_qtw.Flush();
-                }
+				// lock(this) will block any Appends while the buffer is flushed.
+				lock (this)
+				{
+					m_qtw.Flush();
+				}
 
-                return true;
-            }
+				return true;
+			}
 	}
 }

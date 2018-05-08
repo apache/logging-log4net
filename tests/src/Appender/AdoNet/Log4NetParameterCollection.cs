@@ -25,45 +25,45 @@ using System.Data;
 
 namespace log4net.Tests.Appender.AdoNet
 {
-    public class Log4NetParameterCollection : CollectionBase, IDataParameterCollection
-    {
-        #region AdoNetAppender
+	public class Log4NetParameterCollection : CollectionBase, IDataParameterCollection
+	{
+		#region AdoNetAppender
 
-        private readonly Hashtable parameterNameToIndex = new Hashtable();
+		private readonly Hashtable parameterNameToIndex = new Hashtable();
 
-        protected override void OnInsertComplete(int index, object value)
-        {
-            base.OnInsertComplete(index, value);
+		protected override void OnInsertComplete(int index, object value)
+		{
+			base.OnInsertComplete(index, value);
 
-            IDataParameter param = (IDataParameter)value;
-            parameterNameToIndex[param.ParameterName] = index;
-        }
+			IDataParameter param = (IDataParameter)value;
+			parameterNameToIndex[param.ParameterName] = index;
+		}
 
-        public int IndexOf(string parameterName)
-        {
-            return (int)parameterNameToIndex[parameterName];
-        }
+		public int IndexOf(string parameterName)
+		{
+			return (int)parameterNameToIndex[parameterName];
+		}
 
-        public object this[string parameterName]
-        {
-            get { return InnerList[IndexOf(parameterName)]; }
-            set { InnerList[IndexOf(parameterName)] = value; }
-        }
+		public object this[string parameterName]
+		{
+			get { return InnerList[IndexOf(parameterName)]; }
+			set { InnerList[IndexOf(parameterName)] = value; }
+		}
 
-        #endregion
+		#endregion
 
-        #region Not Implemented
+		#region Not Implemented
 
-        public void RemoveAt(string parameterName)
-        {
-            throw new NotImplementedException();
-        }
+		public void RemoveAt(string parameterName)
+		{
+			throw new NotImplementedException();
+		}
 
-        public bool Contains(string parameterName)
-        {
-            throw new NotImplementedException();
-        }
+		public bool Contains(string parameterName)
+		{
+			throw new NotImplementedException();
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

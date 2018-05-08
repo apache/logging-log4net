@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -21,7 +21,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 
 //
-// General Information about an assembly is controlled through the following 
+// General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
@@ -29,23 +29,23 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyDescription("log4net WebApp")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyProduct("log4net - WebApp")]
-[assembly: AssemblyCulture("")]		
+[assembly: AssemblyCulture("")]
 
 //
-// In order to sign your assembly you must specify a key to use. Refer to the 
+// In order to sign your assembly you must specify a key to use. Refer to the
 // Microsoft .NET Framework documentation for more information on assembly signing.
 //
-// Use the attributes below to control which key is used for signing. 
+// Use the attributes below to control which key is used for signing.
 //
-// Notes: 
+// Notes:
 //   (*) If no key is specified, the assembly is not signed.
 //   (*) KeyName refers to a key that has been installed in the Crypto Service
 //       Provider (CSP) on your machine. KeyFile refers to a file which contains
 //       a key.
-//   (*) If the KeyFile and the KeyName values are both specified, the 
+//   (*) If the KeyFile and the KeyName values are both specified, the
 //       following processing occurs:
 //       (1) If the KeyName can be found in the CSP, that key is used.
-//       (2) If the KeyName does not exist and the KeyFile does exist, the key 
+//       (2) If the KeyName does not exist and the KeyFile does exist, the key
 //           in the KeyFile is installed into the CSP and used.
 //   (*) In order to create a KeyFile, you can use the sn.exe (Strong Name) utility.
 //        When specifying the KeyFile, the location of the KeyFile should be
@@ -53,7 +53,7 @@ using System.Runtime.CompilerServices;
 //        directory is dependent on whether you are working with a local or web project.
 //        For local projects, the project output directory is defined as
 //       <Project Directory>\obj\<Configuration>. For example, if your KeyFile is
-//       located in the project directory, you would specify the AssemblyKeyFile 
+//       located in the project directory, you would specify the AssemblyKeyFile
 //       attribute as [assembly: AssemblyKeyFile("..\\..\\mykey.snk")]
 //        For web projects, the project output directory is defined as
 //       %HOMEPATH%\VSWebCache\<Machine Name>\<Project Directory>\obj\<Configuration>.

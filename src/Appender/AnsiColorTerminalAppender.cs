@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -33,11 +33,11 @@ namespace log4net.Appender
 	/// <remarks>
 	/// <para>
 	/// AnsiColorTerminalAppender appends log events to the standard output stream
-	/// or the error output stream using a layout specified by the 
+	/// or the error output stream using a layout specified by the
 	/// user. It also allows the color of a specific level of message to be set.
 	/// </para>
 	/// <note>
-	/// This appender expects the terminal to understand the VT100 control set 
+	/// This appender expects the terminal to understand the VT100 control set
 	/// in order to interpret the color codes. If the terminal or console does not
 	/// understand the control codes the behavior is not defined.
 	/// </note>
@@ -47,11 +47,11 @@ namespace log4net.Appender
 	/// error stream.
 	/// </para>
 	/// <para>
-	/// NOTE: This appender writes each message to the <c>System.Console.Out</c> or 
+	/// NOTE: This appender writes each message to the <c>System.Console.Out</c> or
 	/// <c>System.Console.Error</c> that is set at the time the event is appended.
-	/// Therefore it is possible to programmatically redirect the output of this appender 
+	/// Therefore it is possible to programmatically redirect the output of this appender
 	/// (for example NUnit does this to capture program output). While this is the desired
-	/// behavior of this appender it may have security implications in your application. 
+	/// behavior of this appender it may have security implications in your application.
 	/// </para>
 	/// <para>
 	/// When configuring the ANSI colored terminal appender, a mapping should be
@@ -162,7 +162,7 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
-		/// The enum of possible foreground or background color values for 
+		/// The enum of possible foreground or background color values for
 		/// use with the color mapping method
 		/// </summary>
 		/// <remarks>
@@ -222,10 +222,10 @@ namespace log4net.Appender
 		/// Initializes a new instance of the <see cref="AnsiColorTerminalAppender" /> class.
 		/// </summary>
 		/// <remarks>
-		/// The instance of the <see cref="AnsiColorTerminalAppender" /> class is set up to write 
+		/// The instance of the <see cref="AnsiColorTerminalAppender" /> class is set up to write
 		/// to the standard output stream.
 		/// </remarks>
-		public AnsiColorTerminalAppender() 
+		public AnsiColorTerminalAppender()
 		{
 		}
 
@@ -256,8 +256,8 @@ namespace log4net.Appender
 				if (SystemInfo.EqualsIgnoringCase(ConsoleError, trimmedTargetName))
 				{
 					m_writeToErrorStream = true;
-				} 
-				else 
+				}
+				else
 				{
 					m_writeToErrorStream = false;
 				}
@@ -296,7 +296,7 @@ namespace log4net.Appender
 		/// The format of the output will depend on the appender's layout.
 		/// </para>
 		/// </remarks>
-		override protected void Append(log4net.Core.LoggingEvent loggingEvent) 
+		override protected void Append(log4net.Core.LoggingEvent loggingEvent)
 		{
 			string loggingMessage = RenderLoggingEvent(loggingEvent);
 
@@ -314,26 +314,26 @@ namespace log4net.Appender
 			// are inserted afterwards.
 			if (loggingMessage.Length > 1)
 			{
-				if (loggingMessage.EndsWith("\r\n") || loggingMessage.EndsWith("\n\r")) 
+				if (loggingMessage.EndsWith("\r\n") || loggingMessage.EndsWith("\n\r"))
 				{
 					loggingMessage = loggingMessage.Insert(loggingMessage.Length - 2, PostEventCodes);
-				} 
-				else if (loggingMessage.EndsWith("\n") || loggingMessage.EndsWith("\r")) 
+				}
+				else if (loggingMessage.EndsWith("\n") || loggingMessage.EndsWith("\r"))
 				{
 					loggingMessage = loggingMessage.Insert(loggingMessage.Length - 1, PostEventCodes);
-				} 
-				else 
+				}
+				else
 				{
 					loggingMessage = loggingMessage + PostEventCodes;
 				}
 			}
 			else
 			{
-				if (loggingMessage[0] == '\n' || loggingMessage[0] == '\r') 
+				if (loggingMessage[0] == '\n' || loggingMessage[0] == '\r')
 				{
 					loggingMessage = PostEventCodes + loggingMessage;
-				} 
-				else 
+				}
+				else
 				{
 					loggingMessage = loggingMessage + PostEventCodes;
 				}
@@ -354,7 +354,7 @@ namespace log4net.Appender
 				Console.Write(loggingMessage);
 			}
 #endif
-		
+
 		}
 
 		/// <summary>
@@ -390,24 +390,24 @@ namespace log4net.Appender
 		#region Public Static Fields
 
 		/// <summary>
-		/// The <see cref="AnsiColorTerminalAppender.Target"/> to use when writing to the Console 
+		/// The <see cref="AnsiColorTerminalAppender.Target"/> to use when writing to the Console
 		/// standard output stream.
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// The <see cref="AnsiColorTerminalAppender.Target"/> to use when writing to the Console 
+		/// The <see cref="AnsiColorTerminalAppender.Target"/> to use when writing to the Console
 		/// standard output stream.
 		/// </para>
 		/// </remarks>
 		public const string ConsoleOut = "Console.Out";
 
 		/// <summary>
-		/// The <see cref="AnsiColorTerminalAppender.Target"/> to use when writing to the Console 
+		/// The <see cref="AnsiColorTerminalAppender.Target"/> to use when writing to the Console
 		/// standard error output stream.
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// The <see cref="AnsiColorTerminalAppender.Target"/> to use when writing to the Console 
+		/// The <see cref="AnsiColorTerminalAppender.Target"/> to use when writing to the Console
 		/// standard error output stream.
 		/// </para>
 		/// </remarks>
@@ -516,7 +516,7 @@ namespace log4net.Appender
 				buf.Append("\x1b[0;");
 
 				int lightAdjustment = ((m_attributes & AnsiAttributes.Light) > 0) ? 60 : 0;
-				
+
 				// set the foreground color
 				buf.Append(30 + lightAdjustment + (int)m_foreColor);
 				buf.Append(';');

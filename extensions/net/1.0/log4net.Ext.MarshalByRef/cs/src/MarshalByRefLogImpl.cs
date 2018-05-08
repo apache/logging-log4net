@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -82,17 +82,17 @@ namespace log4net.Ext.MarshalByRef
 
 		#region Implementation of ILog
 
-		public void Debug(object message) 
+		public void Debug(object message)
 		{
 			Logger.Log(ThisDeclaringType, m_levelDebug, message, null);
 		}
 
-		public void Debug(object message, Exception t) 
+		public void Debug(object message, Exception t)
 		{
 			Logger.Log(ThisDeclaringType, m_levelDebug, message, t);
 		}
 
-		public void DebugFormat(string format, params object[] args) 
+		public void DebugFormat(string format, params object[] args)
 		{
 			if (IsDebugEnabled)
 			{
@@ -100,7 +100,7 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void DebugFormat(string format, object arg0) 
+		public void DebugFormat(string format, object arg0)
 		{
 			if (IsDebugEnabled)
 			{
@@ -108,7 +108,7 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void DebugFormat(string format, object arg0, object arg1) 
+		public void DebugFormat(string format, object arg0, object arg1)
 		{
 			if (IsDebugEnabled)
 			{
@@ -116,7 +116,7 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void DebugFormat(string format, object arg0, object arg1, object arg2) 
+		public void DebugFormat(string format, object arg0, object arg1, object arg2)
 		{
 			if (IsDebugEnabled)
 			{
@@ -124,7 +124,7 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void DebugFormat(IFormatProvider provider, string format, params object[] args) 
+		public void DebugFormat(IFormatProvider provider, string format, params object[] args)
 		{
 			if (IsDebugEnabled)
 			{
@@ -132,17 +132,17 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void Info(object message) 
+		public void Info(object message)
 		{
 			Logger.Log(ThisDeclaringType, m_levelInfo, message, null);
 		}
-  
-		public void Info(object message, Exception t) 
+
+		public void Info(object message, Exception t)
 		{
 			Logger.Log(ThisDeclaringType, m_levelInfo, message, t);
 		}
 
-		public void InfoFormat(string format, params object[] args) 
+		public void InfoFormat(string format, params object[] args)
 		{
 			if (IsInfoEnabled)
 			{
@@ -150,7 +150,7 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void InfoFormat(string format, object arg0) 
+		public void InfoFormat(string format, object arg0)
 		{
 			if (IsInfoEnabled)
 			{
@@ -158,7 +158,7 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void InfoFormat(string format, object arg0, object arg1) 
+		public void InfoFormat(string format, object arg0, object arg1)
 		{
 			if (IsInfoEnabled)
 			{
@@ -166,7 +166,7 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void InfoFormat(string format, object arg0, object arg1, object arg2) 
+		public void InfoFormat(string format, object arg0, object arg1, object arg2)
 		{
 			if (IsInfoEnabled)
 			{
@@ -174,7 +174,7 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void InfoFormat(IFormatProvider provider, string format, params object[] args) 
+		public void InfoFormat(IFormatProvider provider, string format, params object[] args)
 		{
 			if (IsInfoEnabled)
 			{
@@ -182,17 +182,17 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void Warn(object message) 
+		public void Warn(object message)
 		{
 			Logger.Log(ThisDeclaringType, m_levelWarn, message, null);
 		}
-  
-		public void Warn(object message, Exception t) 
+
+		public void Warn(object message, Exception t)
 		{
 			Logger.Log(ThisDeclaringType, m_levelWarn, message, t);
 		}
 
-		public void WarnFormat(string format, params object[] args) 
+		public void WarnFormat(string format, params object[] args)
 		{
 			if (IsWarnEnabled)
 			{
@@ -200,7 +200,7 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void WarnFormat(string format, object arg0) 
+		public void WarnFormat(string format, object arg0)
 		{
 			if (IsWarnEnabled)
 			{
@@ -208,7 +208,7 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void WarnFormat(string format, object arg0, object arg1) 
+		public void WarnFormat(string format, object arg0, object arg1)
 		{
 			if (IsWarnEnabled)
 			{
@@ -216,7 +216,7 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void WarnFormat(string format, object arg0, object arg1, object arg2) 
+		public void WarnFormat(string format, object arg0, object arg1, object arg2)
 		{
 			if (IsWarnEnabled)
 			{
@@ -224,7 +224,7 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void WarnFormat(IFormatProvider provider, string format, params object[] args) 
+		public void WarnFormat(IFormatProvider provider, string format, params object[] args)
 		{
 			if (IsWarnEnabled)
 			{
@@ -232,17 +232,17 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void Error(object message) 
+		public void Error(object message)
 		{
 			Logger.Log(ThisDeclaringType, m_levelError, message, null);
 		}
 
-		public void Error(object message, Exception t) 
+		public void Error(object message, Exception t)
 		{
 			Logger.Log(ThisDeclaringType, m_levelError, message, t);
 		}
 
-		public void ErrorFormat(string format, params object[] args) 
+		public void ErrorFormat(string format, params object[] args)
 		{
 			if (IsErrorEnabled)
 			{
@@ -250,7 +250,7 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void ErrorFormat(string format, object arg0) 
+		public void ErrorFormat(string format, object arg0)
 		{
 			if (IsErrorEnabled)
 			{
@@ -258,7 +258,7 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void ErrorFormat(string format, object arg0, object arg1) 
+		public void ErrorFormat(string format, object arg0, object arg1)
 		{
 			if (IsErrorEnabled)
 			{
@@ -266,7 +266,7 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void ErrorFormat(string format, object arg0, object arg1, object arg2) 
+		public void ErrorFormat(string format, object arg0, object arg1, object arg2)
 		{
 			if (IsErrorEnabled)
 			{
@@ -274,7 +274,7 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void ErrorFormat(IFormatProvider provider, string format, params object[] args) 
+		public void ErrorFormat(IFormatProvider provider, string format, params object[] args)
 		{
 			if (IsErrorEnabled)
 			{
@@ -282,17 +282,17 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void Fatal(object message) 
+		public void Fatal(object message)
 		{
 			Logger.Log(ThisDeclaringType, m_levelFatal, message, null);
 		}
-  
-		public void Fatal(object message, Exception t) 
+
+		public void Fatal(object message, Exception t)
 		{
 			Logger.Log(ThisDeclaringType, m_levelFatal, message, t);
 		}
 
-		public void FatalFormat(string format, params object[] args) 
+		public void FatalFormat(string format, params object[] args)
 		{
 			if (IsFatalEnabled)
 			{
@@ -300,7 +300,7 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void FatalFormat(string format, object arg0) 
+		public void FatalFormat(string format, object arg0)
 		{
 			if (IsFatalEnabled)
 			{
@@ -308,7 +308,7 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void FatalFormat(string format, object arg0, object arg1) 
+		public void FatalFormat(string format, object arg0, object arg1)
 		{
 			if (IsFatalEnabled)
 			{
@@ -316,7 +316,7 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void FatalFormat(string format, object arg0, object arg1, object arg2) 
+		public void FatalFormat(string format, object arg0, object arg1, object arg2)
 		{
 			if (IsFatalEnabled)
 			{
@@ -324,7 +324,7 @@ namespace log4net.Ext.MarshalByRef
 			}
 		}
 
-		public void FatalFormat(IFormatProvider provider, string format, params object[] args) 
+		public void FatalFormat(IFormatProvider provider, string format, params object[] args)
 		{
 			if (IsFatalEnabled)
 			{
@@ -336,7 +336,7 @@ namespace log4net.Ext.MarshalByRef
 		{
 			get { return Logger.IsEnabledFor(m_levelDebug); }
 		}
-  
+
 		public bool IsInfoEnabled
 		{
 			get { return Logger.IsEnabledFor(m_levelInfo); }

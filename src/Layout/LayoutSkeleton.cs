@@ -1,10 +1,10 @@
 #region Apache License
 //
-// Licensed to the Apache Software Foundation (ASF) under one or more 
+// Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
-// this work for additional information regarding copyright ownership. 
+// this work for additional information regarding copyright ownership.
 // The ASF licenses this file to you under the Apache License, Version 2.0
-// (the "License"); you may not use this file except in compliance with 
+// (the "License"); you may not use this file except in compliance with
 // the License. You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
@@ -108,18 +108,18 @@ namespace log4net.Layout
 		/// <remarks>
 		/// <para>
 		/// This is part of the <see cref="IOptionHandler"/> delayed object
-		/// activation scheme. The <see cref="ActivateOptions"/> method must 
+		/// activation scheme. The <see cref="ActivateOptions"/> method must
 		/// be called on this object after the configuration properties have
 		/// been set. Until <see cref="ActivateOptions"/> is called this
-		/// object is in an undefined state and must not be used. 
+		/// object is in an undefined state and must not be used.
 		/// </para>
 		/// <para>
-		/// If any of the configuration properties are modified then 
+		/// If any of the configuration properties are modified then
 		/// <see cref="ActivateOptions"/> must be called again.
 		/// </para>
- 		/// <para>
- 		/// This method must be implemented by the subclass.
- 		/// </para>
+		/// <para>
+		/// This method must be implemented by the subclass.
+		/// </para>
 		/// </remarks>
 		abstract public void ActivateOptions();
 
@@ -140,93 +140,93 @@ namespace log4net.Layout
 		/// </remarks>
 		abstract public void Format(TextWriter writer, LoggingEvent loggingEvent);
 
-        /// <summary>
-        /// Convenience method for easily formatting the logging event into a string variable.
-        /// </summary>
-        /// <param name="loggingEvent"></param>
-        /// <remarks>
-        /// Creates a new StringWriter instance to store the formatted logging event.
-        /// </remarks>
-        public string Format(LoggingEvent loggingEvent)
-        {
-            StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
-            Format(writer, loggingEvent);
-            return writer.ToString();
-        }
+		/// <summary>
+		/// Convenience method for easily formatting the logging event into a string variable.
+		/// </summary>
+		/// <param name="loggingEvent"></param>
+		/// <remarks>
+		/// Creates a new StringWriter instance to store the formatted logging event.
+		/// </remarks>
+		public string Format(LoggingEvent loggingEvent)
+		{
+			StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
+			Format(writer, loggingEvent);
+			return writer.ToString();
+		}
 
-	    /// <summary>
-	    /// The content type output by this layout. 
-	    /// </summary>
-	    /// <value>The content type is <c>"text/plain"</c></value>
-	    /// <remarks>
-	    /// <para>
-	    /// The content type output by this layout.
-	    /// </para>
-	    /// <para>
-	    /// This base class uses the value <c>"text/plain"</c>.
-	    /// To change this value a subclass must override this
-	    /// property.
-	    /// </para>
-	    /// </remarks>
-	    virtual public string ContentType
-	    {
-	        get { return "text/plain"; }
-	    }
+		/// <summary>
+		/// The content type output by this layout.
+		/// </summary>
+		/// <value>The content type is <c>"text/plain"</c></value>
+		/// <remarks>
+		/// <para>
+		/// The content type output by this layout.
+		/// </para>
+		/// <para>
+		/// This base class uses the value <c>"text/plain"</c>.
+		/// To change this value a subclass must override this
+		/// property.
+		/// </para>
+		/// </remarks>
+		virtual public string ContentType
+		{
+			get { return "text/plain"; }
+		}
 
-	    /// <summary>
-	    /// The header for the layout format.
-	    /// </summary>
-	    /// <value>the layout header</value>
-	    /// <remarks>
-	    /// <para>
-	    /// The Header text will be appended before any logging events
-	    /// are formatted and appended.
-	    /// </para>
-	    /// </remarks>
-	    virtual public string Header
-	    {
-	        get { return m_header; }
-	        set { m_header = value; }
-	    }
+		/// <summary>
+		/// The header for the layout format.
+		/// </summary>
+		/// <value>the layout header</value>
+		/// <remarks>
+		/// <para>
+		/// The Header text will be appended before any logging events
+		/// are formatted and appended.
+		/// </para>
+		/// </remarks>
+		virtual public string Header
+		{
+			get { return m_header; }
+			set { m_header = value; }
+		}
 
-	    /// <summary>
-	    /// The footer for the layout format.
-	    /// </summary>
-	    /// <value>the layout footer</value>
-	    /// <remarks>
-	    /// <para>
-	    /// The Footer text will be appended after all the logging events
-	    /// have been formatted and appended.
-	    /// </para>
-	    /// </remarks>
-	    virtual public string Footer
-	    {
-	        get { return m_footer; }
-	        set { m_footer = value; }
-	    }
+		/// <summary>
+		/// The footer for the layout format.
+		/// </summary>
+		/// <value>the layout footer</value>
+		/// <remarks>
+		/// <para>
+		/// The Footer text will be appended after all the logging events
+		/// have been formatted and appended.
+		/// </para>
+		/// </remarks>
+		virtual public string Footer
+		{
+			get { return m_footer; }
+			set { m_footer = value; }
+		}
 
-	    /// <summary>
-	    /// Flag indicating if this layout handles exceptions
-	    /// </summary>
-	    /// <value><c>false</c> if this layout handles exceptions</value>
-	    /// <remarks>
-	    /// <para>
-	    /// If this layout handles the exception object contained within
-	    /// <see cref="LoggingEvent"/>, then the layout should return
-	    /// <c>false</c>. Otherwise, if the layout ignores the exception
-	    /// object, then the layout should return <c>true</c>.
-	    /// </para>
-	    /// <para>
-	    /// Set this value to override a this default setting. The default
-	    /// value is <c>true</c>, this layout does not handle the exception.
-	    /// </para>
-	    /// </remarks>
-	    virtual public bool IgnoresException 
-	    { 
-	        get { return m_ignoresException; }
-	        set { m_ignoresException = value; }
-	    }
+		/// <summary>
+		/// Flag indicating if this layout handles exceptions
+		/// </summary>
+		/// <value><c>false</c> if this layout handles exceptions</value>
+		/// <remarks>
+		/// <para>
+		/// If this layout handles the exception object contained within
+		/// <see cref="LoggingEvent"/>, then the layout should return
+		/// <c>false</c>. Otherwise, if the layout ignores the exception
+		/// object, then the layout should return <c>true</c>.
+		/// </para>
+		/// <para>
+		/// Set this value to override a this default setting. The default
+		/// value is <c>true</c>, this layout does not handle the exception.
+		/// </para>
+		/// </remarks>
+		virtual public bool IgnoresException
+		{
+			get { return m_ignoresException; }
+			set { m_ignoresException = value; }
+		}
 
-	    #endregion
+		#endregion
 	}
 }
