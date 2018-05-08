@@ -19,13 +19,13 @@ limitations under the License.
 
   <PropertyGroup>
     <VersionPrefix>2.0.9</VersionPrefix>
-    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <DefineConstants>$(DefineConstants);NETSTANDARD1_3</DefineConstants>
     <AssemblyName>log4net.tests</AssemblyName>
     <PackageId>log4net.tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8</PackageTargetFallback>
-    <RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>2.0.7</RuntimeFrameworkVersion>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
