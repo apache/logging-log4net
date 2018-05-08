@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.0-sdk
+FROM microsoft/dotnet:2-sdk-jessie
 
 # define arguments passed in as environment variables
 ARG JENKINS_UID
