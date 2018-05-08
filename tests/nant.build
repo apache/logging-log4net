@@ -26,11 +26,11 @@ limitations under the License.
 
     <target name="install-nunit">
         <if test="${not file::exists('lib/${current.build.configuration.dir}/nunit.framework.dll')}">
-            <get src="https://github.com/nunit/nunitv2/releases/download/2.6.4/NUnit-2.6.4.zip"
+			<get src="https://www.nuget.org/api/v2/package/NUnit/2.6.5"
                  dest=".tmp-nunit.zip"/>
             <unzip zipfile=".tmp-nunit.zip"
                    todir=".tmp-nunit"/>
-            <copy file=".tmp-nunit/NUnit-2.6.4/bin/nunit.framework.dll"
+            <copy file=".tmp-nunit/lib/nunit.framework.dll"
                   todir="lib/${current.build.configuration.dir}"/>
             <delete file=".tmp-nunit.zip"/>
             <delete dir=".tmp-nunit"/>
