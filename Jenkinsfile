@@ -25,7 +25,7 @@ pipeline {
 		disableConcurrentBuilds()
 	}
 	agent {
-		label 'H20'
+		label 'ubuntu&&!H26'
 	}
 	stages {
 		// prepare node for builds
