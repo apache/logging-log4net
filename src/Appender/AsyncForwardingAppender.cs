@@ -67,15 +67,11 @@ namespace log4net.Appender
         /// </remarks>
         override protected void Append(LoggingEvent loggingEvent)
         {
-            Task.Run(() =>
+            // Pass the logging event on the the attached appenders
+            if (m_appenderAttachedImpl != null)
             {
-                // Pass the logging event on the the attached appenders
-                if (m_appenderAttachedImpl != null)
-                {
-                    m_appenderAttachedImpl.AppendLoopOnAppendersAsync(loggingEvent);
-                }
-            });
-
+                m_appenderAttachedImpl.AppendLoopOnAppendersAsync(loggingEvent);
+            }
         }
 
         /// <summary>
