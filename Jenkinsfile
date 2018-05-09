@@ -71,7 +71,7 @@ pipeline {
 			}
 		}
 		stage('build net-2.0') {
-			agent { label 'Windows' }
+			agent { label 'windows-2012-1||windows-2012-2||windows-2012-3' }
 			environment {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
@@ -85,7 +85,7 @@ pipeline {
 			}
 		}
 		stage('build net-3.5') {
-			agent { label 'Windows' }
+			agent { label 'windows-2012-1||windows-2012-2||windows-2012-3' }
 			environment {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
@@ -99,7 +99,7 @@ pipeline {
 			}
 		}
 		stage('build net-3.5-cp') {
-			agent { label 'Windows' }
+			agent { label 'windows-2012-1||windows-2012-2||windows-2012-3' }
 			environment {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
@@ -113,7 +113,7 @@ pipeline {
 			}
 		}
 		stage('build net-4.0') {
-			agent { label 'Windows' }
+			agent { label 'windows-2012-1||windows-2012-2||windows-2012-3' }
 			environment {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
@@ -127,7 +127,7 @@ pipeline {
 			}
 		}
 		stage('build net-4.0-cp') {
-			agent { label 'Windows' }
+			agent { label 'windows-2012-1||windows-2012-2||windows-2012-3' }
 			environment {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
@@ -141,7 +141,7 @@ pipeline {
 			}
 		}
 		stage('build net-4.5') {
-			agent { label 'Windows' }
+			agent { label 'windows-2012-1||windows-2012-2||windows-2012-3' }
 			environment {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
@@ -206,7 +206,7 @@ pipeline {
 			}
 		}
 		stage('build site') {
-			agent { label 'Windows' }
+			agent { label 'windows-2012-1||windows-2012-2||windows-2012-3' }
 			tools {
 				maven 'Maven 3.3.9 (Windows)'
 				jdk 'JDK 1.8 (latest)'
