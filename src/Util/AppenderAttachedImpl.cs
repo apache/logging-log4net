@@ -18,7 +18,8 @@
 #endregion
 
 using System;
-
+using System.Linq;
+using System.Threading.Tasks;
 using log4net.Core;
 using log4net.Appender;
 
@@ -99,18 +100,113 @@ namespace log4net.Util
 			return m_appenderList.Count;
 		}
 
-		/// <summary>
-		/// Append on on all attached appenders.
-		/// </summary>
-		/// <param name="loggingEvents">The array of events being logged.</param>
-		/// <returns>The number of appenders called.</returns>
-		/// <remarks>
-		/// <para>
-		/// Calls the <see cref="IAppender.DoAppend" /> method on all 
-		/// attached appenders.
-		/// </para>
-		/// </remarks>
-		public int AppendLoopOnAppenders(LoggingEvent[] loggingEvents) 
+        internal Task<int> AppendLoopOnAppendersAsync(LoggingEvent[] loggingEvents)
+        {
+            return Task.Run(async () =>
+            {
+                if (loggingEvents == null)
+                {
+                    throw new ArgumentNullException("loggingEvents");
+                }
+
+                if (loggingEvents.Length == 0)
+                {
+                    throw new ArgumentException("loggingEvents array must not be empty", "loggingEvents");
+                }
+
+                if (loggingEvents.Length == 1)
+                {
+                    // Fall back to single event path
+                    return await AppendLoopOnAppendersAsync(loggingEvents[0]);
+                }
+
+                // m_appenderList is null when empty
+                if (m_appenderList == null)
+                {
+                    return 0;
+                }
+
+                if (m_appenderArray == null)
+                {
+                    m_appenderArray = m_appenderList.ToArray();
+                }
+
+                foreach (IAppender appender in m_appenderArray)
+                {
+                    try
+                    {
+                        CallAppend(appender, loggingEvents);
+                    }
+                    catch (Exception ex)
+                    {
+                        LogLog.Error(declaringType, "Failed to append to appender [" + appender.Name + "]", ex);
+                    }
+                }
+
+                return m_appenderList.Count;
+            });
+        }
+
+        /// <summary>
+        /// Append on on all attached appenders.
+        /// </summary>
+        /// <param name="loggingEvent">The event being logged.</param>
+        /// <returns>The number of appenders called.</returns>
+        /// <remarks>
+        /// <para>
+        /// Calls the <see cref="IAppender.DoAppend" /> method on all 
+        /// attached appenders.
+        /// </para>
+        /// </remarks>
+        public Task<int> AppendLoopOnAppendersAsync(LoggingEvent loggingEvent)
+	    {
+	        return Task.Run(() =>
+	        {
+	            if (loggingEvent == null)
+	            {
+	                throw new ArgumentNullException("loggingEvent");
+	            }
+
+	            // m_appenderList is null when empty
+	            if (m_appenderList == null)
+	            {
+	                return 0;
+	            }
+
+	            if (m_appenderArray == null)
+	            {
+	                m_appenderArray = m_appenderList.ToArray();
+	            }
+
+	            m_appenderArray.AsParallel().ForAll(appender =>
+	            {
+	                try
+	                {
+	                    appender.DoAppend(loggingEvent);
+	                }
+	                catch (Exception ex)
+	                {
+	                    LogLog.Error(declaringType, "Failed to append to appender [" + appender.Name + "]", ex);
+	                }
+	            });
+
+	            return m_appenderList.Count;
+	        });
+
+	    }
+
+        /// <summary>
+        /// Append on on all attached appenders.
+        /// </summary>
+        /// <param name="loggingEvents">The array of events being logged.</param>
+        /// <returns>The number of appenders called.</returns>
+        /// <remarks>
+        /// <para>
+        /// Calls the <see cref="IAppender.DoAppend" /> method on all 
+        /// attached appenders.
+        /// </para>
+        /// </remarks>
+        public int AppendLoopOnAppenders(LoggingEvent[] loggingEvents) 
 		{
 			if (loggingEvents == null)
 			{
