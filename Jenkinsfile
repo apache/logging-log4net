@@ -54,7 +54,7 @@ pipeline {
 					).trim()
 
 					// build docker container
-					def builder = docker.build 'builder-netstandard:latest', "--file $builder_dir/Dockerfile --build-arg JENKINS_UID=$JENKINS_UID --build-arg JENKINS_GID=$JENKINS_GID $builder_dir"
+					def builder = docker.build 'builder-netstandard-1.3:latest', "--file $builder_dir/Dockerfile --build-arg JENKINS_UID=$JENKINS_UID --build-arg JENKINS_GID=$JENKINS_GID $builder_dir"
 
 					// run docker container
 					builder.inside {
@@ -163,12 +163,24 @@ pipeline {
 				}
 			}
 			steps {
-				sh "rm -rf bin/ tests/"
-				checkout scm
-				sh "nant -t:mono-2.0 -buildfile:log4net.build compile-mono-2.0"
-				stash includes: 'bin/**/*.*', name: 'mono-2.0-assemblies'
-				sh "nant -t:mono-2.0 -buildfile:tests/nant.build runtests-mono-2.0"
-				stash includes: 'tests/bin/**/*.nunit.xml', name: 'mono-2.0-testresults'
+				script {
+					checkout scm
+					def builder_target = "mono-2.0"
+					def builder_dir = "buildtools/docker/builder-$builder_target"
+
+					// build docker container
+					def builder = docker.build 'builder-$builder_target:latest', "--file $builder_dir/Dockerfile $builder_dir"
+
+					// run docker container
+					builder.inside {
+						sh "rm -rf bin/ tests/"
+						checkout scm
+						sh "nant -t:mono-2.0 -buildfile:log4net.build compile-mono-2.0"
+						stash includes: 'bin/**/*.*', name: 'mono-2.0-assemblies'
+						sh "nant -t:mono-2.0 -buildfile:tests/nant.build runtests-mono-2.0"
+						stash includes: 'tests/bin/**/*.nunit.xml', name: 'mono-2.0-testresults'
+					}
+				}
 			}
 		}
 		stage('build mono-3.5') {
