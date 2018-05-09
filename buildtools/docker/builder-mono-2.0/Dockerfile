@@ -5,6 +5,7 @@ FROM ubuntu:latest
 MAINTAINER "dev@logging.apache.org"
 
 # prepare tz
+RUN apt-get install tzdata
 RUN ln -fs /usr/share/zoneinfo/Universal /etc/localtime
 RUN dpkg-reconfigure -f noninteractive tzdata
 
