@@ -4,6 +4,10 @@ FROM ubuntu:latest
 # set the maintainer of this docker image
 MAINTAINER "dev@logging.apache.org"
 
+# prepare tz
+RUN ln -fs /usr/share/zoneinfo/Universal /etc/localtime
+RUN dpkg-reconfigure -f noninteractive tzdata
+
 # install dependencies
 RUN apt-get update && apt-get install -y nant git mono-complete mono-reference-assemblies-2.0
 
