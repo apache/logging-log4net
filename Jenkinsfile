@@ -162,7 +162,7 @@ pipeline {
 					def builder_dir = "buildtools/docker/builder-$builder_target"
 
 					// build docker container
-					def builder = docker.build 'builder-$builder_target:latest', "--file $builder_dir/Dockerfile $builder_dir"
+					def builder = docker.build "builder-$builder_target:latest", "--file $builder_dir/Dockerfile $builder_dir"
 
 					// run docker container
 					builder.inside {
