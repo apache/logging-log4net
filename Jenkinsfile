@@ -155,13 +155,6 @@ pipeline {
 			}
 		}
 		stage('build mono-2.0') {
-			agent {
-				dockerfile {
-					dir 'buildtools/docker/builder-mono-2.0'
-					args '-v /etc/localtime:/etc/localtime:ro'
-					reuseNode true
-				}
-			}
 			steps {
 				script {
 					checkout scm
