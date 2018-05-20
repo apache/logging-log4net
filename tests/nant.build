@@ -26,7 +26,7 @@ limitations under the License.
 
     <target name="install-nunit">
         <if test="${not file::exists('lib/${current.build.configuration.dir}/nunit.framework.dll')}">
-			<get src="https://www.nuget.org/api/v2/package/NUnit/2.6.4"
+            <get src="https://www.nuget.org/api/v2/package/NUnit/2.6.4"
                  dest=".tmp-nunit.zip"/>
             <unzip zipfile=".tmp-nunit.zip"
                    todir=".tmp-nunit"/>
@@ -872,15 +872,15 @@ limitations under the License.
             <arg value="-d"/>
             <arg value="test.diagnostics.log"/>
             <arg value="log4net.tests/log4net.tests.csproj" />
-		</exec>
-		<!-- move netstandard/1.3 to tests/bin/netstandard/1.3 -->
-		<move todir="tests/bin/netstandard/1.3/"
-			  failonerror="false">
-			<fileset basedir="netstandard/1.3">
-				<include name="**/*.log" />
-				<include name="**/*.trx" />
-			</fileset>
-		</move>
+        </exec>
+        <!-- move netstandard/1.3 to tests/bin/netstandard/1.3 -->
+        <move todir="${log4net.basedir}/tests/bin/netstandard/1.3/"
+              failonerror="false">
+              <fileset basedir="${log4net.basedir}/netstandard/1.3">
+                <include name="**/*.log" />
+                <include name="**/*.trx" />
+            </fileset>
+        </move>
     </target>
 
 </project>
