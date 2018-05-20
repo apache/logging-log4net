@@ -64,8 +64,8 @@ pipeline {
 
 						// test
 						sh "nant -buildfile:tests/nant.build runtests-netstandard-1.3"
-						stash includes: '**/*.trx', name: 'netstandard-1.3-testresults', allowEmpty: true
-						stash includes: '**/*.log', name: 'netstandard-1.3-testlogs', allowEmpty: true
+						stash includes: 'tests/bin/**/*.trx', name: 'netstandard-1.3-testresults', allowEmpty: true
+						stash includes: 'tests/bin/**/*.log', name: 'netstandard-1.3-testlogs', allowEmpty: true
 					}
 				}
 			}
