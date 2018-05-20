@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements. See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to you under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Copyright>Copyright 2004-2018 The Apache Software Foundation.</Copyright>
+    <AssemblyTitle>Apache log4net for .NET Core</AssemblyTitle>
+    <VersionPrefix>2.0.9</VersionPrefix>
+    <TargetFramework>netstandard1.3</TargetFramework>
+    <AssemblyName>log4net</AssemblyName>
+    <PackageId>log4net</PackageId>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+    <DefineConstants>$(DefineConstants);HAS_READERWRITERLOCKSLIM</DefineConstants>
+    <PublicSign>true</PublicSign>
+	<AssemblyOriginatorKeyFile>../../../log4net.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+    <Compile Remove="..\..\..\src\Appender\AdoNetAppender.cs;..\..\..\src\Appender\AspNetTraceAppender.cs;..\..\..\src\Appender\ColoredConsoleAppender.cs;..\..\..\src\Appender\EventLogAppender.cs;..\..\..\src\Appender\NetSendAppender.cs;..\..\..\src\Appender\RemotingAppender.cs;..\..\..\src\Appender\SmtpAppender.cs;..\..\..\src\Config\DOMConfigurator.cs;..\..\..\src\Config\DOMConfiguratorAttribute.cs;..\..\..\src\Config\Log4NetConfigurationSectionHandler.cs;..\..\..\src\Layout\Pattern\AspNetCachePatternConverter.cs;..\..\..\src\Layout\Pattern\AspNetContextPatternConverter.cs;..\..\..\src\Layout\Pattern\AspNetPatternConverter.cs;..\..\..\src\Layout\Pattern\AspNetRequestPatternConverter.cs;..\..\..\src\Layout\Pattern\AspNetSessionPatternConverter.cs;..\..\..\src\Layout\Pattern\StackTraceDetailPatternConverter.cs;..\..\..\src\Layout\Pattern\StackTracePatternConverter.cs;..\..\..\src\Plugin\RemoteLoggingServerPlugin.cs;..\..\..\src\Util\PatternStringConverters\AppSettingPatternConverter.cs;..\..\..\src\Util\PatternStringConverters\EnvironmentFolderPathPatternConverter.cs;..\..\..\src\Util\NativeError.cs;..\..\..\src\Util\WindowsSecurityContext.cs" />
+   <Compile Include="..\..\..\src\**\*.cs" Exclude="..\..\..\src\Appender\AdoNetAppender.cs;..\..\..\src\Appender\AspNetTraceAppender.cs;..\..\..\src\Appender\ColoredConsoleAppender.cs;..\..\..\src\Appender\EventLogAppender.cs;..\..\..\src\Appender\NetSendAppender.cs;..\..\..\src\Appender\RemotingAppender.cs;..\..\..\src\Appender\SmtpAppender.cs;..\..\..\src\Config\DOMConfigurator.cs;..\..\..\src\Config\DOMConfiguratorAttribute.cs;..\..\..\src\Config\Log4NetConfigurationSectionHandler.cs;..\..\..\src\Layout\Pattern\AspNetCachePatternConverter.cs;..\..\..\src\Layout\Pattern\AspNetContextPatternConverter.cs;..\..\..\src\Layout\Pattern\AspNetPatternConverter.cs;..\..\..\src\Layout\Pattern\AspNetRequestPatternConverter.cs;..\..\..\src\Layout\Pattern\AspNetSessionPatternConverter.cs;..\..\..\src\Layout\Pattern\StackTraceDetailPatternConverter.cs;..\..\..\src\Layout\Pattern\StackTracePatternConverter.cs;..\..\..\src\Plugin\RemoteLoggingServerPlugin.cs;..\..\..\src\Util\PatternStringConverters\AppSettingPatternConverter.cs;..\..\..\src\Util\PatternStringConverters\EnvironmentFolderPathPatternConverter.cs;..\..\..\src\Util\NativeError.cs;..\..\..\src\Util\WindowsSecurityContext.cs;bin\**;obj\**;**\*.xproj;packages\**" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+    <PackageReference Include="System.AppContext" Version="4.3.0" />
+    <PackageReference Include="System.Collections.NonGeneric" Version="4.0.1" />
+    <PackageReference Include="System.Console" Version="4.3.0" />
+    <PackageReference Include="System.Diagnostics.Debug" Version="4.3.0" />
+    <PackageReference Include="System.Diagnostics.Process" Version="4.1.0" />
+    <PackageReference Include="System.Diagnostics.StackTrace" Version="4.0.1" />
+    <PackageReference Include="System.Diagnostics.TraceSource" Version="4.0.0" />
+    <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
+    <PackageReference Include="System.IO.FileSystem.Watcher" Version="4.0.0" />
+    <PackageReference Include="System.Linq" Version="4.3.0" />
+    <PackageReference Include="System.Net.NameResolution" Version="4.0.0" />
+    <PackageReference Include="System.Net.Requests" Version="4.0.11" />
+    <PackageReference Include="System.Net.Sockets" Version="4.3.0" />
+    <PackageReference Include="System.Reflection" Version="4.3.0" />
+    <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.Extensions" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.0" />
+    <PackageReference Include="System.Threading" Version="4.3.0" />
+    <PackageReference Include="System.Threading.Thread" Version="4.0.0" />
+    <PackageReference Include="System.Threading.Timer" Version="4.3.0" />
+    <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.0" />
+    <PackageReference Include="System.Xml.XmlDocument" Version="4.0.1" />
+  </ItemGroup>
+
+</Project>

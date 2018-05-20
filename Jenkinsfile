@@ -19,13 +19,13 @@
 
 pipeline {
 	options {
-		timeout(time: 1, unit: 'HOURS')
+		timeout(time: 4, unit: 'HOURS')
 		buildDiscarder(logRotator(numToKeepStr: '3'))
 		skipDefaultCheckout()
 		disableConcurrentBuilds()
 	}
 	agent {
-		label 'ubuntu'
+		label 'ubuntu&&!H26'
 	}
 	stages {
 		// prepare node for builds
@@ -37,11 +37,11 @@ pipeline {
 		}
 
 		// builds
-		stage('build netstandard') {
+		stage('build netstandard-1.3') {
 			steps {
 				script {
 					checkout scm
-					def builder_dir = "buildtools/docker/builder-netstandard"
+					def builder_dir = "buildtools/docker/builder-netstandard-1.3"
 
 					// calculate args required to build the docker container
 					def JENKINS_UID = sh (
@@ -52,34 +52,40 @@ pipeline {
 						script: "stat -c \"%g\" $builder_dir",
 						returnStdout: true
 					).trim()
-					echo "$JENKINS_UID"
-					echo "$JENKINS_GID"
 
 					// build docker container
-					def builder = docker.build 'builder-netstandard:latest', "--file $builder_dir/Dockerfile --build-arg JENKINS_UID=$JENKINS_UID --build-arg JENKINS_GID=$JENKINS_GID $builder_dir"
+					def builder = docker.build 'builder-netstandard-1.3:latest', "--file $builder_dir/Dockerfile --build-arg JENKINS_UID=$JENKINS_UID --build-arg JENKINS_GID=$JENKINS_GID $builder_dir"
 
 					// run docker container
 					builder.inside {
 						// compile
-						sh "nant compile-netstandard"
-						stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
+						sh "nant compile-netstandard-1.3"
+						stash includes: 'bin/**/*.*', name: 'netstandard-1.3-assemblies'
 
 						// test
-						sh 'cd netstandard/log4net.tests && dotnet test'
+						sh "nant -buildfile:tests/nant.build runtests-netstandard-1.3"
+						stash includes: 'tests/bin/**/*.trx', name: 'netstandard-1.3-testresults', allowEmpty: true
+						stash includes: 'tests/bin/**/*.log', name: 'netstandard-1.3-testlogs', allowEmpty: true
 					}
 				}
-
-
-				// compile 
-				// sh 'nant compile-netstandard'
-				// stash includes: 'bin/**/*.*', name: 'netstandard-assemblies'
-
-				// test
-				// sh 'cd netstandard/log4net.tests && dotnet test'
+			}
+		}
+		stage('build net-2.0') {
+			agent { label 'windows-2012-1||windows-2012-2||windows-2012-3' }
+			environment {
+				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
+			}
+			steps {
+				deleteDir()
+				checkout scm
+				bat "${NANT_BIN} -t:net-2.0 -buildfile:log4net.build compile-net-2.0"
+				stash includes: 'bin/**/*.*', name: 'net-2.0-assemblies'
+				bat "${NANT_BIN} -t:net-2.0 -buildfile:tests/nant.build runtests-net-2.0"
+				stash includes: 'tests/bin/**/*.nunit.xml', name: 'net-2.0-testresults'
 			}
 		}
 		stage('build net-3.5') {
-			agent { label 'Windows' }
+			agent { label 'windows-2012-1||windows-2012-2||windows-2012-3' }
 			environment {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
@@ -93,7 +99,7 @@ pipeline {
 			}
 		}
 		stage('build net-3.5-cp') {
-			agent { label 'Windows' }
+			agent { label 'windows-2012-1||windows-2012-2||windows-2012-3' }
 			environment {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
@@ -107,7 +113,7 @@ pipeline {
 			}
 		}
 		stage('build net-4.0') {
-			agent { label 'Windows' }
+			agent { label 'windows-2012-1||windows-2012-2||windows-2012-3' }
 			environment {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
@@ -121,7 +127,7 @@ pipeline {
 			}
 		}
 		stage('build net-4.0-cp') {
-			agent { label 'Windows' }
+			agent { label 'windows-2012-1||windows-2012-2||windows-2012-3' }
 			environment {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
@@ -135,7 +141,7 @@ pipeline {
 			}
 		}
 		stage('build net-4.5') {
-			agent { label 'Windows' }
+			agent { label 'windows-2012-1||windows-2012-2||windows-2012-3' }
 			environment {
 				NANT_BIN = 'F:\\jenkins\\tools\\nant\\nant-0.92\\bin\\NAnt.exe'
 			}
@@ -200,7 +206,7 @@ pipeline {
 			}
 		}
 		stage('build site') {
-			agent { label 'Windows' }
+			agent { label 'windows-2012-1||windows-2012-2||windows-2012-3' }
 			tools {
 				maven 'Maven 3.3.9 (Windows)'
 				jdk 'JDK 1.8 (latest)'
@@ -230,7 +236,7 @@ pipeline {
 					unstash 'mono-2.0-assemblies'
 					unstash 'mono-3.5-assemblies'
 					unstash 'mono-4.0-assemblies'
-					unstash 'netstandard-assemblies'
+					unstash 'netstandard-1.3-assemblies'
 
 					// unstash test results
 					unstash 'net-3.5-testresults'
@@ -241,11 +247,13 @@ pipeline {
 					unstash 'mono-2.0-testresults'
 					unstash 'mono-3.5-testresults'
 					unstash 'mono-4.0-testresults'
+					unstash 'netstandard-1.3-testresults'
+					unstash 'netstandard-1.3-testlogs'
 
 					// unstash site
 					unstash 'site'
 				}
-				
+
 				// move site
 				sh 'mv package/target/site/ package/site/'
 				sh 'rmdir -p --ignore-fail-on-non-empty package/target'
@@ -277,6 +285,14 @@ pipeline {
 							pattern              : 'package/tests/bin/**/*.nunit.xml',
 							skipNoTestFiles      : true,
 							stopProcessingIfError: true
+						],
+						[
+							$class               : 'MSTestJunitHudsonTestType',
+							deleteOutputFiles    : false,
+							failIfNotNew         : true,
+							pattern              : 'package/**/*.trx',
+							skipNoTestFiles      : true,
+							stopProcessingIfError: true
 						]
 					]
 				])
@@ -295,8 +311,7 @@ pipeline {
 	post {
 		failure {
 			// TODO: change this to dev@
-			step([$class: 'Mailer', notifyEveryUnstableBuild: false, recipients: 'commits@logging.apache.org'])
+			step([$class: 'Mailer', notifyEveryUnstableBuild: false, recipients: 'notifications@logging.apache.org'])
 		}
 	}
 }
-

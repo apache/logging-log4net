@@ -14,5 +14,5 @@ if [ -z "$WORKING_DIR" ]; then
 	WORKING_DIR=$(pwd)
 fi
 
-$MY_PATH/run.sh "builder-netstandard" $WORKING_DIR
+$MY_PATH/run.sh "builder-netstandard-1.3" $WORKING_DIR
 

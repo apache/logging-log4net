@@ -545,23 +545,31 @@ namespace log4net.Appender
 
 					// Set the command type
 					dbCmd.CommandType = CommandType;
+
 					// Send buffer using the prepared command object
 					if (dbTran != null)
 					{
 						dbCmd.Transaction = dbTran;
 					}
+
+					// clear parameters that have been set
+					dbCmd.Parameters.Clear();
+					
+					// Add the query parameters
+					foreach (AdoNetAppenderParameter param in m_parameters)
+					{
+						param.Prepare(dbCmd);
+					}
+					
 					// prepare the command, which is significantly faster
 					dbCmd.Prepare();
+
 					// run for all events
 					foreach (LoggingEvent e in events)
 					{
-						// clear parameters that have been set
-						dbCmd.Parameters.Clear();
-
 						// Set the parameter values
 						foreach (AdoNetAppenderParameter param in m_parameters)
 						{
-							param.Prepare(dbCmd);
 							param.FormatValue(dbCmd, e);
 						}
 
