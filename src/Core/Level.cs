@@ -503,8 +503,7 @@ namespace log4net.Core
 		public readonly static Level Off = new Level(int.MaxValue, "OFF");
 
 		/// <summary>
-		/// The <see cref="Emergency" /> level designates very severe error events.
-		/// System unusable, emergencies.
+		/// The <see cref="Log4Net_Debug" /> is only used to debug internals of log4net.
 		/// </summary>
 		public readonly static Level Log4Net_Debug = new Level(120000, "log4net:DEBUG");
 
