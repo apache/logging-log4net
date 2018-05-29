@@ -509,6 +509,9 @@
     <Compile Include="Layout\XmlLayoutBase.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Layout\XmlLayoutBaseNS.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Layout\XmlLayoutSchemaLog4j.cs">
       <SubType>Code</SubType>
     </Compile>
