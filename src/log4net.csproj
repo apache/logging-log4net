@@ -515,6 +515,9 @@
     <Compile Include="Layout\XmlLayoutSchemaLog4j.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Layout\XmlLayoutSchemaLog4jNS.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="LogicalThreadContext.cs">
       <SubType>Code</SubType>
     </Compile>
