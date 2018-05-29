@@ -201,6 +201,9 @@
     <Compile Include="Layout\XmlLayoutTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Layout\XmlLayoutSchemaLog4jNSTest">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="LoggerRepository\ConfigurationMessages.cs" />
     <Compile Include="Filter\FilterTest.cs" />
     <Compile Include="Utils.cs">
