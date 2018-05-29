@@ -28,7 +28,7 @@ using log4net.Util;
 namespace log4net.Layout
 {
 	/// <summary>
-	/// Layout that formats the log events as XML elements compatible with the log4j schema
+	/// Layout that formats the log events as XML elements compatible with the log4j 1.2 schema
 	/// </summary>
 	/// <remarks>
 	/// <para>
@@ -249,4 +249,3 @@ method="run" file="Generator.java" line="94"/>
 		}
 	}
 }
-
