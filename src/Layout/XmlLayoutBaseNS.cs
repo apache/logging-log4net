@@ -131,7 +131,7 @@ namespace log4net.Layout
 		/// <summary>
 		/// The namespace URI to use for the elements and attributes written by this layout.
 		/// </summary>
-		public string NamespaceUri
+		public virtual string NamespaceUri
 		{
 			get { return m_namespaceUri; }
 			set { m_namespaceUri = value; }
@@ -146,7 +146,7 @@ namespace log4net.Layout
 		/// select the prefix or use no prefix at all.
 		/// </para>
 		/// </remarks>
-		public string Prefix
+		public virtual string Prefix
 		{
 			get { return m_prefix; }
 			set { m_prefix = value; }
