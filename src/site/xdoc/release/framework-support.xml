@@ -634,6 +634,15 @@ limitations under the License.
                     <code>CallContext</code>. Prior to log4net 2.0.8
                     they haven't been supported for .NET Standard at
                     all.</p>
+
+                    <p><code>log4net.Layout.XmlLayoutSchemaLog4j</code>
+                    causes an exception at runtime - as does
+                    <code>log4net.Layout.XmlLayout</code> if you
+                    specify a prefix. You can try
+                    <code>log4net.Layout.XmlLayoutSchemaLog4jNS</code>
+                    as an alternative but the resulting XML will not
+                    be exactly the same and may not be usable by your
+                    downstream tools.</p>
                 </section>
 
                 <section id="net1.0" name="Microsoft .NET Framework 1.0">

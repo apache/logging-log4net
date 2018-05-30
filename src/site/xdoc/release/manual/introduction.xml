@@ -989,26 +989,35 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                                     complies with the log4j event dtd.
                                 </td>
                             </tr>
+                            <tr>
+                                <td><a href="../sdk/html/T_log4net_Layout_XmlLayoutSchemaLog4jNS.htm">log4net.Layout.XmlLayoutSchemaLog4jNS</a></td>
+                                <td>
+                                    Formats the logging event as an XML element that
+                                    is similar to the log4j event dtd
+                                    but uses an XML namespace with
+                                    "log4j" as prefix.
+                                </td>
+                            </tr>
                         </table>
                     </div>
                 </section>
-                
+
                 <section id="renderers" name="Object Renderers">
                     <p>
-                        Just as importantly, log4net will render the content of the log message 
-                        according to user specified criteria. For example, if you frequently need to 
+                        Just as importantly, log4net will render the content of the log message
+                        according to user specified criteria. For example, if you frequently need to
                         log
-                        <span class="code">Oranges</span>, an object type used in your current project, 
+                        <span class="code">Oranges</span>, an object type used in your current project,
                         then you can register an
                         <span class="code">OrangeRenderer</span>
                         that will be invoked whenever an orange needs to be logged.
                     </p>
                     <p>
-                        Object rendering follows the class hierarchy. For example, assuming oranges are 
+                        Object rendering follows the class hierarchy. For example, assuming oranges are
                         fruits, if you register an
-                        <span class="code">FruitRenderer</span>, all fruits including oranges will be 
+                        <span class="code">FruitRenderer</span>, all fruits including oranges will be
                         rendered by the
-                        <span class="code">FruitRenderer</span>, unless of course you registered an 
+                        <span class="code">FruitRenderer</span>, unless of course you registered an
                         orange specific
                         <span class="code">OrangeRenderer</span>.
                     </p>
