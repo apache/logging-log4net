@@ -37,6 +37,28 @@ namespace log4net.Tests.Layout
 	public class XmlLayoutSchemaLog4jNSTest
 	{
 
+#if !NETSTANDARD1_3
+		private CultureInfo _currentCulture;
+		private CultureInfo _currentUICulture;
+
+		[SetUp]
+		public void SetUp()
+		{
+			// set correct thread culture
+			_currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
+			_currentUICulture = System.Threading.Thread.CurrentThread.CurrentUICulture;
+			System.Threading.Thread.CurrentThread.CurrentCulture = System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			// restore previous culture
+			System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture;
+			System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture;
+		}
+#endif
+
 		/// <summary>
 		/// Build a basic <see cref="LoggingEventData"/> object with some default values.
 		/// </summary>
@@ -86,5 +108,172 @@ namespace log4net.Tests.Layout
 
 			Assert.AreEqual(expected, writer.ToString());
 		}
+
+		[Test]
+		public void NamespaceUriCanBeChanged()
+		{
+			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+			TextWriter writer = new StringWriter();
+			XmlLayoutSchemaLog4jNS layout = new XmlLayoutSchemaLog4jNS();
+			layout.NamespaceUri = "urn:foo:bar";
+			LoggingEventData evt = CreateBaseEvent();
+
+			layout.Format(writer, new LoggingEvent(null, rep, evt));
+
+			string expected = CreateEventNode("Test message", "log4j", "urn:foo:bar");
+
+			Assert.AreEqual(expected, writer.ToString());
+		}
+
+		[Test]
+		public void PrefixCanBeChanged()
+		{
+			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+			TextWriter writer = new StringWriter();
+			XmlLayoutSchemaLog4jNS layout = new XmlLayoutSchemaLog4jNS();
+			layout.Prefix = "foo";
+			LoggingEventData evt = CreateBaseEvent();
+
+			layout.Format(writer, new LoggingEvent(null, rep, evt));
+
+			string expected = CreateEventNode("Test message", "foo", "http://logging.apache.org/log4j");
+
+			Assert.AreEqual(expected, writer.ToString());
+		}
+
+		[Test]
+		public void TestIllegalCharacterMasking()
+		{
+			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+			TextWriter writer = new StringWriter();
+			XmlLayoutSchemaLog4jNS layout = new XmlLayoutSchemaLog4jNS();
+			LoggingEventData evt = CreateBaseEvent();
+
+			evt.Message = "This is a masked char->\uFFFF";
+
+			layout.Format(writer, new LoggingEvent(null, rep, evt));
+
+			string expected = CreateEventNode("This is a masked char-&gt;?");
+
+			Assert.AreEqual(expected, writer.ToString());
+		}
+
+		[Test]
+		public void TestCDATAEscaping1()
+		{
+			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+			TextWriter writer = new StringWriter();
+			XmlLayoutSchemaLog4jNS layout = new XmlLayoutSchemaLog4jNS();
+			LoggingEventData evt = CreateBaseEvent();
+
+			//The &'s trigger the use of a cdata block
+			evt.Message = "&&&&&&&Escape this ]]>. End here.";
+
+			layout.Format(writer, new LoggingEvent(null, rep, evt));
+
+			string expected = CreateEventNode("<![CDATA[&&&&&&&Escape this ]]>]]<![CDATA[>. End here.]]>");
+
+			Assert.AreEqual(expected, writer.ToString());
+		}
+
+		[Test]
+		public void TestCDATAEscaping2()
+		{
+			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+			TextWriter writer = new StringWriter();
+			XmlLayoutSchemaLog4jNS layout = new XmlLayoutSchemaLog4jNS();
+			LoggingEventData evt = CreateBaseEvent();
+
+			//The &'s trigger the use of a cdata block
+			evt.Message = "&&&&&&&Escape the end ]]>";
+
+			layout.Format(writer, new LoggingEvent(null, rep, evt));
+
+			string expected = CreateEventNode("<![CDATA[&&&&&&&Escape the end ]]>]]&gt;");
+
+			Assert.AreEqual(expected, writer.ToString());
+		}
+
+		[Test]
+		public void TestCDATAEscaping3()
+		{
+			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+			TextWriter writer = new StringWriter();
+			XmlLayoutSchemaLog4jNS layout = new XmlLayoutSchemaLog4jNS();
+			LoggingEventData evt = CreateBaseEvent();
+
+			//The &'s trigger the use of a cdata block
+			evt.Message = "]]>&&&&&&&Escape the begining";
+
+			layout.Format(writer, new LoggingEvent(null, rep, evt));
+
+			string expected = CreateEventNode("<![CDATA[]]>]]<![CDATA[>&&&&&&&Escape the begining]]>");
+
+			Assert.AreEqual(expected, writer.ToString());
+		}
+
+#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+		[Test]
+		public void BracketsInStackTracesKeepLogWellFormed() {
+			XmlLayoutSchemaLog4jNS layout = new XmlLayoutSchemaLog4jNS();
+			StringAppender stringAppender = new StringAppender();
+			stringAppender.Layout = layout;
+
+			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+			BasicConfigurator.Configure(rep, stringAppender);
+			ILog log1 = LogManager.GetLogger(rep.Name, "TestLogger");
+			Action<int> bar = foo => {
+				try {
+					throw new NullReferenceException();
+				} catch (Exception ex) {
+					log1.Error(string.Format("Error {0}", foo), ex);
+				}
+			};
+			bar(42);
+
+			// really only asserts there is no exception
+			var loggedDoc = new XmlDocument();
+			loggedDoc.LoadXml(stringAppender.GetString());
+		}
+
+		[Test]
+		public void BracketsInStackTracesAreEscapedProperly() {
+			XmlLayoutSchemaLog4jNS layout = new XmlLayoutSchemaLog4jNS();
+			StringAppender stringAppender = new StringAppender();
+			stringAppender.Layout = layout;
+
+			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+			BasicConfigurator.Configure(rep, stringAppender);
+			ILog log1 = LogManager.GetLogger(rep.Name, "TestLogger");
+			Action<int> bar = foo => {
+				try {
+					throw new NullReferenceException();
+				}
+				catch (Exception ex) {
+					log1.Error(string.Format("Error {0}", foo), ex);
+				}
+			};
+			bar(42);
+
+			var log = stringAppender.GetString();
+#if NETSTANDARD1_3
+			var startOfExceptionText = log.IndexOf("<log4j:throwable>", StringComparison.Ordinal) + 17;
+			var endOfExceptionText = log.IndexOf("</log4j:throwable>", StringComparison.Ordinal);
+#else
+			var startOfExceptionText = log.IndexOf("<log4j:throwable>", StringComparison.InvariantCulture) + 17;
+			var endOfExceptionText = log.IndexOf("</log4j:throwable>", StringComparison.InvariantCulture);
+#endif
+			var sub = log.Substring(startOfExceptionText, endOfExceptionText - startOfExceptionText);
+			if (sub.StartsWith("<![CDATA["))
+			{
+				StringAssert.EndsWith("]]>", sub);
+			}
+			else
+			{
+				StringAssert.DoesNotContain("<", sub);
+				StringAssert.DoesNotContain(">", sub);
+			}
+		}
+#endif
 	}
 }
