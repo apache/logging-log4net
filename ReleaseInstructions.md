@@ -1,3 +1,19 @@
+<!---
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
 # Important remark
 
 Note that we invest a great deal of effort into automating the release process by building a continuous delivery pipeline that runs on Jenkins. Further we have moved our codebase from SVN over to GIT and therefore large parts of this howto are no longer up do date!
@@ -99,17 +115,17 @@ Site:
 
 RAT Report:
   http://stefan.samaflost.de/staging/log4net-2.0.6/rat-report.html
- 
+
 Nuget Package:
   https://www.myget.org/feed/log4net-test/package/nuget/log4net
- 
+
 Votes, please. This vote will close in 72 hours, 1000 GMT 24-Dec 2016
- 
+
  [ ] +1 Release these artifacts
  [ ] +0 OK, but...
  [ ] -0 OK, but really should fix...
  [ ] -1 I oppose this release because...
- 
+
 Thanks!
 ```
 * If the vote doesn't pass, adapt trunk and start over with tagging the next release candidate
@@ -146,4 +162,3 @@ Thanks!
 # Post-Release Cleanup
 
 * Delete all artifacts of old releases from <https://dist.apache.org/repos/dist/release/logging/log4net>
-
