@@ -85,26 +85,6 @@ namespace log4net.Layout
 		#region Public Properties
 
 		/// <summary>
-		/// The version of the log4j schema to use.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// Only version 1.2 of the log4j schema is supported.
-		/// </para>
-		/// </remarks>
-		public string Version
-		{
-			get { return "1.2"; }
-			set
-			{
-				if (value != "1.2")
-				{
-					throw new ArgumentException("Only version 1.2 of the log4j schema is currently supported");
-				}
-			}
-		}
-
-		/// <summary>
 		/// The namespace URI to use for the elements and attributes written by this layout.
 		/// </summary>
 		/// <remarks>
