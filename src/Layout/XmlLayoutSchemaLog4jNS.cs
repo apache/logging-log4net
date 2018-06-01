@@ -55,7 +55,7 @@ namespace log4net.Layout
 		/// <summary>
 		/// Constructs an XMLLayoutSchemaLog4jNS
 		/// </summary>
-		public XmlLayoutSchemaLog4jNS() : base()
+		public XmlLayoutSchemaLog4jNS() : this(false)
 		{
 		}
 
@@ -78,37 +78,10 @@ namespace log4net.Layout
 		/// </remarks>
 		public XmlLayoutSchemaLog4jNS(bool locationInfo) :  base(locationInfo)
 		{
+			NamespaceUri = LOG4J_SCHEMA;
+			Prefix = LOG4J_PREFIX;
 		}
 
-		#endregion
-
-		#region Public Properties
-
-		/// <summary>
-		/// The namespace URI to use for the elements and attributes written by this layout.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// Unless configured explicitly http://logging.apache.org/log4j is used.
-		/// </para>
-		/// </remarks>
-		public override string NamespaceUri
-		{
-			get { return base.NamespaceUri == null ? LOG4J_SCHEMA : base.NamespaceUri; }
-		}
-
-		/// <summary>
-		/// The prefix to use for the elements and attributes written by this layout.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// Unless configured explicitly log4j is used.
-		/// </para>
-		/// </remarks>
-		public override string Prefix
-		{
-			get { return base.Prefix == null ? LOG4J_PREFIX : base.Prefix; }
-		}
 		#endregion
 
 		/* Example log4j schema event
