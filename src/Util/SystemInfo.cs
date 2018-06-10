@@ -174,7 +174,7 @@ namespace log4net.Util
 		{
 			get
 			{
-#if NETCF || NETSTANDARD1_3
+#if NETCF || NETSTANDARD1_3 || NETSTANDARD2_0
 				return SystemInfo.EntryAssemblyLocation+".config";
 #else
 				return System.AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;
@@ -233,7 +233,7 @@ namespace log4net.Util
 			{
 #if NETCF_1_0
 				return System.Threading.Thread.CurrentThread.GetHashCode();
-#elif NET_2_0 || NETCF_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0 || NETSTANDARD1_3
+#elif NET_2_0 || NETCF_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0 || NETSTANDARD1_3 || NETSTANDARD2_0
 				return System.Threading.Thread.CurrentThread.ManagedThreadId;
 #else
 				return AppDomain.GetCurrentThreadId();
@@ -484,7 +484,7 @@ namespace log4net.Util
 		{
 #if NETCF
 			return "Not supported on Microsoft .NET Compact Framework";
-#elif NETSTANDARD1_3  // TODO Assembly.Location available in netstandard1.5
+#elif NETSTANDARD1_3 || NETSTANDARD2_0 // TODO Assembly.Location available in netstandard1.5
 			return "Not supported on .NET Core";
 #else
 			if (myAssembly.GlobalAssemblyCache)
@@ -999,7 +999,7 @@ namespace log4net.Util
 		{
 			try
 			{
-#if NETCF || NETSTANDARD1_3
+#if NETCF || NETSTANDARD1_3 || NETSTANDARD2_0
 				// Configuration APIs are not suported under the Compact Framework
 #elif NET_2_0
 				return ConfigurationManager.AppSettings[key];

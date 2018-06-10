@@ -121,7 +121,7 @@ namespace log4net.Config
 				LogLog.Debug(declaringType, "Application config file location unknown");
 			}
 
-#if NETCF || NETSTANDARD1_3
+#if NETCF || NETSTANDARD1_3 || NETSTANDARD2_0
 			// No config file reading stuff. Just go straight for the file
 			Configure(repository, new FileInfo(SystemInfo.ConfigurationFileLocation));
 #else
@@ -651,7 +651,7 @@ namespace log4net.Config
 #endif
 						try
 						{
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 							WebResponse response = configRequest.GetResponseAsync().GetAwaiter().GetResult();
 #else
 							WebResponse response = configRequest.GetResponse();
@@ -728,12 +728,12 @@ namespace log4net.Config
 #if (NETCF)
 					// Create a text reader for the file stream
 					XmlTextReader xmlReader = new XmlTextReader(configStream);
-#elif NET_2_0 || NETSTANDARD1_3
+#elif NET_2_0 || NETSTANDARD1_3 || NETSTANDARD2_0
 					// Allow the DTD to specify entity includes
 					XmlReaderSettings settings = new XmlReaderSettings();
 										// .NET 4.0 warning CS0618: 'System.Xml.XmlReaderSettings.ProhibitDtd'
 										// is obsolete: 'Use XmlReaderSettings.DtdProcessing property instead.'
-#if NETSTANDARD1_3 // TODO DtdProcessing.Parse not yet available (https://github.com/dotnet/corefx/issues/4376)
+#if NETSTANDARD1_3 || NETSTANDARD2_0 // TODO DtdProcessing.Parse not yet available (https://github.com/dotnet/corefx/issues/4376)
 					settings.DtdProcessing = DtdProcessing.Ignore;
 #elif !NET_4_0 && !MONO_4_0
 					settings.ProhibitDtd = true;
