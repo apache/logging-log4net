@@ -17,7 +17,7 @@
 //
 #endregion
 
-// We want this assembly to have a seperate logging repository to the 
+// We want this assembly to have a separate logging repository to the 
 // rest of the application. We will configure this repository seperatly.
 [assembly: log4net.Config.Repository("SimpleModule")]
 
