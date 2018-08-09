@@ -935,6 +935,8 @@ namespace log4net.Appender
 				string date = m_dateTime.Now.ToString(m_datePattern, System.Globalization.DateTimeFormatInfo.InvariantInfo);
 				string prefix = m_preserveLogFileNameExtension ? Path.GetFileNameWithoutExtension(baseFile) + date : baseFile + date;
 				string suffix = m_preserveLogFileNameExtension ? Path.GetExtension(baseFile) : "";
+				prefix=prefix.ToLower(System.Globalization.CultureInfo.InvariantCulture);
+				suffix=suffix.ToLower(System.Globalization.CultureInfo.InvariantCulture);
 				if (!curFileName.StartsWith(prefix) || !curFileName.EndsWith(suffix))
 				{
 					LogLog.Debug(declaringType, "Ignoring file ["+curFileName+"] because it is from a different date period");
