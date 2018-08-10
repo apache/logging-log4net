@@ -493,7 +493,7 @@ namespace log4net.Util
 						LogLog.Error(declaringType, "OptionConverter: A [" + className + "] object is not assignable to a [" + superClass.FullName + "] variable.");
 						return defaultValue;	  
 					}
-					return Activator.CreateInstance(classObj);
+					return LoggerManager.GetService(classObj);
 				}
 				catch (Exception e) 
 				{
