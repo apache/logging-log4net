@@ -156,7 +156,7 @@ namespace log4net.Config
 			}
 
 			// Create an instance of the plugin using the default constructor
-			IPlugin plugin = (IPlugin)Activator.CreateInstance(pluginType);
+			IPlugin plugin = (IPlugin)LoggerManager.GetService(pluginType);
 
 			return plugin;
 		}

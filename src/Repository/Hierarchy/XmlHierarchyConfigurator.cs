@@ -301,9 +301,9 @@ namespace log4net.Repository.Hierarchy
 			try
 			{
 #if NETSTANDARD1_3
-				IAppender appender = (IAppender)Activator.CreateInstance(SystemInfo.GetTypeFromString(this.GetType().GetTypeInfo().Assembly, typeName, true, true));
+				IAppender appender = (IAppender)LoggerManager.GetService(SystemInfo.GetTypeFromString(this.GetType().GetTypeInfo().Assembly, typeName, true, true));
 #else
-				IAppender appender = (IAppender)Activator.CreateInstance(SystemInfo.GetTypeFromString(typeName, true, true));
+				IAppender appender = (IAppender)LoggerManager.GetService(SystemInfo.GetTypeFromString(typeName, true, true));
 #endif
 				appender.Name = appenderName;
 
@@ -853,7 +853,7 @@ namespace log4net.Repository.Hierarchy
 		}
 
 		/// <summary>
-		/// Test if a <see cref="Type"/> is constructible with <c>Activator.CreateInstance</c>.
+		/// Test if a <see cref="Type"/> is constructible with <c>LoggerManager.GetService</c>.
 		/// </summary>
 		/// <param name="type">the type to inspect</param>
 		/// <returns><c>true</c> if the type is creatable using a default constructor, <c>false</c> otherwise</returns>
@@ -1027,7 +1027,7 @@ namespace log4net.Repository.Hierarchy
 			object createdObject = null;
 			try
 			{
-				createdObject = Activator.CreateInstance(objectType);
+				createdObject = LoggerManager.GetService(objectType);
 			}
 			catch(Exception createInstanceEx)
 			{

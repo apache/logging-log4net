@@ -24,6 +24,7 @@ using System.Linq;
 #endif
 using System.Reflection;
 using System.Collections;
+using log4net.Core;
 
 namespace log4net.Util.TypeConverters
 {
@@ -259,11 +260,11 @@ namespace log4net.Util.TypeConverters
 				try
 				{
 					// Create the type converter
-					return Activator.CreateInstance(converterType);
+					return LoggerManager.GetService(converterType);
 				}
 				catch(Exception ex)
 				{
-					LogLog.Error(declaringType, "Cannot CreateConverterInstance of type ["+converterType.FullName+"], Exception in call to Activator.CreateInstance", ex);
+					LogLog.Error(declaringType, "Cannot CreateConverterInstance of type ["+converterType.FullName+"], Exception in call to LoggerManager.GetService", ex);
 				}
 			}
 			else

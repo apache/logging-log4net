@@ -127,7 +127,7 @@ namespace log4net.Core
 					object appRepositorySelectorObj = null;
 					try
 					{
-						appRepositorySelectorObj = Activator.CreateInstance(appRepositorySelectorType);
+						appRepositorySelectorObj = LoggerManager.GetService(appRepositorySelectorType);
 					}
 					catch(Exception ex)
 					{
@@ -175,22 +175,41 @@ namespace log4net.Core
 #endif
 		}
 
-		#endregion Static Constructor
+        #endregion Static Constructor
 
-		#region Public Static Methods
+        #region Public Static Property
 
-		/// <summary>
-		/// Return the default <see cref="ILoggerRepository"/> instance.
-		/// </summary>
-		/// <param name="repository">the repository to lookup in</param>
-		/// <returns>Return the default <see cref="ILoggerRepository"/> instance</returns>
-		/// <remarks>
-		/// <para>
-		/// Gets the <see cref="ILoggerRepository"/> for the repository specified
-		/// by the <paramref name="repository"/> argument.
-		/// </para>
-		/// </remarks>
-		[Obsolete("Use GetRepository instead of GetLoggerRepository")]
+	    /// <summary>
+	    /// Get the instance of the type.
+	    /// </summary>
+	    public static Func<Type, object> GetService
+	    {
+	        get => _getService;
+	        set
+	        {
+	            if (value == null)
+	                throw new ArgumentNullException("value");
+
+	            _getService = value;
+	        }
+	    }
+
+	    #endregion
+
+        #region Public Static Methods
+
+        /// <summary>
+        /// Return the default <see cref="ILoggerRepository"/> instance.
+        /// </summary>
+        /// <param name="repository">the repository to lookup in</param>
+        /// <returns>Return the default <see cref="ILoggerRepository"/> instance</returns>
+        /// <remarks>
+        /// <para>
+        /// Gets the <see cref="ILoggerRepository"/> for the repository specified
+        /// by the <paramref name="repository"/> argument.
+        /// </para>
+        /// </remarks>
+        [Obsolete("Use GetRepository instead of GetLoggerRepository")]
 		public static ILoggerRepository GetLoggerRepository(string repository)
 		{
 			return GetRepository(repository);
@@ -875,6 +894,8 @@ namespace log4net.Core
 		/// </summary>
 		private static IRepositorySelector s_repositorySelector;
 
-		#endregion Private Static Fields
+	    private static Func<Type, object> _getService = Activator.CreateInstance;
+
+	    #endregion Private Static Fields
 	}
 }
