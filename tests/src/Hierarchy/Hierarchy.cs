@@ -22,6 +22,7 @@
 using System;
 using System.Xml;
 using log4net.Config;
+using log4net.Core;
 using log4net.Repository;
 using log4net.Tests.Appender;
 using NUnit.Framework;
@@ -208,6 +209,33 @@ namespace log4net.Tests.Hierarchy
 
 			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 			XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
+		}
+
+		[Test]
+		public void GetServiceTest()
+		{
+			try
+			{
+				LoggerManager.GetService = null;
+			}
+			catch (Exception e)
+			{
+				Assert.IsInstanceOf<ArgumentNullException>(e);
+			}
+
+			LoggerManager.GetService = type =>
+			{
+				Assert.AreEqual(typeof(log4net.Repository.Hierarchy.Hierarchy), type);
+
+				return Activator.CreateInstance(type);
+			};
+
+			XmlDocument log4netConfig = new XmlDocument();
+			log4netConfig.LoadXml(@"
+				<log4net>
+				</log4net>");
+
+			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 		}
 	}
 }
