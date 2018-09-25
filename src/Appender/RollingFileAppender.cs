@@ -170,6 +170,57 @@ namespace log4net.Appender
 			Composite	= 3
 		}
 
+		/// <summary>
+		/// Enumeration of all available rolling lock strategies that the <see cref="RollingFileAppender"/> implements
+		/// </summary>
+		public enum RollingLockStrategyKind
+		{
+			/// <summary>
+			/// Do not lock the rolling operation.
+			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// With the lock strategy set to none, the appender assumes
+			/// that it is safe to roll the file without locking. This
+			/// is the default.
+			/// </para>
+			/// </remarks>
+			None = 0,
+
+			/// <summary>
+			/// Lock the rolling operation with a local mutex.
+			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// With the lock strategy set to mutex, the appender creates
+			/// a system wide unique mutex for the file that it writes to
+			/// It acquires the mutex before rolling and releases the mutex
+			/// when the rolling operation is complete. This prevents multiple
+			/// applications to roll over the same file at the same time and
+			/// works around race conditions.
+			/// </para>
+			/// <para>
+			/// While this allows multiple applications to append and roll the
+			/// same file, the mutex creation adds an overhead.
+			/// </para>
+			/// <para>
+			/// This mutex lock strategy does not work when multiple processes
+			/// log to the same file while being run on different machines.
+			/// </para>
+			/// <para>
+			/// This mutex strategy is known to not work when multiple processes
+			/// log to the same file from different accounts on the same machine.
+			/// </para>
+			/// <para>
+			/// This mutex strategy is known to not work when the appender is
+			/// configured in a netstandard library or .NET Core application.
+			/// See <see href="https://issues.apache.org/jira/browse/LOG4NET-611"/>
+			/// for more information.
+			/// </para>
+			/// </remarks>
+			LocalMutex = 1,
+		}
+
 		#endregion
 
 		#region Protected Enums
@@ -241,17 +292,27 @@ namespace log4net.Appender
 		/// </summary>
 		~RollingFileAppender()
 		{
-#if !NETCF
-			if (m_mutexForRolling != null)
+			switch (RollingLockStrategy)
 			{
+				case RollingLockStrategyKind.None:
+					// noop
+					break;
+				case RollingLockStrategyKind.LocalMutex:
+#if !NETCF
+					if (m_mutexForRolling != null)
+					{
 #if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
-				m_mutexForRolling.Dispose();
+						m_mutexForRolling.Dispose();
 #else
-				m_mutexForRolling.Close();
+						m_mutexForRolling.Close();
 #endif
-				m_mutexForRolling = null;
+						m_mutexForRolling = null;
+					}
+#endif
+					break;
+				default:
+					throw new NotImplementedException();
 			}
-#endif
 		}
 
 		#endregion Public Instance Constructors
@@ -492,6 +553,21 @@ namespace log4net.Appender
 		}
 
 		/// <summary>
+		/// Gets or sets the rolling lock strategy.	
+		/// </summary>
+		/// <value>The rolling lock strategy kind.</value>
+		/// <remarks>
+		/// <para>
+		/// The default rolling lock strategy is <see cref="RollingLockStrategyKind.None"/>.
+		/// </para>
+		/// </remarks>
+		public RollingLockStrategyKind RollingLockStrategy
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Gets or sets a value indicating whether to preserve the file name extension when rolling.
 		/// </summary>
 		/// <value>
@@ -616,10 +692,7 @@ namespace log4net.Appender
 			try
 			{
 				// if rolling should be locked, acquire the lock
-				if (m_mutexForRolling != null)
-				{
-					m_mutexForRolling.WaitOne();
-				}
+				ApplyLockStrategyBeforeRolling();
 #endif
 				if (m_rollDate)
 				{
@@ -645,10 +718,7 @@ namespace log4net.Appender
 			finally
 			{
 				// if rolling should be locked, release the lock
-				if (m_mutexForRolling != null)
-				{
-					m_mutexForRolling.ReleaseMutex();
-				}
+				ApplyLockStrategyBeforeRolling();
 			}
 #endif
 		}
@@ -877,33 +947,86 @@ namespace log4net.Appender
 		/// </remarks>
 		protected void ExistingInit()
 		{
-			DetermineCurSizeRollBackups();
-			RollOverIfDateBoundaryCrossing();
-
-			// If file exists and we are not appending then roll it out of the way
-			if (AppendToFile == false)
+			try
 			{
-				bool fileExists = false;
-				string fileName = GetNextOutputFileName(m_baseFileName);
+				ApplyLockStrategyBeforeRolling();
+				DetermineCurSizeRollBackups();
+				RollOverIfDateBoundaryCrossing();
 
-				using(SecurityContext.Impersonate(this))
+				// If file exists and we are not appending then roll it out of the way
+				if (AppendToFile == false)
 				{
-					fileExists = System.IO.File.Exists(fileName);
-				}
+					bool fileExists = false;
+					string fileName = GetNextOutputFileName(m_baseFileName);
 
-				if (fileExists)
-				{
-					if (m_maxSizeRollBackups == 0)
+					using (SecurityContext.Impersonate(this))
 					{
-						LogLog.Debug(declaringType, "Output file ["+fileName+"] already exists. MaxSizeRollBackups is 0; cannot roll. Overwriting existing file.");
+						fileExists = System.IO.File.Exists(fileName);
 					}
-					else
-					{
-						LogLog.Debug(declaringType, "Output file ["+fileName+"] already exists. Not appending to file. Rolling existing file out of the way.");
 
-						RollOverRenameFiles(fileName);
+					if (fileExists)
+					{
+						if (m_maxSizeRollBackups == 0)
+						{
+							LogLog.Debug(declaringType, "Output file [" + fileName + "] already exists. MaxSizeRollBackups is 0; cannot roll. Overwriting existing file.");
+						}
+						else
+						{
+							LogLog.Debug(declaringType, "Output file [" + fileName + "] already exists. Not appending to file. Rolling existing file out of the way.");
+
+							RollOverRenameFiles(fileName);
+						}
 					}
 				}
+			}
+			finally
+			{
+				ApplyLockStrategyAfterRolling();
+			}
+		}
+
+		/// <summary>
+		/// This method is invoked before a rolling operation begins.
+		/// </summary>
+		private void ApplyLockStrategyBeforeRolling()
+		{
+			switch (RollingLockStrategy)
+			{
+				case RollingLockStrategyKind.None:
+					// noop
+					break;
+				case RollingLockStrategyKind.LocalMutex:
+#if !NETCF
+					m_mutexForRolling.WaitOne();
+#else
+					throw new NotImplementedException("Local mutex is not available on NETCF");
+#endif
+					break;
+				default:
+					throw new NotImplementedException();
+			}
+		}
+
+		/// <summary>
+		/// This method is invoked after a rolling operation completed.
+		/// </summary>
+		private void ApplyLockStrategyAfterRolling()
+		{
+			switch (RollingLockStrategy)
+			{
+				case RollingLockStrategyKind.None:
+					// noop
+					break;
+				case RollingLockStrategyKind.LocalMutex:
+#if !NETCF
+					m_mutexForRolling.ReleaseMutex();
+#else
+					throw new NotImplementedException("Local mutex is not available on NETCF");
+#endif
+
+					break;
+				default:
+					throw new NotImplementedException();
 			}
 		}
 
@@ -1116,7 +1239,7 @@ namespace log4net.Appender
 
 				if (m_rollPoint == RollPoint.InvalidRollPoint)
 				{
-					throw new ArgumentException("Invalid RollPoint, unable to parse ["+m_datePattern+"]");
+					throw new ArgumentException("Invalid RollPoint, unable to parse [" + m_datePattern + "]");
 				}
 
 				// next line added as this removes the name check in rollOver
@@ -1126,7 +1249,7 @@ namespace log4net.Appender
 			{
 				if (m_rollDate)
 				{
-					ErrorHandler.Error("Either DatePattern or rollingStyle options are not set for ["+Name+"].");
+					ErrorHandler.Error("Either DatePattern or rollingStyle options are not set for [" + Name + "].");
 				}
 			}
 
@@ -1135,7 +1258,7 @@ namespace log4net.Appender
 				SecurityContext = SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
 			}
 
-			using(SecurityContext.Impersonate(this))
+			using (SecurityContext.Impersonate(this))
 			{
 				// Must convert the FileAppender's m_filePath to an absolute path before we
 				// call ExistingInit(). This will be done by the base.ActivateOptions() but
@@ -1146,10 +1269,23 @@ namespace log4net.Appender
 				m_baseFileName = base.File;
 			}
 
-#if !NETCF
 			// initialize the mutex that is used to lock rolling
-			m_mutexForRolling = new Mutex(false, m_baseFileName.Replace("\\", "_").Replace(":", "_").Replace("/", "_"));
+			switch (RollingLockStrategy)
+			{
+				case RollingLockStrategyKind.None:
+					// nil
+					break;
+				case RollingLockStrategyKind.LocalMutex:
+#if !NETCF
+					m_mutexForRolling = new Mutex(false, m_baseFileName.Replace("\\", "_").Replace(":", "_").Replace("/", "_"));
+#else
+					throw new NotImplementedException("Local mutex is not available on NETCF");
 #endif
+					break;
+				default:
+					throw new NotImplementedException();
+			}
+
 
 			if (m_rollDate && File != null && m_scheduledFilename == null)
 			{
