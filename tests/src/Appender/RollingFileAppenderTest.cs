@@ -1747,6 +1747,18 @@ namespace log4net.Tests.Appender
 			DestroyLogger();
 		}
 
+		[Test, Ignore("Not Implemented: this test should assert that the rolling file appender works when configured with rolling lock strategy none")]
+		public void TestRollingLockStrategyNone()
+		{
+			// TODO
+		}
+
+		[Test, Ignore("Not Implemented: this test should assert that the rolling file appender works when configured with rolling lock strategy local mutex")]
+		public void TestRollingLockStrategyLocalMutex()
+		{
+			// TODO
+		}
+
 		/// <summary>
 		/// Tests the count up case, with infinite max backups , to see that
 		/// initialization of the rolling file appender results in the expected value
