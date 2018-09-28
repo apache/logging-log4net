@@ -563,8 +563,8 @@ namespace log4net.Appender
 		/// </remarks>
 		public RollingLockStrategyKind RollingLockStrategy
 		{
-			get;
-			set;
+			get { return m_rollingLockStrategy; }
+			set { m_rollingLockStrategy = value; }
 		}
 
 		/// <summary>
@@ -1825,6 +1825,11 @@ namespace log4net.Appender
 		/// FileName provided in configuration.  Used for rolling properly
 		/// </summary>
 		private string m_baseFileName;
+
+		/// <summary>
+		/// A strategy that allows users to choose how rolling should be locked.
+		/// </summary>
+		private RollingLockStrategyKind m_rollingLockStrategy = RollingLockStrategyKind.None;
 
 #if !NETCF
 		/// <summary>
