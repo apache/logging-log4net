@@ -32,7 +32,7 @@ using System.Runtime.CompilerServices;
 //
 [assembly: System.CLSCompliant(true)]
 
-#if (!NETCF)
+#if (!(NETCF || NETSTANDARD1_3))
 //
 // If log4net is strongly named it still allows partially trusted callers
 //
