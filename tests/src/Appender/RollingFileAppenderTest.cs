@@ -33,7 +33,6 @@ using log4net.Util;
 using NUnit.Framework;
 using System.Globalization;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace log4net.Tests.Appender
 {
@@ -1787,28 +1786,30 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestRollingLockStrategyLocalMutex()
 		{
-			String filename = c_fileName;
+			String filename = "test_lock.log";
 			SilentErrorHandler sh = new SilentErrorHandler();
-
-			ILogger log = CreateLogger(filename, new FileAppender.MinimalLock(), sh, maxFileSize: 1, maxSizeRollBackups: 2, rollingLockStrategy: RollingFileAppender.RollingLockStrategyKind.LocalMutex);
-			RollingFileAppender appender = (RollingFileAppender) log.Repository.GetAppenders()[0];
 
 			Mutex syncObject = null;
 			try
 			{
+				ILogger log = CreateLogger(filename, new FileAppender.MinimalLock(), sh, maxFileSize: 1, maxSizeRollBackups: 2, rollingLockStrategy: RollingFileAppender.RollingLockStrategyKind.LocalMutex);
+				RollingFileAppender appender = (RollingFileAppender)log.Repository.GetAppenders()[0];
+
 				syncObject = new Mutex(false, appender.File.Replace("\\", "_").Replace(":", "_").Replace("/", "_"));
 				syncObject.WaitOne();
 
 				// Logger should acquire Mutex in different thread
-				var write1 = Task.Factory.StartNew(()=> Assert.DoesNotThrow(delegate { log.Log(GetType(), Level.Info, "1", null); }));
+				var loggerThread = new Thread(o => Assert.DoesNotThrow(delegate { log.Log(GetType(), Level.Info, "1", null); }));
+				loggerThread.Start();
 				// Wait some time 
-				WaitForStart(write1);
+				Thread.Sleep(2000);
 
 				// Since Mutex already locked, log file should be empty
 				AssertFileEquals(filename, string.Empty, cleanup: false);
 
 				syncObject.ReleaseMutex();
-				write1.Wait();
+
+				loggerThread.Join(1000);
 
 				DestroyLogger();
 				AssertFileEquals(filename, "1" + Environment.NewLine);
@@ -1817,20 +1818,8 @@ namespace log4net.Tests.Appender
 			finally
 			{
 				if (syncObject != null)
-				{
 					syncObject.Dispose();
-				}
-
 			}
-		}
-		private void WaitForStart(Task write1)
-		{
-			while (write1.Status != TaskStatus.Running)
-			{
-				Thread.Sleep(100);
-			}
-
-			Thread.Sleep(800);
 		}
 #endif
 
