@@ -1750,24 +1750,11 @@ namespace log4net.Tests.Appender
 		}
 
 		/// <summary>
-		/// Verifies that the rolling file appender works when configured with rolling lock strategy none
+		/// Verifies that the rolling file appender works when configured with rolling lock strategy none and local mutex
 		/// </summary>
-		[Test]
-		public void TestRollingLockStrategyNone()
-		{
-			TestRollingLockStrategy(RollingFileAppender.RollingLockStrategyKind.None);
-		}
-
-		/// <summary>
-		/// Verifies that the rolling file appender works when configured with rolling lock strategy local mutex
-		/// </summary>
-		[Test]
-		public void TestRollingLockStrategyLocalMutex()
-		{
-			TestRollingLockStrategy(RollingFileAppender.RollingLockStrategyKind.LocalMutex);
-		}
-
-		private void TestRollingLockStrategy(RollingFileAppender.RollingLockStrategyKind strategy)
+		[TestCase(RollingFileAppender.RollingLockStrategyKind.LocalMutex)]
+		[TestCase(RollingFileAppender.RollingLockStrategyKind.None)]
+		public void TestRollingLockStrategy(RollingFileAppender.RollingLockStrategyKind strategy)
 		{
 			String filename = c_fileName;
 			SilentErrorHandler sh = new SilentErrorHandler();
@@ -1788,7 +1775,6 @@ namespace log4net.Tests.Appender
 			AssertFileEquals(filename + ".1", "1" + Environment.NewLine);
 			Assert.IsEmpty(sh.Message);
 		}
-
 
 		/// <summary>
 		/// Tests the count up case, with infinite max backups , to see that
