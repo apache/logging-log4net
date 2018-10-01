@@ -1408,9 +1408,25 @@ namespace log4net.Tests.Appender
 		/// <param name="handler">The error handler to use.</param>
 		/// <param name="maxFileSize">Maximum file size for roll</param>
 		/// <param name="maxSizeRollBackups">Maximum number of roll backups</param>
+		/// <returns>A configured ILogger</returns>
+		private static ILogger CreateLogger(string filename, FileAppender.LockingModelBase lockModel, IErrorHandler handler,
+			int maxFileSize, int maxSizeRollBackups)
+		{
+			return CreateLogger(filename, lockModel, handler, maxFileSize, maxSizeRollBackups,
+				RollingFileAppender.RollingLockStrategyKind.None);
+		}
+
+		/// <summary>
+		/// Creates a logger hierarchy, configures a rolling file appender and returns an ILogger
+		/// </summary>
+		/// <param name="filename">The filename to log to</param>
+		/// <param name="lockModel">The locking model to use.</param>
+		/// <param name="handler">The error handler to use.</param>
+		/// <param name="maxFileSize">Maximum file size for roll</param>
+		/// <param name="maxSizeRollBackups">Maximum number of roll backups</param>
 		/// <param name="rollingLockStrategy">Rolling lock strategy</param>
 		/// <returns>A configured ILogger</returns>
-		private static ILogger CreateLogger(string filename, FileAppender.LockingModelBase lockModel, IErrorHandler handler, int maxFileSize, int maxSizeRollBackups, RollingFileAppender.RollingLockStrategyKind rollingLockStrategy = RollingFileAppender.RollingLockStrategyKind.None)
+		private static ILogger CreateLogger(string filename, FileAppender.LockingModelBase lockModel, IErrorHandler handler, int maxFileSize, int maxSizeRollBackups, RollingFileAppender.RollingLockStrategyKind rollingLockStrategy)
 		{
 			Repository.Hierarchy.Hierarchy h = (Repository.Hierarchy.Hierarchy)LogManager.CreateRepository("TestRepository");
 
@@ -1454,7 +1470,12 @@ namespace log4net.Tests.Appender
 			LoggerManager.RepositorySelector = new DefaultRepositorySelector(typeof(log4net.Repository.Hierarchy.Hierarchy));
 		}
 
-		private static void AssertFileEquals(string filename, string contents, bool cleanup = true)
+		private static void AssertFileEquals(string filename, string contents)
+		{
+			AssertFileEquals(filename, contents, true);
+		}
+
+		private static void AssertFileEquals(string filename, string contents, bool cleanup)
 		{
 #if NETSTANDARD1_3
 			StreamReader sr = new StreamReader(File.Open(filename, FileMode.Open));
@@ -1799,7 +1820,18 @@ namespace log4net.Tests.Appender
 				syncObject.WaitOne();
 
 				// Logger should acquire Mutex in different thread
-				var loggerThread = new Thread(o => Assert.DoesNotThrow(delegate { log.Log(GetType(), Level.Info, "1", null); }));
+				var loggerThread = new Thread
+				(
+					delegate(object o)
+					{
+						Assert.DoesNotThrow(
+							delegate
+							{
+								log.Log(GetType(), Level.Info, "1", null);
+							});
+
+					}
+				);
 				loggerThread.Start();
 				// Wait some time 
 				Thread.Sleep(2000);
