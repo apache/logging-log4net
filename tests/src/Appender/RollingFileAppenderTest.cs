@@ -1820,7 +1820,7 @@ namespace log4net.Tests.Appender
 				syncObject.WaitOne();
 
 				// Logger should acquire Mutex in different thread
-				var loggerThread = new Thread
+				Thread loggerThread = new Thread
 				(
 					delegate(object o)
 					{
@@ -1850,7 +1850,13 @@ namespace log4net.Tests.Appender
 			finally
 			{
 				if (syncObject != null)
+				{
+#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
 					syncObject.Dispose();
+#else
+					syncObject.Close();
+#endif
+				}
 			}
 		}
 #endif
