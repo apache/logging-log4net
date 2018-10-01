@@ -1782,7 +1782,7 @@ namespace log4net.Tests.Appender
 		{
 			String filename = c_fileName;
 			SilentErrorHandler sh = new SilentErrorHandler();
-			ILogger log = CreateLogger(filename, null, sh, maxFileSize: 1, maxSizeRollBackups: 2, rollingLockStrategy: strategy);
+			ILogger log = CreateLogger(filename, null, sh, 1, 2, strategy);
 
 			IAppender[] appenders = log.Repository.GetAppenders();
 			Assert.AreEqual(1, appenders.Length, "The wrong number of appenders are configured");
@@ -1813,7 +1813,7 @@ namespace log4net.Tests.Appender
 			Mutex syncObject = null;
 			try
 			{
-				ILogger log = CreateLogger(filename, new FileAppender.MinimalLock(), sh, maxFileSize: 1, maxSizeRollBackups: 2, rollingLockStrategy: RollingFileAppender.RollingLockStrategyKind.LocalMutex);
+				ILogger log = CreateLogger(filename, new FileAppender.MinimalLock(), sh, 1, 2, RollingFileAppender.RollingLockStrategyKind.LocalMutex);
 				RollingFileAppender appender = (RollingFileAppender)log.Repository.GetAppenders()[0];
 
 				syncObject = new Mutex(false, appender.File.Replace("\\", "_").Replace(":", "_").Replace("/", "_"));
@@ -1837,7 +1837,7 @@ namespace log4net.Tests.Appender
 				Thread.Sleep(2000);
 
 				// Since Mutex already locked, log file should be empty
-				AssertFileEquals(filename, string.Empty, cleanup: false);
+				AssertFileEquals(filename, string.Empty, false);
 
 				syncObject.ReleaseMutex();
 
