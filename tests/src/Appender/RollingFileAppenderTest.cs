@@ -32,6 +32,8 @@ using log4net.Util;
 
 using NUnit.Framework;
 using System.Globalization;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace log4net.Tests.Appender
 {
@@ -1453,19 +1455,21 @@ namespace log4net.Tests.Appender
 			LoggerManager.RepositorySelector = new DefaultRepositorySelector(typeof(log4net.Repository.Hierarchy.Hierarchy));
 		}
 
-		private static void AssertFileEquals(string filename, string contents)
+		private static void AssertFileEquals(string filename, string contents, bool cleanup = true)
 		{
 #if NETSTANDARD1_3
 			StreamReader sr = new StreamReader(File.Open(filename, FileMode.Open));
 #else
 			StreamReader sr = new StreamReader(filename);
 #endif
+
 			string logcont = sr.ReadToEnd();
 			sr.Close();
 
 			Assert.AreEqual(contents, logcont, "Log contents is not what is expected");
 
-			File.Delete(filename);
+			if (cleanup)
+				File.Delete(filename);
 		}
 
 		/// <summary>
@@ -1775,6 +1779,60 @@ namespace log4net.Tests.Appender
 			AssertFileEquals(filename + ".1", "1" + Environment.NewLine);
 			Assert.IsEmpty(sh.Message);
 		}
+
+#if !NETCF
+		/// <summary>
+		/// Verifies that the local mutex  rolling lock strategy works
+		/// </summary>
+		[Test]
+		public void TestRollingLockStrategyLocalMutex()
+		{
+			String filename = c_fileName;
+			SilentErrorHandler sh = new SilentErrorHandler();
+
+			ILogger log = CreateLogger(filename, new FileAppender.MinimalLock(), sh, maxFileSize: 1, maxSizeRollBackups: 2, rollingLockStrategy: RollingFileAppender.RollingLockStrategyKind.LocalMutex);
+			RollingFileAppender appender = (RollingFileAppender) log.Repository.GetAppenders()[0];
+
+			Mutex syncObject = null;
+			try
+			{
+				syncObject = new Mutex(false, appender.File.Replace("\\", "_").Replace(":", "_").Replace("/", "_"));
+				syncObject.WaitOne();
+
+				// Logger should acquire Mutex in different thread
+				var write1 = Task.Factory.StartNew(()=> Assert.DoesNotThrow(delegate { log.Log(GetType(), Level.Info, "1", null); }));
+				// Wait some time 
+				WaitForStart(write1);
+
+				// Since Mutex already locked, log file should be empty
+				AssertFileEquals(filename, string.Empty, cleanup: false);
+
+				syncObject.ReleaseMutex();
+				write1.Wait();
+
+				DestroyLogger();
+				AssertFileEquals(filename, "1" + Environment.NewLine);
+				Assert.IsEmpty(sh.Message);
+			}
+			finally
+			{
+				if (syncObject != null)
+				{
+					syncObject.Dispose();
+				}
+
+			}
+		}
+		private void WaitForStart(Task write1)
+		{
+			while (write1.Status != TaskStatus.Running)
+			{
+				Thread.Sleep(100);
+			}
+
+			Thread.Sleep(800);
+		}
+#endif
 
 		/// <summary>
 		/// Tests the count up case, with infinite max backups , to see that
