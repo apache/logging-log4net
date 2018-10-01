@@ -1407,8 +1407,9 @@ namespace log4net.Tests.Appender
 		/// <param name="handler">The error handler to use.</param>
 		/// <param name="maxFileSize">Maximum file size for roll</param>
 		/// <param name="maxSizeRollBackups">Maximum number of roll backups</param>
+		/// <param name="rollingLockStrategy">Rolling lock strategy</param>
 		/// <returns>A configured ILogger</returns>
-		private static ILogger CreateLogger(string filename, FileAppender.LockingModelBase lockModel, IErrorHandler handler, int maxFileSize, int maxSizeRollBackups)
+		private static ILogger CreateLogger(string filename, FileAppender.LockingModelBase lockModel, IErrorHandler handler, int maxFileSize, int maxSizeRollBackups, RollingFileAppender.RollingLockStrategyKind rollingLockStrategy = RollingFileAppender.RollingLockStrategyKind.None)
 		{
 			Repository.Hierarchy.Hierarchy h = (Repository.Hierarchy.Hierarchy)LogManager.CreateRepository("TestRepository");
 
@@ -1421,6 +1422,7 @@ namespace log4net.Tests.Appender
 			appender.Encoding = Encoding.ASCII;
 			appender.ErrorHandler = handler;
 			appender.MaxSizeRollBackups = maxSizeRollBackups;
+			appender.RollingLockStrategy = rollingLockStrategy;
 			if (lockModel != null)
 			{
 				appender.LockingModel = lockModel;
@@ -1747,17 +1749,46 @@ namespace log4net.Tests.Appender
 			DestroyLogger();
 		}
 
-		[Test, Ignore("Not Implemented: this test should assert that the rolling file appender works when configured with rolling lock strategy none")]
+		/// <summary>
+		/// Verifies that the rolling file appender works when configured with rolling lock strategy none
+		/// </summary>
+		[Test]
 		public void TestRollingLockStrategyNone()
 		{
-			// TODO
+			TestRollingLockStrategy(RollingFileAppender.RollingLockStrategyKind.None);
 		}
 
-		[Test, Ignore("Not Implemented: this test should assert that the rolling file appender works when configured with rolling lock strategy local mutex")]
+		/// <summary>
+		/// Verifies that the rolling file appender works when configured with rolling lock strategy local mutex
+		/// </summary>
+		[Test]
 		public void TestRollingLockStrategyLocalMutex()
 		{
-			// TODO
+			TestRollingLockStrategy(RollingFileAppender.RollingLockStrategyKind.LocalMutex);
 		}
+
+		private void TestRollingLockStrategy(RollingFileAppender.RollingLockStrategyKind strategy)
+		{
+			String filename = c_fileName;
+			SilentErrorHandler sh = new SilentErrorHandler();
+			ILogger log = CreateLogger(filename, null, sh, maxFileSize: 1, maxSizeRollBackups: 2, rollingLockStrategy: strategy);
+
+			IAppender[] appenders = log.Repository.GetAppenders();
+			Assert.AreEqual(1, appenders.Length, "The wrong number of appenders are configured");
+
+			RollingFileAppender rfa = (RollingFileAppender)(appenders[0]);
+			Assert.AreEqual(strategy, rfa.RollingLockStrategy, string.Format("The RollingLockStrategy should be {0}", strategy.ToString()));
+
+			Assert.DoesNotThrow(delegate { log.Log(GetType(), Level.Info, "1", null); });
+			Assert.DoesNotThrow(delegate { log.Log(GetType(), Level.Info, "2", null); });
+
+			DestroyLogger();
+
+			AssertFileEquals(filename, "2" + Environment.NewLine);
+			AssertFileEquals(filename + ".1", "1" + Environment.NewLine);
+			Assert.IsEmpty(sh.Message);
+		}
+
 
 		/// <summary>
 		/// Tests the count up case, with infinite max backups , to see that
