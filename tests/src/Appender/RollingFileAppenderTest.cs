@@ -1774,7 +1774,7 @@ namespace log4net.Tests.Appender
 		}
 
 		/// <summary>
-		/// Verifies that the rolling file appender works when configured with rolling lock strategy none and local mutex
+		/// Verifies that the rolling file appender works when configured with rolling lock strategy
 		/// </summary>
 		[TestCase(RollingFileAppender.RollingLockStrategyKind.LocalMutex)]
 		[TestCase(RollingFileAppender.RollingLockStrategyKind.None)]
