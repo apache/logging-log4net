@@ -45,7 +45,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - The xml documentation of the debug level was fixed.
 - The rolling file appender does not work with exclusive file locks on linux and the tests do now reflect that fact.
-- A regression in the `ReadOnlyPropertiesDictionary` was fixed. It caused `NullReferenceException`s at runtime. Thanks to Vlad Lee who kindly provided the patch. This issue is tracked by [LOG4NET-581](https://issues.apache.org/jira/browse/LOG4NET-581).
+- A regression in the `ReadOnlyPropertiesDictionary` was fixed. It caused `NullReferenceException`s at runtime. Thanks to Vlad Lee who kindly provided the patch. Tracked by [LOG4NET-581](https://issues.apache.org/jira/browse/LOG4NET-581).
 - A regression in the `AdoNetAppender` caused the appender to not work with the postgresql database provider because the provider would not detect database parameter names if they are added after a `Prepare()` on a `DbCommand`. Tracked by [LOG4NET-538](https://issues.apache.org/jira/browse/LOG4NET-538).
 - Fixed a typo in the website manuals where `log4net.LogicalThreadContext` was referenced as `log4net.ThreadLogicalContext`. Thanks to Marcel Gosselin who kindly provided the patch.
 - The `RollingFileAppender` does now honor the `PreserveLogFileNameExtension` flag when rolling over files with `StaticLogFileName` set to `false`.
