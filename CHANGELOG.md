@@ -32,6 +32,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
+- log4net is no longer built against `netstandard-1.3` with the `AllowPartiallyTrustedCallers` attribute. This change can be a breaking change for applications that reference log4net built against `netstandard-1.3` and require log4net to work in partially trusted environments. Note however that all code is security transparent by default since `.NET Framework 4`, which is what partially trusted environments provided before `.NET Framework 4`. See [the official documentation](https://docs.microsoft.com/en-us/dotnet/api/system.security.allowpartiallytrustedcallersattribute) for further information. Tracked by [LOG4NET-611](https://issues.apache.org/jira/browse/LOG4NET-611).
 - The `XmlConfigurator` does not longer allow dtd processing. This is a breaking change for applications that rely on dtd's to be processed when log4net loads the xml configuration file. Tracked by [LOG4NET-575](https://issues.apache.org/jira/browse/LOG4NET-575).
 - The indentations are now all tabs in all project files. They used to be a mix of tabs, 4-spaces or 2-spaces. Editors should now pick up that new codestyle because an `.editorconfig` file was added.
 - The `KEYS` file was changed to be in markdown format.
