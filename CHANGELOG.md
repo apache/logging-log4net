@@ -29,6 +29,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - A security report page was added that provides a central place for security vulnerabilities.
 - Validation of logger names was added to harden the code that evaluates logger names. Tracked by [LOG4NET-580](https://issues.apache.org/jira/browse/LOG4NET-580).
 - Added a safety net of null checks to avoid `NullReferenceExceptions` in the `TypeNamePatternConverter`. Tracked by [LOG4NET-559](https://issues.apache.org/jira/browse/LOG4NET-559).
+- The `RollingFileAppender` does now allow the rolling lock to be configured with the `RollingLockStrategy` property. The rolling lock strategies available are `None` and `LocalMutex`. See remarks for further details. Tracked by [LOG4NET-611](https://issues.apache.org/jira/browse/LOG4NET-611).
+
 
 ### Changed
 
@@ -40,6 +42,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Changed the `CONTRIBUTING.md` and `ReleaseInstructions.md` to match closer the new reality.
 - Changed the mailing lists in the site to reflect the new reality.
 - Changed the site to look more like other apache logging service project sites. Tracked by [LOG4NET-563](https://issues.apache.org/jira/browse/LOG4NET-563).
+- Upgraded nunit from `2.6.4` to `2.6.7`.
 
 ### Fixed
 
