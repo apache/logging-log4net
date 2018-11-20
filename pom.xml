@@ -157,8 +157,6 @@
             <!-- really README files -->
             <exclude>*.snk*</exclude>
             <exclude>tests/lib/prerequisites.txt</exclude>
-            <exclude>CONTRIBUTING.md</exclude>
-            <exclude>ReleaseInstructions.txt</exclude>
 
 	    <!-- can't have comments in JSON -->
 	    <exclude>**/*.json</exclude>
@@ -172,7 +170,7 @@
         <reportSets>
           <reportSet>
             <reports>
-              <report>cim</report>	
+              <report>cim</report>
               <report>scm</report>
               <report>license</report>
               <report>project-team</report>
@@ -260,5 +258,5 @@
       <id>logging.site</id>
       <url>file:///${user.dir}/target/site-deploy</url>
     </site>
-  </distributionManagement> 
+  </distributionManagement>
 </project>

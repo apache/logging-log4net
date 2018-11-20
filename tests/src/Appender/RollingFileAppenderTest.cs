@@ -1624,7 +1624,9 @@ namespace log4net.Tests.Appender
 
 			Assert.IsTrue(locked, "File was not locked");
 #if !MONO || MONO_3_5 || MONO_4_0 // at least on Linux with Mono 2.4 exclusive locking doesn't work as one would expect
+#if !NET_STANDARD_1_ON_LINUX // exclusive locking doesn't seem to work properly on .NET Core 1.x on Linux
 			AssertFileEquals(filename, "This is a message" + Environment.NewLine + "This is a message 2" + Environment.NewLine);
+#endif
 #endif
 			Assert.AreEqual("", sh.Message, "Unexpected error message");
 		}
