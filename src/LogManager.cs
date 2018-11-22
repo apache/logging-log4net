@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using System.Reflection;
 
 using log4net.Core;
@@ -261,16 +262,29 @@ namespace log4net
 #endif
 		}
 
-		/// <summary>
-		/// Shorthand for <see cref="M:LogManager.GetLogger(string)"/>.
-		/// </summary>
-		/// <remarks>
-		/// Gets the logger for the fully qualified name of the type specified.
-		/// </remarks>
-		/// <param name="repository">The repository to lookup in.</param>
-		/// <param name="type">The full name of <paramref name="type"/> will be used as the name of the logger to retrieve.</param>
-		/// <returns>The logger with the name specified.</returns>
-		public static ILog GetLogger(string repository, Type type) 
+        /// <summary>
+        /// Shorthand for <see cref="M:LogManager.GetLogger()"/>.
+        /// </summary>
+        /// <remarks>
+        /// Get the logger for the fully qualified name of the type of the caller.
+        /// </remarks>
+        /// <returns>The logger with the name specified.</returns>
+        public static ILog GetLogger()
+        {
+            var callingMethod = new StackTrace().GetFrame(1).GetMethod();
+            return GetLogger(callingMethod.DeclaringType);
+        }
+
+        /// <summary>
+        /// Shorthand for <see cref="M:LogManager.GetLogger(string)"/>.
+        /// </summary>
+        /// <remarks>
+        /// Gets the logger for the fully qualified name of the type specified.
+        /// </remarks>
+        /// <param name="repository">The repository to lookup in.</param>
+        /// <param name="type">The full name of <paramref name="type"/> will be used as the name of the logger to retrieve.</param>
+        /// <returns>The logger with the name specified.</returns>
+        public static ILog GetLogger(string repository, Type type) 
 		{
 			return WrapLogger(LoggerManager.GetLogger(repository, type));
 		}
