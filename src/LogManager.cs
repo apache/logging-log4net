@@ -267,6 +267,7 @@ namespace log4net
         /// </summary>
         /// <remarks>
         /// Get the logger for the fully qualified name of the type of the caller.
+        /// LogManager.GetLogger() is equivalent to LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         /// </remarks>
         /// <returns>The logger with the name specified.</returns>
         public static ILog GetLogger()
