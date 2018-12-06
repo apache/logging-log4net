@@ -28,6 +28,11 @@ using System.Text;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Collections;
+using System.Globalization;
+using System.Linq;
+using System.Security;
+using System.Web;
+using System.Web.Hosting;
 
 namespace log4net.Util
 {
@@ -463,6 +468,33 @@ namespace log4net.Util
 			get { return s_notAvailableText; }
 			set { s_notAvailableText = value; }
 		}
+
+        /// <summary>
+        /// Get the unique identifier for the application
+        /// </summary>
+        /// <remarks>
+        /// The unique identifier for the application is specific to hosted web applications and is resolved from either
+        /// <see cref="HostingEnvironment.ApplicationID"/> or <see cref="HttpRuntime.AppDomainAppId"/>
+        ///
+        /// This returns an empty string if the value cannot be resolved (i.e. if this isn't a hosted application or
+        /// if the current security policy doesn't allow it)
+        /// </remarks>
+	    public static string ApplicationUniqueId
+	    {
+	        get
+	        {
+	            string appDomainAppId = string.Empty;
+	            try
+	            {
+	                appDomainAppId = ReplaceNonAlphanumericChars(HostingEnvironment.ApplicationID, string.Empty);
+	            }
+	            catch (SecurityException)
+	            {
+	                //cannot acquire, must be running in a reduced trust level
+	            }
+	            return appDomainAppId;
+	        }
+	    }
 
 		#endregion Public Static Properties
 
@@ -1108,9 +1140,20 @@ namespace log4net.Util
 #endif
 		}
 
-		#endregion Public Static Methods
+        #endregion Public Static Methods
 
-		#region Private Static Methods
+        #region Private Static Methods
+
+	    private static string ReplaceNonAlphanumericChars(string input, string replacement)
+	    {
+	        if (string.IsNullOrWhiteSpace(input)) return string.Empty;
+	        var mName = input;
+	        foreach (var c in mName.ToCharArray().Where(c => !char.IsLetterOrDigit(c)))
+	        {
+	            mName = mName.Replace(c.ToString(CultureInfo.InvariantCulture), replacement);
+	        }
+	        return mName;
+        }
 
 #if NETCF
 		private static string NativeEntryAssemblyLocation
@@ -1149,20 +1192,20 @@ namespace log4net.Util
 
 #endif
 
-		#endregion Private Static Methods
+        #endregion Private Static Methods
 
-		#region Public Static Fields
+        #region Public Static Fields
 
-		/// <summary>
-		/// Gets an empty array of types.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// The <c>Type.EmptyTypes</c> field is not available on
-		/// the .NET Compact Framework 1.0.
-		/// </para>
-		/// </remarks>
-		public static readonly Type[] EmptyTypes = new Type[0];
+        /// <summary>
+        /// Gets an empty array of types.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The <c>Type.EmptyTypes</c> field is not available on
+        /// the .NET Compact Framework 1.0.
+        /// </para>
+        /// </remarks>
+        public static readonly Type[] EmptyTypes = new Type[0];
 
 		#endregion Public Static Fields
 

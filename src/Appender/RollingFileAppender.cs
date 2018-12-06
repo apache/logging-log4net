@@ -21,10 +21,11 @@ using System;
 using System.Collections;
 using System.Globalization;
 using System.IO;
-
+using System.Security;
 using log4net.Util;
 using log4net.Core;
 using System.Threading;
+using System.Web.Hosting;
 
 namespace log4net.Appender
 {
@@ -1147,8 +1148,20 @@ namespace log4net.Appender
 			}
 
 #if !NETCF
-			// initialize the mutex that is used to lock rolling
-			m_mutexForRolling = new Mutex(false, m_baseFileName.Replace("\\", "_").Replace(":", "_").Replace("/", "_"));
+
+            //The Mutex name must be unique to this site since this is a system wide lock. If only the base
+            //filename is used then when hosting on applicances like Azure where all website base paths are the
+            //same (i.e. C:\home\site\wwwroot ), then if running the same type of website on the same server
+            //where the log file is the same (i.e. C:\home\site\wwwroot\app_data\log.txt ), 
+            //logging won't be possible for any of those sites since they will all share the same Mutex.
+            //This is why the ApplicationUniqueId is used here.
+
+		    var mutexName = string.Concat(
+		        m_baseFileName.Replace("\\", "_").Replace(":", "_").Replace("/", "_"),
+		        SystemInfo.ApplicationUniqueId);
+
+            // initialize the mutex that is used to lock rolling
+            m_mutexForRolling = new Mutex(false, mutexName);
 #endif
 
 			if (m_rollDate && File != null && m_scheduledFilename == null)
