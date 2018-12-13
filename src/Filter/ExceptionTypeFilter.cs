@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,8 +34,7 @@ namespace log4net.Filter
                 && myExceptionType != null
                 && loggingEvent.ExceptionObject != null)
             {
-
-                var myIsMatched = myExceptionType.IsInstanceOfType(loggingEvent.ExceptionObject);
+                var myIsMatched = myExceptionType.IsAssignableFrom(loggingEvent.ExceptionObject.GetType());
 
                 if (this.AcceptOnMatch)
                 {
