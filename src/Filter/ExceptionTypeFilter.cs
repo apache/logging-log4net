@@ -45,6 +45,21 @@ namespace log4net.Filter
             }
         }
 
+        /// <summary>
+        /// Check if the event should be logged.
+        /// </summary>
+        /// <param name="loggingEvent">the logging event to check</param>
+        /// <returns>see remarks</returns>
+        /// <remarks>
+        /// <para>
+        /// If the <see cref="Level"/> of the logging event is outside the range
+        /// matched by this filter then <see cref="FilterDecision.Deny"/>
+        /// is returned. If the <see cref="Level"/> is matched then the value of
+        /// <see cref="AcceptOnMatch"/> is checked. If it is true then
+        /// <see cref="FilterDecision.Accept"/> is returned, otherwise
+        /// <see cref="FilterDecision.Neutral"/> is returned.
+        /// </para>
+        /// </remarks>
         public override FilterDecision Decide(LoggingEvent loggingEvent)
         {
             if (String.IsNullOrEmpty(this.ExceptionTypeName))
