@@ -5,6 +5,9 @@ using System.Text;
 
 namespace log4net.Filter
 {
+    /// <summary>
+    /// Filter the exception type name
+    /// </summary>
     public class ExceptionTypeFilter : FilterSkeleton
     {
 
@@ -47,13 +50,13 @@ namespace log4net.Filter
             if (String.IsNullOrEmpty(this.ExceptionTypeName))
                 return FilterDecision.Neutral;
 
-            var myExceptionType = Type.GetType(this.ExceptionTypeName, false);
+            Type myExceptionType = Type.GetType(this.ExceptionTypeName, false);
 
             if (this.ExceptionTypeName != null
                 && myExceptionType != null
                 && loggingEvent.ExceptionObject != null)
             {
-                var myIsMatched = myExceptionType.IsAssignableFrom(loggingEvent.ExceptionObject.GetType());
+                bool myIsMatched = myExceptionType.IsAssignableFrom(loggingEvent.ExceptionObject.GetType());
 
                 if (this.AcceptOnMatch)
                 {
