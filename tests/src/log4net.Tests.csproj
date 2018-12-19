@@ -190,7 +190,6 @@
     <Compile Include="Core\StringFormatTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Filter\ExceptionTypeFilterTest.cs" />
     <Compile Include="Hierarchy\Hierarchy.cs" />
     <Compile Include="Hierarchy\Logger.cs">
       <SubType>Code</SubType>
