@@ -148,15 +148,15 @@ namespace log4net.Core
 		/// </remarks>
 		public string UserName;
 
-        /// <summary>
-        /// String representation of the identity.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// String representation of the current thread's principal identity.
-        /// </para>
-        /// </remarks>
-        public string Identity;
+		/// <summary>
+		/// String representation of the identity.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// String representation of the current thread's principal identity.
+		/// </para>
+		/// </remarks>
+		public string Identity;
 
 		/// <summary>
 		/// The string representation of the exception
@@ -190,19 +190,19 @@ namespace log4net.Core
 		/// </remarks>
 		public PropertiesDictionary Properties;
 
-        #endregion Public Instance Fields
-    }
+		#endregion Public Instance Fields
+	}
 
-    /// <summary>
-    /// Flags passed to the <see cref="LoggingEvent.Fix"/> property
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Flags passed to the <see cref="LoggingEvent.Fix"/> property
-    /// </para>
-    /// </remarks>
-    /// <author>Nicko Cadell</author>
-    [Flags] public enum FixFlags
+	/// <summary>
+	/// Flags passed to the <see cref="LoggingEvent.Fix"/> property
+	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// Flags passed to the <see cref="LoggingEvent.Fix"/> property
+	/// </para>
+	/// </remarks>
+	/// <author>Nicko Cadell</author>
+	[Flags] public enum FixFlags
 	{
 		/// <summary>
 		/// Fix the MDC
@@ -264,10 +264,10 @@ namespace log4net.Core
 		/// </summary>
 		Properties = 0x200,
 
-        /// <summary>
-        /// No fields fixed
-        /// </summary>
-        None = 0x0,
+		/// <summary>
+		/// No fields fixed
+		/// </summary>
+		None = 0x0,
 
 		/// <summary>
 		/// All fields fixed
@@ -855,8 +855,8 @@ namespace log4net.Core
 			{
 				if (m_data.UserName == null  && this.m_cacheUpdatable) 
 				{
-                    m_data.UserName = SystemInfo.GetCurrentUserName();
-                }
+					m_data.UserName = SystemInfo.GetCurrentUserName();
+				}
 				return m_data.UserName;
 			}
 		}
@@ -1341,13 +1341,13 @@ namespace log4net.Core
 				compositeProperties.Add(threadProperties);
 			}
 
-            // TODO: Add Repository Properties
+			// TODO: Add Repository Properties
 
-            // event properties
-            PropertiesDictionary eventProperties = new PropertiesDictionary();
-            eventProperties[UserNameProperty] = UserName;
-            eventProperties[IdentityProperty] = Identity;
-            compositeProperties.Add(eventProperties);
+			// event properties
+			PropertiesDictionary eventProperties = new PropertiesDictionary();
+			eventProperties[UserNameProperty] = UserName;
+			eventProperties[IdentityProperty] = Identity;
+			compositeProperties.Add(eventProperties);
 
 			compositeProperties.Add(GlobalContext.Properties.GetReadOnlyProperties());
                         m_compositeProperties = compositeProperties;
