@@ -148,15 +148,15 @@ namespace log4net.Core
 		/// </remarks>
 		public string UserName;
 
-		/// <summary>
-		/// String representation of the identity.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// String representation of the current thread's principal identity.
-		/// </para>
-		/// </remarks>
-		public string Identity;
+        /// <summary>
+        /// String representation of the identity.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// String representation of the current thread's principal identity.
+        /// </para>
+        /// </remarks>
+        public string Identity;
 
 		/// <summary>
 		/// The string representation of the exception
@@ -190,19 +190,19 @@ namespace log4net.Core
 		/// </remarks>
 		public PropertiesDictionary Properties;
 
-		#endregion Public Instance Fields
-	}
+        #endregion Public Instance Fields
+    }
 
-	/// <summary>
-	/// Flags passed to the <see cref="LoggingEvent.Fix"/> property
-	/// </summary>
-	/// <remarks>
-	/// <para>
-	/// Flags passed to the <see cref="LoggingEvent.Fix"/> property
-	/// </para>
-	/// </remarks>
-	/// <author>Nicko Cadell</author>
-	[Flags] public enum FixFlags
+    /// <summary>
+    /// Flags passed to the <see cref="LoggingEvent.Fix"/> property
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Flags passed to the <see cref="LoggingEvent.Fix"/> property
+    /// </para>
+    /// </remarks>
+    /// <author>Nicko Cadell</author>
+    [Flags] public enum FixFlags
 	{
 		/// <summary>
 		/// Fix the MDC
@@ -264,10 +264,10 @@ namespace log4net.Core
 		/// </summary>
 		Properties = 0x200,
 
-		/// <summary>
-		/// No fields fixed
-		/// </summary>
-		None = 0x0,
+        /// <summary>
+        /// No fields fixed
+        /// </summary>
+        None = 0x0,
 
 		/// <summary>
 		/// All fields fixed
@@ -849,53 +849,14 @@ namespace log4net.Core
 		/// underlying runtime has no support for retrieving the name of the 
 		/// current user.
 		/// </value>
-		/// <remarks>
-		/// <para>
-		/// Calls <c>WindowsIdentity.GetCurrent().Name</c> to get the name of
-		/// the current windows user.
-		/// </para>
-		/// <para>
-		/// To improve performance, we could cache the string representation of 
-		/// the name, and reuse that as long as the identity stayed constant.  
-		/// Once the identity changed, we would need to re-assign and re-render 
-		/// the string.
-		/// </para>
-		/// <para>
-		/// However, the <c>WindowsIdentity.GetCurrent()</c> call seems to 
-		/// return different objects every time, so the current implementation 
-		/// doesn't do this type of caching.
-		/// </para>
-		/// <para>
-		/// Timing for these operations:
-		/// </para>
-		/// <list type="table">
-		///   <listheader>
-		///     <term>Method</term>
-		///     <description>Results</description>
-		///   </listheader>
-		///   <item>
-		///	    <term><c>WindowsIdentity.GetCurrent()</c></term>
-		///	    <description>10000 loops, 00:00:00.2031250 seconds</description>
-		///   </item>
-		///   <item>
-		///	    <term><c>WindowsIdentity.GetCurrent().Name</c></term>
-		///	    <description>10000 loops, 00:00:08.0468750 seconds</description>
-		///   </item>
-		/// </list>
-		/// <para>
-		/// This means we could speed things up almost 40 times by caching the 
-		/// value of the <c>WindowsIdentity.GetCurrent().Name</c> property, since 
-		/// this takes (8.04-0.20) = 7.84375 seconds.
-		/// </para>
-		/// </remarks>
 		public string UserName
 		{
 			get
 			{
 				if (m_data.UserName == null  && this.m_cacheUpdatable) 
 				{
-					m_data.UserName = SystemInfo.GetCurrentUserName();
-				}
+                    m_data.UserName = SystemInfo.GetCurrentUserName();
+                }
 				return m_data.UserName;
 			}
 		}
@@ -1380,13 +1341,13 @@ namespace log4net.Core
 				compositeProperties.Add(threadProperties);
 			}
 
-			// TODO: Add Repository Properties
+            // TODO: Add Repository Properties
 
-			// event properties
-			PropertiesDictionary eventProperties = new PropertiesDictionary();
-			eventProperties[UserNameProperty] = UserName;
-			eventProperties[IdentityProperty] = Identity;
-			compositeProperties.Add(eventProperties);
+            // event properties
+            PropertiesDictionary eventProperties = new PropertiesDictionary();
+            eventProperties[UserNameProperty] = UserName;
+            eventProperties[IdentityProperty] = Identity;
+            compositeProperties.Add(eventProperties);
 
 			compositeProperties.Add(GlobalContext.Properties.GetReadOnlyProperties());
                         m_compositeProperties = compositeProperties;
