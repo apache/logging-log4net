@@ -28,6 +28,9 @@ using System.Text;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Collections;
+#if (!NETCF && !SSCLI && !NETSTANDARD1_3)
+using System.Security.Principal;
+#endif
 
 namespace log4net.Util
 {
@@ -44,14 +47,14 @@ namespace log4net.Util
 	/// <author>Alexey Solofnenko</author>
 	public sealed class SystemInfo
 	{
-		#region Private Constants
+#region Private Constants
 
 		private const string DEFAULT_NULL_TEXT = "(null)";
 		private const string DEFAULT_NOT_AVAILABLE_TEXT = "NOT AVAILABLE";
 
-		#endregion
+#endregion
 
-		#region Private Instance Constructors
+#region Private Instance Constructors
 
 		/// <summary>
 		/// Private constructor to prevent instances.
@@ -65,9 +68,9 @@ namespace log4net.Util
 		{
 		}
 
-		#endregion Private Instance Constructors
+#endregion Private Instance Constructors
 
-		#region Public Static Constructor
+#region Public Static Constructor
 
 		/// <summary>
 		/// Initialize default values for private static fields.
@@ -103,9 +106,9 @@ namespace log4net.Util
 			s_nullText = nullText;
 		}
 
-		#endregion
+#endregion
 
-		#region Public Static Properties
+#region Public Static Properties
 
 		/// <summary>
 		/// Gets the system dependent line terminator.
@@ -464,9 +467,9 @@ namespace log4net.Util
 			set { s_notAvailableText = value; }
 		}
 
-		#endregion Public Static Properties
+#endregion Public Static Properties
 
-		#region Public Static Methods
+#region Public Static Methods
 
 		/// <summary>
 		/// Gets the assembly location path for the specified assembly.
@@ -1108,9 +1111,62 @@ namespace log4net.Util
 #endif
         }
 
-		#endregion Public Static Methods
+        /// <summary>
+		/// Gets the name of the current user.
+		/// </summary>
+		/// <value>
+		/// The name of the current user, or <c>NOT AVAILABLE</c> when the 
+		/// underlying runtime has no support for retrieving the name of the 
+		/// current user.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// Calls <c>WindowsIdentity.GetCurrent().Name</c> to get the name of
+		/// the current windows user.
+		/// </para>
+		/// <para>
+		/// To improve performance, we cache the string representation of 
+		/// the name, and reuse that as long as the SID stayed constant.  
+		/// Once the SID changes, we need to re-get the name.
+		/// </para>
+		/// </remarks>
+        public static string GetCurrentUserName()
+        {
+#if (NETCF || SSCLI || NETSTANDARD1_3) // NETSTANDARD1_3 TODO requires platform-specific code
+					// On compact framework there's no notion of current Windows user
+					return NotAvailableText;
+#else
+            string userName = "";
+            try
+            {
+                WindowsIdentity windowsIdentity = WindowsIdentity.GetCurrent();
 
-		#region Private Static Methods
+                if (windowsIdentity != null && windowsIdentity.User != null)
+                {
+                    if (!windowsIdentity.User.Equals(CachedUserSID))
+                    {
+                        CachedUserName = windowsIdentity.Name;
+                        CachedUserSID = windowsIdentity.User;
+                    }
+                    if (CachedUserName != null)
+                    {
+                        userName = CachedUserName;
+                    }
+                }
+            }
+            catch (System.Security.SecurityException)
+            {
+                // This security exception will occur if the caller does not have 
+                // some undefined set of SecurityPermission flags.
+                LogLog.Debug(declaringType, "Security exception while trying to get current windows identity. Error Ignored. Empty user name.");
+            }
+            return userName;
+#endif
+        }
+
+#endregion Public Static Methods
+
+#region Private Static Methods
 
 #if NETCF
 		private static string NativeEntryAssemblyLocation 
@@ -1149,24 +1205,24 @@ namespace log4net.Util
 
 #endif
 
-		#endregion Private Static Methods
+#endregion Private Static Methods
 
-		#region Public Static Fields
+#region Public Static Fields
 
-		/// <summary>
-		/// Gets an empty array of types.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// The <c>Type.EmptyTypes</c> field is not available on
-		/// the .NET Compact Framework 1.0.
-		/// </para>
-		/// </remarks>
-		public static readonly Type[] EmptyTypes = new Type[0];
+        /// <summary>
+        /// Gets an empty array of types.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The <c>Type.EmptyTypes</c> field is not available on
+        /// the .NET Compact Framework 1.0.
+        /// </para>
+        /// </remarks>
+        public static readonly Type[] EmptyTypes = new Type[0];
 
-		#endregion Public Static Fields
+#endregion Public Static Fields
 
-		#region Private Static Fields
+#region Private Static Fields
 
 	    /// <summary>
 	    /// The fully qualified type of the SystemInfo class.
@@ -1202,9 +1258,21 @@ namespace log4net.Util
 		/// </summary>
 		private static DateTime s_processStartTimeUtc = DateTime.UtcNow;
 
-		#endregion
+#if (!NETCF && !SSCLI && !NETSTANDARD1_3)
+        /// <summary>
+        /// The securirty identifier associated with the CachedUserName
+        /// </summary>
+        private static SecurityIdentifier CachedUserSID = null;
 
-		#region Compact Framework Helper Classes
+        /// <summary>
+        /// The user name associated with the CachedUserSID
+        /// </summary>
+        private static string CachedUserName = null;
+#endif
+
+#endregion
+
+        #region Compact Framework Helper Classes
 #if NETCF_1_0
 		/// <summary>
 		/// Generate GUIDs on the .NET Compact Framework.
@@ -1323,6 +1391,6 @@ namespace log4net.Util
 			}
 		}
 #endif
-		#endregion Compact Framework Helper Classes
-	}
+        #endregion Compact Framework Helper Classes
+    }
 }
