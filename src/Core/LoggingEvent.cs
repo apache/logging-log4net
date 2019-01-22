@@ -852,7 +852,7 @@ namespace log4net.Core
 		{
 			get
 			{
-				if (m_data.UserName == null  && this.m_cacheUpdatable) 
+				if (m_data.UserName == null  && this.m_cacheUpdatable)
 				{
 					m_data.UserName = WindowsIdentityProvider.CurrentIdentityName;
 				}
