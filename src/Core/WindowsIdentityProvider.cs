@@ -103,8 +103,8 @@ namespace log4net.Core
 					LogLog.Debug(declaringType, "Security exception while trying to get current windows identity. Error Ignored. Empty user name.");
 					return "";
 				}
-			}
 #endif
+			}
 		}
 	}
 }
