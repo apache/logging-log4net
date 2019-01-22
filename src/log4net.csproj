@@ -314,6 +314,9 @@
     <Compile Include="Core\LoggerWrapperImpl.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Core\WindowsIdentityProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Core\LoggingEvent.cs">
       <SubType>Code</SubType>
     </Compile>
