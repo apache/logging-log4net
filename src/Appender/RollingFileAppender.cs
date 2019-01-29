@@ -1269,7 +1269,7 @@ namespace log4net.Appender
 		/// also checks for existence of target file and deletes if it does.
 		/// </para>
 		/// </remarks>
-		protected void RollFile(string fromFile, string toFile) 
+		protected virtual void RollFile(string fromFile, string toFile) 
 		{
 			if (FileExists(fromFile))
 			{
