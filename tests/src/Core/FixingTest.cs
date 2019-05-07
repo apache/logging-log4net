@@ -36,7 +36,7 @@ namespace log4net.Tests.Core
 #if NETSTANDARD1_3
 		[OneTimeSetUp]
 #else
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 #endif
 		public void CreateRepository()
 		{
