@@ -25,7 +25,6 @@ using System.Security;
 using log4net.Util;
 using log4net.Core;
 using System.Threading;
-using System.Web.Hosting;
 
 namespace log4net.Appender
 {
