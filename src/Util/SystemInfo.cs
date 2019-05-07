@@ -486,7 +486,7 @@ namespace log4net.Util
 	            string appDomainAppId = string.Empty;
 	            try
 	            {
-	                appDomainAppId = ReplaceNonAlphanumericChars(HostingEnvironment.ApplicationID, string.Empty);
+	                appDomainAppId = HostingEnvironment.ApplicationID.ReplaceNonAlphanumericChars(string.Empty);
 	            }
 	            catch (SecurityException)
 	            {
@@ -499,6 +499,28 @@ namespace log4net.Util
 		#endregion Public Static Properties
 
 		#region Public Static Methods
+
+		/// <summary>
+		/// Generates a name for a Mutex lock
+		/// </summary>
+		/// <param name="fileName"></param>
+		/// <param name="applicationId"></param>
+		/// <returns></returns>
+		public static string GetMutexName(string fileName, string applicationId)
+		{
+			if (string.IsNullOrWhiteSpace(fileName)) throw new ArgumentException("fileName cannot be null or empty", nameof(fileName));
+
+			//The Mutex name must be unique to this site since this is a system wide lock. If only the base
+			//filename is used then when hosting on applicances like Azure where all website base paths are the
+			//same (i.e. C:\home\site\wwwroot ), then if running the same type of website on the same server
+			//where the log file is the same (i.e. C:\home\site\wwwroot\app_data\log.txt ), 
+			//logging won't be possible for any of those sites since they will all share the same Mutex.
+			//This is why the ApplicationUniqueId is used here.
+
+			return string.Concat(
+				fileName.Replace("\\", "_").Replace(":", "_").Replace("/", "_"),
+				applicationId);
+		}
 
 		/// <summary>
 		/// Gets the assembly location path for the specified assembly.
@@ -1143,17 +1165,6 @@ namespace log4net.Util
         #endregion Public Static Methods
 
         #region Private Static Methods
-
-	    private static string ReplaceNonAlphanumericChars(string input, string replacement)
-	    {
-	        if (string.IsNullOrWhiteSpace(input)) return string.Empty;
-	        var mName = input;
-	        foreach (var c in mName.ToCharArray().Where(c => !char.IsLetterOrDigit(c)))
-	        {
-	            mName = mName.Replace(c.ToString(CultureInfo.InvariantCulture), replacement);
-	        }
-	        return mName;
-        }
 
 #if NETCF
 		private static string NativeEntryAssemblyLocation
