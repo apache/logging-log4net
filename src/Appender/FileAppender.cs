@@ -24,6 +24,10 @@ using System.Threading;
 using log4net.Util;
 using log4net.Layout;
 using log4net.Core;
+using System.Security.AccessControl;
+using System.Security.Principal;
+using System.Globalization;
+using System.Diagnostics;
 #if NET_4_5 || NETSTANDARD1_3
 using System.Threading.Tasks;
 #endif
@@ -723,6 +727,7 @@ namespace log4net.Appender
 		public class InterProcessLock : LockingModelBase
 		{
 			private Mutex m_mutex = null;
+			private string m_mutexName = null;
 			private Stream m_stream = null;
 			private int m_recursiveWatch = 0;
 
@@ -846,11 +851,15 @@ namespace log4net.Appender
 							.Replace(":", "_")
 							.Replace("/", "_");
 
-					m_mutex = new Mutex(false, mutexFriendlyFilename);
+					m_mutexName = mutexFriendlyFilename;
+
+					LogLog.Debug(declaringType, $"Creating mutex for file appender. Mutex name: \"{m_mutexName}\", current file: {CurrentAppender.File} .");
+
+					m_mutex = SecureCreateMutex(mutexFriendlyFilename, CurrentAppender.ErrorHandler);
 				}
 				else
 				{
-					CurrentAppender.ErrorHandler.Error("Programming error, mutex already initialized!");
+					CurrentAppender.ErrorHandler.Error($"Programming error, mutex already initialized! Mutex name: \"{m_mutexName}\", current file: {CurrentAppender.File} .");
 				}
 			}
 
@@ -867,6 +876,7 @@ namespace log4net.Appender
 					m_mutex.Close();
 #endif
 					m_mutex = null;
+					m_mutexName = null;
 				}
 				else
 				{
@@ -875,6 +885,57 @@ namespace log4net.Appender
 			}
 		}
 #endif
+
+		/// <summary>
+		/// Method for secure open or create Mutex with Synchronize and Modify rights. 
+		/// Using this method allows different users run processes which can open or create a shared mutex without experiencing UnauthorizedAccessException.
+		/// </summary>
+		/// <param name="mutexId">The mutex Id. Here we use a mutex freindly name.</param>
+		/// <param name="errorHandler">Optional error handler, to log potentialy occuring errors.</param>
+		/// <returns></returns>
+		protected static Mutex SecureCreateMutex(string mutexId, IErrorHandler errorHandler)
+		{
+			// Using this mehotd to avoid the issue:
+			// Mutex ~ Access to the path is denied in log4net.Appender.RollingFileAppender.ActivateOptions()
+			// https://jira.apache.org/jira/browse/LOG4NET-587
+			// Solution implemented according to:
+			// UnauthorizedAccessException when trying to open a mutex
+			// https://stackoverflow.com/questions/19536697/unauthorizedaccessexception-when-trying-to-open-a-mutex
+			//NOTE: there are several other jira issues reporting this problem.
+			if (string.IsNullOrWhiteSpace(mutexId))
+			{
+				return null;
+			}
+
+			try
+			{
+				bool createdNew;
+				MutexSecurity mutexSecurity = new MutexSecurity();
+				mutexSecurity.AddAccessRule(
+					new MutexAccessRule(
+						new SecurityIdentifier(WellKnownSidType.WorldSid, null),
+						MutexRights.Synchronize | MutexRights.Modify,
+						AccessControlType.Allow
+						)
+					);
+
+				// attempt to create the mutex, with the desired DACL..
+				Mutex createdMutex = new Mutex(false, mutexId, out createdNew, mutexSecurity);
+				return createdMutex;
+			}
+			catch (WaitHandleCannotBeOpenedException ex)
+			{
+				// the mutex cannot be opened, probably because a Win32 object of a different type with the same name already exists.
+				errorHandler?.Error($"The mutex '{mutexId}' cannot be opened, probably because a Win32 object of a different type with the same name already exists.", ex);
+			}
+			catch (UnauthorizedAccessException ex)
+			{
+				// the mutex exists, but the current process or thread token does not have permission to open the mutex with SYNCHRONIZE | MUTEX_MODIFY rights.
+				errorHandler?.Error($"The mutex '{mutexId}' exists, but the current process or thread token does not have permission to open the mutex with SYNCHRONIZE | MUTEX_MODIFY rights", ex);
+			}
+
+			return null;
+		}
 
 		#endregion Locking Models
 
