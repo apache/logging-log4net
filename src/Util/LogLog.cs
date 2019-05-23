@@ -177,6 +177,16 @@ namespace log4net.Util
 				InternalDebugging = OptionConverter.ToBoolean(SystemInfo.GetAppSetting("log4net.Internal.Debug"), false);
 				QuietMode = OptionConverter.ToBoolean(SystemInfo.GetAppSetting("log4net.Internal.Quiet"), false);
 				EmitInternalMessages = OptionConverter.ToBoolean(SystemInfo.GetAppSetting("log4net.Internal.Emit"), true);
+				s_logMsgPrefixPattern = SystemInfo.GetAppSetting("log4net.Internal.LogMsgPrefixPattern");
+
+				if (string.IsNullOrWhiteSpace(s_logMsgPrefixPattern))
+				{
+					s_logMsgPrefixPattern = null;
+				}
+				else
+				{
+					s_logMsgPrefixPatternLayout = new PatternString(s_logMsgPrefixPattern);
+				}
 			}
 			catch(Exception ex)
 			{
@@ -538,6 +548,7 @@ namespace log4net.Util
 		{
 			try
 			{
+				message = AddTimestampAndCoPrefix(message);
 #if NETCF
 				Console.WriteLine(message);
 				//System.Diagnostics.Debug.WriteLine(message);
@@ -572,6 +583,7 @@ namespace log4net.Util
 		{
 			try
 			{
+				message = AddTimestampAndCoPrefix(message);
 #if NETCF
 				Console.WriteLine(message);
 				//System.Diagnostics.Debug.WriteLine(message);
@@ -584,6 +596,15 @@ namespace log4net.Util
 			{
 				// Ignore exception, what else can we do? Not really a good idea to propagate back to the caller
 			}
+		}
+
+		private static string AddTimestampAndCoPrefix(string message)
+		{
+			if (s_logMsgPrefixPatternLayout != null)
+			{
+				message = $"{s_logMsgPrefixPatternLayout.Format()} {message}";
+			}
+			return message;
 		}
 
 		#region Private Static Fields
@@ -599,6 +620,9 @@ namespace log4net.Util
 		private static bool s_quietMode = false;
 
 		private static bool s_emitInternalMessages = true;
+
+		private static string s_logMsgPrefixPattern = null;
+		private static PatternString s_logMsgPrefixPatternLayout = null;
 
 		private const string PREFIX			= "log4net: ";
 		private const string ERR_PREFIX		= "log4net:ERROR ";
