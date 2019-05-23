@@ -308,6 +308,7 @@ namespace log4net.Util
 			s_globalRulesRegistry.Add("literal", typeof(LiteralPatternConverter));
 			s_globalRulesRegistry.Add("newline", typeof(NewLinePatternConverter));
 			s_globalRulesRegistry.Add("processid", typeof(ProcessIdPatternConverter));
+			s_globalRulesRegistry.Add("thread", typeof(ThreadIdPatternConverter));
 			s_globalRulesRegistry.Add("property", typeof(PropertyPatternConverter));
 			s_globalRulesRegistry.Add("random", typeof(RandomStringPatternConverter));
 			s_globalRulesRegistry.Add("username", typeof(UserNamePatternConverter));

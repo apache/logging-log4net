@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 
  Licensed to the Apache Software Foundation (ASF) under one
@@ -692,6 +692,7 @@
     <Compile Include="Util\PatternStringConverters\RandomStringPatternConverter.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Util\PatternStringConverters\ThreadIdPatternConverter.cs" />
     <Compile Include="Util\PatternStringConverters\UserNamePatternConverter.cs">
       <SubType>Code</SubType>
     </Compile>
