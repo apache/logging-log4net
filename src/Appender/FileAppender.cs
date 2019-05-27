@@ -28,6 +28,7 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Globalization;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 #if NET_4_5 || NETSTANDARD1_3
 using System.Threading.Tasks;
 #endif
@@ -727,7 +728,6 @@ namespace log4net.Appender
 		public class InterProcessLock : LockingModelBase
 		{
 			private Mutex m_mutex = null;
-			private string m_mutexName = null;
 			private Stream m_stream = null;
 			private int m_recursiveWatch = 0;
 
@@ -846,20 +846,11 @@ namespace log4net.Appender
 			{
 				if (m_mutex == null)
 				{
-					string mutexFriendlyFilename = CurrentAppender.File
-							.Replace("\\", "_")
-							.Replace(":", "_")
-							.Replace("/", "_");
-
-					m_mutexName = mutexFriendlyFilename;
-
-					LogLog.Debug(declaringType, $"Creating mutex for file appender. Mutex name: \"{m_mutexName}\", current file: {CurrentAppender.File} .");
-
-					m_mutex = SecureCreateMutex(mutexFriendlyFilename, CurrentAppender.ErrorHandler);
+					m_mutex = CurrentAppender.SecureCreateMutexForFilePath(CurrentAppender.File);
 				}
 				else
 				{
-					CurrentAppender.ErrorHandler.Error($"Programming error, mutex already initialized! Mutex name: \"{m_mutexName}\", current file: {CurrentAppender.File} .");
+					CurrentAppender.ErrorHandler.Error($"Programming error, mutex already initialized! Activating InterProcessLock more than once is incorrect. Current file: {CurrentAppender.File} .");
 				}
 			}
 
@@ -876,7 +867,6 @@ namespace log4net.Appender
 					m_mutex.Close();
 #endif
 					m_mutex = null;
-					m_mutexName = null;
 				}
 				else
 				{
@@ -887,13 +877,27 @@ namespace log4net.Appender
 #endif
 
 		/// <summary>
-		/// Method for secure open or create Mutex with Synchronize and Modify rights. 
+		/// Get Mutex Friendly Filename From file path of this <see cref="FileAppender"/> or derived.
+		/// </summary>
+		/// <param name="filePath">The file path which will be converted to a mutex friendly name</param>
+		/// <returns></returns>
+		private static string GetMutexFriendlyNameFromFilePath(string filePath)
+		{
+			if (filePath == null)
+			{
+				return null;
+			}
+
+			return Regex.Replace(filePath, "[" + new string(Path.GetInvalidFileNameChars()) + "]", "_");
+		}
+
+		/// <summary>
+		/// Method for secure open or create <see cref="Mutex"/> with Synchronize and Modify rights.
 		/// Using this method allows different users run processes which can open or create a shared mutex without experiencing UnauthorizedAccessException.
 		/// </summary>
-		/// <param name="mutexId">The mutex Id. Here we use a mutex freindly name.</param>
-		/// <param name="errorHandler">Optional error handler, to log potentialy occuring errors.</param>
-		/// <returns></returns>
-		protected static Mutex SecureCreateMutex(string mutexId, IErrorHandler errorHandler)
+		/// <param name="filePath">The file path will be converted to a mutex friendly name.</param>
+		/// <returns>The opened or created <see cref="Mutex"/> or null, if there was an error.</returns>
+		protected Mutex SecureCreateMutexForFilePath(string filePath)
 		{
 			// Using this mehotd to avoid the issue:
 			// Mutex ~ Access to the path is denied in log4net.Appender.RollingFileAppender.ActivateOptions()
@@ -902,9 +906,16 @@ namespace log4net.Appender
 			// UnauthorizedAccessException when trying to open a mutex
 			// https://stackoverflow.com/questions/19536697/unauthorizedaccessexception-when-trying-to-open-a-mutex
 			//NOTE: there are several other jira issues reporting this problem.
-			if (string.IsNullOrWhiteSpace(mutexId))
+
+			string mutexFriendlyFilename = filePath;
+			if (string.IsNullOrWhiteSpace(filePath))
 			{
-				return null;
+				ErrorHandler.Error($"The file path'{filePath}' is null, empty or whitespace. The mutext will be created unnamed. Correct this and provide a file path retalted to the mutex, to be able to name and access it cross process!");
+			}
+			else
+			{
+				mutexFriendlyFilename = GetMutexFriendlyNameFromFilePath(filePath);
+				LogLog.Debug(declaringType, $"Creating mutex for file appender. Mutex name: \"{mutexFriendlyFilename}\", related to file: {filePath} .");
 			}
 
 			try
@@ -920,18 +931,16 @@ namespace log4net.Appender
 					);
 
 				// attempt to create the mutex, with the desired DACL..
-				Mutex createdMutex = new Mutex(false, mutexId, out createdNew, mutexSecurity);
+				Mutex createdMutex = new Mutex(false, mutexFriendlyFilename, out createdNew, mutexSecurity);
 				return createdMutex;
 			}
 			catch (WaitHandleCannotBeOpenedException ex)
 			{
-				// the mutex cannot be opened, probably because a Win32 object of a different type with the same name already exists.
-				errorHandler?.Error($"The mutex '{mutexId}' cannot be opened, probably because a Win32 object of a different type with the same name already exists.", ex);
+				ErrorHandler.Error($"The mutex '{mutexFriendlyFilename}' cannot be opened, probably because a Win32 object of a different type with the same name already exists. Proceeding without locking! Check the rights on related file path or directory.", ex);
 			}
 			catch (UnauthorizedAccessException ex)
 			{
-				// the mutex exists, but the current process or thread token does not have permission to open the mutex with SYNCHRONIZE | MUTEX_MODIFY rights.
-				errorHandler?.Error($"The mutex '{mutexId}' exists, but the current process or thread token does not have permission to open the mutex with SYNCHRONIZE | MUTEX_MODIFY rights", ex);
+				ErrorHandler.Error($"The mutex '{mutexFriendlyFilename}' exists, but the current process or thread token does not have permission to open the mutex with SYNCHRONIZE | MUTEX_MODIFY rights. Proceeding without locking! Check the rights on related file path or directory.", ex);
 			}
 
 			return null;

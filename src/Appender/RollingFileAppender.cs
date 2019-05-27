@@ -250,7 +250,6 @@ namespace log4net.Appender
 				m_mutexForRolling.Close();
 #endif
 				m_mutexForRolling = null;
-				m_mutexNameForRolling = null;
 			}
 #endif
 		}
@@ -1151,16 +1150,11 @@ namespace log4net.Appender
 			if (m_mutexForRolling == null)
 			{
 				// initialize the mutex that is used to lock rolling
-				string mutexFriendlyFilename = m_baseFileName.Replace("\\", "_").Replace(":", "_").Replace("/", "_");
-				m_mutexNameForRolling = mutexFriendlyFilename;
-
-				LogLog.Debug(declaringType, $"Creating mutex for rolling file. Mutex name: \"{m_mutexNameForRolling}\", current file: {m_baseFileName} .");
-
-				m_mutexForRolling = SecureCreateMutex(mutexFriendlyFilename, this.ErrorHandler);
+				m_mutexForRolling = SecureCreateMutexForFilePath(m_baseFileName);
 			}
 			else
 			{
-				this.ErrorHandler.Error($"Programming error, mutex for rolling file already initialized! Mutex name: \"{m_mutexNameForRolling}\", current file: {m_baseFileName} .");
+				this.ErrorHandler.Error($"Programming error, mutex for rolling file already initialized! Activating RollingFileAppender more than once is incorrect. Current file: {m_baseFileName} .");
 			}
 #endif
 
@@ -1708,8 +1702,6 @@ namespace log4net.Appender
 		/// A mutex that is used to lock rolling of files.
 		/// </summary>
 		private Mutex m_mutexForRolling;
-
-		private string m_mutexNameForRolling = null;
 #endif
 
 		#endregion Private Instance Fields
