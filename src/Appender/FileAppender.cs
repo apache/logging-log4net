@@ -888,7 +888,7 @@ namespace log4net.Appender
 				return null;
 			}
 
-			return Regex.Replace(filePath, "[" + new string(Path.GetInvalidFileNameChars()) + "]", "_");
+			return Regex.Replace(filePath, "[" + new string(Path.GetInvalidFileNameChars()).Replace(@"\", @"\\") + "]", "_");
 		}
 
 		/// <summary>
