@@ -23,6 +23,8 @@ using System.Collections;
 using System.Diagnostics;
 using log4net.Util;
 using NUnit.Framework;
+using log4net.Tests.Appender;
+using System;
 
 namespace log4net.Tests.Util
 {
@@ -67,6 +69,20 @@ namespace log4net.Tests.Util
 		}
 
 		[Test]
+		public void LogReceivedAdapterWithNullItemsTest()
+		{
+			ArrayList messages = null;
+
+			using (new LogLog.LogReceivedAdapter(messages))
+			{
+				LogLog.Debug(GetType(), "Won't be recorded");
+				LogLog.Error(GetType(), "Won't be recorded");
+			}
+
+			Assert.True(true);
+		}
+
+		[Test]
 		public void LogReceivedAdapter()
 		{
 			ArrayList messages = new ArrayList();
@@ -79,6 +95,27 @@ namespace log4net.Tests.Util
 			}
 
 			Assert.AreEqual(2, messages.Count);
+		}
+
+		[Test]
+		public void TraceListenerMessageFormattingTest()
+		{
+			CategoryTraceListener listTraceListener = new CategoryTraceListener();
+
+			Trace.Listeners.Clear();
+			Trace.Listeners.Add(listTraceListener);
+
+			LogLog.Error(GetType(), "Hello");
+			Assert.AreEqual(1, listTraceListener.Count);
+			string expectedOutput = $"log4net:ERROR Hello{SystemInfo.NewLine}";
+			Assert.AreEqual(expectedOutput, listTraceListener.Message);
+
+			Exception testException = new Exception("Test Exception");
+			LogLog.Error(GetType(), "World", testException);
+
+			Assert.AreEqual(2, listTraceListener.Count);
+			expectedOutput = $"log4net:ERROR World{SystemInfo.NewLine}{testException}{SystemInfo.NewLine}";
+			Assert.AreEqual(expectedOutput, listTraceListener.Message);
 		}
 	}
 

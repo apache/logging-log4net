@@ -20,6 +20,7 @@
 using System;
 using System.Collections;
 using System.IO;
+using System.Linq;
 #if NETSTANDARD1_3
 using System.Reflection;
 #endif
@@ -27,6 +28,8 @@ using System.Reflection;
 using log4net.Util;
 using log4net.Util.PatternStringConverters;
 using log4net.Core;
+using log4net.Util.PatternStringConverters.LogLogConverters;
+using System.Collections.Generic;
 
 namespace log4net.Util
 {
@@ -266,6 +269,11 @@ namespace log4net.Util
 		/// </summary>
 		private static Hashtable s_globalRulesRegistry;
 
+		/// <summary>
+		/// Internal map of <see cref="LogLog"/> specific converter identifiers to converter types.
+		/// </summary>
+		private static Dictionary<string, Type> s_globalLogLogRulesRegistry = new Dictionary<string, Type>();
+
 		#endregion Static Fields
 
 		#region Member Variables
@@ -323,6 +331,13 @@ namespace log4net.Util
 			s_globalRulesRegistry.Add("appSetting", typeof(AppSettingPatternConverter));
 			s_globalRulesRegistry.Add("AppSetting", typeof(AppSettingPatternConverter));
 #endif
+
+			s_globalLogLogRulesRegistry = new Dictionary<string, Type>();
+			s_globalLogLogRulesRegistry.Add("logger", typeof(LogLogSourcePatternConverter));
+
+			s_globalLogLogRulesRegistry.Add("message", typeof(LogLogMessagePatternConverter));
+
+			s_globalLogLogRulesRegistry.Add("level", typeof(LogLogLevelPatternConverter));
 		}
 
 		#endregion Static Constructor
@@ -351,9 +366,51 @@ namespace log4net.Util
 		/// </para>
 		/// </remarks>
 		public PatternString(string pattern)
+			: this(pattern, null)
+		{
+		}
+
+		/// <summary>
+		/// Constructs a PatternString
+		/// </summary>
+		/// <param name="pattern">The pattern to use with this PatternString</param>
+		/// <param name="additionalConverters">Optional parameter. May be null or empty. Additional converters to be used with this <see cref="PatternString"/>.</param>
+		/// <remarks>
+		/// <para>
+		/// Initialize a new instance of <see cref="PatternString"/> with the pattern and additional converters specified.
+		/// </para>
+		/// </remarks>
+		public PatternString(string pattern, IDictionary<string, Type> additionalConverters)
 		{
 			m_pattern = pattern;
+
+			if (additionalConverters?.Any() ?? false)
+			{
+				foreach (var kvp in additionalConverters)
+				{
+					AddConverter(kvp.Key, kvp.Value);
+				}
+			}
+
 			ActivateOptions();
+		}
+
+		/// <summary>
+		/// Factory method costructing <see cref="PatternString"/> for intrnal LogLog purposes.
+		/// The created <see cref="PatternString"/> suports extra patterns: %message, %m, %logger, %c, %level and %p, which handle <see cref="LogLog"/> instance content.
+		/// </summary>
+		/// <param name="pattern">The pattern to use with this PatternString, using the extra patterns  %message, %m, %logger, %c, %level and %p handling <see cref="LogLog"/> instance content.</param>
+		/// <returns>A new instance of <see cref="PatternString"/> with suport for extra patterns handling <see cref="LogLog"/> instances. If the <paramref name="pattern"/> is null or whitespace, null is returned!</returns>
+		public static PatternString CreateForLogLog(string pattern)
+		{
+			PatternString logLogPatternString = null;
+
+			if (!string.IsNullOrWhiteSpace(pattern))
+			{
+				logLogPatternString = new PatternString(pattern, s_globalLogLogRulesRegistry);
+			}
+
+			return logLogPatternString;
 		}
 
 		#endregion
@@ -446,6 +503,21 @@ namespace log4net.Util
 		/// </remarks>
 		public void Format(TextWriter writer)
 		{
+			Format(writer, null);
+		}
+
+		/// <summary>
+		/// Produces a formatted string as specified by the conversion pattern.
+		/// </summary>
+		/// <param name="writer">The TextWriter to write the formatted event to</param>
+		/// <param name="state">The state object on which the pattern converter should be executed.</param>
+		/// <remarks>
+		/// <para>
+		/// Format the pattern to the <paramref name="writer"/>.
+		/// </para>
+		/// </remarks>
+		public void Format(TextWriter writer, object state)
+		{
 			if (writer == null)
 			{
 				throw new ArgumentNullException("writer");
@@ -456,7 +528,7 @@ namespace log4net.Util
 			// loop through the chain of pattern converters
 			while(c != null)
 			{
-				c.Format(writer, null);
+				c.Format(writer, state);
 				c = c.Next;
 			}
 		}
@@ -472,8 +544,23 @@ namespace log4net.Util
 		/// </remarks>
 		public string Format()
 		{
+			return FormatWithState(null);
+		}
+
+		/// <summary>
+		/// Format the pattern as a string with optionally provided <paramref name="state"/> object on which the pattern converter should be executed.
+		/// </summary>
+		/// <param name="state">The state object on which the pattern converter should be executed.</param>
+		/// <returns>the pattern formatted as a string</returns>
+		/// <remarks>
+		/// <para>
+		/// Format the pattern to a string.
+		/// </para>
+		/// </remarks>
+		public string FormatWithState(object state)
+		{
 			StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
-			Format(writer);
+			Format(writer, state);
 			return writer.ToString();
 		}
 

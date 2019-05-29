@@ -177,16 +177,17 @@ namespace log4net.Util
 				InternalDebugging = OptionConverter.ToBoolean(SystemInfo.GetAppSetting("log4net.Internal.Debug"), false);
 				QuietMode = OptionConverter.ToBoolean(SystemInfo.GetAppSetting("log4net.Internal.Quiet"), false);
 				EmitInternalMessages = OptionConverter.ToBoolean(SystemInfo.GetAppSetting("log4net.Internal.Emit"), true);
-				s_logMsgPrefixPattern = SystemInfo.GetAppSetting("log4net.Internal.LogMsgPrefixPattern");
+				string logMsgPattern = SystemInfo.GetAppSetting("log4net.Internal.LogMsgPatternString");
 
-				if (string.IsNullOrWhiteSpace(s_logMsgPrefixPattern))
+				if (string.IsNullOrWhiteSpace(logMsgPattern))
 				{
-					s_logMsgPrefixPattern = null;
+					logMsgPattern = "%level%message%newline";
 				}
-				else
-				{
-					s_logMsgPrefixPatternLayout = new PatternString(s_logMsgPrefixPattern);
-				}
+
+				//NOTE: if the parsing fails, then the s_logMsgPatternLayout is null, which is an ok and accepted fallback!
+				s_lazyLogMsgPatternLayout = new Lazy<PatternString>(
+					() => PatternString.CreateForLogLog(logMsgPattern)
+					);
 			}
 			catch(Exception ex)
 			{
@@ -307,9 +308,18 @@ namespace log4net.Util
 		/// <param name="exception"></param>
 		public static void OnLogReceived(Type source, string prefix, string message, Exception exception)
 		{
-			if (LogReceived != null)
+			OnLogReceived(new LogLog(source, prefix, message, exception));
+		}
+
+		/// <summary>
+		/// Raises the LogReceived event when an internal messages is received.
+		/// </summary>
+		/// <param name="logLog">The <see cref="LogLog" /> instance to be propagated in an event.</param>
+		public static void OnLogReceived(LogLog logLog)
+		{
+			if (LogReceived != null && logLog != null)
 			{
-				LogReceived(null, new LogReceivedEventArgs(new LogLog(source, prefix, message, exception)));
+				LogReceived(null, new LogReceivedEventArgs(logLog));
 			}
 		}
 
@@ -343,15 +353,7 @@ namespace log4net.Util
 		/// </remarks>
 		public static void Debug(Type source, string message)
 		{
-			if (IsDebugEnabled)
-			{
-				if (EmitInternalMessages)
-				{
-					EmitOutLine(PREFIX + message);
-				}
-
-				OnLogReceived(source, PREFIX, message, null);
-			}
+			Debug(source, message, null);
 		}
 
 		/// <summary>
@@ -371,16 +373,13 @@ namespace log4net.Util
 		{
 			if (IsDebugEnabled)
 			{
+				LogLog logLog = new LogLog(source, PREFIX, message, exception);
 				if (EmitInternalMessages)
 				{
-					EmitOutLine(PREFIX + message);
-					if (exception != null)
-					{
-						EmitOutLine(exception.ToString());
-					}
+					EmitOutLine(logLog);
 				}
 
-				OnLogReceived(source, PREFIX, message, exception);
+				OnLogReceived(logLog);
 			}
 		}
 
@@ -414,15 +413,7 @@ namespace log4net.Util
 		/// </remarks>
 		public static void Warn(Type source, string message)
 		{
-			if (IsWarnEnabled)
-			{
-				if (EmitInternalMessages)
-				{
-					EmitErrorLine(WARN_PREFIX + message);
-				}
-
-				OnLogReceived(source, WARN_PREFIX, message, null);
-			}
+			Warn(source, message, null);
 		}
 
 		/// <summary>
@@ -442,16 +433,13 @@ namespace log4net.Util
 		{
 			if (IsWarnEnabled)
 			{
+				LogLog logLog = new LogLog(source, WARN_PREFIX, message, exception);
 				if (EmitInternalMessages)
 				{
-					EmitErrorLine(WARN_PREFIX + message);
-					if (exception != null)
-					{
-						EmitErrorLine(exception.ToString());
-					}
+					EmitErrorLine(logLog);
 				}
 
-				OnLogReceived(source, WARN_PREFIX, message, exception);
+				OnLogReceived(logLog);
 			}
 		}
 
@@ -485,15 +473,7 @@ namespace log4net.Util
 		/// </remarks>
 		public static void Error(Type source, string message)
 		{
-			if (IsErrorEnabled)
-			{
-				if (EmitInternalMessages)
-				{
-					EmitErrorLine(ERR_PREFIX + message);
-				}
-
-				OnLogReceived(source, ERR_PREFIX, message, null);
-			}
+			Error(source, message, null);
 		}
 
 		/// <summary>
@@ -513,16 +493,13 @@ namespace log4net.Util
 		{
 			if (IsErrorEnabled)
 			{
+				LogLog logLog = new LogLog(source, ERR_PREFIX, message, exception);
 				if (EmitInternalMessages)
 				{
-					EmitErrorLine(ERR_PREFIX + message);
-					if (exception != null)
-					{
-						EmitErrorLine(exception.ToString());
-					}
+					EmitErrorLine(logLog);
 				}
 
-				OnLogReceived(source, ERR_PREFIX, message, exception);
+				OnLogReceived(logLog);
 			}
 		}
 
@@ -544,17 +521,17 @@ namespace log4net.Util
 		/// an issue if you are programmatically creating your own AppDomains.
 		/// </para>
 		/// </remarks>
-		private static void EmitOutLine(string message)
+		private static void EmitOutLine(LogLog logLog)
 		{
 			try
 			{
-				message = AddTimestampAndCoPrefix(message);
+				string message = FormatLogLogMessage(logLog);
 #if NETCF
 				Console.WriteLine(message);
 				//System.Diagnostics.Debug.WriteLine(message);
 #else
-				Console.Out.WriteLine(message);
-				Trace.WriteLine(message);
+				Console.Out.Write(message);
+				Trace.Write(message);
 #endif
 			}
 			catch
@@ -579,17 +556,17 @@ namespace log4net.Util
 		/// an issue if you are programmatically creating your own AppDomains.
 		/// </para>
 		/// </remarks>
-		private static void EmitErrorLine(string message)
+		private static void EmitErrorLine(LogLog logLog)
 		{
 			try
 			{
-				message = AddTimestampAndCoPrefix(message);
+				string message = FormatLogLogMessage(logLog);
 #if NETCF
 				Console.WriteLine(message);
 				//System.Diagnostics.Debug.WriteLine(message);
 #else
-				Console.Error.WriteLine(message);
-				Trace.WriteLine(message);
+				Console.Error.Write(message);
+				Trace.Write(message);
 #endif
 			}
 			catch
@@ -598,12 +575,31 @@ namespace log4net.Util
 			}
 		}
 
-		private static string AddTimestampAndCoPrefix(string message)
+		private static string FormatLogLogMessage(LogLog logLog)
 		{
-			if (s_logMsgPrefixPatternLayout != null)
+			string message = null;
+			try
 			{
-				message = $"{s_logMsgPrefixPatternLayout.Format()} {message}";
+				if (s_lazyLogMsgPatternLayout?.Value != null)
+				{
+					message = s_lazyLogMsgPatternLayout.Value.FormatWithState(logLog);
+				}
 			}
+			catch (Exception)
+			{
+				message = null;
+			}
+
+			if (message == null)
+			{
+				message = $"{logLog?.Prefix} {logLog?.Message}{SystemInfo.NewLine}";
+			}
+
+			if (logLog?.exception != null)
+			{
+				message += $"{logLog.Exception.ToString()}{SystemInfo.NewLine}";
+			}
+
 			return message;
 		}
 
@@ -621,8 +617,7 @@ namespace log4net.Util
 
 		private static bool s_emitInternalMessages = true;
 
-		private static string s_logMsgPrefixPattern = null;
-		private static PatternString s_logMsgPrefixPatternLayout = null;
+		private static Lazy<PatternString> s_lazyLogMsgPatternLayout = null;
 
 		private const string PREFIX			= "log4net: ";
 		private const string ERR_PREFIX		= "log4net:ERROR ";
@@ -645,16 +640,19 @@ namespace log4net.Util
 			/// <param name="items"></param>
 			public LogReceivedAdapter(IList items)
 			{
-				this.items = items;
+				if (items != null)
+				{
+					this.items = items;
 
-				handler = new LogReceivedEventHandler(LogLog_LogReceived);
+					handler = new LogReceivedEventHandler(LogLog_LogReceived);
 
-				LogReceived += handler;
+					LogReceived += handler;
+				}
 			}
 
 			void LogLog_LogReceived(object source, LogReceivedEventArgs e)
 			{
-				items.Add(e.LogLog);
+				items?.Add(e?.LogLog);
 			}
 
 			/// <summary>

@@ -86,11 +86,14 @@ namespace log4net.Tests.Appender
 
 	public class CategoryTraceListener : TraceListener
 	{
+		private int count = 0;
+		private string lastMessage;
 		private string lastCategory;
 
 		public override void Write(string message)
 		{
-			// empty
+			count++;
+			lastMessage = message;
 		}
 
 		public override void WriteLine(string message)
@@ -100,13 +103,30 @@ namespace log4net.Tests.Appender
 
 		public override void Write(string message, string category)
 		{
+			count++;
+			lastMessage = message;
 			lastCategory = category;
 			base.Write(message, category);
+		}
+
+		public void Reset()
+		{
+			count = 0;
+		}
+
+		public int Count
+		{
+			get { return count; }
 		}
 
 		public string Category
 		{
 			get { return lastCategory; }
+		}
+
+		public string Message
+		{
+			get { return lastMessage; }
 		}
 	}
 }

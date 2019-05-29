@@ -680,6 +680,10 @@
     <Compile Include="Util\PatternStringConverters\LiteralPatternConverter.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Util\PatternStringConverters\LogLogConverters\LogLogLevelPatternConverter.cs" />
+    <Compile Include="Util\PatternStringConverters\LogLogConverters\LogLogMessagePatternConverter.cs" />
+    <Compile Include="Util\PatternStringConverters\LogLogConverters\LogLogPatternConverter.cs" />
+    <Compile Include="Util\PatternStringConverters\LogLogConverters\LogLogSourcePatternConverter.cs" />
     <Compile Include="Util\PatternStringConverters\NewLinePatternConverter.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -799,6 +803,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
