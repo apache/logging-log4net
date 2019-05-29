@@ -54,6 +54,11 @@
 		/// <param name="state">The state object on which the pattern converter should be executed.</param>
 		override protected void Convert(TextWriter writer, object state)
 		{
+			if (state == null)
+			{
+				throw new ArgumentNullException(nameof(state));
+			}
+
 			LogLog logLog = state as LogLog;
 			if (logLog != null)
 			{

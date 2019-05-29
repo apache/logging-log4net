@@ -22,7 +22,7 @@
 		/// </remarks>
 		override protected void Convert(TextWriter writer, LogLog logLog)
 		{
-			writer.Write(logLog.Source);
+			writer.Write(logLog.Source?.FullName);
 		}
 	}
 }

@@ -98,7 +98,7 @@ namespace log4net.Tests.Util
 		}
 
 		[Test]
-		public void TraceListenerMessageFormattingTest()
+		public void LogLogMessageFormattingTest()
 		{
 			CategoryTraceListener listTraceListener = new CategoryTraceListener();
 
