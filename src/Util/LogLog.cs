@@ -508,7 +508,7 @@ namespace log4net.Util
 		/// <summary>
 		/// Writes output to the standard output stream.
 		/// </summary>
-		/// <param name="message">The message to log.</param>
+		/// <param name="logLog">The <see cref="LogLog" /> instance to log.</param>
 		/// <remarks>
 		/// <para>
 		/// Writes to both Console.Out and System.Diagnostics.Trace.
@@ -543,7 +543,7 @@ namespace log4net.Util
 		/// <summary>
 		/// Writes output to the standard error stream.
 		/// </summary>
-		/// <param name="message">The message to log.</param>
+		/// <param name="logLog">The <see cref="LogLog" /> instance to log.</param>
 		/// <remarks>
 		/// <para>
 		/// Writes to both Console.Error and System.Diagnostics.Trace.
