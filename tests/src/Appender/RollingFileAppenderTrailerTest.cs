@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace log4net.Tests.Appender
 {
 	[TestFixture]
-	public class RollingFileAppenderPeriodicCleanTest
+	public class RollingFileAppenderTrailerTest
 	{
 		[SetUp]
 		public void Setup()
@@ -23,8 +23,8 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestPeriodValue()
 		{
-			var appender = new RollingFileAppenderPeriodicClean();
-			appender.RollWindow = "00:05:00";
+			var appender = new RollingFileAppenderTrailing();
+			appender.TrailPeriod = "00:05:00";
 
 			var logger = CreateLogger("test.log", 100, new OnlyOnceErrorHandler(), 100,
 				RollingFileAppender.RollingLockStrategyKind.None, new FileAppender.MinimalLock());
@@ -40,8 +40,8 @@ namespace log4net.Tests.Appender
 		{
 			Repository.Hierarchy.Hierarchy h = (Repository.Hierarchy.Hierarchy)LogManager.CreateRepository("TestRepository");
 
-			RollingFileAppenderPeriodicClean appender = new RollingFileAppenderPeriodicClean();;
-			appender.RollWindow = "00:00:30";
+			RollingFileAppenderTrailing appender = new RollingFileAppenderTrailing();;
+			appender.TrailPeriod = "00:00:30";
 			appender.File = filename;
 			appender.AppendToFile = false;
 			appender.CountDirection = 0;

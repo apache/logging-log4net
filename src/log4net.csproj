@@ -148,7 +148,7 @@
     <Compile Include="Appender\ConsoleAppender.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Appender\RollingFileAppenderPeriodicClean.cs" />
+    <Compile Include="Appender\RollingFileAppenderTrailing.cs" />
     <Compile Include="Appender\DebugAppender.cs">
       <SubType>Code</SubType>
     </Compile>

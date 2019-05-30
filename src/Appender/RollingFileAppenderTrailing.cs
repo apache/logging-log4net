@@ -8,7 +8,7 @@ namespace log4net.Appender
     /// Appender that keeps only the entries falling in the last specified period.
     /// </summary>
     /// <inheritdoc cref="RollingFileAppender"/>
-    public class RollingFileAppenderPeriodicClean : RollingFileAppender
+    public class RollingFileAppenderTrailing : RollingFileAppender
     {
         private static readonly DateTime ReferenceDate = new DateTime(1999, 1, 1, 1, 1, 1);
 
@@ -20,14 +20,14 @@ namespace log4net.Appender
         /// Setting <c>TimeSpan.MaxValue</c> results into unrepresentable 
         /// time on addition or subraction.
         /// </remarks>
-        private TimeSpan m_rollWindow = TimeSpan.FromDays(36500);
+        private TimeSpan m_trailPeriod = TimeSpan.FromDays(36500);
 
-        public string RollWindow
+        public string TrailPeriod
         {
-            get { return m_rollWindow.ToString("c"); }
+            get { return m_trailPeriod.ToString("c"); }
             set
             {
-                m_rollWindow = (TimeSpan) ConverterRegistry.GetConvertFrom(typeof(TimeSpan))
+                m_trailPeriod = (TimeSpan) ConverterRegistry.GetConvertFrom(typeof(TimeSpan))
                     .ConvertFrom(value);
             }
         }
@@ -36,7 +36,7 @@ namespace log4net.Appender
 
         public DateTime NextRollSchedule { get; private set; }
 
-        public RollingFileAppenderPeriodicClean()
+        public RollingFileAppenderTrailing()
         {
             if (ConverterRegistry.GetConvertTo(typeof(string), typeof(TimeSpan)) == null)
             {
@@ -124,7 +124,7 @@ namespace log4net.Appender
         /// </remarks>
         protected void DeleteOldFiles()
         {
-            var cutOffDate = NormalizeTime(DateTimeStrategy.Now).Subtract(m_rollWindow);
+            var cutOffDate = NormalizeTime(DateTimeStrategy.Now).Subtract(m_trailPeriod);
 
             using (SecurityContext.Impersonate(this))
             {
