@@ -5,13 +5,14 @@ using log4net.Util.TypeConverters;
 namespace log4net.Appender
 {
     /// <summary>
-    /// Appender that keeps only the entries falling in the last specified period.
+    /// Appender that keeps only the entries trailing the current time by a specified period 
+    /// (e. g. last 3 hours, last 5 days, etc.)
     /// </summary>
     /// <inheritdoc cref="RollingFileAppender"/>
     public class RollingFileAppenderTrailing : RollingFileAppender
     {
 	    /// <summary>
-        /// Period to preserve.
+        /// Period to be preserved.
         /// </summary>
         /// <remarks>
         /// Default value set to 100 years (365 days a year) for safety. 
@@ -38,9 +39,9 @@ namespace log4net.Appender
             }
         }
 
-        public TimeSpan CheckInterval { get; private set; }
+        public TimeSpan CleanupCheckInterval { get; private set; }
 
-        public DateTime NextRollSchedule { get; private set; }
+        public DateTime NextCleanupSchedule { get; private set; }
 
         public RollingFileAppenderTrailing()
         {
@@ -50,11 +51,14 @@ namespace log4net.Appender
             }
         }
 
+		/// <summary>
+		/// Cleans up old files if cleanup schedule is overdue.
+		/// </summary>
         protected override void AdjustFileBeforeAppend()
         {
             base.AdjustFileBeforeAppend();
 
-            if (DateTimeStrategy.Now >= NextRollSchedule)
+            if (DateTimeStrategy.Now >= NextCleanupSchedule)
             {
                 DeleteOldFiles();
                 UpdateNextRollSchedule();
@@ -75,43 +79,43 @@ namespace log4net.Appender
         {
             base.ActivateOptions();
 
-            ComputeCheckInterval();
+            ComputeCleanupCheckInterval();
 	        CheckFileRollingStyleCompatibility();
             DeleteOldFiles();
             UpdateNextRollSchedule();
         }
 
 	    /// <summary>
-        /// Computes the interval between checks for roll: <see cref="CheckInterval"/>.
+        /// Computes the interval between checks for roll: <see cref="CleanupCheckInterval"/>.
         /// </summary>
         /// <remarks>
         /// <para>Computed only once, during activation.</para>
         /// <para>Check interval is the smallest non-zero component in 
         /// <see cref="m_trailPeriod"/>.</para>
         /// </remarks>
-        protected void ComputeCheckInterval()
+        protected void ComputeCleanupCheckInterval()
         {
             if (m_trailPeriod.Seconds > 0)
             {
-                CheckInterval = TimeSpan.FromSeconds(1);
+                CleanupCheckInterval = TimeSpan.FromSeconds(1);
                 return;
             }
 
             if (m_trailPeriod.Minutes > 0)
             {
-                CheckInterval = TimeSpan.FromMinutes(1);
+                CleanupCheckInterval = TimeSpan.FromMinutes(1);
                 return;
             }
 
             if (m_trailPeriod.Hours > 0)
             {
-                CheckInterval = TimeSpan.FromHours(1);
+                CleanupCheckInterval = TimeSpan.FromHours(1);
                 return;
             }
 
             if (m_trailPeriod.Days > 0)
             {
-                CheckInterval = TimeSpan.FromDays(1);
+                CleanupCheckInterval = TimeSpan.FromDays(1);
             }
         }
 
@@ -123,7 +127,7 @@ namespace log4net.Appender
 		/// </remarks>
 		protected void CheckFileRollingStyleCompatibility()
 		{
-			if (RollingStyle == RollingMode.Date && CheckInterval > m_trailPeriod)
+			if (RollingStyle == RollingMode.Date && CleanupCheckInterval > m_trailPeriod)
 			{
 				// todo: error!
 			}
@@ -133,7 +137,7 @@ namespace log4net.Appender
         {
             var currentTimeNormalized = NormalizeTime(DateTimeStrategy.Now);
 
-            NextRollSchedule = currentTimeNormalized.Add(CheckInterval);
+            NextCleanupSchedule = currentTimeNormalized.Add(CleanupCheckInterval);
         }
 
         /// <summary>
@@ -178,23 +182,23 @@ namespace log4net.Appender
         /// </example>
         protected DateTime NormalizeTime(DateTime time)
         {
-	        if (CheckInterval.Seconds > 0)
+	        if (CleanupCheckInterval.Seconds > 0)
 			{
 				return time;
 			}
 
-			if (CheckInterval.Minutes > 0)
+			if (CleanupCheckInterval.Minutes > 0)
 			{
 				return time.Subtract(TimeSpan.FromSeconds(time.Second));
 			}
 
-			if (CheckInterval.Hours > 0)
+			if (CleanupCheckInterval.Hours > 0)
 			{
 				return time.Subtract(TimeSpan.FromMinutes(time.Minute)).
 					Subtract(TimeSpan.FromSeconds(time.Second));
 			}
 
-			if (CheckInterval.Days > 0)
+			if (CleanupCheckInterval.Days > 0)
 			{
 				return time.Subtract(TimeSpan.FromHours(time.Hour)).
 					Subtract(TimeSpan.FromMinutes(time.Minute)).
