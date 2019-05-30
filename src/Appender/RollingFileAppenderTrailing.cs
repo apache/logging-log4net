@@ -22,6 +22,14 @@ namespace log4net.Appender
         /// </remarks>
         private TimeSpan m_trailPeriod = TimeSpan.FromDays(36500);
 
+        /// <summary>
+        /// Period to be preserved.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Accepts standard .NET <see cref="TimeSpan"/> string representations.
+        /// </para>
+        /// </remarks>
         public string TrailPeriod
         {
             get { return m_trailPeriod.ToString("c"); }
@@ -55,6 +63,16 @@ namespace log4net.Appender
             }
         }
 
+        /// <summary>
+        /// Initialize the appender based on the options set.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Deletes outdated files, if there are any, computes file rolling check 
+        /// interval from <see cref="RollingFileAppender.DatePattern"/>, and sets the 
+        /// next rolling schedule.
+        /// </para>
+        /// </remarks>
         public override void ActivateOptions()
         {
             base.ActivateOptions();
