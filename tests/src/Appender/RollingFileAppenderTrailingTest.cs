@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using log4net.Appender;
 using log4net.Core;
@@ -21,18 +22,19 @@ namespace log4net.Tests.Appender
 		}
 
 		[Test]
-		public void TestPeriodValue()
+		public void TestRollingFileAppenderTrailingSettings()
 		{
-			var appender = new RollingFileAppenderTrailing();
-			appender.TrailPeriod = "00:05:00";
-
 			var logger = CreateLogger("test.log", 100, new OnlyOnceErrorHandler(), 100,
 				RollingFileAppender.RollingLockStrategyKind.None, new FileAppender.MinimalLock());
 
-			ILog log = new LogImpl(logger);
+			Assert.IsNotNull(logger);
 
-			log.Error("Hello world 1");
-			log.Error("Hello world 2");
+			RollingFileAppenderTrailing appender =
+				(RollingFileAppenderTrailing) LogManager.GetRepository("TestRepository").GetAppenders()[0];
+
+			Assert.IsNotNull(appender);
+			Assert.AreEqual(TimeSpan.FromMinutes(1), appender.CleanupCheckInterval);
+			Assert.AreEqual("00:05:00", appender.TrailPeriod);
 		}
 
 		private ILogger CreateLogger(string filename, long maxFileSize, IErrorHandler handler, int maxSizeRollBackups,
@@ -41,7 +43,7 @@ namespace log4net.Tests.Appender
 			Repository.Hierarchy.Hierarchy h = (Repository.Hierarchy.Hierarchy)LogManager.CreateRepository("TestRepository");
 
 			RollingFileAppenderTrailing appender = new RollingFileAppenderTrailing();;
-			appender.TrailPeriod = "00:00:30";
+			appender.TrailPeriod = "00:05:00";
 			appender.File = filename;
 			appender.AppendToFile = false;
 			appender.CountDirection = 0;
