@@ -77,12 +77,13 @@ namespace log4net.Appender
         {
             base.ActivateOptions();
 
-            DeleteOldFiles();
             ComputeCheckInterval();
+	        CheckFileRollingStyleCompatibility();
+            DeleteOldFiles();
             UpdateNextRollSchedule();
         }
 
-        /// <summary>
+	    /// <summary>
         /// Computes the interval between checks for roll: <see cref="CheckInterval"/>.
         /// </summary>
         /// <remarks>
@@ -121,6 +122,20 @@ namespace log4net.Appender
                 CheckInterval = TimeSpan.FromDays(1);
             }
         }
+
+		/// <summary>
+		/// File rolling frequency.
+		/// </summary>
+		/// <remarks>
+		/// File rolling frequency must be smaller than the <see cref="TrailPeriod"/>.
+		/// </remarks>
+		protected void CheckFileRollingStyleCompatibility()
+		{
+			if (RollingStyle == RollingMode.Date && CheckInterval > m_trailPeriod)
+			{
+				// todo: error!
+			}
+		}
 
         protected void UpdateNextRollSchedule()
         {
