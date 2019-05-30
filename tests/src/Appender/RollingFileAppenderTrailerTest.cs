@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace log4net.Tests.Appender
 {
 	[TestFixture]
-	public class RollingFileAppenderTrailerTest
+	public class RollingFileAppenderTrailerTest : RollingFileAppenderTest
 	{
 		[SetUp]
 		public void Setup()
