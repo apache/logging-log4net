@@ -131,9 +131,9 @@ namespace log4net.Appender
 
         protected void UpdateNextRollSchedule()
         {
-            var currentTimeConvertedBack = NormalizeTime(DateTimeStrategy.Now);
+            var currentTimeNormalized = NormalizeTime(DateTimeStrategy.Now);
 
-            NextRollSchedule = currentTimeConvertedBack.Add(CheckInterval);
+            NextRollSchedule = currentTimeNormalized.Add(CheckInterval);
         }
 
         /// <summary>
@@ -178,13 +178,30 @@ namespace log4net.Appender
         /// </example>
         protected DateTime NormalizeTime(DateTime time)
         {
-            var currentTimeString = time.ToString(DatePattern, 
-                System.Globalization.DateTimeFormatInfo.InvariantInfo);
+	        if (CheckInterval.Seconds > 0)
+			{
+				return time;
+			}
 
-            var currentTimeConvertedBack = DateTime.ParseExact(currentTimeString, DatePattern,
-                System.Globalization.DateTimeFormatInfo.InvariantInfo);
+			if (CheckInterval.Minutes > 0)
+			{
+				return time.Subtract(TimeSpan.FromSeconds(time.Second));
+			}
 
-            return currentTimeConvertedBack;
+			if (CheckInterval.Hours > 0)
+			{
+				return time.Subtract(TimeSpan.FromMinutes(time.Minute)).
+					Subtract(TimeSpan.FromSeconds(time.Second));
+			}
+
+			if (CheckInterval.Days > 0)
+			{
+				return time.Subtract(TimeSpan.FromHours(time.Hour)).
+					Subtract(TimeSpan.FromMinutes(time.Minute)).
+					Subtract(TimeSpan.FromSeconds(time.Second));
+			}
+
+            return time.Subtract(TimeSpan.FromSeconds(5));
         }
     }
 
