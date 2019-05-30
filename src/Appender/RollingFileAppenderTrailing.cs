@@ -10,9 +10,7 @@ namespace log4net.Appender
     /// <inheritdoc cref="RollingFileAppender"/>
     public class RollingFileAppenderTrailing : RollingFileAppender
     {
-        private static readonly DateTime ReferenceDate = new DateTime(1999, 1, 1, 1, 1, 1);
-
-        /// <summary>
+	    /// <summary>
         /// Period to preserve.
         /// </summary>
         /// <remarks>
@@ -89,35 +87,29 @@ namespace log4net.Appender
         /// <remarks>
         /// <para>Computed only once, during activation.</para>
         /// <para>Check interval is the smallest non-zero component in 
-        /// <see cref="RollingFileAppender.DatePattern"/>.</para>
+        /// <see cref="m_trailPeriod"/>.</para>
         /// </remarks>
         protected void ComputeCheckInterval()
         {
-            var referenceDateString = ReferenceDate.ToString(DatePattern, 
-                System.Globalization.DateTimeFormatInfo.InvariantInfo);
-
-            var referenceDateConvertedBack = DateTime.ParseExact(referenceDateString, DatePattern,
-                System.Globalization.DateTimeFormatInfo.InvariantInfo);
-
-            if (referenceDateConvertedBack.Second > 0)
+            if (m_trailPeriod.Seconds > 0)
             {
                 CheckInterval = TimeSpan.FromSeconds(1);
                 return;
             }
 
-            if (referenceDateConvertedBack.Minute > 0)
+            if (m_trailPeriod.Minutes > 0)
             {
                 CheckInterval = TimeSpan.FromMinutes(1);
                 return;
             }
 
-            if (referenceDateConvertedBack.Hour > 0)
+            if (m_trailPeriod.Hours > 0)
             {
                 CheckInterval = TimeSpan.FromHours(1);
                 return;
             }
 
-            if (referenceDateConvertedBack.Day > 0)
+            if (m_trailPeriod.Days > 0)
             {
                 CheckInterval = TimeSpan.FromDays(1);
             }
