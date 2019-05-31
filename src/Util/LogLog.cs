@@ -23,6 +23,7 @@ using System.Collections;
 using System.Configuration;
 #endif
 using System.Diagnostics;
+using System.Threading;
 
 namespace log4net.Util
 {
@@ -184,10 +185,23 @@ namespace log4net.Util
 					logMsgPattern = "%level%message%newline";
 				}
 
-				//NOTE: if the parsing fails, then the s_logMsgPatternLayout is null, which is an ok and accepted fallback!
+				//NOTE: following lazy initialization code runs only if some of the internal LogLog logging methods is first used. It runs on the thread trying to log the internal LogLog message.
+				//NOTE: If the PatternString parsing fails, then the s_lazyLogMsgPatternLayout.Value is null, which is an ok and accepted fallback!
 				s_lazyLogMsgPatternLayout = new Lazy<PatternString>(
-					() => PatternString.CreateForLogLog(logMsgPattern)
-					);
+					() => {
+						PatternString logLogPatternString = null;
+						try
+						{
+							logLogPatternString = PatternString.CreateForLogLog(logMsgPattern);
+						}
+						catch(Exception ex)
+						{
+							string msg = $"LogLog.s_lazyLogMsgPatternLayout: Lazy<PatternString> construction invoked from inside of: FormatLogLogMessage() threw an Exception:{SystemInfo.NewLine}{ex.ToString()}{SystemInfo.NewLine}";
+							Console.Error.Write(msg);
+							Trace.TraceError(msg);
+						}
+						return logLogPatternString;
+					});
 			}
 			catch(Exception ex)
 			{
@@ -578,26 +592,47 @@ namespace log4net.Util
 		private static string FormatLogLogMessage(LogLog logLog)
 		{
 			string message = null;
+			bool recursionPreventionSetInThisCall = false;
+			Exception innerEx = null;
 			try
 			{
-				if (s_lazyLogMsgPatternLayout?.Value != null)
+				if (!s_threadLocalPatternStringRecursionPreventer.Value.AleradyExecuting)
 				{
-					message = s_lazyLogMsgPatternLayout.Value.FormatWithState(logLog);
+					recursionPreventionSetInThisCall = true;
+					s_threadLocalPatternStringRecursionPreventer.Value.AleradyExecuting = true;
+
+					if (s_lazyLogMsgPatternLayout?.Value != null)
+					{
+						message = s_lazyLogMsgPatternLayout.Value.FormatWithState(logLog);
+					}
 				}
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
 				message = null;
+				innerEx = ex;
+			}
+			finally
+			{
+				if (recursionPreventionSetInThisCall)
+				{
+					s_threadLocalPatternStringRecursionPreventer.Value.AleradyExecuting = false;
+				}
 			}
 
 			if (message == null)
 			{
-				message = $"{logLog?.Prefix} {logLog?.Message}{SystemInfo.NewLine}";
+				message = $"{logLog?.Prefix}{logLog?.Message}{SystemInfo.NewLine}";
 			}
 
 			if (logLog?.exception != null)
 			{
 				message += $"{logLog.Exception.ToString()}{SystemInfo.NewLine}";
+			}
+
+			if (innerEx != null)
+			{
+				message += $"FormatLogLogMessage() Inner Exception: {innerEx.ToString()}{SystemInfo.NewLine}";
 			}
 
 			return message;
@@ -619,7 +654,22 @@ namespace log4net.Util
 
 		private static Lazy<PatternString> s_lazyLogMsgPatternLayout = null;
 
-		private const string PREFIX			= "log4net: ";
+		/// <summary>
+		/// This thread local variable serves for prevention of a potential internal own thread recursion: LogLog -> PatternString -> LogLog -> ...
+		/// NOTE: that parallel logging calls are fully OK, while a recursion (in a single thread while PatternString.Format*(...)) is a sign of bad PatternConverter implementation! But it will be logged correctly.
+		/// </summary>
+		private static ThreadLocal<PatternStringRecursionPreventer> s_threadLocalPatternStringRecursionPreventer =
+			new ThreadLocal<PatternStringRecursionPreventer>(
+				() => new PatternStringRecursionPreventer()
+			);
+
+		private class PatternStringRecursionPreventer
+		{
+			public bool AleradyExecuting { get; set; } = false;
+		}
+
+
+        private const string PREFIX			= "log4net: ";
 		private const string ERR_PREFIX		= "log4net:ERROR ";
 		private const string WARN_PREFIX	= "log4net:WARN ";
 
