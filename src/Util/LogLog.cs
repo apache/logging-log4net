@@ -186,8 +186,8 @@ namespace log4net.Util
 				}
 
 				//NOTE: following lazy initialization code runs only if some of the internal LogLog logging methods is first used. It runs on the thread trying to log the internal LogLog message.
-				//NOTE: If the PatternString parsing fails, then the s_lazyLogMsgPatternLayout.Value is null, which is an ok and accepted fallback!
-				s_lazyLogMsgPatternLayout = new Lazy<PatternString>(
+				//NOTE: If the PatternString parsing fails, then the s_lazyLogMsgPatternString.Value is null, which is an ok and accepted fallback!
+				s_lazyLogMsgPatternString = new Lazy<PatternString>(
 					() => {
 						PatternString logLogPatternString = null;
 						try
@@ -196,7 +196,7 @@ namespace log4net.Util
 						}
 						catch(Exception ex)
 						{
-							string msg = $"LogLog.s_lazyLogMsgPatternLayout: Lazy<PatternString> construction invoked from inside of: FormatLogLogMessage() threw an Exception:{SystemInfo.NewLine}{ex.ToString()}{SystemInfo.NewLine}";
+							string msg = $"LogLog.s_lazyLogMsgPatternString: Lazy<PatternString> construction invoked from inside of: FormatLogLogMessage() threw an Exception:{SystemInfo.NewLine}{ex.ToString()}{SystemInfo.NewLine}";
 							Console.Error.Write(msg);
 							Trace.TraceError(msg);
 						}
@@ -601,9 +601,9 @@ namespace log4net.Util
 					recursionPreventionSetInThisCall = true;
 					s_threadLocalPatternStringRecursionPreventer.Value.AleradyExecuting = true;
 
-					if (s_lazyLogMsgPatternLayout?.Value != null)
+					if (s_lazyLogMsgPatternString?.Value != null)
 					{
-						message = s_lazyLogMsgPatternLayout.Value.FormatWithState(logLog);
+						message = s_lazyLogMsgPatternString.Value.FormatWithState(logLog);
 					}
 				}
 			}
@@ -652,7 +652,7 @@ namespace log4net.Util
 
 		private static bool s_emitInternalMessages = true;
 
-		private static Lazy<PatternString> s_lazyLogMsgPatternLayout = null;
+		private static Lazy<PatternString> s_lazyLogMsgPatternString = null;
 
 		/// <summary>
 		/// This thread local variable serves for prevention of a potential internal own thread recursion: LogLog -> PatternString -> LogLog -> ...
@@ -669,7 +669,7 @@ namespace log4net.Util
 		}
 
 
-        private const string PREFIX			= "log4net: ";
+		private const string PREFIX			= "log4net: ";
 		private const string ERR_PREFIX		= "log4net:ERROR ";
 		private const string WARN_PREFIX	= "log4net:WARN ";
 
