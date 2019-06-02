@@ -135,9 +135,7 @@ namespace log4net.Appender
 
         protected void UpdateNextCleanupSchedule()
         {
-            var currentTimeNormalized = NormalizeTime(DateTimeStrategy.Now);
-
-            NextCleanupSchedule = currentTimeNormalized.Add(CleanupCheckInterval);
+	        NextCleanupSchedule = DateTimeStrategy.Now.Add(CleanupCheckInterval);
         }
 
         /// <summary>
@@ -153,7 +151,7 @@ namespace log4net.Appender
         /// </remarks>
         protected void DeleteOldFiles()
         {
-            var cutOffDate = NormalizeTime(DateTimeStrategy.Now).Subtract(m_trailPeriod);
+            var cutOffDate = DateTimeStrategy.Now.Subtract(m_trailPeriod);
 
             using (SecurityContext.Impersonate(this))
             {
@@ -162,7 +160,7 @@ namespace log4net.Appender
 
                 foreach (var file in logFiles)
                 {
-                    var lastWrite = NormalizeTime(System.IO.File.GetLastWriteTime(file));
+                    var lastWrite = System.IO.File.GetLastWriteTime(file);
 
                     if (lastWrite < cutOffDate)
                     {
@@ -170,42 +168,6 @@ namespace log4net.Appender
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Normalizes a <see cref="DateTime"/> instance up to the precision specified 
-        /// by <see cref="RollingFileAppender.DatePattern"/>.
-        /// </summary>
-        /// <param name="time">The <see cref="DateTime"/> instance to be normalized.</param>
-        /// <returns>Normalized <see cref="DateTime"/> instance.</returns>
-        /// <example>
-        /// </example>
-        protected DateTime NormalizeTime(DateTime time)
-        {
-	        if (CleanupCheckInterval.Seconds > 0)
-			{
-				return time;
-			}
-
-			if (CleanupCheckInterval.Minutes > 0)
-			{
-				return time.Subtract(TimeSpan.FromSeconds(time.Second));
-			}
-
-			if (CleanupCheckInterval.Hours > 0)
-			{
-				return time.Subtract(TimeSpan.FromMinutes(time.Minute)).
-					Subtract(TimeSpan.FromSeconds(time.Second));
-			}
-
-			if (CleanupCheckInterval.Days > 0)
-			{
-				return time.Subtract(TimeSpan.FromHours(time.Hour)).
-					Subtract(TimeSpan.FromMinutes(time.Minute)).
-					Subtract(TimeSpan.FromSeconds(time.Second));
-			}
-
-            return time.Subtract(TimeSpan.FromSeconds(5));
         }
     }
 
