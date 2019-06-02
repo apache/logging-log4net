@@ -1395,7 +1395,7 @@ namespace log4net.Tests.Appender
 		/// <param name="lockModel">The locking model to use.</param>
 		/// <param name="handler">The error handler to use.</param>
 		/// <returns>A configured ILogger</returns>
-		private static ILogger CreateLogger(string filename, FileAppender.LockingModelBase lockModel, IErrorHandler handler)
+		protected virtual ILogger CreateLogger(string filename, FileAppender.LockingModelBase lockModel, IErrorHandler handler)
 		{
 			return CreateLogger(filename, lockModel, handler, 100000, 0);
 		}
@@ -1409,7 +1409,7 @@ namespace log4net.Tests.Appender
 		/// <param name="maxFileSize">Maximum file size for roll</param>
 		/// <param name="maxSizeRollBackups">Maximum number of roll backups</param>
 		/// <returns>A configured ILogger</returns>
-		private static ILogger CreateLogger(string filename, FileAppender.LockingModelBase lockModel, IErrorHandler handler,
+		protected virtual ILogger CreateLogger(string filename, FileAppender.LockingModelBase lockModel, IErrorHandler handler,
 			int maxFileSize, int maxSizeRollBackups)
 		{
 			return CreateLogger(filename, lockModel, handler, maxFileSize, maxSizeRollBackups,
@@ -1426,7 +1426,7 @@ namespace log4net.Tests.Appender
 		/// <param name="maxSizeRollBackups">Maximum number of roll backups</param>
 		/// <param name="rollingLockStrategy">Rolling lock strategy</param>
 		/// <returns>A configured ILogger</returns>
-		private static ILogger CreateLogger(string filename, FileAppender.LockingModelBase lockModel, IErrorHandler handler, int maxFileSize, int maxSizeRollBackups, RollingFileAppender.RollingLockStrategyKind rollingLockStrategy)
+		protected virtual ILogger CreateLogger(string filename, FileAppender.LockingModelBase lockModel, IErrorHandler handler, int maxFileSize, int maxSizeRollBackups, RollingFileAppender.RollingLockStrategyKind rollingLockStrategy)
 		{
 			Repository.Hierarchy.Hierarchy h = (Repository.Hierarchy.Hierarchy)LogManager.CreateRepository("TestRepository");
 
@@ -1470,6 +1470,11 @@ namespace log4net.Tests.Appender
 			LoggerManager.RepositorySelector = new DefaultRepositorySelector(typeof(log4net.Repository.Hierarchy.Hierarchy));
 		}
 
+	    protected virtual IErrorHandler CreatErrorHandler()
+	    {
+	        return new SilentErrorHandler();
+	    }
+
 		private static void AssertFileEquals(string filename, string contents)
 		{
 			AssertFileEquals(filename, contents, true);
@@ -1499,7 +1504,7 @@ namespace log4net.Tests.Appender
 		public void TestLogOutput()
 		{
 			String filename = "test.log";
-			SilentErrorHandler sh = new SilentErrorHandler();
+			SilentErrorHandler sh = (SilentErrorHandler) CreatErrorHandler();
 			ILogger log = CreateLogger(filename, new FileAppender.ExclusiveLock(), sh);
 			log.Log(GetType(), Level.Info, "This is a message", null);
 			log.Log(GetType(), Level.Info, "This is a message 2", null);
@@ -1520,7 +1525,7 @@ namespace log4net.Tests.Appender
 			FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
 			fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
 
-			SilentErrorHandler sh = new SilentErrorHandler();
+			SilentErrorHandler sh = (SilentErrorHandler) CreatErrorHandler();
 			ILogger log = CreateLogger(filename, new FileAppender.ExclusiveLock(), sh);
 			log.Log(GetType(), Level.Info, "This is a message", null);
 			log.Log(GetType(), Level.Info, "This is a message 2", null);
@@ -1542,7 +1547,7 @@ namespace log4net.Tests.Appender
 			FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
 			fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
 
-			SilentErrorHandler sh = new SilentErrorHandler();
+			SilentErrorHandler sh = (SilentErrorHandler) CreatErrorHandler();
 			ILogger log = CreateLogger(filename, new FileAppender.ExclusiveLock(), sh);
 			log.Log(GetType(), Level.Info, "This is a message", null);
 			fs.Close();
@@ -1562,7 +1567,7 @@ namespace log4net.Tests.Appender
 			String filename = "test.log";
 			bool locked = false;
 
-			SilentErrorHandler sh = new SilentErrorHandler();
+			SilentErrorHandler sh = (SilentErrorHandler) CreatErrorHandler();
 			ILogger log = CreateLogger(filename, new FileAppender.ExclusiveLock(), sh);
 			log.Log(GetType(), Level.Info, "This is a message", null);
 
@@ -1606,7 +1611,7 @@ namespace log4net.Tests.Appender
 			FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
 			fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
 
-			SilentErrorHandler sh = new SilentErrorHandler();
+			SilentErrorHandler sh = (SilentErrorHandler) CreatErrorHandler();
 			ILogger log = CreateLogger(filename, new FileAppender.MinimalLock(), sh);
 			log.Log(GetType(), Level.Info, "This is a message", null);
 			log.Log(GetType(), Level.Info, "This is a message 2", null);
@@ -1628,7 +1633,7 @@ namespace log4net.Tests.Appender
 			FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
 			fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
 
-			SilentErrorHandler sh = new SilentErrorHandler();
+			SilentErrorHandler sh = (SilentErrorHandler) CreatErrorHandler();
 			ILogger log = CreateLogger(filename, new FileAppender.MinimalLock(), sh);
 			log.Log(GetType(), Level.Info, "This is a message", null);
 			fs.Close();
@@ -1648,7 +1653,7 @@ namespace log4net.Tests.Appender
 			String filename = "test.log";
 			bool locked;
 
-			SilentErrorHandler sh = new SilentErrorHandler();
+			SilentErrorHandler sh = (SilentErrorHandler) CreatErrorHandler();
 			ILogger log = CreateLogger(filename, new FileAppender.MinimalLock(), sh);
 			log.Log(GetType(), Level.Info, "This is a message", null);
 
@@ -1676,7 +1681,7 @@ namespace log4net.Tests.Appender
 			FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
 			fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
 
-			SilentErrorHandler sh = new SilentErrorHandler();
+			SilentErrorHandler sh = (SilentErrorHandler) CreatErrorHandler();
 			ILogger log = CreateLogger(filename, new FileAppender.InterProcessLock(), sh);
 			log.Log(GetType(), Level.Info, "This is a message", null);
 			log.Log(GetType(), Level.Info, "This is a message 2", null);
@@ -1697,7 +1702,7 @@ namespace log4net.Tests.Appender
 			FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
 			fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
 
-			SilentErrorHandler sh = new SilentErrorHandler();
+			SilentErrorHandler sh = (SilentErrorHandler) CreatErrorHandler();
 			ILogger log = CreateLogger(filename, new FileAppender.InterProcessLock(), sh);
 			log.Log(GetType(), Level.Info, "This is a message", null);
 			fs.Close();
@@ -1716,7 +1721,7 @@ namespace log4net.Tests.Appender
 			String filename = "test.log";
 			bool locked;
 
-			SilentErrorHandler sh = new SilentErrorHandler();
+			SilentErrorHandler sh = (SilentErrorHandler) CreatErrorHandler();
 			ILogger log = CreateLogger(filename, new FileAppender.InterProcessLock(), sh);
 			log.Log(GetType(), Level.Info, "This is a message", null);
 
@@ -1741,7 +1746,7 @@ namespace log4net.Tests.Appender
 		{
 			String filename = "test.log";
 
-			SilentErrorHandler sh = new SilentErrorHandler();
+			SilentErrorHandler sh = (SilentErrorHandler) CreatErrorHandler();
 			ILogger log = CreateLogger(filename, new FileAppender.InterProcessLock(), sh, 1, 2);
 
 			Assert.DoesNotThrow(delegate { log.Log(GetType(), Level.Info, "A", null); });
@@ -1761,7 +1766,7 @@ namespace log4net.Tests.Appender
 		public void TestDefaultLockingModel()
 		{
 			String filename = "test.log";
-			SilentErrorHandler sh = new SilentErrorHandler();
+			SilentErrorHandler sh = (SilentErrorHandler) CreatErrorHandler();
 			ILogger log = CreateLogger(filename, null, sh);
 
 			IAppender[] appenders = log.Repository.GetAppenders();
@@ -1781,7 +1786,7 @@ namespace log4net.Tests.Appender
 		public void TestRollingLockStrategy(RollingFileAppender.RollingLockStrategyKind strategy)
 		{
 			String filename = c_fileName;
-			SilentErrorHandler sh = new SilentErrorHandler();
+			SilentErrorHandler sh = (SilentErrorHandler) CreatErrorHandler();
 			ILogger log = CreateLogger(filename, null, sh, 1, 2, strategy);
 
 			IAppender[] appenders = log.Repository.GetAppenders();
@@ -1808,7 +1813,7 @@ namespace log4net.Tests.Appender
 		public void TestRollingLockStrategyLocalMutex()
 		{
 			String filename = "test_lock.log";
-			SilentErrorHandler sh = new SilentErrorHandler();
+			SilentErrorHandler sh = (SilentErrorHandler) CreatErrorHandler();
 
 			Mutex syncObject = null;
 			try
