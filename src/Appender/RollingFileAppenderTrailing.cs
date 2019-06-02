@@ -21,7 +21,7 @@ namespace log4net.Appender
         /// </remarks>
         private TimeSpan m_trailPeriod = TimeSpan.FromDays(36500);
 
-        /// <summary>
+	    /// <summary>
         /// Period to be preserved.
         /// </summary>
         /// <remarks>
@@ -61,7 +61,7 @@ namespace log4net.Appender
             if (DateTimeStrategy.Now >= NextCleanupSchedule)
             {
                 DeleteOldFiles();
-                UpdateNextRollSchedule();
+                UpdateNextCleanupSchedule();
             }
         }
 
@@ -82,11 +82,11 @@ namespace log4net.Appender
             ComputeCleanupCheckInterval();
 	        CheckFileRollingStyleCompatibility();
             DeleteOldFiles();
-            UpdateNextRollSchedule();
+            UpdateNextCleanupSchedule();
         }
 
 	    /// <summary>
-        /// Computes the interval between checks for roll: <see cref="CleanupCheckInterval"/>.
+        /// Computes the interval between checks for file cleanup: <see cref="CleanupCheckInterval"/>.
         /// </summary>
         /// <remarks>
         /// <para>Computed only once, during activation.</para>
@@ -133,7 +133,7 @@ namespace log4net.Appender
 			}
 		}
 
-        protected void UpdateNextRollSchedule()
+        protected void UpdateNextCleanupSchedule()
         {
             var currentTimeNormalized = NormalizeTime(DateTimeStrategy.Now);
 
