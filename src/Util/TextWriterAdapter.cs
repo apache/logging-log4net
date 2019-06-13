@@ -149,7 +149,7 @@ namespace log4net.Util
 		/// <para>
 		/// </para>
 		/// </remarks>
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 		virtual public void Close()
 		{
 			m_writer.Dispose();

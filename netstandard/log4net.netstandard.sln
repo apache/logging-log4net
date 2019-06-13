@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
+# Visual Studio 15
 #
 #
 # Licensed to the Apache Software Foundation (ASF) under one
@@ -20,17 +20,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # specific language governing permissions and limitations
 # under the License.
 #
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 15.0.28307.705
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "log4net", "log4net\log4net.xproj", "{00764202-B361-4BC8-A1B9-01D87F9D2D51}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "log4net.tests", "log4net.tests\log4net.tests.xproj", "{6A78D53B-C864-4316-AA00-F2EBFE975223}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4BB38D1C-1862-432B-881C-925714F7F997}"
 	ProjectSection(SolutionItems) = preProject
 		global.json = global.json
 		nuget.config = nuget.config
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "log4net", "log4net\log4net.csproj", "{00764202-B361-4BC8-A1B9-01D87F9D2D51}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "log4net.tests", "log4net.tests\log4net.tests.csproj", "{6A78D53B-C864-4316-AA00-F2EBFE975223}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,5 +49,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {316D5265-B6A6-4270-9E1C-41BED3BF5E05}
 	EndGlobalSection
 EndGlobal

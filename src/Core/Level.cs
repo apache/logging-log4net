@@ -111,7 +111,7 @@ namespace log4net.Core
 			}
 
 			m_levelValue = level;
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 			m_levelName = levelName;
 #else
 			m_levelName = string.Intern(levelName);

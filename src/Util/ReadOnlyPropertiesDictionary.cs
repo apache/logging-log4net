@@ -92,7 +92,7 @@ namespace log4net.Util
 
 		#region Private Instance Constructors
 
-#if !(NETCF || NETSTANDARD1_3)
+#if !(NETCF || NETSTANDARD1_3 || NETSTANDARD2_0)
 		/// <summary>
 		/// Deserialization constructor
 		/// </summary>
@@ -204,7 +204,7 @@ namespace log4net.Util
 		/// Serializes this object into the <see cref="SerializationInfo" /> provided.
 		/// </para>
 		/// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3 || NETSTANDARD2_0
         [System.Security.SecurityCritical]
 #else
 		[System.Security.Permissions.SecurityPermissionAttribute(System.Security.Permissions.SecurityAction.Demand, SerializationFormatter=true)]
@@ -217,7 +217,7 @@ namespace log4net.Util
 				object entryValue = entry.Value;
 
                 // If value is serializable then we add it to the list
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
                 bool isSerializable = entryValue.GetType().GetTypeInfo().IsSerializable;
 #else
                 bool isSerializable = entryValue.GetType().IsSerializable;

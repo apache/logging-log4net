@@ -212,7 +212,7 @@ namespace log4net.Util
 				return defaultValue;
 			}
 	
-			string s = argValue.Trim().ToUpper(CultureInfo.InvariantCulture);
+            string s = argValue.Trim().ToUpper(CultureInfo.InvariantCulture);
 			long multiplier = 1;
 			int index;
 	
@@ -286,7 +286,7 @@ namespace log4net.Util
 			}
 			else
 			{
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 				if (target.GetTypeInfo().IsEnum)
 #else
 				if (target.IsEnum)
@@ -307,7 +307,7 @@ namespace log4net.Util
 					if (meth != null)
 					{
 						// Call the Parse method
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 						return meth.Invoke(target, new[] { txt });
 #else
 						return meth.Invoke(null, BindingFlags.InvokeMethod, null, new object[] {txt}, CultureInfo.InvariantCulture);
@@ -483,7 +483,7 @@ namespace log4net.Util
 			{
 				try 
 				{
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 					Type classObj = SystemInfo.GetTypeFromString(superClass.GetTypeInfo().Assembly, className, true, true);
 #else
 					Type classObj = SystemInfo.GetTypeFromString(className, true, true);

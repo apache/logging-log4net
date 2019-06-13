@@ -196,7 +196,7 @@ namespace log4net.Layout
 			{
 				throw new ArgumentNullException("loggingEvent");
 			}
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 			var settings = new XmlWriterSettings
 			{
 				Indent = false,

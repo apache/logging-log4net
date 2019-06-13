@@ -23,7 +23,7 @@
 
 using System;
 using System.Collections;
-#if !NETSTANDARD1_3
+#if !NETSTANDARD1_3  && !NETSTANDARD2_0
 using System.Configuration;
 #else
 using System.Linq;
@@ -587,7 +587,7 @@ namespace log4net.Core
 			try
 			{
 				// Look for the RepositoryAttribute on the assembly 
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 				object[] repositoryAttributes = assembly.GetCustomAttributes(typeof(log4net.Config.RepositoryAttribute)).ToArray();
 #else
 				object[] repositoryAttributes = Attribute.GetCustomAttributes(assembly, typeof(log4net.Config.RepositoryAttribute), false);
@@ -663,7 +663,7 @@ namespace log4net.Core
 			}
 
 			// Look for the Configurator attributes (e.g. XmlConfiguratorAttribute) on the assembly
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 			object[] configAttributes = assembly.GetCustomAttributes(typeof(log4net.Config.ConfiguratorAttribute)).ToArray();
 #else
 			object[] configAttributes = Attribute.GetCustomAttributes(assembly, typeof(log4net.Config.ConfiguratorAttribute), false);
@@ -717,7 +717,7 @@ namespace log4net.Core
 
                     // Determine whether to watch the file or not based on an app setting value:
 				    bool watchRepositoryConfigFile = false;
-#if NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0 || NETSTANDARD1_3
+#if NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0 || NETSTANDARD1_3 || NETSTANDARD2_0
 				    Boolean.TryParse(SystemInfo.GetAppSetting("log4net.Config.Watch"), out watchRepositoryConfigFile);
 #else
                                     {
@@ -815,7 +815,7 @@ namespace log4net.Core
 			}
 
 			// Look for the PluginAttribute on the assembly
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 			object[] configAttributes = assembly.GetCustomAttributes(typeof(log4net.Config.PluginAttribute)).ToArray();
 #else
 			object[] configAttributes = Attribute.GetCustomAttributes(assembly, typeof(log4net.Config.PluginAttribute), false);
@@ -859,7 +859,7 @@ namespace log4net.Core
 			}
 
 			// Look for the AliasRepositoryAttribute on the assembly
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 			object[] configAttributes = assembly.GetCustomAttributes(typeof(log4net.Config.AliasRepositoryAttribute)).ToArray();
 #else
 			object[] configAttributes = Attribute.GetCustomAttributes(assembly, typeof(log4net.Config.AliasRepositoryAttribute), false);

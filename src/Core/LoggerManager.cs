@@ -18,7 +18,7 @@
 #endregion
 
 using System;
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 using System.Runtime.InteropServices;
 #else
 using System.Configuration;
@@ -105,7 +105,7 @@ namespace log4net.Core
 #if NETCF
 			s_repositorySelector = new CompactRepositorySelector(typeof(log4net.Repository.Hierarchy.Hierarchy));
 			return;
-#elif !NETSTANDARD1_3
+#elif !NETSTANDARD1_3  && !NETSTANDARD2_0
 			// Look for the RepositorySelector type specified in the AppSettings 'log4net.RepositorySelector'
 			string appRepositorySelectorTypeName = SystemInfo.GetAppSetting("log4net.RepositorySelector");
 			if (appRepositorySelectorTypeName != null && appRepositorySelectorTypeName.Length > 0)
@@ -166,7 +166,7 @@ namespace log4net.Core
 		/// </remarks>
 		private static void RegisterAppDomainEvents()
 		{
-#if !(NETCF || NETSTANDARD1_3)
+#if !(NETCF || NETSTANDARD1_3 || NETSTANDARD2_0)
 			// ProcessExit seems to be fired if we are part of the default domain
 			AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
 
@@ -801,7 +801,7 @@ namespace log4net.Core
 		{
 			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 			Assembly myAssembly = typeof(LoggerManager).GetTypeInfo().Assembly;
 			sb.Append($"log4net assembly [{myAssembly.FullName}]. ");
 			//sb.Append($"Loaded from [{myAssembly.Location}]. "); // TODO Assembly.Location available in netstandard1.5
@@ -814,7 +814,7 @@ namespace log4net.Core
 #if (!SSCLI)
             sb.Append(" on ").Append(Environment.OSVersion.ToString());
 #endif
-#endif // NETSTANDARD1_3
+#endif // NETSTANDARD1_3 || NETSTANDARD2_0
 			sb.Append(")");
 			return sb.ToString();
 		}

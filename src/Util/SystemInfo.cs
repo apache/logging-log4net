@@ -18,7 +18,7 @@
 #endregion
 
 using System;
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 using System.Globalization;
 #else
 using System.Configuration;
@@ -148,7 +148,7 @@ namespace log4net.Util
 			{
 #if NETCF
 -				return System.IO.Path.GetDirectoryName(SystemInfo.EntryAssemblyLocation) + System.IO.Path.DirectorySeparatorChar;
-#elif NETSTANDARD1_3
+#elif NETSTANDARD1_3 || NETSTANDARD2_0
 				return Directory.GetCurrentDirectory();
 #else
 				return AppDomain.CurrentDomain.BaseDirectory;
@@ -174,7 +174,7 @@ namespace log4net.Util
 		{
 			get 
 			{
-#if NETCF || NETSTANDARD1_3
+#if NETCF || NETSTANDARD1_3 || NETSTANDARD2_0
 				return SystemInfo.EntryAssemblyLocation+".config";
 #else
 				return System.AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;
@@ -197,7 +197,7 @@ namespace log4net.Util
 			{
 #if NETCF
 				return SystemInfo.NativeEntryAssemblyLocation;
-#elif NETSTANDARD1_3 // TODO GetEntryAssembly is available for netstandard1.5
+#elif NETSTANDARD1_3 || NETSTANDARD2_0 // TODO GetEntryAssembly is available for netstandard1.5
 				return AppContext.BaseDirectory;
 #else
 				return System.Reflection.Assembly.GetEntryAssembly().Location;
@@ -233,7 +233,7 @@ namespace log4net.Util
 			{
 #if NETCF_1_0
 				return System.Threading.Thread.CurrentThread.GetHashCode();
-#elif NET_2_0 || NETCF_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0 || NETSTANDARD1_3
+#elif NET_2_0 || NETCF_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0 || NETSTANDARD1_3 || NETSTANDARD2_0
 				return System.Threading.Thread.CurrentThread.ManagedThreadId;
 #else
 				return AppDomain.GetCurrentThreadId();
@@ -291,7 +291,7 @@ namespace log4net.Util
 					{
 						try
 						{
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 							s_hostName = Environment.GetEnvironmentVariable("COMPUTERNAME");
 #elif (!SSCLI && !NETCF)
 							s_hostName = Environment.MachineName;
@@ -341,7 +341,7 @@ namespace log4net.Util
 				{
 					try
 					{
-#if !(NETCF || NETSTANDARD1_3)
+#if !(NETCF || NETSTANDARD1_3 || NETSTANDARD2_0)
 						s_appFriendlyName = AppDomain.CurrentDomain.FriendlyName;
 #endif
 					}
@@ -484,7 +484,7 @@ namespace log4net.Util
 		{
 #if NETCF
 			return "Not supported on Microsoft .NET Compact Framework";
-#elif NETSTANDARD1_3  // TODO Assembly.Location available in netstandard1.5
+#elif NETSTANDARD1_3 || NETSTANDARD2_0  // TODO Assembly.Location available in netstandard1.5
             return "Not supported on .NET Core";
 #else
 			if (myAssembly.GlobalAssemblyCache)
@@ -557,7 +557,7 @@ namespace log4net.Util
 		public static string AssemblyQualifiedName(Type type)
 		{
 			return type.FullName + ", "
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 				+ type.GetTypeInfo().Assembly.FullName;
 #else
 				+ type.Assembly.FullName;
@@ -613,7 +613,7 @@ namespace log4net.Util
 		/// </remarks>
 		public static string AssemblyFileName(Assembly myAssembly)
 		{
-#if NETCF || NETSTANDARD1_3 // TODO Assembly.Location is in netstandard1.5 System.Reflection
+#if NETCF || NETSTANDARD1_3 || NETSTANDARD2_0 // TODO Assembly.Location is in netstandard1.5 System.Reflection
 			// This is not very good because it assumes that only
 			// the entry assembly can be an EXE. In fact multiple
 			// EXEs can be loaded in to a process.
@@ -658,14 +658,14 @@ namespace log4net.Util
 		/// </remarks>
 		public static Type GetTypeFromString(Type relativeType, string typeName, bool throwOnError, bool ignoreCase)
 		{
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 			return GetTypeFromString(relativeType.GetTypeInfo().Assembly, typeName, throwOnError, ignoreCase);
 #else
 			return GetTypeFromString(relativeType.Assembly, typeName, throwOnError, ignoreCase);
 #endif
 		}
 
-#if !NETSTANDARD1_3
+#if !NETSTANDARD1_3  && !NETSTANDARD2_0
 		/// <summary>
 		/// Loads the type specified in the type string.
 		/// </summary>
@@ -717,7 +717,7 @@ namespace log4net.Util
 			if(typeName.IndexOf(',') == -1)
 			{
 				//LogLog.Debug(declaringType, "SystemInfo: Loading type ["+typeName+"] from assembly ["+relativeAssembly.FullName+"]");
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 				return relativeAssembly.GetType(typeName, throwOnError, ignoreCase);
 #elif NETCF
 				return relativeAssembly.GetType(typeName, throwOnError);
@@ -999,7 +999,7 @@ namespace log4net.Util
 		{
 			try
 			{
-#if NETCF || NETSTANDARD1_3
+#if NETCF || NETSTANDARD1_3 || NETSTANDARD2_0
 				// Configuration APIs are not suported under the Compact Framework
 #elif NET_2_0
 				return ConfigurationManager.AppSettings[key];
@@ -1101,7 +1101,7 @@ namespace log4net.Util
         {
 #if NET_1_0 || NET_1_1 || NETCF_1_0
             return string.Compare(a, b, true, System.Globalization.CultureInfo.InvariantCulture) == 0
-#elif NETSTANDARD1_3
+#elif NETSTANDARD1_3 || NETSTANDARD2_0
             return CultureInfo.InvariantCulture.CompareInfo.Compare(a, b, CompareOptions.IgnoreCase) == 0;
 #else // >= .NET-2.0
             return String.Equals(a, b, StringComparison.OrdinalIgnoreCase);

@@ -20,7 +20,7 @@
 using System;
 using System.Collections;
 using System.IO;
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 using System.Reflection;
 #endif
 
@@ -300,7 +300,7 @@ namespace log4net.Util
 			s_globalRulesRegistry.Add("date", typeof(DatePatternConverter));
 #if !NETCF
 			s_globalRulesRegistry.Add("env", typeof(EnvironmentPatternConverter));
-#if !NETSTANDARD1_3 // EnvironmentFolderPathPatternConverter not yet supported
+#if !NETSTANDARD1_3  && !NETSTANDARD2_0 // EnvironmentFolderPathPatternConverter not yet supported
 			s_globalRulesRegistry.Add("envFolderPath", typeof(EnvironmentFolderPathPatternConverter));
 #endif
 #endif
@@ -315,7 +315,7 @@ namespace log4net.Util
 			s_globalRulesRegistry.Add("utcdate", typeof(UtcDatePatternConverter));
 			s_globalRulesRegistry.Add("utcDate", typeof(UtcDatePatternConverter));
 			s_globalRulesRegistry.Add("UtcDate", typeof(UtcDatePatternConverter));
-#if !NETCF && !NETSTANDARD1_3
+#if !NETCF && !NETSTANDARD1_3  && !NETSTANDARD2_0
 			// TODO - have added common variants of casing like utcdate above.
 			// Wouldn't it be better to use a case-insensitive Hashtable?
 			s_globalRulesRegistry.Add("appsetting", typeof(AppSettingPatternConverter));

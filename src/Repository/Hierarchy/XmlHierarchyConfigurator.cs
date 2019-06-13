@@ -300,7 +300,7 @@ namespace log4net.Repository.Hierarchy
 			LogLog.Debug(declaringType, "Loading Appender [" + appenderName + "] type: [" + typeName + "]");
 			try 
 			{
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 				IAppender appender = (IAppender)Activator.CreateInstance(SystemInfo.GetTypeFromString(this.GetType().GetTypeInfo().Assembly, typeName, true, true));
 #else
 				IAppender appender = (IAppender)Activator.CreateInstance(SystemInfo.GetTypeFromString(typeName, true, true));
@@ -490,7 +490,7 @@ namespace log4net.Repository.Hierarchy
 			{
 				try 
 				{
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 					m_hierarchy.RendererMap.Put(SystemInfo.GetTypeFromString(this.GetType().GetTypeInfo().Assembly, renderedClassName, true, true), renderer);
 #else
 					m_hierarchy.RendererMap.Put(SystemInfo.GetTypeFromString(renderedClassName, true, true), renderer);
@@ -638,7 +638,7 @@ namespace log4net.Repository.Hierarchy
 
 				if(propertyValue != null)
 				{
-#if !(NETCF || NETSTANDARD1_3) // NETSTANDARD1_3: System.Runtime.InteropServices.RuntimeInformation not available on desktop 4.6
+#if !(NETCF || NETSTANDARD1_3 || NETSTANDARD2_0) // NETSTANDARD1_3: System.Runtime.InteropServices.RuntimeInformation not available on desktop 4.6
 					try
 					{
 						// Expand environment variables in the string.
@@ -666,7 +666,7 @@ namespace log4net.Repository.Hierarchy
 						// Read the explicit subtype
 						try
 						{
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 							Type subType = SystemInfo.GetTypeFromString(this.GetType().GetTypeInfo().Assembly, subTypeString, true, true);
 #else
 							Type subType = SystemInfo.GetTypeFromString(subTypeString, true, true);
@@ -725,7 +725,7 @@ namespace log4net.Repository.Hierarchy
 							try
 							{
 								// Pass to the property
-#if NETSTANDARD1_3 // TODO BindingFlags is available for netstandard1.5
+#if NETSTANDARD1_3 || NETSTANDARD2_0 // TODO BindingFlags is available for netstandard1.5
 								propInfo.SetValue(target, convertedValue, null);
 #else
 								propInfo.SetValue(target, convertedValue, BindingFlags.SetProperty, null, null, CultureInfo.InvariantCulture);
@@ -744,7 +744,7 @@ namespace log4net.Repository.Hierarchy
 							try
 							{
 								// Pass to the property
-#if NETSTANDARD1_3 // TODO BindingFlags is available for netstandard1.5
+#if NETSTANDARD1_3 || NETSTANDARD2_0 // TODO BindingFlags is available for netstandard1.5
 								methInfo.Invoke(target, new[] { convertedValue });
 #else
 								methInfo.Invoke(target, BindingFlags.InvokeMethod, null, new object[] {convertedValue}, CultureInfo.InvariantCulture);
@@ -800,7 +800,7 @@ namespace log4net.Repository.Hierarchy
 							try
 							{
 								// Pass to the property
-#if NETSTANDARD1_3 // TODO BindingFlags is available for netstandard1.5
+#if NETSTANDARD1_3 || NETSTANDARD2_0 // TODO BindingFlags is available for netstandard1.5
 								propInfo.SetValue(target, createdObject, null);
 #else
 								propInfo.SetValue(target, createdObject, BindingFlags.SetProperty, null, null, CultureInfo.InvariantCulture);
@@ -819,7 +819,7 @@ namespace log4net.Repository.Hierarchy
 							try
 							{
 								// Pass to the property
-#if NETSTANDARD1_3 // TODO BindingFlags is available for netstandard1.5
+#if NETSTANDARD1_3 || NETSTANDARD2_0 // TODO BindingFlags is available for netstandard1.5
 								methInfo.Invoke(target, new[] { createdObject });
 #else
 								methInfo.Invoke(target, BindingFlags.InvokeMethod, null, new object[] {createdObject}, CultureInfo.InvariantCulture);
@@ -859,7 +859,7 @@ namespace log4net.Repository.Hierarchy
 		/// <returns><c>true</c> if the type is creatable using a default constructor, <c>false</c> otherwise</returns>
 		private static bool IsTypeConstructible(Type type)
 		{
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 			TypeInfo typeInfo = type.GetTypeInfo();
 			if (typeInfo.IsClass && !typeInfo.IsAbstract)
 #else
@@ -990,7 +990,7 @@ namespace log4net.Repository.Hierarchy
 				// Read the explicit object type
 				try
 				{
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 					objectType = SystemInfo.GetTypeFromString(this.GetType().GetTypeInfo().Assembly, objectTypeString, true, true);
 #else
 					objectType = SystemInfo.GetTypeFromString(objectTypeString, true, true);
@@ -1066,7 +1066,7 @@ namespace log4net.Repository.Hierarchy
 
 		#endregion Protected Instance Methods
 
-#if !(NETCF || NETSTANDARD1_3) // NETSTANDARD1_3: System.Runtime.InteropServices.RuntimeInformation not available on desktop 4.6
+#if !(NETCF || NETSTANDARD1_3 || NETSTANDARD2_0) // NETSTANDARD1_3: System.Runtime.InteropServices.RuntimeInformation not available on desktop 4.6
 		private bool HasCaseInsensitiveEnvironment
 	        {
 		    get
