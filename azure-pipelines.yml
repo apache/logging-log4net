@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'Windows 2019 with VS2019'
+  vmImage: 'windows-latest'
 
 steps:
 - script: echo Hello, world!
