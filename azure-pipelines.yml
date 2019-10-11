@@ -11,16 +11,14 @@ pool:
 
 steps:
 - task: UseDotNet@2
+  displayName: "Use .net core sdk 2.2"
   inputs:
     packageType: 'sdk'
     version: '2.2.x'
 - task: DotNetCoreCLI@2
-  inputs:
-    command: 'restore'
-    projects: '.\netstandard\log4net.netstandard.sln'
-    feedsToUse: 'select'
-    vstsFeed: 'cc499f7c-f140-4e59-aa34-508c25f2cac1'
-- task: DotNetCoreCLI@2
+  displayName: "Build solution"
   inputs:
     command: 'build'
     projects: '.\netstandard\log4net.netstandard.sln'
+    feedsToUse: 'select'
+    vstsFeed: 'cc499f7c-f140-4e59-aa34-508c25f2cac1'
