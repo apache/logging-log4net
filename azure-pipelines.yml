@@ -19,6 +19,12 @@ steps:
   displayName: "Build solution"
   inputs:
     command: 'build'
+    arguments: '-c Release -o $(Build.ArtifactStagingDirectory)' 
     projects: '.\netstandard\log4net.netstandard.sln'
     feedsToUse: 'select'
     vstsFeed: 'cc499f7c-f140-4e59-aa34-508c25f2cac1'
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
