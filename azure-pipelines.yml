@@ -6,6 +6,9 @@
 trigger:
 - master
 
+workspace:
+  clean: all
+
 pool:
   vmImage: 'windows-latest'
 
@@ -19,6 +22,20 @@ steps:
   displayName: "Build solution"
   inputs:
     command: 'build'
+    arguments: '-c Release' 
     projects: '.\netstandard\log4net.netstandard.sln'
     feedsToUse: 'select'
     vstsFeed: 'cc499f7c-f140-4e59-aa34-508c25f2cac1'
+- task: CopyFiles@2
+  displayName: 'Copy package'
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)\netstandard\log4net\bin\Release'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    CleanTargetFolder: true
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish package'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
