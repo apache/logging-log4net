@@ -6,6 +6,9 @@
 trigger:
 - master
 
+workspace:
+  clean: all
+
 pool:
   vmImage: 'windows-latest'
 
