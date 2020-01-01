@@ -1,0 +1,61 @@
+<Project Sdk="">
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<BaseOutputPath>bin\</BaseOutputPath>
+		<BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+		<AssemblyName>log4net</AssemblyName>
+		<RootNamespace>log4net</RootNamespace>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<OutputPath>bin\Debug\</OutputPath>
+		<DefineConstants>NET_2_0,NETSTANDARD1_3</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<OutputPath>bin\Release\</OutputPath>
+		<DefineConstants>NET_2_0,NETSTANDARD1_3</DefineConstants>
+	</PropertyGroup>
+
+	<Import Sdk="Microsoft.NET.Sdk" Project="Sdk.props" />
+	<Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
+	
+	<ItemGroup>
+		<Compile Remove="assembly\**" />
+		<Compile Remove="changes\**" />
+		<Compile Remove="obj\**" />
+		<Compile Remove="site\**" />
+		<EmbeddedResource Remove="assembly\**" />
+		<EmbeddedResource Remove="changes\**" />
+		<EmbeddedResource Remove="obj\**" />
+		<EmbeddedResource Remove="site\**" />
+		<None Remove="assembly\**" />
+		<None Remove="changes\**" />
+		<None Remove="obj\**" />
+		<None Remove="site\**" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <Compile Remove="Appender\AdoNetAppender.cs" />
+	  <Compile Remove="Appender\AspNetTraceAppender.cs" />
+	  <Compile Remove="Appender\RemotingAppender.cs" />
+	  <Compile Remove="Layout\Pattern\AspNetCachePatternConverter.cs" />
+	  <Compile Remove="Layout\Pattern\AspNetContextPatternConverter.cs" />
+	  <Compile Remove="Layout\Pattern\AspNetPatternConverter.cs" />
+	  <Compile Remove="Layout\Pattern\AspNetRequestPatternConverter.cs" />
+	  <Compile Remove="Layout\Pattern\AspNetSessionPatternConverter.cs" />
+	  <Compile Remove="Layout\Pattern\StackTraceDetailPatternConverter.cs" />
+	  <Compile Remove="Layout\Pattern\StackTracePatternConverter.cs" />
+	  <Compile Remove="Plugin\RemoteLoggingServerPlugin.cs" />
+	  <Compile Remove="Util\WindowsSecurityContext.cs" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
+	  <PackageReference Include="System.Diagnostics.EventLog" Version="4.7.0" />
+	</ItemGroup>
+	
+</Project>

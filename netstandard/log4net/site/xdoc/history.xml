@@ -1,0 +1,58 @@
+<?xml version="1.0" ?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one or more 
+contributor license agreements. See the NOTICE file distributed with
+this work for additional information regarding copyright ownership. 
+The ASF licenses this file to you under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with 
+the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<document>
+
+    <properties>
+        <author email="nicko at apache dot org">Nicko Cadell</author>
+        <title>Apache log4net: Project History</title>
+    </properties>
+
+    <meta name="keywords" content="log4net project history, log4net" />
+
+    <body>
+        <section id="main" name="Apache log4net&#x2122; Project History">
+
+            <p>
+                The log4net project was started by <a href="http://www.neoworks.com">Neoworks Limited</a> 
+                in June 2001. It was created as an internal project within Neoworks to port the Apache 
+                log4j&#x2122; code base to the Microsoft&#xae; .NET Framework. The code base was initially branched 
+                from a pre-alpha log4j 1.2.
+            </p>
+
+            <p>
+                In July 2001 a <a href="http://sourceforge.net">Sourceforge</a> project was started
+                and log4net was published under the Apache Software License. The first public release of
+                log4net was made in September 2001. A further 10 releases were made on the sourceforge
+                site.
+            </p>
+
+            <p>
+                In December 2003 the Apache Logging Services project was created. 
+                In February 2004 log4net was donated by Neoworks to the Apache Software Foundation
+                to become a member of the Logging Services project. 
+            </p>
+            
+            <p>
+                In February 2007 log4net graduated from the Apache Incubator project to become a
+                fully fledged Apache project. Apache log4net is a subproject of the Logging Services project.
+            </p>
+            
+        </section>
+    </body>
+
+</document>

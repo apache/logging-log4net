@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl"?>
+<rdf:RDF xml:lang="en"
+         xmlns="http://usefulinc.com/ns/doap#" 
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+         xmlns:asfext="http://projects.apache.org/ns/asfext#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/">
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+-->
+  <Project rdf:about="http://logging.apache.org/log4net">
+    <created>2007-02-09</created>
+    <license rdf:resource="http://usefulinc.com/doap/licenses/asl20" />
+    <name>Apache log4net</name>
+    <homepage rdf:resource="http://logging.apache.org/log4net/" />
+    <asfext:pmc rdf:resource="http://logging.apache.org" />
+    <shortdesc>Apache log4net provides logging services for .NET.</shortdesc>
+    <bug-database rdf:resource="https://issues.apache.org/jira/browse/LOG4NET" />
+    <mailing-list rdf:resource="http://logging.apache.org/log4net/mail-lists.html" />
+    <download-page rdf:resource="http://logging.apache.org/log4net/download_log4net.cgi" />
+    <programming-language>C#</programming-language>
+    <category rdf:resource="http://projects.apache.org/category/library" />
+    <repository>
+      <GITRepository>
+        <location rdf:resource="https://git-wip-us.apache.org/repos/asf/logging-log4net.git"/>
+        <browse rdf:resource="https://git-wip-us.apache.org/repos/asf/logging-log4net.git"/>
+      </GITRepository>
+    </repository>
+    <release>
+      <Version>
+        <name>Apache log4net 1.2.9</name>
+        <created>2005-03-21</created>
+        <revision>1.2.9</revision>
+      </Version>
+    </release>
+    <release>
+      <Version>
+        <name>Apache log4net 1.2.10</name>
+        <created>2006-04-19</created>
+        <revision>1.2.10</revision>
+      </Version>
+    </release>
+    <release>
+      <Version>
+        <name>Apache log4net 1.2.11</name>
+        <created>2011-10-12</created>
+        <revision>1.2.11</revision>
+      </Version>
+    </release>
+    <release>
+      <Version>
+        <name>Apache log4net 1.2.12</name>
+        <created>2013-09-12</created>
+        <revision>1.2.12</revision>
+      </Version>
+    </release>
+    <release>
+      <Version>
+        <name>Apache log4net 1.2.13</name>
+        <created>2013-11-21</created>
+        <revision>1.2.13</revision>
+      </Version>
+    </release>
+    <release>
+      <Version>
+        <name>Apache log4net 1.2.14</name>
+        <created>2015-11-11</created>
+        <revision>1.2.14</revision>
+      </Version>
+    </release>
+    <release>
+      <Version>
+        <name>Apache log4net 1.2.15</name>
+        <created>2015-12-09</created>
+        <revision>1.2.15</revision>
+      </Version>
+    </release>
+    <release>
+      <Version>
+        <name>Apache log4net 2.0.6</name>
+        <created>2016-12-25</created>
+        <revision>2.0.6</revision>
+      </Version>
+    </release>
+    <release>
+      <Version>
+        <name>Apache log4net 2.0.7</name>
+        <created>2017-01-05</created>
+        <revision>2.0.7</revision>
+      </Version>
+    </release>
+    <release>
+      <Version>
+        <name>Apache log4net 2.0.8</name>
+        <created>2017-03-11</created>
+        <revision>2.0.8</revision>
+      </Version>
+    </release>
+  </Project>
+</rdf:RDF>
