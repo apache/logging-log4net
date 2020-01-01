@@ -8,6 +8,8 @@
 		<BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
 		<AssemblyName>log4net</AssemblyName>
 		<RootNamespace>log4net</RootNamespace>
+		<Version>3.0.0</Version>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
