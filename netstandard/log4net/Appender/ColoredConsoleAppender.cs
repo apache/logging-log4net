@@ -458,7 +458,7 @@ namespace log4net.Appender
 			}
 
 			// Lookup the codepage encoding for the console
-			System.Text.Encoding consoleEncoding = System.Text.Encoding.GetEncoding(GetConsoleOutputCP());
+			System.Text.Encoding consoleEncoding = Console.OutputEncoding;
 
 			// Create a writer around the console stream
 			m_consoleOutputWriter = new System.IO.StreamWriter(consoleOutputStream, consoleEncoding, 0x100);
