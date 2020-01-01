@@ -300,11 +300,11 @@ namespace log4net.Repository.Hierarchy
 			LogLog.Debug(declaringType, "Loading Appender [" + appenderName + "] type: [" + typeName + "]");
 			try 
 			{
-#if NETSTANDARD1_3
+//#if NETSTANDARD1_3
 				IAppender appender = (IAppender)Activator.CreateInstance(SystemInfo.GetTypeFromString(this.GetType().GetTypeInfo().Assembly, typeName, true, true));
-#else
-				IAppender appender = (IAppender)Activator.CreateInstance(SystemInfo.GetTypeFromString(typeName, true, true));
-#endif
+//#else
+//				IAppender appender = (IAppender)Activator.CreateInstance(SystemInfo.GetTypeFromString(typeName, true, true));
+//#endif
 				appender.Name = appenderName;
 
 				foreach (XmlNode currentNode in appenderElement.ChildNodes)
@@ -638,7 +638,6 @@ namespace log4net.Repository.Hierarchy
 
 				if(propertyValue != null)
 				{
-#if !(NETCF || NETSTANDARD1_3) // NETSTANDARD1_3: System.Runtime.InteropServices.RuntimeInformation not available on desktop 4.6
 					try
 					{
 						// Expand environment variables in the string.
@@ -655,7 +654,7 @@ namespace log4net.Repository.Hierarchy
 						// will be skipped with the following warning message.
 						LogLog.Debug(declaringType, "Security exception while trying to expand environment variables. Error Ignored. No Expansion.");
 					}
-#endif
+
 
 					Type parsedObjectConversionTargetType = null;
 
@@ -666,11 +665,11 @@ namespace log4net.Repository.Hierarchy
 						// Read the explicit subtype
 						try
 						{
-#if NETSTANDARD1_3
+//#if NETSTANDARD1_3
 							Type subType = SystemInfo.GetTypeFromString(this.GetType().GetTypeInfo().Assembly, subTypeString, true, true);
-#else
-							Type subType = SystemInfo.GetTypeFromString(subTypeString, true, true);
-#endif
+//#else
+					//		Type subType = SystemInfo.GetTypeFromString(subTypeString, true, true);
+//#endif
 
 							LogLog.Debug(declaringType, "Parameter ["+name+"] specified subtype ["+subType.FullName+"]");
 
@@ -725,11 +724,11 @@ namespace log4net.Repository.Hierarchy
 							try
 							{
 								// Pass to the property
-#if NETSTANDARD1_3 // TODO BindingFlags is available for netstandard1.5
-								propInfo.SetValue(target, convertedValue, null);
-#else
+//#if NETSTANDARD1_3 // TODO BindingFlags is available for netstandard1.5
+								//propInfo.SetValue(target, convertedValue, null);
+//#else
 								propInfo.SetValue(target, convertedValue, BindingFlags.SetProperty, null, null, CultureInfo.InvariantCulture);
-#endif
+//#endif
 							}
 							catch(TargetInvocationException targetInvocationEx)
 							{
@@ -744,11 +743,11 @@ namespace log4net.Repository.Hierarchy
 							try
 							{
 								// Pass to the property
-#if NETSTANDARD1_3 // TODO BindingFlags is available for netstandard1.5
-								methInfo.Invoke(target, new[] { convertedValue });
-#else
+//#if NETSTANDARD1_3 // TODO BindingFlags is available for netstandard1.5
+								//methInfo.Invoke(target, new[] { convertedValue });
+//#else
 								methInfo.Invoke(target, BindingFlags.InvokeMethod, null, new object[] {convertedValue}, CultureInfo.InvariantCulture);
-#endif
+//#endif
 							}
 							catch(TargetInvocationException targetInvocationEx)
 							{
@@ -800,11 +799,11 @@ namespace log4net.Repository.Hierarchy
 							try
 							{
 								// Pass to the property
-#if NETSTANDARD1_3 // TODO BindingFlags is available for netstandard1.5
-								propInfo.SetValue(target, createdObject, null);
-#else
+//#if NETSTANDARD1_3 // TODO BindingFlags is available for netstandard1.5
+								//propInfo.SetValue(target, createdObject, null);
+//#else
 								propInfo.SetValue(target, createdObject, BindingFlags.SetProperty, null, null, CultureInfo.InvariantCulture);
-#endif
+//#endif
 							}
 							catch(TargetInvocationException targetInvocationEx)
 							{
@@ -819,11 +818,11 @@ namespace log4net.Repository.Hierarchy
 							try
 							{
 								// Pass to the property
-#if NETSTANDARD1_3 // TODO BindingFlags is available for netstandard1.5
-								methInfo.Invoke(target, new[] { createdObject });
-#else
+//#if NETSTANDARD1_3 // TODO BindingFlags is available for netstandard1.5
+								//methInfo.Invoke(target, new[] { createdObject });
+//#else
 								methInfo.Invoke(target, BindingFlags.InvokeMethod, null, new object[] {createdObject}, CultureInfo.InvariantCulture);
-#endif
+//#endif
 							}
 							catch(TargetInvocationException targetInvocationEx)
 							{
@@ -1066,7 +1065,7 @@ namespace log4net.Repository.Hierarchy
 
 		#endregion Protected Instance Methods
 
-#if !(NETCF || NETSTANDARD1_3) // NETSTANDARD1_3: System.Runtime.InteropServices.RuntimeInformation not available on desktop 4.6
+#if (NETCF || NETSTANDARD1_3) // NETSTANDARD1_3: System.Runtime.InteropServices.RuntimeInformation not available on desktop 4.6
 		private bool HasCaseInsensitiveEnvironment
 	        {
 		    get
