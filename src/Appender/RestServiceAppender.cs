@@ -12,18 +12,24 @@ namespace log4net.Appender
     {
         private HttpClient _httpClient;
 
-        public RestServiceAppender()
+
+        public RestServiceAppender(HttpClient httpClient)
         {
-            _httpClient = new HttpClient();
+            _httpClient = httpClient;
 
             m_parameters = new ArrayList();
+        }
+
+        public RestServiceAppender()
+            :this(new HttpClient())
+        {
+           
         }
 
         public string LoggingEndpoint { get; set; }
         public string ContentType { get; set; }
         public string HttpMethod { get; set; }
         public string Name { get; set; }
-
         public bool IncludeAllFields { get; set; }
 
         public void AddParameter(RestAppenderParameter parameter)
@@ -59,7 +65,7 @@ namespace log4net.Appender
             }
             catch (Exception ex)
             {
-                // Sadly, your connection is bad.
+                // Sadly, your connection is bad or rest endpoint does not exist
                 Error($"Cannot Send Error To {LoggingEndpoint}", ex);
             }
 
