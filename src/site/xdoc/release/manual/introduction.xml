@@ -631,7 +631,7 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net.Appender_FileAppender.htm">log4net.Appender.FileAppender</a></td>
+                                <td><a href="../sdk/html/T_log4net_Appender_FileAppender.htm">log4net.Appender.FileAppender</a></td>
                                 <td>
                                     Writes logging events to a file in the file system.
                                 </td>
