@@ -150,7 +150,13 @@ namespace log4net.Util
 		/// </para>
 		/// </remarks>
 #if NETSTANDARD1_3
-		virtual public void Close()
+		public 
+#if NETSTANDARD2_0
+		override
+#else
+		virtual
+#endif
+		void Close()
 		{
 			m_writer.Dispose();
 		}

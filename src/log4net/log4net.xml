@@ -4,697 +4,6 @@
         <name>log4net</name>
     </assembly>
     <members>
-        <member name="T:log4net.Appender.AdoNetAppender">
-            <summary>
-            Appender that logs to a database.
-            </summary>
-            <remarks>
-            <para>
-            <see cref="T:log4net.Appender.AdoNetAppender"/> appends logging events to a table within a
-            database. The appender can be configured to specify the connection 
-            string by setting the <see cref="P:log4net.Appender.AdoNetAppender.ConnectionString"/> property. 
-            The connection type (provider) can be specified by setting the <see cref="P:log4net.Appender.AdoNetAppender.ConnectionType"/>
-            property. For more information on database connection strings for
-            your specific database see <a href="http://www.connectionstrings.com/">http://www.connectionstrings.com/</a>.
-            </para>
-            <para>
-            Records are written into the database either using a prepared
-            statement or a stored procedure. The <see cref="P:log4net.Appender.AdoNetAppender.CommandType"/> property
-            is set to <see cref="F:System.Data.CommandType.Text"/> (<c>System.Data.CommandType.Text</c>) to specify a prepared statement
-            or to <see cref="F:System.Data.CommandType.StoredProcedure"/> (<c>System.Data.CommandType.StoredProcedure</c>) to specify a stored
-            procedure.
-            </para>
-            <para>
-            The prepared statement text or the name of the stored procedure
-            must be set in the <see cref="P:log4net.Appender.AdoNetAppender.CommandText"/> property.
-            </para>
-            <para>
-            The prepared statement or stored procedure can take a number
-            of parameters. Parameters are added using the <see cref="M:log4net.Appender.AdoNetAppender.AddParameter(log4net.Appender.AdoNetAppenderParameter)"/>
-            method. This adds a single <see cref="T:log4net.Appender.AdoNetAppenderParameter"/> to the
-            ordered list of parameters. The <see cref="T:log4net.Appender.AdoNetAppenderParameter"/>
-            type may be subclassed if required to provide database specific
-            functionality. The <see cref="T:log4net.Appender.AdoNetAppenderParameter"/> specifies
-            the parameter name, database type, size, and how the value should
-            be generated using a <see cref="T:log4net.Layout.ILayout"/>.
-            </para>
-            </remarks>
-            <example>
-            An example of a SQL Server table that could be logged to:
-            <code lang="SQL">
-            CREATE TABLE [dbo].[Log] ( 
-              [ID] [int] IDENTITY (1, 1) NOT NULL ,
-              [Date] [datetime] NOT NULL ,
-              [Thread] [varchar] (255) NOT NULL ,
-              [Level] [varchar] (20) NOT NULL ,
-              [Logger] [varchar] (255) NOT NULL ,
-              [Message] [varchar] (4000) NOT NULL 
-            ) ON [PRIMARY]
-            </code>
-            </example>
-            <example>
-            An example configuration to log to the above table:
-            <code lang="XML" escaped="true">
-            <appender name="AdoNetAppender_SqlServer" type="log4net.Appender.AdoNetAppender" >
-              <connectionType value="System.Data.SqlClient.SqlConnection, System.Data, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-              <connectionString value="data source=SQLSVR;initial catalog=test_log4net;integrated security=false;persist security info=True;User ID=sa;Password=sa" />
-              <commandText value="INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message]) VALUES (@log_date, @thread, @log_level, @logger, @message)" />
-              <parameter>
-                <parameterName value="@log_date" />
-                <dbType value="DateTime" />
-                <layout type="log4net.Layout.PatternLayout" value="%date{yyyy'-'MM'-'dd HH':'mm':'ss'.'fff}" />
-              </parameter>
-              <parameter>
-                <parameterName value="@thread" />
-                <dbType value="String" />
-                <size value="255" />
-                <layout type="log4net.Layout.PatternLayout" value="%thread" />
-              </parameter>
-              <parameter>
-                <parameterName value="@log_level" />
-                <dbType value="String" />
-                <size value="50" />
-                <layout type="log4net.Layout.PatternLayout" value="%level" />
-              </parameter>
-              <parameter>
-                <parameterName value="@logger" />
-                <dbType value="String" />
-                <size value="255" />
-                <layout type="log4net.Layout.PatternLayout" value="%logger" />
-              </parameter>
-              <parameter>
-                <parameterName value="@message" />
-                <dbType value="String" />
-                <size value="4000" />
-                <layout type="log4net.Layout.PatternLayout" value="%message" />
-              </parameter>
-            </appender>
-            </code>
-            </example>
-            <author>Julian Biddle</author>
-            <author>Nicko Cadell</author>
-            <author>Gert Driesen</author>
-            <author>Lance Nehring</author>
-        </member>
-        <member name="M:log4net.Appender.AdoNetAppender.#ctor">
-            <summary> 
-            Initializes a new instance of the <see cref="T:log4net.Appender.AdoNetAppender" /> class.
-            </summary>
-            <remarks>
-            Public default constructor to initialize a new instance of this class.
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.AdoNetAppender.ConnectionString">
-            <summary>
-            Gets or sets the database connection string that is used to connect to 
-            the database.
-            </summary>
-            <value>
-            The database connection string used to connect to the database.
-            </value>
-            <remarks>
-            <para>
-            The connections string is specific to the connection type.
-            See <see cref="P:log4net.Appender.AdoNetAppender.ConnectionType"/> for more information.
-            </para>
-            </remarks>
-            <example>Connection string for MS Access via ODBC:
-            <code>"DSN=MS Access Database;UID=admin;PWD=;SystemDB=C:\data\System.mdw;SafeTransactions = 0;FIL=MS Access;DriverID = 25;DBQ=C:\data\train33.mdb"</code>
-            </example>
-            <example>Another connection string for MS Access via ODBC:
-            <code>"Driver={Microsoft Access Driver (*.mdb)};DBQ=C:\Work\cvs_root\log4net-1.2\access.mdb;UID=;PWD=;"</code>
-            </example>
-            <example>Connection string for MS Access via OLE DB:
-            <code>"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\Work\cvs_root\log4net-1.2\access.mdb;User Id=;Password=;"</code>
-            </example>
-        </member>
-        <member name="P:log4net.Appender.AdoNetAppender.AppSettingsKey">
-            <summary>
-            The appSettings key from App.Config that contains the connection string.
-            </summary>
-        </member>
-        <member name="P:log4net.Appender.AdoNetAppender.ConnectionStringName">
-            <summary>
-            The connectionStrings key from App.Config that contains the connection string.
-            </summary>
-            <remarks>
-            This property requires at least .NET 2.0.
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.AdoNetAppender.ConnectionType">
-            <summary>
-            Gets or sets the type name of the <see cref="T:System.Data.IDbConnection"/> connection
-            that should be created.
-            </summary>
-            <value>
-            The type name of the <see cref="T:System.Data.IDbConnection"/> connection.
-            </value>
-            <remarks>
-            <para>
-            The type name of the ADO.NET provider to use.
-            </para>
-            <para>
-            The default is to use the OLE DB provider.
-            </para>
-            </remarks>
-            <example>Use the OLE DB Provider. This is the default value.
-            <code>System.Data.OleDb.OleDbConnection, System.Data, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</code>
-            </example>
-            <example>Use the MS SQL Server Provider. 
-            <code>System.Data.SqlClient.SqlConnection, System.Data, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</code>
-            </example>
-            <example>Use the ODBC Provider. 
-            <code>Microsoft.Data.Odbc.OdbcConnection,Microsoft.Data.Odbc,version=1.0.3300.0,publicKeyToken=b77a5c561934e089,culture=neutral</code>
-            This is an optional package that you can download from 
-            <a href="http://msdn.microsoft.com/downloads">http://msdn.microsoft.com/downloads</a> 
-            search for <b>ODBC .NET Data Provider</b>.
-            </example>
-            <example>Use the Oracle Provider. 
-            <code>System.Data.OracleClient.OracleConnection, System.Data.OracleClient, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</code>
-            This is an optional package that you can download from 
-            <a href="http://msdn.microsoft.com/downloads">http://msdn.microsoft.com/downloads</a> 
-            search for <b>.NET Managed Provider for Oracle</b>.
-            </example>
-        </member>
-        <member name="P:log4net.Appender.AdoNetAppender.CommandText">
-            <summary>
-            Gets or sets the command text that is used to insert logging events
-            into the database.
-            </summary>
-            <value>
-            The command text used to insert logging events into the database.
-            </value>
-            <remarks>
-            <para>
-            Either the text of the prepared statement or the
-            name of the stored procedure to execute to write into
-            the database.
-            </para>
-            <para>
-            The <see cref="P:log4net.Appender.AdoNetAppender.CommandType"/> property determines if
-            this text is a prepared statement or a stored procedure.
-            </para>
-            <para>
-            If this property is not set, the command text is retrieved by invoking
-            <see cref="M:log4net.Appender.AdoNetAppender.GetLogStatement(log4net.Core.LoggingEvent)"/>.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.AdoNetAppender.CommandType">
-            <summary>
-            Gets or sets the command type to execute.
-            </summary>
-            <value>
-            The command type to execute.
-            </value>
-            <remarks>
-            <para>
-            This value may be either <see cref="F:System.Data.CommandType.Text"/> (<c>System.Data.CommandType.Text</c>) to specify
-            that the <see cref="P:log4net.Appender.AdoNetAppender.CommandText"/> is a prepared statement to execute, 
-            or <see cref="F:System.Data.CommandType.StoredProcedure"/> (<c>System.Data.CommandType.StoredProcedure</c>) to specify that the
-            <see cref="P:log4net.Appender.AdoNetAppender.CommandText"/> property is the name of a stored procedure
-            to execute.
-            </para>
-            <para>
-            The default value is <see cref="F:System.Data.CommandType.Text"/> (<c>System.Data.CommandType.Text</c>).
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.AdoNetAppender.UseTransactions">
-            <summary>
-            Should transactions be used to insert logging events in the database.
-            </summary>
-            <value>
-            <c>true</c> if transactions should be used to insert logging events in
-            the database, otherwise <c>false</c>. The default value is <c>true</c>.
-            </value>
-            <remarks>
-            <para>
-            Gets or sets a value that indicates whether transactions should be used
-            to insert logging events in the database.
-            </para>
-            <para>
-            When set a single transaction will be used to insert the buffered events
-            into the database. Otherwise each event will be inserted without using
-            an explicit transaction.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.AdoNetAppender.SecurityContext">
-            <summary>
-            Gets or sets the <see cref="P:log4net.Appender.AdoNetAppender.SecurityContext"/> used to call the NetSend method.
-            </summary>
-            <value>
-            The <see cref="P:log4net.Appender.AdoNetAppender.SecurityContext"/> used to call the NetSend method.
-            </value>
-            <remarks>
-            <para>
-            Unless a <see cref="P:log4net.Appender.AdoNetAppender.SecurityContext"/> specified here for this appender
-            the <see cref="P:log4net.Core.SecurityContextProvider.DefaultProvider"/> is queried for the
-            security context to use. The default behavior is to use the security context
-            of the current thread.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.AdoNetAppender.ReconnectOnError">
-            <summary>
-            Should this appender try to reconnect to the database on error.
-            </summary>
-            <value>
-            <c>true</c> if the appender should try to reconnect to the database after an
-            error has occurred, otherwise <c>false</c>. The default value is <c>false</c>, 
-            i.e. not to try to reconnect.
-            </value>
-            <remarks>
-            <para>
-            The default behaviour is for the appender not to try to reconnect to the
-            database if an error occurs. Subsequent logging events are discarded.
-            </para>
-            <para>
-            To force the appender to attempt to reconnect to the database set this
-            property to <c>true</c>.
-            </para>
-            <note>
-            When the appender attempts to connect to the database there may be a
-            delay of up to the connection timeout specified in the connection string.
-            This delay will block the calling application's thread. 
-            Until the connection can be reestablished this potential delay may occur multiple times.
-            </note>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.AdoNetAppender.Connection">
-            <summary>
-            Gets or sets the underlying <see cref="T:System.Data.IDbConnection" />.
-            </summary>
-            <value>
-            The underlying <see cref="T:System.Data.IDbConnection" />.
-            </value>
-            <remarks>
-            <see cref="T:log4net.Appender.AdoNetAppender" /> creates a <see cref="T:System.Data.IDbConnection" /> to insert 
-            logging events into a database.  Classes deriving from <see cref="T:log4net.Appender.AdoNetAppender" /> 
-            can use this property to get or set this <see cref="T:System.Data.IDbConnection" />.  Use the 
-            underlying <see cref="T:System.Data.IDbConnection" /> returned from <see cref="P:log4net.Appender.AdoNetAppender.Connection" /> if 
-            you require access beyond that which <see cref="T:log4net.Appender.AdoNetAppender" /> provides.
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.AdoNetAppender.ActivateOptions">
-            <summary>
-            Initialize the appender based on the options set
-            </summary>
-            <remarks>
-            <para>
-            This is part of the <see cref="T:log4net.Core.IOptionHandler"/> delayed object
-            activation scheme. The <see cref="M:log4net.Appender.AdoNetAppender.ActivateOptions"/> method must 
-            be called on this object after the configuration properties have
-            been set. Until <see cref="M:log4net.Appender.AdoNetAppender.ActivateOptions"/> is called this
-            object is in an undefined state and must not be used. 
-            </para>
-            <para>
-            If any of the configuration properties are modified then 
-            <see cref="M:log4net.Appender.AdoNetAppender.ActivateOptions"/> must be called again.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.AdoNetAppender.OnClose">
-            <summary>
-            Override the parent method to close the database
-            </summary>
-            <remarks>
-            <para>
-            Closes the database command and database connection.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.AdoNetAppender.SendBuffer(log4net.Core.LoggingEvent[])">
-            <summary>
-            Inserts the events into the database.
-            </summary>
-            <param name="events">The events to insert into the database.</param>
-            <remarks>
-            <para>
-            Insert all the events specified in the <paramref name="events"/>
-            array into the database.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.AdoNetAppender.AddParameter(log4net.Appender.AdoNetAppenderParameter)">
-            <summary>
-            Adds a parameter to the command.
-            </summary>
-            <param name="parameter">The parameter to add to the command.</param>
-            <remarks>
-            <para>
-            Adds a parameter to the ordered list of command parameters.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.AdoNetAppender.SendBuffer(System.Data.IDbTransaction,log4net.Core.LoggingEvent[])">
-            <summary>
-            Writes the events to the database using the transaction specified.
-            </summary>
-            <param name="dbTran">The transaction that the events will be executed under.</param>
-            <param name="events">The array of events to insert into the database.</param>
-            <remarks>
-            <para>
-            The transaction argument can be <c>null</c> if the appender has been
-            configured not to use transactions. See <see cref="P:log4net.Appender.AdoNetAppender.UseTransactions"/>
-            property for more information.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.AdoNetAppender.GetLogStatement(log4net.Core.LoggingEvent)">
-            <summary>
-            Formats the log message into database statement text.
-            </summary>
-            <param name="logEvent">The event being logged.</param>
-            <remarks>
-            This method can be overridden by subclasses to provide 
-            more control over the format of the database statement.
-            </remarks>
-            <returns>
-            Text that can be passed to a <see cref="T:System.Data.IDbCommand"/>.
-            </returns>
-        </member>
-        <member name="M:log4net.Appender.AdoNetAppender.CreateConnection(System.Type,System.String)">
-            <summary>
-            Creates an <see cref="T:System.Data.IDbConnection"/> instance used to connect to the database.
-            </summary>
-            <remarks>
-            This method is called whenever a new IDbConnection is needed (i.e. when a reconnect is necessary).
-            </remarks>
-            <param name="connectionType">The <see cref="T:System.Type"/> of the <see cref="T:System.Data.IDbConnection"/> object.</param>
-            <param name="connectionString">The connectionString output from the ResolveConnectionString method.</param>
-            <returns>An <see cref="T:System.Data.IDbConnection"/> instance with a valid connection string.</returns>
-        </member>
-        <member name="M:log4net.Appender.AdoNetAppender.ResolveConnectionString(System.String@)">
-            <summary>
-            Resolves the connection string from the ConnectionString, ConnectionStringName, or AppSettingsKey
-            property.
-            </summary>
-            <remarks>
-            ConnectiongStringName is only supported on .NET 2.0 and higher.
-            </remarks>
-            <param name="connectionStringContext">Additional information describing the connection string.</param>
-            <returns>A connection string used to connect to the database.</returns>
-        </member>
-        <member name="M:log4net.Appender.AdoNetAppender.ResolveConnectionType">
-            <summary>
-            Retrieves the class type of the ADO.NET provider.
-            </summary>
-            <remarks>
-            <para>
-            Gets the Type of the ADO.NET provider to use to connect to the
-            database. This method resolves the type specified in the 
-            <see cref="P:log4net.Appender.AdoNetAppender.ConnectionType"/> property.
-            </para>
-            <para>
-            Subclasses can override this method to return a different type
-            if necessary.
-            </para>
-            </remarks>
-            <returns>The <see cref="T:System.Type"/> of the ADO.NET provider</returns>
-        </member>
-        <member name="M:log4net.Appender.AdoNetAppender.InitializeDatabaseConnection">
-            <summary>
-            Connects to the database.
-            </summary>		
-        </member>
-        <member name="M:log4net.Appender.AdoNetAppender.DiposeConnection">
-            <summary>
-            Cleanup the existing connection.
-            </summary>
-            <remarks>
-            Calls the IDbConnection's <see cref="M:System.Data.IDbConnection.Close"/> method.
-            </remarks>
-        </member>
-        <member name="F:log4net.Appender.AdoNetAppender.m_parameters">
-            <summary>
-            The list of <see cref="T:log4net.Appender.AdoNetAppenderParameter"/> objects.
-            </summary>
-            <remarks>
-            <para>
-            The list of <see cref="T:log4net.Appender.AdoNetAppenderParameter"/> objects.
-            </para>
-            </remarks>
-        </member>
-        <member name="F:log4net.Appender.AdoNetAppender.m_securityContext">
-            <summary>
-            The security context to use for privileged calls
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.AdoNetAppender.m_dbConnection">
-            <summary>
-            The <see cref="T:System.Data.IDbConnection" /> that will be used
-            to insert logging events into a database.
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.AdoNetAppender.m_connectionString">
-            <summary>
-            Database connection string.
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.AdoNetAppender.m_appSettingsKey">
-            <summary>
-            The appSettings key from App.Config that contains the connection string.
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.AdoNetAppender.m_connectionStringName">
-            <summary>
-            The connectionStrings key from App.Config that contains the connection string.
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.AdoNetAppender.m_connectionType">
-            <summary>
-            String type name of the <see cref="T:System.Data.IDbConnection"/> type name.
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.AdoNetAppender.m_commandText">
-            <summary>
-            The text of the command.
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.AdoNetAppender.m_commandType">
-            <summary>
-            The command type.
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.AdoNetAppender.m_useTransactions">
-            <summary>
-            Indicates whether to use transactions when writing to the database.
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.AdoNetAppender.m_reconnectOnError">
-            <summary>
-            Indicates whether to reconnect when a connection is lost.
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.AdoNetAppender.declaringType">
-            <summary>
-            The fully qualified type of the AdoNetAppender class.
-            </summary>
-            <remarks>
-            Used by the internal logger to record the Type of the
-            log message.
-            </remarks>
-        </member>
-        <member name="T:log4net.Appender.AdoNetAppenderParameter">
-            <summary>
-            Parameter type used by the <see cref="T:log4net.Appender.AdoNetAppender"/>.
-            </summary>
-            <remarks>
-            <para>
-            This class provides the basic database parameter properties
-            as defined by the <see cref="T:System.Data.IDbDataParameter"/> interface.
-            </para>
-            <para>This type can be subclassed to provide database specific
-            functionality. The two methods that are called externally are
-            <see cref="M:log4net.Appender.AdoNetAppenderParameter.Prepare(System.Data.IDbCommand)"/> and <see cref="M:log4net.Appender.AdoNetAppenderParameter.FormatValue(System.Data.IDbCommand,log4net.Core.LoggingEvent)"/>.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.AdoNetAppenderParameter.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:log4net.Appender.AdoNetAppenderParameter" /> class.
-            </summary>
-            <remarks>
-            Default constructor for the AdoNetAppenderParameter class.
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.AdoNetAppenderParameter.ParameterName">
-            <summary>
-            Gets or sets the name of this parameter.
-            </summary>
-            <value>
-            The name of this parameter.
-            </value>
-            <remarks>
-            <para>
-            The name of this parameter. The parameter name
-            must match up to a named parameter to the SQL stored procedure
-            or prepared statement.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.AdoNetAppenderParameter.DbType">
-            <summary>
-            Gets or sets the database type for this parameter.
-            </summary>
-            <value>
-            The database type for this parameter.
-            </value>
-            <remarks>
-            <para>
-            The database type for this parameter. This property should
-            be set to the database type from the <see cref="P:log4net.Appender.AdoNetAppenderParameter.DbType"/>
-            enumeration. See <see cref="P:System.Data.IDataParameter.DbType"/>.
-            </para>
-            <para>
-            This property is optional. If not specified the ADO.NET provider 
-            will attempt to infer the type from the value.
-            </para>
-            </remarks>
-            <seealso cref="P:System.Data.IDataParameter.DbType" />
-        </member>
-        <member name="P:log4net.Appender.AdoNetAppenderParameter.Precision">
-            <summary>
-            Gets or sets the precision for this parameter.
-            </summary>
-            <value>
-            The precision for this parameter.
-            </value>
-            <remarks>
-            <para>
-            The maximum number of digits used to represent the Value.
-            </para>
-            <para>
-            This property is optional. If not specified the ADO.NET provider 
-            will attempt to infer the precision from the value.
-            </para>
-            </remarks>
-            <seealso cref="P:System.Data.IDbDataParameter.Precision" />
-        </member>
-        <member name="P:log4net.Appender.AdoNetAppenderParameter.Scale">
-            <summary>
-            Gets or sets the scale for this parameter.
-            </summary>
-            <value>
-            The scale for this parameter.
-            </value>
-            <remarks>
-            <para>
-            The number of decimal places to which Value is resolved.
-            </para>
-            <para>
-            This property is optional. If not specified the ADO.NET provider 
-            will attempt to infer the scale from the value.
-            </para>
-            </remarks>
-            <seealso cref="P:System.Data.IDbDataParameter.Scale" />
-        </member>
-        <member name="P:log4net.Appender.AdoNetAppenderParameter.Size">
-            <summary>
-            Gets or sets the size for this parameter.
-            </summary>
-            <value>
-            The size for this parameter.
-            </value>
-            <remarks>
-            <para>
-            The maximum size, in bytes, of the data within the column.
-            </para>
-            <para>
-            This property is optional. If not specified the ADO.NET provider 
-            will attempt to infer the size from the value.
-            </para>
-            <para>
-            For BLOB data types like VARCHAR(max) it may be impossible to infer the value automatically, use -1 as the size in this case.
-            </para>
-            </remarks>
-            <seealso cref="P:System.Data.IDbDataParameter.Size" />
-        </member>
-        <member name="P:log4net.Appender.AdoNetAppenderParameter.Layout">
-            <summary>
-            Gets or sets the <see cref="T:log4net.Layout.IRawLayout"/> to use to 
-            render the logging event into an object for this 
-            parameter.
-            </summary>
-            <value>
-            The <see cref="T:log4net.Layout.IRawLayout"/> used to render the
-            logging event into an object for this parameter.
-            </value>
-            <remarks>
-            <para>
-            The <see cref="T:log4net.Layout.IRawLayout"/> that renders the value for this
-            parameter.
-            </para>
-            <para>
-            The <see cref="T:log4net.Layout.RawLayoutConverter"/> can be used to adapt
-            any <see cref="T:log4net.Layout.ILayout"/> into a <see cref="T:log4net.Layout.IRawLayout"/>
-            for use in the property.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.AdoNetAppenderParameter.Prepare(System.Data.IDbCommand)">
-            <summary>
-            Prepare the specified database command object.
-            </summary>
-            <param name="command">The command to prepare.</param>
-            <remarks>
-            <para>
-            Prepares the database command object by adding
-            this parameter to its collection of parameters.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.AdoNetAppenderParameter.FormatValue(System.Data.IDbCommand,log4net.Core.LoggingEvent)">
-            <summary>
-            Renders the logging event and set the parameter value in the command.
-            </summary>
-            <param name="command">The command containing the parameter.</param>
-            <param name="loggingEvent">The event to be rendered.</param>
-            <remarks>
-            <para>
-            Renders the logging event using this parameters layout
-            object. Sets the value of the parameter on the command object.
-            </para>
-            </remarks>
-        </member>
-        <member name="F:log4net.Appender.AdoNetAppenderParameter.m_parameterName">
-            <summary>
-            The name of this parameter.
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.AdoNetAppenderParameter.m_dbType">
-            <summary>
-            The database type for this parameter.
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.AdoNetAppenderParameter.m_inferType">
-            <summary>
-            Flag to infer type rather than use the DbType
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.AdoNetAppenderParameter.m_precision">
-            <summary>
-            The precision for this parameter.
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.AdoNetAppenderParameter.m_scale">
-            <summary>
-            The scale for this parameter.
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.AdoNetAppenderParameter.m_size">
-            <summary>
-            The size for this parameter.
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.AdoNetAppenderParameter.m_layout">
-            <summary>
-            The <see cref="T:log4net.Layout.IRawLayout"/> to use to render the
-            logging event into an object for this parameter.
-            </summary>
-        </member>
         <member name="T:log4net.Appender.AnsiColorTerminalAppender">
             <summary>
             Appends logging events to the terminal using ANSI color escape sequences.
@@ -1918,85 +1227,6 @@
             log message.
             </remarks>
         </member>
-        <member name="T:log4net.Appender.AspNetTraceAppender">
-            <summary>
-            <para>
-            Appends log events to the ASP.NET <see cref="T:System.Web.TraceContext"/> system.
-            </para>
-            </summary>
-            <remarks>
-            <para>
-            Diagnostic information and tracing messages that you specify are appended to the output 
-            of the page that is sent to the requesting browser. Optionally, you can view this information
-            from a separate trace viewer (Trace.axd) that displays trace information for every page in a 
-            given application.
-            </para>
-            <para>
-            Trace statements are processed and displayed only when tracing is enabled. You can control 
-            whether tracing is displayed to a page, to the trace viewer, or both.
-            </para>
-            <para>
-            The logging event is passed to the <see cref="M:TraceContext.Write(string)"/> or 
-            <see cref="M:TraceContext.Warn(string)"/> method depending on the level of the logging event.
-            The event's logger name is the default value for the category parameter of the Write/Warn method. 
-            </para>
-            </remarks>
-            <author>Nicko Cadell</author>
-            <author>Gert Driesen</author>
-            <author>Ron Grabowski</author>
-        </member>
-        <member name="M:log4net.Appender.AspNetTraceAppender.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:log4net.Appender.AspNetTraceAppender" /> class.
-            </summary>
-            <remarks>
-            <para>
-            Default constructor.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.AspNetTraceAppender.Append(log4net.Core.LoggingEvent)">
-            <summary>
-            Write the logging event to the ASP.NET trace
-            </summary>
-            <param name="loggingEvent">the event to log</param>
-            <remarks>
-            <para>
-            Write the logging event to the ASP.NET trace
-            <c>HttpContext.Current.Trace</c> 
-            (<see cref="T:System.Web.TraceContext"/>).
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.AspNetTraceAppender.RequiresLayout">
-            <summary>
-            This appender requires a <see cref="N:log4net.Layout"/> to be set.
-            </summary>
-            <value><c>true</c></value>
-            <remarks>
-            <para>
-            This appender requires a <see cref="N:log4net.Layout"/> to be set.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.AspNetTraceAppender.Category">
-            <summary>
-            The category parameter sent to the Trace method.
-            </summary>
-            <remarks>
-            <para>
-            Defaults to %logger which will use the logger name of the current 
-            <see cref="T:log4net.Core.LoggingEvent"/> as the category parameter.
-            </para>
-            <para>
-            </para> 
-            </remarks>
-        </member>
-        <member name="F:log4net.Appender.AspNetTraceAppender.m_category">
-            <summary>
-            Defaults to %logger
-            </summary>
-        </member>
         <member name="T:log4net.Appender.BufferingAppenderSkeleton">
             <summary>
             Abstract base class implementation of <see cref="T:log4net.Appender.IAppender"/> that 
@@ -2006,7 +1236,7 @@
             <para>
             This base class should be used by appenders that need to buffer a 
             number of events before logging them.
-            For example the <see cref="T:log4net.Appender.AdoNetAppender"/> 
+            For example the <see cref="!:AdoNetAppender"/> 
             buffers events and then submits the entire contents of the buffer to 
             the underlying database in one go.
             </para>
@@ -2516,305 +1746,6 @@
             Implementation of the <see cref="T:log4net.Core.IAppenderAttachable"/> interface
             </summary>
         </member>
-        <member name="T:log4net.Appender.ColoredConsoleAppender">
-            <summary>
-            Appends logging events to the console.
-            </summary>
-            <remarks>
-            <para>
-            ColoredConsoleAppender appends log events to the standard output stream
-            or the error output stream using a layout specified by the 
-            user. It also allows the color of a specific type of message to be set.
-            </para>
-            <para>
-            By default, all output is written to the console's standard output stream.
-            The <see cref="P:log4net.Appender.ColoredConsoleAppender.Target"/> property can be set to direct the output to the
-            error stream.
-            </para>
-            <para>
-            NOTE: This appender writes directly to the application's attached console
-            not to the <c>System.Console.Out</c> or <c>System.Console.Error</c> <c>TextWriter</c>.
-            The <c>System.Console.Out</c> and <c>System.Console.Error</c> streams can be
-            programmatically redirected (for example NUnit does this to capture program output).
-            This appender will ignore these redirections because it needs to use Win32
-            API calls to colorize the output. To respect these redirections the <see cref="T:log4net.Appender.ConsoleAppender"/>
-            must be used.
-            </para>
-            <para>
-            When configuring the colored console appender, mapping should be
-            specified to map a logging level to a color. For example:
-            </para>
-            <code lang="XML" escaped="true">
-            <mapping>
-            	<level value="ERROR" />
-            	<foreColor value="White" />
-            	<backColor value="Red, HighIntensity" />
-            </mapping>
-            <mapping>
-            	<level value="DEBUG" />
-            	<backColor value="Green" />
-            </mapping>
-            </code>
-            <para>
-            The Level is the standard log4net logging level and ForeColor and BackColor can be any
-            combination of the following values:
-            <list type="bullet">
-            <item><term>Blue</term><description></description></item>
-            <item><term>Green</term><description></description></item>
-            <item><term>Red</term><description></description></item>
-            <item><term>White</term><description></description></item>
-            <item><term>Yellow</term><description></description></item>
-            <item><term>Purple</term><description></description></item>
-            <item><term>Cyan</term><description></description></item>
-            <item><term>HighIntensity</term><description></description></item>
-            </list>
-            </para>
-            </remarks>
-            <author>Rick Hobbs</author>
-            <author>Nicko Cadell</author>
-        </member>
-        <member name="T:log4net.Appender.ColoredConsoleAppender.Colors">
-            <summary>
-            The enum of possible color values for use with the color mapping method
-            </summary>
-            <remarks>
-            <para>
-            The following flags can be combined together to
-            form the colors.
-            </para>
-            </remarks>
-            <seealso cref="T:log4net.Appender.ColoredConsoleAppender" />
-        </member>
-        <member name="F:log4net.Appender.ColoredConsoleAppender.Colors.Blue">
-            <summary>
-            color is blue
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.ColoredConsoleAppender.Colors.Green">
-            <summary>
-            color is green
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.ColoredConsoleAppender.Colors.Red">
-            <summary>
-            color is red
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.ColoredConsoleAppender.Colors.White">
-            <summary>
-            color is white
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.ColoredConsoleAppender.Colors.Yellow">
-            <summary>
-            color is yellow
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.ColoredConsoleAppender.Colors.Purple">
-            <summary>
-            color is purple
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.ColoredConsoleAppender.Colors.Cyan">
-            <summary>
-            color is cyan
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.ColoredConsoleAppender.Colors.HighIntensity">
-            <summary>
-            color is intensified
-            </summary>
-        </member>
-        <member name="M:log4net.Appender.ColoredConsoleAppender.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:log4net.Appender.ColoredConsoleAppender" /> class.
-            </summary>
-            <remarks>
-            The instance of the <see cref="T:log4net.Appender.ColoredConsoleAppender" /> class is set up to write 
-            to the standard output stream.
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.ColoredConsoleAppender.#ctor(log4net.Layout.ILayout)">
-            <summary>
-            Initializes a new instance of the <see cref="T:log4net.Appender.ColoredConsoleAppender" /> class
-            with the specified layout.
-            </summary>
-            <param name="layout">the layout to use for this appender</param>
-            <remarks>
-            The instance of the <see cref="T:log4net.Appender.ColoredConsoleAppender" /> class is set up to write 
-            to the standard output stream.
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.ColoredConsoleAppender.#ctor(log4net.Layout.ILayout,System.Boolean)">
-            <summary>
-            Initializes a new instance of the <see cref="T:log4net.Appender.ColoredConsoleAppender" /> class
-            with the specified layout.
-            </summary>
-            <param name="layout">the layout to use for this appender</param>
-            <param name="writeToErrorStream">flag set to <c>true</c> to write to the console error stream</param>
-            <remarks>
-            When <paramref name="writeToErrorStream" /> is set to <c>true</c>, output is written to
-            the standard error output stream.  Otherwise, output is written to the standard
-            output stream.
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.ColoredConsoleAppender.Target">
-            <summary>
-            Target is the value of the console output stream.
-            This is either <c>"Console.Out"</c> or <c>"Console.Error"</c>.
-            </summary>
-            <value>
-            Target is the value of the console output stream.
-            This is either <c>"Console.Out"</c> or <c>"Console.Error"</c>.
-            </value>
-            <remarks>
-            <para>
-            Target is the value of the console output stream.
-            This is either <c>"Console.Out"</c> or <c>"Console.Error"</c>.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.ColoredConsoleAppender.AddMapping(log4net.Appender.ColoredConsoleAppender.LevelColors)">
-            <summary>
-            Add a mapping of level to color - done by the config file
-            </summary>
-            <param name="mapping">The mapping to add</param>
-            <remarks>
-            <para>
-            Add a <see cref="T:log4net.Appender.ColoredConsoleAppender.LevelColors"/> mapping to this appender.
-            Each mapping defines the foreground and background colors
-            for a level.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.ColoredConsoleAppender.Append(log4net.Core.LoggingEvent)">
-            <summary>
-            This method is called by the <see cref="M:AppenderSkeleton.DoAppend(log4net.Core.LoggingEvent)"/> method.
-            </summary>
-            <param name="loggingEvent">The event to log.</param>
-            <remarks>
-            <para>
-            Writes the event to the console.
-            </para>
-            <para>
-            The format of the output will depend on the appender's layout.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.ColoredConsoleAppender.RequiresLayout">
-            <summary>
-            This appender requires a <see cref="N:log4net.Layout"/> to be set.
-            </summary>
-            <value><c>true</c></value>
-            <remarks>
-            <para>
-            This appender requires a <see cref="N:log4net.Layout"/> to be set.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.ColoredConsoleAppender.ActivateOptions">
-            <summary>
-            Initialize the options for this appender
-            </summary>
-            <remarks>
-            <para>
-            Initialize the level to color mappings set on this appender.
-            </para>
-            </remarks>
-        </member>
-        <member name="F:log4net.Appender.ColoredConsoleAppender.ConsoleOut">
-            <summary>
-            The <see cref="P:log4net.Appender.ColoredConsoleAppender.Target"/> to use when writing to the Console 
-            standard output stream.
-            </summary>
-            <remarks>
-            <para>
-            The <see cref="P:log4net.Appender.ColoredConsoleAppender.Target"/> to use when writing to the Console 
-            standard output stream.
-            </para>
-            </remarks>
-        </member>
-        <member name="F:log4net.Appender.ColoredConsoleAppender.ConsoleError">
-            <summary>
-            The <see cref="P:log4net.Appender.ColoredConsoleAppender.Target"/> to use when writing to the Console 
-            standard error output stream.
-            </summary>
-            <remarks>
-            <para>
-            The <see cref="P:log4net.Appender.ColoredConsoleAppender.Target"/> to use when writing to the Console 
-            standard error output stream.
-            </para>
-            </remarks>
-        </member>
-        <member name="F:log4net.Appender.ColoredConsoleAppender.m_writeToErrorStream">
-            <summary>
-            Flag to write output to the error stream rather than the standard output stream
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.ColoredConsoleAppender.m_levelMapping">
-            <summary>
-            Mapping from level object to color value
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.ColoredConsoleAppender.m_consoleOutputWriter">
-            <summary>
-            The console output stream writer to write to
-            </summary>
-            <remarks>
-            <para>
-            This writer is not thread safe.
-            </para>
-            </remarks>
-        </member>
-        <member name="T:log4net.Appender.ColoredConsoleAppender.LevelColors">
-            <summary>
-            A class to act as a mapping between the level that a logging call is made at and
-            the color it should be displayed as.
-            </summary>
-            <remarks>
-            <para>
-            Defines the mapping between a level and the color it should be displayed in.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.ColoredConsoleAppender.LevelColors.ForeColor">
-            <summary>
-            The mapped foreground color for the specified level
-            </summary>
-            <remarks>
-            <para>
-            Required property.
-            The mapped foreground color for the specified level.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.ColoredConsoleAppender.LevelColors.BackColor">
-            <summary>
-            The mapped background color for the specified level
-            </summary>
-            <remarks>
-            <para>
-            Required property.
-            The mapped background color for the specified level.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.ColoredConsoleAppender.LevelColors.ActivateOptions">
-            <summary>
-            Initialize the options for the object
-            </summary>
-            <remarks>
-            <para>
-            Combine the <see cref="P:log4net.Appender.ColoredConsoleAppender.LevelColors.ForeColor"/> and <see cref="P:log4net.Appender.ColoredConsoleAppender.LevelColors.BackColor"/> together.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.ColoredConsoleAppender.LevelColors.CombinedColor">
-            <summary>
-            The combined <see cref="P:log4net.Appender.ColoredConsoleAppender.LevelColors.ForeColor"/> and <see cref="P:log4net.Appender.ColoredConsoleAppender.LevelColors.BackColor"/> suitable for 
-            setting the console color.
-            </summary>
-        </member>
         <member name="T:log4net.Appender.ConsoleAppender">
             <summary>
             Appends logging events to the console.
@@ -2979,26 +1910,6 @@
             </para>
             </remarks>
         </member>
-        <member name="P:log4net.Appender.DebugAppender.ImmediateFlush">
-            <summary>
-            Gets or sets a value that indicates whether the appender will 
-            flush at the end of each write.
-            </summary>
-            <remarks>
-            <para>The default behavior is to flush at the end of each 
-            write. If the option is set to<c>false</c>, then the underlying 
-            stream can defer writing to physical medium to a later time. 
-            </para>
-            <para>
-            Avoiding the flush operation at the end of each append results 
-            in a performance gain of 10 to 20 percent. However, there is safety
-            trade-off involved in skipping flushing. Indeed, when flushing is
-            skipped, then it is likely that the last few log events will not
-            be recorded on disk when the application exits. This is a high
-            price to pay even for a 20% performance gain.
-            </para>
-            </remarks>
-        </member>
         <member name="P:log4net.Appender.DebugAppender.Category">
             <summary>
             Formats the category parameter sent to the Debug method.
@@ -3012,13 +1923,6 @@
             </para> 
             </remarks>
         </member>
-        <member name="M:log4net.Appender.DebugAppender.Flush(System.Int32)">
-            <summary>
-            Flushes any buffered log data.
-            </summary>
-            <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
-            <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
-        </member>
         <member name="M:log4net.Appender.DebugAppender.Append(log4net.Core.LoggingEvent)">
             <summary>
             Writes the logging event to the <see cref="T:System.Diagnostics.Debug"/> system.
@@ -3027,8 +1931,6 @@
             <remarks>
             <para>
             Writes the logging event to the <see cref="T:System.Diagnostics.Debug"/> system.
-            If <see cref="P:log4net.Appender.DebugAppender.ImmediateFlush"/> is <c>true</c> then the <see cref="M:System.Diagnostics.Debug.Flush"/>
-            is called.
             </para>
             </remarks>
         </member>
@@ -3043,405 +1945,10 @@
             </para>
             </remarks>
         </member>
-        <member name="F:log4net.Appender.DebugAppender.m_immediateFlush">
-            <summary>
-            Immediate flush means that the underlying writer or output stream
-            will be flushed at the end of each append operation.
-            </summary>
-            <remarks>
-            <para>
-            Immediate flush is slower but ensures that each append request is 
-            actually written. If <see cref="P:log4net.Appender.DebugAppender.ImmediateFlush"/> is set to
-            <c>false</c>, then there is a good chance that the last few
-            logs events are not actually written to persistent media if and
-            when the application crashes.
-            </para>
-            <para>
-            The default value is <c>true</c>.</para>
-            </remarks>
-        </member>
         <member name="F:log4net.Appender.DebugAppender.m_category">
             <summary>
             Defaults to a <see cref="T:log4net.Layout.PatternLayout"/> with %logger as the pattern.
             </summary>
-        </member>
-        <member name="T:log4net.Appender.EventLogAppender">
-            <summary>
-            Writes events to the system event log.
-            </summary>
-            <remarks>
-            <para>
-            The appender will fail if you try to write using an event source that doesn't exist unless it is running with local administrator privileges.
-            See also http://logging.apache.org/log4net/release/faq.html#trouble-EventLog
-            </para>
-            <para>
-            The <c>EventID</c> of the event log entry can be
-            set using the <c>EventID</c> property (<see cref="P:log4net.Core.LoggingEvent.Properties"/>)
-            on the <see cref="T:log4net.Core.LoggingEvent"/>.
-            </para>
-            <para>
-            The <c>Category</c> of the event log entry can be
-            set using the <c>Category</c> property (<see cref="P:log4net.Core.LoggingEvent.Properties"/>)
-            on the <see cref="T:log4net.Core.LoggingEvent"/>.
-            </para>
-            <para>
-            There is a limit of 32K characters for an event log message
-            </para>
-            <para>
-            When configuring the EventLogAppender a mapping can be
-            specified to map a logging level to an event log entry type. For example:
-            </para>
-            <code lang="XML">
-            &lt;mapping&gt;
-            	&lt;level value="ERROR" /&gt;
-            	&lt;eventLogEntryType value="Error" /&gt;
-            &lt;/mapping&gt;
-            &lt;mapping&gt;
-            	&lt;level value="DEBUG" /&gt;
-            	&lt;eventLogEntryType value="Information" /&gt;
-            &lt;/mapping&gt;
-            </code>
-            <para>
-            The Level is the standard log4net logging level and eventLogEntryType can be any value
-            from the <see cref="T:System.Diagnostics.EventLogEntryType"/> enum, i.e.:
-            <list type="bullet">
-            <item><term>Error</term><description>an error event</description></item>
-            <item><term>Warning</term><description>a warning event</description></item>
-            <item><term>Information</term><description>an informational event</description></item>
-            </list>
-            </para>
-            </remarks>
-            <author>Aspi Havewala</author>
-            <author>Douglas de la Torre</author>
-            <author>Nicko Cadell</author>
-            <author>Gert Driesen</author>
-            <author>Thomas Voss</author>
-        </member>
-        <member name="M:log4net.Appender.EventLogAppender.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:log4net.Appender.EventLogAppender" /> class.
-            </summary>
-            <remarks>
-            <para>
-            Default constructor.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.EventLogAppender.#ctor(log4net.Layout.ILayout)">
-            <summary>
-            Initializes a new instance of the <see cref="T:log4net.Appender.EventLogAppender" /> class
-            with the specified <see cref="T:log4net.Layout.ILayout" />.
-            </summary>
-            <param name="layout">The <see cref="T:log4net.Layout.ILayout" /> to use with this appender.</param>
-            <remarks>
-            <para>
-            Obsolete constructor.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.EventLogAppender.LogName">
-            <summary>
-            The name of the log where messages will be stored.
-            </summary>
-            <value>
-            The string name of the log where messages will be stored.
-            </value>
-            <remarks>
-            <para>This is the name of the log as it appears in the Event Viewer
-            tree. The default value is to log into the <c>Application</c>
-            log, this is where most applications write their events. However
-            if you need a separate log for your application (or applications)
-            then you should set the <see cref="P:log4net.Appender.EventLogAppender.LogName"/> appropriately.</para>
-            <para>This should not be used to distinguish your event log messages
-            from those of other applications, the <see cref="P:log4net.Appender.EventLogAppender.ApplicationName"/>
-            property should be used to distinguish events. This property should be 
-            used to group together events into a single log.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.EventLogAppender.ApplicationName">
-            <summary>
-            Property used to set the Application name.  This appears in the
-            event logs when logging.
-            </summary>
-            <value>
-            The string used to distinguish events from different sources.
-            </value>
-            <remarks>
-            Sets the event log source property.
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.EventLogAppender.MachineName">
-            <summary>
-            This property is used to return the name of the computer to use
-            when accessing the event logs.  Currently, this is the current
-            computer, denoted by a dot "."
-            </summary>
-            <value>
-            The string name of the machine holding the event log that 
-            will be logged into.
-            </value>
-            <remarks>
-            This property cannot be changed. It is currently set to '.'
-            i.e. the local machine. This may be changed in future.
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.EventLogAppender.AddMapping(log4net.Appender.EventLogAppender.Level2EventLogEntryType)">
-            <summary>
-            Add a mapping of level to <see cref="T:System.Diagnostics.EventLogEntryType"/> - done by the config file
-            </summary>
-            <param name="mapping">The mapping to add</param>
-            <remarks>
-            <para>
-            Add a <see cref="T:log4net.Appender.EventLogAppender.Level2EventLogEntryType"/> mapping to this appender.
-            Each mapping defines the event log entry type for a level.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.EventLogAppender.SecurityContext">
-            <summary>
-            Gets or sets the <see cref="P:log4net.Appender.EventLogAppender.SecurityContext"/> used to write to the EventLog.
-            </summary>
-            <value>
-            The <see cref="P:log4net.Appender.EventLogAppender.SecurityContext"/> used to write to the EventLog.
-            </value>
-            <remarks>
-            <para>
-            The system security context used to write to the EventLog.
-            </para>
-            <para>
-            Unless a <see cref="P:log4net.Appender.EventLogAppender.SecurityContext"/> specified here for this appender
-            the <see cref="P:log4net.Core.SecurityContextProvider.DefaultProvider"/> is queried for the
-            security context to use. The default behavior is to use the security context
-            of the current thread.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.EventLogAppender.EventId">
-            <summary>
-            Gets or sets the <c>EventId</c> to use unless one is explicitly specified via the <c>LoggingEvent</c>'s properties.
-            </summary>
-            <remarks>
-            <para>
-            The <c>EventID</c> of the event log entry will normally be
-            set using the <c>EventID</c> property (<see cref="P:log4net.Core.LoggingEvent.Properties"/>)
-            on the <see cref="T:log4net.Core.LoggingEvent"/>.
-            This property provides the fallback value which defaults to 0.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.EventLogAppender.Category">
-            <summary>
-            Gets or sets the <c>Category</c> to use unless one is explicitly specified via the <c>LoggingEvent</c>'s properties.
-            </summary>
-            <remarks>
-            <para>
-            The <c>Category</c> of the event log entry will normally be
-            set using the <c>Category</c> property (<see cref="P:log4net.Core.LoggingEvent.Properties"/>)
-            on the <see cref="T:log4net.Core.LoggingEvent"/>.
-            This property provides the fallback value which defaults to 0.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.EventLogAppender.ActivateOptions">
-            <summary>
-            Initialize the appender based on the options set
-            </summary>
-            <remarks>
-            <para>
-            This is part of the <see cref="T:log4net.Core.IOptionHandler"/> delayed object
-            activation scheme. The <see cref="M:log4net.Appender.EventLogAppender.ActivateOptions"/> method must 
-            be called on this object after the configuration properties have
-            been set. Until <see cref="M:log4net.Appender.EventLogAppender.ActivateOptions"/> is called this
-            object is in an undefined state and must not be used. 
-            </para>
-            <para>
-            If any of the configuration properties are modified then 
-            <see cref="M:log4net.Appender.EventLogAppender.ActivateOptions"/> must be called again.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.EventLogAppender.CreateEventSource(System.String,System.String,System.String)">
-            <summary>
-            Create an event log source
-            </summary>
-            <remarks>
-            Uses different API calls under NET_2_0
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.EventLogAppender.Append(log4net.Core.LoggingEvent)">
-            <summary>
-            This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/>
-            method. 
-            </summary>
-            <param name="loggingEvent">the event to log</param>
-            <remarks>
-            <para>Writes the event to the system event log using the 
-            <see cref="P:log4net.Appender.EventLogAppender.ApplicationName"/>.</para>
-            
-            <para>If the event has an <c>EventID</c> property (see <see cref="P:log4net.Core.LoggingEvent.Properties"/>)
-            set then this integer will be used as the event log event id.</para>
-            
-            <para>
-            There is a limit of 32K characters for an event log message
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.EventLogAppender.RequiresLayout">
-            <summary>
-            This appender requires a <see cref="N:log4net.Layout"/> to be set.
-            </summary>
-            <value><c>true</c></value>
-            <remarks>
-            <para>
-            This appender requires a <see cref="N:log4net.Layout"/> to be set.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.EventLogAppender.GetEntryType(log4net.Core.Level)">
-            <summary>
-            Get the equivalent <see cref="T:System.Diagnostics.EventLogEntryType"/> for a <see cref="T:log4net.Core.Level"/> <paramref name="level"/>
-            </summary>
-            <param name="level">the Level to convert to an EventLogEntryType</param>
-            <returns>The equivalent <see cref="T:System.Diagnostics.EventLogEntryType"/> for a <see cref="T:log4net.Core.Level"/> <paramref name="level"/></returns>
-            <remarks>
-            Because there are fewer applicable <see cref="T:System.Diagnostics.EventLogEntryType"/>
-            values to use in logging levels than there are in the 
-            <see cref="T:log4net.Core.Level"/> this is a one way mapping. There is
-            a loss of information during the conversion.
-            </remarks>
-        </member>
-        <member name="F:log4net.Appender.EventLogAppender.m_logName">
-            <summary>
-            The log name is the section in the event logs where the messages
-            are stored.
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.EventLogAppender.m_applicationName">
-            <summary>
-            Name of the application to use when logging.  This appears in the
-            application column of the event log named by <see cref="F:log4net.Appender.EventLogAppender.m_logName"/>.
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.EventLogAppender.m_machineName">
-            <summary>
-            The name of the machine which holds the event log. This is
-            currently only allowed to be '.' i.e. the current machine.
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.EventLogAppender.m_levelMapping">
-            <summary>
-            Mapping from level object to EventLogEntryType
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.EventLogAppender.m_securityContext">
-            <summary>
-            The security context to use for privileged calls
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.EventLogAppender.m_eventId">
-            <summary>
-            The event ID to use unless one is explicitly specified via the <c>LoggingEvent</c>'s properties.
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.EventLogAppender.m_category">
-            <summary>
-            The event category to use unless one is explicitly specified via the <c>LoggingEvent</c>'s properties.
-            </summary>
-        </member>
-        <member name="T:log4net.Appender.EventLogAppender.Level2EventLogEntryType">
-            <summary>
-            A class to act as a mapping between the level that a logging call is made at and
-            the color it should be displayed as.
-            </summary>
-            <remarks>
-            <para>
-            Defines the mapping between a level and its event log entry type.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.EventLogAppender.Level2EventLogEntryType.EventLogEntryType">
-            <summary>
-            The <see cref="P:log4net.Appender.EventLogAppender.Level2EventLogEntryType.EventLogEntryType"/> for this entry
-            </summary>
-            <remarks>
-            <para>
-            Required property.
-            The <see cref="P:log4net.Appender.EventLogAppender.Level2EventLogEntryType.EventLogEntryType"/> for this entry
-            </para>
-            </remarks>
-        </member>
-        <member name="F:log4net.Appender.EventLogAppender.declaringType">
-            <summary>
-            The fully qualified type of the EventLogAppender class.
-            </summary>
-            <remarks>
-            Used by the internal logger to record the Type of the
-            log message.
-            </remarks>
-        </member>
-        <member name="F:log4net.Appender.EventLogAppender.MAX_EVENTLOG_MESSAGE_SIZE_DEFAULT">
-            <summary>
-            The maximum size supported by default.
-            </summary>
-            <remarks>
-            http://msdn.microsoft.com/en-us/library/xzwc042w(v=vs.100).aspx
-            The 32766 documented max size is two bytes shy of 32K (I'm assuming 32766 
-            may leave space for a two byte null terminator of #0#0). The 32766 max 
-            length is what the .NET 4.0 source code checks for, but this is WRONG! 
-            Strings with a length > 31839 on Windows Vista or higher can CORRUPT 
-            the event log! See: System.Diagnostics.EventLogInternal.InternalWriteEvent() 
-            for the use of the 32766 max size.
-            </remarks>
-        </member>
-        <member name="F:log4net.Appender.EventLogAppender.MAX_EVENTLOG_MESSAGE_SIZE_VISTA_OR_NEWER">
-            <summary>
-            The maximum size supported by a windows operating system that is vista
-            or newer.
-            </summary>
-            <remarks>
-            See ReportEvent API:
-            	http://msdn.microsoft.com/en-us/library/aa363679(VS.85).aspx
-            ReportEvent's lpStrings parameter:
-            "A pointer to a buffer containing an array of 
-            null-terminated strings that are merged into the message before Event Viewer 
-            displays the string to the user. This parameter must be a valid pointer 
-            (or NULL), even if wNumStrings is zero. Each string is limited to 31,839 characters."
-            
-            Going beyond the size of 31839 will (at some point) corrupt the event log on Windows
-            Vista or higher! It may succeed for a while...but you will eventually run into the
-            error: "System.ComponentModel.Win32Exception : A device attached to the system is
-            not functioning", and the event log will then be corrupt (I was able to corrupt 
-            an event log using a length of 31877 on Windows 7).
-            
-            The max size for Windows Vista or higher is documented here:
-            	http://msdn.microsoft.com/en-us/library/xzwc042w(v=vs.100).aspx.
-            Going over this size may succeed a few times but the buffer will overrun and 
-            eventually corrupt the log (based on testing).
-            
-            The maxEventMsgSize size is based on the max buffer size of the lpStrings parameter of the ReportEvent API.
-            The documented max size for EventLog.WriteEntry for Windows Vista and higher is 31839, but I'm leaving room for a
-            terminator of #0#0, as we cannot see the source of ReportEvent (though we could use an API monitor to examine the
-            buffer, given enough time).
-            </remarks>
-        </member>
-        <member name="F:log4net.Appender.EventLogAppender.MAX_EVENTLOG_MESSAGE_SIZE">
-            <summary>
-            The maximum size that the operating system supports for
-            a event log message.
-            </summary>
-            <remarks>
-            Used to determine the maximum string length that can be written
-            to the operating system event log and eventually truncate a string
-            that exceeds the limits.
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.EventLogAppender.GetMaxEventLogMessageSize">
-            <summary>
-            This method determines the maximum event log message size allowed for
-            the current environment.
-            </summary>
-            <returns></returns>
         </member>
         <member name="T:log4net.Appender.FileAppender">
             <summary>
@@ -3497,11 +2004,6 @@
             <summary>
             Write only <see cref="T:System.IO.Stream"/> that uses the <see cref="T:log4net.Appender.FileAppender.LockingModelBase"/> 
             to manage access to an underlying resource.
-            </summary>
-        </member>
-        <member name="M:log4net.Appender.FileAppender.LockingStream.BeginWrite(System.Byte[],System.Int32,System.Int32,System.AsyncCallback,System.Object)">
-            <summary>
-            True asynchronous writes are not supported, the implementation forces a synchronous write.
             </summary>
         </member>
         <member name="T:log4net.Appender.FileAppender.LockingModelBase">
@@ -3897,7 +2399,7 @@
             </value>
             <remarks>
             <para>
-            The default encoding set is <see cref="P:System.Text.Encoding.Default"/>
+            The default encoding set is <see cref="!:System.Text.Encoding.Default"/>
             which is the encoding for the system's current ANSI code page.
             </para>
             </remarks>
@@ -4415,7 +2917,7 @@
             </para>
             <para>
             The <paramref name="millisecondsTimeout"/> parameter is only relevant for appenders that process logging events asynchronously,
-            such as <see cref="T:log4net.Appender.RemotingAppender"/>.
+            such as <see cref="!:RemotingAppender"/>.
             </para>
             </remarks>
             <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
@@ -5853,212 +4355,6 @@
             </para>
             </remarks>
         </member>
-        <member name="T:log4net.Appender.RemotingAppender">
-            <summary>
-            Delivers logging events to a remote logging sink. 
-            </summary>
-            <remarks>
-            <para>
-            This Appender is designed to deliver events to a remote sink. 
-            That is any object that implements the <see cref="T:log4net.Appender.RemotingAppender.IRemoteLoggingSink"/>
-            interface. It delivers the events using .NET remoting. The
-            object to deliver events to is specified by setting the
-            appenders <see cref="P:log4net.Appender.RemotingAppender.Sink"/> property.</para>
-            <para>
-            The RemotingAppender buffers events before sending them. This allows it to 
-            make more efficient use of the remoting infrastructure.</para>
-            <para>
-            Once the buffer is full the events are still not sent immediately. 
-            They are scheduled to be sent using a pool thread. The effect is that 
-            the send occurs asynchronously. This is very important for a 
-            number of non obvious reasons. The remoting infrastructure will 
-            flow thread local variables (stored in the <see cref="T:System.Runtime.Remoting.Messaging.CallContext"/>),
-            if they are marked as <see cref="T:System.Runtime.Remoting.Messaging.ILogicalThreadAffinative"/>, across the 
-            remoting boundary. If the server is not contactable then
-            the remoting infrastructure will clear the <see cref="T:System.Runtime.Remoting.Messaging.ILogicalThreadAffinative"/>
-            objects from the <see cref="T:System.Runtime.Remoting.Messaging.CallContext"/>. To prevent a logging failure from
-            having side effects on the calling application the remoting call must be made
-            from a separate thread to the one used by the application. A <see cref="T:System.Threading.ThreadPool"/>
-            thread is used for this. If no <see cref="T:System.Threading.ThreadPool"/> thread is available then
-            the events will block in the thread pool manager until a thread is available.</para>
-            <para>
-            Because the events are sent asynchronously using pool threads it is possible to close 
-            this appender before all the queued events have been sent.
-            When closing the appender attempts to wait until all the queued events have been sent, but 
-            this will timeout after 30 seconds regardless.</para>
-            <para>
-            If this appender is being closed because the <see cref="E:System.AppDomain.ProcessExit"/>
-            event has fired it may not be possible to send all the queued events. During process
-            exit the runtime limits the time that a <see cref="E:System.AppDomain.ProcessExit"/>
-            event handler is allowed to run for. If the runtime terminates the threads before
-            the queued events have been sent then they will be lost. To ensure that all events
-            are sent the appender must be closed before the application exits. See 
-            <see cref="M:log4net.Core.LoggerManager.Shutdown"/> for details on how to shutdown
-            log4net programmatically.</para>
-            </remarks>
-            <seealso cref="T:log4net.Appender.RemotingAppender.IRemoteLoggingSink" />
-            <author>Nicko Cadell</author>
-            <author>Gert Driesen</author>
-            <author>Daniel Cazzulino</author>
-        </member>
-        <member name="M:log4net.Appender.RemotingAppender.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:log4net.Appender.RemotingAppender" /> class.
-            </summary>
-            <remarks>
-            <para>
-            Default constructor.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.RemotingAppender.Sink">
-            <summary>
-            Gets or sets the URL of the well-known object that will accept 
-            the logging events.
-            </summary>
-            <value>
-            The well-known URL of the remote sink.
-            </value>
-            <remarks>
-            <para>
-            The URL of the remoting sink that will accept logging events.
-            The sink must implement the <see cref="T:log4net.Appender.RemotingAppender.IRemoteLoggingSink"/>
-            interface.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.RemotingAppender.ActivateOptions">
-            <summary>
-            Initialize the appender based on the options set
-            </summary>
-            <remarks>
-            <para>
-            This is part of the <see cref="T:log4net.Core.IOptionHandler"/> delayed object
-            activation scheme. The <see cref="M:log4net.Appender.RemotingAppender.ActivateOptions"/> method must 
-            be called on this object after the configuration properties have
-            been set. Until <see cref="M:log4net.Appender.RemotingAppender.ActivateOptions"/> is called this
-            object is in an undefined state and must not be used. 
-            </para>
-            <para>
-            If any of the configuration properties are modified then 
-            <see cref="M:log4net.Appender.RemotingAppender.ActivateOptions"/> must be called again.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.RemotingAppender.SendBuffer(log4net.Core.LoggingEvent[])">
-            <summary>
-            Send the contents of the buffer to the remote sink.
-            </summary>
-            <remarks>
-            The events are not sent immediately. They are scheduled to be sent
-            using a pool thread. The effect is that the send occurs asynchronously.
-            This is very important for a number of non obvious reasons. The remoting
-            infrastructure will flow thread local variables (stored in the <see cref="T:System.Runtime.Remoting.Messaging.CallContext"/>),
-            if they are marked as <see cref="T:System.Runtime.Remoting.Messaging.ILogicalThreadAffinative"/>, across the 
-            remoting boundary. If the server is not contactable then
-            the remoting infrastructure will clear the <see cref="T:System.Runtime.Remoting.Messaging.ILogicalThreadAffinative"/>
-            objects from the <see cref="T:System.Runtime.Remoting.Messaging.CallContext"/>. To prevent a logging failure from
-            having side effects on the calling application the remoting call must be made
-            from a separate thread to the one used by the application. A <see cref="T:System.Threading.ThreadPool"/>
-            thread is used for this. If no <see cref="T:System.Threading.ThreadPool"/> thread is available then
-            the events will block in the thread pool manager until a thread is available.
-            </remarks>
-            <param name="events">The events to send.</param>
-        </member>
-        <member name="M:log4net.Appender.RemotingAppender.OnClose">
-            <summary>
-            Override base class close.
-            </summary>
-            <remarks>
-            <para>
-            This method waits while there are queued work items. The events are
-            sent asynchronously using <see cref="T:System.Threading.ThreadPool"/> work items. These items
-            will be sent once a thread pool thread is available to send them, therefore
-            it is possible to close the appender before all the queued events have been
-            sent.</para>
-            <para>
-            This method attempts to wait until all the queued events have been sent, but this 
-            method will timeout after 30 seconds regardless.</para>
-            <para>
-            If the appender is being closed because the <see cref="E:System.AppDomain.ProcessExit"/>
-            event has fired it may not be possible to send all the queued events. During process
-            exit the runtime limits the time that a <see cref="E:System.AppDomain.ProcessExit"/>
-            event handler is allowed to run for.</para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.RemotingAppender.Flush(System.Int32)">
-            <summary>
-            Flushes any buffered log data.
-            </summary>
-            <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
-            <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
-        </member>
-        <member name="M:log4net.Appender.RemotingAppender.BeginAsyncSend">
-            <summary>
-            A work item is being queued into the thread pool
-            </summary>
-        </member>
-        <member name="M:log4net.Appender.RemotingAppender.EndAsyncSend">
-            <summary>
-            A work item from the thread pool has completed
-            </summary>
-        </member>
-        <member name="M:log4net.Appender.RemotingAppender.SendBufferCallback(System.Object)">
-            <summary>
-            Send the contents of the buffer to the remote sink.
-            </summary>
-            <remarks>
-            This method is designed to be used with the <see cref="T:System.Threading.ThreadPool"/>.
-            This method expects to be passed an array of <see cref="T:log4net.Core.LoggingEvent"/>
-            objects in the state param.
-            </remarks>
-            <param name="state">the logging events to send</param>
-        </member>
-        <member name="F:log4net.Appender.RemotingAppender.m_sinkUrl">
-            <summary>
-            The URL of the remote sink.
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.RemotingAppender.m_sinkObj">
-            <summary>
-            The local proxy (.NET remoting) for the remote logging sink.
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.RemotingAppender.m_queuedCallbackCount">
-            <summary>
-            The number of queued callbacks currently waiting or executing
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.RemotingAppender.m_workQueueEmptyEvent">
-            <summary>
-            Event used to signal when there are no queued work items
-            </summary>
-            <remarks>
-            This event is set when there are no queued work items. In this
-            state it is safe to close the appender.
-            </remarks>
-        </member>
-        <member name="T:log4net.Appender.RemotingAppender.IRemoteLoggingSink">
-            <summary>
-            Interface used to deliver <see cref="T:log4net.Core.LoggingEvent"/> objects to a remote sink.
-            </summary>
-            <remarks>
-            This interface must be implemented by a remoting sink
-            if the <see cref="T:log4net.Appender.RemotingAppender"/> is to be used
-            to deliver logging events to the sink.
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.RemotingAppender.IRemoteLoggingSink.LogEvents(log4net.Core.LoggingEvent[])">
-            <summary>
-            Delivers logging events to the remote sink
-            </summary>
-            <param name="events">Array of events to log.</param>
-            <remarks>
-            <para>
-            Delivers logging events to the remote sink
-            </para>
-            </remarks>
-        </member>
         <member name="T:log4net.Appender.RollingFileAppender">
             <summary>
             Appender that rolls log files based on size or date or both.
@@ -6917,327 +5213,6 @@
             </para>
             </remarks>
         </member>
-        <member name="T:log4net.Appender.SmtpAppender">
-            <summary>
-            Send an e-mail when a specific logging event occurs, typically on errors 
-            or fatal errors.
-            </summary>
-            <remarks>
-            <para>
-            The number of logging events delivered in this e-mail depend on
-            the value of <see cref="P:log4net.Appender.BufferingAppenderSkeleton.BufferSize"/> option. The
-            <see cref="T:log4net.Appender.SmtpAppender"/> keeps only the last
-            <see cref="P:log4net.Appender.BufferingAppenderSkeleton.BufferSize"/> logging events in its 
-            cyclic buffer. This keeps memory requirements at a reasonable level while 
-            still delivering useful application context.
-            </para>
-            <note type="caution">
-            Authentication and setting the server Port are only available on the MS .NET 1.1 runtime.
-            For these features to be enabled you need to ensure that you are using a version of
-            the log4net assembly that is built against the MS .NET 1.1 framework and that you are
-            running the your application on the MS .NET 1.1 runtime. On all other platforms only sending
-            unauthenticated messages to a server listening on port 25 (the default) is supported.
-            </note>
-            <para>
-            Authentication is supported by setting the <see cref="P:log4net.Appender.SmtpAppender.Authentication"/> property to
-            either <see cref="F:log4net.Appender.SmtpAppender.SmtpAuthentication.Basic"/> or <see cref="F:log4net.Appender.SmtpAppender.SmtpAuthentication.Ntlm"/>.
-            If using <see cref="F:log4net.Appender.SmtpAppender.SmtpAuthentication.Basic"/> authentication then the <see cref="P:log4net.Appender.SmtpAppender.Username"/>
-            and <see cref="P:log4net.Appender.SmtpAppender.Password"/> properties must also be set.
-            </para>
-            <para>
-            To set the SMTP server port use the <see cref="P:log4net.Appender.SmtpAppender.Port"/> property. The default port is 25.
-            </para>
-            </remarks>
-            <author>Nicko Cadell</author>
-            <author>Gert Driesen</author>
-        </member>
-        <member name="M:log4net.Appender.SmtpAppender.#ctor">
-            <summary>
-            Default constructor
-            </summary>
-            <remarks>
-            <para>
-            Default constructor
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.SmtpAppender.To">
-            <summary>
-            Gets or sets a comma- or semicolon-delimited list of recipient e-mail addresses (use semicolon on .NET 1.1 and comma for later versions).
-            </summary>
-            <value>
-            <para>
-            For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
-            </para>
-            <para>
-            For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
-            </para>
-            </value>
-            <remarks>
-            <para>
-            For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
-            </para>
-            <para>
-            For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.SmtpAppender.Cc">
-            <summary>
-            Gets or sets a comma- or semicolon-delimited list of recipient e-mail addresses 
-            that will be carbon copied (use semicolon on .NET 1.1 and comma for later versions).
-            </summary>
-            <value>
-            <para>
-            For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
-            </para>
-            <para>
-            For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
-            </para>
-            </value>
-            <remarks>
-            <para>
-            For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
-            </para>
-            <para>
-            For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.SmtpAppender.Bcc">
-            <summary>
-            Gets or sets a semicolon-delimited list of recipient e-mail addresses
-            that will be blind carbon copied.
-            </summary>
-            <value>
-            A semicolon-delimited list of e-mail addresses.
-            </value>
-            <remarks>
-            <para>
-            A semicolon-delimited list of recipient e-mail addresses.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.SmtpAppender.From">
-            <summary>
-            Gets or sets the e-mail address of the sender.
-            </summary>
-            <value>
-            The e-mail address of the sender.
-            </value>
-            <remarks>
-            <para>
-            The e-mail address of the sender.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.SmtpAppender.Subject">
-            <summary>
-            Gets or sets the subject line of the e-mail message.
-            </summary>
-            <value>
-            The subject line of the e-mail message.
-            </value>
-            <remarks>
-            <para>
-            The subject line of the e-mail message.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.SmtpAppender.SmtpHost">
-            <summary>
-            Gets or sets the name of the SMTP relay mail server to use to send 
-            the e-mail messages.
-            </summary>
-            <value>
-            The name of the e-mail relay server. If SmtpServer is not set, the 
-            name of the local SMTP server is used.
-            </value>
-            <remarks>
-            <para>
-            The name of the e-mail relay server. If SmtpServer is not set, the 
-            name of the local SMTP server is used.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.SmtpAppender.LocationInfo">
-            <summary>
-            Obsolete
-            </summary>
-            <remarks>
-            Use the BufferingAppenderSkeleton Fix methods instead 
-            </remarks>
-            <remarks>
-            <para>
-            Obsolete property.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.SmtpAppender.Authentication">
-            <summary>
-            The mode to use to authentication with the SMTP server
-            </summary>
-            <remarks>
-            <note type="caution">Authentication is only available on the MS .NET 1.1 runtime.</note>
-            <para>
-            Valid Authentication mode values are: <see cref="F:log4net.Appender.SmtpAppender.SmtpAuthentication.None"/>, 
-            <see cref="F:log4net.Appender.SmtpAppender.SmtpAuthentication.Basic"/>, and <see cref="F:log4net.Appender.SmtpAppender.SmtpAuthentication.Ntlm"/>. 
-            The default value is <see cref="F:log4net.Appender.SmtpAppender.SmtpAuthentication.None"/>. When using 
-            <see cref="F:log4net.Appender.SmtpAppender.SmtpAuthentication.Basic"/> you must specify the <see cref="P:log4net.Appender.SmtpAppender.Username"/> 
-            and <see cref="P:log4net.Appender.SmtpAppender.Password"/> to use to authenticate.
-            When using <see cref="F:log4net.Appender.SmtpAppender.SmtpAuthentication.Ntlm"/> the Windows credentials for the current
-            thread, if impersonating, or the process will be used to authenticate. 
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.SmtpAppender.Username">
-            <summary>
-            The username to use to authenticate with the SMTP server
-            </summary>
-            <remarks>
-            <note type="caution">Authentication is only available on the MS .NET 1.1 runtime.</note>
-            <para>
-            A <see cref="P:log4net.Appender.SmtpAppender.Username"/> and <see cref="P:log4net.Appender.SmtpAppender.Password"/> must be specified when 
-            <see cref="P:log4net.Appender.SmtpAppender.Authentication"/> is set to <see cref="F:log4net.Appender.SmtpAppender.SmtpAuthentication.Basic"/>, 
-            otherwise the username will be ignored. 
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.SmtpAppender.Password">
-            <summary>
-            The password to use to authenticate with the SMTP server
-            </summary>
-            <remarks>
-            <note type="caution">Authentication is only available on the MS .NET 1.1 runtime.</note>
-            <para>
-            A <see cref="P:log4net.Appender.SmtpAppender.Username"/> and <see cref="P:log4net.Appender.SmtpAppender.Password"/> must be specified when 
-            <see cref="P:log4net.Appender.SmtpAppender.Authentication"/> is set to <see cref="F:log4net.Appender.SmtpAppender.SmtpAuthentication.Basic"/>, 
-            otherwise the password will be ignored. 
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.SmtpAppender.Port">
-            <summary>
-            The port on which the SMTP server is listening
-            </summary>
-            <remarks>
-            <note type="caution">Server Port is only available on the MS .NET 1.1 runtime.</note>
-            <para>
-            The port on which the SMTP server is listening. The default
-            port is <c>25</c>. The Port can only be changed when running on
-            the MS .NET 1.1 runtime.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.SmtpAppender.Priority">
-            <summary>
-            Gets or sets the priority of the e-mail message
-            </summary>
-            <value>
-            One of the <see cref="T:System.Net.Mail.MailPriority"/> values.
-            </value>
-            <remarks>
-            <para>
-            Sets the priority of the e-mails generated by this
-            appender. The default priority is <see cref="F:System.Net.Mail.MailPriority.Normal"/>.
-            </para>
-            <para>
-            If you are using this appender to report errors then
-            you may want to set the priority to <see cref="F:System.Net.Mail.MailPriority.High"/>.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.SmtpAppender.EnableSsl">
-            <summary>
-            Enable or disable use of SSL when sending e-mail message
-            </summary>
-            <remarks>
-            This is available on MS .NET 2.0 runtime and higher
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.SmtpAppender.ReplyTo">
-            <summary>
-            Gets or sets the reply-to e-mail address.
-            </summary>
-            <remarks>
-            This is available on MS .NET 2.0 runtime and higher
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.SmtpAppender.SubjectEncoding">
-            <summary>
-            Gets or sets the subject encoding to be used.
-            </summary>
-            <remarks>
-            The default encoding is the operating system's current ANSI codepage.
-            </remarks>
-        </member>
-        <member name="P:log4net.Appender.SmtpAppender.BodyEncoding">
-            <summary>
-            Gets or sets the body encoding to be used.
-            </summary>
-            <remarks>
-            The default encoding is the operating system's current ANSI codepage.
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.SmtpAppender.SendBuffer(log4net.Core.LoggingEvent[])">
-            <summary>
-            Sends the contents of the cyclic buffer as an e-mail message.
-            </summary>
-            <param name="events">The logging events to send.</param>
-        </member>
-        <member name="P:log4net.Appender.SmtpAppender.RequiresLayout">
-            <summary>
-            This appender requires a <see cref="N:log4net.Layout"/> to be set.
-            </summary>
-            <value><c>true</c></value>
-            <remarks>
-            <para>
-            This appender requires a <see cref="N:log4net.Layout"/> to be set.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.SmtpAppender.SendEmail(System.String)">
-            <summary>
-            Send the email message
-            </summary>
-            <param name="messageBody">the body text to include in the mail</param>
-        </member>
-        <member name="T:log4net.Appender.SmtpAppender.SmtpAuthentication">
-            <summary>
-            Values for the <see cref="P:log4net.Appender.SmtpAppender.Authentication"/> property.
-            </summary>
-            <remarks>
-            <para>
-            SMTP authentication modes.
-            </para>
-            </remarks>
-        </member>
-        <member name="F:log4net.Appender.SmtpAppender.SmtpAuthentication.None">
-            <summary>
-            No authentication
-            </summary>
-        </member>
-        <member name="F:log4net.Appender.SmtpAppender.SmtpAuthentication.Basic">
-            <summary>
-            Basic authentication.
-            </summary>
-            <remarks>
-            Requires a username and password to be supplied
-            </remarks>
-        </member>
-        <member name="F:log4net.Appender.SmtpAppender.SmtpAuthentication.Ntlm">
-            <summary>
-            Integrated authentication
-            </summary>
-            <remarks>
-            Uses the Windows credentials from the current thread or process to authenticate.
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.SmtpAppender.MaybeTrimSeparators(System.String)">
-            <summary>
-              trims leading and trailing commas or semicolons
-            </summary>
-        </member>
         <member name="T:log4net.Appender.SmtpPickupDirAppender">
             <summary>
             Send an email when a specific logging event occurs, typically on errors 
@@ -7619,18 +5594,6 @@
             This property will be <c>true</c> while this handler has
             active connections, that is at least one connection that 
             the handler will attempt to send a message to.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Appender.TelnetAppender.SocketHandler.OnConnect(System.IAsyncResult)">
-            <summary>
-            Callback used to accept a connection on the server socket
-            </summary>
-            <param name="asyncResult">The result of the asynchronous operation</param>
-            <remarks>
-            <para>
-            On connection adds to the list of connections 
-            if there are two many open connections you will be disconnected
             </para>
             </remarks>
         </member>
@@ -8530,42 +6493,6 @@
             </para>
             </remarks>
         </member>
-        <member name="M:log4net.Config.BasicConfigurator.Configure">
-            <summary>
-            Initializes the log4net system with a default configuration.
-            </summary>
-            <remarks>
-            <para>
-            Initializes the log4net logging system using a <see cref="T:log4net.Appender.ConsoleAppender"/>
-            that will write to <c>Console.Out</c>. The log messages are
-            formatted using the <see cref="T:log4net.Layout.PatternLayout"/> layout object
-            with the <see cref="F:log4net.Layout.PatternLayout.DetailConversionPattern"/>
-            layout style.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Config.BasicConfigurator.Configure(log4net.Appender.IAppender[])">
-            <summary>
-            Initializes the log4net system using the specified appenders.
-            </summary>
-            <param name="appenders">The appenders to use to log all logging events.</param>
-            <remarks>
-            <para>
-            Initializes the log4net system using the specified appenders.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Config.BasicConfigurator.Configure(log4net.Appender.IAppender)">
-            <summary>
-            Initializes the log4net system using the specified appender.
-            </summary>
-            <param name="appender">The appender to use to log all logging events.</param>
-            <remarks>
-            <para>
-            Initializes the log4net system using the specified appender.
-            </para>
-            </remarks>
-        </member>
         <member name="M:log4net.Config.BasicConfigurator.Configure(log4net.Repository.ILoggerRepository)">
             <summary>
             Initializes the <see cref="T:log4net.Repository.ILoggerRepository"/> with a default configuration.
@@ -8705,271 +6632,6 @@
             </para>
             </remarks>
         </member>
-        <member name="T:log4net.Config.DOMConfigurator">
-            <summary>
-            Use this class to initialize the log4net environment using an Xml tree.
-            </summary>
-            <remarks>
-            <para>
-            <b>DOMConfigurator is obsolete. Use XmlConfigurator instead of DOMConfigurator.</b>
-            </para>
-            <para>
-            Configures a <see cref="T:log4net.Repository.ILoggerRepository"/> using an Xml tree.
-            </para>
-            </remarks>
-            <author>Nicko Cadell</author>
-            <author>Gert Driesen</author>
-        </member>
-        <member name="M:log4net.Config.DOMConfigurator.#ctor">
-            <summary>
-            Private constructor
-            </summary>
-        </member>
-        <member name="M:log4net.Config.DOMConfigurator.Configure">
-            <summary>
-            Automatically configures the log4net system based on the 
-            application's configuration settings.
-            </summary>
-            <remarks>
-            <para>
-            <b>DOMConfigurator is obsolete. Use XmlConfigurator instead of DOMConfigurator.</b>
-            </para>
-            Each application has a configuration file. This has the
-            same name as the application with '.config' appended.
-            This file is XML and calling this function prompts the
-            configurator to look in that file for a section called
-            <c>log4net</c> that contains the configuration data.
-            </remarks>
-        </member>
-        <member name="M:log4net.Config.DOMConfigurator.Configure(log4net.Repository.ILoggerRepository)">
-            <summary>
-            Automatically configures the <see cref="T:log4net.Repository.ILoggerRepository"/> using settings
-            stored in the application's configuration file.
-            </summary>
-            <remarks>
-            <para>
-            <b>DOMConfigurator is obsolete. Use XmlConfigurator instead of DOMConfigurator.</b>
-            </para>
-            Each application has a configuration file. This has the
-            same name as the application with '.config' appended.
-            This file is XML and calling this function prompts the
-            configurator to look in that file for a section called
-            <c>log4net</c> that contains the configuration data.
-            </remarks>
-            <param name="repository">The repository to configure.</param>
-        </member>
-        <member name="M:log4net.Config.DOMConfigurator.Configure(System.Xml.XmlElement)">
-            <summary>
-            Configures log4net using a <c>log4net</c> element
-            </summary>
-            <remarks>
-            <para>
-            <b>DOMConfigurator is obsolete. Use XmlConfigurator instead of DOMConfigurator.</b>
-            </para>
-            Loads the log4net configuration from the XML element
-            supplied as <paramref name="element"/>.
-            </remarks>
-            <param name="element">The element to parse.</param>
-        </member>
-        <member name="M:log4net.Config.DOMConfigurator.Configure(log4net.Repository.ILoggerRepository,System.Xml.XmlElement)">
-            <summary>
-            Configures the <see cref="T:log4net.Repository.ILoggerRepository"/> using the specified XML 
-            element.
-            </summary>
-            <remarks>
-            <para>
-            <b>DOMConfigurator is obsolete. Use XmlConfigurator instead of DOMConfigurator.</b>
-            </para>
-            Loads the log4net configuration from the XML element
-            supplied as <paramref name="element"/>.
-            </remarks>
-            <param name="repository">The repository to configure.</param>
-            <param name="element">The element to parse.</param>
-        </member>
-        <member name="M:log4net.Config.DOMConfigurator.Configure(System.IO.FileInfo)">
-            <summary>
-            Configures log4net using the specified configuration file.
-            </summary>
-            <param name="configFile">The XML file to load the configuration from.</param>
-            <remarks>
-            <para>
-            <b>DOMConfigurator is obsolete. Use XmlConfigurator instead of DOMConfigurator.</b>
-            </para>
-            <para>
-            The configuration file must be valid XML. It must contain
-            at least one element called <c>log4net</c> that holds
-            the log4net configuration data.
-            </para>
-            <para>
-            The log4net configuration file can possible be specified in the application's
-            configuration file (either <c>MyAppName.exe.config</c> for a
-            normal application on <c>Web.config</c> for an ASP.NET application).
-            </para>
-            <example>
-            The following example configures log4net using a configuration file, of which the 
-            location is stored in the application's configuration file :
-            </example>
-            <code lang="C#">
-            using log4net.Config;
-            using System.IO;
-            using System.Configuration;
-            
-            ...
-            
-            DOMConfigurator.Configure(new FileInfo(ConfigurationSettings.AppSettings["log4net-config-file"]));
-            </code>
-            <para>
-            In the <c>.config</c> file, the path to the log4net can be specified like this :
-            </para>
-            <code lang="XML" escaped="true">
-            <configuration>
-            	<appSettings>
-            		<add key="log4net-config-file" value="log.config"/>
-            	</appSettings>
-            </configuration>
-            </code>
-            </remarks>
-        </member>
-        <member name="M:log4net.Config.DOMConfigurator.Configure(System.IO.Stream)">
-            <summary>
-            Configures log4net using the specified configuration file.
-            </summary>
-            <param name="configStream">A stream to load the XML configuration from.</param>
-            <remarks>
-            <para>
-            <b>DOMConfigurator is obsolete. Use XmlConfigurator instead of DOMConfigurator.</b>
-            </para>
-            <para>
-            The configuration data must be valid XML. It must contain
-            at least one element called <c>log4net</c> that holds
-            the log4net configuration data.
-            </para>
-            <para>
-            Note that this method will NOT close the stream parameter.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Config.DOMConfigurator.Configure(log4net.Repository.ILoggerRepository,System.IO.FileInfo)">
-            <summary>
-            Configures the <see cref="T:log4net.Repository.ILoggerRepository"/> using the specified configuration 
-            file.
-            </summary>
-            <param name="repository">The repository to configure.</param>
-            <param name="configFile">The XML file to load the configuration from.</param>
-            <remarks>
-            <para>
-            <b>DOMConfigurator is obsolete. Use XmlConfigurator instead of DOMConfigurator.</b>
-            </para>
-            <para>
-            The configuration file must be valid XML. It must contain
-            at least one element called <c>log4net</c> that holds
-            the configuration data.
-            </para>
-            <para>
-            The log4net configuration file can possible be specified in the application's
-            configuration file (either <c>MyAppName.exe.config</c> for a
-            normal application on <c>Web.config</c> for an ASP.NET application).
-            </para>
-            <example>
-            The following example configures log4net using a configuration file, of which the 
-            location is stored in the application's configuration file :
-            </example>
-            <code lang="C#">
-            using log4net.Config;
-            using System.IO;
-            using System.Configuration;
-            
-            ...
-            
-            DOMConfigurator.Configure(new FileInfo(ConfigurationSettings.AppSettings["log4net-config-file"]));
-            </code>
-            <para>
-            In the <c>.config</c> file, the path to the log4net can be specified like this :
-            </para>
-            <code lang="XML" escaped="true">
-            <configuration>
-            	<appSettings>
-            		<add key="log4net-config-file" value="log.config"/>
-            	</appSettings>
-            </configuration>
-            </code>
-            </remarks>
-        </member>
-        <member name="M:log4net.Config.DOMConfigurator.Configure(log4net.Repository.ILoggerRepository,System.IO.Stream)">
-            <summary>
-            Configures the <see cref="T:log4net.Repository.ILoggerRepository"/> using the specified configuration 
-            file.
-            </summary>
-            <param name="repository">The repository to configure.</param>
-            <param name="configStream">The stream to load the XML configuration from.</param>
-            <remarks>
-            <para>
-            <b>DOMConfigurator is obsolete. Use XmlConfigurator instead of DOMConfigurator.</b>
-            </para>
-            <para>
-            The configuration data must be valid XML. It must contain
-            at least one element called <c>log4net</c> that holds
-            the configuration data.
-            </para>
-            <para>
-            Note that this method will NOT close the stream parameter.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Config.DOMConfigurator.ConfigureAndWatch(System.IO.FileInfo)">
-            <summary>
-            Configures log4net using the file specified, monitors the file for changes 
-            and reloads the configuration if a change is detected.
-            </summary>
-            <param name="configFile">The XML file to load the configuration from.</param>
-            <remarks>
-            <para>
-            <b>DOMConfigurator is obsolete. Use XmlConfigurator instead of DOMConfigurator.</b>
-            </para>
-            <para>
-            The configuration file must be valid XML. It must contain
-            at least one element called <c>log4net</c> that holds
-            the configuration data.
-            </para>
-            <para>
-            The configuration file will be monitored using a <see cref="T:System.IO.FileSystemWatcher"/>
-            and depends on the behavior of that class.
-            </para>
-            <para>
-            For more information on how to configure log4net using
-            a separate configuration file, see <see cref="M:Configure(FileInfo)"/>.
-            </para>
-            </remarks>
-            <seealso cref="M:Configure(FileInfo)"/>
-        </member>
-        <member name="M:log4net.Config.DOMConfigurator.ConfigureAndWatch(log4net.Repository.ILoggerRepository,System.IO.FileInfo)">
-            <summary>
-            Configures the <see cref="T:log4net.Repository.ILoggerRepository"/> using the file specified, 
-            monitors the file for changes and reloads the configuration if a change 
-            is detected.
-            </summary>
-            <param name="repository">The repository to configure.</param>
-            <param name="configFile">The XML file to load the configuration from.</param>
-            <remarks>
-            <para>
-            <b>DOMConfigurator is obsolete. Use XmlConfigurator instead of DOMConfigurator.</b>
-            </para>
-            <para>
-            The configuration file must be valid XML. It must contain
-            at least one element called <c>log4net</c> that holds
-            the configuration data.
-            </para>
-            <para>
-            The configuration file will be monitored using a <see cref="T:System.IO.FileSystemWatcher"/>
-            and depends on the behavior of that class.
-            </para>
-            <para>
-            For more information on how to configure log4net using
-            a separate configuration file, see <see cref="M:Configure(FileInfo)"/>.
-            </para>
-            </remarks>
-            <seealso cref="M:Configure(FileInfo)"/>
-        </member>
         <member name="T:log4net.Config.DOMConfiguratorAttribute">
             <summary>
             Assembly level attribute to configure the <see cref="T:log4net.Config.XmlConfigurator"/>.
@@ -8991,55 +6653,6 @@
             <author>Nicko Cadell</author>
             <author>Gert Driesen</author>
         </member>
-        <member name="T:log4net.Config.Log4NetConfigurationSectionHandler">
-            <summary>
-            Class to register for the log4net section of the configuration file
-            </summary>
-            <remarks>
-            The log4net section of the configuration file needs to have a section
-            handler registered. This is the section handler used. It simply returns
-            the XML element that is the root of the section.
-            </remarks>
-            <example>
-            Example of registering the log4net section handler :
-            <code lang="XML" escaped="true">
-            <configuration>
-            	<configSections>
-            		<section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler, log4net" />
-            	</configSections>
-            	<log4net>
-            		log4net configuration XML goes here
-            	</log4net>
-            </configuration>
-            </code>
-            </example>
-            <author>Nicko Cadell</author>
-            <author>Gert Driesen</author>
-        </member>
-        <member name="M:log4net.Config.Log4NetConfigurationSectionHandler.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:log4net.Config.Log4NetConfigurationSectionHandler"/> class.
-            </summary>
-            <remarks>
-            <para>
-            Default constructor.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Config.Log4NetConfigurationSectionHandler.Create(System.Object,System.Object,System.Xml.XmlNode)">
-            <summary>
-            Parses the configuration section.
-            </summary>
-            <param name="parent">The configuration settings in a corresponding parent configuration section.</param>
-            <param name="configContext">The configuration context when called from the ASP.NET configuration system. Otherwise, this parameter is reserved and is a null reference.</param>
-            <param name="section">The <see cref="T:System.Xml.XmlNode" /> for the log4net section.</param>
-            <returns>The <see cref="T:System.Xml.XmlNode" /> for the log4net section.</returns>
-            <remarks>
-            <para>
-            Returns the <see cref="T:System.Xml.XmlNode"/> containing the configuration data,
-            </para>
-            </remarks>
-        </member>
         <member name="T:log4net.Config.PluginAttribute">
             <summary>
             Assembly level attribute that specifies a plugin to attach to 
@@ -9054,21 +6667,6 @@
             </remarks>
             <author>Nicko Cadell</author>
             <author>Gert Driesen</author>
-        </member>
-        <member name="M:log4net.Config.PluginAttribute.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:log4net.Config.PluginAttribute" /> class
-            with the specified type.
-            </summary>
-            <param name="typeName">The type name of plugin to create.</param>
-            <remarks>
-            <para>
-            Create the attribute with the plugin type specified.
-            </para>
-            <para>
-            Where possible use the constructor that takes a <see cref="T:System.Type"/>.
-            </para>
-            </remarks>
         </member>
         <member name="M:log4net.Config.PluginAttribute.#ctor(System.Type)">
             <summary>
@@ -9313,130 +6911,12 @@
             </para>
             <para>
             To use this method to configure log4net you must specify 
-            the <see cref="T:log4net.Config.Log4NetConfigurationSectionHandler"/> section
+            the <see cref="!:Log4NetConfigurationSectionHandler"/> section
             handler for the <c>log4net</c> configuration section. See the
-            <see cref="T:log4net.Config.Log4NetConfigurationSectionHandler"/> for an example.
+            <see cref="!:Log4NetConfigurationSectionHandler"/> for an example.
             </para>
             </remarks>
             <param name="repository">The repository to configure.</param>
-        </member>
-        <member name="M:log4net.Config.XmlConfigurator.Configure">
-            <summary>
-            Automatically configures the log4net system based on the 
-            application's configuration settings.
-            </summary>
-            <remarks>
-            <para>
-            Each application has a configuration file. This has the
-            same name as the application with '.config' appended.
-            This file is XML and calling this function prompts the
-            configurator to look in that file for a section called
-            <c>log4net</c> that contains the configuration data.
-            </para>
-            <para>
-            To use this method to configure log4net you must specify 
-            the <see cref="T:log4net.Config.Log4NetConfigurationSectionHandler"/> section
-            handler for the <c>log4net</c> configuration section. See the
-            <see cref="T:log4net.Config.Log4NetConfigurationSectionHandler"/> for an example.
-            </para>
-            </remarks>
-            <seealso cref="T:log4net.Config.Log4NetConfigurationSectionHandler"/>
-        </member>
-        <member name="M:log4net.Config.XmlConfigurator.Configure(System.Xml.XmlElement)">
-            <summary>
-            Configures log4net using a <c>log4net</c> element
-            </summary>
-            <remarks>
-            <para>
-            Loads the log4net configuration from the XML element
-            supplied as <paramref name="element"/>.
-            </para>
-            </remarks>
-            <param name="element">The element to parse.</param>
-        </member>
-        <member name="M:log4net.Config.XmlConfigurator.Configure(System.IO.FileInfo)">
-            <summary>
-            Configures log4net using the specified configuration file.
-            </summary>
-            <param name="configFile">The XML file to load the configuration from.</param>
-            <remarks>
-            <para>
-            The configuration file must be valid XML. It must contain
-            at least one element called <c>log4net</c> that holds
-            the log4net configuration data.
-            </para>
-            <para>
-            The log4net configuration file can possible be specified in the application's
-            configuration file (either <c>MyAppName.exe.config</c> for a
-            normal application on <c>Web.config</c> for an ASP.NET application).
-            </para>
-            <para>
-            The first element matching <c>&lt;configuration&gt;</c> will be read as the 
-            configuration. If this file is also a .NET .config file then you must specify 
-            a configuration section for the <c>log4net</c> element otherwise .NET will 
-            complain. Set the type for the section handler to <see cref="T:System.Configuration.IgnoreSectionHandler"/>, for example:
-            <code lang="XML" escaped="true">
-            <configSections>
-            	<section name="log4net" type="System.Configuration.IgnoreSectionHandler" />
-            </configSections>
-            </code>
-            </para>
-            <example>
-            The following example configures log4net using a configuration file, of which the 
-            location is stored in the application's configuration file :
-            </example>
-            <code lang="C#">
-            using log4net.Config;
-            using System.IO;
-            using System.Configuration;
-            
-            ...
-            
-            XmlConfigurator.Configure(new FileInfo(ConfigurationSettings.AppSettings["log4net-config-file"]));
-            </code>
-            <para>
-            In the <c>.config</c> file, the path to the log4net can be specified like this :
-            </para>
-            <code lang="XML" escaped="true">
-            <configuration>
-            	<appSettings>
-            		<add key="log4net-config-file" value="log.config"/>
-            	</appSettings>
-            </configuration>
-            </code>
-            </remarks>
-        </member>
-        <member name="M:log4net.Config.XmlConfigurator.Configure(System.Uri)">
-            <summary>
-            Configures log4net using the specified configuration URI.
-            </summary>
-            <param name="configUri">A URI to load the XML configuration from.</param>
-            <remarks>
-            <para>
-            The configuration data must be valid XML. It must contain
-            at least one element called <c>log4net</c> that holds
-            the log4net configuration data.
-            </para>
-            <para>
-            The <see cref="T:System.Net.WebRequest"/> must support the URI scheme specified.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Config.XmlConfigurator.Configure(System.IO.Stream)">
-            <summary>
-            Configures log4net using the specified configuration data stream.
-            </summary>
-            <param name="configStream">A stream to load the XML configuration from.</param>
-            <remarks>
-            <para>
-            The configuration data must be valid XML. It must contain
-            at least one element called <c>log4net</c> that holds
-            the log4net configuration data.
-            </para>
-            <para>
-            Note that this method will NOT close the stream parameter.
-            </para>
-            </remarks>
         </member>
         <member name="M:log4net.Config.XmlConfigurator.Configure(log4net.Repository.ILoggerRepository,System.Xml.XmlElement)">
             <summary>
@@ -9472,7 +6952,7 @@
             The first element matching <c>&lt;configuration&gt;</c> will be read as the 
             configuration. If this file is also a .NET .config file then you must specify 
             a configuration section for the <c>log4net</c> element otherwise .NET will 
-            complain. Set the type for the section handler to <see cref="T:System.Configuration.IgnoreSectionHandler"/>, for example:
+            complain. Set the type for the section handler to <see cref="!:System.Configuration.IgnoreSectionHandler"/>, for example:
             <code lang="XML" escaped="true">
             <configSections>
             	<section name="log4net" type="System.Configuration.IgnoreSectionHandler" />
@@ -9539,29 +7019,6 @@
             Note that this method will NOT close the stream parameter.
             </para>
             </remarks>
-        </member>
-        <member name="M:log4net.Config.XmlConfigurator.ConfigureAndWatch(System.IO.FileInfo)">
-            <summary>
-            Configures log4net using the file specified, monitors the file for changes 
-            and reloads the configuration if a change is detected.
-            </summary>
-            <param name="configFile">The XML file to load the configuration from.</param>
-            <remarks>
-            <para>
-            The configuration file must be valid XML. It must contain
-            at least one element called <c>log4net</c> that holds
-            the configuration data.
-            </para>
-            <para>
-            The configuration file will be monitored using a <see cref="T:System.IO.FileSystemWatcher"/>
-            and depends on the behavior of that class.
-            </para>
-            <para>
-            For more information on how to configure log4net using
-            a separate configuration file, see <see cref="M:Configure(FileInfo)"/>.
-            </para>
-            </remarks>
-            <seealso cref="M:Configure(FileInfo)"/>
         </member>
         <member name="M:log4net.Config.XmlConfigurator.ConfigureAndWatch(log4net.Repository.ILoggerRepository,System.IO.FileInfo)">
             <summary>
@@ -9734,9 +7191,9 @@
             If set the <see cref="P:log4net.Config.XmlConfiguratorAttribute.ConfigFile"/> property takes priority over the
             <see cref="P:log4net.Config.XmlConfiguratorAttribute.ConfigFileExtension"/> property. The <see cref="P:log4net.Config.XmlConfiguratorAttribute.ConfigFile"/> property
             specifies a path to a file to load the config from. The path is relative to the
-            application's base directory; <see cref="P:System.AppDomain.BaseDirectory"/>.
+            application's base directory; <see cref="!:AppDomain.BaseDirectory"/>.
             The <see cref="P:log4net.Config.XmlConfiguratorAttribute.ConfigFileExtension"/> property is used as a postfix to the assembly file name.
-            The config file must be located in the  application's base directory; <see cref="P:System.AppDomain.BaseDirectory"/>.
+            The config file must be located in the  application's base directory; <see cref="!:AppDomain.BaseDirectory"/>.
             For example in a console application setting the <see cref="P:log4net.Config.XmlConfiguratorAttribute.ConfigFileExtension"/> to
             <c>config</c> has the same effect as not specifying the <see cref="P:log4net.Config.XmlConfiguratorAttribute.ConfigFile"/> or 
             <see cref="P:log4net.Config.XmlConfiguratorAttribute.ConfigFileExtension"/> properties.
@@ -9784,7 +7241,7 @@
             <para>
             If specified, this is the name of the configuration file to use with
             the <see cref="T:log4net.Config.XmlConfigurator"/>. This file path is relative to the
-            <b>application base</b> directory (<see cref="P:System.AppDomain.BaseDirectory"/>).
+            <b>application base</b> directory (<see cref="!:AppDomain.BaseDirectory"/>).
             </para>
             <para>
             The <see cref="P:log4net.Config.XmlConfiguratorAttribute.ConfigFile"/> takes priority over the <see cref="P:log4net.Config.XmlConfiguratorAttribute.ConfigFileExtension"/>.
@@ -9802,7 +7259,7 @@
             <para>
             If specified this is the extension for the configuration file.
             The path to the config file is built by using the <b>application 
-            base</b> directory (<see cref="P:System.AppDomain.BaseDirectory"/>),
+            base</b> directory (<see cref="!:AppDomain.BaseDirectory"/>),
             the <b>assembly file name</b> and the config file extension.
             </para>
             <para>
@@ -12089,11 +9546,6 @@
             </para>
             </remarks>
         </member>
-        <member name="P:log4net.Core.LocationInfo.StackFrames">
-            <summary>
-            Gets the stack frames from the stack trace of the caller making the log request
-            </summary>
-        </member>
         <member name="F:log4net.Core.LocationInfo.declaringType">
             <summary>
             The fully qualified type of the LocationInfo class.
@@ -12116,7 +9568,7 @@
             </summary>
             <remarks>
             <para>
-            This type extends <see cref="T:System.ApplicationException"/>. It
+            This type extends <see cref="!:ApplicationException"/>. It
             does not add any new functionality but does differentiate the
             type of exception being thrown.
             </para>
@@ -12156,19 +9608,6 @@
             <para>
             Initializes a new instance of the <see cref="T:log4net.Core.LogException" /> class
             with the specified message and inner exception.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Core.LogException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Serialization constructor
-            </summary>
-            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
-            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual information about the source or destination.</param>
-            <remarks>
-            <para>
-            Initializes a new instance of the <see cref="T:log4net.Core.LogException" /> class 
-            with serialized data.
             </para>
             </remarks>
         </member>
@@ -12665,13 +10104,13 @@
         </member>
         <member name="M:log4net.Core.LoggerManager.OnDomainUnload(System.Object,System.EventArgs)">
             <summary>
-            Called when the <see cref="E:System.AppDomain.DomainUnload"/> event fires
+            Called when the <see cref="!:AppDomain.DomainUnload"/> event fires
             </summary>
-            <param name="sender">the <see cref="T:System.AppDomain"/> that is exiting</param>
+            <param name="sender">the <see cref="!:AppDomain"/> that is exiting</param>
             <param name="e">null</param>
             <remarks>
             <para>
-            Called when the <see cref="E:System.AppDomain.DomainUnload"/> event fires.
+            Called when the <see cref="!:AppDomain.DomainUnload"/> event fires.
             </para>
             <para>
             When the event is triggered the log4net system is <see cref="M:Shutdown()"/>.
@@ -12680,13 +10119,13 @@
         </member>
         <member name="M:log4net.Core.LoggerManager.OnProcessExit(System.Object,System.EventArgs)">
             <summary>
-            Called when the <see cref="E:System.AppDomain.ProcessExit"/> event fires
+            Called when the <see cref="!:AppDomain.ProcessExit"/> event fires
             </summary>
-            <param name="sender">the <see cref="T:System.AppDomain"/> that is exiting</param>
+            <param name="sender">the <see cref="!:AppDomain"/> that is exiting</param>
             <param name="e">null</param>
             <remarks>
             <para>
-            Called when the <see cref="E:System.AppDomain.ProcessExit"/> event fires.
+            Called when the <see cref="!:AppDomain.ProcessExit"/> event fires.
             </para>
             <para>
             When the event is triggered the log4net system is <see cref="M:Shutdown()"/>.
@@ -17322,7 +14761,7 @@
             </para>
             <para>
             This Layout should only be used with appenders that utilize multiple
-            layouts (e.g. <see cref="T:log4net.Appender.AdoNetAppender"/>).
+            layouts (e.g. <see cref="!:log4net.Appender.AdoNetAppender"/>).
             </para>
             </remarks>
             <author>Nicko Cadell</author>
@@ -18653,132 +16092,6 @@
             </para>
             </remarks>
         </member>
-        <member name="T:log4net.Layout.Pattern.AspNetCachePatternConverter">
-            <summary>
-            Converter for items in the ASP.Net Cache.
-            </summary>
-            <remarks>
-            <para>
-            Outputs an item from the <see cref="P:System.Web.HttpRuntime.Cache" />.
-            </para>
-            </remarks>
-            <author>Ron Grabowski</author>
-        </member>
-        <member name="M:log4net.Layout.Pattern.AspNetCachePatternConverter.Convert(System.IO.TextWriter,log4net.Core.LoggingEvent,System.Web.HttpContext)">
-            <summary>
-            Write the ASP.Net Cache item to the output
-            </summary>
-            <param name="writer"><see cref="T:System.IO.TextWriter" /> that will receive the formatted result.</param>
-            <param name="loggingEvent">The <see cref="T:log4net.Core.LoggingEvent" /> on which the pattern converter should be executed.</param>
-            <param name="httpContext">The <see cref="T:System.Web.HttpContext" /> under which the ASP.Net request is running.</param>
-            <remarks>
-            <para>
-            Writes out the value of a named property. The property name
-            should be set in the <see cref="P:log4net.Util.PatternConverter.Option"/>
-            property. If no property has been set, all key value pairs from the Cache will
-            be written to the output.
-            </para>
-            </remarks>
-        </member>
-        <member name="T:log4net.Layout.Pattern.AspNetContextPatternConverter">
-            <summary>
-            Converter for items in the <see cref="T:System.Web.HttpContext" />.
-            </summary>
-            <remarks>
-            <para>
-            Outputs an item from the <see cref="T:System.Web.HttpContext" />.
-            </para>
-            </remarks>
-            <author>Ron Grabowski</author>
-        </member>
-        <member name="M:log4net.Layout.Pattern.AspNetContextPatternConverter.Convert(System.IO.TextWriter,log4net.Core.LoggingEvent,System.Web.HttpContext)">
-            <summary>
-            Write the ASP.Net HttpContext item to the output
-            </summary>
-            <param name="writer"><see cref="T:System.IO.TextWriter" /> that will receive the formatted result.</param>
-            <param name="loggingEvent">The <see cref="T:log4net.Core.LoggingEvent" /> on which the pattern converter should be executed.</param>
-            <param name="httpContext">The <see cref="T:System.Web.HttpContext" /> under which the ASP.Net request is running.</param>
-            <remarks>
-            <para>
-            Writes out the value of a named property. The property name
-            should be set in the <see cref="P:log4net.Util.PatternConverter.Option"/>
-            property.
-            </para>
-            </remarks>
-        </member>
-        <member name="T:log4net.Layout.Pattern.AspNetPatternLayoutConverter">
-            <summary>
-            Abstract class that provides access to the current HttpContext (<see cref="P:System.Web.HttpContext.Current" />) that 
-            derived classes need.
-            </summary>
-            <remarks>
-            This class handles the case when HttpContext.Current is null by writing
-            <see cref="P:log4net.Util.SystemInfo.NotAvailableText" /> to the writer.
-            </remarks>
-            <author>Ron Grabowski</author>
-        </member>
-        <member name="M:log4net.Layout.Pattern.AspNetPatternLayoutConverter.Convert(System.IO.TextWriter,log4net.Core.LoggingEvent,System.Web.HttpContext)">
-            <summary>
-            Derived pattern converters must override this method in order to
-            convert conversion specifiers in the correct way.
-            </summary>
-            <param name="writer"><see cref="T:System.IO.TextWriter" /> that will receive the formatted result.</param>
-            <param name="loggingEvent">The <see cref="T:log4net.Core.LoggingEvent" /> on which the pattern converter should be executed.</param>
-            <param name="httpContext">The <see cref="T:System.Web.HttpContext" /> under which the ASP.Net request is running.</param>
-        </member>
-        <member name="T:log4net.Layout.Pattern.AspNetRequestPatternConverter">
-            <summary>
-            Converter for items in the ASP.Net Cache.
-            </summary>
-            <remarks>
-            <para>
-            Outputs an item from the <see cref="P:System.Web.HttpRuntime.Cache" />.
-            </para>
-            </remarks>
-            <author>Ron Grabowski</author>
-        </member>
-        <member name="M:log4net.Layout.Pattern.AspNetRequestPatternConverter.Convert(System.IO.TextWriter,log4net.Core.LoggingEvent,System.Web.HttpContext)">
-            <summary>
-            Write the ASP.Net Cache item to the output
-            </summary>
-            <param name="writer"><see cref="T:System.IO.TextWriter" /> that will receive the formatted result.</param>
-            <param name="loggingEvent">The <see cref="T:log4net.Core.LoggingEvent" /> on which the pattern converter should be executed.</param>
-            <param name="httpContext">The <see cref="T:System.Web.HttpContext" /> under which the ASP.Net request is running.</param>
-            <remarks>
-            <para>
-            Writes out the value of a named property. The property name
-            should be set in the <see cref="P:log4net.Util.PatternConverter.Option"/>
-            property.
-            </para>
-            </remarks>
-        </member>
-        <member name="T:log4net.Layout.Pattern.AspNetSessionPatternConverter">
-            <summary>
-            Converter for items in the ASP.Net Cache.
-            </summary>
-            <remarks>
-            <para>
-            Outputs an item from the <see cref="P:System.Web.HttpRuntime.Cache" />.
-            </para>
-            </remarks>
-            <author>Ron Grabowski</author>
-        </member>
-        <member name="M:log4net.Layout.Pattern.AspNetSessionPatternConverter.Convert(System.IO.TextWriter,log4net.Core.LoggingEvent,System.Web.HttpContext)">
-            <summary>
-            Write the ASP.Net Cache item to the output
-            </summary>
-            <param name="writer"><see cref="T:System.IO.TextWriter" /> that will receive the formatted result.</param>
-            <param name="loggingEvent">The <see cref="T:log4net.Core.LoggingEvent" /> on which the pattern converter should be executed.</param>
-            <param name="httpContext">The <see cref="T:System.Web.HttpContext" /> under which the ASP.Net request is running.</param>
-            <remarks>
-            <para>
-            Writes out the value of a named property. The property name
-            should be set in the <see cref="P:log4net.Util.PatternConverter.Option"/>
-            property. If no property has been set, all key value pairs from the Session will
-            be written to the output.
-            </para>
-            </remarks>
-        </member>
         <member name="T:log4net.Layout.Pattern.DatePatternConverter">
             <summary>
             Date pattern converter, uses a <see cref="T:log4net.DateFormatter.IDateFormatter"/> to format 
@@ -19380,86 +16693,6 @@
             <param name="end">end time (in the current local time zone)</param>
             <returns>the time difference in milliseconds</returns>
         </member>
-        <member name="T:log4net.Layout.Pattern.StackTraceDetailPatternConverter">
-            <summary>
-            Write the caller stack frames to the output
-            </summary>
-            <remarks>
-            <para>
-            Writes the <see cref="P:log4net.Core.LocationInfo.StackFrames"/> to the output writer, using format:
-            type3.MethodCall3(type param,...) > type2.MethodCall2(type param,...) > type1.MethodCall1(type param,...)
-            </para>
-            </remarks>
-            <author>Adam Davies</author>
-        </member>
-        <member name="F:log4net.Layout.Pattern.StackTraceDetailPatternConverter.declaringType">
-            <summary>
-            The fully qualified type of the StackTraceDetailPatternConverter class.
-            </summary>
-            <remarks>
-            Used by the internal logger to record the Type of the
-            log message.
-            </remarks>
-        </member>
-        <member name="T:log4net.Layout.Pattern.StackTracePatternConverter">
-            <summary>
-            Write the caller stack frames to the output
-            </summary>
-            <remarks>
-            <para>
-            Writes the <see cref="P:log4net.Core.LocationInfo.StackFrames"/> to the output writer, using format:
-            type3.MethodCall3 > type2.MethodCall2 > type1.MethodCall1
-            </para>
-            </remarks>
-            <author>Michael Cromwell</author>
-        </member>
-        <member name="M:log4net.Layout.Pattern.StackTracePatternConverter.ActivateOptions">
-            <summary>
-            Initialize the converter
-            </summary>
-            <remarks>
-            <para>
-            This is part of the <see cref="T:log4net.Core.IOptionHandler"/> delayed object
-            activation scheme. The <see cref="M:log4net.Layout.Pattern.StackTracePatternConverter.ActivateOptions"/> method must 
-            be called on this object after the configuration properties have
-            been set. Until <see cref="M:log4net.Layout.Pattern.StackTracePatternConverter.ActivateOptions"/> is called this
-            object is in an undefined state and must not be used. 
-            </para>
-            <para>
-            If any of the configuration properties are modified then 
-            <see cref="M:log4net.Layout.Pattern.StackTracePatternConverter.ActivateOptions"/> must be called again.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Layout.Pattern.StackTracePatternConverter.Convert(System.IO.TextWriter,log4net.Core.LoggingEvent)">
-            <summary>
-            Write the strack frames to the output
-            </summary>
-            <param name="writer"><see cref="T:System.IO.TextWriter" /> that will receive the formatted result.</param>
-            <param name="loggingEvent">the event being logged</param>
-            <remarks>
-            <para>
-            Writes the <see cref="P:log4net.Core.LocationInfo.StackFrames"/> to the output writer.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Layout.Pattern.StackTracePatternConverter.GetMethodInformation(log4net.Core.MethodItem)">
-            <summary>
-            Returns the Name of the method
-            </summary>
-            <param name="method"></param>
-            <remarks>This method was created, so this class could be used as a base class for StackTraceDetailPatternConverter</remarks>
-            <returns>string</returns>
-        </member>
-        <member name="F:log4net.Layout.Pattern.StackTracePatternConverter.declaringType">
-            <summary>
-            The fully qualified type of the StackTracePatternConverter class.
-            </summary>
-            <remarks>
-            Used by the internal logger to record the Type of the
-            log message.
-            </remarks>
-        </member>
         <member name="T:log4net.Layout.Pattern.ThreadPatternConverter">
             <summary>
             Converter to include event thread name
@@ -20048,8 +17281,8 @@
             Format the <see cref="T:log4net.Core.LoggingEvent"/> and write it to the <see cref="T:System.IO.TextWriter"/>.
             </para>
             <para>
-            This method creates an <see cref="T:System.Xml.XmlTextWriter"/> that writes to the
-            <paramref name="writer"/>. The <see cref="T:System.Xml.XmlTextWriter"/> is passed 
+            This method creates an <see cref="!:XmlTextWriter"/> that writes to the
+            <paramref name="writer"/>. The <see cref="!:XmlTextWriter"/> is passed 
             to the <see cref="M:log4net.Layout.XmlLayoutBase.FormatXml(System.Xml.XmlWriter,log4net.Core.LoggingEvent)"/> method. Subclasses should override the
             <see cref="M:log4net.Layout.XmlLayoutBase.FormatXml(System.Xml.XmlWriter,log4net.Core.LoggingEvent)"/> method rather than this method.
             </para>
@@ -20147,7 +17380,7 @@
             </summary>
             <remarks>
             <para>
-            The <c>LogicalThreadContext</c> provides a location for <see cref="T:System.Runtime.Remoting.Messaging.CallContext"/> specific debugging 
+            The <c>LogicalThreadContext</c> provides a location for <see cref="!:System.Runtime.Remoting.Messaging.CallContext"/> specific debugging 
             information to be stored.
             The <c>LogicalThreadContext</c> properties override any <see cref="T:log4net.ThreadContext"/> or <see cref="T:log4net.GlobalContext"/>
             properties with the same name.
@@ -20155,7 +17388,7 @@
             <para>
             For .NET Standard 1.3 this class uses
             System.Threading.AsyncLocal rather than <see
-            cref="T:System.Runtime.Remoting.Messaging.CallContext"/>.
+            cref="!:System.Runtime.Remoting.Messaging.CallContext"/>.
             </para>
             <para>
             The Logical Thread Context has a properties map and a stack.
@@ -20170,12 +17403,12 @@
             when a server handles multiple clients near-simultaneously.
             </para>
             <para>
-            The Logical Thread Context is managed on a per <see cref="T:System.Runtime.Remoting.Messaging.CallContext"/> basis.
+            The Logical Thread Context is managed on a per <see cref="!:System.Runtime.Remoting.Messaging.CallContext"/> basis.
             </para>
             <para>
-            The <see cref="T:System.Runtime.Remoting.Messaging.CallContext"/> requires a link time 
-            <see cref="T:System.Security.Permissions.SecurityPermission"/> for the
-            <see cref="F:System.Security.Permissions.SecurityPermissionFlag.Infrastructure"/>.
+            The <see cref="!:System.Runtime.Remoting.Messaging.CallContext"/> requires a link time 
+            <see cref="!:System.Security.Permissions.SecurityPermission"/> for the
+            <see cref="!:System.Security.Permissions.SecurityPermissionFlag.Infrastructure"/>.
             If the calling code does not have this permission then this context will be disabled.
             It will not store any property values set on it.
             </para>
@@ -20284,50 +17517,6 @@
             <remarks>
             Uses a private access modifier to prevent instantiation of this class.
             </remarks>
-        </member>
-        <member name="M:log4net.LogManager.Exists(System.String)">
-            <overloads>Returns the named logger if it exists.</overloads>
-            <summary>
-            Returns the named logger if it exists.
-            </summary>
-            <remarks>
-            <para>
-            If the named logger exists (in the default repository) then it
-            returns a reference to the logger, otherwise it returns <c>null</c>.
-            </para>
-            </remarks>
-            <param name="name">The fully qualified logger name to look for.</param>
-            <returns>The logger found, or <c>null</c> if no logger could be found.</returns>
-        </member>
-        <member name="M:log4net.LogManager.GetCurrentLoggers">
-            <overloads>Get the currently defined loggers.</overloads>
-            <summary>
-            Returns all the currently defined loggers in the default repository.
-            </summary>
-            <remarks>
-            <para>The root logger is <b>not</b> included in the returned array.</para>
-            </remarks>
-            <returns>All the defined loggers.</returns>
-        </member>
-        <member name="M:log4net.LogManager.GetLogger(System.String)">
-            <overloads>Get or create a logger.</overloads>
-            <summary>
-            Retrieves or creates a named logger.
-            </summary>
-            <remarks>
-            <para>
-            Retrieves a logger named as the <paramref name="name"/>
-            parameter. If the named logger already exists, then the
-            existing instance will be returned. Otherwise, a new instance is
-            created.
-            </para>
-            <para>By default, loggers do not have a set level but inherit
-            it from the hierarchy. This is one of the central features of
-            log4net.
-            </para>
-            </remarks>
-            <param name="name">The name of the logger to retrieve.</param>
-            <returns>The logger with the name specified.</returns>
         </member>
         <member name="M:log4net.LogManager.Exists(System.String,System.String)">
             <summary>
@@ -20480,27 +17669,6 @@
             </para>
             </remarks>
         </member>
-        <member name="M:log4net.LogManager.ShutdownRepository">
-            <overloads>Shutdown a logger repository.</overloads>
-            <summary>
-            Shuts down the default repository.
-            </summary>
-            <remarks>
-            <para>
-            Calling this method will <b>safely</b> close and remove all
-            appenders in all the loggers including root contained in the
-            default repository.
-            </para>
-            <para>Some appenders need to be closed before the application exists. 
-            Otherwise, pending logging events might be lost.
-            </para>
-            <para>The <c>shutdown</c> method is careful to close nested
-            appenders before closing regular appenders. This is allows
-            configurations where a regular appender is attached to a logger
-            and again to a nested appender.
-            </para>
-            </remarks>
-        </member>
         <member name="M:log4net.LogManager.ShutdownRepository(System.String)">
             <summary>
             Shuts down the repository for the repository specified.
@@ -20547,22 +17715,6 @@
             </remarks>
             <param name="repositoryAssembly">The assembly to use to lookup the repository.</param>
         </member>
-        <member name="M:log4net.LogManager.ResetConfiguration">
-            <overloads>Reset the configuration of a repository</overloads>
-            <summary>
-            Resets all values contained in this repository instance to their defaults.
-            </summary>
-            <remarks>
-            <para>
-            Resets all values contained in the repository instance to their
-            defaults.  This removes all appenders from all loggers, sets
-            the level of all non-root loggers to <c>null</c>,
-            sets their additivity flag to <c>true</c> and sets the level
-            of the root logger to <see cref="F:log4net.Core.Level.Debug"/>. Moreover,
-            message disabling is set to its default "off" value.
-            </para>		
-            </remarks>
-        </member>
         <member name="M:log4net.LogManager.ResetConfiguration(System.String)">
             <summary>
             Resets all values contained in this repository instance to their defaults.
@@ -20595,19 +17747,6 @@
             </remarks>
             <param name="repositoryAssembly">The assembly to use to lookup the repository to reset.</param>
         </member>
-        <member name="M:log4net.LogManager.GetLoggerRepository">
-            <overloads>Get the logger repository.</overloads>
-            <summary>
-            Returns the default <see cref="T:log4net.Repository.ILoggerRepository"/> instance.
-            </summary>
-            <remarks>
-            <para>
-            Gets the <see cref="T:log4net.Repository.ILoggerRepository"/> for the repository specified
-            by the callers assembly (<see cref="M:Assembly.GetCallingAssembly()"/>).
-            </para>
-            </remarks>
-            <returns>The <see cref="T:log4net.Repository.ILoggerRepository"/> instance for the default repository.</returns>
-        </member>
         <member name="M:log4net.LogManager.GetLoggerRepository(System.String)">
             <summary>
             Returns the default <see cref="T:log4net.Repository.ILoggerRepository"/> instance.
@@ -20634,19 +17773,6 @@
             </remarks>
             <param name="repositoryAssembly">The assembly to use to lookup the repository.</param>
         </member>
-        <member name="M:log4net.LogManager.GetRepository">
-            <overloads>Get a logger repository.</overloads>
-            <summary>
-            Returns the default <see cref="T:log4net.Repository.ILoggerRepository"/> instance.
-            </summary>
-            <remarks>
-            <para>
-            Gets the <see cref="T:log4net.Repository.ILoggerRepository"/> for the repository specified
-            by the callers assembly (<see cref="M:Assembly.GetCallingAssembly()"/>).
-            </para>
-            </remarks>
-            <returns>The <see cref="T:log4net.Repository.ILoggerRepository"/> instance for the default repository.</returns>
-        </member>
         <member name="M:log4net.LogManager.GetRepository(System.String)">
             <summary>
             Returns the default <see cref="T:log4net.Repository.ILoggerRepository"/> instance.
@@ -20672,43 +17798,6 @@
             </para>
             </remarks>
             <param name="repositoryAssembly">The assembly to use to lookup the repository.</param>
-        </member>
-        <member name="M:log4net.LogManager.CreateDomain(System.Type)">
-            <overloads>Create a domain</overloads>
-            <summary>
-            Creates a repository with the specified repository type.
-            </summary>
-            <remarks>
-            <para>
-            <b>CreateDomain is obsolete. Use CreateRepository instead of CreateDomain.</b>
-            </para>
-            <para>
-            The <see cref="T:log4net.Repository.ILoggerRepository"/> created will be associated with the repository
-            specified such that a call to <see cref="M:GetRepository()"/> will return 
-            the same repository instance.
-            </para>
-            </remarks>
-            <param name="repositoryType">A <see cref="T:System.Type"/> that implements <see cref="T:log4net.Repository.ILoggerRepository"/>
-            and has a no arg constructor. An instance of this type will be created to act
-            as the <see cref="T:log4net.Repository.ILoggerRepository"/> for the repository specified.</param>
-            <returns>The <see cref="T:log4net.Repository.ILoggerRepository"/> created for the repository.</returns>
-        </member>
-        <member name="M:log4net.LogManager.CreateRepository(System.Type)">
-            <overloads>Create a logger repository.</overloads>
-            <summary>
-            Creates a repository with the specified repository type.
-            </summary>
-            <param name="repositoryType">A <see cref="T:System.Type"/> that implements <see cref="T:log4net.Repository.ILoggerRepository"/>
-            and has a no arg constructor. An instance of this type will be created to act
-            as the <see cref="T:log4net.Repository.ILoggerRepository"/> for the repository specified.</param>
-            <returns>The <see cref="T:log4net.Repository.ILoggerRepository"/> created for the repository.</returns>
-            <remarks>
-            <para>
-            The <see cref="T:log4net.Repository.ILoggerRepository"/> created will be associated with the repository
-            specified such that a call to <see cref="M:GetRepository()"/> will return 
-            the same repository instance.
-            </para>
-            </remarks>
         </member>
         <member name="M:log4net.LogManager.CreateDomain(System.String)">
             <summary>
@@ -22143,152 +19232,6 @@
             The repository this plugin is attached to.
             </summary>
         </member>
-        <member name="T:log4net.Plugin.RemoteLoggingServerPlugin">
-            <summary>
-            Plugin that listens for events from the <see cref="T:log4net.Appender.RemotingAppender"/>
-            </summary>
-            <remarks>
-            <para>
-            This plugin publishes an instance of <see cref="T:log4net.Appender.RemotingAppender.IRemoteLoggingSink"/> 
-            on a specified <see cref="P:log4net.Plugin.RemoteLoggingServerPlugin.SinkUri"/>. This listens for logging events delivered from
-            a remote <see cref="T:log4net.Appender.RemotingAppender"/>.
-            </para>
-            <para>
-            When an event is received it is relogged within the attached repository
-            as if it had been raised locally.
-            </para>
-            </remarks>
-            <author>Nicko Cadell</author>
-            <author>Gert Driesen</author>
-        </member>
-        <member name="M:log4net.Plugin.RemoteLoggingServerPlugin.#ctor">
-            <summary>
-            Default constructor
-            </summary>
-            <remarks>
-            <para>
-            Initializes a new instance of the <see cref="T:log4net.Plugin.RemoteLoggingServerPlugin" /> class.
-            </para>
-            <para>
-            The <see cref="P:log4net.Plugin.RemoteLoggingServerPlugin.SinkUri"/> property must be set.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Plugin.RemoteLoggingServerPlugin.#ctor(System.String)">
-            <summary>
-            Construct with sink Uri.
-            </summary>
-            <param name="sinkUri">The name to publish the sink under in the remoting infrastructure. 
-            See <see cref="P:log4net.Plugin.RemoteLoggingServerPlugin.SinkUri"/> for more details.</param>
-            <remarks>
-            <para>
-            Initializes a new instance of the <see cref="T:log4net.Plugin.RemoteLoggingServerPlugin" /> class
-            with specified name.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Plugin.RemoteLoggingServerPlugin.SinkUri">
-            <summary>
-            Gets or sets the URI of this sink.
-            </summary>
-            <value>
-            The URI of this sink.
-            </value>
-            <remarks>
-            <para>
-            This is the name under which the object is marshaled.
-            <see cref="M:RemotingServices.Marshal(MarshalByRefObject,String,Type)"/>
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Plugin.RemoteLoggingServerPlugin.Attach(log4net.Repository.ILoggerRepository)">
-            <summary>
-            Attaches this plugin to a <see cref="T:log4net.Repository.ILoggerRepository"/>.
-            </summary>
-            <param name="repository">The <see cref="T:log4net.Repository.ILoggerRepository"/> that this plugin should be attached to.</param>
-            <remarks>
-            <para>
-            A plugin may only be attached to a single repository.
-            </para>
-            <para>
-            This method is called when the plugin is attached to the repository.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Plugin.RemoteLoggingServerPlugin.Shutdown">
-            <summary>
-            Is called when the plugin is to shutdown.
-            </summary>
-            <remarks>
-            <para>
-            When the plugin is shutdown the remote logging
-            sink is disconnected.
-            </para>
-            </remarks>
-        </member>
-        <member name="F:log4net.Plugin.RemoteLoggingServerPlugin.declaringType">
-            <summary>
-            The fully qualified type of the RemoteLoggingServerPlugin class.
-            </summary>
-            <remarks>
-            Used by the internal logger to record the Type of the
-            log message.
-            </remarks>
-        </member>
-        <member name="T:log4net.Plugin.RemoteLoggingServerPlugin.RemoteLoggingSinkImpl">
-            <summary>
-            Delivers <see cref="T:log4net.Core.LoggingEvent"/> objects to a remote sink.
-            </summary>
-            <remarks>
-            <para>
-            Internal class used to listen for logging events
-            and deliver them to the local repository.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Plugin.RemoteLoggingServerPlugin.RemoteLoggingSinkImpl.#ctor(log4net.Repository.ILoggerRepository)">
-            <summary>
-            Constructor
-            </summary>
-            <param name="repository">The repository to log to.</param>
-            <remarks>
-            <para>
-            Initializes a new instance of the <see cref="T:log4net.Plugin.RemoteLoggingServerPlugin.RemoteLoggingSinkImpl"/> for the
-            specified <see cref="T:log4net.Repository.ILoggerRepository"/>.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Plugin.RemoteLoggingServerPlugin.RemoteLoggingSinkImpl.LogEvents(log4net.Core.LoggingEvent[])">
-            <summary>
-            Logs the events to the repository.
-            </summary>
-            <param name="events">The events to log.</param>
-            <remarks>
-            <para>
-            The events passed are logged to the <see cref="T:log4net.Repository.ILoggerRepository"/>
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Plugin.RemoteLoggingServerPlugin.RemoteLoggingSinkImpl.InitializeLifetimeService">
-            <summary>
-            Obtains a lifetime service object to control the lifetime 
-            policy for this instance.
-            </summary>
-            <returns><c>null</c> to indicate that this instance should live forever.</returns>
-            <remarks>
-            <para>
-            Obtains a lifetime service object to control the lifetime 
-            policy for this instance. This object should live forever
-            therefore this implementation returns <c>null</c>.
-            </para>
-            </remarks>
-        </member>
-        <member name="F:log4net.Plugin.RemoteLoggingServerPlugin.RemoteLoggingSinkImpl.m_repository">
-            <summary>
-            The underlying <see cref="T:log4net.Repository.ILoggerRepository" /> that events should
-            be logged to.
-            </summary>
-        </member>
         <member name="T:log4net.Repository.ConfigurationChangedEventArgs">
             <summary>
             
@@ -23446,7 +20389,7 @@
             the string key to optimize comparisons.
             </para>
             <note>
-            The Compact Framework 1.0 the <see cref="M:System.String.Intern(System.String)"/>
+            The Compact Framework 1.0 the <see cref="!:String.Intern"/>
             method does not work. On the Compact Framework
             the string keys are not interned nor are they
             compared by reference.
@@ -26783,18 +23726,18 @@
             The class is not synchronized as each thread has its own <see cref="T:log4net.Util.PropertiesDictionary"/>.
             </para>
             <para>
-            This class stores its properties in a slot on the <see cref="T:System.Runtime.Remoting.Messaging.CallContext"/> named
+            This class stores its properties in a slot on the <see cref="!:CallContext"/> named
             <c>log4net.Util.LogicalThreadContextProperties</c>.
             </para>
             <para>
             For .NET Standard 1.3 this class uses
             System.Threading.AsyncLocal rather than <see
-            cref="T:System.Runtime.Remoting.Messaging.CallContext"/>.
+            cref="!:System.Runtime.Remoting.Messaging.CallContext"/>.
             </para>
             <para>
-            The <see cref="T:System.Runtime.Remoting.Messaging.CallContext"/> requires a link time 
-            <see cref="T:System.Security.Permissions.SecurityPermission"/> for the
-            <see cref="F:System.Security.Permissions.SecurityPermissionFlag.Infrastructure"/>.
+            The <see cref="!:CallContext"/> requires a link time 
+            <see cref="!:System.Security.Permissions.SecurityPermission"/> for the
+            <see cref="!:System.Security.Permissions.SecurityPermissionFlag.Infrastructure"/>.
             If the calling code does not have this permission then this context will be disabled.
             It will not store any property values set on it.
             </para>
@@ -26870,7 +23813,7 @@
             </summary>
             <returns>The peroperties dictionary stored in the call context</returns>
             <remarks>
-            The <see cref="T:System.Runtime.Remoting.Messaging.CallContext"/> method <see cref="M:System.Runtime.Remoting.Messaging.CallContext.GetData(System.String)"/> has a
+            The <see cref="!:CallContext"/> method <see cref="!:CallContext.GetData"/> has a
             security link demand, therfore we must put the method call in a seperate method
             that we can wrap in an exception handler.
             </remarks>
@@ -26881,7 +23824,7 @@
             </summary>
             <param name="properties">The properties.</param>
             <remarks>
-            The <see cref="T:System.Runtime.Remoting.Messaging.CallContext"/> method <see cref="M:System.Runtime.Remoting.Messaging.CallContext.SetData(System.String,System.Object)"/> has a
+            The <see cref="!:CallContext"/> method <see cref="!:CallContext.SetData"/> has a
             security link demand, therfore we must put the method call in a seperate method
             that we can wrap in an exception handler.
             </remarks>
@@ -26895,7 +23838,7 @@
             log message.
             </remarks>
         </member>
-        <member name="T:log4net.Util.TwoArgAction`2">
+        <member name="T:log4net.Util.TwoArgAction">
             <summary>
             Delegate type used for LogicalThreadContextStack's callbacks.
             </summary>
@@ -26928,7 +23871,7 @@
             new instance of a <see cref="T:log4net.Util.LogicalThreadContextStack"/>.
             </summary>
         </member>
-        <member name="M:log4net.Util.LogicalThreadContextStack.#ctor(System.String,log4net.Util.TwoArgAction{System.String,log4net.Util.LogicalThreadContextStack})">
+        <member name="M:log4net.Util.LogicalThreadContextStack.#ctor(System.String,log4net.Util.TwoArgAction)">
             <summary>
             Internal constructor
             </summary>
@@ -29070,52 +26013,6 @@
             </para>
             </remarks>
         </member>
-        <member name="T:log4net.Util.PatternStringConverters.AppSettingPatternConverter">
-            <summary>
-            AppSetting pattern converter
-            </summary>
-            <remarks>
-            <para>
-            This pattern converter reads appSettings from the application configuration file.
-            </para>
-            <para>
-            If the <see cref="P:log4net.Util.PatternConverter.Option"/> is specified then that will be used to
-            lookup a single appSettings value. If no <see cref="P:log4net.Util.PatternConverter.Option"/> is specified
-            then all appSettings will be dumped as a list of key value pairs.
-            </para>
-            <para>
-            A typical use is to specify a base directory for log files, e.g.
-            <example>
-            <![CDATA[
-            <log4net>
-               <appender name="MyAppender" type="log4net.Appender.RollingFileAppender">
-                 <file type="log4net.Util.PatternString" value="appsetting{LogDirectory}MyApp.log"/>
-                  ...
-              </appender>
-            </log4net>
-            ]]>
-            </example>
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Util.PatternStringConverters.AppSettingPatternConverter.Convert(System.IO.TextWriter,System.Object)">
-            <summary>
-            Write the property value to the output
-            </summary>
-            <param name="writer"><see cref="T:System.IO.TextWriter" /> that will receive the formatted result.</param>
-            <param name="state">null, state is not set</param>
-            <remarks>
-            <para>
-            Writes out the value of a named property. The property name
-            should be set in the <see cref="P:log4net.Util.PatternConverter.Option"/>
-            property.
-            </para>
-            <para>
-            If the <see cref="P:log4net.Util.PatternConverter.Option"/> is set to <c>null</c>
-            then all the properties are written as key value pairs.
-            </para>
-            </remarks>
-        </member>
         <member name="T:log4net.Util.PatternStringConverters.DatePatternConverter">
             <summary>
             Write the current date to the output
@@ -29220,44 +26117,6 @@
         <member name="F:log4net.Util.PatternStringConverters.DatePatternConverter.declaringType">
             <summary>
             The fully qualified type of the DatePatternConverter class.
-            </summary>
-            <remarks>
-            Used by the internal logger to record the Type of the
-            log message.
-            </remarks>
-        </member>
-        <member name="T:log4net.Util.PatternStringConverters.EnvironmentFolderPathPatternConverter">
-            <summary>
-            Write an <see cref="T:System.Environment.SpecialFolder" /> folder path to the output
-            </summary>
-            <remarks>
-            <para>
-            Write an special path environment folder path to the output writer.
-            The value of the <see cref="P:log4net.Util.PatternConverter.Option"/> determines 
-            the name of the variable to output. <see cref="P:log4net.Util.PatternConverter.Option"/>
-            should be a value in the <see cref="T:System.Environment.SpecialFolder" /> enumeration.
-            </para>
-            </remarks>
-            <author>Ron Grabowski</author>
-        </member>
-        <member name="M:log4net.Util.PatternStringConverters.EnvironmentFolderPathPatternConverter.Convert(System.IO.TextWriter,System.Object)">
-            <summary>
-            Write an special path environment folder path to the output
-            </summary>
-            <param name="writer">the writer to write to</param>
-            <param name="state">null, state is not set</param>
-            <remarks>
-            <para>
-            Writes the special path environment folder path to the output <paramref name="writer"/>.
-            The name of the special path environment folder path to output must be set
-            using the <see cref="P:log4net.Util.PatternConverter.Option"/>
-            property.
-            </para>
-            </remarks>
-        </member>
-        <member name="F:log4net.Util.PatternStringConverters.EnvironmentFolderPathPatternConverter.declaringType">
-            <summary>
-            The fully qualified type of the EnvironmentFolderPathPatternConverter class.
             </summary>
             <remarks>
             Used by the internal logger to record the Type of the
@@ -29682,19 +26541,6 @@
             <remarks>
             <para>
             Initializes a new instance of the <see cref="T:log4net.Util.PropertiesDictionary" /> class.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Util.PropertiesDictionary.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Initializes a new instance of the <see cref="T:log4net.Util.PropertiesDictionary" /> class 
-            with serialized data.
-            </summary>
-            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized object data.</param>
-            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual information about the source or destination.</param>
-            <remarks>
-            <para>
-            Because this class is sealed the serialization constructor is private.
             </para>
             </remarks>
         </member>
@@ -30157,19 +27003,6 @@
             </para>
             </remarks>
         </member>
-        <member name="M:log4net.Util.ReadOnlyPropertiesDictionary.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Deserialization constructor
-            </summary>
-            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized object data.</param>
-            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual information about the source or destination.</param>
-            <remarks>
-            <para>
-            Initializes a new instance of the <see cref="T:log4net.Util.ReadOnlyPropertiesDictionary" /> class 
-            with serialized data.
-            </para>
-            </remarks>
-        </member>
         <member name="M:log4net.Util.ReadOnlyPropertiesDictionary.GetKeys">
             <summary>
             Gets the key names.
@@ -30411,12 +27244,12 @@
         </member>
         <member name="P:log4net.Util.SystemInfo.ApplicationBaseDirectory">
             <summary>
-            Gets the base directory for this <see cref="T:System.AppDomain"/>.
+            Gets the base directory for this <see cref="!:AppDomain"/>.
             </summary>
-            <value>The base directory path for the current <see cref="T:System.AppDomain"/>.</value>
+            <value>The base directory path for the current <see cref="!:AppDomain"/>.</value>
             <remarks>
             <para>
-            Gets the base directory for this <see cref="T:System.AppDomain"/>.
+            Gets the base directory for this <see cref="!:AppDomain"/>.
             </para>
             <para>
             The value returned may be either a local file path or a URI.
@@ -30425,9 +27258,9 @@
         </member>
         <member name="P:log4net.Util.SystemInfo.ConfigurationFileLocation">
             <summary>
-            Gets the path to the configuration file for the current <see cref="T:System.AppDomain"/>.
+            Gets the path to the configuration file for the current <see cref="!:AppDomain"/>.
             </summary>
-            <value>The path to the configuration file for the current <see cref="T:System.AppDomain"/>.</value>
+            <value>The path to the configuration file for the current <see cref="!:AppDomain"/>.</value>
             <remarks>
             <para>
             The .NET Compact Framework 1.0 does not have a concept of a configuration
@@ -30441,12 +27274,12 @@
         </member>
         <member name="P:log4net.Util.SystemInfo.EntryAssemblyLocation">
             <summary>
-            Gets the path to the file that first executed in the current <see cref="T:System.AppDomain"/>.
+            Gets the path to the file that first executed in the current <see cref="!:AppDomain"/>.
             </summary>
             <value>The path to the entry assembly.</value>
             <remarks>
             <para>
-            Gets the path to the file that first executed in the current <see cref="T:System.AppDomain"/>.
+            Gets the path to the file that first executed in the current <see cref="!:AppDomain"/>.
             </para>
             </remarks>
         </member>
@@ -30670,27 +27503,6 @@
             If the type name is not fully qualified, it will be loaded from the assembly
             containing the specified relative type. If the type is not found in the assembly 
             then all the loaded assemblies will be searched for the type.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Util.SystemInfo.GetTypeFromString(System.String,System.Boolean,System.Boolean)">
-            <summary>
-            Loads the type specified in the type string.
-            </summary>
-            <param name="typeName">The name of the type to load.</param>
-            <param name="throwOnError">Flag set to <c>true</c> to throw an exception if the type cannot be loaded.</param>
-            <param name="ignoreCase"><c>true</c> to ignore the case of the type name; otherwise, <c>false</c></param>
-            <returns>The type loaded or <c>null</c> if it could not be loaded.</returns>		
-            <remarks>
-            <para>
-            If the type name is fully qualified, i.e. if contains an assembly name in 
-            the type name, the type will be loaded from the system using 
-            <see cref="M:Type.GetType(string,bool)"/>.
-            </para>
-            <para>
-            If the type name is not fully qualified it will be loaded from the
-            assembly that is directly calling this method. If the type is not found 
-            in the assembly then all the loaded assemblies will be searched for the type.
             </para>
             </remarks>
         </member>
@@ -31587,7 +28399,7 @@
             </summary>
             <remarks>
             <para>
-            This type extends <see cref="T:System.ApplicationException"/>. It
+            This type extends <see cref="!:ApplicationException"/>. It
             does not add any new functionality but does differentiate the
             type of exception being thrown.
             </para>
@@ -31627,19 +28439,6 @@
             <para>
             Initializes a new instance of the <see cref="T:log4net.Util.TypeConverters.ConversionNotSupportedException" /> class
             with the specified message and inner exception.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Util.TypeConverters.ConversionNotSupportedException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Serialization constructor
-            </summary>
-            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
-            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual information about the source or destination.</param>
-            <remarks>
-            <para>
-            Initializes a new instance of the <see cref="T:log4net.Util.TypeConverters.ConversionNotSupportedException" /> class 
-            with serialized data.
             </para>
             </remarks>
         </member>
@@ -32228,215 +29027,6 @@
             <para>
             The type specified must implement the <see cref="T:log4net.Util.TypeConverters.IConvertFrom"/> 
             or the <see cref="T:log4net.Util.TypeConverters.IConvertTo"/> interfaces.
-            </para>
-            </remarks>
-        </member>
-        <member name="T:log4net.Util.WindowsSecurityContext">
-            <summary>
-            Impersonate a Windows Account
-            </summary>
-            <remarks>
-            <para>
-            This <see cref="T:log4net.Core.SecurityContext"/> impersonates a Windows account.
-            </para>
-            <para>
-            How the impersonation is done depends on the value of <see cref="M:log4net.Util.WindowsSecurityContext.Impersonate(System.Object)"/>.
-            This allows the context to either impersonate a set of user credentials specified 
-            using username, domain name and password or to revert to the process credentials.
-            </para>
-            </remarks>
-        </member>
-        <member name="T:log4net.Util.WindowsSecurityContext.ImpersonationMode">
-            <summary>
-            The impersonation modes for the <see cref="T:log4net.Util.WindowsSecurityContext"/>
-            </summary>
-            <remarks>
-            <para>
-            See the <see cref="P:log4net.Util.WindowsSecurityContext.Credentials"/> property for
-            details.
-            </para>
-            </remarks>
-        </member>
-        <member name="F:log4net.Util.WindowsSecurityContext.ImpersonationMode.User">
-            <summary>
-            Impersonate a user using the credentials supplied
-            </summary>
-        </member>
-        <member name="F:log4net.Util.WindowsSecurityContext.ImpersonationMode.Process">
-            <summary>
-            Revert this the thread to the credentials of the process
-            </summary>
-        </member>
-        <member name="M:log4net.Util.WindowsSecurityContext.#ctor">
-            <summary>
-            Default constructor
-            </summary>
-            <remarks>
-            <para>
-            Default constructor
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Util.WindowsSecurityContext.Credentials">
-            <summary>
-            Gets or sets the impersonation mode for this security context
-            </summary>
-            <value>
-            The impersonation mode for this security context
-            </value>
-            <remarks>
-            <para>
-            Impersonate either a user with user credentials or
-            revert this thread to the credentials of the process.
-            The value is one of the <see cref="T:log4net.Util.WindowsSecurityContext.ImpersonationMode"/>
-            enum.
-            </para>
-            <para>
-            The default value is <see cref="F:log4net.Util.WindowsSecurityContext.ImpersonationMode.User"/>
-            </para>
-            <para>
-            When the mode is set to <see cref="F:log4net.Util.WindowsSecurityContext.ImpersonationMode.User"/>
-            the user's credentials are established using the
-            <see cref="P:log4net.Util.WindowsSecurityContext.UserName"/>, <see cref="P:log4net.Util.WindowsSecurityContext.DomainName"/> and <see cref="P:log4net.Util.WindowsSecurityContext.Password"/>
-            values.
-            </para>
-            <para>
-            When the mode is set to <see cref="F:log4net.Util.WindowsSecurityContext.ImpersonationMode.Process"/>
-            no other properties need to be set. If the calling thread is 
-            impersonating then it will be reverted back to the process credentials.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Util.WindowsSecurityContext.UserName">
-            <summary>
-            Gets or sets the Windows username for this security context
-            </summary>
-            <value>
-            The Windows username for this security context
-            </value>
-            <remarks>
-            <para>
-            This property must be set if <see cref="P:log4net.Util.WindowsSecurityContext.Credentials"/>
-            is set to <see cref="F:log4net.Util.WindowsSecurityContext.ImpersonationMode.User"/> (the default setting).
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Util.WindowsSecurityContext.DomainName">
-            <summary>
-            Gets or sets the Windows domain name for this security context
-            </summary>
-            <value>
-            The Windows domain name for this security context
-            </value>
-            <remarks>
-            <para>
-            The default value for <see cref="P:log4net.Util.WindowsSecurityContext.DomainName"/> is the local machine name
-            taken from the <see cref="P:System.Environment.MachineName"/> property.
-            </para>
-            <para>
-            This property must be set if <see cref="P:log4net.Util.WindowsSecurityContext.Credentials"/>
-            is set to <see cref="F:log4net.Util.WindowsSecurityContext.ImpersonationMode.User"/> (the default setting).
-            </para>
-            </remarks>
-        </member>
-        <member name="P:log4net.Util.WindowsSecurityContext.Password">
-            <summary>
-            Sets the password for the Windows account specified by the <see cref="P:log4net.Util.WindowsSecurityContext.UserName"/> and <see cref="P:log4net.Util.WindowsSecurityContext.DomainName"/> properties.
-            </summary>
-            <value>
-            The password for the Windows account specified by the <see cref="P:log4net.Util.WindowsSecurityContext.UserName"/> and <see cref="P:log4net.Util.WindowsSecurityContext.DomainName"/> properties.
-            </value>
-            <remarks>
-            <para>
-            This property must be set if <see cref="P:log4net.Util.WindowsSecurityContext.Credentials"/>
-            is set to <see cref="F:log4net.Util.WindowsSecurityContext.ImpersonationMode.User"/> (the default setting).
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Util.WindowsSecurityContext.ActivateOptions">
-            <summary>
-            Initialize the SecurityContext based on the options set.
-            </summary>
-            <remarks>
-            <para>
-            This is part of the <see cref="T:log4net.Core.IOptionHandler"/> delayed object
-            activation scheme. The <see cref="M:log4net.Util.WindowsSecurityContext.ActivateOptions"/> method must 
-            be called on this object after the configuration properties have
-            been set. Until <see cref="M:log4net.Util.WindowsSecurityContext.ActivateOptions"/> is called this
-            object is in an undefined state and must not be used. 
-            </para>
-            <para>
-            If any of the configuration properties are modified then 
-            <see cref="M:log4net.Util.WindowsSecurityContext.ActivateOptions"/> must be called again.
-            </para>
-            <para>
-            The security context will try to Logon the specified user account and
-            capture a primary token for impersonation.
-            </para>
-            </remarks>
-            <exception cref="T:System.ArgumentNullException">The required <see cref="P:log4net.Util.WindowsSecurityContext.UserName" />, 
-            <see cref="P:log4net.Util.WindowsSecurityContext.DomainName" /> or <see cref="P:log4net.Util.WindowsSecurityContext.Password" /> properties were not specified.</exception>
-        </member>
-        <member name="M:log4net.Util.WindowsSecurityContext.Impersonate(System.Object)">
-            <summary>
-            Impersonate the Windows account specified by the <see cref="P:log4net.Util.WindowsSecurityContext.UserName"/> and <see cref="P:log4net.Util.WindowsSecurityContext.DomainName"/> properties.
-            </summary>
-            <param name="state">caller provided state</param>
-            <returns>
-            An <see cref="T:System.IDisposable"/> instance that will revoke the impersonation of this SecurityContext
-            </returns>
-            <remarks>
-            <para>
-            Depending on the <see cref="P:log4net.Util.WindowsSecurityContext.Credentials"/> property either
-            impersonate a user using credentials supplied or revert 
-            to the process credentials.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Util.WindowsSecurityContext.LogonUser(System.String,System.String,System.String)">
-            <summary>
-            Create a <see cref="T:System.Security.Principal.WindowsIdentity"/> given the userName, domainName and password.
-            </summary>
-            <param name="userName">the user name</param>
-            <param name="domainName">the domain name</param>
-            <param name="password">the password</param>
-            <returns>the <see cref="T:System.Security.Principal.WindowsIdentity"/> for the account specified</returns>
-            <remarks>
-            <para>
-            Uses the Windows API call LogonUser to get a principal token for the account. This
-            token is used to initialize the WindowsIdentity.
-            </para>
-            </remarks>
-        </member>
-        <member name="T:log4net.Util.WindowsSecurityContext.DisposableImpersonationContext">
-            <summary>
-            Adds <see cref="T:System.IDisposable"/> to <see cref="T:System.Security.Principal.WindowsImpersonationContext"/>
-            </summary>
-            <remarks>
-            <para>
-            Helper class to expose the <see cref="T:System.Security.Principal.WindowsImpersonationContext"/>
-            through the <see cref="T:System.IDisposable"/> interface.
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Util.WindowsSecurityContext.DisposableImpersonationContext.#ctor(System.Security.Principal.WindowsImpersonationContext)">
-            <summary>
-            Constructor
-            </summary>
-            <param name="impersonationContext">the impersonation context being wrapped</param>
-            <remarks>
-            <para>
-            Constructor
-            </para>
-            </remarks>
-        </member>
-        <member name="M:log4net.Util.WindowsSecurityContext.DisposableImpersonationContext.Dispose">
-            <summary>
-            Revert the impersonation
-            </summary>
-            <remarks>
-            <para>
-            Revert the impersonation
             </para>
             </remarks>
         </member>
