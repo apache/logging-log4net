@@ -235,3 +235,7 @@ target
 # other files to ignore
 old-log4net.snk
 src/GeneratedAssemblyInfo.cs
+.idea
+*.orig
+*.old
+*.swp
