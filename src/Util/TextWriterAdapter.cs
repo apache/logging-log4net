@@ -149,17 +149,17 @@ namespace log4net.Util
 		/// <para>
 		/// </para>
 		/// </remarks>
-#if NETSTANDARD1_3
-		virtual public void Close()
-		{
-			m_writer.Dispose();
-		}
-#else
+//#if NETSTANDARD
+//		virtual public void Close()
+//		{
+//			m_writer.Dispose();
+//		}
+//#else
 		override public void Close() 
 		{
 			m_writer.Close();
 		}
-#endif
+//#endif
 
 		/// <summary>
 		/// Dispose this writer

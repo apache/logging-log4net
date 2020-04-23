@@ -244,7 +244,7 @@ namespace log4net.Appender
 #if !NETCF
 			if (m_mutexForRolling != null)
 			{
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETSTANDARD
 				m_mutexForRolling.Dispose();
 #else
 				m_mutexForRolling.Close();

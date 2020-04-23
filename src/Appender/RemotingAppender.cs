@@ -24,7 +24,7 @@ using System;
 using System.Collections;
 using System.Threading;
 
-using System.Runtime.Remoting.Messaging;
+//using System.Runtime.Remoting.Messaging;
 
 using log4net.Layout;
 using log4net.Core;

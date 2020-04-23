@@ -27,7 +27,7 @@ namespace log4net.Core
 	/// </summary>
 	/// <author>Nicko Cadell</author>
 	public class LevelCollection : ICollection, IList, IEnumerable
-#if !NETSTANDARD1_3
+#if !NETSTANDARD
 		, ICloneable
 #endif
 	{

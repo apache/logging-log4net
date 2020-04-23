@@ -82,7 +82,7 @@ namespace log4net.Config
 
 		#region Public Static Methods
 
-#if !NETSTANDARD1_3
+#if !NETSTANDARD
 		/// <summary>
 		/// Initializes the log4net system with a default configuration.
 		/// </summary>
@@ -138,7 +138,7 @@ namespace log4net.Config
 		{
             return Configure(new IAppender[] { appender });
 		}
-#endif // !NETSTANDARD1_3
+#endif // !NETSTANDARD
 
 		/// <summary>
 		/// Initializes the <see cref="ILoggerRepository"/> with a default configuration.

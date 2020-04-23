@@ -19,7 +19,7 @@
 
 using System;
 using System.Globalization;
-#if NETSTANDARD1_3
+#if NETSTANDARD
 using System.Linq;
 #endif
 using System.Reflection;

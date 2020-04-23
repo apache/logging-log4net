@@ -409,7 +409,7 @@ namespace log4net.Appender
                     // Grab as a byte array
                     buffer = this.Encoding.GetBytes(builder.ToString());
 
-#if NETSTANDARD1_3
+#if NETSTANDARD
                     Client.SendAsync(buffer, buffer.Length, RemoteEndPoint).Wait();
 #else
                     this.Client.Send(buffer, buffer.Length, this.RemoteEndPoint);

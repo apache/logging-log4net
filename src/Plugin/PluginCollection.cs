@@ -27,7 +27,7 @@ namespace log4net.Plugin
 	/// </summary>
 	/// <author>Nicko Cadell</author>
 	public class PluginCollection : ICollection, IList, IEnumerable
-#if !NETSTANDARD1_3
+#if !NETSTANDARD
 		, ICloneable
 #endif
 	{

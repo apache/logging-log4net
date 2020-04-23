@@ -18,7 +18,7 @@
 #endregion
 
 using System;
-#if NETSTANDARD1_3
+#if NETSTANDARD
 using System.Reflection;
 #endif
 

@@ -24,7 +24,7 @@ using System.Threading;
 using log4net.Util;
 using log4net.Layout;
 using log4net.Core;
-#if NET_4_5 || NETSTANDARD1_3
+#if NET_4_5 || NETSTANDARD
 using System.Threading.Tasks;
 #endif
 
@@ -162,7 +162,7 @@ namespace log4net.Appender
 
 			#region Override Implementation of Stream
 
-#if NETSTANDARD1_3
+#if NETSTANDARD
 			protected override void Dispose(bool disposing)
 			{
 				m_lockingModel.CloseFile();
@@ -208,7 +208,7 @@ namespace log4net.Appender
 			}
 #endif
 
-#if NET_4_5 || NETSTANDARD1_3
+#if NET_4_5 || NETSTANDARD
 			public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
 			{
 				AssertLocked();
@@ -247,7 +247,7 @@ namespace log4net.Appender
 			}
 			void IDisposable.Dispose()
 			{
-#if NETSTANDARD1_3
+#if NETSTANDARD
 				Dispose(true);
 #else
 				Close();
@@ -740,7 +740,7 @@ namespace log4net.Appender
 			/// -<see cref="ReleaseLock"/> and <see cref="CloseFile"/>.
 			/// </para>
 			/// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETSTANDARD
 			[System.Security.SecuritySafeCritical]
 #endif
 			public override void OpenFile(string filename, bool append, Encoding encoding)
@@ -861,7 +861,7 @@ namespace log4net.Appender
 			{
 				if (m_mutex != null)
 				{
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETSTANDARD
 					m_mutex.Dispose();
 #else
 					m_mutex.Close();

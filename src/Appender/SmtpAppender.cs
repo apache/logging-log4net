@@ -23,10 +23,11 @@
 
 using System;
 using System.IO;
+using System.Net.Mail;
 using System.Text;
 
 #if NET_2_0 || MONO_2_0
-using System.Net.Mail;
+//using System.Net.Mail;
 #else
 using System.Web.Mail;
 #endif

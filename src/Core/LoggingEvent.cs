@@ -22,7 +22,7 @@ using System.Collections;
 using System.IO;
 #if (!NETCF)
 using System.Runtime.Serialization;
-#if !NETSTANDARD1_3
+#if !NETSTANDARD
 using System.Security.Principal;
 #endif
 #endif
@@ -897,7 +897,7 @@ namespace log4net.Core
 			{
 				if (m_data.UserName == null  && this.m_cacheUpdatable) 
 				{
-#if (NETCF || SSCLI || NETSTANDARD1_3) // NETSTANDARD1_3 TODO requires platform-specific code
+#if (NETCF || SSCLI || NETSTANDARD) // NETSTANDARD TODO requires platform-specific code
 					// On compact framework there's no notion of current Windows user
 					m_data.UserName = SystemInfo.NotAvailableText;
 #else
@@ -945,7 +945,7 @@ namespace log4net.Core
 			{
 				if (m_data.Identity == null  && this.m_cacheUpdatable)
 				{
-#if (NETCF || SSCLI || NETSTANDARD1_3)
+#if (NETCF || SSCLI || NETSTANDARD)
 					// On compact framework there's no notion of current thread principals
 					m_data.Identity = SystemInfo.NotAvailableText;
 #else
@@ -1091,7 +1091,7 @@ namespace log4net.Core
 		/// is to be used outside that method.
 		/// </para>
 		/// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETSTANDARD
         [System.Security.SecurityCritical]
 #else
 		[System.Security.Permissions.SecurityPermissionAttribute(System.Security.Permissions.SecurityAction.Demand, SerializationFormatter=true)]

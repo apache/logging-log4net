@@ -75,14 +75,14 @@ namespace log4net.Appender
 		/// Write the logging event to the output debug string API
 		/// </para>
 		/// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETSTANDARD
         [System.Security.SecuritySafeCritical]
 #elif !NETCF
         [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
 #endif
         override protected void Append(LoggingEvent loggingEvent) 
 		{
-#if NETSTANDARD1_3
+#if NETSTANDARD
 			if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 			{
 				throw new System.PlatformNotSupportedException("OutputDebugString is only available on Windows");

@@ -21,7 +21,7 @@
 #if !NETCF
 
 using System;
-using System.Runtime.Remoting;
+//using System.Runtime.Remoting;
 
 using log4net.Util;
 using log4net.Repository;

@@ -94,8 +94,8 @@ namespace log4net.Layout.Pattern
 		/// </para>
 		/// </remarks>
 		override protected void Convert(TextWriter writer, LoggingEvent loggingEvent)
-		{
-			StackFrameItem[] stackframes = loggingEvent.LocationInformation.StackFrames;
+        {
+            StackFrameItem[] stackframes = null; //loggingEvent.LocationInformation.StackFrames;
 			if ((stackframes == null) || (stackframes.Length <= 0))
 			{
 				LogLog.Error(declaringType, "loggingEvent.LocationInformation.StackFrames was null or empty.");

@@ -121,7 +121,7 @@ namespace log4net.Config
 				LogLog.Debug(declaringType, "Application config file location unknown");
 			}
 
-#if NETCF || NETSTANDARD1_3
+#if NETCF || NETSTANDARD
 			// No config file reading stuff. Just go straight for the file
 			Configure(repository, new FileInfo(SystemInfo.ConfigurationFileLocation));
 #else
@@ -161,7 +161,7 @@ namespace log4net.Config
 #endif
 		}
 
-#if !NETSTANDARD1_3 // Excluded because GetCallingAssembly() is not available in CoreFX (https://github.com/dotnet/corefx/issues/2221).
+#if !NETSTANDARD // Excluded because GetCallingAssembly() is not available in CoreFX (https://github.com/dotnet/corefx/issues/2221).
 #if !NETCF
 		/// <summary>
 		/// Automatically configures the log4net system based on the 
@@ -385,7 +385,7 @@ namespace log4net.Config
 
             return configurationMessages;
 		}
-#endif // !NETSTANDARD1_3
+#endif // !NETSTANDARD
 
         /// <summary>
         /// Configures the <see cref="ILoggerRepository"/> using the specified XML 
@@ -651,7 +651,7 @@ namespace log4net.Config
 #endif
 						try
 						{
-#if NETSTANDARD1_3
+#if NETSTANDARD
 							WebResponse response = configRequest.GetResponseAsync().GetAwaiter().GetResult();
 #else
 							WebResponse response = configRequest.GetResponse();
@@ -728,12 +728,12 @@ namespace log4net.Config
 #if (NETCF)
 					// Create a text reader for the file stream
 					XmlTextReader xmlReader = new XmlTextReader(configStream);
-#elif NET_2_0 || NETSTANDARD1_3
+#elif NET_2_0 || NETSTANDARD
 					// Allow the DTD to specify entity includes
 					XmlReaderSettings settings = new XmlReaderSettings();
                                         // .NET 4.0 warning CS0618: 'System.Xml.XmlReaderSettings.ProhibitDtd'
                                         // is obsolete: 'Use XmlReaderSettings.DtdProcessing property instead.'
-#if NETSTANDARD1_3 // TODO DtdProcessing.Parse not yet available (https://github.com/dotnet/corefx/issues/4376)
+#if NETSTANDARD // TODO DtdProcessing.Parse not yet available (https://github.com/dotnet/corefx/issues/4376)
 					settings.DtdProcessing = DtdProcessing.Ignore;
 #elif !NET_4_0 && !MONO_4_0
 					settings.ProhibitDtd = false;
@@ -791,7 +791,7 @@ namespace log4net.Config
 		#region ConfigureAndWatch static methods
 
 #if (!NETCF && !SSCLI)
-#if !NETSTANDARD1_3 // Excluded because GetCallingAssembly() is not available in CoreFX (https://github.com/dotnet/corefx/issues/2221).
+#if !NETSTANDARD // Excluded because GetCallingAssembly() is not available in CoreFX (https://github.com/dotnet/corefx/issues/2221).
 		/// <summary>
 		/// Configures log4net using the file specified, monitors the file for changes 
 		/// and reloads the configuration if a change is detected.
@@ -828,7 +828,7 @@ namespace log4net.Config
 
             return configurationMessages;
 		}
-#endif // !NETSTANDARD1_3
+#endif // !NETSTANDARD
 
         /// <summary>
         /// Configures the <see cref="ILoggerRepository"/> using the file specified, 
@@ -969,7 +969,7 @@ namespace log4net.Config
 			/// Initializes a new instance of the <see cref="ConfigureAndWatchHandler" /> class.
 			/// </para>
 			/// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETSTANDARD
             [System.Security.SecuritySafeCritical]
 #endif
             public ConfigureAndWatchHandler(ILoggerRepository repository, FileInfo configFile)
@@ -1049,7 +1049,7 @@ namespace log4net.Config
             /// <summary>
             /// Release the handles held by the watcher and timer.
             /// </summary>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETSTANDARD
             [System.Security.SecuritySafeCritical]
 #endif
             public void Dispose()
