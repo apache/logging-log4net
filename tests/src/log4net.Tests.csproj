@@ -247,7 +247,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\log4net.csproj">
       <Project>{181fe707-e161-4722-9f38-6aaab6faa106}</Project>
-      <Name>log4net.vs2012</Name>
+      <Name>log4net</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
