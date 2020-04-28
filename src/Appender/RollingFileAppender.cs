@@ -21,7 +21,7 @@ using System;
 using System.Collections;
 using System.Globalization;
 using System.IO;
-
+using System.Security;
 using log4net.Util;
 using log4net.Core;
 using System.Threading;
@@ -1147,8 +1147,11 @@ namespace log4net.Appender
 			}
 
 #if !NETCF
-			// initialize the mutex that is used to lock rolling
-			m_mutexForRolling = new Mutex(false, m_baseFileName.Replace("\\", "_").Replace(":", "_").Replace("/", "_"));
+
+			var mutexName = SystemInfo.GetMutexName(m_baseFileName, SystemInfo.ApplicationUniqueId);
+
+            // initialize the mutex that is used to lock rolling
+            m_mutexForRolling = new Mutex(false, mutexName);
 #endif
 
 			if (m_rollDate && File != null && m_scheduledFilename == null)

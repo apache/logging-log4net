@@ -265,7 +265,7 @@ namespace log4net.Tests.Appender
 		/// <summary>
 		/// Close down remoting infrastructure
 		/// </summary>
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void UnregisterRemotingServerChannel() {
 			if (m_remotingChannel != null) {
 				((TcpChannel) m_remotingChannel).StopListening(null);

@@ -137,26 +137,33 @@ namespace log4net.Tests.Util
 			Assert.AreSame(typeof(SystemInfo), t, "Test explicit case in-sensitive type load lower");
 		}
 
-		[Test, ExpectedException(typeof(TypeLoadException))]
+		[Test]
 		public void TestGetTypeFromStringFails1()
 		{
-			Type t;
+			Assert.Throws<TypeLoadException>(() =>
+			{
+				Type t;
 
-			t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", false, false);
-			Assert.AreSame(null, t, "Test explicit case sensitive fails type load");
+				t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", false, false);
+				Assert.AreSame(null, t, "Test explicit case sensitive fails type load");
 
-			t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", true, false);
+				t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", true, false);
+			});
+			
 		}
 
-		[Test, ExpectedException(typeof(TypeLoadException))]
+		[Test]
 		public void TestGetTypeFromStringFails2()
 		{
-			Type t;
+			Assert.Throws<TypeLoadException>(() =>
+			{
+				Type t;
 
-			t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", false, false);
-			Assert.AreSame(null, t, "Test explicit case sensitive fails type load");
+				t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", false, false);
+				Assert.AreSame(null, t, "Test explicit case sensitive fails type load");
 
-			t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", true, false);
+				t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", true, false);
+			});
 		}
 
 		// Wraps SystemInfo.GetTypeFromString because the method relies on GetCallingAssembly, which is
@@ -205,6 +212,18 @@ namespace log4net.Tests.Util
 		public void EqualsIgnoringCase_DifferentStrings_false()
 		{
 			Assert.False(SystemInfo.EqualsIgnoringCase("foo", "foobar"));
+		}
+
+		[Test]
+		public void TestMutexName()
+		{
+			Assert.Throws<ArgumentException>(() => SystemInfo.GetMutexName(null, null));
+			Assert.Throws<ArgumentException>(() => SystemInfo.GetMutexName(null, string.Empty));
+			Assert.Throws<ArgumentException>(() => SystemInfo.GetMutexName(string.Empty, string.Empty));
+			Assert.DoesNotThrow(() => SystemInfo.GetMutexName("test", null)); //appid can be empty
+
+			var example = SystemInfo.GetMutexName("C:\\temp\\log.log", "/LM/W3SVC/1/ROOT".ReplaceNonAlphanumericChars(string.Empty));
+			Assert.AreEqual("C__temp_log.logLMW3SVC1ROOT", example);
 		}
 	}
 }

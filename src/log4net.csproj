@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 
  Licensed to the Apache Software Foundation (ASF) under one
@@ -717,6 +717,7 @@
     <Compile Include="Util\ReusableStringWriter.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Util\StringExtensions.cs" />
     <Compile Include="Util\SystemInfo.cs">
       <SubType>Code</SubType>
     </Compile>

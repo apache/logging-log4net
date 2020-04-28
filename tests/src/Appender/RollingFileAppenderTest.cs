@@ -1926,7 +1926,6 @@ namespace log4net.Tests.Appender
 		{
 		}
 
-
 		//
 		// Helper functions to dig into the appender
 		//

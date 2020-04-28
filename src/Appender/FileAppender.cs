@@ -841,10 +841,8 @@ namespace log4net.Appender
 			{
 				if (m_mutex == null)
 				{
-					string mutexFriendlyFilename = CurrentAppender.File
-							.Replace("\\", "_")
-							.Replace(":", "_")
-							.Replace("/", "_");
+					
+					string mutexFriendlyFilename = SystemInfo.GetMutexName(CurrentAppender.File, SystemInfo.ApplicationUniqueId);
 
 					m_mutex = new Mutex(false, mutexFriendlyFilename);
 				}
@@ -853,6 +851,8 @@ namespace log4net.Appender
 					CurrentAppender.ErrorHandler.Error("Programming error, mutex already initialized!");
 				}
 			}
+
+			
 
 			/// <summary>
 			/// Disposes all resources that were initialized by this locking model.
