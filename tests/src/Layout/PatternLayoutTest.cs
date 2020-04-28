@@ -30,6 +30,7 @@ using log4net.Util;
 
 using NUnit.Framework;
 using System.Globalization;
+using System.Diagnostics;
 
 namespace log4net.Tests.Layout
 {
@@ -309,6 +310,31 @@ namespace log4net.Tests.Layout
 			log1.Info(".");
 			Assert.AreEqual(".", stringAppender.GetString(), "%message-as-name not registered");
 			stringAppender.Reset();
+		}
+
+		[Test]
+		public void TestThreadPatternConverter()
+		{
+			// Arrange:
+			StringAppender stringAppender = new StringAppender();
+			stringAppender.Layout = NewPatternLayout("%thread");
+
+			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+			BasicConfigurator.Configure(rep, stringAppender);
+			ILog log1 = LogManager.GetLogger(rep.Name, "TestGlobalProperiesPattern");
+
+			string threadName = System.Threading.Thread.CurrentThread.Name;
+
+			if (string.IsNullOrWhiteSpace(threadName))
+			{
+				threadName = System.Threading.Thread.CurrentThread.ManagedThreadId.ToString(CultureInfo.InvariantCulture);
+			}
+
+			// Act:
+			log1.Info("TestMessage");
+
+			// Assert:
+			Assert.AreEqual(threadName, stringAppender.GetString(), "Evaluated pattern expected to be identical to Thread.CurrentThread.ManagedThreadId value");
 		}
 
 		/// <summary>

@@ -25,12 +25,15 @@ using NUnit.Framework;
 using System.IO;
 using System.Reflection;
 using System.Configuration;
+using System.Globalization;
+using System.Diagnostics;
 
 namespace log4net.Tests.Util
 {
 	[TestFixture]
 	public class PatternStringTest : MarshalByRefObject
 	{
+		#region Test EnvironmentFolderPathPatternConverter
 		[Test]
 		public void TestEnvironmentFolderPathPatternConverter()
 		{
@@ -50,7 +53,9 @@ namespace log4net.Tests.Util
 				Assert.AreEqual(Environment.GetFolderPath(specialFolder), evaluatedPattern);
 			}
 		}
+		#endregion Test EnvironmentFolderPathPatternConverter
 
+		#region Test AppSettingPathConverter
 		[Test]
 		public void TestAppSettingPathConverter()
 		{
@@ -108,5 +113,181 @@ namespace log4net.Tests.Util
 			AppDomain ad = AppDomain.CreateDomain(domainName, null, ads);
 			return ad;
 		}
+		#endregion Test AppSettingPathConverter
+
+		#region Test ThreadIdPatternConverter
+		[Test]
+		public void TestThreadIdPatternConverter()
+		{
+			// Arrange:
+			string pattern = "%thread";
+			PatternString patternString = new PatternString(pattern);
+
+			string threadId = System.Threading.Thread.CurrentThread.ManagedThreadId.ToString(CultureInfo.InvariantCulture);
+
+			// Act:
+			string evaluatedPattern = patternString.Format();
+
+
+			// Assert:
+			Assert.AreEqual(threadId, evaluatedPattern, "Evaluated pattern expected to be identical to Thread.CurrentThread.ManagedThreadId value");
+		}
+		#endregion Test ThreadIdPatternConverter
+
+
+		#region Test PatternString.CreateForLogLog()
+		[Test]
+		public void TestNormalPatternStringWithLogLogExtraPatterns()
+		{
+			// Arrange:
+			string pattern = "%date{yyyy-MM-dd} [%7processid][%3thread][%appdomain] %level - %logger - %message%newline";
+			PatternString patternString = new PatternString(pattern);
+
+			LogLog logObj = new LogLog(GetType(), "myInfoPrefix", "Hello world!", null);
+
+			// Act:
+			string evaluatedPattern = patternString.FormatWithState(logObj);
+
+			string expectedOutput = string.Format(
+				CultureInfo.InvariantCulture,
+				"{0:yyyy-MM-dd} [{1,7}][{2,3}][{3}] level - logger - message{4}",
+				DateTime.Now,
+				Process.GetCurrentProcess().Id,
+				System.Threading.Thread.CurrentThread.ManagedThreadId,
+				AppDomain.CurrentDomain.FriendlyName,
+				SystemInfo.NewLine
+				);
+
+			// Assert:
+			Assert.AreEqual(expectedOutput, evaluatedPattern, $"Evaluated pattern expected to be identical to value: {expectedOutput}");
+		}
+
+		[Test]
+		public void TestPatternStringCreateForLogLog()
+		{
+			// Arrange:
+			string pattern = "%date{yyyy-MM-dd} [%7processid][%3thread][%appdomain] %level - %logger - %message%newline";
+			PatternString patternString = PatternString.CreateForLogLog(pattern);
+
+			LogLog logObj = new LogLog(GetType(), "myInfoPrefix", "Hello world!", null);
+
+			// Act:
+			string evaluatedPattern = patternString.FormatWithState(logObj);
+
+			string expectedOutput = string.Format(
+				CultureInfo.InvariantCulture,
+				"{0:yyyy-MM-dd} [{1,7}][{2,3}][{3}] {4} - {5} - {6}{7}",
+				DateTime.Now,
+				Process.GetCurrentProcess().Id,
+				System.Threading.Thread.CurrentThread.ManagedThreadId,
+				AppDomain.CurrentDomain.FriendlyName,
+				logObj.Prefix,
+				logObj.Source.FullName,
+				logObj.Message,
+				SystemInfo.NewLine
+				);
+
+			// Assert:
+			Assert.AreEqual(expectedOutput, evaluatedPattern, $"Evaluated pattern expected to be identical to value: {expectedOutput}");
+		}
+
+		[Test]
+		public void TestPatternStringCreateForLogLogWithExceptionAsParam()
+		{
+			// Arrange:
+			string pattern = "%date{yyyy-MM-dd} [%7processid][%3thread][%appdomain] %level - %logger - %message%newline";
+			PatternString patternString = PatternString.CreateForLogLog(pattern);
+
+			Exception testException = new Exception("Test Exception");
+			LogLog logObj = new LogLog(GetType(), "myInfoPrefix", "Hello world!", testException);
+
+			// Act:
+			string evaluatedPattern = patternString.FormatWithState(logObj);
+
+			//NOTE: current PatternString.CreateForLogLog() does not support exception formatting. In LogLog the whole exception is output on a next line after the LogLog instance traced content.
+			//      For now I do not see the necessity fot this. If really needed, it could be made analogous to ExceptionPatternConverter.
+			string expectedOutput = string.Format(
+				CultureInfo.InvariantCulture,
+				//"{0:yyyy-MM-dd} [{1,7}][{2,3}][{3}] {4} - {5} - {6}{7}{8}{9}",
+				"{0:yyyy-MM-dd} [{1,7}][{2,3}][{3}] {4} - {5} - {6}{7}",
+				DateTime.Now,
+				Process.GetCurrentProcess().Id,
+				System.Threading.Thread.CurrentThread.ManagedThreadId,
+				AppDomain.CurrentDomain.FriendlyName,
+				logObj.Prefix,
+				logObj.Source?.FullName,
+				logObj.Message,
+				//SystemInfo.NewLine,
+				//testException,
+				SystemInfo.NewLine
+				);
+
+			// Assert:
+			Assert.AreEqual(expectedOutput, evaluatedPattern, $"Evaluated pattern expected to be identical to value: {expectedOutput}");
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentNullException))]
+		public void TestPatternStringCreateForLogLogWithNullFormatStateParameter()
+		{
+			// Arrange:
+			string pattern = "%date{yyyy-MM-dd} [%7processid][%3thread][%appdomain] %level - %logger - %message%newline";
+			PatternString patternString = PatternString.CreateForLogLog(pattern);
+
+			// Act:
+			string evaluatedPattern = patternString.FormatWithState(null);
+
+			// Assert: - expect that an Exception was thrown
+			Assert.Fail("Expected Exception was not thrown"); // If it gets to this line, no exception was thrown
+		}
+
+		[Test]
+		public void TestPatternStringCreateForLogLogWithNullLogLogObjectContent()
+		{
+			// Arrange:
+			string pattern = "%date{yyyy-MM-dd} [%7processid][%3thread][%appdomain] %level - %logger - %message%newline";
+			PatternString patternString = PatternString.CreateForLogLog(pattern);
+
+			LogLog logObj = new LogLog(null, null, null, null);
+
+			// Act:
+			string evaluatedPattern = patternString.FormatWithState(logObj);
+
+			string expectedOutput = string.Format(
+				CultureInfo.InvariantCulture,
+				"{0:yyyy-MM-dd} [{1,7}][{2,3}][{3}]  -  - {4}",
+				DateTime.Now,
+				Process.GetCurrentProcess().Id,
+				System.Threading.Thread.CurrentThread.ManagedThreadId,
+				AppDomain.CurrentDomain.FriendlyName,
+				SystemInfo.NewLine
+				);
+
+			// Assert:
+			Assert.AreEqual(expectedOutput, evaluatedPattern, $"Evaluated pattern expected to be identical to value: {expectedOutput}");
+		}
+
+		[Test]
+		public void TestPatternStringCreateForLogLogWithWrongFormatStateParameter()
+		{
+			// Arrange:
+			string pattern = "%date{yyyy-MM-dd} [%7processid][%3thread][%appdomain] %level - %logger - %message%newline";
+			PatternString patternString = PatternString.CreateForLogLog(pattern);
+
+			// Act:
+			try
+			{
+				string evaluatedPattern = patternString.FormatWithState("Providing wrong (string) object here as state param, instead of LogLog instance for test sake.");
+
+				// Assert: - expect that an Exception was thrown
+				Assert.Fail("Expected Exception was not thrown"); // If it gets to this line, no exception was thrown
+			}
+			catch (ArgumentException ex)
+			{
+				// Assert:
+				Assert.AreEqual("state must be of type [log4net.Util.LogLog]\r\nParametername: state", ex.Message);
+			}
+		}
+		#endregion Test ThreadIdPatternConverter
 	}
 }
