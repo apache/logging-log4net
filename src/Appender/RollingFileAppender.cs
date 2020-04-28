@@ -1147,8 +1147,15 @@ namespace log4net.Appender
 			}
 
 #if !NETCF
-			// initialize the mutex that is used to lock rolling
-			m_mutexForRolling = new Mutex(false, m_baseFileName.Replace("\\", "_").Replace(":", "_").Replace("/", "_"));
+			if (m_mutexForRolling == null)
+			{
+				// initialize the mutex that is used to lock rolling
+				m_mutexForRolling = SecureCreateMutexForFilePath(m_baseFileName);
+			}
+			else
+			{
+				this.ErrorHandler.Error($"Programming error, mutex for rolling file already initialized! Activating RollingFileAppender more than once is incorrect. Current file: {m_baseFileName} .");
+			}
 #endif
 
 			if (m_rollDate && File != null && m_scheduledFilename == null)
