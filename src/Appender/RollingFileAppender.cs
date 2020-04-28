@@ -1272,6 +1272,7 @@ namespace log4net.Appender
 					{
 						System.IO.File.Move(fromFile, toFile);
 					}
+					OnFileRolled(fromFile, toFile);
 				}
 				catch(Exception moveEx)
 				{
@@ -1281,7 +1282,17 @@ namespace log4net.Appender
 			else
 			{
 				LogLog.Warn(declaringType, "Cannot RollFile [" + fromFile + "] -> [" + toFile + "]. Source does not exist");
-			}
+			}			
+		}
+
+		/// <summary>
+		/// OnRollFileRolled occurs if log file is renamed from fromFile to toFile.
+		/// It is intended for customization of custom behavior like logs postprocessing, zipping.
+		/// </summary>
+		/// <param name="fromFile">Name of previous log file.</param>
+		/// <param name="toFile">Name of current log file.</param>
+		protected virtual void OnFileRolled(string fromFile, string toFile)
+		{
 		}
 
 		/// <summary>
