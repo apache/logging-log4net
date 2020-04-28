@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using System.Reflection;
 
 using log4net.Core;
@@ -259,6 +260,20 @@ namespace log4net
 #else
 			return GetLogger(Assembly.GetCallingAssembly(), type.FullName);
 #endif
+		}
+
+		/// <summary>
+		/// Shorthand for <see cref="M:LogManager.GetLogger()"/>.
+		/// </summary>
+		/// <remarks>
+		/// Get the logger for the fully qualified name of the type of the caller.
+		/// LogManager.GetLogger() is equivalent to LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		/// </remarks>
+		/// <returns>The logger with the name specified.</returns>
+		public static ILog GetLogger()
+		{
+			var callingMethod = new StackTrace().GetFrame(1).GetMethod();
+			return GetLogger(callingMethod.DeclaringType);
 		}
 
 		/// <summary>
