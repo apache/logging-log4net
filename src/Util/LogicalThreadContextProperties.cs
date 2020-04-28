@@ -21,11 +21,11 @@
 #if !NETCF
 
 using System;
-#if !NETSTANDARD1_3
+#if !(NETSTANDARD1_3 || NETSTANDARD2_0)
 using System.Runtime.Remoting.Messaging;
 #endif
 using System.Security;
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 using System.Threading;
 #endif
 
@@ -59,7 +59,7 @@ namespace log4net.Util
 	/// <author>Nicko Cadell</author>
 	public sealed class LogicalThreadContextProperties : ContextPropertiesBase
 	{
-		#if NETSTANDARD1_3
+		#if NETSTANDARD1_3 || NETSTANDARD2_0
 		private static readonly AsyncLocal<PropertiesDictionary> AsyncLocalDictionary = new AsyncLocal<PropertiesDictionary>();
 		#else
 		private const string c_SlotName = "log4net.Util.LogicalThreadContextProperties";
@@ -230,7 +230,7 @@ namespace log4net.Util
 #endif
 		private static PropertiesDictionary GetLogicalProperties()
 		{
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 			return AsyncLocalDictionary.Value;
 #elif NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0
 			return CallContext.LogicalGetData(c_SlotName) as PropertiesDictionary;
@@ -253,7 +253,7 @@ namespace log4net.Util
 #endif
 		private static void SetLogicalProperties(PropertiesDictionary properties)
 		{
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 			AsyncLocalDictionary.Value = properties;
 #elif NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0
 			CallContext.LogicalSetData(c_SlotName, properties);

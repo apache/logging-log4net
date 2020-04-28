@@ -116,7 +116,7 @@ namespace log4net.Util.TypeConverters
 					}
 
 					// Try to resolve via DNS. This is a blocking call.
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 					IPHostEntry host = Dns.GetHostEntryAsync(str).GetAwaiter().GetResult();
 #else
 					IPHostEntry host = Dns.GetHostByName(str);
