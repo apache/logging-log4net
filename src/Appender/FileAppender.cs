@@ -371,21 +371,22 @@ namespace log4net.Appender
 		{
 			private FileAppender m_appender = null;
 
-			/// <summary>
-			/// Open the output file
-			/// </summary>
-			/// <param name="filename">The filename to use</param>
-			/// <param name="append">Whether to append to the file, or overwrite</param>
-			/// <param name="encoding">The encoding to use</param>
-			/// <remarks>
-			/// <para>
-			/// Open the file specified and prepare for logging.
-			/// No writes will be made until <see cref="AcquireLock"/> is called.
-			/// Must be called before any calls to <see cref="AcquireLock"/>,
-			/// <see cref="ReleaseLock"/> and <see cref="CloseFile"/>.
-			/// </para>
-			/// </remarks>
-			public abstract void OpenFile(string filename, bool append, Encoding encoding);
+            /// <summary>
+            /// Open the output file
+            /// </summary>
+            /// <param name="filename">The filename to use</param>
+            /// <param name="append">Whether to append to the file, or overwrite</param>
+            /// <param name="encoding">The encoding to use</param>
+            /// <param name="useMutexWithMinimalLock">Whether to protect append operation in Minimal lock with Mutex </param>
+            /// <remarks>
+            /// <para>
+            /// Open the file specified and prepare for logging.
+            /// No writes will be made until <see cref="AcquireLock"/> is called.
+            /// Must be called before any calls to <see cref="AcquireLock"/>,
+            /// <see cref="ReleaseLock"/> and <see cref="CloseFile"/>.
+            /// </para>
+            /// </remarks>
+            public abstract void OpenFile(string filename, bool append, Encoding encoding, bool useMutexWithMinimalLock = false);
 
 			/// <summary>
 			/// Close the file
@@ -456,23 +457,23 @@ namespace log4net.Appender
 				set { m_appender = value; }
 			}
 
-			/// <summary>
-			/// Helper method that creates a FileStream under CurrentAppender's SecurityContext.
-			/// </summary>
-			/// <remarks>
-			/// <para>
-			/// Typically called during OpenFile or AcquireLock.
-			/// </para>
-			/// <para>
-			/// If the directory portion of the <paramref name="filename"/> does not exist, it is created
-			/// via Directory.CreateDirecctory.
-			/// </para>
-			/// </remarks>
-			/// <param name="filename"></param>
-			/// <param name="append"></param>
-			/// <param name="fileShare"></param>
-			/// <returns></returns>
-			protected Stream CreateStream(string filename, bool append, FileShare fileShare)
+            /// <summary>
+            /// Helper method that creates a FileStream under CurrentAppender's SecurityContext.
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Typically called during OpenFile or AcquireLock.
+            /// </para>
+            /// <para>
+            /// If the directory portion of the <paramref name="filename"/> does not exist, it is created
+            /// via Directory.CreateDirecctory.
+            /// </para>
+            /// </remarks>
+            /// <param name="filename"></param>
+            /// <param name="append"></param>
+            /// <param name="fileShare"></param>
+            /// <returns></returns>
+            protected Stream CreateStream(string filename, bool append, FileShare fileShare)
 			{
 				using (CurrentAppender.SecurityContext.Impersonate(this))
 				{
@@ -520,21 +521,22 @@ namespace log4net.Appender
 		{
 			private Stream m_stream = null;
 
-			/// <summary>
-			/// Open the file specified and prepare for logging.
-			/// </summary>
-			/// <param name="filename">The filename to use</param>
-			/// <param name="append">Whether to append to the file, or overwrite</param>
-			/// <param name="encoding">The encoding to use</param>
-			/// <remarks>
-			/// <para>
-			/// Open the file specified and prepare for logging.
-			/// No writes will be made until <see cref="AcquireLock"/> is called.
-			/// Must be called before any calls to <see cref="AcquireLock"/>,
-			/// <see cref="ReleaseLock"/> and <see cref="CloseFile"/>.
-			/// </para>
-			/// </remarks>
-			public override void OpenFile(string filename, bool append, Encoding encoding)
+            /// <summary>
+            /// Open the file specified and prepare for logging.
+            /// </summary>
+            /// <param name="filename">The filename to use</param>
+            /// <param name="append">Whether to append to the file, or overwrite</param>
+            /// <param name="encoding">The encoding to use</param>
+            /// <param name="useMutexWithMinimalLock">Whether to protect append operation in Minimal lock with Mutex </param>
+            /// <remarks>
+            /// <para>
+            /// Open the file specified and prepare for logging.
+            /// No writes will be made until <see cref="AcquireLock"/> is called.
+            /// Must be called before any calls to <see cref="AcquireLock"/>,
+            /// <see cref="ReleaseLock"/> and <see cref="CloseFile"/>.
+            /// </para>
+            /// </remarks>
+            public override void OpenFile(string filename, bool append, Encoding encoding, bool useMutexWithMinimalLock = false)
 			{
 				try
 				{
@@ -620,26 +622,32 @@ namespace log4net.Appender
 			private string m_filename;
 			private bool m_append;
 			private Stream m_stream = null;
+            private Mutex m_appendMutex = null;
+            private string m_appendMutexFriendlyName = "LOG4NET_MUTEX_ON_MINIMALLOCK_TO_PROTECT_APPEND_OPERATION";
+            private bool m_useMutexWithMinimalLock = false;
 
-			/// <summary>
-			/// Prepares to open the file when the first message is logged.
-			/// </summary>
-			/// <param name="filename">The filename to use</param>
-			/// <param name="append">Whether to append to the file, or overwrite</param>
-			/// <param name="encoding">The encoding to use</param>
-			/// <remarks>
-			/// <para>
-			/// Open the file specified and prepare for logging.
-			/// No writes will be made until <see cref="AcquireLock"/> is called.
-			/// Must be called before any calls to <see cref="AcquireLock"/>,
-			/// <see cref="ReleaseLock"/> and <see cref="CloseFile"/>.
-			/// </para>
-			/// </remarks>
-			public override void OpenFile(string filename, bool append, Encoding encoding)
+            /// <summary>
+            /// Prepares to open the file when the first message is logged.
+            /// </summary>
+            /// <param name="filename">The filename to use</param>
+            /// <param name="append">Whether to append to the file, or overwrite</param>
+            /// <param name="encoding">The encoding to use</param>
+            /// <param name="useMutexWithMinimalLock">Whether to protect append operation in Minimal lock with Mutex </param>
+            /// <remarks>
+            /// <para>
+            /// Open the file specified and prepare for logging.
+            /// No writes will be made until <see cref="AcquireLock"/> is called.
+            /// Must be called before any calls to <see cref="AcquireLock"/>,
+            /// <see cref="ReleaseLock"/> and <see cref="CloseFile"/>.
+            /// </para>
+            /// </remarks>
+            public override void OpenFile(string filename, bool append, Encoding encoding, bool useMutexWithMinimalLock = false)
 			{
 				m_filename = filename;
 				m_append = append;
-			}
+                m_useMutexWithMinimalLock = useMutexWithMinimalLock;
+
+            }
 
 			/// <summary>
 			/// Close the file
@@ -671,7 +679,20 @@ namespace log4net.Appender
 				{
 					try
 					{
-						m_stream = CreateStream(m_filename, m_append, FileShare.Read);
+                        if (m_useMutexWithMinimalLock)
+                        {
+                            if (m_appendMutex == null)
+                            {
+                                if (!Mutex.TryOpenExisting(m_appendMutexFriendlyName, out m_appendMutex))
+                                {
+                                    m_appendMutex = new Mutex(false, m_appendMutexFriendlyName);
+                                }
+                            }
+
+                            m_appendMutex.WaitOne();
+                        }
+
+                        m_stream = CreateStream(m_filename, m_append, FileShare.Read);
 						m_append = true;
 					}
 					catch (Exception e1)
@@ -695,7 +716,15 @@ namespace log4net.Appender
 			{
 				CloseStream(m_stream);
 				m_stream = null;
-			}
+
+                if (m_useMutexWithMinimalLock)
+                {
+                    if (m_appendMutex != null)
+                    {
+                        m_appendMutex.ReleaseMutex();
+                    }
+                }
+            }
 
 			/// <summary>
 			/// Initializes all resources used by this locking model.
@@ -726,24 +755,25 @@ namespace log4net.Appender
 			private Stream m_stream = null;
 			private int m_recursiveWatch = 0;
 
-			/// <summary>
-			/// Open the file specified and prepare for logging.
-			/// </summary>
-			/// <param name="filename">The filename to use</param>
-			/// <param name="append">Whether to append to the file, or overwrite</param>
-			/// <param name="encoding">The encoding to use</param>
-			/// <remarks>
-			/// <para>
-			/// Open the file specified and prepare for logging.
-			/// No writes will be made until <see cref="AcquireLock"/> is called.
-			/// Must be called before any calls to <see cref="AcquireLock"/>,
-			/// -<see cref="ReleaseLock"/> and <see cref="CloseFile"/>.
-			/// </para>
-			/// </remarks>
+            /// <summary>
+            /// Open the file specified and prepare for logging.
+            /// </summary>
+            /// <param name="filename">The filename to use</param>
+            /// <param name="append">Whether to append to the file, or overwrite</param>
+            /// <param name="encoding">The encoding to use</param>
+            /// <param name="useMutexWithMinimalLock">Whether to protect append operation in Minimal lock with Mutex </param>
+            /// <remarks>
+            /// <para>
+            /// Open the file specified and prepare for logging.
+            /// No writes will be made until <see cref="AcquireLock"/> is called.
+            /// Must be called before any calls to <see cref="AcquireLock"/>,
+            /// -<see cref="ReleaseLock"/> and <see cref="CloseFile"/>.
+            /// </para>
+            /// </remarks>
 #if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
-			[System.Security.SecuritySafeCritical]
+            [System.Security.SecuritySafeCritical]
 #endif
-			public override void OpenFile(string filename, bool append, Encoding encoding)
+			public override void OpenFile(string filename, bool append, Encoding encoding, bool useMutexWithMinimalLock = false)
 			{
 				try
 				{
@@ -1058,30 +1088,48 @@ namespace log4net.Appender
 			set { m_lockingModel = value; }
 		}
 
-		#endregion Public Instance Properties
+        /// <summary>
+        /// Gets or sets a value indicating whether to protect append operation in Minimal lock with Mutex.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if append operation with Minimal lock should be protected from multiple processes appending into same file, otherwise <c>false</c>
+        /// </value>
+        /// <remarks>
+        /// <para>
+        /// By default append operation in Minimal lock won't be protected 
+        /// from multiple processes appending into same file.
+        /// </para>
+        /// </remarks>
+        public bool UseMutexWithMinimalLock
+        {
+            get { return m_useMutexWithMinimalLock; }
+            set { m_useMutexWithMinimalLock = value; }
+        }
 
-		#region Override implementation of AppenderSkeleton
+        #endregion Public Instance Properties
 
-		/// <summary>
-		/// Activate the options on the file appender.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// This is part of the <see cref="IOptionHandler"/> delayed object
-		/// activation scheme. The <see cref="ActivateOptions"/> method must
-		/// be called on this object after the configuration properties have
-		/// been set. Until <see cref="ActivateOptions"/> is called this
-		/// object is in an undefined state and must not be used.
-		/// </para>
-		/// <para>
-		/// If any of the configuration properties are modified then
-		/// <see cref="ActivateOptions"/> must be called again.
-		/// </para>
-		/// <para>
-		/// This will cause the file to be opened.
-		/// </para>
-		/// </remarks>
-		override public void ActivateOptions()
+        #region Override implementation of AppenderSkeleton
+
+        /// <summary>
+        /// Activate the options on the file appender.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// This is part of the <see cref="IOptionHandler"/> delayed object
+        /// activation scheme. The <see cref="ActivateOptions"/> method must
+        /// be called on this object after the configuration properties have
+        /// been set. Until <see cref="ActivateOptions"/> is called this
+        /// object is in an undefined state and must not be used.
+        /// </para>
+        /// <para>
+        /// If any of the configuration properties are modified then
+        /// <see cref="ActivateOptions"/> must be called again.
+        /// </para>
+        /// <para>
+        /// This will cause the file to be opened.
+        /// </para>
+        /// </remarks>
+        override public void ActivateOptions()
 		{
 			base.ActivateOptions();
 
@@ -1371,7 +1419,7 @@ namespace log4net.Appender
 				m_appendToFile = append;
 
 				LockingModel.CurrentAppender = this;
-				LockingModel.OpenFile(fileName, append, m_encoding);
+				LockingModel.OpenFile(fileName, append, m_encoding, m_useMutexWithMinimalLock);
 				m_stream = new LockingStream(LockingModel);
 
 				if (m_stream != null)
@@ -1484,18 +1532,23 @@ namespace log4net.Appender
 		/// </summary>
 		private FileAppender.LockingModelBase m_lockingModel = new FileAppender.ExclusiveLock();
 
-		#endregion Private Instance Fields
+        /// <summary>
+        /// Value indicating whether to protect append operation in Minimal lock with Mutex.
+        /// </summary>
+        private bool m_useMutexWithMinimalLock = false;
 
-		#region Private Static Fields
+        #endregion Private Instance Fields
 
-		/// <summary>
-		/// The fully qualified type of the FileAppender class.
-		/// </summary>
-		/// <remarks>
-		/// Used by the internal logger to record the Type of the
-		/// log message.
-		/// </remarks>
-		private readonly static Type declaringType = typeof(FileAppender);
+        #region Private Static Fields
+
+        /// <summary>
+        /// The fully qualified type of the FileAppender class.
+        /// </summary>
+        /// <remarks>
+        /// Used by the internal logger to record the Type of the
+        /// log message.
+        /// </remarks>
+        private readonly static Type declaringType = typeof(FileAppender);
 
 		#endregion Private Static Fields
 	}
