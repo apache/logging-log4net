@@ -5,7 +5,7 @@ Log4net provides support for a wide array of targets, including
 - more modern net40/net45
 - netstandard1.3/2.0
 
-As such, it does require a relatively full .net environment on Windowsa to build.
+As such, it does require a relatively full .net environment on Windows to build.
 
 Options:
 - build locally. Suggested environment:
