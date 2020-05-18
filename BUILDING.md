@@ -11,6 +11,9 @@ Options:
 - build locally. Suggested environment:
     - Pre-requisites:
         - Visual Studio 2019 Build Tools
+            - include desktop targets at least
+            - include dotnet core targets or download and install
+                the latest dotnet sdk (you will need at least v2.1)
         - Ensure you have .NET Framework 3.5 SP1 installed
             - on Win10+, this can only be installed via Add/Remove Windows Components
             - on other platforms, see https://dotnet.microsoft.com/download/dotnet-framework/net35-sp1
