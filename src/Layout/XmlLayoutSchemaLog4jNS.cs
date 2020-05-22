@@ -28,15 +28,18 @@ using log4net.Util;
 namespace log4net.Layout
 {
 	/// <summary>
-	/// Layout that formats the log events as XML elements compatible with the log4j 1.2 schema
+	/// Layout that formats the log events as XML elements similar to the log4j 1.2 schema
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// Formats the log events according to the http://logging.apache.org/log4j schema.
+	/// Formats the log events according to the
+	/// http://logging.apache.org/log4j schema and actually puts the
+	/// elements into a namespace. This may break tooling that doesn't
+	/// handle XML using namespaces.
 	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
-	public class XmlLayoutSchemaLog4j : XmlLayoutBase
+	public class XmlLayoutSchemaLog4jNS : XmlLayoutBaseNS
 	{
 		#region Static Members
 
@@ -50,14 +53,14 @@ namespace log4net.Layout
 		#region Constructors
 
 		/// <summary>
-		/// Constructs an XMLLayoutSchemaLog4j
+		/// Constructs an XMLLayoutSchemaLog4jNS
 		/// </summary>
-		public XmlLayoutSchemaLog4j() : base()
+		public XmlLayoutSchemaLog4jNS() : this(false)
 		{
 		}
 
 		/// <summary>
-		/// Constructs an XMLLayoutSchemaLog4j.
+		/// Constructs an XMLLayoutSchemaLog4jNS.
 		/// </summary>
 		/// <remarks>
 		/// <para>
@@ -73,39 +76,17 @@ namespace log4net.Layout
 		/// appender as well.
 		/// </para>
 		/// </remarks>
-		public XmlLayoutSchemaLog4j(bool locationInfo) :  base(locationInfo)
+		public XmlLayoutSchemaLog4jNS(bool locationInfo) :  base(locationInfo)
 		{
-		}
-
-		#endregion
-
-		#region Public Properties
-
-		/// <summary>
-		/// The version of the log4j schema to use.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// Only version 1.2 of the log4j schema is supported.
-		/// </para>
-		/// </remarks>
-		public string Version
-		{
-			get { return "1.2"; }
-			set
-			{
-				if (value != "1.2")
-				{
-					throw new ArgumentException("Only version 1.2 of the log4j schema is currently supported");
-				}
-			}
+			NamespaceUri = LOG4J_SCHEMA;
+			Prefix = LOG4J_PREFIX;
 		}
 
 		#endregion
 
 		/* Example log4j schema event
 
-<log4j:event logger="first logger" level="ERROR" thread="Thread-3" timestamp="1051494121460">
+<log4j:event logger="first logger" level="ERROR" thread="Thread-3" timestamp="1051494121460" xmlns:log4j="http://logging.apache.org/log4j">
   <log4j:message><![CDATA[errormsg 3]]></log4j:message>
   <log4j:NDC><![CDATA[third]]></log4j:NDC>
   <log4j:MDC>
@@ -172,7 +153,7 @@ method="run" file="Generator.java" line="94"/>
 			}
 
 			// Write the start element
-			writer.WriteStartElement("log4j:event");
+			writer.WriteStartElement(Prefix, "event", NamespaceUri);
 			writer.WriteAttributeString("logger", loggingEvent.LoggerName);
 
 			// Calculate the timestamp as the number of milliseconds since january 1970
@@ -187,7 +168,7 @@ method="run" file="Generator.java" line="94"/>
 			writer.WriteAttributeString("thread", loggingEvent.ThreadName);
 
 			// Append the message text
-			writer.WriteStartElement("log4j:message");
+			writer.WriteStartElement(Prefix, "message", NamespaceUri);
 			Transform.WriteEscapedXmlString(writer, loggingEvent.RenderedMessage,this.InvalidCharReplacement);
 			writer.WriteEndElement();
 
@@ -199,7 +180,7 @@ method="run" file="Generator.java" line="94"/>
 				if (valueStr != null && valueStr.Length > 0)
 				{
 					// Append the NDC text
-					writer.WriteStartElement("log4j:NDC");
+					writer.WriteStartElement(Prefix, "NDC", NamespaceUri);
 					Transform.WriteEscapedXmlString(writer, valueStr,this.InvalidCharReplacement);
 					writer.WriteEndElement();
 				}
@@ -209,10 +190,10 @@ method="run" file="Generator.java" line="94"/>
 			PropertiesDictionary properties = loggingEvent.GetProperties();
 			if (properties.Count > 0)
 			{
-				writer.WriteStartElement("log4j:properties");
+				writer.WriteStartElement(Prefix, "properties", NamespaceUri);
 				foreach(System.Collections.DictionaryEntry entry in properties)
 				{
-					writer.WriteStartElement("log4j:data");
+					writer.WriteStartElement(Prefix, "data", NamespaceUri);
 					writer.WriteAttributeString("name", (string)entry.Key);
 
 					// Use an ObjectRenderer to convert the object to a string
@@ -228,7 +209,7 @@ method="run" file="Generator.java" line="94"/>
 			if (exceptionStr != null && exceptionStr.Length > 0)
 			{
 				// Append the stack trace line
-				writer.WriteStartElement("log4j:throwable");
+				writer.WriteStartElement(Prefix, "throwable", NamespaceUri);
 				Transform.WriteEscapedXmlString(writer, exceptionStr,this.InvalidCharReplacement);
 				writer.WriteEndElement();
 			}
@@ -237,7 +218,7 @@ method="run" file="Generator.java" line="94"/>
 			{
 				LocationInfo locationInfo = loggingEvent.LocationInformation;
 
-				writer.WriteStartElement("log4j:locationInfo");
+				writer.WriteStartElement(Prefix, "locationInfo", NamespaceUri);
 				writer.WriteAttributeString("class", locationInfo.ClassName);
 				writer.WriteAttributeString("method", locationInfo.MethodName);
 				writer.WriteAttributeString("file", locationInfo.FileName);
@@ -247,5 +228,8 @@ method="run" file="Generator.java" line="94"/>
 
 			writer.WriteEndElement();
 		}
+
+		private const string LOG4J_SCHEMA = "http://logging.apache.org/log4j";
+		private const string LOG4J_PREFIX = "log4j";
 	}
 }
