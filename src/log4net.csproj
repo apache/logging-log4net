@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 
  Licensed to the Apache Software Foundation (ASF) under one
@@ -354,6 +354,7 @@
     <Compile Include="Filter\DenyAllFilter.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Filter\ExceptionTypeFilter.cs" />
     <Compile Include="Filter\FilterDecision.cs">
       <SubType>Code</SubType>
     </Compile>
