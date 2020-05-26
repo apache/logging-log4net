@@ -95,7 +95,7 @@ namespace log4net.Filter
 		{
 			if (m_stringRegexToMatch != null)
 			{
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 				m_regexToMatch = new Regex(m_stringRegexToMatch);
 #else
 				m_regexToMatch = new Regex(m_stringRegexToMatch, RegexOptions.Compiled);

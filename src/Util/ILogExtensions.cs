@@ -17,7 +17,7 @@
 //
 #endregion
 
-#if NET_3_5 || NET_4_0 || MONO_3_5 || MONO_4_0 || NETSTANDARD1_3
+#if NET_3_5 || NET_4_0 || MONO_3_5 || MONO_4_0 || NETSTANDARD1_3 || NETSTANDARD2_0
 
 using System;
 

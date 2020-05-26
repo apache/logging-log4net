@@ -27,7 +27,7 @@ namespace log4net.Appender
 	/// </summary>
 	/// <author>Nicko Cadell</author>
 	public class AppenderCollection : ICollection, IList, IEnumerable
-#if !NETSTANDARD1_3
+#if !NETSTANDARD1_3  && !NETSTANDARD2_0 && !NETSTANDARD2_0
 		, ICloneable
 #endif
 	{

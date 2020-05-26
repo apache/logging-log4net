@@ -75,7 +75,7 @@ namespace log4net.Util
 
 		#region Private Instance Constructors
 
-#if !(NETCF || NETSTANDARD1_3)
+#if !(NETCF || NETSTANDARD1_3 || NETSTANDARD2_0)
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PropertiesDictionary" /> class 
 		/// with serialized data.

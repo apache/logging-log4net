@@ -17,7 +17,7 @@
 //
 #endregion
 
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 
 using System;
 using System.Globalization;
@@ -41,7 +41,7 @@ namespace log4net
         public static void Close(this WebResponse response) => response.Dispose();
         public static void Close(this XmlWriter xmlWriter) => xmlWriter.Dispose();
 
-        public static Attribute[] GetCustomAttributes(this Type type, Type other, bool inherit) => type.GetTypeInfo().GetCustomAttributes(other, inherit).ToArray();
+        public static object[] GetCustomAttributes(this Type type, Type other, bool inherit) => type.GetTypeInfo().GetCustomAttributes(other, inherit).ToArray();
         public static bool IsAssignableFrom(this Type type, Type other) => type.GetTypeInfo().IsAssignableFrom(other.GetTypeInfo());
         public static bool IsSubclassOf(this Type type, Type t) => type.GetTypeInfo().IsSubclassOf(t);
 

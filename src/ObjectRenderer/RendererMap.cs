@@ -19,7 +19,7 @@
 
 using System;
 using System.IO;
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 using System.Reflection;
 #endif
 
@@ -220,7 +220,7 @@ namespace log4net.ObjectRenderer
 
 			if (result == null)
 			{
-#if NETSTANDARD1_3
+#if NETSTANDARD1_3 || NETSTANDARD2_0
 				for (Type cur = type; cur != null; cur = cur.GetTypeInfo().BaseType)
 #else
 				for(Type cur = type; cur != null; cur = cur.BaseType)

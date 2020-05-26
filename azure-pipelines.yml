@@ -1,0 +1,41 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+workspace:
+  clean: all
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+- task: UseDotNet@2
+  displayName: "Use .net core sdk 2.2"
+  inputs:
+    packageType: 'sdk'
+    version: '2.2.x'
+- task: DotNetCoreCLI@2
+  displayName: "Build solution"
+  inputs:
+    command: 'build'
+    arguments: '-c Release' 
+    projects: '.\netstandard\log4net.netstandard.sln'
+    feedsToUse: 'select'
+    vstsFeed: 'cc499f7c-f140-4e59-aa34-508c25f2cac1'
+- task: CopyFiles@2
+  displayName: 'Copy package'
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)\netstandard\log4net\bin\Release'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    CleanTargetFolder: true
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish package'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
