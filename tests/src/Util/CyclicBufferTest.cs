@@ -55,7 +55,7 @@ namespace log4net.Tests.Util
 
 			LoggingEvent discardedEvent = cb.Append(event1);
 
-			Assert.IsNull(discardedEvent, "No event should be discarded untill the buffer is full");
+			Assert.IsNull(discardedEvent, "No event should be discarded until the buffer is full");
 			Assert.AreEqual(1, cb.Length, "Buffer should have length 1");
 			Assert.AreEqual(1, cb.MaxSize, "Buffer should still have max size 1");
 
