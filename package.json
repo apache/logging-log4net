@@ -1,0 +1,33 @@
+{
+  "name": "log4net",
+  "version": "2.0.9",
+  "description": "Log4Net is a logging framework for .NET",
+  "scripts": {
+    "test": "cross-env NUNIT_PROCESS=Single MAX_CONCURRENCY=1 run-s clean-build \"zarro test-dotnet\"",
+    "clean-build": "rimraf build",
+    "build": "run-s \"zarro build\"",
+    "build-release": "cross-env BUILD_CONFIGURATION=Release run-s \"zarro build\"",
+    "pack": "cross-env PACKAGE_TARGET_FOLDER=build/artifacts PACK_INCREMENT_VERSION=false run-s \"zarro pack\"",
+    "zip": "run-s \"zarro zip\"",
+    "dump-env": "node -e \"console.log(process.env);\"",
+    "release": "run-s clean-build build-release pack zip",
+    "zarro": "cross-env BUILD_INCLUDE=src/log4net.sln zarro"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/fluffynuts/logging-log4net.git"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/fluffynuts/logging-log4net/issues"
+  },
+  "homepage": "https://github.com/fluffynuts/logging-log4net#readme",
+  "devDependencies": {
+    "cross-env": "^7.0.2",
+    "gulp-zip": "^5.0.1",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
+    "zarro": "^1.37.0"
+  }
+}

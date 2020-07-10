@@ -1,0 +1,17 @@
+ version: 2.1
+
+ orbs:
+  win: circleci/windows@2.2.0
+
+ jobs:
+   build:
+     executor: win/default     
+    
+     steps:
+       - checkout
+       - run: npm ci --no-progress
+       - run: npm run dump-env
+       - run: npm test
+       - run: npm run release
+       - store_artifacts:
+           path: build/package/log4net.2.0.9.nupkg
