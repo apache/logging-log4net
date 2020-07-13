@@ -2399,7 +2399,7 @@
             </value>
             <remarks>
             <para>
-            The default encoding set is <see cref="!:System.Text.Encoding.Default"/>
+            The default encoding set is <see cref="P:System.Text.Encoding.Default"/>
             which is the encoding for the system's current ANSI code page.
             </para>
             </remarks>
@@ -7191,9 +7191,9 @@
             If set the <see cref="P:log4net.Config.XmlConfiguratorAttribute.ConfigFile"/> property takes priority over the
             <see cref="P:log4net.Config.XmlConfiguratorAttribute.ConfigFileExtension"/> property. The <see cref="P:log4net.Config.XmlConfiguratorAttribute.ConfigFile"/> property
             specifies a path to a file to load the config from. The path is relative to the
-            application's base directory; <see cref="!:AppDomain.BaseDirectory"/>.
+            application's base directory; <see cref="P:System.AppDomain.BaseDirectory"/>.
             The <see cref="P:log4net.Config.XmlConfiguratorAttribute.ConfigFileExtension"/> property is used as a postfix to the assembly file name.
-            The config file must be located in the  application's base directory; <see cref="!:AppDomain.BaseDirectory"/>.
+            The config file must be located in the  application's base directory; <see cref="P:System.AppDomain.BaseDirectory"/>.
             For example in a console application setting the <see cref="P:log4net.Config.XmlConfiguratorAttribute.ConfigFileExtension"/> to
             <c>config</c> has the same effect as not specifying the <see cref="P:log4net.Config.XmlConfiguratorAttribute.ConfigFile"/> or 
             <see cref="P:log4net.Config.XmlConfiguratorAttribute.ConfigFileExtension"/> properties.
@@ -7241,7 +7241,7 @@
             <para>
             If specified, this is the name of the configuration file to use with
             the <see cref="T:log4net.Config.XmlConfigurator"/>. This file path is relative to the
-            <b>application base</b> directory (<see cref="!:AppDomain.BaseDirectory"/>).
+            <b>application base</b> directory (<see cref="P:System.AppDomain.BaseDirectory"/>).
             </para>
             <para>
             The <see cref="P:log4net.Config.XmlConfiguratorAttribute.ConfigFile"/> takes priority over the <see cref="P:log4net.Config.XmlConfiguratorAttribute.ConfigFileExtension"/>.
@@ -7259,7 +7259,7 @@
             <para>
             If specified this is the extension for the configuration file.
             The path to the config file is built by using the <b>application 
-            base</b> directory (<see cref="!:AppDomain.BaseDirectory"/>),
+            base</b> directory (<see cref="P:System.AppDomain.BaseDirectory"/>),
             the <b>assembly file name</b> and the config file extension.
             </para>
             <para>
@@ -9568,7 +9568,7 @@
             </summary>
             <remarks>
             <para>
-            This type extends <see cref="!:ApplicationException"/>. It
+            This type extends <see cref="T:System.ApplicationException"/>. It
             does not add any new functionality but does differentiate the
             type of exception being thrown.
             </para>
@@ -10104,13 +10104,13 @@
         </member>
         <member name="M:log4net.Core.LoggerManager.OnDomainUnload(System.Object,System.EventArgs)">
             <summary>
-            Called when the <see cref="!:AppDomain.DomainUnload"/> event fires
+            Called when the <see cref="E:System.AppDomain.DomainUnload"/> event fires
             </summary>
-            <param name="sender">the <see cref="!:AppDomain"/> that is exiting</param>
+            <param name="sender">the <see cref="T:System.AppDomain"/> that is exiting</param>
             <param name="e">null</param>
             <remarks>
             <para>
-            Called when the <see cref="!:AppDomain.DomainUnload"/> event fires.
+            Called when the <see cref="E:System.AppDomain.DomainUnload"/> event fires.
             </para>
             <para>
             When the event is triggered the log4net system is <see cref="M:Shutdown()"/>.
@@ -10119,13 +10119,13 @@
         </member>
         <member name="M:log4net.Core.LoggerManager.OnProcessExit(System.Object,System.EventArgs)">
             <summary>
-            Called when the <see cref="!:AppDomain.ProcessExit"/> event fires
+            Called when the <see cref="E:System.AppDomain.ProcessExit"/> event fires
             </summary>
-            <param name="sender">the <see cref="!:AppDomain"/> that is exiting</param>
+            <param name="sender">the <see cref="T:System.AppDomain"/> that is exiting</param>
             <param name="e">null</param>
             <remarks>
             <para>
-            Called when the <see cref="!:AppDomain.ProcessExit"/> event fires.
+            Called when the <see cref="E:System.AppDomain.ProcessExit"/> event fires.
             </para>
             <para>
             When the event is triggered the log4net system is <see cref="M:Shutdown()"/>.
@@ -17281,8 +17281,8 @@
             Format the <see cref="T:log4net.Core.LoggingEvent"/> and write it to the <see cref="T:System.IO.TextWriter"/>.
             </para>
             <para>
-            This method creates an <see cref="!:XmlTextWriter"/> that writes to the
-            <paramref name="writer"/>. The <see cref="!:XmlTextWriter"/> is passed 
+            This method creates an <see cref="T:System.Xml.XmlTextWriter"/> that writes to the
+            <paramref name="writer"/>. The <see cref="T:System.Xml.XmlTextWriter"/> is passed 
             to the <see cref="M:log4net.Layout.XmlLayoutBase.FormatXml(System.Xml.XmlWriter,log4net.Core.LoggingEvent)"/> method. Subclasses should override the
             <see cref="M:log4net.Layout.XmlLayoutBase.FormatXml(System.Xml.XmlWriter,log4net.Core.LoggingEvent)"/> method rather than this method.
             </para>
@@ -17408,7 +17408,7 @@
             <para>
             The <see cref="!:System.Runtime.Remoting.Messaging.CallContext"/> requires a link time 
             <see cref="!:System.Security.Permissions.SecurityPermission"/> for the
-            <see cref="!:System.Security.Permissions.SecurityPermissionFlag.Infrastructure"/>.
+            <see cref="F:System.Security.Permissions.SecurityPermissionFlag.Infrastructure"/>.
             If the calling code does not have this permission then this context will be disabled.
             It will not store any property values set on it.
             </para>
@@ -20389,7 +20389,7 @@
             the string key to optimize comparisons.
             </para>
             <note>
-            The Compact Framework 1.0 the <see cref="!:String.Intern"/>
+            The Compact Framework 1.0 the <see cref="M:System.String.Intern(System.String)"/>
             method does not work. On the Compact Framework
             the string keys are not interned nor are they
             compared by reference.
@@ -23737,7 +23737,7 @@
             <para>
             The <see cref="!:CallContext"/> requires a link time 
             <see cref="!:System.Security.Permissions.SecurityPermission"/> for the
-            <see cref="!:System.Security.Permissions.SecurityPermissionFlag.Infrastructure"/>.
+            <see cref="F:System.Security.Permissions.SecurityPermissionFlag.Infrastructure"/>.
             If the calling code does not have this permission then this context will be disabled.
             It will not store any property values set on it.
             </para>
@@ -27244,12 +27244,12 @@
         </member>
         <member name="P:log4net.Util.SystemInfo.ApplicationBaseDirectory">
             <summary>
-            Gets the base directory for this <see cref="!:AppDomain"/>.
+            Gets the base directory for this <see cref="T:System.AppDomain"/>.
             </summary>
-            <value>The base directory path for the current <see cref="!:AppDomain"/>.</value>
+            <value>The base directory path for the current <see cref="T:System.AppDomain"/>.</value>
             <remarks>
             <para>
-            Gets the base directory for this <see cref="!:AppDomain"/>.
+            Gets the base directory for this <see cref="T:System.AppDomain"/>.
             </para>
             <para>
             The value returned may be either a local file path or a URI.
@@ -27258,9 +27258,9 @@
         </member>
         <member name="P:log4net.Util.SystemInfo.ConfigurationFileLocation">
             <summary>
-            Gets the path to the configuration file for the current <see cref="!:AppDomain"/>.
+            Gets the path to the configuration file for the current <see cref="T:System.AppDomain"/>.
             </summary>
-            <value>The path to the configuration file for the current <see cref="!:AppDomain"/>.</value>
+            <value>The path to the configuration file for the current <see cref="T:System.AppDomain"/>.</value>
             <remarks>
             <para>
             The .NET Compact Framework 1.0 does not have a concept of a configuration
@@ -27274,12 +27274,12 @@
         </member>
         <member name="P:log4net.Util.SystemInfo.EntryAssemblyLocation">
             <summary>
-            Gets the path to the file that first executed in the current <see cref="!:AppDomain"/>.
+            Gets the path to the file that first executed in the current <see cref="T:System.AppDomain"/>.
             </summary>
             <value>The path to the entry assembly.</value>
             <remarks>
             <para>
-            Gets the path to the file that first executed in the current <see cref="!:AppDomain"/>.
+            Gets the path to the file that first executed in the current <see cref="T:System.AppDomain"/>.
             </para>
             </remarks>
         </member>
@@ -28399,7 +28399,7 @@
             </summary>
             <remarks>
             <para>
-            This type extends <see cref="!:ApplicationException"/>. It
+            This type extends <see cref="T:System.ApplicationException"/>. It
             does not add any new functionality but does differentiate the
             type of exception being thrown.
             </para>
