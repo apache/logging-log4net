@@ -1,0 +1,259 @@
+<?xml version="1.0" ?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one or more 
+contributor license agreements. See the NOTICE file distributed with
+this work for additional information regarding copyright ownership. 
+The ASF licenses this file to you under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with 
+the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<document>
+
+    <properties>
+        <author email="nicko at apache dot org">Nicko Cadell</author>
+        <title>Apache log4net Manual: Internals</title>
+    </properties>
+
+    <meta name="keywords" content="log4net internals, log4net" />
+
+    <body>
+        <section id="main" name="Apache log4net&#x2122; Manual - Internals">
+            <section id="perf" name="Performance">
+                <p>
+                    One of the often-cited arguments against logging is its computational cost. 
+                    This is a legitimate concern as even moderately sized applications can generate 
+                    thousands of log requests. Much effort was spent measuring and tweaking logging 
+                    performance. Log4net claims to be fast and flexible: speed first, flexibility 
+                    second.
+                </p>
+                <p>
+                    The user should be aware of the following performance issues.
+                </p>
+                <ol>
+                    <li>
+                        <strong>Logging performance when logging is turned off.</strong>
+                        <p>
+                            When logging is turned off entirely or just for a set of levels, the cost of a 
+                            log request consists of a method invocation plus an integer comparison.
+                        </p>
+                        <p>
+                            However, The method invocation involves the "hidden" cost of parameter 
+                            construction.
+                        </p>
+                        <p>
+                            For example, for some logger
+                            <span class="code">log</span>, writing,
+                        </p>
+                        <div class="syntax"><pre class="code">
+log.Debug("Entry number: " + i + " is " + entry[i].ToString());</pre></div>
+                        <p>
+                            incurs the cost of constructing the message parameter, i.e. converting both 
+                            integer
+                            <span class="code">i</span>
+                            and
+                            <span class="code">entry[i]</span>
+                            to strings, and concatenating intermediate strings, regardless of whether the 
+                            message will be logged or not. This cost of parameter construction can be quite 
+                            high and it depends on the number and type of the parameters involved.
+                        </p>
+                        <p>
+                            To avoid the parameter construction cost write:
+                        </p>
+                        <div class="syntax"><pre class="code">
+if(log.IsDebugEnabled)
+{
+    log.Debug("Entry number: " + i + " is " + entry[i].ToString());
+}</pre></div>
+                        <p>
+                            This will not incur the cost of parameter construction if debugging is 
+                            disabled. On the other hand, if the logger is debug-enabled, it will incur 
+                            twice the cost of evaluating whether the logger is enabled or not: once in
+                            <span class="code">IsDebugEnabled</span>
+                            and once in
+                            <span class="code">Debug</span>. This is an insignificant overhead because 
+                            evaluating a logger takes about 1% of the time it takes to actually log.
+                        </p>
+                        <p>
+                            Certain users resort to pre-processing or compile-time techniques to compile 
+                            out all log statements. This leads to perfect performance efficiency with 
+                            respect to logging. However, since the resulting application binary does not 
+                            contain any log statements, logging cannot be turned on for that binary. In 
+                            many people's opinion this is a disproportionate price to pay in exchange for a 
+                            small performance gain.
+                        </p>
+                    </li>
+                    <li>
+                        <strong>The performance of deciding whether to log or not to log when logging is 
+                            turned on.</strong>
+                        <p>
+                            This is essentially the performance of walking the logger hierarchy. When 
+                            logging is turned on, log4net still needs to compare the level of the log 
+                            request with the level of the request logger. However, loggers may not have an 
+                            assigned level; they can inherit them from the logger hierarchy. Thus, before 
+                            inheriting a level, the logger may need to search its ancestors.
+                        </p>
+                        <p>
+                            There has been a serious effort to make this hierarchy walk to be as fast as 
+                            possible. For example, child loggers link only to their existing ancestors. In 
+                            the
+                            <span class="code">BasicConfigurator</span>
+                            example shown earlier, the logger named
+                            <span class="code">Com.Foo.Bar</span>
+                            is linked directly to the <i>root</i> logger, thereby circumventing the nonexistent
+                            <span class="code">Com</span>
+                            or
+                            <span class="code">Com.Foo</span>
+                            loggers. This significantly improves the speed of the walk, especially in 
+                            "sparse" hierarchies.
+                        </p>
+                        <p>
+                            The typical cost of walking the hierarchy is typically 3 times slower than when 
+                            logging is turned off entirely.
+                        </p>
+                    </li>
+                    <li>
+                        <strong>Actually outputting log messages</strong>
+                        <p>
+                            This is the cost of formatting the log output and sending it to its target 
+                            destination. Here again, a serious effort was made to make layouts (formatters) 
+                            perform as quickly as possible. The same is true for appenders.
+                        </p>
+                    </li>
+                </ol>
+                <p>
+                    Although log4net has many features, its first design goal was speed. Some 
+                    log4net components have been rewritten many times to improve performance. 
+                    Nevertheless, contributors frequently come up with new optimizations. You 
+                    should be pleased to know that when configured with the
+                    <span class="code">SimpleLayout</span>
+                    performance tests have shown log4net to log within an order of magnitude of
+                    <span class="code">System.Console.WriteLine</span>.
+                </p>
+            </section>
+
+            <section id="flow" name="Logging Event Flow">
+                <p>
+                    The following is the series of steps and checks that a messages goes through while being logged.
+                    For the purposes of this example we will document an <span class="code">INFO</span> level
+                    message being logged on logger <i>ConsoleApp.LoggingExample</i>. This logger is configured
+                    to use the <span class="code">log4net.Appender.ConsoleAppender</span>. The repository used
+                    in this example is a <span class="code">log4net.Repository.Hierarchy</span> object.
+                </p>
+                <ol>
+                    <li>
+                        <p>
+                            The user logs a message using the <span class="code">ILog.Info</span> method on the logger
+                            obtained using a call to <span class="code">log4net.LogManager.GetLogger("ConsoleApp.LoggingExample")</span>.
+                            For example: <span class="code">log4net.LogManager.GetLogger("ConsoleApp.LoggingExample").Info("Application Start");</span>
+                            The <span class="code">ILog</span> interface is actually an extension to log4net that provides level 
+                            specific logging methods (i.e. Debug, Info, Warn, Error, and Fatal).
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            The message is then logged through to the <span class="code">ILogger.Log</span> method on the 
+                            appropriate <span class="code">log4net.Repository.Hierarchy.Logger</span> object. The 
+                            <span class="code">ILogger.Log</span> method takes the <span class="code">Level</span> to
+                            log at as a parameter and therefore works for all levels.
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            The repository threshold level is compared to the message level to determine if the message 
+                            can be logged. If the message level is below the threshold level the message is not logged.
+                            In this case the repository is a <span class="code">log4net.Repository.Hierarchy</span> object.
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            The <span class="code">Logger</span> level is compared to the message level to determine if the 
+                            message can be logged. Note that the <span class="code">Logger</span> level is inherited from a 
+                            parent <span class="code">Logger</span> if not specified explicitly for this <span class="code">Logger</span>.
+                            If the message level is below the <span class="code">Logger</span> level the message is not logged.
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            A <span class="code">LoggingEvent</span> instance is created to encapsulate the message being logged.
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            The list of appenders for the <span class="code">Logger</span> is built. This includes appenders 
+                            attached to parent <span class="code">Logger</span>s except where excluded by the 
+                            <span class="code">Logger.Additivity</span> property.
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            The <span class="code">LoggingEvent</span> object is passed to the 
+                            <span class="code">IAppender.DoAppend</span> method for each appender.
+                        </p>
+                    </li>
+                </ol>
+                <p>
+                    For Each Appender that the <span class="code">LoggingEvent</span> is delivered to the following
+                    actions take place:
+                </p>
+                <ol>
+                    <li>
+                        <p>
+                            The appender threshold level is compared to the message level to determine if the message 
+                            can be logged. If the message level is below the threshold level the message is not logged.
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            If the appender has a filter chain the <span class="code">LoggingEvent</span> is passed down the 
+                            filter chain which can decide if the message can be logged or not.
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            Next an appender specific check is performed. Usually this check will verify that all the 
+                            required properties are set for the appender (e.g. a <span class="code">Layout</span> is set if required).
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            The <span class="code">LoggingEvent</span> is passed to the appender specific 
+                            <span class="code">Append</span> method. What happens now is specific to the appender.
+                        </p>
+                    </li>
+                </ol>
+                <p>
+                    The following actions take place in the <span class="code">ConsoleAppender.Append</span> method:
+                </p>
+                <ol>
+                    <li>
+                        <p>
+                            The <span class="code">ConsoleAppender</span> uses a <span class="code">Layout</span> to 
+                            format the message as a string for display.
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            The <span class="code">Layout</span> uses the <span class="code">LoggingEvent.RenderedMessage</span>
+                            property to get the string for the message object. This uses the registered 
+                            <span class="code">IObjectRenderer</span> for the type of the message object.
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            The message text is displayed on the console using the <span class="code">Console.WriteLine</span> method.
+                        </p>
+                    </li>
+                </ol>
+            </section>
+
+        </section>
+    </body>
+</document>
