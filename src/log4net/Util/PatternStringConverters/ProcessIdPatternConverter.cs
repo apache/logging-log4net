@@ -18,10 +18,7 @@
 #endregion
 
 using System;
-using System.Text;
 using System.IO;
-
-using log4net.Util;
 
 namespace log4net.Util.PatternStringConverters
 {
@@ -46,7 +43,7 @@ namespace log4net.Util.PatternStringConverters
 		/// Write the current process ID to the output <paramref name="writer"/>.
 		/// </para>
 		/// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETSTANDARD
         [System.Security.SecuritySafeCritical]
 #endif
         override protected void Convert(TextWriter writer, object state) 

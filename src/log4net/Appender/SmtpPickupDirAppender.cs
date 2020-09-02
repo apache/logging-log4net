@@ -18,10 +18,8 @@
 #endregion
 
 using System;
-using System.Text;
 using System.IO;
 
-using log4net.Layout;
 using log4net.Core;
 using log4net.Util;
 
@@ -159,7 +157,7 @@ namespace log4net.Appender
 					m_fileExtension = string.Empty;
 				}
 				// Make sure any non empty extension starts with a dot
-#if NET_2_0 || MONO_2_0
+#if NET_2_0 || MONO_2_0 || NETSTANDARD
 				if (!string.IsNullOrEmpty(m_fileExtension) && !m_fileExtension.StartsWith("."))
 #else
 				if (m_fileExtension != null && m_fileExtension.Length > 0 && !m_fileExtension.StartsWith("."))

@@ -24,9 +24,7 @@ using System.Globalization;
 using System.Configuration;
 #endif
 using System.Reflection;
-using System.Text;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Collections;
 
 namespace log4net.Util
@@ -174,7 +172,7 @@ namespace log4net.Util
 		{
 			get 
 			{
-#if NETCF || NETSTANDARD1_3
+#if NETCF || NETSTANDARD
 				return SystemInfo.EntryAssemblyLocation+".config";
 #else
 				return System.AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;
@@ -233,7 +231,7 @@ namespace log4net.Util
 			{
 #if NETCF_1_0
 				return System.Threading.Thread.CurrentThread.GetHashCode();
-#elif NET_2_0 || NETCF_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0 || NETSTANDARD1_3
+#elif NET_2_0 || NETCF_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0 || NETSTANDARD
 				return System.Threading.Thread.CurrentThread.ManagedThreadId;
 #else
 				return AppDomain.GetCurrentThreadId();
@@ -341,7 +339,7 @@ namespace log4net.Util
 				{
 					try
 					{
-#if !(NETCF || NETSTANDARD1_3)
+#if !NETCF && !NETSTANDARD1_3
 						s_appFriendlyName = AppDomain.CurrentDomain.FriendlyName;
 #endif
 					}
@@ -484,7 +482,7 @@ namespace log4net.Util
 		{
 #if NETCF
 			return "Not supported on Microsoft .NET Compact Framework";
-#elif NETSTANDARD1_3  // TODO Assembly.Location available in netstandard1.5
+#elif NETSTANDARD1_3
             return "Not supported on .NET Core";
 #else
 			if (myAssembly.GlobalAssemblyCache)
@@ -501,11 +499,14 @@ namespace log4net.Util
 						return "Dynamic Assembly";
 					}
 #else
+#if !NETSTANDARD2_0
 					if (myAssembly is System.Reflection.Emit.AssemblyBuilder)
 					{
 						return "Dynamic Assembly";
 					}
-					else if(myAssembly.GetType().FullName == "System.Reflection.Emit.InternalAssemblyBuilder")
+#endif
+
+					if (myAssembly.GetType().FullName == "System.Reflection.Emit.InternalAssemblyBuilder")
 					{
 						return "Dynamic Assembly";
 					}
@@ -664,7 +665,7 @@ namespace log4net.Util
 			return GetTypeFromString(relativeType.Assembly, typeName, throwOnError, ignoreCase);
 #endif
 		}
-
+		
 #if !NETSTANDARD1_3
 		/// <summary>
 		/// Loads the type specified in the type string.
@@ -1001,7 +1002,7 @@ namespace log4net.Util
 			{
 #if NETCF || NETSTANDARD1_3
 				// Configuration APIs are not suported under the Compact Framework
-#elif NET_2_0
+#elif NET_2_0 || NETSTANDARD2_0
 				return ConfigurationManager.AppSettings[key];
 #else
 				return ConfigurationSettings.AppSettings[key];

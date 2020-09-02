@@ -24,7 +24,7 @@ using System.Threading;
 using log4net.Util;
 using log4net.Layout;
 using log4net.Core;
-#if NET_4_5 || NETSTANDARD1_3
+#if NET_4_5 || NETSTANDARD
 using System.Threading.Tasks;
 #endif
 
@@ -115,12 +115,12 @@ namespace log4net.Appender
 	/// The default behavior, implemented by <see cref="FileAppender.ExclusiveLock"/> 
 	/// is to obtain an exclusive write lock on the file until this appender is closed.
 	/// The alternative model only holds a
-    /// write lock while the appender is writing a logging event (<see cref="FileAppender.MinimalLock"/>).
+	/// write lock while the appender is writing a logging event (<see cref="FileAppender.MinimalLock"/>).
 	/// </para>
-    /// <para>
-    /// All locking strategies have issues and you should seriously consider using a different strategy that
-    /// avoids having multiple processes logging to the same file.
-    /// </para>
+	/// <para>
+	/// All locking strategies have issues and you should seriously consider using a different strategy that
+	/// avoids having multiple processes logging to the same file.
+	/// </para>
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
@@ -162,7 +162,7 @@ namespace log4net.Appender
 
 			#region Override Implementation of Stream
 
-#if NETSTANDARD1_3
+#if NETSTANDARD
 			protected override void Dispose(bool disposing)
 			{
 				m_lockingModel.CloseFile();
@@ -208,18 +208,18 @@ namespace log4net.Appender
 			}
 #endif
 
-#if NET_4_5 || NETSTANDARD1_3
+#if NET_4_5 || NETSTANDARD
 			public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
 			{
 				AssertLocked();
- 				return m_realStream.ReadAsync(buffer, offset, count, cancellationToken);
- 			}
+				return m_realStream.ReadAsync(buffer, offset, count, cancellationToken);
+			}
 
- 			public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
- 			{
- 				AssertLocked(); 
- 				return base.WriteAsync(buffer, offset, count, cancellationToken);
-   			}
+			public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+			{
+				AssertLocked(); 
+				return base.WriteAsync(buffer, offset, count, cancellationToken);
+			}
 #endif
 
 			public override void Flush()
@@ -247,7 +247,7 @@ namespace log4net.Appender
 			}
 			void IDisposable.Dispose()
 			{
-#if NETSTANDARD1_3
+#if NETSTANDARD
 				Dispose(true);
 #else
 				Close();
@@ -740,7 +740,7 @@ namespace log4net.Appender
 			/// -<see cref="ReleaseLock"/> and <see cref="CloseFile"/>.
 			/// </para>
 			/// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETSTANDARD
 			[System.Security.SecuritySafeCritical]
 #endif
 			public override void OpenFile(string filename, bool append, Encoding encoding)
@@ -861,7 +861,7 @@ namespace log4net.Appender
 			{
 				if (m_mutex != null)
 				{
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETSTANDARD
 					m_mutex.Dispose();
 #else
 					m_mutex.Close();
@@ -1021,10 +1021,10 @@ namespace log4net.Appender
 		/// Gets or sets the <see cref="FileAppender.LockingModel"/> used to handle locking of the file.
 		/// </para>
 		/// <para>
-        /// There are two built in locking models, <see cref="FileAppender.ExclusiveLock"/> and <see cref="FileAppender.MinimalLock"/>.
+		/// There are two built in locking models, <see cref="FileAppender.ExclusiveLock"/> and <see cref="FileAppender.MinimalLock"/>.
 		/// The first locks the file from the start of logging to the end, the 
 		/// second locks only for the minimal amount of time when logging each message
-        /// and the last synchronizes processes using a named system wide Mutex.
+		/// and the last synchronizes processes using a named system wide Mutex.
 		/// </para>
 		/// <para>
 		/// The default locking model is the <see cref="FileAppender.ExclusiveLock"/>.

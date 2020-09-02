@@ -18,16 +18,15 @@
 #endregion
 
 using System.Collections;
+#if NETSTANDARD1_3
+using System.Reflection;
+#endif
 
 using log4net.Core;
 using log4net.Repository.Hierarchy;
 using log4net.Tests.Appender;
 
 using NUnit.Framework;
-
-#if NETSTANDARD1_3
-using System.Reflection;
-#endif
 
 namespace log4net.Tests.Hierarchy
 {

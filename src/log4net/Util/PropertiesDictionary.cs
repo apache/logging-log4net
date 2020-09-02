@@ -19,14 +19,7 @@
 
 using System;
 using System.Collections;
-#if NETSTANDARD
 using System.Runtime.Serialization;
-#endif
-
-#if NET_2_0
-using System.Runtime.Serialization;
-using System.Xml;
-#endif
 
 namespace log4net.Util
 {
@@ -79,7 +72,7 @@ namespace log4net.Util
 
 		#region Private Instance Constructors
 
-#if !(NETCF || NETSTANDARD1_3 || CLIENT_PROFILE)
+#if !(NETCF || CLIENT_PROFILE)
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PropertiesDictionary" /> class 
 		/// with serialized data.

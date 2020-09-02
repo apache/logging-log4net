@@ -21,11 +21,11 @@
 #if !NETCF
 
 using System;
-using System.Globalization;
-using System.Reflection;
 
 using log4net.Core;
+#if !NETSTANDARD1_3
 using log4net.Util;
+#endif
 using log4net.Plugin;
 
 namespace log4net.Config

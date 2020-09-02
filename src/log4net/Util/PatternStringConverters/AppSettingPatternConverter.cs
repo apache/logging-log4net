@@ -18,16 +18,11 @@
 #endregion
 
 // .NET Compact Framework 1.0 has no support for application .config files
-#if !NETCF && NET_2_0
+#if !NETCF && (NET_2_0 || NETSTANDARD2_0)
 
-using System;
-using System.Text;
 using System.IO;
 using System.Collections;
-
-using log4net.Core;
-using log4net.Util;
-using log4net.Repository;
+using System.Configuration;
 
 namespace log4net.Util.PatternStringConverters
 {
@@ -66,9 +61,9 @@ namespace log4net.Util.PatternStringConverters
                 if (_appSettingsHashTable == null)
                 {
                     Hashtable h = new Hashtable();
-                    foreach(string key in System.Configuration.ConfigurationManager.AppSettings)
+                    foreach(string key in ConfigurationManager.AppSettings)
                     {
-                        h.Add(key, System.Configuration.ConfigurationManager.AppSettings[key]);
+                        h.Add(key, ConfigurationManager.AppSettings[key]);
                     }
                     _appSettingsHashTable = h;
                 }
@@ -100,7 +95,7 @@ namespace log4net.Util.PatternStringConverters
             if (Option != null)
             {
                 // Write the value for the specified key
-                WriteObject(writer, null, System.Configuration.ConfigurationManager.AppSettings[Option]);
+                WriteObject(writer, null, ConfigurationManager.AppSettings[Option]);
             }
             else
             {

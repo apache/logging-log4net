@@ -19,7 +19,6 @@
  *
 */
 
-#if NET_2_0
 using System;
 using System.Collections.Generic;
 using System.Xml;
@@ -117,4 +116,3 @@ namespace log4net.Tests.Filter
         }
     }
 }
-#endif

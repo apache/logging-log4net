@@ -101,6 +101,7 @@ namespace log4net.Appender
 			set { m_immediateFlush = value; }
 		}
 #endif // !NETSTANDARD1_3
+
         /// <summary>
         /// Formats the category parameter sent to the Debug method.
         /// </summary>
@@ -150,7 +151,6 @@ namespace log4net.Appender
 		/// Writes the logging event to the <see cref="System.Diagnostics.Debug"/> system.
 		/// </para>
 		/// </remarks>
-		override protected void Append(LoggingEvent loggingEvent) 
 #else
 		/// <summary>
 		/// Writes the logging event to the <see cref="System.Diagnostics.Debug"/> system.
@@ -162,9 +162,9 @@ namespace log4net.Appender
 		/// If <see cref="ImmediateFlush"/> is <c>true</c> then the <see cref="System.Diagnostics.Debug.Flush"/>
 		/// is called.
 		/// </para>
-		/// </remarks>
-		override protected void Append(LoggingEvent loggingEvent) 
-#endif		
+		/// </remarks> 
+#endif
+		override protected void Append(LoggingEvent loggingEvent)
 		{
 			//
 			// Write the string to the Debug system
@@ -232,6 +232,7 @@ namespace log4net.Appender
 		/// </remarks>
 		private bool m_immediateFlush = true;
 #endif
+
         /// <summary>
         /// Defaults to a <see cref="Layout.PatternLayout"/> with %logger as the pattern.
         /// </summary>

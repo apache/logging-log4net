@@ -92,7 +92,7 @@ namespace log4net.Core
 
 		#region Protected Instance Constructors
 
-#if !(NETCF || NETSTANDARD1_3)
+#if !NETCF && !NETSTANDARD1_3
 		/// <summary>
 		/// Serialization constructor
 		/// </summary>

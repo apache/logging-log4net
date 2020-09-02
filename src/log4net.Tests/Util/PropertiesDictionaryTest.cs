@@ -17,6 +17,8 @@
 //
 #endregion
 
+#if !NETSTANDARD1_3
+
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -65,3 +67,5 @@ namespace log4net.Tests.Util
 		}
 	}
 }
+
+#endif

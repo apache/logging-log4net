@@ -22,13 +22,11 @@ using System.Collections;
 using System.Globalization;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.IO;
-using System.Threading;
-#if NETSTANDARD1_3
+#if NETSTANDARD
 using System.Threading.Tasks;
 #endif
-using log4net.Layout;
+
 using log4net.Core;
 using log4net.Util;
 
@@ -348,7 +346,7 @@ namespace log4net.Appender
 
 			private void AcceptConnection()
 			{
-#if NETSTANDARD1_3
+#if NETSTANDARD
 				m_serverSocket.AcceptAsync().ContinueWith(OnConnect, TaskScheduler.Default);
 #else
 				m_serverSocket.BeginAccept(new AsyncCallback(OnConnect), null);
@@ -435,7 +433,7 @@ namespace log4net.Appender
 			}
 			
 
-#if NETSTANDARD1_3
+#if NETSTANDARD
 			private void OnConnect(Task<Socket> acceptTask)
 #else
 			/// <summary>
@@ -453,7 +451,7 @@ namespace log4net.Appender
 			{
 				try
 				{
-#if NETSTANDARD1_3
+#if NETSTANDARD
 					Socket socket = acceptTask.GetAwaiter().GetResult();
 #else
 					// Block until a client connects

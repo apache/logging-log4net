@@ -19,6 +19,8 @@
  *
 */
 
+#if NET_2_0
+
 using System;
 using log4net.Util;
 using NUnit.Framework;
@@ -110,3 +112,4 @@ namespace log4net.Tests.Util
         }
     }
 }
+#endif

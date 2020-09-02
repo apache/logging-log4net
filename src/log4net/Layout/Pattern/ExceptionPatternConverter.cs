@@ -106,7 +106,7 @@ namespace log4net.Layout.Pattern
 					case "stacktrace":
 						WriteObject(writer, loggingEvent.Repository, loggingEvent.ExceptionObject.StackTrace);
 						break;
-#if !NETSTANDARD1_3
+#if !NETSTANDARD
 					case "targetsite":
 						WriteObject(writer, loggingEvent.Repository, loggingEvent.ExceptionObject.TargetSite);
 						break;

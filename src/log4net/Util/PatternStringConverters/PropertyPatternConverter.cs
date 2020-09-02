@@ -17,14 +17,7 @@
 //
 #endregion
 
-using System;
-using System.Text;
 using System.IO;
-using System.Collections;
-
-using log4net.Core;
-using log4net.Util;
-using log4net.Repository;
 
 namespace log4net.Util.PatternStringConverters
 {

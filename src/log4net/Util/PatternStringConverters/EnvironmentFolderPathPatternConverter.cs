@@ -17,7 +17,7 @@
 //
 #endregion
 
-#if !NETCF && NET_2_0
+#if !NETCF && (NET_2_0 || NETSTANDARD2_0)
 
 using System;
 using System.IO;

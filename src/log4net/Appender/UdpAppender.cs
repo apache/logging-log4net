@@ -23,9 +23,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-using log4net.Layout;
 using log4net.Core;
-using log4net.Util;
 
 namespace log4net.Appender 
 {
@@ -403,7 +401,7 @@ namespace log4net.Appender
 			try 
 			{
 				Byte [] buffer = m_encoding.GetBytes(RenderLoggingEvent(loggingEvent).ToCharArray());
-#if NETSTANDARD1_3
+#if NETSTANDARD
 				Client.SendAsync(buffer, buffer.Length, RemoteEndPoint).Wait();
 #else
 				this.Client.Send(buffer, buffer.Length, this.RemoteEndPoint);
@@ -539,7 +537,7 @@ namespace log4net.Appender
 		/// <summary>
 		/// The encoding to use for the packet.
 		/// </summary>
-#if NETSTANDARD1_3
+#if NETSTANDARD
 		private Encoding m_encoding = Encoding.Unicode;
 #else
 		private Encoding m_encoding = Encoding.Default;
