@@ -7,6 +7,7 @@
     "clean-build": "rimraf build",
     "build": "run-s \"zarro build\"",
     "build-release": "cross-env BUILD_CONFIGURATION=Release run-s \"zarro build\"",
+    "build-site": "run-s \"zarro build-site\"",
     "pack": "cross-env PACKAGE_TARGET_FOLDER=build/artifacts PACK_INCREMENT_VERSION=false run-s \"zarro pack\"",
     "zip": "run-s \"zarro zip\"",
     "dump-env": "node -e \"console.log(process.env);\"",
@@ -28,6 +29,7 @@
     "gulp-zip": "^5.0.1",
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",
-    "zarro": "^1.37.0"
+    "which": "^2.0.2",
+    "zarro": "^1.76.0"
   }
 }
