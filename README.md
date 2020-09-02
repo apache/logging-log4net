@@ -9,9 +9,6 @@ Web site: http://logging.apache.org/log4net
 Documentation
 =============
 
-For local documentation, which is correct for this release see:
-doc/index.html
-
 For the latest documentation see the log4net web site at:
 http://logging.apache.org/log4net
 
