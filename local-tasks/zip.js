@@ -1,5 +1,5 @@
 const
-  gulp = requireModule("gulp-with-help"),
+  gulp = requireModule("gulp"),
   promisify = requireModule("promisify-stream"),
   readNuspecVersion = requireModule("read-nuspec-version"),
   target = "build/artifacts",

@@ -29,7 +29,7 @@
 
 		<menu name="Apache log4net" inherit="top" img="icon-home">
 			<item name="About" href="/index.html"/>
-			<item name="Download" href="/download_log4net.cgi"/>
+			<item name="Download" href="/download_log4net.html"/>
 			<item name="Security Reports" href="/release/security-reports.html"/>
 			<item name="Release Notes" href="/release/release-notes.html"/>
 			<item name="License" href="/license.html"/>
