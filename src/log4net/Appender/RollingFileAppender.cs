@@ -241,7 +241,6 @@ namespace log4net.Appender
 		/// </summary>
 		~RollingFileAppender()
 		{
-#if !NETCF
 			if (m_mutexForRolling != null)
 			{
 #if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
@@ -251,7 +250,6 @@ namespace log4net.Appender
 #endif
 				m_mutexForRolling = null;
 			}
-#endif
 		}
 
 		#endregion Public Instance Constructors
@@ -611,46 +609,48 @@ namespace log4net.Appender
 		/// </remarks>
 		virtual protected void AdjustFileBeforeAppend()
 		{
-			// reuse the file appenders locking model to lock the rolling
-#if !NETCF
-			try
+			// Pretest rolling conditions before applying any lock - performance
+			if (m_rollDate && m_dateTime.Now >= m_nextCheck ||
+				m_rollSize && File != null && ((CountingQuietTextWriter)QuietWriter).Count >= m_maxFileSize)
 			{
-				// if rolling should be locked, acquire the lock
-				if (m_mutexForRolling != null)
+				// reuse the file appenders locking model to lock the rolling
+				try
 				{
-					m_mutexForRolling.WaitOne();
-				}
-#endif
-				if (m_rollDate)
-				{
-					DateTime n = m_dateTime.Now;
-					if (n >= m_nextCheck)
+					// if rolling should be locked, acquire the lock
+					if (m_mutexForRolling != null)
 					{
-						m_now = n;
-						m_nextCheck = NextCheckDate(m_now, m_rollPoint);
+						m_mutexForRolling.WaitOne();
+					}
 
-						RollOverTime(true);
+					if (m_rollDate)
+					{
+						DateTime n = m_dateTime.Now;
+						if (n >= m_nextCheck)
+						{
+							m_now = n;
+							m_nextCheck = NextCheckDate(m_now, m_rollPoint);
+
+							RollOverTime(true);
+						}
+					}
+
+					if (m_rollSize)
+					{
+						if ((File != null) && ((CountingQuietTextWriter)QuietWriter).Count >= m_maxFileSize)
+						{
+							RollOverSize();
+						}
 					}
 				}
-
-				if (m_rollSize)
+				finally
 				{
-					if ((File != null) && ((CountingQuietTextWriter)QuietWriter).Count >= m_maxFileSize)
+					// if rolling should be locked, release the lock
+					if (m_mutexForRolling != null)
 					{
-						RollOverSize();
+						m_mutexForRolling.ReleaseMutex();
 					}
 				}
-#if !NETCF
 			}
-			finally
-			{
-				// if rolling should be locked, release the lock
-				if (m_mutexForRolling != null)
-				{
-					m_mutexForRolling.ReleaseMutex();
-				}
-			}
-#endif
 		}
 
 		/// <summary>
@@ -1158,10 +1158,8 @@ namespace log4net.Appender
 				m_baseFileName = base.File;
 			}
 
-#if !NETCF
 			// initialize the mutex that is used to lock rolling
-			m_mutexForRolling = new Mutex(false, m_baseFileName.Replace("\\", "_").Replace(":", "_").Replace("/", "_"));
-#endif
+			m_mutexForRolling = new FileBasedMutex($"{m_baseFileName}.lock");
 
 			if (m_rollDate && File != null && m_scheduledFilename == null)
 			{
@@ -1702,12 +1700,10 @@ namespace log4net.Appender
 		/// </summary>
 		private string m_baseFileName;
 
-#if !NETCF
 		/// <summary>
 		/// A mutex that is used to lock rolling of files.
 		/// </summary>
-		private Mutex m_mutexForRolling;
-#endif
+		private FileBasedMutex m_mutexForRolling;
 
 		#endregion Private Instance Fields
 
@@ -1787,5 +1783,102 @@ namespace log4net.Appender
 #endif
 
         #endregion DateTime
-	}
+
+        #region FileBasedMutex
+
+        private sealed class FileBasedMutex : WaitHandle
+        {
+            private readonly string filePath;
+            private Stream fileStream;
+            
+            public FileBasedMutex() : this(null) { }
+
+            public FileBasedMutex(string filePath)
+            {
+                this.filePath = filePath ?? Path.GetTempFileName();
+            }
+            
+            public override bool WaitOne()
+            {
+                return WaitOne(0, false);
+            }
+
+            public override bool WaitOne(TimeSpan timeout)
+            {
+                return WaitOne(timeout, false);
+            }
+
+            public override bool WaitOne(TimeSpan timeout, bool exitContext)
+            {
+                var timeoutMilliseconds = (long)timeout.TotalMilliseconds;
+                if (timeoutMilliseconds < 0 || timeoutMilliseconds > Int32.MaxValue)
+                    throw new ArgumentOutOfRangeException(nameof(timeout));
+
+                return WaitOne((int)timeoutMilliseconds, false);
+            }
+
+            public override bool WaitOne(int millisecondsTimeout)
+            {
+                return WaitOne(millisecondsTimeout, false);
+            }
+
+            public override bool WaitOne(int millisecondsTimeout, bool exitContext)
+            {
+                var stopper = millisecondsTimeout > 0 ? System.Diagnostics.Stopwatch.StartNew() : null;
+
+                while (millisecondsTimeout <= 0 || stopper.ElapsedMilliseconds < millisecondsTimeout)
+                {
+                    try
+                    {
+                        fileStream = OpenLockFile();
+                        return true;
+                    }
+                    catch
+                    {
+                    }
+
+                    Thread.Sleep(10);
+                }
+
+                return false;
+            }
+
+            public void ReleaseMutex()
+            {
+                if (fileStream != null)
+                {
+                    fileStream.Close();
+                    fileStream = null;
+                    DeleteLockFile();
+                }
+            }
+
+            protected override void Dispose(bool explicitDisposing)
+            {
+                ReleaseMutex();
+
+                base.Dispose(explicitDisposing);
+            }
+
+            private FileStream OpenLockFile()
+            {
+                return System.IO.File.Open(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
+            }
+
+            private void DeleteLockFile()
+            {
+                if (!System.IO.File.Exists(filePath)) return;
+
+                try
+                {
+                    System.IO.File.Delete(filePath);
+                }
+                catch
+                {
+                }
+            }
+        }
+
+        #endregion FileBasedMutex
+    }
 }
