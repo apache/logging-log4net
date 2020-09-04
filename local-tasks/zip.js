@@ -1,5 +1,5 @@
 const
-  gulp = requireModule("gulp-with-help"),
+  gulp = requireModule("gulp"),
   promisify = requireModule("promisify-stream"),
   readCsProjVersion = requireModule("read-csproj-version"),
   target = "build/artifacts",

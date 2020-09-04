@@ -7,6 +7,7 @@
     "clean-build": "rimraf build",
     "build": "run-s clean-build \"zarro build\"",
     "build-release": "cross-env BUILD_CONFIGURATION=Release run-s clean-build \"zarro build\"",
+    "build-site": "run-s \"zarro build-site\"",
     "zip": "run-s \"zarro zip\"",
     "dump-env": "node -e \"console.log(process.env);\"",
     "release": "run-s build-release zip",
@@ -27,6 +28,7 @@
     "gulp-zip": "^5.0.1",
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",
-    "zarro": "^1.77.0"
+    "zarro": "^1.77.0",
+    "which": "^2.0.2"
   }
 }
