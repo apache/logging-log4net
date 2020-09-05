@@ -27,3 +27,5 @@ tracker is no longer accepting new issues but is available at
 https://issues.apache.org/jira/browse/LOG4NET for access to 
 previous issues. 
 
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) and 
+[BUILDING.md](BUILDING.md)

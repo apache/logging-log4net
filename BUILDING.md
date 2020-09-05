@@ -40,4 +40,7 @@ installed:
 - Linux: use your package manager
 
 The site will be generated in `target/site`, and can be viewed locally. Updates should
-be pushed to the `asf-staging` branch of [https://github.com/apache/logging-log4net-site]()
+be pushed to the `asf-staging` branch of [https://github.com/apache/logging-log4net-site](https://github.com/apache/logging-log4net-site])
+
+Once the site has been pushed to the `asf-staging` branch, it can be viewed at
+[http://logging.staged.apache.org/log4net](http://logging.staged.apache.org/log4net)
