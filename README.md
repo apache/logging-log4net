@@ -27,7 +27,6 @@ tracker is no longer accepting new issues but is available at
 https://issues.apache.org/jira/browse/LOG4NET for access to 
 previous issues. 
 
-
 Developing
 ==========
 
@@ -43,3 +42,5 @@ may be installed by using the bundled helper scripts:
 These scripts download the relevant installers from Microsoft servers,
 but you run them at your own risk.
 
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) and 
+[BUILDING.md](BUILDING.md)

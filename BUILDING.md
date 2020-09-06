@@ -36,5 +36,18 @@ Options:
     included which (should) build if you set up AppVeyer to track
     your fork. AppVeyer is free for open-source projects.
     (TODO: should have a link to the official AppVeyer build)
-- build via the CircleCI Windows image. There is included configuration for CircleCI.
-    CicleCI is free (with usage limitations) for open-source projects.
+
+## Updating the site
+
+Log4Net uses Maven to build the site. Source artifacts can be found under `src/site`.
+Building the site can be accomplished with `npm run build-site`. You should have maven
+installed:
+- Windows: get it from Scoop
+- OSX: get it from Homebrew
+- Linux: use your package manager
+
+The site will be generated in `target/site`, and can be viewed locally. Updates should
+be pushed to the `asf-staging` branch of [https://github.com/apache/logging-log4net-site](https://github.com/apache/logging-log4net-site])
+
+Once the site has been pushed to the `asf-staging` branch, it can be viewed at
+[http://logging.staged.apache.org/log4net](http://logging.staged.apache.org/log4net)
