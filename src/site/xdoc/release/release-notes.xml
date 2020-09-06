@@ -27,6 +27,22 @@ limitations under the License.
     <body>
 
         <section id="main" name="Apache log4net&#x2122; Release Notes">
+            <section id="2.0.10" name="2.0.10">
+                <p>
+                    Apache log4net 2.0.10 improves <code>netstandard2.0</code> support
+                    thanks to community member @NicholasNoise.
+                </p>
+                <section id="2.0.10-bug" name="Bug Fixes">
+                    <ul>
+                        <li>
+                            [<a href="https://issues.apache.org/jira/browse/LOG4NET-575">LOG4NET-575</a>]
+                            Addresses CVE-2018-1285 by cherry-picking the fix from
+                            Dominik Psenner, reported by Karthik Balasundaram, as it already
+                            existed in the the develop branch
+                        </li>
+                    </ul>
+                </section>
+            </section>
 
             <section id="2.0.9" name="2.0.9">
                 <p>
@@ -36,8 +52,12 @@ limitations under the License.
                 </p>
                 <section id="2.0.9-bug" name="Bug Fixes">
                     <ul>
-                        <li>[<a href="https://issues.apache.org/jira/browse/LOG4NET-559">LOG4NET-559</a>] Add null checkes to avoid issues thrown by custom appenders</li>
-                        <li>[<a href="https://issues.apache.org/jira/browse/LOG4NET-563">LOG4NET-563</a>] Site styling copied from log4j</li>
+                        <li>[<a href="https://issues.apache.org/jira/browse/LOG4NET-559">LOG4NET-559</a>] Add null
+                            checkes to avoid issues thrown by custom appenders
+                        </li>
+                        <li>[<a href="https://issues.apache.org/jira/browse/LOG4NET-563">LOG4NET-563</a>] Site styling
+                            copied from log4j
+                        </li>
                     </ul>
                 </section>
             </section>

@@ -10,7 +10,7 @@ gulp.task("zip", [ "zip-binaries", "zip-source"], () => Promise.resolve());
 gulp.task("zip-binaries", async () => {
   const version = await readVersion();
   return promisify(
-    gulp.src("build/Release/**/*")
+    gulp.src(["build/Release/**/*", "LICENSE", "NOTICE"])
       .pipe(zip(`log4net-binaries-${version}.zip`))
       .pipe(gulp.dest(target))
   );
