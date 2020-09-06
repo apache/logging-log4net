@@ -1,4 +1,4 @@
-#if NET_2_0
+#if NET_2_0 || NETSTANDARD2_0
 #region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more 
@@ -91,4 +91,4 @@ namespace log4net.Config
 }
 
 #endif // !NETCF
-#endif // NET_2_0
+#endif // NET_2_0 || NETSTANDARD2_0

@@ -19,7 +19,9 @@
 
 using System;
 using System.Collections;
+#if !NETSTANDARD1_3
 using System.Reflection;
+#endif
 
 using log4net.Appender;
 using log4net.Layout;

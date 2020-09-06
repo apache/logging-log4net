@@ -35,11 +35,10 @@ namespace log4net.Tests.Util
 	[TestFixture]
 	public class CyclicBufferTest
 	{
-		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[Test]
 		public void TestConstructorSize0()
 		{
-			CyclicBuffer cb = new CyclicBuffer(0);
-			Assert.IsNotNull(cb);
+			Assert.Throws<ArgumentOutOfRangeException>(() => new CyclicBuffer(0));
 		}
 
 		[Test]

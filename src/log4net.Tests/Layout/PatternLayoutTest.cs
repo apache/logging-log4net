@@ -19,6 +19,9 @@
 
 using System;
 using System.IO;
+#if !NETSTANDARD1_3
+using System.Globalization;
+#endif
 
 using log4net.Config;
 using log4net.Core;
@@ -29,7 +32,6 @@ using log4net.Tests.Appender;
 using log4net.Util;
 
 using NUnit.Framework;
-using System.Globalization;
 
 namespace log4net.Tests.Layout
 {
@@ -101,11 +103,8 @@ namespace log4net.Tests.Layout
 			stringAppender.Reset();
 		}
 
-#if NETSTANDARD1_3
-        [Test, Ignore("System.Diagnostics.StackTrace isn't fully implemented on NETSTANDARD1_3")]
-#else
+#if !NETSTANDARD1_3
         [Test]
-#endif
         public void TestStackTracePattern()
         {
             StringAppender stringAppender = new StringAppender();
@@ -120,6 +119,7 @@ namespace log4net.Tests.Layout
             StringAssert.EndsWith("PatternLayoutTest.TestStackTracePattern", stringAppender.GetString(), "stack trace value set");
             stringAppender.Reset();
         }
+#endif
 
 		[Test]
 		public void TestGlobalPropertiesPattern()

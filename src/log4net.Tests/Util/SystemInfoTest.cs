@@ -23,7 +23,7 @@ using log4net.Util;
 
 using NUnit.Framework;
 
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETSTANDARD
 using System.Linq.Expressions;
 using System.Reflection;
 #endif
@@ -37,7 +37,7 @@ namespace log4net.Tests.Util
 	public class SystemInfoTest
 	{
 
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETSTANDARD
 		/// <summary>
 		/// It's "does not throw not supported exception" NOT
 		/// "returns 'Dynamic Assembly' string for dynamic assemblies" by purpose.
@@ -117,9 +117,7 @@ namespace log4net.Tests.Util
 			Assert.AreSame(typeof(SystemInfoTest), t, "Test explicit case in-sensitive type load lower");
 		}
 
-#if NETSTANDARD1_3
-		[Ignore("This test relies on enumerating loaded assemblies, which is presently impossible in CoreFX (https://github.com/dotnet/corefx/issues/1784).")]
-#endif
+#if !NETSTANDARD1_3
 		[Test]
 		public void TestGetTypeFromStringSearch()
 		{
@@ -136,8 +134,9 @@ namespace log4net.Tests.Util
 			t = GetTypeFromString("log4net.util.systeminfo", false, true);
 			Assert.AreSame(typeof(SystemInfo), t, "Test explicit case in-sensitive type load lower");
 		}
+#endif
 
-		[Test, ExpectedException(typeof(TypeLoadException))]
+		[Test]
 		public void TestGetTypeFromStringFails1()
 		{
 			Type t;
@@ -145,10 +144,10 @@ namespace log4net.Tests.Util
 			t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", false, false);
 			Assert.AreSame(null, t, "Test explicit case sensitive fails type load");
 
-			t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", true, false);
+			Assert.Throws<TypeLoadException>(() => GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", true, false));
 		}
 
-		[Test, ExpectedException(typeof(TypeLoadException))]
+		[Test]
 		public void TestGetTypeFromStringFails2()
 		{
 			Type t;
@@ -156,7 +155,7 @@ namespace log4net.Tests.Util
 			t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", false, false);
 			Assert.AreSame(null, t, "Test explicit case sensitive fails type load");
 
-			t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", true, false);
+            Assert.Throws<TypeLoadException>(() =>  GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", true, false));
 		}
 
 		// Wraps SystemInfo.GetTypeFromString because the method relies on GetCallingAssembly, which is

@@ -17,7 +17,7 @@
 //
 #endregion
 
-#if NET_4_5 || NETSTANDARD1_3
+#if NET_4_5 || NETSTANDARD
 using System;
 using System.Threading.Tasks;
 using System.Linq;

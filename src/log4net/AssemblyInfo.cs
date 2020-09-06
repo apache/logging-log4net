@@ -106,8 +106,11 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyInformationalVersionAttribute("2.0.9.0-.NET")]
 [assembly: AssemblyTitle("Apache log4net for .NET Framework")]
 #elif (NETSTANDARD1_3)
-[assembly: AssemblyInformationalVersionAttribute("2.0.9.0-.NET Core 1.0")]
-[assembly: AssemblyTitle("Apache log4net for .NET Core 1.0")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.9.0-.NET Standard 1.3")]
+[assembly: AssemblyTitle("Apache log4net for .NET Standard 1.3")]
+#elif (NETSTANDARD2_0)
+[assembly: AssemblyInformationalVersionAttribute("2.0.9.0-.NET Standard 2.0")]
+[assembly: AssemblyTitle("Apache log4net for .NET Standard 2.0")]
 #elif (NETCF)
 [assembly: AssemblyInformationalVersionAttribute("2.0.9.0-.NETCF")]
 [assembly: AssemblyTitle("Apache log4net for .NET Compact Framework")]
@@ -163,4 +166,10 @@ using System.Runtime.CompilerServices;
 #endif
 // We do not use a CSP key for strong naming
 // [assembly: AssemblyKeyName("")]
+
+[assembly: InternalsVisibleTo("log4net.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100297dcac908e286"
+    + "89360399027b0ea4cd852fbb74e1ed95e695a5ba55cbd1d075ec20cdb5fa6fc593d3d571527b20"
+    + "558d6f39e1f4d5cfe0798428c589c311965244b209c38a02aaa8c9da3b72405b6fedeeb4292c34"
+    + "57e9769b74e645c19cb06c2be75fb2d12281a585fbeabf7bd195d6961ba113286fc3e286d7bbd6"
+    + "9024ceda")]
 

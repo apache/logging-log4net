@@ -18,7 +18,7 @@
 #endregion
 
 using System;
-#if !(NETCF || NETSTANDARD1_3)
+#if !NETCF && !NETSTANDARD1_3
 using System.Runtime.Serialization;
 #endif
 
@@ -92,7 +92,7 @@ namespace log4net.Util.TypeConverters
 
 		#region Protected Instance Constructors
 
-#if !(NETCF || NETSTANDARD1_3)
+#if !NETCF && !NETSTANDARD1_3
 		/// <summary>
 		/// Serialization constructor
 		/// </summary>

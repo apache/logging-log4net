@@ -19,9 +19,6 @@
 
 using System;
 using System.Collections;
-#if !NETSTANDARD1_3
-using System.Configuration;
-#endif
 using System.Diagnostics;
 
 namespace log4net.Util

@@ -17,6 +17,9 @@
 //
 #endregion
 
+// .NET Compact Framework 1.0 && netstandard has no support for System.Runtime.Remoting
+#if NET_2_0
+
 using System;
 using System.Collections;
 using System.Reflection;
@@ -283,7 +286,7 @@ namespace log4net.Tests.Appender
         /// <summary>
         /// Close down remoting infrastructure
         /// </summary>
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void UnregisterRemotingServerChannel() {
             if (m_remotingChannel != null) {
                 ((TcpChannel) m_remotingChannel).StopListening(null);
@@ -449,3 +452,5 @@ namespace log4net.Tests.Appender.Remoting.Data
 		}
 	}
 }
+
+#endif // NET_2_0

@@ -18,12 +18,7 @@
 #endregion
 
 using System;
-#if NETSTANDARD1_3
-using System.Reflection;
-#endif
 
-using log4net;
-using log4net.Core;
 using log4net.Util.TypeConverters;
 
 namespace log4net.Layout
