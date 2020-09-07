@@ -18,7 +18,6 @@
 #endregion
 
 using System;
-using System.Collections;
 
 using log4net.Appender;
 using log4net.Util;
@@ -432,7 +431,7 @@ namespace log4net.Repository.Hierarchy
 			{
 				log4net.Util.LogLog.Error(declaringType, "Exception while logging", ex);
 			}
-#if !NET_2_0 && !MONO_2_0 && !MONO_3_5 && !MONO_4_0 && !NETSTANDARD1_3
+#if !NET_2_0 && !MONO_2_0 && !MONO_3_5 && !MONO_4_0 && !NETSTANDARD
 			catch
 			{
 				log4net.Util.LogLog.Error(declaringType, "Exception while logging");
@@ -469,7 +468,7 @@ namespace log4net.Repository.Hierarchy
 			{
 				log4net.Util.LogLog.Error(declaringType, "Exception while logging", ex);
 			}
-#if !NET_2_0 && !MONO_2_0 && !MONO_3_5 && !MONO_4_0 && !NETSTANDARD1_3
+#if !NET_2_0 && !MONO_2_0 && !MONO_3_5 && !MONO_4_0 && !NETSTANDARD
 			catch
 			{
 				log4net.Util.LogLog.Error(declaringType, "Exception while logging");
@@ -509,7 +508,7 @@ namespace log4net.Repository.Hierarchy
 			{
 				log4net.Util.LogLog.Error(declaringType, "Exception while logging", ex);
 			}
-#if !NET_2_0 && !MONO_2_0 && !MONO_3_5 && !MONO_4_0 && !NETSTANDARD1_3
+#if !NET_2_0 && !MONO_2_0 && !MONO_3_5 && !MONO_4_0 && !NETSTANDARD
 			catch
 			{
 				log4net.Util.LogLog.Error(declaringType, "Exception while logging");
@@ -606,7 +605,7 @@ namespace log4net.Repository.Hierarchy
 				{
 					LogLog.Debug(declaringType, "    Current AppDomain context information: ");
 					LogLog.Debug(declaringType, "       BaseDirectory   : " + SystemInfo.ApplicationBaseDirectory);
-#if !(NETCF || NETSTANDARD1_3)
+#if !NETCF && !NETSTANDARD1_3
 					LogLog.Debug(declaringType, "       FriendlyName    : " + AppDomain.CurrentDomain.FriendlyName);
 					LogLog.Debug(declaringType, "       DynamicDirectory: " + AppDomain.CurrentDomain.DynamicDirectory);
 #endif

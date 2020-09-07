@@ -21,10 +21,15 @@
 
 using System;
 using System.Data;
+#if NETSTANDARD1_3
+using System.Reflection;
+#endif
 using System.Xml;
 using log4net.Appender;
 using log4net.Config;
+#if !NETSTANDARD1_3
 using log4net.Core;
+#endif
 using log4net.Layout;
 using log4net.Repository;
 using log4net.Tests.Appender.AdoNet;
@@ -43,13 +48,18 @@ namespace log4net.Tests.Appender
 
             AdoNetAppender adoNetAppender = new AdoNetAppender();
             adoNetAppender.BufferSize = -1;
+#if NETSTANDARD1_3
+            adoNetAppender.ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName;
+#else
             adoNetAppender.ConnectionType = "log4net.Tests.Appender.AdoNet.Log4NetConnection";
+#endif
             adoNetAppender.ActivateOptions();
 
             BasicConfigurator.Configure(rep, adoNetAppender);
 
             ILog log = LogManager.GetLogger(rep.Name, "NoBufferingTest");
             log.Debug("Message");
+            Assert.NotNull(Log4NetCommand.MostRecentInstance);
             Assert.AreEqual(1, Log4NetCommand.MostRecentInstance.ExecuteNonQueryCount);
         }
 
@@ -62,7 +72,11 @@ namespace log4net.Tests.Appender
 
             AdoNetAppender adoNetAppender = new AdoNetAppender();
             adoNetAppender.BufferSize = bufferSize;
+#if NETSTANDARD1_3
+            adoNetAppender.ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName;
+#else
             adoNetAppender.ConnectionType = "log4net.Tests.Appender.AdoNet.Log4NetConnection";
+#endif
             adoNetAppender.ActivateOptions();
 
             BasicConfigurator.Configure(rep, adoNetAppender);
@@ -74,9 +88,11 @@ namespace log4net.Tests.Appender
                 Assert.IsNull(Log4NetCommand.MostRecentInstance);
             }
             log.Debug("Message");
+            Assert.NotNull(Log4NetCommand.MostRecentInstance);
             Assert.AreEqual(bufferSize+1, Log4NetCommand.MostRecentInstance.ExecuteNonQueryCount);
         }
 
+#if !NETSTANDARD1_3
         [Test]
         public void WebsiteExample()
         {
@@ -147,6 +163,7 @@ namespace log4net.Tests.Appender
 
             IDbCommand command = Log4NetCommand.MostRecentInstance;
             
+            Assert.NotNull(command);
             Assert.AreEqual(
                 "INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message],[Exception]) VALUES (@log_date, @thread, @log_level, @logger, @message, @exception)",
                 command.CommandText);
@@ -240,6 +257,7 @@ namespace log4net.Tests.Appender
 
             IDbCommand command = Log4NetCommand.MostRecentInstance;
 
+            Assert.NotNull(command);
             Assert.AreEqual(
                 "INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message],[Exception]) VALUES (@log_date, @thread, @log_level, @logger, @message, @exception)",
                 command.CommandText);
@@ -258,6 +276,7 @@ namespace log4net.Tests.Appender
             param = (IDbDataParameter)command.Parameters["@exception"];
             Assert.IsEmpty((string)param.Value);
         }
+#endif
 
         [Test]
         public void NullPropertyXmlConfig()
@@ -293,6 +312,8 @@ namespace log4net.Tests.Appender
             
             log.Debug("Message");
             IDbCommand command = Log4NetCommand.MostRecentInstance;
+            Assert.NotNull(command);
+
             IDbDataParameter param = (IDbDataParameter)command.Parameters["@productId"];
             Assert.AreNotEqual(SystemInfo.NullText, param.Value);
             Assert.AreEqual(DBNull.Value, param.Value);
@@ -310,7 +331,11 @@ namespace log4net.Tests.Appender
             productIdParam.Layout = rawPropertyLayout;
 
             AdoNetAppender appender = new AdoNetAppender();
+#if NETSTANDARD1_3
+            appender.ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName;
+#else
             appender.ConnectionType = typeof(Log4NetConnection).FullName;
+#endif
             appender.BufferSize = -1;
             appender.CommandText = "INSERT INTO Log ([productId]) VALUES (@productId)";
             appender.AddParameter(productIdParam);
@@ -322,6 +347,8 @@ namespace log4net.Tests.Appender
             
             log.Debug("Message");
             IDbCommand command = Log4NetCommand.MostRecentInstance;
+            Assert.NotNull(command);
+
             IDbDataParameter param = (IDbDataParameter)command.Parameters["@productId"];
             Assert.AreNotEqual(SystemInfo.NullText, param.Value);
             Assert.AreEqual(DBNull.Value, param.Value);

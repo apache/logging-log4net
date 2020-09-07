@@ -19,16 +19,14 @@
  *
 */
 
-#if NET_4_0 || MONO_3_5 || MONO_4_0
+#if NET_4_0 || MONO_3_5 || MONO_4_0 || NETSTANDARD
 
 using System;
 using System.Linq;
 using System.Threading;
 using NUnit.Framework;
-using log4net;
 using log4net.Appender;
 using log4net.Config;
-using log4net.Core;
 using log4net.Layout;
 using log4net.Repository;
 

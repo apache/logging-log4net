@@ -18,6 +18,8 @@
  *
 */
 
+#if NET_2_0
+
 using System;
 using System.Diagnostics;
 using log4net.Appender;
@@ -113,7 +115,6 @@ namespace log4net.Tests.Appender
             Debug.Listeners.Remove(categoryTraceListener);
         }
 
-#if !NETSTANDARD1_3 // "LocationInfo can't get method names on NETSTANDARD1_3 due to unavailable stack frame APIs"
         [Test]
         public void MethodNameCategoryTest()
         {
@@ -140,7 +141,6 @@ namespace log4net.Tests.Appender
 
             Debug.Listeners.Remove(categoryTraceListener);
         }
-#endif
 
         private class TestErrorHandler : IErrorHandler
         {
@@ -171,3 +171,5 @@ namespace log4net.Tests.Appender
         }
     }
 }
+
+#endif

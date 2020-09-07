@@ -242,3 +242,4 @@ build-tools
 buildreports
 vs_buildtools.exe
 dotnetfx35.exe
+*.exe

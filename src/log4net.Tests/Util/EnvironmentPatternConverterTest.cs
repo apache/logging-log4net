@@ -21,11 +21,10 @@
 
 // .NET Compact Framework 1.0 has no support for Environment.GetEnvironmentVariable()
 // .NET Framework version 1.0 / 1.1 do not have support for SetEnvironmentVariable which is used in these tests.
-#if !NETCF && NET_2_0
+#if !NETCF && (NET_2_0 || NETSTANDARD2_0)
 
 using System;
 using System.IO;
-using System.Text;
 using NUnit.Framework;
 
 namespace log4net.Tests.Util

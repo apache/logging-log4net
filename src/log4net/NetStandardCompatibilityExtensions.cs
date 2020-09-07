@@ -37,9 +37,11 @@ namespace log4net
         public static void Close(this Socket socket) => socket.Dispose();
         public static void Close(this Stream stream) => stream.Dispose();
         public static void Close(this StreamWriter streamWriter) => streamWriter.Dispose();
+        public static void Close(this StreamReader streamReader) => streamReader.Dispose();
         public static void Close(this UdpClient client) => client.Dispose();
         public static void Close(this WebResponse response) => response.Dispose();
         public static void Close(this XmlWriter xmlWriter) => xmlWriter.Dispose();
+        public static void Close(this TextWriter textWriter) => textWriter.Dispose();
 
         public static Attribute[] GetCustomAttributes(this Type type, Type other, bool inherit) => type.GetTypeInfo().GetCustomAttributes(other, inherit).Cast<Attribute>().ToArray();
         public static bool IsAssignableFrom(this Type type, Type other) => type.GetTypeInfo().IsAssignableFrom(other.GetTypeInfo());

@@ -19,7 +19,9 @@
 
 using System;
 using System.Collections;
+#if NETSTANDARD1_3
 using System.Reflection;
+#endif
 using System.Runtime.Serialization;
 using System.Xml;
 
@@ -90,7 +92,7 @@ namespace log4net.Util
 
 		#region Private Instance Constructors
 
-#if !(NETCF || NETSTANDARD1_3)
+#if !NETCF
 		/// <summary>
 		/// Deserialization constructor
 		/// </summary>
@@ -202,10 +204,11 @@ namespace log4net.Util
 		/// Serializes this object into the <see cref="SerializationInfo" /> provided.
 		/// </para>
 		/// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETSTANDARD
         [System.Security.SecurityCritical]
-#else
-		[System.Security.Permissions.SecurityPermissionAttribute(System.Security.Permissions.SecurityAction.Demand, SerializationFormatter=true)]
+#endif
+#if !NETCF && !NETSTANDARD1_3
+		[System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, SerializationFormatter = true)]
 #endif
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{

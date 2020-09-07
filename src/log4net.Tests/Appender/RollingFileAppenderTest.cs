@@ -1507,12 +1507,9 @@ namespace log4net.Tests.Appender
 		}
 
 		private static void AssertFileEquals(string filename, string contents)
-		{
-#if NETSTANDARD1_3
-			StreamReader sr = new StreamReader(File.Open(filename, FileMode.Open));
-#else
-			StreamReader sr = new StreamReader(filename);
-#endif
+        {
+            FileInfo fileinfo = new FileInfo(filename);
+			StreamReader sr = new StreamReader(fileinfo.OpenRead());
 			string logcont = sr.ReadToEnd();
 			sr.Close();
 
@@ -1527,7 +1524,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestLogOutput()
 		{
-			String filename = "test.log";
+			string filename ="test_simple.log";
 			SilentErrorHandler sh = new SilentErrorHandler();
 			ILogger log = CreateLogger(filename, new FileAppender.ExclusiveLock(), sh);
 			log.Log(GetType(), Level.Info, "This is a message", null);
@@ -1544,7 +1541,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestExclusiveLockFails()
 		{
-			String filename = "test.log";
+			string filename ="test_exclusive_lock_fails.log";
 
 			FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
 			fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
@@ -1566,7 +1563,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestExclusiveLockRecovers()
 		{
-			String filename = "test.log";
+			string filename ="test_exclusive_lock_recovers.log";
 
 			FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
 			fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
@@ -1588,7 +1585,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestExclusiveLockLocks()
 		{
-			String filename = "test.log";
+			string filename ="test_exclusive_lock_locks.log";
 			bool locked = false;
 
 			SilentErrorHandler sh = new SilentErrorHandler();
@@ -1628,7 +1625,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestMinimalLockFails()
 		{
-			String filename = "test.log";
+			string filename ="test_minimal_lock_fails.log";
 
 			FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
 			fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
@@ -1650,7 +1647,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestMinimalLockRecovers()
 		{
-			String filename = "test.log";
+			string filename ="test_minimal_lock_recovers.log";
 
 			FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
 			fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
@@ -1672,7 +1669,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestMinimalLockUnlocks()
 		{
-			String filename = "test.log";
+			string filename ="test_minimal_lock_unlocks.log";
 			bool locked;
 
 			SilentErrorHandler sh = new SilentErrorHandler();
@@ -1698,7 +1695,7 @@ namespace log4net.Tests.Appender
         /// </summary>
         [Test]
         public void TestInterProcessLockFails() {
-            String filename = "test.log";
+            string filename ="test_interprocess_lock_fails.log";
 
             FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
             fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
@@ -1719,7 +1716,7 @@ namespace log4net.Tests.Appender
         /// </summary>
         [Test]
         public void TestInterProcessLockRecovers() {
-            String filename = "test.log";
+            string filename ="test_interprocess_lock_recovers.log";
 
             FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
             fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
@@ -1740,7 +1737,7 @@ namespace log4net.Tests.Appender
         /// </summary>
         [Test]
         public void TestInterProcessLockUnlocks() {
-            String filename = "test.log";
+            string filename ="test_interprocess_lock_unlocks.log";
             bool locked;
 
             SilentErrorHandler sh = new SilentErrorHandler();
@@ -1766,7 +1763,7 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestInterProcessLockRoll()
 		{
-			String filename = "test.log";
+			string filename ="test_interprocess_lock_roll.log";
 
 			SilentErrorHandler sh = new SilentErrorHandler();
 			ILogger log = CreateLogger(filename, new FileAppender.InterProcessLock(), sh, 1, 2);
@@ -1788,7 +1785,8 @@ namespace log4net.Tests.Appender
 		[Test]
 		public void TestDefaultLockingModel()
 		{
-			String filename = "test.log";
+			string filename ="test_default.log";
+
 			SilentErrorHandler sh = new SilentErrorHandler();
 			ILogger log = CreateLogger(filename, null, sh);
 

@@ -18,10 +18,12 @@
 #endregion
 
 using System;
+#if !NETCF && !NETSTANDARD1_3
 using System.Collections;
 using System.Diagnostics;
 
 using log4net.Util;
+#endif
 
 namespace log4net.Core
 {
@@ -83,7 +85,7 @@ namespace log4net.Core
 			m_methodName = NA;
 			m_fullInfo = NA;
 
-#if !(NETCF || NETSTANDARD1_3) // StackTrace isn't fully implemented for NETSTANDARD1_3 https://github.com/dotnet/corefx/issues/1797
+#if !NETCF && !NETSTANDARD1_3 // StackTrace isn't fully implemented for NETSTANDARD1_3 https://github.com/dotnet/corefx/issues/1797
 			if (callerStackBoundaryDeclaringType != null)
 			{
 				try
@@ -271,7 +273,7 @@ namespace log4net.Core
 			get { return m_fullInfo; }
 		}
 		
-#if !(NETCF || NETSTANDARD1_3)
+#if !NETCF && !NETSTANDARD1_3
 		/// <summary>
 		/// Gets the stack frames from the stack trace of the caller making the log request
 		/// </summary>
@@ -290,7 +292,7 @@ namespace log4net.Core
 		private readonly string m_lineNumber;
 		private readonly string m_methodName;
 		private readonly string m_fullInfo;
-#if !(NETCF || NETSTANDARD1_3)
+#if !NETCF && !NETSTANDARD1_3
 		private readonly StackFrameItem[] m_stackFrames;
 #endif
 

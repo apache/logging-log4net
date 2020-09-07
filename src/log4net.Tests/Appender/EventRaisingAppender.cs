@@ -20,11 +20,8 @@
 */
 
 #if !NET_2_0 && !MONO_2_0
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace log4net.Tests.Appender
 {

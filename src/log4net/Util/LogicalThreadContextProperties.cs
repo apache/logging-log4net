@@ -21,11 +21,11 @@
 #if !NETCF
 
 using System;
-#if !NETSTANDARD1_3
+#if !NETSTANDARD
 using System.Runtime.Remoting.Messaging;
 #endif
 using System.Security;
-#if NETSTANDARD1_3
+#if NETSTANDARD
 using System.Threading;
 #endif
 
@@ -59,11 +59,11 @@ namespace log4net.Util
 	/// <author>Nicko Cadell</author>
 	public sealed class LogicalThreadContextProperties : ContextPropertiesBase
 	{
-		#if NETSTANDARD1_3
+#if NETSTANDARD
 		private static readonly AsyncLocal<PropertiesDictionary> AsyncLocalDictionary = new AsyncLocal<PropertiesDictionary>();
-		#else
+#else
 		private const string c_SlotName = "log4net.Util.LogicalThreadContextProperties";
-		#endif
+#endif
 		
 		/// <summary>
 		/// Flag used to disable this context if we don't have permission to access the CallContext.
@@ -225,12 +225,12 @@ namespace log4net.Util
 		/// security link demand, therfore we must put the method call in a seperate method
 		/// that we can wrap in an exception handler.
 		/// </remarks>
-#if NET_4_0 || MONO_4_0
+#if NET_4_0 || MONO_4_0 || NETSTANDARD
         [System.Security.SecuritySafeCritical]
 #endif
         private static PropertiesDictionary GetLogicalProperties()
 		{
-#if NETSTANDARD1_3
+#if NETSTANDARD
             return AsyncLocalDictionary.Value;
 #elif NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0
             return CallContext.LogicalGetData(c_SlotName) as PropertiesDictionary;
@@ -248,12 +248,12 @@ namespace log4net.Util
 		/// security link demand, therfore we must put the method call in a seperate method
 		/// that we can wrap in an exception handler.
 		/// </remarks>
-#if NET_4_0 || MONO_4_0
+#if NET_4_0 || MONO_4_0 || NETSTANDARD
         [System.Security.SecuritySafeCritical]
 #endif
         private static void SetLogicalProperties(PropertiesDictionary properties)
 		{
-#if NETSTANDARD1_3
+#if NETSTANDARD
 			AsyncLocalDictionary.Value = properties;
 #elif NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0
 			CallContext.LogicalSetData(c_SlotName, properties);

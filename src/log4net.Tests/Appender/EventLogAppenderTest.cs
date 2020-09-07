@@ -17,6 +17,9 @@
 //
 #endregion
 
+// netstandard doesn't support EventLog
+#if NET_2_0
+
 using System.Diagnostics;
 
 using log4net.Appender;
@@ -98,3 +101,5 @@ namespace log4net.Tests.Appender
 
 	}
 }
+
+#endif // NET_2_0

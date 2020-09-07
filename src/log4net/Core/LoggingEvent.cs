@@ -22,9 +22,7 @@ using System.Collections;
 using System.IO;
 using System.Runtime.Serialization;
 #if !NETCF && !NETSTANDARD1_3
-#if !NETSTANDARD1_3
 using System.Security.Principal;
-#endif
 #endif
 
 using log4net.Util;
@@ -1091,10 +1089,11 @@ namespace log4net.Core
 		/// is to be used outside that method.
 		/// </para>
 		/// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETSTANDARD
         [System.Security.SecurityCritical]
-#else
-		[System.Security.Permissions.SecurityPermissionAttribute(System.Security.Permissions.SecurityAction.Demand, SerializationFormatter=true)]
+#endif
+#if !NETCF && !NETSTANDARD1_3
+		[System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, SerializationFormatter = true)]
 #endif
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{

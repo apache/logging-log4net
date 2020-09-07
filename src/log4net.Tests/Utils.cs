@@ -39,7 +39,12 @@ namespace log4net.Tests
 
 		public static object CreateInstance(Type targetType)
 		{
+#if NETSTANDARD1_3
+
+			return targetType.GetConstructor(new Type[0]).Invoke(null);
+#else
 			return targetType.GetConstructor(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance, null, new Type[0], null).Invoke(null);
+#endif
 		}
 
 		public static object InvokeMethod(object target, string name, params object[] args)

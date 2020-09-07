@@ -18,6 +18,13 @@ Options:
             - on Win10+, this can only be installed via Add/Remove Windows Components
             - on other platforms, see https://dotnet.microsoft.com/download/dotnet-framework/net35-sp1
             - Building against .net 2/3.5, especially Client Profile, is not supported on Mono
+        - Log4Net supports some older, out-of-support .net SDKs, particularly
+          dotnet core 1.1 and .net framework client profiles for 3.5 and 4.0.
+          There are helper powershell scripts in the root of this
+          repository to assist with obtaining and installing these
+          SDKs from Microsoft servers. Please see:
+            - [install-dotnet-core-sdk-1.1.ps1](install-dotnet-core-sdk-1.1.ps1)
+            - [install-net-framework-sdk-3.5.ps1](install-net-framework-sdk-3.5.ps1)
     - Binaries can be built with a Visual Studio or Rider installation
     - Binaries, packages and a release zip can be built via commandline
         - Ensure that you have a reasonably modern NodeJS installed (at least version 8+)
@@ -29,5 +36,18 @@ Options:
     included which (should) build if you set up AppVeyer to track
     your fork. AppVeyer is free for open-source projects.
     (TODO: should have a link to the official AppVeyer build)
-- build via the CircleCI Windows image. There is included configuration for CircleCI.
-    CicleCI is free (with usage limitations) for open-source projects.
+
+## Updating the site
+
+Log4Net uses Maven to build the site. Source artifacts can be found under `src/site`.
+Building the site can be accomplished with `npm run build-site`. You should have maven
+installed:
+- Windows: get it from Scoop
+- OSX: get it from Homebrew
+- Linux: use your package manager
+
+The site will be generated in `target/site`, and can be viewed locally. Updates should
+be pushed to the `asf-staging` branch of [https://github.com/apache/logging-log4net-site](https://github.com/apache/logging-log4net-site])
+
+Once the site has been pushed to the `asf-staging` branch, it can be viewed at
+[http://logging.staged.apache.org/log4net](http://logging.staged.apache.org/log4net)

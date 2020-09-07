@@ -33,17 +33,17 @@ limitations under the License.
       <p>Users who download the ZIP files to Windows may need to unblock the
       archive (right click on the ZIP and press the "Unblock" button)
       before extracting it.</p>
-  
+
     </section>
 
-    <section name="log4net 2.0.8">
+    <section name="log4net 2.0.10">
 
       <subsection name="Source">
         <table>
           <tr>
-            <td><a href="https://downloads.apache.org/logging/log4net/source/apache-log4net-source-2.0.9.zip">apache-log4net-source-2.0.9.zip</a></td>
-            <td><a href="https://downloads.apache.org/logging/log4net/source/apache-log4net-source-2.0.9.zip.sha512">sha512</a></td>
-            <td><a href="https://downloads.apache.org/logging/log4net/source/apache-log4net-source-2.0.9.zip.asc">pgp</a></td>
+            <td><a href="https://downloads.apache.org/logging/log4net/source/apache-log4net-source-2.0.10.zip">apache-log4net-source-2.0.10.zip</a></td>
+            <td><a href="https://downloads.apache.org/logging/log4net/source/apache-log4net-source-2.0.10.zip.sha512">sha512</a></td>
+            <td><a href="https://downloads.apache.org/logging/log4net/source/apache-log4net-source-2.0.10.zip.asc">pgp</a></td>
           </tr>
         </table>
       </subsection>
@@ -52,14 +52,14 @@ limitations under the License.
         <p>Binaries are available in a zip file or nupkg, which is also available from <a href="https://www.nuget.org/packages/log4net/">nuget.org</a></p>
         <table>
           <tr>
-            <td><a href="https://downloads.apache.org/logging/binaries/log4net-binaries-2.0.9.zip">log4net-2.0.8-bin-newkey.zip</a></td>
-            <td><a href="https://downloads.apache.org/logging/binaries/log4net-binaries-2.0.9.zip.sha512">sha512</a></td>
-            <td><a href="https://downloads.apache.org/logging/binaries/log4net-binaries-2.0.9.zip.asc">pgp</a></td>
-          </tr>          
+            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net-binaries-2.0.10.zip">log4net-binaries-2.0.10.zip</a></td>
+            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net-binaries-2.0.10.zip.sha512">sha512</a></td>
+            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net-binaries-2.0.10.zip.asc">pgp</a></td>
+          </tr>
           <tr>
-            <td><a href="https://downloads.apache.org/logging/binaries/log4net-2.0.9.nupkg">log4net-2.0.8-bin-newkey.zip</a></td>
-            <td><a href="https://downloads.apache.org/logging/binaries/log4net-2.0.9.nupkg.sha512">sha512</a></td>
-            <td><a href="https://downloads.apache.org/logging/binaries/log4net-2.0.9.nupkg.asc">pgp</a></td>
+            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net.2.0.10.nupkg">log4net-2.0.10.nupkg</a></td>
+            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net.2.0.10.nupkg.sha512">sha512</a></td>
+            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net.2.0.10.nupkg.asc">pgp</a></td>
           </tr>
         </table>
       </subsection>

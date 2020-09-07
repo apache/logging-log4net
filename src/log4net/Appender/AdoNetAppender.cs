@@ -1,4 +1,3 @@
-#if NET_2_0  // TODO: test for netstandard 2
 #region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more 
@@ -23,9 +22,14 @@
 
 using System;
 using System.Collections;
+#if !NETSTANDARD1_3
 using System.Configuration;
+#endif
 using System.Data;
 using System.IO;
+#if NETSTANDARD1_3
+using System.Reflection;
+#endif
 
 using log4net.Util;
 using log4net.Layout;
@@ -183,7 +187,6 @@ namespace log4net.Appender
 			set { m_appSettingsKey = value; }
 		}
 
-#if NET_2_0
 		/// <summary>
 		/// The connectionStrings key from App.Config that contains the connection string.
 		/// </summary>
@@ -195,7 +198,6 @@ namespace log4net.Appender
 			get { return m_connectionStringName; }
 			set { m_connectionStringName = value; }
 		}
-#endif
 
 		/// <summary>
 		/// Gets or sets the type name of the <see cref="IDbConnection"/> connection
@@ -654,7 +656,7 @@ namespace log4net.Appender
 				return ConnectionString;
 			}
 
-#if NET_2_0
+#if !NETSTANDARD1_3
 			if (!String.IsNullOrEmpty(ConnectionStringName))
 			{
 				ConnectionStringSettings settings = ConfigurationManager.ConnectionStrings[ConnectionStringName];
@@ -704,7 +706,12 @@ namespace log4net.Appender
 		{
 			try
 			{
+#if NETSTANDARD1_3
+				// NETSTANDARD1_3 requires comma separated ConnectionType like `System.Data.SqlClient.SqlConnection, System.Data` to work properly.
+				return SystemInfo.GetTypeFromString((Assembly)null, ConnectionType, true, false);
+#else
 				return SystemInfo.GetTypeFromString(ConnectionType, true, false);
+#endif
 			}
 			catch (Exception ex)
 			{
@@ -810,12 +817,10 @@ namespace log4net.Appender
 		/// </summary>
 		private string m_appSettingsKey;
 
-#if NET_2_0
 		/// <summary>
 		/// The connectionStrings key from App.Config that contains the connection string.
 		/// </summary>
 		private string m_connectionStringName;
-#endif
 
 		/// <summary>
 		/// String type name of the <see cref="IDbConnection"/> type name.
@@ -1150,4 +1155,3 @@ namespace log4net.Appender
 }
 
 #endif // !SSCLI
-#endif // NET_2_0

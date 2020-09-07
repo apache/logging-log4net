@@ -341,8 +341,8 @@ namespace log4net
 		{
 			ShutdownRepository(Assembly.GetCallingAssembly());
 		}
-
 #endif
+
 		/// <summary>
 		/// Shuts down the repository for the repository specified.
 		/// </summary>

@@ -18,12 +18,6 @@
 #endregion
 
 using System;
-#if NETSTANDARD1_3
-using System.Reflection;
-#endif
-using System.Text;
-
-using log4net.Util;
 
 namespace log4net.Util.TypeConverters
 {

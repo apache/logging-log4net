@@ -29,11 +29,9 @@
 #if !CLI_1_0
 
 using System;
-using System.Globalization;
 using System.Runtime.InteropServices;
 
 using log4net.Util;
-using log4net.Layout;
 using log4net.Core;
 
 
@@ -304,13 +302,13 @@ namespace log4net.Appender
 		/// Sends the event using a network message.
 		/// </para>
 		/// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
-        [System.Security.SecuritySafeCritical]
+#if NET_4_0 || MONO_4_0 || NETSTANDARD
+		[System.Security.SecuritySafeCritical]
 #endif
 #if !NETSTANDARD1_3
-        [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
+		[System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
 #endif
-        protected override void Append(LoggingEvent loggingEvent) 
+		protected override void Append(LoggingEvent loggingEvent) 
 		{
 			NativeError nativeError = null;
 

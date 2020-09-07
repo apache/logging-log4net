@@ -21,16 +21,10 @@
 
 #if !NET_2_0 && !MONO_2_0
 using System;
-using System.Data;
-using System.Xml;
-using log4net.Appender;
+using System.Globalization;
 using log4net.Config;
 using log4net.Core;
-using log4net.Layout;
-using log4net.Repository;
-using log4net.Util;
 using NUnit.Framework;
-using System.Globalization;
 
 namespace log4net.Tests.Appender
 {

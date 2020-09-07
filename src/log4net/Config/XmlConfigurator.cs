@@ -21,11 +21,12 @@ using System;
 using System.Xml;
 using System.Collections;
 using System.IO;
+#if !NETCF && !NETSTANDARD1_3
 using System.Reflection;
+#endif
 using System.Threading;
 using System.Net;
 
-using log4net.Appender;
 using log4net.Util;
 using log4net.Repository;
 
@@ -127,12 +128,7 @@ namespace log4net.Config
 #else
 			try
 			{
-				XmlElement configElement = null;
-#if NET_2_0
-				configElement = System.Configuration.ConfigurationManager.GetSection("log4net") as XmlElement;
-#else
-				configElement = System.Configuration.ConfigurationSettings.GetConfig("log4net") as XmlElement;
-#endif
+				XmlElement configElement = System.Configuration.ConfigurationManager.GetSection("log4net") as XmlElement;
 				if (configElement == null)
 				{
 					// Failed to load the xml config using configuration settings handler
@@ -651,7 +647,7 @@ namespace log4net.Config
 #endif
 						try
 						{
-#if NETSTANDARD1_3
+#if NETSTANDARD
 							using WebResponse response = configRequest.GetResponseAsync().GetAwaiter().GetResult();
 #else
 							using WebResponse response = configRequest.GetResponse();
@@ -718,14 +714,14 @@ namespace log4net.Config
 #if (NETCF)
 					// Create a text reader for the file stream
 					XmlTextReader xmlReader = new XmlTextReader(configStream);
-#elif NET_2_0 || NETSTANDARD1_3
+#elif NET_2_0 || NETSTANDARD
 					// Allow the DTD to specify entity includes
 					XmlReaderSettings settings = new XmlReaderSettings();
                                         // .NET 4.0 warning CS0618: 'System.Xml.XmlReaderSettings.ProhibitDtd'
                                         // is obsolete: 'Use XmlReaderSettings.DtdProcessing property instead.'
 #if NETSTANDARD1_3 // TODO DtdProcessing.Parse not yet available (https://github.com/dotnet/corefx/issues/4376)
 					settings.DtdProcessing = DtdProcessing.Ignore;
-#elif !NET_4_0 && !MONO_4_0
+#elif !NET_4_0 && !MONO_4_0 && !NETSTANDARD2_0
 					settings.ProhibitDtd = true;
 #else
 					settings.DtdProcessing = DtdProcessing.Ignore;
@@ -959,7 +955,7 @@ namespace log4net.Config
 			/// Initializes a new instance of the <see cref="ConfigureAndWatchHandler" /> class.
 			/// </para>
 			/// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETSTANDARD
             [System.Security.SecuritySafeCritical]
 #endif
             public ConfigureAndWatchHandler(ILoggerRepository repository, FileInfo configFile)
@@ -1039,7 +1035,7 @@ namespace log4net.Config
             /// <summary>
             /// Release the handles held by the watcher and timer.
             /// </summary>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD1_3
+#if NET_4_0 || MONO_4_0 || NETSTANDARD
             [System.Security.SecuritySafeCritical]
 #endif
             public void Dispose()

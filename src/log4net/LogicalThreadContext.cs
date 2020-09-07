@@ -20,9 +20,6 @@
 // .NET Compact Framework 1.0 has no support for System.Runtime.Remoting.Messaging.CallContext
 #if !NETCF
 
-using System;
-using System.Collections;
-
 using log4net.Util;
 
 namespace log4net

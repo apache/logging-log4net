@@ -638,7 +638,7 @@ namespace log4net.Repository.Hierarchy
 
 				if(propertyValue != null)
 				{
-#if !(NETCF || NETSTANDARD1_3) // NETSTANDARD1_3: System.Runtime.InteropServices.RuntimeInformation not available on desktop 4.6
+#if !NETCF && !NETSTANDARD1_3 // NETSTANDARD1_3: System.Runtime.InteropServices.RuntimeInformation not available on desktop 4.6
 					try
 					{
 						// Expand environment variables in the string.
@@ -1066,7 +1066,7 @@ namespace log4net.Repository.Hierarchy
 
 		#endregion Protected Instance Methods
 
-#if !(NETCF || NETSTANDARD1_3) // NETSTANDARD1_3: System.Runtime.InteropServices.RuntimeInformation not available on desktop 4.6
+#if !NETCF && !NETSTANDARD1_3 // NETSTANDARD1_3: System.Runtime.InteropServices.RuntimeInformation not available on desktop 4.6
 		private bool HasCaseInsensitiveEnvironment
 	        {
 		    get
