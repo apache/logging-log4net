@@ -45,7 +45,7 @@ namespace log4net.ObjectRenderer
 	/// <author>Gert Driesen</author>
 	public class RendererMap
 	{
-        private readonly static Type declaringType = typeof(RendererMap);
+		private readonly static Type declaringType = typeof(RendererMap);
 
 		#region Member Variables
 
@@ -94,7 +94,7 @@ namespace log4net.ObjectRenderer
 				return strData;
 			}
 
-			StringWriter stringWriter = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
+			using StringWriter stringWriter = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
 			FindAndRender(obj, stringWriter);
 			return stringWriter.ToString();
 		}

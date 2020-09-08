@@ -92,20 +92,20 @@ namespace log4net.Appender
 		/// Gets or sets a comma- or semicolon-delimited list of recipient e-mail addresses (use semicolon on .NET 1.1 and comma for later versions).
 		/// </summary>
 		/// <value>
-        /// <para>
-        /// For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
-        /// </para>
-        /// <para>
-        /// For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
-        /// </para>
+		/// <para>
+		/// For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
+		/// </para>
+		/// <para>
+		/// For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
+		/// </para>
 		/// </value>
 		/// <remarks>
-        /// <para>
-        /// For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
-        /// </para>
-        /// <para>
-        /// For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
-        /// </para>
+		/// <para>
+		/// For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
+		/// </para>
+		/// <para>
+		/// For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
+		/// </para>
 		/// </remarks>
 		public string To
 		{
@@ -113,49 +113,49 @@ namespace log4net.Appender
 			set { m_to = MaybeTrimSeparators(value); }
 		}
 
-        /// <summary>
-        /// Gets or sets a comma- or semicolon-delimited list of recipient e-mail addresses 
-        /// that will be carbon copied (use semicolon on .NET 1.1 and comma for later versions).
-        /// </summary>
-        /// <value>
-        /// <para>
-        /// For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
-        /// </para>
-        /// <para>
-        /// For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
-        /// </para>
-        /// </value>
-        /// <remarks>
-        /// <para>
-        /// For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
-        /// </para>
-        /// <para>
-        /// For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
-        /// </para>
-        /// </remarks>
-        public string Cc
-        {
-            get { return m_cc; }
-            set { m_cc = MaybeTrimSeparators(value); }
-        }
+		/// <summary>
+		/// Gets or sets a comma- or semicolon-delimited list of recipient e-mail addresses 
+		/// that will be carbon copied (use semicolon on .NET 1.1 and comma for later versions).
+		/// </summary>
+		/// <value>
+		/// <para>
+		/// For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
+		/// </para>
+		/// <para>
+		/// For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
+		/// </para>
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
+		/// </para>
+		/// <para>
+		/// For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
+		/// </para>
+		/// </remarks>
+		public string Cc
+		{
+			get { return m_cc; }
+			set { m_cc = MaybeTrimSeparators(value); }
+		}
 
-        /// <summary>
-        /// Gets or sets a semicolon-delimited list of recipient e-mail addresses
-        /// that will be blind carbon copied.
-        /// </summary>
-        /// <value>
-        /// A semicolon-delimited list of e-mail addresses.
-        /// </value>
-        /// <remarks>
-        /// <para>
-        /// A semicolon-delimited list of recipient e-mail addresses.
-        /// </para>
-        /// </remarks>
-        public string Bcc
-        {
-            get { return m_bcc; }
-            set { m_bcc = MaybeTrimSeparators(value); }
-        }
+		/// <summary>
+		/// Gets or sets a semicolon-delimited list of recipient e-mail addresses
+		/// that will be blind carbon copied.
+		/// </summary>
+		/// <value>
+		/// A semicolon-delimited list of e-mail addresses.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// A semicolon-delimited list of recipient e-mail addresses.
+		/// </para>
+		/// </remarks>
+		public string Bcc
+		{
+			get { return m_bcc; }
+			set { m_bcc = MaybeTrimSeparators(value); }
+		}
 
 		/// <summary>
 		/// Gets or sets the e-mail address of the sender.
@@ -324,29 +324,29 @@ namespace log4net.Appender
 		}
 
 #if NET_2_0 || MONO_2_0 || NETSTANDARD2_0
-        /// <summary>
-        /// Enable or disable use of SSL when sending e-mail message
-        /// </summary>
-        /// <remarks>
-        /// This is available on MS .NET 2.0 runtime and higher
-        /// </remarks>
-        public bool EnableSsl
-        {
-            get { return m_enableSsl; }
-            set { m_enableSsl = value; }
-        }
+		/// <summary>
+		/// Enable or disable use of SSL when sending e-mail message
+		/// </summary>
+		/// <remarks>
+		/// This is available on MS .NET 2.0 runtime and higher
+		/// </remarks>
+		public bool EnableSsl
+		{
+			get { return m_enableSsl; }
+			set { m_enableSsl = value; }
+		}
 
-        /// <summary>
-        /// Gets or sets the reply-to e-mail address.
-        /// </summary>
-        /// <remarks>
-        /// This is available on MS .NET 2.0 runtime and higher
-        /// </remarks>
-        public string ReplyTo
-        {
-            get { return m_replyTo; }
-            set { m_replyTo = value; }
-        }
+		/// <summary>
+		/// Gets or sets the reply-to e-mail address.
+		/// </summary>
+		/// <remarks>
+		/// This is available on MS .NET 2.0 runtime and higher
+		/// </remarks>
+		public string ReplyTo
+		{
+			get { return m_replyTo; }
+			set { m_replyTo = value; }
+		}
 #endif
 
 		/// <summary>
@@ -387,7 +387,7 @@ namespace log4net.Appender
 			// appender. This frees us from needing to synchronize again.
 			try 
 			{	  
-				StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
+				using StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
 
 				string t = Layout.Header;
 				if (t != null)
@@ -449,14 +449,18 @@ namespace log4net.Appender
 			// The old API is deprecated.
 
 			// Create and configure the smtp client
+#if NET_4_0 || MONO_4_0 || NETSTANDARD2_0
+			using SmtpClient smtpClient = new SmtpClient();
+#else
 			SmtpClient smtpClient = new SmtpClient();
+#endif
 			if (!String.IsNullOrEmpty(m_smtpHost))
 			{
 				smtpClient.Host = m_smtpHost;
 			}
 			smtpClient.Port = m_port;
 			smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-            smtpClient.EnableSsl = m_enableSsl;
+			smtpClient.EnableSsl = m_enableSsl;
 
 			if (m_authentication == SmtpAuthentication.Basic)
 			{
@@ -469,38 +473,38 @@ namespace log4net.Appender
 				smtpClient.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
 			}
 
-            using (MailMessage mailMessage = new MailMessage())
-            {
-                mailMessage.Body = messageBody;
+			using (MailMessage mailMessage = new MailMessage())
+			{
+				mailMessage.Body = messageBody;
 				mailMessage.BodyEncoding = m_bodyEncoding;
-                mailMessage.From = new MailAddress(m_from);
-                mailMessage.To.Add(m_to);
-                if (!String.IsNullOrEmpty(m_cc))
-                {
-                    mailMessage.CC.Add(m_cc);
-                }
-                if (!String.IsNullOrEmpty(m_bcc))
-                {
-                    mailMessage.Bcc.Add(m_bcc);
-                }
-                if (!String.IsNullOrEmpty(m_replyTo))
-                {
-                    // .NET 4.0 warning CS0618: 'System.Net.Mail.MailMessage.ReplyTo' is obsolete:
-                    // 'ReplyTo is obsoleted for this type.  Please use ReplyToList instead which can accept multiple addresses. http://go.microsoft.com/fwlink/?linkid=14202'
+				mailMessage.From = new MailAddress(m_from);
+				mailMessage.To.Add(m_to);
+				if (!String.IsNullOrEmpty(m_cc))
+				{
+					mailMessage.CC.Add(m_cc);
+				}
+				if (!String.IsNullOrEmpty(m_bcc))
+				{
+					mailMessage.Bcc.Add(m_bcc);
+				}
+				if (!String.IsNullOrEmpty(m_replyTo))
+				{
+					// .NET 4.0 warning CS0618: 'System.Net.Mail.MailMessage.ReplyTo' is obsolete:
+					// 'ReplyTo is obsoleted for this type.  Please use ReplyToList instead which can accept multiple addresses. http://go.microsoft.com/fwlink/?linkid=14202'
 #if !NET_4_0 && !MONO_4_0 && !NETSTANDARD2_0
-                    mailMessage.ReplyTo = new MailAddress(m_replyTo);
+					mailMessage.ReplyTo = new MailAddress(m_replyTo);
 #else
-                    mailMessage.ReplyToList.Add(new MailAddress(m_replyTo));
+					mailMessage.ReplyToList.Add(new MailAddress(m_replyTo));
 #endif
-                }
-                mailMessage.Subject = m_subject;
+				}
+				mailMessage.Subject = m_subject;
 				mailMessage.SubjectEncoding = m_subjectEncoding;
-                mailMessage.Priority = m_mailPriority;
+				mailMessage.Priority = m_mailPriority;
 
-                // TODO: Consider using SendAsync to send the message without blocking. This would be a change in
-                // behaviour compared to .NET 1.x. We would need a SendCompletedCallback to log errors.
-                smtpClient.Send(mailMessage);
-            }
+				// TODO: Consider using SendAsync to send the message without blocking. This would be a change in
+				// behaviour compared to .NET 1.x. We would need a SendCompletedCallback to log errors.
+				smtpClient.Send(mailMessage);
+			}
 #else
 				// .NET 1.x uses the System.Web.Mail API for sending Mail
 
@@ -509,14 +513,14 @@ namespace log4net.Appender
 				mailMessage.BodyEncoding = m_bodyEncoding;
 				mailMessage.From = m_from;
 				mailMessage.To = m_to;
-                if (m_cc != null && m_cc.Length > 0)
-                {
-                    mailMessage.Cc = m_cc;
-                }
-                if (m_bcc != null && m_bcc.Length > 0)
-                {
-                    mailMessage.Bcc = m_bcc;
-                }
+				if (m_cc != null && m_cc.Length > 0)
+				{
+					mailMessage.Cc = m_cc;
+				}
+				if (m_bcc != null && m_bcc.Length > 0)
+				{
+					mailMessage.Bcc = m_bcc;
+				}
 				mailMessage.Subject = m_subject;
 #if !MONO && !NET_1_0 && !NET_1_1 && !CLI_1_0
 				mailMessage.SubjectEncoding = m_subjectEncoding;
@@ -585,8 +589,8 @@ namespace log4net.Appender
 		#region Private Instance Fields
 
 		private string m_to;
-        private string m_cc;
-        private string m_bcc;
+		private string m_cc;
+		private string m_bcc;
 		private string m_from;
 		private string m_subject;
 		private string m_smtpHost;
@@ -604,8 +608,8 @@ namespace log4net.Appender
 		private MailPriority m_mailPriority = MailPriority.Normal;
 
 #if NET_2_0 || MONO_2_0 || NETSTANDARD2_0
-        private bool m_enableSsl = false;
-        private string m_replyTo;
+		private bool m_enableSsl = false;
+		private string m_replyTo;
 #endif
 
 		#endregion // Private Instance Fields
@@ -646,19 +650,19 @@ namespace log4net.Appender
 
 		#endregion // SmtpAuthentication Enum
 
-            private static readonly char[] ADDRESS_DELIMITERS = new char[] { ',', ';' };
-            
-            /// <summary>
-            ///   trims leading and trailing commas or semicolons
-            /// </summary>
-            private static string MaybeTrimSeparators(string s) {
+			private static readonly char[] ADDRESS_DELIMITERS = new char[] { ',', ';' };
+			
+			/// <summary>
+			///   trims leading and trailing commas or semicolons
+			/// </summary>
+			private static string MaybeTrimSeparators(string s) {
 #if NET_2_0 || MONO_2_0 || NETSTANDARD2_0
-                return string.IsNullOrEmpty(s) ? s : s.Trim(ADDRESS_DELIMITERS);
+				return string.IsNullOrEmpty(s) ? s : s.Trim(ADDRESS_DELIMITERS);
 #else
-                return s != null && s.Length > 0 ? s : s.Trim(ADDRESS_DELIMITERS);
+				return s != null && s.Length > 0 ? s : s.Trim(ADDRESS_DELIMITERS);
 #endif
-            }
-        }
+			}
+		}
 }
 
 #endif // !NETCF && !SSCLI
