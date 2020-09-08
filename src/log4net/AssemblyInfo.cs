@@ -73,14 +73,17 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyInformationalVersionAttribute("2.0.9.0-.NET 4.0")]
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 4.0")]
 #endif // Client Profile
-#elif (NET_2_0)
+#elif (NET_3_5)
 #if CLIENT_PROFILE
 [assembly: AssemblyInformationalVersionAttribute("2.0.9.0-.NET 3.5 CP")]
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 3.5 Client Profile")]
 #else
+[assembly: AssemblyInformationalVersionAttribute("2.0.9.0-.NET 3.5")]
+[assembly: AssemblyTitle("Apache log4net for .NET Framework 3.5")]
+#endif // Client Profile
+#elif (NET_2_0)
 [assembly: AssemblyInformationalVersionAttribute("2.0.9.0-.NET 2.0")]
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 2.0")]
-#endif // Client Profile
 #elif (NETCF_1_0)
 [assembly: AssemblyInformationalVersionAttribute("2.0.9.0-.NETCF 1.0")]
 [assembly: AssemblyTitle("Apache log4net for .NET Compact Framework 1.0")]

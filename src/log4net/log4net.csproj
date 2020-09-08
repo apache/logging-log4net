@@ -69,14 +69,14 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <OutDir>..\..\build\$(Configuration)\net35-client</OutDir>
-    <DefineConstants>$(DefineConstants);NET_2_0;CLIENT_PROFILE</DefineConstants>
+    <DefineConstants>$(DefineConstants);NET_2_0;NET_3_5;CLIENT_PROFILE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='net40-client'">
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <OutDir>..\..\build\$(Configuration)\net40-client</OutDir>
-    <DefineConstants>$(DefineConstants);NET_2_0;CLIENT_PROFILE</DefineConstants>
+    <DefineConstants>$(DefineConstants);NET_2_0;NET_4_0;CLIENT_PROFILE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard1.3'">
     <DefineConstants>$(DefineConstants);NETSTANDARD;NETSTANDARD1_3</DefineConstants>
