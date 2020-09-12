@@ -110,5 +110,19 @@
         <revision>2.0.8</revision>
       </Version>
     </release>
+    <release>
+      <Version>
+        <name>Apache log4net 2.0.9</name>
+        <created>2019-08-25</created>
+        <revision>2.0.9</revision>
+      </Version>
+    </release>    
+    <release>
+      <Version>
+        <name>Apache log4net 2.0.10</name>
+        <created>2019-09.12</created>
+        <revision>2.0.10</revision>
+      </Version>
+    </release>
   </Project>
 </rdf:RDF>
