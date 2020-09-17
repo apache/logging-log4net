@@ -324,7 +324,7 @@ namespace log4net.Core
 	[Serializable]
 #endif
 	public class LoggingEvent 
-#if !NETCF && NET_2_0
+#if !NETCF
 		: ISerializable
 #endif
 	{
