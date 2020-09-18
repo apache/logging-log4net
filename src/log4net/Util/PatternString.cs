@@ -467,7 +467,7 @@ namespace log4net.Util
 		/// </remarks>
 		public string Format() 
 		{
-			StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
+			using StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
 			Format(writer);
 			return writer.ToString();
 		}

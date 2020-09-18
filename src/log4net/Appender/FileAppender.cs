@@ -19,6 +19,9 @@
 
 using System;
 using System.IO;
+#if !NETCF && !NETSTANDARD1_3
+using System.Runtime.Serialization;
+#endif
 using System.Text;
 using System.Threading;
 using log4net.Util;
@@ -138,12 +141,29 @@ namespace log4net.Appender
 		/// </summary>
 		private sealed class LockingStream : Stream, IDisposable
 		{
+#if !NETCR
+			[Serializable]
+#endif
 			public sealed class LockStateException : LogException
 			{
 				public LockStateException(string message)
 					: base(message)
 				{
 				}
+
+				public LockStateException()
+				{
+				}
+
+				public LockStateException(string message, Exception innerException) : base(message, innerException)
+				{
+				}
+
+#if !NETCR && !NETSTANDARD1_3
+				private LockStateException(SerializationInfo info, StreamingContext context) : base(info, context) 
+				{
+				}
+#endif
 			}
 
 			private Stream m_realStream = null;
@@ -1409,7 +1429,10 @@ namespace log4net.Appender
 		/// </remarks>
 		virtual protected void SetQWForFiles(Stream fileStream)
 		{
-			SetQWForFiles(new StreamWriter(fileStream, m_encoding));
+#pragma warning disable CA2000 // Dispose objects before losing scope
+			StreamWriter writer = new StreamWriter(fileStream, m_encoding);
+#pragma warning restore CA2000 // Dispose objects before losing scope
+			SetQWForFiles(writer);
 		}
 
 		/// <summary>

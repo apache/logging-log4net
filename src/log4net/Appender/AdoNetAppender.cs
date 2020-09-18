@@ -617,7 +617,7 @@ namespace log4net.Appender
 			}
 			else
 			{
-				StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
+				using StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
 				Layout.Format(writer, logEvent);
 				return writer.ToString();
 			}
