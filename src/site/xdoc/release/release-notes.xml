@@ -27,6 +27,11 @@ limitations under the License.
     <body>
 
         <section id="main" name="Apache log4net&#x2122; Release Notes">
+            <section id="2.0.11" name="2.0.11">
+                Apachhe log4net 2.0.11 fixes incorrect version strings within the released
+                binaries and contains some minor fixes to correctly dispose of StreamWriters
+                used during log flushing, thanks to community member @NicholasNoise
+            </section>
             <section id="2.0.10" name="2.0.10">
                 <p>
                     Apache log4net 2.0.10 improves <code>netstandard2.0</code> support
