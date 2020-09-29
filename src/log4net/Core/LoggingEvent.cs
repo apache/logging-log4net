@@ -895,7 +895,7 @@ namespace log4net.Core
 			{
 				if (m_data.UserName == null  && this.m_cacheUpdatable) 
 				{
-#if (NETCF || SSCLI || NETSTANDARD1_3) // NETSTANDARD1_3 TODO requires platform-specific code
+#if (NETCF || SSCLI || NETSTANDARD) // NETSTANDARD TODO requires platform-specific code
 					// On compact framework there's no notion of current Windows user
 					m_data.UserName = SystemInfo.NotAvailableText;
 #else
