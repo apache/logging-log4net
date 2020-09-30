@@ -21,10 +21,16 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/apache/logging-log4net</RepositoryUrl>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Platforms>AnyCPU</Platforms>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' != 'CrossPlatform'">
+    <TargetFrameworks>net20;net35;net35-client;net40;net40-client;net45;netstandard1.3;netstandard2.0</TargetFrameworks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'CrossPlatform'">
+    <TargetFrameworks>net20;net35;net40;net45;netstandard1.3;netstandard2.0</TargetFrameworks>
   </PropertyGroup>
   <PropertyGroup>
-    <TargetFrameworks>net20;net35;net35-client;net40;net40-client;net45;netstandard1.3;netstandard2.0</TargetFrameworks>
-    <Configurations>Debug;Release</Configurations>
+    <Configurations>Debug;Release;CrossPlatform</Configurations>
     <LangVersion>latest</LangVersion>
     <RootNamespace>log4net</RootNamespace>
     <AssemblyName>log4net</AssemblyName>
@@ -183,6 +189,12 @@
     <Content Include="..\..\package-icon.png" PackagePath="package-icon.png">
       <Link>package-icon.png</Link>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Net.Compilers" Version="3.7.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
   <PropertyGroup />
 </Project>

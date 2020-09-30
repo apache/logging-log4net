@@ -4,6 +4,7 @@
   "description": "Log4Net is a logging framework for .NET",
   "scripts": {
     "test": "cross-env NUNIT_PROCESS=Single MAX_CONCURRENCY=1 run-s clean-build \"zarro test-dotnet\" run-dotnet-core-tests",
+    "test-xplatform": "cross-env DOTNET_CORE=1 BUILD_CONFIGURATION=CrossPlatform run-s build run-dotnet-core-tests",
     "run-dotnet-core-tests": "cross-env DOTNET_CORE=1 run-s \"zarro quick-test-dotnet\"",
     "clean-build": "rimraf build",
     "build": "run-s clean-build \"zarro build\"",
