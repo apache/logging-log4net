@@ -222,7 +222,7 @@ namespace log4net.Appender
 		/// </para>
 		/// </remarks>
 		[Obsolete("Use Fix property")]
-		virtual public bool OnlyFixPartialEventData
+		public virtual bool OnlyFixPartialEventData
 		{
 			get { return (Fix == FixFlags.Partial); }
 			set 
@@ -252,7 +252,7 @@ namespace log4net.Appender
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="LoggingEvent.Fix"/>
-		virtual public FixFlags Fix
+		public virtual FixFlags Fix
 		{
 			get { return m_fixFlags; }
 			set { m_fixFlags = value; }
@@ -381,7 +381,7 @@ namespace log4net.Appender
 		/// <see cref="ActivateOptions"/> must be called again.
 		/// </para>
 		/// </remarks>
-		override public void ActivateOptions() 
+		public override void ActivateOptions() 
 		{
 			base.ActivateOptions();
 
@@ -417,7 +417,7 @@ namespace log4net.Appender
 		/// the buffer must be sent when the appender is closed.
 		/// </para>
 		/// </remarks>
-		override protected void OnClose() 
+		protected override void OnClose() 
 		{
 			// Flush the buffer on close
 			Flush(true);
@@ -453,7 +453,7 @@ namespace log4net.Appender
 		/// is processed.
 		/// </para>
 		/// </remarks>
-		override protected void Append(LoggingEvent loggingEvent) 
+		protected override void Append(LoggingEvent loggingEvent) 
 		{
 			// If the buffer size is set to 1 or less then the buffer will be
 			// sent immediately because there is not enough space in the buffer
@@ -542,7 +542,7 @@ namespace log4net.Appender
 		/// The subclass must override <see cref="M:SendBuffer(LoggingEvent[])"/>.
 		/// </para>
 		/// </remarks>
-		virtual protected void SendFromBuffer(LoggingEvent firstLoggingEvent, CyclicBuffer buffer)
+		protected virtual void SendFromBuffer(LoggingEvent firstLoggingEvent, CyclicBuffer buffer)
 		{
 			LoggingEvent[] bufferEvents = buffer.PopAll();
 
@@ -576,7 +576,7 @@ namespace log4net.Appender
 		/// The subclass must override this method to process the buffered events.
 		/// </para>
 		/// </remarks>
-		abstract protected void SendBuffer(LoggingEvent[] events);
+		protected abstract void SendBuffer(LoggingEvent[] events);
 
 		#region Private Static Fields
 

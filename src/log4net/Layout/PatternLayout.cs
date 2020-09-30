@@ -1019,7 +1019,7 @@ namespace log4net.Layout
 		/// global and instance rules on the <see cref="PatternParser"/>.
 		/// </para>
 		/// </remarks>
-		virtual protected PatternParser CreatePatternParser(string pattern) 
+		protected virtual PatternParser CreatePatternParser(string pattern) 
 		{
 			PatternParser patternParser = new PatternParser(pattern);
 
@@ -1058,7 +1058,7 @@ namespace log4net.Layout
 		/// <see cref="ActivateOptions"/> must be called again.
 		/// </para>
 		/// </remarks>
-		override public void ActivateOptions() 
+		public override void ActivateOptions() 
 		{
 			m_head = CreatePatternParser(m_pattern).Parse();
 
@@ -1095,7 +1095,7 @@ namespace log4net.Layout
 		/// specified in the <see cref="ConversionPattern"/> property.
 		/// </para>
 		/// </remarks>
-		override public void Format(TextWriter writer, LoggingEvent loggingEvent) 
+		public override void Format(TextWriter writer, LoggingEvent loggingEvent) 
 		{
 			if (writer == null)
 			{

@@ -91,7 +91,7 @@ namespace log4net.Filter
 		/// <see cref="ActivateOptions"/> must be called again.
 		/// </para>
 		/// </remarks>
-		override public void ActivateOptions() 
+		public override void ActivateOptions() 
 		{
 			if (m_stringRegexToMatch != null)
 			{
@@ -186,7 +186,7 @@ namespace log4net.Filter
 		/// <see cref="FilterDecision.Deny"/> is returned.
 		/// </para>
 		/// </remarks>
-		override public FilterDecision Decide(LoggingEvent loggingEvent) 
+		public override FilterDecision Decide(LoggingEvent loggingEvent) 
 		{
 			if (loggingEvent == null)
 			{

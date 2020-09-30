@@ -100,7 +100,7 @@ namespace log4net.Util
 		/// The Encoding in which the output is written
 		/// </para>
 		/// </remarks>
-		override public Encoding Encoding 
+		public override Encoding Encoding 
 		{
 			get { return m_writer.Encoding; }
 		}
@@ -116,7 +116,7 @@ namespace log4net.Util
 		/// Gets an object that controls formatting
 		/// </para>
 		/// </remarks>
-		override public IFormatProvider FormatProvider 
+		public override IFormatProvider FormatProvider 
 		{
 			get { return m_writer.FormatProvider; }
 		}
@@ -132,7 +132,7 @@ namespace log4net.Util
 		/// Gets or sets the line terminator string used by the TextWriter
 		/// </para>
 		/// </remarks>
-		override public String NewLine 
+		public override String NewLine 
 		{
 			get { return m_writer.NewLine; }
 			set { m_writer.NewLine = value; }
@@ -168,7 +168,7 @@ namespace log4net.Util
 		/// Dispose this writer
 		/// </para>
 		/// </remarks>
-		override protected void Dispose(bool disposing)
+		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
@@ -185,7 +185,7 @@ namespace log4net.Util
 		/// to the underlying device
 		/// </para>
 		/// </remarks>
-		override public void Flush() 
+		public override void Flush() 
 		{
 			m_writer.Flush();
 		}
@@ -199,7 +199,7 @@ namespace log4net.Util
 		/// Writes a character to the wrapped TextWriter
 		/// </para>
 		/// </remarks>
-		override public void Write(char value) 
+		public override void Write(char value) 
 		{
 			m_writer.Write(value);
 		}
@@ -215,7 +215,7 @@ namespace log4net.Util
 		/// Writes a character buffer to the wrapped TextWriter
 		/// </para>
 		/// </remarks>
-		override public void Write(char[] buffer, int index, int count) 
+		public override void Write(char[] buffer, int index, int count) 
 		{
 			m_writer.Write(buffer, index, count);
 		}
@@ -229,7 +229,7 @@ namespace log4net.Util
 		/// Writes a string to the wrapped TextWriter
 		/// </para>
 		/// </remarks>
-		override public void Write(String value) 
+		public override void Write(String value) 
 		{
 			m_writer.Write(value);
 		}

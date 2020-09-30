@@ -891,7 +891,7 @@ namespace log4net.Core
         /// Used by the internal logger to record the Type of the
         /// log message.
         /// </remarks>
-        private readonly static Type declaringType = typeof(DefaultRepositorySelector);
+        private static readonly Type declaringType = typeof(DefaultRepositorySelector);
 
 		private const string DefaultRepositoryName = "log4net-default-repository";
 

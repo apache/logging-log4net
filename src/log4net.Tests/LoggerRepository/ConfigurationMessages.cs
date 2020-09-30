@@ -80,7 +80,7 @@ namespace log4net.Tests.LoggerRepository
 
     public class LogLogAppender : AppenderSkeleton
     {
-        private readonly static Type declaringType = typeof(LogLogAppender);
+        private static readonly Type declaringType = typeof(LogLogAppender);
 
         public override void ActivateOptions()
         {

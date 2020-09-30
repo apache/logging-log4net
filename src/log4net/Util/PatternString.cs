@@ -390,7 +390,7 @@ namespace log4net.Util
 		/// <see cref="ActivateOptions"/> must be called again.
 		/// </para>
 		/// </remarks>
-		virtual public void ActivateOptions() 
+		public virtual void ActivateOptions() 
 		{
 			m_head = CreatePatternParser(m_pattern).Parse();
 		}

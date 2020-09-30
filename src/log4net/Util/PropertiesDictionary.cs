@@ -108,7 +108,7 @@ namespace log4net.Util
 		/// a serialization operation is performed.
 		/// </para>
 		/// </remarks>
-		override public object this[string key]
+		public override object this[string key]
 		{
 			get { return InnerHashtable[key]; }
 			set { InnerHashtable[key] = value; }

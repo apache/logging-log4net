@@ -290,7 +290,7 @@ namespace log4net.Repository.Hierarchy
 		/// its reference, otherwise returns <c>null</c>.
 		/// </para>
 		/// </remarks>
-		override public ILogger Exists(string name) 
+		public override ILogger Exists(string name) 
 		{	
 			if (name == null)
 			{
@@ -314,7 +314,7 @@ namespace log4net.Repository.Hierarchy
 		/// enumeration.
 		/// </para>
 		/// </remarks>
-		override public ILogger[] GetCurrentLoggers() 
+		public override ILogger[] GetCurrentLoggers() 
 		{
 			// The accumulation in loggers is necessary because not all elements in
 			// ht are Logger objects as there might be some ProvisionNodes
@@ -352,7 +352,7 @@ namespace log4net.Repository.Hierarchy
 		/// </remarks>
 		/// <param name="name">The name of the logger to retrieve</param>
 		/// <returns>The logger object with the name specified</returns>
-		override public ILogger GetLogger(string name) 
+		public override ILogger GetLogger(string name) 
 		{
 			if (name == null)
 			{
@@ -383,7 +383,7 @@ namespace log4net.Repository.Hierarchy
 		/// and again to a nested appender.
 		/// </para>
 		/// </remarks>
-		override public void Shutdown() 
+		public override void Shutdown() 
 		{
 			LogLog.Debug(declaringType, "Shutdown called on Hierarchy ["+this.Name+"]");
 
@@ -431,7 +431,7 @@ namespace log4net.Repository.Hierarchy
 		/// block all logging until it is completed.
 		/// </para>
 		/// </remarks>
-		override public void ResetConfiguration() 
+		public override void ResetConfiguration() 
 		{
 			Root.Level = LevelMap.LookupWithDefault(Level.Debug);
 			Threshold = LevelMap.LookupWithDefault(Level.All);
@@ -470,7 +470,7 @@ namespace log4net.Repository.Hierarchy
 		/// that logger is then responsible for logging the event.
 		/// </para>
 		/// </remarks>
-		override public void Log(LoggingEvent logEvent)
+		public override void Log(LoggingEvent logEvent)
 		{
 			if (logEvent == null)
 			{
@@ -494,7 +494,7 @@ namespace log4net.Repository.Hierarchy
 		/// The list returned is unordered but does not contain duplicates.
 		/// </para>
 		/// </remarks>
-		override public Appender.IAppender[] GetAppenders()
+		public override Appender.IAppender[] GetAppenders()
 		{
 			System.Collections.ArrayList appenderList = new System.Collections.ArrayList();
 
@@ -1079,7 +1079,7 @@ namespace log4net.Repository.Hierarchy
 	    /// Used by the internal logger to record the Type of the
 	    /// log message.
 	    /// </remarks>
-	    private readonly static Type declaringType = typeof(Hierarchy);
+	    private static readonly Type declaringType = typeof(Hierarchy);
 
 	    #endregion Private Static Fields
 	}

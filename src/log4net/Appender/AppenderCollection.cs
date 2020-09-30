@@ -160,7 +160,7 @@ namespace log4net.Appender
 		/// Used to access protected constructor
 		/// </summary>
 		/// <exclude/>
-		internal protected enum Tag 
+		protected internal enum Tag 
 		{
 			/// <summary>
 			/// A value
@@ -173,7 +173,7 @@ namespace log4net.Appender
 		/// </summary>
 		/// <param name="tag"></param>
 		/// <exclude/>
-		internal protected AppenderCollection(Tag tag)
+		protected internal AppenderCollection(Tag tag)
 		{
 			m_array = null;
 		}

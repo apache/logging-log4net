@@ -104,7 +104,7 @@ namespace log4net.Filter
 		/// however this method must still be called. 
 		/// </para>
 		/// </remarks>
-		virtual public void ActivateOptions() 
+		public virtual void ActivateOptions() 
 		{
 		}
 
@@ -130,7 +130,7 @@ namespace log4net.Filter
 		/// in a subclass.
 		/// </para>
 		/// </remarks>
-		abstract public FilterDecision Decide(LoggingEvent loggingEvent);
+		public abstract FilterDecision Decide(LoggingEvent loggingEvent);
 
 		/// <summary>
 		/// Property to get and set the next filter

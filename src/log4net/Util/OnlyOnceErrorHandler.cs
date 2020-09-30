@@ -276,7 +276,7 @@ namespace log4net.Util
 	    /// Used by the internal logger to record the Type of the
 	    /// log message.
 	    /// </remarks>
-		private readonly static Type declaringType = typeof(OnlyOnceErrorHandler);
+		private static readonly Type declaringType = typeof(OnlyOnceErrorHandler);
 
 		#endregion
 	}

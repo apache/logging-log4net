@@ -456,7 +456,7 @@ namespace log4net.Appender
 		/// Translates a log4net level to a syslog severity.
 		/// </para>
 		/// </remarks>
-		virtual protected SyslogSeverity GetSeverity(Level level)
+		protected virtual SyslogSeverity GetSeverity(Level level)
 		{
 			LevelSeverity levelSeverity = m_levelMapping.Lookup(level) as LevelSeverity;
 			if (levelSeverity != null)

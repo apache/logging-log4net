@@ -90,7 +90,7 @@ namespace log4net.Layout.Pattern
 		///		</item>		
 		/// </list>
 		/// </remarks>
-		override protected void Convert(TextWriter writer, LoggingEvent loggingEvent)
+		protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
 		{
 			if (loggingEvent.ExceptionObject != null && Option != null && Option.Length > 0)
 			{

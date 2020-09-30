@@ -41,7 +41,7 @@ namespace log4net.Layout
 	/// </remarks>
 	/// <author>Nicko Cadell</author>
 	/// <author>Gert Driesen</author>
-	abstract public class XmlLayoutBase : LayoutSkeleton
+	public abstract class XmlLayoutBase : LayoutSkeleton
 	{
 		#region Protected Instance Constructors
 
@@ -149,7 +149,7 @@ namespace log4net.Layout
 		/// <see cref="ActivateOptions"/> must be called again.
 		/// </para>
 		/// </remarks>
-		override public void ActivateOptions() 
+		public override void ActivateOptions() 
 		{
 			// nothing to do
 		}
@@ -169,7 +169,7 @@ namespace log4net.Layout
 		/// As this is the XML layout, the value is always <c>"text/xml"</c>.
 		/// </para>
 		/// </remarks>
-		override public string ContentType
+		public override string ContentType
 		{
 			get { return "text/xml"; }
 		}
@@ -190,7 +190,7 @@ namespace log4net.Layout
 		/// <see cref="FormatXml"/> method rather than this method.
 		/// </para>
 		/// </remarks>
-		override public void Format(TextWriter writer, LoggingEvent loggingEvent) 
+		public override void Format(TextWriter writer, LoggingEvent loggingEvent) 
 		{
 			if (loggingEvent == null)
 			{
@@ -233,7 +233,7 @@ namespace log4net.Layout
 		/// the <see cref="LoggingEvent"/> as XML.
 		/// </para>
 		/// </remarks>
-		abstract protected void FormatXml(XmlWriter writer, LoggingEvent loggingEvent);
+		protected abstract void FormatXml(XmlWriter writer, LoggingEvent loggingEvent);
 
 		#endregion Protected Instance Methods
 

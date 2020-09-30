@@ -69,7 +69,7 @@ namespace log4net.Layout.Pattern
 		/// value is <c>true</c>, this converter does not handle the exception.
 		/// </para>
 		/// </remarks>
-		virtual public bool IgnoresException 
+		public virtual bool IgnoresException 
 		{ 
 			get { return m_ignoresException; }
 			set { m_ignoresException = value; }
@@ -85,7 +85,7 @@ namespace log4net.Layout.Pattern
 		/// </summary>
 		/// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
 		/// <param name="loggingEvent">The <see cref="LoggingEvent" /> on which the pattern converter should be executed.</param>
-		abstract protected void Convert(TextWriter writer, LoggingEvent loggingEvent);
+		protected abstract void Convert(TextWriter writer, LoggingEvent loggingEvent);
 
 		#endregion Protected Abstract Methods
 
@@ -97,7 +97,7 @@ namespace log4net.Layout.Pattern
 		/// </summary>
 		/// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
 		/// <param name="state">The state object on which the pattern converter should be executed.</param>
-		override protected void Convert(TextWriter writer, object state)
+		protected override void Convert(TextWriter writer, object state)
 		{
 			LoggingEvent loggingEvent = state as LoggingEvent;
 			if (loggingEvent != null)

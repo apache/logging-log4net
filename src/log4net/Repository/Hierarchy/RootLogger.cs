@@ -79,7 +79,7 @@ namespace log4net.Repository.Hierarchy
 		/// value of <see cref="Logger.Level"/>.
 		/// </para>
 		/// </remarks>
-		override public Level EffectiveLevel 
+		public override Level EffectiveLevel 
 		{
 			get 
 			{
@@ -99,7 +99,7 @@ namespace log4net.Repository.Hierarchy
 		/// may have catastrophic results. We prevent this here.
 		/// </para>
 		/// </remarks>
-		override public Level Level
+		public override Level Level
 		{
 			get { return base.Level; }
 			set
@@ -126,7 +126,7 @@ namespace log4net.Repository.Hierarchy
 	    /// Used by the internal logger to record the Type of the
 	    /// log message.
 	    /// </remarks>
-	    private readonly static Type declaringType = typeof(RootLogger);
+	    private static readonly Type declaringType = typeof(RootLogger);
 
 	    #endregion Private Static Fields
 	}

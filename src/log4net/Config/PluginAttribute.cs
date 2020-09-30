@@ -175,7 +175,7 @@ namespace log4net.Config
 		/// </para>
 		/// </remarks>
 		/// <returns>A representation of the properties of this object</returns>
-		override public string ToString()
+		public override string ToString()
 		{
 			if (m_type != null)
 			{

@@ -195,7 +195,7 @@ namespace log4net.Util
 		/// <summary>
 		/// The singleton instance of the <see cref="NullDictionaryEnumerator" />.
 		/// </summary>
-		private readonly static NullDictionaryEnumerator s_instance = new NullDictionaryEnumerator();
+		private static readonly NullDictionaryEnumerator s_instance = new NullDictionaryEnumerator();
   
 		#endregion Private Static Fields
 	}

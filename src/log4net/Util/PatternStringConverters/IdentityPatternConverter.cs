@@ -46,7 +46,7 @@ namespace log4net.Util.PatternStringConverters
 		/// Writes the current thread identity to the output <paramref name="writer"/>.
 		/// </para>
 		/// </remarks>
-		override protected void Convert(TextWriter writer, object state) 
+		protected override void Convert(TextWriter writer, object state) 
 		{
 #if (NETCF || SSCLI || NETSTANDARD1_3)
 			// On compact framework there's no notion of current thread principals
@@ -81,7 +81,7 @@ namespace log4net.Util.PatternStringConverters
 	    /// Used by the internal logger to record the Type of the
 	    /// log message.
 	    /// </remarks>
-	    private readonly static Type declaringType = typeof(IdentityPatternConverter);
+	    private static readonly Type declaringType = typeof(IdentityPatternConverter);
 
 	    #endregion Private Static Fields
 	}

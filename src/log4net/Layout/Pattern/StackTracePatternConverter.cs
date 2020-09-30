@@ -92,7 +92,7 @@ namespace log4net.Layout.Pattern
 		/// Writes the <see cref="LocationInfo.StackFrames"/> to the output writer.
 		/// </para>
 		/// </remarks>
-		override protected void Convert(TextWriter writer, LoggingEvent loggingEvent)
+		protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
 		{
 			StackFrameItem[] stackframes = loggingEvent.LocationInformation.StackFrames;
 			if ((stackframes == null) || (stackframes.Length <= 0))
@@ -141,7 +141,7 @@ namespace log4net.Layout.Pattern
 	    /// Used by the internal logger to record the Type of the
 	    /// log message.
 	    /// </remarks>
-	    private readonly static Type declaringType = typeof(StackTracePatternConverter);
+	    private static readonly Type declaringType = typeof(StackTracePatternConverter);
 
 	    #endregion Private Static Fields
 	}

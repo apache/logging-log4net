@@ -407,7 +407,7 @@ namespace log4net.Appender
 		/// <see cref="ActivateOptions"/> must be called again.
 		/// </para>
 		/// </remarks>
-		override public void ActivateOptions()
+		public override void ActivateOptions()
 		{
 			base.ActivateOptions();
 
@@ -431,7 +431,7 @@ namespace log4net.Appender
 		/// Closes the database command and database connection.
 		/// </para>
 		/// </remarks>
-		override protected void OnClose()
+		protected override void OnClose()
 		{
 			base.OnClose();
 			DiposeConnection();
@@ -451,7 +451,7 @@ namespace log4net.Appender
 		/// array into the database.
 		/// </para>
 		/// </remarks>
-		override protected void SendBuffer(LoggingEvent[] events)
+		protected override void SendBuffer(LoggingEvent[] events)
 		{
 			if (ReconnectOnError && (Connection == null || Connection.State != ConnectionState.Open))
 			{
@@ -536,7 +536,7 @@ namespace log4net.Appender
 		/// property for more information.
 		/// </para>
 		/// </remarks>
-		virtual protected void SendBuffer(IDbTransaction dbTran, LoggingEvent[] events)
+		protected virtual void SendBuffer(IDbTransaction dbTran, LoggingEvent[] events)
 		{
 			// string.IsNotNullOrWhiteSpace() does not exist in ancient .NET frameworks
 			if (CommandText != null && CommandText.Trim() != "")
@@ -608,7 +608,7 @@ namespace log4net.Appender
 		/// <returns>
 		/// Text that can be passed to a <see cref="System.Data.IDbCommand"/>.
 		/// </returns>
-		virtual protected string GetLogStatement(LoggingEvent logEvent)
+		protected virtual string GetLogStatement(LoggingEvent logEvent)
 		{
 			if (Layout == null)
 			{
@@ -632,7 +632,7 @@ namespace log4net.Appender
 		/// <param name="connectionType">The <see cref="Type"/> of the <see cref="IDbConnection"/> object.</param>
 		/// <param name="connectionString">The connectionString output from the ResolveConnectionString method.</param>
 		/// <returns>An <see cref="IDbConnection"/> instance with a valid connection string.</returns>
-		virtual protected IDbConnection CreateConnection(Type connectionType, string connectionString)
+		protected virtual IDbConnection CreateConnection(Type connectionType, string connectionString)
 		{
 			IDbConnection connection = (IDbConnection)Activator.CreateInstance(connectionType);
 			connection.ConnectionString = connectionString;
@@ -648,7 +648,7 @@ namespace log4net.Appender
 		/// </remarks>
 		/// <param name="connectionStringContext">Additional information describing the connection string.</param>
 		/// <returns>A connection string used to connect to the database.</returns>
-		virtual protected string ResolveConnectionString(out string connectionStringContext)
+		protected virtual string ResolveConnectionString(out string connectionStringContext)
 		{
 			if (ConnectionString != null && ConnectionString.Length > 0)
 			{
@@ -702,7 +702,7 @@ namespace log4net.Appender
 		/// </para>
 		/// </remarks>
 		/// <returns>The <see cref="Type"/> of the ADO.NET provider</returns>
-		virtual protected Type ResolveConnectionType()
+		protected virtual Type ResolveConnectionType()
 		{
 			try
 			{
@@ -858,7 +858,7 @@ namespace log4net.Appender
 		/// Used by the internal logger to record the Type of the
 		/// log message.
 		/// </remarks>
-		private readonly static Type declaringType = typeof(AdoNetAppender);
+		private static readonly Type declaringType = typeof(AdoNetAppender);
 
 		#endregion Private Static Fields
 	}
@@ -1053,7 +1053,7 @@ namespace log4net.Appender
 		/// this parameter to its collection of parameters.
 		/// </para>
 		/// </remarks>
-		virtual public void Prepare(IDbCommand command)
+		public virtual void Prepare(IDbCommand command)
 		{
 			// Create a new parameter
 			IDbDataParameter param = command.CreateParameter();
@@ -1093,7 +1093,7 @@ namespace log4net.Appender
 		/// object. Sets the value of the parameter on the command object.
 		/// </para>
 		/// </remarks>
-		virtual public void FormatValue(IDbCommand command, LoggingEvent loggingEvent)
+		public virtual void FormatValue(IDbCommand command, LoggingEvent loggingEvent)
 		{
 			// Lookup the parameter
 			IDbDataParameter param = (IDbDataParameter)command.Parameters[ParameterName];

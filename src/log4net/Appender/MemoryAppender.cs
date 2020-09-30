@@ -84,7 +84,7 @@ namespace log4net.Appender
 		/// Gets the events that have been logged.
 		/// </para>
 		/// </remarks>
-		virtual public LoggingEvent[] GetEvents()
+		public virtual LoggingEvent[] GetEvents()
 		{
             lock (m_eventsList.SyncRoot)
             {
@@ -110,7 +110,7 @@ namespace log4net.Appender
 		/// </para>
 		/// </remarks>
 		[Obsolete("Use Fix property")]
-		virtual public bool OnlyFixPartialEventData
+		public virtual bool OnlyFixPartialEventData
 		{
 			get { return (Fix == FixFlags.Partial); }
 			set 
@@ -136,7 +136,7 @@ namespace log4net.Appender
 		/// for details.
 		/// </para>
 		/// </remarks>
-		virtual public FixFlags Fix
+		public virtual FixFlags Fix
 		{
 			get { return m_fixFlags; }
 			set { m_fixFlags = value; }
@@ -153,7 +153,7 @@ namespace log4net.Appender
 		/// <remarks>
 		/// <para>Stores the <paramref name="loggingEvent"/> in the events list.</para>
 		/// </remarks>
-		override protected void Append(LoggingEvent loggingEvent) 
+		protected override void Append(LoggingEvent loggingEvent) 
 		{
 			// Because we are caching the LoggingEvent beyond the
 			// lifetime of the Append() method we must fix any
@@ -176,7 +176,7 @@ namespace log4net.Appender
 		/// <remarks>
 		/// Clear the list of events
 		/// </remarks>
-		virtual public void Clear()
+		public virtual void Clear()
 		{
             lock (m_eventsList.SyncRoot)
             {
@@ -193,7 +193,7 @@ namespace log4net.Appender
         /// Gets the events that have been logged and clears the list of events.
         /// </para>
         /// </remarks>
-        virtual public LoggingEvent[] PopAllEvents()
+        public virtual LoggingEvent[] PopAllEvents()
         {
             lock (m_eventsList.SyncRoot)
             {

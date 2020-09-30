@@ -428,7 +428,7 @@ namespace log4net.Util
 	    /// Used by the internal logger to record the Type of the
 	    /// log message.
 	    /// </remarks>
-	    private readonly static Type declaringType = typeof(PatternParser);
+	    private static readonly Type declaringType = typeof(PatternParser);
 
 	    #endregion Private Static Fields
 	}

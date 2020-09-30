@@ -121,7 +121,7 @@ namespace log4net.Layout
 		/// This method must be implemented by the subclass.
 		/// </para>
 		/// </remarks>
-		abstract public void ActivateOptions();
+		public abstract void ActivateOptions();
 
 		#endregion
 
@@ -138,7 +138,7 @@ namespace log4net.Layout
 		/// the <paramref name="loggingEvent"/> as text.
 		/// </para>
 		/// </remarks>
-		abstract public void Format(TextWriter writer, LoggingEvent loggingEvent);
+		public abstract void Format(TextWriter writer, LoggingEvent loggingEvent);
 
 		/// <summary>
 		/// Convenience method for easily formatting the logging event into a string variable.
@@ -168,7 +168,7 @@ namespace log4net.Layout
 		/// property.
 		/// </para>
 		/// </remarks>
-		virtual public string ContentType
+		public virtual string ContentType
 		{
 			get { return "text/plain"; }
 		}
@@ -183,7 +183,7 @@ namespace log4net.Layout
 		/// are formatted and appended.
 		/// </para>
 		/// </remarks>
-		virtual public string Header
+		public virtual string Header
 		{
 			get { return m_header; }
 			set { m_header = value; }
@@ -199,7 +199,7 @@ namespace log4net.Layout
 		/// have been formatted and appended.
 		/// </para>
 		/// </remarks>
-		virtual public string Footer
+		public virtual string Footer
 		{
 			get { return m_footer; }
 			set { m_footer = value; }
@@ -221,7 +221,7 @@ namespace log4net.Layout
 		/// value is <c>true</c>, this layout does not handle the exception.
 		/// </para>
 		/// </remarks>
-		virtual public bool IgnoresException 
+		public virtual bool IgnoresException 
 		{ 
 			get { return m_ignoresException; }
 			set { m_ignoresException = value; }

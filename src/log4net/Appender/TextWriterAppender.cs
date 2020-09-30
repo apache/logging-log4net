@@ -144,7 +144,7 @@ namespace log4net.Appender
 		/// <b>Note:</b> Logging to an unopened <see cref="TextWriter"/> will fail.
 		/// </para>
 		/// </remarks>
-		virtual public TextWriter Writer 
+		public virtual TextWriter Writer 
 		{
 			get { return m_qtw; }
 			set 
@@ -175,7 +175,7 @@ namespace log4net.Appender
 		/// </para>
 		/// </remarks>
 		/// <returns><c>false</c> if any of the preconditions fail.</returns>
-		override protected bool PreAppendCheck() 
+		protected override bool PreAppendCheck() 
 		{
 			if (!base.PreAppendCheck()) 
 			{
@@ -216,7 +216,7 @@ namespace log4net.Appender
 		/// The format of the output will depend on the appender's layout.
 		/// </para>
 		/// </remarks>
-		override protected void Append(LoggingEvent loggingEvent) 
+		protected override void Append(LoggingEvent loggingEvent) 
 		{
 			RenderLoggingEvent(m_qtw, loggingEvent);
 
@@ -237,7 +237,7 @@ namespace log4net.Appender
 		/// before flushing the stream.
 		/// </para>
 		/// </remarks>
-		override protected void Append(LoggingEvent[] loggingEvents) 
+		protected override void Append(LoggingEvent[] loggingEvents) 
 		{
 			foreach(LoggingEvent loggingEvent in loggingEvents)
 			{
@@ -256,7 +256,7 @@ namespace log4net.Appender
 		/// <remarks>
 		/// Closed appenders cannot be reused.
 		/// </remarks>
-		override protected void OnClose() 
+		protected override void OnClose() 
 		{
 			lock(this)
 			{
@@ -271,7 +271,7 @@ namespace log4net.Appender
 		/// <value>
 		/// The <see cref="IErrorHandler"/> for this appender.
 		/// </value>
-		override public IErrorHandler ErrorHandler
+		public override IErrorHandler ErrorHandler
 		{
 			get { return base.ErrorHandler; }
 			set
@@ -303,7 +303,7 @@ namespace log4net.Appender
 		/// This appender requires a <see cref="Layout"/> to be set.
 		/// </para>
 		/// </remarks>
-		override protected bool RequiresLayout
+		protected override bool RequiresLayout
 		{
 			get { return true; }
 		}
@@ -320,7 +320,7 @@ namespace log4net.Appender
 		/// Writes the footer and closes the underlying <see cref="TextWriter"/>.
 		/// </para>
 		/// </remarks>
-		virtual protected void WriteFooterAndCloseWriter()
+		protected virtual void WriteFooterAndCloseWriter()
 		{
 			WriteFooter();
 			CloseWriter();
@@ -334,7 +334,7 @@ namespace log4net.Appender
 		/// Closes the underlying <see cref="TextWriter"/>.
 		/// </para>
 		/// </remarks>
-		virtual protected void CloseWriter() 
+		protected virtual void CloseWriter() 
 		{
 			if (m_qtw != null) 
 			{
@@ -360,7 +360,7 @@ namespace log4net.Appender
 		/// Subclasses can override this method for an alternate closing behavior.
 		/// </para>
 		/// </remarks>
-		virtual protected void Reset() 
+		protected virtual void Reset() 
 		{
 			WriteFooterAndCloseWriter();
 			m_qtw = null;
@@ -374,7 +374,7 @@ namespace log4net.Appender
 		/// Writes a footer as produced by the embedded layout's <see cref="ILayout.Footer"/> property.
 		/// </para>
 		/// </remarks>
-		virtual protected void WriteFooter() 
+		protected virtual void WriteFooter() 
 		{
 			if (Layout != null && m_qtw != null && !m_qtw.Closed) 
 			{
@@ -394,7 +394,7 @@ namespace log4net.Appender
 		/// Writes a header produced by the embedded layout's <see cref="ILayout.Header"/> property.
 		/// </para>
 		/// </remarks>
-		virtual protected void WriteHeader() 
+		protected virtual void WriteHeader() 
 		{
 			if (Layout != null && m_qtw != null && !m_qtw.Closed) 
 			{
@@ -416,7 +416,7 @@ namespace log4net.Appender
 		/// attempt to initialize the writer multiple times.
 		/// </para>
 		/// </remarks>
-		virtual protected void PrepareWriter()
+		protected virtual void PrepareWriter()
 		{
 		}
 
@@ -478,7 +478,7 @@ namespace log4net.Appender
 	    /// Used by the internal logger to record the Type of the
 	    /// log message.
 	    /// </remarks>
-	    private readonly static Type declaringType = typeof(TextWriterAppender);
+	    private static readonly Type declaringType = typeof(TextWriterAppender);
 
 	    #endregion Private Static Fields
 

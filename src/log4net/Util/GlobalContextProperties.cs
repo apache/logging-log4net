@@ -93,7 +93,7 @@ namespace log4net.Util
 		/// the properties is created.
 		/// </para>
 		/// </remarks>
-		override public object this[string key]
+		public override object this[string key]
 		{
 			get 
 			{ 

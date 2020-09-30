@@ -165,7 +165,7 @@ namespace log4net.Core
 		/// <see cref="M:Debug(object,Exception)"/> form instead.
 		/// </para>
 		/// </remarks>
-		virtual public void Debug(object message) 
+		public virtual void Debug(object message) 
 		{
 			Logger.Log(ThisDeclaringType, m_levelDebug, message, null);
 		}
@@ -186,7 +186,7 @@ namespace log4net.Core
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="M:Debug(object)"/>
-		virtual public void Debug(object message, Exception exception) 
+		public virtual void Debug(object message, Exception exception) 
 		{
 			Logger.Log(ThisDeclaringType, m_levelDebug, message, exception);
 		}
@@ -213,7 +213,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void DebugFormat(string format, params object[] args) 
+		public virtual void DebugFormat(string format, params object[] args) 
 		{
 			if (IsDebugEnabled)
 			{
@@ -243,7 +243,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void DebugFormat(string format, object arg0) 
+		public virtual void DebugFormat(string format, object arg0) 
 		{
 			if (IsDebugEnabled)
 			{
@@ -274,7 +274,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void DebugFormat(string format, object arg0, object arg1) 
+		public virtual void DebugFormat(string format, object arg0, object arg1) 
 		{
 			if (IsDebugEnabled)
 			{
@@ -306,7 +306,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void DebugFormat(string format, object arg0, object arg1, object arg2) 
+		public virtual void DebugFormat(string format, object arg0, object arg1, object arg2) 
 		{
 			if (IsDebugEnabled)
 			{
@@ -332,7 +332,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void DebugFormat(IFormatProvider provider, string format, params object[] args) 
+		public virtual void DebugFormat(IFormatProvider provider, string format, params object[] args) 
 		{
 			if (IsDebugEnabled)
 			{
@@ -363,7 +363,7 @@ namespace log4net.Core
 		/// <see cref="M:Info(object,Exception)"/> form instead.
 		/// </para>
 		/// </remarks>
-		virtual public void Info(object message) 
+		public virtual void Info(object message) 
 		{
 			Logger.Log(ThisDeclaringType, m_levelInfo, message, null);
 		}
@@ -384,7 +384,7 @@ namespace log4net.Core
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="M:Info(object)"/>
-		virtual public void Info(object message, Exception exception) 
+		public virtual void Info(object message, Exception exception) 
 		{
 			Logger.Log(ThisDeclaringType, m_levelInfo, message, exception);
 		}
@@ -411,7 +411,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void InfoFormat(string format, params object[] args) 
+		public virtual void InfoFormat(string format, params object[] args) 
 		{
 			if (IsInfoEnabled)
 			{
@@ -441,7 +441,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void InfoFormat(string format, object arg0) 
+		public virtual void InfoFormat(string format, object arg0) 
 		{
 			if (IsInfoEnabled)
 			{
@@ -472,7 +472,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void InfoFormat(string format, object arg0, object arg1) 
+		public virtual void InfoFormat(string format, object arg0, object arg1) 
 		{
 			if (IsInfoEnabled)
 			{
@@ -504,7 +504,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void InfoFormat(string format, object arg0, object arg1, object arg2) 
+		public virtual void InfoFormat(string format, object arg0, object arg1, object arg2) 
 		{
 			if (IsInfoEnabled)
 			{
@@ -530,7 +530,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void InfoFormat(IFormatProvider provider, string format, params object[] args) 
+		public virtual void InfoFormat(IFormatProvider provider, string format, params object[] args) 
 		{
 			if (IsInfoEnabled)
 			{
@@ -561,7 +561,7 @@ namespace log4net.Core
 		/// <see cref="M:Warn(object,Exception)"/> form instead.
 		/// </para>
 		/// </remarks>
-		virtual public void Warn(object message) 
+		public virtual void Warn(object message) 
 		{
 			Logger.Log(ThisDeclaringType, m_levelWarn, message, null);
 		}
@@ -582,7 +582,7 @@ namespace log4net.Core
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="M:Warn(object)"/>
-		virtual public void Warn(object message, Exception exception) 
+		public virtual void Warn(object message, Exception exception) 
 		{
 			Logger.Log(ThisDeclaringType, m_levelWarn, message, exception);
 		}
@@ -609,7 +609,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void WarnFormat(string format, params object[] args) 
+		public virtual void WarnFormat(string format, params object[] args) 
 		{
 			if (IsWarnEnabled)
 			{
@@ -639,7 +639,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void WarnFormat(string format, object arg0) 
+		public virtual void WarnFormat(string format, object arg0) 
 		{
 			if (IsWarnEnabled)
 			{
@@ -670,7 +670,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void WarnFormat(string format, object arg0, object arg1) 
+		public virtual void WarnFormat(string format, object arg0, object arg1) 
 		{
 			if (IsWarnEnabled)
 			{
@@ -702,7 +702,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void WarnFormat(string format, object arg0, object arg1, object arg2) 
+		public virtual void WarnFormat(string format, object arg0, object arg1, object arg2) 
 		{
 			if (IsWarnEnabled)
 			{
@@ -728,7 +728,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void WarnFormat(IFormatProvider provider, string format, params object[] args) 
+		public virtual void WarnFormat(IFormatProvider provider, string format, params object[] args) 
 		{
 			if (IsWarnEnabled)
 			{
@@ -759,7 +759,7 @@ namespace log4net.Core
 		/// <see cref="M:Error(object,Exception)"/> form instead.
 		/// </para>
 		/// </remarks>
-		virtual public void Error(object message) 
+		public virtual void Error(object message) 
 		{
 			Logger.Log(ThisDeclaringType, m_levelError, message, null);
 		}
@@ -780,7 +780,7 @@ namespace log4net.Core
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="M:Error(object)"/>
-		virtual public void Error(object message, Exception exception) 
+		public virtual void Error(object message, Exception exception) 
 		{
 			Logger.Log(ThisDeclaringType, m_levelError, message, exception);
 		}
@@ -807,7 +807,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void ErrorFormat(string format, params object[] args) 
+		public virtual void ErrorFormat(string format, params object[] args) 
 		{
 			if (IsErrorEnabled)
 			{
@@ -837,7 +837,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void ErrorFormat(string format, object arg0) 
+		public virtual void ErrorFormat(string format, object arg0) 
 		{
 			if (IsErrorEnabled)
 			{
@@ -868,7 +868,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void ErrorFormat(string format, object arg0, object arg1) 
+		public virtual void ErrorFormat(string format, object arg0, object arg1) 
 		{
 			if (IsErrorEnabled)
 			{
@@ -900,7 +900,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void ErrorFormat(string format, object arg0, object arg1, object arg2) 
+		public virtual void ErrorFormat(string format, object arg0, object arg1, object arg2) 
 		{
 			if (IsErrorEnabled)
 			{
@@ -926,7 +926,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void ErrorFormat(IFormatProvider provider, string format, params object[] args) 
+		public virtual void ErrorFormat(IFormatProvider provider, string format, params object[] args) 
 		{
 			if (IsErrorEnabled)
 			{
@@ -957,7 +957,7 @@ namespace log4net.Core
 		/// <see cref="M:Fatal(object,Exception)"/> form instead.
 		/// </para>
 		/// </remarks>
-		virtual public void Fatal(object message) 
+		public virtual void Fatal(object message) 
 		{
 			Logger.Log(ThisDeclaringType, m_levelFatal, message, null);
 		}
@@ -978,7 +978,7 @@ namespace log4net.Core
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="M:Fatal(object)"/>
-		virtual public void Fatal(object message, Exception exception) 
+		public virtual void Fatal(object message, Exception exception) 
 		{
 			Logger.Log(ThisDeclaringType, m_levelFatal, message, exception);
 		}
@@ -1005,7 +1005,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void FatalFormat(string format, params object[] args) 
+		public virtual void FatalFormat(string format, params object[] args) 
 		{
 			if (IsFatalEnabled)
 			{
@@ -1035,7 +1035,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void FatalFormat(string format, object arg0) 
+		public virtual void FatalFormat(string format, object arg0) 
 		{
 			if (IsFatalEnabled)
 			{
@@ -1066,7 +1066,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void FatalFormat(string format, object arg0, object arg1) 
+		public virtual void FatalFormat(string format, object arg0, object arg1) 
 		{
 			if (IsFatalEnabled)
 			{
@@ -1098,7 +1098,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void FatalFormat(string format, object arg0, object arg1, object arg2) 
+		public virtual void FatalFormat(string format, object arg0, object arg1, object arg2) 
 		{
 			if (IsFatalEnabled)
 			{
@@ -1124,7 +1124,7 @@ namespace log4net.Core
 		/// methods instead.
 		/// </para>
 		/// </remarks>
-		virtual public void FatalFormat(IFormatProvider provider, string format, params object[] args) 
+		public virtual void FatalFormat(IFormatProvider provider, string format, params object[] args) 
 		{
 			if (IsFatalEnabled)
 			{
@@ -1175,7 +1175,7 @@ namespace log4net.Core
 		/// takes to actually log.
 		/// </para>
 		/// </remarks>
-		virtual public bool IsDebugEnabled
+		public virtual bool IsDebugEnabled
 		{
 			get { return Logger.IsEnabledFor(m_levelDebug); }
 		}
@@ -1194,7 +1194,7 @@ namespace log4net.Core
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="LogImpl.IsDebugEnabled"/>
-		virtual public bool IsInfoEnabled
+		public virtual bool IsInfoEnabled
 		{
 			get { return Logger.IsEnabledFor(m_levelInfo); }
 		}
@@ -1213,7 +1213,7 @@ namespace log4net.Core
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="ILog.IsDebugEnabled"/>
-		virtual public bool IsWarnEnabled
+		public virtual bool IsWarnEnabled
 		{
 			get { return Logger.IsEnabledFor(m_levelWarn); }
 		}
@@ -1231,7 +1231,7 @@ namespace log4net.Core
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="ILog.IsDebugEnabled"/>
-		virtual public bool IsErrorEnabled
+		public virtual bool IsErrorEnabled
 		{
 			get { return Logger.IsEnabledFor(m_levelError); }
 		}
@@ -1249,7 +1249,7 @@ namespace log4net.Core
 		/// </para>
 		/// </remarks>
 		/// <seealso cref="ILog.IsDebugEnabled"/>
-		virtual public bool IsFatalEnabled
+		public virtual bool IsFatalEnabled
 		{
 			get { return Logger.IsEnabledFor(m_levelFatal); }
 		}
@@ -1279,7 +1279,7 @@ namespace log4net.Core
 		/// <summary>
 		/// The fully qualified name of this declaring type not the type of any subclass.
 		/// </summary>
-		private readonly static Type ThisDeclaringType = typeof(LogImpl);
+		private static readonly Type ThisDeclaringType = typeof(LogImpl);
 
 		#endregion Private Static Instance Fields
 

@@ -547,7 +547,7 @@ namespace log4net.Appender
 	    /// Used by the internal logger to record the Type of the
 	    /// log message.
 	    /// </remarks>
-	    private readonly static Type declaringType = typeof(RollingFileAppender);
+	    private static readonly Type declaringType = typeof(RollingFileAppender);
 
 	    #endregion Private Static Fields
 
@@ -560,7 +560,7 @@ namespace log4net.Appender
 		/// This method can be overridden by sub classes.
 		/// </remarks>
 		/// <param name="writer">the writer to set</param>
-		override protected void SetQWForFiles(TextWriter writer) 
+		protected override void SetQWForFiles(TextWriter writer) 
 		{
 			QuietWriter = new CountingQuietTextWriter(writer, ErrorHandler);
 		}
@@ -576,7 +576,7 @@ namespace log4net.Appender
 		/// is need and then appends to the file last.
 		/// </para>
 		/// </remarks>
-		override protected void Append(LoggingEvent loggingEvent) 
+		protected override void Append(LoggingEvent loggingEvent) 
 		{
 			AdjustFileBeforeAppend();
 			base.Append(loggingEvent);
@@ -593,7 +593,7 @@ namespace log4net.Appender
 		/// is need and then appends to the file last.
 		/// </para>
 		/// </remarks>
-		override protected void Append(LoggingEvent[] loggingEvents) 
+		protected override void Append(LoggingEvent[] loggingEvents) 
 		{
 			AdjustFileBeforeAppend();
 			base.Append(loggingEvents);
@@ -609,7 +609,7 @@ namespace log4net.Appender
 		/// is need and then appends to the file last.
 		/// </para>
 		/// </remarks>
-		virtual protected void AdjustFileBeforeAppend()
+		protected virtual void AdjustFileBeforeAppend()
 		{
 			// reuse the file appenders locking model to lock the rolling
 #if !NETCF
@@ -663,7 +663,7 @@ namespace log4net.Appender
 		/// <para>This method will ensure that the directory structure
 		/// for the <paramref name="fileName"/> specified exists.</para>
 		/// </remarks>
-		override protected void OpenFile(string fileName, bool append)
+		protected override void OpenFile(string fileName, bool append)
 		{
 			lock(this)
 			{
@@ -1114,7 +1114,7 @@ namespace log4net.Appender
 		/// the current number of backups.
 		/// </para>
 		/// </remarks>
-		override public void ActivateOptions() 
+		public override void ActivateOptions() 
 		{
 			if (m_dateTime == null)
 			{

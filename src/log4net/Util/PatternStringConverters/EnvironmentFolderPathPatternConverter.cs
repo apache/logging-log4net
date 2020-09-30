@@ -51,7 +51,7 @@ namespace log4net.Util.PatternStringConverters
         /// property.
         /// </para>
         /// </remarks>
-        override protected void Convert(TextWriter writer, object state)
+        protected override void Convert(TextWriter writer, object state)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace log4net.Util.PatternStringConverters
         /// Used by the internal logger to record the Type of the
         /// log message.
         /// </remarks>
-        private readonly static Type declaringType = typeof(EnvironmentFolderPathPatternConverter);
+        private static readonly Type declaringType = typeof(EnvironmentFolderPathPatternConverter);
 
         #endregion Private Static Fields
     }

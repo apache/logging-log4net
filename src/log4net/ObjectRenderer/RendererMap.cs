@@ -45,7 +45,7 @@ namespace log4net.ObjectRenderer
 	/// <author>Gert Driesen</author>
 	public class RendererMap
 	{
-		private readonly static Type declaringType = typeof(RendererMap);
+		private static readonly Type declaringType = typeof(RendererMap);
 
 		#region Member Variables
 
