@@ -88,4 +88,5 @@
     <Compile Remove="DateFormatter\AbsoluteTimeDateFormatterTest.cs" />
     <Compile Remove="Hierarchy\XmlHierarchyConfiguratorTest.cs" />
   </ItemGroup>
+  <Import Project="../MonoForFramework.targets" />
 </Project>
