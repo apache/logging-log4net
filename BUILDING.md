@@ -32,6 +32,7 @@ Options:
             - `npm run build`
             - optionally `npm test` to run all tests
             - optionally `npm run release` to generate release artifacts
+- build via docker for windows, using the `build-with-docker-for-windows.bat` script
 - build via the vs2019 Windows AppVeyer image. There is an appveyer.yml file
     included which (should) build if you set up AppVeyer to track
     your fork. AppVeyer is free for open-source projects.
