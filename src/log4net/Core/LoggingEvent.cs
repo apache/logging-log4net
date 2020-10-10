@@ -26,6 +26,7 @@ using System.Runtime.Serialization;
 using System.Security;
 #if !NETCF && !NETSTANDARD1_3
 using System.Security.Principal;
+using System.Runtime.InteropServices;
 #endif
 using log4net.Util;
 using log4net.Repository;
@@ -922,27 +923,34 @@ namespace log4net.Core
 					// On compact framework there's no notion of current Windows user
 					return SystemInfo.NotAvailableText;
 #else
-            try
+        #if NETSTANDARD
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
             {
-                var windowsIdentity = WindowsIdentity.GetCurrent();
-                return windowsIdentity?.Name ?? "";
-            }
-            catch (PlatformNotSupportedException)
-            {
-                // TODO: on a platform which supports it, invoke `whoami`
-                return SystemInfo.NotAvailableText;
-            }
-            catch (SecurityException)
-            {
-                // This security exception will occur if the caller does not have 
-                // some undefined set of SecurityPermission flags.
-                LogLog.Debug(
-                    declaringType,
-                    "Security exception while trying to get current windows identity. Error Ignored. Empty user name."
-                );
+        #endif
+                try
+                {
+                    var windowsIdentity = WindowsIdentity.GetCurrent();
+                    return windowsIdentity?.Name ?? "";
+                }
+                catch (SecurityException)
+                {
+                    // This security exception will occur if the caller does not have 
+                    // some undefined set of SecurityPermission flags.
+                    LogLog.Debug(
+                        declaringType,
+                        "Security exception while trying to get current windows identity. Error Ignored. Empty user name."
+                    );
 
-                return SystemInfo.NotAvailableText;
+                    return SystemInfo.NotAvailableText;
+                }
+        #if NETSTANDARD
+            } 
+            else 
+            {
+                // On non-Windows platforms, obtain user name from an environment variable.
+                return Environment.UserName;
             }
+        #endif
 #endif
         }
 
