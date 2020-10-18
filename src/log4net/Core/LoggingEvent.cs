@@ -914,7 +914,7 @@ namespace log4net.Core
         /// </para>
         /// </remarks>
         public string UserName =>
-            m_data.UserName ??= TryGetCurrentUserName(); 
+            m_data.UserName ??= TryGetCurrentUserName() ?? SystemInfo.NotAvailableText; 
 
         private static string TryGetCurrentUserName()
         {
@@ -929,8 +929,7 @@ namespace log4net.Core
             }
             catch (PlatformNotSupportedException)
             {
-                // TODO: on a platform which supports it, invoke `whoami`
-                return SystemInfo.NotAvailableText;
+                return Environment.UserName;
             }
             catch (SecurityException)
             {
@@ -940,12 +939,15 @@ namespace log4net.Core
                     declaringType,
                     "Security exception while trying to get current windows identity. Error Ignored. Empty user name."
                 );
-
-                return SystemInfo.NotAvailableText;
+                return null;
+            }
+            catch
+            {
+                return null;
             }
 #endif
         }
-
+        
         /// <summary>
         /// Gets the identity of the current thread principal.
         /// </summary>
