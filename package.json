@@ -1,6 +1,6 @@
 {
   "name": "log4net",
-  "version": "2.0.9",
+  "version": "2.0.12",
   "description": "Log4Net is a logging framework for .NET",
   "scripts": {
     "test": "cross-env NUNIT_PROCESS=Single MAX_CONCURRENCY=1 run-s clean-build \"zarro test-dotnet\" run-dotnet-core-tests",

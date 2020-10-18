@@ -937,9 +937,9 @@ namespace log4net.Core
                 // some undefined set of SecurityPermission flags.
                 LogLog.Debug(
                     declaringType,
-                    "Security exception while trying to get current windows identity. Error Ignored. Empty user name."
+                    "Security exception while trying to get current windows identity. Error Ignored."
                 );
-                return null;
+                return Environment.UserName;
             }
             catch
             {
