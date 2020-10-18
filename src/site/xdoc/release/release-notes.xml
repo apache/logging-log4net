@@ -34,7 +34,9 @@ limitations under the License.
               </p>
               <section id="2.0.12-bug" name="Bug Fixes">
                 <ul>
-                  <li>Addresses the issues reported in LOG4NET-652 and LOG4NET-653 whereby
+                  <li>Addresses the issues reported in 
+                      [<a href="https://issues.apache.org/jira/browse/LOG4NET-652">LOG4NET-652</a>]
+                      and [<a href="https://issues.apache.org/jira/browse/LOG4NET-652">LOG4NET-653</a>] whereby
                       logging could throw a PlatformNotSupported exception when the username
                       is required within logs on non-Windows platforms. The implemented
                       behavior is to fall back, where possible, on Environment.UserName
