@@ -27,8 +27,24 @@ limitations under the License.
     <body>
 
         <section id="main" name="Apache log4net&#x2122; Release Notes">
+            <section id="2.0.12" name="2.0.12">
+              <p>
+              Apache log4net 2.0.12 is a minor fix release to address reported issues on
+              non-windows platforms.
+              </p>
+              <section id="2.0.12-bug" name="Bug Fixes">
+                <ul>
+                  <li>Addresses the issues reported in LOG4NET-652 and LOG4NET-653 whereby
+                      logging could throw a PlatformNotSupported exception when the username
+                      is required within logs on non-Windows platforms. The implemented
+                      behavior is to fall back, where possible, on Environment.UserName
+                      or provide text that the facility is not supported.
+                  </li>
+                </ul>
+              </section>
+            </section>
             <section id="2.0.11" name="2.0.11">
-                Apachhe log4net 2.0.11 fixes incorrect version strings within the released
+                Apache log4net 2.0.11 fixes incorrect version strings within the released
                 binaries and contains some minor fixes to correctly dispose of StreamWriters
                 used during log flushing, thanks to community member @NicholasNoise
             </section>
