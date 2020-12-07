@@ -267,7 +267,7 @@ namespace log4net.Util.TypeConverters
 				try
 				{
 					// Create the type converter
-					return Activator.CreateInstance(converterType);
+					return ObjectFactory.Create(converterType);
 				}
 				catch(Exception ex)
 				{

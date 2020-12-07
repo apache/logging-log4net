@@ -21,7 +21,6 @@ using System;
 using System.Collections;
 using System.Reflection;
 
-using log4net.Appender;
 using log4net.Util;
 using log4net.Repository;
 
@@ -244,7 +243,7 @@ namespace log4net.Core
 					LogLog.Debug(declaringType, "Creating repository ["+repositoryName+"] using type ["+repositoryType+"]");
 
 					// Call the no arg constructor for the repositoryType
-					rep = (ILoggerRepository)Activator.CreateInstance(repositoryType);
+					rep = ObjectFactory.Create<ILoggerRepository>(repositoryType);
 
 					// Set the name of the repository
 					rep.Name = repositoryName;

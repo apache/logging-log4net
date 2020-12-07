@@ -643,7 +643,7 @@ namespace log4net.Appender
 		/// <returns>An <see cref="IDbConnection"/> instance with a valid connection string.</returns>
 		protected virtual IDbConnection CreateConnection(Type connectionType, string connectionString)
 		{
-			IDbConnection connection = (IDbConnection)Activator.CreateInstance(connectionType);
+			IDbConnection connection = ObjectFactory.Create<IDbConnection>(connectionType);
 			connection.ConnectionString = connectionString;
 			return connection;
 		}

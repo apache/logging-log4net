@@ -122,19 +122,19 @@ namespace log4net.Core
 				if (appRepositorySelectorType != null)
 				{
 					// Create an instance of the RepositorySelectorType
-					object appRepositorySelectorObj = null;
+					IRepositorySelector appRepositorySelectorObj = null;
 					try
 					{
-						appRepositorySelectorObj = Activator.CreateInstance(appRepositorySelectorType);
+						appRepositorySelectorObj = ObjectFactory.Create<IRepositorySelector>(appRepositorySelectorType, false);
 					}
 					catch(Exception ex)
 					{
 						LogLog.Error(declaringType, "Exception while creating RepositorySelector ["+appRepositorySelectorType.FullName+"]", ex);
 					}
 
-					if (appRepositorySelectorObj != null && appRepositorySelectorObj is IRepositorySelector)
+					if (appRepositorySelectorObj != null)
 					{
-						s_repositorySelector = (IRepositorySelector)appRepositorySelectorObj;
+						s_repositorySelector = appRepositorySelectorObj;
 					}
 					else
 					{

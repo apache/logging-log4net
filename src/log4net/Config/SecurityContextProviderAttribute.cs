@@ -112,7 +112,7 @@ namespace log4net.Config
 			{
 				LogLog.Debug(declaringType, "Creating provider of type ["+ m_providerType.FullName +"]");
 
-				SecurityContextProvider provider = Activator.CreateInstance(m_providerType) as SecurityContextProvider;
+				SecurityContextProvider provider = ObjectFactory.Create<SecurityContextProvider>(m_providerType, false);
 
 				if (provider == null)
 				{

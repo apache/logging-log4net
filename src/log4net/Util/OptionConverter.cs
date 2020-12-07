@@ -18,7 +18,6 @@
 #endregion
 
 using System;
-using System.Collections;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
@@ -479,7 +478,7 @@ namespace log4net.Util
 		/// </remarks>
 		public static object InstantiateByClassName(string className, Type superClass, object defaultValue) 
 		{
-			if (className != null) 
+			if (className != null)
 			{
 				try 
 				{
@@ -491,16 +490,16 @@ namespace log4net.Util
 					if (!superClass.IsAssignableFrom(classObj)) 
 					{
 						LogLog.Error(declaringType, "OptionConverter: A [" + className + "] object is not assignable to a [" + superClass.FullName + "] variable.");
-						return defaultValue;	  
+						return defaultValue;
 					}
-					return Activator.CreateInstance(classObj);
+					return ObjectFactory.Create(classObj);
 				}
 				catch (Exception e) 
 				{
 					LogLog.Error(declaringType, "Could not instantiate class [" + className + "].", e);
 				}
 			}
-			return defaultValue;	
+			return defaultValue;
 		}
 
 		/// <summary>

@@ -23,9 +23,7 @@
 
 using System;
 using System.Collections;
-#if !NETSTANDARD
-using System.Configuration;
-#else
+#if NETSTANDARD
 using System.Linq;
 #endif
 using System.IO;
@@ -413,7 +411,7 @@ namespace log4net.Core
 						LogLog.Debug(declaringType, "Creating repository [" + repositoryName + "] using type [" + repositoryType + "]");
 
 						// Call the no arg constructor for the repositoryType
-						rep = (ILoggerRepository)Activator.CreateInstance(repositoryType);
+						rep = ObjectFactory.Create<ILoggerRepository>(repositoryType);
 
 						// Set the name of the repository
 						rep.Name = repositoryName;

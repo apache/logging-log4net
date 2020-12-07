@@ -23,9 +23,7 @@
 using System;
 
 using log4net.Core;
-#if !NETSTANDARD1_3
 using log4net.Util;
-#endif
 using log4net.Plugin;
 
 namespace log4net.Config
@@ -156,7 +154,7 @@ namespace log4net.Config
 			}
 
 			// Create an instance of the plugin using the default constructor
-			IPlugin plugin = (IPlugin)Activator.CreateInstance(pluginType);
+			IPlugin plugin = ObjectFactory.Create<IPlugin>(pluginType);
 
 			return plugin;
 		}

@@ -325,7 +325,7 @@ namespace log4net.Util
 			LogLog.Debug(declaringType, "Converter ["+converterName+"] Option ["+option+"] Format [min="+formattingInfo.Min+",max="+formattingInfo.Max+",leftAlign="+formattingInfo.LeftAlign+"]");
 
 			// Lookup the converter type
-            ConverterInfo converterInfo = (ConverterInfo)m_patternConverters[converterName];
+			ConverterInfo converterInfo = (ConverterInfo)m_patternConverters[converterName];
 			if (converterInfo == null)
 			{
 				LogLog.Error(declaringType, "Unknown converter name ["+converterName+"] in conversion pattern.");
@@ -336,20 +336,20 @@ namespace log4net.Util
 				PatternConverter pc = null;
 				try
 				{
-                    pc = (PatternConverter)Activator.CreateInstance(converterInfo.Type);
+					pc = ObjectFactory.Create<PatternConverter>(converterInfo.Type);
 				}
 				catch(Exception createInstanceEx)
 				{
-                    LogLog.Error(declaringType, "Failed to create instance of Type [" + converterInfo.Type.FullName + "] using default constructor. Exception: " + createInstanceEx.ToString());
+					LogLog.Error(declaringType, "Failed to create instance of Type [" + converterInfo.Type.FullName + "] using default constructor. Exception: " + createInstanceEx.ToString());
 				}
 
 				// formattingInfo variable is an instance variable, occasionally reset 
 				// and used over and over again
 				pc.FormattingInfo = formattingInfo;
 				pc.Option = option;
-                pc.Properties = converterInfo.Properties;
+				pc.Properties = converterInfo.Properties;
 
-			    IOptionHandler optionHandler = pc as IOptionHandler;
+				IOptionHandler optionHandler = pc as IOptionHandler;
 				if (optionHandler != null)
 				{
 					optionHandler.ActivateOptions();
@@ -419,17 +419,17 @@ namespace log4net.Util
 
 		#endregion Private Instance Fields
 
-	    #region Private Static Fields
+		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the PatternParser class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private static readonly Type declaringType = typeof(PatternParser);
+		/// <summary>
+		/// The fully qualified type of the PatternParser class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private static readonly Type declaringType = typeof(PatternParser);
 
-	    #endregion Private Static Fields
+		#endregion Private Static Fields
 	}
 }
