@@ -553,8 +553,17 @@ namespace log4net.Appender
 					{
 						dbCmd.Transaction = dbTran;
 					}
-					// prepare the command, which is significantly faster
-					dbCmd.Prepare();
+
+					try
+					{
+						// prepare the command, which is significantly faster
+						dbCmd.Prepare();
+					}
+					catch (Exception)
+					{
+						// ignore prepare exceptions as they can happen without affecting actual logging, eg on npgsql
+					}
+
 					// run for all events
 					foreach (LoggingEvent e in events)
 					{
