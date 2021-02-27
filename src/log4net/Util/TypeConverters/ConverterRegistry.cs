@@ -17,6 +17,7 @@
 //
 #endregion
 
+using log4net.Core;
 using System;
 using System.Collections;
 #if NETSTANDARD1_3
@@ -267,11 +268,11 @@ namespace log4net.Util.TypeConverters
 				try
 				{
 					// Create the type converter
-					return Activator.CreateInstance(converterType);
+					return ActivatorProvider.CreateInstance(converterType);
 				}
 				catch(Exception ex)
 				{
-					LogLog.Error(declaringType, "Cannot CreateConverterInstance of type ["+converterType.FullName+"], Exception in call to Activator.CreateInstance", ex);
+					LogLog.Error(declaringType, "Cannot CreateConverterInstance of type ["+converterType.FullName+"], Exception in call to ActivatorProvider.CreateInstance", ex);
 				}
 			}
 			else
