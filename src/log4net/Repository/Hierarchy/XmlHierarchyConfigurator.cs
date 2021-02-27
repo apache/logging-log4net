@@ -301,9 +301,9 @@ namespace log4net.Repository.Hierarchy
 			try 
 			{
 #if NETSTANDARD1_3
-				IAppender appender = (IAppender)Activator.CreateInstance(SystemInfo.GetTypeFromString(this.GetType().GetTypeInfo().Assembly, typeName, true, true));
+				IAppender appender = (IAppender)ActivatorProvider.CreateInstance(SystemInfo.GetTypeFromString(this.GetType().GetTypeInfo().Assembly, typeName, true, true));
 #else
-				IAppender appender = (IAppender)Activator.CreateInstance(SystemInfo.GetTypeFromString(typeName, true, true));
+				IAppender appender = (IAppender)ActivatorProvider.CreateInstance(SystemInfo.GetTypeFromString(typeName, true, true));
 #endif
 				appender.Name = appenderName;
 
@@ -778,7 +778,7 @@ namespace log4net.Repository.Hierarchy
 					{
 						// No value specified
 						Type defaultObjectType = null;
-						if (IsTypeConstructible(propertyType))
+						if (ActivatorProvider.CanCreateInstance(propertyType))
 						{
 							defaultObjectType = propertyType;
 						}
@@ -845,29 +845,6 @@ namespace log4net.Repository.Hierarchy
 			foreach(XmlNode node in element.ChildNodes)
 			{
 				if (node.NodeType == XmlNodeType.Attribute || node.NodeType == XmlNodeType.Element)
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-
-		/// <summary>
-		/// Test if a <see cref="Type"/> is constructible with <c>Activator.CreateInstance</c>.
-		/// </summary>
-		/// <param name="type">the type to inspect</param>
-		/// <returns><c>true</c> if the type is creatable using a default constructor, <c>false</c> otherwise</returns>
-		private static bool IsTypeConstructible(Type type)
-		{
-#if NETSTANDARD1_3
-			TypeInfo typeInfo = type.GetTypeInfo();
-			if (typeInfo.IsClass && !typeInfo.IsAbstract)
-#else
-			if (type.IsClass && !type.IsAbstract)
-#endif
-			{
-				ConstructorInfo defaultConstructor = type.GetConstructor(new Type[0]);
-				if (defaultConstructor != null && !defaultConstructor.IsAbstract && !defaultConstructor.IsPrivate)
 				{
 					return true;
 				}
@@ -1027,7 +1004,7 @@ namespace log4net.Repository.Hierarchy
 			object createdObject = null;
 			try
 			{
-				createdObject = Activator.CreateInstance(objectType);
+				createdObject = ActivatorProvider.CreateInstance(objectType);
 			}
 			catch(Exception createInstanceEx)
 			{

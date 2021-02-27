@@ -23,10 +23,8 @@
 using System;
 
 using log4net.Core;
-#if !NETSTANDARD1_3
-using log4net.Util;
-#endif
 using log4net.Plugin;
+using log4net.Util;
 
 namespace log4net.Config
 {
@@ -155,8 +153,8 @@ namespace log4net.Config
 				throw new LogException("Plugin type [" + pluginType.FullName + "] does not implement the log4net.IPlugin interface");
 			}
 
-			// Create an instance of the plugin using the default constructor
-			IPlugin plugin = (IPlugin)Activator.CreateInstance(pluginType);
+			// Create an instance of the plugin
+			IPlugin plugin = (IPlugin)ActivatorProvider.CreateInstance(pluginType);
 
 			return plugin;
 		}

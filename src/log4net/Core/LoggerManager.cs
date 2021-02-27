@@ -125,7 +125,7 @@ namespace log4net.Core
 					object appRepositorySelectorObj = null;
 					try
 					{
-						appRepositorySelectorObj = Activator.CreateInstance(appRepositorySelectorType);
+						appRepositorySelectorObj = ActivatorProvider.CreateInstance(appRepositorySelectorType);
 					}
 					catch(Exception ex)
 					{
