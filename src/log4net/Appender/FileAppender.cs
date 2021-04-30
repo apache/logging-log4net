@@ -812,12 +812,12 @@ namespace log4net.Appender
 					// TODO: add timeout?
 					m_mutex.WaitOne();
 
-					// increment recursive watch
-					m_recursiveWatch++;
-
 					// should always be true (and fast) for FileStream
 					if (m_stream != null)
 					{
+						// increment recursive watch
+						m_recursiveWatch++;
+
 						if (m_stream.CanSeek)
 						{
 							m_stream.Seek(0, SeekOrigin.End);
@@ -825,6 +825,7 @@ namespace log4net.Appender
 					}
 					else
 					{
+						m_mutex.ReleaseMutex();
 						// this can happen when the file appender cannot open a file for writing
 					}
 				}
@@ -1242,14 +1243,16 @@ namespace log4net.Appender
 			if (m_stream != null)
 			{
 				//WriteFooter can be called even before a file is opened
-				m_stream.AcquireLock();
-				try
+				if (m_stream.AcquireLock())
 				{
-					base.WriteFooter();
-				}
-				finally
-				{
-					m_stream.ReleaseLock();
+					try
+					{
+						base.WriteFooter();
+					}
+					finally
+					{
+						m_stream.ReleaseLock();
+					}
 				}
 			}
 		}
@@ -1292,14 +1295,16 @@ namespace log4net.Appender
 		{
 			if (m_stream != null)
 			{
-				m_stream.AcquireLock();
-				try
+				if (m_stream.AcquireLock())
 				{
-					base.CloseWriter();
-				}
-				finally
-				{
-					m_stream.ReleaseLock();
+					try
+					{
+						base.CloseWriter();
+					}
+					finally
+					{
+						m_stream.ReleaseLock();
+					}
 				}
 			}
 		}
@@ -1396,14 +1401,16 @@ namespace log4net.Appender
 
 				if (m_stream != null)
 				{
-					m_stream.AcquireLock();
-					try
+					if (m_stream.AcquireLock())
 					{
-						SetQWForFiles(m_stream);
-					}
-					finally
-					{
-						m_stream.ReleaseLock();
+						try
+						{
+							SetQWForFiles(m_stream);
+						}
+						finally
+						{
+							m_stream.ReleaseLock();
+						}
 					}
 				}
 
