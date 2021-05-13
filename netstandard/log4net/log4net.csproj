@@ -6,14 +6,14 @@
 	<PropertyGroup>
 		<BaseOutputPath>bin\</BaseOutputPath>
 		<BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
-		<AssemblyName>log4net2</AssemblyName>
+		<AssemblyName>log4net</AssemblyName>
 		<RootNamespace>log4net</RootNamespace>
 		<Version>3.0.1</Version>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<PackageId>log4net2</PackageId>
-		<Authors>log4net2</Authors>
-		<Company>log4net2</Company>
-		<Product>log4net2</Product>
+		<PackageId>log4net.NetStandard</PackageId>
+		<Authors>log4net.NetStandard</Authors>
+		<Company>log4net.NetStandard</Company>
+		<Product>log4net.NetStandard</Product>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
