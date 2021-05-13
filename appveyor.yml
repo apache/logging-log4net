@@ -1,7 +1,5 @@
-version: 2.0.{build}
+version: 3.0.{build}
 image: Visual Studio 2019
-configuration: Release
-platform: Any CPU
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
@@ -20,8 +18,9 @@ dotnet_csproj:
 build_script:
 - cmd: dotnet build netstandard\log4net.netstandard.sln --configuration Release
 artifacts:
-- path: log4net\bin\Release\log4net.NetStandard.*.nupkg
+- path: netstandard\log4net\bin\Release\log4net.NetStandard.*.nupkg
   name: log4net.NetStandard
 deploy:
 - provider: NuGet
   server: nuget.org
+ 
