@@ -20,7 +20,7 @@ dotnet_csproj:
 build_script:
 - cmd: dotnet build netstandard\log4net.netstandard.sln --configuration Release
 artifacts:
-- path: logging-log4net\netstandard\log4net\bin\Release\log4net.NetStandard.*.nupkg
+- path: log4net\bin\Release\log4net.NetStandard.*.nupkg
   name: log4net.NetStandard
 deploy:
 - provider: NuGet
