@@ -6,7 +6,7 @@
 	<PropertyGroup>
 		<BaseOutputPath>bin\</BaseOutputPath>
 		<BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
-		<AssemblyName>log4net</AssemblyName>
+		<AssemblyName>log4net2</AssemblyName>
 		<RootNamespace>log4net</RootNamespace>
 		<Version>3.0.1</Version>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
