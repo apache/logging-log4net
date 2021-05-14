@@ -1,6 +1,8 @@
 logging.log4net.NetStandard
 
-![Build status](https://ci.appveyor.com/api/projects/status/j2axn2v9pn63ya98/branch/master?svg=true)
+[![Build status](https://ci.appveyor.com/api/projects/status/cjjvowrxh6w6kdgp/branch/master?svg=true)](https://ci.appveyor.com/project/BuddyWork/logging-log4net/branch/master)
+[![NuGet Version](http://img.shields.io/nuget/v/Serilog.Sinks.Log4Net.svg?style=flat)](https://www.nuget.org/packages/log4net.NetStandard/)
+
 
 Introduction
 ===========
