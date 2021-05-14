@@ -1,3 +1,7 @@
+logging-log4net.NetStandard
+
+[![Build status](https://ci.appveyor.com/api/projects/status/cjjvowrxh6w6kdgp?svg=true)](https://ci.appveyor.com/project/BuddyWork/logging-log4net)
+
 Introduction
 ===========
 
