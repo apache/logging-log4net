@@ -1,6 +1,6 @@
 logging.log4net.NetStandard
 
-[![Build status](https://ci.appveyor.com/api/projects/status/j2axn2v9pn63ya98/branch/master?svg=true)](https://ci.appveyor.com/project/BuddyWork/serilog-sinks-log4net/branch/master
+[![Build status](https://ci.appveyor.com/api/projects/status/j2axn2v9pn63ya98/branch/master?svg=true)]
 
 Introduction
 ===========
