@@ -1,4 +1,4 @@
-logging.log4net.NetStandard
+log4net.NetStandard
 
 [![Build status](https://ci.appveyor.com/api/projects/status/cjjvowrxh6w6kdgp/branch/master?svg=true)](https://ci.appveyor.com/project/BuddyWork/logging-log4net/branch/master)
 [![NuGet Version](http://img.shields.io/nuget/v/log4net.NetStandard.svg?style=flat)](https://www.nuget.org/packages/log4net.NetStandard/)
