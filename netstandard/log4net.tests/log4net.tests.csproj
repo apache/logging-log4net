@@ -1,0 +1,51 @@
+<Project Sdk="">
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<BaseOutputPath>bin\</BaseOutputPath>
+		<BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+		<AssemblyName>log4net.tests</AssemblyName>
+		<RootNamespace>log4net.tests</RootNamespace>
+		<ApplicationIcon />
+		<StartupObject />
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<OutputPath>bin\Debug\</OutputPath>
+		<DefineConstants>NETSTANDARD1_3</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<OutputPath>bin\Release\</OutputPath>
+		<DefineConstants>NETSTANDARD1_3</DefineConstants>
+	</PropertyGroup>
+
+	<Import Sdk="Microsoft.NET.Sdk" Project="Sdk.props" />
+	<Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
+	
+	<ItemGroup>
+		<Compile Remove="obj\**" />
+		<EmbeddedResource Remove="obj\**" />
+		<None Remove="obj\**" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <Compile Remove="src\Appender\AdoNetAppenderTest.cs" />
+	  <Compile Remove="src\Appender\DebugAppenderTest.cs" />
+	  <Compile Remove="src\Appender\RemotingAppenderTest.cs" />
+	  <Compile Remove="src\Util\PatternStringTest.cs" />
+	</ItemGroup>
+
+
+  <ItemGroup>
+	  <PackageReference Include="NUnit" Version="3.12.0" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <ProjectReference Include="..\log4net\log4net.csproj" />
+	</ItemGroup>
+	
+</Project>
