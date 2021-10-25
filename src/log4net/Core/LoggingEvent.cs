@@ -956,7 +956,10 @@ namespace log4net.Core
 #endif
         }
 
+#if (NETCF || SSCLI || NETSTANDARD1_3)
+#else
         private static bool _platformDoesNotSupportWindowsIdentity;
+#endif
 
         /// <summary>
         /// Gets the identity of the current thread principal.
