@@ -497,15 +497,15 @@ namespace log4net.Core
             // hierarchy but may not be for the target hierarchy that this
             // event may be re-logged into. If it is to be re-logged it may
             // be necessary to re-lookup the level based only on the name.
-            m_data.Level = (Level) info.GetValue("Level", typeof(Level));
+            m_data.Level = (Level)info.GetValue("Level", typeof(Level));
 
             m_data.Message = info.GetString("Message");
             m_data.ThreadName = info.GetString("ThreadName");
             m_data.TimeStampUtc = info.GetDateTime("TimeStamp").ToUniversalTime();
-            m_data.LocationInfo = (LocationInfo) info.GetValue("LocationInfo", typeof(LocationInfo));
+            m_data.LocationInfo = (LocationInfo)info.GetValue("LocationInfo", typeof(LocationInfo));
             m_data.UserName = info.GetString("UserName");
             m_data.ExceptionString = info.GetString("ExceptionString");
-            m_data.Properties = (PropertiesDictionary) info.GetValue("Properties", typeof(PropertiesDictionary));
+            m_data.Properties = (PropertiesDictionary)info.GetValue("Properties", typeof(PropertiesDictionary));
             m_data.Domain = info.GetString("Domain");
             m_data.Identity = info.GetString("Identity");
 
@@ -914,7 +914,7 @@ namespace log4net.Core
         /// </para>
         /// </remarks>
         public string UserName =>
-            m_data.UserName ??= TryGetCurrentUserName() ?? SystemInfo.NotAvailableText; 
+            m_data.UserName ??= TryGetCurrentUserName() ?? SystemInfo.NotAvailableText;
 
         private static string TryGetCurrentUserName()
         {
@@ -922,6 +922,13 @@ namespace log4net.Core
 					// On compact framework there's no notion of current Windows user
 					return SystemInfo.NotAvailableText;
 #else
+            if (_platformDoesNotSupportWindowsIdentity)
+            {
+                // we've already received one PlatformNotSupportedException
+                // and it's highly unlikely that will change
+                return Environment.UserName;
+            }
+
             try
             {
                 var windowsIdentity = WindowsIdentity.GetCurrent();
@@ -929,6 +936,7 @@ namespace log4net.Core
             }
             catch (PlatformNotSupportedException)
             {
+                _platformDoesNotSupportWindowsIdentity = true;
                 return Environment.UserName;
             }
             catch (SecurityException)
@@ -947,7 +955,9 @@ namespace log4net.Core
             }
 #endif
         }
-        
+
+        private static bool _platformDoesNotSupportWindowsIdentity;
+
         /// <summary>
         /// Gets the identity of the current thread principal.
         /// </summary>
@@ -1338,7 +1348,7 @@ namespace log4net.Core
             m_cacheUpdatable = true;
 
             // determine the flags that we are actually fixing
-            var updateFlags = (FixFlags) ((flags ^ m_fixFlags) & flags);
+            var updateFlags = (FixFlags)((flags ^ m_fixFlags) & flags);
 
             if (updateFlags > 0)
             {
