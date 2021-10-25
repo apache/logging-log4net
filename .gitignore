@@ -13,7 +13,6 @@
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
-[Rr]elease/
 [Rr]eleases/
 x64/
 x86/
@@ -137,7 +136,7 @@ publish/
 # Publish Web Output
 *.[Pp]ublish.xml
 *.azurePubxml
-# TODO: Comment the next line if you want to checkin your web deploy settings 
+# TODO: Comment the next line if you want to checkin your web deploy settings
 # but database connection strings (with potential passwords) will be unencrypted
 *.pubxml
 *.publishproj
@@ -235,3 +234,12 @@ target
 # other files to ignore
 old-log4net.snk
 src/GeneratedAssemblyInfo.cs
+.idea
+*.orig
+*.old
+*.swp
+build-tools
+buildreports
+vs_buildtools.exe
+dotnetfx35.exe
+*.exe

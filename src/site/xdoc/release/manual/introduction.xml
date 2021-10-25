@@ -1,10 +1,10 @@
 <?xml version="1.0" ?>
 <!--
-Licensed to the Apache Software Foundation (ASF) under one or more 
+Licensed to the Apache Software Foundation (ASF) under one or more
 contributor license agreements. See the NOTICE file distributed with
-this work for additional information regarding copyright ownership. 
+this work for additional information regarding copyright ownership.
 The ASF licenses this file to you under the Apache License, Version 2.0
-(the "License"); you may not use this file except in compliance with 
+(the "License"); you may not use this file except in compliance with
 the License. You may obtain a copy of the License at
 
 http://www.apache.org/licenses/LICENSE-2.0
@@ -33,51 +33,51 @@ limitations under the License.
                 <p>
                     The log4net framework is based on Apache log4j&#x2122;, see <a href="http://logging.apache.org/log4j/">
                         http://logging.apache.org/log4j/</a> for more information on log4j.
-                    The log4net framework, source code, binaries, documentation, examples and related 
-                    materials are published under the terms of the 
-                    <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>, 
+                    The log4net framework, source code, binaries, documentation, examples and related
+                    materials are published under the terms of the
+                    <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>,
                     a copy of which has been included with this distribution in the LICENSE.txt file.
                 </p>
                 <p>
-                    This document is an introduction to the log4net API, its unique features and 
-                    design rationale. Log4net is an open source project based on the work of many 
-                    authors. It allows the developer to control which log statements are output 
-                    with arbitrary granularity. It is fully configurable at runtime using external 
+                    This document is an introduction to the log4net API, its unique features and
+                    design rationale. Log4net is an open source project based on the work of many
+                    authors. It allows the developer to control which log statements are output
+                    with arbitrary granularity. It is fully configurable at runtime using external
                     configuration files.
                 </p>
                 <p>
-                    Almost every large application includes its own logging or tracing API. 
-                    Inserting log statements into code is a low-tech method for debugging it. It 
-                    may also be the only way because debuggers are not always available or 
-                    applicable. This is usually the case for multithreaded applications and 
+                    Almost every large application includes its own logging or tracing API.
+                    Inserting log statements into code is a low-tech method for debugging it. It
+                    may also be the only way because debuggers are not always available or
+                    applicable. This is usually the case for multithreaded applications and
                     distributed applications at large.
                 </p>
                 <p>
-                    Once an application has been deployed it may not be possible to utilize 
-                    development and debugging tools. An administrator can use effective logging 
+                    Once an application has been deployed it may not be possible to utilize
+                    development and debugging tools. An administrator can use effective logging
                     systems to diagnose and fix many configuration issues.
                 </p>
                 <p>
-                    Experience indicates that logging is an important component of the development 
-                    cycle. It offers several advantages. It provides precise <i>context</i> about the 
-                    execution of the application. Once inserted into the code, the generation of 
-                    logging output requires no human intervention. Moreover, log output can be 
-                    saved in persistent medium to be studied at a later time. In addition to its 
-                    use in the development cycle, a sufficiently rich logging package can also be 
+                    Experience indicates that logging is an important component of the development
+                    cycle. It offers several advantages. It provides precise <i>context</i> about the
+                    execution of the application. Once inserted into the code, the generation of
+                    logging output requires no human intervention. Moreover, log output can be
+                    saved in persistent medium to be studied at a later time. In addition to its
+                    use in the development cycle, a sufficiently rich logging package can also be
                     viewed as an auditing tool.
                 </p>
                 <p>
-                    Logging does have its drawbacks. It can slow down an application. If too 
-                    verbose, it can cause scrolling blindness. To alleviate these concerns, log4net 
-                    is designed to be reliable, fast and extensible. Since logging is rarely the 
-                    main focus of an application, the log4net API strives to be simple to 
+                    Logging does have its drawbacks. It can slow down an application. If too
+                    verbose, it can cause scrolling blindness. To alleviate these concerns, log4net
+                    is designed to be reliable, fast and extensible. Since logging is rarely the
+                    main focus of an application, the log4net API strives to be simple to
                     understand and to use.
                 </p>
             </section>
-            
+
             <section id="frameworks" name="Frameworks">
                 <p>
-                    Log4net is available for several frameworks. For each supported framework an 
+                    Log4net is available for several frameworks. For each supported framework an
                     assembly targeting that framework is built:
                 </p>
                 <ul>
@@ -100,46 +100,46 @@ limitations under the License.
                     <li>CLI 1.0 Compatible</li>
                 </ul>
                 <p>
-                    Not all frameworks are created equal and some features have been excluded from 
-                    some of the builds. See the <a href="../framework-support.html">Framework Support</a> 
+                    Not all frameworks are created equal and some features have been excluded from
+                    some of the builds. See the <a href="../framework-support.html">Framework Support</a>
                     document for more information.
                 </p>
             </section>
-            
+
             <section id="loggers" name="Loggers and Appenders">
                 <p>
-                    Log4net has three main components: <i>loggers</i>, <i>appenders</i> and <i>layouts</i>. 
-                    These three types of components work together to enable developers to log 
-                    messages according to message type and level, and to control at runtime how 
+                    Log4net has three main components: <i>loggers</i>, <i>appenders</i> and <i>layouts</i>.
+                    These three types of components work together to enable developers to log
+                    messages according to message type and level, and to control at runtime how
                     these messages are formatted and where they are reported. These components are
                     helped by <i>filters</i> that control the actions of the appender and
                     <i>object renderers</i> that turn objects into strings.
                 </p>
-                
+
                 <section id="hierarchy" name="Logger hierarchy">
                     <p>
                         The first and foremost advantage of any logging API over plain
                         <span class="code">System.Console.WriteLine</span>
-                        resides in its ability to disable certain log statements while allowing others 
-                        to print unhindered. This capability assumes that the logging space, that is, 
-                        the space of all possible logging statements, is categorized according to some 
+                        resides in its ability to disable certain log statements while allowing others
+                        to print unhindered. This capability assumes that the logging space, that is,
+                        the space of all possible logging statements, is categorized according to some
                         developer-chosen criteria.
                     </p>
                     <p>
-                        Loggers are named entities. Logger names are case-sensitive and they follow the 
+                        Loggers are named entities. Logger names are case-sensitive and they follow the
                         following hierarchical naming rule:
                     </p>
                     <dl class="rule">
                         <dt>Named Hierarchy</dt>
                         <dd>
                             <p>
-                                A logger is said to be an <i>ancestor</i> of another logger if its name 
-                                followed by a dot is a prefix of the <i>descendant</i> logger name. A logger is 
-                                said to be a <i>parent</i> of a <i>child</i> logger if there are no ancestors 
+                                A logger is said to be an <i>ancestor</i> of another logger if its name
+                                followed by a dot is a prefix of the <i>descendant</i> logger name. A logger is
+                                said to be a <i>parent</i> of a <i>child</i> logger if there are no ancestors
                                 between itself and the descendant logger.
                             </p>
                             <p>
-                                The hierarchy works very much in the same way as the namespace and class 
+                                The hierarchy works very much in the same way as the namespace and class
                                 hierarchy in .NET. This is very convenient as we shall soon see.
                             </p>
                         </dd>
@@ -153,11 +153,11 @@ limitations under the License.
                         is a parent of
                         <span class="code">"System.Text"</span>
                         and an ancestor of
-                        <span class="code">"System.Text.StringBuilder"</span>. This naming scheme 
+                        <span class="code">"System.Text.StringBuilder"</span>. This naming scheme
                         should be familiar to most developers.
                     </p>
                     <p>
-                        The <i>root</i> logger resides at the top of the logger hierarchy. It is exceptional 
+                        The <i>root</i> logger resides at the top of the logger hierarchy. It is exceptional
                         in three ways:
                     </p>
                     <ol>
@@ -173,7 +173,7 @@ limitations under the License.
                         <span class="code">log4net.LogManager</span>
                         class. The
                         <span class="code">GetLogger</span>
-                        methods take the name of the desired logger as a parameter. They are listed 
+                        methods take the name of the desired logger as a parameter. They are listed
                         below:
                     </p>
                     <source language="C#"><![CDATA[
@@ -190,7 +190,7 @@ namespace log4net
                         <span class="code">GetLogger</span>
                         methods that takes a
                         <span class="code">Type</span>
-                        parameter uses the fully qualified type name as the name of the logger to 
+                        parameter uses the fully qualified type name as the name of the logger to
                         retrieve.
                     </p>
                     <p>
@@ -198,7 +198,7 @@ namespace log4net
                         <span class="code">GetLogger</span>
                         methods return an
                         <span class="code">ILog</span>
-                        interface. That is the representation of the <i>Logger</i> passed back to the 
+                        interface. That is the representation of the <i>Logger</i> passed back to the
                         developer. The
                         <span class="code">ILog</span>
                         interface is defined below:
@@ -214,28 +214,28 @@ namespace log4net
         bool IsWarnEnabled { get; }
         bool IsErrorEnabled { get; }
         bool IsFatalEnabled { get; }
-        
+
         /* Log a message object */
         void Debug(object message);
         void Info(object message);
         void Warn(object message);
         void Error(object message);
         void Fatal(object message);
-        
+
         /* Log a message object and exception */
         void Debug(object message, Exception t);
         void Info(object message, Exception t);
         void Warn(object message, Exception t);
         void Error(object message, Exception t);
         void Fatal(object message, Exception t);
-        
+
         /* Log a message string using the System.String.Format syntax */
         void DebugFormat(string format, params object[] args);
         void InfoFormat(string format, params object[] args);
         void WarnFormat(string format, params object[] args);
         void ErrorFormat(string format, params object[] args);
         void FatalFormat(string format, params object[] args);
-        
+
         /* Log a message string using the System.String.Format syntax */
         void DebugFormat(IFormatProvider provider, string format, params object[] args);
         void InfoFormat(IFormatProvider provider, string format, params object[] args);
@@ -273,26 +273,26 @@ namespace log4net
                         </li>
                     </ul>
                     <p>
-                        If a given logger is not assigned a level, then it inherits one from its 
+                        If a given logger is not assigned a level, then it inherits one from its
                         closest ancestor with an assigned level. More formally:
                     </p>
                     <dl class="rule">
                         <dt>Level Inheritance</dt>
                         <dd>
                             <p>
-                                The <i>inherited level</i> for a given logger <i>X</i>, is equal to the first 
-                                non-null level in the logger hierarchy, starting at <i>X</i> and proceeding 
+                                The <i>inherited level</i> for a given logger <i>X</i>, is equal to the first
+                                non-null level in the logger hierarchy, starting at <i>X</i> and proceeding
                                 upwards in the hierarchy towards the <i>root</i> logger.
                             </p>
                         </dd>
                     </dl>
                     <p>
-                        To ensure that all loggers can eventually inherit a level, the <i>root</i> logger 
+                        To ensure that all loggers can eventually inherit a level, the <i>root</i> logger
                         always has an assigned level. The default value for the <i>root</i> logger is
                         <span class="code">DEBUG</span>.
                     </p>
                     <p>
-                        Below are four tables with various assigned level values and the resulting 
+                        Below are four tables with various assigned level values and the resulting
                         inherited levels according to the above rule.
                     </p>
                     <p> </p>
@@ -329,7 +329,7 @@ namespace log4net
                         </table>
                     </div>
                     <p>
-                        In <i>Example 1</i> above, only the <i>root</i> logger is assigned a level. This level 
+                        In <i>Example 1</i> above, only the <i>root</i> logger is assigned a level. This level
                         value,
                         <span class="code">Proot</span>, is inherited by the other loggers
                         <span class="code">X</span>,
@@ -371,7 +371,7 @@ namespace log4net
                         </table>
                     </div>
                     <p>
-                        In <i>Example 2</i> above, all loggers have an assigned level value. There is 
+                        In <i>Example 2</i> above, all loggers have an assigned level value. There is
                         no need for level inheritance.
                     </p>
                     <p> </p>
@@ -472,7 +472,7 @@ namespace log4net
                         having an assigned level.
                     </p>
                     <p>
-                        Logging requests are made by invoking one of the printing methods of a logger 
+                        Logging requests are made by invoking one of the printing methods of a logger
                         instance (through the <span class="code">log4net.ILog</span>). These printing methods are
                         <span class="code">Debug</span>,
                         <span class="code">Info</span>,
@@ -481,7 +481,7 @@ namespace log4net
                         <span class="code">Fatal</span>.
                     </p>
                     <p>
-                        By definition, the printing method determines the level of a logging request. 
+                        By definition, the printing method determines the level of a logging request.
                         For example, if
                         <span class="code">log</span>
                         is a logger instance, then the statement
@@ -489,29 +489,29 @@ namespace log4net
                         is a logging request of level <span class="code">INFO</span>.
                     </p>
                     <p>
-                        A logging request is said to be <i>enabled</i> if its level is higher than or 
-                        equal to the level of its logger. Otherwise, the request is said to be <i>disabled</i>. 
-                        A logger without an assigned level will inherit one from the hierarchy. This 
+                        A logging request is said to be <i>enabled</i> if its level is higher than or
+                        equal to the level of its logger. Otherwise, the request is said to be <i>disabled</i>.
+                        A logger without an assigned level will inherit one from the hierarchy. This
                         rule is summarized below.
                     </p>
                     <dl class="rule">
                         <dt>Basic Selection Rule</dt>
                         <dd>
                             <p>
-                                A log request of level <i>L</i> in a logger with (either assigned or inherited, 
+                                A log request of level <i>L</i> in a logger with (either assigned or inherited,
                                 whichever is appropriate) level <i>K</i>, is enabled if <i>L &gt;= K</i>.
                             </p>
                         </dd>
                     </dl>
                     <p>
-                        This rule is at the heart of log4net. It assumes that levels are ordered. For 
+                        This rule is at the heart of log4net. It assumes that levels are ordered. For
                         the standard levels, we have
                         <span class="code">DEBUG &lt; INFO &lt; WARN &lt; ERROR &lt; FATAL</span>.
                     </p>
                     <p>
                         Calling the
                         <span class="code">log4net.LogManager.GetLogger</span>
-                        method with the same name will always return a reference to the exact same 
+                        method with the same name will always return a reference to the exact same
                         logger object.
                     </p>
                     <p>
@@ -527,41 +527,41 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                         refer to <i>exactly</i> the same logger object.
                     </p>
                     <p>
-                        Thus, it is possible to configure a logger and then to retrieve the same 
-                        instance somewhere else in the code without passing around references. In 
-                        fundamental contradiction to biological parenthood, where parents always 
-                        precede their children, log4net loggers can be created and configured in any 
-                        order. In particular, a "parent" logger will find and link to its descendants 
+                        Thus, it is possible to configure a logger and then to retrieve the same
+                        instance somewhere else in the code without passing around references. In
+                        fundamental contradiction to biological parenthood, where parents always
+                        precede their children, log4net loggers can be created and configured in any
+                        order. In particular, a "parent" logger will find and link to its descendants
                         even if it is instantiated after them.
                     </p>
                     <p>
-                        Configuration of the log4net environment is typically done at application 
-                        initialization. The preferred way is by reading a configuration file. This 
+                        Configuration of the log4net environment is typically done at application
+                        initialization. The preferred way is by reading a configuration file. This
                         approach will be discussed shortly.
                     </p>
                     <p>
-                        Log4net makes it easy to name loggers by <i>software component</i>. This can be 
-                        accomplished by statically instantiating a logger in each class, with the 
-                        logger name equal to the fully qualified name of the class. This is a useful 
-                        and straightforward method of defining loggers. As the log output bears the 
-                        name of the generating logger, this naming strategy makes it easy to identify 
-                        the origin of a log message. However, this is only one possible, albeit common, 
-                        strategy for naming loggers. Log4net does not restrict the possible set of 
+                        Log4net makes it easy to name loggers by <i>software component</i>. This can be
+                        accomplished by statically instantiating a logger in each class, with the
+                        logger name equal to the fully qualified name of the class. This is a useful
+                        and straightforward method of defining loggers. As the log output bears the
+                        name of the generating logger, this naming strategy makes it easy to identify
+                        the origin of a log message. However, this is only one possible, albeit common,
+                        strategy for naming loggers. Log4net does not restrict the possible set of
                         loggers. The developer is free to name the loggers as desired.
                     </p>
                     <p>
-                        Nevertheless, naming loggers after the class where they are located seems to be 
-                        the best strategy known so far. It is simple an obvious to the developers where 
-                        each log message came from. Most importantly it leverages the design of the 
-                        application to produce the design of the logger hierarchy. Hopefully some 
+                        Nevertheless, naming loggers after the class where they are located seems to be
+                        the best strategy known so far. It is simple an obvious to the developers where
+                        each log message came from. Most importantly it leverages the design of the
+                        application to produce the design of the logger hierarchy. Hopefully some
                         thought has gone into the design of the application.
                     </p>
                 </section>
-                
+
                 <section id="appenders" name="Appenders">
                     <p>
-                        The ability to selectively enable or disable logging requests based on their 
-                        logger is only part of the picture. Log4net allows logging requests to print to 
+                        The ability to selectively enable or disable logging requests based on their
+                        logger is only part of the picture. Log4net allows logging requests to print to
                         multiple destinations. In log4net speak, an output destination is called an <i>appender</i>.
                         Appenders must implement the <span class="code">log4net.Appenders.IAppender</span>
                         interface.
@@ -580,7 +580,7 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                             <tr>
                                 <td><a href="../sdk/html/T_log4net_Appender_AdoNetAppender.htm">log4net.Appender.AdoNetAppender</a></td>
                                 <td>
-                                    Writes logging events to a database using either prepared statements or stored 
+                                    Writes logging events to a database using either prepared statements or stored
                                     procedures.
                                 </td>
                             </tr>
@@ -593,7 +593,7 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                             <tr>
                                 <td><a href="../sdk/html/T_log4net_Appender_AspNetTraceAppender.htm">log4net.Appender.AspNetTraceAppender</a></td>
                                 <td>
-                                    Writes logging events to the ASP trace context. These can then be rendered at 
+                                    Writes logging events to the ASP trace context. These can then be rendered at
                                     the end of the ASP page or on the ASP trace page.
                                 </td>
                             </tr>
@@ -606,7 +606,7 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                             <tr>
                                 <td><a href="../sdk/html/T_log4net_Appender_ColoredConsoleAppender.htm">log4net.Appender.ColoredConsoleAppender</a></td>
                                 <td>
-                                    Writes logging events to the application's Console. The events may go to either 
+                                    Writes logging events to the application's Console. The events may go to either
                                     the standard our stream or the standard error stream. The events may have configurable
                                     text and background colors defined for each level.
                                 </td>
@@ -614,7 +614,7 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                             <tr>
                                 <td><a href="../sdk/html/T_log4net_Appender_ConsoleAppender.htm">log4net.Appender.ConsoleAppender</a></td>
                                 <td>
-                                    Writes logging events to the application's Console. The events may go to either 
+                                    Writes logging events to the application's Console. The events may go to either
                                     the standard our stream or the standard error stream.
                                 </td>
                             </tr>
@@ -631,7 +631,7 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net.Appender_FileAppender.htm">log4net.Appender.FileAppender</a></td>
+                                <td><a href="../sdk/html/T_log4net_Appender_FileAppender.htm">log4net.Appender.FileAppender</a></td>
                                 <td>
                                     Writes logging events to a file in the file system.
                                 </td>
@@ -657,15 +657,15 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                             <tr>
                                 <td><a href="../sdk/html/T_log4net_Appender_NetSendAppender.htm">log4net.Appender.NetSendAppender</a></td>
                                 <td>
-                                    Writes logging events to the Windows Messenger service. These messages are 
+                                    Writes logging events to the Windows Messenger service. These messages are
                                     displayed in a dialog on a users terminal.
                                 </td>
                             </tr>
                             <tr>
                                 <td><a href="../sdk/html/T_log4net_Appender_OutputDebugStringAppender.htm">log4net.Appender.OutputDebugStringAppender</a></td>
                                 <td>
-                                    Writes logging events to the debugger. If the application has no 
-                                    debugger, the system debugger displays the string. If the application has no 
+                                    Writes logging events to the debugger. If the application has no
+                                    debugger, the system debugger displays the string. If the application has no
                                     debugger and the system debugger is not active, the message is ignored.
                                 </td>
                             </tr>
@@ -684,8 +684,8 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                             <tr>
                                 <td><a href="../sdk/html/T_log4net_Appender_RollingFileAppender.htm">log4net.Appender.RollingFileAppender</a></td>
                                 <td>
-                                    Writes logging events to a file in the file system. The RollingFileAppender can 
-                                    be configured to log to multiple files based upon date or file size 
+                                    Writes logging events to a file in the file system. The RollingFileAppender can
+                                    be configured to log to multiple files based upon date or file size
                                     constraints.
                                 </td>
                             </tr>
@@ -718,7 +718,7 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                             <tr>
                                 <td><a href="../sdk/html/T_log4net_Appender_UdpAppender.htm">log4net.Appender.UdpAppender</a></td>
                                 <td>
-                                    Sends logging events as connectionless UDP datagrams to a remote host or a 
+                                    Sends logging events as connectionless UDP datagrams to a remote host or a
                                     multicast group using a UdpClient.
                                 </td>
                             </tr>
@@ -729,16 +729,16 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                     </p>
                     <p>
                         <strong>
-                            Each enabled logging request for a given logger will be forwarded to all 
+                            Each enabled logging request for a given logger will be forwarded to all
                             the appenders in that logger as well as the appenders higher in the hierarchy.
                         </strong>
-                        In other words, appenders are inherited additively from the logger hierarchy. 
-                        For example, if a console appender is added to the <i>root</i> logger, then all 
-                        enabled logging requests will at least print on the console. If in addition a 
-                        file appender is added to a logger, say <i>X</i>, then enabled logging requests 
-                        for <i>X</i> and <i>X</i>'s children will print on a file <i>and</i> on the 
-                        console. It is possible to override this default behavior so that appender 
-                        accumulation is no longer additive by setting the additivity flag on the logger 
+                        In other words, appenders are inherited additively from the logger hierarchy.
+                        For example, if a console appender is added to the <i>root</i> logger, then all
+                        enabled logging requests will at least print on the console. If in addition a
+                        file appender is added to a logger, say <i>X</i>, then enabled logging requests
+                        for <i>X</i> and <i>X</i>'s children will print on a file <i>and</i> on the
+                        console. It is possible to override this default behavior so that appender
+                        accumulation is no longer additive by setting the additivity flag on the logger
                         to
                         <span class="code">false</span>.
                     </p>
@@ -749,15 +749,15 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                         <dt>Appender Additivity</dt>
                         <dd>
                             <p>
-                                The output of a log statement of logger <i>X</i> will go to all the appenders 
-                                in <i>X</i> and its ancestors. This is the meaning of the term "appender 
+                                The output of a log statement of logger <i>X</i> will go to all the appenders
+                                in <i>X</i> and its ancestors. This is the meaning of the term "appender
                                 additivity".
                             </p>
                             <p>
-                                However, if an ancestor of logger <i>X</i>, say <i>Y</i>, has the additivity 
+                                However, if an ancestor of logger <i>X</i>, say <i>Y</i>, has the additivity
                                 flag set to
-                                <span class="code">false</span>, then <i>X</i>'s output will be directed to all 
-                                the appenders in <i>X</i> and it's ancestors up to and including <i>Y</i> but 
+                                <span class="code">false</span>, then <i>X</i>'s output will be directed to all
+                                the appenders in <i>X</i> and it's ancestors up to and including <i>Y</i> but
                                 not the appenders in any of the ancestors of <i>Y</i>.
                             </p>
                             <p>
@@ -825,28 +825,28 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                                 <td>none</td>
                                 <td>true</td>
                                 <td>A-sec</td>
-                                <td>Only appenders of "security" because the additivity flag in "security" is set 
+                                <td>Only appenders of "security" because the additivity flag in "security" is set
                                     to
                                     <span class="code">false</span>.</td>
                             </tr>
                         </table>
                     </div>
                 </section>
-                
+
                 <section id="filters" name="Filters">
                     <p>
-                        Appenders can filter the events that are delivered to them. The filters can be 
-                        specified in the configuration to allow fine control of the events that are 
+                        Appenders can filter the events that are delivered to them. The filters can be
+                        specified in the configuration to allow fine control of the events that are
                         logged through different appenders.
                     </p>
                     <p>
                         The simplest form of control is to specify a
                         <span class="code">Threshold</span>
-                        on the appender. This works by logging only the events that have a level that 
+                        on the appender. This works by logging only the events that have a level that
                         is greater than or equal to the threshold.
                     </p>
                     <p>
-                        More complex and custom event filtering can be done using the filter chain 
+                        More complex and custom event filtering can be done using the filter chain
                         defined on each appender. Filters must implement the
                         <span class="code">log4net.Filter.IFilter</span> interface.
                     </p>
@@ -900,20 +900,20 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                         </table>
                     </div>
                     <p>
-                        The filters can be configured to either accept or reject the event based upon 
+                        The filters can be configured to either accept or reject the event based upon
                         the match.
                     </p>
                 </section>
-                
+
                 <section id="layouts" name="Layouts">
                     <p>
-                        More often than not, users wish to customize not only the output destination 
-                        but also the output format. This is accomplished by associating a <i>layout</i> 
-                        with an appender. The layout is responsible for formatting the logging request 
-                        according to the user's wishes, whereas an appender takes care of sending the 
+                        More often than not, users wish to customize not only the output destination
+                        but also the output format. This is accomplished by associating a <i>layout</i>
+                        with an appender. The layout is responsible for formatting the logging request
+                        according to the user's wishes, whereas an appender takes care of sending the
                         formatted output to its destination. The
-                        <span class="code">PatternLayout</span>, part of the standard log4net 
-                        distribution, lets the user specify the output format according to conversion 
+                        <span class="code">PatternLayout</span>, part of the standard log4net
+                        distribution, lets the user specify the output format according to conversion
                         patterns similar to the C language
                         <span class="code">printf</span>
                         function.
@@ -926,10 +926,10 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                     <source language="text"><![CDATA[
 176 [main] INFO  Com.Foo.Bar - Located nearest gas station.]]></source>
                     <p>
-                        The first field is the number of milliseconds elapsed since the start of the 
-                        program. The second field is the thread making the log request. The third field 
-                        is the level of the log statement. The fourth field is the name of the logger 
-                        associated with the log request. The text after the '-' is the message of the 
+                        The first field is the number of milliseconds elapsed since the start of the
+                        program. The second field is the thread making the log request. The third field
+                        is the level of the log statement. The fourth field is the name of the logger
+                        associated with the log request. The text after the '-' is the message of the
                         statement.
                     </p>
                     <p>
@@ -946,14 +946,14 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                             <tr>
                                 <td><a href="../sdk/html/T_log4net_Layout_ExceptionLayout.htm">log4net.Layout.ExceptionLayout</a></td>
                                 <td>
-                                    Renders the exception text from the logging 
+                                    Renders the exception text from the logging
                                     event.
                                 </td>
                             </tr>
                             <tr>
                                 <td><a href="../sdk/html/T_log4net_Layout_PatternLayout.htm">log4net.Layout.PatternLayout</a></td>
                                 <td>
-                                    Formats the logging event according to a flexible 
+                                    Formats the logging event according to a flexible
                                     set of formatting flags.
                                 </td>
                             </tr>
@@ -1023,7 +1023,7 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                         <span class="code">ErrorFormat</span> and <span class="code">FatalFormat</span> methods.
                     </p>
                 </section>
-                
+
             </section>
 
         </section>

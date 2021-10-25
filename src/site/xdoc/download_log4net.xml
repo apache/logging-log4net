@@ -33,88 +33,46 @@ limitations under the License.
       <p>Users who download the ZIP files to Windows may need to unblock the
       archive (right click on the ZIP and press the "Unblock" button)
       before extracting it.</p>
-  
-      <subsection name="Using a Mirror">
-        <p>We recommend you use a mirror to download our release
-        builds, but you <strong>must</strong> verify the integrity of
-        the downloaded files using signatures downloaded from our main
-        distribution directories. Recent releases (48 hours) may not
-        yet be available from the mirrors.</p>
 
-        <p>You are currently using <b>[preferred]</b>.  If you
-        encounter a problem with this mirror, please select another
-        mirror.  If all mirrors are failing, there are <i>backup</i>
-        mirrors (at the end of the mirrors list) that should be
-        available.
-        <br></br>
-        [if-any logo]<a href="[link]"><img align="right" src="[logo]" border="0"></img></a>[end]
-        </p>
+    </section>
 
-        <form action="[location]" method="get" id="SelectMirror">
-          <p>
-            Other mirrors: 
-            <select name="Preferred">
-              [if-any http]
-              [for http]<option value="[http]">[http]</option>[end]
-              [end]
-              [if-any ftp]
-              [for ftp]<option value="[ftp]">[ftp]</option>[end]
-              [end]
-              [if-any backup]
-              [for backup]<option value="[backup]">[backup] (backup)</option>[end]
-              [end]
-            </select>
-            <input type="submit" value="Change"></input>
-          </p>
-        </form>
+    <section name="log4net 2.0.12">
 
+      <subsection name="Source">
+        <table>
+          <tr>
+            <td><a href="https://downloads.apache.org/logging/log4net/source/apache-log4net-source-2.0.12.zip">apache-log4net-source-2.0.12.zip</a></td>
+            <td><a href="https://downloads.apache.org/logging/log4net/source/apache-log4net-source-2.0.12.zip.sha512">sha512</a></td>
+            <td><a href="https://downloads.apache.org/logging/log4net/source/apache-log4net-source-2.0.12.zip.asc">pgp</a></td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Binaries">
+        <p>Binaries are available in a zip file or nupkg, which is also available from <a href="https://www.nuget.org/packages/log4net/">nuget.org</a></p>
+        <table>
+          <tr>
+            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net-binaries-2.0.12.zip">log4net-binaries-2.0.12.zip</a></td>
+            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net-binaries-2.0.12.zip.sha512">sha512</a></td>
+            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net-binaries-2.0.12.zip.asc">pgp</a></td>
+          </tr>
+          <tr>
+            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net.2.0.12.nupkg">log4net-2.0.12.nupkg</a></td>
+            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net.2.0.12.nupkg.sha512">sha512</a></td>
+            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net.2.0.12.nupkg.asc">pgp</a></td>
+          </tr>
+        </table>
+      </subsection>
+
+    </section>
+
+    <section name="Keys">
         <p>The <a
         href="http://www.apache.org/dist/logging/log4net/KEYS">KEYS</a> link
         links to the code signing keys used to sign the product.  The
         <code>PGP</code> link downloads the OpenPGP compatible
         signature from our main site.  The <code>MD5</code> link
         downloads the checksum from the main site.</p>
-      </subsection>
-    </section>
-
-    <section name="log4net 2.0.8">
-
-      <subsection name="Source">
-        <table>
-          <tr>
-            <td><a href="[preferred]/logging/log4net/source/log4net-2.0.8-src.zip">log4net-2.0.8-src.zip</a></td>
-              <td><a href="http://www.apache.org/dist/logging/log4net/source/log4net-2.0.8-src.zip.md5">md5</a></td>
-              <td><a href="http://www.apache.org/dist/logging/log4net/source/log4net-2.0.8-src.zip.asc">pgp</a></td>
-          </tr>
-        </table>
-      </subsection>
-
-      <subsection name="Binaries">
-
-        <p>There are two different binary releases,
-        <code>oldkey</code> and <code>newkey</code>.  Both contain
-        assemblies built for most supported platforms and have been
-        built from the same code base, they only differ in the strong
-        name key used to sign the assemblies.</p>
-
-        <p>See <a href="./release/faq.html#two-snks">the FAQ</a> for
-        background.  We recommend you use the assemblies signed with
-        the "new" key whenever possible.</p>
-
-        <table>
-          <tr>
-            <td><a href="[preferred]/logging/log4net/binaries/log4net-2.0.8-bin-newkey.zip">log4net-2.0.8-bin-newkey.zip</a></td>
-              <td><a href="http://www.apache.org/dist/logging/log4net/binaries/log4net-2.0.8-bin-newkey.zip.md5">md5</a></td>
-              <td><a href="http://www.apache.org/dist/logging/log4net/binaries/log4net-2.0.8-bin-newkey.zip.asc">pgp</a></td>
-          </tr>
-          <tr>
-            <td><a href="[preferred]/logging/log4net/binaries/log4net-2.0.8-bin-oldkey.zip">log4net-2.0.8-bin-oldkey.zip</a></td>
-              <td><a href="http://www.apache.org/dist/logging/log4net/binaries/log4net-2.0.8-bin-oldkey.zip.md5">md5</a></td>
-              <td><a href="http://www.apache.org/dist/logging/log4net/binaries/log4net-2.0.8-bin-oldkey.zip.asc">pgp</a></td>
-          </tr>
-        </table>
-      </subsection>
-
     </section>
 
     <section name="Archives">

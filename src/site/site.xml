@@ -29,7 +29,8 @@
 
 		<menu name="Apache log4net" inherit="top" img="icon-home">
 			<item name="About" href="/index.html"/>
-			<item name="Download" href="/download_log4net.cgi"/>
+			<item name="Download" href="/download_log4net.html"/>
+			<item name="Security Reports" href="/release/security-reports.html"/>
 			<item name="Release Notes" href="/release/release-notes.html"/>
 			<item name="License" href="/license.html"/>
 		</menu>
@@ -66,8 +67,8 @@
                 </menu>
 
 		<menu name="Apache" inherit="top" img="icon-info-sign">
-			<item name="Home" href="http://www.apache.org/"/>	
-			<item name="License" href="http://www.apache.org/licenses/"/>	
+			<item name="Home" href="http://www.apache.org/"/>
+			<item name="License" href="http://www.apache.org/licenses/"/>
 			<item name="Sponsorship" href="http://www.apache.org/foundation/sponsorship.html"/>
 			<item name="Thanks" href="http://www.apache.org/foundation/thanks.html"/>
 			<item name="Security" href="http://www.apache.org/security/"/>

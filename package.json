@@ -1,0 +1,40 @@
+{
+  "name": "log4net",
+  "version": "2.0.12",
+  "description": "Log4Net is a logging framework for .NET",
+  "scripts": {
+    "test": "cross-env NUNIT_PROCESS=Single MAX_CONCURRENCY=1 run-s clean-build \"zarro test-dotnet\" run-dotnet-core-tests",
+    "test-xplatform": "run-s build-xplatform run-dotnet-core-tests",
+    "build-xplatform": "cross-env DOTNET_CORE=1 BUILD_CONFIGURATION=CrossPlatform run-s build",
+    "run-dotnet-core-tests": "cross-env DOTNET_CORE=1 run-s \"zarro quick-test-dotnet\"",
+    "clean-build": "rimraf build",
+    "build": "run-s clean-build \"zarro build\"",
+    "build-release": "cross-env BUILD_CONFIGURATION=Release run-s clean-build \"zarro build\"",
+    "build-site": "run-s \"zarro build-site\"",
+    "prepare-build-artifacts": "run-s \"zarro prepare-build-artifacts\"",
+    "dump-env": "node -e \"console.log(process.env);\"",
+    "release": "run-s update-version-info build-release prepare-build-artifacts build-site",
+    "zarro": "cross-env BUILD_INCLUDE=src/log4net.sln zarro",
+    "update-version-info": "run-s \"zarro update-version-info\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/fluffynuts/logging-log4net.git"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/fluffynuts/logging-log4net/issues"
+  },
+  "homepage": "https://github.com/fluffynuts/logging-log4net#readme",
+  "devDependencies": {
+    "cross-env": "^7.0.2",
+    "gulp-zip": "^5.0.2",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
+    "simple-git": "^2.20.1",
+    "which": "^2.0.2",
+    "yafs": "^1.5.0",
+    "zarro": "^1.78.0"
+  }
+}

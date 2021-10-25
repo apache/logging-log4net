@@ -10,7 +10,7 @@ Getting Started
 
 + Make sure you have a [JIRA account](https://issues.apache.org/jira/).
 + Make sure you have a [GitHub account](https://github.com/signup/free).
-+ If you're planning to implement a new feature it makes sense to discuss you're changes on the [dev list](https://logging.apache.org/log4net/mail-lists.html) first. This way you can make sure you're not wasting your time on something that isn't considered to be in Apache log4net's scope.
++ If you're planning to implement a new feature it makes sense to discuss your changes on the [dev list](https://logging.apache.org/log4net/mail-lists.html) first. This way you can make sure you're not wasting your time on something that isn't considered to be in Apache log4net's scope.
 + Submit a ticket for your issue, assuming one does not already exist.
   + Clearly describe the issue including steps to reproduce when it is a bug.
   + Make sure you fill in the earliest version that you know has the issue.
