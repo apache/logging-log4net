@@ -42,5 +42,7 @@ may be installed by using the bundled helper scripts:
 These scripts download the relevant installers from Microsoft servers,
 but you run them at your own risk.
 
-Please see [CONTRIBUTING.md](CONTRIBUTING.md) and 
-[BUILDING.md](BUILDING.md)
+Please see 
+- [CONTRIBUTING.md](doc/CONTRIBUTING.md)
+- [BUILDING.md](doc/BUILDING.md)
+- [RELEASING.md](doc/RELEASING.md)
