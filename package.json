@@ -29,6 +29,8 @@
   "homepage": "https://github.com/fluffynuts/logging-log4net#readme",
   "devDependencies": {
     "cross-env": "^7.0.2",
+    "gulp-debug": "^4.0.0",
+    "gulp-rename": "^2.0.0",
     "gulp-zip": "^5.0.2",
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",

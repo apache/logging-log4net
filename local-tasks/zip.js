@@ -3,21 +3,31 @@ const
   promisify = requireModule("promisify-stream"),
   readCsProjVersion = requireModule("read-csproj-version"),
   target = "build/artifacts",
+  debug = require("gulp-debug"),
+  rename = require("gulp-rename"),
   zip = require("gulp-zip");
 
-gulp.task("zip", [ "zip-binaries", "zip-source"], () => Promise.resolve());
+gulp.task("zip", ["zip-binaries", "zip-source"], () => Promise.resolve());
 
 gulp.task("zip-binaries", async () => {
-  const version = await readVersion();
+  const
+    version = await readVersion(),
+    baseDir = `apache-log4net-binaries-${version}`;
   return promisify(
     gulp.src(["build/Release/**/*", "LICENSE", "NOTICE"])
-      .pipe(zip(`log4net-binaries-${version}.zip`))
+      .pipe(rename(path => {
+        path.dirname = `${baseDir}/${path.dirname}`
+      }))
+      .pipe(zip(`${baseDir}.zip`))
       .pipe(gulp.dest(target))
   );
 });
 
 gulp.task("zip-source", async () => {
-  const version = await readVersion();
+  const
+    version = await readVersion(),
+    baseDir = `apache-log4net-source-${version}`;
+
   return promisify(
     gulp.src([
       "**/*",
@@ -32,8 +42,11 @@ gulp.task("zip-source", async () => {
       "!.idea",
       "!.idea/**/*"
     ])
-    .pipe(zip(`log4net-source-${version}.zip`))
-    .pipe(gulp.dest(target))
+      .pipe(rename(path => {
+        path.dirname = `${baseDir}/${path.dirname}`
+      }))
+      .pipe(zip(`${baseDir}.zip`))
+      .pipe(gulp.dest(target))
   );
 });
 
