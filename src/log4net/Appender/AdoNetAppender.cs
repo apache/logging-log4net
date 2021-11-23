@@ -557,23 +557,26 @@ namespace log4net.Appender
 					try
 					{
 						// prepare the command, which is significantly faster
-						dbCmd.Prepare();
+						Prepare(dbCmd);
 					}
 					catch (Exception)
 					{
+						if (dbTran != null)
+						{
+							// rethrow exception in transaction mode, cuz now transaction is in failed state
+							throw;
+						}
+
 						// ignore prepare exceptions as they can happen without affecting actual logging, eg on npgsql
 					}
 
 					// run for all events
 					foreach (LoggingEvent e in events)
 					{
-						// clear parameters that have been set
-						dbCmd.Parameters.Clear();
-
+						// No need to clear dbCmd.Parameters, just use existing.
 						// Set the parameter values
 						foreach (AdoNetAppenderParameter param in m_parameters)
 						{
-							param.Prepare(dbCmd);
 							param.FormatValue(dbCmd, e);
 						}
 
@@ -604,6 +607,21 @@ namespace log4net.Appender
 					}
 				}
 			}
+		}
+
+		/// <summary>
+		/// Prepare entire database command object to be executed.
+		/// </summary>
+		/// <param name="dbCmd">The command to prepare.</param>
+		protected virtual void Prepare(IDbCommand dbCmd)
+		{
+			// npgsql require parameters to prepare command
+			foreach (AdoNetAppenderParameter parameter in m_parameters)
+			{
+				parameter.Prepare(dbCmd);
+			}
+
+			dbCmd.Prepare();
 		}
 
 		/// <summary>
