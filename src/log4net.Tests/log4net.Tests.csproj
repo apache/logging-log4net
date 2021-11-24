@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net462;netcoreapp1.0;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
+    <NoWarn>NETSDK1138;CS1701</NoWarn>
     <ProjectType>Local</ProjectType>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
@@ -62,7 +63,7 @@
     <ProjectReference Include="..\log4net\log4net.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Net.Compilers" Version="3.7.0">
+    <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="4.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

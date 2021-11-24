@@ -106,7 +106,7 @@ namespace log4net.Util
 		/// </remarks>
 		protected ReadOnlyPropertiesDictionary(SerializationInfo info, StreamingContext context)
 		{
-			foreach(SerializationEntry entry in info)
+			foreach(var entry in info)
 			{
 				// The keys are stored as Xml encoded names
 				InnerHashtable[XmlConvert.DecodeName(entry.Name)] = entry.Value;
@@ -129,7 +129,7 @@ namespace log4net.Util
 		/// </remarks>
 		public string[] GetKeys()
 		{
-			string[] keys = new String[InnerHashtable.Count];
+			var keys = new String[InnerHashtable.Count];
 			InnerHashtable.Keys.CopyTo(keys, 0);
 			return keys;
 		}
@@ -214,22 +214,33 @@ namespace log4net.Util
 		{
 			foreach(DictionaryEntry entry in InnerHashtable.Clone() as IDictionary)
 			{
-				string entryKey = entry.Key as string;
-				object entryValue = entry.Value;
+				var entryKey = entry.Key as string;
+				if (entryKey is null)
+				{
+					continue;
+				}
+
+				var entryValue = entry.Value;
 
                 // If value is serializable then we add it to the list
 #if NETSTANDARD1_3
-                bool isSerializable = entryValue.GetType().GetTypeInfo().IsSerializable;
+                var isSerializable = entryValue?.GetType().GetTypeInfo().IsSerializable ?? false;
 #else
-                bool isSerializable = entryValue.GetType().IsSerializable;
+                var isSerializable = entryValue?.GetType().IsSerializable ?? false;
 #endif
-				if (entryKey != null && entryValue != null && isSerializable)
+				if (!isSerializable)
 				{
-					// Store the keys as an Xml encoded local name as it may contain colons (':') 
-					// which are NOT escaped by the Xml Serialization framework.
-					// This must be a bug in the serialization framework as we cannot be expected
-					// to know the implementation details of all the possible transport layers.
-					info.AddValue(XmlConvert.EncodeLocalName(entryKey), entryValue);
+					continue;
+				}
+
+				// Store the keys as an Xml encoded local name as it may contain colons (':') 
+				// which are NOT escaped by the Xml Serialization framework.
+				// This must be a bug in the serialization framework as we cannot be expected
+				// to know the implementation details of all the possible transport layers.
+				var localKeyName = XmlConvert.EncodeLocalName(entryKey);
+				if (localKeyName is not null)
+				{
+					info.AddValue(localKeyName, entryValue);
 				}
 			}
 		}
