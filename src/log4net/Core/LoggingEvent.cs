@@ -835,10 +835,16 @@ namespace log4net.Core
 					m_data.ThreadName =
  SystemInfo.CurrentThreadId.ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
 #else
-                    m_data.ThreadName = System.Threading.Thread.CurrentThread.Name;
-                    if (m_data.ThreadName == null || m_data.ThreadName.Length == 0)
+                    // '.NET ThreadPool Worker' appears as a default thread pool name in .NET 6+.
+                    // Prefer the numeric thread ID instead.
+                    string threadName = System.Threading.Thread.CurrentThread.Name;
+                    if (!string.IsNullOrEmpty(threadName) && threadName != ".NET ThreadPool Worker")
                     {
-                        // The thread name is not available. Therefore we
+                        m_data.ThreadName = threadName;
+                    }
+                    else
+                    {
+                        // The thread name is not available or unsuitable. Therefore we
                         // go the the AppDomain to get the ID of the 
                         // current thread. (Why don't Threads know their own ID?)
                         try
@@ -847,7 +853,7 @@ namespace log4net.Core
                                 SystemInfo.CurrentThreadId.ToString(System.Globalization.NumberFormatInfo
                                     .InvariantInfo);
                         }
-                        catch (System.Security.SecurityException)
+                        catch (SecurityException)
                         {
                             // This security exception will occur if the caller does not have 
                             // some undefined set of SecurityPermission flags.
