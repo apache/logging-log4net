@@ -14,6 +14,9 @@ Options:
             - include desktop targets at least
             - include dotnet core targets or download and install
                 the latest dotnet sdk (you will need at least v2.1)
+            - note that build is possible with VS2022 build tools, but I had to
+                install VS2019 build tools _as well_ to get msbuild to recognise 
+                the legacy net35-profile target
         - Ensure you have .NET Framework 3.5 SP1 installed
             - on Win10+, this can only be installed via Add/Remove Windows Components
             - on other platforms, see https://dotnet.microsoft.com/download/dotnet-framework/net35-sp1
