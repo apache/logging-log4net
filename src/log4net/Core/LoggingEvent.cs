@@ -937,8 +937,10 @@ namespace log4net.Core
 
             try
             {
-                var windowsIdentity = WindowsIdentity.GetCurrent();
-                return windowsIdentity?.Name ?? "";
+                using (WindowsIdentity windowsIdentity = WindowsIdentity.GetCurrent())
+                {
+                    return windowsIdentity?.Name ?? "";
+                }
             }
             catch (PlatformNotSupportedException)
             {
