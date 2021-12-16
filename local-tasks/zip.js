@@ -40,7 +40,8 @@ gulp.task("zip-source", async () => {
       "!build",
       "!build/**/*",
       "!.idea",
-      "!.idea/**/*"
+      "!.idea/**/*",
+      "!*.exe"
     ])
       .pipe(rename(path => {
         path.dirname = `${baseDir}/${path.dirname}`
