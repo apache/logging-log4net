@@ -55,11 +55,22 @@ release version 2.0.123:
 11. create an rc-releasd at GitHub with a tag like `rc/2.0.123-rc1`
     - attach all the files from the build/artifacts folder, _including signatures_
 12. get the artifacts in build/artifacts up to https://downloads.apache.org/logging/log4net/
-    - currently, I have to as another ASF member for help with this
-    - I also see release notes there - which are out of date (don't know how to update)    
+    - `svn co https://dist.apache.org/repos/dist/dev/logging -N apache-dist-logging-dev`
+    - `cd apache-dist-logging-dev`
+    - `svn up log4net`
+    - copy in source & binary artifacts to respective locations
+    - `svn delete` old items
+    - `svn commit`
 13. raise a vote on the log4net mailing list (dev@logging.apache.org)
 14. wait
 15. when the vote has 3 or more +1's, it's time to go live!
+16. copy the apache artifacts (binary and source) to the release svn repo and commit
+    - `svn co https://dist.apache.org/repos/dist/release/logging -N apache-dist-logging-release`
+    - `cd apache-dist-logging-release`
+    - `svn up log4net`
+    - copy in source & binary artifacts to respective locations
+    - `svn delete` old items
+    - `svn commit`
 16. push the .nupkg to nuget.org
 17. don't forget to make the docs live: in the logging-log4net-site folder:
     - `git checkout asf-site`
