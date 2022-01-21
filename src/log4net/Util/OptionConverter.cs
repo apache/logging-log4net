@@ -18,7 +18,6 @@
 #endregion
 
 using System;
-using System.Collections;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
@@ -58,79 +57,6 @@ namespace log4net.Util
 
 		#region Public Static Methods
 
-//		/// <summary>
-//		/// Concatenates two string arrays.
-//		/// </summary>
-//		/// <param name="l">Left array.</param>
-//		/// <param name="r">Right array.</param>
-//		/// <returns>Array containing both left and right arrays.</returns>
-//		public static string[] ConcatenateArrays(string[] l, string[] r) 
-//		{
-//			return (string[])ConcatenateArrays(l, r);
-//		}
-
-//		/// <summary>
-//		/// Concatenates two arrays.
-//		/// </summary>
-//		/// <param name="l">Left array</param>
-//		/// <param name="r">Right array</param>
-//		/// <returns>Array containing both left and right arrays.</returns>
-//		public static Array ConcatenateArrays(Array l, Array r) 
-//		{
-//			if (l == null)
-//			{
-//				throw new ArgumentNullException("l");
-//			}
-//			if (r == null)
-//			{
-//				throw new ArgumentNullException("r");
-//			}
-//
-//			int len = l.Length + r.Length;
-//			Array a = Array.CreateInstance(l.GetType(), len);
-//
-//			Array.Copy(l, 0, a, 0, l.Length);
-//			Array.Copy(r, 0, a, l.Length, r.Length);
-//
-//			return a;
-//		}
-  
-//		/// <summary>
-//		/// Converts string escape characters back to their correct values.
-//		/// </summary>
-//		/// <param name="s">String to convert.</param>
-//		/// <returns>Converted result.</returns>
-//		public static string ConvertSpecialChars(string s) 
-//		{
-//			if (s == null)
-//			{
-//				throw new ArgumentNullException("s");
-//			}
-//			char c;
-//			int len = s.Length;
-//			StringBuilder buf = new StringBuilder(len);
-//	
-//			int i = 0;
-//			while(i < len) 
-//			{
-//				c = s[i++];
-//				if (c == '\\') 
-//				{
-//					c =  s[i++];
-//					if (c == 'n')	  c = '\n';
-//					else if (c == 'r') c = '\r';
-//					else if (c == 't') c = '\t';
-//					else if (c == 'f') c = '\f';
-//					else if (c == '\b') c = '\b';					
-//					else if (c == '\"') c = '\"';				
-//					else if (c == '\'') c = '\'';			
-//					else if (c == '\\') c = '\\';			
-//				}
-//				buf.Append(c);	  
-//			}
-//			return buf.ToString();
-//		}
-
 		/// <summary>
 		/// Converts a string to a <see cref="bool" /> value.
 		/// </summary>
@@ -159,35 +85,6 @@ namespace log4net.Util
 			}
 			return defaultValue;
 		}
-
-//		/// <summary>
-//		/// Converts a string to an integer.
-//		/// </summary>
-//		/// <param name="argValue">String to convert.</param>
-//		/// <param name="defaultValue">The default value.</param>
-//		/// <returns>The <see cref="int" /> value of <paramref name="argValue" />.</returns>
-//		/// <remarks>
-//		/// <para>
-//		/// <paramref name="defaultValue"/> is returned when <paramref name="argValue"/>
-//		/// cannot be converted to a <see cref="int" /> value.
-//		/// </para>
-//		/// </remarks>
-//		public static int ToInt(string argValue, int defaultValue) 
-//		{
-//			if (argValue != null) 
-//			{
-//				string s = argValue.Trim();
-//				try 
-//				{
-//					return int.Parse(s, NumberFormatInfo.InvariantInfo);
-//				}
-//				catch (Exception e) 
-//				{
-//					LogLog.Error(declaringType, "OptionConverter: [" + s + "] is not in proper int form.", e);
-//				}
-//			}
-//			return defaultValue;
-//		}
 
 		/// <summary>
 		/// Parses a file size into a number.
