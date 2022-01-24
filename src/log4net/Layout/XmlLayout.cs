@@ -160,7 +160,6 @@ namespace log4net.Layout
 			set {m_base64Properties=value;}
 		}
 
-
 		#endregion Public Instance Properties
 
 		#region Implementation of IOptionHandler
@@ -199,7 +198,7 @@ namespace log4net.Layout
 				m_elmLocation = m_prefix + ":" + ELM_LOCATION;
 			}
 		}
-
+		
 		#endregion Implementation of IOptionHandler
 
 		#region Override implementation of XMLLayoutBase
@@ -217,7 +216,12 @@ namespace log4net.Layout
 		/// </remarks>
 		protected override void FormatXml(XmlWriter writer, LoggingEvent loggingEvent)
 		{
+			#if NETSTANDARD
+			writer.WriteStartElement(m_prefix, ELM_EVENT, m_prefix);
+			// writer.WriteAttributeString("xmlns", "log4net", null, "http://logging.apache.org/log4net/schemas/log4net-events-1.2");
+			#else
 			writer.WriteStartElement(m_elmEvent);
+			#endif
 			writer.WriteAttributeString(ATTR_LOGGER, loggingEvent.LoggerName);
 
 #if NET_2_0 || NETCF_2_0 || MONO_2_0 || NETSTANDARD
@@ -243,7 +247,11 @@ namespace log4net.Layout
 			}
     
 			// Append the message text
+			#if NETSTANDARD
+			writer.WriteStartElement(m_prefix, ELM_MESSAGE, m_prefix);
+			#else
 			writer.WriteStartElement(m_elmMessage);
+			#endif
 			if (!this.Base64EncodeMessage)
 			{
 				Transform.WriteEscapedXmlString(writer, loggingEvent.RenderedMessage, this.InvalidCharReplacement);
@@ -261,10 +269,18 @@ namespace log4net.Layout
 			// Append the properties text
 			if (properties.Count > 0)
 			{
+				#if NETSTANDARD
+				writer.WriteStartElement(m_prefix, ELM_PROPERTIES, m_prefix);
+				#else
 				writer.WriteStartElement(m_elmProperties);
+				#endif
 				foreach(System.Collections.DictionaryEntry entry in properties)
 				{
+					#if NETSTANDARD
+					writer.WriteStartElement(m_prefix, ELM_DATA, m_prefix);
+					#else
 					writer.WriteStartElement(m_elmData);
+					#endif
 					writer.WriteAttributeString(ATTR_NAME, Transform.MaskXmlInvalidCharacters((string)entry.Key,this.InvalidCharReplacement));
 
 					// Use an ObjectRenderer to convert the object to a string
@@ -289,7 +305,11 @@ namespace log4net.Layout
 			if (exceptionStr != null && exceptionStr.Length > 0)
 			{
 				// Append the stack trace line
+				#if NETSTANDARD
+				writer.WriteStartElement(m_prefix, ELM_EXCEPTION, m_prefix);
+				#else
 				writer.WriteStartElement(m_elmException);
+				#endif
 				Transform.WriteEscapedXmlString(writer, exceptionStr,this.InvalidCharReplacement);
 				writer.WriteEndElement();
 			}
@@ -298,7 +318,11 @@ namespace log4net.Layout
 			{ 
 				LocationInfo locationInfo = loggingEvent.LocationInformation;
 
+				#if NETSTANDARD
+				writer.WriteStartElement(m_prefix, ELM_LOCATION, m_prefix);
+				#else
 				writer.WriteStartElement(m_elmLocation);
+				#endif
 				writer.WriteAttributeString(ATTR_CLASS, locationInfo.ClassName);
 				writer.WriteAttributeString(ATTR_METHOD, locationInfo.MethodName);
 				writer.WriteAttributeString(ATTR_FILE, locationInfo.FileName);

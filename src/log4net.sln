@@ -24,6 +24,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net", "log4net\log4net.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.Tests", "log4net.Tests\log4net.Tests.csproj", "{B0530F10-0238-49A9-93B0-8EF412E90BCF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "integration-testing", "integration-testing", "{8953473C-EEE8-4740-993D-B8E10FA876CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net-672", "integration-testing\log4net-672\log4net-672.csproj", "{9050922E-E22E-4FF5-A1B0-2F21745C6882}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,8 +47,17 @@ Global
 		{B0530F10-0238-49A9-93B0-8EF412E90BCF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B0530F10-0238-49A9-93B0-8EF412E90BCF}.CrossPlatform|Any CPU.ActiveCfg = CrossPlatform|Any CPU
 		{B0530F10-0238-49A9-93B0-8EF412E90BCF}.CrossPlatform|Any CPU.Build.0 = CrossPlatform|Any CPU
+		{9050922E-E22E-4FF5-A1B0-2F21745C6882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9050922E-E22E-4FF5-A1B0-2F21745C6882}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9050922E-E22E-4FF5-A1B0-2F21745C6882}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9050922E-E22E-4FF5-A1B0-2F21745C6882}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9050922E-E22E-4FF5-A1B0-2F21745C6882}.CrossPlatform|Any CPU.ActiveCfg = Debug|Any CPU
+		{9050922E-E22E-4FF5-A1B0-2F21745C6882}.CrossPlatform|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9050922E-E22E-4FF5-A1B0-2F21745C6882} = {8953473C-EEE8-4740-993D-B8E10FA876CD}
 	EndGlobalSection
 EndGlobal
