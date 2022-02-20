@@ -36,8 +36,8 @@ install relevant SDKs and build for those targets. In particular,
 older Client Profile .NET Framework targets and dotnet core 1.1
 may be installed by using the bundled helper scripts:
 
-- [install-net-framework-sdk-3.5.ps1]()
-- [install-dotnet-core-sdk-1.1.ps1]()
+- [install-net-framework-sdk-3.5.ps1](install-net-framework-sdk-3.5.ps1)
+- [install-dotnet-core-sdk-1.1.ps1](install-dotnet-core-sdk-1.1.ps1)
 
 These scripts download the relevant installers from Microsoft servers,
 but you run them at your own risk.
