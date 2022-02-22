@@ -922,6 +922,8 @@ namespace log4net.Core
         public string UserName =>
             m_data.UserName ??= TryGetCurrentUserName() ?? SystemInfo.NotAvailableText;
 
+        private static string _cachedWindowsIdentityName;
+        
         private static string TryGetCurrentUserName()
         {
 #if (NETCF || SSCLI || NETSTANDARD1_3)
@@ -937,10 +939,13 @@ namespace log4net.Core
 
             try
             {
-                using (WindowsIdentity windowsIdentity = WindowsIdentity.GetCurrent())
+                if (_cachedWindowsIdentityName is not null)
                 {
-                    return windowsIdentity?.Name ?? "";
+                    return _cachedWindowsIdentityName;
                 }
+                
+                using var windowsIdentity = WindowsIdentity.GetCurrent();
+                return _cachedWindowsIdentityName = windowsIdentity?.Name ?? "";
             }
             catch (PlatformNotSupportedException)
             {
