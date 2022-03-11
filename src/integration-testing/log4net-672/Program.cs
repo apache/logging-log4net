@@ -1,102 +1,91 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using System.Xml;
 using log4net;
 using log4net.Config;
-using log4net.Core;
 
-if (true)
+const int NO_ERROR = 0;
+const int MISSING_LOGS = 1;
+const int OVERWRITTEN_LOGS = 2;
+
+var appPath = new Uri(Assembly.GetExecutingAssembly().Location).LocalPath;
+var appFolder = Path.GetDirectoryName(appPath);
+if (appFolder is null)
 {
-    var appPath = new Uri(Assembly.GetExecutingAssembly().Location).LocalPath;
-    var appFolder = Path.GetDirectoryName(appPath);
-    if (appFolder is null)
-    {
-        throw new InvalidOperationException(
-            $"Can't determine app folder for {appPath}"
-        );
-    }
+    throw new InvalidOperationException(
+        $"Can't determine app folder for {appPath}"
+    );
+}
 
-    var configFile = Path.Combine(appFolder, "log4net.config");
-    if (!File.Exists(configFile))
-    {
-        throw new InvalidOperationException($"log4net.config not found at {configFile}");
-    }
+var logFolder = Path.Combine(appFolder, "Logs");
+if (Directory.Exists(logFolder))
+{
+    Directory.Delete(logFolder, recursive: true);
+}
 
+var configFile = Path.Combine(appFolder, "log4net.config");
+if (!File.Exists(configFile))
+{
+    throw new InvalidOperationException($"log4net.config not found at {configFile}");
+}
+
+var logCount = 10;
+var identifiers = new List<Guid>();
+for (var i = 0; i < 10; i++)
+{
+    var identifier = Guid.NewGuid();
+    identifiers.Add(identifier);
+    var logged = LogWith(identifier, logCount);
+    if (logged != logCount)
+    {
+        Die($"Missing logs immediately for '{identifier}' - found {logged}/{logCount}", MISSING_LOGS);
+    }
+}
+
+foreach (var identifier in identifiers)
+{
+    var logged = CountIdentifierInLogs(identifier);
+    if (logged != logCount)
+    {
+        Die($"Logs have been overwritten for '{identifier}' - found {logged}/{logCount}", OVERWRITTEN_LOGS);
+    }
+}
+
+Console.WriteLine("All good: LOG4NET-672 is resolved");
+return NO_ERROR;
+
+void Die(string message, int exitCode)
+{
+    Console.Error.WriteLine(message);
+    Environment.Exit(exitCode);
+}
+
+int CountIdentifierInLogs(Guid id)
+{
+    return Directory.EnumerateFiles("Logs").Select(
+        filePath => CountIdentifierInFile(id, filePath)
+    ).Sum();
+}
+
+int CountIdentifierInFile(Guid id, string filePath)
+{
+    var contents = File.ReadAllLines(filePath);
+    return contents.Count(line => line.Contains(id.ToString()));
+}
+
+int LogWith(Guid identifier, int howManyLogs)
+{
     var info = new FileInfo(configFile);
-
     XmlConfigurator.Configure(info);
-
     var logger = LogManager.GetLogger("main");
 
-    for (var i = 0; i < 10; i++)
+    for (var i = 0; i < howManyLogs; i++)
     {
-        logger.Info($"test log {i}");
+        logger.Info($"test log {i} [{identifier}]");
     }
 
     LogManager.Flush(int.MaxValue);
+    return CountIdentifierInLogs(identifier);
 }
-
-// Sample.Main();
-//
-// public class Sample
-// {
-//     private const string filename = "sampledata.xml";
-//
-//     public static void Main()
-//     {
-//
-//         XmlTextWriter writer = new XmlTextWriter (filename, null);
-//         //Use indenting for readability.
-//         writer.Formatting = Formatting.Indented;
-//
-//         writer.WriteComment("sample XML fragment");
-//
-//         //Write an element (this one is the root).
-//         writer.WriteStartElement("bookstore");
-//
-//         //Write the namespace declaration.
-//         writer.WriteAttributeString("xmlns", "bk", null, "log4net");
-//
-//         writer.WriteStartElement("book");
-//
-//         //Lookup the prefix and then write the ISBN attribute.
-//         string prefix = writer.LookupPrefix("urn:samples");
-//         writer.WriteStartAttribute(prefix, "ISBN", "urn:samples");
-//         writer.WriteString("1-861003-78");
-//         writer.WriteEndAttribute();
-//
-//         //Write the title.
-//         writer.WriteStartElement("title");
-//         writer.WriteString("The Handmaid's Tale");
-//         writer.WriteEndElement();
-//
-//         //Write the price.
-//         writer.WriteElementString("price", "19.95");
-//
-//         //Write the style element.
-//         writer.WriteStartElement(prefix, "style", "urn:samples");
-//         writer.WriteString("hardcover");
-//         writer.WriteEndElement();
-//
-//         //Write the end tag for the book element.
-//         writer.WriteEndElement();
-//
-//         //Write the close tag for the root element.
-//         writer.WriteEndElement();
-//
-//         //Write the XML to file and close the writer.
-//         writer.Flush();
-//         writer.Close();
-//
-//         //Read the file back in and parse to ensure well formed XML.
-//         XmlDocument doc = new XmlDocument();
-//         //Preserve white space for readability.
-//         doc.PreserveWhitespace = true;
-//         //Load the file
-//         doc.Load(filename);
-//
-//         //Write the XML content to the console.
-//         Console.Write(doc.InnerXml);
-//     }
-// }

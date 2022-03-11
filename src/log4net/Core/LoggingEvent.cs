@@ -922,7 +922,7 @@ namespace log4net.Core
         public string UserName =>
             m_data.UserName ??= TryGetCurrentUserName() ?? SystemInfo.NotAvailableText;
 
-        private static string TryGetCurrentUserName()
+        private string TryGetCurrentUserName()
         {
 #if (NETCF || SSCLI || NETSTANDARD1_3)
 					// On compact framework there's no notion of current Windows user
@@ -937,10 +937,8 @@ namespace log4net.Core
 
             try
             {
-                using (WindowsIdentity windowsIdentity = WindowsIdentity.GetCurrent())
-                {
-                    return windowsIdentity?.Name ?? "";
-                }
+                return _cachedWindowsIdentityUserName ??= 
+                    TryReadWindowsIdentityUserName();
             }
             catch (PlatformNotSupportedException)
             {
@@ -963,6 +961,16 @@ namespace log4net.Core
             }
 #endif
         }
+        
+#if (NETCF || SSCLI || NETSTANDARD1_3)
+#else
+        private string _cachedWindowsIdentityUserName;
+        private static string TryReadWindowsIdentityUserName()
+        {
+            using var identity = WindowsIdentity.GetCurrent();
+            return identity?.Name ?? "";
+        }
+#endif
 
 #if (NETCF || SSCLI || NETSTANDARD1_3)
 #else
@@ -1464,10 +1472,23 @@ namespace log4net.Core
             // TODO: Add Repository Properties
 
             // event properties
-            var eventProperties = new PropertiesDictionary();
-            eventProperties[UserNameProperty] = UserName;
-            eventProperties[IdentityProperty] = Identity;
-            compositeProperties.Add(eventProperties);
+            var shouldFixUserName = (m_fixFlags & FixFlags.UserName) != 0;
+            var shouldFixIdentity = (m_fixFlags & FixFlags.Identity) != 0;
+            if (shouldFixIdentity || shouldFixUserName)
+            {
+                var eventProperties = new PropertiesDictionary();
+                if (shouldFixUserName)
+                {
+                    eventProperties[UserNameProperty] = UserName;
+                }
+
+                if (shouldFixIdentity)
+                {
+                    eventProperties[IdentityProperty] = Identity;
+                }
+
+                compositeProperties.Add(eventProperties);
+            }
 
             compositeProperties.Add(GlobalContext.Properties.GetReadOnlyProperties());
             m_compositeProperties = compositeProperties;

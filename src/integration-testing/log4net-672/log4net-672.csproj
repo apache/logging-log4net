@@ -20,4 +20,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="PeanutButter.EasyArgs" Version="2.0.63" />
+  </ItemGroup>
+
 </Project>
