@@ -680,6 +680,7 @@ namespace log4net.Core
         public object MessageObject
         {
             get { return m_message; }
+            protected set { m_message = value; }
         }
 
         /// <summary>
@@ -743,7 +744,7 @@ namespace log4net.Core
         /// The collected information is cached for future use.
         /// </para>
         /// </remarks>
-        public string RenderedMessage
+        public virtual string RenderedMessage
         {
             get
             {
@@ -785,7 +786,7 @@ namespace log4net.Core
         /// to be accessed multiple times then the property will be more efficient.
         /// </para>
         /// </remarks>
-        public void WriteRenderedMessage(TextWriter writer)
+        public virtual void WriteRenderedMessage(TextWriter writer)
         {
             if (m_data.Message != null)
             {
@@ -1357,7 +1358,7 @@ namespace log4net.Core
         /// It is not possible to 'unfix' a field.
         /// </para>
         /// </remarks>
-        protected void FixVolatileData(FixFlags flags)
+        protected virtual void FixVolatileData(FixFlags flags)
         {
             object forceCreation = null;
 
@@ -1641,7 +1642,7 @@ namespace log4net.Core
         /// <summary>
         /// The application supplied message of logging event.
         /// </summary>
-        private readonly object m_message;
+        private object m_message;
 
         /// <summary>
         /// The exception that was thrown.

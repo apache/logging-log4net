@@ -36,8 +36,16 @@ namespace log4net.Util
 	public sealed class SystemStringFormat
 	{
 		private readonly IFormatProvider m_provider;
-		private readonly string m_format;
-		private readonly object[] m_args;
+
+		/// <summary>
+		/// Format
+		/// </summary>
+		public string Format { get; set; }
+
+		/// <summary>
+		/// Args
+		/// </summary>
+		public object[] Args { get; set; }
 
 		#region Constructor
 
@@ -50,8 +58,8 @@ namespace log4net.Util
 		public SystemStringFormat(IFormatProvider provider, string format, params object[] args)
 		{
 			m_provider = provider;
-			m_format = format;
-			m_args = args;
+			Format = format;
+			Args = args;
 		}
 
 		#endregion Constructor
@@ -62,7 +70,7 @@ namespace log4net.Util
 		/// <returns>the formatted string</returns>
 		public override string ToString()
 		{
-			return StringFormat(m_provider, m_format, m_args);
+			return StringFormat(m_provider, Format, Args);
 		}
 
 		#region StringFormat
