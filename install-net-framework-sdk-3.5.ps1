@@ -1,3 +1,6 @@
+#Enforce TLS 1.2 as Microsoft is deprecating all old TLS versions
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
+
 if (-not (Test-Path dotnetfx35.exe)) {
     Write-Host "Downloading dotnetfx35.exe"
     Invoke-WebRequest -Uri "https://download.microsoft.com/download/2/0/E/20E90413-712F-438C-988E-FDAA79A8AC3D/dotnetfx35.exe" -OutFile dotnetfx35.exe
