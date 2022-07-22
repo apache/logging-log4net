@@ -13,7 +13,7 @@ gulp.task("build-site", async () => {
         let extra;
         switch (os.platform()) {
             case "win32":
-                extra = "You may install maven via scoop (https://scoop.sh/)";
+                extra = "You may install maven via chocolatey (https://chocolatey.org)";
                 break;
             case "darwin":
                 extra = "You may install maven via homebrew";

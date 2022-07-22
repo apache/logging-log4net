@@ -27,6 +27,33 @@ limitations under the License.
     <body>
 
         <section id="main" name="Apache log4net&#x2122; Release Notes">
+            <section id="2.0.15" name="2.0.15">
+            Attention: .NET 3.5 Client Profile is <i>no longer supported</i>. I'm really sorry, I've tried
+            to keep as many of the legacy targets available as possible, but after spending another 4 or so 
+            hours trying to get net35-client to build on any machine, I've given up - as far as I'm aware,
+            this should only affect Windows XP clients. I'm afraid 2.0.14 was the end of the road for you.
+
+            Apache log4net 2.0.15 addresses reported issues:
+              <section id="2.0.15-bug" name="Bug fixes">
+                <ul>
+                  <li>Improper usage of xml namespacing for netfx targets after a netstandard update (
+                    <a href="https://issues.apache.org/jira/projects/LOG4NET/issues/LOG4NET-685">LOG4NET-685</a>, 
+                    related <a href="https://issues.apache.org/jira/projects/LOG4NET/issues/LOG4NET-683">LOG4NET-683</a>)</li>
+                  <li>Locking hashtables during write in RenderMap calls to make them thread-safe (
+                    <a href="https://issues.apache.org/jira/projects/LOG4NET/issues/LOG4NET-646">LOG4NET-646</a>)</li>
+                  <li>An issue where RollingFilAppender would sometimes overwrite files instead of rolling them (
+                    <a href="https://issues.apache.org/jira/projects/LOG4NET/issues/LOG4NET-672">LOG4NET-672</a>)</li>
+                </ul>
+              </section>
+              <section id="2.0.15-enhancements" name="Enhancements">
+                <ul>
+                  <li><a href="https://github.com/apache/logging-log4net/pull/81">Enforce TLS1.2 in the ps1 scripts provided for dev use</a></li>  
+                  <li><a href="https://github.com/apache/logging-log4net/pull/80">Corrected links in README</a></li>
+                  <li><a href="https://github.com/apache/logging-log4net/pull/89">Open up the internals of LogEvent a bit for extension purposes</a></li>
+                  <li>Add information about FixFlags and performance to the BufferingAppender (and derivative) documentation</li>
+                </ul>
+              </section>
+            </section>
             <section id="2.0.14" name="2.0.14">
               Apache log4net 2.0.14 is a minor release to address some reported issues
               and accept a pull request provided by a community member:
