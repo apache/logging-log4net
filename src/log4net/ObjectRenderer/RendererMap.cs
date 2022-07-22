@@ -22,7 +22,7 @@ using System.IO;
 #if NETSTANDARD1_3
 using System.Reflection;
 #endif
-
+using System.Collections;
 using log4net.Util;
 
 namespace log4net.ObjectRenderer
@@ -49,27 +49,10 @@ namespace log4net.ObjectRenderer
 
 		#region Member Variables
 
-		private System.Collections.Hashtable m_map;
-		private System.Collections.Hashtable m_cache = new System.Collections.Hashtable();
+		private readonly Hashtable m_map = new();
+		private readonly Hashtable m_cache = new();
 
 		private static IObjectRenderer s_defaultRenderer = new DefaultRenderer();
-
-		#endregion
-
-		#region Constructors
-
-		/// <summary>
-		/// Default Constructor
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// Default constructor.
-		/// </para>
-		/// </remarks>
-		public RendererMap() 
-		{
-			m_map = System.Collections.Hashtable.Synchronized(new System.Collections.Hashtable());
-		}
 
 		#endregion
 
@@ -137,7 +120,7 @@ namespace log4net.ObjectRenderer
 					catch(Exception ex)
 					{
 						// Exception rendering the object
-						log4net.Util.LogLog.Error(declaringType, "Exception while rendering object of type ["+obj.GetType().FullName+"]", ex);
+						LogLog.Error(declaringType, "Exception while rendering object of type ["+obj.GetType().FullName+"]", ex);
 
 						// return default message
 						string objectTypeName = "";
@@ -241,7 +224,10 @@ namespace log4net.ObjectRenderer
 				}
 
 				// Add to cache
-				m_cache[type] = result;
+				lock (m_cache)
+				{
+					m_cache[type] = result;
+				}
 			}
 
 			return result;
@@ -299,8 +285,15 @@ namespace log4net.ObjectRenderer
 		/// </remarks>
 		public void Clear() 
 		{
-			m_map.Clear();
-			m_cache.Clear();
+			lock (m_map)
+			{
+				m_map.Clear();
+			}
+
+			lock (m_cache)
+			{
+				m_cache.Clear();
+			}
 		}
 
 		/// <summary>
@@ -317,7 +310,10 @@ namespace log4net.ObjectRenderer
 		/// </remarks>
 		public void Put(Type typeToRender, IObjectRenderer renderer) 
 		{
-			m_cache.Clear();
+			lock (m_cache)
+			{
+				m_cache.Clear();
+			}
 
 			if (typeToRender == null)
 			{
@@ -328,7 +324,10 @@ namespace log4net.ObjectRenderer
 				throw new ArgumentNullException("renderer");
 			}
 
-			m_map[typeToRender] = renderer;
+			lock (m_map)
+			{
+				m_map[typeToRender] = renderer;
+			}
 		}	
 	}
 }
