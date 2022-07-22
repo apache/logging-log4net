@@ -28,7 +28,7 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\log4net.snk</AssemblyOriginatorKeyFile>
     <OutputPath>bin\$(Configuration)</OutputPath>
-    <Configurations>Debug;Release;CrossPlatform</Configurations>
+    <Configurations>Debug;Release</Configurations>
     <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
   <PropertyGroup>
