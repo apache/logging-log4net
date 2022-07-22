@@ -18,11 +18,14 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Threading;
 
 using log4net.Core;
 
 using NUnit.Framework;
+using static NExpect.Expectations;
+using NExpect;
 
 namespace log4net.Tests.Core
 {
@@ -54,6 +57,22 @@ namespace log4net.Tests.Core
 			if (Thread.CurrentThread.Name == null)
 			{
 				Thread.CurrentThread.Name = "Log4Net Test thread";
+			}
+		}
+
+		[Test]
+		public void All_ShouldContainAllFlags()
+		{
+			// Arrange
+			// Act
+			var allFlags = Enum.GetValues(typeof(FixFlags)).Cast<FixFlags>()
+				.Except(new[] { FixFlags.None })
+				.ToArray();
+			// Assert
+			foreach (var flag in allFlags)
+			{
+				Expect(FixFlags.All & flag)
+					.To.Equal(flag, () => $"FixFlags.All does not contain {flag}");
 			}
 		}
 
