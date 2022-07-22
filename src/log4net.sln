@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net-611-lib", "integrat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net-673", "integration-testing\log4net-673\log4net-673.csproj", "{169118A6-CAC3-4E83-ABEE-9E884B75B294}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net-681", "integration-testing\log4net-681\log4net-681.csproj", "{A4F9E417-2250-4075-9118-B4FF1C58B6C5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,10 @@ Global
 		{169118A6-CAC3-4E83-ABEE-9E884B75B294}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{169118A6-CAC3-4E83-ABEE-9E884B75B294}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{169118A6-CAC3-4E83-ABEE-9E884B75B294}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4F9E417-2250-4075-9118-B4FF1C58B6C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4F9E417-2250-4075-9118-B4FF1C58B6C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4F9E417-2250-4075-9118-B4FF1C58B6C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4F9E417-2250-4075-9118-B4FF1C58B6C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,5 +79,6 @@ Global
 		{2087EDC5-689F-406C-947C-06C5F321CA8C} = {8953473C-EEE8-4740-993D-B8E10FA876CD}
 		{D818035F-0345-49EF-9AB9-021583986CE2} = {8953473C-EEE8-4740-993D-B8E10FA876CD}
 		{169118A6-CAC3-4E83-ABEE-9E884B75B294} = {8953473C-EEE8-4740-993D-B8E10FA876CD}
+		{A4F9E417-2250-4075-9118-B4FF1C58B6C5} = {8953473C-EEE8-4740-993D-B8E10FA876CD}
 	EndGlobalSection
 EndGlobal
