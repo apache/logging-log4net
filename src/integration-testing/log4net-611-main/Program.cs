@@ -8,6 +8,7 @@ using log4net_611_lib;
 var appPath = new Uri(Assembly.GetExecutingAssembly().Location).LocalPath;
 var appFolder = Path.GetDirectoryName(appPath);
 // force loading the assembly, otherwise the appender type isn't found later
+Assembly.LoadFile("log4net-611-lib.dll");
 if (appFolder is null)
 {
     throw new InvalidOperationException("Can't find myself");
