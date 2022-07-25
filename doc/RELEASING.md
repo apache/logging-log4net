@@ -64,7 +64,7 @@ release version 2.0.123:
     - `cd apache-dist-logging-dev`
     - `svn up log4net`
     - copy in source & binary artifacts to respective locations
-    - `svn delete` old items
+    - `svn delete` old items (or defer this until after the vote completes)
     - `svn commit`
 13. raise a vote on the log4net mailing list (dev@logging.apache.org)
 14. wait
