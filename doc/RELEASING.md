@@ -30,6 +30,10 @@ release version 2.0.123:
     - currently, this _must_ happen on a windows machine because of older
         .net framework requirements which cannot be met on a Linux machine
         (or at least, I haven't figured out how - in particular CF)
+    - TODO: the following are still manual and need to be built into the `release` script:
+        - log4net.build: update package.version property
+        - log4net.shfbproj: update HtmlHelpName
+        - pom.xml: update version
 4. Sign release artifacts (zips & nupkg) under `build/artifacts`
     - eg `gpg --argmor --output log4net-2.0.123.nupkg.asc --detach-sig log4net-2.0.123.nupkg`
     - there is an accompanying `sign-log4net-libraries.sh` which you could invoke if you cd
@@ -40,6 +44,7 @@ release version 2.0.123:
     - check out the `asf-staging` branch
     - create a folder which includes the version, eg `log4net-2.0.123`
 6. Copy the contents of `target/site` from this repo into the folder created in (5)
+    - remember to either update or link in sdk docs from a prior release
 7. Update the symlinks in the base of the docs repo, ie:
     - 2.0.x -> 2.0.123
     - 2.x -> 2.0.123
