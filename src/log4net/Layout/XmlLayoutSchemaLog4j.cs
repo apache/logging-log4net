@@ -125,6 +125,29 @@ method="run" file="Generator.java" line="94"/>
 		*/
 
 		/* Since log4j 1.3 the log4j:MDC has been combined into the log4j:properties element */
+		
+		/// <summary>
+		/// Overrides default Format method so it can enable Namespaces writing
+		/// required in this XML layout.
+		/// </summary>
+		public override void Format(TextWriter writer, LoggingEvent loggingEvent)
+		{
+		    // safe check
+		    if (loggingEvent == null)
+		    {
+			throw new ArgumentNullException(nameof (loggingEvent));
+		    }
+
+		    using (var xmlWriter = CreateXmlWriter(writer))
+		    {
+			xmlWriter.Formatting = Formatting.None;
+			// XmlLayoutSchemaLog4j from version 2.0.10 requires
+			// namespaces to be enabled or it will throw
+			xmlWriter.Namespaces = true;
+			FormatXml(xmlWriter, loggingEvent);
+			xmlWriter.WriteWhitespace(SystemInfo.NewLine);
+		    }
+		}
 
 		/// <summary>
 		/// Actually do the writing of the xml
