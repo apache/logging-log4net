@@ -20,6 +20,8 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
+// [assembly:AssemblyKeyFile("log4net.snk")]
+
 #if (!SSCLI)
 //
 // log4net makes use of static methods which cannot be made com visible
