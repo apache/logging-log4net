@@ -202,7 +202,8 @@ namespace log4net.Util
 #elif NETSTANDARD1_3 // TODO GetEntryAssembly is available for netstandard1.5
 				return entryAssemblyLocation = AppContext.BaseDirectory;
 #else
-				return entryAssemblyLocation = System.Reflection.Assembly.GetEntryAssembly().Location;
+				return entryAssemblyLocation = Assembly.GetEntryAssembly()?.Location
+					?? throw new InvalidOperationException($"Unable to determine EntryAssembly location: EntryAssembly is null. Try explicitly setting {nameof(SystemInfo)}.{nameof(EntryAssemblyLocation)}");
 #endif
 			}
 			set => entryAssemblyLocation = value;
