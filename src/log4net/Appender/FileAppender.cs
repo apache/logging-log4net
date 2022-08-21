@@ -160,7 +160,7 @@ namespace log4net.Appender
 				}
 
 #if !NETCR && !NETSTANDARD1_3
-				private LockStateException(SerializationInfo info, StreamingContext context) : base(info, context) 
+				private LockStateException(SerializationInfo info, StreamingContext context) : base(info, context)
 				{
 				}
 #endif
@@ -494,6 +494,7 @@ namespace log4net.Appender
 			/// <returns></returns>
 			protected Stream CreateStream(string filename, bool append, FileShare fileShare)
 			{
+				filename = Environment.ExpandEnvironmentVariables(filename);
 				using (CurrentAppender.SecurityContext.Impersonate(this))
 				{
 					// Ensure that the directory structure exists
@@ -896,6 +897,118 @@ namespace log4net.Appender
 		}
 #endif
 
+		/// <summary>
+		/// Hold no lock on the output file
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Open the file once and hold it open until <see cref="CloseFile"/> is called. 
+		/// Maintains no lock on the file during this time.
+		/// </para>
+		/// </remarks>
+		public class NoLock : LockingModelBase
+		{
+			private Stream m_stream = null;
+
+			/// <summary>
+			/// Open the file specified and prepare for logging.
+			/// </summary>
+			/// <param name="filename">The filename to use</param>
+			/// <param name="append">Whether to append to the file, or overwrite</param>
+			/// <param name="encoding">The encoding to use</param>
+			/// <remarks>
+			/// <para>
+			/// Open the file specified and prepare for logging. 
+			/// No writes will be made until <see cref="AcquireLock"/> is called.
+			/// Must be called before any calls to <see cref="AcquireLock"/>,
+			/// <see cref="ReleaseLock"/> and <see cref="CloseFile"/>.
+			/// </para>
+			/// </remarks>
+			public override void OpenFile(string filename, bool append, Encoding encoding)
+			{
+				try
+				{
+					// no lock
+					m_stream = CreateStream(filename, append, FileShare.ReadWrite);
+				}
+				catch (Exception e1)
+				{
+					CurrentAppender.ErrorHandler.Error("Unable to acquire lock on file " + filename + ". " + e1.Message);
+				}
+			}
+
+			/// <summary>
+			/// Close the file
+			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// Close the file. No further writes will be made.
+			/// </para>
+			/// </remarks>
+			public override void CloseFile()
+			{
+				CloseStream(m_stream);
+				m_stream = null;
+			}
+
+			/// <summary>
+			/// Acquire the lock on the file
+			/// </summary>
+			/// <returns>A stream that is ready to be written to.</returns>
+			/// <remarks>
+			/// <para>
+			/// Does nothing. The lock is already taken
+			/// </para>
+			/// </remarks>
+			public override Stream AcquireLock()
+			{
+				return m_stream;
+			}
+
+			/// <summary>
+			/// Release the lock on the file
+			/// </summary>
+			/// <remarks>
+			/// <para>
+			/// Does nothing. The lock will be released when the file is closed.
+			/// </para>
+			/// </remarks>
+			public override void ReleaseLock()
+			{
+				// NOP
+			}
+
+			/// <summary>
+			/// Initializes all resources used by this locking model.
+			/// </summary>
+			public override void ActivateOptions()
+			{
+				// NOP
+			}
+
+			/// <summary>
+			/// Disposes all resources that were initialized by this locking model.
+			/// </summary>
+			public override void OnClose()
+			{
+				// NOP
+			}
+		}
+
+		/// <summary>
+		/// Default locking model (when no locking model was configured)
+		/// </summary>
+		private static Type defaultLockingModelType = typeof(ExclusiveLock);
+
+		/// <summary>
+		/// Specify default locking model
+		/// </summary>
+		/// <typeparam name="TLockingModel">Type of LockingModel</typeparam>
+		public static void SetDefaultLockingModelType<TLockingModel>() where TLockingModel : LockingModelBase
+		{
+			defaultLockingModelType = typeof(TLockingModel);
+		}
+
 		#endregion Locking Models
 
 		#region Public Instance Constructors
@@ -1112,7 +1225,7 @@ namespace log4net.Appender
 
 			if (m_lockingModel == null)
 			{
-				m_lockingModel = new FileAppender.ExclusiveLock();
+				m_lockingModel = (LockingModelBase)Activator.CreateInstance(defaultLockingModelType);
 			}
 
 			m_lockingModel.CurrentAppender = this;
