@@ -344,88 +344,98 @@ namespace log4net.Appender
 		/// </remarks>
 		protected override void Append(LoggingEvent loggingEvent)
 		{
-            try
-            {
-                // Priority
-                int priority = GeneratePriority(m_facility, GetSeverity(loggingEvent.Level));
+			try
+			{
+				// Priority
+				int priority = GeneratePriority(m_facility, GetSeverity(loggingEvent.Level));
 
-                // Identity
-                string identity;
+				// Identity
+				string identity;
 
-                if (m_identity != null)
-                {
-                    identity = m_identity.Format(loggingEvent);
-                }
-                else
-                {
-                    identity = loggingEvent.Domain;
-                }
+				if (m_identity != null)
+				{
+					identity = m_identity.Format(loggingEvent);
+				}
+				else
+				{
+					identity = loggingEvent.Domain;
+				}
 
-                // Message. The message goes after the tag/identity
-                string message = RenderLoggingEvent(loggingEvent);
+				// Message. The message goes after the tag/identity
+				string message = RenderLoggingEvent(loggingEvent);
 
-                Byte[] buffer;
-                int i = 0;
-                char c;
+				byte[] buffer;
+				int i = 0;
 
-                StringBuilder builder = new StringBuilder();
+				StringBuilder builder = new StringBuilder();
 
-                while (i < message.Length)
-                {
-                    // Clear StringBuilder
-                    builder.Length = 0;
+				while (i < message.Length)
+				{
+					// Clear StringBuilder
+					builder.Length = 0;
 
-                    // Write priority
-                    builder.Append('<');
-                    builder.Append(priority);
-                    builder.Append('>');
+					// Write priority
+					builder.Append('<');
+					builder.Append(priority);
+					builder.Append('>');
 
-                    // Write identity
-                    builder.Append(identity);
-                    builder.Append(": ");
+					// Write identity
+					builder.Append(identity);
+					builder.Append(": ");
 
-                    for (; i < message.Length; i++)
-                    {
-                        c = message[i];
+					AppendMessage(message, ref i, builder);
 
-                        // Accept only visible ASCII characters and space. See RFC 3164 section 4.1.3
-                        if (((int)c >= 32) && ((int)c <= 126))
-                        {
-                            builder.Append(c);
-                        }
-                        // If character is newline, break and send the current line
-                        else if ((c == '\r') || (c == '\n'))
-                        {
-                            // Check the next character to handle \r\n or \n\r
-                            if ((message.Length > i + 1) && ((message[i + 1] == '\r') || (message[i + 1] == '\n')))
-                            {
-                                i++;
-                            }
-                            i++;
-                            break;
-                        }
-                    }
-
-                    // Grab as a byte array
-                    buffer = this.Encoding.GetBytes(builder.ToString());
+					// Grab as a byte array
+					buffer = this.Encoding.GetBytes(builder.ToString());
 
 #if NET_4_5 || NETSTANDARD
-                    Client.SendAsync(buffer, buffer.Length, RemoteEndPoint).Wait();
+					Client.SendAsync(buffer, buffer.Length, RemoteEndPoint).Wait();
 #else
-                    this.Client.Send(buffer, buffer.Length, this.RemoteEndPoint);
+					this.Client.Send(buffer, buffer.Length, this.RemoteEndPoint);
 #endif
-                }
-            }
-            catch (Exception e)
-            {
-                ErrorHandler.Error(
-                    "Unable to send logging event to remote syslog " +
-                    this.RemoteAddress.ToString() +
-                    " on port " +
-                    this.RemotePort + ".",
-                    e,
-                    ErrorCode.WriteFailure);
-            }
+				}
+			}
+			catch (Exception e)
+			{
+				ErrorHandler.Error(
+						"Unable to send logging event to remote syslog " +
+						this.RemoteAddress.ToString() +
+						" on port " +
+						this.RemotePort + ".",
+						e,
+						ErrorCode.WriteFailure);
+			}
+		}
+
+		/// <summary>
+		/// Appends the rendered message to the buffer
+		/// </summary>
+		/// <param name="message">rendered message</param>
+		/// <param name="characterIndex">index of the current character in the message</param>
+		/// <param name="builder">buffer</param>
+		protected virtual void AppendMessage(string message, ref int characterIndex, StringBuilder builder)
+		{
+			for (; characterIndex < message.Length; characterIndex++)
+			{
+				char c = message[characterIndex];
+
+				// Accept only visible ASCII characters and space. See RFC 3164 section 4.1.3
+				if (((int)c >= 32) && ((int)c <= 126))
+				{
+					builder.Append(c);
+				}
+				// If character is newline, break and send the current line
+				else if ((c == '\r') || (c == '\n'))
+				{
+					// Check the next character to handle \r\n or \n\r
+					if ((message.Length > characterIndex + 1) && ((message[characterIndex + 1] == '\r') || (message[characterIndex + 1] == '\n')))
+					{
+						characterIndex++;
+					}
+					characterIndex++;
+					break;
+				}
+			}
 		}
 
 		/// <summary>
