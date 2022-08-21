@@ -59,7 +59,7 @@ namespace log4net.Util
 		/// Only static methods are exposed from this type.
 		/// </para>
 		/// </remarks>
-		private SystemInfo() 
+		private SystemInfo()
 		{
 		}
 
@@ -142,7 +142,7 @@ namespace log4net.Util
 		/// </remarks>
 		public static string ApplicationBaseDirectory
 		{
-			get 
+			get
 			{
 #if NETCF
 -				return System.IO.Path.GetDirectoryName(SystemInfo.EntryAssemblyLocation) + System.IO.Path.DirectorySeparatorChar;
@@ -170,7 +170,7 @@ namespace log4net.Util
 		/// </remarks>
 		public static string ConfigurationFileLocation
 		{
-			get 
+			get
 			{
 #if NETCF || NETSTANDARD
 				return SystemInfo.EntryAssemblyLocation+".config";
@@ -179,6 +179,8 @@ namespace log4net.Util
 #endif
 			}
 		}
+
+		private static string entryAssemblyLocation;
 
 		/// <summary>
 		/// Gets the path to the file that first executed in the current <see cref="AppDomain"/>.
@@ -191,16 +193,19 @@ namespace log4net.Util
 		/// </remarks>
 		public static string EntryAssemblyLocation
 		{
-			get 
+			get
 			{
+				if (entryAssemblyLocation != null)
+					return entryAssemblyLocation;
 #if NETCF
-				return SystemInfo.NativeEntryAssemblyLocation;
+				return entryAssemblyLocation = SystemInfo.NativeEntryAssemblyLocation;
 #elif NETSTANDARD1_3 // TODO GetEntryAssembly is available for netstandard1.5
-				return AppContext.BaseDirectory;
+				return entryAssemblyLocation = AppContext.BaseDirectory;
 #else
-				return System.Reflection.Assembly.GetEntryAssembly().Location;
+				return entryAssemblyLocation = System.Reflection.Assembly.GetEntryAssembly().Location;
 #endif
 			}
+			set => entryAssemblyLocation = value;
 		}
 
 		/// <summary>
@@ -227,7 +232,7 @@ namespace log4net.Util
 		/// </remarks>
 		public static int CurrentThreadId
 		{
-			get 
+			get
 			{
 #if NETCF_1_0
 				return System.Threading.Thread.CurrentThread.GetHashCode();
@@ -295,10 +300,10 @@ namespace log4net.Util
 							s_hostName = Environment.MachineName;
 #endif
 						}
-						catch(InvalidOperationException)
+						catch (InvalidOperationException)
 						{
 						}
-						catch(System.Security.SecurityException)
+						catch (System.Security.SecurityException)
 						{
 							// We may get a security exception looking up the machine name
 							// You must have Unrestricted EnvironmentPermission to access resource
@@ -343,7 +348,7 @@ namespace log4net.Util
 						s_appFriendlyName = AppDomain.CurrentDomain.FriendlyName;
 #endif
 					}
-					catch(System.Security.SecurityException)
+					catch (System.Security.SecurityException)
 					{
 						// This security exception will occur if the caller does not have 
 						// some undefined set of SecurityPermission flags.
@@ -357,7 +362,7 @@ namespace log4net.Util
 							string assemblyLocation = SystemInfo.EntryAssemblyLocation;
 							s_appFriendlyName = System.IO.Path.GetFileName(assemblyLocation);
 						}
-						catch(System.Security.SecurityException)
+						catch (System.Security.SecurityException)
 						{
 							// Caller needs path discovery permission
 						}
@@ -392,35 +397,35 @@ namespace log4net.Util
 		/// will be set per AppDomain.
 		/// </para>
 		/// </remarks>
-        [Obsolete("Use ProcessStartTimeUtc and convert to local time if needed.")]
+		[Obsolete("Use ProcessStartTimeUtc and convert to local time if needed.")]
 		public static DateTime ProcessStartTime
 		{
 			get { return s_processStartTimeUtc.ToLocalTime(); }
 		}
 
-        /// <summary>
-        /// Get the UTC start time for the current process.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// This is the UTC time at which the log4net library was loaded into the
-        /// AppDomain. Due to reports of a hang in the call to <c>System.Diagnostics.Process.StartTime</c>
-        /// this is not the start time for the current process.
-        /// </para>
-        /// <para>
-        /// The log4net library should be loaded by an application early during its
-        /// startup, therefore this start time should be a good approximation for
-        /// the actual start time.
-        /// </para>
-        /// <para>
-        /// Note that AppDomains may be loaded and unloaded within the
-        /// same process without the process terminating, however this start time
-        /// will be set per AppDomain.
-        /// </para>
-        /// </remarks>
-        public static DateTime ProcessStartTimeUtc
-        {
-            get { return s_processStartTimeUtc; }
+		/// <summary>
+		/// Get the UTC start time for the current process.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This is the UTC time at which the log4net library was loaded into the
+		/// AppDomain. Due to reports of a hang in the call to <c>System.Diagnostics.Process.StartTime</c>
+		/// this is not the start time for the current process.
+		/// </para>
+		/// <para>
+		/// The log4net library should be loaded by an application early during its
+		/// startup, therefore this start time should be a good approximation for
+		/// the actual start time.
+		/// </para>
+		/// <para>
+		/// Note that AppDomains may be loaded and unloaded within the
+		/// same process without the process terminating, however this start time
+		/// will be set per AppDomain.
+		/// </para>
+		/// </remarks>
+		public static DateTime ProcessStartTimeUtc
+		{
+			get { return s_processStartTimeUtc; }
 		}
 
 		/// <summary>
@@ -483,7 +488,7 @@ namespace log4net.Util
 #if NETCF
 			return "Not supported on Microsoft .NET Compact Framework";
 #elif NETSTANDARD1_3
-            return "Not supported on .NET Core";
+						return "Not supported on .NET Core";
 #else
 			if (myAssembly.GlobalAssemblyCache)
 			{
@@ -665,7 +670,7 @@ namespace log4net.Util
 			return GetTypeFromString(relativeType.Assembly, typeName, throwOnError, ignoreCase);
 #endif
 		}
-		
+
 #if !NETSTANDARD1_3
 		/// <summary>
 		/// Loads the type specified in the type string.
@@ -715,7 +720,7 @@ namespace log4net.Util
 		public static Type GetTypeFromString(Assembly relativeAssembly, string typeName, bool throwOnError, bool ignoreCase)
 		{
 			// Check if the type name specifies the assembly name
-			if(typeName.IndexOf(',') == -1)
+			if (typeName.IndexOf(',') == -1)
 			{
 				//LogLog.Debug(declaringType, "SystemInfo: Loading type ["+typeName+"] from assembly ["+relativeAssembly.FullName+"]");
 #if NETSTANDARD1_3
@@ -737,7 +742,7 @@ namespace log4net.Util
 				{
 					loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
 				}
-				catch(System.Security.SecurityException)
+				catch (System.Security.SecurityException)
 				{
 					// Insufficient permissions to get the list of loaded assemblies
 				}
@@ -746,33 +751,33 @@ namespace log4net.Util
 				{
 					Type fallback = null;
 					// Search the loaded assemblies for the type
-					foreach (Assembly assembly in loadedAssemblies) 
+					foreach (Assembly assembly in loadedAssemblies)
 					{
 						Type t = assembly.GetType(typeName, false, ignoreCase);
 						if (t != null)
 						{
 							// Found type in loaded assembly
-							LogLog.Debug(declaringType, "Loaded type ["+typeName+"] from assembly ["+assembly.FullName+"] by searching loaded assemblies.");
-                                                        if (assembly.GlobalAssemblyCache)
-                                                        {
-                                                            fallback = t;
-                                                        }
-                                                        else
-                                                        {
-                                                            return t;
-                                                        }
+							LogLog.Debug(declaringType, "Loaded type [" + typeName + "] from assembly [" + assembly.FullName + "] by searching loaded assemblies.");
+							if (assembly.GlobalAssemblyCache)
+							{
+								fallback = t;
+							}
+							else
+							{
+								return t;
+							}
 						}
 					}
-                                        if (fallback != null)
-                                        {
-                                            return fallback;
-                                        }
+					if (fallback != null)
+					{
+						return fallback;
+					}
 				}
 
 				// Didn't find the type
 				if (throwOnError)
 				{
-					throw new TypeLoadException("Could not load type ["+typeName+"]. Tried assembly ["+relativeAssembly.FullName+"] and all loaded assemblies");
+					throw new TypeLoadException("Could not load type [" + typeName + "]. Tried assembly [" + relativeAssembly.FullName + "] and all loaded assemblies");
 				}
 				return null;
 #endif
@@ -938,20 +943,20 @@ namespace log4net.Util
 #endif
 		}
 
-        /// <summary>
-        /// Parse a string into an <see cref="Int16"/> value
-        /// </summary>
-        /// <param name="s">the string to parse</param>
-        /// <param name="val">out param where the parsed value is placed</param>
-        /// <returns><c>true</c> if the string was able to be parsed into an integer</returns>
-        /// <remarks>
-        /// <para>
-        /// Attempts to parse the string into an integer. If the string cannot
-        /// be parsed then this method returns <c>false</c>. The method does not throw an exception.
-        /// </para>
-        /// </remarks>
-        public static bool TryParse(string s, out short val)
-        {
+		/// <summary>
+		/// Parse a string into an <see cref="Int16"/> value
+		/// </summary>
+		/// <param name="s">the string to parse</param>
+		/// <param name="val">out param where the parsed value is placed</param>
+		/// <returns><c>true</c> if the string was able to be parsed into an integer</returns>
+		/// <remarks>
+		/// <para>
+		/// Attempts to parse the string into an integer. If the string cannot
+		/// be parsed then this method returns <c>false</c>. The method does not throw an exception.
+		/// </para>
+		/// </remarks>
+		public static bool TryParse(string s, out short val)
+		{
 #if NETCF
 			val = 0;
 			try
@@ -965,28 +970,28 @@ namespace log4net.Util
 
 			return false;
 #else
-            // Initialise out param
-            val = 0;
+			// Initialise out param
+			val = 0;
 
-            try 
-            {
-                double doubleVal;
-                if (Double.TryParse(s, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out doubleVal))
-                {
-                    val = Convert.ToInt16(doubleVal);
-                    return true;
-                }
-            }
-            catch
-            {
-                // Ignore exception, just return false
-            }
+			try
+			{
+				double doubleVal;
+				if (Double.TryParse(s, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out doubleVal))
+				{
+					val = Convert.ToInt16(doubleVal);
+					return true;
+				}
+			}
+			catch
+			{
+				// Ignore exception, just return false
+			}
 
-            return false;
+			return false;
 #endif
-        }
+		}
 
-        /// <summary>
+		/// <summary>
 		/// Lookup an application setting
 		/// </summary>
 		/// <param name="key">the application settings key to lookup</param>
@@ -1008,7 +1013,7 @@ namespace log4net.Util
 				return ConfigurationSettings.AppSettings[key];
 #endif
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				// If an exception is thrown here then it looks like the config file does not parse correctly.
 				LogLog.Error(declaringType, "Exception while reading ConfigurationSettings. Check your .config file is well formed XML.", ex);
@@ -1086,28 +1091,28 @@ namespace log4net.Util
 #endif
 		}
 
-        /// <summary>
-        /// Tests two strings for equality, the ignoring case.
-        /// </summary>
-        /// <remarks>
-        /// If the platform permits, culture information is ignored completely (ordinal comparison).
-        /// The aim of this method is to provide a fast comparison that deals with <c>null</c> and ignores different casing.
-        /// It is not supposed to deal with various, culture-specific habits.
-        /// Use it to compare against pure ASCII constants, like keywords etc.
-        /// </remarks>
-        /// <param name="a">The one string.</param>
-        /// <param name="b">The other string.</param>
-        /// <returns><c>true</c> if the strings are equal, <c>false</c> otherwise.</returns>
-        public static Boolean EqualsIgnoringCase(String a, String b)
-        {
+		/// <summary>
+		/// Tests two strings for equality, the ignoring case.
+		/// </summary>
+		/// <remarks>
+		/// If the platform permits, culture information is ignored completely (ordinal comparison).
+		/// The aim of this method is to provide a fast comparison that deals with <c>null</c> and ignores different casing.
+		/// It is not supposed to deal with various, culture-specific habits.
+		/// Use it to compare against pure ASCII constants, like keywords etc.
+		/// </remarks>
+		/// <param name="a">The one string.</param>
+		/// <param name="b">The other string.</param>
+		/// <returns><c>true</c> if the strings are equal, <c>false</c> otherwise.</returns>
+		public static Boolean EqualsIgnoringCase(String a, String b)
+		{
 #if NET_1_0 || NET_1_1 || NETCF_1_0
-            return string.Compare(a, b, true, System.Globalization.CultureInfo.InvariantCulture) == 0
+						return string.Compare(a, b, true, System.Globalization.CultureInfo.InvariantCulture) == 0
 #elif NETSTANDARD1_3
-            return CultureInfo.InvariantCulture.CompareInfo.Compare(a, b, CompareOptions.IgnoreCase) == 0;
+						return CultureInfo.InvariantCulture.CompareInfo.Compare(a, b, CompareOptions.IgnoreCase) == 0;
 #else // >= .NET-2.0
-            return String.Equals(a, b, StringComparison.OrdinalIgnoreCase);
+			return String.Equals(a, b, StringComparison.OrdinalIgnoreCase);
 #endif
-        }
+		}
 
 		#endregion Public Static Methods
 
@@ -1169,14 +1174,14 @@ namespace log4net.Util
 
 		#region Private Static Fields
 
-	    /// <summary>
-	    /// The fully qualified type of the SystemInfo class.
-	    /// </summary>
-	    /// <remarks>
-	    /// Used by the internal logger to record the Type of the
-	    /// log message.
-	    /// </remarks>
-	    private static readonly Type declaringType = typeof(SystemInfo);
+		/// <summary>
+		/// The fully qualified type of the SystemInfo class.
+		/// </summary>
+		/// <remarks>
+		/// Used by the internal logger to record the Type of the
+		/// log message.
+		/// </remarks>
+		private static readonly Type declaringType = typeof(SystemInfo);
 
 		/// <summary>
 		/// Cache the host name for the current machine
