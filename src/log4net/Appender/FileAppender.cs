@@ -1657,7 +1657,7 @@ namespace log4net.Appender
         /// <summary>
         /// The locking model to use
         /// </summary>
-        private FileAppender.LockingModelBase m_lockingModel = new FileAppender.ExclusiveLock();
+        private FileAppender.LockingModelBase m_lockingModel;
 
         #endregion Private Instance Fields
 
