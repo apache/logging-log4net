@@ -6,9 +6,9 @@
     <Product>Apache log4net</Product>
     <Description>
       log4net is a tool to help the programmer output log statements to a variety of output targets.
-      In case of problems with an application, it is helpful to enable logging so that the problem 
+      In case of problems with an application, it is helpful to enable logging so that the problem
       can be located. With log4net it is possible to enable logging at runtime without modifying the
-      application binary. The log4net package is designed so that log statements can remain in 
+      application binary. The log4net package is designed so that log statements can remain in
       shipped code without incurring a high performance cost. It follows that the speed of logging
       (or rather not logging) is crucial.
 
@@ -64,6 +64,7 @@
     <OutputPath>..\..\build\$(Configuration)</OutputPath>
     <PackageOutputPath>..\..\build\artifacts</PackageOutputPath>
     <DocumentationFile>..\..\build\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
   <PropertyGroup>
     <BaseAddress>285212672</BaseAddress>
@@ -203,4 +204,12 @@
   </ItemGroup>
   <PropertyGroup />
   <Import Project="../MonoForFramework.targets" />
+  <Target Name="_ResolveCopyLocalNuGetPackagePdbsAndXml" Condition="$(CopyLocalLockFileAssemblies) == true" AfterTargets="ResolveReferences">
+    <!-- "Workaround" for missing '.pdb'-Files from NuGet Packages -->
+    <!-- https://github.com/dotnet/sdk/issues/1458#issuecomment-420456386 -->
+    <ItemGroup>
+      <ReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->'%(RootDir)%(Directory)%(Filename).pdb')" Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' != '' and Exists('%(RootDir)%(Directory)%(Filename).pdb')"/>
+      <ReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->'%(RootDir)%(Directory)%(Filename).xml')" Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' != '' and Exists('%(RootDir)%(Directory)%(Filename).xml')"/>
+    </ItemGroup>
+  </Target>
 </Project>
