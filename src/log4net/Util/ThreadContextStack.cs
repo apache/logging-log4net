@@ -159,6 +159,26 @@ namespace log4net.Util
 			return new AutoPopStackFrame(stack, stack.Count - 1);
 		}
 
+        /// <summary>
+        /// Returns the top context from this stack.
+        /// </summary>
+        /// <returns>The message in the context from the top of this stack.</returns>
+        /// <remarks>
+        /// <para>
+        /// Returns the top context from this stack. If this stack is empty then an
+        /// empty string (not <see langword="null"/>) is returned.
+        /// </para>
+        /// </remarks>
+        public string Peek()
+		{
+            Stack stack = m_stack;
+            if (stack.Count > 0)
+            {
+                return ((StackFrame)stack.Peek()).Message;
+            }
+            return "";
+        }
+
 		#endregion Public Methods
 
 		#region Internal Methods
