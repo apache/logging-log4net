@@ -35,7 +35,7 @@ namespace log4net.Util
 	public delegate void TwoArgAction(string t1, LogicalThreadContextStack t2);
 	#endif
 
-		/// <summary>
+	/// <summary>
 	/// Implementation of Stack for the <see cref="log4net.LogicalThreadContext"/>
 	/// </summary>
 	/// <remarks>
@@ -65,7 +65,7 @@ namespace log4net.Util
 		/// </summary>
 		#if NET_2_0 || MONO_2_0 || NETSTANDARD
 		private TwoArgAction<string, LogicalThreadContextStack> m_registerNew;
-				#else
+		#else
 		private TwoArgAction m_registerNew;
 		#endif
 
@@ -83,7 +83,7 @@ namespace log4net.Util
 		/// </remarks>
 		#if NET_2_0 || MONO_2_0 || NETSTANDARD
 		internal LogicalThreadContextStack(string propertyKey, TwoArgAction<string, LogicalThreadContextStack> registerNew)
-				#else
+		#else
 		internal LogicalThreadContextStack(string propertyKey, TwoArgAction registerNew)
 		#endif
 		{
