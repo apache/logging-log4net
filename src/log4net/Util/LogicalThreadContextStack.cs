@@ -26,16 +26,16 @@ using log4net.Core;
 namespace log4net.Util
 {
 
-    /// <summary>
+	/// <summary>
 	/// Delegate type used for LogicalThreadContextStack's callbacks.
 	/// </summary>
-    #if NET_2_0 || MONO_2_0 || NETSTANDARD
+	#if NET_2_0 || MONO_2_0 || NETSTANDARD
 	public delegate void TwoArgAction<T1, T2>(T1 t1, T2 t2);
-    #else
+	#else
 	public delegate void TwoArgAction(string t1, LogicalThreadContextStack t2);
-    #endif
+	#endif
 
-        /// <summary>
+	/// <summary>
 	/// Implementation of Stack for the <see cref="log4net.LogicalThreadContext"/>
 	/// </summary>
 	/// <remarks>
@@ -65,7 +65,7 @@ namespace log4net.Util
 		/// </summary>
 		#if NET_2_0 || MONO_2_0 || NETSTANDARD
 		private TwoArgAction<string, LogicalThreadContextStack> m_registerNew;
-                #else
+		#else
 		private TwoArgAction m_registerNew;
 		#endif
 
@@ -83,7 +83,7 @@ namespace log4net.Util
 		/// </remarks>
 		#if NET_2_0 || MONO_2_0 || NETSTANDARD
 		internal LogicalThreadContextStack(string propertyKey, TwoArgAction<string, LogicalThreadContextStack> registerNew)
-                #else
+		#else
 		internal LogicalThreadContextStack(string propertyKey, TwoArgAction registerNew)
 		#endif
 		{
@@ -196,6 +196,26 @@ namespace log4net.Util
 			contextStack.m_stack = stack;
 			m_registerNew(m_propertyKey, contextStack);
 			return new AutoPopStackFrame(contextStack, stack.Count - 1);
+		}
+
+		/// <summary>
+		/// Returns the top context from this stack.
+		/// </summary>
+		/// <returns>The message in the context from the top of this stack.</returns>
+		/// <remarks>
+		/// <para>
+		/// Returns the top context from this stack. If this stack is empty then an
+		/// empty string (not <see langword="null"/>) is returned.
+		/// </para>
+		/// </remarks>
+		public string Peek()
+		{
+			Stack stack = m_stack;
+			if (stack.Count > 0)
+			{
+				return ((StackFrame)stack.Peek()).Message;
+			}
+			return "";
 		}
 
 		#endregion Public Methods
