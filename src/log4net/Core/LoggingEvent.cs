@@ -737,9 +737,10 @@ namespace log4net.Core
  SystemInfo.CurrentThreadId.ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
 #else
                     // '.NET ThreadPool Worker' appears as a default thread pool name in .NET 6+.
+                    // '.NET TP Worker' appears as a default thread pool name in .NET 8+.
                     // Prefer the numeric thread ID instead.
                     string threadName = System.Threading.Thread.CurrentThread.Name;
-                    if (!string.IsNullOrEmpty(threadName) && threadName != ".NET ThreadPool Worker")
+                    if (!string.IsNullOrEmpty(threadName) && threadName != ".NET ThreadPool Worker" && threadName != ".NET TP Worker")
                     {
                         m_data.ThreadName = threadName;
                     }
