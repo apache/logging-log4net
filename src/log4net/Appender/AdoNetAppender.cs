@@ -89,7 +89,7 @@ namespace log4net.Appender
 	/// <code lang="XML" escaped="true">
 	/// <appender name="AdoNetAppender_SqlServer" type="log4net.Appender.AdoNetAppender" >
 	///   <connectionType value="System.Data.SqlClient.SqlConnection, System.Data, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-	///   <connectionString value="data source=SQLSVR;initial catalog=test_log4net;integrated security=false;persist security info=True;User ID=sa;Password=sa" />
+	///   <connectionString value="data source=SQLSVR;initial catalog=test_log4net;integrated security=false;persist security info=True;" />
 	///   <commandText value="INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message]) VALUES (@log_date, @thread, @log_level, @logger, @message)" />
 	///   <parameter>
 	///     <parameterName value="@log_date" />
