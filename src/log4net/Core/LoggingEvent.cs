@@ -736,17 +736,18 @@ namespace log4net.Core
 					m_data.ThreadName =
  SystemInfo.CurrentThreadId.ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
 #else
-                    // '.NET ThreadPool Worker' appears as a default thread pool name in .NET 6+.
+                    // '.NET ThreadPool Worker' appears as a default thread name in the .NET 6-7 thread pool.
+                    // '.NET TP Worker' is the default thread name in the .NET 8+ thread pool.
                     // Prefer the numeric thread ID instead.
                     string threadName = System.Threading.Thread.CurrentThread.Name;
-                    if (!string.IsNullOrEmpty(threadName) && threadName != ".NET ThreadPool Worker")
+                    if (!string.IsNullOrEmpty(threadName) && threadName != ".NET TP Worker" && threadName != ".NET ThreadPool Worker")
                     {
                         m_data.ThreadName = threadName;
                     }
                     else
                     {
                         // The thread name is not available or unsuitable. Therefore we
-                        // go the the AppDomain to get the ID of the 
+                        // go to the AppDomain to get the ID of the
                         // current thread. (Why don't Threads know their own ID?)
                         try
                         {
