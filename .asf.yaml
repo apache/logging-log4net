@@ -34,7 +34,6 @@ github:
   labels:
     - apache
     - dotnet
-    - .NET
     - api
     - library
     - log4net
