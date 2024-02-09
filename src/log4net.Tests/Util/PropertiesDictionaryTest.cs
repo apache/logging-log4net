@@ -17,7 +17,7 @@
 //
 #endregion
 
-#if !NETSTANDARD1_3
+#if NETFRAMEWORK
 
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
