@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net462;net7.0</TargetFrameworks>
+    <TargetFrameworks>net462;net8.0</TargetFrameworks>
     <NoWarn>NETSDK1138;CS1701</NoWarn>
     <ProjectType>Local</ProjectType>
     <DefaultClientScript>JScript</DefaultClientScript>
@@ -40,12 +40,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='net462'">
     <DefineConstants>$(DefineConstants);NET_2_0;NET_4_0;NET_4_5</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp1.0'">
-    <DefineConstants>$(DefineConstants);NETSTANDARD;NETSTANDARD1_3</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp2.1'">
-    <DefineConstants>$(DefineConstants);NETSTANDARD;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp3.1'">
     <DefineConstants>$(DefineConstants);NETSTANDARD;NETSTANDARD2_0</DefineConstants>

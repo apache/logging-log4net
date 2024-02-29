@@ -27,6 +27,27 @@ limitations under the License.
   <body>
 
     <section id="main" name="Apache log4net&#x2122; Release Notes">
+      <section id="3.0.0" name="3.0.0">
+        Attention: Starting with 3.0.0 we only support the followeing target frameworks
+        <ul>
+          <li>net462</li>
+          <li>netstandard2.0</li>
+        </ul>
+        The reasoning for this change can be found in <a href="https://github.com/apache/logging-log4net/issues/111">Dropping support for older runtimes</a>
+
+        Apache log4net 3.0.0 addresses reported issues:
+        <section id="3.0.0-bug" name="Bug fixes">
+          <ul>
+          </ul>
+        </section>
+        <section id="3.0.0-enhancements" name="Enhancements">
+          <ul>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/111">Dropping support for older runtimes (by @fluffynuts and @freeandnil)</a>
+            </li>
+          </ul>
+        </section>
+      </section>
       <section id="2.0.16" name="2.0.16">
         Apache log4net 2.0.16 addresses reported issues:
         <section id="2.0.16-bug" name="Bug fixes">

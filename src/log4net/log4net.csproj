@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <PackageId>log4net</PackageId>
-    <Version>2.0.16</Version>
-    <PackageVersion>2.0.16</PackageVersion>
+    <Version>3.0.0</Version>
+    <PackageVersion>3.0.0</PackageVersion>
     <Title>Apache log4net</Title>
     <Product>Apache log4net</Product>
     <Description>
@@ -31,7 +31,7 @@
     <RepositoryUrl>https://github.com/apache/logging-log4net</RepositoryUrl>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Platforms>AnyCPU</Platforms>
-    <TargetFrameworks>net20;net35;net40;net40-client;net45;netstandard1.3;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net462;netstandard2.0</TargetFrameworks>
     <Configurations>Debug;Release</Configurations>
     <LangVersion>latest</LangVersion>
     <RootNamespace>log4net</RootNamespace>
@@ -73,31 +73,11 @@
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='net40-client'">
-    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
-    <OutDir>..\..\build\$(Configuration)\net40-client</OutDir>
-    <DefineConstants>$(DefineConstants);NET_2_0;NET_4_0;CLIENT_PROFILE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard1.3'">
-    <DefineConstants>$(DefineConstants);NETSTANDARD;NETSTANDARD1_3</DefineConstants>
-    <NoWarn>1574</NoWarn>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
     <DefineConstants>$(DefineConstants);NETSTANDARD;NETSTANDARD2_0</DefineConstants>
     <NoWarn>1574</NoWarn>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='net20'">
-    <DefineConstants>$(DefineConstants);NET_2_0</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='net35'">
-    <DefineConstants>$(DefineConstants);NET_2_0;NET_3_5</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='net40'">
-    <DefineConstants>$(DefineConstants);NET_2_0;NET_4_0</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='net45'">
+  <PropertyGroup Condition="'$(TargetFramework)'=='net462'">
     <DefineConstants>$(DefineConstants);NET_2_0;NET_4_0;NET_4_5</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
@@ -123,57 +103,10 @@
       <Name>System.XML</Name>
     </Reference>
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)'=='netstandard1.3'">
-    <PackageReference Include="System.AppContext" Version="4.3.0" />
-    <PackageReference Include="System.Collections.NonGeneric" Version="4.0.1" />
-    <PackageReference Include="System.Console" Version="4.3.0" />
-    <PackageReference Include="System.Data.Common" Version="4.1.0" />
-    <PackageReference Include="System.Diagnostics.Debug" Version="4.3.0" />
-    <PackageReference Include="System.Diagnostics.Process" Version="4.1.0" />
-    <PackageReference Include="System.Diagnostics.StackTrace" Version="4.0.1" />
-    <PackageReference Include="System.Diagnostics.TraceSource" Version="4.0.0" />
-    <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
-    <PackageReference Include="System.IO.FileSystem.Watcher" Version="4.0.0" />
-    <PackageReference Include="System.Linq" Version="4.3.0" />
-    <PackageReference Include="System.Net.NameResolution" Version="4.0.0" />
-    <PackageReference Include="System.Net.Requests" Version="4.0.11" />
-    <PackageReference Include="System.Net.Sockets" Version="4.3.0" />
-    <PackageReference Include="System.Reflection" Version="4.3.0" />
-    <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.1.0" />
-    <PackageReference Include="System.Runtime.Extensions" Version="4.3.1" />
-    <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
-    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
-    <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
-    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
-    <PackageReference Include="System.Text.Encoding" Version="4.3.0" />
-    <PackageReference Include="System.Threading" Version="4.3.0" />
-    <PackageReference Include="System.Threading.Thread" Version="4.0.0" />
-    <PackageReference Include="System.Threading.Timer" Version="4.3.0" />
-    <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.0" />
-    <PackageReference Include="System.Xml.XmlDocument" Version="4.0.1" />
-  </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
   </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
+ <ItemGroup>
     <Compile Remove="Log4netAssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
