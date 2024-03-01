@@ -36,14 +36,14 @@ limitations under the License.
 
     </section>
 
-    <section name="log4net 2.0.15">
+    <section name="log4net 2.0.16">
 
       <subsection name="Source">
         <table>
           <tr>
-            <td><a href="https://downloads.apache.org/logging/log4net/source/apache-log4net-source-2.0.15.zip">apache-log4net-source-2.0.15.zip</a></td>
-            <td><a href="https://downloads.apache.org/logging/log4net/source/apache-log4net-source-2.0.15.zip.sha512">sha512</a></td>
-            <td><a href="https://downloads.apache.org/logging/log4net/source/apache-log4net-source-2.0.15.zip.asc">pgp</a></td>
+            <td><a href="https://downloads.apache.org/logging/log4net/source/apache-log4net-source-2.0.16.zip">apache-log4net-source-2.0.16.zip</a></td>
+            <td><a href="https://downloads.apache.org/logging/log4net/source/apache-log4net-source-2.0.16.zip.sha512">sha512</a></td>
+            <td><a href="https://downloads.apache.org/logging/log4net/source/apache-log4net-source-2.0.16.zip.asc">pgp</a></td>
           </tr>
         </table>
       </subsection>
@@ -52,14 +52,14 @@ limitations under the License.
         <p>Binaries are available in a zip file or nupkg, which is also available from <a href="https://www.nuget.org/packages/log4net/">nuget.org</a></p>
         <table>
           <tr>
-            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net-binaries-2.0.15.zip">log4net-binaries-2.0.15.zip</a></td>
-            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net-binaries-2.0.15.zip.sha512">sha512</a></td>
-            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net-binaries-2.0.15.zip.asc">pgp</a></td>
+            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net-binaries-2.0.16.zip">log4net-binaries-2.0.16.zip</a></td>
+            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net-binaries-2.0.16.zip.sha512">sha512</a></td>
+            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net-binaries-2.0.16.zip.asc">pgp</a></td>
           </tr>
           <tr>
-            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net.2.0.15.nupkg">log4net-2.0.15.nupkg</a></td>
-            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net.2.0.15.nupkg.sha512">sha512</a></td>
-            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net.2.0.15.nupkg.asc">pgp</a></td>
+            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net.2.0.16.nupkg">log4net-2.0.16.nupkg</a></td>
+            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net.2.0.16.nupkg.sha512">sha512</a></td>
+            <td><a href="https://downloads.apache.org/logging/log4net/binaries/apache-log4net.2.0.16.nupkg.asc">pgp</a></td>
           </tr>
         </table>
       </subsection>
