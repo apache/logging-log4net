@@ -20,7 +20,7 @@ limitations under the License.
   <property name="log4net.basedir" value="." />
   <property name="project.build.config" value="debug" />
   <property name="project.build.package" value="false" />
-  <property name="package.version" value="2.0.15"/>
+  <property name="package.version" value="2.0.16"/>
 
   <!-- Include log4net helpers -->
   <include buildfile="${log4net.basedir}/log4net.include" />
