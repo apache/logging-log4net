@@ -36,6 +36,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net-673", "integration-
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net-681", "integration-testing\log4net-681\log4net-681.csproj", "{A4F9E417-2250-4075-9118-B4FF1C58B6C5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{78CDAF4E-3F9F-4D00-A494-FFAE30E7EF0E}"
+	ProjectSection(SolutionItems) = preProject
+		..\.asf.yaml = ..\.asf.yaml
+		..\.gitignore = ..\.gitignore
+		..\.zarro-defaults = ..\.zarro-defaults
+		..\package.json = ..\package.json
+		..\pom.xml = ..\pom.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
