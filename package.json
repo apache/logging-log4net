@@ -16,7 +16,7 @@
     "prepare-build-artifacts": "zarro @",
     "dump-env": "node -e \"console.log(process.env);\"",
     "release": "run-s update-version-info build-release prepare-build-artifacts build-site",
-    "release-beta": "cross-env VERSION_INCREMENT_STRATEGY=prerelease BUILD_CONFIGURATION=Release zarro pack",
+    "release-beta": "cross-env DOTNET_CORE=1 VERSION_INCREMENT_STRATEGY=prerelease BUILD_CONFIGURATION=Release zarro release-nuget",
     "zarro": "zarro",
     "update-version-info": "zarro @",
     "this-is-an-example": "zarro @"
