@@ -72,13 +72,6 @@
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='net35-client'">
-    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
-    <OutDir>..\..\build\$(Configuration)\net35-client</OutDir>
-    <DefineConstants>$(DefineConstants);NET_2_0;NET_3_5;CLIENT_PROFILE</DefineConstants>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='net40-client'">
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
