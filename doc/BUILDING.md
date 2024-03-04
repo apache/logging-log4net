@@ -1,9 +1,8 @@
 ## Building log4net
 
-Log4net provides support for a wide array of targets, including
-- older .net 2 and 3.5 (including client profile for net-40)
-- more modern net40/net45
-- netstandard1.3/2.0
+Log4net provides support for the following targets
+- net462
+- netstandard2.0
 
 As such, it does require a relatively full .net environment on Windows to build.
 I have recently found a fairly freshly-installed win11 machine to work adequately,
@@ -39,20 +38,6 @@ Options:
             - include desktop targets at least
             - include dotnet core targets or download and install
                 the latest dotnet sdk (you will need at least v2.1)
-            - note that build is possible with VS2022 build tools, but I had to
-                install VS2019 build tools _as well_ to get msbuild to recognise 
-                the legacy net35-profile target
-        - Ensure you have .NET Framework 3.5 SP1 installed
-            - on Win10+, this can only be installed via Add/Remove Windows Components
-            - on other platforms, see https://dotnet.microsoft.com/download/dotnet-framework/net35-sp1
-            - Building against .net 2/3.5, especially Client Profile, is not supported on Mono
-        - Log4Net supports some older, out-of-support .net SDKs, particularly
-          dotnet core 1.1 and .net framework client profiles for 3.5 and 4.0.
-          There are helper powershell scripts in the root of this
-          repository to assist with obtaining and installing these
-          SDKs from Microsoft servers. Please see:
-            - [install-dotnet-core-sdk-1.1.ps1](install-dotnet-core-sdk-1.1.ps1)
-            - [install-net-framework-sdk-3.5.ps1](install-net-framework-sdk-3.5.ps1)
     - Binaries can be built with a Visual Studio or Rider installation
     - Binaries, packages and a release zip can be built via commandline
         - Ensure that you have a reasonably modern NodeJS installed (at least version 8+)
