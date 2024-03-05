@@ -34,7 +34,7 @@ namespace log4net.Tests.Hierarchy
   /// Internal unit test. Uses the NUnit test harness.
   /// </remarks>
   [TestFixture]
-  public class LoggerTest
+  public sealed class LoggerTest
   {
     private Logger log;
 

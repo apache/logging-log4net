@@ -39,7 +39,7 @@ namespace log4net.Tests.Appender
   /// Used for internal unit testing the <see cref="RollingFileAppender"/> class.
   /// </summary>
   [TestFixture]
-  public class RollingFileAppenderTest
+  public sealed class RollingFileAppenderTest
   {
     private const string c_fileName = "test_41d3d834_4320f4da.log";
 
@@ -58,7 +58,7 @@ namespace log4net.Tests.Appender
     private Logger _root;
     private CultureInfo _currentCulture;
     private CultureInfo _currentUICulture;
-    private class SilentErrorHandler : IErrorHandler
+    private sealed class SilentErrorHandler : IErrorHandler
     {
       private StringBuilder m_buffer = new StringBuilder();
 
@@ -340,7 +340,7 @@ namespace log4net.Tests.Appender
     /// Used for test purposes, a table of these objects can be used to identify
     /// any existing files and their expected length.
     /// </summary>
-    public class RollFileEntry
+    public sealed class RollFileEntry
     {
       /// <summary>
       /// Stores the name of the file
@@ -356,8 +356,7 @@ namespace log4net.Tests.Appender
       /// Default constructor
       /// </summary>
       public RollFileEntry()
-      {
-      }
+      { }
 
       /// <summary>
       /// Constructor used when the fileInfo and expected length are known
@@ -391,7 +390,7 @@ namespace log4net.Tests.Appender
     /// Used for table-driven testing.  This class holds information that can be used
     /// for testing of file rolling.
     /// </summary>
-    public class RollConditions
+    public sealed class RollConditions
     {
       /// <summary>
       /// A table of entries showing files that should exist and their expected sizes
@@ -718,7 +717,7 @@ namespace log4net.Tests.Appender
     /// This class holds information that is used while we are generating
     /// test data sets
     /// </summary>
-    public class RollingStats
+    public sealed class RollingStats
     {
       private int iTotalMessageLength;
       private int iMessagesPerFile;
@@ -2053,7 +2052,7 @@ namespace log4net.Tests.Appender
   }
 
   [TestFixture]
-  public class RollingFileAppenderSubClassTest : RollingFileAppender
+  public sealed class RollingFileAppenderSubClassTest : RollingFileAppender
   {
     [Test]
     public void TestComputeCheckPeriod()

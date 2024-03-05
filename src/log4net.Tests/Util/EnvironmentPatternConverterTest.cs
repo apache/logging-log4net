@@ -26,7 +26,7 @@ using NUnit.Framework;
 namespace log4net.Tests.Util
 {
   [TestFixture]
-  public class EnvironmentPatternConverterTest
+  public sealed class EnvironmentPatternConverterTest
   {
     private const string ENVIRONMENT_VARIABLE_NAME = "LOG4NET_TEST_TEMP";
     const string SYSTEM_LEVEL_VALUE = "SystemLevelEnvironmentValue";
@@ -88,7 +88,7 @@ namespace log4net.Tests.Util
       Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, null);
     }
 
-    private class EnvironmentPatternConverter
+    private sealed class EnvironmentPatternConverter
     {
       private object target = null;
 

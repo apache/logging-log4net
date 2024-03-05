@@ -34,7 +34,7 @@ using System.Globalization;
 namespace log4net.Tests.Layout
 {
   [TestFixture]
-  public class XmlLayoutTest
+  public sealed class XmlLayoutTest
   {
     private CultureInfo _currentCulture;
     private CultureInfo _currentUICulture;

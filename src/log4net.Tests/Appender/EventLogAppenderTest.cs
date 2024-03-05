@@ -36,7 +36,7 @@ namespace log4net.Tests.Appender
   /// Used for internal unit testing the <see cref="EventLogAppender"/> class.
   /// </remarks>
   [TestFixture]
-  public class EventLogAppenderTest
+  public sealed class EventLogAppenderTest
   {
     /// <summary>
     /// Verifies that for each event log level, the correct system
