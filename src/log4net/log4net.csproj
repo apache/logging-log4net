@@ -106,8 +106,13 @@
   <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
   </ItemGroup>
- <ItemGroup>
-    <Compile Remove="Log4netAssemblyInfo.cs" />
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+    <None Include="**\*.NetStandard.cs" />
+    <Compile Remove="**\*.NetStandard.cs" />
+  </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
+    <None Include="**\*.NetFx.cs" />
+    <Compile Remove="**\*.NetFx.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\log4net.snk">

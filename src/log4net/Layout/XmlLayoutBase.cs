@@ -24,6 +24,7 @@ using System.Xml;
 
 using log4net.Util;
 using log4net.Core;
+using log4net.Layout.Internal;
 
 namespace log4net.Layout
 {
@@ -196,18 +197,7 @@ namespace log4net.Layout
       {
         throw new ArgumentNullException("loggingEvent");
       }
-#if NETSTANDARD
-      var settings = new XmlWriterSettings
-      {
-        Indent = false,
-        OmitXmlDeclaration = true
-      };
-      using var xmlWriter = XmlWriter.Create(new ProtectCloseTextWriter(writer), settings);
-#else
-      using XmlTextWriter xmlWriter = new XmlTextWriter(new ProtectCloseTextWriter(writer));
-      xmlWriter.Formatting = Formatting.None;
-      xmlWriter.Namespaces = false;
-#endif
+      using XmlWriter xmlWriter = XmlWriterExtensions.CreateXmlWriter(writer);
       // Write the event to the writer
       FormatXml(xmlWriter, loggingEvent);
 

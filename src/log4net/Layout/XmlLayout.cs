@@ -22,6 +22,7 @@ using System.Text;
 using System.Xml;
 
 using log4net.Core;
+using log4net.Layout.Internal;
 using log4net.Util;
 
 namespace log4net.Layout
@@ -216,19 +217,10 @@ namespace log4net.Layout
     /// </remarks>
     protected override void FormatXml(XmlWriter writer, LoggingEvent loggingEvent)
     {
-#if NETSTANDARD
-      writer.WriteStartElement(m_prefix, ELM_EVENT, m_prefix);
-      // writer.WriteAttributeString("xmlns", "log4net", null, "http://logging.apache.org/log4net/schemas/log4net-events-1.2");
-#else
-      writer.WriteStartElement(m_elmEvent);
-#endif
+      writer.WriteStartElement(m_elmEvent, m_prefix, ELM_EVENT, m_prefix);
       writer.WriteAttributeString(ATTR_LOGGER, loggingEvent.LoggerName);
 
-#if NET_2_0 || NETCF_2_0 || MONO_2_0 || NETSTANDARD
       writer.WriteAttributeString(ATTR_TIMESTAMP, XmlConvert.ToString(loggingEvent.TimeStamp, XmlDateTimeSerializationMode.Local));
-#else
-      writer.WriteAttributeString(ATTR_TIMESTAMP, XmlConvert.ToString(loggingEvent.TimeStamp));
-#endif
 
       writer.WriteAttributeString(ATTR_LEVEL, loggingEvent.Level.DisplayName);
       writer.WriteAttributeString(ATTR_THREAD, loggingEvent.ThreadName);
@@ -247,11 +239,7 @@ namespace log4net.Layout
       }
 
       // Append the message text
-#if NETSTANDARD
-      writer.WriteStartElement(m_prefix, ELM_MESSAGE, m_prefix);
-#else
-      writer.WriteStartElement(m_elmMessage);
-#endif
+      writer.WriteStartElement(m_elmMessage, m_prefix, ELM_MESSAGE, m_prefix);
       if (!this.Base64EncodeMessage)
       {
         Transform.WriteEscapedXmlString(writer, loggingEvent.RenderedMessage, this.InvalidCharReplacement);
@@ -269,18 +257,10 @@ namespace log4net.Layout
       // Append the properties text
       if (properties.Count > 0)
       {
-#if NETSTANDARD
-        writer.WriteStartElement(m_prefix, ELM_PROPERTIES, m_prefix);
-#else
-        writer.WriteStartElement(m_elmProperties);
-#endif
+        writer.WriteStartElement(m_elmProperties, m_prefix, ELM_PROPERTIES, m_prefix);
         foreach (System.Collections.DictionaryEntry entry in properties)
         {
-#if NETSTANDARD
-          writer.WriteStartElement(m_prefix, ELM_DATA, m_prefix);
-#else
-          writer.WriteStartElement(m_elmData);
-#endif
+          writer.WriteStartElement(m_elmData, m_prefix, ELM_DATA, m_prefix);
           writer.WriteAttributeString(ATTR_NAME, Transform.MaskXmlInvalidCharacters((string)entry.Key, this.InvalidCharReplacement));
 
           // Use an ObjectRenderer to convert the object to a string
@@ -305,11 +285,7 @@ namespace log4net.Layout
       if (exceptionStr != null && exceptionStr.Length > 0)
       {
         // Append the stack trace line
-#if NETSTANDARD
-        writer.WriteStartElement(m_prefix, ELM_EXCEPTION, m_prefix);
-#else
-        writer.WriteStartElement(m_elmException);
-#endif
+        writer.WriteStartElement(m_elmException, m_prefix, ELM_EXCEPTION, m_prefix);
         Transform.WriteEscapedXmlString(writer, exceptionStr, this.InvalidCharReplacement);
         writer.WriteEndElement();
       }
@@ -318,11 +294,7 @@ namespace log4net.Layout
       {
         LocationInfo locationInfo = loggingEvent.LocationInformation;
 
-#if NETSTANDARD
-        writer.WriteStartElement(m_prefix, ELM_LOCATION, m_prefix);
-#else
-        writer.WriteStartElement(m_elmLocation);
-#endif
+        writer.WriteStartElement(m_elmLocation, m_prefix, ELM_LOCATION, m_prefix);
         writer.WriteAttributeString(ATTR_CLASS, locationInfo.ClassName);
         writer.WriteAttributeString(ATTR_METHOD, locationInfo.MethodName);
         writer.WriteAttributeString(ATTR_FILE, locationInfo.FileName);

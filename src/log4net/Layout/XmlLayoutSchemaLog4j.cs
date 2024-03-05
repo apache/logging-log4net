@@ -24,6 +24,7 @@ using System.IO;
 
 using log4net.Core;
 using log4net.Util;
+using log4net.Layout.Internal;
 
 namespace log4net.Layout
 {
@@ -112,7 +113,7 @@ namespace log4net.Layout
     <log4j:data name="some string" value="some valuethird"/>
   </log4j:MDC>
   <log4j:throwable><![CDATA[java.lang.Exception: someexception-third
-   at org.apache.log4j.chainsaw.Generator.run(Generator.java:94)
+  at org.apache.log4j.chainsaw.Generator.run(Generator.java:94)
 ]]></log4j:throwable>
   <log4j:locationInfo class="org.apache.log4j.chainsaw.Generator"
 method="run" file="Generator.java" line="94"/>
@@ -172,11 +173,7 @@ method="run" file="Generator.java" line="94"/>
       }
 
       // Write the start element
-#if NETSTANDARD
-      writer.WriteStartElement("log4j", "event", "log4net");
-#else
-      writer.WriteStartElement("log4j:event");
-#endif
+      writer.WriteStartElement("log4j:event", "log4j", "event", "log4net");
       writer.WriteAttributeString("logger", loggingEvent.LoggerName);
 
       // Calculate the timestamp as the number of milliseconds since january 1970
@@ -191,11 +188,7 @@ method="run" file="Generator.java" line="94"/>
       writer.WriteAttributeString("thread", loggingEvent.ThreadName);
 
       // Append the message text
-#if NETSTANDARD
-      writer.WriteStartElement("log4j", "message", "log4net");
-#else
-      writer.WriteStartElement("log4j:message");
-#endif
+      writer.WriteStartElement("log4j:message", "log4j", "message", "log4net");
       Transform.WriteEscapedXmlString(writer, loggingEvent.RenderedMessage, this.InvalidCharReplacement);
       writer.WriteEndElement();
 
@@ -207,11 +200,7 @@ method="run" file="Generator.java" line="94"/>
         if (valueStr != null && valueStr.Length > 0)
         {
           // Append the NDC text
-#if NETSTANDARD
-          writer.WriteStartElement("log4j", "NDC", "log4net");
-#else
-          writer.WriteStartElement("log4j:NDC");
-#endif
+          writer.WriteStartElement("log4j:NDC", "log4j", "NDC", "log4net");
           Transform.WriteEscapedXmlString(writer, valueStr, this.InvalidCharReplacement);
           writer.WriteEndElement();
         }
@@ -221,18 +210,10 @@ method="run" file="Generator.java" line="94"/>
       PropertiesDictionary properties = loggingEvent.GetProperties();
       if (properties.Count > 0)
       {
-#if NETSTANDARD
-        writer.WriteStartElement("log4j", "properties", "log4net");
-#else
-        writer.WriteStartElement("log4j:properties");
-#endif
+        writer.WriteStartElement("log4j:properties", "log4j", "properties", "log4net");
         foreach (System.Collections.DictionaryEntry entry in properties)
         {
-#if NETSTANDARD
-          writer.WriteStartElement("log4j", "data", "log4net");
-#else
-          writer.WriteStartElement("log4j:data");
-#endif
+          writer.WriteStartElement("log4j:data", "log4j", "data", "log4net");
           writer.WriteAttributeString("name", (string)entry.Key);
 
           // Use an ObjectRenderer to convert the object to a string
@@ -248,11 +229,7 @@ method="run" file="Generator.java" line="94"/>
       if (exceptionStr != null && exceptionStr.Length > 0)
       {
         // Append the stack trace line
-#if NETSTANDARD
-        writer.WriteStartElement("log4j", "throwable", "log4net");
-#else
-        writer.WriteStartElement("log4j:throwable");
-#endif
+        writer.WriteStartElement("log4j:throwable", "log4j", "data", "log4net");
         Transform.WriteEscapedXmlString(writer, exceptionStr, this.InvalidCharReplacement);
         writer.WriteEndElement();
       }
@@ -261,11 +238,7 @@ method="run" file="Generator.java" line="94"/>
       {
         LocationInfo locationInfo = loggingEvent.LocationInformation;
 
-#if NETSTANDARD
-        writer.WriteStartElement("log4j", "locationInfo", "log4net");
-#else
-        writer.WriteStartElement("log4j:locationInfo");
-#endif
+        writer.WriteStartElement("log4j:locationInfo", "log4j", "locationInfo", "log4net");
         writer.WriteAttributeString("class", locationInfo.ClassName);
         writer.WriteAttributeString("method", locationInfo.MethodName);
         writer.WriteAttributeString("file", locationInfo.FileName);
@@ -277,4 +250,3 @@ method="run" file="Generator.java" line="94"/>
     }
   }
 }
-
