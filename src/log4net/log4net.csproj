@@ -68,10 +68,12 @@
   </PropertyGroup>
   <PropertyGroup>
     <BaseAddress>285212672</BaseAddress>
+    <DebugType>portable</DebugType>
+    <Deterministic>true</Deterministic>
     <FileAlignment>4096</FileAlignment>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
     <DefineConstants>TRACE;DEBUG;$(DefineConstants)</DefineConstants>
@@ -100,18 +102,11 @@
   <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
   </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
-    <None Include="**\*.NetStandard.cs" />
-    <Compile Remove="**\*.NetStandard.cs" />
-  </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
-    <None Include="**\*.NetFx.cs" />
-    <Compile Remove="**\*.NetFx.cs" />
-  </ItemGroup>
   <ItemGroup>
     <None Include="..\..\log4net.snk">
       <Link>log4net.snk</Link>
     </None>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup Label="Packaging">
     <Content Include="..\..\package-icon.png" PackagePath="package-icon.png">
