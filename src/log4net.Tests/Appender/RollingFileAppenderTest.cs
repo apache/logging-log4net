@@ -463,7 +463,7 @@ namespace log4net.Tests.Appender
             ArrayList alExisting = GetExistingFiles(sBaseFileName);
             if (null != fileEntries)
             {
-                //					AssertEquals( "File count mismatch", alExisting.Count, fileEntries.Length );
+                //          AssertEquals( "File count mismatch", alExisting.Count, fileEntries.Length );
                 foreach (RollFileEntry rollFile in fileEntries)
                 {
                     string sFileName = rollFile.FileName;
@@ -552,7 +552,7 @@ namespace log4net.Tests.Appender
         //    {
         //        DumpFileEntry( file );
         //    }
-        //    //				System.Diagnostics.Debug.WriteLine("");
+        //    //        System.Diagnostics.Debug.WriteLine("");
         //}
 
         /// <summary>
@@ -569,15 +569,15 @@ namespace log4net.Tests.Appender
             {
                 RollConditions entry = entries[i];
 
-                //					System.Diagnostics.Debug.WriteLine( i + ": Entry " + i + " pre/post conditions");
-                //					DumpTableEntry( entry );
-                //					System.Diagnostics.Debug.WriteLine( i + ": Testing entry pre-conditions");
+                //          System.Diagnostics.Debug.WriteLine( i + ": Entry " + i + " pre/post conditions");
+                //          DumpTableEntry( entry );
+                //          System.Diagnostics.Debug.WriteLine( i + ": Testing entry pre-conditions");
                 VerifyPreConditions(sBaseFileName, entry);
-                //					System.Diagnostics.Debug.WriteLine( i + ": Logging message");
+                //          System.Diagnostics.Debug.WriteLine( i + ": Logging message");
                 LogMessage(entry, sMessageToLog);
-                //					System.Diagnostics.Debug.WriteLine( i + ": Testing entry post-conditions");
+                //          System.Diagnostics.Debug.WriteLine( i + ": Testing entry post-conditions");
                 VerifyPostConditions(sBaseFileName, entry);
-                //					System.Diagnostics.Debug.WriteLine( i + ": Finished validating entry\n");
+                //          System.Diagnostics.Debug.WriteLine( i + ": Finished validating entry\n");
             }
         }
 
@@ -678,7 +678,7 @@ namespace log4net.Tests.Appender
         //{
         //    if (0 == stats.NumberOfFileRolls )
         //    {
-        //        return null;	// first round has no previous backups
+        //        return null;  // first round has no previous backups
         //    }
         //    string sGroup;
         //    if (0 == stats.MessagesThisFile )
@@ -1651,7 +1651,7 @@ namespace log4net.Tests.Appender
             catch (IOException e1)
             {
 #if MONO
-				Assert.AreEqual("Sharing violation on path ", e1.Message.Substring(0, 26), "Unexpected exception");
+        Assert.AreEqual("Sharing violation on path ", e1.Message.Substring(0, 26), "Unexpected exception");
 #else
                 Assert.AreEqual("The process cannot access the file ", e1.Message.Substring(0, 35),
                     "Unexpected exception");
@@ -1977,7 +1977,7 @@ namespace log4net.Tests.Appender
             SetFieldCurSizeRollBackups(rfa, 0);
             InitializeRollBackups(rfa, sBaseFile, arrFiles);
 
-            // iBackups	/ Meaning
+            // iBackups  / Meaning
             // 0 = none
             // 1 = file.log
             // 2 = file.log.1

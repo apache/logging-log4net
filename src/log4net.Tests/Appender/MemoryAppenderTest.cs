@@ -70,21 +70,21 @@ namespace log4net.Tests.Appender
             {
                 thread.Join();
             }
-	    cEventsRead += memoryAppender.PopAllEvents().Length;
+      cEventsRead += memoryAppender.PopAllEvents().Length;
             Assert.AreEqual(cEventsExpected, cEventsRead, "Log events were lost.");
         }
 
         private static ThreadStart LogMessages(string repository)
         {
-	    return () => {
-		var logger = LogManager.GetLogger(repository, "LoggerThread");
-		for (var i = 0; i < cLogEntriesPerThread; i++)
-		{
-		    logger.InfoFormat("Logging message {0}", i);
-		}
-		Interlocked.Decrement(ref cThreadsRunning);
-	    };
-	}
+      return () => {
+    var logger = LogManager.GetLogger(repository, "LoggerThread");
+    for (var i = 0; i < cLogEntriesPerThread; i++)
+    {
+        logger.InfoFormat("Logging message {0}", i);
+    }
+    Interlocked.Decrement(ref cThreadsRunning);
+      };
+  }
     }
 }
 #endif

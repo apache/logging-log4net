@@ -50,8 +50,8 @@ namespace log4net.Tests.Util
 
             converter.Option = ENVIRONMENT_VARIABLE_NAME;
 
-			StringWriter sw = new StringWriter();
-			converter.Convert(sw, null);
+      StringWriter sw = new StringWriter();
+      converter.Convert(sw, null);
 
             Assert.AreEqual(SYSTEM_LEVEL_VALUE, sw.ToString(), "System level environment variable not expended correctly.");
 

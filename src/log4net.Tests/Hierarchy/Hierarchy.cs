@@ -100,7 +100,7 @@ namespace log4net.Tests.Hierarchy
         }
 
         [Test]
-	// LOG4NET-343
+  // LOG4NET-343
         public void LoggerNameCanConsistOfASingleDot()
         {
             XmlDocument log4netConfig = new XmlDocument();
