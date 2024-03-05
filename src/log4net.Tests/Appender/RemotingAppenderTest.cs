@@ -17,8 +17,8 @@
 //
 #endregion
 
-// .NET Compact Framework 1.0 && netstandard has no support for System.Runtime.Remoting
-#if NET_2_0
+// netstandard has no support for System.Runtime.Remoting
+#if NET462_OR_GREATER
 
 using System;
 using System.Collections;
@@ -235,11 +235,7 @@ namespace log4net.Tests.Appender
         // Setup remoting server
         try
         {
-#if NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0
           ChannelServices.RegisterChannel(m_remotingChannel, false);
-#else
-          ChannelServices.RegisterChannel(m_remotingChannel);
-#endif
         }
         catch (Exception ex)
         {
@@ -457,4 +453,4 @@ namespace log4net.Tests.Appender.Remoting.Data
   }
 }
 
-#endif // NET_2_0
+#endif // NET462_OR_GREATER

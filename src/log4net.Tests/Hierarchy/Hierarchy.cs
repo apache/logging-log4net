@@ -86,11 +86,7 @@ namespace log4net.Tests.Hierarchy
       CountingAppender alpha = new CountingAppender();
       CountingAppender beta = new CountingAppender();
 
-#if NETSTANDARD1_3
-            BasicConfigurator.Configure(Utils.GetRepository(), alpha, beta);
-#else
-      BasicConfigurator.Configure(alpha, beta);
-#endif
+      BasicConfigurator.Configure(Utils.GetRepository(), alpha, beta);
 
       ILog log = LogManager.GetLogger(GetType());
       log.Debug("Hello World");

@@ -17,7 +17,6 @@
 //
 #endregion
 
-#if NET_4_5 || NETSTANDARD
 using System;
 using System.Threading.Tasks;
 using System.Linq;
@@ -341,4 +340,3 @@ namespace log4net.Tests.Context
     }
   }
 }
-#endif

@@ -18,7 +18,7 @@
 #endregion
 
 // netstandard doesn't support EventLog
-#if NET_2_0
+#if NET462_OR_GREATER
 
 using System.Diagnostics;
 
@@ -102,4 +102,4 @@ namespace log4net.Tests.Appender
   }
 }
 
-#endif // NET_2_0
+#endif // NET462_OR_GREATER

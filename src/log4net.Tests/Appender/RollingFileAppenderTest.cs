@@ -56,10 +56,8 @@ namespace log4net.Tests.Appender
     private int _MaxSizeRollBackups = 3;
     private CountingAppender _caRoot;
     private Logger _root;
-#if !NETSTANDARD1_3
     private CultureInfo _currentCulture;
     private CultureInfo _currentUICulture;
-#endif
     private class SilentErrorHandler : IErrorHandler
     {
       private StringBuilder m_buffer = new StringBuilder();
@@ -121,14 +119,12 @@ namespace log4net.Tests.Appender
       ResetAndDeleteTestFiles();
       InitializeVariables();
 
-#if !NETSTANDARD1_3
       // set correct thread culture
       _currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
       _currentUICulture = System.Threading.Thread.CurrentThread.CurrentUICulture;
       System.Threading.Thread.CurrentThread.CurrentCulture =
           System.Threading.Thread.CurrentThread.CurrentUICulture =
               System.Globalization.CultureInfo.InvariantCulture;
-#endif
     }
 
     /// <summary>
@@ -139,11 +135,9 @@ namespace log4net.Tests.Appender
     {
       ResetAndDeleteTestFiles();
 
-#if !NETSTANDARD1_3
       // restore previous culture
       System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture;
       System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture;
-#endif
     }
 
     /// <summary>
@@ -1194,7 +1188,7 @@ namespace log4net.Tests.Appender
       _root.Level = Level.Debug;
       _caRoot = new CountingAppender();
       _root.AddAppender(_caRoot);
-      Assert.AreEqual(_caRoot.Counter, 0);
+      Assert.AreEqual(0, _caRoot.Counter);
 
       //
       // Set the root appender with a RollingFileAppender
@@ -1602,8 +1596,7 @@ namespace log4net.Tests.Appender
       fs.Close();
 
       AssertFileEquals(filename, "Test");
-      Assert.AreEqual(sh.Message.Substring(0, 30), "Unable to acquire lock on file",
-          "Expecting an error message");
+      StringAssert.StartsWith(sh.Message, "Unable to acquire lock on file", "Expecting an error message");
     }
 
     /// <summary>
@@ -1650,12 +1643,8 @@ namespace log4net.Tests.Appender
       }
       catch (IOException e1)
       {
-#if MONO
-        Assert.AreEqual("Sharing violation on path ", e1.Message.Substring(0, 26), "Unexpected exception");
-#else
         Assert.AreEqual("The process cannot access the file ", e1.Message.Substring(0, 35),
             "Unexpected exception");
-#endif
         locked = true;
       }
 
@@ -1663,10 +1652,8 @@ namespace log4net.Tests.Appender
       DestroyLogger();
 
       Assert.IsTrue(locked, "File was not locked");
-#if !MONO || MONO_3_5 || MONO_4_0 // at least on Linux with Mono 2.4 exclusive locking doesn't work as one would expect
       AssertFileEquals(filename,
           "This is a message" + Environment.NewLine + "This is a message 2" + Environment.NewLine);
-#endif
       Assert.AreEqual("", sh.Message, "Unexpected error message");
     }
 
@@ -1745,7 +1732,6 @@ namespace log4net.Tests.Appender
       Assert.AreEqual("", sh.Message, "Unexpected error message");
     }
 
-#if !NETCF
     /// <summary>
     /// Verifies that attempting to log to a locked file fails gracefully
     /// </summary>
@@ -1846,7 +1832,6 @@ namespace log4net.Tests.Appender
       AssertFileEquals(filename + ".1", "A" + Environment.NewLine);
       Assert.IsEmpty(sh.Message);
     }
-#endif
 
     /// <summary>
     /// Verify that the default LockModel is ExclusiveLock, to maintain backwards compatibility with previous behaviour

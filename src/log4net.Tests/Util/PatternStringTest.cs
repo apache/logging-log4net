@@ -19,7 +19,7 @@
  *
 */
 
-#if NET_2_0
+#if NET462_OR_GREATER
 
 using System;
 using log4net.Util;

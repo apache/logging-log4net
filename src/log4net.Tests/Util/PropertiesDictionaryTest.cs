@@ -17,7 +17,7 @@
 //
 #endregion
 
-#if NETFRAMEWORK
+#if NET462_OR_GREATER
 
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;

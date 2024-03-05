@@ -18,8 +18,7 @@
  *
 */
 
-#if NET_2_0
-
+#if NET462_OR_GREATER
 using System;
 using System.Diagnostics;
 using log4net.Appender;
@@ -56,9 +55,7 @@ namespace log4net.Tests.Appender
       ILog log = LogManager.GetLogger(rep.Name, GetType());
       log.Debug("Message");
 
-      Assert.AreEqual(
-          null,
-          categoryTraceListener.Category);
+      Assert.IsNull(categoryTraceListener.Category);
 
       Assert.IsFalse(testErrHandler.ErrorOccured);
 
@@ -84,9 +81,7 @@ namespace log4net.Tests.Appender
       ILog log = LogManager.GetLogger(rep.Name, GetType());
       log.Debug("Message");
 
-      Assert.AreEqual(
-          null,
-          categoryTraceListener.Category);
+      Assert.IsNull(categoryTraceListener.Category);
 
       Debug.Listeners.Remove(categoryTraceListener);
     }
@@ -171,5 +166,4 @@ namespace log4net.Tests.Appender
     }
   }
 }
-
 #endif

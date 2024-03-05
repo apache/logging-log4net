@@ -23,10 +23,8 @@ using log4net.Util;
 
 using NUnit.Framework;
 
-#if NET_4_0 || MONO_4_0 || NETSTANDARD
 using System.Linq.Expressions;
 using System.Reflection;
-#endif
 
 namespace log4net.Tests.Util
 {
@@ -37,7 +35,6 @@ namespace log4net.Tests.Util
   public class SystemInfoTest
   {
 
-#if NET_4_0 || MONO_4_0 || NETSTANDARD
     /// <summary>
     /// It's "does not throw not supported exception" NOT
     /// "returns 'Dynamic Assembly' string for dynamic assemblies" by purpose.
@@ -65,13 +62,8 @@ namespace log4net.Tests.Util
 
     public static string TestAssemblyLocationInfoMethod()
     {
-#if NETSTANDARD1_3
-      return SystemInfo.AssemblyLocationInfo(typeof(SystemInfoTest).GetTypeInfo().Assembly);
-#else
       return SystemInfo.AssemblyLocationInfo(Assembly.GetCallingAssembly());
-#endif
     }
-#endif
 
     [Test]
     public void TestGetTypeFromStringFullyQualified()
@@ -88,7 +80,6 @@ namespace log4net.Tests.Util
       Assert.AreSame(typeof(SystemInfoTest), t, "Test explicit case in-sensitive type load lower");
     }
 
-#if !NETSTANDARD1_3
     [Test]
     [Platform(Include = "Win")]
     public void TestGetTypeFromStringCaseInsensitiveOnAssemblyName()
@@ -101,7 +92,6 @@ namespace log4net.Tests.Util
       t = GetTypeFromString("log4net.tests.util.systeminfotest,log4net.tests", false, true);
       Assert.AreSame(typeof(SystemInfoTest), t, "Test explicit case in-sensitive type load lower");
     }
-#endif
 
     [Test]
     public void TestGetTypeFromStringRelative()
@@ -118,7 +108,6 @@ namespace log4net.Tests.Util
       Assert.AreSame(typeof(SystemInfoTest), t, "Test explicit case in-sensitive type load lower");
     }
 
-#if !NETSTANDARD1_3
     [Test]
     public void TestGetTypeFromStringSearch()
     {
@@ -135,7 +124,6 @@ namespace log4net.Tests.Util
       t = GetTypeFromString("log4net.util.systeminfo", false, true);
       Assert.AreSame(typeof(SystemInfo), t, "Test explicit case in-sensitive type load lower");
     }
-#endif
 
     [Test]
     public void TestGetTypeFromStringFails1()
@@ -164,11 +152,7 @@ namespace log4net.Tests.Util
     // are exposed for NETSTANDARD1_3.
     private Type GetTypeFromString(string typeName, bool throwOnError, bool ignoreCase)
     {
-#if NETSTANDARD1_3
-      return SystemInfo.GetTypeFromString(GetType().GetTypeInfo().Assembly, typeName, throwOnError, ignoreCase);
-#else
       return SystemInfo.GetTypeFromString(typeName, throwOnError, ignoreCase);
-#endif
     }
 
     [Test]

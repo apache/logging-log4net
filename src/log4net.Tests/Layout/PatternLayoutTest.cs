@@ -19,9 +19,7 @@
 
 using System;
 using System.IO;
-#if !NETSTANDARD1_3
 using System.Globalization;
-#endif
 
 using log4net.Config;
 using log4net.Core;
@@ -44,7 +42,6 @@ namespace log4net.Tests.Layout
   [TestFixture]
   public class PatternLayoutTest
   {
-#if !NETSTANDARD1_3
     private CultureInfo _currentCulture;
     private CultureInfo _currentUICulture;
 
@@ -66,7 +63,6 @@ namespace log4net.Tests.Layout
       System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture;
       System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture;
     }
-#endif
 
     protected virtual PatternLayout NewPatternLayout()
     {
@@ -106,7 +102,6 @@ namespace log4net.Tests.Layout
       stringAppender.Reset();
     }
 
-#if !NETSTANDARD1_3
     [Test]
     public void TestStackTracePattern()
     {
@@ -122,7 +117,6 @@ namespace log4net.Tests.Layout
       StringAssert.EndsWith("PatternLayoutTest.TestStackTracePattern", stringAppender.GetString(), "stack trace value set");
       stringAppender.Reset();
     }
-#endif
 
     [Test]
     public void TestGlobalPropertiesPattern()

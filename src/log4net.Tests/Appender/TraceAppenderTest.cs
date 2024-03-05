@@ -55,7 +55,6 @@ namespace log4net.Tests.Appender
           categoryTraceListener.Category);
     }
 
-#if !NETSTANDARD1_3 // "LocationInfo can't get method names on NETSTANDARD1_3 due to unavailable stack frame APIs"
     [Test]
     public void MethodNameCategoryTest()
     {
@@ -81,7 +80,6 @@ namespace log4net.Tests.Appender
           System.Reflection.MethodInfo.GetCurrentMethod().Name,
           categoryTraceListener.Category);
     }
-#endif
   }
 
   public class CategoryTraceListener : TraceListener

@@ -21,15 +21,10 @@
 
 using System;
 using System.Data;
-#if NETSTANDARD1_3
-using System.Reflection;
-#endif
 using System.Xml;
 using log4net.Appender;
 using log4net.Config;
-#if !NETSTANDARD1_3
 using log4net.Core;
-#endif
 using log4net.Layout;
 using log4net.Repository;
 using log4net.Tests.Appender.AdoNet;
@@ -48,11 +43,7 @@ namespace log4net.Tests.Appender
 
       AdoNetAppender adoNetAppender = new AdoNetAppender();
       adoNetAppender.BufferSize = -1;
-#if NETSTANDARD1_3
-            adoNetAppender.ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName;
-#else
-      adoNetAppender.ConnectionType = "log4net.Tests.Appender.AdoNet.Log4NetConnection";
-#endif
+      adoNetAppender.ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName;
       adoNetAppender.ActivateOptions();
 
       BasicConfigurator.Configure(rep, adoNetAppender);
@@ -72,11 +63,7 @@ namespace log4net.Tests.Appender
 
       AdoNetAppender adoNetAppender = new AdoNetAppender();
       adoNetAppender.BufferSize = bufferSize;
-#if NETSTANDARD1_3
-            adoNetAppender.ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName;
-#else
-      adoNetAppender.ConnectionType = "log4net.Tests.Appender.AdoNet.Log4NetConnection";
-#endif
+      adoNetAppender.ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName;
       adoNetAppender.ActivateOptions();
 
       BasicConfigurator.Configure(rep, adoNetAppender);
@@ -92,7 +79,6 @@ namespace log4net.Tests.Appender
       Assert.AreEqual(bufferSize + 1, Log4NetCommand.MostRecentInstance.ExecuteNonQueryCount);
     }
 
-#if !NETSTANDARD1_3
     [Test]
     public void WebsiteExample()
     {
@@ -276,7 +262,6 @@ namespace log4net.Tests.Appender
       param = (IDbDataParameter)command.Parameters["@exception"];
       Assert.IsEmpty((string)param.Value);
     }
-#endif
 
     [Test]
     public void NullPropertyXmlConfig()
@@ -331,11 +316,7 @@ namespace log4net.Tests.Appender
       productIdParam.Layout = rawPropertyLayout;
 
       AdoNetAppender appender = new AdoNetAppender();
-#if NETSTANDARD1_3
-            appender.ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName;
-#else
-      appender.ConnectionType = typeof(Log4NetConnection).FullName;
-#endif
+      appender.ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName;
       appender.BufferSize = -1;
       appender.CommandText = "INSERT INTO Log ([productId]) VALUES (@productId)";
       appender.AddParameter(productIdParam);
