@@ -47,24 +47,24 @@ namespace log4net.Core
             m_method = new MethodItem();
             m_className = NA;
 
-			try
-			{
-				// get frame values
-				m_lineNumber = frame.GetFileLineNumber().ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
-				m_fileName = frame.GetFileName();
-				// get method values
-				MethodBase method = frame.GetMethod();
-				if (method != null)
-				{
-					if(method.DeclaringType != null)
-						m_className = method.DeclaringType.FullName;
-					m_method = new MethodItem(method);
-				}
-			}
-			catch (Exception ex)
-			{
-				LogLog.Error(declaringType, "An exception ocurred while retreiving stack frame information.", ex);
-			}
+      try
+      {
+        // get frame values
+        m_lineNumber = frame.GetFileLineNumber().ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
+        m_fileName = frame.GetFileName();
+        // get method values
+        MethodBase method = frame.GetMethod();
+        if (method != null)
+        {
+          if(method.DeclaringType != null)
+            m_className = method.DeclaringType.FullName;
+          m_method = new MethodItem(method);
+        }
+      }
+      catch (Exception ex)
+      {
+        LogLog.Error(declaringType, "An exception ocurred while retreiving stack frame information.", ex);
+      }
 
             // set full info
             m_fullInfo = m_className + '.' + m_method.Name + '(' + m_fileName + ':' + m_lineNumber + ')';
@@ -167,7 +167,7 @@ namespace log4net.Core
         private readonly string m_fileName;
         private readonly string m_className;
         private readonly string m_fullInfo;
-		private readonly MethodItem m_method;
+    private readonly MethodItem m_method;
 
         #endregion
 

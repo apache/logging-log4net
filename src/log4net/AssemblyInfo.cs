@@ -137,8 +137,8 @@ using System.Runtime.CompilerServices;
 
 [assembly: AssemblyProduct("log4net")]
 [assembly: AssemblyDefaultAlias("log4net")]
-[assembly: AssemblyCulture("")]		
-		
+[assembly: AssemblyCulture("")]    
+    
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 
 // Microsoft .NET Framework documentation for more information on assembly signing.

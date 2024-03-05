@@ -732,8 +732,8 @@ namespace log4net.Core
                 if (m_data.ThreadName == null && this.m_cacheUpdatable)
                 {
 #if NETCF
-					// Get thread ID only
-					m_data.ThreadName =
+          // Get thread ID only
+          m_data.ThreadName =
  SystemInfo.CurrentThreadId.ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
 #else
                     // '.NET ThreadPool Worker' appears as a default thread name in the .NET 6-7 thread pool.
@@ -807,12 +807,12 @@ namespace log4net.Core
         ///     <description>Results</description>
         ///   </listheader>
         ///   <item>
-        ///	    <term><c>WindowsIdentity.GetCurrent()</c></term>
-        ///	    <description>10000 loops, 00:00:00.2031250 seconds</description>
+        ///      <term><c>WindowsIdentity.GetCurrent()</c></term>
+        ///      <description>10000 loops, 00:00:00.2031250 seconds</description>
         ///   </item>
         ///   <item>
-        ///	    <term><c>WindowsIdentity.GetCurrent().Name</c></term>
-        ///	    <description>10000 loops, 00:00:08.0468750 seconds</description>
+        ///      <term><c>WindowsIdentity.GetCurrent().Name</c></term>
+        ///      <description>10000 loops, 00:00:08.0468750 seconds</description>
         ///   </item>
         /// </list>
         /// <para>
@@ -827,8 +827,8 @@ namespace log4net.Core
         private string TryGetCurrentUserName()
         {
 #if (NETCF || SSCLI || NETSTANDARD1_3)
-					// On compact framework there's no notion of current Windows user
-					return SystemInfo.NotAvailableText;
+          // On compact framework there's no notion of current Windows user
+          return SystemInfo.NotAvailableText;
 #else
             if (_platformDoesNotSupportWindowsIdentity)
             {
@@ -898,8 +898,8 @@ namespace log4net.Core
                 if (m_data.Identity == null && this.m_cacheUpdatable)
                 {
 #if (NETCF || SSCLI || NETSTANDARD1_3)
-					// On compact framework there's no notion of current thread principals
-					m_data.Identity = SystemInfo.NotAvailableText;
+          // On compact framework there's no notion of current thread principals
+          m_data.Identity = SystemInfo.NotAvailableText;
 #else
                     try
                     {
@@ -1447,27 +1447,27 @@ namespace log4net.Core
         /// This event has composite properties that combine together properties from
         /// several different contexts in the following order:
         /// <list type="definition">
-        ///		<item>
-        /// 		<term>this events properties</term>
-        /// 		<description>
-        /// 		This event has <see cref="Properties"/> that can be set. These 
-        /// 		properties are specific to this event only.
-        /// 		</description>
-        /// 	</item>
-        /// 	<item>
-        /// 		<term>the thread properties</term>
-        /// 		<description>
-        /// 		The <see cref="ThreadContext.Properties"/> that are set on the current
-        /// 		thread. These properties are shared by all events logged on this thread.
-        /// 		</description>
-        /// 	</item>
-        /// 	<item>
-        /// 		<term>the global properties</term>
-        /// 		<description>
-        /// 		The <see cref="GlobalContext.Properties"/> that are set globally. These 
-        /// 		properties are shared by all the threads in the AppDomain.
-        /// 		</description>
-        /// 	</item>
+        ///    <item>
+        ///     <term>this events properties</term>
+        ///     <description>
+        ///     This event has <see cref="Properties"/> that can be set. These 
+        ///     properties are specific to this event only.
+        ///     </description>
+        ///   </item>
+        ///   <item>
+        ///     <term>the thread properties</term>
+        ///     <description>
+        ///     The <see cref="ThreadContext.Properties"/> that are set on the current
+        ///     thread. These properties are shared by all events logged on this thread.
+        ///     </description>
+        ///   </item>
+        ///   <item>
+        ///     <term>the global properties</term>
+        ///     <description>
+        ///     The <see cref="GlobalContext.Properties"/> that are set globally. These 
+        ///     properties are shared by all the threads in the AppDomain.
+        ///     </description>
+        ///   </item>
         /// </list>
         /// </para>
         /// </remarks>
