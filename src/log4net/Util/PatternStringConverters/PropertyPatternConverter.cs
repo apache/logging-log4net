@@ -61,13 +61,12 @@ namespace log4net.Util.PatternStringConverters
     {
       CompositeProperties compositeProperties = new CompositeProperties();
 
-#if !NETCF
       PropertiesDictionary logicalThreadProperties = LogicalThreadContext.Properties.GetProperties(false);
       if (logicalThreadProperties != null)
       {
         compositeProperties.Add(logicalThreadProperties);
       }
-#endif
+
       PropertiesDictionary threadProperties = ThreadContext.Properties.GetProperties(false);
       if (threadProperties != null)
       {

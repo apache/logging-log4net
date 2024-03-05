@@ -17,9 +17,6 @@
 //
 #endregion
 
-// .NET Compact Framework 1.0 has no support for application .config files
-#if !NETCF && (NET_2_0 || NETSTANDARD2_0)
-
 using System.IO;
 using System.Collections;
 using System.Configuration;
@@ -105,4 +102,3 @@ namespace log4net.Util.PatternStringConverters
     }
   }
 }
-#endif // !NETCF && NET_2_0

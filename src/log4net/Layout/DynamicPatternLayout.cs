@@ -113,7 +113,7 @@ namespace log4net.Layout
         base.Header = value;
         m_headerPatternString = new PatternString(value);
       }
-    }    /* property DynamicPatternLayout Header */
+    }   /* property DynamicPatternLayout Header */
 
     /// <summary>
     /// The footer for the layout format.
@@ -137,7 +137,7 @@ namespace log4net.Layout
         base.Footer = value;
         m_footerPatternString = new PatternString(value);
       }
-    }    /* property DynamicPatternLayout Footer */
+    }   /* property DynamicPatternLayout Footer */
     #endregion
   }      /* class DynamicPatternLayout */
 }        /* namespace log4net.Layout */

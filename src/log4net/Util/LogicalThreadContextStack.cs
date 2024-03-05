@@ -17,7 +17,6 @@
 //
 #endregion
 
-#if !NETCF
 using System;
 using System.Collections;
 
@@ -29,11 +28,7 @@ namespace log4net.Util
   /// <summary>
   /// Delegate type used for LogicalThreadContextStack's callbacks.
   /// </summary>
-#if NET_2_0 || MONO_2_0 || NETSTANDARD
   public delegate void TwoArgAction<T1, T2>(T1 t1, T2 t2);
-#else
-  public delegate void TwoArgAction(string t1, LogicalThreadContextStack t2);
-#endif
 
   /// <summary>
   /// Implementation of Stack for the <see cref="log4net.LogicalThreadContext"/>
@@ -63,11 +58,7 @@ namespace log4net.Util
     /// The callback used to let the <see cref="log4net.Util.LogicalThreadContextStacks"/> register a
     /// new instance of a <see cref="log4net.Util.LogicalThreadContextStack"/>.
     /// </summary>
-#if NET_2_0 || MONO_2_0 || NETSTANDARD
     private TwoArgAction<string, LogicalThreadContextStack> m_registerNew;
-#else
-    private TwoArgAction m_registerNew;
-#endif
 
     #endregion Private Instance Fields
 
@@ -81,11 +72,7 @@ namespace log4net.Util
     /// Initializes a new instance of the <see cref="LogicalThreadContextStack" /> class. 
     /// </para>
     /// </remarks>
-#if NET_2_0 || MONO_2_0 || NETSTANDARD
     internal LogicalThreadContextStack(string propertyKey, TwoArgAction<string, LogicalThreadContextStack> registerNew)
-#else
-    internal LogicalThreadContextStack(string propertyKey, TwoArgAction registerNew)
-#endif
     {
       m_propertyKey = propertyKey;
       m_registerNew = registerNew;
@@ -446,4 +433,3 @@ namespace log4net.Util
 
   }
 }
-#endif

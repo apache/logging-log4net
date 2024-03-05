@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <PackageId>log4net</PackageId>
     <Version>3.0.0</Version>
@@ -73,13 +73,6 @@
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
-    <DefineConstants>$(DefineConstants);NETSTANDARD;NETSTANDARD2_0</DefineConstants>
-    <NoWarn>1574</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='net462'">
-    <DefineConstants>$(DefineConstants);NET_2_0;NET_4_0;NET_4_5</DefineConstants>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
     <DefineConstants>TRACE;DEBUG;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
@@ -88,16 +81,17 @@
     <DebugType>none</DebugType>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
-  <ItemGroup>
+  <PropertyGroup />
+  <ItemGroup Condition="'$(TargetFramework)'=='net462'">
     <Reference Update="System">
       <Name>System</Name>
     </Reference>
-    <Reference Include="System.Configuration" Condition="$(DefineConstants.Contains(NET_2_0))" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web">
+      <Name>System.Web</Name>
+    </Reference>
     <Reference Update="System.Data">
       <Name>System.Data</Name>
-    </Reference>
-    <Reference Include="System.Web" Condition="$(DefineConstants.Contains(NET_2_0)) and !$(DefineConstants.Contains(CLIENT_PROFILE))">
-      <Name>System.Web</Name>
     </Reference>
     <Reference Update="System.Xml">
       <Name>System.XML</Name>
@@ -129,19 +123,14 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net35" Version="1.0.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
-  <PropertyGroup />
   <Import Project="../MonoForFramework.targets" />
   <Target Name="_ResolveCopyLocalNuGetPackagePdbsAndXml" Condition="$(CopyLocalLockFileAssemblies) == true" AfterTargets="ResolveReferences">
     <!-- "Workaround" for missing '.pdb'-Files from NuGet Packages -->
     <!-- https://github.com/dotnet/sdk/issues/1458#issuecomment-420456386 -->
     <ItemGroup>
-      <ReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->'%(RootDir)%(Directory)%(Filename).pdb')" Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' != '' and Exists('%(RootDir)%(Directory)%(Filename).pdb')"/>
-      <ReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->'%(RootDir)%(Directory)%(Filename).xml')" Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' != '' and Exists('%(RootDir)%(Directory)%(Filename).xml')"/>
+      <ReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->'%(RootDir)%(Directory)%(Filename).pdb')" Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' != '' and Exists('%(RootDir)%(Directory)%(Filename).pdb')" />
+      <ReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->'%(RootDir)%(Directory)%(Filename).xml')" Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' != '' and Exists('%(RootDir)%(Directory)%(Filename).xml')" />
     </ItemGroup>
   </Target>
 </Project>

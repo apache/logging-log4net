@@ -60,84 +60,134 @@ limitations under the License.
 
       <section id="appenders" name="Appenders">
         <p>
-          Currently all appenders are available in each supported framework:
+          The following appenders are supported as specified:
         </p>
         <div class="table">
           <table>
             <colgroup>
               <col style="text-align: left;" />
+              <col style="text-align: center;" />
+              <col style="text-align: center;" />
             </colgroup>
             <tr>
               <th>Appender</th>
+              <th>.NET Framework 4.6.2</th>
+              <th>.NET Standard 2.0</th>
             </tr>
             <tr>
               <td>AdoNetAppender</td>
+              <td>x</td>
+              <td>x</td>
             </tr>
             <tr>
               <td>AnsiColorTerminalAppender</td>
+              <td>x</td>
+              <td>x</td>
             </tr>
             <tr>
               <td>AspNetTraceAppender</td>
+              <td>x</td>
+              <td></td>
             </tr>
             <tr>
               <td>BufferingForwardingAppender</td>
+              <td>x</td>
+              <td>x</td>
             </tr>
             <tr>
               <td>ColoredConsoleAppender</td>
+              <td>x</td>
+              <td>x</td>
             </tr>
             <tr>
               <td>ConsoleAppender</td>
+              <td>x</td>
+              <td>x</td>
             </tr>
             <tr>
               <td>DebugAppender</td>
+              <td>x</td>
+              <td>x</td>
             </tr>
             <tr>
               <td>EventLogAppender</td>
+              <td>x</td>
+              <td></td>
             </tr>
             <tr>
               <td>FileAppender</td>
+              <td>x</td>
+              <td>x</td>
             </tr>
             <tr>
               <td>ForwardingAppender</td>
+              <td>x</td>
+              <td>x</td>
             </tr>
             <tr>
               <td>LocalSyslogAppender</td>
+              <td>x</td>
+              <td>x</td>
             </tr>
             <tr>
               <td>ManagedColoredConsoleAppender</td>
+              <td>x</td>
+              <td>x</td>
             </tr>
             <tr>
               <td>MemoryAppender</td>
+              <td>x</td>
+              <td>x</td>
             </tr>
             <tr>
               <td>NetSendAppender</td>
+              <td>x</td>
+              <td>x</td>
             </tr>
             <tr>
               <td>OutputDebugStringAppender</td>
+              <td>x</td>
+              <td>x</td>
             </tr>
             <tr>
               <td>RemoteSyslogAppender</td>
+              <td>x</td>
+              <td>x</td>
             </tr>
             <tr>
               <td>RemotingAppender</td>
+              <td>x</td>
+              <td></td>
             </tr>
             <tr>
               <td>RollingFileAppender</td>
+              <td>x</td>
+              <td>x</td>
             </tr>
             <tr>
               <td>SmtpAppender</td>
+              <td>x</td>
+              <td>x</td>
             </tr>
             <tr>
               <td>SmtpPickupDirAppender</td>
+              <td>x</td>
+              <td>x</td>
             </tr>
             <tr>
               <td>TelnetAppender</td>
+              <td>x</td>
+              <td>x</td>
             </tr>
             <tr>
               <td>TraceAppender</td>
+              <td>x</td>
+              <td>x</td>
             </tr>
             <tr>
               <td>UdpAppender</td>
+              <td>x</td>
+              <td>x</td>
             </tr>
           </table>
         </div>

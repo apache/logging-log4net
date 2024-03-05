@@ -17,10 +17,14 @@
 //
 #endregion
 
-// .NET Compact Framework 1.0 has no support for System.Runtime.Remoting.Messaging.CallContext
-#if !NETCF
-
 using log4net.Util;
+
+#if NET462_OR_GREATER
+using CallContext = System.Runtime.Remoting.Messaging.CallContext;
+#endif
+#if NETSTANDARD2_0_OR_GREATER
+using CallContext = System.Threading.AsyncLocal<log4net.Util.PropertiesDictionary>;
+#endif
 
 namespace log4net
 {
@@ -29,15 +33,14 @@ namespace log4net
   /// </summary>
   /// <remarks>
   /// <para>
-  /// The <c>LogicalThreadContext</c> provides a location for <see cref="System.Runtime.Remoting.Messaging.CallContext"/> specific debugging 
+  /// The <c>LogicalThreadContext</c> provides a location for <see cref="CallContext"/> specific debugging 
   /// information to be stored.
   /// The <c>LogicalThreadContext</c> properties override any <see cref="ThreadContext"/> or <see cref="GlobalContext"/>
   /// properties with the same name.
   /// </para>
   /// <para>
   /// For .NET Standard 1.3 this class uses
-  /// System.Threading.AsyncLocal rather than <see
-  /// cref="System.Runtime.Remoting.Messaging.CallContext"/>.
+  /// System.Threading.AsyncLocal rather than <see cref="CallContext"/>.
   /// </para>
   /// <para>
   /// The Logical Thread Context has a properties map and a stack.
@@ -52,10 +55,10 @@ namespace log4net
   /// when a server handles multiple clients near-simultaneously.
   /// </para>
   /// <para>
-  /// The Logical Thread Context is managed on a per <see cref="System.Runtime.Remoting.Messaging.CallContext"/> basis.
+  /// The Logical Thread Context is managed on a per <see cref="CallContext"/> basis.
   /// </para>
   /// <para>
-  /// The <see cref="System.Runtime.Remoting.Messaging.CallContext"/> requires a link time 
+  /// The <see cref="CallContext"/> requires a link time 
   /// <see cref="System.Security.Permissions.SecurityPermission"/> for the
   /// <see cref="System.Security.Permissions.SecurityPermissionFlag.Infrastructure"/>.
   /// If the calling code does not have this permission then this context will be disabled.
@@ -149,5 +152,3 @@ namespace log4net
     #endregion Private Static Fields
   }
 }
-
-#endif

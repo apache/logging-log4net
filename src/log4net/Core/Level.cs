@@ -80,9 +80,7 @@ namespace log4net.Core
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-#if !NETCF
   [Serializable]
-#endif
   public sealed class Level : IComparable
   {
     #region Public Instance Constructors
@@ -111,11 +109,7 @@ namespace log4net.Core
       }
 
       m_levelValue = level;
-#if NETSTANDARD1_3
-      m_levelName = levelName;
-#else
       m_levelName = string.Intern(levelName);
-#endif
       m_levelDisplayName = displayName;
     }
 

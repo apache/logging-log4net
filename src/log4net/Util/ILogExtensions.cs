@@ -17,8 +17,6 @@
 //
 #endregion
 
-#if NET_3_5 || NET_4_0 || MONO_3_5 || MONO_4_0 || NETSTANDARD
-
 using System;
 
 using log4net.Core;
@@ -1738,4 +1736,3 @@ namespace log4net.Util
     #endregion
   }
 }
-#endif

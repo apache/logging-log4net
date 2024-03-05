@@ -17,8 +17,6 @@
 //
 #endregion
 
-#if !NETCF && (NET_2_0 || NETSTANDARD2_0)
-
 using System;
 using System.IO;
 
@@ -94,5 +92,3 @@ namespace log4net.Util.PatternStringConverters
     #endregion Private Static Fields
   }
 }
-
-#endif // !NETCF && NET_2_0

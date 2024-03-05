@@ -26,10 +26,7 @@ namespace log4net.Appender
   /// A strongly-typed collection of <see cref="IAppender"/> objects.
   /// </summary>
   /// <author>Nicko Cadell</author>
-  public class AppenderCollection : ICollection, IList, IEnumerable
-#if !NETSTANDARD1_3
-    , ICloneable
-#endif
+  public class AppenderCollection : ICollection, IList, IEnumerable, ICloneable
   {
     #region Interfaces
     /// <summary>

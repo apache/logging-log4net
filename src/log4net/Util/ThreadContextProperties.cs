@@ -18,9 +18,6 @@
 #endregion
 
 using System;
-#if NETCF
-using System.Collections;
-#endif
 
 namespace log4net.Util
 {
@@ -38,18 +35,11 @@ namespace log4net.Util
   {
     #region Private Instance Fields
 
-#if NETCF
-    /// <summary>
-    /// The thread local data slot to use to store a PropertiesDictionary.
-    /// </summary>
-    private readonly static LocalDataStoreSlot s_threadLocalSlot = System.Threading.Thread.AllocateDataSlot();
-#else
     /// <summary>
     /// Each thread will automatically have its instance.
     /// </summary>
     [ThreadStatic]
     private static PropertiesDictionary _dictionary;
-#endif
 
     #endregion Private Instance Fields
 
@@ -86,9 +76,6 @@ namespace log4net.Util
     {
       get
       {
-#if NETCF
-        PropertiesDictionary _dictionary = GetProperties(false);
-#endif
         if (_dictionary != null)
         {
           return _dictionary[key];
@@ -116,9 +103,6 @@ namespace log4net.Util
     /// </remarks>
     public void Remove(string key)
     {
-#if NETCF
-      PropertiesDictionary _dictionary = GetProperties(false);
-#endif
       if (_dictionary != null)
       {
         _dictionary.Remove(key);
@@ -134,9 +118,6 @@ namespace log4net.Util
     /// <returns>a set of the defined keys</returns>
     public string[] GetKeys()
     {
-#if NETCF
-      PropertiesDictionary _dictionary = GetProperties(false);
-#endif
       if (_dictionary != null)
       {
         return _dictionary.GetKeys();
@@ -154,9 +135,6 @@ namespace log4net.Util
     /// </remarks>
     public void Clear()
     {
-#if NETCF
-      PropertiesDictionary _dictionary = GetProperties(false);
-#endif
       if (_dictionary != null)
       {
         _dictionary.Clear();
@@ -181,15 +159,9 @@ namespace log4net.Util
     /// </remarks>
     internal PropertiesDictionary GetProperties(bool create)
     {
-#if NETCF
-      PropertiesDictionary _dictionary = (PropertiesDictionary)System.Threading.Thread.GetData(s_threadLocalSlot);
-#endif
       if (_dictionary == null && create)
       {
         _dictionary = new PropertiesDictionary();
-#if NETCF
-        System.Threading.Thread.SetData(s_threadLocalSlot, _dictionary);
-#endif
       }
       return _dictionary;
     }
@@ -197,4 +169,3 @@ namespace log4net.Util
     #endregion Internal Instance Methods
   }
 }
-

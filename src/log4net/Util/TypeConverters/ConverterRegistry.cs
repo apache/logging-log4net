@@ -19,9 +19,6 @@
 
 using System;
 using System.Collections;
-#if NETSTANDARD1_3
-using System.Reflection;
-#endif
 
 namespace log4net.Util.TypeConverters
 {
@@ -215,9 +212,6 @@ namespace log4net.Util.TypeConverters
     {
       // Look for an attribute on the destination type
       var attributes = destinationType
-#if NETSTANDARD1_3
-          .GetTypeInfo()
-#endif
         .GetCustomAttributes(typeof(TypeConverterAttribute), true);
       if (attributes is null)
       {

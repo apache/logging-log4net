@@ -19,9 +19,6 @@
 
 using System;
 using System.Collections;
-#if NETSTANDARD1_3
-using System.Reflection;
-#endif
 using System.Runtime.Serialization;
 using System.Xml;
 
@@ -42,12 +39,8 @@ namespace log4net.Util
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-#if NETCF
-  public class ReadOnlyPropertiesDictionary : IDictionary
-#else
   [Serializable]
   public class ReadOnlyPropertiesDictionary : ISerializable, IDictionary
-#endif
   {
     #region Private Instance Fields
 
@@ -93,7 +86,6 @@ namespace log4net.Util
 
     #region Private Instance Constructors
 
-#if !NETCF
     /// <summary>
     /// Deserialization constructor
     /// </summary>
@@ -113,7 +105,6 @@ namespace log4net.Util
         InnerHashtable[XmlConvert.DecodeName(entry.Name)] = entry.Value;
       }
     }
-#endif
 
     #endregion Protected Instance Constructors
 
@@ -194,7 +185,6 @@ namespace log4net.Util
 
     #region Implementation of ISerializable
 
-#if !NETCF
     /// <summary>
     /// Serializes this object into the <see cref="SerializationInfo" /> provided.
     /// </summary>
@@ -205,12 +195,8 @@ namespace log4net.Util
     /// Serializes this object into the <see cref="SerializationInfo" /> provided.
     /// </para>
     /// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD
-        [System.Security.SecurityCritical]
-#endif
-#if !NETCF && !NETSTANDARD1_3
+    [System.Security.SecurityCritical]
     [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, SerializationFormatter = true)]
-#endif
     public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
     {
       foreach (DictionaryEntry entry in InnerHashtable.Clone() as IDictionary)
@@ -224,11 +210,7 @@ namespace log4net.Util
         var entryValue = entry.Value;
 
         // If value is serializable then we add it to the list
-#if NETSTANDARD1_3
-                var isSerializable = entryValue?.GetType().GetTypeInfo().IsSerializable ?? false;
-#else
         var isSerializable = entryValue?.GetType().IsSerializable ?? false;
-#endif
         if (!isSerializable)
         {
           continue;
@@ -245,7 +227,6 @@ namespace log4net.Util
         }
       }
     }
-#endif
 
     #endregion Implementation of ISerializable
 

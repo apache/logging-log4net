@@ -17,16 +17,13 @@
 //
 #endregion
 
-// .NET Compact Framework 1.0 has no support for System.Runtime.Remoting.Messaging.CallContext
-#if !NETCF
-
 using System;
-#if !NETSTANDARD
-using System.Runtime.Remoting.Messaging;
-#endif
 using System.Security;
-#if NETSTANDARD
-using System.Threading;
+#if NET462_OR_GREATER
+using CallContext = System.Runtime.Remoting.Messaging.CallContext;
+#endif
+#if NETSTANDARD2_0_OR_GREATER
+using CallContext = System.Threading.AsyncLocal<log4net.Util.PropertiesDictionary>;
 #endif
 
 namespace log4net.Util
@@ -45,8 +42,7 @@ namespace log4net.Util
   /// </para>
   /// <para>
   /// For .NET Standard 1.3 this class uses
-  /// System.Threading.AsyncLocal rather than <see
-  /// cref="System.Runtime.Remoting.Messaging.CallContext"/>.
+  /// System.Threading.AsyncLocal rather than <see cref="CallContext"/>.
   /// </para>
   /// <para>
   /// The <see cref="CallContext"/> requires a link time 
@@ -59,8 +55,8 @@ namespace log4net.Util
   /// <author>Nicko Cadell</author>
   public sealed class LogicalThreadContextProperties : ContextPropertiesBase
   {
-#if NETSTANDARD
-    private static readonly AsyncLocal<PropertiesDictionary> AsyncLocalDictionary = new AsyncLocal<PropertiesDictionary>();
+#if NETSTANDARD2_0_OR_GREATER
+    private static readonly CallContext AsyncLocalDictionary = new CallContext();
 #else
     private const string c_SlotName = "log4net.Util.LogicalThreadContextProperties";
 #endif
@@ -221,21 +217,16 @@ namespace log4net.Util
     /// </summary>
     /// <returns>The peroperties dictionary stored in the call context</returns>
     /// <remarks>
-    /// The <see cref="CallContext"/> method <see cref="CallContext.GetData"/> has a
-    /// security link demand, therfore we must put the method call in a seperate method
-    /// that we can wrap in an exception handler.
+    /// The <see cref="CallContext"/> method GetData security link demand, therefore we must
+    /// put the method call in a seperate method that we can wrap in an exception handler.
     /// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD
-        [System.Security.SecuritySafeCritical]
-#endif
+    [System.Security.SecuritySafeCritical]
     private static PropertiesDictionary GetLogicalProperties()
     {
-#if NETSTANDARD
-            return AsyncLocalDictionary.Value;
-#elif NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0
-      return CallContext.LogicalGetData(c_SlotName) as PropertiesDictionary;
+#if NETSTANDARD2_0_OR_GREATER
+      return AsyncLocalDictionary.Value;
 #else
-      return CallContext.GetData(c_SlotName) as PropertiesDictionary;
+      return CallContext.LogicalGetData(c_SlotName) as PropertiesDictionary;
 #endif
     }
 
@@ -244,21 +235,16 @@ namespace log4net.Util
     /// </summary>
     /// <param name="properties">The properties.</param>
     /// <remarks>
-    /// The <see cref="CallContext"/> method <see cref="CallContext.SetData"/> has a
-    /// security link demand, therfore we must put the method call in a seperate method
-    /// that we can wrap in an exception handler.
+    /// The <see cref="CallContext"/> method SetData has a security link demand, therefore we must
+    /// put the method call in a seperate method that we can wrap in an exception handler.
     /// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD
-        [System.Security.SecuritySafeCritical]
-#endif
+    [System.Security.SecuritySafeCritical]
     private static void SetLogicalProperties(PropertiesDictionary properties)
     {
-#if NETSTANDARD
+#if NETSTANDARD2_0_OR_GREATER
       AsyncLocalDictionary.Value = properties;
-#elif NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0
-      CallContext.LogicalSetData(c_SlotName, properties);
 #else
-      CallContext.SetData(c_SlotName, properties);
+      CallContext.LogicalSetData(c_SlotName, properties);
 #endif
     }
 
@@ -278,5 +264,3 @@ namespace log4net.Util
     #endregion Private Static Fields
   }
 }
-
-#endif

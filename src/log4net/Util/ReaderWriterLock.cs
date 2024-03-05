@@ -17,13 +17,6 @@
 //
 #endregion
 
-#if (!NETCF) && !NETSTANDARD1_3
-#define HAS_READERWRITERLOCK
-#endif
-#if NET_4_0 || MONO_4_0
-#define HAS_READERWRITERLOCKSLIM
-#endif
-
 using System;
 
 namespace log4net.Util
@@ -61,14 +54,7 @@ namespace log4net.Util
     /// </remarks>
     public ReaderWriterLock()
     {
-
-#if HAS_READERWRITERLOCK
-#if HAS_READERWRITERLOCKSLIM
       m_lock = new System.Threading.ReaderWriterLockSlim(System.Threading.LockRecursionPolicy.SupportsRecursion);
-#else
-      m_lock = new System.Threading.ReaderWriterLock();
-#endif
-#endif
     }
 
     #endregion Private Instance Constructors
@@ -86,20 +72,12 @@ namespace log4net.Util
     /// </remarks>
     public void AcquireReaderLock()
     {
-#if HAS_READERWRITERLOCK
-#if HAS_READERWRITERLOCKSLIM
-                    // prevent ThreadAbort while updating state, see https://issues.apache.org/jira/browse/LOG4NET-443
-                    try { } 
-                    finally
-                    {
-      m_lock.EnterReadLock();
-                    }
-#else
-      m_lock.AcquireReaderLock(-1);
-#endif
-#else
-      System.Threading.Monitor.Enter(this);
-#endif
+      // prevent ThreadAbort while updating state, see https://issues.apache.org/jira/browse/LOG4NET-443
+      try { }
+      finally
+      {
+        m_lock.EnterReadLock();
+      }
     }
 
     /// <summary>
@@ -113,16 +91,7 @@ namespace log4net.Util
     /// </remarks>
     public void ReleaseReaderLock()
     {
-#if HAS_READERWRITERLOCK
-#if HAS_READERWRITERLOCKSLIM
       m_lock.ExitReadLock();
-#else
-      m_lock.ReleaseReaderLock();
-
-#endif
-#else
-      System.Threading.Monitor.Exit(this);
-#endif
     }
 
     /// <summary>
@@ -135,20 +104,12 @@ namespace log4net.Util
     /// </remarks>
     public void AcquireWriterLock()
     {
-#if HAS_READERWRITERLOCK
-#if HAS_READERWRITERLOCKSLIM
-                    // prevent ThreadAbort while updating state, see https://issues.apache.org/jira/browse/LOG4NET-443
-                    try { } 
-                    finally
-                    {
-      m_lock.EnterWriteLock();
-                    }
-#else
-      m_lock.AcquireWriterLock(-1);
-#endif
-#else
-      System.Threading.Monitor.Enter(this);
-#endif
+      // prevent ThreadAbort while updating state, see https://issues.apache.org/jira/browse/LOG4NET-443
+      try { }
+      finally
+      {
+        m_lock.EnterWriteLock();
+      }
     }
 
     /// <summary>
@@ -162,29 +123,14 @@ namespace log4net.Util
     /// </remarks>
     public void ReleaseWriterLock()
     {
-#if HAS_READERWRITERLOCK
-#if HAS_READERWRITERLOCKSLIM
       m_lock.ExitWriteLock();
-#else
-      m_lock.ReleaseWriterLock();
-#endif
-#else
-      System.Threading.Monitor.Exit(this);
-#endif
     }
 
     #endregion Public Methods
 
     #region Private Members
 
-#if HAS_READERWRITERLOCK
-#if HAS_READERWRITERLOCKSLIM
     private System.Threading.ReaderWriterLockSlim m_lock;
-#else
-    private System.Threading.ReaderWriterLock m_lock;
-#endif
-
-#endif
 
     #endregion
   }

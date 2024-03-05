@@ -48,10 +48,6 @@ namespace log4net.Util.PatternStringConverters
     /// </remarks>
     protected override void Convert(TextWriter writer, object state)
     {
-#if (NETCF || SSCLI || NETSTANDARD1_3)
-      // On compact framework there's no notion of current thread principals
-      writer.Write( SystemInfo.NotAvailableText );
-#else
       try
       {
         if (System.Threading.Thread.CurrentPrincipal != null &&
@@ -69,7 +65,6 @@ namespace log4net.Util.PatternStringConverters
 
         writer.Write(SystemInfo.NotAvailableText);
       }
-#endif
     }
 
     #region Private Static Fields

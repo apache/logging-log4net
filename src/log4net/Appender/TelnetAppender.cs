@@ -23,9 +23,7 @@ using System.Globalization;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
-#if NETSTANDARD
 using System.Threading.Tasks;
-#endif
 
 using log4net.Core;
 using log4net.Util;
@@ -311,11 +309,7 @@ namespace log4net.Appender
 
             try
             {
-#if NET_4_0 || NETSTANDARD
               m_socket.Dispose();
-#else
-              m_socket.Close();
-#endif
             }
             catch { }
 
@@ -346,11 +340,7 @@ namespace log4net.Appender
 
       private void AcceptConnection()
       {
-#if NETSTANDARD
-        m_serverSocket.AcceptAsync().ContinueWith(OnConnect, TaskScheduler.Default);
-#else
         m_serverSocket.BeginAccept(new AsyncCallback(OnConnect), null);
-#endif
       }
 
       /// <summary>
@@ -433,9 +423,6 @@ namespace log4net.Appender
       }
 
 
-#if NETSTANDARD
-      private void OnConnect(Task<Socket> acceptTask)
-#else
       /// <summary>
       /// Callback used to accept a connection on the server socket
       /// </summary>
@@ -447,16 +434,11 @@ namespace log4net.Appender
       /// </para>
       /// </remarks>
       private void OnConnect(IAsyncResult asyncResult)
-#endif
       {
         try
         {
-#if NETSTANDARD
-          Socket socket = acceptTask.GetAwaiter().GetResult();
-#else
           // Block until a client connects
           Socket socket = m_serverSocket.EndAccept(asyncResult);
-#endif
           LogLog.Debug(declaringType, "Accepting connection from [" + socket.RemoteEndPoint.ToString() + "]");
           SocketClient client = new SocketClient(socket);
 
@@ -523,11 +505,7 @@ namespace log4net.Appender
 
         try
         {
-#if NET_2_0
-          localSocket.Close();
-#else
           localSocket.Dispose();
-#endif
         }
         catch
         {

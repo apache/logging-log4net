@@ -18,12 +18,10 @@
 #endregion
 
 using System;
-#if !NETCF && !NETSTANDARD1_3
 using System.Collections;
 using System.Diagnostics;
 
 using log4net.Util;
-#endif
 
 namespace log4net.Core
 {
@@ -58,9 +56,7 @@ namespace log4net.Core
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-#if !NETCF
   [Serializable]
-#endif
   public class LocationInfo
   {
     #region Public Instance Constructors
@@ -76,7 +72,7 @@ namespace log4net.Core
     /// class based on the current thread.
     /// </para>
     /// </remarks>
-    public LocationInfo(Type callerStackBoundaryDeclaringType)
+    public LocationInfo(Type callerStackBoundaryDeclaringType) 
     {
       // Initialize all fields
       m_className = NA;
@@ -85,14 +81,13 @@ namespace log4net.Core
       m_methodName = NA;
       m_fullInfo = NA;
 
-#if !NETCF && !NETSTANDARD1_3 // StackTrace isn't fully implemented for NETSTANDARD1_3 https://github.com/dotnet/corefx/issues/1797
       if (callerStackBoundaryDeclaringType != null)
       {
         try
         {
           StackTrace st = new StackTrace(true);
           int frameIndex = 0;
-
+                                        
           // skip frames not from fqnOfCallingClass
           while (frameIndex < st.FrameCount)
           {
@@ -119,15 +114,15 @@ namespace log4net.Core
           {
             // take into account the frames we skip above
             int adjustedFrameCount = st.FrameCount - frameIndex;
-            ArrayList stackFramesList = new ArrayList(adjustedFrameCount);
+                        ArrayList stackFramesList = new ArrayList(adjustedFrameCount);
             m_stackFrames = new StackFrameItem[adjustedFrameCount];
-            for (int i = frameIndex; i < st.FrameCount; i++)
+            for (int i=frameIndex; i < st.FrameCount; i++) 
             {
               stackFramesList.Add(new StackFrameItem(st.GetFrame(i)));
             }
-
+                        
             stackFramesList.CopyTo(m_stackFrames, 0);
-
+            
             // now frameIndex is the first 'user' caller frame
             StackFrame locationFrame = st.GetFrame(frameIndex);
 
@@ -137,7 +132,7 @@ namespace log4net.Core
 
               if (method != null)
               {
-                m_methodName = method.Name;
+                m_methodName =  method.Name;
                 if (method.DeclaringType != null)
                 {
                   m_className = method.DeclaringType.FullName;
@@ -147,18 +142,17 @@ namespace log4net.Core
               m_lineNumber = locationFrame.GetFileLineNumber().ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
 
               // Combine all location info
-              m_fullInfo = m_className + '.' + m_methodName + '(' + m_fileName + ':' + m_lineNumber + ')';
+              m_fullInfo =  m_className + '.' + m_methodName + '(' + m_fileName + ':' + m_lineNumber + ')';
             }
           }
         }
-        catch (System.Security.SecurityException)
+        catch(System.Security.SecurityException)
         {
           // This security exception will occur if the caller does not have 
           // some undefined set of SecurityPermission flags.
           LogLog.Debug(declaringType, "Security exception while trying to get caller stack frame. Error Ignored. Location Information Not Available.");
         }
       }
-#endif
     }
 
     /// <summary>
@@ -180,7 +174,7 @@ namespace log4net.Core
       m_fileName = fileName;
       m_lineNumber = lineNumber;
       m_methodName = methodName;
-      m_fullInfo = m_className + '.' + m_methodName + '(' + m_fileName +
+      m_fullInfo = m_className + '.' + m_methodName + '(' + m_fileName + 
         ':' + m_lineNumber + ')';
     }
 
@@ -272,8 +266,7 @@ namespace log4net.Core
     {
       get { return m_fullInfo; }
     }
-
-#if !NETCF && !NETSTANDARD1_3
+    
     /// <summary>
     /// Gets the stack frames from the stack trace of the caller making the log request
     /// </summary>
@@ -281,7 +274,6 @@ namespace log4net.Core
     {
       get { return m_stackFrames; }
     }
-#endif
 
     #endregion Public Instance Properties
 
@@ -292,22 +284,20 @@ namespace log4net.Core
     private readonly string m_lineNumber;
     private readonly string m_methodName;
     private readonly string m_fullInfo;
-#if !NETCF && !NETSTANDARD1_3
     private readonly StackFrameItem[] m_stackFrames;
-#endif
 
     #endregion Private Instance Fields
 
     #region Private Static Fields
 
-    /// <summary>
-    /// The fully qualified type of the LocationInfo class.
-    /// </summary>
-    /// <remarks>
-    /// Used by the internal logger to record the Type of the
-    /// log message.
-    /// </remarks>
-    private static readonly Type declaringType = typeof(LocationInfo);
+      /// <summary>
+      /// The fully qualified type of the LocationInfo class.
+      /// </summary>
+      /// <remarks>
+      /// Used by the internal logger to record the Type of the
+      /// log message.
+      /// </remarks>
+      private static readonly Type declaringType = typeof(LocationInfo);
 
     /// <summary>
     /// When location information is not available the constant

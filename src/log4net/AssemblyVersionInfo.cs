@@ -29,17 +29,12 @@
 // by using the '*' as shown below:
 
 [assembly: System.Reflection.AssemblyVersion("2.0.16.0")]
-
-#if !NETCF
-#if !SSCLI
 [assembly: System.Reflection.AssemblyFileVersion("2.0.16.0")]
-#endif
-#endif
 
 //
 // Shared assembly settings
 //
 
 [assembly: System.Reflection.AssemblyCompany("The Apache Software Foundation")]
-[assembly: System.Reflection.AssemblyCopyright("Copyright 2004-2017 The Apache Software Foundation.")]
+[assembly: System.Reflection.AssemblyCopyright("Copyright 2004-2024 The Apache Software Foundation.")]
 [assembly: System.Reflection.AssemblyTrademark("Apache and Apache log4net are trademarks of The Apache Software Foundation")]

@@ -17,8 +17,8 @@
 //
 #endregion
 
-// .NET Compact Framework 1.0 && netstandard has no support for System.Runtime.Remoting
-#if NET_2_0
+// netstandard has no support for System.Runtime.Remoting
+#if NET462_OR_GREATER
 
 using System;
 using System.Collections;
@@ -138,9 +138,7 @@ namespace log4net.Appender
     /// <see cref="ActivateOptions"/> must be called again.
     /// </para>
     /// </remarks>
-#if NET_4_0 || MONO_4_0
-        [System.Security.SecuritySafeCritical]
-#endif
+    [System.Security.SecuritySafeCritical]
     public override void ActivateOptions()
     {
       base.ActivateOptions();
@@ -336,4 +334,4 @@ namespace log4net.Appender
   }
 }
 
-#endif // NET_2_0
+#endif // NET462_OR_GREATER

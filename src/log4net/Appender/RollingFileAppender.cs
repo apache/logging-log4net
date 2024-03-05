@@ -29,7 +29,7 @@ using System.Threading;
 namespace log4net.Appender
 {
 #if CONFIRM_WIN32_FILE_SHAREMODES
-  // The following sounds good, and I though it was the case, but after
+  // The following sounds good, and I thought it was the case, but after
   // further testing on Windows I have not been able to confirm it.
 
   /// On the Windows platform if another process has a write lock on the file 
@@ -241,24 +241,17 @@ namespace log4net.Appender
     /// </summary>
     ~RollingFileAppender()
     {
-#if !NETCF
       if (m_mutexForRolling != null)
       {
-#if NET_4_0 || MONO_4_0 || NETSTANDARD
         m_mutexForRolling.Dispose();
-#else
-        m_mutexForRolling.Close();
-#endif
         m_mutexForRolling = null;
       }
-#endif
     }
 
     #endregion Public Instance Constructors
 
     #region Public Instance Properties
 
-#if !NET_1_0 && !CLI_1_0 && !NETCF
     /// <summary>
     /// Gets or sets the strategy for determining the current date and time. The default
     /// implementation is to use LocalDateTime which internally calls through to DateTime.Now. 
@@ -281,23 +274,6 @@ namespace log4net.Appender
     /// The default strategy is <see cref="RollingFileAppender.LocalDateTime"/>.
     /// </para>
     /// </remarks>
-#else
-        /// <summary>
-    /// Gets or sets the strategy for determining the current date and time. The default
-    /// implementation is to use LocalDateTime which internally calls through to DateTime.Now. 
-    /// </summary>
-    /// <value>
-    /// An implementation of the <see cref="RollingFileAppender.IDateTime"/> interface which returns the current date and time.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets or sets the <see cref="RollingFileAppender.IDateTime"/> used to return the current date and time.
-    /// </para>
-        /// <para>
-    /// The default strategy is <see cref="RollingFileAppender.LocalDateTime"/>.
-    /// </para>
-    /// </remarks>
-#endif
     public IDateTime DateTimeStrategy
     {
       get { return m_dateTime; }
@@ -612,7 +588,6 @@ namespace log4net.Appender
     protected virtual void AdjustFileBeforeAppend()
     {
       // reuse the file appenders locking model to lock the rolling
-#if !NETCF
       try
       {
         // if rolling should be locked, acquire the lock
@@ -620,7 +595,6 @@ namespace log4net.Appender
         {
           m_mutexForRolling.WaitOne();
         }
-#endif
         if (m_rollDate)
         {
           var n = m_dateTime.Now;
@@ -640,7 +614,6 @@ namespace log4net.Appender
             RollOverSize();
           }
         }
-#if !NETCF
       }
       finally
       {
@@ -650,7 +623,6 @@ namespace log4net.Appender
           m_mutexForRolling.ReleaseMutex();
         }
       }
-#endif
     }
 
     /// <summary>
@@ -837,18 +809,14 @@ namespace log4net.Appender
           DateTime last;
           using (SecurityContext.Impersonate(this))
           {
-#if !NET_1_0 && !CLI_1_0 && !NETCF
             if (DateTimeStrategy is UniversalDateTime)
             {
               last = System.IO.File.GetLastWriteTimeUtc(m_baseFileName);
             }
             else
             {
-#endif
               last = System.IO.File.GetLastWriteTime(m_baseFileName);
-#if !NET_1_0 && !CLI_1_0 && !NETCF
             }
-#endif
           }
           LogLog.Debug(declaringType, "[" + last.ToString(m_datePattern, DateTimeFormatInfo.InvariantInfo) + "] vs. [" + m_now.ToString(m_datePattern, DateTimeFormatInfo.InvariantInfo) + "]");
 
@@ -1157,14 +1125,12 @@ namespace log4net.Appender
         m_baseFileName = base.File;
       }
 
-#if !NETCF
       // initialize the mutex that is used to lock rolling
       m_mutexForRolling = new Mutex(false, m_baseFileName
         .Replace("\\", "_")
         .Replace(":", "_")
         .Replace("/", "_") + "_rolling"
       );
-#endif
 
       if (m_rollDate && File != null && m_scheduledFilename == null)
       {
@@ -1705,12 +1671,10 @@ namespace log4net.Appender
     /// </summary>
     private string m_baseFileName;
 
-#if !NETCF
     /// <summary>
     /// A mutex that is used to lock rolling of files.
     /// </summary>
     private Mutex m_mutexForRolling;
-#endif
 
     #endregion Private Instance Fields
 
@@ -1767,7 +1731,6 @@ namespace log4net.Appender
       }
     }
 
-#if !NET_1_0 && !CLI_1_0 && !NETCF
     /// <summary>
     /// Implementation of <see cref="IDateTime"/> that returns the current time as the coordinated universal time (UTC).
     /// </summary>
@@ -1787,7 +1750,6 @@ namespace log4net.Appender
         get { return DateTime.UtcNow; }
       }
     }
-#endif
 
     #endregion DateTime
   }

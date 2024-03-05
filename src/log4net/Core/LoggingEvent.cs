@@ -24,9 +24,7 @@ using System.Collections;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Security;
-#if !NETCF && !NETSTANDARD1_3
 using System.Security.Principal;
-#endif
 using log4net.Util;
 using log4net.Repository;
 
@@ -226,13 +224,8 @@ namespace log4net.Core
   /// <author>Gert Driesen</author>
   /// <author>Douglas de la Torre</author>
   /// <author>Daniel Cazzulino</author>
-#if !NETCF
   [Serializable]
-#endif
-  public class LoggingEvent
-#if !NETCF
-      : ISerializable
-#endif
+  public class LoggingEvent : ISerializable
   {
     private static readonly Type declaringType = typeof(LoggingEvent);
 
@@ -375,8 +368,6 @@ namespace log4net.Core
 
     #region Protected Instance Constructors
 
-#if !NETCF
-
     /// <summary>
     /// Serialization constructor
     /// </summary>
@@ -413,8 +404,6 @@ namespace log4net.Core
       // Set the fix flags otherwise the data values may be overwritten from the current environment.
       m_fixFlags = FixFlags.All;
     }
-
-#endif
 
     #endregion Protected Instance Constructors
 
@@ -731,11 +720,6 @@ namespace log4net.Core
       {
         if (m_data.ThreadName == null && this.m_cacheUpdatable)
         {
-#if NETCF
-          // Get thread ID only
-          m_data.ThreadName =
- SystemInfo.CurrentThreadId.ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
-#else
           // '.NET ThreadPool Worker' appears as a default thread name in the .NET 6-7 thread pool.
           // '.NET TP Worker' is the default thread name in the .NET 8+ thread pool.
           // Prefer the numeric thread ID instead.
@@ -767,7 +751,6 @@ namespace log4net.Core
                   .ToString(System.Globalization.CultureInfo.InvariantCulture);
             }
           }
-#endif
         }
 
         return m_data.ThreadName;
@@ -826,10 +809,6 @@ namespace log4net.Core
 
     private string TryGetCurrentUserName()
     {
-#if (NETCF || SSCLI || NETSTANDARD1_3)
-          // On compact framework there's no notion of current Windows user
-          return SystemInfo.NotAvailableText;
-#else
       if (_platformDoesNotSupportWindowsIdentity)
       {
         // we've already received one PlatformNotSupportedException
@@ -861,23 +840,16 @@ namespace log4net.Core
       {
         return null;
       }
-#endif
     }
 
-#if (NETCF || SSCLI || NETSTANDARD1_3)
-#else
     private string _cachedWindowsIdentityUserName;
     private static string TryReadWindowsIdentityUserName()
     {
       using var identity = WindowsIdentity.GetCurrent();
       return identity?.Name ?? "";
     }
-#endif
 
-#if (NETCF || SSCLI || NETSTANDARD1_3)
-#else
     private static bool _platformDoesNotSupportWindowsIdentity;
-#endif
 
     /// <summary>
     /// Gets the identity of the current thread principal.
@@ -897,10 +869,6 @@ namespace log4net.Core
       {
         if (m_data.Identity == null && this.m_cacheUpdatable)
         {
-#if (NETCF || SSCLI || NETSTANDARD1_3)
-          // On compact framework there's no notion of current thread principals
-          m_data.Identity = SystemInfo.NotAvailableText;
-#else
           try
           {
             if (System.Threading.Thread.CurrentPrincipal != null &&
@@ -933,7 +901,6 @@ namespace log4net.Core
 
             m_data.Identity = "";
           }
-#endif
         }
 
         return m_data.Identity;
@@ -1031,8 +998,6 @@ namespace log4net.Core
 
     #region Implementation of ISerializable
 
-#if !NETCF
-
     /// <summary>
     /// Serializes this object into the <see cref="SerializationInfo" /> provided.
     /// </summary>
@@ -1048,13 +1013,9 @@ namespace log4net.Core
     /// is to be used outside that method.
     /// </para>
     /// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD
-        [System.Security.SecurityCritical]
-#endif
-#if !NETCF && !NETSTANDARD1_3
+    [System.Security.SecurityCritical]
     [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand,
         SerializationFormatter = true)]
-#endif
     public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
     {
       // The caller must call FixVolatileData before this object
@@ -1077,8 +1038,6 @@ namespace log4net.Core
       info.AddValue("Domain", m_data.Domain);
       info.AddValue("Identity", m_data.Identity);
     }
-
-#endif
 
     #endregion Implementation of ISerializable
 
@@ -1358,13 +1317,11 @@ namespace log4net.Core
       {
         compositeProperties.Add(m_eventProperties);
       }
-#if !NETCF
       var logicalThreadProperties = LogicalThreadContext.Properties.GetProperties(false);
       if (logicalThreadProperties != null)
       {
         compositeProperties.Add(logicalThreadProperties);
       }
-#endif
       var threadProperties = ThreadContext.Properties.GetProperties(false);
       if (threadProperties != null)
       {

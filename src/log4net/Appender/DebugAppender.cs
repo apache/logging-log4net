@@ -76,7 +76,6 @@ namespace log4net.Appender
 
     #region Public Instance Properties
 
-#if !NETSTANDARD1_3 // System.Diagnostics.Debug has no Flush() in netstandard1.3
     /// <summary>
     /// Gets or sets a value that indicates whether the appender will 
     /// flush at the end of each write.
@@ -100,7 +99,6 @@ namespace log4net.Appender
       get { return m_immediateFlush; }
       set { m_immediateFlush = value; }
     }
-#endif // !NETSTANDARD1_3
 
     /// <summary>
     /// Formats the category parameter sent to the Debug method.
@@ -121,7 +119,6 @@ namespace log4net.Appender
 
     #endregion Public Instance Properties
 
-#if !NETSTANDARD1_3
     /// <summary>
     /// Flushes any buffered log data.
     /// </summary>
@@ -137,21 +134,9 @@ namespace log4net.Appender
 
       return true;
     }
-#endif
 
     #region Override implementation of AppenderSkeleton
 
-#if NETSTANDARD1_3
-    /// <summary>
-    /// Writes the logging event to the <see cref="System.Diagnostics.Debug"/> system.
-    /// </summary>
-    /// <param name="loggingEvent">The event to log.</param>
-    /// <remarks>
-    /// <para>
-    /// Writes the logging event to the <see cref="System.Diagnostics.Debug"/> system.
-    /// </para>
-    /// </remarks>
-#else
     /// <summary>
     /// Writes the logging event to the <see cref="System.Diagnostics.Debug"/> system.
     /// </summary>
@@ -163,7 +148,6 @@ namespace log4net.Appender
     /// is called.
     /// </para>
     /// </remarks> 
-#endif
     protected override void Append(LoggingEvent loggingEvent)
     {
       //
@@ -185,7 +169,6 @@ namespace log4net.Appender
           System.Diagnostics.Debug.Write(RenderLoggingEvent(loggingEvent), category);
         }
       }
-#if !NETSTANDARD1_3
       //
       // Flush the Debug system if needed
       //
@@ -193,7 +176,6 @@ namespace log4net.Appender
       {
         System.Diagnostics.Debug.Flush();
       }
-#endif
     }
 
     /// <summary>
@@ -214,7 +196,6 @@ namespace log4net.Appender
 
     #region Private Instance Fields
 
-#if !NETSTANDARD1_3
     /// <summary>
     /// Immediate flush means that the underlying writer or output stream
     /// will be flushed at the end of each append operation.
@@ -231,7 +212,6 @@ namespace log4net.Appender
     /// The default value is <c>true</c>.</para>
     /// </remarks>
     private bool m_immediateFlush = true;
-#endif
 
     /// <summary>
     /// Defaults to a <see cref="Layout.PatternLayout"/> with %logger as the pattern.

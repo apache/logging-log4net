@@ -43,15 +43,9 @@ namespace log4net.Util.PatternStringConverters
     /// Write the current process ID to the output <paramref name="writer"/>.
     /// </para>
     /// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD
-        [System.Security.SecuritySafeCritical]
-#endif
+    [System.Security.SecuritySafeCritical]
     protected override void Convert(TextWriter writer, object state)
     {
-#if (NETCF || SSCLI)
-      // On compact framework there is no System.Diagnostics.Process class
-      writer.Write( SystemInfo.NotAvailableText );
-#else
       try
       {
         writer.Write(System.Diagnostics.Process.GetCurrentProcess().Id);
@@ -64,7 +58,6 @@ namespace log4net.Util.PatternStringConverters
 
         writer.Write(SystemInfo.NotAvailableText);
       }
-#endif
     }
 
     #region Private Static Fields

@@ -18,9 +18,7 @@
 #endregion
 
 using System;
-#if !NETCF && !NETSTANDARD1_3
 using System.Runtime.Serialization;
-#endif
 
 namespace log4net.Util.TypeConverters
 {
@@ -36,14 +34,8 @@ namespace log4net.Util.TypeConverters
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-#if !NETCF
   [Serializable]
-#endif
-#if NETSTANDARD1_3
-  public class ConversionNotSupportedException : Exception
-#else
   public class ConversionNotSupportedException : ApplicationException
-#endif
   {
     #region Public Instance Constructors
 
@@ -92,7 +84,6 @@ namespace log4net.Util.TypeConverters
 
     #region Protected Instance Constructors
 
-#if !NETCF && !NETSTANDARD1_3
     /// <summary>
     /// Serialization constructor
     /// </summary>
@@ -107,7 +98,6 @@ namespace log4net.Util.TypeConverters
     protected ConversionNotSupportedException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }
-#endif
 
     #endregion Protected Instance Constructors
 

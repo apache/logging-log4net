@@ -17,15 +17,10 @@
 //
 #endregion
 
-// .NET Compact Framework 1.0 has no support for reading assembly attributes
-#if !NETCF
-
 using System;
 
 using log4net.Core;
-#if !NETSTANDARD1_3
 using log4net.Util;
-#endif
 using log4net.Plugin;
 
 namespace log4net.Config
@@ -49,7 +44,6 @@ namespace log4net.Config
   {
     #region Public Instance Constructors
 
-#if !NETSTANDARD1_3 // Excluded because GetCallingAssembly() is not available in CoreFX (https://github.com/dotnet/corefx/issues/2221).
     /// <summary>
     /// Initializes a new instance of the <see cref="PluginAttribute" /> class
     /// with the specified type.
@@ -67,7 +61,6 @@ namespace log4net.Config
     {
       m_typeName = typeName;
     }
-#endif
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PluginAttribute" /> class
@@ -142,13 +135,11 @@ namespace log4net.Config
     public IPlugin CreatePlugin()
     {
       Type pluginType = m_type;
-#if !NETSTANDARD1_3
       if (m_type == null)
       {
         // Get the plugin object type from the string type name
         pluginType = SystemInfo.GetTypeFromString(m_typeName, true, true);
       }
-#endif
       // Check that the type is a plugin
       if (!(typeof(IPlugin).IsAssignableFrom(pluginType)))
       {
@@ -194,5 +185,3 @@ namespace log4net.Config
     #endregion Private Instance Fields
   }
 }
-
-#endif // !NETCF

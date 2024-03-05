@@ -151,10 +151,6 @@ namespace log4net.Appender
     /// </remarks>
     protected override void Append(LoggingEvent loggingEvent)
     {
-#if NETCF_1_0
-      // Write to the output stream
-      Console.Write(RenderLoggingEvent(loggingEvent));
-#else
       if (m_writeToErrorStream)
       {
         // Write to the error stream
@@ -165,7 +161,6 @@ namespace log4net.Appender
         // Write to the output stream
         Console.Write(RenderLoggingEvent(loggingEvent));
       }
-#endif
     }
 
     /// <summary>

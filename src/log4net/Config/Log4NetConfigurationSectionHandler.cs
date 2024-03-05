@@ -1,4 +1,3 @@
-#if NET_2_0 || NETSTANDARD2_0
 #region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more 
@@ -17,9 +16,6 @@
 // limitations under the License.
 //
 #endregion
-
-// .NET Compact Framework 1.0 has no support for application .config files
-#if !NETCF
 
 using System.Configuration;
 using System.Xml;
@@ -89,6 +85,3 @@ namespace log4net.Config
     #endregion Implementation of IConfigurationSectionHandler
   }
 }
-
-#endif // !NETCF
-#endif // NET_2_0 || NETSTANDARD2_0

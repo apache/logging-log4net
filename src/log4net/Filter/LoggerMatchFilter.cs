@@ -107,7 +107,7 @@ namespace log4net.Filter
       set { m_loggerToMatch = value; }
     }
 
-    #endregion 
+    #endregion
 
     #region Override implementation of FilterSkeleton
 

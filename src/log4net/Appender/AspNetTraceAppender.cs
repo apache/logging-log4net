@@ -1,4 +1,4 @@
-#if NET_2_0
+#if NET462_OR_GREATER
 #region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more 
@@ -17,10 +17,6 @@
 // limitations under the License.
 //
 #endregion
-
-// .NET Compact Framework 1.0 has no support for ASP.NET
-// SSCLI 1.0 has no support for ASP.NET
-#if !NETCF && !SSCLI && !CLIENT_PROFILE
 
 using System.Web;
 
@@ -54,7 +50,7 @@ namespace log4net.Appender
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
   /// <author>Ron Grabowski</author>
-  public class AspNetTraceAppender : AppenderSkeleton
+  public class AspNetTraceAppender : AppenderSkeleton 
   {
     #region Public Instances Constructors
 
@@ -85,19 +81,19 @@ namespace log4net.Appender
     /// (<see cref="TraceContext"/>).
     /// </para>
     /// </remarks>
-    protected override void Append(LoggingEvent loggingEvent)
+    protected override void Append(LoggingEvent loggingEvent) 
     {
       // check if log4net is running in the context of an ASP.NET application
-      if (HttpContext.Current != null)
+      if (HttpContext.Current != null) 
       {
         // check if tracing is enabled for the current context
-        if (HttpContext.Current.Trace.IsEnabled)
+        if (HttpContext.Current.Trace.IsEnabled) 
         {
-          if (loggingEvent.Level >= Level.Warn)
+          if (loggingEvent.Level >= Level.Warn) 
           {
             HttpContext.Current.Trace.Warn(m_category.Format(loggingEvent), RenderLoggingEvent(loggingEvent));
           }
-          else
+          else 
           {
             HttpContext.Current.Trace.Write(m_category.Format(loggingEvent), RenderLoggingEvent(loggingEvent));
           }
@@ -152,6 +148,4 @@ namespace log4net.Appender
     #endregion
   }
 }
-
-#endif // !NETCF && !SSCLI
-#endif // NET_2_0
+#endif

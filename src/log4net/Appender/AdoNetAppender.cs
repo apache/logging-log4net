@@ -17,19 +17,11 @@
 //
 #endregion
 
-// SSCLI 1.0 has no support for ADO.NET
-#if !SSCLI
-
 using System;
 using System.Collections;
-#if !NETSTANDARD1_3
 using System.Configuration;
-#endif
 using System.Data;
 using System.IO;
-#if NETSTANDARD1_3
-using System.Reflection;
-#endif
 
 using log4net.Util;
 using log4net.Layout;
@@ -683,7 +675,6 @@ namespace log4net.Appender
         return ConnectionString;
       }
 
-#if !NETSTANDARD1_3
       if (!String.IsNullOrEmpty(ConnectionStringName))
       {
         ConnectionStringSettings settings = ConfigurationManager.ConnectionStrings[ConnectionStringName];
@@ -697,7 +688,6 @@ namespace log4net.Appender
           throw new LogException("Unable to find [" + ConnectionStringName + "] ConfigurationManager.ConnectionStrings item");
         }
       }
-#endif
 
       if (AppSettingsKey != null && AppSettingsKey.Length > 0)
       {
@@ -733,12 +723,7 @@ namespace log4net.Appender
     {
       try
       {
-#if NETSTANDARD1_3
-        // NETSTANDARD1_3 requires comma separated ConnectionType like `System.Data.SqlClient.SqlConnection, System.Data` to work properly.
-        return SystemInfo.GetTypeFromString((Assembly)null, ConnectionType, true, false);
-#else
         return SystemInfo.GetTypeFromString(ConnectionType, true, false);
-#endif
       }
       catch (Exception ex)
       {
@@ -1180,5 +1165,3 @@ namespace log4net.Appender
     #endregion // Private Instance Fields
   }
 }
-
-#endif // !SSCLI

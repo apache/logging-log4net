@@ -149,12 +149,7 @@ namespace log4net.Util
     /// <para>
     /// </para>
     /// </remarks>
-#if !NETSTANDARD1_3
-    override
-#else
-    virtual
-#endif
-    public void Close()
+    override public void Close()
     {
       m_writer.Close();
     }

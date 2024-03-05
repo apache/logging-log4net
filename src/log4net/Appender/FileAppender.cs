@@ -21,21 +21,16 @@
 
 using System;
 using System.IO;
-#if !NETCF && !NETSTANDARD1_3
 using System.Runtime.Serialization;
-#endif
 using System.Text;
 using System.Threading;
 using log4net.Util;
 using log4net.Layout;
 using log4net.Core;
-#if NET_4_5 || NETSTANDARD
 using System.Threading.Tasks;
-#endif
 
 namespace log4net.Appender
 {
-#if !NETCF
   /// <summary>
   /// Appends logging events to a file.
   /// </summary>
@@ -84,55 +79,6 @@ namespace log4net.Appender
   /// <author>Rodrigo B. de Oliveira</author>
   /// <author>Douglas de la Torre</author>
   /// <author>Niall Daley</author>
-#else
-  /// <summary>
-  /// Appends logging events to a file.
-  /// </summary>
-  /// <remarks>
-  /// <para>
-  /// Logging events are sent to the file specified by
-  /// the <see cref="File"/> property.
-  /// </para>
-  /// <para>
-  /// The file can be opened in either append or overwrite mode 
-  /// by specifying the <see cref="AppendToFile"/> property.
-  /// If the file path is relative it is taken as relative from 
-  /// the application base directory. The file encoding can be
-  /// specified by setting the <see cref="Encoding"/> property.
-  /// </para>
-  /// <para>
-  /// The layout's <see cref="ILayout.Header"/> and <see cref="ILayout.Footer"/>
-  /// values will be written each time the file is opened and closed
-  /// respectively. If the <see cref="AppendToFile"/> property is <see langword="true"/>
-  /// then the file may contain multiple copies of the header and footer.
-  /// </para>
-  /// <para>
-  /// This appender will first try to open the file for writing when <see cref="ActivateOptions"/>
-  /// is called. This will typically be during configuration.
-  /// If the file cannot be opened for writing the appender will attempt
-  /// to open the file again each time a message is logged to the appender.
-  /// If the file cannot be opened for writing when a message is logged then
-  /// the message will be discarded by this appender.
-  /// </para>
-  /// <para>
-  /// The <see cref="FileAppender"/> supports pluggable file locking models via
-  /// the <see cref="LockingModel"/> property.
-  /// The default behavior, implemented by <see cref="FileAppender.ExclusiveLock"/> 
-  /// is to obtain an exclusive write lock on the file until this appender is closed.
-  /// The alternative model only holds a
-  /// write lock while the appender is writing a logging event (<see cref="FileAppender.MinimalLock"/>).
-  /// </para>
-  /// <para>
-  /// All locking strategies have issues and you should seriously consider using a different strategy that
-  /// avoids having multiple processes logging to the same file.
-  /// </para>
-  /// </remarks>
-  /// <author>Nicko Cadell</author>
-  /// <author>Gert Driesen</author>
-  /// <author>Rodrigo B. de Oliveira</author>
-  /// <author>Douglas de la Torre</author>
-  /// <author>Niall Daley</author>
-#endif
   public class FileAppender : TextWriterAppender
   {
     #region LockingStream Inner Class
@@ -143,9 +89,7 @@ namespace log4net.Appender
     /// </summary>
     private sealed class LockingStream : Stream, IDisposable
     {
-#if !NETCR
       [Serializable]
-#endif
       public sealed class LockStateException : LogException
       {
         public LockStateException(string message)
@@ -161,11 +105,9 @@ namespace log4net.Appender
         {
         }
 
-#if !NETCR && !NETSTANDARD1_3
         private LockStateException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
       }
 
       private Stream m_realStream = null;
@@ -185,62 +127,12 @@ namespace log4net.Appender
 
       #region Override Implementation of Stream
 
-#if NETSTANDARD
       protected override void Dispose(bool disposing)
       {
         m_lockingModel.CloseFile();
         base.Dispose(disposing);
       }
-#else
 
-      private int m_readTotal = -1;
-
-      // Methods
-      public override IAsyncResult BeginRead(byte[] buffer,
-          int offset,
-          int count,
-          AsyncCallback callback,
-          object state)
-      {
-        AssertLocked();
-        IAsyncResult ret = m_realStream.BeginRead(buffer, offset, count, callback, state);
-        m_readTotal = EndRead(ret);
-        return ret;
-      }
-
-      /// <summary>
-      /// True asynchronous writes are not supported, the implementation forces a synchronous write.
-      /// </summary>
-      public override IAsyncResult BeginWrite(byte[] buffer,
-          int offset,
-          int count,
-          AsyncCallback callback,
-          object state)
-      {
-        AssertLocked();
-        IAsyncResult ret = m_realStream.BeginWrite(buffer, offset, count, callback, state);
-        EndWrite(ret);
-        return ret;
-      }
-
-      public override void Close()
-      {
-        m_lockingModel.CloseFile();
-      }
-
-      public override int EndRead(IAsyncResult asyncResult)
-      {
-        AssertLocked();
-        return m_readTotal;
-      }
-
-      public override void EndWrite(IAsyncResult asyncResult)
-      {
-        //No-op, it has already been handled
-      }
-#endif
-
-#if NET_4_5 || NETSTANDARD
       public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
       {
         AssertLocked();
@@ -249,10 +141,9 @@ namespace log4net.Appender
 
       public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
       {
-        AssertLocked(); 
+        AssertLocked();
         return base.WriteAsync(buffer, offset, count, cancellationToken);
       }
-#endif
 
       public override void Flush()
       {
@@ -284,11 +175,7 @@ namespace log4net.Appender
 
       void IDisposable.Dispose()
       {
-#if NETSTANDARD
         Dispose(true);
-#else
-        Close();
-#endif
       }
 
       public override void Write(byte[] buffer, int offset, int count)
@@ -765,7 +652,6 @@ namespace log4net.Appender
       }
     }
 
-#if !NETCF
     /// <summary>
     /// Provides cross-process file locking.
     /// </summary>
@@ -791,9 +677,7 @@ namespace log4net.Appender
       /// -<see cref="ReleaseLock"/> and <see cref="CloseFile"/>.
       /// </para>
       /// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD
       [System.Security.SecuritySafeCritical]
-#endif
       public override void OpenFile(string filename, bool append, Encoding encoding)
       {
         try
@@ -915,11 +799,7 @@ namespace log4net.Appender
       {
         if (m_mutex != null)
         {
-#if NET_4_0 || MONO_4_0 || NETSTANDARD
           m_mutex.Dispose();
-#else
-          m_mutex.Close();
-#endif
           m_mutex = null;
         }
         else
@@ -928,7 +808,6 @@ namespace log4net.Appender
         }
       }
     }
-#endif
 
     /// <summary>
     /// Hold no lock on the output file
@@ -1177,28 +1056,6 @@ namespace log4net.Appender
       set { m_securityContext = value; }
     }
 
-#if NETCF
-    /// <summary>
-    /// Gets or sets the <see cref="FileAppender.LockingModel"/> used to handle locking of the file.
-    /// </summary>
-    /// <value>
-    /// The <see cref="FileAppender.LockingModel"/> used to lock the file.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets or sets the <see cref="FileAppender.LockingModel"/> used to handle locking of the file.
-    /// </para>
-    /// <para>
-    /// There are two built in locking models, <see cref="FileAppender.ExclusiveLock"/> and <see cref="FileAppender.MinimalLock"/>.
-    /// The first locks the file from the start of logging to the end, the 
-    /// second locks only for the minimal amount of time when logging each message
-    /// and the last synchronizes processes using a named system wide Mutex.
-    /// </para>
-    /// <para>
-    /// The default locking model is the <see cref="FileAppender.ExclusiveLock"/>.
-    /// </para>
-    /// </remarks>
-#else
     /// <summary>
     /// Gets or sets the <see cref="FileAppender.LockingModel"/> used to handle locking of the file.
     /// </summary>
@@ -1219,7 +1076,6 @@ namespace log4net.Appender
     /// The default locking model is the <see cref="FileAppender.ExclusiveLock"/>.
     /// </para>
     /// </remarks>
-#endif
     public FileAppender.LockingModelBase LockingModel
     {
       get { return m_lockingModel; }

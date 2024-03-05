@@ -17,16 +17,11 @@
 //
 #endregion
 
-#if NET_2_0 // really only because netstandard doesn't understand Assembly.GetCallingAssembly()
 using System;
-using System.Xml;
-using System.Collections;
 using System.IO;
 using System.Reflection;
-using System.Threading;
+using System.Xml;
 
-using log4net.Appender;
-using log4net.Util;
 using log4net.Repository;
 
 namespace log4net.Config
@@ -288,8 +283,6 @@ namespace log4net.Config
 
     #region ConfigureAndWatch static methods
 
-#if (!NETCF && !SSCLI)
-
     /// <summary>
     /// Configures log4net using the file specified, monitors the file for changes 
     /// and reloads the configuration if a change is detected.
@@ -351,9 +344,7 @@ namespace log4net.Config
     {
       XmlConfigurator.ConfigureAndWatch(repository, configFile);
     }
-#endif
 
     #endregion ConfigureAndWatch static methods
   }
 }
-#endif // NET_2_0

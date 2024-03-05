@@ -17,16 +17,7 @@
 //
 #endregion
 
-#if NET_2_0
-// .NET Compact Framework 1.0 has no support for WindowsIdentity
-#if !NETCF 
-// MONO 1.0 has no support for Win32 Logon APIs
-#if !MONO
-// SSCLI 1.0 has no support for Win32 Logon APIs
-#if !SSCLI
-// We don't want framework or platform specific code in the CLI version of log4net
-#if !CLI_1_0
-
+#if NET462_OR_GREATER
 using System;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
@@ -276,9 +267,7 @@ namespace log4net.Util
     /// token is used to initialize the WindowsIdentity.
     /// </para>
     /// </remarks>
-#if NET_4_0 || MONO_4_0
-        [System.Security.SecuritySafeCritical]
-#endif
+    [System.Security.SecuritySafeCritical]
     [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
     private static WindowsIdentity LogonUser(string userName, string domainName, string password)
     {
@@ -380,10 +369,4 @@ namespace log4net.Util
     #endregion
   }
 }
-
-#endif // !CLI_1_0
-#endif // !SSCLI
-#endif // !MONO
-#endif // !NETCF
-#endif // NET_2_0
-
+#endif // NET462_OR_GREATER

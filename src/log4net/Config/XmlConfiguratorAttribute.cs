@@ -17,9 +17,6 @@
 //
 #endregion
 
-// .NET Compact Framework 1.0 has no support for reading assembly attributes
-#if !NETCF
-
 using System;
 using System.Collections;
 using System.Reflection;
@@ -313,13 +310,6 @@ namespace log4net.Config
     /// <param name="configFile">the FileInfo pointing to the config file</param>
     private void ConfigureFromFile(ILoggerRepository targetRepository, FileInfo configFile)
     {
-#if (SSCLI)
-      if (m_configureAndWatch)
-      {
-        LogLog.Warn(declaringType, "XmlConfiguratorAttribute: Unable to watch config file not supported on SSCLI");
-      }
-      XmlConfigurator.Configure(targetRepository, configFile);
-#else
       // Do we configure just once or do we configure and then watch?
       if (m_configureAndWatch)
       {
@@ -329,7 +319,6 @@ namespace log4net.Config
       {
         XmlConfigurator.Configure(targetRepository, configFile);
       }
-#endif
     }
 
     /// <summary>
@@ -465,5 +454,3 @@ namespace log4net.Config
     #endregion Private Static Fields
   }
 }
-
-#endif // !NETCF

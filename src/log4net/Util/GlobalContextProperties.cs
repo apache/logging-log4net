@@ -49,11 +49,7 @@ namespace log4net.Util
     /// reordering reads and writes of this thread performed on different threads.
     /// </para>
     /// </remarks>
-#if NETCF
-    private ReadOnlyPropertiesDictionary m_readOnlyProperties = new ReadOnlyPropertiesDictionary();
-#else
     private volatile ReadOnlyPropertiesDictionary m_readOnlyProperties = new ReadOnlyPropertiesDictionary();
-#endif
 
     /// <summary>
     /// Lock object used to synchronize updates within this instance

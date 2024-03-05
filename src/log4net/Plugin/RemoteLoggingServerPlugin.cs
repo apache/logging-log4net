@@ -18,8 +18,8 @@
 //
 #endregion
 
-// .NET Compact Framework 1.0 && netstandard has no support for System.Runtime.Remoting
-#if NET_2_0
+// netstandard has no support for System.Runtime.Remoting
+#if NET462_OR_GREATER
 
 using System;
 using System.Runtime.Remoting;
@@ -120,9 +120,7 @@ namespace log4net.Plugin
     /// This method is called when the plugin is attached to the repository.
     /// </para>
     /// </remarks>
-#if NET_4_0 || MONO_4_0
     [System.Security.SecuritySafeCritical]
-#endif
     public override void Attach(ILoggerRepository repository)
     {
       base.Attach(repository);
@@ -149,9 +147,7 @@ namespace log4net.Plugin
     /// sink is disconnected.
     /// </para>
     /// </remarks>
-#if NET_4_0 || MONO_4_0
-        [System.Security.SecuritySafeCritical]
-#endif
+    [System.Security.SecuritySafeCritical]
     public override void Shutdown()
     {
       // Stops the sink from receiving messages
@@ -254,9 +250,7 @@ namespace log4net.Plugin
       /// therefore this implementation returns <c>null</c>.
       /// </para>
       /// </remarks>
-#if NET_4_0 || MONO_4_0
-            [System.Security.SecurityCritical]
-#endif
+      [System.Security.SecurityCritical]
       public override object InitializeLifetimeService()
       {
         return null;
@@ -277,4 +271,4 @@ namespace log4net.Plugin
   }
 }
 
-#endif // NET_2_0
+#endif // NET462_OR_GREATER

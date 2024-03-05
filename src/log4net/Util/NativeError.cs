@@ -17,13 +17,6 @@
 //
 #endregion
 
-// MONO 1.0 has no support for Win32 Error APIs
-#if !MONO
-// SSCLI 1.0 has no support for Win32 Error APIs
-#if !SSCLI
-// We don't want framework or platform specific code in the CLI version of log4net
-#if !CLI_1_0
-
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
@@ -114,12 +107,8 @@ namespace log4net.Util
     /// native Win32 <c>FormatMessage</c> function.
     /// </para>
     /// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD
-        [System.Security.SecuritySafeCritical]
-#endif
-#if !NETCF && !NETSTANDARD1_3
+    [System.Security.SecuritySafeCritical]
     [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
-#endif
     public static NativeError GetLastError()
     {
       int number = Marshal.GetLastWin32Error();
@@ -158,12 +147,8 @@ namespace log4net.Util
     /// using the native <c>FormatMessage</c> function.
     /// </para>
     /// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD
-        [System.Security.SecuritySafeCritical]
-#endif
-#if !NETCF && !NETSTANDARD1_3
+    [System.Security.SecuritySafeCritical]
     [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
-#endif
     public static string GetErrorMessage(int messageId)
     {
       // Win32 constants
@@ -262,11 +247,7 @@ namespace log4net.Util
     /// call <see cref="M:Marshal.GetLastWin32Error()" />.
     /// </para>
     /// </returns>
-#if NETCF || NETSTANDARD
-    [DllImport("CoreDll.dll", SetLastError=true, CharSet=CharSet.Unicode)]
-#else
     [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-#endif
     private static extern int FormatMessage(
       int dwFlags,
       ref IntPtr lpSource,
@@ -286,7 +267,3 @@ namespace log4net.Util
     #endregion
   }
 }
-
-#endif // !CLI_1_0
-#endif // !SSCLI
-#endif // !MONO

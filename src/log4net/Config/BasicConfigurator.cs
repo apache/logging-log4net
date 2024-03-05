@@ -19,9 +19,7 @@
 
 using System;
 using System.Collections;
-#if !NETSTANDARD1_3
 using System.Reflection;
-#endif
 
 using log4net.Appender;
 using log4net.Layout;
@@ -84,7 +82,6 @@ namespace log4net.Config
 
     #region Public Static Methods
 
-#if !NETSTANDARD1_3
     /// <summary>
     /// Initializes the log4net system with a default configuration.
     /// </summary>
@@ -140,7 +137,6 @@ namespace log4net.Config
     {
       return Configure(new IAppender[] { appender });
     }
-#endif // !NETSTANDARD1_3
 
     /// <summary>
     /// Initializes the <see cref="ILoggerRepository"/> with a default configuration.

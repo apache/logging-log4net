@@ -17,18 +17,10 @@
 //
 #endregion
 
-// MONO 1.0 Beta mcs does not like #if !A && !B && !C syntax
-
 // netstandard doesn't support EventLog
-#if NET_2_0
-// .NET Compact Framework 1.0 has no support for EventLog
-#if !NETCF 
-// SSCLI 1.0 has no support for EventLog
-#if !SSCLI
-
+#if NET462_OR_GREATER
 using System;
 using System.Diagnostics;
-using System.Globalization;
 
 using log4net.Util;
 using log4net.Layout;
@@ -356,13 +348,9 @@ namespace log4net.Appender
     /// </remarks>
     private static void CreateEventSource(string source, string logName, string machineName)
     {
-#if NET_2_0
       EventSourceCreationData eventSourceCreationData = new EventSourceCreationData(source, logName);
       eventSourceCreationData.MachineName = machineName;
       EventLog.CreateEventSource(eventSourceCreationData);
-#else
-      EventLog.CreateEventSource(source, logName, machineName);
-#endif
     }
 
     #region Override implementation of AppenderSkeleton
@@ -689,7 +677,4 @@ namespace log4net.Appender
     #endregion Private Static Fields
   }
 }
-
-#endif // !SSCLI
-#endif // !NETCF
-#endif // NET_2_0
+#endif // NET462_OR_GREATER

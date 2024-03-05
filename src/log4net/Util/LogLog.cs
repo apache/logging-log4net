@@ -168,7 +168,6 @@ namespace log4net.Util
     /// </remarks>
     static LogLog()
     {
-#if !NETCF
       try
       {
         InternalDebugging = OptionConverter.ToBoolean(SystemInfo.GetAppSetting("log4net.Internal.Debug"), false);
@@ -183,7 +182,6 @@ namespace log4net.Util
         // We will leave debug OFF and print an Error message
         Error(typeof(LogLog), "Exception while reading ConfigurationSettings. Check your .config file is well formed XML.", ex);
       }
-#endif
     }
 
     #endregion Static Constructor
@@ -535,13 +533,8 @@ namespace log4net.Util
     {
       try
       {
-#if NETCF
-        Console.WriteLine(message);
-        //System.Diagnostics.Debug.WriteLine(message);
-#else
         Console.Out.WriteLine(message);
         Trace.WriteLine(message);
-#endif
       }
       catch
       {
@@ -569,13 +562,8 @@ namespace log4net.Util
     {
       try
       {
-#if NETCF
-        Console.WriteLine(message);
-        //System.Diagnostics.Debug.WriteLine(message);
-#else
         Console.Error.WriteLine(message);
         Trace.WriteLine(message);
-#endif
       }
       catch
       {

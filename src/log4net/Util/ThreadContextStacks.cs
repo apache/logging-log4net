@@ -18,7 +18,6 @@
 #endregion
 
 using System;
-using System.Collections;
 
 namespace log4net.Util
 {
@@ -121,4 +120,3 @@ namespace log4net.Util
     #endregion Private Static Fields
   }
 }
-

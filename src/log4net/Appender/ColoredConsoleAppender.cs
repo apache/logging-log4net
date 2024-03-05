@@ -17,18 +17,6 @@
 //
 #endregion
 
-// MONO 1.0 Beta mcs does not like #if !A && !B && !C syntax
-
-#if !NETSTANDARD1_3 // netstandard doesn't support System.Security.Permissions
-// .NET Compact Framework 1.0 has no support for Win32 Console API's
-#if !NETCF 
-// .Mono 1.0 has no support for Win32 Console API's
-#if !MONO 
-// SSCLI 1.0 has no support for Win32 Console API's
-#if !SSCLI
-// We don't want framework or platform specific code in the CLI version of log4net
-#if !CLI_1_0
-
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
@@ -266,9 +254,7 @@ namespace log4net.Appender
     /// The format of the output will depend on the appender's layout.
     /// </para>
     /// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD
     [System.Security.SecuritySafeCritical]
-#endif
     [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
     protected override void Append(log4net.Core.LoggingEvent loggingEvent)
     {
@@ -435,9 +421,7 @@ namespace log4net.Appender
     /// Initialize the level to color mappings set on this appender.
     /// </para>
     /// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD
     [System.Security.SecuritySafeCritical]
-#endif
     [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
     public override void ActivateOptions()
     {
@@ -660,9 +644,3 @@ namespace log4net.Appender
     #endregion // LevelColors LevelMapping Entry
   }
 }
-
-#endif // !CLI_1_0
-#endif // !SSCLI
-#endif // !MONO
-#endif // !NETCF
-#endif // !NETSTANDARD1_3
