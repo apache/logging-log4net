@@ -53,7 +53,7 @@ namespace log4net.Layout
     }
 
     #endregion
-  
+
     #region Implementation of IOptionHandler
 
     /// <summary>
@@ -72,7 +72,7 @@ namespace log4net.Layout
     /// <see cref="ActivateOptions"/> must be called again.
     /// </para>
     /// </remarks>
-    public override void ActivateOptions() 
+    public override void ActivateOptions()
     {
       // nothing to do.
     }
@@ -93,7 +93,7 @@ namespace log4net.Layout
     /// output is terminated by a newline.
     /// </para>
     /// </remarks>
-    public override void Format(TextWriter writer, LoggingEvent loggingEvent) 
+    public override void Format(TextWriter writer, LoggingEvent loggingEvent)
     {
       if (loggingEvent == null)
       {

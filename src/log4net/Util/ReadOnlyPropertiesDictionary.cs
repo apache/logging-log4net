@@ -45,7 +45,8 @@ namespace log4net.Util
 #if NETCF
   public class ReadOnlyPropertiesDictionary : IDictionary
 #else
-  [Serializable] public class ReadOnlyPropertiesDictionary : ISerializable, IDictionary
+  [Serializable]
+  public class ReadOnlyPropertiesDictionary : ISerializable, IDictionary
 #endif
   {
     #region Private Instance Fields
@@ -82,7 +83,7 @@ namespace log4net.Util
     /// </remarks>
     public ReadOnlyPropertiesDictionary(ReadOnlyPropertiesDictionary propertiesDictionary)
     {
-      foreach(DictionaryEntry entry in propertiesDictionary)
+      foreach (DictionaryEntry entry in propertiesDictionary)
       {
         InnerHashtable.Add(entry.Key, entry.Value);
       }
@@ -106,7 +107,7 @@ namespace log4net.Util
     /// </remarks>
     protected ReadOnlyPropertiesDictionary(SerializationInfo info, StreamingContext context)
     {
-      foreach(var entry in info)
+      foreach (var entry in info)
       {
         // The keys are stored as Xml encoded names
         InnerHashtable[XmlConvert.DecodeName(entry.Name)] = entry.Value;
@@ -210,9 +211,9 @@ namespace log4net.Util
 #if !NETCF && !NETSTANDARD1_3
     [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, SerializationFormatter = true)]
 #endif
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+    public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
     {
-      foreach(DictionaryEntry entry in InnerHashtable.Clone() as IDictionary)
+      foreach (DictionaryEntry entry in InnerHashtable.Clone() as IDictionary)
       {
         var entryKey = entry.Key as string;
         if (entryKey is null)
@@ -222,11 +223,11 @@ namespace log4net.Util
 
         var entryValue = entry.Value;
 
-                // If value is serializable then we add it to the list
+        // If value is serializable then we add it to the list
 #if NETSTANDARD1_3
                 var isSerializable = entryValue?.GetType().GetTypeInfo().IsSerializable ?? false;
 #else
-                var isSerializable = entryValue?.GetType().IsSerializable ?? false;
+        var isSerializable = entryValue?.GetType().IsSerializable ?? false;
 #endif
         if (!isSerializable)
         {

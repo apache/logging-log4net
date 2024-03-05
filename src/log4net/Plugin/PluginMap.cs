@@ -82,7 +82,7 @@ namespace log4net.Plugin
           throw new ArgumentNullException("name");
         }
 
-        lock(this)
+        lock (this)
         {
           return (IPlugin)m_mapName2Plugin[name];
         }
@@ -102,13 +102,13 @@ namespace log4net.Plugin
     {
       get
       {
-        lock(this)
+        lock (this)
         {
           return new PluginCollection(m_mapName2Plugin.Values);
         }
       }
     }
-    
+
     #endregion Public Instance Properties
 
     #region Public Instance Methods
@@ -137,7 +137,7 @@ namespace log4net.Plugin
 
       IPlugin curPlugin = null;
 
-      lock(this)
+      lock (this)
       {
         // Get the current plugin if it exists
         curPlugin = m_mapName2Plugin[plugin.Name] as IPlugin;
@@ -171,7 +171,7 @@ namespace log4net.Plugin
       {
         throw new ArgumentNullException("plugin");
       }
-      lock(this)
+      lock (this)
       {
         m_mapName2Plugin.Remove(plugin.Name);
       }

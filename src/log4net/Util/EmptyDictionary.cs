@@ -53,7 +53,7 @@ namespace log4net.Util
     }
 
     #endregion Private Instance Constructors
-  
+
     #region Public Static Properties
 
     /// <summary>
@@ -107,7 +107,7 @@ namespace log4net.Util
     /// </remarks>
     public bool IsSynchronized
     {
-      get  { return true; }
+      get { return true; }
     }
 
     /// <summary>
@@ -275,7 +275,7 @@ namespace log4net.Util
     /// </remarks>
     public bool IsReadOnly
     {
-      get  { return true; }
+      get { return true; }
     }
 
     /// <summary>
@@ -333,7 +333,7 @@ namespace log4net.Util
     /// The singleton instance of the empty dictionary.
     /// </summary>
     private static readonly EmptyDictionary s_instance = new EmptyDictionary();
-  
+
     #endregion Private Static Fields
   }
 }

@@ -162,7 +162,7 @@ namespace log4net.Appender
     /// The instance of the <see cref="ColoredConsoleAppender" /> class is set up to write 
     /// to the standard output stream.
     /// </remarks>
-    public ColoredConsoleAppender() 
+    public ColoredConsoleAppender()
     {
     }
 
@@ -192,7 +192,7 @@ namespace log4net.Appender
     /// output stream.
     /// </remarks>
     [Obsolete("Instead use the default constructor and set the Layout & Target properties")]
-    public ColoredConsoleAppender(ILayout layout, bool writeToErrorStream) 
+    public ColoredConsoleAppender(ILayout layout, bool writeToErrorStream)
     {
       Layout = layout;
       m_writeToErrorStream = writeToErrorStream;
@@ -222,12 +222,12 @@ namespace log4net.Appender
       set
       {
         string v = value.Trim();
-        
-        if (string.Compare(ConsoleError, v, true, CultureInfo.InvariantCulture) == 0) 
+
+        if (string.Compare(ConsoleError, v, true, CultureInfo.InvariantCulture) == 0)
         {
           m_writeToErrorStream = true;
-        } 
-        else 
+        }
+        else
         {
           m_writeToErrorStream = false;
         }
@@ -270,7 +270,7 @@ namespace log4net.Appender
     [System.Security.SecuritySafeCritical]
 #endif
     [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
-    protected override void Append(log4net.Core.LoggingEvent loggingEvent) 
+    protected override void Append(log4net.Core.LoggingEvent loggingEvent)
     {
       if (m_consoleOutputWriter != null)
       {
@@ -391,7 +391,7 @@ namespace log4net.Appender
         bool appendNewline = false;
 
         // Trim off last newline, if it exists
-        if (arrayLength > 1 && messageCharArray[arrayLength-2] == '\r' && messageCharArray[arrayLength-1] == '\n')
+        if (arrayLength > 1 && messageCharArray[arrayLength - 2] == '\r' && messageCharArray[arrayLength - 1] == '\n')
         {
           arrayLength -= 2;
           appendNewline = true;
@@ -411,7 +411,7 @@ namespace log4net.Appender
       }
     }
 
-    private static readonly char[] s_windowsNewline = {'\r', '\n'};
+    private static readonly char[] s_windowsNewline = { '\r', '\n' };
 
     /// <summary>
     /// This appender requires a <see cref="Layout"/> to be set.
@@ -529,59 +529,59 @@ namespace log4net.Appender
 
     #region Win32 Methods
 
-    [DllImport("Kernel32.dll", SetLastError=true, CharSet=CharSet.Auto)]
+    [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
     private static extern int GetConsoleOutputCP();
 
-    [DllImport("Kernel32.dll", SetLastError=true, CharSet=CharSet.Auto)]
+    [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
     private static extern bool SetConsoleTextAttribute(
       IntPtr consoleHandle,
       ushort attributes);
 
-    [DllImport("Kernel32.dll", SetLastError=true, CharSet=CharSet.Auto)]
+    [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
     private static extern bool GetConsoleScreenBufferInfo(
       IntPtr consoleHandle,
       out CONSOLE_SCREEN_BUFFER_INFO bufferInfo);
 
-//    [DllImport("Kernel32.dll", SetLastError=true, CharSet=CharSet.Unicode)]
-//    private static extern bool WriteConsoleW(
-//      IntPtr hConsoleHandle,
-//      [MarshalAs(UnmanagedType.LPWStr)] string strBuffer,
-//      UInt32 bufferLen,
-//      out UInt32 written,
-//      IntPtr reserved);
+    //    [DllImport("Kernel32.dll", SetLastError=true, CharSet=CharSet.Unicode)]
+    //    private static extern bool WriteConsoleW(
+    //      IntPtr hConsoleHandle,
+    //      [MarshalAs(UnmanagedType.LPWStr)] string strBuffer,
+    //      UInt32 bufferLen,
+    //      out UInt32 written,
+    //      IntPtr reserved);
 
     //private const UInt32 STD_INPUT_HANDLE = unchecked((UInt32)(-10));
     private const UInt32 STD_OUTPUT_HANDLE = unchecked((UInt32)(-11));
     private const UInt32 STD_ERROR_HANDLE = unchecked((UInt32)(-12));
 
-    [DllImport("Kernel32.dll", SetLastError=true, CharSet=CharSet.Auto)]
+    [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
     private static extern IntPtr GetStdHandle(
       UInt32 type);
 
     [StructLayout(LayoutKind.Sequential)]
-    private struct COORD 
+    private struct COORD
     {
-      public UInt16 x; 
-      public UInt16 y; 
+      public UInt16 x;
+      public UInt16 y;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    private struct SMALL_RECT 
+    private struct SMALL_RECT
     {
-      public UInt16 Left; 
-      public UInt16 Top; 
-      public UInt16 Right; 
-      public UInt16 Bottom; 
+      public UInt16 Left;
+      public UInt16 Top;
+      public UInt16 Right;
+      public UInt16 Bottom;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    private struct CONSOLE_SCREEN_BUFFER_INFO 
-    { 
-      public COORD      dwSize; 
-      public COORD      dwCursorPosition; 
-      public ushort     wAttributes; 
-      public SMALL_RECT srWindow; 
-      public COORD      dwMaximumWindowSize; 
+    private struct CONSOLE_SCREEN_BUFFER_INFO
+    {
+      public COORD dwSize;
+      public COORD dwCursorPosition;
+      public ushort wAttributes;
+      public SMALL_RECT srWindow;
+      public COORD dwMaximumWindowSize;
     }
 
     #endregion // Win32 Methods
@@ -644,7 +644,7 @@ namespace log4net.Appender
       public override void ActivateOptions()
       {
         base.ActivateOptions();
-        m_combinedColor = (ushort)( (int)m_foreColor + (((int)m_backColor) << 4) );
+        m_combinedColor = (ushort)((int)m_foreColor + (((int)m_backColor) << 4));
       }
 
       /// <summary>

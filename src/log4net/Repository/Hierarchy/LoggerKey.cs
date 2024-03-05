@@ -62,7 +62,7 @@ namespace log4net.Repository.Hierarchy
     /// </note>
     /// </remarks>
     /// <param name="name">The name of the logger.</param>
-    internal LoggerKey(string name) 
+    internal LoggerKey(string name)
     {
 #if NETCF || NETSTANDARD1_3
       // NETCF: String.Intern causes Native Exception
@@ -86,7 +86,7 @@ namespace log4net.Repository.Hierarchy
     /// Returns the cached hashcode.
     /// </para>
     /// </remarks>
-    public override int GetHashCode() 
+    public override int GetHashCode()
     {
       return m_hashCache;
     }
@@ -104,22 +104,22 @@ namespace log4net.Repository.Hierarchy
     /// Compares the references of the interned strings.
     /// </para>
     /// </remarks>
-    public override bool Equals(object obj) 
+    public override bool Equals(object obj)
     {
       // Compare reference type of this against argument
       if (((object)this) == obj)
       {
         return true;
       }
-      
+
       LoggerKey objKey = obj as LoggerKey;
-      if (objKey != null) 
+      if (objKey != null)
       {
 #if NETCF || NETSTANDARD1_3
         return ( m_name == objKey.m_name );
 #else
         // Compare reference types rather than string's overloaded ==
-        return ( ((object)m_name) == ((object)objKey.m_name) );
+        return (((object)m_name) == ((object)objKey.m_name));
 #endif
       }
       return false;
@@ -129,10 +129,10 @@ namespace log4net.Repository.Hierarchy
 
     #region Private Instance Fields
 
-    private readonly string m_name;  
+    private readonly string m_name;
     private readonly int m_hashCache;
 
     #endregion Private Instance Fields
-  }  
+  }
 }
 

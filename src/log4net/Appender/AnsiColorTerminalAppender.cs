@@ -121,16 +121,16 @@ namespace log4net.Appender
       /// <summary>
       /// text is bright
       /// </summary>
-      Bright      = 1,
+      Bright = 1,
       /// <summary>
       /// text is dim
       /// </summary>
-      Dim        = 2,
+      Dim = 2,
 
       /// <summary>
       /// text is underlined
       /// </summary>
-      Underscore    = 4,
+      Underscore = 4,
 
       /// <summary>
       /// text is blinking
@@ -138,27 +138,27 @@ namespace log4net.Appender
       /// <remarks>
       /// Not all terminals support this attribute
       /// </remarks>
-      Blink      = 8,
+      Blink = 8,
 
       /// <summary>
       /// text and background colors are reversed
       /// </summary>
-      Reverse      = 16,
+      Reverse = 16,
 
       /// <summary>
       /// text is hidden
       /// </summary>
-      Hidden      = 32,
+      Hidden = 32,
 
       /// <summary>
       /// text is displayed with a strikethrough
       /// </summary>
-      Strikethrough    = 64,
+      Strikethrough = 64,
 
       /// <summary>
       /// text color is light
       /// </summary>
-      Light      = 128
+      Light = 128
     }
 
     /// <summary>
@@ -176,42 +176,42 @@ namespace log4net.Appender
       /// <summary>
       /// color is black
       /// </summary>
-      Black  = 0,
+      Black = 0,
 
       /// <summary>
       /// color is red
       /// </summary>
-      Red  = 1,
+      Red = 1,
 
       /// <summary>
       /// color is green
       /// </summary>
-      Green  = 2,
+      Green = 2,
 
       /// <summary>
       /// color is yellow
       /// </summary>
-      Yellow  = 3,
+      Yellow = 3,
 
       /// <summary>
       /// color is blue
       /// </summary>
-      Blue  = 4,
+      Blue = 4,
 
       /// <summary>
       /// color is magenta
       /// </summary>
-      Magenta  = 5,
+      Magenta = 5,
 
       /// <summary>
       /// color is cyan
       /// </summary>
-      Cyan  = 6,
+      Cyan = 6,
 
       /// <summary>
       /// color is white
       /// </summary>
-      White  = 7
+      White = 7
     }
 
     #endregion
@@ -225,7 +225,7 @@ namespace log4net.Appender
     /// The instance of the <see cref="AnsiColorTerminalAppender" /> class is set up to write 
     /// to the standard output stream.
     /// </remarks>
-    public AnsiColorTerminalAppender() 
+    public AnsiColorTerminalAppender()
     {
     }
 
@@ -256,8 +256,8 @@ namespace log4net.Appender
         if (SystemInfo.EqualsIgnoringCase(ConsoleError, trimmedTargetName))
         {
           m_writeToErrorStream = true;
-        } 
-        else 
+        }
+        else
         {
           m_writeToErrorStream = false;
         }
@@ -296,7 +296,7 @@ namespace log4net.Appender
     /// The format of the output will depend on the appender's layout.
     /// </para>
     /// </remarks>
-    protected override void Append(log4net.Core.LoggingEvent loggingEvent) 
+    protected override void Append(log4net.Core.LoggingEvent loggingEvent)
     {
       string loggingMessage = RenderLoggingEvent(loggingEvent);
 
@@ -314,26 +314,26 @@ namespace log4net.Appender
       // are inserted afterwards.
       if (loggingMessage.Length > 1)
       {
-        if (loggingMessage.EndsWith("\r\n") || loggingMessage.EndsWith("\n\r")) 
+        if (loggingMessage.EndsWith("\r\n") || loggingMessage.EndsWith("\n\r"))
         {
           loggingMessage = loggingMessage.Insert(loggingMessage.Length - 2, PostEventCodes);
-        } 
-        else if (loggingMessage.EndsWith("\n") || loggingMessage.EndsWith("\r")) 
+        }
+        else if (loggingMessage.EndsWith("\n") || loggingMessage.EndsWith("\r"))
         {
           loggingMessage = loggingMessage.Insert(loggingMessage.Length - 1, PostEventCodes);
-        } 
-        else 
+        }
+        else
         {
           loggingMessage = loggingMessage + PostEventCodes;
         }
       }
       else
       {
-        if (loggingMessage[0] == '\n' || loggingMessage[0] == '\r') 
+        if (loggingMessage[0] == '\n' || loggingMessage[0] == '\r')
         {
           loggingMessage = PostEventCodes + loggingMessage;
-        } 
-        else 
+        }
+        else
         {
           loggingMessage = loggingMessage + PostEventCodes;
         }
@@ -354,7 +354,7 @@ namespace log4net.Appender
         Console.Write(loggingMessage);
       }
 #endif
-    
+
     }
 
     /// <summary>
@@ -516,7 +516,7 @@ namespace log4net.Appender
         buf.Append("\x1b[0;");
 
         int lightAdjustment = ((m_attributes & AnsiAttributes.Light) > 0) ? 60 : 0;
-        
+
         // set the foreground color
         buf.Append(30 + lightAdjustment + (int)m_foreColor);
         buf.Append(';');

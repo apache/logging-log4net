@@ -61,7 +61,7 @@ namespace log4net.Core
     /// Private constructor to prevent instances. Only static methods should be used.
     /// </para>
     /// </remarks>
-    private LoggerManager() 
+    private LoggerManager()
     {
     }
 
@@ -88,16 +88,16 @@ namespace log4net.Core
         // makes a LinkDemand which throws the exception during the JIT phase.
         RegisterAppDomainEvents();
       }
-      catch(System.Security.SecurityException)
+      catch (System.Security.SecurityException)
       {
-        LogLog.Debug(declaringType, "Security Exception (ControlAppDomain LinkDemand) while trying "+
-          "to register Shutdown handler with the AppDomain. LoggerManager.Shutdown() "+
-          "will not be called automatically when the AppDomain exits. It must be called "+
+        LogLog.Debug(declaringType, "Security Exception (ControlAppDomain LinkDemand) while trying " +
+          "to register Shutdown handler with the AppDomain. LoggerManager.Shutdown() " +
+          "will not be called automatically when the AppDomain exits. It must be called " +
           "programmatically.");
       }
 
       // Dump out our assembly version into the log if debug is enabled
-            LogLog.Debug(declaringType, GetVersionInfo());
+      LogLog.Debug(declaringType, GetVersionInfo());
 
       // Set the default repository selector
 #if NETCF
@@ -114,9 +114,9 @@ namespace log4net.Core
         {
           appRepositorySelectorType = SystemInfo.GetTypeFromString(appRepositorySelectorTypeName, false, true);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-          LogLog.Error(declaringType, "Exception while resolving RepositorySelector Type ["+appRepositorySelectorTypeName+"]", ex);
+          LogLog.Error(declaringType, "Exception while resolving RepositorySelector Type [" + appRepositorySelectorTypeName + "]", ex);
         }
 
         if (appRepositorySelectorType != null)
@@ -127,9 +127,9 @@ namespace log4net.Core
           {
             appRepositorySelectorObj = Activator.CreateInstance(appRepositorySelectorType);
           }
-          catch(Exception ex)
+          catch (Exception ex)
           {
-            LogLog.Error(declaringType, "Exception while creating RepositorySelector ["+appRepositorySelectorType.FullName+"]", ex);
+            LogLog.Error(declaringType, "Exception while creating RepositorySelector [" + appRepositorySelectorType.FullName + "]", ex);
           }
 
           if (appRepositorySelectorObj != null && appRepositorySelectorObj is IRepositorySelector)
@@ -138,7 +138,7 @@ namespace log4net.Core
           }
           else
           {
-            LogLog.Error(declaringType, "RepositorySelector Type ["+appRepositorySelectorType.FullName+"] is not an IRepositorySelector");
+            LogLog.Error(declaringType, "RepositorySelector Type [" + appRepositorySelectorType.FullName + "] is not an IRepositorySelector");
           }
         }
       }
@@ -260,7 +260,7 @@ namespace log4net.Core
     /// <c>null</c>.
     /// </para>
     /// </remarks>
-    public static ILogger Exists(string repository, string name) 
+    public static ILogger Exists(string repository, string name)
     {
       if (repository == null)
       {
@@ -289,7 +289,7 @@ namespace log4net.Core
     /// <c>null</c>.
     /// </para>
     /// </remarks>
-    public static ILogger Exists(Assembly repositoryAssembly, string name) 
+    public static ILogger Exists(Assembly repositoryAssembly, string name)
     {
       if (repositoryAssembly == null)
       {
@@ -402,7 +402,7 @@ namespace log4net.Core
         throw new ArgumentNullException("name");
       }
       return RepositorySelector.GetRepository(repositoryAssembly).GetLogger(name);
-    }  
+    }
 
     /// <summary>
     /// Shorthand for <see cref="M:LogManager.GetLogger(string)"/>.
@@ -415,7 +415,7 @@ namespace log4net.Core
     /// Gets the logger for the fully qualified name of the type specified.
     /// </para>
     /// </remarks>
-    public static ILogger GetLogger(string repository, Type type) 
+    public static ILogger GetLogger(string repository, Type type)
     {
       if (repository == null)
       {
@@ -439,7 +439,7 @@ namespace log4net.Core
     /// Gets the logger for the fully qualified name of the type specified.
     /// </para>
     /// </remarks>
-    public static ILogger GetLogger(Assembly repositoryAssembly, Type type) 
+    public static ILogger GetLogger(Assembly repositoryAssembly, Type type)
     {
       if (repositoryAssembly == null)
       {
@@ -450,7 +450,7 @@ namespace log4net.Core
         throw new ArgumentNullException("type");
       }
       return RepositorySelector.GetRepository(repositoryAssembly).GetLogger(type.FullName);
-    }  
+    }
 
     /// <summary>
     /// Shuts down the log4net system.
@@ -472,9 +472,9 @@ namespace log4net.Core
     /// and again to a nested appender.
     /// </para>
     /// </remarks>
-    public static void Shutdown() 
+    public static void Shutdown()
     {
-      foreach(ILoggerRepository repository in GetAllRepositories())
+      foreach (ILoggerRepository repository in GetAllRepositories())
       {
         repository.Shutdown();
       }
@@ -501,7 +501,7 @@ namespace log4net.Core
     /// and again to a nested appender.
     /// </para>
     /// </remarks>
-    public static void ShutdownRepository(string repository) 
+    public static void ShutdownRepository(string repository)
     {
       if (repository == null)
       {
@@ -532,7 +532,7 @@ namespace log4net.Core
     /// and again to a nested appender.
     /// </para>
     /// </remarks>
-    public static void ShutdownRepository(Assembly repositoryAssembly) 
+    public static void ShutdownRepository(Assembly repositoryAssembly)
     {
       if (repositoryAssembly == null)
       {
@@ -555,7 +555,7 @@ namespace log4net.Core
     /// message disabling is set its default "off" value.
     /// </para>    
     /// </remarks>
-    public static void ResetConfiguration(string repository) 
+    public static void ResetConfiguration(string repository)
     {
       if (repository == null)
       {
@@ -578,7 +578,7 @@ namespace log4net.Core
     /// message disabling is set its default "off" value.
     /// </para>    
     /// </remarks>
-    public static void ResetConfiguration(Assembly repositoryAssembly) 
+    public static void ResetConfiguration(Assembly repositoryAssembly)
     {
       if (repositoryAssembly == null)
       {
@@ -810,7 +810,7 @@ namespace log4net.Core
       sb.Append("Loaded from [").Append(SystemInfo.AssemblyLocationInfo(myAssembly)).Append("]. ");
       sb.Append("(.NET Runtime [").Append(Environment.Version.ToString()).Append("]");
 #if (!SSCLI)
-            sb.Append(" on ").Append(Environment.OSVersion.ToString());
+      sb.Append(" on ").Append(Environment.OSVersion.ToString());
 #endif
 #endif // NETSTANDARD1_3
       sb.Append(")");
@@ -859,14 +859,14 @@ namespace log4net.Core
 
     #region Private Static Fields
 
-      /// <summary>
-      /// The fully qualified type of the LoggerManager class.
-      /// </summary>
-      /// <remarks>
-      /// Used by the internal logger to record the Type of the
-      /// log message.
-      /// </remarks>
-      private static readonly Type declaringType = typeof(LoggerManager);
+    /// <summary>
+    /// The fully qualified type of the LoggerManager class.
+    /// </summary>
+    /// <remarks>
+    /// Used by the internal logger to record the Type of the
+    /// log message.
+    /// </remarks>
+    private static readonly Type declaringType = typeof(LoggerManager);
 
     /// <summary>
     /// Initialize the default repository selector

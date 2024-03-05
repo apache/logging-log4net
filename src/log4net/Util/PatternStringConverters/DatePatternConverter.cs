@@ -91,7 +91,7 @@ namespace log4net.Util.PatternStringConverters
     /// </para>
     /// </remarks>
     protected IDateFormatter m_dateFormatter;
-  
+
     #region Implementation of IOptionHandler
 
     /// <summary>
@@ -118,7 +118,7 @@ namespace log4net.Util.PatternStringConverters
       {
         dateFormatStr = AbsoluteTimeDateFormatter.Iso8601TimeDateFormat;
       }
-      
+
       if (SystemInfo.EqualsIgnoringCase(dateFormatStr, AbsoluteTimeDateFormatter.Iso8601TimeDateFormat))
       {
         m_dateFormatter = new Iso8601DateFormatter();
@@ -133,15 +133,15 @@ namespace log4net.Util.PatternStringConverters
       }
       else
       {
-        try 
+        try
         {
           m_dateFormatter = new SimpleDateFormatter(dateFormatStr);
         }
-        catch (Exception e) 
+        catch (Exception e)
         {
-          LogLog.Error(declaringType, "Could not instantiate SimpleDateFormatter with ["+dateFormatStr+"]", e);
+          LogLog.Error(declaringType, "Could not instantiate SimpleDateFormatter with [" + dateFormatStr + "]", e);
           m_dateFormatter = new Iso8601DateFormatter();
-        }  
+        }
       }
     }
 
@@ -161,29 +161,29 @@ namespace log4net.Util.PatternStringConverters
     /// The date and time passed is in the local time zone.
     /// </para>
     /// </remarks>
-    protected override void Convert(TextWriter writer, object state) 
+    protected override void Convert(TextWriter writer, object state)
     {
-      try 
+      try
       {
         m_dateFormatter.FormatDate(DateTime.Now, writer);
       }
-      catch (Exception ex) 
+      catch (Exception ex)
       {
         LogLog.Error(declaringType, "Error occurred while converting date.", ex);
       }
     }
 
-      #region Private Static Fields
+    #region Private Static Fields
 
-      /// <summary>
-      /// The fully qualified type of the DatePatternConverter class.
-      /// </summary>
-      /// <remarks>
-      /// Used by the internal logger to record the Type of the
-      /// log message.
-      /// </remarks>
-      private static readonly Type declaringType = typeof(DatePatternConverter);
+    /// <summary>
+    /// The fully qualified type of the DatePatternConverter class.
+    /// </summary>
+    /// <remarks>
+    /// Used by the internal logger to record the Type of the
+    /// log message.
+    /// </remarks>
+    private static readonly Type declaringType = typeof(DatePatternConverter);
 
-      #endregion Private Static Fields
+    #endregion Private Static Fields
   }
 }

@@ -126,8 +126,8 @@ namespace log4net.Layout
     /// </summary>
     public string InvalidCharReplacement
     {
-      get {return m_invalidCharReplacement;}
-      set {m_invalidCharReplacement=value;}
+      get { return m_invalidCharReplacement; }
+      set { m_invalidCharReplacement = value; }
     }
     #endregion
 
@@ -149,7 +149,7 @@ namespace log4net.Layout
     /// <see cref="ActivateOptions"/> must be called again.
     /// </para>
     /// </remarks>
-    public override void ActivateOptions() 
+    public override void ActivateOptions()
     {
       // nothing to do
     }
@@ -190,7 +190,7 @@ namespace log4net.Layout
     /// <see cref="FormatXml"/> method rather than this method.
     /// </para>
     /// </remarks>
-    public override void Format(TextWriter writer, LoggingEvent loggingEvent) 
+    public override void Format(TextWriter writer, LoggingEvent loggingEvent)
     {
       if (loggingEvent == null)
       {
@@ -238,7 +238,7 @@ namespace log4net.Layout
     #endregion Protected Instance Methods
 
     #region Private Instance Fields
-  
+
     /// <summary>
     /// Flag to indicate if location information should be included in
     /// the XML events.
@@ -248,7 +248,7 @@ namespace log4net.Layout
     /// <summary>
     /// The string to replace invalid chars with
     /// </summary>
-    private string m_invalidCharReplacement="?";
+    private string m_invalidCharReplacement = "?";
 
     #endregion Private Instance Fields
   }

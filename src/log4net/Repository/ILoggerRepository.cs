@@ -74,8 +74,8 @@ namespace log4net.Repository
   /// </remarks>
   public delegate void LoggerRepositoryConfigurationChangedEventHandler(object sender, EventArgs e);
 
-    #endregion
-  
+  #endregion
+
   /// <summary>
   /// Interface implemented by logger repositories.
   /// </summary>
@@ -276,11 +276,11 @@ namespace log4net.Repository
     /// </remarks>
     bool Configured { get; set; }
 
-        /// <summary>
-        /// Collection of internal messages captured during the most 
-        /// recent configuration process.
-        /// </summary>
-        ICollection ConfigurationMessages { get; set; }
+    /// <summary>
+    /// Collection of internal messages captured during the most 
+    /// recent configuration process.
+    /// </summary>
+    ICollection ConfigurationMessages { get; set; }
 
     /// <summary>
     /// Event to notify that the repository has been shutdown.

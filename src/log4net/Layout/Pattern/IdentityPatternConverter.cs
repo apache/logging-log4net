@@ -36,7 +36,7 @@ namespace log4net.Layout.Pattern
   /// </remarks>
   /// <author>Daniel Cazzulino</author>
   /// <author>Nicko Cadell</author>
-  internal sealed class IdentityPatternConverter : PatternLayoutConverter 
+  internal sealed class IdentityPatternConverter : PatternLayoutConverter
   {
     /// <summary>
     /// Writes the event identity to the output

@@ -65,11 +65,11 @@ namespace log4net.Util.TypeConverters
     /// <see cref="String"/> argument to a <see cref="Boolean"/>.
     /// </para>
     /// </remarks>
-     /// <exception cref="ConversionNotSupportedException">
-     /// The <paramref name="source"/> object cannot be converted to the
-     /// target type. To check for this condition use the <see cref="CanConvertFrom"/>
-     /// method.
-     /// </exception>
+    /// <exception cref="ConversionNotSupportedException">
+    /// The <paramref name="source"/> object cannot be converted to the
+    /// target type. To check for this condition use the <see cref="CanConvertFrom"/>
+    /// method.
+    /// </exception>
     public object ConvertFrom(object source)
     {
       string str = source as string;

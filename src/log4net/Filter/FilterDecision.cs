@@ -38,7 +38,7 @@ namespace log4net.Filter
     /// consulting with the remaining filters, if any, in the chain.
     /// </summary>
     Deny = -1,
-  
+
     /// <summary>
     /// This filter is neutral with respect to the log event. 
     /// The remaining filters, if any, should be consulted for a final decision.

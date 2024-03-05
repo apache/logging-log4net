@@ -99,7 +99,7 @@ namespace log4net.Core
     /// the specified level name and value.
     /// </para>
     /// </remarks>
-    public Level(int level, string levelName, string displayName) 
+    public Level(int level, string levelName, string displayName)
     {
       if (levelName == null)
       {
@@ -202,7 +202,7 @@ namespace log4net.Core
     /// Returns the level <see cref="Name"/>.
     /// </para>
     /// </remarks>
-    public override string ToString() 
+    public override string ToString()
     {
       return m_levelName;
     }
@@ -321,7 +321,7 @@ namespace log4net.Core
     /// Compares two levels.
     /// </para>
     /// </remarks>
-    public static bool operator > (Level l, Level r)
+    public static bool operator >(Level l, Level r)
     {
       return l.m_levelValue > r.m_levelValue;
     }
@@ -341,7 +341,7 @@ namespace log4net.Core
     /// Compares two levels.
     /// </para>
     /// </remarks>
-    public static bool operator < (Level l, Level r)
+    public static bool operator <(Level l, Level r)
     {
       return l.m_levelValue < r.m_levelValue;
     }
@@ -361,7 +361,7 @@ namespace log4net.Core
     /// Compares two levels.
     /// </para>
     /// </remarks>
-    public static bool operator >= (Level l, Level r)
+    public static bool operator >=(Level l, Level r)
     {
       return l.m_levelValue >= r.m_levelValue;
     }
@@ -381,7 +381,7 @@ namespace log4net.Core
     /// Compares two levels.
     /// </para>
     /// </remarks>
-    public static bool operator <= (Level l, Level r)
+    public static bool operator <=(Level l, Level r)
     {
       return l.m_levelValue <= r.m_levelValue;
     }
@@ -401,7 +401,7 @@ namespace log4net.Core
     /// Compares two levels.
     /// </para>
     /// </remarks>
-    public static bool operator == (Level l, Level r)
+    public static bool operator ==(Level l, Level r)
     {
       if (((object)l) != null && ((object)r) != null)
       {
@@ -409,7 +409,7 @@ namespace log4net.Core
       }
       else
       {
-        return ((object) l) == ((object) r);
+        return ((object)l) == ((object)r);
       }
     }
 
@@ -428,9 +428,9 @@ namespace log4net.Core
     /// Compares two levels.
     /// </para>
     /// </remarks>
-    public static bool operator != (Level l, Level r)
+    public static bool operator !=(Level l, Level r)
     {
-      return !(l==r);
+      return !(l == r);
     }
 
     #endregion Operators
@@ -502,11 +502,11 @@ namespace log4net.Core
     /// </summary>
     public static readonly Level Off = new Level(int.MaxValue, "OFF");
 
-        /// <summary>
-        /// The <see cref="Emergency" /> level designates very severe error events. 
-        /// System unusable, emergencies.
-        /// </summary>
-        public static readonly Level Log4Net_Debug = new Level(120000, "log4net:DEBUG");
+    /// <summary>
+    /// The <see cref="Emergency" /> level designates very severe error events. 
+    /// System unusable, emergencies.
+    /// </summary>
+    public static readonly Level Log4Net_Debug = new Level(120000, "log4net:DEBUG");
 
     /// <summary>
     /// The <see cref="Emergency" /> level designates very severe error events. 
@@ -547,19 +547,19 @@ namespace log4net.Core
     /// The <see cref="Warn" /> level designates potentially harmful 
     /// situations.
     /// </summary>
-    public static readonly Level Warn  = new Level(60000, "WARN");
+    public static readonly Level Warn = new Level(60000, "WARN");
 
     /// <summary>
     /// The <see cref="Notice" /> level designates informational messages 
     /// that highlight the progress of the application at the highest level.
     /// </summary>
-    public static readonly Level Notice  = new Level(50000, "NOTICE");
+    public static readonly Level Notice = new Level(50000, "NOTICE");
 
     /// <summary>
     /// The <see cref="Info" /> level designates informational messages that 
     /// highlight the progress of the application at coarse-grained level.
     /// </summary>
-    public static readonly Level Info  = new Level(40000, "INFO");
+    public static readonly Level Info = new Level(40000, "INFO");
 
     /// <summary>
     /// The <see cref="Debug" /> level designates fine-grained informational 

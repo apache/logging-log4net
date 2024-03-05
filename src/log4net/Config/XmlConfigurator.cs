@@ -140,7 +140,7 @@ namespace log4net.Config
           InternalConfigureFromXml(repository, configElement);
         }
       }
-      catch(System.Configuration.ConfigurationException confEx)
+      catch (System.Configuration.ConfigurationException confEx)
       {
         if (confEx.BareMessage.IndexOf("Unrecognized element") >= 0)
         {
@@ -532,14 +532,14 @@ namespace log4net.Config
           FileStream fs = null;
 
           // Try hard to open the file
-          for(int retry = 5; --retry >= 0; )
+          for (int retry = 5; --retry >= 0;)
           {
             try
             {
               fs = configFile.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
               break;
             }
-            catch(IOException ex)
+            catch (IOException ex)
             {
               if (retry == 0)
               {
@@ -605,7 +605,7 @@ namespace log4net.Config
 
     private static void InternalConfigure(ILoggerRepository repository, Uri configUri)
     {
-      LogLog.Debug(declaringType, "configuring repository [" + repository.Name + "] using URI ["+configUri+"]");
+      LogLog.Debug(declaringType, "configuring repository [" + repository.Name + "] using URI [" + configUri + "]");
 
       if (configUri == null)
       {
@@ -627,9 +627,9 @@ namespace log4net.Config
           {
             configRequest = WebRequest.Create(configUri);
           }
-          catch(Exception ex)
+          catch (Exception ex)
           {
-            LogLog.Error(declaringType, "Failed to create WebRequest for URI ["+configUri+"]", ex);
+            LogLog.Error(declaringType, "Failed to create WebRequest for URI [" + configUri + "]", ex);
           }
 
           if (configRequest != null)
@@ -658,9 +658,9 @@ namespace log4net.Config
                 InternalConfigure(repository, configStream);
               }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-              LogLog.Error(declaringType, "Failed to request config from URI ["+configUri+"]", ex);
+              LogLog.Error(declaringType, "Failed to request config from URI [" + configUri + "]", ex);
             }
           }
         }
@@ -746,7 +746,7 @@ namespace log4net.Config
           // load the data into the document
           doc.Load(xmlReader);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
           LogLog.Error(declaringType, "Error while loading XML configuration", ex);
 
@@ -890,9 +890,9 @@ namespace log4net.Config
             m_repositoryName2ConfigAndWatchHandler[configFile.FullName] = handler;
           }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-          LogLog.Error(declaringType, "Failed to initialize configuration file watcher for file ["+configFile.FullName+"]", ex);
+          LogLog.Error(declaringType, "Failed to initialize configuration file watcher for file [" + configFile.FullName + "]", ex);
         }
       }
     }
@@ -1001,7 +1001,7 @@ namespace log4net.Config
       /// </remarks>
       private void ConfigureAndWatchHandler_OnChanged(object source, FileSystemEventArgs e)
       {
-        LogLog.Debug(declaringType, "ConfigureAndWatchHandler: "+e.ChangeType+" [" + m_configFile.FullName + "]");
+        LogLog.Debug(declaringType, "ConfigureAndWatchHandler: " + e.ChangeType + " [" + m_configFile.FullName + "]");
 
         // Deliver the event in TimeoutMillis time
         // timer will fire only once

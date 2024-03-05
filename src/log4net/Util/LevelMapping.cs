@@ -46,14 +46,14 @@ namespace log4net.Util
     /// Initialise a new instance of <see cref="LevelMapping"/>.
     /// </para>
     /// </remarks>
-    public LevelMapping() 
+    public LevelMapping()
     {
     }
 
     #endregion // Public Instance Constructors
 
     #region Public Instance Methods
-  
+
     /// <summary>
     /// Add a <see cref="LevelMappingEntry"/> to this mapping
     /// </summary>
@@ -93,7 +93,7 @@ namespace log4net.Util
     {
       if (m_entries != null)
       {
-        foreach(LevelMappingEntry entry in m_entries)
+        foreach (LevelMappingEntry entry in m_entries)
         {
           if (level >= entry.Level)
           {
@@ -130,12 +130,12 @@ namespace log4net.Util
       // Reverse list so that highest level is first
       Array.Reverse(sortValues, 0, sortValues.Length);
 
-      foreach(LevelMappingEntry entry in sortValues)
+      foreach (LevelMappingEntry entry in sortValues)
       {
         entry.ActivateOptions();
       }
 
-       m_entries = sortValues;
+      m_entries = sortValues;
     }
 
     #endregion // IOptionHandler Members

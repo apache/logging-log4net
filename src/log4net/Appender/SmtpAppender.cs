@@ -81,7 +81,7 @@ namespace log4net.Appender
     /// </para>
     /// </remarks>
     public SmtpAppender()
-    {  
+    {
     }
 
     #endregion // Public Instance Constructors
@@ -168,7 +168,7 @@ namespace log4net.Appender
     /// The e-mail address of the sender.
     /// </para>
     /// </remarks>
-    public string From 
+    public string From
     {
       get { return m_from; }
       set { m_from = value; }
@@ -185,12 +185,12 @@ namespace log4net.Appender
     /// The subject line of the e-mail message.
     /// </para>
     /// </remarks>
-    public string Subject 
+    public string Subject
     {
       get { return m_subject; }
       set { m_subject = value; }
     }
-  
+
     /// <summary>
     /// Gets or sets the name of the SMTP relay mail server to use to send 
     /// the e-mail messages.
@@ -226,7 +226,7 @@ namespace log4net.Appender
     public bool LocationInfo
     {
       get { return false; }
-      set { ; }
+      set {; }
     }
 
     /// <summary>
@@ -381,12 +381,12 @@ namespace log4net.Appender
     /// Sends the contents of the cyclic buffer as an e-mail message.
     /// </summary>
     /// <param name="events">The logging events to send.</param>
-    protected override void SendBuffer(LoggingEvent[] events) 
+    protected override void SendBuffer(LoggingEvent[] events)
     {
       // Note: this code already owns the monitor for this
       // appender. This frees us from needing to synchronize again.
-      try 
-      {    
+      try
+      {
         using StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
 
         string t = Layout.Header;
@@ -395,7 +395,7 @@ namespace log4net.Appender
           writer.Write(t);
         }
 
-        for(int i = 0; i < events.Length; i++) 
+        for (int i = 0; i < events.Length; i++)
         {
           // Render the event and append the text to the buffer
           RenderLoggingEvent(writer, events[i]);
@@ -408,8 +408,8 @@ namespace log4net.Appender
         }
 
         SendEmail(writer.ToString());
-      } 
-      catch(Exception e) 
+      }
+      catch (Exception e)
       {
         ErrorHandler.Error("Error occurred while sending e-mail notification.", e);
       }
@@ -650,19 +650,20 @@ namespace log4net.Appender
 
     #endregion // SmtpAuthentication Enum
 
-      private static readonly char[] ADDRESS_DELIMITERS = new char[] { ',', ';' };
-      
-      /// <summary>
-      ///   trims leading and trailing commas or semicolons
-      /// </summary>
-      private static string MaybeTrimSeparators(string s) {
+    private static readonly char[] ADDRESS_DELIMITERS = new char[] { ',', ';' };
+
+    /// <summary>
+    ///   trims leading and trailing commas or semicolons
+    /// </summary>
+    private static string MaybeTrimSeparators(string s)
+    {
 #if NET_2_0 || MONO_2_0 || NETSTANDARD2_0
-        return string.IsNullOrEmpty(s) ? s : s.Trim(ADDRESS_DELIMITERS);
+      return string.IsNullOrEmpty(s) ? s : s.Trim(ADDRESS_DELIMITERS);
 #else
         return s != null && s.Length > 0 ? s : s.Trim(ADDRESS_DELIMITERS);
 #endif
-      }
     }
+  }
 }
 
 #endif // !NETCF && !SSCLI

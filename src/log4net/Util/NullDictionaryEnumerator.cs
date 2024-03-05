@@ -52,7 +52,7 @@ namespace log4net.Util
     #endregion Private Instance Constructors
 
     #region Public Static Properties
-  
+
     /// <summary>
     /// Gets the singleton instance of the <see cref="NullDictionaryEnumerator" />.
     /// </summary>
@@ -87,11 +87,11 @@ namespace log4net.Util
     /// </remarks>
     /// <exception cref="InvalidOperationException">The collection is empty and <see cref="Current"/> 
     /// cannot be positioned over a valid location.</exception>
-    public object Current 
+    public object Current
     {
-      get  { throw new InvalidOperationException(); }
+      get { throw new InvalidOperationException(); }
     }
-  
+
     /// <summary>
     /// Test if the enumerator can advance, if so advance.
     /// </summary>
@@ -107,7 +107,7 @@ namespace log4net.Util
     {
       return false;
     }
-  
+
     /// <summary>
     /// Resets the enumerator back to the start.
     /// </summary>
@@ -116,7 +116,7 @@ namespace log4net.Util
     /// As the enumerator is over an empty collection <see cref="Reset"/> does nothing.
     /// </para>
     /// </remarks>
-    public void Reset() 
+    public void Reset()
     {
     }
 
@@ -140,9 +140,9 @@ namespace log4net.Util
     /// </remarks>
     /// <exception cref="InvalidOperationException">The collection is empty and <see cref="Current"/> 
     /// cannot be positioned over a valid location.</exception>
-    public object Key 
+    public object Key
     {
-      get  { throw new InvalidOperationException(); }
+      get { throw new InvalidOperationException(); }
     }
 
     /// <summary>
@@ -162,9 +162,9 @@ namespace log4net.Util
     /// </remarks>
     /// <exception cref="InvalidOperationException">The collection is empty and <see cref="Current"/> 
     /// cannot be positioned over a valid location.</exception>
-    public object Value 
+    public object Value
     {
-      get  { throw new InvalidOperationException(); }
+      get { throw new InvalidOperationException(); }
     }
 
     /// <summary>
@@ -183,11 +183,11 @@ namespace log4net.Util
     /// </remarks>
     /// <exception cref="InvalidOperationException">The collection is empty and <see cref="Current"/> 
     /// cannot be positioned over a valid location.</exception>
-    public DictionaryEntry Entry 
+    public DictionaryEntry Entry
     {
-      get  { throw new InvalidOperationException(); }
+      get { throw new InvalidOperationException(); }
     }
-  
+
     #endregion Implementation of IDictionaryEnumerator
 
     #region Private Static Fields
@@ -196,7 +196,7 @@ namespace log4net.Util
     /// The singleton instance of the <see cref="NullDictionaryEnumerator" />.
     /// </summary>
     private static readonly NullDictionaryEnumerator s_instance = new NullDictionaryEnumerator();
-  
+
     #endregion Private Static Fields
   }
 }

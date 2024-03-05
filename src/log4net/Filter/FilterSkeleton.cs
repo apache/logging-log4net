@@ -104,7 +104,7 @@ namespace log4net.Filter
     /// however this method must still be called. 
     /// </para>
     /// </remarks>
-    public virtual void ActivateOptions() 
+    public virtual void ActivateOptions()
     {
     }
 

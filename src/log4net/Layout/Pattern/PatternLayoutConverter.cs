@@ -45,8 +45,8 @@ namespace log4net.Layout.Pattern
     /// <summary>
     /// Initializes a new instance of the <see cref="PatternLayoutConverter" /> class.
     /// </summary>
-    protected PatternLayoutConverter() 
-    {  
+    protected PatternLayoutConverter()
+    {
     }
 
     #endregion Protected Instance Constructors
@@ -69,8 +69,8 @@ namespace log4net.Layout.Pattern
     /// value is <c>true</c>, this converter does not handle the exception.
     /// </para>
     /// </remarks>
-    public virtual bool IgnoresException 
-    { 
+    public virtual bool IgnoresException
+    {
       get { return m_ignoresException; }
       set { m_ignoresException = value; }
     }
@@ -106,7 +106,7 @@ namespace log4net.Layout.Pattern
       }
       else
       {
-        throw new ArgumentException("state must be of type ["+typeof(LoggingEvent).FullName+"]", "state");
+        throw new ArgumentException("state must be of type [" + typeof(LoggingEvent).FullName + "]", "state");
       }
     }
 

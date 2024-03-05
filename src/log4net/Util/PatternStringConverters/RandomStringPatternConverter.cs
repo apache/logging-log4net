@@ -87,8 +87,8 @@ namespace log4net.Util.PatternStringConverters
         }
         else
         {
-          LogLog.Error(declaringType, "RandomStringPatternConverter: Could not convert Option ["+optionStr+"] to Length Int32");
-        }  
+          LogLog.Error(declaringType, "RandomStringPatternConverter: Could not convert Option [" + optionStr + "] to Length Int32");
+        }
       }
     }
 
@@ -104,13 +104,13 @@ namespace log4net.Util.PatternStringConverters
     /// Write a randoim string to the output <paramref name="writer"/>.
     /// </para>
     /// </remarks>
-    protected override void Convert(TextWriter writer, object state) 
+    protected override void Convert(TextWriter writer, object state)
     {
-      try 
+      try
       {
-        lock(s_random)
+        lock (s_random)
         {
-          for(int i=0; i<m_length; i++)
+          for (int i = 0; i < m_length; i++)
           {
             int randValue = s_random.Next(36);
 
@@ -134,23 +134,23 @@ namespace log4net.Util.PatternStringConverters
           }
         }
       }
-      catch (Exception ex) 
+      catch (Exception ex)
       {
         LogLog.Error(declaringType, "Error occurred while converting.", ex);
       }
     }
 
-      #region Private Static Fields
+    #region Private Static Fields
 
-      /// <summary>
-      /// The fully qualified type of the RandomStringPatternConverter class.
-      /// </summary>
-      /// <remarks>
-      /// Used by the internal logger to record the Type of the
-      /// log message.
-      /// </remarks>
-      private static readonly Type declaringType = typeof(RandomStringPatternConverter);
+    /// <summary>
+    /// The fully qualified type of the RandomStringPatternConverter class.
+    /// </summary>
+    /// <remarks>
+    /// Used by the internal logger to record the Type of the
+    /// log message.
+    /// </remarks>
+    private static readonly Type declaringType = typeof(RandomStringPatternConverter);
 
-      #endregion Private Static Fields
+    #endregion Private Static Fields
   }
 }

@@ -55,15 +55,18 @@ namespace log4net.Layout.Pattern
     /// </remarks>
     protected override void Convert(TextWriter writer, LoggingEvent loggingEvent, HttpContext httpContext)
     {
-        HttpRequest request = null;
-        try {
-      request = httpContext.Request;
-        } catch (HttpException) {
-      // likely a case of running in IIS integrated mode
-      // when inside an Application_Start event.
-      // treat it like a case of the Request
-      // property returning null
-        }
+      HttpRequest request = null;
+      try
+      {
+        request = httpContext.Request;
+      }
+      catch (HttpException)
+      {
+        // likely a case of running in IIS integrated mode
+        // when inside an Application_Start event.
+        // treat it like a case of the Request
+        // property returning null
+      }
 
       if (request != null)
       {

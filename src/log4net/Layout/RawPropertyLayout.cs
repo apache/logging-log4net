@@ -65,7 +65,7 @@ namespace log4net.Layout
       get { return m_key; }
       set { m_key = value; }
     }
-  
+
     #region Implementation of IRawLayout
 
     /// <summary>

@@ -67,7 +67,7 @@ namespace log4net.Util
     /// </remarks>
     public ThreadContextStack this[string key]
     {
-      get 
+      get
       {
         ThreadContextStack stack = null;
 
@@ -95,7 +95,7 @@ namespace log4net.Util
             {
             }
 
-            LogLog.Error(declaringType, "ThreadContextStacks: Request for stack named ["+key+"] failed because a property with the same name exists which is a ["+propertyValue.GetType().Name+"] with value ["+propertyValueString+"]");
+            LogLog.Error(declaringType, "ThreadContextStacks: Request for stack named [" + key + "] failed because a property with the same name exists which is a [" + propertyValue.GetType().Name + "] with value [" + propertyValueString + "]");
 
             stack = new ThreadContextStack();
           }
@@ -107,18 +107,18 @@ namespace log4net.Util
 
     #endregion Public Instance Properties
 
-      #region Private Static Fields
+    #region Private Static Fields
 
-      /// <summary>
-      /// The fully qualified type of the ThreadContextStacks class.
-      /// </summary>
-      /// <remarks>
-      /// Used by the internal logger to record the Type of the
-      /// log message.
-      /// </remarks>
-      private static readonly Type declaringType = typeof(ThreadContextStacks);
+    /// <summary>
+    /// The fully qualified type of the ThreadContextStacks class.
+    /// </summary>
+    /// <remarks>
+    /// Used by the internal logger to record the Type of the
+    /// log message.
+    /// </remarks>
+    private static readonly Type declaringType = typeof(ThreadContextStacks);
 
-      #endregion Private Static Fields
+    #endregion Private Static Fields
   }
 }
 

@@ -75,15 +75,15 @@ namespace log4net.DateFormatter
     protected override void FormatDateWithoutMillis(DateTime dateToFormat, StringBuilder buffer)
     {
       int day = dateToFormat.Day;
-      if (day < 10) 
+      if (day < 10)
       {
         buffer.Append('0');
       }
       buffer.Append(day);
-      buffer.Append(' ');    
+      buffer.Append(' ');
 
       buffer.Append(m_dateTimeFormatInfo.GetAbbreviatedMonthName(dateToFormat.Month));
-      buffer.Append(' ');  
+      buffer.Append(' ');
 
       buffer.Append(dateToFormat.Year);
       buffer.Append(' ');

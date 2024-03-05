@@ -80,7 +80,7 @@ namespace log4net.DateFormatter
       buffer.Append('-');
 
       int day = dateToFormat.Day;
-      if (day < 10) 
+      if (day < 10)
       {
         buffer.Append('0');
       }

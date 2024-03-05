@@ -43,7 +43,7 @@ namespace log4net.Config
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-  [AttributeUsage(AttributeTargets.Assembly,AllowMultiple=true)]
+  [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
   [Serializable]
   public /*sealed*/ class AliasRepositoryAttribute : Attribute
   {
@@ -87,7 +87,7 @@ namespace log4net.Config
     public string Name
     {
       get { return m_name; }
-      set { m_name = value ; }
+      set { m_name = value; }
     }
 
     #endregion Public Instance Properties

@@ -79,9 +79,9 @@ namespace log4net.Repository.Hierarchy
     /// value of <see cref="Logger.Level"/>.
     /// </para>
     /// </remarks>
-    public override Level EffectiveLevel 
+    public override Level EffectiveLevel
     {
-      get 
+      get
       {
         return base.Level;
       }
@@ -104,11 +104,11 @@ namespace log4net.Repository.Hierarchy
       get { return base.Level; }
       set
       {
-        if (value == null) 
+        if (value == null)
         {
           LogLog.Error(declaringType, "You have tried to set a null level to root.", new LogException());
         }
-        else 
+        else
         {
           base.Level = value;
         }
@@ -117,17 +117,17 @@ namespace log4net.Repository.Hierarchy
 
     #endregion Override implementation of Logger
 
-      #region Private Static Fields
+    #region Private Static Fields
 
-      /// <summary>
-      /// The fully qualified type of the RootLogger class.
-      /// </summary>
-      /// <remarks>
-      /// Used by the internal logger to record the Type of the
-      /// log message.
-      /// </remarks>
-      private static readonly Type declaringType = typeof(RootLogger);
+    /// <summary>
+    /// The fully qualified type of the RootLogger class.
+    /// </summary>
+    /// <remarks>
+    /// Used by the internal logger to record the Type of the
+    /// log message.
+    /// </remarks>
+    private static readonly Type declaringType = typeof(RootLogger);
 
-      #endregion Private Static Fields
+    #endregion Private Static Fields
   }
 }

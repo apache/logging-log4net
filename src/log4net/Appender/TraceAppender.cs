@@ -37,7 +37,7 @@ namespace log4net.Appender
   /// <para>
   /// Events are written using the <c>System.Diagnostics.Trace.Write(string,string)</c>
   /// method. The event's logger name is the default value for the category parameter 
-    /// of the Write method. 
+  /// of the Write method. 
   /// </para>
   /// <para>
   /// <b>Compact Framework</b><br />
@@ -50,7 +50,7 @@ namespace log4net.Appender
   /// <author>Douglas de la Torre</author>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-    /// <author>Ron Grabowski</author>
+  /// <author>Ron Grabowski</author>
   public class TraceAppender : AppenderSkeleton
   {
     #region Public Instance Constructors
@@ -111,24 +111,24 @@ namespace log4net.Appender
       set { m_immediateFlush = value; }
     }
 
-        /// <summary>
-        /// The category parameter sent to the Trace method.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// Defaults to %logger which will use the logger name of the current 
-        /// <see cref="LoggingEvent"/> as the category parameter.
-        /// </para>
-        /// <para>
-        /// </para> 
-        /// </remarks>
-      public PatternLayout Category
-      {
-          get { return m_category; }
-          set { m_category = value; }
-      }
+    /// <summary>
+    /// The category parameter sent to the Trace method.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Defaults to %logger which will use the logger name of the current 
+    /// <see cref="LoggingEvent"/> as the category parameter.
+    /// </para>
+    /// <para>
+    /// </para> 
+    /// </remarks>
+    public PatternLayout Category
+    {
+      get { return m_category; }
+      set { m_category = value; }
+    }
 
-      #endregion Public Instance Properties
+    #endregion Public Instance Properties
 
     #region Override implementation of AppenderSkeleton
 
@@ -141,7 +141,7 @@ namespace log4net.Appender
     /// Writes the logging event to the <see cref="System.Diagnostics.Trace"/> system.
     /// </para>
     /// </remarks>
-    protected override void Append(LoggingEvent loggingEvent) 
+    protected override void Append(LoggingEvent loggingEvent)
     {
       //
       // Write the string to the Trace system
@@ -149,20 +149,20 @@ namespace log4net.Appender
 #if NETCF
       System.Diagnostics.Debug.Write(RenderLoggingEvent(loggingEvent), m_category.Format(loggingEvent));
 #else
-            System.Diagnostics.Trace.Write(RenderLoggingEvent(loggingEvent), m_category.Format(loggingEvent));
+      System.Diagnostics.Trace.Write(RenderLoggingEvent(loggingEvent), m_category.Format(loggingEvent));
 #endif
-   
+
       //
       // Flush the Trace system if needed
       //
-      if (m_immediateFlush) 
+      if (m_immediateFlush)
       {
 #if NETCF
         System.Diagnostics.Debug.Flush();
 #else
         System.Diagnostics.Trace.Flush();
 #endif
-      } 
+      }
     }
 
     /// <summary>
@@ -200,30 +200,30 @@ namespace log4net.Appender
     /// </remarks>
     private bool m_immediateFlush = true;
 
-        /// <summary>
-        /// Defaults to %logger
-        /// </summary>
-        private PatternLayout m_category = new PatternLayout("%logger");
+    /// <summary>
+    /// Defaults to %logger
+    /// </summary>
+    private PatternLayout m_category = new PatternLayout("%logger");
 
     #endregion Private Instance Fields
 
-        /// <summary>
-        /// Flushes any buffered log data.
-        /// </summary>
-        /// <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
-        /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
-        public override bool Flush(int millisecondsTimeout)
-        {
-            // Nothing to do if ImmediateFlush is true
-            if (m_immediateFlush) return true;
+    /// <summary>
+    /// Flushes any buffered log data.
+    /// </summary>
+    /// <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
+    /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+    public override bool Flush(int millisecondsTimeout)
+    {
+      // Nothing to do if ImmediateFlush is true
+      if (m_immediateFlush) return true;
 
-            // System.Diagnostics.Trace and System.Diagnostics.Debug are thread-safe, so no need for lock(this).
+      // System.Diagnostics.Trace and System.Diagnostics.Debug are thread-safe, so no need for lock(this).
 #if NETCF
       System.Diagnostics.Debug.Flush();
 #else
-            System.Diagnostics.Trace.Flush();
+      System.Diagnostics.Trace.Flush();
 #endif
-            return true;
-        }
+      return true;
     }
+  }
 }

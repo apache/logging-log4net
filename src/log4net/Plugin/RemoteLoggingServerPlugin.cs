@@ -77,7 +77,7 @@ namespace log4net.Plugin
     /// with specified name.
     /// </para>
     /// </remarks>
-    public RemoteLoggingServerPlugin(string sinkUri) : base("RemoteLoggingServerPlugin:"+sinkUri)
+    public RemoteLoggingServerPlugin(string sinkUri) : base("RemoteLoggingServerPlugin:" + sinkUri)
     {
       m_sinkUri = sinkUri;
     }
@@ -98,8 +98,8 @@ namespace log4net.Plugin
     /// <see cref="M:RemotingServices.Marshal(MarshalByRefObject,String,Type)"/>
     /// </para>
     /// </remarks>
-    public virtual string SinkUri 
-    { 
+    public virtual string SinkUri
+    {
       get { return m_sinkUri; }
       set { m_sinkUri = value; }
     }
@@ -128,13 +128,13 @@ namespace log4net.Plugin
       base.Attach(repository);
 
       // Create the sink and marshal it
-      m_sink = new RemoteLoggingSinkImpl(repository); 
+      m_sink = new RemoteLoggingSinkImpl(repository);
 
       try
       {
-        RemotingServices.Marshal(m_sink, m_sinkUri, typeof(IRemoteLoggingSink));    
+        RemotingServices.Marshal(m_sink, m_sinkUri, typeof(IRemoteLoggingSink));
       }
-      catch(Exception ex)
+      catch (Exception ex)
       {
         LogLog.Error(declaringType, "Failed to Marshal remoting sink", ex);
       }
@@ -152,7 +152,7 @@ namespace log4net.Plugin
 #if NET_4_0 || MONO_4_0
         [System.Security.SecuritySafeCritical]
 #endif
-        public override void Shutdown()
+    public override void Shutdown()
     {
       // Stops the sink from receiving messages
       RemotingServices.Disconnect(m_sink);
@@ -170,18 +170,18 @@ namespace log4net.Plugin
 
     #endregion Private Instance Fields
 
-      #region Private Static Fields
+    #region Private Static Fields
 
-      /// <summary>
-      /// The fully qualified type of the RemoteLoggingServerPlugin class.
-      /// </summary>
-      /// <remarks>
-      /// Used by the internal logger to record the Type of the
-      /// log message.
-      /// </remarks>
-      private static readonly Type declaringType = typeof(RemoteLoggingServerPlugin);
+    /// <summary>
+    /// The fully qualified type of the RemoteLoggingServerPlugin class.
+    /// </summary>
+    /// <remarks>
+    /// Used by the internal logger to record the Type of the
+    /// log message.
+    /// </remarks>
+    private static readonly Type declaringType = typeof(RemoteLoggingServerPlugin);
 
-      #endregion Private Static Fields
+    #endregion Private Static Fields
 
     /// <summary>
     /// Delivers <see cref="LoggingEvent"/> objects to a remote sink.
@@ -228,7 +228,7 @@ namespace log4net.Plugin
       {
         if (events != null)
         {
-          foreach(LoggingEvent logEvent in events)
+          foreach (LoggingEvent logEvent in events)
           {
             if (logEvent != null)
             {
@@ -257,7 +257,7 @@ namespace log4net.Plugin
 #if NET_4_0 || MONO_4_0
             [System.Security.SecurityCritical]
 #endif
-            public override object InitializeLifetimeService()
+      public override object InitializeLifetimeService()
       {
         return null;
       }

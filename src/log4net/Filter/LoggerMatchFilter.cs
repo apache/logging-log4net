@@ -129,7 +129,7 @@ namespace log4net.Filter
     /// <see cref="FilterDecision.Deny"/> is returned.
     /// </para>
     /// </remarks>
-    public override FilterDecision Decide(LoggingEvent loggingEvent) 
+    public override FilterDecision Decide(LoggingEvent loggingEvent)
     {
       if (loggingEvent == null)
       {
@@ -137,14 +137,14 @@ namespace log4net.Filter
       }
 
       // Check if we have been setup to filter
-      if ((m_loggerToMatch != null && m_loggerToMatch.Length != 0) && 
+      if ((m_loggerToMatch != null && m_loggerToMatch.Length != 0) &&
         loggingEvent.LoggerName.StartsWith(m_loggerToMatch))
       {
         // we've got a match
-        if (m_acceptOnMatch) 
+        if (m_acceptOnMatch)
         {
           return FilterDecision.Accept;
-        } 
+        }
         return FilterDecision.Deny;
       }
       else

@@ -60,27 +60,27 @@ namespace log4net.Util.PatternStringConverters
     /// <seealso cref="DatePatternConverter"/>
     protected override void Convert(TextWriter writer, object state)
     {
-      try 
+      try
       {
         m_dateFormatter.FormatDate(DateTime.UtcNow, writer);
       }
-      catch (Exception ex) 
+      catch (Exception ex)
       {
         LogLog.Error(declaringType, "Error occurred while converting date.", ex);
       }
     }
 
-      #region Private Static Fields
+    #region Private Static Fields
 
-      /// <summary>
-      /// The fully qualified type of the UtcDatePatternConverter class.
-      /// </summary>
-      /// <remarks>
-      /// Used by the internal logger to record the Type of the
-      /// log message.
-      /// </remarks>
-      private static readonly Type declaringType = typeof(UtcDatePatternConverter);
+    /// <summary>
+    /// The fully qualified type of the UtcDatePatternConverter class.
+    /// </summary>
+    /// <remarks>
+    /// Used by the internal logger to record the Type of the
+    /// log message.
+    /// </remarks>
+    private static readonly Type declaringType = typeof(UtcDatePatternConverter);
 
-      #endregion Private Static Fields
+    #endregion Private Static Fields
   }
 }

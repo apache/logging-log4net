@@ -61,7 +61,7 @@ namespace log4net.Appender
     /// The instance of the <see cref="ConsoleAppender" /> class is set up to write 
     /// to the standard output stream.
     /// </remarks>
-    public ConsoleAppender() 
+    public ConsoleAppender()
     {
     }
 
@@ -91,7 +91,7 @@ namespace log4net.Appender
     /// output stream.
     /// </remarks>
     [Obsolete("Instead use the default constructor and set the Layout & Target properties")]
-    public ConsoleAppender(ILayout layout, bool writeToErrorStream) 
+    public ConsoleAppender(ILayout layout, bool writeToErrorStream)
     {
       Layout = layout;
       m_writeToErrorStream = writeToErrorStream;
@@ -125,8 +125,8 @@ namespace log4net.Appender
         if (SystemInfo.EqualsIgnoringCase(ConsoleError, v))
         {
           m_writeToErrorStream = true;
-        } 
-        else 
+        }
+        else
         {
           m_writeToErrorStream = false;
         }
@@ -149,7 +149,7 @@ namespace log4net.Appender
     /// The format of the output will depend on the appender's layout.
     /// </para>
     /// </remarks>
-    protected override void Append(LoggingEvent loggingEvent) 
+    protected override void Append(LoggingEvent loggingEvent)
     {
 #if NETCF_1_0
       // Write to the output stream

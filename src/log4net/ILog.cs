@@ -91,7 +91,7 @@ namespace log4net
     /// <seealso cref="M:Debug(object,Exception)"/>
     /// <seealso cref="IsDebugEnabled"/>
     void Debug(object message);
-  
+
     /// <summary>
     /// Log a message object with the <see cref="Level.Debug"/> level including
     /// the stack trace of the <see cref="Exception"/> passed
@@ -128,7 +128,7 @@ namespace log4net
     /// </remarks>
     /// <seealso cref="M:Debug(object)"/>
     /// <seealso cref="IsDebugEnabled"/>
-    void DebugFormat(string format, params object[] args); 
+    void DebugFormat(string format, params object[] args);
 
     /// <summary>
     /// Logs a formatted message string with the <see cref="Level.Debug"/> level.
@@ -149,7 +149,7 @@ namespace log4net
     /// </remarks>
     /// <seealso cref="M:Debug(object)"/>
     /// <seealso cref="IsDebugEnabled"/>
-    void DebugFormat(string format, object arg0); 
+    void DebugFormat(string format, object arg0);
 
     /// <summary>
     /// Logs a formatted message string with the <see cref="Level.Debug"/> level.
@@ -171,7 +171,7 @@ namespace log4net
     /// </remarks>
     /// <seealso cref="M:Debug(object)"/>
     /// <seealso cref="IsDebugEnabled"/>
-    void DebugFormat(string format, object arg0, object arg1); 
+    void DebugFormat(string format, object arg0, object arg1);
 
     /// <summary>
     /// Logs a formatted message string with the <see cref="Level.Debug"/> level.
@@ -194,7 +194,7 @@ namespace log4net
     /// </remarks>
     /// <seealso cref="M:Debug(object)"/>
     /// <seealso cref="IsDebugEnabled"/>
-    void DebugFormat(string format, object arg0, object arg1, object arg2); 
+    void DebugFormat(string format, object arg0, object arg1, object arg2);
 
     /// <summary>
     /// Logs a formatted message string with the <see cref="Level.Debug"/> level.
@@ -244,7 +244,7 @@ namespace log4net
     /// <seealso cref="M:Info(object,Exception)"/>
     /// <seealso cref="IsInfoEnabled"/>
     void Info(object message);
-  
+
     /// <summary>
     /// Logs a message object with the <c>INFO</c> level including
     /// the stack trace of the <see cref="Exception"/> passed
@@ -302,7 +302,7 @@ namespace log4net
     /// </remarks>
     /// <seealso cref="M:Info(object)"/>
     /// <seealso cref="IsInfoEnabled"/>
-    void InfoFormat(string format, object arg0); 
+    void InfoFormat(string format, object arg0);
 
     /// <summary>
     /// Logs a formatted message string with the <see cref="Level.Info"/> level.
@@ -324,7 +324,7 @@ namespace log4net
     /// </remarks>
     /// <seealso cref="M:Info(object)"/>
     /// <seealso cref="IsInfoEnabled"/>
-    void InfoFormat(string format, object arg0, object arg1); 
+    void InfoFormat(string format, object arg0, object arg1);
 
     /// <summary>
     /// Logs a formatted message string with the <see cref="Level.Info"/> level.
@@ -347,7 +347,7 @@ namespace log4net
     /// </remarks>
     /// <seealso cref="M:Info(object)"/>
     /// <seealso cref="IsInfoEnabled"/>
-    void InfoFormat(string format, object arg0, object arg1, object arg2); 
+    void InfoFormat(string format, object arg0, object arg1, object arg2);
 
     /// <summary>
     /// Logs a formatted message string with the <see cref="Level.Info"/> level.
@@ -397,7 +397,7 @@ namespace log4net
     /// <seealso cref="M:Warn(object,Exception)"/>
     /// <seealso cref="IsWarnEnabled"/>
     void Warn(object message);
-  
+
     /// <summary>
     /// Log a message object with the <see cref="Level.Warn"/> level including
     /// the stack trace of the <see cref="Exception"/> passed
@@ -455,7 +455,7 @@ namespace log4net
     /// </remarks>
     /// <seealso cref="M:Warn(object)"/>
     /// <seealso cref="IsWarnEnabled"/>
-    void WarnFormat(string format, object arg0); 
+    void WarnFormat(string format, object arg0);
 
     /// <summary>
     /// Logs a formatted message string with the <see cref="Level.Warn"/> level.
@@ -477,7 +477,7 @@ namespace log4net
     /// </remarks>
     /// <seealso cref="M:Warn(object)"/>
     /// <seealso cref="IsWarnEnabled"/>
-    void WarnFormat(string format, object arg0, object arg1); 
+    void WarnFormat(string format, object arg0, object arg1);
 
     /// <summary>
     /// Logs a formatted message string with the <see cref="Level.Warn"/> level.
@@ -500,7 +500,7 @@ namespace log4net
     /// </remarks>
     /// <seealso cref="M:Warn(object)"/>
     /// <seealso cref="IsWarnEnabled"/>
-    void WarnFormat(string format, object arg0, object arg1, object arg2); 
+    void WarnFormat(string format, object arg0, object arg1, object arg2);
 
     /// <summary>
     /// Logs a formatted message string with the <see cref="Level.Warn"/> level.
@@ -608,7 +608,7 @@ namespace log4net
     /// </remarks>
     /// <seealso cref="M:Error(object)"/>
     /// <seealso cref="IsErrorEnabled"/>
-    void ErrorFormat(string format, object arg0); 
+    void ErrorFormat(string format, object arg0);
 
     /// <summary>
     /// Logs a formatted message string with the <see cref="Level.Error"/> level.
@@ -630,7 +630,7 @@ namespace log4net
     /// </remarks>
     /// <seealso cref="M:Error(object)"/>
     /// <seealso cref="IsErrorEnabled"/>
-    void ErrorFormat(string format, object arg0, object arg1); 
+    void ErrorFormat(string format, object arg0, object arg1);
 
     /// <summary>
     /// Logs a formatted message string with the <see cref="Level.Error"/> level.
@@ -653,7 +653,7 @@ namespace log4net
     /// </remarks>
     /// <seealso cref="M:Error(object)"/>
     /// <seealso cref="IsErrorEnabled"/>
-    void ErrorFormat(string format, object arg0, object arg1, object arg2); 
+    void ErrorFormat(string format, object arg0, object arg1, object arg2);
 
     /// <summary>
     /// Logs a formatted message string with the <see cref="Level.Error"/> level.
@@ -703,7 +703,7 @@ namespace log4net
     /// <seealso cref="M:Fatal(object,Exception)"/>
     /// <seealso cref="IsFatalEnabled"/>
     void Fatal(object message);
-  
+
     /// <summary>
     /// Log a message object with the <see cref="Level.Fatal"/> level including
     /// the stack trace of the <see cref="Exception"/> passed
@@ -761,7 +761,7 @@ namespace log4net
     /// </remarks>
     /// <seealso cref="M:Fatal(object)"/>
     /// <seealso cref="IsFatalEnabled"/>
-    void FatalFormat(string format, object arg0); 
+    void FatalFormat(string format, object arg0);
 
     /// <summary>
     /// Logs a formatted message string with the <see cref="Level.Fatal"/> level.
@@ -783,7 +783,7 @@ namespace log4net
     /// </remarks>
     /// <seealso cref="M:Fatal(object)"/>
     /// <seealso cref="IsFatalEnabled"/>
-    void FatalFormat(string format, object arg0, object arg1); 
+    void FatalFormat(string format, object arg0, object arg1);
 
     /// <summary>
     /// Logs a formatted message string with the <see cref="Level.Fatal"/> level.
@@ -806,7 +806,7 @@ namespace log4net
     /// </remarks>
     /// <seealso cref="M:Fatal(object)"/>
     /// <seealso cref="IsFatalEnabled"/>
-    void FatalFormat(string format, object arg0, object arg1, object arg2); 
+    void FatalFormat(string format, object arg0, object arg1, object arg2);
 
     /// <summary>
     /// Logs a formatted message string with the <see cref="Level.Fatal"/> level.
@@ -900,7 +900,7 @@ namespace log4net
     /// <seealso cref="M:Debug(object)"/>
     /// <seealso cref="M:DebugFormat(IFormatProvider, string, object[])"/>
     bool IsDebugEnabled { get; }
-  
+
     /// <summary>
     /// Checks if this logger is enabled for the <see cref="Level.Info"/> level.
     /// </summary>

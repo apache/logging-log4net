@@ -42,7 +42,7 @@ namespace log4net.Util.TypeConverters
 #if NETSTANDARD1_3
   public class ConversionNotSupportedException : Exception
 #else
-  public class ConversionNotSupportedException : ApplicationException 
+  public class ConversionNotSupportedException : ApplicationException
 #endif
   {
     #region Public Instance Constructors
@@ -69,10 +69,10 @@ namespace log4net.Util.TypeConverters
     /// with the specified message.
     /// </para>
     /// </remarks>
-    public ConversionNotSupportedException(String message) : base(message) 
+    public ConversionNotSupportedException(String message) : base(message)
     {
     }
-    
+
     /// <summary>
     /// Constructor
     /// </summary>
@@ -84,7 +84,7 @@ namespace log4net.Util.TypeConverters
     /// with the specified message and inner exception.
     /// </para>
     /// </remarks>
-    public ConversionNotSupportedException(String message, Exception innerException) : base(message, innerException) 
+    public ConversionNotSupportedException(String message, Exception innerException) : base(message, innerException)
     {
     }
 
@@ -104,7 +104,7 @@ namespace log4net.Util.TypeConverters
     /// with serialized data.
     /// </para>
     /// </remarks>
-    protected ConversionNotSupportedException(SerializationInfo info, StreamingContext context) : base(info, context) 
+    protected ConversionNotSupportedException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }
 #endif
@@ -145,11 +145,11 @@ namespace log4net.Util.TypeConverters
     {
       if (sourceValue == null)
       {
-        return new ConversionNotSupportedException("Cannot convert value [null] to type ["+destinationType+"]", innerException);
+        return new ConversionNotSupportedException("Cannot convert value [null] to type [" + destinationType + "]", innerException);
       }
       else
       {
-        return new ConversionNotSupportedException("Cannot convert from type ["+sourceValue.GetType()+"] value ["+sourceValue+"] to type ["+destinationType+"]", innerException);
+        return new ConversionNotSupportedException("Cannot convert from type [" + sourceValue.GetType() + "] value [" + sourceValue + "] to type [" + destinationType + "]", innerException);
       }
     }
 

@@ -34,7 +34,7 @@ namespace log4net.Layout.Pattern
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
-  internal sealed class LoggerPatternConverter : NamedPatternConverter 
+  internal sealed class LoggerPatternConverter : NamedPatternConverter
   {
     /// <summary>
     /// Gets the fully qualified name of the logger
@@ -46,7 +46,7 @@ namespace log4net.Layout.Pattern
     /// Returns the <see cref="LoggingEvent.LoggerName"/> of the <paramref name="loggingEvent"/>.
     /// </para>
     /// </remarks>
-    protected override string GetFullyQualifiedName(LoggingEvent loggingEvent) 
+    protected override string GetFullyQualifiedName(LoggingEvent loggingEvent)
     {
       return loggingEvent.LoggerName;
     }

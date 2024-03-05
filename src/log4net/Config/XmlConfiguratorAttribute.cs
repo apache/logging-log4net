@@ -195,35 +195,35 @@ namespace log4net.Config
     /// configure it.
     /// </para>
     /// </remarks>
-        /// <exception cref="ArgumentOutOfRangeException">The <paramref name="targetRepository" /> does not extend <see cref="Hierarchy"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The <paramref name="targetRepository" /> does not extend <see cref="Hierarchy"/>.</exception>
     public override void Configure(Assembly sourceAssembly, ILoggerRepository targetRepository)
     {
-            IList configurationMessages = new ArrayList();
+      IList configurationMessages = new ArrayList();
 
-            using (new LogLog.LogReceivedAdapter(configurationMessages))
-            {
-                string applicationBaseDirectory = null;
-                try
-                {
-                    applicationBaseDirectory = SystemInfo.ApplicationBaseDirectory;
-                }
-                catch
-                {
-                    // Ignore this exception because it is only thrown when ApplicationBaseDirectory is a file
-                    // and the application does not have PathDiscovery permission
-                }
+      using (new LogLog.LogReceivedAdapter(configurationMessages))
+      {
+        string applicationBaseDirectory = null;
+        try
+        {
+          applicationBaseDirectory = SystemInfo.ApplicationBaseDirectory;
+        }
+        catch
+        {
+          // Ignore this exception because it is only thrown when ApplicationBaseDirectory is a file
+          // and the application does not have PathDiscovery permission
+        }
 
-                if (applicationBaseDirectory == null || (new Uri(applicationBaseDirectory)).IsFile)
-                {
-                    ConfigureFromFile(sourceAssembly, targetRepository);
-                }
-                else
-                {
-                    ConfigureFromUri(sourceAssembly, targetRepository);
-                }
-            }
+        if (applicationBaseDirectory == null || (new Uri(applicationBaseDirectory)).IsFile)
+        {
+          ConfigureFromFile(sourceAssembly, targetRepository);
+        }
+        else
+        {
+          ConfigureFromUri(sourceAssembly, targetRepository);
+        }
+      }
 
-            targetRepository.ConfigurationMessages = configurationMessages;
+      targetRepository.ConfigurationMessages = configurationMessages;
     }
 
     #endregion
@@ -237,7 +237,7 @@ namespace log4net.Config
     {
       // Work out the full path to the config file
       string fullPath2ConfigFile = null;
-      
+
       // Select the config file
       if (m_configFile == null || m_configFile.Length == 0)
       {
@@ -248,7 +248,7 @@ namespace log4net.Config
           {
             fullPath2ConfigFile = SystemInfo.ConfigurationFileLocation;
           }
-          catch(Exception ex)
+          catch (Exception ex)
           {
             LogLog.Error(declaringType, "XmlConfiguratorAttribute: Exception getting ConfigurationFileLocation. Must be able to resolve ConfigurationFileLocation when ConfigFile and ConfigFileExtension properties are not set.", ex);
           }
@@ -266,7 +266,7 @@ namespace log4net.Config
           {
             applicationBaseDirectory = SystemInfo.ApplicationBaseDirectory;
           }
-          catch(Exception ex)
+          catch (Exception ex)
           {
             LogLog.Error(declaringType, "Exception getting ApplicationBaseDirectory. Must be able to resolve ApplicationBaseDirectory and AssemblyFileName when ConfigFileExtension property is set.", ex);
           }
@@ -284,9 +284,9 @@ namespace log4net.Config
         {
           applicationBaseDirectory = SystemInfo.ApplicationBaseDirectory;
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-          LogLog.Warn(declaringType, "Exception getting ApplicationBaseDirectory. ConfigFile property path ["+m_configFile+"] will be treated as an absolute path.", ex);
+          LogLog.Warn(declaringType, "Exception getting ApplicationBaseDirectory. ConfigFile property path [" + m_configFile + "] will be treated as an absolute path.", ex);
         }
 
         if (applicationBaseDirectory != null)
@@ -341,7 +341,7 @@ namespace log4net.Config
     {
       // Work out the full path to the config file
       Uri fullPath2ConfigFile = null;
-      
+
       // Select the config file
       if (m_configFile == null || m_configFile.Length == 0)
       {
@@ -352,7 +352,7 @@ namespace log4net.Config
           {
             systemConfigFilePath = SystemInfo.ConfigurationFileLocation;
           }
-          catch(Exception ex)
+          catch (Exception ex)
           {
             LogLog.Error(declaringType, "XmlConfiguratorAttribute: Exception getting ConfigurationFileLocation. Must be able to resolve ConfigurationFileLocation when ConfigFile and ConfigFileExtension properties are not set.", ex);
           }
@@ -378,7 +378,7 @@ namespace log4net.Config
           {
             systemConfigFilePath = SystemInfo.ConfigurationFileLocation;
           }
-          catch(Exception ex)
+          catch (Exception ex)
           {
             LogLog.Error(declaringType, "XmlConfiguratorAttribute: Exception getting ConfigurationFileLocation. Must be able to resolve ConfigurationFileLocation when the ConfigFile property are not set.", ex);
           }
@@ -408,9 +408,9 @@ namespace log4net.Config
         {
           applicationBaseDirectory = SystemInfo.ApplicationBaseDirectory;
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-          LogLog.Warn(declaringType, "Exception getting ApplicationBaseDirectory. ConfigFile property path ["+m_configFile+"] will be treated as an absolute URI.", ex);
+          LogLog.Warn(declaringType, "Exception getting ApplicationBaseDirectory. ConfigFile property path [" + m_configFile + "] will be treated as an absolute URI.", ex);
         }
 
         if (applicationBaseDirectory != null)
@@ -451,18 +451,18 @@ namespace log4net.Config
 
     #endregion Private Instance Fields
 
-      #region Private Static Fields
+    #region Private Static Fields
 
-      /// <summary>
-      /// The fully qualified type of the XmlConfiguratorAttribute class.
-      /// </summary>
-      /// <remarks>
-      /// Used by the internal logger to record the Type of the
-      /// log message.
-      /// </remarks>
-      private static readonly Type declaringType = typeof(XmlConfiguratorAttribute);
+    /// <summary>
+    /// The fully qualified type of the XmlConfiguratorAttribute class.
+    /// </summary>
+    /// <remarks>
+    /// Used by the internal logger to record the Type of the
+    /// log message.
+    /// </remarks>
+    private static readonly Type declaringType = typeof(XmlConfiguratorAttribute);
 
-      #endregion Private Static Fields
+    #endregion Private Static Fields
   }
 }
 

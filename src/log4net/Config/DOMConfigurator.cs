@@ -52,8 +52,8 @@ namespace log4net.Config
     /// <summary>
     /// Private constructor
     /// </summary>
-    private DOMConfigurator() 
-    { 
+    private DOMConfigurator()
+    {
     }
 
     #endregion Protected Instance Constructors
@@ -75,7 +75,7 @@ namespace log4net.Config
     /// <c>log4net</c> that contains the configuration data.
     /// </remarks>
     [Obsolete("Use XmlConfigurator.Configure instead of DOMConfigurator.Configure")]
-    public static void Configure() 
+    public static void Configure()
     {
       XmlConfigurator.Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()));
     }
@@ -96,7 +96,7 @@ namespace log4net.Config
     /// </remarks>
     /// <param name="repository">The repository to configure.</param>
     [Obsolete("Use XmlConfigurator.Configure instead of DOMConfigurator.Configure")]
-    public static void Configure(ILoggerRepository repository) 
+    public static void Configure(ILoggerRepository repository)
     {
       XmlConfigurator.Configure(repository);
     }
@@ -113,7 +113,7 @@ namespace log4net.Config
     /// </remarks>
     /// <param name="element">The element to parse.</param>
     [Obsolete("Use XmlConfigurator.Configure instead of DOMConfigurator.Configure")]
-    public static void Configure(XmlElement element) 
+    public static void Configure(XmlElement element)
     {
       XmlConfigurator.Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()), element);
     }
@@ -132,7 +132,7 @@ namespace log4net.Config
     /// <param name="repository">The repository to configure.</param>
     /// <param name="element">The element to parse.</param>
     [Obsolete("Use XmlConfigurator.Configure instead of DOMConfigurator.Configure")]
-    public static void Configure(ILoggerRepository repository, XmlElement element) 
+    public static void Configure(ILoggerRepository repository, XmlElement element)
     {
       XmlConfigurator.Configure(repository, element);
     }

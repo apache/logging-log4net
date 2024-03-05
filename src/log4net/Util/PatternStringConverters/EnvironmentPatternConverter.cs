@@ -51,9 +51,9 @@ namespace log4net.Util.PatternStringConverters
     /// property.
     /// </para>
     /// </remarks>
-    protected override void Convert(TextWriter writer, object state) 
+    protected override void Convert(TextWriter writer, object state)
     {
-      try 
+      try
       {
         if (this.Option != null && this.Option.Length > 0)
         {
@@ -61,17 +61,17 @@ namespace log4net.Util.PatternStringConverters
           string envValue = Environment.GetEnvironmentVariable(this.Option);
 
 #if NET_2_0 || NETSTANDARD2_0
-                    // If we didn't see it for the process, try a user level variable.
-            if (envValue == null)
-            {
-                envValue = Environment.GetEnvironmentVariable(this.Option, EnvironmentVariableTarget.User);
-            }
+          // If we didn't see it for the process, try a user level variable.
+          if (envValue == null)
+          {
+            envValue = Environment.GetEnvironmentVariable(this.Option, EnvironmentVariableTarget.User);
+          }
 
-                    // If we still didn't find it, try a system level one.
-            if (envValue == null)
-            {
-                envValue = Environment.GetEnvironmentVariable(this.Option, EnvironmentVariableTarget.Machine);
-            }
+          // If we still didn't find it, try a system level one.
+          if (envValue == null)
+          {
+            envValue = Environment.GetEnvironmentVariable(this.Option, EnvironmentVariableTarget.Machine);
+          }
 #endif          
 
           if (envValue != null && envValue.Length > 0)
@@ -80,31 +80,31 @@ namespace log4net.Util.PatternStringConverters
           }
         }
       }
-      catch(System.Security.SecurityException secEx)
+      catch (System.Security.SecurityException secEx)
       {
         // This security exception will occur if the caller does not have 
         // unrestricted environment permission. If this occurs the expansion 
         // will be skipped with the following warning message.
         LogLog.Debug(declaringType, "Security exception while trying to expand environment variables. Error Ignored. No Expansion.", secEx);
       }
-      catch (Exception ex) 
+      catch (Exception ex)
       {
         LogLog.Error(declaringType, "Error occurred while converting environment variable.", ex);
       }
     }
 
-      #region Private Static Fields
+    #region Private Static Fields
 
-      /// <summary>
-      /// The fully qualified type of the EnvironmentPatternConverter class.
-      /// </summary>
-      /// <remarks>
-      /// Used by the internal logger to record the Type of the
-      /// log message.
-      /// </remarks>
-      private static readonly Type declaringType = typeof(EnvironmentPatternConverter);
+    /// <summary>
+    /// The fully qualified type of the EnvironmentPatternConverter class.
+    /// </summary>
+    /// <remarks>
+    /// Used by the internal logger to record the Type of the
+    /// log message.
+    /// </remarks>
+    private static readonly Type declaringType = typeof(EnvironmentPatternConverter);
 
-      #endregion Private Static Fields
+    #endregion Private Static Fields
   }
 }
 

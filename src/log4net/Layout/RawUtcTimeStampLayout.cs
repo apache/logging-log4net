@@ -47,7 +47,7 @@ namespace log4net.Layout
     }
 
     #endregion
-  
+
     #region Implementation of IRawLayout
 
     /// <summary>

@@ -61,7 +61,7 @@ namespace log4net.Core
     /// collection rather than <c>null</c>.
     /// </para>
     /// </remarks>
-    AppenderCollection Appenders {get;}
+    AppenderCollection Appenders { get; }
 
     /// <summary>
     /// Gets an attached appender with the specified name.
@@ -116,6 +116,6 @@ namespace log4net.Core
     /// <see cref="IAppender.Close"/> on the appender removed.
     /// </para>
     /// </remarks>
-    IAppender RemoveAppender(string name);     
+    IAppender RemoveAppender(string name);
   }
 }

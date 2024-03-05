@@ -36,7 +36,7 @@ namespace log4net.Util.TypeConverters
   /// <seealso cref="IConvertFrom"/>
   /// <seealso cref="IConvertTo"/>
   /// <author>Nicko Cadell</author>
-  internal class TypeConverter : IConvertFrom 
+  internal class TypeConverter : IConvertFrom
   {
     #region Implementation of IConvertFrom
 
@@ -51,7 +51,7 @@ namespace log4net.Util.TypeConverters
     /// the <see cref="String"/> type.
     /// </para>
     /// </remarks>
-    public bool CanConvertFrom(Type sourceType) 
+    public bool CanConvertFrom(Type sourceType)
     {
       return (sourceType == typeof(string));
     }
@@ -74,7 +74,7 @@ namespace log4net.Util.TypeConverters
     /// target type. To check for this condition use the <see cref="CanConvertFrom"/>
     /// method.
     /// </exception>
-    public object ConvertFrom(object source) 
+    public object ConvertFrom(object source)
     {
       string str = source as string;
       if (str != null)

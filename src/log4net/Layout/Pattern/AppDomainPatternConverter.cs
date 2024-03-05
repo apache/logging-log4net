@@ -35,7 +35,7 @@ namespace log4net.Layout.Pattern
   /// </remarks>
   /// <author>Daniel Cazzulino</author>
   /// <author>Nicko Cadell</author>
-  internal sealed class AppDomainPatternConverter : PatternLayoutConverter 
+  internal sealed class AppDomainPatternConverter : PatternLayoutConverter
   {
     /// <summary>
     /// Write the event appdomain name to the output

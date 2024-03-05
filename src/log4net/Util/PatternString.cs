@@ -265,12 +265,12 @@ namespace log4net.Util
     #endregion Static Fields
 
     #region Member Variables
-    
+
     /// <summary>
     /// the pattern
     /// </summary>
     private string m_pattern;
-  
+
     /// <summary>
     /// the head of the pattern converter chain
     /// </summary>
@@ -352,7 +352,7 @@ namespace log4net.Util
     }
 
     #endregion
-  
+
     /// <summary>
     /// Gets or sets the pattern formatting string
     /// </summary>
@@ -368,7 +368,7 @@ namespace log4net.Util
     /// </remarks>
     public string ConversionPattern
     {
-      get { return m_pattern;  }
+      get { return m_pattern; }
       set { m_pattern = value; }
     }
 
@@ -390,7 +390,7 @@ namespace log4net.Util
     /// <see cref="ActivateOptions"/> must be called again.
     /// </para>
     /// </remarks>
-    public virtual void ActivateOptions() 
+    public virtual void ActivateOptions()
     {
       m_head = CreatePatternParser(m_pattern).Parse();
     }
@@ -409,27 +409,27 @@ namespace log4net.Util
     /// custom conversion pattern name.
     /// </para>
     /// </remarks>
-    private PatternParser CreatePatternParser(string pattern) 
+    private PatternParser CreatePatternParser(string pattern)
     {
       PatternParser patternParser = new PatternParser(pattern);
 
       // Add all the builtin patterns
-      foreach(DictionaryEntry entry in s_globalRulesRegistry)
+      foreach (DictionaryEntry entry in s_globalRulesRegistry)
       {
-                ConverterInfo converterInfo = new ConverterInfo();
-                converterInfo.Name = (string)entry.Key;
-                converterInfo.Type = (Type)entry.Value;
-                patternParser.PatternConverters.Add(entry.Key, converterInfo);
+        ConverterInfo converterInfo = new ConverterInfo();
+        converterInfo.Name = (string)entry.Key;
+        converterInfo.Type = (Type)entry.Value;
+        patternParser.PatternConverters.Add(entry.Key, converterInfo);
       }
       // Add the instance patterns
-      foreach(DictionaryEntry entry in m_instanceRulesRegistry)
+      foreach (DictionaryEntry entry in m_instanceRulesRegistry)
       {
         patternParser.PatternConverters[entry.Key] = entry.Value;
       }
 
       return patternParser;
     }
-  
+
     /// <summary>
     /// Produces a formatted string as specified by the conversion pattern.
     /// </summary>
@@ -439,7 +439,7 @@ namespace log4net.Util
     /// Format the pattern to the <paramref name="writer"/>.
     /// </para>
     /// </remarks>
-    public void Format(TextWriter writer) 
+    public void Format(TextWriter writer)
     {
       if (writer == null)
       {
@@ -449,7 +449,7 @@ namespace log4net.Util
       PatternConverter c = m_head;
 
       // loop through the chain of pattern converters
-      while(c != null) 
+      while (c != null)
       {
         c.Format(writer, null);
         c = c.Next;
@@ -465,7 +465,7 @@ namespace log4net.Util
     /// Format the pattern to a string.
     /// </para>
     /// </remarks>
-    public string Format() 
+    public string Format()
     {
       using StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
       Format(writer);
@@ -484,13 +484,13 @@ namespace log4net.Util
     /// </remarks>
     public void AddConverter(ConverterInfo converterInfo)
     {
-            if (converterInfo == null) throw new ArgumentNullException("converterInfo");
+      if (converterInfo == null) throw new ArgumentNullException("converterInfo");
 
-            if (!typeof(PatternConverter).IsAssignableFrom(converterInfo.Type))
-            {
-                throw new ArgumentException("The converter type specified [" + converterInfo.Type + "] must be a subclass of log4net.Util.PatternConverter", "converterInfo");
-            }
-            m_instanceRulesRegistry[converterInfo.Name] = converterInfo;
+      if (!typeof(PatternConverter).IsAssignableFrom(converterInfo.Type))
+      {
+        throw new ArgumentException("The converter type specified [" + converterInfo.Type + "] must be a subclass of log4net.Util.PatternConverter", "converterInfo");
+      }
+      m_instanceRulesRegistry[converterInfo.Name] = converterInfo;
     }
 
     /// <summary>
@@ -508,11 +508,11 @@ namespace log4net.Util
       if (name == null) throw new ArgumentNullException("name");
       if (type == null) throw new ArgumentNullException("type");
 
-            ConverterInfo converterInfo = new ConverterInfo();
-            converterInfo.Name = name;
-            converterInfo.Type = type;
+      ConverterInfo converterInfo = new ConverterInfo();
+      converterInfo.Name = name;
+      converterInfo.Type = type;
 
-            AddConverter(converterInfo);
+      AddConverter(converterInfo);
     }
   }
 }

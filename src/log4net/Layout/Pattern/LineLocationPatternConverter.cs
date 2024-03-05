@@ -35,7 +35,7 @@ namespace log4net.Layout.Pattern
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
-  internal sealed class LineLocationPatternConverter : PatternLayoutConverter 
+  internal sealed class LineLocationPatternConverter : PatternLayoutConverter
   {
     /// <summary>
     /// Write the caller location line number to the output

@@ -35,7 +35,7 @@ namespace log4net.Util.TypeConverters
   /// <seealso cref="IConvertTo"/>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-  internal class EncodingConverter : IConvertFrom 
+  internal class EncodingConverter : IConvertFrom
   {
     #region Implementation of IConvertFrom
 
@@ -50,7 +50,7 @@ namespace log4net.Util.TypeConverters
     /// the <see cref="String"/> type.
     /// </para>
     /// </remarks>
-    public bool CanConvertFrom(Type sourceType) 
+    public bool CanConvertFrom(Type sourceType)
     {
       return (sourceType == typeof(string));
     }
@@ -71,10 +71,10 @@ namespace log4net.Util.TypeConverters
     /// target type. To check for this condition use the <see cref="CanConvertFrom"/>
     /// method.
     /// </exception>
-    public object ConvertFrom(object source) 
+    public object ConvertFrom(object source)
     {
       string str = source as string;
-      if (str != null) 
+      if (str != null)
       {
         return Encoding.GetEncoding(str);
       }

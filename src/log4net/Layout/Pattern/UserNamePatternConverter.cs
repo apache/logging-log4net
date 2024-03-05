@@ -30,7 +30,7 @@ namespace log4net.Layout.Pattern
   /// </summary>
   /// <author>Douglas de la Torre</author>
   /// <author>Nicko Cadell</author>
-  internal sealed class UserNamePatternConverter : PatternLayoutConverter 
+  internal sealed class UserNamePatternConverter : PatternLayoutConverter
   {
     /// <summary>
     /// Convert the pattern to the rendered message
@@ -39,7 +39,7 @@ namespace log4net.Layout.Pattern
     /// <param name="loggingEvent">the event being logged</param>
     protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
     {
-      writer.Write( loggingEvent.UserName );
+      writer.Write(loggingEvent.UserName);
     }
   }
 }

@@ -34,7 +34,7 @@ namespace log4net.Util.PatternStringConverters
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
-  internal sealed class AppDomainPatternConverter : PatternConverter 
+  internal sealed class AppDomainPatternConverter : PatternConverter
   {
     /// <summary>
     /// Write the name of the current AppDomain to the output
@@ -46,9 +46,9 @@ namespace log4net.Util.PatternStringConverters
     /// Writes name of the current AppDomain to the output <paramref name="writer"/>.
     /// </para>
     /// </remarks>
-    protected override void Convert(TextWriter writer, object state) 
+    protected override void Convert(TextWriter writer, object state)
     {
-      writer.Write( SystemInfo.ApplicationFriendlyName );
+      writer.Write(SystemInfo.ApplicationFriendlyName);
     }
   }
 }

@@ -42,7 +42,7 @@ namespace log4net.Layout.Pattern
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
-  internal sealed class PropertyPatternConverter : PatternLayoutConverter 
+  internal sealed class PropertyPatternConverter : PatternLayoutConverter
   {
     /// <summary>
     /// Write the property value to the output

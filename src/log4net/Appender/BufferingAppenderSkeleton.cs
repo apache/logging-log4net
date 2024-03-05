@@ -69,7 +69,7 @@ namespace log4net.Appender
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-    public abstract class BufferingAppenderSkeleton : AppenderSkeleton
+  public abstract class BufferingAppenderSkeleton : AppenderSkeleton
   {
     #region Protected Instance Constructors
 
@@ -182,7 +182,7 @@ namespace log4net.Appender
     public ITriggeringEventEvaluator Evaluator
     {
       get { return m_evaluator; }
-      set  { m_evaluator = value; }
+      set { m_evaluator = value; }
     }
 
     /// <summary>
@@ -201,7 +201,7 @@ namespace log4net.Appender
     public ITriggeringEventEvaluator LossyEvaluator
     {
       get { return m_lossyEvaluator; }
-      set  { m_lossyEvaluator = value; }
+      set { m_lossyEvaluator = value; }
     }
 
     /// <summary>
@@ -225,8 +225,8 @@ namespace log4net.Appender
     public virtual bool OnlyFixPartialEventData
     {
       get { return (Fix == FixFlags.Partial); }
-      set 
-      { 
+      set
+      {
         if (value)
         {
           Fix = FixFlags.Partial;
@@ -262,16 +262,16 @@ namespace log4net.Appender
 
     #region Public Methods
 
-        /// <summary>
-        /// Flushes any buffered log data.
-        /// </summary>
-        /// <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
-        /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
-        public override bool Flush(int millisecondsTimeout)
-        {
-            Flush();
-            return true;
-        }
+    /// <summary>
+    /// Flushes any buffered log data.
+    /// </summary>
+    /// <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
+    /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+    public override bool Flush(int millisecondsTimeout)
+    {
+      Flush();
+      return true;
+    }
 
     /// <summary>
     /// Flush the currently buffered events
@@ -316,7 +316,7 @@ namespace log4net.Appender
       // This method will be called outside of the AppenderSkeleton DoAppend() method
       // therefore it needs to be protected by its own lock. This will block any
       // Appends while the buffer is flushed.
-      lock(this)
+      lock (this)
       {
         if (m_cb != null && m_cb.Length > 0)
         {
@@ -331,7 +331,7 @@ namespace log4net.Appender
                 LoggingEvent[] bufferedEvents = m_cb.PopAll();
                 ArrayList filteredEvents = new ArrayList(bufferedEvents.Length);
 
-                foreach(LoggingEvent loggingEvent in bufferedEvents)
+                foreach (LoggingEvent loggingEvent in bufferedEvents)
                 {
                   if (m_lossyEvaluator.IsTriggeringEvent(loggingEvent))
                   {
@@ -381,7 +381,7 @@ namespace log4net.Appender
     /// <see cref="ActivateOptions"/> must be called again.
     /// </para>
     /// </remarks>
-    public override void ActivateOptions() 
+    public override void ActivateOptions()
     {
       base.ActivateOptions();
 
@@ -390,7 +390,7 @@ namespace log4net.Appender
       // therefore check we have an evaluator.
       if (m_lossy && m_evaluator == null)
       {
-        ErrorHandler.Error("Appender ["+Name+"] is Lossy but has no Evaluator. The buffer will never be sent!"); 
+        ErrorHandler.Error("Appender [" + Name + "] is Lossy but has no Evaluator. The buffer will never be sent!");
       }
 
       if (m_bufferSize > 1)
@@ -417,7 +417,7 @@ namespace log4net.Appender
     /// the buffer must be sent when the appender is closed.
     /// </para>
     /// </remarks>
-    protected override void OnClose() 
+    protected override void OnClose()
     {
       // Flush the buffer on close
       Flush(true);
@@ -453,7 +453,7 @@ namespace log4net.Appender
     /// is processed.
     /// </para>
     /// </remarks>
-    protected override void Append(LoggingEvent loggingEvent) 
+    protected override void Append(LoggingEvent loggingEvent)
     {
       // If the buffer size is set to 1 or less then the buffer will be
       // sent immediately because there is not enough space in the buffer
@@ -462,8 +462,8 @@ namespace log4net.Appender
       if (m_cb == null || m_bufferSize <= 1)
       {
         // Only send the event if we are in non lossy mode or the event is a triggering event
-        if ((!m_lossy) || 
-          (m_evaluator != null && m_evaluator.IsTriggeringEvent(loggingEvent)) || 
+        if ((!m_lossy) ||
+          (m_evaluator != null && m_evaluator.IsTriggeringEvent(loggingEvent)) ||
           (m_lossyEvaluator != null && m_lossyEvaluator.IsTriggeringEvent(loggingEvent)))
         {
           if (m_eventMustBeFixed)
@@ -473,7 +473,7 @@ namespace log4net.Appender
           }
 
           // Not buffering events, send immediately
-          SendBuffer(new LoggingEvent[] { loggingEvent } );
+          SendBuffer(new LoggingEvent[] { loggingEvent });
         }
       }
       else
@@ -511,7 +511,7 @@ namespace log4net.Appender
             else if (discardedLoggingEvent != null)
             {
               // Just send the discarded event
-              SendBuffer(new LoggingEvent[] { discardedLoggingEvent } );
+              SendBuffer(new LoggingEvent[] { discardedLoggingEvent });
             }
           }
         }
@@ -552,7 +552,7 @@ namespace log4net.Appender
       }
       else if (bufferEvents.Length == 0)
       {
-        SendBuffer(new LoggingEvent[] { firstLoggingEvent } );
+        SendBuffer(new LoggingEvent[] { firstLoggingEvent });
       }
       else
       {

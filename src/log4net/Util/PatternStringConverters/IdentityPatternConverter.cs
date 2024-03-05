@@ -34,7 +34,7 @@ namespace log4net.Util.PatternStringConverters
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
-  internal sealed class IdentityPatternConverter : PatternConverter 
+  internal sealed class IdentityPatternConverter : PatternConverter
   {
     /// <summary>
     /// Write the current thread identity to the output
@@ -46,7 +46,7 @@ namespace log4net.Util.PatternStringConverters
     /// Writes the current thread identity to the output <paramref name="writer"/>.
     /// </para>
     /// </remarks>
-    protected override void Convert(TextWriter writer, object state) 
+    protected override void Convert(TextWriter writer, object state)
     {
 #if (NETCF || SSCLI || NETSTANDARD1_3)
       // On compact framework there's no notion of current thread principals
@@ -54,35 +54,35 @@ namespace log4net.Util.PatternStringConverters
 #else
       try
       {
-        if (System.Threading.Thread.CurrentPrincipal != null && 
+        if (System.Threading.Thread.CurrentPrincipal != null &&
           System.Threading.Thread.CurrentPrincipal.Identity != null &&
           System.Threading.Thread.CurrentPrincipal.Identity.Name != null)
         {
-          writer.Write( System.Threading.Thread.CurrentPrincipal.Identity.Name );
+          writer.Write(System.Threading.Thread.CurrentPrincipal.Identity.Name);
         }
       }
-      catch(System.Security.SecurityException)
+      catch (System.Security.SecurityException)
       {
         // This security exception will occur if the caller does not have 
         // some undefined set of SecurityPermission flags.
         LogLog.Debug(declaringType, "Security exception while trying to get current thread principal. Error Ignored.");
 
-        writer.Write( SystemInfo.NotAvailableText );
+        writer.Write(SystemInfo.NotAvailableText);
       }
 #endif
     }
 
-      #region Private Static Fields
+    #region Private Static Fields
 
-      /// <summary>
-      /// The fully qualified type of the IdentityPatternConverter class.
-      /// </summary>
-      /// <remarks>
-      /// Used by the internal logger to record the Type of the
-      /// log message.
-      /// </remarks>
-      private static readonly Type declaringType = typeof(IdentityPatternConverter);
+    /// <summary>
+    /// The fully qualified type of the IdentityPatternConverter class.
+    /// </summary>
+    /// <remarks>
+    /// Used by the internal logger to record the Type of the
+    /// log message.
+    /// </remarks>
+    private static readonly Type declaringType = typeof(IdentityPatternConverter);
 
-      #endregion Private Static Fields
+    #endregion Private Static Fields
   }
 }

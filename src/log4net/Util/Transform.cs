@@ -72,7 +72,7 @@ namespace log4net.Util
       // Write either escaped text or CDATA sections
 
       int weightCData = 12 * (1 + CountSubstrings(stringData, CDATA_END));
-      int weightStringEscapes = 3*(CountSubstrings(stringData, "<") + CountSubstrings(stringData, ">")) + 4*CountSubstrings(stringData, "&");
+      int weightStringEscapes = 3 * (CountSubstrings(stringData, "<") + CountSubstrings(stringData, ">")) + 4 * CountSubstrings(stringData, "&");
 
       if (weightStringEscapes <= weightCData)
       {
@@ -84,15 +84,15 @@ namespace log4net.Util
         // Write string using CDATA section
 
         int end = stringData.IndexOf(CDATA_END);
-  
-        if (end < 0) 
+
+        if (end < 0)
         {
           writer.WriteCData(stringData);
         }
         else
         {
           int start = 0;
-          while (end > -1) 
+          while (end > -1)
           {
             writer.WriteCData(stringData.Substring(start, end - start));
             if (end == stringData.Length - 3)
@@ -108,7 +108,7 @@ namespace log4net.Util
               end = stringData.IndexOf(CDATA_END, start);
             }
           }
-  
+
           if (start < stringData.Length)
           {
             writer.WriteCData(stringData.Substring(start));
@@ -169,7 +169,7 @@ namespace log4net.Util
         return 0;
       }
 
-      while(offset < length)
+      while (offset < length)
       {
         int index = text.IndexOf(substring, offset);
 
@@ -188,13 +188,13 @@ namespace log4net.Util
 
     #region Private Static Fields
 
-    private const string CDATA_END  = "]]>";
-    private const string CDATA_UNESCAPABLE_TOKEN  = "]]";
+    private const string CDATA_END = "]]>";
+    private const string CDATA_UNESCAPABLE_TOKEN = "]]";
 
-        /// <summary>
-        /// Characters illegal in XML 1.0
-        /// </summary>
-    private static Regex INVALIDCHARS=new Regex(@"[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD]",RegexOptions.Compiled);
+    /// <summary>
+    /// Characters illegal in XML 1.0
+    /// </summary>
+    private static Regex INVALIDCHARS = new Regex(@"[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD]", RegexOptions.Compiled);
     #endregion Private Static Fields
   }
 }

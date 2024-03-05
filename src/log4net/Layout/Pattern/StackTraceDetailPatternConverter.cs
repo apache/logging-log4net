@@ -28,63 +28,63 @@ using log4net.Core;
 
 namespace log4net.Layout.Pattern
 {
-    /// <summary>
-    /// Write the caller stack frames to the output
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Writes the <see cref="LocationInfo.StackFrames"/> to the output writer, using format:
-    /// type3.MethodCall3(type param,...) > type2.MethodCall2(type param,...) > type1.MethodCall1(type param,...)
-    /// </para>
-    /// </remarks>
-    /// <author>Adam Davies</author>
-    internal class StackTraceDetailPatternConverter : StackTracePatternConverter
+  /// <summary>
+  /// Write the caller stack frames to the output
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// Writes the <see cref="LocationInfo.StackFrames"/> to the output writer, using format:
+  /// type3.MethodCall3(type param,...) > type2.MethodCall2(type param,...) > type1.MethodCall1(type param,...)
+  /// </para>
+  /// </remarks>
+  /// <author>Adam Davies</author>
+  internal class StackTraceDetailPatternConverter : StackTracePatternConverter
+  {
+    internal override string GetMethodInformation(MethodItem method)
     {
-        internal override string GetMethodInformation(MethodItem method)
+      string returnValue = "";
+
+      try
+      {
+        string param = "";
+        string[] names = method.Parameters;
+        StringBuilder sb = new StringBuilder();
+        if (names != null && names.GetUpperBound(0) > 0)
         {
-            string returnValue="";
-
-            try
-            {
-                string param = "";
-                string[] names = method.Parameters;
-                StringBuilder sb = new StringBuilder();
-                if (names != null && names.GetUpperBound(0) > 0)
-                {
-                    for (int i = 0; i <= names.GetUpperBound(0); i++)
-                    {
-                        sb.AppendFormat("{0}, ", names[i]);
-                    }
-                }
-
-                if (sb.Length > 0)
-                {
-                    sb.Remove(sb.Length - 2, 2);
-                    param = sb.ToString();
-                }
-
-                returnValue=base.GetMethodInformation(method) + "(" + param + ")";
-            }
-            catch (Exception ex)
-            {
-                LogLog.Error(declaringType, "An exception ocurred while retreiving method information.", ex);
-            }
-
-            return returnValue;
+          for (int i = 0; i <= names.GetUpperBound(0); i++)
+          {
+            sb.AppendFormat("{0}, ", names[i]);
+          }
         }
 
-        #region Private Static Fields
+        if (sb.Length > 0)
+        {
+          sb.Remove(sb.Length - 2, 2);
+          param = sb.ToString();
+        }
 
-        /// <summary>
-        /// The fully qualified type of the StackTraceDetailPatternConverter class.
-        /// </summary>
-        /// <remarks>
-        /// Used by the internal logger to record the Type of the
-        /// log message.
-        /// </remarks>
-        private static readonly Type declaringType = typeof(StackTracePatternConverter);
+        returnValue = base.GetMethodInformation(method) + "(" + param + ")";
+      }
+      catch (Exception ex)
+      {
+        LogLog.Error(declaringType, "An exception ocurred while retreiving method information.", ex);
+      }
 
-        #endregion Private Static Fields
+      return returnValue;
     }
+
+    #region Private Static Fields
+
+    /// <summary>
+    /// The fully qualified type of the StackTraceDetailPatternConverter class.
+    /// </summary>
+    /// <remarks>
+    /// Used by the internal logger to record the Type of the
+    /// log message.
+    /// </remarks>
+    private static readonly Type declaringType = typeof(StackTracePatternConverter);
+
+    #endregion Private Static Fields
+  }
 }
 #endif // !NETCF && NET_2_0

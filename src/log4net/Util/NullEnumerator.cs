@@ -50,7 +50,7 @@ namespace log4net.Util
     }
 
     #endregion Private Instance Constructors
-  
+
     #region Public Static Properties
 
     /// <summary>
@@ -87,11 +87,11 @@ namespace log4net.Util
     /// </remarks>
     /// <exception cref="InvalidOperationException">The collection is empty and <see cref="Current"/> 
     /// cannot be positioned over a valid location.</exception>
-    public object Current 
+    public object Current
     {
-      get  { throw new InvalidOperationException(); }
+      get { throw new InvalidOperationException(); }
     }
-  
+
     /// <summary>
     /// Test if the enumerator can advance, if so advance
     /// </summary>
@@ -107,7 +107,7 @@ namespace log4net.Util
     {
       return false;
     }
-  
+
     /// <summary>
     /// Resets the enumerator back to the start.
     /// </summary>
@@ -116,7 +116,7 @@ namespace log4net.Util
     /// As the enumerator is over an empty collection <see cref="Reset"/> does nothing.
     /// </para>
     /// </remarks>
-    public void Reset() 
+    public void Reset()
     {
     }
 
@@ -128,7 +128,7 @@ namespace log4net.Util
     /// The singleton instance of the <see cref="NullEnumerator" />.
     /// </summary>
     private static readonly NullEnumerator s_instance = new NullEnumerator();
-  
+
     #endregion Private Static Fields
   }
 }

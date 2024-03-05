@@ -70,8 +70,8 @@ namespace log4net.Plugin
     /// plugin has been attached to a repository.
     /// </para>
     /// </remarks>
-    public virtual string Name 
-    { 
+    public virtual string Name
+    {
       get { return m_name; }
       set { m_name = value; }
     }
@@ -123,9 +123,9 @@ namespace log4net.Plugin
     /// attached to.
     /// </para>
     /// </remarks>
-    protected virtual ILoggerRepository LoggerRepository 
+    protected virtual ILoggerRepository LoggerRepository
     {
-      get { return this.m_repository;  }
+      get { return this.m_repository; }
       set { this.m_repository = value; }
     }
 

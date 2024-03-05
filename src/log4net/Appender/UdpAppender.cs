@@ -25,7 +25,7 @@ using System.Text;
 
 using log4net.Core;
 
-namespace log4net.Appender 
+namespace log4net.Appender
 {
   /// <summary>
   /// Sends logging events as connectionless UDP datagrams to a remote host or a 
@@ -114,7 +114,7 @@ namespace log4net.Appender
     /// <remarks>
     /// The default constructor initializes all fields to their default values.
     /// </remarks>
-    public UdpAppender() 
+    public UdpAppender()
     {
     }
 
@@ -212,17 +212,17 @@ namespace log4net.Appender
     public int RemotePort
     {
       get { return m_remotePort; }
-      set 
+      set
       {
-        if (value < IPEndPoint.MinPort || value > IPEndPoint.MaxPort) 
+        if (value < IPEndPoint.MinPort || value > IPEndPoint.MaxPort)
         {
           throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("value", (object)value,
-            "The value specified is less than " + 
-            IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo) + 
-            " or greater than " + 
+            "The value specified is less than " +
+            IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo) +
+            " or greater than " +
             IPEndPoint.MaxPort.ToString(NumberFormatInfo.InvariantInfo) + ".");
-        } 
-        else 
+        }
+        else
         {
           m_remotePort = value;
         }
@@ -249,17 +249,17 @@ namespace log4net.Appender
     public int LocalPort
     {
       get { return m_localPort; }
-      set 
+      set
       {
         if (value != 0 && (value < IPEndPoint.MinPort || value > IPEndPoint.MaxPort))
         {
           throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("value", (object)value,
-            "The value specified is less than " + 
-            IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo) + 
-            " or greater than " + 
+            "The value specified is less than " +
+            IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo) +
+            " or greater than " +
             IPEndPoint.MaxPort.ToString(NumberFormatInfo.InvariantInfo) + ".");
-        } 
-        else 
+        }
+        else
         {
           m_localPort = value;
         }
@@ -353,27 +353,27 @@ namespace log4net.Appender
     {
       base.ActivateOptions();
 
-      if (this.RemoteAddress == null) 
+      if (this.RemoteAddress == null)
       {
         throw new ArgumentNullException("The required property 'Address' was not specified.");
-      } 
-      else if (this.RemotePort < IPEndPoint.MinPort || this.RemotePort > IPEndPoint.MaxPort) 
+      }
+      else if (this.RemotePort < IPEndPoint.MinPort || this.RemotePort > IPEndPoint.MaxPort)
       {
         throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("this.RemotePort", (object)this.RemotePort,
-          "The RemotePort is less than " + 
-          IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo) + 
-          " or greater than " + 
+          "The RemotePort is less than " +
+          IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo) +
+          " or greater than " +
           IPEndPoint.MaxPort.ToString(NumberFormatInfo.InvariantInfo) + ".");
-      } 
+      }
       else if (this.LocalPort != 0 && (this.LocalPort < IPEndPoint.MinPort || this.LocalPort > IPEndPoint.MaxPort))
       {
         throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("this.LocalPort", (object)this.LocalPort,
-          "The LocalPort is less than " + 
-          IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo) + 
-          " or greater than " + 
+          "The LocalPort is less than " +
+          IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo) +
+          " or greater than " +
           IPEndPoint.MaxPort.ToString(NumberFormatInfo.InvariantInfo) + ".");
-      } 
-      else 
+      }
+      else
       {
         this.RemoteEndPoint = new IPEndPoint(this.RemoteAddress, this.RemotePort);
         this.InitializeClientConnection();
@@ -396,25 +396,25 @@ namespace log4net.Appender
     /// Exceptions are passed to the <see cref="AppenderSkeleton.ErrorHandler"/>.
     /// </para>
     /// </remarks>
-    protected override void Append(LoggingEvent loggingEvent) 
+    protected override void Append(LoggingEvent loggingEvent)
     {
-      try 
+      try
       {
-        Byte [] buffer = m_encoding.GetBytes(RenderLoggingEvent(loggingEvent).ToCharArray());
+        Byte[] buffer = m_encoding.GetBytes(RenderLoggingEvent(loggingEvent).ToCharArray());
 #if NETSTANDARD
         Client.SendAsync(buffer, buffer.Length, RemoteEndPoint).Wait();
 #else
         this.Client.Send(buffer, buffer.Length, this.RemoteEndPoint);
 #endif
-      } 
-      catch (Exception ex) 
+      }
+      catch (Exception ex)
       {
         ErrorHandler.Error(
-          "Unable to send logging event to remote host " + 
-          this.RemoteAddress.ToString() + 
-          " on port " + 
-          this.RemotePort + ".", 
-          ex, 
+          "Unable to send logging event to remote host " +
+          this.RemoteAddress.ToString() +
+          " on port " +
+          this.RemotePort + ".",
+          ex,
           ErrorCode.WriteFailure);
       }
     }
@@ -443,11 +443,11 @@ namespace log4net.Appender
     /// and unmanaged resources associated with the <see cref="UdpAppender" />.
     /// </para>
     /// </remarks>
-    protected override void OnClose() 
+    protected override void OnClose()
     {
       base.OnClose();
 
-      if (this.Client != null) 
+      if (this.Client != null)
       {
         this.Client.Close();
       }
@@ -469,9 +469,9 @@ namespace log4net.Appender
     /// Exceptions are passed to the <see cref="AppenderSkeleton.ErrorHandler"/>.
     /// </para>
     /// </remarks>
-    protected virtual void InitializeClientConnection() 
+    protected virtual void InitializeClientConnection()
     {
-      try 
+      try
       {
         if (this.LocalPort == 0)
         {
@@ -489,13 +489,13 @@ namespace log4net.Appender
           this.Client = new UdpClient(this.LocalPort, RemoteAddress.AddressFamily);
 #endif
         }
-      } 
-      catch (Exception ex) 
+      }
+      catch (Exception ex)
       {
         ErrorHandler.Error(
-          "Could not initialize the UdpClient connection on port " + 
-          this.LocalPort.ToString(NumberFormatInfo.InvariantInfo) + ".", 
-          ex, 
+          "Could not initialize the UdpClient connection on port " +
+          this.LocalPort.ToString(NumberFormatInfo.InvariantInfo) + ".",
+          ex,
           ErrorCode.GenericFailure);
 
         this.Client = null;
@@ -511,7 +511,7 @@ namespace log4net.Appender
     /// the logging event will be sent.
     /// </summary>
     private IPAddress m_remoteAddress;
-    
+
     /// <summary>
     /// The TCP port number of the remote host or multicast group to 
     /// which the logging event will be sent.

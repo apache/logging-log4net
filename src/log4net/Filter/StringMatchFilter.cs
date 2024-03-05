@@ -91,7 +91,7 @@ namespace log4net.Filter
     /// <see cref="ActivateOptions"/> must be called again.
     /// </para>
     /// </remarks>
-    public override void ActivateOptions() 
+    public override void ActivateOptions()
     {
       if (m_stringRegexToMatch != null)
       {
@@ -186,7 +186,7 @@ namespace log4net.Filter
     /// <see cref="FilterDecision.Deny"/> is returned.
     /// </para>
     /// </remarks>
-    public override FilterDecision Decide(LoggingEvent loggingEvent) 
+    public override FilterDecision Decide(LoggingEvent loggingEvent)
     {
       if (loggingEvent == null)
       {
@@ -202,7 +202,7 @@ namespace log4net.Filter
         // to continue processing
         return FilterDecision.Neutral;
       }
-    
+
       // Firstly check if we are matching using a regex
       if (m_regexToMatch != null)
       {
@@ -211,29 +211,29 @@ namespace log4net.Filter
         {
           // No match, continue processing
           return FilterDecision.Neutral;
-        } 
+        }
 
         // we've got a match
-        if (m_acceptOnMatch) 
+        if (m_acceptOnMatch)
         {
           return FilterDecision.Accept;
-        } 
+        }
         return FilterDecision.Deny;
       }
       else if (m_stringToMatch != null)
       {
         // Check substring match
-        if (msg.IndexOf(m_stringToMatch) == -1) 
+        if (msg.IndexOf(m_stringToMatch) == -1)
         {
           // No match, continue processing
           return FilterDecision.Neutral;
-        } 
+        }
 
         // we've got a match
-        if (m_acceptOnMatch) 
+        if (m_acceptOnMatch)
         {
           return FilterDecision.Accept;
-        } 
+        }
         return FilterDecision.Deny;
       }
       return FilterDecision.Neutral;

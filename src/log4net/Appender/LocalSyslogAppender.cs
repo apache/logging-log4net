@@ -27,7 +27,7 @@ using System.Runtime.InteropServices;
 using log4net.Core;
 using log4net.Util;
 
-namespace log4net.Appender 
+namespace log4net.Appender
 {
   /// <summary>
   /// Logs events to a local syslog service.
@@ -62,7 +62,7 @@ namespace log4net.Appender
   /// </remarks>
   /// <author>Rob Lyon</author>
   /// <author>Nicko Cadell</author>
-  public class LocalSyslogAppender : AppenderSkeleton 
+  public class LocalSyslogAppender : AppenderSkeleton
   {
     #region Enumerations
 
@@ -262,14 +262,14 @@ namespace log4net.Appender
     /// This instance of the <see cref="LocalSyslogAppender" /> class is set up to write 
     /// to a local syslog service.
     /// </remarks>
-    public LocalSyslogAppender() 
+    public LocalSyslogAppender()
     {
     }
 
     #endregion // Public Instance Constructors
 
     #region Public Instance Properties
-    
+
     /// <summary>
     /// Message identity
     /// </summary>
@@ -300,7 +300,7 @@ namespace log4net.Appender
       get { return m_facility; }
       set { m_facility = value; }
     }
-    
+
     #endregion // Public Instance Properties
 
     /// <summary>
@@ -341,7 +341,7 @@ namespace log4net.Appender
     public override void ActivateOptions()
     {
       base.ActivateOptions();
-      
+
       m_levelMapping.ActivateOptions();
 
       string identString = m_identity;
@@ -382,7 +382,7 @@ namespace log4net.Appender
 #if !NETSTANDARD1_3
     [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
 #endif
-    protected override void Append(LoggingEvent loggingEvent) 
+    protected override void Append(LoggingEvent loggingEvent)
     {
       int priority = GeneratePriority(m_facility, GetSeverity(loggingEvent.Level));
       string message = RenderLoggingEvent(loggingEvent);
@@ -412,11 +412,11 @@ namespace log4net.Appender
         // close syslog
         closelog();
       }
-      catch(DllNotFoundException)
+      catch (DllNotFoundException)
       {
         // Ignore dll not found at this point
       }
-    
+
       if (m_handleToIdentity != IntPtr.Zero)
       {
         // free global ident
@@ -464,30 +464,30 @@ namespace log4net.Appender
       // Fallback to sensible default values
       //
 
-      if (level >= Level.Alert) 
+      if (level >= Level.Alert)
       {
         return SyslogSeverity.Alert;
-      } 
-      else if (level >= Level.Critical) 
+      }
+      else if (level >= Level.Critical)
       {
         return SyslogSeverity.Critical;
-      } 
-      else if (level >= Level.Error) 
+      }
+      else if (level >= Level.Error)
       {
         return SyslogSeverity.Error;
-      } 
-      else if (level >= Level.Warn) 
+      }
+      else if (level >= Level.Warn)
       {
         return SyslogSeverity.Warning;
-      } 
-      else if (level >= Level.Notice) 
+      }
+      else if (level >= Level.Notice)
       {
         return SyslogSeverity.Notice;
-      } 
-      else if (level >= Level.Info) 
+      }
+      else if (level >= Level.Info)
       {
         return SyslogSeverity.Informational;
-      } 
+      }
       // Default setting
       return SyslogSeverity.Debug;
     }
@@ -536,7 +536,7 @@ namespace log4net.Appender
     #endregion // Private Instances Fields
 
     #region External Members
-    
+
     /// <summary>
     /// Open connection to system logger.
     /// </summary>
@@ -555,7 +555,7 @@ namespace log4net.Appender
     /// string to <c>"%s"</c>.
     /// </para>
     /// </remarks>
-    [DllImport("libc", CharSet=CharSet.Ansi, CallingConvention=CallingConvention.Cdecl)]
+    [DllImport("libc", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
     private static extern void syslog(int priority, string format, string message);
 
     /// <summary>

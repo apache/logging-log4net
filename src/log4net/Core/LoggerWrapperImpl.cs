@@ -42,7 +42,7 @@ namespace log4net.Core
     /// Constructs a new wrapper for the specified logger.
     /// </para>
     /// </remarks>
-    protected LoggerWrapperImpl(ILogger logger) 
+    protected LoggerWrapperImpl(ILogger logger)
     {
       m_logger = logger;
     }
@@ -79,8 +79,8 @@ namespace log4net.Core
     /// <summary>
     /// The logger that this object is wrapping
     /// </summary>
-    private readonly ILogger m_logger;  
- 
+    private readonly ILogger m_logger;
+
     #endregion Private Instance Fields
   }
 }

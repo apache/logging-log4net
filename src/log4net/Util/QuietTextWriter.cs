@@ -85,7 +85,7 @@ namespace log4net.Util
         }
         m_errorHandler = value;
       }
-    }  
+    }
 
     /// <summary>
     /// Gets a value indicating whether this writer is closed.
@@ -116,18 +116,18 @@ namespace log4net.Util
     /// Writes a character to the underlying writer
     /// </para>
     /// </remarks>
-    public override void Write(char value) 
+    public override void Write(char value)
     {
-      try 
+      try
       {
         base.Write(value);
-      } 
-      catch(Exception e) 
+      }
+      catch (Exception e)
       {
         m_errorHandler.Error("Failed to write [" + value + "].", e, ErrorCode.WriteFailure);
       }
     }
-    
+
     /// <summary>
     /// Writes a buffer to the underlying writer
     /// </summary>
@@ -139,18 +139,18 @@ namespace log4net.Util
     /// Writes a buffer to the underlying writer
     /// </para>
     /// </remarks>
-    public override void Write(char[] buffer, int index, int count) 
+    public override void Write(char[] buffer, int index, int count)
     {
-      try 
+      try
       {
         base.Write(buffer, index, count);
-      } 
-      catch(Exception e) 
+      }
+      catch (Exception e)
       {
         m_errorHandler.Error("Failed to write buffer.", e, ErrorCode.WriteFailure);
       }
     }
-    
+
     /// <summary>
     /// Writes a string to the output.
     /// </summary>
@@ -160,13 +160,13 @@ namespace log4net.Util
     /// Writes a string to the output.
     /// </para>
     /// </remarks>
-    public override void Write(string value) 
+    public override void Write(string value)
     {
-      try 
+      try
       {
         base.Write(value);
-      } 
-      catch(Exception e) 
+      }
+      catch (Exception e)
       {
         m_errorHandler.Error("Failed to write [" + value + "].", e, ErrorCode.WriteFailure);
       }

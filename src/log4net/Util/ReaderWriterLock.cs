@@ -72,7 +72,7 @@ namespace log4net.Util
     }
 
     #endregion Private Instance Constructors
-  
+
     #region Public Methods
 
     /// <summary>

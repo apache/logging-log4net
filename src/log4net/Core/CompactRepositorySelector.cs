@@ -81,14 +81,14 @@ namespace log4net.Core
       }
 
       // Check that the type is a repository
-      if (! (typeof(ILoggerRepository).IsAssignableFrom(defaultRepositoryType)) )
+      if (!(typeof(ILoggerRepository).IsAssignableFrom(defaultRepositoryType)))
       {
-        throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("defaultRepositoryType", (object)defaultRepositoryType, "Parameter: defaultRepositoryType, Value: ["+defaultRepositoryType+"] out of range. Argument must implement the ILoggerRepository interface");
+        throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("defaultRepositoryType", (object)defaultRepositoryType, "Parameter: defaultRepositoryType, Value: [" + defaultRepositoryType + "] out of range. Argument must implement the ILoggerRepository interface");
       }
 
       m_defaultRepositoryType = defaultRepositoryType;
 
-      LogLog.Debug(declaringType, "defaultRepositoryType ["+m_defaultRepositoryType+"]");
+      LogLog.Debug(declaringType, "defaultRepositoryType [" + m_defaultRepositoryType + "]");
     }
 
     #endregion
@@ -137,13 +137,13 @@ namespace log4net.Core
         throw new ArgumentNullException("repositoryName");
       }
 
-      lock(this)
+      lock (this)
       {
         // Lookup in map
         ILoggerRepository rep = m_name2repositoryMap[repositoryName] as ILoggerRepository;
         if (rep == null)
         {
-          throw new LogException("Repository ["+repositoryName+"] is NOT defined.");
+          throw new LogException("Repository [" + repositoryName + "] is NOT defined.");
         }
         return rep;
       }
@@ -177,7 +177,7 @@ namespace log4net.Core
         repositoryType = m_defaultRepositoryType;
       }
 
-      lock(this)
+      lock (this)
       {
         // This method should not throw if the default repository already exists.
 
@@ -190,7 +190,7 @@ namespace log4net.Core
         }
 
         return rep;
-      }    
+      }
     }
 
     /// <summary>
@@ -229,7 +229,7 @@ namespace log4net.Core
         repositoryType = m_defaultRepositoryType;
       }
 
-      lock(this)
+      lock (this)
       {
         ILoggerRepository rep = null;
 
@@ -237,11 +237,11 @@ namespace log4net.Core
         rep = m_name2repositoryMap[repositoryName] as ILoggerRepository;
         if (rep != null)
         {
-          throw new LogException("Repository ["+repositoryName+"] is already defined. Repositories cannot be redefined.");
+          throw new LogException("Repository [" + repositoryName + "] is already defined. Repositories cannot be redefined.");
         }
         else
         {
-          LogLog.Debug(declaringType, "Creating repository ["+repositoryName+"] using type ["+repositoryType+"]");
+          LogLog.Debug(declaringType, "Creating repository [" + repositoryName + "] using type [" + repositoryType + "]");
 
           // Call the no arg constructor for the repositoryType
           rep = (ILoggerRepository)Activator.CreateInstance(repositoryType);
@@ -274,7 +274,7 @@ namespace log4net.Core
     /// </remarks>
     public bool ExistsRepository(string repositoryName)
     {
-      lock(this)
+      lock (this)
       {
         return m_name2repositoryMap.ContainsKey(repositoryName);
       }
@@ -291,7 +291,7 @@ namespace log4net.Core
     /// </remarks>
     public ILoggerRepository[] GetAllRepositories()
     {
-      lock(this)
+      lock (this)
       {
         ICollection reps = m_name2repositoryMap.Values;
         ILoggerRepository[] all = new ILoggerRepository[reps.Count];
@@ -302,18 +302,18 @@ namespace log4net.Core
 
     #endregion
 
-      #region Private Static Fields
+    #region Private Static Fields
 
-      /// <summary>
-      /// The fully qualified type of the CompactRepositorySelector class.
-      /// </summary>
-      /// <remarks>
-      /// Used by the internal logger to record the Type of the
-      /// log message.
-      /// </remarks>
-      private static readonly Type declaringType = typeof(CompactRepositorySelector);
+    /// <summary>
+    /// The fully qualified type of the CompactRepositorySelector class.
+    /// </summary>
+    /// <remarks>
+    /// Used by the internal logger to record the Type of the
+    /// log message.
+    /// </remarks>
+    private static readonly Type declaringType = typeof(CompactRepositorySelector);
 
-      #endregion Private Static Fields
+    #endregion Private Static Fields
 
     /// <summary>
     /// Event to notify that a logger repository has been created.

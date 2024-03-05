@@ -129,7 +129,7 @@ namespace log4net
     /// </para>
     /// </remarks>
     /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
-    public static void Clear() 
+    public static void Clear()
     {
       ThreadContext.Stacks["NDC"].Clear();
     }
@@ -152,7 +152,7 @@ namespace log4net
     /// </para>
     /// </remarks>
     /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
-    public static Stack CloneStack() 
+    public static Stack CloneStack()
     {
       return ThreadContext.Stacks["NDC"].InternalStack;
     }
@@ -179,7 +179,7 @@ namespace log4net
     /// </para>
     /// </remarks>
     /*[Obsolete("NDC has been replaced by ThreadContext.Stacks", true)]*/
-    public static void Inherit(Stack stack) 
+    public static void Inherit(Stack stack)
     {
       ThreadContext.Stacks["NDC"].InternalStack = stack;
     }
@@ -205,7 +205,7 @@ namespace log4net
     /// </para>
     /// </remarks>
     /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
-    public static string Pop() 
+    public static string Pop()
     {
       return ThreadContext.Stacks["NDC"].Pop();
     }
@@ -241,7 +241,7 @@ namespace log4net
     /// </code>
     /// </example>
     /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
-    public static IDisposable Push(string message) 
+    public static IDisposable Push(string message)
     {
       return ThreadContext.Stacks["NDC"].Push(message);
     }
@@ -300,7 +300,7 @@ namespace log4net
     /// </para>
     /// </remarks>
     /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
-    public static void Remove() 
+    public static void Remove()
     {
     }
 
@@ -324,7 +324,7 @@ namespace log4net
     /// </para>
     /// </remarks>
     /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
-    public static void SetMaxDepth(int maxDepth) 
+    public static void SetMaxDepth(int maxDepth)
     {
       if (maxDepth >= 0)
       {
@@ -336,7 +336,7 @@ namespace log4net
         }
         else
         {
-          while(stack.Count > maxDepth)
+          while (stack.Count > maxDepth)
           {
             stack.Pop();
           }

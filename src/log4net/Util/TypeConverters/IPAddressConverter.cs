@@ -33,7 +33,7 @@ namespace log4net.Util.TypeConverters
   /// <seealso cref="ConverterRegistry"/>
   /// <seealso cref="IConvertFrom"/>
   /// <author>Nicko Cadell</author>
-  internal class IPAddressConverter : IConvertFrom 
+  internal class IPAddressConverter : IConvertFrom
   {
     #region Implementation of IConvertFrom
 
@@ -48,7 +48,7 @@ namespace log4net.Util.TypeConverters
     /// the <see cref="String"/> type.
     /// </para>
     /// </remarks>
-    public bool CanConvertFrom(Type sourceType) 
+    public bool CanConvertFrom(Type sourceType)
     {
       return (sourceType == typeof(string));
     }
@@ -70,10 +70,10 @@ namespace log4net.Util.TypeConverters
     /// target type. To check for this condition use the <see cref="CanConvertFrom"/>
     /// method.
     /// </exception>
-    public object ConvertFrom(object source) 
+    public object ConvertFrom(object source)
     {
       string str = source as string;
-      if (str != null && str.Length > 0) 
+      if (str != null && str.Length > 0)
       {
         try
         {
@@ -91,8 +91,8 @@ namespace log4net.Util.TypeConverters
           // Try to resolve via DNS. This is a blocking call. 
           // GetHostEntry works with either an IPAddress string or a host name
           IPHostEntry host = Dns.GetHostEntry(str);
-          if (host != null && 
-            host.AddressList != null && 
+          if (host != null &&
+            host.AddressList != null &&
             host.AddressList.Length > 0 &&
             host.AddressList[0] != null)
           {
@@ -130,7 +130,7 @@ namespace log4net.Util.TypeConverters
           }
 #endif
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
           throw ConversionNotSupportedException.Create(typeof(IPAddress), source, ex);
         }
@@ -143,6 +143,6 @@ namespace log4net.Util.TypeConverters
     /// <summary>
     /// Valid characters in an IPv4 or IPv6 address string. (Does not support subnets)
     /// </summary>
-    private static readonly char[] validIpAddressChars = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','A','B','C','D','E','F','x','X','.',':','%'};
+    private static readonly char[] validIpAddressChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F', 'x', 'X', '.', ':', '%' };
   }
 }

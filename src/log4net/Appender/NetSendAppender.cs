@@ -35,7 +35,7 @@ using log4net.Util;
 using log4net.Core;
 
 
-namespace log4net.Appender 
+namespace log4net.Appender
 {
   /// <summary>
   /// Logs entries by sending network messages using the 
@@ -138,7 +138,7 @@ namespace log4net.Appender
   /// </example>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-  public class NetSendAppender : AppenderSkeleton 
+  public class NetSendAppender : AppenderSkeleton
   {
     #region Member Variables
 
@@ -172,7 +172,7 @@ namespace log4net.Appender
     /// <remarks>
     /// The default constructor initializes all fields to their default values.
     /// </remarks>
-    public NetSendAppender() 
+    public NetSendAppender()
     {
     }
 
@@ -189,7 +189,7 @@ namespace log4net.Appender
     /// <remarks>
     /// If this property is not specified, the message is sent from the local computer.
     /// </remarks>
-    public string Sender 
+    public string Sender
     {
       get { return m_sender; }
       set { m_sender = value; }
@@ -204,12 +204,12 @@ namespace log4net.Appender
     /// <remarks>
     /// This property should always be specified in order to send a message.
     /// </remarks>
-    public string Recipient 
+    public string Recipient
     {
       get { return m_recipient; }
       set { m_recipient = value; }
     }
-    
+
     /// <summary>
     /// Gets or sets the DNS or NetBIOS name of the remote server on which the function is to execute.
     /// </summary>
@@ -224,7 +224,7 @@ namespace log4net.Appender
     /// If this property is not specified, the local computer is used. 
     /// </para>
     /// </remarks>
-    public string Server 
+    public string Server
     {
       get { return m_server; }
       set { m_server = value; }
@@ -244,7 +244,7 @@ namespace log4net.Appender
     /// of the current thread.
     /// </para>
     /// </remarks>
-    public SecurityContext SecurityContext 
+    public SecurityContext SecurityContext
     {
       get { return m_securityContext; }
       set { m_securityContext = value; }
@@ -277,8 +277,8 @@ namespace log4net.Appender
     public override void ActivateOptions()
     {
       base.ActivateOptions();
-  
-      if (this.Recipient == null) 
+
+      if (this.Recipient == null)
       {
         throw new ArgumentNullException("Recipient", "The required property 'Recipient' was not specified.");
       }
@@ -308,20 +308,20 @@ namespace log4net.Appender
 #if !NETSTANDARD1_3
     [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
 #endif
-    protected override void Append(LoggingEvent loggingEvent) 
+    protected override void Append(LoggingEvent loggingEvent)
     {
       NativeError nativeError = null;
 
       // Render the event in the callers security context
       string renderedLoggingEvent = RenderLoggingEvent(loggingEvent);
 
-      using(m_securityContext.Impersonate(this))
+      using (m_securityContext.Impersonate(this))
       {
         // Send the message
-        int returnValue = NetMessageBufferSend(this.Server, this.Recipient, this.Sender, renderedLoggingEvent, renderedLoggingEvent.Length * Marshal.SystemDefaultCharSize);   
+        int returnValue = NetMessageBufferSend(this.Server, this.Recipient, this.Sender, renderedLoggingEvent, renderedLoggingEvent.Length * Marshal.SystemDefaultCharSize);
 
         // Log the error if the message could not be sent
-        if (returnValue != 0) 
+        if (returnValue != 0)
         {
           // Lookup the native error
           nativeError = NativeError.GetError(returnValue);
@@ -407,8 +407,8 @@ namespace log4net.Appender
     /// If the function succeeds, the return value is zero.
     /// </para>
     /// </returns>
-    [DllImport("netapi32.dll", SetLastError=true)] 
-    protected static extern int NetMessageBufferSend(     
+    [DllImport("netapi32.dll", SetLastError = true)]
+    protected static extern int NetMessageBufferSend(
       [MarshalAs(UnmanagedType.LPWStr)] string serverName,
       [MarshalAs(UnmanagedType.LPWStr)] string msgName,
       [MarshalAs(UnmanagedType.LPWStr)] string fromName,

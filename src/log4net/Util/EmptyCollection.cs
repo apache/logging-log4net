@@ -53,7 +53,7 @@ namespace log4net.Util
     }
 
     #endregion Private Instance Constructors
-  
+
     #region Public Static Properties
 
     /// <summary>
@@ -107,7 +107,7 @@ namespace log4net.Util
     /// </remarks>
     public bool IsSynchronized
     {
-      get  { return true; }
+      get { return true; }
     }
 
     /// <summary>
@@ -172,7 +172,7 @@ namespace log4net.Util
     /// The singleton instance of the empty collection.
     /// </summary>
     private static readonly EmptyCollection s_instance = new EmptyCollection();
-  
+
     #endregion Private Static Fields
   }
 }

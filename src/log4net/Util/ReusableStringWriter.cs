@@ -46,7 +46,7 @@ namespace log4net.Util
     /// Create an instance of <see cref="ReusableStringWriter"/>
     /// </para>
     /// </remarks>
-    public ReusableStringWriter(IFormatProvider formatProvider) : base(formatProvider) 
+    public ReusableStringWriter(IFormatProvider formatProvider) : base(formatProvider)
     {
     }
 
@@ -83,12 +83,12 @@ namespace log4net.Util
       StringBuilder sb = this.GetStringBuilder();
 
       sb.Length = 0;
-      
+
       // Check if over max size
-      if (sb.Capacity > maxCapacity) 
+      if (sb.Capacity > maxCapacity)
       {
         sb.Capacity = defaultSize;
-      } 
+      }
     }
   }
 }

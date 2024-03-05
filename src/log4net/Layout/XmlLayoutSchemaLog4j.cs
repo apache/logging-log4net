@@ -73,7 +73,7 @@ namespace log4net.Layout
     /// appender as well.
     /// </para>
     /// </remarks>
-    public XmlLayoutSchemaLog4j(bool locationInfo) :  base(locationInfo)
+    public XmlLayoutSchemaLog4j(bool locationInfo) : base(locationInfo)
     {
     }
 
@@ -92,8 +92,8 @@ namespace log4net.Layout
     public string Version
     {
       get { return "1.2"; }
-      set 
-      { 
+      set
+      {
         if (value != "1.2")
         {
           throw new ArgumentException("Only version 1.2 of the log4j schema is currently supported");
@@ -141,42 +141,42 @@ method="run" file="Generator.java" line="94"/>
       // Translate logging events for log4j
 
       // Translate hostname property
-      if (loggingEvent.LookupProperty(LoggingEvent.HostNameProperty) != null && 
+      if (loggingEvent.LookupProperty(LoggingEvent.HostNameProperty) != null &&
         loggingEvent.LookupProperty("log4jmachinename") == null)
       {
         loggingEvent.GetProperties()["log4jmachinename"] = loggingEvent.LookupProperty(LoggingEvent.HostNameProperty);
       }
 
       // translate appdomain name
-      if (loggingEvent.LookupProperty("log4japp") == null && 
-        loggingEvent.Domain != null && 
+      if (loggingEvent.LookupProperty("log4japp") == null &&
+        loggingEvent.Domain != null &&
         loggingEvent.Domain.Length > 0)
       {
         loggingEvent.GetProperties()["log4japp"] = loggingEvent.Domain;
       }
 
       // translate identity name
-      if (loggingEvent.Identity != null && 
-        loggingEvent.Identity.Length > 0 && 
+      if (loggingEvent.Identity != null &&
+        loggingEvent.Identity.Length > 0 &&
         loggingEvent.LookupProperty(LoggingEvent.IdentityProperty) == null)
       {
         loggingEvent.GetProperties()[LoggingEvent.IdentityProperty] = loggingEvent.Identity;
       }
 
       // translate user name
-      if (loggingEvent.UserName != null && 
-        loggingEvent.UserName.Length > 0 && 
+      if (loggingEvent.UserName != null &&
+        loggingEvent.UserName.Length > 0 &&
         loggingEvent.LookupProperty(LoggingEvent.UserNameProperty) == null)
       {
         loggingEvent.GetProperties()[LoggingEvent.UserNameProperty] = loggingEvent.UserName;
       }
 
       // Write the start element
-      #if NETSTANDARD
+#if NETSTANDARD
       writer.WriteStartElement("log4j", "event", "log4net");
-      #else
+#else
       writer.WriteStartElement("log4j:event");
-      #endif
+#endif
       writer.WriteAttributeString("logger", loggingEvent.LoggerName);
 
       // Calculate the timestamp as the number of milliseconds since january 1970
@@ -189,14 +189,14 @@ method="run" file="Generator.java" line="94"/>
       writer.WriteAttributeString("timestamp", XmlConvert.ToString((long)timeSince1970.TotalMilliseconds));
       writer.WriteAttributeString("level", loggingEvent.Level.DisplayName);
       writer.WriteAttributeString("thread", loggingEvent.ThreadName);
-    
+
       // Append the message text
-      #if NETSTANDARD
+#if NETSTANDARD
       writer.WriteStartElement("log4j", "message", "log4net");
-      #else
+#else
       writer.WriteStartElement("log4j:message");
-      #endif
-      Transform.WriteEscapedXmlString(writer, loggingEvent.RenderedMessage,this.InvalidCharReplacement);
+#endif
+      Transform.WriteEscapedXmlString(writer, loggingEvent.RenderedMessage, this.InvalidCharReplacement);
       writer.WriteEndElement();
 
       object ndcObj = loggingEvent.LookupProperty("NDC");
@@ -207,12 +207,12 @@ method="run" file="Generator.java" line="94"/>
         if (valueStr != null && valueStr.Length > 0)
         {
           // Append the NDC text
-          #if NETSTANDARD
+#if NETSTANDARD
           writer.WriteStartElement("log4j", "NDC", "log4net");
-          #else
+#else
           writer.WriteStartElement("log4j:NDC");
-          #endif
-          Transform.WriteEscapedXmlString(writer, valueStr,this.InvalidCharReplacement);
+#endif
+          Transform.WriteEscapedXmlString(writer, valueStr, this.InvalidCharReplacement);
           writer.WriteEndElement();
         }
       }
@@ -221,18 +221,18 @@ method="run" file="Generator.java" line="94"/>
       PropertiesDictionary properties = loggingEvent.GetProperties();
       if (properties.Count > 0)
       {
-        #if NETSTANDARD
+#if NETSTANDARD
         writer.WriteStartElement("log4j", "properties", "log4net");
-        #else
+#else
         writer.WriteStartElement("log4j:properties");
-        #endif
-        foreach(System.Collections.DictionaryEntry entry in properties)
+#endif
+        foreach (System.Collections.DictionaryEntry entry in properties)
         {
-          #if NETSTANDARD
+#if NETSTANDARD
           writer.WriteStartElement("log4j", "data", "log4net");
-          #else
+#else
           writer.WriteStartElement("log4j:data");
-          #endif
+#endif
           writer.WriteAttributeString("name", (string)entry.Key);
 
           // Use an ObjectRenderer to convert the object to a string
@@ -248,24 +248,24 @@ method="run" file="Generator.java" line="94"/>
       if (exceptionStr != null && exceptionStr.Length > 0)
       {
         // Append the stack trace line
-        #if NETSTANDARD
+#if NETSTANDARD
         writer.WriteStartElement("log4j", "throwable", "log4net");
-        #else
+#else
         writer.WriteStartElement("log4j:throwable");
-        #endif
-        Transform.WriteEscapedXmlString(writer, exceptionStr,this.InvalidCharReplacement);
+#endif
+        Transform.WriteEscapedXmlString(writer, exceptionStr, this.InvalidCharReplacement);
         writer.WriteEndElement();
       }
 
       if (LocationInfo)
-      { 
+      {
         LocationInfo locationInfo = loggingEvent.LocationInformation;
 
-        #if NETSTANDARD
+#if NETSTANDARD
         writer.WriteStartElement("log4j", "locationInfo", "log4net");
-        #else
+#else
         writer.WriteStartElement("log4j:locationInfo");
-        #endif
+#endif
         writer.WriteAttributeString("class", locationInfo.ClassName);
         writer.WriteAttributeString("method", locationInfo.MethodName);
         writer.WriteAttributeString("file", locationInfo.FileName);

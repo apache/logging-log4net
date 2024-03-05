@@ -37,7 +37,7 @@ namespace log4net.Layout.Pattern
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
-  internal sealed class NdcPatternConverter : PatternLayoutConverter 
+  internal sealed class NdcPatternConverter : PatternLayoutConverter
   {
     /// <summary>
     /// Write the event NDC to the output

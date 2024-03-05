@@ -50,7 +50,7 @@ namespace log4net.Layout
   /// &lt;/layout&gt;
   /// </example>
   /// </remarks>
-  public class DynamicPatternLayout: PatternLayout
+  public class DynamicPatternLayout : PatternLayout
   {
     #region Member Variables
     /// <summary>
@@ -61,7 +61,7 @@ namespace log4net.Layout
     /// <summary>
     /// The footer PatternString
     /// </summary>
-    private PatternString m_footerPatternString  = new PatternString("");
+    private PatternString m_footerPatternString = new PatternString("");
     #endregion
 
     #region Constructors
@@ -84,7 +84,7 @@ namespace log4net.Layout
     /// <param name="pattern">the pattern to use</param>
     /// <remarks>
     /// </remarks>
-    public DynamicPatternLayout (string pattern) 
+    public DynamicPatternLayout(string pattern)
       : base(pattern)
     {
     }

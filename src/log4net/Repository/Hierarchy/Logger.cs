@@ -70,7 +70,7 @@ namespace log4net.Repository.Hierarchy
     /// logger creator.
     /// </para>
     /// </remarks>
-    protected Logger(string name) 
+    protected Logger(string name)
     {
 #if NETCF || NETSTANDARD1_3
       // NETCF: String.Intern causes Native Exception
@@ -140,14 +140,14 @@ namespace log4net.Repository.Hierarchy
     /// </remarks>
     public virtual Level EffectiveLevel
     {
-      get 
+      get
       {
-        for(Logger c = this; c != null; c = c.m_parent) 
+        for (Logger c = this; c != null; c = c.m_parent)
         {
           Level level = c.m_level;
 
           // Casting level to Object for performance, otherwise the overloaded operator is called
-          if ((object)level != null) 
+          if ((object)level != null)
           {
             return level;
           }
@@ -208,7 +208,7 @@ namespace log4net.Repository.Hierarchy
     /// appenders, then it won't be added again.
     /// </para>
     /// </remarks>
-    public virtual void AddAppender(IAppender newAppender) 
+    public virtual void AddAppender(IAppender newAppender)
     {
       if (newAppender == null)
       {
@@ -218,7 +218,7 @@ namespace log4net.Repository.Hierarchy
       m_appenderLock.AcquireWriterLock();
       try
       {
-        if (m_appenderAttachedImpl == null) 
+        if (m_appenderAttachedImpl == null)
         {
           m_appenderAttachedImpl = new log4net.Util.AppenderAttachedImpl();
         }
@@ -242,7 +242,7 @@ namespace log4net.Repository.Hierarchy
     /// can be found, then a <see cref="EmptyCollection"/> is returned.
     /// </para>
     /// </remarks>
-    public virtual AppenderCollection Appenders 
+    public virtual AppenderCollection Appenders
     {
       get
       {
@@ -253,7 +253,7 @@ namespace log4net.Repository.Hierarchy
           {
             return AppenderCollection.EmptyCollection;
           }
-          else 
+          else
           {
             return m_appenderAttachedImpl.Appenders;
           }
@@ -275,7 +275,7 @@ namespace log4net.Repository.Hierarchy
     /// Returns the named appender, or null if the appender is not found.
     /// </para>
     /// </remarks>
-    public virtual IAppender GetAppender(string name) 
+    public virtual IAppender GetAppender(string name)
     {
       m_appenderLock.AcquireReaderLock();
       try
@@ -304,12 +304,12 @@ namespace log4net.Repository.Hierarchy
     /// This is useful when re-reading configuration information.
     /// </para>
     /// </remarks>
-    public virtual void RemoveAllAppenders() 
+    public virtual void RemoveAllAppenders()
     {
       m_appenderLock.AcquireWriterLock();
       try
       {
-        if (m_appenderAttachedImpl != null) 
+        if (m_appenderAttachedImpl != null)
         {
           m_appenderAttachedImpl.RemoveAllAppenders();
           m_appenderAttachedImpl = null;
@@ -334,12 +334,12 @@ namespace log4net.Repository.Hierarchy
     /// <see cref="IAppender.Close"/> on the appender removed.
     /// </para>
     /// </remarks>
-    public virtual IAppender RemoveAppender(IAppender appender) 
+    public virtual IAppender RemoveAppender(IAppender appender)
     {
       m_appenderLock.AcquireWriterLock();
       try
       {
-        if (appender != null && m_appenderAttachedImpl != null) 
+        if (appender != null && m_appenderAttachedImpl != null)
         {
           return m_appenderAttachedImpl.RemoveAppender(appender);
         }
@@ -364,7 +364,7 @@ namespace log4net.Repository.Hierarchy
     /// <see cref="IAppender.Close"/> on the appender removed.
     /// </para>
     /// </remarks>
-    public virtual IAppender RemoveAppender(string name) 
+    public virtual IAppender RemoveAppender(string name)
     {
       m_appenderLock.AcquireWriterLock();
       try
@@ -380,7 +380,7 @@ namespace log4net.Repository.Hierarchy
       }
       return null;
     }
-  
+
     #endregion
 
     #region Implementation of ILogger
@@ -418,13 +418,13 @@ namespace log4net.Repository.Hierarchy
     /// This method must not throw any exception to the caller.
     /// </para>
     /// </remarks>
-    public virtual void Log(Type callerStackBoundaryDeclaringType, Level level, object message, Exception exception) 
+    public virtual void Log(Type callerStackBoundaryDeclaringType, Level level, object message, Exception exception)
     {
       try
       {
         if (IsEnabledFor(level))
         {
-                    ForcedLog((callerStackBoundaryDeclaringType != null) ? callerStackBoundaryDeclaringType : declaringType, level, message, exception);
+          ForcedLog((callerStackBoundaryDeclaringType != null) ? callerStackBoundaryDeclaringType : declaringType, level, message, exception);
         }
       }
       catch (Exception ex)
@@ -531,11 +531,11 @@ namespace log4net.Repository.Hierarchy
     /// </para>
     /// </remarks>
     public ILoggerRepository Repository
-    { 
+    {
       get { return m_hierarchy; }
     }
 
-      #endregion Implementation of ILogger
+    #endregion Implementation of ILogger
 
     /// <summary>
     /// Deliver the <see cref="LoggingEvent"/> to the attached appenders.
@@ -553,7 +553,7 @@ namespace log4net.Repository.Hierarchy
     /// to log the particular log request.
     /// </para>
     /// </remarks>
-    protected virtual void CallAppenders(LoggingEvent loggingEvent) 
+    protected virtual void CallAppenders(LoggingEvent loggingEvent)
     {
       if (loggingEvent == null)
       {
@@ -562,15 +562,15 @@ namespace log4net.Repository.Hierarchy
 
       int writes = 0;
 
-      for(Logger c=this; c != null; c=c.m_parent) 
+      for (Logger c = this; c != null; c = c.m_parent)
       {
-        if (c.m_appenderAttachedImpl != null) 
+        if (c.m_appenderAttachedImpl != null)
         {
           // Protected against simultaneous call to addAppender, removeAppender,...
           c.m_appenderLock.AcquireReaderLock();
           try
           {
-            if (c.m_appenderAttachedImpl != null) 
+            if (c.m_appenderAttachedImpl != null)
             {
               writes += c.m_appenderAttachedImpl.AppendLoopOnAppenders(loggingEvent);
             }
@@ -581,12 +581,12 @@ namespace log4net.Repository.Hierarchy
           }
         }
 
-        if (!c.m_additive) 
+        if (!c.m_additive)
         {
           break;
         }
       }
-      
+
       // No appenders in hierarchy, warn user only once.
       //
       // Note that by including the AppDomain values for the currently running
@@ -596,7 +596,7 @@ namespace log4net.Repository.Hierarchy
       // or impossible to determine which .config file is missing appender
       // definitions.
       //
-      if (!m_hierarchy.EmittedNoAppenderWarning && writes == 0) 
+      if (!m_hierarchy.EmittedNoAppenderWarning && writes == 0)
       {
         m_hierarchy.EmittedNoAppenderWarning = true;
         LogLog.Debug(declaringType, "No appenders could be found for logger [" + Name + "] repository [" + Repository.Name + "]");
@@ -610,7 +610,7 @@ namespace log4net.Repository.Hierarchy
           LogLog.Debug(declaringType, "       DynamicDirectory: " + AppDomain.CurrentDomain.DynamicDirectory);
 #endif
         }
-        catch(System.Security.SecurityException)
+        catch (System.Security.SecurityException)
         {
           // Insufficient permissions to display info from the AppDomain
         }
@@ -625,7 +625,7 @@ namespace log4net.Repository.Hierarchy
     /// Used to ensure that the appenders are correctly shutdown.
     /// </para>
     /// </remarks>
-    public virtual void CloseNestedAppenders() 
+    public virtual void CloseNestedAppenders()
     {
       m_appenderLock.AcquireWriterLock();
       try
@@ -633,7 +633,7 @@ namespace log4net.Repository.Hierarchy
         if (m_appenderAttachedImpl != null)
         {
           AppenderCollection appenders = m_appenderAttachedImpl.Appenders;
-          foreach(IAppender appender in appenders)
+          foreach (IAppender appender in appenders)
           {
             if (appender is IAppenderAttachable)
             {
@@ -660,11 +660,11 @@ namespace log4net.Repository.Hierarchy
     /// the <paramref name="message"/>.
     /// </para>
     /// </remarks>
-    public virtual void Log(Level level, object message, Exception exception) 
+    public virtual void Log(Level level, object message, Exception exception)
     {
       if (IsEnabledFor(level))
       {
-                ForcedLog(declaringType, level, message, exception);
+        ForcedLog(declaringType, level, message, exception);
       }
     }
 
@@ -682,7 +682,7 @@ namespace log4net.Repository.Hierarchy
     /// appenders.
     /// </para>
     /// </remarks>
-    protected virtual void ForcedLog(Type callerStackBoundaryDeclaringType, Level level, object message, Exception exception) 
+    protected virtual void ForcedLog(Type callerStackBoundaryDeclaringType, Level level, object message, Exception exception)
     {
       CallAppenders(new LoggingEvent(callerStackBoundaryDeclaringType, this.Hierarchy, this.Name, level, message, exception));
     }
@@ -696,7 +696,7 @@ namespace log4net.Repository.Hierarchy
     /// Delivers the logging event to the attached appenders.
     /// </para>
     /// </remarks>
-    protected virtual void ForcedLog(LoggingEvent logEvent) 
+    protected virtual void ForcedLog(LoggingEvent logEvent)
     {
       // The logging event may not have been created by this logger
       // the Repository may not be correctly set on the event. This
@@ -708,10 +708,10 @@ namespace log4net.Repository.Hierarchy
 
     #region Private Static Fields
 
-        /// <summary>
-        /// The fully qualified type of the Logger class.
-        /// </summary>
-        private static readonly Type declaringType = typeof(Logger);
+    /// <summary>
+    /// The fully qualified type of the Logger class.
+    /// </summary>
+    private static readonly Type declaringType = typeof(Logger);
 
     #endregion Private Static Fields
 
@@ -720,7 +720,7 @@ namespace log4net.Repository.Hierarchy
     /// <summary>
     /// The name of this logger.
     /// </summary>
-    private readonly string m_name;  
+    private readonly string m_name;
 
     /// <summary>
     /// The assigned level of this logger. 
@@ -782,7 +782,7 @@ namespace log4net.Repository.Hierarchy
     /// Lock to protect AppenderAttachedImpl variable m_appenderAttachedImpl
     /// </summary>
     private readonly ReaderWriterLock m_appenderLock = new ReaderWriterLock();
-  
+
     #endregion
   }
 }

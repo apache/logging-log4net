@@ -43,7 +43,7 @@ namespace log4net.Config
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-  [AttributeUsage(AttributeTargets.Assembly,AllowMultiple=true)]
+  [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
   [Serializable]
   public sealed class PluginAttribute : Attribute, IPluginFactory
   {
@@ -102,7 +102,7 @@ namespace log4net.Config
     public Type Type
     {
       get { return m_type; }
-      set { m_type = value ; }
+      set { m_type = value; }
     }
 
     /// <summary>
@@ -122,7 +122,7 @@ namespace log4net.Config
     public string TypeName
     {
       get { return m_typeName; }
-      set { m_typeName = value ; }
+      set { m_typeName = value; }
     }
 
     #endregion Public Instance Properties

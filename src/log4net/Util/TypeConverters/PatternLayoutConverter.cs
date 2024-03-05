@@ -77,7 +77,7 @@ namespace log4net.Util.TypeConverters
     /// target type. To check for this condition use the <see cref="CanConvertFrom"/>
     /// method.
     /// </exception>
-    public object ConvertFrom(object source) 
+    public object ConvertFrom(object source)
     {
       string str = source as string;
       if (str != null)

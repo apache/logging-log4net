@@ -141,11 +141,11 @@ namespace log4net.Appender
 #if NET_4_0 || MONO_4_0
         [System.Security.SecuritySafeCritical]
 #endif
-        public override void ActivateOptions() 
+    public override void ActivateOptions()
     {
       base.ActivateOptions();
 
-      IDictionary channelProperties = new Hashtable(); 
+      IDictionary channelProperties = new Hashtable();
       channelProperties["typeFilterLevel"] = "Full";
 
       m_sinkObj = (IRemoteLoggingSink)Activator.GetObject(typeof(IRemoteLoggingSink), m_sinkUrl, channelProperties);
@@ -184,7 +184,7 @@ namespace log4net.Appender
         // Cancel the async send
         EndAsyncSend();
 
-        ErrorHandler.Error("RemotingAppender ["+Name+"] failed to ThreadPool.QueueUserWorkItem logging events in SendBuffer.");
+        ErrorHandler.Error("RemotingAppender [" + Name + "] failed to ThreadPool.QueueUserWorkItem logging events in SendBuffer.");
       }
     }
 
@@ -214,7 +214,7 @@ namespace log4net.Appender
       // Wait for the work queue to become empty before closing, timeout 30 seconds
       if (!m_workQueueEmptyEvent.WaitOne(30 * 1000, false))
       {
-        ErrorHandler.Error("RemotingAppender ["+Name+"] failed to send all queued events before close, in OnClose.");
+        ErrorHandler.Error("RemotingAppender [" + Name + "] failed to send all queued events before close, in OnClose.");
       }
     }
 
@@ -274,7 +274,7 @@ namespace log4net.Appender
         // Send the events
         m_sinkObj.LogEvents(events);
       }
-      catch(Exception ex)
+      catch (Exception ex)
       {
         ErrorHandler.Error("Failed in SendBufferCallback", ex);
       }

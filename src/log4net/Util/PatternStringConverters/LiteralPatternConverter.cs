@@ -36,7 +36,7 @@ namespace log4net.Util.PatternStringConverters
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
-  internal class LiteralPatternConverter : PatternConverter 
+  internal class LiteralPatternConverter : PatternConverter
   {
     /// <summary>
     /// Set the next converter in the chain
@@ -84,7 +84,7 @@ namespace log4net.Util.PatternStringConverters
     /// to the output <paramref name="writer"/>.
     /// </para>
     /// </remarks>
-    public override void Format(TextWriter writer, object state) 
+    public override void Format(TextWriter writer, object state)
     {
       writer.Write(Option);
     }
@@ -99,7 +99,7 @@ namespace log4net.Util.PatternStringConverters
     /// This method is not used.
     /// </para>
     /// </remarks>
-    protected override void Convert(TextWriter writer, object state) 
+    protected override void Convert(TextWriter writer, object state)
     {
       throw new InvalidOperationException("Should never get here because of the overridden Format method");
     }

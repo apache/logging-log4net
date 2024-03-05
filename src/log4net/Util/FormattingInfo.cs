@@ -47,7 +47,7 @@ namespace log4net.Util
     /// Initializes a new instance of the <see cref="FormattingInfo" /> class.
     /// </para>
     /// </remarks>
-    public FormattingInfo() 
+    public FormattingInfo()
     {
     }
 
@@ -60,7 +60,7 @@ namespace log4net.Util
     /// with the specified parameters.
     /// </para>
     /// </remarks>
-    public FormattingInfo(int min, int max, bool leftAlign) 
+    public FormattingInfo(int min, int max, bool leftAlign)
     {
       m_min = min;
       m_max = max;

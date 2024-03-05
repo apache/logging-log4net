@@ -86,11 +86,11 @@ namespace log4net
     /// </remarks>
     /// <param name="name">The fully qualified logger name to look for.</param>
     /// <returns>The logger found, or <c>null</c> if no logger could be found.</returns>
-    public static ILog Exists(string name) 
+    public static ILog Exists(string name)
     {
       return Exists(Assembly.GetCallingAssembly(), name);
     }
-        
+
     /// <overloads>Get the currently defined loggers.</overloads>
     /// <summary>
     /// Returns all the currently defined loggers in the default repository.
@@ -103,7 +103,7 @@ namespace log4net
     {
       return GetCurrentLoggers(Assembly.GetCallingAssembly());
     }
-        
+
     /// <overloads>Get or create a logger.</overloads>
     /// <summary>
     /// Retrieves or creates a named logger.
@@ -128,23 +128,23 @@ namespace log4net
     }
 #endif // !NETSTANDARD1_3
 
-        /// <summary>
-        /// Returns the named logger if it exists.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// If the named logger exists (in the specified repository) then it
-        /// returns a reference to the logger, otherwise it returns
-        /// <c>null</c>.
-        /// </para>
-        /// </remarks>
-        /// <param name="repository">The repository to lookup in.</param>
-        /// <param name="name">The fully qualified logger name to look for.</param>
-        /// <returns>
-        /// The logger found, or <c>null</c> if the logger doesn't exist in the specified 
-        /// repository.
-        /// </returns>
-        public static ILog Exists(string repository, string name) 
+    /// <summary>
+    /// Returns the named logger if it exists.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// If the named logger exists (in the specified repository) then it
+    /// returns a reference to the logger, otherwise it returns
+    /// <c>null</c>.
+    /// </para>
+    /// </remarks>
+    /// <param name="repository">The repository to lookup in.</param>
+    /// <param name="name">The fully qualified logger name to look for.</param>
+    /// <returns>
+    /// The logger found, or <c>null</c> if the logger doesn't exist in the specified 
+    /// repository.
+    /// </returns>
+    public static ILog Exists(string repository, string name)
     {
       return WrapLogger(LoggerManager.Exists(repository, name));
     }
@@ -165,7 +165,7 @@ namespace log4net
     /// The logger, or <c>null</c> if the logger doesn't exist in the specified
     /// assembly's repository.
     /// </returns>
-    public static ILog Exists(Assembly repositoryAssembly, string name) 
+    public static ILog Exists(Assembly repositoryAssembly, string name)
     {
       return WrapLogger(LoggerManager.Exists(repositoryAssembly, name));
     }
@@ -242,7 +242,7 @@ namespace log4net
     public static ILog GetLogger(Assembly repositoryAssembly, string name)
     {
       return WrapLogger(LoggerManager.GetLogger(repositoryAssembly, name));
-    }  
+    }
 
     /// <summary>
     /// Shorthand for <see cref="M:LogManager.GetLogger(string)"/>.
@@ -252,7 +252,7 @@ namespace log4net
     /// </remarks>
     /// <param name="type">The full name of <paramref name="type"/> will be used as the name of the logger to retrieve.</param>
     /// <returns>The logger with the name specified.</returns>
-    public static ILog GetLogger(Type type) 
+    public static ILog GetLogger(Type type)
     {
 #if NETSTANDARD1_3
       return GetLogger(type.GetTypeInfo().Assembly, type.FullName);
@@ -270,7 +270,7 @@ namespace log4net
     /// <param name="repository">The repository to lookup in.</param>
     /// <param name="type">The full name of <paramref name="type"/> will be used as the name of the logger to retrieve.</param>
     /// <returns>The logger with the name specified.</returns>
-    public static ILog GetLogger(string repository, Type type) 
+    public static ILog GetLogger(string repository, Type type)
     {
       return WrapLogger(LoggerManager.GetLogger(repository, type));
     }
@@ -284,7 +284,7 @@ namespace log4net
     /// <param name="repositoryAssembly">The assembly to use to lookup the repository.</param>
     /// <param name="type">The full name of <paramref name="type"/> will be used as the name of the logger to retrieve.</param>
     /// <returns>The logger with the name specified.</returns>
-    public static ILog GetLogger(Assembly repositoryAssembly, Type type) 
+    public static ILog GetLogger(Assembly repositoryAssembly, Type type)
     {
       return WrapLogger(LoggerManager.GetLogger(repositoryAssembly, type));
     }
@@ -312,7 +312,7 @@ namespace log4net
     /// and again to a nested appender.
     /// </para>
     /// </remarks>
-    public static void Shutdown() 
+    public static void Shutdown()
     {
       LoggerManager.Shutdown();
     }
@@ -337,7 +337,7 @@ namespace log4net
     /// and again to a nested appender.
     /// </para>
     /// </remarks>
-    public static void ShutdownRepository() 
+    public static void ShutdownRepository()
     {
       ShutdownRepository(Assembly.GetCallingAssembly());
     }
@@ -363,7 +363,7 @@ namespace log4net
     /// </para>
     /// </remarks>
     /// <param name="repository">The repository to shutdown.</param>
-    public static void ShutdownRepository(string repository) 
+    public static void ShutdownRepository(string repository)
     {
       LoggerManager.ShutdownRepository(repository);
     }
@@ -390,7 +390,7 @@ namespace log4net
     /// </para>
     /// </remarks>
     /// <param name="repositoryAssembly">The assembly to use to lookup the repository.</param>
-    public static void ShutdownRepository(Assembly repositoryAssembly) 
+    public static void ShutdownRepository(Assembly repositoryAssembly)
     {
       LoggerManager.ShutdownRepository(repositoryAssembly);
     }
@@ -410,7 +410,7 @@ namespace log4net
     /// message disabling is set to its default "off" value.
     /// </para>    
     /// </remarks>
-    public static void ResetConfiguration() 
+    public static void ResetConfiguration()
     {
       ResetConfiguration(Assembly.GetCallingAssembly());
     }
@@ -430,7 +430,7 @@ namespace log4net
     /// </para>    
     /// </remarks>
     /// <param name="repository">The repository to reset.</param>
-    public static void ResetConfiguration(string repository) 
+    public static void ResetConfiguration(string repository)
     {
       LoggerManager.ResetConfiguration(repository);
     }
@@ -449,7 +449,7 @@ namespace log4net
     /// </para>    
     /// </remarks>
     /// <param name="repositoryAssembly">The assembly to use to lookup the repository to reset.</param>
-    public static void ResetConfiguration(Assembly repositoryAssembly) 
+    public static void ResetConfiguration(Assembly repositoryAssembly)
     {
       LoggerManager.ResetConfiguration(repositoryAssembly);
     }
@@ -751,27 +751,27 @@ namespace log4net
       return LoggerManager.GetAllRepositories();
     }
 
-            /// <summary>
-            /// Flushes logging events buffered in all configured appenders in the default repository.
-            /// </summary>
-            /// <param name="millisecondsTimeout">The maximum time in milliseconds to wait for logging events from asycnhronous appenders to be flushed.</param>
-            /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
-            public static bool Flush(int millisecondsTimeout)
-            {
+    /// <summary>
+    /// Flushes logging events buffered in all configured appenders in the default repository.
+    /// </summary>
+    /// <param name="millisecondsTimeout">The maximum time in milliseconds to wait for logging events from asycnhronous appenders to be flushed.</param>
+    /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+    public static bool Flush(int millisecondsTimeout)
+    {
 #if !NETSTANDARD1_3 // Excluded because GetCallingAssembly() is not available in CoreFX (https://github.com/dotnet/corefx/issues/2221).
-                Appender.IFlushable flushableRepository = LoggerManager.GetRepository(Assembly.GetCallingAssembly()) as Appender.IFlushable;
-                if (flushableRepository == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    return flushableRepository.Flush(millisecondsTimeout);
-                }
+      Appender.IFlushable flushableRepository = LoggerManager.GetRepository(Assembly.GetCallingAssembly()) as Appender.IFlushable;
+      if (flushableRepository == null)
+      {
+        return false;
+      }
+      else
+      {
+        return flushableRepository.Flush(millisecondsTimeout);
+      }
 #else
                 return false;
 #endif
-            }
+    }
 
     #endregion Domain & Repository Manager Methods
 
@@ -795,7 +795,7 @@ namespace log4net
     private static ILog[] WrapLoggers(ILogger[] loggers)
     {
       ILog[] results = new ILog[loggers.Length];
-      for(int i=0; i<loggers.Length; i++)
+      for (int i = 0; i < loggers.Length; i++)
       {
         results[i] = WrapLogger(loggers[i]);
       }

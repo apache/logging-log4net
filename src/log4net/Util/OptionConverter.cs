@@ -70,7 +70,7 @@ namespace log4net.Util
     /// Otherwise, <paramref name="defaultValue"/> is returned.
     /// </para>
     /// </remarks>
-    public static bool ToBoolean(string argValue, bool defaultValue) 
+    public static bool ToBoolean(string argValue, bool defaultValue)
     {
       if (argValue != null && argValue.Length > 0)
       {
@@ -78,7 +78,7 @@ namespace log4net.Util
         {
           return bool.Parse(argValue);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
           LogLog.Error(declaringType, "[" + argValue + "] is not in proper bool form.", e);
         }
@@ -102,37 +102,37 @@ namespace log4net.Util
     /// cannot be converted to a <see cref="long" /> value.
     /// </para>
     /// </remarks>
-    public static long ToFileSize(string argValue, long defaultValue) 
+    public static long ToFileSize(string argValue, long defaultValue)
     {
       if (argValue == null)
       {
         return defaultValue;
       }
-  
+
       string s = argValue.Trim().ToUpperInvariant();
       long multiplier = 1;
       int index;
-  
-      if ((index = s.IndexOf("KB")) != -1) 
-      {    
+
+      if ((index = s.IndexOf("KB")) != -1)
+      {
         multiplier = 1024;
         s = s.Substring(0, index);
       }
-      else if ((index = s.IndexOf("MB")) != -1) 
+      else if ((index = s.IndexOf("MB")) != -1)
       {
         multiplier = 1024 * 1024;
         s = s.Substring(0, index);
       }
-      else if ((index = s.IndexOf("GB")) != -1) 
+      else if ((index = s.IndexOf("GB")) != -1)
       {
         multiplier = 1024 * 1024 * 1024;
         s = s.Substring(0, index);
-      }  
-      if (s != null) 
+      }
+      if (s != null)
       {
         // Try again to remove whitespace between the number and the size specifier
         s = s.Trim();
-        
+
         long longVal;
         if (SystemInfo.TryParse(s, out longVal))
         {
@@ -140,7 +140,7 @@ namespace log4net.Util
         }
         else
         {
-          LogLog.Error(declaringType, "OptionConverter: ["+ s +"] is not in the correct file size syntax.");
+          LogLog.Error(declaringType, "OptionConverter: [" + s + "] is not in the correct file size syntax.");
         }
       }
       return defaultValue;
@@ -200,14 +200,14 @@ namespace log4net.Util
           // to an arbitrary type T there will be a static method defined on type T called Parse
           // that will take an argument of type string. i.e. T.Parse(string)->T we call this
           // method to convert the string to the type required by the property.
-          System.Reflection.MethodInfo meth = target.GetMethod("Parse", new Type[] {typeof(string)});
+          System.Reflection.MethodInfo meth = target.GetMethod("Parse", new Type[] { typeof(string) });
           if (meth != null)
           {
             // Call the Parse method
 #if NETSTANDARD1_3
             return meth.Invoke(target, new[] { txt });
 #else
-            return meth.Invoke(null, BindingFlags.InvokeMethod, null, new object[] {txt}, CultureInfo.InvariantCulture);
+            return meth.Invoke(null, BindingFlags.InvokeMethod, null, new object[] { txt }, CultureInfo.InvariantCulture);
 #endif
           }
           else
@@ -219,20 +219,20 @@ namespace log4net.Util
       return null;
     }
 
-//    /// <summary>
-//    /// Looks up the <see cref="IConvertFrom"/> for the target type.
-//    /// </summary>
-//    /// <param name="target">The type to lookup the converter for.</param>
-//    /// <returns>The converter for the specified type.</returns>
-//    public static IConvertFrom GetTypeConverter(Type target)
-//    {
-//      IConvertFrom converter = ConverterRegistry.GetConverter(target);
-//      if (converter == null)
-//      {
-//        throw new InvalidOperationException("No type converter defined for [" + target + "]");
-//      }
-//      return converter;
-//    }
+    //    /// <summary>
+    //    /// Looks up the <see cref="IConvertFrom"/> for the target type.
+    //    /// </summary>
+    //    /// <param name="target">The type to lookup the converter for.</param>
+    //    /// <returns>The converter for the specified type.</returns>
+    //    public static IConvertFrom GetTypeConverter(Type target)
+    //    {
+    //      IConvertFrom converter = ConverterRegistry.GetConverter(target);
+    //      if (converter == null)
+    //      {
+    //        throw new InvalidOperationException("No type converter defined for [" + target + "]");
+    //      }
+    //      return converter;
+    //    }
 
     /// <summary>
     /// Checks if there is an appropriate type conversion from the source type to the target type.
@@ -325,37 +325,37 @@ namespace log4net.Util
       throw new ArgumentException("Cannot convert source object [" + sourceInstance.ToString() + "] to target type [" + targetType.Name + "]", "sourceInstance");
     }
 
-//    /// <summary>
-//    /// Finds the value corresponding to <paramref name="key"/> in 
-//    /// <paramref name="props"/> and then perform variable substitution 
-//    /// on the found value.
-//    /// </summary>
-//    /// <param name="key">The key to lookup.</param>
-//    /// <param name="props">The association to use for lookups.</param>
-//    /// <returns>The substituted result.</returns>
-//    public static string FindAndSubst(string key, System.Collections.IDictionary props) 
-//    {
-//      if (props == null)
-//      {
-//        throw new ArgumentNullException("props");
-//      }
-//
-//      string v = props[key] as string;
-//      if (v == null) 
-//      {
-//        return null;    
-//      }
-//  
-//      try 
-//      {
-//        return SubstituteVariables(v, props);
-//      } 
-//      catch(Exception e) 
-//      {
-//        LogLog.Error(declaringType, "OptionConverter: Bad option value [" + v + "].", e);
-//        return v;
-//      }  
-//    }
+    //    /// <summary>
+    //    /// Finds the value corresponding to <paramref name="key"/> in 
+    //    /// <paramref name="props"/> and then perform variable substitution 
+    //    /// on the found value.
+    //    /// </summary>
+    //    /// <param name="key">The key to lookup.</param>
+    //    /// <param name="props">The association to use for lookups.</param>
+    //    /// <returns>The substituted result.</returns>
+    //    public static string FindAndSubst(string key, System.Collections.IDictionary props) 
+    //    {
+    //      if (props == null)
+    //      {
+    //        throw new ArgumentNullException("props");
+    //      }
+    //
+    //      string v = props[key] as string;
+    //      if (v == null) 
+    //      {
+    //        return null;    
+    //      }
+    //  
+    //      try 
+    //      {
+    //        return SubstituteVariables(v, props);
+    //      } 
+    //      catch(Exception e) 
+    //      {
+    //        LogLog.Error(declaringType, "OptionConverter: Bad option value [" + v + "].", e);
+    //        return v;
+    //      }  
+    //    }
 
     /// <summary>
     /// Instantiates an object given a class name.
@@ -374,30 +374,30 @@ namespace log4net.Util
     /// not be instantiated, then <paramref name="defaultValue"/> is returned.
     /// </para>
     /// </remarks>
-    public static object InstantiateByClassName(string className, Type superClass, object defaultValue) 
+    public static object InstantiateByClassName(string className, Type superClass, object defaultValue)
     {
-      if (className != null) 
+      if (className != null)
       {
-        try 
+        try
         {
 #if NETSTANDARD1_3
           Type classObj = SystemInfo.GetTypeFromString(superClass.GetTypeInfo().Assembly, className, true, true);
 #else
           Type classObj = SystemInfo.GetTypeFromString(className, true, true);
 #endif
-          if (!superClass.IsAssignableFrom(classObj)) 
+          if (!superClass.IsAssignableFrom(classObj))
           {
             LogLog.Error(declaringType, "OptionConverter: A [" + className + "] object is not assignable to a [" + superClass.FullName + "] variable.");
-            return defaultValue;    
+            return defaultValue;
           }
           return Activator.CreateInstance(classObj);
         }
-        catch (Exception e) 
+        catch (Exception e)
         {
           LogLog.Error(declaringType, "Could not instantiate class [" + className + "].", e);
         }
       }
-      return defaultValue;  
+      return defaultValue;
     }
 
     /// <summary>
@@ -443,48 +443,48 @@ namespace log4net.Util
     /// delimiter "${" which is not balanced by a stop delimiter "}". 
     /// </para>
     /// </remarks>
-    public static string SubstituteVariables(string value, System.Collections.IDictionary props) 
+    public static string SubstituteVariables(string value, System.Collections.IDictionary props)
     {
       StringBuilder buf = new StringBuilder();
 
       int i = 0;
       int j, k;
-  
-      while(true) 
+
+      while (true)
       {
         j = value.IndexOf(DELIM_START, i);
-        if (j == -1) 
+        if (j == -1)
         {
           if (i == 0)
           {
             return value;
           }
-          else 
+          else
           {
             buf.Append(value.Substring(i, value.Length - i));
             return buf.ToString();
           }
         }
-        else 
+        else
         {
           buf.Append(value.Substring(i, j - i));
           k = value.IndexOf(DELIM_STOP, j);
-          if (k == -1) 
+          if (k == -1)
           {
             throw new LogException("[" + value + "] has no closing brace. Opening brace at position [" + j + "]");
           }
-          else 
+          else
           {
             j += DELIM_START_LEN;
             string key = value.Substring(j, k - j);
 
             string replacement = props[key] as string;
 
-            if (replacement != null) 
+            if (replacement != null)
             {
               buf.Append(replacement);
             }
-            i = k + DELIM_STOP_LEN;    
+            i = k + DELIM_STOP_LEN;
           }
         }
       }
@@ -502,7 +502,7 @@ namespace log4net.Util
     /// <param name="value">The enum string value.</param>
     /// <param name="ignoreCase">If <c>true</c>, ignore case; otherwise, regard case.</param>
     /// <returns>An object of type <paramref name="enumType" /> whose value is represented by <paramref name="value" />.</returns>
-    private static object ParseEnum(System.Type enumType, string value, bool ignoreCase) 
+    private static object ParseEnum(System.Type enumType, string value, bool ignoreCase)
     {
 #if !NETCF
       return Enum.Parse(enumType, value, ignoreCase);
@@ -543,25 +543,25 @@ namespace log4net.Util
       }
       return Enum.ToObject(enumType, retVal);
 #endif
-    }    
+    }
 
     #endregion Private Static Methods
 
     #region Private Static Fields
 
-        /// <summary>
-        /// The fully qualified type of the OptionConverter class.
-        /// </summary>
-        /// <remarks>
-        /// Used by the internal logger to record the Type of the
-        /// log message.
-        /// </remarks>
-        private static readonly Type declaringType = typeof(OptionConverter);
+    /// <summary>
+    /// The fully qualified type of the OptionConverter class.
+    /// </summary>
+    /// <remarks>
+    /// Used by the internal logger to record the Type of the
+    /// log message.
+    /// </remarks>
+    private static readonly Type declaringType = typeof(OptionConverter);
 
     private const string DELIM_START = "${";
-    private const char   DELIM_STOP  = '}';
+    private const char DELIM_STOP = '}';
     private const int DELIM_START_LEN = 2;
-    private const int DELIM_STOP_LEN  = 1;
+    private const int DELIM_STOP_LEN = 1;
 
     #endregion Private Static Fields
   }

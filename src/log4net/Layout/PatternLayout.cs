@@ -25,12 +25,12 @@ using log4net.Core;
 using log4net.Layout.Pattern;
 using log4net.Util;
 using log4net.Util.PatternStringConverters;
-using AppDomainPatternConverter=log4net.Layout.Pattern.AppDomainPatternConverter;
-using DatePatternConverter=log4net.Layout.Pattern.DatePatternConverter;
-using IdentityPatternConverter=log4net.Layout.Pattern.IdentityPatternConverter;
-using PropertyPatternConverter=log4net.Layout.Pattern.PropertyPatternConverter;
-using UserNamePatternConverter=log4net.Layout.Pattern.UserNamePatternConverter;
-using UtcDatePatternConverter=log4net.Layout.Pattern.UtcDatePatternConverter;
+using AppDomainPatternConverter = log4net.Layout.Pattern.AppDomainPatternConverter;
+using DatePatternConverter = log4net.Layout.Pattern.DatePatternConverter;
+using IdentityPatternConverter = log4net.Layout.Pattern.IdentityPatternConverter;
+using PropertyPatternConverter = log4net.Layout.Pattern.PropertyPatternConverter;
+using UserNamePatternConverter = log4net.Layout.Pattern.UserNamePatternConverter;
+using UtcDatePatternConverter = log4net.Layout.Pattern.UtcDatePatternConverter;
 
 namespace log4net.Layout
 {
@@ -106,46 +106,46 @@ namespace log4net.Layout
   ///     <item>
   ///         <term>aspnet-cache</term>
   ///         <description>
-    ///             <para>
-    ///             Used to output all cache items in the case of <b>%aspnet-cache</b> or just one named item if used as <b>%aspnet-cache{key}</b>
-    ///             </para>
-    ///             <para>
-    ///             This pattern is not available for Compact Framework or Client Profile assemblies.
-    ///             </para>
+  ///             <para>
+  ///             Used to output all cache items in the case of <b>%aspnet-cache</b> or just one named item if used as <b>%aspnet-cache{key}</b>
+  ///             </para>
+  ///             <para>
+  ///             This pattern is not available for Compact Framework or Client Profile assemblies.
+  ///             </para>
   ///         </description>
   ///     </item>
   ///     <item>
   ///         <term>aspnet-context</term>
   ///         <description>
-    ///             <para>
-    ///             Used to output all context items in the case of <b>%aspnet-context</b> or just one named item if used as <b>%aspnet-context{key}</b>
-    ///             </para>
-    ///             <para>
-    ///             This pattern is not available for Compact Framework or Client Profile assemblies.
-    ///             </para>
-    ///         </description>
+  ///             <para>
+  ///             Used to output all context items in the case of <b>%aspnet-context</b> or just one named item if used as <b>%aspnet-context{key}</b>
+  ///             </para>
+  ///             <para>
+  ///             This pattern is not available for Compact Framework or Client Profile assemblies.
+  ///             </para>
+  ///         </description>
   ///     </item>
   ///     <item>
   ///         <term>aspnet-request</term>
   ///         <description>
-    ///             <para>
-    ///             Used to output all request parameters in the case of <b>%aspnet-request</b> or just one named param if used as <b>%aspnet-request{key}</b>
-    ///             </para>
-    ///             <para>
-    ///             This pattern is not available for Compact Framework or Client Profile assemblies.
-    ///             </para>
-    ///         </description>
+  ///             <para>
+  ///             Used to output all request parameters in the case of <b>%aspnet-request</b> or just one named param if used as <b>%aspnet-request{key}</b>
+  ///             </para>
+  ///             <para>
+  ///             This pattern is not available for Compact Framework or Client Profile assemblies.
+  ///             </para>
+  ///         </description>
   ///     </item>
   ///     <item>
   ///         <term>aspnet-session</term>
   ///         <description>
-    ///             <para>
-    ///             Used to output all session items in the case of <b>%aspnet-session</b> or just one named item if used as <b>%aspnet-session{key}</b>
-    ///             </para>
-    ///             <para>
-    ///             This pattern is not available for Compact Framework or Client Profile assemblies.
-    ///             </para>
-    ///         </description>
+  ///             <para>
+  ///             Used to output all session items in the case of <b>%aspnet-session</b> or just one named item if used as <b>%aspnet-session{key}</b>
+  ///             </para>
+  ///             <para>
+  ///             This pattern is not available for Compact Framework or Client Profile assemblies.
+  ///             </para>
+  ///         </description>
   ///     </item>
   ///     <item>
   ///         <term>c</term>
@@ -466,34 +466,34 @@ namespace log4net.Layout
   ///       between braces. For example, <b>%stacktrace{level}</b>.  
   ///       If no stack trace level specifier is given then 1 is assumed 
   ///       </para>
-    ///       <para>
-    ///       Output uses the format:
-    ///       type3.MethodCall3 > type2.MethodCall2 > type1.MethodCall1
-    ///       </para>
-    ///             <para>
-    ///             This pattern is not available for Compact Framework assemblies.
-    ///             </para>
-    ///      </description>
+  ///       <para>
+  ///       Output uses the format:
+  ///       type3.MethodCall3 > type2.MethodCall2 > type1.MethodCall1
+  ///       </para>
+  ///             <para>
+  ///             This pattern is not available for Compact Framework assemblies.
+  ///             </para>
+  ///      </description>
   ///    </item>
-    ///   <item>
-    ///      <term>stacktracedetail</term> 
-    ///      <description>
-    ///       <para>
-    ///       Used to output the stack trace of the logging event
-    ///       The stack trace level specifier may be enclosed 
-    ///       between braces. For example, <b>%stacktracedetail{level}</b>.  
-    ///       If no stack trace level specifier is given then 1 is assumed 
-    ///       </para>
-    ///       <para>
-    ///       Output uses the format:
-    ///             type3.MethodCall3(type param,...) > type2.MethodCall2(type param,...) > type1.MethodCall1(type param,...)
-    ///       </para>
-    ///             <para>
-    ///             This pattern is not available for Compact Framework assemblies.
-    ///             </para>
-    ///      </description>
-    ///    </item>
-    ///     <item>
+  ///   <item>
+  ///      <term>stacktracedetail</term> 
+  ///      <description>
+  ///       <para>
+  ///       Used to output the stack trace of the logging event
+  ///       The stack trace level specifier may be enclosed 
+  ///       between braces. For example, <b>%stacktracedetail{level}</b>.  
+  ///       If no stack trace level specifier is given then 1 is assumed 
+  ///       </para>
+  ///       <para>
+  ///       Output uses the format:
+  ///             type3.MethodCall3(type param,...) > type2.MethodCall2(type param,...) > type1.MethodCall1(type param,...)
+  ///       </para>
+  ///             <para>
+  ///             This pattern is not available for Compact Framework assemblies.
+  ///             </para>
+  ///      </description>
+  ///    </item>
+  ///     <item>
   ///         <term>t</term>
   ///         <description>Equivalent to <b>thread</b></description>
   ///     </item>
@@ -793,7 +793,7 @@ namespace log4net.Layout
     /// which just prints the application supplied message. 
     /// </para>
     /// </remarks>
-    public const string DefaultConversionPattern ="%message%newline";
+    public const string DefaultConversionPattern = "%message%newline";
 
     /// <summary>
     /// A detailed conversion pattern
@@ -823,12 +823,12 @@ namespace log4net.Layout
     #endregion Static Fields
 
     #region Member Variables
-    
+
     /// <summary>
     /// the pattern
     /// </summary>
     private string m_pattern;
-  
+
     /// <summary>
     /// the head of the pattern converter chain
     /// </summary>
@@ -859,8 +859,8 @@ namespace log4net.Layout
       s_globalRulesRegistry.Add("newline", typeof(NewLinePatternConverter));
       s_globalRulesRegistry.Add("n", typeof(NewLinePatternConverter));
 
-// .NET Compact Framework 1.0 has no support for ASP.NET
-// SSCLI 1.0 has no support for ASP.NET
+      // .NET Compact Framework 1.0 has no support for ASP.NET
+      // SSCLI 1.0 has no support for ASP.NET
 #if !NETCF && !SSCLI && !CLIENT_PROFILE && !NETSTANDARD
       s_globalRulesRegistry.Add("aspnet-cache", typeof(AspNetCachePatternConverter));
       s_globalRulesRegistry.Add("aspnet-context", typeof(AspNetContextPatternConverter));
@@ -904,10 +904,10 @@ namespace log4net.Layout
 
       s_globalRulesRegistry.Add("r", typeof(RelativeTimePatternConverter));
       s_globalRulesRegistry.Add("timestamp", typeof(RelativeTimePatternConverter));
-      
+
 #if !NETCF && !NETSTANDARD1_3
       s_globalRulesRegistry.Add("stacktrace", typeof(StackTracePatternConverter));
-            s_globalRulesRegistry.Add("stacktracedetail", typeof(StackTraceDetailPatternConverter));
+      s_globalRulesRegistry.Add("stacktracedetail", typeof(StackTraceDetailPatternConverter));
 #endif
 
       s_globalRulesRegistry.Add("t", typeof(ThreadPatternConverter));
@@ -976,7 +976,7 @@ namespace log4net.Layout
     /// need not be called. This may not be the case when using a subclass.
     /// </para>
     /// </remarks>
-    public PatternLayout(string pattern) 
+    public PatternLayout(string pattern)
     {
       // By default we do not process the exception
       IgnoresException = true;
@@ -991,7 +991,7 @@ namespace log4net.Layout
     }
 
     #endregion
-  
+
     /// <summary>
     /// The pattern formatting string
     /// </summary>
@@ -1004,7 +1004,7 @@ namespace log4net.Layout
     /// </remarks>
     public string ConversionPattern
     {
-      get { return m_pattern;  }
+      get { return m_pattern; }
       set { m_pattern = value; }
     }
 
@@ -1019,27 +1019,27 @@ namespace log4net.Layout
     /// global and instance rules on the <see cref="PatternParser"/>.
     /// </para>
     /// </remarks>
-    protected virtual PatternParser CreatePatternParser(string pattern) 
+    protected virtual PatternParser CreatePatternParser(string pattern)
     {
       PatternParser patternParser = new PatternParser(pattern);
 
       // Add all the builtin patterns
-      foreach(DictionaryEntry entry in s_globalRulesRegistry)
+      foreach (DictionaryEntry entry in s_globalRulesRegistry)
       {
-                ConverterInfo converterInfo = new ConverterInfo();
-                converterInfo.Name = (string)entry.Key;
-                converterInfo.Type = (Type)entry.Value;
-                patternParser.PatternConverters[entry.Key] = converterInfo;
+        ConverterInfo converterInfo = new ConverterInfo();
+        converterInfo.Name = (string)entry.Key;
+        converterInfo.Type = (Type)entry.Value;
+        patternParser.PatternConverters[entry.Key] = converterInfo;
       }
       // Add the instance patterns
-      foreach(DictionaryEntry entry in m_instanceRulesRegistry)
+      foreach (DictionaryEntry entry in m_instanceRulesRegistry)
       {
         patternParser.PatternConverters[entry.Key] = entry.Value;
       }
 
       return patternParser;
     }
-  
+
     #region Implementation of IOptionHandler
 
     /// <summary>
@@ -1058,12 +1058,12 @@ namespace log4net.Layout
     /// <see cref="ActivateOptions"/> must be called again.
     /// </para>
     /// </remarks>
-    public override void ActivateOptions() 
+    public override void ActivateOptions()
     {
       m_head = CreatePatternParser(m_pattern).Parse();
 
       PatternConverter curConverter = m_head;
-      while(curConverter != null)
+      while (curConverter != null)
       {
         PatternLayoutConverter layoutConverter = curConverter as PatternLayoutConverter;
         if (layoutConverter != null)
@@ -1095,7 +1095,7 @@ namespace log4net.Layout
     /// specified in the <see cref="ConversionPattern"/> property.
     /// </para>
     /// </remarks>
-    public override void Format(TextWriter writer, LoggingEvent loggingEvent) 
+    public override void Format(TextWriter writer, LoggingEvent loggingEvent)
     {
       if (writer == null)
       {
@@ -1109,7 +1109,7 @@ namespace log4net.Layout
       PatternConverter c = m_head;
 
       // loop through the chain of pattern converters
-      while(c != null) 
+      while (c != null)
       {
         c.Format(writer, loggingEvent);
         c = c.Next;
@@ -1130,13 +1130,13 @@ namespace log4net.Layout
     /// </remarks>
     public void AddConverter(ConverterInfo converterInfo)
     {
-            if (converterInfo == null) throw new ArgumentNullException("converterInfo");
+      if (converterInfo == null) throw new ArgumentNullException("converterInfo");
 
-            if (!typeof(PatternConverter).IsAssignableFrom(converterInfo.Type))
-            {
-                throw new ArgumentException("The converter type specified [" + converterInfo.Type + "] must be a subclass of log4net.Util.PatternConverter", "converterInfo");
-            }
-            m_instanceRulesRegistry[converterInfo.Name] = converterInfo;
+      if (!typeof(PatternConverter).IsAssignableFrom(converterInfo.Type))
+      {
+        throw new ArgumentException("The converter type specified [" + converterInfo.Type + "] must be a subclass of log4net.Util.PatternConverter", "converterInfo");
+      }
+      m_instanceRulesRegistry[converterInfo.Name] = converterInfo;
     }
 
     /// <summary>
@@ -1157,14 +1157,14 @@ namespace log4net.Layout
     /// </remarks>
     public void AddConverter(string name, Type type)
     {
-            if (name == null) throw new ArgumentNullException("name");
-            if (type == null) throw new ArgumentNullException("type");
+      if (name == null) throw new ArgumentNullException("name");
+      if (type == null) throw new ArgumentNullException("type");
 
-            ConverterInfo converterInfo = new ConverterInfo();
-            converterInfo.Name = name;
-            converterInfo.Type = type;
+      ConverterInfo converterInfo = new ConverterInfo();
+      converterInfo.Name = name;
+      converterInfo.Type = type;
 
-            AddConverter(converterInfo);
+      AddConverter(converterInfo);
     }
   }
 }

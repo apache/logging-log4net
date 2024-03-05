@@ -34,7 +34,7 @@ namespace log4net.Layout.Pattern
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
-  internal sealed class RelativeTimePatternConverter : PatternLayoutConverter 
+  internal sealed class RelativeTimePatternConverter : PatternLayoutConverter
   {
     /// <summary>
     /// Write the relative time to the output
@@ -50,7 +50,7 @@ namespace log4net.Layout.Pattern
     /// </remarks>
     protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
     {
-      writer.Write( TimeDifferenceInMillis(LoggingEvent.StartTimeUtc, loggingEvent.TimeStampUtc).ToString(System.Globalization.NumberFormatInfo.InvariantInfo) );
+      writer.Write(TimeDifferenceInMillis(LoggingEvent.StartTimeUtc, loggingEvent.TimeStampUtc).ToString(System.Globalization.NumberFormatInfo.InvariantInfo));
     }
 
     /// <summary>

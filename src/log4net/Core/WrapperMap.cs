@@ -78,7 +78,7 @@ namespace log4net.Core
     /// the specified handler to create the wrapper objects.
     /// </para>
     /// </remarks>
-    public WrapperMap(WrapperCreationHandler createWrapperHandler) 
+    public WrapperMap(WrapperCreationHandler createWrapperHandler)
     {
       m_createWrapperHandler = createWrapperHandler;
 
@@ -113,7 +113,7 @@ namespace log4net.Core
         return null;
       }
 
-      lock(this)
+      lock (this)
       {
         // Lookup hierarchy in map.
         Hashtable wrappersMap = (Hashtable)m_repositories[logger.Repository];
@@ -139,7 +139,7 @@ namespace log4net.Core
 
           // Create a new wrapper wrapping the logger
           wrapperObject = CreateNewWrapperObject(logger);
-          
+
           // Store wrapper logger in map
           wrappersMap[logger] = wrapperObject;
         }
@@ -165,7 +165,7 @@ namespace log4net.Core
     /// value being the corresponding <see cref="ILoggerWrapper"/>.
     /// </para>
     /// </remarks>
-    protected Hashtable Repositories 
+    protected Hashtable Repositories
     {
       get { return this.m_repositories; }
     }
@@ -210,7 +210,7 @@ namespace log4net.Core
     /// </remarks>
     protected virtual void RepositoryShutdown(ILoggerRepository repository)
     {
-      lock(this)
+      lock (this)
       {
         // Remove the repository from map
         m_repositories.Remove(repository);
@@ -253,7 +253,7 @@ namespace log4net.Core
     /// Internal reference to the delegate used to register for repository shutdown events.
     /// </summary>
     private readonly LoggerRepositoryShutdownEventHandler m_shutdownHandler;
- 
+
     #endregion Private Instance Variables
   }
 }

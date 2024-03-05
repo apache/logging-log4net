@@ -51,8 +51,8 @@ namespace log4net.Util
     /// Initializes a new instance of the <see cref="PatternConverter" /> class.
     /// </para>
     /// </remarks>
-    protected PatternConverter() 
-    {  
+    protected PatternConverter()
+    {
     }
 
     #endregion Protected Instance Constructors
@@ -165,7 +165,7 @@ namespace log4net.Util
     /// apply those formattings before writing the output.
     /// </para>
     /// </remarks>
-    public virtual void Format(TextWriter writer, object state) 
+    public virtual void Format(TextWriter writer, object state)
     {
       if (m_min < 0 && m_max == int.MaxValue)
       {
@@ -174,35 +174,35 @@ namespace log4net.Util
       }
       else
       {
-                string msg = null;
-                int len;
-                lock (m_formatWriter)
-                {
-                    m_formatWriter.Reset(c_renderBufferMaxCapacity, c_renderBufferSize);
-
-                    Convert(m_formatWriter, state);
-
-                    StringBuilder buf = m_formatWriter.GetStringBuilder();
-                    len = buf.Length;
-                    if (len > m_max)
-                    {
-                        msg = buf.ToString(len - m_max, m_max);
-                        len = m_max;
-                    }
-                    else
-                    {
-                        msg = buf.ToString();
-                    }
-                }
-
-        if (len < m_min) 
+        string msg = null;
+        int len;
+        lock (m_formatWriter)
         {
-          if (m_leftAlign) 
-          {  
+          m_formatWriter.Reset(c_renderBufferMaxCapacity, c_renderBufferSize);
+
+          Convert(m_formatWriter, state);
+
+          StringBuilder buf = m_formatWriter.GetStringBuilder();
+          len = buf.Length;
+          if (len > m_max)
+          {
+            msg = buf.ToString(len - m_max, m_max);
+            len = m_max;
+          }
+          else
+          {
+            msg = buf.ToString();
+          }
+        }
+
+        if (len < m_min)
+        {
+          if (m_leftAlign)
+          {
             writer.Write(msg);
             SpacePad(writer, m_min - len);
           }
-          else 
+          else
           {
             SpacePad(writer, m_min - len);
             writer.Write(msg);
@@ -213,7 +213,7 @@ namespace log4net.Util
           writer.Write(msg);
         }
       }
-    }  
+    }
 
     private static readonly string[] SPACES = {  " ", "  ", "    ", "        ",      // 1,2,4,8 spaces
                           "                ",            // 16 spaces
@@ -229,22 +229,22 @@ namespace log4net.Util
     /// Fast space padding method.
     /// </para>
     /// </remarks>
-    protected static void SpacePad(TextWriter writer, int length) 
+    protected static void SpacePad(TextWriter writer, int length)
     {
-      while(length >= 32) 
+      while (length >= 32)
       {
         writer.Write(SPACES[5]);
         length -= 32;
       }
-    
-      for(int i = 4; i >= 0; i--) 
-      {  
-        if ((length & (1<<i)) != 0) 
+
+      for (int i = 4; i >= 0; i--)
+      {
+        if ((length & (1 << i)) != 0)
         {
           writer.Write(SPACES[i]);
         }
       }
-    }  
+    }
 
     #endregion Public Instance Methods
 
@@ -372,26 +372,26 @@ namespace log4net.Util
         // Don't have a repository to render with so just have to rely on ToString
         if (value == null)
         {
-          writer.Write( SystemInfo.NullText );
+          writer.Write(SystemInfo.NullText);
         }
         else
         {
-          writer.Write( value.ToString() );
+          writer.Write(value.ToString());
         }
       }
     }
 
     #endregion
 
-        private PropertiesDictionary properties;
+    private PropertiesDictionary properties;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public PropertiesDictionary Properties
-      {
-          get { return properties; }
-          set { properties = value; }
-      }
+    /// <summary>
+    /// 
+    /// </summary>
+    public PropertiesDictionary Properties
+    {
+      get { return properties; }
+      set { properties = value; }
+    }
   }
 }

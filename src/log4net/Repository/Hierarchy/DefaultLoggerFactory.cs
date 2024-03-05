@@ -73,7 +73,7 @@ namespace log4net.Repository.Hierarchy
     /// must be returned.
     /// </para>
     /// </remarks>
-    public Logger CreateLogger(ILoggerRepository repository, string name) 
+    public Logger CreateLogger(ILoggerRepository repository, string name)
     {
       if (name == null)
       {

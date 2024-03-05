@@ -35,7 +35,7 @@ namespace log4net.Util
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-#if NETCF 
+#if NETCF
   public sealed class PropertiesDictionary : ReadOnlyPropertiesDictionary, IDictionary
 #else
   [Serializable]

@@ -279,8 +279,8 @@ namespace log4net.Util
 #if NET_4_0 || MONO_4_0
         [System.Security.SecuritySafeCritical]
 #endif
-        [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
-        private static WindowsIdentity LogonUser(string userName, string domainName, string password)
+    [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
+    private static WindowsIdentity LogonUser(string userName, string domainName, string password)
     {
       const int LOGON32_PROVIDER_DEFAULT = 0;
       //This parameter causes LogonUser to create a primary token.
@@ -288,15 +288,15 @@ namespace log4net.Util
 
       // Call LogonUser to obtain a handle to an access token.
       IntPtr tokenHandle = IntPtr.Zero;
-      if(!LogonUser(userName, domainName, password, LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, ref tokenHandle))
+      if (!LogonUser(userName, domainName, password, LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, ref tokenHandle))
       {
         NativeError error = NativeError.GetLastError();
-        throw new Exception("Failed to LogonUser ["+userName+"] in Domain ["+domainName+"]. Error: "+ error.ToString());
+        throw new Exception("Failed to LogonUser [" + userName + "] in Domain [" + domainName + "]. Error: " + error.ToString());
       }
 
       const int SecurityImpersonation = 2;
       IntPtr dupeTokenHandle = IntPtr.Zero;
-      if(!DuplicateToken(tokenHandle, SecurityImpersonation, ref dupeTokenHandle))
+      if (!DuplicateToken(tokenHandle, SecurityImpersonation, ref dupeTokenHandle))
       {
         NativeError error = NativeError.GetLastError();
         if (tokenHandle != IntPtr.Zero)
@@ -309,7 +309,7 @@ namespace log4net.Util
       WindowsIdentity identity = new WindowsIdentity(dupeTokenHandle);
 
       // Free the tokens.
-      if (dupeTokenHandle != IntPtr.Zero) 
+      if (dupeTokenHandle != IntPtr.Zero)
       {
         CloseHandle(dupeTokenHandle);
       }
@@ -323,13 +323,13 @@ namespace log4net.Util
 
     #region Native Method Stubs
 
-    [DllImport("advapi32.dll", SetLastError=true)]
+    [DllImport("advapi32.dll", SetLastError = true)]
     private static extern bool LogonUser(String lpszUsername, String lpszDomain, String lpszPassword, int dwLogonType, int dwLogonProvider, ref IntPtr phToken);
 
-    [DllImport("kernel32.dll", CharSet=CharSet.Auto)]
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
     private static extern bool CloseHandle(IntPtr handle);
 
-    [DllImport("advapi32.dll", CharSet=CharSet.Auto, SetLastError=true)]
+    [DllImport("advapi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
     private static extern bool DuplicateToken(IntPtr ExistingTokenHandle, int SECURITY_IMPERSONATION_LEVEL, ref IntPtr DuplicateTokenHandle);
 
     #endregion

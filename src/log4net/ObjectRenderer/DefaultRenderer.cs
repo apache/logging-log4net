@@ -157,7 +157,7 @@ namespace log4net.ObjectRenderer
         writer.Write(SystemInfo.NullText);
         return;
       }
-      
+
       Array objArray = obj as Array;
       if (objArray != null)
       {
@@ -177,7 +177,7 @@ namespace log4net.ObjectRenderer
           writer.Write("{}");
           return;
         }
-        
+
         // This is a special check to allow us to get the enumerator from the IDictionary
         // interface as this guarantees us DictionaryEntry objects. Note that in .NET 2.0
         // the generic IDictionary<> interface enumerates KeyValuePair objects rather than
@@ -200,7 +200,7 @@ namespace log4net.ObjectRenderer
         RenderEnumerator(rendererMap, objEnumerator, writer);
         return;
       }
-      
+
       if (obj is DictionaryEntry)
       {
         RenderDictionaryEntry(rendererMap, (DictionaryEntry)obj, writer);
@@ -208,7 +208,7 @@ namespace log4net.ObjectRenderer
       }
 
       string str = obj.ToString();
-      writer.Write( (str==null) ? SystemInfo.NullText : str );
+      writer.Write((str == null) ? SystemInfo.NullText : str);
     }
 
     #endregion
@@ -246,7 +246,7 @@ namespace log4net.ObjectRenderer
         if (len > 0)
         {
           rendererMap.FindAndRender(array.GetValue(0), writer);
-          for(int i=1; i<len; i++)
+          for (int i = 1; i < len; i++)
           {
             writer.Write(", ");
             rendererMap.FindAndRender(array.GetValue(i), writer);
@@ -305,6 +305,6 @@ namespace log4net.ObjectRenderer
       rendererMap.FindAndRender(entry.Key, writer);
       writer.Write("=");
       rendererMap.FindAndRender(entry.Value, writer);
-    }  
+    }
   }
 }

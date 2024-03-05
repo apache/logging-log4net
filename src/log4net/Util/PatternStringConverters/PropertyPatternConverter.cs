@@ -39,7 +39,7 @@ namespace log4net.Util.PatternStringConverters
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
-  internal sealed class PropertyPatternConverter : PatternConverter 
+  internal sealed class PropertyPatternConverter : PatternConverter
   {
     /// <summary>
     /// Write the property value to the output
@@ -57,7 +57,7 @@ namespace log4net.Util.PatternStringConverters
     /// then all the properties are written as key value pairs.
     /// </para>
     /// </remarks>
-    protected override void Convert(TextWriter writer, object state) 
+    protected override void Convert(TextWriter writer, object state)
     {
       CompositeProperties compositeProperties = new CompositeProperties();
 

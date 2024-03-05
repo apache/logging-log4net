@@ -95,7 +95,7 @@ namespace log4net.Core
           throw new ArgumentNullException("name");
         }
 
-        lock(this)
+        lock (this)
         {
           return (Level)m_mapName2Level[name];
         }
@@ -137,7 +137,7 @@ namespace log4net.Core
       }
       if (name.Length == 0)
       {
-        throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("name", name, "Parameter: name, Value: ["+name+"] out of range. Level name must not be empty");
+        throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("name", name, "Parameter: name, Value: [" + name + "] out of range. Level name must not be empty");
       }
 
       if (displayName == null || displayName.Length == 0)
@@ -163,7 +163,7 @@ namespace log4net.Core
       {
         throw new ArgumentNullException("level");
       }
-      lock(this)
+      lock (this)
       {
         m_mapName2Level[level.Name] = level;
       }
@@ -182,7 +182,7 @@ namespace log4net.Core
     {
       get
       {
-        lock(this)
+        lock (this)
         {
           return new LevelCollection(m_mapName2Level.Values);
         }
@@ -214,7 +214,7 @@ namespace log4net.Core
         throw new ArgumentNullException("defaultLevel");
       }
 
-      lock(this)
+      lock (this)
       {
         Level level = (Level)m_mapName2Level[defaultLevel.Name];
         if (level == null)

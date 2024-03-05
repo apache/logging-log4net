@@ -80,7 +80,7 @@ namespace log4net.Util
     /// </remarks>
     public object this[string key]
     {
-      get 
+      get
       {
         // Look in the flattened properties first
         if (m_flattened != null)
@@ -89,7 +89,7 @@ namespace log4net.Util
         }
 
         // Look for the key in all the nested properties
-        foreach(ReadOnlyPropertiesDictionary cur in m_nestedProperties)
+        foreach (ReadOnlyPropertiesDictionary cur in m_nestedProperties)
         {
           if (cur.Contains(key))
           {
@@ -136,11 +136,11 @@ namespace log4net.Util
       {
         m_flattened = new PropertiesDictionary();
 
-        for(int i=m_nestedProperties.Count; --i>=0; )
+        for (int i = m_nestedProperties.Count; --i >= 0;)
         {
           ReadOnlyPropertiesDictionary cur = (ReadOnlyPropertiesDictionary)m_nestedProperties[i];
 
-          foreach(DictionaryEntry entry in cur)
+          foreach (DictionaryEntry entry in cur)
           {
             m_flattened[(string)entry.Key] = entry.Value;
           }

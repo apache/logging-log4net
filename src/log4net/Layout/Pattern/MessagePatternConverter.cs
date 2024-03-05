@@ -35,7 +35,7 @@ namespace log4net.Layout.Pattern
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
-  internal sealed class MessagePatternConverter : PatternLayoutConverter 
+  internal sealed class MessagePatternConverter : PatternLayoutConverter
   {
     /// <summary>
     /// Writes the event message to the output

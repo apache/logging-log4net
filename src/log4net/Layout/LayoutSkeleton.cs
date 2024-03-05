@@ -221,8 +221,8 @@ namespace log4net.Layout
     /// value is <c>true</c>, this layout does not handle the exception.
     /// </para>
     /// </remarks>
-    public virtual bool IgnoresException 
-    { 
+    public virtual bool IgnoresException
+    {
       get { return m_ignoresException; }
       set { m_ignoresException = value; }
     }

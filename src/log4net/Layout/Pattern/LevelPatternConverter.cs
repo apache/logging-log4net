@@ -35,7 +35,7 @@ namespace log4net.Layout.Pattern
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
-  internal sealed class LevelPatternConverter : PatternLayoutConverter 
+  internal sealed class LevelPatternConverter : PatternLayoutConverter
   {
     /// <summary>
     /// Write the event level to the output
@@ -50,7 +50,7 @@ namespace log4net.Layout.Pattern
     /// </remarks>
     protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
     {
-      writer.Write( loggingEvent.Level.DisplayName );
+      writer.Write(loggingEvent.Level.DisplayName);
     }
   }
 }

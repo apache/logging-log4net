@@ -34,7 +34,7 @@ namespace log4net.Layout.Pattern
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
-  internal sealed class ThreadPatternConverter : PatternLayoutConverter 
+  internal sealed class ThreadPatternConverter : PatternLayoutConverter
   {
     /// <summary>
     /// Write the ThreadName to the output

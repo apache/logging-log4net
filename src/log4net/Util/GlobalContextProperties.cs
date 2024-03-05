@@ -95,13 +95,13 @@ namespace log4net.Util
     /// </remarks>
     public override object this[string key]
     {
-      get 
-      { 
+      get
+      {
         return m_readOnlyProperties[key];
       }
       set
       {
-        lock(m_syncRoot)
+        lock (m_syncRoot)
         {
           PropertiesDictionary mutableProps = new PropertiesDictionary(m_readOnlyProperties);
 
@@ -128,7 +128,7 @@ namespace log4net.Util
     /// </remarks>
     public void Remove(string key)
     {
-      lock(m_syncRoot)
+      lock (m_syncRoot)
       {
         if (m_readOnlyProperties.Contains(key))
         {
@@ -146,7 +146,7 @@ namespace log4net.Util
     /// </summary>
     public void Clear()
     {
-      lock(m_syncRoot)
+      lock (m_syncRoot)
       {
         m_readOnlyProperties = new ReadOnlyPropertiesDictionary();
       }

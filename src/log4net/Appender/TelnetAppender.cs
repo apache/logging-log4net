@@ -30,7 +30,7 @@ using System.Threading.Tasks;
 using log4net.Core;
 using log4net.Util;
 
-namespace log4net.Appender 
+namespace log4net.Appender
 {
   /// <summary>
   /// Appender that allows clients to connect via Telnet to receive log messages
@@ -49,7 +49,7 @@ namespace log4net.Appender
   /// </remarks>
   /// <author>Keith Long</author>
   /// <author>Nicko Cadell</author>
-  public class TelnetAppender : AppenderSkeleton 
+  public class TelnetAppender : AppenderSkeleton
   {
     private SocketHandler m_handler;
     private int m_listeningPort = 23;
@@ -70,18 +70,18 @@ namespace log4net.Appender
 
     #endregion
 
-      #region Private Static Fields
+    #region Private Static Fields
 
-      /// <summary>
-      /// The fully qualified type of the TelnetAppender class.
-      /// </summary>
-      /// <remarks>
-      /// Used by the internal logger to record the Type of the
-      /// log message.
-      /// </remarks>
-      private static readonly Type declaringType = typeof(TelnetAppender);
+    /// <summary>
+    /// The fully qualified type of the TelnetAppender class.
+    /// </summary>
+    /// <remarks>
+    /// Used by the internal logger to record the Type of the
+    /// log message.
+    /// </remarks>
+    private static readonly Type declaringType = typeof(TelnetAppender);
 
-      #endregion Private Static Fields
+    #endregion Private Static Fields
 
     /// <summary>
     /// Gets or sets the TCP port number on which this <see cref="TelnetAppender"/> will listen for connections.
@@ -108,9 +108,9 @@ namespace log4net.Appender
         if (value < IPEndPoint.MinPort || value > IPEndPoint.MaxPort)
         {
           throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("value", (object)value,
-            "The value specified for Port is less than " + 
-            IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo) + 
-            " or greater than " + 
+            "The value specified for Port is less than " +
+            IPEndPoint.MinPort.ToString(NumberFormatInfo.InvariantInfo) +
+            " or greater than " +
             IPEndPoint.MaxPort.ToString(NumberFormatInfo.InvariantInfo) + ".");
         }
         else
@@ -130,7 +130,7 @@ namespace log4net.Appender
     /// Closes all the outstanding connections.
     /// </para>
     /// </remarks>
-    protected override void OnClose()  
+    protected override void OnClose()
     {
       base.OnClose();
 
@@ -174,15 +174,15 @@ namespace log4net.Appender
     /// Create the socket handler and wait for connections
     /// </para>
     /// </remarks>
-    public override void ActivateOptions() 
+    public override void ActivateOptions()
     {
       base.ActivateOptions();
-      try 
+      try
       {
-        LogLog.Debug(declaringType, "Creating SocketHandler to listen on port ["+m_listeningPort+"]");
+        LogLog.Debug(declaringType, "Creating SocketHandler to listen on port [" + m_listeningPort + "]");
         m_handler = new SocketHandler(m_listeningPort);
       }
-      catch(Exception ex) 
+      catch (Exception ex)
       {
         LogLog.Error(declaringType, "Failed to create SocketHandler", ex);
         throw;
@@ -198,7 +198,7 @@ namespace log4net.Appender
     /// Writes the logging event to each connected client.
     /// </para>
     /// </remarks>
-    protected override void Append(LoggingEvent loggingEvent) 
+    protected override void Append(LoggingEvent loggingEvent)
     {
       if (m_handler != null && m_handler.HasConnections)
       {
@@ -221,7 +221,7 @@ namespace log4net.Appender
     /// </para>
     /// </remarks>
     protected class SocketHandler : IDisposable
-    {      
+    {
       private const int MAX_CONNECTIONS = 20;
 
       private Socket m_serverSocket;
@@ -325,7 +325,7 @@ namespace log4net.Appender
 
         #endregion
       }
-    
+
       /// <summary>
       /// Opens a new server port on <paramref ref="port"/>
       /// </summary>
@@ -387,7 +387,7 @@ namespace log4net.Appender
       /// <param name="client">client to add</param>
       private void AddClient(SocketClient client)
       {
-        lock(this)
+        lock (this)
         {
           ArrayList clientsCopy = (ArrayList)m_clients.Clone();
           clientsCopy.Add(client);
@@ -401,7 +401,7 @@ namespace log4net.Appender
       /// <param name="client">client to remove</param>
       private void RemoveClient(SocketClient client)
       {
-        lock(this)
+        lock (this)
         {
           ArrayList clientsCopy = (ArrayList)m_clients.Clone();
           clientsCopy.Remove(client);
@@ -431,7 +431,7 @@ namespace log4net.Appender
           return (localClients != null && localClients.Count > 0);
         }
       }
-      
+
 
 #if NETSTANDARD
       private void OnConnect(Task<Socket> acceptTask)
@@ -457,11 +457,11 @@ namespace log4net.Appender
           // Block until a client connects
           Socket socket = m_serverSocket.EndAccept(asyncResult);
 #endif
-          LogLog.Debug(declaringType, "Accepting connection from ["+socket.RemoteEndPoint.ToString()+"]");
+          LogLog.Debug(declaringType, "Accepting connection from [" + socket.RemoteEndPoint.ToString() + "]");
           SocketClient client = new SocketClient(socket);
 
           int currentActiveConnectionsCount = m_clients.Count;
-          if (currentActiveConnectionsCount < MAX_CONNECTIONS) 
+          if (currentActiveConnectionsCount < MAX_CONNECTIONS)
           {
             try
             {
@@ -473,7 +473,7 @@ namespace log4net.Appender
               client.Dispose();
             }
           }
-          else 
+          else
           {
             client.Send("Sorry - Too many connections.\r\n");
             client.Dispose();
@@ -513,12 +513,12 @@ namespace log4net.Appender
 
         Socket localSocket = m_serverSocket;
         m_serverSocket = null;
-        try 
+        try
         {
           localSocket.Shutdown(SocketShutdown.Both);
-        } 
-        catch 
-        { 
+        }
+        catch
+        {
         }
 
         try
@@ -529,9 +529,9 @@ namespace log4net.Appender
           localSocket.Dispose();
 #endif
         }
-        catch 
-        { 
-        }      
+        catch
+        {
+        }
       }
 
       #endregion

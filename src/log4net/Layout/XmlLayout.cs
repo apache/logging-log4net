@@ -97,7 +97,7 @@ namespace log4net.Layout
     /// appender as well.
     /// </para>
     /// </remarks>
-    public XmlLayout(bool locationInfo) :  base(locationInfo)
+    public XmlLayout(bool locationInfo) : base(locationInfo)
     {
     }
 
@@ -121,7 +121,7 @@ namespace log4net.Layout
       set { m_prefix = value; }
     }
 
-    
+
     /// <summary>
     /// Set whether or not to base64 encode the message.
     /// </summary>
@@ -137,8 +137,8 @@ namespace log4net.Layout
     /// </remarks>
     public bool Base64EncodeMessage
     {
-      get {return m_base64Message;}
-      set {m_base64Message=value;}
+      get { return m_base64Message; }
+      set { m_base64Message = value; }
     }
 
     /// <summary>
@@ -156,8 +156,8 @@ namespace log4net.Layout
     /// </remarks>
     public bool Base64EncodeProperties
     {
-      get {return m_base64Properties;}
-      set {m_base64Properties=value;}
+      get { return m_base64Properties; }
+      set { m_base64Properties = value; }
     }
 
     #endregion Public Instance Properties
@@ -183,7 +183,7 @@ namespace log4net.Layout
     /// Builds a cache of the element names
     /// </para>
     /// </remarks>
-    public override void ActivateOptions() 
+    public override void ActivateOptions()
     {
       base.ActivateOptions();
 
@@ -198,7 +198,7 @@ namespace log4net.Layout
         m_elmLocation = m_prefix + ":" + ELM_LOCATION;
       }
     }
-    
+
     #endregion Implementation of IOptionHandler
 
     #region Override implementation of XMLLayoutBase
@@ -216,12 +216,12 @@ namespace log4net.Layout
     /// </remarks>
     protected override void FormatXml(XmlWriter writer, LoggingEvent loggingEvent)
     {
-      #if NETSTANDARD
+#if NETSTANDARD
       writer.WriteStartElement(m_prefix, ELM_EVENT, m_prefix);
       // writer.WriteAttributeString("xmlns", "log4net", null, "http://logging.apache.org/log4net/schemas/log4net-events-1.2");
-      #else
+#else
       writer.WriteStartElement(m_elmEvent);
-      #endif
+#endif
       writer.WriteAttributeString(ATTR_LOGGER, loggingEvent.LoggerName);
 
 #if NET_2_0 || NETCF_2_0 || MONO_2_0 || NETSTANDARD
@@ -245,13 +245,13 @@ namespace log4net.Layout
       {
         writer.WriteAttributeString(ATTR_USERNAME, loggingEvent.UserName);
       }
-    
+
       // Append the message text
-      #if NETSTANDARD
+#if NETSTANDARD
       writer.WriteStartElement(m_prefix, ELM_MESSAGE, m_prefix);
-      #else
+#else
       writer.WriteStartElement(m_elmMessage);
-      #endif
+#endif
       if (!this.Base64EncodeMessage)
       {
         Transform.WriteEscapedXmlString(writer, loggingEvent.RenderedMessage, this.InvalidCharReplacement);
@@ -260,7 +260,7 @@ namespace log4net.Layout
       {
         byte[] messageBytes = Encoding.UTF8.GetBytes(loggingEvent.RenderedMessage);
         string base64Message = Convert.ToBase64String(messageBytes, 0, messageBytes.Length);
-        Transform.WriteEscapedXmlString(writer, base64Message,this.InvalidCharReplacement);
+        Transform.WriteEscapedXmlString(writer, base64Message, this.InvalidCharReplacement);
       }
       writer.WriteEndElement();
 
@@ -269,25 +269,25 @@ namespace log4net.Layout
       // Append the properties text
       if (properties.Count > 0)
       {
-        #if NETSTANDARD
+#if NETSTANDARD
         writer.WriteStartElement(m_prefix, ELM_PROPERTIES, m_prefix);
-        #else
+#else
         writer.WriteStartElement(m_elmProperties);
-        #endif
-        foreach(System.Collections.DictionaryEntry entry in properties)
+#endif
+        foreach (System.Collections.DictionaryEntry entry in properties)
         {
-          #if NETSTANDARD
+#if NETSTANDARD
           writer.WriteStartElement(m_prefix, ELM_DATA, m_prefix);
-          #else
+#else
           writer.WriteStartElement(m_elmData);
-          #endif
-          writer.WriteAttributeString(ATTR_NAME, Transform.MaskXmlInvalidCharacters((string)entry.Key,this.InvalidCharReplacement));
+#endif
+          writer.WriteAttributeString(ATTR_NAME, Transform.MaskXmlInvalidCharacters((string)entry.Key, this.InvalidCharReplacement));
 
           // Use an ObjectRenderer to convert the object to a string
-          string valueStr =null;
+          string valueStr = null;
           if (!this.Base64EncodeProperties)
           {
-            valueStr = Transform.MaskXmlInvalidCharacters(loggingEvent.Repository.RendererMap.FindAndRender(entry.Value),this.InvalidCharReplacement);
+            valueStr = Transform.MaskXmlInvalidCharacters(loggingEvent.Repository.RendererMap.FindAndRender(entry.Value), this.InvalidCharReplacement);
           }
           else
           {
@@ -305,24 +305,24 @@ namespace log4net.Layout
       if (exceptionStr != null && exceptionStr.Length > 0)
       {
         // Append the stack trace line
-        #if NETSTANDARD
+#if NETSTANDARD
         writer.WriteStartElement(m_prefix, ELM_EXCEPTION, m_prefix);
-        #else
+#else
         writer.WriteStartElement(m_elmException);
-        #endif
-        Transform.WriteEscapedXmlString(writer, exceptionStr,this.InvalidCharReplacement);
+#endif
+        Transform.WriteEscapedXmlString(writer, exceptionStr, this.InvalidCharReplacement);
         writer.WriteEndElement();
       }
 
       if (LocationInfo)
-      { 
+      {
         LocationInfo locationInfo = loggingEvent.LocationInformation;
 
-        #if NETSTANDARD
+#if NETSTANDARD
         writer.WriteStartElement(m_prefix, ELM_LOCATION, m_prefix);
-        #else
+#else
         writer.WriteStartElement(m_elmLocation);
-        #endif
+#endif
         writer.WriteAttributeString(ATTR_CLASS, locationInfo.ClassName);
         writer.WriteAttributeString(ATTR_METHOD, locationInfo.MethodName);
         writer.WriteAttributeString(ATTR_FILE, locationInfo.FileName);
@@ -336,7 +336,7 @@ namespace log4net.Layout
     #endregion Override implementation of XMLLayoutBase
 
     #region Private Instance Fields
-  
+
     /// <summary>
     /// The prefix to use for all generated element names
     /// </summary>
@@ -349,8 +349,8 @@ namespace log4net.Layout
     private string m_elmException = ELM_EXCEPTION;
     private string m_elmLocation = ELM_LOCATION;
 
-    private bool m_base64Message=false;
-    private bool m_base64Properties=false;
+    private bool m_base64Message = false;
+    private bool m_base64Properties = false;
 
     #endregion Private Instance Fields
 

@@ -35,7 +35,7 @@ namespace log4net.Core
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
-  public class LevelEvaluator : ITriggeringEventEvaluator 
+  public class LevelEvaluator : ITriggeringEventEvaluator
   {
     /// <summary>
     /// The threshold for triggering
@@ -120,14 +120,14 @@ namespace log4net.Core
     /// level.
     /// </para>
     /// </remarks>
-    public bool IsTriggeringEvent(LoggingEvent loggingEvent) 
+    public bool IsTriggeringEvent(LoggingEvent loggingEvent)
     {
       if (loggingEvent == null)
       {
         throw new ArgumentNullException("loggingEvent");
       }
 
-      return (loggingEvent.Level >= m_threshold); 
+      return (loggingEvent.Level >= m_threshold);
     }
   }
 }

@@ -68,7 +68,7 @@ namespace log4net.Layout.Pattern
     {
       m_precision = 0;
 
-      if (Option != null) 
+      if (Option != null)
       {
         string optStr = Option.Trim();
         if (optStr.Length > 0)
@@ -76,7 +76,7 @@ namespace log4net.Layout.Pattern
           int precisionVal;
           if (SystemInfo.TryParse(optStr, out precisionVal))
           {
-            if (precisionVal <= 0) 
+            if (precisionVal <= 0)
             {
               LogLog.Error(declaringType, "NamedPatternConverter: Precision option (" + optStr + ") isn't a positive integer.");
             }
@@ -84,7 +84,7 @@ namespace log4net.Layout.Pattern
             {
               m_precision = precisionVal;
             }
-          } 
+          }
           else
           {
             LogLog.Error(declaringType, "NamedPatternConverter: Precision option \"" + optStr + "\" not a decimal integer.");
@@ -110,7 +110,7 @@ namespace log4net.Layout.Pattern
     /// </para>
     /// </remarks>
     protected abstract string GetFullyQualifiedName(LoggingEvent loggingEvent);
-  
+
     /// <summary>
     /// Convert the pattern to the rendered message
     /// </summary>
@@ -127,45 +127,45 @@ namespace log4net.Layout.Pattern
       {
         writer.Write(name);
       }
-      else 
+      else
       {
         int len = name.Length;
-                string trailingDot = string.Empty;
-                if (name.EndsWith(DOT))
-                {
-                    trailingDot = DOT;
-                    name = name.Substring(0, len - 1);
-                    len--;
-                }
-
-                int end = name.LastIndexOf(DOT);
-        for(int i = 1; end > 0 && i < m_precision; i++) 
+        string trailingDot = string.Empty;
+        if (name.EndsWith(DOT))
         {
-                    end = name.LastIndexOf('.', end - 1);
-                }
-                if (end == -1)
-                {
-                    writer.Write(name + trailingDot);
-                }
-                else
-                {
-                    writer.Write(name.Substring(end + 1, len - end - 1) + trailingDot);
-                }
-      }    
+          trailingDot = DOT;
+          name = name.Substring(0, len - 1);
+          len--;
+        }
+
+        int end = name.LastIndexOf(DOT);
+        for (int i = 1; end > 0 && i < m_precision; i++)
+        {
+          end = name.LastIndexOf('.', end - 1);
+        }
+        if (end == -1)
+        {
+          writer.Write(name + trailingDot);
+        }
+        else
+        {
+          writer.Write(name.Substring(end + 1, len - end - 1) + trailingDot);
+        }
+      }
     }
 
-      #region Private Static Fields
+    #region Private Static Fields
 
-      /// <summary>
-      /// The fully qualified type of the NamedPatternConverter class.
-      /// </summary>
-      /// <remarks>
-      /// Used by the internal logger to record the Type of the
-      /// log message.
-      /// </remarks>
-      private static readonly Type declaringType = typeof(NamedPatternConverter);
+    /// <summary>
+    /// The fully qualified type of the NamedPatternConverter class.
+    /// </summary>
+    /// <remarks>
+    /// Used by the internal logger to record the Type of the
+    /// log message.
+    /// </remarks>
+    private static readonly Type declaringType = typeof(NamedPatternConverter);
 
-        private const string DOT = ".";
-      #endregion Private Static Fields
+    private const string DOT = ".";
+    #endregion Private Static Fields
   }
 }

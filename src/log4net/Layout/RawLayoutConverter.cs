@@ -51,7 +51,7 @@ namespace log4net.Layout
     /// as the <paramref name="sourceType"/>.
     /// </para>
     /// </remarks>
-    public bool CanConvertFrom(Type sourceType) 
+    public bool CanConvertFrom(Type sourceType)
     {
       // Accept an ILayout object
       return (typeof(ILayout).IsAssignableFrom(sourceType));
@@ -71,10 +71,10 @@ namespace log4net.Layout
     /// exception is thrown.
     /// </para>
     /// </remarks>
-    public object ConvertFrom(object source) 
+    public object ConvertFrom(object source)
     {
       ILayout layout = source as ILayout;
-      if (layout != null) 
+      if (layout != null)
       {
         return new Layout2RawLayoutAdapter(layout);
       }

@@ -58,7 +58,7 @@ namespace log4net.Layout
     }
 
     #endregion
-  
+
     #region Implementation of IOptionHandler
 
     /// <summary>
@@ -73,7 +73,7 @@ namespace log4net.Layout
     /// This method does nothing as options become effective immediately.
     /// </para>
     /// </remarks>
-    public override void ActivateOptions() 
+    public override void ActivateOptions()
     {
       // nothing to do.
     }
@@ -93,7 +93,7 @@ namespace log4net.Layout
     /// The exception string is retrieved from <see cref="M:LoggingEvent.GetExceptionString()"/>.
     /// </para>
     /// </remarks>
-    public override void Format(TextWriter writer, LoggingEvent loggingEvent) 
+    public override void Format(TextWriter writer, LoggingEvent loggingEvent)
     {
       if (loggingEvent == null)
       {

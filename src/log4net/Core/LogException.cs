@@ -42,7 +42,7 @@ namespace log4net.Core
 #if NETSTANDARD1_3
   public class LogException : Exception
 #else
-  public class LogException : ApplicationException 
+  public class LogException : ApplicationException
 #endif
   {
     #region Public Instance Constructors
@@ -69,10 +69,10 @@ namespace log4net.Core
     /// the specified message.
     /// </para>
     /// </remarks>
-    public LogException(String message) : base(message) 
+    public LogException(String message) : base(message)
     {
     }
-    
+
     /// <summary>
     /// Constructor
     /// </summary>
@@ -84,7 +84,7 @@ namespace log4net.Core
     /// with the specified message and inner exception.
     /// </para>
     /// </remarks>
-    public LogException(String message, Exception innerException) : base(message, innerException) 
+    public LogException(String message, Exception innerException) : base(message, innerException)
     {
     }
 
@@ -104,7 +104,7 @@ namespace log4net.Core
     /// with serialized data.
     /// </para>
     /// </remarks>
-    protected LogException(SerializationInfo info, StreamingContext context) : base(info, context) 
+    protected LogException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }
 #endif

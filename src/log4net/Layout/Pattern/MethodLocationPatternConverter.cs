@@ -35,7 +35,7 @@ namespace log4net.Layout.Pattern
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
-  internal sealed class MethodLocationPatternConverter : PatternLayoutConverter 
+  internal sealed class MethodLocationPatternConverter : PatternLayoutConverter
   {
     /// <summary>
     /// Write the method name to the output

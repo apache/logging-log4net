@@ -106,17 +106,17 @@ namespace log4net.Config
     {
       if (m_providerType == null)
       {
-        LogLog.Error(declaringType, "Attribute specified on assembly ["+sourceAssembly.FullName+"] with null ProviderType.");
+        LogLog.Error(declaringType, "Attribute specified on assembly [" + sourceAssembly.FullName + "] with null ProviderType.");
       }
       else
       {
-        LogLog.Debug(declaringType, "Creating provider of type ["+ m_providerType.FullName +"]");
+        LogLog.Debug(declaringType, "Creating provider of type [" + m_providerType.FullName + "]");
 
         SecurityContextProvider provider = Activator.CreateInstance(m_providerType) as SecurityContextProvider;
 
         if (provider == null)
         {
-          LogLog.Error(declaringType, "Failed to create SecurityContextProvider instance of type ["+m_providerType.Name+"].");
+          LogLog.Error(declaringType, "Failed to create SecurityContextProvider instance of type [" + m_providerType.Name + "].");
         }
         else
         {
@@ -133,18 +133,18 @@ namespace log4net.Config
 
     #endregion Private Instance Fields
 
-      #region Private Static Fields
+    #region Private Static Fields
 
-      /// <summary>
-      /// The fully qualified type of the SecurityContextProviderAttribute class.
-      /// </summary>
-      /// <remarks>
-      /// Used by the internal logger to record the Type of the
-      /// log message.
-      /// </remarks>
-      private static readonly Type declaringType = typeof(SecurityContextProviderAttribute);
+    /// <summary>
+    /// The fully qualified type of the SecurityContextProviderAttribute class.
+    /// </summary>
+    /// <remarks>
+    /// Used by the internal logger to record the Type of the
+    /// log message.
+    /// </remarks>
+    private static readonly Type declaringType = typeof(SecurityContextProviderAttribute);
 
-      #endregion Private Static Fields
+    #endregion Private Static Fields
   }
 }
 

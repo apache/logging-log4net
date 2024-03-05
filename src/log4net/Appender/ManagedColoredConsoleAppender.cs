@@ -98,7 +98,7 @@ namespace log4net.Appender
   /// <author>Rick Hobbs</author>
   /// <author>Nicko Cadell</author>
   /// <author>Pavlos Touboulidis</author>
-  public class ManagedColoredConsoleAppender: AppenderSkeleton
+  public class ManagedColoredConsoleAppender : AppenderSkeleton
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="ManagedColoredConsoleAppender" /> class.
@@ -107,10 +107,10 @@ namespace log4net.Appender
     /// The instance of the <see cref="ManagedColoredConsoleAppender" /> class is set up to write 
     /// to the standard output stream.
     /// </remarks>
-    public ManagedColoredConsoleAppender() 
+    public ManagedColoredConsoleAppender()
     {
     }
-    
+
     #region Public Instance Properties
     /// <summary>
     /// Target is the value of the console output stream.
@@ -136,8 +136,8 @@ namespace log4net.Appender
         if (SystemInfo.EqualsIgnoringCase(ConsoleError, v))
         {
           m_writeToErrorStream = true;
-        } 
-        else 
+        }
+        else
         {
           m_writeToErrorStream = false;
         }
@@ -174,18 +174,18 @@ namespace log4net.Appender
     /// The format of the output will depend on the appender's layout.
     /// </para>
     /// </remarks>
-    protected override void Append(log4net.Core.LoggingEvent loggingEvent) 
+    protected override void Append(log4net.Core.LoggingEvent loggingEvent)
     {
       System.IO.TextWriter writer;
-      
+
       if (m_writeToErrorStream)
         writer = Console.Error;
       else
         writer = Console.Out;
-      
+
       // Reset color
       Console.ResetColor();
-      
+
       // see if there is a specified lookup
       LevelColors levelColors = m_levelMapping.Lookup(loggingEvent.Level) as LevelColors;
       if (levelColors != null)
@@ -197,7 +197,7 @@ namespace log4net.Appender
         if (levelColors.HasForeColor)
           Console.ForegroundColor = levelColors.ForeColor;
       }
-      
+
       // Render the event to a string
       string strLoggingMessage = RenderLoggingEvent(loggingEvent);
       // and write it
@@ -304,11 +304,13 @@ namespace log4net.Appender
       }
       private ConsoleColor foreColor;
       private bool hasForeColor;
-            internal bool HasForeColor {
-                get {
-                    return hasForeColor;
-                }
-            }
+      internal bool HasForeColor
+      {
+        get
+        {
+          return hasForeColor;
+        }
+      }
 
       /// <summary>
       /// The mapped background color for the specified level
@@ -327,12 +329,14 @@ namespace log4net.Appender
         set { this.backColor = value; this.hasBackColor = true; }
       }
       private ConsoleColor backColor;
-            private bool hasBackColor;
-            internal bool HasBackColor {
-                get {
-                    return hasBackColor;
-                }
-            }
+      private bool hasBackColor;
+      internal bool HasBackColor
+      {
+        get
+        {
+          return hasBackColor;
+        }
+      }
     }
     #endregion // LevelColors LevelMapping Entry
   }

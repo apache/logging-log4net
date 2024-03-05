@@ -80,7 +80,7 @@ namespace log4net.Appender
     /// A semicolon-delimited list of e-mail addresses.
     /// </para>
     /// </remarks>
-    public string To 
+    public string To
     {
       get { return m_to; }
       set { m_to = value; }
@@ -97,7 +97,7 @@ namespace log4net.Appender
     /// The e-mail address of the sender.
     /// </para>
     /// </remarks>
-    public string From 
+    public string From
     {
       get { return m_from; }
       set { m_from = value; }
@@ -114,12 +114,12 @@ namespace log4net.Appender
     /// The subject line of the e-mail message.
     /// </para>
     /// </remarks>
-    public string Subject 
+    public string Subject
     {
       get { return m_subject; }
       set { m_subject = value; }
     }
-  
+
     /// <summary>
     /// Gets or sets the path to write the messages to.
     /// </summary>
@@ -135,7 +135,7 @@ namespace log4net.Appender
       set { m_pickupDir = value; }
     }
 
-     /// <summary>
+    /// <summary>
     /// Gets or sets the file extension for the generated files
     /// </summary>
     /// <value>
@@ -182,7 +182,7 @@ namespace log4net.Appender
     /// of the current thread.
     /// </para>
     /// </remarks>
-    public SecurityContext SecurityContext 
+    public SecurityContext SecurityContext
     {
       get { return m_securityContext; }
       set { m_securityContext = value; }
@@ -201,17 +201,17 @@ namespace log4net.Appender
     /// Sends the contents of the cyclic buffer as an e-mail message.
     /// </para>
     /// </remarks>
-    protected override void SendBuffer(LoggingEvent[] events) 
+    protected override void SendBuffer(LoggingEvent[] events)
     {
       // Note: this code already owns the monitor for this
       // appender. This frees us from needing to synchronize again.
-      try 
+      try
       {
         string filePath = null;
         StreamWriter writer = null;
 
         // Impersonate to open the file
-        using(SecurityContext.Impersonate(this))
+        using (SecurityContext.Impersonate(this))
         {
           filePath = Path.Combine(m_pickupDir, SystemInfo.NewGuid().ToString("N") + m_fileExtension);
           writer = File.CreateText(filePath);
@@ -219,11 +219,11 @@ namespace log4net.Appender
 
         if (writer == null)
         {
-          ErrorHandler.Error("Failed to create output file for writing ["+filePath+"]", null, ErrorCode.FileOpenFailure);
+          ErrorHandler.Error("Failed to create output file for writing [" + filePath + "]", null, ErrorCode.FileOpenFailure);
         }
         else
         {
-          using(writer)
+          using (writer)
           {
             writer.WriteLine("To: " + m_to);
             writer.WriteLine("From: " + m_from);
@@ -237,7 +237,7 @@ namespace log4net.Appender
               writer.Write(t);
             }
 
-            for(int i = 0; i < events.Length; i++) 
+            for (int i = 0; i < events.Length; i++)
             {
               // Render the event and append the text to the buffer
               RenderLoggingEvent(writer, events[i]);
@@ -253,8 +253,8 @@ namespace log4net.Appender
             writer.WriteLine(".");
           }
         }
-      } 
-      catch(Exception e) 
+      }
+      catch (Exception e)
       {
         ErrorHandler.Error("Error occurred while sending e-mail notification.", e);
       }
@@ -280,8 +280,8 @@ namespace log4net.Appender
     /// <see cref="ActivateOptions"/> must be called again.
     /// </para>
     /// </remarks>
-    public override void ActivateOptions() 
-    {  
+    public override void ActivateOptions()
+    {
       base.ActivateOptions();
 
       if (m_securityContext == null)
@@ -289,7 +289,7 @@ namespace log4net.Appender
         m_securityContext = SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
       }
 
-      using(SecurityContext.Impersonate(this))
+      using (SecurityContext.Impersonate(this))
       {
         m_pickupDir = ConvertToFullPath(m_pickupDir.Trim());
       }

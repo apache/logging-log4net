@@ -34,7 +34,7 @@ namespace log4net.Layout.Pattern
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
-  internal sealed class FullLocationPatternConverter : PatternLayoutConverter 
+  internal sealed class FullLocationPatternConverter : PatternLayoutConverter
   {
     /// <summary>
     /// Write the caller location info to the output
@@ -48,7 +48,7 @@ namespace log4net.Layout.Pattern
     /// </remarks>
     protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
     {
-      writer.Write( loggingEvent.LocationInformation.FullInfo );
+      writer.Write(loggingEvent.LocationInformation.FullInfo);
     }
   }
 }

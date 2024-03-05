@@ -40,7 +40,7 @@ namespace log4net.Layout.Pattern
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
-  internal sealed class ExceptionPatternConverter : PatternLayoutConverter 
+  internal sealed class ExceptionPatternConverter : PatternLayoutConverter
   {
     /// <summary>
     /// Default constructor
@@ -123,7 +123,7 @@ namespace log4net.Layout.Pattern
       else
       {
         string exceptionString = loggingEvent.GetExceptionString();
-        if (exceptionString != null && exceptionString.Length > 0) 
+        if (exceptionString != null && exceptionString.Length > 0)
         {
           writer.WriteLine(exceptionString);
         }

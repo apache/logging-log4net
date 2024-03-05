@@ -35,7 +35,7 @@ namespace log4net.Layout.Pattern
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
-  internal sealed class FileLocationPatternConverter : PatternLayoutConverter 
+  internal sealed class FileLocationPatternConverter : PatternLayoutConverter
   {
     /// <summary>
     /// Write the caller location file name to the output

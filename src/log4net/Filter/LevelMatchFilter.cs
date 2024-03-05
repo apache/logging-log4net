@@ -122,14 +122,14 @@ namespace log4net.Filter
     /// the result will be <see cref="FilterDecision.Neutral"/>.
     /// </para>
     /// </remarks>
-    public override FilterDecision Decide(LoggingEvent loggingEvent) 
+    public override FilterDecision Decide(LoggingEvent loggingEvent)
     {
       if (loggingEvent == null)
       {
         throw new ArgumentNullException("loggingEvent");
       }
 
-      if (m_levelToMatch != null && m_levelToMatch == loggingEvent.Level) 
+      if (m_levelToMatch != null && m_levelToMatch == loggingEvent.Level)
       {
         // Found match
         return m_acceptOnMatch ? FilterDecision.Accept : FilterDecision.Deny;

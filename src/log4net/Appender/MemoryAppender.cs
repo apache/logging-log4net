@@ -86,10 +86,10 @@ namespace log4net.Appender
     /// </remarks>
     public virtual LoggingEvent[] GetEvents()
     {
-            lock (m_eventsList.SyncRoot)
-            {
-                return (LoggingEvent[]) m_eventsList.ToArray(typeof(LoggingEvent));
-            }
+      lock (m_eventsList.SyncRoot)
+      {
+        return (LoggingEvent[])m_eventsList.ToArray(typeof(LoggingEvent));
+      }
     }
 
     /// <summary>
@@ -113,8 +113,8 @@ namespace log4net.Appender
     public virtual bool OnlyFixPartialEventData
     {
       get { return (Fix == FixFlags.Partial); }
-      set 
-      { 
+      set
+      {
         if (value)
         {
           Fix = FixFlags.Partial;
@@ -153,18 +153,18 @@ namespace log4net.Appender
     /// <remarks>
     /// <para>Stores the <paramref name="loggingEvent"/> in the events list.</para>
     /// </remarks>
-    protected override void Append(LoggingEvent loggingEvent) 
+    protected override void Append(LoggingEvent loggingEvent)
     {
       // Because we are caching the LoggingEvent beyond the
       // lifetime of the Append() method we must fix any
       // volatile data in the event.
       loggingEvent.Fix = this.Fix;
 
-            lock (m_eventsList.SyncRoot)
-            {
-                m_eventsList.Add(loggingEvent);
-            }
-    } 
+      lock (m_eventsList.SyncRoot)
+      {
+        m_eventsList.Add(loggingEvent);
+      }
+    }
 
     #endregion Override implementation of AppenderSkeleton
 
@@ -178,30 +178,30 @@ namespace log4net.Appender
     /// </remarks>
     public virtual void Clear()
     {
-            lock (m_eventsList.SyncRoot)
-            {
-                m_eventsList.Clear();
-            }
+      lock (m_eventsList.SyncRoot)
+      {
+        m_eventsList.Clear();
+      }
     }
 
-        /// <summary>
-        /// Gets the events that have been logged and clears the list of events.
-        /// </summary>
-        /// <returns>The events that have been logged</returns>
-        /// <remarks>
-        /// <para>
-        /// Gets the events that have been logged and clears the list of events.
-        /// </para>
-        /// </remarks>
-        public virtual LoggingEvent[] PopAllEvents()
-        {
-            lock (m_eventsList.SyncRoot)
-            {
-                LoggingEvent[] tmp = (LoggingEvent[]) m_eventsList.ToArray(typeof (LoggingEvent));
-                m_eventsList.Clear();
-                return tmp;
-            }
-        }
+    /// <summary>
+    /// Gets the events that have been logged and clears the list of events.
+    /// </summary>
+    /// <returns>The events that have been logged</returns>
+    /// <remarks>
+    /// <para>
+    /// Gets the events that have been logged and clears the list of events.
+    /// </para>
+    /// </remarks>
+    public virtual LoggingEvent[] PopAllEvents()
+    {
+      lock (m_eventsList.SyncRoot)
+      {
+        LoggingEvent[] tmp = (LoggingEvent[])m_eventsList.ToArray(typeof(LoggingEvent));
+        m_eventsList.Clear();
+        return tmp;
+      }
+    }
 
     #endregion Public Instance Methods
 

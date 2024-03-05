@@ -46,7 +46,7 @@ namespace log4net.Util
     /// Default protected constructor
     /// </para>
     /// </remarks>
-    protected LevelMappingEntry() 
+    protected LevelMappingEntry()
     {
     }
 
@@ -93,7 +93,7 @@ namespace log4net.Util
 
     #region Private Instance Fields
 
-    private Level m_level; 
+    private Level m_level;
 
     #endregion // Private Instance Fields
   }

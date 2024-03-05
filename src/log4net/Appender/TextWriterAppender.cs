@@ -42,7 +42,7 @@ namespace log4net.Appender
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
   /// <author>Douglas de la Torre</author>
-    public class TextWriterAppender : AppenderSkeleton
+  public class TextWriterAppender : AppenderSkeleton
   {
     #region Public Instance Constructors
 
@@ -54,7 +54,7 @@ namespace log4net.Appender
     /// Default constructor.
     /// </para>
     /// </remarks>
-    public TextWriterAppender() 
+    public TextWriterAppender()
     {
     }
 
@@ -90,7 +90,7 @@ namespace log4net.Appender
     /// </para>
     /// </remarks>
     [Obsolete("Instead use the default constructor and set the Layout & Writer properties")]
-    public TextWriterAppender(ILayout layout, TextWriter writer) 
+    public TextWriterAppender(ILayout layout, TextWriter writer)
     {
       Layout = layout;
       Writer = writer;
@@ -123,7 +123,7 @@ namespace log4net.Appender
     /// be recorded on disk when the application exits. This is a high
     /// price to pay even for a 20% performance gain.
     /// </remarks>
-    public bool ImmediateFlush 
+    public bool ImmediateFlush
     {
       get { return m_immediateFlush; }
       set { m_immediateFlush = value; }
@@ -144,12 +144,12 @@ namespace log4net.Appender
     /// <b>Note:</b> Logging to an unopened <see cref="TextWriter"/> will fail.
     /// </para>
     /// </remarks>
-    public virtual TextWriter Writer 
+    public virtual TextWriter Writer
     {
       get { return m_qtw; }
-      set 
+      set
       {
-        lock(this) 
+        lock (this)
         {
           Reset();
           if (value != null)
@@ -175,27 +175,27 @@ namespace log4net.Appender
     /// </para>
     /// </remarks>
     /// <returns><c>false</c> if any of the preconditions fail.</returns>
-    protected override bool PreAppendCheck() 
+    protected override bool PreAppendCheck()
     {
-      if (!base.PreAppendCheck()) 
+      if (!base.PreAppendCheck())
       {
         return false;
       }
 
-      if (m_qtw == null) 
+      if (m_qtw == null)
       {
         // Allow subclass to lazily create the writer
         PrepareWriter();
 
-        if (m_qtw == null) 
+        if (m_qtw == null)
         {
-          ErrorHandler.Error("No output stream or file set for the appender named ["+ Name +"].");
+          ErrorHandler.Error("No output stream or file set for the appender named [" + Name + "].");
           return false;
         }
       }
-      if (m_qtw.Closed) 
+      if (m_qtw.Closed)
       {
-        ErrorHandler.Error("Output stream for appender named ["+ Name +"] has been closed.");
+        ErrorHandler.Error("Output stream for appender named [" + Name + "] has been closed.");
         return false;
       }
 
@@ -216,14 +216,14 @@ namespace log4net.Appender
     /// The format of the output will depend on the appender's layout.
     /// </para>
     /// </remarks>
-    protected override void Append(LoggingEvent loggingEvent) 
+    protected override void Append(LoggingEvent loggingEvent)
     {
       RenderLoggingEvent(m_qtw, loggingEvent);
 
-      if (m_immediateFlush) 
+      if (m_immediateFlush)
       {
         m_qtw.Flush();
-      } 
+      }
     }
 
     /// <summary>
@@ -237,17 +237,17 @@ namespace log4net.Appender
     /// before flushing the stream.
     /// </para>
     /// </remarks>
-    protected override void Append(LoggingEvent[] loggingEvents) 
+    protected override void Append(LoggingEvent[] loggingEvents)
     {
-      foreach(LoggingEvent loggingEvent in loggingEvents)
+      foreach (LoggingEvent loggingEvent in loggingEvents)
       {
         RenderLoggingEvent(m_qtw, loggingEvent);
       }
 
-      if (m_immediateFlush) 
+      if (m_immediateFlush)
       {
         m_qtw.Flush();
-      } 
+      }
     }
 
     /// <summary>
@@ -256,9 +256,9 @@ namespace log4net.Appender
     /// <remarks>
     /// Closed appenders cannot be reused.
     /// </remarks>
-    protected override void OnClose() 
+    protected override void OnClose()
     {
-      lock(this)
+      lock (this)
       {
         Reset();
       }
@@ -276,20 +276,20 @@ namespace log4net.Appender
       get { return base.ErrorHandler; }
       set
       {
-        lock(this)
+        lock (this)
         {
-          if (value == null) 
+          if (value == null)
           {
             LogLog.Warn(declaringType, "TextWriterAppender: You have tried to set a null error-handler.");
-          } 
-          else 
+          }
+          else
           {
             base.ErrorHandler = value;
-            if (m_qtw != null) 
+            if (m_qtw != null)
             {
               m_qtw.ErrorHandler = value;
             }
-          }  
+          }
         }
       }
     }
@@ -334,17 +334,17 @@ namespace log4net.Appender
     /// Closes the underlying <see cref="TextWriter"/>.
     /// </para>
     /// </remarks>
-    protected virtual void CloseWriter() 
+    protected virtual void CloseWriter()
     {
-      if (m_qtw != null) 
+      if (m_qtw != null)
       {
-        try 
+        try
         {
           m_qtw.Close();
-        } 
-        catch(Exception e) 
+        }
+        catch (Exception e)
         {
-          ErrorHandler.Error("Could not close writer ["+m_qtw+"]", e); 
+          ErrorHandler.Error("Could not close writer [" + m_qtw + "]", e);
           // do need to invoke an error handler
           // at this late stage
         }
@@ -360,7 +360,7 @@ namespace log4net.Appender
     /// Subclasses can override this method for an alternate closing behavior.
     /// </para>
     /// </remarks>
-    protected virtual void Reset() 
+    protected virtual void Reset()
     {
       WriteFooterAndCloseWriter();
       m_qtw = null;
@@ -374,9 +374,9 @@ namespace log4net.Appender
     /// Writes a footer as produced by the embedded layout's <see cref="ILayout.Footer"/> property.
     /// </para>
     /// </remarks>
-    protected virtual void WriteFooter() 
+    protected virtual void WriteFooter()
     {
-      if (Layout != null && m_qtw != null && !m_qtw.Closed) 
+      if (Layout != null && m_qtw != null && !m_qtw.Closed)
       {
         string f = Layout.Footer;
         if (f != null)
@@ -394,9 +394,9 @@ namespace log4net.Appender
     /// Writes a header produced by the embedded layout's <see cref="ILayout.Header"/> property.
     /// </para>
     /// </remarks>
-    protected virtual void WriteHeader() 
+    protected virtual void WriteHeader()
     {
-      if (Layout != null && m_qtw != null && !m_qtw.Closed) 
+      if (Layout != null && m_qtw != null && !m_qtw.Closed)
       {
         string h = Layout.Header;
         if (h != null)
@@ -437,13 +437,13 @@ namespace log4net.Appender
     {
       get { return m_qtw; }
       set { m_qtw = value; }
-        }
+    }
 
-        #endregion Protected Instance Methods
+    #endregion Protected Instance Methods
 
-        #region Private Instance Fields
+    #region Private Instance Fields
 
-        /// <summary>
+    /// <summary>
     /// This is the <see cref="log4net.Util.QuietTextWriter"/> where logging events
     /// will be written to. 
     /// </summary>
@@ -469,36 +469,36 @@ namespace log4net.Appender
 
     #endregion Private Instance Fields
 
-      #region Private Static Fields
+    #region Private Static Fields
 
-      /// <summary>
-      /// The fully qualified type of the TextWriterAppender class.
-      /// </summary>
-      /// <remarks>
-      /// Used by the internal logger to record the Type of the
-      /// log message.
-      /// </remarks>
-      private static readonly Type declaringType = typeof(TextWriterAppender);
+    /// <summary>
+    /// The fully qualified type of the TextWriterAppender class.
+    /// </summary>
+    /// <remarks>
+    /// Used by the internal logger to record the Type of the
+    /// log message.
+    /// </remarks>
+    private static readonly Type declaringType = typeof(TextWriterAppender);
 
-      #endregion Private Static Fields
+    #endregion Private Static Fields
 
-            /// <summary>
-            /// Flushes any buffered log data.
-            /// </summary>
-            /// <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
-            /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
-            public override bool Flush(int millisecondsTimeout)
-            {
-                // Nothing to do if ImmediateFlush is true
-                if (m_immediateFlush) return true;
+    /// <summary>
+    /// Flushes any buffered log data.
+    /// </summary>
+    /// <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
+    /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+    public override bool Flush(int millisecondsTimeout)
+    {
+      // Nothing to do if ImmediateFlush is true
+      if (m_immediateFlush) return true;
 
-                // lock(this) will block any Appends while the buffer is flushed.
-                lock (this)
-                {
-                    m_qtw.Flush();
-                }
+      // lock(this) will block any Appends while the buffer is flushed.
+      lock (this)
+      {
+        m_qtw.Flush();
+      }
 
-                return true;
-            }
+      return true;
+    }
   }
 }

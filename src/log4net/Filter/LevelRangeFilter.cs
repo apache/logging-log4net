@@ -142,38 +142,38 @@ namespace log4net.Filter
     /// <see cref="FilterDecision.Neutral"/> is returned.
     /// </para>
     /// </remarks>
-    public override FilterDecision Decide(LoggingEvent loggingEvent) 
+    public override FilterDecision Decide(LoggingEvent loggingEvent)
     {
       if (loggingEvent == null)
       {
         throw new ArgumentNullException("loggingEvent");
       }
 
-      if (m_levelMin != null) 
+      if (m_levelMin != null)
       {
-        if (loggingEvent.Level < m_levelMin) 
+        if (loggingEvent.Level < m_levelMin)
         {
           // level of event is less than minimum
           return FilterDecision.Deny;
         }
       }
 
-      if (m_levelMax != null) 
+      if (m_levelMax != null)
       {
-        if (loggingEvent.Level > m_levelMax) 
+        if (loggingEvent.Level > m_levelMax)
         {
           // level of event is greater than maximum
           return FilterDecision.Deny;
         }
       }
 
-      if (m_acceptOnMatch) 
+      if (m_acceptOnMatch)
       {
         // this filter set up to bypass later filters and always return
         // accept if level in range
         return FilterDecision.Accept;
       }
-      else 
+      else
       {
         // event is ok for this filter; allow later filters to have a look..
         return FilterDecision.Neutral;
