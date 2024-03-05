@@ -1596,7 +1596,7 @@ namespace log4net.Tests.Appender
       fs.Close();
 
       AssertFileEquals(filename, "Test");
-      StringAssert.StartsWith(sh.Message, "Unable to acquire lock on file", "Expecting an error message");
+      StringAssert.StartsWith("Unable to acquire lock on file", sh.Message, "Expecting an error message");
     }
 
     /// <summary>
@@ -1618,7 +1618,7 @@ namespace log4net.Tests.Appender
       DestroyLogger();
 
       AssertFileEquals(filename, "This is a message 2" + Environment.NewLine);
-      Assert.AreEqual("Unable to acquire lock on file", sh.Message.Substring(0, 30),
+      StringAssert.StartsWith("Unable to acquire lock on file", sh.Message,
           "Expecting an error message");
     }
 
@@ -1997,54 +1997,6 @@ namespace log4net.Tests.Appender
       VerifyInitializeRollBackups(7, iMaxRollBackups);
       VerifyInitializeRollBackups(8, iMaxRollBackups);
     }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    [Test,
-     Ignore("Not Implemented: Want to test counted files limited up, to see that others are ?? ignored? deleted?")]
-    public void TestInitialization3()
-    {
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    [Test,
-     Ignore(
-         "Not Implemented: Want to test counted files limited down, to see that others are ?? ignored? deleted?")]
-    public void TestInitialization4()
-    {
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    [Test,
-     Ignore("Not Implemented: Want to test dated files with a limit, to see that others are ?? ignored? deleted?")]
-    public void TestInitialization5()
-    {
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    [Test,
-     Ignore("Not Implemented: Want to test dated files with no limit, to see that others are ?? ignored? deleted?")]
-    public void TestInitialization6()
-    {
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    [Test,
-     Ignore(
-         "Not Implemented: Want to test dated files with mixed dates existing, to see that other dates do not matter")]
-    public void TestInitialization7()
-    {
-    }
-
 
     //
     // Helper functions to dig into the appender

@@ -80,13 +80,25 @@ namespace log4net.Tests.Layout
 
     private static string CreateEventNode(string message)
     {
-      return String.Format("<event logger=\"TestLogger\" timestamp=\"{0}\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message>{1}</message></event>" + Environment.NewLine, XmlConvert.ToString(DateTime.Today, XmlDateTimeSerializationMode.Local),
-       message);
+      return string.Format("<{0}event logger=\"TestLogger\" timestamp=\"{2}\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"{1}><{0}message>{3}</{0}message></{0}event>" +
+        Environment.NewLine,
+#if NETCOREAPP
+        "log4net:", @" xmlns:log4net=""log4net""",
+#else
+        string.Empty, string.Empty,
+#endif
+        XmlConvert.ToString(DateTime.Today, XmlDateTimeSerializationMode.Local),
+        message);
     }
 
     private static string CreateEventNode(string key, string value)
     {
-      return String.Format("<event logger=\"TestLogger\" timestamp=\"{0}\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message>Test message</message><properties><data name=\"{1}\" value=\"{2}\" /></properties></event>" + Environment.NewLine,
+      return string.Format("<{0}event logger=\"TestLogger\" timestamp=\"{2}\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"{1}><{0}message>Test message</{0}message><{0}properties><{0}data name=\"{3}\" value=\"{4}\" /></{0}properties></{0}event>" + Environment.NewLine,
+#if NETCOREAPP
+        "log4net:", @" xmlns:log4net=""log4net""",
+#else
+        string.Empty, string.Empty,
+#endif
        XmlConvert.ToString(DateTime.Today, XmlDateTimeSerializationMode.Local), key, value);
     }
 
@@ -343,9 +355,15 @@ namespace log4net.Tests.Layout
       };
       bar(42);
 
+#if NETCOREAPP
+      const string nodeName = "log4net:exception";
+#else
+      const string nodeName = "exception";
+#endif
+
       var log = stringAppender.GetString();
-      var startOfExceptionText = log.IndexOf("<exception>", StringComparison.InvariantCulture) + 11;
-      var endOfExceptionText = log.IndexOf("</exception>", StringComparison.InvariantCulture);
+      var startOfExceptionText = log.IndexOf("<" + nodeName + ">", StringComparison.InvariantCulture) + nodeName.Length + 2;
+      var endOfExceptionText = log.IndexOf("</" + nodeName + ">", StringComparison.InvariantCulture);
       var sub = log.Substring(startOfExceptionText, endOfExceptionText - startOfExceptionText);
       if (sub.StartsWith("<![CDATA["))
       {

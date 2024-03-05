@@ -160,7 +160,7 @@ namespace log4net.Tests.Hierarchy
 
       ab.Log(Level.Debug, MSG, null);
       Assert.AreEqual(1, ca1.Counter);
-      Assert.AreEqual(2, ca2.Counter);
+      Assert.AreEqual(0, ca2.Counter);
 
       abc.Log(Level.Debug, MSG, null);
       Assert.AreEqual(2, ca1.Counter);

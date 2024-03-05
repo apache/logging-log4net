@@ -1162,7 +1162,7 @@ namespace log4net.Appender
     protected override void OnClose()
     {
       base.OnClose();
-      m_lockingModel.OnClose();
+      m_lockingModel?.OnClose();
     }
 
     /// <summary>
