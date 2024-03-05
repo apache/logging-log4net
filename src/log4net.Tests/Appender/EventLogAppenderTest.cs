@@ -46,7 +46,7 @@ namespace log4net.Tests.Appender
     public void TestGetEntryTypeForExistingApplicationName()
     {
       EventLogAppender eventAppender = new EventLogAppender();
-            eventAppender.ApplicationName = "Winlogon";
+      eventAppender.ApplicationName = "Winlogon";
       eventAppender.ActivateOptions();
 
       Assert.AreEqual(
@@ -78,17 +78,17 @@ namespace log4net.Tests.Appender
         GetEntryType(eventAppender, Level.Off));
     }
 
-        /// <summary>
-        /// ActivateOption tries to create an event source if it doesn't exist but this is going to fail on more modern Windows versions unless the code is run with local administrator privileges.
-        /// </summary>
-        [Test]
-  [Ignore("seems to require administrator privileges or a specific environent when run")]
-        public void ActivateOptionsDisablesAppenderIfSourceDoesntExist()
-        {
-            EventLogAppender eventAppender = new EventLogAppender();
-            eventAppender.ActivateOptions();
-            Assert.AreEqual(Level.Off, eventAppender.Threshold);
-        }
+    /// <summary>
+    /// ActivateOption tries to create an event source if it doesn't exist but this is going to fail on more modern Windows versions unless the code is run with local administrator privileges.
+    /// </summary>
+    [Test]
+    [Ignore("seems to require administrator privileges or a specific environent when run")]
+    public void ActivateOptionsDisablesAppenderIfSourceDoesntExist()
+    {
+      EventLogAppender eventAppender = new EventLogAppender();
+      eventAppender.ActivateOptions();
+      Assert.AreEqual(Level.Off, eventAppender.Threshold);
+    }
 
     //
     // Helper functions to dig into the appender

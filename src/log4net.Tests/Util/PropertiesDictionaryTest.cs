@@ -42,7 +42,7 @@ namespace log4net.Tests.Util
     {
       PropertiesDictionary pd = new PropertiesDictionary();
 
-      for(int i = 0; i < 10; i++)
+      for (int i = 0; i < 10; i++)
       {
         pd[i.ToString()] = i;
       }
@@ -60,7 +60,7 @@ namespace log4net.Tests.Util
 
       Assert.AreEqual(10, pd2.Count, "Deserialized Dictionary should have 10 items");
 
-      foreach(string key in pd.GetKeys())
+      foreach (string key in pd.GetKeys())
       {
         Assert.AreEqual(pd[key], pd2[key], "Check Value Persisted for key [{0}]", key);
       }

@@ -138,7 +138,7 @@ namespace log4net.Tests.Appender
 
     private void WaitFor(
       string failMessage,
-      Func<bool> condition, 
+      Func<bool> condition,
       int maxWaitMilliseconds = 5000)
     {
       var start = DateTime.Now;
@@ -169,7 +169,7 @@ namespace log4net.Tests.Appender
 
       string testMessage = string.Format("test message [ {0} ]", (new Random()).Next());
 
-      using(NDC.Push("value"))
+      using (NDC.Push("value"))
       {
       }
 
@@ -241,7 +241,7 @@ namespace log4net.Tests.Appender
           ChannelServices.RegisterChannel(m_remotingChannel);
 #endif
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
           Assert.Fail("Failed to set up LoggingSink: {0}", ex);
         }
@@ -251,7 +251,7 @@ namespace log4net.Tests.Appender
       }
     }
 
-        /// <summary>
+    /// <summary>
     /// Shuts down any loggers in the hierarchy, along
     /// with all appenders.
     /// </summary>
@@ -283,21 +283,25 @@ namespace log4net.Tests.Appender
       ResetRepository();
     }
 
-        /// <summary>
-        /// Close down remoting infrastructure
-        /// </summary>
-        [OneTimeTearDown]
-        public void UnregisterRemotingServerChannel() {
-            if (m_remotingChannel != null) {
-                ((TcpChannel) m_remotingChannel).StopListening(null);
-                try {
-                    ChannelServices.UnregisterChannel(m_remotingChannel);
-                }
-                catch (Exception) {
-                }
-                m_remotingChannel = null;
-            }
+    /// <summary>
+    /// Close down remoting infrastructure
+    /// </summary>
+    [OneTimeTearDown]
+    public void UnregisterRemotingServerChannel()
+    {
+      if (m_remotingChannel != null)
+      {
+        ((TcpChannel)m_remotingChannel).StopListening(null);
+        try
+        {
+          ChannelServices.UnregisterChannel(m_remotingChannel);
         }
+        catch (Exception)
+        {
+        }
+        m_remotingChannel = null;
+      }
+    }
 
     /// <summary>
     /// Configures the root appender for counting and rolling
@@ -420,7 +424,7 @@ namespace log4net.Tests.Appender.Remoting
 
     public void Test()
     {
-      using(NDC.Push("test1"))
+      using (NDC.Push("test1"))
       {
         log.Info("feature");
         Thread.Sleep(100);
@@ -444,7 +448,7 @@ namespace log4net.Tests.Appender.Remoting.Data
 
     public void Test()
     {
-      using(NDC.Push("test2"))
+      using (NDC.Push("test2"))
       {
         log.Info("return");
         Thread.Sleep(100);

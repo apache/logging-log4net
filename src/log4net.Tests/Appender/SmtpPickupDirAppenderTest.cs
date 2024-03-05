@@ -188,11 +188,11 @@ namespace log4net.Tests.Appender
       const string dateHeaderStart = "Date: ";
       foreach (string line in fileContent)
       {
-        if(line.StartsWith(dateHeaderStart))
+        if (line.StartsWith(dateHeaderStart))
         {
           string datePart = line.Substring(dateHeaderStart.Length);
           DateTime date = DateTime.ParseExact(datePart, "r", System.Globalization.CultureInfo.InvariantCulture);
-          double diff = Math.Abs( (DateTime.UtcNow - date).TotalMilliseconds);
+          double diff = Math.Abs((DateTime.UtcNow - date).TotalMilliseconds);
           Assert.LessOrEqual(diff, 1000, "Times should be equal, allowing a diff of one second to make test robust");
           hasDateHeader = true;
         }

@@ -306,67 +306,76 @@ namespace log4net.Tests.Layout
     }
 
 #if NET_4_0 || MONO_4_0 || NETSTANDARD
-        [Test]
-        public void BracketsInStackTracesKeepLogWellFormed() {
-            XmlLayout layout = new XmlLayout();
-            StringAppender stringAppender = new StringAppender();
-            stringAppender.Layout = layout;
+    [Test]
+    public void BracketsInStackTracesKeepLogWellFormed()
+    {
+      XmlLayout layout = new XmlLayout();
+      StringAppender stringAppender = new StringAppender();
+      stringAppender.Layout = layout;
 
-            ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-            BasicConfigurator.Configure(rep, stringAppender);
-            ILog log1 = LogManager.GetLogger(rep.Name, "TestLogger");
-            Action<int> bar = foo => { 
-                try {
-                    throw new NullReferenceException();
-                } catch (Exception ex) {
-                    log1.Error(string.Format("Error {0}", foo), ex);
-                }
-            };
-            bar(42);
-
-            // really only asserts there is no exception
-            var loggedDoc = new XmlDocument();
-            loggedDoc.LoadXml(stringAppender.GetString());
+      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+      BasicConfigurator.Configure(rep, stringAppender);
+      ILog log1 = LogManager.GetLogger(rep.Name, "TestLogger");
+      Action<int> bar = foo =>
+      {
+        try
+        {
+          throw new NullReferenceException();
         }
+        catch (Exception ex)
+        {
+          log1.Error(string.Format("Error {0}", foo), ex);
+        }
+      };
+      bar(42);
 
-        [Test]
-        public void BracketsInStackTracesAreEscapedProperly() {
-            XmlLayout layout = new XmlLayout();
-            StringAppender stringAppender = new StringAppender();
-            stringAppender.Layout = layout;
+      // really only asserts there is no exception
+      var loggedDoc = new XmlDocument();
+      loggedDoc.LoadXml(stringAppender.GetString());
+    }
 
-            ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-            BasicConfigurator.Configure(rep, stringAppender);
-            ILog log1 = LogManager.GetLogger(rep.Name, "TestLogger");
-            Action<int> bar = foo => {
-                try {
-                    throw new NullReferenceException();
-                }
-                catch (Exception ex) {
-                    log1.Error(string.Format("Error {0}", foo), ex);
-                }
-            };
-            bar(42);
+    [Test]
+    public void BracketsInStackTracesAreEscapedProperly()
+    {
+      XmlLayout layout = new XmlLayout();
+      StringAppender stringAppender = new StringAppender();
+      stringAppender.Layout = layout;
 
-            var log = stringAppender.GetString();
+      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+      BasicConfigurator.Configure(rep, stringAppender);
+      ILog log1 = LogManager.GetLogger(rep.Name, "TestLogger");
+      Action<int> bar = foo =>
+      {
+        try
+        {
+          throw new NullReferenceException();
+        }
+        catch (Exception ex)
+        {
+          log1.Error(string.Format("Error {0}", foo), ex);
+        }
+      };
+      bar(42);
+
+      var log = stringAppender.GetString();
 #if NETSTANDARD1_3
             var startOfExceptionText = log.IndexOf("<exception>", StringComparison.Ordinal) + 11;
             var endOfExceptionText = log.IndexOf("</exception>", StringComparison.Ordinal);
 #else
-            var startOfExceptionText = log.IndexOf("<exception>", StringComparison.InvariantCulture) + 11;
-            var endOfExceptionText = log.IndexOf("</exception>", StringComparison.InvariantCulture);
+      var startOfExceptionText = log.IndexOf("<exception>", StringComparison.InvariantCulture) + 11;
+      var endOfExceptionText = log.IndexOf("</exception>", StringComparison.InvariantCulture);
 #endif
-            var sub = log.Substring(startOfExceptionText, endOfExceptionText - startOfExceptionText);
-            if (sub.StartsWith("<![CDATA["))
-            {
-                StringAssert.EndsWith("]]>", sub);
-            }
-            else
-            {
-                StringAssert.DoesNotContain("<", sub);
-                StringAssert.DoesNotContain(">", sub);
-            }
-        }
+      var sub = log.Substring(startOfExceptionText, endOfExceptionText - startOfExceptionText);
+      if (sub.StartsWith("<![CDATA["))
+      {
+        StringAssert.EndsWith("]]>", sub);
+      }
+      else
+      {
+        StringAssert.DoesNotContain("<", sub);
+        StringAssert.DoesNotContain(">", sub);
+      }
+    }
 #endif
   }
 }

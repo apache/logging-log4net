@@ -89,7 +89,8 @@ namespace log4net.Tests.Util
     }
 
 #if !NETSTANDARD1_3
-    [Test][Platform(Include="Win")]
+    [Test]
+    [Platform(Include = "Win")]
     public void TestGetTypeFromStringCaseInsensitiveOnAssemblyName()
     {
       Type t;
@@ -155,7 +156,7 @@ namespace log4net.Tests.Util
       t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", false, false);
       Assert.AreSame(null, t, "Test explicit case sensitive fails type load");
 
-            Assert.Throws<TypeLoadException>(() =>  GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", true, false));
+      Assert.Throws<TypeLoadException>(() => GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", true, false));
     }
 
     // Wraps SystemInfo.GetTypeFromString because the method relies on GetCallingAssembly, which is
@@ -170,40 +171,40 @@ namespace log4net.Tests.Util
 #endif
     }
 
-        [Test]
-        public void EqualsIgnoringCase_BothNull_true()
-        {
-            Assert.True(SystemInfo.EqualsIgnoringCase(null, null));
-        }
+    [Test]
+    public void EqualsIgnoringCase_BothNull_true()
+    {
+      Assert.True(SystemInfo.EqualsIgnoringCase(null, null));
+    }
 
-        [Test]
-        public void EqualsIgnoringCase_LeftNull_false()
-        {
-            Assert.False(SystemInfo.EqualsIgnoringCase(null, "foo"));
-        }
+    [Test]
+    public void EqualsIgnoringCase_LeftNull_false()
+    {
+      Assert.False(SystemInfo.EqualsIgnoringCase(null, "foo"));
+    }
 
-        [Test]
-        public void EqualsIgnoringCase_RightNull_false()
-        {
-            Assert.False(SystemInfo.EqualsIgnoringCase("foo", null));
-        }
+    [Test]
+    public void EqualsIgnoringCase_RightNull_false()
+    {
+      Assert.False(SystemInfo.EqualsIgnoringCase("foo", null));
+    }
 
-        [Test]
-        public void EqualsIgnoringCase_SameStringsSameCase_true()
-        {
-            Assert.True(SystemInfo.EqualsIgnoringCase("foo", "foo"));
-        }
+    [Test]
+    public void EqualsIgnoringCase_SameStringsSameCase_true()
+    {
+      Assert.True(SystemInfo.EqualsIgnoringCase("foo", "foo"));
+    }
 
-        [Test]
-        public void EqualsIgnoringCase_SameStringsDifferentCase_true()
-        {
-            Assert.True(SystemInfo.EqualsIgnoringCase("foo", "FOO"));
-        }
+    [Test]
+    public void EqualsIgnoringCase_SameStringsDifferentCase_true()
+    {
+      Assert.True(SystemInfo.EqualsIgnoringCase("foo", "FOO"));
+    }
 
-        [Test]
-        public void EqualsIgnoringCase_DifferentStrings_false()
-        {
-            Assert.False(SystemInfo.EqualsIgnoringCase("foo", "foobar"));
-        }
+    [Test]
+    public void EqualsIgnoringCase_DifferentStrings_false()
+    {
+      Assert.False(SystemInfo.EqualsIgnoringCase("foo", "foobar"));
+    }
   }
 }
