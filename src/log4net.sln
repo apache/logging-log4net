@@ -1,28 +1,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-#
-#
-# Licensed to the Apache Software Foundation (ASF) under one
-# or more contributor license agreements.  See the NOTICE file
-# distributed with this work for additional information
-# regarding copyright ownership.  The ASF licenses this file
-# to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
-# with the License.  You may obtain a copy of the License at
-#
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# KIND, either express or implied.  See the License for the
-# specific language governing permissions and limitations
-# under the License.
-#
-#
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net", "log4net\log4net.csproj", "{181FE707-E161-4722-9F38-6AAAB6FAA106}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34622.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "log4net", "log4net\log4net.csproj", "{181FE707-E161-4722-9F38-6AAAB6FAA106}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "log4net.Tests", "log4net.Tests\log4net.Tests.csproj", "{B0530F10-0238-49A9-93B0-8EF412E90BCF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "log4net.Tests", "log4net.Tests\log4net.Tests.csproj", "{B0530F10-0238-49A9-93B0-8EF412E90BCF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "integration-testing", "integration-testing", "{8953473C-EEE8-4740-993D-B8E10FA876CD}"
 EndProject
@@ -41,6 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{78CD
 		..\.asf.yaml = ..\.asf.yaml
 		..\.gitignore = ..\.gitignore
 		..\.zarro-defaults = ..\.zarro-defaults
+		Directory.Build.props = Directory.Build.props
 		..\package.json = ..\package.json
 		..\pom.xml = ..\pom.xml
 	EndProjectSection
@@ -89,5 +72,8 @@ Global
 		{D818035F-0345-49EF-9AB9-021583986CE2} = {8953473C-EEE8-4740-993D-B8E10FA876CD}
 		{169118A6-CAC3-4E83-ABEE-9E884B75B294} = {8953473C-EEE8-4740-993D-B8E10FA876CD}
 		{A4F9E417-2250-4075-9118-B4FF1C58B6C5} = {8953473C-EEE8-4740-993D-B8E10FA876CD}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {532DE291-8626-4FE3-B255-78515D744BCF}
 	EndGlobalSection
 EndGlobal
