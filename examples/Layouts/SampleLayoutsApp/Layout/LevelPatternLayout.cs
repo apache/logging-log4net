@@ -17,6 +17,7 @@
 //
 #endregion
 
+using System;
 using System.Collections;
 using System.IO;
 using log4net.Core;
@@ -24,27 +25,26 @@ using log4net.Layout;
 
 namespace SampleLayoutsApp.Layout
 {
-    public class LevelPatternLayout : PatternLayout
+  /// <inheritdoc/>
+  public sealed class LevelPatternLayout : PatternLayout
+  {
+    private readonly Hashtable levelToPatternLayout = [];
+
+    /// <inheritdoc/>
+    public override void Format(TextWriter writer, LoggingEvent loggingEvent)
     {
-        private readonly Hashtable m_levelToPatternLayout = new Hashtable();
-
-        public override void Format(TextWriter writer, LoggingEvent loggingEvent)
-        {
-            PatternLayout patternLayout = m_levelToPatternLayout[loggingEvent.Level] as PatternLayout;
-
-            if (patternLayout == null)
-            {
-                base.Format(writer, loggingEvent);
-            }
-            else
-            {
-                patternLayout.Format(writer, loggingEvent);
-            }
-        }
-
-        public void AddLevelConversionPattern(LevelConversionPattern levelLayout)
-        {
-            m_levelToPatternLayout[levelLayout.Level] = new PatternLayout(levelLayout.ConversionPattern);
-        }
+      ArgumentNullException.ThrowIfNull(loggingEvent);
+      if (levelToPatternLayout[loggingEvent.Level] is not PatternLayout patternLayout)
+        base.Format(writer, loggingEvent);
+      else
+        patternLayout.Format(writer, loggingEvent);
     }
+
+    /// <inheritdoc/>
+    public void AddLevelConversionPattern(LevelConversionPattern levelLayout)
+    {
+      ArgumentNullException.ThrowIfNull(levelLayout);
+      levelToPatternLayout[levelLayout.Level] = new PatternLayout(levelLayout.ConversionPattern);
+    }
+  }
 }

@@ -17,16 +17,14 @@
 //
 #endregion
 
-using System;
 using System.Management.Instrumentation;
 
 namespace log4net.Appender
 {
-	/// <summary>
-	/// Register this assembly with WMI
-	/// </summary>
-	[System.ComponentModel.RunInstaller(true)]
-	public class WmiInstaller : DefaultManagementProjectInstaller
-	{
-	}
+  /// <summary>
+  /// Register this assembly with WMI
+  /// </summary>
+  [System.ComponentModel.RunInstaller(true)]
+  public sealed class WmiInstaller : DefaultManagementProjectInstaller
+  { }
 }

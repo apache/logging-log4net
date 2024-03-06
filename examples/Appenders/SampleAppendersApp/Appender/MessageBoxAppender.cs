@@ -28,76 +28,64 @@ using log4net.Util;
 
 namespace SampleAppendersApp.Appender
 {
-	/// <summary>
-	/// Displays messages as message boxes
-	/// </summary>
-	/// <remarks>
-	/// Displays each LoggingEvent as a MessageBox. The message box is UI modal
-	/// and will block the calling thread until it is dismissed by the user.
-	/// </remarks>
-	public class MessageBoxAppender : AppenderSkeleton
-	{
-		private PatternLayout m_titleLayout;
-		private LevelMapping m_levelMapping = new LevelMapping();
+  /// <summary>
+  /// Displays messages as message boxes
+  /// </summary>
+  /// <remarks>
+  /// Displays each LoggingEvent as a MessageBox. The message box is UI modal
+  /// and will block the calling thread until it is dismissed by the user.
+  /// </remarks>
+  public sealed class MessageBoxAppender : AppenderSkeleton
+  {
+    private LevelMapping levelMapping = new();
 
-		public MessageBoxAppender()
-		{
-		}
+    /// <inheritdoc/>
+    public void AddMapping(LevelIcon mapping) => levelMapping.Add(mapping);
 
-		public void AddMapping(LevelIcon mapping)
-		{
-			m_levelMapping.Add(mapping);
-		}
+    /// <inheritdoc/>
+    public PatternLayout? TitleLayout { get; set; }
 
-		public PatternLayout TitleLayout
-		{
-			get { return m_titleLayout; }
-			set { m_titleLayout = value; }
-		}
+    /// <inheritdoc/>
+    protected override void Append(LoggingEvent loggingEvent)
+    {
+      ArgumentNullException.ThrowIfNull(loggingEvent);
 
-		override protected void Append(LoggingEvent loggingEvent) 
-		{
-			MessageBoxIcon messageBoxIcon = MessageBoxIcon.Information;
+      MessageBoxIcon messageBoxIcon = MessageBoxIcon.Information;
 
-			LevelIcon levelIcon = m_levelMapping.Lookup(loggingEvent.Level) as LevelIcon;
-			if (levelIcon != null)
-			{
-				// Prepend the Ansi Color code
-				messageBoxIcon = levelIcon.Icon;
-			}
+      if (levelMapping.Lookup(loggingEvent.Level) is LevelIcon levelIcon)
+        // Prepend the Ansi Color code
+        messageBoxIcon = levelIcon.Icon;
 
-			string message = RenderLoggingEvent(loggingEvent);
+      string message = RenderLoggingEvent(loggingEvent);
 
-			string title = null;
-			if (m_titleLayout == null)
-			{
-				title = "LoggingEvent: "+loggingEvent.Level.Name;
-			}
-			else
-			{
-				StringWriter titleWriter = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
-				m_titleLayout.Format(titleWriter, loggingEvent);
-				title = titleWriter.ToString();
-			}
+      string? title = null;
+      if (TitleLayout is null)
+      {
+        title = "LoggingEvent: " + loggingEvent.Level.Name;
+      }
+      else
+      {
+        using StringWriter titleWriter = new(System.Globalization.CultureInfo.InvariantCulture);
+        TitleLayout.Format(titleWriter, loggingEvent);
+        title = titleWriter.ToString();
+      }
 
-			MessageBox.Show(message, title, MessageBoxButtons.OK, messageBoxIcon);
-		} 
+      MessageBox.Show(message, title, MessageBoxButtons.OK, messageBoxIcon);
+    }
 
-		public override void ActivateOptions()
-		{
-			base.ActivateOptions();
-			m_levelMapping.ActivateOptions();
-		}
+    /// <inheritdoc/>
+    public override void ActivateOptions()
+    {
+      base.ActivateOptions();
+      levelMapping.ActivateOptions();
+    }
 
-		public class LevelIcon : LevelMappingEntry
-		{
-			private MessageBoxIcon m_icon;
-
-			public MessageBoxIcon Icon
-			{
-				get { return m_icon; }
-				set { m_icon = value; }
-			}
-		}
-	}
+    /// <inheritdoc/>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1034:Nested types should not be visible")]
+    public sealed class LevelIcon : LevelMappingEntry
+    {
+      /// <inheritdoc/>
+      public MessageBoxIcon Icon { get; set; }
+    }
+  }
 }

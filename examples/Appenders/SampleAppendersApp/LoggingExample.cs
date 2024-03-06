@@ -22,118 +22,93 @@ using System;
 using SampleAppendersApp.Appender;
 
 // Configure log4net using the .config file
-[assembly: log4net.Config.XmlConfigurator(Watch=true)]
+[assembly: log4net.Config.XmlConfigurator(Watch = true)]
 // This will cause log4net to look for a configuration file
 // called ConsoleApp.exe.config in the application base
 // directory (i.e. the directory containing SampleAppendersApp.exe)
 
 namespace SampleAppendersApp
 {
-	/// <summary>
-	/// Example of how to simply configure and use log4net
-	/// </summary>
-	public class LoggingExample
-	{
-		// Create a logger for use in this class
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-		// NOTE that using System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
-		// is equivalent to typeof(LoggingExample) but is more portable
-		// i.e. you can copy the code directly into another class without
-		// needing to edit the code.
+  /// <summary>
+  /// Example of how to simply configure and use log4net
+  /// </summary>
+  public static class LoggingExample
+  {
+    // Create a logger for use in this class
+    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(LoggingExample));
 
-		/// <summary>
-		/// Application entry point
-		/// </summary>
-		/// <param name="args">command line arguments</param>
-		public static void Main(string[] args)
-		{
-			log4net.ThreadContext.Properties["session"] = 21;
+    /// <summary>
+    /// Application entry point
+    /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters")]
+    public static void Main()
+    {
+      log4net.ThreadContext.Properties["session"] = 21;
 
-			// Hookup the FireEventAppender event
-			if (FireEventAppender.Instance != null)
-			{
-				FireEventAppender.Instance.MessageLoggedEvent += new MessageLoggedEventHandler(FireEventAppender_MessageLoggedEventHandler);
-			}
+      // Hookup the FireEventAppender event
+      if (FireEventAppender.Instance is not null)
+        FireEventAppender.Instance.MessageLoggedEvent += FireEventAppender_MessageLoggedEventHandler;
 
-			// Log an info level message
-			if (log.IsInfoEnabled) log.Info("Application [ConsoleApp] Start");
+      // Log an info level message
+      if (log.IsInfoEnabled) log.Info("Application [ConsoleApp] Start");
 
-			// Log a debug message. Test if debug is enabled before
-			// attempting to log the message. This is not required but
-			// can make running without logging faster.
-			if (log.IsDebugEnabled) log.Debug("This is a debug message");
+      // Log a debug message. Test if debug is enabled before
+      // attempting to log the message. This is not required but
+      // can make running without logging faster.
+      if (log.IsDebugEnabled) log.Debug("This is a debug message");
 
-			// Log a custom object as the log message
-			log.Warn(new MsgObj(42, "So long and thanks for all the fish"));
+      // Log a custom object as the log message
+      log.Warn(new MsgObj(42, "So long and thanks for all the fish"));
 
-			try
-			{
-				Bar();
-			}
-			catch(Exception ex)
-			{
-				// Log an error with an exception
-				log.Error("Exception thrown from method Bar", ex);
-			}
+      try
+      {
+        Bar();
+      }
+      catch (ArithmeticException ex)
+      {
+        // Log an error with an exception
+        log.Error("Exception thrown from method Bar", ex);
+      }
 
-			log.Error("Hey this is an error!");
+      log.Error("Hey this is an error!");
 
-			// Log an info level message
-			if (log.IsInfoEnabled) log.Info("Application [ConsoleApp] End");
+      // Log an info level message
+      if (log.IsInfoEnabled) log.Info("Application [ConsoleApp] End");
 
-			Console.Write("Press Enter to exit...");
-			Console.ReadLine();
-		}
+      Console.Write("Press Enter to exit...");
+      Console.ReadLine();
+    }
 
-		// Helper methods to demonstrate location information and nested exceptions
+    // Helper methods to demonstrate location information and nested exceptions
 
-		private static void Bar()
-		{
-			Goo();
-		}
+    private static void Bar() => Goo();
 
-		private static void Foo()
-		{
-			throw new Exception("This is an Exception");
-		}
+    private static void Foo() => throw new InvalidTimeZoneException("This is an Exception");
 
-		private static void Goo()
-		{
-			try
-			{
-				Foo();
-			}
-			catch(Exception ex)
-			{
-				throw new ArithmeticException("Failed in Goo. Calling Foo. Inner Exception provided", ex);
-			}
-		}
+    private static void Goo()
+    {
+      try
+      {
+        Foo();
+      }
+      catch (Exception ex)
+      {
+        throw new ArithmeticException("Failed in Goo. Calling Foo. Inner Exception provided", ex);
+      }
+    }
 
-		private static void FireEventAppender_MessageLoggedEventHandler(object sender, MessageLoggedEventArgs e)
-		{
-			System.Diagnostics.Trace.WriteLine("EVENT ****" + e.LoggingEvent.RenderedMessage + "****");
-		}
+    private static void FireEventAppender_MessageLoggedEventHandler(object? sender, MessageLoggedEventArgs e)
+      => System.Diagnostics.Trace.WriteLine("EVENT ****" + e.LoggingEvent.RenderedMessage + "****");
 
-		public class MsgObj
-		{
-			private readonly int _type;
-			private readonly string _error;
+    /// <inheritdoc/>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1034:Nested types should not be visible")]
+    public sealed class MsgObj(int type, string error)
+    {
+      /// <inheritdoc/>
+      public int MessageType { get; } = type;
 
-			public MsgObj(int type, string error)
-			{
-				_type = type;
-				_error = error;
-			}
-
-			public int MessageType
-			{
-				get { return _type; }
-			}
-
-			public string ErrorText
-			{
-				get { return _error; }
-			}
-		}
-	}
+      /// <inheritdoc/>
+      public string ErrorText { get; } = error;
+    }
+  }
 }

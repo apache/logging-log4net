@@ -19,84 +19,69 @@
 
 using System;
 using System.IO;
-using System.Text;
-using log4net.Layout;
 using log4net.Core;
-using log4net.Util;
 
 namespace SampleLayoutsApp.Layout
 {
-	/// <summary>
-	/// The LineWrappingLayout wraps the output of a nested layout
-	/// </summary>
-	/// <remarks>
-	/// The output of the nested layout is wrapped at
-	/// <see cref="LineWidth"/>. Each of the continuation lines
-	/// is prefixed with a number of spaces specified by <see cref="Indent"/>.
-	/// </remarks>
-	public class LineWrappingLayout : ForwardingLayout
-	{
-		private int m_lineWidth = 76;
-		private int m_indent = 4;
+  /// <summary>
+  /// The LineWrappingLayout wraps the output of a nested layout
+  /// </summary>
+  /// <remarks>
+  /// The output of the nested layout is wrapped at
+  /// <see cref="LineWidth"/>. Each of the continuation lines
+  /// is prefixed with a number of spaces specified by <see cref="Indent"/>.
+  /// </remarks>
+  public sealed class LineWrappingLayout : ForwardingLayout
+  {
+    /// <inheritdoc/>
+    public int LineWidth { get; set; } = 76;
 
-		public LineWrappingLayout()
-		{
-		}
+    /// <inheritdoc/>
+    public int Indent { get; set; } = 4;
 
-		public int LineWidth
-		{
-			get { return m_lineWidth; }
-			set { m_lineWidth = value; }
-		}
-		public int Indent
-		{
-			get { return m_indent; }
-			set { m_indent = value; }
-		}
+    /// <inheritdoc/>
+    public override void Format(TextWriter writer, LoggingEvent loggingEvent)
+    {
+      ArgumentNullException.ThrowIfNull(writer);
+      using StringWriter stringWriter = new();
 
-		override public void Format(TextWriter writer, LoggingEvent loggingEvent)
-		{
-			StringWriter stringWriter = new StringWriter();
+      base.Format(stringWriter, loggingEvent);
 
-			base.Format(stringWriter, loggingEvent);
+      string formattedString = stringWriter.ToString();
 
-			string formattedString = stringWriter.ToString();
+      WrapText(writer, formattedString);
+    }
 
-			WrapText(writer, formattedString);
-		}
+    private void WrapText(TextWriter writer, string text)
+    {
+      if (text.Length <= LineWidth)
+        writer.Write(text);
+      else
+      {
+        // Do the first line
+        writer.WriteLine(text.AsSpan(0, LineWidth));
+        string rest = text[LineWidth..];
 
-		private void WrapText(TextWriter writer, string text)
-		{
-			if (text.Length <= m_lineWidth)
-			{
-				writer.Write(text);
-			}
-			else
-			{
-				// Do the first line
-				writer.WriteLine(text.Substring(0, m_lineWidth));
-				string rest = text.Substring(m_lineWidth);
+        string indentString = new(' ', Indent);
+        int continuationLineWidth = LineWidth - Indent;
 
-				string indentString = new String(' ', m_indent);
-				int continuationLineWidth = m_lineWidth - m_indent;
+        // Do the continuation lines
+        while (true)
+        {
+          writer.Write(indentString);
 
-				// Do the continuation lines
-				while(true)
-				{
-					writer.Write(indentString);
-
-					if (rest.Length > continuationLineWidth)
-					{
-						writer.WriteLine(rest.Substring(0, continuationLineWidth));
-						rest = rest.Substring(continuationLineWidth);
-					}
-					else
-					{
-						writer.Write(rest);
-						break;
-					}
-				}
-			}
-		}
-	}
+          if (rest.Length > continuationLineWidth)
+          {
+            writer.WriteLine(rest[..continuationLineWidth]);
+            rest = rest[continuationLineWidth..];
+          }
+          else
+          {
+            writer.Write(rest);
+            break;
+          }
+        }
+      }
+    }
+  }
 }

@@ -20,48 +20,44 @@
 using System;
 
 // Configure log4net using the .config file
-[assembly: log4net.Config.XmlConfigurator(Watch=true)]
+[assembly: log4net.Config.XmlConfigurator(Watch = true)]
 // This will cause log4net to look for a configuration file
 // called ConsoleApp.exe.config in the application base
 // directory (i.e. the directory containing SampleAppendersApp.exe)
 
 namespace SampleLayoutsApp
 {
-	/// <summary>
-	/// Example of how to simply configure and use log4net
-	/// </summary>
-	public class LoggingExample
-	{
-		// Create a logger for use in this class
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-		// NOTE that using System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
-		// is equivalent to typeof(LoggingExample) but is more portable
-		// i.e. you can copy the code directly into another class without
-		// needing to edit the code.
+  /// <summary>
+  /// Example of how to simply configure and use log4net
+  /// </summary>
+  public static class LoggingExample
+  {
+    // Create a logger for use in this class
+    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(LoggingExample));
 
-		/// <summary>
-		/// Application entry point
-		/// </summary>
-		/// <param name="args">command line arguments</param>
-		public static void Main(string[] args)
-		{
-			// Log an info level message
-			if (log.IsInfoEnabled) log.Info("Application [SampleLayoutsApp] Start");
+    /// <summary>
+    /// Application entry point
+    /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters")]
+    public static void Main()
+    {
+      // Log an info level message
+      if (log.IsInfoEnabled) log.Info("Application [SampleLayoutsApp] Start");
 
-			// Log a debug message. Test if debug is enabled before
-			// attempting to log the message. This is not required but
-			// can make running without logging faster.
-			if (log.IsDebugEnabled) log.Debug("This is a debug message");
+      // Log a debug message. Test if debug is enabled before
+      // attempting to log the message. This is not required but
+      // can make running without logging faster.
+      if (log.IsDebugEnabled) log.Debug("This is a debug message");
 
-			log.Info("This is a long line of logging text. This should test if the LineWrappingLayout works. This text should be wrapped over multiple lines of output. Could you get a log message longer than this?");
+      log.Info("This is a long line of logging text. This should test if the LineWrappingLayout works. This text should be wrapped over multiple lines of output. Could you get a log message longer than this?");
 
-			log.Error("Hey this is an error!");
+      log.Error("Hey this is an error!");
 
-			// Log an info level message
-			if (log.IsInfoEnabled) log.Info("Application [SampleLayoutsApp] End");
+      // Log an info level message
+      if (log.IsInfoEnabled) log.Info("Application [SampleLayoutsApp] End");
 
-			Console.Write("Press Enter to exit...");
-			Console.ReadLine();
-		}
-	}
+      Console.Write("Press Enter to exit...");
+      Console.ReadLine();
+    }
+  }
 }

@@ -19,78 +19,67 @@
 
 using System;
 using System.Globalization;
-
 using log4net.Core;
 using log4net.Util;
 
 namespace log4net.Ext.Trace
 {
-	public class TraceLogImpl : LogImpl, ITraceLog
-	{
-		/// <summary>
-		/// The fully qualified name of this declaring type not the type of any subclass.
-		/// </summary>
-		private readonly static Type ThisDeclaringType = typeof(TraceLogImpl);
+  /// <inheritdoc/>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix")]
+  public sealed class TraceLogImpl(ILogger logger) : LogImpl(logger), ITraceLog
+  {
+    /// <summary>
+    /// The fully qualified name of this declaring type not the type of any subclass.
+    /// </summary>
+    private readonly static Type ThisDeclaringType = typeof(TraceLogImpl);
 
-		/// <summary>
-		/// The default value for the TRACE level
-		/// </summary>
-		private readonly static Level s_defaultLevelTrace = new Level(20000, "TRACE");
-		
-		/// <summary>
-		/// The current value for the TRACE level
-		/// </summary>
-		private Level m_levelTrace;
-		
+    /// <summary>
+    /// The default value for the TRACE level
+    /// </summary>
+    private readonly static Level s_defaultLevelTrace = new(20000, "TRACE");
 
-		public TraceLogImpl(ILogger logger) : base(logger)
-		{
-		}
+    /// <summary>
+    /// The current value for the TRACE level
+    /// </summary>
+    private Level? levelTrace;
 
-		/// <summary>
-		/// Lookup the current value of the TRACE level
-		/// </summary>
-		protected override void ReloadLevels(log4net.Repository.ILoggerRepository repository)
-		{
-			base.ReloadLevels(repository);
+    /// <summary>
+    /// Lookup the current value of the TRACE level
+    /// </summary>
+    protected override void ReloadLevels(Repository.ILoggerRepository repository)
+    {
+      base.ReloadLevels(repository);
+      ArgumentNullException.ThrowIfNull(repository);
+      levelTrace = repository.LevelMap.LookupWithDefault(s_defaultLevelTrace);
+    }
 
-			m_levelTrace = repository.LevelMap.LookupWithDefault(s_defaultLevelTrace);
-		}
+    #region Implementation of ITraceLog
 
-		#region Implementation of ITraceLog
+    /// <inheritdoc/>
+    public void Trace(object message)
+      => Logger.Log(ThisDeclaringType, levelTrace, message, null);
 
-		public void Trace(object message)
-		{
-			Logger.Log(ThisDeclaringType, m_levelTrace, message, null);
-		}
+    /// <inheritdoc/>
+    public void Trace(object message, Exception t)
+      => Logger.Log(ThisDeclaringType, levelTrace, message, t);
 
-		public void Trace(object message, System.Exception t)
-		{
-			Logger.Log(ThisDeclaringType, m_levelTrace, message, t);
-		}
+    /// <inheritdoc/>
+    public void TraceFormat(string format, params object[] args)
+    {
+      if (IsTraceEnabled)
+        Logger.Log(ThisDeclaringType, levelTrace, new SystemStringFormat(CultureInfo.InvariantCulture, format, args), null);
+    }
 
-		public void TraceFormat(string format, params object[] args)
-		{
-			if (IsTraceEnabled)
-			{
-				Logger.Log(ThisDeclaringType, m_levelTrace, new SystemStringFormat(CultureInfo.InvariantCulture, format, args), null);
-			}
-		}
+    /// <inheritdoc/>
+    public void TraceFormat(IFormatProvider provider, string format, params object[] args)
+    {
+      if (IsTraceEnabled)
+        Logger.Log(ThisDeclaringType, levelTrace, new SystemStringFormat(provider, format, args), null);
+    }
 
-		public void TraceFormat(IFormatProvider provider, string format, params object[] args)
-		{
-			if (IsTraceEnabled)
-			{
-				Logger.Log(ThisDeclaringType, m_levelTrace, new SystemStringFormat(provider, format, args), null);
-			}
-		}
+    /// <inheritdoc/>
+    public bool IsTraceEnabled => Logger.IsEnabledFor(levelTrace);
 
-		public bool IsTraceEnabled
-		{
-			get { return Logger.IsEnabledFor(m_levelTrace); }
-		}
-
-		#endregion Implementation of ITraceLog
-	}
+    #endregion Implementation of ITraceLog
+  }
 }
-

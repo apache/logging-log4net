@@ -17,37 +17,36 @@
 //
 #endregion
 
-using System;
 using log4net.Core;
 using System.Management.Instrumentation;
 
 namespace log4net.Appender
 {
-	/// <summary>
-	/// Subclass of <see cref="IEvent"/> for events that need to bind to a <see cref="LoggingEvent"/>
-	/// </summary>
-	/// <remarks>
-	/// <para>
-	/// If the <see cref="LoggingEvent"/>.<see cref="LoggingEvent.MessageObject"/> is
-	/// a <see cref="IWmiBoundEvent"/> then the default behavior of the <see cref="WmiLayout"/>
-	/// is to call the <see cref="Bind"/> method passing the <see cref="LoggingEvent"/>.
-	/// This allows the event object to capture additional data from the <see cref="LoggingEvent"/>
-	/// before it is fired.
-	/// </para>
-	/// </remarks>
-	public interface IWmiBoundEvent : IEvent
-	{
-		/// <summary>
-		/// This method is called before this instance is fired
-		/// </summary>
-		/// <param name="loggingEvent">the <see cref="LoggingEvent"/> containing the data</param>
-		/// <remarks>
-		/// <para>
-		/// The <see cref="WmiLayout"/> calls this method passing the <see cref="LoggingEvent"/>
-		/// object. Implementors should capture any required data from the <paramref name="loggingEvent"/>
-		/// and store it in their instance prior to firing to WMI.
-		/// </para>
-		/// </remarks>
-		void Bind(LoggingEvent loggingEvent);
-	}
+  /// <summary>
+  /// Subclass of <see cref="IEvent"/> for events that need to bind to a <see cref="LoggingEvent"/>
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// If the <see cref="LoggingEvent"/>.<see cref="LoggingEvent.MessageObject"/> is
+  /// a <see cref="IWmiBoundEvent"/> then the default behavior of the <see cref="WmiLayout"/>
+  /// is to call the <see cref="Bind"/> method passing the <see cref="LoggingEvent"/>.
+  /// This allows the event object to capture additional data from the <see cref="LoggingEvent"/>
+  /// before it is fired.
+  /// </para>
+  /// </remarks>
+  public interface IWmiBoundEvent : IEvent
+  {
+    /// <summary>
+    /// This method is called before this instance is fired
+    /// </summary>
+    /// <param name="loggingEvent">the <see cref="LoggingEvent"/> containing the data</param>
+    /// <remarks>
+    /// <para>
+    /// The <see cref="WmiLayout"/> calls this method passing the <see cref="LoggingEvent"/>
+    /// object. Implementors should capture any required data from the <paramref name="loggingEvent"/>
+    /// and store it in their instance prior to firing to WMI.
+    /// </para>
+    /// </remarks>
+    void Bind(LoggingEvent loggingEvent);
+  }
 }

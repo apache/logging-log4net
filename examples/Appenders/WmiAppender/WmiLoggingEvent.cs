@@ -18,30 +18,34 @@
 #endregion
 
 using System;
-using log4net.Core;
 using System.Management.Instrumentation;
 
 namespace log4net.Appender
 {
-	/// <summary>
-	/// The default instrumented event raised by the <see cref="WmiAppender"/>
-	/// </summary>
-	/// <remarks>
-	/// <para>
-	/// This is the default event fired by the <see cref="WmiAppender"/>.
-	/// To fire a custom event set the <see cref="WmiAppender.Layout"/> to a
-	/// subclass of <see cref="WmiLayout"/> that overrides the <see cref="WmiLayout.CreateEvent"/>
-	/// method.
-	/// </para>
-	/// </remarks>
-	public class WmiLoggingEvent : BaseEvent
-	{
-		public DateTime TimeStamp;
-		public string LoggerName;
-		public string Level;
-		public string Message;
-		public string ThreadName;
-		public string ExceptionString;
-		public string Domain;
-	}
+  /// <summary>
+  /// The default instrumented event raised by the <see cref="WmiAppender"/>
+  /// </summary>
+  /// <para>
+  /// This is the default event fired by the <see cref="WmiAppender"/>.
+  /// To fire a custom event set the <see cref="WmiAppender.Layout"/> to a
+  /// subclass of <see cref="WmiLayout"/> that overrides the <see cref="WmiLayout.CreateEvent"/>
+  /// method.
+  /// </para>
+  public sealed class WmiLoggingEvent : BaseEvent
+  {
+    /// <inheritdoc/>
+    public DateTime TimeStamp { get; set; }
+    /// <inheritdoc/>
+    public string? LoggerName { get; set; }
+    /// <inheritdoc/>
+    public string? Level { get; set; }
+    /// <inheritdoc/>
+    public string? Message { get; set; }
+    /// <inheritdoc/>
+    public string? ThreadName { get; set; }
+    /// <inheritdoc/>
+    public string? ExceptionString { get; set; }
+    /// <inheritdoc/>
+    public string? Domain { get; set; }
+  }
 }

@@ -6,4 +6,7 @@
   <ItemGroup>
     <PackageReference Include="log4net" Version="$(Log4NetPackageVersion)" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Extensions\log4net.Ext.EventID\log4net.Ext.EventID.csproj" />
+  </ItemGroup>
 </Project>

@@ -25,170 +25,128 @@ using log4net.Util;
 
 namespace SampleAppendersApp.Appender
 {
-	/// <summary>
-	/// Appender that forwards LoggingEvents asynchronously
-	/// </summary>
-	/// <remarks>
-	/// This appender forwards LoggingEvents to a list of attached appenders.
-	/// The events are forwarded asynchronously using the ThreadPool.
-	/// This allows the calling thread to be released quickly, however it does
-	/// not guarantee the ordering of events delivered to the attached appenders.
-	/// </remarks>
-	public sealed class AsyncAppender : IAppender, IBulkAppender, IOptionHandler, IAppenderAttachable
-	{
-		private string m_name;
+  /// <summary>
+  /// Appender that forwards LoggingEvents asynchronously
+  /// </summary>
+  /// <remarks>
+  /// This appender forwards LoggingEvents to a list of attached appenders.
+  /// The events are forwarded asynchronously using the ThreadPool.
+  /// This allows the calling thread to be released quickly, however it does
+  /// not guarantee the ordering of events delivered to the attached appenders.
+  /// </remarks>
+  public sealed class AsyncAppender : IAppender, IBulkAppender, IOptionHandler, IAppenderAttachable
+  {
+    private readonly object syncRoot = new();
 
-		public string Name
-		{
-			get { return m_name; }
-			set { m_name = value; }
-		}
+    /// <inheritdoc/>
+    public string Name { get; set; } = string.Empty;
 
-		public void ActivateOptions() 
-		{
-		}
+    /// <inheritdoc/>
+    public void ActivateOptions()
+    { }
 
-		public FixFlags Fix
-		{
-			get { return m_fixFlags; }
-			set { m_fixFlags = value; }
-		}
+    /// <inheritdoc/>
+    public FixFlags Fix { get; set; } = FixFlags.All;
 
-		public void Close()
-		{
-			// Remove all the attached appenders
-			lock(this)
-			{
-				if (m_appenderAttachedImpl != null)
-				{
-					m_appenderAttachedImpl.RemoveAllAppenders();
-				}
-			}
-		}
+    /// <inheritdoc/>
+    public void Close()
+    {
+      // Remove all the attached appenders
+      lock (syncRoot)
+        appenderAttachedImpl?.RemoveAllAppenders();
+    }
 
-		public void DoAppend(LoggingEvent loggingEvent)
-		{
-			loggingEvent.Fix = m_fixFlags;
-			System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(AsyncAppend), loggingEvent);
-		}
+    /// <inheritdoc/>
+    public void DoAppend(LoggingEvent loggingEvent)
+    {
+      ArgumentNullException.ThrowIfNull(loggingEvent);
+      loggingEvent.Fix = Fix;
+      ThreadPool.QueueUserWorkItem(new WaitCallback(AsyncAppend), loggingEvent);
+    }
 
-		public void DoAppend(LoggingEvent[] loggingEvents)
-		{
-			foreach(LoggingEvent loggingEvent in loggingEvents)
-			{
-				loggingEvent.Fix = m_fixFlags;
-			}
-			System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(AsyncAppend), loggingEvents);
-		}
+    /// <inheritdoc/>
+    public void DoAppend(LoggingEvent[] loggingEvents)
+    {
+      ArgumentNullException.ThrowIfNull(loggingEvents);
+      foreach (LoggingEvent loggingEvent in loggingEvents)
+        loggingEvent.Fix = Fix;
+      ThreadPool.QueueUserWorkItem(new WaitCallback(AsyncAppend), loggingEvents);
+    }
 
-		private void AsyncAppend(object state)
-		{
-			if (m_appenderAttachedImpl != null)
-			{
-				LoggingEvent loggingEvent = state as LoggingEvent;
-				if (loggingEvent != null)
-				{
-					m_appenderAttachedImpl.AppendLoopOnAppenders(loggingEvent);
-				}
-				else
-				{
-					LoggingEvent[] loggingEvents = state as LoggingEvent[];
-					if (loggingEvents != null)
-					{
-						m_appenderAttachedImpl.AppendLoopOnAppenders(loggingEvents);
-					}
-				}
-			}
-		}
+    private void AsyncAppend(object? state)
+    {
+      if (appenderAttachedImpl != null)
+      {
+        if (state is LoggingEvent loggingEvent)
+          appenderAttachedImpl.AppendLoopOnAppenders(loggingEvent);
+        else if (state is LoggingEvent[] loggingEvents)
+          appenderAttachedImpl.AppendLoopOnAppenders(loggingEvents);
+      }
+    }
 
-		#region IAppenderAttachable Members
+    #region IAppenderAttachable Members
 
-		public void AddAppender(IAppender newAppender) 
-		{
-			if (newAppender == null)
-			{
-				throw new ArgumentNullException("newAppender");
-			}
-			lock(this)
-			{
-				if (m_appenderAttachedImpl == null) 
-				{
-					m_appenderAttachedImpl = new log4net.Util.AppenderAttachedImpl();
-				}
-				m_appenderAttachedImpl.AddAppender(newAppender);
-			}
-		}
+    /// <inheritdoc/>
+    public void AddAppender(IAppender appender)
+    {
+      ArgumentNullException.ThrowIfNull(appender);
+      lock (syncRoot)
+        (appenderAttachedImpl ??= new()).AddAppender(appender);
+    }
 
-		public AppenderCollection Appenders
-		{
-			get
-			{
-				lock(this)
-				{
-					if (m_appenderAttachedImpl == null)
-					{
-						return AppenderCollection.EmptyCollection;
-					}
-					else 
-					{
-						return m_appenderAttachedImpl.Appenders;
-					}
-				}
-			}
-		}
+    /// <inheritdoc/>
+    public AppenderCollection Appenders
+    {
+      get
+      {
+        lock (syncRoot)
+          return appenderAttachedImpl?.Appenders ?? AppenderCollection.EmptyCollection;
+      }
+    }
 
-		public IAppender GetAppender(string name) 
-		{
-			lock(this)
-			{
-				if (m_appenderAttachedImpl == null || name == null)
-				{
-					return null;
-				}
+    /// <inheritdoc/>
+    public IAppender? GetAppender(string name)
+    {
+      lock (syncRoot)
+      {
+        if (appenderAttachedImpl is null || name is null)
+          return null;
 
-				return m_appenderAttachedImpl.GetAppender(name);
-			}
-		}
+        return appenderAttachedImpl.GetAppender(name);
+      }
+    }
 
-		public void RemoveAllAppenders() 
-		{
-			lock(this)
-			{
-				if (m_appenderAttachedImpl != null) 
-				{
-					m_appenderAttachedImpl.RemoveAllAppenders();
-					m_appenderAttachedImpl = null;
-				}
-			}
-		}
+    /// <inheritdoc/>
+    public void RemoveAllAppenders()
+    {
+      lock (syncRoot)
+        if (appenderAttachedImpl is not null)
+        {
+          appenderAttachedImpl.RemoveAllAppenders();
+          appenderAttachedImpl = null;
+        }
+    }
 
-		public IAppender RemoveAppender(IAppender appender) 
-		{
-			lock(this)
-			{
-				if (appender != null && m_appenderAttachedImpl != null) 
-				{
-					return m_appenderAttachedImpl.RemoveAppender(appender);
-				}
-			}
-			return null;
-		}
+    /// <inheritdoc/>
+    public IAppender? RemoveAppender(IAppender appender)
+    {
+      lock (syncRoot)
+        if (appender is not null && appenderAttachedImpl is not null)
+          return appenderAttachedImpl.RemoveAppender(appender);
+      return null;
+    }
 
-		public IAppender RemoveAppender(string name) 
-		{
-			lock(this)
-			{
-				if (name != null && m_appenderAttachedImpl != null)
-				{
-					return m_appenderAttachedImpl.RemoveAppender(name);
-				}
-			}
-			return null;
-		}
+    /// <inheritdoc/>
+    public IAppender? RemoveAppender(string name)
+    {
+      lock (syncRoot)
+        if (name is not null && appenderAttachedImpl is not null)
+          return appenderAttachedImpl.RemoveAppender(name);
+      return null;
+    }
 
-		#endregion
+    #endregion
 
-		private AppenderAttachedImpl m_appenderAttachedImpl;
-		private FixFlags m_fixFlags = FixFlags.All;
-	}
+    private AppenderAttachedImpl? appenderAttachedImpl;
+  }
 }

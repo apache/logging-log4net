@@ -17,31 +17,32 @@
 //
 #endregion
 
+using System;
+
+using log4net.Ext.Trace;
+
 // Configure this assembly using the 'TraceLogApp.exe.log4net' config file
-[assembly: log4net.Config.XmlConfigurator(ConfigFileExtension="log4net", Watch=true)]
+[assembly: log4net.Config.XmlConfigurator(ConfigFileExtension = "log4net", Watch = true)]
 
 namespace TraceLogApp
 {
-	using System;
+  /// <inheritdoc/>
+  internal static class TraceLogApp
+  {
+    // Create a logger for use in this class
+    private static readonly ITraceLog log = TraceLogManager.GetLogger(typeof(TraceLogApp));
 
-	using log4net.Ext.Trace;
-
-	class TraceLogApp
-	{
-		// Create a logger for use in this class
-		private static readonly ITraceLog log = TraceLogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
-		/// The main entry point for the application.
-		/// </summary>
-		[STAThread]
-		static void Main(string[] args)
-		{
-			for (int i=0; i<10; i++)
-			{
-				log.Trace("This is a trace message "+i);
-				System.Threading.Thread.Sleep(new TimeSpan(0, 0, 2));
-			}
-		}
-	}
+    /// <summary>
+    /// The main entry point for the application.
+    /// </summary>
+    [STAThread]
+    static void Main()
+    {
+      for (int i = 0; i < 10; i++)
+      {
+        log.Trace("This is a trace message " + i);
+        System.Threading.Thread.Sleep(new TimeSpan(0, 0, 2));
+      }
+    }
+  }
 }

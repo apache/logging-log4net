@@ -23,79 +23,76 @@ using log4net.Core;
 
 namespace log4net.Ext.EventID
 {
-	public class EventIDLogImpl : LogImpl, IEventIDLog
-	{
-		/// <summary>
-		/// The fully qualified name of this declaring type not the type of any subclass.
-		/// </summary>
-		private readonly static Type ThisDeclaringType = typeof(EventIDLogImpl);
+  /// <summary>
+  /// Implementation for <see cref="IEventIDLog"/>
+  /// </summary>
+  /// <inheritdoc/>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix")]
+  public sealed class EventIDLogImpl(ILogger logger) : LogImpl(logger), IEventIDLog
+  {
+    /// <summary>
+    /// The fully qualified name of this declaring type not the type of any subclass.
+    /// </summary>
+    private readonly static Type ThisDeclaringType = typeof(EventIDLogImpl);
 
-		public EventIDLogImpl(ILogger logger) : base(logger)
-		{
-		}
+    #region Implementation of IEventIDLog
 
-		#region Implementation of IEventIDLog
+    /// <inheritdoc/>
+    public void Info(int eventId, object message) => Info(eventId, message, null);
 
-		public void Info(int eventId, object message)
-		{
-			Info(eventId, message, null);
-		}
+    /// <inheritdoc/>
+    public void Info(int eventId, object message, Exception? t)
+    {
+      if (IsInfoEnabled)
+      {
+        LoggingEvent loggingEvent = new(ThisDeclaringType, Logger.Repository, Logger.Name, Level.Info, message, t);
+        loggingEvent.Properties["EventID"] = eventId;
+        Logger.Log(loggingEvent);
+      }
+    }
 
-		public void Info(int eventId, object message, System.Exception t)
-		{
-			if (this.IsInfoEnabled)
-			{
-				LoggingEvent loggingEvent = new LoggingEvent(ThisDeclaringType, Logger.Repository, Logger.Name, Level.Info, message, t);
-				loggingEvent.Properties["EventID"] = eventId;
-				Logger.Log(loggingEvent);
-			}
-		}
+    /// <inheritdoc/>
+    public void Warn(int eventId, object message) => Warn(eventId, message, null);
 
-		public void Warn(int eventId, object message)
-		{
-			Warn(eventId, message, null);
-		}
+    /// <inheritdoc/>
+    public void Warn(int eventId, object message, Exception? t)
+    {
+      if (IsWarnEnabled)
+      {
+        LoggingEvent loggingEvent = new(ThisDeclaringType, Logger.Repository, Logger.Name, Level.Warn, message, t);
+        loggingEvent.Properties["EventID"] = eventId;
+        Logger.Log(loggingEvent);
+      }
+    }
 
-		public void Warn(int eventId, object message, System.Exception t)
-		{
-			if (this.IsWarnEnabled)
-			{
-				LoggingEvent loggingEvent = new LoggingEvent(ThisDeclaringType, Logger.Repository, Logger.Name, Level.Warn, message, t);
-				loggingEvent.Properties["EventID"] = eventId;
-				Logger.Log(loggingEvent);
-			}
-		}
+    /// <inheritdoc/>
+    public void Error(int eventId, object message) => Error(eventId, message, null);
 
-		public void Error(int eventId, object message)
-		{
-			Error(eventId, message, null);
-		}
+    /// <inheritdoc/>
+    public void Error(int eventId, object message, Exception? t)
+    {
+      if (IsErrorEnabled)
+      {
+        LoggingEvent loggingEvent = new(ThisDeclaringType, Logger.Repository, Logger.Name, Level.Error, message, t);
+        loggingEvent.Properties["EventID"] = eventId;
+        Logger.Log(loggingEvent);
+      }
+    }
 
-		public void Error(int eventId, object message, System.Exception t)
-		{
-			if (this.IsErrorEnabled)
-			{
-				LoggingEvent loggingEvent = new LoggingEvent(ThisDeclaringType, Logger.Repository, Logger.Name, Level.Error, message, t);
-				loggingEvent.Properties["EventID"] = eventId;
-				Logger.Log(loggingEvent);
-			}
-		}
+    /// <inheritdoc/>
+    public void Fatal(int eventId, object message) => Fatal(eventId, message, null);
 
-		public void Fatal(int eventId, object message)
-		{
-			Fatal(eventId, message, null);
-		}
+    /// <inheritdoc/>
+    public void Fatal(int eventId, object message, Exception? t)
+    {
+      if (IsFatalEnabled)
+      {
+        LoggingEvent loggingEvent = new(ThisDeclaringType, Logger.Repository, Logger.Name, Level.Fatal, message, t);
+        loggingEvent.Properties["EventID"] = eventId;
+        Logger.Log(loggingEvent);
+      }
+    }
 
-		public void Fatal(int eventId, object message, System.Exception t)
-		{
-			if (this.IsFatalEnabled)
-			{
-				LoggingEvent loggingEvent = new LoggingEvent(ThisDeclaringType, Logger.Repository, Logger.Name, Level.Fatal, message, t);
-				loggingEvent.Properties["EventID"] = eventId;
-				Logger.Log(loggingEvent);
-			}
-		}
-
-		#endregion Implementation of IEventIDLog
-	}
+    #endregion Implementation of IEventIDLog
+  }
 }

@@ -23,68 +23,48 @@ using log4net.Core;
 
 namespace SampleAppendersApp.Appender
 {
-	public delegate void MessageLoggedEventHandler(object sender, MessageLoggedEventArgs e);
+  /// <inheritdoc/>
+  public sealed class MessageLoggedEventArgs(LoggingEvent loggingEvent) : EventArgs
+  {
+    /// <inheritdoc/>
+    public LoggingEvent LoggingEvent { get; } = loggingEvent;
+  }
 
-	public class MessageLoggedEventArgs : EventArgs
-	{
-		private LoggingEvent m_loggingEvent;
+  /// <summary>
+  /// Appender that raises an event for each LoggingEvent received
+  /// </summary>
+  /// <remarks>
+  /// Raises a MessageLoggedEvent for each LoggingEvent object received
+  /// by this appender.
+  /// </remarks>
+  public class FireEventAppender : log4net.Appender.AppenderSkeleton
+  {
+    /// <summary>
+    /// Event handler
+    /// </summary>
+    public event EventHandler<MessageLoggedEventArgs>? MessageLoggedEvent;
 
-		public MessageLoggedEventArgs(LoggingEvent loggingEvent)
-		{
-			m_loggingEvent = loggingEvent;
-		}
-		public LoggingEvent LoggingEvent
-		{
-			get { return m_loggingEvent; }
-		}
-	}
+    /// <summary>
+    /// Easy singleton, gets the last instance created
+    /// </summary>
+    public static FireEventAppender? Instance { get; private set; }
 
-	/// <summary>
-	/// Appender that raises an event for each LoggingEvent received
-	/// </summary>
-	/// <remarks>
-	/// Raises a MessageLoggedEvent for each LoggingEvent object received
-	/// by this appender.
-	/// </remarks>
-	public class FireEventAppender : log4net.Appender.AppenderSkeleton
-	{
-		private static FireEventAppender m_instance;
+    /// <inheritdoc/>
+    public FireEventAppender() => Instance = this; // Store the instance created
 
-		private FixFlags m_fixFlags = FixFlags.All;
+    /// <inheritdoc/>
+    public virtual FixFlags Fix { get; set; } = FixFlags.All;
 
-		// Event handler
-		public event MessageLoggedEventHandler MessageLoggedEvent;
+    /// <inheritdoc/>
+    protected override void Append(LoggingEvent loggingEvent)
+    {
+      ArgumentNullException.ThrowIfNull(loggingEvent);
+      // Because we the LoggingEvent may be used beyond the lifetime 
+      // of the Append() method we must fix any volatile data in the event
+      loggingEvent.Fix = Fix;
 
-		// Easy singleton, gets the last instance created
-		public static FireEventAppender Instance
-		{
-			get { return m_instance; }
-		}
-
-		public FireEventAppender()
-		{
-			// Store the instance created
-			m_instance = this;
-		}
-
-		virtual public FixFlags Fix
-		{
-			get { return m_fixFlags; }
-			set { m_fixFlags = value; }
-		}
-
-		override protected void Append(LoggingEvent loggingEvent) 
-		{
-			// Because we the LoggingEvent may be used beyond the lifetime 
-			// of the Append() method we must fix any volatile data in the event
-			loggingEvent.Fix = this.Fix;
-
-			// Raise the event
-			MessageLoggedEventHandler handler = MessageLoggedEvent;
-			if (handler != null)
-			{
-				handler(this, new MessageLoggedEventArgs(loggingEvent));
-			}
-		} 
-	}
+      // Raise the event
+      MessageLoggedEvent?.Invoke(this, new MessageLoggedEventArgs(loggingEvent));
+    }
+  }
 }
