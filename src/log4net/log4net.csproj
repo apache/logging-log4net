@@ -48,7 +48,7 @@
     <PackageTags>logging log tracing logfiles</PackageTags>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/apache/logging-log4net</RepositoryUrl>
-    <Owners>Apache Logging Project, Jiří Činčura</Owners>
+    <Owners>Apache Logging Project</Owners>
     <PackageVersion>$(Version)</PackageVersion>
   </PropertyGroup>
   <PropertyGroup>
