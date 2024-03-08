@@ -2014,6 +2014,17 @@ namespace log4net.Tests.Appender
     }
 
     /// <summary>
+    /// Ensures that no problems result from creating and then closing the appender
+    /// when it has not also been initialized with ActivateOptions().
+    /// </summary>
+    [Test]
+    public void TestCreateCloseNoActivateOptions()
+    {
+      var appender = new RollingFileAppender();
+      appender.Close();
+    }
+
+    /// <summary>
     /// 
     /// </summary>
     [Test,

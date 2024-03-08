@@ -169,7 +169,7 @@ namespace log4net.Appender
       }
 
       private Stream m_realStream = null;
-      private LockingModelBase m_lockingModel = null;
+      private readonly LockingModelBase m_lockingModel;
       private int m_lockLevel = 0;
 
       public LockingStream(LockingModelBase locking)
@@ -1306,7 +1306,7 @@ namespace log4net.Appender
     protected override void OnClose()
     {
       base.OnClose();
-      m_lockingModel.OnClose();
+      m_lockingModel?.OnClose();
     }
 
     /// <summary>
