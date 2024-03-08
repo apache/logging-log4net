@@ -65,7 +65,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <PackageReference Include="NUnit" Version="3.14.0" />
-    <PackageReference Include="NExpect" Version="2.0.78" />
     <PackageReference Include="Quackers.TestLogger" Version="1.0.24" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='net462'">
