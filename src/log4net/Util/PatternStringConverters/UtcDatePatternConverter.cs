@@ -18,11 +18,8 @@
 #endregion
 
 using System;
-using System.Text;
 using System.IO;
 
-using log4net.Core;
-using log4net.Util;
 using log4net.DateFormatter;
 
 namespace log4net.Util.PatternStringConverters
@@ -58,7 +55,7 @@ namespace log4net.Util.PatternStringConverters
     /// </para>
     /// </remarks>
     /// <seealso cref="DatePatternConverter"/>
-    protected override void Convert(TextWriter writer, object state)
+    protected internal override void Convert(TextWriter writer, object state)
     {
       try
       {

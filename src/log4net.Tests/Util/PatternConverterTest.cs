@@ -156,7 +156,7 @@ namespace log4net.Tests.Util
       mostRecentInstance = this;
     }
 
-    protected override void Convert(TextWriter writer, object state)
+    protected internal override void Convert(TextWriter writer, object state)
     {
       writer.Write(Properties.GetKeys().Length);
     }

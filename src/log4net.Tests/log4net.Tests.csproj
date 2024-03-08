@@ -30,6 +30,8 @@
     <Deterministic>true</Deterministic>
     <!-- suppress analyzer mismatch warning -->
     <NoWarn>CS8032</NoWarn>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\log4net.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <BaseAddress>285212672</BaseAddress>
