@@ -21,6 +21,7 @@
 
 using System;
 using System.IO;
+using log4net.Util.PatternStringConverters;
 using NUnit.Framework;
 
 namespace log4net.Tests.Util
@@ -86,27 +87,6 @@ namespace log4net.Tests.Util
       Assert.AreEqual(PROCESS_LEVEL_VALUE, sw.ToString(), "Process level environment variable not expended correctly.");
 
       Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, null);
-    }
-
-    private sealed class EnvironmentPatternConverter
-    {
-      private object target = null;
-
-      public EnvironmentPatternConverter()
-      {
-        target = Utils.CreateInstance("log4net.Util.PatternStringConverters.EnvironmentPatternConverter,log4net");
-      }
-
-      public string Option
-      {
-        get { return Utils.GetProperty(target, "Option") as string; }
-        set { Utils.SetProperty(target, "Option", value); }
-      }
-
-      public void Convert(TextWriter writer, object state)
-      {
-        Utils.InvokeMethod(target, "Convert", writer, state);
-      }
     }
   }
 }

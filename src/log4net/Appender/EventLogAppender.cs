@@ -494,7 +494,7 @@ namespace log4net.Appender
     /// <see cref="Level"/> this is a one way mapping. There is
     /// a loss of information during the conversion.
     /// </remarks>
-    protected virtual EventLogEntryType GetEntryType(Level level)
+    protected internal virtual EventLogEntryType GetEntryType(Level level)
     {
       // see if there is a specified lookup.
       Level2EventLogEntryType entryType = m_levelMapping.Lookup(level) as Level2EventLogEntryType;

@@ -161,7 +161,7 @@ namespace log4net.Util.PatternStringConverters
     /// The date and time passed is in the local time zone.
     /// </para>
     /// </remarks>
-    protected override void Convert(TextWriter writer, object state)
+    protected internal override void Convert(TextWriter writer, object state)
     {
       try
       {

@@ -101,7 +101,7 @@ namespace log4net.Tests.Appender
       Assert.AreEqual(1, events.Length, "Expect to receive 1 remoted event");
 
       // Grab the event data
-      LoggingEventData eventData = GetLoggingEventData(events[0]);
+      LoggingEventData eventData = events[0].m_data;
 
       Assert.IsNull(eventData.LocationInfo, "Expect LocationInfo to be null because only doing a partial fix");
     }
@@ -131,7 +131,7 @@ namespace log4net.Tests.Appender
       Assert.AreEqual(1, events.Length, "Expect to receive 1 remoted event");
 
       // Grab the event data
-      LoggingEventData eventData = GetLoggingEventData(events[0]);
+      LoggingEventData eventData = events[0].m_data;
 
       Assert.IsNotNull(eventData.LocationInfo, "Expect LocationInfo to not be null because doing a full fix");
     }
@@ -376,15 +376,6 @@ namespace log4net.Tests.Appender
       {
         get { return (LoggingEvent[])m_events.ToArray(typeof(LoggingEvent)); }
       }
-    }
-
-    //
-    // Helper functions to dig into the appender
-    //
-
-    private static LoggingEventData GetLoggingEventData(LoggingEvent loggingEvent)
-    {
-      return (LoggingEventData)Utils.GetField(loggingEvent, "m_data");
     }
   }
 }
