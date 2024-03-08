@@ -18,13 +18,10 @@
 #endregion
 
 using System;
-using System.Text;
 using System.IO;
-using System.Collections;
 
 using log4net.Core;
 using log4net.Util;
-using log4net.Repository;
 
 namespace log4net.Layout.Pattern
 {
@@ -97,7 +94,7 @@ namespace log4net.Layout.Pattern
     /// </summary>
     /// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
     /// <param name="state">The state object on which the pattern converter should be executed.</param>
-    protected override void Convert(TextWriter writer, object state)
+    protected internal override void Convert(TextWriter writer, object state)
     {
       LoggingEvent loggingEvent = state as LoggingEvent;
       if (loggingEvent != null)

@@ -22,7 +22,6 @@
     <Platforms>AnyCPU</Platforms>
     <TargetFrameworks>net462;netstandard2.0</TargetFrameworks>
     <Configurations>Debug;Release</Configurations>
-    <LangVersion>latest</LangVersion>
     <RootNamespace>log4net</RootNamespace>
     <AssemblyName>log4net</AssemblyName>
     <ProjectType>Local</ProjectType>

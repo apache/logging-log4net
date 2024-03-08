@@ -18,10 +18,7 @@
 #endregion
 
 using System;
-using System.Text;
 using System.IO;
-
-using log4net.Util;
 
 namespace log4net.Util.PatternStringConverters
 {
@@ -46,7 +43,7 @@ namespace log4net.Util.PatternStringConverters
     /// Writes the current thread identity to the output <paramref name="writer"/>.
     /// </para>
     /// </remarks>
-    protected override void Convert(TextWriter writer, object state)
+    protected internal override void Convert(TextWriter writer, object state)
     {
       try
       {

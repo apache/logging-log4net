@@ -51,54 +51,44 @@ namespace log4net.Tests.Appender
 
       Assert.AreEqual(
         EventLogEntryType.Information,
-        GetEntryType(eventAppender, Level.All));
+        eventAppender.GetEntryType(Level.All));
 
       Assert.AreEqual(
         EventLogEntryType.Information,
-        GetEntryType(eventAppender, Level.Debug));
+        eventAppender.GetEntryType(Level.Debug));
 
       Assert.AreEqual(
         EventLogEntryType.Information,
-        GetEntryType(eventAppender, Level.Info));
+        eventAppender.GetEntryType(Level.Info));
 
       Assert.AreEqual(
         EventLogEntryType.Warning,
-        GetEntryType(eventAppender, Level.Warn));
+        eventAppender.GetEntryType(Level.Warn));
 
       Assert.AreEqual(
         EventLogEntryType.Error,
-        GetEntryType(eventAppender, Level.Error));
+        eventAppender.GetEntryType(Level.Error));
 
       Assert.AreEqual(
         EventLogEntryType.Error,
-        GetEntryType(eventAppender, Level.Fatal));
+        eventAppender.GetEntryType(Level.Fatal));
 
       Assert.AreEqual(
         EventLogEntryType.Error,
-        GetEntryType(eventAppender, Level.Off));
+        eventAppender.GetEntryType(Level.Off));
     }
 
     /// <summary>
     /// ActivateOption tries to create an event source if it doesn't exist but this is going to fail on more modern Windows versions unless the code is run with local administrator privileges.
     /// </summary>
     [Test]
-    [Ignore("seems to require administrator privileges or a specific environent when run")]
+    [Ignore("seems to require administrator privileges or a specific environment when run")]
     public void ActivateOptionsDisablesAppenderIfSourceDoesntExist()
     {
       EventLogAppender eventAppender = new EventLogAppender();
       eventAppender.ActivateOptions();
       Assert.AreEqual(Level.Off, eventAppender.Threshold);
     }
-
-    //
-    // Helper functions to dig into the appender
-    //
-
-    private static EventLogEntryType GetEntryType(EventLogAppender appender, Level level)
-    {
-      return (EventLogEntryType)Utils.InvokeMethod(appender, "GetEntryType", level);
-    }
-
   }
 }
 

@@ -18,11 +18,8 @@
 #endregion
 
 using System;
-using System.Text;
 using System.IO;
 
-using log4net.Util;
-using log4net.DateFormatter;
 using log4net.Core;
 
 namespace log4net.Util.PatternStringConverters
@@ -104,7 +101,7 @@ namespace log4net.Util.PatternStringConverters
     /// Write a randoim string to the output <paramref name="writer"/>.
     /// </para>
     /// </remarks>
-    protected override void Convert(TextWriter writer, object state)
+    protected internal override void Convert(TextWriter writer, object state)
     {
       try
       {

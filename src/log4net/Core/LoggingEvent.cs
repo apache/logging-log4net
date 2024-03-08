@@ -1479,7 +1479,7 @@ namespace log4net.Core
     /// <summary>
     /// The internal logging event data.
     /// </summary>
-    private LoggingEventData m_data;
+    internal LoggingEventData m_data;
 
     /// <summary>
     /// The internal logging event data.

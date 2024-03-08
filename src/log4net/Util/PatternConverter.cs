@@ -21,7 +21,6 @@ using System.Text;
 using System.IO;
 using System.Collections;
 
-using log4net.Util;
 using log4net.Repository;
 
 namespace log4net.Util
@@ -129,7 +128,7 @@ namespace log4net.Util
     /// convert conversion specifiers in the appropriate way.
     /// </para>
     /// </remarks>
-    protected abstract void Convert(TextWriter writer, object state);
+    protected internal abstract void Convert(TextWriter writer, object state);
 
     #endregion Protected Abstract Methods
 

@@ -86,7 +86,7 @@ namespace log4net.Util.PatternStringConverters
     /// then all the properties are written as key value pairs.
     /// </para>
     /// </remarks>
-    protected override void Convert(TextWriter writer, object state)
+    protected internal override void Convert(TextWriter writer, object state)
     {
 
       if (Option != null)

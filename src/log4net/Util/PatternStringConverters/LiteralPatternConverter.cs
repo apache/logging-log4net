@@ -18,10 +18,7 @@
 #endregion
 
 using System;
-using System.Text;
 using System.IO;
-
-using log4net.Util;
 
 namespace log4net.Util.PatternStringConverters
 {
@@ -99,7 +96,7 @@ namespace log4net.Util.PatternStringConverters
     /// This method is not used.
     /// </para>
     /// </remarks>
-    protected override void Convert(TextWriter writer, object state)
+    protected internal override void Convert(TextWriter writer, object state)
     {
       throw new InvalidOperationException("Should never get here because of the overridden Format method");
     }

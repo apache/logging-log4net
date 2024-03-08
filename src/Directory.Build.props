@@ -1,5 +1,6 @@
 <Project>
     <PropertyGroup>
         <UseSharedCompilation>true</UseSharedCompilation>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
 </Project>
