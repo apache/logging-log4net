@@ -1,7 +1,5 @@
 ﻿using log4net.Repository;
 using NUnit.Framework;
-using NExpect;
-using static NExpect.Expectations;
 
 namespace log4net.Tests
 {
@@ -15,9 +13,7 @@ namespace log4net.Tests
       var asm = typeof(LoggerRepositorySkeleton).Assembly;
       // Act
       var result = asm.GetName().GetPublicKey();
-      // Assert
-      Expect(result)
-          .Not.To.Be.Empty();
+      Assert.AreNotEqual(0, result.Length);
     }
   }
 }

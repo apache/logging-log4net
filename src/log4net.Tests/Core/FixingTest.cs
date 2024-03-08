@@ -24,13 +24,9 @@ using System.Threading;
 using log4net.Core;
 
 using NUnit.Framework;
-using static NExpect.Expectations;
-using NExpect;
 
 namespace log4net.Tests.Core
 {
-  /// <summary>
-  /// </<summary>
   [TestFixture]
   public class FixingTest
   {
@@ -75,8 +71,7 @@ namespace log4net.Tests.Core
       // Assert
       foreach (var flag in allFlags)
       {
-        Expect(FixFlags.All & flag)
-          .To.Equal(flag, () => $"FixFlags.All does not contain {flag}");
+        Assert.AreEqual(flag, FixFlags.All & flag, $"FixFlags.All does not contain {flag}");
       }
     }
 
