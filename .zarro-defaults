@@ -15,3 +15,14 @@ MAX_CONCURRENCY=1
 
 # specify what to build (prevents accidental build of any other sln)
 BUILD_INCLUDE=src/log4net.sln
+
+# using zarro's pack target, tell it what to pack
+PACK_INCLUDE_CSPROJ=log4net.csproj
+# the pack target increments the PackageVersion node in log4net.csproj
+# - setting this "truthy" propagates that change to the Version node
+PACK_SYNC_PROJECT_VERSION=1
+# all version changes should be manual, however, it's generally
+# accepted that the beta for, eg, 1.2.3 is 1.2.3-{date}-{sha}
+#  ie beta packages carry the main version of their intended
+#  release version
+PACK_INCREMENT_MINOR_ON_FIRST_RELEASE=0

@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <PackageId>log4net</PackageId>
-    <Version>2.0.15</Version>
+    <Version>2.0.16</Version>
+    <PackageVersion>2.0.16</PackageVersion>
     <Title>Apache log4net</Title>
     <Product>Apache log4net</Product>
     <Description>
@@ -24,7 +25,7 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://logging.apache.org/log4net/</PackageProjectUrl>
     <PackageIcon>package-icon.png</PackageIcon>
-    <Copyright>Copyright 2004-2017 The Apache Software Foundation</Copyright>
+    <Copyright>Copyright 2004-2024 The Apache Software Foundation</Copyright>
     <PackageTags>logging log tracing logfiles</PackageTags>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/apache/logging-log4net</RepositoryUrl>
@@ -41,7 +42,6 @@
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
     <OutputType>Library</OutputType>
-    <OldToolsVersion>3.5</OldToolsVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -71,6 +71,7 @@
     <FileAlignment>4096</FileAlignment>
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='net40-client'">
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>

@@ -1,3 +1,4 @@
+/// <reference path="../node_modules/zarro/types.d.ts" />
 // Licensed to the Apache Software Foundation (ASF) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -5,9 +6,9 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 //   http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -16,21 +17,21 @@
 // under the License.
 
 const
-  gulp = requireModule("gulp");
+  gulp = requireModule<Gulp>("gulp");
 
 gulp.task("update-version-info", async () => {
   // the version as per the .csproj is the correct version, but there
   // are other places where the version string is set via [assembly]
   // attributes, so we need to re-align them all
   const
-    Git = require("simple-git/promise"),
-    readTextFile = requireModule("read-text-file"),
-    writeTextFile = requireModule("write-text-file"),
-    readCsProjVersion = requireModule("read-csproj-version"),
-    currentVersion = await readCsProjVersion("src/log4net/log4net.csproj"),
+    Git = require("simple-git"),
+    { readTextFile, writeTextFile } = require("yafs"),
+    { readProjectVersion } = requireModule<CsProjUtils>("csproj-utils"),
+    currentVersion = await readProjectVersion("src/log4net/log4net.csproj"),
     assemblyInfo = "src/log4net/AssemblyInfo.cs",
     assemblyVersionInfo = "src/log4net/AssemblyVersionInfo.cs",
     versionString = sanitiseVersion(currentVersion);
+
 
   await updateVersionsIn(assemblyInfo, versionString);
   await updateVersionsIn(assemblyVersionInfo, versionString);
@@ -43,9 +44,9 @@ gulp.task("update-version-info", async () => {
   await git.commit(`:bookmark: update versioning to ${versionString}`);
 
   async function updateVersionsIn(
-    filePath,
-    newVersion
-  ) {
+    filePath: string,
+    newVersion: string
+  ): Promise<void> {
     const
       contents = await readTextFile(filePath),
       updated = contents
@@ -56,7 +57,7 @@ gulp.task("update-version-info", async () => {
     await writeTextFile(filePath, updated);
   }
 
-  function sanitiseVersion(version) {
+  function sanitiseVersion(version: string): string {
     const parts = version.split(".");
     while (parts.length < 4) {
       parts.push("0");

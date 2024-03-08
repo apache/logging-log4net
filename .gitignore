@@ -244,3 +244,5 @@ vs_buildtools.exe
 dotnetfx35.exe
 *.exe
 /src/Binaries/*
+
+local-tasks/*.generated.js

@@ -8,7 +8,6 @@
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
     <OutputType>Library</OutputType>
-    <OldToolsVersion>3.5</OldToolsVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -29,6 +28,7 @@
     <OutputPath>bin\$(Configuration)</OutputPath>
     <Configurations>Debug;Release</Configurations>
     <Platforms>AnyCPU</Platforms>
+    <Deterministic>true</Deterministic>
     <!-- suppress analyzer mismatch warning -->
     <NoWarn>CS8032</NoWarn>
   </PropertyGroup>
