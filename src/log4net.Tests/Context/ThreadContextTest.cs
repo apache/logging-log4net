@@ -21,6 +21,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using log4net.Config;
 using log4net.Layout;
@@ -28,8 +29,6 @@ using log4net.Repository;
 using log4net.Tests.Appender;
 using log4net.Util;
 using NUnit.Framework;
-using static NExpect.Expectations;
-using NExpect;
 
 namespace log4net.Tests.Context
 {
@@ -252,9 +251,7 @@ namespace log4net.Tests.Context
         t.Join();
       }
 
-      // Assert
-      Expect(flags)
-          .To.Contain.All.Matched.By(o => o.Flag == false);
+      Assert.IsTrue(flags.All(o => !o.Flag));
     }
 
     public class FlagContainer
