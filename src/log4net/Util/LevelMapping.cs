@@ -24,127 +24,127 @@ using log4net.Core;
 
 namespace log4net.Util
 {
-	/// <summary>
-	/// Manages a mapping from levels to <see cref="LevelMappingEntry"/>
-	/// </summary>
-	/// <remarks>
-	/// <para>
-	/// Manages an ordered mapping from <see cref="Level"/> instances 
-	/// to <see cref="LevelMappingEntry"/> subclasses.
-	/// </para>
-	/// </remarks>
-	/// <author>Nicko Cadell</author>
-	public sealed class LevelMapping : IOptionHandler
-	{
-		#region Public Instance Constructors
+  /// <summary>
+  /// Manages a mapping from levels to <see cref="LevelMappingEntry"/>
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// Manages an ordered mapping from <see cref="Level"/> instances 
+  /// to <see cref="LevelMappingEntry"/> subclasses.
+  /// </para>
+  /// </remarks>
+  /// <author>Nicko Cadell</author>
+  public sealed class LevelMapping : IOptionHandler
+  {
+    #region Public Instance Constructors
 
-		/// <summary>
-		/// Default constructor
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// Initialise a new instance of <see cref="LevelMapping"/>.
-		/// </para>
-		/// </remarks>
-		public LevelMapping() 
-		{
-		}
+    /// <summary>
+    /// Default constructor
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Initialise a new instance of <see cref="LevelMapping"/>.
+    /// </para>
+    /// </remarks>
+    public LevelMapping()
+    {
+    }
 
-		#endregion // Public Instance Constructors
+    #endregion // Public Instance Constructors
 
-		#region Public Instance Methods
-	
-		/// <summary>
-		/// Add a <see cref="LevelMappingEntry"/> to this mapping
-		/// </summary>
-		/// <param name="entry">the entry to add</param>
-		/// <remarks>
-		/// <para>
-		/// If a <see cref="LevelMappingEntry"/> has previously been added
-		/// for the same <see cref="Level"/> then that entry will be 
-		/// overwritten.
-		/// </para>
-		/// </remarks>
-		public void Add(LevelMappingEntry entry)
-		{
-			if (m_entriesMap.ContainsKey(entry.Level))
-			{
-				m_entriesMap.Remove(entry.Level);
-			}
-			m_entriesMap.Add(entry.Level, entry);
-		}
+    #region Public Instance Methods
 
-		/// <summary>
-		/// Lookup the mapping for the specified level
-		/// </summary>
-		/// <param name="level">the level to lookup</param>
-		/// <returns>the <see cref="LevelMappingEntry"/> for the level or <c>null</c> if no mapping found</returns>
-		/// <remarks>
-		/// <para>
-		/// Lookup the value for the specified level. Finds the nearest
-		/// mapping value for the level that is equal to or less than the
-		/// <paramref name="level"/> specified.
-		/// </para>
-		/// <para>
-		/// If no mapping could be found then <c>null</c> is returned.
-		/// </para>
-		/// </remarks>
-		public LevelMappingEntry Lookup(Level level)
-		{
-			if (m_entries != null)
-			{
-				foreach(LevelMappingEntry entry in m_entries)
-				{
-					if (level >= entry.Level)
-					{
-						return entry;
-					}
-				}
-			}
-			return null;
-		}
+    /// <summary>
+    /// Add a <see cref="LevelMappingEntry"/> to this mapping
+    /// </summary>
+    /// <param name="entry">the entry to add</param>
+    /// <remarks>
+    /// <para>
+    /// If a <see cref="LevelMappingEntry"/> has previously been added
+    /// for the same <see cref="Level"/> then that entry will be 
+    /// overwritten.
+    /// </para>
+    /// </remarks>
+    public void Add(LevelMappingEntry entry)
+    {
+      if (m_entriesMap.ContainsKey(entry.Level))
+      {
+        m_entriesMap.Remove(entry.Level);
+      }
+      m_entriesMap.Add(entry.Level, entry);
+    }
 
-		#endregion // Public Instance Methods
+    /// <summary>
+    /// Lookup the mapping for the specified level
+    /// </summary>
+    /// <param name="level">the level to lookup</param>
+    /// <returns>the <see cref="LevelMappingEntry"/> for the level or <c>null</c> if no mapping found</returns>
+    /// <remarks>
+    /// <para>
+    /// Lookup the value for the specified level. Finds the nearest
+    /// mapping value for the level that is equal to or less than the
+    /// <paramref name="level"/> specified.
+    /// </para>
+    /// <para>
+    /// If no mapping could be found then <c>null</c> is returned.
+    /// </para>
+    /// </remarks>
+    public LevelMappingEntry Lookup(Level level)
+    {
+      if (m_entries != null)
+      {
+        foreach (LevelMappingEntry entry in m_entries)
+        {
+          if (level >= entry.Level)
+          {
+            return entry;
+          }
+        }
+      }
+      return null;
+    }
 
-		#region IOptionHandler Members
+    #endregion // Public Instance Methods
 
-		/// <summary>
-		/// Initialize options
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// Caches the sorted list of <see cref="LevelMappingEntry"/> in an array
-		/// </para>
-		/// </remarks>
-		public void ActivateOptions()
-		{
-			Level[] sortKeys = new Level[m_entriesMap.Count];
-			LevelMappingEntry[] sortValues = new LevelMappingEntry[m_entriesMap.Count];
+    #region IOptionHandler Members
 
-			m_entriesMap.Keys.CopyTo(sortKeys, 0);
-			m_entriesMap.Values.CopyTo(sortValues, 0);
+    /// <summary>
+    /// Initialize options
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Caches the sorted list of <see cref="LevelMappingEntry"/> in an array
+    /// </para>
+    /// </remarks>
+    public void ActivateOptions()
+    {
+      Level[] sortKeys = new Level[m_entriesMap.Count];
+      LevelMappingEntry[] sortValues = new LevelMappingEntry[m_entriesMap.Count];
 
-			// Sort in level order
-			Array.Sort(sortKeys, sortValues, 0, sortKeys.Length, null);
+      m_entriesMap.Keys.CopyTo(sortKeys, 0);
+      m_entriesMap.Values.CopyTo(sortValues, 0);
 
-			// Reverse list so that highest level is first
-			Array.Reverse(sortValues, 0, sortValues.Length);
+      // Sort in level order
+      Array.Sort(sortKeys, sortValues, 0, sortKeys.Length, null);
 
-			foreach(LevelMappingEntry entry in sortValues)
-			{
-				entry.ActivateOptions();
-			}
+      // Reverse list so that highest level is first
+      Array.Reverse(sortValues, 0, sortValues.Length);
 
-			 m_entries = sortValues;
-		}
+      foreach (LevelMappingEntry entry in sortValues)
+      {
+        entry.ActivateOptions();
+      }
 
-		#endregion // IOptionHandler Members
+      m_entries = sortValues;
+    }
 
-		#region Private Instance Fields
+    #endregion // IOptionHandler Members
 
-		private Hashtable m_entriesMap = new Hashtable();
-		private LevelMappingEntry[] m_entries = null;
+    #region Private Instance Fields
 
-		#endregion // Private Instance Fields
-	}
+    private Hashtable m_entriesMap = new Hashtable();
+    private LevelMappingEntry[] m_entries = null;
+
+    #endregion // Private Instance Fields
+  }
 }

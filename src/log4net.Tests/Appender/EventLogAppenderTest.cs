@@ -29,77 +29,77 @@ using NUnit.Framework;
 
 namespace log4net.Tests.Appender
 {
-	/// <summary>
-	/// Used for internal unit testing the <see cref="EventLogAppender"/> class.
-	/// </summary>
-	/// <remarks>
-	/// Used for internal unit testing the <see cref="EventLogAppender"/> class.
-	/// </remarks>
-	[TestFixture]
-	public class EventLogAppenderTest
-	{
-		/// <summary>
-		/// Verifies that for each event log level, the correct system
-		/// event log enumeration is returned
-		/// </summary>
-		[Test]
-		public void TestGetEntryTypeForExistingApplicationName()
-		{
-			EventLogAppender eventAppender = new EventLogAppender();
-            eventAppender.ApplicationName = "Winlogon";
-			eventAppender.ActivateOptions();
+  /// <summary>
+  /// Used for internal unit testing the <see cref="EventLogAppender"/> class.
+  /// </summary>
+  /// <remarks>
+  /// Used for internal unit testing the <see cref="EventLogAppender"/> class.
+  /// </remarks>
+  [TestFixture]
+  public class EventLogAppenderTest
+  {
+    /// <summary>
+    /// Verifies that for each event log level, the correct system
+    /// event log enumeration is returned
+    /// </summary>
+    [Test]
+    public void TestGetEntryTypeForExistingApplicationName()
+    {
+      EventLogAppender eventAppender = new EventLogAppender();
+      eventAppender.ApplicationName = "Winlogon";
+      eventAppender.ActivateOptions();
 
-			Assert.AreEqual(
-				EventLogEntryType.Information,
-				GetEntryType(eventAppender, Level.All));
+      Assert.AreEqual(
+        EventLogEntryType.Information,
+        GetEntryType(eventAppender, Level.All));
 
-			Assert.AreEqual(
-				EventLogEntryType.Information,
-				GetEntryType(eventAppender, Level.Debug));
+      Assert.AreEqual(
+        EventLogEntryType.Information,
+        GetEntryType(eventAppender, Level.Debug));
 
-			Assert.AreEqual(
-				EventLogEntryType.Information,
-				GetEntryType(eventAppender, Level.Info));
+      Assert.AreEqual(
+        EventLogEntryType.Information,
+        GetEntryType(eventAppender, Level.Info));
 
-			Assert.AreEqual(
-				EventLogEntryType.Warning,
-				GetEntryType(eventAppender, Level.Warn));
+      Assert.AreEqual(
+        EventLogEntryType.Warning,
+        GetEntryType(eventAppender, Level.Warn));
 
-			Assert.AreEqual(
-				EventLogEntryType.Error,
-				GetEntryType(eventAppender, Level.Error));
+      Assert.AreEqual(
+        EventLogEntryType.Error,
+        GetEntryType(eventAppender, Level.Error));
 
-			Assert.AreEqual(
-				EventLogEntryType.Error,
-				GetEntryType(eventAppender, Level.Fatal));
+      Assert.AreEqual(
+        EventLogEntryType.Error,
+        GetEntryType(eventAppender, Level.Fatal));
 
-			Assert.AreEqual(
-				EventLogEntryType.Error,
-				GetEntryType(eventAppender, Level.Off));
-		}
+      Assert.AreEqual(
+        EventLogEntryType.Error,
+        GetEntryType(eventAppender, Level.Off));
+    }
 
-        /// <summary>
-        /// ActivateOption tries to create an event source if it doesn't exist but this is going to fail on more modern Windows versions unless the code is run with local administrator privileges.
-        /// </summary>
-        [Test]
-	[Ignore("seems to require administrator privileges or a specific environent when run")]
-        public void ActivateOptionsDisablesAppenderIfSourceDoesntExist()
-        {
-            EventLogAppender eventAppender = new EventLogAppender();
-            eventAppender.ActivateOptions();
-            Assert.AreEqual(Level.Off, eventAppender.Threshold);
-        }
+    /// <summary>
+    /// ActivateOption tries to create an event source if it doesn't exist but this is going to fail on more modern Windows versions unless the code is run with local administrator privileges.
+    /// </summary>
+    [Test]
+    [Ignore("seems to require administrator privileges or a specific environent when run")]
+    public void ActivateOptionsDisablesAppenderIfSourceDoesntExist()
+    {
+      EventLogAppender eventAppender = new EventLogAppender();
+      eventAppender.ActivateOptions();
+      Assert.AreEqual(Level.Off, eventAppender.Threshold);
+    }
 
-		//
-		// Helper functions to dig into the appender
-		//
+    //
+    // Helper functions to dig into the appender
+    //
 
-		private static EventLogEntryType GetEntryType(EventLogAppender appender, Level level)
-		{
-			return (EventLogEntryType)Utils.InvokeMethod(appender, "GetEntryType", level);
-		}
+    private static EventLogEntryType GetEntryType(EventLogAppender appender, Level level)
+    {
+      return (EventLogEntryType)Utils.InvokeMethod(appender, "GetEntryType", level);
+    }
 
-	}
+  }
 }
 
 #endif // NET_2_0

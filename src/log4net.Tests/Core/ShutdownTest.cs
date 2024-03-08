@@ -28,46 +28,46 @@ using NUnit.Framework;
 
 namespace log4net.Tests.Core
 {
-	/// <summary>
-	/// </remarks>
-	[TestFixture]
-	public class ShutdownTest
-	{
-		/// <summary>
-		/// Test that a repository can be shutdown and reconfigured
-		/// </summary>
-		[Test]
-		public void TestShutdownAndReconfigure()
-		{
-			// Create unique repository
-			ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+  /// <summary>
+  /// </remarks>
+  [TestFixture]
+  public class ShutdownTest
+  {
+    /// <summary>
+    /// Test that a repository can be shutdown and reconfigured
+    /// </summary>
+    [Test]
+    public void TestShutdownAndReconfigure()
+    {
+      // Create unique repository
+      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 
-			// Create appender and configure repos
-			StringAppender stringAppender = new StringAppender();
-			stringAppender.Layout = new PatternLayout("%m");
-			BasicConfigurator.Configure(rep, stringAppender);
+      // Create appender and configure repos
+      StringAppender stringAppender = new StringAppender();
+      stringAppender.Layout = new PatternLayout("%m");
+      BasicConfigurator.Configure(rep, stringAppender);
 
-			// Get logger from repos
-			ILog log1 = LogManager.GetLogger(rep.Name, "logger1");
+      // Get logger from repos
+      ILog log1 = LogManager.GetLogger(rep.Name, "logger1");
 
-			log1.Info("TestMessage1");
-			Assert.AreEqual("TestMessage1", stringAppender.GetString(), "Test logging configured");
-			stringAppender.Reset();
+      log1.Info("TestMessage1");
+      Assert.AreEqual("TestMessage1", stringAppender.GetString(), "Test logging configured");
+      stringAppender.Reset();
 
-			rep.Shutdown();
+      rep.Shutdown();
 
-			log1.Info("TestMessage2");
-			Assert.AreEqual("", stringAppender.GetString(), "Test not logging while shutdown");
-			stringAppender.Reset();
+      log1.Info("TestMessage2");
+      Assert.AreEqual("", stringAppender.GetString(), "Test not logging while shutdown");
+      stringAppender.Reset();
 
-			// Create new appender and configure
-			stringAppender = new StringAppender();
-			stringAppender.Layout = new PatternLayout("%m");
-			BasicConfigurator.Configure(rep, stringAppender);
+      // Create new appender and configure
+      stringAppender = new StringAppender();
+      stringAppender.Layout = new PatternLayout("%m");
+      BasicConfigurator.Configure(rep, stringAppender);
 
-			log1.Info("TestMessage3");
-			Assert.AreEqual("TestMessage3", stringAppender.GetString(), "Test logging re-configured");
-			stringAppender.Reset();
-		}
-	}
+      log1.Info("TestMessage3");
+      Assert.AreEqual("TestMessage3", stringAppender.GetString(), "Test logging re-configured");
+      stringAppender.Reset();
+    }
+  }
 }

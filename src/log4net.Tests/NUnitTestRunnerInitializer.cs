@@ -1,16 +1,16 @@
 ﻿namespace log4net.Tests
 {
-    using System.IO;
+  using System.IO;
 
-    using NUnit.Framework;
+  using NUnit.Framework;
 
-    [SetUpFixture]
-    public class NUnitTestRunnerInitializer
+  [SetUpFixture]
+  public class NUnitTestRunnerInitializer
+  {
+    [OneTimeSetUp]
+    public void RunBeforeAnyTests()
     {
-        [OneTimeSetUp]
-        public void RunBeforeAnyTests()
-        {
-            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-        }
+      Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
     }
+  }
 }

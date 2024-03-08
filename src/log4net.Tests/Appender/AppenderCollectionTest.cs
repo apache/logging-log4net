@@ -22,44 +22,44 @@ using NUnit.Framework;
 
 namespace log4net.Tests.Appender
 {
-	/// <summary>
-	/// Used for internal unit testing the <see cref="AppenderCollection"/> class.
-	/// </summary>
-	/// <remarks>
-	/// Used for internal unit testing the <see cref="AppenderCollection"/> class.
-	/// </remarks>
-	/// <author>Carlos Muñoz</author>
-	[TestFixture]
-	public class AppenderCollectionTest
-	{
-		/// <summary>
-		/// Verifies that ToArray returns the elements of the <see cref="AppenderCollection"/>
-		/// </summary>
-		[Test]
-		public void ToArrayTest()
-		{
-			AppenderCollection appenderCollection = new AppenderCollection();
-			IAppender appender = new MemoryAppender();
-			appenderCollection.Add(appender);
+  /// <summary>
+  /// Used for internal unit testing the <see cref="AppenderCollection"/> class.
+  /// </summary>
+  /// <remarks>
+  /// Used for internal unit testing the <see cref="AppenderCollection"/> class.
+  /// </remarks>
+  /// <author>Carlos Muñoz</author>
+  [TestFixture]
+  public class AppenderCollectionTest
+  {
+    /// <summary>
+    /// Verifies that ToArray returns the elements of the <see cref="AppenderCollection"/>
+    /// </summary>
+    [Test]
+    public void ToArrayTest()
+    {
+      AppenderCollection appenderCollection = new AppenderCollection();
+      IAppender appender = new MemoryAppender();
+      appenderCollection.Add(appender);
 
-			IAppender[] appenderArray = appenderCollection.ToArray();
+      IAppender[] appenderArray = appenderCollection.ToArray();
 
-			Assert.AreEqual(1, appenderArray.Length);
-			Assert.AreEqual(appender, appenderArray[0]);
-		}
+      Assert.AreEqual(1, appenderArray.Length);
+      Assert.AreEqual(appender, appenderArray[0]);
+    }
 
-		[Test]
-		public void ReadOnlyToArrayTest()
-		{
-			AppenderCollection appenderCollection = new AppenderCollection();
-			IAppender appender = new MemoryAppender();
-			appenderCollection.Add(appender);
-			AppenderCollection readonlyAppenderCollection = AppenderCollection.ReadOnly(appenderCollection);
+    [Test]
+    public void ReadOnlyToArrayTest()
+    {
+      AppenderCollection appenderCollection = new AppenderCollection();
+      IAppender appender = new MemoryAppender();
+      appenderCollection.Add(appender);
+      AppenderCollection readonlyAppenderCollection = AppenderCollection.ReadOnly(appenderCollection);
 
-			IAppender[] appenderArray = readonlyAppenderCollection.ToArray();
+      IAppender[] appenderArray = readonlyAppenderCollection.ToArray();
 
-			Assert.AreEqual(1, appenderArray.Length);
-			Assert.AreEqual(appender, appenderArray[0]);
-		}
-	}
+      Assert.AreEqual(1, appenderArray.Length);
+      Assert.AreEqual(appender, appenderArray[0]);
+    }
+  }
 }

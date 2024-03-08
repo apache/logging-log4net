@@ -29,84 +29,84 @@ using NUnit.Framework;
 
 namespace log4net.Tests.Appender
 {
-    [TestFixture]
-    public class TraceAppenderTest
+  [TestFixture]
+  public class TraceAppenderTest
+  {
+    [Test]
+    public void DefaultCategoryTest()
     {
-        [Test]
-        public void DefaultCategoryTest()
-        {
-            CategoryTraceListener categoryTraceListener = new CategoryTraceListener();
-            Trace.Listeners.Clear();
-            Trace.Listeners.Add(categoryTraceListener);
+      CategoryTraceListener categoryTraceListener = new CategoryTraceListener();
+      Trace.Listeners.Clear();
+      Trace.Listeners.Add(categoryTraceListener);
 
-            ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 
-            TraceAppender traceAppender = new TraceAppender();
-            traceAppender.Layout = new SimpleLayout();
-            traceAppender.ActivateOptions();
+      TraceAppender traceAppender = new TraceAppender();
+      traceAppender.Layout = new SimpleLayout();
+      traceAppender.ActivateOptions();
 
-            BasicConfigurator.Configure(rep, traceAppender);
+      BasicConfigurator.Configure(rep, traceAppender);
 
-            ILog log = LogManager.GetLogger(rep.Name, GetType());
-            log.Debug("Message");
+      ILog log = LogManager.GetLogger(rep.Name, GetType());
+      log.Debug("Message");
 
-            Assert.AreEqual(
-                GetType().ToString(),
-                categoryTraceListener.Category);
-        }
+      Assert.AreEqual(
+          GetType().ToString(),
+          categoryTraceListener.Category);
+    }
 
 #if !NETSTANDARD1_3 // "LocationInfo can't get method names on NETSTANDARD1_3 due to unavailable stack frame APIs"
-        [Test]
-        public void MethodNameCategoryTest()
-        {
-            CategoryTraceListener categoryTraceListener = new CategoryTraceListener();
-            Trace.Listeners.Clear();
-            Trace.Listeners.Add(categoryTraceListener);
-
-            ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-
-            TraceAppender traceAppender = new TraceAppender();
-            PatternLayout methodLayout = new PatternLayout("%method");
-            methodLayout.ActivateOptions();
-            traceAppender.Category = methodLayout;
-            traceAppender.Layout = new SimpleLayout();
-            traceAppender.ActivateOptions();
-
-            BasicConfigurator.Configure(rep, traceAppender);
-
-            ILog log = LogManager.GetLogger(rep.Name, GetType());
-            log.Debug("Message");
-
-            Assert.AreEqual(
-                System.Reflection.MethodInfo.GetCurrentMethod().Name,
-                categoryTraceListener.Category);
-        }
-#endif
-    }
-
-    public class CategoryTraceListener : TraceListener
+    [Test]
+    public void MethodNameCategoryTest()
     {
-        private string lastCategory;
+      CategoryTraceListener categoryTraceListener = new CategoryTraceListener();
+      Trace.Listeners.Clear();
+      Trace.Listeners.Add(categoryTraceListener);
 
-        public override void Write(string message)
-        {
-            // empty
-        }
+      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 
-        public override void WriteLine(string message)
-        {
-            Write(message);
-        }
+      TraceAppender traceAppender = new TraceAppender();
+      PatternLayout methodLayout = new PatternLayout("%method");
+      methodLayout.ActivateOptions();
+      traceAppender.Category = methodLayout;
+      traceAppender.Layout = new SimpleLayout();
+      traceAppender.ActivateOptions();
 
-        public override void Write(string message, string category)
-        {
-            lastCategory = category;
-            base.Write(message, category);
-        }
+      BasicConfigurator.Configure(rep, traceAppender);
 
-        public string Category
-        {
-            get { return lastCategory; }
-        }
+      ILog log = LogManager.GetLogger(rep.Name, GetType());
+      log.Debug("Message");
+
+      Assert.AreEqual(
+          System.Reflection.MethodInfo.GetCurrentMethod().Name,
+          categoryTraceListener.Category);
     }
+#endif
+  }
+
+  public class CategoryTraceListener : TraceListener
+  {
+    private string lastCategory;
+
+    public override void Write(string message)
+    {
+      // empty
+    }
+
+    public override void WriteLine(string message)
+    {
+      Write(message);
+    }
+
+    public override void Write(string message, string category)
+    {
+      lastCategory = category;
+      base.Write(message, category);
+    }
+
+    public string Category
+    {
+      get { return lastCategory; }
+    }
+  }
 }
