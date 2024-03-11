@@ -66,7 +66,7 @@ release version 2.0.123:
     - copy in source & binary artifacts to respective locations
     - `svn delete` old items (or defer this until after the vote completes)
     - `svn commit`
-13. raise a vote on the log4net mailing list (dev@logging.apache.org)
+13. raise a vote on the log4net mailing list (dev@logging.apache.org) - see MailTemplate.txt
 14. wait
 15. when the vote has 3 or more +1's, it's time to go live!
 16. copy the apache artifacts (binary and source) to the release svn repo and commit
