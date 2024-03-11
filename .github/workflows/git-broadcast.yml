@@ -19,6 +19,7 @@ jobs:
         node-version: '16'
     - name: broadcast master changes to satellite branches
       env:
+        DEBUG: '*'
         RUN_NUMBER: ${{ github.run_number }}
       run: |
         git config --global user.name "Git Broadcast"
