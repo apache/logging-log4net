@@ -28,9 +28,9 @@
   "author": "",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/fluffynuts/logging-log4net/issues"
+    "url": "https://github.com/apache/logging-log4net/issues"
   },
-  "homepage": "https://github.com/fluffynuts/logging-log4net#readme",
+  "homepage": "https://github.com/apache/logging-log4net#readme",
   "devDependencies": {
     "cross-env": "^7.0.2",
     "gulp-debug": "^4.0.0",
