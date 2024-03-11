@@ -1925,8 +1925,8 @@ namespace log4net.Tests.Appender
     [Test]
     public void TestCreateCloseNoActivateOptions()
     {
-        var appender = new RollingFileAppender();
-        appender.Close();
+      var appender = new RollingFileAppender();
+      appender.Close();
     }
 
     //
