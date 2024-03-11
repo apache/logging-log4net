@@ -146,7 +146,7 @@ namespace log4net.Appender
         return base.WriteAsync(buffer, offset, count, cancellationToken);
       }
 
-            public override void Flush()
+      public override void Flush()
       {
         AssertLocked().Flush();
       }
@@ -228,9 +228,9 @@ namespace log4net.Appender
         }
       }
 
-            #endregion Override Implementation of Stream
+      #endregion Override Implementation of Stream
 
-            #region Locking Methods
+      #region Locking Methods
 
       private Stream AssertLocked()
       {
