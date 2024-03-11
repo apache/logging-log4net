@@ -23,4 +23,4 @@ jobs:
       run: |
         git config --global user.name "Git Broadcast"
         git config --global user.email "git-broadcast@no-reply.com"
-        npx git-broadcast@latest --from master --push --pretty --suppress-log-prefixes --prefix-logs-with $GITHUB_REPOSITORY
+        npx git-broadcast@beta --ignore abandoned-develop --from master --push --pretty --suppress-log-prefixes --prefix-logs-with $GITHUB_REPOSITORY
