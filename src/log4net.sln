@@ -45,6 +45,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{78CD
 		..\pom.xml = ..\pom.xml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{3EE6A25B-2DF9-4825-A784-EE32EEA0BE58}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{92B16708-35B8-4E60-AF44-CF6D797FB63B}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\git-broadcast.yml = ..\.github\workflows\git-broadcast.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -89,5 +96,6 @@ Global
 		{D818035F-0345-49EF-9AB9-021583986CE2} = {8953473C-EEE8-4740-993D-B8E10FA876CD}
 		{169118A6-CAC3-4E83-ABEE-9E884B75B294} = {8953473C-EEE8-4740-993D-B8E10FA876CD}
 		{A4F9E417-2250-4075-9118-B4FF1C58B6C5} = {8953473C-EEE8-4740-993D-B8E10FA876CD}
+		{92B16708-35B8-4E60-AF44-CF6D797FB63B} = {3EE6A25B-2DF9-4825-A784-EE32EEA0BE58}
 	EndGlobalSection
 EndGlobal
