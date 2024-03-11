@@ -32,59 +32,60 @@ using log4net.Repository;
 
 namespace log4net.Tests.Appender
 {
-    [TestFixture]
-    public class MemoryAppenderTest
+  [TestFixture]
+  public class MemoryAppenderTest
+  {
+    private static int cThreadsRunning;
+    private const int cThreadsMax = 10;
+    private const int cLogEntriesPerThread = 100;
+    private const long cEventsExpected = cLogEntriesPerThread * cThreadsMax;
+
+    [Test]
+    public void TestThreadSafety()
     {
-        private static int cThreadsRunning;
-        private const int cThreadsMax = 10;
-        private const int cLogEntriesPerThread = 100;
-        private const long cEventsExpected = cLogEntriesPerThread * cThreadsMax;
+      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+      var memoryAppender = new MemoryAppender();
+      var patternLayout = new PatternLayout();
+      memoryAppender.Layout = patternLayout;
+      memoryAppender.ActivateOptions();
+      BasicConfigurator.Configure(rep, memoryAppender);
 
-        [Test]
-        public void TestThreadSafety()
-        {
-            ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-            var memoryAppender = new MemoryAppender();
-            var patternLayout = new PatternLayout();
-            memoryAppender.Layout = patternLayout;
-            memoryAppender.ActivateOptions();
-            BasicConfigurator.Configure(rep, memoryAppender);
+      cThreadsRunning = cThreadsMax;
+      var threads = Enumerable.Range(0, cThreadsMax)
+          .Select(i => new Thread(LogMessages(rep.Name)))
+          .ToList();
 
-            cThreadsRunning = cThreadsMax;
-            var threads = Enumerable.Range(0, cThreadsMax)
-                .Select(i => new Thread(LogMessages(rep.Name)))
-                .ToList();
+      foreach (var thread in threads)
+      {
+        thread.Start();
+      }
 
-            foreach (var thread in threads)
-            {
-                thread.Start();
-            }
-
-            long cEventsRead = 0;
-            while (cThreadsRunning > 0)
-            {
-                var events = memoryAppender.PopAllEvents();
-                cEventsRead += events.Length;
-            }
-            foreach (var thread in threads)
-            {
-                thread.Join();
-            }
-	    cEventsRead += memoryAppender.PopAllEvents().Length;
-            Assert.AreEqual(cEventsExpected, cEventsRead, "Log events were lost.");
-        }
-
-        private static ThreadStart LogMessages(string repository)
-        {
-	    return () => {
-		var logger = LogManager.GetLogger(repository, "LoggerThread");
-		for (var i = 0; i < cLogEntriesPerThread; i++)
-		{
-		    logger.InfoFormat("Logging message {0}", i);
-		}
-		Interlocked.Decrement(ref cThreadsRunning);
-	    };
-	}
+      long cEventsRead = 0;
+      while (cThreadsRunning > 0)
+      {
+        var events = memoryAppender.PopAllEvents();
+        cEventsRead += events.Length;
+      }
+      foreach (var thread in threads)
+      {
+        thread.Join();
+      }
+      cEventsRead += memoryAppender.PopAllEvents().Length;
+      Assert.AreEqual(cEventsExpected, cEventsRead, "Log events were lost.");
     }
+
+    private static ThreadStart LogMessages(string repository)
+    {
+      return () =>
+      {
+        var logger = LogManager.GetLogger(repository, "LoggerThread");
+        for (var i = 0; i < cLogEntriesPerThread; i++)
+        {
+          logger.InfoFormat("Logging message {0}", i);
+        }
+        Interlocked.Decrement(ref cThreadsRunning);
+      };
+    }
+  }
 }
 #endif

@@ -1,0 +1,28 @@
+# zarro defaults file:
+# place one VARIABLE=VALUE per line below
+# variables here will not override existing environment variables
+#   unless prepended with a bang, ie
+#     !VARIABLE=Value
+#   so this means anything you set in your package.json, eg with
+#   cross-env, will override what's in here unless you've specifically
+#   marked the setting in here as forced with !
+
+# instruct nunit console runner to run in a single process
+NUNIT_PROCESS=Single
+
+# determines how many tests can run in parallel - 1 is fine
+MAX_CONCURRENCY=1
+
+# specify what to build (prevents accidental build of any other sln)
+BUILD_INCLUDE=src/log4net.sln
+
+# using zarro's pack target, tell it what to pack
+PACK_INCLUDE_CSPROJ=log4net.csproj
+# the pack target increments the PackageVersion node in log4net.csproj
+# - setting this "truthy" propagates that change to the Version node
+PACK_SYNC_PROJECT_VERSION=1
+# all version changes should be manual, however, it's generally
+# accepted that the beta for, eg, 1.2.3 is 1.2.3-{date}-{sha}
+#  ie beta packages carry the main version of their intended
+#  release version
+PACK_INCREMENT_MINOR_ON_FIRST_RELEASE=0

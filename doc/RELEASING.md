@@ -77,6 +77,8 @@ release version 2.0.123:
     - `svn delete` old items
     - `svn commit`
 16. push the .nupkg to nuget.org
+    - via `dotnet`: `dotnet nuget push <path to package> -s nuget.org -k <your nuget api key>`
+    - via `nuget`: `nuget push <path to package> -Source nuget.org -ApiKey <your nuget api key>`
 17. don't forget to make the docs live: in the logging-log4net-site folder:
     - `git checkout asf-site`
     - `git pull --rebase`

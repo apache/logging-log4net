@@ -1,11 +1,36 @@
 ## Building log4net
 
 Log4net provides support for a wide array of targets, including
-- older .net 2 and 3.5 (including client profiles)
+- older .net 2 and 3.5 (including client profile for net-40)
 - more modern net40/net45
 - netstandard1.3/2.0
 
 As such, it does require a relatively full .net environment on Windows to build.
+I have recently found a fairly freshly-installed win11 machine to work adequately,
+after adding the "windows feature" for ".NET Framework 3.5 (includes .NET 2.0 and 3.0)"
+
+TL;DR (Windows):
+- install Visual Studio Build Tools (at least VS2019)
+- install nodejs (at least v16)
+- install dotnet (v7+) and the .NET SDK (current latest)
+- install dotnet 2, 3, 3.5 via "add windows features"
+- in the project folder:
+  - `npm i`
+  - `npm run build`
+
+TL;DR (!Windows):
+- install the dotnet SDK - v7 or better (at time of writing, v8 is current but
+  I've had some issues elsewhere, so I'm waiting a bit before recommending it
+  everywhere
+- install Mono (you're going to need it to target certain versions of .NET)
+- install nodejs 16+
+  - in the project folder:
+  - `npm i`
+  - `export DOTNET_CORE=1 npm run build`
+    - we force using `dotnet` on non-windows targets for now. At some point,
+      this should become automatic
+
+## The full story
 
 Options:
 - build locally. Suggested environment:
@@ -35,6 +60,10 @@ Options:
             - `npm run build`
             - optionally `npm test` to run all tests
             - optionally `npm run release` to generate release artifacts
+- build locally (CLI edition)
+  - install nodejs (at least v16)
+  - `npm i`
+  - `npm run build`
 - build via docker for windows, using the `build-with-docker-for-windows.bat` script
 - build via the vs2019 Windows AppVeyer image. There is an appveyer.yml file
     included which (should) build if you set up AppVeyer to track

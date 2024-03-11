@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net462;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net462;net7.0</TargetFrameworks>
     <NoWarn>NETSDK1138;CS1701</NoWarn>
     <ProjectType>Local</ProjectType>
     <DefaultClientScript>JScript</DefaultClientScript>
@@ -8,7 +8,6 @@
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
     <OutputType>Library</OutputType>
-    <OldToolsVersion>3.5</OldToolsVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -29,6 +28,9 @@
     <OutputPath>bin\$(Configuration)</OutputPath>
     <Configurations>Debug;Release</Configurations>
     <Platforms>AnyCPU</Platforms>
+    <Deterministic>true</Deterministic>
+    <!-- suppress analyzer mismatch warning -->
+    <NoWarn>CS8032</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <BaseAddress>285212672</BaseAddress>
@@ -66,24 +68,26 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+    <PackageReference Include="NUnit" Version="3.14.0" />
     <PackageReference Include="NExpect" Version="1.0.273" />
+    <PackageReference Include="Quackers.TestLogger" Version="1.0.24" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='net462'">
     <Reference Include="System.Configuration" />
     <Reference Include="System.Runtime.Remoting" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp1.0'">
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp2.1'">
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp3.1'">
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="DateFormatter\AbsoluteTimeDateFormatterTest.cs" />

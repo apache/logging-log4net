@@ -32,14 +32,14 @@ using NUnit.Framework;
 
 namespace log4net.Tests.Util
 {
-    [TestFixture]
-    public class PatternConverterTest
+  [TestFixture]
+  public class PatternConverterTest
+  {
+    [Test]
+    public void PatternLayoutConverterProperties()
     {
-        [Test]
-        public void PatternLayoutConverterProperties()
-        {
-            XmlDocument log4netConfig = new XmlDocument();
-            log4netConfig.LoadXml(@"
+      XmlDocument log4netConfig = new XmlDocument();
+      log4netConfig.LoadXml(@"
                 <log4net>
                   <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
                     <layout type=""log4net.Layout.PatternLayout"">
@@ -64,27 +64,27 @@ namespace log4net.Tests.Util
                   </root>  
                 </log4net>");
 
-            ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-            XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
+      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+      XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
 
-            ILog log = LogManager.GetLogger(rep.Name, "PatternLayoutConverterProperties");
-            log.Debug("Message");
+      ILog log = LogManager.GetLogger(rep.Name, "PatternLayoutConverterProperties");
+      log.Debug("Message");
 
-            PropertyKeyCountPatternLayoutConverter converter = 
-                PropertyKeyCountPatternLayoutConverter.MostRecentInstance;
-            Assert.AreEqual(2, converter.Properties.Count);
-            Assert.AreEqual("4", converter.Properties["two-plus-two"]);
+      PropertyKeyCountPatternLayoutConverter converter =
+          PropertyKeyCountPatternLayoutConverter.MostRecentInstance;
+      Assert.AreEqual(2, converter.Properties.Count);
+      Assert.AreEqual("4", converter.Properties["two-plus-two"]);
 
-            StringAppender appender = 
-                (StringAppender)LogManager.GetRepository(rep.Name).GetAppenders()[0];
-            Assert.AreEqual("2", appender.GetString());
-        }
+      StringAppender appender =
+          (StringAppender)LogManager.GetRepository(rep.Name).GetAppenders()[0];
+      Assert.AreEqual("2", appender.GetString());
+    }
 
-        [Test]
-        public void PatternConverterProperties()
-        {
-            XmlDocument log4netConfig = new XmlDocument();
-            log4netConfig.LoadXml(@"
+    [Test]
+    public void PatternConverterProperties()
+    {
+      XmlDocument log4netConfig = new XmlDocument();
+      log4netConfig.LoadXml(@"
                 <log4net>
                   <appender name=""PatternStringAppender"" type=""log4net.Tests.Util.PatternStringAppender, log4net.Tests"">
                     <layout type=""log4net.Layout.SimpleLayout"" />
@@ -110,83 +110,83 @@ namespace log4net.Tests.Util
                   </root>  
                 </log4net>");
 
-            ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-            XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
+      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+      XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
 
-            ILog log = LogManager.GetLogger(rep.Name, "PatternConverterProperties");
-            log.Debug("Message");
+      ILog log = LogManager.GetLogger(rep.Name, "PatternConverterProperties");
+      log.Debug("Message");
 
-            PropertyKeyCountPatternConverter converter =
-                PropertyKeyCountPatternConverter.MostRecentInstance;
-            Assert.AreEqual(2, converter.Properties.Count);
-            Assert.AreEqual("4", converter.Properties["two-plus-two"]);
+      PropertyKeyCountPatternConverter converter =
+          PropertyKeyCountPatternConverter.MostRecentInstance;
+      Assert.AreEqual(2, converter.Properties.Count);
+      Assert.AreEqual("4", converter.Properties["two-plus-two"]);
 
-            PatternStringAppender appender =
-                (PatternStringAppender)LogManager.GetRepository(rep.Name).GetAppenders()[0];
-            Assert.AreEqual("2", appender.Setting.Format());
-        }
+      PatternStringAppender appender =
+          (PatternStringAppender)LogManager.GetRepository(rep.Name).GetAppenders()[0];
+      Assert.AreEqual("2", appender.Setting.Format());
     }
+  }
 
-    public class PropertyKeyCountPatternLayoutConverter : PatternLayoutConverter
+  public class PropertyKeyCountPatternLayoutConverter : PatternLayoutConverter
+  {
+    private static PropertyKeyCountPatternLayoutConverter mostRecentInstance;
+
+    public PropertyKeyCountPatternLayoutConverter()
     {
-        private static PropertyKeyCountPatternLayoutConverter mostRecentInstance;
-
-        public PropertyKeyCountPatternLayoutConverter()
-        {
-            mostRecentInstance = this;
-        }
-
-        protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
-        {
-            writer.Write(Properties.GetKeys().Length);
-        }
-
-        public static PropertyKeyCountPatternLayoutConverter MostRecentInstance
-        {
-            get { return mostRecentInstance; }
-        }
+      mostRecentInstance = this;
     }
 
-    public class PropertyKeyCountPatternConverter : PatternConverter
+    protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
     {
-        private static PropertyKeyCountPatternConverter mostRecentInstance;
-
-        public PropertyKeyCountPatternConverter()
-        {
-            mostRecentInstance = this;
-        }
-
-        protected override void Convert(TextWriter writer, object state)
-        {
-            writer.Write(Properties.GetKeys().Length);
-        }
-
-        public static PropertyKeyCountPatternConverter MostRecentInstance
-        {
-            get { return mostRecentInstance; }
-        }
+      writer.Write(Properties.GetKeys().Length);
     }
 
-    public class PatternStringAppender : StringAppender
+    public static PropertyKeyCountPatternLayoutConverter MostRecentInstance
     {
-        private static PatternStringAppender mostRecentInstace;
-
-        private PatternString setting;
-
-        public PatternStringAppender()
-        {
-            mostRecentInstace = this;
-        }
-
-        public PatternString Setting
-        {
-            get { return setting; }
-            set { setting = value; }
-        }
-
-        public static PatternStringAppender MostRecentInstace
-        {
-            get { return mostRecentInstace; }
-        }
+      get { return mostRecentInstance; }
     }
+  }
+
+  public class PropertyKeyCountPatternConverter : PatternConverter
+  {
+    private static PropertyKeyCountPatternConverter mostRecentInstance;
+
+    public PropertyKeyCountPatternConverter()
+    {
+      mostRecentInstance = this;
+    }
+
+    protected override void Convert(TextWriter writer, object state)
+    {
+      writer.Write(Properties.GetKeys().Length);
+    }
+
+    public static PropertyKeyCountPatternConverter MostRecentInstance
+    {
+      get { return mostRecentInstance; }
+    }
+  }
+
+  public class PatternStringAppender : StringAppender
+  {
+    private static PatternStringAppender mostRecentInstace;
+
+    private PatternString setting;
+
+    public PatternStringAppender()
+    {
+      mostRecentInstace = this;
+    }
+
+    public PatternString Setting
+    {
+      get { return setting; }
+      set { setting = value; }
+    }
+
+    public static PatternStringAppender MostRecentInstace
+    {
+      get { return mostRecentInstace; }
+    }
+  }
 }

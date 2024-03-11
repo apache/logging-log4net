@@ -1,0 +1,26 @@
+name: Broadcast master updates to satellites
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+concurrency:
+  group: git-broadcast
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2-beta
+      with:
+        node-version: '16'
+    - name: broadcast master changes to satellite branches
+      env:
+        RUN_NUMBER: ${{ github.run_number }}
+      run: |
+        git config --global user.name "Git Broadcast"
+        git config --global user.email "git-broadcast@no-reply.com"
+        npx git-broadcast@latest --from master --push --pretty --suppress-log-prefixes --prefix-logs-with $GITHUB_REPOSITORY

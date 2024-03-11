@@ -55,77 +55,77 @@ using System.Runtime.CompilerServices;
 //
 
 #if (CLI_1_0)
-[assembly: AssemblyInformationalVersionAttribute("2.0.15.0-.CLI 1.0")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.16.0-.CLI 1.0")]
 [assembly: AssemblyTitle("Apache log4net for CLI 1.0 Compatible Frameworks")]
 #elif (NET_1_0)
-[assembly: AssemblyInformationalVersionAttribute("2.0.15.0-.NET 1.0")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.16.0-.NET 1.0")]
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 1.0")]
 #elif (NET_1_1)
-[assembly: AssemblyInformationalVersionAttribute("2.0.15.0-.NET 1.1")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.16.0-.NET 1.1")]
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 1.1")]
 #elif (NET_4_5)
-[assembly: AssemblyInformationalVersionAttribute("2.0.15.0-.NET 4.5")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.16.0-.NET 4.5")]
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 4.5")]
 #elif (NET_4_0)
 #if CLIENT_PROFILE
-[assembly: AssemblyInformationalVersionAttribute("2.0.15.0-.NET 4.0 CP")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.16.0-.NET 4.0 CP")]
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 4.0 Client Profile")]
 #else
-[assembly: AssemblyInformationalVersionAttribute("2.0.15.0-.NET 4.0")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.16.0-.NET 4.0")]
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 4.0")]
 #endif // Client Profile
 #elif (NET_3_5)
 #if CLIENT_PROFILE
-[assembly: AssemblyInformationalVersionAttribute("2.0.15.0-.NET 3.5 CP")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.16.0-.NET 3.5 CP")]
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 3.5 Client Profile")]
 #else
-[assembly: AssemblyInformationalVersionAttribute("2.0.15.0-.NET 3.5")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.16.0-.NET 3.5")]
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 3.5")]
 #endif // Client Profile
 #elif (NET_2_0)
-[assembly: AssemblyInformationalVersionAttribute("2.0.15.0-.NET 2.0")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.16.0-.NET 2.0")]
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 2.0")]
 #elif (NETCF_1_0)
-[assembly: AssemblyInformationalVersionAttribute("2.0.15.0-.NETCF 1.0")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.16.0-.NETCF 1.0")]
 [assembly: AssemblyTitle("Apache log4net for .NET Compact Framework 1.0")]
 #elif (NETCF_2_0)
-[assembly: AssemblyInformationalVersionAttribute("2.0.15.0-.NETCF 2.0")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.16.0-.NETCF 2.0")]
 [assembly: AssemblyTitle("Apache log4net for .NET Compact Framework 2.0")]
 #elif (MONO_1_0)
-[assembly: AssemblyInformationalVersionAttribute("2.0.15.0-Mono 1.0")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.16.0-Mono 1.0")]
 [assembly: AssemblyTitle("Apache log4net for Mono 1.0")]
 #elif (MONO_2_0)
-[assembly: AssemblyInformationalVersionAttribute("2.0.15.0-Mono 2.0")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.16.0-Mono 2.0")]
 [assembly: AssemblyTitle("Apache log4net for Mono 2.0")]
 #elif (MONO_3_5)
-[assembly: AssemblyInformationalVersionAttribute("2.0.15.0-Mono 3.5")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.16.0-Mono 3.5")]
 [assembly: AssemblyTitle("Apache log4net for Mono 3.5")]
 #elif (MONO_4_0)
-[assembly: AssemblyInformationalVersionAttribute("2.0.15.0-Mono 4.0")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.16.0-Mono 4.0")]
 [assembly: AssemblyTitle("Apache log4net for Mono 4.0")]
 #elif (SSCLI_1_0)
-[assembly: AssemblyInformationalVersionAttribute("2.0.15.0-SSCLI 1.0")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.16.0-SSCLI 1.0")]
 [assembly: AssemblyTitle("Apache log4net for Shared Source CLI 1.0")]
 #elif (NET)
-[assembly: AssemblyInformationalVersionAttribute("2.0.15.0-.NET")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.16.0-.NET")]
 [assembly: AssemblyTitle("Apache log4net for .NET Framework")]
 #elif (NETSTANDARD1_3)
-[assembly: AssemblyInformationalVersionAttribute("2.0.15.0-.NET Standard 1.3")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.16.0-.NET Standard 1.3")]
 [assembly: AssemblyTitle("Apache log4net for .NET Standard 1.3")]
 #elif (NETSTANDARD2_0)
-[assembly: AssemblyInformationalVersionAttribute("2.0.15.0-.NET Standard 2.0")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.16.0-.NET Standard 2.0")]
 [assembly: AssemblyTitle("Apache log4net for .NET Standard 2.0")]
 #elif (NETCF)
-[assembly: AssemblyInformationalVersionAttribute("2.0.15.0-.NETCF")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.16.0-.NETCF")]
 [assembly: AssemblyTitle("Apache log4net for .NET Compact Framework")]
 #elif (MONO)
-[assembly: AssemblyInformationalVersionAttribute("2.0.15.0-Mono")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.16.0-Mono")]
 [assembly: AssemblyTitle("Apache log4net for Mono")]
 #elif (SSCLI)
-[assembly: AssemblyInformationalVersionAttribute("2.0.15.0-SSCLI")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.16.0-SSCLI")]
 [assembly: AssemblyTitle("Apache log4net for Shared Source CLI")]
 #else
-[assembly: AssemblyInformationalVersionAttribute("2.0.15.0")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.16.0")]
 [assembly: AssemblyTitle("Apache log4net")]
 #endif
 
@@ -137,8 +137,8 @@ using System.Runtime.CompilerServices;
 
 [assembly: AssemblyProduct("log4net")]
 [assembly: AssemblyDefaultAlias("log4net")]
-[assembly: AssemblyCulture("")]		
-		
+[assembly: AssemblyCulture("")]
+
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 
 // Microsoft .NET Framework documentation for more information on assembly signing.

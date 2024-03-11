@@ -21,17 +21,21 @@ using log4net.Layout;
 
 using NUnit.Framework;
 
-namespace log4net.Tests.Layout {
-    /// <summary>
-    /// Used for internal unit testing the <see cref="DynamicPatternLayout"/> class.
-    /// </summary>
-    public class DynamicPatternLayoutTest : PatternLayoutTest {
-        protected override PatternLayout NewPatternLayout() {
-            return new DynamicPatternLayout();
-        }
-
-        protected override PatternLayout NewPatternLayout(string pattern) {
-            return new DynamicPatternLayout(pattern);
-        }
+namespace log4net.Tests.Layout
+{
+  /// <summary>
+  /// Used for internal unit testing the <see cref="DynamicPatternLayout"/> class.
+  /// </summary>
+  public class DynamicPatternLayoutTest : PatternLayoutTest
+  {
+    protected override PatternLayout NewPatternLayout()
+    {
+      return new DynamicPatternLayout();
     }
+
+    protected override PatternLayout NewPatternLayout(string pattern)
+    {
+      return new DynamicPatternLayout(pattern);
+    }
+  }
 }
