@@ -23,6 +23,8 @@ using System.Reflection;
 using System.IO;
 using System.Collections;
 
+#nullable enable
+
 namespace log4net.Util
 {
   /// <summary>
@@ -36,32 +38,10 @@ namespace log4net.Util
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
   /// <author>Alexey Solofnenko</author>
-  public sealed class SystemInfo
+  public static class SystemInfo
   {
-    #region Private Constants
-
     private const string DEFAULT_NULL_TEXT = "(null)";
     private const string DEFAULT_NOT_AVAILABLE_TEXT = "NOT AVAILABLE";
-
-    #endregion
-
-    #region Private Instance Constructors
-
-    /// <summary>
-    /// Private constructor to prevent instances.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Only static methods are exposed from this type.
-    /// </para>
-    /// </remarks>
-    private SystemInfo()
-    {
-    }
-
-    #endregion Private Instance Constructors
-
-    #region Public Static Constructor
 
     /// <summary>
     /// Initialize default values for private static fields.
@@ -77,27 +57,23 @@ namespace log4net.Util
       string notAvailableText = DEFAULT_NOT_AVAILABLE_TEXT;
 
       // Look for log4net.NullText in AppSettings
-      string nullTextAppSettingsKey = SystemInfo.GetAppSetting("log4net.NullText");
-      if (nullTextAppSettingsKey != null && nullTextAppSettingsKey.Length > 0)
+      string? nullTextAppSettingsKey = GetAppSetting("log4net.NullText");
+      if (nullTextAppSettingsKey is not null && nullTextAppSettingsKey.Length > 0)
       {
-        LogLog.Debug(declaringType, "Initializing NullText value to [" + nullTextAppSettingsKey + "].");
+        LogLog.Debug(declaringType, $"Initializing NullText value to [{nullTextAppSettingsKey}].");
         nullText = nullTextAppSettingsKey;
       }
 
       // Look for log4net.NotAvailableText in AppSettings
-      string notAvailableTextAppSettingsKey = SystemInfo.GetAppSetting("log4net.NotAvailableText");
-      if (notAvailableTextAppSettingsKey != null && notAvailableTextAppSettingsKey.Length > 0)
+      string? notAvailableTextAppSettingsKey = GetAppSetting("log4net.NotAvailableText");
+      if (notAvailableTextAppSettingsKey is not null && notAvailableTextAppSettingsKey.Length > 0)
       {
-        LogLog.Debug(declaringType, "Initializing NotAvailableText value to [" + notAvailableTextAppSettingsKey + "].");
+        LogLog.Debug(declaringType, $"Initializing NotAvailableText value to [{notAvailableTextAppSettingsKey}].");
         notAvailableText = notAvailableTextAppSettingsKey;
       }
-      s_notAvailableText = notAvailableText;
-      s_nullText = nullText;
+      NotAvailableText = notAvailableText;
+      NullText = nullText;
     }
-
-    #endregion
-
-    #region Public Static Properties
 
     /// <summary>
     /// Gets the system dependent line terminator.
@@ -110,13 +86,7 @@ namespace log4net.Util
     /// Gets the system dependent line terminator.
     /// </para>
     /// </remarks>
-    public static string NewLine
-    {
-      get
-      {
-        return System.Environment.NewLine;
-      }
-    }
+    public static string NewLine => Environment.NewLine;
 
     /// <summary>
     /// Gets the base directory for this <see cref="AppDomain"/>.
@@ -124,19 +94,10 @@ namespace log4net.Util
     /// <value>The base directory path for the current <see cref="AppDomain"/>.</value>
     /// <remarks>
     /// <para>
-    /// Gets the base directory for this <see cref="AppDomain"/>.
-    /// </para>
-    /// <para>
     /// The value returned may be either a local file path or a URI.
     /// </para>
     /// </remarks>
-    public static string ApplicationBaseDirectory
-    {
-      get
-      {
-        return AppDomain.CurrentDomain.BaseDirectory;
-      }
-    }
+    public static string ApplicationBaseDirectory => AppDomain.CurrentDomain.BaseDirectory;
 
     /// <summary>
     /// Gets the path to the configuration file for the current <see cref="AppDomain"/>.
@@ -157,14 +118,14 @@ namespace log4net.Util
       get
       {
 #if NETSTANDARD2_0_OR_GREATER
-        return SystemInfo.EntryAssemblyLocation + ".config";
+        return EntryAssemblyLocation + ".config";
 #else
-        return System.AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;
+        return AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;
 #endif
       }
     }
 
-    private static string entryAssemblyLocation;
+    private static string? entryAssemblyLocation;
 
     /// <summary>
     /// Gets the path to the file that first executed in the current <see cref="AppDomain"/>.
@@ -179,8 +140,10 @@ namespace log4net.Util
     {
       get
       {
-        if (entryAssemblyLocation != null)
+        if (entryAssemblyLocation is not null)
+        {
           return entryAssemblyLocation;
+        }
         return entryAssemblyLocation = Assembly.GetEntryAssembly()?.Location
           ?? throw new InvalidOperationException($"Unable to determine EntryAssembly location: EntryAssembly is null. Try explicitly setting {nameof(SystemInfo)}.{nameof(EntryAssemblyLocation)}");
       }
@@ -209,13 +172,7 @@ namespace log4net.Util
     /// change if the runtime is using fibers.
     /// </para>
     /// </remarks>
-    public static int CurrentThreadId
-    {
-      get
-      {
-        return System.Threading.Thread.CurrentThread.ManagedThreadId;
-      }
-    }
+    public static int CurrentThreadId => System.Threading.Thread.CurrentThread.ManagedThreadId;
 
     /// <summary>
     /// Get the host name or machine name for the current machine
@@ -238,9 +195,8 @@ namespace log4net.Util
     {
       get
       {
-        if (s_hostName == null)
+        if (s_hostName is null)
         {
-
           // Get the DNS host name of the current machine
           try
           {
@@ -263,7 +219,7 @@ namespace log4net.Util
           }
 
           // Get the NETBIOS machine name of the current machine
-          if (s_hostName == null || s_hostName.Length == 0)
+          if (string.IsNullOrEmpty(s_hostName))
           {
             try
             {
@@ -280,13 +236,13 @@ namespace log4net.Util
           }
 
           // Couldn't find a value
-          if (s_hostName == null || s_hostName.Length == 0)
+          if (string.IsNullOrEmpty(s_hostName))
           {
-            s_hostName = s_notAvailableText;
+            s_hostName = NotAvailableText;
             LogLog.Debug(declaringType, "Could not determine the hostname. Error Ignored. Empty host name will be used");
           }
         }
-        return s_hostName;
+        return s_hostName!;
       }
     }
 
@@ -309,7 +265,7 @@ namespace log4net.Util
     {
       get
       {
-        if (s_appFriendlyName == null)
+        if (s_appFriendlyName is null)
         {
           try
           {
@@ -322,12 +278,12 @@ namespace log4net.Util
             LogLog.Debug(declaringType, "Security exception while trying to get current domain friendly name. Error Ignored.");
           }
 
-          if (s_appFriendlyName == null || s_appFriendlyName.Length == 0)
+          if (string.IsNullOrEmpty(s_appFriendlyName))
           {
             try
             {
-              string assemblyLocation = SystemInfo.EntryAssemblyLocation;
-              s_appFriendlyName = System.IO.Path.GetFileName(assemblyLocation);
+              string assemblyLocation = EntryAssemblyLocation;
+              s_appFriendlyName = Path.GetFileName(assemblyLocation);
             }
             catch (System.Security.SecurityException)
             {
@@ -335,12 +291,12 @@ namespace log4net.Util
             }
           }
 
-          if (s_appFriendlyName == null || s_appFriendlyName.Length == 0)
+          if (string.IsNullOrEmpty(s_appFriendlyName))
           {
-            s_appFriendlyName = s_notAvailableText;
+            s_appFriendlyName = NotAvailableText;
           }
         }
-        return s_appFriendlyName;
+        return s_appFriendlyName!;
       }
     }
 
@@ -365,10 +321,7 @@ namespace log4net.Util
     /// </para>
     /// </remarks>
     [Obsolete("Use ProcessStartTimeUtc and convert to local time if needed.")]
-    public static DateTime ProcessStartTime
-    {
-      get { return s_processStartTimeUtc.ToLocalTime(); }
-    }
+    public static DateTime ProcessStartTime => s_processStartTimeUtc.ToLocalTime();
 
     /// <summary>
     /// Get the UTC start time for the current process.
@@ -390,10 +343,7 @@ namespace log4net.Util
     /// will be set per AppDomain.
     /// </para>
     /// </remarks>
-    public static DateTime ProcessStartTimeUtc
-    {
-      get { return s_processStartTimeUtc; }
-    }
+    public static DateTime ProcessStartTimeUtc => s_processStartTimeUtc;
 
     /// <summary>
     /// Text to output when a <c>null</c> is encountered.
@@ -409,11 +359,7 @@ namespace log4net.Util
     /// .config file.
     /// </para>
     /// </remarks>
-    public static string NullText
-    {
-      get { return s_nullText; }
-      set { s_nullText = value; }
-    }
+    public static string NullText { get; set; }
 
     /// <summary>
     /// Text to output when an unsupported feature is requested.
@@ -428,15 +374,7 @@ namespace log4net.Util
     /// .config file.
     /// </para>
     /// </remarks>
-    public static string NotAvailableText
-    {
-      get { return s_notAvailableText; }
-      set { s_notAvailableText = value; }
-    }
-
-    #endregion Public Static Properties
-
-    #region Public Static Methods
+    public static string NotAvailableText { get; set; }
 
     /// <summary>
     /// Gets the assembly location path for the specified assembly.
@@ -485,11 +423,11 @@ namespace log4net.Util
         }
         catch (TargetInvocationException ex)
         {
-          return "Location Detect Failed (" + ex.Message + ")";
+          return $"Location Detect Failed ({ex.Message})";
         }
         catch (ArgumentException ex)
         {
-          return "Location Detect Failed (" + ex.Message + ")";
+          return $"Location Detect Failed ({ex.Message})";
         }
         catch (System.Security.SecurityException)
         {
@@ -514,7 +452,7 @@ namespace log4net.Util
     /// </remarks>
     public static string AssemblyQualifiedName(Type type)
     {
-      return type.FullName + ", " + type.Assembly.FullName;
+      return $"{type.FullName}, {type.Assembly.FullName}";
     }
 
     /// <summary>
@@ -566,7 +504,7 @@ namespace log4net.Util
     /// </remarks>
     public static string AssemblyFileName(Assembly myAssembly)
     {
-      return System.IO.Path.GetFileName(myAssembly.Location);
+      return Path.GetFileName(myAssembly.Location);
     }
 
     /// <summary>
@@ -589,7 +527,7 @@ namespace log4net.Util
     /// then all the loaded assemblies will be searched for the type.
     /// </para>
     /// </remarks>
-    public static Type GetTypeFromString(Type relativeType, string typeName, bool throwOnError, bool ignoreCase)
+    public static Type? GetTypeFromString(Type relativeType, string typeName, bool throwOnError, bool ignoreCase)
     {
       return GetTypeFromString(relativeType.Assembly, typeName, throwOnError, ignoreCase);
     }
@@ -613,7 +551,7 @@ namespace log4net.Util
     /// in the assembly then all the loaded assemblies will be searched for the type.
     /// </para>
     /// </remarks>
-    public static Type GetTypeFromString(string typeName, bool throwOnError, bool ignoreCase)
+    public static Type? GetTypeFromString(string typeName, bool throwOnError, bool ignoreCase)
     {
       return GetTypeFromString(Assembly.GetCallingAssembly(), typeName, throwOnError, ignoreCase);
     }
@@ -638,22 +576,19 @@ namespace log4net.Util
     /// will be searched for the type.
     /// </para>
     /// </remarks>
-    public static Type GetTypeFromString(Assembly relativeAssembly, string typeName, bool throwOnError, bool ignoreCase)
+    public static Type? GetTypeFromString(Assembly relativeAssembly, string typeName, bool throwOnError, bool ignoreCase)
     {
       // Check if the type name specifies the assembly name
       if (typeName.IndexOf(',') == -1)
       {
-        //LogLog.Debug(declaringType, "SystemInfo: Loading type ["+typeName+"] from assembly ["+relativeAssembly.FullName+"]");
-        // Attempt to lookup the type from the relativeAssembly
+        // Attempt to look up the type from the relativeAssembly
         Type type = relativeAssembly.GetType(typeName, false, ignoreCase);
-        if (type != null)
+        if (type is not null)
         {
-          // Found type in relative assembly
-          //LogLog.Debug(declaringType, "SystemInfo: Loaded type ["+typeName+"] from assembly ["+relativeAssembly.FullName+"]");
           return type;
         }
 
-        Assembly[] loadedAssemblies = null;
+        Assembly[]? loadedAssemblies = null;
         try
         {
           loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -665,15 +600,15 @@ namespace log4net.Util
 
         if (loadedAssemblies != null)
         {
-          Type fallback = null;
+          Type? fallback = null;
           // Search the loaded assemblies for the type
           foreach (Assembly assembly in loadedAssemblies)
           {
             Type t = assembly.GetType(typeName, false, ignoreCase);
-            if (t != null)
+            if (t is not null)
             {
               // Found type in loaded assembly
-              LogLog.Debug(declaringType, "Loaded type [" + typeName + "] from assembly [" + assembly.FullName + "] by searching loaded assemblies.");
+              LogLog.Debug(declaringType, $"Loaded type [{typeName}] from assembly [{assembly.FullName}] by searching loaded assemblies.");
               if (assembly.GlobalAssemblyCache)
               {
                 fallback = t;
@@ -684,7 +619,7 @@ namespace log4net.Util
               }
             }
           }
-          if (fallback != null)
+          if (fallback is not null)
           {
             return fallback;
           }
@@ -693,19 +628,14 @@ namespace log4net.Util
         // Didn't find the type
         if (throwOnError)
         {
-          throw new TypeLoadException("Could not load type [" + typeName + "]. Tried assembly [" + relativeAssembly.FullName + "] and all loaded assemblies");
+          throw new TypeLoadException($"Could not load type [{typeName}]. Tried assembly [{relativeAssembly.FullName}] and all loaded assemblies");
         }
         return null;
       }
-      else
-      {
-        // Includes explicit assembly name
-        //LogLog.Debug(declaringType, "SystemInfo: Loading type ["+typeName+"] from global Type");
 
-        return Type.GetType(typeName, throwOnError, ignoreCase);
-      }
+      // Includes explicit assembly name
+      return Type.GetType(typeName, throwOnError, ignoreCase);
     }
-
 
     /// <summary>
     /// Generate a new guid
@@ -751,7 +681,7 @@ namespace log4net.Util
     /// </summary>
     /// <param name="s">the string to parse</param>
     /// <param name="val">out param where the parsed value is placed</param>
-    /// <returns><c>true</c> if the string was able to be parsed into an integer</returns>
+    /// <returns><c>true</c> if the string was parsed into an integer</returns>
     /// <remarks>
     /// <para>
     /// Attempts to parse the string into an integer. If the string cannot
@@ -765,8 +695,7 @@ namespace log4net.Util
 
       try
       {
-        double doubleVal;
-        if (Double.TryParse(s, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out doubleVal))
+        if (double.TryParse(s, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out double doubleVal))
         {
           val = Convert.ToInt32(doubleVal);
           return true;
@@ -785,7 +714,7 @@ namespace log4net.Util
     /// </summary>
     /// <param name="s">the string to parse</param>
     /// <param name="val">out param where the parsed value is placed</param>
-    /// <returns><c>true</c> if the string was able to be parsed into an integer</returns>
+    /// <returns><c>true</c> if the string was parsed into an integer</returns>
     /// <remarks>
     /// <para>
     /// Attempts to parse the string into an integer. If the string cannot
@@ -799,8 +728,7 @@ namespace log4net.Util
 
       try
       {
-        double doubleVal;
-        if (Double.TryParse(s, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out doubleVal))
+        if (double.TryParse(s, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out double doubleVal))
         {
           val = Convert.ToInt64(doubleVal);
           return true;
@@ -819,7 +747,7 @@ namespace log4net.Util
     /// </summary>
     /// <param name="s">the string to parse</param>
     /// <param name="val">out param where the parsed value is placed</param>
-    /// <returns><c>true</c> if the string was able to be parsed into an integer</returns>
+    /// <returns><c>true</c> if the string was parsed into an integer</returns>
     /// <remarks>
     /// <para>
     /// Attempts to parse the string into an integer. If the string cannot
@@ -833,8 +761,7 @@ namespace log4net.Util
 
       try
       {
-        double doubleVal;
-        if (Double.TryParse(s, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out doubleVal))
+        if (double.TryParse(s, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out double doubleVal))
         {
           val = Convert.ToInt16(doubleVal);
           return true;
@@ -858,7 +785,7 @@ namespace log4net.Util
     /// Configuration APIs are not supported under the Compact Framework
     /// </para>
     /// </remarks>
-    public static string GetAppSetting(string key)
+    public static string? GetAppSetting(string key)
     {
       try
       {
@@ -890,23 +817,21 @@ namespace log4net.Util
     /// </remarks>
     public static string ConvertToFullPath(string path)
     {
-      if (path == null)
+      if (path is null)
       {
-        throw new ArgumentNullException("path");
+        throw new ArgumentNullException(nameof(path));
       }
 
-      string baseDirectory = "";
+      string baseDirectory = string.Empty;
       try
       {
-        string applicationBaseDirectory = SystemInfo.ApplicationBaseDirectory;
-        if (applicationBaseDirectory != null)
+        string applicationBaseDirectory = ApplicationBaseDirectory;
+
+        // applicationBaseDirectory may be a URI not a local file path
+        Uri applicationBaseDirectoryUri = new Uri(applicationBaseDirectory);
+        if (applicationBaseDirectoryUri.IsFile)
         {
-          // applicationBaseDirectory may be a URI not a local file path
-          Uri applicationBaseDirectoryUri = new Uri(applicationBaseDirectory);
-          if (applicationBaseDirectoryUri.IsFile)
-          {
-            baseDirectory = applicationBaseDirectoryUri.LocalPath;
-          }
+          baseDirectory = applicationBaseDirectoryUri.LocalPath;
         }
       }
       catch
@@ -914,7 +839,7 @@ namespace log4net.Util
         // Ignore URI exceptions & SecurityExceptions from SystemInfo.ApplicationBaseDirectory
       }
 
-      if (baseDirectory != null && baseDirectory.Length > 0)
+      if (!string.IsNullOrEmpty(baseDirectory))
       {
         // Note that Path.Combine will return the second path if it is rooted
         return Path.GetFullPath(Path.Combine(baseDirectory, path));
@@ -948,18 +873,10 @@ namespace log4net.Util
     /// <param name="a">The one string.</param>
     /// <param name="b">The other string.</param>
     /// <returns><c>true</c> if the strings are equal, <c>false</c> otherwise.</returns>
-    public static Boolean EqualsIgnoringCase(String a, String b)
+    public static bool EqualsIgnoringCase(string a, string b)
     {
-      return String.Equals(a, b, StringComparison.OrdinalIgnoreCase);
+      return string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
     }
-
-    #endregion Public Static Methods
-
-    #region Private Static Methods
-
-    #endregion Private Static Methods
-
-    #region Public Static Fields
 
     /// <summary>
     /// Gets an empty array of types.
@@ -970,11 +887,7 @@ namespace log4net.Util
     /// the .NET Compact Framework 1.0.
     /// </para>
     /// </remarks>
-    public static readonly Type[] EmptyTypes = new Type[0];
-
-    #endregion Public Static Fields
-
-    #region Private Static Fields
+    public static readonly Type[] EmptyTypes = Type.EmptyTypes;
 
     /// <summary>
     /// The fully qualified type of the SystemInfo class.
@@ -988,28 +901,16 @@ namespace log4net.Util
     /// <summary>
     /// Cache the host name for the current machine
     /// </summary>
-    private static string s_hostName;
+    private static string? s_hostName;
 
     /// <summary>
     /// Cache the application friendly name
     /// </summary>
-    private static string s_appFriendlyName;
-
-    /// <summary>
-    /// Text to output when a <c>null</c> is encountered.
-    /// </summary>
-    private static string s_nullText;
-
-    /// <summary>
-    /// Text to output when an unsupported feature is requested.
-    /// </summary>
-    private static string s_notAvailableText;
+    private static string? s_appFriendlyName;
 
     /// <summary>
     /// Start time for the current process.
     /// </summary>
     private static DateTime s_processStartTimeUtc = DateTime.UtcNow;
-
-    #endregion
   }
 }

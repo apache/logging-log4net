@@ -24,8 +24,6 @@ using log4net.Repository;
 
 namespace log4net.Core
 {
-  #region LoggerRepositoryCreationEvent
-
   /// <summary>
   /// Delegate used to handle logger repository creation event notifications
   /// </summary>
@@ -51,11 +49,6 @@ namespace log4net.Core
   public class LoggerRepositoryCreationEventArgs : EventArgs
   {
     /// <summary>
-    /// The <see cref="ILoggerRepository"/> created
-    /// </summary>
-    private ILoggerRepository m_repository;
-
-    /// <summary>
     /// Construct instance using <see cref="ILoggerRepository"/> specified
     /// </summary>
     /// <param name="repository">the <see cref="ILoggerRepository"/> that has been created</param>
@@ -66,7 +59,7 @@ namespace log4net.Core
     /// </remarks>
     public LoggerRepositoryCreationEventArgs(ILoggerRepository repository)
     {
-      m_repository = repository;
+      LoggerRepository = repository;
     }
 
     /// <summary>
@@ -80,13 +73,8 @@ namespace log4net.Core
     /// The <see cref="ILoggerRepository"/> that has been created
     /// </para>
     /// </remarks>
-    public ILoggerRepository LoggerRepository
-    {
-      get { return m_repository; }
-    }
+    public ILoggerRepository LoggerRepository { get; }
   }
-
-  #endregion
 
   /// <summary>
   /// Interface used by the <see cref="LogManager"/> to select the <see cref="ILoggerRepository"/>.
@@ -105,7 +93,7 @@ namespace log4net.Core
     /// <summary>
     /// Gets the <see cref="ILoggerRepository"/> for the specified assembly.
     /// </summary>
-    /// <param name="assembly">The assembly to use to lookup to the <see cref="ILoggerRepository"/></param>
+    /// <param name="assembly">The assembly to use to look up to the <see cref="ILoggerRepository"/></param>
     /// <returns>The <see cref="ILoggerRepository"/> for the assembly.</returns>
     /// <remarks>
     /// <para>
@@ -124,7 +112,7 @@ namespace log4net.Core
     /// <summary>
     /// Gets the named <see cref="ILoggerRepository"/>.
     /// </summary>
-    /// <param name="repositoryName">The name to use to lookup to the <see cref="ILoggerRepository"/>.</param>
+    /// <param name="repositoryName">The name to use to look up to the <see cref="ILoggerRepository"/>.</param>
     /// <returns>The named <see cref="ILoggerRepository"/></returns>
     /// <remarks>
     /// Lookup a named <see cref="ILoggerRepository"/>. This is the repository created by
@@ -165,7 +153,7 @@ namespace log4net.Core
     /// same name will return the same repository instance.
     /// </para>
     /// </remarks>
-    ILoggerRepository CreateRepository(string repositoryName, Type repositoryType);
+    ILoggerRepository CreateRepository(string repositoryName, Type? repositoryType);
 
     /// <summary>
     /// Test if a named repository exists
@@ -189,7 +177,7 @@ namespace log4net.Core
     /// this <see cref="IRepositorySelector"/>.</returns>
     /// <remarks>
     /// <para>
-    /// Gets an array of all of the repositories created by this selector.
+    /// Gets an array of all repositories created by this selector.
     /// </para>
     /// </remarks>
     ILoggerRepository[] GetAllRepositories();

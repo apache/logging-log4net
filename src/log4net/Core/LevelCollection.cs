@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace log4net.Core
 {
@@ -142,6 +143,17 @@ namespace log4net.Core
     {
       m_array = new Level[col.Count];
       AddRange(col);
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <c>LevelCollection</c> class
+    /// that contains elements copied from the specified <see cref="Level"/> collection.
+    /// </summary>
+    /// <param name="col">The <see cref="Level"/> collection whose elements are copied to the new list.</param>
+    public LevelCollection(ICollection<Level> col)
+    {
+      m_array = new Level[col.Count];
+      AddRange((ICollection)col);
     }
 
     /// <summary>
