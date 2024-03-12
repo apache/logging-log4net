@@ -59,7 +59,7 @@ namespace log4net.Util.PatternStringConverters
     /// </remarks>
     public override void Convert(TextWriter writer, object state)
     {
-      CompositeProperties compositeProperties = new CompositeProperties();
+      CompositeProperties compositeProperties = new();
 
       if (LogicalThreadContext.Properties.GetProperties(false) is PropertiesDictionary logicalThreadProperties)
         compositeProperties.Add(logicalThreadProperties);
@@ -70,11 +70,15 @@ namespace log4net.Util.PatternStringConverters
       compositeProperties.Add(GlobalContext.Properties.GetReadOnlyProperties());
 
       if (Option is not null)
+      {
         // Write the value for the specified key
         WriteObject(writer, null, compositeProperties[Option]);
+      }
       else
+      {
         // Write all the key value pairs
         WriteDictionary(writer, null, compositeProperties.Flatten());
+      }
     }
   }
 }

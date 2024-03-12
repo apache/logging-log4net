@@ -86,6 +86,15 @@ namespace log4net.Tests.Appender
       }
     }
 
+    private sealed class RollingFileAppenderForTest : RollingFileAppender
+    {
+      /// <summary>
+      /// Builds a list of filenames for all files matching the base filename plus a file pattern.
+      /// </summary>
+      internal new List<string> GetExistingFiles(string baseFilePath)
+        => base.GetExistingFiles(baseFilePath);
+    }
+
     /// <summary>
     /// Sets up variables used for the tests
     /// </summary>
@@ -1927,7 +1936,7 @@ namespace log4net.Tests.Appender
 
     private static List<string> GetExistingFiles(string baseFilePath, bool preserveLogFileNameExtension = false)
     {
-      RollingFileAppender appender = new RollingFileAppender
+      RollingFileAppenderForTest appender = new()
       {
         PreserveLogFileNameExtension = preserveLogFileNameExtension,
         SecurityContext = NullSecurityContext.Instance
@@ -1937,17 +1946,12 @@ namespace log4net.Tests.Appender
 
     private static string GetTestMessage()
     {
-      switch (Environment.NewLine.Length)
+      return Environment.NewLine.Length switch
       {
-        case 2:
-          return c_testMessage98Chars;
-
-        case 1:
-          return c_testMessage99Chars;
-
-        default:
-          throw new Exception("Unexpected Environment.NewLine.Length");
-      }
+        2 => c_testMessage98Chars,
+        1 => c_testMessage99Chars,
+        _ => throw new Exception("Unexpected Environment.NewLine.Length"),
+      };
     }
   }
 
