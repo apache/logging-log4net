@@ -27,6 +27,7 @@ using System.Security;
 using System.Security.Principal;
 using log4net.Util;
 using log4net.Repository;
+using System.ComponentModel;
 
 namespace log4net.Core
 {
@@ -110,13 +111,10 @@ namespace log4net.Core
     {
       get
       {
-        if (TimeStamp != default(DateTime) &&
-            _timeStampUtc == default(DateTime))
-        {
+        if (TimeStamp != default && _timeStampUtc == default)
           // TimeStamp field has been set explicitly but TimeStampUtc hasn't
           // => use TimeStamp
           return TimeStamp.ToUniversalTime();
-        }
 
         return _timeStampUtc;
       }
@@ -1479,7 +1477,12 @@ namespace log4net.Core
     /// <summary>
     /// The internal logging event data.
     /// </summary>
-    internal LoggingEventData m_data;
+    private LoggingEventData m_data;
+
+    /// <summary>
+    /// Location information for the caller.
+    /// </summary>
+    public LocationInfo LocationInfo => m_data.LocationInfo;
 
     /// <summary>
     /// The internal logging event data.

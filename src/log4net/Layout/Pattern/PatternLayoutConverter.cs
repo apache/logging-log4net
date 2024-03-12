@@ -94,17 +94,12 @@ namespace log4net.Layout.Pattern
     /// </summary>
     /// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
     /// <param name="state">The state object on which the pattern converter should be executed.</param>
-    protected internal override void Convert(TextWriter writer, object state)
+    public override void Convert(TextWriter writer, object state)
     {
-      LoggingEvent loggingEvent = state as LoggingEvent;
-      if (loggingEvent != null)
-      {
+      if (state is LoggingEvent loggingEvent)
         Convert(writer, loggingEvent);
-      }
       else
-      {
         throw new ArgumentException("state must be of type [" + typeof(LoggingEvent).FullName + "]", "state");
-      }
     }
 
     #endregion Protected Methods

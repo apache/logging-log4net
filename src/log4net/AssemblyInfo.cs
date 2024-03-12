@@ -64,5 +64,3 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyProduct("log4net")]
 [assembly: AssemblyDefaultAlias("log4net")]
 [assembly: AssemblyCulture("")]
-
-[assembly: InternalsVisibleTo("log4net.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100297dcac908e28689360399027b0ea4cd852fbb74e1ed95e695a5ba55cbd1d075ec20cdb5fa6fc593d3d571527b20558d6f39e1f4d5cfe0798428c589c311965244b209c38a02aaa8c9da3b72405b6fedeeb4292c3457e9769b74e645c19cb06c2be75fb2d12281a585fbeabf7bd195d6961ba113286fc3e286d7bbd69024ceda")]

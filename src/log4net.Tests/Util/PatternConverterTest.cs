@@ -131,62 +131,33 @@ namespace log4net.Tests.Util
   {
     private static PropertyKeyCountPatternLayoutConverter mostRecentInstance;
 
-    public PropertyKeyCountPatternLayoutConverter()
-    {
-      mostRecentInstance = this;
-    }
+    public PropertyKeyCountPatternLayoutConverter() => mostRecentInstance = this;
 
-    protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
-    {
-      writer.Write(Properties.GetKeys().Length);
-    }
+    protected override void Convert(TextWriter writer, LoggingEvent loggingEvent) => writer.Write(Properties.GetKeys().Length);
 
-    public static PropertyKeyCountPatternLayoutConverter MostRecentInstance
-    {
-      get { return mostRecentInstance; }
-    }
+    public static PropertyKeyCountPatternLayoutConverter MostRecentInstance => mostRecentInstance;
   }
 
   public class PropertyKeyCountPatternConverter : PatternConverter
   {
     private static PropertyKeyCountPatternConverter mostRecentInstance;
 
-    public PropertyKeyCountPatternConverter()
-    {
-      mostRecentInstance = this;
-    }
+    public PropertyKeyCountPatternConverter() => mostRecentInstance = this;
 
-    protected internal override void Convert(TextWriter writer, object state)
-    {
-      writer.Write(Properties.GetKeys().Length);
-    }
+    public override void Convert(TextWriter writer, object state)
+      => writer.Write(Properties.GetKeys().Length);
 
-    public static PropertyKeyCountPatternConverter MostRecentInstance
-    {
-      get { return mostRecentInstance; }
-    }
+    public static PropertyKeyCountPatternConverter MostRecentInstance => mostRecentInstance;
   }
 
   public class PatternStringAppender : StringAppender
   {
     private static PatternStringAppender mostRecentInstace;
 
-    private PatternString setting;
+    public PatternStringAppender() => mostRecentInstace = this;
 
-    public PatternStringAppender()
-    {
-      mostRecentInstace = this;
-    }
+    public PatternString Setting { get; set; }
 
-    public PatternString Setting
-    {
-      get { return setting; }
-      set { setting = value; }
-    }
-
-    public static PatternStringAppender MostRecentInstace
-    {
-      get { return mostRecentInstace; }
-    }
+    public static PatternStringAppender MostRecentInstace => mostRecentInstace;
   }
 }

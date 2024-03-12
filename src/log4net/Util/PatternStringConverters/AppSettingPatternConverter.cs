@@ -86,19 +86,14 @@ namespace log4net.Util.PatternStringConverters
     /// then all the properties are written as key value pairs.
     /// </para>
     /// </remarks>
-    protected internal override void Convert(TextWriter writer, object state)
+    public override void Convert(TextWriter writer, object state)
     {
-
-      if (Option != null)
-      {
+      if (Option is not null)
         // Write the value for the specified key
         WriteObject(writer, null, ConfigurationManager.AppSettings[Option]);
-      }
       else
-      {
         // Write all the key value pairs
         WriteDictionary(writer, null, AppSettingsDictionary);
-      }
     }
   }
 }

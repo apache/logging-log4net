@@ -43,16 +43,12 @@ namespace log4net.Util.PatternStringConverters
     /// Write the current threads username to the output <paramref name="writer"/>.
     /// </para>
     /// </remarks>
-    protected internal override void Convert(TextWriter writer, object state)
+    public override void Convert(TextWriter writer, object state)
     {
       try
       {
-        System.Security.Principal.WindowsIdentity windowsIdentity = null;
-        windowsIdentity = System.Security.Principal.WindowsIdentity.GetCurrent();
-        if (windowsIdentity != null && windowsIdentity.Name != null)
-        {
-          writer.Write(windowsIdentity.Name);
-        }
+        if (System.Security.Principal.WindowsIdentity.GetCurrent()?.Name is string name)
+          writer.Write(name);
       }
       catch (System.Security.SecurityException)
       {

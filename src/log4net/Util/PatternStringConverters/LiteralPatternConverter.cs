@@ -53,12 +53,10 @@ namespace log4net.Util.PatternStringConverters
     /// </remarks>
     public override PatternConverter SetNext(PatternConverter pc)
     {
-      LiteralPatternConverter literalPc = pc as LiteralPatternConverter;
-      if (literalPc != null)
+      if (pc is LiteralPatternConverter literalPc)
       {
         // Combine the two adjacent literals together
         Option = Option + literalPc.Option;
-
         // We are the next converter now
         return this;
       }
@@ -82,9 +80,7 @@ namespace log4net.Util.PatternStringConverters
     /// </para>
     /// </remarks>
     public override void Format(TextWriter writer, object state)
-    {
-      writer.Write(Option);
-    }
+      => writer.Write(Option);
 
     /// <summary>
     /// Convert this pattern into the rendered message
@@ -96,9 +92,7 @@ namespace log4net.Util.PatternStringConverters
     /// This method is not used.
     /// </para>
     /// </remarks>
-    protected internal override void Convert(TextWriter writer, object state)
-    {
-      throw new InvalidOperationException("Should never get here because of the overridden Format method");
-    }
+    public override void Convert(TextWriter writer, object state)
+      => throw new InvalidOperationException("Should never get here because of the overridden Format method");
   }
 }

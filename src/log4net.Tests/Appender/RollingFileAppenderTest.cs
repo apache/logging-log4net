@@ -1307,7 +1307,7 @@ namespace log4net.Tests.Appender
         int iExpectedValue)
     {
       rfa.InitializeRollBackups(sBaseFile, alFiles);
-      Assert.AreEqual(iExpectedValue, rfa.m_curSizeRollBackups);
+      Assert.AreEqual(iExpectedValue, rfa.CurrentSizeRollBackups);
     }
 
     /// <summary>
@@ -1343,7 +1343,7 @@ namespace log4net.Tests.Appender
       RollingFileAppender rfa = new RollingFileAppender();
       rfa.RollingStyle = RollingFileAppender.RollingMode.Size;
       rfa.MaxSizeRollBackups = Int32.Parse(asParams[0].Trim());
-      rfa.m_curSizeRollBackups = Int32.Parse(asParams[1].Trim());
+      rfa.CurrentSizeRollBackups = Int32.Parse(asParams[1].Trim());
       rfa.CountDirection = Int32.Parse(asParams[2].Trim());
 
       return rfa;
@@ -1869,17 +1869,14 @@ namespace log4net.Tests.Appender
     private void VerifyInitializeRollBackups(int iBackups, int iMaxSizeRollBackups)
     {
       string sBaseFile = "LogFile.log";
-      var arrFiles = new List<string>();
-      arrFiles.Add("junk1");
+      var arrFiles = new List<string> { "junk1" };
       for (int i = 0; i < iBackups; i++)
-      {
         arrFiles.Add(MakeFileName(sBaseFile, i));
-      }
 
-      RollingFileAppender rfa = new RollingFileAppender();
+      RollingFileAppender rfa = new();
       rfa.RollingStyle = RollingFileAppender.RollingMode.Size;
       rfa.MaxSizeRollBackups = iMaxSizeRollBackups;
-      rfa.m_curSizeRollBackups = 0;
+      rfa.CurrentSizeRollBackups = 0;
       rfa.InitializeRollBackups(sBaseFile, arrFiles);
 
       // iBackups  / Meaning
@@ -1887,15 +1884,10 @@ namespace log4net.Tests.Appender
       // 1 = file.log
       // 2 = file.log.1
       // 3 = file.log.2
-      if (0 == iBackups ||
-          1 == iBackups)
-      {
-        Assert.AreEqual(0, rfa.m_curSizeRollBackups);
-      }
+      if (iBackups is 0 or 1)
+        Assert.AreEqual(0, rfa.CurrentSizeRollBackups);
       else
-      {
-        Assert.AreEqual(Math.Min(iBackups - 1, iMaxSizeRollBackups), rfa.m_curSizeRollBackups);
-      }
+        Assert.AreEqual(Math.Min(iBackups - 1, iMaxSizeRollBackups), rfa.CurrentSizeRollBackups);
     }
 
     /// <summary>
@@ -1925,8 +1917,8 @@ namespace log4net.Tests.Appender
     [Test]
     public void TestCreateCloseNoActivateOptions()
     {
-        var appender = new RollingFileAppender();
-        appender.Close();
+      var appender = new RollingFileAppender();
+      appender.Close();
     }
 
     //
@@ -1937,8 +1929,8 @@ namespace log4net.Tests.Appender
     {
       RollingFileAppender appender = new RollingFileAppender
       {
-          PreserveLogFileNameExtension = preserveLogFileNameExtension,
-          SecurityContext = NullSecurityContext.Instance
+        PreserveLogFileNameExtension = preserveLogFileNameExtension,
+        SecurityContext = NullSecurityContext.Instance
       };
       return appender.GetExistingFiles(baseFilePath);
     }

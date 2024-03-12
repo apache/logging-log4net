@@ -49,20 +49,18 @@ namespace log4net.Util.PatternStringConverters
     /// property.
     /// </para>
     /// </remarks>
-    protected internal override void Convert(TextWriter writer, object state)
+    public override void Convert(TextWriter writer, object state)
     {
       try
       {
-        if (Option != null && Option.Length > 0)
+        if (Option?.Length > 0)
         {
           Environment.SpecialFolder specialFolder =
               (Environment.SpecialFolder)Enum.Parse(typeof(Environment.SpecialFolder), Option, true);
 
           string envFolderPathValue = Environment.GetFolderPath(specialFolder);
-          if (envFolderPathValue != null && envFolderPathValue.Length > 0)
-          {
+          if (envFolderPathValue?.Length > 0)
             writer.Write(envFolderPathValue);
-          }
         }
       }
       catch (System.Security.SecurityException secEx)

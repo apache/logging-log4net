@@ -33,7 +33,7 @@ namespace log4net.Util.PatternStringConverters
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
-  internal sealed class EnvironmentPatternConverter : PatternConverter
+  public sealed class EnvironmentPatternConverter : PatternConverter
   {
     /// <summary>
     /// Write an environment variable to the output
@@ -48,31 +48,23 @@ namespace log4net.Util.PatternStringConverters
     /// property.
     /// </para>
     /// </remarks>
-    protected internal override void Convert(TextWriter writer, object state)
+    public override void Convert(TextWriter writer, object state)
     {
       try
       {
-        if (this.Option != null && this.Option.Length > 0)
+        if (Option?.Length > 0)
         {
           // Lookup the environment variable
-          string envValue = Environment.GetEnvironmentVariable(this.Option);
+          string envValue = Environment.GetEnvironmentVariable(Option);
 
           // If we didn't see it for the process, try a user level variable.
-          if (envValue == null)
-          {
-            envValue = Environment.GetEnvironmentVariable(this.Option, EnvironmentVariableTarget.User);
-          }
+          envValue ??= Environment.GetEnvironmentVariable(Option, EnvironmentVariableTarget.User);
 
           // If we still didn't find it, try a system level one.
-          if (envValue == null)
-          {
-            envValue = Environment.GetEnvironmentVariable(this.Option, EnvironmentVariableTarget.Machine);
-          }
+          envValue ??= Environment.GetEnvironmentVariable(Option, EnvironmentVariableTarget.Machine);
 
-          if (envValue != null && envValue.Length > 0)
-          {
+          if (envValue?.Length > 0)
             writer.Write(envValue);
-          }
         }
       }
       catch (System.Security.SecurityException secEx)

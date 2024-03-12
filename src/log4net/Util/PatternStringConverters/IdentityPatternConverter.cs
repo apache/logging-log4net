@@ -43,7 +43,7 @@ namespace log4net.Util.PatternStringConverters
     /// Writes the current thread identity to the output <paramref name="writer"/>.
     /// </para>
     /// </remarks>
-    protected internal override void Convert(TextWriter writer, object state)
+    public override void Convert(TextWriter writer, object state)
     {
       try
       {

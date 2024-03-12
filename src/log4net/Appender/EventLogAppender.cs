@@ -411,32 +411,21 @@ namespace log4net.Appender
 
       short category = m_category;
       // Look for the Category property
-      object categoryPropertyObj = loggingEvent.LookupProperty("Category");
-      if (categoryPropertyObj != null)
+      if (loggingEvent.LookupProperty("Category") is object categoryPropertyObj)
       {
-        if (categoryPropertyObj is short)
-        {
-          category = (short)categoryPropertyObj;
-        }
+        if (categoryPropertyObj is short shortValue)
+          category = shortValue;
         else
         {
-          string categoryPropertyString = categoryPropertyObj as string;
-          if (categoryPropertyString == null)
-          {
+          if (categoryPropertyObj is not string categoryPropertyString)
             categoryPropertyString = categoryPropertyObj.ToString();
-          }
-          if (categoryPropertyString != null && categoryPropertyString.Length > 0)
+          if (categoryPropertyString?.Length > 0)
           {
             // Read the string property into a number
-            short shortVal;
-            if (SystemInfo.TryParse(categoryPropertyString, out shortVal))
-            {
+            if (SystemInfo.TryParse(categoryPropertyString, out short shortVal))
               category = shortVal;
-            }
             else
-            {
               ErrorHandler.Error("Unable to parse event category property [" + categoryPropertyString + "].");
-            }
           }
         }
       }
@@ -448,16 +437,12 @@ namespace log4net.Appender
 
         // There is a limit of about 32K characters for an event log message
         if (eventTxt.Length > MAX_EVENTLOG_MESSAGE_SIZE)
-        {
           eventTxt = eventTxt.Substring(0, MAX_EVENTLOG_MESSAGE_SIZE);
-        }
 
         EventLogEntryType entryType = GetEntryType(loggingEvent.Level);
 
         using (SecurityContext.Impersonate(this))
-        {
           EventLog.WriteEntry(m_applicationName, eventTxt, entryType, eventID, category);
-        }
       }
       catch (Exception ex)
       {
@@ -469,15 +454,7 @@ namespace log4net.Appender
     /// This appender requires a <see cref="Layout"/> to be set.
     /// </summary>
     /// <value><c>true</c></value>
-    /// <remarks>
-    /// <para>
-    /// This appender requires a <see cref="Layout"/> to be set.
-    /// </para>
-    /// </remarks>
-    protected override bool RequiresLayout
-    {
-      get { return true; }
-    }
+    protected override bool RequiresLayout => true;
 
     #endregion // Override implementation of AppenderSkeleton
 
@@ -494,25 +471,17 @@ namespace log4net.Appender
     /// <see cref="Level"/> this is a one way mapping. There is
     /// a loss of information during the conversion.
     /// </remarks>
-    protected internal virtual EventLogEntryType GetEntryType(Level level)
+    public virtual EventLogEntryType GetEntryType(Level level)
     {
       // see if there is a specified lookup.
-      Level2EventLogEntryType entryType = m_levelMapping.Lookup(level) as Level2EventLogEntryType;
-      if (entryType != null)
-      {
+      if (m_levelMapping.Lookup(level) is Level2EventLogEntryType entryType)
         return entryType.EventLogEntryType;
-      }
 
       // Use default behavior
-
       if (level >= Level.Error)
-      {
         return EventLogEntryType.Error;
-      }
-      else if (level == Level.Warn)
-      {
+      if (level == Level.Warn)
         return EventLogEntryType.Warning;
-      }
 
       // Default setting
       return EventLogEntryType.Information;
