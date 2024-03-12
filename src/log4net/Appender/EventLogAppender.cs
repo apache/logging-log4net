@@ -414,7 +414,9 @@ namespace log4net.Appender
       if (loggingEvent.LookupProperty("Category") is object categoryPropertyObj)
       {
         if (categoryPropertyObj is short shortValue)
+        {
           category = shortValue;
+        }
         else
         {
           if (categoryPropertyObj is not string categoryPropertyString)
@@ -423,9 +425,13 @@ namespace log4net.Appender
           {
             // Read the string property into a number
             if (SystemInfo.TryParse(categoryPropertyString, out short shortVal))
+            {
               category = shortVal;
+            }
             else
-              ErrorHandler.Error("Unable to parse event category property [" + categoryPropertyString + "].");
+            {
+              ErrorHandler.Error($"Unable to parse event category property [{categoryPropertyString}].");
+            }
           }
         }
       }
@@ -480,6 +486,7 @@ namespace log4net.Appender
       // Use default behavior
       if (level >= Level.Error)
         return EventLogEntryType.Error;
+
       if (level == Level.Warn)
         return EventLogEntryType.Warning;
 

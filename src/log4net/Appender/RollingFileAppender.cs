@@ -126,10 +126,8 @@ namespace log4net.Appender
   /// <author>Aspi Havewala</author>
   /// <author>Douglas de la Torre</author>
   /// <author>Edward Smit</author>
-  public class RollingFileAppender : FileAppender
+  public partial class RollingFileAppender : FileAppender
   {
-    #region Public Enums
-
     /// <summary>
     /// Style of rolling to use
     /// </summary>
@@ -220,10 +218,6 @@ namespace log4net.Appender
       TopOfMonth = 5
     }
 
-    #endregion
-
-    #region Public Instance Constructors
-
     /// <summary>
     /// Initializes a new instance of the <see cref="RollingFileAppender" /> class.
     /// </summary>
@@ -240,34 +234,29 @@ namespace log4net.Appender
     /// </summary>
     ~RollingFileAppender()
     {
-      m_mutexForRolling?.Dispose();
-      m_mutexForRolling = null;
+      Interlocked.Exchange(ref m_mutexForRolling, null)?.Dispose();
     }
-
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
 
     /// <summary>
     /// Gets or sets the strategy for determining the current date and time. The default
     /// implementation is to use LocalDateTime which internally calls through to DateTime.Now. 
     /// DateTime.UtcNow may be used on frameworks newer than .NET 1.0 by specifying
-    /// <see cref="RollingFileAppender.UniversalDateTime"/>.
+    /// <see cref="UniversalDateTime"/>.
     /// </summary>
     /// <value>
-    /// An implementation of the <see cref="RollingFileAppender.IDateTime"/> interface which returns the current date and time.
+    /// An implementation of the <see cref="IDateTime"/> interface which returns the current date and time.
     /// </value>
     /// <remarks>
     /// <para>
-    /// Gets or sets the <see cref="RollingFileAppender.IDateTime"/> used to return the current date and time.
+    /// Gets or sets the <see cref="IDateTime"/> used to return the current date and time.
     /// </para>
     /// <para>
     /// There are two built strategies for determining the current date and time, 
-    /// <see cref="RollingFileAppender.LocalDateTime"/>
-    /// and <see cref="RollingFileAppender.UniversalDateTime"/>.
+    /// <see cref="LocalDateTime"/>
+    /// and <see cref="UniversalDateTime"/>.
     /// </para>
     /// <para>
-    /// The default strategy is <see cref="RollingFileAppender.LocalDateTime"/>.
+    /// The default strategy is <see cref="LocalDateTime"/>.
     /// </para>
     /// </remarks>
     public IDateTime DateTimeStrategy { get; set; } = new LocalDateTime();
@@ -283,7 +272,7 @@ namespace log4net.Appender
     /// <remarks>
     /// <para>
     /// Takes a string in the same format as expected by 
-    /// <see cref="log4net.DateFormatter.SimpleDateFormatter" />.
+    /// <see cref="DateFormatter.SimpleDateFormatter" />.
     /// May be set to null to disable date formatting.
     /// </para>
     /// <para>
@@ -367,8 +356,8 @@ namespace log4net.Appender
     /// </remarks>
     public string MaximumFileSize
     {
-      get { return MaxFileSize.ToString(NumberFormatInfo.InvariantInfo); }
-      set { MaxFileSize = OptionConverter.ToFileSize(value, MaxFileSize + 1); }
+      get => MaxFileSize.ToString(NumberFormatInfo.InvariantInfo);
+      set => MaxFileSize = OptionConverter.ToFileSize(value, MaxFileSize + 1);
     }
 
     /// <summary>
@@ -413,7 +402,7 @@ namespace log4net.Appender
     /// </remarks>
     public RollingMode RollingStyle
     {
-      get { return m_rollingStyle; }
+      get => m_rollingStyle;
       set
       {
         m_rollingStyle = value;
@@ -481,10 +470,6 @@ namespace log4net.Appender
     /// </remarks>
     public bool StaticLogFileName { get; set; } = true;
 
-    #endregion Public Instance Properties
-
-    #region Private Static Fields
-
     /// <summary>
     /// The fully qualified type of the RollingFileAppender class.
     /// </summary>
@@ -493,10 +478,6 @@ namespace log4net.Appender
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(RollingFileAppender);
-
-    #endregion Private Static Fields
-
-    #region Override implementation of FileAppender 
 
     /// <summary>
     /// Sets the quiet writer being used.
@@ -626,7 +607,7 @@ namespace log4net.Appender
             // The only exception is if we are not allowed to roll the existing file away.
             if (MaxSizeRollBackups != 0 && FileExists(fileName))
             {
-              LogLog.Error(declaringType, "RollingFileAppender: INTERNAL ERROR. Append is False but OutputFile [" + fileName + "] already exists.");
+              LogLog.Error(declaringType, $"RollingFileAppender: INTERNAL ERROR. Append is False but OutputFile [{fileName}] already exists.");
             }
           }
         }
@@ -669,16 +650,12 @@ namespace log4net.Appender
 
         if (CountDirection >= 0)
         {
-          fileName = CombinePath(fileName, "." + CurrentSizeRollBackups);
+          fileName = CombinePath(fileName, $".{CurrentSizeRollBackups}");
         }
       }
 
       return fileName;
     }
-
-    #endregion
-
-    #region Initialize Options
 
     /// <summary>
     /// Determines curSizeRollBackups (only within the current roll point)
@@ -699,7 +676,7 @@ namespace log4net.Appender
       List<string> arrayFiles = GetExistingFiles(fullPath);
       InitializeRollBackups(fileName, arrayFiles);
 
-      LogLog.Debug(declaringType, "curSizeRollBackups starts at [" + CurrentSizeRollBackups + "]");
+      LogLog.Debug(declaringType, $"curSizeRollBackups starts at [{CurrentSizeRollBackups}]");
     }
 
     /// <summary>
@@ -709,16 +686,14 @@ namespace log4net.Appender
     private string GetWildcardPatternForFile(string baseFileName)
     {
       if (PreserveLogFileNameExtension)
-        return Path.GetFileNameWithoutExtension(baseFileName) + "*" + Path.GetExtension(baseFileName);
-      return baseFileName + '*';
+        return $"{Path.GetFileNameWithoutExtension(baseFileName)}*{Path.GetExtension(baseFileName)}";
+      return $"{baseFileName}*";
     }
 
     /// <summary>
-    /// Builds a list of filenames for all files matching the base filename plus a file
-    /// pattern.
+    /// Builds a list of filenames for all files matching the base filename plus a file pattern.
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public List<string> GetExistingFiles(string baseFilePath)
+    protected List<string> GetExistingFiles(string baseFilePath)
     {
       var alFiles = new List<string>();
 
@@ -761,14 +736,14 @@ namespace log4net.Appender
             last = DateTimeStrategy is UniversalDateTime
               ? System.IO.File.GetLastWriteTimeUtc(m_baseFileName)
               : System.IO.File.GetLastWriteTime(m_baseFileName);
-          LogLog.Debug(declaringType, "[" + last.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo) + "] vs. [" + m_now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo) + "]");
+          LogLog.Debug(declaringType, $"[{last.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo)}] vs. [{m_now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo)}]");
 
           if (!last.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo).Equals(m_now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo)))
           {
             m_scheduledFilename = CombinePath(m_baseFileName, last.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo));
-            LogLog.Debug(declaringType, "Initial roll over to [" + m_scheduledFilename + "]");
+            LogLog.Debug(declaringType, $"Initial roll over to [{m_scheduledFilename}]");
             RollOverTime(false);
-            LogLog.Debug(declaringType, "curSizeRollBackups after rollOver at [" + CurrentSizeRollBackups + "]");
+            LogLog.Debug(declaringType, $"curSizeRollBackups after rollOver at [{CurrentSizeRollBackups}]");
           }
         }
       }
@@ -806,10 +781,10 @@ namespace log4net.Appender
         return;
 
       if (MaxSizeRollBackups == 0)
-        LogLog.Debug(declaringType, "Output file [" + fileName + "] already exists. MaxSizeRollBackups is 0; cannot roll. Overwriting existing file.");
+        LogLog.Debug(declaringType, $"Output file [{fileName}] already exists. MaxSizeRollBackups is 0; cannot roll. Overwriting existing file.");
       else
       {
-        LogLog.Debug(declaringType, "Output file [" + fileName + "] already exists. Not appending to file. Rolling existing file out of the way.");
+        LogLog.Debug(declaringType, $"Output file [{fileName}] already exists. Not appending to file. Rolling existing file out of the way.");
         RollOverRenameFiles(fileName);
       }
     }
@@ -844,7 +819,7 @@ namespace log4net.Appender
           : "";
         if (!curFileName.StartsWith(prefix) || !curFileName.EndsWith(suffix))
         {
-          LogLog.Debug(declaringType, "Ignoring file [" + curFileName + "] because it is from a different date period");
+          LogLog.Debug(declaringType, $"Ignoring file [{curFileName}] because it is from a different date period");
           return;
         }
       }
@@ -886,14 +861,14 @@ namespace log4net.Appender
               }
             }
           }
-          LogLog.Debug(declaringType, "File name [" + curFileName + "] moves current count to [" + CurrentSizeRollBackups + "]");
+          LogLog.Debug(declaringType, $"File name [{curFileName}] moves current count to [{CurrentSizeRollBackups}]");
         }
       }
       catch (FormatException)
       {
         //this happens when file.log -> file.log.yyyy-MM-dd which is normal
         //when staticLogFileName == false
-        LogLog.Debug(declaringType, "Encountered a backup file not ending in .x [" + curFileName + "]");
+        LogLog.Debug(declaringType, $"Encountered a backup file not ending in .x [{curFileName}]");
       }
     }
 
@@ -968,7 +943,7 @@ namespace log4net.Appender
         // Get string representation of next pattern
         string r1 = NextCheckDate(s_date1970, (RollPoint)i).ToString(datePattern, DateTimeFormatInfo.InvariantInfo);
 
-        LogLog.Debug(declaringType, "Type = [" + i + "], r0 = [" + r0 + "], r1 = [" + r1 + "]");
+        LogLog.Debug(declaringType, $"Type = [{i}], r0 = [{r0}], r1 = [{r1}]");
 
         // Check if the string representations are different
         if (!r0.Equals(r1))
@@ -1011,7 +986,7 @@ namespace log4net.Appender
 
         if (m_rollPoint == RollPoint.InvalidRollPoint)
         {
-          throw new ArgumentException("Invalid RollPoint, unable to parse [" + DatePattern + "]");
+          throw new ArgumentException($"Invalid RollPoint, unable to parse [{DatePattern}]");
         }
 
         // next line added as this removes the name check in rollOver
@@ -1021,7 +996,7 @@ namespace log4net.Appender
       {
         if (m_rollDate)
         {
-          ErrorHandler.Error("Either DatePattern or rollingStyle options are not set for [" + Name + "].");
+          ErrorHandler.Error($"Either DatePattern or rollingStyle options are not set for [{Name}].");
         }
       }
 
@@ -1055,12 +1030,8 @@ namespace log4net.Appender
       base.ActivateOptions();
     }
 
-    #endregion
-
-    #region Roll File
-
     /// <summary>
-    /// 
+    /// CombinePath
     /// </summary>
     /// <param name="path1"></param>
     /// <param name="path2">.1, .2, .3, etc.</param>
@@ -1069,13 +1040,8 @@ namespace log4net.Appender
     {
       var extension = Path.GetExtension(path1);
       if (PreserveLogFileNameExtension && extension.Length > 0)
-      {
         return Path.Combine(Path.GetDirectoryName(path1) ?? string.Empty, Path.GetFileNameWithoutExtension(path1) + path2 + extension);
-      }
-      else
-      {
-        return path1 + path2;
-      }
+      return path1 + path2;
     }
 
     /// <summary>
@@ -1106,7 +1072,7 @@ namespace log4net.Appender
         var dateFormat = m_now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo);
         if (string.Equals(m_scheduledFilename, CombinePath(File!, dateFormat)))
         {
-          ErrorHandler.Error("Compare " + m_scheduledFilename + " : " + CombinePath(File!, dateFormat));
+          ErrorHandler.Error($"Compare {m_scheduledFilename} : {CombinePath(File!, dateFormat)}");
           return;
         }
 
@@ -1161,7 +1127,7 @@ namespace log4net.Appender
         // We may not have permission to move the file, or the file may be locked
         try
         {
-          LogLog.Debug(declaringType, "Moving [" + fromFile + "] -> [" + toFile + "]");
+          LogLog.Debug(declaringType, $"Moving [{fromFile}] -> [{toFile}]");
           using (SecurityContext?.Impersonate(this))
           {
             System.IO.File.Move(fromFile, toFile);
@@ -1169,12 +1135,12 @@ namespace log4net.Appender
         }
         catch (Exception moveEx)
         {
-          ErrorHandler.Error("Exception while rolling file [" + fromFile + "] -> [" + toFile + "]", moveEx, ErrorCode.GenericFailure);
+          ErrorHandler.Error($"Exception while rolling file [{fromFile}] -> [{toFile}]", moveEx, ErrorCode.GenericFailure);
         }
       }
       else
       {
-        LogLog.Warn(declaringType, "Cannot RollFile [" + fromFile + "] -> [" + toFile + "]. Source does not exist");
+        LogLog.Warn(declaringType, $"Cannot RollFile [{fromFile}] -> [{toFile}]. Source does not exist");
       }
     }
 
@@ -1229,7 +1195,7 @@ namespace log4net.Appender
         }
         catch (Exception moveEx)
         {
-          LogLog.Debug(declaringType, "Exception while moving file to be deleted [" + fileName + "] -> [" + tempFileName + "]", moveEx);
+          LogLog.Debug(declaringType, $"Exception while moving file to be deleted [{fileName}] -> [{tempFileName}]", moveEx);
         }
 
         // Try to delete the file (either the original or the moved file)
@@ -1239,20 +1205,20 @@ namespace log4net.Appender
           {
             System.IO.File.Delete(fileToDelete);
           }
-          LogLog.Debug(declaringType, "Deleted file [" + fileName + "]");
+          LogLog.Debug(declaringType, $"Deleted file [{fileName}]");
         }
         catch (Exception deleteEx)
         {
           if (fileToDelete == fileName)
           {
             // Unable to move or delete the file
-            ErrorHandler.Error("Exception while deleting file [" + fileToDelete + "]", deleteEx, ErrorCode.GenericFailure);
+            ErrorHandler.Error($"Exception while deleting file [{fileToDelete}]", deleteEx, ErrorCode.GenericFailure);
           }
           else
           {
             // Moved the file, but the delete failed. File is probably locked.
             // The file should automatically be deleted when the lock is released.
-            LogLog.Debug(declaringType, "Exception while deleting temp file [" + fileToDelete + "]", deleteEx);
+            LogLog.Debug(declaringType, $"Exception while deleting temp file [{fileToDelete}]", deleteEx);
           }
         }
       }
@@ -1288,10 +1254,10 @@ namespace log4net.Appender
     {
       CloseFile(); // keep windows happy.
 
-      LogLog.Debug(declaringType, "rolling over count [" + ((CountingQuietTextWriter)QuietWriter).Count + "]");
-      LogLog.Debug(declaringType, "maxSizeRollBackups [" + MaxSizeRollBackups + "]");
-      LogLog.Debug(declaringType, "curSizeRollBackups [" + CurrentSizeRollBackups + "]");
-      LogLog.Debug(declaringType, "countDirection [" + CountDirection + "]");
+      LogLog.Debug(declaringType, $"rolling over count [{((CountingQuietTextWriter)QuietWriter).Count}]");
+      LogLog.Debug(declaringType, $"maxSizeRollBackups [{MaxSizeRollBackups}]");
+      LogLog.Debug(declaringType, $"curSizeRollBackups [{CurrentSizeRollBackups}]");
+      LogLog.Debug(declaringType, $"countDirection [{CountDirection}]");
 
       if (File is not null)
       {
@@ -1411,10 +1377,6 @@ namespace log4net.Appender
       }
     }
 
-    #endregion
-
-    #region NextCheckDate
-
     /// <summary>
     /// Get the start time of the next window for the current rollpoint
     /// </summary>
@@ -1497,10 +1459,6 @@ namespace log4net.Appender
       return current;
     }
 
-    #endregion
-
-    #region Private Instance Fields
-
     /// <summary>
     /// The actual formatted filename that is currently being written to
     /// or will be the file transferred to on roll over
@@ -1553,81 +1511,9 @@ namespace log4net.Appender
     /// </summary>
     private Mutex? m_mutexForRolling;
 
-    #endregion Private Instance Fields
-
-    #region Static Members
-
     /// <summary>
     /// The 1st of January 1970 in UTC
     /// </summary>
     private static readonly DateTime s_date1970 = new DateTime(1970, 1, 1);
-
-    #endregion
-
-    #region DateTime
-
-    /// <summary>
-    /// This interface is used to supply Date/Time information to the <see cref="RollingFileAppender"/>.
-    /// </summary>
-    /// <remarks>
-    /// This interface is used to supply Date/Time information to the <see cref="RollingFileAppender"/>.
-    /// Used primarily to allow test classes to plug themselves in so they can
-    /// supply test date/times.
-    /// </remarks>
-    public interface IDateTime
-    {
-      /// <summary>
-      /// Gets the <i>current</i> time.
-      /// </summary>
-      /// <value>The <i>current</i> time.</value>
-      /// <remarks>
-      /// <para>
-      /// Gets the <i>current</i> time.
-      /// </para>
-      /// </remarks>
-      DateTime Now { get; }
-    }
-
-    /// <summary>
-    /// Default implementation of <see cref="IDateTime"/> that returns the current time.
-    /// </summary>
-    private sealed class LocalDateTime : IDateTime
-    {
-      /// <summary>
-      /// Gets the <b>current</b> time.
-      /// </summary>
-      /// <value>The <b>current</b> time.</value>
-      /// <remarks>
-      /// <para>
-      /// Gets the <b>current</b> time.
-      /// </para>
-      /// </remarks>
-      public DateTime Now
-      {
-        get { return DateTime.Now; }
-      }
-    }
-
-    /// <summary>
-    /// Implementation of <see cref="IDateTime"/> that returns the current time as the coordinated universal time (UTC).
-    /// </summary>
-    private sealed class UniversalDateTime : IDateTime
-    {
-      /// <summary>
-      /// Gets the <b>current</b> time.
-      /// </summary>
-      /// <value>The <b>current</b> time.</value>
-      /// <remarks>
-      /// <para>
-      /// Gets the <b>current</b> time.
-      /// </para>
-      /// </remarks>
-      public DateTime Now
-      {
-        get { return DateTime.UtcNow; }
-      }
-    }
-
-    #endregion DateTime
   }
 }
