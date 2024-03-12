@@ -18,9 +18,7 @@
 #endregion
 
 using System;
-using System.Collections;
-using System.Collections.Specialized;
-
+using System.Collections.Concurrent;
 using log4net.Util;
 
 namespace log4net.Core
@@ -32,21 +30,17 @@ namespace log4net.Core
   /// <para>
   /// Mapping between string name and <see cref="Level"/> object.
   /// This mapping is held separately for each <see cref="log4net.Repository.ILoggerRepository"/>.
-  /// The level name is case insensitive.
+  /// The level name is case-insensitive.
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
   public sealed class LevelMap
   {
-    #region Member Variables
-
     /// <summary>
     /// Mapping from level name to Level object. The
-    /// level name is case insensitive
+    /// level name is case-insensitive
     /// </summary>
-    private Hashtable m_mapName2Level = SystemInfo.CreateCaseInsensitiveHashtable();
-
-    #endregion
+    private readonly ConcurrentDictionary<string, Level> m_mapName2Level = new(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>
     /// Construct the level map
@@ -86,19 +80,17 @@ namespace log4net.Core
     /// found then <c>null</c> is returned.
     /// </para>
     /// </remarks>
-    public Level this[string name]
+    public Level? this[string name]
     {
       get
       {
         if (name == null)
         {
-          throw new ArgumentNullException("name");
+          throw new ArgumentNullException(nameof(name));
         }
 
-        lock (this)
-        {
-          return (Level)m_mapName2Level[name];
-        }
+        m_mapName2Level.TryGetValue(name, out Level? level);
+        return level;
       }
     }
 
@@ -129,23 +121,23 @@ namespace log4net.Core
     /// Create a new Level and add it to the map
     /// </para>
     /// </remarks>
-    public void Add(string name, int value, string displayName)
+    public void Add(string name, int value, string? displayName)
     {
       if (name == null)
       {
-        throw new ArgumentNullException("name");
+        throw new ArgumentNullException(nameof(name));
       }
       if (name.Length == 0)
       {
-        throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("name", name, "Parameter: name, Value: [" + name + "] out of range. Level name must not be empty");
+        throw SystemInfo.CreateArgumentOutOfRangeException("name", name, "Parameter: name, Value: [" + name + "] out of range. Level name must not be empty");
       }
 
-      if (displayName == null || displayName.Length == 0)
+      if (string.IsNullOrEmpty(displayName))
       {
         displayName = name;
       }
 
-      Add(new Level(value, name, displayName));
+      Add(new Level(value, name, displayName!));
     }
 
     /// <summary>
@@ -161,12 +153,9 @@ namespace log4net.Core
     {
       if (level == null)
       {
-        throw new ArgumentNullException("level");
+        throw new ArgumentNullException(nameof(level));
       }
-      lock (this)
-      {
-        m_mapName2Level[level.Name] = level;
-      }
+      m_mapName2Level[level.Name] = level;
     }
 
     /// <summary>
@@ -178,16 +167,7 @@ namespace log4net.Core
     /// Return all possible levels as a list of Level objects.
     /// </para>
     /// </remarks>
-    public LevelCollection AllLevels
-    {
-      get
-      {
-        lock (this)
-        {
-          return new LevelCollection(m_mapName2Level.Values);
-        }
-      }
-    }
+    public LevelCollection AllLevels => new(m_mapName2Level.Values);
 
     /// <summary>
     /// Lookup a named level from the map
@@ -211,19 +191,10 @@ namespace log4net.Core
     {
       if (defaultLevel == null)
       {
-        throw new ArgumentNullException("defaultLevel");
+        throw new ArgumentNullException(nameof(defaultLevel));
       }
 
-      lock (this)
-      {
-        Level level = (Level)m_mapName2Level[defaultLevel.Name];
-        if (level == null)
-        {
-          m_mapName2Level[defaultLevel.Name] = defaultLevel;
-          return defaultLevel;
-        }
-        return level;
-      }
+      return m_mapName2Level.GetOrAdd(defaultLevel.Name, defaultLevel);
     }
   }
 }

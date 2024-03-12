@@ -19,7 +19,6 @@
 
 using System;
 
-using log4net.Core;
 using log4net.Repository;
 
 namespace log4net.Core
@@ -69,7 +68,7 @@ namespace log4net.Core
     /// the <paramref name="message"/> and <paramref name="exception"/>.
     /// </para>
     /// </remarks>
-    void Log(Type callerStackBoundaryDeclaringType, Level level, object message, Exception exception);
+    void Log(Type callerStackBoundaryDeclaringType, Level? level, object message, Exception? exception);
 
     /// <summary>
     /// This is the most generic printing method that is intended to be used 
@@ -95,7 +94,7 @@ namespace log4net.Core
     /// Test if this logger is going to log events of the specified <paramref name="level"/>.
     /// </para>
     /// </remarks>
-    bool IsEnabledFor(Level level);
+    bool IsEnabledFor(Level? level);
 
     /// <summary>
     /// Gets the <see cref="ILoggerRepository"/> where this 
@@ -110,6 +109,6 @@ namespace log4net.Core
     /// <c>Logger</c> instance is attached to.
     /// </para>
     /// </remarks>
-    ILoggerRepository Repository { get; }
+    ILoggerRepository? Repository { get; }
   }
 }

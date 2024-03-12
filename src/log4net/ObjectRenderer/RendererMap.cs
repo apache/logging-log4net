@@ -19,8 +19,10 @@
 
 using System;
 using System.IO;
-using System.Collections;
+using System.Collections.Concurrent;
 using log4net.Util;
+
+#nullable enable
 
 namespace log4net.ObjectRenderer
 {
@@ -44,14 +46,10 @@ namespace log4net.ObjectRenderer
   {
     private static readonly Type declaringType = typeof(RendererMap);
 
-    #region Member Variables
+    private readonly ConcurrentDictionary<Type, IObjectRenderer> m_map = new();
+    private readonly ConcurrentDictionary<Type, IObjectRenderer> m_cache = new();
 
-    private readonly Hashtable m_map = new();
-    private readonly Hashtable m_cache = new();
-
-    private static IObjectRenderer s_defaultRenderer = new DefaultRenderer();
-
-    #endregion
+    private static readonly IObjectRenderer s_defaultRenderer = new DefaultRenderer();
 
     /// <summary>
     /// Render <paramref name="obj"/> using the appropriate renderer.
@@ -68,8 +66,7 @@ namespace log4net.ObjectRenderer
     public string FindAndRender(object obj)
     {
       // Optimisation for strings
-      string strData = obj as String;
-      if (strData != null)
+      if (obj is string strData)
       {
         return strData;
       }
@@ -93,17 +90,16 @@ namespace log4net.ObjectRenderer
     /// as a <see cref="string"/>.
     /// </para>
     /// </remarks>
-    public void FindAndRender(object obj, TextWriter writer)
+    public void FindAndRender(object? obj, TextWriter writer)
     {
-      if (obj == null)
+      if (obj is null)
       {
         writer.Write(SystemInfo.NullText);
       }
       else
       {
         // Optimisation for strings
-        string str = obj as string;
-        if (str != null)
+        if (obj is string str)
         {
           writer.Write(str);
         }
@@ -117,31 +113,24 @@ namespace log4net.ObjectRenderer
           catch (Exception ex)
           {
             // Exception rendering the object
-            LogLog.Error(declaringType, "Exception while rendering object of type [" + obj.GetType().FullName + "]", ex);
+            LogLog.Error(declaringType, $"Exception while rendering object of type [{obj.GetType().FullName}]", ex);
 
             // return default message
-            string objectTypeName = "";
-            if (obj != null && obj.GetType() != null)
+            string objectTypeName = obj.GetType().FullName ?? string.Empty;
+
+            writer.Write($"<log4net.Error>Exception rendering object type [{objectTypeName}]");
+
+            string? exceptionText = null;
+            try
             {
-              objectTypeName = obj.GetType().FullName;
+              exceptionText = ex.ToString();
+            }
+            catch
+            {
+              // Ignore exception
             }
 
-            writer.Write("<log4net.Error>Exception rendering object type [" + objectTypeName + "]");
-            if (ex != null)
-            {
-              string exceptionText = null;
-
-              try
-              {
-                exceptionText = ex.ToString();
-              }
-              catch
-              {
-                // Ignore exception
-              }
-
-              writer.Write("<stackTrace>" + exceptionText + "</stackTrace>");
-            }
+            writer.Write($"<stackTrace>{exceptionText}</stackTrace>");
             writer.Write("</log4net.Error>");
           }
         }
@@ -162,22 +151,20 @@ namespace log4net.ObjectRenderer
     /// with the type of the object parameter.
     /// </param>
     /// </remarks>
-    public IObjectRenderer Get(Object obj)
+    public IObjectRenderer? Get(object? obj)
     {
-      if (obj == null)
+      if (obj is null)
       {
         return null;
       }
-      else
-      {
-        return Get(obj.GetType());
-      }
+
+      return Get(obj.GetType());
     }
 
     /// <summary>
     /// Gets the renderer for the specified type
     /// </summary>
-    /// <param name="type">the type to lookup the renderer for</param>
+    /// <param name="type">the type to look up the renderer for</param>
     /// <returns>the renderer for the specified type</returns>
     /// <remarks>
     /// <para>
@@ -188,19 +175,15 @@ namespace log4net.ObjectRenderer
     /// </remarks>
     public IObjectRenderer Get(Type type)
     {
-      if (type == null)
+      if (type is null)
       {
-        throw new ArgumentNullException("type");
+        throw new ArgumentNullException(nameof(type));
       }
 
-      IObjectRenderer result = null;
-
       // Check cache
-      result = (IObjectRenderer)m_cache[type];
-
-      if (result == null)
+      if (!m_cache.TryGetValue(type, out IObjectRenderer? result))
       {
-        for (Type cur = type; cur != null; cur = cur.BaseType)
+        for (Type? cur = type; cur != null; cur = cur.BaseType)
         {
           // Search the type's interfaces
           result = SearchTypeAndInterfaces(cur);
@@ -211,16 +194,10 @@ namespace log4net.ObjectRenderer
         }
 
         // if not set then use the default renderer
-        if (result == null)
-        {
-          result = s_defaultRenderer;
-        }
+        result ??= s_defaultRenderer;
 
         // Add to cache
-        lock (m_cache)
-        {
-          m_cache[type] = result;
-        }
+        m_cache.TryAdd(type, result);
       }
 
       return result;
@@ -229,24 +206,21 @@ namespace log4net.ObjectRenderer
     /// <summary>
     /// Internal function to recursively search interfaces
     /// </summary>
-    /// <param name="type">the type to lookup the renderer for</param>
+    /// <param name="type">the type to look up the renderer for</param>
     /// <returns>the renderer for the specified type</returns>
-    private IObjectRenderer SearchTypeAndInterfaces(Type type)
+    private IObjectRenderer? SearchTypeAndInterfaces(Type type)
     {
-      IObjectRenderer r = (IObjectRenderer)m_map[type];
-      if (r != null)
+      if (m_map.TryGetValue(type, out IObjectRenderer? r))
       {
         return r;
       }
-      else
+
+      foreach (Type t in type.GetInterfaces())
       {
-        foreach (Type t in type.GetInterfaces())
+        r = SearchTypeAndInterfaces(t);
+        if (r != null)
         {
-          r = SearchTypeAndInterfaces(t);
-          if (r != null)
-          {
-            return r;
-          }
+          return r;
         }
       }
       return null;
@@ -261,10 +235,7 @@ namespace log4net.ObjectRenderer
     /// Get the default renderer
     /// </para>
     /// </remarks>
-    public IObjectRenderer DefaultRenderer
-    {
-      get { return s_defaultRenderer; }
-    }
+    public IObjectRenderer DefaultRenderer => s_defaultRenderer;
 
     /// <summary>
     /// Clear the map of renderers
@@ -278,15 +249,8 @@ namespace log4net.ObjectRenderer
     /// </remarks>
     public void Clear()
     {
-      lock (m_map)
-      {
-        m_map.Clear();
-      }
-
-      lock (m_cache)
-      {
-        m_cache.Clear();
-      }
+      m_map.Clear();
+      m_cache.Clear();
     }
 
     /// <summary>
@@ -303,24 +267,14 @@ namespace log4net.ObjectRenderer
     /// </remarks>
     public void Put(Type typeToRender, IObjectRenderer renderer)
     {
-      lock (m_cache)
+      m_cache.Clear();
+
+      if (typeToRender is null)
       {
-        m_cache.Clear();
+        throw new ArgumentNullException(nameof(typeToRender));
       }
 
-      if (typeToRender == null)
-      {
-        throw new ArgumentNullException("typeToRender");
-      }
-      if (renderer == null)
-      {
-        throw new ArgumentNullException("renderer");
-      }
-
-      lock (m_map)
-      {
-        m_map[typeToRender] = renderer;
-      }
+      m_map[typeToRender] = renderer ?? throw new ArgumentNullException(nameof(renderer));
     }
   }
 }

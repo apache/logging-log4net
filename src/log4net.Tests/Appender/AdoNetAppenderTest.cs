@@ -41,9 +41,11 @@ namespace log4net.Tests.Appender
     {
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 
-      AdoNetAppender adoNetAppender = new AdoNetAppender();
-      adoNetAppender.BufferSize = -1;
-      adoNetAppender.ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName;
+      AdoNetAppender adoNetAppender = new AdoNetAppender
+      {
+          BufferSize = -1,
+          ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!
+      };
       adoNetAppender.ActivateOptions();
 
       BasicConfigurator.Configure(rep, adoNetAppender);
@@ -61,9 +63,11 @@ namespace log4net.Tests.Appender
 
       int bufferSize = 5;
 
-      AdoNetAppender adoNetAppender = new AdoNetAppender();
-      adoNetAppender.BufferSize = bufferSize;
-      adoNetAppender.ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName;
+      AdoNetAppender adoNetAppender = new AdoNetAppender
+      {
+          BufferSize = bufferSize,
+          ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!
+      };
       adoNetAppender.ActivateOptions();
 
       BasicConfigurator.Configure(rep, adoNetAppender);
@@ -83,7 +87,6 @@ namespace log4net.Tests.Appender
     public void WebsiteExample()
     {
       XmlDocument log4netConfig = new XmlDocument();
-      #region Load log4netConfig
       log4netConfig.LoadXml(@"
                 <log4net>
                 <appender name=""AdoNetAppender"" type=""log4net.Appender.AdoNetAppender"">
@@ -140,7 +143,6 @@ namespace log4net.Tests.Appender
                     <appender-ref ref=""AdoNetAppender"" />
                   </root>  
                 </log4net>");
-      #endregion
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
       XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
@@ -173,7 +175,6 @@ namespace log4net.Tests.Appender
     public void BufferingWebsiteExample()
     {
       XmlDocument log4netConfig = new XmlDocument();
-      #region Load log4netConfig
       log4netConfig.LoadXml(@"
                 <log4net>
                 <appender name=""AdoNetAppender"" type=""log4net.Appender.AdoNetAppender"">
@@ -230,7 +231,6 @@ namespace log4net.Tests.Appender
                     <appender-ref ref=""AdoNetAppender"" />
                   </root>  
                 </log4net>");
-      #endregion
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
       XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
@@ -267,7 +267,6 @@ namespace log4net.Tests.Appender
     public void NullPropertyXmlConfig()
     {
       XmlDocument log4netConfig = new XmlDocument();
-      #region Load log4netConfig
       log4netConfig.LoadXml(@"
                 <log4net>
                 <appender name=""AdoNetAppender"" type=""log4net.Appender.AdoNetAppender"">
@@ -289,7 +288,6 @@ namespace log4net.Tests.Appender
                     <appender-ref ref=""AdoNetAppender"" />
                   </root>  
                 </log4net>");
-      #endregion
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
       XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
@@ -305,7 +303,7 @@ namespace log4net.Tests.Appender
     }
 
     [Test]
-    public void NullPropertyProgmaticConfig()
+    public void NullPropertyProgrammaticConfig()
     {
       AdoNetAppenderParameter productIdParam = new AdoNetAppenderParameter();
       productIdParam.ParameterName = "@productId";

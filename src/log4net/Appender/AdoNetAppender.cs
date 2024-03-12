@@ -18,7 +18,7 @@
 #endregion
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.IO;
@@ -26,6 +26,8 @@ using System.IO;
 using log4net.Util;
 using log4net.Layout;
 using log4net.Core;
+
+#nullable enable
 
 namespace log4net.Appender
 {
@@ -121,8 +123,6 @@ namespace log4net.Appender
   /// <author>Lance Nehring</author>
   public class AdoNetAppender : BufferingAppenderSkeleton
   {
-    #region Public Instance Constructors
-
     /// <summary> 
     /// Initializes a new instance of the <see cref="AdoNetAppender" /> class.
     /// </summary>
@@ -133,14 +133,9 @@ namespace log4net.Appender
     {
       ConnectionType = "System.Data.OleDb.OleDbConnection, System.Data, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089";
       UseTransactions = true;
-      CommandType = System.Data.CommandType.Text;
-      m_parameters = new ArrayList();
+      CommandType = CommandType.Text;
       ReconnectOnError = false;
     }
-
-    #endregion // Public Instance Constructors
-
-    #region Public Instance Properties
 
     /// <summary>
     /// Gets or sets the database connection string that is used to connect to 
@@ -164,32 +159,17 @@ namespace log4net.Appender
     /// <example>Connection string for MS Access via OLE DB:
     /// <code>"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\Work\cvs_root\log4net-1.2\access.mdb;User Id=;Password=;"</code>
     /// </example>
-    public string ConnectionString
-    {
-      get { return m_connectionString; }
-      set { m_connectionString = value; }
-    }
+    public string? ConnectionString { get; set; }
 
     /// <summary>
     /// The appSettings key from App.Config that contains the connection string.
     /// </summary>
-    public string AppSettingsKey
-    {
-      get { return m_appSettingsKey; }
-      set { m_appSettingsKey = value; }
-    }
+    public string? AppSettingsKey { get; set; }
 
     /// <summary>
     /// The connectionStrings key from App.Config that contains the connection string.
     /// </summary>
-    /// <remarks>
-    /// This property requires at least .NET 2.0.
-    /// </remarks>
-    public string ConnectionStringName
-    {
-      get { return m_connectionStringName; }
-      set { m_connectionStringName = value; }
-    }
+    public string? ConnectionStringName { get; set; }
 
     /// <summary>
     /// Gets or sets the type name of the <see cref="IDbConnection"/> connection
@@ -224,11 +204,7 @@ namespace log4net.Appender
     /// <a href="http://msdn.microsoft.com/downloads">http://msdn.microsoft.com/downloads</a> 
     /// search for <b>.NET Managed Provider for Oracle</b>.
     /// </example>
-    public string ConnectionType
-    {
-      get { return m_connectionType; }
-      set { m_connectionType = value; }
-    }
+    public string ConnectionType { get; set; }
 
     /// <summary>
     /// Gets or sets the command text that is used to insert logging events
@@ -252,11 +228,7 @@ namespace log4net.Appender
     /// <see cref="GetLogStatement(LoggingEvent)"/>.
     /// </para>
     /// </remarks>
-    public string CommandText
-    {
-      get { return m_commandText; }
-      set { m_commandText = value; }
-    }
+    public string? CommandText { get; set; }
 
     /// <summary>
     /// Gets or sets the command type to execute.
@@ -276,11 +248,7 @@ namespace log4net.Appender
     /// The default value is <see cref="System.Data.CommandType.Text"/> (<c>System.Data.CommandType.Text</c>).
     /// </para>
     /// </remarks>
-    public CommandType CommandType
-    {
-      get { return m_commandType; }
-      set { m_commandType = value; }
-    }
+    public CommandType CommandType { get; set; }
 
     /// <summary>
     /// Should transactions be used to insert logging events in the database.
@@ -300,11 +268,7 @@ namespace log4net.Appender
     /// an explicit transaction.
     /// </para>
     /// </remarks>
-    public bool UseTransactions
-    {
-      get { return m_useTransactions; }
-      set { m_useTransactions = value; }
-    }
+    public bool UseTransactions { get; set; }
 
     /// <summary>
     /// Gets or sets the <see cref="SecurityContext"/> used to call the NetSend method.
@@ -320,11 +284,7 @@ namespace log4net.Appender
     /// of the current thread.
     /// </para>
     /// </remarks>
-    public SecurityContext SecurityContext
-    {
-      get { return m_securityContext; }
-      set { m_securityContext = value; }
-    }
+    public SecurityContext? SecurityContext { get; set; }
 
     /// <summary>
     /// Should this appender try to reconnect to the database on error.
@@ -350,15 +310,7 @@ namespace log4net.Appender
     /// Until the connection can be reestablished this potential delay may occur multiple times.
     /// </note>
     /// </remarks>
-    public bool ReconnectOnError
-    {
-      get { return m_reconnectOnError; }
-      set { m_reconnectOnError = value; }
-    }
-
-    #endregion // Public Instance Properties
-
-    #region Protected Instance Properties
+    public bool ReconnectOnError { get; set; }
 
     /// <summary>
     /// Gets or sets the underlying <see cref="IDbConnection" />.
@@ -373,15 +325,7 @@ namespace log4net.Appender
     /// underlying <see cref="IDbConnection" /> returned from <see cref="Connection" /> if 
     /// you require access beyond that which <see cref="AdoNetAppender" /> provides.
     /// </remarks>
-    protected IDbConnection Connection
-    {
-      get { return m_dbConnection; }
-      set { m_dbConnection = value; }
-    }
-
-    #endregion // Protected Instance Properties
-
-    #region Implementation of IOptionHandler
+    protected IDbConnection? Connection { get; set; }
 
     /// <summary>
     /// Initialize the appender based on the options set
@@ -403,17 +347,10 @@ namespace log4net.Appender
     {
       base.ActivateOptions();
 
-      if (SecurityContext == null)
-      {
-        SecurityContext = SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
-      }
+      SecurityContext ??= SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
 
       InitializeDatabaseConnection();
     }
-
-    #endregion
-
-    #region Override implementation of AppenderSkeleton
 
     /// <summary>
     /// Override the parent method to close the database
@@ -426,12 +363,8 @@ namespace log4net.Appender
     protected override void OnClose()
     {
       base.OnClose();
-      DiposeConnection();
+      DisposeConnection();
     }
-
-    #endregion
-
-    #region Override implementation of BufferingAppenderSkeleton
 
     /// <summary>
     /// Inserts the events into the database.
@@ -447,7 +380,7 @@ namespace log4net.Appender
     {
       if (ReconnectOnError && (Connection == null || Connection.State != ConnectionState.Open))
       {
-        LogLog.Debug(declaringType, "Attempting to reconnect to database. Current Connection State: " + ((Connection == null) ? SystemInfo.NullText : Connection.State.ToString()));
+        LogLog.Debug(declaringType, $"Attempting to reconnect to database. Current Connection State: {((Connection == null) ? SystemInfo.NullText : Connection.State.ToString())}");
 
         InitializeDatabaseConnection();
       }
@@ -493,10 +426,6 @@ namespace log4net.Appender
       }
     }
 
-    #endregion // Override implementation of BufferingAppenderSkeleton
-
-    #region Public Instance Methods
-
     /// <summary>
     /// Adds a parameter to the command.
     /// </summary>
@@ -511,11 +440,6 @@ namespace log4net.Appender
       m_parameters.Add(parameter);
     }
 
-
-    #endregion // Public Instance Methods
-
-    #region Protected Instance Methods
-
     /// <summary>
     /// Writes the events to the database using the transaction specified.
     /// </summary>
@@ -528,12 +452,11 @@ namespace log4net.Appender
     /// property for more information.
     /// </para>
     /// </remarks>
-    protected virtual void SendBuffer(IDbTransaction dbTran, LoggingEvent[] events)
+    protected virtual void SendBuffer(IDbTransaction? dbTran, LoggingEvent[] events)
     {
-      // string.IsNotNullOrWhiteSpace() does not exist in ancient .NET frameworks
-      if (CommandText != null && CommandText.Trim() != "")
+      if (!string.IsNullOrWhiteSpace(CommandText))
       {
-        using (IDbCommand dbCmd = Connection.CreateCommand())
+        using (IDbCommand dbCmd = Connection!.CreateCommand())
         {
           // Set the command string
           dbCmd.CommandText = CommandText;
@@ -580,7 +503,7 @@ namespace log4net.Appender
       else
       {
         // create a new command
-        using (IDbCommand dbCmd = Connection.CreateCommand())
+        using (IDbCommand dbCmd = Connection!.CreateCommand())
         {
           if (dbTran != null)
           {
@@ -592,7 +515,7 @@ namespace log4net.Appender
             // Get the command text from the Layout
             string logStatement = GetLogStatement(e);
 
-            LogLog.Debug(declaringType, "LogStatement [" + logStatement + "]");
+            LogLog.Debug(declaringType, $"LogStatement [{logStatement}]");
 
             dbCmd.CommandText = logStatement;
             dbCmd.ExecuteNonQuery();
@@ -662,9 +585,6 @@ namespace log4net.Appender
     /// Resolves the connection string from the ConnectionString, ConnectionStringName, or AppSettingsKey
     /// property.
     /// </summary>
-    /// <remarks>
-    /// ConnectiongStringName is only supported on .NET 2.0 and higher.
-    /// </remarks>
     /// <param name="connectionStringContext">Additional information describing the connection string.</param>
     /// <returns>A connection string used to connect to the database.</returns>
     protected virtual string ResolveConnectionString(out string connectionStringContext)
@@ -677,7 +597,7 @@ namespace log4net.Appender
 
       if (!String.IsNullOrEmpty(ConnectionStringName))
       {
-        ConnectionStringSettings settings = ConfigurationManager.ConnectionStrings[ConnectionStringName];
+        ConnectionStringSettings settings = ConfigurationManager.ConnectionStrings[ConnectionStringName!];
         if (settings != null)
         {
           connectionStringContext = "ConnectionStringName";
@@ -685,19 +605,19 @@ namespace log4net.Appender
         }
         else
         {
-          throw new LogException("Unable to find [" + ConnectionStringName + "] ConfigurationManager.ConnectionStrings item");
+          throw new LogException($"Unable to find [{ConnectionStringName}] ConfigurationManager.ConnectionStrings item");
         }
       }
 
       if (AppSettingsKey != null && AppSettingsKey.Length > 0)
       {
         connectionStringContext = "AppSettingsKey";
-        string appSettingsConnectionString = SystemInfo.GetAppSetting(AppSettingsKey);
-        if (appSettingsConnectionString == null || appSettingsConnectionString.Length == 0)
+        string? appSettingsConnectionString = SystemInfo.GetAppSetting(AppSettingsKey);
+        if (string.IsNullOrEmpty(appSettingsConnectionString))
         {
-          throw new LogException("Unable to find [" + AppSettingsKey + "] AppSettings key.");
+          throw new LogException($"Unable to find [{AppSettingsKey}] AppSettings key.");
         }
-        return appSettingsConnectionString;
+        return appSettingsConnectionString!;
       }
 
       connectionStringContext = "Unable to resolve connection string from ConnectionString, ConnectionStrings, or AppSettings.";
@@ -723,18 +643,19 @@ namespace log4net.Appender
     {
       try
       {
-        return SystemInfo.GetTypeFromString(ConnectionType, true, false);
+        Type? t = SystemInfo.GetTypeFromString(ConnectionType, true, false);
+        if (t is not null)
+        {
+            return t;
+        }
+        throw new InvalidOperationException($"Connection type {ConnectionType} was not found in any assembly");
       }
       catch (Exception ex)
       {
-        ErrorHandler.Error("Failed to load connection type [" + ConnectionType + "]", ex);
+        ErrorHandler.Error($"Failed to load connection type [{ConnectionType}]", ex);
         throw;
       }
     }
-
-    #endregion // Protected Instance Methods
-
-    #region Private Instance Methods
 
     /// <summary>
     /// Connects to the database.
@@ -746,14 +667,14 @@ namespace log4net.Appender
 
       try
       {
-        DiposeConnection();
+        DisposeConnection();
 
         // Set the connection string
         resolvedConnectionString = ResolveConnectionString(out connectionStringContext);
 
         Connection = CreateConnection(ResolveConnectionType(), resolvedConnectionString);
 
-        using (SecurityContext.Impersonate(this))
+        using (SecurityContext?.Impersonate(this))
         {
           // Open the database connection
           Connection.Open();
@@ -762,7 +683,7 @@ namespace log4net.Appender
       catch (Exception e)
       {
         // Sadly, your connection string is bad.
-        ErrorHandler.Error("Could not open database connection [" + resolvedConnectionString + "]. Connection string context [" + connectionStringContext + "].", e);
+        ErrorHandler.Error($"Could not open database connection [{resolvedConnectionString}]. Connection string context [{connectionStringContext}].", e);
 
         Connection = null;
       }
@@ -774,7 +695,7 @@ namespace log4net.Appender
     /// <remarks>
     /// Calls the IDbConnection's <see cref="IDbConnection.Close"/> method.
     /// </remarks>
-    private void DiposeConnection()
+    private void DisposeConnection()
     {
       if (Connection != null)
       {
@@ -790,10 +711,6 @@ namespace log4net.Appender
       }
     }
 
-    #endregion // Private Instance Methods
-
-    #region Protected Instance Fields
-
     /// <summary>
     /// The list of <see cref="AdoNetAppenderParameter"/> objects.
     /// </summary>
@@ -802,66 +719,7 @@ namespace log4net.Appender
     /// The list of <see cref="AdoNetAppenderParameter"/> objects.
     /// </para>
     /// </remarks>
-    protected ArrayList m_parameters;
-
-    #endregion // Protected Instance Fields
-
-    #region Private Instance Fields
-
-    /// <summary>
-    /// The security context to use for privileged calls
-    /// </summary>
-    private SecurityContext m_securityContext;
-
-    /// <summary>
-    /// The <see cref="IDbConnection" /> that will be used
-    /// to insert logging events into a database.
-    /// </summary>
-    private IDbConnection m_dbConnection;
-
-    /// <summary>
-    /// Database connection string.
-    /// </summary>
-    private string m_connectionString;
-
-    /// <summary>
-    /// The appSettings key from App.Config that contains the connection string.
-    /// </summary>
-    private string m_appSettingsKey;
-
-    /// <summary>
-    /// The connectionStrings key from App.Config that contains the connection string.
-    /// </summary>
-    private string m_connectionStringName;
-
-    /// <summary>
-    /// String type name of the <see cref="IDbConnection"/> type name.
-    /// </summary>
-    private string m_connectionType;
-
-    /// <summary>
-    /// The text of the command.
-    /// </summary>
-    private string m_commandText;
-
-    /// <summary>
-    /// The command type.
-    /// </summary>
-    private CommandType m_commandType;
-
-    /// <summary>
-    /// Indicates whether to use transactions when writing to the database.
-    /// </summary>
-    private bool m_useTransactions;
-
-    /// <summary>
-    /// Indicates whether to reconnect when a connection is lost.
-    /// </summary>
-    private bool m_reconnectOnError;
-
-    #endregion // Private Instance Fields
-
-    #region Private Static Fields
+    protected List<AdoNetAppenderParameter> m_parameters = new();
 
     /// <summary>
     /// The fully qualified type of the AdoNetAppender class.
@@ -871,8 +729,6 @@ namespace log4net.Appender
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(AdoNetAppender);
-
-    #endregion Private Static Fields
   }
 
   /// <summary>
@@ -890,8 +746,6 @@ namespace log4net.Appender
   /// </remarks>
   public class AdoNetAppenderParameter
   {
-    #region Public Instance Constructors
-
     /// <summary>
     /// Initializes a new instance of the <see cref="AdoNetAppenderParameter" /> class.
     /// </summary>
@@ -904,10 +758,6 @@ namespace log4net.Appender
       Scale = 0;
       Size = 0;
     }
-
-    #endregion // Public Instance Constructors
-
-    #region Public Instance Properties
 
     /// <summary>
     /// Gets or sets the name of this parameter.
@@ -922,11 +772,7 @@ namespace log4net.Appender
     /// or prepared statement.
     /// </para>
     /// </remarks>
-    public string ParameterName
-    {
-      get { return m_parameterName; }
-      set { m_parameterName = value; }
-    }
+    public string? ParameterName { get; set; }
 
     /// <summary>
     /// Gets or sets the database type for this parameter.
@@ -948,7 +794,7 @@ namespace log4net.Appender
     /// <seealso cref="IDataParameter.DbType" />
     public DbType DbType
     {
-      get { return m_dbType; }
+      get => m_dbType;
       set
       {
         m_dbType = value;
@@ -972,11 +818,7 @@ namespace log4net.Appender
     /// </para>
     /// </remarks>
     /// <seealso cref="IDbDataParameter.Precision" />
-    public byte Precision
-    {
-      get { return m_precision; }
-      set { m_precision = value; }
-    }
+    public byte Precision { get; set; }
 
     /// <summary>
     /// Gets or sets the scale for this parameter.
@@ -994,11 +836,7 @@ namespace log4net.Appender
     /// </para>
     /// </remarks>
     /// <seealso cref="IDbDataParameter.Scale" />
-    public byte Scale
-    {
-      get { return m_scale; }
-      set { m_scale = value; }
-    }
+    public byte Scale { get; set; }
 
     /// <summary>
     /// Gets or sets the size for this parameter.
@@ -1019,11 +857,7 @@ namespace log4net.Appender
     /// </para>
     /// </remarks>
     /// <seealso cref="IDbDataParameter.Size" />
-    public int Size
-    {
-      get { return m_size; }
-      set { m_size = value; }
-    }
+    public int Size { get; set; }
 
     /// <summary>
     /// Gets or sets the <see cref="IRawLayout"/> to use to 
@@ -1045,15 +879,7 @@ namespace log4net.Appender
     /// for use in the property.
     /// </para>
     /// </remarks>
-    public IRawLayout Layout
-    {
-      get { return m_layout; }
-      set { m_layout = value; }
-    }
-
-    #endregion // Public Instance Properties
-
-    #region Public Instance Methods
+    public IRawLayout? Layout { get; set; }
 
     /// <summary>
     /// Prepare the specified database command object.
@@ -1111,25 +937,13 @@ namespace log4net.Appender
       IDbDataParameter param = (IDbDataParameter)command.Parameters[ParameterName];
 
       // Format the value
-      object formattedValue = Layout.Format(loggingEvent);
+      object? formattedValue = Layout?.Format(loggingEvent);
 
       // If the value is null then convert to a DBNull
-      if (formattedValue == null)
-      {
-        formattedValue = DBNull.Value;
-      }
+      formattedValue ??= DBNull.Value;
 
       param.Value = formattedValue;
     }
-
-    #endregion // Public Instance Methods
-
-    #region Private Instance Fields
-
-    /// <summary>
-    /// The name of this parameter.
-    /// </summary>
-    private string m_parameterName;
 
     /// <summary>
     /// The database type for this parameter.
@@ -1140,28 +954,5 @@ namespace log4net.Appender
     /// Flag to infer type rather than use the DbType
     /// </summary>
     private bool m_inferType = true;
-
-    /// <summary>
-    /// The precision for this parameter.
-    /// </summary>
-    private byte m_precision;
-
-    /// <summary>
-    /// The scale for this parameter.
-    /// </summary>
-    private byte m_scale;
-
-    /// <summary>
-    /// The size for this parameter.
-    /// </summary>
-    private int m_size;
-
-    /// <summary>
-    /// The <see cref="IRawLayout"/> to use to render the
-    /// logging event into an object for this parameter.
-    /// </summary>
-    private IRawLayout m_layout;
-
-    #endregion // Private Instance Fields
   }
 }

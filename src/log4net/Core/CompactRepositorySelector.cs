@@ -18,13 +18,14 @@
 #endregion
 
 using System;
-using System.Collections;
+using System.Collections.Concurrent;
+using System.Linq;
 using System.Reflection;
 
-using log4net.Appender;
 using log4net.Util;
 using log4net.Repository;
 
+#nullable enable
 
 namespace log4net.Core
 {
@@ -47,18 +48,10 @@ namespace log4net.Core
   /// <author>Nicko Cadell</author>
   public class CompactRepositorySelector : IRepositorySelector
   {
-    #region Member Variables
-
     private const string DefaultRepositoryName = "log4net-default-repository";
 
-    private readonly Hashtable m_name2repositoryMap = new Hashtable();
+    private readonly ConcurrentDictionary<string, ILoggerRepository> m_name2repositoryMap = new(StringComparer.Ordinal);
     private readonly Type m_defaultRepositoryType;
-
-    private event LoggerRepositoryCreationEventHandler m_loggerRepositoryCreatedEvent;
-
-    #endregion
-
-    #region Constructors
 
     /// <summary>
     /// Create a new repository selector
@@ -66,7 +59,6 @@ namespace log4net.Core
     /// <param name="defaultRepositoryType">the type of the repositories to create, must implement <see cref="ILoggerRepository"/></param>
     /// <remarks>
     /// <para>
-    /// Create an new compact repository selector.
     /// The default type for repositories must be specified,
     /// an appropriate value would be <see cref="log4net.Repository.Hierarchy.Hierarchy"/>.
     /// </para>
@@ -75,25 +67,21 @@ namespace log4net.Core
     /// <exception cref="ArgumentOutOfRangeException">throw if <paramref name="defaultRepositoryType"/> does not implement <see cref="ILoggerRepository"/></exception>
     public CompactRepositorySelector(Type defaultRepositoryType)
     {
-      if (defaultRepositoryType == null)
+      if (defaultRepositoryType is null)
       {
-        throw new ArgumentNullException("defaultRepositoryType");
+        throw new ArgumentNullException(nameof(defaultRepositoryType));
       }
 
       // Check that the type is a repository
       if (!(typeof(ILoggerRepository).IsAssignableFrom(defaultRepositoryType)))
       {
-        throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("defaultRepositoryType", (object)defaultRepositoryType, "Parameter: defaultRepositoryType, Value: [" + defaultRepositoryType + "] out of range. Argument must implement the ILoggerRepository interface");
+        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(defaultRepositoryType), defaultRepositoryType, $"Parameter: defaultRepositoryType, Value: [{defaultRepositoryType}] out of range. Argument must implement the ILoggerRepository interface");
       }
 
       m_defaultRepositoryType = defaultRepositoryType;
 
-      LogLog.Debug(declaringType, "defaultRepositoryType [" + m_defaultRepositoryType + "]");
+      LogLog.Debug(declaringType, $"{nameof(defaultRepositoryType)} [{m_defaultRepositoryType}]");
     }
-
-    #endregion
-
-    #region Implementation of IRepositorySelector
 
     /// <summary>
     /// Get the <see cref="ILoggerRepository"/> for the specified assembly
@@ -132,21 +120,16 @@ namespace log4net.Core
     /// <exception cref="LogException">throw if the <paramref name="repositoryName"/> does not exist</exception>
     public ILoggerRepository GetRepository(string repositoryName)
     {
-      if (repositoryName == null)
+      if (repositoryName is null)
       {
-        throw new ArgumentNullException("repositoryName");
+        throw new ArgumentNullException(nameof(repositoryName));
       }
 
-      lock (this)
+      if (m_name2repositoryMap.TryGetValue(repositoryName, out ILoggerRepository? rep))
       {
-        // Lookup in map
-        ILoggerRepository rep = m_name2repositoryMap[repositoryName] as ILoggerRepository;
-        if (rep == null)
-        {
-          throw new LogException("Repository [" + repositoryName + "] is NOT defined.");
-        }
         return rep;
       }
+      throw new LogException($"Repository [{repositoryName}] is NOT defined.");
     }
 
     /// <summary>
@@ -169,28 +152,23 @@ namespace log4net.Core
     /// returned. The default repository is named <c>log4net-default-repository</c>.
     /// </para>
     /// </remarks>
-    public ILoggerRepository CreateRepository(Assembly assembly, Type repositoryType)
+    public ILoggerRepository CreateRepository(Assembly assembly, Type? repositoryType)
     {
       // If the type is not set then use the default type
-      if (repositoryType == null)
+      repositoryType ??= m_defaultRepositoryType;
+
+      // This method should not throw if the default repository already exists.
+
+      // First check that the repository does not exist
+      if (m_name2repositoryMap.TryGetValue(DefaultRepositoryName, out ILoggerRepository? rep))
       {
-        repositoryType = m_defaultRepositoryType;
+          return rep;
       }
 
-      lock (this)
-      {
-        // This method should not throw if the default repository already exists.
+      // Must create the repository
+      rep = CreateRepository(DefaultRepositoryName, repositoryType);
 
-        // First check that the repository does not exist
-        ILoggerRepository rep = m_name2repositoryMap[DefaultRepositoryName] as ILoggerRepository;
-        if (rep == null)
-        {
-          // Must create the repository
-          rep = CreateRepository(DefaultRepositoryName, repositoryType);
-        }
-
-        return rep;
-      }
+      return rep;
     }
 
     /// <summary>
@@ -216,48 +194,37 @@ namespace log4net.Core
     /// </remarks>
     /// <exception cref="ArgumentNullException">throw if <paramref name="repositoryName"/> is null</exception>
     /// <exception cref="LogException">throw if the <paramref name="repositoryName"/> already exists</exception>
-    public ILoggerRepository CreateRepository(string repositoryName, Type repositoryType)
+    public ILoggerRepository CreateRepository(string repositoryName, Type? repositoryType)
     {
-      if (repositoryName == null)
+      if (repositoryName is null)
       {
-        throw new ArgumentNullException("repositoryName");
+        throw new ArgumentNullException(nameof(repositoryName));
       }
 
       // If the type is not set then use the default type
-      if (repositoryType == null)
+      repositoryType ??= m_defaultRepositoryType;
+
+      // First check that the repository does not exist
+      if (m_name2repositoryMap.ContainsKey(repositoryName))
       {
-        repositoryType = m_defaultRepositoryType;
+        throw new LogException($"Repository [{repositoryName}] is already defined. Repositories cannot be redefined.");
       }
 
-      lock (this)
-      {
-        ILoggerRepository rep = null;
+      LogLog.Debug(declaringType, $"Creating repository [{repositoryName}] using type [{repositoryType}]");
 
-        // First check that the repository does not exist
-        rep = m_name2repositoryMap[repositoryName] as ILoggerRepository;
-        if (rep != null)
-        {
-          throw new LogException("Repository [" + repositoryName + "] is already defined. Repositories cannot be redefined.");
-        }
-        else
-        {
-          LogLog.Debug(declaringType, "Creating repository [" + repositoryName + "] using type [" + repositoryType + "]");
+      // Call the no arg constructor for the repositoryType
+      ILoggerRepository rep = (ILoggerRepository)Activator.CreateInstance(repositoryType);
 
-          // Call the no arg constructor for the repositoryType
-          rep = (ILoggerRepository)Activator.CreateInstance(repositoryType);
+      // Set the name of the repository
+      rep.Name = repositoryName;
 
-          // Set the name of the repository
-          rep.Name = repositoryName;
+      // Store in map
+      m_name2repositoryMap[repositoryName] = rep;
 
-          // Store in map
-          m_name2repositoryMap[repositoryName] = rep;
+      // Notify listeners that the repository has been created
+      OnLoggerRepositoryCreatedEvent(rep);
 
-          // Notify listeners that the repository has been created
-          OnLoggerRepositoryCreatedEvent(rep);
-        }
-
-        return rep;
-      }
+      return rep;
     }
 
     /// <summary>
@@ -274,10 +241,7 @@ namespace log4net.Core
     /// </remarks>
     public bool ExistsRepository(string repositoryName)
     {
-      lock (this)
-      {
-        return m_name2repositoryMap.ContainsKey(repositoryName);
-      }
+      return m_name2repositoryMap.ContainsKey(repositoryName);
     }
 
     /// <summary>
@@ -286,23 +250,13 @@ namespace log4net.Core
     /// <returns>an array of all known <see cref="ILoggerRepository"/> objects</returns>
     /// <remarks>
     /// <para>
-    /// Gets an array of all of the repositories created by this selector.
+    /// Gets an array of all repositories created by this selector.
     /// </para>
     /// </remarks>
     public ILoggerRepository[] GetAllRepositories()
     {
-      lock (this)
-      {
-        ICollection reps = m_name2repositoryMap.Values;
-        ILoggerRepository[] all = new ILoggerRepository[reps.Count];
-        reps.CopyTo(all, 0);
-        return all;
-      }
+      return m_name2repositoryMap.Values.ToArray();
     }
-
-    #endregion
-
-    #region Private Static Fields
 
     /// <summary>
     /// The fully qualified type of the CompactRepositorySelector class.
@@ -312,8 +266,6 @@ namespace log4net.Core
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(CompactRepositorySelector);
-
-    #endregion Private Static Fields
 
     /// <summary>
     /// Event to notify that a logger repository has been created.
@@ -329,11 +281,7 @@ namespace log4net.Core
     /// holds the newly created <see cref="ILoggerRepository"/>.
     /// </para>
     /// </remarks>
-    public event LoggerRepositoryCreationEventHandler LoggerRepositoryCreatedEvent
-    {
-      add { m_loggerRepositoryCreatedEvent += value; }
-      remove { m_loggerRepositoryCreatedEvent -= value; }
-    }
+    public event LoggerRepositoryCreationEventHandler? LoggerRepositoryCreatedEvent;
 
     /// <summary>
     /// Notify the registered listeners that the repository has been created
@@ -347,11 +295,7 @@ namespace log4net.Core
     /// </remarks>
     protected virtual void OnLoggerRepositoryCreatedEvent(ILoggerRepository repository)
     {
-      LoggerRepositoryCreationEventHandler handler = m_loggerRepositoryCreatedEvent;
-      if (handler != null)
-      {
-        handler(this, new LoggerRepositoryCreationEventArgs(repository));
-      }
+      LoggerRepositoryCreatedEvent?.Invoke(this, new LoggerRepositoryCreationEventArgs(repository));
     }
   }
 }

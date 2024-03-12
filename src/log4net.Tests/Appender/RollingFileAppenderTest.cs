@@ -63,12 +63,9 @@ namespace log4net.Tests.Appender
 
     private sealed class SilentErrorHandler : IErrorHandler
     {
-      private readonly StringBuilder m_buffer = new StringBuilder();
+      private readonly StringBuilder m_buffer = new();
 
-      public string Message
-      {
-        get { return m_buffer.ToString(); }
-      }
+      public string Message => m_buffer.ToString();
 
       public void Error(string message)
       {
@@ -226,7 +223,7 @@ namespace log4net.Tests.Appender
       roller.ActivateOptions();
       _root.AddAppender(roller);
 
-      _root.Repository.Configured = true;
+      _root.Repository!.Configured = true;
 
       for (int i = 0; i < 1000; i++)
       {
@@ -699,10 +696,7 @@ namespace log4net.Tests.Appender
       /// <summary>
       /// Number of total bytes a log file can reach.
       /// </summary>
-      public int MaximumFileSize
-      {
-        get { return TotalMessageLength * MessagesPerFile; }
-      }
+      public int MaximumFileSize => TotalMessageLength * MessagesPerFile;
 
       /// <summary>
       /// The length of a message, including any CR/LF characters.
@@ -822,8 +816,6 @@ namespace log4net.Tests.Appender
     /// Callback point for the regular expression parser.  Turns
     /// the number into a file name.
     /// </summary>
-    /// <param name="match"></param>
-    /// <returns></returns>
     private static string NumberedNameMaker(Match match)
     {
       Int32 iValue = Int32.Parse(match.Value);
@@ -835,9 +827,6 @@ namespace log4net.Tests.Appender
     /// Calls back to a method that does the actual replacement, turning
     /// the numeric value into a filename.
     /// </summary>
-    /// <param name="sBackupInfo"></param>
-    /// <param name="evaluator"></param>
-    /// <returns></returns>
     private static string ConvertToFiles(string sBackupInfo, MatchEvaluator evaluator)
     {
       Regex regex = new Regex(@"\d+");
@@ -1144,7 +1133,10 @@ namespace log4net.Tests.Appender
       //
       _root.AddAppender(CreateAppender());
 
-      _root.Repository.Configured = true;
+      if (_root.Repository is not null)
+      {
+        _root.Repository.Configured = true;
+      }
     }
 
     /// <summary>
@@ -1485,13 +1477,8 @@ namespace log4net.Tests.Appender
 
     private static void AssertFileEquals(string filename, string contents)
     {
-      FileInfo fileinfo = new FileInfo(filename);
-      StreamReader sr = new StreamReader(fileinfo.OpenRead());
-      string logcont = sr.ReadToEnd();
-      sr.Close();
-
+      string logcont = File.ReadAllText(filename);
       Assert.AreEqual(contents, logcont, "Log contents is not what is expected");
-
       File.Delete(filename);
     }
 
@@ -1748,19 +1735,13 @@ namespace log4net.Tests.Appender
     [Test]
     public void TestInterProcessLockRoll()
     {
-      string filename = "test_interprocess_lock_roll.log";
+      const string filename = "test_interprocess_lock_roll.log";
 
       SilentErrorHandler sh = new SilentErrorHandler();
       ILogger log = CreateLogger(filename, new FileAppender.InterProcessLock(), sh, 1, 2);
 
-      Assert.DoesNotThrow(delegate
-      {
-        log.Log(GetType(), Level.Info, "A", null);
-      });
-      Assert.DoesNotThrow(delegate
-      {
-        log.Log(GetType(), Level.Info, "A", null);
-      });
+      Assert.DoesNotThrow(() => log.Log(GetType(), Level.Info, "A", null));
+      Assert.DoesNotThrow(() => log.Log(GetType(), Level.Info, "A", null));
 
       DestroyLogger();
 
@@ -1780,8 +1761,9 @@ namespace log4net.Tests.Appender
       SilentErrorHandler sh = new SilentErrorHandler();
       ILogger log = CreateLogger(filename, null, sh);
 
-      IAppender[] appenders = log.Repository.GetAppenders();
-      Assert.AreEqual(1, appenders.Length, "The wrong number of appenders are configured");
+      IAppender[]? appenders = log.Repository?.GetAppenders();
+      Assert.IsNotNull(appenders);
+      Assert.AreEqual(1, appenders!.Length, "The wrong number of appenders are configured");
 
       RollingFileAppender rfa = (RollingFileAppender)(appenders[0]);
       Assert.AreEqual(typeof(FileAppender.ExclusiveLock), rfa.LockingModel.GetType(),
@@ -1804,7 +1786,7 @@ namespace log4net.Tests.Appender
 
 
     /// <summary>
-    /// Tests the count down case, with max backups limited to 3, to see that
+    /// Tests the countdown case, with max backups limited to 3, to see that
     /// initialization of the rolling file appender results in the expected value
     /// </summary>
     private static void VerifyInitializeDownFixedExpectedValue(

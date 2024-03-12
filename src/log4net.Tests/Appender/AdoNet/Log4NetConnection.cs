@@ -22,40 +22,29 @@
 using System;
 using System.Data;
 
+#nullable enable
+
 namespace log4net.Tests.Appender.AdoNet
 {
   public class Log4NetConnection : IDbConnection
   {
-    #region AdoNetAppender
-
-    private static Log4NetConnection mostRecentInstance;
-
-    private bool open;
-    private string connectionString;
+    private bool _open;
 
     public Log4NetConnection()
     {
-      mostRecentInstance = this;
+      MostRecentInstance = this;
     }
 
     public void Close()
     {
-      open = false;
+      _open = false;
     }
 
-    public ConnectionState State
-    {
-      get
-      {
-        return open ? ConnectionState.Open : ConnectionState.Closed;
-      }
-    }
+    public ConnectionState State => _open ? ConnectionState.Open : ConnectionState.Closed;
 
-    public string ConnectionString
-    {
-      get { return connectionString; }
-      set { connectionString = value; }
-    }
+#pragma warning disable CS8766 // Nullability of reference types in return type doesn't match implicitly implemented member (possibly because of nullability attributes).
+    public string? ConnectionString { get; set; }
+#pragma warning restore CS8766
 
     public IDbTransaction BeginTransaction()
     {
@@ -69,17 +58,10 @@ namespace log4net.Tests.Appender.AdoNet
 
     public void Open()
     {
-      open = true;
+      _open = true;
     }
 
-    public static Log4NetConnection MostRecentInstance
-    {
-      get { return mostRecentInstance; }
-    }
-
-    #endregion
-
-    #region Not Implemented
+    public static Log4NetConnection? MostRecentInstance { get; private set; }
 
     public IDbTransaction BeginTransaction(IsolationLevel il)
     {
@@ -91,21 +73,13 @@ namespace log4net.Tests.Appender.AdoNet
       throw new NotImplementedException();
     }
 
-    public int ConnectionTimeout
-    {
-      get { throw new NotImplementedException(); }
-    }
+    public int ConnectionTimeout => throw new NotImplementedException();
 
-    public string Database
-    {
-      get { throw new NotImplementedException(); }
-    }
+    public string Database => throw new NotImplementedException();
 
     public void Dispose()
     {
       throw new NotImplementedException();
     }
-
-    #endregion
   }
 }
