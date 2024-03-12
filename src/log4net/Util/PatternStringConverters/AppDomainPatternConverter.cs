@@ -42,9 +42,7 @@ namespace log4net.Util.PatternStringConverters
     /// Writes name of the current AppDomain to the output <paramref name="writer"/>.
     /// </para>
     /// </remarks>
-    protected internal override void Convert(TextWriter writer, object state)
-    {
-      writer.Write(SystemInfo.ApplicationFriendlyName);
-    }
+    public override void Convert(TextWriter writer, object state)
+      => writer.Write(SystemInfo.ApplicationFriendlyName);
   }
 }

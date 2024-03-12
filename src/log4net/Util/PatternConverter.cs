@@ -128,7 +128,7 @@ namespace log4net.Util
     /// convert conversion specifiers in the appropriate way.
     /// </para>
     /// </remarks>
-    protected internal abstract void Convert(TextWriter writer, object state);
+    public abstract void Convert(TextWriter writer, object state);
 
     #endregion Protected Abstract Methods
 

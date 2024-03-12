@@ -55,7 +55,7 @@ namespace log4net.Util.PatternStringConverters
     /// </para>
     /// </remarks>
     /// <seealso cref="DatePatternConverter"/>
-    protected internal override void Convert(TextWriter writer, object state)
+    public override void Convert(TextWriter writer, object state)
     {
       try
       {

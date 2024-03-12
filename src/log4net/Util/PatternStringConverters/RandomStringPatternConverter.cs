@@ -34,15 +34,14 @@ namespace log4net.Util.PatternStringConverters
   /// to the string value of the length required.
   /// </para>
   /// <para>
-  /// The random characters in the string are limited to uppercase letters
-  /// and numbers only.
+  /// The random characters in the string are limited to uppercase letters and numbers only.
   /// </para>
   /// <para>
   /// The random number generator used by this class is not cryptographically secure.
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
-  internal sealed class RandomStringPatternConverter : PatternConverter, IOptionHandler
+  public sealed class RandomStringPatternConverter : PatternConverter, IOptionHandler
   {
     /// <summary>
     /// Shared random number generator
@@ -101,7 +100,7 @@ namespace log4net.Util.PatternStringConverters
     /// Write a randoim string to the output <paramref name="writer"/>.
     /// </para>
     /// </remarks>
-    protected internal override void Convert(TextWriter writer, object state)
+    public override void Convert(TextWriter writer, object state)
     {
       try
       {

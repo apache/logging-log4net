@@ -44,7 +44,7 @@ namespace log4net.Util.PatternStringConverters
     /// </para>
     /// </remarks>
     [System.Security.SecuritySafeCritical]
-    protected internal override void Convert(TextWriter writer, object state)
+    public override void Convert(TextWriter writer, object state)
     {
       try
       {

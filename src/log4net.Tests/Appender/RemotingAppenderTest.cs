@@ -100,10 +100,7 @@ namespace log4net.Tests.Appender
       LoggingEvent[] events = RemoteLoggingSinkImpl.Instance.Events;
       Assert.AreEqual(1, events.Length, "Expect to receive 1 remoted event");
 
-      // Grab the event data
-      LoggingEventData eventData = events[0].m_data;
-
-      Assert.IsNull(eventData.LocationInfo, "Expect LocationInfo to be null because only doing a partial fix");
+      Assert.IsNull(events[0].LocationInfo, "Expect LocationInfo to be null because only doing a partial fix");
     }
 
     /// <summary>
@@ -130,10 +127,7 @@ namespace log4net.Tests.Appender
       LoggingEvent[] events = RemoteLoggingSinkImpl.Instance.Events;
       Assert.AreEqual(1, events.Length, "Expect to receive 1 remoted event");
 
-      // Grab the event data
-      LoggingEventData eventData = events[0].m_data;
-
-      Assert.IsNotNull(eventData.LocationInfo, "Expect LocationInfo to not be null because doing a full fix");
+      Assert.IsNotNull(events[0].LocationInfo, "Expect LocationInfo to not be null because doing a full fix");
     }
 
     private void WaitFor(
@@ -145,9 +139,7 @@ namespace log4net.Tests.Appender
       do
       {
         if (condition())
-        {
           return;
-        }
         Thread.Sleep(100);
       } while ((DateTime.Now - start).TotalMilliseconds < maxWaitMilliseconds);
       throw new TimeoutException($"Condition not achieved within {maxWaitMilliseconds}ms: {failMessage}");
