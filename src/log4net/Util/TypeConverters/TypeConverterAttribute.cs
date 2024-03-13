@@ -79,7 +79,7 @@ namespace log4net.Util.TypeConverters
     }
 
     /// <summary>
-    /// Create a new type converter attribute for the specified type
+    /// Creates a new type converter attribute for the specified type
     /// </summary>
     /// <param name="converterType">The type of the type converter</param>
     /// <remarks>
@@ -90,7 +90,7 @@ namespace log4net.Util.TypeConverters
     /// </remarks>
     public TypeConverterAttribute(Type converterType)
     {
-      m_typeName = log4net.Util.SystemInfo.AssemblyQualifiedName(converterType);
+      m_typeName = converterType.AssemblyQualifiedName!;
     }
 
     #endregion

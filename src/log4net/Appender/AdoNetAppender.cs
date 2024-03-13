@@ -643,8 +643,7 @@ namespace log4net.Appender
     {
       try
       {
-        Type? t = SystemInfo.GetTypeFromString(ConnectionType, true, false);
-        if (t is not null)
+        if (SystemInfo.GetTypeFromString(ConnectionType, true, false) is Type t)
         {
             return t;
         }

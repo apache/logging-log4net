@@ -111,9 +111,9 @@ namespace log4net.Tests.Appender
     private static void ResetAndDeleteTestFiles()
     {
       // Regular users should not use the clear method lightly!
-      Utils.GetRepository().ResetConfiguration();
-      Utils.GetRepository().Shutdown();
-      ((Repository.Hierarchy.Hierarchy)Utils.GetRepository()).Clear();
+      LogManager.GetRepository().ResetConfiguration();
+      LogManager.GetRepository().Shutdown();
+      ((Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Clear();
 
       DeleteTestFiles();
     }
@@ -204,7 +204,7 @@ namespace log4net.Tests.Appender
     [Test]
     public void RollingCombinedWithPreserveExtension()
     {
-      _root = ((Repository.Hierarchy.Hierarchy)Utils.GetRepository()).Root;
+      _root = ((Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Root;
       _root.Level = Level.All;
       PatternLayout patternLayout = new PatternLayout();
       patternLayout.ActivateOptions();
@@ -1122,7 +1122,7 @@ namespace log4net.Tests.Appender
     /// </summary>
     private void ConfigureRootAppender()
     {
-      _root = ((Repository.Hierarchy.Hierarchy)Utils.GetRepository()).Root;
+      _root = ((Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Root;
       _root.Level = Level.Debug;
       _caRoot = new CountingAppender();
       _root.AddAppender(_caRoot);

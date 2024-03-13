@@ -158,7 +158,7 @@ namespace log4net.Core
     }
 
     /// <summary>
-    /// Create a new repository for the assembly specified 
+    /// Creates a new repository for the assembly specified 
     /// </summary>
     /// <param name="repositoryAssembly">the assembly to use to create the repository to associate with the <see cref="ILoggerRepository"/>.</param>
     /// <param name="repositoryType">The type of repository to create, must implement <see cref="ILoggerRepository"/>.</param>

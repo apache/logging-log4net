@@ -17,8 +17,6 @@
 //
 #endregion
 
-using log4net.Repository;
-
 namespace log4net.Tests
 {
   /// <summary>
@@ -33,17 +31,6 @@ namespace log4net.Tests
       GlobalContext.Properties.Remove(PROPERTY_KEY);
       ThreadContext.Properties.Remove(PROPERTY_KEY);
       LogicalThreadContext.Properties.Remove(PROPERTY_KEY);
-    }
-
-    // Wrappers because repository/logger retrieval APIs require an Assembly argument on NETSTANDARD1_3
-    internal static ILog GetLogger(string name)
-    {
-      return LogManager.GetLogger(name);
-    }
-
-    internal static ILoggerRepository GetRepository()
-    {
-      return LogManager.GetRepository();
     }
   }
 }

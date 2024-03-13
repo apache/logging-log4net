@@ -25,6 +25,8 @@ using log4net.Tests.Appender;
 
 using NUnit.Framework;
 
+#nullable enable
+
 namespace log4net.Tests.Hierarchy
 {
   /// <summary>
@@ -42,24 +44,15 @@ namespace log4net.Tests.Hierarchy
     private static string MSG = "M";
 
     /// <summary>
-    /// Any initialization that happens before each test can
-    /// go here
-    /// </summary>
-    [SetUp]
-    public void SetUp()
-    {
-    }
-
-    /// <summary>
     /// Any steps that happen after each test go here
     /// </summary>
     [TearDown]
     public void TearDown()
     {
       // Regular users should not use the clear method lightly!
-      Utils.GetRepository().ResetConfiguration();
-      Utils.GetRepository().Shutdown();
-      ((Repository.Hierarchy.Hierarchy)Utils.GetRepository()).Clear();
+      LogManager.GetRepository().ResetConfiguration();
+      LogManager.GetRepository().Shutdown();
+      ((Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Clear();
     }
 
     /// <summary>
@@ -68,7 +61,7 @@ namespace log4net.Tests.Hierarchy
     [Test]
     public void TestAppender1()
     {
-      log = (Logger)Utils.GetLogger("test").Logger;
+      log = (Logger)LogManager.GetLogger("test").Logger;
       CountingAppender a1 = new CountingAppender();
       a1.Name = "testAppender1";
       log.AddAppender(a1);
@@ -91,7 +84,7 @@ namespace log4net.Tests.Hierarchy
       CountingAppender a2 = new CountingAppender();
       a2.Name = "testAppender2.2";
 
-      log = (Logger)Utils.GetLogger("test").Logger;
+      log = (Logger)LogManager.GetLogger("test").Logger;
       log.AddAppender(a1);
       log.AddAppender(a2);
 
@@ -119,8 +112,8 @@ namespace log4net.Tests.Hierarchy
     [Test]
     public void TestAdditivity1()
     {
-      Logger a = (Logger)Utils.GetLogger("a").Logger;
-      Logger ab = (Logger)Utils.GetLogger("a.b").Logger;
+      Logger a = (Logger)LogManager.GetLogger("a").Logger;
+      Logger ab = (Logger)LogManager.GetLogger("a.b").Logger;
       CountingAppender ca = new CountingAppender();
 
       a.AddAppender(ca);
@@ -143,10 +136,10 @@ namespace log4net.Tests.Hierarchy
     [Test]
     public void TestAdditivity2()
     {
-      Logger a = (Logger)Utils.GetLogger("a").Logger;
-      Logger ab = (Logger)Utils.GetLogger("a.b").Logger;
-      Logger abc = (Logger)Utils.GetLogger("a.b.c").Logger;
-      Logger x = (Logger)Utils.GetLogger("x").Logger;
+      Logger a = (Logger)LogManager.GetLogger("a").Logger;
+      Logger ab = (Logger)LogManager.GetLogger("a.b").Logger;
+      Logger abc = (Logger)LogManager.GetLogger("a.b.c").Logger;
+      Logger x = (Logger)LogManager.GetLogger("x").Logger;
 
       CountingAppender ca1 = new CountingAppender();
       CountingAppender ca2 = new CountingAppender();
@@ -177,10 +170,10 @@ namespace log4net.Tests.Hierarchy
     [Test]
     public void TestAdditivity3()
     {
-      Logger root = ((Repository.Hierarchy.Hierarchy)Utils.GetRepository()).Root;
-      Logger a = (Logger)Utils.GetLogger("a").Logger;
-      Logger ab = (Logger)Utils.GetLogger("a.b").Logger;
-      Logger abc = (Logger)Utils.GetLogger("a.b.c").Logger;
+      Logger root = ((Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Root;
+      Logger a = (Logger)LogManager.GetLogger("a").Logger;
+      Logger ab = (Logger)LogManager.GetLogger("a.b").Logger;
+      Logger abc = (Logger)LogManager.GetLogger("a.b.c").Logger;
 
       CountingAppender caRoot = new CountingAppender();
       CountingAppender caA = new CountingAppender();
@@ -220,10 +213,10 @@ namespace log4net.Tests.Hierarchy
     public void TestDisable1()
     {
       CountingAppender caRoot = new CountingAppender();
-      Logger root = ((Repository.Hierarchy.Hierarchy)Utils.GetRepository()).Root;
+      Logger root = ((Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Root;
       root.AddAppender(caRoot);
 
-      Repository.Hierarchy.Hierarchy h = ((Repository.Hierarchy.Hierarchy)Utils.GetRepository());
+      Repository.Hierarchy.Hierarchy h = ((Repository.Hierarchy.Hierarchy)LogManager.GetRepository());
       h.Threshold = Level.Info;
       h.Configured = true;
 
@@ -271,12 +264,11 @@ namespace log4net.Tests.Hierarchy
     [Test]
     public void TestExists()
     {
-      object a = Utils.GetLogger("a");
-      object a_b = Utils.GetLogger("a.b");
-      object a_b_c = Utils.GetLogger("a.b.c");
+      ILog a = LogManager.GetLogger("a");
+      ILog a_b = LogManager.GetLogger("a.b");
+      ILog a_b_c = LogManager.GetLogger("a.b.c");
 
-      object t;
-      t = LogManager.Exists("xx");
+      ILog? t = LogManager.Exists("xx");
       Assert.IsNull(t);
       t = LogManager.Exists("a");
       Assert.AreSame(a, t);

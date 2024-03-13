@@ -128,7 +128,7 @@ namespace log4net.Core
 
           if (appRepositorySelectorObj != null && appRepositorySelectorObj is IRepositorySelector)
           {
-            s_repositorySelector = (IRepositorySelector)appRepositorySelectorObj;
+            RepositorySelector = (IRepositorySelector)appRepositorySelectorObj;
           }
           else
           {
@@ -137,9 +137,9 @@ namespace log4net.Core
         }
       }
       // Create the DefaultRepositorySelector if not configured above 
-      if (s_repositorySelector == null)
+      if (RepositorySelector == null)
       {
-        s_repositorySelector = new DefaultRepositorySelector(typeof(log4net.Repository.Hierarchy.Hierarchy));
+        RepositorySelector = new DefaultRepositorySelector(typeof(log4net.Repository.Hierarchy.Hierarchy));
       }
     }
 
@@ -764,19 +764,10 @@ namespace log4net.Core
     /// <see cref="M:Assembly.GetCallingAssembly()"/>).
     /// </para>
     /// <para>
-    /// This context is used by the selector to lookup a specific repository.
-    /// </para>
-    /// <para>
-    /// For the full .NET Framework, the default repository is <c>DefaultRepositorySelector</c>;
-    /// for the .NET Compact Framework <c>CompactRepositorySelector</c> is the default
-    /// repository.
+    /// This context is used by the selector to look up a specific repository.
     /// </para>
     /// </remarks>
-    public static IRepositorySelector RepositorySelector
-    {
-      get { return s_repositorySelector; }
-      set { s_repositorySelector = value; }
-    }
+    public static IRepositorySelector RepositorySelector { get; set; }
 
     #endregion Public Static Methods
 
@@ -847,11 +838,6 @@ namespace log4net.Core
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(LoggerManager);
-
-    /// <summary>
-    /// Initialize the default repository selector
-    /// </summary>
-    private static IRepositorySelector s_repositorySelector;
 
     #endregion Private Static Fields
   }
