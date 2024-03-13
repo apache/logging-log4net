@@ -24,11 +24,10 @@ using log4net.Util;
 namespace log4net.Core
 {
   /// <summary>
-  /// Mapping between string name and Level object
+  /// Maps between string name and Level object.
   /// </summary>
   /// <remarks>
   /// <para>
-  /// Mapping between string name and <see cref="Level"/> object.
   /// This mapping is held separately for each <see cref="log4net.Repository.ILoggerRepository"/>.
   /// The level name is case-insensitive.
   /// </para>
@@ -41,18 +40,6 @@ namespace log4net.Core
     /// level name is case-insensitive
     /// </summary>
     private readonly ConcurrentDictionary<string, Level> m_mapName2Level = new(StringComparer.OrdinalIgnoreCase);
-
-    /// <summary>
-    /// Construct the level map
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Construct the level map.
-    /// </para>
-    /// </remarks>
-    public LevelMap()
-    {
-    }
 
     /// <summary>
     /// Clear the internal maps of all levels
@@ -84,7 +71,7 @@ namespace log4net.Core
     {
       get
       {
-        if (name == null)
+        if (name is null)
         {
           throw new ArgumentNullException(nameof(name));
         }
@@ -123,13 +110,13 @@ namespace log4net.Core
     /// </remarks>
     public void Add(string name, int value, string? displayName)
     {
-      if (name == null)
+      if (name is null)
       {
         throw new ArgumentNullException(nameof(name));
       }
       if (name.Length == 0)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException("name", name, "Parameter: name, Value: [" + name + "] out of range. Level name must not be empty");
+        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(name), name, $"Parameter: name, Value: [{name}] out of range. Level name must not be empty");
       }
 
       if (string.IsNullOrEmpty(displayName))
@@ -151,7 +138,7 @@ namespace log4net.Core
     /// </remarks>
     public void Add(Level level)
     {
-      if (level == null)
+      if (level is null)
       {
         throw new ArgumentNullException(nameof(level));
       }
@@ -189,7 +176,7 @@ namespace log4net.Core
     /// </remarks>
     public Level LookupWithDefault(Level defaultLevel)
     {
-      if (defaultLevel == null)
+      if (defaultLevel is null)
       {
         throw new ArgumentNullException(nameof(defaultLevel));
       }

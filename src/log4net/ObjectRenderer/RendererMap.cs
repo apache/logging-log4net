@@ -27,17 +27,14 @@ using log4net.Util;
 namespace log4net.ObjectRenderer
 {
   /// <summary>
-  /// Map class objects to an <see cref="IObjectRenderer"/>.
+  /// Maps types to <see cref="IObjectRenderer"/> instances for types that require custom
+  /// rendering.
   /// </summary>
   /// <remarks>
   /// <para>
-  /// Maintains a mapping between types that require special
-  /// rendering and the <see cref="IObjectRenderer"/> that
-  /// is used to render them.
-  /// </para>
-  /// <para>
   /// The <see cref="M:FindAndRender(object)"/> method is used to render an
-  /// <c>object</c> using the appropriate renderers defined in this map.
+  /// <c>object</c> using the appropriate renderers defined in this map,
+  /// using a default renderer if no custom renderer is defined for a type.
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
@@ -52,10 +49,10 @@ namespace log4net.ObjectRenderer
     private static readonly IObjectRenderer s_defaultRenderer = new DefaultRenderer();
 
     /// <summary>
-    /// Render <paramref name="obj"/> using the appropriate renderer.
+    /// Renders <paramref name="obj"/> using the appropriate renderer.
     /// </summary>
     /// <param name="obj">the object to render to a string</param>
-    /// <returns>the object rendered as a string</returns>
+    /// <returns>The object rendered as a string.</returns>
     /// <remarks>
     /// <para>
     /// This is a convenience method used to render an object to a string.
@@ -138,9 +135,9 @@ namespace log4net.ObjectRenderer
     }
 
     /// <summary>
-    /// Gets the renderer for the specified object type
+    /// Gets the renderer for the specified object type.
     /// </summary>
-    /// <param name="obj">the object to lookup the renderer for</param>
+    /// <param name="obj">The object for which to look up the renderer.</param>
     /// <returns>the renderer for <paramref name="obj"/></returns>
     /// <remarks>
     /// <param>
@@ -165,14 +162,7 @@ namespace log4net.ObjectRenderer
     /// Gets the renderer for the specified type
     /// </summary>
     /// <param name="type">the type to look up the renderer for</param>
-    /// <returns>the renderer for the specified type</returns>
-    /// <remarks>
-    /// <para>
-    /// Returns the renderer for the specified type.
-    /// If no specific renderer has been defined the
-    /// <see cref="DefaultRenderer"/> will be returned.
-    /// </para>
-    /// </remarks>
+    /// <returns>The renderer for the specified type, or <see cref="DefaultRenderer"/> if no specific renderer has been defined.</returns>
     public IObjectRenderer Get(Type type)
     {
       if (type is null)
@@ -204,10 +194,10 @@ namespace log4net.ObjectRenderer
     }
 
     /// <summary>
-    /// Internal function to recursively search interfaces
+    /// Recursively searches interfaces.
     /// </summary>
-    /// <param name="type">the type to look up the renderer for</param>
-    /// <returns>the renderer for the specified type</returns>
+    /// <param name="type">The type for which to look up the renderer.</param>
+    /// <returns>The renderer for the specified type, or <c>null</c> if not found.</returns>
     private IObjectRenderer? SearchTypeAndInterfaces(Type type)
     {
       if (m_map.TryGetValue(type, out IObjectRenderer? r))
@@ -227,26 +217,14 @@ namespace log4net.ObjectRenderer
     }
 
     /// <summary>
-    /// Get the default renderer instance
+    /// Gets the default renderer instance
     /// </summary>
-    /// <value>the default renderer</value>
-    /// <remarks>
-    /// <para>
-    /// Get the default renderer
-    /// </para>
-    /// </remarks>
     public IObjectRenderer DefaultRenderer => s_defaultRenderer;
 
     /// <summary>
-    /// Clear the map of renderers
+    /// Clears the map of custom renderers. The <see cref="DefaultRenderer"/>
+    /// is not removed.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Clear the custom renderers defined by using
-    /// <see cref="Put"/>. The <see cref="DefaultRenderer"/>
-    /// cannot be removed.
-    /// </para>
-    /// </remarks>
     public void Clear()
     {
       m_map.Clear();
@@ -254,27 +232,23 @@ namespace log4net.ObjectRenderer
     }
 
     /// <summary>
-    /// Register an <see cref="IObjectRenderer"/> for <paramref name="typeToRender"/>. 
+    /// Registers an <see cref="IObjectRenderer"/> for <paramref name="typeToRender"/>. 
     /// </summary>
-    /// <param name="typeToRender">the type that will be rendered by <paramref name="renderer"/></param>
-    /// <param name="renderer">the renderer for <paramref name="typeToRender"/></param>
-    /// <remarks>
-    /// <para>
-    /// Register an object renderer for a specific source type.
-    /// This renderer will be returned from a call to <see cref="M:Get(Type)"/>
-    /// specifying the same <paramref name="typeToRender"/> as an argument.
-    /// </para>
-    /// </remarks>
+    /// <param name="typeToRender">The type that will be rendered by <paramref name="renderer"/>.</param>
+    /// <param name="renderer">The renderer for <paramref name="typeToRender"/>.</param>
     public void Put(Type typeToRender, IObjectRenderer renderer)
     {
-      m_cache.Clear();
-
       if (typeToRender is null)
       {
         throw new ArgumentNullException(nameof(typeToRender));
       }
+      if (renderer is null)
+      {
+        throw new ArgumentNullException(nameof(renderer));
+      }
 
-      m_map[typeToRender] = renderer ?? throw new ArgumentNullException(nameof(renderer));
+      m_cache.Clear();
+      m_map[typeToRender] = renderer;
     }
   }
 }

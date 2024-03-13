@@ -67,7 +67,7 @@ namespace log4net.Tests.Hierarchy
       CountingAppender beta = new CountingAppender();
 
       Repository.Hierarchy.Hierarchy hierarchy =
-          (Repository.Hierarchy.Hierarchy)Utils.GetRepository();
+          (Repository.Hierarchy.Hierarchy)LogManager.GetRepository();
 
       hierarchy.Root.AddAppender(alpha);
       hierarchy.Root.AddAppender(beta);
@@ -86,7 +86,7 @@ namespace log4net.Tests.Hierarchy
       CountingAppender alpha = new CountingAppender();
       CountingAppender beta = new CountingAppender();
 
-      BasicConfigurator.Configure(Utils.GetRepository(), alpha, beta);
+      BasicConfigurator.Configure(LogManager.GetRepository(), alpha, beta);
 
       ILog log = LogManager.GetLogger(GetType());
       log.Debug("Hello World");

@@ -129,8 +129,7 @@ namespace log4net.Repository.Hierarchy
       {
         for (Logger? c = this; c is not null; c = c.m_parent) 
         {
-          Level? level = c.Level;
-          if (level is not null) 
+          if (c.Level is Level level) 
           {
             return level;
           }

@@ -30,11 +30,6 @@ namespace log4net.Util
   /// <summary>
   /// Utility class for system specific information.
   /// </summary>
-  /// <remarks>
-  /// <para>
-  /// Utility class of static methods for system specific information.
-  /// </para>
-  /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
   /// <author>Alexey Solofnenko</author>
@@ -78,20 +73,11 @@ namespace log4net.Util
     /// <summary>
     /// Gets the system dependent line terminator.
     /// </summary>
-    /// <value>
-    /// The system dependent line terminator.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets the system dependent line terminator.
-    /// </para>
-    /// </remarks>
     public static string NewLine => Environment.NewLine;
 
     /// <summary>
     /// Gets the base directory for this <see cref="AppDomain"/>.
     /// </summary>
-    /// <value>The base directory path for the current <see cref="AppDomain"/>.</value>
     /// <remarks>
     /// <para>
     /// The value returned may be either a local file path or a URI.
@@ -102,13 +88,7 @@ namespace log4net.Util
     /// <summary>
     /// Gets the path to the configuration file for the current <see cref="AppDomain"/>.
     /// </summary>
-    /// <value>The path to the configuration file for the current <see cref="AppDomain"/>.</value>
     /// <remarks>
-    /// <para>
-    /// The .NET Compact Framework 1.0 does not have a concept of a configuration
-    /// file. For this runtime, we use the entry assembly location as the root for
-    /// the configuration file name.
-    /// </para>
     /// <para>
     /// The value returned may be either a local file path or a URI.
     /// </para>
@@ -130,12 +110,6 @@ namespace log4net.Util
     /// <summary>
     /// Gets the path to the file that first executed in the current <see cref="AppDomain"/>.
     /// </summary>
-    /// <value>The path to the entry assembly.</value>
-    /// <remarks>
-    /// <para>
-    /// Gets the path to the file that first executed in the current <see cref="AppDomain"/>.
-    /// </para>
-    /// </remarks>
     public static string EntryAssemblyLocation
     {
       get
@@ -153,40 +127,15 @@ namespace log4net.Util
     /// <summary>
     /// Gets the ID of the current thread.
     /// </summary>
-    /// <value>The ID of the current thread.</value>
-    /// <remarks>
-    /// <para>
-    /// On the .NET framework, the <c>AppDomain.GetCurrentThreadId</c> method
-    /// is used to obtain the thread ID for the current thread. This is the 
-    /// operating system ID for the thread.
-    /// </para>
-    /// <para>
-    /// On the .NET Compact Framework 1.0 it is not possible to get the 
-    /// operating system thread ID for the current thread. The native method 
-    /// <c>GetCurrentThreadId</c> is implemented inline in a header file
-    /// and cannot be called.
-    /// </para>
-    /// <para>
-    /// On the .NET Framework 2.0 the <c>Thread.ManagedThreadId</c> is used as this
-    /// gives a stable id unrelated to the operating system thread ID which may 
-    /// change if the runtime is using fibers.
-    /// </para>
-    /// </remarks>
     public static int CurrentThreadId => System.Threading.Thread.CurrentThread.ManagedThreadId;
 
     /// <summary>
-    /// Get the host name or machine name for the current machine
+    /// Gets the host name or machine name for the current machine.
     /// </summary>
-    /// <value>
-    /// The hostname or machine name
-    /// </value>
     /// <remarks>
     /// <para>
-    /// Get the host name or machine name for the current machine
-    /// </para>
-    /// <para>
     /// The host name (<see cref="System.Net.Dns.GetHostName"/>) or
-    /// the machine name (<c>Environment.MachineName</c>) for
+    /// the machine name (<see cref="Environment.MachineName"/>) for
     /// the current machine, or if neither of these are available
     /// then <c>NOT AVAILABLE</c> is returned.
     /// </para>
@@ -247,11 +196,8 @@ namespace log4net.Util
     }
 
     /// <summary>
-    /// Get this application's friendly name
+    /// Gets this application's friendly name.
     /// </summary>
-    /// <value>
-    /// The friendly name of this application as a string
-    /// </value>
     /// <remarks>
     /// <para>
     /// If available the name of the application is retrieved from
@@ -437,25 +383,6 @@ namespace log4net.Util
     }
 
     /// <summary>
-    /// Gets the fully qualified name of the <see cref="Type" />, including 
-    /// the name of the assembly from which the <see cref="Type" /> was 
-    /// loaded.
-    /// </summary>
-    /// <param name="type">The <see cref="Type" /> to get the fully qualified name for.</param>
-    /// <returns>The fully qualified name for the <see cref="Type" />.</returns>
-    /// <remarks>
-    /// <para>
-    /// This is equivalent to the <c>Type.AssemblyQualifiedName</c> property,
-    /// but this method works on the .NET Compact Framework 1.0 as well as
-    /// the full .NET runtime.
-    /// </para>
-    /// </remarks>
-    public static string AssemblyQualifiedName(Type type)
-    {
-      return $"{type.FullName}, {type.Assembly.FullName}";
-    }
-
-    /// <summary>
     /// Gets the short name of the <see cref="Assembly" />.
     /// </summary>
     /// <param name="myAssembly">The <see cref="Assembly" /> to get the name for.</param>
@@ -465,10 +392,6 @@ namespace log4net.Util
     /// The short name of the assembly is the <see cref="Assembly.FullName" /> 
     /// without the version, culture, or public key. i.e. it is just the 
     /// assembly's file name without the extension.
-    /// </para>
-    /// <para>
-    /// Use this rather than <c>Assembly.GetName().Name</c> because that
-    /// is not available on the Compact Framework.
     /// </para>
     /// <para>
     /// Because of a FileIOPermission security demand we cannot do
@@ -582,8 +505,7 @@ namespace log4net.Util
       if (typeName.IndexOf(',') == -1)
       {
         // Attempt to look up the type from the relativeAssembly
-        Type type = relativeAssembly.GetType(typeName, false, ignoreCase);
-        if (type is not null)
+        if (relativeAssembly.GetType(typeName, false, ignoreCase) is Type type)
         {
           return type;
         }
@@ -604,8 +526,7 @@ namespace log4net.Util
           // Search the loaded assemblies for the type
           foreach (Assembly assembly in loadedAssemblies)
           {
-            Type t = assembly.GetType(typeName, false, ignoreCase);
-            if (t is not null)
+            if (assembly.GetType(typeName, false, ignoreCase) is Type t)
             {
               // Found type in loaded assembly
               LogLog.Debug(declaringType, $"Loaded type [{typeName}] from assembly [{assembly.FullName}] by searching loaded assemblies.");
@@ -664,17 +585,11 @@ namespace log4net.Util
     /// with a specified error message, the parameter name, and the value 
     /// of the argument.
     /// </para>
-    /// <para>
-    /// The Compact Framework does not support the 3 parameter constructor for the
-    /// <see cref="ArgumentOutOfRangeException"/> type. This method provides an
-    /// implementation that works for all platforms.
-    /// </para>
     /// </remarks>
     public static ArgumentOutOfRangeException CreateArgumentOutOfRangeException(string parameterName, object actualValue, string message)
     {
       return new ArgumentOutOfRangeException(parameterName, actualValue, message);
     }
-
 
     /// <summary>
     /// Parse a string into an <see cref="Int32"/> value
@@ -780,11 +695,6 @@ namespace log4net.Util
     /// </summary>
     /// <param name="key">the application settings key to lookup</param>
     /// <returns>the value for the key, or <c>null</c></returns>
-    /// <remarks>
-    /// <para>
-    /// Configuration APIs are not supported under the Compact Framework
-    /// </para>
-    /// </remarks>
     public static string? GetAppSetting(string key)
     {
       try
@@ -877,17 +787,6 @@ namespace log4net.Util
     {
       return string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
     }
-
-    /// <summary>
-    /// Gets an empty array of types.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The <c>Type.EmptyTypes</c> field is not available on
-    /// the .NET Compact Framework 1.0.
-    /// </para>
-    /// </remarks>
-    public static readonly Type[] EmptyTypes = Type.EmptyTypes;
 
     /// <summary>
     /// The fully qualified type of the SystemInfo class.
