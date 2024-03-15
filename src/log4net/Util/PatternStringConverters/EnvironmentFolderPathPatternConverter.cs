@@ -27,7 +27,6 @@ namespace log4net.Util.PatternStringConverters
   /// </summary>
   /// <remarks>
   /// <para>
-  /// Write an special path environment folder path to the output writer.
   /// The value of the <see cref="log4net.Util.PatternConverter.Option"/> determines 
   /// the name of the variable to output. <see cref="log4net.Util.PatternConverter.Option"/>
   /// should be a value in the <see cref="System.Environment.SpecialFolder" /> enumeration.
@@ -37,7 +36,7 @@ namespace log4net.Util.PatternStringConverters
   internal sealed class EnvironmentFolderPathPatternConverter : PatternConverter
   {
     /// <summary>
-    /// Write an special path environment folder path to the output
+    /// Writes a special path environment folder path to the output
     /// </summary>
     /// <param name="writer">the writer to write to</param>
     /// <param name="state">null, state is not set</param>

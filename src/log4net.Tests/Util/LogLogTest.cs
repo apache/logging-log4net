@@ -19,7 +19,7 @@
  *
 */
 
-using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using log4net.Util;
 using NUnit.Framework;
@@ -71,7 +71,7 @@ namespace log4net.Tests.Util
     [Test]
     public void LogReceivedAdapter()
     {
-      ArrayList messages = new ArrayList();
+      var messages = new List<LogLog>();
 
       using (new LogLog.LogReceivedAdapter(messages))
       {
@@ -86,26 +86,21 @@ namespace log4net.Tests.Util
 
   public class TraceListenerCounter : TraceListener
   {
-    private int count = 0;
-
-    public override void Write(string message)
+    public override void Write(string? message)
     {
-      count++;
+      Count++;
     }
 
-    public override void WriteLine(string message)
+    public override void WriteLine(string? message)
     {
       Write(message);
     }
 
     public void Reset()
     {
-      count = 0;
+      Count = 0;
     }
 
-    public int Count
-    {
-      get { return count; }
-    }
+    public int Count { get; private set; }
   }
 }

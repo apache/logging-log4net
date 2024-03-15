@@ -21,7 +21,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using log4net.Appender;
-using log4net.Config;
 using log4net.Core;
 using log4net.ObjectRenderer;
 using log4net.Plugin;
@@ -183,7 +182,5 @@ namespace log4net.Tests.Core
     }
   }
 
-  internal class MockLoggerRepository2 : MockLoggerRepository
-  {
-  }
+  internal class MockLoggerRepository2 : MockLoggerRepository;
 }

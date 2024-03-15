@@ -29,6 +29,8 @@ using log4net.Util;
 
 using NUnit.Framework;
 
+#nullable enable
+
 namespace log4net.Tests.Context
 {
   /// <summary>
@@ -253,7 +255,7 @@ namespace log4net.Tests.Context
       stringAppender.Reset();
 
       string testValueForCurrentContext = "Outer";
-      string[] strings = null;
+      string[]? strings;
       using (LogicalThreadContext.Stacks[Utils.PROPERTY_KEY].Push(testValueForCurrentContext))
       {
         log1.Info("TestMessage");
@@ -304,10 +306,12 @@ namespace log4net.Tests.Context
       log.Info("TestMessage");
     }
 
-    static async Task<string> SomeWorkStack(string stackName)
+    private static async Task<string> SomeWorkStack(string stackName)
     {
-      StringAppender stringAppender = new StringAppender();
-      stringAppender.Layout = new PatternLayout("%property{" + Utils.PROPERTY_KEY + "}");
+      var stringAppender = new StringAppender
+      {
+        Layout = new PatternLayout("%property{" + Utils.PROPERTY_KEY + "}")
+      };
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
       BasicConfigurator.Configure(rep, stringAppender);

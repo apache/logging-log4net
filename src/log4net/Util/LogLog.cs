@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace log4net.Util
@@ -28,7 +29,7 @@ namespace log4net.Util
   /// </summary>
   /// <param name="source"></param>
   /// <param name="e"></param>
-  public delegate void LogReceivedEventHandler(object source, LogReceivedEventArgs e);
+  public delegate void LogReceivedEventHandler(object? source, LogReceivedEventArgs e);
 
   /// <summary>
   /// Outputs log statements from within the log4net assembly.
@@ -52,37 +53,22 @@ namespace log4net.Util
     /// <summary>
     /// The event raised when an internal message has been received.
     /// </summary>
-    public static event LogReceivedEventHandler LogReceived;
-
-    private readonly Type source;
-    private readonly DateTime timeStampUtc;
-    private readonly string prefix;
-    private readonly string message;
-    private readonly Exception exception;
+    public static event LogReceivedEventHandler? LogReceived;
 
     /// <summary>
     /// The Type that generated the internal message.
     /// </summary>
-    public Type Source
-    {
-      get { return source; }
-    }
+    public Type Source { get; }
 
     /// <summary>
     /// The DateTime stamp of when the internal message was received.
     /// </summary>
-    public DateTime TimeStamp
-    {
-      get { return timeStampUtc.ToLocalTime(); }
-    }
+    public DateTime TimeStamp => TimeStampUtc.ToLocalTime();
 
     /// <summary>
     /// The UTC DateTime stamp of when the internal message was received.
     /// </summary>
-    public DateTime TimeStampUtc
-    {
-      get { return timeStampUtc; }
-    }
+    public DateTime TimeStampUtc { get; }
 
     /// <summary>
     /// A string indicating the severity of the internal message.
@@ -92,18 +78,12 @@ namespace log4net.Util
     /// "log4net:ERROR ", 
     /// "log4net:WARN "
     /// </remarks>
-    public string Prefix
-    {
-      get { return prefix; }
-    }
+    public string Prefix { get; }
 
     /// <summary>
     /// The internal log message.
     /// </summary>
-    public string Message
-    {
-      get { return message; }
-    }
+    public string Message { get; }
 
     /// <summary>
     /// The Exception related to the message.
@@ -111,10 +91,7 @@ namespace log4net.Util
     /// <remarks>
     /// Optional. Will be null if no Exception was passed.
     /// </remarks>
-    public Exception Exception
-    {
-      get { return exception; }
-    }
+    public Exception? Exception { get; }
 
     /// <summary>
     /// Formats Prefix, Source, and Message in the same format as the value
@@ -126,28 +103,18 @@ namespace log4net.Util
       return Prefix + Source.Name + ": " + Message;
     }
 
-    #region Private Instance Constructors
-
     /// <summary>
     /// Initializes a new instance of the <see cref="LogLog" /> class. 
     /// </summary>
-    /// <param name="source"></param>
-    /// <param name="prefix"></param>
-    /// <param name="message"></param>
-    /// <param name="exception"></param>
-    public LogLog(Type source, string prefix, string message, Exception exception)
+    public LogLog(Type source, string prefix, string message, Exception? exception)
     {
-      timeStampUtc = DateTime.UtcNow;
+      TimeStampUtc = DateTime.UtcNow;
 
-      this.source = source;
-      this.prefix = prefix;
-      this.message = message;
-      this.exception = exception;
+      Source = source;
+      Prefix = prefix;
+      Message = message;
+      Exception = exception;
     }
-
-    #endregion Private Instance Constructors
-
-    #region Static Constructor
 
     /// <summary>
     /// Static constructor that initializes logging by reading 
@@ -183,10 +150,6 @@ namespace log4net.Util
         Error(typeof(LogLog), "Exception while reading ConfigurationSettings. Check your .config file is well formed XML.", ex);
       }
     }
-
-    #endregion Static Constructor
-
-    #region Public Static Properties
 
     /// <summary>
     /// Gets or sets a value indicating whether log4net internal logging
@@ -224,11 +187,7 @@ namespace log4net.Util
     /// </configuration>
     /// </code>
     /// </example>
-    public static bool InternalDebugging
-    {
-      get { return s_debugEnabled; }
-      set { s_debugEnabled = value; }
-    }
+    public static bool InternalDebugging { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether log4net should generate no output
@@ -264,24 +223,12 @@ namespace log4net.Util
     /// </configuration>
     /// </code>
     /// </example>
-    public static bool QuietMode
-    {
-      get { return s_quietMode; }
-      set { s_quietMode = value; }
-    }
+    public static bool QuietMode { get; set; }
 
     /// <summary>
     /// 
     /// </summary>
-    public static bool EmitInternalMessages
-    {
-      get { return s_emitInternalMessages; }
-      set { s_emitInternalMessages = value; }
-    }
-
-    #endregion Public Static Properties
-
-    #region Public Static Methods
+    public static bool EmitInternalMessages { get; set; } = true;
 
     /// <summary>
     /// Raises the LogReceived event when an internal messages is received.
@@ -290,12 +237,9 @@ namespace log4net.Util
     /// <param name="prefix"></param>
     /// <param name="message"></param>
     /// <param name="exception"></param>
-    public static void OnLogReceived(Type source, string prefix, string message, Exception exception)
+    public static void OnLogReceived(Type source, string prefix, string message, Exception? exception)
     {
-      if (LogReceived != null)
-      {
-        LogReceived(null, new LogReceivedEventArgs(new LogLog(source, prefix, message, exception)));
-      }
+      LogReceived?.Invoke(null, new LogReceivedEventArgs(new LogLog(source, prefix, message, exception)));
     }
 
     /// <summary>
@@ -309,10 +253,7 @@ namespace log4net.Util
     /// Test if LogLog.Debug is enabled for output.
     /// </para>
     /// </remarks>
-    public static bool IsDebugEnabled
-    {
-      get { return s_debugEnabled && !s_quietMode; }
-    }
+    public static bool IsDebugEnabled => InternalDebugging && !QuietMode;
 
     /// <summary>
     /// Writes log4net internal debug messages to the 
@@ -352,7 +293,7 @@ namespace log4net.Util
     ///  the string "log4net: ".
     /// </para>
     /// </remarks>
-    public static void Debug(Type source, string message, Exception exception)
+    public static void Debug(Type source, string message, Exception? exception)
     {
       if (IsDebugEnabled)
       {
@@ -375,15 +316,7 @@ namespace log4net.Util
     /// <value>
     /// <c>true</c> if Warn is enabled
     /// </value>
-    /// <remarks>
-    /// <para>
-    /// Test if LogLog.Warn is enabled for output.
-    /// </para>
-    /// </remarks>
-    public static bool IsWarnEnabled
-    {
-      get { return !s_quietMode; }
-    }
+    public static bool IsWarnEnabled => !QuietMode;
 
     /// <summary>
     /// Writes log4net internal warning messages to the 
@@ -423,7 +356,7 @@ namespace log4net.Util
     ///  the string "log4net:WARN ".
     /// </para>
     /// </remarks>
-    public static void Warn(Type source, string message, Exception exception)
+    public static void Warn(Type source, string message, Exception? exception)
     {
       if (IsWarnEnabled)
       {
@@ -451,10 +384,7 @@ namespace log4net.Util
     /// Test if LogLog.Error is enabled for output.
     /// </para>
     /// </remarks>
-    public static bool IsErrorEnabled
-    {
-      get { return !s_quietMode; }
-    }
+    public static bool IsErrorEnabled => !QuietMode;
 
     /// <summary>
     /// Writes log4net internal error messages to the 
@@ -494,7 +424,7 @@ namespace log4net.Util
     ///  the string "log4net:ERROR ".
     /// </para>
     /// </remarks>
-    public static void Error(Type source, string message, Exception exception)
+    public static void Error(Type source, string message, Exception? exception)
     {
       if (IsErrorEnabled)
       {
@@ -511,8 +441,6 @@ namespace log4net.Util
       }
     }
 
-    #endregion Public Static Methods
-
     /// <summary>
     /// Writes output to the standard output stream.  
     /// </summary>
@@ -520,8 +448,6 @@ namespace log4net.Util
     /// <remarks>
     /// <para>
     /// Writes to both Console.Out and System.Diagnostics.Trace.
-    /// Note that the System.Diagnostics.Trace is not supported
-    /// on the Compact Framework.
     /// </para>
     /// <para>
     /// If the AppDomain is not configured with a config file then
@@ -571,25 +497,9 @@ namespace log4net.Util
       }
     }
 
-    #region Private Static Fields
-
-    /// <summary>
-    ///  Default debug level
-    /// </summary>
-    private static bool s_debugEnabled = false;
-
-    /// <summary>
-    /// In quietMode not even errors generate any output.
-    /// </summary>
-    private static bool s_quietMode = false;
-
-    private static bool s_emitInternalMessages = true;
-
     private const string PREFIX = "log4net: ";
     private const string ERR_PREFIX = "log4net:ERROR ";
     private const string WARN_PREFIX = "log4net:WARN ";
-
-    #endregion Private Static Fields
 
     /// <summary>
     /// Subscribes to the LogLog.LogReceived event and stores messages
@@ -597,41 +507,35 @@ namespace log4net.Util
     /// </summary>
     public class LogReceivedAdapter : IDisposable
     {
-      private readonly IList items;
-      private readonly LogReceivedEventHandler handler;
+      private readonly LogReceivedEventHandler m_handler;
 
       /// <summary>
       /// 
       /// </summary>
       /// <param name="items"></param>
-      public LogReceivedAdapter(IList items)
+      public LogReceivedAdapter(List<LogLog> items)
       {
-        this.items = items;
-
-        handler = new LogReceivedEventHandler(LogLog_LogReceived);
-
-        LogReceived += handler;
+        Items = items;
+        m_handler = LogLog_LogReceived;
+        LogReceived += m_handler;
       }
 
       void LogLog_LogReceived(object source, LogReceivedEventArgs e)
       {
-        items.Add(e.LogLog);
+        Items.Add(e.LogLog);
       }
 
       /// <summary>
       /// 
       /// </summary>
-      public IList Items
-      {
-        get { return items; }
-      }
+      public List<LogLog> Items { get; }
 
       /// <summary>
       /// 
       /// </summary>
       public void Dispose()
       {
-        LogReceived -= handler;
+        LogReceived -= m_handler;
       }
     }
   }
@@ -641,23 +545,18 @@ namespace log4net.Util
   /// </summary>
   public class LogReceivedEventArgs : EventArgs
   {
-    private readonly LogLog loglog;
-
     /// <summary>
     /// 
     /// </summary>
     /// <param name="loglog"></param>
     public LogReceivedEventArgs(LogLog loglog)
     {
-      this.loglog = loglog;
+      this.LogLog = loglog;
     }
 
     /// <summary>
     /// 
     /// </summary>
-    public LogLog LogLog
-    {
-      get { return loglog; }
-    }
+    public LogLog LogLog { get; }
   }
 }

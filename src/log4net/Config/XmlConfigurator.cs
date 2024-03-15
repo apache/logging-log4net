@@ -20,6 +20,7 @@
 using System;
 using System.Xml;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Reflection;
 using System.Threading;
@@ -27,34 +28,17 @@ using System.Net;
 
 using log4net.Util;
 using log4net.Repository;
+using System.Collections.Generic;
 
 namespace log4net.Config
 {
   /// <summary>
-  /// Use this class to initialize the log4net environment using an Xml tree.
+  /// Configures a <see cref="ILoggerRepository"/> using an XML tree.
   /// </summary>
-  /// <remarks>
-  /// <para>
-  /// Configures a <see cref="ILoggerRepository"/> using an Xml tree.
-  /// </para>
-  /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-  public sealed class XmlConfigurator
+  public static class XmlConfigurator
   {
-    #region Private Instance Constructors
-
-    /// <summary>
-    /// Private constructor
-    /// </summary>
-    private XmlConfigurator()
-    {
-    }
-
-    #endregion Protected Instance Constructors
-
-    #region Configure static methods
-
     /// <summary>
     /// Automatically configures the <see cref="ILoggerRepository"/> using settings
     /// stored in the application's configuration file.
@@ -77,7 +61,7 @@ namespace log4net.Config
     /// <param name="repository">The repository to configure.</param>
     public static ICollection Configure(ILoggerRepository repository)
     {
-      ArrayList configurationMessages = new ArrayList();
+      var configurationMessages = new List<LogLog>();
 
       using (new LogLog.LogReceivedAdapter(configurationMessages))
       {
@@ -91,11 +75,11 @@ namespace log4net.Config
 
     private static void InternalConfigure(ILoggerRepository repository)
     {
-      LogLog.Debug(declaringType, "configuring repository [" + repository.Name + "] using .config file section");
+      LogLog.Debug(declaringType, $"configuring repository [{repository.Name}] using .config file section");
 
       try
       {
-        LogLog.Debug(declaringType, "Application config file is [" + SystemInfo.ConfigurationFileLocation + "]");
+        LogLog.Debug(declaringType, $"Application config file is [{SystemInfo.ConfigurationFileLocation}]");
       }
       catch
       {
@@ -105,8 +89,7 @@ namespace log4net.Config
 
       try
       {
-        XmlElement configElement = System.Configuration.ConfigurationManager.GetSection("log4net") as XmlElement;
-        if (configElement == null)
+        if (System.Configuration.ConfigurationManager.GetSection("log4net") is not XmlElement configElement)
         {
           // Failed to load the xml config using configuration settings handler
           LogLog.Error(declaringType, "Failed to find configuration section 'log4net' in the application's .config file. Check your .config file for the <log4net> and <configSections> elements. The configuration section should look like: <section name=\"log4net\" type=\"log4net.Config.Log4NetConfigurationSectionHandler,log4net\" />");
@@ -119,7 +102,7 @@ namespace log4net.Config
       }
       catch (System.Configuration.ConfigurationException confEx)
       {
-        if (confEx.BareMessage.IndexOf("Unrecognized element") >= 0)
+        if (confEx.BareMessage.IndexOf("Unrecognized element", StringComparison.Ordinal) >= 0)
         {
           // Looks like the XML file is not valid
           LogLog.Error(declaringType, "Failed to parse config file. Check your .config file is well formed XML.", confEx);
@@ -170,7 +153,7 @@ namespace log4net.Config
     /// <param name="element">The element to parse.</param>
     public static ICollection Configure(XmlElement element)
     {
-      ArrayList configurationMessages = new ArrayList();
+      var configurationMessages = new List<LogLog>();
 
       ILoggerRepository repository = LogManager.GetRepository(Assembly.GetCallingAssembly());
 
@@ -195,7 +178,7 @@ namespace log4net.Config
     /// the log4net configuration data.
     /// </para>
     /// <para>
-    /// The log4net configuration file can possible be specified in the application's
+    /// The log4net configuration file can possibly be specified in the application's
     /// configuration file (either <c>MyAppName.exe.config</c> for a
     /// normal application on <c>Web.config</c> for an ASP.NET application).
     /// </para>
@@ -236,7 +219,7 @@ namespace log4net.Config
     /// </remarks>
     public static ICollection Configure(FileInfo configFile)
     {
-      ArrayList configurationMessages = new ArrayList();
+      var configurationMessages = new List<LogLog>();
 
       using (new LogLog.LogReceivedAdapter(configurationMessages))
       {
@@ -262,7 +245,7 @@ namespace log4net.Config
     /// </remarks>
     public static ICollection Configure(Uri configUri)
     {
-      ArrayList configurationMessages = new ArrayList();
+      var configurationMessages = new List<LogLog>();
 
       ILoggerRepository repository = LogManager.GetRepository(Assembly.GetCallingAssembly());
       using (new LogLog.LogReceivedAdapter(configurationMessages))
@@ -291,7 +274,7 @@ namespace log4net.Config
     /// </remarks>
     public static ICollection Configure(Stream configStream)
     {
-      ArrayList configurationMessages = new ArrayList();
+      var configurationMessages = new List<LogLog>();
 
       ILoggerRepository repository = LogManager.GetRepository(Assembly.GetCallingAssembly());
       using (new LogLog.LogReceivedAdapter(configurationMessages))
@@ -316,7 +299,7 @@ namespace log4net.Config
     /// <param name="element">The element to parse.</param>
     public static ICollection Configure(ILoggerRepository repository, XmlElement element)
     {
-      ArrayList configurationMessages = new ArrayList();
+      var configurationMessages = new List<LogLog>();
 
       using (new LogLog.LogReceivedAdapter(configurationMessages))
       {
@@ -343,7 +326,7 @@ namespace log4net.Config
     /// the configuration data.
     /// </para>
     /// <para>
-    /// The log4net configuration file can possible be specified in the application's
+    /// The log4net configuration file can possibly be specified in the application's
     /// configuration file (either <c>MyAppName.exe.config</c> for a
     /// normal application on <c>Web.config</c> for an ASP.NET application).
     /// </para>
@@ -384,7 +367,7 @@ namespace log4net.Config
     /// </remarks>
     public static ICollection Configure(ILoggerRepository repository, FileInfo configFile)
     {
-      ArrayList configurationMessages = new ArrayList();
+      var configurationMessages = new List<LogLog>();
 
       using (new LogLog.LogReceivedAdapter(configurationMessages))
       {
@@ -396,11 +379,11 @@ namespace log4net.Config
       return configurationMessages;
     }
 
-    private static void InternalConfigure(ILoggerRepository repository, FileInfo configFile)
+    private static void InternalConfigure(ILoggerRepository repository, FileInfo? configFile)
     {
-      LogLog.Debug(declaringType, "configuring repository [" + repository.Name + "] using file [" + configFile + "]");
+      LogLog.Debug(declaringType, $"configuring repository [{repository.Name}] using file [{configFile}]");
 
-      if (configFile == null)
+      if (configFile is null)
       {
         LogLog.Error(declaringType, "Configure called with null 'configFile' parameter");
       }
@@ -411,7 +394,7 @@ namespace log4net.Config
         if (File.Exists(configFile.FullName))
         {
           // Open the file for reading
-          FileStream fs = null;
+          FileStream? fs = null;
 
           // Try hard to open the file
           for (int retry = 5; --retry >= 0;)
@@ -425,16 +408,16 @@ namespace log4net.Config
             {
               if (retry == 0)
               {
-                LogLog.Error(declaringType, "Failed to open XML config file [" + configFile.Name + "]", ex);
+                LogLog.Error(declaringType, $"Failed to open XML config file [{configFile.Name}]", ex);
 
                 // The stream cannot be valid
                 fs = null;
               }
-              System.Threading.Thread.Sleep(250);
+              Thread.Sleep(250);
             }
           }
 
-          if (fs != null)
+          if (fs is not null)
           {
             try
             {
@@ -473,7 +456,7 @@ namespace log4net.Config
     /// </remarks>
     public static ICollection Configure(ILoggerRepository repository, Uri configUri)
     {
-      ArrayList configurationMessages = new ArrayList();
+      var configurationMessages = new List<LogLog>();
 
       using (new LogLog.LogReceivedAdapter(configurationMessages))
       {
@@ -485,11 +468,11 @@ namespace log4net.Config
       return configurationMessages;
     }
 
-    private static void InternalConfigure(ILoggerRepository repository, Uri configUri)
+    private static void InternalConfigure(ILoggerRepository repository, Uri? configUri)
     {
-      LogLog.Debug(declaringType, "configuring repository [" + repository.Name + "] using URI [" + configUri + "]");
+      LogLog.Debug(declaringType, $"configuring repository [{repository.Name}] using URI [{configUri}]");
 
-      if (configUri == null)
+      if (configUri is null)
       {
         LogLog.Error(declaringType, "Configure called with null 'configUri' parameter");
       }
@@ -503,7 +486,7 @@ namespace log4net.Config
         else
         {
           // NETCF dose not support WebClient
-          WebRequest configRequest = null;
+          WebRequest? configRequest = null;
 
           try
           {
@@ -511,10 +494,10 @@ namespace log4net.Config
           }
           catch (Exception ex)
           {
-            LogLog.Error(declaringType, "Failed to create WebRequest for URI [" + configUri + "]", ex);
+            LogLog.Error(declaringType, $"Failed to create WebRequest for URI [{configUri}]", ex);
           }
 
-          if (configRequest != null)
+          if (configRequest is not null)
           {
             // authentication may be required, set client to use default credentials
             try
@@ -527,8 +510,8 @@ namespace log4net.Config
             }
             try
             {
-              using WebResponse response = configRequest.GetResponse();
-              if (response != null)
+              using WebResponse? response = configRequest.GetResponse();
+              if (response is not null)
               {
                 using var configStream = response.GetResponseStream();
                 InternalConfigure(repository, configStream);
@@ -536,7 +519,7 @@ namespace log4net.Config
             }
             catch (Exception ex)
             {
-              LogLog.Error(declaringType, "Failed to request config from URI [" + configUri + "]", ex);
+              LogLog.Error(declaringType, $"Failed to request config from URI [{configUri}]", ex);
             }
           }
         }
@@ -561,7 +544,7 @@ namespace log4net.Config
     /// </remarks>
     public static ICollection Configure(ILoggerRepository repository, Stream configStream)
     {
-      ArrayList configurationMessages = new ArrayList();
+      var configurationMessages = new List<LogLog>();
 
       using (new LogLog.LogReceivedAdapter(configurationMessages))
       {
@@ -573,22 +556,22 @@ namespace log4net.Config
       return configurationMessages;
     }
 
-    private static void InternalConfigure(ILoggerRepository repository, Stream configStream)
+    private static void InternalConfigure(ILoggerRepository repository, Stream? configStream)
     {
-      LogLog.Debug(declaringType, "configuring repository [" + repository.Name + "] using stream");
+      LogLog.Debug(declaringType, $"configuring repository [{repository.Name}] using stream");
 
-      if (configStream == null)
+      if (configStream is null)
       {
         LogLog.Error(declaringType, "Configure called with null 'configStream' parameter");
       }
       else
       {
         // Load the config file into a document
-        XmlDocument doc = new XmlDocument { XmlResolver = null };
+        XmlDocument? doc = new XmlDocument { XmlResolver = null };
         try
         {
           // Allow the DTD to specify entity includes
-          XmlReaderSettings settings = new XmlReaderSettings();
+          var settings = new XmlReaderSettings();
           // .NET 4.0 warning CS0618: 'System.Xml.XmlReaderSettings.ProhibitDtd'
           // is obsolete: 'Use XmlReaderSettings.DtdProcessing property instead.'
           settings.DtdProcessing = DtdProcessing.Ignore;
@@ -607,7 +590,7 @@ namespace log4net.Config
           doc = null;
         }
 
-        if (doc != null)
+        if (doc is not null)
         {
           LogLog.Debug(declaringType, "loading XML configuration");
 
@@ -619,7 +602,7 @@ namespace log4net.Config
           }
           else if (configNodeList.Count > 1)
           {
-            LogLog.Error(declaringType, "XML configuration contains [" + configNodeList.Count + "] <log4net> elements. Only one is allowed. Configuration Aborted.");
+            LogLog.Error(declaringType, $"XML configuration contains [{configNodeList.Count}] <log4net> elements. Only one is allowed. Configuration Aborted.");
           }
           else
           {
@@ -628,10 +611,6 @@ namespace log4net.Config
         }
       }
     }
-
-    #endregion Configure static methods
-
-    #region ConfigureAndWatch static methods
 
     /// <summary>
     /// Configures log4net using the file specified, monitors the file for changes 
@@ -656,7 +635,7 @@ namespace log4net.Config
     /// <seealso cref="M:Configure(FileInfo)"/>
     public static ICollection ConfigureAndWatch(FileInfo configFile)
     {
-      ArrayList configurationMessages = new ArrayList();
+      var configurationMessages = new List<LogLog>();
 
       ILoggerRepository repository = LogManager.GetRepository(Assembly.GetCallingAssembly());
 
@@ -695,7 +674,7 @@ namespace log4net.Config
     /// <seealso cref="M:Configure(FileInfo)"/>
     public static ICollection ConfigureAndWatch(ILoggerRepository repository, FileInfo configFile)
     {
-      ArrayList configurationMessages = new ArrayList();
+      var configurationMessages = new List<LogLog>();
 
       using (new LogLog.LogReceivedAdapter(configurationMessages))
       {
@@ -707,9 +686,9 @@ namespace log4net.Config
       return configurationMessages;
     }
 
-    private static void InternalConfigureAndWatch(ILoggerRepository repository, FileInfo configFile)
+    private static void InternalConfigureAndWatch(ILoggerRepository repository, FileInfo? configFile)
     {
-      LogLog.Debug(declaringType, "configuring repository [" + repository.Name + "] using file [" + configFile + "] watching for file updates");
+      LogLog.Debug(declaringType, $"configuring repository [{repository.Name}] using file [{configFile}] watching for file updates");
 
       if (configFile == null)
       {
@@ -722,34 +701,25 @@ namespace log4net.Config
 
         try
         {
-          lock (m_repositoryName2ConfigAndWatchHandler)
-          {
-            // support multiple repositories each having their own watcher
-            ConfigureAndWatchHandler handler =
-              (ConfigureAndWatchHandler)m_repositoryName2ConfigAndWatchHandler[configFile.FullName];
-
-            if (handler != null)
+          // Support multiple repositories each having their own watcher.
+          // Create and start a watch handler that will reload the
+          // configuration whenever the config file is modified.
+          m_repositoryName2ConfigAndWatchHandler.AddOrUpdate(
+            configFile.FullName,
+            _ => new ConfigureAndWatchHandler(repository, configFile),
+            (_, handler) =>
             {
-              m_repositoryName2ConfigAndWatchHandler.Remove(configFile.FullName);
+              // Replace the old handler.
               handler.Dispose();
-            }
-
-            // Create and start a watch handler that will reload the
-            // configuration whenever the config file is modified.
-            handler = new ConfigureAndWatchHandler(repository, configFile);
-            m_repositoryName2ConfigAndWatchHandler[configFile.FullName] = handler;
-          }
+              return new ConfigureAndWatchHandler(repository, configFile);
+            });
         }
         catch (Exception ex)
         {
-          LogLog.Error(declaringType, "Failed to initialize configuration file watcher for file [" + configFile.FullName + "]", ex);
+          LogLog.Error(declaringType, $"Failed to initialize configuration file watcher for file [{configFile.FullName}]", ex);
         }
       }
     }
-
-    #endregion ConfigureAndWatch static methods
-
-    #region ConfigureAndWatchHandler
 
     /// <summary>
     /// Class used to watch config files.
@@ -772,17 +742,17 @@ namespace log4net.Config
       /// <summary>
       /// Holds the FileInfo used to configure the XmlConfigurator
       /// </summary>
-      private FileInfo m_configFile;
+      private readonly FileInfo m_configFile;
 
       /// <summary>
       /// Holds the repository being configured.
       /// </summary>
-      private ILoggerRepository m_repository;
+      private readonly ILoggerRepository m_repository;
 
       /// <summary>
       /// The timer used to compress the notification events.
       /// </summary>
-      private Timer m_timer;
+      private readonly Timer m_timer;
 
       /// <summary>
       /// The default amount of time to wait after receiving notification
@@ -794,7 +764,7 @@ namespace log4net.Config
       /// Watches file for changes. This object should be disposed when no longer
       /// needed to free system handles on the watched resources.
       /// </summary>
-      private FileSystemWatcher m_watcher;
+      private readonly FileSystemWatcher m_watcher;
 
       /// <summary>
       /// Initializes a new instance of the <see cref="ConfigureAndWatchHandler" /> class to
@@ -814,25 +784,24 @@ namespace log4net.Config
         m_configFile = configFile;
 
         // Create a new FileSystemWatcher and set its properties.
-        m_watcher = new FileSystemWatcher();
-
-        m_watcher.Path = m_configFile.DirectoryName;
-        m_watcher.Filter = m_configFile.Name;
-
-        // Set the notification filters
-        m_watcher.NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.LastWrite | NotifyFilters.FileName;
+        m_watcher = new FileSystemWatcher()
+        {
+          Path = m_configFile.DirectoryName,
+          Filter = m_configFile.Name,
+          NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.LastWrite | NotifyFilters.FileName,
+        };
 
         // Add event handlers. OnChanged will do for all event handlers that fire a FileSystemEventArgs
-        m_watcher.Changed += new FileSystemEventHandler(ConfigureAndWatchHandler_OnChanged);
-        m_watcher.Created += new FileSystemEventHandler(ConfigureAndWatchHandler_OnChanged);
-        m_watcher.Deleted += new FileSystemEventHandler(ConfigureAndWatchHandler_OnChanged);
-        m_watcher.Renamed += new RenamedEventHandler(ConfigureAndWatchHandler_OnRenamed);
+        m_watcher.Changed += ConfigureAndWatchHandler_OnChanged;
+        m_watcher.Created += ConfigureAndWatchHandler_OnChanged;
+        m_watcher.Deleted += ConfigureAndWatchHandler_OnChanged;
+        m_watcher.Renamed += ConfigureAndWatchHandler_OnRenamed;
 
         // Begin watching.
         m_watcher.EnableRaisingEvents = true;
 
         // Create the timer that will be used to deliver events. Set as disabled
-        m_timer = new Timer(new TimerCallback(OnWatchedFileChange), null, Timeout.Infinite, Timeout.Infinite);
+        m_timer = new Timer(OnWatchedFileChange, state: null, Timeout.Infinite, Timeout.Infinite);
       }
 
       /// <summary>
@@ -847,7 +816,7 @@ namespace log4net.Config
       /// </remarks>
       private void ConfigureAndWatchHandler_OnChanged(object source, FileSystemEventArgs e)
       {
-        LogLog.Debug(declaringType, "ConfigureAndWatchHandler: " + e.ChangeType + " [" + m_configFile.FullName + "]");
+        LogLog.Debug(declaringType, $"ConfigureAndWatchHandler: {e.ChangeType} [{m_configFile.FullName}]");
 
         // Deliver the event in TimeoutMillis time
         // timer will fire only once
@@ -866,7 +835,7 @@ namespace log4net.Config
       /// </remarks>
       private void ConfigureAndWatchHandler_OnRenamed(object source, RenamedEventArgs e)
       {
-        LogLog.Debug(declaringType, "ConfigureAndWatchHandler: " + e.ChangeType + " [" + m_configFile.FullName + "]");
+        LogLog.Debug(declaringType, $"ConfigureAndWatchHandler: {e.ChangeType} [{m_configFile.FullName}]");
 
         // Deliver the event in TimeoutMillis time
         // timer will fire only once
@@ -894,10 +863,6 @@ namespace log4net.Config
       }
     }
 
-    #endregion ConfigureAndWatchHandler
-
-    #region Private Static Methods
-
     /// <summary>
     /// Configures the specified repository using a <c>log4net</c> element.
     /// </summary>
@@ -913,13 +878,13 @@ namespace log4net.Config
     /// to load the configuration from an <see cref="XmlElement"/>.
     /// </para>
     /// </remarks>
-    private static void InternalConfigureFromXml(ILoggerRepository repository, XmlElement element)
+    private static void InternalConfigureFromXml(ILoggerRepository? repository, XmlElement? element)
     {
-      if (element == null)
+      if (element is null)
       {
         LogLog.Error(declaringType, "ConfigureFromXml called with null 'element' parameter");
       }
-      else if (repository == null)
+      else if (repository is null)
       {
         LogLog.Error(declaringType, "ConfigureFromXml called with null 'repository' parameter");
       }
@@ -927,8 +892,7 @@ namespace log4net.Config
       {
         LogLog.Debug(declaringType, "Configuring Repository [" + repository.Name + "]");
 
-        IXmlRepositoryConfigurator configurableRepository = repository as IXmlRepositoryConfigurator;
-        if (configurableRepository == null)
+        if (repository is not IXmlRepositoryConfigurator configurableRepository)
         {
           LogLog.Warn(declaringType, "Repository [" + repository + "] does not support the XmlConfigurator");
         }
@@ -946,16 +910,12 @@ namespace log4net.Config
       }
     }
 
-    #endregion Private Static Methods
-
-    #region Private Static Fields
-
     /// <summary>
     /// Maps repository names to ConfigAndWatchHandler instances to allow a particular
     /// ConfigAndWatchHandler to dispose of its FileSystemWatcher when a repository is 
     /// reconfigured.
     /// </summary>
-    private static readonly Hashtable m_repositoryName2ConfigAndWatchHandler = new Hashtable();
+    private static readonly ConcurrentDictionary<string, ConfigureAndWatchHandler> m_repositoryName2ConfigAndWatchHandler = new(StringComparer.Ordinal);
 
     /// <summary>
     /// The fully qualified type of the XmlConfigurator class.
@@ -965,7 +925,5 @@ namespace log4net.Config
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(XmlConfigurator);
-
-    #endregion Private Static Fields
   }
 }

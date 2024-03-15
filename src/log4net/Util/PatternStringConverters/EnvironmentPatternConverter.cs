@@ -64,7 +64,9 @@ namespace log4net.Util.PatternStringConverters
           envValue ??= Environment.GetEnvironmentVariable(Option, EnvironmentVariableTarget.Machine);
 
           if (envValue?.Length > 0)
+          {
             writer.Write(envValue);
+          }
         }
       }
       catch (System.Security.SecurityException secEx)
@@ -80,8 +82,6 @@ namespace log4net.Util.PatternStringConverters
       }
     }
 
-    #region Private Static Fields
-
     /// <summary>
     /// The fully qualified type of the EnvironmentPatternConverter class.
     /// </summary>
@@ -90,7 +90,5 @@ namespace log4net.Util.PatternStringConverters
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(EnvironmentPatternConverter);
-
-    #endregion Private Static Fields
   }
 }

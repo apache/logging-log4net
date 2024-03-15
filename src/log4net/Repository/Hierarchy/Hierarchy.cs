@@ -18,16 +18,14 @@
 #endregion
 
 using System;
-using System.Collections;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using log4net.Appender;
 using log4net.Core;
-using log4net.Repository;
 using log4net.Util;
 
 namespace log4net.Repository.Hierarchy
 {
-  #region LoggerCreationEvent
-
   /// <summary>
   /// Delegate used to handle logger creation event notifications.
   /// </summary>
@@ -51,12 +49,7 @@ namespace log4net.Repository.Hierarchy
   /// </remarks>
   public class LoggerCreationEventArgs : EventArgs
   {
-    /// <summary>
-    /// The <see cref="Logger"/> created
-    /// </summary>
-    private Logger m_log;
-
-    /// <summary>
+      /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="log">The <see cref="Logger"/> that has been created.</param>
@@ -68,7 +61,7 @@ namespace log4net.Repository.Hierarchy
     /// </remarks>
     public LoggerCreationEventArgs(Logger log)
     {
-      m_log = log;
+      Logger = log;
     }
 
     /// <summary>
@@ -82,13 +75,8 @@ namespace log4net.Repository.Hierarchy
     /// The <see cref="Logger"/> that has been created.
     /// </para>
     /// </remarks>
-    public Logger Logger
-    {
-      get { return m_log; }
-    }
+    public Logger Logger { get; }
   }
-
-  #endregion LoggerCreationEvent
 
   /// <summary>
   /// Hierarchical organization of loggers
@@ -121,8 +109,6 @@ namespace log4net.Repository.Hierarchy
   /// <author>Gert Driesen</author>
   public class Hierarchy : LoggerRepositorySkeleton, IBasicRepositoryConfigurator, IXmlRepositoryConfigurator
   {
-    #region Public Events
-
     /// <summary>
     /// Event used to notify that a logger has been created.
     /// </summary>
@@ -131,15 +117,7 @@ namespace log4net.Repository.Hierarchy
     /// Event raised when a logger is created.
     /// </para>
     /// </remarks>
-    public event LoggerCreationEventHandler LoggerCreatedEvent
-    {
-      add { m_loggerCreatedEvent += value; }
-      remove { m_loggerCreatedEvent -= value; }
-    }
-
-    #endregion Public Events
-
-    #region Public Instance Constructors
+    public event LoggerCreationEventHandler? LoggerCreatedEvent;
 
     /// <summary>
     /// Default constructor
@@ -193,19 +171,13 @@ namespace log4net.Repository.Hierarchy
     /// </remarks>
     public Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFactory) : base(properties)
     {
-      if (loggerFactory == null)
+      if (loggerFactory is null)
       {
-        throw new ArgumentNullException("loggerFactory");
+        throw new ArgumentNullException(nameof(loggerFactory));
       }
 
       m_defaultFactory = loggerFactory;
-
-      m_ht = System.Collections.Hashtable.Synchronized(new System.Collections.Hashtable());
     }
-
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
 
     /// <summary>
     /// Has no appender warning been emitted
@@ -216,11 +188,7 @@ namespace log4net.Repository.Hierarchy
     /// about not having an appender warning.
     /// </para>
     /// </remarks>
-    public bool EmittedNoAppenderWarning
-    {
-      get { return m_emittedNoAppenderWarning; }
-      set { m_emittedNoAppenderWarning = value; }
-    }
+    public bool EmittedNoAppenderWarning { get; set; } = false;
 
     /// <summary>
     /// Get the root of this hierarchy
@@ -234,11 +202,11 @@ namespace log4net.Repository.Hierarchy
     {
       get
       {
-        if (m_root == null)
+        if (m_root is null)
         {
           lock (this)
           {
-            if (m_root == null)
+            if (m_root is null)
             {
               // Create the root logger
               Logger root = m_defaultFactory.CreateLogger(this, null);
@@ -264,20 +232,12 @@ namespace log4net.Repository.Hierarchy
     /// </remarks>
     public ILoggerFactory LoggerFactory
     {
-      get { return m_defaultFactory; }
+      get => m_defaultFactory;
       set
       {
-        if (value == null)
-        {
-          throw new ArgumentNullException("value");
-        }
-        m_defaultFactory = value;
+        m_defaultFactory = value ?? throw new ArgumentNullException(nameof(value));
       }
     }
-
-    #endregion Public Instance Properties
-
-    #region Override Implementation of LoggerRepositorySkeleton
 
     /// <summary>
     /// Test if a logger exists
@@ -290,17 +250,15 @@ namespace log4net.Repository.Hierarchy
     /// its reference, otherwise returns <c>null</c>.
     /// </para>
     /// </remarks>
-    public override ILogger Exists(string name)
+    public override ILogger? Exists(string name)
     {
-      if (name == null)
+      if (name is null)
       {
-        throw new ArgumentNullException("name");
+        throw new ArgumentNullException(nameof(name));
       }
 
-      lock (m_ht)
-      {
-        return m_ht[new LoggerKey(name)] as Logger;
-      }
+      m_ht.TryGetValue(new LoggerKey(name), out object? o);
+      return o as Logger;
     }
 
     /// <summary>
@@ -319,20 +277,17 @@ namespace log4net.Repository.Hierarchy
       // The accumulation in loggers is necessary because not all elements in
       // ht are Logger objects as there might be some ProvisionNodes
       // as well.
-      lock (m_ht)
-      {
-        System.Collections.ArrayList loggers = new System.Collections.ArrayList(m_ht.Count);
+      var loggers = new List<ILogger>(m_ht.Count);
 
-        // Iterate through m_ht values
-        foreach (object node in m_ht.Values)
+      // Iterate through m_ht values
+      foreach (object node in m_ht.Values)
+      {
+        if (node is Logger logger)
         {
-          if (node is Logger)
-          {
-            loggers.Add(node);
-          }
+          loggers.Add(logger);
         }
-        return (Logger[])loggers.ToArray(typeof(Logger));
       }
+      return loggers.ToArray();
     }
 
     /// <summary>
@@ -356,7 +311,7 @@ namespace log4net.Repository.Hierarchy
     {
       if (name == null)
       {
-        throw new ArgumentNullException("name");
+        throw new ArgumentNullException(nameof(name));
       }
 
       return GetLogger(name, m_defaultFactory);
@@ -378,33 +333,36 @@ namespace log4net.Repository.Hierarchy
     /// </para>
     /// <para>
     /// The <c>Shutdown</c> method is careful to close nested
-    /// appenders before closing regular appenders. This is allows
+    /// appenders before closing regular appenders. This allows
     /// configurations where a regular appender is attached to a logger
     /// and again to a nested appender.
     /// </para>
     /// </remarks>
     public override void Shutdown()
     {
-      LogLog.Debug(declaringType, "Shutdown called on Hierarchy [" + this.Name + "]");
+      LogLog.Debug(declaringType, $"Shutdown called on Hierarchy [{Name}]");
 
       // begin by closing nested appenders
       Root.CloseNestedAppenders();
 
-      lock (m_ht)
+      ILogger[] currentLoggers = GetCurrentLoggers();
+
+      foreach (ILogger logger in currentLoggers)
       {
-        ILogger[] currentLoggers = this.GetCurrentLoggers();
-
-        foreach (Logger logger in currentLoggers)
+        if (logger is Logger l)
         {
-          logger.CloseNestedAppenders();
+          l.CloseNestedAppenders();
         }
+      }
 
-        // then, remove all appenders
-        Root.RemoveAllAppenders();
+      // then, remove all appenders
+      Root.RemoveAllAppenders();
 
-        foreach (Logger logger in currentLoggers)
+      foreach (ILogger logger in currentLoggers)
+      {
+        if (logger is Logger l)
         {
-          logger.RemoveAllAppenders();
+          l.RemoveAllAppenders();
         }
       }
 
@@ -436,12 +394,11 @@ namespace log4net.Repository.Hierarchy
       Root.Level = LevelMap.LookupWithDefault(Level.Debug);
       Threshold = LevelMap.LookupWithDefault(Level.All);
 
-      // the synchronization is needed to prevent hashtable surprises
-      lock (m_ht)
-      {
-        Shutdown(); // nested locks are OK  
+      Shutdown(); // nested locks are OK  
 
-        foreach (Logger l in this.GetCurrentLoggers())
+      foreach (ILogger logger in GetCurrentLoggers())
+      {
+        if (logger is Logger l)
         {
           l.Level = null;
           l.Additivity = true;
@@ -472,12 +429,15 @@ namespace log4net.Repository.Hierarchy
     /// </remarks>
     public override void Log(LoggingEvent logEvent)
     {
-      if (logEvent == null)
+      if (logEvent is null)
       {
-        throw new ArgumentNullException("logEvent");
+        throw new ArgumentNullException(nameof(logEvent));
       }
 
-      this.GetLogger(logEvent.LoggerName, m_defaultFactory).Log(logEvent);
+      if (logEvent.LoggerName is not null)
+      {
+        GetLogger(logEvent.LoggerName, m_defaultFactory).Log(logEvent);
+      }
     }
 
     /// <summary>
@@ -494,38 +454,34 @@ namespace log4net.Repository.Hierarchy
     /// The list returned is unordered but does not contain duplicates.
     /// </para>
     /// </remarks>
-    public override Appender.IAppender[] GetAppenders()
+    public override IAppender[] GetAppenders()
     {
-      System.Collections.ArrayList appenderList = new System.Collections.ArrayList();
+      var appenderList = new List<IAppender>();
 
       CollectAppenders(appenderList, Root);
 
-      foreach (Logger logger in GetCurrentLoggers())
+      foreach (ILogger logger in GetCurrentLoggers())
       {
-        CollectAppenders(appenderList, logger);
+        if (logger is Logger l)
+        {
+          CollectAppenders(appenderList, l);
+        }
       }
 
-      return (Appender.IAppender[])appenderList.ToArray(typeof(Appender.IAppender));
+      return appenderList.ToArray();
     }
-
-    #endregion Override Implementation of LoggerRepositorySkeleton
-
-    #region Private Static Methods
 
     /// <summary>
     /// Collect the appenders from an <see cref="IAppenderAttachable"/>.
     /// The appender may also be a container.
     /// </summary>
-    /// <param name="appenderList"></param>
-    /// <param name="appender"></param>
-    private static void CollectAppender(System.Collections.ArrayList appenderList, Appender.IAppender appender)
+    private static void CollectAppender(List<IAppender> appenderList, IAppender appender)
     {
       if (!appenderList.Contains(appender))
       {
         appenderList.Add(appender);
 
-        IAppenderAttachable container = appender as IAppenderAttachable;
-        if (container != null)
+        if (appender is IAppenderAttachable container)
         {
           CollectAppenders(appenderList, container);
         }
@@ -535,19 +491,13 @@ namespace log4net.Repository.Hierarchy
     /// <summary>
     /// Collect the appenders from an <see cref="IAppenderAttachable"/> container
     /// </summary>
-    /// <param name="appenderList"></param>
-    /// <param name="container"></param>
-    private static void CollectAppenders(System.Collections.ArrayList appenderList, IAppenderAttachable container)
+    private static void CollectAppenders(List<IAppender> appenderList, IAppenderAttachable container)
     {
-      foreach (Appender.IAppender appender in container.Appenders)
+      foreach (IAppender appender in container.Appenders)
       {
         CollectAppender(appenderList, appender);
       }
     }
-
-    #endregion
-
-    #region Implementation of IBasicRepositoryConfigurator
 
     /// <summary>
     /// Initialize the log4net system using the specified appender
@@ -580,7 +530,7 @@ namespace log4net.Repository.Hierarchy
     /// </remarks>
     protected void BasicRepositoryConfigure(params IAppender[] appenders)
     {
-      ArrayList configurationMessages = new ArrayList();
+      var configurationMessages = new List<LogLog>();
 
       using (new LogLog.LogReceivedAdapter(configurationMessages))
       {
@@ -597,10 +547,6 @@ namespace log4net.Repository.Hierarchy
       // Notify listeners
       OnConfigurationChanged(new ConfigurationChangedEventArgs(configurationMessages));
     }
-
-    #endregion Implementation of IBasicRepositoryConfigurator
-
-    #region Implementation of IXmlRepositoryConfigurator
 
     /// <summary>
     /// Initialize the log4net system using the specified config
@@ -624,11 +570,11 @@ namespace log4net.Repository.Hierarchy
     /// </remarks>
     protected void XmlRepositoryConfigure(System.Xml.XmlElement element)
     {
-      ArrayList configurationMessages = new ArrayList();
+      var configurationMessages = new List<LogLog>();
 
       using (new LogLog.LogReceivedAdapter(configurationMessages))
       {
-        XmlHierarchyConfigurator config = new XmlHierarchyConfigurator(this);
+        var config = new XmlHierarchyConfigurator(this);
         config.Configure(element);
       }
 
@@ -639,10 +585,6 @@ namespace log4net.Repository.Hierarchy
       // Notify listeners
       OnConfigurationChanged(new ConfigurationChangedEventArgs(configurationMessages));
     }
-
-    #endregion Implementation of IXmlRepositoryConfigurator
-
-    #region Public Instance Methods
 
     /// <summary>
     /// Test if this hierarchy is disabled for the specified <see cref="Level"/>.
@@ -667,10 +609,9 @@ namespace log4net.Repository.Hierarchy
     /// </remarks>
     public bool IsDisabled(Level level)
     {
-      // Cast level to object for performance
-      if ((object)level == null)
+      if (level is null)
       {
-        throw new ArgumentNullException("level");
+        throw new ArgumentNullException(nameof(level));
       }
 
       if (Configured)
@@ -700,10 +641,7 @@ namespace log4net.Repository.Hierarchy
     /// </remarks>
     public void Clear()
     {
-      lock (m_ht)
-      {
-        m_ht.Clear();
-      }
+      m_ht.Clear();
     }
 
     /// <summary>
@@ -725,60 +663,51 @@ namespace log4net.Repository.Hierarchy
     {
       if (name == null)
       {
-        throw new ArgumentNullException("name");
+        throw new ArgumentNullException(nameof(name));
       }
       if (factory == null)
       {
-        throw new ArgumentNullException("factory");
+        throw new ArgumentNullException(nameof(factory));
       }
 
-      LoggerKey key = new LoggerKey(name);
+      var key = new LoggerKey(name);
 
       // Synchronize to prevent write conflicts. Read conflicts (in
       // GetEffectiveLevel() method) are possible only if variable
       // assignments are non-atomic.
 
-      lock (m_ht)
+      if (!m_ht.TryGetValue(key, out object? node))
       {
-        Logger logger = null;
+        return CreateLogger(null);
+      }
 
-        Object node = m_ht[key];
-        if (node == null)
+      if (node is Logger nodeLogger)
+      {
+        return nodeLogger;
+      }
+
+      if (node is ProvisionNode nodeProvisionNode)
+      {
+        return CreateLogger(l => UpdateChildren(nodeProvisionNode, l));
+      }
+
+      // It should be impossible to arrive here but let's keep the compiler happy.
+      return null!;
+
+      Logger CreateLogger(Action<Logger>? extraInit)
+      {
+        // Use GetOrAdd in case the logger was added after checking above.
+        return (Logger)m_ht.GetOrAdd(key, _ =>
         {
-          logger = factory.CreateLogger(this, name);
+          Logger logger = factory.CreateLogger(this, name);
           logger.Hierarchy = this;
-          m_ht[key] = logger;
+          extraInit?.Invoke(logger);
           UpdateParents(logger);
           OnLoggerCreationEvent(logger);
           return logger;
-        }
-
-        Logger nodeLogger = node as Logger;
-        if (nodeLogger != null)
-        {
-          return nodeLogger;
-        }
-
-        ProvisionNode nodeProvisionNode = node as ProvisionNode;
-        if (nodeProvisionNode != null)
-        {
-          logger = factory.CreateLogger(this, name);
-          logger.Hierarchy = this;
-          m_ht[key] = logger;
-          UpdateChildren(nodeProvisionNode, logger);
-          UpdateParents(logger);
-          OnLoggerCreationEvent(logger);
-          return logger;
-        }
-
-        // It should be impossible to arrive here but let's keep the compiler happy.
-        return null;
+        });
       }
     }
-
-    #endregion Public Instance Methods
-
-    #region Protected Instance Methods
 
     /// <summary>
     /// Sends a logger creation event to all registered listeners
@@ -789,16 +718,8 @@ namespace log4net.Repository.Hierarchy
     /// </remarks>
     protected virtual void OnLoggerCreationEvent(Logger logger)
     {
-      LoggerCreationEventHandler handler = m_loggerCreatedEvent;
-      if (handler != null)
-      {
-        handler(this, new LoggerCreationEventArgs(logger));
-      }
+      LoggerCreatedEvent?.Invoke(this, new LoggerCreationEventArgs(logger));
     }
-
-    #endregion Protected Instance Methods
-
-    #region Private Instance Methods
 
     /// <summary>
     /// Updates all the parents of the specified logger
@@ -822,7 +743,7 @@ namespace log4net.Repository.Hierarchy
     ///      <description>
     ///      The entry is <paramref name="log"/>'s nearest existing parent. We 
     ///      update <paramref name="log"/>'s parent field with this entry. We also break from 
-    ///      he loop because updating our parent's parent is our parent's 
+    ///      the loop because updating our parent's parent is our parent's 
     ///      responsibility.
     ///      </description>
     ///    </item>
@@ -846,40 +767,35 @@ namespace log4net.Repository.Hierarchy
       {
         string substr = name.Substring(0, i);
 
-        LoggerKey key = new LoggerKey(substr); // simple constructor
-        Object node = m_ht[key];
+        var key = new LoggerKey(substr);
+        m_ht.TryGetValue(key, out object? node);
+
         // Create a provision node for a future parent.
-        if (node == null)
+        if (node is null)
         {
-          ProvisionNode pn = new ProvisionNode(log);
-          m_ht[key] = pn;
+          m_ht[key] = new ProvisionNode(log);
         }
         else
         {
-          Logger nodeLogger = node as Logger;
-          if (nodeLogger != null)
+          if (node is Logger nodeLogger)
           {
             parentFound = true;
             log.Parent = nodeLogger;
             break; // no need to update the ancestors of the closest ancestor
           }
+
+          if (node is ProvisionNode nodeProvisionNode)
+          {
+            nodeProvisionNode.Add(log);
+          }
           else
           {
-            ProvisionNode nodeProvisionNode = node as ProvisionNode;
-            if (nodeProvisionNode != null)
-            {
-              nodeProvisionNode.Add(log);
-            }
-            else
-            {
-              LogLog.Error(declaringType, "Unexpected object type [" + node.GetType() + "] in ht.", new LogException());
-            }
+            LogLog.Error(declaringType, $"Unexpected object type [{node.GetType()}] in ht.", new LogException());
           }
         }
         if (i == 0)
         {
-          // logger name starts with a dot
-          // and we've hit the start
+          // logger name starts with a dot and we've hit the start
           break;
         }
       }
@@ -887,15 +803,13 @@ namespace log4net.Repository.Hierarchy
       // If we could not find any existing parents, then link with root.
       if (!parentFound)
       {
-        log.Parent = this.Root;
+        log.Parent = Root;
       }
     }
 
     /// <summary>
     /// Replace a <see cref="ProvisionNode"/> with a <see cref="Logger"/> in the hierarchy.
     /// </summary>
-    /// <param name="pn"></param>
-    /// <param name="log"></param>
     /// <remarks>
     /// <para>
     /// We update the links for all the children that placed themselves
@@ -917,13 +831,11 @@ namespace log4net.Repository.Hierarchy
     /// </remarks>
     private static void UpdateChildren(ProvisionNode pn, Logger log)
     {
-      for (int i = 0; i < pn.Count; i++)
+      foreach (Logger childLogger in pn)
       {
-        Logger childLogger = (Logger)pn[i];
-
         // Unless this child already points to a correct (lower) parent,
         // make log.Parent point to childLogger.Parent and childLogger.Parent to log.
-        if (!childLogger.Parent.Name.StartsWith(log.Name))
+        if (childLogger.Parent is not null && !childLogger.Parent.Name.StartsWith(log.Name, StringComparison.Ordinal))
         {
           log.Parent = childLogger.Parent;
           childLogger.Parent = log;
@@ -937,24 +849,27 @@ namespace log4net.Repository.Hierarchy
     /// <param name="levelEntry">the level values</param>
     /// <remarks>
     /// <para>
-    /// Define or redefine a Level using the values in the <see cref="LevelEntry"/> argument
-    /// </para>
-    /// <para>
     /// Supports setting levels via the configuration file.
     /// </para>
     /// </remarks>
     internal void AddLevel(LevelEntry levelEntry)
     {
-      if (levelEntry == null) throw new ArgumentNullException("levelEntry");
-      if (levelEntry.Name == null) throw new ArgumentNullException("levelEntry.Name");
+      if (levelEntry is null)
+      {
+        throw new ArgumentNullException(nameof(levelEntry));
+      }
+      if (levelEntry.Name is null)
+      {
+        throw new ArgumentNullException("levelEntry.Name");
+      }
 
       // Lookup replacement value
       if (levelEntry.Value == -1)
       {
-        Level previousLevel = LevelMap[levelEntry.Name];
-        if (previousLevel == null)
+        Level? previousLevel = LevelMap[levelEntry.Name];
+        if (previousLevel is null)
         {
-          throw new InvalidOperationException("Cannot redefine level [" + levelEntry.Name + "] because it is not defined in the LevelMap. To define the level supply the level value.");
+          throw new InvalidOperationException($"Cannot redefine level [{levelEntry.Name}] because it is not defined in the LevelMap. To define the level supply the level value.");
         }
 
         levelEntry.Value = previousLevel.Value;
@@ -971,12 +886,8 @@ namespace log4net.Repository.Hierarchy
     /// A class to hold the value, name and display name for a level
     /// </para>
     /// </remarks>
-    internal class LevelEntry
+    internal sealed class LevelEntry
     {
-      private int m_levelValue = -1;
-      private string m_levelName = null;
-      private string m_levelDisplayName = null;
-
       /// <summary>
       /// Value of the level
       /// </summary>
@@ -986,11 +897,7 @@ namespace log4net.Repository.Hierarchy
       /// up for the current level with the same name.
       /// </para>
       /// </remarks>
-      public int Value
-      {
-        get { return m_levelValue; }
-        set { m_levelValue = value; }
-      }
+      public int Value { get; set; } = -1;
 
       /// <summary>
       /// Name of the level
@@ -1003,11 +910,7 @@ namespace log4net.Repository.Hierarchy
       /// The name of the level.
       /// </para>
       /// </remarks>
-      public string Name
-      {
-        get { return m_levelName; }
-        set { m_levelName = value; }
-      }
+      public string? Name { get; set; }
 
       /// <summary>
       /// Display name for the level
@@ -1020,11 +923,7 @@ namespace log4net.Repository.Hierarchy
       /// The display name of the level.
       /// </para>
       /// </remarks>
-      public string DisplayName
-      {
-        get { return m_levelDisplayName; }
-        set { m_levelDisplayName = value; }
-      }
+      public string? DisplayName { get; set; }
 
       /// <summary>
       /// Override <c>Object.ToString</c> to return sensible debug info
@@ -1032,7 +931,7 @@ namespace log4net.Repository.Hierarchy
       /// <returns>string info about this object</returns>
       public override string ToString()
       {
-        return "LevelEntry(Value=" + m_levelValue + ", Name=" + m_levelName + ", DisplayName=" + m_levelDisplayName + ")";
+        return $"LevelEntry(Value={Value}, Name={Name}, DisplayName={DisplayName})";
       }
     }
 
@@ -1050,28 +949,22 @@ namespace log4net.Repository.Hierarchy
     /// </remarks>
     internal void AddProperty(PropertyEntry propertyEntry)
     {
-      if (propertyEntry == null) throw new ArgumentNullException("propertyEntry");
-      if (propertyEntry.Key == null) throw new ArgumentNullException("propertyEntry.Key");
+      if (propertyEntry is null)
+      {
+        throw new ArgumentNullException(nameof(propertyEntry));
+      }
+      if (propertyEntry.Key is null)
+      {
+        throw new ArgumentNullException("propertyEntry.Key");
+      }
 
       Properties[propertyEntry.Key] = propertyEntry.Value;
     }
 
-    #endregion Private Instance Methods
-
-    #region Private Instance Fields
-
     private ILoggerFactory m_defaultFactory;
 
-    private System.Collections.Hashtable m_ht;
-    private Logger m_root;
-
-    private bool m_emittedNoAppenderWarning = false;
-
-    private event LoggerCreationEventHandler m_loggerCreatedEvent;
-
-    #endregion Private Instance Fields
-
-    #region Private Static Fields
+    private readonly ConcurrentDictionary<LoggerKey, object> m_ht = new(LoggerKey.ComparerInstance);
+    private Logger? m_root;
 
     /// <summary>
     /// The fully qualified type of the Hierarchy class.
@@ -1081,7 +974,5 @@ namespace log4net.Repository.Hierarchy
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(Hierarchy);
-
-    #endregion Private Static Fields
   }
 }

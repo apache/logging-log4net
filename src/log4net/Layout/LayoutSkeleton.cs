@@ -17,10 +17,8 @@
 //
 #endregion
 
-using System;
 using System.IO;
 
-using log4net;
 using log4net.Core;
 
 namespace log4net.Layout
@@ -50,42 +48,6 @@ namespace log4net.Layout
   /// <author>Gert Driesen</author>
   public abstract class LayoutSkeleton : ILayout, IOptionHandler
   {
-    #region Member Variables
-
-    /// <summary>
-    /// The header text
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// See <see cref="Header"/> for more information.
-    /// </para>
-    /// </remarks>
-    private string m_header = null;
-
-    /// <summary>
-    /// The footer text
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// See <see cref="Footer"/> for more information.
-    /// </para>
-    /// </remarks>
-    private string m_footer = null;
-
-    /// <summary>
-    /// Flag indicating if this layout handles exceptions
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// <c>false</c> if this layout handles exceptions
-    /// </para>
-    /// </remarks>
-    private bool m_ignoresException = true;
-
-    #endregion
-
-    #region Constructors
-
     /// <summary>
     /// Empty default constructor
     /// </summary>
@@ -97,10 +59,6 @@ namespace log4net.Layout
     protected LayoutSkeleton()
     {
     }
-
-    #endregion
-
-    #region Implementation of IOptionHandler
 
     /// <summary>
     /// Activate component options
@@ -122,10 +80,6 @@ namespace log4net.Layout
     /// </para>
     /// </remarks>
     public abstract void ActivateOptions();
-
-    #endregion
-
-    #region Implementation of ILayout
 
     /// <summary>
     /// Implement this method to create your own layout format.
@@ -149,7 +103,7 @@ namespace log4net.Layout
     /// </remarks>
     public string Format(LoggingEvent loggingEvent)
     {
-      using StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
+      using var writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
       Format(writer, loggingEvent);
       return writer.ToString();
     }
@@ -168,10 +122,7 @@ namespace log4net.Layout
     /// property.
     /// </para>
     /// </remarks>
-    public virtual string ContentType
-    {
-      get { return "text/plain"; }
-    }
+    public virtual string ContentType => "text/plain";
 
     /// <summary>
     /// The header for the layout format.
@@ -183,11 +134,7 @@ namespace log4net.Layout
     /// are formatted and appended.
     /// </para>
     /// </remarks>
-    public virtual string Header
-    {
-      get { return m_header; }
-      set { m_header = value; }
-    }
+    public virtual string? Header { get; set; }
 
     /// <summary>
     /// The footer for the layout format.
@@ -199,11 +146,7 @@ namespace log4net.Layout
     /// have been formatted and appended.
     /// </para>
     /// </remarks>
-    public virtual string Footer
-    {
-      get { return m_footer; }
-      set { m_footer = value; }
-    }
+    public virtual string? Footer { get; set; }
 
     /// <summary>
     /// Flag indicating if this layout handles exceptions
@@ -217,16 +160,10 @@ namespace log4net.Layout
     /// object, then the layout should return <c>true</c>.
     /// </para>
     /// <para>
-    /// Set this value to override a this default setting. The default
+    /// Set this value to override the default setting. The default
     /// value is <c>true</c>, this layout does not handle the exception.
     /// </para>
     /// </remarks>
-    public virtual bool IgnoresException
-    {
-      get { return m_ignoresException; }
-      set { m_ignoresException = value; }
-    }
-
-    #endregion
+    public virtual bool IgnoresException { get; set; } = true;
   }
 }

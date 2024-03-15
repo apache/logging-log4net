@@ -17,9 +17,6 @@
 //
 #endregion
 
-using System;
-using System.Collections;
-
 using log4net.Util;
 
 namespace log4net
@@ -67,26 +64,8 @@ namespace log4net
   /// </example>
   /// <threadsafety static="true" instance="true" />
   /// <author>Nicko Cadell</author>
-  public sealed class ThreadContext
+  public static class ThreadContext
   {
-    #region Private Instance Constructors
-
-    /// <summary>
-    /// Private Constructor. 
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Uses a private access modifier to prevent instantiation of this class.
-    /// </para>
-    /// </remarks>
-    private ThreadContext()
-    {
-    }
-
-    #endregion Private Instance Constructors
-
-    #region Public Static Properties
-
     /// <summary>
     /// The thread properties map
     /// </summary>
@@ -99,10 +78,7 @@ namespace log4net
     /// properties with the same name.
     /// </para>
     /// </remarks>
-    public static ThreadContextProperties Properties
-    {
-      get { return s_properties; }
-    }
+    public static ThreadContextProperties Properties { get; } = new();
 
     /// <summary>
     /// The thread stacks
@@ -115,25 +91,6 @@ namespace log4net
     /// The thread local stacks.
     /// </para>
     /// </remarks>
-    public static ThreadContextStacks Stacks
-    {
-      get { return s_stacks; }
-    }
-
-    #endregion Public Static Properties
-
-    #region Private Static Fields
-
-    /// <summary>
-    /// The thread context properties instance
-    /// </summary>
-    private static readonly ThreadContextProperties s_properties = new ThreadContextProperties();
-
-    /// <summary>
-    /// The thread context stacks instance
-    /// </summary>
-    private static readonly ThreadContextStacks s_stacks = new ThreadContextStacks(s_properties);
-
-    #endregion Private Static Fields
+    public static ThreadContextStacks Stacks { get; } = new(Properties);
   }
 }
