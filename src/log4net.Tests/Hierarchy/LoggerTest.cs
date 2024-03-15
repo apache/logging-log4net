@@ -17,8 +17,9 @@
 //
 #endregion
 
+using System;
 using System.Collections;
-
+using log4net.Appender;
 using log4net.Core;
 using log4net.Repository.Hierarchy;
 using log4net.Tests.Appender;
@@ -38,7 +39,7 @@ namespace log4net.Tests.Hierarchy
   [TestFixture]
   public sealed class LoggerTest
   {
-    private Logger log;
+    private Logger? log;
 
     // A short message.
     private static string MSG = "M";
@@ -62,14 +63,23 @@ namespace log4net.Tests.Hierarchy
     public void TestAppender1()
     {
       log = (Logger)LogManager.GetLogger("test").Logger;
-      CountingAppender a1 = new CountingAppender();
-      a1.Name = "testAppender1";
+      var a1 = new CountingAppender { Name = "testAppender1" };
       log.AddAppender(a1);
 
       IEnumerator enumAppenders = ((IEnumerable)log.Appenders).GetEnumerator();
-      Assert.IsTrue(enumAppenders.MoveNext());
-      CountingAppender aHat = (CountingAppender)enumAppenders.Current;
-      Assert.AreEqual(a1, aHat);
+      try
+      {
+        Assert.IsTrue(enumAppenders.MoveNext());
+        var aHat = (CountingAppender?)enumAppenders.Current;
+        Assert.AreEqual(a1, aHat);
+      }
+      finally
+      {
+        if (enumAppenders is IDisposable disposable)
+        {
+          disposable.Dispose();
+        }
+      }
     }
 
     /// <summary>
@@ -79,31 +89,61 @@ namespace log4net.Tests.Hierarchy
     [Test]
     public void TestAppender2()
     {
-      CountingAppender a1 = new CountingAppender();
-      a1.Name = "testAppender2.1";
-      CountingAppender a2 = new CountingAppender();
-      a2.Name = "testAppender2.2";
+      var a1 = new CountingAppender { Name = "testAppender2.1" };
+      var a2 = new CountingAppender { Name = "testAppender2.2" };
 
       log = (Logger)LogManager.GetLogger("test").Logger;
       log.AddAppender(a1);
       log.AddAppender(a2);
+      Assert.AreEqual(2, log.Appenders.Count);
 
-      CountingAppender aHat = (CountingAppender)log.GetAppender(a1.Name);
+      var aHat = (CountingAppender?)log.GetAppender(a1.Name);
       Assert.AreEqual(a1, aHat);
 
-      aHat = (CountingAppender)log.GetAppender(a2.Name);
+      aHat = (CountingAppender?)log.GetAppender(a2.Name);
       Assert.AreEqual(a2, aHat);
 
-      log.RemoveAppender("testAppender2.1");
+      // By name.
+      IAppender? removedAppender = log.RemoveAppender("testAppender2.1");
+      Assert.AreSame(a1, removedAppender);
+      Assert.AreEqual(1, log.Appenders.Count);
 
       IEnumerator enumAppenders = ((IEnumerable)log.Appenders).GetEnumerator();
-      Assert.IsTrue(enumAppenders.MoveNext());
-      aHat = (CountingAppender)enumAppenders.Current;
-      Assert.AreEqual(a2, aHat);
-      Assert.IsFalse(enumAppenders.MoveNext());
+      try
+      {
+        Assert.IsTrue(enumAppenders.MoveNext());
+        aHat = (CountingAppender?)enumAppenders.Current;
+        Assert.AreSame(a2, aHat);
+        Assert.IsFalse(enumAppenders.MoveNext());
+      }
+      finally
+      {
+        if (enumAppenders is IDisposable disposable)
+        {
+          disposable.Dispose();
+        }
+      }
 
-      aHat = (CountingAppender)log.GetAppender(a2.Name);
-      Assert.AreEqual(a2, aHat);
+      aHat = (CountingAppender?)log.GetAppender(a2.Name);
+      Assert.AreSame(a2, aHat);
+
+      // By appender.
+      removedAppender = log.RemoveAppender(a2);
+      Assert.AreSame(a2, removedAppender);
+      Assert.AreEqual(0, log.Appenders.Count);
+
+      enumAppenders = ((IEnumerable)log.Appenders).GetEnumerator();
+      try
+      {
+        Assert.IsFalse(enumAppenders.MoveNext());
+      }
+      finally
+      {
+        if (enumAppenders is IDisposable disposable)
+        {
+          disposable.Dispose();
+        }
+      }
     }
 
     /// <summary>
@@ -117,7 +157,8 @@ namespace log4net.Tests.Hierarchy
       CountingAppender ca = new CountingAppender();
 
       a.AddAppender(ca);
-      a.Repository.Configured = true;
+      Assert.IsNotNull(a.Repository);
+      a.Repository!.Configured = true;
 
       Assert.AreEqual(0, ca.Counter);
       ab.Log(Level.Debug, MSG, null);
@@ -146,7 +187,8 @@ namespace log4net.Tests.Hierarchy
 
       a.AddAppender(ca1);
       abc.AddAppender(ca2);
-      a.Repository.Configured = true;
+      Assert.IsNotNull(a.Repository);
+      a.Repository!.Configured = true;
 
       Assert.AreEqual(0, ca1.Counter);
       Assert.AreEqual(0, ca2.Counter);
@@ -182,7 +224,8 @@ namespace log4net.Tests.Hierarchy
       root.AddAppender(caRoot);
       a.AddAppender(caA);
       abc.AddAppender(caABC);
-      a.Repository.Configured = true;
+      Assert.IsNotNull(a.Repository);
+      a.Repository!.Configured = true;
 
       Assert.AreEqual(0, caRoot.Counter);
       Assert.AreEqual(0, caA.Counter);
