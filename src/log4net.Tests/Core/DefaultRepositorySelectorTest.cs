@@ -171,9 +171,11 @@ namespace log4net.Tests.Core
     }
     public bool Configured { get; set; }
     public ICollection ConfigurationMessages { get; set; } = new List<string>();
+#pragma warning disable CS0067  // Unused event
     public event LoggerRepositoryShutdownEventHandler? ShutdownEvent;
     public event LoggerRepositoryConfigurationResetEventHandler? ConfigurationReset;
     public event LoggerRepositoryConfigurationChangedEventHandler? ConfigurationChanged;
+#pragma warning restore CS0067
     public PropertiesDictionary Properties { get; } = new();
     public IAppender[] GetAppenders()
     {
