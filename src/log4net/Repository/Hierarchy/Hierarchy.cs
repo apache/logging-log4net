@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using log4net.Appender;
 using log4net.Core;
 using log4net.Util;
@@ -188,7 +189,7 @@ namespace log4net.Repository.Hierarchy
     /// about not having an appender warning.
     /// </para>
     /// </remarks>
-    public bool EmittedNoAppenderWarning { get; set; } = false;
+    public bool EmittedNoAppenderWarning { get; set; }
 
     /// <summary>
     /// Get the root of this hierarchy
@@ -224,7 +225,6 @@ namespace log4net.Repository.Hierarchy
     /// <summary>
     /// Gets or sets the default <see cref="ILoggerFactory" /> instance.
     /// </summary>
-    /// <value>The default <see cref="ILoggerFactory" /></value>
     /// <remarks>
     /// <para>
     /// The logger factory is used to create logger instances.
@@ -347,23 +347,17 @@ namespace log4net.Repository.Hierarchy
 
       ILogger[] currentLoggers = GetCurrentLoggers();
 
-      foreach (ILogger logger in currentLoggers)
+      foreach (Logger logger in currentLoggers.OfType<Logger>())
       {
-        if (logger is Logger l)
-        {
-          l.CloseNestedAppenders();
-        }
+        logger.CloseNestedAppenders();
       }
 
       // then, remove all appenders
       Root.RemoveAllAppenders();
 
-      foreach (ILogger logger in currentLoggers)
+      foreach (Logger logger in currentLoggers.OfType<Logger>())
       {
-        if (logger is Logger l)
-        {
-          l.RemoveAllAppenders();
-        }
+        logger.RemoveAllAppenders();
       }
 
       base.Shutdown();
@@ -396,13 +390,10 @@ namespace log4net.Repository.Hierarchy
 
       Shutdown(); // nested locks are OK  
 
-      foreach (ILogger logger in GetCurrentLoggers())
+      foreach (Logger logger in GetCurrentLoggers().OfType<Logger>())
       {
-        if (logger is Logger l)
-        {
-          l.Level = null;
-          l.Additivity = true;
-        }
+        logger.Level = null;
+        logger.Additivity = true;
       }
 
       base.ResetConfiguration();
@@ -460,12 +451,9 @@ namespace log4net.Repository.Hierarchy
 
       CollectAppenders(appenderList, Root);
 
-      foreach (ILogger logger in GetCurrentLoggers())
+      foreach (Logger logger in GetCurrentLoggers().OfType<Logger>())
       {
-        if (logger is Logger l)
-        {
-          CollectAppenders(appenderList, l);
-        }
+        CollectAppenders(appenderList, logger);
       }
 
       return appenderList.ToArray();
@@ -866,13 +854,14 @@ namespace log4net.Repository.Hierarchy
       // Lookup replacement value
       if (levelEntry.Value == -1)
       {
-        Level? previousLevel = LevelMap[levelEntry.Name];
-        if (previousLevel is null)
+        if (LevelMap[levelEntry.Name] is Level previousLevel)
+        {
+          levelEntry.Value = previousLevel.Value;
+        }
+        else
         {
           throw new InvalidOperationException($"Cannot redefine level [{levelEntry.Name}] because it is not defined in the LevelMap. To define the level supply the level value.");
         }
-
-        levelEntry.Value = previousLevel.Value;
       }
 
       LevelMap.Add(levelEntry.Name, levelEntry.Value, levelEntry.DisplayName);

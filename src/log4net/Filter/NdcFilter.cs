@@ -17,13 +17,6 @@
 //
 #endregion
 
-using System;
-using System.Text.RegularExpressions;
-
-using log4net;
-using log4net.Core;
-using log4net.Util;
-
 namespace log4net.Filter
 {
   /// <summary>
@@ -34,7 +27,7 @@ namespace log4net.Filter
   /// Simple filter to match a string in the <see cref="NDC"/>
   /// </para>
   /// <para>
-  /// As the MDC has been replaced with named stacks stored in the
+  /// As the NDC has been replaced with named stacks stored in the
   /// properties collections the <see cref="PropertyFilter"/> should 
   /// be used instead.
   /// </para>
@@ -54,7 +47,7 @@ namespace log4net.Filter
     /// </remarks>
     public NdcFilter()
     {
-      base.Key = "NDC";
+      Key = "NDC";
     }
   }
 }

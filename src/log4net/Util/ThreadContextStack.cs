@@ -83,10 +83,7 @@ namespace log4net.Util
     /// syntax.
     /// </para>
     /// </remarks>
-    public void Clear()
-    {
-      m_stack.Clear();
-    }
+    public void Clear() => m_stack.Clear();
 
     /// <summary>
     /// Removes the top context from this stack.
@@ -202,30 +199,12 @@ namespace log4net.Util
     /// <summary>
     /// Gets the current context information for this stack.
     /// </summary>
-    /// <returns>Gets the current context information</returns>
-    /// <remarks>
-    /// <para>
-    /// Gets the current context information for this stack.
-    /// </para>
-    /// </remarks>
-    public override string? ToString()
-    {
-      return GetFullMessage();
-    }
+    public override string? ToString() => GetFullMessage();
 
     /// <summary>
     /// Get a portable version of this object
     /// </summary>
-    /// <returns>the portable instance of this object</returns>
-    /// <remarks>
-    /// <para>
-    /// Get a cross thread portable version of this object
-    /// </para>
-    /// </remarks>
-    object IFixingRequired.GetFixedObject()
-    {
-      return GetFullMessage() ?? string.Empty;
-    }
+    object? IFixingRequired.GetFixedObject() => GetFullMessage();
 
     /// <summary>
     /// Inner class used to represent a single context frame in the stack.

@@ -177,8 +177,7 @@ namespace log4net.Util
           // to an arbitrary type T there will be a static method defined on type T called Parse
           // that will take an argument of type string. i.e. T.Parse(string)->T we call this
           // method to convert the string to the type required by the property.
-          MethodInfo? meth = target.GetMethod("Parse", new[] { typeof(string) });
-          if (meth is not null)
+          if (target.GetMethod("Parse", new[] { typeof(string) }) is MethodInfo meth)
           {
             // Call the Parse method
             return meth.Invoke(null, BindingFlags.InvokeMethod, null, new object[] { txt }, CultureInfo.InvariantCulture);
@@ -217,8 +216,7 @@ namespace log4net.Util
       }
 
       // Look for a To converter
-      IConvertTo? tcSource = ConverterRegistry.GetConvertTo(sourceType, targetType);
-      if (tcSource is not null)
+      if (ConverterRegistry.GetConvertTo(sourceType, targetType) is IConvertTo tcSource)
       {
         if (tcSource.CanConvertTo(targetType))
         {
@@ -227,8 +225,7 @@ namespace log4net.Util
       }
 
       // Look for a From converter
-      IConvertFrom? tcTarget = ConverterRegistry.GetConvertFrom(targetType);
-      if (tcTarget is not null)
+      if (ConverterRegistry.GetConvertFrom(targetType) is IConvertFrom tcTarget)
       {
         if (tcTarget.CanConvertFrom(sourceType))
         {
@@ -261,8 +258,7 @@ namespace log4net.Util
       }
 
       // Look for a TO converter
-      IConvertTo? tcSource = ConverterRegistry.GetConvertTo(sourceType, targetType);
-      if (tcSource is not null)
+      if (ConverterRegistry.GetConvertTo(sourceType, targetType) is IConvertTo tcSource)
       {
         if (tcSource.CanConvertTo(targetType))
         {
@@ -271,8 +267,7 @@ namespace log4net.Util
       }
 
       // Look for a FROM converter
-      IConvertFrom? tcTarget = ConverterRegistry.GetConvertFrom(targetType);
-      if (tcTarget is not null)
+      if (ConverterRegistry.GetConvertFrom(targetType) is IConvertFrom tcTarget)
       {
         if (tcTarget.CanConvertFrom(sourceType))
         {
@@ -316,10 +311,8 @@ namespace log4net.Util
             }
             return Activator.CreateInstance(classObj);
           }
-          else
-          {
-            LogLog.Error(declaringType, $"Could not find class [{className}].");
-          }
+
+          LogLog.Error(declaringType, $"Could not find class [{className}].");
         }
         catch (Exception e)
         {

@@ -208,27 +208,13 @@ namespace log4net.Util
     }
 
     /// <summary>
-    /// Get a portable version of this object
+    /// Gets a cross-thread portable version of this object
     /// </summary>
-    /// <returns>the portable instance of this object</returns>
-    /// <remarks>
-    /// <para>
-    /// Get a cross thread portable version of this object
-    /// </para>
-    /// </remarks>
-    object IFixingRequired.GetFixedObject()
-    {
-      return GetFullMessage() ?? string.Empty;
-    }
+    object? IFixingRequired.GetFixedObject() => GetFullMessage();
 
     /// <summary>
     /// Inner class used to represent a single context frame in the stack.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Inner class used to represent a single context frame in the stack.
-    /// </para>
-    /// </remarks>
     internal sealed class StackFrame
     {
       private readonly StackFrame? m_parent;

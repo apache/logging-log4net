@@ -188,8 +188,7 @@ namespace log4net.Util.TypeConverters
       {
         if (attribute is TypeConverterAttribute tcAttr)
         {
-          Type? converterType = SystemInfo.GetTypeFromString(destinationType, tcAttr.ConverterTypeName, false, true);
-          if (converterType is not null)
+          if (SystemInfo.GetTypeFromString(destinationType, tcAttr.ConverterTypeName, false, true) is Type converterType)
           {
             return CreateConverterInstance(converterType);
           }

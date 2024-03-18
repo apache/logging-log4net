@@ -19,10 +19,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Security;
 using System.Security.Principal;
+using System.Threading;
 using log4net.Util;
 using log4net.Repository;
 
@@ -676,12 +678,12 @@ namespace log4net.Core
     {
       get
       {
-        if (m_data.ThreadName == null && this.m_cacheUpdatable)
+        if (m_data.ThreadName == null && m_cacheUpdatable)
         {
           // '.NET ThreadPool Worker' appears as a default thread name in the .NET 6-7 thread pool.
           // '.NET TP Worker' is the default thread name in the .NET 8+ thread pool.
           // Prefer the numeric thread ID instead.
-          string threadName = System.Threading.Thread.CurrentThread.Name;
+          string threadName = Thread.CurrentThread.Name;
           if (!string.IsNullOrEmpty(threadName) && threadName != ".NET TP Worker" && threadName != ".NET ThreadPool Worker")
           {
             m_data.ThreadName = threadName;
@@ -693,9 +695,7 @@ namespace log4net.Core
             // current thread. (Why don't Threads know their own ID?)
             try
             {
-              m_data.ThreadName =
-                  SystemInfo.CurrentThreadId.ToString(System.Globalization.NumberFormatInfo
-                      .InvariantInfo);
+              m_data.ThreadName = SystemInfo.CurrentThreadId.ToString(NumberFormatInfo.InvariantInfo);
             }
             catch (SecurityException)
             {
@@ -705,8 +705,7 @@ namespace log4net.Core
                   "Security exception while trying to get current thread ID. Error Ignored. Empty thread name.");
 
               // As a last resort use the hash code of the Thread object
-              m_data.ThreadName = System.Threading.Thread.CurrentThread.GetHashCode()
-                  .ToString(System.Globalization.CultureInfo.InvariantCulture);
+              m_data.ThreadName = Thread.CurrentThread.GetHashCode().ToString(CultureInfo.InvariantCulture);
             }
           }
         }
@@ -826,11 +825,10 @@ namespace log4net.Core
         {
           try
           {
-            if (System.Threading.Thread.CurrentPrincipal is not null &&
-                System.Threading.Thread.CurrentPrincipal.Identity is not null &&
-                System.Threading.Thread.CurrentPrincipal.Identity.Name is not null)
+            if (Thread.CurrentPrincipal is not null &&
+                Thread.CurrentPrincipal.Identity?.Name is string name)
             {
-              m_data.Identity = System.Threading.Thread.CurrentPrincipal.Identity.Name;
+              m_data.Identity = name;
             }
             else
             {
@@ -839,7 +837,7 @@ namespace log4net.Core
           }
           catch (ObjectDisposedException)
           {
-            // This exception will occur if System.Threading.Thread.CurrentPrincipal.Identity is not null but
+            // This exception will occur if Thread.CurrentPrincipal.Identity is not null but
             // the getter of the property Name tries to access disposed objects.
             // Seen to happen on IIS 7 or greater with windows authentication.
             LogLog.Debug(declaringType,
@@ -930,8 +928,8 @@ namespace log4net.Core
     /// </remarks>
     public FixFlags Fix
     {
-      get { return m_fixFlags; }
-      set { FixVolatileData(value); }
+      get => m_fixFlags;
+      set => FixVolatileData(value);
     }
 
     /// <summary>
@@ -1152,11 +1150,9 @@ namespace log4net.Core
     /// </remarks>
     protected virtual void FixVolatileData(FixFlags flags)
     {
-      object forceCreation = null;
-
-      //Unlock the cache so that new values can be stored
-      //This may not be ideal if we are no longer in the correct context
-      //and someone calls fix. 
+      // Unlock the cache so that new values can be stored
+      // This may not be ideal if we are no longer in the correct context
+      // and someone calls fix. 
       m_cacheUpdatable = true;
 
       // determine the flags that we are actually fixing
@@ -1167,7 +1163,7 @@ namespace log4net.Core
         if ((updateFlags & FixFlags.Message) != 0)
         {
           // Force the message to be rendered
-          forceCreation = RenderedMessage;
+          _ = RenderedMessage;
 
           m_fixFlags |= FixFlags.Message;
         }
@@ -1175,7 +1171,7 @@ namespace log4net.Core
         if ((updateFlags & FixFlags.ThreadName) != 0)
         {
           // Grab the thread name
-          forceCreation = ThreadName;
+          _ = ThreadName;
 
           m_fixFlags |= FixFlags.ThreadName;
         }
@@ -1183,7 +1179,7 @@ namespace log4net.Core
         if ((updateFlags & FixFlags.LocationInfo) != 0)
         {
           // Force the location information to be loaded
-          forceCreation = LocationInformation;
+          _ = LocationInformation;
 
           m_fixFlags |= FixFlags.LocationInfo;
         }
@@ -1191,7 +1187,7 @@ namespace log4net.Core
         if ((updateFlags & FixFlags.UserName) != 0)
         {
           // Grab the user name
-          forceCreation = UserName;
+          _ = UserName;
 
           m_fixFlags |= FixFlags.UserName;
         }
@@ -1199,7 +1195,7 @@ namespace log4net.Core
         if ((updateFlags & FixFlags.Domain) != 0)
         {
           // Grab the domain name
-          forceCreation = Domain;
+          _ = Domain;
 
           m_fixFlags |= FixFlags.Domain;
         }
@@ -1207,7 +1203,7 @@ namespace log4net.Core
         if ((updateFlags & FixFlags.Identity) != 0)
         {
           // Grab the identity
-          forceCreation = Identity;
+          _ = Identity;
 
           m_fixFlags |= FixFlags.Identity;
         }
@@ -1215,7 +1211,7 @@ namespace log4net.Core
         if ((updateFlags & FixFlags.Exception) != 0)
         {
           // Force the exception text to be loaded
-          forceCreation = GetExceptionString();
+          _ = GetExceptionString();
 
           m_fixFlags |= FixFlags.Exception;
         }
@@ -1226,11 +1222,6 @@ namespace log4net.Core
 
           m_fixFlags |= FixFlags.Properties;
         }
-      }
-
-      // avoid warning CS0219
-      if (forceCreation is not null)
-      {
       }
 
       // Finally lock everything we've cached.
@@ -1246,12 +1237,11 @@ namespace log4net.Core
         compositeProperties.Add(m_eventProperties);
       }
       var logicalThreadProperties = LogicalThreadContext.Properties.GetProperties(false);
-      if (logicalThreadProperties != null)
+      if (logicalThreadProperties is not null)
       {
         compositeProperties.Add(logicalThreadProperties);
       }
-      PropertiesDictionary threadProperties = ThreadContext.Properties.GetProperties(false);
-      if (threadProperties != null)
+      if (ThreadContext.Properties.GetProperties(false) is PropertiesDictionary threadProperties)
       {
         compositeProperties.Add(threadProperties);
       }

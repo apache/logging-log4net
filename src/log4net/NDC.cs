@@ -44,7 +44,7 @@ namespace log4net
   /// come into play.
   /// </para>
   /// <para>
-  /// Note that NDCs are managed on a per thread basis. The NDC class
+  /// Note that NDCs are managed on a per-thread basis. The NDC class
   /// is made up of static methods that operate on the context of the
   /// calling thread.
   /// </para>
@@ -62,24 +62,8 @@ namespace log4net
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
   /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
-  public sealed class NDC
+  public static class NDC
   {
-    #region Private Instance Constructors
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="NDC" /> class. 
-    /// </summary>
-    /// <remarks>
-    /// Uses a private access modifier to prevent instantiation of this class.
-    /// </remarks>
-    private NDC()
-    {
-    }
-
-    #endregion Private Instance Constructors
-
-    #region Public Static Properties
-
     /// <summary>
     /// Gets the current context depth.
     /// </summary>
@@ -105,10 +89,6 @@ namespace log4net
     {
       get { return ThreadContext.Stacks["NDC"].Count; }
     }
-
-    #endregion Public Static Properties
-
-    #region Public Static Methods
 
     /// <summary>
     /// Clears all the contextual information held on the current thread.
@@ -201,7 +181,7 @@ namespace log4net
     /// </para>
     /// </remarks>
     /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
-    public static string Pop()
+    public static string? Pop()
     {
       return ThreadContext.Stacks["NDC"].Pop();
     }
@@ -324,7 +304,7 @@ namespace log4net
     {
       if (maxDepth >= 0)
       {
-        log4net.Util.ThreadContextStack stack = ThreadContext.Stacks["NDC"];
+        Util.ThreadContextStack stack = ThreadContext.Stacks["NDC"];
 
         if (maxDepth == 0)
         {
@@ -339,7 +319,5 @@ namespace log4net
         }
       }
     }
-
-    #endregion Public Static Methods
   }
 }

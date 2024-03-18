@@ -138,8 +138,7 @@ namespace log4net.Repository.Hierarchy
         // Parse the attribute
         try
         {
-          var mode = (ConfigUpdateMode?)OptionConverter.ConvertStringTo(typeof(ConfigUpdateMode), configUpdateModeAttribute);
-          if (mode is not null)
+          if (OptionConverter.ConvertStringTo(typeof(ConfigUpdateMode), configUpdateModeAttribute) is ConfigUpdateMode mode)
           {
             configUpdateMode = mode;
           }

@@ -66,14 +66,8 @@ namespace log4net.Util
     /// </remarks>
     public override object? this[string key]
     {
-      get
-      {
-        return _dictionary?[key];
-      }
-      set
-      {
-        GetProperties(true)![key] = value;
-      }
+      get => _dictionary?[key];
+      set => GetProperties(true)![key] = value;
     }
 
     /// <summary>
@@ -85,10 +79,7 @@ namespace log4net.Util
     /// Remove a property
     /// </para>
     /// </remarks>
-    public void Remove(string key)
-    {
-      _dictionary?.Remove(key);
-    }
+    public void Remove(string key) => _dictionary?.Remove(key);
 
     /// <summary>
     /// Get the keys stored in the properties.
@@ -97,10 +88,7 @@ namespace log4net.Util
     /// Gets the keys stored in the properties.
     /// </para>
     /// <returns>a set of the defined keys</returns>
-    public string[]? GetKeys()
-    {
-      return _dictionary?.GetKeys();
-    }
+    public string[]? GetKeys() => _dictionary?.GetKeys();
 
     /// <summary>
     /// Clear all properties
@@ -110,10 +98,7 @@ namespace log4net.Util
     /// Clear all properties
     /// </para>
     /// </remarks>
-    public void Clear()
-    {
-      _dictionary?.Clear();
-    }
+    public void Clear() => _dictionary?.Clear();
 
     /// <summary>
     /// Get the <c>PropertiesDictionary</c> for this thread.
