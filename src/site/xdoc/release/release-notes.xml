@@ -28,12 +28,20 @@ limitations under the License.
 
     <section id="main" name="Apache log4net&#x2122; Release Notes">
       <section id="3.0.0" name="3.0.0">
-        Attention: Starting with 3.0.0 we only support the followeing target frameworks
-        <ul>
-          <li>net462</li>
-          <li>netstandard2.0</li>
-        </ul>
-        The reasoning for this change can be found in <a href="https://github.com/apache/logging-log4net/issues/111">Dropping support for older runtimes</a>
+        <section id="3.0.0-breaking" name="Breaking Changes">
+          <p>
+            Attention: Starting with 3.0.0 we only support the following target frameworks
+            <ul>
+              <li>net462</li>
+              <li>netstandard2.0</li>
+            </ul>
+            The reasoning for this change can be found in <a href="https://github.com/apache/logging-log4net/issues/111">Dropping support for older runtimes</a>
+          </p>
+          <p>
+            log4net.Util.ReadOnlyPropertiesDictionary.InnerHashtable is now Dictionary&lt;string, object?&gt; (instead of System.Collections.Hashtable before)
+            The reason is an optimization as part of <a href="https://github.com/apache/logging-log4net/issues/124">Add support for nullable annotations</a>
+          </p>
+        </section>
 
         Apache log4net 3.0.0 addresses reported issues:
         <section id="3.0.0-bug" name="Bug fixes">
@@ -43,7 +51,23 @@ limitations under the License.
         <section id="3.0.0-enhancements" name="Enhancements">
           <ul>
             <li>
-              <a href="https://github.com/apache/logging-log4net/issues/111">Dropping support for older runtimes (by @fluffynuts and @freeandnil)</a>
+              <a href="https://github.com/apache/logging-log4net/issues/111">Dropping support for older runtimes</a> (by @fluffynuts and @freeandnil)
+            </li>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/124">Add support for nullable annotations</a> (by @erikmav)
+            </li>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/127">Enable building log4net with docker container</a> (by @freeandnil)
+            </li>
+          </ul>
+        </section>
+      </section>
+      <section id="2.0.17" name="2.0.17">
+        Apache log4net 2.0.17 addresses reported issues:
+        <section id="2.0.17-bug" name="Bug fixes">
+          <ul>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/118">NullRefException from shutdown in 2.0.16</a> fixed in <a href="https://github.com/apache/logging-log4net/pull/120">Fast fix for NullRefException from FileAppender</a> (by @erikmav)
             </li>
           </ul>
         </section>
