@@ -436,7 +436,9 @@ namespace log4net.Appender
       // The old API is deprecated.
 
       // Create and configure the smtp client
+#pragma warning disable CS0618 // Type or member is obsolete
       using SmtpClient smtpClient = new SmtpClient();
+#pragma warning restore CS0618 // Type or member is obsolete
       if (!String.IsNullOrEmpty(m_smtpHost))
       {
         smtpClient.Host = m_smtpHost;
