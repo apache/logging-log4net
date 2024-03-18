@@ -13,7 +13,9 @@ TL;DR (Windows):
   - `npm run build`
 
 TL;DR (Docker):
-- in logging/log4net
+- install docker (if you haven't already)
+  - https://docs.docker.com/engine/install/
+- in logging/log4net run
   - `docker build -t log4net-builder .`
   - `docker run -it log4net-builder /bin/bash`
     - this will
