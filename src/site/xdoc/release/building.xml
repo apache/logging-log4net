@@ -27,47 +27,8 @@ limitations under the License.
   <body>
     <section id="main" name="Building Apache log4net&#x2122;">
       <p>
-        The log4net release builds are built using zarro. Log4net can also be built
-        using Visual Studio.
+        see <a href="https://github.com/apache/logging-log4net/blob/master/doc/BUILDING.md">BUILDING.md</a>
       </p>
-
-      <section id="vsnet" name="Visual Studio">
-        <p>
-          Visual Studio 2019 and 2022 are supported build platforms for log4net.
-        </p>
-
-        <section id="vs" name="Visual Studio">
-          <p>
-            The log4net distribution includes a solution and project file
-            for Visual Studio. Open the <span class="code">log4net.sln</span>
-            from the src directory in the distribution.
-          </p>
-          <p>
-            The log4net project requires only the following references:
-          </p>
-          <ul>
-            <li>System</li>
-            <li>System.Configuration</li>
-            <li>System.Data</li>
-            <li>System.Web</li>
-            <li>System.XML</li>
-          </ul>
-        </section>
-      </section>
-
-      <section id="sdk" name="SDK Reference">
-        <p>
-          <a href="https://github.com/EWSoftware/SHFB">
-            Sandcastle
-            Helpfile Builder
-          </a> is used to build the log4net SDK
-          documentation.  Running it is currently not
-          integrated with the NAnt build process, you'll
-          have to open and run <code>log4net.shfbproj</code>
-          with SHFB manually.
-        </p>
-      </section>
-
     </section>
   </body>
 </document>
