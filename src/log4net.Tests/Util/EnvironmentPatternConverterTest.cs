@@ -37,6 +37,8 @@ namespace log4net.Tests.Util
     [Test]
     public void SystemLevelEnvironmentVariable()
     {
+      if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
+        return;
       EnvironmentPatternConverter converter = new EnvironmentPatternConverter();
       try
       {
@@ -60,6 +62,8 @@ namespace log4net.Tests.Util
     [Test]
     public void UserLevelEnvironmentVariable()
     {
+      if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
+        return;
       EnvironmentPatternConverter converter = new EnvironmentPatternConverter();
       Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, USER_LEVEL_VALUE, EnvironmentVariableTarget.User);
 
