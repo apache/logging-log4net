@@ -17,12 +17,12 @@ TL;DR (Docker):
   - https://docs.docker.com/engine/install/
 - in logging/log4net run
   - `docker build -t log4net-builder .`
-  - `docker run -it log4net-builder /bin/bash`
+  - `docker run -it log4net-builder`
     - this will
       - install all dependencies in the container
       - build src/log4net.sln
   - inside the container run
-    - `dotnet test ../src/log4net.sln` (gets printed after building)
+    - `dotnet test /logging-log4net/src/log4net.sln`
 
 TL;DR (!Windows):
 - install the dotnet SDK - v8 or better

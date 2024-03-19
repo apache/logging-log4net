@@ -31,5 +31,6 @@ ENV DOTNET_ROOT=/root/.dotnet
 ENV PATH="$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools"
   
 ADD . /logging-log4net
-RUN chmod +x /logging-log4net/docker-build/docker-build.sh
-ADD ./docker-build/.bashrc /root/.bashrc
+RUN dotnet restore /logging-log4net/src/log4net.sln
+RUN dotnet build /logging-log4net/src/log4net.sln
+CMD /bin/bash
