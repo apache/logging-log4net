@@ -825,8 +825,7 @@ namespace log4net.Core
         {
           try
           {
-            if (Thread.CurrentPrincipal is not null &&
-                Thread.CurrentPrincipal.Identity?.Name is string name)
+            if (Thread.CurrentPrincipal?.Identity?.Name is string name)
             {
               m_data.Identity = name;
             }
