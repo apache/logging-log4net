@@ -196,14 +196,18 @@ namespace log4net.Layout
 
       writer.WriteAttributeString(ATTR_TIMESTAMP, XmlConvert.ToString(loggingEvent.TimeStamp, XmlDateTimeSerializationMode.Local));
 
-      writer.WriteAttributeString(ATTR_LEVEL, loggingEvent.Level.DisplayName);
+      if (loggingEvent.Level is not null)
+      {
+        writer.WriteAttributeString(ATTR_LEVEL, loggingEvent.Level.DisplayName);
+      }
+
       writer.WriteAttributeString(ATTR_THREAD, loggingEvent.ThreadName!);
 
-      if (loggingEvent.Domain != null && loggingEvent.Domain.Length > 0)
+      if (loggingEvent.Domain is not null && loggingEvent.Domain.Length > 0)
       {
         writer.WriteAttributeString(ATTR_DOMAIN, loggingEvent.Domain);
       }
-      if (loggingEvent.Identity != null && loggingEvent.Identity.Length > 0)
+      if (loggingEvent.Identity is not null && loggingEvent.Identity.Length > 0)
       {
         writer.WriteAttributeString(ATTR_IDENTITY, loggingEvent.Identity);
       }
@@ -213,18 +217,21 @@ namespace log4net.Layout
       }
 
       // Append the message text
-      writer.WriteStartElement(m_elmMessage, Prefix, ELM_MESSAGE, Prefix);
-      if (!Base64EncodeMessage)
+      if (loggingEvent.RenderedMessage is not null)
       {
-        Transform.WriteEscapedXmlString(writer, loggingEvent.RenderedMessage, this.InvalidCharReplacement);
+        writer.WriteStartElement(m_elmMessage, Prefix, ELM_MESSAGE, Prefix);
+        if (!Base64EncodeMessage)
+        {
+          Transform.WriteEscapedXmlString(writer, loggingEvent.RenderedMessage, InvalidCharReplacement);
+        }
+        else
+        {
+          byte[] messageBytes = Encoding.UTF8.GetBytes(loggingEvent.RenderedMessage);
+          string base64Message = Convert.ToBase64String(messageBytes, 0, messageBytes.Length);
+          Transform.WriteEscapedXmlString(writer, base64Message, InvalidCharReplacement);
+        }
+        writer.WriteEndElement();
       }
-      else
-      {
-        byte[] messageBytes = Encoding.UTF8.GetBytes(loggingEvent.RenderedMessage);
-        string base64Message = Convert.ToBase64String(messageBytes, 0, messageBytes.Length);
-        Transform.WriteEscapedXmlString(writer, base64Message, this.InvalidCharReplacement);
-      }
-      writer.WriteEndElement();
 
       PropertiesDictionary properties = loggingEvent.GetProperties();
 
@@ -238,24 +245,27 @@ namespace log4net.Layout
           writer.WriteAttributeString(ATTR_NAME, Transform.MaskXmlInvalidCharacters(entry.Key, InvalidCharReplacement));
 
           // Use an ObjectRenderer to convert the object to a string
-          string valueStr;
-          if (!Base64EncodeProperties)
+          if (loggingEvent.Repository is not null)
           {
-            valueStr = Transform.MaskXmlInvalidCharacters(loggingEvent.Repository.RendererMap.FindAndRender(entry.Value), InvalidCharReplacement);
+            string valueStr;
+            if (!Base64EncodeProperties)
+            {
+              valueStr = Transform.MaskXmlInvalidCharacters(loggingEvent.Repository.RendererMap.FindAndRender(entry.Value), InvalidCharReplacement);
+            }
+            else
+            {
+              byte[] propertyValueBytes = Encoding.UTF8.GetBytes(loggingEvent.Repository.RendererMap.FindAndRender(entry.Value));
+              valueStr = Convert.ToBase64String(propertyValueBytes, 0, propertyValueBytes.Length);
+            }
+            writer.WriteAttributeString(ATTR_VALUE, valueStr);
           }
-          else
-          {
-            byte[] propertyValueBytes = Encoding.UTF8.GetBytes(loggingEvent.Repository.RendererMap.FindAndRender(entry.Value));
-            valueStr = Convert.ToBase64String(propertyValueBytes, 0, propertyValueBytes.Length);
-          }
-          writer.WriteAttributeString(ATTR_VALUE, valueStr);
 
           writer.WriteEndElement();
         }
         writer.WriteEndElement();
       }
 
-      string exceptionStr = loggingEvent.GetExceptionString();
+      string? exceptionStr = loggingEvent.GetExceptionString();
       if (exceptionStr != null && exceptionStr.Length > 0)
       {
         // Append the stack trace line
@@ -266,14 +276,16 @@ namespace log4net.Layout
 
       if (LocationInfo)
       {
-        LocationInfo locationInfo = loggingEvent.LocationInformation;
-
-        writer.WriteStartElement(m_elmLocation, Prefix, ELM_LOCATION, Prefix);
-        writer.WriteAttributeString(ATTR_CLASS, locationInfo.ClassName);
-        writer.WriteAttributeString(ATTR_METHOD, locationInfo.MethodName);
-        writer.WriteAttributeString(ATTR_FILE, locationInfo.FileName);
-        writer.WriteAttributeString(ATTR_LINE, locationInfo.LineNumber);
-        writer.WriteEndElement();
+        LocationInfo? locationInfo = loggingEvent.LocationInformation;
+        if (locationInfo is not null)
+        {
+          writer.WriteStartElement(m_elmLocation, Prefix, ELM_LOCATION, Prefix);
+          writer.WriteAttributeString(ATTR_CLASS, locationInfo.ClassName);
+          writer.WriteAttributeString(ATTR_METHOD, locationInfo.MethodName);
+          writer.WriteAttributeString(ATTR_FILE, locationInfo.FileName);
+          writer.WriteAttributeString(ATTR_LINE, locationInfo.LineNumber);
+          writer.WriteEndElement();
+        }
       }
 
       writer.WriteEndElement();

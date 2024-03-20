@@ -25,8 +25,6 @@ using System.Text;
 using log4net.Core;
 using log4net.Util.TypeConverters;
 
-#nullable enable
-
 namespace log4net.Util
 {
   /// <summary>

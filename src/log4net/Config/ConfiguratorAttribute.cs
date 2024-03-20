@@ -38,7 +38,7 @@ namespace log4net.Config
   [AttributeUsage(AttributeTargets.Assembly)]
   public abstract class ConfiguratorAttribute : Attribute, IComparable
   {
-    private int m_priority = 0;
+    private readonly int m_priority;
 
     /// <summary>
     /// Constructor used by subclasses.
@@ -83,16 +83,14 @@ namespace log4net.Config
     /// </remarks>
     public int CompareTo(object obj)
     {
-      // Reference equals
-      if ((object)this == obj)
+      if (ReferenceEquals(this ,obj))
       {
         return 0;
       }
 
       int result = -1;
 
-      ConfiguratorAttribute target = obj as ConfiguratorAttribute;
-      if (target != null)
+      if (obj is ConfiguratorAttribute target)
       {
         // Compare the priorities
         result = target.m_priority.CompareTo(m_priority);

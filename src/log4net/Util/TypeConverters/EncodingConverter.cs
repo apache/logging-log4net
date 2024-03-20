@@ -25,11 +25,6 @@ namespace log4net.Util.TypeConverters
   /// <summary>
   /// Supports conversion from string to <see cref="Encoding"/> type.
   /// </summary>
-  /// <remarks>
-  /// <para>
-  /// Supports conversion from string to <see cref="Encoding"/> type.
-  /// </para>
-  /// </remarks>
   /// <seealso cref="ConverterRegistry"/>
   /// <seealso cref="IConvertFrom"/>
   /// <seealso cref="IConvertTo"/>
@@ -37,19 +32,14 @@ namespace log4net.Util.TypeConverters
   /// <author>Gert Driesen</author>
   internal class EncodingConverter : IConvertFrom
   {
-    #region Implementation of IConvertFrom
-
     /// <summary>
     /// Can the source type be converted to the type supported by this object
     /// </summary>
     /// <param name="sourceType">the type to convert</param>
-    /// <returns>true if the conversion is possible</returns>
-    /// <remarks>
-    /// <para>
-    /// Returns <c>true</c> if the <paramref name="sourceType"/> is
-    /// the <see cref="String"/> type.
-    /// </para>
-    /// </remarks>
+    /// <returns>
+    /// <c>True</c> if the <paramref name="sourceType"/> is
+    /// the <see cref="string"/> type.
+    /// </returns>
     public bool CanConvertFrom(Type sourceType)
     {
       return (sourceType == typeof(string));
@@ -63,7 +53,7 @@ namespace log4net.Util.TypeConverters
     /// <remarks>
     /// <para>
     /// Uses the <see cref="M:Encoding.GetEncoding(string)"/> method to 
-    /// convert the <see cref="String"/> argument to an <see cref="Encoding"/>.
+    /// convert the <see cref="string"/> argument to an <see cref="Encoding"/>.
     /// </para>
     /// </remarks>
     /// <exception cref="ConversionNotSupportedException">
@@ -73,14 +63,11 @@ namespace log4net.Util.TypeConverters
     /// </exception>
     public object ConvertFrom(object source)
     {
-      string str = source as string;
-      if (str != null)
+      if (source is string str)
       {
         return Encoding.GetEncoding(str);
       }
       throw ConversionNotSupportedException.Create(typeof(Encoding), source);
     }
-
-    #endregion
   }
 }

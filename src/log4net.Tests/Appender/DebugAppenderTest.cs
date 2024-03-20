@@ -21,6 +21,7 @@
 #if NET462_OR_GREATER
 using System;
 using System.Diagnostics;
+using System.Reflection;
 using log4net.Appender;
 using log4net.Config;
 using log4net.Core;
@@ -131,7 +132,7 @@ namespace log4net.Tests.Appender
       log.Debug("Message");
 
       Assert.AreEqual(
-          System.Reflection.MethodInfo.GetCurrentMethod().Name,
+          MethodInfo.GetCurrentMethod().Name,
           categoryTraceListener.Category);
 
       Debug.Listeners.Remove(categoryTraceListener);

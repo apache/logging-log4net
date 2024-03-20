@@ -26,8 +26,6 @@ using log4net.Tests.Appender;
 
 using NUnit.Framework;
 
-#nullable enable
-
 namespace log4net.Tests.Hierarchy
 {
   /// <summary>

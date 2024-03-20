@@ -40,8 +40,6 @@ namespace log4net.Util
   /// <author>Gert Driesen</author>
   public sealed class PatternParser
   {
-    #region Public Instance Constructors
-
     /// <summary>
     /// Constructor
     /// </summary>
@@ -57,20 +55,11 @@ namespace log4net.Util
       m_pattern = pattern;
     }
 
-    #endregion Public Instance Constructors
-
-    #region Public Instance Methods
-
     /// <summary>
     /// Parses the pattern into a chain of pattern converters.
     /// </summary>
     /// <returns>The head of a chain of pattern converters.</returns>
-    /// <remarks>
-    /// <para>
-    /// Parses the pattern into a chain of pattern converters.
-    /// </para>
-    /// </remarks>
-    public PatternConverter Parse()
+    public PatternConverter? Parse()
     {
       string[] converterNamesCache = BuildCache();
 
@@ -79,51 +68,25 @@ namespace log4net.Util
       return m_head;
     }
 
-    #endregion Public Instance Methods
-
-    #region Public Instance Properties
-
     /// <summary>
-    /// Get the converter registry used by this parser
+    /// Gets the converter registry used by this parser.
     /// </summary>
-    /// <value>
-    /// The converter registry used by this parser
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Get the converter registry used by this parser
-    /// </para>
-    /// </remarks>
-    public Hashtable PatternConverters
-    {
-      get { return m_patternConverters; }
-    }
-
-    #endregion Public Instance Properties
-
-    #region Private Instance Methods
+    public Hashtable PatternConverters { get; } = new();
 
     /// <summary>
     /// Build the unified cache of converters from the static and instance maps
     /// </summary>
     /// <returns>the list of all the converter names</returns>
-    /// <remarks>
-    /// <para>
-    /// Build the unified cache of converters from the static and instance maps
-    /// </para>
-    /// </remarks>
     private string[] BuildCache()
     {
-      string[] converterNamesCache = new string[m_patternConverters.Keys.Count];
-      m_patternConverters.Keys.CopyTo(converterNamesCache, 0);
+      string[] converterNamesCache = new string[PatternConverters.Keys.Count];
+      PatternConverters.Keys.CopyTo(converterNamesCache, 0);
 
       // sort array so that longer strings come first
       Array.Sort(converterNamesCache, 0, converterNamesCache.Length, StringLengthComparer.Instance);
 
       return converterNamesCache;
     }
-
-    #region StringLengthComparer
 
     /// <summary>
     /// Sort strings by length
@@ -136,39 +99,33 @@ namespace log4net.Util
     /// </remarks>
     private sealed class StringLengthComparer : IComparer
     {
-      public static readonly StringLengthComparer Instance = new StringLengthComparer();
+      public static readonly StringLengthComparer Instance = new();
 
       private StringLengthComparer()
       {
       }
 
-      #region Implementation of IComparer
-
-      public int Compare(object x, object y)
+      public int Compare(object? x, object? y)
       {
-        string s1 = x as string;
-        string s2 = y as string;
+        string? s1 = x as string;
+        string? s2 = y as string;
 
-        if (s1 == null && s2 == null)
+        if (s1 is null && s2 is null)
         {
           return 0;
         }
-        if (s1 == null)
+        if (s1 is null)
         {
           return 1;
         }
-        if (s2 == null)
+        if (s2 is null)
         {
           return -1;
         }
 
         return s2.Length.CompareTo(s1.Length);
       }
-
-      #endregion
     }
-
-    #endregion // StringLengthComparer
 
     /// <summary>
     /// Internal method to parse the specified pattern to find specified matches
@@ -185,7 +142,7 @@ namespace log4net.Util
       int offset = 0;
       while (offset < pattern.Length)
       {
-        int i = pattern.IndexOf('%', offset);
+        int i = pattern.IndexOf(ESCAPE_CHAR, offset);
         if (i < 0 || i == pattern.Length - 1)
         {
           ProcessLiteral(pattern.Substring(offset));
@@ -193,7 +150,7 @@ namespace log4net.Util
         }
         else
         {
-          if (pattern[i + 1] == '%')
+          if (pattern[i + 1] == ESCAPE_CHAR)
           {
             // Escaped
             ProcessLiteral(pattern.Substring(offset, i - offset + 1));
@@ -204,7 +161,7 @@ namespace log4net.Util
             ProcessLiteral(pattern.Substring(offset, i - offset));
             offset = i + 1;
 
-            FormattingInfo formattingInfo = new FormattingInfo();
+            var formattingInfo = new FormattingInfo();
 
             // Process formatting options
 
@@ -266,9 +223,9 @@ namespace log4net.Util
                 if (string.Compare(pattern, offset, key, 0, key.Length) == 0)
                 {
                   // Found match
-                  offset = offset + matches[m].Length;
+                  offset += matches[m].Length;
 
-                  string option = null;
+                  string? option = null;
 
                   // Look for option
                   if (offset < pattern.Length)
@@ -320,27 +277,28 @@ namespace log4net.Util
     /// <param name="converterName">the name of the converter</param>
     /// <param name="option">the optional option for the converter</param>
     /// <param name="formattingInfo">the formatting info for the converter</param>
-    private void ProcessConverter(string converterName, string option, FormattingInfo formattingInfo)
+    private void ProcessConverter(string converterName, string? option, FormattingInfo formattingInfo)
     {
-      LogLog.Debug(declaringType, "Converter [" + converterName + "] Option [" + option + "] Format [min=" + formattingInfo.Min + ",max=" + formattingInfo.Max + ",leftAlign=" + formattingInfo.LeftAlign + "]");
+      LogLog.Debug(declaringType, $"Converter [{converterName}] Option [{option}] Format [min={formattingInfo.Min},max={formattingInfo.Max},leftAlign={formattingInfo.LeftAlign}]");
 
       // Lookup the converter type
-      ConverterInfo converterInfo = (ConverterInfo)m_patternConverters[converterName];
-      if (converterInfo == null)
+      ConverterInfo? converterInfo = (ConverterInfo)PatternConverters[converterName];
+      if (converterInfo is null)
       {
-        LogLog.Error(declaringType, "Unknown converter name [" + converterName + "] in conversion pattern.");
+        LogLog.Error(declaringType, $"Unknown converter name [{converterName}] in conversion pattern.");
       }
       else
       {
         // Create the pattern converter
-        PatternConverter pc = null;
+        PatternConverter pc;
         try
         {
           pc = (PatternConverter)Activator.CreateInstance(converterInfo.Type);
         }
         catch (Exception createInstanceEx)
         {
-          LogLog.Error(declaringType, "Failed to create instance of Type [" + converterInfo.Type.FullName + "] using default constructor. Exception: " + createInstanceEx.ToString());
+          LogLog.Error(declaringType, $"Failed to create instance of Type [{converterInfo.Type?.FullName}] using default constructor. Exception: {createInstanceEx}");
+          return;
         }
 
         // formattingInfo variable is an instance variable, occasionally reset 
@@ -349,8 +307,7 @@ namespace log4net.Util
         pc.Option = option;
         pc.Properties = converterInfo.Properties;
 
-        IOptionHandler optionHandler = pc as IOptionHandler;
-        if (optionHandler != null)
+        if (pc is IOptionHandler optionHandler)
         {
           optionHandler.ActivateOptions();
         }
@@ -368,7 +325,7 @@ namespace log4net.Util
     {
       // Add the pattern converter to the list.
 
-      if (m_head == null)
+      if (m_head is null)
       {
         m_head = m_tail = pc;
       }
@@ -378,48 +335,26 @@ namespace log4net.Util
         // Update the tail reference
         // note that a converter may combine the 'next' into itself
         // and therefore the tail would not change!
-        m_tail = m_tail.SetNext(pc);
+        m_tail = m_tail!.SetNext(pc);
       }
     }
 
-    #endregion Protected Instance Methods
-
-    #region Private Constants
-
     private const char ESCAPE_CHAR = '%';
-
-    #endregion Private Constants
-
-    #region Private Instance Fields
 
     /// <summary>
     /// The first pattern converter in the chain
     /// </summary>
-    private PatternConverter m_head;
+    private PatternConverter? m_head;
 
     /// <summary>
     ///  the last pattern converter in the chain
     /// </summary>
-    private PatternConverter m_tail;
+    private PatternConverter? m_tail;
 
     /// <summary>
     /// The pattern
     /// </summary>
-    private string m_pattern;
-
-    /// <summary>
-    /// Internal map of converter identifiers to converter types
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// This map overrides the static s_globalRulesRegistry map.
-    /// </para>
-    /// </remarks>
-    private Hashtable m_patternConverters = new Hashtable();
-
-    #endregion Private Instance Fields
-
-    #region Private Static Fields
+    private readonly string m_pattern;
 
     /// <summary>
     /// The fully qualified type of the PatternParser class.
@@ -429,7 +364,5 @@ namespace log4net.Util
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(PatternParser);
-
-    #endregion Private Static Fields
   }
 }

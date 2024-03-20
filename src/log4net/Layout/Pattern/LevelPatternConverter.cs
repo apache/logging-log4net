@@ -50,7 +50,10 @@ namespace log4net.Layout.Pattern
     /// </remarks>
     protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
     {
-      writer.Write(loggingEvent.Level.DisplayName);
+      if (loggingEvent.Level is not null)
+      {
+        writer.Write(loggingEvent.Level.DisplayName);
+      }
     }
   }
 }

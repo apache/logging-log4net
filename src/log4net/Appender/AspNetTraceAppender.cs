@@ -64,7 +64,7 @@ namespace log4net.Appender
         // check if tracing is enabled for the current context
         if (HttpContext.Current.Trace.IsEnabled) 
         {
-          if (loggingEvent.Level >= Level.Warn) 
+          if (loggingEvent.Level is not null && loggingEvent.Level >= Level.Warn) 
           {
             HttpContext.Current.Trace.Warn(Category.Format(loggingEvent), RenderLoggingEvent(loggingEvent));
           }

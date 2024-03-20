@@ -42,8 +42,8 @@ namespace log4net.Tests.Layout
   [TestFixture]
   public class PatternLayoutTest
   {
-    private CultureInfo _currentCulture;
-    private CultureInfo _currentUICulture;
+    private CultureInfo? _currentCulture;
+    private CultureInfo? _currentUICulture;
 
     [SetUp]
     public void SetUp()
@@ -53,15 +53,13 @@ namespace log4net.Tests.Layout
       _currentUICulture = System.Threading.Thread.CurrentThread.CurrentUICulture;
       System.Threading.Thread.CurrentThread.CurrentCulture = System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
     }
-
-
     [TearDown]
     public void TearDown()
     {
       Utils.RemovePropertyFromAllContexts();
       // restore previous culture
-      System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture;
-      System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture;
+      System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture!;
+      System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture!;
     }
 
     protected virtual PatternLayout NewPatternLayout()
@@ -350,7 +348,7 @@ namespace log4net.Tests.Layout
     {
       protected override string GetFullyQualifiedName(LoggingEvent loggingEvent)
       {
-        return loggingEvent.MessageObject.ToString();
+        return loggingEvent.MessageObject?.ToString() ?? string.Empty;
       }
     }
   }

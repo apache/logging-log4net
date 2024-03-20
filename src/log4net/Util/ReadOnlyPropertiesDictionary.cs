@@ -23,8 +23,6 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Xml;
 
-#nullable enable
-
 namespace log4net.Util
 {
   /// <summary>

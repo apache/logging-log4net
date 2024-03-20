@@ -65,14 +65,16 @@ namespace log4net.Tests.Util
                 </log4net>");
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-      XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
+      XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
 
       ILog log = LogManager.GetLogger(rep.Name, "PatternLayoutConverterProperties");
       log.Debug("Message");
 
-      PropertyKeyCountPatternLayoutConverter converter =
+      PropertyKeyCountPatternLayoutConverter? converter =
           PropertyKeyCountPatternLayoutConverter.MostRecentInstance;
-      Assert.AreEqual(2, converter.Properties.Count);
+      Assert.IsNotNull(converter);
+      Assert.IsNotNull(converter!.Properties);
+      Assert.AreEqual(2, converter.Properties!.Count);
       Assert.AreEqual("4", converter.Properties["two-plus-two"]);
 
       StringAppender appender =
@@ -111,53 +113,56 @@ namespace log4net.Tests.Util
                 </log4net>");
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-      XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
+      XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
 
       ILog log = LogManager.GetLogger(rep.Name, "PatternConverterProperties");
       log.Debug("Message");
 
-      PropertyKeyCountPatternConverter converter =
+      PropertyKeyCountPatternConverter? converter =
           PropertyKeyCountPatternConverter.MostRecentInstance;
-      Assert.AreEqual(2, converter.Properties.Count);
+      Assert.IsNotNull(converter);
+      Assert.IsNotNull(converter!.Properties);
+      Assert.AreEqual(2, converter!.Properties!.Count);
       Assert.AreEqual("4", converter.Properties["two-plus-two"]);
 
       PatternStringAppender appender =
           (PatternStringAppender)LogManager.GetRepository(rep.Name).GetAppenders()[0];
-      Assert.AreEqual("2", appender.Setting.Format());
+      Assert.IsNotNull(appender.Setting);
+      Assert.AreEqual("2", appender.Setting!.Format());
     }
   }
 
   public class PropertyKeyCountPatternLayoutConverter : PatternLayoutConverter
   {
-    private static PropertyKeyCountPatternLayoutConverter mostRecentInstance;
+    private static PropertyKeyCountPatternLayoutConverter? mostRecentInstance;
 
     public PropertyKeyCountPatternLayoutConverter() => mostRecentInstance = this;
 
-    protected override void Convert(TextWriter writer, LoggingEvent loggingEvent) => writer.Write(Properties.GetKeys().Length);
+    protected override void Convert(TextWriter writer, LoggingEvent loggingEvent) => writer.Write(Properties!.GetKeys().Length);
 
-    public static PropertyKeyCountPatternLayoutConverter MostRecentInstance => mostRecentInstance;
+    public static PropertyKeyCountPatternLayoutConverter? MostRecentInstance => mostRecentInstance;
   }
 
   public class PropertyKeyCountPatternConverter : PatternConverter
   {
-    private static PropertyKeyCountPatternConverter mostRecentInstance;
+    private static PropertyKeyCountPatternConverter? mostRecentInstance;
 
     public PropertyKeyCountPatternConverter() => mostRecentInstance = this;
 
-    public override void Convert(TextWriter writer, object state)
-      => writer.Write(Properties.GetKeys().Length);
+    public override void Convert(TextWriter writer, object? state)
+      => writer.Write(Properties!.GetKeys().Length);
 
-    public static PropertyKeyCountPatternConverter MostRecentInstance => mostRecentInstance;
+    public static PropertyKeyCountPatternConverter? MostRecentInstance => mostRecentInstance;
   }
 
   public class PatternStringAppender : StringAppender
   {
-    private static PatternStringAppender mostRecentInstace;
+    private static PatternStringAppender? mostRecentInstace;
 
     public PatternStringAppender() => mostRecentInstace = this;
 
-    public PatternString Setting { get; set; }
+    public PatternString? Setting { get; set; }
 
-    public static PatternStringAppender MostRecentInstace => mostRecentInstace;
+    public static PatternStringAppender? MostRecentInstace => mostRecentInstace;
   }
 }

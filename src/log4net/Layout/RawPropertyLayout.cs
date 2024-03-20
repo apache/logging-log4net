@@ -17,59 +17,23 @@
 //
 #endregion
 
-using System;
-using System.Text;
-
 using log4net.Core;
-using log4net.Util;
 
 namespace log4net.Layout
 {
   /// <summary>
-  /// Extract the value of a property from the <see cref="LoggingEvent"/>
+  /// Extracts the value of a property from the <see cref="LoggingEvent"/>.
   /// </summary>
-  /// <remarks>
-  /// <para>
-  /// Extract the value of a property from the <see cref="LoggingEvent"/>
-  /// </para>
-  /// </remarks>
   /// <author>Nicko Cadell</author>
   public class RawPropertyLayout : IRawLayout
   {
-    #region Constructors
-
     /// <summary>
-    /// Constructs a RawPropertyLayout
+    /// The name of the value to look up in the LoggingEvent Properties collection.
     /// </summary>
-    public RawPropertyLayout()
-    {
-    }
-
-    #endregion
-
-    private string m_key;
+    public string Key { get; set; } = string.Empty;
 
     /// <summary>
-    /// The name of the value to lookup in the LoggingEvent Properties collection.
-    /// </summary>
-    /// <value>
-    /// Value to lookup in the LoggingEvent Properties collection
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// String name of the property to lookup in the <see cref="LoggingEvent"/>.
-    /// </para>
-    /// </remarks>
-    public string Key
-    {
-      get { return m_key; }
-      set { m_key = value; }
-    }
-
-    #region Implementation of IRawLayout
-
-    /// <summary>
-    /// Lookup the property for <see cref="Key"/>
+    /// Looks up the property for <see cref="Key"/>.
     /// </summary>
     /// <param name="loggingEvent">The event to format</param>
     /// <returns>returns property value</returns>
@@ -80,11 +44,9 @@ namespace log4net.Layout
     /// with than name then <c>null</c> will be returned.
     /// </para>
     /// </remarks>
-    public virtual object Format(LoggingEvent loggingEvent)
+    public virtual object? Format(LoggingEvent loggingEvent)
     {
-      return loggingEvent.LookupProperty(m_key);
+      return loggingEvent.LookupProperty(Key);
     }
-
-    #endregion
   }
 }

@@ -18,7 +18,7 @@
 #endregion
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 
 using log4net.Core;
@@ -781,8 +781,6 @@ namespace log4net.Layout
   /// <author>Daniel Cazzulino</author>
   public class PatternLayout : LayoutSkeleton
   {
-    #region Constants
-
     /// <summary>
     /// Default pattern string for log output. 
     /// </summary>
@@ -806,10 +804,6 @@ namespace log4net.Layout
     /// </remarks>
     public const string DetailConversionPattern = "%timestamp [%thread] %level %logger %ndc - %message%newline";
 
-    #endregion
-
-    #region Static Fields
-
     /// <summary>
     /// Internal map of converter identifiers to converter types.
     /// </summary>
@@ -818,123 +812,94 @@ namespace log4net.Layout
     /// This static map is overridden by the m_converterRegistry instance map
     /// </para>
     /// </remarks>
-    private static Hashtable s_globalRulesRegistry;
+    private static readonly Dictionary<string, Type> s_globalRulesRegistry = new(StringComparer.Ordinal)
+    {
+      ["literal"] = typeof(LiteralPatternConverter),
+      ["newline"] = typeof(NewLinePatternConverter),
+      ["n"] = typeof(NewLinePatternConverter),
 
-    #endregion Static Fields
+      // .NET Standard has no support for ASP.NET
+#if NET462_OR_GREATER
+      ["aspnet-cache"] = typeof(AspNetCachePatternConverter),
+      ["aspnet-context"] = typeof(AspNetContextPatternConverter),
+      ["aspnet-request"] = typeof(AspNetRequestPatternConverter),
+      ["aspnet-session"] = typeof(AspNetSessionPatternConverter),
+#endif
 
-    #region Member Variables
+      ["c"] = typeof(LoggerPatternConverter),
+      ["logger"] = typeof(LoggerPatternConverter),
 
-    /// <summary>
-    /// the pattern
-    /// </summary>
-    private string m_pattern;
+      ["C"] = typeof(TypeNamePatternConverter),
+      ["class"] = typeof(TypeNamePatternConverter),
+      ["type"] = typeof(TypeNamePatternConverter),
+
+      ["d"] = typeof(DatePatternConverter),
+      ["date"] = typeof(DatePatternConverter),
+
+      ["exception"] = typeof(ExceptionPatternConverter),
+
+      ["F"] = typeof(FileLocationPatternConverter),
+      ["file"] = typeof(FileLocationPatternConverter),
+
+      ["l"] = typeof(FullLocationPatternConverter),
+      ["location"] = typeof(FullLocationPatternConverter),
+
+      ["L"] = typeof(LineLocationPatternConverter),
+      ["line"] = typeof(LineLocationPatternConverter),
+
+      ["m"] = typeof(MessagePatternConverter),
+      ["message"] = typeof(MessagePatternConverter),
+
+      ["M"] = typeof(MethodLocationPatternConverter),
+      ["method"] = typeof(MethodLocationPatternConverter),
+
+      ["p"] = typeof(LevelPatternConverter),
+      ["level"] = typeof(LevelPatternConverter),
+
+      ["P"] = typeof(PropertyPatternConverter),
+      ["property"] = typeof(PropertyPatternConverter),
+      ["properties"] = typeof(PropertyPatternConverter),
+
+      ["r"] = typeof(RelativeTimePatternConverter),
+      ["timestamp"] = typeof(RelativeTimePatternConverter),
+
+      ["stacktrace"] = typeof(StackTracePatternConverter),
+      ["stacktracedetail"] = typeof(StackTraceDetailPatternConverter),
+
+      ["t"] = typeof(ThreadPatternConverter),
+      ["thread"] = typeof(ThreadPatternConverter),
+
+      // For backwards compatibility the NDC patterns
+      ["x"] = typeof(NdcPatternConverter),
+      ["ndc"] = typeof(NdcPatternConverter),
+
+      // For backwards compatibility the MDC patterns just do a property lookup
+      ["X"] = typeof(PropertyPatternConverter),
+      ["mdc"] = typeof(PropertyPatternConverter),
+
+      ["a"] = typeof(AppDomainPatternConverter),
+      ["appdomain"] = typeof(AppDomainPatternConverter),
+
+      ["u"] = typeof(IdentityPatternConverter),
+      ["identity"] = typeof(IdentityPatternConverter),
+
+      ["utcdate"] = typeof(UtcDatePatternConverter),
+      ["utcDate"] = typeof(UtcDatePatternConverter),
+      ["UtcDate"] = typeof(UtcDatePatternConverter),
+
+      ["w"] = typeof(UserNamePatternConverter),
+      ["username"] = typeof(UserNamePatternConverter),
+    };
 
     /// <summary>
     /// the head of the pattern converter chain
     /// </summary>
-    private PatternConverter m_head;
+    private PatternConverter? m_head;
 
     /// <summary>
     /// patterns defined on this PatternLayout only
     /// </summary>
-    private Hashtable m_instanceRulesRegistry = new Hashtable();
-
-    #endregion
-
-    #region Static Constructor
-
-    /// <summary>
-    /// Initialize the global registry
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Defines the builtin global rules.
-    /// </para>
-    /// </remarks>
-    static PatternLayout()
-    {
-      s_globalRulesRegistry = new Hashtable(45);
-
-      s_globalRulesRegistry.Add("literal", typeof(LiteralPatternConverter));
-      s_globalRulesRegistry.Add("newline", typeof(NewLinePatternConverter));
-      s_globalRulesRegistry.Add("n", typeof(NewLinePatternConverter));
-
-      // .NET Standard has no support for ASP.NET
-#if NET462_OR_GREATER
-      s_globalRulesRegistry.Add("aspnet-cache", typeof(AspNetCachePatternConverter));
-      s_globalRulesRegistry.Add("aspnet-context", typeof(AspNetContextPatternConverter));
-      s_globalRulesRegistry.Add("aspnet-request", typeof(AspNetRequestPatternConverter));
-      s_globalRulesRegistry.Add("aspnet-session", typeof(AspNetSessionPatternConverter));
-#endif
-
-      s_globalRulesRegistry.Add("c", typeof(LoggerPatternConverter));
-      s_globalRulesRegistry.Add("logger", typeof(LoggerPatternConverter));
-
-      s_globalRulesRegistry.Add("C", typeof(TypeNamePatternConverter));
-      s_globalRulesRegistry.Add("class", typeof(TypeNamePatternConverter));
-      s_globalRulesRegistry.Add("type", typeof(TypeNamePatternConverter));
-
-      s_globalRulesRegistry.Add("d", typeof(DatePatternConverter));
-      s_globalRulesRegistry.Add("date", typeof(DatePatternConverter));
-
-      s_globalRulesRegistry.Add("exception", typeof(ExceptionPatternConverter));
-
-      s_globalRulesRegistry.Add("F", typeof(FileLocationPatternConverter));
-      s_globalRulesRegistry.Add("file", typeof(FileLocationPatternConverter));
-
-      s_globalRulesRegistry.Add("l", typeof(FullLocationPatternConverter));
-      s_globalRulesRegistry.Add("location", typeof(FullLocationPatternConverter));
-
-      s_globalRulesRegistry.Add("L", typeof(LineLocationPatternConverter));
-      s_globalRulesRegistry.Add("line", typeof(LineLocationPatternConverter));
-
-      s_globalRulesRegistry.Add("m", typeof(MessagePatternConverter));
-      s_globalRulesRegistry.Add("message", typeof(MessagePatternConverter));
-
-      s_globalRulesRegistry.Add("M", typeof(MethodLocationPatternConverter));
-      s_globalRulesRegistry.Add("method", typeof(MethodLocationPatternConverter));
-
-      s_globalRulesRegistry.Add("p", typeof(LevelPatternConverter));
-      s_globalRulesRegistry.Add("level", typeof(LevelPatternConverter));
-
-      s_globalRulesRegistry.Add("P", typeof(PropertyPatternConverter));
-      s_globalRulesRegistry.Add("property", typeof(PropertyPatternConverter));
-      s_globalRulesRegistry.Add("properties", typeof(PropertyPatternConverter));
-
-      s_globalRulesRegistry.Add("r", typeof(RelativeTimePatternConverter));
-      s_globalRulesRegistry.Add("timestamp", typeof(RelativeTimePatternConverter));
-
-      s_globalRulesRegistry.Add("stacktrace", typeof(StackTracePatternConverter));
-      s_globalRulesRegistry.Add("stacktracedetail", typeof(StackTraceDetailPatternConverter));
-
-      s_globalRulesRegistry.Add("t", typeof(ThreadPatternConverter));
-      s_globalRulesRegistry.Add("thread", typeof(ThreadPatternConverter));
-
-      // For backwards compatibility the NDC patterns
-      s_globalRulesRegistry.Add("x", typeof(NdcPatternConverter));
-      s_globalRulesRegistry.Add("ndc", typeof(NdcPatternConverter));
-
-      // For backwards compatibility the MDC patterns just do a property lookup
-      s_globalRulesRegistry.Add("X", typeof(PropertyPatternConverter));
-      s_globalRulesRegistry.Add("mdc", typeof(PropertyPatternConverter));
-
-      s_globalRulesRegistry.Add("a", typeof(AppDomainPatternConverter));
-      s_globalRulesRegistry.Add("appdomain", typeof(AppDomainPatternConverter));
-
-      s_globalRulesRegistry.Add("u", typeof(IdentityPatternConverter));
-      s_globalRulesRegistry.Add("identity", typeof(IdentityPatternConverter));
-
-      s_globalRulesRegistry.Add("utcdate", typeof(UtcDatePatternConverter));
-      s_globalRulesRegistry.Add("utcDate", typeof(UtcDatePatternConverter));
-      s_globalRulesRegistry.Add("UtcDate", typeof(UtcDatePatternConverter));
-
-      s_globalRulesRegistry.Add("w", typeof(UserNamePatternConverter));
-      s_globalRulesRegistry.Add("username", typeof(UserNamePatternConverter));
-    }
-
-    #endregion Static Constructor
-
-    #region Constructors
+    private readonly Dictionary<string, ConverterInfo> m_instanceRulesRegistry = new(StringComparer.Ordinal);
 
     /// <summary>
     /// Constructs a PatternLayout using the DefaultConversionPattern
@@ -973,24 +938,18 @@ namespace log4net.Layout
     /// need not be called. This may not be the case when using a subclass.
     /// </para>
     /// </remarks>
-    public PatternLayout(string pattern)
+    public PatternLayout(string? pattern)
     {
       // By default we do not process the exception
       IgnoresException = true;
 
-      m_pattern = pattern;
-      if (m_pattern == null)
-      {
-        m_pattern = DefaultConversionPattern;
-      }
+      ConversionPattern = pattern ?? DefaultConversionPattern;
 
       ActivateOptions();
     }
 
-    #endregion
-
     /// <summary>
-    /// The pattern formatting string
+    /// Gets or sets the pattern formatting string.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -999,11 +958,7 @@ namespace log4net.Layout
     /// conversion specifiers.
     /// </para>
     /// </remarks>
-    public string ConversionPattern
-    {
-      get { return m_pattern; }
-      set { m_pattern = value; }
-    }
+    public string ConversionPattern { get; set; }
 
     /// <summary>
     /// Create the pattern parser instance
@@ -1018,18 +973,20 @@ namespace log4net.Layout
     /// </remarks>
     protected virtual PatternParser CreatePatternParser(string pattern)
     {
-      PatternParser patternParser = new PatternParser(pattern);
+      var patternParser = new PatternParser(pattern);
 
       // Add all the builtin patterns
-      foreach (DictionaryEntry entry in s_globalRulesRegistry)
+      foreach (KeyValuePair<string, Type> entry in s_globalRulesRegistry)
       {
-        ConverterInfo converterInfo = new ConverterInfo();
-        converterInfo.Name = (string)entry.Key;
-        converterInfo.Type = (Type)entry.Value;
+        var converterInfo = new ConverterInfo
+        {
+          Name = entry.Key,
+          Type = entry.Value
+        };
         patternParser.PatternConverters[entry.Key] = converterInfo;
       }
       // Add the instance patterns
-      foreach (DictionaryEntry entry in m_instanceRulesRegistry)
+      foreach (KeyValuePair<string, ConverterInfo> entry in m_instanceRulesRegistry)
       {
         patternParser.PatternConverters[entry.Key] = entry.Value;
       }
@@ -1037,10 +994,8 @@ namespace log4net.Layout
       return patternParser;
     }
 
-    #region Implementation of IOptionHandler
-
     /// <summary>
-    /// Initialize layout options
+    /// Initializes layout options.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -1057,18 +1012,17 @@ namespace log4net.Layout
     /// </remarks>
     public override void ActivateOptions()
     {
-      m_head = CreatePatternParser(m_pattern).Parse();
+      m_head = CreatePatternParser(ConversionPattern).Parse();
 
-      PatternConverter curConverter = m_head;
-      while (curConverter != null)
+      PatternConverter? curConverter = m_head;
+      while (curConverter is not null)
       {
-        PatternLayoutConverter layoutConverter = curConverter as PatternLayoutConverter;
-        if (layoutConverter != null)
+        if (curConverter is PatternLayoutConverter layoutConverter)
         {
           if (!layoutConverter.IgnoresException)
           {
             // Found converter that handles the exception
-            this.IgnoresException = false;
+            IgnoresException = false;
 
             break;
           }
@@ -1077,43 +1031,37 @@ namespace log4net.Layout
       }
     }
 
-    #endregion
-
-    #region Override implementation of LayoutSkeleton
-
     /// <summary>
     /// Produces a formatted string as specified by the conversion pattern.
     /// </summary>
-    /// <param name="loggingEvent">the event being logged</param>
-    /// <param name="writer">The TextWriter to write the formatted event to</param>
+    /// <param name="loggingEvent">The event being logged.</param>
+    /// <param name="writer">The TextWriter to write the formatted event to.</param>
     /// <remarks>
     /// <para>
-    /// Parse the <see cref="LoggingEvent"/> using the patter format
+    /// Parses the <see cref="LoggingEvent"/> using the patter format
     /// specified in the <see cref="ConversionPattern"/> property.
     /// </para>
     /// </remarks>
     public override void Format(TextWriter writer, LoggingEvent loggingEvent)
     {
-      if (writer == null)
+      if (writer is null)
       {
-        throw new ArgumentNullException("writer");
+        throw new ArgumentNullException(nameof(writer));
       }
-      if (loggingEvent == null)
+      if (loggingEvent is null)
       {
-        throw new ArgumentNullException("loggingEvent");
+        throw new ArgumentNullException(nameof(loggingEvent));
       }
 
-      PatternConverter c = m_head;
+      PatternConverter? c = m_head;
 
       // loop through the chain of pattern converters
-      while (c != null)
+      while (c is not null)
       {
         c.Format(writer, loggingEvent);
         c = c.Next;
       }
     }
-
-    #endregion
 
     /// <summary>
     /// Add a converter to this PatternLayout
@@ -1127,24 +1075,25 @@ namespace log4net.Layout
     /// </remarks>
     public void AddConverter(ConverterInfo converterInfo)
     {
-      if (converterInfo == null) throw new ArgumentNullException("converterInfo");
-
+      if (converterInfo is null)
+      {
+        throw new ArgumentNullException(nameof(converterInfo));
+      }
       if (!typeof(PatternConverter).IsAssignableFrom(converterInfo.Type))
       {
-        throw new ArgumentException("The converter type specified [" + converterInfo.Type + "] must be a subclass of log4net.Util.PatternConverter", "converterInfo");
+        throw new ArgumentException($"The converter type specified [{converterInfo.Type}] must be a subclass of log4net.Util.PatternConverter", "converterInfo");
       }
       m_instanceRulesRegistry[converterInfo.Name] = converterInfo;
     }
 
     /// <summary>
-    /// Add a converter to this PatternLayout
+    /// Adds a named pattern converter to this PatternLayout.
     /// </summary>
     /// <param name="name">the name of the conversion pattern for this converter</param>
     /// <param name="type">the type of the converter</param>
     /// <remarks>
     /// <para>
-    /// Add a named pattern converter to this instance. This
-    /// converter will be used in the formatting of the event.
+    /// This converter will be used in the formatting of the event.
     /// This method must be called before <see cref="ActivateOptions"/>.
     /// </para>
     /// <para>
@@ -1154,12 +1103,20 @@ namespace log4net.Layout
     /// </remarks>
     public void AddConverter(string name, Type type)
     {
-      if (name == null) throw new ArgumentNullException("name");
-      if (type == null) throw new ArgumentNullException("type");
+      if (name is null)
+      {
+        throw new ArgumentNullException(nameof(name));
+      }
+      if (type is null)
+      {
+        throw new ArgumentNullException(nameof(type));
+      }
 
-      ConverterInfo converterInfo = new ConverterInfo();
-      converterInfo.Name = name;
-      converterInfo.Type = type;
+      var converterInfo = new ConverterInfo
+      {
+        Name = name,
+        Type = type
+      };
 
       AddConverter(converterInfo);
     }

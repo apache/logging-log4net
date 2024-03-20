@@ -43,15 +43,14 @@ namespace log4net.Util.PatternStringConverters
     /// Writes the current thread identity to the output <paramref name="writer"/>.
     /// </para>
     /// </remarks>
-    public override void Convert(TextWriter writer, object state)
+    public override void Convert(TextWriter writer, object? state)
     {
       try
       {
-        if (System.Threading.Thread.CurrentPrincipal != null &&
-          System.Threading.Thread.CurrentPrincipal.Identity != null &&
-          System.Threading.Thread.CurrentPrincipal.Identity.Name != null)
+        string? name = System.Threading.Thread.CurrentPrincipal?.Identity?.Name;
+        if (name is not null)
         {
-          writer.Write(System.Threading.Thread.CurrentPrincipal.Identity.Name);
+          writer.Write(name);
         }
       }
       catch (System.Security.SecurityException)
@@ -64,8 +63,6 @@ namespace log4net.Util.PatternStringConverters
       }
     }
 
-    #region Private Static Fields
-
     /// <summary>
     /// The fully qualified type of the IdentityPatternConverter class.
     /// </summary>
@@ -74,7 +71,5 @@ namespace log4net.Util.PatternStringConverters
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(IdentityPatternConverter);
-
-    #endregion Private Static Fields
   }
 }

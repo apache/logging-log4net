@@ -520,7 +520,7 @@ namespace log4net.Util
         LogReceived += m_handler;
       }
 
-      void LogLog_LogReceived(object source, LogReceivedEventArgs e)
+      void LogLog_LogReceived(object? source, LogReceivedEventArgs e)
       {
         Items.Add(e.LogLog);
       }

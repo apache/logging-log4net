@@ -19,6 +19,7 @@
  *
 */
 
+using log4net.Core;
 using System;
 
 namespace log4net.Tests.Appender
@@ -29,11 +30,15 @@ namespace log4net.Tests.Appender
   /// <seealso cref="System.EventArgs" />
   public class LoggingEventEventArgs : EventArgs
   {
-    public log4net.Core.LoggingEvent LoggingEvent { get; private set; }
+    public LoggingEvent LoggingEvent { get; private set; }
 
-    public LoggingEventEventArgs(log4net.Core.LoggingEvent loggingEvent)
+    public LoggingEventEventArgs(LoggingEvent loggingEvent)
     {
-      if (loggingEvent == null) throw new ArgumentNullException("loggingEvent");
+      if (loggingEvent is null)
+      {
+        throw new ArgumentNullException(nameof(loggingEvent));
+      }
+
       LoggingEvent = loggingEvent;
     }
   }
@@ -47,29 +52,22 @@ namespace log4net.Tests.Appender
   /// </remarks>
   public class EventRaisingAppender : log4net.Appender.IAppender
   {
-    public event EventHandler<LoggingEventEventArgs> LoggingEventAppended;
+    public event EventHandler<LoggingEventEventArgs>? LoggingEventAppended;
 
     protected void OnLoggingEventAppended(LoggingEventEventArgs e)
     {
-      var loggingEventAppended = LoggingEventAppended;
-      if (loggingEventAppended != null)
-      {
-        loggingEventAppended(this, e);
-      }
+      LoggingEventAppended?.Invoke(this, e);
     }
 
     public void Close()
     {
     }
 
-    public void DoAppend(log4net.Core.LoggingEvent loggingEvent)
+    public void DoAppend(LoggingEvent loggingEvent)
     {
       OnLoggingEventAppended(new LoggingEventEventArgs(loggingEvent));
     }
 
-    public string Name
-    {
-      get; set;
-    }
+    public string Name { get; set; } = string.Empty;
   }
 }

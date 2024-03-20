@@ -62,7 +62,7 @@ namespace log4net.Core
       }
       catch (Exception ex)
       {
-        LogLog.Error(declaringType, "An exception ocurred while retreiving stack frame information.", ex);
+        LogLog.Error(declaringType, "An exception occurred while retrieving stack frame information.", ex);
       }
 
       // set full info

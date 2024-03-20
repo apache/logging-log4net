@@ -26,8 +26,6 @@ using CallContext = System.Runtime.Remoting.Messaging.CallContext;
 using CallContext = System.Threading.AsyncLocal<log4net.Util.PropertiesDictionary>;
 #endif
 
-#nullable enable
-
 namespace log4net.Util
 {
   /// <summary>

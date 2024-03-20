@@ -17,9 +17,6 @@
 //
 #endregion
 
-using System;
-using System.Collections;
-
 namespace log4net
 {
   /// <summary>
@@ -48,24 +45,8 @@ namespace log4net
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
   /*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
-  public sealed class MDC
+  public static class MDC
   {
-    #region Private Instance Constructors
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MDC" /> class. 
-    /// </summary>
-    /// <remarks>
-    /// Uses a private access modifier to prevent instantiation of this class.
-    /// </remarks>
-    private MDC()
-    {
-    }
-
-    #endregion Private Instance Constructors
-
-    #region Public Static Methods
-
     /// <summary>
     /// Gets the context value identified by the <paramref name="key" /> parameter.
     /// </summary>
@@ -84,14 +65,10 @@ namespace log4net
     /// </para>
     /// </remarks>
     /*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
-    public static string Get(string key)
+    public static string? Get(string key)
     {
-      object obj = ThreadContext.Properties[key];
-      if (obj == null)
-      {
-        return null;
-      }
-      return obj.ToString();
+      object? obj = ThreadContext.Properties[key];
+      return obj?.ToString();
     }
 
     /// <summary>
@@ -163,7 +140,5 @@ namespace log4net
     {
       ThreadContext.Properties.Clear();
     }
-
-    #endregion Public Static Methods
   }
 }

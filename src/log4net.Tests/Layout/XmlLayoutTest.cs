@@ -36,8 +36,8 @@ namespace log4net.Tests.Layout
   [TestFixture]
   public sealed class XmlLayoutTest
   {
-    private CultureInfo _currentCulture;
-    private CultureInfo _currentUICulture;
+    private CultureInfo? _currentCulture;
+    private CultureInfo? _currentUICulture;
 
     [SetUp]
     public void SetUp()
@@ -52,8 +52,8 @@ namespace log4net.Tests.Layout
     public void TearDown()
     {
       // restore previous culture
-      System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture;
-      System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture;
+      System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture!;
+      System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture!;
     }
 
     /// <summary>
@@ -202,7 +202,7 @@ namespace log4net.Tests.Layout
     public void TestPropertyEventLogging()
     {
       LoggingEventData evt = CreateBaseEvent();
-      evt.Properties["Property1"] = "prop1";
+      evt.Properties!["Property1"] = "prop1";
 
       XmlLayout layout = new XmlLayout();
       StringAppender stringAppender = new StringAppender();
@@ -223,7 +223,7 @@ namespace log4net.Tests.Layout
     public void TestBase64PropertyEventLogging()
     {
       LoggingEventData evt = CreateBaseEvent();
-      evt.Properties["Property1"] = "prop1";
+      evt.Properties!["Property1"] = "prop1";
 
       XmlLayout layout = new XmlLayout();
       layout.Base64EncodeProperties = true;
@@ -245,7 +245,7 @@ namespace log4net.Tests.Layout
     public void TestPropertyCharacterEscaping()
     {
       LoggingEventData evt = CreateBaseEvent();
-      evt.Properties["Property1"] = "prop1 \"quoted\"";
+      evt.Properties!["Property1"] = "prop1 \"quoted\"";
 
       XmlLayout layout = new XmlLayout();
       StringAppender stringAppender = new StringAppender();
@@ -266,7 +266,7 @@ namespace log4net.Tests.Layout
     public void TestPropertyIllegalCharacterMasking()
     {
       LoggingEventData evt = CreateBaseEvent();
-      evt.Properties["Property1"] = "mask this ->\uFFFF";
+      evt.Properties!["Property1"] = "mask this ->\uFFFF";
 
       XmlLayout layout = new XmlLayout();
       StringAppender stringAppender = new StringAppender();
@@ -287,7 +287,7 @@ namespace log4net.Tests.Layout
     public void TestPropertyIllegalCharacterMaskingInName()
     {
       LoggingEventData evt = CreateBaseEvent();
-      evt.Properties["Property\uFFFF"] = "mask this ->\uFFFF";
+      evt.Properties!["Property\uFFFF"] = "mask this ->\uFFFF";
 
       XmlLayout layout = new XmlLayout();
       StringAppender stringAppender = new StringAppender();

@@ -26,8 +26,6 @@ using log4net.Util;
 using log4net.Repository;
 using log4net.Repository.Hierarchy;
 
-#nullable enable
-
 namespace log4net.Config
 {
   /// <summary>

@@ -344,7 +344,7 @@ namespace log4net.Appender
       int eventID = m_eventId;
 
       // Look for the EventID property
-      object eventIDPropertyObj = loggingEvent.LookupProperty("EventID");
+      object? eventIDPropertyObj = loggingEvent.LookupProperty("EventID");
       if (eventIDPropertyObj is not null)
       {
         if (eventIDPropertyObj is int eventIdInt)
@@ -452,6 +452,12 @@ namespace log4net.Appender
       }
 
       // Use default behavior
+      if (level is null)
+      {
+        // Default setting
+        return EventLogEntryType.Information;
+      }
+
       if (level >= Level.Error)
       {
         return EventLogEntryType.Error;

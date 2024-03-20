@@ -53,9 +53,9 @@ namespace log4net.Tests.Appender
         m_buffer.Append(message + '\n' + e.Message + '\n');
       }
 
-      public void Error(string message, Exception e, ErrorCode errorCode)
+      public void Error(string message, Exception? e, ErrorCode errorCode)
       {
-        m_buffer.Append(message + '\n' + e.Message + '\n');
+        m_buffer.Append(message + '\n' + e?.Message + '\n');
       }
     }
 

@@ -37,8 +37,6 @@ namespace log4net.Util.TypeConverters
   [Serializable]
   public class ConversionNotSupportedException : ApplicationException
   {
-    #region Public Instance Constructors
-
     /// <summary>
     /// Constructor
     /// </summary>
@@ -61,7 +59,7 @@ namespace log4net.Util.TypeConverters
     /// with the specified message.
     /// </para>
     /// </remarks>
-    public ConversionNotSupportedException(String message) : base(message)
+    public ConversionNotSupportedException(string message) : base(message)
     {
     }
 
@@ -76,13 +74,9 @@ namespace log4net.Util.TypeConverters
     /// with the specified message and inner exception.
     /// </para>
     /// </remarks>
-    public ConversionNotSupportedException(String message, Exception innerException) : base(message, innerException)
+    public ConversionNotSupportedException(string message, Exception? innerException) : base(message, innerException)
     {
     }
-
-    #endregion Public Instance Constructors
-
-    #region Protected Instance Constructors
 
     /// <summary>
     /// Serialization constructor
@@ -98,10 +92,6 @@ namespace log4net.Util.TypeConverters
     protected ConversionNotSupportedException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }
-
-    #endregion Protected Instance Constructors
-
-    #region  Public Static Methods
 
     /// <summary>
     /// Creates a new instance of the <see cref="ConversionNotSupportedException" /> class.
@@ -131,18 +121,16 @@ namespace log4net.Util.TypeConverters
     /// Creates a new instance of the <see cref="ConversionNotSupportedException" /> class.
     /// </para>
     /// </remarks>
-    public static ConversionNotSupportedException Create(Type destinationType, object sourceValue, Exception innerException)
+    public static ConversionNotSupportedException Create(Type destinationType, object? sourceValue, Exception? innerException)
     {
-      if (sourceValue == null)
+      if (sourceValue is null)
       {
-        return new ConversionNotSupportedException("Cannot convert value [null] to type [" + destinationType + "]", innerException);
+        return new ConversionNotSupportedException($"Cannot convert value [null] to type [{destinationType}]", innerException);
       }
       else
       {
-        return new ConversionNotSupportedException("Cannot convert from type [" + sourceValue.GetType() + "] value [" + sourceValue + "] to type [" + destinationType + "]", innerException);
+        return new ConversionNotSupportedException($"Cannot convert from type [{sourceValue.GetType()}] value [{sourceValue}] to type [{destinationType}]", innerException);
       }
     }
-
-    #endregion  Public Static Methods
   }
 }

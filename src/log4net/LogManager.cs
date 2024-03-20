@@ -82,7 +82,7 @@ namespace log4net
     /// <para>The root logger is <b>not</b> included in the returned array.</para>
     /// </remarks>
     /// <returns>All the defined loggers.</returns>
-    public static ILog[] GetCurrentLoggers()
+    public static ILog?[] GetCurrentLoggers()
     {
       return GetCurrentLoggers(Assembly.GetCallingAssembly());
     }
@@ -160,7 +160,7 @@ namespace log4net
     /// The root logger is <b>not</b> included in the returned array.
     /// </remarks>
     /// <returns>All the defined loggers.</returns>
-    public static ILog[] GetCurrentLoggers(string repository)
+    public static ILog?[] GetCurrentLoggers(string repository)
     {
       return WrapLoggers(LoggerManager.GetCurrentLoggers(repository));
     }
@@ -173,7 +173,7 @@ namespace log4net
     /// The root logger is <b>not</b> included in the returned array.
     /// </remarks>
     /// <returns>All the defined loggers.</returns>
-    public static ILog[] GetCurrentLoggers(Assembly repositoryAssembly)
+    public static ILog?[] GetCurrentLoggers(Assembly repositoryAssembly)
     {
       return WrapLoggers(LoggerManager.GetCurrentLoggers(repositoryAssembly));
     }
@@ -745,9 +745,9 @@ namespace log4net
     /// </summary>
     /// <param name="loggers">The loggers to get the wrappers for.</param>
     /// <returns>The wrapper objects for the loggers specified.</returns>
-    private static ILog[] WrapLoggers(ILogger[] loggers)
+    private static ILog?[] WrapLoggers(ILogger[] loggers)
     {
-      ILog[] results = new ILog[loggers.Length];
+      var results = new ILog?[loggers.Length];
       for (int i = 0; i < loggers.Length; i++)
       {
         results[i] = WrapLogger(loggers[i]);

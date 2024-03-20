@@ -212,18 +212,16 @@ namespace log4net.Tests.Context
       Thread.CurrentThread.Join(2000);
     }
 
-    private static void ExecuteBackgroundThread(object context)
+    private static void ExecuteBackgroundThread(object? context)
     {
-      string testBackgroundThreadContextPropertyRepository = (string)context;
+      string testBackgroundThreadContextPropertyRepository = (string)context!;
       ILog log = LogManager.GetLogger(testBackgroundThreadContextPropertyRepository, "ExecuteBackGroundThread");
       ThreadContext.Properties["DateTimeTodayToString"] = DateTime.Today.ToString(CultureInfo.InvariantCulture);
 
       log.Info("TestMessage");
 
-      Repository.Hierarchy.Hierarchy hierarchyLoggingRepository =
-          (Repository.Hierarchy.Hierarchy)log.Logger.Repository;
+      var hierarchyLoggingRepository = (Repository.Hierarchy.Hierarchy?)log.Logger.Repository;
       StringAppender stringAppender = (StringAppender)hierarchyLoggingRepository!.Root.Appenders[0];
-
       Assert.AreEqual(DateTime.Today.ToString(CultureInfo.InvariantCulture), stringAppender.GetString());
     }
 
@@ -257,15 +255,15 @@ namespace log4net.Tests.Context
       public bool Flag { get; set; }
     }
 
-    private void SpinAndCheck(object obj)
+    private void SpinAndCheck(object? obj)
     {
-      var container = (FlagContainer)obj;
+      var container = (FlagContainer)obj!;
       var threadid = Thread.CurrentThread.ManagedThreadId;
       for (var i = 0; i < 100000; i++)
       {
         ThreadContext.Properties["threadid"] = threadid;
         Thread.Sleep(0);
-        if ((int)ThreadContext.Properties["threadid"] != threadid)
+        if ((int?)ThreadContext.Properties["threadid"] != threadid)
         {
           container.Flag = true;
           break;

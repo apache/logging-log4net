@@ -61,7 +61,7 @@ namespace log4net.Core
     /// <summary>
     /// The type that triggers this evaluator.
     /// </summary>
-    public Type ExceptionType { get; set; }
+    public Type? ExceptionType { get; set; }
 
     /// <summary>
     /// If true, this evaluator will trigger on subclasses of <see cref="ExceptionType"/>.
@@ -93,7 +93,7 @@ namespace log4net.Core
       {
         // check if loggingEvent.ExceptionObject is of type ExceptionType or subclass of ExceptionType
         Type exceptionObjectType = loggingEvent.ExceptionObject.GetType();
-        return exceptionObjectType == ExceptionType || ExceptionType.IsAssignableFrom(exceptionObjectType);
+        return ExceptionType is null || exceptionObjectType == ExceptionType || ExceptionType.IsAssignableFrom(exceptionObjectType);
       }
       else if (!TriggerOnSubclass && loggingEvent.ExceptionObject is not null)
       {

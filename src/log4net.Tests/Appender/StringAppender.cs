@@ -30,14 +30,7 @@ namespace log4net.Tests.Appender
   /// <author>Nicko Cadell</author>
   public class StringAppender : AppenderSkeleton
   {
-    private StringBuilder m_buf = new();
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="StringAppender" /> class.
-    /// </summary>
-    public StringAppender()
-    {
-    }
+    private readonly StringBuilder m_buf = new();
 
     /// <summary>
     /// Get the string logged so far

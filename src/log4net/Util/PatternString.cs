@@ -18,11 +18,11 @@
 #endregion
 
 using System;
-using System.Collections;
 using System.IO;
 
 using log4net.Util.PatternStringConverters;
 using log4net.Core;
+using System.Collections.Generic;
 
 namespace log4net.Util
 {
@@ -255,68 +255,42 @@ namespace log4net.Util
   /// <author>Nicko Cadell</author>
   public class PatternString : IOptionHandler
   {
-    #region Static Fields
-
     /// <summary>
     /// Internal map of converter identifiers to converter types.
     /// </summary>
-    private static Hashtable s_globalRulesRegistry;
+    private static readonly Dictionary<string, Type> s_globalRulesRegistry = new(StringComparer.Ordinal)
+    {
+      // TODO - have added common variants of casing for utcdate and appsetting.
+      // Wouldn't it be better to use a case-insensitive dictionary?
 
-    #endregion Static Fields
-
-    #region Member Variables
-
-    /// <summary>
-    /// the pattern
-    /// </summary>
-    private string m_pattern;
+      ["appdomain"] = typeof(AppDomainPatternConverter),
+      ["appsetting"] = typeof(AppSettingPatternConverter),
+      ["appSetting"] = typeof(AppSettingPatternConverter),
+      ["AppSetting"] = typeof(AppSettingPatternConverter),
+      ["date"] = typeof(DatePatternConverter),
+      ["env"] = typeof(EnvironmentPatternConverter),
+      ["envFolderPath"] = typeof(EnvironmentFolderPathPatternConverter),
+      ["identity"] = typeof(IdentityPatternConverter),
+      ["literal"] = typeof(LiteralPatternConverter),
+      ["newline"] = typeof(NewLinePatternConverter),
+      ["processid"] = typeof(ProcessIdPatternConverter),
+      ["property"] = typeof(PropertyPatternConverter),
+      ["random"] = typeof(RandomStringPatternConverter),
+      ["username"] = typeof(UserNamePatternConverter),
+      ["utcdate"] = typeof(UtcDatePatternConverter),
+      ["utcDate"] = typeof(UtcDatePatternConverter),
+      ["UtcDate"] = typeof(UtcDatePatternConverter),
+    };
 
     /// <summary>
     /// the head of the pattern converter chain
     /// </summary>
-    private PatternConverter m_head;
+    private PatternConverter? m_head;
 
     /// <summary>
     /// patterns defined on this PatternString only
     /// </summary>
-    private Hashtable m_instanceRulesRegistry = new Hashtable();
-
-    #endregion
-
-    #region Static Constructor
-
-    /// <summary>
-    /// Initialize the global registry
-    /// </summary>
-    static PatternString()
-    {
-      s_globalRulesRegistry = new Hashtable(18);
-
-      s_globalRulesRegistry.Add("appdomain", typeof(AppDomainPatternConverter));
-      s_globalRulesRegistry.Add("date", typeof(DatePatternConverter));
-      s_globalRulesRegistry.Add("env", typeof(EnvironmentPatternConverter));
-      s_globalRulesRegistry.Add("envFolderPath", typeof(EnvironmentFolderPathPatternConverter));
-      s_globalRulesRegistry.Add("identity", typeof(IdentityPatternConverter));
-      s_globalRulesRegistry.Add("literal", typeof(LiteralPatternConverter));
-      s_globalRulesRegistry.Add("newline", typeof(NewLinePatternConverter));
-      s_globalRulesRegistry.Add("processid", typeof(ProcessIdPatternConverter));
-      s_globalRulesRegistry.Add("property", typeof(PropertyPatternConverter));
-      s_globalRulesRegistry.Add("random", typeof(RandomStringPatternConverter));
-      s_globalRulesRegistry.Add("username", typeof(UserNamePatternConverter));
-
-      s_globalRulesRegistry.Add("utcdate", typeof(UtcDatePatternConverter));
-      s_globalRulesRegistry.Add("utcDate", typeof(UtcDatePatternConverter));
-      s_globalRulesRegistry.Add("UtcDate", typeof(UtcDatePatternConverter));
-      // TODO - have added common variants of casing like utcdate above.
-      // Wouldn't it be better to use a case-insensitive Hashtable?
-      s_globalRulesRegistry.Add("appsetting", typeof(AppSettingPatternConverter));
-      s_globalRulesRegistry.Add("appSetting", typeof(AppSettingPatternConverter));
-      s_globalRulesRegistry.Add("AppSetting", typeof(AppSettingPatternConverter));
-    }
-
-    #endregion Static Constructor
-
-    #region Constructors
+    private readonly Dictionary<string, ConverterInfo> m_instanceRulesRegistry = new(StringComparer.Ordinal);
 
     /// <summary>
     /// Default constructor
@@ -339,13 +313,11 @@ namespace log4net.Util
     /// Initialize a new instance of <see cref="PatternString"/> with the pattern specified.
     /// </para>
     /// </remarks>
-    public PatternString(string pattern)
+    public PatternString(string? pattern)
     {
-      m_pattern = pattern;
+      ConversionPattern = pattern;
       ActivateOptions();
     }
-
-    #endregion
 
     /// <summary>
     /// Gets or sets the pattern formatting string
@@ -360,13 +332,7 @@ namespace log4net.Util
     /// conversion specifiers.
     /// </para>
     /// </remarks>
-    public string ConversionPattern
-    {
-      get { return m_pattern; }
-      set { m_pattern = value; }
-    }
-
-    #region Implementation of IOptionHandler
+    public string? ConversionPattern { get; set; }
 
     /// <summary>
     /// Initialize object options
@@ -386,10 +352,15 @@ namespace log4net.Util
     /// </remarks>
     public virtual void ActivateOptions()
     {
-      m_head = CreatePatternParser(m_pattern).Parse();
+      if (ConversionPattern is null)
+      {
+        m_head = null;
+      }
+      else
+      {
+        m_head = CreatePatternParser(ConversionPattern).Parse();
+      }
     }
-
-    #endregion
 
     /// <summary>
     /// Create the <see cref="PatternParser"/> used to parse the pattern
@@ -405,18 +376,20 @@ namespace log4net.Util
     /// </remarks>
     private PatternParser CreatePatternParser(string pattern)
     {
-      PatternParser patternParser = new PatternParser(pattern);
+      var patternParser = new PatternParser(pattern);
 
       // Add all the builtin patterns
-      foreach (DictionaryEntry entry in s_globalRulesRegistry)
+      foreach (KeyValuePair<string, Type> entry in s_globalRulesRegistry)
       {
-        ConverterInfo converterInfo = new ConverterInfo();
-        converterInfo.Name = (string)entry.Key;
-        converterInfo.Type = (Type)entry.Value;
+        var converterInfo = new ConverterInfo
+        {
+          Name = entry.Key,
+          Type = entry.Value
+        };
         patternParser.PatternConverters.Add(entry.Key, converterInfo);
       }
       // Add the instance patterns
-      foreach (DictionaryEntry entry in m_instanceRulesRegistry)
+      foreach (KeyValuePair<string, ConverterInfo> entry in m_instanceRulesRegistry)
       {
         patternParser.PatternConverters[entry.Key] = entry.Value;
       }
@@ -435,15 +408,15 @@ namespace log4net.Util
     /// </remarks>
     public void Format(TextWriter writer)
     {
-      if (writer == null)
+      if (writer is null)
       {
-        throw new ArgumentNullException("writer");
+        throw new ArgumentNullException(nameof(writer));
       }
 
-      PatternConverter c = m_head;
+      PatternConverter? c = m_head;
 
       // loop through the chain of pattern converters
-      while (c != null)
+      while (c is not null)
       {
         c.Format(writer, null);
         c = c.Next;
@@ -461,28 +434,31 @@ namespace log4net.Util
     /// </remarks>
     public string Format()
     {
-      using StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
+      using var writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
       Format(writer);
       return writer.ToString();
     }
 
     /// <summary>
-    /// Add a converter to this PatternString
+    /// Adds a converter to this PatternString.
     /// </summary>
     /// <param name="converterInfo">the converter info</param>
     /// <remarks>
     /// <para>
     /// This version of the method is used by the configurator.
     /// Programmatic users should use the alternative <see cref="M:AddConverter(string,Type)"/> method.
+    /// The converter name is case-insensitive.
     /// </para>
     /// </remarks>
     public void AddConverter(ConverterInfo converterInfo)
     {
-      if (converterInfo == null) throw new ArgumentNullException("converterInfo");
-
+      if (converterInfo is null)
+      {
+        throw new ArgumentNullException(nameof(converterInfo));
+      }
       if (!typeof(PatternConverter).IsAssignableFrom(converterInfo.Type))
       {
-        throw new ArgumentException("The converter type specified [" + converterInfo.Type + "] must be a subclass of log4net.Util.PatternConverter", "converterInfo");
+        throw new ArgumentException($"The converter type specified [{converterInfo.Type}] must be a subclass of log4net.Util.PatternConverter", "converterInfo");
       }
       m_instanceRulesRegistry[converterInfo.Name] = converterInfo;
     }
@@ -492,20 +468,22 @@ namespace log4net.Util
     /// </summary>
     /// <param name="name">the name of the conversion pattern for this converter</param>
     /// <param name="type">the type of the converter</param>
-    /// <remarks>
-    /// <para>
-    /// Add a converter to this PatternString
-    /// </para>
-    /// </remarks>
     public void AddConverter(string name, Type type)
     {
-      if (name == null) throw new ArgumentNullException("name");
-      if (type == null) throw new ArgumentNullException("type");
+      if (name is null)
+      {
+        throw new ArgumentNullException(nameof(name));
+      }
+      if (type is null)
+      {
+        throw new ArgumentNullException(nameof(type));
+      }
 
-      ConverterInfo converterInfo = new ConverterInfo();
-      converterInfo.Name = name;
-      converterInfo.Type = type;
-
+      var converterInfo = new ConverterInfo
+      {
+        Name = name,
+        Type = type
+      };
       AddConverter(converterInfo);
     }
   }

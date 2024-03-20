@@ -19,8 +19,6 @@
 
 using System;
 
-#nullable enable
-
 namespace log4net.Appender
 {
   public partial class RollingFileAppender

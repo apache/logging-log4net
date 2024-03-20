@@ -90,7 +90,7 @@ namespace log4net.Repository
     /// stored by the <see cref="IRepositorySelector"/>.
     /// </para>
     /// </remarks>
-    public virtual string? Name { get; set; }
+    public virtual string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// The threshold for all events in this repository
@@ -178,7 +178,7 @@ namespace log4net.Repository
     /// its reference, otherwise returns <c>null</c>.
     /// </para>
     /// </remarks>
-    public abstract ILogger Exists(string name);
+    public abstract ILogger? Exists(string name);
 
     /// <summary>
     /// Returns all the currently defined loggers in the repository

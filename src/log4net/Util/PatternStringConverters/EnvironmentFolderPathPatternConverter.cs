@@ -48,7 +48,7 @@ namespace log4net.Util.PatternStringConverters
     /// property.
     /// </para>
     /// </remarks>
-    public override void Convert(TextWriter writer, object state)
+    public override void Convert(TextWriter writer, object? state)
     {
       try
       {
@@ -59,7 +59,9 @@ namespace log4net.Util.PatternStringConverters
 
           string envFolderPathValue = Environment.GetFolderPath(specialFolder);
           if (envFolderPathValue?.Length > 0)
+          {
             writer.Write(envFolderPathValue);
+          }
         }
       }
       catch (System.Security.SecurityException secEx)
@@ -75,8 +77,6 @@ namespace log4net.Util.PatternStringConverters
       }
     }
 
-    #region Private Static Fields
-
     /// <summary>
     /// The fully qualified type of the EnvironmentFolderPathPatternConverter class.
     /// </summary>
@@ -85,7 +85,5 @@ namespace log4net.Util.PatternStringConverters
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(EnvironmentFolderPathPatternConverter);
-
-    #endregion Private Static Fields
   }
 }

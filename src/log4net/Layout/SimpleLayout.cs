@@ -19,9 +19,7 @@
 
 using System;
 using System.IO;
-using System.Text;
 
-using log4net.Util;
 using log4net.Core;
 
 namespace log4net.Layout
@@ -42,8 +40,6 @@ namespace log4net.Layout
   /// <author>Gert Driesen</author>
   public class SimpleLayout : LayoutSkeleton
   {
-    #region Constructors
-
     /// <summary>
     /// Constructs a SimpleLayout
     /// </summary>
@@ -51,10 +47,6 @@ namespace log4net.Layout
     {
       IgnoresException = true;
     }
-
-    #endregion
-
-    #region Implementation of IOptionHandler
 
     /// <summary>
     /// Initialize layout options
@@ -77,10 +69,6 @@ namespace log4net.Layout
       // nothing to do.
     }
 
-    #endregion
-
-    #region Override implementation of LayoutSkeleton
-
     /// <summary>
     /// Produces a simple formatted output.
     /// </summary>
@@ -88,24 +76,25 @@ namespace log4net.Layout
     /// <param name="writer">The TextWriter to write the formatted event to</param>
     /// <remarks>
     /// <para>
-    /// Formats the event as the level of the even,
+    /// Formats the event as the level of the event,
     /// followed by " - " and then the log message itself. The
     /// output is terminated by a newline.
     /// </para>
     /// </remarks>
     public override void Format(TextWriter writer, LoggingEvent loggingEvent)
     {
-      if (loggingEvent == null)
+      if (loggingEvent is null)
       {
-        throw new ArgumentNullException("loggingEvent");
+        throw new ArgumentNullException(nameof(loggingEvent));
       }
 
-      writer.Write(loggingEvent.Level.DisplayName);
-      writer.Write(" - ");
+      if (loggingEvent.Level is not null)
+      {
+        writer.Write(loggingEvent.Level.DisplayName);
+        writer.Write(" - ");
+      }
       loggingEvent.WriteRenderedMessage(writer);
       writer.WriteLine();
     }
-
-    #endregion
   }
 }

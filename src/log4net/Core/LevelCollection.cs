@@ -22,8 +22,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-#nullable enable
-
 namespace log4net.Core
 {
   /// <summary>

@@ -21,6 +21,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Reflection;
 using log4net.Appender;
 using log4net.Config;
 using log4net.Layout;
@@ -35,14 +36,16 @@ namespace log4net.Tests.Appender
     [Test]
     public void DefaultCategoryTest()
     {
-      CategoryTraceListener categoryTraceListener = new CategoryTraceListener();
+      var categoryTraceListener = new CategoryTraceListener();
       Trace.Listeners.Clear();
       Trace.Listeners.Add(categoryTraceListener);
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 
-      TraceAppender traceAppender = new TraceAppender();
-      traceAppender.Layout = new SimpleLayout();
+      var traceAppender = new TraceAppender
+      {
+        Layout = new SimpleLayout()
+      };
       traceAppender.ActivateOptions();
 
       BasicConfigurator.Configure(rep, traceAppender);
@@ -58,14 +61,14 @@ namespace log4net.Tests.Appender
     [Test]
     public void MethodNameCategoryTest()
     {
-      CategoryTraceListener categoryTraceListener = new CategoryTraceListener();
+      var categoryTraceListener = new CategoryTraceListener();
       Trace.Listeners.Clear();
       Trace.Listeners.Add(categoryTraceListener);
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 
-      TraceAppender traceAppender = new TraceAppender();
-      PatternLayout methodLayout = new PatternLayout("%method");
+      var traceAppender = new TraceAppender();
+      var methodLayout = new PatternLayout("%method");
       methodLayout.ActivateOptions();
       traceAppender.Category = methodLayout;
       traceAppender.Layout = new SimpleLayout();
@@ -77,34 +80,29 @@ namespace log4net.Tests.Appender
       log.Debug("Message");
 
       Assert.AreEqual(
-          System.Reflection.MethodInfo.GetCurrentMethod().Name,
+          MethodInfo.GetCurrentMethod()!.Name,
           categoryTraceListener.Category);
     }
   }
 
   public class CategoryTraceListener : TraceListener
   {
-    private string lastCategory;
-
-    public override void Write(string message)
+    public override void Write(string? message)
     {
       // empty
     }
 
-    public override void WriteLine(string message)
+    public override void WriteLine(string? message)
     {
       Write(message);
     }
 
-    public override void Write(string message, string category)
+    public override void Write(string? message, string? category)
     {
-      lastCategory = category;
+      Category = category;
       base.Write(message, category);
     }
 
-    public string Category
-    {
-      get { return lastCategory; }
-    }
+    public string? Category { get; private set; }
   }
 }

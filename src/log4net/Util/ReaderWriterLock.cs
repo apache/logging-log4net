@@ -17,7 +17,7 @@
 //
 #endregion
 
-using System;
+using System.Threading;
 
 namespace log4net.Util
 {
@@ -42,25 +42,6 @@ namespace log4net.Util
   /// <author>Nicko Cadell</author>
   public sealed class ReaderWriterLock
   {
-    #region Instance Constructors
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Initializes a new instance of the <see cref="ReaderWriterLock" /> class.
-    /// </para>
-    /// </remarks>
-    public ReaderWriterLock()
-    {
-      m_lock = new System.Threading.ReaderWriterLockSlim(System.Threading.LockRecursionPolicy.SupportsRecursion);
-    }
-
-    #endregion Private Instance Constructors
-
-    #region Public Methods
-
     /// <summary>
     /// Acquires a reader lock
     /// </summary>
@@ -126,12 +107,6 @@ namespace log4net.Util
       m_lock.ExitWriteLock();
     }
 
-    #endregion Public Methods
-
-    #region Private Members
-
-    private System.Threading.ReaderWriterLockSlim m_lock;
-
-    #endregion
+    private readonly ReaderWriterLockSlim m_lock = new(LockRecursionPolicy.SupportsRecursion);
   }
 }

@@ -371,7 +371,7 @@ namespace log4net.Appender
     {
       if (Layout is not null && QuietWriter is not null && !QuietWriter.Closed)
       {
-        string h = Layout.Header;
+        string? h = Layout.Header;
         if (h is not null)
         {
           QuietWriter.Write(h);

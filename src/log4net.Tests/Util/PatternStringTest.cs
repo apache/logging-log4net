@@ -63,8 +63,8 @@ namespace log4net.Tests.Util
   </appSettings>
 </configuration>
 ";
-      string configurationFileName = null;
-      AppDomain appDomain = null;
+      string? configurationFileName = null;
+      AppDomain? appDomain = null;
       try
       {
         configurationFileName = CreateTempConfigFile(configurationFileContent);
@@ -75,8 +75,14 @@ namespace log4net.Tests.Util
       }
       finally
       {
-        if (appDomain != null) AppDomain.Unload(appDomain);
-        if (configurationFileName != null) File.Delete(configurationFileName);
+        if (appDomain != null)
+        {
+          AppDomain.Unload(appDomain);
+        }
+        if (configurationFileName != null)
+        {
+          File.Delete(configurationFileName);
+        }
       }
     }
 

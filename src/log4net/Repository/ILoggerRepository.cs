@@ -25,8 +25,6 @@ using log4net.Core;
 using log4net.Plugin;
 using log4net.Util;
 
-#nullable enable
-
 namespace log4net.Repository
 {
   /// <summary>

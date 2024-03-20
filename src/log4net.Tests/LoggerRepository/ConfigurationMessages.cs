@@ -61,7 +61,7 @@ namespace log4net.Tests.LoggerRepository
         ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
         rep.ConfigurationChanged += new LoggerRepositoryConfigurationChangedEventHandler(rep_ConfigurationChanged);
 
-        ICollection configurationMessages = XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
+        ICollection configurationMessages = XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
 
         Assert.IsTrue(configurationMessages.Count > 0);
       }

@@ -18,7 +18,6 @@
 #endregion
 
 using System;
-using System.Text;
 using System.IO;
 using System.Collections;
 
@@ -41,26 +40,8 @@ namespace log4net.ObjectRenderer
   /// <author>Gert Driesen</author>
   public sealed class DefaultRenderer : IObjectRenderer
   {
-    #region Constructors
-
     /// <summary>
-    /// Default constructor
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Default constructor
-    /// </para>
-    /// </remarks>
-    public DefaultRenderer()
-    {
-    }
-
-    #endregion
-
-    #region Implementation of IObjectRenderer
-
-    /// <summary>
-    /// Render the object <paramref name="obj"/> to a string
+    /// Renders the object <paramref name="obj"/> to a string.
     /// </summary>
     /// <param name="rendererMap">The map used to lookup renderers</param>
     /// <param name="obj">The object to render</param>
@@ -145,34 +126,31 @@ namespace log4net.ObjectRenderer
     ///    </item>
     /// </list>
     /// </remarks>
-    public void RenderObject(RendererMap rendererMap, object obj, TextWriter writer)
+    public void RenderObject(RendererMap rendererMap, object? obj, TextWriter writer)
     {
-      if (rendererMap == null)
+      if (rendererMap is null)
       {
-        throw new ArgumentNullException("rendererMap");
+        throw new ArgumentNullException(nameof(rendererMap));
       }
 
-      if (obj == null)
+      if (obj is null)
       {
         writer.Write(SystemInfo.NullText);
         return;
       }
 
-      Array objArray = obj as Array;
-      if (objArray != null)
+      if (obj is Array objArray)
       {
         RenderArray(rendererMap, objArray, writer);
         return;
       }
 
       // Test if we are dealing with some form of collection object
-      IEnumerable objEnumerable = obj as IEnumerable;
-      if (objEnumerable != null)
+      if (obj is IEnumerable objEnumerable)
       {
         // Get a collection interface if we can as its .Count property may be more
         // performant than getting the IEnumerator object and trying to advance it.
-        ICollection objCollection = obj as ICollection;
-        if (objCollection != null && objCollection.Count == 0)
+        if (obj is ICollection objCollection && objCollection.Count == 0)
         {
           writer.Write("{}");
           return;
@@ -183,8 +161,7 @@ namespace log4net.ObjectRenderer
         // the generic IDictionary<> interface enumerates KeyValuePair objects rather than
         // DictionaryEntry ones. However the implementation of the plain IDictionary 
         // interface on the generic Dictionary<> still returns DictionaryEntry objects.
-        IDictionary objDictionary = obj as IDictionary;
-        if (objDictionary != null)
+        if (obj is IDictionary objDictionary)
         {
           RenderEnumerator(rendererMap, objDictionary.GetEnumerator(), writer);
           return;
@@ -194,24 +171,21 @@ namespace log4net.ObjectRenderer
         return;
       }
 
-      IEnumerator objEnumerator = obj as IEnumerator;
-      if (objEnumerator != null)
+      if (obj is IEnumerator objEnumerator)
       {
         RenderEnumerator(rendererMap, objEnumerator, writer);
         return;
       }
 
-      if (obj is DictionaryEntry)
+      if (obj is DictionaryEntry entry)
       {
-        RenderDictionaryEntry(rendererMap, (DictionaryEntry)obj, writer);
+        RenderDictionaryEntry(rendererMap, entry, writer);
         return;
       }
 
-      string str = obj.ToString();
-      writer.Write((str == null) ? SystemInfo.NullText : str);
+      string? str = obj.ToString();
+      writer.Write(str ?? SystemInfo.NullText);
     }
-
-    #endregion
 
     /// <summary>
     /// Render the array argument into a string
@@ -232,7 +206,7 @@ namespace log4net.ObjectRenderer
     ///  <c>Array.ToString()</c> is returned.
     ///  </para>
     /// </remarks>
-    private void RenderArray(RendererMap rendererMap, Array array, TextWriter writer)
+    private static void RenderArray(RendererMap rendererMap, Array array, TextWriter writer)
     {
       if (array.Rank != 1)
       {
@@ -270,11 +244,11 @@ namespace log4net.ObjectRenderer
     ///  <c>{a, b, c}</c>.
     ///  </para>
     /// </remarks>
-    private void RenderEnumerator(RendererMap rendererMap, IEnumerator enumerator, TextWriter writer)
+    private static void RenderEnumerator(RendererMap rendererMap, IEnumerator? enumerator, TextWriter writer)
     {
       writer.Write("{");
 
-      if (enumerator != null && enumerator.MoveNext())
+      if (enumerator is not null && enumerator.MoveNext())
       {
         rendererMap.FindAndRender(enumerator.Current, writer);
 
@@ -289,7 +263,7 @@ namespace log4net.ObjectRenderer
     }
 
     /// <summary>
-    /// Render the DictionaryEntry argument into a string
+    /// Renders the DictionaryEntry argument into a string.
     /// </summary>
     /// <param name="rendererMap">The map used to lookup renderers</param>
     /// <param name="entry">the DictionaryEntry to render</param>
@@ -300,7 +274,7 @@ namespace log4net.ObjectRenderer
     ///  renderer). For example: <c>key=value</c>.
     ///  </para>
     /// </remarks>
-    private void RenderDictionaryEntry(RendererMap rendererMap, DictionaryEntry entry, TextWriter writer)
+    private static void RenderDictionaryEntry(RendererMap rendererMap, DictionaryEntry entry, TextWriter writer)
     {
       rendererMap.FindAndRender(entry.Key, writer);
       writer.Write("=");

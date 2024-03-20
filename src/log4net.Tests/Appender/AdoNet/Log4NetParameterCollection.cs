@@ -21,38 +21,39 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 
 namespace log4net.Tests.Appender.AdoNet
 {
   public class Log4NetParameterCollection : CollectionBase, IDataParameterCollection
   {
-    #region AdoNetAppender
+    private readonly Dictionary<string, int> m_parameterNameToIndex = new(StringComparer.Ordinal);
 
-    private readonly Hashtable parameterNameToIndex = new Hashtable();
-
-    protected override void OnInsertComplete(int index, object value)
+    protected override void OnInsertComplete(int index, object? value)
     {
       base.OnInsertComplete(index, value);
 
-      IDataParameter param = (IDataParameter)value;
-      parameterNameToIndex[param.ParameterName] = index;
+      if (value is IDataParameter param)
+      {
+        m_parameterNameToIndex[param.ParameterName] = index;
+      }
     }
 
     public int IndexOf(string parameterName)
     {
-      return (int)parameterNameToIndex[parameterName];
+      if (m_parameterNameToIndex.TryGetValue(parameterName, out var index))
+      {
+        return index;
+      }
+      return -1;
     }
 
     public object this[string parameterName]
     {
-      get { return InnerList[IndexOf(parameterName)]; }
-      set { InnerList[IndexOf(parameterName)] = value; }
+      get => InnerList[IndexOf(parameterName)]!;
+      set => InnerList[IndexOf(parameterName)] = value;
     }
-
-    #endregion
-
-    #region Not Implemented
 
     public void RemoveAt(string parameterName)
     {
@@ -63,7 +64,5 @@ namespace log4net.Tests.Appender.AdoNet
     {
       throw new NotImplementedException();
     }
-
-    #endregion
   }
 }

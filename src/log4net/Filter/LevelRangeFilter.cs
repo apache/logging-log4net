@@ -98,14 +98,14 @@ namespace log4net.Filter
     /// </remarks>
     public override FilterDecision Decide(LoggingEvent loggingEvent)
     {
-      if (loggingEvent == null)
+      if (loggingEvent is null)
       {
         throw new ArgumentNullException(nameof(loggingEvent));
       }
 
       if (LevelMin is not null)
       {
-        if (loggingEvent.Level < LevelMin)
+        if (loggingEvent.Level is not null && loggingEvent.Level < LevelMin)
         {
           // level of event is less than minimum
           return FilterDecision.Deny;
@@ -114,7 +114,7 @@ namespace log4net.Filter
 
       if (LevelMax is not null)
       {
-        if (loggingEvent.Level > LevelMax)
+        if (loggingEvent.Level is not null && loggingEvent.Level > LevelMax)
         {
           // level of event is greater than maximum
           return FilterDecision.Deny;

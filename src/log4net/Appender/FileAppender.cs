@@ -16,7 +16,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
 #endregion
 
 using System;
@@ -28,8 +27,6 @@ using log4net.Util;
 using log4net.Layout;
 using log4net.Core;
 using System.Threading.Tasks;
-
-#nullable enable
 
 namespace log4net.Appender
 {

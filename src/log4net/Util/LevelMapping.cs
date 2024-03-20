@@ -43,7 +43,10 @@ namespace log4net.Util
     /// </remarks>
     public void Add(LevelMappingEntry entry)
     {
-      m_entriesMap[entry.Level] = entry;
+      if (entry.Level is not null)
+      {
+        m_entriesMap[entry.Level] = entry;
+      }
     }
 
     /// <summary>
@@ -55,11 +58,16 @@ namespace log4net.Util
     /// <returns>The <see cref="LevelMappingEntry"/> for the level or <c>null</c> if no mapping found</returns>
     public LevelMappingEntry? Lookup(Level? level)
     {
+      if (level is null)
+      {
+        return null;
+      }
+
       if (m_entries is not null)
       {
         foreach (LevelMappingEntry entry in m_entries)
         {
-          if (level >= entry.Level)
+          if (entry.Level is not null && level >= entry.Level)
           {
             return entry;
           }

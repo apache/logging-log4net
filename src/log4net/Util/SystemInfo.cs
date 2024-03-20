@@ -23,8 +23,6 @@ using System.Reflection;
 using System.IO;
 using System.Collections;
 
-#nullable enable
-
 namespace log4net.Util
 {
   /// <summary>
@@ -775,7 +773,7 @@ namespace log4net.Util
     /// <param name="a">The one string.</param>
     /// <param name="b">The other string.</param>
     /// <returns><c>true</c> if the strings are equal, <c>false</c> otherwise.</returns>
-    public static bool EqualsIgnoringCase(string a, string b)
+    public static bool EqualsIgnoringCase(string? a, string? b)
     {
       return string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
     }

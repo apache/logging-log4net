@@ -114,8 +114,11 @@ namespace log4net.Core
           wrappersMap = new Hashtable();
           Repositories[logger.Repository] = wrappersMap;
 
-          // Register for config reset & shutdown on repository
-          logger.Repository.ShutdownEvent += m_shutdownHandler;
+          if (logger.Repository is not null)
+          {
+            // Register for config reset & shutdown on repository
+            logger.Repository.ShutdownEvent += m_shutdownHandler;
+          }
         }
 
         // Look for the wrapper object in the map
@@ -161,9 +164,9 @@ namespace log4net.Core
     /// can be overridden in a subclass.
     /// </para>
     /// </remarks>
-    protected virtual ILoggerWrapper? CreateNewWrapperObject(ILogger logger)
+    protected virtual ILoggerWrapper CreateNewWrapperObject(ILogger logger)
     {
-      return m_createWrapperHandler?.Invoke(logger);
+      return m_createWrapperHandler.Invoke(logger);
     }
 
     /// <summary>
@@ -208,7 +211,7 @@ namespace log4net.Core
     /// <summary>
     /// The handler to use to create the extension wrapper objects.
     /// </summary>
-    private readonly WrapperCreationHandler? m_createWrapperHandler;
+    private readonly WrapperCreationHandler m_createWrapperHandler;
 
     /// <summary>
     /// Internal reference to the delegate used to register for repository shutdown events.
