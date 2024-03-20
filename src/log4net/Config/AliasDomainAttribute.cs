@@ -48,8 +48,6 @@ namespace log4net.Config
   [Obsolete("Use AliasRepositoryAttribute instead of AliasDomainAttribute")]
   public sealed class AliasDomainAttribute : AliasRepositoryAttribute
   {
-    #region Public Instance Constructors
-
     /// <summary>
     /// Initializes a new instance of the <see cref="AliasDomainAttribute" /> class with 
     /// the specified domain to alias to this assembly's repository.
@@ -63,7 +61,5 @@ namespace log4net.Config
     public AliasDomainAttribute(string name) : base(name)
     {
     }
-
-    #endregion Public Instance Constructors
   }
 }

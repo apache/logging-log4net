@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace log4net.Appender
 {
@@ -26,77 +27,35 @@ namespace log4net.Appender
   /// A strongly-typed collection of <see cref="IAppender"/> objects.
   /// </summary>
   /// <author>Nicko Cadell</author>
-  public class AppenderCollection : ICollection, IList, IEnumerable, ICloneable
+  public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   {
-    #region Interfaces
-    /// <summary>
-    /// Supports type-safe iteration over a <see cref="AppenderCollection"/>.
-    /// </summary>
-    /// <exclude/>
-    public interface IAppenderCollectionEnumerator
-    {
-      /// <summary>
-      /// Gets the current element in the collection.
-      /// </summary>
-      IAppender Current { get; }
-
-      /// <summary>
-      /// Advances the enumerator to the next element in the collection.
-      /// </summary>
-      /// <returns>
-      /// <c>true</c> if the enumerator was successfully advanced to the next element; 
-      /// <c>false</c> if the enumerator has passed the end of the collection.
-      /// </returns>
-      /// <exception cref="InvalidOperationException">
-      /// The collection was modified after the enumerator was created.
-      /// </exception>
-      bool MoveNext();
-
-      /// <summary>
-      /// Sets the enumerator to its initial position, before the first element in the collection.
-      /// </summary>
-      void Reset();
-    }
-    #endregion
-
     private const int DEFAULT_CAPACITY = 16;
 
-    #region Implementation (data)
-
     private IAppender[] m_array;
-    private int m_count = 0;
-    private int m_version = 0;
-
-    #endregion
-
-    #region Static Wrappers
+    private int m_count;
+    private int m_version;
 
     /// <summary>
     /// Creates a read-only wrapper for a <c>AppenderCollection</c> instance.
     /// </summary>
-    /// <param name="list">list to create a readonly wrapper arround</param>
+    /// <param name="list">list to create a readonly wrapper around</param>
     /// <returns>
     /// An <c>AppenderCollection</c> wrapper that is read-only.
     /// </returns>
     public static AppenderCollection ReadOnly(AppenderCollection list)
     {
-      if (list == null) throw new ArgumentNullException("list");
+      if (list is null)
+      {
+        throw new ArgumentNullException(nameof(list));
+      }
 
       return new ReadOnlyAppenderCollection(list);
     }
-
-    #endregion
-
-    #region Static Fields
 
     /// <summary>
     /// An empty readonly static AppenderCollection
     /// </summary>
     public static readonly AppenderCollection EmptyCollection = ReadOnly(new AppenderCollection(0));
-
-    #endregion
-
-    #region Constructors
 
     /// <summary>
     /// Initializes a new instance of the <c>AppenderCollection</c> class
@@ -168,24 +127,16 @@ namespace log4net.Appender
     /// <summary>
     /// Allow subclasses to avoid our default constructors
     /// </summary>
-    /// <param name="tag"></param>
     /// <exclude/>
-    protected internal AppenderCollection(Tag tag)
+    protected internal AppenderCollection(Tag _)
     {
-      m_array = null;
+      m_array = Array.Empty<IAppender>();
     }
-
-    #endregion
-
-    #region Operations (type-safe ICollection)
 
     /// <summary>
     /// Gets the number of elements actually contained in the <c>AppenderCollection</c>.
     /// </summary>
-    public virtual int Count
-    {
-      get { return m_count; }
-    }
+    public virtual int Count => m_count;
 
     /// <summary>
     /// Copies the entire <c>AppenderCollection</c> to a one-dimensional
@@ -194,7 +145,7 @@ namespace log4net.Appender
     /// <param name="array">The one-dimensional <see cref="IAppender"/> array to copy to.</param>
     public virtual void CopyTo(IAppender[] array)
     {
-      this.CopyTo(array, 0);
+      CopyTo(array, 0);
     }
 
     /// <summary>
@@ -207,7 +158,7 @@ namespace log4net.Appender
     {
       if (m_count > array.GetUpperBound(0) + 1 - start)
       {
-        throw new System.ArgumentException("Destination array was not long enough.");
+        throw new ArgumentException("Destination array was not long enough.");
       }
 
       Array.Copy(m_array, 0, array, start, m_count);
@@ -217,22 +168,12 @@ namespace log4net.Appender
     /// Gets a value indicating whether access to the collection is synchronized (thread-safe).
     /// </summary>
     /// <returns>false, because the backing type is an array, which is never thread-safe.</returns>
-    public virtual bool IsSynchronized
-    {
-      get { return false; }
-    }
+    public virtual bool IsSynchronized => false;
 
     /// <summary>
     /// Gets an object that can be used to synchronize access to the collection.
     /// </summary>
-    public virtual object SyncRoot
-    {
-      get { return m_array; }
-    }
-
-    #endregion
-
-    #region Operations (type-safe IList)
+    public virtual object SyncRoot => m_array;
 
     /// <summary>
     /// Gets or sets the <see cref="IAppender"/> at the specified index.
@@ -262,8 +203,9 @@ namespace log4net.Appender
     /// Adds a <see cref="IAppender"/> to the end of the <c>AppenderCollection</c>.
     /// </summary>
     /// <param name="item">The <see cref="IAppender"/> to be added to the end of the <c>AppenderCollection</c>.</param>
-    /// <returns>The index at which the value has been added.</returns>
-    public virtual int Add(IAppender item)
+    public virtual void Add(IAppender item) => InternalAdd(item);
+
+    private int InternalAdd(IAppender item)
     {
       if (m_count == m_array.Length)
       {
@@ -272,9 +214,9 @@ namespace log4net.Appender
 
       m_array[m_count] = item;
       m_version++;
-
       return m_count++;
     }
+
 
     /// <summary>
     /// Removes all elements from the <c>AppenderCollection</c>.
@@ -292,8 +234,11 @@ namespace log4net.Appender
     /// <returns>A new <see cref="AppenderCollection"/> with a shallow copy of the collection data.</returns>
     public virtual object Clone()
     {
-      AppenderCollection newCol = new AppenderCollection(m_count);
-      Array.Copy(m_array, 0, newCol.m_array, 0, m_count);
+      var newCol = new AppenderCollection(m_count);
+      if (m_count > 0)
+      {
+        Array.Copy(m_array, 0, newCol.m_array, 0, m_count);
+      }
       newCol.m_count = m_count;
       newCol.m_version = m_version;
 
@@ -371,19 +316,21 @@ namespace log4net.Appender
     /// Removes the first occurrence of a specific <see cref="IAppender"/> from the <c>AppenderCollection</c>.
     /// </summary>
     /// <param name="item">The <see cref="IAppender"/> to remove from the <c>AppenderCollection</c>.</param>
+    /// <returns>True if the item was removed.</returns>
     /// <exception cref="ArgumentException">
     /// The specified <see cref="IAppender"/> was not found in the <c>AppenderCollection</c>.
     /// </exception>
-    public virtual void Remove(IAppender item)
+    public virtual bool Remove(IAppender item)
     {
       int i = IndexOf(item);
       if (i < 0)
       {
-        throw new System.ArgumentException("Cannot remove the specified item because it was not found in the specified Collection.");
+        throw new ArgumentException("Cannot remove the specified item because it was not found in the specified Collection.");
       }
 
       ++m_version;
       RemoveAt(i);
+      return true;
     }
 
     /// <summary>
@@ -418,46 +365,29 @@ namespace log4net.Appender
     /// Gets a value indicating whether the collection has a fixed size.
     /// </summary>
     /// <value>true if the collection has a fixed size; otherwise, false. The default is false</value>
-    public virtual bool IsFixedSize
-    {
-      get { return false; }
-    }
+    public virtual bool IsFixedSize => false;
 
     /// <summary>
     /// Gets a value indicating whether the IList is read-only.
     /// </summary>
     /// <value>true if the collection is read-only; otherwise, false. The default is false</value>
-    public virtual bool IsReadOnly
-    {
-      get { return false; }
-    }
-
-    #endregion
-
-    #region Operations (type-safe IEnumerable)
+    public virtual bool IsReadOnly => false;
 
     /// <summary>
     /// Returns an enumerator that can iterate through the <c>AppenderCollection</c>.
     /// </summary>
     /// <returns>An <see cref="Enumerator"/> for the entire <c>AppenderCollection</c>.</returns>
-    public virtual IAppenderCollectionEnumerator GetEnumerator()
+    public virtual IEnumerator<IAppender> GetEnumerator()
     {
       return new Enumerator(this);
     }
-
-    #endregion
-
-    #region Public helpers (just to mimic some nice features of ArrayList)
 
     /// <summary>
     /// Gets or sets the number of elements the <c>AppenderCollection</c> can contain.
     /// </summary>
     public virtual int Capacity
     {
-      get
-      {
-        return m_array.Length;
-      }
+      get => m_array.Length;
       set
       {
         if (value < m_count)
@@ -544,7 +474,7 @@ namespace log4net.Appender
     /// </summary>
     public virtual void TrimToSize()
     {
-      this.Capacity = m_count;
+      Capacity = m_count;
     }
 
     /// <summary>
@@ -553,7 +483,7 @@ namespace log4net.Appender
     /// <returns>the array</returns>
     public virtual IAppender[] ToArray()
     {
-      IAppender[] resultArray = new IAppender[m_count];
+      var resultArray = new IAppender[m_count];
       if (m_count > 0)
       {
         Array.Copy(m_array, 0, resultArray, 0, m_count);
@@ -561,48 +491,30 @@ namespace log4net.Appender
       return resultArray;
     }
 
-    #endregion
-
-    #region Implementation (helpers)
-
     /// <exception cref="ArgumentOutOfRangeException">
     /// <para><paramref name="i"/> is less than zero</para>
     /// <para>-or-</para>
     /// <para><paramref name="i"/> is equal to or greater than <see cref="AppenderCollection.Count"/>.</para>
     /// </exception>
-    private void ValidateIndex(int i)
-    {
-      ValidateIndex(i, false);
-    }
-
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// <para><paramref name="i"/> is less than zero</para>
-    /// <para>-or-</para>
-    /// <para><paramref name="i"/> is equal to or greater than <see cref="AppenderCollection.Count"/>.</para>
-    /// </exception>
-    private void ValidateIndex(int i, bool allowEqualEnd)
+    private void ValidateIndex(int i, bool allowEqualEnd = false)
     {
       int max = (allowEqualEnd) ? (m_count) : (m_count - 1);
       if (i < 0 || i > max)
       {
-        throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("i", (object)i, "Index was out of range. Must be non-negative and less than the size of the collection. [" + (object)i + "] Specified argument was out of the range of valid values.");
+        throw Util.SystemInfo.CreateArgumentOutOfRangeException(nameof(i), i, $"Index was out of range. Must be non-negative and less than the size of the collection. [{i}] Specified argument was out of the range of valid values.");
       }
     }
 
     private void EnsureCapacity(int min)
     {
-      int newCapacity = ((m_array.Length == 0) ? DEFAULT_CAPACITY : m_array.Length * 2);
+      int newCapacity = (m_array.Length == 0) ? DEFAULT_CAPACITY : m_array.Length * 2;
       if (newCapacity < min)
       {
         newCapacity = min;
       }
 
-      this.Capacity = newCapacity;
+      Capacity = newCapacity;
     }
-
-    #endregion
-
-    #region Implementation (ICollection)
 
     void ICollection.CopyTo(Array array, int start)
     {
@@ -612,79 +524,70 @@ namespace log4net.Appender
       }
     }
 
-    #endregion
-
-    #region Implementation (IList)
-
     object IList.this[int i]
     {
-      get { return (object)this[i]; }
-      set { this[i] = (IAppender)value; }
+      get => this[i];
+      set => this[i] = (IAppender)value;
     }
 
-    int IList.Add(object x)
+    int IList.Add(object? x)
     {
-      return this.Add((IAppender)x);
+      if (x is IAppender appender)
+      {
+        return InternalAdd(appender);
+      }
+
+      return -1;
     }
 
-    bool IList.Contains(object x)
+    bool IList.Contains(object? x)
     {
-      return this.Contains((IAppender)x);
+      if (x is IAppender appender)
+      {
+        return Contains(appender);
+      }
+
+      return false;
     }
 
     int IList.IndexOf(object x)
     {
-      return this.IndexOf((IAppender)x);
+      return IndexOf((IAppender)x);
     }
 
     void IList.Insert(int pos, object x)
     {
-      this.Insert(pos, (IAppender)x);
+      Insert(pos, (IAppender)x);
     }
 
     void IList.Remove(object x)
     {
-      this.Remove((IAppender)x);
+      Remove((IAppender)x);
     }
 
     void IList.RemoveAt(int pos)
     {
-      this.RemoveAt(pos);
+      RemoveAt(pos);
     }
-
-    #endregion
-
-    #region Implementation (IEnumerable)
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-      return (IEnumerator)(this.GetEnumerator());
+      return GetEnumerator();
     }
-
-    #endregion
-
-    #region Nested enumerator class
 
     /// <summary>
     /// Supports simple iteration over a <see cref="AppenderCollection"/>.
     /// </summary>
     /// <exclude/>
-    private sealed class Enumerator : IEnumerator, IAppenderCollectionEnumerator
+    private sealed class Enumerator : IEnumerator<IAppender>
     {
-      #region Implementation (data)
-
       private readonly AppenderCollection m_collection;
       private int m_index;
-      private int m_version;
-
-      #endregion
-
-      #region Construction
+      private readonly int m_version;
 
       /// <summary>
       /// Initializes a new instance of the <c>Enumerator</c> class.
       /// </summary>
-      /// <param name="tc"></param>
       internal Enumerator(AppenderCollection tc)
       {
         m_collection = tc;
@@ -692,17 +595,10 @@ namespace log4net.Appender
         m_version = tc.m_version;
       }
 
-      #endregion
-
-      #region Operations (type-safe IEnumerator)
-
       /// <summary>
       /// Gets the current element in the collection.
       /// </summary>
-      public IAppender Current
-      {
-        get { return m_collection[m_index]; }
-      }
+      public IAppender Current => m_collection[m_index];
 
       /// <summary>
       /// Advances the enumerator to the next element in the collection.
@@ -718,7 +614,7 @@ namespace log4net.Appender
       {
         if (m_version != m_collection.m_version)
         {
-          throw new System.InvalidOperationException("Collection was modified; enumeration operation may not execute.");
+          throw new InvalidOperationException("Collection was modified; enumeration operation may not execute.");
         }
 
         ++m_index;
@@ -732,41 +628,23 @@ namespace log4net.Appender
       {
         m_index = -1;
       }
-      #endregion
 
-      #region Implementation (IEnumerator)
+      object IEnumerator.Current => Current;
 
-      object IEnumerator.Current
+      public void Dispose()
       {
-        get { return this.Current; }
       }
-
-      #endregion
     }
-
-    #endregion
-
-    #region Nested Read Only Wrapper class
 
     /// <exclude/>
     private sealed class ReadOnlyAppenderCollection : AppenderCollection, ICollection
     {
-      #region Implementation (data)
-
       private readonly AppenderCollection m_collection;
-
-      #endregion
-
-      #region Construction
 
       internal ReadOnlyAppenderCollection(AppenderCollection list) : base(Tag.Default)
       {
         m_collection = list;
       }
-
-      #endregion
-
-      #region Type-safe ICollection
 
       public override void CopyTo(IAppender[] array)
       {
@@ -783,32 +661,19 @@ namespace log4net.Appender
         ((ICollection)m_collection).CopyTo(array, start);
       }
 
-      public override int Count
-      {
-        get { return m_collection.Count; }
-      }
+      public override int Count => m_collection.Count;
 
-      public override bool IsSynchronized
-      {
-        get { return m_collection.IsSynchronized; }
-      }
+      public override bool IsSynchronized => m_collection.IsSynchronized;
 
-      public override object SyncRoot
-      {
-        get { return this.m_collection.SyncRoot; }
-      }
-
-      #endregion
-
-      #region Type-safe IList
+      public override object SyncRoot => m_collection.SyncRoot;
 
       public override IAppender this[int i]
       {
-        get { return m_collection[i]; }
-        set { throw new NotSupportedException("This is a Read Only Collection and can not be modified"); }
+        get => m_collection[i];
+        set => throw new NotSupportedException("This is a Read Only Collection and can not be modified");
       }
 
-      public override int Add(IAppender x)
+      public override void Add(IAppender x)
       {
         throw new NotSupportedException("This is a Read Only Collection and can not be modified");
       }
@@ -818,22 +683,16 @@ namespace log4net.Appender
         throw new NotSupportedException("This is a Read Only Collection and can not be modified");
       }
 
-      public override bool Contains(IAppender x)
-      {
-        return m_collection.Contains(x);
-      }
+      public override bool Contains(IAppender x) => m_collection.Contains(x);
 
-      public override int IndexOf(IAppender x)
-      {
-        return m_collection.IndexOf(x);
-      }
+      public override int IndexOf(IAppender x) => m_collection.IndexOf(x);
 
       public override void Insert(int pos, IAppender x)
       {
         throw new NotSupportedException("This is a Read Only Collection and can not be modified");
       }
 
-      public override void Remove(IAppender x)
+      public override bool Remove(IAppender x)
       {
         throw new NotSupportedException("This is a Read Only Collection and can not be modified");
       }
@@ -843,34 +702,20 @@ namespace log4net.Appender
         throw new NotSupportedException("This is a Read Only Collection and can not be modified");
       }
 
-      public override bool IsFixedSize
-      {
-        get { return true; }
-      }
+      public override bool IsFixedSize => true;
 
-      public override bool IsReadOnly
-      {
-        get { return true; }
-      }
+      public override bool IsReadOnly => true;
 
-      #endregion
-
-      #region Type-safe IEnumerable
-
-      public override IAppenderCollectionEnumerator GetEnumerator()
+      public override IEnumerator<IAppender> GetEnumerator()
       {
         return m_collection.GetEnumerator();
       }
 
-      #endregion
-
-      #region Public Helpers
-
       // (just to mimic some nice features of ArrayList)
       public override int Capacity
       {
-        get { return m_collection.Capacity; }
-        set { throw new NotSupportedException("This is a Read Only Collection and can not be modified"); }
+        get => m_collection.Capacity;
+        set => throw new NotSupportedException("This is a Read Only Collection and can not be modified");
       }
 
       public override int AddRange(AppenderCollection x)
@@ -883,20 +728,12 @@ namespace log4net.Appender
         throw new NotSupportedException("This is a Read Only Collection and can not be modified");
       }
 
-      public override IAppender[] ToArray()
-      {
-        return m_collection.ToArray();
-      }
+      public override IAppender[] ToArray() => m_collection.ToArray();
 
       public override void TrimToSize()
       {
         throw new NotSupportedException("This is a Read Only Collection and can not be modified");
       }
-
-      #endregion
     }
-
-    #endregion
   }
-
 }

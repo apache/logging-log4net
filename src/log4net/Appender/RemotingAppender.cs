@@ -22,13 +22,10 @@
 
 using System;
 using System.Collections;
+using System.Runtime.Remoting.Messaging;
 using System.Threading;
 
-using System.Runtime.Remoting.Messaging;
-
-using log4net.Layout;
 using log4net.Core;
-using log4net.Util;
 
 namespace log4net.Appender
 {
@@ -49,7 +46,7 @@ namespace log4net.Appender
   /// Once the buffer is full the events are still not sent immediately. 
   /// They are scheduled to be sent using a pool thread. The effect is that 
   /// the send occurs asynchronously. This is very important for a 
-  /// number of non obvious reasons. The remoting infrastructure will 
+  /// number of non-obvious reasons. The remoting infrastructure will 
   /// flow thread local variables (stored in the <see cref="CallContext"/>),
   /// if they are marked as <see cref="ILogicalThreadAffinative"/>, across the 
   /// remoting boundary. If the server is not contactable then
@@ -63,7 +60,7 @@ namespace log4net.Appender
   /// Because the events are sent asynchronously using pool threads it is possible to close 
   /// this appender before all the queued events have been sent.
   /// When closing the appender attempts to wait until all the queued events have been sent, but 
-  /// this will timeout after 30 seconds regardless.</para>
+  /// this will time out after 30 seconds regardless.</para>
   /// <para>
   /// If this appender is being closed because the <see cref="AppDomain.ProcessExit"/>
   /// event has fired it may not be possible to send all the queued events. During process
@@ -71,7 +68,7 @@ namespace log4net.Appender
   /// event handler is allowed to run for. If the runtime terminates the threads before
   /// the queued events have been sent then they will be lost. To ensure that all events
   /// are sent the appender must be closed before the application exits. See 
-  /// <see cref="log4net.Core.LoggerManager.Shutdown"/> for details on how to shutdown
+  /// <see cref="log4net.Core.LoggerManager.Shutdown"/> for details on how to shut down
   /// log4net programmatically.</para>
   /// </remarks>
   /// <seealso cref="IRemoteLoggingSink" />
@@ -80,8 +77,6 @@ namespace log4net.Appender
   /// <author>Daniel Cazzulino</author>
   public class RemotingAppender : BufferingAppenderSkeleton
   {
-    #region Public Instance Constructors
-
     /// <summary>
     /// Initializes a new instance of the <see cref="RemotingAppender" /> class.
     /// </summary>
@@ -93,10 +88,6 @@ namespace log4net.Appender
     public RemotingAppender()
     {
     }
-
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
 
     /// <summary>
     /// Gets or sets the URL of the well-known object that will accept 
@@ -112,15 +103,7 @@ namespace log4net.Appender
     /// interface.
     /// </para>
     /// </remarks>
-    public string Sink
-    {
-      get { return m_sinkUrl; }
-      set { m_sinkUrl = value; }
-    }
-
-    #endregion Public Instance Properties
-
-    #region Implementation of IOptionHandler
+    public string? Sink { get; set; }
 
     /// <summary>
     /// Initialize the appender based on the options set
@@ -141,17 +124,18 @@ namespace log4net.Appender
     [System.Security.SecuritySafeCritical]
     public override void ActivateOptions()
     {
+      if (Sink is null)
+      {
+        throw new ArgumentNullException($"The {nameof(Sink)} property is not set");
+      }
+
       base.ActivateOptions();
 
       IDictionary channelProperties = new Hashtable();
       channelProperties["typeFilterLevel"] = "Full";
 
-      m_sinkObj = (IRemoteLoggingSink)Activator.GetObject(typeof(IRemoteLoggingSink), m_sinkUrl, channelProperties);
+      m_sinkObj = (IRemoteLoggingSink)Activator.GetObject(typeof(IRemoteLoggingSink), Sink, channelProperties);
     }
-
-    #endregion
-
-    #region Override implementation of BufferingAppenderSkeleton
 
     /// <summary>
     /// Send the contents of the buffer to the remote sink.
@@ -159,7 +143,7 @@ namespace log4net.Appender
     /// <remarks>
     /// The events are not sent immediately. They are scheduled to be sent
     /// using a pool thread. The effect is that the send occurs asynchronously.
-    /// This is very important for a number of non obvious reasons. The remoting
+    /// This is very important for a number of non-obvious reasons. The remoting
     /// infrastructure will flow thread local variables (stored in the <see cref="CallContext"/>),
     /// if they are marked as <see cref="ILogicalThreadAffinative"/>, across the 
     /// remoting boundary. If the server is not contactable then
@@ -177,12 +161,12 @@ namespace log4net.Appender
       BeginAsyncSend();
 
       // Send the events
-      if (!ThreadPool.QueueUserWorkItem(new WaitCallback(SendBufferCallback), events))
+      if (!ThreadPool.QueueUserWorkItem(SendBufferCallback, events))
       {
         // Cancel the async send
         EndAsyncSend();
 
-        ErrorHandler.Error("RemotingAppender [" + Name + "] failed to ThreadPool.QueueUserWorkItem logging events in SendBuffer.");
+        ErrorHandler.Error($"RemotingAppender [{Name}] failed to ThreadPool.QueueUserWorkItem logging events in SendBuffer.");
       }
     }
 
@@ -198,7 +182,7 @@ namespace log4net.Appender
     /// sent.</para>
     /// <para>
     /// This method attempts to wait until all the queued events have been sent, but this 
-    /// method will timeout after 30 seconds regardless.</para>
+    /// method will time out after 30 seconds regardless.</para>
     /// <para>
     /// If the appender is being closed because the <see cref="AppDomain.ProcessExit"/>
     /// event has fired it may not be possible to send all the queued events. During process
@@ -212,7 +196,7 @@ namespace log4net.Appender
       // Wait for the work queue to become empty before closing, timeout 30 seconds
       if (!m_workQueueEmptyEvent.WaitOne(30 * 1000, false))
       {
-        ErrorHandler.Error("RemotingAppender [" + Name + "] failed to send all queued events before close, in OnClose.");
+        ErrorHandler.Error($"RemotingAppender [{Name}] failed to send all queued events before close, in OnClose.");
       }
     }
 
@@ -226,8 +210,6 @@ namespace log4net.Appender
       base.Flush();
       return m_workQueueEmptyEvent.WaitOne(millisecondsTimeout, false);
     }
-
-    #endregion
 
     /// <summary>
     /// A work item is being queued into the thread pool
@@ -270,7 +252,7 @@ namespace log4net.Appender
         LoggingEvent[] events = (LoggingEvent[])state;
 
         // Send the events
-        m_sinkObj.LogEvents(events);
+        m_sinkObj?.LogEvents(events);
       }
       catch (Exception ex)
       {
@@ -282,22 +264,15 @@ namespace log4net.Appender
       }
     }
 
-    #region Private Instance Fields
-
-    /// <summary>
-    /// The URL of the remote sink.
-    /// </summary>
-    private string m_sinkUrl;
-
     /// <summary>
     /// The local proxy (.NET remoting) for the remote logging sink.
     /// </summary>
-    private IRemoteLoggingSink m_sinkObj;
+    private IRemoteLoggingSink? m_sinkObj;
 
     /// <summary>
     /// The number of queued callbacks currently waiting or executing
     /// </summary>
-    private int m_queuedCallbackCount = 0;
+    private int m_queuedCallbackCount;
 
     /// <summary>
     /// Event used to signal when there are no queued work items
@@ -306,9 +281,7 @@ namespace log4net.Appender
     /// This event is set when there are no queued work items. In this
     /// state it is safe to close the appender.
     /// </remarks>
-    private ManualResetEvent m_workQueueEmptyEvent = new ManualResetEvent(true);
-
-    #endregion Private Instance Fields
+    private readonly ManualResetEvent m_workQueueEmptyEvent = new(true);
 
     /// <summary>
     /// Interface used to deliver <see cref="LoggingEvent"/> objects to a remote sink.

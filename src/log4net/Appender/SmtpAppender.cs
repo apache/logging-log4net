@@ -60,8 +60,6 @@ namespace log4net.Appender
   /// <author>Gert Driesen</author>
   public class SmtpAppender : BufferingAppenderSkeleton
   {
-    #region Public Instance Constructors
-
     /// <summary>
     /// Default constructor
     /// </summary>
@@ -74,59 +72,23 @@ namespace log4net.Appender
     {
     }
 
-    #endregion // Public Instance Constructors
-
-    #region Public Instance Properties
-
     /// <summary>
-    /// Gets or sets a comma- or semicolon-delimited list of recipient e-mail addresses (use semicolon on .NET 1.1 and comma for later versions).
+    /// Gets or sets a comma-delimited list of recipient e-mail addresses.
     /// </summary>
-    /// <value>
-    /// <para>
-    /// For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
-    /// </para>
-    /// <para>
-    /// For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
-    /// </para>
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
-    /// </para>
-    /// <para>
-    /// For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
-    /// </para>
-    /// </remarks>
-    public string To
+    public string? To
     {
       get { return m_to; }
       set { m_to = MaybeTrimSeparators(value); }
     }
 
     /// <summary>
-    /// Gets or sets a comma- or semicolon-delimited list of recipient e-mail addresses 
-    /// that will be carbon copied (use semicolon on .NET 1.1 and comma for later versions).
+    /// Gets or sets a comma-delimited list of recipient e-mail addresses 
+    /// that will be carbon copied.
     /// </summary>
-    /// <value>
-    /// <para>
-    /// For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
-    /// </para>
-    /// <para>
-    /// For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
-    /// </para>
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// For .NET 1.1 (System.Web.Mail): A semicolon-delimited list of e-mail addresses.
-    /// </para>
-    /// <para>
-    /// For .NET 2.0 (System.Net.Mail): A comma-delimited list of e-mail addresses.
-    /// </para>
-    /// </remarks>
-    public string Cc
+    public string? Cc
     {
-      get { return m_cc; }
-      set { m_cc = MaybeTrimSeparators(value); }
+      get => m_cc;
+      set => m_cc = MaybeTrimSeparators(value);
     }
 
     /// <summary>
@@ -141,10 +103,10 @@ namespace log4net.Appender
     /// A semicolon-delimited list of recipient e-mail addresses.
     /// </para>
     /// </remarks>
-    public string Bcc
+    public string? Bcc
     {
-      get { return m_bcc; }
-      set { m_bcc = MaybeTrimSeparators(value); }
+      get => m_bcc;
+      set => m_bcc = MaybeTrimSeparators(value);
     }
 
     /// <summary>
@@ -158,11 +120,7 @@ namespace log4net.Appender
     /// The e-mail address of the sender.
     /// </para>
     /// </remarks>
-    public string From
-    {
-      get { return m_from; }
-      set { m_from = value; }
-    }
+    public string? From { get; set; }
 
     /// <summary>
     /// Gets or sets the subject line of the e-mail message.
@@ -175,11 +133,7 @@ namespace log4net.Appender
     /// The subject line of the e-mail message.
     /// </para>
     /// </remarks>
-    public string Subject
-    {
-      get { return m_subject; }
-      set { m_subject = value; }
-    }
+    public string? Subject { get; set; }
 
     /// <summary>
     /// Gets or sets the name of the SMTP relay mail server to use to send 
@@ -195,11 +149,7 @@ namespace log4net.Appender
     /// name of the local SMTP server is used.
     /// </para>
     /// </remarks>
-    public string SmtpHost
-    {
-      get { return m_smtpHost; }
-      set { m_smtpHost = value; }
-    }
+    public string? SmtpHost { get; set; }
 
     /// <summary>
     /// Obsolete
@@ -234,11 +184,7 @@ namespace log4net.Appender
     /// thread, if impersonating, or the process will be used to authenticate. 
     /// </para>
     /// </remarks>
-    public SmtpAuthentication Authentication
-    {
-      get { return m_authentication; }
-      set { m_authentication = value; }
-    }
+    public SmtpAuthentication Authentication { get; set; } = SmtpAuthentication.None;
 
     /// <summary>
     /// The username to use to authenticate with the SMTP server
@@ -251,11 +197,7 @@ namespace log4net.Appender
     /// otherwise the username will be ignored. 
     /// </para>
     /// </remarks>
-    public string Username
-    {
-      get { return m_username; }
-      set { m_username = value; }
-    }
+    public string? Username { get; set; }
 
     /// <summary>
     /// The password to use to authenticate with the SMTP server
@@ -268,11 +210,7 @@ namespace log4net.Appender
     /// otherwise the password will be ignored. 
     /// </para>
     /// </remarks>
-    public string Password
-    {
-      get { return m_password; }
-      set { m_password = value; }
-    }
+    public string? Password { get; set; }
 
     /// <summary>
     /// The port on which the SMTP server is listening
@@ -285,11 +223,7 @@ namespace log4net.Appender
     /// the MS .NET 1.1 runtime.
     /// </para>
     /// </remarks>
-    public int Port
-    {
-      get { return m_port; }
-      set { m_port = value; }
-    }
+    public int Port { get; set; } = 25;
 
     /// <summary>
     /// Gets or sets the priority of the e-mail message
@@ -307,11 +241,7 @@ namespace log4net.Appender
     /// you may want to set the priority to <see cref="MailPriority.High"/>.
     /// </para>
     /// </remarks>
-    public MailPriority Priority
-    {
-      get { return m_mailPriority; }
-      set { m_mailPriority = value; }
-    }
+    public MailPriority Priority { get; set; } = MailPriority.Normal;
 
     /// <summary>
     /// Enable or disable use of SSL when sending e-mail message
@@ -319,23 +249,12 @@ namespace log4net.Appender
     /// <remarks>
     /// This is available on MS .NET 2.0 runtime and higher
     /// </remarks>
-    public bool EnableSsl
-    {
-      get { return m_enableSsl; }
-      set { m_enableSsl = value; }
-    }
+    public bool EnableSsl { get; set; }
 
     /// <summary>
     /// Gets or sets the reply-to e-mail address.
     /// </summary>
-    /// <remarks>
-    /// This is available on MS .NET 2.0 runtime and higher
-    /// </remarks>
-    public string ReplyTo
-    {
-      get { return m_replyTo; }
-      set { m_replyTo = value; }
-    }
+    public string? ReplyTo { get; set; }
 
     /// <summary>
     /// Gets or sets the subject encoding to be used.
@@ -343,11 +262,7 @@ namespace log4net.Appender
     /// <remarks>
     /// The default encoding is the operating system's current ANSI codepage.
     /// </remarks>
-    public Encoding SubjectEncoding
-    {
-      get { return m_subjectEncoding; }
-      set { m_subjectEncoding = value; }
-    }
+    public Encoding SubjectEncoding { get; set; } = Encoding.UTF8;
 
     /// <summary>
     /// Gets or sets the body encoding to be used.
@@ -355,15 +270,7 @@ namespace log4net.Appender
     /// <remarks>
     /// The default encoding is the operating system's current ANSI codepage.
     /// </remarks>
-    public Encoding BodyEncoding
-    {
-      get { return m_bodyEncoding; }
-      set { m_bodyEncoding = value; }
-    }
-
-    #endregion // Public Instance Properties
-
-    #region Override implementation of BufferingAppenderSkeleton
+    public Encoding BodyEncoding { get; set; } = Encoding.UTF8;
 
     /// <summary>
     /// Sends the contents of the cyclic buffer as an e-mail message.
@@ -375,10 +282,10 @@ namespace log4net.Appender
       // appender. This frees us from needing to synchronize again.
       try
       {
-        using StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
+        using var writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
 
-        string t = Layout.Header;
-        if (t != null)
+        string? t = Layout?.Header;
+        if (t is not null)
         {
           writer.Write(t);
         }
@@ -389,8 +296,8 @@ namespace log4net.Appender
           RenderLoggingEvent(writer, events[i]);
         }
 
-        t = Layout.Footer;
-        if (t != null)
+        t = Layout?.Footer;
+        if (t is not null)
         {
           writer.Write(t);
         }
@@ -403,27 +310,10 @@ namespace log4net.Appender
       }
     }
 
-    #endregion // Override implementation of BufferingAppenderSkeleton
-
-    #region Override implementation of AppenderSkeleton
-
     /// <summary>
     /// This appender requires a <see cref="Layout"/> to be set.
     /// </summary>
-    /// <value><c>true</c></value>
-    /// <remarks>
-    /// <para>
-    /// This appender requires a <see cref="Layout"/> to be set.
-    /// </para>
-    /// </remarks>
-    protected override bool RequiresLayout
-    {
-      get { return true; }
-    }
-
-    #endregion // Override implementation of AppenderSkeleton
-
-    #region Protected Methods
+    protected override bool RequiresLayout => true;
 
     /// <summary>
     /// Send the email message
@@ -431,90 +321,63 @@ namespace log4net.Appender
     /// <param name="messageBody">the body text to include in the mail</param>
     protected virtual void SendEmail(string messageBody)
     {
-      // .NET 2.0 has a new API for SMTP email System.Net.Mail
-      // This API supports credentials and multiple hosts correctly.
-      // The old API is deprecated.
-
       // Create and configure the smtp client
 #pragma warning disable CS0618 // Type or member is obsolete
-      using SmtpClient smtpClient = new SmtpClient();
+      using var smtpClient = new SmtpClient();
 #pragma warning restore CS0618 // Type or member is obsolete
-      if (!String.IsNullOrEmpty(m_smtpHost))
+      if (!string.IsNullOrEmpty(SmtpHost))
       {
-        smtpClient.Host = m_smtpHost;
+        smtpClient.Host = SmtpHost;
       }
-      smtpClient.Port = m_port;
+      smtpClient.Port = Port;
       smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-      smtpClient.EnableSsl = m_enableSsl;
+      smtpClient.EnableSsl = EnableSsl;
 
-      if (m_authentication == SmtpAuthentication.Basic)
+      if (Authentication == SmtpAuthentication.Basic)
       {
         // Perform basic authentication
-        smtpClient.Credentials = new System.Net.NetworkCredential(m_username, m_password);
+        smtpClient.Credentials = new System.Net.NetworkCredential(Username, Password);
       }
-      else if (m_authentication == SmtpAuthentication.Ntlm)
+      else if (Authentication == SmtpAuthentication.Ntlm)
       {
         // Perform integrated authentication (NTLM)
         smtpClient.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
       }
 
-      using (MailMessage mailMessage = new MailMessage())
+      using (var mailMessage = new MailMessage())
       {
         mailMessage.Body = messageBody;
-        mailMessage.BodyEncoding = m_bodyEncoding;
-        mailMessage.From = new MailAddress(m_from);
+        mailMessage.BodyEncoding = BodyEncoding;
+        mailMessage.From = new MailAddress(From);
         mailMessage.To.Add(m_to);
-        if (!String.IsNullOrEmpty(m_cc))
+        if (!string.IsNullOrEmpty(m_cc))
         {
           mailMessage.CC.Add(m_cc);
         }
-        if (!String.IsNullOrEmpty(m_bcc))
+        if (!string.IsNullOrEmpty(m_bcc))
         {
           mailMessage.Bcc.Add(m_bcc);
         }
-        if (!String.IsNullOrEmpty(m_replyTo))
+        if (!string.IsNullOrEmpty(ReplyTo))
         {
-          mailMessage.ReplyToList.Add(new MailAddress(m_replyTo));
+          mailMessage.ReplyToList.Add(new MailAddress(ReplyTo));
         }
-        mailMessage.Subject = m_subject;
-        mailMessage.SubjectEncoding = m_subjectEncoding;
-        mailMessage.Priority = m_mailPriority;
+        mailMessage.Subject = Subject;
+        mailMessage.SubjectEncoding = SubjectEncoding;
+        mailMessage.Priority = Priority;
 
-        // TODO: Consider using SendAsync to send the message without blocking. This would be a change in
-        // behaviour compared to .NET 1.x. We would need a SendCompletedCallback to log errors.
+        // TODO: Consider using SendAsync to send the message without blocking. We would need a SendCompletedCallback to log errors.
         smtpClient.Send(mailMessage);
       }
     }
 
-    #endregion // Protected Methods
-
-    #region Private Instance Fields
-
-    private string m_to;
-    private string m_cc;
-    private string m_bcc;
-    private string m_from;
-    private string m_subject;
-    private string m_smtpHost;
-    private Encoding m_subjectEncoding = Encoding.UTF8;
-    private Encoding m_bodyEncoding = Encoding.UTF8;
+    private string? m_to;
+    private string? m_cc;
+    private string? m_bcc;
 
     // authentication fields
-    private SmtpAuthentication m_authentication = SmtpAuthentication.None;
-    private string m_username;
-    private string m_password;
 
     // server port, default port 25
-    private int m_port = 25;
-
-    private MailPriority m_mailPriority = MailPriority.Normal;
-
-    private bool m_enableSsl = false;
-    private string m_replyTo;
-
-    #endregion // Private Instance Fields
-
-    #region SmtpAuthentication Enum
 
     /// <summary>
     /// Values for the <see cref="SmtpAppender.Authentication"/> property.
@@ -547,15 +410,14 @@ namespace log4net.Appender
       /// </remarks>
       Ntlm
     }
-
-    #endregion // SmtpAuthentication Enum
-
-    private static readonly char[] ADDRESS_DELIMITERS = new char[] { ',', ';' };
+    
+    // Allow semicolon delimiters for backward compatibility.
+    private static readonly char[] ADDRESS_DELIMITERS = { ',', ';' };
 
     /// <summary>
     ///   trims leading and trailing commas or semicolons
     /// </summary>
-    private static string MaybeTrimSeparators(string s)
+    private static string? MaybeTrimSeparators(string? s)
     {
       return string.IsNullOrEmpty(s) ? s : s.Trim(ADDRESS_DELIMITERS);
     }

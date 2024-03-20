@@ -242,11 +242,11 @@ namespace log4net.Core
     /// </para>
     /// </remarks>
     public LoggingEvent(
-        Type callerStackBoundaryDeclaringType,
+        Type? callerStackBoundaryDeclaringType,
         ILoggerRepository? repository,
-        string loggerName,
+        string? loggerName,
         Level? level,
-        object message,
+        object? message,
         Exception? exception)
     {
       m_callerStackBoundaryDeclaringType = callerStackBoundaryDeclaringType;

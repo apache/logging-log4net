@@ -18,42 +18,18 @@
 #endregion
 
 using System;
-using System.Collections;
-
+using System.Collections.Generic;
 using log4net.Core;
 
 namespace log4net.Util
 {
   /// <summary>
-  /// Manages a mapping from levels to <see cref="LevelMappingEntry"/>
-  /// </summary>
-  /// <remarks>
-  /// <para>
   /// Manages an ordered mapping from <see cref="Level"/> instances 
   /// to <see cref="LevelMappingEntry"/> subclasses.
-  /// </para>
-  /// </remarks>
+  /// </summary>
   /// <author>Nicko Cadell</author>
   public sealed class LevelMapping : IOptionHandler
   {
-    #region Public Instance Constructors
-
-    /// <summary>
-    /// Default constructor
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Initialise a new instance of <see cref="LevelMapping"/>.
-    /// </para>
-    /// </remarks>
-    public LevelMapping()
-    {
-    }
-
-    #endregion // Public Instance Constructors
-
-    #region Public Instance Methods
-
     /// <summary>
     /// Add a <see cref="LevelMappingEntry"/> to this mapping
     /// </summary>
@@ -67,31 +43,19 @@ namespace log4net.Util
     /// </remarks>
     public void Add(LevelMappingEntry entry)
     {
-      if (m_entriesMap.ContainsKey(entry.Level))
-      {
-        m_entriesMap.Remove(entry.Level);
-      }
-      m_entriesMap.Add(entry.Level, entry);
+      m_entriesMap[entry.Level] = entry;
     }
 
     /// <summary>
-    /// Lookup the mapping for the specified level
-    /// </summary>
-    /// <param name="level">the level to lookup</param>
-    /// <returns>the <see cref="LevelMappingEntry"/> for the level or <c>null</c> if no mapping found</returns>
-    /// <remarks>
-    /// <para>
-    /// Lookup the value for the specified level. Finds the nearest
+    /// Looks up the value for the specified level. Finds the nearest
     /// mapping value for the level that is equal to or less than the
     /// <paramref name="level"/> specified.
-    /// </para>
-    /// <para>
-    /// If no mapping could be found then <c>null</c> is returned.
-    /// </para>
-    /// </remarks>
-    public LevelMappingEntry Lookup(Level level)
+    /// </summary>
+    /// <param name="level">the level to look up.</param>
+    /// <returns>The <see cref="LevelMappingEntry"/> for the level or <c>null</c> if no mapping found</returns>
+    public LevelMappingEntry? Lookup(Level? level)
     {
-      if (m_entries != null)
+      if (m_entries is not null)
       {
         foreach (LevelMappingEntry entry in m_entries)
         {
@@ -103,10 +67,6 @@ namespace log4net.Util
       }
       return null;
     }
-
-    #endregion // Public Instance Methods
-
-    #region IOptionHandler Members
 
     /// <summary>
     /// Initialize options
@@ -138,13 +98,7 @@ namespace log4net.Util
       m_entries = sortValues;
     }
 
-    #endregion // IOptionHandler Members
-
-    #region Private Instance Fields
-
-    private Hashtable m_entriesMap = new Hashtable();
-    private LevelMappingEntry[] m_entries = null;
-
-    #endregion // Private Instance Fields
+    private readonly Dictionary<Level, LevelMappingEntry> m_entriesMap = new();
+    private LevelMappingEntry[]? m_entries;
   }
 }

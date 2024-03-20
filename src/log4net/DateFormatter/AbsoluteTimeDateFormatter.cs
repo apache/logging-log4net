@@ -18,7 +18,7 @@
 #endregion
 
 using System;
-using System.Collections;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Text;
 
@@ -36,8 +36,6 @@ namespace log4net.DateFormatter
   /// <author>Gert Driesen</author>
   public class AbsoluteTimeDateFormatter : IDateFormatter
   {
-    #region Protected Instance Methods
-
     /// <summary>
     /// Renders the date into a string. Format is <c>"HH:mm:ss"</c>.
     /// </summary>
@@ -58,16 +56,14 @@ namespace log4net.DateFormatter
       {
         buffer.Append('0');
       }
-      buffer.Append(hour);
-      buffer.Append(':');
+      buffer.Append(hour).Append(':');
 
       int mins = dateToFormat.Minute;
       if (mins < 10)
       {
         buffer.Append('0');
       }
-      buffer.Append(mins);
-      buffer.Append(':');
+      buffer.Append(mins).Append(':');
 
       int secs = dateToFormat.Second;
       if (secs < 10)
@@ -76,10 +72,6 @@ namespace log4net.DateFormatter
       }
       buffer.Append(secs);
     }
-
-    #endregion Protected Instance Methods
-
-    #region Implementation of IDateFormatter
 
     /// <summary>
     /// Renders the date into a string. Format is "HH:mm:ss,fff".
@@ -95,77 +87,51 @@ namespace log4net.DateFormatter
     /// per second.
     /// </para>
     /// <para>
-    /// Sub classes should override <see cref="FormatDateWithoutMillis"/>
+    /// Subclasses should override <see cref="FormatDateWithoutMillis"/>
     /// rather than <see cref="FormatDate"/>.
     /// </para>
     /// </remarks>
     public virtual void FormatDate(DateTime dateToFormat, TextWriter writer)
     {
-      lock (s_lastTimeStrings)
-      {
-        // Calculate the current time precise only to the second
-        long currentTimeToTheSecond = (dateToFormat.Ticks - (dateToFormat.Ticks % TimeSpan.TicksPerSecond));
-
-        string timeString = null;
-        // Compare this time with the stored last time
-        // If we are in the same second then append
-        // the previously calculated time string
-        if (s_lastTimeToTheSecond != currentTimeToTheSecond)
+      string timeString = s_lastTimeStrings.AddOrUpdate(GetType(),
+        _ => BuildTimeString(),
+        (_, existing) =>
         {
-          s_lastTimeStrings.Clear();
-        }
-        else
-        {
-          timeString = (string)s_lastTimeStrings[GetType()];
-        }
+          // Calculate the current time precise only to the second
+          long currentTimeToTheSecond = (dateToFormat.Ticks - (dateToFormat.Ticks % TimeSpan.TicksPerSecond));
 
-        if (timeString == null)
-        {
-          // lock so that only one thread can use the buffer and
-          // update the s_lastTimeToTheSecond and s_lastTimeStrings
-
-          // PERF: Try removing this lock and using a new StringBuilder each time
-          lock (s_lastTimeBuf)
+          // Compare this time with the stored last time
+          // If we are in the same second then append
+          // the previously calculated time string
+          if (s_lastTimeToTheSecond == currentTimeToTheSecond)
           {
-            timeString = (string)s_lastTimeStrings[GetType()];
-
-            if (timeString == null)
-            {
-              // We are in a new second.
-              s_lastTimeBuf.Length = 0;
-
-              // Calculate the new string for this second
-              FormatDateWithoutMillis(dateToFormat, s_lastTimeBuf);
-
-              // Render the string buffer to a string
-              timeString = s_lastTimeBuf.ToString();
-
-              // Store the time as a string (we only have to do this once per second)
-              s_lastTimeStrings[GetType()] = timeString;
-              s_lastTimeToTheSecond = currentTimeToTheSecond;
-            }
+            return existing;
           }
-        }
-        writer.Write(timeString);
+          s_lastTimeToTheSecond = currentTimeToTheSecond;
+          return BuildTimeString();
+        });
+      writer.Write(timeString);
 
-        // Append the current millisecond info
-        writer.Write(',');
-        int millis = dateToFormat.Millisecond;
-        if (millis < 100)
-        {
-          writer.Write('0');
-        }
-        if (millis < 10)
-        {
-          writer.Write('0');
-        }
-        writer.Write(millis);
+      // Append the current millisecond info
+      writer.Write(',');
+      int millis = dateToFormat.Millisecond;
+      if (millis < 100)
+      {
+        writer.Write('0');
+      }
+      if (millis < 10)
+      {
+        writer.Write('0');
+      }
+      writer.Write(millis);
+
+      string BuildTimeString()
+      {
+        var sb = new StringBuilder();
+        FormatDateWithoutMillis(dateToFormat, sb);
+        return sb.ToString();
       }
     }
-
-    #endregion Implementation of IDateFormatter
-
-    #region Public Static Fields
 
     /// <summary>
     /// String constant used to specify AbsoluteTimeDateFormat in layouts. Current value is <b>ABSOLUTE</b>.
@@ -182,27 +148,15 @@ namespace log4net.DateFormatter
     /// </summary>
     public const string Iso8601TimeDateFormat = "ISO8601";
 
-    #endregion Public Static Fields
-
-    #region Private Static Fields
-
     /// <summary>
     /// Last stored time with precision up to the second.
     /// </summary>
-    private static long s_lastTimeToTheSecond = 0;
+    private static long s_lastTimeToTheSecond;
 
     /// <summary>
     /// Last stored time with precision up to the second, formatted
     /// as a string.
     /// </summary>
-    private static StringBuilder s_lastTimeBuf = new StringBuilder();
-
-    /// <summary>
-    /// Last stored time with precision up to the second, formatted
-    /// as a string.
-    /// </summary>
-    private static Hashtable s_lastTimeStrings = new Hashtable();
-
-    #endregion Private Static Fields
+    private static readonly ConcurrentDictionary<Type, string> s_lastTimeStrings = new();
   }
 }

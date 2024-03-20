@@ -69,17 +69,17 @@ namespace log4net.Tests.Appender
 
       public void Error(string message)
       {
-        m_buffer.Append(message + "\n");
+        m_buffer.Append(message + '\n');
       }
 
       public void Error(string message, Exception e)
       {
-        m_buffer.Append(message + "\n" + e.Message + "\n");
+        m_buffer.Append(message + '\n' + e.Message + '\n');
       }
 
-      public void Error(string message, Exception e, ErrorCode errorCode)
+      public void Error(string message, Exception? e, ErrorCode errorCode)
       {
-        m_buffer.Append(message + "\n" + e.Message + "\n");
+        m_buffer.Append(message + '\n' + e?.Message + '\n');
       }
     }
 
@@ -1862,7 +1862,9 @@ namespace log4net.Tests.Appender
       string sBaseFile = "LogFile.log";
       var arrFiles = new List<string> { "junk1" };
       for (int i = 0; i < iBackups; i++)
+      {
         arrFiles.Add(MakeFileName(sBaseFile, i));
+      }
 
       RollingFileAppender rfa = new();
       rfa.RollingStyle = RollingFileAppender.RollingMode.Size;
@@ -1876,9 +1878,13 @@ namespace log4net.Tests.Appender
       // 2 = file.log.1
       // 3 = file.log.2
       if (iBackups is 0 or 1)
+      {
         Assert.AreEqual(0, rfa.CurrentSizeRollBackups);
+      }
       else
+      {
         Assert.AreEqual(Math.Min(iBackups - 1, iMaxSizeRollBackups), rfa.CurrentSizeRollBackups);
+      }
     }
 
     /// <summary>

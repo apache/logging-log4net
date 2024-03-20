@@ -42,8 +42,6 @@ namespace log4net.Config
   [Serializable]
   public sealed class PluginAttribute : Attribute, IPluginFactory
   {
-    #region Public Instance Constructors
-
     /// <summary>
     /// Initializes a new instance of the <see cref="PluginAttribute" /> class
     /// with the specified type.
@@ -59,7 +57,7 @@ namespace log4net.Config
     /// </remarks>
     public PluginAttribute(string typeName)
     {
-      m_typeName = typeName;
+      TypeName = typeName;
     }
 
     /// <summary>
@@ -74,53 +72,23 @@ namespace log4net.Config
     /// </remarks>
     public PluginAttribute(Type type)
     {
-      m_type = type;
+      Type = type;
     }
-
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
 
     /// <summary>
     /// Gets or sets the type for the plugin.
     /// </summary>
-    /// <value>
-    /// The type for the plugin.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// The type for the plugin.
-    /// </para>
-    /// </remarks>
-    public Type Type
-    {
-      get { return m_type; }
-      set { m_type = value; }
-    }
+    public Type? Type { get; set; }
 
     /// <summary>
     /// Gets or sets the type name for the plugin.
     /// </summary>
-    /// <value>
-    /// The type name for the plugin.
-    /// </value>
     /// <remarks>
-    /// <para>
-    /// The type name for the plugin.
-    /// </para>
     /// <para>
     /// Where possible use the <see cref="Type"/> property instead.
     /// </para>
     /// </remarks>
-    public string TypeName
-    {
-      get { return m_typeName; }
-      set { m_typeName = value; }
-    }
-
-    #endregion Public Instance Properties
-
-    #region Implementation of IPluginFactory
+    public string? TypeName { get; set; }
 
     /// <summary>
     /// Creates the plugin object defined by this attribute.
@@ -134,16 +102,13 @@ namespace log4net.Config
     /// <returns>The plugin object.</returns>
     public IPlugin CreatePlugin()
     {
-      Type pluginType = m_type;
-      if (m_type == null)
-      {
-        // Get the plugin object type from the string type name
-        pluginType = SystemInfo.GetTypeFromString(m_typeName, true, true);
-      }
+      // Get the plugin object type from the type first before trying the string type name.
+      Type? pluginType = Type ?? SystemInfo.GetTypeFromString(TypeName, true, true);
+
       // Check that the type is a plugin
       if (!(typeof(IPlugin).IsAssignableFrom(pluginType)))
       {
-        throw new LogException("Plugin type [" + pluginType.FullName + "] does not implement the log4net.IPlugin interface");
+        throw new LogException($"Plugin type [{pluginType.FullName}] does not implement the log4net.IPlugin interface");
       }
 
       // Create an instance of the plugin using the default constructor
@@ -151,10 +116,6 @@ namespace log4net.Config
 
       return plugin;
     }
-
-    #endregion Implementation of IPluginFactory
-
-    #region Override implementation of Object
 
     /// <summary>
     /// Returns a representation of the properties of this object.
@@ -168,20 +129,7 @@ namespace log4net.Config
     /// <returns>A representation of the properties of this object</returns>
     public override string ToString()
     {
-      if (m_type != null)
-      {
-        return "PluginAttribute[Type=" + m_type.FullName + "]";
-      }
-      return "PluginAttribute[Type=" + m_typeName + "]";
+      return $"PluginAttribute[Type={Type?.FullName ?? TypeName}]";
     }
-
-    #endregion Override implementation of Object
-
-    #region Private Instance Fields
-
-    private string m_typeName = null;
-    private Type m_type = null;
-
-    #endregion Private Instance Fields
   }
 }

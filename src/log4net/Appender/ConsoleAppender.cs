@@ -18,7 +18,6 @@
 #endregion
 
 using System;
-using System.Globalization;
 
 using log4net.Layout;
 using log4net.Core;
@@ -52,8 +51,6 @@ namespace log4net.Appender
   /// <author>Gert Driesen</author>
   public class ConsoleAppender : AppenderSkeleton
   {
-    #region Public Instance Constructors
-
     /// <summary>
     /// Initializes a new instance of the <see cref="ConsoleAppender" /> class.
     /// </summary>
@@ -97,10 +94,6 @@ namespace log4net.Appender
       m_writeToErrorStream = writeToErrorStream;
     }
 
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
-
     /// <summary>
     /// Target is the value of the console output stream.
     /// This is either <c>"Console.Out"</c> or <c>"Console.Error"</c>.
@@ -117,25 +110,9 @@ namespace log4net.Appender
     /// </remarks>
     public virtual string Target
     {
-      get { return m_writeToErrorStream ? ConsoleError : ConsoleOut; }
-      set
-      {
-        string v = value.Trim();
-
-        if (SystemInfo.EqualsIgnoringCase(ConsoleError, v))
-        {
-          m_writeToErrorStream = true;
-        }
-        else
-        {
-          m_writeToErrorStream = false;
-        }
-      }
+      get => m_writeToErrorStream ? ConsoleError : ConsoleOut;
+      set => m_writeToErrorStream = SystemInfo.EqualsIgnoringCase(ConsoleError, value.Trim());
     }
-
-    #endregion Public Instance Properties
-
-    #region Override implementation of AppenderSkeleton
 
     /// <summary>
     /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/> method.
@@ -166,51 +143,20 @@ namespace log4net.Appender
     /// <summary>
     /// This appender requires a <see cref="Layout"/> to be set.
     /// </summary>
-    /// <value><c>true</c></value>
-    /// <remarks>
-    /// <para>
-    /// This appender requires a <see cref="Layout"/> to be set.
-    /// </para>
-    /// </remarks>
-    protected override bool RequiresLayout
-    {
-      get { return true; }
-    }
-
-    #endregion Override implementation of AppenderSkeleton
-
-    #region Public Static Fields
+    protected override bool RequiresLayout => true;
 
     /// <summary>
     /// The <see cref="ConsoleAppender.Target"/> to use when writing to the Console 
     /// standard output stream.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The <see cref="ConsoleAppender.Target"/> to use when writing to the Console 
-    /// standard output stream.
-    /// </para>
-    /// </remarks>
     public const string ConsoleOut = "Console.Out";
 
     /// <summary>
     /// The <see cref="ConsoleAppender.Target"/> to use when writing to the Console 
     /// standard error output stream.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The <see cref="ConsoleAppender.Target"/> to use when writing to the Console 
-    /// standard error output stream.
-    /// </para>
-    /// </remarks>
     public const string ConsoleError = "Console.Error";
 
-    #endregion Public Static Fields
-
-    #region Private Instances Fields
-
-    private bool m_writeToErrorStream = false;
-
-    #endregion Private Instances Fields
+    private bool m_writeToErrorStream;
   }
 }

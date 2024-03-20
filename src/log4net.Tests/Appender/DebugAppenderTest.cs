@@ -139,17 +139,11 @@ namespace log4net.Tests.Appender
 
     private class TestErrorHandler : IErrorHandler
     {
-      private bool m_errorOccured = false;
+      public bool ErrorOccured { get; private set; }
 
-      public bool ErrorOccured
+      public void Error(string message, Exception? e, ErrorCode errorCode)
       {
-        get { return m_errorOccured; }
-      }
-      #region IErrorHandler Members
-
-      public void Error(string message, Exception e, ErrorCode errorCode)
-      {
-        m_errorOccured = true;
+        ErrorOccured = true;
       }
 
       public void Error(string message, Exception e)
@@ -161,8 +155,6 @@ namespace log4net.Tests.Appender
       {
         Error(message, null, ErrorCode.GenericFailure);
       }
-
-      #endregion
     }
   }
 }

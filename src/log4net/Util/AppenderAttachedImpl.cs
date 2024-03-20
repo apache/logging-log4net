@@ -114,11 +114,11 @@ namespace log4net.Util
     {
       if (loggingEvents == null)
       {
-        throw new ArgumentNullException("loggingEvents");
+        throw new ArgumentNullException(nameof(loggingEvents));
       }
       if (loggingEvents.Length == 0)
       {
-        throw new ArgumentException("loggingEvents array must not be empty", "loggingEvents");
+        throw new ArgumentException($"{nameof(loggingEvents)} array must not be empty", nameof(loggingEvents));
       }
       if (loggingEvents.Length == 1)
       {
