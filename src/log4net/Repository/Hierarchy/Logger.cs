@@ -142,7 +142,6 @@ namespace log4net.Repository.Hierarchy
     /// Gets or sets the <see cref="Hierarchy"/> where this 
     /// <c>Logger</c> instance is attached to.
     /// </summary>
-    /// <value>The hierarchy that this logger belongs to.</value>
     /// <remarks>
     /// <para>
     /// This logger must be attached to a single <see cref="Hierarchy"/>.
@@ -160,11 +159,6 @@ namespace log4net.Repository.Hierarchy
     /// <value>
     /// The <see cref="Level"/> of this logger.
     /// </value>
-    /// <remarks>
-    /// <para>
-    /// The assigned <see cref="Level"/> can be <c>null</c>.
-    /// </para>
-    /// </remarks>
     public virtual Level? Level { get; set; }
 
     /// <summary>
@@ -173,10 +167,6 @@ namespace log4net.Repository.Hierarchy
     /// </summary>
     /// <param name="newAppender">An appender to add to this logger</param>
     /// <remarks>
-    /// <para>
-    /// Add <paramref name="newAppender"/> to the list of appenders of this
-    /// Logger instance.
-    /// </para>
     /// <para>
     /// If <paramref name="newAppender"/> is already in the list of
     /// appenders, then it won't be added again.
@@ -205,14 +195,10 @@ namespace log4net.Repository.Hierarchy
     /// Get the appenders contained in this logger as an 
     /// <see cref="System.Collections.ICollection"/>.
     /// </summary>
-    /// <returns>A collection of the appenders in this logger</returns>
-    /// <remarks>
-    /// <para>
-    /// Get the appenders contained in this logger as an 
-    /// <see cref="System.Collections.ICollection"/>. If no appenders 
+    /// <returns>
+    /// A collection of the appenders in this logger. If no appenders 
     /// can be found, then a <see cref="EmptyCollection"/> is returned.
-    /// </para>
-    /// </remarks>
+    /// </returns>
     public virtual AppenderCollection Appenders 
     {
       get
@@ -241,11 +227,6 @@ namespace log4net.Repository.Hierarchy
     /// </summary>
     /// <param name="name">The name of the appender to lookup</param>
     /// <returns>The appender with the name specified, or <c>null</c>.</returns>
-    /// <remarks>
-    /// <para>
-    /// Returns the named appender, or null if the appender is not found.
-    /// </para>
-    /// </remarks>
     public virtual IAppender? GetAppender(string? name) 
     {
       m_appenderLock.AcquireReaderLock();
@@ -265,12 +246,9 @@ namespace log4net.Repository.Hierarchy
     }
 
     /// <summary>
-    /// Remove all previously added appenders from this Logger instance.
+    /// Removes all previously added appenders from this Logger instance.
     /// </summary>
     /// <remarks>
-    /// <para>
-    /// Remove all previously added appenders from this Logger instance.
-    /// </para>
     /// <para>
     /// This is useful when re-reading configuration information.
     /// </para>
@@ -299,7 +277,6 @@ namespace log4net.Repository.Hierarchy
     /// <returns>The appender removed from the list</returns>
     /// <remarks>
     /// <para>
-    /// Remove the appender passed as parameter form the list of appenders.
     /// The appender removed is not closed.
     /// If you are discarding the appender you must call
     /// <see cref="IAppender.Close"/> on the appender removed.
@@ -329,7 +306,6 @@ namespace log4net.Repository.Hierarchy
     /// <returns>The appender removed from the list</returns>
     /// <remarks>
     /// <para>
-    /// Remove the named appender passed as parameter form the list of appenders.
     /// The appender removed is not closed.
     /// If you are discarding the appender you must call
     /// <see cref="IAppender.Close"/> on the appender removed.
@@ -355,18 +331,11 @@ namespace log4net.Repository.Hierarchy
     /// <summary>
     /// Gets the logger name.
     /// </summary>
-    /// <value>
-    /// The name of the logger.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// The name of this logger
-    /// </para>
-    /// </remarks>
     public virtual string Name { get; }
 
     /// <summary>
-    /// This generic form is intended to be used by wrappers.
+    /// Generates a logging event for the specified <paramref name="level"/> using
+    /// the <paramref name="message"/> and <paramref name="exception"/>.
     /// </summary>
     /// <param name="callerStackBoundaryDeclaringType">The declaring type of the method that is
     /// the stack boundary into the logging system for this call.</param>
@@ -375,8 +344,7 @@ namespace log4net.Repository.Hierarchy
     /// <param name="exception">The exception to log, including its stack trace.</param>
     /// <remarks>
     /// <para>
-    /// Generate a logging event for the specified <paramref name="level"/> using
-    /// the <paramref name="message"/> and <paramref name="exception"/>.
+    /// This generic form is intended to be used by wrappers.
     /// </para>
     /// <para>
     /// This method must not throw any exception to the caller.
@@ -398,13 +366,13 @@ namespace log4net.Repository.Hierarchy
     }
 
     /// <summary>
-    /// This is the most generic printing method that is intended to be used 
-    /// by wrappers.
+    /// Logs the specified logging event through this logger.
     /// </summary>
     /// <param name="logEvent">The event being logged.</param>
     /// <remarks>
     /// <para>
-    /// Logs the specified logging event through this logger.
+    /// This is the most generic printing method that is intended to be used 
+    /// by wrappers.
     /// </para>
     /// <para>
     /// This method must not throw any exception to the caller.
@@ -437,9 +405,6 @@ namespace log4net.Repository.Hierarchy
     /// </returns>
     /// <remarks>
     /// <para>
-    /// Test if this logger is going to log events of the specified <paramref name="level"/>.
-    /// </para>
-    /// <para>
     /// This method must not throw any exception to the caller.
     /// </para>
     /// </remarks>
@@ -467,15 +432,6 @@ namespace log4net.Repository.Hierarchy
     /// Gets the <see cref="ILoggerRepository"/> where this 
     /// <c>Logger</c> instance is attached to.
     /// </summary>
-    /// <value>
-    /// The <see cref="ILoggerRepository" /> that this logger belongs to.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets the <see cref="ILoggerRepository"/> where this 
-    /// <c>Logger</c> instance is attached to.
-    /// </para>
-    /// </remarks>
     public ILoggerRepository? Repository => m_hierarchy;
 
     /// <summary>

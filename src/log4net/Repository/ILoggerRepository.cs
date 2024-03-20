@@ -174,17 +174,17 @@ namespace log4net.Repository
     /// <summary>
     /// Event to notify that the repository has been shut down.
     /// </summary>
-    event LoggerRepositoryShutdownEventHandler ShutdownEvent;
+    event LoggerRepositoryShutdownEventHandler? ShutdownEvent;
 
     /// <summary>
     /// Event to notify that the repository has had its configuration reset to default.
     /// </summary>
-    event LoggerRepositoryConfigurationResetEventHandler ConfigurationReset;
+    event LoggerRepositoryConfigurationResetEventHandler? ConfigurationReset;
 
     /// <summary>
     /// Event to notify that the repository's configuration has changed.
     /// </summary>
-    event LoggerRepositoryConfigurationChangedEventHandler ConfigurationChanged;
+    event LoggerRepositoryConfigurationChangedEventHandler? ConfigurationChanged;
 
     /// <summary>
     /// Repository specific properties.

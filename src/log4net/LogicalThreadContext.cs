@@ -82,73 +82,22 @@ namespace log4net
   /// </example>
   /// <threadsafety static="true" instance="true" />
   /// <author>Nicko Cadell</author>
-  public sealed class LogicalThreadContext
+  public static class LogicalThreadContext
   {
-    #region Private Instance Constructors
-
-    /// <summary>
-    /// Private Constructor. 
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Uses a private access modifier to prevent instantiation of this class.
-    /// </para>
-    /// </remarks>
-    private LogicalThreadContext()
-    {
-    }
-
-    #endregion Private Instance Constructors
-
-    #region Public Static Properties
-
     /// <summary>
     /// The thread properties map
     /// </summary>
-    /// <value>
-    /// The thread properties map
-    /// </value>
     /// <remarks>
     /// <para>
     /// The <c>LogicalThreadContext</c> properties override any <see cref="ThreadContext"/> 
     /// or <see cref="GlobalContext"/> properties with the same name.
     /// </para>
     /// </remarks>
-    public static LogicalThreadContextProperties Properties
-    {
-      get { return s_properties; }
-    }
+    public static LogicalThreadContextProperties Properties { get; } = new();
 
     /// <summary>
-    /// The thread stacks
-    /// </summary>
-    /// <value>
-    /// stack map
-    /// </value>
-    /// <remarks>
-    /// <para>
     /// The logical thread stacks.
-    /// </para>
-    /// </remarks>
-    public static LogicalThreadContextStacks Stacks
-    {
-      get { return s_stacks; }
-    }
-
-    #endregion Public Static Properties
-
-    #region Private Static Fields
-
-    /// <summary>
-    /// The thread context properties instance
     /// </summary>
-    private static readonly LogicalThreadContextProperties s_properties = new LogicalThreadContextProperties();
-
-    /// <summary>
-    /// The thread context stacks instance
-    /// </summary>
-    private static readonly LogicalThreadContextStacks s_stacks = new LogicalThreadContextStacks(s_properties);
-
-    #endregion Private Static Fields
+    public static LogicalThreadContextStacks Stacks { get; } = new(Properties);
   }
 }

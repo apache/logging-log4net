@@ -17,8 +17,6 @@
 //
 #endregion
 
-using System;
-
 namespace log4net.Core
 {
   /// <summary>
@@ -53,6 +51,6 @@ namespace log4net.Core
     /// and logged from any thread with identical results.
     /// </para>
     /// </remarks>
-    object GetFixedObject();
+    object? GetFixedObject();
   }
 }

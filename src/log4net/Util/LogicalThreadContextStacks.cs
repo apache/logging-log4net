@@ -24,17 +24,10 @@ namespace log4net.Util
   /// <summary>
   /// Implementation of Stacks collection for the <see cref="log4net.LogicalThreadContext"/>
   /// </summary>
-  /// <remarks>
-  /// <para>
-  /// Implementation of Stacks collection for the <see cref="log4net.LogicalThreadContext"/>
-  /// </para>
-  /// </remarks>
   /// <author>Nicko Cadell</author>
   public sealed class LogicalThreadContextStacks
   {
     private readonly LogicalThreadContextProperties m_properties;
-
-    #region Public Instance Constructors
 
     /// <summary>
     /// Internal constructor
@@ -48,10 +41,6 @@ namespace log4net.Util
     {
       m_properties = properties;
     }
-
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
 
     /// <summary>
     /// Gets the named thread context stack
@@ -74,7 +63,7 @@ namespace log4net.Util
         if (propertyValue == null)
         {
           // Stack does not exist, create
-          stack = new LogicalThreadContextStack(key, registerNew);
+          stack = new LogicalThreadContextStack(key, RegisterNew);
           m_properties[key] = stack;
         }
         else
@@ -96,7 +85,7 @@ namespace log4net.Util
 
             LogLog.Error(declaringType, "ThreadContextStacks: Request for stack named [" + key + "] failed because a property with the same name exists which is a [" + propertyValue.GetType().Name + "] with value [" + propertyValueString + "]");
 
-            stack = new LogicalThreadContextStack(key, registerNew);
+            stack = new LogicalThreadContextStack(key, RegisterNew);
           }
         }
 
@@ -104,18 +93,10 @@ namespace log4net.Util
       }
     }
 
-    #endregion Public Instance Properties
-
-    #region Private Instance Fields
-
-    private void registerNew(string stackName, LogicalThreadContextStack stack)
+    private void RegisterNew(string stackName, LogicalThreadContextStack stack)
     {
       m_properties[stackName] = stack;
     }
-
-    #endregion Private Instance Fields
-
-    #region Private Static Fields
 
     /// <summary>
     /// The fully qualified type of the ThreadContextStacks class.
@@ -125,7 +106,5 @@ namespace log4net.Util
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(LogicalThreadContextStacks);
-
-    #endregion Private Static Fields
   }
 }

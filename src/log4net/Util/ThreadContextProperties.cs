@@ -19,6 +19,8 @@
 
 using System;
 
+#nullable enable
+
 namespace log4net.Util
 {
   /// <summary>
@@ -33,17 +35,11 @@ namespace log4net.Util
   /// <author>Nicko Cadell</author>
   public sealed class ThreadContextProperties : ContextPropertiesBase
   {
-    #region Private Instance Fields
-
     /// <summary>
     /// Each thread will automatically have its instance.
     /// </summary>
     [ThreadStatic]
-    private static PropertiesDictionary _dictionary;
-
-    #endregion Private Instance Fields
-
-    #region Public Instance Constructors
+    private static PropertiesDictionary? _dictionary;
 
     /// <summary>
     /// Internal constructor
@@ -57,10 +53,6 @@ namespace log4net.Util
     {
     }
 
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
-
     /// <summary>
     /// Gets or sets the value of a property
     /// </summary>
@@ -72,25 +64,11 @@ namespace log4net.Util
     /// Gets or sets the value of a property
     /// </para>
     /// </remarks>
-    public override object this[string key]
+    public override object? this[string key]
     {
-      get
-      {
-        if (_dictionary != null)
-        {
-          return _dictionary[key];
-        }
-        return null;
-      }
-      set
-      {
-        GetProperties(true)[key] = value;
-      }
+      get => _dictionary?[key];
+      set => GetProperties(true)![key] = value;
     }
-
-    #endregion Public Instance Properties
-
-    #region Public Instance Methods
 
     /// <summary>
     /// Remove a property
@@ -101,13 +79,7 @@ namespace log4net.Util
     /// Remove a property
     /// </para>
     /// </remarks>
-    public void Remove(string key)
-    {
-      if (_dictionary != null)
-      {
-        _dictionary.Remove(key);
-      }
-    }
+    public void Remove(string key) => _dictionary?.Remove(key);
 
     /// <summary>
     /// Get the keys stored in the properties.
@@ -116,14 +88,7 @@ namespace log4net.Util
     /// Gets the keys stored in the properties.
     /// </para>
     /// <returns>a set of the defined keys</returns>
-    public string[] GetKeys()
-    {
-      if (_dictionary != null)
-      {
-        return _dictionary.GetKeys();
-      }
-      return null;
-    }
+    public string[]? GetKeys() => _dictionary?.GetKeys();
 
     /// <summary>
     /// Clear all properties
@@ -133,22 +98,12 @@ namespace log4net.Util
     /// Clear all properties
     /// </para>
     /// </remarks>
-    public void Clear()
-    {
-      if (_dictionary != null)
-      {
-        _dictionary.Clear();
-      }
-    }
-
-    #endregion Public Instance Methods
-
-    #region Internal Instance Methods
+    public void Clear() => _dictionary?.Clear();
 
     /// <summary>
     /// Get the <c>PropertiesDictionary</c> for this thread.
     /// </summary>
-    /// <param name="create">create the dictionary if it does not exist, otherwise return null if does not exist</param>
+    /// <param name="create">create the dictionary if it does not exist, otherwise return null if it does not exist</param>
     /// <returns>the properties for this thread</returns>
     /// <remarks>
     /// <para>
@@ -157,15 +112,13 @@ namespace log4net.Util
     /// caller must clone the collection before doing so.
     /// </para>
     /// </remarks>
-    internal PropertiesDictionary GetProperties(bool create)
+    internal PropertiesDictionary? GetProperties(bool create)
     {
-      if (_dictionary == null && create)
+      if (_dictionary is null && create)
       {
         _dictionary = new PropertiesDictionary();
       }
       return _dictionary;
     }
-
-    #endregion Internal Instance Methods
   }
 }

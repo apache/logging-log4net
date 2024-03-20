@@ -71,6 +71,7 @@ namespace log4net.Tests.Hierarchy
       {
         Assert.IsTrue(enumAppenders.MoveNext());
         var aHat = (CountingAppender?)enumAppenders.Current;
+        Assert.IsNotNull(aHat);
         Assert.AreEqual(a1, aHat);
       }
       finally
@@ -101,6 +102,7 @@ namespace log4net.Tests.Hierarchy
       Assert.AreEqual(a1, aHat);
 
       aHat = (CountingAppender?)log.GetAppender(a2.Name);
+      Assert.IsNotNull(aHat);
       Assert.AreEqual(a2, aHat);
 
       // By name.
@@ -113,6 +115,7 @@ namespace log4net.Tests.Hierarchy
       {
         Assert.IsTrue(enumAppenders.MoveNext());
         aHat = (CountingAppender?)enumAppenders.Current;
+        Assert.IsNotNull(aHat);
         Assert.AreSame(a2, aHat);
         Assert.IsFalse(enumAppenders.MoveNext());
       }
@@ -125,6 +128,7 @@ namespace log4net.Tests.Hierarchy
       }
 
       aHat = (CountingAppender?)log.GetAppender(a2.Name);
+      Assert.IsNotNull(aHat);
       Assert.AreSame(a2, aHat);
 
       // By appender.
@@ -154,7 +158,7 @@ namespace log4net.Tests.Hierarchy
     {
       Logger a = (Logger)LogManager.GetLogger("a").Logger;
       Logger ab = (Logger)LogManager.GetLogger("a.b").Logger;
-      CountingAppender ca = new CountingAppender();
+      var ca = new CountingAppender();
 
       a.AddAppender(ca);
       Assert.IsNotNull(a.Repository);
@@ -182,8 +186,8 @@ namespace log4net.Tests.Hierarchy
       Logger abc = (Logger)LogManager.GetLogger("a.b.c").Logger;
       Logger x = (Logger)LogManager.GetLogger("x").Logger;
 
-      CountingAppender ca1 = new CountingAppender();
-      CountingAppender ca2 = new CountingAppender();
+      var ca1 = new CountingAppender();
+      var ca2 = new CountingAppender();
 
       a.AddAppender(ca1);
       abc.AddAppender(ca2);
@@ -217,9 +221,9 @@ namespace log4net.Tests.Hierarchy
       Logger ab = (Logger)LogManager.GetLogger("a.b").Logger;
       Logger abc = (Logger)LogManager.GetLogger("a.b.c").Logger;
 
-      CountingAppender caRoot = new CountingAppender();
-      CountingAppender caA = new CountingAppender();
-      CountingAppender caABC = new CountingAppender();
+      var caRoot = new CountingAppender();
+      var caA = new CountingAppender();
+      var caABC = new CountingAppender();
 
       root.AddAppender(caRoot);
       a.AddAppender(caA);
@@ -255,7 +259,7 @@ namespace log4net.Tests.Hierarchy
     [Test]
     public void TestDisable1()
     {
-      CountingAppender caRoot = new CountingAppender();
+      var caRoot = new CountingAppender();
       Logger root = ((Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Root;
       root.AddAppender(caRoot);
 
@@ -308,8 +312,11 @@ namespace log4net.Tests.Hierarchy
     public void TestExists()
     {
       ILog a = LogManager.GetLogger("a");
+      Assert.IsNotNull(a);
       ILog a_b = LogManager.GetLogger("a.b");
+      Assert.IsNotNull(a_b);
       ILog a_b_c = LogManager.GetLogger("a.b.c");
+      Assert.IsNotNull(a_b_c);
 
       ILog? t = LogManager.Exists("xx");
       Assert.IsNull(t);
@@ -327,7 +334,7 @@ namespace log4net.Tests.Hierarchy
     [Test]
     public void TestHierarchy1()
     {
-      Repository.Hierarchy.Hierarchy h = new Repository.Hierarchy.Hierarchy();
+      var h = new Repository.Hierarchy.Hierarchy();
       h.Root.Level = Level.Error;
 
       Logger a0 = (Logger)h.GetLogger("a");

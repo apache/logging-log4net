@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using System.Xml;
@@ -48,8 +49,6 @@ namespace log4net.Repository.Hierarchy
       Overwrite
     }
 
-    #region Public Instance Constructors
-
     /// <summary>
     /// Construct the configurator for a hierarchy
     /// </summary>
@@ -63,12 +62,7 @@ namespace log4net.Repository.Hierarchy
     public XmlHierarchyConfigurator(Hierarchy hierarchy)
     {
       m_hierarchy = hierarchy;
-      m_appenderBag = new Hashtable();
     }
-
-    #endregion Public Instance Constructors
-
-    #region Public Instance Methods
 
     /// <summary>
     /// Configure the hierarchy by parsing a DOM tree of XML elements.
@@ -79,9 +73,9 @@ namespace log4net.Repository.Hierarchy
     /// Configure the hierarchy by parsing a DOM tree of XML elements.
     /// </para>
     /// </remarks>
-    public void Configure(XmlElement element)
+    public void Configure(XmlElement? element)
     {
-      if (element == null || m_hierarchy == null)
+      if (element is null)
       {
         return;
       }
@@ -90,7 +84,7 @@ namespace log4net.Repository.Hierarchy
 
       if (rootElementName != CONFIGURATION_TAG)
       {
-        LogLog.Error(declaringType, "Xml element is - not a <" + CONFIGURATION_TAG + "> element.");
+        LogLog.Error(declaringType, $"Xml element is - not a <{CONFIGURATION_TAG}> element.");
         return;
       }
 
@@ -98,7 +92,7 @@ namespace log4net.Repository.Hierarchy
       {
         // Look for a emitDebug attribute to enable internal debug
         string emitDebugAttribute = element.GetAttribute(EMIT_INTERNAL_DEBUG_ATTR);
-        LogLog.Debug(declaringType, EMIT_INTERNAL_DEBUG_ATTR + " attribute [" + emitDebugAttribute + "].");
+        LogLog.Debug(declaringType, $"{EMIT_INTERNAL_DEBUG_ATTR} attribute [{emitDebugAttribute}].");
 
         if (emitDebugAttribute.Length > 0 && emitDebugAttribute != "null")
         {
@@ -106,7 +100,7 @@ namespace log4net.Repository.Hierarchy
         }
         else
         {
-          LogLog.Debug(declaringType, "Ignoring " + EMIT_INTERNAL_DEBUG_ATTR + " attribute.");
+          LogLog.Debug(declaringType, $"Ignoring {EMIT_INTERNAL_DEBUG_ATTR} attribute.");
         }
       }
 
@@ -114,7 +108,7 @@ namespace log4net.Repository.Hierarchy
       {
         // Look for a debug attribute to enable internal debug
         string debugAttribute = element.GetAttribute(INTERNAL_DEBUG_ATTR);
-        LogLog.Debug(declaringType, INTERNAL_DEBUG_ATTR + " attribute [" + debugAttribute + "].");
+        LogLog.Debug(declaringType, $"{INTERNAL_DEBUG_ATTR} attribute [{debugAttribute}].");
 
         if (debugAttribute.Length > 0 && debugAttribute != "null")
         {
@@ -122,38 +116,45 @@ namespace log4net.Repository.Hierarchy
         }
         else
         {
-          LogLog.Debug(declaringType, "Ignoring " + INTERNAL_DEBUG_ATTR + " attribute.");
+          LogLog.Debug(declaringType, $"Ignoring {INTERNAL_DEBUG_ATTR} attribute.");
         }
 
         string confDebug = element.GetAttribute(CONFIG_DEBUG_ATTR);
         if (confDebug.Length > 0 && confDebug != "null")
         {
-          LogLog.Warn(declaringType, "The \"" + CONFIG_DEBUG_ATTR + "\" attribute is deprecated.");
-          LogLog.Warn(declaringType, "Use the \"" + INTERNAL_DEBUG_ATTR + "\" attribute instead.");
+          LogLog.Warn(declaringType, $"The \"{CONFIG_DEBUG_ATTR}\" attribute is deprecated.");
+          LogLog.Warn(declaringType, $"Use the \"{INTERNAL_DEBUG_ATTR}\" attribute instead.");
           LogLog.InternalDebugging = OptionConverter.ToBoolean(confDebug, true);
         }
       }
 
       // Default mode is merge
-      ConfigUpdateMode configUpdateMode = ConfigUpdateMode.Merge;
+      ConfigUpdateMode? configUpdateMode = ConfigUpdateMode.Merge;
 
       // Look for the config update attribute
-      string configUpdateModeAttribute = element.GetAttribute(CONFIG_UPDATE_MODE_ATTR);
-      if (configUpdateModeAttribute != null && configUpdateModeAttribute.Length > 0)
+      string? configUpdateModeAttribute = element.GetAttribute(CONFIG_UPDATE_MODE_ATTR);
+      if (!string.IsNullOrEmpty(configUpdateModeAttribute))
       {
         // Parse the attribute
         try
         {
-          configUpdateMode = (ConfigUpdateMode)OptionConverter.ConvertStringTo(typeof(ConfigUpdateMode), configUpdateModeAttribute);
+          if (OptionConverter.ConvertStringTo(typeof(ConfigUpdateMode), configUpdateModeAttribute) is ConfigUpdateMode mode)
+          {
+            configUpdateMode = mode;
+          }
+          else
+          {
+            LogLog.Error(declaringType, $"Invalid {CONFIG_UPDATE_MODE_ATTR} attribute value [{configUpdateModeAttribute}]");
+          }
         }
         catch
         {
-          LogLog.Error(declaringType, "Invalid " + CONFIG_UPDATE_MODE_ATTR + " attribute value [" + configUpdateModeAttribute + "]");
+          LogLog.Error(declaringType, $"Invalid {CONFIG_UPDATE_MODE_ATTR} attribute value [{configUpdateModeAttribute}]");
         }
       }
 
       // IMPL: The IFormatProvider argument to Enum.ToString() is deprecated in .NET 2.0
-      LogLog.Debug(declaringType, "Configuration update mode [" + configUpdateMode.ToString() + "].");
+      LogLog.Debug(declaringType, $"Configuration update mode [{configUpdateMode}].");
 
       // Only reset configuration if overwrite flag specified
       if (configUpdateMode == ConfigUpdateMode.Overwrite)
@@ -206,26 +207,22 @@ namespace log4net.Repository.Hierarchy
 
       // Lastly set the hierarchy threshold
       string thresholdStr = element.GetAttribute(THRESHOLD_ATTR);
-      LogLog.Debug(declaringType, "Hierarchy Threshold [" + thresholdStr + "]");
+      LogLog.Debug(declaringType, $"Hierarchy Threshold [{thresholdStr}]");
       if (thresholdStr.Length > 0 && thresholdStr != "null")
       {
         Level thresholdLevel = (Level)ConvertStringTo(typeof(Level), thresholdStr);
-        if (thresholdLevel != null)
+        if (thresholdLevel is not null)
         {
           m_hierarchy.Threshold = thresholdLevel;
         }
         else
         {
-          LogLog.Warn(declaringType, "Unable to set hierarchy threshold using value [" + thresholdStr + "] (with acceptable conversion types)");
+          LogLog.Warn(declaringType, $"Unable to set hierarchy threshold using value [{thresholdStr}] (with acceptable conversion types)");
         }
       }
 
       // Done reading config
     }
-
-    #endregion Public Instance Methods
-
-    #region Protected Instance Methods
 
     /// <summary>
     /// Parse appenders by IDREF.
@@ -238,47 +235,42 @@ namespace log4net.Repository.Hierarchy
     /// the appender.
     /// </para>
     /// </remarks>
-    protected IAppender FindAppenderByReference(XmlElement appenderRef)
+    protected IAppender? FindAppenderByReference(XmlElement appenderRef)
     {
-      string appenderName = appenderRef.GetAttribute(REF_ATTR);
+      string? appenderName = appenderRef.GetAttribute(REF_ATTR);
 
-      IAppender appender = (IAppender)m_appenderBag[appenderName];
-      if (appender != null)
+      if (m_appenderBag.TryGetValue(appenderName, out IAppender? appender))
       {
         return appender;
       }
-      else
+
+      // Find the element with that id
+      XmlElement? element = null;
+
+      if (!string.IsNullOrEmpty(appenderName) && appenderRef.OwnerDocument is not null)
       {
-        // Find the element with that id
-        XmlElement element = null;
-
-        if (appenderName != null && appenderName.Length > 0)
+        foreach (XmlElement curAppenderElement in appenderRef.OwnerDocument.GetElementsByTagName(APPENDER_TAG))
         {
-          foreach (XmlElement curAppenderElement in appenderRef.OwnerDocument.GetElementsByTagName(APPENDER_TAG))
+          if (curAppenderElement.GetAttribute("name") == appenderName)
           {
-            if (curAppenderElement.GetAttribute("name") == appenderName)
-            {
-              element = curAppenderElement;
-              break;
-            }
+            element = curAppenderElement;
+            break;
           }
-        }
-
-        if (element == null)
-        {
-          LogLog.Error(declaringType, "XmlHierarchyConfigurator: No appender named [" + appenderName + "] could be found.");
-          return null;
-        }
-        else
-        {
-          appender = ParseAppender(element);
-          if (appender != null)
-          {
-            m_appenderBag[appenderName] = appender;
-          }
-          return appender;
         }
       }
+
+      if (element is null)
+      {
+        LogLog.Error(declaringType, $"XmlHierarchyConfigurator: No appender named [{appenderName}] could be found.");
+        return null;
+      }
+
+      appender = ParseAppender(element);
+      if (appender is not null)
+      {
+        m_appenderBag[appenderName] = appender;
+      }
+      return appender;
     }
 
     /// <summary>
@@ -292,20 +284,20 @@ namespace log4net.Repository.Hierarchy
     /// the appender instance.
     /// </para>
     /// </remarks>
-    protected IAppender ParseAppender(XmlElement appenderElement)
+    protected IAppender? ParseAppender(XmlElement appenderElement)
     {
       string appenderName = appenderElement.GetAttribute(NAME_ATTR);
       string typeName = appenderElement.GetAttribute(TYPE_ATTR);
 
-      LogLog.Debug(declaringType, "Loading Appender [" + appenderName + "] type: [" + typeName + "]");
+      LogLog.Debug(declaringType, $"Loading Appender [{appenderName}] type: [{typeName}]");
       try
       {
-        IAppender appender = (IAppender)Activator.CreateInstance(SystemInfo.GetTypeFromString(typeName, true, true));
+        IAppender appender = (IAppender)Activator.CreateInstance(SystemInfo.GetTypeFromString(typeName, true, true)!);
         appender.Name = appenderName;
 
         foreach (XmlNode currentNode in appenderElement.ChildNodes)
         {
-          /* We're only interested in Elements */
+          // We're only interested in Elements
           if (currentNode.NodeType == XmlNodeType.Element)
           {
             XmlElement currentElement = (XmlElement)currentNode;
@@ -315,20 +307,19 @@ namespace log4net.Repository.Hierarchy
             {
               string refName = currentElement.GetAttribute(REF_ATTR);
 
-              IAppenderAttachable appenderContainer = appender as IAppenderAttachable;
-              if (appenderContainer != null)
+              if (appender is IAppenderAttachable appenderContainer)
               {
-                LogLog.Debug(declaringType, "Attaching appender named [" + refName + "] to appender named [" + appender.Name + "].");
+                LogLog.Debug(declaringType, $"Attaching appender named [{refName}] to appender named [{appender.Name}].");
 
                 IAppender referencedAppender = FindAppenderByReference(currentElement);
-                if (referencedAppender != null)
+                if (referencedAppender is not null)
                 {
                   appenderContainer.AddAppender(referencedAppender);
                 }
               }
               else
               {
-                LogLog.Error(declaringType, "Requesting attachment of appender named [" + refName + "] to appender named [" + appender.Name + "] which does not implement log4net.Core.IAppenderAttachable.");
+                LogLog.Error(declaringType, $"Requesting attachment of appender named [{refName}] to appender named [{appender.Name}] which does not implement log4net.Core.IAppenderAttachable.");
               }
             }
             else
@@ -339,20 +330,19 @@ namespace log4net.Repository.Hierarchy
           }
         }
 
-        IOptionHandler optionHandler = appender as IOptionHandler;
-        if (optionHandler != null)
+        if (appender is IOptionHandler optionHandler)
         {
           optionHandler.ActivateOptions();
         }
 
-        LogLog.Debug(declaringType, "Created Appender [" + appenderName + "]");
+        LogLog.Debug(declaringType, $"Created Appender [{appenderName}]");
         return appender;
       }
       catch (Exception ex)
       {
         // Yes, it's ugly.  But all exceptions point to the same problem: we can't create an Appender
 
-        LogLog.Error(declaringType, "Could not create Appender [" + appenderName + "] of type [" + typeName + "]. Reported error follows.", ex);
+        LogLog.Error(declaringType, $"Could not create Appender [{appenderName}] of type [{typeName}]. Reported error follows.", ex);
         return null;
       }
     }
@@ -371,19 +361,21 @@ namespace log4net.Repository.Hierarchy
       // Create a new log4net.Logger object from the <logger> element.
       string loggerName = loggerElement.GetAttribute(NAME_ATTR);
 
-      LogLog.Debug(declaringType, "Retrieving an instance of log4net.Repository.Logger for logger [" + loggerName + "].");
-      Logger log = m_hierarchy.GetLogger(loggerName) as Logger;
+      LogLog.Debug(declaringType, $"Retrieving an instance of log4net.Repository.Logger for logger [{loggerName}].");
 
       // Setting up a logger needs to be an atomic operation, in order
       // to protect potential log operations while logger
       // configuration is in progress.
-      lock (log)
+      if (m_hierarchy.GetLogger(loggerName) is Logger log)
       {
-        bool additivity = OptionConverter.ToBoolean(loggerElement.GetAttribute(ADDITIVITY_ATTR), true);
+        lock (log)
+        {
+          bool additivity = OptionConverter.ToBoolean(loggerElement.GetAttribute(ADDITIVITY_ATTR), true);
 
-        LogLog.Debug(declaringType, "Setting [" + log.Name + "] additivity to [" + additivity + "].");
-        log.Additivity = additivity;
-        ParseChildrenOfLoggerElement(loggerElement, log, false);
+          LogLog.Debug(declaringType, $"Setting [{log.Name}] additivity to [{additivity}].");
+          log.Additivity = additivity;
+          ParseChildrenOfLoggerElement(loggerElement, log, false);
+        }
       }
     }
 
@@ -433,17 +425,17 @@ namespace log4net.Repository.Hierarchy
           {
             IAppender appender = FindAppenderByReference(currentElement);
             string refName = currentElement.GetAttribute(REF_ATTR);
-            if (appender != null)
+            if (appender is not null)
             {
-              LogLog.Debug(declaringType, "Adding appender named [" + refName + "] to logger [" + log.Name + "].");
+              LogLog.Debug(declaringType, $"Adding appender named [{refName}] to logger [{log.Name}].");
               log.AddAppender(appender);
             }
             else
             {
-              LogLog.Error(declaringType, "Appender named [" + refName + "] not found.");
+              LogLog.Error(declaringType, $"Appender named [{refName}] not found.");
             }
           }
-          else if (currentElement.LocalName == LEVEL_TAG || currentElement.LocalName == PRIORITY_TAG)
+          else if (currentElement.LocalName is LEVEL_TAG or PRIORITY_TAG)
           {
             ParseLevel(currentElement, log, isRoot);
           }
@@ -454,8 +446,7 @@ namespace log4net.Repository.Hierarchy
         }
       }
 
-      IOptionHandler optionHandler = log as IOptionHandler;
-      if (optionHandler != null)
+      if (log is IOptionHandler optionHandler)
       {
         optionHandler.ActivateOptions();
       }
@@ -475,23 +466,21 @@ namespace log4net.Repository.Hierarchy
       string renderingClassName = element.GetAttribute(RENDERING_TYPE_ATTR);
       string renderedClassName = element.GetAttribute(RENDERED_TYPE_ATTR);
 
-      LogLog.Debug(declaringType, "Rendering class [" + renderingClassName + "], Rendered class [" + renderedClassName + "].");
+      LogLog.Debug(declaringType, $"Rendering class [{renderingClassName}], Rendered class [{renderedClassName}].");
       IObjectRenderer renderer = (IObjectRenderer)OptionConverter.InstantiateByClassName(renderingClassName, typeof(IObjectRenderer), null);
-      if (renderer == null)
+      if (renderer is null)
       {
-        LogLog.Error(declaringType, "Could not instantiate renderer [" + renderingClassName + "].");
+        LogLog.Error(declaringType, $"Could not instantiate renderer [{renderingClassName}].");
         return;
       }
-      else
+
+      try
       {
-        try
-        {
-          m_hierarchy.RendererMap.Put(SystemInfo.GetTypeFromString(renderedClassName, true, true), renderer);
-        }
-        catch (Exception e)
-        {
-          LogLog.Error(declaringType, "Could not find class [" + renderedClassName + "].", e);
-        }
+        m_hierarchy.RendererMap.Put(SystemInfo.GetTypeFromString(renderedClassName, true, true)!, renderer);
+      }
+      catch (Exception e)
+      {
+        LogLog.Error(declaringType, $"Could not find class [{renderedClassName}].", e);
       }
     }
 
@@ -515,7 +504,7 @@ namespace log4net.Repository.Hierarchy
       }
 
       string levelStr = element.GetAttribute(VALUE_ATTR);
-      LogLog.Debug(declaringType, "Logger [" + loggerName + "] Level string is [" + levelStr + "].");
+      LogLog.Debug(declaringType, $"Logger [{loggerName}] Level string is [{levelStr}].");
 
       if (INHERITED == levelStr)
       {
@@ -525,20 +514,20 @@ namespace log4net.Repository.Hierarchy
         }
         else
         {
-          LogLog.Debug(declaringType, "Logger [" + loggerName + "] level set to inherit from parent.");
+          LogLog.Debug(declaringType, $"Logger [{loggerName}] level set to inherit from parent.");
           log.Level = null;
         }
       }
       else
       {
-        log.Level = log.Hierarchy.LevelMap[levelStr];
-        if (log.Level == null)
+        log.Level = log.Hierarchy?.LevelMap[levelStr];
+        if (log.Level is null)
         {
-          LogLog.Error(declaringType, "Undefined level [" + levelStr + "] on Logger [" + loggerName + "].");
+          LogLog.Error(declaringType, $"Undefined level [{levelStr}] on Logger [{loggerName}].");
         }
         else
         {
-          LogLog.Debug(declaringType, "Logger [" + loggerName + "] level set to [name=\"" + log.Level.Name + "\",value=" + log.Level.Value + "].");
+          LogLog.Debug(declaringType, $"Logger [{loggerName}] level set to [name=\"{log.Level.Name}\",value={log.Level.Value}].");
         }
       }
     }
@@ -565,21 +554,20 @@ namespace log4net.Repository.Hierarchy
       string name = element.GetAttribute(NAME_ATTR);
 
       // If the name attribute does not exist then use the name of the element
-      if (element.LocalName != PARAM_TAG || name == null || name.Length == 0)
+      if (element.LocalName != PARAM_TAG || name.Length == 0)
       {
         name = element.LocalName;
       }
 
       // Look for the property on the target object
       Type targetType = target.GetType();
-      Type propertyType = null;
+      Type? propertyType = null;
 
-      PropertyInfo propInfo = null;
-      MethodInfo methInfo = null;
+      MethodInfo? methInfo = null;
 
       // Try to find a writable property
-      propInfo = targetType.GetProperty(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.IgnoreCase);
-      if (propInfo != null && propInfo.CanWrite)
+      PropertyInfo? propInfo = targetType.GetProperty(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.IgnoreCase);
+      if (propInfo is not null && propInfo.CanWrite)
       {
         // found a property
         propertyType = propInfo.PropertyType;
@@ -590,22 +578,21 @@ namespace log4net.Repository.Hierarchy
 
         // look for a method with the signature Add<property>(type)
         methInfo = FindMethodInfo(targetType, name);
-
-        if (methInfo != null)
+        if (methInfo is not null)
         {
           propertyType = methInfo.GetParameters()[0].ParameterType;
         }
       }
 
-      if (propertyType == null)
+      if (propertyType is null)
       {
-        LogLog.Error(declaringType, "XmlHierarchyConfigurator: Cannot find Property [" + name + "] to set object on [" + target.ToString() + "]");
+        LogLog.Error(declaringType, $"XmlHierarchyConfigurator: Cannot find Property [{name}] to set object on [{target}]");
       }
       else
       {
-        string propertyValue = null;
+        string? propertyValue = null;
 
-        if (element.GetAttributeNode(VALUE_ATTR) != null)
+        if (element.GetAttributeNode(VALUE_ATTR) is not null)
         {
           propertyValue = element.GetAttribute(VALUE_ATTR);
         }
@@ -614,9 +601,9 @@ namespace log4net.Repository.Hierarchy
           // Concatenate the CDATA and Text nodes together
           foreach (XmlNode childNode in element.ChildNodes)
           {
-            if (childNode.NodeType == XmlNodeType.CDATA || childNode.NodeType == XmlNodeType.Text)
+            if (childNode.NodeType is XmlNodeType.CDATA or XmlNodeType.Text)
             {
-              if (propertyValue == null)
+              if (propertyValue is null)
               {
                 propertyValue = childNode.InnerText;
               }
@@ -628,7 +615,7 @@ namespace log4net.Repository.Hierarchy
           }
         }
 
-        if (propertyValue != null)
+        if (propertyValue is not null)
         {
           try
           {
@@ -652,14 +639,14 @@ namespace log4net.Repository.Hierarchy
 
           // Check if a specific subtype is specified on the element using the 'type' attribute
           string subTypeString = element.GetAttribute(TYPE_ATTR);
-          if (subTypeString != null && subTypeString.Length > 0)
+          if (subTypeString.Length > 0)
           {
             // Read the explicit subtype
             try
             {
-              Type subType = SystemInfo.GetTypeFromString(subTypeString, true, true);
+              Type subType = SystemInfo.GetTypeFromString(subTypeString, true, true)!;
 
-              LogLog.Debug(declaringType, "Parameter [" + name + "] specified subtype [" + subType.FullName + "]");
+              LogLog.Debug(declaringType, $"Parameter [{name}] specified subtype [{subType.FullName}]");
 
               if (!propertyType.IsAssignableFrom(subType))
               {
@@ -669,12 +656,12 @@ namespace log4net.Repository.Hierarchy
                   // Must re-convert to the real property type
                   parsedObjectConversionTargetType = propertyType;
 
-                  // Use sub type as intermediary type
+                  // Use subtype as intermediary type
                   propertyType = subType;
                 }
                 else
                 {
-                  LogLog.Error(declaringType, "subtype [" + subType.FullName + "] set on [" + name + "] is not a subclass of property type [" + propertyType.FullName + "] and there are no acceptable type conversions.");
+                  LogLog.Error(declaringType, $"subtype [{subType.FullName}] set on [{name}] is not a subclass of property type [{propertyType.FullName}] and there are no acceptable type conversions.");
                 }
               }
               else
@@ -686,28 +673,28 @@ namespace log4net.Repository.Hierarchy
             }
             catch (Exception ex)
             {
-              LogLog.Error(declaringType, "Failed to find type [" + subTypeString + "] set on [" + name + "]", ex);
+              LogLog.Error(declaringType, $"Failed to find type [{subTypeString}] set on [{name}]", ex);
             }
           }
 
           // Now try to convert the string value to an acceptable type
           // to pass to this property.
 
-          object convertedValue = ConvertStringTo(propertyType, propertyValue);
+          object? convertedValue = ConvertStringTo(propertyType, propertyValue);
 
           // Check if we need to do an additional conversion
-          if (convertedValue != null && parsedObjectConversionTargetType != null)
+          if (convertedValue is not null && parsedObjectConversionTargetType is not null)
           {
-            LogLog.Debug(declaringType, "Performing additional conversion of value from [" + convertedValue.GetType().Name + "] to [" + parsedObjectConversionTargetType.Name + "]");
+            LogLog.Debug(declaringType, $"Performing additional conversion of value from [{convertedValue.GetType().Name}] to [{parsedObjectConversionTargetType.Name}]");
             convertedValue = OptionConverter.ConvertTypeTo(convertedValue, parsedObjectConversionTargetType);
           }
 
-          if (convertedValue != null)
+          if (convertedValue is not null)
           {
-            if (propInfo != null)
+            if (propInfo is not null)
             {
               // Got a converted result
-              LogLog.Debug(declaringType, "Setting Property [" + propInfo.Name + "] to " + convertedValue.GetType().Name + " value [" + convertedValue.ToString() + "]");
+              LogLog.Debug(declaringType, $"Setting Property [{propInfo.Name}] to {convertedValue.GetType().Name} value [{convertedValue}]");
 
               try
               {
@@ -716,33 +703,33 @@ namespace log4net.Repository.Hierarchy
               }
               catch (TargetInvocationException targetInvocationEx)
               {
-                LogLog.Error(declaringType, "Failed to set parameter [" + propInfo.Name + "] on object [" + target + "] using value [" + convertedValue + "]", targetInvocationEx.InnerException);
+                LogLog.Error(declaringType, $"Failed to set parameter [{propInfo.Name}] on object [{target}] using value [{convertedValue}]", targetInvocationEx.InnerException);
               }
             }
-            else if (methInfo != null)
+            else
             {
               // Got a converted result
-              LogLog.Debug(declaringType, "Setting Collection Property [" + methInfo.Name + "] to " + convertedValue.GetType().Name + " value [" + convertedValue.ToString() + "]");
+              LogLog.Debug(declaringType, $"Setting Collection Property [{methInfo.Name}] to {convertedValue.GetType().Name} value [{convertedValue}]");
 
               try
               {
                 // Pass to the property
-                methInfo.Invoke(target, BindingFlags.InvokeMethod, null, new object[] { convertedValue }, CultureInfo.InvariantCulture);
+                methInfo.Invoke(target, BindingFlags.InvokeMethod, null, new[] { convertedValue }, CultureInfo.InvariantCulture);
               }
               catch (TargetInvocationException targetInvocationEx)
               {
-                LogLog.Error(declaringType, "Failed to set parameter [" + name + "] on object [" + target + "] using value [" + convertedValue + "]", targetInvocationEx.InnerException);
+                LogLog.Error(declaringType, $"Failed to set parameter [{name}] on object [{target}] using value [{convertedValue}]", targetInvocationEx.InnerException);
               }
             }
           }
           else
           {
-            LogLog.Warn(declaringType, "Unable to set property [" + name + "] on object [" + target + "] using value [" + propertyValue + "] (with acceptable conversion types)");
+            LogLog.Warn(declaringType, $"Unable to set property [{name}] on object [{target}] using value [{propertyValue}] (with acceptable conversion types)");
           }
         }
         else
         {
-          object createdObject = null;
+          object? createdObject;
 
           if (propertyType == typeof(string) && !HasAttributesOrElements(element))
           {
@@ -751,12 +738,12 @@ namespace log4net.Repository.Hierarchy
             // This is necessary because while the String is a class it does not have
             // a default constructor that creates an empty string, which is the behavior
             // we are trying to simulate and would be expected from CreateObjectFromXml
-            createdObject = "";
+            createdObject = string.Empty;
           }
           else
           {
             // No value specified
-            Type defaultObjectType = null;
+            Type? defaultObjectType = null;
             if (IsTypeConstructible(propertyType))
             {
               defaultObjectType = propertyType;
@@ -765,16 +752,16 @@ namespace log4net.Repository.Hierarchy
             createdObject = CreateObjectFromXml(element, defaultObjectType, propertyType);
           }
 
-          if (createdObject == null)
+          if (createdObject is null)
           {
-            LogLog.Error(declaringType, "Failed to create object to set param: " + name);
+            LogLog.Error(declaringType, $"Failed to create object to set param: {name}");
           }
           else
           {
-            if (propInfo != null)
+            if (propInfo is not null)
             {
               // Got a converted result
-              LogLog.Debug(declaringType, "Setting Property [" + propInfo.Name + "] to object [" + createdObject + "]");
+              LogLog.Debug(declaringType, $"Setting Property [{propInfo.Name}] to object [{createdObject}]");
 
               try
               {
@@ -783,22 +770,22 @@ namespace log4net.Repository.Hierarchy
               }
               catch (TargetInvocationException targetInvocationEx)
               {
-                LogLog.Error(declaringType, "Failed to set parameter [" + propInfo.Name + "] on object [" + target + "] using value [" + createdObject + "]", targetInvocationEx.InnerException);
+                LogLog.Error(declaringType, $"Failed to set parameter [{propInfo.Name}] on object [{target}] using value [{createdObject}]", targetInvocationEx.InnerException);
               }
             }
-            else if (methInfo != null)
+            else
             {
               // Got a converted result
-              LogLog.Debug(declaringType, "Setting Collection Property [" + methInfo.Name + "] to object [" + createdObject + "]");
+              LogLog.Debug(declaringType, $"Setting Collection Property [{methInfo.Name}] to object [{createdObject}]");
 
               try
               {
                 // Pass to the property
-                methInfo.Invoke(target, BindingFlags.InvokeMethod, null, new object[] { createdObject }, CultureInfo.InvariantCulture);
+                methInfo.Invoke(target, BindingFlags.InvokeMethod, null, new[] { createdObject }, CultureInfo.InvariantCulture);
               }
               catch (TargetInvocationException targetInvocationEx)
               {
-                LogLog.Error(declaringType, "Failed to set parameter [" + methInfo.Name + "] on object [" + target + "] using value [" + createdObject + "]", targetInvocationEx.InnerException);
+                LogLog.Error(declaringType, $"Failed to set parameter [{methInfo.Name}] on object [{target}] using value [{createdObject}]", targetInvocationEx.InnerException);
               }
             }
           }
@@ -832,8 +819,8 @@ namespace log4net.Repository.Hierarchy
     {
       if (type.IsClass && !type.IsAbstract)
       {
-        ConstructorInfo defaultConstructor = type.GetConstructor(new Type[0]);
-        if (defaultConstructor != null && !defaultConstructor.IsAbstract && !defaultConstructor.IsPrivate)
+        ConstructorInfo defaultConstructor = type.GetConstructor(Type.EmptyTypes);
+        if (defaultConstructor is not null && !defaultConstructor.IsAbstract && !defaultConstructor.IsPrivate)
         {
           return true;
         }
@@ -854,7 +841,7 @@ namespace log4net.Repository.Hierarchy
     /// The method must take a single parameter.
     /// </para>
     /// </remarks>
-    private MethodInfo FindMethodInfo(Type targetType, string name)
+    private static MethodInfo? FindMethodInfo(Type targetType, string name)
     {
       string requiredMethodNameA = name;
       string requiredMethodNameB = "Add" + name;
@@ -873,7 +860,7 @@ namespace log4net.Repository.Hierarchy
             // Found matching method name
 
             // Look for version with one arg only
-            System.Reflection.ParameterInfo[] methParams = methInfo.GetParameters();
+            ParameterInfo[] methParams = methInfo.GetParameters();
             if (methParams.Length == 1)
             {
               return methInfo;
@@ -895,17 +882,17 @@ namespace log4net.Repository.Hierarchy
     /// <c>null</c> when the conversion could not be performed.
     /// </para>
     /// </returns>
-    protected object ConvertStringTo(Type type, string value)
+    protected object? ConvertStringTo(Type type, string value)
     {
       // Hack to allow use of Level in property
       if (typeof(Level) == type)
       {
         // Property wants a level
-        Level levelValue = m_hierarchy.LevelMap[value];
+        Level? levelValue = m_hierarchy.LevelMap[value];
 
-        if (levelValue == null)
+        if (levelValue is null)
         {
-          LogLog.Error(declaringType, "XmlHierarchyConfigurator: Unknown Level Specified [" + value + "]");
+          LogLog.Error(declaringType, $"XmlHierarchyConfigurator: Unknown Level Specified [{value}]");
         }
 
         return levelValue;
@@ -932,24 +919,22 @@ namespace log4net.Repository.Hierarchy
     /// <paramref name="typeConstraint"/> type.
     /// </para>
     /// </remarks>
-    protected object CreateObjectFromXml(XmlElement element, Type defaultTargetType, Type typeConstraint)
+    protected object? CreateObjectFromXml(XmlElement element, Type? defaultTargetType, Type? typeConstraint)
     {
-      Type objectType = null;
+      Type? objectType;
 
       // Get the object type
       string objectTypeString = element.GetAttribute(TYPE_ATTR);
-      if (objectTypeString == null || objectTypeString.Length == 0)
+      if (objectTypeString.Length == 0)
       {
-        if (defaultTargetType == null)
+        if (defaultTargetType is null)
         {
-          LogLog.Error(declaringType, "Object type not specified. Cannot create object of type [" + typeConstraint.FullName + "]. Missing Value or Type.");
+          LogLog.Error(declaringType, $"Object type not specified. Cannot create object of type [{typeConstraint?.FullName}]. Missing Value or Type.");
           return null;
         }
-        else
-        {
-          // Use the default object type
-          objectType = defaultTargetType;
-        }
+
+        // Use the default object type
+        objectType = defaultTargetType;
       }
       else
       {
@@ -960,7 +945,7 @@ namespace log4net.Repository.Hierarchy
         }
         catch (Exception ex)
         {
-          LogLog.Error(declaringType, "Failed to find type [" + objectTypeString + "]", ex);
+          LogLog.Error(declaringType, $"Failed to find type [{objectTypeString}]", ex);
           return null;
         }
       }
@@ -968,7 +953,7 @@ namespace log4net.Repository.Hierarchy
       bool requiresConversion = false;
 
       // Got the object type. Check that it meets the typeConstraint
-      if (typeConstraint != null)
+      if (typeConstraint is not null)
       {
         if (!typeConstraint.IsAssignableFrom(objectType))
         {
@@ -979,21 +964,22 @@ namespace log4net.Repository.Hierarchy
           }
           else
           {
-            LogLog.Error(declaringType, "Object type [" + objectType.FullName + "] is not assignable to type [" + typeConstraint.FullName + "]. There are no acceptable type conversions.");
+            LogLog.Error(declaringType, $"Object type [{objectType!.FullName}] is not assignable to type [{typeConstraint.FullName}]. There are no acceptable type conversions.");
             return null;
           }
         }
       }
 
       // Create using the default constructor
-      object createdObject = null;
+      object? createdObject;
       try
       {
-        createdObject = Activator.CreateInstance(objectType);
+        createdObject = Activator.CreateInstance(objectType!);
       }
       catch (Exception createInstanceEx)
       {
-        LogLog.Error(declaringType, "XmlHierarchyConfigurator: Failed to construct object of type [" + objectType.FullName + "] Exception: " + createInstanceEx.ToString());
+        LogLog.Error(declaringType, $"XmlHierarchyConfigurator: Failed to construct object of type [{objectType!.FullName}] Exception: {createInstanceEx}");
+        return null;
       }
 
       // Set any params on object
@@ -1006,8 +992,7 @@ namespace log4net.Repository.Hierarchy
       }
 
       // Check if we need to call ActivateOptions
-      IOptionHandler optionHandler = createdObject as IOptionHandler;
-      if (optionHandler != null)
+      if (createdObject is IOptionHandler optionHandler)
       {
         optionHandler.ActivateOptions();
       }
@@ -1019,16 +1004,12 @@ namespace log4net.Repository.Hierarchy
         // Convert the object type
         return OptionConverter.ConvertTypeTo(createdObject, typeConstraint);
       }
-      else
-      {
-        // The object is of the correct type
-        return createdObject;
-      }
+
+      // The object is of the correct type
+      return createdObject;
     }
 
-    #endregion Protected Instance Methods
-
-    private bool HasCaseInsensitiveEnvironment
+    private static bool HasCaseInsensitiveEnvironment
     {
       get
       {
@@ -1037,12 +1018,8 @@ namespace log4net.Repository.Hierarchy
       }
     }
 
-    private IDictionary CreateCaseInsensitiveWrapper(IDictionary dict)
+    private static IDictionary CreateCaseInsensitiveWrapper(IDictionary dict)
     {
-      if (dict == null)
-      {
-        return dict;
-      }
       Hashtable hash = SystemInfo.CreateCaseInsensitiveHashtable();
       foreach (DictionaryEntry entry in dict)
       {
@@ -1050,8 +1027,6 @@ namespace log4net.Repository.Hierarchy
       }
       return hash;
     }
-
-    #region Private Constants
 
     // String constants used while parsing the XML data
     private const string CONFIGURATION_TAG = "log4net";
@@ -1084,23 +1059,15 @@ namespace log4net.Repository.Hierarchy
     // flag used on the level element
     private const string INHERITED = "inherited";
 
-    #endregion Private Constants
-
-    #region Private Instance Fields
-
     /// <summary>
     /// key: appenderName, value: appender.
     /// </summary>
-    private Hashtable m_appenderBag;
+    private readonly Dictionary<string, IAppender> m_appenderBag = new(StringComparer.Ordinal);
 
     /// <summary>
     /// The Hierarchy being configured.
     /// </summary>
     private readonly Hierarchy m_hierarchy;
-
-    #endregion Private Instance Fields
-
-    #region Private Static Fields
 
     /// <summary>
     /// The fully qualified type of the XmlHierarchyConfigurator class.
@@ -1110,7 +1077,5 @@ namespace log4net.Repository.Hierarchy
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(XmlHierarchyConfigurator);
-
-    #endregion Private Static Fields
   }
 }

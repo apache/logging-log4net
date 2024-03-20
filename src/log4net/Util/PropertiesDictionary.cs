@@ -19,7 +19,10 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
+
+#nullable enable
 
 namespace log4net.Util
 {
@@ -28,7 +31,7 @@ namespace log4net.Util
   /// </summary>
   /// <remarks>
   /// <para>
-  /// While this collection is serializable only member 
+  /// While this collection is serializable, only member 
   /// objects that are serializable will
   /// be serialized along with this collection.
   /// </para>
@@ -38,8 +41,6 @@ namespace log4net.Util
   [Serializable]
   public sealed class PropertiesDictionary : ReadOnlyPropertiesDictionary, ISerializable, IDictionary
   {
-    #region Public Instance Constructors
-
     /// <summary>
     /// Constructor
     /// </summary>
@@ -65,10 +66,6 @@ namespace log4net.Util
     {
     }
 
-    #endregion Public Instance Constructors
-
-    #region Private Instance Constructors
-
     /// <summary>
     /// Initializes a new instance of the <see cref="PropertiesDictionary" /> class 
     /// with serialized data.
@@ -84,10 +81,6 @@ namespace log4net.Util
     {
     }
 
-    #endregion Protected Instance Constructors
-
-    #region Public Instance Properties
-
     /// <summary>
     /// Gets or sets the value of the  property with the specified key.
     /// </summary>
@@ -102,15 +95,19 @@ namespace log4net.Util
     /// a serialization operation is performed.
     /// </para>
     /// </remarks>
-    public override object this[string key]
+    public override object? this[string key]
     {
-      get { return InnerHashtable[key]; }
-      set { InnerHashtable[key] = value; }
+      get => base[key];
+      set => InnerHashtable[key] = value;
     }
 
-    #endregion Public Instance Properties
-
-    #region Public Instance Methods
+    /// <summary>
+    /// See <see cref="IDictionary{TKey,TValue}.Add(TKey,TValue)"/>.
+    /// </summary>
+    public override void Add(string key, object? value)
+    {
+      InnerHashtable.Add(key, value);
+    }
 
     /// <summary>
     /// Remove the entry with the specified key from this dictionary
@@ -121,14 +118,10 @@ namespace log4net.Util
     /// Remove the entry with the specified key from this dictionary
     /// </para>
     /// </remarks>
-    public void Remove(string key)
+    public override bool Remove(string key)
     {
-      InnerHashtable.Remove(key);
+      return InnerHashtable.Remove(key);
     }
-
-    #endregion Public Instance Methods
-
-    #region Implementation of IDictionary
 
     /// <summary>
     /// See <see cref="IDictionary.GetEnumerator"/>
@@ -155,22 +148,12 @@ namespace log4net.Util
     /// </remarks>
     void IDictionary.Remove(object key)
     {
-      InnerHashtable.Remove(key);
-    }
+      if (key is not string k)
+      {
+        throw new ArgumentException("key must be a string");
+      }
 
-    /// <summary>
-    /// See <see cref="IDictionary.Contains"/>
-    /// </summary>
-    /// <param name="key">the key to lookup in the collection</param>
-    /// <returns><c>true</c> if the collection contains the specified key</returns>
-    /// <remarks>
-    /// <para>
-    /// Test if this collection contains a specified key.
-    /// </para>
-    /// </remarks>
-    bool IDictionary.Contains(object key)
-    {
-      return InnerHashtable.Contains(key);
+      InnerHashtable.Remove(k);
     }
 
     /// <summary>
@@ -199,11 +182,11 @@ namespace log4net.Util
     /// <exception cref="ArgumentException">Thrown if the <paramref name="key"/> is not a string</exception>
     void IDictionary.Add(object key, object value)
     {
-      if (!(key is string))
+      if (key is not string k)
       {
-        throw new ArgumentException("key must be a string", "key");
+        throw new ArgumentException("key must be a string", nameof(key));
       }
-      InnerHashtable.Add(key, value);
+      InnerHashtable.Add(k, value);
     }
 
     /// <summary>
@@ -218,10 +201,7 @@ namespace log4net.Util
     /// returns <c>false</c>.
     /// </para>
     /// </remarks>
-    bool IDictionary.IsReadOnly
-    {
-      get { return false; }
-    }
+    bool IDictionary.IsReadOnly => false;
 
     /// <summary>
     /// See <see cref="IDictionary.this"/>
@@ -235,93 +215,25 @@ namespace log4net.Util
     /// </para>
     /// </remarks>
     /// <exception cref="ArgumentException">Thrown if the <paramref name="key"/> is not a string</exception>
-    object IDictionary.this[object key]
+    object? IDictionary.this[object key]
     {
       get
       {
-        if (!(key is string))
+        if (key is not string k)
         {
-          throw new ArgumentException("key must be a string", "key");
+          throw new ArgumentException("key must be a string", nameof(key));
         }
-        return InnerHashtable[key];
+        InnerHashtable.TryGetValue(k, out object? val);
+        return val;
       }
       set
       {
-        if (!(key is string))
+        if (key is not string k)
         {
-          throw new ArgumentException("key must be a string", "key");
+          throw new ArgumentException("key must be a string", nameof(key));
         }
-        InnerHashtable[key] = value;
+        InnerHashtable[k] = value;
       }
     }
-
-    /// <summary>
-    /// See <see cref="IDictionary.Values"/>
-    /// </summary>
-    ICollection IDictionary.Values
-    {
-      get { return InnerHashtable.Values; }
-    }
-
-    /// <summary>
-    /// See <see cref="IDictionary.Keys"/>
-    /// </summary>
-    ICollection IDictionary.Keys
-    {
-      get { return InnerHashtable.Keys; }
-    }
-
-    /// <summary>
-    /// See <see cref="IDictionary.IsFixedSize"/>
-    /// </summary>
-    bool IDictionary.IsFixedSize
-    {
-      get { return false; }
-    }
-
-    #endregion
-
-    #region Implementation of ICollection
-
-    /// <summary>
-    /// See <see cref="ICollection.CopyTo"/>
-    /// </summary>
-    /// <param name="array"></param>
-    /// <param name="index"></param>
-    void ICollection.CopyTo(Array array, int index)
-    {
-      InnerHashtable.CopyTo(array, index);
-    }
-
-    /// <summary>
-    /// See <see cref="ICollection.IsSynchronized"/>
-    /// </summary>
-    bool ICollection.IsSynchronized
-    {
-      get { return InnerHashtable.IsSynchronized; }
-    }
-
-    /// <summary>
-    /// See <see cref="ICollection.SyncRoot"/>
-    /// </summary>
-    object ICollection.SyncRoot
-    {
-      get { return InnerHashtable.SyncRoot; }
-    }
-
-    #endregion
-
-    #region Implementation of IEnumerable
-
-    /// <summary>
-    /// See <see cref="IEnumerable.GetEnumerator"/>
-    /// </summary>
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-      return ((IEnumerable)InnerHashtable).GetEnumerator();
-    }
-
-    #endregion
   }
 }
-

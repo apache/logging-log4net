@@ -18,8 +18,8 @@
 #endregion
 
 using System;
-
 using System.Collections;
+using System.Collections.Generic;
 
 using log4net.Core;
 
@@ -36,16 +36,10 @@ namespace log4net.Util
   /// <author>Nicko Cadell</author>
   public sealed class ThreadContextStack : IFixingRequired
   {
-    #region Private Static Fields
-
     /// <summary>
     /// The stack store.
     /// </summary>
-    private Stack m_stack = new Stack();
-
-    #endregion Private Static Fields
-
-    #region Public Instance Constructors
+    private readonly Stack<StackFrame> m_stack = new();
 
     /// <summary>
     /// Internal constructor
@@ -58,10 +52,6 @@ namespace log4net.Util
     internal ThreadContextStack()
     {
     }
-
-    #endregion Public Instance Constructors
-
-    #region Public Properties
 
     /// <summary>
     /// The number of messages in the stack
@@ -76,14 +66,7 @@ namespace log4net.Util
     /// minus the number of times <see cref="Pop"/> has been called.
     /// </para>
     /// </remarks>
-    public int Count
-    {
-      get { return m_stack.Count; }
-    }
-
-    #endregion // Public Properties
-
-    #region Public Methods
+    public int Count => m_stack.Count;
 
     /// <summary>
     /// Clears all the contextual information held in this stack.
@@ -100,10 +83,7 @@ namespace log4net.Util
     /// syntax.
     /// </para>
     /// </remarks>
-    public void Clear()
-    {
-      m_stack.Clear();
-    }
+    public void Clear() => m_stack.Clear();
 
     /// <summary>
     /// Removes the top context from this stack.
@@ -116,14 +96,14 @@ namespace log4net.Util
     /// empty string (not <see langword="null"/>) is returned.
     /// </para>
     /// </remarks>
-    public string Pop()
+    public string? Pop()
     {
-      Stack stack = m_stack;
+      Stack<StackFrame> stack = m_stack;
       if (stack.Count > 0)
       {
-        return ((StackFrame)(stack.Pop())).Message;
+        return stack.Pop().Message;
       }
-      return "";
+      return string.Empty;
     }
 
     /// <summary>
@@ -149,10 +129,10 @@ namespace log4net.Util
     ///  }
     /// </code>
     /// </example>
-    public IDisposable Push(string message)
+    public IDisposable Push(string? message)
     {
-      Stack stack = m_stack;
-      stack.Push(new StackFrame(message, (stack.Count > 0) ? (StackFrame)stack.Peek() : null));
+      Stack<StackFrame> stack = m_stack;
+      stack.Push(new StackFrame(message, (stack.Count > 0) ? stack.Peek() : null));
 
       return new AutoPopStackFrame(stack, stack.Count - 1);
     }
@@ -167,30 +147,26 @@ namespace log4net.Util
     /// empty string (not <see langword="null"/>) is returned.
     /// </para>
     /// </remarks>
-    public string Peek()
+    public string? Peek()
     {
-      Stack stack = m_stack;
+      Stack<StackFrame> stack = m_stack;
       if (stack.Count > 0)
       {
-        return ((StackFrame)stack.Peek()).Message;
+        return stack.Peek().Message;
       }
       return "";
     }
-
-    #endregion Public Methods
-
-    #region Internal Methods
 
     /// <summary>
     /// Gets the current context information for this stack.
     /// </summary>
     /// <returns>The current context information.</returns>
-    internal string GetFullMessage()
+    internal string? GetFullMessage()
     {
-      Stack stack = m_stack;
+      Stack<StackFrame> stack = m_stack;
       if (stack.Count > 0)
       {
-        return ((StackFrame)(stack.Peek())).FullMessage;
+        return stack.Peek().FullMessage;
       }
       return null;
     }
@@ -201,46 +177,34 @@ namespace log4net.Util
     /// <value>The internal storage stack</value>
     /// <remarks>
     /// <para>
-    /// This property is provided only to support backward compatability 
-    /// of the <see cref="NDC"/>. Tytpically the internal stack should not
+    /// This property is provided only to support backward compatibility 
+    /// of the <see cref="NDC"/>. Typically the internal stack should not
     /// be modified.
     /// </para>
     /// </remarks>
     internal Stack InternalStack
     {
-      get { return m_stack; }
-      set { m_stack = value; }
+        get => new Stack(new Stack(m_stack));
+        set
+        {
+          m_stack.Clear();
+          var frames = (StackFrame[])value.ToArray();
+          for (int i = frames.Length - 1; i >= 0; i--)
+          {
+             m_stack.Push(frames[i]);
+          }
+        }
     }
-
-    #endregion Internal Methods
 
     /// <summary>
     /// Gets the current context information for this stack.
     /// </summary>
-    /// <returns>Gets the current context information</returns>
-    /// <remarks>
-    /// <para>
-    /// Gets the current context information for this stack.
-    /// </para>
-    /// </remarks>
-    public override string ToString()
-    {
-      return GetFullMessage();
-    }
+    public override string? ToString() => GetFullMessage();
 
     /// <summary>
     /// Get a portable version of this object
     /// </summary>
-    /// <returns>the portable instance of this object</returns>
-    /// <remarks>
-    /// <para>
-    /// Get a cross thread portable version of this object
-    /// </para>
-    /// </remarks>
-    object IFixingRequired.GetFixedObject()
-    {
-      return GetFullMessage();
-    }
+    object? IFixingRequired.GetFixedObject() => GetFullMessage();
 
     /// <summary>
     /// Inner class used to represent a single context frame in the stack.
@@ -250,17 +214,10 @@ namespace log4net.Util
     /// Inner class used to represent a single context frame in the stack.
     /// </para>
     /// </remarks>
-    private sealed class StackFrame
+    internal sealed class StackFrame
     {
-      #region Private Instance Fields
-
-      private readonly string m_message;
-      private readonly StackFrame m_parent;
-      private string m_fullMessage = null;
-
-      #endregion
-
-      #region Internal Instance Constructors
+      private readonly StackFrame? m_parent;
+      private string? m_fullMessage;
 
       /// <summary>
       /// Constructor
@@ -273,20 +230,16 @@ namespace log4net.Util
       /// with the specified message and parent context.
       /// </para>
       /// </remarks>
-      internal StackFrame(string message, StackFrame parent)
+      internal StackFrame(string? message, StackFrame? parent)
       {
-        m_message = message;
+        Message = message;
         m_parent = parent;
 
-        if (parent == null)
+        if (parent is null)
         {
           m_fullMessage = message;
         }
       }
-
-      #endregion Internal Instance Constructors
-
-      #region Internal Instance Properties
 
       /// <summary>
       /// Get the message.
@@ -297,10 +250,7 @@ namespace log4net.Util
       /// Get the message.
       /// </para>
       /// </remarks>
-      internal string Message
-      {
-        get { return m_message; }
-      }
+      internal string? Message { get; }
 
       /// <summary>
       /// Gets the full text of the context down to the root level.
@@ -313,19 +263,17 @@ namespace log4net.Util
       /// Gets the full text of the context down to the root level.
       /// </para>
       /// </remarks>
-      internal string FullMessage
+      internal string? FullMessage
       {
         get
         {
-          if (m_fullMessage == null && m_parent != null)
+          if (m_fullMessage is null && m_parent is not null)
           {
-            m_fullMessage = string.Concat(m_parent.FullMessage, " ", m_message);
+            m_fullMessage = string.Concat(m_parent.FullMessage, " ", Message);
           }
           return m_fullMessage;
         }
       }
-
-      #endregion Internal Instance Properties
     }
 
     /// <summary>
@@ -337,56 +285,36 @@ namespace log4net.Util
     /// with the <see langword="using"/> pattern to remove the stack frame at the end of the scope.
     /// </para>
     /// </remarks>
-    private struct AutoPopStackFrame : IDisposable
+    private readonly struct AutoPopStackFrame : IDisposable
     {
-      #region Private Instance Fields
-
       /// <summary>
       /// The ThreadContextStack internal stack
       /// </summary>
-      private Stack m_frameStack;
+      private readonly Stack<StackFrame> m_frameStack;
 
       /// <summary>
       /// The depth to trim the stack to when this instance is disposed
       /// </summary>
-      private int m_frameDepth;
-
-      #endregion Private Instance Fields
-
-      #region Internal Instance Constructors
+      private readonly int m_frameDepth;
 
       /// <summary>
-      /// Constructor
+      /// Initializes a new instance of the <see cref="AutoPopStackFrame" /> class with
+      /// the specified stack and return depth.
       /// </summary>
       /// <param name="frameStack">The internal stack used by the ThreadContextStack.</param>
       /// <param name="frameDepth">The depth to return the stack to when this object is disposed.</param>
-      /// <remarks>
-      /// <para>
-      /// Initializes a new instance of the <see cref="AutoPopStackFrame" /> class with
-      /// the specified stack and return depth.
-      /// </para>
-      /// </remarks>
-      internal AutoPopStackFrame(Stack frameStack, int frameDepth)
+      internal AutoPopStackFrame(Stack<StackFrame> frameStack, int frameDepth)
       {
         m_frameStack = frameStack;
         m_frameDepth = frameDepth;
       }
 
-      #endregion Internal Instance Constructors
-
-      #region Implementation of IDisposable
-
       /// <summary>
       /// Returns the stack to the correct depth.
       /// </summary>
-      /// <remarks>
-      /// <para>
-      /// Returns the stack to the correct depth.
-      /// </para>
-      /// </remarks>
       public void Dispose()
       {
-        if (m_frameDepth >= 0 && m_frameStack != null)
+        if (m_frameDepth >= 0)
         {
           while (m_frameStack.Count > m_frameDepth)
           {
@@ -394,8 +322,6 @@ namespace log4net.Util
           }
         }
       }
-
-      #endregion Implementation of IDisposable
     }
   }
 }

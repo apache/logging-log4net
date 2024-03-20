@@ -19,7 +19,6 @@
 
 using System;
 using System.IO;
-using System.Text;
 using System.Xml;
 
 using log4net.Util;
@@ -44,8 +43,6 @@ namespace log4net.Layout
   /// <author>Gert Driesen</author>
   public abstract class XmlLayoutBase : LayoutSkeleton
   {
-    #region Protected Instance Constructors
-
     /// <summary>
     /// Protected constructor to support subclasses
     /// </summary>
@@ -80,12 +77,8 @@ namespace log4net.Layout
     protected XmlLayoutBase(bool locationInfo)
     {
       IgnoresException = false;
-      m_locationInfo = locationInfo;
+      LocationInfo = locationInfo;
     }
-
-    #endregion Protected Instance Constructors
-
-    #region Public Instance Properties
 
     /// <summary>
     /// Gets a value indicating whether to include location information in 
@@ -107,11 +100,8 @@ namespace log4net.Layout
     /// appender as well.
     /// </para>
     /// </remarks>
-    public bool LocationInfo
-    {
-      get { return m_locationInfo; }
-      set { m_locationInfo = value; }
-    }
+    public bool LocationInfo { get; set; }
+
     /// <summary>
     /// The string to replace characters that can not be expressed in XML with.
     /// <remarks>
@@ -125,14 +115,7 @@ namespace log4net.Layout
     /// </para>
     /// </remarks>
     /// </summary>
-    public string InvalidCharReplacement
-    {
-      get { return m_invalidCharReplacement; }
-      set { m_invalidCharReplacement = value; }
-    }
-    #endregion
-
-    #region Implementation of IOptionHandler
+    public string InvalidCharReplacement { get; set; } = "?";
 
     /// <summary>
     /// Initialize layout options
@@ -154,10 +137,6 @@ namespace log4net.Layout
     {
       // nothing to do
     }
-
-    #endregion Implementation of IOptionHandler
-
-    #region Override implementation of LayoutSkeleton
 
     /// <summary>
     /// Gets the content type output by this layout. 
@@ -193,9 +172,9 @@ namespace log4net.Layout
     /// </remarks>
     public override void Format(TextWriter writer, LoggingEvent loggingEvent)
     {
-      if (loggingEvent == null)
+      if (loggingEvent is null)
       {
-        throw new ArgumentNullException("loggingEvent");
+        throw new ArgumentNullException(nameof(loggingEvent));
       }
       using XmlWriter xmlWriter = XmlWriterExtensions.CreateXmlWriter(writer);
       // Write the event to the writer
@@ -207,10 +186,6 @@ namespace log4net.Layout
       // the protected writer will ignore the actual close
       // -> Dispose from using var will close & flush
     }
-
-    #endregion Override implementation of LayoutSkeleton
-
-    #region Protected Instance Methods
 
     /// <summary>
     /// Does the actual writing of the XML.
@@ -224,22 +199,5 @@ namespace log4net.Layout
     /// </para>
     /// </remarks>
     protected abstract void FormatXml(XmlWriter writer, LoggingEvent loggingEvent);
-
-    #endregion Protected Instance Methods
-
-    #region Private Instance Fields
-
-    /// <summary>
-    /// Flag to indicate if location information should be included in
-    /// the XML events.
-    /// </summary>
-    private bool m_locationInfo = false;
-
-    /// <summary>
-    /// The string to replace invalid chars with
-    /// </summary>
-    private string m_invalidCharReplacement = "?";
-
-    #endregion Private Instance Fields
   }
 }

@@ -26,6 +26,8 @@ using CallContext = System.Runtime.Remoting.Messaging.CallContext;
 using CallContext = System.Threading.AsyncLocal<log4net.Util.PropertiesDictionary>;
 #endif
 
+#nullable enable
+
 namespace log4net.Util
 {
   /// <summary>
@@ -64,9 +66,7 @@ namespace log4net.Util
     /// <summary>
     /// Flag used to disable this context if we don't have permission to access the CallContext.
     /// </summary>
-    private bool m_disabled = false;
-
-    #region Public Instance Constructors
+    private bool m_disabled;
 
     /// <summary>
     /// Constructor
@@ -80,48 +80,26 @@ namespace log4net.Util
     {
     }
 
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
-
-    /// <summary>
-    /// Gets or sets the value of a property
-    /// </summary>
-    /// <value>
-    /// The value for the property with the specified key
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Get or set the property value for the <paramref name="key"/> specified.
-    /// </para>
-    /// </remarks>
-    public override object this[string key]
+    /// <inheritdoc/>
+    public override object? this[string key]
     {
       get
       {
         // Don't create the dictionary if it does not already exist
-        PropertiesDictionary dictionary = GetProperties(false);
-        if (dictionary != null)
-        {
-          return dictionary[key];
-        }
-        return null;
+        PropertiesDictionary? dictionary = GetProperties(false);
+        return dictionary?[key];
       }
       set
       {
         // Force the dictionary to be created
-        PropertiesDictionary props = GetProperties(true);
+        PropertiesDictionary props = GetProperties(true)!;
         // Reason for cloning the dictionary below: object instances set on the CallContext
         // need to be immutable to correctly flow through async/await
-        PropertiesDictionary immutableProps = new PropertiesDictionary(props);
+        var immutableProps = new PropertiesDictionary(props);
         immutableProps[key] = value;
         SetLogicalProperties(immutableProps);
       }
     }
-
-    #endregion Public Instance Properties
-
-    #region Public Instance Methods
 
     /// <summary>
     /// Remove a property
@@ -134,7 +112,7 @@ namespace log4net.Util
     /// </remarks>
     public void Remove(string key)
     {
-      PropertiesDictionary dictionary = GetProperties(false);
+      PropertiesDictionary? dictionary = GetProperties(false);
       if (dictionary != null)
       {
         PropertiesDictionary immutableProps = new PropertiesDictionary(dictionary);
@@ -153,22 +131,17 @@ namespace log4net.Util
     /// </remarks>
     public void Clear()
     {
-      PropertiesDictionary dictionary = GetProperties(false);
-      if (dictionary != null)
+      PropertiesDictionary? dictionary = GetProperties(false);
+      if (dictionary is not null)
       {
-        PropertiesDictionary immutableProps = new PropertiesDictionary();
-        SetLogicalProperties(immutableProps);
+        SetLogicalProperties(new PropertiesDictionary());
       }
     }
-
-    #endregion Public Instance Methods
-
-    #region Internal Instance Methods
 
     /// <summary>
     /// Get the PropertiesDictionary stored in the LocalDataStoreSlot for this thread.
     /// </summary>
-    /// <param name="create">create the dictionary if it does not exist, otherwise return null if is does not exist</param>
+    /// <param name="create">create the dictionary if it does not exist, otherwise return null if it does not exist</param>
     /// <returns>the properties for this thread</returns>
     /// <remarks>
     /// <para>
@@ -177,13 +150,13 @@ namespace log4net.Util
     /// caller must clone the collection before doings so.
     /// </para>
     /// </remarks>
-    internal PropertiesDictionary GetProperties(bool create)
+    internal PropertiesDictionary? GetProperties(bool create)
     {
       if (!m_disabled)
       {
         try
         {
-          PropertiesDictionary properties = GetLogicalProperties();
+          PropertiesDictionary? properties = GetLogicalProperties();
           if (properties == null && create)
           {
             properties = new PropertiesDictionary();
@@ -208,20 +181,16 @@ namespace log4net.Util
       return null;
     }
 
-    #endregion Internal Instance Methods
-
-    #region Private Static Methods
-
     /// <summary>
     /// Gets the call context get data.
     /// </summary>
-    /// <returns>The peroperties dictionary stored in the call context</returns>
+    /// <returns>The properties dictionary stored in the call context</returns>
     /// <remarks>
     /// The <see cref="CallContext"/> method GetData security link demand, therefore we must
-    /// put the method call in a seperate method that we can wrap in an exception handler.
+    /// put the method call in a separate method that we can wrap in an exception handler.
     /// </remarks>
-    [System.Security.SecuritySafeCritical]
-    private static PropertiesDictionary GetLogicalProperties()
+    [SecuritySafeCritical]
+    private static PropertiesDictionary? GetLogicalProperties()
     {
 #if NETSTANDARD2_0_OR_GREATER
       return AsyncLocalDictionary.Value;
@@ -236,9 +205,9 @@ namespace log4net.Util
     /// <param name="properties">The properties.</param>
     /// <remarks>
     /// The <see cref="CallContext"/> method SetData has a security link demand, therefore we must
-    /// put the method call in a seperate method that we can wrap in an exception handler.
+    /// put the method call in a separate method that we can wrap in an exception handler.
     /// </remarks>
-    [System.Security.SecuritySafeCritical]
+    [SecuritySafeCritical]
     private static void SetLogicalProperties(PropertiesDictionary properties)
     {
 #if NETSTANDARD2_0_OR_GREATER
@@ -248,10 +217,6 @@ namespace log4net.Util
 #endif
     }
 
-    #endregion
-
-    #region Private Static Fields
-
     /// <summary>
     /// The fully qualified type of the LogicalThreadContextProperties class.
     /// </summary>
@@ -260,7 +225,5 @@ namespace log4net.Util
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(LogicalThreadContextProperties);
-
-    #endregion Private Static Fields
   }
 }

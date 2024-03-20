@@ -40,8 +40,6 @@ namespace log4net.Util
   /// <author>Gert Driesen</author>
   public abstract class PatternConverter
   {
-    #region Protected Instance Constructors
-
     /// <summary>
     /// Protected constructor
     /// </summary>
@@ -54,25 +52,10 @@ namespace log4net.Util
     {
     }
 
-    #endregion Protected Instance Constructors
-
-    #region Public Instance Properties
-
     /// <summary>
-    /// Get the next pattern converter in the chain
+    /// Gets the next pattern converter in the chain.
     /// </summary>
-    /// <value>
-    /// the next pattern converter in the chain
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Get the next pattern converter in the chain
-    /// </para>
-    /// </remarks>
-    public virtual PatternConverter Next
-    {
-      get { return m_next; }
-    }
+    public virtual PatternConverter? Next => m_next;
 
     /// <summary>
     /// Gets or sets the formatting info for this converter
@@ -107,15 +90,7 @@ namespace log4net.Util
     /// Gets or sets the option value for this converter
     /// </para>
     /// </remarks>
-    public virtual string Option
-    {
-      get { return m_option; }
-      set { m_option = value; }
-    }
-
-    #endregion Public Instance Properties
-
-    #region Protected Abstract Methods
+    public virtual string? Option { get; set; }
 
     /// <summary>
     /// Evaluate this pattern converter and write the output to a writer.
@@ -130,10 +105,6 @@ namespace log4net.Util
     /// </remarks>
     public abstract void Convert(TextWriter writer, object state);
 
-    #endregion Protected Abstract Methods
-
-    #region Public Instance Methods
-
     /// <summary>
     /// Set the next pattern converter in the chains
     /// </summary>
@@ -141,7 +112,7 @@ namespace log4net.Util
     /// <returns>the next converter</returns>
     /// <remarks>
     /// <para>
-    /// The PatternConverter can merge with its neighbor during this method (or a sub class).
+    /// The PatternConverter can merge with its neighbor during this method (or a subclass).
     /// Therefore the return value may or may not be the value of the argument passed in.
     /// </para>
     /// </remarks>
@@ -173,7 +144,7 @@ namespace log4net.Util
       }
       else
       {
-        string msg = null;
+        string? msg;
         int len;
         lock (m_formatWriter)
         {
@@ -214,9 +185,17 @@ namespace log4net.Util
       }
     }
 
-    private static readonly string[] SPACES = {  " ", "  ", "    ", "        ",      // 1,2,4,8 spaces
-                          "                ",            // 16 spaces
-                          "                                " }; // 32 spaces
+    private static readonly string[] SPACES =
+    {
+      // 1,2,4,8 spaces
+      " ", "  ", "    ", "        ",      
+      
+      // 16 spaces
+      "                ",
+
+      // 32 spaces
+      "                                "
+    };
 
     /// <summary>
     /// Fast space padding method.
@@ -245,25 +224,12 @@ namespace log4net.Util
       }
     }
 
-    #endregion Public Instance Methods
-
-    #region Private Instance Fields
-
-    private PatternConverter m_next;
+    private PatternConverter? m_next;
     private int m_min = -1;
     private int m_max = int.MaxValue;
-    private bool m_leftAlign = false;
+    private bool m_leftAlign;
 
-    /// <summary>
-    /// The option string to the converter
-    /// </summary>
-    private string m_option = null;
-
-    private ReusableStringWriter m_formatWriter = new ReusableStringWriter(System.Globalization.CultureInfo.InvariantCulture);
-
-    #endregion Private Instance Fields
-
-    #region Constants
+    private readonly ReusableStringWriter m_formatWriter = new(System.Globalization.CultureInfo.InvariantCulture);
 
     /// <summary>
     /// Initial buffer size
@@ -274,10 +240,6 @@ namespace log4net.Util
     /// Maximum buffer size before it is recycled
     /// </summary>
     private const int c_renderBufferMaxCapacity = 1024;
-
-    #endregion
-
-    #region Static Methods
 
     /// <summary>
     /// Write an dictionary to a <see cref="TextWriter"/>
@@ -304,7 +266,7 @@ namespace log4net.Util
     }
 
     /// <summary>
-    /// Write an dictionary to a <see cref="TextWriter"/>
+    /// Writes a dictionary to a <see cref="TextWriter"/>
     /// </summary>
     /// <param name="writer">the writer to write to</param>
     /// <param name="repository">a <see cref="ILoggerRepository"/> to use for object conversion</param>
@@ -360,16 +322,16 @@ namespace log4net.Util
     /// the object's ToString method is called.
     /// </para>
     /// </remarks>
-    protected static void WriteObject(TextWriter writer, ILoggerRepository repository, object value)
+    protected static void WriteObject(TextWriter writer, ILoggerRepository? repository, object? value)
     {
-      if (repository != null)
+      if (repository is not null)
       {
         repository.RendererMap.FindAndRender(value, writer);
       }
       else
       {
         // Don't have a repository to render with so just have to rely on ToString
-        if (value == null)
+        if (value is null)
         {
           writer.Write(SystemInfo.NullText);
         }
@@ -380,17 +342,9 @@ namespace log4net.Util
       }
     }
 
-    #endregion
-
-    private PropertiesDictionary properties;
-
     /// <summary>
     /// 
     /// </summary>
-    public PropertiesDictionary Properties
-    {
-      get { return properties; }
-      set { properties = value; }
-    }
+    public PropertiesDictionary? Properties { get; set; }
   }
 }

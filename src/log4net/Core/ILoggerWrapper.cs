@@ -17,12 +17,6 @@
 //
 #endregion
 
-using System;
-
-using log4net;
-using log4net.Core;
-using log4net.Repository;
-
 namespace log4net.Core
 {
   /// <summary>
@@ -40,18 +34,14 @@ namespace log4net.Core
   public interface ILoggerWrapper
   {
     /// <summary>
-    /// Get the implementation behind this wrapper object.
+    /// Gets the <see cref="ILogger"/> object that implements this object.
     /// </summary>
     /// <value>
-    /// The <see cref="ILogger"/> object that in implementing this object.
     /// </value>
     /// <remarks>
     /// <para>
-    /// The <see cref="ILogger"/> object that in implementing this
-    /// object. The <c>Logger</c> object may not 
-    /// be the same object as this object because of logger decorators.
-    /// This gets the actual underlying objects that is used to process
-    /// the log events.
+    /// The <c>Logger</c> object may not  be the same object as this object because of logger decorators.
+    /// This gets the actual underlying objects that is used to process the log events.
     /// </para>
     /// </remarks>
     ILogger Logger { get; }
