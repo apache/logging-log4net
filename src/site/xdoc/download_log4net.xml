@@ -74,9 +74,8 @@ limitations under the License.
 
       <p>The 1.2.10 and 1.2.9 releases have been created while log4net
       was still undergoing incubation and those releases are available
-      from the <a
-      href="http://archive.apache.org/dist/incubator/log4net/">distribution
-      archive</a> for the Incubator project.</p>
+      from the <a href="http://archive.apache.org/dist/incubator/log4net/">distribution archive</a>
+      for the Incubator project.</p>
 
       <p>Previous releases of log4net are available from the
       <a href="http://sourceforge.net/project/showfiles.php?group_id=31983&amp;release_id=171808">SourceForge Project Site</a>.</p>
@@ -85,7 +84,7 @@ limitations under the License.
 
   <section name="Verify Releases">
 
-    <p>It is essential that you verify the integrity of the downloaded files using the PGP signature.</p>
+    <p>It is essential that you verify the integrity of the downloaded files using the GPG signature.</p>
 
     <p>Please read <a
     href="http://httpd.apache.org/dev/verification.html">Verifying Apache HTTP Server Releases</a> for more information on why you should verify our releases.
