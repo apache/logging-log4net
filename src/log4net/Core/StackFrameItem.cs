@@ -50,12 +50,11 @@ namespace log4net.Core
         FileName = frame.GetFileName();
 
         // get method values
-        MethodBase? method = frame.GetMethod();
-        if (method is not null)
+        if (frame.GetMethod() is MethodBase method)
         {
-          if (method.DeclaringType is not null)
+          if (method.DeclaringType?.FullName is string className)
           {
-            ClassName = method.DeclaringType.FullName;
+            ClassName = className;
           }
 
           Method = new MethodItem(method);

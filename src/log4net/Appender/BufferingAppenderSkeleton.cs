@@ -22,6 +22,7 @@ using System.Collections;
 
 using log4net.Util;
 using log4net.Core;
+using System.Collections.Generic;
 
 namespace log4net.Appender
 {
@@ -121,7 +122,7 @@ namespace log4net.Appender
     /// <para>If <see cref="Lossy"/> is set to <c>true</c> then an
     /// <see cref="Evaluator"/> must be specified.</para>
     /// </remarks>
-    public bool Lossy { get; set; } = false;
+    public bool Lossy { get; set; }
 
     /// <summary>
     /// Gets or sets the size of the cyclic buffer used to hold the 
@@ -285,11 +286,11 @@ namespace log4net.Appender
             // If we are allowed to eagerly flush from the lossy buffer
             if (flushLossyBuffer)
             {
-              if (LossyEvaluator != null)
+              if (LossyEvaluator is not null)
               {
                 // Test the contents of the buffer against the lossy evaluator
                 LoggingEvent[] bufferedEvents = m_cb.PopAll();
-                ArrayList filteredEvents = new ArrayList(bufferedEvents.Length);
+                var filteredEvents = new List<LoggingEvent>(bufferedEvents.Length);
 
                 foreach (LoggingEvent loggingEvent in bufferedEvents)
                 {
@@ -302,7 +303,7 @@ namespace log4net.Appender
                 // Send the events that meet the lossy evaluator criteria
                 if (filteredEvents.Count > 0)
                 {
-                  SendBuffer((LoggingEvent[])filteredEvents.ToArray(typeof(LoggingEvent)));
+                  SendBuffer(filteredEvents.ToArray());
                 }
               }
               else
@@ -344,9 +345,9 @@ namespace log4net.Appender
       // If the appender is in Lossy mode then we will
       // only send the buffer when the Evaluator triggers
       // therefore check we have an evaluator.
-      if (Lossy && Evaluator == null)
+      if (Lossy && Evaluator is null)
       {
-        ErrorHandler.Error("Appender [" + Name + "] is Lossy but has no Evaluator. The buffer will never be sent!");
+        ErrorHandler.Error($"Appender [{Name}] is Lossy but has no Evaluator. The buffer will never be sent!");
       }
 
       if (BufferSize > 1)
@@ -411,7 +412,7 @@ namespace log4net.Appender
       // sent immediately because there is not enough space in the buffer
       // to buffer up more than 1 event. Therefore as a special case
       // we don't use the buffer at all.
-      if (m_cb == null || BufferSize <= 1)
+      if (m_cb is null || BufferSize <= 1)
       {
         // Only send the event if we are in non-lossy mode or the event is a triggering event
         if ((!Lossy) ||
@@ -542,7 +543,5 @@ namespace log4net.Appender
     /// The events delivered to the subclass must be fixed.
     /// </summary>
     private readonly bool m_eventMustBeFixed;
-
-    private readonly object m_ockObj = new();
   }
 }

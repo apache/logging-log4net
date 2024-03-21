@@ -374,8 +374,7 @@ namespace log4net.Appender
 
       short category = m_category;
       // Look for the Category property
-      object? categoryPropertyObj = loggingEvent.LookupProperty("Category");
-      if (categoryPropertyObj is not null)
+      if (loggingEvent.LookupProperty("Category") is object categoryPropertyObj)
       {
         if (categoryPropertyObj is short shortValue)
         {

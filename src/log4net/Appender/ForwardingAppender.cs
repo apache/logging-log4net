@@ -129,7 +129,7 @@ namespace log4net.Appender
       {
         lock (this)
         {
-          return m_appenderAttachedImpl is null ? AppenderCollection.EmptyCollection : m_appenderAttachedImpl.Appenders;
+          return m_appenderAttachedImpl?.Appenders ?? AppenderCollection.EmptyCollection;
         }
       }
     }

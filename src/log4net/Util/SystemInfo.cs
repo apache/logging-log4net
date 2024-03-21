@@ -520,7 +520,7 @@ namespace log4net.Util
           // Insufficient permissions to get the list of loaded assemblies
         }
 
-        if (loadedAssemblies != null)
+        if (loadedAssemblies is not null)
         {
           Type? fallback = null;
           // Search the loaded assemblies for the type
@@ -559,36 +559,28 @@ namespace log4net.Util
     }
 
     /// <summary>
-    /// Generate a new guid
-    /// </summary>
-    /// <returns>A new Guid</returns>
-    /// <remarks>
-    /// <para>
-    /// Generate a new guid
-    /// </para>
-    /// </remarks>
-    public static Guid NewGuid()
-    {
-      return Guid.NewGuid();
-    }
-
-    /// <summary>
-    /// Create an <see cref="ArgumentOutOfRangeException"/>
+    /// Creates an <see cref="ArgumentOutOfRangeException"/>
     /// </summary>
     /// <param name="parameterName">The name of the parameter that caused the exception</param>
     /// <param name="actualValue">The value of the argument that causes this exception</param>
     /// <param name="message">The message that describes the error</param>
-    /// <returns>the ArgumentOutOfRangeException object</returns>
-    /// <remarks>
-    /// <para>
-    /// Create a new instance of the <see cref="ArgumentOutOfRangeException"/> class 
-    /// with a specified error message, the parameter name, and the value 
+    /// <returns>
+    /// A new instance of the <see cref="ArgumentOutOfRangeException"/> class 
+    /// with the specified error message, parameter name, and value
     /// of the argument.
-    /// </para>
-    /// </remarks>
+    /// </returns>
     public static ArgumentOutOfRangeException CreateArgumentOutOfRangeException(string parameterName, object actualValue, string message)
     {
       return new ArgumentOutOfRangeException(parameterName, actualValue, message);
+    }
+
+    /// <summary>
+    /// Creates a <see cref="NotSupportedException"/> for read-only collection modification calls.
+    /// </summary>
+    /// <returns>The NotSupportedException object</returns>
+    public static NotSupportedException CreateReadOnlyCollectionNotModifiableException()
+    {
+      return new NotSupportedException("This is a Read Only Collection and can not be modified");
     }
 
     /// <summary>

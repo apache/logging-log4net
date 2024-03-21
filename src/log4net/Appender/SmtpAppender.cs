@@ -39,13 +39,6 @@ namespace log4net.Appender
   /// cyclic buffer. This keeps memory requirements at a reasonable level while 
   /// still delivering useful application context.
   /// </para>
-  /// <note type="caution">
-  /// Authentication and setting the server Port are only available on the MS .NET 1.1 runtime.
-  /// For these features to be enabled you need to ensure that you are using a version of
-  /// the log4net assembly that is built against the MS .NET 1.1 framework and that you are
-  /// running the your application on the MS .NET 1.1 runtime. On all other platforms only sending
-  /// unauthenticated messages to a server listening on port 25 (the default) is supported.
-  /// </note>
   /// <para>
   /// Authentication is supported by setting the <see cref="Authentication"/> property to
   /// either <see cref="SmtpAuthentication.Basic"/> or <see cref="SmtpAuthentication.Ntlm"/>.
@@ -173,7 +166,6 @@ namespace log4net.Appender
     /// The mode to use to authentication with the SMTP server
     /// </summary>
     /// <remarks>
-    /// <note type="caution">Authentication is only available on the MS .NET 1.1 runtime.</note>
     /// <para>
     /// Valid Authentication mode values are: <see cref="SmtpAuthentication.None"/>, 
     /// <see cref="SmtpAuthentication.Basic"/>, and <see cref="SmtpAuthentication.Ntlm"/>. 
@@ -190,7 +182,6 @@ namespace log4net.Appender
     /// The username to use to authenticate with the SMTP server
     /// </summary>
     /// <remarks>
-    /// <note type="caution">Authentication is only available on the MS .NET 1.1 runtime.</note>
     /// <para>
     /// A <see cref="Username"/> and <see cref="Password"/> must be specified when 
     /// <see cref="Authentication"/> is set to <see cref="SmtpAuthentication.Basic"/>, 
@@ -203,7 +194,6 @@ namespace log4net.Appender
     /// The password to use to authenticate with the SMTP server
     /// </summary>
     /// <remarks>
-    /// <note type="caution">Authentication is only available on the MS .NET 1.1 runtime.</note>
     /// <para>
     /// A <see cref="Username"/> and <see cref="Password"/> must be specified when 
     /// <see cref="Authentication"/> is set to <see cref="SmtpAuthentication.Basic"/>, 
@@ -216,11 +206,9 @@ namespace log4net.Appender
     /// The port on which the SMTP server is listening
     /// </summary>
     /// <remarks>
-    /// <note type="caution">Server Port is only available on the MS .NET 1.1 runtime.</note>
     /// <para>
     /// The port on which the SMTP server is listening. The default
-    /// port is <c>25</c>. The Port can only be changed when running on
-    /// the MS .NET 1.1 runtime.
+    /// port is <c>25</c>.
     /// </para>
     /// </remarks>
     public int Port { get; set; } = 25;
@@ -284,10 +272,9 @@ namespace log4net.Appender
       {
         using var writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
 
-        string? t = Layout?.Header;
-        if (t is not null)
+        if (Layout?.Header is string header)
         {
-          writer.Write(t);
+          writer.Write(header);
         }
 
         for (int i = 0; i < events.Length; i++)
@@ -296,10 +283,9 @@ namespace log4net.Appender
           RenderLoggingEvent(writer, events[i]);
         }
 
-        t = Layout?.Footer;
-        if (t is not null)
+        if (Layout?.Footer is string footer)
         {
-          writer.Write(t);
+          writer.Write(footer);
         }
 
         SendEmail(writer.ToString());
@@ -419,7 +405,7 @@ namespace log4net.Appender
     /// </summary>
     private static string? MaybeTrimSeparators(string? s)
     {
-      return string.IsNullOrEmpty(s) ? s : s.Trim(ADDRESS_DELIMITERS);
+      return s?.Trim(ADDRESS_DELIMITERS);
     }
   }
 }

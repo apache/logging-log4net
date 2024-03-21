@@ -17,6 +17,7 @@
 //
 #endregion
 
+using log4net.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -235,10 +236,7 @@ namespace log4net.Appender
     public virtual object Clone()
     {
       var newCol = new AppenderCollection(m_count);
-      if (m_count > 0)
-      {
-        Array.Copy(m_array, 0, newCol.m_array, 0, m_count);
-      }
+      Array.Copy(m_array, 0, newCol.m_array, 0, m_count);
       newCol.m_count = m_count;
       newCol.m_version = m_version;
 
@@ -670,17 +668,17 @@ namespace log4net.Appender
       public override IAppender this[int i]
       {
         get => m_collection[i];
-        set => throw new NotSupportedException("This is a Read Only Collection and can not be modified");
+        set => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
       }
 
       public override void Add(IAppender x)
       {
-        throw new NotSupportedException("This is a Read Only Collection and can not be modified");
+        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
       }
 
       public override void Clear()
       {
-        throw new NotSupportedException("This is a Read Only Collection and can not be modified");
+        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
       }
 
       public override bool Contains(IAppender x) => m_collection.Contains(x);
@@ -689,17 +687,17 @@ namespace log4net.Appender
 
       public override void Insert(int pos, IAppender x)
       {
-        throw new NotSupportedException("This is a Read Only Collection and can not be modified");
+        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
       }
 
       public override bool Remove(IAppender x)
       {
-        throw new NotSupportedException("This is a Read Only Collection and can not be modified");
+        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
       }
 
       public override void RemoveAt(int pos)
       {
-        throw new NotSupportedException("This is a Read Only Collection and can not be modified");
+        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
       }
 
       public override bool IsFixedSize => true;
@@ -715,24 +713,24 @@ namespace log4net.Appender
       public override int Capacity
       {
         get => m_collection.Capacity;
-        set => throw new NotSupportedException("This is a Read Only Collection and can not be modified");
+        set => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
       }
 
       public override int AddRange(AppenderCollection x)
       {
-        throw new NotSupportedException("This is a Read Only Collection and can not be modified");
+        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
       }
 
       public override int AddRange(IAppender[] x)
       {
-        throw new NotSupportedException("This is a Read Only Collection and can not be modified");
+        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
       }
 
       public override IAppender[] ToArray() => m_collection.ToArray();
 
       public override void TrimToSize()
       {
-        throw new NotSupportedException("This is a Read Only Collection and can not be modified");
+        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
       }
     }
   }

@@ -17,6 +17,7 @@
 //
 #endregion
 
+using log4net.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -685,17 +686,17 @@ namespace log4net.Core
       public override Level this[int i]
       {
         get => m_collection[i];
-        set => throw new NotSupportedException("This is a Read Only Collection and can not be modified");
+        set => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
       }
 
       public override int Add(Level x)
       {
-        throw new NotSupportedException("This is a Read Only Collection and can not be modified");
+        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
       }
 
       public override void Clear()
       {
-        throw new NotSupportedException("This is a Read Only Collection and can not be modified");
+        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
       }
 
       public override bool Contains(Level x) => m_collection.Contains(x);
@@ -704,17 +705,17 @@ namespace log4net.Core
 
       public override void Insert(int pos, Level x)
       {
-        throw new NotSupportedException("This is a Read Only Collection and can not be modified");
+        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
       }
 
       public override void Remove(Level x)
       {
-        throw new NotSupportedException("This is a Read Only Collection and can not be modified");
+        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
       }
 
       public override void RemoveAt(int pos)
       {
-        throw new NotSupportedException("This is a Read Only Collection and can not be modified");
+        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
       }
 
       public override bool IsFixedSize => true;
@@ -730,17 +731,17 @@ namespace log4net.Core
       public override int Capacity
       {
         get => m_collection.Capacity;
-        set => throw new NotSupportedException("This is a Read Only Collection and can not be modified");
+        set => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
       }
 
       public override int AddRange(LevelCollection x)
       {
-        throw new NotSupportedException("This is a Read Only Collection and can not be modified");
+        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
       }
 
       public override int AddRange(Level[] x)
       {
-        throw new NotSupportedException("This is a Read Only Collection and can not be modified");
+        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
       }
     }
   }
