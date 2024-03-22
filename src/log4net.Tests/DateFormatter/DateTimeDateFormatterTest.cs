@@ -43,7 +43,7 @@ namespace log4net.Tests.DateFormatter
 
       // Non-zero-prepend case.
       var formatter2 = new DifferentTypeNameDateTimeDateFormatter();
-      formatter.FormatDate(new DateTime(2100, 12, 30, 11, 59, 59).AddMilliseconds(100), writer);
+      formatter2.FormatDate(new DateTime(2100, 12, 30, 11, 59, 59).AddMilliseconds(100), writer);
       Assert.AreEqual("30 Dec 2100 11:59:59,100", sb.ToString());
       sb.Clear();
     }
