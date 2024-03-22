@@ -16,6 +16,7 @@
 // limitations under the License.
 //
 #endregion
+
 using System;
 using System.Diagnostics;
 using System.Reflection;
@@ -24,40 +25,39 @@ using log4net.Util;
 namespace log4net.Core
 {
   /// <summary>
-  /// provides stack frame information without actually referencing a System.Diagnostics.StackFrame
+  /// Provides stack frame information without actually referencing a System.Diagnostics.StackFrame
   /// as that would require that the containing assembly is loaded.
   /// </summary>
-  /// 
   [Serializable]
   public class StackFrameItem
   {
-    #region Public Instance Constructors
-
     /// <summary>
-    /// returns a stack frame item from a stack frame. This 
+    /// Creates a stack frame item from a stack frame.
     /// </summary>
     /// <param name="frame"></param>
-    /// <returns></returns>
     public StackFrameItem(StackFrame frame)
     {
       // set default values
-      m_lineNumber = NA;
-      m_fileName = NA;
-      m_method = new MethodItem();
-      m_className = NA;
+      LineNumber = NA;
+      FileName = NA;
+      Method = new MethodItem();
+      ClassName = NA;
 
       try
       {
         // get frame values
-        m_lineNumber = frame.GetFileLineNumber().ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
-        m_fileName = frame.GetFileName();
+        LineNumber = frame.GetFileLineNumber().ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
+        FileName = frame.GetFileName();
+
         // get method values
-        MethodBase method = frame.GetMethod();
-        if (method != null)
+        if (frame.GetMethod() is MethodBase method)
         {
-          if (method.DeclaringType != null)
-            m_className = method.DeclaringType.FullName;
-          m_method = new MethodItem(method);
+          if (method.DeclaringType?.FullName is string className)
+          {
+            ClassName = className;
+          }
+
+          Method = new MethodItem(method);
         }
       }
       catch (Exception ex)
@@ -66,111 +66,35 @@ namespace log4net.Core
       }
 
       // set full info
-      m_fullInfo = m_className + '.' + m_method.Name + '(' + m_fileName + ':' + m_lineNumber + ')';
+      FullInfo = $"{ClassName}.{Method.Name}({FileName}:{LineNumber})";
     }
-
-    #endregion
-
-    #region Public Instance Properties
 
     /// <summary>
     /// Gets the fully qualified class name of the caller making the logging 
     /// request.
     /// </summary>
-    /// <value>
-    /// The fully qualified class name of the caller making the logging 
-    /// request.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets the fully qualified class name of the caller making the logging 
-    /// request.
-    /// </para>
-    /// </remarks>
-    public string ClassName
-    {
-      get { return m_className; }
-    }
+    public string ClassName { get; }
 
     /// <summary>
     /// Gets the file name of the caller.
     /// </summary>
-    /// <value>
-    /// The file name of the caller.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets the file name of the caller.
-    /// </para>
-    /// </remarks>
-    public string FileName
-    {
-      get { return m_fileName; }
-    }
+    public string FileName { get; }
 
     /// <summary>
     /// Gets the line number of the caller.
     /// </summary>
-    /// <value>
-    /// The line number of the caller.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets the line number of the caller.
-    /// </para>
-    /// </remarks>
-    public string LineNumber
-    {
-      get { return m_lineNumber; }
-    }
+    public string LineNumber { get; }
 
     /// <summary>
     /// Gets the method name of the caller.
     /// </summary>
-    /// <value>
-    /// The method name of the caller.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets the method name of the caller.
-    /// </para>
-    /// </remarks>
-    public MethodItem Method
-    {
-      get { return m_method; }
-    }
+    public MethodItem Method { get; }
 
     /// <summary>
-    /// Gets all available caller information
+    /// Gets all available caller information in the format
+    /// <c>fully.qualified.classname.of.caller.methodName(Filename:line)</c>
     /// </summary>
-    /// <value>
-    /// All available caller information, in the format
-    /// <c>fully.qualified.classname.of.caller.methodName(Filename:line)</c>
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets all available caller information, in the format
-    /// <c>fully.qualified.classname.of.caller.methodName(Filename:line)</c>
-    /// </para>
-    /// </remarks>
-    public string FullInfo
-    {
-      get { return m_fullInfo; }
-    }
-
-    #endregion Public Instance Properties
-
-    #region Private Instance Fields
-
-    private readonly string m_lineNumber;
-    private readonly string m_fileName;
-    private readonly string m_className;
-    private readonly string m_fullInfo;
-    private readonly MethodItem m_method;
-
-    #endregion
-
-    #region Private Static Fields
+    public string FullInfo { get; }
 
     /// <summary>
     /// The fully qualified type of the StackFrameItem class.
@@ -187,7 +111,5 @@ namespace log4net.Core
     /// constant is <b>?</b>.
     /// </summary>
     private const string NA = "?";
-
-    #endregion Private Static Fields
   }
 }

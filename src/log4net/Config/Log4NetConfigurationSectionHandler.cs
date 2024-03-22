@@ -47,8 +47,6 @@ namespace log4net.Config
   /// <author>Gert Driesen</author>
   public class Log4NetConfigurationSectionHandler : IConfigurationSectionHandler
   {
-    #region Public Instance Constructors
-
     /// <summary>
     /// Initializes a new instance of the <see cref="Log4NetConfigurationSectionHandler"/> class.
     /// </summary>
@@ -60,10 +58,6 @@ namespace log4net.Config
     public Log4NetConfigurationSectionHandler()
     {
     }
-
-    #endregion Public Instance Constructors
-
-    #region Implementation of IConfigurationSectionHandler
 
     /// <summary>
     /// Parses the configuration section.
@@ -81,7 +75,5 @@ namespace log4net.Config
     {
       return section;
     }
-
-    #endregion Implementation of IConfigurationSectionHandler
   }
 }

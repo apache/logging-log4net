@@ -48,51 +48,19 @@ namespace log4net.Config
     // Class is not sealed because AliasDomainAttribute extends it while it is obsoleted
     // 
 
-    #region Public Instance Constructors
-
     /// <summary>
     /// Initializes a new instance of the <see cref="AliasRepositoryAttribute" /> class with 
     /// the specified repository to alias to this assembly's repository.
     /// </summary>
     /// <param name="name">The repository to alias to this assemby's repository.</param>
-    /// <remarks>
-    /// <para>
-    /// Initializes a new instance of the <see cref="AliasRepositoryAttribute" /> class with 
-    /// the specified repository to alias to this assembly's repository.
-    /// </para>
-    /// </remarks>
     public AliasRepositoryAttribute(string name)
     {
       Name = name;
     }
 
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
-
     /// <summary>
     /// Gets or sets the repository to alias to this assemby's repository.
     /// </summary>
-    /// <value>
-    /// The repository to alias to this assemby's repository.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// The name of the repository to alias to this assemby's repository.
-    /// </para>
-    /// </remarks>
-    public string Name
-    {
-      get { return m_name; }
-      set { m_name = value; }
-    }
-
-    #endregion Public Instance Properties
-
-    #region Private Instance Fields
-
-    private string m_name = null;
-
-    #endregion Private Instance Fields
+    public string Name { get; }
   }
 }

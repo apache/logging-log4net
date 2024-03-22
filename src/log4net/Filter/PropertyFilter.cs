@@ -18,11 +18,8 @@
 #endregion
 
 using System;
-using System.Text.RegularExpressions;
 
-using log4net;
 using log4net.Core;
-using log4net.Util;
 
 namespace log4net.Filter
 {
@@ -38,26 +35,6 @@ namespace log4net.Filter
   /// <author>Nicko Cadell</author>
   public class PropertyFilter : StringMatchFilter
   {
-    #region Member Variables
-
-    /// <summary>
-    /// The key to use to lookup the string from the event properties
-    /// </summary>
-    private string m_key;
-
-    #endregion
-
-    #region Constructors
-
-    /// <summary>
-    /// Default constructor
-    /// </summary>
-    public PropertyFilter()
-    {
-    }
-
-    #endregion
-
     /// <summary>
     /// The key to lookup in the event properties and then match against.
     /// </summary>
@@ -68,13 +45,7 @@ namespace log4net.Filter
     /// the value of this property if it exists.
     /// </para>
     /// </remarks>
-    public string Key
-    {
-      get { return m_key; }
-      set { m_key = value; }
-    }
-
-    #region Override implementation of FilterSkeleton
+    public string? Key { get; set; }
 
     /// <summary>
     /// Check if this filter should allow the event to be logged
@@ -96,13 +67,13 @@ namespace log4net.Filter
     /// </remarks>
     public override FilterDecision Decide(LoggingEvent loggingEvent)
     {
-      if (loggingEvent == null)
+      if (loggingEvent is null)
       {
-        throw new ArgumentNullException("loggingEvent");
+        throw new ArgumentNullException(nameof(loggingEvent));
       }
 
       // Check if we have a key to lookup the event property value with
-      if (m_key == null)
+      if (Key is null)
       {
         // We cannot filter so allow the filter chain
         // to continue processing
@@ -111,13 +82,13 @@ namespace log4net.Filter
 
       // Lookup the string to match in from the properties using 
       // the key specified.
-      object msgObj = loggingEvent.LookupProperty(m_key);
+      object msgObj = loggingEvent.LookupProperty(Key);
 
       // Use an ObjectRenderer to convert the property value to a string
-      string msg = loggingEvent.Repository.RendererMap.FindAndRender(msgObj);
+      string? msg = loggingEvent.Repository.RendererMap.FindAndRender(msgObj);
 
       // Check if we have been setup to filter
-      if (msg == null || (m_stringToMatch == null && m_regexToMatch == null))
+      if (msg is null || (StringToMatch is null && m_regexToMatch is null))
       {
         // We cannot filter so allow the filter chain
         // to continue processing
@@ -125,7 +96,7 @@ namespace log4net.Filter
       }
 
       // Firstly check if we are matching using a regex
-      if (m_regexToMatch != null)
+      if (m_regexToMatch is not null)
       {
         // Check the regex
         if (m_regexToMatch.Match(msg).Success == false)
@@ -135,23 +106,23 @@ namespace log4net.Filter
         }
 
         // we've got a match
-        if (m_acceptOnMatch)
+        if (AcceptOnMatch)
         {
           return FilterDecision.Accept;
         }
         return FilterDecision.Deny;
       }
-      else if (m_stringToMatch != null)
+      else if (StringToMatch is not null)
       {
         // Check substring match
-        if (msg.IndexOf(m_stringToMatch) == -1)
+        if (msg.IndexOf(StringToMatch) == -1)
         {
           // No match, continue processing
           return FilterDecision.Neutral;
         }
 
         // we've got a match
-        if (m_acceptOnMatch)
+        if (AcceptOnMatch)
         {
           return FilterDecision.Accept;
         }
@@ -159,7 +130,5 @@ namespace log4net.Filter
       }
       return FilterDecision.Neutral;
     }
-
-    #endregion
   }
 }

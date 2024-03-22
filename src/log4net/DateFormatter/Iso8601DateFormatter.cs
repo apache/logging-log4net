@@ -34,24 +34,6 @@ namespace log4net.DateFormatter
   /// <author>Gert Driesen</author>
   public class Iso8601DateFormatter : AbsoluteTimeDateFormatter
   {
-    #region Public Instance Constructors
-
-    /// <summary>
-    /// Default constructor
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Initializes a new instance of the <see cref="Iso8601DateFormatter" /> class.
-    /// </para>
-    /// </remarks>
-    public Iso8601DateFormatter()
-    {
-    }
-
-    #endregion Public Instance Constructors
-
-    #region Override implementation of AbsoluteTimeDateFormatter
-
     /// <summary>
     /// Formats the date without the milliseconds part
     /// </summary>
@@ -68,29 +50,24 @@ namespace log4net.DateFormatter
     /// </remarks>
     protected override void FormatDateWithoutMillis(DateTime dateToFormat, StringBuilder buffer)
     {
-      buffer.Append(dateToFormat.Year);
+      buffer.Append(dateToFormat.Year).Append('-');
 
-      buffer.Append('-');
       int month = dateToFormat.Month;
       if (month < 10)
       {
         buffer.Append('0');
       }
-      buffer.Append(month);
-      buffer.Append('-');
+      buffer.Append(month).Append('-');
 
       int day = dateToFormat.Day;
       if (day < 10)
       {
         buffer.Append('0');
       }
-      buffer.Append(day);
-      buffer.Append(' ');
+      buffer.Append(day).Append(' ');
 
       // Append the 'HH:mm:ss'
       base.FormatDateWithoutMillis(dateToFormat, buffer);
     }
-
-    #endregion Override implementation of AbsoluteTimeDateFormatter
   }
 }

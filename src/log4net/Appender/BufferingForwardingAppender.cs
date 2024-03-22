@@ -20,7 +20,6 @@
 using System;
 
 using log4net.Util;
-using log4net.Layout;
 using log4net.Core;
 
 namespace log4net.Appender
@@ -44,24 +43,6 @@ namespace log4net.Appender
   /// <author>Gert Driesen</author>
   public class BufferingForwardingAppender : BufferingAppenderSkeleton, IAppenderAttachable
   {
-    #region Public Instance Constructors
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BufferingForwardingAppender" /> class.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Default constructor.
-    /// </para>
-    /// </remarks>
-    public BufferingForwardingAppender()
-    {
-    }
-
-    #endregion Public Instance Constructors
-
-    #region Override implementation of AppenderSkeleton
-
     /// <summary>
     /// Closes the appender and releases resources.
     /// </summary>
@@ -77,26 +58,19 @@ namespace log4net.Appender
     protected override void OnClose()
     {
       // Remove all the attached appenders
-      lock (this)
+      lock (LockObj)
       {
         // Delegate to base, which will flush buffers
         base.OnClose();
 
-        if (m_appenderAttachedImpl != null)
-        {
-          m_appenderAttachedImpl.RemoveAllAppenders();
-        }
+        m_appenderAttachedImpl?.RemoveAllAppenders();
       }
     }
-
-    #endregion Override implementation of AppenderSkeleton
-
-    #region Override implementation of BufferingAppenderSkeleton
 
     /// <summary>
     /// Send the events.
     /// </summary>
-    /// <param name="events">The events that need to be send.</param>
+    /// <param name="events">The events that need to be sent.</param>
     /// <remarks>
     /// <para>
     /// Forwards the events to the attached appenders.
@@ -104,16 +78,12 @@ namespace log4net.Appender
     /// </remarks>
     protected override void SendBuffer(LoggingEvent[] events)
     {
-      // Pass the logging event on to the attached appenders
-      if (m_appenderAttachedImpl != null)
+      lock (LockObj)
       {
-        m_appenderAttachedImpl.AppendLoopOnAppenders(events);
+        // Pass the logging event on to the attached appenders
+        m_appenderAttachedImpl?.AppendLoopOnAppenders(events);
       }
     }
-
-    #endregion Override implementation of BufferingAppenderSkeleton
-
-    #region Implementation of IAppenderAttachable
 
     /// <summary>
     /// Adds an <see cref="IAppender" /> to the list of appenders of this
@@ -128,16 +98,13 @@ namespace log4net.Appender
     /// </remarks>
     public virtual void AddAppender(IAppender newAppender)
     {
-      if (newAppender == null)
+      if (newAppender is null)
       {
-        throw new ArgumentNullException("newAppender");
+        throw new ArgumentNullException(nameof(newAppender));
       }
-      lock (this)
+      lock (LockObj)
       {
-        if (m_appenderAttachedImpl == null)
-        {
-          m_appenderAttachedImpl = new log4net.Util.AppenderAttachedImpl();
-        }
+        m_appenderAttachedImpl ??= new AppenderAttachedImpl();
         m_appenderAttachedImpl.AddAppender(newAppender);
       }
     }
@@ -157,9 +124,9 @@ namespace log4net.Appender
     {
       get
       {
-        lock (this)
+        lock (LockObj)
         {
-          if (m_appenderAttachedImpl == null)
+          if (m_appenderAttachedImpl is null)
           {
             return AppenderCollection.EmptyCollection;
           }
@@ -178,16 +145,11 @@ namespace log4net.Appender
     /// <returns>
     /// The appender with the specified name, or <c>null</c>.
     /// </returns>
-    /// <remarks>
-    /// <para>
-    /// Get the named appender attached to this buffering appender.
-    /// </para>
-    /// </remarks>
-    public virtual IAppender GetAppender(string name)
+    public virtual IAppender? GetAppender(string? name)
     {
-      lock (this)
+      lock (LockObj)
       {
-        if (m_appenderAttachedImpl == null || name == null)
+        if (m_appenderAttachedImpl is null || name is null)
         {
           return null;
         }
@@ -206,9 +168,9 @@ namespace log4net.Appender
     /// </remarks>
     public virtual void RemoveAllAppenders()
     {
-      lock (this)
+      lock (LockObj)
       {
-        if (m_appenderAttachedImpl != null)
+        if (m_appenderAttachedImpl is not null)
         {
           m_appenderAttachedImpl.RemoveAllAppenders();
           m_appenderAttachedImpl = null;
@@ -226,11 +188,11 @@ namespace log4net.Appender
     /// If you are discarding the appender you must call
     /// <see cref="IAppender.Close"/> on the appender removed.
     /// </remarks>
-    public virtual IAppender RemoveAppender(IAppender appender)
+    public virtual IAppender? RemoveAppender(IAppender? appender)
     {
-      lock (this)
+      lock (LockObj)
       {
-        if (appender != null && m_appenderAttachedImpl != null)
+        if (appender is not null && m_appenderAttachedImpl is not null)
         {
           return m_appenderAttachedImpl.RemoveAppender(appender);
         }
@@ -248,11 +210,11 @@ namespace log4net.Appender
     /// If you are discarding the appender you must call
     /// <see cref="IAppender.Close"/> on the appender removed.
     /// </remarks>
-    public virtual IAppender RemoveAppender(string name)
+    public virtual IAppender? RemoveAppender(string? name)
     {
-      lock (this)
+      lock (LockObj)
       {
-        if (name != null && m_appenderAttachedImpl != null)
+        if (name is not null && m_appenderAttachedImpl is not null)
         {
           return m_appenderAttachedImpl.RemoveAppender(name);
         }
@@ -260,15 +222,9 @@ namespace log4net.Appender
       return null;
     }
 
-    #endregion Implementation of IAppenderAttachable
-
-    #region Private Instance Fields
-
     /// <summary>
     /// Implementation of the <see cref="IAppenderAttachable"/> interface
     /// </summary>
-    private AppenderAttachedImpl m_appenderAttachedImpl;
-
-    #endregion Private Instance Fields
+    private AppenderAttachedImpl? m_appenderAttachedImpl;
   }
 }

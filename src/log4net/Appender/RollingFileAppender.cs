@@ -556,7 +556,7 @@ namespace log4net.Appender
 
         if (m_rollSize)
         {
-          if ((File != null) && ((CountingQuietTextWriter)QuietWriter).Count >= MaxFileSize)
+          if ((File is not null) && ((CountingQuietTextWriter)QuietWriter!).Count >= MaxFileSize)
           {
             RollOverSize();
           }
@@ -621,7 +621,7 @@ namespace log4net.Appender
         base.OpenFile(fileName, append);
 
         // Set the file size onto the counting writer
-        ((CountingQuietTextWriter)QuietWriter).Count = currentCount;
+        ((CountingQuietTextWriter)QuietWriter!).Count = currentCount;
       }
     }
 
@@ -1254,7 +1254,7 @@ namespace log4net.Appender
     {
       CloseFile(); // keep windows happy.
 
-      LogLog.Debug(declaringType, $"rolling over count [{((CountingQuietTextWriter)QuietWriter).Count}]");
+      LogLog.Debug(declaringType, $"rolling over count [{((CountingQuietTextWriter)QuietWriter!).Count}]");
       LogLog.Debug(declaringType, $"maxSizeRollBackups [{MaxSizeRollBackups}]");
       LogLog.Debug(declaringType, $"curSizeRollBackups [{CurrentSizeRollBackups}]");
       LogLog.Debug(declaringType, $"countDirection [{CountDirection}]");

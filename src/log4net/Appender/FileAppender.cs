@@ -69,7 +69,7 @@ namespace log4net.Appender
   /// is to obtain an exclusive write lock on the file until this appender is closed.
   /// The alternative models only hold a
   /// write lock while the appender is writing a logging event (<see cref="FileAppender.MinimalLock"/>)
-  /// or synchronize by using a named system wide Mutex (<see cref="FileAppender.InterProcessLock"/>).
+  /// or synchronize by using a named system-wide Mutex (<see cref="FileAppender.InterProcessLock"/>).
   /// </para>
   /// <para>
   /// All locking strategies have issues and you should seriously consider using a different strategy that
@@ -83,8 +83,6 @@ namespace log4net.Appender
   /// <author>Niall Daley</author>
   public class FileAppender : TextWriterAppender
   {
-    #region LockingStream Inner Class
-
     /// <summary>
     /// Write only <see cref="Stream"/> that uses the <see cref="LockingModelBase"/> 
     /// to manage access to an underlying resource.
@@ -117,17 +115,14 @@ namespace log4net.Appender
       private int m_lockLevel;
 
       public LockingStream(LockingModelBase locking)
-          : base()
       {
-        if (locking == null)
+        if (locking is null)
         {
-          throw new ArgumentException("Locking model may not be null", nameof(locking));
+          throw new ArgumentNullException(nameof(locking));
         }
 
         m_lockingModel = locking;
       }
-
-      #region Override Implementation of Stream
 
       protected override void Dispose(bool disposing)
       {
@@ -228,13 +223,9 @@ namespace log4net.Appender
         }
       }
 
-      #endregion Override Implementation of Stream
-
-      #region Locking Methods
-
       private Stream AssertLocked()
       {
-        if (m_realStream == null)
+        if (m_realStream is null)
         {
           throw new LockStateException("The file is not currently locked");
         }
@@ -253,7 +244,7 @@ namespace log4net.Appender
             m_realStream = m_lockingModel.AcquireLock();
           }
 
-          if (m_realStream != null)
+          if (m_realStream is not null)
           {
             m_lockLevel++;
             ret = true;
@@ -276,13 +267,7 @@ namespace log4net.Appender
           }
         }
       }
-
-      #endregion Locking Methods
     }
-
-    #endregion LockingStream Inner Class
-
-    #region Locking Models
 
     /// <summary>
     /// Locking model base class
@@ -726,7 +711,7 @@ namespace log4net.Appender
       /// </remarks>
       public override Stream? AcquireLock()
       {
-        if (m_mutex != null)
+        if (m_mutex is not null)
         {
           // TODO: add timeout?
           m_mutex.WaitOne();
@@ -735,7 +720,7 @@ namespace log4net.Appender
           m_recursiveWatch++;
 
           // should always be true (and fast) for FileStream
-          if (m_stream != null)
+          if (m_stream is not null)
           {
             if (m_stream.CanSeek)
             {
@@ -761,7 +746,7 @@ namespace log4net.Appender
       /// </summary>
       public override void ReleaseLock()
       {
-        if (m_mutex != null)
+        if (m_mutex is not null)
         {
           if (m_recursiveWatch > 0)
           {
@@ -780,7 +765,7 @@ namespace log4net.Appender
       /// </summary>
       public override void ActivateOptions()
       {
-        if (m_mutex == null)
+        if (m_mutex is null)
         {
           if (CurrentAppender is not null)
           {
@@ -810,7 +795,7 @@ namespace log4net.Appender
       /// </summary>
       public override void OnClose()
       {
-        if (m_mutex != null)
+        if (m_mutex is not null)
         {
           m_mutex.Dispose();
           m_mutex = null;
@@ -939,10 +924,6 @@ namespace log4net.Appender
       defaultLockingModelType = typeof(TLockingModel);
     }
 
-    #endregion Locking Models
-
-    #region Public Instance Constructors
-
     /// <summary>
     /// Default constructor
     /// </summary>
@@ -991,10 +972,6 @@ namespace log4net.Appender
         : this(layout, filename, true)
     {
     }
-
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
 
     /// <summary>
     /// Gets or sets the path to the file that logging will be written to.
@@ -1074,17 +1051,13 @@ namespace log4net.Appender
     /// There are three built in locking models, <see cref="FileAppender.ExclusiveLock"/>, <see cref="FileAppender.MinimalLock"/> and <see cref="FileAppender.InterProcessLock"/> .
     /// The first locks the file from the start of logging to the end, the 
     /// second locks only for the minimal amount of time when logging each message
-    /// and the last synchronizes processes using a named system wide Mutex.
+    /// and the last synchronizes processes using a named system-wide Mutex.
     /// </para>
     /// <para>
     /// The default locking model is the <see cref="FileAppender.ExclusiveLock"/>.
     /// </para>
     /// </remarks>
     public LockingModelBase LockingModel { get; set; } = (LockingModelBase)Activator.CreateInstance(defaultLockingModelType);
-
-    #endregion Public Instance Properties
-
-    #region Override implementation of AppenderSkeleton
 
     /// <summary>
     /// Activate the options on the file appender. 
@@ -1114,7 +1087,7 @@ namespace log4net.Appender
       LockingModel.CurrentAppender = this;
       LockingModel.ActivateOptions();
 
-      if (m_fileName != null)
+      if (m_fileName is not null)
       {
         using (SecurityContext.Impersonate(this))
         {
@@ -1129,10 +1102,6 @@ namespace log4net.Appender
         LogLog.Warn(declaringType, "FileAppender: Are you using FileAppender instead of ConsoleAppender?");
       }
     }
-
-    #endregion Override implementation of AppenderSkeleton
-
-    #region Override implementation of TextWriterAppender
 
     /// <summary>
     /// Closes any previously opened file and calls the parent's <see cref="TextWriterAppender.Reset"/>.
@@ -1239,7 +1208,7 @@ namespace log4net.Appender
     /// </remarks>
     protected override void WriteFooter()
     {
-      if (m_stream != null)
+      if (m_stream is not null)
       {
         //WriteFooter can be called even before a file is opened
         m_stream.AcquireLock();
@@ -1264,7 +1233,7 @@ namespace log4net.Appender
     /// </remarks>
     protected override void WriteHeader()
     {
-      if (m_stream != null)
+      if (m_stream is not null)
       {
         if (m_stream.AcquireLock())
         {
@@ -1290,7 +1259,7 @@ namespace log4net.Appender
     /// </remarks>
     protected override void CloseWriter()
     {
-      if (m_stream != null)
+      if (m_stream is not null)
       {
         m_stream.AcquireLock();
         try
@@ -1303,10 +1272,6 @@ namespace log4net.Appender
         }
       }
     }
-
-    #endregion Override implementation of TextWriterAppender
-
-    #region Public Instance Methods
 
     /// <summary>
     /// Closes the previously opened file.
@@ -1321,10 +1286,6 @@ namespace log4net.Appender
     {
       WriteFooterAndCloseWriter();
     }
-
-    #endregion Public Instance Methods
-
-    #region Protected Instance Methods
 
     /// <summary>
     /// Sets and <i>opens</i> the file where the log output will go. The specified file must be writable.
@@ -1345,8 +1306,7 @@ namespace log4net.Appender
       }
       catch (Exception e)
       {
-        ErrorHandler.Error("OpenFile(" + fileName + "," + append + ") call failed.", e,
-            ErrorCode.FileOpenFailure);
+        ErrorHandler.Error($"OpenFile({fileName},{append}) call failed.", e, ErrorCode.FileOpenFailure);
       }
     }
 
@@ -1397,7 +1357,7 @@ namespace log4net.Appender
         LockingModel.OpenFile(fileName, append, Encoding);
         m_stream = new LockingStream(LockingModel);
 
-        if (m_stream != null)
+        if (m_stream is not null)
         {
           m_stream.AcquireLock();
           try
@@ -1425,7 +1385,7 @@ namespace log4net.Appender
     /// <see cref="M:SetQWForFiles(TextWriter)"/> method.
     /// </para>
     /// <para>
-    /// This method can be overridden by sub classes that want to wrap the
+    /// This method can be overridden by subclasses that want to wrap the
     /// <see cref="Stream"/> in some way, for example to encrypt the output
     /// data using a <c>System.Security.Cryptography.CryptoStream</c>.
     /// </para>
@@ -1433,7 +1393,7 @@ namespace log4net.Appender
     protected virtual void SetQWForFiles(Stream fileStream)
     {
 #pragma warning disable CA2000 // Dispose objects before losing scope
-      StreamWriter writer = new StreamWriter(fileStream, Encoding);
+      StreamWriter writer = new(fileStream, Encoding);
 #pragma warning restore CA2000 // Dispose objects before losing scope
       SetQWForFiles(writer);
     }
@@ -1444,7 +1404,7 @@ namespace log4net.Appender
     /// <param name="writer">the writer over the file stream that has been opened for writing</param>
     /// <remarks>
     /// <para>
-    /// This method can be overridden by sub classes that want to
+    /// This method can be overridden by subclasses that want to
     /// wrap the <see cref="TextWriter"/> in some way.
     /// </para>
     /// </remarks>
@@ -1452,10 +1412,6 @@ namespace log4net.Appender
     {
       QuietWriter = new QuietTextWriter(writer, ErrorHandler);
     }
-
-    #endregion Protected Instance Methods
-
-    #region Protected Static Methods
 
     /// <summary>
     /// Convert a path into a fully qualified path.
@@ -1475,10 +1431,6 @@ namespace log4net.Appender
       return SystemInfo.ConvertToFullPath(path);
     }
 
-    #endregion Protected Static Methods
-
-    #region Private Instance Fields
-
     /// <summary>
     /// The name of the log file.
     /// </summary>
@@ -1489,10 +1441,6 @@ namespace log4net.Appender
     /// </summary>
     private LockingStream? m_stream;
 
-    #endregion Private Instance Fields
-
-    #region Private Static Fields
-
     /// <summary>
     /// The fully qualified type of the FileAppender class.
     /// </summary>
@@ -1501,7 +1449,5 @@ namespace log4net.Appender
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(FileAppender);
-
-    #endregion Private Static Fields
   }
 }

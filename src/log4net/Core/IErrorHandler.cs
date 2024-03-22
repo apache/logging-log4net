@@ -19,6 +19,8 @@
 
 using System;
 
+#nullable enable
+
 namespace log4net.Core
 {
   /// <summary>
@@ -47,7 +49,7 @@ namespace log4net.Core
     /// a parameter.
     /// </para>
     /// </remarks>
-    void Error(string message, Exception e, ErrorCode errorCode);
+    void Error(string message, Exception? e, ErrorCode errorCode);
 
     /// <summary>
     /// Prints the error message passed as a parameter.

@@ -23,7 +23,6 @@ using System.Runtime.InteropServices;
 using log4net.Util;
 using log4net.Core;
 
-
 namespace log4net.Appender
 {
   /// <summary>
@@ -129,32 +128,6 @@ namespace log4net.Appender
   /// <author>Gert Driesen</author>
   public class NetSendAppender : AppenderSkeleton
   {
-    #region Member Variables
-
-    /// <summary>
-    /// The DNS or NetBIOS name of the server on which the function is to execute.
-    /// </summary>
-    private string m_server;
-
-    /// <summary>
-    /// The sender of the network message.
-    /// </summary>
-    private string m_sender;
-
-    /// <summary>
-    /// The message alias to which the message should be sent.
-    /// </summary>
-    private string m_recipient;
-
-    /// <summary>
-    /// The security context to use for privileged calls
-    /// </summary>
-    private SecurityContext m_securityContext;
-
-    #endregion
-
-    #region Constructors
-
     /// <summary>
     /// Initializes the appender.
     /// </summary>
@@ -165,10 +138,6 @@ namespace log4net.Appender
     {
     }
 
-    #endregion
-
-    #region Properties
-
     /// <summary>
     /// Gets or sets the sender of the message.
     /// </summary>
@@ -178,11 +147,7 @@ namespace log4net.Appender
     /// <remarks>
     /// If this property is not specified, the message is sent from the local computer.
     /// </remarks>
-    public string Sender
-    {
-      get { return m_sender; }
-      set { m_sender = value; }
-    }
+    public string? Sender { get; set; }
 
     /// <summary>
     /// Gets or sets the message alias to which the message should be sent.
@@ -193,11 +158,7 @@ namespace log4net.Appender
     /// <remarks>
     /// This property should always be specified in order to send a message.
     /// </remarks>
-    public string Recipient
-    {
-      get { return m_recipient; }
-      set { m_recipient = value; }
-    }
+    public string? Recipient { get; set; }
 
     /// <summary>
     /// Gets or sets the DNS or NetBIOS name of the remote server on which the function is to execute.
@@ -213,11 +174,7 @@ namespace log4net.Appender
     /// If this property is not specified, the local computer is used. 
     /// </para>
     /// </remarks>
-    public string Server
-    {
-      get { return m_server; }
-      set { m_server = value; }
-    }
+    public string? Server { get; set; }
 
     /// <summary>
     /// Gets or sets the <see cref="SecurityContext"/> used to call the NetSend method.
@@ -233,15 +190,7 @@ namespace log4net.Appender
     /// of the current thread.
     /// </para>
     /// </remarks>
-    public SecurityContext SecurityContext
-    {
-      get { return m_securityContext; }
-      set { m_securityContext = value; }
-    }
-
-    #endregion
-
-    #region Implementation of IOptionHandler
+    public SecurityContext? SecurityContext { get; set; }
 
     /// <summary>
     /// Initialize the appender based on the options set.
@@ -267,20 +216,13 @@ namespace log4net.Appender
     {
       base.ActivateOptions();
 
-      if (this.Recipient == null)
+      if (Recipient is null)
       {
-        throw new ArgumentNullException("Recipient", "The required property 'Recipient' was not specified.");
+        throw new ArgumentNullException(nameof(Recipient), "The required property 'Recipient' was not specified.");
       }
 
-      if (m_securityContext == null)
-      {
-        m_securityContext = SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
-      }
+      SecurityContext ??= SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
     }
-
-    #endregion
-
-    #region Override implementation of AppenderSkeleton
 
     /// <summary>
     /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/> method.
@@ -295,15 +237,15 @@ namespace log4net.Appender
     [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
     protected override void Append(LoggingEvent loggingEvent)
     {
-      NativeError nativeError = null;
+      NativeError? nativeError = null;
 
       // Render the event in the callers security context
       string renderedLoggingEvent = RenderLoggingEvent(loggingEvent);
 
-      using (m_securityContext.Impersonate(this))
+      using (SecurityContext?.Impersonate(this))
       {
         // Send the message
-        int returnValue = NetMessageBufferSend(this.Server, this.Recipient, this.Sender, renderedLoggingEvent, renderedLoggingEvent.Length * Marshal.SystemDefaultCharSize);
+        int returnValue = NetMessageBufferSend(Server, Recipient!, Sender, renderedLoggingEvent, renderedLoggingEvent.Length * Marshal.SystemDefaultCharSize);
 
         // Log the error if the message could not be sent
         if (returnValue != 0)
@@ -313,30 +255,17 @@ namespace log4net.Appender
         }
       }
 
-      if (nativeError != null)
+      if (nativeError is not null)
       {
         // Handle the error over to the ErrorHandler
-        ErrorHandler.Error(nativeError.ToString() + " (Params: Server=" + this.Server + ", Recipient=" + this.Recipient + ", Sender=" + this.Sender + ")");
+        ErrorHandler.Error($"{nativeError} (Params: Server={Server}, Recipient={Recipient}, Sender={Sender})");
       }
     }
 
     /// <summary>
     /// This appender requires a <see cref="Layout"/> to be set.
     /// </summary>
-    /// <value><c>true</c></value>
-    /// <remarks>
-    /// <para>
-    /// This appender requires a <see cref="Layout"/> to be set.
-    /// </para>
-    /// </remarks>
-    protected override bool RequiresLayout
-    {
-      get { return true; }
-    }
-
-    #endregion
-
-    #region Stubs For Native Function Calls
+    protected override bool RequiresLayout => true;
 
     /// <summary>
     /// Sends a buffer of information to a registered message alias.
@@ -393,13 +322,12 @@ namespace log4net.Appender
     /// </para>
     /// </returns>
     [DllImport("netapi32.dll", SetLastError = true)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     protected static extern int NetMessageBufferSend(
-      [MarshalAs(UnmanagedType.LPWStr)] string serverName,
+      [MarshalAs(UnmanagedType.LPWStr)] string? serverName,
       [MarshalAs(UnmanagedType.LPWStr)] string msgName,
-      [MarshalAs(UnmanagedType.LPWStr)] string fromName,
+      [MarshalAs(UnmanagedType.LPWStr)] string? fromName,
       [MarshalAs(UnmanagedType.LPWStr)] string buffer,
       int bufferSize);
-
-    #endregion
   }
 }

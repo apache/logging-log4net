@@ -20,7 +20,6 @@
 using System;
 using System.IO;
 
-using log4net;
 using log4net.Core;
 
 namespace log4net.Layout
@@ -90,7 +89,7 @@ namespace log4net.Layout
     /// are formatted and appended.
     /// </para>
     /// </remarks>
-    string Header { get; }
+    string? Header { get; }
 
     /// <summary>
     /// The footer for the layout format.
@@ -102,7 +101,7 @@ namespace log4net.Layout
     /// have been formatted and appended.
     /// </para>
     /// </remarks>
-    string Footer { get; }
+    string? Footer { get; }
 
     /// <summary>
     /// Flag indicating if this layout handle exceptions
