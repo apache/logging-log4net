@@ -27,16 +27,12 @@
   <url>http://logging.apache.org/log4net/</url>
   <inceptionYear>2004</inceptionYear>
   <issueManagement>
-    <system>JIRA</system>
-    <url>https://issues.apache.org/jira/browse/LOG4NET</url>
+    <system>Github</system>
+    <url>https://github.com/apache/logging-log4net/issues</url>
   </issueManagement>
-  <ciManagement>
-    <system>Jenkins</system>
-    <url>https://builds.apache.org/job/log4net-trunk-build/</url>
-  </ciManagement>
   <mailingLists>
     <mailingList>
-      <name>log4net-user : log4net usage</name>
+      <name>log4net-user: log4net usage</name>
       <subscribe>log4net-user-subscribe@logging.apache.org</subscribe>
       <unsubscribe>log4net-user-unsubscribe@logging.apache.org</unsubscribe>
       <post>log4net-user@logging.apache.org</post>
@@ -47,19 +43,17 @@
       </otherArchives>
     </mailingList>
     <mailingList>
-      <name>dev : development of the logging projects including log4net</name>
+      <name>dev: development of the logging projects including log4net</name>
       <subscribe>dev-subscribe@logging.apache.org</subscribe>
       <unsubscribe>dev-unsubscribe@logging.apache.org</unsubscribe>
       <post>dev@logging.apache.org</post>
       <archive>https://lists.apache.org/list.html?dev@logging.apache.org</archive>
       <otherArchives>
         <otherArchive>http://mail-archives.apache.org/mod_mbox/logging-dev/</otherArchive>
-        <!--otherArchive>http://marc.info/?l=log4net-dev</otherArchive>
-        <otherArchive>http://dir.gmane.org/gmane.comp.apache.logging.log4net.devel</otherArchive-->
       </otherArchives>
     </mailingList>
     <mailingList>
-      <name>logging commits : all svn/git commits of the logging projects including log4net</name>
+      <name>logging commits: all git commits of the logging projects including log4net</name>
       <subscribe>commits-subscribe@logging.apache.org</subscribe>
       <unsubscribe>commits-unsubscribe@logging.apache.org</unsubscribe>
       <post>Read-Only List</post>
@@ -74,9 +68,9 @@
     </license>
   </licenses>
   <scm>
-    <connection>scm:git:http://git-wip-us.apache.org/repos/asf/logging-log4net.git</connection>
-    <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/logging-log4net.git</developerConnection>
-    <url>https://git-wip-us.apache.org/repos/asf?p=logging-log4net.git</url>
+    <connection>scm:git:https://github.com/apache/logging-log4net</connection>
+    <developerConnection>scm:git:https://github.com/apache/logging-log4net</developerConnection>
+    <url>https://github.com/apache/logging-log4net</url>
   </scm>
   <organization>
     <name>Apache Software Foundation</name>
@@ -140,30 +134,7 @@
         <artifactId>apache-rat-plugin</artifactId>
         <version>0.12</version>
         <configuration>
-          <excludes>
-            <!-- generated files -->
-            <exclude>**/TestResult.xml</exclude>
-            <exclude>**/*.suo</exclude>
-            <exclude>**/*.user</exclude>
-            <exclude>**/obj/**</exclude>
-            <exclude>bin/**</exclude>
-            <exclude>build/**</exclude>
-            <exclude>doc/sdk/**</exclude>
-            <exclude>src/log4net.xml</exclude>
-            <exclude>src/GeneratedAssemblyInfo.cs</exclude>
-            <exclude>src/site/resources/**</exclude>
-            <exclude>tests/bin/**</exclude>
-            <exclude>netstandard/*/bin/**</exclude>
-
-            <!-- really README files -->
-            <exclude>*.snk*</exclude>
-            <exclude>tests/lib/prerequisites.txt</exclude>
-            <exclude>CONTRIBUTING.md</exclude>
-            <exclude>ReleaseInstructions.txt</exclude>
-
-	    <!-- can't have comments in JSON -->
-	    <exclude>**/*.json</exclude>
-	  </excludes>
+		  <excludesFile>${basedir}/rat.excludesFile</excludesFile>
         </configuration>
       </plugin>
       <plugin>
