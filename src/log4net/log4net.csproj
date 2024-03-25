@@ -1,117 +1,118 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <PackageId>log4net</PackageId>
-    <Version>3.0.0</Version>
-    <Title>Apache log4net</Title>
-    <Product>Apache log4net</Product>
-    <Description>
-      log4net is a tool to help the programmer output log statements to a variety of output targets.
-      In case of problems with an application, it is helpful to enable logging so that the problem
-      can be located. With log4net it is possible to enable logging at runtime without modifying the
-      application binary. The log4net package is designed so that log statements can remain in
-      shipped code without incurring a high performance cost. It follows that the speed of logging
-      (or rather not logging) is crucial.
+    <PropertyGroup>
+        <PackageId>log4net</PackageId>
+        <Version>3.0.0</Version>
+        <PackageVersion>$(Version)</PackageVersion>
+        <Title>Apache log4net</Title>
+        <Product>Apache log4net</Product>
+        <Description>
+            log4net is a tool to help the programmer output log statements to a variety of output targets.
+            In case of problems with an application, it is helpful to enable logging so that the problem
+            can be located. With log4net it is possible to enable logging at runtime without modifying the
+            application binary. The log4net package is designed so that log statements can remain in
+            shipped code without incurring a high performance cost. It follows that the speed of logging
+            (or rather not logging) is crucial.
 
-      At the same time, log output can be so voluminous that it quickly becomes overwhelming.
-      One of the distinctive features of log4net is the notion of hierarchical loggers.
-      Using these loggers it is possible to selectively control which log statements are output
-      at arbitrary granularity.
+            At the same time, log output can be so voluminous that it quickly becomes overwhelming.
+            One of the distinctive features of log4net is the notion of hierarchical loggers.
+            Using these loggers it is possible to selectively control which log statements are output
+            at arbitrary granularity.
 
-      log4net is designed with two distinct goals in mind: speed and flexibility
-    </Description>
-    <Platforms>AnyCPU</Platforms>
-    <TargetFrameworks>net462;netstandard2.0</TargetFrameworks>
-    <Configurations>Debug;Release</Configurations>
-    <RootNamespace>log4net</RootNamespace>
-    <AssemblyName>log4net</AssemblyName>
-    <ProjectType>Local</ProjectType>
-    <OutputType>Library</OutputType>
-    <MapFileExtensions>true</MapFileExtensions>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\log4net.snk</AssemblyOriginatorKeyFile>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <OutputPath>..\..\build\$(Configuration)</OutputPath>
-    <PackageOutputPath>..\..\build\artifacts</PackageOutputPath>
-    <DocumentationFile>..\..\build\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-  </PropertyGroup>
-  <PropertyGroup Label="NuGet generation">
-    <Authors>The Apache Software Foundation</Authors>
-    <Copyright>Copyright 2004-2024 The Apache Software Foundation</Copyright>
-    <DevelopmentDependency>false</DevelopmentDependency>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageProjectUrl>https://logging.apache.org/log4net/</PackageProjectUrl>
-    <PackageIcon>package-icon.png</PackageIcon>
-    <PackageTags>logging log tracing logfiles</PackageTags>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/apache/logging-log4net</RepositoryUrl>
-    <Owners>Apache Logging Project</Owners>
-    <PackageVersion>$(Version)</PackageVersion>
-  </PropertyGroup>
-  <PropertyGroup>
-    <BaseAddress>285212672</BaseAddress>
-    <DebugType>portable</DebugType>
-    <Deterministic>true</Deterministic>
-    <FileAlignment>4096</FileAlignment>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/apache/logging-log4net</RepositoryUrl>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
-    <DefineConstants>TRACE;DEBUG;$(DefineConstants)</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)'=='Release' ">
-    <DefineConstants>TRACE;STRONG;$(DefineConstants)</DefineConstants>
-    <DebugType>none</DebugType>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-  </PropertyGroup>
-  <PropertyGroup />
-  <ItemGroup Condition="'$(TargetFramework)'=='net462'">
-    <Reference Update="System">
-      <Name>System</Name>
-    </Reference>
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Web">
-      <Name>System.Web</Name>
-    </Reference>
-    <Reference Update="System.Data">
-      <Name>System.Data</Name>
-    </Reference>
-    <Reference Update="System.Xml">
-      <Name>System.XML</Name>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\log4net.snk">
-      <Link>log4net.snk</Link>
-    </None>
-    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
-  </ItemGroup>
-  <ItemGroup Label="Packaging">
-    <Content Include="..\..\package-icon.png" PackagePath="package-icon.png">
-      <Link>package-icon.png</Link>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="4.0.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-  <Import Project="../MonoForFramework.targets" />
-  <Target Name="_ResolveCopyLocalNuGetPackagePdbsAndXml" Condition="$(CopyLocalLockFileAssemblies) == true" AfterTargets="ResolveReferences">
-    <!-- "Workaround" for missing '.pdb'-Files from NuGet Packages -->
-    <!-- https://github.com/dotnet/sdk/issues/1458#issuecomment-420456386 -->
-    <ItemGroup>
-      <ReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->'%(RootDir)%(Directory)%(Filename).pdb')" Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' != '' and Exists('%(RootDir)%(Directory)%(Filename).pdb')" />
-      <ReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->'%(RootDir)%(Directory)%(Filename).xml')" Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' != '' and Exists('%(RootDir)%(Directory)%(Filename).xml')" />
+            log4net is designed with two distinct goals in mind: speed and flexibility
+        </Description>
+        <Platforms>AnyCPU</Platforms>
+        <TargetFrameworks>net462;netstandard2.0</TargetFrameworks>
+        <Configurations>Debug;Release</Configurations>
+        <RootNamespace>log4net</RootNamespace>
+        <AssemblyName>log4net</AssemblyName>
+        <ProjectType>Local</ProjectType>
+        <OutputType>Library</OutputType>
+        <MapFileExtensions>true</MapFileExtensions>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>..\..\log4net.snk</AssemblyOriginatorKeyFile>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <OutputPath>..\..\build\$(Configuration)</OutputPath>
+        <PackageOutputPath>..\..\build\artifacts</PackageOutputPath>
+        <DocumentationFile>..\..\build\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    </PropertyGroup>
+    <PropertyGroup Label="NuGet generation">
+        <Authors>The Apache Software Foundation</Authors>
+        <Copyright>Copyright 2004-2024 The Apache Software Foundation</Copyright>
+        <DevelopmentDependency>false</DevelopmentDependency>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <PackageProjectUrl>https://logging.apache.org/log4net/</PackageProjectUrl>
+        <PackageIcon>package-icon.png</PackageIcon>
+        <PackageTags>logging log tracing logfiles</PackageTags>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/apache/logging-log4net</RepositoryUrl>
+        <Owners>Apache Logging Project</Owners>
+        <PackageVersion>$(Version)</PackageVersion>
+    </PropertyGroup>
+    <PropertyGroup>
+        <BaseAddress>285212672</BaseAddress>
+        <DebugType>portable</DebugType>
+        <Deterministic>true</Deterministic>
+        <FileAlignment>4096</FileAlignment>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RegisterForComInterop>false</RegisterForComInterop>
+        <RemoveIntegerChecks>false</RemoveIntegerChecks>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/apache/logging-log4net</RepositoryUrl>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
+        <DefineConstants>TRACE;DEBUG;$(DefineConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)'=='Release' ">
+        <DefineConstants>TRACE;STRONG;$(DefineConstants)</DefineConstants>
+        <DebugType>none</DebugType>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
+    <PropertyGroup />
+    <ItemGroup Condition="'$(TargetFramework)'=='net462'">
+        <Reference Update="System">
+            <Name>System</Name>
+        </Reference>
+        <Reference Include="System.Configuration" />
+        <Reference Include="System.Web">
+            <Name>System.Web</Name>
+        </Reference>
+        <Reference Update="System.Data">
+            <Name>System.Data</Name>
+        </Reference>
+        <Reference Update="System.Xml">
+            <Name>System.XML</Name>
+        </Reference>
     </ItemGroup>
-  </Target>
+    <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="..\..\log4net.snk">
+            <Link>log4net.snk</Link>
+        </None>
+        <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
+    <ItemGroup Label="Packaging">
+        <Content Include="..\..\package-icon.png" PackagePath="package-icon.png">
+            <Link>package-icon.png</Link>
+        </Content>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="4.0.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+    <Import Project="../MonoForFramework.targets" />
+    <Target Name="_ResolveCopyLocalNuGetPackagePdbsAndXml" Condition="$(CopyLocalLockFileAssemblies) == true" AfterTargets="ResolveReferences">
+        <!-- "Workaround" for missing '.pdb'-Files from NuGet Packages -->
+        <!-- https://github.com/dotnet/sdk/issues/1458#issuecomment-420456386 -->
+        <ItemGroup>
+            <ReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->'%(RootDir)%(Directory)%(Filename).pdb')" Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' != '' and Exists('%(RootDir)%(Directory)%(Filename).pdb')" />
+            <ReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->'%(RootDir)%(Directory)%(Filename).xml')" Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' != '' and Exists('%(RootDir)%(Directory)%(Filename).xml')" />
+        </ItemGroup>
+    </Target>
 </Project>

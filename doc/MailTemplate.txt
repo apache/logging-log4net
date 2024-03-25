@@ -1,0 +1,19 @@
+To: dev@logging.apache.org
+Subject: [VOTE] Release Apache Log4net 2.0.17
+
+This is a vote to release the Apache Log4net 2.0.17.
+
+Website: https://logging.staged.apache.org/log4net/release/release-notes.html
+GitHub: https://github.com/apache/logging-log4net
+GitHub release (pre-release): https://github.com/apache/logging-log4net/releases/tag/2.0.17-rc1
+Distribution: https://dist.apache.org/repos/dist/dev/logging/log4net
+
+Please download, test, and cast your votes on this mailing list.
+
+[ ] +1, release the artifacts
+[ ] -1, don't release, because...
+
+This vote is open for 72 hours and will pass unless getting a
+net negative vote count. All votes are welcome and we encourage
+everyone to test the release, but only the Logging Services PMC
+votes are officially counted.

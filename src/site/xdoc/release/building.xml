@@ -17,18 +17,18 @@ limitations under the License.
 -->
 <document>
 
-  <properties>
-    <author email="nicko at apache dot org">Nicko Cadell</author>
-    <title>Apache log4net: Building log4net</title>
-  </properties>
+    <properties>
+        <author email="nicko at apache dot org">Nicko Cadell</author>
+        <title>Apache log4net: Building log4net</title>
+    </properties>
 
-  <meta name="keywords" content="building log4net, log4net" />
+    <meta name="keywords" content="building log4net, log4net" />
 
-  <body>
-    <section id="main" name="Building Apache log4net&#x2122;">
-      <p>
-        see <a href="https://github.com/apache/logging-log4net/blob/master/doc/BUILDING.md">BUILDING.md</a>
-      </p>
-    </section>
-  </body>
+    <body>
+        <section id="main" name="Building Apache log4net&#x2122;">
+            <p>
+                see <a href="https://github.com/apache/logging-log4net/blob/master/doc/BUILDING.md">BUILDING.md</a>
+            </p>
+        </section>
+    </body>
 </document>

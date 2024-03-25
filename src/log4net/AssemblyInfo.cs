@@ -47,11 +47,11 @@ using System.Runtime.CompilerServices;
 //
 
 #if NET462_OR_GREATER
-[assembly: AssemblyInformationalVersion("2.0.16.0-.NET 4.6.2")]
+[assembly: AssemblyInformationalVersion("3.0.0.0-.NET 4.6.2")]
 [assembly: AssemblyTitle("Apache log4net for .NET Framework 4.6.2")]
 #endif
 #if NETSTANDARD2_0_OR_GREATER
-[assembly: AssemblyInformationalVersion("2.0.16.0-.NET Standard 2.0")]
+[assembly: AssemblyInformationalVersion("3.0.0.0-.NET Standard 2.0")]
 [assembly: AssemblyTitle("Apache log4net for .NET Standard 2.0")]
 #endif
 
