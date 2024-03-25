@@ -27,18 +27,18 @@ limitations under the License.
   <body>
 
     <section id="main" name="Apache log4net&#x2122; Release Notes">
-      <section id="2.0.17" name="2.0.17">
+      <section id="a2.0.17" name="2.0.17">
         Apache log4net 2.0.16 addresses reported issues:
-        <section id="2.0.17-bug" name="Bug fixes">
+        <section id="a2.0.17-bug" name="Bug fixes">
           <ul>
             <li>
               <a href="https://github.com/apache/logging-log4net/issues/118">NullRefException from shutdown in 2.0.16</a> fixed in <a href="https://github.com/apache/logging-log4net/pull/120">Fast fix for NullRefException from FileAppender"</a> by (by @erikmav)"</li>
           </ul>
         </section>
       </section>
-      <section id="2.0.16" name="2.0.16">
+      <section id="a2.0.16" name="2.0.16">
         Apache log4net 2.0.16 addresses reported issues:
-        <section id="2.0.16-bug" name="Bug fixes">
+        <section id="a2.0.16-bug" name="Bug fixes">
           <ul>
             <li>
               <a href="https://github.com/apache/logging-log4net/pull/103">Support converting '.NET TP Worker' to the numeric thread ID on .NET 8+</a> (by @erikmav)
@@ -51,7 +51,7 @@ limitations under the License.
             </li>
           </ul>
         </section>
-        <section id="2.0.16-enhancements" name="Enhancements">
+        <section id="a2.0.16-enhancements" name="Enhancements">
           <ul>
             <li>
               <a href="https://github.com/apache/logging-log4net/pull/89">adding extension points for revising logged content</a> (by @freeandnil)
@@ -74,14 +74,14 @@ limitations under the License.
           </ul>
         </section>
       </section>
-      <section id="2.0.15" name="2.0.15">
+      <section id="a2.0.15" name="2.0.15">
         Attention: .NET 3.5 Client Profile is <i>no longer supported</i>. I'm really sorry, I've tried
         to keep as many of the legacy targets available as possible, but after spending another 4 or so
         hours trying to get net35-client to build on any machine, I've given up - as far as I'm aware,
         this should only affect Windows XP clients. I'm afraid 2.0.14 was the end of the road for you.
 
         Apache log4net 2.0.15 addresses reported issues:
-        <section id="2.0.15-bug" name="Bug fixes">
+        <section id="a2.0.15-bug" name="Bug fixes">
           <ul>
             <li>
               Improper usage of xml namespacing for netfx targets after a netstandard update (
@@ -98,7 +98,7 @@ limitations under the License.
             </li>
           </ul>
         </section>
-        <section id="2.0.15-enhancements" name="Enhancements">
+        <section id="a2.0.15-enhancements" name="Enhancements">
           <ul>
             <li>
               <a href="https://github.com/apache/logging-log4net/pull/81">Enforce TLS1.2 in the ps1 scripts provided for dev use</a>
@@ -113,10 +113,10 @@ limitations under the License.
           </ul>
         </section>
       </section>
-      <section id="2.0.14" name="2.0.14">
+      <section id="a2.0.14" name="2.0.14">
         Apache log4net 2.0.14 is a minor release to address some reported issues
         and accept a pull request provided by a community member:
-        <section id="2.0.14-bug" name="Bug fixes">
+        <section id="a2.0.14-bug" name="Bug fixes">
           <ul>
             <li>
               <a href="https://github.com/apache/logging-log4net/pull/77">Pull request</a> by @NicholasNoise to address issues with logging via ado appender to PostgreSQL
@@ -133,10 +133,10 @@ limitations under the License.
           </ul>
         </section>
       </section>
-      <section id="2.0.13" name="2.0.13">
+      <section id="a2.0.13" name="2.0.13">
         Apache log4net 2.0.13 is a minor release to address some reported issues
         and accept some pull requests provided by community members:
-        <section id="2.0.13-bug" name="Bug fixes">
+        <section id="a2.0.13-bug" name="Bug fixes">
           <ul>
             <li>
               Addresses issue [<a href="https://issues.apache.org/jira/browse/LOG4NET-583">LOG4NET-583</a>] with proposed solution by Emmo Emminghaus,
@@ -153,12 +153,12 @@ limitations under the License.
           </ul>
         </section>
       </section>
-      <section id="2.0.12" name="2.0.12">
+      <section id="a2.0.12" name="2.0.12">
         <p>
           Apache log4net 2.0.12 is a minor fix release to address reported issues on
           non-windows platforms.
         </p>
-        <section id="2.0.12-bug" name="Bug Fixes">
+        <section id="a2.0.12-bug" name="Bug Fixes">
           <ul>
             <li>
               Addresses the issues reported in
@@ -172,17 +172,17 @@ limitations under the License.
           </ul>
         </section>
       </section>
-      <section id="2.0.11" name="2.0.11">
+      <section id="a2.0.11" name="2.0.11">
         Apache log4net 2.0.11 fixes incorrect version strings within the released
         binaries and contains some minor fixes to correctly dispose of StreamWriters
         used during log flushing, thanks to community member @NicholasNoise
       </section>
-      <section id="2.0.10" name="2.0.10">
+      <section id="a2.0.10" name="2.0.10">
         <p>
           Apache log4net 2.0.10 improves <code>netstandard2.0</code> support
           thanks to community member @NicholasNoise.
         </p>
-        <section id="2.0.10-bug" name="Bug Fixes">
+        <section id="a2.0.10-bug" name="Bug Fixes">
           <ul>
             <li>
               [<a href="https://issues.apache.org/jira/browse/LOG4NET-575">LOG4NET-575</a>]
@@ -194,13 +194,13 @@ limitations under the License.
         </section>
       </section>
 
-      <section id="2.0.9" name="2.0.9">
+      <section id="a2.0.9" name="2.0.9">
         <p>
           Apache log4net 2.0.9 adds <code>netstandard2.0</code> support
           and restructures the project to enable easier build as well as build
           at AppVeyer. Project files have been updated to the modern Sdk format.
         </p>
-        <section id="2.0.9-bug" name="Bug Fixes">
+        <section id="a2.0.9-bug" name="Bug Fixes">
           <ul>
             <li>
               [<a href="https://issues.apache.org/jira/browse/LOG4NET-559">LOG4NET-559</a>] Add null
@@ -213,7 +213,7 @@ limitations under the License.
           </ul>
         </section>
       </section>
-      <section id="2.0.8" name="2.0.8">
+      <section id="a2.0.8" name="2.0.8">
         <p>
           Apache log4net 2.0.8 fixes a
           <code>LockRecursionException</code>
@@ -226,7 +226,7 @@ limitations under the License.
           <code>CallContext</code>.
         </p>
 
-        <section id="2.0.8-bug" name="Bug Fixes">
+        <section id="a2.0.8-bug" name="Bug Fixes">
           <ul>
             <li>
               [<a href='https://issues.apache.org/jira/browse/LOG4NET-466'>LOG4NET-466</a>] - &quot;LockRecursionException:
@@ -247,7 +247,7 @@ limitations under the License.
           </ul>
         </section>
 
-        <section id="2.0.8-new" name="New Features">
+        <section id="a2.0.8-new" name="New Features">
           <ul>
             <li>
               [<a href='https://issues.apache.org/jira/browse/LOG4NET-553'>LOG4NET-553</a>] -
@@ -258,7 +258,7 @@ limitations under the License.
         </section>
       </section>
 
-      <section id="2.0.7" name="2.0.7">
+      <section id="a2.0.7" name="2.0.7">
         <p>
           Apache log4net 2.0.7 fixes a glitch in nuget packaging and
           is otherwise identical to 2.0.6 (apart from the copyright
@@ -266,7 +266,7 @@ limitations under the License.
           package there is no reason to upgrade.
         </p>
 
-        <section id="2.0.7-bug" name="Bug Fixes">
+        <section id="a2.0.7-bug" name="Bug Fixes">
           <ul>
             <li>
               [<a href='https://issues.apache.org/jira/browse/LOG4NET-540'>LOG4NET-540</a>] - nuget
@@ -276,7 +276,7 @@ limitations under the License.
         </section>
       </section>
 
-      <section id="2.0.6" name="2.0.6">
+      <section id="a2.0.6" name="2.0.6">
 
         <p>
           The Apache log4net team is now responsible for the nuget
@@ -302,7 +302,7 @@ limitations under the License.
           </a> for details.
         </p>
 
-        <section id="2.0.6-bug" name="Bug Fixes">
+        <section id="a2.0.6-bug" name="Bug Fixes">
           <ul>
             <li>
               [<a href='https://issues.apache.org/jira/browse/LOG4NET-508'>LOG4NET-508</a>] - NAnt release
@@ -329,7 +329,7 @@ limitations under the License.
             </li>
           </ul>
         </section>
-        <section id="2.0.6-enh" name="Improvements">
+        <section id="a2.0.6-enh" name="Improvements">
           <ul>
             <li>
               [<a href='https://issues.apache.org/jira/browse/LOG4NET-530'>LOG4NET-530</a>] - Use UTC
@@ -338,7 +338,7 @@ limitations under the License.
           </ul>
         </section>
 
-        <section id="2.0.6-new" name="New Features">
+        <section id="a2.0.6-new" name="New Features">
           <ul>
             <li>
               [<a href='https://issues.apache.org/jira/browse/LOG4NET-467'>LOG4NET-467</a>] - Is .NET
@@ -358,8 +358,8 @@ limitations under the License.
         </section>
       </section>
 
-      <section id="1.2.15" name="1.2.15">
-        <section id="1.2.15-bug" name="Bug Fixes">
+      <section id="a1.2.15" name="1.2.15">
+        <section id="a1.2.15-bug" name="Bug Fixes">
           <ul>
             <li>
               [<a href='https://issues.apache.org/jira/browse/LOG4NET-462'>LOG4NET-462</a>] -
@@ -395,8 +395,8 @@ limitations under the License.
         </section>
       </section>
 
-      <section id="1.2.14" name="1.2.14">
-        <section id="1.2.14-bug" name="Bug Fixes">
+      <section id="a1.2.14" name="1.2.14">
+        <section id="a1.2.14-bug" name="Bug Fixes">
           <ul>
             <li>
               [<a href='https://issues.apache.org/jira/browse/LOG4NET-408'>LOG4NET-408</a>] - Correction
@@ -438,7 +438,7 @@ limitations under the License.
           </ul>
         </section>
 
-        <section id="1.2.14-enh" name="Improvements">
+        <section id="a1.2.14-enh" name="Improvements">
           <ul>
             <li>
               [<a href='https://issues.apache.org/jira/browse/LOG4NET-456'>LOG4NET-456</a>] - Include
@@ -453,7 +453,7 @@ limitations under the License.
           </ul>
         </section>
 
-        <section id="1.2.14-new" name="New Features">
+        <section id="a1.2.14-new" name="New Features">
           <ul>
             <li>
               [<a href='https://issues.apache.org/jira/browse/LOG4NET-473'>LOG4NET-473</a>] - Option for
@@ -464,9 +464,9 @@ limitations under the License.
         </section>
       </section>
 
-      <section id="1.2.13" name="1.2.13">
+      <section id="a1.2.13" name="1.2.13">
 
-        <section id="1.2.13-bug" name="Bug Fixes">
+        <section id="a1.2.13-bug" name="Bug Fixes">
           <ul>
             <li>
               [<a href='https://issues.apache.org/jira/browse/LOG4NET-132'>LOG4NET-132</a>] - Environment
@@ -500,7 +500,7 @@ limitations under the License.
 
         </section>
 
-        <section id="1.2.13-enh" name="Improvements">
+        <section id="a1.2.13-enh" name="Improvements">
 
           <ul>
             <li>
@@ -512,7 +512,7 @@ limitations under the License.
         </section>
       </section>
 
-      <section id="1.2.12" name="1.2.12">
+      <section id="a1.2.12" name="1.2.12">
 
         <p>
           The binary distributions no longer contain assemblies
@@ -520,7 +520,7 @@ limitations under the License.
           those yourself using the source distribution.
         </p>
 
-        <section id="1.2.12-bug" name="Bug Fixes">
+        <section id="a1.2.12-bug" name="Bug Fixes">
           <ul>
             <li>
               [<a href='https://issues.apache.org/jira/browse/LOG4NET-148'>LOG4NET-148</a>] -
@@ -663,7 +663,7 @@ limitations under the License.
           </ul>
         </section>
 
-        <section id="1.2.12-enh" name="Improvements">
+        <section id="a1.2.12-enh" name="Improvements">
           <ul>
             <li>
               [<a href='https://issues.apache.org/jira/browse/LOG4NET-222'>LOG4NET-222</a>] - [PATCH]
@@ -731,7 +731,7 @@ limitations under the License.
           </ul>
         </section>
 
-        <section id="1.2.12-new" name="New Features">
+        <section id="a1.2.12-new" name="New Features">
           <ul>
             <li>
               [<a href='https://issues.apache.org/jira/browse/LOG4NET-290'>LOG4NET-290</a>] - Add
@@ -746,7 +746,7 @@ limitations under the License.
         </section>
       </section>
 
-      <section id="1.2.11" name="1.2.11">
+      <section id="a1.2.11" name="1.2.11">
         <p>
           log4net 1.2.11 is not only a bugfix release, it also
           adds support for Microsoft&#xae; .NET 4.0 as well as the client profiles
@@ -767,7 +767,7 @@ limitations under the License.
           distribution.
         </p>
 
-        <section id="1.2.11-breaking" name="Breaking Changes">
+        <section id="a1.2.11-breaking" name="Breaking Changes">
           <p>
             The signature of
             <code>ILoggerFactory.CreateLogger</code>
@@ -775,7 +775,7 @@ limitations under the License.
           </p>
         </section>
 
-        <section id="1.2.11-bug" name="Bug Fixes">
+        <section id="a1.2.11-bug" name="Bug Fixes">
           <ul>
             <li>
               [<a href='https://issues.apache.org/jira/browse/LOG4NET-76'>LOG4NET-76</a>] -
@@ -936,7 +936,7 @@ limitations under the License.
           </ul>
         </section>
 
-        <section id="1.2.11-enh" name="Improvements">
+        <section id="a1.2.11-enh" name="Improvements">
           <ul>
             <li>
               [<a href='https://issues.apache.org/jira/browse/LOG4NET-31'>LOG4NET-31</a>] - Allow user to
@@ -1029,7 +1029,7 @@ limitations under the License.
           </ul>
 
         </section>
-        <section id="1.2.11-new" name="New Features">
+        <section id="a1.2.11-new" name="New Features">
           <ul>
             <li>
               The various static <code>Configure</code> methods of the <code>Configurator</code> classes
@@ -1098,9 +1098,9 @@ limitations under the License.
 
       </section>
 
-      <section id="1.2.10" name="1.2.10">
+      <section id="a1.2.10" name="1.2.10">
 
-        <section id="1.2.10-bug" name="Bug Fixes">
+        <section id="a1.2.10-bug" name="Bug Fixes">
           <ul>
             <li>
               [<a href='http://issues.apache.org/jira/browse/LOG4NET-21'>LOG4NET-21</a>] -
@@ -1210,7 +1210,7 @@ limitations under the License.
           </ul>
         </section>
 
-        <section id="1.2.10-new" name="New Features">
+        <section id="a1.2.10-new" name="New Features">
           <ul>
             <li>
               [<a href='http://issues.apache.org/jira/browse/LOG4NET-11'>LOG4NET-11</a>] - Add Flush
@@ -1237,7 +1237,7 @@ limitations under the License.
           </ul>
         </section>
 
-        <section id="1.2.10-enh" name="Improvements">
+        <section id="a1.2.10-enh" name="Improvements">
           <ul>
             <li>
               [<a href='http://issues.apache.org/jira/browse/LOG4NET-3'>LOG4NET-3</a>] - Support per event
@@ -1301,9 +1301,9 @@ limitations under the License.
 
       </section>
 
-      <section id="1.2.9" name="1.2.9 Beta">
+      <section id="a1.2.9" name="1.2.9 Beta">
 
-        <section id="1.2.9-breaking" name="Breaking Changes">
+        <section id="a1.2.9-breaking" name="Breaking Changes">
           <h3>Renamed namespaces</h3>
           <p>
             Renamed namespace <span class="code">log4net.spi</span> to <span class="code">
@@ -1358,7 +1358,7 @@ limitations under the License.
           </p>
         </section>
 
-        <section id="1.2.9-new" name="New Features">
+        <section id="a1.2.9-new" name="New Features">
           <h3>New CLI build</h3>
           <p>
             A new log4net assembly is built that targets all CLI 1.0 compatible runtimes.
@@ -1640,7 +1640,7 @@ limitations under the License.
           </p>
         </section>
 
-        <section id="1.2.9-other" name="Other Changes">
+        <section id="a1.2.9-other" name="Other Changes">
           <h3>FxCop compliance</h3>
           <p>
             Updates to bring the internal code in line with the current FxCop rules.
@@ -1684,7 +1684,7 @@ limitations under the License.
 
       </section>
 
-      <section id="1.2.0b8" name="1.2.0 Beta 8">
+      <section id="a1.2.0" name="1.2.0">
         <h3>
           Changed assembly name to
           <span class="code">log4net</span>
@@ -1770,9 +1770,6 @@ limitations under the License.
           check that only logs the first 32000 characters from the rendered
           message.
         </p>
-      </section>
-
-      <section id="1.2.0b7" name="1.2.0 Beta 7">
         <h3>Updated to support the Microsoft .NET Framework 1.1 Final</h3>
         <p>
           Updated to support the Microsoft .NET Framework 1.1 Final Beta (1.1.4322).
@@ -1820,9 +1817,6 @@ limitations under the License.
           <a href="config-examples.html">Example Appender Configuration</a>
           document for more information.
         </p>
-      </section>
-
-      <section id="1.2.0b6" name="1.2.0 Beta 6">
         <h3>Added support for multiple frameworks</h3>
         <p>
           log4net 1.2.0 beta 6 adds support for the the following frameworks:
@@ -1997,9 +1991,6 @@ limitations under the License.
         <h3>Removed obsolete methods</h3>
         <h3>Lots of updates to improve our compliance with FxCop</h3>
         <h3>Improved SDK documentation</h3>
-      </section>
-
-      <section id="1.2.0b5" name="1.2.0 Beta 5">
         <h3>
           Fixed Exception thrown when DOM Configurator called with a null XML
           Element.
@@ -2007,9 +1998,6 @@ limitations under the License.
         <p>This occurred if the configuration file did not have a log4net section defined.</p>
         <h3>Made level lookup case insensitive</h3>
         <h3>Prevented the Hierarchy's Threshold level from being set to a null reference</h3>
-      </section>
-
-      <section id="1.2.0b4" name="1.2.0 Beta 4">
         <h3>Added event specific properties to the logging event object</h3>
         <p>
           Appenders can add additional information to the events they are logging. The
@@ -2065,9 +2053,6 @@ limitations under the License.
         <h3>Upgraded to use NUnit 2.0</h3>
         <h3>File appenders can specify the encoding to use for the file</h3>
         <h3>Added strong named configuration</h3>
-      </section>
-
-      <section id="1.2.0b3" name="1.2.0 Beta 3">
         <h3>Added log4net.Ext.Trace extension</h3>
         <p>This is a separate assembly that adds a trace level to log4net.</p>
         <h3>
@@ -2099,16 +2084,10 @@ limitations under the License.
           especially when developing web applications (ASP.NET).
         </p>
         <h3>A few good bug fixes!</h3>
-      </section>
-
-      <section id="1.2.0b2" name="1.2.0 Beta 2">
         <h3>Added ADONetAppender</h3>
         <p>Thanks to TechnologyOneCorp.com.</p>
         <h3>Added TraceLogAssembly extensibility example</h3>
         <h3>Lots of bug fixes</h3>
-      </section>
-
-      <section id="1.2.0b1" name="1.2.0 Beta 1">
         <h3>Added 6 new examples</h3>
         <h3>Split Category class into Logger and LogManager classes</h3>
         <p>

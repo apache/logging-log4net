@@ -21,56 +21,54 @@
          xsi:schemaLocation="http://maven.apache.org/DECORATION/1.4.0 http://maven.apache.org/xsd/decoration-1.4.0.xsd">
   <body>
     <links>
-      <item name="Logging Wiki" href="https://wiki.apache.org/logging"/>
       <item name="Apache" href="https://www.apache.org/"/>
       <item name="Logging Services" href="https://logging.apache.org/"/>
       <item name="GitHub" href="https://github.com/apache/logging-log4net/"/>
     </links>
 
-        <menu name="Apache log4net" inherit="top" img="icon-home">
-            <item name="About" href="/index.html"/>
-            <item name="Download" href="/download_log4net.html"/>
-            <item name="Security Reports" href="/release/security-reports.html"/>
-            <item name="Release Notes" href="/release/release-notes.html"/>
-            <item name="License" href="/license.html"/>
-        </menu>
+    <menu name="Apache log4net" inherit="top" img="icon-home">
+      <item name="About" href="/index.html"/>
+      <item name="Download" href="/download_log4net.html"/>
+      <item name="Security Reports" href="/release/security-reports.html"/>
+      <item name="Release Notes" href="/release/release-notes.html"/>
+      <item name="License" href="/license.html"/>
+    </menu>
 
-        <menu name="Documentation" inherit="top" img="icon-file">
-            <item name="Features" href="/release/features.html"/>
-            <item name="Supported Frameworks" href="/release/framework-support.html"/>
-            <item name="Example Apps" href="/release/example-apps.html"/>
-            <item name="Config Examples" href="/release/config-examples.html"/>
-            <item name="Building" href="/release/building.html"/>
-            <item name="FAQ" href="/release/faq.html"/>
-        </menu>
+    <menu name="Documentation" inherit="top" img="icon-file">
+      <item name="Features" href="/release/features.html"/>
+      <item name="Supported Frameworks" href="/release/framework-support.html"/>
+      <item name="Example Apps" href="/release/example-apps.html"/>
+      <item name="Config Examples" href="/release/config-examples.html"/>
+      <item name="Building" href="/release/building.html"/>
+      <item name="FAQ" href="/release/faq.html"/>
+    </menu>
 
-        <menu name="Manual" inherit="top" img="icon-book">
-            <item name="Introduction" href="/release/manual/introduction.html"/>
-            <item name="Configuration" href="/release/manual/configuration.html"/>
-            <item name="Contexts" href="/release/manual/contexts.html"/>
-            <item name="Plugins" href="/release/manual/plugins.html"/>
-            <item name="Repositories" href="/release/manual/repositories.html"/>
-            <item name="Internals" href="/release/manual/internals.html"/>
-        </menu>
+    <menu name="Manual" inherit="top" img="icon-book">
+      <item name="Introduction" href="/release/manual/introduction.html"/>
+      <item name="Configuration" href="/release/manual/configuration.html"/>
+      <item name="Contexts" href="/release/manual/contexts.html"/>
+      <item name="Plugins" href="/release/manual/plugins.html"/>
+      <item name="Repositories" href="/release/manual/repositories.html"/>
+      <item name="Internals" href="/release/manual/internals.html"/>
+    </menu>
 
-        <menu name="For Contributors" inherit="top" img="icon-pencil">
-            <item name="Mailing Lists" href="/mail-lists.html"/>
-            <item name="Issue Tracking" href="/issue-tracking.html"/>
-            <item name="Repository" href="/source-repository.html"/>
-            <item name="Continuous Integration" href="/integration.html"/>
-        </menu>
+    <menu name="For Contributors" inherit="top" img="icon-pencil">
+      <item name="Mailing Lists" href="/mail-lists.html"/>
+      <item name="Issue Tracking" href="/issue-tracking.html"/>
+      <item name="Repository" href="/source-repository.html"/>
+    </menu>
 
-                <menu name="Project Reports" inherit="top" img="icon-cog">
-                  <item name="RAT Report" href="/rat-report.html" />
-                </menu>
+    <menu name="Project Reports" inherit="top" img="icon-cog">
+      <item name="RAT Report" href="/rat-report.html" />
+    </menu>
 
-        <menu name="Apache" inherit="top" img="icon-info-sign">
-            <item name="Home" href="http://www.apache.org/"/>
-            <item name="License" href="http://www.apache.org/licenses/"/>
-            <item name="Sponsorship" href="http://www.apache.org/foundation/sponsorship.html"/>
-            <item name="Thanks" href="http://www.apache.org/foundation/thanks.html"/>
-            <item name="Security" href="http://www.apache.org/security/"/>
-            <item name="Conferences" href="http://www.apachecon.com"/>
-        </menu>
-    </body>
+    <menu name="Apache" inherit="top" img="icon-info-sign">
+      <item name="Home" href="http://www.apache.org/"/>
+      <item name="License" href="http://www.apache.org/licenses/"/>
+      <item name="Sponsorship" href="http://www.apache.org/foundation/sponsorship.html"/>
+      <item name="Thanks" href="http://www.apache.org/foundation/thanks.html"/>
+      <item name="Security" href="http://www.apache.org/security/"/>
+      <item name="Conferences" href="http://www.apachecon.com"/>
+    </menu>
+</body>
 </project>
