@@ -28,11 +28,11 @@
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: System.Reflection.AssemblyVersion("2.0.16.0")]
+[assembly: System.Reflection.AssemblyVersion("2.0.17.0")]
 
 #if !NETCF
 #if !SSCLI
-[assembly: System.Reflection.AssemblyFileVersion("2.0.16.0")]
+[assembly: System.Reflection.AssemblyFileVersion("2.0.17.0")]
 #endif
 #endif
 

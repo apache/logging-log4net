@@ -33,7 +33,7 @@ limitations under the License.
     <!-- SHFB properties -->
     <FrameworkVersion>.NET Framework 3.5</FrameworkVersion>
     <OutputPath>doc\sdk\net\4.0\</OutputPath>
-    <HtmlHelpName>log4net-sdk-2.0.16</HtmlHelpName>
+    <HtmlHelpName>log4net-sdk-2.0.17</HtmlHelpName>
     <Language>en-US</Language>
     <SyntaxFilters>Standard</SyntaxFilters>
     <SdkLinkTarget>Blank</SdkLinkTarget>

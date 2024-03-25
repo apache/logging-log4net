@@ -65,39 +65,12 @@ limitations under the License.
 
             <section id="frameworks" name="Support for multiple frameworks">
                 <p>
-                    log4net runs on all ECMA CLI 1.0 compatible runtimes.
                     log4net has specific builds for the following frameworks:
                 </p>
                 <ul>
-                    <li>.NET Core 1.0 - using netstandard-1.3</li>
-                    <li>Microsoft&#xae; .NET Framework 1.0<sup><a href="#no-bin-support">*</a></sup></li>
-                    <li>Microsoft .NET Framework 1.1<sup><a href="#no-bin-support">*</a></sup></li>
-                    <li>Microsoft .NET Framework 2.0</li>
-                    <li>Microsoft .NET Framework 3.5</li>
-                    <li>Microsoft .NET Framework 4.0</li>
-                    <li>Microsoft .NET Framework 4.5</li>
-                    <li>Microsoft .NET Framework 3.5 Client Profile</li>
-                    <li>Microsoft .NET Framework 4.0 Client Profile</li>
-                    <li>Microsoft .NET Compact Framework 1.0<sup><a href="#no-bin-support">*</a></sup></li>
-                    <li>Microsoft .NET Compact Framework 2.0<sup><a href="#no-bin-support">*</a></sup></li>
-                    <li>Mono 1.0<sup><a href="#no-bin-support">*</a></sup></li>
-                    <li>Mono 2.0</li>
-                    <li>Mono 3.5</li>
-                    <li>Mono 4.0</li>
-                    <li>Microsoft Shared Source CLI 1.0<sup><a href="#no-bin-support">*</a></sup></li>
-                    <li>CLI 1.0 Compatible<sup><a href="#no-bin-support">*</a></sup></li>
+                    <li>.NET Core 6 or higher - using netstandard-2.0</li>
+                    <li>Microsoft .NET Framework 4.6.2 or higher</li>
                 </ul>
-                <p>The "Client Profile" builds are stripped down
-                versions of the "normal" builds that don't contain any
-                ASP.NET releated code - which for example means the
-                <code>%aspnet-*</code> patterns and the
-                <code>AspNetTraceAppender</code> are not available.</p>
-
-                <p style="font-size:smaller">
-                  <sup><a name="no-bin-support">*</a></sup>Not
-                  supported by the binary release but can be built
-                  from the source release.
-                </p>
             </section>
 
             <section id="appenders" name="Output to multiple logging targets">
