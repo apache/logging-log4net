@@ -68,30 +68,6 @@ namespace log4net.Appender
     }
 
     /// <summary>
-    /// Gets or sets a value indicating whether only part of the logging event 
-    /// data should be fixed.
-    /// </summary>
-    /// <value>
-    /// <c>true</c> if the appender should only fix part of the logging event 
-    /// data, otherwise <c>false</c>. The default is <c>false</c>.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Setting this property to <c>true</c> will cause only part of the event 
-    /// data to be fixed and stored in the appender, hereby improving performance. 
-    /// </para>
-    /// <para>
-    /// See <see cref="M:LoggingEvent.FixVolatileData(bool)"/> for more information.
-    /// </para>
-    /// </remarks>
-    [Obsolete("Use Fix property")]
-    public virtual bool OnlyFixPartialEventData
-    {
-      get => Fix == FixFlags.Partial;
-      set => Fix = value ? FixFlags.Partial : FixFlags.All;
-    }
-
-    /// <summary>
     /// Gets or sets the fields that will be fixed in the event
     /// </summary>
     /// <remarks>

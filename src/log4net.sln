@@ -40,6 +40,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\.editorconfig = ..\.editorconfig
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "log4net2-SerializeEvent", "integration-testing\log4net2-SerializeEvent\log4net2-SerializeEvent.csproj", "{605058A8-CE6D-4190-91DA-7B3E9F84489E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,10 @@ Global
 		{A4F9E417-2250-4075-9118-B4FF1C58B6C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4F9E417-2250-4075-9118-B4FF1C58B6C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4F9E417-2250-4075-9118-B4FF1C58B6C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{605058A8-CE6D-4190-91DA-7B3E9F84489E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{605058A8-CE6D-4190-91DA-7B3E9F84489E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{605058A8-CE6D-4190-91DA-7B3E9F84489E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{605058A8-CE6D-4190-91DA-7B3E9F84489E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -85,6 +91,7 @@ Global
 		{169118A6-CAC3-4E83-ABEE-9E884B75B294} = {8953473C-EEE8-4740-993D-B8E10FA876CD}
 		{A4F9E417-2250-4075-9118-B4FF1C58B6C5} = {8953473C-EEE8-4740-993D-B8E10FA876CD}
 		{92B16708-35B8-4E60-AF44-CF6D797FB63B} = {3EE6A25B-2DF9-4825-A784-EE32EEA0BE58}
+		{605058A8-CE6D-4190-91DA-7B3E9F84489E} = {8953473C-EEE8-4740-993D-B8E10FA876CD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {532DE291-8626-4FE3-B255-78515D744BCF}

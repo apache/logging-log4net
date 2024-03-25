@@ -18,6 +18,9 @@
 #endregion
 
 using System;
+using System.Runtime.Serialization;
+using System.Security;
+using System.Xml.Linq;
 
 namespace log4net.Core
 {
@@ -80,7 +83,7 @@ namespace log4net.Core
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
   [Serializable]
-  public sealed class Level : IComparable
+  public class Level : IComparable, ISerializable
   {
     /// <summary>
     /// Constructor
@@ -123,6 +126,25 @@ namespace log4net.Core
     /// </remarks>
     public Level(int level, string levelName) : this(level, levelName, levelName)
     {
+    }
+
+    /// <summary>
+    /// Serialization constructor
+    /// </summary>
+    /// <param name="info">The <see cref="SerializationInfo" /> that holds the serialized object data.</param>
+    /// <param name="context">The <see cref="StreamingContext" /> that contains contextual information about the source or destination.</param>
+    /// <remarks>
+    /// <para>
+    /// Initializes a new instance of the <see cref="Level" /> class 
+    /// with serialized data.
+    /// </para>
+    /// </remarks>
+    protected Level(SerializationInfo info, StreamingContext context)
+    {
+      // Use member names from log4net 2.x implicit serialzation for cross-version compat.
+      Value = info.GetInt32("m_levelValue");
+      Name = info.GetString("m_levelName");
+      DisplayName = info.GetString("m_levelDisplayName");
     }
 
     /// <summary>
@@ -243,6 +265,22 @@ namespace log4net.Core
         return Compare(this, target);
       }
       throw new ArgumentException($"Parameter: r, Value: [{r}] is not an instance of Level");
+    }
+
+    /// <summary>
+    /// Serializes this object into the <see cref="SerializationInfo" /> provided.
+    /// </summary>
+    /// <param name="info">The <see cref="SerializationInfo" /> to populate with data.</param>
+    /// <param name="context">The destination for this serialization.</param>
+    [SecurityCritical]
+    [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand,
+      SerializationFormatter = true)]
+    public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+    {
+      // Use member names from log4net 2.x implicit serialzation for cross-version compat.
+      info.AddValue("m_levelValue", Value);
+      info.AddValue("m_levelName", Name);
+      info.AddValue("m_levelDisplayName", DisplayName);
     }
 
     /// <summary>

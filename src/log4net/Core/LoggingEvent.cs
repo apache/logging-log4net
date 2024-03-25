@@ -68,49 +68,9 @@ namespace log4net.Core
     public string? ThreadName;
 
     /// <summary>
-    /// Gets or sets the local time the event was logged.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Prefer using the <see cref="TimeStampUtc"/> setter, since local time can be ambiguous.
-    /// </para>
-    /// </remarks>
-    [Obsolete(
-        "Prefer using TimeStampUtc, since local time can be ambiguous in time zones with daylight savings time.")]
-    public DateTime TimeStamp;
-
-    /// <summary>
     /// Gets or sets the UTC time the event was logged.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The TimeStamp is stored in the UTC time zone.
-    /// </para>
-    /// </remarks>
-#pragma warning disable 618 // Suppress warnings that TimeStamp field is obsolete
-    public DateTime TimeStampUtc
-    {
-      get
-      {
-        if (TimeStamp != default && _timeStampUtc == default)
-        {
-          // TimeStamp field has been set explicitly but TimeStampUtc hasn't
-          // => use TimeStamp
-          return TimeStamp.ToUniversalTime();
-        }
-
-        return _timeStampUtc;
-      }
-      set
-      {
-        _timeStampUtc = value;
-        // For backwards compatibility
-        TimeStamp = _timeStampUtc.ToLocalTime();
-      }
-    }
-
-    private DateTime _timeStampUtc;
-#pragma warning restore 618
+    public DateTime TimeStampUtc { get; set; }
 
     /// <summary>
     /// Location information for the caller.
@@ -193,9 +153,9 @@ namespace log4net.Core
   /// are considered volatile, that is the values are correct at the
   /// time the event is delivered to appenders, but will not be consistent
   /// at any time afterward. If an event is to be stored and then processed
-  /// at a later time these volatile values must be fixed by calling
-  /// <see cref="M:FixVolatileData()"/>. There is a performance penalty
-  /// for incurred by calling <see cref="M:FixVolatileData()"/> but it
+  /// at a later time these volatile values must be fixed by setting
+  /// <see cref="Fix"/>. There is a performance penalty
+  /// for incurred by calling <see cref="Fix"/> but it
   /// is essential to maintain data consistency.
   /// </para>
   /// </remarks>
@@ -227,9 +187,8 @@ namespace log4net.Core
     /// <remarks>
     /// <para>
     /// Except <see cref="TimeStamp"/>, <see cref="Level"/> and <see cref="LoggerName"/>, 
-    /// all fields of <c>LoggingEvent</c> are lazily filled when actually needed. Call
-    /// <see cref="M:FixVolatileData()"/> to cache all data locally
-    /// to prevent inconsistencies.
+    /// all fields of <c>LoggingEvent</c> are lazily filled when actually needed. Set
+    /// <see cref="Fix"/> to cache all data locally to prevent inconsistencies.
     /// </para>
     /// <para>This method is called by the log4net framework
     /// to create a logging event.
@@ -351,6 +310,26 @@ namespace log4net.Core
     }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="LoggingEvent" /> class.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// This constructor is provided to allow deserialization using System.Text.Json
+    /// or Newtonsoft.Json.
+    /// </para>
+    /// <para>
+    /// Use the <see cref="M:GetLoggingEventData(FixFlags)"/> method to obtain an 
+    /// instance of the <see cref="LoggingEventData"/> class.
+    /// </para>
+    /// <para>
+    /// This constructor sets this objects <see cref="Fix"/> flags to <see cref="FixFlags.None"/>.
+    /// </para>
+    /// </remarks>
+    public LoggingEvent() : this(null, null, new LoggingEventData(), FixFlags.None)
+    {
+    }
+
+    /// <summary>
     /// Serialization constructor
     /// </summary>
     /// <param name="info">The <see cref="SerializationInfo" /> that holds the serialized object data.</param>
@@ -374,7 +353,17 @@ namespace log4net.Core
 
       m_data.Message = info.GetString("Message");
       m_data.ThreadName = info.GetString("ThreadName");
-      m_data.TimeStampUtc = info.GetDateTime("TimeStamp").ToUniversalTime();
+
+      // Favor the newer serialization tag 'TimeStampUtc' while supporting the obsolete format from pre-3.0.
+      try
+      {
+        m_data.TimeStampUtc = info.GetDateTime("TimeStampUtc");
+      }
+      catch (SerializationException)
+      {
+        m_data.TimeStampUtc = info.GetDateTime("TimeStamp").ToUniversalTime();
+      }
+
       m_data.LocationInfo = (LocationInfo)info.GetValue("LocationInfo", typeof(LocationInfo));
       m_data.UserName = info.GetString("UserName");
       m_data.ExceptionString = info.GetString("ExceptionString");
@@ -895,7 +884,7 @@ namespace log4net.Core
     }
 
     /// <summary>
-    /// The fixed fields in this event
+    /// Gets the fixed fields in this event, or on set, fixes fields specified in the value.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -919,7 +908,7 @@ namespace log4net.Core
     /// The data in this event must be fixed before it can be serialized.
     /// </para>
     /// <para>
-    /// The <see cref="M:FixVolatileData()"/> method must be called during the
+    /// The <see cref="Fix"/> property must be set during the
     /// <see cref="log4net.Appender.IAppender.DoAppend"/> method call if this event 
     /// is to be used outside that method.
     /// </para>
@@ -929,19 +918,19 @@ namespace log4net.Core
         SerializationFormatter = true)]
     public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
     {
-      // The caller must call FixVolatileData before this object
-      // can be serialized.
+      // The caller must set Fix before this object can be serialized.
 
       info.AddValue("LoggerName", m_data.LoggerName);
       info.AddValue("Level", m_data.Level);
       info.AddValue("Message", m_data.Message);
       info.AddValue("ThreadName", m_data.ThreadName);
-      // TODO: consider serializing UTC rather than local time.  Not implemented here because it
-      // would give an unexpected result if client and server have different versions of this class.
-      // info.AddValue("TimeStamp", m_data.TimeStampUtc);
-#pragma warning disable 618
-      info.AddValue("TimeStamp", m_data.TimeStamp);
-#pragma warning restore 618
+
+      // Serialize UTC->local time for backward compatibility with obsolete 'TimeStamp' property.
+      info.AddValue("TimeStamp", m_data.TimeStampUtc.ToLocalTime());
+
+      // Also add the UTC time under its own serialization tag.
+      info.AddValue("TimeStampUtc", m_data.TimeStampUtc);
+
       info.AddValue("LocationInfo", m_data.LocationInfo);
       info.AddValue("UserName", m_data.UserName);
       info.AddValue("ExceptionString", m_data.ExceptionString);
@@ -995,24 +984,6 @@ namespace log4net.Core
     /// </returns>
     /// <remarks>
     /// <para>
-    /// <b>Obsolete. Use <see cref="GetExceptionString"/> instead.</b>
-    /// </para>
-    /// </remarks>
-    [Obsolete("Use GetExceptionString instead")]
-    public string? GetExceptionStrRep()
-    {
-      return GetExceptionString();
-    }
-
-    /// <summary>
-    /// Returns this event's exception's rendered using the 
-    /// <see cref="ILoggerRepository.RendererMap" />.
-    /// </summary>
-    /// <returns>
-    /// This event's exception's rendered using the <see cref="ILoggerRepository.RendererMap" />.
-    /// </returns>
-    /// <remarks>
-    /// <para>
     /// Returns this event's exception's rendered using the 
     /// <see cref="ILoggerRepository.RendererMap" />.
     /// </para>
@@ -1041,77 +1012,6 @@ namespace log4net.Core
       }
 
       return m_data.ExceptionString;
-    }
-
-    /// <summary>
-    /// Fix instance fields that hold volatile data.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Some of the values in instances of <see cref="LoggingEvent"/>
-    /// are considered volatile, that is the values are correct at the
-    /// time the event is delivered to appenders, but will not be consistent
-    /// at any time afterward. If an event is to be stored and then processed
-    /// at a later time these volatile values must be fixed by calling
-    /// <see cref="M:FixVolatileData()"/>. There is a performance penalty
-    /// incurred by calling <see cref="M:FixVolatileData()"/> but it
-    /// is essential to maintain data consistency.
-    /// </para>
-    /// <para>
-    /// Calling <see cref="M:FixVolatileData()"/> is equivalent to
-    /// calling <see cref="M:FixVolatileData(bool)"/> passing the parameter
-    /// <c>false</c>.
-    /// </para>
-    /// <para>
-    /// See <see cref="M:FixVolatileData(bool)"/> for more
-    /// information.
-    /// </para>
-    /// </remarks>
-    [Obsolete("Use Fix property")]
-    public void FixVolatileData()
-    {
-      Fix = FixFlags.All;
-    }
-
-    /// <summary>
-    /// Fixes instance fields that hold volatile data.
-    /// </summary>
-    /// <param name="fastButLoose">Set to <c>true</c> to not fix data that takes a long time to fix.</param>
-    /// <remarks>
-    /// <para>
-    /// Some of the values in instances of <see cref="LoggingEvent"/>
-    /// are considered volatile, that is the values are correct at the
-    /// time the event is delivered to appenders, but will not be consistent
-    /// at any time afterward. If an event is to be stored and then processed
-    /// at a later time these volatile values must be fixed by calling
-    /// <see cref="M:FixVolatileData()"/>. There is a performance penalty
-    /// for incurred by calling <see cref="M:FixVolatileData()"/> but it
-    /// is essential to maintain data consistency.
-    /// </para>
-    /// <para>
-    /// The <paramref name="fastButLoose"/> param controls the data that
-    /// is fixed. Some of the data that can be fixed takes a long time to 
-    /// generate, therefore if you do not require those settings to be fixed
-    /// they can be ignored by setting the <paramref name="fastButLoose"/> param
-    /// to <c>true</c>. This setting will ignore the <see cref="LocationInformation"/>
-    /// and <see cref="UserName"/> settings.
-    /// </para>
-    /// <para>
-    /// Set <paramref name="fastButLoose"/> to <c>false</c> to ensure that all 
-    /// settings are fixed.
-    /// </para>
-    /// </remarks>
-    [Obsolete("Use Fix property")]
-    public void FixVolatileData(bool fastButLoose)
-    {
-      if (fastButLoose)
-      {
-        Fix = FixFlags.Partial;
-      }
-      else
-      {
-        Fix = FixFlags.All;
-      }
     }
 
     /// <summary>

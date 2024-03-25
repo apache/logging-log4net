@@ -24,11 +24,6 @@ namespace log4net.Core
   /// <summary>
   /// Flags passed to the <see cref="LoggingEvent.Fix"/> property
   /// </summary>
-  /// <remarks>
-  /// <para>
-  /// Flags passed to the <see cref="LoggingEvent.Fix"/> property
-  /// </para>
-  /// </remarks>
   /// <author>Nicko Cadell</author>
   [Flags]
   public enum FixFlags
@@ -36,7 +31,7 @@ namespace log4net.Core
     /// <summary>
     /// Fix the MDC
     /// </summary>
-    [Obsolete("Replaced by composite Properties")]
+    /*[Obsolete("Replaced by composite Properties")]*/
     Mdc = 0x01,
 
     /// <summary>
