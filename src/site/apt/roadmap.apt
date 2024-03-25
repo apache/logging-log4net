@@ -20,8 +20,8 @@
 
 Apache log4net&#x2122; Roadmap
 
-  The log4net development roadmap is managed by our JIRA issue tracking system.
+  The log4net development roadmap is managed by our Github issue tracking system.
   
   For a list of upcoming fixes and in-progress tasks see:
 
-  {{{http://issues.apache.org/jira/browse/LOG4NET?report=com.atlassian.jira.plugin.system.project:roadmap-panel}Apache log4net Roadmap}}
+  {{{https://github.com/apache/logging-log4net/milestones}log4net Milestones}}

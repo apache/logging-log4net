@@ -27,40 +27,49 @@ limitations under the License.
   <body>
 
     <section id="main" name="Apache log4net&#x2122; Release Notes">
+      <section id="2.0.17" name="2.0.17">
+        Apache log4net 2.0.16 addresses reported issues:
+        <section id="2.0.17-bug" name="Bug fixes">
+          <ul>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/118">NullRefException from shutdown in 2.0.16</a> fixed in <a href="https://github.com/apache/logging-log4net/pull/120">Fast fix for NullRefException from FileAppender"</a> by (by @erikmav)"</li>
+          </ul>
+        </section>
+      </section>
       <section id="2.0.16" name="2.0.16">
         Apache log4net 2.0.16 addresses reported issues:
         <section id="2.0.16-bug" name="Bug fixes">
           <ul>
             <li>
-              <a href="https://github.com/apache/logging-log4net/pull/103">Support converting '.NET TP Worker' to the numeric thread ID on .NET 8+ (by @erikmav)</a>
+              <a href="https://github.com/apache/logging-log4net/pull/103">Support converting '.NET TP Worker' to the numeric thread ID on .NET 8+</a> (by @erikmav)
             </li>
             <li>
-              <a href="https://github.com/apache/logging-log4net/pull/94">Fix typo in RemotingServer App.Config (by @craigdfrench)</a>
+              <a href="https://github.com/apache/logging-log4net/pull/94">Fix typo in RemotingServer App.Config</a> (by @craigdfrench)
             </li>
             <li>
-              <a href="https://github.com/apache/logging-log4net/pull/105">Fix CodeQL Password in configuration file Rule False Positives (by @justinmichaels)</a>
+              <a href="https://github.com/apache/logging-log4net/pull/105">Fix CodeQL Password in configuration file Rule False Positives</a> (by @justinmichaels)
             </li>
           </ul>
         </section>
         <section id="2.0.16-enhancements" name="Enhancements">
           <ul>
             <li>
-              <a href="https://github.com/apache/logging-log4net/pull/89">adding extension points for revising logged content (by @freeandnil)</a>
+              <a href="https://github.com/apache/logging-log4net/pull/89">adding extension points for revising logged content</a> (by @freeandnil)
             </li>
             <li>
-              <a href="https://github.com/apache/logging-log4net/pull/91">SystemInfo.EntryAssemblyLocation writable to adjust location for config-files in unit test projects (by @freeandnil)</a>
+              <a href="https://github.com/apache/logging-log4net/pull/91">SystemInfo.EntryAssemblyLocation writable to adjust location for config-files in unit test projects</a> (by @freeandnil)
             </li>
             <li>
-              <a href="https://github.com/apache/logging-log4net/pull/92">New locking model for single log file in native applications with managed parts (by @freeandnil)</a>
+              <a href="https://github.com/apache/logging-log4net/pull/92">New locking model for single log file in native applications with managed parts</a> (by @freeandnil)
             </li>
             <li>
-              <a href="https://github.com/apache/logging-log4net/pull/93">Extension point for handling new lines in RemoteSysLogAppender added (by @freeandnil)</a>
+              <a href="https://github.com/apache/logging-log4net/pull/93">Extension point for handling new lines in RemoteSysLogAppender added</a> (by @freeandnil)
             </li>
             <li>
-              <a href="https://github.com/apache/logging-log4net/pull/94">Defer creation of locking model to ActivateOptions() (by @freeandnil)</a>
+              <a href="https://github.com/apache/logging-log4net/pull/95">Defer creation of locking model to ActivateOptions()</a> (by @freeandnil)
             </li>
             <li>
-              <a href="https://github.com/apache/logging-log4net/pull/101">Add Peek() method to ThreadContextStack and LogicalThreadContextStack (by @andreycha)</a>
+              <a href="https://github.com/apache/logging-log4net/pull/101">Add Peek() method to ThreadContextStack and LogicalThreadContextStack</a> (by @andreycha)
             </li>
           </ul>
         </section>
