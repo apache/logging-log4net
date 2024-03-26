@@ -1,6 +1,17 @@
 To: dev@logging.apache.org
-Subject: [VOTE] Release Apache Log4net 2.0.17
+Subject: [RESULT][VOTE] Release Apache Log4net 3.0.0
 
+Hi,
+
+with +3 binding votes (..., Volkan and myself), apache log4net 3.0.0 is released and available:
+https://github.com/apache/logging-log4net/releases/tag/rel%2F3.0.0
+
+Source snapshot at:
+https://downloads.apache.org/logging/log4net/source/apache-log4net-source-3.0.0.zip
+
+Thanks
+
+------------------------------------------------------------------------------------------------
 This is a vote to release the Apache Log4net 3.0.0.
 
 Website: https://logging.staged.apache.org/log4net/release/release-notes.html
