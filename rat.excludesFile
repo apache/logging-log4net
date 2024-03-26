@@ -1,5 +1,7 @@
 rat.excludesFile
+.editorconfig
 **/*.suo
+**/*.sln
 **/*.user
 **/*.yml
 **/*.yaml
@@ -13,6 +15,7 @@ rat.excludesFile
 **/*.config
 **/*.log
 **/*.targets
+**/*.bin
 **/GeneratedAssemblyInfo.cs
 **/obj/**
 **/bin/**
@@ -22,5 +25,6 @@ rat.excludesFile
 src/.idea/**
 src/integration-testing/**
 build/**
+build-tools/**
 doc/**
 src/site/**
