@@ -30,16 +30,18 @@ namespace log4net.Tests.Util
   public sealed class EnvironmentPatternConverterTest
   {
     private const string ENVIRONMENT_VARIABLE_NAME = "LOG4NET_TEST_TEMP";
-    const string SYSTEM_LEVEL_VALUE = "SystemLevelEnvironmentValue";
-    const string USER_LEVEL_VALUE = "UserLevelEnvironmentValue";
-    const string PROCESS_LEVEL_VALUE = "ProcessLevelEnvironmentValue";
+    private const string SYSTEM_LEVEL_VALUE = "SystemLevelEnvironmentValue";
+    private const string USER_LEVEL_VALUE = "UserLevelEnvironmentValue";
+    private const string PROCESS_LEVEL_VALUE = "ProcessLevelEnvironmentValue";
 
+    /// <summary>
+    /// .NET implementations on Unix-like systems only support variables in the process environment block
+    /// </summary>
     [Test]
+    [Platform(Include = "Win", Reason = @"https://learn.microsoft.com/en-us/dotnet/api/system.environment.setenvironmentvariable")]
     public void SystemLevelEnvironmentVariable()
     {
-      if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
-        return;
-      EnvironmentPatternConverter converter = new EnvironmentPatternConverter();
+      var converter = new EnvironmentPatternConverter();
       try
       {
         Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, SYSTEM_LEVEL_VALUE, EnvironmentVariableTarget.Machine);
@@ -51,7 +53,7 @@ namespace log4net.Tests.Util
 
       converter.Option = ENVIRONMENT_VARIABLE_NAME;
 
-      StringWriter sw = new StringWriter();
+      var sw = new StringWriter();
       converter.Convert(sw, null);
 
       Assert.AreEqual(SYSTEM_LEVEL_VALUE, sw.ToString(), "System level environment variable not expended correctly.");
@@ -59,17 +61,19 @@ namespace log4net.Tests.Util
       Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, null, EnvironmentVariableTarget.Machine);
     }
 
+    /// <summary>
+    /// .NET implementations on Unix-like systems only support variables in the process environment block
+    /// </summary>
     [Test]
+    [Platform(Include = "Win", Reason = @"https://learn.microsoft.com/en-us/dotnet/api/system.environment.setenvironmentvariable")]
     public void UserLevelEnvironmentVariable()
     {
-      if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
-        return;
-      EnvironmentPatternConverter converter = new EnvironmentPatternConverter();
+      var converter = new EnvironmentPatternConverter();
       Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, USER_LEVEL_VALUE, EnvironmentVariableTarget.User);
 
       converter.Option = ENVIRONMENT_VARIABLE_NAME;
 
-      StringWriter sw = new StringWriter();
+      var sw = new StringWriter();
       converter.Convert(sw, null);
 
       Assert.AreEqual(USER_LEVEL_VALUE, sw.ToString(), "User level environment variable not expended correctly.");
@@ -80,12 +84,12 @@ namespace log4net.Tests.Util
     [Test]
     public void ProcessLevelEnvironmentVariable()
     {
-      EnvironmentPatternConverter converter = new EnvironmentPatternConverter();
+      var converter = new EnvironmentPatternConverter();
       Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, PROCESS_LEVEL_VALUE);
 
       converter.Option = ENVIRONMENT_VARIABLE_NAME;
 
-      StringWriter sw = new StringWriter();
+      var sw = new StringWriter();
       converter.Convert(sw, null);
 
       Assert.AreEqual(PROCESS_LEVEL_VALUE, sw.ToString(), "Process level environment variable not expended correctly.");
