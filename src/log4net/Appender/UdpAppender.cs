@@ -315,8 +315,9 @@ namespace log4net.Appender
 
       if (RemoteAddress is null)
       {
-        throw new ArgumentNullException("The required property 'Address' was not specified.");
+        throw new ArgumentNullException(nameof(RemoteAddress), $"The required property '{nameof(RemoteAddress)}' was not specified.");
       }
+
       else if (RemotePort < IPEndPoint.MinPort || RemotePort > IPEndPoint.MaxPort)
       {
         throw Util.SystemInfo.CreateArgumentOutOfRangeException(nameof(RemotePort), RemotePort,
@@ -354,7 +355,9 @@ namespace log4net.Appender
           $"Unable to send logging event to remote host {RemoteAddress} on port {RemotePort}, no client created",
           e: null,
           ErrorCode.WriteFailure);
+        return;
       }
+
       try
       {
         Byte[] buffer = Encoding.GetBytes(RenderLoggingEvent(loggingEvent).ToCharArray());
@@ -409,11 +412,11 @@ namespace log4net.Appender
       {
         if (LocalPort == 0)
         {
-          Client = new UdpClient(RemoteAddress.AddressFamily);
+          Client = new UdpClient(RemoteAddress!.AddressFamily);
         }
         else
         {
-          Client = new UdpClient(this.LocalPort, RemoteAddress.AddressFamily);
+          Client = new UdpClient(LocalPort, RemoteAddress!.AddressFamily);
         }
       }
       catch (Exception ex)

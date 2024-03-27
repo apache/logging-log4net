@@ -17,33 +17,29 @@
 //
 #endregion
 
-using System;
+namespace System.Diagnostics.CodeAnalysis;
 
-using log4net.Core;
+// Not available until .NET 6, cloned from .NET code.
 
-namespace log4net.Layout
+/// <summary>
+/// Specifies that the output will be non-null if the named parameter is non-null.
+/// </summary>
+[AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue,
+  AllowMultiple = true, Inherited = false)]
+internal sealed class NotNullIfNotNullAttribute : Attribute
 {
   /// <summary>
-  /// Extracts the date from the <see cref="LoggingEvent"/>.
+  /// Initializes the attribute with the associated parameter name.
   /// </summary>
-  /// <author>Nicko Cadell</author>
-  /// <author>Gert Driesen</author>
-  public class RawTimeStampLayout : IRawLayout
-  {
-    /// <summary>
-    /// Gets the <see cref="LoggingEvent.TimeStamp"/> as a <see cref="DateTime"/>.
-    /// </summary>
-    /// <param name="loggingEvent">The event to format</param>
-    /// <returns>returns the time stamp</returns>
-    /// <remarks>
-    /// <para>
-    /// The time stamp is in local time. To format the time stamp
-    /// in universal time use <see cref="RawUtcTimeStampLayout"/>.
-    /// </para>
-    /// </remarks>
-    public virtual object Format(LoggingEvent loggingEvent)
-    {
-      return loggingEvent.TimeStamp;
-    }
-  }
+  /// <param name="parameterName">
+  /// The associated parameter name.
+  /// The output will be non-null if the argument to the parameter specified is non-null.
+  /// </param>
+  public NotNullIfNotNullAttribute(string parameterName)
+    => ParameterName = parameterName;
+
+  /// <summary>
+  /// Gets the associated parameter name.
+  /// </summary>
+  public string ParameterName { get; }
 }

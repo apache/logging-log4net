@@ -28,119 +28,42 @@ namespace log4net.Util
   /// Adapter that extends <see cref="TextWriter"/> and forwards all
   /// messages to an instance of <see cref="TextWriter"/>.
   /// </summary>
-  /// <remarks>
-  /// <para>
-  /// Adapter that extends <see cref="TextWriter"/> and forwards all
-  /// messages to an instance of <see cref="TextWriter"/>.
-  /// </para>
-  /// </remarks>
   /// <author>Nicko Cadell</author>
   public abstract class TextWriterAdapter : TextWriter
   {
-    #region Private Member Variables
-
     /// <summary>
-    /// The writer to forward messages to
-    /// </summary>
-    private TextWriter m_writer;
-
-    #endregion
-
-    #region Constructors
-
-    /// <summary>
-    /// Create an instance of <see cref="TextWriterAdapter"/> that forwards all
+    /// Creates an instance of <see cref="TextWriterAdapter"/> that forwards all
     /// messages to a <see cref="TextWriter"/>.
     /// </summary>
     /// <param name="writer">The <see cref="TextWriter"/> to forward to</param>
-    /// <remarks>
-    /// <para>
-    /// Create an instance of <see cref="TextWriterAdapter"/> that forwards all
-    /// messages to a <see cref="TextWriter"/>.
-    /// </para>
-    /// </remarks>
     protected TextWriterAdapter(TextWriter writer) : base(CultureInfo.InvariantCulture)
     {
-      m_writer = writer;
+      Writer = writer;
     }
-
-    #endregion
-
-    #region Protected Instance Properties
 
     /// <summary>
     /// Gets or sets the underlying <see cref="TextWriter" />.
     /// </summary>
-    /// <value>
-    /// The underlying <see cref="TextWriter" />.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets or sets the underlying <see cref="TextWriter" />.
-    /// </para>
-    /// </remarks>
-    protected TextWriter Writer
-    {
-      get { return m_writer; }
-      set { m_writer = value; }
-    }
-
-    #endregion Protected Instance Properties
-
-    #region Public Properties
+    protected TextWriter Writer { get; set; }
 
     /// <summary>
-    /// The Encoding in which the output is written
+    /// The <see cref="Encoding"/> in which the output is written
     /// </summary>
-    /// <value>
-    /// The <see cref="Encoding"/>
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// The Encoding in which the output is written
-    /// </para>
-    /// </remarks>
-    public override Encoding Encoding
-    {
-      get { return m_writer.Encoding; }
-    }
+    public override Encoding Encoding => Writer.Encoding;
 
     /// <summary>
     /// Gets an object that controls formatting
     /// </summary>
-    /// <value>
-    /// The format provider
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets an object that controls formatting
-    /// </para>
-    /// </remarks>
-    public override IFormatProvider FormatProvider
-    {
-      get { return m_writer.FormatProvider; }
-    }
+    public override IFormatProvider FormatProvider => Writer.FormatProvider;
 
     /// <summary>
-    /// Gets or sets the line terminator string used by the TextWriter
+    /// Gets or sets the line terminator string used by the TextWriter.
     /// </summary>
-    /// <value>
-    /// The line terminator to use
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets or sets the line terminator string used by the TextWriter
-    /// </para>
-    /// </remarks>
-    public override String NewLine
+    public override string NewLine
     {
-      get { return m_writer.NewLine; }
-      set { m_writer.NewLine = value; }
+      get => Writer.NewLine;
+      set => Writer.NewLine = value;
     }
-
-    #endregion
-
-    #region Public Methods
 
     /// <summary>
     /// Closes the writer and releases any system resources associated with the writer
@@ -151,7 +74,7 @@ namespace log4net.Util
     /// </remarks>
     override public void Close()
     {
-      m_writer.Close();
+      Writer.Close();
     }
 
     /// <summary>
@@ -167,7 +90,7 @@ namespace log4net.Util
     {
       if (disposing)
       {
-        ((IDisposable)m_writer).Dispose();
+        ((IDisposable)Writer).Dispose();
       }
     }
 
@@ -182,7 +105,7 @@ namespace log4net.Util
     /// </remarks>
     public override void Flush()
     {
-      m_writer.Flush();
+      Writer.Flush();
     }
 
     /// <summary>
@@ -196,7 +119,7 @@ namespace log4net.Util
     /// </remarks>
     public override void Write(char value)
     {
-      m_writer.Write(value);
+      Writer.Write(value);
     }
 
     /// <summary>
@@ -212,7 +135,7 @@ namespace log4net.Util
     /// </remarks>
     public override void Write(char[] buffer, int index, int count)
     {
-      m_writer.Write(buffer, index, count);
+      Writer.Write(buffer, index, count);
     }
 
     /// <summary>
@@ -224,11 +147,9 @@ namespace log4net.Util
     /// Writes a string to the wrapped TextWriter
     /// </para>
     /// </remarks>
-    public override void Write(String value)
+    public override void Write(string value)
     {
-      m_writer.Write(value);
+      Writer.Write(value);
     }
-
-    #endregion
   }
 }

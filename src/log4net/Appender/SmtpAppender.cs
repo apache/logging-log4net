@@ -401,7 +401,7 @@ namespace log4net.Appender
     private static readonly char[] ADDRESS_DELIMITERS = { ',', ';' };
 
     /// <summary>
-    ///   trims leading and trailing commas or semicolons
+    /// Trims leading and trailing commas or semicolons
     /// </summary>
     private static string? MaybeTrimSeparators(string? s)
     {

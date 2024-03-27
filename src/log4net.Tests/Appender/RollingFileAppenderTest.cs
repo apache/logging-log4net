@@ -33,8 +33,6 @@ using log4net.Util;
 using NUnit.Framework;
 using System.Globalization;
 
-#nullable enable
-
 namespace log4net.Tests.Appender
 {
   /// <summary>

@@ -29,8 +29,6 @@ using log4net.Util;
 
 using NUnit.Framework;
 
-#nullable enable
-
 namespace log4net.Tests.Context
 {
   /// <summary>

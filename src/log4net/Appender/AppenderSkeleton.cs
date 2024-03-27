@@ -174,7 +174,7 @@ namespace log4net.Appender
     /// <summary>
     /// Gets or sets the name that uniquely identifies this appender.
     /// </summary>
-    public string? Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Closes the appender and releases resources.
@@ -499,7 +499,7 @@ namespace log4net.Appender
     /// </returns>
     protected virtual bool IsAsSevereAsThreshold(Level? level)
     {
-      return ((Threshold is null) || level >= Threshold);
+      return Threshold is null || level is null || level >= Threshold;
     }
 
     /// <summary>
@@ -684,8 +684,8 @@ namespace log4net.Appender
 
       if (Layout.IgnoresException)
       {
-        string exceptionStr = loggingEvent.GetExceptionString();
-        if (exceptionStr != null && exceptionStr.Length > 0)
+        string? exceptionStr = loggingEvent.GetExceptionString();
+        if (!string.IsNullOrEmpty(exceptionStr))
         {
           // render the event and the exception
           Layout.Format(writer, loggingEvent);

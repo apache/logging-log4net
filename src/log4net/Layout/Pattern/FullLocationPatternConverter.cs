@@ -48,7 +48,10 @@ namespace log4net.Layout.Pattern
     /// </remarks>
     protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
     {
-      writer.Write(loggingEvent.LocationInformation.FullInfo);
+      if (loggingEvent.LocationInformation is not null)
+      {
+        writer.Write(loggingEvent.LocationInformation.FullInfo);
+      }
     }
   }
 }

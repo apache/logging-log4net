@@ -20,6 +20,7 @@
 using log4net.Util;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace log4net.Plugin
 {
@@ -136,6 +137,17 @@ namespace log4net.Plugin
     }
 
     /// <summary>
+    /// Initializes a new instance of the <c>PluginCollection</c> class
+    /// that contains elements copied from the specified <see cref="IPlugin"/> collection.
+    /// </summary>
+    /// <param name="col">The <see cref="IPlugin"/> collection whose elements are copied to the new list.</param>
+    public PluginCollection(ICollection<IPlugin> col)
+    {
+      m_array = new IPlugin[col.Count];
+      AddRange(col);
+    }
+
+    /// <summary>
     /// Type visible only to our subclasses
     /// Used to access protected constructor
     /// </summary>
@@ -154,7 +166,7 @@ namespace log4net.Plugin
     /// <exclude/>
     protected internal PluginCollection(Tag _)
     {
-      m_array = null;
+      m_array = Array.Empty<IPlugin>();
     }
 
     /// <summary>
@@ -260,7 +272,7 @@ namespace log4net.Plugin
     /// <returns>A new <see cref="PluginCollection"/> with a shallow copy of the collection data.</returns>
     public virtual object Clone()
     {
-      PluginCollection newCol = new PluginCollection(m_count);
+      var newCol = new PluginCollection(m_count);
       Array.Copy(m_array, 0, newCol.m_array, 0, m_count);
       newCol.m_count = m_count;
       newCol.m_version = m_version;
@@ -493,6 +505,26 @@ namespace log4net.Plugin
     }
 
     /// <summary>
+    /// Adds the elements of a <see cref="IPlugin"/> collection to the current <c>PluginCollection</c>.
+    /// </summary>
+    /// <param name="col">The <see cref="IPlugin"/> collection whose elements should be added to the end of the <c>PluginCollection</c>.</param>
+    /// <returns>The new <see cref="PluginCollection.Count"/> of the <c>PluginCollection</c>.</returns>
+    public virtual int AddRange(ICollection<IPlugin> col)
+    {
+      if (m_count + col.Count >= m_array.Length)
+      {
+        EnsureCapacity(m_count + col.Count);
+      }
+
+      foreach (IPlugin item in col)
+      {
+        Add(item);
+      }
+
+      return m_count;
+    }
+
+    /// <summary>
     /// Sets the capacity to the actual number of elements.
     /// </summary>
     public virtual void TrimToSize()
@@ -605,9 +637,6 @@ namespace log4net.Plugin
       /// <summary>
       /// Gets the current element in the collection.
       /// </summary>
-      /// <value>
-      /// The current element in the collection.
-      /// </value>
       public IPlugin Current => m_collection[m_index];
 
       /// <summary>

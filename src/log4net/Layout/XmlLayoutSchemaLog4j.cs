@@ -170,24 +170,28 @@ method="run" file="Generator.java" line="94"/>
       TimeSpan timeSince1970 = loggingEvent.TimeStampUtc - s_date1970;
 
       writer.WriteAttributeString("timestamp", XmlConvert.ToString((long)timeSince1970.TotalMilliseconds));
-      writer.WriteAttributeString("level", loggingEvent.Level.DisplayName);
+      if (loggingEvent.Level is not null)
+      {
+        writer.WriteAttributeString("level", loggingEvent.Level.DisplayName);
+      }
       writer.WriteAttributeString("thread", loggingEvent.ThreadName);
 
       // Append the message text
-      writer.WriteStartElement("log4j:message", "log4j", "message", "log4net");
-      Transform.WriteEscapedXmlString(writer, loggingEvent.RenderedMessage, InvalidCharReplacement);
-      writer.WriteEndElement();
-
-      object ndcObj = loggingEvent.LookupProperty("NDC");
-      if (ndcObj is not null)
+      if (loggingEvent.RenderedMessage is not null)
       {
-        string? valueStr = loggingEvent.Repository.RendererMap.FindAndRender(ndcObj);
+        writer.WriteStartElement("log4j:message", "log4j", "message", "log4net");
+        Transform.WriteEscapedXmlString(writer, loggingEvent.RenderedMessage, InvalidCharReplacement);
+        writer.WriteEndElement();
+      }
 
-        if (valueStr is not null && valueStr.Length > 0)
+      if (loggingEvent.LookupProperty("NDC") is object ndcObj)
+      {
+        string? valueStr = loggingEvent.Repository?.RendererMap.FindAndRender(ndcObj);
+        if (!string.IsNullOrEmpty(valueStr))
         {
           // Append the NDC text
           writer.WriteStartElement("log4j:NDC", "log4j", "NDC", "log4net");
-          Transform.WriteEscapedXmlString(writer, valueStr, InvalidCharReplacement);
+          Transform.WriteEscapedXmlString(writer, valueStr!, InvalidCharReplacement);
           writer.WriteEndElement();
         }
       }
@@ -203,33 +207,37 @@ method="run" file="Generator.java" line="94"/>
           writer.WriteAttributeString("name", entry.Key);
 
           // Use an ObjectRenderer to convert the object to a string
-          string valueStr = loggingEvent.Repository.RendererMap.FindAndRender(entry.Value);
-          writer.WriteAttributeString("value", valueStr);
+          string? valueStr = loggingEvent.Repository?.RendererMap.FindAndRender(entry.Value);
+          if (!string.IsNullOrEmpty(valueStr))
+          {
+            writer.WriteAttributeString("value", valueStr);
+          }
 
           writer.WriteEndElement();
         }
         writer.WriteEndElement();
       }
 
-      string exceptionStr = loggingEvent.GetExceptionString();
-      if (exceptionStr != null && exceptionStr.Length > 0)
+      string? exceptionStr = loggingEvent.GetExceptionString();
+      if (!string.IsNullOrEmpty(exceptionStr))
       {
         // Append the stack trace line
         writer.WriteStartElement("log4j:throwable", "log4j", "data", "log4net");
-        Transform.WriteEscapedXmlString(writer, exceptionStr, InvalidCharReplacement);
+        Transform.WriteEscapedXmlString(writer, exceptionStr!, InvalidCharReplacement);
         writer.WriteEndElement();
       }
 
       if (LocationInfo)
       {
-        LocationInfo? locationInfo = loggingEvent.LocationInformation;
-
-        writer.WriteStartElement("log4j:locationInfo", "log4j", "locationInfo", "log4net");
-        writer.WriteAttributeString("class", locationInfo.ClassName);
-        writer.WriteAttributeString("method", locationInfo.MethodName);
-        writer.WriteAttributeString("file", locationInfo.FileName);
-        writer.WriteAttributeString("line", locationInfo.LineNumber);
-        writer.WriteEndElement();
+        if (loggingEvent.LocationInformation is LocationInfo locationInfo)
+        {
+          writer.WriteStartElement("log4j:locationInfo", "log4j", "locationInfo", "log4net");
+          writer.WriteAttributeString("class", locationInfo.ClassName);
+          writer.WriteAttributeString("method", locationInfo.MethodName);
+          writer.WriteAttributeString("file", locationInfo.FileName);
+          writer.WriteAttributeString("line", locationInfo.LineNumber);
+          writer.WriteEndElement();
+        }
       }
 
       writer.WriteEndElement();

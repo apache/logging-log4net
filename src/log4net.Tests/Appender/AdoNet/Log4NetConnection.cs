@@ -22,8 +22,6 @@
 using System;
 using System.Data;
 
-#nullable enable
-
 namespace log4net.Tests.Appender.AdoNet
 {
   public class Log4NetConnection : IDbConnection

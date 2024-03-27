@@ -92,9 +92,9 @@ namespace log4net.Layout.Pattern
     /// </remarks>
     protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
     {
-      if (loggingEvent.ExceptionObject != null && Option != null && Option.Length > 0)
+      if (loggingEvent.ExceptionObject is not null && !string.IsNullOrEmpty(Option))
       {
-        switch (Option.ToLower())
+        switch (Option!.ToLowerInvariant())
         {
           case "message":
             WriteObject(writer, loggingEvent.Repository, loggingEvent.ExceptionObject.Message);
@@ -118,8 +118,8 @@ namespace log4net.Layout.Pattern
       }
       else
       {
-        string exceptionString = loggingEvent.GetExceptionString();
-        if (exceptionString != null && exceptionString.Length > 0)
+        string? exceptionString = loggingEvent.GetExceptionString();
+        if (!string.IsNullOrEmpty(exceptionString))
         {
           writer.WriteLine(exceptionString);
         }

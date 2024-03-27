@@ -46,14 +46,12 @@ namespace log4net.Util.PatternStringConverters
     /// <summary>
     /// Shared random number generator
     /// </summary>
-    private static readonly Random s_random = new Random();
+    private static readonly Random s_random = new();
 
     /// <summary>
     /// Length of random string to generate. Default length 4.
     /// </summary>
     private int m_length = 4;
-
-    #region Implementation of IOptionHandler
 
     /// <summary>
     /// Initialize the converter options
@@ -73,34 +71,26 @@ namespace log4net.Util.PatternStringConverters
     /// </remarks>
     public void ActivateOptions()
     {
-      string optionStr = Option;
-      if (optionStr != null && optionStr.Length > 0)
+      string? optionStr = Option;
+      if (!string.IsNullOrEmpty(optionStr))
       {
-        int lengthVal;
-        if (SystemInfo.TryParse(optionStr, out lengthVal))
+        if (SystemInfo.TryParse(optionStr!, out int lengthVal))
         {
           m_length = lengthVal;
         }
         else
         {
-          LogLog.Error(declaringType, "RandomStringPatternConverter: Could not convert Option [" + optionStr + "] to Length Int32");
+          LogLog.Error(declaringType, $"RandomStringPatternConverter: Could not convert Option [{optionStr}] to Length Int32");
         }
       }
     }
 
-    #endregion
-
     /// <summary>
-    /// Write a randoim string to the output
+    /// Writes a random string to the output
     /// </summary>
     /// <param name="writer">the writer to write to</param>
     /// <param name="state">null, state is not set</param>
-    /// <remarks>
-    /// <para>
-    /// Write a randoim string to the output <paramref name="writer"/>.
-    /// </para>
-    /// </remarks>
-    public override void Convert(TextWriter writer, object state)
+    public override void Convert(TextWriter writer, object? state)
     {
       try
       {
@@ -136,8 +126,6 @@ namespace log4net.Util.PatternStringConverters
       }
     }
 
-    #region Private Static Fields
-
     /// <summary>
     /// The fully qualified type of the RandomStringPatternConverter class.
     /// </summary>
@@ -146,7 +134,5 @@ namespace log4net.Util.PatternStringConverters
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(RandomStringPatternConverter);
-
-    #endregion Private Static Fields
   }
 }

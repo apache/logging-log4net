@@ -2,6 +2,6 @@
     <PropertyGroup>
         <UseSharedCompilation>true</UseSharedCompilation>
         <LangVersion>latest</LangVersion>
-        <Nullable>annotations</Nullable>
+        <Nullable>Enable</Nullable>
     </PropertyGroup>
 </Project>

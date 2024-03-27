@@ -30,9 +30,9 @@ namespace log4net.Tests.Core
   [TestFixture]
   public class EvaluatorTest
   {
-    private BufferingForwardingAppender m_bufferingForwardingAppender;
-    private CountingAppender m_countingAppender;
-    private Repository.Hierarchy.Hierarchy m_hierarchy;
+    private BufferingForwardingAppender m_bufferingForwardingAppender = new();
+    private CountingAppender m_countingAppender = new();
+    private Repository.Hierarchy.Hierarchy m_hierarchy = new();
 
     [SetUp]
     public void SetupRepository()

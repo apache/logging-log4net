@@ -44,7 +44,7 @@ namespace log4net.Util.PatternStringConverters
     /// </para>
     /// </remarks>
     [System.Security.SecuritySafeCritical]
-    public override void Convert(TextWriter writer, object state)
+    public override void Convert(TextWriter writer, object? state)
     {
       try
       {
@@ -60,8 +60,6 @@ namespace log4net.Util.PatternStringConverters
       }
     }
 
-    #region Private Static Fields
-
     /// <summary>
     /// The fully qualified type of the ProcessIdPatternConverter class.
     /// </summary>
@@ -70,7 +68,5 @@ namespace log4net.Util.PatternStringConverters
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(ProcessIdPatternConverter);
-
-    #endregion Private Static Fields
   }
 }

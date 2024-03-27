@@ -57,18 +57,19 @@ namespace log4net.Layout.Pattern
     /// </remarks>
     public void ActivateOptions()
     {
-      if (Option == null)
+      if (Option is null)
+      {
         return;
+      }
 
       string optStr = Option.Trim();
       if (optStr.Length != 0)
       {
-        int stackLevelVal;
-        if (SystemInfo.TryParse(optStr, out stackLevelVal))
+        if (SystemInfo.TryParse(optStr, out int stackLevelVal))
         {
           if (stackLevelVal <= 0)
           {
-            LogLog.Error(declaringType, "StackTracePatternConverter: StackeFrameLevel option (" + optStr + ") isn't a positive integer.");
+            LogLog.Error(declaringType, $"StackTracePatternConverter: StackeFrameLevel option ({optStr}) isn't a positive integer.");
           }
           else
           {
@@ -77,7 +78,7 @@ namespace log4net.Layout.Pattern
         }
         else
         {
-          LogLog.Error(declaringType, "StackTracePatternConverter: StackFrameLevel option \"" + optStr + "\" not a decimal integer.");
+          LogLog.Error(declaringType, $"StackTracePatternConverter: StackFrameLevel option \"{optStr}\" not a decimal integer.");
         }
       }
     }
@@ -94,8 +95,8 @@ namespace log4net.Layout.Pattern
     /// </remarks>
     protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
     {
-      StackFrameItem[] stackframes = loggingEvent.LocationInformation.StackFrames;
-      if ((stackframes == null) || (stackframes.Length <= 0))
+      StackFrameItem[]? stackframes = loggingEvent.LocationInformation?.StackFrames;
+      if ((stackframes is null) || (stackframes.Length <= 0))
       {
         LogLog.Error(declaringType, "loggingEvent.LocationInformation.StackFrames was null or empty.");
         return;
@@ -127,12 +128,7 @@ namespace log4net.Layout.Pattern
     /// <param name="method"></param>
     /// <remarks>This method was created, so this class could be used as a base class for StackTraceDetailPatternConverter</remarks>
     /// <returns>string</returns>
-    internal virtual string GetMethodInformation(MethodItem method)
-    {
-      return method.Name;
-    }
-
-    #region Private Static Fields
+    internal virtual string GetMethodInformation(MethodItem method) => method.Name;
 
     /// <summary>
     /// The fully qualified type of the StackTracePatternConverter class.
@@ -142,7 +138,5 @@ namespace log4net.Layout.Pattern
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(StackTracePatternConverter);
-
-    #endregion Private Static Fields
   }
 }

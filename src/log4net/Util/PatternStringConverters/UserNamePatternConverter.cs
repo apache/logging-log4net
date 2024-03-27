@@ -43,12 +43,14 @@ namespace log4net.Util.PatternStringConverters
     /// Write the current threads username to the output <paramref name="writer"/>.
     /// </para>
     /// </remarks>
-    public override void Convert(TextWriter writer, object state)
+    public override void Convert(TextWriter writer, object? state)
     {
       try
       {
         if (System.Security.Principal.WindowsIdentity.GetCurrent()?.Name is string name)
+        {
           writer.Write(name);
+        }
       }
       catch (System.Security.SecurityException)
       {
@@ -60,8 +62,6 @@ namespace log4net.Util.PatternStringConverters
       }
     }
 
-    #region Private Static Fields
-
     /// <summary>
     /// The fully qualified type of the UserNamePatternConverter class.
     /// </summary>
@@ -70,7 +70,5 @@ namespace log4net.Util.PatternStringConverters
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(UserNamePatternConverter);
-
-    #endregion Private Static Fields
   }
 }

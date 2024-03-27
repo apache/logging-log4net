@@ -392,6 +392,11 @@ namespace log4net.Appender
       // Fall back to sensible default values
       //
 
+      if (level is null)
+      {
+        // Default setting
+        return SyslogSeverity.Debug;
+      }
       if (level >= Level.Alert) 
       {
         return SyslogSeverity.Alert;

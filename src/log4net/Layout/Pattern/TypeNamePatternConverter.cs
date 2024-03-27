@@ -17,10 +17,6 @@
 //
 #endregion
 
-using System;
-using System.Text;
-using System.IO;
-
 using log4net.Core;
 
 namespace log4net.Layout.Pattern
@@ -46,19 +42,9 @@ namespace log4net.Layout.Pattern
     /// Returns the <see cref="LocationInfo.ClassName"/> of the <paramref name="loggingEvent"/>.
     /// </para>
     /// </remarks>
-    protected override string GetFullyQualifiedName(LoggingEvent loggingEvent)
+    protected override string GetFullyQualifiedName(LoggingEvent? loggingEvent)
     {
-      if (loggingEvent == null)
-      {
-        return string.Empty;
-      }
-
-      if (loggingEvent.LocationInformation == null)
-      {
-        return string.Empty;
-      }
-
-      return loggingEvent.LocationInformation.ClassName;
+      return loggingEvent?.LocationInformation?.ClassName ?? string.Empty;
     }
   }
 }

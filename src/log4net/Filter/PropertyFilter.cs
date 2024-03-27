@@ -82,10 +82,10 @@ namespace log4net.Filter
 
       // Lookup the string to match in from the properties using 
       // the key specified.
-      object msgObj = loggingEvent.LookupProperty(Key);
+      object? msgObj = loggingEvent.LookupProperty(Key);
 
       // Use an ObjectRenderer to convert the property value to a string
-      string? msg = loggingEvent.Repository.RendererMap.FindAndRender(msgObj);
+      string? msg = loggingEvent.Repository?.RendererMap.FindAndRender(msgObj);
 
       // Check if we have been setup to filter
       if (msg is null || (StringToMatch is null && m_regexToMatch is null))

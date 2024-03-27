@@ -210,8 +210,7 @@ namespace log4net.Repository.Hierarchy
       LogLog.Debug(declaringType, $"Hierarchy Threshold [{thresholdStr}]");
       if (thresholdStr.Length > 0 && thresholdStr != "null")
       {
-        Level thresholdLevel = (Level)ConvertStringTo(typeof(Level), thresholdStr);
-        if (thresholdLevel is not null)
+        if (ConvertStringTo(typeof(Level), thresholdStr) is Level thresholdLevel)
         {
           m_hierarchy.Threshold = thresholdLevel;
         }
@@ -311,8 +310,7 @@ namespace log4net.Repository.Hierarchy
               {
                 LogLog.Debug(declaringType, $"Attaching appender named [{refName}] to appender named [{appender.Name}].");
 
-                IAppender referencedAppender = FindAppenderByReference(currentElement);
-                if (referencedAppender is not null)
+                if (FindAppenderByReference(currentElement) is IAppender referencedAppender)
                 {
                   appenderContainer.AddAppender(referencedAppender);
                 }
@@ -423,9 +421,8 @@ namespace log4net.Repository.Hierarchy
 
           if (currentElement.LocalName == APPENDER_REF_TAG)
           {
-            IAppender appender = FindAppenderByReference(currentElement);
             string refName = currentElement.GetAttribute(REF_ATTR);
-            if (appender is not null)
+            if (FindAppenderByReference(currentElement) is IAppender appender)
             {
               LogLog.Debug(declaringType, $"Adding appender named [{refName}] to logger [{log.Name}].");
               log.AddAppender(appender);
@@ -467,8 +464,7 @@ namespace log4net.Repository.Hierarchy
       string renderedClassName = element.GetAttribute(RENDERED_TYPE_ATTR);
 
       LogLog.Debug(declaringType, $"Rendering class [{renderingClassName}], Rendered class [{renderedClassName}].");
-      IObjectRenderer renderer = (IObjectRenderer)OptionConverter.InstantiateByClassName(renderingClassName, typeof(IObjectRenderer), null);
-      if (renderer is null)
+      if (OptionConverter.InstantiateByClassName(renderingClassName, typeof(IObjectRenderer), null) is not IObjectRenderer renderer)
       {
         LogLog.Error(declaringType, $"Could not instantiate renderer [{renderingClassName}].");
         return;
@@ -635,7 +631,7 @@ namespace log4net.Repository.Hierarchy
             LogLog.Debug(declaringType, "Security exception while trying to expand environment variables. Error Ignored. No Expansion.");
           }
 
-          Type parsedObjectConversionTargetType = null;
+          Type? parsedObjectConversionTargetType = null;
 
           // Check if a specific subtype is specified on the element using the 'type' attribute
           string subTypeString = element.GetAttribute(TYPE_ATTR);
@@ -709,7 +705,7 @@ namespace log4net.Repository.Hierarchy
             else
             {
               // Got a converted result
-              LogLog.Debug(declaringType, $"Setting Collection Property [{methInfo.Name}] to {convertedValue.GetType().Name} value [{convertedValue}]");
+              LogLog.Debug(declaringType, $"Setting Collection Property [{methInfo!.Name}] to {convertedValue.GetType().Name} value [{convertedValue}]");
 
               try
               {
@@ -776,7 +772,7 @@ namespace log4net.Repository.Hierarchy
             else
             {
               // Got a converted result
-              LogLog.Debug(declaringType, $"Setting Collection Property [{methInfo.Name}] to object [{createdObject}]");
+              LogLog.Debug(declaringType, $"Setting Collection Property [{methInfo!.Name}] to object [{createdObject}]");
 
               try
               {
@@ -1002,7 +998,7 @@ namespace log4net.Repository.Hierarchy
       if (requiresConversion)
       {
         // Convert the object type
-        return OptionConverter.ConvertTypeTo(createdObject, typeConstraint);
+        return OptionConverter.ConvertTypeTo(createdObject, typeConstraint!);
       }
 
       // The object is of the correct type

@@ -20,6 +20,7 @@
 using System.IO;
 using System.Collections;
 using System.Configuration;
+using System.Collections.Generic;
 
 namespace log4net.Util.PatternStringConverters
 {
@@ -55,9 +56,9 @@ namespace log4net.Util.PatternStringConverters
     {
       get
       {
-        if (_appSettingsHashTable == null)
+        if (_appSettingsHashTable is null)
         {
-          Hashtable h = new Hashtable();
+          var h = new Dictionary<string, string?>();
           foreach (string key in ConfigurationManager.AppSettings)
           {
             h.Add(key, ConfigurationManager.AppSettings[key]);
@@ -68,7 +69,7 @@ namespace log4net.Util.PatternStringConverters
       }
 
     }
-    private static Hashtable _appSettingsHashTable;
+    private static Dictionary<string, string?>? _appSettingsHashTable;
 
     /// <summary>
     /// Write the property value to the output
@@ -86,14 +87,18 @@ namespace log4net.Util.PatternStringConverters
     /// then all the properties are written as key value pairs.
     /// </para>
     /// </remarks>
-    public override void Convert(TextWriter writer, object state)
+    public override void Convert(TextWriter writer, object? state)
     {
       if (Option is not null)
+      {
         // Write the value for the specified key
         WriteObject(writer, null, ConfigurationManager.AppSettings[Option]);
+      }
       else
+      {
         // Write all the key value pairs
         WriteDictionary(writer, null, AppSettingsDictionary);
+      }
     }
   }
 }

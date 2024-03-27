@@ -321,13 +321,22 @@ namespace log4net.Appender
     /// </remarks>
     protected override void Append(LoggingEvent loggingEvent)
     {
+      if (Client is null)
+      {
+        ErrorHandler.Error(
+          $"Unable to send logging event to remote syslog {RemoteAddress} on port {RemotePort}, no client created",
+          e: null,
+          ErrorCode.WriteFailure);
+        return;
+      }
+
       try
       {
         // Priority
         int priority = GeneratePriority(Facility, GetSeverity(loggingEvent.Level));
 
         // Identity
-        string identity;
+        string? identity;
         if (Identity is not null)
         {
           identity = Identity.Format(loggingEvent);
@@ -342,7 +351,7 @@ namespace log4net.Appender
 
         int i = 0;
 
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
 
         while (i < message.Length)
         {
@@ -350,13 +359,10 @@ namespace log4net.Appender
           builder.Length = 0;
 
           // Write priority
-          builder.Append('<');
-          builder.Append(priority);
-          builder.Append('>');
+          builder.Append('<').Append(priority).Append('>');
 
           // Write identity
-          builder.Append(identity);
-          builder.Append(": ");
+          builder.Append(identity).Append(": ");
 
           AppendMessage(message, ref i, builder);
 
@@ -425,11 +431,6 @@ namespace log4net.Appender
     /// </summary>
     /// <param name="level">A log4net level.</param>
     /// <returns>A syslog severity.</returns>
-    /// <remarks>
-    /// <para>
-    /// Translates a log4net level to a syslog severity.
-    /// </para>
-    /// </remarks>
     protected virtual SyslogSeverity GetSeverity(Level? level)
     {
       if (m_levelMapping.Lookup(level) is LevelSeverity levelSeverity)
@@ -441,6 +442,11 @@ namespace log4net.Appender
       // Fallback to sensible default values
       //
 
+      if (level is null)
+      {
+        // Default setting
+        return SyslogSeverity.Debug;
+      }
       if (level >= Level.Alert)
       {
         return SyslogSeverity.Alert;

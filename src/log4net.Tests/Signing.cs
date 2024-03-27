@@ -32,7 +32,8 @@ namespace log4net.Tests
       var asm = typeof(LoggerRepositorySkeleton).Assembly;
       // Act
       var result = asm.GetName().GetPublicKey();
-      Assert.AreNotEqual(0, result.Length);
+      Assert.IsNotNull(result);
+      Assert.AreNotEqual(0, result!.Length);
     }
   }
 }

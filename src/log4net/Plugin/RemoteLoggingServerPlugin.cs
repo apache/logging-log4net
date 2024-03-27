@@ -49,8 +49,6 @@ namespace log4net.Plugin
   /// <author>Gert Driesen</author>
   public class RemoteLoggingServerPlugin : PluginSkeleton
   {
-    #region Public Instance Constructors
-
     /// <summary>
     /// Default constructor
     /// </summary>
@@ -79,12 +77,8 @@ namespace log4net.Plugin
     /// </remarks>
     public RemoteLoggingServerPlugin(string sinkUri) : base("RemoteLoggingServerPlugin:" + sinkUri)
     {
-      m_sinkUri = sinkUri;
+      SinkUri = sinkUri;
     }
-
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
 
     /// <summary>
     /// Gets or sets the URI of this sink.
@@ -98,15 +92,7 @@ namespace log4net.Plugin
     /// <see cref="M:RemotingServices.Marshal(MarshalByRefObject,String,Type)"/>
     /// </para>
     /// </remarks>
-    public virtual string SinkUri
-    {
-      get { return m_sinkUri; }
-      set { m_sinkUri = value; }
-    }
-
-    #endregion Public Instance Properties
-
-    #region Override implementation of PluginSkeleton
+    public virtual string? SinkUri { get; set; }
 
     /// <summary>
     /// Attaches this plugin to a <see cref="ILoggerRepository"/>.
@@ -130,7 +116,7 @@ namespace log4net.Plugin
 
       try
       {
-        RemotingServices.Marshal(m_sink, m_sinkUri, typeof(IRemoteLoggingSink));
+        RemotingServices.Marshal(m_sink, SinkUri, typeof(IRemoteLoggingSink));
       }
       catch (Exception ex)
       {
@@ -139,11 +125,11 @@ namespace log4net.Plugin
     }
 
     /// <summary>
-    /// Is called when the plugin is to shutdown.
+    /// Is called when the plugin is to shut down.
     /// </summary>
     /// <remarks>
     /// <para>
-    /// When the plugin is shutdown the remote logging
+    /// When the plugin is shut down the remote logging
     /// sink is disconnected.
     /// </para>
     /// </remarks>
@@ -157,16 +143,7 @@ namespace log4net.Plugin
       base.Shutdown();
     }
 
-    #endregion Override implementation of PluginSkeleton
-
-    #region Private Instance Fields
-
-    private RemoteLoggingSinkImpl m_sink;
-    private string m_sinkUri;
-
-    #endregion Private Instance Fields
-
-    #region Private Static Fields
+    private RemoteLoggingSinkImpl? m_sink;
 
     /// <summary>
     /// The fully qualified type of the RemoteLoggingServerPlugin class.
@@ -177,8 +154,6 @@ namespace log4net.Plugin
     /// </remarks>
     private static readonly Type declaringType = typeof(RemoteLoggingServerPlugin);
 
-    #endregion Private Static Fields
-
     /// <summary>
     /// Delivers <see cref="LoggingEvent"/> objects to a remote sink.
     /// </summary>
@@ -188,10 +163,8 @@ namespace log4net.Plugin
     /// and deliver them to the local repository.
     /// </para>
     /// </remarks>
-    private class RemoteLoggingSinkImpl : MarshalByRefObject, IRemoteLoggingSink
+    private sealed class RemoteLoggingSinkImpl : MarshalByRefObject, IRemoteLoggingSink
     {
-      #region Public Instance Constructors
-
       /// <summary>
       /// Constructor
       /// </summary>
@@ -207,10 +180,6 @@ namespace log4net.Plugin
         m_repository = repository;
       }
 
-      #endregion Public Instance Constructors
-
-      #region Implementation of IRemoteLoggingSink
-
       /// <summary>
       /// Logs the events to the repository.
       /// </summary>
@@ -220,9 +189,9 @@ namespace log4net.Plugin
       /// The events passed are logged to the <see cref="ILoggerRepository"/>
       /// </para>
       /// </remarks>
-      public void LogEvents(LoggingEvent[] events)
+      public void LogEvents(LoggingEvent[]? events)
       {
-        if (events != null)
+        if (events is not null)
         {
           foreach (LoggingEvent logEvent in events)
           {
@@ -233,10 +202,6 @@ namespace log4net.Plugin
           }
         }
       }
-
-      #endregion Implementation of IRemoteLoggingSink
-
-      #region Override implementation of MarshalByRefObject
 
       /// <summary>
       /// Obtains a lifetime service object to control the lifetime 
@@ -251,22 +216,16 @@ namespace log4net.Plugin
       /// </para>
       /// </remarks>
       [System.Security.SecurityCritical]
-      public override object InitializeLifetimeService()
+      public override object? InitializeLifetimeService()
       {
         return null;
       }
-
-      #endregion Override implementation of MarshalByRefObject
-
-      #region Private Instance Fields
 
       /// <summary>
       /// The underlying <see cref="ILoggerRepository" /> that events should
       /// be logged to.
       /// </summary>
       private readonly ILoggerRepository m_repository;
-
-      #endregion Private Instance Fields
     }
   }
 }

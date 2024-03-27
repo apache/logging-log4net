@@ -22,8 +22,6 @@ using log4net.Tests.Layout;
 
 using NUnit.Framework;
 
-#nullable enable
-
 namespace log4net.Tests.Core
 {
   /// <summary>

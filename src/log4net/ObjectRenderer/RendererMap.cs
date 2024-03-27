@@ -22,8 +22,6 @@ using System.IO;
 using System.Collections.Concurrent;
 using log4net.Util;
 
-#nullable enable
-
 namespace log4net.ObjectRenderer
 {
   /// <summary>
@@ -60,7 +58,7 @@ namespace log4net.ObjectRenderer
     /// should be used when streaming output to a <see cref="TextWriter"/>.
     /// </para>
     /// </remarks>
-    public string FindAndRender(object obj)
+    public string FindAndRender(object? obj)
     {
       // Optimisation for strings
       if (obj is string strData)

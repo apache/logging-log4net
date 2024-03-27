@@ -25,23 +25,16 @@ using log4net.Core;
 using log4net.Layout;
 using log4net.Repository;
 using log4net.Tests.Appender;
-using log4net.Tests.Layout;
 
 using NUnit.Framework;
 
 namespace log4net.Tests.Core
 {
-  /// <summary>
-  /// Used for internal unit testing the <see cref="PatternLayoutTest"/> class.
-  /// </summary>
-  /// <remarks>
-  /// Used for internal unit testing the <see cref="PatternLayoutTest"/> class.
-  /// </remarks>
   [TestFixture]
   public class StringFormatTest
   {
-    private CultureInfo _currentCulture;
-    private CultureInfo _currentUICulture;
+    private CultureInfo? _currentCulture;
+    private CultureInfo? _currentUICulture;
 
     [SetUp]
     public void SetUp()
@@ -49,22 +42,24 @@ namespace log4net.Tests.Core
       // set correct thread culture
       _currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
       _currentUICulture = System.Threading.Thread.CurrentThread.CurrentUICulture;
-      System.Threading.Thread.CurrentThread.CurrentCulture = System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
+      System.Threading.Thread.CurrentThread.CurrentCulture = System.Threading.Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
     }
 
     [TearDown]
     public void TearDown()
     {
       // restore previous culture
-      System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture;
-      System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture;
+      System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture!;
+      System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture!;
     }
 
     [Test]
     public void TestFormatString()
     {
-      StringAppender stringAppender = new StringAppender();
-      stringAppender.Layout = new PatternLayout("%message");
+      var stringAppender = new StringAppender
+      {
+        Layout = new PatternLayout("%message")
+      };
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
       BasicConfigurator.Configure(rep, stringAppender);
@@ -112,16 +107,44 @@ namespace log4net.Tests.Core
       log1.InfoFormat("IGNORE THIS WARNING - EXCEPTION EXPECTED Before {0} After {1} {2}", "Middle", "End");
       Assert.AreEqual(STRING_FORMAT_ERROR, stringAppender.GetString(), "Test formatting error");
       stringAppender.Reset();
+
+      // ***
+      log1.InfoFormat("One{0} null", null);
+      Assert.AreEqual("One null", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.InfoFormat("Two{0} nulls{1}", null, null);
+      Assert.AreEqual("Two nulls", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.InfoFormat("Three{0} nulls{1} here{2}", null, null, null);
+      Assert.AreEqual("Three nulls here", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.InfoFormat("Four{0} nulls{1} this{2} time{3}", null, null, null, null);
+      Assert.AreEqual("Four nulls this time", stringAppender.GetString());
+      stringAppender.Reset();
+
+      object[]? args = null;
+      log1.InfoFormat("Null param array", args);
+      Assert.AreEqual("Null param array", stringAppender.GetString());
+      stringAppender.Reset();
+
+      // Degenerate case - null param array internally converts to an array of one null.
+      log1.InfoFormat("Null param array with {0}", args);
+      Assert.AreEqual("Null param array with ", stringAppender.GetString());
+      stringAppender.Reset();
     }
 
     private const string STRING_FORMAT_ERROR = "<log4net.Error>Exception during StringFormat: Index (zero based) must be greater than or equal to zero and less than the size of the argument list. <format>IGNORE THIS WARNING - EXCEPTION EXPECTED Before {0} After {1} {2}</format><args>{Middle, End}</args></log4net.Error>";
 
-
     [Test]
     public void TestLogFormatApi_Debug()
     {
-      StringAppender stringAppender = new StringAppender();
-      stringAppender.Layout = new PatternLayout("%level:%message");
+      var stringAppender = new StringAppender
+      {
+        Layout = new PatternLayout("%level:%message")
+      };
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
       BasicConfigurator.Configure(rep, stringAppender);
@@ -173,14 +196,43 @@ namespace log4net.Tests.Core
       log1.DebugFormat(new CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
       Assert.AreEqual("DEBUG:Before Middle After End", stringAppender.GetString(), "Test formatting with 'en' provider");
       stringAppender.Reset();
+
+      // ***
+      log1.DebugFormat("One{0} null", null);
+      Assert.AreEqual("DEBUG:One null", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.DebugFormat("Two{0} nulls{1}", null, null);
+      Assert.AreEqual("DEBUG:Two nulls", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.DebugFormat("Three{0} nulls{1} here{2}", null, null, null);
+      Assert.AreEqual("DEBUG:Three nulls here", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.DebugFormat("Four{0} nulls{1} this{2} time{3}", null, null, null, null);
+      Assert.AreEqual("DEBUG:Four nulls this time", stringAppender.GetString());
+      stringAppender.Reset();
+
+      object[]? args = null;
+      log1.DebugFormat("Null param array", args);
+      Assert.AreEqual("DEBUG:Null param array", stringAppender.GetString());
+      stringAppender.Reset();
+
+      // Degenerate case - null param array internally converts to an array of one null.
+      log1.DebugFormat("Null param array with {0}", args);
+      Assert.AreEqual("DEBUG:Null param array with ", stringAppender.GetString());
+      stringAppender.Reset();
     }
 
     [Test]
     public void TestLogFormatApi_NoDebug()
     {
-      StringAppender stringAppender = new StringAppender();
-      stringAppender.Threshold = Level.Info;
-      stringAppender.Layout = new PatternLayout("%level:%message");
+      var stringAppender = new StringAppender
+      {
+        Threshold = Level.Info,
+        Layout = new PatternLayout("%level:%message")
+      };
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
       BasicConfigurator.Configure(rep, stringAppender);
@@ -232,14 +284,42 @@ namespace log4net.Tests.Core
       log1.DebugFormat(new CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
       Assert.AreEqual("", stringAppender.GetString(), "Test formatting with 'en' provider");
       stringAppender.Reset();
-    }
 
+      // ***
+      log1.DebugFormat("One{0} null", null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.DebugFormat("Two{0} nulls{1}", null, null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.DebugFormat("Three{0} nulls{1} here{2}", null, null, null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.DebugFormat("Four{0} nulls{1} this{2} time{3}", null, null, null, null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      object[]? args = null;
+      log1.DebugFormat("Null param array", args);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      // Degenerate case - null param array internally converts to an array of one null.
+      log1.DebugFormat("Null param array with {0}", args);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+    }
 
     [Test]
     public void TestLogFormatApi_Info()
     {
-      StringAppender stringAppender = new StringAppender();
-      stringAppender.Layout = new PatternLayout("%level:%message");
+      var stringAppender = new StringAppender
+      {
+        Layout = new PatternLayout("%level:%message")
+      };
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
       BasicConfigurator.Configure(rep, stringAppender);
@@ -291,14 +371,43 @@ namespace log4net.Tests.Core
       log1.InfoFormat(new CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
       Assert.AreEqual("INFO:Before Middle After End", stringAppender.GetString(), "Test formatting with 'en' provider");
       stringAppender.Reset();
+
+      // ***
+      log1.InfoFormat("One{0} null", null);
+      Assert.AreEqual("INFO:One null", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.InfoFormat("Two{0} nulls{1}", null, null);
+      Assert.AreEqual("INFO:Two nulls", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.InfoFormat("Three{0} nulls{1} here{2}", null, null, null);
+      Assert.AreEqual("INFO:Three nulls here", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.InfoFormat("Four{0} nulls{1} this{2} time{3}", null, null, null, null);
+      Assert.AreEqual("INFO:Four nulls this time", stringAppender.GetString());
+      stringAppender.Reset();
+
+      object[]? args = null;
+      log1.InfoFormat("Null param array", args);
+      Assert.AreEqual("INFO:Null param array", stringAppender.GetString());
+      stringAppender.Reset();
+
+      // Degenerate case - null param array internally converts to an array of one null.
+      log1.InfoFormat("Null param array with {0}", args);
+      Assert.AreEqual("INFO:Null param array with ", stringAppender.GetString());
+      stringAppender.Reset();
     }
 
     [Test]
     public void TestLogFormatApi_NoInfo()
     {
-      StringAppender stringAppender = new StringAppender();
-      stringAppender.Threshold = Level.Warn;
-      stringAppender.Layout = new PatternLayout("%level:%message");
+      var stringAppender = new StringAppender
+      {
+        Threshold = Level.Warn,
+        Layout = new PatternLayout("%level:%message")
+      };
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
       BasicConfigurator.Configure(rep, stringAppender);
@@ -350,14 +459,42 @@ namespace log4net.Tests.Core
       log1.InfoFormat(new CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
       Assert.AreEqual("", stringAppender.GetString(), "Test formatting with 'en' provider");
       stringAppender.Reset();
-    }
 
+      // ***
+      log1.InfoFormat("One{0} null", null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.InfoFormat("Two{0} nulls{1}", null, null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.InfoFormat("Three{0} nulls{1} here{2}", null, null, null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.InfoFormat("Four{0} nulls{1} this{2} time{3}", null, null, null, null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      object[]? args = null;
+      log1.InfoFormat("Null param array", args);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      // Degenerate case - null param array internally converts to an array of one null.
+      log1.InfoFormat("Null param array with {0}", args);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+    }
 
     [Test]
     public void TestLogFormatApi_Warn()
     {
-      StringAppender stringAppender = new StringAppender();
-      stringAppender.Layout = new PatternLayout("%level:%message");
+      var stringAppender = new StringAppender
+      {
+        Layout = new PatternLayout("%level:%message")
+      };
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
       BasicConfigurator.Configure(rep, stringAppender);
@@ -409,14 +546,43 @@ namespace log4net.Tests.Core
       log1.WarnFormat(new CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
       Assert.AreEqual("WARN:Before Middle After End", stringAppender.GetString(), "Test formatting with 'en' provider");
       stringAppender.Reset();
+
+      // ***
+      log1.WarnFormat("One{0} null", null);
+      Assert.AreEqual("WARN:One null", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.WarnFormat("Two{0} nulls{1}", null, null);
+      Assert.AreEqual("WARN:Two nulls", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.WarnFormat("Three{0} nulls{1} here{2}", null, null, null);
+      Assert.AreEqual("WARN:Three nulls here", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.WarnFormat("Four{0} nulls{1} this{2} time{3}", null, null, null, null);
+      Assert.AreEqual("WARN:Four nulls this time", stringAppender.GetString());
+      stringAppender.Reset();
+
+      object[]? args = null;
+      log1.WarnFormat("Null param array", args);
+      Assert.AreEqual("WARN:Null param array", stringAppender.GetString());
+      stringAppender.Reset();
+
+      // Degenerate case - null param array internally converts to an array of one null.
+      log1.WarnFormat("Null param array with {0}", args);
+      Assert.AreEqual("WARN:Null param array with ", stringAppender.GetString());
+      stringAppender.Reset();
     }
 
     [Test]
     public void TestLogFormatApi_NoWarn()
     {
-      StringAppender stringAppender = new StringAppender();
-      stringAppender.Threshold = Level.Error;
-      stringAppender.Layout = new PatternLayout("%level:%message");
+      var stringAppender = new StringAppender
+      {
+        Threshold = Level.Error,
+        Layout = new PatternLayout("%level:%message")
+      };
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
       BasicConfigurator.Configure(rep, stringAppender);
@@ -468,14 +634,42 @@ namespace log4net.Tests.Core
       log1.WarnFormat(new CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
       Assert.AreEqual("", stringAppender.GetString(), "Test formatting with 'en' provider");
       stringAppender.Reset();
-    }
 
+      // ***
+      log1.WarnFormat("One{0} null", null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.WarnFormat("Two{0} nulls{1}", null, null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.WarnFormat("Three{0} nulls{1} here{2}", null, null, null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.WarnFormat("Four{0} nulls{1} this{2} time{3}", null, null, null, null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      object[]? args = null;
+      log1.WarnFormat("Null param array", args);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      // Degenerate case - null param array internally converts to an array of one null.
+      log1.WarnFormat("Null param array with {0}", args);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+    }
 
     [Test]
     public void TestLogFormatApi_Error()
     {
-      StringAppender stringAppender = new StringAppender();
-      stringAppender.Layout = new PatternLayout("%level:%message");
+      var stringAppender = new StringAppender
+      {
+        Layout = new PatternLayout("%level:%message")
+      };
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
       BasicConfigurator.Configure(rep, stringAppender);
@@ -527,14 +721,43 @@ namespace log4net.Tests.Core
       log1.ErrorFormat(new CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
       Assert.AreEqual("ERROR:Before Middle After End", stringAppender.GetString(), "Test formatting with 'en' provider");
       stringAppender.Reset();
+
+      // ***
+      log1.ErrorFormat("One{0} null", null);
+      Assert.AreEqual("ERROR:One null", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.ErrorFormat("Two{0} nulls{1}", null, null);
+      Assert.AreEqual("ERROR:Two nulls", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.ErrorFormat("Three{0} nulls{1} here{2}", null, null, null);
+      Assert.AreEqual("ERROR:Three nulls here", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.ErrorFormat("Four{0} nulls{1} this{2} time{3}", null, null, null, null);
+      Assert.AreEqual("ERROR:Four nulls this time", stringAppender.GetString());
+      stringAppender.Reset();
+
+      object[]? args = null;
+      log1.ErrorFormat("Null param array", args);
+      Assert.AreEqual("ERROR:Null param array", stringAppender.GetString());
+      stringAppender.Reset();
+
+      // Degenerate case - null param array internally converts to an array of one null.
+      log1.ErrorFormat("Null param array with {0}", args);
+      Assert.AreEqual("ERROR:Null param array with ", stringAppender.GetString());
+      stringAppender.Reset();
     }
 
     [Test]
     public void TestLogFormatApi_NoError()
     {
-      StringAppender stringAppender = new StringAppender();
-      stringAppender.Threshold = Level.Fatal;
-      stringAppender.Layout = new PatternLayout("%level:%message");
+      var stringAppender = new StringAppender
+      {
+        Threshold = Level.Fatal,
+        Layout = new PatternLayout("%level:%message")
+      };
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
       BasicConfigurator.Configure(rep, stringAppender);
@@ -586,14 +809,42 @@ namespace log4net.Tests.Core
       log1.ErrorFormat(new CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
       Assert.AreEqual("", stringAppender.GetString(), "Test formatting with 'en' provider");
       stringAppender.Reset();
-    }
 
+      // ***
+      log1.ErrorFormat("One{0} null", null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.ErrorFormat("Two{0} nulls{1}", null, null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.ErrorFormat("Three{0} nulls{1} here{2}", null, null, null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.ErrorFormat("Four{0} nulls{1} this{2} time{3}", null, null, null, null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      object[]? args = null;
+      log1.ErrorFormat("Null param array", args);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      // Degenerate case - null param array internally converts to an array of one null.
+      log1.ErrorFormat("Null param array with {0}", args);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+    }
 
     [Test]
     public void TestLogFormatApi_Fatal()
     {
-      StringAppender stringAppender = new StringAppender();
-      stringAppender.Layout = new PatternLayout("%level:%message");
+      var stringAppender = new StringAppender
+      {
+        Layout = new PatternLayout("%level:%message")
+      };
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
       BasicConfigurator.Configure(rep, stringAppender);
@@ -645,14 +896,43 @@ namespace log4net.Tests.Core
       log1.FatalFormat(new CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
       Assert.AreEqual("FATAL:Before Middle After End", stringAppender.GetString(), "Test formatting with 'en' provider");
       stringAppender.Reset();
+
+      // ***
+      log1.FatalFormat("One{0} null", null);
+      Assert.AreEqual("FATAL:One null", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.FatalFormat("Two{0} nulls{1}", null, null);
+      Assert.AreEqual("FATAL:Two nulls", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.FatalFormat("Three{0} nulls{1} here{2}", null, null, null);
+      Assert.AreEqual("FATAL:Three nulls here", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.FatalFormat("Four{0} nulls{1} this{2} time{3}", null, null, null, null);
+      Assert.AreEqual("FATAL:Four nulls this time", stringAppender.GetString());
+      stringAppender.Reset();
+
+      object[]? args = null;
+      log1.FatalFormat("Null param array", args);
+      Assert.AreEqual("FATAL:Null param array", stringAppender.GetString());
+      stringAppender.Reset();
+
+      // Degenerate case - null param array internally converts to an array of one null.
+      log1.FatalFormat("Null param array with {0}", args);
+      Assert.AreEqual("FATAL:Null param array with ", stringAppender.GetString());
+      stringAppender.Reset();
     }
 
     [Test]
     public void TestLogFormatApi_NoFatal()
     {
-      StringAppender stringAppender = new StringAppender();
-      stringAppender.Threshold = Level.Off;
-      stringAppender.Layout = new PatternLayout("%level:%message");
+      var stringAppender = new StringAppender
+      {
+        Threshold = Level.Off,
+        Layout = new PatternLayout("%level:%message")
+      };
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
       BasicConfigurator.Configure(rep, stringAppender);
@@ -703,6 +983,33 @@ namespace log4net.Tests.Core
       // ***
       log1.FatalFormat(new CultureInfo("en"), "Before {0} After {1}", "Middle", "End");
       Assert.AreEqual("", stringAppender.GetString(), "Test formatting with 'en' provider");
+      stringAppender.Reset();
+
+      // ***
+      log1.FatalFormat("One{0} null", null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.FatalFormat("Two{0} nulls{1}", null, null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.FatalFormat("Three{0} nulls{1} here{2}", null, null, null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.FatalFormat("Four{0} nulls{1} this{2} time{3}", null, null, null, null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      object[]? args = null;
+      log1.FatalFormat("Null param array", args);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      // Degenerate case - null param array internally converts to an array of one null.
+      log1.FatalFormat("Null param array with {0}", args);
+      Assert.AreEqual("", stringAppender.GetString());
       stringAppender.Reset();
     }
   }

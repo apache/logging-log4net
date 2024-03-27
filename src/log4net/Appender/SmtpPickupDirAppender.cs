@@ -187,6 +187,11 @@ namespace log4net.Appender
     /// </remarks>
     public override void ActivateOptions()
     {
+      if (PickupDir is null)
+      {
+        throw new ArgumentException($"{nameof(PickupDir)} must be specified", nameof(PickupDir));
+      }
+
       base.ActivateOptions();
 
       SecurityContext ??= SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);

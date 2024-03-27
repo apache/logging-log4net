@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 using log4net.Util;
@@ -112,9 +113,9 @@ namespace log4net.Core
           {
             // take into account the frames we skip above
             int adjustedFrameCount = st.FrameCount - frameIndex;
-            ArrayList stackFramesList = new ArrayList(adjustedFrameCount);
+            var stackFramesList = new List<StackFrameItem>(adjustedFrameCount);
             StackFrames = new StackFrameItem[adjustedFrameCount];
-            for (int i=frameIndex; i < st.FrameCount; i++) 
+            for (int i = frameIndex; i < st.FrameCount; i++) 
             {
               stackFramesList.Add(new StackFrameItem(st.GetFrame(i)));
             }
@@ -140,7 +141,7 @@ namespace log4net.Core
               LineNumber = locationFrame.GetFileLineNumber().ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
 
               // Combine all location info
-              FullInfo =  ClassName + '.' + MethodName + '(' + FileName + ':' + LineNumber + ')';
+              FullInfo = $"{ClassName}.{MethodName}({FileName}:{LineNumber})";
             }
           }
         }

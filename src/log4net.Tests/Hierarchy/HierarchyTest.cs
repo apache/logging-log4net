@@ -54,7 +54,7 @@ namespace log4net.Tests.Hierarchy
                 </log4net>");
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-      XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
+      XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
 
       Assert.AreEqual("4", rep.Properties["two-plus-two"]);
       Assert.IsNull(rep.Properties["one-plus-one"]);
@@ -115,7 +115,7 @@ namespace log4net.Tests.Hierarchy
                 </log4net>");
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-      XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
+      XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
     }
 
     [Test]
@@ -137,7 +137,7 @@ namespace log4net.Tests.Hierarchy
                 </log4net>");
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-      XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
+      XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
     }
 
     [Test]
@@ -159,7 +159,7 @@ namespace log4net.Tests.Hierarchy
                 </log4net>");
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-      XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
+      XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
     }
   }
 }

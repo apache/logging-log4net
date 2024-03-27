@@ -85,14 +85,7 @@ namespace log4net.Util.PatternStringConverters
     /// <summary>
     /// The <see cref="IDateFormatter"/> used to render the date to a string
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The <see cref="IDateFormatter"/> used to render the date to a string
-    /// </para>
-    /// </remarks>
-    protected IDateFormatter m_dateFormatter;
-
-    #region Implementation of IOptionHandler
+    protected IDateFormatter? m_dateFormatter;
 
     /// <summary>
     /// Initialize the converter options
@@ -112,12 +105,7 @@ namespace log4net.Util.PatternStringConverters
     /// </remarks>
     public void ActivateOptions()
     {
-      string dateFormatStr = Option;
-
-      if (dateFormatStr == null)
-      {
-        dateFormatStr = AbsoluteTimeDateFormatter.Iso8601TimeDateFormat;
-      }
+      string dateFormatStr = Option ?? AbsoluteTimeDateFormatter.Iso8601TimeDateFormat;
 
       if (SystemInfo.EqualsIgnoringCase(dateFormatStr, AbsoluteTimeDateFormatter.Iso8601TimeDateFormat))
       {
@@ -139,13 +127,11 @@ namespace log4net.Util.PatternStringConverters
         }
         catch (Exception e)
         {
-          LogLog.Error(declaringType, "Could not instantiate SimpleDateFormatter with [" + dateFormatStr + "]", e);
+          LogLog.Error(declaringType, $"Could not instantiate SimpleDateFormatter with [{dateFormatStr}]", e);
           m_dateFormatter = new Iso8601DateFormatter();
         }
       }
     }
-
-    #endregion
 
     /// <summary>
     /// Write the current date to the output
@@ -161,19 +147,17 @@ namespace log4net.Util.PatternStringConverters
     /// The date and time passed is in the local time zone.
     /// </para>
     /// </remarks>
-    public override void Convert(TextWriter writer, object state)
+    public override void Convert(TextWriter writer, object? state)
     {
       try
       {
-        m_dateFormatter.FormatDate(DateTime.Now, writer);
+        m_dateFormatter?.FormatDate(DateTime.Now, writer);
       }
       catch (Exception ex)
       {
         LogLog.Error(declaringType, "Error occurred while converting date.", ex);
       }
     }
-
-    #region Private Static Fields
 
     /// <summary>
     /// The fully qualified type of the DatePatternConverter class.
@@ -183,7 +167,5 @@ namespace log4net.Util.PatternStringConverters
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(DatePatternConverter);
-
-    #endregion Private Static Fields
   }
 }

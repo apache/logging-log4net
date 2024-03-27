@@ -149,7 +149,7 @@ namespace log4net.Layout
     public virtual string? Footer { get; set; }
 
     /// <summary>
-    /// Flag indicating if this layout handles exceptions
+    /// Flag indicating if this layout handles exceptions.
     /// </summary>
     /// <value><c>false</c> if this layout handles exceptions</value>
     /// <remarks>

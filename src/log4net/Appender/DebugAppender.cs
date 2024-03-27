@@ -99,7 +99,7 @@ namespace log4net.Appender
     /// <see cref="LoggingEvent"/> as the category parameter.
     /// </para>
     /// </remarks>
-    public PatternLayout Category { get; set; } = new("%logger");
+    public PatternLayout? Category { get; set; } = new("%logger");
 
     /// <summary>
     /// Flushes any buffered log data.

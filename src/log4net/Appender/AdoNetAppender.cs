@@ -27,8 +27,6 @@ using log4net.Util;
 using log4net.Layout;
 using log4net.Core;
 
-#nullable enable
-
 namespace log4net.Appender
 {
   /// <summary>

@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Net;
 
 namespace log4net.Util.TypeConverters
@@ -35,8 +36,6 @@ namespace log4net.Util.TypeConverters
   /// <author>Nicko Cadell</author>
   internal class IPAddressConverter : IConvertFrom
   {
-    #region Implementation of IConvertFrom
-
     /// <summary>
     /// Can the source type be converted to the type supported by this object
     /// </summary>
@@ -72,25 +71,20 @@ namespace log4net.Util.TypeConverters
     /// </exception>
     public object ConvertFrom(object source)
     {
-      string str = source as string;
-      if (str != null && str.Length > 0)
+      if (source is string str && str.Length > 0)
       {
         try
         {
           // Try an explicit parse of string representation of an IPAddress (v4 or v6)
-          IPAddress result;
-          if (IPAddress.TryParse(str, out result))
+          if (IPAddress.TryParse(str, out IPAddress result))
           {
             return result;
           }
 
           // Try to resolve via DNS. This is a blocking call. 
           // GetHostEntry works with either an IPAddress string or a host name
-          IPHostEntry host = Dns.GetHostEntry(str);
-          if (host != null &&
-            host.AddressList != null &&
-            host.AddressList.Length > 0 &&
-            host.AddressList[0] != null)
+          IPHostEntry? host = Dns.GetHostEntry(str);
+          if (host?.AddressList?.FirstOrDefault() is IPAddress address)
           {
             return host.AddressList[0];
           }
@@ -102,12 +96,5 @@ namespace log4net.Util.TypeConverters
       }
       throw ConversionNotSupportedException.Create(typeof(IPAddress), source);
     }
-
-    #endregion
-
-    /// <summary>
-    /// Valid characters in an IPv4 or IPv6 address string. (Does not support subnets)
-    /// </summary>
-    private static readonly char[] validIpAddressChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F', 'x', 'X', '.', ':', '%' };
   }
 }

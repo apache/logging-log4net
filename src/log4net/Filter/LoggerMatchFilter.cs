@@ -95,8 +95,9 @@ namespace log4net.Filter
         throw new ArgumentNullException(nameof(loggingEvent));
       }
 
-      // Check if we have been setup to filter
+      // Check if we have been set up to filter
       if (!string.IsNullOrEmpty(LoggerToMatch) &&
+        loggingEvent.LoggerName is not null &&
         loggingEvent.LoggerName.StartsWith(LoggerToMatch))
       {
         // we've got a match

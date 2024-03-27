@@ -38,7 +38,7 @@ namespace log4net.Util
     /// <summary>
     /// Args
     /// </summary>
-    public object[] Args { get; set; }
+    public object?[]? Args { get; set; }
 
     /// <summary>
     /// Initialise the <see cref="SystemStringFormat"/>
@@ -46,7 +46,7 @@ namespace log4net.Util
     /// <param name="provider">An <see cref="System.IFormatProvider"/> that supplies culture-specific formatting information.</param>
     /// <param name="format">A <see cref="System.String"/> containing zero or more format items.</param>
     /// <param name="args">An <see cref="System.Object"/> array containing zero or more objects to format.</param>
-    public SystemStringFormat(IFormatProvider? provider, string format, params object[] args)
+    public SystemStringFormat(IFormatProvider? provider, string format, params object?[]? args)
     {
       m_provider = provider;
       Format = format;
@@ -80,7 +80,7 @@ namespace log4net.Util
     /// exception and arguments are returned in the result string.
     /// </para>
     /// </remarks>
-    private static string? StringFormat(IFormatProvider? provider, string? format, params object[]? args)
+    private static string? StringFormat(IFormatProvider? provider, string? format, params object?[]? args)
     {
       try
       {
@@ -109,26 +109,17 @@ namespace log4net.Util
     /// <summary>
     /// Process an error during StringFormat
     /// </summary>
-    private static string StringFormatError(Exception? formatException, string? format, object[]? args)
+    private static string StringFormatError(Exception formatException, string? format, object?[]? args)
     {
       try
       {
         var buf = new StringBuilder("<log4net.Error>", 100);
-
-        if (formatException is not null)
-        {
-          buf.Append("Exception during StringFormat: ").Append(formatException.Message);
-        }
-        else
-        {
-          buf.Append("Exception during StringFormat");
-        }
+        buf.Append("Exception during StringFormat: ").Append(formatException.Message);
         buf.Append(" <format>").Append(format).Append("</format>");
         buf.Append("<args>");
         RenderArray(args, buf);
         buf.Append("</args>");
         buf.Append("</log4net.Error>");
-
         return buf.ToString();
       }
       catch (Exception ex)

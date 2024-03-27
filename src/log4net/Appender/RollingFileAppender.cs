@@ -27,8 +27,6 @@ using log4net.Core;
 using System.Threading;
 using System.ComponentModel;
 
-#nullable enable
-
 namespace log4net.Appender
 {
 #if CONFIRM_WIN32_FILE_SHAREMODES

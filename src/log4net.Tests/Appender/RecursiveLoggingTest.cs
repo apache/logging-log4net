@@ -30,17 +30,14 @@ namespace log4net.Tests.Appender
   [TestFixture]
   public class RecursiveLoggingTest
   {
-    private EventRaisingAppender m_eventRaisingAppender;
-    private Repository.Hierarchy.Hierarchy m_hierarchy;
+    private readonly EventRaisingAppender m_eventRaisingAppender = new();
+    private readonly Repository.Hierarchy.Hierarchy m_hierarchy = new Repository.Hierarchy.Hierarchy();
     private int m_eventCount;
-    private ILogger m_logger;
+    private ILogger? m_logger;
     private const int MaxRecursion = 3;
 
     private void SetupRepository()
     {
-      m_hierarchy = new Repository.Hierarchy.Hierarchy();
-
-      m_eventRaisingAppender = new EventRaisingAppender();
       m_eventRaisingAppender.LoggingEventAppended += eventRaisingAppender_LoggingEventAppended;
 
       m_hierarchy.Root.Level = Level.All;
@@ -49,12 +46,11 @@ namespace log4net.Tests.Appender
       BasicConfigurator.Configure(m_hierarchy, m_eventRaisingAppender);
 
       m_logger = m_hierarchy.GetLogger("test");
-
     }
 
-    void eventRaisingAppender_LoggingEventAppended(object sender, LoggingEventEventArgs e)
+    void eventRaisingAppender_LoggingEventAppended(object? sender, LoggingEventEventArgs e)
     {
-      if (m_eventCount < MaxRecursion && m_logger != null)
+      if (m_eventCount < MaxRecursion && m_logger is not null)
       {
         m_eventCount++;
         string message = String.Format(CultureInfo.CurrentCulture, "Log event {0} from EventRaisingAppender", m_eventCount);
@@ -69,10 +65,9 @@ namespace log4net.Tests.Appender
       SetupRepository();
 
       m_eventCount = 0;
-      m_logger.Log(typeof(RecursiveLoggingTest), Level.Warn, "Message logged", null);
+      m_logger!.Log(typeof(RecursiveLoggingTest), Level.Warn, "Message logged", null);
 
       Assert.AreEqual(MaxRecursion, m_eventCount, "Expected MaxRecursion recursive calls");
     }
-
   }
 }

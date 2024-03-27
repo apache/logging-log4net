@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using log4net.Appender;
 using log4net.Core;
@@ -735,6 +736,7 @@ namespace log4net
     /// </summary>
     /// <param name="logger">The logger to get the wrapper for.</param>
     /// <returns>The wrapper for the logger specified.</returns>
+    [return: NotNullIfNotNull("logger")]
     private static ILog? WrapLogger(ILogger? logger)
     {
       return (ILog?)s_wrapperMap.GetWrapper(logger);
@@ -747,7 +749,7 @@ namespace log4net
     /// <returns>The wrapper objects for the loggers specified.</returns>
     private static ILog[] WrapLoggers(ILogger[] loggers)
     {
-      ILog[] results = new ILog[loggers.Length];
+      var results = new ILog[loggers.Length];
       for (int i = 0; i < loggers.Length; i++)
       {
         results[i] = WrapLogger(loggers[i]);

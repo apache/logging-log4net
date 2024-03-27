@@ -103,12 +103,12 @@ namespace log4net.Config
     public IPlugin CreatePlugin()
     {
       // Get the plugin object type from the type first before trying the string type name.
-      Type? pluginType = Type ?? SystemInfo.GetTypeFromString(TypeName, true, true);
+      Type? pluginType = Type ?? SystemInfo.GetTypeFromString(TypeName!, true, true);
 
       // Check that the type is a plugin
       if (!(typeof(IPlugin).IsAssignableFrom(pluginType)))
       {
-        throw new LogException($"Plugin type [{pluginType.FullName}] does not implement the log4net.IPlugin interface");
+        throw new LogException($"Plugin type [{pluginType?.FullName}] does not implement the log4net.IPlugin interface");
       }
 
       // Create an instance of the plugin using the default constructor

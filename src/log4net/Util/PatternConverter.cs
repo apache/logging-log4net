@@ -103,7 +103,7 @@ namespace log4net.Util
     /// convert conversion specifiers in the appropriate way.
     /// </para>
     /// </remarks>
-    public abstract void Convert(TextWriter writer, object state);
+    public abstract void Convert(TextWriter writer, object? state);
 
     /// <summary>
     /// Set the next pattern converter in the chains
@@ -135,7 +135,7 @@ namespace log4net.Util
     /// apply those formattings before writing the output.
     /// </para>
     /// </remarks>
-    public virtual void Format(TextWriter writer, object state)
+    public virtual void Format(TextWriter writer, object? state)
     {
       if (m_min < 0 && m_max == int.MaxValue)
       {
@@ -260,7 +260,7 @@ namespace log4net.Util
     /// the object's ToString method is called.
     /// </para>
     /// </remarks>
-    protected static void WriteDictionary(TextWriter writer, ILoggerRepository repository, IDictionary value)
+    protected static void WriteDictionary(TextWriter writer, ILoggerRepository? repository, IDictionary value)
     {
       WriteDictionary(writer, repository, value.GetEnumerator());
     }
@@ -284,7 +284,7 @@ namespace log4net.Util
     /// the object's ToString method is called.
     /// </para>
     /// </remarks>
-    protected static void WriteDictionary(TextWriter writer, ILoggerRepository repository, IDictionaryEnumerator value)
+    protected static void WriteDictionary(TextWriter writer, ILoggerRepository? repository, IDictionaryEnumerator value)
     {
       writer.Write("{");
 

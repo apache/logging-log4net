@@ -439,14 +439,6 @@ namespace log4net.Core
     /// <summary>
     /// Gets the <see cref="Level" /> of the logging event.
     /// </summary>
-    /// <value>
-    /// The <see cref="Level" /> of the logging event.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets the <see cref="Level" /> of the logging event.
-    /// </para>
-    /// </remarks>
     public Level? Level => m_data.Level;
 
     /// <summary>
@@ -473,22 +465,11 @@ namespace log4net.Core
     /// <summary>
     /// Gets the name of the logger that logged the event.
     /// </summary>
-    /// <value>
-    /// The name of the logger that logged the event.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets the name of the logger that logged the event.
-    /// </para>
-    /// </remarks>
     public string? LoggerName => m_data.LoggerName;
 
     /// <summary>
     /// Gets the location information for this logging event.
     /// </summary>
-    /// <value>
-    /// The location information for this logging event.
-    /// </value>
     /// <remarks>
     /// <para>
     /// The collected information is cached for future use.

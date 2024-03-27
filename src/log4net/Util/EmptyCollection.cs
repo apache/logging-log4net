@@ -36,8 +36,6 @@ namespace log4net.Util
   [Serializable]
   public sealed class EmptyCollection : ICollection
   {
-    #region Private Instance Constructors
-
     /// <summary>
     /// Initializes a new instance of the <see cref="EmptyCollection" /> class. 
     /// </summary>
@@ -50,10 +48,6 @@ namespace log4net.Util
     {
     }
 
-    #endregion Private Instance Constructors
-
-    #region Public Static Properties
-
     /// <summary>
     /// Gets the singleton instance of the empty collection.
     /// </summary>
@@ -63,14 +57,7 @@ namespace log4net.Util
     /// Gets the singleton instance of the empty collection.
     /// </para>
     /// </remarks>
-    public static EmptyCollection Instance
-    {
-      get { return s_instance; }
-    }
-
-    #endregion Public Static Properties
-
-    #region Implementation of ICollection
+    public static EmptyCollection Instance { get; } = new();
 
     /// <summary>
     /// Copies the elements of the <see cref="ICollection"/> to an 
@@ -87,7 +74,7 @@ namespace log4net.Util
     /// As the collection is empty no values are copied into the array.
     /// </para>
     /// </remarks>
-    public void CopyTo(System.Array array, int index)
+    public void CopyTo(Array array, int index)
     {
       // copy nothing
     }
@@ -103,10 +90,7 @@ namespace log4net.Util
     /// For the <see cref="EmptyCollection"/> this property is always <c>true</c>.
     /// </para>
     /// </remarks>
-    public bool IsSynchronized
-    {
-      get { return true; }
-    }
+    public bool IsSynchronized => true;
 
     /// <summary>
     /// Gets the number of elements contained in the <see cref="ICollection"/>.
@@ -119,10 +103,7 @@ namespace log4net.Util
     /// As the collection is empty the <see cref="Count"/> is always <c>0</c>.
     /// </para>
     /// </remarks>
-    public int Count
-    {
-      get { return 0; }
-    }
+    public int Count => 0;
 
     /// <summary>
     /// Gets an object that can be used to synchronize access to the <see cref="ICollection"/>.
@@ -136,14 +117,7 @@ namespace log4net.Util
     /// the <see cref="SyncRoot"/> object.
     /// </para>
     /// </remarks>
-    public object SyncRoot
-    {
-      get { return this; }
-    }
-
-    #endregion Implementation of ICollection
-
-    #region Implementation of IEnumerable
+    public object SyncRoot => this;
 
     /// <summary>
     /// Returns an enumerator that can iterate through a collection.
@@ -161,16 +135,5 @@ namespace log4net.Util
     {
       return NullEnumerator.Instance;
     }
-
-    #endregion Implementation of IEnumerable
-
-    #region Private Static Fields
-
-    /// <summary>
-    /// The singleton instance of the empty collection.
-    /// </summary>
-    private static readonly EmptyCollection s_instance = new EmptyCollection();
-
-    #endregion Private Static Fields
   }
 }

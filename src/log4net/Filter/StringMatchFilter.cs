@@ -34,7 +34,7 @@ namespace log4net.Filter
     /// <summary>
     /// A regex object to match (generated from m_stringRegexToMatch)
     /// </summary>
-    protected Regex m_regexToMatch;
+    protected Regex? m_regexToMatch;
 
     /// <summary>
     /// Initialize and precompile the Regex if required

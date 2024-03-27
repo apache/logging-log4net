@@ -51,7 +51,7 @@ namespace log4net.Layout.Pattern
     /// </remarks>
     protected override void Convert(TextWriter writer, LoggingEvent loggingEvent, HttpContext httpContext)
     {
-      HttpRequest request = null;
+      HttpRequest? request = null;
       try
       {
         request = httpContext.Request;

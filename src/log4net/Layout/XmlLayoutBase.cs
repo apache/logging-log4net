@@ -149,10 +149,7 @@ namespace log4net.Layout
     /// As this is the XML layout, the value is always <c>"text/xml"</c>.
     /// </para>
     /// </remarks>
-    public override string ContentType
-    {
-      get { return "text/xml"; }
-    }
+    public override string ContentType => "text/xml";
 
     /// <summary>
     /// Produces a formatted string.

@@ -24,40 +24,23 @@ using System.Runtime.InteropServices;
 namespace log4net.Util
 {
   /// <summary>
-  /// Represents a native error code and message.
+  /// Represents a Win32 native error code and message.
   /// </summary>
-  /// <remarks>
-  /// <para>
-  /// Represents a Win32 platform native error.
-  /// </para>
-  /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
   public sealed class NativeError
   {
-    #region Protected Instance Constructors
-
     /// <summary>
     /// Create an instance of the <see cref="NativeError" /> class with the specified 
     /// error number and message.
     /// </summary>
     /// <param name="number">The number of the native error.</param>
     /// <param name="message">The message of the native error.</param>
-    /// <remarks>
-    /// <para>
-    /// Create an instance of the <see cref="NativeError" /> class with the specified 
-    /// error number and message.
-    /// </para>
-    /// </remarks>
-    private NativeError(int number, string message)
+    private NativeError(int number, string? message)
     {
-      m_number = number;
-      m_message = message;
+      Number = number;
+      Message = message;
     }
-
-    #endregion // Protected Instance Constructors
-
-    #region Public Instance Properties
 
     /// <summary>
     /// Gets the number of the native error.
@@ -70,33 +53,15 @@ namespace log4net.Util
     /// Gets the number of the native error.
     /// </para>
     /// </remarks>
-    public int Number
-    {
-      get { return m_number; }
-    }
+    public int Number { get; }
 
     /// <summary>
     /// Gets the message of the native error.
     /// </summary>
-    /// <value>
-    /// The message of the native error.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// </para>
-    /// Gets the message of the native error.
-    /// </remarks>
-    public string Message
-    {
-      get { return m_message; }
-    }
-
-    #endregion // Public Instance Properties
-
-    #region Public Static Methods
+    public string? Message { get; }
 
     /// <summary>
-    /// Create a new instance of the <see cref="NativeError" /> class for the last Windows error.
+    /// Creates a new instance of the <see cref="NativeError" /> class for the last Windows error.
     /// </summary>
     /// <returns>
     /// An instance of the <see cref="NativeError" /> class for the last windows error.
@@ -112,7 +77,7 @@ namespace log4net.Util
     public static NativeError GetLastError()
     {
       int number = Marshal.GetLastWin32Error();
-      return new NativeError(number, NativeError.GetErrorMessage(number));
+      return new NativeError(number, GetErrorMessage(number));
     }
 
     /// <summary>
@@ -131,7 +96,7 @@ namespace log4net.Util
     /// </remarks>
     public static NativeError GetError(int number)
     {
-      return new NativeError(number, NativeError.GetErrorMessage(number));
+      return new NativeError(number, GetErrorMessage(number));
     }
 
     /// <summary>
@@ -149,16 +114,16 @@ namespace log4net.Util
     /// </remarks>
     [System.Security.SecuritySafeCritical]
     [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
-    public static string GetErrorMessage(int messageId)
+    public static string? GetErrorMessage(int messageId)
     {
       // Win32 constants
       int FORMAT_MESSAGE_ALLOCATE_BUFFER = 0x00000100;  // The function should allocates a buffer large enough to hold the formatted message
       int FORMAT_MESSAGE_IGNORE_INSERTS = 0x00000200;    // Insert sequences in the message definition are to be ignored
       int FORMAT_MESSAGE_FROM_SYSTEM = 0x00001000;    // The function should search the system message-table resource(s) for the requested message
 
-      string msgBuf = "";        // buffer that will receive the message
-      IntPtr sourcePtr = new IntPtr();  // Location of the message definition, will be ignored
-      IntPtr argumentsPtr = new IntPtr();  // Pointer to array of values to insert, not supported as it requires unsafe code
+      string? msgBuf = "";        // buffer that will receive the message
+      var sourcePtr = new IntPtr();  // Location of the message definition, will be ignored
+      var argumentsPtr = new IntPtr();  // Pointer to array of values to insert, not supported as it requires unsafe code
 
       if (messageId != 0)
       {
@@ -175,7 +140,7 @@ namespace log4net.Util
         if (messageSize > 0)
         {
           // Remove trailing null-terminating characters (\r\n) from the message
-          msgBuf = msgBuf.TrimEnd(new char[] { '\r', '\n' });
+          msgBuf = msgBuf.TrimEnd(Newlines);
         }
         else
         {
@@ -191,10 +156,6 @@ namespace log4net.Util
       return msgBuf;
     }
 
-    #endregion // Public Static Methods
-
-    #region Override Object Implementation
-
     /// <summary>
     /// Return error information string
     /// </summary>
@@ -206,12 +167,8 @@ namespace log4net.Util
     /// </remarks>
     public override string ToString()
     {
-      return string.Format(CultureInfo.InvariantCulture, "0x{0:x8}", this.Number) + (this.Message != null ? ": " + this.Message : "");
+      return string.Format(CultureInfo.InvariantCulture, "0x{0:x8}", Number) + (Message is not null ? ": " + Message : string.Empty);
     }
-
-    #endregion // Override Object Implementation
-
-    #region Stubs For Native Function Calls
 
     /// <summary>
     /// Formats a message string.
@@ -248,22 +205,16 @@ namespace log4net.Util
     /// </para>
     /// </returns>
     [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     private static extern int FormatMessage(
       int dwFlags,
       ref IntPtr lpSource,
       int dwMessageId,
       int dwLanguageId,
-      ref String lpBuffer,
+      ref string lpBuffer,
       int nSize,
       IntPtr Arguments);
 
-    #endregion // Stubs For Native Function Calls
-
-    #region Private Instance Fields
-
-    private int m_number;
-    private string m_message;
-
-    #endregion
+    private static readonly char[] Newlines = { '\r', '\n' };
   }
 }
