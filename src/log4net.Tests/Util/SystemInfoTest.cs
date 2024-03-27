@@ -55,7 +55,7 @@ namespace log4net.Tests.Util
 
     private static Func<string> GetAssemblyLocationInfoMethodCall()
     {
-      var method = typeof(SystemInfoTest).GetMethod("TestAssemblyLocationInfoMethod", Array.Empty<Type>());
+      var method = typeof(SystemInfoTest).GetMethod(nameof(TestAssemblyLocationInfoMethod), Array.Empty<Type>());
       var methodCall = Expression.Call(null, method!, Array.Empty<Expression>());
       return Expression.Lambda<Func<string>>(methodCall, Array.Empty<ParameterExpression>()).Compile();
     }

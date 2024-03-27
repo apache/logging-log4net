@@ -310,8 +310,7 @@ namespace log4net.Repository.Hierarchy
               {
                 LogLog.Debug(declaringType, $"Attaching appender named [{refName}] to appender named [{appender.Name}].");
 
-                IAppender? referencedAppender = FindAppenderByReference(currentElement);
-                if (referencedAppender is not null)
+                if (FindAppenderByReference(currentElement) is IAppender referencedAppender)
                 {
                   appenderContainer.AddAppender(referencedAppender);
                 }
@@ -422,9 +421,8 @@ namespace log4net.Repository.Hierarchy
 
           if (currentElement.LocalName == APPENDER_REF_TAG)
           {
-            IAppender? appender = FindAppenderByReference(currentElement);
             string refName = currentElement.GetAttribute(REF_ATTR);
-            if (appender is not null)
+            if (FindAppenderByReference(currentElement) is IAppender appender)
             {
               LogLog.Debug(declaringType, $"Adding appender named [{refName}] to logger [{log.Name}].");
               log.AddAppender(appender);

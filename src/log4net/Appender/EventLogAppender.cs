@@ -344,8 +344,7 @@ namespace log4net.Appender
       int eventID = m_eventId;
 
       // Look for the EventID property
-      object? eventIDPropertyObj = loggingEvent.LookupProperty("EventID");
-      if (eventIDPropertyObj is not null)
+      if (loggingEvent.LookupProperty("EventID") is object eventIDPropertyObj)
       {
         if (eventIDPropertyObj is int eventIdInt)
         {

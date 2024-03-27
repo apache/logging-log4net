@@ -183,8 +183,7 @@ namespace log4net.ObjectRenderer
         return;
       }
 
-      string? str = obj.ToString();
-      writer.Write(str ?? SystemInfo.NullText);
+      writer.Write(obj.ToString() ?? SystemInfo.NullText);
     }
 
     /// <summary>

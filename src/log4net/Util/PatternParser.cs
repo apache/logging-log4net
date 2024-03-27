@@ -282,8 +282,7 @@ namespace log4net.Util
       LogLog.Debug(declaringType, $"Converter [{converterName}] Option [{option}] Format [min={formattingInfo.Min},max={formattingInfo.Max},leftAlign={formattingInfo.LeftAlign}]");
 
       // Lookup the converter type
-      ConverterInfo? converterInfo = (ConverterInfo)PatternConverters[converterName];
-      if (converterInfo is null)
+      if (PatternConverters[converterName] is not ConverterInfo converterInfo)
       {
         LogLog.Error(declaringType, $"Unknown converter name [{converterName}] in conversion pattern.");
       }

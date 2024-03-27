@@ -212,7 +212,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Debug(object)"/>
     /// <seealso cref="ILog.IsDebugEnabled"/>
-    public static void DebugFormatExt(this ILog logger, string format, object arg0)
+    public static void DebugFormatExt(this ILog logger, string format, object? arg0)
     {
       try
       {
@@ -247,7 +247,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Debug(object)"/>
     /// <seealso cref="ILog.IsDebugEnabled"/>
-    public static void DebugFormatExt(this ILog logger, string format, params object[] args)
+    public static void DebugFormatExt(this ILog logger, string format, params object?[]? args)
     {
       try
       {
@@ -283,7 +283,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Debug(object)"/>
     /// <seealso cref="ILog.IsDebugEnabled"/>
-    public static void DebugFormatExt(this ILog logger, IFormatProvider provider, string format, params object[] args)
+    public static void DebugFormatExt(this ILog logger, IFormatProvider provider, string format, params object?[]? args)
     {
       try
       {
@@ -319,7 +319,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Debug(object)"/>
     /// <seealso cref="ILog.IsDebugEnabled"/>
-    public static void DebugFormatExt(this ILog logger, string format, object arg0, object arg1)
+    public static void DebugFormatExt(this ILog logger, string format, object? arg0, object? arg1)
     {
       try
       {
@@ -356,7 +356,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Debug(object)"/>
     /// <seealso cref="ILog.IsDebugEnabled"/>
-    public static void DebugFormatExt(this ILog logger, string format, object arg0, object arg1, object arg2)
+    public static void DebugFormatExt(this ILog logger, string format, object? arg0, object? arg1, object? arg2)
     {
       try
       {
@@ -532,7 +532,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Info(object)"/>
     /// <seealso cref="ILog.IsInfoEnabled"/>
-    public static void InfoFormatExt(this ILog logger, string format, object arg0)
+    public static void InfoFormatExt(this ILog logger, string format, object? arg0)
     {
       try
       {
@@ -567,7 +567,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Info(object)"/>
     /// <seealso cref="ILog.IsInfoEnabled"/>
-    public static void InfoFormatExt(this ILog logger, string format, params object[] args)
+    public static void InfoFormatExt(this ILog logger, string format, params object?[]? args)
     {
       try
       {
@@ -603,7 +603,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Info(object)"/>
     /// <seealso cref="ILog.IsInfoEnabled"/>
-    public static void InfoFormatExt(this ILog logger, IFormatProvider provider, string format, params object[] args)
+    public static void InfoFormatExt(this ILog logger, IFormatProvider provider, string format, params object?[]? args)
     {
       try
       {
@@ -639,7 +639,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Info(object)"/>
     /// <seealso cref="ILog.IsInfoEnabled"/>
-    public static void InfoFormatExt(this ILog logger, string format, object arg0, object arg1)
+    public static void InfoFormatExt(this ILog logger, string format, object? arg0, object? arg1)
     {
       try
       {
@@ -676,7 +676,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Info(object)"/>
     /// <seealso cref="ILog.IsInfoEnabled"/>
-    public static void InfoFormatExt(this ILog logger, string format, object arg0, object arg1, object arg2)
+    public static void InfoFormatExt(this ILog logger, string format, object? arg0, object? arg1, object? arg2)
     {
       try
       {
@@ -852,7 +852,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Warn(object)"/>
     /// <seealso cref="ILog.IsWarnEnabled"/>
-    public static void WarnFormatExt(this ILog logger, string format, object arg0)
+    public static void WarnFormatExt(this ILog logger, string format, object? arg0)
     {
       try
       {
@@ -887,7 +887,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Warn(object)"/>
     /// <seealso cref="ILog.IsWarnEnabled"/>
-    public static void WarnFormatExt(this ILog logger, string format, params object[] args)
+    public static void WarnFormatExt(this ILog logger, string format, params object?[]? args)
     {
       try
       {
@@ -923,7 +923,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Warn(object)"/>
     /// <seealso cref="ILog.IsWarnEnabled"/>
-    public static void WarnFormatExt(this ILog logger, IFormatProvider provider, string format, params object[] args)
+    public static void WarnFormatExt(this ILog logger, IFormatProvider provider, string format, params object?[]? args)
     {
       try
       {
@@ -959,7 +959,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Warn(object)"/>
     /// <seealso cref="ILog.IsWarnEnabled"/>
-    public static void WarnFormatExt(this ILog logger, string format, object arg0, object arg1)
+    public static void WarnFormatExt(this ILog logger, string format, object? arg0, object? arg1)
     {
       try
       {
@@ -996,7 +996,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Warn(object)"/>
     /// <seealso cref="ILog.IsWarnEnabled"/>
-    public static void WarnFormatExt(this ILog logger, string format, object arg0, object arg1, object arg2)
+    public static void WarnFormatExt(this ILog logger, string format, object? arg0, object? arg1, object? arg2)
     {
       try
       {
@@ -1172,7 +1172,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Error(object)"/>
     /// <seealso cref="ILog.IsErrorEnabled"/>
-    public static void ErrorFormatExt(this ILog logger, string format, object arg0)
+    public static void ErrorFormatExt(this ILog logger, string format, object? arg0)
     {
       try
       {
@@ -1207,7 +1207,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Error(object)"/>
     /// <seealso cref="ILog.IsErrorEnabled"/>
-    public static void ErrorFormatExt(this ILog logger, string format, params object[] args)
+    public static void ErrorFormatExt(this ILog logger, string format, params object?[]? args)
     {
       try
       {
@@ -1243,7 +1243,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Error(object)"/>
     /// <seealso cref="ILog.IsErrorEnabled"/>
-    public static void ErrorFormatExt(this ILog logger, IFormatProvider provider, string format, params object[] args)
+    public static void ErrorFormatExt(this ILog logger, IFormatProvider provider, string format, params object?[]? args)
     {
       try
       {
@@ -1279,7 +1279,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Error(object)"/>
     /// <seealso cref="ILog.IsErrorEnabled"/>
-    public static void ErrorFormatExt(this ILog logger, string format, object arg0, object arg1)
+    public static void ErrorFormatExt(this ILog logger, string format, object? arg0, object? arg1)
     {
       try
       {
@@ -1316,7 +1316,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Error(object)"/>
     /// <seealso cref="ILog.IsErrorEnabled"/>
-    public static void ErrorFormatExt(this ILog logger, string format, object arg0, object arg1, object arg2)
+    public static void ErrorFormatExt(this ILog logger, string format, object? arg0, object? arg1, object? arg2)
     {
       try
       {
@@ -1492,7 +1492,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Fatal(object)"/>
     /// <seealso cref="ILog.IsFatalEnabled"/>
-    public static void FatalFormatExt(this ILog logger, string format, object arg0)
+    public static void FatalFormatExt(this ILog logger, string format, object? arg0)
     {
       try
       {
@@ -1527,7 +1527,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Fatal(object)"/>
     /// <seealso cref="ILog.IsFatalEnabled"/>
-    public static void FatalFormatExt(this ILog logger, string format, params object[] args)
+    public static void FatalFormatExt(this ILog logger, string format, params object?[]? args)
     {
       try
       {
@@ -1563,7 +1563,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Fatal(object)"/>
     /// <seealso cref="ILog.IsFatalEnabled"/>
-    public static void FatalFormatExt(this ILog logger, IFormatProvider provider, string format, params object[] args)
+    public static void FatalFormatExt(this ILog logger, IFormatProvider provider, string format, params object?[]? args)
     {
       try
       {
@@ -1599,7 +1599,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Fatal(object)"/>
     /// <seealso cref="ILog.IsFatalEnabled"/>
-    public static void FatalFormatExt(this ILog logger, string format, object arg0, object arg1)
+    public static void FatalFormatExt(this ILog logger, string format, object? arg0, object? arg1)
     {
       try
       {
@@ -1636,7 +1636,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Fatal(object)"/>
     /// <seealso cref="ILog.IsFatalEnabled"/>
-    public static void FatalFormatExt(this ILog logger, string format, object arg0, object arg1, object arg2)
+    public static void FatalFormatExt(this ILog logger, string format, object? arg0, object? arg1, object? arg2)
     {
       try
       {

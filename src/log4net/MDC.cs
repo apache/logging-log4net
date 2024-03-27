@@ -67,8 +67,7 @@ namespace log4net
     /*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
     public static string? Get(string key)
     {
-      object? obj = ThreadContext.Properties[key];
-      return obj?.ToString();
+      return ThreadContext.Properties[key]?.ToString();
     }
 
     /// <summary>

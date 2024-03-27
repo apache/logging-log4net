@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using log4net.Appender;
 using log4net.Core;
@@ -82,7 +83,7 @@ namespace log4net
     /// <para>The root logger is <b>not</b> included in the returned array.</para>
     /// </remarks>
     /// <returns>All the defined loggers.</returns>
-    public static ILog?[] GetCurrentLoggers()
+    public static ILog[] GetCurrentLoggers()
     {
       return GetCurrentLoggers(Assembly.GetCallingAssembly());
     }
@@ -160,7 +161,7 @@ namespace log4net
     /// The root logger is <b>not</b> included in the returned array.
     /// </remarks>
     /// <returns>All the defined loggers.</returns>
-    public static ILog?[] GetCurrentLoggers(string repository)
+    public static ILog[] GetCurrentLoggers(string repository)
     {
       return WrapLoggers(LoggerManager.GetCurrentLoggers(repository));
     }
@@ -173,7 +174,7 @@ namespace log4net
     /// The root logger is <b>not</b> included in the returned array.
     /// </remarks>
     /// <returns>All the defined loggers.</returns>
-    public static ILog?[] GetCurrentLoggers(Assembly repositoryAssembly)
+    public static ILog[] GetCurrentLoggers(Assembly repositoryAssembly)
     {
       return WrapLoggers(LoggerManager.GetCurrentLoggers(repositoryAssembly));
     }
@@ -735,6 +736,7 @@ namespace log4net
     /// </summary>
     /// <param name="logger">The logger to get the wrapper for.</param>
     /// <returns>The wrapper for the logger specified.</returns>
+    [return: NotNullIfNotNull("logger")]
     private static ILog? WrapLogger(ILogger? logger)
     {
       return (ILog?)s_wrapperMap.GetWrapper(logger);
@@ -745,9 +747,9 @@ namespace log4net
     /// </summary>
     /// <param name="loggers">The loggers to get the wrappers for.</param>
     /// <returns>The wrapper objects for the loggers specified.</returns>
-    private static ILog?[] WrapLoggers(ILogger[] loggers)
+    private static ILog[] WrapLoggers(ILogger[] loggers)
     {
-      var results = new ILog?[loggers.Length];
+      var results = new ILog[loggers.Length];
       for (int i = 0; i < loggers.Length; i++)
       {
         results[i] = WrapLogger(loggers[i]);

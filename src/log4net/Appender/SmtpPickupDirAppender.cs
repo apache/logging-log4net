@@ -189,7 +189,7 @@ namespace log4net.Appender
     {
       if (PickupDir is null)
       {
-        throw new ArgumentException($"{nameof(PickupDir)} must be specified");
+        throw new ArgumentException($"{nameof(PickupDir)} must be specified", nameof(PickupDir));
       }
 
       base.ActivateOptions();

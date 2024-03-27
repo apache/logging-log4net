@@ -45,9 +45,7 @@ namespace log4net.Util
       get
       {
         ThreadContextStack? stack;
-
-        object? propertyValue = m_properties[key];
-        if (propertyValue is null)
+        if (m_properties[key] is not object propertyValue)
         {
           // Stack does not exist, create
           stack = new ThreadContextStack();

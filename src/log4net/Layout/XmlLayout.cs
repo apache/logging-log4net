@@ -276,8 +276,7 @@ namespace log4net.Layout
 
       if (LocationInfo)
       {
-        LocationInfo? locationInfo = loggingEvent.LocationInformation;
-        if (locationInfo is not null)
+        if (loggingEvent.LocationInformation is LocationInfo locationInfo)
         {
           writer.WriteStartElement(m_elmLocation, Prefix, ELM_LOCATION, Prefix);
           writer.WriteAttributeString(ATTR_CLASS, locationInfo.ClassName);

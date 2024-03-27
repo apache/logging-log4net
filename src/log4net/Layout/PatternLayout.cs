@@ -1081,7 +1081,7 @@ namespace log4net.Layout
       }
       if (!typeof(PatternConverter).IsAssignableFrom(converterInfo.Type))
       {
-        throw new ArgumentException($"The converter type specified [{converterInfo.Type}] must be a subclass of log4net.Util.PatternConverter", "converterInfo");
+        throw new ArgumentException($"The converter type specified [{converterInfo.Type}] must be a subclass of log4net.Util.PatternConverter", nameof(converterInfo));
       }
       m_instanceRulesRegistry[converterInfo.Name] = converterInfo;
     }

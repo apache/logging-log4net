@@ -184,8 +184,7 @@ method="run" file="Generator.java" line="94"/>
         writer.WriteEndElement();
       }
 
-      object? ndcObj = loggingEvent.LookupProperty("NDC");
-      if (ndcObj is not null)
+      if (loggingEvent.LookupProperty("NDC") is object ndcObj)
       {
         string? valueStr = loggingEvent.Repository?.RendererMap.FindAndRender(ndcObj);
         if (!string.IsNullOrEmpty(valueStr))
@@ -230,8 +229,7 @@ method="run" file="Generator.java" line="94"/>
 
       if (LocationInfo)
       {
-        LocationInfo? locationInfo = loggingEvent.LocationInformation;
-        if (locationInfo is not null)
+        if (loggingEvent.LocationInformation is LocationInfo locationInfo)
         {
           writer.WriteStartElement("log4j:locationInfo", "log4j", "locationInfo", "log4net");
           writer.WriteAttributeString("class", locationInfo.ClassName);

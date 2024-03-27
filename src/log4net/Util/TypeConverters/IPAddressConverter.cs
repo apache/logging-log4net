@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Net;
 
 namespace log4net.Util.TypeConverters
@@ -83,9 +84,7 @@ namespace log4net.Util.TypeConverters
           // Try to resolve via DNS. This is a blocking call. 
           // GetHostEntry works with either an IPAddress string or a host name
           IPHostEntry? host = Dns.GetHostEntry(str);
-          if (host?.AddressList is not null &&
-            host.AddressList.Length > 0 &&
-            host.AddressList[0] is not null)
+          if (host?.AddressList?.FirstOrDefault() is IPAddress address)
           {
             return host.AddressList[0];
           }

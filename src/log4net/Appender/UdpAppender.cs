@@ -315,7 +315,7 @@ namespace log4net.Appender
 
       if (RemoteAddress is null)
       {
-        throw new ArgumentNullException($"The required property '{nameof(RemoteAddress)}' was not specified.");
+        throw new ArgumentNullException(nameof(RemoteAddress), $"The required property '{nameof(RemoteAddress)}' was not specified.");
       }
 
       else if (RemotePort < IPEndPoint.MinPort || RemotePort > IPEndPoint.MaxPort)

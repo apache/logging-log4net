@@ -157,12 +157,13 @@ namespace log4net.Tests.Util
 
   public class PatternStringAppender : StringAppender
   {
-    private static PatternStringAppender? mostRecentInstace;
-
-    public PatternStringAppender() => mostRecentInstace = this;
+    public PatternStringAppender()
+    {
+      MostRecentInstace = this;
+    }
 
     public PatternString? Setting { get; set; }
 
-    public static PatternStringAppender? MostRecentInstace => mostRecentInstace;
+    public static PatternStringAppender? MostRecentInstace { get; private set; }
   }
 }

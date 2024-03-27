@@ -47,8 +47,7 @@ namespace log4net.Util.PatternStringConverters
     {
       try
       {
-        string? name = System.Threading.Thread.CurrentPrincipal?.Identity?.Name;
-        if (name is not null)
+        if (System.Threading.Thread.CurrentPrincipal?.Identity?.Name is string name)
         {
           writer.Write(name);
         }

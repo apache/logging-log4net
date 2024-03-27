@@ -438,7 +438,6 @@ namespace log4net.Appender
 
         // Add to the buffer, returns the event discarded from the buffer if there is no space remaining after the append
         LoggingEvent? discardedLoggingEvent = m_cb.Append(loggingEvent);
-
         if (discardedLoggingEvent is not null)
         {
           // Buffer is full and has had to discard an event
