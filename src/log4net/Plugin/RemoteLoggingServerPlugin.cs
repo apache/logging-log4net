@@ -195,7 +195,7 @@ namespace log4net.Plugin
         {
           foreach (LoggingEvent logEvent in events)
           {
-            if (logEvent != null)
+            if (logEvent is not null)
             {
               m_repository.Log(logEvent);
             }

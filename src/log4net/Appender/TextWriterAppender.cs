@@ -168,12 +168,12 @@ namespace log4net.Appender
         return false;
       }
 
-      if (QuietWriter == null)
+      if (QuietWriter is null)
       {
         // Allow subclass to lazily create the writer
         PrepareWriter();
 
-        if (QuietWriter == null)
+        if (QuietWriter is null)
         {
           ErrorHandler.Error("No output stream or file set for the appender named [" + Name + "].");
           return false;

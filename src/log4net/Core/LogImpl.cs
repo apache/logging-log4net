@@ -162,7 +162,7 @@ namespace log4net.Core
     /// <see cref="M:Debug(object,Exception)"/> form instead.
     /// </para>
     /// </remarks>
-    public virtual void Debug(object message)
+    public virtual void Debug(object? message)
     {
       Logger.Log(ThisDeclaringType, m_levelDebug, message, null);
     }
@@ -183,7 +183,7 @@ namespace log4net.Core
     /// </para>
     /// </remarks>
     /// <seealso cref="M:Debug(object)"/>
-    public virtual void Debug(object message, Exception? exception)
+    public virtual void Debug(object? message, Exception? exception)
     {
       Logger.Log(ThisDeclaringType, m_levelDebug, message, exception);
     }
@@ -360,7 +360,7 @@ namespace log4net.Core
     /// <see cref="M:Info(object,Exception)"/> form instead.
     /// </para>
     /// </remarks>
-    public virtual void Info(object message)
+    public virtual void Info(object? message)
     {
       Logger.Log(ThisDeclaringType, m_levelInfo, message, null);
     }
@@ -381,7 +381,7 @@ namespace log4net.Core
     /// </para>
     /// </remarks>
     /// <seealso cref="M:Info(object)"/>
-    public virtual void Info(object message, Exception? exception)
+    public virtual void Info(object? message, Exception? exception)
     {
       Logger.Log(ThisDeclaringType, m_levelInfo, message, exception);
     }
@@ -558,7 +558,7 @@ namespace log4net.Core
     /// <see cref="M:Warn(object,Exception)"/> form instead.
     /// </para>
     /// </remarks>
-    public virtual void Warn(object message)
+    public virtual void Warn(object? message)
     {
       Logger.Log(ThisDeclaringType, m_levelWarn, message, null);
     }
@@ -579,7 +579,7 @@ namespace log4net.Core
     /// </para>
     /// </remarks>
     /// <seealso cref="M:Warn(object)"/>
-    public virtual void Warn(object message, Exception? exception)
+    public virtual void Warn(object? message, Exception? exception)
     {
       Logger.Log(ThisDeclaringType, m_levelWarn, message, exception);
     }
@@ -756,7 +756,7 @@ namespace log4net.Core
     /// <see cref="M:Error(object,Exception)"/> form instead.
     /// </para>
     /// </remarks>
-    public virtual void Error(object message)
+    public virtual void Error(object? message)
     {
       Logger.Log(ThisDeclaringType, m_levelError, message, null);
     }
@@ -777,7 +777,7 @@ namespace log4net.Core
     /// </para>
     /// </remarks>
     /// <seealso cref="M:Error(object)"/>
-    public virtual void Error(object message, Exception? exception)
+    public virtual void Error(object? message, Exception? exception)
     {
       Logger.Log(ThisDeclaringType, m_levelError, message, exception);
     }
@@ -954,7 +954,7 @@ namespace log4net.Core
     /// <see cref="M:Fatal(object,Exception)"/> form instead.
     /// </para>
     /// </remarks>
-    public virtual void Fatal(object message)
+    public virtual void Fatal(object? message)
     {
       Logger.Log(ThisDeclaringType, m_levelFatal, message, null);
     }
@@ -975,7 +975,7 @@ namespace log4net.Core
     /// </para>
     /// </remarks>
     /// <seealso cref="M:Fatal(object)"/>
-    public virtual void Fatal(object message, Exception? exception)
+    public virtual void Fatal(object? message, Exception? exception)
     {
       Logger.Log(ThisDeclaringType, m_levelFatal, message, exception);
     }

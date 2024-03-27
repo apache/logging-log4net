@@ -75,11 +75,11 @@ namespace log4net.Tests.Util
       }
       finally
       {
-        if (appDomain != null)
+        if (appDomain is not null)
         {
           AppDomain.Unload(appDomain);
         }
-        if (configurationFileName != null)
+        if (configurationFileName is not null)
         {
           File.Delete(configurationFileName);
         }

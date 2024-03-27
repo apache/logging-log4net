@@ -52,9 +52,9 @@ namespace log4net.Layout.Pattern
     /// </remarks>
     protected override void Convert(TextWriter writer, LoggingEvent loggingEvent, HttpContext httpContext)
     {
-      if (HttpRuntime.Cache != null)
+      if (HttpRuntime.Cache is not null)
       {
-        if (Option != null)
+        if (Option is not null)
         {
           WriteObject(writer, loggingEvent.Repository, HttpRuntime.Cache[Option]);
         }

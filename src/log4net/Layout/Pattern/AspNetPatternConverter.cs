@@ -38,7 +38,7 @@ namespace log4net.Layout.Pattern
   {
     protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
     {
-      if (HttpContext.Current == null)
+      if (HttpContext.Current is null)
       {
         writer.Write(SystemInfo.NotAvailableText);
       }

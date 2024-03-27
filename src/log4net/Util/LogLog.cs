@@ -300,7 +300,7 @@ namespace log4net.Util
         if (EmitInternalMessages)
         {
           EmitOutLine(PREFIX + message);
-          if (exception != null)
+          if (exception is not null)
           {
             EmitOutLine(exception.ToString());
           }
@@ -363,7 +363,7 @@ namespace log4net.Util
         if (EmitInternalMessages)
         {
           EmitErrorLine(WARN_PREFIX + message);
-          if (exception != null)
+          if (exception is not null)
           {
             EmitErrorLine(exception.ToString());
           }
@@ -431,7 +431,7 @@ namespace log4net.Util
         if (EmitInternalMessages)
         {
           EmitErrorLine(ERR_PREFIX + message);
-          if (exception != null)
+          if (exception is not null)
           {
             EmitErrorLine(exception.ToString());
           }

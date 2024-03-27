@@ -55,7 +55,7 @@ namespace log4net.Util
         {
           // Look for existing stack
           stack = propertyValue as ThreadContextStack;
-          if (stack == null)
+          if (stack is null)
           {
             // Property is not set to a stack!
             string propertyValueString = SystemInfo.NullText;

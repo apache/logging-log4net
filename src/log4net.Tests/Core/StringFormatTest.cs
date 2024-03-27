@@ -108,7 +108,15 @@ namespace log4net.Tests.Core
       Assert.AreEqual(STRING_FORMAT_ERROR, stringAppender.GetString(), "Test formatting error");
       stringAppender.Reset();
 
-      // ***
+      // *** Nulls
+      log1.Debug(null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.Debug(null, new Exception("Exception message"));
+      Assert.AreEqual("System.Exception: Exception message" + Environment.NewLine, stringAppender.GetString());
+      stringAppender.Reset();
+
       log1.InfoFormat("One{0} null", null);
       Assert.AreEqual("One null", stringAppender.GetString());
       stringAppender.Reset();
@@ -197,7 +205,15 @@ namespace log4net.Tests.Core
       Assert.AreEqual("DEBUG:Before Middle After End", stringAppender.GetString(), "Test formatting with 'en' provider");
       stringAppender.Reset();
 
-      // ***
+      // *** Nulls
+      log1.Debug(null);
+      Assert.AreEqual("DEBUG:", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.Debug(null, new Exception("Exception message"));
+      Assert.AreEqual("DEBUG:System.Exception: Exception message" + Environment.NewLine, stringAppender.GetString());
+      stringAppender.Reset();
+
       log1.DebugFormat("One{0} null", null);
       Assert.AreEqual("DEBUG:One null", stringAppender.GetString());
       stringAppender.Reset();
@@ -285,7 +301,15 @@ namespace log4net.Tests.Core
       Assert.AreEqual("", stringAppender.GetString(), "Test formatting with 'en' provider");
       stringAppender.Reset();
 
-      // ***
+      // *** Nulls
+      log1.Debug(null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.Debug(null, new Exception("Exception message"));
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
       log1.DebugFormat("One{0} null", null);
       Assert.AreEqual("", stringAppender.GetString());
       stringAppender.Reset();
@@ -372,7 +396,15 @@ namespace log4net.Tests.Core
       Assert.AreEqual("INFO:Before Middle After End", stringAppender.GetString(), "Test formatting with 'en' provider");
       stringAppender.Reset();
 
-      // ***
+      // *** Nulls
+      log1.Info(null);
+      Assert.AreEqual("INFO:", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.Info(null, new Exception("Exception message"));
+      Assert.AreEqual("INFO:System.Exception: Exception message" + Environment.NewLine, stringAppender.GetString());
+      stringAppender.Reset();
+
       log1.InfoFormat("One{0} null", null);
       Assert.AreEqual("INFO:One null", stringAppender.GetString());
       stringAppender.Reset();
@@ -460,7 +492,15 @@ namespace log4net.Tests.Core
       Assert.AreEqual("", stringAppender.GetString(), "Test formatting with 'en' provider");
       stringAppender.Reset();
 
-      // ***
+      // *** Nulls
+      log1.Info(null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.Info(null, new Exception("Exception message"));
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
       log1.InfoFormat("One{0} null", null);
       Assert.AreEqual("", stringAppender.GetString());
       stringAppender.Reset();
@@ -547,7 +587,15 @@ namespace log4net.Tests.Core
       Assert.AreEqual("WARN:Before Middle After End", stringAppender.GetString(), "Test formatting with 'en' provider");
       stringAppender.Reset();
 
-      // ***
+      // *** Nulls
+      log1.Warn(null);
+      Assert.AreEqual("WARN:", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.Warn(null, new Exception("Exception message"));
+      Assert.AreEqual("WARN:System.Exception: Exception message" + Environment.NewLine, stringAppender.GetString());
+      stringAppender.Reset();
+
       log1.WarnFormat("One{0} null", null);
       Assert.AreEqual("WARN:One null", stringAppender.GetString());
       stringAppender.Reset();
@@ -635,7 +683,15 @@ namespace log4net.Tests.Core
       Assert.AreEqual("", stringAppender.GetString(), "Test formatting with 'en' provider");
       stringAppender.Reset();
 
-      // ***
+      // *** Nulls
+      log1.Warn(null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.Warn(null, new Exception("Exception message"));
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
       log1.WarnFormat("One{0} null", null);
       Assert.AreEqual("", stringAppender.GetString());
       stringAppender.Reset();
@@ -722,7 +778,15 @@ namespace log4net.Tests.Core
       Assert.AreEqual("ERROR:Before Middle After End", stringAppender.GetString(), "Test formatting with 'en' provider");
       stringAppender.Reset();
 
-      // ***
+      // *** Nulls
+      log1.Error(null);
+      Assert.AreEqual("ERROR:", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.Error(null, new Exception("Exception message"));
+      Assert.AreEqual("ERROR:System.Exception: Exception message" + Environment.NewLine, stringAppender.GetString());
+      stringAppender.Reset();
+
       log1.ErrorFormat("One{0} null", null);
       Assert.AreEqual("ERROR:One null", stringAppender.GetString());
       stringAppender.Reset();
@@ -810,7 +874,15 @@ namespace log4net.Tests.Core
       Assert.AreEqual("", stringAppender.GetString(), "Test formatting with 'en' provider");
       stringAppender.Reset();
 
-      // ***
+      // *** Nulls
+      log1.Error(null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.Error(null, new Exception("Exception message"));
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
       log1.ErrorFormat("One{0} null", null);
       Assert.AreEqual("", stringAppender.GetString());
       stringAppender.Reset();
@@ -897,7 +969,15 @@ namespace log4net.Tests.Core
       Assert.AreEqual("FATAL:Before Middle After End", stringAppender.GetString(), "Test formatting with 'en' provider");
       stringAppender.Reset();
 
-      // ***
+      // *** Nulls
+      log1.Fatal(null);
+      Assert.AreEqual("FATAL:", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.Fatal(null, new Exception("Exception message"));
+      Assert.AreEqual("FATAL:System.Exception: Exception message" + Environment.NewLine, stringAppender.GetString());
+      stringAppender.Reset();
+
       log1.FatalFormat("One{0} null", null);
       Assert.AreEqual("FATAL:One null", stringAppender.GetString());
       stringAppender.Reset();
@@ -985,7 +1065,15 @@ namespace log4net.Tests.Core
       Assert.AreEqual("", stringAppender.GetString(), "Test formatting with 'en' provider");
       stringAppender.Reset();
 
-      // ***
+      // *** Nulls
+      log1.Fatal(null);
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
+      log1.Fatal(null, new Exception("Exception message"));
+      Assert.AreEqual("", stringAppender.GetString());
+      stringAppender.Reset();
+
       log1.FatalFormat("One{0} null", null);
       Assert.AreEqual("", stringAppender.GetString());
       stringAppender.Reset();

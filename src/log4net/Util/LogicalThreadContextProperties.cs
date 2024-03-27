@@ -111,7 +111,7 @@ namespace log4net.Util
     public void Remove(string key)
     {
       PropertiesDictionary? dictionary = GetProperties(false);
-      if (dictionary != null)
+      if (dictionary is not null)
       {
         PropertiesDictionary immutableProps = new PropertiesDictionary(dictionary);
         immutableProps.Remove(key);
@@ -155,7 +155,7 @@ namespace log4net.Util
         try
         {
           PropertiesDictionary? properties = GetLogicalProperties();
-          if (properties == null && create)
+          if (properties is null && create)
           {
             properties = new PropertiesDictionary();
             SetLogicalProperties(properties);

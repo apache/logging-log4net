@@ -417,11 +417,11 @@ namespace log4net.Repository
     /// </remarks>
     public virtual void AddRenderer(Type typeToRender, IObjectRenderer rendererInstance)
     {
-      if (typeToRender == null)
+      if (typeToRender is null)
       {
         throw new ArgumentNullException(nameof(typeToRender));
       }
-      if (rendererInstance == null)
+      if (rendererInstance is null)
       {
         throw new ArgumentNullException(nameof(rendererInstance));
       }

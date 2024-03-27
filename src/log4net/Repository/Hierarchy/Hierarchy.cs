@@ -309,7 +309,7 @@ namespace log4net.Repository.Hierarchy
     /// <returns>The logger object with the name specified</returns>
     public override ILogger GetLogger(string name)
     {
-      if (name == null)
+      if (name is null)
       {
         throw new ArgumentNullException(nameof(name));
       }
@@ -649,11 +649,11 @@ namespace log4net.Repository.Hierarchy
     /// </remarks>
     public Logger GetLogger(string name, ILoggerFactory factory)
     {
-      if (name == null)
+      if (name is null)
       {
         throw new ArgumentNullException(nameof(name));
       }
-      if (factory == null)
+      if (factory is null)
       {
         throw new ArgumentNullException(nameof(factory));
       }

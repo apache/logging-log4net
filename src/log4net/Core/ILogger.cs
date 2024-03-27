@@ -68,7 +68,7 @@ namespace log4net.Core
     /// the <paramref name="message"/> and <paramref name="exception"/>.
     /// </para>
     /// </remarks>
-    void Log(Type callerStackBoundaryDeclaringType, Level? level, object message, Exception? exception);
+    void Log(Type callerStackBoundaryDeclaringType, Level? level, object? message, Exception? exception);
 
     /// <summary>
     /// This is the most generic printing method that is intended to be used 

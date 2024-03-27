@@ -37,7 +37,7 @@ namespace log4net.Tests.Core
     {
       bool exists = false;
       Repository.ILoggerRepository[] repositories = LogManager.GetAllRepositories();
-      if (repositories != null)
+      if (repositories is not null)
       {
         foreach (Repository.ILoggerRepository r in repositories)
         {
@@ -54,7 +54,7 @@ namespace log4net.Tests.Core
       }
 
       // write-once
-      if (Thread.CurrentThread.Name == null)
+      if (Thread.CurrentThread.Name is null)
       {
         Thread.CurrentThread.Name = "Log4Net Test thread";
       }

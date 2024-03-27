@@ -3,5 +3,6 @@
         <UseSharedCompilation>true</UseSharedCompilation>
         <LangVersion>latest</LangVersion>
         <Nullable>Enable</Nullable>
+        <WarningsAsErrors>nullable</WarningsAsErrors>
     </PropertyGroup>
 </Project>

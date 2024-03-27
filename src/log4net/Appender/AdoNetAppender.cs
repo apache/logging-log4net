@@ -376,15 +376,15 @@ namespace log4net.Appender
     /// </remarks>
     protected override void SendBuffer(LoggingEvent[] events)
     {
-      if (ReconnectOnError && (Connection == null || Connection.State != ConnectionState.Open))
+      if (ReconnectOnError && (Connection is null || Connection.State != ConnectionState.Open))
       {
-        LogLog.Debug(declaringType, $"Attempting to reconnect to database. Current Connection State: {((Connection == null) ? SystemInfo.NullText : Connection.State.ToString())}");
+        LogLog.Debug(declaringType, $"Attempting to reconnect to database. Current Connection State: {((Connection is null) ? SystemInfo.NullText : Connection.State.ToString())}");
 
         InitializeDatabaseConnection();
       }
 
       // Check that the connection exists and is open
-      if (Connection != null && Connection.State == ConnectionState.Open)
+      if (Connection is not null && Connection.State == ConnectionState.Open)
       {
         if (UseTransactions)
         {
@@ -462,7 +462,7 @@ namespace log4net.Appender
           // Set the command type
           dbCmd.CommandType = CommandType;
           // Send buffer using the prepared command object
-          if (dbTran != null)
+          if (dbTran is not null)
           {
             dbCmd.Transaction = dbTran;
           }
@@ -474,7 +474,7 @@ namespace log4net.Appender
           }
           catch (Exception)
           {
-            if (dbTran != null)
+            if (dbTran is not null)
             {
               // rethrow exception in transaction mode, cuz now transaction is in failed state
               throw;
@@ -503,7 +503,7 @@ namespace log4net.Appender
         // create a new command
         using (IDbCommand dbCmd = Connection!.CreateCommand())
         {
-          if (dbTran != null)
+          if (dbTran is not null)
           {
             dbCmd.Transaction = dbTran;
           }
@@ -550,7 +550,7 @@ namespace log4net.Appender
     /// </returns>
     protected virtual string GetLogStatement(LoggingEvent logEvent)
     {
-      if (Layout == null)
+      if (Layout is null)
       {
         ErrorHandler.Error("AdoNetAppender: No Layout specified.");
         return "";
@@ -587,7 +587,7 @@ namespace log4net.Appender
     /// <returns>A connection string used to connect to the database.</returns>
     protected virtual string ResolveConnectionString(out string connectionStringContext)
     {
-      if (ConnectionString != null && ConnectionString.Length > 0)
+      if (ConnectionString is not null && ConnectionString.Length > 0)
       {
         connectionStringContext = "ConnectionString";
         return ConnectionString;
@@ -596,7 +596,7 @@ namespace log4net.Appender
       if (!String.IsNullOrEmpty(ConnectionStringName))
       {
         ConnectionStringSettings settings = ConfigurationManager.ConnectionStrings[ConnectionStringName!];
-        if (settings != null)
+        if (settings is not null)
         {
           connectionStringContext = "ConnectionStringName";
           return settings.ConnectionString;
@@ -607,7 +607,7 @@ namespace log4net.Appender
         }
       }
 
-      if (AppSettingsKey != null && AppSettingsKey.Length > 0)
+      if (AppSettingsKey is not null && AppSettingsKey.Length > 0)
       {
         connectionStringContext = "AppSettingsKey";
         string? appSettingsConnectionString = SystemInfo.GetAppSetting(AppSettingsKey);
@@ -694,7 +694,7 @@ namespace log4net.Appender
     /// </remarks>
     private void DisposeConnection()
     {
-      if (Connection != null)
+      if (Connection is not null)
       {
         try
         {

@@ -350,7 +350,7 @@ namespace log4net.Repository.Hierarchy
     /// This method must not throw any exception to the caller.
     /// </para>
     /// </remarks>
-    public virtual void Log(Type? callerStackBoundaryDeclaringType, Level? level, object message, Exception? exception) 
+    public virtual void Log(Type? callerStackBoundaryDeclaringType, Level? level, object? message, Exception? exception) 
     {
       try
       {
@@ -555,7 +555,7 @@ namespace log4net.Repository.Hierarchy
     /// the <paramref name="message"/>.
     /// </para>
     /// </remarks>
-    public virtual void Log(Level level, object message, Exception? exception) 
+    public virtual void Log(Level level, object? message, Exception? exception) 
     {
       if (IsEnabledFor(level))
       {
@@ -577,7 +577,7 @@ namespace log4net.Repository.Hierarchy
     /// appenders.
     /// </para>
     /// </remarks>
-    protected virtual void ForcedLog(Type callerStackBoundaryDeclaringType, Level? level, object message, Exception? exception)
+    protected virtual void ForcedLog(Type callerStackBoundaryDeclaringType, Level? level, object? message, Exception? exception)
     {
       CallAppenders(new LoggingEvent(callerStackBoundaryDeclaringType, Hierarchy, Name, level, message, exception));
     }

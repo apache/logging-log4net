@@ -47,7 +47,7 @@ namespace log4net.Layout.Pattern
         string param = "";
         string[] names = method.Parameters;
         StringBuilder sb = new StringBuilder();
-        if (names != null && names.GetUpperBound(0) > 0)
+        if (names is not null && names.GetUpperBound(0) > 0)
         {
           for (int i = 0; i <= names.GetUpperBound(0); i++)
           {
