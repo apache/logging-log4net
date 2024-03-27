@@ -496,7 +496,7 @@ namespace log4net.Repository.Hierarchy
       if (m_hierarchy is not null && !m_hierarchy.EmittedNoAppenderWarning && writes == 0) 
       {
         m_hierarchy.EmittedNoAppenderWarning = true;
-        LogLog.Debug(declaringType, "No appenders could be found for logger [" + Name + "] repository [" + Repository?.Name + "]");
+        LogLog.Debug(declaringType, $"No appenders could be found for logger [{Name}] repository [{Repository?.Name}]");
         LogLog.Debug(declaringType, "Please initialize the log4net system properly.");
         try
         {
