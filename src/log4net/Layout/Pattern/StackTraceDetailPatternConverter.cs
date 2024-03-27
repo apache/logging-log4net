@@ -27,16 +27,11 @@ using log4net.Core;
 namespace log4net.Layout.Pattern
 {
   /// <summary>
-  /// Write the caller stack frames to the output
-  /// </summary>
-  /// <remarks>
-  /// <para>
   /// Writes the <see cref="LocationInfo.StackFrames"/> to the output writer, using format:
   /// type3.MethodCall3(type param,...) > type2.MethodCall2(type param,...) > type1.MethodCall1(type param,...)
-  /// </para>
-  /// </remarks>
+  /// </summary>
   /// <author>Adam Davies</author>
-  internal class StackTraceDetailPatternConverter : StackTracePatternConverter
+  internal sealed class StackTraceDetailPatternConverter : StackTracePatternConverter
   {
     internal override string GetMethodInformation(MethodItem method)
     {

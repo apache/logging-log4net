@@ -138,7 +138,7 @@ namespace log4net.Tests.Appender
       Debug.Listeners.Remove(categoryTraceListener);
     }
 
-    private class TestErrorHandler : IErrorHandler
+    private sealed class TestErrorHandler : IErrorHandler
     {
       public bool ErrorOccured { get; private set; }
 

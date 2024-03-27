@@ -203,11 +203,7 @@ namespace log4net.Appender
     /// This property provides the fallback value which defaults to 0.
     /// </para>
     /// </remarks>
-    public int EventId
-    {
-      get { return m_eventId; }
-      set { m_eventId = value; }
-    }
+    public int EventId { get; set; }
 
 
     /// <summary>
@@ -221,11 +217,7 @@ namespace log4net.Appender
     /// This property provides the fallback value which defaults to 0.
     /// </para>
     /// </remarks>
-    public short Category
-    {
-      get { return m_category; }
-      set { m_category = value; }
-    }
+    public short Category { get; set; }
 
     /// <summary>
     /// Initialize the appender based on the options set
@@ -297,12 +289,11 @@ namespace log4net.Appender
 
         m_levelMapping.ActivateOptions();
 
-        LogLog.Debug(declaringType, "Source [" + ApplicationName + "] is registered to log [" + registeredLogName + "]");
+        LogLog.Debug(declaringType, $"Source [{ApplicationName}] is registered to log [{registeredLogName}]");
       }
       catch (System.Security.SecurityException ex)
       {
-        ErrorHandler.Error("Caught a SecurityException trying to access the EventLog.  Most likely the event source "
-            + ApplicationName
+        ErrorHandler.Error($"Caught a SecurityException trying to access the EventLog.  Most likely the event source {ApplicationName}"
             + " doesn't exist and must be created by a local administrator.  Will disable EventLogAppender."
             + "  See http://logging.apache.org/log4net/release/faq.html#trouble-EventLog",
             ex);
@@ -315,8 +306,10 @@ namespace log4net.Appender
     /// </summary>
     private static void CreateEventSource(string source, string logName, string machineName)
     {
-      EventSourceCreationData eventSourceCreationData = new EventSourceCreationData(source, logName);
-      eventSourceCreationData.MachineName = machineName;
+      var eventSourceCreationData = new EventSourceCreationData(source, logName)
+      {
+        MachineName = machineName
+      };
       EventLog.CreateEventSource(eventSourceCreationData);
     }
 
@@ -341,7 +334,7 @@ namespace log4net.Appender
       //
       // Write the resulting string to the event log system
       //
-      int eventID = m_eventId;
+      int eventID = EventId;
 
       // Look for the EventID property
       if (loggingEvent.LookupProperty("EventID") is object eventIDPropertyObj)
@@ -371,7 +364,7 @@ namespace log4net.Appender
         }
       }
 
-      short category = m_category;
+      short category = Category;
       // Look for the Category property
       if (loggingEvent.LookupProperty("Category") is object categoryPropertyObj)
       {
@@ -475,16 +468,6 @@ namespace log4net.Appender
     /// Mapping from level object to EventLogEntryType
     /// </summary>
     private readonly LevelMapping m_levelMapping = new();
-
-    /// <summary>
-    /// The event ID to use unless one is explicitly specified via the <c>LoggingEvent</c>'s properties.
-    /// </summary>
-    private int m_eventId;
-
-    /// <summary>
-    /// The event category to use unless one is explicitly specified via the <c>LoggingEvent</c>'s properties.
-    /// </summary>
-    private short m_category;
 
     /// <summary>
     /// A class to act as a mapping between the level that a logging call is made at and

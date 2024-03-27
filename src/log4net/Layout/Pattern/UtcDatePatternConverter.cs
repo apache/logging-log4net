@@ -44,7 +44,7 @@ namespace log4net.Layout.Pattern
   /// </remarks>
   /// <seealso cref="DatePatternConverter"/>
   /// <author>Nicko Cadell</author>
-  internal class UtcDatePatternConverter : DatePatternConverter
+  internal sealed class UtcDatePatternConverter : DatePatternConverter
   {
     /// <summary>
     /// Writes the TimeStamp to the output.

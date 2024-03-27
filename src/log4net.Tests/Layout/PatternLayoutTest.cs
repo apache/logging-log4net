@@ -310,7 +310,7 @@ namespace log4net.Tests.Layout
     /// <summary>
     /// Converter to include event message
     /// </summary>
-    private class TestMessagePatternConverter : PatternLayoutConverter
+    private sealed class TestMessagePatternConverter : PatternLayoutConverter
     {
       /// <summary>
       /// Convert the pattern to the rendered message
@@ -344,7 +344,7 @@ namespace log4net.Tests.Layout
       stringAppender.Reset();
     }
 
-    private class MessageAsNamePatternConverter : NamedPatternConverter
+    private sealed class MessageAsNamePatternConverter : NamedPatternConverter
     {
       protected override string GetFullyQualifiedName(LoggingEvent loggingEvent)
       {

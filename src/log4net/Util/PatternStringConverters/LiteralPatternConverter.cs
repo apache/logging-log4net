@@ -56,7 +56,7 @@ namespace log4net.Util.PatternStringConverters
       if (pc is LiteralPatternConverter literalPc)
       {
         // Combine the two adjacent literals together
-        Option = Option + literalPc.Option;
+        Option += literalPc.Option;
         // We are the next converter now
         return this;
       }

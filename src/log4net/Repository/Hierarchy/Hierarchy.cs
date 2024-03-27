@@ -633,7 +633,7 @@ namespace log4net.Repository.Hierarchy
     }
 
     /// <summary>
-    /// Return a new logger instance named as the first parameter using
+    /// Returns a new logger instance named as the first parameter using
     /// <paramref name="factory"/>.
     /// </summary>
     /// <param name="name">The name of the logger to retrieve</param>

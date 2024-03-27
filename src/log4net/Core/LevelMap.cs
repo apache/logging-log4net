@@ -56,17 +56,10 @@ namespace log4net.Core
     }
 
     /// <summary>
-    /// Lookup a <see cref="Level"/> by name
+    /// Looks up a <see cref="Level"/> by name
     /// </summary>
-    /// <param name="name">The name of the Level to lookup</param>
-    /// <returns>a Level from the map with the name specified</returns>
-    /// <remarks>
-    /// <para>
-    /// Returns the <see cref="Level"/> from the
-    /// map with the name specified. If the no level is
-    /// found then <c>null</c> is returned.
-    /// </para>
-    /// </remarks>
+    /// <param name="name">The name of the Level to look up.</param>
+    /// <returns>A Level from the map with the name specified, or <c>null</c> if none is found.</returns>
     public Level? this[string name]
     {
       get
@@ -82,15 +75,10 @@ namespace log4net.Core
     }
 
     /// <summary>
-    /// Create a new Level and add it to the map
+    /// Creates a new Level and adds it to the map.
     /// </summary>
     /// <param name="name">the string to display for the Level</param>
     /// <param name="value">the level value to give to the Level</param>
-    /// <remarks>
-    /// <para>
-    /// Create a new Level and add it to the map
-    /// </para>
-    /// </remarks>
     /// <seealso cref="M:Add(string,int,string)"/>
     public void Add(string name, int value)
     {
@@ -98,16 +86,11 @@ namespace log4net.Core
     }
 
     /// <summary>
-    /// Create a new Level and add it to the map
+    /// Creates a new Level and adds it to the map.
     /// </summary>
     /// <param name="name">the string to display for the Level</param>
     /// <param name="value">the level value to give to the Level</param>
     /// <param name="displayName">the display name to give to the Level</param>
-    /// <remarks>
-    /// <para>
-    /// Create a new Level and add it to the map
-    /// </para>
-    /// </remarks>
     public void Add(string name, int value, string? displayName)
     {
       if (name is null)
@@ -128,14 +111,9 @@ namespace log4net.Core
     }
 
     /// <summary>
-    /// Add a Level to the map
+    /// Adds a Level to the map.
     /// </summary>
     /// <param name="level">the Level to add</param>
-    /// <remarks>
-    /// <para>
-    /// Add a Level to the map
-    /// </para>
-    /// </remarks>
     public void Add(Level level)
     {
       if (level is null)
@@ -146,34 +124,21 @@ namespace log4net.Core
     }
 
     /// <summary>
-    /// Return all possible levels as a list of Level objects.
+    /// Gets all possible levels as a collection of Level objects.
     /// </summary>
-    /// <returns>all possible levels as a list of Level objects</returns>
-    /// <remarks>
-    /// <para>
-    /// Return all possible levels as a list of Level objects.
-    /// </para>
-    /// </remarks>
     public LevelCollection AllLevels => new(m_mapName2Level.Values);
 
     /// <summary>
-    /// Lookup a named level from the map
+    /// Looks up a named level from the map.
     /// </summary>
-    /// <param name="defaultLevel">the name of the level to lookup is taken from this level. 
-    /// If the level is not set on the map then this level is added</param>
-    /// <returns>the level in the map with the name specified</returns>
-    /// <remarks>
-    /// <para>
-    /// Lookup a named level from the map. The name of the level to lookup is taken
-    /// from the <see cref="Level.Name"/> property of the <paramref name="defaultLevel"/>
-    /// argument.
-    /// </para>
-    /// <para>
+    /// <param name="defaultLevel">
+    /// The name of the level to look up is taken from this level. 
+    /// If the level is not set in the map then this level is added.
     /// If no level with the specified name is found then the 
     /// <paramref name="defaultLevel"/> argument is added to the level map
     /// and returned.
-    /// </para>
-    /// </remarks>
+    /// </param>
+    /// <returns>the level in the map with the name specified</returns>
     public Level LookupWithDefault(Level defaultLevel)
     {
       if (defaultLevel is null)

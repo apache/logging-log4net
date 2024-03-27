@@ -114,7 +114,7 @@ namespace log4net.Tests.DateFormatter
     }
   }
 
-  internal class FormatterTwo : FormatterOne
+  internal sealed class FormatterTwo : FormatterOne
   {
   }
 }

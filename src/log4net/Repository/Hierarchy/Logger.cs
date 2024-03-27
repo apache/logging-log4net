@@ -611,7 +611,6 @@ namespace log4net.Repository.Hierarchy
     /// </summary>
     /// <remarks>
     /// <para>
-    /// The parent of this logger. 
     /// All loggers have at least one ancestor which is the root logger.
     /// </para>
     /// </remarks>
@@ -620,13 +619,6 @@ namespace log4net.Repository.Hierarchy
     /// <summary>
     /// Loggers need to know what Hierarchy they are in.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Loggers need to know what Hierarchy they are in.
-    /// The hierarchy that this logger is a member of is stored
-    /// here.
-    /// </para>
-    /// </remarks>
     private Hierarchy? m_hierarchy;
 
     /// <summary>

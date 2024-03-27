@@ -1261,10 +1261,10 @@ namespace log4net.Core
     /// </summary>
     private static readonly object?[] OneNullArgs = { null };
 
-    private Level? m_levelDebug;
-    private Level? m_levelInfo;
-    private Level? m_levelWarn;
-    private Level? m_levelError;
-    private Level? m_levelFatal;
+    private Level m_levelDebug = Level.Debug;
+    private Level m_levelInfo = Level.Info;
+    private Level m_levelWarn = Level.Warn;
+    private Level m_levelError = Level.Error;
+    private Level m_levelFatal = Level.Fatal;
   }
 }
