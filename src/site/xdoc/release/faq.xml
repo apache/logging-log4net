@@ -16,20 +16,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <document>
-
   <properties>
     <author email="nicko at apache dot org">Nicko Cadell</author>
     <title>Apache log4net: Frequently Asked Questions</title>
   </properties>
-
-  <meta name="keywords" content="log4net frequently asked questions, log4net faq, log4net" />
-
+  <meta name="keywords" content="log4net frequently asked questions, log4net faq, log4net"/>
   <body>
     <a name="top">
-    </a>
+        </a>
     <section id="main" name="Apache log4net&#x2122; Frequently Asked Questions">
       <section id="information" name="Information">
-
         <section id="what-is-log4net" name="What is log4net?">
           <p>
             log4net is a tool to help the programmer output log statements to a variety of
@@ -47,9 +43,8 @@ limitations under the License.
             At the same time, log output can be so voluminous that it quickly becomes
             overwhelming. One of the distinctive features of log4net (and common to all of
             the log4x libraries) is the notion of <i>
-              hierarchical
-              loggers
-            </i>. Using these loggers it is possible to selectively control
+            hierarchical
+            loggers</i>. Using these loggers it is possible to selectively control
             which log statements are output at arbitrary granularity.
           </p>
           <p>
@@ -60,8 +55,6 @@ limitations under the License.
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="reliability" name="Is log4net a reliable logging system?">
           <p>
             No. log4net is not reliable. It is a best-effort and <em>fail-stop</em> logging system.
@@ -69,16 +62,12 @@ limitations under the License.
           <p>
             By fail-stop, we mean that log4net will not throw unexpected exceptions at
             run-time potentially causing your application to crash. <b>
-              If for any reason, log4net
-              throws an uncaught exception
-            </b> (except for <span class="code">ArgumentException</span> and
+            If for any reason, log4net
+            throws an uncaught exception</b> (except for <span class="code">ArgumentException</span> and
             <span class="code">ArgumentNullException</span> which may be thrown), <b>
-              please send an email
-              to the <a href="mailto:log4net-user@logging.apache.org">
-                log4net-user@logging.apache.org
-              </a> mailing list
-            </b>. Uncaught exceptions
-            are handled as serious bugs requiring immediate attention.
+            please send an email
+            to the <a href="mailto:log4net-user@logging.apache.org">log4net-user@logging.apache.org</a> mailing list</b>.
+            Uncaught exceptions are handled as serious bugs requiring immediate attention.
           </p>
           <p>
             Moreover, log4net will not revert to <span class="code">System.Console.Out</span>
@@ -93,8 +82,6 @@ limitations under the License.
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="prerequisites" name="What are the prerequisites for log4net?">
           <p>
             log4net runs on net462 or higher and any framework supporting netstandard2.0.
@@ -103,8 +90,6 @@ limitations under the License.
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="examples" name="Is there example code for using log4net?">
           <p>
             There is a directory containing examples in <span class="code">log4net\examples</span>.
@@ -114,48 +99,20 @@ limitations under the License.
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="features" name="What are the features of log4net?">
           <ul>
-            <li>
-              log4net is optimized for speed.
-            </li>
-            <li>
-              log4net is based on a named logger hierarchy.
-            </li>
-            <li>
-              log4net is fail-stop but not reliable.
-            </li>
-            <li>
-              log4net is thread-safe.
-            </li>
-            <li>
-              log4net is not restricted to a predefined set of facilities.
-            </li>
-            <li>
-              Logging behavior can be set at runtime using a configuration file.
-              Configuration files are in XML format.
-            </li>
-            <li>
-              log4net is designed to handle exceptions from the start.
-            </li>
-            <li>
-              log4net can direct its output to many sinks including: a file, the console, the NT EventLog or even e-mail.
-            </li>
-            <li>
-              log4net categorizes logging into levels: DEBUG, INFO, WARN, ERROR and FATAL.
-            </li>
-            <li>
-              The format of the log output can be easily changed by implementing a new layout class.
-            </li>
-            <li>
-              The target of the log output as well as the writing strategy can be altered by
-              writing a new appender class.
-            </li>
-            <li>
-              log4net supports multiple output appenders per logger.
-            </li>
+            <li>log4net is optimized for speed.</li>
+            <li>log4net is based on a named logger hierarchy.</li>
+            <li>log4net is fail-stop but not reliable.</li>
+            <li>log4net is thread-safe.</li>
+            <li>log4net is not restricted to a predefined set of facilities.</li>
+            <li>Logging behavior can be set at runtime using a configuration file. Configuration files are in XML format.</li>
+            <li>log4net is designed to handle exceptions from the start.</li>
+            <li>log4net can direct its output to many sinks including: a file, the console, the NT EventLog or even e-mail.</li>
+            <li>log4net categorizes logging into levels: DEBUG, INFO, WARN, ERROR and FATAL.</li>
+            <li>The format of the log output can be easily changed by implementing a new layout class.</li>
+            <li>The target of the log output as well as the writing strategy can be altered by writing a new appender class.</li>
+            <li>log4net supports multiple output appenders per logger.</li>
           </ul>
           <p>
             See the <a href="features.html">features</a> overview document for more information on the features of log4net.
@@ -164,8 +121,6 @@ limitations under the License.
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="thread-safe" name="Is log4net thread-safe?">
           <p>
             Yes, log4net is thread-safe.
@@ -174,8 +129,6 @@ limitations under the License.
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="output" name="What does log output look like?">
           <p>
             The log output can be customized in many ways. Moreover, one can completely
@@ -186,7 +139,7 @@ limitations under the License.
             pattern <span class="code">%timestamp [%thread] %-5level %logger{2} %ndc - %message%newline</span>
           </p>
           <source language="text">
-            <![CDATA[
+                        <![CDATA[
 176 [main] INFO  examples.Sort - Populating an array of 2 elements in reverse order.
 225 [main] INFO  examples.SortAlgo - Entered the sort method.
 262 [main] DEBUG SortAlgo.OUTER i=1 - Outer loop.
@@ -197,8 +150,7 @@ limitations under the License.
 331 [main] INFO  SortAlgo.DUMP - Element [1] = 1
 343 [main] INFO  examples.Sort - The next log statement should be an error message.
 346 [main] ERROR SortAlgo.DUMP - Tried to dump an uninitialized array.
-467 [main] INFO  examples.Sort - Exiting main method.]]>
-          </source>
+467 [main] INFO  examples.Sort - Exiting main method.]]></source>
           <p>
             The first field is the number of milliseconds elapsed since the start of the
             program. The second field is the thread outputting the log statement. The third
@@ -212,8 +164,6 @@ limitations under the License.
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="loggers" name="What are Loggers?">
           <p>
             The logger concept lies at the heart of log4net's configuration. Loggers are organized into a
@@ -228,16 +178,12 @@ limitations under the License.
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="contributing" name="Why should I donate my extensions to log4net back to the project?">
           <p>
             Contrary to the GNU Public License (GPL) the Apache Software License does not
             make any claims over your extensions. By extensions, we mean totally new code
-            that invokes existing log4net code. <em>
-              You are free to do whatever you wish with
-              your proprietary log4net extensions.
-            </em> In particular, you may choose to
+            that invokes existing log4net code. <em>You are free to do whatever you wish with
+            your proprietary log4net extensions.</em> In particular, you may choose to
             never release your extensions to the wider public. For details see the
             <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.
           </p>
@@ -265,8 +211,6 @@ limitations under the License.
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="contributing-guidelines" name="What should I keep in mind when contributing code?">
           <ol>
             <li>
@@ -289,15 +233,13 @@ limitations under the License.
               </p>
             </li>
             <li>
-              Did I mention sticking with the indentation style?
+                Did I mention sticking with the indentation style?
             </li>
           </ol>
         </section>
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="history" name="What is the history of log4net?">
           <p>
             log4net is a port of the popular <a href="http://logging.apache.org/log4j/">Apache log4j&#x2122;</a> logging library.
@@ -308,8 +250,6 @@ limitations under the License.
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="download" name="Where can I find the latest distribution of log4net?">
           <p>
             The log4net <a href="http://logging.apache.org/log4net/">home page</a> is a good place to start.
@@ -318,20 +258,15 @@ limitations under the License.
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
       </section>
-
       <section id="configuration" name="Configuration">
-
         <section id="dynamic" name="How can I change log behavior at runtime?">
           <p>
             Logging behavior can be set using configuration files which are parsed at runtime.
-            Using configuration files the programmer can define loggers and set their
-            levels.
+            Using configuration files the programmer can define loggers and set their levels.
           </p>
           <p>
             Configuration files are specified in XML. See <span class="code">log4net.Config.XmlConfigurator</span>
@@ -345,8 +280,6 @@ limitations under the License.
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="runtime-disable" name="How do I completely disable all logging at runtime?">
           <p>
             Setting the <span class="code">Threshold</span> on the Hierarchy to Level OFF will disable all
@@ -355,14 +288,12 @@ limitations under the License.
             For example:
           </p>
           <source language="xml">
-            <![CDATA[
-<log4net threshold="OFF" />]]>
-          </source>
+                        <![CDATA[
+<log4net threshold="OFF" />]]></source>
         </section>
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
         <section id="appender-options" name="What are the configurable options for an appender?">
           <p>
             log4net uses public properties to configure components such as
@@ -382,8 +313,6 @@ limitations under the License.
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="appender-level" name="Is it possible to direct log output to different appenders by level?">
           <p>
             Yes it is. Setting the <span class="code">Threshold</span> option of any appender extending
@@ -412,8 +341,6 @@ limitations under the License.
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="config-reload" name="Is there a way to get log4net to automatically reload a configuration file if it changes?">
           <p>
             Yes. The <span class="code">XmlConfigurator</span> supports automatic
@@ -424,8 +351,6 @@ limitations under the License.
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="appender-assembly" name="Can I load an appender from another assembly?">
           <p>
             Yes. When specifying the type in the configuration file you can give the assembly
@@ -433,8 +358,7 @@ limitations under the License.
           </p>
           <source language="xml">
             <![CDATA[
-<appender name="..." type="MyNamespace.MyAppender, MyAssembly">]]>
-          </source>
+<appender name="..." type="MyNamespace.MyAppender, MyAssembly">]]></source>
           <p>
             The .NET runtime will try to locate the assembly called <i>MyAssembly</i>.
             How .NET locates assemblies is beyond the scope of this FAQ.
@@ -449,8 +373,6 @@ limitations under the License.
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="assembly-public-key" name="How do I get the Public Key for an assembly?">
           <p>
             The fully qualified name for an assembly includes the version, culture and
@@ -464,8 +386,6 @@ limitations under the License.
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="layout-header-xml-newlines" name="How do I insert newlines into the layout header?">
           <p>
             Newlines in the config file need to be escaped using an XML numeric character reference.
@@ -475,17 +395,14 @@ limitations under the License.
           <source language="xml">
             <![CDATA[
 <layout type="log4net.Layout.PatternLayout">
-    <header value="[Header]&#13;&#10;" />
-    <footer value="[Footer]&#13;&#10;" />
-    <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
-</layout>]]>
-          </source>
+  <header value="[Header]&#13;&#10;" />
+  <footer value="[Footer]&#13;&#10;" />
+  <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
+</layout>]]></source>
         </section>
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="pattern-string" name="How do I use a pattern to set the value of a string property?">
           <p>
             Log4net supports a pattern syntax for setting string properties similar to the
@@ -493,9 +410,7 @@ limitations under the License.
             This pattern syntax can be used by specifying <span class="code">type="log4net.Util.PatternString"</span>
             on the string property in the config file. This tells the config parser to pass the
             value to the <span class="code">PatternString</span> type before converting the result
-            to a string. For details on the patterns supported see the <a href="sdk/html/T_log4net_Util_PatternString.htm">
-              PatternString SDK Reference
-            </a>.
+            to a string.
           </p>
           <p>
             The following example sets the file name for a <span class="code">FileAppender</span> to include the
@@ -505,20 +420,15 @@ limitations under the License.
           <source language="xml">
             <![CDATA[
 <appender name="LogFileAppender" type="log4net.Appender.FileAppender">
-    <file type="log4net.Util.PatternString" value="log-file-[%processid].txt" />
-    <layout type="log4net.Layout.PatternLayout" value="%date [%thread] %-5level %logger - %message%newline" />
-</appender>]]>
-          </source>
+  <file type="log4net.Util.PatternString" value="log-file-[%processid].txt" />
+  <layout type="log4net.Layout.PatternLayout" value="%date [%thread] %-5level %logger - %message%newline" />
+</appender>]]></source>
         </section>
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
       </section>
-
       <section id="implementing" name="Implementing Logging">
-
         <section id="naming" name="Are there any suggested ways for naming loggers?">
           <p>
             Yes, there are.
@@ -543,8 +453,7 @@ limitations under the License.
               It can be further refined at will.
             </li>
             <li>
-              Printing the logger automatically gives information on the locality of the
-              log statement.
+              Printing the logger automatically gives information on the locality of the log statement.
             </li>
           </ul>
           <p>
@@ -572,8 +481,6 @@ limitations under the License.
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="static-class-name" name="How do I get the fully-qualified name of a class in a static block?">
           <p>
             You can easily retrieve the fully-qualified name of a class in a static block
@@ -590,10 +497,9 @@ limitations under the License.
             <![CDATA[
 public class Foo
 {
-    private static readonly ILog log = LogManager.GetLogger(typeof(Foo));
-    ... other code
-}]]>
-          </source>
+  private static readonly ILog log = LogManager.GetLogger(typeof(Foo));
+  ... other code
+}]]></source>
           <p>
             An equivalent and more portable solution, though slightly longer, is to use the declaring type
             of the static constructor.
@@ -602,19 +508,16 @@ public class Foo
             <![CDATA[
 public class Foo
 {
-    private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-    ... other code
-}]]>
-          </source>
+  private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+  ... other code
+}]]></source>
           <p>
             <b>Note:</b> the .NET Compact Framework 1.0 does not support <span class="code">System.Reflection.MethodBase.GetCurrentMethod()</span>.
           </p>
-
           <p>
             <b>Note:</b> the two forms are only equivalent
             if <span class="code">Foo</span> is not a
-            generic class.  For a generic class <span
-                      class="code">Foo&lt;T&gt;</span> the variant
+            generic class.  For a generic class <span class="code">Foo&lt;T&gt;</span> the variant
             using <span class="code">typeof</span> generates
             a different logger for each different type
             parameter <span class="code">T</span> while the
@@ -625,16 +528,13 @@ public class Foo
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="perf-not-logging" name="What is the fastest way of (not) logging?">
           <p>
             For some logger <span class="code">log</span>, writing,
           </p>
           <source language="C#">
             <![CDATA[
-log.Debug("Entry number: " + i + " is " + entry[i]);]]>
-          </source>
+log.Debug("Entry number: " + i + " is " + entry[i]);]]></source>
           <p>
             incurs the cost of constructing the message parameter, that is converting both
             integer <span class="code">i</span> and <span class="code">entry[i]</span> to
@@ -648,9 +548,8 @@ log.Debug("Entry number: " + i + " is " + entry[i]);]]>
             <![CDATA[
 if(log.IsDebugEnabled) 
 {
-    log.Debug("Entry number: " + i + " is " + entry[i]);
-}]]>
-          </source>
+  log.Debug("Entry number: " + i + " is " + entry[i]);
+}]]></source>
           <p>
             This way you will not incur the cost of parameter construction if debugging is
             disabled for logger <span class="code">log</span>. On the other hand, if the logger is
@@ -663,8 +562,6 @@ if(log.IsDebugEnabled)
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="perf-not-logging2" name="What is REALLY the FASTEST way of (not) logging?">
           <p>
             So you don't think that the previous FAQ is really the fastest way
@@ -675,9 +572,8 @@ if(log.IsDebugEnabled)
             <![CDATA[
 if(log.IsDebugEnabled) 
 {
-    log.Debug("Entry number: " + i + " is " + entry[i]);
-}]]>
-          </source>
+  log.Debug("Entry number: " + i + " is " + entry[i]);
+}]]></source>
           <p>
             It is possible to further eliminate the calls to <span class="code">IsDebugEnabled</span>
             so that the call is only made once per logger. If you are using one logger
@@ -693,13 +589,12 @@ public class FastLogger
 
     public void MyMethod()
     {
-        if(isDebugEnabled) 
-        {
-            log.Debug("Entry number: " + i + " is " + entry[i]);
-        }
+      if(isDebugEnabled) 
+      {
+        log.Debug("Entry number: " + i + " is " + entry[i]);
+      }
     }
-}]]>
-          </source>
+}]]></source>
           <p>
             So why exactly is this faster? Well to start with the <span class="code">IsDebugEnabled</span>
             is not called for each log statement, it is called once per logger. Furthermore as the
@@ -724,8 +619,6 @@ public class FastLogger
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="multiple-files" name="Can the outputs of multiple client request go to different log files?">
           <p>
             Many developers are confronted with the problem of distinguishing the log
@@ -750,8 +643,6 @@ public class FastLogger
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="remove-logger" name="Logger instances seem to be create only. Why isn't there a method to remove logger instances?">
           <p>
             It is quite nontrivial to define the semantics of a "removed" logger which is
@@ -761,8 +652,6 @@ public class FastLogger
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="single-file" name="How do I get multiple process to log to the same file?">
           <p>
             Before you even start trying any of the
@@ -770,16 +659,13 @@ public class FastLogger
             really need to have multiple processes log to the
             same file, then don't do it ;-).
           </p>
-
           <p>
             FileAppender offers pluggable locking models for
             this usecase but all existing implementations have
             issues and drawbacks.
           </p>
-
           <p>
-            By default the <span
-                        class="code">FileAppender</span> holds an
+            By default the <span class="code">FileAppender</span> holds an
             exclusive write lock on the log file while it
             is logging. This prevents other processes from
             writing to the file.  This model is known to
@@ -788,7 +674,6 @@ public class FastLogger
             as soon as another process tries to access the
             log file.
           </p>
-
           <p>
             <span class="code">MinimalLock</span> only
             acquires the write lock while a log is being
@@ -807,34 +692,26 @@ public class FastLogger
             is preferable to the use of MinimalLock.
           </p>
           <p>
-            If you use <span
- class="code">RollingFileAppender</span> things
+            If you use <span class="code">RollingFileAppender</span> things
             become even worse as several process may try to
-            start rolling the log file concurrently.  <span
-                      class="code">RollingFileAppender</span>
+            start rolling the log file concurrently.  <span class="code">RollingFileAppender</span>
             completely ignores the locking model when
             rolling files, rolling files is simply not
             compatible with this scenario.
           </p>
           <p>
             A better alternative is to have your processes
-            log to <span
-     class="code">RemotingAppenders</span>.  Using
-            the <span
-        class="code">RemoteLoggingServerPlugin</span>
-            (or <span
-        class="code">IRemoteLoggingSink</span>) a
+            log to <span class="code">RemotingAppenders</span>.  Using
+            the <span class="code">RemoteLoggingServerPlugin</span>
+            (or <span class="code">IRemoteLoggingSink</span>) a
             process can receive all the events and log
             them to a single log file.  One of the
-            examples shows how to use the <span
-                        class="code">RemoteLoggingServerPlugin</span>.
+            examples shows how to use the <span class="code">RemoteLoggingServerPlugin</span>.
           </p>
         </section>
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="distributed" name="If I have many processes across multiple hosts (possibly across multiple time zones) logging to the same file using the RemotingAppender, what happens to timestamps?">
           <p>
             The timestamp is created when the logging event is created. That is so say,
@@ -852,8 +729,6 @@ public class FastLogger
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="first-log" name="When should I log my first message?">
           <p>
             The simple answer is as soon as possible. The long answer is more complex.
@@ -877,12 +752,8 @@ public class FastLogger
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
       </section>
-
       <section id="customization" name="Customization">
-
         <section id="custom-output" name="Can the log output format be customized?">
           <p>
             Yes. You can implement the <span class="code">log4net.Layout.ILayout</span>
@@ -895,8 +766,6 @@ public class FastLogger
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="custom-appender" name="Can I write a custom appender?">
           <p>
             Yes. You can implement the <span class="code">log4net.Appender.IAppender</span>
@@ -914,8 +783,7 @@ public class FastLogger
           </p>
           <source language="xml">
             <![CDATA[
-<appender name="..." type="MyNamespace.MyAppender, MyAssembly">]]>
-          </source>
+<appender name="..." type="MyNamespace.MyAppender, MyAssembly">]]></source>
           <p>
             The .NET runtime will try to locate the assembly called <i>MyAssembly</i>.
             How .NET locates assemblies is beyond the scope of this FAQ.
@@ -924,11 +792,8 @@ public class FastLogger
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
       </section>
-
       <section id="troubleshooting" name="Troubleshooting">
-
         <section id="internalDebug" name="How do I enable log4net internal debugging?">
           <p>
             There are 2 different ways to enable internal debugging in log4net.
@@ -939,34 +804,34 @@ public class FastLogger
           <ul>
             <li>
               <p>
-                Internal debugging can also be enabled by setting a value in the application's
-                configuration file (not the log4net configuration file, unless the log4net config
-                data is embedded in the application's config file). The <span class="code">log4net.Internal.Debug</span>
-                application setting must be set to the value <span class="code">true</span>.
-                For example:
-              </p>
+          Internal debugging can also be enabled by setting a value in the application's
+          configuration file (not the log4net configuration file, unless the log4net config
+          data is embedded in the application's config file). The <span class="code">log4net.Internal.Debug</span>
+          application setting must be set to the value <span class="code">true</span>.
+          For example:
+                </p>
               <div class="syntax">
                 <pre class="code">
-                  &lt;?xml version="1.0" encoding="utf-8" ?&gt;
-                  &lt;configuration&gt;
-                  &lt;appSettings&gt;
-                  &lt;add key="log4net.Internal.Debug" value="true"/&gt;
-                  &lt;/appSettings&gt;
-                  &lt;/configuration&gt;
-                </pre>
+              &lt;?xml version="1.0" encoding="utf-8" ?&gt;
+              &lt;configuration&gt;
+              &lt;appSettings&gt;
+              &lt;add key="log4net.Internal.Debug" value="true"/&gt;
+              &lt;/appSettings&gt;
+              &lt;/configuration&gt;
+          </pre>
               </div>
               <p>
-                This setting is read immediately on startup an will cause all internal
-                debugging messages to be emitted.
-              </p>
+          This setting is read immediately on startup an will cause all internal
+          debugging messages to be emitted.
+                </p>
             </li>
             <li>
               <p>
-                To enable log4net's internal debug programmatically you need
-                to set the <span class="code">log4net.Util.LogLog.InternalDebugging</span>
-                property to <span class="code">true</span>. Obviously the sooner this
-                is set the more debug will be produced.
-              </p>
+          To enable log4net's internal debug programmatically you need
+          to set the <span class="code">log4net.Util.LogLog.InternalDebugging</span>
+          property to <span class="code">true</span>. Obviously the sooner this
+          is set the more debug will be produced.
+                </p>
             </li>
           </ul>
           <p>
@@ -989,22 +854,22 @@ public class FastLogger
           </p>
           <div class="syntax">
             <pre class="code">
-              &lt;configuration&gt;
-              ...
+                &lt;configuration&gt;
+                ...
 
-              &lt;system.diagnostics&gt;
-              &lt;trace autoflush="true"&gt;
-              &lt;listeners&gt;
-              &lt;add
-              name="textWriterTraceListener"
-              type="System.Diagnostics.TextWriterTraceListener"
-              initializeData="C:\tmp\log4net.txt" /&gt;
-              &lt;/listeners&gt;
-              &lt;/trace&gt;
-              &lt;/system.diagnostics&gt;
+                &lt;system.diagnostics&gt;
+                &lt;trace autoflush="true"&gt;
+                &lt;listeners&gt;
+                &lt;add
+                name="textWriterTraceListener"
+                type="System.Diagnostics.TextWriterTraceListener"
+                initializeData="C:\tmp\log4net.txt" /&gt;
+                &lt;/listeners&gt;
+                &lt;/trace&gt;
+                &lt;/system.diagnostics&gt;
 
-              ...
-              &lt;/configuration&gt;
+                ...
+                &lt;/configuration&gt;
             </pre>
           </div>
           <p>
@@ -1015,7 +880,6 @@ public class FastLogger
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
         <section id="trouble-evaluate-configurationerrors-at-runtime" name="How can I evaluate configuration errors at runtime?">
           <p>
             To prevent silent failure of log4net as reported as <a href="http://issues.apache.org/jira/browse/LOG4NET-342">LOG4NET-342</a>,
@@ -1025,21 +889,20 @@ public class FastLogger
           </p>
           <div class="syntax">
             <pre class="code">
-              if(!log4net.LogManager.GetRepository().Configured)
-              {
-              // log4net not configured
-              foreach(log4net.Util.LogLog message in log4net.LogManager.GetRepository().ConfigurationMessages.Cast&lt;log4net.Util.LogLog&bg;())
-              {
-              // evaluate configuration message
-              }
-              }
+                if(!log4net.LogManager.GetRepository().Configured)
+                {
+                  // log4net not configured
+                  foreach(log4net.Util.LogLog message in log4net.LogManager.GetRepository().ConfigurationMessages.Cast&lt;log4net.Util.LogLog&gt;())
+                  {
+                    // evaluate configuration message
+                  }
+                }
             </pre>
           </div>
         </section>
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
         <section id="trouble-EventLog" name="Why doesn't the EventLogAppender work?">
           <p>
             If you are not getting events delivered to the event log this usually indicates
@@ -1061,34 +924,32 @@ public class FastLogger
           <ol>
             <li>
               <p>
-                Make the ASPNET user a member of the Administrators group. This will work because the
-                user will then have the required permissions. This is <strong>not recommended</strong>
-                for production use.
-              </p>
+          Make the ASPNET user a member of the Administrators group. This will work because the
+          user will then have the required permissions. This is <strong>not recommended</strong>
+          for production use.
+                </p>
             </li>
             <li>
               <p>
-                As the event source only needs to be created once for the machine, create an installer
-                and configure it to create the event source.
-                The installer will need to be run as Administrator (don't they all). See
-                <span class="code">System.Diagnostics.EventLogInstaller</span> in the Microsoft .NET
-                Framework SDK for an example of how to create a simple event log installer.
-              </p>
+          As the event source only needs to be created once for the machine, create an installer
+          and configure it to create the event source.
+          The installer will need to be run as Administrator (don't they all). See
+          <span class="code">System.Diagnostics.EventLogInstaller</span> in the Microsoft .NET
+          Framework SDK for an example of how to create a simple event log installer.
+                </p>
             </li>
           </ol>
           <p>
             There is a Microsoft Knowledge Base article that covers this issue and how to resolve
             it. <a href="http://support.microsoft.com/default.aspx?scid=kb;en-us;329291">
-              PRB: "Requested Registry Access Is Not Allowed" Error Message When ASP.NET
-              Application Tries to Write New EventSource in the EventLog
-            </a>.
+            PRB: "Requested Registry Access Is Not Allowed" Error Message When ASP.NET
+            Application Tries to Write New EventSource in the EventLog
+          </a>.
           </p>
         </section>
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="trouble-file-perm" name="Why can't I log to a FileAppender from a web application?">
           <p>
             The web application runs as a special user account on the web server
@@ -1102,8 +963,6 @@ public class FastLogger
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="trouble-service" name="Why doesn't the logging in my service work?">
           <p>
             A windows service runs as a user account specified in the services
@@ -1125,8 +984,6 @@ public class FastLogger
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="trouble-webapp-stops-logging" name="Why does my ASP.NET web application stop logging when deployed on an IIS?">
           <p>
             This problem has been reported by several people as issue
@@ -1154,8 +1011,6 @@ public class FastLogger
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="trouble-db" name="I am having trouble using the AdoNetAppender to connect to my database?">
           <p>
             For details on the different ways in which ADO.NET can connect to a database see:
@@ -1171,33 +1026,25 @@ public class FastLogger
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-
         <section id="report-bugs" name="How do I report bugs?">
           <p>
             First make sure it really is a bug and not a
-            usage error.  When in doubt, ask on the <a
-                      href="../mail-lists.html">
-              log4net-user mailing
-              list
-            </a> first.
+            usage error.  When in doubt, ask on the <a href="../mail-lists.html">
+            log4net-user mailing
+            list
+          </a> first.
           </p>
           <p>
-            If you have identified a bug, please report it
-            via our <a href="../issue-tracking.html">
-              Issue
-              Tracker
-            </a>.  You may want to check it hasn't
-            been reported before by searching the existing
-            issues.
+            If you have identified a bug, please report it via our
+            <a href="../issue-tracking.html">Issue Tracker</a>.
+            You may want to check it hasn't been reported before by
+            searching the existing issues.
           </p>
         </section>
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-        <section id="log-early"
-                 name="log4net doesn't log when built in RELEASE mode">
+        <section id="log-early" name="log4net doesn't log when built in RELEASE mode">
           <p>
             If you use attributes to configure log4net then
             the order by which assemblies are loaded may
@@ -1205,18 +1052,15 @@ public class FastLogger
             not.  Assembly load order may be different in
             DEBUG and RELEASE mode.
           </p>
-
           <p>
-            As stated in <a
-                      href="manual/configuration.html#attributes">
-              the
-              manual
-            </a> the attribute will only be read for
+            As stated in <a href="manual/configuration.html#attributes">
+            the
+            manual
+          </a> the attribute will only be read for
             the first assembly that tries to use log4net.
             So it is important that you obtain your
             <code>ILog</code> instance as early as possible.
           </p>
-
           <p>
             For a command line application "as early as
             possible" probably is the class holding the
@@ -1229,9 +1073,7 @@ public class FastLogger
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-        <section id="no-explicit-configuration"
-                 name="log4net doesn't log at all">
+        <section id="no-explicit-configuration" name="log4net doesn't log at all">
           <p>
             You may have overlooked initialization code for
             log4net in your application. log4net can be
@@ -1244,31 +1086,18 @@ public class FastLogger
             <code>[XmlConfiguratorAttribute]</code> in the
             assembly where log4net is first used.
           </p>
-
           <p>
-            See <a href="manual/configuration.html">
-              the
-              manual
-            </a> for more information.  If you use
-            attributes to configure log4net then the order
-            by which assemblies are loaded may determine
-            whether you attributes are used or not.
-            Assembly load order may be different in DEBUG
-            and RELEASE mode.  See also <a
-                      href="#log-early">
-              log4net doesn't log when built
-              in RELEASE mode
-            </a>.
+            See <a href="manual/configuration.html">the manual</a>for more information.
+            If you use attributes to configure log4net then the order by which
+            assemblies are loaded may determine whether you attributes are used or not.
+            Assembly load order may be different in DEBUG and RELEASE mode.
+            See also <a href="#log-early">log4net doesn't log when built in RELEASE mode</a>.
           </p>
-
         </section>
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
-        <section id="adonet-doesnt-reconnect"
-                 name="The ADO.NET Appender doesn't reconnect
-                               after a DB failure on .NET 4.5.1">
+        <section id="adonet-doesnt-reconnect" name="The ADO.NET Appender doesn't reconnect after a DB failure on .NET 4.5.1">
           <p>
             Starting with .NET 4.5.1 ADO.NET has added
             connection resiliency which is supposed to
@@ -1284,38 +1113,28 @@ public class FastLogger
             connection string.
           </p>
           <p>
-            For details see <a
-                      href="https://issues.apache.org/jira/browse/LOG4NET-442">LOG4NET-442</a>
+            For details see <a href="https://issues.apache.org/jira/browse/LOG4NET-442">LOG4NET-442</a>
           </p>
         </section>
       </section>
-
       <section id="misc" name="Miscellaneous">
-
         <section id="vsnet-add-reference" name="How do I make log4net appear in the Visual Studio Add References dialog?">
           <p>
             There is a good discussion of this topic on Robert McLaws blog:
             <a href="http://weblogs.asp.net/rmclaws/archive/2003/11/15/37743.aspx">Building a Better Server Control Experience, Part 2</a>.
           </p>
         </section>
-
         <section id="nuget" name="Do you provide a Nuget package?">
           <p>
-            Starting with version 2.0.6 we provide <a
-        href="https://www.nuget.org/packages/log4net/"
-        rel="nofollow">Nuget packages</a>. For earlier
-            versions <a href="http://blog.cincura.net/"
-   rel="nofollow">Jiří Činčura</a> has kindly created
+            Starting with version 2.0.6 we provide <a href="https://www.nuget.org/packages/log4net/" rel="nofollow">Nuget packages</a>. For earlier
+            versions <a href="http://blog.cincura.net/" rel="nofollow">Jiří Činčura</a> has kindly created
             Nuget packages.
           </p>
         </section>
         <p>
           <a href="#top">Back to Top</a>
         </p>
-
       </section>
-
     </section>
-
   </body>
 </document>

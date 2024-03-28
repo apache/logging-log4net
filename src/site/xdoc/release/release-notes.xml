@@ -27,8 +27,8 @@ limitations under the License.
     <body>
 
         <section id="main" name="Apache log4net&#x2122; Release Notes">
-            <section id="3.0.0" name="3.0.0">
-                <section id="3.0.0-breaking" name="Breaking Changes">
+            <section id="a3.0.0" name="3.0.0">
+                <section id="a3.0.0-breaking" name="Breaking Changes">
                     <p>
                         Attention: Starting with 3.0.0 we only support the following target frameworks
                         <ul>
@@ -44,11 +44,11 @@ limitations under the License.
                 </section>
 
                 Apache log4net 3.0.0 addresses reported issues:
-                <section id="3.0.0-bug" name="Bug fixes">
+                <section id="a3.0.0-bug" name="Bug fixes">
                     <ul>
                     </ul>
                 </section>
-                <section id="3.0.0-enhancements" name="Enhancements">
+                <section id="a3.0.0-enhancements" name="Enhancements">
                     <ul>
                         <li>
                             <a href="https://github.com/apache/logging-log4net/issues/111">Dropping support for older runtimes</a> (by @fluffynuts and @freeandnil)
@@ -63,7 +63,7 @@ limitations under the License.
                 </section>
             </section>
             <section id="a2.0.17" name="2.0.17">
-                Apache log4net 2.0.16 addresses reported issues:
+                Apache log4net 2.0.17 addresses reported issues:
                 <section id="a2.0.17-bug" name="Bug fixes">
                     <ul>
                         <li>
@@ -1456,12 +1456,6 @@ limitations under the License.
                         <span class="code">log4net.Util.PatternConverter</span>
                         base class. The custom pattern can then be used in the pattern string.
                     </p>
-                    <p>
-                        For full details see the SDK Reference entry: <a
-                            href="sdk/html/T_log4net_Layout_PatternLayout.htm">
-                        log4net.Layout.PatternLayout
-                    </a>.
-                    </p>
                     <h3>
                         <span class="code">PatternString</span>
                         for pattern based configuration
@@ -1503,12 +1497,6 @@ limitations under the License.
                             }
                         </pre>
                     </div>
-                    <p>
-                        For full details see the SDK Reference entry: <a
-                            href="sdk/html/T_log4net_Util_PatternString_htm">
-                        log4net.Util.PatternString
-                    </a>.
-                    </p>
                     <h3>Loading configuration from a URI</h3>
                     <p>
                         The <span class="code">XmlConfigurator</span> methods now support loading the
@@ -1628,12 +1616,6 @@ limitations under the License.
                         maintains the current exclusive file locking behavior. An alternative
                         model, <span class="code">MinimalLock</span>, can be used to support writing to
                         a single output file from multiple processes.
-                    </p>
-                    <p>
-                        For full details see the SDK Reference entry: <a
-                            href="sdk/html/T_log4net_Appender_FileAppender_LockingModel.htm">
-                        log4net.Appender.FileAppender.LockingModel
-                    </a>.
                     </p>
                     <h3>
                         <span class="code">RollingFileAppender</span>
