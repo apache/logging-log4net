@@ -28,39 +28,24 @@ namespace log4net.Util
   /// </summary>
   /// <remarks>
   /// <para>
-  /// A <see cref="StringWriter"/> that can be <see cref="Reset"/> and reused.
   /// This uses a single buffer for string operations.
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
   public class ReusableStringWriter : StringWriter
   {
-    #region Constructor
-
     /// <summary>
-    /// Create an instance of <see cref="ReusableStringWriter"/>
+    /// Creates an instance of <see cref="ReusableStringWriter"/>
     /// </summary>
     /// <param name="formatProvider">the format provider to use</param>
-    /// <remarks>
-    /// <para>
-    /// Create an instance of <see cref="ReusableStringWriter"/>
-    /// </para>
-    /// </remarks>
     public ReusableStringWriter(IFormatProvider formatProvider) : base(formatProvider)
     {
     }
-
-    #endregion
 
     /// <summary>
     /// Override Dispose to prevent closing of writer
     /// </summary>
     /// <param name="disposing">flag</param>
-    /// <remarks>
-    /// <para>
-    /// Override Dispose to prevent closing of writer
-    /// </para>
-    /// </remarks>
     protected override void Dispose(bool disposing)
     {
       // Do not close the writer
@@ -80,7 +65,7 @@ namespace log4net.Util
     public void Reset(int maxCapacity, int defaultSize)
     {
       // Reset working string buffer
-      StringBuilder sb = this.GetStringBuilder();
+      StringBuilder sb = GetStringBuilder();
 
       sb.Length = 0;
 

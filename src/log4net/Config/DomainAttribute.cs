@@ -17,9 +17,6 @@
 //
 #endregion
 
-// .NET Compact Framework 1.0 has no support for reading assembly attributes
-#if !NETCF
-
 using System;
 
 namespace log4net.Config
@@ -52,8 +49,6 @@ namespace log4net.Config
   [Obsolete("Use RepositoryAttribute instead of DomainAttribute")]
   public sealed class DomainAttribute : RepositoryAttribute
   {
-    #region Public Instance Constructors
-
     /// <summary>
     /// Initializes a new instance of the <see cref="DomainAttribute" /> class.
     /// </summary>
@@ -79,9 +74,5 @@ namespace log4net.Config
     public DomainAttribute(string name) : base(name)
     {
     }
-
-    #endregion Public Instance Constructors
   }
 }
-
-#endif // !NETCF

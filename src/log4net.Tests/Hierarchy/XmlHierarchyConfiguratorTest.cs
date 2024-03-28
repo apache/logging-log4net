@@ -19,7 +19,6 @@
  *
 */
 
-using System;
 using System.Xml;
 using NUnit.Framework;
 
@@ -27,58 +26,47 @@ using log4net.Repository.Hierarchy;
 
 namespace log4net.Tests.Hierarchy
 {
-    [TestFixture]
-    public class XmlHierarchyConfiguratorTest
+  [TestFixture]
+  public class XmlHierarchyConfiguratorTest
+  {
+    public string? TestProp { set; get; }
+
+    [Test]
+    [Platform(Include="Win")]
+    public void EnvironmentOnWindowsIsCaseInsensitive()
     {
-
-	private string testProp;
-
-	public string TestProp
-	{
-	    set
-	    {
-		testProp = value;
-	    }
-	    get
-	    {
-		return testProp;
-	    }
-	}
-
-#if !NETSTANDARD1_3 // TODO write replacement test
-	[Test][Platform(Include="Win")]
-	public void EnvironmentOnWindowsIsCaseInsensitive()
-	{
-	    SetTestPropWithPath();	    
-	    Assert.AreNotEqual("Path=", TestProp);
-	}
-
-	[Test][Platform(Include="Unix")]
-	public void EnvironmentOnUnixIsCaseSensitive()
-	{
-	    SetTestPropWithPath();	    
-	    Assert.AreEqual("Path=", TestProp);
-	}
-#endif
-
-	private void SetTestPropWithPath()
-	{
-	    XmlDocument doc = new XmlDocument();
-	    XmlElement el = doc.CreateElement("param");
-	    el.SetAttribute("name", "TestProp");
-	    el.SetAttribute("value", "Path=${path}");
-	    new TestConfigurator().PublicSetParameter(el, this);
-	}
-
-	// workaround for SetParameter being protected
-	private class TestConfigurator : XmlHierarchyConfigurator {
-	    public TestConfigurator() : base(null)
-	    {
-	    }
-	    public void PublicSetParameter(XmlElement element, object target) 
-	    {
-		SetParameter(element, target);
-	    }
-	}
+      SetTestPropWithPath();      
+      Assert.AreNotEqual("Path=", TestProp);
     }
+
+    [Test]
+    [Platform(Include="Unix")]
+    public void EnvironmentOnUnixIsCaseSensitive()
+    {
+      SetTestPropWithPath();      
+      Assert.AreEqual("Path=", TestProp);
+    }
+
+    private void SetTestPropWithPath()
+    {
+      XmlDocument doc = new XmlDocument();
+      XmlElement el = doc.CreateElement("param");
+      el.SetAttribute("name", "TestProp");
+      el.SetAttribute("value", "Path=${path}");
+      new TestConfigurator().PublicSetParameter(el, this);
+    }
+
+    // workaround for SetParameter being protected
+    private sealed class TestConfigurator : XmlHierarchyConfigurator
+    {
+      public TestConfigurator() : base(null!)
+      {
+      }
+
+      public void PublicSetParameter(XmlElement element, object target) 
+      {
+        SetParameter(element, target);
+      }
+    }
+  }
 }

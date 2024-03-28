@@ -18,8 +18,6 @@
 #endregion
 
 using System;
-using System.Globalization;
-using System.Text;
 using System.IO;
 
 using log4net.Core;
@@ -44,10 +42,8 @@ namespace log4net.Layout.Pattern
   /// <author>Nicko Cadell</author>
   public abstract class NamedPatternConverter : PatternLayoutConverter, IOptionHandler
   {
-    private int m_precision = 0;
-
-    #region Implementation of IOptionHandler
-
+    private int m_precision;
+    
     /// <summary>
     /// Initialize the converter 
     /// </summary>
@@ -68,17 +64,16 @@ namespace log4net.Layout.Pattern
     {
       m_precision = 0;
 
-      if (Option != null)
+      if (Option is not null)
       {
         string optStr = Option.Trim();
         if (optStr.Length > 0)
         {
-          int precisionVal;
-          if (SystemInfo.TryParse(optStr, out precisionVal))
+          if (SystemInfo.TryParse(optStr, out int precisionVal))
           {
             if (precisionVal <= 0)
             {
-              LogLog.Error(declaringType, "NamedPatternConverter: Precision option (" + optStr + ") isn't a positive integer.");
+              LogLog.Error(declaringType, $"NamedPatternConverter: Precision option ({optStr}) isn't a positive integer.");
             }
             else
             {
@@ -87,16 +82,14 @@ namespace log4net.Layout.Pattern
           }
           else
           {
-            LogLog.Error(declaringType, "NamedPatternConverter: Precision option \"" + optStr + "\" not a decimal integer.");
+            LogLog.Error(declaringType, $"NamedPatternConverter: Precision option \"{optStr}\" not a decimal integer.");
           }
         }
       }
     }
 
-    #endregion
-
     /// <summary>
-    /// Get the fully qualified string data
+    /// Gets the fully qualified <c>'.'</c> (dot/period) separated name for an event.
     /// </summary>
     /// <param name="loggingEvent">the event being logged</param>
     /// <returns>the fully qualified name</returns>
@@ -105,14 +98,11 @@ namespace log4net.Layout.Pattern
     /// Overridden by subclasses to get the fully qualified name before the
     /// precision is applied to it.
     /// </para>
-    /// <para>
-    /// Return the fully qualified <c>'.'</c> (dot/period) separated string.
-    /// </para>
     /// </remarks>
-    protected abstract string GetFullyQualifiedName(LoggingEvent loggingEvent);
+    protected abstract string? GetFullyQualifiedName(LoggingEvent loggingEvent);
 
     /// <summary>
-    /// Convert the pattern to the rendered message
+    /// Converts the pattern to the rendered message
     /// </summary>
     /// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
     /// <param name="loggingEvent">the event being logged</param>
@@ -122,8 +112,8 @@ namespace log4net.Layout.Pattern
     /// </remarks>
     protected sealed override void Convert(TextWriter writer, LoggingEvent loggingEvent)
     {
-      string name = GetFullyQualifiedName(loggingEvent);
-      if (m_precision <= 0 || name == null || name.Length < 2)
+      string? name = GetFullyQualifiedName(loggingEvent);
+      if (m_precision <= 0 || name is null || name.Length < 2)
       {
         writer.Write(name);
       }
@@ -154,8 +144,6 @@ namespace log4net.Layout.Pattern
       }
     }
 
-    #region Private Static Fields
-
     /// <summary>
     /// The fully qualified type of the NamedPatternConverter class.
     /// </summary>
@@ -166,6 +154,5 @@ namespace log4net.Layout.Pattern
     private static readonly Type declaringType = typeof(NamedPatternConverter);
 
     private const string DOT = ".";
-    #endregion Private Static Fields
   }
 }

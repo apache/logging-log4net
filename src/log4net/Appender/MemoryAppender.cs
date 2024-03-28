@@ -18,8 +18,7 @@
 #endregion
 
 using System;
-using System.Collections;
-
+using System.Collections.Generic;
 using log4net.Core;
 
 namespace log4net.Appender
@@ -56,39 +55,15 @@ namespace log4net.Appender
   /// <author>Gert Driesen</author>
   public class MemoryAppender : AppenderSkeleton
   {
-    #region Public Instance Constructors
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MemoryAppender" /> class.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Default constructor.
-    /// </para>
-    /// </remarks>
-    public MemoryAppender() : base()
-    {
-      m_eventsList = new ArrayList();
-    }
-
-    #endregion Protected Instance Constructors
-
-    #region Public Instance Properties
-
     /// <summary>
     /// Gets the events that have been logged.
     /// </summary>
     /// <returns>The events that have been logged</returns>
-    /// <remarks>
-    /// <para>
-    /// Gets the events that have been logged.
-    /// </para>
-    /// </remarks>
     public virtual LoggingEvent[] GetEvents()
     {
-      lock (m_eventsList.SyncRoot)
+      lock (m_lockObj)
       {
-        return (LoggingEvent[])m_eventsList.ToArray(typeof(LoggingEvent));
+        return m_eventsList.ToArray();
       }
     }
 
@@ -112,18 +87,8 @@ namespace log4net.Appender
     [Obsolete("Use Fix property")]
     public virtual bool OnlyFixPartialEventData
     {
-      get { return (Fix == FixFlags.Partial); }
-      set
-      {
-        if (value)
-        {
-          Fix = FixFlags.Partial;
-        }
-        else
-        {
-          Fix = FixFlags.All;
-        }
-      }
+      get => Fix == FixFlags.Partial;
+      set => Fix = value ? FixFlags.Partial : FixFlags.All;
     }
 
     /// <summary>
@@ -136,15 +101,7 @@ namespace log4net.Appender
     /// for details.
     /// </para>
     /// </remarks>
-    public virtual FixFlags Fix
-    {
-      get { return m_fixFlags; }
-      set { m_fixFlags = value; }
-    }
-
-    #endregion Public Instance Properties
-
-    #region Override implementation of AppenderSkeleton
+    public virtual FixFlags Fix { get; set; } = FixFlags.All;
 
     /// <summary>
     /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/> method. 
@@ -158,17 +115,13 @@ namespace log4net.Appender
       // Because we are caching the LoggingEvent beyond the
       // lifetime of the Append() method we must fix any
       // volatile data in the event.
-      loggingEvent.Fix = this.Fix;
+      loggingEvent.Fix = Fix;
 
-      lock (m_eventsList.SyncRoot)
+      lock (m_lockObj)
       {
         m_eventsList.Add(loggingEvent);
       }
     }
-
-    #endregion Override implementation of AppenderSkeleton
-
-    #region Public Instance Methods
 
     /// <summary>
     /// Clear the list of events
@@ -178,7 +131,7 @@ namespace log4net.Appender
     /// </remarks>
     public virtual void Clear()
     {
-      lock (m_eventsList.SyncRoot)
+      lock (m_lockObj)
       {
         m_eventsList.Clear();
       }
@@ -188,38 +141,21 @@ namespace log4net.Appender
     /// Gets the events that have been logged and clears the list of events.
     /// </summary>
     /// <returns>The events that have been logged</returns>
-    /// <remarks>
-    /// <para>
-    /// Gets the events that have been logged and clears the list of events.
-    /// </para>
-    /// </remarks>
     public virtual LoggingEvent[] PopAllEvents()
     {
-      lock (m_eventsList.SyncRoot)
+      lock (m_lockObj)
       {
-        LoggingEvent[] tmp = (LoggingEvent[])m_eventsList.ToArray(typeof(LoggingEvent));
+        LoggingEvent[] tmp = m_eventsList.ToArray();
         m_eventsList.Clear();
         return tmp;
       }
     }
 
-    #endregion Public Instance Methods
-
-    #region Protected Instance Fields
-
     /// <summary>
     /// The list of events that have been appended.
     /// </summary>
-    protected ArrayList m_eventsList;
+    protected List<LoggingEvent> m_eventsList = new();
 
-    /// <summary>
-    /// Value indicating which fields in the event should be fixed
-    /// </summary>
-    /// <remarks>
-    /// By default all fields are fixed
-    /// </remarks>
-    protected FixFlags m_fixFlags = FixFlags.All;
-
-    #endregion Protected Instance Fields
+    private readonly object m_lockObj = new();
   }
 }

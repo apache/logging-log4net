@@ -35,8 +35,6 @@ namespace log4net.Util
   /// <author>Gert Driesen</author>
   public class CyclicBuffer
   {
-    #region Public Instance Constructors
-
     /// <summary>
     /// Constructor
     /// </summary>
@@ -52,7 +50,7 @@ namespace log4net.Util
     {
       if (maxSize < 1)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException("maxSize", (object)maxSize, "Parameter: maxSize, Value: [" + maxSize + "] out of range. Non zero positive integer required");
+        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(maxSize), maxSize, $"Parameter: {nameof(maxSize)}, Value: [{maxSize}] out of range. A positive integer is required.");
       }
 
       m_maxSize = maxSize;
@@ -61,10 +59,6 @@ namespace log4net.Util
       m_last = 0;
       m_numElems = 0;
     }
-
-    #endregion Public Instance Constructors
-
-    #region Public Instance Methods
 
     /// <summary>
     /// Appends a <paramref name="loggingEvent"/> to the buffer.
@@ -75,20 +69,20 @@ namespace log4net.Util
     /// <para>
     /// Append an event to the buffer. If the buffer still contains free space then
     /// <c>null</c> is returned. If the buffer is full then an event will be dropped
-    /// to make space for the new event, the event dropped is returned.
+    /// to make space for the new event, the dropped event is returned.
     /// </para>
     /// </remarks>
-    public LoggingEvent Append(LoggingEvent loggingEvent)
+    public LoggingEvent? Append(LoggingEvent loggingEvent)
     {
-      if (loggingEvent == null)
+      if (loggingEvent is null)
       {
-        throw new ArgumentNullException("loggingEvent");
+        throw new ArgumentNullException(nameof(loggingEvent));
       }
 
       lock (this)
       {
         // save the discarded event
-        LoggingEvent discardedLoggingEvent = m_events[m_last];
+        LoggingEvent? discardedLoggingEvent = m_events[m_last];
 
         // overwrite the last event position
         m_events[m_last] = loggingEvent;
@@ -129,11 +123,11 @@ namespace log4net.Util
     /// from the buffer.
     /// </para>
     /// </remarks>
-    public LoggingEvent PopOldest()
+    public LoggingEvent? PopOldest()
     {
       lock (this)
       {
-        LoggingEvent ret = null;
+        LoggingEvent? ret = null;
         if (m_numElems > 0)
         {
           m_numElems--;
@@ -223,14 +217,14 @@ namespace log4net.Util
       {
         if (newSize < 0) 
         {
-          throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException("newSize", (object)newSize, "Parameter: newSize, Value: [" + newSize + "] out of range. Non zero positive integer required");
+          throw SystemInfo.CreateArgumentOutOfRangeException(nameof(newSize), newSize, $"Parameter: {nameof(newSize)}, Value: [{newSize}] out of range. A positive integer is required.");
         }
         if (newSize == m_numElems)
         {
           return; // nothing to do
         }
   
-        LoggingEvent[] temp = new  LoggingEvent[newSize];
+        LoggingEvent?[] temp = new  LoggingEvent[newSize];
 
         int loopLen = (newSize < m_numElems) ? newSize : m_numElems;
   
@@ -262,21 +256,16 @@ namespace log4net.Util
     }
 #endif
 
-    #endregion Public Instance Methods
-
-    #region Public Instance Properties
-
     /// <summary>
     /// Gets the <paramref name="i"/>th oldest event currently in the buffer.
     /// </summary>
-    /// <value>The <paramref name="i"/>th oldest event currently in the buffer.</value>
     /// <remarks>
     /// <para>
     /// If <paramref name="i"/> is outside the range 0 to the number of events
     /// currently in the buffer, then <c>null</c> is returned.
     /// </para>
     /// </remarks>
-    public LoggingEvent this[int i]
+    public LoggingEvent? this[int i]
     {
       get
       {
@@ -340,16 +329,10 @@ namespace log4net.Util
       }
     }
 
-    #endregion Public Instance Properties
-
-    #region Private Instance Fields
-
-    private LoggingEvent[] m_events;
+    private readonly LoggingEvent?[] m_events;
     private int m_first;
     private int m_last;
     private int m_numElems;
-    private int m_maxSize;
-
-    #endregion Private Instance Fields
+    private readonly int m_maxSize;
   }
 }

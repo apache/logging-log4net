@@ -19,9 +19,7 @@
 
 using System;
 
-using log4net;
 using log4net.Core;
-using log4net.Util;
 
 namespace log4net.Filter
 {
@@ -44,31 +42,6 @@ namespace log4net.Filter
   /// <author>Gert Driesen</author>
   public class LevelMatchFilter : FilterSkeleton
   {
-    #region Member Variables
-
-    /// <summary>
-    /// flag to indicate if the filter should <see cref="FilterDecision.Accept"/> on a match
-    /// </summary>
-    private bool m_acceptOnMatch = true;
-
-    /// <summary>
-    /// the <see cref="Level"/> to match against
-    /// </summary>
-    private Level m_levelToMatch;
-
-    #endregion
-
-    #region Constructors
-
-    /// <summary>
-    /// Default constructor
-    /// </summary>
-    public LevelMatchFilter()
-    {
-    }
-
-    #endregion
-
     /// <summary>
     /// <see cref="FilterDecision.Accept"/> when matching <see cref="LevelToMatch"/>
     /// </summary>
@@ -83,11 +56,7 @@ namespace log4net.Filter
     /// The default is <c>true</c> i.e. to <see cref="FilterDecision.Accept"/> the event.
     /// </para>
     /// </remarks>
-    public bool AcceptOnMatch
-    {
-      get { return m_acceptOnMatch; }
-      set { m_acceptOnMatch = value; }
-    }
+    public bool AcceptOnMatch { get; set; } = true;
 
     /// <summary>
     /// The <see cref="Level"/> that the filter will match
@@ -99,13 +68,7 @@ namespace log4net.Filter
     /// the result depends on the value of <see cref="AcceptOnMatch"/>.
     /// </para>
     /// </remarks>
-    public Level LevelToMatch
-    {
-      get { return m_levelToMatch; }
-      set { m_levelToMatch = value; }
-    }
-
-    #region Override implementation of FilterSkeleton
+    public Level? LevelToMatch { get; set; }
 
     /// <summary>
     /// Tests if the <see cref="Level"/> of the logging event matches that of the filter
@@ -124,19 +87,17 @@ namespace log4net.Filter
     /// </remarks>
     public override FilterDecision Decide(LoggingEvent loggingEvent)
     {
-      if (loggingEvent == null)
+      if (loggingEvent is null)
       {
-        throw new ArgumentNullException("loggingEvent");
+        throw new ArgumentNullException(nameof(loggingEvent));
       }
 
-      if (m_levelToMatch != null && m_levelToMatch == loggingEvent.Level)
+      if (LevelToMatch is not null && LevelToMatch == loggingEvent.Level)
       {
         // Found match
-        return m_acceptOnMatch ? FilterDecision.Accept : FilterDecision.Deny;
+        return AcceptOnMatch ? FilterDecision.Accept : FilterDecision.Deny;
       }
       return FilterDecision.Neutral;
     }
-
-    #endregion
   }
 }

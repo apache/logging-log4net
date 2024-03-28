@@ -16,26 +16,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
 #endregion
 
 using System;
 using System.IO;
-#if !NETCF && !NETSTANDARD1_3
 using System.Runtime.Serialization;
-#endif
 using System.Text;
 using System.Threading;
 using log4net.Util;
 using log4net.Layout;
 using log4net.Core;
-#if NET_4_5 || NETSTANDARD
 using System.Threading.Tasks;
-#endif
 
 namespace log4net.Appender
 {
-#if !NETCF
   /// <summary>
   /// Appends logging events to a file.
   /// </summary>
@@ -72,7 +66,7 @@ namespace log4net.Appender
   /// is to obtain an exclusive write lock on the file until this appender is closed.
   /// The alternative models only hold a
   /// write lock while the appender is writing a logging event (<see cref="FileAppender.MinimalLock"/>)
-  /// or synchronize by using a named system wide Mutex (<see cref="FileAppender.InterProcessLock"/>).
+  /// or synchronize by using a named system-wide Mutex (<see cref="FileAppender.InterProcessLock"/>).
   /// </para>
   /// <para>
   /// All locking strategies have issues and you should seriously consider using a different strategy that
@@ -84,68 +78,15 @@ namespace log4net.Appender
   /// <author>Rodrigo B. de Oliveira</author>
   /// <author>Douglas de la Torre</author>
   /// <author>Niall Daley</author>
-#else
-  /// <summary>
-  /// Appends logging events to a file.
-  /// </summary>
-  /// <remarks>
-  /// <para>
-  /// Logging events are sent to the file specified by
-  /// the <see cref="File"/> property.
-  /// </para>
-  /// <para>
-  /// The file can be opened in either append or overwrite mode 
-  /// by specifying the <see cref="AppendToFile"/> property.
-  /// If the file path is relative it is taken as relative from 
-  /// the application base directory. The file encoding can be
-  /// specified by setting the <see cref="Encoding"/> property.
-  /// </para>
-  /// <para>
-  /// The layout's <see cref="ILayout.Header"/> and <see cref="ILayout.Footer"/>
-  /// values will be written each time the file is opened and closed
-  /// respectively. If the <see cref="AppendToFile"/> property is <see langword="true"/>
-  /// then the file may contain multiple copies of the header and footer.
-  /// </para>
-  /// <para>
-  /// This appender will first try to open the file for writing when <see cref="ActivateOptions"/>
-  /// is called. This will typically be during configuration.
-  /// If the file cannot be opened for writing the appender will attempt
-  /// to open the file again each time a message is logged to the appender.
-  /// If the file cannot be opened for writing when a message is logged then
-  /// the message will be discarded by this appender.
-  /// </para>
-  /// <para>
-  /// The <see cref="FileAppender"/> supports pluggable file locking models via
-  /// the <see cref="LockingModel"/> property.
-  /// The default behavior, implemented by <see cref="FileAppender.ExclusiveLock"/> 
-  /// is to obtain an exclusive write lock on the file until this appender is closed.
-  /// The alternative model only holds a
-  /// write lock while the appender is writing a logging event (<see cref="FileAppender.MinimalLock"/>).
-  /// </para>
-  /// <para>
-  /// All locking strategies have issues and you should seriously consider using a different strategy that
-  /// avoids having multiple processes logging to the same file.
-  /// </para>
-  /// </remarks>
-  /// <author>Nicko Cadell</author>
-  /// <author>Gert Driesen</author>
-  /// <author>Rodrigo B. de Oliveira</author>
-  /// <author>Douglas de la Torre</author>
-  /// <author>Niall Daley</author>
-#endif
   public class FileAppender : TextWriterAppender
   {
-    #region LockingStream Inner Class
-
     /// <summary>
     /// Write only <see cref="Stream"/> that uses the <see cref="LockingModelBase"/> 
     /// to manage access to an underlying resource.
     /// </summary>
     private sealed class LockingStream : Stream, IDisposable
     {
-#if !NETCR
       [Serializable]
-#endif
       public sealed class LockStateException : LogException
       {
         public LockStateException(string message)
@@ -161,146 +102,80 @@ namespace log4net.Appender
         {
         }
 
-#if !NETCR && !NETSTANDARD1_3
         private LockStateException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
       }
 
-      private Stream m_realStream = null;
+      private Stream? m_realStream;
       private readonly LockingModelBase m_lockingModel;
-      private int m_lockLevel = 0;
+      private int m_lockLevel;
 
       public LockingStream(LockingModelBase locking)
-          : base()
       {
-        if (locking == null)
+        if (locking is null)
         {
-          throw new ArgumentException("Locking model may not be null", "locking");
+          throw new ArgumentNullException(nameof(locking));
         }
 
         m_lockingModel = locking;
       }
 
-      #region Override Implementation of Stream
-
-#if NETSTANDARD
       protected override void Dispose(bool disposing)
       {
         m_lockingModel.CloseFile();
         base.Dispose(disposing);
       }
-#else
 
-      private int m_readTotal = -1;
-
-      // Methods
-      public override IAsyncResult BeginRead(byte[] buffer,
-          int offset,
-          int count,
-          AsyncCallback callback,
-          object state)
-      {
-        AssertLocked();
-        IAsyncResult ret = m_realStream.BeginRead(buffer, offset, count, callback, state);
-        m_readTotal = EndRead(ret);
-        return ret;
-      }
-
-      /// <summary>
-      /// True asynchronous writes are not supported, the implementation forces a synchronous write.
-      /// </summary>
-      public override IAsyncResult BeginWrite(byte[] buffer,
-          int offset,
-          int count,
-          AsyncCallback callback,
-          object state)
-      {
-        AssertLocked();
-        IAsyncResult ret = m_realStream.BeginWrite(buffer, offset, count, callback, state);
-        EndWrite(ret);
-        return ret;
-      }
-
-      public override void Close()
-      {
-        m_lockingModel.CloseFile();
-      }
-
-      public override int EndRead(IAsyncResult asyncResult)
-      {
-        AssertLocked();
-        return m_readTotal;
-      }
-
-      public override void EndWrite(IAsyncResult asyncResult)
-      {
-        //No-op, it has already been handled
-      }
-#endif
-
-#if NET_4_5 || NETSTANDARD
       public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
       {
-        AssertLocked();
-        return m_realStream.ReadAsync(buffer, offset, count, cancellationToken);
+        return AssertLocked().ReadAsync(buffer, offset, count, cancellationToken);
       }
 
       public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
       {
-        AssertLocked(); 
+        AssertLocked();
         return base.WriteAsync(buffer, offset, count, cancellationToken);
       }
-#endif
 
       public override void Flush()
       {
-        AssertLocked();
-        m_realStream.Flush();
+        AssertLocked().Flush();
       }
 
       public override int Read(byte[] buffer, int offset, int count)
       {
-        return m_realStream.Read(buffer, offset, count);
+        return AssertLocked().Read(buffer, offset, count);
       }
 
       public override int ReadByte()
       {
-        return m_realStream.ReadByte();
+        return AssertLocked().ReadByte();
       }
 
       public override long Seek(long offset, SeekOrigin origin)
       {
-        AssertLocked();
-        return m_realStream.Seek(offset, origin);
+        return AssertLocked().Seek(offset, origin);
       }
 
       public override void SetLength(long value)
       {
-        AssertLocked();
-        m_realStream.SetLength(value);
+        AssertLocked().SetLength(value);
       }
 
       void IDisposable.Dispose()
       {
-#if NETSTANDARD
         Dispose(true);
-#else
-        Close();
-#endif
       }
 
       public override void Write(byte[] buffer, int offset, int count)
       {
-        AssertLocked();
-        m_realStream.Write(buffer, offset, count);
+        AssertLocked().Write(buffer, offset, count);
       }
 
       public override void WriteByte(byte value)
       {
-        AssertLocked();
-        m_realStream.WriteByte(value);
+        AssertLocked().WriteByte(value);
       }
 
       // Properties
@@ -313,8 +188,7 @@ namespace log4net.Appender
       {
         get
         {
-          AssertLocked();
-          return m_realStream.CanSeek;
+          return AssertLocked().CanSeek;
         }
       }
 
@@ -322,8 +196,7 @@ namespace log4net.Appender
       {
         get
         {
-          AssertLocked();
-          return m_realStream.CanWrite;
+          return AssertLocked().CanWrite;
         }
       }
 
@@ -331,8 +204,7 @@ namespace log4net.Appender
       {
         get
         {
-          AssertLocked();
-          return m_realStream.Length;
+          return AssertLocked().Length;
         }
       }
 
@@ -340,26 +212,22 @@ namespace log4net.Appender
       {
         get
         {
-          AssertLocked();
-          return m_realStream.Position;
+          return AssertLocked().Position;
         }
         set
         {
-          AssertLocked();
-          m_realStream.Position = value;
+          AssertLocked().Position = value;
         }
       }
 
-      #endregion Override Implementation of Stream
-
-      #region Locking Methods
-
-      private void AssertLocked()
+      private Stream AssertLocked()
       {
-        if (m_realStream == null)
+        if (m_realStream is null)
         {
           throw new LockStateException("The file is not currently locked");
         }
+
+        return m_realStream;
       }
 
       public bool AcquireLock()
@@ -373,7 +241,7 @@ namespace log4net.Appender
             m_realStream = m_lockingModel.AcquireLock();
           }
 
-          if (m_realStream != null)
+          if (m_realStream is not null)
           {
             m_lockLevel++;
             ret = true;
@@ -396,13 +264,7 @@ namespace log4net.Appender
           }
         }
       }
-
-      #endregion Locking Methods
     }
-
-    #endregion LockingStream Inner Class
-
-    #region Locking Models
 
     /// <summary>
     /// Locking model base class
@@ -414,8 +276,6 @@ namespace log4net.Appender
     /// </remarks>
     public abstract class LockingModelBase
     {
-      private FileAppender m_appender = null;
-
       /// <summary>
       /// Open the output file
       /// </summary>
@@ -455,23 +315,23 @@ namespace log4net.Appender
       /// <summary>
       /// Acquire the lock on the file
       /// </summary>
-      /// <returns>A stream that is ready to be written to.</returns>
+      /// <returns>A stream that is ready to be written to, or null if there is no active stream because uninitialized or error.</returns>
       /// <remarks>
       /// <para>
-      /// Acquire the lock on the file in preparation for writing to it. 
-      /// Return a stream pointing to the file. <see cref="ReleaseLock"/>
-      /// must be called to release the lock on the output file.
+      /// Acquire the lock on the file in preparation for writing to it.
+      /// Returns a stream pointing to the file. <see cref="ReleaseLock"/>
+      /// must be called to release the lock on the output file when the return
+      /// value is not null.
       /// </para>
       /// </remarks>
-      public abstract Stream AcquireLock();
+      public abstract Stream? AcquireLock();
 
       /// <summary>
-      /// Release the lock on the file
+      /// Releases the lock on the file
       /// </summary>
       /// <remarks>
       /// <para>
-      /// Release the lock on the file. No further writes will be made to the 
-      /// stream until <see cref="AcquireLock"/> is called again.
+      /// No further writes will be made to the stream until <see cref="AcquireLock"/> is called again.
       /// </para>
       /// </remarks>
       public abstract void ReleaseLock();
@@ -495,11 +355,7 @@ namespace log4net.Appender
       /// called.
       /// </para>
       /// </remarks>
-      public FileAppender CurrentAppender
-      {
-        get { return m_appender; }
-        set { m_appender = value; }
-      }
+      public FileAppender? CurrentAppender { get; set; }
 
       /// <summary>
       /// Helper method that creates a FileStream under CurrentAppender's SecurityContext.
@@ -510,7 +366,7 @@ namespace log4net.Appender
       /// </para>
       /// <para>
       /// If the directory portion of the <paramref name="filename"/> does not exist, it is created
-      /// via Directory.CreateDirecctory.
+      /// via Directory.CreateDirectory.
       /// </para>
       /// </remarks>
       /// <param name="filename"></param>
@@ -520,14 +376,14 @@ namespace log4net.Appender
       protected Stream CreateStream(string filename, bool append, FileShare fileShare)
       {
         filename = Environment.ExpandEnvironmentVariables(filename);
-        using (CurrentAppender.SecurityContext.Impersonate(this))
+        using (CurrentAppender?.SecurityContext?.Impersonate(this))
         {
           // Ensure that the directory structure exists
-          string directoryFullName = Path.GetDirectoryName(filename);
+          string? directoryFullName = Path.GetDirectoryName(filename);
 
           // Only create the directory if it does not exist
           // doing this check here resolves some permissions failures
-          if (!Directory.Exists(directoryFullName))
+          if (directoryFullName is not null && !Directory.Exists(directoryFullName))
           {
             Directory.CreateDirectory(directoryFullName);
           }
@@ -548,7 +404,7 @@ namespace log4net.Appender
       /// <param name="stream"></param>
       protected void CloseStream(Stream stream)
       {
-        using (CurrentAppender.SecurityContext.Impersonate(this))
+        using (CurrentAppender?.SecurityContext?.Impersonate(this))
         {
           stream.Dispose();
         }
@@ -566,7 +422,7 @@ namespace log4net.Appender
     /// </remarks>
     public class ExclusiveLock : LockingModelBase
     {
-      private Stream m_stream = null;
+      private Stream? m_stream;
 
       /// <summary>
       /// Open the file specified and prepare for logging.
@@ -590,7 +446,7 @@ namespace log4net.Appender
         }
         catch (Exception e1)
         {
-          CurrentAppender.ErrorHandler.Error("Unable to acquire lock on file " + filename + ". " +
+          CurrentAppender?.ErrorHandler.Error("Unable to acquire lock on file " + filename + ". " +
               e1.Message);
         }
       }
@@ -605,8 +461,11 @@ namespace log4net.Appender
       /// </remarks>
       public override void CloseFile()
       {
-        CloseStream(m_stream);
-        m_stream = null;
+        if (m_stream is not null)
+        {
+          CloseStream(m_stream);
+          m_stream = null;
+        }
       }
 
       /// <summary>
@@ -618,9 +477,9 @@ namespace log4net.Appender
       /// Does nothing. The lock is already taken
       /// </para>
       /// </remarks>
-      public override Stream AcquireLock()
+      public override Stream? AcquireLock()
       {
-        return m_stream;
+          return m_stream;
       }
 
       /// <summary>
@@ -666,9 +525,9 @@ namespace log4net.Appender
     /// </remarks>
     public class MinimalLock : LockingModelBase
     {
-      private string m_filename;
+      private string? m_filename;
       private bool m_append;
-      private Stream m_stream = null;
+      private Stream? m_stream;
 
       /// <summary>
       /// Prepares to open the file when the first message is logged.
@@ -714,19 +573,26 @@ namespace log4net.Appender
       /// must be called to release the lock on the output file.
       /// </para>
       /// </remarks>
-      public override Stream AcquireLock()
+      public override Stream? AcquireLock()
       {
-        if (m_stream == null)
+        if (m_stream is null)
         {
-          try
+          if (m_filename is not null)
           {
-            m_stream = CreateStream(m_filename, m_append, FileShare.Read);
-            m_append = true;
+            try
+            {
+              m_stream = CreateStream(m_filename, m_append, FileShare.Read);
+              m_append = true;
+            }
+            catch (Exception e1)
+            {
+              CurrentAppender?.ErrorHandler.Error("Unable to acquire lock on file " + m_filename + ". " +
+                  e1.Message);
+            }
           }
-          catch (Exception e1)
+          else
           {
-            CurrentAppender.ErrorHandler.Error("Unable to acquire lock on file " + m_filename + ". " +
-                e1.Message);
+            CurrentAppender?.ErrorHandler.Error($"Unable to acquire lock because {nameof(OpenFile)} has not been called");
           }
         }
 
@@ -744,8 +610,11 @@ namespace log4net.Appender
       /// </remarks>
       public override void ReleaseLock()
       {
-        CloseStream(m_stream);
-        m_stream = null;
+        if (m_stream is not null)
+        {
+          CloseStream(m_stream);
+          m_stream = null;
+        }
       }
 
       /// <summary>
@@ -765,7 +634,6 @@ namespace log4net.Appender
       }
     }
 
-#if !NETCF
     /// <summary>
     /// Provides cross-process file locking.
     /// </summary>
@@ -773,9 +641,9 @@ namespace log4net.Appender
     /// <author>Steve Wranovsky</author>
     public class InterProcessLock : LockingModelBase
     {
-      private Mutex m_mutex = null;
-      private Stream m_stream = null;
-      private int m_recursiveWatch = 0;
+      private Mutex? m_mutex;
+      private Stream? m_stream;
+      private int m_recursiveWatch;
 
       /// <summary>
       /// Open the file specified and prepare for logging.
@@ -791,9 +659,7 @@ namespace log4net.Appender
       /// -<see cref="ReleaseLock"/> and <see cref="CloseFile"/>.
       /// </para>
       /// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD
       [System.Security.SecuritySafeCritical]
-#endif
       public override void OpenFile(string filename, bool append, Encoding encoding)
       {
         try
@@ -802,7 +668,7 @@ namespace log4net.Appender
         }
         catch (Exception e1)
         {
-          CurrentAppender.ErrorHandler.Error("Unable to acquire lock on file " + filename + ". " +
+          CurrentAppender?.ErrorHandler.Error("Unable to acquire lock on file " + filename + ". " +
               e1.Message);
         }
       }
@@ -819,8 +685,11 @@ namespace log4net.Appender
       {
         try
         {
-          CloseStream(m_stream);
-          m_stream = null;
+          if (m_stream is not null)
+          {
+            CloseStream(m_stream);
+            m_stream = null;
+          }
         }
         finally
         {
@@ -837,9 +706,9 @@ namespace log4net.Appender
       /// Does nothing. The lock is already taken
       /// </para>
       /// </remarks>
-      public override Stream AcquireLock()
+      public override Stream? AcquireLock()
       {
-        if (m_mutex != null)
+        if (m_mutex is not null)
         {
           // TODO: add timeout?
           m_mutex.WaitOne();
@@ -848,7 +717,7 @@ namespace log4net.Appender
           m_recursiveWatch++;
 
           // should always be true (and fast) for FileStream
-          if (m_stream != null)
+          if (m_stream is not null)
           {
             if (m_stream.CanSeek)
             {
@@ -862,7 +731,7 @@ namespace log4net.Appender
         }
         else
         {
-          CurrentAppender.ErrorHandler.Error(
+          CurrentAppender?.ErrorHandler.Error(
               "Programming error, no mutex available to acquire lock! From here on things will be dangerous!");
         }
 
@@ -874,7 +743,7 @@ namespace log4net.Appender
       /// </summary>
       public override void ReleaseLock()
       {
-        if (m_mutex != null)
+        if (m_mutex is not null)
         {
           if (m_recursiveWatch > 0)
           {
@@ -884,7 +753,7 @@ namespace log4net.Appender
         }
         else
         {
-          CurrentAppender.ErrorHandler.Error("Programming error, no mutex available to release the lock!");
+          CurrentAppender?.ErrorHandler.Error("Programming error, no mutex available to release the lock!");
         }
       }
 
@@ -893,18 +762,28 @@ namespace log4net.Appender
       /// </summary>
       public override void ActivateOptions()
       {
-        if (m_mutex == null)
+        if (m_mutex is null)
         {
-          string mutexFriendlyFilename = CurrentAppender.File
-              .Replace("\\", "_")
-              .Replace(":", "_")
-              .Replace("/", "_");
+          if (CurrentAppender is not null)
+          {
+            if (CurrentAppender.File is not null)
+            {
+              string mutexFriendlyFilename = CurrentAppender.File
+                  .Replace("\\", "_")
+                  .Replace(":", "_")
+                  .Replace("/", "_");
 
-          m_mutex = new Mutex(false, mutexFriendlyFilename);
+              m_mutex = new Mutex(false, mutexFriendlyFilename);
+            }
+            else
+            {
+              CurrentAppender.ErrorHandler.Error($"Current appender has no file name, {nameof(OpenFile)} not called or it encountered an error");
+            }
+          }
         }
         else
         {
-          CurrentAppender.ErrorHandler.Error("Programming error, mutex already initialized!");
+          CurrentAppender?.ErrorHandler.Error("Programming error, mutex already initialized!");
         }
       }
 
@@ -913,22 +792,17 @@ namespace log4net.Appender
       /// </summary>
       public override void OnClose()
       {
-        if (m_mutex != null)
+        if (m_mutex is not null)
         {
-#if NET_4_0 || MONO_4_0 || NETSTANDARD
           m_mutex.Dispose();
-#else
-          m_mutex.Close();
-#endif
           m_mutex = null;
         }
         else
         {
-          CurrentAppender.ErrorHandler.Error("Programming error, mutex not initialized!");
+          CurrentAppender?.ErrorHandler.Error("Programming error, mutex not initialized!");
         }
       }
     }
-#endif
 
     /// <summary>
     /// Hold no lock on the output file
@@ -941,7 +815,7 @@ namespace log4net.Appender
     /// </remarks>
     public class NoLock : LockingModelBase
     {
-      private Stream m_stream = null;
+      private Stream? m_stream;
 
       /// <summary>
       /// Open the file specified and prepare for logging.
@@ -966,7 +840,7 @@ namespace log4net.Appender
         }
         catch (Exception e1)
         {
-          CurrentAppender.ErrorHandler.Error(
+          CurrentAppender?.ErrorHandler.Error(
               $"Unable to acquire lock on file {filename}. {e1.Message}"
           );
         }
@@ -982,8 +856,11 @@ namespace log4net.Appender
       /// </remarks>
       public override void CloseFile()
       {
-        CloseStream(m_stream);
-        m_stream = null;
+        if (m_stream is not null)
+        {
+          CloseStream(m_stream);
+          m_stream = null;
+        }
       }
 
       /// <summary>
@@ -995,7 +872,7 @@ namespace log4net.Appender
       /// Does nothing. The lock is already taken
       /// </para>
       /// </remarks>
-      public override Stream AcquireLock()
+      public override Stream? AcquireLock()
       {
         return m_stream;
       }
@@ -1043,10 +920,6 @@ namespace log4net.Appender
     {
       defaultLockingModelType = typeof(TLockingModel);
     }
-
-    #endregion Locking Models
-
-    #region Public Instance Constructors
 
     /// <summary>
     /// Default constructor
@@ -1097,10 +970,6 @@ namespace log4net.Appender
     {
     }
 
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
-
     /// <summary>
     /// Gets or sets the path to the file that logging will be written to.
     /// </summary>
@@ -1113,7 +982,7 @@ namespace log4net.Appender
     /// the application base directory.
     /// </para>
     /// </remarks>
-    public virtual string File
+    public virtual string? File
     {
       get { return m_fileName; }
       set { m_fileName = value; }
@@ -1133,11 +1002,7 @@ namespace log4net.Appender
     /// </para>
     /// The default value is true.
     /// </remarks>
-    public bool AppendToFile
-    {
-      get { return m_appendToFile; }
-      set { m_appendToFile = value; }
-    }
+    public bool AppendToFile { get; set; } = true;
 
     /// <summary>
     /// Gets or sets <see cref="Encoding"/> used to write to the file.
@@ -1151,11 +1016,7 @@ namespace log4net.Appender
     /// which is the encoding for the system's current ANSI code page.
     /// </para>
     /// </remarks>
-    public Encoding Encoding
-    {
-      get { return m_encoding; }
-      set { m_encoding = value; }
-    }
+    public Encoding Encoding { get; set; } = Encoding.GetEncoding(0);
 
     /// <summary>
     /// Gets or sets the <see cref="SecurityContext"/> used to write to the file.
@@ -1171,34 +1032,8 @@ namespace log4net.Appender
     /// of the current thread.
     /// </para>
     /// </remarks>
-    public SecurityContext SecurityContext
-    {
-      get { return m_securityContext; }
-      set { m_securityContext = value; }
-    }
+    public SecurityContext? SecurityContext { get; set; }
 
-#if NETCF
-    /// <summary>
-    /// Gets or sets the <see cref="FileAppender.LockingModel"/> used to handle locking of the file.
-    /// </summary>
-    /// <value>
-    /// The <see cref="FileAppender.LockingModel"/> used to lock the file.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets or sets the <see cref="FileAppender.LockingModel"/> used to handle locking of the file.
-    /// </para>
-    /// <para>
-    /// There are two built in locking models, <see cref="FileAppender.ExclusiveLock"/> and <see cref="FileAppender.MinimalLock"/>.
-    /// The first locks the file from the start of logging to the end, the 
-    /// second locks only for the minimal amount of time when logging each message
-    /// and the last synchronizes processes using a named system wide Mutex.
-    /// </para>
-    /// <para>
-    /// The default locking model is the <see cref="FileAppender.ExclusiveLock"/>.
-    /// </para>
-    /// </remarks>
-#else
     /// <summary>
     /// Gets or sets the <see cref="FileAppender.LockingModel"/> used to handle locking of the file.
     /// </summary>
@@ -1213,22 +1048,13 @@ namespace log4net.Appender
     /// There are three built in locking models, <see cref="FileAppender.ExclusiveLock"/>, <see cref="FileAppender.MinimalLock"/> and <see cref="FileAppender.InterProcessLock"/> .
     /// The first locks the file from the start of logging to the end, the 
     /// second locks only for the minimal amount of time when logging each message
-    /// and the last synchronizes processes using a named system wide Mutex.
+    /// and the last synchronizes processes using a named system-wide Mutex.
     /// </para>
     /// <para>
     /// The default locking model is the <see cref="FileAppender.ExclusiveLock"/>.
     /// </para>
     /// </remarks>
-#endif
-    public FileAppender.LockingModelBase LockingModel
-    {
-      get { return m_lockingModel; }
-      set { m_lockingModel = value; }
-    }
-
-    #endregion Public Instance Properties
-
-    #region Override implementation of AppenderSkeleton
+    public LockingModelBase LockingModel { get; set; } = (LockingModelBase)Activator.CreateInstance(defaultLockingModelType);
 
     /// <summary>
     /// Activate the options on the file appender. 
@@ -1253,27 +1079,19 @@ namespace log4net.Appender
     {
       base.ActivateOptions();
 
-      if (m_securityContext == null)
-      {
-        m_securityContext = SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
-      }
+      SecurityContext ??= SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
 
-      if (m_lockingModel == null)
-      {
-        m_lockingModel = (LockingModelBase)Activator.CreateInstance(defaultLockingModelType);
-      }
+      LockingModel.CurrentAppender = this;
+      LockingModel.ActivateOptions();
 
-      m_lockingModel.CurrentAppender = this;
-      m_lockingModel.ActivateOptions();
-
-      if (m_fileName != null)
+      if (m_fileName is not null)
       {
         using (SecurityContext.Impersonate(this))
         {
           m_fileName = ConvertToFullPath(m_fileName.Trim());
         }
 
-        SafeOpenFile(m_fileName, m_appendToFile);
+        SafeOpenFile(m_fileName, AppendToFile);
       }
       else
       {
@@ -1281,10 +1099,6 @@ namespace log4net.Appender
         LogLog.Warn(declaringType, "FileAppender: Are you using FileAppender instead of ConsoleAppender?");
       }
     }
-
-    #endregion Override implementation of AppenderSkeleton
-
-    #region Override implementation of TextWriterAppender
 
     /// <summary>
     /// Closes any previously opened file and calls the parent's <see cref="TextWriterAppender.Reset"/>.
@@ -1306,7 +1120,7 @@ namespace log4net.Appender
     protected override void OnClose()
     {
       base.OnClose();
-      m_lockingModel?.OnClose();
+      LockingModel.OnClose();
     }
 
     /// <summary>
@@ -1320,7 +1134,10 @@ namespace log4net.Appender
     /// </remarks>
     protected override void PrepareWriter()
     {
-      SafeOpenFile(m_fileName, m_appendToFile);
+      if (m_fileName is not null)
+      {
+        SafeOpenFile(m_fileName, AppendToFile);
+      }
     }
 
     /// <summary>
@@ -1339,7 +1156,7 @@ namespace log4net.Appender
     /// </remarks>
     protected override void Append(LoggingEvent loggingEvent)
     {
-      if (m_stream.AcquireLock())
+      if (m_stream is not null && m_stream.AcquireLock())
       {
         try
         {
@@ -1365,7 +1182,7 @@ namespace log4net.Appender
     /// </remarks>
     protected override void Append(LoggingEvent[] loggingEvents)
     {
-      if (m_stream.AcquireLock())
+      if (m_stream is not null && m_stream.AcquireLock())
       {
         try
         {
@@ -1388,7 +1205,7 @@ namespace log4net.Appender
     /// </remarks>
     protected override void WriteFooter()
     {
-      if (m_stream != null)
+      if (m_stream is not null)
       {
         //WriteFooter can be called even before a file is opened
         m_stream.AcquireLock();
@@ -1413,7 +1230,7 @@ namespace log4net.Appender
     /// </remarks>
     protected override void WriteHeader()
     {
-      if (m_stream != null)
+      if (m_stream is not null)
       {
         if (m_stream.AcquireLock())
         {
@@ -1439,7 +1256,7 @@ namespace log4net.Appender
     /// </remarks>
     protected override void CloseWriter()
     {
-      if (m_stream != null)
+      if (m_stream is not null)
       {
         m_stream.AcquireLock();
         try
@@ -1452,10 +1269,6 @@ namespace log4net.Appender
         }
       }
     }
-
-    #endregion Override implementation of TextWriterAppender
-
-    #region Public Instance Methods
 
     /// <summary>
     /// Closes the previously opened file.
@@ -1470,10 +1283,6 @@ namespace log4net.Appender
     {
       WriteFooterAndCloseWriter();
     }
-
-    #endregion Public Instance Methods
-
-    #region Protected Instance Methods
 
     /// <summary>
     /// Sets and <i>opens</i> the file where the log output will go. The specified file must be writable.
@@ -1494,8 +1303,7 @@ namespace log4net.Appender
       }
       catch (Exception e)
       {
-        ErrorHandler.Error("OpenFile(" + fileName + "," + append + ") call failed.", e,
-            ErrorCode.FileOpenFailure);
+        ErrorHandler.Error($"OpenFile({fileName},{append}) call failed.", e, ErrorCode.FileOpenFailure);
       }
     }
 
@@ -1519,8 +1327,8 @@ namespace log4net.Appender
       if (LogLog.IsErrorEnabled)
       {
         // Internal check that the fileName passed in is a rooted path
-        bool isPathRooted = false;
-        using (SecurityContext.Impersonate(this))
+        bool isPathRooted;
+        using (SecurityContext?.Impersonate(this))
         {
           isPathRooted = Path.IsPathRooted(fileName);
         }
@@ -1540,13 +1348,13 @@ namespace log4net.Appender
 
         // Save these for later, allowing retries if file open fails
         m_fileName = fileName;
-        m_appendToFile = append;
+        AppendToFile = append;
 
         LockingModel.CurrentAppender = this;
-        LockingModel.OpenFile(fileName, append, m_encoding);
+        LockingModel.OpenFile(fileName, append, Encoding);
         m_stream = new LockingStream(LockingModel);
 
-        if (m_stream != null)
+        if (m_stream is not null)
         {
           m_stream.AcquireLock();
           try
@@ -1574,7 +1382,7 @@ namespace log4net.Appender
     /// <see cref="M:SetQWForFiles(TextWriter)"/> method.
     /// </para>
     /// <para>
-    /// This method can be overridden by sub classes that want to wrap the
+    /// This method can be overridden by subclasses that want to wrap the
     /// <see cref="Stream"/> in some way, for example to encrypt the output
     /// data using a <c>System.Security.Cryptography.CryptoStream</c>.
     /// </para>
@@ -1582,7 +1390,7 @@ namespace log4net.Appender
     protected virtual void SetQWForFiles(Stream fileStream)
     {
 #pragma warning disable CA2000 // Dispose objects before losing scope
-      StreamWriter writer = new StreamWriter(fileStream, m_encoding);
+      StreamWriter writer = new(fileStream, Encoding);
 #pragma warning restore CA2000 // Dispose objects before losing scope
       SetQWForFiles(writer);
     }
@@ -1593,7 +1401,7 @@ namespace log4net.Appender
     /// <param name="writer">the writer over the file stream that has been opened for writing</param>
     /// <remarks>
     /// <para>
-    /// This method can be overridden by sub classes that want to
+    /// This method can be overridden by subclasses that want to
     /// wrap the <see cref="TextWriter"/> in some way.
     /// </para>
     /// </remarks>
@@ -1601,10 +1409,6 @@ namespace log4net.Appender
     {
       QuietWriter = new QuietTextWriter(writer, ErrorHandler);
     }
-
-    #endregion Protected Instance Methods
-
-    #region Protected Static Methods
 
     /// <summary>
     /// Convert a path into a fully qualified path.
@@ -1624,44 +1428,15 @@ namespace log4net.Appender
       return SystemInfo.ConvertToFullPath(path);
     }
 
-    #endregion Protected Static Methods
-
-    #region Private Instance Fields
-
-    /// <summary>
-    /// Flag to indicate if we should append to the file
-    /// or overwrite the file. The default is to append.
-    /// </summary>
-    private bool m_appendToFile = true;
-
     /// <summary>
     /// The name of the log file.
     /// </summary>
-    private string m_fileName = null;
-
-    /// <summary>
-    /// The encoding to use for the file stream.
-    /// </summary>
-    private Encoding m_encoding = Encoding.GetEncoding(0);
-
-    /// <summary>
-    /// The security context to use for privileged calls
-    /// </summary>
-    private SecurityContext m_securityContext;
+    private string? m_fileName;
 
     /// <summary>
     /// The stream to log to. Has added locking semantics
     /// </summary>
-    private FileAppender.LockingStream m_stream = null;
-
-    /// <summary>
-    /// The locking model to use
-    /// </summary>
-    private FileAppender.LockingModelBase m_lockingModel;
-
-    #endregion Private Instance Fields
-
-    #region Private Static Fields
+    private LockingStream? m_stream;
 
     /// <summary>
     /// The fully qualified type of the FileAppender class.
@@ -1671,7 +1446,5 @@ namespace log4net.Appender
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(FileAppender);
-
-    #endregion Private Static Fields
   }
 }

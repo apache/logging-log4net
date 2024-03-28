@@ -26,21 +26,11 @@ namespace log4net.Tests.Appender.AdoNet
 {
   public class Log4NetCommand : IDbCommand
   {
-    #region AdoNetAppender
-
-    private static Log4NetCommand mostRecentInstance;
-
-    private IDbTransaction transaction;
-    private string commandText;
-    private readonly IDataParameterCollection parameters;
-    private CommandType commandType;
-    private int executeNonQueryCount;
-
     public Log4NetCommand()
     {
-      mostRecentInstance = this;
+      MostRecentInstance = this;
 
-      parameters = new Log4NetParameterCollection();
+      Parameters = new Log4NetParameterCollection();
     }
 
     public void Dispose()
@@ -48,58 +38,35 @@ namespace log4net.Tests.Appender.AdoNet
       // empty
     }
 
-    public IDbTransaction Transaction
-    {
-      get { return transaction; }
-      set { transaction = value; }
-    }
+    public IDbTransaction? Transaction { get; set; }
 
     public int ExecuteNonQuery()
     {
-      executeNonQueryCount++;
+      ExecuteNonQueryCount++;
       return 0;
     }
 
-    public int ExecuteNonQueryCount
-    {
-      get { return executeNonQueryCount; }
-    }
+    public int ExecuteNonQueryCount { get; private set; }
 
     public IDbDataParameter CreateParameter()
     {
       return new Log4NetParameter();
     }
 
-    public string CommandText
-    {
-      get { return commandText; }
-      set { commandText = value; }
-    }
+#pragma warning disable CS8766 // Nullability of reference types in return type doesn't match implicitly implemented member (possibly because of nullability attributes).
+    public string? CommandText { get; set; }
+#pragma warning restore CS8766
 
-    public CommandType CommandType
-    {
-      get { return commandType; }
-      set { commandType = value; }
-    }
+    public CommandType CommandType { get; set; }
 
     public void Prepare()
     {
       // empty
     }
 
-    public IDataParameterCollection Parameters
-    {
-      get { return parameters; }
-    }
+    public IDataParameterCollection Parameters { get; }
 
-    public static Log4NetCommand MostRecentInstance
-    {
-      get { return mostRecentInstance; }
-    }
-
-    #endregion
-
-    #region Not Implemented
+    public static Log4NetCommand? MostRecentInstance { get; private set; }
 
     public void Cancel()
     {
@@ -121,24 +88,22 @@ namespace log4net.Tests.Appender.AdoNet
       throw new NotImplementedException();
     }
 
-    public IDbConnection Connection
+    public IDbConnection? Connection
     {
-      get { throw new NotImplementedException(); }
-      set { throw new NotImplementedException(); }
+      get => throw new NotImplementedException();
+      set => throw new NotImplementedException();
     }
 
     public int CommandTimeout
     {
-      get { throw new NotImplementedException(); }
-      set { throw new NotImplementedException(); }
+      get => throw new NotImplementedException();
+      set => throw new NotImplementedException();
     }
 
     public UpdateRowSource UpdatedRowSource
     {
-      get { throw new NotImplementedException(); }
-      set { throw new NotImplementedException(); }
+      get => throw new NotImplementedException();
+      set => throw new NotImplementedException();
     }
-
-    #endregion
   }
 }

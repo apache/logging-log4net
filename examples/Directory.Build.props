@@ -1,0 +1,40 @@
+<Project>
+  <PropertyGroup>
+    <Version>3.0.0</Version>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <Deterministic>true</Deterministic>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <AnalysisLevel>8</AnalysisLevel>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <_SkipUpgradeNetAnalyzersNuGetWarning>true</_SkipUpgradeNetAnalyzersNuGetWarning>
+    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <SelfContained>false</SelfContained>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Log4NetPackageVersion>2.0.17</Log4NetPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup Label="GenerateAssemblyInfo">
+    <GenerateAssemblyVersionAttribute>true</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>true</GenerateAssemblyFileVersionAttribute>
+  </PropertyGroup>
+  <PropertyGroup Label="Metadata">
+    <AssemblyTitle>$(AssemblyName)</AssemblyTitle>
+    <Company>Apache Foundation</Company>
+    <Product>log4net</Product>
+    <Copyright>Copyright %A9 2008 - $([System.DateTime]::Now.Year)</Copyright>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/apache/logging-log4net</RepositoryUrl>
+  </PropertyGroup>
+</Project>

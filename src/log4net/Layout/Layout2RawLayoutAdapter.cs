@@ -17,10 +17,8 @@
 //
 #endregion
 
-using System;
 using System.IO;
 
-using log4net;
 using log4net.Core;
 
 namespace log4net.Layout
@@ -38,16 +36,10 @@ namespace log4net.Layout
   /// <author>Gert Driesen</author>
   public class Layout2RawLayoutAdapter : IRawLayout
   {
-    #region Member Variables
-
     /// <summary>
     /// The layout to adapt
     /// </summary>
-    private ILayout m_layout;
-
-    #endregion
-
-    #region Constructors
+    private readonly ILayout m_layout;
 
     /// <summary>
     /// Construct a new adapter
@@ -63,19 +55,12 @@ namespace log4net.Layout
       m_layout = layout;
     }
 
-    #endregion
-
-    #region Implementation of IRawLayout
-
     /// <summary>
-    /// Format the logging event as an object.
+    /// Formats the logging event as an object.
     /// </summary>
     /// <param name="loggingEvent">The event to format</param>
     /// <returns>returns the formatted event</returns>
     /// <remarks>
-    /// <para>
-    /// Format the logging event as an object.
-    /// </para>
     /// <para>
     /// Uses the <see cref="ILayout"/> object supplied to 
     /// the constructor to perform the formatting.
@@ -83,11 +68,9 @@ namespace log4net.Layout
     /// </remarks>
     public virtual object Format(LoggingEvent loggingEvent)
     {
-      using StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
+      using var writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
       m_layout.Format(writer, loggingEvent);
       return writer.ToString();
     }
-
-    #endregion
   }
 }

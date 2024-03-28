@@ -30,9 +30,9 @@ namespace log4net.Tests.Core
   [TestFixture]
   public class EvaluatorTest
   {
-    private BufferingForwardingAppender m_bufferingForwardingAppender;
-    private CountingAppender m_countingAppender;
-    private Repository.Hierarchy.Hierarchy m_hierarchy;
+    private BufferingForwardingAppender m_bufferingForwardingAppender = new();
+    private CountingAppender m_countingAppender = new();
+    private Repository.Hierarchy.Hierarchy m_hierarchy = new();
 
     [SetUp]
     public void SetupRepository()
@@ -70,7 +70,6 @@ namespace log4net.Tests.Core
       Assert.AreEqual(3, m_countingAppender.Counter, "Test 3 events flushed on Info message.");
     }
 
-#if !NETSTANDARD1_3
     [Test]
     public void TestExceptionEvaluator()
     {
@@ -139,6 +138,5 @@ namespace log4net.Tests.Core
       logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", new ApplicationException());
       Assert.AreEqual(0, m_countingAppender.Counter, "Test 3 events buffered");
     }
-#endif
   }
 }

@@ -1,4 +1,4 @@
-#if NET_2_0
+#if NET462_OR_GREATER
 #region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more 
@@ -17,10 +17,6 @@
 // limitations under the License.
 //
 #endregion
-
-// .NET Compact Framework 1.0 has no support for ASP.NET
-// SSCLI 1.0 has no support for ASP.NET
-#if !NETCF && !SSCLI && !CLIENT_PROFILE
 
 using System.IO;
 using System.Web;
@@ -56,9 +52,9 @@ namespace log4net.Layout.Pattern
     /// </remarks>
     protected override void Convert(TextWriter writer, LoggingEvent loggingEvent, HttpContext httpContext)
     {
-      if (httpContext.Session != null)
+      if (httpContext.Session is not null)
       {
-        if (Option != null)
+        if (Option is not null)
         {
           WriteObject(writer, loggingEvent.Repository, httpContext.Session.Contents[Option]);
         }
@@ -75,5 +71,4 @@ namespace log4net.Layout.Pattern
   }
 }
 
-#endif // !NETCF && !SSCLI && !CLIENT_PROFILE
-#endif // NET_2_0
+#endif // NET462_OR_GREATER

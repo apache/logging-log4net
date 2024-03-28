@@ -35,8 +35,6 @@ namespace log4net.Util
   /// <author>Gert Driesen</author>
   public sealed class NullDictionaryEnumerator : IDictionaryEnumerator
   {
-    #region Private Instance Constructors
-
     /// <summary>
     /// Initializes a new instance of the <see cref="NullDictionaryEnumerator" /> class. 
     /// </summary>
@@ -49,27 +47,11 @@ namespace log4net.Util
     {
     }
 
-    #endregion Private Instance Constructors
-
-    #region Public Static Properties
-
     /// <summary>
     /// Gets the singleton instance of the <see cref="NullDictionaryEnumerator" />.
     /// </summary>
     /// <returns>The singleton instance of the <see cref="NullDictionaryEnumerator" />.</returns>
-    /// <remarks>
-    /// <para>
-    /// Gets the singleton instance of the <see cref="NullDictionaryEnumerator" />.
-    /// </para>
-    /// </remarks>
-    public static NullDictionaryEnumerator Instance
-    {
-      get { return s_instance; }
-    }
-
-    #endregion Public Static Properties
-
-    #region Implementation of IEnumerator
+    public static NullDictionaryEnumerator Instance { get; } = new();
 
     /// <summary>
     /// Gets the current object from the enumerator.
@@ -87,10 +69,7 @@ namespace log4net.Util
     /// </remarks>
     /// <exception cref="InvalidOperationException">The collection is empty and <see cref="Current"/> 
     /// cannot be positioned over a valid location.</exception>
-    public object Current
-    {
-      get { throw new InvalidOperationException(); }
-    }
+    public object Current => throw new InvalidOperationException();
 
     /// <summary>
     /// Test if the enumerator can advance, if so advance.
@@ -103,10 +82,7 @@ namespace log4net.Util
     /// will always return <c>false</c>.
     /// </para>
     /// </remarks>
-    public bool MoveNext()
-    {
-      return false;
-    }
+    public bool MoveNext() => false;
 
     /// <summary>
     /// Resets the enumerator back to the start.
@@ -119,10 +95,6 @@ namespace log4net.Util
     public void Reset()
     {
     }
-
-    #endregion Implementation of IEnumerator
-
-    #region Implementation of IDictionaryEnumerator
 
     /// <summary>
     /// Gets the current key from the enumerator.
@@ -140,10 +112,7 @@ namespace log4net.Util
     /// </remarks>
     /// <exception cref="InvalidOperationException">The collection is empty and <see cref="Current"/> 
     /// cannot be positioned over a valid location.</exception>
-    public object Key
-    {
-      get { throw new InvalidOperationException(); }
-    }
+    public object Key => throw new InvalidOperationException();
 
     /// <summary>
     /// Gets the current value from the enumerator.
@@ -162,10 +131,7 @@ namespace log4net.Util
     /// </remarks>
     /// <exception cref="InvalidOperationException">The collection is empty and <see cref="Current"/> 
     /// cannot be positioned over a valid location.</exception>
-    public object Value
-    {
-      get { throw new InvalidOperationException(); }
-    }
+    public object Value => throw new InvalidOperationException();
 
     /// <summary>
     /// Gets the current entry from the enumerator.
@@ -183,20 +149,6 @@ namespace log4net.Util
     /// </remarks>
     /// <exception cref="InvalidOperationException">The collection is empty and <see cref="Current"/> 
     /// cannot be positioned over a valid location.</exception>
-    public DictionaryEntry Entry
-    {
-      get { throw new InvalidOperationException(); }
-    }
-
-    #endregion Implementation of IDictionaryEnumerator
-
-    #region Private Static Fields
-
-    /// <summary>
-    /// The singleton instance of the <see cref="NullDictionaryEnumerator" />.
-    /// </summary>
-    private static readonly NullDictionaryEnumerator s_instance = new NullDictionaryEnumerator();
-
-    #endregion Private Static Fields
+    public DictionaryEntry Entry => throw new InvalidOperationException();
   }
 }

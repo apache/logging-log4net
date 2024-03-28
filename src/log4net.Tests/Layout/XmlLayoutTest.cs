@@ -34,11 +34,10 @@ using System.Globalization;
 namespace log4net.Tests.Layout
 {
   [TestFixture]
-  public class XmlLayoutTest
+  public sealed class XmlLayoutTest
   {
-#if !NETSTANDARD1_3
-    private CultureInfo _currentCulture;
-    private CultureInfo _currentUICulture;
+    private CultureInfo? _currentCulture;
+    private CultureInfo? _currentUICulture;
 
     [SetUp]
     public void SetUp()
@@ -53,10 +52,9 @@ namespace log4net.Tests.Layout
     public void TearDown()
     {
       // restore previous culture
-      System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture;
-      System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture;
+      System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture!;
+      System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture!;
     }
-#endif
 
     /// <summary>
     /// Build a basic <see cref="LoggingEventData"/> object with some default values.
@@ -82,25 +80,26 @@ namespace log4net.Tests.Layout
 
     private static string CreateEventNode(string message)
     {
-      return String.Format("<event logger=\"TestLogger\" timestamp=\"{0}\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message>{1}</message></event>" + Environment.NewLine,
-#if NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0 || NETSTANDARD
-                           XmlConvert.ToString(DateTime.Today, XmlDateTimeSerializationMode.Local),
+      return string.Format("<{0}event logger=\"TestLogger\" timestamp=\"{2}\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"{1}><{0}message>{3}</{0}message></{0}event>" +
+        Environment.NewLine,
+#if NETCOREAPP
+        "log4net:", @" xmlns:log4net=""log4net""",
 #else
-                           XmlConvert.ToString(DateTime.Today),
+        string.Empty, string.Empty,
 #endif
-                           message);
+        XmlConvert.ToString(DateTime.Today, XmlDateTimeSerializationMode.Local),
+        message);
     }
 
     private static string CreateEventNode(string key, string value)
     {
-      return String.Format("<event logger=\"TestLogger\" timestamp=\"{0}\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"><message>Test message</message><properties><data name=\"{1}\" value=\"{2}\" /></properties></event>" + Environment.NewLine,
-#if NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0 || NETSTANDARD
-                           XmlConvert.ToString(DateTime.Today, XmlDateTimeSerializationMode.Local),
+      return string.Format("<{0}event logger=\"TestLogger\" timestamp=\"{2}\" level=\"INFO\" thread=\"TestThread\" domain=\"Tests\" identity=\"TestRunner\" username=\"TestRunner\"{1}><{0}message>Test message</{0}message><{0}properties><{0}data name=\"{3}\" value=\"{4}\" /></{0}properties></{0}event>" + Environment.NewLine,
+#if NETCOREAPP
+        "log4net:", @" xmlns:log4net=""log4net""",
 #else
-                           XmlConvert.ToString(DateTime.Today),
+        string.Empty, string.Empty,
 #endif
-                           key,
-                           value);
+       XmlConvert.ToString(DateTime.Today, XmlDateTimeSerializationMode.Local), key, value);
     }
 
     [Test]
@@ -203,7 +202,7 @@ namespace log4net.Tests.Layout
     public void TestPropertyEventLogging()
     {
       LoggingEventData evt = CreateBaseEvent();
-      evt.Properties["Property1"] = "prop1";
+      evt.Properties!["Property1"] = "prop1";
 
       XmlLayout layout = new XmlLayout();
       StringAppender stringAppender = new StringAppender();
@@ -224,7 +223,7 @@ namespace log4net.Tests.Layout
     public void TestBase64PropertyEventLogging()
     {
       LoggingEventData evt = CreateBaseEvent();
-      evt.Properties["Property1"] = "prop1";
+      evt.Properties!["Property1"] = "prop1";
 
       XmlLayout layout = new XmlLayout();
       layout.Base64EncodeProperties = true;
@@ -246,7 +245,7 @@ namespace log4net.Tests.Layout
     public void TestPropertyCharacterEscaping()
     {
       LoggingEventData evt = CreateBaseEvent();
-      evt.Properties["Property1"] = "prop1 \"quoted\"";
+      evt.Properties!["Property1"] = "prop1 \"quoted\"";
 
       XmlLayout layout = new XmlLayout();
       StringAppender stringAppender = new StringAppender();
@@ -267,7 +266,7 @@ namespace log4net.Tests.Layout
     public void TestPropertyIllegalCharacterMasking()
     {
       LoggingEventData evt = CreateBaseEvent();
-      evt.Properties["Property1"] = "mask this ->\uFFFF";
+      evt.Properties!["Property1"] = "mask this ->\uFFFF";
 
       XmlLayout layout = new XmlLayout();
       StringAppender stringAppender = new StringAppender();
@@ -288,7 +287,7 @@ namespace log4net.Tests.Layout
     public void TestPropertyIllegalCharacterMaskingInName()
     {
       LoggingEventData evt = CreateBaseEvent();
-      evt.Properties["Property\uFFFF"] = "mask this ->\uFFFF";
+      evt.Properties!["Property\uFFFF"] = "mask this ->\uFFFF";
 
       XmlLayout layout = new XmlLayout();
       StringAppender stringAppender = new StringAppender();
@@ -305,7 +304,6 @@ namespace log4net.Tests.Layout
       Assert.AreEqual(expected, stringAppender.GetString());
     }
 
-#if NET_4_0 || MONO_4_0 || NETSTANDARD
     [Test]
     public void BracketsInStackTracesKeepLogWellFormed()
     {
@@ -357,14 +355,15 @@ namespace log4net.Tests.Layout
       };
       bar(42);
 
-      var log = stringAppender.GetString();
-#if NETSTANDARD1_3
-            var startOfExceptionText = log.IndexOf("<exception>", StringComparison.Ordinal) + 11;
-            var endOfExceptionText = log.IndexOf("</exception>", StringComparison.Ordinal);
+#if NETCOREAPP
+      const string nodeName = "log4net:exception";
 #else
-      var startOfExceptionText = log.IndexOf("<exception>", StringComparison.InvariantCulture) + 11;
-      var endOfExceptionText = log.IndexOf("</exception>", StringComparison.InvariantCulture);
+      const string nodeName = "exception";
 #endif
+
+      var log = stringAppender.GetString();
+      var startOfExceptionText = log.IndexOf("<" + nodeName + ">", StringComparison.InvariantCulture) + nodeName.Length + 2;
+      var endOfExceptionText = log.IndexOf("</" + nodeName + ">", StringComparison.InvariantCulture);
       var sub = log.Substring(startOfExceptionText, endOfExceptionText - startOfExceptionText);
       if (sub.StartsWith("<![CDATA["))
       {
@@ -376,6 +375,5 @@ namespace log4net.Tests.Layout
         StringAssert.DoesNotContain(">", sub);
       }
     }
-#endif
   }
 }

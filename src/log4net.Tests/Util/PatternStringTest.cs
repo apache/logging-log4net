@@ -19,7 +19,7 @@
  *
 */
 
-#if NET_2_0
+#if NET462_OR_GREATER
 
 using System;
 using log4net.Util;
@@ -63,8 +63,8 @@ namespace log4net.Tests.Util
   </appSettings>
 </configuration>
 ";
-      string configurationFileName = null;
-      AppDomain appDomain = null;
+      string? configurationFileName = null;
+      AppDomain? appDomain = null;
       try
       {
         configurationFileName = CreateTempConfigFile(configurationFileContent);
@@ -75,8 +75,14 @@ namespace log4net.Tests.Util
       }
       finally
       {
-        if (appDomain != null) AppDomain.Unload(appDomain);
-        if (configurationFileName != null) File.Delete(configurationFileName);
+        if (appDomain is not null)
+        {
+          AppDomain.Unload(appDomain);
+        }
+        if (configurationFileName is not null)
+        {
+          File.Delete(configurationFileName);
+        }
       }
     }
 

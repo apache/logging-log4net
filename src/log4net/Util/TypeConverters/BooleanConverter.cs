@@ -34,28 +34,23 @@ namespace log4net.Util.TypeConverters
   /// <seealso cref="IConvertTo"/>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-  internal class BooleanConverter : IConvertFrom
+  internal sealed class BooleanConverter : IConvertFrom
   {
-    #region Implementation of IConvertFrom
-
     /// <summary>
     /// Can the source type be converted to the type supported by this object
     /// </summary>
     /// <param name="sourceType">the type to convert</param>
-    /// <returns>true if the conversion is possible</returns>
-    /// <remarks>
-    /// <para>
-    /// Returns <c>true</c> if the <paramref name="sourceType"/> is
-    /// the <see cref="String"/> type.
-    /// </para>
-    /// </remarks>
+    /// <returns>
+    /// <c>True</c> if the <paramref name="sourceType"/> is
+    /// the <see cref="string"/> type.
+    /// </returns>
     public bool CanConvertFrom(Type sourceType)
     {
       return (sourceType == typeof(string));
     }
 
     /// <summary>
-    /// Convert the source object to the type supported by this object
+    /// Converts the source object to the type supported by this object
     /// </summary>
     /// <param name="source">the object to convert</param>
     /// <returns>the converted object</returns>
@@ -72,14 +67,11 @@ namespace log4net.Util.TypeConverters
     /// </exception>
     public object ConvertFrom(object source)
     {
-      string str = source as string;
-      if (str != null)
+      if (source is string str)
       {
         return bool.Parse(str);
       }
       throw ConversionNotSupportedException.Create(typeof(bool), source);
     }
-
-    #endregion
   }
 }

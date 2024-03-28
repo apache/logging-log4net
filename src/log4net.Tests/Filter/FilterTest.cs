@@ -37,8 +37,7 @@ namespace log4net.Tests.Filter
     [Test]
     public void FilterConfigurationTest()
     {
-      XmlDocument log4netConfig = new XmlDocument();
-      #region Load log4netConfig
+      var log4netConfig = new XmlDocument();
       log4netConfig.LoadXml(@"
             <log4net>
             <appender name=""MemoryAppender"" type=""log4net.Appender.MemoryAppender, log4net"">
@@ -58,24 +57,23 @@ namespace log4net.Tests.Filter
                 <appender-ref ref=""MemoryAppender"" />
             </root>
             </log4net>");
-      #endregion
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-      XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
+      XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
 
       IAppender[] appenders = LogManager.GetRepository(rep.Name).GetAppenders();
       Assert.IsTrue(appenders.Length == 1);
 
-      IAppender appender = Array.Find(appenders, delegate (IAppender a)
+      IAppender? appender = Array.Find(appenders, (IAppender a) =>
       {
         return a.Name == "MemoryAppender";
       });
       Assert.IsNotNull(appender);
 
-      MultiplePropertyFilter multiplePropertyFilter =
-          ((AppenderSkeleton)appender).FilterHead as MultiplePropertyFilter;
-
-      MultiplePropertyFilter.Condition[] conditions = multiplePropertyFilter.GetConditions();
+      MultiplePropertyFilter? multiplePropertyFilter =
+          ((AppenderSkeleton)appender!).FilterHead as MultiplePropertyFilter;
+      Assert.IsNotNull(multiplePropertyFilter);
+      MultiplePropertyFilter.Condition[] conditions = multiplePropertyFilter!.GetConditions();
       Assert.AreEqual(2, conditions.Length);
       Assert.AreEqual("ABC", conditions[0].Key);
       Assert.AreEqual("123", conditions[0].StringToMatch);
@@ -86,7 +84,7 @@ namespace log4net.Tests.Filter
 
   public class MultiplePropertyFilter : FilterSkeleton
   {
-    private readonly List<Condition> _conditions = new List<Condition>();
+    private readonly List<Condition> _conditions = new();
 
     public override FilterDecision Decide(LoggingEvent loggingEvent)
     {
@@ -105,17 +103,8 @@ namespace log4net.Tests.Filter
 
     public class Condition
     {
-      private string key, stringToMatch;
-      public string Key
-      {
-        get { return key; }
-        set { key = value; }
-      }
-      public string StringToMatch
-      {
-        get { return stringToMatch; }
-        set { stringToMatch = value; }
-      }
+      public string? Key { get; set; }
+      public string? StringToMatch { get; set; }
     }
   }
 }

@@ -31,8 +31,6 @@ namespace log4net.Core
   /// <author>Gert Driesen</author>
   public abstract class LoggerWrapperImpl : ILoggerWrapper
   {
-    #region Protected Instance Constructors
-
     /// <summary>
     /// Constructs a new wrapper for the specified logger.
     /// </summary>
@@ -44,12 +42,8 @@ namespace log4net.Core
     /// </remarks>
     protected LoggerWrapperImpl(ILogger logger)
     {
-      m_logger = logger;
+      Logger = logger;
     }
-
-    #endregion Public Instance Constructors
-
-    #region Implementation of ILoggerWrapper
 
     /// <summary>
     /// Gets the implementation behind this wrapper object.
@@ -67,20 +61,6 @@ namespace log4net.Core
     /// the log events.
     /// </para>
     /// </remarks>
-    public virtual ILogger Logger
-    {
-      get { return m_logger; }
-    }
-
-    #endregion
-
-    #region Private Instance Fields
-
-    /// <summary>
-    /// The logger that this object is wrapping
-    /// </summary>
-    private readonly ILogger m_logger;
-
-    #endregion Private Instance Fields
+    public virtual ILogger Logger { get; }
   }
 }

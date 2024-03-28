@@ -17,16 +17,7 @@
 //
 #endregion
 
-// .NET Compact Framework 1.0 has no support for reading assembly attributes
-#if !NETCF
-
 using System;
-using System.Reflection;
-using System.IO;
-
-using log4net.Util;
-using log4net.Repository;
-using log4net.Repository.Hierarchy;
 
 namespace log4net.Config
 {
@@ -56,5 +47,3 @@ namespace log4net.Config
   {
   }
 }
-
-#endif // !NETCF

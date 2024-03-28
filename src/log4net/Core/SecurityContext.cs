@@ -50,6 +50,6 @@ namespace log4net.Core
     /// before <see cref="Impersonate"/> was called.
     /// </para>
     /// </remarks>
-    public abstract IDisposable Impersonate(object state);
+    public abstract IDisposable? Impersonate(object state);
   }
 }

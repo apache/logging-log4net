@@ -35,8 +35,6 @@ namespace log4net.Plugin
   /// <author>Gert Driesen</author>
   public abstract class PluginSkeleton : IPlugin
   {
-    #region Protected Instance Constructors
-
     /// <summary>
     /// Constructor
     /// </summary>
@@ -46,12 +44,8 @@ namespace log4net.Plugin
     /// </remarks>
     protected PluginSkeleton(string name)
     {
-      m_name = name;
+      Name = name;
     }
-
-    #endregion Protected Instance Constructors
-
-    #region Implementation of IPlugin
 
     /// <summary>
     /// Gets or sets the name of the plugin.
@@ -66,15 +60,11 @@ namespace log4net.Plugin
     /// repository must be a unique name.
     /// </para>
     /// <para>
-    /// The name of the plugin must not change one the 
+    /// The name of the plugin must not change once the 
     /// plugin has been attached to a repository.
     /// </para>
     /// </remarks>
-    public virtual string Name
-    {
-      get { return m_name; }
-      set { m_name = value; }
-    }
+    public virtual string Name { get; set; }
 
     /// <summary>
     /// Attaches this plugin to a <see cref="ILoggerRepository"/>.
@@ -90,7 +80,7 @@ namespace log4net.Plugin
     /// </remarks>
     public virtual void Attach(ILoggerRepository repository)
     {
-      m_repository = repository;
+      LoggerRepository = repository;
     }
 
     /// <summary>
@@ -107,10 +97,6 @@ namespace log4net.Plugin
     {
     }
 
-    #endregion Implementation of IPlugin
-
-    #region Protected Instance Properties
-
     /// <summary>
     /// The repository for this plugin
     /// </summary>
@@ -123,26 +109,6 @@ namespace log4net.Plugin
     /// attached to.
     /// </para>
     /// </remarks>
-    protected virtual ILoggerRepository LoggerRepository
-    {
-      get { return this.m_repository; }
-      set { this.m_repository = value; }
-    }
-
-    #endregion Protected Instance Properties
-
-    #region Private Instance Fields
-
-    /// <summary>
-    /// The name of this plugin.
-    /// </summary>
-    private string m_name;
-
-    /// <summary>
-    /// The repository this plugin is attached to.
-    /// </summary>
-    private ILoggerRepository m_repository;
-
-    #endregion Private Instance Fields
+    protected virtual ILoggerRepository? LoggerRepository { get; set; }
   }
 }

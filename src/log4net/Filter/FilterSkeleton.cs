@@ -17,7 +17,6 @@
 //
 #endregion
 
-using System;
 using log4net.Core;
 
 namespace log4net.Filter
@@ -68,22 +67,6 @@ namespace log4net.Filter
   /// <author>Gert Driesen</author>
   public abstract class FilterSkeleton : IFilter
   {
-    #region Member Variables
-
-    /// <summary>
-    /// Points to the next filter in the filter chain.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// See <see cref="Next"/> for more information.
-    /// </para>
-    /// </remarks>
-    private IFilter m_next;
-
-    #endregion
-
-    #region Implementation of IOptionHandler
-
     /// <summary>
     /// Initialize the filter with the options set
     /// </summary>
@@ -108,10 +91,6 @@ namespace log4net.Filter
     {
     }
 
-    #endregion
-
-    #region Implementation of IFilter
-
     /// <summary>
     /// Decide if the <see cref="LoggingEvent"/> should be logged through an appender.
     /// </summary>
@@ -133,23 +112,14 @@ namespace log4net.Filter
     public abstract FilterDecision Decide(LoggingEvent loggingEvent);
 
     /// <summary>
-    /// Property to get and set the next filter
+    /// Gets or sets the next filter in the filter chain.
     /// </summary>
-    /// <value>
-    /// The next filter in the chain
-    /// </value>
     /// <remarks>
     /// <para>
     /// Filters are typically composed into chains. This property allows the next filter in 
     /// the chain to be accessed.
     /// </para>
     /// </remarks>
-    public IFilter Next
-    {
-      get { return m_next; }
-      set { m_next = value; }
-    }
-
-    #endregion
+    public IFilter? Next { get; set; }
   }
 }

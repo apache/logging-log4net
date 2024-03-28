@@ -18,13 +18,10 @@
 #endregion
 
 using System;
-using System.Text;
 using System.IO;
-using System.Collections;
 
 using log4net.Core;
 using log4net.Util;
-using log4net.Repository;
 
 namespace log4net.Layout.Pattern
 {
@@ -40,18 +37,12 @@ namespace log4net.Layout.Pattern
   /// <author>Nicko Cadell</author>
   public abstract class PatternLayoutConverter : PatternConverter
   {
-    #region Protected Instance Constructors
-
     /// <summary>
     /// Initializes a new instance of the <see cref="PatternLayoutConverter" /> class.
     /// </summary>
     protected PatternLayoutConverter()
     {
     }
-
-    #endregion Protected Instance Constructors
-
-    #region Public Properties
 
     /// <summary>
     /// Flag indicating if this converter handles the logging event exception
@@ -69,15 +60,7 @@ namespace log4net.Layout.Pattern
     /// value is <c>true</c>, this converter does not handle the exception.
     /// </para>
     /// </remarks>
-    public virtual bool IgnoresException
-    {
-      get { return m_ignoresException; }
-      set { m_ignoresException = value; }
-    }
-
-    #endregion Public Properties
-
-    #region Protected Abstract Methods
+    public virtual bool IgnoresException { get; set; } = true;
 
     /// <summary>
     /// Derived pattern converters must override this method in order to
@@ -87,37 +70,20 @@ namespace log4net.Layout.Pattern
     /// <param name="loggingEvent">The <see cref="LoggingEvent" /> on which the pattern converter should be executed.</param>
     protected abstract void Convert(TextWriter writer, LoggingEvent loggingEvent);
 
-    #endregion Protected Abstract Methods
-
-    #region Protected Methods
-
     /// <summary>
     /// Derived pattern converters must override this method in order to
     /// convert conversion specifiers in the correct way.
     /// </summary>
     /// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
     /// <param name="state">The state object on which the pattern converter should be executed.</param>
-    protected override void Convert(TextWriter writer, object state)
+    public override void Convert(TextWriter writer, object? state)
     {
-      LoggingEvent loggingEvent = state as LoggingEvent;
-      if (loggingEvent != null)
+      if (state is not LoggingEvent loggingEvent)
       {
-        Convert(writer, loggingEvent);
+        throw new ArgumentException($"state must be of type [{typeof(LoggingEvent).FullName}]", "state");
       }
-      else
-      {
-        throw new ArgumentException("state must be of type [" + typeof(LoggingEvent).FullName + "]", "state");
-      }
+
+      Convert(writer, loggingEvent);
     }
-
-    #endregion Protected Methods
-
-    /// <summary>
-    /// Flag indicating if this converter handles exceptions
-    /// </summary>
-    /// <remarks>
-    /// <c>false</c> if this converter handles exceptions
-    /// </remarks>
-    private bool m_ignoresException = true;
   }
 }

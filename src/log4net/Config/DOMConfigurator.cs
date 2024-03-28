@@ -17,16 +17,11 @@
 //
 #endregion
 
-#if NET_2_0 // really only because netstandard doesn't understand Assembly.GetCallingAssembly()
 using System;
-using System.Xml;
-using System.Collections;
 using System.IO;
 using System.Reflection;
-using System.Threading;
+using System.Xml;
 
-using log4net.Appender;
-using log4net.Util;
 using log4net.Repository;
 
 namespace log4net.Config
@@ -47,18 +42,12 @@ namespace log4net.Config
   [Obsolete("Use XmlConfigurator instead of DOMConfigurator")]
   public sealed class DOMConfigurator
   {
-    #region Private Instance Constructors
-
     /// <summary>
     /// Private constructor
     /// </summary>
     private DOMConfigurator()
     {
     }
-
-    #endregion Protected Instance Constructors
-
-    #region Configure static methods
 
     /// <summary>
     /// Automatically configures the log4net system based on the 
@@ -284,12 +273,6 @@ namespace log4net.Config
       XmlConfigurator.Configure(repository, configStream);
     }
 
-    #endregion Configure static methods
-
-    #region ConfigureAndWatch static methods
-
-#if (!NETCF && !SSCLI)
-
     /// <summary>
     /// Configures log4net using the file specified, monitors the file for changes 
     /// and reloads the configuration if a change is detected.
@@ -351,9 +334,5 @@ namespace log4net.Config
     {
       XmlConfigurator.ConfigureAndWatch(repository, configFile);
     }
-#endif
-
-    #endregion ConfigureAndWatch static methods
   }
 }
-#endif // NET_2_0

@@ -17,48 +17,64 @@
    limitations under the License.
 -->
 <document>
-    <properties>
-        <title>Apache log4net: Security Reports</title>
-        <author email="dev@logging.apache.org">Logging Documentation Team</author>
-    </properties>
-    <body>
-      <section name="General Information">
-        <p>For information about reporting or asking questions about
+  <properties>
+    <title>Apache log4net: Security Reports</title>
+    <author email="dev@logging.apache.org">Logging Documentation Team</author>
+  </properties>
+  <body>
+    <section name="General Information">
+      <p>
+        For information about reporting or asking questions about
         security problems, please see the <a
-        href="https://logging.apache.org/security.html">security page
-        of the Logging project</a>.</p>
-      </section>
+        href="https://logging.apache.org/security.html">
+          security page
+          of the Logging project
+        </a>.
+      </p>
+    </section>
 
-      <section name="Apache log4net Security Vulnerabilities">
-        <p>This page lists all security vulnerabilities fixed in
+    <section name="Apache log4net Security Vulnerabilities">
+      <p>
+        This page lists all security vulnerabilities fixed in
         released versions of Apache log4net. Each
         vulnerability is given a security impact rating by the
         development team - please note that this rating may vary from
         platform to platform. We also list the versions of log4net the
-		flaw is known to affect, and where a flaw has not
-        been verified list the version with a question mark.</p>
+        flaw is known to affect, and where a flaw has not
+        been verified list the version with a question mark.
+      </p>
 
-        <p>Please note that binary patches are never provided. If you
+      <p>
+        Please note that binary patches are never provided. If you
         need to apply a source code patch, use the building
         instructions for the log4net version that you are
-        using.</p>
+        using.
+      </p>
 
-        <p>If you need help on building log4net or other help
+      <p>
+        If you need help on building log4net or other help
         on following the instructions to mitigate the known
         vulnerabilities listed here, please send your questions to the
-        public <a href="../mail-lists.html">Logging Users mailing
-        list</a>.</p>
+        public <a href="../mail-lists.html">
+          Logging Users mailing
+          list
+        </a>.
+      </p>
 
-        <p>If you have encountered an unlisted security vulnerability
+      <p>
+        If you have encountered an unlisted security vulnerability
         or other unexpected behaviour that has security impact, or if
         the descriptions here are incomplete, please report them
-        privately to the Apache Security Team. Thank you.</p>
+        privately to the Apache Security Team. Thank you.
+      </p>
 
-	  </section>
+    </section>
 
-      <section name="Errors and Ommissions">
-        <p>Please report any errors or omissions to <a
-        href="../mail-lists.html">the dev mailing list</a>.</p>
-      </section>
-    </body>
+    <section name="Errors and Ommissions">
+      <p>
+        Please report any errors or omissions to <a
+        href="../mail-lists.html">the dev mailing list</a>.
+      </p>
+    </section>
+  </body>
 </document>

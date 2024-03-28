@@ -38,25 +38,6 @@ namespace log4net.DateFormatter
   /// <author>Angelika Schnagl</author>
   public class DateTimeDateFormatter : AbsoluteTimeDateFormatter
   {
-    #region Public Instance Constructors
-
-    /// <summary>
-    /// Default constructor.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Initializes a new instance of the <see cref="DateTimeDateFormatter" /> class.
-    /// </para>
-    /// </remarks>
-    public DateTimeDateFormatter()
-    {
-      m_dateTimeFormatInfo = DateTimeFormatInfo.InvariantInfo;
-    }
-
-    #endregion Public Instance Constructors
-
-    #region Override implementation of AbsoluteTimeDateFormatter
-
     /// <summary>
     /// Formats the date without the milliseconds part
     /// </summary>
@@ -79,28 +60,13 @@ namespace log4net.DateFormatter
       {
         buffer.Append('0');
       }
-      buffer.Append(day);
-      buffer.Append(' ');
-
-      buffer.Append(m_dateTimeFormatInfo.GetAbbreviatedMonthName(dateToFormat.Month));
-      buffer.Append(' ');
-
-      buffer.Append(dateToFormat.Year);
-      buffer.Append(' ');
+      buffer
+        .Append(day).Append(' ')
+        .Append(DateTimeFormatInfo.InvariantInfo.GetAbbreviatedMonthName(dateToFormat.Month)).Append(' ')
+        .Append(dateToFormat.Year).Append(' ');
 
       // Append the 'HH:mm:ss'
       base.FormatDateWithoutMillis(dateToFormat, buffer);
     }
-
-    #endregion Override implementation of AbsoluteTimeDateFormatter
-
-    #region Private Instance Fields
-
-    /// <summary>
-    /// The format info for the invariant culture.
-    /// </summary>
-    private readonly DateTimeFormatInfo m_dateTimeFormatInfo;
-
-    #endregion Private Instance Fields
   }
 }

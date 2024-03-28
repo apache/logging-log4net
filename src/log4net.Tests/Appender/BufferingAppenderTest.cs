@@ -28,21 +28,17 @@ namespace log4net.Tests.Appender
   /// <summary>
   /// Used for internal unit testing the <see cref="BufferingAppenderSkeleton"/> class.
   /// </summary>
-  /// <remarks>
-  /// Used for internal unit testing the <see cref="BufferingAppenderSkeleton"/> class.
-  /// </remarks>
   [TestFixture]
   public class BufferingAppenderTest
   {
-    private BufferingForwardingAppender m_bufferingForwardingAppender;
-    private CountingAppender m_countingAppender;
-    private Repository.Hierarchy.Hierarchy m_hierarchy;
-
+    private BufferingForwardingAppender m_bufferingForwardingAppender = new();
+    private CountingAppender m_countingAppender = new();
+    private Repository.Hierarchy.Hierarchy m_hierarchy = new();
 
     private void SetupRepository()
     {
       m_hierarchy = new Repository.Hierarchy.Hierarchy();
-
+      
       m_countingAppender = new CountingAppender();
       m_countingAppender.ActivateOptions();
 
@@ -62,8 +58,6 @@ namespace log4net.Tests.Appender
       BasicConfigurator.Configure(m_hierarchy, m_bufferingForwardingAppender);
     }
 
-    /// <summary>
-    /// </summary>
     [Test]
     public void TestSetupAppender()
     {
@@ -77,8 +71,6 @@ namespace log4net.Tests.Appender
       Assert.AreEqual(1, m_countingAppender.Counter, "Test 1 event logged");
     }
 
-    /// <summary>
-    /// </summary>
     [Test]
     public void TestBufferSize5()
     {
