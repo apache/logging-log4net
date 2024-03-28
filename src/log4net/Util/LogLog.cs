@@ -98,10 +98,7 @@ namespace log4net.Util
     /// sent to Console.Out and Trace.Write.
     /// </summary>
     /// <returns></returns>
-    public override string ToString()
-    {
-      return Prefix + Source.Name + ": " + Message;
-    }
+    public override string ToString() => $"{Prefix}{Source.Name}: {Message}";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LogLog" /> class. 
@@ -522,7 +519,10 @@ namespace log4net.Util
 
       void LogLog_LogReceived(object? source, LogReceivedEventArgs e)
       {
-        Items.Add(e.LogLog);
+        lock (((ICollection)Items).SyncRoot)
+        {
+          Items.Add(e.LogLog);
+        }
       }
 
       /// <summary>

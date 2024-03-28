@@ -19,8 +19,11 @@
  *
 */
 
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using log4net.Util;
 using NUnit.Framework;
 
@@ -73,33 +76,54 @@ namespace log4net.Tests.Util
     {
       var messages = new List<LogLog>();
 
-      using (new LogLog.LogReceivedAdapter(messages))
-      {
-        LogLog.Debug(GetType(), "Won't be recorded");
-        LogLog.Error(GetType(), "This will be recorded.");
-        LogLog.Error(GetType(), "This will be recorded.");
-      }
+      using var _ = new LogLog.LogReceivedAdapter(messages);
+      LogLog.Debug(GetType(), "Won't be recorded");
+      LogLog.Error(GetType(), "This will be recorded.");
+      LogLog.Error(GetType(), "This will be recorded.");
 
       Assert.AreEqual(2, messages.Count);
     }
+    
+    /// <summary>
+    /// Tests multi threaded calls to <see cref="LogLog.OnLogReceived"/>
+    /// </summary>
+    [Test]
+    public void LogReceivedAdapterThreading()
+    {
+      for (int i = 0; i < 1000; i++)
+      {
+        LogReceivedAdapterThreadingCore(i);
+      }
+    }
+
+    private void LogReceivedAdapterThreadingCore(int seed)
+    {
+      var messages = new List<LogLog>(1);
+      var syncRoot = ((ICollection)messages).SyncRoot;
+      var random = new Random(seed);
+      using var _ = new LogLog.LogReceivedAdapter(messages);
+      Parallel.For(0, 10, i =>
+      {
+        if (random.Next(10) > 8)
+        {
+          lock (syncRoot)
+          {
+            messages.Clear();
+            messages.Capacity = 1;
+          }
+        }
+        LogLog.Warn(GetType(), messages.Capacity.ToString() + ' ' + messages.Count);
+      });
+    }
   }
 
-  public class TraceListenerCounter : TraceListener
+  internal sealed class TraceListenerCounter : TraceListener
   {
-    public override void Write(string? message)
-    {
-      Count++;
-    }
+    public override void Write(string? message) => Count++;
 
-    public override void WriteLine(string? message)
-    {
-      Write(message);
-    }
+    public override void WriteLine(string? message) => Write(message);
 
-    public void Reset()
-    {
-      Count = 0;
-    }
+    public void Reset() => Count = 0;
 
     public int Count { get; private set; }
   }
