@@ -85,7 +85,7 @@ namespace log4net.Tests.Appender
     [Ignore("seems to require administrator privileges or a specific environment when run")]
     public void ActivateOptionsDisablesAppenderIfSourceDoesntExist()
     {
-      EventLogAppender eventAppender = new EventLogAppender();
+      var eventAppender = new EventLogAppender();
       eventAppender.ActivateOptions();
       Assert.AreEqual(Level.Off, eventAppender.Threshold);
     }
