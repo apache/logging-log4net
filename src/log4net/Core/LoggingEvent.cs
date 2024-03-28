@@ -39,11 +39,6 @@ namespace log4net.Core
     /// <summary>
     /// The logger name.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The logger name.
-    /// </para>
-    /// </remarks>
     public string? LoggerName;
 
     /// <summary>
@@ -51,9 +46,13 @@ namespace log4net.Core
     /// </summary>
     /// <remarks>
     /// <para>
-    /// Level of logging event. Level cannot be Serializable
-    /// because it is a flyweight.  Due to its special serialization it
-    /// cannot be declared final either.
+    /// A null level produces varying results depending on the appenders in use.
+    /// In many cases it is equivalent of <see cref="Level.All"/>, other times
+    /// it is mapped to Debug or Info defaults.
+    /// </para>
+    /// <para>
+    /// Level cannot be Serializable because it is a flyweight.
+    /// Due to its special serialization it cannot be declared final either.
     /// </para>
     /// </remarks>
     public Level? Level;
@@ -61,25 +60,15 @@ namespace log4net.Core
     /// <summary>
     /// The application supplied message.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The application supplied message of logging event.
-    /// </para>
-    /// </remarks>
     public string? Message;
 
     /// <summary>
-    /// The name of thread
+    /// Gets or sets the name of the thread in which this logging event was generated.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The name of thread in which this logging event was generated
-    /// </para>
-    /// </remarks>
     public string? ThreadName;
 
     /// <summary>
-    /// Gets or sets the local time the event was logged
+    /// Gets or sets the local time the event was logged.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -91,7 +80,7 @@ namespace log4net.Core
     public DateTime TimeStamp;
 
     /// <summary>
-    /// Gets or sets the UTC time the event was logged
+    /// Gets or sets the UTC time the event was logged.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -227,13 +216,18 @@ namespace log4net.Core
     /// the stack boundary into the logging system for this call.</param>
     /// <param name="repository">The repository this event is logged in.</param>
     /// <param name="loggerName">The name of the logger of this event.</param>
-    /// <param name="level">The level of this event.</param>
+    /// <param name="level">
+    /// The level of this event.
+    /// A null level produces varying results depending on the appenders in use.
+    /// In many cases it is equivalent of <see cref="Level.All"/>, other times
+    /// it is mapped to Debug or Info defaults.
+    /// </param>
     /// <param name="message">The message of this event.</param>
     /// <param name="exception">The exception for this event.</param>
     /// <remarks>
     /// <para>
     /// Except <see cref="TimeStamp"/>, <see cref="Level"/> and <see cref="LoggerName"/>, 
-    /// all fields of <c>LoggingEvent</c> are filled when actually needed. Call
+    /// all fields of <c>LoggingEvent</c> are lazily filled when actually needed. Call
     /// <see cref="M:FixVolatileData()"/> to cache all data locally
     /// to prevent inconsistencies.
     /// </para>
@@ -438,6 +432,9 @@ namespace log4net.Core
 
     /// <summary>
     /// Gets the <see cref="Level" /> of the logging event.
+    /// A null level produces varying results depending on the appenders in use.
+    /// In many cases it is equivalent of <see cref="Level.All"/>, other times
+    /// it is mapped to Debug or Info defaults.
     /// </summary>
     public Level? Level => m_data.Level;
 

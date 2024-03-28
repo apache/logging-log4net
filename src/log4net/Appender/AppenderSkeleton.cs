@@ -79,6 +79,7 @@ namespace log4net.Appender
 
     /// <summary>
     /// Gets or sets the threshold <see cref="Level"/> of this appender.
+    /// Defaults to <see cref="Level.All"/>.
     /// </summary>
     /// <value>
     /// The threshold <see cref="Level"/> of the appender. 
@@ -94,7 +95,7 @@ namespace log4net.Appender
     /// string, such as "DEBUG", "INFO" and so on.
     /// </para>
     /// </remarks>
-    public Level? Threshold { get; set; }
+    public Level Threshold { get; set; } = Level.All;
 
     /// <summary>
     /// Gets or sets the <see cref="IErrorHandler"/> for this appender.
@@ -488,18 +489,14 @@ namespace log4net.Appender
     /// Checks if the message level is below this appender's threshold.
     /// </summary>
     /// <param name="level"><see cref="Level"/> to test against.</param>
-    /// <remarks>
-    /// <para>
-    /// If there is no threshold set, then the return value is always <c>true</c>.
-    /// </para>
-    /// </remarks>
     /// <returns>
     /// <c>true</c> if the <paramref name="level"/> meets the <see cref="Threshold"/> 
-    /// requirements of this appender.
+    /// requirements of this appender. A null level always maps to <c>true</c>,
+    /// the equivalent of <see cref="Level.All"/>.
     /// </returns>
     protected virtual bool IsAsSevereAsThreshold(Level? level)
     {
-      return Threshold is null || level is null || level >= Threshold;
+      return level is null || level >= Threshold;
     }
 
     /// <summary>
