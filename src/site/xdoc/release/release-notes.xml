@@ -28,7 +28,7 @@ limitations under the License.
 
     <section id="main" name="Apache log4net&#x2122; Release Notes">
       <section id="a2.0.17" name="2.0.17">
-        Apache log4net 2.0.16 addresses reported issues:
+        Apache log4net 2.0.17 addresses reported issues:
         <section id="a2.0.17-bug" name="Bug fixes">
           <ul>
             <li>
