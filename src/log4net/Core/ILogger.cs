@@ -57,7 +57,7 @@ namespace log4net.Core
     /// This generic form is intended to be used by wrappers.
     /// </para>
     /// </remarks>
-    void Log(Type callerStackBoundaryDeclaringType, Level? level, object? message, Exception? exception);
+    void Log(Type callerStackBoundaryDeclaringType, Level level, object? message, Exception? exception);
 
     /// <summary>
     /// Logs the specified logging event through this logger.

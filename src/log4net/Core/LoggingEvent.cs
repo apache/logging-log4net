@@ -55,7 +55,7 @@ namespace log4net.Core
     /// Due to its special serialization it cannot be declared final either.
     /// </para>
     /// </remarks>
-    public Level? Level;
+    public Level Level;
 
     /// <summary>
     /// The application supplied message.
@@ -198,7 +198,7 @@ namespace log4net.Core
         Type? callerStackBoundaryDeclaringType,
         ILoggerRepository? repository,
         string? loggerName,
-        Level? level,
+        Level level,
         object? message,
         Exception? exception)
     {

@@ -46,8 +46,8 @@ namespace log4net.Tests.Util
       Assert.AreEqual(0, cb.Length, "Empty Buffer should have length 0");
       Assert.AreEqual(1, cb.MaxSize, "Buffer should have max size 1");
 
-      LoggingEvent event1 = new LoggingEvent(null, null, null, null, null, null);
-      LoggingEvent event2 = new LoggingEvent(null, null, null, null, null, null);
+      LoggingEvent event1 = new LoggingEvent(null, null, null, Level.All, null, null);
+      LoggingEvent event2 = new LoggingEvent(null, null, null, Level.All, null, null);
 
       LoggingEvent? discardedEvent = cb.Append(event1);
 
@@ -77,9 +77,9 @@ namespace log4net.Tests.Util
       Assert.AreEqual(0, cb.Length, "Empty Buffer should have length 0");
       Assert.AreEqual(2, cb.MaxSize, "Buffer should have max size 2");
 
-      LoggingEvent event1 = new LoggingEvent(null, null, null, null, null, null);
-      LoggingEvent event2 = new LoggingEvent(null, null, null, null, null, null);
-      LoggingEvent event3 = new LoggingEvent(null, null, null, null, null, null);
+      LoggingEvent event1 = new LoggingEvent(null, null, null, Level.All, null, null);
+      LoggingEvent event2 = new LoggingEvent(null, null, null, Level.All, null, null);
+      LoggingEvent event3 = new LoggingEvent(null, null, null, Level.All, null, null);
 
       LoggingEvent? discardedEvent;
 
