@@ -206,7 +206,7 @@ namespace log4net.Util
     {
       if (Credentials == ImpersonationMode.User)
       {
-        if (m_identity != null)
+        if (m_identity is not null)
         {
           return new DisposableImpersonationContext(m_identity.Impersonate());
         }

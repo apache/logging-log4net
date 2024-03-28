@@ -28,7 +28,7 @@ namespace log4net.Util.TypeConverters
   /// <seealso cref="IConvertFrom"/>
   /// <seealso cref="IConvertTo"/>
   /// <author>Nicko Cadell</author>
-  internal class TypeConverter : IConvertFrom
+  internal sealed class TypeConverter : IConvertFrom
   {
     /// <summary>
     /// Can the source type be converted to the type supported by this object

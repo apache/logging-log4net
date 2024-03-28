@@ -57,7 +57,7 @@ namespace log4net.Tests.Hierarchy
     }
 
     // workaround for SetParameter being protected
-    private class TestConfigurator : XmlHierarchyConfigurator
+    private sealed class TestConfigurator : XmlHierarchyConfigurator
     {
       public TestConfigurator() : base(null!)
       {

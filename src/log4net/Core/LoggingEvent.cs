@@ -580,7 +580,7 @@ namespace log4net.Core
       {
         if (m_data.Message is null && m_cacheUpdatable)
         {
-          if (m_message == null)
+          if (m_message is null)
           {
             m_data.Message = string.Empty;
           }
@@ -659,7 +659,7 @@ namespace log4net.Core
     {
       get
       {
-        if (m_data.ThreadName == null && m_cacheUpdatable)
+        if (m_data.ThreadName is null && m_cacheUpdatable)
         {
           // '.NET ThreadPool Worker' appears as a default thread name in the .NET 6-7 thread pool.
           // '.NET TP Worker' is the default thread name in the .NET 8+ thread pool.
@@ -1351,12 +1351,12 @@ namespace log4net.Core
     /// </remarks>
     public PropertiesDictionary GetProperties()
     {
-      if (m_data.Properties != null)
+      if (m_data.Properties is not null)
       {
         return m_data.Properties;
       }
 
-      if (m_compositeProperties == null)
+      if (m_compositeProperties is null)
       {
         CreateCompositeProperties();
       }

@@ -38,7 +38,7 @@ namespace log4net.Util.PatternStringConverters
   /// </remarks>
   /// <seealso cref="DatePatternConverter"/>
   /// <author>Nicko Cadell</author>
-  internal class UtcDatePatternConverter : DatePatternConverter
+  internal sealed class UtcDatePatternConverter : DatePatternConverter
   {
     /// <summary>
     /// Write the current date and time to the output

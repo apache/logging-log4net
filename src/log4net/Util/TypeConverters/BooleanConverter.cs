@@ -34,7 +34,7 @@ namespace log4net.Util.TypeConverters
   /// <seealso cref="IConvertTo"/>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-  internal class BooleanConverter : IConvertFrom
+  internal sealed class BooleanConverter : IConvertFrom
   {
     /// <summary>
     /// Can the source type be converted to the type supported by this object

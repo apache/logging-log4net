@@ -171,11 +171,11 @@ namespace log4net.ObjectRenderer
       // Check cache
       if (!m_cache.TryGetValue(type, out IObjectRenderer? result))
       {
-        for (Type? cur = type; cur != null; cur = cur.BaseType)
+        for (Type? cur = type; cur is not null; cur = cur.BaseType)
         {
           // Search the type's interfaces
           result = SearchTypeAndInterfaces(cur);
-          if (result != null)
+          if (result is not null)
           {
             break;
           }
@@ -206,7 +206,7 @@ namespace log4net.ObjectRenderer
       foreach (Type t in type.GetInterfaces())
       {
         r = SearchTypeAndInterfaces(t);
-        if (r != null)
+        if (r is not null)
         {
           return r;
         }

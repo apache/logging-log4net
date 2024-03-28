@@ -106,7 +106,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Debug(object)"/>
     /// <seealso cref="ILog.IsDebugEnabled"/>
-    public static void DebugExt(this ILog logger, Func<object> callback, Exception exception)
+    public static void DebugExt(this ILog logger, Func<object> callback, Exception? exception)
     {
       try
       {
@@ -147,7 +147,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Debug(object)"/>
     /// <seealso cref="ILog.IsDebugEnabled"/>
-    public static void DebugExt(this ILog logger, object message)
+    public static void DebugExt(this ILog logger, object? message)
     {
       try
       {
@@ -177,7 +177,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Debug(object)"/>
     /// <seealso cref="ILog.IsDebugEnabled"/>
-    public static void DebugExt(this ILog logger, object message, Exception exception)
+    public static void DebugExt(this ILog logger, object? message, Exception? exception)
     {
       try
       {
@@ -426,7 +426,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Info(object)"/>
     /// <seealso cref="ILog.IsInfoEnabled"/>
-    public static void InfoExt(this ILog logger, Func<object> callback, Exception exception)
+    public static void InfoExt(this ILog logger, Func<object> callback, Exception? exception)
     {
       try
       {
@@ -467,7 +467,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Info(object)"/>
     /// <seealso cref="ILog.IsInfoEnabled"/>
-    public static void InfoExt(this ILog logger, object message)
+    public static void InfoExt(this ILog logger, object? message)
     {
       try
       {
@@ -497,7 +497,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Info(object)"/>
     /// <seealso cref="ILog.IsInfoEnabled"/>
-    public static void InfoExt(this ILog logger, object message, Exception exception)
+    public static void InfoExt(this ILog logger, object? message, Exception? exception)
     {
       try
       {
@@ -746,7 +746,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Warn(object)"/>
     /// <seealso cref="ILog.IsWarnEnabled"/>
-    public static void WarnExt(this ILog logger, Func<object> callback, Exception exception)
+    public static void WarnExt(this ILog logger, Func<object> callback, Exception? exception)
     {
       try
       {
@@ -787,7 +787,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Warn(object)"/>
     /// <seealso cref="ILog.IsWarnEnabled"/>
-    public static void WarnExt(this ILog logger, object message)
+    public static void WarnExt(this ILog logger, object? message)
     {
       try
       {
@@ -817,7 +817,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Warn(object)"/>
     /// <seealso cref="ILog.IsWarnEnabled"/>
-    public static void WarnExt(this ILog logger, object message, Exception exception)
+    public static void WarnExt(this ILog logger, object? message, Exception? exception)
     {
       try
       {
@@ -1066,7 +1066,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Error(object)"/>
     /// <seealso cref="ILog.IsErrorEnabled"/>
-    public static void ErrorExt(this ILog logger, Func<object> callback, Exception exception)
+    public static void ErrorExt(this ILog logger, Func<object> callback, Exception? exception)
     {
       try
       {
@@ -1107,7 +1107,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Error(object)"/>
     /// <seealso cref="ILog.IsErrorEnabled"/>
-    public static void ErrorExt(this ILog logger, object message)
+    public static void ErrorExt(this ILog logger, object? message)
     {
       try
       {
@@ -1137,7 +1137,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Error(object)"/>
     /// <seealso cref="ILog.IsErrorEnabled"/>
-    public static void ErrorExt(this ILog logger, object message, Exception exception)
+    public static void ErrorExt(this ILog logger, object? message, Exception? exception)
     {
       try
       {
@@ -1386,7 +1386,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Fatal(object)"/>
     /// <seealso cref="ILog.IsFatalEnabled"/>
-    public static void FatalExt(this ILog logger, Func<object> callback, Exception exception)
+    public static void FatalExt(this ILog logger, Func<object> callback, Exception? exception)
     {
       try
       {
@@ -1427,7 +1427,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Fatal(object)"/>
     /// <seealso cref="ILog.IsFatalEnabled"/>
-    public static void FatalExt(this ILog logger, object message)
+    public static void FatalExt(this ILog logger, object? message)
     {
       try
       {
@@ -1457,7 +1457,7 @@ namespace log4net.Util
     /// </remarks>
     /// <seealso cref="ILog.Fatal(object)"/>
     /// <seealso cref="ILog.IsFatalEnabled"/>
-    public static void FatalExt(this ILog logger, object message, Exception exception)
+    public static void FatalExt(this ILog logger, object? message, Exception? exception)
     {
       try
       {

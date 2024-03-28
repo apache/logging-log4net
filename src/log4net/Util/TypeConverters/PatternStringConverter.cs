@@ -38,7 +38,7 @@ namespace log4net.Util.TypeConverters
   /// <seealso cref="IConvertFrom"/>
   /// <seealso cref="IConvertTo"/>
   /// <author>Nicko Cadell</author>
-  internal class PatternStringConverter : IConvertTo, IConvertFrom
+  internal sealed class PatternStringConverter : IConvertTo, IConvertFrom
   {
     /// <summary>
     /// Can the target type be converted to the type supported by this object

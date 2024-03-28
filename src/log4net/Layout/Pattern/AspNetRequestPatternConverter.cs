@@ -64,9 +64,9 @@ namespace log4net.Layout.Pattern
         // property returning null
       }
 
-      if (request != null)
+      if (request is not null)
       {
-        if (Option != null)
+        if (Option is not null)
         {
           WriteObject(writer, loggingEvent.Repository, httpContext.Request.Params[Option]);
         }

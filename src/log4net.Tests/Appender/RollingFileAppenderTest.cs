@@ -1441,7 +1441,7 @@ namespace log4net.Tests.Appender
       appender.Encoding = Encoding.ASCII;
       appender.ErrorHandler = handler;
       appender.MaxSizeRollBackups = maxSizeRollBackups;
-      if (lockModel != null)
+      if (lockModel is not null)
       {
         appender.LockingModel = lockModel;
       }

@@ -977,7 +977,7 @@ namespace log4net.Appender
     /// </remarks>
     public override void ActivateOptions()
     {
-      if (m_rollDate && DatePattern != null)
+      if (m_rollDate && DatePattern is not null)
       {
         m_now = DateTimeStrategy.Now;
         m_rollPoint = ComputeCheckPeriod(DatePattern);
@@ -1018,7 +1018,7 @@ namespace log4net.Appender
         .Replace("/", "_") + "_rolling"
       );
 
-      if (m_rollDate && File != null && m_scheduledFilename == null)
+      if (m_rollDate && File is not null && m_scheduledFilename is null)
       {
         m_scheduledFilename = CombinePath(File, m_now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo));
       }
@@ -1058,7 +1058,7 @@ namespace log4net.Appender
       if (StaticLogFileName)
       {
         // Compute filename, but only if datePattern is specified
-        if (DatePattern == null)
+        if (DatePattern is null)
         {
           ErrorHandler.Error("Missing DatePattern option in rollOver().");
           return;

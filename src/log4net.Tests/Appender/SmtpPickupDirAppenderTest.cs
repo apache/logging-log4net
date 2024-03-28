@@ -37,7 +37,7 @@ namespace log4net.Tests.Appender
   {
     private readonly string _testPickupDir;
 
-    private class SilentErrorHandler : IErrorHandler
+    private sealed class SilentErrorHandler : IErrorHandler
     {
       private readonly StringBuilder m_buffer = new();
 

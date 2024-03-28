@@ -182,5 +182,5 @@ namespace log4net.Tests.Core
     }
   }
 
-  internal class MockLoggerRepository2 : MockLoggerRepository;
+  internal sealed class MockLoggerRepository2 : MockLoggerRepository;
 }

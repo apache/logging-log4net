@@ -266,7 +266,7 @@ namespace log4net.Layout
       }
 
       string? exceptionStr = loggingEvent.GetExceptionString();
-      if (exceptionStr != null && exceptionStr.Length > 0)
+      if (exceptionStr is not null && exceptionStr.Length > 0)
       {
         // Append the stack trace line
         writer.WriteStartElement(m_elmException, Prefix, ELM_EXCEPTION, Prefix);

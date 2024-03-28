@@ -350,7 +350,7 @@ namespace log4net.Repository.Hierarchy
     /// This method must not throw any exception to the caller.
     /// </para>
     /// </remarks>
-    public virtual void Log(Type? callerStackBoundaryDeclaringType, Level? level, object message, Exception? exception) 
+    public virtual void Log(Type? callerStackBoundaryDeclaringType, Level? level, object? message, Exception? exception) 
     {
       try
       {
@@ -496,7 +496,7 @@ namespace log4net.Repository.Hierarchy
       if (m_hierarchy is not null && !m_hierarchy.EmittedNoAppenderWarning && writes == 0) 
       {
         m_hierarchy.EmittedNoAppenderWarning = true;
-        LogLog.Debug(declaringType, "No appenders could be found for logger [" + Name + "] repository [" + Repository?.Name + "]");
+        LogLog.Debug(declaringType, $"No appenders could be found for logger [{Name}] repository [{Repository?.Name}]");
         LogLog.Debug(declaringType, "Please initialize the log4net system properly.");
         try
         {
@@ -555,7 +555,7 @@ namespace log4net.Repository.Hierarchy
     /// the <paramref name="message"/>.
     /// </para>
     /// </remarks>
-    public virtual void Log(Level level, object message, Exception? exception) 
+    public virtual void Log(Level level, object? message, Exception? exception) 
     {
       if (IsEnabledFor(level))
       {
@@ -577,7 +577,7 @@ namespace log4net.Repository.Hierarchy
     /// appenders.
     /// </para>
     /// </remarks>
-    protected virtual void ForcedLog(Type callerStackBoundaryDeclaringType, Level? level, object message, Exception? exception)
+    protected virtual void ForcedLog(Type callerStackBoundaryDeclaringType, Level? level, object? message, Exception? exception)
     {
       CallAppenders(new LoggingEvent(callerStackBoundaryDeclaringType, Hierarchy, Name, level, message, exception));
     }
@@ -611,7 +611,6 @@ namespace log4net.Repository.Hierarchy
     /// </summary>
     /// <remarks>
     /// <para>
-    /// The parent of this logger. 
     /// All loggers have at least one ancestor which is the root logger.
     /// </para>
     /// </remarks>
@@ -620,13 +619,6 @@ namespace log4net.Repository.Hierarchy
     /// <summary>
     /// Loggers need to know what Hierarchy they are in.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Loggers need to know what Hierarchy they are in.
-    /// The hierarchy that this logger is a member of is stored
-    /// here.
-    /// </para>
-    /// </remarks>
     private Hierarchy? m_hierarchy;
 
     /// <summary>

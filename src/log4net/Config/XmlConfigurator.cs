@@ -690,7 +690,7 @@ namespace log4net.Config
     {
       LogLog.Debug(declaringType, $"configuring repository [{repository.Name}] using file [{configFile}] watching for file updates");
 
-      if (configFile == null)
+      if (configFile is null)
       {
         LogLog.Error(declaringType, "ConfigureAndWatch called with null 'configFile' parameter");
       }

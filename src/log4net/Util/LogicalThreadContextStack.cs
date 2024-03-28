@@ -234,7 +234,7 @@ namespace log4net.Util
         Message = message;
         m_parent = parent;
 
-        if (parent == null)
+        if (parent is null)
         {
           m_fullMessage = message;
         }
@@ -266,7 +266,7 @@ namespace log4net.Util
       {
         get
         {
-          if (m_fullMessage == null && m_parent != null)
+          if (m_fullMessage is null && m_parent is not null)
           {
             m_fullMessage = string.Concat(m_parent.FullMessage, " ", Message);
           }

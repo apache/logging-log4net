@@ -121,9 +121,9 @@ namespace log4net.Core
     /// </remarks>
     public bool IsTriggeringEvent(LoggingEvent loggingEvent)
     {
-      if (loggingEvent == null)
+      if (loggingEvent is null)
       {
-        throw new ArgumentNullException("loggingEvent");
+        throw new ArgumentNullException(nameof(loggingEvent));
       }
 
       // disable the evaluator if threshold is zero

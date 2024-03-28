@@ -33,7 +33,7 @@ namespace log4net.Repository.Hierarchy
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-  internal class DefaultLoggerFactory : ILoggerFactory
+  internal sealed class DefaultLoggerFactory : ILoggerFactory
   {
     /// <summary>
     /// Create a new <see cref="Logger" /> instance with the specified name.

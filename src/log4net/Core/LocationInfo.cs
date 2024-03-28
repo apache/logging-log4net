@@ -91,7 +91,7 @@ namespace log4net.Core
           while (frameIndex < st.FrameCount)
           {
             StackFrame frame = st.GetFrame(frameIndex);
-            if (frame != null && frame.GetMethod().DeclaringType == callerStackBoundaryDeclaringType)
+            if (frame is not null && frame.GetMethod().DeclaringType == callerStackBoundaryDeclaringType)
             {
               break;
             }
@@ -102,7 +102,7 @@ namespace log4net.Core
           while (frameIndex < st.FrameCount)
           {
             StackFrame frame = st.GetFrame(frameIndex);
-            if (frame != null && frame.GetMethod().DeclaringType != callerStackBoundaryDeclaringType)
+            if (frame is not null && frame.GetMethod().DeclaringType != callerStackBoundaryDeclaringType)
             {
               break;
             }

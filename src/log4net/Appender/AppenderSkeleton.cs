@@ -72,7 +72,7 @@ namespace log4net.Appender
       // There is no point in closing twice.
       if (!m_closed)
       {
-        LogLog.Debug(declaringType, "Finalizing appender named [" + Name + "].");
+        LogLog.Debug(declaringType, $"Finalizing appender named [{Name}].");
         Close();
       }
     }

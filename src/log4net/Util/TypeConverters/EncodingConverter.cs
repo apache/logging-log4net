@@ -30,7 +30,7 @@ namespace log4net.Util.TypeConverters
   /// <seealso cref="IConvertTo"/>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-  internal class EncodingConverter : IConvertFrom
+  internal sealed class EncodingConverter : IConvertFrom
   {
     /// <summary>
     /// Can the source type be converted to the type supported by this object
