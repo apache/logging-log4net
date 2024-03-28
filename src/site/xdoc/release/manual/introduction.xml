@@ -81,23 +81,8 @@ limitations under the License.
                     assembly targeting that framework is built:
                 </p>
                 <ul>
-                    <li>.NET Standard 1.3 via .NET Core 1.0</li>
-                    <li>Microsoft&#xae; .NET Framework 1.0</li>
-                    <li>Microsoft .NET Framework 1.1</li>
-                    <li>Microsoft .NET Framework 2.0</li>
-                    <li>Microsoft .NET Framework 3.5</li>
-                    <li>Microsoft .NET Framework 4.0</li>
-                    <li>Microsoft .NET Framework 4.5</li>
-                    <li>Microsoft .NET Framework 3.5 Client Profile</li>
-                    <li>Microsoft .NET Framework 4.0 Client Profile</li>
-                    <li>Microsoft .NET Compact Framework 1.0</li>
-                    <li>Microsoft .NET Compact Framework 2.0</li>
-                    <li>Mono 1.0</li>
-                    <li>Mono 2.0</li>
-                    <li>Mono 3.5</li>
-                    <li>Mono 4.0</li>
-                    <li>Microsoft Shared Source CLI 1.0</li>
-                    <li>CLI 1.0 Compatible</li>
+                    <li>.NET Standard 2.0 via .NET 8.0</li>
+                    <li>Microsoft .NET Framework 4.6.2</li>
                 </ul>
                 <p>
                     Not all frameworks are created equal and some features have been excluded from
@@ -299,12 +284,9 @@ namespace log4net
                     <div class="table">
                         <table>
                             <tr>
-                                <th>
-                                    Logger name</th>
-                                <th>
-                                    Assigned level</th>
-                                <th>
-                                    Inherited level</th>
+                                <th>Logger name</th>
+                                <th>Assigned level</th>
+                                <th>Inherited level</th>
                             </tr>
                             <tr align="left">
                                 <td><i>root</i></td>
@@ -341,12 +323,9 @@ namespace log4net
                     <div class="table">
                         <table>
                             <tr>
-                                <th>
-                                    Logger name</th>
-                                <th>
-                                    Assigned level</th>
-                                <th>
-                                    Inherited level</th>
+                                <th>Logger name</th>
+                                <th>Assigned level</th>
+                                <th>Inherited level</th>
                             </tr>
                             <tr align="left">
                                 <td><i>root</i></td>
@@ -378,12 +357,9 @@ namespace log4net
                     <div class="table">
                         <table>
                             <tr>
-                                <th>
-                                    Logger name</th>
-                                <th>
-                                    Assigned level</th>
-                                <th>
-                                    Inherited level</th>
+                                <th>Logger name</th>
+                                <th>Assigned level</th>
+                                <th>Inherited level</th>
                             </tr>
                             <tr align="left">
                                 <td><i>root</i></td>
@@ -427,12 +403,9 @@ namespace log4net
                     <div class="table">
                         <table>
                             <tr>
-                                <th>
-                                    Logger name</th>
-                                <th>
-                                    Assigned level</th>
-                                <th>
-                                    Inherited level</th>
+                                <th>Logger name</th>
+                                <th>Assigned level</th>
+                                <th>Inherited level</th>
                             </tr>
                             <tr align="left">
                                 <td><i>root</i></td>
@@ -572,39 +545,37 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                     <div class="table">
                         <table>
                             <tr>
-                                <th>
-                                    Type</th>
-                                <th>
-                                    Description</th>
+                                <th>Type</th>
+                                <th>Description</th>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Appender_AdoNetAppender.htm">log4net.Appender.AdoNetAppender</a></td>
+                                <td>log4net.Appender.AdoNetAppender</td>
                                 <td>
                                     Writes logging events to a database using either prepared statements or stored
                                     procedures.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Appender_AnsiColorTerminalAppender.htm">log4net.Appender.AnsiColorTerminalAppender</a></td>
+                                <td>log4net.Appender.AnsiColorTerminalAppender</td>
                                 <td>
                                     Writes color highlighted logging events to a an ANSI terminal window.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Appender_AspNetTraceAppender.htm">log4net.Appender.AspNetTraceAppender</a></td>
+                                <td>log4net.Appender.AspNetTraceAppender</td>
                                 <td>
                                     Writes logging events to the ASP trace context. These can then be rendered at
                                     the end of the ASP page or on the ASP trace page.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Appender_BufferingForwardingAppender.htm">log4net.Appender.BufferingForwardingAppender</a></td>
+                                <td>log4net.Appender.BufferingForwardingAppender</td>
                                 <td>
                                     Buffers logging events before forwarding them to child appenders.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Appender_ColoredConsoleAppender.htm">log4net.Appender.ColoredConsoleAppender</a></td>
+                                <td>log4net.Appender.ColoredConsoleAppender</td>
                                 <td>
                                     Writes logging events to the application's Console. The events may go to either
                                     the standard our stream or the standard error stream. The events may have configurable
@@ -612,57 +583,57 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Appender_ConsoleAppender.htm">log4net.Appender.ConsoleAppender</a></td>
+                                <td>log4net.Appender.ConsoleAppender</td>
                                 <td>
                                     Writes logging events to the application's Console. The events may go to either
                                     the standard our stream or the standard error stream.
                                 </td>
                             </tr>
                             <tr>
-                              <td><a href="../sdk/html/T_log4net_Appender_DebugAppender.htm">log4net.Appender.DebugAppender</a></td>
+                              <td>log4net.Appender.DebugAppender</td>
                               <td>
-                                Writes logging events to the .NET  system.
+                                Writes logging events to the .NET debug system.
                               </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Appender_EventLogAppender.htm">log4net.Appender.EventLogAppender</a></td>
+                                <td>log4net.Appender.EventLogAppender</td>
                                 <td>
                                     Writes logging events to the Windows Event Log.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Appender_FileAppender.htm">log4net.Appender.FileAppender</a></td>
+                                <td>log4net.Appender.FileAppender</td>
                                 <td>
                                     Writes logging events to a file in the file system.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Appender_ForwardingAppender.htm">log4net.Appender.ForwardingAppender</a></td>
+                                <td>log4net.Appender.ForwardingAppender</td>
                                 <td>
                                     Forwards logging events to child appenders.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Appender_LocalSyslogAppender.htm">log4net.Appender.LocalSyslogAppender</a></td>
+                                <td>log4net.Appender.LocalSyslogAppender</td>
                                 <td>
                                     Writes logging events to the local syslog service (UNIX only).
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Appender_MemoryAppender.htm">log4net.Appender.MemoryAppender</a></td>
+                                <td>log4net.Appender.MemoryAppender</td>
                                 <td>
                                     Stores logging events in an in memory buffer.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Appender_NetSendAppender.htm">log4net.Appender.NetSendAppender</a></td>
+                                <td>log4net.Appender.NetSendAppender</td>
                                 <td>
                                     Writes logging events to the Windows Messenger service. These messages are
                                     displayed in a dialog on a users terminal.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Appender_OutputDebugStringAppender.htm">log4net.Appender.OutputDebugStringAppender</a></td>
+                                <td>log4net.Appender.OutputDebugStringAppender</td>
                                 <td>
                                     Writes logging events to the debugger. If the application has no
                                     debugger, the system debugger displays the string. If the application has no
@@ -670,19 +641,19 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Appender_RemoteSyslogAppender.htm">log4net.Appender.RemoteSyslogAppender</a></td>
+                                <td>log4net.Appender.RemoteSyslogAppender</td>
                                 <td>
                                     Writes logging events to a remote syslog service using UDP networking.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Appender_RemotingAppender.htm">log4net.Appender.RemotingAppender</a></td>
+                                <td>log4net.Appender.RemotingAppender</td>
                                 <td>
                                     Writes logging events to a remoting sink using .NET remoting.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Appender_RollingFileAppender.htm">log4net.Appender.RollingFileAppender</a></td>
+                                <td>log4net.Appender.RollingFileAppender</td>
                                 <td>
                                     Writes logging events to a file in the file system. The RollingFileAppender can
                                     be configured to log to multiple files based upon date or file size
@@ -690,13 +661,13 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Appender_SmtpAppender.htm">log4net.Appender.SmtpAppender</a></td>
+                                <td>log4net.Appender.SmtpAppender</td>
                                 <td>
                                     Sends logging events to an email address.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Appender_SmtpPickupDirAppender.htm">log4net.Appender.SmtpPickupDirAppender</a></td>
+                                <td>log4net.Appender.SmtpPickupDirAppender</td>
                                 <td>
                                     Writes SMTP messages as files into a pickup directory.
                                     These files can then be read and sent by an SMTP agent
@@ -704,19 +675,19 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Appender_TelnetAppender.htm">log4net.Appender.TelnetAppender</a></td>
+                                <td>log4net.Appender.TelnetAppender</td>
                                 <td>
                                     Clients connect via Telnet to receive logging events.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Appender_TraceAppender.htm">log4net.Appender.TraceAppender</a></td>
+                                <td>log4net.Appender.TraceAppender</td>
                                 <td>
                                     Writes logging events to the .NET trace system.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Appender_UdpAppender.htm">log4net.Appender.UdpAppender</a></td>
+                                <td>log4net.Appender.UdpAppender</td>
                                 <td>
                                     Sends logging events as connectionless UDP datagrams to a remote host or a
                                     multicast group using a UdpClient.
@@ -773,16 +744,11 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                     <div class="table">
                         <table>
                             <tr>
-                                <th>
-                                    Logger Name</th>
-                                <th>
-                                    Added Appenders</th>
-                                <th>
-                                    Additivity Flag</th>
-                                <th>
-                                    Output Targets</th>
-                                <th>
-                                    Comment</th>
+                                <th>Logger Name</th>
+                                <th>Added Appenders</th>
+                                <th>Additivity Flag</th>
+                                <th>Output Targets</th>
+                                <th>Comment</th>
                             </tr>
                             <tr>
                                 <td><i>root</i></td>
@@ -856,43 +822,41 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                     <div class="table">
                         <table>
                             <tr>
-                                <th>
-                                    Type</th>
-                                <th>
-                                    Description</th>
+                                <th>Type</th>
+                                <th>Description</th>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Filter_DenyAllFilter.htm">log4net.Filter.DenyAllFilter</a></td>
+                                <td>log4net.Filter.DenyAllFilter</td>
                                 <td>
                                     Drops all logging events.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Filter_LevelMatchFilter.htm">log4net.Filter.LevelMatchFilter</a></td>
+                                <td>log4net.Filter.LevelMatchFilter</td>
                                 <td>
                                     An exact match to the event's level.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Filter_LevelRangeFilter.htm">log4net.Filter.LevelRangeFilter</a></td>
+                                <td>log4net.Filter.LevelRangeFilter</td>
                                 <td>
                                     Matches against a range of levels.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Filter_LoggerMatchFilter.htm">log4net.Filter.LoggerMatchFilter</a></td>
+                                <td>log4net.Filter.LoggerMatchFilter</td>
                                 <td>
                                     Matches against a the start of the logger name.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Filter_PropertyFilter.htm">log4net.Filter.PropertyFilter</a></td>
+                                <td>log4net.Filter.PropertyFilter</td>
                                 <td>
                                     Matches a substring from a specific property value.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Filter_StringMatchFilter.htm">log4net.Filter.StringMatchFilter</a></td>
+                                <td>log4net.Filter.StringMatchFilter</td>
                                 <td>
                                     Matches a substring from the event's message.
                                 </td>
@@ -938,52 +902,50 @@ ILog y = LogManager.GetLogger("wombat");]]></source>
                     <div class="table">
                         <table>
                             <tr>
-                                <th>
-                                    Type</th>
-                                <th>
-                                    Description</th>
+                                <th>Type</th>
+                                <th>Description</th>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Layout_ExceptionLayout.htm">log4net.Layout.ExceptionLayout</a></td>
+                                <td>log4net.Layout.ExceptionLayout</td>
                                 <td>
                                     Renders the exception text from the logging
                                     event.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Layout_PatternLayout.htm">log4net.Layout.PatternLayout</a></td>
+                                <td>log4net.Layout.PatternLayout</td>
                                 <td>
                                     Formats the logging event according to a flexible
                                     set of formatting flags.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Layout_RawTimeStampLayout.htm">log4net.Layout.RawTimeStampLayout</a></td>
+                                <td>log4net.Layout.RawTimeStampLayout</td>
                                 <td>
                                     Extracts the timestamp from the logging event.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Layout_RawUtcTimeStampLayout.htm">log4net.Layout.RawUtcTimeStampLayout</a></td>
+                                <td>log4net.Layout.RawUtcTimeStampLayout</td>
                                 <td>
                                     Extracts the timestamp from the logging event in Universal Time.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Layout_SimpleLayout.htm">log4net.Layout.SimpleLayout</a></td>
+                                <td>log4net.Layout.SimpleLayout</td>
                                 <td>
                                     Formats the logging event very simply:
                                     <span class="code">[level] - [message]</span>
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Layout_XmlLayout.htm">log4net.Layout.XmlLayout</a></td>
+                                <td>log4net.Layout.XmlLayout</td>
                                 <td>
                                     Formats the logging event as an XML element.
                                 </td>
                             </tr>
                             <tr>
-                                <td><a href="../sdk/html/T_log4net_Layout_XmlLayoutSchemaLog4j.htm">log4net.Layout.XmlLayoutSchemaLog4j</a></td>
+                                <td>log4net.Layout.XmlLayoutSchemaLog4j</td>
                                 <td>
                                     Formats the logging event as an XML element that
                                     complies with the log4j event dtd.

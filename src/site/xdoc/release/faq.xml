@@ -502,8 +502,7 @@ limitations under the License.
                         This pattern syntax can be used by specifying <span class="code">type="log4net.Util.PatternString"</span>
                         on the string property in the config file. This tells the config parser to pass the
                         value to the <span class="code">PatternString</span> type before converting the result
-                        to a string. For details on the patterns supported see the <a href="sdk/html/T_log4net_Util_PatternString.htm">
-                        PatternString SDK Reference</a>.
+                        to a string.
                     </p>
                     <p>
                         The following example sets the file name for a <span class="code">FileAppender</span> to include the 

@@ -43,10 +43,6 @@ limitations under the License.
             
             <section id="adonetappender" name="AdoNetAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_AdoNetAppender.htm">log4net.Appender.AdoNetAppender</a>.
-                    <u>Please see notes on the <a href="#bufferingforwardingappender">BufferingForwardingAppender</a> about performance and data fixing</u>
-                </p>
-                <p>
                     The configuration of the <span class="code">AdoNetAppender</span> depends on the
                     provider selected for the target database. Here are some examples.
                 </p>
@@ -448,9 +444,6 @@ CREATE TABLE Log (
             
             <section id="aspnettraceappender" name="AspNetTraceAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_AspNetTraceAppender.htm">log4net.Appender.AspNetTraceAppender</a>.
-                </p>
-                <p>
                     The following example shows how to configure the <span class="code">AspNetTraceAppender</span> 
                     to log messages to the ASP.NET TraceContext. The messages are written to the 
                     <span class="code">System.Web.TraceContext.Write</span> method if they are below
@@ -467,9 +460,6 @@ CREATE TABLE Log (
             </section>
             
             <section id="bufferingforwardingappender" name="BufferingForwardingAppender">
-                <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_BufferingForwardingAppender.htm">log4net.Appender.BufferingForwardingAppender</a>.
-                </p>
                 <p>
                     The following example shows how to configure the <span class="code">BufferingForwardingAppender</span> 
                     to buffer 100 messages before delivering them to the <i>ConsoleAppender</i>.
@@ -512,9 +502,6 @@ CREATE TABLE Log (
             
             <section id="coloredconsoleappender" name="ColoredConsoleAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_ColoredConsoleAppender.htm">log4net.Appender.ColoredConsoleAppender</a>.
-                </p>
-                <p>
                     The following example shows how to configure the <span class="code">ColoredConsoleAppender</span> 
                     to log messages to the console. By default the messages are sent to the console
                     standard output stream. This example shows how to highlight error messages.
@@ -554,9 +541,6 @@ CREATE TABLE Log (
             
             <section id="consoleappender" name="ConsoleAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_ConsoleAppender.htm">log4net.Appender.ConsoleAppender</a>.
-                </p>
-                <p>
                     The following example shows how to configure the <span class="code">ConsoleAppender</span> 
                     to log messages to the console. By default the messages are sent to the console
                     standard output stream.
@@ -582,13 +566,6 @@ CREATE TABLE Log (
             </section>
             
             <section id="eventlogappender" name="EventLogAppender">
-                <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_EventLogAppender.htm">log4net.Appender.EventLogAppender</a>.
-                    Please note that this appender is not natively available in log4net for dotnet standard, as
-                    it would bring in windows dependencies for non-windows consumers. Please see 
-                    <a href="https://www.nuget.org/packages/log4net.appenders.netcore">https://www.nuget.org/packages/log4net.appenders.netcore</a>
-                    for an alternative if you still require EventLog logging for netstandard targets.
-                </p>
                 <p>
                     The following example shows how to configure the <span class="code">EventLogAppender</span> to log
                     to the <i>Application</i> event log on the local machine using the
@@ -621,9 +598,6 @@ CREATE TABLE Log (
             </section>
             
             <section id="fileappender" name="FileAppender">
-                <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_FileAppender.htm">log4net.Appender.FileAppender</a>.
-                </p>
                 <p>
                     The following example shows how to configure the <span class="code">FileAppender</span>
                     to write messages to a file. The file specified is <i>log-file.txt</i>. The file will
@@ -690,9 +664,6 @@ CREATE TABLE Log (
             
             <section id="forwardingappender" name="ForwardingAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_ForwardingAppender.htm">log4net.Appender.ForwardingAppender</a>.
-                </p>
-                <p>
                     The following example shows how to configure the <span class="code">ForwardingAppender</span>.
                     The forwarding appender allows a set of constraints to be used to decorate an appender.
                     In this example the <i>ConsoleAppender</i> is decorated with a <i>Threshold</i> of
@@ -710,9 +681,6 @@ CREATE TABLE Log (
             </section>
             
             <section id="managedcoloredconsoleappender" name="ManagedColoredConsoleAppender">
-                <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_ManagedColoredConsoleAppender.htm">log4net.Appender.ManagedColoredConsoleAppender</a>.
-                </p>
                 <p>
                     The following example shows how to configure the <span class="code">ManagedColoredConsoleAppender</span> 
                     to log messages to the console. By default the messages are sent to the console
@@ -761,9 +729,6 @@ CREATE TABLE Log (
             
             <section id="memoryappender" name="MemoryAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_MemoryAppender.htm">log4net.Appender.MemoryAppender</a>.
-                </p>
-                <p>
                     It is unlikely that the <span class="code">MemoryAppender</span> will be configured
                     using a config file, but if you want to do it here's how.
                 </p>
@@ -775,9 +740,6 @@ CREATE TABLE Log (
             </section>
             
             <section id="netsendappender" name="NetSendAppender">
-                <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_NetSendAppender.htm">log4net.Appender.NetSendAppender</a>.
-                </p>
                 <p>
                     The following example shows how to configure the <span class="code">NetSendAppender</span>
                     to deliver messages to a specific user's screen. As this appender is typically only
@@ -803,9 +765,6 @@ CREATE TABLE Log (
             
             <section id="outputdebugstringappender" name="OutputDebugStringAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_OutputDebugStringAppender.htm">log4net.Appender.OutputDebugStringAppender</a>.
-                </p>
-                <p>
                     The following example shows how to configure the <span class="code">OutputDebugStringAppender</span>
                     to write logging messages to the <span class="code">OutputDebugString</span> API.
                 </p>
@@ -819,10 +778,6 @@ CREATE TABLE Log (
             </section>
             
             <section id="remotingappender" name="RemotingAppender">
-                <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_RemotingAppender.htm">log4net.Appender.RemotingAppender</a>.
-                    <u>Please see notes on the <a href="#bufferingforwardingappender">BufferingForwardingAppender</a> about performance and data fixing</u>
-                </p>
                 <p>
                     The following example shows how to configure the <span class="code">RemotingAppender</span>
                     to deliver logging events to a specified <i>Sink</i> (in this example
@@ -861,9 +816,6 @@ CREATE TABLE Log (
             </section>
             
             <section id="rollingfileappender" name="RollingFileAppender">
-                <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_RollingFileAppender.htm">log4net.Appender.RollingFileAppender</a>.
-                </p>
                 <p>
                     The <span class="code">RollingFileAppender</span> builds on the
                     <span class="code">FileAppender</span> and has the same options
@@ -951,10 +903,6 @@ CREATE TABLE Log (
             
             <section id="smtpappender" name="SmtpAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_SmtpAppender.htm">log4net.Appender.SmtpAppender</a>.
-                    <u>Please see notes on the <a href="#bufferingforwardingappender">BufferingForwardingAppender</a> about performance and data fixing</u>
-                </p>
-                <p>
                     The following example shows how to configure the <span class="code">SmtpAppender</span>
                     to deliver log events via SMTP email. The <i>To</i>, <i>From</i>, <i>Subject</i> and
                     <i>SmtpHost</i> are required parameters.
@@ -1021,10 +969,6 @@ CREATE TABLE Log (
             
             <section id="smtppickupdirappender" name="SmtpPickupDirAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_SmtpPickupDirAppender.htm">log4net.Appender.SmtpPickupDirAppender</a>.
-                    <u>Please see notes on the <a href="#bufferingforwardingappender">BufferingForwardingAppender</a> about performance and data fixing</u>
-                </p>
-                <p>
                     The <span class="code">SmtpPickupDirAppender</span> is configured similarly
                     to the <span class="code">SmtpAppender</span>. The only difference is that rather
                     than specify a <i>SmtpHost</i> parameter a <i>PickupDir</i> must be specified.
@@ -1064,9 +1008,6 @@ CREATE TABLE Log (
             
             <section id="traceappender" name="TraceAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_TraceAppender.htm">log4net.Appender.TraceAppender</a>.
-                </p>
-                <p>
                     The following example shows how to configure the <span class="code">TraceAppender</span>
                     to log messages to the <span class="code">System.Diagnostics.Trace</span> system.
                     This is the tracing system supplied with the .net base class libraries.
@@ -1084,9 +1025,6 @@ CREATE TABLE Log (
             
             <section id="udpappender" name="UdpAppender">
                 <p>
-                    For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_UdpAppender.htm">log4net.Appender.UdpAppender</a>.
-                </p>
-                <p>
                     The following example shows how to configure the <span class="code">UdpAppender</span>
                     to send events to a <i>RemoteAddress</i> on the specified <i>RemotePort</i>.
                 </p>
@@ -1103,9 +1041,6 @@ CREATE TABLE Log (
             </section>
 			
 			<section id="dynamicpatternlayout" name="DynamicPatternLayout">
-				<p>
-					For full details see the SDK Reference entry: <a href="sdk/html/T_log4net_Appender_DynamicPatternLayout.htm">log4net.Layout.DynamicPatternLayout</a>.
-				</p>
 				<p>
 					The <span class="code">DynamicPatternLayout</span> should be used whenever the header or footer should contain information that could change over time.
 					Compared to the static <span class="code">PatternLayout</span> which does not re-evaluate on every invoke, the <span class="code">DynamicPatternLayout</span>

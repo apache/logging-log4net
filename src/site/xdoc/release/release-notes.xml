@@ -1421,12 +1421,6 @@ limitations under the License.
             <span class="code">log4net.Util.PatternConverter</span>
             base class. The custom pattern can then be used in the pattern string.
           </p>
-          <p>
-            For full details see the SDK Reference entry: <a
-                            href="sdk/html/T_log4net_Layout_PatternLayout.htm">
-              log4net.Layout.PatternLayout
-            </a>.
-          </p>
           <h3>
             <span class="code">PatternString</span>
             for pattern based configuration
@@ -1468,12 +1462,6 @@ limitations under the License.
               }
             </pre>
           </div>
-          <p>
-            For full details see the SDK Reference entry: <a
-                            href="sdk/html/T_log4net_Util_PatternString_htm">
-              log4net.Util.PatternString
-            </a>.
-          </p>
           <h3>Loading configuration from a URI</h3>
           <p>
             The <span class="code">XmlConfigurator</span> methods now support loading the
@@ -1593,12 +1581,6 @@ limitations under the License.
             maintains the current exclusive file locking behavior. An alternative
             model, <span class="code">MinimalLock</span>, can be used to support writing to
             a single output file from multiple processes.
-          </p>
-          <p>
-            For full details see the SDK Reference entry: <a
-                            href="sdk/html/T_log4net_Appender_FileAppender_LockingModel.htm">
-              log4net.Appender.FileAppender.LockingModel
-            </a>.
           </p>
           <h3>
             <span class="code">RollingFileAppender</span>
