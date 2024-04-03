@@ -25,10 +25,8 @@ namespace log4net.Util
   /// A <see cref="TextWriter"/> that ignores the <see cref="Close"/> message
   /// </summary>
   /// <remarks>
-  /// <para>
   /// This writer is used in special cases where it is necessary 
   /// to protect a writer from being closed by a client.
-  /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
   public class ProtectCloseTextWriter : TextWriterAdapter
@@ -38,9 +36,7 @@ namespace log4net.Util
     /// </summary>
     /// <param name="writer">the writer to actually write to</param>
     /// <remarks>
-    /// <para>
     /// Create a new ProtectCloseTextWriter using a writer
-    /// </para>
     /// </remarks>
     public ProtectCloseTextWriter(TextWriter writer) : base(writer)
     {
