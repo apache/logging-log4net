@@ -42,7 +42,7 @@ namespace log4net.Config
   /// <author>Gert Driesen</author>
   [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
   [Serializable]
-  public class AliasRepositoryAttribute : Attribute
+  public sealed class AliasRepositoryAttribute : Attribute
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="AliasRepositoryAttribute" /> class with 
