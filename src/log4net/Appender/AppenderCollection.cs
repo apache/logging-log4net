@@ -30,6 +30,13 @@ namespace log4net.Appender
   /// <author>Nicko Cadell</author>
   public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   {
+    /// <summary>
+    /// Supports type-safe iteration over a <see cref="AppenderCollection"/>.
+    /// </summary>
+    [Obsolete("Use IEnumerator<IAppender> instead of AppenderCollection.IAppenderCollectionEnumerator")]
+    public interface IAppenderCollectionEnumerator : IEnumerator<IAppender>
+    { }
+
     private const int DEFAULT_CAPACITY = 16;
 
     private IAppender[] m_array;
@@ -183,7 +190,7 @@ namespace log4net.Appender
     /// <exception cref="ArgumentOutOfRangeException">
     ///    <para><paramref name="index"/> is less than zero</para>
     ///    <para>-or-</para>
-    ///    <para><paramref name="index"/> is equal to or greater than <see cref="AppenderCollection.Count"/>.</para>
+    ///    <para><paramref name="index"/> is equal to or greater than <see cref="Count"/>.</para>
     /// </exception>
     public virtual IAppender this[int index]
     {
@@ -200,13 +207,15 @@ namespace log4net.Appender
       }
     }
 
+
+    void ICollection<IAppender>.Add(IAppender item) => Add(item);
+
     /// <summary>
     /// Adds a <see cref="IAppender"/> to the end of the <c>AppenderCollection</c>.
     /// </summary>
     /// <param name="item">The <see cref="IAppender"/> to be added to the end of the <c>AppenderCollection</c>.</param>
-    public virtual void Add(IAppender item) => InternalAdd(item);
-
-    private int InternalAdd(IAppender item)
+    /// <returns>The new <see cref="Count"/></returns>
+    public virtual int Add(IAppender item)
     {
       if (m_count == m_array.Length)
       {
@@ -289,7 +298,7 @@ namespace log4net.Appender
     /// <exception cref="ArgumentOutOfRangeException">
     /// <para><paramref name="index"/> is less than zero</para>
     /// <para>-or-</para>
-    /// <para><paramref name="index"/> is equal to or greater than <see cref="AppenderCollection.Count"/>.</para>
+    /// <para><paramref name="index"/> is equal to or greater than <see cref="Count"/>.</para>
     /// </exception>
     public virtual void Insert(int index, IAppender item)
     {
@@ -318,7 +327,7 @@ namespace log4net.Appender
     /// <exception cref="ArgumentException">
     /// The specified <see cref="IAppender"/> was not found in the <c>AppenderCollection</c>.
     /// </exception>
-    public virtual bool Remove(IAppender item)
+    public virtual void Remove(IAppender item)
     {
       int i = IndexOf(item);
       if (i < 0)
@@ -328,6 +337,11 @@ namespace log4net.Appender
 
       ++m_version;
       RemoveAt(i);
+    }
+
+    bool ICollection<IAppender>.Remove(IAppender item)
+    {
+      Remove(item);
       return true;
     }
 
@@ -338,7 +352,7 @@ namespace log4net.Appender
     /// <exception cref="ArgumentOutOfRangeException">
     /// <para><paramref name="index"/> is less than zero</para>
     /// <para>-or-</para>
-    /// <para><paramref name="index"/> is equal to or greater than <see cref="AppenderCollection.Count"/>.</para>
+    /// <para><paramref name="index"/> is equal to or greater than <see cref="Count"/>.</para>
     /// </exception>
     public virtual void RemoveAt(int index)
     {
@@ -375,10 +389,7 @@ namespace log4net.Appender
     /// Returns an enumerator that can iterate through the <c>AppenderCollection</c>.
     /// </summary>
     /// <returns>An <see cref="Enumerator"/> for the entire <c>AppenderCollection</c>.</returns>
-    public virtual IEnumerator<IAppender> GetEnumerator()
-    {
-      return new Enumerator(this);
-    }
+    public virtual IEnumerator<IAppender> GetEnumerator() => new Enumerator(this);
 
     /// <summary>
     /// Gets or sets the number of elements the <c>AppenderCollection</c> can contain.
@@ -413,7 +424,7 @@ namespace log4net.Appender
     /// Adds the elements of another <c>AppenderCollection</c> to the current <c>AppenderCollection</c>.
     /// </summary>
     /// <param name="x">The <c>AppenderCollection</c> whose elements should be added to the end of the current <c>AppenderCollection</c>.</param>
-    /// <returns>The new <see cref="AppenderCollection.Count"/> of the <c>AppenderCollection</c>.</returns>
+    /// <returns>The new <see cref="Count"/> of the <c>AppenderCollection</c>.</returns>
     public virtual int AddRange(AppenderCollection x)
     {
       if (m_count + x.Count >= m_array.Length)
@@ -432,7 +443,7 @@ namespace log4net.Appender
     /// Adds the elements of a <see cref="IAppender"/> array to the current <c>AppenderCollection</c>.
     /// </summary>
     /// <param name="x">The <see cref="IAppender"/> array whose elements should be added to the end of the <c>AppenderCollection</c>.</param>
-    /// <returns>The new <see cref="AppenderCollection.Count"/> of the <c>AppenderCollection</c>.</returns>
+    /// <returns>The new <see cref="Count"/> of the <c>AppenderCollection</c>.</returns>
     public virtual int AddRange(IAppender[] x)
     {
       if (m_count + x.Length >= m_array.Length)
@@ -451,7 +462,7 @@ namespace log4net.Appender
     /// Adds the elements of a <see cref="IAppender"/> collection to the current <c>AppenderCollection</c>.
     /// </summary>
     /// <param name="col">The <see cref="IAppender"/> collection whose elements should be added to the end of the <c>AppenderCollection</c>.</param>
-    /// <returns>The new <see cref="AppenderCollection.Count"/> of the <c>AppenderCollection</c>.</returns>
+    /// <returns>The new <see cref="Count"/> of the <c>AppenderCollection</c>.</returns>
     public virtual int AddRange(ICollection col)
     {
       if (m_count + col.Count >= m_array.Length)
@@ -470,10 +481,7 @@ namespace log4net.Appender
     /// <summary>
     /// Sets the capacity to the actual number of elements.
     /// </summary>
-    public virtual void TrimToSize()
-    {
-      Capacity = m_count;
-    }
+    public virtual void TrimToSize() => Capacity = m_count;
 
     /// <summary>
     /// Return the collection elements as an array
@@ -492,14 +500,14 @@ namespace log4net.Appender
     /// <exception cref="ArgumentOutOfRangeException">
     /// <para><paramref name="i"/> is less than zero</para>
     /// <para>-or-</para>
-    /// <para><paramref name="i"/> is equal to or greater than <see cref="AppenderCollection.Count"/>.</para>
+    /// <para><paramref name="i"/> is equal to or greater than <see cref="Count"/>.</para>
     /// </exception>
     private void ValidateIndex(int i, bool allowEqualEnd = false)
     {
       int max = (allowEqualEnd) ? (m_count) : (m_count - 1);
       if (i < 0 || i > max)
       {
-        throw Util.SystemInfo.CreateArgumentOutOfRangeException(nameof(i), i, $"Index was out of range. Must be non-negative and less than the size of the collection. [{i}] Specified argument was out of the range of valid values.");
+        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(i), i, $"Index was out of range. Must be non-negative and less than the size of the collection. [{i}] Specified argument was out of the range of valid values.");
       }
     }
 
@@ -532,7 +540,7 @@ namespace log4net.Appender
     {
       if (x is IAppender appender)
       {
-        return InternalAdd(appender);
+        return Add(appender);
       }
 
       return -1;
@@ -548,36 +556,23 @@ namespace log4net.Appender
       return false;
     }
 
-    int IList.IndexOf(object x)
-    {
-      return IndexOf((IAppender)x);
-    }
+    int IList.IndexOf(object x) => IndexOf((IAppender)x);
 
-    void IList.Insert(int pos, object x)
-    {
-      Insert(pos, (IAppender)x);
-    }
+    void IList.Insert(int pos, object x) => Insert(pos, (IAppender)x);
 
-    void IList.Remove(object x)
-    {
-      Remove((IAppender)x);
-    }
+    void IList.Remove(object x) => Remove((IAppender)x);
 
-    void IList.RemoveAt(int pos)
-    {
-      RemoveAt(pos);
-    }
+    void IList.RemoveAt(int pos) => RemoveAt(pos);
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-      return GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     /// <summary>
     /// Supports simple iteration over a <see cref="AppenderCollection"/>.
     /// </summary>
     /// <exclude/>
-    private sealed class Enumerator : IEnumerator<IAppender>
+#pragma warning disable CS0618 // Type or member is obsolete
+    private sealed class Enumerator : IAppenderCollectionEnumerator
+#pragma warning restore CS0618 // Type or member is obsolete
     {
       private readonly AppenderCollection m_collection;
       private int m_index;
@@ -622,10 +617,7 @@ namespace log4net.Appender
       /// <summary>
       /// Sets the enumerator to its initial position, before the first element in the collection.
       /// </summary>
-      public void Reset()
-      {
-        m_index = -1;
-      }
+      public void Reset() => m_index = -1;
 
       object IEnumerator.Current => Current;
 
@@ -644,20 +636,11 @@ namespace log4net.Appender
         m_collection = list;
       }
 
-      public override void CopyTo(IAppender[] array)
-      {
-        m_collection.CopyTo(array);
-      }
+      public override void CopyTo(IAppender[] array) => m_collection.CopyTo(array);
 
-      public override void CopyTo(IAppender[] array, int start)
-      {
-        m_collection.CopyTo(array, start);
-      }
+      public override void CopyTo(IAppender[] array, int start) => m_collection.CopyTo(array, start);
 
-      void ICollection.CopyTo(Array array, int start)
-      {
-        ((ICollection)m_collection).CopyTo(array, start);
-      }
+      void ICollection.CopyTo(Array array, int start) => ((ICollection)m_collection).CopyTo(array, start);
 
       public override int Count => m_collection.Count;
 
@@ -671,43 +654,25 @@ namespace log4net.Appender
         set => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
       }
 
-      public override void Add(IAppender x)
-      {
-        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
-      }
+      public override int Add(IAppender x) => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
 
-      public override void Clear()
-      {
-        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
-      }
+      public override void Clear() => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
 
       public override bool Contains(IAppender x) => m_collection.Contains(x);
 
       public override int IndexOf(IAppender x) => m_collection.IndexOf(x);
 
-      public override void Insert(int pos, IAppender x)
-      {
-        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
-      }
+      public override void Insert(int pos, IAppender x) => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
 
-      public override bool Remove(IAppender x)
-      {
-        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
-      }
+      public override void Remove(IAppender x) => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
 
-      public override void RemoveAt(int pos)
-      {
-        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
-      }
+      public override void RemoveAt(int pos) => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
 
       public override bool IsFixedSize => true;
 
       public override bool IsReadOnly => true;
 
-      public override IEnumerator<IAppender> GetEnumerator()
-      {
-        return m_collection.GetEnumerator();
-      }
+      public override IEnumerator<IAppender> GetEnumerator() => m_collection.GetEnumerator();
 
       // (just to mimic some nice features of ArrayList)
       public override int Capacity
@@ -716,22 +681,13 @@ namespace log4net.Appender
         set => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
       }
 
-      public override int AddRange(AppenderCollection x)
-      {
-        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
-      }
+      public override int AddRange(AppenderCollection x) => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
 
-      public override int AddRange(IAppender[] x)
-      {
-        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
-      }
+      public override int AddRange(IAppender[] x) => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
 
       public override IAppender[] ToArray() => m_collection.ToArray();
 
-      public override void TrimToSize()
-      {
-        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
-      }
+      public override void TrimToSize() => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
     }
   }
 }
