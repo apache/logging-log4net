@@ -96,22 +96,6 @@ namespace log4net.Appender
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="EventLogAppender" /> class
-    /// with the specified <see cref="ILayout" />.
-    /// </summary>
-    /// <param name="layout">The <see cref="ILayout" /> to use with this appender.</param>
-    /// <remarks>
-    /// <para>
-    /// Obsolete constructor.
-    /// </para>
-    /// </remarks>
-    [Obsolete("Instead use the default constructor and set the Layout property")]
-    public EventLogAppender(ILayout layout) : this()
-    {
-      Layout = layout;
-    }
-
-    /// <summary>
     /// The name of the log where messages will be stored.
     /// </summary>
     /// <value>

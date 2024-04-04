@@ -43,12 +43,8 @@ namespace log4net.Config
   /// <author>Gert Driesen</author>
   [AttributeUsage(AttributeTargets.Assembly)]
   [Serializable]
-  public /*sealed*/ class RepositoryAttribute : Attribute
+  public sealed class RepositoryAttribute : Attribute
   {
-    //
-    // Class is not sealed because DomainAttribute extends it while it is obsoleted
-    // 
-
     /// <summary>
     /// Initializes a new instance of the <see cref="RepositoryAttribute" /> class.
     /// </summary>

@@ -42,12 +42,8 @@ namespace log4net.Config
   /// <author>Gert Driesen</author>
   [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
   [Serializable]
-  public /*sealed*/ class AliasRepositoryAttribute : Attribute
+  public sealed class AliasRepositoryAttribute : Attribute
   {
-    //
-    // Class is not sealed because AliasDomainAttribute extends it while it is obsoleted
-    // 
-
     /// <summary>
     /// Initializes a new instance of the <see cref="AliasRepositoryAttribute" /> class with 
     /// the specified repository to alias to this assembly's repository.

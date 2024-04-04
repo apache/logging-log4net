@@ -922,55 +922,6 @@ namespace log4net.Appender
     }
 
     /// <summary>
-    /// Default constructor
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Default constructor
-    /// </para>
-    /// </remarks>
-    public FileAppender()
-    {
-    }
-
-    /// <summary>
-    /// Construct a new appender using the layout, file and append mode.
-    /// </summary>
-    /// <param name="layout">the layout to use with this appender</param>
-    /// <param name="filename">the full path to the file to write to</param>
-    /// <param name="append">flag to indicate if the file should be appended to</param>
-    /// <remarks>
-    /// <para>
-    /// Obsolete constructor.
-    /// </para>
-    /// </remarks>
-    [Obsolete("Instead use the default constructor and set the Layout, File & AppendToFile properties")]
-    public FileAppender(ILayout layout, string filename, bool append)
-    {
-      Layout = layout;
-      File = filename;
-      AppendToFile = append;
-      ActivateOptions();
-    }
-
-    /// <summary>
-    /// Construct a new appender using the layout and file specified.
-    /// The file will be appended to.
-    /// </summary>
-    /// <param name="layout">the layout to use with this appender</param>
-    /// <param name="filename">the full path to the file to write to</param>
-    /// <remarks>
-    /// <para>
-    /// Obsolete constructor.
-    /// </para>
-    /// </remarks>
-    [Obsolete("Instead use the default constructor and set the Layout & File properties")]
-    public FileAppender(ILayout layout, string filename)
-        : this(layout, filename, true)
-    {
-    }
-
-    /// <summary>
     /// Gets or sets the path to the file that logging will be written to.
     /// </summary>
     /// <value>

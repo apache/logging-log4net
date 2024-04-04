@@ -18,10 +18,10 @@
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-
+using System.Runtime.Serialization;
+using System.Security;
 using log4net.Util;
 
 namespace log4net.Core
@@ -58,7 +58,7 @@ namespace log4net.Core
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
   [Serializable]
-  public class LocationInfo
+  public class LocationInfo : ISerializable
   {
     /// <summary>
     /// Constructor
@@ -177,6 +177,28 @@ namespace log4net.Core
     }
 
     /// <summary>
+    /// Serialization constructor
+    /// </summary>
+    /// <param name="info">The <see cref="SerializationInfo" /> that holds the serialized object data.</param>
+    /// <param name="context">The <see cref="StreamingContext" /> that contains contextual information about the source or destination.</param>
+    /// <remarks>
+    /// <para>
+    /// Initializes a new instance of the <see cref="Level" /> class 
+    /// with serialized data.
+    /// </para>
+    /// </remarks>
+    protected LocationInfo(SerializationInfo info, StreamingContext context)
+    {
+      // Use member names from log4net 2.x implicit serialzation for cross-version compat.
+      ClassName = info.GetString("m_className");
+      FileName = info.GetString("m_fileName");
+      LineNumber = info.GetString("m_lineNumber");
+      MethodName = info.GetString("m_methodName");
+      FullInfo = info.GetString("m_fullInfo");
+      StackFrames = (StackFrameItem[])info.GetValue("m_stackFrames", typeof(StackFrameItem[]));
+    }
+
+    /// <summary>
     /// Gets the fully qualified class name of the caller making the logging 
     /// request.
     /// </summary>
@@ -216,6 +238,25 @@ namespace log4net.Core
     /// Gets the stack frames from the stack trace of the caller making the log request
     /// </summary>
     public StackFrameItem[]? StackFrames { get; }
+
+    /// <summary>
+    /// Serializes this object into the <see cref="SerializationInfo" /> provided.
+    /// </summary>
+    /// <param name="info">The <see cref="SerializationInfo" /> to populate with data.</param>
+    /// <param name="context">The destination for this serialization.</param>
+    [SecurityCritical]
+    [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand,
+      SerializationFormatter = true)]
+    public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+    {
+      // Use member names from log4net 2.x implicit serialzation for cross-version compat.
+      info.AddValue("m_className", ClassName);
+      info.AddValue("m_fileName", FileName);
+      info.AddValue("m_lineNumber", LineNumber);
+      info.AddValue("m_methodName", MethodName);
+      info.AddValue("m_fullInfo", FullInfo);
+      info.AddValue("m_stackFrames", StackFrames);
+    }
 
     /// <summary>
     /// The fully qualified type of the LocationInfo class.
