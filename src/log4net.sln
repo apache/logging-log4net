@@ -21,6 +21,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{78CDAF4E-3F9F-4D00-A494-FFAE30E7EF0E}"
 	ProjectSection(SolutionItems) = preProject
 		..\.asf.yaml = ..\.asf.yaml
+		..\.editorconfig = ..\.editorconfig
 		..\.gitignore = ..\.gitignore
 		..\.zarro-defaults = ..\.zarro-defaults
 		Directory.Build.props = Directory.Build.props
@@ -35,12 +36,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		..\.github\workflows\git-broadcast.yml = ..\.github\workflows\git-broadcast.yml
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CE38DCC5-1BE9-4DEE-ADF4-854689B4028C}"
-	ProjectSection(SolutionItems) = preProject
-		..\.editorconfig = ..\.editorconfig
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "log4net2-SerializeEvent", "integration-testing\log4net2-SerializeEvent\log4net2-SerializeEvent.csproj", "{605058A8-CE6D-4190-91DA-7B3E9F84489E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".doc", ".doc", "{33D80AD3-8048-4220-8BB0-38E3BDE5FCF4}"
+	ProjectSection(SolutionItems) = preProject
+		..\doc\BUILDING.md = ..\doc\BUILDING.md
+		..\doc\MailTemplate.Result.txt = ..\doc\MailTemplate.Result.txt
+		..\doc\MailTemplate.txt = ..\doc\MailTemplate.txt
+		..\doc\RELEASING.md = ..\doc\RELEASING.md
+		site\xdoc\release\release-notes.xml = site\xdoc\release\release-notes.xml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
