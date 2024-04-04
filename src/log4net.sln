@@ -45,6 +45,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".doc", ".doc", "{33D80AD3-8
 		..\doc\MailTemplate.txt = ..\doc\MailTemplate.txt
 		..\doc\RELEASING.md = ..\doc\RELEASING.md
 		site\xdoc\release\release-notes.xml = site\xdoc\release\release-notes.xml
+		site\xdoc\download_log4net.xml = site\xdoc\download_log4net.xml
 	EndProjectSection
 EndProject
 Global
