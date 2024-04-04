@@ -1,22 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <PackageId>log4net</PackageId>
-        <Version>3.0.0</Version>
-        <PackageVersion>$(Version)</PackageVersion>
-        <Title>Apache log4net</Title>
-        <Product>Apache log4net</Product>
-        <Description>
-            log4net is a tool to help the programmer output log statements to a variety of output targets.
-            In case of problems with an application, it is helpful to enable logging so that the problem
-            can be located. With log4net it is possible to enable logging at runtime without modifying the
-            application binary. The log4net package is designed so that log statements can remain in
-            shipped code without incurring a high performance cost. It follows that the speed of logging
-            (or rather not logging) is crucial.
+  <PropertyGroup>
+    <PackageId>log4net</PackageId>
+    <Title>Apache log4net</Title>
+    <Product>Apache log4net</Product>
+    <Description>
+      log4net is a tool to help the programmer output log statements to a variety of output targets.
+      In case of problems with an application, it is helpful to enable logging so that the problem
+      can be located. With log4net it is possible to enable logging at runtime without modifying the
+      application binary. The log4net package is designed so that log statements can remain in
+      shipped code without incurring a high performance cost. It follows that the speed of logging
+      (or rather not logging) is crucial.
 
-            At the same time, log output can be so voluminous that it quickly becomes overwhelming.
-            One of the distinctive features of log4net is the notion of hierarchical loggers.
-            Using these loggers it is possible to selectively control which log statements are output
-            at arbitrary granularity.
+      At the same time, log output can be so voluminous that it quickly becomes overwhelming.
+      One of the distinctive features of log4net is the notion of hierarchical loggers.
+      Using these loggers it is possible to selectively control which log statements are output
+      at arbitrary granularity.
 
       log4net is designed with two distinct goals in mind: speed and flexibility
     </Description>
@@ -41,7 +39,8 @@
     <Authors>The Apache Software Foundation</Authors>
     <Copyright>Copyright 2004-2024 The Apache Software Foundation</Copyright>
     <DevelopmentDependency>false</DevelopmentDependency>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>$(GeneratePackages)</GeneratePackageOnBuild>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://logging.apache.org/log4net/</PackageProjectUrl>
     <PackageIcon>package-icon.png</PackageIcon>
