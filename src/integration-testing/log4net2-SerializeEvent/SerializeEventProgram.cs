@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using log4net.Core;
@@ -13,7 +14,7 @@ using log4net.Util;
 // If for some reason a new serialized file is needed, run this program and
 // commit the result over the cached version.
 
-var localTimestamp = new DateTime(2000, 7, 1).ToLocalTime();
+var localTimestamp = new DateTime(2000, 7, 1, 0, 0, 0, 0, CultureInfo.InvariantCulture.Calendar, DateTimeKind.Local);
 
 var stackTrace = new StackTrace(true);
 

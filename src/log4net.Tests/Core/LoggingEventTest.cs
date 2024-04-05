@@ -24,6 +24,7 @@ using log4net.Core;
 using log4net.Util;
 using NUnit.Framework;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -32,10 +33,12 @@ namespace log4net.Tests.Core
   [TestFixture]
   public class LoggingEventTest
   {
+    DateTime localTime = new DateTime(2000, 7, 1, 0, 0, 0, 0, CultureInfo.InvariantCulture.Calendar, DateTimeKind.Local);
+
     [Test]
     public void SerializeDeserialize_BinaryFormatter()
     {
-      var timestamp = new DateTime(2000, 7, 1).ToUniversalTime();
+      var timestamp = localTime.ToUniversalTime();
       var ev = new LoggingEvent(new LoggingEventData
       {
         LoggerName = "aLogger",
@@ -106,7 +109,7 @@ namespace log4net.Tests.Core
       Assert.AreEqual("aDomain", ev.Domain);
       Assert.AreEqual(1, ev.Properties.Count);
       Assert.AreEqual("bar", ev.Properties["foo"]);
-      Assert.AreEqual(new DateTime(2000, 7, 1), ev.TimeStampUtc);
+      Assert.AreEqual(localTime.ToUniversalTime(), ev.TimeStampUtc);
     }
   }
 }
