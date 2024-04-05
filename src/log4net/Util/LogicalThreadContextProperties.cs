@@ -37,7 +37,7 @@ namespace log4net.Util
   /// </para>
   /// <para>
   /// This class stores its properties in a slot on the <see cref="CallContext"/> named
-  /// <c>log4net.Util.LogicalThreadContextProperties</c> for .net4x,
+  /// <see cref="log4net.Util.LogicalThreadContextProperties"/> for .net4x,
   /// otherwise System.Threading.AsyncLocal
   /// </para>
   /// </remarks>
@@ -99,10 +99,9 @@ namespace log4net.Util
     /// </remarks>
     public void Remove(string key)
     {
-      PropertiesDictionary? dictionary = GetProperties(false);
-      if (dictionary is not null)
+      if (GetProperties(false) is PropertiesDictionary dictionary)
       {
-        PropertiesDictionary immutableProps = new PropertiesDictionary(dictionary);
+        PropertiesDictionary immutableProps = new(dictionary);
         immutableProps.Remove(key);
         SetLogicalProperties(immutableProps);
       }
@@ -118,8 +117,7 @@ namespace log4net.Util
     /// </remarks>
     public void Clear()
     {
-      PropertiesDictionary? dictionary = GetProperties(false);
-      if (dictionary is not null)
+      if (GetProperties(false) is not null)
       {
         SetLogicalProperties(new PropertiesDictionary());
       }

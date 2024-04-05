@@ -17,6 +17,8 @@
 //
 #endregion
 
+// inspired by https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Diagnostics/CodeAnalysis/SetsRequiredMembersAttribute.cs
+
 #if !NET7_0_OR_GREATER
 namespace System.Diagnostics.CodeAnalysis;
 

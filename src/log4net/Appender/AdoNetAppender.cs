@@ -452,18 +452,13 @@ namespace log4net.Appender
     {
       if (!string.IsNullOrWhiteSpace(CommandText))
       {
-        using IDbCommand dbCmd = Connection!.CreateCommand();
-        // Set the command string
+        using IDbCommand dbCmd = Connection.EnsureNotNull().CreateCommand();
         dbCmd.CommandText = CommandText;
-
-        // Set the command type
         dbCmd.CommandType = CommandType;
-        // Send buffer using the prepared command object
         if (dbTran is not null)
         {
           dbCmd.Transaction = dbTran;
         }
-
         try
         {
           // prepare the command, which is significantly faster
@@ -476,7 +471,6 @@ namespace log4net.Appender
             // rethrow exception in transaction mode, cuz now transaction is in failed state
             throw;
           }
-
           // ignore prepare exceptions as they can happen without affecting actual logging, eg on npgsql
         }
 
@@ -581,7 +575,7 @@ namespace log4net.Appender
     /// <returns>A connection string used to connect to the database.</returns>
     protected virtual string ResolveConnectionString(out string connectionStringContext)
     {
-      if (ConnectionString is string { Length: > 0 })
+      if (ConnectionString is { Length: > 0 })
       {
         connectionStringContext = "ConnectionString";
         return ConnectionString;
@@ -601,7 +595,7 @@ namespace log4net.Appender
         }
       }
 
-      if (AppSettingsKey is string { Length: > 0 })
+      if (AppSettingsKey is { Length: > 0 })
       {
         connectionStringContext = "AppSettingsKey";
         string? appSettingsConnectionString = SystemInfo.GetAppSetting(AppSettingsKey);

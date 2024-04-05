@@ -678,24 +678,19 @@ namespace log4net.Core
     /// </exception>
     private static void LoadPlugins(Assembly assembly, ILoggerRepository repository)
     {
-      repository.EnsureNotNull();
-
       // Look for the PluginAttribute on the assembly
-      PluginAttribute[] configAttributes = Attribute.GetCustomAttributes(assembly.EnsureNotNull(), typeof(PluginAttribute), false)
+      PluginAttribute[] configAttributes = Attribute.GetCustomAttributes(assembly, typeof(PluginAttribute), false)
         .EnsureIs<PluginAttribute[]>();
-      if (configAttributes.Length > 0)
+      foreach (PluginAttribute configAttr in configAttributes)
       {
-        foreach (PluginAttribute configAttr in configAttributes)
+        try
         {
-          try
-          {
-            // Create the plugin and add it to the repository
-            repository.PluginMap.Add(configAttr.CreatePlugin());
-          }
-          catch (Exception ex)
-          {
-            LogLog.Error(declaringType, $"Failed to create plugin. Attribute [{configAttr}]", ex);
-          }
+          // Create the plugin and add it to the repository
+          repository.PluginMap.Add(configAttr.CreatePlugin());
+        }
+        catch (Exception ex)
+        {
+          LogLog.Error(declaringType, $"Failed to create plugin. Attribute [{configAttr}]", ex);
         }
       }
     }
@@ -712,24 +707,19 @@ namespace log4net.Core
     /// </exception>
     private void LoadAliases(Assembly assembly, ILoggerRepository repository)
     {
-      assembly.EnsureNotNull();
-      repository.EnsureNotNull();
-
       // Look for the AliasRepositoryAttribute on the assembly
-      AliasRepositoryAttribute[] configAttributes = Attribute.GetCustomAttributes(assembly, typeof(AliasRepositoryAttribute), false)
+      AliasRepositoryAttribute[] configAttributes = Attribute
+        .GetCustomAttributes(assembly, typeof(AliasRepositoryAttribute), false)
         .EnsureIs<AliasRepositoryAttribute[]>();
-      if (configAttributes.Length > 0)
+      foreach (AliasRepositoryAttribute configAttr in configAttributes)
       {
-        foreach (AliasRepositoryAttribute configAttr in configAttributes)
+        try
         {
-          try
-          {
-            AliasRepository(configAttr.Name, repository);
-          }
-          catch (Exception ex)
-          {
-            LogLog.Error(declaringType, $"Failed to alias repository [{configAttr.Name}]", ex);
-          }
+          AliasRepository(configAttr.Name, repository);
+        }
+        catch (Exception ex)
+        {
+          LogLog.Error(declaringType, $"Failed to alias repository [{configAttr.Name}]", ex);
         }
       }
     }

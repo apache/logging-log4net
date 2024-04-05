@@ -17,6 +17,8 @@
 //
 #endregion
 
+// inspired by https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Runtime/CompilerServices/NullableContextAttribute.cs
+
 using System.Diagnostics.CodeAnalysis;
 
 namespace System.Runtime.CompilerServices;
