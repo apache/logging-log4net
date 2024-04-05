@@ -21,8 +21,7 @@ using log4net.Util;
 
 #if NET462_OR_GREATER
 using CallContext = System.Runtime.Remoting.Messaging.CallContext;
-#endif
-#if NETSTANDARD2_0_OR_GREATER
+#else
 using CallContext = System.Threading.AsyncLocal<log4net.Util.PropertiesDictionary>;
 #endif
 
@@ -39,13 +38,12 @@ namespace log4net
   /// properties with the same name.
   /// </para>
   /// <para>
-  /// For .NET Standard 1.3 this class uses
-  /// System.Threading.AsyncLocal rather than <see cref="CallContext"/>.
+  /// For .NET Standard this class uses System.Threading.AsyncLocal rather than <see cref="CallContext"/>.
   /// </para>
   /// <para>
   /// The Logical Thread Context has a properties map and a stack.
   /// The properties and stack can 
-  /// be included in the output of log messages. The <see cref="log4net.Layout.PatternLayout"/>
+  /// be included in the output of log messages. The <see cref="Layout.PatternLayout"/>
   /// supports selecting and outputting these properties.
   /// </para>
   /// <para>

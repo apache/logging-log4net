@@ -102,10 +102,7 @@ namespace log4net.Util
     /// <summary>
     /// See <see cref="IDictionary{TKey,TValue}.Add(TKey,TValue)"/>.
     /// </summary>
-    public override void Add(string key, object? value)
-    {
-      InnerHashtable.Add(key, value);
-    }
+    public override void Add(string key, object? value) => InnerHashtable.Add(key, value);
 
     /// <summary>
     /// Remove the entry with the specified key from this dictionary
@@ -116,10 +113,7 @@ namespace log4net.Util
     /// Remove the entry with the specified key from this dictionary
     /// </para>
     /// </remarks>
-    public override bool Remove(string key)
-    {
-      return InnerHashtable.Remove(key);
-    }
+    public override bool Remove(string key) => InnerHashtable.Remove(key);
 
     /// <summary>
     /// See <see cref="IDictionary.GetEnumerator"/>
@@ -130,10 +124,7 @@ namespace log4net.Util
     /// Returns a <see cref="IDictionaryEnumerator"/> over the contest of this collection.
     /// </para>
     /// </remarks>
-    IDictionaryEnumerator IDictionary.GetEnumerator()
-    {
-      return InnerHashtable.GetEnumerator();
-    }
+    IDictionaryEnumerator IDictionary.GetEnumerator() => InnerHashtable.GetEnumerator();
 
     /// <summary>
     /// See <see cref="IDictionary.Remove"/>
@@ -162,10 +153,7 @@ namespace log4net.Util
     /// Remove all properties from the properties collection
     /// </para>
     /// </remarks>
-    public override void Clear()
-    {
-      InnerHashtable.Clear();
-    }
+    public override void Clear() => InnerHashtable.Clear();
 
     /// <summary>
     /// See <see cref="IDictionary.Add"/>
@@ -174,18 +162,11 @@ namespace log4net.Util
     /// <param name="value">the value to store for the key</param>
     /// <remarks>
     /// <para>
-    /// Store a value for the specified <see cref="String"/> <paramref name="key"/>.
+    /// Store a value for the specified <see cref="string"/> <paramref name="key"/>.
     /// </para>
     /// </remarks>
     /// <exception cref="ArgumentException">Thrown if the <paramref name="key"/> is not a string</exception>
-    void IDictionary.Add(object key, object value)
-    {
-      if (key is not string k)
-      {
-        throw new ArgumentException("key must be a string", nameof(key));
-      }
-      InnerHashtable.Add(k, value);
-    }
+    void IDictionary.Add(object key, object? value) => InnerHashtable.Add(key.EnsureIs<string>(), value);
 
     /// <summary>
     /// See <see cref="IDictionary.IsReadOnly"/>
@@ -209,7 +190,7 @@ namespace log4net.Util
     /// </value>
     /// <remarks>
     /// <para>
-    /// Get or set a value for the specified <see cref="String"/> <paramref name="key"/>.
+    /// Get or set a value for the specified <see cref="string"/> <paramref name="key"/>.
     /// </para>
     /// </remarks>
     /// <exception cref="ArgumentException">Thrown if the <paramref name="key"/> is not a string</exception>
@@ -217,21 +198,10 @@ namespace log4net.Util
     {
       get
       {
-        if (key is not string k)
-        {
-          throw new ArgumentException("key must be a string", nameof(key));
-        }
-        InnerHashtable.TryGetValue(k, out object? val);
+        InnerHashtable.TryGetValue(key.EnsureIs<string>(), out object? val);
         return val;
       }
-      set
-      {
-        if (key is not string k)
-        {
-          throw new ArgumentException("key must be a string", nameof(key));
-        }
-        InnerHashtable[k] = value;
-      }
+      set => InnerHashtable[key.EnsureIs<string>()] = value;
     }
   }
 }

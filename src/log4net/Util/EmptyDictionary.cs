@@ -131,10 +131,7 @@ namespace log4net.Util
     /// As the collection is empty a <see cref="NullEnumerator"/> is returned.
     /// </para>
     /// </remarks>
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-      return NullEnumerator.Instance;
-    }
+    IEnumerator IEnumerable.GetEnumerator() => NullEnumerator.Instance;
 
     /// <summary>
     /// Adds an element with the provided key and value to the 
@@ -149,10 +146,7 @@ namespace log4net.Util
     /// </para>
     /// </remarks>
     /// <exception cref="InvalidOperationException">This dictionary is always empty and cannot be modified.</exception>
-    public void Add(object key, object value)
-    {
-      throw new InvalidOperationException();
-    }
+    public void Add(object key, object? value) => throw new InvalidOperationException();
 
     /// <summary>
     /// Removes all elements from the <see cref="EmptyDictionary" />.
@@ -164,10 +158,7 @@ namespace log4net.Util
     /// </para>
     /// </remarks>
     /// <exception cref="InvalidOperationException">This dictionary is always empty and cannot be modified.</exception>
-    public void Clear()
-    {
-      throw new InvalidOperationException();
-    }
+    public void Clear() => throw new InvalidOperationException();
 
     /// <summary>
     /// Determines whether the <see cref="EmptyDictionary" /> contains an element 
@@ -194,10 +185,7 @@ namespace log4net.Util
     /// As the collection is empty a <see cref="NullEnumerator"/> is returned.
     /// </para>
     /// </remarks>
-    public IDictionaryEnumerator GetEnumerator()
-    {
-      return NullDictionaryEnumerator.Instance;
-    }
+    public IDictionaryEnumerator GetEnumerator() => NullDictionaryEnumerator.Instance;
 
     /// <summary>
     /// Removes the element with the specified key from the <see cref="EmptyDictionary" />.
@@ -210,10 +198,7 @@ namespace log4net.Util
     /// </para>
     /// </remarks>
     /// <exception cref="InvalidOperationException">This dictionary is always empty and cannot be modified.</exception>
-    public void Remove(object key)
-    {
-      throw new InvalidOperationException();
-    }
+    public void Remove(object key) => throw new InvalidOperationException();
 
     /// <summary>
     /// Gets a value indicating whether the <see cref="EmptyDictionary" /> has a fixed size.

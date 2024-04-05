@@ -55,10 +55,7 @@ namespace log4net.Config
     /// Where possible use the constructor that takes a <see cref="System.Type"/>.
     /// </para>
     /// </remarks>
-    public PluginAttribute(string typeName)
-    {
-      TypeName = typeName;
-    }
+    public PluginAttribute(string typeName) => TypeName = typeName;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PluginAttribute" /> class
@@ -70,10 +67,7 @@ namespace log4net.Config
     /// Create the attribute with the plugin type specified.
     /// </para>
     /// </remarks>
-    public PluginAttribute(Type type)
-    {
-      Type = type;
-    }
+    public PluginAttribute(Type type) => Type = type;
 
     /// <summary>
     /// Gets or sets the type for the plugin.
@@ -93,12 +87,6 @@ namespace log4net.Config
     /// <summary>
     /// Creates the plugin object defined by this attribute.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Creates the instance of the <see cref="IPlugin"/> object as 
-    /// specified by this attribute.
-    /// </para>
-    /// </remarks>
     /// <returns>The plugin object.</returns>
     public IPlugin CreatePlugin()
     {
@@ -106,30 +94,16 @@ namespace log4net.Config
       Type? pluginType = Type ?? SystemInfo.GetTypeFromString(TypeName!, true, true);
 
       // Check that the type is a plugin
-      if (!(typeof(IPlugin).IsAssignableFrom(pluginType)))
+      if (!typeof(IPlugin).IsAssignableFrom(pluginType))
       {
         throw new LogException($"Plugin type [{pluginType?.FullName}] does not implement the log4net.IPlugin interface");
       }
 
       // Create an instance of the plugin using the default constructor
-      IPlugin plugin = (IPlugin)Activator.CreateInstance(pluginType);
-
-      return plugin;
+      return Activator.CreateInstance(pluginType).EnsureIs<IPlugin>();
     }
 
-    /// <summary>
-    /// Returns a representation of the properties of this object.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Overrides base class <see cref="M:Object.ToString()" /> method to 
-    /// return a representation of the properties of this object.
-    /// </para>
-    /// </remarks>
-    /// <returns>A representation of the properties of this object</returns>
-    public override string ToString()
-    {
-      return $"PluginAttribute[Type={Type?.FullName ?? TypeName}]";
-    }
+    /// <inheritdoc/>
+    public override string ToString() => $"PluginAttribute[Type={Type?.FullName ?? TypeName}]";
   }
 }

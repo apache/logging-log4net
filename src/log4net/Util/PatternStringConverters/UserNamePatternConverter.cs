@@ -19,6 +19,7 @@
 
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace log4net.Util.PatternStringConverters
 {
@@ -47,6 +48,13 @@ namespace log4net.Util.PatternStringConverters
     {
       try
       {
+#if !NET462_OR_GREATER
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+          Fallback(writer);
+          return;
+        }
+#endif
         if (System.Security.Principal.WindowsIdentity.GetCurrent()?.Name is string name)
         {
           writer.Write(name);
@@ -54,10 +62,14 @@ namespace log4net.Util.PatternStringConverters
       }
       catch (System.Security.SecurityException)
       {
+        Fallback(writer);
+      }
+
+      static void Fallback(TextWriter writer)
+      {
         // This security exception will occur if the caller does not have 
         // some undefined set of SecurityPermission flags.
         LogLog.Debug(declaringType, "Security exception while trying to get current windows identity. Error Ignored.");
-
         writer.Write(SystemInfo.NotAvailableText);
       }
     }

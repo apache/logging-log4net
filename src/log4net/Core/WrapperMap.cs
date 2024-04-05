@@ -98,7 +98,7 @@ namespace log4net.Core
     public virtual ILoggerWrapper? GetWrapper(ILogger? logger)
     {
       // If the logger is null then the corresponding wrapper is null
-      if (logger is null)
+      if (logger?.Repository is null)
       {
         return null;
       }

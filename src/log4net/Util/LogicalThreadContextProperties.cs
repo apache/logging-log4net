@@ -21,8 +21,7 @@ using System;
 using System.Security;
 #if NET462_OR_GREATER
 using CallContext = System.Runtime.Remoting.Messaging.CallContext;
-#endif
-#if NETSTANDARD2_0_OR_GREATER
+#else
 using CallContext = System.Threading.AsyncLocal<log4net.Util.PropertiesDictionary>;
 #endif
 
@@ -38,24 +37,14 @@ namespace log4net.Util
   /// </para>
   /// <para>
   /// This class stores its properties in a slot on the <see cref="CallContext"/> named
-  /// <c>log4net.Util.LogicalThreadContextProperties</c>.
-  /// </para>
-  /// <para>
-  /// For .NET Standard 1.3 this class uses
-  /// System.Threading.AsyncLocal rather than <see cref="CallContext"/>.
-  /// </para>
-  /// <para>
-  /// The <see cref="CallContext"/> requires a link time 
-  /// <see cref="System.Security.Permissions.SecurityPermission"/> for the
-  /// <see cref="System.Security.Permissions.SecurityPermissionFlag.Infrastructure"/>.
-  /// If the calling code does not have this permission then this context will be disabled.
-  /// It will not store any property values set on it.
+  /// <c>log4net.Util.LogicalThreadContextProperties</c> for .net4x,
+  /// otherwise System.Threading.AsyncLocal
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
   public sealed class LogicalThreadContextProperties : ContextPropertiesBase
   {
-#if NETSTANDARD2_0_OR_GREATER
+#if !NET462_OR_GREATER
     private static readonly CallContext AsyncLocalDictionary = new CallContext();
 #else
     private const string c_SlotName = "log4net.Util.LogicalThreadContextProperties";
@@ -190,10 +179,10 @@ namespace log4net.Util
     [SecuritySafeCritical]
     private static PropertiesDictionary? GetLogicalProperties()
     {
-#if NETSTANDARD2_0_OR_GREATER
-      return AsyncLocalDictionary.Value;
-#else
+#if NET462_OR_GREATER
       return CallContext.LogicalGetData(c_SlotName) as PropertiesDictionary;
+#else
+      return AsyncLocalDictionary.Value;
 #endif
     }
 
@@ -208,10 +197,10 @@ namespace log4net.Util
     [SecuritySafeCritical]
     private static void SetLogicalProperties(PropertiesDictionary properties)
     {
-#if NETSTANDARD2_0_OR_GREATER
-      AsyncLocalDictionary.Value = properties;
-#else
+#if NET462_OR_GREATER
       CallContext.LogicalSetData(c_SlotName, properties);
+#else
+      AsyncLocalDictionary.Value = properties;
 #endif
     }
 

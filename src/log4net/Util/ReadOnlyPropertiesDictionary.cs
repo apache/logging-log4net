@@ -312,7 +312,7 @@ namespace log4net.Util
     /// <summary>
     /// See <see cref="IDictionary.Add"/>.
     /// </summary>
-    void IDictionary.Add(object key, object value)
+    void IDictionary.Add(object key, object? value)
     {
       throw new NotSupportedException(ReadOnlyMessage);
     }

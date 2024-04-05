@@ -21,13 +21,13 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Security;
 using System.Security.Principal;
 using System.Threading;
-using log4net.Util;
 using log4net.Repository;
-using System.Runtime.InteropServices;
+using log4net.Util;
 
 namespace log4net.Core
 {

@@ -21,6 +21,7 @@ using System;
 using System.Text;
 using System.IO;
 using System.Globalization;
+using System.Diagnostics.CodeAnalysis;
 
 namespace log4net.Util
 {
@@ -59,6 +60,7 @@ namespace log4net.Util
     /// <summary>
     /// Gets or sets the line terminator string used by the TextWriter.
     /// </summary>
+    [AllowNull]
     public override string NewLine
     {
       get => Writer.NewLine;
@@ -72,10 +74,7 @@ namespace log4net.Util
     /// <para>
     /// </para>
     /// </remarks>
-    override public void Close()
-    {
-      Writer.Close();
-    }
+    public override void Close() => Writer.Close();
 
     /// <summary>
     /// Dispose this writer
@@ -90,7 +89,7 @@ namespace log4net.Util
     {
       if (disposing)
       {
-        ((IDisposable)Writer).Dispose();
+        (Writer as IDisposable)?.Dispose();
       }
     }
 
@@ -103,10 +102,7 @@ namespace log4net.Util
     /// to the underlying device
     /// </para>
     /// </remarks>
-    public override void Flush()
-    {
-      Writer.Flush();
-    }
+    public override void Flush() => Writer.Flush();
 
     /// <summary>
     /// Writes a character to the wrapped TextWriter
@@ -117,10 +113,7 @@ namespace log4net.Util
     /// Writes a character to the wrapped TextWriter
     /// </para>
     /// </remarks>
-    public override void Write(char value)
-    {
-      Writer.Write(value);
-    }
+    public override void Write(char value) => Writer.Write(value);
 
     /// <summary>
     /// Writes a character buffer to the wrapped TextWriter
@@ -133,10 +126,7 @@ namespace log4net.Util
     /// Writes a character buffer to the wrapped TextWriter
     /// </para>
     /// </remarks>
-    public override void Write(char[] buffer, int index, int count)
-    {
-      Writer.Write(buffer, index, count);
-    }
+    public override void Write(char[] buffer, int index, int count) => Writer.Write(buffer, index, count);
 
     /// <summary>
     /// Writes a string to the wrapped TextWriter
@@ -147,9 +137,6 @@ namespace log4net.Util
     /// Writes a string to the wrapped TextWriter
     /// </para>
     /// </remarks>
-    public override void Write(string value)
-    {
-      Writer.Write(value);
-    }
+    public override void Write(string? value) => Writer.Write(value);
   }
 }

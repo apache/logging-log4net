@@ -59,7 +59,7 @@ namespace log4net.Util.TypeConverters
     /// <returns>the IPAddress</returns>
     /// <remarks>
     /// <para>
-    /// Uses the <see cref="IPAddress.Parse"/> method to convert the
+    /// Uses the <see cref="IPAddress.Parse(string)"/> method to convert the
     /// <see cref="String"/> argument to an <see cref="IPAddress"/>.
     /// If that fails then the string is resolved as a DNS hostname.
     /// </para>
@@ -76,7 +76,7 @@ namespace log4net.Util.TypeConverters
         try
         {
           // Try an explicit parse of string representation of an IPAddress (v4 or v6)
-          if (IPAddress.TryParse(str, out IPAddress result))
+          if (IPAddress.TryParse(str, out IPAddress? result))
           {
             return result;
           }

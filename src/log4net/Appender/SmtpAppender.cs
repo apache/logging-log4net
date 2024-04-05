@@ -23,6 +23,7 @@ using System.Text;
 
 using System.Net.Mail;
 using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Appender
 {
@@ -312,31 +313,29 @@ namespace log4net.Appender
         smtpClient.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
       }
 
-      using (var mailMessage = new MailMessage())
+      using var mailMessage = new MailMessage();
+      mailMessage.Body = messageBody;
+      mailMessage.BodyEncoding = BodyEncoding;
+      mailMessage.From = new MailAddress(From.EnsureNotNull());
+      mailMessage.To.Add(m_to.EnsureNotNull());
+      if (!string.IsNullOrEmpty(m_cc))
       {
-        mailMessage.Body = messageBody;
-        mailMessage.BodyEncoding = BodyEncoding;
-        mailMessage.From = new MailAddress(From);
-        mailMessage.To.Add(m_to);
-        if (!string.IsNullOrEmpty(m_cc))
-        {
-          mailMessage.CC.Add(m_cc);
-        }
-        if (!string.IsNullOrEmpty(m_bcc))
-        {
-          mailMessage.Bcc.Add(m_bcc);
-        }
-        if (!string.IsNullOrEmpty(ReplyTo))
-        {
-          mailMessage.ReplyToList.Add(new MailAddress(ReplyTo));
-        }
-        mailMessage.Subject = Subject;
-        mailMessage.SubjectEncoding = SubjectEncoding;
-        mailMessage.Priority = Priority;
-
-        // TODO: Consider using SendAsync to send the message without blocking. We would need a SendCompletedCallback to log errors.
-        smtpClient.Send(mailMessage);
+        mailMessage.CC.Add(m_cc);
       }
+      if (!string.IsNullOrEmpty(m_bcc))
+      {
+        mailMessage.Bcc.Add(m_bcc);
+      }
+      if (!string.IsNullOrEmpty(ReplyTo))
+      {
+        mailMessage.ReplyToList.Add(new MailAddress(ReplyTo));
+      }
+      mailMessage.Subject = Subject;
+      mailMessage.SubjectEncoding = SubjectEncoding;
+      mailMessage.Priority = Priority;
+
+      // TODO: Consider using SendAsync to send the message without blocking. We would need a SendCompletedCallback to log errors.
+      smtpClient.Send(mailMessage);
     }
 
     private string? m_to;
@@ -378,7 +377,7 @@ namespace log4net.Appender
       /// </remarks>
       Ntlm
     }
-    
+
     // Allow semicolon delimiters for backward compatibility.
     private static readonly char[] ADDRESS_DELIMITERS = { ',', ';' };
 

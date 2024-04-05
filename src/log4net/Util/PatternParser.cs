@@ -292,7 +292,7 @@ namespace log4net.Util
         PatternConverter pc;
         try
         {
-          pc = (PatternConverter)Activator.CreateInstance(converterInfo.Type);
+          pc = Activator.CreateInstance(converterInfo.Type.EnsureNotNull()).EnsureIs<PatternConverter>();
         }
         catch (Exception createInstanceEx)
         {

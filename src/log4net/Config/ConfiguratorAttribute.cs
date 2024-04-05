@@ -81,9 +81,9 @@ namespace log4net.Config
     /// randomly ordered.
     /// </para>
     /// </remarks>
-    public int CompareTo(object obj)
+    public int CompareTo(object? obj)
     {
-      if (ReferenceEquals(this ,obj))
+      if (ReferenceEquals(this, obj))
       {
         return 0;
       }

@@ -56,8 +56,8 @@ namespace log4net.Util.TypeConverters
     /// <returns>the converted object</returns>
     /// <remarks>
     /// <para>
-    /// Uses the <see cref="Boolean.Parse"/> method to convert the
-    /// <see cref="String"/> argument to a <see cref="Boolean"/>.
+    /// Uses the <see cref="bool.Parse(string)"/> method to convert the
+    /// <see cref="string"/> argument to a <see cref="bool"/>.
     /// </para>
     /// </remarks>
     /// <exception cref="ConversionNotSupportedException">

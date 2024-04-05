@@ -390,30 +390,28 @@ namespace log4net.Appender
         {
           // Create transaction
           // NJC - Do this on 2 lines because it can confuse the debugger
-          using (IDbTransaction dbTran = Connection.BeginTransaction())
+          using IDbTransaction dbTran = Connection.BeginTransaction();
+          try
           {
+            SendBuffer(dbTran, events);
+
+            // commit transaction
+            dbTran.Commit();
+          }
+          catch (Exception ex)
+          {
+            // rollback the transaction
             try
             {
-              SendBuffer(dbTran, events);
-
-              // commit transaction
-              dbTran.Commit();
+              dbTran.Rollback();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-              // rollback the transaction
-              try
-              {
-                dbTran.Rollback();
-              }
-              catch (Exception)
-              {
-                // Ignore exception
-              }
-
-              // Can't insert into the database. That's a bad thing
-              ErrorHandler.Error("Exception while writing to database", ex);
+              // Ignore exception
             }
+
+            // Can't insert into the database. That's a bad thing
+            ErrorHandler.Error("Exception while writing to database", ex);
           }
         }
         else
@@ -454,70 +452,66 @@ namespace log4net.Appender
     {
       if (!string.IsNullOrWhiteSpace(CommandText))
       {
-        using (IDbCommand dbCmd = Connection!.CreateCommand())
-        {
-          // Set the command string
-          dbCmd.CommandText = CommandText;
+        using IDbCommand dbCmd = Connection!.CreateCommand();
+        // Set the command string
+        dbCmd.CommandText = CommandText;
 
-          // Set the command type
-          dbCmd.CommandType = CommandType;
-          // Send buffer using the prepared command object
+        // Set the command type
+        dbCmd.CommandType = CommandType;
+        // Send buffer using the prepared command object
+        if (dbTran is not null)
+        {
+          dbCmd.Transaction = dbTran;
+        }
+
+        try
+        {
+          // prepare the command, which is significantly faster
+          Prepare(dbCmd);
+        }
+        catch (Exception)
+        {
           if (dbTran is not null)
           {
-            dbCmd.Transaction = dbTran;
+            // rethrow exception in transaction mode, cuz now transaction is in failed state
+            throw;
           }
 
-          try
+          // ignore prepare exceptions as they can happen without affecting actual logging, eg on npgsql
+        }
+
+        // run for all events
+        foreach (LoggingEvent e in events)
+        {
+          // No need to clear dbCmd.Parameters, just use existing.
+          // Set the parameter values
+          foreach (AdoNetAppenderParameter param in m_parameters)
           {
-            // prepare the command, which is significantly faster
-            Prepare(dbCmd);
-          }
-          catch (Exception)
-          {
-            if (dbTran is not null)
-            {
-              // rethrow exception in transaction mode, cuz now transaction is in failed state
-              throw;
-            }
-
-            // ignore prepare exceptions as they can happen without affecting actual logging, eg on npgsql
+            param.FormatValue(dbCmd, e);
           }
 
-          // run for all events
-          foreach (LoggingEvent e in events)
-          {
-            // No need to clear dbCmd.Parameters, just use existing.
-            // Set the parameter values
-            foreach (AdoNetAppenderParameter param in m_parameters)
-            {
-              param.FormatValue(dbCmd, e);
-            }
-
-            // Execute the query
-            dbCmd.ExecuteNonQuery();
-          }
+          // Execute the query
+          dbCmd.ExecuteNonQuery();
         }
       }
       else
       {
         // create a new command
-        using (IDbCommand dbCmd = Connection!.CreateCommand())
+        using IDbCommand dbCmd = Connection!.CreateCommand();
+        if (dbTran is not null)
         {
-          if (dbTran is not null)
-          {
-            dbCmd.Transaction = dbTran;
-          }
-          // run for all events
-          foreach (LoggingEvent e in events)
-          {
-            // Get the command text from the Layout
-            string logStatement = GetLogStatement(e);
+          dbCmd.Transaction = dbTran;
+        }
+        // run for all events
+        foreach (LoggingEvent e in events)
+        {
+          // Get the command text from the Layout
+          string logStatement = GetLogStatement(e);
 
-            LogLog.Debug(declaringType, $"LogStatement [{logStatement}]");
+          LogLog.Debug(declaringType, $"LogStatement [{logStatement}]");
 
-            dbCmd.CommandText = logStatement;
-            dbCmd.ExecuteNonQuery();
-          }
+          dbCmd.CommandText = logStatement;
+          dbCmd.ExecuteNonQuery();
         }
       }
     }
@@ -557,7 +551,7 @@ namespace log4net.Appender
       }
       else
       {
-        using StringWriter writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
+        using StringWriter writer = new(System.Globalization.CultureInfo.InvariantCulture);
         Layout.Format(writer, logEvent);
         return writer.ToString();
       }
@@ -574,7 +568,7 @@ namespace log4net.Appender
     /// <returns>An <see cref="IDbConnection"/> instance with a valid connection string.</returns>
     protected virtual IDbConnection CreateConnection(Type connectionType, string connectionString)
     {
-      IDbConnection connection = (IDbConnection)Activator.CreateInstance(connectionType);
+      IDbConnection connection = Activator.CreateInstance(connectionType).EnsureIs<IDbConnection>();
       connection.ConnectionString = connectionString;
       return connection;
     }
@@ -587,7 +581,7 @@ namespace log4net.Appender
     /// <returns>A connection string used to connect to the database.</returns>
     protected virtual string ResolveConnectionString(out string connectionStringContext)
     {
-      if (ConnectionString is not null && ConnectionString.Length > 0)
+      if (ConnectionString is string { Length: > 0 })
       {
         connectionStringContext = "ConnectionString";
         return ConnectionString;
@@ -607,7 +601,7 @@ namespace log4net.Appender
         }
       }
 
-      if (AppSettingsKey is not null && AppSettingsKey.Length > 0)
+      if (AppSettingsKey is string { Length: > 0 })
       {
         connectionStringContext = "AppSettingsKey";
         string? appSettingsConnectionString = SystemInfo.GetAppSetting(AppSettingsKey);
@@ -643,7 +637,7 @@ namespace log4net.Appender
       {
         if (SystemInfo.GetTypeFromString(ConnectionType, true, false) is Type t)
         {
-            return t;
+          return t;
         }
         throw new InvalidOperationException($"Connection type {ConnectionType} was not found in any assembly");
       }
@@ -931,7 +925,7 @@ namespace log4net.Appender
     public virtual void FormatValue(IDbCommand command, LoggingEvent loggingEvent)
     {
       // Lookup the parameter
-      IDbDataParameter param = (IDbDataParameter)command.Parameters[ParameterName];
+      IDbDataParameter param = (IDbDataParameter)command.Parameters[ParameterName.EnsureNotNull()];
 
       // Format the value
       object? formattedValue = Layout?.Format(loggingEvent);

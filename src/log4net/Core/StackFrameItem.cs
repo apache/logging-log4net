@@ -47,7 +47,7 @@ namespace log4net.Core
       {
         // get frame values
         LineNumber = frame.GetFileLineNumber().ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
-        FileName = frame.GetFileName();
+        FileName = frame.GetFileName() ?? string.Empty;
 
         // get method values
         if (frame.GetMethod() is MethodBase method)
