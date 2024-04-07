@@ -1,8 +1,11 @@
 <Project>
-    <PropertyGroup>
-        <UseSharedCompilation>true</UseSharedCompilation>
-        <LangVersion>latest</LangVersion>
-        <Nullable>Enable</Nullable>
-        <WarningsAsErrors>nullable</WarningsAsErrors>
-    </PropertyGroup>
+  <PropertyGroup Label="Versioning">
+    <VersionPrefix>3.0.0</VersionPrefix>
+  </PropertyGroup>
+  <PropertyGroup>
+    <UseSharedCompilation>true</UseSharedCompilation>
+    <LangVersion>latest</LangVersion>
+    <Nullable>Enable</Nullable>
+    <WarningsAsErrors>nullable</WarningsAsErrors>
+  </PropertyGroup>
 </Project>
