@@ -73,23 +73,13 @@ namespace log4net.Plugin
     /// A <c>PluginCollection</c> wrapper that is read-only.
     /// </returns>
     public static PluginCollection ReadOnly(PluginCollection list)
-    {
-      if (list is null)
-      {
-        throw new ArgumentNullException(nameof(list));
-      }
-
-      return new ReadOnlyPluginCollection(list);
-    }
+      => new ReadOnlyPluginCollection(list.EnsureNotNull());
 
     /// <summary>
     ///  Initializes a new instance of the <c>PluginCollection</c> class
     ///  that is empty and has the default initial capacity.
     /// </summary>
-    public PluginCollection()
-    {
-      m_array = new IPlugin[DEFAULT_CAPACITY];
-    }
+    public PluginCollection() => m_array = new IPlugin[DEFAULT_CAPACITY];
 
     /// <summary>
     /// Initializes a new instance of the <c>PluginCollection</c> class
@@ -98,10 +88,7 @@ namespace log4net.Plugin
     /// <param name="capacity">
     /// The number of elements that the new <c>PluginCollection</c> is initially capable of storing.
     /// </param>
-    public PluginCollection(int capacity)
-    {
-      m_array = new IPlugin[capacity];
-    }
+    public PluginCollection(int capacity) => m_array = new IPlugin[capacity];
 
     /// <summary>
     /// Initializes a new instance of the <c>PluginCollection</c> class
@@ -179,10 +166,7 @@ namespace log4net.Plugin
     /// <see cref="IPlugin"/> array.
     /// </summary>
     /// <param name="array">The one-dimensional <see cref="IPlugin"/> array to copy to.</param>
-    public virtual void CopyTo(IPlugin[] array)
-    {
-      CopyTo(array, 0);
-    }
+    public virtual void CopyTo(IPlugin[] array) => CopyTo(array, 0);
 
     /// <summary>
     /// Copies the entire <c>PluginCollection</c> to a one-dimensional
@@ -409,10 +393,7 @@ namespace log4net.Plugin
     /// Returns an enumerator that can iterate through the <c>PluginCollection</c>.
     /// </summary>
     /// <returns>An <see cref="Enumerator"/> for the entire <c>PluginCollection</c>.</returns>
-    public virtual IPluginCollectionEnumerator GetEnumerator()
-    {
-      return new Enumerator(this);
-    }
+    public virtual IPluginCollectionEnumerator GetEnumerator() => new Enumerator(this);
 
     /// <summary>
     /// Gets or sets the number of elements the <c>PluginCollection</c> can contain.
@@ -527,20 +508,14 @@ namespace log4net.Plugin
     /// <summary>
     /// Sets the capacity to the actual number of elements.
     /// </summary>
-    public virtual void TrimToSize()
-    {
-      Capacity = m_count;
-    }
+    public virtual void TrimToSize() => Capacity = m_count;
 
     /// <exception cref="ArgumentOutOfRangeException">
     /// <para><paramref name="i"/> is less than zero.</para>
     /// <para>-or-</para>
     /// <para><paramref name="i"/> is equal to or greater than <see cref="PluginCollection.Count"/>.</para>
     /// </exception>
-    private void ValidateIndex(int i)
-    {
-      ValidateIndex(i, false);
-    }
+    private void ValidateIndex(int i) => ValidateIndex(i, false);
 
     /// <exception cref="ArgumentOutOfRangeException">
     /// <para><paramref name="i"/> is less than zero.</para>
@@ -567,51 +542,27 @@ namespace log4net.Plugin
       Capacity = newCapacity;
     }
 
-    void ICollection.CopyTo(Array array, int start)
-    {
-      Array.Copy(m_array, 0, array, start, m_count);
-    }
+    void ICollection.CopyTo(Array array, int start) => Array.Copy(m_array, 0, array, start, m_count);
 
-    object IList.this[int i]
+    object? IList.this[int i]
     {
       get => this[i];
-      set => this[i] = (IPlugin)value;
+      set => this[i] = value.EnsureIs<IPlugin>();
     }
 
-    int IList.Add(object x)
-    {
-      return Add((IPlugin)x);
-    }
+    int IList.Add(object? x) => Add(x.EnsureIs<IPlugin>());
 
-    bool IList.Contains(object x)
-    {
-      return Contains((IPlugin)x);
-    }
+    bool IList.Contains(object? x) => Contains(x.EnsureIs<IPlugin>());
 
-    int IList.IndexOf(object x)
-    {
-      return IndexOf((IPlugin)x);
-    }
+    int IList.IndexOf(object? x) => IndexOf(x.EnsureIs<IPlugin>());
 
-    void IList.Insert(int pos, object x)
-    {
-      Insert(pos, (IPlugin)x);
-    }
+    void IList.Insert(int pos, object? x) => Insert(pos, x.EnsureIs<IPlugin>());
 
-    void IList.Remove(object x)
-    {
-      Remove((IPlugin)x);
-    }
+    void IList.Remove(object? x) => Remove(x.EnsureIs<IPlugin>());
 
-    void IList.RemoveAt(int pos)
-    {
-      RemoveAt(pos);
-    }
+    void IList.RemoveAt(int pos) => RemoveAt(pos);
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-      return (IEnumerator)GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => (IEnumerator)GetEnumerator();
 
     /// <summary>
     /// Supports simple iteration over a <see cref="PluginCollection"/>.
@@ -663,10 +614,7 @@ namespace log4net.Plugin
       /// <summary>
       /// Sets the enumerator to its initial position, before the first element in the collection.
       /// </summary>
-      public void Reset()
-      {
-        m_index = -1;
-      }
+      public void Reset() => m_index = -1;
 
       object IEnumerator.Current => Current;
     }
@@ -681,15 +629,9 @@ namespace log4net.Plugin
         m_collection = list;
       }
 
-      public override void CopyTo(IPlugin[] array)
-      {
-        m_collection.CopyTo(array);
-      }
+      public override void CopyTo(IPlugin[] array) => m_collection.CopyTo(array);
 
-      public override void CopyTo(IPlugin[] array, int start)
-      {
-        m_collection.CopyTo(array, start);
-      }
+      public override void CopyTo(IPlugin[] array, int start) => m_collection.CopyTo(array, start);
 
       public override int Count => m_collection.Count;
 
@@ -703,34 +645,19 @@ namespace log4net.Plugin
         set => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
       }
 
-      public override int Add(IPlugin x)
-      {
-        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
-      }
+      public override int Add(IPlugin x) => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
 
-      public override void Clear()
-      {
-        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
-      }
+      public override void Clear() => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
 
       public override bool Contains(IPlugin x) => m_collection.Contains(x);
 
       public override int IndexOf(IPlugin x) => m_collection.IndexOf(x);
 
-      public override void Insert(int pos, IPlugin x)
-      {
-        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
-      }
+      public override void Insert(int pos, IPlugin x) => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
 
-      public override void Remove(IPlugin x)
-      {
-        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
-      }
+      public override void Remove(IPlugin x) => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
 
-      public override void RemoveAt(int pos)
-      {
-        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
-      }
+      public override void RemoveAt(int pos) => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
 
       public override bool IsFixedSize => true;
 
@@ -745,15 +672,9 @@ namespace log4net.Plugin
         set => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
       }
 
-      public override int AddRange(PluginCollection x)
-      {
-        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
-      }
+      public override int AddRange(PluginCollection x) => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
 
-      public override int AddRange(IPlugin[] x)
-      {
-        throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
-      }
+      public override int AddRange(IPlugin[] x) => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
     }
   }
 }

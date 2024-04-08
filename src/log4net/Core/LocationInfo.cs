@@ -71,7 +71,7 @@ namespace log4net.Core
     /// class based on the current thread.
     /// </para>
     /// </remarks>
-    public LocationInfo(Type? callerStackBoundaryDeclaringType) 
+    public LocationInfo(Type? callerStackBoundaryDeclaringType)
     {
       // Initialize all fields
       ClassName = NA;
@@ -86,12 +86,12 @@ namespace log4net.Core
         {
           StackTrace st = new StackTrace(true);
           int frameIndex = 0;
-                                        
+
           // skip frames not from fqnOfCallingClass
           while (frameIndex < st.FrameCount)
           {
-            StackFrame frame = st.GetFrame(frameIndex);
-            if (frame is not null && frame.GetMethod().DeclaringType == callerStackBoundaryDeclaringType)
+            if (st.GetFrame(frameIndex) is StackFrame frame
+                && frame.GetMethod()?.DeclaringType == callerStackBoundaryDeclaringType)
             {
               break;
             }
@@ -101,8 +101,8 @@ namespace log4net.Core
           // skip frames from fqnOfCallingClass
           while (frameIndex < st.FrameCount)
           {
-            StackFrame frame = st.GetFrame(frameIndex);
-            if (frame is not null && frame.GetMethod().DeclaringType != callerStackBoundaryDeclaringType)
+            if (st.GetFrame(frameIndex) is StackFrame frame
+                && frame.GetMethod()?.DeclaringType != callerStackBoundaryDeclaringType)
             {
               break;
             }
@@ -115,23 +115,22 @@ namespace log4net.Core
             int adjustedFrameCount = st.FrameCount - frameIndex;
             var stackFramesList = new List<StackFrameItem>(adjustedFrameCount);
             StackFrames = new StackFrameItem[adjustedFrameCount];
-            for (int i = frameIndex; i < st.FrameCount; i++) 
+            for (int i = frameIndex; i < st.FrameCount; i++)
             {
-              stackFramesList.Add(new StackFrameItem(st.GetFrame(i)));
-            }
-                        
-            stackFramesList.CopyTo(StackFrames, 0);
-            
-            // now frameIndex is the first 'user' caller frame
-            StackFrame locationFrame = st.GetFrame(frameIndex);
-
-            if (locationFrame is not null)
-            {
-              System.Reflection.MethodBase method = locationFrame.GetMethod();
-
-              if (method is not null)
+              if (st.GetFrame(i) is StackFrame frame)
               {
-                MethodName =  method.Name;
+                stackFramesList.Add(new StackFrameItem(frame));
+              }
+            }
+
+            stackFramesList.CopyTo(StackFrames, 0);
+
+            // now frameIndex is the first 'user' caller frame
+            if (st.GetFrame(frameIndex) is StackFrame locationFrame)
+            {
+              if (locationFrame.GetMethod() is System.Reflection.MethodBase method)
+              {
+                MethodName = method.Name;
                 if (method.DeclaringType is not null)
                 {
                   ClassName = method.DeclaringType.FullName;
@@ -145,7 +144,7 @@ namespace log4net.Core
             }
           }
         }
-        catch(System.Security.SecurityException)
+        catch (System.Security.SecurityException)
         {
           // This security exception will occur if the caller does not have 
           // some undefined set of SecurityPermission flags.
@@ -192,10 +191,10 @@ namespace log4net.Core
       // Use member names from log4net 2.x implicit serialzation for cross-version compat.
       ClassName = info.GetString("m_className");
       FileName = info.GetString("m_fileName");
-      LineNumber = info.GetString("m_lineNumber");
-      MethodName = info.GetString("m_methodName");
-      FullInfo = info.GetString("m_fullInfo");
-      StackFrames = (StackFrameItem[])info.GetValue("m_stackFrames", typeof(StackFrameItem[]));
+      LineNumber = info.GetString("m_lineNumber") ?? string.Empty;
+      MethodName = info.GetString("m_methodName") ?? string.Empty;
+      FullInfo = info.GetString("m_fullInfo") ?? string.Empty;
+      StackFrames = info.GetValue("m_stackFrames", typeof(StackFrameItem[])) as StackFrameItem[];
     }
 
     /// <summary>

@@ -21,12 +21,13 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Security;
 using System.Security.Principal;
 using System.Threading;
-using log4net.Util;
 using log4net.Repository;
+using log4net.Util;
 
 namespace log4net.Core
 {
@@ -187,7 +188,7 @@ namespace log4net.Core
     /// <remarks>
     /// <para>
     /// Except <see cref="TimeStamp"/>, <see cref="Level"/> and <see cref="LoggerName"/>, 
-    /// all fields of <c>LoggingEvent</c> are lazily filled when actually needed. Set
+    /// all fields of <see cref="LoggingEvent"/> are lazily filled when actually needed. Set
     /// <see cref="Fix"/> to cache all data locally to prevent inconsistencies.
     /// </para>
     /// <para>This method is called by the log4net framework
@@ -349,7 +350,7 @@ namespace log4net.Core
       // hierarchy but may not be for the target hierarchy that this
       // event may be re-logged into. If it is to be re-logged it may
       // be necessary to re-lookup the level based only on the name.
-      m_data.Level = (Level)info.GetValue("Level", typeof(Level));
+      m_data.Level = info.GetValue("Level", typeof(Level)) as Level;
 
       m_data.Message = info.GetString("Message");
       m_data.ThreadName = info.GetString("ThreadName");
@@ -364,10 +365,10 @@ namespace log4net.Core
         m_data.TimeStampUtc = info.GetDateTime("TimeStamp").ToUniversalTime();
       }
 
-      m_data.LocationInfo = (LocationInfo)info.GetValue("LocationInfo", typeof(LocationInfo));
+      m_data.LocationInfo = info.GetValue("LocationInfo", typeof(LocationInfo)) as LocationInfo;
       m_data.UserName = info.GetString("UserName");
       m_data.ExceptionString = info.GetString("ExceptionString");
-      m_data.Properties = (PropertiesDictionary)info.GetValue("Properties", typeof(PropertiesDictionary));
+      m_data.Properties = info.GetValue("Properties", typeof(PropertiesDictionary)) as PropertiesDictionary;
       m_data.Domain = info.GetString("Domain");
       m_data.Identity = info.GetString("Identity");
 
@@ -650,8 +651,8 @@ namespace log4net.Core
           // '.NET ThreadPool Worker' appears as a default thread name in the .NET 6-7 thread pool.
           // '.NET TP Worker' is the default thread name in the .NET 8+ thread pool.
           // Prefer the numeric thread ID instead.
-          string threadName = Thread.CurrentThread.Name;
-          if (!string.IsNullOrEmpty(threadName) && threadName != ".NET TP Worker" && threadName != ".NET ThreadPool Worker")
+          if (Thread.CurrentThread.Name is string { Length: > 0 } threadName
+              && threadName is not ".NET TP Worker" or ".NET ThreadPool Worker")
           {
             m_data.ThreadName = threadName;
           }
@@ -769,6 +770,12 @@ namespace log4net.Core
     private string? _cachedWindowsIdentityUserName;
     private static string TryReadWindowsIdentityUserName()
     {
+#if !NET462_OR_GREATER
+      if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+      {
+        return string.Empty;
+      }
+#endif
       using var identity = WindowsIdentity.GetCurrent();
       return identity?.Name ?? string.Empty;
     }

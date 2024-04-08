@@ -89,7 +89,8 @@ namespace log4net.Core
     /// with serialized data.
     /// </para>
     /// </remarks>
-    protected LogException(SerializationInfo info, StreamingContext context) : base(info, context)
+    protected LogException(SerializationInfo info, StreamingContext context)
+      : base(info, context)
     {
     }
   }

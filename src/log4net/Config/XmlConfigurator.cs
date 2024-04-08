@@ -567,7 +567,7 @@ namespace log4net.Config
       else
       {
         // Load the config file into a document
-        XmlDocument? doc = new XmlDocument { XmlResolver = null };
+        XmlDocument? doc = new() { XmlResolver = null };
         try
         {
           // Allow the DTD to specify entity includes
@@ -786,7 +786,7 @@ namespace log4net.Config
         // Create a new FileSystemWatcher and set its properties.
         m_watcher = new FileSystemWatcher()
         {
-          Path = m_configFile.DirectoryName,
+          Path = m_configFile.DirectoryName.EnsureNotNull(),
           Filter = m_configFile.Name,
           NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.LastWrite | NotifyFilters.FileName,
         };
@@ -846,10 +846,7 @@ namespace log4net.Config
       /// Called by the timer when the configuration has been updated.
       /// </summary>
       /// <param name="state">null</param>
-      private void OnWatchedFileChange(object state)
-      {
-        XmlConfigurator.InternalConfigure(m_repository, m_configFile);
-      }
+      private void OnWatchedFileChange(object? state) => InternalConfigure(m_repository, m_configFile);
 
       /// <summary>
       /// Release the handles held by the watcher and timer.
@@ -902,7 +899,7 @@ namespace log4net.Config
           // this isolates the xml config data from the rest of
           // the document
           XmlDocument newDoc = new XmlDocument { XmlResolver = null };
-          XmlElement newElement = (XmlElement)newDoc.AppendChild(newDoc.ImportNode(element, true));
+          XmlElement newElement = newDoc.AppendChild(newDoc.ImportNode(element, true)).EnsureIs<XmlElement>();
 
           // Pass the configurator the config element
           configurableRepository.Configure(newElement);

@@ -51,14 +51,7 @@ namespace log4net.Appender
     /// An <c>AppenderCollection</c> wrapper that is read-only.
     /// </returns>
     public static AppenderCollection ReadOnly(AppenderCollection list)
-    {
-      if (list is null)
-      {
-        throw new ArgumentNullException(nameof(list));
-      }
-
-      return new ReadOnlyAppenderCollection(list);
-    }
+      => new ReadOnlyAppenderCollection(list.EnsureNotNull());
 
     /// <summary>
     /// An empty readonly static AppenderCollection
@@ -69,10 +62,7 @@ namespace log4net.Appender
     /// Initializes a new instance of the <c>AppenderCollection</c> class
     /// that is empty and has the default initial capacity.
     /// </summary>
-    public AppenderCollection()
-    {
-      m_array = new IAppender[DEFAULT_CAPACITY];
-    }
+    public AppenderCollection() => m_array = new IAppender[DEFAULT_CAPACITY];
 
     /// <summary>
     /// Initializes a new instance of the <c>AppenderCollection</c> class
@@ -81,10 +71,7 @@ namespace log4net.Appender
     /// <param name="capacity">
     /// The number of elements that the new <c>AppenderCollection</c> is initially capable of storing.
     /// </param>
-    public AppenderCollection(int capacity)
-    {
-      m_array = new IAppender[capacity];
-    }
+    public AppenderCollection(int capacity) => m_array = new IAppender[capacity];
 
     /// <summary>
     /// Initializes a new instance of the <c>AppenderCollection</c> class
@@ -530,10 +517,13 @@ namespace log4net.Appender
       }
     }
 
-    object IList.this[int i]
+    object? IList.this[int i]
     {
       get => this[i];
-      set => this[i] = (IAppender)value;
+      set
+      {
+        this[i] = value.EnsureIs<IAppender>();
+      }
     }
 
     int IList.Add(object? x)
@@ -556,11 +546,11 @@ namespace log4net.Appender
       return false;
     }
 
-    int IList.IndexOf(object x) => IndexOf((IAppender)x);
+    int IList.IndexOf(object? x) => IndexOf(x.EnsureIs<IAppender>());
 
-    void IList.Insert(int pos, object x) => Insert(pos, (IAppender)x);
+    void IList.Insert(int pos, object? x) => Insert(pos, x.EnsureIs<IAppender>());
 
-    void IList.Remove(object x) => Remove((IAppender)x);
+    void IList.Remove(object? x) => Remove(x.EnsureIs<IAppender>());
 
     void IList.RemoveAt(int pos) => RemoveAt(pos);
 

@@ -154,13 +154,7 @@ namespace log4net.Core
     /// </para>
     /// </remarks>
     public static ILoggerRepository GetRepository(string repository)
-    {
-      if (repository is null)
-      {
-        throw new ArgumentNullException(nameof(repository));
-      }
-      return RepositorySelector.GetRepository(repository);
-    }
+      => RepositorySelector.GetRepository(repository.EnsureNotNull());
 
     /// <summary>
     /// Returns the default <see cref="ILoggerRepository"/> instance.
@@ -173,13 +167,7 @@ namespace log4net.Core
     /// </para>
     /// </remarks>
     public static ILoggerRepository GetRepository(Assembly repositoryAssembly)
-    {
-      if (repositoryAssembly is null)
-      {
-        throw new ArgumentNullException(nameof(repositoryAssembly));
-      }
-      return RepositorySelector.GetRepository(repositoryAssembly);
-    }
+      => RepositorySelector.GetRepository(repositoryAssembly.EnsureNotNull());
 
     /// <summary>
     /// Returns the named logger if it exists.
@@ -198,17 +186,7 @@ namespace log4net.Core
     /// </para>
     /// </remarks>
     public static ILogger? Exists(string repository, string name)
-    {
-      if (repository is null)
-      {
-        throw new ArgumentNullException(nameof(repository));
-      }
-      if (name is null)
-      {
-        throw new ArgumentNullException(nameof(name));
-      }
-      return RepositorySelector.GetRepository(repository).Exists(name);
-    }
+      => RepositorySelector.GetRepository(repository.EnsureNotNull()).Exists(name.EnsureNotNull());
 
     /// <summary>
     /// Returns the named logger if it exists.
@@ -227,17 +205,7 @@ namespace log4net.Core
     /// </para>
     /// </remarks>
     public static ILogger? Exists(Assembly repositoryAssembly, string name)
-    {
-      if (repositoryAssembly is null)
-      {
-        throw new ArgumentNullException(nameof(repositoryAssembly));
-      }
-      if (name is null)
-      {
-        throw new ArgumentNullException(nameof(name));
-      }
-      return RepositorySelector.GetRepository(repositoryAssembly).Exists(name);
-    }
+      => RepositorySelector.GetRepository(repositoryAssembly.EnsureNotNull()).Exists(name.EnsureNotNull());
 
     /// <summary>
     /// Returns all the currently defined loggers in the specified repository.
@@ -250,13 +218,7 @@ namespace log4net.Core
     /// </para>
     /// </remarks>
     public static ILogger[] GetCurrentLoggers(string repository)
-    {
-      if (repository is null)
-      {
-        throw new ArgumentNullException(nameof(repository));
-      }
-      return RepositorySelector.GetRepository(repository).GetCurrentLoggers();
-    }
+      => RepositorySelector.GetRepository(repository.EnsureNotNull()).GetCurrentLoggers();
 
     /// <summary>
     /// Returns all the currently defined loggers in the specified assembly's repository.
@@ -269,13 +231,7 @@ namespace log4net.Core
     /// </para>
     /// </remarks>
     public static ILogger[] GetCurrentLoggers(Assembly repositoryAssembly)
-    {
-      if (repositoryAssembly is null)
-      {
-        throw new ArgumentNullException(nameof(repositoryAssembly));
-      }
-      return RepositorySelector.GetRepository(repositoryAssembly).GetCurrentLoggers();
-    }
+      => RepositorySelector.GetRepository(repositoryAssembly.EnsureNotNull()).GetCurrentLoggers();
 
     /// <summary>
     /// Retrieves or creates a named logger.
@@ -297,17 +253,7 @@ namespace log4net.Core
     /// </para>
     /// </remarks>
     public static ILogger GetLogger(string repository, string name)
-    {
-      if (repository is null)
-      {
-        throw new ArgumentNullException(nameof(repository));
-      }
-      if (name is null)
-      {
-        throw new ArgumentNullException(nameof(name));
-      }
-      return RepositorySelector.GetRepository(repository).GetLogger(name);
-    }
+      => RepositorySelector.GetRepository(repository.EnsureNotNull()).GetLogger(name.EnsureNotNull());
 
     /// <summary>
     /// Retrieves or creates a named logger.
@@ -329,17 +275,7 @@ namespace log4net.Core
     /// </para>
     /// </remarks>
     public static ILogger GetLogger(Assembly repositoryAssembly, string name)
-    {
-      if (repositoryAssembly is null)
-      {
-        throw new ArgumentNullException(nameof(repositoryAssembly));
-      }
-      if (name is null)
-      {
-        throw new ArgumentNullException(nameof(name));
-      }
-      return RepositorySelector.GetRepository(repositoryAssembly).GetLogger(name);
-    }
+      => RepositorySelector.GetRepository(repositoryAssembly.EnsureNotNull()).GetLogger(name.EnsureNotNull());
 
     /// <summary>
     /// Shorthand for <see cref="M:LogManager.GetLogger(string)"/>.
@@ -354,19 +290,11 @@ namespace log4net.Core
     /// </remarks>
     public static ILogger GetLogger(string repository, Type type)
     {
-      if (repository is null)
-      {
-        throw new ArgumentNullException(nameof(repository));
-      }
-      if (type is null)
-      {
-        throw new ArgumentNullException(nameof(type));
-      }
-      if (type.FullName is null)
+      if (type.EnsureNotNull().FullName is not string name)
       {
         throw new ArgumentException($"Type {type} does not have a full name", nameof(type));
       }
-      return RepositorySelector.GetRepository(repository).GetLogger(type.FullName);
+      return RepositorySelector.GetRepository(repository.EnsureNotNull()).GetLogger(name);
     }
 
     /// <summary>
@@ -382,19 +310,11 @@ namespace log4net.Core
     /// </remarks>
     public static ILogger GetLogger(Assembly repositoryAssembly, Type type)
     {
-      if (repositoryAssembly is null)
-      {
-        throw new ArgumentNullException(nameof(repositoryAssembly));
-      }
-      if (type is null)
-      {
-        throw new ArgumentNullException(nameof(type));
-      }
-      if (type.FullName is null)
+      if (type.EnsureNotNull().FullName is not string name)
       {
         throw new ArgumentException($"Type {type} does not have a full name", nameof(type));
       }
-      return RepositorySelector.GetRepository(repositoryAssembly).GetLogger(type.FullName);
+      return RepositorySelector.GetRepository(repositoryAssembly.EnsureNotNull()).GetLogger(name);
     }
 
     /// <summary>
@@ -447,13 +367,7 @@ namespace log4net.Core
     /// </para>
     /// </remarks>
     public static void ShutdownRepository(string repository)
-    {
-      if (repository is null)
-      {
-        throw new ArgumentNullException(nameof(repository));
-      }
-      RepositorySelector.GetRepository(repository).Shutdown();
-    }
+      => RepositorySelector.GetRepository(repository.EnsureNotNull()).Shutdown();
 
     /// <summary>
     /// Shuts down the repository for the repository specified.
@@ -478,13 +392,7 @@ namespace log4net.Core
     /// </para>
     /// </remarks>
     public static void ShutdownRepository(Assembly repositoryAssembly)
-    {
-      if (repositoryAssembly is null)
-      {
-        throw new ArgumentNullException(nameof(repositoryAssembly));
-      }
-      RepositorySelector.GetRepository(repositoryAssembly).Shutdown();
-    }
+      => RepositorySelector.GetRepository(repositoryAssembly.EnsureNotNull()).Shutdown();
 
     /// <summary>
     /// Resets all values contained in this repository instance to their defaults.
@@ -501,13 +409,7 @@ namespace log4net.Core
     /// </para>    
     /// </remarks>
     public static void ResetConfiguration(string repository)
-    {
-      if (repository is null)
-      {
-        throw new ArgumentNullException(nameof(repository));
-      }
-      RepositorySelector.GetRepository(repository).ResetConfiguration();
-    }
+      => RepositorySelector.GetRepository(repository.EnsureNotNull()).ResetConfiguration();
 
     /// <summary>
     /// Resets all values contained in this repository instance to their defaults.
@@ -524,13 +426,7 @@ namespace log4net.Core
     /// </para>    
     /// </remarks>
     public static void ResetConfiguration(Assembly repositoryAssembly)
-    {
-      if (repositoryAssembly is null)
-      {
-        throw new ArgumentNullException(nameof(repositoryAssembly));
-      }
-      RepositorySelector.GetRepository(repositoryAssembly).ResetConfiguration();
-    }
+      => RepositorySelector.GetRepository(repositoryAssembly.EnsureNotNull()).ResetConfiguration();
 
     /// <summary>
     /// Creates a repository with the specified name.
@@ -549,13 +445,7 @@ namespace log4net.Core
     /// </remarks>
     /// <exception cref="LogException">The specified repository already exists.</exception>
     public static ILoggerRepository CreateRepository(string repository)
-    {
-      if (repository is null)
-      {
-        throw new ArgumentNullException(nameof(repository));
-      }
-      return RepositorySelector.CreateRepository(repository, null);
-    }
+      => RepositorySelector.CreateRepository(repository.EnsureNotNull(), null);
 
     /// <summary>
     /// Creates a repository with the specified name and repository type.
@@ -573,17 +463,7 @@ namespace log4net.Core
     /// </remarks>
     /// <exception cref="LogException">The specified repository already exists.</exception>
     public static ILoggerRepository CreateRepository(string repository, Type repositoryType)
-    {
-      if (repository is null)
-      {
-        throw new ArgumentNullException(nameof(repository));
-      }
-      if (repositoryType is null)
-      {
-        throw new ArgumentNullException(nameof(repositoryType));
-      }
-      return RepositorySelector.CreateRepository(repository, repositoryType);
-    }
+      => RepositorySelector.CreateRepository(repository.EnsureNotNull(), repositoryType.EnsureNotNull());
 
     /// <summary>
     /// Creates a repository for the specified assembly and repository type.
@@ -601,17 +481,7 @@ namespace log4net.Core
     /// </para>
     /// </remarks>
     public static ILoggerRepository CreateRepository(Assembly repositoryAssembly, Type repositoryType)
-    {
-      if (repositoryAssembly is null)
-      {
-        throw new ArgumentNullException(nameof(repositoryAssembly));
-      }
-      if (repositoryType is null)
-      {
-        throw new ArgumentNullException(nameof(repositoryType));
-      }
-      return RepositorySelector.CreateRepository(repositoryAssembly, repositoryType);
-    }
+      => RepositorySelector.CreateRepository(repositoryAssembly.EnsureNotNull(), repositoryType.EnsureNotNull());
 
     /// <summary>
     /// Gets an array of all currently defined repositories.
@@ -622,10 +492,7 @@ namespace log4net.Core
     /// Gets an array of all currently defined repositories.
     /// </para>
     /// </remarks>
-    public static ILoggerRepository[] GetAllRepositories()
-    {
-      return RepositorySelector.GetAllRepositories();
-    }
+    public static ILoggerRepository[] GetAllRepositories() => RepositorySelector.GetAllRepositories();
 
     /// <summary>
     /// Gets or sets the repository selector used by the <see cref="LogManager" />.
@@ -680,10 +547,7 @@ namespace log4net.Core
     /// When the event is triggered the log4net system is <see cref="M:Shutdown()"/>.
     /// </para>
     /// </remarks>
-    private static void OnDomainUnload(object sender, EventArgs e)
-    {
-      Shutdown();
-    }
+    private static void OnDomainUnload(object? sender, EventArgs e) => Shutdown();
 
     /// <summary>
     /// Called when the <see cref="AppDomain.ProcessExit"/> event fires
@@ -698,10 +562,7 @@ namespace log4net.Core
     /// When the event is triggered the log4net system is <see cref="M:Shutdown()"/>.
     /// </para>
     /// </remarks>
-    private static void OnProcessExit(object sender, EventArgs e)
-    {
-      Shutdown();
-    }
+    private static void OnProcessExit(object? sender, EventArgs e) => Shutdown();
 
     /// <summary>
     /// The fully qualified type of the LoggerManager class.

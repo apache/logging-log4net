@@ -291,7 +291,8 @@ namespace log4net.Repository.Hierarchy
       LogLog.Debug(declaringType, $"Loading Appender [{appenderName}] type: [{typeName}]");
       try
       {
-        IAppender appender = (IAppender)Activator.CreateInstance(SystemInfo.GetTypeFromString(typeName, true, true)!);
+        IAppender appender = Activator.CreateInstance(
+          SystemInfo.GetTypeFromString(typeName, true, true).EnsureNotNull()).EnsureIs<IAppender>();
         appender.Name = appenderName;
 
         foreach (XmlNode currentNode in appenderElement.ChildNodes)
@@ -813,15 +814,9 @@ namespace log4net.Repository.Hierarchy
     /// <returns><c>true</c> if the type is creatable using a default constructor, <c>false</c> otherwise</returns>
     private static bool IsTypeConstructible(Type type)
     {
-      if (type.IsClass && !type.IsAbstract)
-      {
-        ConstructorInfo defaultConstructor = type.GetConstructor(Type.EmptyTypes);
-        if (defaultConstructor is not null && !defaultConstructor.IsAbstract && !defaultConstructor.IsPrivate)
-        {
-          return true;
-        }
-      }
-      return false;
+      return type.IsClass && !type.IsAbstract
+        && type.GetConstructor(Type.EmptyTypes) is ConstructorInfo defaultConstructor
+        && !defaultConstructor.IsAbstract && !defaultConstructor.IsPrivate;
     }
 
     /// <summary>
@@ -970,7 +965,7 @@ namespace log4net.Repository.Hierarchy
       object? createdObject;
       try
       {
-        createdObject = Activator.CreateInstance(objectType!);
+        createdObject = Activator.CreateInstance(objectType!).EnsureNotNull();
       }
       catch (Exception createInstanceEx)
       {

@@ -1,4 +1,4 @@
-#region Apache License
+﻿#region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more 
 // contributor license agreements. See the NOTICE file distributed with
@@ -17,29 +17,23 @@
 //
 #endregion
 
-namespace System.Diagnostics.CodeAnalysis;
+// inspired by https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Runtime/CompilerServices/CallerArgumentExpressionAttribute.cs
 
-// Not available until .NET 6, cloned from .NET code.
+#if !NET6_0_OR_GREATER
+namespace System.Runtime.CompilerServices;
 
 /// <summary>
-/// Specifies that the output will be non-null if the named parameter is non-null.
+/// Indicates that a parameter captures the expression passed for another parameter as a string.
 /// </summary>
-[AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue,
-  AllowMultiple = true, Inherited = false)]
-internal sealed class NotNullIfNotNullAttribute : Attribute
+[AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
+internal sealed class CallerArgumentExpressionAttribute : Attribute
 {
   /// <summary>
-  /// Initializes the attribute with the associated parameter name.
-  /// </summary>
-  /// <param name="parameterName">
-  /// The associated parameter name.
-  /// The output will be non-null if the argument to the parameter specified is non-null.
-  /// </param>
-  public NotNullIfNotNullAttribute(string parameterName)
-    => ParameterName = parameterName;
-
-  /// <summary>
-  /// Gets the associated parameter name.
+  /// Name of the parameter whose expression should be captured as a string
   /// </summary>
   public string ParameterName { get; }
+
+  /// <inheritdoc/>
+  public CallerArgumentExpressionAttribute(string parameterName) => ParameterName = parameterName;
 }
+#endif

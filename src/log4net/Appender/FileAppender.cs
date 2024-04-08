@@ -62,11 +62,11 @@ namespace log4net.Appender
   /// <para>
   /// The <see cref="FileAppender"/> supports pluggable file locking models via
   /// the <see cref="LockingModel"/> property.
-  /// The default behavior, implemented by <see cref="FileAppender.ExclusiveLock"/> 
+  /// The default behavior, implemented by <see cref="ExclusiveLock"/> 
   /// is to obtain an exclusive write lock on the file until this appender is closed.
   /// The alternative models only hold a
-  /// write lock while the appender is writing a logging event (<see cref="FileAppender.MinimalLock"/>)
-  /// or synchronize by using a named system-wide Mutex (<see cref="FileAppender.InterProcessLock"/>).
+  /// write lock while the appender is writing a logging event (<see cref="MinimalLock"/>)
+  /// or synchronize by using a named system-wide Mutex (<see cref="InterProcessLock"/>).
   /// </para>
   /// <para>
   /// All locking strategies have issues and you should seriously consider using a different strategy that
@@ -111,15 +111,7 @@ namespace log4net.Appender
       private readonly LockingModelBase m_lockingModel;
       private int m_lockLevel;
 
-      public LockingStream(LockingModelBase locking)
-      {
-        if (locking is null)
-        {
-          throw new ArgumentNullException(nameof(locking));
-        }
-
-        m_lockingModel = locking;
-      }
+      public LockingStream(LockingModelBase locking) => m_lockingModel = locking.EnsureNotNull();
 
       protected override void Dispose(bool disposing)
       {
@@ -479,7 +471,7 @@ namespace log4net.Appender
       /// </remarks>
       public override Stream? AcquireLock()
       {
-          return m_stream;
+        return m_stream;
       }
 
       /// <summary>
@@ -519,7 +511,7 @@ namespace log4net.Appender
     /// <para>
     /// Opens the file once for each <see cref="AcquireLock"/>/<see cref="ReleaseLock"/> cycle, 
     /// thus holding the lock for the minimal amount of time. This method of locking
-    /// is considerably slower than <see cref="FileAppender.ExclusiveLock"/> but allows 
+    /// is considerably slower than <see cref="ExclusiveLock"/> but allows 
     /// other processes to move/delete the log file whilst logging continues.
     /// </para>
     /// </remarks>
@@ -963,7 +955,7 @@ namespace log4net.Appender
     /// </value>
     /// <remarks>
     /// <para>
-    /// The default encoding set is <see cref="System.Text.Encoding.Default"/>
+    /// The default encoding set is <see cref="Encoding.Default"/>
     /// which is the encoding for the system's current ANSI code page.
     /// </para>
     /// </remarks>
@@ -986,26 +978,27 @@ namespace log4net.Appender
     public SecurityContext? SecurityContext { get; set; }
 
     /// <summary>
-    /// Gets or sets the <see cref="FileAppender.LockingModel"/> used to handle locking of the file.
+    /// Gets or sets the <see cref="LockingModel"/> used to handle locking of the file.
     /// </summary>
     /// <value>
-    /// The <see cref="FileAppender.LockingModel"/> used to lock the file.
+    /// The <see cref="LockingModel"/> used to lock the file.
     /// </value>
     /// <remarks>
     /// <para>
-    /// Gets or sets the <see cref="FileAppender.LockingModel"/> used to handle locking of the file.
+    /// Gets or sets the <see cref="LockingModel"/> used to handle locking of the file.
     /// </para>
     /// <para>
-    /// There are three built in locking models, <see cref="FileAppender.ExclusiveLock"/>, <see cref="FileAppender.MinimalLock"/> and <see cref="FileAppender.InterProcessLock"/> .
+    /// There are three built in locking models, <see cref="ExclusiveLock"/>, <see cref="MinimalLock"/> and <see cref="InterProcessLock"/> .
     /// The first locks the file from the start of logging to the end, the 
     /// second locks only for the minimal amount of time when logging each message
     /// and the last synchronizes processes using a named system-wide Mutex.
     /// </para>
     /// <para>
-    /// The default locking model is the <see cref="FileAppender.ExclusiveLock"/>.
+    /// The default locking model is the <see cref="ExclusiveLock"/>.
     /// </para>
     /// </remarks>
-    public LockingModelBase LockingModel { get; set; } = (LockingModelBase)Activator.CreateInstance(defaultLockingModelType);
+    public LockingModelBase LockingModel { get; set; }
+      = Activator.CreateInstance(defaultLockingModelType).EnsureIs<LockingModelBase>();
 
     /// <summary>
     /// Activate the options on the file appender. 

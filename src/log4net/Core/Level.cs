@@ -21,6 +21,7 @@ using System;
 using System.Runtime.Serialization;
 using System.Security;
 using System.Xml.Linq;
+using log4net.Util;
 
 namespace log4net.Core
 {
@@ -99,18 +100,9 @@ namespace log4net.Core
     /// </remarks>
     public Level(int level, string levelName, string displayName)
     {
-      if (levelName is null)
-      {
-        throw new ArgumentNullException(nameof(levelName));
-      }
-      if (displayName is null)
-      {
-        throw new ArgumentNullException(nameof(displayName));
-      }
-
       Value = level;
-      Name = string.Intern(levelName);
-      DisplayName = displayName;
+      Name = string.Intern(levelName.EnsureNotNull());
+      DisplayName = displayName.EnsureNotNull();
     }
 
     /// <summary>
@@ -124,9 +116,9 @@ namespace log4net.Core
     /// the specified level name and value.
     /// </para>
     /// </remarks>
-    public Level(int level, string levelName) : this(level, levelName, levelName)
-    {
-    }
+    public Level(int level, string levelName)
+      : this(level, levelName, levelName)
+    { }
 
     /// <summary>
     /// Serialization constructor
@@ -143,8 +135,8 @@ namespace log4net.Core
     {
       // Use member names from log4net 2.x implicit serialzation for cross-version compat.
       Value = info.GetInt32("m_levelValue");
-      Name = info.GetString("m_levelName");
-      DisplayName = info.GetString("m_levelDisplayName");
+      Name = info.GetString("m_levelName") ?? string.Empty;
+      DisplayName = info.GetString("m_levelDisplayName") ?? string.Empty;
     }
 
     /// <summary>
@@ -196,7 +188,7 @@ namespace log4net.Core
     /// instance.
     /// </para>
     /// </remarks>
-    public override bool Equals(object o)
+    public override bool Equals(object? o)
     {
       if (o is Level otherLevel)
       {
@@ -258,7 +250,7 @@ namespace log4net.Core
     /// </para>
     /// </remarks>
     /// <exception cref="ArgumentException"><paramref name="r" /> is not a <see cref="Level" />.</exception>
-    public int CompareTo(object r)
+    public int CompareTo(object? r)
     {
       if (r is Level target)
       {

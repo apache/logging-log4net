@@ -127,7 +127,7 @@ namespace log4net.Appender
         StreamWriter writer;
 
         // Impersonate to open the file
-        string filePath = Path.Combine(PickupDir, Guid.NewGuid().ToString("N") + m_fileExtension);
+        string filePath = Path.Combine(PickupDir.EnsureNotNull(), Guid.NewGuid().ToString("N") + m_fileExtension);
         using (SecurityContext?.Impersonate(this))
         {
           writer = File.CreateText(filePath);

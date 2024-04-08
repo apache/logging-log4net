@@ -95,10 +95,10 @@ namespace log4net.Util
     {
       get
       {
-#if NETSTANDARD2_0_OR_GREATER
-        return EntryAssemblyLocation + ".config";
-#else
+#if NET462_OR_GREATER
         return AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;
+#else
+        return EntryAssemblyLocation + ".config";
 #endif
       }
     }
@@ -377,7 +377,7 @@ namespace log4net.Util
     /// </remarks>
     public static string AssemblyShortName(Assembly myAssembly)
     {
-      string name = myAssembly.FullName;
+      string name = myAssembly.FullName ?? string.Empty;
       int offset = name.IndexOf(',');
       if (offset > 0)
       {
@@ -694,10 +694,7 @@ namespace log4net.Util
     /// </remarks>
     public static string ConvertToFullPath(string path)
     {
-      if (path is null)
-      {
-        throw new ArgumentNullException(nameof(path));
-      }
+      path.EnsureNotNull();
 
       string baseDirectory = string.Empty;
       try

@@ -47,14 +47,9 @@ namespace log4net.Util
     /// Create a new QuietTextWriter using a writer and error handler
     /// </para>
     /// </remarks>
-    public QuietTextWriter(TextWriter writer, IErrorHandler errorHandler) : base(writer)
-    {
-      if (errorHandler is null)
-      {
-        throw new ArgumentNullException(nameof(errorHandler));
-      }
-      m_errorHandler = errorHandler;
-    }
+    public QuietTextWriter(TextWriter writer, IErrorHandler errorHandler)
+      : base(writer)
+      => m_errorHandler = errorHandler.EnsureNotNull();
 
     /// <summary>
     /// Gets or sets the error handler that all errors are passed to.
@@ -70,15 +65,7 @@ namespace log4net.Util
     public IErrorHandler ErrorHandler
     {
       get => m_errorHandler;
-      set
-      {
-        if (value is null)
-        {
-          // This is a programming error on the part of the enclosing appender.
-          throw new ArgumentNullException(nameof(value));
-        }
-        m_errorHandler = value;
-      }
+      set => m_errorHandler = value.EnsureNotNull();
     }
 
     /// <summary>
@@ -142,7 +129,7 @@ namespace log4net.Util
     /// Writes a string to the output.
     /// </summary>
     /// <param name="value">The string data to write to the output.</param>
-    public override void Write(string value)
+    public override void Write(string? value)
     {
       try
       {
