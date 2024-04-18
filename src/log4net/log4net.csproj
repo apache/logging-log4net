@@ -89,7 +89,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'!='net462'">
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.1" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\log4net.snk">
