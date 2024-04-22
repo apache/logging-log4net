@@ -28,8 +28,8 @@
 
     <menu name="Apache log4net" inherit="top" img="icon-home">
       <item name="About" href="/index.html"/>
-      <item name="Download" href="../download.html"/>
-      <item name="Support" href="../support.html" />
+      <item name="Download" href="https://logging.apache.org/download.html"/>
+      <item name="Support" href="https://logging.apache.org/support.html" />
       <item name="Release Notes" href="/release/release-notes.html"/>
       <item name="License" href="/license.html"/>
     </menu>
