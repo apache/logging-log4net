@@ -28,8 +28,8 @@
 
     <menu name="Apache log4net" inherit="top" img="icon-home">
       <item name="About" href="/index.html"/>
-      <item name="Download" href="/download_log4net.html"/>
-      <item name="Security Reports" href="/release/security-reports.html"/>
+      <item name="Download" href="https://logging.apache.org/download.html"/>
+      <item name="Support" href="https://logging.apache.org/support.html" />
       <item name="Release Notes" href="/release/release-notes.html"/>
       <item name="License" href="/license.html"/>
     </menu>
@@ -53,8 +53,6 @@
     </menu>
 
     <menu name="For Contributors" inherit="top" img="icon-pencil">
-      <item name="Mailing Lists" href="/mail-lists.html"/>
-      <item name="Issue Tracking" href="/issue-tracking.html"/>
       <item name="Repository" href="/source-repository.html"/>
     </menu>
 
@@ -67,7 +65,7 @@
       <item name="License" href="http://www.apache.org/licenses/"/>
       <item name="Sponsorship" href="http://www.apache.org/foundation/sponsorship.html"/>
       <item name="Thanks" href="http://www.apache.org/foundation/thanks.html"/>
-      <item name="Security" href="http://www.apache.org/security/"/>
+      <item name="Security" href="http://logging.apache.org/security.html"/>
       <item name="Conferences" href="http://www.apachecon.com"/>
     </menu>
 </body>
