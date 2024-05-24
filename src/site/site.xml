@@ -28,7 +28,7 @@
 
     <menu name="Apache log4net" inherit="top" img="icon-home">
       <item name="About" href="/index.html"/>
-      <item name="Download" href="https://logging.apache.org/download.html"/>
+      <item name="Download" href="/release/download.html"/>
       <item name="Support" href="https://logging.apache.org/support.html" />
       <item name="Release Notes" href="/release/release-notes.html"/>
       <item name="License" href="/license.html"/>
@@ -45,6 +45,7 @@
 
     <menu name="Manual" inherit="top" img="icon-book">
       <item name="Introduction" href="/release/manual/introduction.html"/>
+      <item name="Installation" href="/release/manual/installation.html"/>
       <item name="Configuration" href="/release/manual/configuration.html"/>
       <item name="Contexts" href="/release/manual/contexts.html"/>
       <item name="Plugins" href="/release/manual/plugins.html"/>
