@@ -138,6 +138,12 @@ method="run" file="Generator.java" line="94"/>
     /// </remarks>
     protected override void FormatXml(XmlWriter writer, LoggingEvent loggingEvent)
     {
+
+#if NETSTANDARD
+            // set namespaces to true for writer
+            ((System.Xml.XmlTextWriter)writer).Namespaces = true;
+#endif
+
       // Translate logging events for log4j
 
       // Translate hostname property
