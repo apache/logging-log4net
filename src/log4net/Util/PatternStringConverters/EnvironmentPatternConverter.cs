@@ -17,9 +17,6 @@
 //
 #endregion
 
-// .NET Compact Framework 1.0 has no support for Environment.GetEnvironmentVariable()
-#if !NETCF
-
 using System;
 using System.IO;
 
@@ -36,7 +33,7 @@ namespace log4net.Util.PatternStringConverters
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
-  internal sealed class EnvironmentPatternConverter : PatternConverter
+  public sealed class EnvironmentPatternConverter : PatternConverter
   {
     /// <summary>
     /// Write an environment variable to the output
@@ -51,30 +48,22 @@ namespace log4net.Util.PatternStringConverters
     /// property.
     /// </para>
     /// </remarks>
-    protected override void Convert(TextWriter writer, object state)
+    public override void Convert(TextWriter writer, object? state)
     {
       try
       {
-        if (this.Option != null && this.Option.Length > 0)
+        if (Option?.Length > 0)
         {
           // Lookup the environment variable
-          string envValue = Environment.GetEnvironmentVariable(this.Option);
+          string? envValue = Environment.GetEnvironmentVariable(Option);
 
-#if NET_2_0 || NETSTANDARD2_0
           // If we didn't see it for the process, try a user level variable.
-          if (envValue == null)
-          {
-            envValue = Environment.GetEnvironmentVariable(this.Option, EnvironmentVariableTarget.User);
-          }
+          envValue ??= Environment.GetEnvironmentVariable(Option, EnvironmentVariableTarget.User);
 
           // If we still didn't find it, try a system level one.
-          if (envValue == null)
-          {
-            envValue = Environment.GetEnvironmentVariable(this.Option, EnvironmentVariableTarget.Machine);
-          }
-#endif          
+          envValue ??= Environment.GetEnvironmentVariable(Option, EnvironmentVariableTarget.Machine);
 
-          if (envValue != null && envValue.Length > 0)
+          if (envValue?.Length > 0)
           {
             writer.Write(envValue);
           }
@@ -93,8 +82,6 @@ namespace log4net.Util.PatternStringConverters
       }
     }
 
-    #region Private Static Fields
-
     /// <summary>
     /// The fully qualified type of the EnvironmentPatternConverter class.
     /// </summary>
@@ -103,9 +90,5 @@ namespace log4net.Util.PatternStringConverters
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(EnvironmentPatternConverter);
-
-    #endregion Private Static Fields
   }
 }
-
-#endif // !NETCF

@@ -56,6 +56,6 @@ namespace log4net.Layout
     /// Implement this method to create your own layout format.
     /// </para>
     /// </remarks>
-    object Format(LoggingEvent loggingEvent);
+    object? Format(LoggingEvent loggingEvent);
   }
 }

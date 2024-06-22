@@ -35,8 +35,6 @@ namespace log4net.Util
   /// <author>Gert Driesen</author>
   public sealed class NullEnumerator : IEnumerator
   {
-    #region Private Instance Constructors
-
     /// <summary>
     /// Initializes a new instance of the <see cref="NullEnumerator" /> class. 
     /// </summary>
@@ -49,27 +47,11 @@ namespace log4net.Util
     {
     }
 
-    #endregion Private Instance Constructors
-
-    #region Public Static Properties
-
     /// <summary>
     /// Get the singleton instance of the <see cref="NullEnumerator" />.
     /// </summary>
     /// <returns>The singleton instance of the <see cref="NullEnumerator" />.</returns>
-    /// <remarks>
-    /// <para>
-    /// Gets the singleton instance of the <see cref="NullEnumerator" />.
-    /// </para>
-    /// </remarks>
-    public static NullEnumerator Instance
-    {
-      get { return s_instance; }
-    }
-
-    #endregion Public Static Properties
-
-    #region Implementation of IEnumerator
+    public static NullEnumerator Instance { get; } = new();
 
     /// <summary>
     /// Gets the current object from the enumerator.
@@ -87,10 +69,7 @@ namespace log4net.Util
     /// </remarks>
     /// <exception cref="InvalidOperationException">The collection is empty and <see cref="Current"/> 
     /// cannot be positioned over a valid location.</exception>
-    public object Current
-    {
-      get { throw new InvalidOperationException(); }
-    }
+    public object Current => throw new InvalidOperationException();
 
     /// <summary>
     /// Test if the enumerator can advance, if so advance
@@ -103,10 +82,7 @@ namespace log4net.Util
     /// will always return <c>false</c>.
     /// </para>
     /// </remarks>
-    public bool MoveNext()
-    {
-      return false;
-    }
+    public bool MoveNext() => false;
 
     /// <summary>
     /// Resets the enumerator back to the start.
@@ -119,16 +95,5 @@ namespace log4net.Util
     public void Reset()
     {
     }
-
-    #endregion Implementation of IEnumerator
-
-    #region Private Static Fields
-
-    /// <summary>
-    /// The singleton instance of the <see cref="NullEnumerator" />.
-    /// </summary>
-    private static readonly NullEnumerator s_instance = new NullEnumerator();
-
-    #endregion Private Static Fields
   }
 }

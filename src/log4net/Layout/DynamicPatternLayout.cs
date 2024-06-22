@@ -17,13 +17,6 @@
 //
 #endregion
 
-
-using System;
-using System.Collections;
-using System.IO;
-
-using log4net.Core;
-using log4net.Layout.Pattern;
 using log4net.Util;
 
 namespace log4net.Layout
@@ -52,19 +45,16 @@ namespace log4net.Layout
   /// </remarks>
   public class DynamicPatternLayout : PatternLayout
   {
-    #region Member Variables
     /// <summary>
     /// The header PatternString
     /// </summary>
-    private PatternString m_headerPatternString = new PatternString("");
+    private PatternString m_headerPatternString = new(string.Empty);
 
     /// <summary>
     /// The footer PatternString
     /// </summary>
-    private PatternString m_footerPatternString = new PatternString("");
-    #endregion
+    private PatternString m_footerPatternString = new(string.Empty);
 
-    #region Constructors
     /// <summary>
     /// Constructs a DynamicPatternLayout using the DefaultConversionPattern
     /// </summary>
@@ -79,20 +69,16 @@ namespace log4net.Layout
     }
 
     /// <summary>
-    /// Constructs a DynamicPatternLayout using the supplied conversion pattern
+    /// Constructs a DynamicPatternLayout using the supplied conversion pattern.
     /// </summary>
-    /// <param name="pattern">the pattern to use</param>
-    /// <remarks>
-    /// </remarks>
+    /// <param name="pattern">The pattern to use.</param>
     public DynamicPatternLayout(string pattern)
       : base(pattern)
     {
     }
-    #endregion
 
-    #region Override implementation of LayoutSkeleton
     /// <summary>
-    /// The header for the layout format.
+    /// Gets or sets the header for the layout format.
     /// </summary>
     /// <value>the layout header</value>
     /// <remarks>
@@ -102,21 +88,21 @@ namespace log4net.Layout
     /// </para>
     /// The pattern will be formatted on each get operation.
     /// </remarks>
-    public override string Header
+    public override string? Header
     {
-      get
-      {
-        return m_headerPatternString.Format();
-      }
+      get => m_headerPatternString.Format();
       set
       {
         base.Header = value;
-        m_headerPatternString = new PatternString(value);
+        if (value is not null)
+        {
+          m_headerPatternString = new PatternString(value);
+        }
       }
-    }    /* property DynamicPatternLayout Header */
+    }
 
     /// <summary>
-    /// The footer for the layout format.
+    /// Gets or sets the footer for the layout format.
     /// </summary>
     /// <value>the layout footer</value>
     /// <remarks>
@@ -126,18 +112,14 @@ namespace log4net.Layout
     /// </para>
     /// The pattern will be formatted on each get operation.
     /// </remarks>
-    public override string Footer
+    public override string? Footer
     {
-      get
-      {
-        return m_footerPatternString.Format();
-      }
+      get => m_footerPatternString.Format();
       set
       {
         base.Footer = value;
         m_footerPatternString = new PatternString(value);
       }
-    }    /* property DynamicPatternLayout Footer */
-    #endregion
-  }      /* class DynamicPatternLayout */
-}        /* namespace log4net.Layout */
+    }
+  }
+}

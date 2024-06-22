@@ -19,9 +19,8 @@
 
 using System;
 using System.Collections;
-#if !NETSTANDARD1_3
+using System.Collections.Generic;
 using System.Reflection;
-#endif
 
 using log4net.Appender;
 using log4net.Layout;
@@ -51,10 +50,8 @@ namespace log4net.Config
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-  public sealed class BasicConfigurator
+  public static class BasicConfigurator
   {
-    #region Private Static Fields
-
     /// <summary>
     /// The fully qualified type of the BasicConfigurator class.
     /// </summary>
@@ -64,27 +61,6 @@ namespace log4net.Config
     /// </remarks>
     private static readonly Type declaringType = typeof(BasicConfigurator);
 
-    #endregion Private Static Fields
-
-    #region Private Instance Constructors
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BasicConfigurator" /> class. 
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Uses a private access modifier to prevent instantiation of this class.
-    /// </para>
-    /// </remarks>
-    private BasicConfigurator()
-    {
-    }
-
-    #endregion Private Instance Constructors
-
-    #region Public Static Methods
-
-#if !NETSTANDARD1_3
     /// <summary>
     /// Initializes the log4net system with a default configuration.
     /// </summary>
@@ -99,7 +75,7 @@ namespace log4net.Config
     /// </remarks>
     public static ICollection Configure()
     {
-      return BasicConfigurator.Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()));
+      return Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()));
     }
 
     /// <summary>
@@ -113,7 +89,7 @@ namespace log4net.Config
     /// </remarks>
     public static ICollection Configure(params IAppender[] appenders)
     {
-      ArrayList configurationMessages = new ArrayList();
+      var configurationMessages = new List<LogLog>();
 
       ILoggerRepository repository = LogManager.GetRepository(Assembly.GetCallingAssembly());
 
@@ -126,21 +102,6 @@ namespace log4net.Config
 
       return configurationMessages;
     }
-
-    /// <summary>
-    /// Initializes the log4net system using the specified appender.
-    /// </summary>
-    /// <param name="appender">The appender to use to log all logging events.</param>
-    /// <remarks>
-    /// <para>
-    /// Initializes the log4net system using the specified appender.
-    /// </para>
-    /// </remarks>
-    public static ICollection Configure(IAppender appender)
-    {
-      return Configure(new IAppender[] { appender });
-    }
-#endif // !NETSTANDARD1_3
 
     /// <summary>
     /// Initializes the <see cref="ILoggerRepository"/> with a default configuration.
@@ -157,18 +118,16 @@ namespace log4net.Config
     /// </remarks>
     public static ICollection Configure(ILoggerRepository repository)
     {
-      ArrayList configurationMessages = new ArrayList();
+      var configurationMessages = new List<LogLog>();
 
       using (new LogLog.LogReceivedAdapter(configurationMessages))
       {
         // Create the layout
-        PatternLayout layout = new PatternLayout();
-        layout.ConversionPattern = PatternLayout.DetailConversionPattern;
+        var layout = new PatternLayout { ConversionPattern = PatternLayout.DetailConversionPattern };
         layout.ActivateOptions();
 
         // Create the appender
-        ConsoleAppender appender = new ConsoleAppender();
-        appender.Layout = layout;
+        var appender = new ConsoleAppender { Layout = layout };
         appender.ActivateOptions();
 
         InternalConfigure(repository, appender);
@@ -177,21 +136,6 @@ namespace log4net.Config
       repository.ConfigurationMessages = configurationMessages;
 
       return configurationMessages;
-    }
-
-    /// <summary>
-    /// Initializes the <see cref="ILoggerRepository"/> using the specified appender.
-    /// </summary>
-    /// <param name="repository">The repository to configure.</param>
-    /// <param name="appender">The appender to use to log all logging events.</param>
-    /// <remarks>
-    /// <para>
-    /// Initializes the <see cref="ILoggerRepository"/> using the specified appender.
-    /// </para>
-    /// </remarks>
-    public static ICollection Configure(ILoggerRepository repository, IAppender appender)
-    {
-      return Configure(repository, new IAppender[] { appender });
     }
 
     /// <summary>
@@ -206,7 +150,7 @@ namespace log4net.Config
     /// </remarks>
     public static ICollection Configure(ILoggerRepository repository, params IAppender[] appenders)
     {
-      ArrayList configurationMessages = new ArrayList();
+      var configurationMessages = new List<LogLog>();
 
       using (new LogLog.LogReceivedAdapter(configurationMessages))
       {
@@ -220,17 +164,14 @@ namespace log4net.Config
 
     private static void InternalConfigure(ILoggerRepository repository, params IAppender[] appenders)
     {
-      IBasicRepositoryConfigurator configurableRepository = repository as IBasicRepositoryConfigurator;
-      if (configurableRepository != null)
+      if (repository is IBasicRepositoryConfigurator configurableRepository)
       {
         configurableRepository.Configure(appenders);
       }
       else
       {
-        LogLog.Warn(declaringType, "BasicConfigurator: Repository [" + repository + "] does not support the BasicConfigurator");
+        LogLog.Warn(declaringType, $"BasicConfigurator: Repository [{repository}] does not support the BasicConfigurator");
       }
     }
-
-    #endregion Public Static Methods
   }
 }

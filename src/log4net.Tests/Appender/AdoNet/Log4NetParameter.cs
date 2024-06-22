@@ -26,78 +26,40 @@ namespace log4net.Tests.Appender.AdoNet
 {
   public class Log4NetParameter : IDbDataParameter
   {
-    #region AdoNetAppender
+#pragma warning disable CS8766  // nullability difference from interface - seems to vary by framework.
+    public string? ParameterName { get; set; } = string.Empty;
+#pragma warning restore CS8766
 
-    private string parameterName;
-    private byte precision;
-    private byte scale;
-    private int size;
-    private DbType dbType;
-    private object value;
+    public byte Precision { get; set; }
 
-    public string ParameterName
-    {
-      get { return parameterName; }
-      set { parameterName = value; }
-    }
+    public byte Scale { get; set; }
 
-    public byte Precision
-    {
-      get { return precision; }
-      set { precision = value; }
-    }
+    public int Size { get; set; }
 
-    public byte Scale
-    {
-      get { return scale; }
-      set { scale = value; }
-    }
+    public DbType DbType { get; set; }
 
-    public int Size
-    {
-      get { return size; }
-      set { size = value; }
-    }
-
-    public DbType DbType
-    {
-      get { return dbType; }
-      set { dbType = value; }
-    }
-
-    public object Value
-    {
-      get { return value; }
-      set { this.value = value; }
-    }
-
-    #endregion
-
-    #region Not Implemented
+    public object? Value { get; set; }
 
     public ParameterDirection Direction
     {
-      get { throw new NotImplementedException(); }
-      set { throw new NotImplementedException(); }
+      get => throw new NotImplementedException();
+      set => throw new NotImplementedException();
     }
 
-    public bool IsNullable
-    {
-      get { throw new NotImplementedException(); }
-    }
+    public bool IsNullable => throw new NotImplementedException();
 
+#pragma warning disable CS8767  // nullability difference from interface - seems to vary by framework.
     public string SourceColumn
     {
-      get { throw new NotImplementedException(); }
-      set { throw new NotImplementedException(); }
+      get => throw new NotImplementedException();
+      set => throw new NotImplementedException();
     }
+#pragma warning restore CS8766
 
     public DataRowVersion SourceVersion
     {
-      get { throw new NotImplementedException(); }
-      set { throw new NotImplementedException(); }
+      get => throw new NotImplementedException();
+      set => throw new NotImplementedException();
     }
-
-    #endregion
   }
 }

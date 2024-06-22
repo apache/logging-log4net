@@ -17,15 +17,10 @@
 //
 #endregion
 
-// .NET Compact Framework 1.0 has no support for reading assembly attributes
-#if !NETCF
-
 using System;
 
 using log4net.Core;
-#if !NETSTANDARD1_3
 using log4net.Util;
-#endif
 using log4net.Plugin;
 
 namespace log4net.Config
@@ -47,9 +42,6 @@ namespace log4net.Config
   [Serializable]
   public sealed class PluginAttribute : Attribute, IPluginFactory
   {
-    #region Public Instance Constructors
-
-#if !NETSTANDARD1_3 // Excluded because GetCallingAssembly() is not available in CoreFX (https://github.com/dotnet/corefx/issues/2221).
     /// <summary>
     /// Initializes a new instance of the <see cref="PluginAttribute" /> class
     /// with the specified type.
@@ -63,11 +55,7 @@ namespace log4net.Config
     /// Where possible use the constructor that takes a <see cref="System.Type"/>.
     /// </para>
     /// </remarks>
-    public PluginAttribute(string typeName)
-    {
-      m_typeName = typeName;
-    }
-#endif
+    public PluginAttribute(string typeName) => TypeName = typeName;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PluginAttribute" /> class
@@ -79,120 +67,43 @@ namespace log4net.Config
     /// Create the attribute with the plugin type specified.
     /// </para>
     /// </remarks>
-    public PluginAttribute(Type type)
-    {
-      m_type = type;
-    }
-
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
+    public PluginAttribute(Type type) => Type = type;
 
     /// <summary>
     /// Gets or sets the type for the plugin.
     /// </summary>
-    /// <value>
-    /// The type for the plugin.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// The type for the plugin.
-    /// </para>
-    /// </remarks>
-    public Type Type
-    {
-      get { return m_type; }
-      set { m_type = value; }
-    }
+    public Type? Type { get; set; }
 
     /// <summary>
     /// Gets or sets the type name for the plugin.
     /// </summary>
-    /// <value>
-    /// The type name for the plugin.
-    /// </value>
     /// <remarks>
-    /// <para>
-    /// The type name for the plugin.
-    /// </para>
     /// <para>
     /// Where possible use the <see cref="Type"/> property instead.
     /// </para>
     /// </remarks>
-    public string TypeName
-    {
-      get { return m_typeName; }
-      set { m_typeName = value; }
-    }
-
-    #endregion Public Instance Properties
-
-    #region Implementation of IPluginFactory
+    public string? TypeName { get; set; }
 
     /// <summary>
     /// Creates the plugin object defined by this attribute.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Creates the instance of the <see cref="IPlugin"/> object as 
-    /// specified by this attribute.
-    /// </para>
-    /// </remarks>
     /// <returns>The plugin object.</returns>
     public IPlugin CreatePlugin()
     {
-      Type pluginType = m_type;
-#if !NETSTANDARD1_3
-      if (m_type == null)
-      {
-        // Get the plugin object type from the string type name
-        pluginType = SystemInfo.GetTypeFromString(m_typeName, true, true);
-      }
-#endif
+      // Get the plugin object type from the type first before trying the string type name.
+      Type? pluginType = Type ?? SystemInfo.GetTypeFromString(TypeName!, true, true);
+
       // Check that the type is a plugin
-      if (!(typeof(IPlugin).IsAssignableFrom(pluginType)))
+      if (!typeof(IPlugin).IsAssignableFrom(pluginType))
       {
-        throw new LogException("Plugin type [" + pluginType.FullName + "] does not implement the log4net.IPlugin interface");
+        throw new LogException($"Plugin type [{pluginType?.FullName}] does not implement the log4net.IPlugin interface");
       }
 
       // Create an instance of the plugin using the default constructor
-      IPlugin plugin = (IPlugin)Activator.CreateInstance(pluginType);
-
-      return plugin;
+      return Activator.CreateInstance(pluginType).EnsureIs<IPlugin>();
     }
 
-    #endregion Implementation of IPluginFactory
-
-    #region Override implementation of Object
-
-    /// <summary>
-    /// Returns a representation of the properties of this object.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Overrides base class <see cref="M:Object.ToString()" /> method to 
-    /// return a representation of the properties of this object.
-    /// </para>
-    /// </remarks>
-    /// <returns>A representation of the properties of this object</returns>
-    public override string ToString()
-    {
-      if (m_type != null)
-      {
-        return "PluginAttribute[Type=" + m_type.FullName + "]";
-      }
-      return "PluginAttribute[Type=" + m_typeName + "]";
-    }
-
-    #endregion Override implementation of Object
-
-    #region Private Instance Fields
-
-    private string m_typeName = null;
-    private Type m_type = null;
-
-    #endregion Private Instance Fields
+    /// <inheritdoc/>
+    public override string ToString() => $"PluginAttribute[Type={Type?.FullName ?? TypeName}]";
   }
 }
-
-#endif // !NETCF

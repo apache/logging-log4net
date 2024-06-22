@@ -19,23 +19,16 @@
 
 using System;
 using System.Text;
-using System.Xml;
-using System.Text.RegularExpressions;
 
 namespace log4net.Util
 {
   /// <summary>
   /// Utility class that represents a format string.
   /// </summary>
-  /// <remarks>
-  /// <para>
-  /// Utility class that represents a format string.
-  /// </para>
-  /// </remarks>
   /// <author>Nicko Cadell</author>
   public sealed class SystemStringFormat
   {
-    private readonly IFormatProvider m_provider;
+    private readonly IFormatProvider? m_provider;
 
     /// <summary>
     /// Format
@@ -45,9 +38,7 @@ namespace log4net.Util
     /// <summary>
     /// Args
     /// </summary>
-    public object[] Args { get; set; }
-
-    #region Constructor
+    public object?[]? Args { get; set; }
 
     /// <summary>
     /// Initialise the <see cref="SystemStringFormat"/>
@@ -55,25 +46,21 @@ namespace log4net.Util
     /// <param name="provider">An <see cref="System.IFormatProvider"/> that supplies culture-specific formatting information.</param>
     /// <param name="format">A <see cref="System.String"/> containing zero or more format items.</param>
     /// <param name="args">An <see cref="System.Object"/> array containing zero or more objects to format.</param>
-    public SystemStringFormat(IFormatProvider provider, string format, params object[] args)
+    public SystemStringFormat(IFormatProvider? provider, string format, params object?[]? args)
     {
       m_provider = provider;
       Format = format;
       Args = args;
     }
 
-    #endregion Constructor
-
     /// <summary>
     /// Format the string and arguments
     /// </summary>
     /// <returns>the formatted string</returns>
-    public override string ToString()
+    public override string? ToString()
     {
       return StringFormat(m_provider, Format, Args);
     }
-
-    #region StringFormat
 
     /// <summary>
     /// Replaces the format item in a specified <see cref="System.String"/> with the text equivalent 
@@ -93,84 +80,61 @@ namespace log4net.Util
     /// exception and arguments are returned in the result string.
     /// </para>
     /// </remarks>
-    private static string StringFormat(IFormatProvider provider, string format, params object[] args)
+    private static string? StringFormat(IFormatProvider? provider, string? format, params object?[]? args)
     {
       try
       {
         // The format is missing, log null value
-        if (format == null)
+        if (format is null)
         {
           return null;
         }
 
         // The args are missing - should not happen unless we are called explicitly with a null array
-        if (args == null)
+        if (args is null)
         {
           return format;
         }
 
         // Try to format the string
-        return String.Format(provider, format, args);
+        return string.Format(provider, format, args);
       }
       catch (Exception ex)
       {
-        log4net.Util.LogLog.Warn(declaringType, "Exception while rendering format [" + format + "]", ex);
+        LogLog.Warn(declaringType, $"Exception while rendering format [{format}]", ex);
         return StringFormatError(ex, format, args);
       }
-#if !NET_2_0 && !MONO_2_0 && !MONO_3_5 && !MONO_4_0 && !NETSTANDARD
-      catch
-      {
-        log4net.Util.LogLog.Warn(declaringType, "Exception while rendering format ["+format+"]");
-        return StringFormatError(null, format, args);
-      }
-#endif
     }
 
     /// <summary>
     /// Process an error during StringFormat
     /// </summary>
-    private static string StringFormatError(Exception formatException, string format, object[] args)
+    private static string StringFormatError(Exception formatException, string? format, object?[]? args)
     {
       try
       {
-        StringBuilder buf = new StringBuilder("<log4net.Error>");
-
-        if (formatException != null)
-        {
-          buf.Append("Exception during StringFormat: ").Append(formatException.Message);
-        }
-        else
-        {
-          buf.Append("Exception during StringFormat");
-        }
+        var buf = new StringBuilder("<log4net.Error>", 100);
+        buf.Append("Exception during StringFormat: ").Append(formatException.Message);
         buf.Append(" <format>").Append(format).Append("</format>");
         buf.Append("<args>");
         RenderArray(args, buf);
         buf.Append("</args>");
         buf.Append("</log4net.Error>");
-
         return buf.ToString();
       }
       catch (Exception ex)
       {
-        log4net.Util.LogLog.Error(declaringType, "INTERNAL ERROR during StringFormat error handling", ex);
+        LogLog.Error(declaringType, "INTERNAL ERROR during StringFormat error handling", ex);
         return "<log4net.Error>Exception during StringFormat. See Internal Log.</log4net.Error>";
       }
-#if !NET_2_0 && !MONO_2_0 && !MONO_3_5 && !MONO_4_0 && !NETSTANDARD
-      catch
-      {
-        log4net.Util.LogLog.Error(declaringType, "INTERNAL ERROR during StringFormat error handling");
-        return "<log4net.Error>Exception during StringFormat. See Internal Log.</log4net.Error>";
-      }
-#endif
     }
 
     /// <summary>
     /// Dump the contents of an array into a string builder
     /// </summary>
-    private static void RenderArray(Array array, StringBuilder buffer)
+    private static void RenderArray(Array? array, StringBuilder buffer)
     {
-      if (array == null)
+      if (array is null)
       {
         buffer.Append(SystemInfo.NullText);
       }
@@ -178,7 +142,7 @@ namespace log4net.Util
       {
         if (array.Rank != 1)
         {
-          buffer.Append(array.ToString());
+          buffer.Append(array);
         }
         else
         {
@@ -202,9 +166,9 @@ namespace log4net.Util
     /// <summary>
     /// Dump an object to a string
     /// </summary>
-    private static void RenderObject(Object obj, StringBuilder buffer)
+    private static void RenderObject(object? obj, StringBuilder buffer)
     {
-      if (obj == null)
+      if (obj is null)
       {
         buffer.Append(SystemInfo.NullText);
       }
@@ -218,18 +182,8 @@ namespace log4net.Util
         {
           buffer.Append("<Exception: ").Append(ex.Message).Append(">");
         }
-#if !NET_2_0 && !MONO_2_0 && !MONO_3_5 && !MONO_4_0 && !NETSTANDARD
-        catch
-        {
-          buffer.Append("<Exception>");
-        }
-#endif
       }
     }
-
-    #endregion StringFormat
-
-    #region Private Static Fields
 
     /// <summary>
     /// The fully qualified type of the SystemStringFormat class.
@@ -239,7 +193,5 @@ namespace log4net.Util
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(SystemStringFormat);
-
-    #endregion Private Static Fields
   }
 }

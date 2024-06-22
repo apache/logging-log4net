@@ -18,7 +18,10 @@
 #endregion
 
 using System;
-using System.Collections;
+using System.Runtime.Serialization;
+using System.Security;
+using System.Xml.Linq;
+using log4net.Util;
 
 namespace log4net.Core
 {
@@ -80,13 +83,9 @@ namespace log4net.Core
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-#if !NETCF
   [Serializable]
-#endif
-  public sealed class Level : IComparable
+  public class Level : IComparable, ISerializable
   {
-    #region Public Instance Constructors
-
     /// <summary>
     /// Constructor
     /// </summary>
@@ -101,22 +100,9 @@ namespace log4net.Core
     /// </remarks>
     public Level(int level, string levelName, string displayName)
     {
-      if (levelName == null)
-      {
-        throw new ArgumentNullException("levelName");
-      }
-      if (displayName == null)
-      {
-        throw new ArgumentNullException("displayName");
-      }
-
-      m_levelValue = level;
-#if NETSTANDARD1_3
-      m_levelName = levelName;
-#else
-      m_levelName = string.Intern(levelName);
-#endif
-      m_levelDisplayName = displayName;
+      Value = level;
+      Name = string.Intern(levelName.EnsureNotNull());
+      DisplayName = displayName.EnsureNotNull();
     }
 
     /// <summary>
@@ -130,13 +116,28 @@ namespace log4net.Core
     /// the specified level name and value.
     /// </para>
     /// </remarks>
-    public Level(int level, string levelName) : this(level, levelName, levelName)
+    public Level(int level, string levelName)
+      : this(level, levelName, levelName)
+    { }
+
+    /// <summary>
+    /// Serialization constructor
+    /// </summary>
+    /// <param name="info">The <see cref="SerializationInfo" /> that holds the serialized object data.</param>
+    /// <param name="context">The <see cref="StreamingContext" /> that contains contextual information about the source or destination.</param>
+    /// <remarks>
+    /// <para>
+    /// Initializes a new instance of the <see cref="Level" /> class 
+    /// with serialized data.
+    /// </para>
+    /// </remarks>
+    protected Level(SerializationInfo info, StreamingContext context)
     {
+      // Use member names from log4net 2.x implicit serialzation for cross-version compat.
+      Value = info.GetInt32("m_levelValue");
+      Name = info.GetString("m_levelName") ?? string.Empty;
+      DisplayName = info.GetString("m_levelDisplayName") ?? string.Empty;
     }
-
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
 
     /// <summary>
     /// Gets the name of this level.
@@ -149,46 +150,17 @@ namespace log4net.Core
     /// Gets the name of this level.
     /// </para>
     /// </remarks>
-    public string Name
-    {
-      get { return m_levelName; }
-    }
+    public string Name { get; }
 
     /// <summary>
     /// Gets the value of this level.
     /// </summary>
-    /// <value>
-    /// The value of this level.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets the value of this level.
-    /// </para>
-    /// </remarks>
-    public int Value
-    {
-      get { return m_levelValue; }
-    }
+    public int Value { get; }
 
     /// <summary>
     /// Gets the display name of this level.
     /// </summary>
-    /// <value>
-    /// The display name of this level.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets the display name of this level.
-    /// </para>
-    /// </remarks>
-    public string DisplayName
-    {
-      get { return m_levelDisplayName; }
-    }
-
-    #endregion Public Instance Properties
-
-    #region Override implementation of Object
+    public string DisplayName { get; }
 
     /// <summary>
     /// Returns the <see cref="string" /> representation of the current 
@@ -202,10 +174,7 @@ namespace log4net.Core
     /// Returns the level <see cref="Name"/>.
     /// </para>
     /// </remarks>
-    public override string ToString()
-    {
-      return m_levelName;
-    }
+    public override string ToString() => Name;
 
     /// <summary>
     /// Compares levels.
@@ -219,17 +188,13 @@ namespace log4net.Core
     /// instance.
     /// </para>
     /// </remarks>
-    public override bool Equals(object o)
+    public override bool Equals(object? o)
     {
-      Level otherLevel = o as Level;
-      if (otherLevel != null)
+      if (o is Level otherLevel)
       {
-        return m_levelValue == otherLevel.m_levelValue;
+        return Value == otherLevel.Value;
       }
-      else
-      {
-        return base.Equals(o);
-      }
+      return base.Equals(o);
     }
 
     /// <summary>
@@ -245,14 +210,7 @@ namespace log4net.Core
     /// Returns the hash code of the level <see cref="Value"/>.
     /// </para>
     /// </remarks>
-    public override int GetHashCode()
-    {
-      return m_levelValue;
-    }
-
-    #endregion Override implementation of Object
-
-    #region Implementation of IComparable
+    public override int GetHashCode() => Value;
 
     /// <summary>
     /// Compares this instance to a specified object and returns an 
@@ -292,19 +250,30 @@ namespace log4net.Core
     /// </para>
     /// </remarks>
     /// <exception cref="ArgumentException"><paramref name="r" /> is not a <see cref="Level" />.</exception>
-    public int CompareTo(object r)
+    public int CompareTo(object? r)
     {
-      Level target = r as Level;
-      if (target != null)
+      if (r is Level target)
       {
         return Compare(this, target);
       }
-      throw new ArgumentException("Parameter: r, Value: [" + r + "] is not an instance of Level");
+      throw new ArgumentException($"Parameter: r, Value: [{r}] is not an instance of Level");
     }
 
-    #endregion Implementation of IComparable
-
-    #region Operators
+    /// <summary>
+    /// Serializes this object into the <see cref="SerializationInfo" /> provided.
+    /// </summary>
+    /// <param name="info">The <see cref="SerializationInfo" /> to populate with data.</param>
+    /// <param name="context">The destination for this serialization.</param>
+    [SecurityCritical]
+    [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand,
+      SerializationFormatter = true)]
+    public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+    {
+      // Use member names from log4net 2.x implicit serialzation for cross-version compat.
+      info.AddValue("m_levelValue", Value);
+      info.AddValue("m_levelName", Name);
+      info.AddValue("m_levelDisplayName", DisplayName);
+    }
 
     /// <summary>
     /// Returns a value indicating whether a specified <see cref="Level" /> 
@@ -323,7 +292,7 @@ namespace log4net.Core
     /// </remarks>
     public static bool operator >(Level l, Level r)
     {
-      return l.m_levelValue > r.m_levelValue;
+      return l.Value > r.Value;
     }
 
     /// <summary>
@@ -343,7 +312,7 @@ namespace log4net.Core
     /// </remarks>
     public static bool operator <(Level l, Level r)
     {
-      return l.m_levelValue < r.m_levelValue;
+      return l.Value < r.Value;
     }
 
     /// <summary>
@@ -363,7 +332,7 @@ namespace log4net.Core
     /// </remarks>
     public static bool operator >=(Level l, Level r)
     {
-      return l.m_levelValue >= r.m_levelValue;
+      return l.Value >= r.Value;
     }
 
     /// <summary>
@@ -376,14 +345,9 @@ namespace log4net.Core
     /// <c>true</c> if <paramref name="l" /> is less than or equal to 
     /// <paramref name="r" />; otherwise, <c>false</c>.
     /// </returns>
-    /// <remarks>
-    /// <para>
-    /// Compares two levels.
-    /// </para>
-    /// </remarks>
     public static bool operator <=(Level l, Level r)
     {
-      return l.m_levelValue <= r.m_levelValue;
+      return l.Value <= r.Value;
     }
 
     /// <summary>
@@ -396,21 +360,13 @@ namespace log4net.Core
     /// <c>true</c> if the value of <paramref name="l" /> is the same as the 
     /// value of <paramref name="r" />; otherwise, <c>false</c>.
     /// </returns>
-    /// <remarks>
-    /// <para>
-    /// Compares two levels.
-    /// </para>
-    /// </remarks>
-    public static bool operator ==(Level l, Level r)
+    public static bool operator ==(Level? l, Level? r)
     {
-      if (((object)l) != null && ((object)r) != null)
+      if (l is not null && r is not null)
       {
-        return l.m_levelValue == r.m_levelValue;
+        return l.Value == r.Value;
       }
-      else
-      {
-        return ((object)l) == ((object)r);
-      }
+      return ReferenceEquals(l, r);
     }
 
     /// <summary>
@@ -423,19 +379,10 @@ namespace log4net.Core
     /// <c>true</c> if the value of <paramref name="l" /> is different from
     /// the value of <paramref name="r" />; otherwise, <c>false</c>.
     /// </returns>
-    /// <remarks>
-    /// <para>
-    /// Compares two levels.
-    /// </para>
-    /// </remarks>
     public static bool operator !=(Level l, Level r)
     {
       return !(l == r);
     }
-
-    #endregion Operators
-
-    #region Public Static Methods
 
     /// <summary>
     /// Compares two specified <see cref="Level"/> instances.
@@ -464,152 +411,132 @@ namespace log4net.Core
     ///    </item>
     /// </list>
     /// </returns>
-    /// <remarks>
-    /// <para>
-    /// Compares two levels.
-    /// </para>
-    /// </remarks>
-    public static int Compare(Level l, Level r)
+    public static int Compare(Level? l, Level? r)
     {
-      // Reference equals
-      if ((object)l == (object)r)
+      if (ReferenceEquals(l, r))
       {
         return 0;
       }
 
-      if (l == null && r == null)
+      if (l is null && r is null)
       {
         return 0;
       }
-      if (l == null)
+      if (l is null)
       {
         return -1;
       }
-      if (r == null)
+      if (r is null)
       {
         return 1;
       }
 
-      return l.m_levelValue.CompareTo(r.m_levelValue);
+      return l.Value.CompareTo(r.Value);
     }
-
-    #endregion Public Static Methods
-
-    #region Public Static Fields
 
     /// <summary>
     /// The <see cref="Off" /> level designates a higher level than all the rest.
     /// </summary>
-    public static readonly Level Off = new Level(int.MaxValue, "OFF");
+    public static readonly Level Off = new(int.MaxValue, "OFF");
 
     /// <summary>
     /// The <see cref="Emergency" /> level designates very severe error events. 
     /// System unusable, emergencies.
     /// </summary>
-    public static readonly Level Log4Net_Debug = new Level(120000, "log4net:DEBUG");
+    public static readonly Level Log4Net_Debug = new(120000, "log4net:DEBUG");
 
     /// <summary>
     /// The <see cref="Emergency" /> level designates very severe error events. 
     /// System unusable, emergencies.
     /// </summary>
-    public static readonly Level Emergency = new Level(120000, "EMERGENCY");
+    public static readonly Level Emergency = new(120000, "EMERGENCY");
 
     /// <summary>
     /// The <see cref="Fatal" /> level designates very severe error events 
     /// that will presumably lead the application to abort.
     /// </summary>
-    public static readonly Level Fatal = new Level(110000, "FATAL");
+    public static readonly Level Fatal = new(110000, "FATAL");
 
     /// <summary>
     /// The <see cref="Alert" /> level designates very severe error events. 
     /// Take immediate action, alerts.
     /// </summary>
-    public static readonly Level Alert = new Level(100000, "ALERT");
+    public static readonly Level Alert = new(100000, "ALERT");
 
     /// <summary>
     /// The <see cref="Critical" /> level designates very severe error events. 
     /// Critical condition, critical.
     /// </summary>
-    public static readonly Level Critical = new Level(90000, "CRITICAL");
+    public static readonly Level Critical = new(90000, "CRITICAL");
 
     /// <summary>
     /// The <see cref="Severe" /> level designates very severe error events.
     /// </summary>
-    public static readonly Level Severe = new Level(80000, "SEVERE");
+    public static readonly Level Severe = new(80000, "SEVERE");
 
     /// <summary>
     /// The <see cref="Error" /> level designates error events that might 
     /// still allow the application to continue running.
     /// </summary>
-    public static readonly Level Error = new Level(70000, "ERROR");
+    public static readonly Level Error = new(70000, "ERROR");
 
     /// <summary>
     /// The <see cref="Warn" /> level designates potentially harmful 
     /// situations.
     /// </summary>
-    public static readonly Level Warn = new Level(60000, "WARN");
+    public static readonly Level Warn = new(60000, "WARN");
 
     /// <summary>
     /// The <see cref="Notice" /> level designates informational messages 
     /// that highlight the progress of the application at the highest level.
     /// </summary>
-    public static readonly Level Notice = new Level(50000, "NOTICE");
+    public static readonly Level Notice = new(50000, "NOTICE");
 
     /// <summary>
     /// The <see cref="Info" /> level designates informational messages that 
     /// highlight the progress of the application at coarse-grained level.
     /// </summary>
-    public static readonly Level Info = new Level(40000, "INFO");
+    public static readonly Level Info = new(40000, "INFO");
 
     /// <summary>
     /// The <see cref="Debug" /> level designates fine-grained informational 
     /// events that are most useful to debug an application.
     /// </summary>
-    public static readonly Level Debug = new Level(30000, "DEBUG");
+    public static readonly Level Debug = new(30000, "DEBUG");
 
     /// <summary>
     /// The <see cref="Fine" /> level designates fine-grained informational 
     /// events that are most useful to debug an application.
     /// </summary>
-    public static readonly Level Fine = new Level(30000, "FINE");
+    public static readonly Level Fine = new(30000, "FINE");
 
     /// <summary>
     /// The <see cref="Trace" /> level designates fine-grained informational 
     /// events that are most useful to debug an application.
     /// </summary>
-    public static readonly Level Trace = new Level(20000, "TRACE");
+    public static readonly Level Trace = new(20000, "TRACE");
 
     /// <summary>
     /// The <see cref="Finer" /> level designates fine-grained informational 
     /// events that are most useful to debug an application.
     /// </summary>
-    public static readonly Level Finer = new Level(20000, "FINER");
+    public static readonly Level Finer = new(20000, "FINER");
 
     /// <summary>
     /// The <see cref="Verbose" /> level designates fine-grained informational 
     /// events that are most useful to debug an application.
     /// </summary>
-    public static readonly Level Verbose = new Level(10000, "VERBOSE");
+    public static readonly Level Verbose = new(10000, "VERBOSE");
 
     /// <summary>
     /// The <see cref="Finest" /> level designates fine-grained informational 
     /// events that are most useful to debug an application.
     /// </summary>
-    public static readonly Level Finest = new Level(10000, "FINEST");
+    public static readonly Level Finest = new(10000, "FINEST");
 
     /// <summary>
     /// The <see cref="All" /> level designates the lowest level possible.
     /// </summary>
-    public static readonly Level All = new Level(int.MinValue, "ALL");
-
-    #endregion Public Static Fields
-
-    #region Private Instance Fields
-
-    private readonly int m_levelValue;
-    private readonly string m_levelName;
-    private readonly string m_levelDisplayName;
-
-    #endregion Private Instance Fields
+    public static readonly Level All = new(int.MinValue, "ALL");
   }
 }

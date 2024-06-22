@@ -43,15 +43,9 @@ namespace log4net.Util.PatternStringConverters
     /// Write the current process ID to the output <paramref name="writer"/>.
     /// </para>
     /// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD
-        [System.Security.SecuritySafeCritical]
-#endif
-    protected override void Convert(TextWriter writer, object state)
+    [System.Security.SecuritySafeCritical]
+    public override void Convert(TextWriter writer, object? state)
     {
-#if (NETCF || SSCLI)
-      // On compact framework there is no System.Diagnostics.Process class
-      writer.Write( SystemInfo.NotAvailableText );
-#else
       try
       {
         writer.Write(System.Diagnostics.Process.GetCurrentProcess().Id);
@@ -64,10 +58,7 @@ namespace log4net.Util.PatternStringConverters
 
         writer.Write(SystemInfo.NotAvailableText);
       }
-#endif
     }
-
-    #region Private Static Fields
 
     /// <summary>
     /// The fully qualified type of the ProcessIdPatternConverter class.
@@ -77,7 +68,5 @@ namespace log4net.Util.PatternStringConverters
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(ProcessIdPatternConverter);
-
-    #endregion Private Static Fields
   }
 }

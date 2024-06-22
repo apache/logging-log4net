@@ -17,8 +17,6 @@
 //
 #endregion
 
-using System;
-
 namespace log4net.Core
 {
   /// <summary>

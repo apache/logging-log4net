@@ -35,16 +35,6 @@ namespace log4net.Core
   public class ExceptionEvaluator : ITriggeringEventEvaluator
   {
     /// <summary>
-    /// The type that causes the trigger to fire.
-    /// </summary>
-    private Type m_type;
-
-    /// <summary>
-    /// Causes subclasses of <see cref="ExceptionType"/> to cause the trigger to fire.
-    /// </summary>
-    private bool m_triggerOnSubclass;
-
-    /// <summary>
     /// Default ctor to allow dynamic creation through a configurator.
     /// </summary>
     public ExceptionEvaluator()
@@ -59,34 +49,24 @@ namespace log4net.Core
     /// <param name="triggerOnSubClass">If true, this evaluator will trigger on subclasses of <see cref="ExceptionType"/>.</param>
     public ExceptionEvaluator(Type exType, bool triggerOnSubClass)
     {
-      if (exType == null)
+      if (exType is null)
       {
-        throw new ArgumentNullException("exType");
+        throw new ArgumentNullException(nameof(exType));
       }
 
-      m_type = exType;
-      m_triggerOnSubclass = triggerOnSubClass;
+      ExceptionType = exType;
+      TriggerOnSubclass = triggerOnSubClass;
     }
 
     /// <summary>
     /// The type that triggers this evaluator.
     /// </summary>
-    public Type ExceptionType
-    {
-      get { return m_type; }
-      set { m_type = value; }
-    }
+    public Type? ExceptionType { get; set; }
 
     /// <summary>
     /// If true, this evaluator will trigger on subclasses of <see cref="ExceptionType"/>.
     /// </summary>
-    public bool TriggerOnSubclass
-    {
-      get { return m_triggerOnSubclass; }
-      set { m_triggerOnSubclass = value; }
-    }
-
-    #region ITriggeringEventEvaluator Members
+    public bool TriggerOnSubclass { get; set; }
 
     /// <summary>
     /// Is this <paramref name="loggingEvent"/> the triggering event?
@@ -104,27 +84,27 @@ namespace log4net.Core
     /// </remarks>
     public bool IsTriggeringEvent(LoggingEvent loggingEvent)
     {
-      if (loggingEvent == null)
+      if (loggingEvent is null)
       {
-        throw new ArgumentNullException("loggingEvent");
+        throw new ArgumentNullException(nameof(loggingEvent));
       }
 
-      if (m_triggerOnSubclass && loggingEvent.ExceptionObject != null)
+      if (TriggerOnSubclass && loggingEvent.ExceptionObject is not null)
       {
         // check if loggingEvent.ExceptionObject is of type ExceptionType or subclass of ExceptionType
         Type exceptionObjectType = loggingEvent.ExceptionObject.GetType();
-        return exceptionObjectType == m_type || m_type.IsAssignableFrom(exceptionObjectType);
+        return ExceptionType is null || exceptionObjectType == ExceptionType || ExceptionType.IsAssignableFrom(exceptionObjectType);
       }
-      else if (!m_triggerOnSubclass && loggingEvent.ExceptionObject != null)
-      {   // check if loggingEvent.ExceptionObject is of type ExceptionType
-        return loggingEvent.ExceptionObject.GetType() == m_type;
+      else if (!TriggerOnSubclass && loggingEvent.ExceptionObject is not null)
+      {
+        // check if loggingEvent.ExceptionObject is of type ExceptionType
+        return loggingEvent.ExceptionObject.GetType() == ExceptionType;
       }
       else
-      {   // loggingEvent.ExceptionObject is null
+      {
+        // loggingEvent.ExceptionObject is null
         return false;
       }
     }
-
-    #endregion
   }
 }

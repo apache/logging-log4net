@@ -22,6 +22,7 @@ Mailing Lists:
 Active Committers
 =================
 * Davyd McColl (davydm)
+* Jan Friedrich (freeandnil)
 
 Former Committers
 ================
@@ -31,4 +32,3 @@ Former Committers
 * Ron Grabowski (rgrabowski)
 * Stefan Bodewig (bodewig)
 * Dominik Psenner (dpsenner)
-

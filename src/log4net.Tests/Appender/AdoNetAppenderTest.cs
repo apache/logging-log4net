@@ -21,15 +21,10 @@
 
 using System;
 using System.Data;
-#if NETSTANDARD1_3
-using System.Reflection;
-#endif
 using System.Xml;
 using log4net.Appender;
 using log4net.Config;
-#if !NETSTANDARD1_3
 using log4net.Core;
-#endif
 using log4net.Layout;
 using log4net.Repository;
 using log4net.Tests.Appender.AdoNet;
@@ -46,13 +41,11 @@ namespace log4net.Tests.Appender
     {
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 
-      AdoNetAppender adoNetAppender = new AdoNetAppender();
-      adoNetAppender.BufferSize = -1;
-#if NETSTANDARD1_3
-            adoNetAppender.ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName;
-#else
-      adoNetAppender.ConnectionType = "log4net.Tests.Appender.AdoNet.Log4NetConnection";
-#endif
+      AdoNetAppender adoNetAppender = new AdoNetAppender
+      {
+          BufferSize = -1,
+          ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!
+      };
       adoNetAppender.ActivateOptions();
 
       BasicConfigurator.Configure(rep, adoNetAppender);
@@ -60,7 +53,7 @@ namespace log4net.Tests.Appender
       ILog log = LogManager.GetLogger(rep.Name, "NoBufferingTest");
       log.Debug("Message");
       Assert.NotNull(Log4NetCommand.MostRecentInstance);
-      Assert.AreEqual(1, Log4NetCommand.MostRecentInstance.ExecuteNonQueryCount);
+      Assert.AreEqual(1, Log4NetCommand.MostRecentInstance!.ExecuteNonQueryCount);
     }
 
     [Test]
@@ -70,13 +63,11 @@ namespace log4net.Tests.Appender
 
       int bufferSize = 5;
 
-      AdoNetAppender adoNetAppender = new AdoNetAppender();
-      adoNetAppender.BufferSize = bufferSize;
-#if NETSTANDARD1_3
-            adoNetAppender.ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName;
-#else
-      adoNetAppender.ConnectionType = "log4net.Tests.Appender.AdoNet.Log4NetConnection";
-#endif
+      AdoNetAppender adoNetAppender = new AdoNetAppender
+      {
+          BufferSize = bufferSize,
+          ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!
+      };
       adoNetAppender.ActivateOptions();
 
       BasicConfigurator.Configure(rep, adoNetAppender);
@@ -89,15 +80,13 @@ namespace log4net.Tests.Appender
       }
       log.Debug("Message");
       Assert.NotNull(Log4NetCommand.MostRecentInstance);
-      Assert.AreEqual(bufferSize + 1, Log4NetCommand.MostRecentInstance.ExecuteNonQueryCount);
+      Assert.AreEqual(bufferSize + 1, Log4NetCommand.MostRecentInstance!.ExecuteNonQueryCount);
     }
 
-#if !NETSTANDARD1_3
     [Test]
     public void WebsiteExample()
     {
       XmlDocument log4netConfig = new XmlDocument();
-      #region Load log4netConfig
       log4netConfig.LoadXml(@"
                 <log4net>
                 <appender name=""AdoNetAppender"" type=""log4net.Appender.AdoNetAppender"">
@@ -154,19 +143,18 @@ namespace log4net.Tests.Appender
                     <appender-ref ref=""AdoNetAppender"" />
                   </root>  
                 </log4net>");
-      #endregion
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-      XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
+      XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
       ILog log = LogManager.GetLogger(rep.Name, "WebsiteExample");
       log.Debug("Message");
 
-      IDbCommand command = Log4NetCommand.MostRecentInstance;
-
+      IDbCommand? command = Log4NetCommand.MostRecentInstance;
       Assert.NotNull(command);
+
       Assert.AreEqual(
           "INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message],[Exception]) VALUES (@log_date, @thread, @log_level, @logger, @message, @exception)",
-          command.CommandText);
+          command!.CommandText);
 
       Assert.AreEqual(6, command.Parameters.Count);
 
@@ -180,14 +168,13 @@ namespace log4net.Tests.Appender
       Assert.AreEqual("WebsiteExample", param.Value);
 
       param = (IDbDataParameter)command.Parameters["@exception"];
-      Assert.IsEmpty((string)param.Value);
+      Assert.IsEmpty((string?)param.Value);
     }
 
     [Test]
     public void BufferingWebsiteExample()
     {
       XmlDocument log4netConfig = new XmlDocument();
-      #region Load log4netConfig
       log4netConfig.LoadXml(@"
                 <log4net>
                 <appender name=""AdoNetAppender"" type=""log4net.Appender.AdoNetAppender"">
@@ -244,10 +231,9 @@ namespace log4net.Tests.Appender
                     <appender-ref ref=""AdoNetAppender"" />
                   </root>  
                 </log4net>");
-      #endregion
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-      XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
+      XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
       ILog log = LogManager.GetLogger(rep.Name, "WebsiteExample");
 
       for (int i = 0; i < 3; i++)
@@ -255,12 +241,12 @@ namespace log4net.Tests.Appender
         log.Debug("Message");
       }
 
-      IDbCommand command = Log4NetCommand.MostRecentInstance;
-
+      IDbCommand? command = Log4NetCommand.MostRecentInstance;
       Assert.NotNull(command);
+
       Assert.AreEqual(
           "INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message],[Exception]) VALUES (@log_date, @thread, @log_level, @logger, @message, @exception)",
-          command.CommandText);
+          command!.CommandText);
 
       Assert.AreEqual(6, command.Parameters.Count);
 
@@ -274,15 +260,13 @@ namespace log4net.Tests.Appender
       Assert.AreEqual("WebsiteExample", param.Value);
 
       param = (IDbDataParameter)command.Parameters["@exception"];
-      Assert.IsEmpty((string)param.Value);
+      Assert.IsEmpty((string?)param.Value);
     }
-#endif
 
     [Test]
     public void NullPropertyXmlConfig()
     {
       XmlDocument log4netConfig = new XmlDocument();
-      #region Load log4netConfig
       log4netConfig.LoadXml(@"
                 <log4net>
                 <appender name=""AdoNetAppender"" type=""log4net.Appender.AdoNetAppender"">
@@ -304,23 +288,22 @@ namespace log4net.Tests.Appender
                     <appender-ref ref=""AdoNetAppender"" />
                   </root>  
                 </log4net>");
-      #endregion
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-      XmlConfigurator.Configure(rep, log4netConfig["log4net"]);
+      XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
       ILog log = LogManager.GetLogger(rep.Name, "NullPropertyXmlConfig");
 
       log.Debug("Message");
-      IDbCommand command = Log4NetCommand.MostRecentInstance;
+      IDbCommand? command = Log4NetCommand.MostRecentInstance;
       Assert.NotNull(command);
 
-      IDbDataParameter param = (IDbDataParameter)command.Parameters["@productId"];
+      IDbDataParameter param = (IDbDataParameter)command!.Parameters["@productId"];
       Assert.AreNotEqual(SystemInfo.NullText, param.Value);
       Assert.AreEqual(DBNull.Value, param.Value);
     }
 
     [Test]
-    public void NullPropertyProgmaticConfig()
+    public void NullPropertyProgrammaticConfig()
     {
       AdoNetAppenderParameter productIdParam = new AdoNetAppenderParameter();
       productIdParam.ParameterName = "@productId";
@@ -331,11 +314,7 @@ namespace log4net.Tests.Appender
       productIdParam.Layout = rawPropertyLayout;
 
       AdoNetAppender appender = new AdoNetAppender();
-#if NETSTANDARD1_3
-            appender.ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName;
-#else
-      appender.ConnectionType = typeof(Log4NetConnection).FullName;
-#endif
+      appender.ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!;
       appender.BufferSize = -1;
       appender.CommandText = "INSERT INTO Log ([productId]) VALUES (@productId)";
       appender.AddParameter(productIdParam);
@@ -346,10 +325,10 @@ namespace log4net.Tests.Appender
       ILog log = LogManager.GetLogger(rep.Name, "NullPropertyProgmaticConfig");
 
       log.Debug("Message");
-      IDbCommand command = Log4NetCommand.MostRecentInstance;
+      IDbCommand? command = Log4NetCommand.MostRecentInstance;
       Assert.NotNull(command);
 
-      IDbDataParameter param = (IDbDataParameter)command.Parameters["@productId"];
+      IDbDataParameter param = (IDbDataParameter)command!.Parameters["@productId"];
       Assert.AreNotEqual(SystemInfo.NullText, param.Value);
       Assert.AreEqual(DBNull.Value, param.Value);
     }

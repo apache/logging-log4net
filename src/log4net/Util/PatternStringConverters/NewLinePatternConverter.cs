@@ -47,8 +47,6 @@ namespace log4net.Util.PatternStringConverters
   /// <author>Nicko Cadell</author>
   internal sealed class NewLinePatternConverter : LiteralPatternConverter, IOptionHandler
   {
-    #region Implementation of IOptionHandler
-
     /// <summary>
     /// Initialize the converter
     /// </summary>
@@ -80,7 +78,5 @@ namespace log4net.Util.PatternStringConverters
         Option = SystemInfo.NewLine;
       }
     }
-
-    #endregion
   }
 }

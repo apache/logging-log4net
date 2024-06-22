@@ -17,8 +17,6 @@
 //
 #endregion
 
-using System;
-
 using log4net.Core;
 
 namespace log4net.Filter
@@ -38,21 +36,8 @@ namespace log4net.Filter
   /// <author>Gert Driesen</author>
   public sealed class DenyAllFilter : FilterSkeleton
   {
-    #region Constructors
-
     /// <summary>
-    /// Default constructor
-    /// </summary>
-    public DenyAllFilter()
-    {
-    }
-
-    #endregion
-
-    #region Override implementation of FilterSkeleton
-
-    /// <summary>
-    /// Always returns the integer constant <see cref="FilterDecision.Deny"/>
+    /// Always returns <see cref="FilterDecision.Deny"/>.
     /// </summary>
     /// <param name="loggingEvent">the LoggingEvent to filter</param>
     /// <returns>Always returns <see cref="FilterDecision.Deny"/></returns>
@@ -69,7 +54,5 @@ namespace log4net.Filter
     {
       return FilterDecision.Deny;
     }
-
-    #endregion
   }
 }

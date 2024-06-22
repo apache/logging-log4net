@@ -21,9 +21,6 @@ release version 2.0.123:
                     - people who reported issues
                     - people who created pull requests
                     - people who suggested code that was implemented
-        - `src/site/xdoc/download_log4net.xml`
-            - you should be able to search & replace on the prior version
-                for the new one you're about to create
 2. Update the log4net.csproj file with this new version
 3. Build release artifacts with `npm run release`
     - if this doesn't work, you may need to `npm ci` first!

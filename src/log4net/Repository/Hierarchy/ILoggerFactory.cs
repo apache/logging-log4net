@@ -59,6 +59,6 @@ namespace log4net.Repository.Hierarchy
     /// must be returned.
     /// </para>
     /// </remarks>
-    Logger CreateLogger(ILoggerRepository repository, string name);
+    Logger CreateLogger(ILoggerRepository repository, string? name);
   }
 }

@@ -37,8 +37,6 @@ namespace log4net.Util
   /// <author>Gert Driesen</author>
   public class QuietTextWriter : TextWriterAdapter
   {
-    #region Public Instance Constructors
-
     /// <summary>
     /// Constructor
     /// </summary>
@@ -49,18 +47,9 @@ namespace log4net.Util
     /// Create a new QuietTextWriter using a writer and error handler
     /// </para>
     /// </remarks>
-    public QuietTextWriter(TextWriter writer, IErrorHandler errorHandler) : base(writer)
-    {
-      if (errorHandler == null)
-      {
-        throw new ArgumentNullException("errorHandler");
-      }
-      ErrorHandler = errorHandler;
-    }
-
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
+    public QuietTextWriter(TextWriter writer, IErrorHandler errorHandler)
+      : base(writer)
+      => m_errorHandler = errorHandler.EnsureNotNull();
 
     /// <summary>
     /// Gets or sets the error handler that all errors are passed to.
@@ -75,16 +64,8 @@ namespace log4net.Util
     /// </remarks>
     public IErrorHandler ErrorHandler
     {
-      get { return m_errorHandler; }
-      set
-      {
-        if (value == null)
-        {
-          // This is a programming error on the part of the enclosing appender.
-          throw new ArgumentNullException("value");
-        }
-        m_errorHandler = value;
-      }
+      get => m_errorHandler;
+      set => m_errorHandler = value.EnsureNotNull();
     }
 
     /// <summary>
@@ -98,14 +79,7 @@ namespace log4net.Util
     /// Gets a value indicating whether this writer is closed.
     /// </para>
     /// </remarks>
-    public bool Closed
-    {
-      get { return m_closed; }
-    }
-
-    #endregion Public Instance Properties
-
-    #region Override Implementation of TextWriter
+    public bool Closed { get; private set; }
 
     /// <summary>
     /// Writes a character to the underlying writer
@@ -124,7 +98,7 @@ namespace log4net.Util
       }
       catch (Exception e)
       {
-        m_errorHandler.Error("Failed to write [" + value + "].", e, ErrorCode.WriteFailure);
+        m_errorHandler.Error($"Failed to write [{value}].", e, ErrorCode.WriteFailure);
       }
     }
 
@@ -155,12 +129,7 @@ namespace log4net.Util
     /// Writes a string to the output.
     /// </summary>
     /// <param name="value">The string data to write to the output.</param>
-    /// <remarks>
-    /// <para>
-    /// Writes a string to the output.
-    /// </para>
-    /// </remarks>
-    public override void Write(string value)
+    public override void Write(string? value)
     {
       try
       {
@@ -168,7 +137,7 @@ namespace log4net.Util
       }
       catch (Exception e)
       {
-        m_errorHandler.Error("Failed to write [" + value + "].", e, ErrorCode.WriteFailure);
+        m_errorHandler.Error($"Failed to write [{value}].", e, ErrorCode.WriteFailure);
       }
     }
 
@@ -182,24 +151,13 @@ namespace log4net.Util
     /// </remarks>
     public override void Close()
     {
-      m_closed = true;
+      Closed = true;
       base.Close();
     }
-
-    #endregion Public Instance Methods
-
-    #region Private Instance Fields
 
     /// <summary>
     /// The error handler instance to pass all errors to
     /// </summary>
     private IErrorHandler m_errorHandler;
-
-    /// <summary>
-    /// Flag to indicate if this writer is closed
-    /// </summary>
-    private bool m_closed = false;
-
-    #endregion Private Instance Fields
   }
 }

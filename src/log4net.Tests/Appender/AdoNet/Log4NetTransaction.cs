@@ -26,8 +26,6 @@ namespace log4net.Tests.Appender.AdoNet
 {
   public class Log4NetTransaction : IDbTransaction
   {
-    #region AdoNetAppender
-
     public void Commit()
     {
       // empty
@@ -38,25 +36,13 @@ namespace log4net.Tests.Appender.AdoNet
       // empty
     }
 
-    #endregion
+    public IDbConnection Connection => throw new NotImplementedException();
 
-    #region Not Implemented
-
-    public IDbConnection Connection
-    {
-      get { throw new NotImplementedException(); }
-    }
-
-    public IsolationLevel IsolationLevel
-    {
-      get { throw new NotImplementedException(); }
-    }
+    public IsolationLevel IsolationLevel => throw new NotImplementedException();
 
     public void Dispose()
     {
       throw new NotImplementedException();
     }
-
-    #endregion
   }
 }

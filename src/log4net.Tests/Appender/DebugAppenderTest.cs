@@ -18,10 +18,10 @@
  *
 */
 
-#if NET_2_0
-
+#if NET462_OR_GREATER
 using System;
 using System.Diagnostics;
+using System.Reflection;
 using log4net.Appender;
 using log4net.Config;
 using log4net.Core;
@@ -56,9 +56,7 @@ namespace log4net.Tests.Appender
       ILog log = LogManager.GetLogger(rep.Name, GetType());
       log.Debug("Message");
 
-      Assert.AreEqual(
-          null,
-          categoryTraceListener.Category);
+      Assert.IsNull(categoryTraceListener.Category);
 
       Assert.IsFalse(testErrHandler.ErrorOccured);
 
@@ -84,9 +82,7 @@ namespace log4net.Tests.Appender
       ILog log = LogManager.GetLogger(rep.Name, GetType());
       log.Debug("Message");
 
-      Assert.AreEqual(
-          null,
-          categoryTraceListener.Category);
+      Assert.IsNull(categoryTraceListener.Category);
 
       Debug.Listeners.Remove(categoryTraceListener);
     }
@@ -136,25 +132,19 @@ namespace log4net.Tests.Appender
       log.Debug("Message");
 
       Assert.AreEqual(
-          System.Reflection.MethodInfo.GetCurrentMethod().Name,
+          MethodInfo.GetCurrentMethod().Name,
           categoryTraceListener.Category);
 
       Debug.Listeners.Remove(categoryTraceListener);
     }
 
-    private class TestErrorHandler : IErrorHandler
+    private sealed class TestErrorHandler : IErrorHandler
     {
-      private bool m_errorOccured = false;
+      public bool ErrorOccured { get; private set; }
 
-      public bool ErrorOccured
+      public void Error(string message, Exception? e, ErrorCode errorCode)
       {
-        get { return m_errorOccured; }
-      }
-      #region IErrorHandler Members
-
-      public void Error(string message, Exception e, ErrorCode errorCode)
-      {
-        m_errorOccured = true;
+        ErrorOccured = true;
       }
 
       public void Error(string message, Exception e)
@@ -166,10 +156,7 @@ namespace log4net.Tests.Appender
       {
         Error(message, null, ErrorCode.GenericFailure);
       }
-
-      #endregion
     }
   }
 }
-
 #endif
