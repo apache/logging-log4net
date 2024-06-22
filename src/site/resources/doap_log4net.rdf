@@ -31,7 +31,7 @@
     <shortdesc>Apache log4net provides logging services for .NET.</shortdesc>
     <bug-database rdf:resource="https://github.com/apache/logging-log4net/issues" />
     <mailing-list rdf:resource="http://logging.apache.org/log4net/mail-lists.html" />
-    <download-page rdf:resource="https://logging.apache.org/log4net/download_log4net.html" />
+    <download-page rdf:resource="https://logging.apache.org/log4net/release/download.html" />
     <programming-language>C#</programming-language>
     <category rdf:resource="http://projects.apache.org/category/library" />
     <repository>
