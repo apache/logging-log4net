@@ -29,7 +29,7 @@
     <homepage rdf:resource="http://logging.apache.org/log4net/" />
     <asfext:pmc rdf:resource="http://logging.apache.org" />
     <shortdesc>Apache log4net provides logging services for .NET.</shortdesc>
-    <download-page rdf:resource="https://logging.apache.org/log4net/download.html" />
+    <download-page rdf:resource="https://logging.apache.org/log4net/release/download.html" />
     <programming-language>C#</programming-language>
     <category rdf:resource="http://projects.apache.org/category/library" />
     <repository>
