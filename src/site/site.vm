@@ -375,7 +375,7 @@
       #if( $item.img )
         #set ( $img = $item.img )
       #else
-        #set ( $img = "images/maven-feather.png" )
+        #set ( $img = "images/maven.png" )
       #end
 ##
       #if ( ! ( $img.toLowerCase().startsWith("http:/") || $img.toLowerCase().startsWith("https:/") ||
@@ -414,12 +414,12 @@
     #end
     #if( $poweredBy.isEmpty() )
       <a href="http://maven.apache.org/" title="$i18n.getString( "site-renderer", $locale, "template.builtby" ) Maven" class="poweredBy">
-        <img class="poweredBy" alt="$i18n.getString( "site-renderer", $locale, "template.builtby" ) Maven" src="$relativePath/images/maven-feather.png" />
+        <img class="poweredBy" alt="$i18n.getString( "site-renderer", $locale, "template.builtby" ) Maven" src="$relativePath/images/maven.png" />
       </a>
     #end
   #else
     <a href="http://maven.apache.org/" title="$i18n.getString( "site-renderer", $locale, "template.builtby" ) Maven" class="poweredBy">
-      <img class="poweredBy" alt="$i18n.getString( "site-renderer", $locale, "template.builtby" ) Maven" src="$relativePath/images/maven-feather.png" />
+      <img class="poweredBy" alt="$i18n.getString( "site-renderer", $locale, "template.builtby" ) Maven" src="$relativePath/images/maven.png" />
     </a>
   #end
 #end

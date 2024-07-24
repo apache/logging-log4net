@@ -9,6 +9,7 @@ rat.excludesFile
 **/*.md
 **/*.txt
 **/*.sh
+**/*.ps1
 **/*.xml
 **/*.props
 **/*.csproj
