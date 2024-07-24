@@ -15,17 +15,11 @@ http://logging.apache.org/log4net
 Contributing
 ============
 
-log4net development happens on the logging dev mailing list, see
-https://logging.apache.org/log4net/mail-lists.html.  Please join the
-mailing list and discuss bigger changes before working on them.
+log4net development happens on [Github](https://github.com/apache/logging-log4net)
+and on our [mailing list](https://logging.apache.org/support.html).
+Please join the mailing list and discuss bigger changes before working on them.
 
-For bigger changes we must ask you to sign a Contributor License
-Agreement http://www.apache.org/licenses/#clas.
-
-Github pull requests are one way to contribute, the Apache issue
-tracker is no longer accepting new issues but is available at 
-https://issues.apache.org/jira/browse/LOG4NET for access to 
-previous issues. 
+For bigger changes we must ask you to sign a [Contributor License Agreement](http://www.apache.org/licenses/#clas).
 
 Developing
 ==========
