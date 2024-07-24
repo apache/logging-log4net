@@ -40,7 +40,6 @@
     <Copyright>Copyright 2004-2024 The Apache Software Foundation</Copyright>
     <DevelopmentDependency>false</DevelopmentDependency>
     <IsPackable>true</IsPackable>
-    <GeneratePackageOnBuild>$(GeneratePackages)</GeneratePackageOnBuild>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://logging.apache.org/log4net/</PackageProjectUrl>
     <PackageIcon>package-icon.png</PackageIcon>
@@ -63,10 +62,10 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
     <DefineConstants>TRACE;DEBUG;$(DefineConstants)</DefineConstants>
+    <GeneratePackageOnBuild>$(GeneratePackages)</GeneratePackageOnBuild>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)'=='Release' ">
     <DefineConstants>TRACE;STRONG;$(DefineConstants)</DefineConstants>
-    <DebugType>none</DebugType>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <PropertyGroup />
