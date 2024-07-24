@@ -40,12 +40,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "log4net2-SerializeEvent", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".doc", ".doc", "{33D80AD3-8048-4220-8BB0-38E3BDE5FCF4}"
 	ProjectSection(SolutionItems) = preProject
+		build-preview.ps1 = build-preview.ps1
 		..\doc\BUILDING.md = ..\doc\BUILDING.md
+		site\xdoc\download_log4net.xml = site\xdoc\download_log4net.xml
 		..\doc\MailTemplate.Result.txt = ..\doc\MailTemplate.Result.txt
 		..\doc\MailTemplate.txt = ..\doc\MailTemplate.txt
-		..\doc\RELEASING.md = ..\doc\RELEASING.md
 		site\xdoc\release\release-notes.xml = site\xdoc\release\release-notes.xml
-		site\xdoc\download_log4net.xml = site\xdoc\download_log4net.xml
+		..\doc\RELEASING.md = ..\doc\RELEASING.md
 	EndProjectSection
 EndProject
 Global
