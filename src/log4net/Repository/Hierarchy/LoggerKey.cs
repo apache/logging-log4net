@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace log4net.Repository.Hierarchy
 {
@@ -39,6 +40,7 @@ namespace log4net.Repository.Hierarchy
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
+  [DebuggerDisplay("{m_name}")]
   internal readonly struct LoggerKey
   {
     /// <summary>
