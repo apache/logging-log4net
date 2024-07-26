@@ -169,6 +169,9 @@ limitations under the License.
         Apache log4net 3.0.0 addresses reported issues:
         <section id="a3.0.0-bug" name="Bug fixes">
           <ul>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/156">Regression: Creating nested loggers in reverse order fails in 3.0.0-preview.1</a> (by @freeandnil)
+            </li>
           </ul>
         </section>
         <section id="a3.0.0-enhancements" name="Enhancements">

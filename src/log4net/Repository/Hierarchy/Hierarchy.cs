@@ -50,7 +50,7 @@ namespace log4net.Repository.Hierarchy
   /// </remarks>
   public class LoggerCreationEventArgs : EventArgs
   {
-      /// <summary>
+    /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="log">The <see cref="Logger"/> that has been created.</param>
@@ -660,42 +660,64 @@ namespace log4net.Repository.Hierarchy
 
       var key = new LoggerKey(name);
 
-      // Synchronize to prevent write conflicts. Read conflicts (in
-      // GetEffectiveLevel() method) are possible only if variable
-      // assignments are non-atomic.
+      const int maxRetries = 5;
+      for (int i = 0; i < maxRetries; i++)
+      {
+        if (TryCreateLogger(key, factory) is Logger result)
+        {
+          return result;
+        }
+      }
+      throw new InvalidOperationException(
+        $"GetLogger failed, because possibly too many threads are messing with creating the logger {name}!");
+    }
 
+    private Logger? TryCreateLogger(LoggerKey key, ILoggerFactory factory)
+    {
       if (!m_ht.TryGetValue(key, out object? node))
       {
-        return CreateLogger(null);
+        Logger newLogger = CreateLogger(key.Name);
+        node = m_ht.GetOrAdd(key, newLogger);
+        if (node == newLogger)
+        {
+          RegisterLogger(newLogger);
+        }
       }
 
-      if (node is Logger nodeLogger)
+      if (node is Logger logger)
       {
-        return nodeLogger;
+        return logger;
       }
 
-      if (node is ProvisionNode nodeProvisionNode)
+      if (node is ProvisionNode provisionNode)
       {
-        return CreateLogger(l => UpdateChildren(nodeProvisionNode, l));
+        Logger newLogger = CreateLogger(key.Name);
+        if (m_ht.TryUpdate(key, newLogger, node))
+        {
+          UpdateChildren(provisionNode, newLogger);
+          RegisterLogger(newLogger);
+          return newLogger;
+        }
+        return null;
       }
 
       // It should be impossible to arrive here but let's keep the compiler happy.
-      return null!;
+      throw new InvalidOperationException("TryCreateLogger failed, because a node is neither a Logger nor a ProvisionNode!");
 
-      Logger CreateLogger(Action<Logger>? extraInit)
+      Logger CreateLogger(string name)
       {
-        // Use GetOrAdd in case the logger was added after checking above.
-        return (Logger)m_ht.GetOrAdd(key, _ =>
-        {
-          Logger logger = factory.CreateLogger(this, name);
-          logger.Hierarchy = this;
-          extraInit?.Invoke(logger);
-          UpdateParents(logger);
-          OnLoggerCreationEvent(logger);
-          return logger;
-        });
+        Logger result = factory.CreateLogger(this, name);
+        result.Hierarchy = this;
+        return result;
+      }
+
+      void RegisterLogger(Logger logger)
+      {
+        UpdateParents(logger);
+        OnLoggerCreationEvent(logger);
       }
     }
+
 
     /// <summary>
     /// Sends a logger creation event to all registered listeners
