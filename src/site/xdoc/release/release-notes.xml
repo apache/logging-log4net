@@ -127,6 +127,14 @@ limitations under the License.
               </li>
             </ul>
           </p>
+          <p>
+            <a href="https://github.com/apache/logging-log4net/issues/154">Remove RemotingAppender</a>
+            <ul>
+              <li>
+                <code>log4net.Appender.RemotingAppender</code>
+              </li>
+            </ul>
+          </p>
           <br/>
           <p>
             Changed members
