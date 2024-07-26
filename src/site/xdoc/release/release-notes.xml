@@ -147,6 +147,10 @@ limitations under the License.
                 <code>log4net.Appender.MemoryAppender.m_eventsList</code> (protected field) is now <code>List&lt;LoggingEvent&gt;</code> (instead of <code>System.Collections.ArrayList </code> before)
                 The reason is an optimization as part of <a href="https://github.com/apache/logging-log4net/issues/124">Add support for nullable annotations</a>
               </li>
+              <li>
+                <code>log4net.Repository.Hierarchy.Hierarchy.EmittedNoAppenderWarning</code> is now internal.
+                See <a href="https://github.com/apache/logging-log4net/issues/157">fixed Regression when creating nested loggers in reverse order</a>
+              </li>
             </ul>
           </p>
           <br/>
