@@ -128,10 +128,14 @@ limitations under the License.
             </ul>
           </p>
           <p>
-            <a href="https://github.com/apache/logging-log4net/issues/154">Remove RemotingAppender</a>
             <ul>
               <li>
                 <code>log4net.Appender.RemotingAppender</code>
+                <a href="https://github.com/apache/logging-log4net/issues/154">Remove RemotingAppender</a>
+              </li>
+              <li>
+                <code>log4net.Appender.NetSendAppender</code>
+                <a href="https://github.com/apache/logging-log4net/pull/158">NetSendAdapter removed</a>
               </li>
             </ul>
           </p>
