@@ -149,13 +149,6 @@ limitations under the License.
                             </td>
                         </tr>
                         <tr>
-                            <td>log4net.Appender.NetSendAppender</td>
-                            <td>
-                                Writes logging events to the Windows Messenger service. These messages are
-                                displayed in a dialog on a users terminal.
-                            </td>
-                        </tr>
-                        <tr>
                             <td>log4net.Appender.OutputDebugStringAppender</td>
                             <td>
                                 Writes logging events to the debugger. If the application has no
@@ -167,12 +160,6 @@ limitations under the License.
                             <td>log4net.Appender.RemoteSyslogAppender</td>
                             <td>
                                 Writes logging events to a remote syslog service using UDP networking.
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>log4net.Appender.RemotingAppender</td>
-                            <td>
-                                Writes logging events to a remoting sink using .NET remoting.
                             </td>
                         </tr>
                         <tr>

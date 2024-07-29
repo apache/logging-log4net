@@ -2166,10 +2166,6 @@ limitations under the License.
           An <span class="code">IPlugin</span> interface can be attached to any repository.
         </p>
         <h3>
-          A new RemoteLoggingServerPlugin plugin acts as the server for the
-          RemotingAppender
-        </h3>
-        <h3>
           Updated the core log4net framework to work in an environment with no
           permissions
         </h3>

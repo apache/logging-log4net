@@ -795,32 +795,6 @@ CREATE TABLE Log (
         </source>
       </section>
 
-      <section id="netsendappender" name="NetSendAppender">
-        <p>
-          The following example shows how to configure the <span class="code">NetSendAppender</span>
-          to deliver messages to a specific user's screen. As this appender is typically only
-          used for important notifications a <i>Threshold</i> of level <span class="code">Error</span>
-          is specified. This example delivers the messages to the user <i>nicko</i> on the
-          machine <i>SQUARE</i>. However things are not always straight forward using the Windows
-          Messenger Service, one possible outcome using this configuration is that the <i>Server</i>
-          will broadcast looking for a WINS server which it will then ask to deliver the message
-          to the <i>Recipient</i>, the WINS server will deliver it to the first terminal that the
-          user logged in from.
-        </p>
-        <source language="xml">
-          <![CDATA[
-<appender name="NetSendAppender" type="log4net.Appender.NetSendAppender">
-    <threshold value="ERROR" />
-    <server value="SQUARE" />
-    <recipient value="nicko" />
-    <layout type="log4net.Layout.PatternLayout">
-        <conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
-    </layout>
-</appender>
-                ]]>
-        </source>
-      </section>
-
       <section id="outputdebugstringappender" name="OutputDebugStringAppender">
         <p>
           The following example shows how to configure the <span class="code">OutputDebugStringAppender</span>
@@ -832,48 +806,6 @@ CREATE TABLE Log (
     <layout type="log4net.Layout.PatternLayout">
         <conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
     </layout>
-</appender>
-                ]]>
-        </source>
-      </section>
-
-      <section id="remotingappender" name="RemotingAppender">
-        <p>
-          The following example shows how to configure the <span class="code">RemotingAppender</span>
-          to deliver logging events to a specified <i>Sink</i> (in this example
-          the sink is <span class="code">tcp://localhost:8085/LoggingSink</span>).
-          In this example the events are delivered in blocks of 95 events because
-          of the <i>BufferSize</i>. No events are discarded. The <i>OnlyFixPartialEventData</i>
-          option allows the appender to ignore certain logging event properties that
-          can be very slow to generate (e.g. the calling location information).
-        </p>
-        <source language="xml">
-          <![CDATA[
-<appender name="RemotingAppender" type="log4net.Appender.RemotingAppender" >
-    <sink value="tcp://localhost:8085/LoggingSink" />
-    <lossy value="false" />
-    <bufferSize value="95" />
-    <onlyFixPartialEventData value="true" />
-</appender>
-                ]]>
-        </source>
-        <p>
-          This example configures the <span class="code">RemotingAppender</span> to
-          deliver the events only when an event with level <span class="code">ERROR</span>
-          or above is logged. When the events are delivered, up to 200 (<i>BufferSize</i>)
-          previous events (regardless of level) will be delivered to provide context.
-          Events not delivered will be discarded.
-        </p>
-        <source language="xml">
-          <![CDATA[
-<appender name="RemotingAppender" type="log4net.Appender.RemotingAppender" >
-    <sink value="tcp://localhost:8085/LoggingSink" />
-    <lossy value="true" />
-    <bufferSize value="200" />
-    <onlyFixPartialEventData value="true" />
-    <evaluator type="log4net.Core.LevelEvaluator">
-        <threshold value="ERROR"/>
-    </evaluator>
 </appender>
                 ]]>
         </source>

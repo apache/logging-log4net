@@ -699,33 +699,10 @@ public class FastLogger
             rolling files, rolling files is simply not
             compatible with this scenario.
           </p>
-          <p>
-            A better alternative is to have your processes
-            log to <span class="code">RemotingAppenders</span>.  Using
-            the <span class="code">RemoteLoggingServerPlugin</span>
-            (or <span class="code">IRemoteLoggingSink</span>) a
-            process can receive all the events and log
-            them to a single log file.  One of the
-            examples shows how to use the <span class="code">RemoteLoggingServerPlugin</span>.
-          </p>
         </section>
         <p>
           <a href="#top">Back to Top</a>
         </p>
-        <section id="distributed" name="If I have many processes across multiple hosts (possibly across multiple time zones) logging to the same file using the RemotingAppender, what happens to timestamps?">
-          <p>
-            The timestamp is created when the logging event is created. That is so say,
-            when the <span class="code">Debug</span>, <span class="code">Info</span>,
-            <span class="code">Warn</span>, <span class="code">Error</span>
-            or <span class="code">Fatal</span> method is invoked. This is unaffected by the time at
-            which they may arrive at a remote server. Since the timestamps are
-            transmitted in UTC format by the <span class="code">RemotingAppender</span>,
-            they all appear in the same time zone as
-            the host creating the logfile. Since the clocks of various machines may not be
-            synchronized, this may account for time interval inconsistencies between events
-            generated on different hosts.
-          </p>
-        </section>
         <p>
           <a href="#top">Back to Top</a>
         </p>
