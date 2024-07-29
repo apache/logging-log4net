@@ -40,7 +40,7 @@ namespace log4net.Repository.Hierarchy
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-  [DebuggerDisplay("{m_name}")]
+  [DebuggerDisplay("{Name}")]
   internal readonly struct LoggerKey
   {
     /// <summary>
@@ -65,7 +65,7 @@ namespace log4net.Repository.Hierarchy
     /// <param name="name">The name of the logger.</param>
     internal LoggerKey(string name)
     {
-      m_name = string.Intern(name);
+      Name = string.Intern(name);
       m_hashCache = name.GetHashCode();
     }
 
@@ -83,7 +83,11 @@ namespace log4net.Repository.Hierarchy
       return m_hashCache;
     }
 
-    private readonly string m_name;
+    /// <summary>
+    /// Name of the Logger
+    /// </summary>
+    internal string Name { get; }
+
     private readonly int m_hashCache;
 
     public static Comparer ComparerInstance { get; } = new();
@@ -92,7 +96,7 @@ namespace log4net.Repository.Hierarchy
     {
       public bool Equals(LoggerKey x, LoggerKey y)
       {
-        return x.m_hashCache == y.m_hashCache && x.m_name == y.m_name;
+        return x.m_hashCache == y.m_hashCache && x.Name == y.Name;
       }
 
       public int GetHashCode(LoggerKey obj) => obj.m_hashCache;

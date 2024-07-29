@@ -128,10 +128,14 @@ limitations under the License.
             </ul>
           </p>
           <p>
-            <a href="https://github.com/apache/logging-log4net/issues/154">Remove RemotingAppender</a>
             <ul>
               <li>
                 <code>log4net.Appender.RemotingAppender</code>
+                <a href="https://github.com/apache/logging-log4net/issues/154">Remove RemotingAppender</a>
+              </li>
+              <li>
+                <code>log4net.Appender.NetSendAppender</code>
+                <a href="https://github.com/apache/logging-log4net/pull/158">NetSendAdapter removed</a>
               </li>
             </ul>
           </p>
@@ -146,6 +150,10 @@ limitations under the License.
               <li>
                 <code>log4net.Appender.MemoryAppender.m_eventsList</code> (protected field) is now <code>List&lt;LoggingEvent&gt;</code> (instead of <code>System.Collections.ArrayList </code> before)
                 The reason is an optimization as part of <a href="https://github.com/apache/logging-log4net/issues/124">Add support for nullable annotations</a>
+              </li>
+              <li>
+                <code>log4net.Repository.Hierarchy.Hierarchy.EmittedNoAppenderWarning</code> is now internal.
+                See <a href="https://github.com/apache/logging-log4net/issues/157">fixed Regression when creating nested loggers in reverse order</a>
               </li>
             </ul>
           </p>
@@ -169,6 +177,9 @@ limitations under the License.
         Apache log4net 3.0.0 addresses reported issues:
         <section id="a3.0.0-bug" name="Bug fixes">
           <ul>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/156">Regression: Creating nested loggers in reverse order fails in 3.0.0-preview.1</a> (by @freeandnil)
+            </li>
           </ul>
         </section>
         <section id="a3.0.0-enhancements" name="Enhancements">

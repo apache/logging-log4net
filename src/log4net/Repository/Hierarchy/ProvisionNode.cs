@@ -31,8 +31,7 @@ namespace log4net.Repository.Hierarchy
   /// <see cref="Logger" /> for that node.
   /// </para>
   /// <para>
-  /// A provision node holds a list of child loggers on behalf of
-  /// a logger that does not exist.
+  /// A provision node holds a list of child loggers on behalf of a logger that does not exist.
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
@@ -43,12 +42,6 @@ namespace log4net.Repository.Hierarchy
     /// Create a new provision node with child node
     /// </summary>
     /// <param name="log">A child logger to add to this node.</param>
-    /// <remarks>
-    /// <para>
-    /// Initializes a new instance of the <see cref="ProvisionNode" /> class 
-    /// with the specified child logger.
-    /// </para>
-    /// </remarks>
     internal ProvisionNode(Logger log)
     {
       Add(log);
