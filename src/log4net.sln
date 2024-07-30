@@ -42,6 +42,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".doc", ".doc", "{33D80AD3-8
 	ProjectSection(SolutionItems) = preProject
 		build-preview.ps1 = build-preview.ps1
 		..\doc\BUILDING.md = ..\doc\BUILDING.md
+		site\xdoc\release\config-examples.xml = site\xdoc\release\config-examples.xml
 		site\xdoc\download_log4net.xml = site\xdoc\download_log4net.xml
 		..\doc\MailTemplate.Result.txt = ..\doc\MailTemplate.Result.txt
 		..\doc\MailTemplate.txt = ..\doc\MailTemplate.txt

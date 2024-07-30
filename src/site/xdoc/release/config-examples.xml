@@ -31,7 +31,7 @@ limitations under the License.
         <p>
           This document presents example configurations for the built-in appenders.
           These configurations are designed to work with the
-          <span class="code">log4net.Config.DOMConfigurator</span> and the
+          <span class="code">log4net.Config.XmlConfigurator</span> and the
           <span class="code">log4net.Repository.Hierarchy.Hierarchy</span>.
         </p>
         <p>
@@ -462,7 +462,6 @@ CREATE TABLE Log (
         </section>
 
       </section>
-
 
       <section id="aspnettraceappender" name="AspNetTraceAppender">
         <p>
