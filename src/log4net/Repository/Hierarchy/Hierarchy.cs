@@ -204,7 +204,7 @@ namespace log4net.Repository.Hierarchy
     {
       // The accumulation in loggers is necessary because not all elements in
       // loggers are Logger objects as there might be some ProvisionNodes as well.
-      return loggers.Values.OfType<Logger>().ToArray();
+      return loggers.Select(logger => logger.Value).OfType<ILogger>().ToArray();
     }
 
     /// <summary>
