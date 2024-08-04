@@ -30,14 +30,7 @@ namespace log4net.Tests.Appender
   /// <author>Nicko Cadell</author>
   public class StringAppender : AppenderSkeleton
   {
-    private StringBuilder m_buf = new StringBuilder();
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="StringAppender" /> class.
-    /// </summary>
-    public StringAppender()
-    {
-    }
+    private readonly StringBuilder m_buf = new();
 
     /// <summary>
     /// Get the string logged so far
@@ -68,9 +61,6 @@ namespace log4net.Tests.Appender
     /// This appender requires a <see cref="Layout"/> to be set.
     /// </summary>
     /// <value><c>true</c></value>
-    protected override bool RequiresLayout
-    {
-      get { return true; }
-    }
+    protected override bool RequiresLayout => true;
   }
 }

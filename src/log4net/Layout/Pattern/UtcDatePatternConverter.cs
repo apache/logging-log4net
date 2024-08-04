@@ -18,7 +18,6 @@
 #endregion
 
 using System;
-using System.Text;
 using System.IO;
 
 using log4net.Core;
@@ -28,7 +27,7 @@ using log4net.DateFormatter;
 namespace log4net.Layout.Pattern
 {
   /// <summary>
-  /// Write the TimeStamp to the output
+  /// Writes the TimeStamp to the output.
   /// </summary>
   /// <remarks>
   /// <para>
@@ -36,7 +35,7 @@ namespace log4net.Layout.Pattern
   /// the date of a <see cref="LoggingEvent"/>.
   /// </para>
   /// <para>
-  /// Uses a <see cref="IDateFormatter"/> to format the <see cref="LoggingEvent.TimeStamp"/> 
+  /// Uses a <see cref="IDateFormatter"/> to format the <see cref="LoggingEvent.TimeStamp"/>
   /// in Universal time.
   /// </para>
   /// <para>
@@ -45,10 +44,10 @@ namespace log4net.Layout.Pattern
   /// </remarks>
   /// <seealso cref="DatePatternConverter"/>
   /// <author>Nicko Cadell</author>
-  internal class UtcDatePatternConverter : DatePatternConverter
+  internal sealed class UtcDatePatternConverter : DatePatternConverter
   {
     /// <summary>
-    /// Write the TimeStamp to the output
+    /// Writes the TimeStamp to the output.
     /// </summary>
     /// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
     /// <param name="loggingEvent">the event being logged</param>
@@ -67,15 +66,13 @@ namespace log4net.Layout.Pattern
     {
       try
       {
-        m_dateFormatter.FormatDate(loggingEvent.TimeStampUtc, writer);
+        m_dateFormatter!.FormatDate(loggingEvent.TimeStampUtc, writer);
       }
       catch (Exception ex)
       {
         LogLog.Error(declaringType, "Error occurred while converting date.", ex);
       }
     }
-
-    #region Private Static Fields
 
     /// <summary>
     /// The fully qualified type of the UtcDatePatternConverter class.
@@ -85,7 +82,5 @@ namespace log4net.Layout.Pattern
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(UtcDatePatternConverter);
-
-    #endregion Private Static Fields
   }
 }

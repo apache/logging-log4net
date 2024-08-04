@@ -17,17 +17,13 @@
 //
 #endregion
 
-// .NET Compact Framework 1.0 has no support for Marshal.StringToHGlobalAnsi
-// SSCLI 1.0 has no support for Marshal.StringToHGlobalAnsi
-#if !NETCF && !SSCLI
-
 using System;
 using System.Runtime.InteropServices;
 
 using log4net.Core;
 using log4net.Util;
 
-namespace log4net.Appender
+namespace log4net.Appender 
 {
   /// <summary>
   /// Logs events to a local syslog service.
@@ -62,10 +58,8 @@ namespace log4net.Appender
   /// </remarks>
   /// <author>Rob Lyon</author>
   /// <author>Nicko Cadell</author>
-  public class LocalSyslogAppender : AppenderSkeleton
+  public class LocalSyslogAppender : AppenderSkeleton 
   {
-    #region Enumerations
-
     /// <summary>
     /// syslog severities
     /// </summary>
@@ -251,41 +245,18 @@ namespace log4net.Appender
       Local7 = 23
     }
 
-    #endregion // Enumerations
-
-    #region Public Instance Constructors
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LocalSyslogAppender" /> class.
-    /// </summary>
-    /// <remarks>
-    /// This instance of the <see cref="LocalSyslogAppender" /> class is set up to write 
-    /// to a local syslog service.
-    /// </remarks>
-    public LocalSyslogAppender()
-    {
-    }
-
-    #endregion // Public Instance Constructors
-
-    #region Public Instance Properties
-
     /// <summary>
     /// Message identity
     /// </summary>
     /// <remarks>
     /// <para>
     /// An identifier is specified with each log message. This can be specified
-    /// by setting the <see cref="Identity"/> property. The identity (also know 
+    /// by setting the <see cref="Identity"/> property. The identity (also known 
     /// as the tag) must not contain white space. The default value for the
     /// identity is the application name (from <see cref="SystemInfo.ApplicationFriendlyName"/>).
     /// </para>
     /// </remarks>
-    public string Identity
-    {
-      get { return m_identity; }
-      set { m_identity = value; }
-    }
+    public string? Identity { get; set; }
 
     /// <summary>
     /// Syslog facility
@@ -295,13 +266,7 @@ namespace log4net.Appender
     /// facilities is predefined and cannot be extended. The default value
     /// is <see cref="SyslogFacility.User"/>.
     /// </remarks>
-    public SyslogFacility Facility
-    {
-      get { return m_facility; }
-      set { m_facility = value; }
-    }
-
-    #endregion // Public Instance Properties
+    public SyslogFacility Facility { get; set; } = SyslogFacility.User;
 
     /// <summary>
     /// Add a mapping of level to severity
@@ -316,8 +281,6 @@ namespace log4net.Appender
     {
       m_levelMapping.Add(mapping);
     }
-
-    #region IOptionHandler Implementation
 
     /// <summary>
     /// Initialize the appender based on the options set.
@@ -335,21 +298,15 @@ namespace log4net.Appender
     /// <see cref="ActivateOptions"/> must be called again.
     /// </para>
     /// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD
     [System.Security.SecuritySafeCritical]
-#endif
     public override void ActivateOptions()
     {
       base.ActivateOptions();
-
+      
       m_levelMapping.ActivateOptions();
 
-      string identString = m_identity;
-      if (identString == null)
-      {
-        // Set to app name by default
-        identString = SystemInfo.ApplicationFriendlyName;
-      }
+      // Set to app name by default
+      string? identString = Identity ?? SystemInfo.ApplicationFriendlyName;
 
       // create the native heap ansi string. Note this is a copy of our string
       // so we do not need to hold on to the string itself, holding on to the
@@ -357,12 +314,8 @@ namespace log4net.Appender
       m_handleToIdentity = Marshal.StringToHGlobalAnsi(identString);
 
       // open syslog
-      openlog(m_handleToIdentity, 1, m_facility);
+      openlog(m_handleToIdentity, 1, Facility);
     }
-
-    #endregion // IOptionHandler Implementation
-
-    #region AppenderSkeleton Implementation
 
     /// <summary>
     /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/> method.
@@ -376,15 +329,11 @@ namespace log4net.Appender
     /// The format of the output will depend on the appender's layout.
     /// </para>
     /// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD
     [System.Security.SecuritySafeCritical]
-#endif
-#if !NETSTANDARD1_3
     [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
-#endif
-    protected override void Append(LoggingEvent loggingEvent)
+    protected override void Append(LoggingEvent loggingEvent) 
     {
-      int priority = GeneratePriority(m_facility, GetSeverity(loggingEvent.Level));
+      int priority = GeneratePriority(Facility, GetSeverity(loggingEvent.Level));
       string message = RenderLoggingEvent(loggingEvent);
 
       // Call the local libc syslog method
@@ -400,9 +349,7 @@ namespace log4net.Appender
     /// Close the syslog when the appender is closed
     /// </para>
     /// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD
     [System.Security.SecuritySafeCritical]
-#endif
     protected override void OnClose()
     {
       base.OnClose();
@@ -416,7 +363,7 @@ namespace log4net.Appender
       {
         // Ignore dll not found at this point
       }
-
+    
       if (m_handleToIdentity != IntPtr.Zero)
       {
         // free global ident
@@ -427,74 +374,56 @@ namespace log4net.Appender
     /// <summary>
     /// This appender requires a <see cref="AppenderSkeleton.Layout"/> to be set.
     /// </summary>
-    /// <value><c>true</c></value>
-    /// <remarks>
-    /// <para>
-    /// This appender requires a <see cref="AppenderSkeleton.Layout"/> to be set.
-    /// </para>
-    /// </remarks>
-    protected override bool RequiresLayout
-    {
-      get { return true; }
-    }
-
-    #endregion // AppenderSkeleton Implementation
-
-    #region Protected Members
+    protected override bool RequiresLayout => true;
 
     /// <summary>
     /// Translates a log4net level to a syslog severity.
     /// </summary>
     /// <param name="level">A log4net level.</param>
     /// <returns>A syslog severity.</returns>
-    /// <remarks>
-    /// <para>
-    /// Translates a log4net level to a syslog severity.
-    /// </para>
-    /// </remarks>
-    protected virtual SyslogSeverity GetSeverity(Level level)
+    protected virtual SyslogSeverity GetSeverity(Level? level)
     {
-      LevelSeverity levelSeverity = m_levelMapping.Lookup(level) as LevelSeverity;
-      if (levelSeverity != null)
+      if (m_levelMapping.Lookup(level) is LevelSeverity levelSeverity)
       {
         return levelSeverity.Severity;
       }
 
       //
-      // Fallback to sensible default values
+      // Fall back to sensible default values
       //
 
-      if (level >= Level.Alert)
+      if (level is null)
+      {
+        // Default setting
+        return SyslogSeverity.Debug;
+      }
+      if (level >= Level.Alert) 
       {
         return SyslogSeverity.Alert;
-      }
-      else if (level >= Level.Critical)
+      } 
+      else if (level >= Level.Critical) 
       {
         return SyslogSeverity.Critical;
-      }
-      else if (level >= Level.Error)
+      } 
+      else if (level >= Level.Error) 
       {
         return SyslogSeverity.Error;
-      }
-      else if (level >= Level.Warn)
+      } 
+      else if (level >= Level.Warn) 
       {
         return SyslogSeverity.Warning;
-      }
-      else if (level >= Level.Notice)
+      } 
+      else if (level >= Level.Notice) 
       {
         return SyslogSeverity.Notice;
-      }
-      else if (level >= Level.Info)
+      } 
+      else if (level >= Level.Info) 
       {
         return SyslogSeverity.Informational;
-      }
+      } 
       // Default setting
       return SyslogSeverity.Debug;
     }
-
-    #endregion // Protected Members
-
-    #region Public Static Members
 
     /// <summary>
     /// Generate a syslog priority.
@@ -507,20 +436,6 @@ namespace log4net.Appender
       return ((int)facility * 8) + (int)severity;
     }
 
-    #endregion // Public Static Members
-
-    #region Private Instances Fields
-
-    /// <summary>
-    /// The facility. The default facility is <see cref="SyslogFacility.User"/>.
-    /// </summary>
-    private SyslogFacility m_facility = SyslogFacility.User;
-
-    /// <summary>
-    /// The message identity
-    /// </summary>
-    private string m_identity;
-
     /// <summary>
     /// Marshaled handle to the identity string. We have to hold on to the
     /// string as the <c>openlog</c> and <c>syslog</c> APIs just hold the
@@ -531,12 +446,8 @@ namespace log4net.Appender
     /// <summary>
     /// Mapping from level object to syslog severity
     /// </summary>
-    private LevelMapping m_levelMapping = new LevelMapping();
-
-    #endregion // Private Instances Fields
-
-    #region External Members
-
+    private readonly LevelMapping m_levelMapping = new();
+    
     /// <summary>
     /// Open connection to system logger.
     /// </summary>
@@ -555,7 +466,7 @@ namespace log4net.Appender
     /// string to <c>"%s"</c>.
     /// </para>
     /// </remarks>
-    [DllImport("libc", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+    [DllImport("libc", CharSet=CharSet.Ansi, CallingConvention=CallingConvention.Cdecl)]
     private static extern void syslog(int priority, string format, string message);
 
     /// <summary>
@@ -564,42 +475,16 @@ namespace log4net.Appender
     [DllImport("libc")]
     private static extern void closelog();
 
-    #endregion // External Members
-
-    #region LevelSeverity LevelMapping Entry
-
     /// <summary>
     /// A class to act as a mapping between the level that a logging call is made at and
     /// the syslog severity that is should be logged at.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// A class to act as a mapping between the level that a logging call is made at and
-    /// the syslog severity that is should be logged at.
-    /// </para>
-    /// </remarks>
     public class LevelSeverity : LevelMappingEntry
     {
-      private SyslogSeverity m_severity;
-
       /// <summary>
       /// The mapped syslog severity for the specified level
       /// </summary>
-      /// <remarks>
-      /// <para>
-      /// Required property.
-      /// The mapped syslog severity for the specified level
-      /// </para>
-      /// </remarks>
-      public SyslogSeverity Severity
-      {
-        get { return m_severity; }
-        set { m_severity = value; }
-      }
+      public SyslogSeverity Severity { get; set; }
     }
-
-    #endregion // LevelSeverity LevelMapping Entry
   }
 }
-
-#endif

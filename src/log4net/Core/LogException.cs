@@ -18,9 +18,7 @@
 #endregion
 
 using System;
-#if !NETCF && !NETSTANDARD1_3
 using System.Runtime.Serialization;
-#endif
 
 namespace log4net.Core
 {
@@ -36,17 +34,9 @@ namespace log4net.Core
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-#if !NETCF
   [Serializable]
-#endif
-#if NETSTANDARD1_3
-  public class LogException : Exception
-#else
   public class LogException : ApplicationException
-#endif
   {
-    #region Public Instance Constructors
-
     /// <summary>
     /// Constructor
     /// </summary>
@@ -69,7 +59,7 @@ namespace log4net.Core
     /// the specified message.
     /// </para>
     /// </remarks>
-    public LogException(String message) : base(message)
+    public LogException(string message) : base(message)
     {
     }
 
@@ -84,15 +74,10 @@ namespace log4net.Core
     /// with the specified message and inner exception.
     /// </para>
     /// </remarks>
-    public LogException(String message, Exception innerException) : base(message, innerException)
+    public LogException(string message, Exception innerException) : base(message, innerException)
     {
     }
 
-    #endregion Public Instance Constructors
-
-    #region Protected Instance Constructors
-
-#if !NETCF && !NETSTANDARD1_3
     /// <summary>
     /// Serialization constructor
     /// </summary>
@@ -104,11 +89,9 @@ namespace log4net.Core
     /// with serialized data.
     /// </para>
     /// </remarks>
-    protected LogException(SerializationInfo info, StreamingContext context) : base(info, context)
+    protected LogException(SerializationInfo info, StreamingContext context)
+      : base(info, context)
     {
     }
-#endif
-
-    #endregion Protected Instance Constructors
   }
 }

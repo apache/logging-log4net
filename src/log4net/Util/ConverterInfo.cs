@@ -34,45 +34,15 @@ namespace log4net.Util
   /// </remarks>
   public sealed class ConverterInfo
   {
-    private string m_name;
-    private Type m_type;
-    private readonly PropertiesDictionary properties = new PropertiesDictionary();
+    /// <summary>
+    /// Gets or sets the name of the conversion pattern in the format string.
+    /// </summary>
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
-    /// default constructor
+    /// Gets or sets the type of the converter. The type must extend <see cref="PatternConverter"/>.
     /// </summary>
-    public ConverterInfo()
-    {
-    }
-
-    /// <summary>
-    /// Gets or sets the name of the conversion pattern
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The name of the pattern in the format string
-    /// </para>
-    /// </remarks>
-    public string Name
-    {
-      get { return m_name; }
-      set { m_name = value; }
-    }
-
-    /// <summary>
-    /// Gets or sets the type of the converter
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The value specified must extend the 
-    /// <see cref="PatternConverter"/> type.
-    /// </para>
-    /// </remarks>
-    public Type Type
-    {
-      get { return m_type; }
-      set { m_type = value; }
-    }
+    public Type? Type { get; set; }
 
     /// <summary>
     /// 
@@ -80,15 +50,15 @@ namespace log4net.Util
     /// <param name="entry"></param>
     public void AddProperty(PropertyEntry entry)
     {
-      properties[entry.Key] = entry.Value;
+      if (entry.Key is not null)
+      {
+        Properties[entry.Key] = entry.Value;
+      }
     }
 
     /// <summary>
     /// 
     /// </summary>
-    public PropertiesDictionary Properties
-    {
-      get { return properties; }
-    }
+    public PropertiesDictionary Properties { get; } = new();
   }
 }

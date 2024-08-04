@@ -1,0 +1,42 @@
+To: dev@logging.apache.org
+Subject: [RESULT][VOTE] Release Apache Log4net 3.0.0
+
+Hi,
+
+with +3 binding votes (..., Volkan and myself), apache log4net 3.0.0 is released and available:
+https://github.com/apache/logging-log4net/releases/tag/rel%2F3.0.0
+
+Source snapshot at:
+https://downloads.apache.org/logging/log4net/source/apache-log4net-source-3.0.0.zip
+
+Thanks
+
+---------------------------------------------------------------------------------------------------
+This is a vote to release the Apache Log4net 3.0.0.
+
+Website: https://logging.staged.apache.org/log4net/release/release-notes.html
+GitHub: https://github.com/apache/logging-log4net
+GitHub release (pre-release): https://github.com/apache/logging-log4net/releases/tag/3.0.0-rc1
+Distribution: https://dist.apache.org/repos/dist/dev/logging/log4net
+
+Please download, test, and cast your votes on this mailing list.
+
+How to run the unit tests?
+- install docker (if you haven't already)
+  - https://docs.docker.com/engine/install/
+- in logging/log4net run
+  - `docker build -t log4net-builder .`
+  - `docker run -it log4net-builder`
+    - this will
+      - install all dependencies in the container
+      - build src/log4net.sln
+  - inside the container run
+    - `dotnet test /logging-log4net/src/log4net.sln`
+
+[ ] +1, release the artifacts
+[ ] -1, don't release, because ...
+
+This vote is open for 72 hours and will pass unless getting a
+net negative vote count. All votes are welcome and we encourage
+everyone to test the release, but only the Logging Services PMC
+votes are officially counted.

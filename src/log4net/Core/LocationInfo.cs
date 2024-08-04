@@ -18,12 +18,11 @@
 #endregion
 
 using System;
-#if !NETCF && !NETSTANDARD1_3
-using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
-
+using System.Runtime.Serialization;
+using System.Security;
 using log4net.Util;
-#endif
 
 namespace log4net.Core
 {
@@ -58,13 +57,9 @@ namespace log4net.Core
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-#if !NETCF
   [Serializable]
-#endif
-  public class LocationInfo
+  public class LocationInfo : ISerializable
   {
-    #region Public Instance Constructors
-
     /// <summary>
     /// Constructor
     /// </summary>
@@ -76,17 +71,16 @@ namespace log4net.Core
     /// class based on the current thread.
     /// </para>
     /// </remarks>
-    public LocationInfo(Type callerStackBoundaryDeclaringType)
+    public LocationInfo(Type? callerStackBoundaryDeclaringType)
     {
       // Initialize all fields
-      m_className = NA;
-      m_fileName = NA;
-      m_lineNumber = NA;
-      m_methodName = NA;
-      m_fullInfo = NA;
+      ClassName = NA;
+      FileName = NA;
+      LineNumber = NA;
+      MethodName = NA;
+      FullInfo = NA;
 
-#if !NETCF && !NETSTANDARD1_3 // StackTrace isn't fully implemented for NETSTANDARD1_3 https://github.com/dotnet/corefx/issues/1797
-      if (callerStackBoundaryDeclaringType != null)
+      if (callerStackBoundaryDeclaringType is not null)
       {
         try
         {
@@ -96,8 +90,8 @@ namespace log4net.Core
           // skip frames not from fqnOfCallingClass
           while (frameIndex < st.FrameCount)
           {
-            StackFrame frame = st.GetFrame(frameIndex);
-            if (frame != null && frame.GetMethod().DeclaringType == callerStackBoundaryDeclaringType)
+            if (st.GetFrame(frameIndex) is StackFrame frame
+                && frame.GetMethod()?.DeclaringType == callerStackBoundaryDeclaringType)
             {
               break;
             }
@@ -107,8 +101,8 @@ namespace log4net.Core
           // skip frames from fqnOfCallingClass
           while (frameIndex < st.FrameCount)
           {
-            StackFrame frame = st.GetFrame(frameIndex);
-            if (frame != null && frame.GetMethod().DeclaringType != callerStackBoundaryDeclaringType)
+            if (st.GetFrame(frameIndex) is StackFrame frame
+                && frame.GetMethod()?.DeclaringType != callerStackBoundaryDeclaringType)
             {
               break;
             }
@@ -119,35 +113,34 @@ namespace log4net.Core
           {
             // take into account the frames we skip above
             int adjustedFrameCount = st.FrameCount - frameIndex;
-            ArrayList stackFramesList = new ArrayList(adjustedFrameCount);
-            m_stackFrames = new StackFrameItem[adjustedFrameCount];
+            var stackFramesList = new List<StackFrameItem>(adjustedFrameCount);
+            StackFrames = new StackFrameItem[adjustedFrameCount];
             for (int i = frameIndex; i < st.FrameCount; i++)
             {
-              stackFramesList.Add(new StackFrameItem(st.GetFrame(i)));
+              if (st.GetFrame(i) is StackFrame frame)
+              {
+                stackFramesList.Add(new StackFrameItem(frame));
+              }
             }
 
-            stackFramesList.CopyTo(m_stackFrames, 0);
+            stackFramesList.CopyTo(StackFrames, 0);
 
             // now frameIndex is the first 'user' caller frame
-            StackFrame locationFrame = st.GetFrame(frameIndex);
-
-            if (locationFrame != null)
+            if (st.GetFrame(frameIndex) is StackFrame locationFrame)
             {
-              System.Reflection.MethodBase method = locationFrame.GetMethod();
-
-              if (method != null)
+              if (locationFrame.GetMethod() is System.Reflection.MethodBase method)
               {
-                m_methodName = method.Name;
-                if (method.DeclaringType != null)
+                MethodName = method.Name;
+                if (method.DeclaringType is not null)
                 {
-                  m_className = method.DeclaringType.FullName;
+                  ClassName = method.DeclaringType.FullName;
                 }
               }
-              m_fileName = locationFrame.GetFileName();
-              m_lineNumber = locationFrame.GetFileLineNumber().ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
+              FileName = locationFrame.GetFileName();
+              LineNumber = locationFrame.GetFileLineNumber().ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
 
               // Combine all location info
-              m_fullInfo = m_className + '.' + m_methodName + '(' + m_fileName + ':' + m_lineNumber + ')';
+              FullInfo = $"{ClassName}.{MethodName}({FileName}:{LineNumber})";
             }
           }
         }
@@ -158,7 +151,6 @@ namespace log4net.Core
           LogLog.Debug(declaringType, "Security exception while trying to get caller stack frame. Error Ignored. Location Information Not Available.");
         }
       }
-#endif
     }
 
     /// <summary>
@@ -176,84 +168,55 @@ namespace log4net.Core
     /// </remarks>
     public LocationInfo(string className, string methodName, string fileName, string lineNumber)
     {
-      m_className = className;
-      m_fileName = fileName;
-      m_lineNumber = lineNumber;
-      m_methodName = methodName;
-      m_fullInfo = m_className + '.' + m_methodName + '(' + m_fileName +
-        ':' + m_lineNumber + ')';
+      ClassName = className;
+      FileName = fileName;
+      LineNumber = lineNumber;
+      MethodName = methodName;
+      FullInfo = $"{ClassName}.{MethodName}({FileName}:{LineNumber})";
     }
 
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
+    /// <summary>
+    /// Serialization constructor
+    /// </summary>
+    /// <param name="info">The <see cref="SerializationInfo" /> that holds the serialized object data.</param>
+    /// <param name="context">The <see cref="StreamingContext" /> that contains contextual information about the source or destination.</param>
+    /// <remarks>
+    /// <para>
+    /// Initializes a new instance of the <see cref="Level" /> class 
+    /// with serialized data.
+    /// </para>
+    /// </remarks>
+    protected LocationInfo(SerializationInfo info, StreamingContext context)
+    {
+      // Use member names from log4net 2.x implicit serialzation for cross-version compat.
+      ClassName = info.GetString("m_className");
+      FileName = info.GetString("m_fileName");
+      LineNumber = info.GetString("m_lineNumber") ?? string.Empty;
+      MethodName = info.GetString("m_methodName") ?? string.Empty;
+      FullInfo = info.GetString("m_fullInfo") ?? string.Empty;
+      StackFrames = info.GetValue("m_stackFrames", typeof(StackFrameItem[])) as StackFrameItem[];
+    }
 
     /// <summary>
     /// Gets the fully qualified class name of the caller making the logging 
     /// request.
     /// </summary>
-    /// <value>
-    /// The fully qualified class name of the caller making the logging 
-    /// request.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets the fully qualified class name of the caller making the logging 
-    /// request.
-    /// </para>
-    /// </remarks>
-    public string ClassName
-    {
-      get { return m_className; }
-    }
+    public string? ClassName { get; }
 
     /// <summary>
     /// Gets the file name of the caller.
     /// </summary>
-    /// <value>
-    /// The file name of the caller.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets the file name of the caller.
-    /// </para>
-    /// </remarks>
-    public string FileName
-    {
-      get { return m_fileName; }
-    }
+    public string? FileName { get; }
 
     /// <summary>
     /// Gets the line number of the caller.
     /// </summary>
-    /// <value>
-    /// The line number of the caller.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets the line number of the caller.
-    /// </para>
-    /// </remarks>
-    public string LineNumber
-    {
-      get { return m_lineNumber; }
-    }
+    public string LineNumber { get; }
 
     /// <summary>
     /// Gets the method name of the caller.
     /// </summary>
-    /// <value>
-    /// The method name of the caller.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets the method name of the caller.
-    /// </para>
-    /// </remarks>
-    public string MethodName
-    {
-      get { return m_methodName; }
-    }
+    public string MethodName { get; }
 
     /// <summary>
     /// Gets all available caller information
@@ -268,37 +231,31 @@ namespace log4net.Core
     /// <c>fully.qualified.classname.of.caller.methodName(Filename:line)</c>
     /// </para>
     /// </remarks>
-    public string FullInfo
-    {
-      get { return m_fullInfo; }
-    }
+    public string FullInfo { get; }
 
-#if !NETCF && !NETSTANDARD1_3
     /// <summary>
     /// Gets the stack frames from the stack trace of the caller making the log request
     /// </summary>
-    public StackFrameItem[] StackFrames
+    public StackFrameItem[]? StackFrames { get; }
+
+    /// <summary>
+    /// Serializes this object into the <see cref="SerializationInfo" /> provided.
+    /// </summary>
+    /// <param name="info">The <see cref="SerializationInfo" /> to populate with data.</param>
+    /// <param name="context">The destination for this serialization.</param>
+    [SecurityCritical]
+    [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand,
+      SerializationFormatter = true)]
+    public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
     {
-      get { return m_stackFrames; }
+      // Use member names from log4net 2.x implicit serialzation for cross-version compat.
+      info.AddValue("m_className", ClassName);
+      info.AddValue("m_fileName", FileName);
+      info.AddValue("m_lineNumber", LineNumber);
+      info.AddValue("m_methodName", MethodName);
+      info.AddValue("m_fullInfo", FullInfo);
+      info.AddValue("m_stackFrames", StackFrames);
     }
-#endif
-
-    #endregion Public Instance Properties
-
-    #region Private Instance Fields
-
-    private readonly string m_className;
-    private readonly string m_fileName;
-    private readonly string m_lineNumber;
-    private readonly string m_methodName;
-    private readonly string m_fullInfo;
-#if !NETCF && !NETSTANDARD1_3
-    private readonly StackFrameItem[] m_stackFrames;
-#endif
-
-    #endregion Private Instance Fields
-
-    #region Private Static Fields
 
     /// <summary>
     /// The fully qualified type of the LocationInfo class.
@@ -315,7 +272,5 @@ namespace log4net.Core
     /// constant is <b>?</b>.
     /// </summary>
     private const string NA = "?";
-
-    #endregion Private Static Fields
   }
 }

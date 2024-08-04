@@ -24,6 +24,7 @@ using log4net.Core;
 using log4net.Util;
 using log4net.Plugin;
 using System.Threading;
+using log4net.Appender;
 
 namespace log4net.Repository
 {
@@ -41,25 +42,12 @@ namespace log4net.Repository
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-  public abstract class LoggerRepositorySkeleton : ILoggerRepository, Appender.IFlushable
+  public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
   {
-    #region Member Variables
-
-    private string m_name;
-    private RendererMap m_rendererMap;
-    private PluginMap m_pluginMap;
-    private LevelMap m_levelMap;
-    private Level m_threshold;
-    private bool m_configured;
-    private ICollection m_configurationMessages;
-    private event LoggerRepositoryShutdownEventHandler m_shutdownEvent;
-    private event LoggerRepositoryConfigurationResetEventHandler m_configurationResetEvent;
-    private event LoggerRepositoryConfigurationChangedEventHandler m_configurationChangedEvent;
-    private PropertiesDictionary m_properties;
-
-    #endregion
-
-    #region Constructors
+    private readonly RendererMap m_rendererMap = new();
+    private readonly LevelMap m_levelMap = new();
+    private Level m_threshold = Level.All;  // Don't disable any levels by default.
+    private ICollection m_configurationMessages = EmptyCollection.Instance;
 
     /// <summary>
     /// Default Constructor
@@ -84,22 +72,10 @@ namespace log4net.Repository
     /// </remarks>
     protected LoggerRepositorySkeleton(PropertiesDictionary properties)
     {
-      m_properties = properties;
-      m_rendererMap = new RendererMap();
-      m_pluginMap = new PluginMap(this);
-      m_levelMap = new LevelMap();
-      m_configurationMessages = EmptyCollection.Instance;
-      m_configured = false;
-
+      Properties = properties;
+      PluginMap = new PluginMap(this);
       AddBuiltinLevels();
-
-      // Don't disable any levels by default.
-      m_threshold = Level.All;
     }
-
-    #endregion
-
-    #region Implementation of ILoggerRepository
 
     /// <summary>
     /// The name of the repository
@@ -114,11 +90,7 @@ namespace log4net.Repository
     /// stored by the <see cref="IRepositorySelector"/>.
     /// </para>
     /// </remarks>
-    public virtual string Name
-    {
-      get { return m_name; }
-      set { m_name = value; }
-    }
+    public virtual string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// The threshold for all events in this repository
@@ -133,10 +105,10 @@ namespace log4net.Repository
     /// </remarks>
     public virtual Level Threshold
     {
-      get { return m_threshold; }
+      get => m_threshold;
       set
       {
-        if (value != null)
+        if (value is not null)
         {
           m_threshold = value;
         }
@@ -164,10 +136,7 @@ namespace log4net.Repository
     /// <see cref="IObjectRenderer"/> objects.
     /// </para>
     /// </remarks>
-    public virtual RendererMap RendererMap
-    {
-      get { return m_rendererMap; }
-    }
+    public virtual RendererMap RendererMap => m_rendererMap;
 
     /// <summary>
     /// The plugin map for this repository.
@@ -181,10 +150,7 @@ namespace log4net.Repository
     /// that have been attached to this repository.
     /// </para>
     /// </remarks>
-    public virtual PluginMap PluginMap
-    {
-      get { return m_pluginMap; }
-    }
+    public virtual PluginMap PluginMap { get; }
 
     /// <summary>
     /// Get the level map for the Repository.
@@ -199,10 +165,7 @@ namespace log4net.Repository
     /// this repository.
     /// </para>
     /// </remarks>
-    public virtual LevelMap LevelMap
-    {
-      get { return m_levelMap; }
-    }
+    public virtual LevelMap LevelMap => m_levelMap;
 
     /// <summary>
     /// Test if logger exists
@@ -215,7 +178,7 @@ namespace log4net.Repository
     /// its reference, otherwise returns <c>null</c>.
     /// </para>
     /// </remarks>
-    public abstract ILogger Exists(string name);
+    public abstract ILogger? Exists(string name);
 
     /// <summary>
     /// Returns all the currently defined loggers in the repository
@@ -328,20 +291,16 @@ namespace log4net.Repository
     /// Flag indicates if this repository has been configured.
     /// </para>
     /// </remarks>
-    public virtual bool Configured
-    {
-      get { return m_configured; }
-      set { m_configured = value; }
-    }
+    public virtual bool Configured { get; set; }
 
     /// <summary>
-    /// Contains a list of internal messages captures during the 
+    /// Contains a list of internal messages captured during the 
     /// last configuration.
     /// </summary>
     public virtual ICollection ConfigurationMessages
     {
-      get { return m_configurationMessages; }
-      set { m_configurationMessages = value; }
+      get => m_configurationMessages;
+      set => m_configurationMessages = value;
     }
 
     /// <summary>
@@ -355,11 +314,7 @@ namespace log4net.Repository
     /// Event raised when the repository has been shutdown.
     /// </para>
     /// </remarks>
-    public event LoggerRepositoryShutdownEventHandler ShutdownEvent
-    {
-      add { m_shutdownEvent += value; }
-      remove { m_shutdownEvent -= value; }
-    }
+    public event LoggerRepositoryShutdownEventHandler? ShutdownEvent;
 
     /// <summary>
     /// Event to notify that the repository has had its configuration reset.
@@ -373,11 +328,7 @@ namespace log4net.Repository
     /// reset to default.
     /// </para>
     /// </remarks>
-    public event LoggerRepositoryConfigurationResetEventHandler ConfigurationReset
-    {
-      add { m_configurationResetEvent += value; }
-      remove { m_configurationResetEvent -= value; }
-    }
+    public event LoggerRepositoryConfigurationResetEventHandler? ConfigurationReset;
 
     /// <summary>
     /// Event to notify that the repository has had its configuration changed.
@@ -390,11 +341,7 @@ namespace log4net.Repository
     /// Event raised when the repository's configuration has been changed.
     /// </para>
     /// </remarks>
-    public event LoggerRepositoryConfigurationChangedEventHandler ConfigurationChanged
-    {
-      add { m_configurationChangedEvent += value; }
-      remove { m_configurationChangedEvent -= value; }
-    }
+    public event LoggerRepositoryConfigurationChangedEventHandler? ConfigurationChanged;
 
     /// <summary>
     /// Repository specific properties
@@ -405,10 +352,7 @@ namespace log4net.Repository
     /// <remarks>
     /// These properties can be specified on a repository specific basis
     /// </remarks>
-    public PropertiesDictionary Properties
-    {
-      get { return m_properties; }
-    }
+    public PropertiesDictionary Properties { get; }
 
     /// <summary>
     /// Returns all the Appenders that are configured as an Array.
@@ -419,11 +363,7 @@ namespace log4net.Repository
     /// Returns all the Appenders that are configured as an Array.
     /// </para>
     /// </remarks>
-    public abstract log4net.Appender.IAppender[] GetAppenders();
-
-    #endregion
-
-    #region Private Static Fields
+    public abstract IAppender[] GetAppenders();
 
     /// <summary>
     /// The fully qualified type of the LoggerRepositorySkeleton class.
@@ -433,8 +373,6 @@ namespace log4net.Repository
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(LoggerRepositorySkeleton);
-
-    #endregion Private Static Fields
 
     private void AddBuiltinLevels()
     {
@@ -479,13 +417,13 @@ namespace log4net.Repository
     /// </remarks>
     public virtual void AddRenderer(Type typeToRender, IObjectRenderer rendererInstance)
     {
-      if (typeToRender == null)
+      if (typeToRender is null)
       {
-        throw new ArgumentNullException("typeToRender");
+        throw new ArgumentNullException(nameof(typeToRender));
       }
-      if (rendererInstance == null)
+      if (rendererInstance is null)
       {
-        throw new ArgumentNullException("rendererInstance");
+        throw new ArgumentNullException(nameof(rendererInstance));
       }
 
       m_rendererMap.Put(typeToRender, rendererInstance);
@@ -500,18 +438,10 @@ namespace log4net.Repository
     /// Notify any listeners that this repository is shutting down.
     /// </para>
     /// </remarks>
-    protected virtual void OnShutdown(EventArgs e)
+    protected virtual void OnShutdown(EventArgs? e)
     {
-      if (e == null)
-      {
-        e = EventArgs.Empty;
-      }
-
-      LoggerRepositoryShutdownEventHandler handler = m_shutdownEvent;
-      if (handler != null)
-      {
-        handler(this, e);
-      }
+      e ??= EventArgs.Empty;
+      ShutdownEvent?.Invoke(this, e);
     }
 
     /// <summary>
@@ -523,18 +453,10 @@ namespace log4net.Repository
     /// Notify any listeners that this repository's configuration has been reset.
     /// </para>
     /// </remarks>
-    protected virtual void OnConfigurationReset(EventArgs e)
+    protected virtual void OnConfigurationReset(EventArgs? e)
     {
-      if (e == null)
-      {
-        e = EventArgs.Empty;
-      }
-
-      LoggerRepositoryConfigurationResetEventHandler handler = m_configurationResetEvent;
-      if (handler != null)
-      {
-        handler(this, e);
-      }
+      e ??= EventArgs.Empty;
+      ConfigurationReset?.Invoke(this, e);
     }
 
     /// <summary>
@@ -546,18 +468,10 @@ namespace log4net.Repository
     /// Notify any listeners that this repository's configuration has changed.
     /// </para>
     /// </remarks>
-    protected virtual void OnConfigurationChanged(EventArgs e)
+    protected virtual void OnConfigurationChanged(EventArgs? e)
     {
-      if (e == null)
-      {
-        e = EventArgs.Empty;
-      }
-
-      LoggerRepositoryConfigurationChangedEventHandler handler = m_configurationChangedEvent;
-      if (handler != null)
-      {
-        handler(this, e);
-      }
+      e ??= EventArgs.Empty;
+      ConfigurationChanged?.Invoke(this, e);
     }
 
     /// <summary>
@@ -589,12 +503,12 @@ namespace log4net.Repository
     /// <summary>
     /// Flushes all configured Appenders that implement <see cref="log4net.Appender.IFlushable"/>.
     /// </summary>
-    /// <param name="millisecondsTimeout">The maximum time in milliseconds to wait for logging events from asycnhronous appenders to be flushed,
+    /// <param name="millisecondsTimeout">The maximum time in milliseconds to wait for logging events from asynchronous appenders to be flushed,
     /// or <see cref="Timeout.Infinite"/> to wait indefinitely.</param>
     /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
     public bool Flush(int millisecondsTimeout)
     {
-      if (millisecondsTimeout < -1) throw new ArgumentOutOfRangeException("millisecondsTimeout", "Timeout must be -1 (Timeout.Infinite) or non-negative");
+      if (millisecondsTimeout < -1) throw new ArgumentOutOfRangeException(nameof(millisecondsTimeout), "Timeout must be -1 (Timeout.Infinite) or non-negative");
 
       // Assume success until one of the appenders fails
       bool result = true;
@@ -603,11 +517,14 @@ namespace log4net.Repository
       DateTime startTimeUtc = DateTime.UtcNow;
 
       // Do buffering appenders first.  These may be forwarding to other appenders
-      foreach (log4net.Appender.IAppender appender in GetAppenders())
+      foreach (IAppender appender in GetAppenders())
       {
-        log4net.Appender.IFlushable flushable = appender as log4net.Appender.IFlushable;
-        if (flushable == null) continue;
-        if (appender is Appender.BufferingAppenderSkeleton)
+        if (appender is not IFlushable flushable)
+        {
+          continue;
+        }
+
+        if (appender is BufferingAppenderSkeleton)
         {
           int timeout = GetWaitTime(startTimeUtc, millisecondsTimeout);
           if (!flushable.Flush(timeout)) result = false;
@@ -615,11 +532,14 @@ namespace log4net.Repository
       }
 
       // Do non-buffering appenders.
-      foreach (log4net.Appender.IAppender appender in GetAppenders())
+      foreach (IAppender appender in GetAppenders())
       {
-        log4net.Appender.IFlushable flushable = appender as log4net.Appender.IFlushable;
-        if (flushable == null) continue;
-        if (!(appender is Appender.BufferingAppenderSkeleton))
+        if (appender is not IFlushable flushable)
+        {
+          continue;
+        }
+
+        if (appender is not BufferingAppenderSkeleton)
         {
           int timeout = GetWaitTime(startTimeUtc, millisecondsTimeout);
           if (!flushable.Flush(timeout)) result = false;

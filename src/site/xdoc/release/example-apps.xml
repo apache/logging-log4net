@@ -16,18 +16,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <document>
-  <properties>
-    <author email="nicko at apache dot org">Nicko Cadell</author>
-    <title>Apache log4net: Examples</title>
-  </properties>
+    <properties>
+        <author email="nicko at apache dot org">Nicko Cadell</author>
+        <title>Apache log4net: Examples</title>
+    </properties>
 
-  <meta name="keywords" content="log4net examples, log4net" />
-  
-  <body>
-    <section id="main" name="Apache log4net&#x2122; Examples">
-      <p>
-        The examples can be found at <a href="https://github.com/apache/logging-log4net/tree/master/examples">examples</a>
-      </p>
-    </section>
-  </body>
+    <meta name="keywords" content="log4net examples, log4net" />
+
+    <body>
+        <section id="main" name="Apache log4net&#x2122; Examples">
+            <p>
+                The examples can be found at <a href="https://github.com/apache/logging-log4net/tree/master/examples">examples</a>
+            </p>
+        </section>
+    </body>
 </document>

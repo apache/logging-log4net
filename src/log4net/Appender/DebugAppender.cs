@@ -42,41 +42,6 @@ namespace log4net.Appender
   /// <author>Nicko Cadell</author>
   public class DebugAppender : AppenderSkeleton
   {
-    #region Public Instance Constructors
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DebugAppender" />.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Default constructor.
-    /// </para>
-    /// </remarks>
-    public DebugAppender()
-    {
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DebugAppender" /> 
-    /// with a specified layout.
-    /// </summary>
-    /// <param name="layout">The layout to use with this appender.</param>
-    /// <remarks>
-    /// <para>
-    /// Obsolete constructor.
-    /// </para>
-    /// </remarks>
-    [System.Obsolete("Instead use the default constructor and set the Layout property")]
-    public DebugAppender(ILayout layout)
-    {
-      Layout = layout;
-    }
-
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
-
-#if !NETSTANDARD1_3 // System.Diagnostics.Debug has no Flush() in netstandard1.3
     /// <summary>
     /// Gets or sets a value that indicates whether the appender will 
     /// flush at the end of each write.
@@ -95,12 +60,7 @@ namespace log4net.Appender
     /// price to pay even for a 20% performance gain.
     /// </para>
     /// </remarks>
-    public bool ImmediateFlush
-    {
-      get { return m_immediateFlush; }
-      set { m_immediateFlush = value; }
-    }
-#endif // !NETSTANDARD1_3
+    public bool ImmediateFlush { get; set; } = true;
 
     /// <summary>
     /// Formats the category parameter sent to the Debug method.
@@ -110,18 +70,9 @@ namespace log4net.Appender
     /// Defaults to a <see cref="Layout.PatternLayout"/> with %logger as the pattern which will use the logger name of the current 
     /// <see cref="LoggingEvent"/> as the category parameter.
     /// </para>
-    /// <para>
-    /// </para> 
     /// </remarks>
-    public PatternLayout Category
-    {
-      get { return m_category; }
-      set { m_category = value; }
-    }
+    public PatternLayout? Category { get; set; } = new("%logger");
 
-    #endregion Public Instance Properties
-
-#if !NETSTANDARD1_3
     /// <summary>
     /// Flushes any buffered log data.
     /// </summary>
@@ -130,28 +81,17 @@ namespace log4net.Appender
     public override bool Flush(int millisecondsTimeout)
     {
       // Nothing to do if ImmediateFlush is true
-      if (m_immediateFlush) return true;
+      if (ImmediateFlush)
+      {
+        return true;
+      }
 
       // System.Diagnostics.Debug is thread-safe, so no need for lock(this).
       System.Diagnostics.Debug.Flush();
 
       return true;
     }
-#endif
 
-    #region Override implementation of AppenderSkeleton
-
-#if NETSTANDARD1_3
-    /// <summary>
-    /// Writes the logging event to the <see cref="System.Diagnostics.Debug"/> system.
-    /// </summary>
-    /// <param name="loggingEvent">The event to log.</param>
-    /// <remarks>
-    /// <para>
-    /// Writes the logging event to the <see cref="System.Diagnostics.Debug"/> system.
-    /// </para>
-    /// </remarks>
-#else
     /// <summary>
     /// Writes the logging event to the <see cref="System.Diagnostics.Debug"/> system.
     /// </summary>
@@ -163,19 +103,18 @@ namespace log4net.Appender
     /// is called.
     /// </para>
     /// </remarks> 
-#endif
     protected override void Append(LoggingEvent loggingEvent)
     {
       //
       // Write the string to the Debug system
       //
-      if (m_category == null)
+      if (Category is null)
       {
         System.Diagnostics.Debug.Write(RenderLoggingEvent(loggingEvent));
       }
       else
       {
-        string category = m_category.Format(loggingEvent);
+        string category = Category.Format(loggingEvent);
         if (string.IsNullOrEmpty(category))
         {
           System.Diagnostics.Debug.Write(RenderLoggingEvent(loggingEvent));
@@ -185,59 +124,18 @@ namespace log4net.Appender
           System.Diagnostics.Debug.Write(RenderLoggingEvent(loggingEvent), category);
         }
       }
-#if !NETSTANDARD1_3
       //
       // Flush the Debug system if needed
       //
-      if (m_immediateFlush)
+      if (ImmediateFlush)
       {
         System.Diagnostics.Debug.Flush();
       }
-#endif
     }
 
     /// <summary>
     /// This appender requires a <see cref="Layout"/> to be set.
     /// </summary>
-    /// <value><c>true</c></value>
-    /// <remarks>
-    /// <para>
-    /// This appender requires a <see cref="Layout"/> to be set.
-    /// </para>
-    /// </remarks>
-    protected override bool RequiresLayout
-    {
-      get { return true; }
-    }
-
-    #endregion Override implementation of AppenderSkeleton
-
-    #region Private Instance Fields
-
-#if !NETSTANDARD1_3
-    /// <summary>
-    /// Immediate flush means that the underlying writer or output stream
-    /// will be flushed at the end of each append operation.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Immediate flush is slower but ensures that each append request is 
-    /// actually written. If <see cref="ImmediateFlush"/> is set to
-    /// <c>false</c>, then there is a good chance that the last few
-    /// logs events are not actually written to persistent media if and
-    /// when the application crashes.
-    /// </para>
-    /// <para>
-    /// The default value is <c>true</c>.</para>
-    /// </remarks>
-    private bool m_immediateFlush = true;
-#endif
-
-    /// <summary>
-    /// Defaults to a <see cref="Layout.PatternLayout"/> with %logger as the pattern.
-    /// </summary>
-    private PatternLayout m_category = new PatternLayout("%logger");
-
-    #endregion Private Instance Fields
+    protected override bool RequiresLayout => true;
   }
 }

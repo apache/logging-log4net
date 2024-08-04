@@ -21,9 +21,6 @@ release version 2.0.123:
                     - people who reported issues
                     - people who created pull requests
                     - people who suggested code that was implemented
-        - `src/site/xdoc/download_log4net.xml`
-            - you should be able to search & replace on the prior version
-                for the new one you're about to create
 2. Update the log4net.csproj file with this new version
 3. Build release artifacts with `npm run release`
     - if this doesn't work, you may need to `npm ci` first!
@@ -32,7 +29,6 @@ release version 2.0.123:
         (or at least, I haven't figured out how - in particular CF)
     - TODO: the following are still manual and need to be built into the `release` script:
         - log4net.build: update package.version property
-        - log4net.shfbproj: update HtmlHelpName
         - pom.xml: update version
 4. Sign release artifacts (zips & nupkg) under `build/artifacts`
     - eg `gpg --argmor --output log4net-2.0.123.nupkg.asc --detach-sig log4net-2.0.123.nupkg`
@@ -85,4 +81,3 @@ release version 2.0.123:
     - `git merge asf-staging`
 18. rename the release at github, eg to `rel/2.0.123`
     - double-check that the `rel` tag is created
-

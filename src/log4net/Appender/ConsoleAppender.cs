@@ -18,7 +18,6 @@
 #endregion
 
 using System;
-using System.Globalization;
 
 using log4net.Layout;
 using log4net.Core;
@@ -52,8 +51,6 @@ namespace log4net.Appender
   /// <author>Gert Driesen</author>
   public class ConsoleAppender : AppenderSkeleton
   {
-    #region Public Instance Constructors
-
     /// <summary>
     /// Initializes a new instance of the <see cref="ConsoleAppender" /> class.
     /// </summary>
@@ -64,42 +61,6 @@ namespace log4net.Appender
     public ConsoleAppender()
     {
     }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ConsoleAppender" /> class
-    /// with the specified layout.
-    /// </summary>
-    /// <param name="layout">the layout to use for this appender</param>
-    /// <remarks>
-    /// The instance of the <see cref="ConsoleAppender" /> class is set up to write 
-    /// to the standard output stream.
-    /// </remarks>
-    [Obsolete("Instead use the default constructor and set the Layout property")]
-    public ConsoleAppender(ILayout layout) : this(layout, false)
-    {
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ConsoleAppender" /> class
-    /// with the specified layout.
-    /// </summary>
-    /// <param name="layout">the layout to use for this appender</param>
-    /// <param name="writeToErrorStream">flag set to <c>true</c> to write to the console error stream</param>
-    /// <remarks>
-    /// When <paramref name="writeToErrorStream" /> is set to <c>true</c>, output is written to
-    /// the standard error output stream.  Otherwise, output is written to the standard
-    /// output stream.
-    /// </remarks>
-    [Obsolete("Instead use the default constructor and set the Layout & Target properties")]
-    public ConsoleAppender(ILayout layout, bool writeToErrorStream)
-    {
-      Layout = layout;
-      m_writeToErrorStream = writeToErrorStream;
-    }
-
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
 
     /// <summary>
     /// Target is the value of the console output stream.
@@ -117,25 +78,9 @@ namespace log4net.Appender
     /// </remarks>
     public virtual string Target
     {
-      get { return m_writeToErrorStream ? ConsoleError : ConsoleOut; }
-      set
-      {
-        string v = value.Trim();
-
-        if (SystemInfo.EqualsIgnoringCase(ConsoleError, v))
-        {
-          m_writeToErrorStream = true;
-        }
-        else
-        {
-          m_writeToErrorStream = false;
-        }
-      }
+      get => m_writeToErrorStream ? ConsoleError : ConsoleOut;
+      set => m_writeToErrorStream = SystemInfo.EqualsIgnoringCase(ConsoleError, value.Trim());
     }
-
-    #endregion Public Instance Properties
-
-    #region Override implementation of AppenderSkeleton
 
     /// <summary>
     /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/> method.
@@ -151,10 +96,6 @@ namespace log4net.Appender
     /// </remarks>
     protected override void Append(LoggingEvent loggingEvent)
     {
-#if NETCF_1_0
-      // Write to the output stream
-      Console.Write(RenderLoggingEvent(loggingEvent));
-#else
       if (m_writeToErrorStream)
       {
         // Write to the error stream
@@ -165,57 +106,25 @@ namespace log4net.Appender
         // Write to the output stream
         Console.Write(RenderLoggingEvent(loggingEvent));
       }
-#endif
     }
 
     /// <summary>
     /// This appender requires a <see cref="Layout"/> to be set.
     /// </summary>
-    /// <value><c>true</c></value>
-    /// <remarks>
-    /// <para>
-    /// This appender requires a <see cref="Layout"/> to be set.
-    /// </para>
-    /// </remarks>
-    protected override bool RequiresLayout
-    {
-      get { return true; }
-    }
-
-    #endregion Override implementation of AppenderSkeleton
-
-    #region Public Static Fields
+    protected override bool RequiresLayout => true;
 
     /// <summary>
     /// The <see cref="ConsoleAppender.Target"/> to use when writing to the Console 
     /// standard output stream.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The <see cref="ConsoleAppender.Target"/> to use when writing to the Console 
-    /// standard output stream.
-    /// </para>
-    /// </remarks>
     public const string ConsoleOut = "Console.Out";
 
     /// <summary>
     /// The <see cref="ConsoleAppender.Target"/> to use when writing to the Console 
     /// standard error output stream.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The <see cref="ConsoleAppender.Target"/> to use when writing to the Console 
-    /// standard error output stream.
-    /// </para>
-    /// </remarks>
     public const string ConsoleError = "Console.Error";
 
-    #endregion Public Static Fields
-
-    #region Private Instances Fields
-
-    private bool m_writeToErrorStream = false;
-
-    #endregion Private Instances Fields
+    private bool m_writeToErrorStream;
   }
 }

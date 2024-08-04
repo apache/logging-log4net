@@ -21,7 +21,7 @@
   <groupId>log4net</groupId>
   <artifactId>apache-log4net</artifactId>
   <packaging>pom</packaging>
-  <version>2.0.17</version>
+  <version>3.0.0</version>
   <name>Apache log4net</name>
   <description>Logging framework for Microsoft .NET Framework.</description>
   <url>http://logging.apache.org/log4net/</url>
@@ -91,30 +91,6 @@
           <templateFile>${basedir}/src/site/site.vm</templateFile>
         </configuration>
       </plugin>
-      <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.8</version>
-        <executions>
-          <execution>
-            <phase>install</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <tasks>
-                <fixcrlf srcDir="target/site" excludes="images/**"/>
-              </tasks>
-            </configuration>
-          </execution>
-        </executions>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.ant</groupId>
-            <artifactId>ant</artifactId>
-            <version>1.10.11</version>
-          </dependency>
-        </dependencies>
-      </plugin>
     </plugins>
   </build>
 
@@ -134,7 +110,7 @@
         <artifactId>apache-rat-plugin</artifactId>
         <version>0.12</version>
         <configuration>
-		  <excludesFile>${basedir}/rat.excludesFile</excludesFile>
+      <excludesFile>${basedir}/rat.excludesFile</excludesFile>
         </configuration>
       </plugin>
       <plugin>
@@ -148,8 +124,6 @@
               <report>scm</report>
               <report>license</report>
               <report>project-team</report>
-              <report>issue-tracking</report>
-              <report>mailing-list</report>
             </reports>
           </reportSet>
         </reportSets>
@@ -158,6 +132,14 @@
   </reporting>
 
   <developers>
+    <developer>
+      <name>Davyd McColl</name>
+      <id>fluffynuts</id>
+    </developer>
+    <developer>
+      <name>Jan Friedrich</name>
+      <id>freeandnil</id>
+    </developer>
     <developer>
       <name>Curt Arnold</name>
       <id>carnold</id>
@@ -189,6 +171,9 @@
   </developers>
 
   <contributors>
+    <contributor>
+      <name>Erik Mavrinac</name>
+    </contributor>
     <contributor>
       <name>Julian Biddle</name>
     </contributor>

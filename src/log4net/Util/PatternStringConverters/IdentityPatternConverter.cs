@@ -18,10 +18,7 @@
 #endregion
 
 using System;
-using System.Text;
 using System.IO;
-
-using log4net.Util;
 
 namespace log4net.Util.PatternStringConverters
 {
@@ -46,19 +43,13 @@ namespace log4net.Util.PatternStringConverters
     /// Writes the current thread identity to the output <paramref name="writer"/>.
     /// </para>
     /// </remarks>
-    protected override void Convert(TextWriter writer, object state)
+    public override void Convert(TextWriter writer, object? state)
     {
-#if (NETCF || SSCLI || NETSTANDARD1_3)
-      // On compact framework there's no notion of current thread principals
-      writer.Write( SystemInfo.NotAvailableText );
-#else
       try
       {
-        if (System.Threading.Thread.CurrentPrincipal != null &&
-          System.Threading.Thread.CurrentPrincipal.Identity != null &&
-          System.Threading.Thread.CurrentPrincipal.Identity.Name != null)
+        if (System.Threading.Thread.CurrentPrincipal?.Identity?.Name is string name)
         {
-          writer.Write(System.Threading.Thread.CurrentPrincipal.Identity.Name);
+          writer.Write(name);
         }
       }
       catch (System.Security.SecurityException)
@@ -69,10 +60,7 @@ namespace log4net.Util.PatternStringConverters
 
         writer.Write(SystemInfo.NotAvailableText);
       }
-#endif
     }
-
-    #region Private Static Fields
 
     /// <summary>
     /// The fully qualified type of the IdentityPatternConverter class.
@@ -82,7 +70,5 @@ namespace log4net.Util.PatternStringConverters
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(IdentityPatternConverter);
-
-    #endregion Private Static Fields
   }
 }

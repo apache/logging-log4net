@@ -18,39 +18,26 @@
 #endregion
 
 using System;
-#if NETSTANDARD1_3
-using System.Reflection;
-#endif
 
 namespace log4net.Util.TypeConverters
 {
   /// <summary>
   /// Supports conversion from string to <see cref="Type"/> type.
   /// </summary>
-  /// <remarks>
-  /// <para>
-  /// Supports conversion from string to <see cref="Type"/> type.
-  /// </para>
-  /// </remarks>
   /// <seealso cref="ConverterRegistry"/>
   /// <seealso cref="IConvertFrom"/>
   /// <seealso cref="IConvertTo"/>
   /// <author>Nicko Cadell</author>
-  internal class TypeConverter : IConvertFrom
+  internal sealed class TypeConverter : IConvertFrom
   {
-    #region Implementation of IConvertFrom
-
     /// <summary>
     /// Can the source type be converted to the type supported by this object
     /// </summary>
     /// <param name="sourceType">the type to convert</param>
-    /// <returns>true if the conversion is possible</returns>
-    /// <remarks>
-    /// <para>
-    /// Returns <c>true</c> if the <paramref name="sourceType"/> is
+    /// <returns>
+    /// <c>True</c> if the <paramref name="sourceType"/> is
     /// the <see cref="String"/> type.
-    /// </para>
-    /// </remarks>
+    /// </returns>
     public bool CanConvertFrom(Type sourceType)
     {
       return (sourceType == typeof(string));
@@ -76,18 +63,11 @@ namespace log4net.Util.TypeConverters
     /// </exception>
     public object ConvertFrom(object source)
     {
-      string str = source as string;
-      if (str != null)
+      if (source is string str)
       {
-#if NETSTANDARD1_3 // TODO can we use ComponentModel here?
-        return SystemInfo.GetTypeFromString(GetType().GetTypeInfo().Assembly, str, true, true);
-#else
-        return SystemInfo.GetTypeFromString(str, true, true);
-#endif
+        return SystemInfo.GetTypeFromString(str, throwOnError: true, ignoreCase: true)!;
       }
       throw ConversionNotSupportedException.Create(typeof(Type), source);
     }
-
-    #endregion
   }
 }

@@ -17,8 +17,6 @@
 //
 #endregion
 
-using System;
-using System.Text;
 using System.Xml;
 using System.Text.RegularExpressions;
 
@@ -34,26 +32,8 @@ namespace log4net.Util
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-  public sealed class Transform
+  public static class Transform
   {
-    #region Private Instance Constructors
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Transform" /> class. 
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Uses a private access modifier to prevent instantiation of this class.
-    /// </para>
-    /// </remarks>
-    private Transform()
-    {
-    }
-
-    #endregion Private Instance Constructors
-
-    #region XML String Methods
-
     /// <summary>
     /// Write a string to an <see cref="XmlWriter"/>
     /// </summary>
@@ -138,10 +118,6 @@ namespace log4net.Util
       return INVALIDCHARS.Replace(textData, mask);
     }
 
-    #endregion XML String Methods
-
-    #region Private Helper Methods
-
     /// <summary>
     /// Count the number of times that the substring occurs in the text
     /// </summary>
@@ -184,17 +160,12 @@ namespace log4net.Util
       return count;
     }
 
-    #endregion
-
-    #region Private Static Fields
-
     private const string CDATA_END = "]]>";
     private const string CDATA_UNESCAPABLE_TOKEN = "]]";
 
     /// <summary>
     /// Characters illegal in XML 1.0
     /// </summary>
-    private static Regex INVALIDCHARS = new Regex(@"[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD]", RegexOptions.Compiled);
-    #endregion Private Static Fields
+    private static readonly Regex INVALIDCHARS = new(@"[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD]", RegexOptions.Compiled);
   }
 }

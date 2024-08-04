@@ -92,29 +92,25 @@ namespace log4net.Layout.Pattern
     /// </remarks>
     protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
     {
-      if (loggingEvent.ExceptionObject != null && Option != null && Option.Length > 0)
+      if (loggingEvent.ExceptionObject is not null && !string.IsNullOrEmpty(Option))
       {
-        switch (Option.ToLower())
+        switch (Option!.ToLowerInvariant())
         {
           case "message":
             WriteObject(writer, loggingEvent.Repository, loggingEvent.ExceptionObject.Message);
             break;
-#if !NETCF            
           case "source":
             WriteObject(writer, loggingEvent.Repository, loggingEvent.ExceptionObject.Source);
             break;
           case "stacktrace":
             WriteObject(writer, loggingEvent.Repository, loggingEvent.ExceptionObject.StackTrace);
             break;
-#if !NETSTANDARD
           case "targetsite":
             WriteObject(writer, loggingEvent.Repository, loggingEvent.ExceptionObject.TargetSite);
             break;
-#endif
           case "helplink":
             WriteObject(writer, loggingEvent.Repository, loggingEvent.ExceptionObject.HelpLink);
             break;
-#endif            
           default:
             // do not output SystemInfo.NotAvailableText
             break;
@@ -122,8 +118,8 @@ namespace log4net.Layout.Pattern
       }
       else
       {
-        string exceptionString = loggingEvent.GetExceptionString();
-        if (exceptionString != null && exceptionString.Length > 0)
+        string? exceptionString = loggingEvent.GetExceptionString();
+        if (!string.IsNullOrEmpty(exceptionString))
         {
           writer.WriteLine(exceptionString);
         }

@@ -17,8 +17,6 @@
 //
 #endregion
 
-#if !NETCF && (NET_2_0 || NETSTANDARD2_0)
-
 using System;
 using System.IO;
 
@@ -29,7 +27,6 @@ namespace log4net.Util.PatternStringConverters
   /// </summary>
   /// <remarks>
   /// <para>
-  /// Write an special path environment folder path to the output writer.
   /// The value of the <see cref="log4net.Util.PatternConverter.Option"/> determines 
   /// the name of the variable to output. <see cref="log4net.Util.PatternConverter.Option"/>
   /// should be a value in the <see cref="System.Environment.SpecialFolder" /> enumeration.
@@ -39,7 +36,7 @@ namespace log4net.Util.PatternStringConverters
   internal sealed class EnvironmentFolderPathPatternConverter : PatternConverter
   {
     /// <summary>
-    /// Write an special path environment folder path to the output
+    /// Writes a special path environment folder path to the output
     /// </summary>
     /// <param name="writer">the writer to write to</param>
     /// <param name="state">null, state is not set</param>
@@ -51,17 +48,17 @@ namespace log4net.Util.PatternStringConverters
     /// property.
     /// </para>
     /// </remarks>
-    protected override void Convert(TextWriter writer, object state)
+    public override void Convert(TextWriter writer, object? state)
     {
       try
       {
-        if (Option != null && Option.Length > 0)
+        if (Option?.Length > 0)
         {
           Environment.SpecialFolder specialFolder =
               (Environment.SpecialFolder)Enum.Parse(typeof(Environment.SpecialFolder), Option, true);
 
           string envFolderPathValue = Environment.GetFolderPath(specialFolder);
-          if (envFolderPathValue != null && envFolderPathValue.Length > 0)
+          if (envFolderPathValue?.Length > 0)
           {
             writer.Write(envFolderPathValue);
           }
@@ -80,8 +77,6 @@ namespace log4net.Util.PatternStringConverters
       }
     }
 
-    #region Private Static Fields
-
     /// <summary>
     /// The fully qualified type of the EnvironmentFolderPathPatternConverter class.
     /// </summary>
@@ -90,9 +85,5 @@ namespace log4net.Util.PatternStringConverters
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(EnvironmentFolderPathPatternConverter);
-
-    #endregion Private Static Fields
   }
 }
-
-#endif // !NETCF && NET_2_0

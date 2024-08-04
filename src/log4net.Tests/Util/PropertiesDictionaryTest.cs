@@ -17,8 +17,9 @@
 //
 #endregion
 
-#if NETFRAMEWORK
+#if NET462_OR_GREATER
 
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -48,6 +49,8 @@ namespace log4net.Tests.Util
       }
 
       Assert.AreEqual(10, pd.Count, "Dictionary should have 10 items");
+
+      Assert.IsNull(pd["notThere"], "Getter should act as IDictionary not IDictionary<TKey, TValue>");
 
       // Serialize the properties into a memory stream
       BinaryFormatter formatter = new BinaryFormatter();

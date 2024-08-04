@@ -1,4 +1,4 @@
-#if NET_2_0
+#if NET462_OR_GREATER
 #region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more 
@@ -17,10 +17,6 @@
 // limitations under the License.
 //
 #endregion
-
-// .NET Compact Framework 1.0 has no support for ASP.NET
-// SSCLI 1.0 has no support for ASP.NET
-#if !NETCF && !SSCLI && !CLIENT_PROFILE
 
 using System.Web;
 
@@ -54,52 +50,27 @@ namespace log4net.Appender
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
   /// <author>Ron Grabowski</author>
-  public class AspNetTraceAppender : AppenderSkeleton
+  public class AspNetTraceAppender : AppenderSkeleton 
   {
-    #region Public Instances Constructors
-
     /// <summary>
-    /// Initializes a new instance of the <see cref="AspNetTraceAppender" /> class.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Default constructor.
-    /// </para>
-    /// </remarks>
-    public AspNetTraceAppender()
-    {
-    }
-
-    #endregion // Public Instances Constructors
-
-    #region Override implementation of AppenderSkeleton
-
-    /// <summary>
-    /// Write the logging event to the ASP.NET trace
+    /// Write the logging event to the ASP.NET trace <c>HttpContext.Current.Trace</c>.
     /// </summary>
     /// <param name="loggingEvent">the event to log</param>
-    /// <remarks>
-    /// <para>
-    /// Write the logging event to the ASP.NET trace
-    /// <c>HttpContext.Current.Trace</c> 
-    /// (<see cref="TraceContext"/>).
-    /// </para>
-    /// </remarks>
-    protected override void Append(LoggingEvent loggingEvent)
+    protected override void Append(LoggingEvent loggingEvent) 
     {
       // check if log4net is running in the context of an ASP.NET application
-      if (HttpContext.Current != null)
+      if (HttpContext.Current is not null) 
       {
         // check if tracing is enabled for the current context
-        if (HttpContext.Current.Trace.IsEnabled)
+        if (HttpContext.Current.Trace.IsEnabled) 
         {
-          if (loggingEvent.Level >= Level.Warn)
+          if (loggingEvent.Level is not null && loggingEvent.Level >= Level.Warn) 
           {
-            HttpContext.Current.Trace.Warn(m_category.Format(loggingEvent), RenderLoggingEvent(loggingEvent));
+            HttpContext.Current.Trace.Warn(Category.Format(loggingEvent), RenderLoggingEvent(loggingEvent));
           }
-          else
+          else 
           {
-            HttpContext.Current.Trace.Write(m_category.Format(loggingEvent), RenderLoggingEvent(loggingEvent));
+            HttpContext.Current.Trace.Write(Category.Format(loggingEvent), RenderLoggingEvent(loggingEvent));
           }
         }
       }
@@ -108,20 +79,7 @@ namespace log4net.Appender
     /// <summary>
     /// This appender requires a <see cref="Layout"/> to be set.
     /// </summary>
-    /// <value><c>true</c></value>
-    /// <remarks>
-    /// <para>
-    /// This appender requires a <see cref="Layout"/> to be set.
-    /// </para>
-    /// </remarks>
-    protected override bool RequiresLayout
-    {
-      get { return true; }
-    }
-
-    #endregion // Override implementation of AppenderSkeleton
-
-    #region Public Instance Properties
+    protected override bool RequiresLayout => true;
 
     /// <summary>
     /// The category parameter sent to the Trace method.
@@ -131,27 +89,8 @@ namespace log4net.Appender
     /// Defaults to %logger which will use the logger name of the current 
     /// <see cref="LoggingEvent"/> as the category parameter.
     /// </para>
-    /// <para>
-    /// </para> 
     /// </remarks>
-    public PatternLayout Category
-    {
-      get { return m_category; }
-      set { m_category = value; }
-    }
-
-    #endregion
-
-    #region Private Instance Fields
-
-    /// <summary>
-    /// Defaults to %logger
-    /// </summary>
-    private PatternLayout m_category = new PatternLayout("%logger");
-
-    #endregion
+    public PatternLayout Category { get; set; } = new("%logger");
   }
 }
-
-#endif // !NETCF && !SSCLI
-#endif // NET_2_0
+#endif

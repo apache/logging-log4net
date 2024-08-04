@@ -21,6 +21,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Threading;
 using log4net.Config;
 using log4net.Layout;
@@ -28,17 +30,12 @@ using log4net.Repository;
 using log4net.Tests.Appender;
 using log4net.Util;
 using NUnit.Framework;
-using static NExpect.Expectations;
-using NExpect;
 
 namespace log4net.Tests.Context
 {
   /// <summary>
   /// Used for internal unit testing the <see cref="ThreadContext"/> class.
   /// </summary>
-  /// <remarks>
-  /// Used for internal unit testing the <see cref="ThreadContext"/> class.
-  /// </remarks>
   [TestFixture]
   public class ThreadContextTest
   {
@@ -198,36 +195,34 @@ namespace log4net.Tests.Context
       stringAppender.Reset();
     }
 
-    private static string TestBackgroundThreadContextPropertyRepository;
-
     [Test]
     public void TestBackgroundThreadContextProperty()
     {
       StringAppender stringAppender = new StringAppender();
       stringAppender.Layout = new PatternLayout("%property{DateTimeTodayToString}");
 
-      ILoggerRepository rep = LogManager.CreateRepository(TestBackgroundThreadContextPropertyRepository =
-          "TestBackgroundThreadContextPropertyRepository" + Guid.NewGuid().ToString());
+      string testBackgroundThreadContextPropertyRepository =
+        "TestBackgroundThreadContextPropertyRepository" + Guid.NewGuid();
+      ILoggerRepository rep = LogManager.CreateRepository(testBackgroundThreadContextPropertyRepository);
       BasicConfigurator.Configure(rep, stringAppender);
 
-      Thread thread = new Thread(new ThreadStart(ExecuteBackgroundThread));
-      thread.Start();
+      Thread thread = new Thread(ExecuteBackgroundThread);
+      thread.Start(testBackgroundThreadContextPropertyRepository);
 
       Thread.CurrentThread.Join(2000);
     }
 
-    private static void ExecuteBackgroundThread()
+    private static void ExecuteBackgroundThread(object? context)
     {
-      ILog log = LogManager.GetLogger(TestBackgroundThreadContextPropertyRepository, "ExecuteBackGroundThread");
-      ThreadContext.Properties["DateTimeTodayToString"] = DateTime.Today.ToString();
+      string testBackgroundThreadContextPropertyRepository = (string)context!;
+      ILog log = LogManager.GetLogger(testBackgroundThreadContextPropertyRepository, "ExecuteBackGroundThread");
+      ThreadContext.Properties["DateTimeTodayToString"] = DateTime.Today.ToString(CultureInfo.InvariantCulture);
 
       log.Info("TestMessage");
 
-      Repository.Hierarchy.Hierarchy hierarchyLoggingRepository =
-          (Repository.Hierarchy.Hierarchy)log.Logger.Repository;
-      StringAppender stringAppender = (StringAppender)hierarchyLoggingRepository.Root.Appenders[0];
-
-      Assert.AreEqual(DateTime.Today.ToString(), stringAppender.GetString());
+      var hierarchyLoggingRepository = (Repository.Hierarchy.Hierarchy?)log.Logger.Repository;
+      StringAppender stringAppender = (StringAppender)hierarchyLoggingRepository!.Root.Appenders[0];
+      Assert.AreEqual(DateTime.Today.ToString(CultureInfo.InvariantCulture), stringAppender.GetString());
     }
 
     [Test]
@@ -238,7 +233,7 @@ namespace log4net.Tests.Context
       var flags = new List<FlagContainer>();
 
       // Act
-      for (var i = 0; i < 256; i++)
+      for (var i = 0; i < Math.Max(64, 4 * Environment.ProcessorCount); i++)
       {
         var t = new Thread(SpinAndCheck);
         var flag = new FlagContainer();
@@ -252,9 +247,7 @@ namespace log4net.Tests.Context
         t.Join();
       }
 
-      // Assert
-      Expect(flags)
-          .To.Contain.All.Matched.By(o => o.Flag == false);
+      Assert.IsTrue(flags.All(o => !o.Flag));
     }
 
     public class FlagContainer
@@ -262,15 +255,15 @@ namespace log4net.Tests.Context
       public bool Flag { get; set; }
     }
 
-    private void SpinAndCheck(object obj)
+    private void SpinAndCheck(object? obj)
     {
-      var container = obj as FlagContainer;
+      var container = (FlagContainer)obj!;
       var threadid = Thread.CurrentThread.ManagedThreadId;
       for (var i = 0; i < 100000; i++)
       {
         ThreadContext.Properties["threadid"] = threadid;
         Thread.Sleep(0);
-        if ((int)ThreadContext.Properties["threadid"] != threadid)
+        if ((int?)ThreadContext.Properties["threadid"] != threadid)
         {
           container.Flag = true;
           break;

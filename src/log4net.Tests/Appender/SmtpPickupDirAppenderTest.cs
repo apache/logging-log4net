@@ -18,8 +18,6 @@
 #endregion
 
 using System;
-using System.Collections;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -39,28 +37,25 @@ namespace log4net.Tests.Appender
   {
     private readonly string _testPickupDir;
 
-    private class SilentErrorHandler : IErrorHandler
+    private sealed class SilentErrorHandler : IErrorHandler
     {
-      private StringBuilder m_buffer = new StringBuilder();
+      private readonly StringBuilder m_buffer = new();
 
-      public string Message
-      {
-        get { return m_buffer.ToString(); }
-      }
+      public string Message => m_buffer.ToString();
 
       public void Error(string message)
       {
-        m_buffer.Append(message + "\n");
+        m_buffer.Append(message + '\n');
       }
 
       public void Error(string message, Exception e)
       {
-        m_buffer.Append(message + "\n" + e.Message + "\n");
+        m_buffer.Append(message + '\n' + e.Message + '\n');
       }
 
-      public void Error(string message, Exception e, ErrorCode errorCode)
+      public void Error(string message, Exception? e, ErrorCode errorCode)
       {
-        m_buffer.Append(message + "\n" + e.Message + "\n");
+        m_buffer.Append(message + '\n' + e?.Message + '\n');
       }
     }
 
@@ -68,6 +63,7 @@ namespace log4net.Tests.Appender
     {
       _testPickupDir = Path.Combine(Directory.GetCurrentDirectory(), "SmtpPickupDirAppenderTest_PickupDir");
     }
+
     /// <summary>
     /// Sets up variables used for the tests
     /// </summary>
@@ -84,9 +80,9 @@ namespace log4net.Tests.Appender
     private void ResetLogger()
     {
       // Regular users should not use the clear method lightly!
-      Utils.GetRepository().ResetConfiguration();
-      Utils.GetRepository().Shutdown();
-      ((Repository.Hierarchy.Hierarchy)Utils.GetRepository()).Clear();
+      LogManager.GetRepository().ResetConfiguration();
+      LogManager.GetRepository().Shutdown();
+      ((Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Clear();
     }
 
     /// <summary>
@@ -131,8 +127,7 @@ namespace log4net.Tests.Appender
     {
       Repository.Hierarchy.Hierarchy h = (Repository.Hierarchy.Hierarchy)LogManager.CreateRepository("TestRepository");
 
-      PatternLayout layout = new PatternLayout();
-      layout.ConversionPattern = "%m%n";
+      var layout = new PatternLayout { ConversionPattern = "%m%n" };
       layout.ActivateOptions();
 
       appender.Layout = layout;
@@ -199,7 +194,7 @@ namespace log4net.Tests.Appender
       }
       Assert.IsTrue(hasDateHeader, "Output must contains a date header");
 
-      Assert.AreEqual("", sh.Message, "Unexpected error message");
+      Assert.AreEqual(string.Empty, sh.Message, "Unexpected error message");
     }
 
     /// <summary>
@@ -220,7 +215,7 @@ namespace log4net.Tests.Appender
       Assert.AreEqual(1, Directory.GetFiles(_testPickupDir).Length);
       FileInfo fileInfo = new FileInfo(Directory.GetFiles(_testPickupDir)[0]);
       Assert.AreEqual("." + fileExtension, fileInfo.Extension);
-      Assert.DoesNotThrow(delegate { new Guid(fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length)); }); // Assert that filename before extension is a guid
+      Assert.IsTrue(Guid.TryParse(fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length), out _));
 
       Assert.AreEqual("", sh.Message, "Unexpected error message");
     }
@@ -241,9 +236,9 @@ namespace log4net.Tests.Appender
       Assert.AreEqual(1, Directory.GetFiles(_testPickupDir).Length);
       FileInfo fileInfo = new FileInfo(Directory.GetFiles(_testPickupDir)[0]);
       Assert.IsEmpty(fileInfo.Extension);
-      Assert.DoesNotThrow(delegate { new Guid(fileInfo.Name); }); // Assert that filename is a guid
+      Assert.IsTrue(Guid.TryParse(fileInfo.Name, out _));
 
-      Assert.AreEqual("", sh.Message, "Unexpected error message");
+      Assert.AreEqual(string.Empty, sh.Message, "Unexpected error message");
     }
   }
 }

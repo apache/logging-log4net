@@ -17,13 +17,9 @@
 //
 #endregion
 
-using System;
-using System.Text;
 using System.IO;
-using System.Collections;
 
 using log4net.Core;
-using log4net.Repository;
 
 namespace log4net.Layout.Pattern
 {
@@ -62,7 +58,7 @@ namespace log4net.Layout.Pattern
     /// </remarks>
     protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
     {
-      if (Option != null)
+      if (Option is not null)
       {
         // Write the value for the specified key
         WriteObject(writer, loggingEvent.Repository, loggingEvent.LookupProperty(Option));

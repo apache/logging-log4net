@@ -18,61 +18,34 @@
 #endregion
 
 using System;
-using System.Collections;
 
 namespace log4net.Util
 {
   /// <summary>
   /// Implementation of Stacks collection for the <see cref="log4net.ThreadContext"/>
   /// </summary>
-  /// <remarks>
-  /// <para>
-  /// Implementation of Stacks collection for the <see cref="log4net.ThreadContext"/>
-  /// </para>
-  /// </remarks>
   /// <author>Nicko Cadell</author>
   public sealed class ThreadContextStacks
   {
     private readonly ContextPropertiesBase m_properties;
 
-    #region Public Instance Constructors
-
     /// <summary>
-    /// Internal constructor
-    /// </summary>
-    /// <remarks>
-    /// <para>
     /// Initializes a new instance of the <see cref="ThreadContextStacks" /> class.
-    /// </para>
-    /// </remarks>
+    /// </summary>
     internal ThreadContextStacks(ContextPropertiesBase properties)
     {
       m_properties = properties;
     }
 
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
-
     /// <summary>
-    /// Gets the named thread context stack
+    /// Gets the named thread context stack.
     /// </summary>
-    /// <value>
-    /// The named stack
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets the named thread context stack
-    /// </para>
-    /// </remarks>
     public ThreadContextStack this[string key]
     {
       get
       {
-        ThreadContextStack stack = null;
-
-        object propertyValue = m_properties[key];
-        if (propertyValue == null)
+        ThreadContextStack? stack;
+        if (m_properties[key] is not object propertyValue)
         {
           // Stack does not exist, create
           stack = new ThreadContextStack();
@@ -82,10 +55,10 @@ namespace log4net.Util
         {
           // Look for existing stack
           stack = propertyValue as ThreadContextStack;
-          if (stack == null)
+          if (stack is null)
           {
             // Property is not set to a stack!
-            string propertyValueString = SystemInfo.NullText;
+            string? propertyValueString = SystemInfo.NullText;
 
             try
             {
@@ -95,7 +68,7 @@ namespace log4net.Util
             {
             }
 
-            LogLog.Error(declaringType, "ThreadContextStacks: Request for stack named [" + key + "] failed because a property with the same name exists which is a [" + propertyValue.GetType().Name + "] with value [" + propertyValueString + "]");
+            LogLog.Error(declaringType, $"ThreadContextStacks: Request for stack named [{key}] failed because a property with the same name exists which is a [{propertyValue.GetType().Name}] with value [{propertyValueString}]");
 
             stack = new ThreadContextStack();
           }
@@ -105,10 +78,6 @@ namespace log4net.Util
       }
     }
 
-    #endregion Public Instance Properties
-
-    #region Private Static Fields
-
     /// <summary>
     /// The fully qualified type of the ThreadContextStacks class.
     /// </summary>
@@ -117,8 +86,5 @@ namespace log4net.Util
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(ThreadContextStacks);
-
-    #endregion Private Static Fields
   }
 }
-

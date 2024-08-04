@@ -17,9 +17,6 @@
 //
 #endregion
 
-// .NET Compact Framework 1.0 has no support for reading assembly attributes
-#if !NETCF
-
 using System;
 
 namespace log4net.Config
@@ -46,14 +43,8 @@ namespace log4net.Config
   /// <author>Gert Driesen</author>
   [AttributeUsage(AttributeTargets.Assembly)]
   [Serializable]
-  public /*sealed*/ class RepositoryAttribute : Attribute
+  public sealed class RepositoryAttribute : Attribute
   {
-    //
-    // Class is not sealed because DomainAttribute extends it while it is obsoleted
-    // 
-
-    #region Public Instance Constructors
-
     /// <summary>
     /// Initializes a new instance of the <see cref="RepositoryAttribute" /> class.
     /// </summary>
@@ -78,12 +69,8 @@ namespace log4net.Config
     /// </remarks>
     public RepositoryAttribute(string name)
     {
-      m_name = name;
+      Name = name;
     }
-
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
 
     /// <summary>
     /// Gets or sets the name of the logging repository.
@@ -98,11 +85,7 @@ namespace log4net.Config
     /// same repository. They will share the logging configuration of the repository.
     /// </para>
     /// </remarks>
-    public string Name
-    {
-      get { return m_name; }
-      set { m_name = value; }
-    }
+    public string? Name { get; set; }
 
     /// <summary>
     /// Gets or sets the type of repository to create for this assembly.
@@ -124,21 +107,6 @@ namespace log4net.Config
     /// repository.
     /// </para>
     /// </remarks>
-    public Type RepositoryType
-    {
-      get { return m_repositoryType; }
-      set { m_repositoryType = value; }
-    }
-
-    #endregion Public Instance Properties
-
-    #region Private Instance Fields
-
-    private string m_name = null;
-    private Type m_repositoryType = null;
-
-    #endregion Private Instance Fields
+    public Type? RepositoryType { get; set; }
   }
 }
-
-#endif // !NETCF

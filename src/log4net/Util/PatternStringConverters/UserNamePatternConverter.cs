@@ -19,6 +19,7 @@
 
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace log4net.Util.PatternStringConverters
 {
@@ -43,33 +44,35 @@ namespace log4net.Util.PatternStringConverters
     /// Write the current threads username to the output <paramref name="writer"/>.
     /// </para>
     /// </remarks>
-    protected override void Convert(TextWriter writer, object state)
+    public override void Convert(TextWriter writer, object? state)
     {
-#if (NETCF || SSCLI || NETSTANDARD1_3)
-      // On compact framework there's no notion of current Windows user
-      writer.Write( SystemInfo.NotAvailableText );
-#else
       try
       {
-        System.Security.Principal.WindowsIdentity windowsIdentity = null;
-        windowsIdentity = System.Security.Principal.WindowsIdentity.GetCurrent();
-        if (windowsIdentity != null && windowsIdentity.Name != null)
+#if !NET462_OR_GREATER
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-          writer.Write(windowsIdentity.Name);
+          Fallback(writer);
+          return;
+        }
+#endif
+        if (System.Security.Principal.WindowsIdentity.GetCurrent()?.Name is string name)
+        {
+          writer.Write(name);
         }
       }
       catch (System.Security.SecurityException)
       {
+        Fallback(writer);
+      }
+
+      static void Fallback(TextWriter writer)
+      {
         // This security exception will occur if the caller does not have 
         // some undefined set of SecurityPermission flags.
         LogLog.Debug(declaringType, "Security exception while trying to get current windows identity. Error Ignored.");
-
         writer.Write(SystemInfo.NotAvailableText);
       }
-#endif
     }
-
-    #region Private Static Fields
 
     /// <summary>
     /// The fully qualified type of the UserNamePatternConverter class.
@@ -79,7 +82,5 @@ namespace log4net.Util.PatternStringConverters
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(UserNamePatternConverter);
-
-    #endregion Private Static Fields
   }
 }
