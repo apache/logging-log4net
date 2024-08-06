@@ -207,7 +207,7 @@ limitations under the License.
         <section id="a2.0.17-bug" name="Bug fixes">
           <ul>
             <li>
-              <a href="https://github.com/apache/logging-log4net/issues/118">NullRefException from shutdown in 2.0.16</a> fixed in <a href="https://github.com/apache/logging-log4net/pull/120">Fast fix for NullRefException from FileAppender"</a> by (by @erikmav)"
+              <a href="https://github.com/apache/logging-log4net/issues/118">NullRefException from shutdown in 2.0.16</a> fixed in <a href="https://github.com/apache/logging-log4net/pull/120">Fast fix for NullRefException from FileAppender</a> (by @erikmav)
             </li>
           </ul>
         </section>
