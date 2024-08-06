@@ -196,6 +196,9 @@ limitations under the License.
             <li>
               <a href="https://github.com/apache/logging-log4net/issues/127">Enable building log4net with docker container</a> (by @freeandnil)
             </li>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/109">Fix dotnet (ie not netfx) test run</a> (by @mobilebilly)
+            </li>
           </ul>
         </section>
       </section>
