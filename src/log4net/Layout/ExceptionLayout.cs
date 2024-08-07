@@ -19,9 +19,7 @@
 
 using System;
 using System.IO;
-using System.Text;
 
-using log4net.Util;
 using log4net.Core;
 
 namespace log4net.Layout
@@ -31,9 +29,6 @@ namespace log4net.Layout
   /// </summary>
   /// <remarks>
   /// <para>
-  /// A Layout that renders only the Exception text from the logging event.
-  /// </para>
-  /// <para>
   /// This Layout should only be used with appenders that utilize multiple
   /// layouts (e.g. <see cref="log4net.Appender.AdoNetAppender"/>).
   /// </para>
@@ -42,27 +37,16 @@ namespace log4net.Layout
   /// <author>Gert Driesen</author>
   public class ExceptionLayout : LayoutSkeleton
   {
-    #region Constructors
-
     /// <summary>
-    /// Default constructor
+    /// Constructs an ExceptionLayout.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Constructs a ExceptionLayout
-    /// </para>
-    /// </remarks>
     public ExceptionLayout()
     {
-      this.IgnoresException = false;
+      IgnoresException = false;
     }
 
-    #endregion
-
-    #region Implementation of IOptionHandler
-
     /// <summary>
-    /// Activate component options
+    /// Activates component options.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -78,10 +62,6 @@ namespace log4net.Layout
       // nothing to do.
     }
 
-    #endregion
-
-    #region Override implementation of LayoutSkeleton
-
     /// <summary>
     /// Gets the exception text from the logging event
     /// </summary>
@@ -95,14 +75,12 @@ namespace log4net.Layout
     /// </remarks>
     public override void Format(TextWriter writer, LoggingEvent loggingEvent)
     {
-      if (loggingEvent == null)
+      if (loggingEvent is null)
       {
-        throw new ArgumentNullException("loggingEvent");
+        throw new ArgumentNullException(nameof(loggingEvent));
       }
 
       writer.Write(loggingEvent.GetExceptionString());
     }
-
-    #endregion
   }
 }

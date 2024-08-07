@@ -19,26 +19,20 @@
 
 using System;
 using System.IO;
-#if NETSTANDARD1_3
-using System.Reflection;
-#endif
-using System.Collections;
+using System.Collections.Concurrent;
 using log4net.Util;
 
 namespace log4net.ObjectRenderer
 {
   /// <summary>
-  /// Map class objects to an <see cref="IObjectRenderer"/>.
+  /// Maps types to <see cref="IObjectRenderer"/> instances for types that require custom
+  /// rendering.
   /// </summary>
   /// <remarks>
   /// <para>
-  /// Maintains a mapping between types that require special
-  /// rendering and the <see cref="IObjectRenderer"/> that
-  /// is used to render them.
-  /// </para>
-  /// <para>
   /// The <see cref="M:FindAndRender(object)"/> method is used to render an
-  /// <c>object</c> using the appropriate renderers defined in this map.
+  /// <c>object</c> using the appropriate renderers defined in this map,
+  /// using a default renderer if no custom renderer is defined for a type.
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
@@ -47,20 +41,16 @@ namespace log4net.ObjectRenderer
   {
     private static readonly Type declaringType = typeof(RendererMap);
 
-    #region Member Variables
+    private readonly ConcurrentDictionary<Type, IObjectRenderer> m_map = new();
+    private readonly ConcurrentDictionary<Type, IObjectRenderer> m_cache = new();
 
-    private readonly Hashtable m_map = new();
-    private readonly Hashtable m_cache = new();
-
-    private static IObjectRenderer s_defaultRenderer = new DefaultRenderer();
-
-    #endregion
+    private static readonly IObjectRenderer s_defaultRenderer = new DefaultRenderer();
 
     /// <summary>
-    /// Render <paramref name="obj"/> using the appropriate renderer.
+    /// Renders <paramref name="obj"/> using the appropriate renderer.
     /// </summary>
     /// <param name="obj">the object to render to a string</param>
-    /// <returns>the object rendered as a string</returns>
+    /// <returns>The object rendered as a string.</returns>
     /// <remarks>
     /// <para>
     /// This is a convenience method used to render an object to a string.
@@ -68,11 +58,10 @@ namespace log4net.ObjectRenderer
     /// should be used when streaming output to a <see cref="TextWriter"/>.
     /// </para>
     /// </remarks>
-    public string FindAndRender(object obj)
+    public string FindAndRender(object? obj)
     {
       // Optimisation for strings
-      string strData = obj as String;
-      if (strData != null)
+      if (obj is string strData)
       {
         return strData;
       }
@@ -96,17 +85,16 @@ namespace log4net.ObjectRenderer
     /// as a <see cref="string"/>.
     /// </para>
     /// </remarks>
-    public void FindAndRender(object obj, TextWriter writer)
+    public void FindAndRender(object? obj, TextWriter writer)
     {
-      if (obj == null)
+      if (obj is null)
       {
         writer.Write(SystemInfo.NullText);
       }
       else
       {
         // Optimisation for strings
-        string str = obj as string;
-        if (str != null)
+        if (obj is string str)
         {
           writer.Write(str);
         }
@@ -120,31 +108,24 @@ namespace log4net.ObjectRenderer
           catch (Exception ex)
           {
             // Exception rendering the object
-            LogLog.Error(declaringType, "Exception while rendering object of type [" + obj.GetType().FullName + "]", ex);
+            LogLog.Error(declaringType, $"Exception while rendering object of type [{obj.GetType().FullName}]", ex);
 
             // return default message
-            string objectTypeName = "";
-            if (obj != null && obj.GetType() != null)
+            string objectTypeName = obj.GetType().FullName ?? string.Empty;
+
+            writer.Write($"<log4net.Error>Exception rendering object type [{objectTypeName}]");
+
+            string? exceptionText = null;
+            try
             {
-              objectTypeName = obj.GetType().FullName;
+              exceptionText = ex.ToString();
+            }
+            catch
+            {
+              // Ignore exception
             }
 
-            writer.Write("<log4net.Error>Exception rendering object type [" + objectTypeName + "]");
-            if (ex != null)
-            {
-              string exceptionText = null;
-
-              try
-              {
-                exceptionText = ex.ToString();
-              }
-              catch
-              {
-                // Ignore exception
-              }
-
-              writer.Write("<stackTrace>" + exceptionText + "</stackTrace>");
-            }
+            writer.Write($"<stackTrace>{exceptionText}</stackTrace>");
             writer.Write("</log4net.Error>");
           }
         }
@@ -152,9 +133,9 @@ namespace log4net.ObjectRenderer
     }
 
     /// <summary>
-    /// Gets the renderer for the specified object type
+    /// Gets the renderer for the specified object type.
     /// </summary>
-    /// <param name="obj">the object to lookup the renderer for</param>
+    /// <param name="obj">The object for which to look up the renderer.</param>
     /// <returns>the renderer for <paramref name="obj"/></returns>
     /// <remarks>
     /// <param>
@@ -165,169 +146,107 @@ namespace log4net.ObjectRenderer
     /// with the type of the object parameter.
     /// </param>
     /// </remarks>
-    public IObjectRenderer Get(Object obj)
+    public IObjectRenderer? Get(object? obj)
     {
-      if (obj == null)
+      if (obj is null)
       {
         return null;
       }
-      else
-      {
-        return Get(obj.GetType());
-      }
+
+      return Get(obj.GetType());
     }
 
     /// <summary>
     /// Gets the renderer for the specified type
     /// </summary>
-    /// <param name="type">the type to lookup the renderer for</param>
-    /// <returns>the renderer for the specified type</returns>
-    /// <remarks>
-    /// <para>
-    /// Returns the renderer for the specified type.
-    /// If no specific renderer has been defined the
-    /// <see cref="DefaultRenderer"/> will be returned.
-    /// </para>
-    /// </remarks>
+    /// <param name="type">the type to look up the renderer for</param>
+    /// <returns>The renderer for the specified type, or <see cref="DefaultRenderer"/> if no specific renderer has been defined.</returns>
     public IObjectRenderer Get(Type type)
     {
-      if (type == null)
+      if (type is null)
       {
-        throw new ArgumentNullException("type");
+        throw new ArgumentNullException(nameof(type));
       }
 
-      IObjectRenderer result = null;
-
       // Check cache
-      result = (IObjectRenderer)m_cache[type];
-
-      if (result == null)
+      if (!m_cache.TryGetValue(type, out IObjectRenderer? result))
       {
-#if NETSTANDARD1_3
-        for (Type cur = type; cur != null; cur = cur.GetTypeInfo().BaseType)
-#else
-        for (Type cur = type; cur != null; cur = cur.BaseType)
-#endif
+        for (Type? cur = type; cur is not null; cur = cur.BaseType)
         {
           // Search the type's interfaces
           result = SearchTypeAndInterfaces(cur);
-          if (result != null)
+          if (result is not null)
           {
             break;
           }
         }
 
         // if not set then use the default renderer
-        if (result == null)
-        {
-          result = s_defaultRenderer;
-        }
+        result ??= s_defaultRenderer;
 
         // Add to cache
-        lock (m_cache)
-        {
-          m_cache[type] = result;
-        }
+        m_cache.TryAdd(type, result);
       }
 
       return result;
     }
 
     /// <summary>
-    /// Internal function to recursively search interfaces
+    /// Recursively searches interfaces.
     /// </summary>
-    /// <param name="type">the type to lookup the renderer for</param>
-    /// <returns>the renderer for the specified type</returns>
-    private IObjectRenderer SearchTypeAndInterfaces(Type type)
+    /// <param name="type">The type for which to look up the renderer.</param>
+    /// <returns>The renderer for the specified type, or <c>null</c> if not found.</returns>
+    private IObjectRenderer? SearchTypeAndInterfaces(Type type)
     {
-      IObjectRenderer r = (IObjectRenderer)m_map[type];
-      if (r != null)
+      if (m_map.TryGetValue(type, out IObjectRenderer? r))
       {
         return r;
       }
-      else
+
+      foreach (Type t in type.GetInterfaces())
       {
-        foreach (Type t in type.GetInterfaces())
+        r = SearchTypeAndInterfaces(t);
+        if (r is not null)
         {
-          r = SearchTypeAndInterfaces(t);
-          if (r != null)
-          {
-            return r;
-          }
+          return r;
         }
       }
       return null;
     }
 
     /// <summary>
-    /// Get the default renderer instance
+    /// Gets the default renderer instance
     /// </summary>
-    /// <value>the default renderer</value>
-    /// <remarks>
-    /// <para>
-    /// Get the default renderer
-    /// </para>
-    /// </remarks>
-    public IObjectRenderer DefaultRenderer
-    {
-      get { return s_defaultRenderer; }
-    }
+    public IObjectRenderer DefaultRenderer => s_defaultRenderer;
 
     /// <summary>
-    /// Clear the map of renderers
+    /// Clears the map of custom renderers. The <see cref="DefaultRenderer"/>
+    /// is not removed.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Clear the custom renderers defined by using
-    /// <see cref="Put"/>. The <see cref="DefaultRenderer"/>
-    /// cannot be removed.
-    /// </para>
-    /// </remarks>
     public void Clear()
     {
-      lock (m_map)
-      {
-        m_map.Clear();
-      }
-
-      lock (m_cache)
-      {
-        m_cache.Clear();
-      }
+      m_map.Clear();
+      m_cache.Clear();
     }
 
     /// <summary>
-    /// Register an <see cref="IObjectRenderer"/> for <paramref name="typeToRender"/>. 
+    /// Registers an <see cref="IObjectRenderer"/> for <paramref name="typeToRender"/>. 
     /// </summary>
-    /// <param name="typeToRender">the type that will be rendered by <paramref name="renderer"/></param>
-    /// <param name="renderer">the renderer for <paramref name="typeToRender"/></param>
-    /// <remarks>
-    /// <para>
-    /// Register an object renderer for a specific source type.
-    /// This renderer will be returned from a call to <see cref="M:Get(Type)"/>
-    /// specifying the same <paramref name="typeToRender"/> as an argument.
-    /// </para>
-    /// </remarks>
+    /// <param name="typeToRender">The type that will be rendered by <paramref name="renderer"/>.</param>
+    /// <param name="renderer">The renderer for <paramref name="typeToRender"/>.</param>
     public void Put(Type typeToRender, IObjectRenderer renderer)
     {
-      lock (m_cache)
+      if (typeToRender is null)
       {
-        m_cache.Clear();
+        throw new ArgumentNullException(nameof(typeToRender));
+      }
+      if (renderer is null)
+      {
+        throw new ArgumentNullException(nameof(renderer));
       }
 
-      if (typeToRender == null)
-      {
-        throw new ArgumentNullException("typeToRender");
-      }
-      if (renderer == null)
-      {
-        throw new ArgumentNullException("renderer");
-      }
-
-      lock (m_map)
-      {
-        m_map[typeToRender] = renderer;
-      }
+      m_cache.Clear();
+      m_map[typeToRender] = renderer;
     }
   }
 }

@@ -19,9 +19,7 @@
 
 using System;
 
-using log4net;
 using log4net.Core;
-using log4net.Util;
 
 namespace log4net.Filter
 {
@@ -43,36 +41,6 @@ namespace log4net.Filter
   /// <author>Gert Driesen</author>
   public class LevelRangeFilter : FilterSkeleton
   {
-    #region Member Variables
-
-    /// <summary>
-    /// Flag to indicate the behavior when matching a <see cref="Level"/>
-    /// </summary>
-    private bool m_acceptOnMatch = true;
-
-    /// <summary>
-    /// the minimum <see cref="Level"/> value to match
-    /// </summary>
-    private Level m_levelMin;
-
-    /// <summary>
-    /// the maximum <see cref="Level"/> value to match
-    /// </summary>
-    private Level m_levelMax;
-
-    #endregion
-
-    #region Constructors
-
-    /// <summary>
-    /// Default constructor
-    /// </summary>
-    public LevelRangeFilter()
-    {
-    }
-
-    #endregion
-
     /// <summary>
     /// <see cref="FilterDecision.Accept"/> when matching <see cref="LevelMin"/> and <see cref="LevelMax"/>
     /// </summary>
@@ -87,11 +55,7 @@ namespace log4net.Filter
     /// The default is <c>true</c> i.e. to <see cref="FilterDecision.Accept"/> the event.
     /// </para>
     /// </remarks>
-    public bool AcceptOnMatch
-    {
-      get { return m_acceptOnMatch; }
-      set { m_acceptOnMatch = value; }
-    }
+    public bool AcceptOnMatch { get; set; } = true;
 
     /// <summary>
     /// Set the minimum matched <see cref="Level"/>
@@ -103,11 +67,7 @@ namespace log4net.Filter
     /// the result depends on the value of <see cref="AcceptOnMatch"/>.
     /// </para>
     /// </remarks>
-    public Level LevelMin
-    {
-      get { return m_levelMin; }
-      set { m_levelMin = value; }
-    }
+    public Level? LevelMin { get; set; }
 
     /// <summary>
     /// Sets the maximum matched <see cref="Level"/>
@@ -119,13 +79,7 @@ namespace log4net.Filter
     /// the result depends on the value of <see cref="AcceptOnMatch"/>.
     /// </para>
     /// </remarks>
-    public Level LevelMax
-    {
-      get { return m_levelMax; }
-      set { m_levelMax = value; }
-    }
-
-    #region Override implementation of FilterSkeleton
+    public Level? LevelMax { get; set; }
 
     /// <summary>
     /// Check if the event should be logged.
@@ -144,30 +98,30 @@ namespace log4net.Filter
     /// </remarks>
     public override FilterDecision Decide(LoggingEvent loggingEvent)
     {
-      if (loggingEvent == null)
+      if (loggingEvent is null)
       {
-        throw new ArgumentNullException("loggingEvent");
+        throw new ArgumentNullException(nameof(loggingEvent));
       }
 
-      if (m_levelMin != null)
+      if (LevelMin is not null)
       {
-        if (loggingEvent.Level < m_levelMin)
+        if (loggingEvent.Level is not null && loggingEvent.Level < LevelMin)
         {
           // level of event is less than minimum
           return FilterDecision.Deny;
         }
       }
 
-      if (m_levelMax != null)
+      if (LevelMax is not null)
       {
-        if (loggingEvent.Level > m_levelMax)
+        if (loggingEvent.Level is not null && loggingEvent.Level > LevelMax)
         {
           // level of event is greater than maximum
           return FilterDecision.Deny;
         }
       }
 
-      if (m_acceptOnMatch)
+      if (AcceptOnMatch)
       {
         // this filter set up to bypass later filters and always return
         // accept if level in range
@@ -179,7 +133,5 @@ namespace log4net.Filter
         return FilterDecision.Neutral;
       }
     }
-
-    #endregion
   }
 }

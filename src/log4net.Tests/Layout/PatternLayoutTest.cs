@@ -19,9 +19,7 @@
 
 using System;
 using System.IO;
-#if !NETSTANDARD1_3
 using System.Globalization;
-#endif
 
 using log4net.Config;
 using log4net.Core;
@@ -44,9 +42,8 @@ namespace log4net.Tests.Layout
   [TestFixture]
   public class PatternLayoutTest
   {
-#if !NETSTANDARD1_3
-    private CultureInfo _currentCulture;
-    private CultureInfo _currentUICulture;
+    private CultureInfo? _currentCulture;
+    private CultureInfo? _currentUICulture;
 
     [SetUp]
     public void SetUp()
@@ -56,17 +53,14 @@ namespace log4net.Tests.Layout
       _currentUICulture = System.Threading.Thread.CurrentThread.CurrentUICulture;
       System.Threading.Thread.CurrentThread.CurrentCulture = System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
     }
-
-
     [TearDown]
     public void TearDown()
     {
       Utils.RemovePropertyFromAllContexts();
       // restore previous culture
-      System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture;
-      System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture;
+      System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture!;
+      System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture!;
     }
-#endif
 
     protected virtual PatternLayout NewPatternLayout()
     {
@@ -106,7 +100,6 @@ namespace log4net.Tests.Layout
       stringAppender.Reset();
     }
 
-#if !NETSTANDARD1_3
     [Test]
     public void TestStackTracePattern()
     {
@@ -122,7 +115,6 @@ namespace log4net.Tests.Layout
       StringAssert.EndsWith("PatternLayoutTest.TestStackTracePattern", stringAppender.GetString(), "stack trace value set");
       stringAppender.Reset();
     }
-#endif
 
     [Test]
     public void TestGlobalPropertiesPattern()
@@ -318,7 +310,7 @@ namespace log4net.Tests.Layout
     /// <summary>
     /// Converter to include event message
     /// </summary>
-    private class TestMessagePatternConverter : PatternLayoutConverter
+    private sealed class TestMessagePatternConverter : PatternLayoutConverter
     {
       /// <summary>
       /// Convert the pattern to the rendered message
@@ -352,11 +344,11 @@ namespace log4net.Tests.Layout
       stringAppender.Reset();
     }
 
-    private class MessageAsNamePatternConverter : NamedPatternConverter
+    private sealed class MessageAsNamePatternConverter : NamedPatternConverter
     {
       protected override string GetFullyQualifiedName(LoggingEvent loggingEvent)
       {
-        return loggingEvent.MessageObject.ToString();
+        return loggingEvent.MessageObject?.ToString() ?? string.Empty;
       }
     }
   }

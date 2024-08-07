@@ -38,10 +38,8 @@ namespace log4net.Util.TypeConverters
   /// <seealso cref="IConvertFrom"/>
   /// <seealso cref="IConvertTo"/>
   /// <author>Nicko Cadell</author>
-  internal class PatternStringConverter : IConvertTo, IConvertFrom
+  internal sealed class PatternStringConverter : IConvertTo, IConvertFrom
   {
-    #region Implementation of IConvertTo
-
     /// <summary>
     /// Can the target type be converted to the type supported by this object
     /// </summary>
@@ -77,29 +75,21 @@ namespace log4net.Util.TypeConverters
     /// </exception>
     public object ConvertTo(object source, Type targetType)
     {
-      PatternString patternString = source as PatternString;
-      if (patternString != null && CanConvertTo(targetType))
+      if (source is PatternString patternString && CanConvertTo(targetType))
       {
         return patternString.Format();
       }
       throw ConversionNotSupportedException.Create(targetType, source);
     }
 
-    #endregion
-
-    #region Implementation of IConvertFrom
-
     /// <summary>
     /// Can the source type be converted to the type supported by this object
     /// </summary>
     /// <param name="sourceType">the type to convert</param>
-    /// <returns>true if the conversion is possible</returns>
-    /// <remarks>
-    /// <para>
-    /// Returns <c>true</c> if the <paramref name="sourceType"/> is
-    /// the <see cref="String"/> type.
-    /// </para>
-    /// </remarks>
+    /// <returns>
+    /// <c>True</c> if the <paramref name="sourceType"/> is
+    /// the <see cref="string"/> type.
+    /// </returns>
     public bool CanConvertFrom(System.Type sourceType)
     {
       return (sourceType == typeof(string));
@@ -124,14 +114,11 @@ namespace log4net.Util.TypeConverters
     /// </exception>
     public object ConvertFrom(object source)
     {
-      string str = source as string;
-      if (str != null)
+      if (source is string str)
       {
         return new PatternString(str);
       }
       throw ConversionNotSupportedException.Create(typeof(PatternString), source);
     }
-
-    #endregion
   }
 }

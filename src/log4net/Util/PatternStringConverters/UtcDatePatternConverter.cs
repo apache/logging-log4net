@@ -18,11 +18,8 @@
 #endregion
 
 using System;
-using System.Text;
 using System.IO;
 
-using log4net.Core;
-using log4net.Util;
 using log4net.DateFormatter;
 
 namespace log4net.Util.PatternStringConverters
@@ -41,7 +38,7 @@ namespace log4net.Util.PatternStringConverters
   /// </remarks>
   /// <seealso cref="DatePatternConverter"/>
   /// <author>Nicko Cadell</author>
-  internal class UtcDatePatternConverter : DatePatternConverter
+  internal sealed class UtcDatePatternConverter : DatePatternConverter
   {
     /// <summary>
     /// Write the current date and time to the output
@@ -58,19 +55,17 @@ namespace log4net.Util.PatternStringConverters
     /// </para>
     /// </remarks>
     /// <seealso cref="DatePatternConverter"/>
-    protected override void Convert(TextWriter writer, object state)
+    public override void Convert(TextWriter writer, object? state)
     {
       try
       {
-        m_dateFormatter.FormatDate(DateTime.UtcNow, writer);
+        m_dateFormatter!.FormatDate(DateTime.UtcNow, writer);
       }
       catch (Exception ex)
       {
         LogLog.Error(declaringType, "Error occurred while converting date.", ex);
       }
     }
-
-    #region Private Static Fields
 
     /// <summary>
     /// The fully qualified type of the UtcDatePatternConverter class.
@@ -80,7 +75,5 @@ namespace log4net.Util.PatternStringConverters
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(UtcDatePatternConverter);
-
-    #endregion Private Static Fields
   }
 }

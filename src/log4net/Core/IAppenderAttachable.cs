@@ -17,8 +17,6 @@
 //
 #endregion
 
-using System;
-
 using log4net.Appender;
 
 namespace log4net.Core
@@ -78,7 +76,7 @@ namespace log4net.Core
     /// returned.
     /// </para>
     /// </remarks>
-    IAppender GetAppender(string name);
+    IAppender? GetAppender(string? name);
 
     /// <summary>
     /// Removes all attached appenders.
@@ -102,7 +100,7 @@ namespace log4net.Core
     /// <see cref="IAppender.Close"/> on the appender removed.
     /// </para>
     /// </remarks>
-    IAppender RemoveAppender(IAppender appender);
+    IAppender? RemoveAppender(IAppender appender);
 
     /// <summary>
     /// Removes the appender with the specified name from the list of appenders.
@@ -116,6 +114,6 @@ namespace log4net.Core
     /// <see cref="IAppender.Close"/> on the appender removed.
     /// </para>
     /// </remarks>
-    IAppender RemoveAppender(string name);
+    IAppender? RemoveAppender(string name);
   }
 }

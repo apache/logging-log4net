@@ -17,8 +17,7 @@
 //
 #endregion
 
-using System;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace log4net.Repository.Hierarchy
 {
@@ -32,27 +31,20 @@ namespace log4net.Repository.Hierarchy
   /// <see cref="Logger" /> for that node.
   /// </para>
   /// <para>
-  /// A provision node holds a list of child loggers on behalf of
-  /// a logger that does not exist.
+  /// A provision node holds a list of child loggers on behalf of a logger that does not exist.
   /// </para>
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-  internal sealed class ProvisionNode : ArrayList
+  internal sealed class ProvisionNode : List<Logger>
   {
     /// <summary>
     /// Create a new provision node with child node
     /// </summary>
     /// <param name="log">A child logger to add to this node.</param>
-    /// <remarks>
-    /// <para>
-    /// Initializes a new instance of the <see cref="ProvisionNode" /> class 
-    /// with the specified child logger.
-    /// </para>
-    /// </remarks>
-    internal ProvisionNode(Logger log) : base()
+    internal ProvisionNode(Logger log)
     {
-      this.Add(log);
+      Add(log);
     }
   }
 }

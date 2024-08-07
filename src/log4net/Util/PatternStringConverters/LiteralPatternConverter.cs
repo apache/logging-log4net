@@ -18,10 +18,7 @@
 #endregion
 
 using System;
-using System.Text;
 using System.IO;
-
-using log4net.Util;
 
 namespace log4net.Util.PatternStringConverters
 {
@@ -56,12 +53,10 @@ namespace log4net.Util.PatternStringConverters
     /// </remarks>
     public override PatternConverter SetNext(PatternConverter pc)
     {
-      LiteralPatternConverter literalPc = pc as LiteralPatternConverter;
-      if (literalPc != null)
+      if (pc is LiteralPatternConverter literalPc)
       {
         // Combine the two adjacent literals together
-        Option = Option + literalPc.Option;
-
+        Option += literalPc.Option;
         // We are the next converter now
         return this;
       }
@@ -84,10 +79,8 @@ namespace log4net.Util.PatternStringConverters
     /// to the output <paramref name="writer"/>.
     /// </para>
     /// </remarks>
-    public override void Format(TextWriter writer, object state)
-    {
-      writer.Write(Option);
-    }
+    public override void Format(TextWriter writer, object? state)
+      => writer.Write(Option);
 
     /// <summary>
     /// Convert this pattern into the rendered message
@@ -99,9 +92,7 @@ namespace log4net.Util.PatternStringConverters
     /// This method is not used.
     /// </para>
     /// </remarks>
-    protected override void Convert(TextWriter writer, object state)
-    {
-      throw new InvalidOperationException("Should never get here because of the overridden Format method");
-    }
+    public override void Convert(TextWriter writer, object? state)
+      => throw new InvalidOperationException("Should never get here because of the overridden Format method");
   }
 }

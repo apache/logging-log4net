@@ -86,17 +86,14 @@ namespace log4net.Filter
     FilterDecision Decide(LoggingEvent loggingEvent);
 
     /// <summary>
-    /// Property to get and set the next filter
+    /// Gets or sets the next filter in the chain.
     /// </summary>
-    /// <value>
-    /// The next filter in the chain
-    /// </value>
     /// <remarks>
     /// <para>
     /// Filters are typically composed into chains. This property allows the next filter in 
     /// the chain to be accessed.
     /// </para>
     /// </remarks>
-    IFilter Next { get; set; }
+    IFilter? Next { get; set; }
   }
 }

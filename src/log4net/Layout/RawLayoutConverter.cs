@@ -24,11 +24,10 @@ using log4net.Util.TypeConverters;
 namespace log4net.Layout
 {
   /// <summary>
-  /// Type converter for the <see cref="IRawLayout"/> interface
+  /// Type converter for the <see cref="IRawLayout"/> interface.
   /// </summary>
   /// <remarks>
   /// <para>
-  /// Used to convert objects to the <see cref="IRawLayout"/> interface.
   /// Supports converting from the <see cref="ILayout"/> interface to
   /// the <see cref="IRawLayout"/> interface using the <see cref="Layout2RawLayoutAdapter"/>.
   /// </para>
@@ -37,8 +36,6 @@ namespace log4net.Layout
   /// <author>Gert Driesen</author>
   public class RawLayoutConverter : IConvertFrom
   {
-    #region Override Implementation of IRawLayout
-
     /// <summary>
     /// Can the sourceType be converted to an <see cref="IRawLayout"/>
     /// </summary>
@@ -58,29 +55,24 @@ namespace log4net.Layout
     }
 
     /// <summary>
-    /// Convert the value to a <see cref="IRawLayout"/> object
+    /// Converts the value to a <see cref="IRawLayout"/> object.
     /// </summary>
     /// <param name="source">the value to convert</param>
     /// <returns>the <see cref="IRawLayout"/> object</returns>
     /// <remarks>
     /// <para>
-    /// Convert the <paramref name="source"/> object to a 
-    /// <see cref="IRawLayout"/> object. If the <paramref name="source"/> object
-    /// is a <see cref="ILayout"/> then the <see cref="Layout2RawLayoutAdapter"/>
-    /// is used to adapt between the two interfaces, otherwise an
-    /// exception is thrown.
+    /// If the <paramref name="source"/> object is an <see cref="ILayout"/> then the
+    /// <see cref="Layout2RawLayoutAdapter"/> is used to adapt between the two interfaces,
+    /// otherwise an exception is thrown.
     /// </para>
     /// </remarks>
     public object ConvertFrom(object source)
     {
-      ILayout layout = source as ILayout;
-      if (layout != null)
+      if (source is ILayout layout)
       {
         return new Layout2RawLayoutAdapter(layout);
       }
       throw ConversionNotSupportedException.Create(typeof(IRawLayout), source);
     }
-
-    #endregion
   }
 }

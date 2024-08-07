@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+
+    <!-- Windows-only net472 because BinaryFormatter is deprecated and turned off in net8.0 -->
+    <TargetFramework>net472</TargetFramework>
+    <RootNamespace>log4net2_SerializeEvent</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="log4net" Version="2.0.17" />
+  </ItemGroup>
+
+</Project>

@@ -17,10 +17,13 @@
 //
 #endregion
 
-// .NET Compact Framework 1.0 has no support for System.Runtime.Remoting.Messaging.CallContext
-#if !NETCF
-
 using log4net.Util;
+
+#if NET462_OR_GREATER
+using CallContext = System.Runtime.Remoting.Messaging.CallContext;
+#else
+using CallContext = System.Threading.AsyncLocal<log4net.Util.PropertiesDictionary>;
+#endif
 
 namespace log4net
 {
@@ -29,20 +32,18 @@ namespace log4net
   /// </summary>
   /// <remarks>
   /// <para>
-  /// The <c>LogicalThreadContext</c> provides a location for <see cref="System.Runtime.Remoting.Messaging.CallContext"/> specific debugging 
+  /// The <c>LogicalThreadContext</c> provides a location for <see cref="CallContext"/> specific debugging 
   /// information to be stored.
   /// The <c>LogicalThreadContext</c> properties override any <see cref="ThreadContext"/> or <see cref="GlobalContext"/>
   /// properties with the same name.
   /// </para>
   /// <para>
-  /// For .NET Standard 1.3 this class uses
-  /// System.Threading.AsyncLocal rather than <see
-  /// cref="System.Runtime.Remoting.Messaging.CallContext"/>.
+  /// For .NET Standard this class uses System.Threading.AsyncLocal rather than <see cref="CallContext"/>.
   /// </para>
   /// <para>
   /// The Logical Thread Context has a properties map and a stack.
   /// The properties and stack can 
-  /// be included in the output of log messages. The <see cref="log4net.Layout.PatternLayout"/>
+  /// be included in the output of log messages. The <see cref="Layout.PatternLayout"/>
   /// supports selecting and outputting these properties.
   /// </para>
   /// <para>
@@ -52,10 +53,10 @@ namespace log4net
   /// when a server handles multiple clients near-simultaneously.
   /// </para>
   /// <para>
-  /// The Logical Thread Context is managed on a per <see cref="System.Runtime.Remoting.Messaging.CallContext"/> basis.
+  /// The Logical Thread Context is managed on a per <see cref="CallContext"/> basis.
   /// </para>
   /// <para>
-  /// The <see cref="System.Runtime.Remoting.Messaging.CallContext"/> requires a link time 
+  /// The <see cref="CallContext"/> requires a link time 
   /// <see cref="System.Security.Permissions.SecurityPermission"/> for the
   /// <see cref="System.Security.Permissions.SecurityPermissionFlag.Infrastructure"/>.
   /// If the calling code does not have this permission then this context will be disabled.
@@ -79,75 +80,22 @@ namespace log4net
   /// </example>
   /// <threadsafety static="true" instance="true" />
   /// <author>Nicko Cadell</author>
-  public sealed class LogicalThreadContext
+  public static class LogicalThreadContext
   {
-    #region Private Instance Constructors
-
-    /// <summary>
-    /// Private Constructor. 
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Uses a private access modifier to prevent instantiation of this class.
-    /// </para>
-    /// </remarks>
-    private LogicalThreadContext()
-    {
-    }
-
-    #endregion Private Instance Constructors
-
-    #region Public Static Properties
-
     /// <summary>
     /// The thread properties map
     /// </summary>
-    /// <value>
-    /// The thread properties map
-    /// </value>
     /// <remarks>
     /// <para>
     /// The <c>LogicalThreadContext</c> properties override any <see cref="ThreadContext"/> 
     /// or <see cref="GlobalContext"/> properties with the same name.
     /// </para>
     /// </remarks>
-    public static LogicalThreadContextProperties Properties
-    {
-      get { return s_properties; }
-    }
+    public static LogicalThreadContextProperties Properties { get; } = new();
 
     /// <summary>
-    /// The thread stacks
-    /// </summary>
-    /// <value>
-    /// stack map
-    /// </value>
-    /// <remarks>
-    /// <para>
     /// The logical thread stacks.
-    /// </para>
-    /// </remarks>
-    public static LogicalThreadContextStacks Stacks
-    {
-      get { return s_stacks; }
-    }
-
-    #endregion Public Static Properties
-
-    #region Private Static Fields
-
-    /// <summary>
-    /// The thread context properties instance
     /// </summary>
-    private static readonly LogicalThreadContextProperties s_properties = new LogicalThreadContextProperties();
-
-    /// <summary>
-    /// The thread context stacks instance
-    /// </summary>
-    private static readonly LogicalThreadContextStacks s_stacks = new LogicalThreadContextStacks(s_properties);
-
-    #endregion Private Static Fields
+    public static LogicalThreadContextStacks Stacks { get; } = new(Properties);
   }
 }
-
-#endif

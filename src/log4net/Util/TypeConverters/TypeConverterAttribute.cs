@@ -40,31 +40,8 @@ namespace log4net.Util.TypeConverters
   [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Enum)]
   public sealed class TypeConverterAttribute : Attribute
   {
-    #region Member Variables
-
     /// <summary>
-    /// The string type name of the type converter
-    /// </summary>
-    private string m_typeName = null;
-
-    #endregion
-
-    #region Constructors
-
-    /// <summary>
-    /// Default constructor
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Default constructor
-    /// </para>
-    /// </remarks>
-    public TypeConverterAttribute()
-    {
-    }
-
-    /// <summary>
-    /// Create a new type converter attribute for the specified type name
+    /// Creates a new type converter attribute for the specified type name
     /// </summary>
     /// <param name="typeName">The string type name of the type converter</param>
     /// <remarks>
@@ -75,11 +52,11 @@ namespace log4net.Util.TypeConverters
     /// </remarks>
     public TypeConverterAttribute(string typeName)
     {
-      m_typeName = typeName;
+      ConverterTypeName = typeName;
     }
 
     /// <summary>
-    /// Create a new type converter attribute for the specified type
+    /// Creates a new type converter attribute for the specified type
     /// </summary>
     /// <param name="converterType">The type of the type converter</param>
     /// <remarks>
@@ -90,27 +67,18 @@ namespace log4net.Util.TypeConverters
     /// </remarks>
     public TypeConverterAttribute(Type converterType)
     {
-      m_typeName = log4net.Util.SystemInfo.AssemblyQualifiedName(converterType);
+      ConverterTypeName = converterType.AssemblyQualifiedName!;
     }
-
-    #endregion
 
     /// <summary>
     /// The string type name of the type converter 
     /// </summary>
-    /// <value>
-    /// The string type name of the type converter 
-    /// </value>
     /// <remarks>
     /// <para>
     /// The type specified must implement the <see cref="IConvertFrom"/> 
     /// or the <see cref="IConvertTo"/> interfaces.
     /// </para>
     /// </remarks>
-    public string ConverterTypeName
-    {
-      get { return m_typeName; }
-      set { m_typeName = value; }
-    }
+    public string ConverterTypeName { get; set; }
   }
 }

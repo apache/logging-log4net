@@ -18,8 +18,6 @@
  * under the License.
  *
 */
-#if !NETCF && (NET_2_0 || NETSTANDARD2_0)
-
 using System;
 using System.Text;
 
@@ -29,16 +27,11 @@ using log4net.Core;
 namespace log4net.Layout.Pattern
 {
   /// <summary>
-  /// Write the caller stack frames to the output
-  /// </summary>
-  /// <remarks>
-  /// <para>
   /// Writes the <see cref="LocationInfo.StackFrames"/> to the output writer, using format:
   /// type3.MethodCall3(type param,...) > type2.MethodCall2(type param,...) > type1.MethodCall1(type param,...)
-  /// </para>
-  /// </remarks>
+  /// </summary>
   /// <author>Adam Davies</author>
-  internal class StackTraceDetailPatternConverter : StackTracePatternConverter
+  internal sealed class StackTraceDetailPatternConverter : StackTracePatternConverter
   {
     internal override string GetMethodInformation(MethodItem method)
     {
@@ -49,7 +42,7 @@ namespace log4net.Layout.Pattern
         string param = "";
         string[] names = method.Parameters;
         StringBuilder sb = new StringBuilder();
-        if (names != null && names.GetUpperBound(0) > 0)
+        if (names is not null && names.GetUpperBound(0) > 0)
         {
           for (int i = 0; i <= names.GetUpperBound(0); i++)
           {
@@ -87,4 +80,3 @@ namespace log4net.Layout.Pattern
     #endregion Private Static Fields
   }
 }
-#endif // !NETCF && NET_2_0

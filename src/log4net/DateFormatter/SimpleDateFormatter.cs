@@ -34,8 +34,6 @@ namespace log4net.DateFormatter
   /// <author>Gert Driesen</author>
   public class SimpleDateFormatter : IDateFormatter
   {
-    #region Public Instance Constructors
-
     /// <summary>
     /// Constructor
     /// </summary>
@@ -55,10 +53,6 @@ namespace log4net.DateFormatter
       m_formatString = format;
     }
 
-    #endregion Public Instance Constructors
-
-    #region Implementation of IDateFormatter
-
     /// <summary>
     /// Formats the date using <see cref="M:DateTime.ToString(string, IFormatProvider)"/>.
     /// </summary>
@@ -75,21 +69,6 @@ namespace log4net.DateFormatter
       writer.Write(dateToFormat.ToString(m_formatString, System.Globalization.DateTimeFormatInfo.InvariantInfo));
     }
 
-    #endregion
-
-    #region Private Instance Fields
-
-    /// <summary>
-    /// The format string used to format the <see cref="DateTime" />.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The format string must be compatible with the options
-    /// that can be supplied to <see cref="M:DateTime.ToString(string, IFormatProvider)"/>.
-    /// </para>
-    /// </remarks>
     private readonly string m_formatString;
-
-    #endregion Private Instance Fields
   }
 }

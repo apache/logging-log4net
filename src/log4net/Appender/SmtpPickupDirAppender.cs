@@ -50,75 +50,20 @@ namespace log4net.Appender
   /// <author>Nicko Cadell</author>
   public class SmtpPickupDirAppender : BufferingAppenderSkeleton
   {
-    #region Public Instance Constructors
-
-    /// <summary>
-    /// Default constructor
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Default constructor
-    /// </para>
-    /// </remarks>
-    public SmtpPickupDirAppender()
-    {
-      m_fileExtension = string.Empty; // Default to empty string, not null
-    }
-
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
-
     /// <summary>
     /// Gets or sets a semicolon-delimited list of recipient e-mail addresses.
     /// </summary>
-    /// <value>
-    /// A semicolon-delimited list of e-mail addresses.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// A semicolon-delimited list of e-mail addresses.
-    /// </para>
-    /// </remarks>
-    public string To
-    {
-      get { return m_to; }
-      set { m_to = value; }
-    }
+    public string? To { get; set; }
 
     /// <summary>
     /// Gets or sets the e-mail address of the sender.
     /// </summary>
-    /// <value>
-    /// The e-mail address of the sender.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// The e-mail address of the sender.
-    /// </para>
-    /// </remarks>
-    public string From
-    {
-      get { return m_from; }
-      set { m_from = value; }
-    }
+    public string? From { get; set; }
 
     /// <summary>
     /// Gets or sets the subject line of the e-mail message.
     /// </summary>
-    /// <value>
-    /// The subject line of the e-mail message.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// The subject line of the e-mail message.
-    /// </para>
-    /// </remarks>
-    public string Subject
-    {
-      get { return m_subject; }
-      set { m_subject = value; }
-    }
+    public string? Subject { get; set; }
 
     /// <summary>
     /// Gets or sets the path to write the messages to.
@@ -129,39 +74,19 @@ namespace log4net.Appender
     /// as that used by the agent sending the messages.
     /// </para>
     /// </remarks>
-    public string PickupDir
-    {
-      get { return m_pickupDir; }
-      set { m_pickupDir = value; }
-    }
+    public string? PickupDir { get; set; }
 
     /// <summary>
     /// Gets or sets the file extension for the generated files
     /// </summary>
-    /// <value>
-    /// The file extension for the generated files
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// The file extension for the generated files
-    /// </para>
-    /// </remarks>
-    public string FileExtension
+    public string? FileExtension
     {
-      get { return m_fileExtension; }
+      get => m_fileExtension;
       set
       {
-        m_fileExtension = value;
-        if (m_fileExtension == null)
-        {
-          m_fileExtension = string.Empty;
-        }
-        // Make sure any non empty extension starts with a dot
-#if NET_2_0 || MONO_2_0 || NETSTANDARD
+        m_fileExtension = value ?? string.Empty;
+        // Make sure any non-empty extension starts with a dot
         if (!string.IsNullOrEmpty(m_fileExtension) && !m_fileExtension.StartsWith("."))
-#else
-        if (m_fileExtension != null && m_fileExtension.Length > 0 && !m_fileExtension.StartsWith("."))
-#endif
         {
           m_fileExtension = "." + m_fileExtension;
         }
@@ -182,15 +107,7 @@ namespace log4net.Appender
     /// of the current thread.
     /// </para>
     /// </remarks>
-    public SecurityContext SecurityContext
-    {
-      get { return m_securityContext; }
-      set { m_securityContext = value; }
-    }
-
-    #endregion Public Instance Properties
-
-    #region Override implementation of BufferingAppenderSkeleton
+    public SecurityContext? SecurityContext { get; set; }
 
     /// <summary>
     /// Sends the contents of the cyclic buffer as an e-mail message.
@@ -207,51 +124,43 @@ namespace log4net.Appender
       // appender. This frees us from needing to synchronize again.
       try
       {
-        string filePath = null;
-        StreamWriter writer = null;
+        StreamWriter writer;
 
         // Impersonate to open the file
-        using (SecurityContext.Impersonate(this))
+        string filePath = Path.Combine(PickupDir.EnsureNotNull(), Guid.NewGuid().ToString("N") + m_fileExtension);
+        using (SecurityContext?.Impersonate(this))
         {
-          filePath = Path.Combine(m_pickupDir, SystemInfo.NewGuid().ToString("N") + m_fileExtension);
           writer = File.CreateText(filePath);
         }
 
-        if (writer == null)
+        using (writer)
         {
-          ErrorHandler.Error("Failed to create output file for writing [" + filePath + "]", null, ErrorCode.FileOpenFailure);
-        }
-        else
-        {
-          using (writer)
+          writer.WriteLine("To: " + To);
+          writer.WriteLine("From: " + From);
+          writer.WriteLine("Subject: " + Subject);
+          writer.WriteLine("Date: " + DateTime.UtcNow.ToString("r"));
+          writer.WriteLine();
+
+          string? t = Layout?.Header;
+          if (t is not null)
           {
-            writer.WriteLine("To: " + m_to);
-            writer.WriteLine("From: " + m_from);
-            writer.WriteLine("Subject: " + m_subject);
-            writer.WriteLine("Date: " + DateTime.UtcNow.ToString("r"));
-            writer.WriteLine("");
-
-            string t = Layout.Header;
-            if (t != null)
-            {
-              writer.Write(t);
-            }
-
-            for (int i = 0; i < events.Length; i++)
-            {
-              // Render the event and append the text to the buffer
-              RenderLoggingEvent(writer, events[i]);
-            }
-
-            t = Layout.Footer;
-            if (t != null)
-            {
-              writer.Write(t);
-            }
-
-            writer.WriteLine("");
-            writer.WriteLine(".");
+            writer.Write(t);
           }
+
+          for (int i = 0; i < events.Length; i++)
+          {
+            // Render the event and append the text to the buffer
+            RenderLoggingEvent(writer, events[i]);
+          }
+
+          t = Layout?.Footer;
+          if (t is not null)
+          {
+            writer.Write(t);
+          }
+
+          writer.WriteLine();
+          writer.WriteLine(".");
         }
       }
       catch (Exception e)
@@ -259,10 +168,6 @@ namespace log4net.Appender
         ErrorHandler.Error("Error occurred while sending e-mail notification.", e);
       }
     }
-
-    #endregion Override implementation of BufferingAppenderSkeleton
-
-    #region Override implementation of AppenderSkeleton
 
     /// <summary>
     /// Activate the options on this appender. 
@@ -282,36 +187,25 @@ namespace log4net.Appender
     /// </remarks>
     public override void ActivateOptions()
     {
+      if (PickupDir is null)
+      {
+        throw new ArgumentException($"{nameof(PickupDir)} must be specified", nameof(PickupDir));
+      }
+
       base.ActivateOptions();
 
-      if (m_securityContext == null)
-      {
-        m_securityContext = SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
-      }
+      SecurityContext ??= SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
 
       using (SecurityContext.Impersonate(this))
       {
-        m_pickupDir = ConvertToFullPath(m_pickupDir.Trim());
+        PickupDir = ConvertToFullPath(PickupDir.Trim());
       }
     }
 
     /// <summary>
     /// This appender requires a <see cref="Layout"/> to be set.
     /// </summary>
-    /// <value><c>true</c></value>
-    /// <remarks>
-    /// <para>
-    /// This appender requires a <see cref="Layout"/> to be set.
-    /// </para>
-    /// </remarks>
-    protected override bool RequiresLayout
-    {
-      get { return true; }
-    }
-
-    #endregion Override implementation of AppenderSkeleton
-
-    #region Protected Static Methods
+    protected override bool RequiresLayout => true;
 
     /// <summary>
     /// Convert a path into a fully qualified path.
@@ -331,21 +225,6 @@ namespace log4net.Appender
       return SystemInfo.ConvertToFullPath(path);
     }
 
-    #endregion Protected Static Methods
-
-    #region Private Instance Fields
-
-    private string m_to;
-    private string m_from;
-    private string m_subject;
-    private string m_pickupDir;
-    private string m_fileExtension;
-
-    /// <summary>
-    /// The security context to use for privileged calls
-    /// </summary>
-    private SecurityContext m_securityContext;
-
-    #endregion Private Instance Fields
+    private string m_fileExtension = string.Empty;
   }
 }

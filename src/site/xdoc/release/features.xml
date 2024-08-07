@@ -26,29 +26,29 @@ limitations under the License.
 
     <body>
         <section id="main" name="Apache log4net&#x2122; Features">
-        
+
             <section id="overview" name="Overview">
                 <p>
-                    log4net is a tool to help the programmer output log statements to a 
-                    variety of output targets. In case of problems with an application, 
-                    it is helpful to enable logging so that the problem can be located. 
-                    With log4net it is possible to enable logging at runtime without 
-                    modifying the application binary. The log4net package is designed so 
-                    that log statements can remain in shipped code without incurring a 
-                    high performance cost. It follows that the speed of logging (or 
+                    log4net is a tool to help the programmer output log statements to a
+                    variety of output targets. In case of problems with an application,
+                    it is helpful to enable logging so that the problem can be located.
+                    With log4net it is possible to enable logging at runtime without
+                    modifying the application binary. The log4net package is designed so
+                    that log statements can remain in shipped code without incurring a
+                    high performance cost. It follows that the speed of logging (or
                     rather not logging) is crucial.
                 </p>
                 <p>
-                    At the same time, log output can be so voluminous that it quickly becomes 
-                    overwhelming. One of the distinctive features of log4net is the notion of 
-                    hierarchical loggers. Using these loggers it is possible to selectively 
-                    control which log statements are output at arbitrary granularity. 
+                    At the same time, log output can be so voluminous that it quickly becomes
+                    overwhelming. One of the distinctive features of log4net is the notion of
+                    hierarchical loggers. Using these loggers it is possible to selectively
+                    control which log statements are output at arbitrary granularity.
                 </p>
                 <p>
                     log4net is designed with two distinct goals in mind: speed and flexibility
                 </p>
             </section>
-            
+
             <section id="features" name="Features">
                 <ul>
                     <li>Support for multiple frameworks</li>
@@ -88,7 +88,7 @@ limitations under the License.
                         <tr>
                             <td>log4net.Appender.AdoNetAppender</td>
                             <td>
-                                Writes logging events to a database using either prepared statements or stored 
+                                Writes logging events to a database using either prepared statements or stored
                                 procedures.
                             </td>
                         </tr>
@@ -101,7 +101,7 @@ limitations under the License.
                         <tr>
                             <td>log4net.Appender.AspNetTraceAppender</td>
                             <td>
-                                Writes logging events to the ASP trace context. These can then be rendered at 
+                                Writes logging events to the ASP trace context. These can then be rendered at
                                 the end of the ASP page or on the ASP trace page.
                             </td>
                         </tr>
@@ -114,7 +114,7 @@ limitations under the License.
                         <tr>
                             <td>log4net.Appender.ConsoleAppender</td>
                             <td>
-                                Writes logging events to the application's Console. The events may go to either 
+                                Writes logging events to the application's Console. The events may go to either
                                 the standard our stream or the standard error stream.
                             </td>
                         </tr>
@@ -149,17 +149,10 @@ limitations under the License.
                             </td>
                         </tr>
                         <tr>
-                            <td>log4net.Appender.NetSendAppender</td>
-                            <td>
-                                Writes logging events to the Windows Messenger service. These messages are 
-                                displayed in a dialog on a users terminal.
-                            </td>
-                        </tr>
-                        <tr>
                             <td>log4net.Appender.OutputDebugStringAppender</td>
                             <td>
-                                Writes logging events to the debugger. If the application has no 
-                                debugger, the system debugger displays the string. If the application has no 
+                                Writes logging events to the debugger. If the application has no
+                                debugger, the system debugger displays the string. If the application has no
                                 debugger and the system debugger is not active, the message is ignored.
                             </td>
                         </tr>
@@ -170,16 +163,10 @@ limitations under the License.
                             </td>
                         </tr>
                         <tr>
-                            <td>log4net.Appender.RemotingAppender</td>
-                            <td>
-                                Writes logging events to a remoting sink using .NET remoting.
-                            </td>
-                        </tr>
-                        <tr>
                             <td>log4net.Appender.RollingFileAppender</td>
                             <td>
-                                Writes logging events to a file in the file system. The RollingFileAppender can 
-                                be configured to log to multiple files based upon date or file size 
+                                Writes logging events to a file in the file system. The RollingFileAppender can
+                                be configured to log to multiple files based upon date or file size
                                 constraints.
                             </td>
                         </tr>
@@ -213,34 +200,34 @@ limitations under the License.
                         <tr>
                             <td>log4net.Appender.UdpAppender</td>
                             <td>
-                                Sends logging events as connectionless UDP datagrams to a remote host or a 
+                                Sends logging events as connectionless UDP datagrams to a remote host or a
                                 multicast group using a UdpClient.
                             </td>
                         </tr>
                     </table>
                 </div>
                 <p>A special log4net.Appender.ForwardingAppender can
-                be used to wrap another appender, for example to
-                attach additional filters.</p>
+                    be used to wrap another appender, for example to
+                    attach additional filters.</p>
             </section>
 
             <section id="hierarchy" name="Hierarchical logging architecture">
                 <p>
-                    Hierarchical logging is an ideal fit with component based development. 
-                    Each component has its own of logger. When individually tested, the 
-                    properties of these loggers may be set as the developer requires. 
-                    When combined with other components, the loggers inherit the properties 
-                    determined by the integrator of the components. One can selectively elevate 
-                    logging priorities on one component without affecting the other components. 
-                    This is useful when you need a detailed trace from just a single component 
-                    without crowding the trace file with messages from other components. All 
-                    this can be done through configuration files; no code changes are required.             
+                    Hierarchical logging is an ideal fit with component based development.
+                    Each component has its own of logger. When individually tested, the
+                    properties of these loggers may be set as the developer requires.
+                    When combined with other components, the loggers inherit the properties
+                    determined by the integrator of the components. One can selectively elevate
+                    logging priorities on one component without affecting the other components.
+                    This is useful when you need a detailed trace from just a single component
+                    without crowding the trace file with messages from other components. All
+                    this can be done through configuration files; no code changes are required.
                 </p>
             </section>
 
             <section id="xml-config" name="XML Configuration">
                 <p>
-                    log4net is configured using an XML configuration file. The configuration 
+                    log4net is configured using an XML configuration file. The configuration
                     information can be embedded within other XML configuration files
                     (such as the application's .config file) or in a separate file. The
                     configuration is easily readable and updateable while retaining the
@@ -254,9 +241,9 @@ limitations under the License.
             <section id="dynamic-config" name="Dynamic Configuration">
                 <p>
                     log4net can monitor its configuration file for changes and dynamically
-                    apply changes made by the configurator. The logging levels, appenders, 
-                    layouts, and just about everything else can be adjusted at runtime. 
-                    In many cases it is possible to diagnose application issues without 
+                    apply changes made by the configurator. The logging levels, appenders,
+                    layouts, and just about everything else can be adjusted at runtime.
+                    In many cases it is possible to diagnose application issues without
                     terminating the process in question. This can a very valuable tool in
                     investigating issues with deployed applications.
                 </p>
@@ -264,12 +251,12 @@ limitations under the License.
 
             <section id="context" name="Logging Context">
                 <p>
-                    log4net can be used to collect logging context data in a way that is transparent 
-                    to the developer at the point of logging. The GlobalContext and the 
+                    log4net can be used to collect logging context data in a way that is transparent
+                    to the developer at the point of logging. The GlobalContext and the
                     ThreadContext allow the application to store contextual data that is
-                    attached to logging messages. For instance, in a web service, 
-                    once the caller is authenticated the username of the caller could be 
-                    stored in a ThreadContext property. This property would then be automatically 
+                    attached to logging messages. For instance, in a web service,
+                    once the caller is authenticated the username of the caller could be
+                    stored in a ThreadContext property. This property would then be automatically
                     logged as part of each subsequent logging message made from the same thread.
                 </p>
             </section>
@@ -277,11 +264,11 @@ limitations under the License.
             <section id="history" name="Proven architecture">
                 <p>
                     log4net is based on the highly successful Apache log4j&#x2122; logging library,
-                    in development since 1996. This popular and proven architecture has 
+                    in development since 1996. This popular and proven architecture has
                     so far been ported to 12 languages.
                 </p>
             </section>
-            
+
         </section>
     </body>
 </document>

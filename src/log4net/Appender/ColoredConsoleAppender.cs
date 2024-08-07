@@ -17,22 +17,11 @@
 //
 #endregion
 
-// MONO 1.0 Beta mcs does not like #if !A && !B && !C syntax
-
-#if !NETSTANDARD1_3 // netstandard doesn't support System.Security.Permissions
-// .NET Compact Framework 1.0 has no support for Win32 Console API's
-#if !NETCF 
-// .Mono 1.0 has no support for Win32 Console API's
-#if !MONO 
-// SSCLI 1.0 has no support for Win32 Console API's
-#if !SSCLI
-// We don't want framework or platform specific code in the CLI version of log4net
-#if !CLI_1_0
-
 using System;
-using System.Globalization;
+using System.IO;
 using System.Runtime.InteropServices;
 
+using log4net.Core;
 using log4net.Layout;
 using log4net.Util;
 
@@ -95,20 +84,17 @@ namespace log4net.Appender
   /// <author>Nicko Cadell</author>
   public class ColoredConsoleAppender : AppenderSkeleton
   {
-    #region Colors Enum
-
     /// <summary>
     /// The enum of possible color values for use with the color mapping method
     /// </summary>
     /// <remarks>
     /// <para>
-    /// The following flags can be combined together to
-    /// form the colors.
+    /// The following flags can be combined to form the colors.
     /// </para>
     /// </remarks>
     /// <seealso cref="ColoredConsoleAppender" />
     [Flags]
-    public enum Colors : int
+    public enum Colors
     {
       /// <summary>
       /// color is blue
@@ -151,10 +137,6 @@ namespace log4net.Appender
       HighIntensity = 0x0008,
     }
 
-    #endregion // Colors Enum
-
-    #region Public Instance Constructors
-
     /// <summary>
     /// Initializes a new instance of the <see cref="ColoredConsoleAppender" /> class.
     /// </summary>
@@ -165,42 +147,6 @@ namespace log4net.Appender
     public ColoredConsoleAppender()
     {
     }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ColoredConsoleAppender" /> class
-    /// with the specified layout.
-    /// </summary>
-    /// <param name="layout">the layout to use for this appender</param>
-    /// <remarks>
-    /// The instance of the <see cref="ColoredConsoleAppender" /> class is set up to write 
-    /// to the standard output stream.
-    /// </remarks>
-    [Obsolete("Instead use the default constructor and set the Layout property")]
-    public ColoredConsoleAppender(ILayout layout) : this(layout, false)
-    {
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ColoredConsoleAppender" /> class
-    /// with the specified layout.
-    /// </summary>
-    /// <param name="layout">the layout to use for this appender</param>
-    /// <param name="writeToErrorStream">flag set to <c>true</c> to write to the console error stream</param>
-    /// <remarks>
-    /// When <paramref name="writeToErrorStream" /> is set to <c>true</c>, output is written to
-    /// the standard error output stream.  Otherwise, output is written to the standard
-    /// output stream.
-    /// </remarks>
-    [Obsolete("Instead use the default constructor and set the Layout & Target properties")]
-    public ColoredConsoleAppender(ILayout layout, bool writeToErrorStream)
-    {
-      Layout = layout;
-      m_writeToErrorStream = writeToErrorStream;
-    }
-
-    #endregion // Public Instance Constructors
-
-    #region Public Instance Properties
 
     /// <summary>
     /// Target is the value of the console output stream.
@@ -218,20 +164,8 @@ namespace log4net.Appender
     /// </remarks>
     public virtual string Target
     {
-      get { return m_writeToErrorStream ? ConsoleError : ConsoleOut; }
-      set
-      {
-        string v = value.Trim();
-
-        if (string.Compare(ConsoleError, v, true, CultureInfo.InvariantCulture) == 0)
-        {
-          m_writeToErrorStream = true;
-        }
-        else
-        {
-          m_writeToErrorStream = false;
-        }
-      }
+      get => m_writeToErrorStream ? ConsoleError : ConsoleOut;
+      set => m_writeToErrorStream = StringComparer.OrdinalIgnoreCase.Equals(ConsoleError, value.Trim());
     }
 
     /// <summary>
@@ -250,10 +184,6 @@ namespace log4net.Appender
       m_levelMapping.Add(mapping);
     }
 
-    #endregion // Public Instance Properties
-
-    #region Override implementation of AppenderSkeleton
-
     /// <summary>
     /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(log4net.Core.LoggingEvent)"/> method.
     /// </summary>
@@ -266,32 +196,19 @@ namespace log4net.Appender
     /// The format of the output will depend on the appender's layout.
     /// </para>
     /// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD
     [System.Security.SecuritySafeCritical]
-#endif
     [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
-    protected override void Append(log4net.Core.LoggingEvent loggingEvent)
+    protected override void Append(LoggingEvent loggingEvent)
     {
-      if (m_consoleOutputWriter != null)
+      if (m_consoleOutputWriter is not null)
       {
-        IntPtr consoleHandle = IntPtr.Zero;
-        if (m_writeToErrorStream)
-        {
-          // Write to the error stream
-          consoleHandle = GetStdHandle(STD_ERROR_HANDLE);
-        }
-        else
-        {
-          // Write to the output stream
-          consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-        }
+        IntPtr consoleHandle = GetStdHandle(m_writeToErrorStream ? STD_ERROR_HANDLE : STD_OUTPUT_HANDLE);
 
         // Default to white on black
         ushort colorInfo = (ushort)Colors.White;
 
         // see if there is a specified lookup
-        LevelColors levelColors = m_levelMapping.Lookup(loggingEvent.Level) as LevelColors;
-        if (levelColors != null)
+        if (m_levelMapping.Lookup(loggingEvent.Level) is LevelColors levelColors)
         {
           colorInfo = levelColors.CombinedColor;
         }
@@ -300,8 +217,7 @@ namespace log4net.Appender
         string strLoggingMessage = RenderLoggingEvent(loggingEvent);
 
         // get the current console color - to restore later
-        CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-        GetConsoleScreenBufferInfo(consoleHandle, out bufferInfo);
+        GetConsoleScreenBufferInfo(consoleHandle, out CONSOLE_SCREEN_BUFFER_INFO bufferInfo);
 
         // set the console colors
         SetConsoleTextAttribute(consoleHandle, colorInfo);
@@ -416,55 +332,29 @@ namespace log4net.Appender
     /// <summary>
     /// This appender requires a <see cref="Layout"/> to be set.
     /// </summary>
-    /// <value><c>true</c></value>
-    /// <remarks>
-    /// <para>
-    /// This appender requires a <see cref="Layout"/> to be set.
-    /// </para>
-    /// </remarks>
-    protected override bool RequiresLayout
-    {
-      get { return true; }
-    }
+    protected override bool RequiresLayout => true;
 
     /// <summary>
-    /// Initialize the options for this appender
+    /// Initializes the options for this appender.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Initialize the level to color mappings set on this appender.
-    /// </para>
-    /// </remarks>
-#if NET_4_0 || MONO_4_0 || NETSTANDARD
     [System.Security.SecuritySafeCritical]
-#endif
     [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
     public override void ActivateOptions()
     {
       base.ActivateOptions();
       m_levelMapping.ActivateOptions();
 
-      System.IO.Stream consoleOutputStream = null;
-
       // Use the Console methods to open a Stream over the console std handle
-      if (m_writeToErrorStream)
-      {
-        // Write to the error stream
-        consoleOutputStream = Console.OpenStandardError();
-      }
-      else
-      {
-        // Write to the output stream
-        consoleOutputStream = Console.OpenStandardOutput();
-      }
+      Stream consoleOutputStream = m_writeToErrorStream ? Console.OpenStandardError() : Console.OpenStandardOutput();
 
-      // Lookup the codepage encoding for the console
+      // Look up the codepage encoding for the console
       System.Text.Encoding consoleEncoding = System.Text.Encoding.GetEncoding(GetConsoleOutputCP());
 
       // Create a writer around the console stream
-      m_consoleOutputWriter = new System.IO.StreamWriter(consoleOutputStream, consoleEncoding, 0x100);
-
-      m_consoleOutputWriter.AutoFlush = true;
+      m_consoleOutputWriter = new StreamWriter(consoleOutputStream, consoleEncoding, 0x100)
+      {
+        AutoFlush = true
+      };
 
       // SuppressFinalize on m_consoleOutputWriter because all it will do is flush
       // and close the file handle. Because we have set AutoFlush the additional flush
@@ -473,47 +363,27 @@ namespace log4net.Appender
       GC.SuppressFinalize(m_consoleOutputWriter);
     }
 
-    #endregion // Override implementation of AppenderSkeleton
-
-    #region Public Static Fields
-
     /// <summary>
     /// The <see cref="ColoredConsoleAppender.Target"/> to use when writing to the Console 
     /// standard output stream.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The <see cref="ColoredConsoleAppender.Target"/> to use when writing to the Console 
-    /// standard output stream.
-    /// </para>
-    /// </remarks>
     public const string ConsoleOut = "Console.Out";
 
     /// <summary>
     /// The <see cref="ColoredConsoleAppender.Target"/> to use when writing to the Console 
     /// standard error output stream.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The <see cref="ColoredConsoleAppender.Target"/> to use when writing to the Console 
-    /// standard error output stream.
-    /// </para>
-    /// </remarks>
     public const string ConsoleError = "Console.Error";
-
-    #endregion // Public Static Fields
-
-    #region Private Instances Fields
 
     /// <summary>
     /// Flag to write output to the error stream rather than the standard output stream
     /// </summary>
-    private bool m_writeToErrorStream = false;
+    private bool m_writeToErrorStream;
 
     /// <summary>
     /// Mapping from level object to color value
     /// </summary>
-    private LevelMapping m_levelMapping = new LevelMapping();
+    private readonly LevelMapping m_levelMapping = new();
 
     /// <summary>
     /// The console output stream writer to write to
@@ -523,38 +393,29 @@ namespace log4net.Appender
     /// This writer is not thread safe.
     /// </para>
     /// </remarks>
-    private System.IO.StreamWriter m_consoleOutputWriter = null;
-
-    #endregion // Private Instances Fields
-
-    #region Win32 Methods
+    private StreamWriter? m_consoleOutputWriter;
 
     [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     private static extern int GetConsoleOutputCP();
 
     [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     private static extern bool SetConsoleTextAttribute(
       IntPtr consoleHandle,
       ushort attributes);
 
     [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     private static extern bool GetConsoleScreenBufferInfo(
       IntPtr consoleHandle,
       out CONSOLE_SCREEN_BUFFER_INFO bufferInfo);
 
-    //    [DllImport("Kernel32.dll", SetLastError=true, CharSet=CharSet.Unicode)]
-    //    private static extern bool WriteConsoleW(
-    //      IntPtr hConsoleHandle,
-    //      [MarshalAs(UnmanagedType.LPWStr)] string strBuffer,
-    //      UInt32 bufferLen,
-    //      out UInt32 written,
-    //      IntPtr reserved);
-
-    //private const UInt32 STD_INPUT_HANDLE = unchecked((UInt32)(-10));
     private const UInt32 STD_OUTPUT_HANDLE = unchecked((UInt32)(-11));
     private const UInt32 STD_ERROR_HANDLE = unchecked((UInt32)(-12));
 
     [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     private static extern IntPtr GetStdHandle(
       UInt32 type);
 
@@ -584,10 +445,6 @@ namespace log4net.Appender
       public COORD dwMaximumWindowSize;
     }
 
-    #endregion // Win32 Methods
-
-    #region LevelColors LevelMapping Entry
-
     /// <summary>
     /// A class to act as a mapping between the level that a logging call is made at and
     /// the color it should be displayed as.
@@ -599,39 +456,15 @@ namespace log4net.Appender
     /// </remarks>
     public class LevelColors : LevelMappingEntry
     {
-      private Colors m_foreColor;
-      private Colors m_backColor;
-      private ushort m_combinedColor = 0;
-
       /// <summary>
       /// The mapped foreground color for the specified level
       /// </summary>
-      /// <remarks>
-      /// <para>
-      /// Required property.
-      /// The mapped foreground color for the specified level.
-      /// </para>
-      /// </remarks>
-      public Colors ForeColor
-      {
-        get { return m_foreColor; }
-        set { m_foreColor = value; }
-      }
+      public Colors ForeColor { get; set; }
 
       /// <summary>
       /// The mapped background color for the specified level
       /// </summary>
-      /// <remarks>
-      /// <para>
-      /// Required property.
-      /// The mapped background color for the specified level.
-      /// </para>
-      /// </remarks>
-      public Colors BackColor
-      {
-        get { return m_backColor; }
-        set { m_backColor = value; }
-      }
+      public Colors BackColor { get; set; }
 
       /// <summary>
       /// Initialize the options for the object
@@ -644,25 +477,14 @@ namespace log4net.Appender
       public override void ActivateOptions()
       {
         base.ActivateOptions();
-        m_combinedColor = (ushort)((int)m_foreColor + (((int)m_backColor) << 4));
+        CombinedColor = (ushort)((int)ForeColor + (((int)BackColor) << 4));
       }
 
       /// <summary>
       /// The combined <see cref="ForeColor"/> and <see cref="BackColor"/> suitable for 
       /// setting the console color.
       /// </summary>
-      internal ushort CombinedColor
-      {
-        get { return m_combinedColor; }
-      }
+      internal ushort CombinedColor { get; private set; }
     }
-
-    #endregion // LevelColors LevelMapping Entry
   }
 }
-
-#endif // !CLI_1_0
-#endif // !SSCLI
-#endif // !MONO
-#endif // !NETCF
-#endif // !NETSTANDARD1_3

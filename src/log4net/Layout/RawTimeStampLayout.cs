@@ -18,47 +18,24 @@
 #endregion
 
 using System;
-using System.Text;
 
 using log4net.Core;
-using log4net.Util;
 
 namespace log4net.Layout
 {
   /// <summary>
-  /// Extract the date from the <see cref="LoggingEvent"/>
+  /// Extracts the date from the <see cref="LoggingEvent"/>.
   /// </summary>
-  /// <remarks>
-  /// <para>
-  /// Extract the date from the <see cref="LoggingEvent"/>
-  /// </para>
-  /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
   public class RawTimeStampLayout : IRawLayout
   {
-    #region Constructors
-
-    /// <summary>
-    /// Constructs a RawTimeStampLayout
-    /// </summary>
-    public RawTimeStampLayout()
-    {
-    }
-
-    #endregion
-
-    #region Implementation of IRawLayout
-
     /// <summary>
     /// Gets the <see cref="LoggingEvent.TimeStamp"/> as a <see cref="DateTime"/>.
     /// </summary>
     /// <param name="loggingEvent">The event to format</param>
     /// <returns>returns the time stamp</returns>
     /// <remarks>
-    /// <para>
-    /// Gets the <see cref="LoggingEvent.TimeStamp"/> as a <see cref="DateTime"/>.
-    /// </para>
     /// <para>
     /// The time stamp is in local time. To format the time stamp
     /// in universal time use <see cref="RawUtcTimeStampLayout"/>.
@@ -68,7 +45,5 @@ namespace log4net.Layout
     {
       return loggingEvent.TimeStamp;
     }
-
-    #endregion
   }
 }
