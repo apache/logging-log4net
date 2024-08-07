@@ -44,13 +44,12 @@ namespace log4net.Tests.Appender
     private const string c_fileName = "test_41d3d834_4320f4da.log";
 
     private const string c_testMessage98Chars =
-        "01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567";
+      "01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567";
 
     private const string c_testMessage99Chars =
-        "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678";
+      "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678";
 
     private const int c_iMaximumFileSize = 450; // in bytes
-    private int _iMessagesLoggedThisFile;
     private int _iMessagesLogged;
     private int _iCountDirection;
     private int _MaxSizeRollBackups = 3;
@@ -61,24 +60,18 @@ namespace log4net.Tests.Appender
 
     private sealed class SilentErrorHandler : IErrorHandler
     {
-      private readonly StringBuilder m_buffer = new();
+      private readonly StringBuilder buffer = new();
 
-      public string Message => m_buffer.ToString();
+      public string Message => buffer.ToString();
 
       public void Error(string message)
-      {
-        m_buffer.Append(message + '\n');
-      }
+        => buffer.Append(message + '\n');
 
       public void Error(string message, Exception e)
-      {
-        m_buffer.Append(message + '\n' + e.Message + '\n');
-      }
+        => buffer.Append(message + '\n' + e.Message + '\n');
 
       public void Error(string message, Exception? e, ErrorCode errorCode)
-      {
-        m_buffer.Append(message + '\n' + e?.Message + '\n');
-      }
+        => buffer.Append(message + '\n' + e?.Message + '\n');
     }
 
     private sealed class RollingFileAppenderForTest : RollingFileAppender
@@ -95,7 +88,6 @@ namespace log4net.Tests.Appender
     /// </summary>
     private void InitializeVariables()
     {
-      _iMessagesLoggedThisFile = 0;
       _iMessagesLogged = 0;
       _iCountDirection = +1; // Up
       _MaxSizeRollBackups = 3;
@@ -163,7 +155,7 @@ namespace log4net.Tests.Appender
     /// </summary>
     private static void CreateFile(int iFileNumber)
     {
-      FileInfo fileInfo = new FileInfo(MakeFileName(c_fileName, iFileNumber));
+      FileInfo fileInfo = new(MakeFileName(c_fileName, iFileNumber));
 
       FileStream? fileStream = null;
       try
@@ -204,20 +196,22 @@ namespace log4net.Tests.Appender
     {
       _root = ((Repository.Hierarchy.Hierarchy)LogManager.GetRepository()).Root;
       _root.Level = Level.All;
-      PatternLayout patternLayout = new PatternLayout();
+      PatternLayout patternLayout = new();
       patternLayout.ActivateOptions();
 
-      RollingFileAppender roller = new RollingFileAppender();
-      roller.StaticLogFileName = false;
-      roller.Layout = patternLayout;
-      roller.AppendToFile = true;
-      roller.RollingStyle = RollingFileAppender.RollingMode.Composite;
-      roller.DatePattern = "dd_MM_yyyy";
-      roller.MaxSizeRollBackups = 1;
-      roller.CountDirection = 1;
-      roller.PreserveLogFileNameExtension = true;
-      roller.MaximumFileSize = "10KB";
-      roller.File = c_fileName;
+      RollingFileAppender roller = new()
+      {
+        StaticLogFileName = false,
+        Layout = patternLayout,
+        AppendToFile = true,
+        RollingStyle = RollingFileAppender.RollingMode.Composite,
+        DatePattern = "dd_MM_yyyy",
+        MaxSizeRollBackups = 1,
+        CountDirection = 1,
+        PreserveLogFileNameExtension = true,
+        MaximumFileSize = "10KB",
+        File = c_fileName
+      };
       roller.ActivateOptions();
       _root.AddAppender(roller);
 
@@ -225,12 +219,12 @@ namespace log4net.Tests.Appender
 
       for (int i = 0; i < 1000; i++)
       {
-        StringBuilder s = new StringBuilder();
+        StringBuilder s = new();
         for (int j = 50; j < 100; j++)
         {
           if (j > 50)
           {
-            s.Append(" ");
+            s.Append(' ');
           }
 
           s.Append(j);
@@ -263,16 +257,6 @@ namespace log4net.Tests.Appender
       }
     }
 
-    ///// <summary>
-    ///// Generates a file name associated with the count.
-    ///// </summary>
-    ///// <param name="iFileCount"></param>
-    ///// <returns></returns>
-    //private string MakeFileName(int iFileCount)
-    //{
-    //    return MakeFileName(_fileName, iFileCount);
-    //}
-
     /// <summary>
     /// Generates a file name associated with the count, using
     /// the base file name.
@@ -295,10 +279,7 @@ namespace log4net.Tests.Appender
     /// file size and number of backups
     /// </summary>
     /// <returns></returns>
-    private RollingFileAppender CreateAppender()
-    {
-      return CreateAppender(new FileAppender.ExclusiveLock());
-    }
+    private RollingFileAppender CreateAppender() => CreateAppender(new FileAppender.ExclusiveLock());
 
     /// <summary>
     /// Returns a RollingFileAppender using all the internal settings for maximum
@@ -312,20 +293,22 @@ namespace log4net.Tests.Appender
       // Use a basic pattern that
       // includes just the message and a CR/LF.
       //
-      PatternLayout layout = new PatternLayout("%m%n");
+      PatternLayout layout = new("%m%n");
 
       //
       // Create the new appender
       //
-      RollingFileAppender appender = new RollingFileAppender();
-      appender.Layout = layout;
-      appender.File = c_fileName;
-      appender.Encoding = Encoding.ASCII;
-      appender.MaximumFileSize = c_iMaximumFileSize.ToString();
-      appender.MaxSizeRollBackups = _MaxSizeRollBackups;
-      appender.CountDirection = _iCountDirection;
-      appender.RollingStyle = RollingFileAppender.RollingMode.Size;
-      appender.LockingModel = lockModel;
+      RollingFileAppender appender = new()
+      {
+        Layout = layout,
+        File = c_fileName,
+        Encoding = Encoding.ASCII,
+        MaximumFileSize = c_iMaximumFileSize.ToString(),
+        MaxSizeRollBackups = _MaxSizeRollBackups,
+        CountDirection = _iCountDirection,
+        RollingStyle = RollingFileAppender.RollingMode.Size,
+        LockingModel = lockModel
+      };
 
       appender.ActivateOptions();
 
@@ -374,20 +357,20 @@ namespace log4net.Tests.Appender
       /// A table of entries showing files that should exist and their expected sizes
       /// before logging is called
       /// </summary>
-      private readonly RollFileEntry[] m_preLogFileEntries;
+      private readonly List<RollFileEntry> m_preLogFileEntries;
 
       /// <summary>
       /// A table of entries showing files that should exist and their expected sizes
       /// after a message is logged
       /// </summary>
-      private readonly RollFileEntry[] m_postLogFileEntries;
+      private readonly List<RollFileEntry> m_postLogFileEntries;
 
       /// <summary>
       /// Constructor, taking all required parameters
       /// </summary>
       /// <param name="preLogFileEntries"></param>
       /// <param name="postLogFileEntries"></param>
-      public RollConditions(RollFileEntry[] preLogFileEntries, RollFileEntry[] postLogFileEntries)
+      public RollConditions(List<RollFileEntry> preLogFileEntries, List<RollFileEntry> postLogFileEntries)
       {
         m_preLogFileEntries = preLogFileEntries;
         m_postLogFileEntries = postLogFileEntries;
@@ -397,19 +380,13 @@ namespace log4net.Tests.Appender
       /// A table of entries showing files that should exist and their expected sizes
       /// before logging is called
       /// </summary>
-      public RollFileEntry[] GetPreLogFileEntries()
-      {
-        return m_preLogFileEntries;
-      }
+      public List<RollFileEntry> GetPreLogFileEntries() => m_preLogFileEntries;
 
       /// <summary>
       /// A table of entries showing files that should exist and their expected sizes
       /// after a message is logged
       /// </summary>
-      public RollFileEntry[] GetPostLogFileEntries()
-      {
-        return m_postLogFileEntries;
-      }
+      public List<RollFileEntry> GetPostLogFileEntries() => m_postLogFileEntries;
     }
 
     private static void VerifyExistenceAndRemoveFromList(List<string> alExisting,
@@ -429,15 +406,15 @@ namespace log4net.Tests.Appender
     /// </summary>
     /// <param name="sBaseFileName"></param>
     /// <param name="fileEntries"></param>
-    private static void VerifyFileConditions(string sBaseFileName, RollFileEntry[] fileEntries)
+    private static void VerifyFileConditions(string sBaseFileName, List<RollFileEntry> fileEntries)
     {
       List<string> alExisting = GetExistingFiles(sBaseFileName);
-      //          AssertEquals( "File count mismatch", alExisting.Count, fileEntries.Length );
+
       foreach (RollFileEntry rollFile in fileEntries)
       {
         string? sFileName = rollFile.FileName;
         Assert.IsNotNull(sFileName);
-        FileInfo file = new FileInfo(sFileName!);
+        FileInfo file = new(sFileName!);
 
         if (rollFile.FileLength > 0)
         {
@@ -469,9 +446,7 @@ namespace log4net.Tests.Appender
     /// <param name="sBaseFileName"></param>
     /// <param name="entry"></param>
     private static void VerifyPreConditions(string sBaseFileName, RollConditions entry)
-    {
-      VerifyFileConditions(sBaseFileName, entry.GetPreLogFileEntries());
-    }
+      => VerifyFileConditions(sBaseFileName, entry.GetPreLogFileEntries());
 
     /// <summary>
     /// Called after logging a message to check that all the expected files exist, 
@@ -481,9 +456,7 @@ namespace log4net.Tests.Appender
     /// <param name="sBaseFileName"></param>
     /// <param name="entry"></param>
     private static void VerifyPostConditions(string sBaseFileName, RollConditions entry)
-    {
-      VerifyFileConditions(sBaseFileName, entry.GetPostLogFileEntries());
-    }
+      => VerifyFileConditions(sBaseFileName, entry.GetPostLogFileEntries());
 
     /// <summary>
     /// Logs a message, verifying the expected message counts against the 
@@ -496,29 +469,7 @@ namespace log4net.Tests.Appender
       Assert.IsNotNull(_root);
       _root!.Log(Level.Debug, sMessageToLog, null);
       Assert.AreEqual(_caRoot.Counter, _iMessagesLogged);
-      _iMessagesLoggedThisFile++;
     }
-
-    //private void DumpFileEntry( RollFileEntry entry )
-    //{
-    //    System.Diagnostics.Debug.WriteLine( "\tfile   name: " + entry.FileName );
-    //    System.Diagnostics.Debug.WriteLine( "\tfile length: " + entry.FileLength );
-    //}
-
-    //private void DumpTableEntry( RollConditions entry )
-    //{
-    //    System.Diagnostics.Debug.WriteLine( "Pre-Conditions" );
-    //    foreach( RollFileEntry file in entry.GetPreLogFileEntries() )
-    //    {
-    //        DumpFileEntry( file );
-    //    }
-    //    System.Diagnostics.Debug.WriteLine( "Post-Conditions" );
-    //    foreach( RollFileEntry file in entry.GetPostLogFileEntries() )
-    //    {
-    //        DumpFileEntry( file );
-    //    }
-    //    //        System.Diagnostics.Debug.WriteLine("");
-    //}
 
     /// <summary>
     /// Runs through all table entries, logging messages.  Before each message is logged,
@@ -534,15 +485,9 @@ namespace log4net.Tests.Appender
       {
         RollConditions entry = entries[i];
 
-        //          System.Diagnostics.Debug.WriteLine( i + ": Entry " + i + " pre/post conditions");
-        //          DumpTableEntry( entry );
-        //          System.Diagnostics.Debug.WriteLine( i + ": Testing entry pre-conditions");
         VerifyPreConditions(sBaseFileName, entry);
-        //          System.Diagnostics.Debug.WriteLine( i + ": Logging message");
         LogMessage(sMessageToLog);
-        //          System.Diagnostics.Debug.WriteLine( i + ": Testing entry post-conditions");
         VerifyPostConditions(sBaseFileName, entry);
-        //          System.Diagnostics.Debug.WriteLine( i + ": Finished validating entry\n");
       }
     }
 
@@ -554,10 +499,7 @@ namespace log4net.Tests.Appender
     /// </summary>
     /// <param name="sMessage"></param>
     /// <returns></returns>
-    private static int TotalMessageLength(string sMessage)
-    {
-      return sMessage.Length + s_Newline_Length;
-    }
+    private static int TotalMessageLength(string sMessage) => sMessage.Length + s_Newline_Length;
 
     /// <summary>
     /// Determines how many messages of a fixed length can be logged
@@ -586,12 +528,10 @@ namespace log4net.Tests.Appender
     /// Determines the name of the current file
     /// </summary>
     /// <returns></returns>
-    private static string GetCurrentFile()
-    {
+    private static string GetCurrentFile() =>
       // Current file name is always the base file name when
       // counting.  Dates will need a different approach
-      return c_fileName;
-    }
+      c_fileName;
 
     /// <summary>
     /// Turns a group of file names into an array of file entries that include the name
@@ -601,22 +541,22 @@ namespace log4net.Tests.Appender
     /// <param name="sBackupGroup"></param>
     /// <param name="iBackupFileLength"></param>
     /// <returns></returns>
-    private static RollFileEntry[] MakeBackupFileEntriesFromBackupGroup(string sBackupGroup, int iBackupFileLength)
+    private static List<RollFileEntry> MakeBackupFileEntriesFromBackupGroup(string sBackupGroup, int iBackupFileLength)
     {
       string[] sFiles = sBackupGroup.Split(' ');
 
-      var alEntries = new List<RollFileEntry>();
+      List<RollFileEntry> result = [];
 
       for (int i = 0; i < sFiles.Length; i++)
       {
         // Weed out any whitespace entries from the array
         if (sFiles[i].Trim().Length > 0)
         {
-          alEntries.Add(new RollFileEntry(sFiles[i], iBackupFileLength));
+          result.Add(new RollFileEntry(sFiles[i], iBackupFileLength));
         }
       }
 
-      return alEntries.ToArray();
+      return result;
     }
 
     /// <summary>
@@ -631,40 +571,6 @@ namespace log4net.Tests.Appender
       return sGroups[iGroup];
     }
 
-    ///// <summary>
-    ///// Builds a collection of file entries based on the file names
-    ///// specified in a groups string and the max file size from the
-    ///// stats object
-    ///// </summary>
-    ///// <param name="sBackupGroups"></param>
-    ///// <param name="stats"></param>
-    ///// <returns></returns>
-    //private RollFileEntry[] MakeBackupFileEntriesForPreCondition( string sBackupGroups, RollingStats stats )
-    //{
-    //    if (0 == stats.NumberOfFileRolls )
-    //    {
-    //        return null;  // first round has no previous backups
-    //    }
-    //    string sGroup;
-    //    if (0 == stats.MessagesThisFile )
-    //    {
-    //        // first file has special pattern...since rolling doesn't occur when message
-    //        // is logged, rather before next message is logged.
-    //        if (stats.NumberOfFileRolls <= 1 )
-    //        {
-    //            return null;   
-    //        }
-    //        // Use backup files from previous round.  The minus 2 is because we have already
-    //        // rolled, and the first round uses null instead of the string
-    //        sGroup = GetBackupGroup( sBackupGroups, stats.NumberOfFileRolls-2 );
-    //    }
-    //    else
-    //    {
-    //        sGroup = GetBackupGroup( sBackupGroups, stats.NumberOfFileRolls-1 );
-    //    }
-    //    return MakeBackupFileEntriesFromBackupGroup( sGroup, stats.MaximumFileSize );
-    //}
-
     /// <summary>
     /// Builds a collection of file entries based on the file names
     /// specified in a groups string and the max file size from the
@@ -673,7 +579,7 @@ namespace log4net.Tests.Appender
     /// <param name="sBackupGroups"></param>
     /// <param name="stats"></param>
     /// <returns></returns>
-    private static RollFileEntry[]? MakeBackupFileEntriesForPostCondition(string sBackupGroups, RollingStats stats)
+    private static List<RollFileEntry>? MakeBackupFileEntriesForPostCondition(string sBackupGroups, RollingStats stats)
     {
       if (0 == stats.NumberOfFileRolls)
       {
@@ -728,9 +634,10 @@ namespace log4net.Tests.Appender
     /// <returns></returns>
     private static RollingStats InitializeStats(string sTestMessage)
     {
-      RollingStats rollingStats = new RollingStats();
-
-      rollingStats.TotalMessageLength = TotalMessageLength(sTestMessage);
+      RollingStats rollingStats = new()
+      {
+        TotalMessageLength = TotalMessageLength(sTestMessage)
+      };
       rollingStats.MessagesPerFile = MessagesPerFile(rollingStats.TotalMessageLength);
       rollingStats.MessagesThisFile = 0;
       rollingStats.NumberOfFileRolls = 0;
@@ -747,21 +654,21 @@ namespace log4net.Tests.Appender
     /// <param name="existing"></param>
     /// <param name="final"></param>
     /// <returns></returns>
-    private static RollFileEntry[] AddFinalElement(RollFileEntry[]? existing, RollFileEntry final)
+    private static List<RollFileEntry> AddFinalElement(List<RollFileEntry>? existing, RollFileEntry final)
     {
       int iLength = 1;
-      if (null != existing)
+      if (existing is not null)
       {
-        iLength += existing.Length;
+        iLength += existing.Count;
       }
 
-      RollFileEntry[] combined = new RollFileEntry[iLength];
-      if (null != existing)
+      List<RollFileEntry> combined = new(iLength);
+      if (existing is not null)
       {
-        Array.Copy(existing, 0, combined, 0, existing.Length);
+        combined.AddRange(existing);
       }
 
-      combined[iLength - 1] = final;
+      combined.Add(final);
       return combined;
     }
 
@@ -770,14 +677,14 @@ namespace log4net.Tests.Appender
     /// current file / next file.
     /// </summary>
     private static RollConditions BuildTableEntry(string sBackupFiles,
-        RollConditions? preCondition,
-        RollFileEntry current,
-        RollFileEntry currentNext,
-        RollingStats rollingStats)
+      RollConditions? preCondition,
+      RollFileEntry current,
+      RollFileEntry currentNext,
+      RollingStats rollingStats)
     {
-      RollFileEntry[]? backupsPost = MakeBackupFileEntriesForPostCondition(sBackupFiles, rollingStats);
-      RollFileEntry[] post = AddFinalElement(backupsPost, currentNext);
-      if (null == preCondition)
+      List<RollFileEntry>? backupsPost = MakeBackupFileEntriesForPostCondition(sBackupFiles, rollingStats);
+      List<RollFileEntry> post = AddFinalElement(backupsPost, currentNext);
+      if (preCondition is null)
       {
         return new RollConditions(AddFinalElement(null, current), post);
       }
@@ -796,18 +703,15 @@ namespace log4net.Tests.Appender
     /// <returns></returns>
     private static RollFileEntry MoveNextEntry(RollingStats rollingStats, RollFileEntry currentNext)
     {
-      rollingStats.MessagesThisFile = rollingStats.MessagesThisFile + 1;
+      rollingStats.MessagesThisFile++;
       if (rollingStats.MessagesThisFile >= rollingStats.MessagesPerFile)
       {
         rollingStats.MessagesThisFile = 0;
-        rollingStats.NumberOfFileRolls = rollingStats.NumberOfFileRolls + 1;
+        rollingStats.NumberOfFileRolls++;
 
         return new RollFileEntry(GetCurrentFile(), 0);
       }
-      else
-      {
-        return currentNext;
-      }
+      return currentNext;
     }
 
     /// <summary>
@@ -816,7 +720,7 @@ namespace log4net.Tests.Appender
     /// </summary>
     private static string NumberedNameMaker(Match match)
     {
-      Int32 iValue = Int32.Parse(match.Value);
+      int iValue = int.Parse(match.Value);
       return MakeFileName(c_fileName, iValue);
     }
 
@@ -827,7 +731,7 @@ namespace log4net.Tests.Appender
     /// </summary>
     private static string ConvertToFiles(string sBackupInfo, MatchEvaluator evaluator)
     {
-      Regex regex = new Regex(@"\d+");
+      Regex regex = new(@"\d+");
       return regex.Replace(sBackupInfo, evaluator);
     }
 
@@ -839,16 +743,9 @@ namespace log4net.Tests.Appender
     /// that results after each message is logged</param>
     /// <param name="iMessagesToLog">How many times the test message will be repeatedly logged</param>
     /// <returns></returns>
-    private static RollConditions[] MakeNumericTestEntries(string sTestMessage,
-        string sBackupInfo,
-        int iMessagesToLog)
-    {
-      return MakeTestEntries(
-          sTestMessage,
-          sBackupInfo,
-          iMessagesToLog,
-          NumberedNameMaker);
-    }
+    private static RollConditions[] MakeNumericTestEntries(string sTestMessage, string sBackupInfo,
+      int iMessagesToLog)
+      => MakeTestEntries(sTestMessage, sBackupInfo, iMessagesToLog, NumberedNameMaker);
 
     /// <summary>
     /// This routine takes a list of backup file names and a message that will be logged
@@ -876,10 +773,10 @@ namespace log4net.Tests.Appender
       RollConditions? preCondition = null;
       rollingStats.MessagesThisFile = 0;
 
-      RollFileEntry currentFile = new RollFileEntry(GetCurrentFile(), 0);
+      RollFileEntry currentFile = new(GetCurrentFile(), 0);
       for (int i = 0; i < iMessagesToLog; i++)
       {
-        RollFileEntry currentNext = new RollFileEntry(
+        RollFileEntry currentNext = new(
             GetCurrentFile(),
             (1 + rollingStats.MessagesThisFile) * rollingStats.TotalMessageLength);
 
@@ -1144,12 +1041,9 @@ namespace log4net.Tests.Appender
     /// <param name="alFiles"></param>
     /// <param name="iExpectedCurSizeRollBackups"></param>
     private static void VerifyInitializeRollBackupsFromBaseFile(string sBaseFile,
-        List<string> alFiles,
-        int iExpectedCurSizeRollBackups)
-    {
-      InitializeAndVerifyExpectedValue(alFiles, sBaseFile, CreateRollingFileAppender("5,0,1"),
+      List<string> alFiles, int iExpectedCurSizeRollBackups)
+      => InitializeAndVerifyExpectedValue(alFiles, sBaseFile, CreateRollingFileAppender("5,0,1"),
           iExpectedCurSizeRollBackups);
-    }
 
     /// <summary>
     /// Tests that the current backup index is 0 when no
@@ -1159,12 +1053,14 @@ namespace log4net.Tests.Appender
     public void TestInitializeRollBackups1()
     {
       string sBaseFile = "LogFile.log";
-      List<string> arrFiles = new List<string>();
-      arrFiles.Add("junk1");
-      arrFiles.Add("junk1.log");
-      arrFiles.Add("junk2.log");
-      arrFiles.Add("junk.log.1");
-      arrFiles.Add("junk.log.2");
+      List<string> arrFiles =
+      [
+        "junk1",
+        "junk1.log",
+        "junk2.log",
+        "junk.log.1",
+        "junk.log.2",
+      ];
 
       int iExpectedCurSizeRollBackups = 0;
       VerifyInitializeRollBackupsFromBaseFile(sBaseFile, arrFiles, iExpectedCurSizeRollBackups);
@@ -1299,11 +1195,8 @@ namespace log4net.Tests.Appender
       VerifyInitializeDownFixedExpectedValue(alFiles, c_fileName, 3);
     }
 
-    private static void InitializeAndVerifyExpectedValue(
-        List<string> alFiles,
-        string sBaseFile,
-        RollingFileAppender rfa,
-        int iExpectedValue)
+    private static void InitializeAndVerifyExpectedValue(List<string> alFiles, string sBaseFile,
+      RollingFileAppender rfa, int iExpectedValue)
     {
       rfa.InitializeRollBackups(sBaseFile, alFiles);
       Assert.AreEqual(iExpectedValue, rfa.CurrentSizeRollBackups);
@@ -1317,11 +1210,8 @@ namespace log4net.Tests.Appender
     /// <param name="sBaseFile"></param>
     /// <param name="iExpectedValue"></param>
     private static void VerifyInitializeDownInfiniteExpectedValue(List<string> alFiles,
-        string sBaseFile,
-        int iExpectedValue)
-    {
-      InitializeAndVerifyExpectedValue(alFiles, sBaseFile, CreateRollingFileAppender("-1,0,-1"), iExpectedValue);
-    }
+      string sBaseFile, int iExpectedValue)
+      => InitializeAndVerifyExpectedValue(alFiles, sBaseFile, CreateRollingFileAppender("-1,0,-1"), iExpectedValue);
 
     /// <summary>
     /// Creates a RollingFileAppender with the desired values, where the
@@ -1333,17 +1223,19 @@ namespace log4net.Tests.Appender
     private static RollingFileAppender CreateRollingFileAppender(string sParams)
     {
       string[] asParams = sParams.Split(',');
-      if (null == asParams || asParams.Length != 3)
+      if (asParams?.Length != 3)
       {
         throw new ArgumentOutOfRangeException(sParams, sParams,
-            "Must have 3 comma separated params: MaxSizeRollBackups, CurSizeRollBackups, CountDirection");
+          "Must have 3 comma separated params: MaxSizeRollBackups, CurSizeRollBackups, CountDirection");
       }
 
-      RollingFileAppender rfa = new RollingFileAppender();
-      rfa.RollingStyle = RollingFileAppender.RollingMode.Size;
-      rfa.MaxSizeRollBackups = Int32.Parse(asParams[0].Trim());
-      rfa.CurrentSizeRollBackups = Int32.Parse(asParams[1].Trim());
-      rfa.CountDirection = Int32.Parse(asParams[2].Trim());
+      RollingFileAppender rfa = new()
+      {
+        RollingStyle = RollingFileAppender.RollingMode.Size,
+        MaxSizeRollBackups = int.Parse(asParams[0].Trim()),
+        CurrentSizeRollBackups = int.Parse(asParams[1].Trim()),
+        CountDirection = int.Parse(asParams[2].Trim())
+      };
 
       return rfa;
     }
@@ -1423,31 +1315,32 @@ namespace log4net.Tests.Appender
     /// <param name="maxFileSize">Maximum file size for roll</param>
     /// <param name="maxSizeRollBackups">Maximum number of roll backups</param>
     /// <returns>A configured ILogger</returns>
-    private static ILogger CreateLogger(string filename,
-        FileAppender.LockingModelBase? lockModel,
-        IErrorHandler handler,
-        int maxFileSize = 100000,
-        int maxSizeRollBackups = 0)
+    private static ILogger CreateLogger(string filename, FileAppender.LockingModelBase? lockModel,
+      IErrorHandler handler, int maxFileSize = 100000, int maxSizeRollBackups = 0)
     {
       Repository.Hierarchy.Hierarchy h =
-          (Repository.Hierarchy.Hierarchy)LogManager.CreateRepository("TestRepository");
+        (Repository.Hierarchy.Hierarchy)LogManager.CreateRepository("TestRepository");
 
-      RollingFileAppender appender = new RollingFileAppender();
-      appender.File = filename;
-      appender.AppendToFile = false;
-      appender.CountDirection = 0;
-      appender.RollingStyle = RollingFileAppender.RollingMode.Size;
-      appender.MaxFileSize = maxFileSize;
-      appender.Encoding = Encoding.ASCII;
-      appender.ErrorHandler = handler;
-      appender.MaxSizeRollBackups = maxSizeRollBackups;
+      RollingFileAppender appender = new()
+      {
+        File = filename,
+        AppendToFile = false,
+        CountDirection = 0,
+        RollingStyle = RollingFileAppender.RollingMode.Size,
+        MaxFileSize = maxFileSize,
+        Encoding = Encoding.ASCII,
+        ErrorHandler = handler,
+        MaxSizeRollBackups = maxSizeRollBackups
+      };
       if (lockModel is not null)
       {
         appender.LockingModel = lockModel;
       }
 
-      PatternLayout layout = new PatternLayout();
-      layout.ConversionPattern = "%m%n";
+      PatternLayout layout = new()
+      {
+        ConversionPattern = "%m%n"
+      };
       layout.ActivateOptions();
 
       appender.Layout = layout;
@@ -1470,7 +1363,7 @@ namespace log4net.Tests.Appender
       h.ResetConfiguration();
       //Replace the repository selector so that we can recreate the hierarchy with the same name if necessary
       LoggerManager.RepositorySelector =
-          new DefaultRepositorySelector(typeof(log4net.Repository.Hierarchy.Hierarchy));
+        new DefaultRepositorySelector(typeof(log4net.Repository.Hierarchy.Hierarchy));
     }
 
     private static void AssertFileEquals(string filename, string contents)
@@ -1487,7 +1380,7 @@ namespace log4net.Tests.Appender
     public void TestLogOutput()
     {
       string filename = "test_simple.log";
-      SilentErrorHandler sh = new SilentErrorHandler();
+      SilentErrorHandler sh = new();
       ILogger log = CreateLogger(filename, new FileAppender.ExclusiveLock(), sh);
       log.Log(GetType(), Level.Info, "This is a message", null);
       log.Log(GetType(), Level.Info, "This is a message 2", null);
@@ -1506,10 +1399,10 @@ namespace log4net.Tests.Appender
     {
       string filename = "test_exclusive_lock_fails.log";
 
-      FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
+      FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
       fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
 
-      SilentErrorHandler sh = new SilentErrorHandler();
+      SilentErrorHandler sh = new();
       ILogger log = CreateLogger(filename, new FileAppender.ExclusiveLock(), sh);
       log.Log(GetType(), Level.Info, "This is a message", null);
       log.Log(GetType(), Level.Info, "This is a message 2", null);
@@ -1528,10 +1421,10 @@ namespace log4net.Tests.Appender
     {
       string filename = "test_exclusive_lock_recovers.log";
 
-      FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
+      FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
       fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
 
-      SilentErrorHandler sh = new SilentErrorHandler();
+      SilentErrorHandler sh = new();
       ILogger log = CreateLogger(filename, new FileAppender.ExclusiveLock(), sh);
       log.Log(GetType(), Level.Info, "This is a message", null);
       fs.Close();
@@ -1540,7 +1433,7 @@ namespace log4net.Tests.Appender
 
       AssertFileEquals(filename, "This is a message 2" + Environment.NewLine);
       StringAssert.StartsWith("Unable to acquire lock on file", sh.Message,
-          "Expecting an error message");
+        "Expecting an error message");
     }
 
     /// <summary>
@@ -1552,20 +1445,20 @@ namespace log4net.Tests.Appender
       string filename = "test_exclusive_lock_locks.log";
       bool locked = false;
 
-      SilentErrorHandler sh = new SilentErrorHandler();
+      SilentErrorHandler sh = new();
       ILogger log = CreateLogger(filename, new FileAppender.ExclusiveLock(), sh);
       log.Log(GetType(), Level.Info, "This is a message", null);
 
       try
       {
-        FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
+        FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
         fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
         fs.Close();
       }
       catch (IOException e1)
       {
         Assert.AreEqual("The process cannot access the file ", e1.Message.Substring(0, 35),
-            "Unexpected exception");
+          "Unexpected exception");
         locked = true;
       }
 
@@ -1574,7 +1467,7 @@ namespace log4net.Tests.Appender
 
       Assert.IsTrue(locked, "File was not locked");
       AssertFileEquals(filename,
-          "This is a message" + Environment.NewLine + "This is a message 2" + Environment.NewLine);
+        "This is a message" + Environment.NewLine + "This is a message 2" + Environment.NewLine);
       Assert.AreEqual("", sh.Message, "Unexpected error message");
     }
 
@@ -1587,10 +1480,10 @@ namespace log4net.Tests.Appender
     {
       string filename = "test_minimal_lock_fails.log";
 
-      FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
+      FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
       fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
 
-      SilentErrorHandler sh = new SilentErrorHandler();
+      SilentErrorHandler sh = new();
       ILogger log = CreateLogger(filename, new FileAppender.MinimalLock(), sh);
       log.Log(GetType(), Level.Info, "This is a message", null);
       log.Log(GetType(), Level.Info, "This is a message 2", null);
@@ -1610,10 +1503,10 @@ namespace log4net.Tests.Appender
     {
       string filename = "test_minimal_lock_recovers.log";
 
-      FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
+      FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
       fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
 
-      SilentErrorHandler sh = new SilentErrorHandler();
+      SilentErrorHandler sh = new();
       ILogger log = CreateLogger(filename, new FileAppender.MinimalLock(), sh);
       log.Log(GetType(), Level.Info, "This is a message", null);
       fs.Close();
@@ -1622,7 +1515,7 @@ namespace log4net.Tests.Appender
 
       AssertFileEquals(filename, "This is a message 2" + Environment.NewLine);
       Assert.AreEqual("Unable to acquire lock on file", sh.Message.Substring(0, 30),
-          "Expecting an error message");
+        "Expecting an error message");
     }
 
     /// <summary>
@@ -1634,12 +1527,12 @@ namespace log4net.Tests.Appender
       string filename = "test_minimal_lock_unlocks.log";
       bool locked;
 
-      SilentErrorHandler sh = new SilentErrorHandler();
+      SilentErrorHandler sh = new();
       ILogger log = CreateLogger(filename, new FileAppender.MinimalLock(), sh);
       log.Log(GetType(), Level.Info, "This is a message", null);
 
       locked = true;
-      FileStream fs = new FileStream(filename, FileMode.Append, FileAccess.Write, FileShare.None);
+      FileStream fs = new(filename, FileMode.Append, FileAccess.Write, FileShare.None);
       fs.Write(Encoding.ASCII.GetBytes("Test" + Environment.NewLine), 0, 4 + Environment.NewLine.Length);
       fs.Close();
 
@@ -1648,8 +1541,8 @@ namespace log4net.Tests.Appender
 
       Assert.IsTrue(locked, "File was not locked");
       AssertFileEquals(filename,
-          "This is a message" + Environment.NewLine + "Test" + Environment.NewLine + "This is a message 2" +
-          Environment.NewLine);
+        "This is a message" + Environment.NewLine + "Test" + Environment.NewLine + "This is a message 2" +
+        Environment.NewLine);
       Assert.AreEqual("", sh.Message, "Unexpected error message");
     }
 
@@ -1661,10 +1554,10 @@ namespace log4net.Tests.Appender
     {
       string filename = "test_interprocess_lock_fails.log";
 
-      FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
+      FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
       fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
 
-      SilentErrorHandler sh = new SilentErrorHandler();
+      SilentErrorHandler sh = new();
       ILogger log = CreateLogger(filename, new FileAppender.InterProcessLock(), sh);
       log.Log(GetType(), Level.Info, "This is a message", null);
       log.Log(GetType(), Level.Info, "This is a message 2", null);
@@ -1684,10 +1577,10 @@ namespace log4net.Tests.Appender
     {
       string filename = "test_interprocess_lock_recovers.log";
 
-      FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
+      FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
       fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
 
-      SilentErrorHandler sh = new SilentErrorHandler();
+      SilentErrorHandler sh = new();
       ILogger log = CreateLogger(filename, new FileAppender.InterProcessLock(), sh);
       log.Log(GetType(), Level.Info, "This is a message", null);
       fs.Close();
@@ -1696,7 +1589,7 @@ namespace log4net.Tests.Appender
 
       AssertFileEquals(filename, "This is a message 2" + Environment.NewLine);
       Assert.AreEqual("Unable to acquire lock on file", sh.Message.Substring(0, 30),
-          "Expecting an error message");
+        "Expecting an error message");
     }
 
     /// <summary>
@@ -1708,12 +1601,12 @@ namespace log4net.Tests.Appender
       string filename = "test_interprocess_lock_unlocks.log";
       bool locked;
 
-      SilentErrorHandler sh = new SilentErrorHandler();
+      SilentErrorHandler sh = new();
       ILogger log = CreateLogger(filename, new FileAppender.InterProcessLock(), sh);
       log.Log(GetType(), Level.Info, "This is a message", null);
 
       locked = true;
-      FileStream fs = new FileStream(filename, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+      FileStream fs = new(filename, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
       fs.Write(Encoding.ASCII.GetBytes("Test" + Environment.NewLine), 0, 4 + Environment.NewLine.Length);
       fs.Close();
 
@@ -1722,8 +1615,8 @@ namespace log4net.Tests.Appender
 
       Assert.IsTrue(locked, "File was not locked");
       AssertFileEquals(filename,
-          "This is a message" + Environment.NewLine + "Test" + Environment.NewLine + "This is a message 2" +
-          Environment.NewLine);
+        "This is a message" + Environment.NewLine + "Test" + Environment.NewLine + "This is a message 2" +
+        Environment.NewLine);
       Assert.AreEqual("", sh.Message, "Unexpected error message");
     }
 
@@ -1735,7 +1628,7 @@ namespace log4net.Tests.Appender
     {
       const string filename = "test_interprocess_lock_roll.log";
 
-      SilentErrorHandler sh = new SilentErrorHandler();
+      SilentErrorHandler sh = new();
       ILogger log = CreateLogger(filename, new FileAppender.InterProcessLock(), sh, 1, 2);
 
       Assert.DoesNotThrow(() => log.Log(GetType(), Level.Info, "A", null));
@@ -1756,7 +1649,7 @@ namespace log4net.Tests.Appender
     {
       string filename = "test_default.log";
 
-      SilentErrorHandler sh = new SilentErrorHandler();
+      SilentErrorHandler sh = new();
       ILogger log = CreateLogger(filename, null, sh);
 
       IAppender[]? appenders = log.Repository?.GetAppenders();
@@ -1774,26 +1667,18 @@ namespace log4net.Tests.Appender
     /// Tests the count up case, with infinite max backups , to see that
     /// initialization of the rolling file appender results in the expected value
     /// </summary>
-    private static void VerifyInitializeUpInfiniteExpectedValue(
-        List<string> alFiles,
-        string sBaseFile,
-        int iExpectedValue)
-    {
-      InitializeAndVerifyExpectedValue(alFiles, sBaseFile, CreateRollingFileAppender("-1,0,1"), iExpectedValue);
-    }
+    private static void VerifyInitializeUpInfiniteExpectedValue(List<string> alFiles,
+      string sBaseFile, int iExpectedValue)
+      => InitializeAndVerifyExpectedValue(alFiles, sBaseFile, CreateRollingFileAppender("-1,0,1"), iExpectedValue);
 
 
     /// <summary>
     /// Tests the countdown case, with max backups limited to 3, to see that
     /// initialization of the rolling file appender results in the expected value
     /// </summary>
-    private static void VerifyInitializeDownFixedExpectedValue(
-        List<string> alFiles,
-        string sBaseFile,
-        int iExpectedValue)
-    {
-      InitializeAndVerifyExpectedValue(alFiles, sBaseFile, CreateRollingFileAppender("3,0,-1"), iExpectedValue);
-    }
+    private static void VerifyInitializeDownFixedExpectedValue(List<string> alFiles, string sBaseFile,
+      int iExpectedValue)
+      => InitializeAndVerifyExpectedValue(alFiles, sBaseFile, CreateRollingFileAppender("3,0,-1"), iExpectedValue);
 
     /// <summary>
     /// Turns a string of comma separated numbers into a collection of filenames
@@ -1804,9 +1689,7 @@ namespace log4net.Tests.Appender
     /// </summary>
     /// <param name="sFileNumbers">Comma separated list of numbers for counted file names</param>
     private static List<string> MakeTestDataFromString(string sFileNumbers)
-    {
-      return MakeTestDataFromString(c_fileName, sFileNumbers);
-    }
+      => MakeTestDataFromString(c_fileName, sFileNumbers);
 
     /// <summary>
     /// Turns a string of comma separated numbers into a collection of filenames
@@ -1819,12 +1702,12 @@ namespace log4net.Tests.Appender
     /// <returns></returns>
     private static List<string> MakeTestDataFromString(string sFileName, string sFileNumbers)
     {
-      var alFiles = new List<string>();
+      List<string> alFiles = [];
 
       string[] sNumbers = sFileNumbers.Split(',');
       foreach (string sNumber in sNumbers)
       {
-        Int32 iValue = Int32.Parse(sNumber.Trim());
+        int iValue = int.Parse(sNumber.Trim());
         alFiles.Add(MakeFileName(sFileName, iValue));
       }
 
@@ -1836,26 +1719,20 @@ namespace log4net.Tests.Appender
     /// for a file with no extension
     /// </summary>
     [Test]
-    public void TestInitializeRollBackups2()
-    {
-      VerifyInitializeRollBackupsFromBaseFile("LogFile");
-    }
+    public void TestInitializeRollBackups2() => VerifyInitializeRollBackupsFromBaseFile("LogFile");
 
     /// <summary>
     /// Tests that the current backup index is correctly detected
     /// for a file with a .log extension
     /// </summary>
     [Test]
-    public void TestInitializeRollBackups3()
-    {
-      VerifyInitializeRollBackupsFromBaseFile("LogFile.log");
-    }
+    public void TestInitializeRollBackups3() => VerifyInitializeRollBackupsFromBaseFile("LogFile.log");
 
     /// <summary>
     /// Makes sure that the initialization can detect the backup
     /// number correctly.
     /// </summary>
-    private void VerifyInitializeRollBackups(int iBackups, int iMaxSizeRollBackups)
+    private static void VerifyInitializeRollBackups(int iBackups, int iMaxSizeRollBackups)
     {
       string sBaseFile = "LogFile.log";
       var arrFiles = new List<string> { "junk1" };
@@ -1864,10 +1741,12 @@ namespace log4net.Tests.Appender
         arrFiles.Add(MakeFileName(sBaseFile, i));
       }
 
-      RollingFileAppender rfa = new();
-      rfa.RollingStyle = RollingFileAppender.RollingMode.Size;
-      rfa.MaxSizeRollBackups = iMaxSizeRollBackups;
-      rfa.CurrentSizeRollBackups = 0;
+      RollingFileAppender rfa = new()
+      {
+        RollingStyle = RollingFileAppender.RollingMode.Size,
+        MaxSizeRollBackups = iMaxSizeRollBackups,
+        CurrentSizeRollBackups = 0
+      };
       rfa.InitializeRollBackups(sBaseFile, arrFiles);
 
       // iBackups  / Meaning
@@ -1930,15 +1809,12 @@ namespace log4net.Tests.Appender
       return appender.GetExistingFiles(baseFilePath);
     }
 
-    private static string GetTestMessage()
+    private static string GetTestMessage() => Environment.NewLine.Length switch
     {
-      return Environment.NewLine.Length switch
-      {
-        2 => c_testMessage98Chars,
-        1 => c_testMessage99Chars,
-        _ => throw new Exception("Unexpected Environment.NewLine.Length"),
-      };
-    }
+      2 => c_testMessage98Chars,
+      1 => c_testMessage99Chars,
+      _ => throw new Exception("Unexpected Environment.NewLine.Length"),
+    };
   }
 
   [TestFixture]
@@ -1947,7 +1823,7 @@ namespace log4net.Tests.Appender
     [Test]
     public void TestComputeCheckPeriod()
     {
-      RollingFileAppender rfa = new RollingFileAppender();
+      RollingFileAppender rfa = new();
 
       Assert.AreEqual(RollPoint.TopOfMinute, rfa.ComputeCheckPeriod(".yyyy-MM-dd HH:mm"),
           "TopOfMinute pattern");
