@@ -129,11 +129,6 @@ namespace log4net.Appender
     /// <summary>
     /// Style of rolling to use
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Style of rolling to use
-    /// </para>
-    /// </remarks>
     public enum RollingMode
     {
       /// <summary>
@@ -142,13 +137,11 @@ namespace log4net.Appender
       /// <remarks>
       /// <para>
       /// Roll files once per program execution.
-      /// Well really once each time this appender is
-      /// configured.
+      /// Well really once each time this appender is configured.
       /// </para>
       /// <para>
-      /// Setting this option also sets <c>AppendToFile</c> to
-      /// <c>false</c> on the <c>RollingFileAppender</c>, otherwise
-      /// this appender would just be a normal file appender.
+      /// Setting this option also sets <c>AppendToFile</c> to <see langword="false"/> on the
+      /// <see cref="RollingFileAppender"/>, otherwise this appender would just be a normal file appender.
       /// </para>
       /// </remarks>
       Once = 0,
@@ -173,9 +166,6 @@ namespace log4net.Appender
     /// The code assumes that the following 'time' constants are in a increasing sequence.
     /// </summary>
     /// <remarks>
-    /// <para>
-    /// The code assumes that the following 'time' constants are in a increasing sequence.
-    /// </para>
     /// </remarks>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public enum RollPoint
@@ -219,11 +209,6 @@ namespace log4net.Appender
     /// <summary>
     /// Initializes a new instance of the <see cref="RollingFileAppender" /> class.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Default constructor.
-    /// </para>
-    /// </remarks>
     public RollingFileAppender()
     { }
 
@@ -393,7 +378,7 @@ namespace log4net.Appender
     /// </para>
     /// <para>
     /// When set to <see cref="RollingMode.Once"/> this appender's
-    /// <see cref="FileAppender.AppendToFile"/> property is set to <c>false</c>, otherwise
+    /// <see cref="FileAppender.AppendToFile"/> property is set to <see langword="false"/>, otherwise
     /// the appender would append to a single file rather than rolling
     /// the file each time it is opened.
     /// </para>
@@ -435,7 +420,7 @@ namespace log4net.Appender
     /// Gets or sets a value indicating whether to preserve the file name extension when rolling.
     /// </summary>
     /// <value>
-    /// <c>true</c> if the file name extension should be preserved.
+    /// <see langword="true"/> if the file name extension should be preserved.
     /// </value>
     /// <remarks>
     /// <para>
@@ -452,7 +437,7 @@ namespace log4net.Appender
     /// the same file.
     /// </summary>
     /// <value>
-    /// <c>true</c> if always should be logged to the same file, otherwise <c>false</c>.
+    /// <see langword="true"/> if always should be logged to the same file, otherwise <see langword="false"/>.
     /// </value>
     /// <remarks>
     /// <para>
