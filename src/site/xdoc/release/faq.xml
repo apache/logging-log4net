@@ -60,14 +60,12 @@ limitations under the License.
             No. log4net is not reliable. It is a best-effort and <em>fail-stop</em> logging system.
           </p>
           <p>
-            By fail-stop, we mean that log4net will not throw unexpected exceptions at
-            run-time potentially causing your application to crash. <b>
-            If for any reason, log4net
-            throws an uncaught exception</b> (except for <span class="code">ArgumentException</span> and
-            <span class="code">ArgumentNullException</span> which may be thrown), <b>
-            please send an email
-            to the <a href="mailto:log4net-user@logging.apache.org">log4net-user@logging.apache.org</a> mailing list</b>.
-            Uncaught exceptions are handled as serious bugs requiring immediate attention.
+            By fail-stop, we mean that log4net will not throw unexpected exceptions at run-time potentially
+            causing your application to crash. <b>If for any reason, log4net throws an uncaught exception</b>
+            (except for <span class="code">ArgumentException</span> and <span class="code">ArgumentNullException</span>
+            which may be thrown), <b>
+            please open a <a href="https://github.com/apache/logging-log4net/discussions/new?category=general">dicussion</a>
+            at Github</b>. Uncaught exceptions are handled as serious bugs requiring immediate attention.
           </p>
           <p>
             Moreover, log4net will not revert to <span class="code">System.Console.Out</span>
@@ -1005,17 +1003,13 @@ public class FastLogger
         </p>
         <section id="report-bugs" name="How do I report bugs?">
           <p>
-            First make sure it really is a bug and not a
-            usage error.  When in doubt, ask on the <a href="../mail-lists.html">
-            log4net-user mailing
-            list
-          </a> first.
+            First make sure it really is a bug and not a usage error.
+            When in doubt, open <a href="https://github.com/apache/logging-log4net/discussions/new?category=general">discussion</a> first.
           </p>
           <p>
             If you have identified a bug, please report it via our
-            <a href="../issue-tracking.html">Issue Tracker</a>.
-            You may want to check it hasn't been reported before by
-            searching the existing issues.
+            <a href="https://github.com/apache/logging-log4net/issues">Issue Tracker</a>.
+            You may want to check it hasn't been reported before by searching the existing issues.
           </p>
         </section>
         <p>
