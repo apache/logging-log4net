@@ -29,6 +29,8 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\log4net.snk</AssemblyOriginatorKeyFile>
+    <!-- opt-out of trimming until it works https://github.com/apache/logging-log4net/issues/142 -->
+    <SetIsTrimmable>false</SetIsTrimmable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <OutputPath>..\..\build\$(Configuration)</OutputPath>
     <PackageOutputPath>..\..\build\artifacts</PackageOutputPath>
