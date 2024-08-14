@@ -14,6 +14,9 @@
     <NoWarn>CS8032</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\log4net\Diagnostics\CodeAnalysis\CallerArgumentExpressionAttribute.cs" Link="Diagnostics\CodeAnalysis\CallerArgumentExpressionAttribute.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\log4net\log4net.csproj" />
   </ItemGroup>
   <ItemGroup>
