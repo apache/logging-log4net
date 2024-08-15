@@ -18,21 +18,20 @@
 #endregion
 
 using log4net.Core;
-using log4net.Tests.Layout;
 
 using NUnit.Framework;
 
 namespace log4net.Tests.Core
 {
   /// <summary>
-  /// Used for internal unit testing the <see cref="PatternLayoutTest"/> class.
+  /// Used for internal unit testing the <see cref="LevelMap"/> class.
   /// </summary>
-  /// <remarks>
-  /// Used for internal unit testing the <see cref="PatternLayoutTest"/> class.
-  /// </remarks>
   [TestFixture]
-  public class LevelMapTest
+  public sealed class LevelMapTest
   {
+    /// <summary>
+    /// Tests the creation of a <see cref="LevelMap"/> and calling its <see cref="LevelMap.Clear"/> method
+    /// </summary>
     [Test]
     public void LevelMapCreateClear()
     {
