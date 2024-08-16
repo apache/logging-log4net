@@ -28,89 +28,89 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace log4net.Tests.Core
+namespace log4net.Tests.Core;
+
+[TestFixture]
+public sealed class LoggingEventTest
 {
-  [TestFixture]
-  public class LoggingEventTest
+  private static readonly DateTime localTime
+    = new DateTime(2000, 7, 1, 0, 0, 0, 0, CultureInfo.InvariantCulture.Calendar, DateTimeKind.Local);
+
+  [Test]
+  public void SerializeDeserialize_BinaryFormatter()
   {
-    DateTime localTime = new DateTime(2000, 7, 1, 0, 0, 0, 0, CultureInfo.InvariantCulture.Calendar, DateTimeKind.Local);
-
-    [Test]
-    public void SerializeDeserialize_BinaryFormatter()
+    var timestamp = localTime.ToUniversalTime();
+    var ev = new LoggingEvent(new LoggingEventData
     {
-      var timestamp = localTime.ToUniversalTime();
-      var ev = new LoggingEvent(new LoggingEventData
-      {
-        LoggerName = "aLogger",
-        Level = Level.Log4Net_Debug,
-        Message = "aMessage",
-        ThreadName = "aThread",
-        TimeStampUtc = timestamp,
-        LocationInfo = new LocationInfo(GetType()),
-        UserName = "aUser",
-        Identity = "anIdentity",
-        ExceptionString = "anException",
-        Domain = "aDomain",
-        Properties = new PropertiesDictionary { ["foo"] = "bar" },
-      });
+      LoggerName = "aLogger",
+      Level = Level.Log4Net_Debug,
+      Message = "aMessage",
+      ThreadName = "aThread",
+      TimeStampUtc = timestamp,
+      LocationInfo = new LocationInfo(GetType()),
+      UserName = "aUser",
+      Identity = "anIdentity",
+      ExceptionString = "anException",
+      Domain = "aDomain",
+      Properties = new PropertiesDictionary { ["foo"] = "bar" },
+    });
 
-      var formatter = new BinaryFormatter();
-      using var stream = new MemoryStream();
-      formatter.Serialize(stream, ev);
-      stream.Position = 0;
-      var ev2 = (LoggingEvent)formatter.Deserialize(stream);
+    var formatter = new BinaryFormatter();
+    using var stream = new MemoryStream();
+    formatter.Serialize(stream, ev);
+    stream.Position = 0;
+    var ev2 = (LoggingEvent)formatter.Deserialize(stream);
 
-      Assert.AreEqual("aLogger", ev2.LoggerName);
-      Assert.AreEqual(Level.Log4Net_Debug, ev2.Level);
-      Assert.IsNull(ev2.MessageObject);
-      Assert.AreEqual("aMessage", ev2.RenderedMessage);
-      Assert.AreEqual("aThread", ev2.ThreadName);
-      Assert.AreEqual(timestamp, ev2.TimeStampUtc);
-      Assert.IsNotNull(ev2.LocationInfo);
-      Assert.AreEqual("System.RuntimeMethodHandle", ev2.LocationInfo!.ClassName);
-      Assert.AreEqual("InvokeMethod", ev2.LocationInfo!.MethodName);
-      Assert.IsNull(ev2.LocationInfo!.FileName);
-      Assert.AreEqual("0", ev2.LocationInfo!.LineNumber);
-      Assert.AreEqual("aUser", ev2.UserName);
-      Assert.AreEqual("anIdentity", ev2.Identity);
-      Assert.IsNull(ev2.ExceptionObject);
-      Assert.AreEqual("anException", ev2.GetExceptionString());
-      Assert.AreEqual("aDomain", ev2.Domain);
-      Assert.AreEqual(1, ev.Properties.Count);
-      Assert.AreEqual("bar", ev2.Properties["foo"]);
-    }
+    Assert.AreEqual("aLogger", ev2.LoggerName);
+    Assert.AreEqual(Level.Log4Net_Debug, ev2.Level);
+    Assert.IsNull(ev2.MessageObject);
+    Assert.AreEqual("aMessage", ev2.RenderedMessage);
+    Assert.AreEqual("aThread", ev2.ThreadName);
+    Assert.AreEqual(timestamp, ev2.TimeStampUtc);
+    Assert.IsNotNull(ev2.LocationInfo);
+    Assert.AreEqual("System.RuntimeMethodHandle", ev2.LocationInfo!.ClassName);
+    Assert.AreEqual("InvokeMethod", ev2.LocationInfo!.MethodName);
+    Assert.IsNull(ev2.LocationInfo!.FileName);
+    Assert.AreEqual("0", ev2.LocationInfo!.LineNumber);
+    Assert.AreEqual("aUser", ev2.UserName);
+    Assert.AreEqual("anIdentity", ev2.Identity);
+    Assert.IsNull(ev2.ExceptionObject);
+    Assert.AreEqual("anException", ev2.GetExceptionString());
+    Assert.AreEqual("aDomain", ev2.Domain);
+    Assert.AreEqual(1, ev.Properties.Count);
+    Assert.AreEqual("bar", ev2.Properties["foo"]);
+  }
 
-    /// <summary>
-    /// Loads and validates the cached serialized v2 event data from the log4net2-SerializeEvent directory.
-    /// </summary>
-    [Test]
-    public void DeserializeV2()
-    {
-      const string datPath = @"..\..\..\..\integration-testing\log4net2-SerializeEvent\SerializeV2Event.dat";
-      using var stream = File.OpenRead(datPath);
-      var formatter = new BinaryFormatter();
-      LoggingEvent ev = (LoggingEvent)formatter.Deserialize(stream);
-      Assert.IsNotNull(ev);
+  /// <summary>
+  /// Loads and validates the cached serialized v2 event data from the log4net2-SerializeEvent directory.
+  /// </summary>
+  [Test]
+  public void DeserializeV2()
+  {
+    const string datPath = @"..\..\..\..\integration-testing\log4net2-SerializeEvent\SerializeV2Event.dat";
+    using var stream = File.OpenRead(datPath);
+    var formatter = new BinaryFormatter();
+    LoggingEvent ev = (LoggingEvent)formatter.Deserialize(stream);
+    Assert.IsNotNull(ev);
 
-      Assert.AreEqual("aLogger", ev!.LoggerName);
-      Assert.AreEqual(Level.Log4Net_Debug, ev.Level);
-      Assert.IsNull(ev.MessageObject);
-      Assert.AreEqual("aMessage", ev.RenderedMessage);
-      Assert.AreEqual("aThread", ev.ThreadName);
-      Assert.IsNotNull(ev.LocationInfo);
-      Assert.AreEqual("?", ev.LocationInfo!.ClassName);
-      Assert.AreEqual("?", ev.LocationInfo!.MethodName);
-      Assert.AreEqual("?", ev.LocationInfo!.FileName);
-      Assert.AreEqual("?", ev.LocationInfo!.LineNumber);
-      Assert.AreEqual("aUser", ev.UserName);
-      Assert.AreEqual("anIdentity", ev.Identity);
-      Assert.IsNull(ev.ExceptionObject);
-      Assert.AreEqual("anException", ev.GetExceptionString());
-      Assert.AreEqual("aDomain", ev.Domain);
-      Assert.AreEqual(1, ev.Properties.Count);
-      Assert.AreEqual("bar", ev.Properties["foo"]);
-      Assert.AreEqual(localTime.ToUniversalTime(), ev.TimeStampUtc);
-    }
+    Assert.AreEqual("aLogger", ev!.LoggerName);
+    Assert.AreEqual(Level.Log4Net_Debug, ev.Level);
+    Assert.IsNull(ev.MessageObject);
+    Assert.AreEqual("aMessage", ev.RenderedMessage);
+    Assert.AreEqual("aThread", ev.ThreadName);
+    Assert.IsNotNull(ev.LocationInfo);
+    Assert.AreEqual("?", ev.LocationInfo!.ClassName);
+    Assert.AreEqual("?", ev.LocationInfo!.MethodName);
+    Assert.AreEqual("?", ev.LocationInfo!.FileName);
+    Assert.AreEqual("?", ev.LocationInfo!.LineNumber);
+    Assert.AreEqual("aUser", ev.UserName);
+    Assert.AreEqual("anIdentity", ev.Identity);
+    Assert.IsNull(ev.ExceptionObject);
+    Assert.AreEqual("anException", ev.GetExceptionString());
+    Assert.AreEqual("aDomain", ev.Domain);
+    Assert.AreEqual(1, ev.Properties.Count);
+    Assert.AreEqual("bar", ev.Properties["foo"]);
+    Assert.AreEqual(localTime.ToUniversalTime(), ev.TimeStampUtc);
   }
 }
 #endif // NET462_OR_GREATER

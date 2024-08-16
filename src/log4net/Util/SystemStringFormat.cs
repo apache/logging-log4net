@@ -41,7 +41,7 @@ namespace log4net.Util
     public object?[]? Args { get; set; }
 
     /// <summary>
-    /// Initialise the <see cref="SystemStringFormat"/>
+    /// Constructor
     /// </summary>
     /// <param name="provider">An <see cref="System.IFormatProvider"/> that supplies culture-specific formatting information.</param>
     /// <param name="format">A <see cref="System.String"/> containing zero or more format items.</param>
@@ -57,10 +57,7 @@ namespace log4net.Util
     /// Format the string and arguments
     /// </summary>
     /// <returns>the formatted string</returns>
-    public override string? ToString()
-    {
-      return StringFormat(m_provider, Format, Args);
-    }
+    public override string? ToString() => StringFormat(m_provider, Format, Args);
 
     /// <summary>
     /// Replaces the format item in a specified <see cref="System.String"/> with the text equivalent 

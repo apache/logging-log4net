@@ -572,7 +572,6 @@ namespace log4net.Util
     /// </remarks>
     public static bool TryParse(string s, out int val)
     {
-      // Initialise out param
       val = 0;
 
       try
@@ -605,7 +604,6 @@ namespace log4net.Util
     /// </remarks>
     public static bool TryParse(string s, out long val)
     {
-      // Initialise out param
       val = 0;
 
       try
@@ -638,7 +636,6 @@ namespace log4net.Util
     /// </remarks>
     public static bool TryParse(string s, out short val)
     {
-      // Initialise out param
       val = 0;
 
       try

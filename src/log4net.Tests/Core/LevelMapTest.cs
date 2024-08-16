@@ -21,48 +21,47 @@ using log4net.Core;
 
 using NUnit.Framework;
 
-namespace log4net.Tests.Core
+namespace log4net.Tests.Core;
+
+/// <summary>
+/// Used for internal unit testing the <see cref="LevelMap"/> class.
+/// </summary>
+[TestFixture]
+public sealed class LevelMapTest
 {
   /// <summary>
-  /// Used for internal unit testing the <see cref="LevelMap"/> class.
+  /// Tests the creation of a <see cref="LevelMap"/> and calling its <see cref="LevelMap.Clear"/> method
   /// </summary>
-  [TestFixture]
-  public sealed class LevelMapTest
+  [Test]
+  public void LevelMapCreateClear()
   {
-    /// <summary>
-    /// Tests the creation of a <see cref="LevelMap"/> and calling its <see cref="LevelMap.Clear"/> method
-    /// </summary>
-    [Test]
-    public void LevelMapCreateClear()
-    {
-      var map = new LevelMap();
-      LevelCollection allLevels = map.AllLevels;
-      Assert.AreEqual(0, allLevels.Count);
-      Assert.IsNull(map["nonexistent"]);
+    var map = new LevelMap();
+    LevelCollection allLevels = map.AllLevels;
+    Assert.AreEqual(0, allLevels.Count);
+    Assert.IsNull(map["nonexistent"]);
 
-      map.Add("level1234", 1234, "displayName");
-      allLevels = map.AllLevels;
-      Assert.AreEqual(1, allLevels.Count);
-      Assert.AreEqual("level1234", allLevels[0].Name);
-      Assert.AreEqual("displayName", allLevels[0].DisplayName);
-      Assert.AreEqual(1234, allLevels[0].Value);
-      Level? level1234 = map["level1234"];
-      Assert.IsNotNull(level1234);
-      Assert.AreSame(level1234, allLevels[0]);
+    map.Add("level1234", 1234, "displayName");
+    allLevels = map.AllLevels;
+    Assert.AreEqual(1, allLevels.Count);
+    Assert.AreEqual("level1234", allLevels[0].Name);
+    Assert.AreEqual("displayName", allLevels[0].DisplayName);
+    Assert.AreEqual(1234, allLevels[0].Value);
+    Level? level1234 = map["level1234"];
+    Assert.IsNotNull(level1234);
+    Assert.AreSame(level1234, allLevels[0]);
 
-      Level lookupLevel = map.LookupWithDefault(level1234!);
-      Assert.AreSame(level1234, lookupLevel);
+    Level lookupLevel = map.LookupWithDefault(level1234!);
+    Assert.AreSame(level1234, lookupLevel);
 
-      var otherLevel = new Level(5678, "level5678", "display");
-      lookupLevel = map.LookupWithDefault(otherLevel);
-      Assert.AreSame(otherLevel, lookupLevel);
-      Assert.AreSame(otherLevel, map["LEVEL5678"]);
+    var otherLevel = new Level(5678, "level5678", "display");
+    lookupLevel = map.LookupWithDefault(otherLevel);
+    Assert.AreSame(otherLevel, lookupLevel);
+    Assert.AreSame(otherLevel, map["LEVEL5678"]);
 
-      map.Clear();
-      allLevels = map.AllLevels;
-      Assert.AreEqual(0, allLevels.Count);
-      Assert.IsNull(map["level1234"]);
-      Assert.IsNull(map["LEVEL5678"]);
-    }
+    map.Clear();
+    allLevels = map.AllLevels;
+    Assert.AreEqual(0, allLevels.Count);
+    Assert.IsNull(map["level1234"]);
+    Assert.IsNull(map["LEVEL5678"]);
   }
 }

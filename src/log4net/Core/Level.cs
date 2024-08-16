@@ -383,96 +383,96 @@ public class Level : IComparable, ISerializable, IEquatable<Level>, IComparable<
   /// The <see cref="Emergency" /> level designates very severe error events. 
   /// System unusable, emergencies.
   /// </summary>
-  public static readonly Level Log4Net_Debug = new(120000, "log4net:DEBUG");
+  public static readonly Level Log4Net_Debug = new(120_000, "log4net:DEBUG");
 
   /// <summary>
   /// The <see cref="Emergency" /> level designates very severe error events. 
   /// System unusable, emergencies.
   /// </summary>
-  public static readonly Level Emergency = new(120000, "EMERGENCY");
+  public static readonly Level Emergency = new(120_000, "EMERGENCY");
 
   /// <summary>
   /// The <see cref="Fatal" /> level designates very severe error events 
   /// that will presumably lead the application to abort.
   /// </summary>
-  public static readonly Level Fatal = new(110000, "FATAL");
+  public static readonly Level Fatal = new(110_000, "FATAL");
 
   /// <summary>
   /// The <see cref="Alert" /> level designates very severe error events. 
   /// Take immediate action, alerts.
   /// </summary>
-  public static readonly Level Alert = new(100000, "ALERT");
+  public static readonly Level Alert = new(100_000, "ALERT");
 
   /// <summary>
   /// The <see cref="Critical" /> level designates very severe error events. 
   /// Critical condition, critical.
   /// </summary>
-  public static readonly Level Critical = new(90000, "CRITICAL");
+  public static readonly Level Critical = new(90_000, "CRITICAL");
 
   /// <summary>
   /// The <see cref="Severe" /> level designates very severe error events.
   /// </summary>
-  public static readonly Level Severe = new(80000, "SEVERE");
+  public static readonly Level Severe = new(80_000, "SEVERE");
 
   /// <summary>
   /// The <see cref="Error" /> level designates error events that might 
   /// still allow the application to continue running.
   /// </summary>
-  public static readonly Level Error = new(70000, "ERROR");
+  public static readonly Level Error = new(70_000, "ERROR");
 
   /// <summary>
   /// The <see cref="Warn" /> level designates potentially harmful 
   /// situations.
   /// </summary>
-  public static readonly Level Warn = new(60000, "WARN");
+  public static readonly Level Warn = new(60_000, "WARN");
 
   /// <summary>
   /// The <see cref="Notice" /> level designates informational messages 
   /// that highlight the progress of the application at the highest level.
   /// </summary>
-  public static readonly Level Notice = new(50000, "NOTICE");
+  public static readonly Level Notice = new(50_000, "NOTICE");
 
   /// <summary>
   /// The <see cref="Info" /> level designates informational messages that 
   /// highlight the progress of the application at coarse-grained level.
   /// </summary>
-  public static readonly Level Info = new(40000, "INFO");
+  public static readonly Level Info = new(40_000, "INFO");
 
   /// <summary>
   /// The <see cref="Debug" /> level designates fine-grained informational 
   /// events that are most useful to debug an application.
   /// </summary>
-  public static readonly Level Debug = new(30000, "DEBUG");
+  public static readonly Level Debug = new(30_000, "DEBUG");
 
   /// <summary>
   /// The <see cref="Fine" /> level designates fine-grained informational 
   /// events that are most useful to debug an application.
   /// </summary>
-  public static readonly Level Fine = new(30000, "FINE");
+  public static readonly Level Fine = new(30_000, "FINE");
 
   /// <summary>
   /// The <see cref="Trace" /> level designates fine-grained informational 
   /// events that are most useful to debug an application.
   /// </summary>
-  public static readonly Level Trace = new(20000, "TRACE");
+  public static readonly Level Trace = new(20_000, "TRACE");
 
   /// <summary>
   /// The <see cref="Finer" /> level designates fine-grained informational 
   /// events that are most useful to debug an application.
   /// </summary>
-  public static readonly Level Finer = new(20000, "FINER");
+  public static readonly Level Finer = new(20_000, "FINER");
 
   /// <summary>
   /// The <see cref="Verbose" /> level designates fine-grained informational 
   /// events that are most useful to debug an application.
   /// </summary>
-  public static readonly Level Verbose = new(10000, "VERBOSE");
+  public static readonly Level Verbose = new(10_000, "VERBOSE");
 
   /// <summary>
   /// The <see cref="Finest" /> level designates fine-grained informational 
   /// events that are most useful to debug an application.
   /// </summary>
-  public static readonly Level Finest = new(10000, "FINEST");
+  public static readonly Level Finest = new(10_000, "FINEST");
 
   /// <summary>
   /// The <see cref="All" /> level designates the lowest level possible.

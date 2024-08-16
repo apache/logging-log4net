@@ -23,50 +23,49 @@ using log4net.Core;
 
 using NUnit.Framework;
 
-namespace log4net.Tests.Core
+namespace log4net.Tests.Core;
+
+/// <summary>
+/// Used for internal unit testing the <see cref="Level"/> class.
+/// </summary>
+[TestFixture]
+public sealed class LevelTest
 {
   /// <summary>
-  /// Used for internal unit testing the <see cref="Level"/> class.
+  /// Tests the comparison between two <see cref="Level"/>s
   /// </summary>
-  [TestFixture]
-  public sealed class LevelTest
+  [Test]
+  public void LevelCompare()
   {
-    /// <summary>
-    /// Tests the comparison between two <see cref="Level"/>s
-    /// </summary>
-    [Test]
-    public void LevelCompare()
-    {
-      Level? nullLevel = null;
-      int? nullInt = null;
-      Compare(nullInt, nullInt, nullLevel, nullLevel);
-      Compare(nullInt, Level.Verbose.Value, nullLevel, Level.Verbose);
-      Compare(Level.Verbose.Value, nullInt, Level.Verbose, nullLevel);
-      Compare(Level.Verbose.Value, Level.Verbose.Value, Level.Verbose, Level.Verbose);
-      Compare(Level.Debug.Value, Level.Verbose.Value, Level.Debug, Level.Verbose);
-    }
+    Level? nullLevel = null;
+    int? nullInt = null;
+    Compare(nullInt, nullInt, nullLevel, nullLevel);
+    Compare(nullInt, Level.Verbose.Value, nullLevel, Level.Verbose);
+    Compare(Level.Verbose.Value, nullInt, Level.Verbose, nullLevel);
+    Compare(Level.Verbose.Value, Level.Verbose.Value, Level.Verbose, Level.Verbose);
+    Compare(Level.Debug.Value, Level.Verbose.Value, Level.Debug, Level.Verbose);
+  }
 
-    private static void Compare(int? leftInt, int? rightInt, Level? left, Level? right,
-      [CallerArgumentExpression(nameof(left))] string leftName = "",
-      [CallerArgumentExpression(nameof(right))] string rightName = "")
+  private static void Compare(int? leftInt, int? rightInt, Level? left, Level? right,
+    [CallerArgumentExpression(nameof(left))] string leftName = "",
+    [CallerArgumentExpression(nameof(right))] string rightName = "")
+  {
+    Assert.AreEqual(leftInt < rightInt, left < right, "{0} < {1}", leftName, rightName);
+    Assert.AreEqual(leftInt > rightInt, left > right, "{0} > {1}", leftName, rightName);
+    Assert.AreEqual(leftInt <= rightInt, left <= right, "{0} <= {1}", leftName, rightName);
+    Assert.AreEqual(leftInt >= rightInt, left >= right, "{0} >= {1}", leftName, rightName);
+    Assert.AreEqual(leftInt == rightInt, left == right, "{0} == {1}", leftName, rightName);
+    Assert.AreEqual(leftInt != rightInt, left != right, "{0} != {1}", leftName, rightName);
+    Assert.AreEqual(leftInt?.Equals(rightInt), left?.Equals(right), "{0}?.Equals({1})", leftName, rightName);
+    if (leftInt is not null)
     {
-      Assert.AreEqual(leftInt < rightInt, left < right, "{0} < {1}", leftName, rightName);
-      Assert.AreEqual(leftInt > rightInt, left > right, "{0} > {1}", leftName, rightName);
-      Assert.AreEqual(leftInt <= rightInt, left <= right, "{0} <= {1}", leftName, rightName);
-      Assert.AreEqual(leftInt >= rightInt, left >= right, "{0} >= {1}", leftName, rightName);
-      Assert.AreEqual(leftInt == rightInt, left == right, "{0} == {1}", leftName, rightName);
-      Assert.AreEqual(leftInt != rightInt, left != right, "{0} != {1}", leftName, rightName);
-      Assert.AreEqual(leftInt?.Equals(rightInt), left?.Equals(right), "{0}?.Equals({1})", leftName, rightName);
-      if (leftInt is not null)
+      if (rightInt is not null)
       {
-        if (rightInt is not null)
-        {
-          Assert.AreEqual(leftInt?.CompareTo(rightInt), left?.CompareTo(right!), "{0}?.CompareTo({1})", leftName, rightName);
-        }
-        else
-        {
-          Assert.Throws<ArgumentNullException>(() => left!.CompareTo(right!));
-        }
+        Assert.AreEqual(leftInt?.CompareTo(rightInt), left?.CompareTo(right!), "{0}?.CompareTo({1})", leftName, rightName);
+      }
+      else
+      {
+        Assert.Throws<ArgumentNullException>(() => left!.CompareTo(right!));
       }
     }
   }
