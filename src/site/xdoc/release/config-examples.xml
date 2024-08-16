@@ -788,7 +788,7 @@ CREATE TABLE Log (
         <source language="xml">
           <![CDATA[
 <appender name="MemoryAppender" type="log4net.Appender.MemoryAppender">
-    <onlyFixPartialEventData value="true" />
+    <fix value="Partial" />
 </appender>
                 ]]>
         </source>
