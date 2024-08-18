@@ -183,6 +183,9 @@ limitations under the License.
             <li>
               <a href="https://github.com/apache/logging-log4net/issues/169">System.NullReferenceException when comparing with a null Level</a> (by @freeandnil)
             </li>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/168">ColoredConsoleAppender writes UTF-8 preamble to the console on initialization</a> (reported by @RoboBurned, fixed by @freeandnil)
+            </li>
           </ul>
         </section>
         <section id="a3.0.0-enhancements" name="Enhancements">
