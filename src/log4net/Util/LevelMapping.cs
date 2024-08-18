@@ -17,8 +17,8 @@
 //
 #endregion
 
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using log4net.Core;
 
 namespace log4net.Util
@@ -30,6 +30,9 @@ namespace log4net.Util
   /// <author>Nicko Cadell</author>
   public sealed class LevelMapping : IOptionHandler
   {
+    private readonly Dictionary<Level, LevelMappingEntry> entries = new();
+    private List<LevelMappingEntry>? sortedEntries;
+
     /// <summary>
     /// Add a <see cref="LevelMappingEntry"/> to this mapping
     /// </summary>
@@ -45,7 +48,7 @@ namespace log4net.Util
     {
       if (entry.Level is not null)
       {
-        m_entriesMap[entry.Level] = entry;
+        entries[entry.Level] = entry;
       }
     }
 
@@ -55,22 +58,19 @@ namespace log4net.Util
     /// <paramref name="level"/> specified.
     /// </summary>
     /// <param name="level">the level to look up.</param>
-    /// <returns>The <see cref="LevelMappingEntry"/> for the level or <c>null</c> if no mapping found</returns>
+    /// <returns>The <see cref="LevelMappingEntry"/> for the level or <see langword="null"/> if no mapping found</returns>
     public LevelMappingEntry? Lookup(Level? level)
     {
-      if (level is null)
+      if (level is null || sortedEntries is null)
       {
         return null;
       }
 
-      if (m_entries is not null)
+      foreach (LevelMappingEntry entry in sortedEntries)
       {
-        foreach (LevelMappingEntry entry in m_entries)
+        if (level >= entry.Level)
         {
-          if (entry.Level is not null && level >= entry.Level)
-          {
-            return entry;
-          }
+          return entry;
         }
       }
       return null;
@@ -80,33 +80,15 @@ namespace log4net.Util
     /// Initialize options
     /// </summary>
     /// <remarks>
-    /// <para>
-    /// Caches the sorted list of <see cref="LevelMappingEntry"/> in an array
-    /// </para>
+    /// Caches the sorted list of <see cref="LevelMappingEntry"/>
     /// </remarks>
     public void ActivateOptions()
     {
-      Level[] sortKeys = new Level[m_entriesMap.Count];
-      LevelMappingEntry[] sortValues = new LevelMappingEntry[m_entriesMap.Count];
-
-      m_entriesMap.Keys.CopyTo(sortKeys, 0);
-      m_entriesMap.Values.CopyTo(sortValues, 0);
-
-      // Sort in level order
-      Array.Sort(sortKeys, sortValues, 0, sortKeys.Length, null);
-
-      // Reverse list so that highest level is first
-      Array.Reverse(sortValues, 0, sortValues.Length);
-
-      foreach (LevelMappingEntry entry in sortValues)
-      {
-        entry.ActivateOptions();
-      }
-
-      m_entries = sortValues;
+      sortedEntries = SortEntries();
+      sortedEntries.ForEach(entry => entry.ActivateOptions());
     }
 
-    private readonly Dictionary<Level, LevelMappingEntry> m_entriesMap = new();
-    private LevelMappingEntry[]? m_entries;
+    private List<LevelMappingEntry> SortEntries()
+      => entries.OrderByDescending(entry => entry.Key).Select(entry => entry.Value).ToList();
   }
 }

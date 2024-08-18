@@ -17,6 +17,7 @@
 //
 #endregion
 
+using System.Diagnostics;
 using log4net.Core;
 
 namespace log4net.Util
@@ -26,14 +27,14 @@ namespace log4net.Util
   /// <see cref="LevelMapping"/> object.
   /// </summary>
   /// <author>Nicko Cadell</author>
+  [DebuggerDisplay("{Level}")]
   public abstract class LevelMappingEntry : IOptionHandler
   {
     /// <summary>
     /// Default protected constructor
     /// </summary>
     protected LevelMappingEntry()
-    {
-    }
+    { }
 
     /// <summary>
     /// Gets or sets the level that is the key for this mapping.
@@ -45,7 +46,7 @@ namespace log4net.Util
     /// </summary>
     /// <remarks>
     /// <para>
-    /// Should be overridden by any classes that need to initialise based on their options
+    /// Should be overridden by any classes that need to initialize based on their options
     /// </para>
     /// </remarks>
     public virtual void ActivateOptions()

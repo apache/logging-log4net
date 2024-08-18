@@ -215,18 +215,18 @@ namespace log4net.Appender
     /// </summary>
     public virtual string Target
     {
-      get => m_writeToErrorStream ? ConsoleError : ConsoleOut;
+      get => writeToErrorStream ? ConsoleError : ConsoleOut;
       set
       {
         string trimmedTargetName = value.Trim();
 
         if (SystemInfo.EqualsIgnoringCase(ConsoleError, trimmedTargetName))
         {
-          m_writeToErrorStream = true;
+          writeToErrorStream = true;
         }
         else
         {
-          m_writeToErrorStream = false;
+          writeToErrorStream = false;
         }
       }
     }
@@ -237,7 +237,7 @@ namespace log4net.Appender
     /// <param name="mapping">The mapping to add</param>
     public void AddMapping(LevelColors mapping)
     {
-      m_levelMapping.Add(mapping);
+      levelMapping.Add(mapping);
     }
 
     /// <summary>
@@ -257,7 +257,7 @@ namespace log4net.Appender
       string loggingMessage = RenderLoggingEvent(loggingEvent);
 
       // see if there is a specified lookup.
-      if (m_levelMapping.Lookup(loggingEvent.Level) is LevelColors levelColors)
+      if (levelMapping.Lookup(loggingEvent.Level) is LevelColors levelColors)
       {
         // Prepend the Ansi Color code
         loggingMessage = levelColors.CombinedColor + loggingMessage;
@@ -294,7 +294,7 @@ namespace log4net.Appender
         }
       }
 
-      if (m_writeToErrorStream)
+      if (writeToErrorStream)
       {
         // Write to the error stream
         Console.Error.Write(loggingMessage);
@@ -318,17 +318,17 @@ namespace log4net.Appender
     public override void ActivateOptions()
     {
       base.ActivateOptions();
-      m_levelMapping.ActivateOptions();
+      levelMapping.ActivateOptions();
     }
 
     /// <summary>
-    /// The <see cref="AnsiColorTerminalAppender.Target"/> to use when writing to the Console 
+    /// The <see cref="Target"/> to use when writing to the Console 
     /// standard output stream.
     /// </summary>
     public const string ConsoleOut = "Console.Out";
 
     /// <summary>
-    /// The <see cref="AnsiColorTerminalAppender.Target"/> to use when writing to the Console 
+    /// The <see cref="Target"/> to use when writing to the Console 
     /// standard error output stream.
     /// </summary>
     public const string ConsoleError = "Console.Error";
@@ -336,12 +336,12 @@ namespace log4net.Appender
     /// <summary>
     /// Flag to write output to the error stream rather than the standard output stream
     /// </summary>
-    private bool m_writeToErrorStream;
+    private bool writeToErrorStream;
 
     /// <summary>
     /// Mapping from level object to color value
     /// </summary>
-    private readonly LevelMapping m_levelMapping = new();
+    private readonly LevelMapping levelMapping = new();
 
     /// <summary>
     /// Ansi code to reset terminal
@@ -393,7 +393,7 @@ namespace log4net.Appender
       {
         base.ActivateOptions();
 
-        StringBuilder buf = new StringBuilder();
+        StringBuilder buf = new();
 
         // Reset any existing codes
         buf.Append("\x1b[0;");
