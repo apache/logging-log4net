@@ -40,8 +40,8 @@ namespace log4net.Util
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-  [Serializable]
-  public class ReadOnlyPropertiesDictionary : ISerializable, IDictionary, IDictionary<string, object?>
+  [Log4NetSerializable]
+  public class ReadOnlyPropertiesDictionary : ILog4NetSerializable, IDictionary, IDictionary<string, object?>
   {
     private const string ReadOnlyMessage = "This is a read-only dictionary and cannot be modified";
 

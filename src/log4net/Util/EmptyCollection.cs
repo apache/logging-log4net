@@ -33,7 +33,7 @@ namespace log4net.Util
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-  [Serializable]
+  [Log4NetSerializable]
   public sealed class EmptyCollection : ICollection
   {
     /// <summary>

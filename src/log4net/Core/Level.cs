@@ -82,8 +82,8 @@ namespace log4net.Core;
 /// </remarks>
 /// <author>Nicko Cadell</author>
 /// <author>Gert Driesen</author>
-[Serializable]
-public class Level : IComparable, ISerializable, IEquatable<Level>, IComparable<Level>
+[Log4NetSerializable]
+public class Level : IComparable, ILog4NetSerializable, IEquatable<Level>, IComparable<Level>
 {
   /// <summary>
   /// Constructor

@@ -57,8 +57,8 @@ namespace log4net.Core
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-  [Serializable]
-  public class LocationInfo : ISerializable
+  [Log4NetSerializable]
+  public class LocationInfo : ILog4NetSerializable
   {
     /// <summary>
     /// Constructor

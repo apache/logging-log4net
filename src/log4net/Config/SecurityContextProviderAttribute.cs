@@ -42,7 +42,7 @@ namespace log4net.Config
   /// </remarks>
   /// <author>Nicko Cadell</author>
   [AttributeUsage(AttributeTargets.Assembly)]
-  [Serializable]
+  [Log4NetSerializable]
   public sealed class SecurityContextProviderAttribute : ConfiguratorAttribute
   {
     /// <summary>

@@ -34,7 +34,7 @@ namespace log4net.Core
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-  [Serializable]
+  [Log4NetSerializable]
   public class LogException : ApplicationException
   {
     /// <summary>

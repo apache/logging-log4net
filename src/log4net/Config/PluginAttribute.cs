@@ -39,7 +39,7 @@ namespace log4net.Config
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
   [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-  [Serializable]
+  [Log4NetSerializable]
   public sealed class PluginAttribute : Attribute, IPluginFactory
   {
     /// <summary>

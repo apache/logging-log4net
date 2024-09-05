@@ -164,8 +164,8 @@ namespace log4net.Core
   /// <author>Gert Driesen</author>
   /// <author>Douglas de la Torre</author>
   /// <author>Daniel Cazzulino</author>
-  [Serializable]
-  public class LoggingEvent : ISerializable
+  [Log4NetSerializable]
+  public class LoggingEvent : ILog4NetSerializable
   {
     private static readonly Type declaringType = typeof(LoggingEvent);
 
