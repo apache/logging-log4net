@@ -31,7 +31,7 @@ release version 2.0.123:
         - log4net.build: update package.version property
         - pom.xml: update version
 4. Sign release artifacts (zips & nupkg) under `build/artifacts`
-    - eg `gpg --argmor --output log4net-2.0.123.nupkg.asc --detach-sig log4net-2.0.123.nupkg`
+    - eg `gpg --armor --output log4net-2.0.123.nupkg.asc --detach-sig log4net-2.0.123.nupkg`
     - there is an accompanying `sign-log4net-libraries.sh` which you could invoke if you cd
         into the `build/artifacts` folder
         - I build on Windows and sign on Linux as my build machine belongs to my company
