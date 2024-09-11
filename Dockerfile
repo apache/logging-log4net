@@ -34,4 +34,4 @@ ADD . /logging-log4net
 RUN dotnet restore /logging-log4net/src/log4net.sln
 RUN dotnet build -c Release /logging-log4net/src/log4net.sln
 SHELL ["/bin/bash"]
-ENTRYPOINT echo "you can start the tests with: dotnet test /logging-log4net/src/log4net.sln"
+ENTRYPOINT echo "hello world"
