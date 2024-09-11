@@ -41,6 +41,8 @@ namespace log4net.Tests.Appender
   [TestFixture]
   public sealed class RollingFileAppenderTest
   {
+    private static readonly bool isMono = Type.GetType("Mono.Runtime") is not null;
+
     private const string c_fileName = "test_41d3d834_4320f4da.log";
 
     private const string c_testMessage98Chars =
@@ -1457,8 +1459,11 @@ namespace log4net.Tests.Appender
       }
       catch (IOException e1)
       {
-        Assert.AreEqual("The process cannot access the file ", e1.Message.Substring(0, 35),
+        if (!isMono)
+        {
+          Assert.AreEqual("The process cannot access the file ", e1.Message.Substring(0, 35),
           "Unexpected exception");
+        }
         locked = true;
       }
 
