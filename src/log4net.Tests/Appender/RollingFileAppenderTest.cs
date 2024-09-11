@@ -1444,6 +1444,10 @@ namespace log4net.Tests.Appender
     [Test]
     public void TestExclusiveLockLocks()
     {
+      if (!isMono)
+      {
+        Assert.Inconclusive("mono has a different behaviour");
+      }
       string filename = "test_exclusive_lock_locks.log";
       bool locked = false;
 
@@ -1459,11 +1463,8 @@ namespace log4net.Tests.Appender
       }
       catch (IOException e1)
       {
-        if (!isMono)
-        {
-          Assert.AreEqual("The process cannot access the file ", e1.Message.Substring(0, 35),
-          "Unexpected exception");
-        }
+        Assert.AreEqual("The process cannot access the file ", e1.Message.Substring(0, 35),
+        "Unexpected exception");
         locked = true;
       }
 
