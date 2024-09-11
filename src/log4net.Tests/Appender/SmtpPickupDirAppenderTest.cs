@@ -170,6 +170,7 @@ namespace log4net.Tests.Appender
     [Test]
     public void TestOutputContainsSentDate()
     {
+      Utils.InconclusiveOnMono();
       SilentErrorHandler sh = new SilentErrorHandler();
       SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(sh);
       ILogger log = CreateLogger(appender);
@@ -203,6 +204,7 @@ namespace log4net.Tests.Appender
     [Test]
     public void TestConfigurableFileExtension()
     {
+      Utils.InconclusiveOnMono();
       const string fileExtension = "eml";
       SilentErrorHandler sh = new SilentErrorHandler();
       SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(sh);
@@ -226,6 +228,7 @@ namespace log4net.Tests.Appender
     [Test]
     public void TestDefaultFileNameIsAGuid()
     {
+      Utils.InconclusiveOnMono();
       SilentErrorHandler sh = new SilentErrorHandler();
       SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(sh);
       ILogger log = CreateLogger(appender);

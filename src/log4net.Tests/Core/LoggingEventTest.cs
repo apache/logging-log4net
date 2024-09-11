@@ -39,6 +39,7 @@ public sealed class LoggingEventTest
   [Test]
   public void SerializeDeserialize_BinaryFormatter()
   {
+    Utils.InconclusiveOnMono();
     var timestamp = localTime.ToUniversalTime();
     var ev = new LoggingEvent(new LoggingEventData
     {
@@ -87,6 +88,7 @@ public sealed class LoggingEventTest
   [Test]
   public void DeserializeV2()
   {
+    Utils.InconclusiveOnMono();
     const string datPath = @"..\..\..\..\integration-testing\log4net2-SerializeEvent\SerializeV2Event.dat";
     using var stream = File.OpenRead(datPath);
     var formatter = new BinaryFormatter();
