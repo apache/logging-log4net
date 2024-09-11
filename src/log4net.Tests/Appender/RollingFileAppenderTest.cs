@@ -1444,7 +1444,7 @@ namespace log4net.Tests.Appender
     [Test]
     public void TestExclusiveLockLocks()
     {
-      if (!isMono)
+      if (isMono)
       {
         Assert.Inconclusive("mono has a different behaviour");
       }
