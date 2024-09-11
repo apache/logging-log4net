@@ -33,5 +33,4 @@ ENV PATH="$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools"
 ADD . /logging-log4net
 RUN dotnet restore /logging-log4net/src/log4net.sln
 RUN dotnet build -c Release /logging-log4net/src/log4net.sln
-SHELL ["/bin/bash"]
-ENTRYPOINT echo "hello world"
+CMD ["/bin/bash"]
