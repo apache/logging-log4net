@@ -51,7 +51,6 @@ release version 2.0.123:
 10. push the `asf-staging` branch to github and wait a bit 
     - after a minute or two, check the updates at https://logging.staged.apache.org/log4net
         - are you seeing the correct releases page?
-        - are you seeing the correct downloads page?
         - download links should (at this point) not work
 11. create an rc-releasd at GitHub with a tag like `rc/2.0.123-rc1`
     - attach all the files from the build/artifacts folder, _including signatures_
@@ -60,8 +59,10 @@ release version 2.0.123:
     - `cd apache-dist-logging-dev`
     - `svn up log4net`
     - copy in source & binary artifacts to respective locations
-    - `svn delete` old items (or defer this until after the vote completes)
+    - `svn delete *`
+    - `svn add *`
     - `svn commit`
+    - check https://dist.apache.org/repos/dist/dev/logging/log4net/binaries/
 13. raise a vote on the log4net mailing list (dev@logging.apache.org) - see MailTemplate.txt
 14. wait
 15. when the vote has 3 or more +1's, it's time to go live!
