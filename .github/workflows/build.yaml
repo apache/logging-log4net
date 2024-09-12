@@ -41,7 +41,6 @@ jobs:
         with:
           dotnet-version: 8
           dotnet-quality: ga
-          cache: true
 
       - name: Build
         run: |
