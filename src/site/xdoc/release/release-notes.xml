@@ -127,7 +127,9 @@ limitations under the License.
               </li>
             </ul>
           </p>
+          <br/>
           <p>
+            Other Changes
             <ul>
               <li>
                 <code>log4net.Appender.RemotingAppender</code>
@@ -141,12 +143,6 @@ limitations under the License.
                 Serializable Support removed (for .netstandard)
                 <a href="https://github.com/apache/logging-log4net/discussions/175">Removing legacy serialization from log4net </a>
               </li>
-            </ul>
-          </p>
-          <br/>
-          <p>
-            Changed members
-            <ul>
               <li>
                 <code>log4net.Util.ReadOnlyPropertiesDictionary.InnerHashtable</code> is now <code>Dictionary&lt;string, object?&gt;</code> (instead of <code>System.Collections.Hashtable</code> before)
                 The reason is an optimization as part of <a href="https://github.com/apache/logging-log4net/issues/124">Add support for nullable annotations</a>
