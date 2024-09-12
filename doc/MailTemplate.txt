@@ -5,7 +5,7 @@ This is a vote to release the Apache Log4net 3.0.0.
 
 Website: https://logging.staged.apache.org/log4net/release/release-notes.html
 GitHub: https://github.com/apache/logging-log4net
-GitHub release (pre-release): https://github.com/apache/logging-log4net/releases/tag/3.0.0-rc1
+GitHub release (pre-release): https://github.com/apache/logging-log4net/releases/tag/rc/3.0.0-rc1
 Distribution: https://dist.apache.org/repos/dist/dev/logging/log4net
 
 Please download, test, and cast your votes on this mailing list.
