@@ -63,6 +63,7 @@ release version 2.0.123:
     - `svn add *`
     - `svn commit`
     - check https://dist.apache.org/repos/dist/dev/logging/log4net/binaries/
+      and https://dist.apache.org/repos/dist/dev/logging/log4net/source/
 13. raise a vote on the log4net mailing list (dev@logging.apache.org) - see MailTemplate.txt
 14. wait
 15. when the vote has 3 or more +1's, it's time to go live!
