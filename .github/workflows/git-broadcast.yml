@@ -1,10 +1,12 @@
 name: Broadcast master updates to satellites
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  workflow_dispatch:
+# Temporarily disabled, uncomment if needed.
+#  push:
+#    branches: [ master ]
+#  pull_request:
+#    branches: [ master ]
 
 concurrency:
   group: git-broadcast
