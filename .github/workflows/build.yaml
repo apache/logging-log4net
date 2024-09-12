@@ -42,10 +42,16 @@ jobs:
           dotnet-version: 8
           dotnet-quality: ga
 
-      - name: Build
-        run: |
-          dotnet restore src/log4net.sln
-          dotnet build src/log4net.sln
+      - name: Set up NodeJs
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b   # 4.0.3
+        with:
+          node-version: 20
 
-      - name: Test
-        run: dotnet test src/log4net.sln
+      - name: Build and test
+        env:
+          DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+          DOTNET_CLIE_TELEMETRY_OPTOUT: 1
+        run: |
+          npm update -g npm --no-progress
+          npm install --no-progress
+          npm test
