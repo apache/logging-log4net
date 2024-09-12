@@ -86,7 +86,7 @@ namespace log4net.Appender
     /// </summary>
     private sealed class LockingStream : Stream, IDisposable
     {
-      [Serializable]
+      [Log4NetSerializable]
       public sealed class LockStateException : LogException
       {
         public LockStateException(string message)

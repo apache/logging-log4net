@@ -34,7 +34,7 @@ namespace log4net.Util.TypeConverters
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-  [Serializable]
+  [Log4NetSerializable]
   public class ConversionNotSupportedException : ApplicationException
   {
     /// <summary>

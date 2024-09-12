@@ -36,8 +36,8 @@ namespace log4net.Util
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-  [Serializable]
-  public sealed class PropertiesDictionary : ReadOnlyPropertiesDictionary, ISerializable, IDictionary
+  [Log4NetSerializable]
+  public sealed class PropertiesDictionary : ReadOnlyPropertiesDictionary, ILog4NetSerializable, IDictionary
   {
     /// <summary>
     /// Constructor

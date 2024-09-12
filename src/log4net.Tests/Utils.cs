@@ -17,15 +17,40 @@
 //
 #endregion
 
+using System;
+using NUnit.Framework;
+
 namespace log4net.Tests
 {
   /// <summary>
-  /// Summary description for Class1.
+  /// Utilities for testing
   /// </summary>
   public static class Utils
   {
+    /// <summary>
+    /// Is the mono runtime used
+    /// </summary>
+    internal static bool IsMono { get; } = Type.GetType("Mono.Runtime") is not null;
+
+    /// <summary>
+    /// Skips the current test when run under mono
+    /// </summary>
+    internal static void InconclusiveOnMono()
+    {
+      if (IsMono)
+      {
+        Assert.Inconclusive("mono has a different behaviour");
+      }
+    }
+
+    /// <summary>
+    /// Sample property key
+    /// </summary>
     internal const string PROPERTY_KEY = "prop1";
 
+    /// <summary>
+    /// Remove the <see cref="PROPERTY_KEY"/> from alle log4net contexts
+    /// </summary>
     internal static void RemovePropertyFromAllContexts()
     {
       GlobalContext.Properties.Remove(PROPERTY_KEY);

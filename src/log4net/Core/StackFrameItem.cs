@@ -28,7 +28,7 @@ namespace log4net.Core
   /// Provides stack frame information without actually referencing a System.Diagnostics.StackFrame
   /// as that would require that the containing assembly is loaded.
   /// </summary>
-  [Serializable]
+  [Log4NetSerializable]
   public class StackFrameItem
   {
     /// <summary>

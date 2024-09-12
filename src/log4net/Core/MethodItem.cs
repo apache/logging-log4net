@@ -28,7 +28,7 @@ namespace log4net.Core
   /// as that would require that the containing assembly is loaded.
   /// </summary>
   /// 
-  [Serializable]
+  [Log4NetSerializable]
   public class MethodItem
   {
     /// <summary>

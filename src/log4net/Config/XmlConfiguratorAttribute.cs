@@ -76,7 +76,7 @@ namespace log4net.Config
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
   [AttributeUsage(AttributeTargets.Assembly)]
-  [Serializable]
+  [Log4NetSerializable]
   public sealed class XmlConfiguratorAttribute : ConfiguratorAttribute
   {
     /// <summary>

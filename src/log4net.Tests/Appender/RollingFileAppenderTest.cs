@@ -1379,6 +1379,7 @@ namespace log4net.Tests.Appender
     [Test]
     public void TestLogOutput()
     {
+      Utils.InconclusiveOnMono();
       string filename = "test_simple.log";
       SilentErrorHandler sh = new();
       ILogger log = CreateLogger(filename, new FileAppender.ExclusiveLock(), sh);
@@ -1419,6 +1420,7 @@ namespace log4net.Tests.Appender
     [Test]
     public void TestExclusiveLockRecovers()
     {
+      Utils.InconclusiveOnMono();
       string filename = "test_exclusive_lock_recovers.log";
 
       FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
@@ -1442,6 +1444,7 @@ namespace log4net.Tests.Appender
     [Test]
     public void TestExclusiveLockLocks()
     {
+      Utils.InconclusiveOnMono();
       string filename = "test_exclusive_lock_locks.log";
       bool locked = false;
 
@@ -1458,7 +1461,7 @@ namespace log4net.Tests.Appender
       catch (IOException e1)
       {
         Assert.AreEqual("The process cannot access the file ", e1.Message.Substring(0, 35),
-          "Unexpected exception");
+        "Unexpected exception");
         locked = true;
       }
 
@@ -1478,6 +1481,7 @@ namespace log4net.Tests.Appender
     [Test]
     public void TestMinimalLockFails()
     {
+      Utils.InconclusiveOnMono();
       string filename = "test_minimal_lock_fails.log";
 
       FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
@@ -1501,6 +1505,7 @@ namespace log4net.Tests.Appender
     [Test]
     public void TestMinimalLockRecovers()
     {
+      Utils.InconclusiveOnMono();
       string filename = "test_minimal_lock_recovers.log";
 
       FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
@@ -1524,6 +1529,7 @@ namespace log4net.Tests.Appender
     [Test]
     public void TestMinimalLockUnlocks()
     {
+      Utils.InconclusiveOnMono();
       string filename = "test_minimal_lock_unlocks.log";
       bool locked;
 
@@ -1552,6 +1558,7 @@ namespace log4net.Tests.Appender
     [Test]
     public void TestInterProcessLockFails()
     {
+      Utils.InconclusiveOnMono();
       string filename = "test_interprocess_lock_fails.log";
 
       FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
@@ -1575,6 +1582,7 @@ namespace log4net.Tests.Appender
     [Test]
     public void TestInterProcessLockRecovers()
     {
+      Utils.InconclusiveOnMono();
       string filename = "test_interprocess_lock_recovers.log";
 
       FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
@@ -1598,6 +1606,7 @@ namespace log4net.Tests.Appender
     [Test]
     public void TestInterProcessLockUnlocks()
     {
+      Utils.InconclusiveOnMono();
       string filename = "test_interprocess_lock_unlocks.log";
       bool locked;
 
@@ -1626,6 +1635,7 @@ namespace log4net.Tests.Appender
     [Test]
     public void TestInterProcessLockRoll()
     {
+      Utils.InconclusiveOnMono();
       const string filename = "test_interprocess_lock_roll.log";
 
       SilentErrorHandler sh = new();
