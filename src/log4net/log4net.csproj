@@ -67,6 +67,7 @@
   <PropertyGroup Condition=" '$(Configuration)'=='Release' ">
     <DefineConstants>TRACE;STRONG;$(DefineConstants)</DefineConstants>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PathMap>$(MSBuildProjectDirectory)\=$(MSBuildProjectDirectory.Replace($(MSBuildThisFileDirectory),"D:\Git\apache\logging-log4net"))\</PathMap>
   </PropertyGroup>
   <PropertyGroup />
   <ItemGroup Condition="'$(TargetFramework)'=='net462'">
