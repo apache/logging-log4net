@@ -1,22 +1,22 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <Version>3.0.0</Version>
     <PackageId>log4net</PackageId>
-    <Title>Apache log4net</Title>
     <Product>Apache log4net</Product>
-    <Description>
-      log4net is a tool to help the programmer output log statements to a variety of output targets.
-      In case of problems with an application, it is helpful to enable logging so that the problem
-      can be located. With log4net it is possible to enable logging at runtime without modifying the
-      application binary. The log4net package is designed so that log statements can remain in
-      shipped code without incurring a high performance cost. It follows that the speed of logging
-      (or rather not logging) is crucial.
+    <Title>$(Product)</Title>
+    <Description>log4net is a tool to help the programmer output log statements to a variety of output targets.
+In case of problems with an application, it is helpful to enable logging so that the problem
+can be located. With log4net it is possible to enable logging at runtime without modifying the
+application binary. The log4net package is designed so that log statements can remain in
+shipped code without incurring a high performance cost. It follows that the speed of logging
+(or rather not logging) is crucial.
 
-      At the same time, log output can be so voluminous that it quickly becomes overwhelming.
-      One of the distinctive features of log4net is the notion of hierarchical loggers.
-      Using these loggers it is possible to selectively control which log statements are output
-      at arbitrary granularity.
+At the same time, log output can be so voluminous that it quickly becomes overwhelming.
+One of the distinctive features of log4net is the notion of hierarchical loggers.
+Using these loggers it is possible to selectively control which log statements are output
+at arbitrary granularity.
 
-      log4net is designed with two distinct goals in mind: speed and flexibility
+log4net is designed with two distinct goals in mind: speed and flexibility
     </Description>
     <Platforms>AnyCPU</Platforms>
     <TargetFrameworks>net462;netstandard2.0</TargetFrameworks>
@@ -26,7 +26,7 @@
     <ProjectType>Local</ProjectType>
     <OutputType>Library</OutputType>
     <MapFileExtensions>true</MapFileExtensions>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\log4net.snk</AssemblyOriginatorKeyFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -44,27 +44,37 @@
     <PackageProjectUrl>https://logging.apache.org/log4net/</PackageProjectUrl>
     <PackageIcon>package-icon.png</PackageIcon>
     <PackageTags>logging log tracing logfiles</PackageTags>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/apache/logging-log4net</RepositoryUrl>
     <Owners>Apache Logging Project</Owners>
     <PackageVersion>$(Version)</PackageVersion>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AssemblyTitle>Apache log4net for .NET</AssemblyTitle>
+    <AssemblyProduct>$(AssemblyName)</AssemblyProduct>
+    <AssemblyCompany>The Apache Software Foundation</AssemblyCompany>
+    <Copyright>Copyright %A9 2004 - $([System.DateTime]::Now.Year) The Apache Software Foundation</Copyright>
+    <AssemblyCopyright>$(Copyright)</AssemblyCopyright>
+    <AssemblyTrademark>Apache and Apache log4net are trademarks of The Apache Software Foundation</AssemblyTrademark>
+    <AssemblyDefaultAlias>$(AssemblyName)</AssemblyDefaultAlias>
+    <AssemblyCulture></AssemblyCulture>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)'=='net462'">
+    <AssemblyTitle>$(AssemblyTitle) Framework 4.6.2</AssemblyTitle>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+    <AssemblyTitle>$(AssemblyTitle) Standard 2.0</AssemblyTitle>
   </PropertyGroup>
   <PropertyGroup>
-    <BaseAddress>285212672</BaseAddress>
-    <DebugType>portable</DebugType>
-    <Deterministic>true</Deterministic>
-    <FileAlignment>4096</FileAlignment>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/apache/logging-log4net</RepositoryUrl>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
+    <AssemblyConfiguration>Debug</AssemblyConfiguration>
     <DefineConstants>TRACE;DEBUG;$(DefineConstants)</DefineConstants>
     <GeneratePackageOnBuild>$(GeneratePackages)</GeneratePackageOnBuild>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)'=='Release' ">
+    <AssemblyConfiguration>Retail</AssemblyConfiguration>
     <DefineConstants>TRACE;STRONG;$(DefineConstants)</DefineConstants>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PathMap>$(MSBuildProjectDirectory)\=$(MSBuildProjectDirectory.Replace($(MSBuildThisFileDirectory),"D:\Git\apache\logging-log4net"))\</PathMap>
@@ -104,6 +114,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
   </ItemGroup>
   <Import Project="../MonoForFramework.targets" />
   <Target Name="_ResolveCopyLocalNuGetPackagePdbsAndXml" Condition="$(CopyLocalLockFileAssemblies) == true" AfterTargets="ResolveReferences">

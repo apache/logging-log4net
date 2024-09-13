@@ -1,8 +1,7 @@
 <Project>
-  <PropertyGroup Label="Versioning">
-    <VersionPrefix>3.0.0</VersionPrefix>
-  </PropertyGroup>
   <PropertyGroup>
+    <Deterministic>true</Deterministic>
+    <DebugType>portable</DebugType>
     <UseSharedCompilation>true</UseSharedCompilation>
     <LangVersion>latest</LangVersion>
     <Nullable>Enable</Nullable>
