@@ -77,7 +77,7 @@ namespace log4net.Appender
     /// The name uniquely identifies the appender.
     /// </para>
     /// </remarks>
-    public string? Name { get; set; }
+    public string Name { get; set; } = default!;
 
     /// <summary>
     /// Gets or sets the threshold <see cref="Level"/> of this appender.
@@ -165,12 +165,16 @@ namespace log4net.Appender
     public void DoAppend(LoggingEvent loggingEvent)
     {
       if (loggingEvent is null)
+      {
         throw new ArgumentNullException(nameof(loggingEvent));
+      }
 
       try
       {
         if (IsAsSevereAsThreshold(loggingEvent.Level))
+        {
           (Layout?.Format(loggingEvent))?.Fire();
+        }
       }
       catch (Exception ex)
       {
@@ -179,8 +183,8 @@ namespace log4net.Appender
     }
 
     /// <summary>
-    /// Checks if the message level is below this appender's threshold.
+    /// Checks if the message level is below this appenders threshold.
     /// </summary>
-    private bool IsAsSevereAsThreshold(Level level) => ((Threshold == null) || level >= Threshold);
+    private bool IsAsSevereAsThreshold(Level? level) => ((Threshold is null) || level >= Threshold);
   }
 }

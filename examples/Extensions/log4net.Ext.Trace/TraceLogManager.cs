@@ -49,7 +49,7 @@ namespace log4net.Ext.Trace
     /// </remarks>
     /// <param name="name">The fully qualified logger name to look for</param>
     /// <returns>The logger found, or null</returns>
-    public static ITraceLog Exists(string name) => Exists(Assembly.GetCallingAssembly(), name);
+    public static ITraceLog? Exists(string name) => Exists(Assembly.GetCallingAssembly(), name);
 
     /// <summary>
     /// Returns the named logger if it exists
@@ -62,7 +62,7 @@ namespace log4net.Ext.Trace
     /// <param name="domain">the domain to lookup in</param>
     /// <param name="name">The fully qualified logger name to look for</param>
     /// <returns>The logger found, or null</returns>
-    public static ITraceLog Exists(string domain, string name)
+    public static ITraceLog? Exists(string domain, string name)
       => WrapLogger(LoggerManager.Exists(domain, name));
 
     /// <summary>
@@ -76,7 +76,7 @@ namespace log4net.Ext.Trace
     /// <param name="assembly">the assembly to use to lookup the domain</param>
     /// <param name="name">The fully qualified logger name to look for</param>
     /// <returns>The logger found, or null</returns>
-    public static ITraceLog Exists(Assembly assembly, string name)
+    public static ITraceLog? Exists(Assembly assembly, string name)
       => WrapLogger(LoggerManager.Exists(assembly, name));
 
     /// <summary>
@@ -125,7 +125,7 @@ namespace log4net.Ext.Trace
     /// </remarks>
     /// <param name="name">The name of the logger to retrieve.</param>
     /// <returns>the logger with the name specified</returns>
-    public static ITraceLog GetLogger(string name) => GetLogger(Assembly.GetCallingAssembly(), name);
+    public static ITraceLog? GetLogger(string name) => GetLogger(Assembly.GetCallingAssembly(), name);
 
     /// <summary>
     /// Retrieve or create a named logger.
@@ -143,7 +143,7 @@ namespace log4net.Ext.Trace
     /// <param name="domain">the domain to lookup in</param>
     /// <param name="name">The name of the logger to retrieve.</param>
     /// <returns>the logger with the name specified</returns>
-    public static ITraceLog GetLogger(string domain, string name)
+    public static ITraceLog? GetLogger(string domain, string name)
       => WrapLogger(LoggerManager.GetLogger(domain, name));
 
     /// <summary>
@@ -162,7 +162,7 @@ namespace log4net.Ext.Trace
     /// <param name="assembly">the assembly to use to lookup the domain</param>
     /// <param name="name">The name of the logger to retrieve.</param>
     /// <returns>the logger with the name specified</returns>
-    public static ITraceLog GetLogger(Assembly assembly, string name)
+    public static ITraceLog? GetLogger(Assembly assembly, string name)
       => WrapLogger(LoggerManager.GetLogger(assembly, name));
 
     /// <summary>
@@ -174,7 +174,7 @@ namespace log4net.Ext.Trace
     /// <param name="type">The full name of <paramref name="type"/> will 
     /// be used as the name of the logger to retrieve.</param>
     /// <returns>the logger with the name specified</returns>
-    public static ITraceLog GetLogger(Type type)
+    public static ITraceLog? GetLogger(Type type)
     {
       ArgumentNullException.ThrowIfNull(type?.FullName);
       return GetLogger(Assembly.GetCallingAssembly(), type.FullName);
@@ -190,7 +190,7 @@ namespace log4net.Ext.Trace
     /// <param name="type">The full name of <paramref name="type"/> will 
     /// be used as the name of the logger to retrieve.</param>
     /// <returns>the logger with the name specified</returns>
-    public static ITraceLog GetLogger(string domain, Type type)
+    public static ITraceLog? GetLogger(string domain, Type type)
       => WrapLogger(LoggerManager.GetLogger(domain, type));
 
     /// <summary>
@@ -203,7 +203,7 @@ namespace log4net.Ext.Trace
     /// <param name="type">The full name of <paramref name="type"/> will 
     /// be used as the name of the logger to retrieve.</param>
     /// <returns>the logger with the name specified</returns>
-    public static ITraceLog GetLogger(Assembly assembly, Type type)
+    public static ITraceLog? GetLogger(Assembly assembly, Type type)
       => WrapLogger(LoggerManager.GetLogger(assembly, type));
 
     #endregion
@@ -215,7 +215,7 @@ namespace log4net.Ext.Trace
     /// </summary>
     /// <param name="logger">the logger to get the wrapper for</param>
     /// <returns>the wrapper for the logger specified</returns>
-    private static ITraceLog WrapLogger(ILogger logger) => (ITraceLog)s_wrapperMap.GetWrapper(logger);
+    private static ITraceLog? WrapLogger(ILogger? logger) => (ITraceLog?)s_wrapperMap.GetWrapper(logger);
 
     /// <summary>
     /// Lookup the wrapper objects for the loggers specified
@@ -226,7 +226,10 @@ namespace log4net.Ext.Trace
     {
       ITraceLog[] results = new ITraceLog[loggers.Length];
       for (int i = 0; i < loggers.Length; i++)
-        results[i] = WrapLogger(loggers[i]);
+      {
+        results[i] = WrapLogger(loggers[i]) ?? throw new ArgumentNullException(nameof(loggers));
+      }
+
       return results;
     }
 

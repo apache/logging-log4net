@@ -30,7 +30,8 @@ namespace TraceLogApp
   internal static class TraceLogApp
   {
     // Create a logger for use in this class
-    private static readonly ITraceLog log = TraceLogManager.GetLogger(typeof(TraceLogApp));
+    private static readonly ITraceLog log = TraceLogManager.GetLogger(typeof(TraceLogApp))
+                                            ?? throw new ArgumentNullException(nameof(TraceLogManager.GetLogger));
 
     /// <summary>
     /// The main entry point for the application.

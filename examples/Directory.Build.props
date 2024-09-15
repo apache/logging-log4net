@@ -23,7 +23,7 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup>
-    <Log4NetPackageVersion>2.0.17</Log4NetPackageVersion>
+    <Log4NetPackageVersion>3.0.0</Log4NetPackageVersion>
   </PropertyGroup>
   <PropertyGroup Label="GenerateAssemblyInfo">
     <GenerateAssemblyVersionAttribute>true</GenerateAssemblyVersionAttribute>

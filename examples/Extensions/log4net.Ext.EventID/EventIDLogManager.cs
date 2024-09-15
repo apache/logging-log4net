@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using log4net.Core;
 
@@ -58,7 +59,7 @@ namespace log4net.Ext.EventID
     /// </remarks>
     /// <param name="name">The fully qualified logger name to look for</param>
     /// <returns>The logger found, or null</returns>
-    public static IEventIDLog Exists(string name) => Exists(Assembly.GetCallingAssembly(), name);
+    public static IEventIDLog? Exists(string name) => Exists(Assembly.GetCallingAssembly(), name);
 
     /// <summary>
     /// Returns the named logger if it exists
@@ -71,7 +72,7 @@ namespace log4net.Ext.EventID
     /// <param name="domain">the domain to lookup in</param>
     /// <param name="name">The fully qualified logger name to look for</param>
     /// <returns>The logger found, or null</returns>
-    public static IEventIDLog Exists(string domain, string name)
+    public static IEventIDLog? Exists(string domain, string name)
       => WrapLogger(LoggerManager.Exists(domain, name));
 
     /// <summary>
@@ -85,7 +86,7 @@ namespace log4net.Ext.EventID
     /// <param name="assembly">the assembly to use to lookup the domain</param>
     /// <param name="name">The fully qualified logger name to look for</param>
     /// <returns>The logger found, or null</returns>
-    public static IEventIDLog Exists(Assembly assembly, string name)
+    public static IEventIDLog? Exists(Assembly assembly, string name)
       => WrapLogger(LoggerManager.Exists(assembly, name));
 
     /// <summary>
@@ -135,7 +136,7 @@ namespace log4net.Ext.EventID
     /// </remarks>
     /// <param name="name">The name of the logger to retrieve.</param>
     /// <returns>the logger with the name specified</returns>
-    public static IEventIDLog GetLogger(string name)
+    public static IEventIDLog? GetLogger(string name)
       => GetLogger(Assembly.GetCallingAssembly(), name);
 
     /// <summary>
@@ -154,7 +155,7 @@ namespace log4net.Ext.EventID
     /// <param name="domain">the domain to lookup in</param>
     /// <param name="name">The name of the logger to retrieve.</param>
     /// <returns>the logger with the name specified</returns>
-    public static IEventIDLog GetLogger(string domain, string name)
+    public static IEventIDLog? GetLogger(string domain, string name)
       => WrapLogger(LoggerManager.GetLogger(domain, name));
 
     /// <summary>
@@ -173,7 +174,7 @@ namespace log4net.Ext.EventID
     /// <param name="assembly">the assembly to use to lookup the domain</param>
     /// <param name="name">The name of the logger to retrieve.</param>
     /// <returns>the logger with the name specified</returns>
-    public static IEventIDLog GetLogger(Assembly assembly, string name)
+    public static IEventIDLog? GetLogger(Assembly assembly, string name)
       => WrapLogger(LoggerManager.GetLogger(assembly, name));
 
     /// <summary>
@@ -185,7 +186,7 @@ namespace log4net.Ext.EventID
     /// <param name="type">The full name of <paramref name="type"/> will 
     /// be used as the name of the logger to retrieve.</param>
     /// <returns>the logger with the name specified</returns>
-    public static IEventIDLog GetLogger(Type type)
+    public static IEventIDLog? GetLogger(Type type)
     {
       ArgumentNullException.ThrowIfNull(type);
       return GetLogger(Assembly.GetCallingAssembly(), type.FullName ?? string.Empty);
@@ -201,7 +202,7 @@ namespace log4net.Ext.EventID
     /// <param name="type">The full name of <paramref name="type"/> will 
     /// be used as the name of the logger to retrieve.</param>
     /// <returns>the logger with the name specified</returns>
-    public static IEventIDLog GetLogger(string domain, Type type)
+    public static IEventIDLog? GetLogger(string domain, Type type)
       => WrapLogger(LoggerManager.GetLogger(domain, type));
 
     /// <summary>
@@ -214,7 +215,7 @@ namespace log4net.Ext.EventID
     /// <param name="type">The full name of <paramref name="type"/> will 
     /// be used as the name of the logger to retrieve.</param>
     /// <returns>the logger with the name specified</returns>
-    public static IEventIDLog GetLogger(Assembly assembly, Type type)
+    public static IEventIDLog? GetLogger(Assembly assembly, Type type)
       => WrapLogger(LoggerManager.GetLogger(assembly, type));
 
     #endregion
@@ -226,19 +227,19 @@ namespace log4net.Ext.EventID
     /// </summary>
     /// <param name="logger">the logger to get the wrapper for</param>
     /// <returns>the wrapper for the logger specified</returns>
-    private static IEventIDLog WrapLogger(ILogger logger) => (IEventIDLog)wrapperMap.GetWrapper(logger);
+    private static IEventIDLog? WrapLogger(ILogger? logger) => (IEventIDLog?)wrapperMap.GetWrapper(logger);
 
     /// <summary>
     /// Lookup the wrapper objects for the loggers specified
     /// </summary>
     /// <param name="loggers">the loggers to get the wrappers for</param>
     /// <returns>Lookup the wrapper objects for the loggers specified</returns>
-    private static IEventIDLog[] WrapLoggers(ILogger[] loggers)
+    private static IEventIDLog[] WrapLoggers(IReadOnlyList<ILogger> loggers)
     {
-      IEventIDLog[] results = new IEventIDLog[loggers.Length];
-      for (int i = 0; i < loggers.Length; i++)
+      IEventIDLog[] results = new IEventIDLog[loggers.Count];
+      for (int i = 0; i < loggers.Count; i++)
       {
-        results[i] = WrapLogger(loggers[i]);
+        results[i] = WrapLogger(loggers[i]) ?? throw new ArgumentNullException(nameof(loggers));
       }
       return results;
     }

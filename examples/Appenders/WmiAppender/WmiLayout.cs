@@ -87,7 +87,7 @@ namespace log4net.Appender
       {
         TimeStamp = loggingEvent.TimeStamp,
         LoggerName = loggingEvent.LoggerName,
-        Level = loggingEvent.Level.DisplayName,
+        Level = (loggingEvent.Level ??Level.Debug).DisplayName,
         Message = loggingEvent.RenderedMessage,
         ThreadName = loggingEvent.ThreadName,
         ExceptionString = loggingEvent.GetExceptionString(),

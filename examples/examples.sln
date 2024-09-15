@@ -4,7 +4,7 @@ VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5886EE0F-0A11-48A5-8618-75112878F381}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\Directory.Build.props = ..\..\Directory.Build.props
+		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "Tutorials\ConsoleApp\ConsoleApp.csproj", "{988F2EF8-7CD9-4F78-A8C3-FBFBCE7CC5D2}"

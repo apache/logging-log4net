@@ -31,7 +31,8 @@ namespace EventIDLogApp
   internal static class EventIDLogApp
   {
     // Create a logger for use in this class
-    private static readonly IEventIDLog log = EventIDLogManager.GetLogger(typeof(EventIDLogApp));
+    private static readonly IEventIDLog log = EventIDLogManager.GetLogger(typeof(EventIDLogApp))
+      ?? throw new ArgumentNullException(nameof(EventIDLogManager.GetLogger));
 
     /// <summary>
     /// The main entry point for the application.
