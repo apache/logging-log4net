@@ -1,10 +1,10 @@
 Param (
-  [Parameter()]
+  [Parameter(Mandatory = $true)]
   [ValidateNotNullOrEmpty()]
-  [string]$OldVersion = '3.0.0',
-  [Parameter()]
+  [string]$OldVersion,
+  [Parameter(Mandatory = $true)]
   [ValidateNotNullOrEmpty()]
-  [string]$NewVersion = '3.1.0'
+  [string]$NewVersion
 )
 
 Set-StrictMode -Version Latest
