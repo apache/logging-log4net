@@ -648,37 +648,43 @@ namespace log4net.Core
       {
         if (m_data.ThreadName is null && m_cacheUpdatable)
         {
-          // '.NET ThreadPool Worker' appears as a default thread name in the .NET 6-7 thread pool.
-          // '.NET TP Worker' is the default thread name in the .NET 8+ thread pool.
-          // Prefer the numeric thread ID instead.
-          if (Thread.CurrentThread.Name is string { Length: > 0 } threadName
-              && threadName is not ".NET TP Worker" or ".NET ThreadPool Worker")
-          {
-            m_data.ThreadName = threadName;
-          }
-          else
-          {
-            // The thread name is not available or unsuitable. Therefore we
-            // go to the AppDomain to get the ID of the
-            // current thread. (Why don't Threads know their own ID?)
-            try
-            {
-              m_data.ThreadName = SystemInfo.CurrentThreadId.ToString(NumberFormatInfo.InvariantInfo);
-            }
-            catch (SecurityException)
-            {
-              // This security exception will occur if the caller does not have 
-              // some undefined set of SecurityPermission flags.
-              LogLog.Debug(declaringType,
-                  "Security exception while trying to get current thread ID. Error Ignored. Empty thread name.");
-
-              // As a last resort use the hash code of the Thread object
-              m_data.ThreadName = Thread.CurrentThread.GetHashCode().ToString(CultureInfo.InvariantCulture);
-            }
-          }
+          m_data.ThreadName = ReviseThreadName(Thread.CurrentThread.Name);
         }
 
         return m_data.ThreadName;
+      }
+    }
+
+    /// <summary>
+    /// Returns a 'meaningful' name for the thread (or its Id)
+    /// </summary>
+    /// <param name="threadName">Name</param>
+    /// <returns>Meaningful name</returns>
+    private static string ReviseThreadName(string? threadName)
+    {
+      // '.NET ThreadPool Worker' appears as a default thread name in the .NET 6-7 thread pool.
+      // '.NET TP Worker' is the default thread name in the .NET 8+ thread pool.
+      // '.NET Long Running Task' is used for long running tasks
+      // Prefer the numeric thread ID instead.
+      if (threadName is string { Length: > 0 } name
+          && !name.StartsWith(".NET ", StringComparison.Ordinal))
+      {
+        return name;
+      }
+      // The thread name is not available or unsuitable, therefore we use the ManagedThreadId.
+      try
+      {
+        return SystemInfo.CurrentThreadId.ToString(NumberFormatInfo.InvariantInfo);
+      }
+      catch (SecurityException)
+      {
+        // This security exception will occur if the caller does not have 
+        // some undefined set of SecurityPermission flags.
+        LogLog.Debug(declaringType,
+          "Security exception while trying to get current thread ID. Error Ignored. Empty thread name.");
+
+        // As a last resort use the hash code of the Thread object
+        return Thread.CurrentThread.GetHashCode().ToString(CultureInfo.InvariantCulture);
       }
     }
 
@@ -885,7 +891,7 @@ namespace log4net.Core
           return m_data.Properties;
         }
 
-        m_eventProperties ??= new PropertiesDictionary();
+        m_eventProperties ??= new();
         return m_eventProperties;
       }
     }

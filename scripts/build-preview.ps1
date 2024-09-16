@@ -1,0 +1,1 @@
+dotnet build -c Release '-p:GeneratePackages=true' $PSScriptRoot/../src/log4net/log4net.csproj
