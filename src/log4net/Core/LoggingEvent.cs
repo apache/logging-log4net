@@ -738,9 +738,10 @@ namespace log4net.Core
 #else
           // '.NET ThreadPool Worker' appears as a default thread name in the .NET 6-7 thread pool.
           // '.NET TP Worker' is the default thread name in the .NET 8+ thread pool.
+          // '.NET Long Running Task' is the default thread name in the .NET 8+ thread pool.
           // Prefer the numeric thread ID instead.
           string threadName = System.Threading.Thread.CurrentThread.Name;
-          if (!string.IsNullOrEmpty(threadName) && threadName != ".NET TP Worker" && threadName != ".NET ThreadPool Worker")
+          if (!string.IsNullOrEmpty(threadName) && threadName != ".NET TP Worker" && threadName != ".NET ThreadPool Worker" && threadName != ".NET Long Running Task")
           {
             m_data.ThreadName = threadName;
           }
