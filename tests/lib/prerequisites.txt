@@ -1,7 +1,0 @@
-Prerequisites for log4net tests
-===============================
-
-The nunit.framework.dll assembly version 2.6.4 is required to build
-the log4net tests. The build process will download NUnit and place the
-framework dll inside the lib directory corresponding to the current
-framework.
