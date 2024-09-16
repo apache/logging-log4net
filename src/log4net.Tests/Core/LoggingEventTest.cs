@@ -17,31 +17,31 @@
 //
 #endregion
 
-// net8 deprecates BinaryFormatter used in testing.
-#if NET462_OR_GREATER
-
-using log4net.Core;
-using log4net.Util;
-using NUnit.Framework;
 using System;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
+using log4net.Core;
+using log4net.Util;
+using NUnit.Framework;
 
 namespace log4net.Tests.Core;
 
 [TestFixture]
 public sealed class LoggingEventTest
 {
+  // net8 deprecates BinaryFormatter used in testing.
+#if NET462_OR_GREATER
   private static readonly DateTime localTime
-    = new DateTime(2000, 7, 1, 0, 0, 0, 0, CultureInfo.InvariantCulture.Calendar, DateTimeKind.Local);
+    = new(2000, 7, 1, 0, 0, 0, 0, CultureInfo.InvariantCulture.Calendar, DateTimeKind.Local);
 
   [Test]
   public void SerializeDeserialize_BinaryFormatter()
   {
     Utils.InconclusiveOnMono();
-    var timestamp = localTime.ToUniversalTime();
-    var ev = new LoggingEvent(new LoggingEventData
+    DateTime timestamp = localTime.ToUniversalTime();
+    LoggingEvent ev = new(new()
     {
       LoggerName = "aLogger",
       Level = Level.Log4Net_Debug,
@@ -56,11 +56,11 @@ public sealed class LoggingEventTest
       Properties = new PropertiesDictionary { ["foo"] = "bar" },
     });
 
-    var formatter = new BinaryFormatter();
-    using var stream = new MemoryStream();
+    BinaryFormatter formatter = new();
+    using MemoryStream stream = new();
     formatter.Serialize(stream, ev);
     stream.Position = 0;
-    var ev2 = (LoggingEvent)formatter.Deserialize(stream);
+    LoggingEvent ev2 = (LoggingEvent)formatter.Deserialize(stream);
 
     Assert.AreEqual("aLogger", ev2.LoggerName);
     Assert.AreEqual(Level.Log4Net_Debug, ev2.Level);
@@ -90,8 +90,8 @@ public sealed class LoggingEventTest
   {
     Utils.InconclusiveOnMono();
     const string datPath = @"..\..\..\..\integration-testing\log4net2-SerializeEvent\SerializeV2Event.dat";
-    using var stream = File.OpenRead(datPath);
-    var formatter = new BinaryFormatter();
+    using Stream stream = File.OpenRead(datPath);
+    BinaryFormatter formatter = new();
     LoggingEvent ev = (LoggingEvent)formatter.Deserialize(stream);
     Assert.IsNotNull(ev);
 
@@ -114,5 +114,28 @@ public sealed class LoggingEventTest
     Assert.AreEqual("bar", ev.Properties["foo"]);
     Assert.AreEqual(localTime.ToUniversalTime(), ev.TimeStampUtc);
   }
-}
 #endif // NET462_OR_GREATER
+
+  /// <summary>
+  /// Tests <see cref="LoggingEvent.ReviseThreadName"/>
+  /// </summary>
+  [Test]
+  public void ReviseThreadNameTest()
+  {
+    Assert.AreEqual("PoolBoy", ReviseThreadName("PoolBoy"));
+    AssertIsCurrentThreadId(ReviseThreadName(null));
+    AssertIsCurrentThreadId(ReviseThreadName(string.Empty));
+    AssertIsCurrentThreadId(ReviseThreadName(".NET ThreadPool Worker"));
+    AssertIsCurrentThreadId(ReviseThreadName(".NET TP Worker"));
+    AssertIsCurrentThreadId(ReviseThreadName(".NET Long Running Task"));
+
+    static string ReviseThreadName(string? name)
+    {
+      return (string)typeof(LoggingEvent).GetMethod(nameof(ReviseThreadName),
+        BindingFlags.Static | BindingFlags.NonPublic)!.Invoke(null, [name])!;
+    }
+
+    static void AssertIsCurrentThreadId(string name)
+      => Assert.AreEqual(name, SystemInfo.CurrentThreadId.ToString(CultureInfo.InvariantCulture));
+  }
+}
