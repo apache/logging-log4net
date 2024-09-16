@@ -18,9 +18,7 @@
 #endregion
 
 using System;
-using System.Collections;
-
-using log4net.Util;
+using System.Collections.Concurrent;
 using log4net.Repository;
 
 namespace log4net.Plugin
@@ -38,8 +36,6 @@ namespace log4net.Plugin
   /// <author>Gert Driesen</author>
   public sealed class PluginMap
   {
-    #region Public Instance Constructors
-
     /// <summary>
     /// Constructor
     /// </summary>
@@ -55,10 +51,6 @@ namespace log4net.Plugin
       m_repository = repository;
     }
 
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
-
     /// <summary>
     /// Gets a <see cref="IPlugin" /> by name.
     /// </summary>
@@ -67,25 +59,17 @@ namespace log4net.Plugin
     /// The <see cref="IPlugin" /> from the map with the name specified, or 
     /// <c>null</c> if no plugin is found.
     /// </returns>
-    /// <remarks>
-    /// <para>
-    /// Lookup a plugin by name. If the plugin is not found <c>null</c>
-    /// will be returned.
-    /// </para>
-    /// </remarks>
-    public IPlugin this[string name]
+    public IPlugin? this[string name]
     {
       get
       {
-        if (name == null)
+        if (name is null)
         {
-          throw new ArgumentNullException("name");
+          throw new ArgumentNullException(nameof(name));
         }
 
-        lock (this)
-        {
-          return (IPlugin)m_mapName2Plugin[name];
-        }
+        m_mapName2Plugin.TryGetValue(name, out IPlugin? plugin);
+        return plugin;
       }
     }
 
@@ -93,25 +77,7 @@ namespace log4net.Plugin
     /// Gets all possible plugins as a list of <see cref="IPlugin" /> objects.
     /// </summary>
     /// <value>All possible plugins as a list of <see cref="IPlugin" /> objects.</value>
-    /// <remarks>
-    /// <para>
-    /// Get a collection of all the plugins defined in this map.
-    /// </para>
-    /// </remarks>
-    public PluginCollection AllPlugins
-    {
-      get
-      {
-        lock (this)
-        {
-          return new PluginCollection(m_mapName2Plugin.Values);
-        }
-      }
-    }
-
-    #endregion Public Instance Properties
-
-    #region Public Instance Methods
+    public PluginCollection AllPlugins => new PluginCollection(m_mapName2Plugin.Values);
 
     /// <summary>
     /// Adds a <see cref="IPlugin" /> to the map.
@@ -130,60 +96,39 @@ namespace log4net.Plugin
     /// </remarks>
     public void Add(IPlugin plugin)
     {
-      if (plugin == null)
+      if (plugin is null)
       {
-        throw new ArgumentNullException("plugin");
+        throw new ArgumentNullException(nameof(plugin));
       }
 
-      IPlugin curPlugin = null;
-
-      lock (this)
+      IPlugin? curPlugin = null;
+      m_mapName2Plugin.AddOrUpdate(plugin.Name, plugin, (_, existingPlugin) =>
       {
-        // Get the current plugin if it exists
-        curPlugin = m_mapName2Plugin[plugin.Name] as IPlugin;
-
-        // Store new plugin
-        m_mapName2Plugin[plugin.Name] = plugin;
-      }
+        curPlugin = existingPlugin;
+        return plugin;
+      });
 
       // Shutdown existing plugin with same name
-      if (curPlugin != null)
-      {
-        curPlugin.Shutdown();
-      }
+      curPlugin?.Shutdown();
 
       // Attach new plugin to repository
       plugin.Attach(m_repository);
     }
 
     /// <summary>
-    /// Removes a <see cref="IPlugin" /> from the map.
+    /// Removes an <see cref="IPlugin" /> from the map.
     /// </summary>
     /// <param name="plugin">The <see cref="IPlugin" /> to remove from the map.</param>
-    /// <remarks>
-    /// <para>
-    /// Remove a specific plugin from this map.
-    /// </para>
-    /// </remarks>
     public void Remove(IPlugin plugin)
     {
-      if (plugin == null)
+      if (plugin is null)
       {
-        throw new ArgumentNullException("plugin");
+        throw new ArgumentNullException(nameof(plugin));
       }
-      lock (this)
-      {
-        m_mapName2Plugin.Remove(plugin.Name);
-      }
+      m_mapName2Plugin.TryRemove(plugin.Name, out _);
     }
 
-    #endregion Public Instance Methods
-
-    #region Private Instance Fields
-
-    private readonly Hashtable m_mapName2Plugin = new Hashtable();
+    private readonly ConcurrentDictionary<string, IPlugin> m_mapName2Plugin = new(StringComparer.Ordinal);
     private readonly ILoggerRepository m_repository;
-
-    #endregion Private Instance Fields
   }
 }

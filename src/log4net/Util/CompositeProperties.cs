@@ -17,8 +17,7 @@
 //
 #endregion
 
-using System;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace log4net.Util
 {
@@ -34,14 +33,8 @@ namespace log4net.Util
   /// <author>Nicko Cadell</author>
   public sealed class CompositeProperties
   {
-    #region Private Instance Fields
-
-    private PropertiesDictionary m_flattened = null;
-    private ArrayList m_nestedProperties = new ArrayList();
-
-    #endregion Private Instance Fields
-
-    #region Public Instance Constructors
+    private PropertiesDictionary? m_flattened;
+    private readonly List<ReadOnlyPropertiesDictionary> m_nestedProperties = new();
 
     /// <summary>
     /// Constructor
@@ -54,10 +47,6 @@ namespace log4net.Util
     internal CompositeProperties()
     {
     }
-
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
 
     /// <summary>
     /// Gets the value of a property
@@ -78,12 +67,12 @@ namespace log4net.Util
     /// <c>null</c> is returned.
     /// </para>
     /// </remarks>
-    public object this[string key]
+    public object? this[string key]
     {
       get
       {
         // Look in the flattened properties first
-        if (m_flattened != null)
+        if (m_flattened is not null)
         {
           return m_flattened[key];
         }
@@ -91,18 +80,14 @@ namespace log4net.Util
         // Look for the key in all the nested properties
         foreach (ReadOnlyPropertiesDictionary cur in m_nestedProperties)
         {
-          if (cur.Contains(key))
+          if (cur.TryGetValue(key, out object? val))
           {
-            return cur[key];
+            return val;
           }
         }
         return null;
       }
     }
-
-    #endregion Public Instance Properties
-
-    #region Public Instance Methods
 
     /// <summary>
     /// Add a Properties Dictionary to this composite collection
@@ -132,24 +117,22 @@ namespace log4net.Util
     /// </remarks>
     public PropertiesDictionary Flatten()
     {
-      if (m_flattened == null)
+      if (m_flattened is null)
       {
         m_flattened = new PropertiesDictionary();
 
         for (int i = m_nestedProperties.Count; --i >= 0;)
         {
-          ReadOnlyPropertiesDictionary cur = (ReadOnlyPropertiesDictionary)m_nestedProperties[i];
+          ReadOnlyPropertiesDictionary cur = m_nestedProperties[i];
 
-          foreach (DictionaryEntry entry in cur)
+          foreach (KeyValuePair<string, object?> entry in cur)
           {
-            m_flattened[(string)entry.Key] = entry.Value;
+            m_flattened[entry.Key] = entry.Value;
           }
         }
       }
       return m_flattened;
     }
-
-    #endregion Public Instance Methods
   }
 }
 

@@ -17,131 +17,45 @@
 //
 #endregion
 
-using log4net.Repository;
 using System;
-using System.Reflection;
+using NUnit.Framework;
 
 namespace log4net.Tests
 {
   /// <summary>
-  /// Summary description for Class1.
+  /// Utilities for testing
   /// </summary>
-  public class Utils
+  public static class Utils
   {
-    private Utils()
+    /// <summary>
+    /// Is the mono runtime used
+    /// </summary>
+    internal static bool IsMono { get; } = Type.GetType("Mono.Runtime") is not null;
+
+    /// <summary>
+    /// Skips the current test when run under mono
+    /// </summary>
+    internal static void InconclusiveOnMono()
     {
-    }
-
-    public static object CreateInstance(string targetType)
-    {
-      return CreateInstance(Type.GetType(targetType, true, true));
-    }
-
-    public static object CreateInstance(Type targetType)
-    {
-#if NETSTANDARD1_3
-
-      return targetType.GetConstructor(new Type[0]).Invoke(null);
-#else
-      return targetType.GetConstructor(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance, null, new Type[0], null).Invoke(null);
-#endif
-    }
-
-    public static object InvokeMethod(object target, string name, params object[] args)
-    {
-#if NETSTANDARD1_3
-      return target.GetType().GetTypeInfo().GetDeclaredMethod(name).Invoke(target, args);
-#else
-      return target.GetType().GetMethod(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, null, GetTypesArray(args), null).Invoke(target, args);
-#endif
-    }
-
-    public static object InvokeMethod(Type target, string name, params object[] args)
-    {
-#if NETSTANDARD1_3
-      return target.GetTypeInfo().GetDeclaredMethod(name).Invoke(null, args);
-#else
-      return target.GetMethod(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static, null, GetTypesArray(args), null).Invoke(null, args);
-#endif
-    }
-
-    public static object GetField(object target, string name)
-    {
-      return target.GetType().GetField(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance).GetValue(target);
-    }
-
-    public static void SetField(object target, string name, object val)
-    {
-      target.GetType().GetField(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance).SetValue(target, val);
-    }
-
-    public static object GetProperty(object target, string name)
-    {
-      return target.GetType().GetProperty(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance).GetValue(target, null);
-    }
-
-    public static void SetProperty(object target, string name, object val)
-    {
-      target.GetType().GetProperty(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance).SetValue(target, val, null);
-    }
-
-    public static object GetProperty(object target, string name, params object[] index)
-    {
-      return target.GetType().GetProperty(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance).GetValue(target, index);
-    }
-
-    public static void SetProperty(object target, string name, object val, params object[] index)
-    {
-      target.GetType().GetProperty(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance).SetValue(target, val, index);
-    }
-
-    private static Type[] GetTypesArray(object[] args)
-    {
-      Type[] types = new Type[args.Length];
-
-      for (int i = 0; i < args.Length; i++)
+      if (IsMono)
       {
-        if (args[i] == null)
-        {
-          types[i] = typeof(object);
-        }
-        else
-        {
-          types[i] = args[i].GetType();
-        }
+        Assert.Inconclusive("mono has a different behaviour");
       }
-
-      return types;
     }
 
+    /// <summary>
+    /// Sample property key
+    /// </summary>
     internal const string PROPERTY_KEY = "prop1";
 
+    /// <summary>
+    /// Remove the <see cref="PROPERTY_KEY"/> from alle log4net contexts
+    /// </summary>
     internal static void RemovePropertyFromAllContexts()
     {
       GlobalContext.Properties.Remove(PROPERTY_KEY);
       ThreadContext.Properties.Remove(PROPERTY_KEY);
-#if !NETCF
       LogicalThreadContext.Properties.Remove(PROPERTY_KEY);
-#endif
-    }
-
-    // Wrappers because repository/logger retrieval APIs require an Assembly argument on NETSTANDARD1_3
-    internal static ILog GetLogger(string name)
-    {
-#if NETSTANDARD1_3
-            return LogManager.GetLogger(typeof(Utils).GetTypeInfo().Assembly, name);
-#else
-      return LogManager.GetLogger(name);
-#endif
-    }
-
-    internal static ILoggerRepository GetRepository()
-    {
-#if NETSTANDARD1_3
-            return LogManager.GetRepository(typeof(Utils).GetTypeInfo().Assembly);
-#else
-      return LogManager.GetRepository();
-#endif
     }
   }
 }

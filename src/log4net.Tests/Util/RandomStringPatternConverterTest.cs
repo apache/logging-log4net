@@ -18,7 +18,7 @@
 #endregion
 
 using System.IO;
-
+using log4net.Util.PatternStringConverters;
 using NUnit.Framework;
 
 namespace log4net.Tests.Util
@@ -59,32 +59,6 @@ namespace log4net.Tests.Util
 
       string string2 = sw.ToString();
       Assert.IsTrue(string1 != string2, "strings should be different");
-    }
-
-    private class RandomStringPatternConverter
-    {
-      private object target = null;
-
-      public RandomStringPatternConverter()
-      {
-        target = Utils.CreateInstance("log4net.Util.PatternStringConverters.RandomStringPatternConverter,log4net");
-      }
-
-      public string Option
-      {
-        get { return Utils.GetProperty(target, "Option") as string; }
-        set { Utils.SetProperty(target, "Option", value); }
-      }
-
-      public void Convert(TextWriter writer, object state)
-      {
-        Utils.InvokeMethod(target, "Convert", writer, state);
-      }
-
-      public void ActivateOptions()
-      {
-        Utils.InvokeMethod(target, "ActivateOptions");
-      }
     }
   }
 }

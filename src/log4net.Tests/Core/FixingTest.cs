@@ -24,13 +24,9 @@ using System.Threading;
 using log4net.Core;
 
 using NUnit.Framework;
-using static NExpect.Expectations;
-using NExpect;
 
 namespace log4net.Tests.Core
 {
-  /// <summary>
-  /// </<summary>
   [TestFixture]
   public class FixingTest
   {
@@ -41,7 +37,7 @@ namespace log4net.Tests.Core
     {
       bool exists = false;
       Repository.ILoggerRepository[] repositories = LogManager.GetAllRepositories();
-      if (repositories != null)
+      if (repositories is not null)
       {
         foreach (Repository.ILoggerRepository r in repositories)
         {
@@ -58,7 +54,7 @@ namespace log4net.Tests.Core
       }
 
       // write-once
-      if (Thread.CurrentThread.Name == null)
+      if (Thread.CurrentThread.Name is null)
       {
         Thread.CurrentThread.Name = "Log4Net Test thread";
       }
@@ -75,8 +71,7 @@ namespace log4net.Tests.Core
       // Assert
       foreach (var flag in allFlags)
       {
-        Expect(FixFlags.All & flag)
-          .To.Equal(flag, () => $"FixFlags.All does not contain {flag}");
+        Assert.AreEqual(flag, FixFlags.All & flag, $"FixFlags.All does not contain {flag}");
       }
     }
 
@@ -87,7 +82,7 @@ namespace log4net.Tests.Core
 
       // LoggingEvents occur at distinct points in time
       LoggingEvent loggingEvent = new LoggingEvent(
-        loggingEventData.LocationInfo.GetType(),
+        loggingEventData.LocationInfo?.GetType(),
         LogManager.GetRepository(TEST_REPOSITORY),
         loggingEventData.LoggerName,
         loggingEventData.Level,
@@ -106,7 +101,7 @@ namespace log4net.Tests.Core
 
       // LoggingEvents occur at distinct points in time
       LoggingEvent loggingEvent = new LoggingEvent(
-        loggingEventData.LocationInfo.GetType(),
+        loggingEventData.LocationInfo?.GetType(),
         LogManager.GetRepository(TEST_REPOSITORY),
         loggingEventData.LoggerName,
         loggingEventData.Level,
@@ -127,7 +122,7 @@ namespace log4net.Tests.Core
 
       // LoggingEvents occur at distinct points in time
       LoggingEvent loggingEvent = new LoggingEvent(
-        loggingEventData.LocationInfo.GetType(),
+        loggingEventData.LocationInfo?.GetType(),
         LogManager.GetRepository(TEST_REPOSITORY),
         loggingEventData.LoggerName,
         loggingEventData.Level,
@@ -160,16 +155,15 @@ namespace log4net.Tests.Core
     {
       Assert.AreEqual("ReallySimpleApp", loggingEventData.Domain, "Domain is incorrect");
       Assert.AreEqual("System.Exception: This is the exception", loggingEvent.GetExceptionString(), "Exception is incorrect");
-      Assert.AreEqual(null, loggingEventData.Identity, "Identity is incorrect");
+      Assert.IsNull(loggingEventData.Identity, "Identity is incorrect");
       Assert.AreEqual(Level.Warn, loggingEventData.Level, "Level is incorrect");
-#if !NETSTANDARD1_3 // NETSTANDARD1_3: LocationInfo can't get method names
-      Assert.AreEqual("get_LocationInformation", loggingEvent.LocationInformation.MethodName, "Location Info is incorrect");
-#endif
+      Assert.IsNotNull(loggingEvent.LocationInformation);
+      Assert.AreEqual("get_LocationInformation", loggingEvent.LocationInformation!.MethodName, "Location Info is incorrect");
       Assert.AreEqual("log4net.Tests.Core.FixingTest", loggingEventData.LoggerName, "LoggerName is incorrect");
       Assert.AreEqual(LogManager.GetRepository(TEST_REPOSITORY), loggingEvent.Repository, "Repository is incorrect");
       Assert.AreEqual(Thread.CurrentThread.Name, loggingEventData.ThreadName, "ThreadName is incorrect");
       // This test is redundant as loggingEventData.TimeStamp is a value type and cannot be null
-      // Assert.IsNotNull(loggingEventData.TimeStampUtc, "TimeStamp is incorrect");
+      //Assert.IsNotNull(loggingEventData.TimeStampUtc, "TimeStamp is incorrect");
       Assert.AreEqual("TestUser", loggingEventData.UserName, "UserName is incorrect");
       Assert.AreEqual("Logging event works", loggingEvent.RenderedMessage, "Message is incorrect");
     }

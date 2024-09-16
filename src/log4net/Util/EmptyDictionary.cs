@@ -33,13 +33,9 @@ namespace log4net.Util
   /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
-#if !NETCF
-  [Serializable]
-#endif
+  [Log4NetSerializable]
   public sealed class EmptyDictionary : IDictionary
   {
-    #region Private Instance Constructors
-
     /// <summary>
     /// Initializes a new instance of the <see cref="EmptyDictionary" /> class. 
     /// </summary>
@@ -52,10 +48,6 @@ namespace log4net.Util
     {
     }
 
-    #endregion Private Instance Constructors
-
-    #region Public Static Properties
-
     /// <summary>
     /// Gets the singleton instance of the <see cref="EmptyDictionary" />.
     /// </summary>
@@ -65,14 +57,7 @@ namespace log4net.Util
     /// Gets the singleton instance of the <see cref="EmptyDictionary" />.
     /// </para>
     /// </remarks>
-    public static EmptyDictionary Instance
-    {
-      get { return s_instance; }
-    }
-
-    #endregion Public Static Properties
-
-    #region Implementation of ICollection
+    public static EmptyDictionary Instance { get; } = new();
 
     /// <summary>
     /// Copies the elements of the <see cref="ICollection"/> to an 
@@ -105,10 +90,7 @@ namespace log4net.Util
     /// For the <see cref="EmptyCollection"/> this property is always <b>true</b>.
     /// </para>
     /// </remarks>
-    public bool IsSynchronized
-    {
-      get { return true; }
-    }
+    public bool IsSynchronized => true;
 
     /// <summary>
     /// Gets the number of elements contained in the <see cref="ICollection"/>
@@ -121,10 +103,7 @@ namespace log4net.Util
     /// As the collection is empty the <see cref="Count"/> is always <c>0</c>.
     /// </para>
     /// </remarks>
-    public int Count
-    {
-      get { return 0; }
-    }
+    public int Count => 0;
 
     /// <summary>
     /// Gets an object that can be used to synchronize access to the <see cref="ICollection"/>.
@@ -138,14 +117,7 @@ namespace log4net.Util
     /// the <see cref="SyncRoot"/> object.
     /// </para>
     /// </remarks>
-    public object SyncRoot
-    {
-      get { return this; }
-    }
-
-    #endregion Implementation of ICollection
-
-    #region Implementation of IEnumerable
+    public object SyncRoot => this;
 
     /// <summary>
     /// Returns an enumerator that can iterate through a collection.
@@ -159,14 +131,7 @@ namespace log4net.Util
     /// As the collection is empty a <see cref="NullEnumerator"/> is returned.
     /// </para>
     /// </remarks>
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-      return NullEnumerator.Instance;
-    }
-
-    #endregion Implementation of IEnumerable
-
-    #region Implementation of IDictionary
+    IEnumerator IEnumerable.GetEnumerator() => NullEnumerator.Instance;
 
     /// <summary>
     /// Adds an element with the provided key and value to the 
@@ -181,10 +146,7 @@ namespace log4net.Util
     /// </para>
     /// </remarks>
     /// <exception cref="InvalidOperationException">This dictionary is always empty and cannot be modified.</exception>
-    public void Add(object key, object value)
-    {
-      throw new InvalidOperationException();
-    }
+    public void Add(object key, object? value) => throw new InvalidOperationException();
 
     /// <summary>
     /// Removes all elements from the <see cref="EmptyDictionary" />.
@@ -196,10 +158,7 @@ namespace log4net.Util
     /// </para>
     /// </remarks>
     /// <exception cref="InvalidOperationException">This dictionary is always empty and cannot be modified.</exception>
-    public void Clear()
-    {
-      throw new InvalidOperationException();
-    }
+    public void Clear() => throw new InvalidOperationException();
 
     /// <summary>
     /// Determines whether the <see cref="EmptyDictionary" /> contains an element 
@@ -212,10 +171,7 @@ namespace log4net.Util
     /// As the collection is empty the <see cref="Contains"/> method always returns <c>false</c>.
     /// </para>
     /// </remarks>
-    public bool Contains(object key)
-    {
-      return false;
-    }
+    public bool Contains(object key) => false;
 
     /// <summary>
     /// Returns an enumerator that can iterate through a collection.
@@ -229,10 +185,7 @@ namespace log4net.Util
     /// As the collection is empty a <see cref="NullEnumerator"/> is returned.
     /// </para>
     /// </remarks>
-    public IDictionaryEnumerator GetEnumerator()
-    {
-      return NullDictionaryEnumerator.Instance;
-    }
+    public IDictionaryEnumerator GetEnumerator() => NullDictionaryEnumerator.Instance;
 
     /// <summary>
     /// Removes the element with the specified key from the <see cref="EmptyDictionary" />.
@@ -245,10 +198,7 @@ namespace log4net.Util
     /// </para>
     /// </remarks>
     /// <exception cref="InvalidOperationException">This dictionary is always empty and cannot be modified.</exception>
-    public void Remove(object key)
-    {
-      throw new InvalidOperationException();
-    }
+    public void Remove(object key) => throw new InvalidOperationException();
 
     /// <summary>
     /// Gets a value indicating whether the <see cref="EmptyDictionary" /> has a fixed size.
@@ -259,10 +209,7 @@ namespace log4net.Util
     /// As the collection is empty <see cref="IsFixedSize"/> always returns <c>true</c>.
     /// </para>
     /// </remarks>
-    public bool IsFixedSize
-    {
-      get { return true; }
-    }
+    public bool IsFixedSize => true;
 
     /// <summary>
     /// Gets a value indicating whether the <see cref="EmptyDictionary" /> is read-only.
@@ -273,10 +220,7 @@ namespace log4net.Util
     /// As the collection is empty <see cref="IsReadOnly"/> always returns <c>true</c>.
     /// </para>
     /// </remarks>
-    public bool IsReadOnly
-    {
-      get { return true; }
-    }
+    public bool IsReadOnly => true;
 
     /// <summary>
     /// Gets an <see cref="ICollection" /> containing the keys of the <see cref="EmptyDictionary" />.
@@ -287,10 +231,7 @@ namespace log4net.Util
     /// As the collection is empty a <see cref="EmptyCollection"/> is returned.
     /// </para>
     /// </remarks>
-    public System.Collections.ICollection Keys
-    {
-      get { return EmptyCollection.Instance; }
-    }
+    public ICollection Keys => EmptyCollection.Instance;
 
     /// <summary>
     /// Gets an <see cref="ICollection" /> containing the values of the <see cref="EmptyDictionary" />.
@@ -301,10 +242,7 @@ namespace log4net.Util
     /// As the collection is empty a <see cref="EmptyCollection"/> is returned.
     /// </para>
     /// </remarks>
-    public System.Collections.ICollection Values
-    {
-      get { return EmptyCollection.Instance; }
-    }
+    public ICollection Values => EmptyCollection.Instance;
 
     /// <summary>
     /// Gets or sets the element with the specified key.
@@ -319,21 +257,10 @@ namespace log4net.Util
     /// </para>
     /// </remarks>
     /// <exception cref="InvalidOperationException">This dictionary is always empty and cannot be modified.</exception>
-    public object this[object key]
+    public object? this[object key]
     {
-      get { return null; }
-      set { throw new InvalidOperationException(); }
+      get => null;
+      set => throw new InvalidOperationException();
     }
-
-    #endregion Implementation of IDictionary
-
-    #region Private Static Fields
-
-    /// <summary>
-    /// The singleton instance of the empty dictionary.
-    /// </summary>
-    private static readonly EmptyDictionary s_instance = new EmptyDictionary();
-
-    #endregion Private Static Fields
   }
 }

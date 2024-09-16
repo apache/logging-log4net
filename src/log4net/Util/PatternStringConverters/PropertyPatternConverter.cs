@@ -57,27 +57,19 @@ namespace log4net.Util.PatternStringConverters
     /// then all the properties are written as key value pairs.
     /// </para>
     /// </remarks>
-    protected override void Convert(TextWriter writer, object state)
+    public override void Convert(TextWriter writer, object? state)
     {
-      CompositeProperties compositeProperties = new CompositeProperties();
+      CompositeProperties compositeProperties = new();
 
-#if !NETCF
-      PropertiesDictionary logicalThreadProperties = LogicalThreadContext.Properties.GetProperties(false);
-      if (logicalThreadProperties != null)
-      {
+      if (LogicalThreadContext.Properties.GetProperties(false) is PropertiesDictionary logicalThreadProperties)
         compositeProperties.Add(logicalThreadProperties);
-      }
-#endif
-      PropertiesDictionary threadProperties = ThreadContext.Properties.GetProperties(false);
-      if (threadProperties != null)
-      {
-        compositeProperties.Add(threadProperties);
-      }
 
-      // TODO: Add Repository Properties
+      if (ThreadContext.Properties.GetProperties(false) is PropertiesDictionary threadProperties)
+        compositeProperties.Add(threadProperties);
+
       compositeProperties.Add(GlobalContext.Properties.GetReadOnlyProperties());
 
-      if (Option != null)
+      if (Option is not null)
       {
         // Write the value for the specified key
         WriteObject(writer, null, compositeProperties[Option]);

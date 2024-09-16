@@ -17,9 +17,6 @@
 //
 #endregion
 
-// .NET Compact Framework 1.0 has no support for reading assembly attributes
-#if !NETCF
-
 using System;
 using System.Reflection;
 
@@ -45,11 +42,9 @@ namespace log4net.Config
   /// </remarks>
   /// <author>Nicko Cadell</author>
   [AttributeUsage(AttributeTargets.Assembly)]
-  [Serializable]
+  [Log4NetSerializable]
   public sealed class SecurityContextProviderAttribute : ConfiguratorAttribute
   {
-    #region Constructor
-
     /// <summary>
     /// Construct provider attribute with type specified
     /// </summary>
@@ -62,34 +57,19 @@ namespace log4net.Config
     /// </remarks>
     public SecurityContextProviderAttribute(Type providerType) : base(100) /* configurator priority 100 to execute before the XmlConfigurator */
     {
-      m_providerType = providerType;
+      ProviderType = providerType;
     }
-
-    #endregion
-
-    #region Public Instance Properties
 
     /// <summary>
     /// Gets or sets the type of the provider to use.
     /// </summary>
-    /// <value>
-    /// the type of the provider to use.
-    /// </value>
     /// <remarks>
     /// <para>
     /// The provider specified must subclass the <see cref="SecurityContextProvider"/>
     /// class.
     /// </para>
     /// </remarks>
-    public Type ProviderType
-    {
-      get { return m_providerType; }
-      set { m_providerType = value; }
-    }
-
-    #endregion Public Instance Properties
-
-    #region Override ConfiguratorAttribute
+    public Type ProviderType { get; set; }
 
     /// <summary>
     /// Configures the SecurityContextProvider
@@ -104,19 +84,17 @@ namespace log4net.Config
     /// </remarks>
     public override void Configure(Assembly sourceAssembly, ILoggerRepository targetRepository)
     {
-      if (m_providerType == null)
+      if (ProviderType is null)
       {
-        LogLog.Error(declaringType, "Attribute specified on assembly [" + sourceAssembly.FullName + "] with null ProviderType.");
+        LogLog.Error(declaringType, $"Attribute specified on assembly [{sourceAssembly.FullName}] with null ProviderType.");
       }
       else
       {
-        LogLog.Debug(declaringType, "Creating provider of type [" + m_providerType.FullName + "]");
+        LogLog.Debug(declaringType, $"Creating provider of type [{ProviderType.FullName}]");
 
-        SecurityContextProvider provider = Activator.CreateInstance(m_providerType) as SecurityContextProvider;
-
-        if (provider == null)
+        if (Activator.CreateInstance(ProviderType) is not SecurityContextProvider provider)
         {
-          LogLog.Error(declaringType, "Failed to create SecurityContextProvider instance of type [" + m_providerType.Name + "].");
+          LogLog.Error(declaringType, $"Failed to create SecurityContextProvider instance of type [{ProviderType.Name}].");
         }
         else
         {
@@ -124,16 +102,6 @@ namespace log4net.Config
         }
       }
     }
-
-    #endregion
-
-    #region Private Instance Fields
-
-    private Type m_providerType = null;
-
-    #endregion Private Instance Fields
-
-    #region Private Static Fields
 
     /// <summary>
     /// The fully qualified type of the SecurityContextProviderAttribute class.
@@ -143,9 +111,5 @@ namespace log4net.Config
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(SecurityContextProviderAttribute);
-
-    #endregion Private Static Fields
   }
 }
-
-#endif // !NETCF

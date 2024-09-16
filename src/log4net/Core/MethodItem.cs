@@ -16,9 +16,9 @@
 // limitations under the License.
 //
 #endregion
-using System;
-using System.Collections;
 
+using System;
+using System.Collections.Generic;
 using log4net.Util;
 
 namespace log4net.Core
@@ -28,20 +28,16 @@ namespace log4net.Core
   /// as that would require that the containing assembly is loaded.
   /// </summary>
   /// 
-#if !NETCF
-  [Serializable]
-#endif
+  [Log4NetSerializable]
   public class MethodItem
   {
-    #region Public Instance Constructors
-
     /// <summary>
     /// constructs a method item for an unknown method.
     /// </summary>
     public MethodItem()
     {
-      m_name = NA;
-      m_parameters = new string[0];
+      Name = NA;
+      Parameters = Array.Empty<string>();
     }
 
     /// <summary>
@@ -51,7 +47,7 @@ namespace log4net.Core
     public MethodItem(string name)
       : this()
     {
-      m_name = name;
+      Name = name;
     }
 
     /// <summary>
@@ -62,7 +58,7 @@ namespace log4net.Core
     public MethodItem(string name, string[] parameters)
       : this(name)
     {
-      m_parameters = parameters;
+      Parameters = parameters;
     }
 
     /// <summary>
@@ -74,11 +70,9 @@ namespace log4net.Core
     {
     }
 
-    #endregion
-
     private static string[] GetMethodParameterNames(System.Reflection.MethodBase methodBase)
     {
-      ArrayList methodParameterNames = new ArrayList();
+      var methodParameterNames = new List<string>();
       try
       {
         System.Reflection.ParameterInfo[] methodBaseGetParameters = methodBase.GetParameters();
@@ -95,10 +89,8 @@ namespace log4net.Core
         LogLog.Error(declaringType, "An exception ocurred while retreiving method parameters.", ex);
       }
 
-      return (string[])methodParameterNames.ToArray(typeof(string));
+      return methodParameterNames.ToArray();
     }
-
-    #region Public Instance Properties
 
     /// <summary>
     /// Gets the method name of the caller making the logging 
@@ -114,10 +106,7 @@ namespace log4net.Core
     /// request.
     /// </para>
     /// </remarks>
-    public string Name
-    {
-      get { return m_name; }
-    }
+    public string Name { get; }
 
     /// <summary>
     /// Gets the method parameters of the caller making
@@ -133,21 +122,7 @@ namespace log4net.Core
     /// the logging request.
     /// </para>
     /// </remarks>
-    public string[] Parameters
-    {
-      get { return m_parameters; }
-    }
-
-    #endregion
-
-    #region Private Instance Fields
-
-    private readonly string m_name;
-    private readonly string[] m_parameters;
-
-    #endregion
-
-    #region Private Static Fields
+    public string[] Parameters { get; }
 
     /// <summary>
     /// The fully qualified type of the StackFrameItem class.
@@ -164,7 +139,5 @@ namespace log4net.Core
     /// constant is <b>?</b>.
     /// </summary>
     private const string NA = "?";
-
-    #endregion Private Static Fields
   }
 }

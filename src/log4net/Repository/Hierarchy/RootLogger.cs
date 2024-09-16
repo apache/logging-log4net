@@ -43,8 +43,6 @@ namespace log4net.Repository.Hierarchy
   /// <author>Gert Driesen</author>
   public class RootLogger : Logger
   {
-    #region Public Instance Constructors
-
     /// <summary>
     /// Construct a <see cref="RootLogger"/>
     /// </summary>
@@ -61,12 +59,8 @@ namespace log4net.Repository.Hierarchy
     /// </remarks>
     public RootLogger(Level level) : base("root")
     {
-      this.Level = level;
+      Level = level;
     }
-
-    #endregion Public Instance Constructors
-
-    #region Override implementation of Logger
 
     /// <summary>
     /// Gets the assigned level value without walking the logger hierarchy.
@@ -79,13 +73,7 @@ namespace log4net.Repository.Hierarchy
     /// value of <see cref="Logger.Level"/>.
     /// </para>
     /// </remarks>
-    public override Level EffectiveLevel
-    {
-      get
-      {
-        return base.Level;
-      }
-    }
+    public override Level EffectiveLevel => base.Level!;
 
     /// <summary>
     /// Gets or sets the assigned <see cref="Level"/> for the root logger.  
@@ -99,12 +87,12 @@ namespace log4net.Repository.Hierarchy
     /// may have catastrophic results. We prevent this here.
     /// </para>
     /// </remarks>
-    public override Level Level
+    public override Level? Level
     {
-      get { return base.Level; }
+      get => base.Level;
       set
       {
-        if (value == null)
+        if (value is null)
         {
           LogLog.Error(declaringType, "You have tried to set a null level to root.", new LogException());
         }
@@ -115,10 +103,6 @@ namespace log4net.Repository.Hierarchy
       }
     }
 
-    #endregion Override implementation of Logger
-
-    #region Private Static Fields
-
     /// <summary>
     /// The fully qualified type of the RootLogger class.
     /// </summary>
@@ -127,7 +111,5 @@ namespace log4net.Repository.Hierarchy
     /// log message.
     /// </remarks>
     private static readonly Type declaringType = typeof(RootLogger);
-
-    #endregion Private Static Fields
   }
 }

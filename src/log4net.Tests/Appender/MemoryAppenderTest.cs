@@ -19,8 +19,6 @@
  *
 */
 
-#if NET_4_0 || MONO_3_5 || MONO_4_0 || NETSTANDARD
-
 using System;
 using System.Linq;
 using System.Threading;
@@ -88,4 +86,3 @@ namespace log4net.Tests.Appender
     }
   }
 }
-#endif

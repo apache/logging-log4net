@@ -25,14 +25,196 @@ limitations under the License.
   <meta name="keywords" content="log4net release notes, log4net"/>
 
   <body>
-
     <section id="main" name="Apache log4net&#x2122; Release Notes">
+      <section id="a3.0.0" name="3.0.0">
+        <section id="a3.0.0-breaking" name="Breaking Changes">
+          <p>
+            Attention: Starting with 3.0.0 we only support the following target frameworks
+            <ul>
+              <li>net462</li>
+              <li>netstandard2.0</li>
+            </ul>
+            The reasoning for this change can be found in <a href="https://github.com/apache/logging-log4net/issues/111">Dropping support for older runtimes</a>
+          </p>
+          <br/>
+          <br/>
+          <p>
+            Removed obsolete classes and members - obsolete since 1.2.14 - 2015
+            <ul>
+              <li>
+                <code>log4net.Appender.BufferingAppenderSkeleton.OnlyFixPartialEventData</code>
+              </li>
+              <li>
+                <code>log4net.Appender.ColoredConsoleAppender.ctor(ILayout)</code>
+              </li>
+              <li>
+                <code>log4net.Appender.ColoredConsoleAppender.ctor(ILayout, bool)</code>
+              </li>
+              <li>
+                <code>log4net.Appender.ConsoleAppender.ctor(ILayout)</code>
+              </li>
+              <li>
+                <code>log4net.Appender.ConsoleAppender.ctor(ILayout, bool)</code>
+              </li>
+              <li>
+                <code>log4net.Appender.DebugAppender.ctor(ILayout)</code>
+              </li>
+              <li>
+                <code>log4net.Appender.EventLogAppender.ctor(ILayout)</code>
+              </li>
+              <li>
+                <code>log4net.Appender.FileAppender.ctor(ILayout, string)</code>
+              </li>
+              <li>
+                <code>log4net.Appender.FileAppender.ctor(ILayout, string, bool)</code>
+              </li>
+              <li>
+                <code>log4net.Appender.MemoryAppender.OnlyFixPartialEventData</code>
+              </li>
+              <li>
+                <code>log4net.Appender.SmtpAppender.LocationInfo</code>
+              </li>
+              <li>
+                <code>log4net.Appender.TextWriterAppender.ctor(ILayout, Stream)</code>
+              </li>
+              <li>
+                <code>log4net.Appender.TextWriterAppender.ctor(ILayout, TextWriter)</code>
+              </li>
+              <li>
+                <code>log4net.Appender.TraceAppender.ctor(ILayout)</code>
+              </li>
+              <li>
+                <code>log4net.Config.DOMConfigurator</code>
+              </li>
+              <li>
+                <code>log4net.Config.AliasDomainAttribute</code>
+              </li>
+              <li>
+                <code>log4net.Config.DomainAttribute</code>
+              </li>
+              <li>
+                <code>log4net.Config.DOMConfiguratorAttribute</code>
+              </li>
+              <li>
+                <code>log4net.Core.LoggerManager.GetLoggerRepository</code>
+              </li>
+              <li>
+                <code>log4net.Core.LoggerManager.CreateDomain</code>
+              </li>
+              <li>
+                <code>log4net.Core.LoggingEventData.TimeStamp</code>
+              </li>
+              <li>
+                <code>log4net.Core.LoggingEvent.GetExceptionStrRep</code>
+              </li>
+              <li>
+                <code>log4net.Core.LoggingEvent.FixVolatileData</code>
+              </li>
+              <li>
+                <code>log4net.LogManager.GetLoggerRepository</code>
+              </li>
+              <li>
+                <code>log4net.LogManager.CreateDomain</code>
+              </li>
+            </ul>
+          </p>
+          <br/>
+          <p>
+            Removed obsolete classes and members - obsolete since 2.0.6 - 2016
+            <ul>
+              <li>
+                <code>log4net.Util.SystemInfo.ProcessStartTime</code>
+              </li>
+            </ul>
+          </p>
+          <br/>
+          <p>
+            Other Changes
+            <ul>
+              <li>
+                <code>log4net.Appender.RemotingAppender</code>
+                <a href="https://github.com/apache/logging-log4net/issues/154">Remove RemotingAppender</a>
+              </li>
+              <li>
+                <code>log4net.Appender.NetSendAppender</code>
+                <a href="https://github.com/apache/logging-log4net/pull/158">NetSendAdapter removed</a>
+              </li>
+              <li>
+                Serializable Support removed (for .netstandard)
+                <a href="https://github.com/apache/logging-log4net/discussions/175">Removing legacy serialization from log4net </a>
+              </li>
+              <li>
+                <code>log4net.Util.ReadOnlyPropertiesDictionary.InnerHashtable</code> is now <code>Dictionary&lt;string, object?&gt;</code> (instead of <code>System.Collections.Hashtable</code> before)
+                The reason is an optimization as part of <a href="https://github.com/apache/logging-log4net/issues/124">Add support for nullable annotations</a>
+              </li>
+              <li>
+                <code>log4net.Appender.MemoryAppender.m_eventsList</code> (protected field) is now <code>List&lt;LoggingEvent&gt;</code> (instead of <code>System.Collections.ArrayList </code> before)
+                The reason is an optimization as part of <a href="https://github.com/apache/logging-log4net/issues/124">Add support for nullable annotations</a>
+              </li>
+              <li>
+                <code>log4net.Repository.Hierarchy.Hierarchy.EmittedNoAppenderWarning</code> is now internal.
+                See <a href="https://github.com/apache/logging-log4net/issues/157">fixed Regression when creating nested loggers in reverse order</a>
+              </li>
+            </ul>
+          </p>
+          <br/>
+          <p>
+            Sealed classes - the following classes are now sealed
+            <ul>
+              <li>
+                <code>log4net.Config.AliasRepositoryAttribute</code>
+              </li>
+              <li>
+                <code>log4net.Config.RepositoryAttribute</code>
+              </li>
+              <li>
+                <code>log4net.Config.XmlConfiguratorAttribute</code>
+              </li>
+            </ul>
+          </p>
+        </section>
+        <br/>
+        Apache log4net 3.0.0 addresses reported issues:
+        <section id="a3.0.0-bug" name="Bug fixes">
+          <ul>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/156">Regression: Creating nested loggers in reverse order fails in 3.0.0-preview.1</a> (by @freeandnil)
+            </li>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/169">System.NullReferenceException when comparing with a null Level</a> (by @freeandnil)
+            </li>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/168">ColoredConsoleAppender writes UTF-8 preamble to the console on initialization</a> (reported by @RoboBurned, fixed by @freeandnil)
+            </li>
+          </ul>
+        </section>
+        <section id="a3.0.0-enhancements" name="Enhancements">
+          <ul>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/111">Dropping support for older runtimes</a> (by @fluffynuts and @freeandnil)
+            </li>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/124">Add support for nullable annotations</a> (by @erikmav)
+            </li>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/125">Remove deprecated code for 3.0</a> (by @erikmav)
+            </li>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/127">Enable building log4net with docker container</a> (by @freeandnil)
+            </li>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/109">Fix dotnet (ie not netfx) test run</a> (by @mobilebilly)
+            </li>
+          </ul>
+        </section>
+      </section>
       <section id="a2.0.17" name="2.0.17">
         Apache log4net 2.0.17 addresses reported issues:
         <section id="a2.0.17-bug" name="Bug fixes">
           <ul>
             <li>
-              <a href="https://github.com/apache/logging-log4net/issues/118">NullRefException from shutdown in 2.0.16</a> fixed in <a href="https://github.com/apache/logging-log4net/pull/120">Fast fix for NullRefException from FileAppender"</a> by (by @erikmav)"</li>
+              <a href="https://github.com/apache/logging-log4net/issues/118">NullRefException from shutdown in 2.0.16</a> fixed in <a href="https://github.com/apache/logging-log4net/pull/120">Fast fix for NullRefException from FileAppender</a> (by @erikmav)
+            </li>
           </ul>
         </section>
       </section>
@@ -1992,10 +2174,6 @@ limitations under the License.
         <p>
           An <span class="code">IPlugin</span> interface can be attached to any repository.
         </p>
-        <h3>
-          A new RemoteLoggingServerPlugin plugin acts as the server for the
-          RemotingAppender
-        </h3>
         <h3>
           Updated the core log4net framework to work in an environment with no
           permissions

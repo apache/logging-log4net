@@ -17,9 +17,6 @@
 //
 #endregion
 
-using System;
-using log4net.Util;
-
 namespace log4net.Util
 {
   /// <summary>
@@ -37,8 +34,6 @@ namespace log4net.Util
   /// <author>Gert Driesen</author>
   public class FormattingInfo
   {
-    #region Public Instance Constructors
-
     /// <summary>
     /// Defaut Constructor
     /// </summary>
@@ -62,75 +57,25 @@ namespace log4net.Util
     /// </remarks>
     public FormattingInfo(int min, int max, bool leftAlign)
     {
-      m_min = min;
-      m_max = max;
-      m_leftAlign = leftAlign;
+      Min = min;
+      Max = max;
+      LeftAlign = leftAlign;
     }
-
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
 
     /// <summary>
     /// Gets or sets the minimum value.
     /// </summary>
-    /// <value>
-    /// The minimum value.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets or sets the minimum value.
-    /// </para>
-    /// </remarks>
-    public int Min
-    {
-      get { return m_min; }
-      set { m_min = value; }
-    }
+    public int Min { get; set; } = -1;
 
     /// <summary>
     /// Gets or sets the maximum value.
     /// </summary>
-    /// <value>
-    /// The maximum value.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets or sets the maximum value.
-    /// </para>
-    /// </remarks>
-    public int Max
-    {
-      get { return m_max; }
-      set { m_max = value; }
-    }
+    public int Max { get; set; } = int.MaxValue;
 
     /// <summary>
-    /// Gets or sets a flag indicating whether left align is enabled
+    /// Gets or sets a flag indicating whether left align is enabled.
     /// or not.
     /// </summary>
-    /// <value>
-    /// A flag indicating whether left align is enabled or not.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Gets or sets a flag indicating whether left align is enabled or not.
-    /// </para>
-    /// </remarks>
-    public bool LeftAlign
-    {
-      get { return m_leftAlign; }
-      set { m_leftAlign = value; }
-    }
-
-    #endregion Public Instance Properties
-
-    #region Private Instance Fields
-
-    private int m_min = -1;
-    private int m_max = int.MaxValue;
-    private bool m_leftAlign = false;
-
-    #endregion Private Instance Fields
+    public bool LeftAlign { get; set; } = false;
   }
 }

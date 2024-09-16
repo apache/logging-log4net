@@ -18,7 +18,6 @@
 #endregion
 
 using System;
-using System.Text;
 
 using log4net.Layout;
 
@@ -29,9 +28,6 @@ namespace log4net.Util.TypeConverters
   /// </summary>
   /// <remarks>
   /// <para>
-  /// Supports conversion from string to <see cref="PatternLayout"/> type.
-  /// </para>
-  /// <para>
   /// The string is used as the <see cref="PatternLayout.ConversionPattern"/> 
   /// of the <see cref="PatternLayout"/>.
   /// </para>
@@ -40,21 +36,16 @@ namespace log4net.Util.TypeConverters
   /// <seealso cref="IConvertFrom"/>
   /// <seealso cref="IConvertTo"/>
   /// <author>Nicko Cadell</author>
-  internal class PatternLayoutConverter : IConvertFrom
+  internal sealed class PatternLayoutConverter : IConvertFrom
   {
-    #region Implementation of IConvertFrom
-
     /// <summary>
     /// Can the source type be converted to the type supported by this object
     /// </summary>
     /// <param name="sourceType">the type to convert</param>
-    /// <returns>true if the conversion is possible</returns>
-    /// <remarks>
-    /// <para>
-    /// Returns <c>true</c> if the <paramref name="sourceType"/> is
-    /// the <see cref="String"/> type.
-    /// </para>
-    /// </remarks>
+    /// <returns>
+    /// <c>True</c> if the <paramref name="sourceType"/> is
+    /// the <see cref="string"/> type.
+    /// </returns>
     public bool CanConvertFrom(System.Type sourceType)
     {
       return (sourceType == typeof(string));
@@ -79,14 +70,11 @@ namespace log4net.Util.TypeConverters
     /// </exception>
     public object ConvertFrom(object source)
     {
-      string str = source as string;
-      if (str != null)
+      if (source is string str)
       {
         return new PatternLayout(str);
       }
       throw ConversionNotSupportedException.Create(typeof(PatternLayout), source);
     }
-
-    #endregion
   }
 }

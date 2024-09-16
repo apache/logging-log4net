@@ -21,9 +21,6 @@ release version 2.0.123:
                     - people who reported issues
                     - people who created pull requests
                     - people who suggested code that was implemented
-        - `src/site/xdoc/download_log4net.xml`
-            - you should be able to search & replace on the prior version
-                for the new one you're about to create
 2. Update the log4net.csproj file with this new version
 3. Build release artifacts with `npm run release`
     - if this doesn't work, you may need to `npm ci` first!
@@ -32,10 +29,9 @@ release version 2.0.123:
         (or at least, I haven't figured out how - in particular CF)
     - TODO: the following are still manual and need to be built into the `release` script:
         - log4net.build: update package.version property
-        - log4net.shfbproj: update HtmlHelpName
         - pom.xml: update version
 4. Sign release artifacts (zips & nupkg) under `build/artifacts`
-    - eg `gpg --argmor --output log4net-2.0.123.nupkg.asc --detach-sig log4net-2.0.123.nupkg`
+    - eg `gpg --armor --output log4net-2.0.123.nupkg.asc --detach-sig log4net-2.0.123.nupkg`
     - there is an accompanying `sign-log4net-libraries.sh` which you could invoke if you cd
         into the `build/artifacts` folder
         - I build on Windows and sign on Linux as my build machine belongs to my company
@@ -55,7 +51,6 @@ release version 2.0.123:
 10. push the `asf-staging` branch to github and wait a bit 
     - after a minute or two, check the updates at https://logging.staged.apache.org/log4net
         - are you seeing the correct releases page?
-        - are you seeing the correct downloads page?
         - download links should (at this point) not work
 11. create an rc-releasd at GitHub with a tag like `rc/2.0.123-rc1`
     - attach all the files from the build/artifacts folder, _including signatures_
@@ -64,8 +59,11 @@ release version 2.0.123:
     - `cd apache-dist-logging-dev`
     - `svn up log4net`
     - copy in source & binary artifacts to respective locations
-    - `svn delete` old items (or defer this until after the vote completes)
+    - `svn delete *`
+    - `svn add *`
     - `svn commit`
+    - check https://dist.apache.org/repos/dist/dev/logging/log4net/binaries/
+      and https://dist.apache.org/repos/dist/dev/logging/log4net/source/
 13. raise a vote on the log4net mailing list (dev@logging.apache.org) - see MailTemplate.txt
 14. wait
 15. when the vote has 3 or more +1's, it's time to go live!
@@ -85,4 +83,3 @@ release version 2.0.123:
     - `git merge asf-staging`
 18. rename the release at github, eg to `rel/2.0.123`
     - double-check that the `rel` tag is created
-

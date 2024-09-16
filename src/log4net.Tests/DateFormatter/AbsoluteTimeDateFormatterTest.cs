@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using log4net.DateFormatter;
@@ -25,81 +26,95 @@ using NUnit.Framework;
 
 namespace log4net.Tests.DateFormatter
 {
-
-    [TestFixture]
-    public class AbsoluteTimeDateFormatterTest
+  [TestFixture]
+  public class AbsoluteTimeDateFormatterTest
+  {
+    [TearDown]
+    public void ResetCounts()
     {
-
-        [TearDown]
-        public void resetCounts()
-        {
-            FormatterOne.invocations = 0;
-        }
-
-        [Test]
-        public void CacheWorksForSameTicks()
-        {
-            StringWriter sw = new StringWriter();
-            FormatterOne f1 = new FormatterOne();
-            FormatterOne f2 = new FormatterOne();
-            DateTime dt = DateTime.Now;
-            f1.FormatDate(dt, sw);
-            f2.FormatDate(dt, sw);
-            Assert.AreEqual(1, FormatterOne.invocations);
-        }
-
-        [Test]
-        public void CacheWorksForSameSecond()
-        {
-            StringWriter sw = new StringWriter();
-            FormatterOne f1 = new FormatterOne();
-            FormatterOne f2 = new FormatterOne();
-            DateTime dt1 = DateTime.Today;
-            DateTime dt2 = dt1.AddMilliseconds(600);
-            f1.FormatDate(dt1, sw);
-            f2.FormatDate(dt2, sw);
-            Assert.AreEqual(1, FormatterOne.invocations);
-        }
-
-        [Test]
-        public void CacheExpiresWhenCrossingSecond()
-        {
-            StringWriter sw = new StringWriter();
-            FormatterOne f1 = new FormatterOne();
-            FormatterOne f2 = new FormatterOne();
-            DateTime dt1 = DateTime.Today.AddMinutes(1);
-            DateTime dt2 = dt1.AddMilliseconds(1100);
-            f1.FormatDate(dt1, sw);
-            f2.FormatDate(dt2, sw);
-            Assert.AreEqual(2, FormatterOne.invocations);
-        }
-
-        [Test]
-        public void CacheIsLocalToSubclass()
-        {
-            StringWriter sw = new StringWriter();
-            FormatterOne f1 = new FormatterOne();
-            FormatterTwo f2 = new FormatterTwo();
-            DateTime dt1 = DateTime.Today.AddMinutes(10);
-            f1.FormatDate(dt1, sw);
-            f2.FormatDate(dt1, sw);
-            Assert.AreEqual(2, FormatterOne.invocations);
-        }
+      FormatterOne.Invocations = 0;
     }
 
-    internal class FormatterOne : AbsoluteTimeDateFormatter
+    [Test]
+    public void CacheWorksForSameTicks()
     {
-        internal static int invocations = 0;
-
-        override protected void FormatDateWithoutMillis(DateTime dateToFormat,
-                                                        StringBuilder buffer)
-        {
-            invocations++;
-        }
-        
+      StringWriter sw = new StringWriter();
+      FormatterOne f1 = new FormatterOne();
+      FormatterOne f2 = new FormatterOne();
+      DateTime dt = DateTime.Now;
+      f1.FormatDate(dt, sw);
+      f2.FormatDate(dt, sw);
+      Assert.AreEqual(1, FormatterOne.Invocations);
     }
 
-    internal class FormatterTwo : FormatterOne
+    [Test]
+    public void CacheWorksForSameSecond()
     {
+      StringWriter sw = new StringWriter();
+      FormatterOne f1 = new FormatterOne();
+      FormatterOne f2 = new FormatterOne();
+      DateTime dt1 = DateTime.Today;
+      DateTime dt2 = dt1.AddMilliseconds(600);
+      f1.FormatDate(dt1, sw);
+      f2.FormatDate(dt2, sw);
+      Assert.AreEqual(1, FormatterOne.Invocations);
     }
+
+    [Test]
+    public void CacheExpiresWhenCrossingSecond()
+    {
+      StringWriter sw = new StringWriter();
+      FormatterOne f1 = new FormatterOne();
+      FormatterOne f2 = new FormatterOne();
+      DateTime dt1 = DateTime.Today.AddMinutes(1);
+      DateTime dt2 = dt1.AddMilliseconds(1100);
+      f1.FormatDate(dt1, sw);
+      f2.FormatDate(dt2, sw);
+      Assert.AreEqual(2, FormatterOne.Invocations);
+    }
+
+    [Test]
+    public void CacheIsLocalToSubclass()
+    {
+      StringWriter sw = new StringWriter();
+      FormatterOne f1 = new FormatterOne();
+      FormatterTwo f2 = new FormatterTwo();
+      DateTime dt1 = DateTime.Today.AddMinutes(10);
+      f1.FormatDate(dt1, sw);
+      f2.FormatDate(dt1, sw);
+      Assert.AreEqual(2, FormatterOne.Invocations);
+    }
+
+    [Test]
+    public void TestFormattingResults()
+    {
+      var formatter = new AbsoluteTimeDateFormatter();
+      var sb = new StringBuilder();
+      using var writer = new StringWriter(sb, CultureInfo.InvariantCulture);
+
+      // Tests for prepended 0 characters for 2-digit and 3-digit portions.
+      formatter.FormatDate(new DateTime(1970, 1, 1, 1, 1, 1).AddMilliseconds(1), writer);
+      Assert.AreEqual("01:01:01,001", sb.ToString());
+      sb.Clear();
+
+      // Non-zero-prepend case.
+      formatter.FormatDate(new DateTime(2100, 12, 30, 11, 59, 59).AddMilliseconds(100), writer);
+      Assert.AreEqual("11:59:59,100", sb.ToString());
+      sb.Clear();
+    }
+  }
+
+  internal class FormatterOne : AbsoluteTimeDateFormatter
+  {
+    internal static int Invocations;
+
+    override protected void FormatDateWithoutMillis(DateTime dateToFormat, StringBuilder buffer)
+    {
+      Invocations++;
+    }
+  }
+
+  internal sealed class FormatterTwo : FormatterOne
+  {
+  }
 }

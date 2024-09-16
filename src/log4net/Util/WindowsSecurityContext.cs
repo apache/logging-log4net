@@ -17,20 +17,10 @@
 //
 #endregion
 
-#if NET_2_0
-// .NET Compact Framework 1.0 has no support for WindowsIdentity
-#if !NETCF 
-// MONO 1.0 has no support for Win32 Logon APIs
-#if !MONO
-// SSCLI 1.0 has no support for Win32 Logon APIs
-#if !SSCLI
-// We don't want framework or platform specific code in the CLI version of log4net
-#if !CLI_1_0
-
+#if NET462_OR_GREATER
 using System;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
-using System.Security.Permissions;
 
 using log4net.Core;
 
@@ -73,33 +63,8 @@ namespace log4net.Util
       Process
     }
 
-    #region Member Variables
-
-    private ImpersonationMode m_impersonationMode = ImpersonationMode.User;
-    private string m_userName;
-    private string m_domainName = Environment.MachineName;
-    private string m_password;
-    private WindowsIdentity m_identity;
-
-    #endregion
-
-    #region Constructor
-
-    /// <summary>
-    /// Default constructor
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Default constructor
-    /// </para>
-    /// </remarks>
-    public WindowsSecurityContext()
-    {
-    }
-
-    #endregion
-
-    #region Public Properties
+    private string? m_password;
+    private WindowsIdentity? m_identity;
 
     /// <summary>
     /// Gets or sets the impersonation mode for this security context
@@ -129,11 +94,7 @@ namespace log4net.Util
     /// impersonating then it will be reverted back to the process credentials.
     /// </para>
     /// </remarks>
-    public ImpersonationMode Credentials
-    {
-      get { return m_impersonationMode; }
-      set { m_impersonationMode = value; }
-    }
+    public ImpersonationMode Credentials { get; set; } = ImpersonationMode.User;
 
     /// <summary>
     /// Gets or sets the Windows username for this security context
@@ -147,11 +108,7 @@ namespace log4net.Util
     /// is set to <see cref="ImpersonationMode.User"/> (the default setting).
     /// </para>
     /// </remarks>
-    public string UserName
-    {
-      get { return m_userName; }
-      set { m_userName = value; }
-    }
+    public string? UserName { get; set; }
 
     /// <summary>
     /// Gets or sets the Windows domain name for this security context
@@ -169,11 +126,7 @@ namespace log4net.Util
     /// is set to <see cref="ImpersonationMode.User"/> (the default setting).
     /// </para>
     /// </remarks>
-    public string DomainName
-    {
-      get { return m_domainName; }
-      set { m_domainName = value; }
-    }
+    public string DomainName { get; set; } = Environment.MachineName;
 
     /// <summary>
     /// Sets the password for the Windows account specified by the <see cref="UserName"/> and <see cref="DomainName"/> properties.
@@ -191,10 +144,6 @@ namespace log4net.Util
     {
       set { m_password = value; }
     }
-
-    #endregion
-
-    #region IOptionHandler Members
 
     /// <summary>
     /// Initialize the SecurityContext based on the options set.
@@ -220,17 +169,24 @@ namespace log4net.Util
     /// <see cref="DomainName" /> or <see cref="Password" /> properties were not specified.</exception>
     public void ActivateOptions()
     {
-      if (m_impersonationMode == ImpersonationMode.User)
+      if (Credentials == ImpersonationMode.User)
       {
-        if (m_userName == null) throw new ArgumentNullException("m_userName");
-        if (m_domainName == null) throw new ArgumentNullException("m_domainName");
-        if (m_password == null) throw new ArgumentNullException("m_password");
+        if (UserName is null)
+        {
+          throw new ArgumentNullException(nameof(UserName));
+        }
+        if (DomainName is null)
+        {
+          throw new ArgumentNullException(nameof(DomainName));
+        }
+        if (m_password is null)
+        {
+          throw new ArgumentNullException(nameof(Password));
+        }
 
-        m_identity = LogonUser(m_userName, m_domainName, m_password);
+        m_identity = LogonUser(UserName, DomainName, m_password);
       }
     }
-
-    #endregion
 
     /// <summary>
     /// Impersonate the Windows account specified by the <see cref="UserName"/> and <see cref="DomainName"/> properties.
@@ -246,16 +202,16 @@ namespace log4net.Util
     /// to the process credentials.
     /// </para>
     /// </remarks>
-    public override IDisposable Impersonate(object state)
+    public override IDisposable? Impersonate(object state)
     {
-      if (m_impersonationMode == ImpersonationMode.User)
+      if (Credentials == ImpersonationMode.User)
       {
-        if (m_identity != null)
+        if (m_identity is not null)
         {
           return new DisposableImpersonationContext(m_identity.Impersonate());
         }
       }
-      else if (m_impersonationMode == ImpersonationMode.Process)
+      else if (Credentials == ImpersonationMode.Process)
       {
         // Impersonate(0) will revert to the process credentials
         return new DisposableImpersonationContext(WindowsIdentity.Impersonate(IntPtr.Zero));
@@ -276,9 +232,7 @@ namespace log4net.Util
     /// token is used to initialize the WindowsIdentity.
     /// </para>
     /// </remarks>
-#if NET_4_0 || MONO_4_0
-        [System.Security.SecuritySafeCritical]
-#endif
+    [System.Security.SecuritySafeCritical]
     [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
     private static WindowsIdentity LogonUser(string userName, string domainName, string password)
     {
@@ -291,7 +245,7 @@ namespace log4net.Util
       if (!LogonUser(userName, domainName, password, LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, ref tokenHandle))
       {
         NativeError error = NativeError.GetLastError();
-        throw new Exception("Failed to LogonUser [" + userName + "] in Domain [" + domainName + "]. Error: " + error.ToString());
+        throw new Exception($"Failed to LogonUser [{userName}] in Domain [{domainName}]. Error: {error.ToString()}");
       }
 
       const int SecurityImpersonation = 2;
@@ -303,10 +257,10 @@ namespace log4net.Util
         {
           CloseHandle(tokenHandle);
         }
-        throw new Exception("Failed to DuplicateToken after LogonUser. Error: " + error.ToString());
+        throw new Exception($"Failed to DuplicateToken after LogonUser. Error: {error}");
       }
 
-      WindowsIdentity identity = new WindowsIdentity(dupeTokenHandle);
+      var identity = new WindowsIdentity(dupeTokenHandle);
 
       // Free the tokens.
       if (dupeTokenHandle != IntPtr.Zero)
@@ -321,20 +275,17 @@ namespace log4net.Util
       return identity;
     }
 
-    #region Native Method Stubs
-
     [DllImport("advapi32.dll", SetLastError = true)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     private static extern bool LogonUser(String lpszUsername, String lpszDomain, String lpszPassword, int dwLogonType, int dwLogonProvider, ref IntPtr phToken);
 
     [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     private static extern bool CloseHandle(IntPtr handle);
 
     [DllImport("advapi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     private static extern bool DuplicateToken(IntPtr ExistingTokenHandle, int SECURITY_IMPERSONATION_LEVEL, ref IntPtr DuplicateTokenHandle);
-
-    #endregion
-
-    #region DisposableImpersonationContext class
 
     /// <summary>
     /// Adds <see cref="IDisposable"/> to <see cref="WindowsImpersonationContext"/>
@@ -376,14 +327,6 @@ namespace log4net.Util
         m_impersonationContext.Undo();
       }
     }
-
-    #endregion
   }
 }
-
-#endif // !CLI_1_0
-#endif // !SSCLI
-#endif // !MONO
-#endif // !NETCF
-#endif // NET_2_0
-
+#endif // NET462_OR_GREATER

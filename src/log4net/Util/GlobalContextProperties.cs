@@ -17,9 +17,6 @@
 //
 #endregion
 
-using System;
-using System.Collections;
-
 namespace log4net.Util
 {
   /// <summary>
@@ -38,8 +35,6 @@ namespace log4net.Util
   /// <author>Nicko Cadell</author>
   public sealed class GlobalContextProperties : ContextPropertiesBase
   {
-    #region Private Instance Fields
-
     /// <summary>
     /// The read only copy of the properties.
     /// </summary>
@@ -49,20 +44,12 @@ namespace log4net.Util
     /// reordering reads and writes of this thread performed on different threads.
     /// </para>
     /// </remarks>
-#if NETCF
-    private ReadOnlyPropertiesDictionary m_readOnlyProperties = new ReadOnlyPropertiesDictionary();
-#else
-    private volatile ReadOnlyPropertiesDictionary m_readOnlyProperties = new ReadOnlyPropertiesDictionary();
-#endif
+    private volatile ReadOnlyPropertiesDictionary m_readOnlyProperties = new();
 
     /// <summary>
     /// Lock object used to synchronize updates within this instance
     /// </summary>
-    private readonly object m_syncRoot = new object();
-
-    #endregion Private Instance Fields
-
-    #region Public Instance Constructors
+    private readonly object m_syncRoot = new();
 
     /// <summary>
     /// Constructor
@@ -75,10 +62,6 @@ namespace log4net.Util
     internal GlobalContextProperties()
     {
     }
-
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
 
     /// <summary>
     /// Gets or sets the value of a property
@@ -93,28 +76,21 @@ namespace log4net.Util
     /// the properties is created.
     /// </para>
     /// </remarks>
-    public override object this[string key]
+    public override object? this[string key]
     {
-      get
-      {
-        return m_readOnlyProperties[key];
-      }
+      get => m_readOnlyProperties[key];
       set
       {
         lock (m_syncRoot)
         {
-          PropertiesDictionary mutableProps = new PropertiesDictionary(m_readOnlyProperties);
-
-          mutableProps[key] = value;
-
+          var mutableProps = new PropertiesDictionary(m_readOnlyProperties)
+          {
+            [key] = value
+          };
           m_readOnlyProperties = new ReadOnlyPropertiesDictionary(mutableProps);
         }
       }
     }
-
-    #endregion Public Instance Properties
-
-    #region Public Instance Methods
 
     /// <summary>
     /// Remove a property from the global context
@@ -132,10 +108,8 @@ namespace log4net.Util
       {
         if (m_readOnlyProperties.Contains(key))
         {
-          PropertiesDictionary mutableProps = new PropertiesDictionary(m_readOnlyProperties);
-
+          var mutableProps = new PropertiesDictionary(m_readOnlyProperties);
           mutableProps.Remove(key);
-
           m_readOnlyProperties = new ReadOnlyPropertiesDictionary(mutableProps);
         }
       }
@@ -152,10 +126,6 @@ namespace log4net.Util
       }
     }
 
-    #endregion Public Instance Methods
-
-    #region Internal Instance Methods
-
     /// <summary>
     /// Get a readonly immutable copy of the properties
     /// </summary>
@@ -170,8 +140,5 @@ namespace log4net.Util
     {
       return m_readOnlyProperties;
     }
-
-    #endregion Internal Instance Methods
   }
 }
-

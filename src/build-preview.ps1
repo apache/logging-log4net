@@ -1,0 +1,1 @@
+dotnet build -c Release '-p:GeneratePackages=true;VersionSuffix=preview.4' ./log4net/log4net.csproj

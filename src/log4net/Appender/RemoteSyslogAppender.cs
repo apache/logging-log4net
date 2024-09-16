@@ -20,7 +20,6 @@
 using System;
 
 using log4net.Core;
-using log4net.Appender;
 using log4net.Util;
 using log4net.Layout;
 using System.Text;
@@ -33,7 +32,7 @@ namespace log4net.Appender
   /// <remarks>
   /// <para>
   /// The BSD syslog protocol is used to remotely log to
-  /// a syslog daemon. The syslogd listens for for messages
+  /// a syslog daemon. The syslogd listens for messages
   /// on UDP port 514.
   /// </para>
   /// <para>
@@ -52,7 +51,7 @@ namespace log4net.Appender
   /// hostname or IP address to any messages received.
   /// </para>
   /// <para>
-  /// Syslog messages must have a facility and and a severity. The severity
+  /// Syslog messages must have a facility and a severity. The severity
   /// is derived from the Level of the logging event.
   /// The facility must be chosen from the set of defined syslog 
   /// <see cref="SyslogFacility"/> values. The facilities list is predefined
@@ -60,7 +59,7 @@ namespace log4net.Appender
   /// </para>
   /// <para>
   /// An identifier is specified with each log message. This can be specified
-  /// by setting the <see cref="Identity"/> property. The identity (also know 
+  /// by setting the <see cref="Identity"/> property. The identity (also known 
   /// as the tag) must not contain white space. The default value for the
   /// identity is the application name (from <see cref="LoggingEvent.Domain"/>).
   /// </para>
@@ -73,8 +72,6 @@ namespace log4net.Appender
     /// Syslog port 514
     /// </summary>
     private const int DefaultSyslogPort = 514;
-
-    #region Enumerations
 
     /// <summary>
     /// syslog severities
@@ -258,10 +255,6 @@ namespace log4net.Appender
       Local7 = 23
     }
 
-    #endregion Enumerations
-
-    #region Public Instance Constructors
-
     /// <summary>
     /// Initializes a new instance of the <see cref="RemoteSyslogAppender" /> class.
     /// </summary>
@@ -272,14 +265,10 @@ namespace log4net.Appender
     public RemoteSyslogAppender()
     {
       // syslog udp defaults
-      this.RemotePort = DefaultSyslogPort;
-      this.RemoteAddress = System.Net.IPAddress.Parse("127.0.0.1");
-      this.Encoding = System.Text.Encoding.ASCII;
+      RemotePort = DefaultSyslogPort;
+      RemoteAddress = System.Net.IPAddress.Parse("127.0.0.1");
+      Encoding = Encoding.ASCII;
     }
-
-    #endregion Public Instance Constructors
-
-    #region Public Instance Properties
 
     /// <summary>
     /// Message identity
@@ -287,16 +276,12 @@ namespace log4net.Appender
     /// <remarks>
     /// <para>
     /// An identifier is specified with each log message. This can be specified
-    /// by setting the <see cref="Identity"/> property. The identity (also know 
+    /// by setting the <see cref="Identity"/> property. The identity (also known
     /// as the tag) must not contain white space. The default value for the
     /// identity is the application name (from <see cref="LoggingEvent.Domain"/>).
     /// </para>
     /// </remarks>
-    public PatternLayout Identity
-    {
-      get { return m_identity; }
-      set { m_identity = value; }
-    }
+    public PatternLayout? Identity { get; set; }
 
     /// <summary>
     /// Syslog facility
@@ -306,13 +291,7 @@ namespace log4net.Appender
     /// facilities is predefined and cannot be extended. The default value
     /// is <see cref="SyslogFacility.User"/>.
     /// </remarks>
-    public SyslogFacility Facility
-    {
-      get { return m_facility; }
-      set { m_facility = value; }
-    }
-
-    #endregion Public Instance Properties
+    public SyslogFacility Facility { get; set; } = SyslogFacility.User;
 
     /// <summary>
     /// Add a mapping of level to severity
@@ -328,15 +307,13 @@ namespace log4net.Appender
       m_levelMapping.Add(mapping);
     }
 
-    #region AppenderSkeleton Implementation
-
     /// <summary>
-    /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/> method.
+    /// Writes the event to a remote syslog daemon.
     /// </summary>
     /// <param name="loggingEvent">The event to log.</param>
     /// <remarks>
     /// <para>
-    /// Writes the event to a remote syslog daemon.
+    /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/> method.
     /// </para>
     /// <para>
     /// The format of the output will depend on the appender's layout.
@@ -344,17 +321,25 @@ namespace log4net.Appender
     /// </remarks>
     protected override void Append(LoggingEvent loggingEvent)
     {
+      if (Client is null)
+      {
+        ErrorHandler.Error(
+          $"Unable to send logging event to remote syslog {RemoteAddress} on port {RemotePort}, no client created",
+          e: null,
+          ErrorCode.WriteFailure);
+        return;
+      }
+
       try
       {
         // Priority
-        int priority = GeneratePriority(m_facility, GetSeverity(loggingEvent.Level));
+        int priority = GeneratePriority(Facility, GetSeverity(loggingEvent.Level));
 
         // Identity
-        string identity;
-
-        if (m_identity != null)
+        string? identity;
+        if (Identity is not null)
         {
-          identity = m_identity.Format(loggingEvent);
+          identity = Identity.Format(loggingEvent);
         }
         else
         {
@@ -364,10 +349,9 @@ namespace log4net.Appender
         // Message. The message goes after the tag/identity
         string message = RenderLoggingEvent(loggingEvent);
 
-        byte[] buffer;
         int i = 0;
 
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
 
         while (i < message.Length)
         {
@@ -375,33 +359,23 @@ namespace log4net.Appender
           builder.Length = 0;
 
           // Write priority
-          builder.Append('<');
-          builder.Append(priority);
-          builder.Append('>');
+          builder.Append('<').Append(priority).Append('>');
 
           // Write identity
-          builder.Append(identity);
-          builder.Append(": ");
+          builder.Append(identity).Append(": ");
 
           AppendMessage(message, ref i, builder);
 
           // Grab as a byte array
-          buffer = this.Encoding.GetBytes(builder.ToString());
+          byte[] buffer = Encoding.GetBytes(builder.ToString());
 
-#if NET_4_5 || NETSTANDARD
           Client.SendAsync(buffer, buffer.Length, RemoteEndPoint).Wait();
-#else
-          this.Client.Send(buffer, buffer.Length, this.RemoteEndPoint);
-#endif
         }
       }
       catch (Exception e)
       {
         ErrorHandler.Error(
-            "Unable to send logging event to remote syslog " +
-            this.RemoteAddress.ToString() +
-            " on port " +
-            this.RemotePort + ".",
+          $"Unable to send logging event to remote syslog {RemoteAddress} on port {RemotePort}.",
             e,
             ErrorCode.WriteFailure);
       }
@@ -420,12 +394,12 @@ namespace log4net.Appender
         char c = message[characterIndex];
 
         // Accept only visible ASCII characters and space. See RFC 3164 section 4.1.3
-        if (((int)c >= 32) && ((int)c <= 126))
+        if ((c >= ' ') && (c <= 126))
         {
           builder.Append(c);
         }
         // If character is newline, break and send the current line
-        else if ((c == '\r') || (c == '\n'))
+        else if (c is '\r' or '\n')
         {
           // Check the next character to handle \r\n or \n\r
           if ((message.Length > characterIndex + 1) && ((message[characterIndex + 1] == '\r') || (message[characterIndex + 1] == '\n')))
@@ -452,24 +426,14 @@ namespace log4net.Appender
       m_levelMapping.ActivateOptions();
     }
 
-    #endregion AppenderSkeleton Implementation
-
-    #region Protected Members
-
     /// <summary>
     /// Translates a log4net level to a syslog severity.
     /// </summary>
     /// <param name="level">A log4net level.</param>
     /// <returns>A syslog severity.</returns>
-    /// <remarks>
-    /// <para>
-    /// Translates a log4net level to a syslog severity.
-    /// </para>
-    /// </remarks>
-    protected virtual SyslogSeverity GetSeverity(Level level)
+    protected virtual SyslogSeverity GetSeverity(Level? level)
     {
-      LevelSeverity levelSeverity = m_levelMapping.Lookup(level) as LevelSeverity;
-      if (levelSeverity != null)
+      if (m_levelMapping.Lookup(level) is LevelSeverity levelSeverity)
       {
         return levelSeverity.Severity;
       }
@@ -478,6 +442,11 @@ namespace log4net.Appender
       // Fallback to sensible default values
       //
 
+      if (level is null)
+      {
+        // Default setting
+        return SyslogSeverity.Debug;
+      }
       if (level >= Level.Alert)
       {
         return SyslogSeverity.Alert;
@@ -506,10 +475,6 @@ namespace log4net.Appender
       return SyslogSeverity.Debug;
     }
 
-    #endregion Protected Members
-
-    #region Public Static Members
-
     /// <summary>
     /// Generate a syslog priority.
     /// </summary>
@@ -525,12 +490,12 @@ namespace log4net.Appender
     {
       if (facility < SyslogFacility.Kernel || facility > SyslogFacility.Local7)
       {
-        throw new ArgumentException("SyslogFacility out of range", "facility");
+        throw new ArgumentException($"{nameof(SyslogFacility)} out of range", nameof(facility));
       }
 
       if (severity < SyslogSeverity.Emergency || severity > SyslogSeverity.Debug)
       {
-        throw new ArgumentException("SyslogSeverity out of range", "severity");
+        throw new ArgumentException($"{nameof(SyslogSeverity)} out of range", nameof(severity));
       }
 
       unchecked
@@ -539,68 +504,32 @@ namespace log4net.Appender
       }
     }
 
-    #endregion Public Static Members
-
-    #region Private Instances Fields
-
-    /// <summary>
-    /// The facility. The default facility is <see cref="SyslogFacility.User"/>.
-    /// </summary>
-    private SyslogFacility m_facility = SyslogFacility.User;
-
-    /// <summary>
-    /// The message identity
-    /// </summary>
-    private PatternLayout m_identity;
-
     /// <summary>
     /// Mapping from level object to syslog severity
     /// </summary>
-    private LevelMapping m_levelMapping = new LevelMapping();
+    private readonly LevelMapping m_levelMapping = new();
 
-    /// <summary>
-    /// Initial buffer size
-    /// </summary>
-    private const int c_renderBufferSize = 256;
-
-    /// <summary>
-    /// Maximum buffer size before it is recycled
-    /// </summary>
-    private const int c_renderBufferMaxCapacity = 1024;
-
-    #endregion Private Instances Fields
-
-    #region LevelSeverity LevelMapping Entry
     /// <summary>
     /// A class to act as a mapping between the level that a logging call is made at and
-    /// the syslog severity that is should be logged at.
+    /// the syslog severity that it should be logged at.
     /// </summary>
     /// <remarks>
     /// <para>
     /// A class to act as a mapping between the level that a logging call is made at and
-    /// the syslog severity that is should be logged at.
+    /// the syslog severity that it should be logged at.
     /// </para>
     /// </remarks>
     public class LevelSeverity : LevelMappingEntry
     {
-      private SyslogSeverity m_severity;
-
       /// <summary>
       /// The mapped syslog severity for the specified level
       /// </summary>
       /// <remarks>
       /// <para>
       /// Required property.
-      /// The mapped syslog severity for the specified level
       /// </para>
       /// </remarks>
-      public SyslogSeverity Severity
-      {
-        get { return m_severity; }
-        set { m_severity = value; }
-      }
+      public SyslogSeverity Severity { get; set; }
     }
-
-    #endregion // LevelSeverity LevelMapping Entry
   }
 }

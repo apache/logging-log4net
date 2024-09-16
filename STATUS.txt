@@ -12,16 +12,13 @@ Project Details
 ===============
 
 Web site: http://logging.apache.org/log4net/
-Issue Tracking: http://issues.apache.org/jira/browse/LOG4NET
-Source Code: http://svn.apache.org/viewvc/logging/log4net/
-Mailing Lists:
-  User: log4net-user@logging.apache.org
-  Dev:  log4net-dev@logging.apache.org
-
+Issue Tracking: https://github.com/apache/logging-log4net/issues/
+Source Code: https://github.com/apache/logging-log4net/
 
 Active Committers
 =================
 * Davyd McColl (davydm)
+* Jan Friedrich (freeandnil)
 
 Former Committers
 ================
@@ -31,4 +28,3 @@ Former Committers
 * Ron Grabowski (rgrabowski)
 * Stefan Bodewig (bodewig)
 * Dominik Psenner (dpsenner)
-

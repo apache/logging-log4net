@@ -1,6 +1,6 @@
 {
   "name": "log4net",
-  "version": "2.0.12",
+  "version": "3.0.0",
   "description": "Log4Net is a logging framework for .NET",
   "scripts": {
     "test": "run-s clean-build test-dotnet run-dotnet-core-tests",
@@ -23,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/fluffynuts/logging-log4net.git"
+    "url": "git+ssh://git@github.com/apache/logging-log4net.git"
   },
   "author": "",
   "license": "Apache-2.0",

@@ -19,9 +19,7 @@
 
 using System;
 
-using log4net;
 using log4net.Core;
-using log4net.Util;
 
 namespace log4net.Filter
 {
@@ -42,33 +40,6 @@ namespace log4net.Filter
   /// <author>Daniel Cazzulino</author>
   public class LoggerMatchFilter : FilterSkeleton
   {
-    #region Member Variables
-
-    /// <summary>
-    /// Flag to indicate the behavior when we have a match
-    /// </summary>
-    private bool m_acceptOnMatch = true;
-
-    /// <summary>
-    /// The logger name string to substring match against the event
-    /// </summary>
-    private string m_loggerToMatch;
-
-    #endregion
-
-    #region Constructors
-
-    /// <summary>
-    /// Default constructor
-    /// </summary>
-    public LoggerMatchFilter()
-    {
-    }
-
-    #endregion
-
-    #region Properties
-
     /// <summary>
     /// <see cref="FilterDecision.Accept"/> when matching <see cref="LoggerToMatch"/>
     /// </summary>
@@ -83,11 +54,7 @@ namespace log4net.Filter
     /// The default is <c>true</c> i.e. to <see cref="FilterDecision.Accept"/> the event.
     /// </para>
     /// </remarks>
-    public bool AcceptOnMatch
-    {
-      get { return m_acceptOnMatch; }
-      set { m_acceptOnMatch = value; }
-    }
+    public bool AcceptOnMatch { get; set; } = true;
 
     /// <summary>
     /// The <see cref="LoggingEvent.LoggerName"/> that the filter will match
@@ -101,15 +68,7 @@ namespace log4net.Filter
     /// the result depends on the value of <see cref="AcceptOnMatch"/>.
     /// </para>
     /// </remarks>
-    public string LoggerToMatch
-    {
-      get { return m_loggerToMatch; }
-      set { m_loggerToMatch = value; }
-    }
-
-    #endregion 
-
-    #region Override implementation of FilterSkeleton
+    public string? LoggerToMatch { get; set; }
 
     /// <summary>
     /// Check if this filter should allow the event to be logged
@@ -131,17 +90,18 @@ namespace log4net.Filter
     /// </remarks>
     public override FilterDecision Decide(LoggingEvent loggingEvent)
     {
-      if (loggingEvent == null)
+      if (loggingEvent is null)
       {
-        throw new ArgumentNullException("loggingEvent");
+        throw new ArgumentNullException(nameof(loggingEvent));
       }
 
-      // Check if we have been setup to filter
-      if ((m_loggerToMatch != null && m_loggerToMatch.Length != 0) &&
-        loggingEvent.LoggerName.StartsWith(m_loggerToMatch))
+      // Check if we have been set up to filter
+      if (!string.IsNullOrEmpty(LoggerToMatch) &&
+        loggingEvent.LoggerName is not null &&
+        loggingEvent.LoggerName.StartsWith(LoggerToMatch))
       {
         // we've got a match
-        if (m_acceptOnMatch)
+        if (AcceptOnMatch)
         {
           return FilterDecision.Accept;
         }
@@ -154,7 +114,5 @@ namespace log4net.Filter
         return FilterDecision.Neutral;
       }
     }
-
-    #endregion
   }
 }

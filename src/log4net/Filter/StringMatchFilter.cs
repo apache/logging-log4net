@@ -20,60 +20,21 @@
 using System;
 using System.Text.RegularExpressions;
 
-using log4net;
 using log4net.Core;
-using log4net.Util;
 
 namespace log4net.Filter
 {
   /// <summary>
-  /// Simple filter to match a string in the rendered message
+  /// Simple filter to match a string in the rendered message.
   /// </summary>
-  /// <remarks>
-  /// <para>
-  /// Simple filter to match a string in the rendered message
-  /// </para>
-  /// </remarks>
   /// <author>Nicko Cadell</author>
   /// <author>Gert Driesen</author>
   public class StringMatchFilter : FilterSkeleton
   {
-    #region Member Variables
-
-    /// <summary>
-    /// Flag to indicate the behavior when we have a match
-    /// </summary>
-    protected bool m_acceptOnMatch = true;
-
-    /// <summary>
-    /// The string to substring match against the message
-    /// </summary>
-    protected string m_stringToMatch;
-
-    /// <summary>
-    /// A string regex to match
-    /// </summary>
-    protected string m_stringRegexToMatch;
-
     /// <summary>
     /// A regex object to match (generated from m_stringRegexToMatch)
     /// </summary>
-    protected Regex m_regexToMatch;
-
-    #endregion
-
-    #region Constructors
-
-    /// <summary>
-    /// Default constructor
-    /// </summary>
-    public StringMatchFilter()
-    {
-    }
-
-    #endregion
-
-    #region Implementation of IOptionHandler
+    protected Regex? m_regexToMatch;
 
     /// <summary>
     /// Initialize and precompile the Regex if required
@@ -91,19 +52,13 @@ namespace log4net.Filter
     /// <see cref="ActivateOptions"/> must be called again.
     /// </para>
     /// </remarks>
-    public override void ActivateOptions()
+    public override void ActivateOptions() 
     {
-      if (m_stringRegexToMatch != null)
+      if (RegexToMatch is not null)
       {
-#if NETSTANDARD1_3
-        m_regexToMatch = new Regex(m_stringRegexToMatch);
-#else
-        m_regexToMatch = new Regex(m_stringRegexToMatch, RegexOptions.Compiled);
-#endif
+        m_regexToMatch = new Regex(RegexToMatch, RegexOptions.Compiled);
       }
     }
-
-    #endregion
 
     /// <summary>
     /// <see cref="FilterDecision.Accept"/> when matching <see cref="StringToMatch"/> or <see cref="RegexToMatch"/>
@@ -119,11 +74,7 @@ namespace log4net.Filter
     /// The default is <c>true</c> i.e. to <see cref="FilterDecision.Accept"/> the event.
     /// </para>
     /// </remarks>
-    public bool AcceptOnMatch
-    {
-      get { return m_acceptOnMatch; }
-      set { m_acceptOnMatch = value; }
-    }
+    public bool AcceptOnMatch { get; set; } = true;
 
     /// <summary>
     /// Sets the static string to match
@@ -140,11 +91,7 @@ namespace log4net.Filter
     /// must be specified.
     /// </para>
     /// </remarks>
-    public string StringToMatch
-    {
-      get { return m_stringToMatch; }
-      set { m_stringToMatch = value; }
-    }
+    public string? StringToMatch { get; set; }
 
     /// <summary>
     /// Sets the regular expression to match
@@ -161,13 +108,7 @@ namespace log4net.Filter
     /// must be specified.
     /// </para>
     /// </remarks>
-    public string RegexToMatch
-    {
-      get { return m_stringRegexToMatch; }
-      set { m_stringRegexToMatch = value; }
-    }
-
-    #region Override implementation of FilterSkeleton
+    public string? RegexToMatch { get; set; }
 
     /// <summary>
     /// Check if this filter should allow the event to be logged
@@ -186,60 +127,58 @@ namespace log4net.Filter
     /// <see cref="FilterDecision.Deny"/> is returned.
     /// </para>
     /// </remarks>
-    public override FilterDecision Decide(LoggingEvent loggingEvent)
+    public override FilterDecision Decide(LoggingEvent loggingEvent) 
     {
-      if (loggingEvent == null)
+      if (loggingEvent is null)
       {
-        throw new ArgumentNullException("loggingEvent");
+        throw new ArgumentNullException(nameof(loggingEvent));
       }
 
-      string msg = loggingEvent.RenderedMessage;
+      string? msg = loggingEvent.RenderedMessage;
 
       // Check if we have been setup to filter
-      if (msg == null || (m_stringToMatch == null && m_regexToMatch == null))
+      if (msg is null || (StringToMatch is null && m_regexToMatch is null))
       {
         // We cannot filter so allow the filter chain
         // to continue processing
         return FilterDecision.Neutral;
       }
-
+    
       // Firstly check if we are matching using a regex
-      if (m_regexToMatch != null)
+      if (m_regexToMatch is not null)
       {
         // Check the regex
         if (m_regexToMatch.Match(msg).Success == false)
         {
           // No match, continue processing
           return FilterDecision.Neutral;
-        }
+        } 
 
         // we've got a match
-        if (m_acceptOnMatch)
+        if (AcceptOnMatch) 
         {
           return FilterDecision.Accept;
-        }
+        } 
         return FilterDecision.Deny;
       }
-      else if (m_stringToMatch != null)
+      else if (StringToMatch is not null)
       {
         // Check substring match
-        if (msg.IndexOf(m_stringToMatch) == -1)
+        if (msg.IndexOf(StringToMatch) == -1) 
         {
           // No match, continue processing
           return FilterDecision.Neutral;
-        }
+        } 
 
         // we've got a match
-        if (m_acceptOnMatch)
+        if (AcceptOnMatch) 
         {
           return FilterDecision.Accept;
-        }
+        } 
         return FilterDecision.Deny;
       }
+
       return FilterDecision.Neutral;
-
     }
-
-    #endregion
   }
 }
