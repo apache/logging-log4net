@@ -21,7 +21,7 @@
   <groupId>log4net</groupId>
   <artifactId>apache-log4net</artifactId>
   <packaging>pom</packaging>
-  <version>3.0.0</version>
+  <version>3.1.0</version>
   <name>Apache log4net</name>
   <description>Logging framework for Microsoft .NET Framework.</description>
   <url>http://logging.apache.org/log4net/</url>
@@ -72,7 +72,6 @@
       </plugin>
     </plugins>
   </build>
-
   <reporting>
     <plugins>
       <plugin>
@@ -89,7 +88,7 @@
         <artifactId>apache-rat-plugin</artifactId>
         <version>0.12</version>
         <configuration>
-      <excludesFile>${basedir}/rat.excludesFile</excludesFile>
+          <excludesFile>${basedir}/rat.excludesFile</excludesFile>
         </configuration>
       </plugin>
       <plugin>
@@ -99,7 +98,7 @@
         <reportSets>
           <reportSet>
             <reports>
-              <report>cim</report>	
+              <report>cim</report>
               <report>scm</report>
               <report>license</report>
               <report>project-team</report>
@@ -109,7 +108,6 @@
       </plugin>
     </plugins>
   </reporting>
-
   <developers>
     <developer>
       <name>Davyd McColl</name>
@@ -148,7 +146,6 @@
       <id>dpsenner</id>
     </developer>
   </developers>
-
   <contributors>
     <contributor>
       <name>Erik Mavrinac</name>
@@ -187,14 +184,12 @@
       <name>Jarrod Alexander</name>
     </contributor>
   </contributors>
-
   <dependencies>
   </dependencies>
-
   <distributionManagement>
     <site>
       <id>logging.site</id>
       <url>file:///${user.dir}/target/site-deploy</url>
     </site>
-  </distributionManagement> 
+  </distributionManagement>
 </project>
