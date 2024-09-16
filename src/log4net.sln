@@ -40,7 +40,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "log4net2-SerializeEvent", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".doc", ".doc", "{33D80AD3-8048-4220-8BB0-38E3BDE5FCF4}"
 	ProjectSection(SolutionItems) = preProject
-		build-preview.ps1 = build-preview.ps1
 		..\doc\BUILDING.md = ..\doc\BUILDING.md
 		site\xdoc\release\config-examples.xml = site\xdoc\release\config-examples.xml
 		site\xdoc\download_log4net.xml = site\xdoc\download_log4net.xml
@@ -48,6 +47,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".doc", ".doc", "{33D80AD3-8
 		..\doc\MailTemplate.txt = ..\doc\MailTemplate.txt
 		site\xdoc\release\release-notes.xml = site\xdoc\release\release-notes.xml
 		..\doc\RELEASING.md = ..\doc\RELEASING.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".scripts", ".scripts", "{050E0D0D-D916-42FD-AE58-32965336D357}"
+	ProjectSection(SolutionItems) = preProject
+		..\scripts\build-preview.ps1 = ..\scripts\build-preview.ps1
+		..\scripts\install-dotnet-sdk.ps1 = ..\scripts\install-dotnet-sdk.ps1
+		..\scripts\sign-log4net-libraries.ps1 = ..\scripts\sign-log4net-libraries.ps1
+		..\scripts\sign-log4net-libraries.sh = ..\scripts\sign-log4net-libraries.sh
 	EndProjectSection
 EndProject
 Global
