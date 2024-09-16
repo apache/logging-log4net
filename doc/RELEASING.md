@@ -32,7 +32,7 @@ release version 2.0.123:
         - pom.xml: update version
 4. Sign release artifacts (zips & nupkg) under `build/artifacts`
     - eg `gpg --armor --output log4net-2.0.123.nupkg.asc --detach-sig log4net-2.0.123.nupkg`
-    - there is an accompanying `sign-log4net-libraries.sh` which you could invoke if you cd
+    - there is an accompanying `sign-log4net-libraries.sh/ps1` under scripts which you could invoke if you cd
         into the `build/artifacts` folder
         - I build on Windows and sign on Linux as my build machine belongs to my company
             and I don't want to store keys there. Always protect your keys fervently!
