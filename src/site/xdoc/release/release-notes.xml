@@ -34,6 +34,9 @@ limitations under the License.
         </section><section id="a3.1.0-enhancements" name="Enhancements">
           <ul>
             <li>
+              <a href="https://github.com/apache/logging-log4net/pull/176">added source link</a> (by @FreeAndNil)
+            </li>
+            <li>
               <a href="https://github.com/apache/logging-log4net/issues/177">use ManagedThreadId for long running tasks</a> (reported by @Audela-220 fixed by @FreeAndNil)
             </li>
             <li>
@@ -201,6 +204,9 @@ limitations under the License.
             </li>
             <li>
               <a href="https://github.com/apache/logging-log4net/issues/168">ColoredConsoleAppender writes UTF-8 preamble to the console on initialization</a> (reported by @RoboBurned, fixed by @freeandnil)
+            </li>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/179">Culture-Specific String Comparisons Cause RollingFileAppender Failure in log4net on NET 5+</a> (reported by @stianeklund)
             </li>
           </ul>
         </section><section id="a3.0.0-enhancements" name="Enhancements">

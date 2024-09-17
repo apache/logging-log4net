@@ -45,7 +45,6 @@ log4net is designed with two distinct goals in mind: speed and flexibility
     <PackageIcon>package-icon.png</PackageIcon>
     <PackageTags>logging log tracing logfiles</PackageTags>
     <Owners>Apache Logging Project</Owners>
-    <PackageVersion>$(Version)</PackageVersion>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <AssemblyTitle>Apache log4net for .NET</AssemblyTitle>
