@@ -50,6 +50,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".doc", ".doc", "{33D80AD3-8
 		..\doc\RELEASING.md = ..\doc\RELEASING.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".scripts", ".scripts", "{C09A163E-D7A5-4CD2-9E1D-452266277CC1}"
+	ProjectSection(SolutionItems) = preProject
+		..\scripts\build-preview.ps1 = ..\scripts\build-preview.ps1
+		..\scripts\install-dotnet-sdk.ps1 = ..\scripts\install-dotnet-sdk.ps1
+		..\scripts\sign-log4net-libraries.ps1 = ..\scripts\sign-log4net-libraries.ps1
+		..\scripts\sign-log4net-libraries.sh = ..\scripts\sign-log4net-libraries.sh
+		..\scripts\update-version.ps1 = ..\scripts\update-version.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
