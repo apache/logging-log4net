@@ -27,8 +27,7 @@ namespace log4net.Util.TypeConverters
   /// </summary>
   /// <remarks>
   /// <para>
-  /// Maintains a registry of type converters used to convert between
-  /// types.
+  /// Maintains a registry of type converters used to convert between types.
   /// </para>
   /// <para>
   /// Use the <see cref="M:AddConverter(Type, object)"/> and 
@@ -44,13 +43,8 @@ namespace log4net.Util.TypeConverters
   public static class ConverterRegistry
   {
     /// <summary>
-    /// Static constructor.
+    /// This class constructor adds the intrinsic type converters
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// This constructor defines the intrinsic type converters.
-    /// </para>
-    /// </remarks>
     static ConverterRegistry()
     {
       // Add predefined converters here
@@ -67,23 +61,19 @@ namespace log4net.Util.TypeConverters
     /// </summary>
     /// <param name="destinationType">The type being converted to.</param>
     /// <param name="converter">The type converter to use to convert to the destination type.</param>
-    /// <remarks>
-    /// <para>
-    /// Adds a converter instance for a specific type.
-    /// </para>
-    /// </remarks>
     public static void AddConverter(Type? destinationType, object? converter)
     {
-      if (destinationType is not null && converter is not null)
+      if (destinationType is null || converter is null)
       {
-        if (converter is IConvertTo convertTo)
-        {
-          s_type2ConvertTo[destinationType] = convertTo;
-        }
-        else if (converter is IConvertFrom convertFrom)
-        {
-          s_type2ConvertFrom[destinationType] = convertFrom;
-        }
+        return;
+      }
+      if (converter is IConvertTo convertTo)
+      {
+        s_type2ConvertTo[destinationType] = convertTo;
+      }
+      if (converter is IConvertFrom convertFrom)
+      {
+        s_type2ConvertFrom[destinationType] = convertFrom;
       }
     }
 
@@ -92,15 +82,8 @@ namespace log4net.Util.TypeConverters
     /// </summary>
     /// <param name="destinationType">The type being converted to.</param>
     /// <param name="converterType">The type of the type converter to use to convert to the destination type.</param>
-    /// <remarks>
-    /// <para>
-    /// Adds a converter <see cref="Type"/> for a specific type.
-    /// </para>
-    /// </remarks>
     public static void AddConverter(Type destinationType, Type converterType)
-    {
-      AddConverter(destinationType, CreateConverterInstance(converterType));
-    }
+      => AddConverter(destinationType, CreateConverterInstance(converterType));
 
     /// <summary>
     /// Gets the type converter to use to convert values to the destination type.
@@ -111,11 +94,6 @@ namespace log4net.Util.TypeConverters
     /// The type converter instance to use for type conversions or <c>null</c> 
     /// if no type converter is found.
     /// </returns>
-    /// <remarks>
-    /// <para>
-    /// Gets the type converter to use to convert values to the destination type.
-    /// </para>
-    /// </remarks>
     public static IConvertTo? GetConvertTo(Type sourceType, Type destinationType)
     {
       // TODO: Support inheriting type converters.
@@ -146,11 +124,6 @@ namespace log4net.Util.TypeConverters
     /// The type converter instance to use for type conversions or <c>null</c> 
     /// if no type converter is found.
     /// </returns>
-    /// <remarks>
-    /// <para>
-    /// Gets the type converter to use to convert values to the destination type.
-    /// </para>
-    /// </remarks>
     public static IConvertFrom? GetConvertFrom(Type destinationType)
     {
       // TODO: Support inheriting type converters.

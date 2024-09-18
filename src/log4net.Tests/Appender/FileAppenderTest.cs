@@ -92,8 +92,6 @@ public sealed class FileAppenderTest
 """);
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
       XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
-      ILog log = LogManager.GetLogger(rep.Name, "GeneralFileAppender");
-      log.Info("Message");
     }
     finally
     {
