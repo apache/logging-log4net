@@ -21,10 +21,10 @@
   <groupId>log4net</groupId>
   <artifactId>apache-log4net</artifactId>
   <packaging>pom</packaging>
-  <version>3.1.0</version>
+  <version>3.0.1</version>
   <name>Apache log4net</name>
   <description>Logging framework for Microsoft .NET Framework.</description>
-  <url>http://logging.apache.org/log4net/</url>
+  <url>https://logging.apache.org/log4net/</url>
   <inceptionYear>2004</inceptionYear>
   <issueManagement>
     <system>Github</system>
@@ -36,13 +36,13 @@
       <subscribe>commits-subscribe@logging.apache.org</subscribe>
       <unsubscribe>commits-unsubscribe@logging.apache.org</unsubscribe>
       <post>Read-Only List</post>
-      <archive>http://mail-archives.apache.org/mod_mbox/logging-commits/</archive>
+      <archive>https://mail-archives.apache.org/mod_mbox/logging-commits/</archive>
     </mailingList>
   </mailingLists>
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
@@ -53,7 +53,7 @@
   </scm>
   <organization>
     <name>Apache Software Foundation</name>
-    <url>http://www.apache.org</url>
+    <url>https://www.apache.org</url>
   </organization>
   <build>
     <plugins>
