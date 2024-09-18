@@ -86,7 +86,7 @@ namespace log4net.Tests.Layout
 #if NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0 || NETSTANDARD
                            XmlConvert.ToString(DateTime.Today, XmlDateTimeSerializationMode.Local),
 #else
-                           XmlConvert.ToString(DateTime.Today),
+                           XmlConvert.ToString(DateTime.Today, XmlDateTimeSerializationMode.Local),
 #endif
                            message);
     }
@@ -97,7 +97,7 @@ namespace log4net.Tests.Layout
 #if NET_2_0 || MONO_2_0 || MONO_3_5 || MONO_4_0 || NETSTANDARD
                            XmlConvert.ToString(DateTime.Today, XmlDateTimeSerializationMode.Local),
 #else
-                           XmlConvert.ToString(DateTime.Today),
+                           XmlConvert.ToString(DateTime.Today, XmlDateTimeSerializationMode.Local),
 #endif
                            key,
                            value);
