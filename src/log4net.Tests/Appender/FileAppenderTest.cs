@@ -95,7 +95,7 @@ public sealed class FileAppenderTest
     }
     finally
     {
-      LogLog.LogReceived += LogReceived;
+      LogLog.LogReceived -= LogReceived;
     }
 
     static void LogReceived(object? source, LogReceivedEventArgs e) => Assert.Fail(e.LogLog.Message);
