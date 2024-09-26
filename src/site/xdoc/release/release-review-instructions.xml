@@ -31,22 +31,35 @@ limitations under the License.
           <pre class="code">svn co https://dist.apache.org/repos/dist/dev/logging/log4net/source/{releaseVersion} log4net-{releaseVersion} &amp;&amp; cd $_</pre>
         </li>
         <li>
-          <p>Verify checksums</p>
-          <pre class="code">sha512sum --check *.sha512</pre>
-        </li>
-        <li>
-          <p>Import the release manager GPG keys, unless you haven’t earlier done so</p>
-          <pre class="code">wget -O - https://downloads.apache.org/logging/KEYS | gpg --import</pre>
-        </li>
-        <li>
-          <p>Verify signatures</p>
-          <pre class="code">for sigFile in *.asc; do gpg --verify $sigFile; done</pre>
-        </li>
-        <li>
-          <p>Extract sources</p>
-          <pre class="code">umask 0022
+          <ul>
+            <li>
+              Verify and extract (Windows)
+              <pre class="code">&amp; ./verify-release.ps1</pre>
+            </li>
+            <li>
+              Verify and extract (Linux)
+              <ol>
+                <li>
+                  <p>Verify checksums</p>
+                  <pre class="code">sha512sum --check *.sha512</pre>
+                </li>
+                <li>
+                  <p>Import the release manager GPG keys, unless you haven’t earlier done so</p>
+                  <pre class="code">wget -O - https://downloads.apache.org/logging/KEYS | gpg --import</pre>
+                </li>
+                <li>
+                  <p>Verify signatures</p>
+                  <pre class="code">for sigFile in *.asc; do gpg --verify $sigFile; done</pre>
+                </li>
+                <li>
+                  <p>Extract sources</p>
+                  <pre class="code">umask 0022
 unzip -q *-src.zip -d src
 cd src</pre>
+                </li>
+              </ol>
+            </li>
+          </ul>
         </li>
         <li>
           <p>Verify the build (docker)</p>
@@ -68,8 +81,7 @@ dotnet test /logging-log4net/src/log4net.sln
           <p>Verify the build (Windows)</p>
           <pre class="code">winget install -e --id Mono.Mono
 winget install Microsoft.DotNet.SDK.8
-dotnet test ./log4net.sln`
-          </pre>
+dotnet test ./log4net.sln</pre>
         </li>
       </ol>
     </section>
