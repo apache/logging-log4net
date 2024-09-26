@@ -39,10 +39,10 @@ pushd log4net-{releaseVersion}</pre>
               <pre class="code">&amp; ./verify-release.ps1</pre>
             </li>
             <li>
-              <p>Verify the build (Windows)</p>
+              <p>Verify the build</p>
               <pre class="code">winget install -e --id Mono.Mono
-    winget install Microsoft.DotNet.SDK.8
-    dotnet test ./log4net.sln</pre>
+winget install Microsoft.DotNet.SDK.8
+dotnet test ./src/log4net.sln</pre>
             </li>
           </ol>
         </li>
@@ -72,7 +72,7 @@ unzip -q *-src.zip -d src
 cd src</pre>
             </li>
             <li>
-              <p>Verify the build (docker)</p>
+              <p>Verify the build</p>
               <ul>
                 <li>install <a href="https://docs.docker.com/engine/install/">docker</a> (if you haven't already) </li>
                 <li>
