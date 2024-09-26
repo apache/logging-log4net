@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements. See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to you under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<document>
+  <properties>
+    <title>Apache log4net release verification</title>
+  </properties>
+
+  <body>
+    <section id ="release.verification" name="Release verification">
+      <p>
+        Releases of log4net can be verified with following steps:
+      </p>
+      <ol>
+        <li>
+          <p>Check out the release distribution</p>
+          <pre class="code">svn co https://dist.apache.org/repos/dist/dev/logging/log4net/source/{releaseVersion} log4net-{releaseVersion} &amp;&amp; cd $_</pre>
+        </li>
+        <li>
+          <p>Verify checksums</p>
+          <pre class="code">sha512sum --check *.sha512</pre>
+        </li>
+        <li>
+          <p>Import the release manager GPG keys, unless you haven’t earlier done so</p>
+          <pre class="code">wget -O - https://downloads.apache.org/logging/KEYS | gpg --import</pre>
+        </li>
+        <li>
+          <p>Verify signatures</p>
+          <pre class="code">for sigFile in *.asc; do gpg --verify $sigFile; done</pre>
+        </li>
+        <li>
+          <p>Extract sources</p>
+          <pre class="code">umask 0022
+unzip -q *-src.zip -d src
+cd src</pre>
+        </li>
+        <li>
+          <p>Verify the build (docker)</p>
+          <ul>
+            <li>install <a href="https://docs.docker.com/engine/install/">docker</a> (if you haven't already) </li>
+            <li>
+              <pre class="code">docker build -t log4net-builder .
+docker run -it log4net-builder
+# this will
+# - install all dependencies in the container
+# - build src/log4net.sln
+# inside the container run
+dotnet test /logging-log4net/src/log4net.sln
+              </pre>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <p>Verify the build (Windows)</p>
+          <pre class="code">winget install -e --id Mono.Mono
+winget install Microsoft.DotNet.SDK.8
+dotnet test ./log4net.sln`
+          </pre>
+        </li>
+      </ol>
+    </section>
+  </body>
+</document>
