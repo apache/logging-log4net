@@ -25,65 +25,70 @@ limitations under the License.
       <p>
         Releases of log4net can be verified with following steps:
       </p>
-      <ol>
+      <ul>
         <li>
-          <p>Check out the release distribution</p>
-          <pre class="code">svn co https://dist.apache.org/repos/dist/dev/logging/log4net/source/{releaseVersion} log4net-{releaseVersion} &amp;&amp; cd $_</pre>
-        </li>
-        <li>
-          <ul>
+          Windows
+          <ol>
             <li>
-              Verify and extract (Windows)
+              Check out the release distribution
+              <pre class="code">svn co https://dist.apache.org/repos/dist/dev/logging/log4net/source/{releaseVersion} log4net-{releaseVersion}
+pushd log4net-{releaseVersion}</pre>
+            </li>
+            <li>
+              Verify and extract
               <pre class="code">&amp; ./verify-release.ps1</pre>
             </li>
             <li>
-              Verify and extract (Linux)
-              <ol>
-                <li>
-                  <p>Verify checksums</p>
-                  <pre class="code">sha512sum --check *.sha512</pre>
-                </li>
-                <li>
-                  <p>Import the release manager GPG keys, unless you haven’t earlier done so</p>
-                  <pre class="code">wget -O - https://downloads.apache.org/logging/KEYS | gpg --import</pre>
-                </li>
-                <li>
-                  <p>Verify signatures</p>
-                  <pre class="code">for sigFile in *.asc; do gpg --verify $sigFile; done</pre>
-                </li>
-                <li>
-                  <p>Extract sources</p>
-                  <pre class="code">umask 0022
-unzip -q *-src.zip -d src
-cd src</pre>
-                </li>
-              </ol>
+              <p>Verify the build (Windows)</p>
+              <pre class="code">winget install -e --id Mono.Mono
+    winget install Microsoft.DotNet.SDK.8
+    dotnet test ./log4net.sln</pre>
             </li>
-          </ul>
+          </ol>
         </li>
         <li>
-          <p>Verify the build (docker)</p>
-          <ul>
-            <li>install <a href="https://docs.docker.com/engine/install/">docker</a> (if you haven't already) </li>
+          Linux
+          <ol>
             <li>
-              <pre class="code">docker build -t log4net-builder .
+              <p>Check out the release distribution</p>
+              <pre class="code">svn co https://dist.apache.org/repos/dist/dev/logging/log4net/{releaseVersion} log4net-{releaseVersion} &amp;&amp; cd $_</pre>
+            </li>
+            <li>
+              <p>Verify checksums</p>
+              <pre class="code">sha512sum --check *.sha512</pre>
+            </li>
+            <li>
+              <p>Import the release manager GPG keys, unless you haven’t earlier done so</p>
+              <pre class="code">wget -O - https://downloads.apache.org/logging/KEYS | gpg --import</pre>
+            </li>
+            <li>
+              <p>Verify signatures</p>
+              <pre class="code">for sigFile in *.asc; do gpg --verify $sigFile; done</pre>
+            </li>
+            <li>
+              <p>Extract sources</p>
+              <pre class="code">umask 0022
+unzip -q *-src.zip -d src
+cd src</pre>
+            </li>
+            <li>
+              <p>Verify the build (docker)</p>
+              <ul>
+                <li>install <a href="https://docs.docker.com/engine/install/">docker</a> (if you haven't already) </li>
+                <li>
+                  <pre class="code">docker build -t log4net-builder .
 docker run -it log4net-builder
 # this will
 # - install all dependencies in the container
 # - build src/log4net.sln
 # inside the container run
-dotnet test /logging-log4net/src/log4net.sln
-              </pre>
+dotnet test /logging-log4net/src/log4net.sln</pre>
+                </li>
+              </ul>
             </li>
-          </ul>
+          </ol>
         </li>
-        <li>
-          <p>Verify the build (Windows)</p>
-          <pre class="code">winget install -e --id Mono.Mono
-winget install Microsoft.DotNet.SDK.8
-dotnet test ./log4net.sln</pre>
-        </li>
-      </ol>
+      </ul>
     </section>
   </body>
 </document>

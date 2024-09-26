@@ -46,7 +46,7 @@ foreach ($File in Get-ChildItem $Directory *.sha512)
 }
 
 Invoke-WebRequest https://downloads.apache.org/logging/KEYS -OutFile $Directory/KEYS
-gpg --import $Directory/KEYS
+gpg --import -q $Directory/KEYS
 
 foreach ($File in Get-ChildItem $Directory *.asc)
 {
