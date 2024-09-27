@@ -31,6 +31,7 @@
       <item name="Download" href="/release/download.html"/>
       <item name="Support" href="https://logging.apache.org/support.html" />
       <item name="Release Notes" href="/release/release-notes.html"/>
+      <item name="Release Review" href="/release/release-review-instructions.html"/>
       <item name="License" href="/license.html"/>
     </menu>
 

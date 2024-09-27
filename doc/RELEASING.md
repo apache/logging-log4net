@@ -27,9 +27,6 @@ release version 2.0.123:
     - currently, this _must_ happen on a windows machine because of older
         .net framework requirements which cannot be met on a Linux machine
         (or at least, I haven't figured out how - in particular CF)
-    - TODO: the following are still manual and need to be built into the `release` script:
-        - log4net.build: update package.version property
-        - pom.xml: update version
 4. Sign release artifacts (zips & nupkg) under `build/artifacts`
     - eg `gpg --armor --output log4net-2.0.123.nupkg.asc --detach-sig log4net-2.0.123.nupkg`
     - there is an accompanying `sign-log4net-libraries.sh/ps1` under scripts which you could invoke if you cd
@@ -58,12 +55,12 @@ release version 2.0.123:
     - `svn co https://dist.apache.org/repos/dist/dev/logging -N apache-dist-logging-dev`
     - `cd apache-dist-logging-dev`
     - `svn up log4net`
-    - copy in source & binary artifacts to respective locations
     - `svn delete *`
+    - `mkdir 2.0.123`
+    - copy all artifacts to the new folder
     - `svn add *`
-    - `svn commit`
-    - check https://dist.apache.org/repos/dist/dev/logging/log4net/binaries/
-      and https://dist.apache.org/repos/dist/dev/logging/log4net/source/
+    - `svn commit -m 'log4net 2.0.123'`
+    - check https://dist.apache.org/repos/dist/dev/logging/log4net/2.0.123/
 13. raise a vote on the log4net mailing list (dev@logging.apache.org) - see MailTemplate.txt
 14. wait
 15. when the vote has 3 or more +1's, it's time to go live!
@@ -83,3 +80,4 @@ release version 2.0.123:
     - `git merge asf-staging`
 18. rename the release at github, eg to `rel/2.0.123`
     - double-check that the `rel` tag is created
+19. apply the next version by calling `./scripts/update-version.ps1 2.0.123 2.0.124`
