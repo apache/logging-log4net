@@ -20,31 +20,49 @@ limitations under the License.
     <author email="nicko at apache dot org">Nicko Cadell</author>
     <title>Apache log4net: Release Notes</title>
   </properties>
-  <meta name="keywords" content="log4net release notes, log4net" />
+  <meta name="keywords" content="log4net release notes, log4net"/>
   <body>
     <section id="main" name="Apache log4net™ Release Notes">
+      <section id="a3.0.2" name="3.0.2">
+        <section id="a3.0.2-breaking" name="Breaking Changes"/>
+        <br/>Apache log4net 3.0.2 addresses reported issues:
+        <section id="a3.0.2-bug" name="Bug fixes">
+          <ul>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/tbd">tbd</a> (by tbd)
+            </li>
+          </ul>
+        </section>
+        <section id="a3.0.2-enhancements" name="Enhancements">
+          <ul>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/189">separate review instructions for log4net</a> (by @FreeAndNil)
+            </li>
+          </ul>
+        </section>
+      </section>
       <section id="a3.0.1" name="3.0.1">
         Apache log4net 3.0.1 addresses reported issues:
         <section id="a3.0.1-bug" name="Bug fixes">
           <ul>
             <li>
-              <a href="https://github.com/apache/logging-log4net/issues/183">Unable to set property [file] on object [log4net.Appender.FileAppender]</a>
-              (reported by @sc-mk fixed by @FreeAndNil in https://github.com/apache/logging-log4net/pull/184)
+              <a href="https://github.com/apache/logging-log4net/issues/183">Unable to set property [file] on object [log4net.Appender.FileAppender]</a> (reported by @sc-mk fixed by @FreeAndNil in https://github.com/apache/logging-log4net/pull/184)
             </li>
           </ul>
-        </section><section id="a3.0.1-enhancements" name="Enhancements">
-        <ul>
-          <li>
-            <a href="https://github.com/apache/logging-log4net/pull/176">added source link</a> (by @FreeAndNil)
-          </li>
-          <li>
-            <a href="https://github.com/apache/logging-log4net/issues/177">use ManagedThreadId for long running tasks</a> (reported by @Audela-220 fixed by @FreeAndNil)
-          </li>
-          <li>
-            <a href="https://github.com/apache/logging-log4net/pull/181">automate version bumps</a> (by @FreeAndNil)
-          </li>
-        </ul>
-      </section>
+        </section>
+        <section id="a3.0.1-enhancements" name="Enhancements">
+          <ul>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/pull/176">added source link</a> (by @FreeAndNil)
+            </li>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/177">use ManagedThreadId for long running tasks</a> (reported by @Audela-220 fixed by @FreeAndNil)
+            </li>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/pull/181">automate version bumps</a> (by @FreeAndNil)
+            </li>
+          </ul>
+        </section>
       </section>
       <section id="a3.0.0" name="3.0.0">
         <section id="a3.0.0-breaking" name="Breaking Changes">
@@ -56,8 +74,8 @@ limitations under the License.
             </ul>
             The reasoning for this change can be found in <a href="https://github.com/apache/logging-log4net/issues/111">Dropping support for older runtimes</a>
           </p>
-          <br />
-          <br />
+          <br/>
+          <br/>
           <p>
             Removed obsolete classes and members - obsolete since 1.2.14 - 2015
             <ul>
@@ -138,7 +156,7 @@ limitations under the License.
               </li>
             </ul>
           </p>
-          <br />
+          <br/>
           <p>
             Removed obsolete classes and members - obsolete since 2.0.6 - 2016
             <ul>
@@ -147,7 +165,7 @@ limitations under the License.
               </li>
             </ul>
           </p>
-          <br />
+          <br/>
           <p>
             Other Changes
             <ul>
@@ -177,7 +195,7 @@ limitations under the License.
               </li>
             </ul>
           </p>
-          <br />
+          <br/>
           <p>
             Sealed classes - the following classes are now sealed
             <ul>
@@ -193,7 +211,7 @@ limitations under the License.
             </ul>
           </p>
         </section>
-        <br />
+        <br/>
         Apache log4net 3.0.0 addresses reported issues:
         <section id="a3.0.0-bug" name="Bug fixes">
           <ul>
@@ -210,25 +228,26 @@ limitations under the License.
               <a href="https://github.com/apache/logging-log4net/issues/179">Culture-Specific String Comparisons Cause RollingFileAppender Failure in log4net on NET 5+</a> (reported by @stianeklund)
             </li>
           </ul>
-        </section><section id="a3.0.0-enhancements" name="Enhancements">
-        <ul>
-          <li>
-            <a href="https://github.com/apache/logging-log4net/issues/111">Dropping support for older runtimes</a> (by @fluffynuts and @freeandnil)
+        </section>
+        <section id="a3.0.0-enhancements" name="Enhancements">
+          <ul>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/111">Dropping support for older runtimes</a> (by @fluffynuts and @freeandnil)
           </li>
-          <li>
-            <a href="https://github.com/apache/logging-log4net/issues/124">Add support for nullable annotations</a> (by @erikmav)
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/124">Add support for nullable annotations</a> (by @erikmav)
           </li>
-          <li>
-            <a href="https://github.com/apache/logging-log4net/issues/125">Remove deprecated code for 3.0</a> (by @erikmav)
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/125">Remove deprecated code for 3.0</a> (by @erikmav)
           </li>
-          <li>
-            <a href="https://github.com/apache/logging-log4net/issues/127">Enable building log4net with docker container</a> (by @freeandnil)
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/127">Enable building log4net with docker container</a> (by @freeandnil)
           </li>
-          <li>
-            <a href="https://github.com/apache/logging-log4net/issues/109">Fix dotnet (ie not netfx) test run</a> (by @mobilebilly)
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/109">Fix dotnet (ie not netfx) test run</a> (by @mobilebilly)
           </li>
-        </ul>
-      </section>
+          </ul>
+        </section>
       </section>
       <section id="a2.0.17" name="2.0.17">
         Apache log4net 2.0.17 addresses reported issues:
@@ -254,28 +273,29 @@ limitations under the License.
               <a href="https://github.com/apache/logging-log4net/pull/105">Fix CodeQL Password in configuration file Rule False Positives</a> (by @justinmichaels)
             </li>
           </ul>
-        </section><section id="a2.0.16-enhancements" name="Enhancements">
-        <ul>
-          <li>
-            <a href="https://github.com/apache/logging-log4net/pull/89">adding extension points for revising logged content</a> (by @freeandnil)
+        </section>
+        <section id="a2.0.16-enhancements" name="Enhancements">
+          <ul>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/pull/89">adding extension points for revising logged content</a> (by @freeandnil)
           </li>
-          <li>
-            <a href="https://github.com/apache/logging-log4net/pull/91">SystemInfo.EntryAssemblyLocation writable to adjust location for config-files in unit test projects</a> (by @freeandnil)
+            <li>
+              <a href="https://github.com/apache/logging-log4net/pull/91">SystemInfo.EntryAssemblyLocation writable to adjust location for config-files in unit test projects</a> (by @freeandnil)
           </li>
-          <li>
-            <a href="https://github.com/apache/logging-log4net/pull/92">New locking model for single log file in native applications with managed parts</a> (by @freeandnil)
+            <li>
+              <a href="https://github.com/apache/logging-log4net/pull/92">New locking model for single log file in native applications with managed parts</a> (by @freeandnil)
           </li>
-          <li>
-            <a href="https://github.com/apache/logging-log4net/pull/93">Extension point for handling new lines in RemoteSysLogAppender added</a> (by @freeandnil)
+            <li>
+              <a href="https://github.com/apache/logging-log4net/pull/93">Extension point for handling new lines in RemoteSysLogAppender added</a> (by @freeandnil)
           </li>
-          <li>
-            <a href="https://github.com/apache/logging-log4net/pull/95">Defer creation of locking model to ActivateOptions()</a> (by @freeandnil)
+            <li>
+              <a href="https://github.com/apache/logging-log4net/pull/95">Defer creation of locking model to ActivateOptions()</a> (by @freeandnil)
           </li>
-          <li>
-            <a href="https://github.com/apache/logging-log4net/pull/101">Add Peek() method to ThreadContextStack and LogicalThreadContextStack</a> (by @andreycha)
+            <li>
+              <a href="https://github.com/apache/logging-log4net/pull/101">Add Peek() method to ThreadContextStack and LogicalThreadContextStack</a> (by @andreycha)
           </li>
-        </ul>
-      </section>
+          </ul>
+        </section>
       </section>
       <section id="a2.0.15" name="2.0.15">
         Attention: .NET 3.5 Client Profile is <i>no longer supported</i>. I'm really sorry, I've tried
@@ -300,20 +320,21 @@ limitations under the License.
               <a href="https://issues.apache.org/jira/projects/LOG4NET/issues/LOG4NET-672">LOG4NET-672</a>)
             </li>
           </ul>
-        </section><section id="a2.0.15-enhancements" name="Enhancements">
-        <ul>
-          <li>
-            <a href="https://github.com/apache/logging-log4net/pull/81">Enforce TLS1.2 in the ps1 scripts provided for dev use</a>
-          </li>
-          <li>
-            <a href="https://github.com/apache/logging-log4net/pull/80">Corrected links in README</a>
-          </li>
-          <li>
-            <a href="https://github.com/apache/logging-log4net/pull/89">Open up the internals of LogEvent a bit for extension purposes</a>
-          </li>
-          <li>Add information about FixFlags and performance to the BufferingAppender (and derivative) documentation</li>
-        </ul>
-      </section>
+        </section>
+        <section id="a2.0.15-enhancements" name="Enhancements">
+          <ul>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/pull/81">Enforce TLS1.2 in the ps1 scripts provided for dev use</a>
+            </li>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/pull/80">Corrected links in README</a>
+            </li>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/pull/89">Open up the internals of LogEvent a bit for extension purposes</a>
+            </li>
+            <li>Add information about FixFlags and performance to the BufferingAppender (and derivative) documentation</li>
+          </ul>
+        </section>
       </section>
       <section id="a2.0.14" name="2.0.14">
         Apache log4net 2.0.14 is a minor release to address some reported issues
@@ -923,7 +944,7 @@ limitations under the License.
       <section id="a1.2.11" name="1.2.11">
         <p>
           log4net 1.2.11 is not only a bugfix release, it also
-          adds support for Microsoft® .NET 4.0 as well as the client profiles
+          adds support for MicrosoftÂ® .NET 4.0 as well as the client profiles
           of .NET 3.5 and .NET 4.0.
         </p>
         <p>
@@ -1223,31 +1244,39 @@ limitations under the License.
               <li>
                 [<a href="https://issues.apache.org/jira/browse/LOG4NET-92">LOG4NET-92</a>] - Build for
                 Compact Framework 2.0
-              </li><li>
+              </li>
+              <li>
               [<a href="https://issues.apache.org/jira/browse/LOG4NET-107">LOG4NET-107</a>] - Added
               ExceptionEvaluator
-            </li><li>
+            </li>
+              <li>
               [<a href="https://issues.apache.org/jira/browse/LOG4NET-115">LOG4NET-115</a>] - Expand
               UserAppDataPath in filename
-            </li><li>
+            </li>
+              <li>
               [<a href="https://issues.apache.org/jira/browse/LOG4NET-116">LOG4NET-116</a>] - allow
               smtp
               to ssl authenticate and with certificates.
-            </li><li>
+            </li>
+              <li>
               [<a href="https://issues.apache.org/jira/browse/LOG4NET-154">LOG4NET-154</a>] - Add a
               StackTracePatternConverter to display method calls leading up to log message
-            </li><li>
+            </li>
+              <li>
               [<a href="https://issues.apache.org/jira/browse/LOG4NET-155">LOG4NET-155</a>] - Add
               TimeEvaluator
-            </li><li>
+            </li>
+              <li>
               [<a href="https://issues.apache.org/jira/browse/LOG4NET-168">LOG4NET-168</a>] - New
               property
               ReplyTo address for the SmtpAppender required
-            </li><li>
+            </li>
+              <li>
               [<a href="https://issues.apache.org/jira/browse/LOG4NET-176">LOG4NET-176</a>] -
               Buildable
               with VS 2008 and .NET FW 3.5
-            </li><li>
+            </li>
+              <li>
               [<a href="https://issues.apache.org/jira/browse/LOG4NET-233">LOG4NET-233</a>] - Support
               .NET
               4.0 including Client Profile
@@ -1852,7 +1881,7 @@ limitations under the License.
         <h3>New Layout: XmlLayoutSchemaLog4j</h3>
         <p>
           This new layout formats the logging events as XML which complies with
-          the Apache log4j™ event dtd. This can be used to transfer log event from log4net
+          the Apache log4jâ„¢ event dtd. This can be used to transfer log event from log4net
           to log4j. Currently the only appender that can communicate directly with
           log4j is the <span class="code">UdpAppender</span>.
         </p>
@@ -1954,7 +1983,7 @@ limitations under the License.
         <div class="table">
           <table cellspacing="0">
             <colgroup>
-              <col style="text-align: left;" />
+              <col style="text-align: left;"/>
             </colgroup>
             <tr>
               <th>
@@ -1994,7 +2023,7 @@ limitations under the License.
             </tr>
           </table>
         </div>
-        <br />
+        <br/>
         <p>
           Not all frameworks are created equal and some features have been excluded from
           some of the builds. See the <a href="framework-support.html">Framework Support</a> document for more
@@ -2061,7 +2090,7 @@ limitations under the License.
           event <span class="code">Properties</span> map on the <span class="code">LoggingEvent</span>.
         </p>
         <h3>Updated ADONetAppender</h3>
-        <p />
+        <p/>
         <ul>
           <li>
             Added support for prepared statements and stored procedures
@@ -2074,7 +2103,7 @@ limitations under the License.
             Added <span class="code">ExceptionLayout</span> to render the exception data
           </li>
         </ul>
-        <p />
+        <p/>
         <h3>Support for front-end extension</h3>
         <p>
           This allows the logging API to be wrapped or adapted for specific purposes. Two
@@ -2083,8 +2112,8 @@ limitations under the License.
         <div class="table">
           <table cellspacing="0">
             <colgroup>
-              <col style="width: 50%; text-align: left;" />
-              <col style="width: 50%; text-align: left;" />
+              <col style="width: 50%; text-align: left;"/>
+              <col style="width: 50%; text-align: left;"/>
             </colgroup>
             <tr>
               <th>
@@ -2104,7 +2133,7 @@ limitations under the License.
             </tr>
           </table>
         </div>
-        <p />
+        <p/>
         <h3>Added ForwardingAppender</h3>
         <p>Forwards events to multiple sub appenders after applying filter rules.</p>
         <h3>Added BufferingForwardingAppender</h3>
