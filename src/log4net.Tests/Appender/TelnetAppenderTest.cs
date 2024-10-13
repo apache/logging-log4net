@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using log4net.Appender;
@@ -62,12 +63,22 @@ public class TelnetAppenderTest
 """);
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
-    Task task = Task.Run(() => new SimpleTelnetClient(Received).Run());
-    task.Wait(500);
-    
-    rep.GetLogger("Telnet").Log(typeof(TelnetAppenderTest), Level.Info, "Log-Message", null);
+    TaskCompletionSource<int> startup = new();
+    using SimpleTelnetClient telnetClient = new(Received, startup);
+    Task.Run(() => telnetClient.Run());
+    startup.Task.Wait();
+    var logger = rep.GetLogger("Telnet");
+    while (received.Count < 1)
+    {
+      Thread.Sleep(10);
+    }
+    logger.Log(typeof(TelnetAppenderTest), Level.Info, "Log-Message", null);
 
-    Assert.AreEqual(1, received.Count);
+    while (received.Count < 2)
+    {
+      Thread.Sleep(10);
+    }
+    Assert.AreEqual(2, received.Count);
     
     void Received(string message) => received.Add(message);
   }
