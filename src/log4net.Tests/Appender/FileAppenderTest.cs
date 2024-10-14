@@ -26,6 +26,9 @@ using NUnit.Framework;
 using log4net.Repository;
 using log4net.Config;
 using log4net.Util;
+using log4net.Core;
+using System.IO;
+using System.Linq;
 
 namespace log4net.Tests.Appender;
 
@@ -99,5 +102,50 @@ public sealed class FileAppenderTest
     }
 
     static void LogReceived(object? source, LogReceivedEventArgs e) => Assert.Fail(e.LogLog.Message);
+  }
+
+  /// <summary>
+  /// Verifies that the <see cref="FileAppender.File"/> property accepts a <see cref="PatternString"/> with a <see cref="GlobalContext"/>
+  /// </summary>
+  /// <remarks>see https://github.com/apache/logging-log4net/issues/193</remarks>
+  [Test]
+  public void FilenameWithGlobalContextPatternStringTest()
+  {
+    DirectoryInfo logs = new("./Logs");
+    if (logs.Exists)
+    {
+      logs.Delete(true);
+    }
+
+    XmlDocument log4netConfig = new();
+    log4netConfig.LoadXml("""
+  <log4net>
+    <appender name="ConsoleAppender" type="log4net.Appender.ConsoleAppender">
+      <layout type="log4net.Layout.PatternLayout">
+        <conversionPattern value="%date{ABSOLUTE} [%logger] %level - %message%newline%exception"/>
+      </layout>
+    </appender>
+    <appender name="GeneralFileAppender" type="log4net.Appender.FileAppender">
+      <file type="log4net.Util.PatternString" value="Logs\file_%property{LogName}_%date{yyyyMMddHHmmss}.Log"/>
+      <appendToFile value="true"/>
+      <lockingModel type="log4net.Appender.FileAppender+MinimalLock"/>
+      <layout type="log4net.Layout.PatternLayout">
+        <conversionPattern value="%date{ABSOLUTE} [%logger] %level - %message%newline%exception"/>
+      </layout>
+    </appender>
+    <root>
+      <level value="INFO"/>
+      <appender-ref ref="GeneralFileAppender"/>
+    </root>
+  </log4net>
+""");
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    // latest possible moment to set GlobalContext property used in filename
+    GlobalContext.Properties["LogName"] = "custom_log_issue_193";
+    XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+    ILogger logger = rep.GetLogger(nameof(FilenameWithGlobalContextPatternStringTest));
+    logger.Log(GetType(), Level.Info, nameof(FilenameWithGlobalContextPatternStringTest), null);
+    logs.Refresh();
+    Assert.IsTrue(logs.GetFiles().Any(file => file.Name.StartsWith("file_custom_log_issue_193")));
   }
 }
