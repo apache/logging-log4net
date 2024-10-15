@@ -139,3 +139,6 @@ dotnet_diagnostic.SYSLIB0014.severity = none
 dotnet_diagnostic.SYSLIB0050.severity = none
 # SYSLIB0051: Type or member is obsolete
 dotnet_diagnostic.SYSLIB0051.severity = none
+
+# KR1012: Classes should be sealed.
+dotnet_diagnostic.KR1012.severity = none

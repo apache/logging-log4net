@@ -27,46 +27,45 @@ using log4net.Util;
 
 using NUnit.Framework;
 
-namespace log4net.Tests.Util
+namespace log4net.Tests.Util;
+
+/// <summary>
+/// Used for internal unit testing the <see cref="PropertiesDictionary"/> class.
+/// </summary>
+/// <remarks>
+/// Used for internal unit testing the <see cref="PropertiesDictionary"/> class.
+/// </remarks>
+[TestFixture]
+public class PropertiesDictionaryTest
 {
-  /// <summary>
-  /// Used for internal unit testing the <see cref="PropertiesDictionary"/> class.
-  /// </summary>
-  /// <remarks>
-  /// Used for internal unit testing the <see cref="PropertiesDictionary"/> class.
-  /// </remarks>
-  [TestFixture]
-  public class PropertiesDictionaryTest
+  [Test]
+  public void TestSerialization()
   {
-    [Test]
-    public void TestSerialization()
+    PropertiesDictionary pd = new PropertiesDictionary();
+
+    for (int i = 0; i < 10; i++)
     {
-      PropertiesDictionary pd = new PropertiesDictionary();
+      pd[i.ToString()] = i;
+    }
 
-      for (int i = 0; i < 10; i++)
-      {
-        pd[i.ToString()] = i;
-      }
+    Assert.AreEqual(10, pd.Count, "Dictionary should have 10 items");
 
-      Assert.AreEqual(10, pd.Count, "Dictionary should have 10 items");
+    Assert.IsNull(pd["notThere"], "Getter should act as IDictionary not IDictionary<TKey, TValue>");
 
-      Assert.IsNull(pd["notThere"], "Getter should act as IDictionary not IDictionary<TKey, TValue>");
+    // Serialize the properties into a memory stream
+    BinaryFormatter formatter = new BinaryFormatter();
+    MemoryStream memory = new MemoryStream();
+    formatter.Serialize(memory, pd);
 
-      // Serialize the properties into a memory stream
-      BinaryFormatter formatter = new BinaryFormatter();
-      MemoryStream memory = new MemoryStream();
-      formatter.Serialize(memory, pd);
+    // Deserialize the stream into a new properties dictionary
+    memory.Position = 0;
+    PropertiesDictionary pd2 = (PropertiesDictionary)formatter.Deserialize(memory);
 
-      // Deserialize the stream into a new properties dictionary
-      memory.Position = 0;
-      PropertiesDictionary pd2 = (PropertiesDictionary)formatter.Deserialize(memory);
+    Assert.AreEqual(10, pd2.Count, "Deserialized Dictionary should have 10 items");
 
-      Assert.AreEqual(10, pd2.Count, "Deserialized Dictionary should have 10 items");
-
-      foreach (string key in pd.GetKeys())
-      {
-        Assert.AreEqual(pd[key], pd2[key], "Check Value Persisted for key [{0}]", key);
-      }
+    foreach (string key in pd.GetKeys())
+    {
+      Assert.AreEqual(pd[key], pd2[key], "Check Value Persisted for key [{0}]", key);
     }
   }
 }

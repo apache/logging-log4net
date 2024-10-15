@@ -17,33 +17,30 @@
 //
 #endregion
 
-using System;
-using System.Text;
 using System.IO;
 
 using log4net.Core;
 
-namespace log4net.Layout.Pattern
+namespace log4net.Layout.Pattern;
+
+/// <summary>
+/// Writes the value of the <see cref="LocationInfo.FileName"/> for
+/// the event to the output writer.
+/// </summary>
+/// <author>Nicko Cadell</author>
+internal sealed class FileLocationPatternConverter : PatternLayoutConverter
 {
   /// <summary>
   /// Writes the value of the <see cref="LocationInfo.FileName"/> for
-  /// the event to the output writer.
+  /// the <paramref name="loggingEvent"/> to the output <paramref name="writer"/>.
   /// </summary>
-  /// <author>Nicko Cadell</author>
-  internal sealed class FileLocationPatternConverter : PatternLayoutConverter
+  /// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
+  /// <param name="loggingEvent">the event being logged</param>
+  protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
   {
-    /// <summary>
-    /// Writes the value of the <see cref="LocationInfo.FileName"/> for
-    /// the <paramref name="loggingEvent"/> to the output <paramref name="writer"/>.
-    /// </summary>
-    /// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
-    /// <param name="loggingEvent">the event being logged</param>
-    protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
+    if (loggingEvent.LocationInformation is not null)
     {
-      if (loggingEvent.LocationInformation is not null)
-      {
-        writer.Write(loggingEvent.LocationInformation.FileName);
-      }
+      writer.Write(loggingEvent.LocationInformation.FileName);
     }
   }
 }

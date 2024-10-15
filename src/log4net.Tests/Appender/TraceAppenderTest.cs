@@ -28,81 +28,80 @@ using log4net.Layout;
 using log4net.Repository;
 using NUnit.Framework;
 
-namespace log4net.Tests.Appender
+namespace log4net.Tests.Appender;
+
+[TestFixture]
+public class TraceAppenderTest
 {
-  [TestFixture]
-  public class TraceAppenderTest
+  [Test]
+  public void DefaultCategoryTest()
   {
-    [Test]
-    public void DefaultCategoryTest()
+    var categoryTraceListener = new CategoryTraceListener();
+    Trace.Listeners.Clear();
+    Trace.Listeners.Add(categoryTraceListener);
+
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+
+    var traceAppender = new TraceAppender
     {
-      var categoryTraceListener = new CategoryTraceListener();
-      Trace.Listeners.Clear();
-      Trace.Listeners.Add(categoryTraceListener);
+      Layout = new SimpleLayout()
+    };
+    traceAppender.ActivateOptions();
 
-      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    BasicConfigurator.Configure(rep, traceAppender);
 
-      var traceAppender = new TraceAppender
-      {
-        Layout = new SimpleLayout()
-      };
-      traceAppender.ActivateOptions();
+    ILog log = LogManager.GetLogger(rep.Name, GetType());
+    log.Debug("Message");
 
-      BasicConfigurator.Configure(rep, traceAppender);
-
-      ILog log = LogManager.GetLogger(rep.Name, GetType());
-      log.Debug("Message");
-
-      Assert.AreEqual(
-          GetType().ToString(),
-          categoryTraceListener.Category);
-    }
-
-    [Test]
-    public void MethodNameCategoryTest()
-    {
-      var categoryTraceListener = new CategoryTraceListener();
-      Trace.Listeners.Clear();
-      Trace.Listeners.Add(categoryTraceListener);
-
-      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-
-      var traceAppender = new TraceAppender();
-      var methodLayout = new PatternLayout("%method");
-      methodLayout.ActivateOptions();
-      traceAppender.Category = methodLayout;
-      traceAppender.Layout = new SimpleLayout();
-      traceAppender.ActivateOptions();
-
-      BasicConfigurator.Configure(rep, traceAppender);
-
-      ILog log = LogManager.GetLogger(rep.Name, GetType());
-      log.Debug("Message");
-
-      Assert.AreEqual(
-          MethodInfo.GetCurrentMethod()!.Name,
-          categoryTraceListener.Category);
-    }
+    Assert.AreEqual(
+        GetType().ToString(),
+        categoryTraceListener.Category);
   }
 
-  public class CategoryTraceListener : TraceListener
+  [Test]
+  public void MethodNameCategoryTest()
   {
-    public override void Write(string? message)
-    {
-      // empty
-    }
+    var categoryTraceListener = new CategoryTraceListener();
+    Trace.Listeners.Clear();
+    Trace.Listeners.Add(categoryTraceListener);
 
-    public override void WriteLine(string? message)
-    {
-      Write(message);
-    }
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 
-    public override void Write(string? message, string? category)
-    {
-      Category = category;
-      base.Write(message, category);
-    }
+    var traceAppender = new TraceAppender();
+    var methodLayout = new PatternLayout("%method");
+    methodLayout.ActivateOptions();
+    traceAppender.Category = methodLayout;
+    traceAppender.Layout = new SimpleLayout();
+    traceAppender.ActivateOptions();
 
-    public string? Category { get; private set; }
+    BasicConfigurator.Configure(rep, traceAppender);
+
+    ILog log = LogManager.GetLogger(rep.Name, GetType());
+    log.Debug("Message");
+
+    Assert.AreEqual(
+        MethodInfo.GetCurrentMethod()!.Name,
+        categoryTraceListener.Category);
   }
+}
+
+public class CategoryTraceListener : TraceListener
+{
+  public override void Write(string? message)
+  {
+    // empty
+  }
+
+  public override void WriteLine(string? message)
+  {
+    Write(message);
+  }
+
+  public override void Write(string? message, string? category)
+  {
+    Category = category;
+    base.Write(message, category);
+  }
+
+  public string? Category { get; private set; }
 }

@@ -22,44 +22,43 @@
 using System;
 using System.Data;
 
-namespace log4net.Tests.Appender.AdoNet
+namespace log4net.Tests.Appender.AdoNet;
+
+public class Log4NetParameter : IDbDataParameter
 {
-  public class Log4NetParameter : IDbDataParameter
-  {
 #pragma warning disable CS8766  // nullability difference from interface - seems to vary by framework.
-    public string? ParameterName { get; set; } = string.Empty;
+  public string? ParameterName { get; set; } = string.Empty;
 #pragma warning restore CS8766
 
-    public byte Precision { get; set; }
+  public byte Precision { get; set; }
 
-    public byte Scale { get; set; }
+  public byte Scale { get; set; }
 
-    public int Size { get; set; }
+  public int Size { get; set; }
 
-    public DbType DbType { get; set; }
+  public DbType DbType { get; set; }
 
-    public object? Value { get; set; }
+  public object? Value { get; set; }
 
-    public ParameterDirection Direction
-    {
-      get => throw new NotImplementedException();
-      set => throw new NotImplementedException();
-    }
+  public ParameterDirection Direction
+  {
+    get => throw new NotImplementedException();
+    set => throw new NotImplementedException();
+  }
 
-    public bool IsNullable => throw new NotImplementedException();
+  public bool IsNullable => throw new NotImplementedException();
 
 #pragma warning disable CS8767  // nullability difference from interface - seems to vary by framework.
-    public string SourceColumn
-    {
-      get => throw new NotImplementedException();
-      set => throw new NotImplementedException();
-    }
+  public string SourceColumn
+  {
+    get => throw new NotImplementedException();
+    set => throw new NotImplementedException();
+  }
 #pragma warning restore CS8766
 
-    public DataRowVersion SourceVersion
-    {
-      get => throw new NotImplementedException();
-      set => throw new NotImplementedException();
-    }
+  public DataRowVersion SourceVersion
+  {
+    get => throw new NotImplementedException();
+    set => throw new NotImplementedException();
   }
 }

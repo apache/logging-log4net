@@ -26,17 +26,17 @@ using log4net.Repository;
 using log4net.Tests.Appender;
 using NUnit.Framework;
 
-namespace log4net.Tests.Hierarchy
+namespace log4net.Tests.Hierarchy;
+
+[TestFixture]
+public class Hierarchy
 {
-  [TestFixture]
-  public class Hierarchy
+  [Test]
+  public void SetRepositoryPropertiesInConfigFile()
   {
-    [Test]
-    public void SetRepositoryPropertiesInConfigFile()
-    {
-      // LOG4NET-53: Allow repository properties to be set in the config file
-      XmlDocument log4netConfig = new XmlDocument();
-      log4netConfig.LoadXml(@"
+    // LOG4NET-53: Allow repository properties to be set in the config file
+    XmlDocument log4netConfig = new XmlDocument();
+    log4netConfig.LoadXml(@"
         <log4net>
           <property>
             <key value=""two-plus-two"" />
@@ -51,54 +51,54 @@ namespace log4net.Tests.Hierarchy
           </root>
         </log4net>");
 
-      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-      XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
 
-      Assert.AreEqual("4", rep.Properties["two-plus-two"]);
-      Assert.IsNull(rep.Properties["one-plus-one"]);
-    }
+    Assert.AreEqual("4", rep.Properties["two-plus-two"]);
+    Assert.IsNull(rep.Properties["one-plus-one"]);
+  }
 
-    [Test]
-    public void AddingMultipleAppenders()
-    {
-      CountingAppender alpha = new CountingAppender();
-      CountingAppender beta = new CountingAppender();
+  [Test]
+  public void AddingMultipleAppenders()
+  {
+    CountingAppender alpha = new CountingAppender();
+    CountingAppender beta = new CountingAppender();
 
-      Repository.Hierarchy.Hierarchy hierarchy =
-          (Repository.Hierarchy.Hierarchy)LogManager.GetRepository();
+    Repository.Hierarchy.Hierarchy hierarchy =
+        (Repository.Hierarchy.Hierarchy)LogManager.GetRepository();
 
-      hierarchy.Root.AddAppender(alpha);
-      hierarchy.Root.AddAppender(beta);
-      hierarchy.Configured = true;
+    hierarchy.Root.AddAppender(alpha);
+    hierarchy.Root.AddAppender(beta);
+    hierarchy.Configured = true;
 
-      ILog log = LogManager.GetLogger(GetType());
-      log.Debug("Hello World");
+    ILog log = LogManager.GetLogger(GetType());
+    log.Debug("Hello World");
 
-      Assert.AreEqual(1, alpha.Counter);
-      Assert.AreEqual(1, beta.Counter);
-    }
+    Assert.AreEqual(1, alpha.Counter);
+    Assert.AreEqual(1, beta.Counter);
+  }
 
-    [Test]
-    public void AddingMultipleAppenders2()
-    {
-      CountingAppender alpha = new CountingAppender();
-      CountingAppender beta = new CountingAppender();
+  [Test]
+  public void AddingMultipleAppenders2()
+  {
+    CountingAppender alpha = new CountingAppender();
+    CountingAppender beta = new CountingAppender();
 
-      BasicConfigurator.Configure(LogManager.GetRepository(), alpha, beta);
+    BasicConfigurator.Configure(LogManager.GetRepository(), alpha, beta);
 
-      ILog log = LogManager.GetLogger(GetType());
-      log.Debug("Hello World");
+    ILog log = LogManager.GetLogger(GetType());
+    log.Debug("Hello World");
 
-      Assert.AreEqual(1, alpha.Counter);
-      Assert.AreEqual(1, beta.Counter);
-    }
+    Assert.AreEqual(1, alpha.Counter);
+    Assert.AreEqual(1, beta.Counter);
+  }
 
-    [Test]
-    // LOG4NET-343
-    public void LoggerNameCanConsistOfASingleDot()
-    {
-      XmlDocument log4netConfig = new XmlDocument();
-      log4netConfig.LoadXml(@"
+  [Test]
+  // LOG4NET-343
+  public void LoggerNameCanConsistOfASingleDot()
+  {
+    XmlDocument log4netConfig = new XmlDocument();
+    log4netConfig.LoadXml(@"
         <log4net>
           <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
             <layout type=""log4net.Layout.SimpleLayout"" />
@@ -112,15 +112,15 @@ namespace log4net.Tests.Hierarchy
           </logger>
         </log4net>");
 
-      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-      XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
-    }
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+  }
 
-    [Test]
-    public void LoggerNameCanConsistOfASingleNonDot()
-    {
-      XmlDocument log4netConfig = new XmlDocument();
-      log4netConfig.LoadXml(@"
+  [Test]
+  public void LoggerNameCanConsistOfASingleNonDot()
+  {
+    XmlDocument log4netConfig = new XmlDocument();
+    log4netConfig.LoadXml(@"
         <log4net>
           <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
             <layout type=""log4net.Layout.SimpleLayout"" />
@@ -134,15 +134,15 @@ namespace log4net.Tests.Hierarchy
           </logger>
         </log4net>");
 
-      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-      XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
-    }
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+  }
 
-    [Test]
-    public void LoggerNameCanContainSequenceOfDots()
-    {
-      XmlDocument log4netConfig = new XmlDocument();
-      log4netConfig.LoadXml(@"
+  [Test]
+  public void LoggerNameCanContainSequenceOfDots()
+  {
+    XmlDocument log4netConfig = new XmlDocument();
+    log4netConfig.LoadXml(@"
         <log4net>
           <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
             <layout type=""log4net.Layout.SimpleLayout"" />
@@ -156,19 +156,19 @@ namespace log4net.Tests.Hierarchy
           </logger>
         </log4net>");
 
-      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-      XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
-    }
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+  }
 
-    /// <summary>
-    /// https://github.com/apache/logging-log4net/issues/156
-    /// Regression: Creating nested loggers in reverse order fails in 3.0.0-preview.1
-    /// </summary>
-    [Test]
-    public void CreateNestedLoggersInReverseOrder()
-    {
-      XmlDocument log4netConfig = new XmlDocument();
-      log4netConfig.LoadXml(@"
+  /// <summary>
+  /// https://github.com/apache/logging-log4net/issues/156
+  /// Regression: Creating nested loggers in reverse order fails in 3.0.0-preview.1
+  /// </summary>
+  [Test]
+  public void CreateNestedLoggersInReverseOrder()
+  {
+    XmlDocument log4netConfig = new XmlDocument();
+    log4netConfig.LoadXml(@"
         <log4net>
           <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
             <layout type=""log4net.Layout.SimpleLayout"" />
@@ -179,10 +179,9 @@ namespace log4net.Tests.Hierarchy
           </root>
         </log4net>");
 
-      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-      XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
-      Assert.AreEqual("A.B.C", rep.GetLogger("A.B.C").Name);
-      Assert.AreEqual("A.B", rep.GetLogger("A.B").Name);
-    }
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+    Assert.AreEqual("A.B.C", rep.GetLogger("A.B.C").Name);
+    Assert.AreEqual("A.B", rep.GetLogger("A.B").Name);
   }
 }

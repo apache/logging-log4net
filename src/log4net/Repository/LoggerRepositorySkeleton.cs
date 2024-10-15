@@ -26,527 +26,522 @@ using log4net.Plugin;
 using System.Threading;
 using log4net.Appender;
 
-namespace log4net.Repository
+namespace log4net.Repository;
+
+/// <summary>
+/// Base implementation of <see cref="ILoggerRepository"/>
+/// </summary>
+/// <remarks>
+/// <para>
+/// Default abstract implementation of the <see cref="ILoggerRepository"/> interface.
+/// </para>
+/// <para>
+/// Skeleton implementation of the <see cref="ILoggerRepository"/> interface.
+/// All <see cref="ILoggerRepository"/> types can extend this type.
+/// </para>
+/// </remarks>
+/// <author>Nicko Cadell</author>
+/// <author>Gert Driesen</author>
+public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
 {
+  private readonly RendererMap rendererMap = new();
+  private readonly LevelMap levelMap = new();
+  private Level threshold = Level.All;  // Don't disable any levels by default.
+  private ICollection configurationMessages = EmptyCollection.Instance;
+
   /// <summary>
-  /// Base implementation of <see cref="ILoggerRepository"/>
+  /// Default Constructor
   /// </summary>
   /// <remarks>
   /// <para>
-  /// Default abstract implementation of the <see cref="ILoggerRepository"/> interface.
-  /// </para>
-  /// <para>
-  /// Skeleton implementation of the <see cref="ILoggerRepository"/> interface.
-  /// All <see cref="ILoggerRepository"/> types can extend this type.
+  /// Initializes the repository with default (empty) properties.
   /// </para>
   /// </remarks>
-  /// <author>Nicko Cadell</author>
-  /// <author>Gert Driesen</author>
-  public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
+  protected LoggerRepositorySkeleton()
+    : this([])
   {
-    private readonly RendererMap m_rendererMap = new();
-    private readonly LevelMap m_levelMap = new();
-    private Level m_threshold = Level.All;  // Don't disable any levels by default.
-    private ICollection m_configurationMessages = EmptyCollection.Instance;
+  }
 
-    /// <summary>
-    /// Default Constructor
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Initializes the repository with default (empty) properties.
-    /// </para>
-    /// </remarks>
-    protected LoggerRepositorySkeleton() : this(new PropertiesDictionary())
+  /// <summary>
+  /// Construct the repository using specific properties
+  /// </summary>
+  /// <param name="properties">the properties to set for this repository</param>
+  /// <remarks>
+  /// <para>
+  /// Initializes the repository with specified properties.
+  /// </para>
+  /// </remarks>
+  protected LoggerRepositorySkeleton(PropertiesDictionary properties)
+  {
+    Properties = properties;
+    PluginMap = new PluginMap(this);
+    AddBuiltinLevels();
+  }
+
+  /// <summary>
+  /// The name of the repository
+  /// </summary>
+  /// <value>
+  /// The string name of the repository
+  /// </value>
+  /// <remarks>
+  /// <para>
+  /// The name of this repository. The name is
+  /// used to store and lookup the repositories 
+  /// stored by the <see cref="IRepositorySelector"/>.
+  /// </para>
+  /// </remarks>
+  public virtual string Name { get; set; } = string.Empty;
+
+  /// <summary>
+  /// The threshold for all events in this repository
+  /// </summary>
+  /// <value>
+  /// The threshold for all events in this repository
+  /// </value>
+  /// <remarks>
+  /// <para>
+  /// The threshold for all events in this repository
+  /// </para>
+  /// </remarks>
+  public virtual Level Threshold
+  {
+    get => threshold;
+    set
     {
-    }
-
-    /// <summary>
-    /// Construct the repository using specific properties
-    /// </summary>
-    /// <param name="properties">the properties to set for this repository</param>
-    /// <remarks>
-    /// <para>
-    /// Initializes the repository with specified properties.
-    /// </para>
-    /// </remarks>
-    protected LoggerRepositorySkeleton(PropertiesDictionary properties)
-    {
-      Properties = properties;
-      PluginMap = new PluginMap(this);
-      AddBuiltinLevels();
-    }
-
-    /// <summary>
-    /// The name of the repository
-    /// </summary>
-    /// <value>
-    /// The string name of the repository
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// The name of this repository. The name is
-    /// used to store and lookup the repositories 
-    /// stored by the <see cref="IRepositorySelector"/>.
-    /// </para>
-    /// </remarks>
-    public virtual string Name { get; set; } = string.Empty;
-
-    /// <summary>
-    /// The threshold for all events in this repository
-    /// </summary>
-    /// <value>
-    /// The threshold for all events in this repository
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// The threshold for all events in this repository
-    /// </para>
-    /// </remarks>
-    public virtual Level Threshold
-    {
-      get => m_threshold;
-      set
+      if (value is not null)
       {
-        if (value is not null)
-        {
-          m_threshold = value;
-        }
-        else
-        {
-          // Must not set threshold to null
-          LogLog.Warn(declaringType, "LoggerRepositorySkeleton: Threshold cannot be set to null. Setting to ALL");
-          m_threshold = Level.All;
-        }
+        threshold = value;
+      }
+      else
+      {
+        // Must not set threshold to null
+        LogLog.Warn(declaringType, "LoggerRepositorySkeleton: Threshold cannot be set to null. Setting to ALL");
+        threshold = Level.All;
+      }
+    }
+  }
+
+  /// <summary>
+  /// RendererMap accesses the object renderer map for this repository.
+  /// </summary>
+  /// <value>
+  /// RendererMap accesses the object renderer map for this repository.
+  /// </value>
+  /// <remarks>
+  /// <para>
+  /// RendererMap accesses the object renderer map for this repository.
+  /// </para>
+  /// <para>
+  /// The RendererMap holds a mapping between types and
+  /// <see cref="IObjectRenderer"/> objects.
+  /// </para>
+  /// </remarks>
+  public virtual RendererMap RendererMap => rendererMap;
+
+  /// <summary>
+  /// The plugin map for this repository.
+  /// </summary>
+  /// <value>
+  /// The plugin map for this repository.
+  /// </value>
+  /// <remarks>
+  /// <para>
+  /// The plugin map holds the <see cref="IPlugin"/> instances
+  /// that have been attached to this repository.
+  /// </para>
+  /// </remarks>
+  public virtual PluginMap PluginMap { get; }
+
+  /// <summary>
+  /// Get the level map for the Repository.
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// Get the level map for the Repository.
+  /// </para>
+  /// <para>
+  /// The level map defines the mappings between
+  /// level names and <see cref="Level"/> objects in
+  /// this repository.
+  /// </para>
+  /// </remarks>
+  public virtual LevelMap LevelMap => levelMap;
+
+  /// <summary>
+  /// Test if logger exists
+  /// </summary>
+  /// <param name="name">The name of the logger to lookup</param>
+  /// <returns>The Logger object with the name specified</returns>
+  /// <remarks>
+  /// <para>
+  /// Check if the named logger exists in the repository. If so return
+  /// its reference, otherwise returns <c>null</c>.
+  /// </para>
+  /// </remarks>
+  public abstract ILogger? Exists(string name);
+
+  /// <summary>
+  /// Returns all the currently defined loggers in the repository
+  /// </summary>
+  /// <returns>All the defined loggers</returns>
+  /// <remarks>
+  /// <para>
+  /// Returns all the currently defined loggers in the repository as an Array.
+  /// </para>
+  /// </remarks>
+  public abstract ILogger[] GetCurrentLoggers();
+
+  /// <summary>
+  /// Return a new logger instance
+  /// </summary>
+  /// <param name="name">The name of the logger to retrieve</param>
+  /// <returns>The logger object with the name specified</returns>
+  /// <remarks>
+  /// <para>
+  /// Return a new logger instance.
+  /// </para>
+  /// <para>
+  /// If a logger of that name already exists, then it will be
+  /// returned. Otherwise, a new logger will be instantiated and
+  /// then linked with its existing ancestors as well as children.
+  /// </para>
+  /// </remarks>
+  public abstract ILogger GetLogger(string name);
+
+  /// <summary>
+  /// Shutdown the repository
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// Shutdown the repository. Can be overridden in a subclass.
+  /// This base class implementation notifies the <see cref="ShutdownEvent"/>
+  /// listeners and all attached plugins of the shutdown event.
+  /// </para>
+  /// </remarks>
+  public virtual void Shutdown()
+  {
+    // Shutdown attached plugins
+    foreach (IPlugin plugin in PluginMap.AllPlugins)
+    {
+      plugin.Shutdown();
+    }
+
+    // Notify listeners
+    OnShutdown(null);
+  }
+
+  /// <summary>
+  /// Reset the repositories configuration to a default state
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// Reset all values contained in this instance to their
+  /// default state.
+  /// </para>
+  /// <para>
+  /// Existing loggers are not removed. They are just reset.
+  /// </para>
+  /// <para>
+  /// This method should be used sparingly and with care as it will
+  /// block all logging until it is completed.
+  /// </para>
+  /// </remarks>
+  public virtual void ResetConfiguration()
+  {
+    // Clear internal data structures
+    rendererMap.Clear();
+    levelMap.Clear();
+    configurationMessages = EmptyCollection.Instance;
+
+    // Add the predefined levels to the map
+    AddBuiltinLevels();
+
+    Configured = false;
+
+    // Notify listeners
+    OnConfigurationReset(null);
+  }
+
+  /// <summary>
+  /// Log the logEvent through this repository.
+  /// </summary>
+  /// <param name="logEvent">the event to log</param>
+  /// <remarks>
+  /// <para>
+  /// This method should not normally be used to log.
+  /// The <see cref="ILog"/> interface should be used 
+  /// for routine logging. This interface can be obtained
+  /// using the <see cref="M:log4net.LogManager.GetLogger(string)"/> method.
+  /// </para>
+  /// <para>
+  /// The <c>logEvent</c> is delivered to the appropriate logger and
+  /// that logger is then responsible for logging the event.
+  /// </para>
+  /// </remarks>
+  public abstract void Log(LoggingEvent logEvent);
+
+  /// <summary>
+  /// Flag indicates if this repository has been configured.
+  /// </summary>
+  public virtual bool Configured { get; set; }
+
+  /// <summary>
+  /// Contains a list of internal messages captured during the 
+  /// last configuration.
+  /// </summary>
+  public virtual ICollection ConfigurationMessages
+  {
+    get => configurationMessages;
+    set => configurationMessages = value;
+  }
+
+  /// <summary>
+  /// Event to notify that the repository has been shutdown.
+  /// </summary>
+  /// <value>
+  /// Event to notify that the repository has been shutdown.
+  /// </value>
+  /// <remarks>
+  /// <para>
+  /// Event raised when the repository has been shutdown.
+  /// </para>
+  /// </remarks>
+  public event LoggerRepositoryShutdownEventHandler? ShutdownEvent;
+
+  /// <summary>
+  /// Event to notify that the repository has had its configuration reset.
+  /// </summary>
+  /// <value>
+  /// Event to notify that the repository has had its configuration reset.
+  /// </value>
+  /// <remarks>
+  /// <para>
+  /// Event raised when the repository's configuration has been
+  /// reset to default.
+  /// </para>
+  /// </remarks>
+  public event LoggerRepositoryConfigurationResetEventHandler? ConfigurationReset;
+
+  /// <summary>
+  /// Event to notify that the repository has had its configuration changed.
+  /// </summary>
+  /// <value>
+  /// Event to notify that the repository has had its configuration changed.
+  /// </value>
+  /// <remarks>
+  /// <para>
+  /// Event raised when the repository's configuration has been changed.
+  /// </para>
+  /// </remarks>
+  public event LoggerRepositoryConfigurationChangedEventHandler? ConfigurationChanged;
+
+  /// <summary>
+  /// Repository specific properties
+  /// </summary>
+  /// <value>
+  /// Repository specific properties
+  /// </value>
+  /// <remarks>
+  /// These properties can be specified on a repository specific basis
+  /// </remarks>
+  public PropertiesDictionary Properties { get; }
+
+  /// <summary>
+  /// Returns all the Appenders that are configured as an Array.
+  /// </summary>
+  /// <returns>All the Appenders</returns>
+  /// <remarks>
+  /// <para>
+  /// Returns all the Appenders that are configured as an Array.
+  /// </para>
+  /// </remarks>
+  public abstract IAppender[] GetAppenders();
+
+  /// <summary>
+  /// The fully qualified type of the LoggerRepositorySkeleton class.
+  /// </summary>
+  /// <remarks>
+  /// Used by the internal logger to record the Type of the
+  /// log message.
+  /// </remarks>
+  private static readonly Type declaringType = typeof(LoggerRepositorySkeleton);
+
+  private void AddBuiltinLevels()
+  {
+    // Add the predefined levels to the map
+    levelMap.Add(Level.Off);
+
+    // Unrecoverable errors
+    levelMap.Add(Level.Emergency);
+    levelMap.Add(Level.Fatal);
+    levelMap.Add(Level.Alert);
+
+    // Recoverable errors
+    levelMap.Add(Level.Critical);
+    levelMap.Add(Level.Severe);
+    levelMap.Add(Level.Error);
+    levelMap.Add(Level.Warn);
+
+    // Information
+    levelMap.Add(Level.Notice);
+    levelMap.Add(Level.Info);
+
+    // Debug
+    levelMap.Add(Level.Debug);
+    levelMap.Add(Level.Fine);
+    levelMap.Add(Level.Trace);
+    levelMap.Add(Level.Finer);
+    levelMap.Add(Level.Verbose);
+    levelMap.Add(Level.Finest);
+
+    levelMap.Add(Level.All);
+  }
+
+  /// <summary>
+  /// Adds an object renderer for a specific class. 
+  /// </summary>
+  /// <param name="typeToRender">The type that will be rendered by the renderer supplied.</param>
+  /// <param name="rendererInstance">The object renderer used to render the object.</param>
+  /// <remarks>
+  /// <para>
+  /// Adds an object renderer for a specific class. 
+  /// </para>
+  /// </remarks>
+  public virtual void AddRenderer(Type typeToRender, IObjectRenderer rendererInstance)
+  {
+    if (typeToRender is null)
+    {
+      throw new ArgumentNullException(nameof(typeToRender));
+    }
+    if (rendererInstance is null)
+    {
+      throw new ArgumentNullException(nameof(rendererInstance));
+    }
+
+    rendererMap.Put(typeToRender, rendererInstance);
+  }
+
+  /// <summary>
+  /// Notify the registered listeners that the repository is shutting down
+  /// </summary>
+  /// <param name="e">Empty EventArgs</param>
+  /// <remarks>
+  /// <para>
+  /// Notify any listeners that this repository is shutting down.
+  /// </para>
+  /// </remarks>
+  protected virtual void OnShutdown(EventArgs? e)
+  {
+    e ??= EventArgs.Empty;
+    ShutdownEvent?.Invoke(this, e);
+  }
+
+  /// <summary>
+  /// Notify the registered listeners that the repository has had its configuration reset
+  /// </summary>
+  /// <param name="e">Empty EventArgs</param>
+  /// <remarks>
+  /// <para>
+  /// Notify any listeners that this repository's configuration has been reset.
+  /// </para>
+  /// </remarks>
+  protected virtual void OnConfigurationReset(EventArgs? e)
+  {
+    e ??= EventArgs.Empty;
+    ConfigurationReset?.Invoke(this, e);
+  }
+
+  /// <summary>
+  /// Notify the registered listeners that the repository has had its configuration changed
+  /// </summary>
+  /// <param name="e">Empty EventArgs</param>
+  /// <remarks>
+  /// <para>
+  /// Notify any listeners that this repository's configuration has changed.
+  /// </para>
+  /// </remarks>
+  protected virtual void OnConfigurationChanged(EventArgs? e)
+  {
+    e ??= EventArgs.Empty;
+    ConfigurationChanged?.Invoke(this, e);
+  }
+
+  /// <summary>
+  /// Raise a configuration changed event on this repository
+  /// </summary>
+  /// <param name="e">EventArgs.Empty</param>
+  /// <remarks>
+  /// <para>
+  /// Applications that programmatically change the configuration of the repository should
+  /// raise this event notification to notify listeners.
+  /// </para>
+  /// </remarks>
+  public void RaiseConfigurationChanged(EventArgs e)
+  {
+    OnConfigurationChanged(e);
+  }
+
+  private static int GetWaitTime(DateTime startTimeUtc, int millisecondsTimeout)
+  {
+    if (millisecondsTimeout == Timeout.Infinite) return Timeout.Infinite;
+    if (millisecondsTimeout == 0) return 0;
+
+    int elapsedMilliseconds = (int)(DateTime.UtcNow - startTimeUtc).TotalMilliseconds;
+    int timeout = millisecondsTimeout - elapsedMilliseconds;
+    if (timeout < 0) timeout = 0;
+    return timeout;
+  }
+
+  /// <summary>
+  /// Flushes all configured Appenders that implement <see cref="log4net.Appender.IFlushable"/>.
+  /// </summary>
+  /// <param name="millisecondsTimeout">The maximum time in milliseconds to wait for logging events from asynchronous appenders to be flushed,
+  /// or <see cref="Timeout.Infinite"/> to wait indefinitely.</param>
+  /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+  public bool Flush(int millisecondsTimeout)
+  {
+    if (millisecondsTimeout < -1) throw new ArgumentOutOfRangeException(nameof(millisecondsTimeout), "Timeout must be -1 (Timeout.Infinite) or non-negative");
+
+    // Assume success until one of the appenders fails
+    bool result = true;
+
+    // Use DateTime.UtcNow rather than a System.Diagnostics.Stopwatch for compatibility with .NET 1.x
+    DateTime startTimeUtc = DateTime.UtcNow;
+
+    // Do buffering appenders first.  These may be forwarding to other appenders
+    foreach (IAppender appender in GetAppenders())
+    {
+      if (appender is not IFlushable flushable)
+      {
+        continue;
+      }
+
+      if (appender is BufferingAppenderSkeleton)
+      {
+        int timeout = GetWaitTime(startTimeUtc, millisecondsTimeout);
+        if (!flushable.Flush(timeout)) result = false;
       }
     }
 
-    /// <summary>
-    /// RendererMap accesses the object renderer map for this repository.
-    /// </summary>
-    /// <value>
-    /// RendererMap accesses the object renderer map for this repository.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// RendererMap accesses the object renderer map for this repository.
-    /// </para>
-    /// <para>
-    /// The RendererMap holds a mapping between types and
-    /// <see cref="IObjectRenderer"/> objects.
-    /// </para>
-    /// </remarks>
-    public virtual RendererMap RendererMap => m_rendererMap;
-
-    /// <summary>
-    /// The plugin map for this repository.
-    /// </summary>
-    /// <value>
-    /// The plugin map for this repository.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// The plugin map holds the <see cref="IPlugin"/> instances
-    /// that have been attached to this repository.
-    /// </para>
-    /// </remarks>
-    public virtual PluginMap PluginMap { get; }
-
-    /// <summary>
-    /// Get the level map for the Repository.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Get the level map for the Repository.
-    /// </para>
-    /// <para>
-    /// The level map defines the mappings between
-    /// level names and <see cref="Level"/> objects in
-    /// this repository.
-    /// </para>
-    /// </remarks>
-    public virtual LevelMap LevelMap => m_levelMap;
-
-    /// <summary>
-    /// Test if logger exists
-    /// </summary>
-    /// <param name="name">The name of the logger to lookup</param>
-    /// <returns>The Logger object with the name specified</returns>
-    /// <remarks>
-    /// <para>
-    /// Check if the named logger exists in the repository. If so return
-    /// its reference, otherwise returns <c>null</c>.
-    /// </para>
-    /// </remarks>
-    public abstract ILogger? Exists(string name);
-
-    /// <summary>
-    /// Returns all the currently defined loggers in the repository
-    /// </summary>
-    /// <returns>All the defined loggers</returns>
-    /// <remarks>
-    /// <para>
-    /// Returns all the currently defined loggers in the repository as an Array.
-    /// </para>
-    /// </remarks>
-    public abstract ILogger[] GetCurrentLoggers();
-
-    /// <summary>
-    /// Return a new logger instance
-    /// </summary>
-    /// <param name="name">The name of the logger to retrieve</param>
-    /// <returns>The logger object with the name specified</returns>
-    /// <remarks>
-    /// <para>
-    /// Return a new logger instance.
-    /// </para>
-    /// <para>
-    /// If a logger of that name already exists, then it will be
-    /// returned. Otherwise, a new logger will be instantiated and
-    /// then linked with its existing ancestors as well as children.
-    /// </para>
-    /// </remarks>
-    public abstract ILogger GetLogger(string name);
-
-    /// <summary>
-    /// Shutdown the repository
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Shutdown the repository. Can be overridden in a subclass.
-    /// This base class implementation notifies the <see cref="ShutdownEvent"/>
-    /// listeners and all attached plugins of the shutdown event.
-    /// </para>
-    /// </remarks>
-    public virtual void Shutdown()
+    // Do non-buffering appenders.
+    foreach (IAppender appender in GetAppenders())
     {
-      // Shutdown attached plugins
-      foreach (IPlugin plugin in PluginMap.AllPlugins)
+      if (appender is not IFlushable flushable)
       {
-        plugin.Shutdown();
+        continue;
       }
 
-      // Notify listeners
-      OnShutdown(null);
-    }
-
-    /// <summary>
-    /// Reset the repositories configuration to a default state
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Reset all values contained in this instance to their
-    /// default state.
-    /// </para>
-    /// <para>
-    /// Existing loggers are not removed. They are just reset.
-    /// </para>
-    /// <para>
-    /// This method should be used sparingly and with care as it will
-    /// block all logging until it is completed.
-    /// </para>
-    /// </remarks>
-    public virtual void ResetConfiguration()
-    {
-      // Clear internal data structures
-      m_rendererMap.Clear();
-      m_levelMap.Clear();
-      m_configurationMessages = EmptyCollection.Instance;
-
-      // Add the predefined levels to the map
-      AddBuiltinLevels();
-
-      Configured = false;
-
-      // Notify listeners
-      OnConfigurationReset(null);
-    }
-
-    /// <summary>
-    /// Log the logEvent through this repository.
-    /// </summary>
-    /// <param name="logEvent">the event to log</param>
-    /// <remarks>
-    /// <para>
-    /// This method should not normally be used to log.
-    /// The <see cref="ILog"/> interface should be used 
-    /// for routine logging. This interface can be obtained
-    /// using the <see cref="M:log4net.LogManager.GetLogger(string)"/> method.
-    /// </para>
-    /// <para>
-    /// The <c>logEvent</c> is delivered to the appropriate logger and
-    /// that logger is then responsible for logging the event.
-    /// </para>
-    /// </remarks>
-    public abstract void Log(LoggingEvent logEvent);
-
-    /// <summary>
-    /// Flag indicates if this repository has been configured.
-    /// </summary>
-    /// <value>
-    /// Flag indicates if this repository has been configured.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Flag indicates if this repository has been configured.
-    /// </para>
-    /// </remarks>
-    public virtual bool Configured { get; set; }
-
-    /// <summary>
-    /// Contains a list of internal messages captured during the 
-    /// last configuration.
-    /// </summary>
-    public virtual ICollection ConfigurationMessages
-    {
-      get => m_configurationMessages;
-      set => m_configurationMessages = value;
-    }
-
-    /// <summary>
-    /// Event to notify that the repository has been shutdown.
-    /// </summary>
-    /// <value>
-    /// Event to notify that the repository has been shutdown.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Event raised when the repository has been shutdown.
-    /// </para>
-    /// </remarks>
-    public event LoggerRepositoryShutdownEventHandler? ShutdownEvent;
-
-    /// <summary>
-    /// Event to notify that the repository has had its configuration reset.
-    /// </summary>
-    /// <value>
-    /// Event to notify that the repository has had its configuration reset.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Event raised when the repository's configuration has been
-    /// reset to default.
-    /// </para>
-    /// </remarks>
-    public event LoggerRepositoryConfigurationResetEventHandler? ConfigurationReset;
-
-    /// <summary>
-    /// Event to notify that the repository has had its configuration changed.
-    /// </summary>
-    /// <value>
-    /// Event to notify that the repository has had its configuration changed.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// Event raised when the repository's configuration has been changed.
-    /// </para>
-    /// </remarks>
-    public event LoggerRepositoryConfigurationChangedEventHandler? ConfigurationChanged;
-
-    /// <summary>
-    /// Repository specific properties
-    /// </summary>
-    /// <value>
-    /// Repository specific properties
-    /// </value>
-    /// <remarks>
-    /// These properties can be specified on a repository specific basis
-    /// </remarks>
-    public PropertiesDictionary Properties { get; }
-
-    /// <summary>
-    /// Returns all the Appenders that are configured as an Array.
-    /// </summary>
-    /// <returns>All the Appenders</returns>
-    /// <remarks>
-    /// <para>
-    /// Returns all the Appenders that are configured as an Array.
-    /// </para>
-    /// </remarks>
-    public abstract IAppender[] GetAppenders();
-
-    /// <summary>
-    /// The fully qualified type of the LoggerRepositorySkeleton class.
-    /// </summary>
-    /// <remarks>
-    /// Used by the internal logger to record the Type of the
-    /// log message.
-    /// </remarks>
-    private static readonly Type declaringType = typeof(LoggerRepositorySkeleton);
-
-    private void AddBuiltinLevels()
-    {
-      // Add the predefined levels to the map
-      m_levelMap.Add(Level.Off);
-
-      // Unrecoverable errors
-      m_levelMap.Add(Level.Emergency);
-      m_levelMap.Add(Level.Fatal);
-      m_levelMap.Add(Level.Alert);
-
-      // Recoverable errors
-      m_levelMap.Add(Level.Critical);
-      m_levelMap.Add(Level.Severe);
-      m_levelMap.Add(Level.Error);
-      m_levelMap.Add(Level.Warn);
-
-      // Information
-      m_levelMap.Add(Level.Notice);
-      m_levelMap.Add(Level.Info);
-
-      // Debug
-      m_levelMap.Add(Level.Debug);
-      m_levelMap.Add(Level.Fine);
-      m_levelMap.Add(Level.Trace);
-      m_levelMap.Add(Level.Finer);
-      m_levelMap.Add(Level.Verbose);
-      m_levelMap.Add(Level.Finest);
-
-      m_levelMap.Add(Level.All);
-    }
-
-    /// <summary>
-    /// Adds an object renderer for a specific class. 
-    /// </summary>
-    /// <param name="typeToRender">The type that will be rendered by the renderer supplied.</param>
-    /// <param name="rendererInstance">The object renderer used to render the object.</param>
-    /// <remarks>
-    /// <para>
-    /// Adds an object renderer for a specific class. 
-    /// </para>
-    /// </remarks>
-    public virtual void AddRenderer(Type typeToRender, IObjectRenderer rendererInstance)
-    {
-      if (typeToRender is null)
+      if (appender is not BufferingAppenderSkeleton)
       {
-        throw new ArgumentNullException(nameof(typeToRender));
-      }
-      if (rendererInstance is null)
-      {
-        throw new ArgumentNullException(nameof(rendererInstance));
-      }
-
-      m_rendererMap.Put(typeToRender, rendererInstance);
-    }
-
-    /// <summary>
-    /// Notify the registered listeners that the repository is shutting down
-    /// </summary>
-    /// <param name="e">Empty EventArgs</param>
-    /// <remarks>
-    /// <para>
-    /// Notify any listeners that this repository is shutting down.
-    /// </para>
-    /// </remarks>
-    protected virtual void OnShutdown(EventArgs? e)
-    {
-      e ??= EventArgs.Empty;
-      ShutdownEvent?.Invoke(this, e);
-    }
-
-    /// <summary>
-    /// Notify the registered listeners that the repository has had its configuration reset
-    /// </summary>
-    /// <param name="e">Empty EventArgs</param>
-    /// <remarks>
-    /// <para>
-    /// Notify any listeners that this repository's configuration has been reset.
-    /// </para>
-    /// </remarks>
-    protected virtual void OnConfigurationReset(EventArgs? e)
-    {
-      e ??= EventArgs.Empty;
-      ConfigurationReset?.Invoke(this, e);
-    }
-
-    /// <summary>
-    /// Notify the registered listeners that the repository has had its configuration changed
-    /// </summary>
-    /// <param name="e">Empty EventArgs</param>
-    /// <remarks>
-    /// <para>
-    /// Notify any listeners that this repository's configuration has changed.
-    /// </para>
-    /// </remarks>
-    protected virtual void OnConfigurationChanged(EventArgs? e)
-    {
-      e ??= EventArgs.Empty;
-      ConfigurationChanged?.Invoke(this, e);
-    }
-
-    /// <summary>
-    /// Raise a configuration changed event on this repository
-    /// </summary>
-    /// <param name="e">EventArgs.Empty</param>
-    /// <remarks>
-    /// <para>
-    /// Applications that programmatically change the configuration of the repository should
-    /// raise this event notification to notify listeners.
-    /// </para>
-    /// </remarks>
-    public void RaiseConfigurationChanged(EventArgs e)
-    {
-      OnConfigurationChanged(e);
-    }
-
-    private static int GetWaitTime(DateTime startTimeUtc, int millisecondsTimeout)
-    {
-      if (millisecondsTimeout == Timeout.Infinite) return Timeout.Infinite;
-      if (millisecondsTimeout == 0) return 0;
-
-      int elapsedMilliseconds = (int)(DateTime.UtcNow - startTimeUtc).TotalMilliseconds;
-      int timeout = millisecondsTimeout - elapsedMilliseconds;
-      if (timeout < 0) timeout = 0;
-      return timeout;
-    }
-
-    /// <summary>
-    /// Flushes all configured Appenders that implement <see cref="log4net.Appender.IFlushable"/>.
-    /// </summary>
-    /// <param name="millisecondsTimeout">The maximum time in milliseconds to wait for logging events from asynchronous appenders to be flushed,
-    /// or <see cref="Timeout.Infinite"/> to wait indefinitely.</param>
-    /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
-    public bool Flush(int millisecondsTimeout)
-    {
-      if (millisecondsTimeout < -1) throw new ArgumentOutOfRangeException(nameof(millisecondsTimeout), "Timeout must be -1 (Timeout.Infinite) or non-negative");
-
-      // Assume success until one of the appenders fails
-      bool result = true;
-
-      // Use DateTime.UtcNow rather than a System.Diagnostics.Stopwatch for compatibility with .NET 1.x
-      DateTime startTimeUtc = DateTime.UtcNow;
-
-      // Do buffering appenders first.  These may be forwarding to other appenders
-      foreach (IAppender appender in GetAppenders())
-      {
-        if (appender is not IFlushable flushable)
+        int timeout = GetWaitTime(startTimeUtc, millisecondsTimeout);
+        if (!flushable.Flush(timeout))
         {
-          continue;
-        }
-
-        if (appender is BufferingAppenderSkeleton)
-        {
-          int timeout = GetWaitTime(startTimeUtc, millisecondsTimeout);
-          if (!flushable.Flush(timeout)) result = false;
+          result = false;
         }
       }
-
-      // Do non-buffering appenders.
-      foreach (IAppender appender in GetAppenders())
-      {
-        if (appender is not IFlushable flushable)
-        {
-          continue;
-        }
-
-        if (appender is not BufferingAppenderSkeleton)
-        {
-          int timeout = GetWaitTime(startTimeUtc, millisecondsTimeout);
-          if (!flushable.Flush(timeout)) result = false;
-        }
-      }
-
-      return result;
     }
+
+    return result;
   }
 }

@@ -24,77 +24,76 @@ using System.IO;
 using log4net.Util.PatternStringConverters;
 using NUnit.Framework;
 
-namespace log4net.Tests.Util
+namespace log4net.Tests.Util;
+
+[TestFixture]
+public sealed class EnvironmentPatternConverterTest
 {
-  [TestFixture]
-  public sealed class EnvironmentPatternConverterTest
+  private const string ENVIRONMENT_VARIABLE_NAME = "LOG4NET_TEST_TEMP";
+  private const string SYSTEM_LEVEL_VALUE = "SystemLevelEnvironmentValue";
+  private const string USER_LEVEL_VALUE = "UserLevelEnvironmentValue";
+  private const string PROCESS_LEVEL_VALUE = "ProcessLevelEnvironmentValue";
+
+  /// <summary>
+  /// .NET implementations on Unix-like systems only support variables in the process environment block
+  /// </summary>
+  [Test]
+  [Platform(Include = "Win", Reason = @"https://learn.microsoft.com/en-us/dotnet/api/system.environment.setenvironmentvariable")]
+  public void SystemLevelEnvironmentVariable()
   {
-    private const string ENVIRONMENT_VARIABLE_NAME = "LOG4NET_TEST_TEMP";
-    private const string SYSTEM_LEVEL_VALUE = "SystemLevelEnvironmentValue";
-    private const string USER_LEVEL_VALUE = "UserLevelEnvironmentValue";
-    private const string PROCESS_LEVEL_VALUE = "ProcessLevelEnvironmentValue";
-
-    /// <summary>
-    /// .NET implementations on Unix-like systems only support variables in the process environment block
-    /// </summary>
-    [Test]
-    [Platform(Include = "Win", Reason = @"https://learn.microsoft.com/en-us/dotnet/api/system.environment.setenvironmentvariable")]
-    public void SystemLevelEnvironmentVariable()
+    var converter = new EnvironmentPatternConverter();
+    try
     {
-      var converter = new EnvironmentPatternConverter();
-      try
-      {
-        Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, SYSTEM_LEVEL_VALUE, EnvironmentVariableTarget.Machine);
-      }
-      catch (System.Security.SecurityException)
-      {
-        Assert.Ignore("Test skipped as current user must not set system level environment variables");
-      }
-
-      converter.Option = ENVIRONMENT_VARIABLE_NAME;
-
-      var sw = new StringWriter();
-      converter.Convert(sw, null);
-
-      Assert.AreEqual(SYSTEM_LEVEL_VALUE, sw.ToString(), "System level environment variable not expended correctly.");
-
-      Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, null, EnvironmentVariableTarget.Machine);
+      Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, SYSTEM_LEVEL_VALUE, EnvironmentVariableTarget.Machine);
+    }
+    catch (System.Security.SecurityException)
+    {
+      Assert.Ignore("Test skipped as current user must not set system level environment variables");
     }
 
-    /// <summary>
-    /// .NET implementations on Unix-like systems only support variables in the process environment block
-    /// </summary>
-    [Test]
-    [Platform(Include = "Win", Reason = @"https://learn.microsoft.com/en-us/dotnet/api/system.environment.setenvironmentvariable")]
-    public void UserLevelEnvironmentVariable()
-    {
-      var converter = new EnvironmentPatternConverter();
-      Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, USER_LEVEL_VALUE, EnvironmentVariableTarget.User);
+    converter.Option = ENVIRONMENT_VARIABLE_NAME;
 
-      converter.Option = ENVIRONMENT_VARIABLE_NAME;
+    var sw = new StringWriter();
+    converter.Convert(sw, null);
 
-      var sw = new StringWriter();
-      converter.Convert(sw, null);
+    Assert.AreEqual(SYSTEM_LEVEL_VALUE, sw.ToString(), "System level environment variable not expended correctly.");
 
-      Assert.AreEqual(USER_LEVEL_VALUE, sw.ToString(), "User level environment variable not expended correctly.");
+    Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, null, EnvironmentVariableTarget.Machine);
+  }
 
-      Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, null, EnvironmentVariableTarget.User);
-    }
+  /// <summary>
+  /// .NET implementations on Unix-like systems only support variables in the process environment block
+  /// </summary>
+  [Test]
+  [Platform(Include = "Win", Reason = @"https://learn.microsoft.com/en-us/dotnet/api/system.environment.setenvironmentvariable")]
+  public void UserLevelEnvironmentVariable()
+  {
+    var converter = new EnvironmentPatternConverter();
+    Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, USER_LEVEL_VALUE, EnvironmentVariableTarget.User);
 
-    [Test]
-    public void ProcessLevelEnvironmentVariable()
-    {
-      var converter = new EnvironmentPatternConverter();
-      Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, PROCESS_LEVEL_VALUE);
+    converter.Option = ENVIRONMENT_VARIABLE_NAME;
 
-      converter.Option = ENVIRONMENT_VARIABLE_NAME;
+    var sw = new StringWriter();
+    converter.Convert(sw, null);
 
-      var sw = new StringWriter();
-      converter.Convert(sw, null);
+    Assert.AreEqual(USER_LEVEL_VALUE, sw.ToString(), "User level environment variable not expended correctly.");
 
-      Assert.AreEqual(PROCESS_LEVEL_VALUE, sw.ToString(), "Process level environment variable not expended correctly.");
+    Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, null, EnvironmentVariableTarget.User);
+  }
 
-      Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, null);
-    }
+  [Test]
+  public void ProcessLevelEnvironmentVariable()
+  {
+    var converter = new EnvironmentPatternConverter();
+    Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, PROCESS_LEVEL_VALUE);
+
+    converter.Option = ENVIRONMENT_VARIABLE_NAME;
+
+    var sw = new StringWriter();
+    converter.Convert(sw, null);
+
+    Assert.AreEqual(PROCESS_LEVEL_VALUE, sw.ToString(), "Process level environment variable not expended correctly.");
+
+    Environment.SetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME, null);
   }
 }

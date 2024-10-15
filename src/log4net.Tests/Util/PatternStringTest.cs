@@ -28,94 +28,93 @@ using System.IO;
 using System.Reflection;
 using System.Configuration;
 
-namespace log4net.Tests.Util
+namespace log4net.Tests.Util;
+
+[TestFixture]
+public class PatternStringTest : MarshalByRefObject
 {
-  [TestFixture]
-  public class PatternStringTest : MarshalByRefObject
+  [Test]
+  public void TestEnvironmentFolderPathPatternConverter()
   {
-    [Test]
-    public void TestEnvironmentFolderPathPatternConverter()
+    string[] specialFolderNames = Enum.GetNames(typeof(Environment.SpecialFolder));
+
+    foreach (string specialFolderName in specialFolderNames)
     {
-      string[] specialFolderNames = Enum.GetNames(typeof(Environment.SpecialFolder));
+      string pattern = "%envFolderPath{" + specialFolderName + "}";
 
-      foreach (string specialFolderName in specialFolderNames)
-      {
-        string pattern = "%envFolderPath{" + specialFolderName + "}";
+      PatternString patternString = new PatternString(pattern);
 
-        PatternString patternString = new PatternString(pattern);
+      string evaluatedPattern = patternString.Format();
 
-        string evaluatedPattern = patternString.Format();
+      Environment.SpecialFolder specialFolder =
+          (Environment.SpecialFolder)Enum.Parse(typeof(Environment.SpecialFolder), specialFolderName);
 
-        Environment.SpecialFolder specialFolder =
-            (Environment.SpecialFolder)Enum.Parse(typeof(Environment.SpecialFolder), specialFolderName);
-
-        Assert.AreEqual(Environment.GetFolderPath(specialFolder), evaluatedPattern);
-      }
+      Assert.AreEqual(Environment.GetFolderPath(specialFolder), evaluatedPattern);
     }
+  }
 
-    [Test]
-    public void TestAppSettingPathConverter()
-    {
-      string configurationFileContent = @"
+  [Test]
+  public void TestAppSettingPathConverter()
+  {
+    string configurationFileContent = @"
 <configuration>
   <appSettings>
     <add key=""TestKey"" value = ""TestValue"" />
   </appSettings>
 </configuration>
 ";
-      string? configurationFileName = null;
-      AppDomain? appDomain = null;
-      try
+    string? configurationFileName = null;
+    AppDomain? appDomain = null;
+    try
+    {
+      configurationFileName = CreateTempConfigFile(configurationFileContent);
+      appDomain = CreateConfiguredDomain("AppSettingsTestDomain", configurationFileName);
+
+      PatternStringTest pst = (PatternStringTest)appDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, this.GetType().FullName);
+      pst.TestAppSettingPathConverterInConfiguredDomain();
+    }
+    finally
+    {
+      if (appDomain is not null)
       {
-        configurationFileName = CreateTempConfigFile(configurationFileContent);
-        appDomain = CreateConfiguredDomain("AppSettingsTestDomain", configurationFileName);
-
-        PatternStringTest pst = (PatternStringTest)appDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, this.GetType().FullName);
-        pst.TestAppSettingPathConverterInConfiguredDomain();
+        AppDomain.Unload(appDomain);
       }
-      finally
+      if (configurationFileName is not null)
       {
-        if (appDomain is not null)
-        {
-          AppDomain.Unload(appDomain);
-        }
-        if (configurationFileName is not null)
-        {
-          File.Delete(configurationFileName);
-        }
+        File.Delete(configurationFileName);
       }
     }
+  }
 
-    public void TestAppSettingPathConverterInConfiguredDomain()
-    {
-      string pattern = "%appSetting{TestKey}";
-      PatternString patternString = new PatternString(pattern);
-      string evaluatedPattern = patternString.Format();
-      string appSettingValue = ConfigurationManager.AppSettings["TestKey"];
-      Assert.AreEqual("TestValue", appSettingValue, "Expected configuration file to contain a key TestKey with the value TestValue");
-      Assert.AreEqual(appSettingValue, evaluatedPattern, "Evaluated pattern expected to be identical to appSetting value");
+  public void TestAppSettingPathConverterInConfiguredDomain()
+  {
+    string pattern = "%appSetting{TestKey}";
+    PatternString patternString = new PatternString(pattern);
+    string evaluatedPattern = patternString.Format();
+    string appSettingValue = ConfigurationManager.AppSettings["TestKey"];
+    Assert.AreEqual("TestValue", appSettingValue, "Expected configuration file to contain a key TestKey with the value TestValue");
+    Assert.AreEqual(appSettingValue, evaluatedPattern, "Evaluated pattern expected to be identical to appSetting value");
 
-      string badPattern = "%appSetting{UnknownKey}";
-      patternString = new PatternString(badPattern);
-      evaluatedPattern = patternString.Format();
-      Assert.AreEqual("(null)", evaluatedPattern, "Evaluated pattern expected to be \"(null)\" for non-existent appSettings key");
-    }
+    string badPattern = "%appSetting{UnknownKey}";
+    patternString = new PatternString(badPattern);
+    evaluatedPattern = patternString.Format();
+    Assert.AreEqual("(null)", evaluatedPattern, "Evaluated pattern expected to be \"(null)\" for non-existent appSettings key");
+  }
 
-    private static string CreateTempConfigFile(string configurationFileContent)
-    {
-      string fileName = Path.GetTempFileName();
-      File.WriteAllText(fileName, configurationFileContent);
-      return fileName;
-    }
+  private static string CreateTempConfigFile(string configurationFileContent)
+  {
+    string fileName = Path.GetTempFileName();
+    File.WriteAllText(fileName, configurationFileContent);
+    return fileName;
+  }
 
-    private static AppDomain CreateConfiguredDomain(string domainName, string configurationFileName)
-    {
-      AppDomainSetup ads = new AppDomainSetup();
-      ads.ApplicationBase = AppDomain.CurrentDomain.BaseDirectory;
-      ads.ConfigurationFile = configurationFileName;
-      AppDomain ad = AppDomain.CreateDomain(domainName, null, ads);
-      return ad;
-    }
+  private static AppDomain CreateConfiguredDomain(string domainName, string configurationFileName)
+  {
+    AppDomainSetup ads = new AppDomainSetup();
+    ads.ApplicationBase = AppDomain.CurrentDomain.BaseDirectory;
+    ads.ConfigurationFile = configurationFileName;
+    AppDomain ad = AppDomain.CreateDomain(domainName, null, ads);
+    return ad;
   }
 }
 #endif

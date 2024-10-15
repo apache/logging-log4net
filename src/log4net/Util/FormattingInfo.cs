@@ -17,65 +17,64 @@
 //
 #endregion
 
-namespace log4net.Util
+namespace log4net.Util;
+
+/// <summary>
+/// Contain the information obtained when parsing formatting modifiers 
+/// in conversion modifiers.
+/// </summary>
+/// <remarks>
+/// <para>
+/// Holds the formatting information extracted from the format string by
+/// the <see cref="PatternParser"/>. This is used by the <see cref="PatternConverter"/>
+/// objects when rendering the output.
+/// </para>
+/// </remarks>
+/// <author>Nicko Cadell</author>
+/// <author>Gert Driesen</author>
+public class FormattingInfo
 {
   /// <summary>
-  /// Contain the information obtained when parsing formatting modifiers 
-  /// in conversion modifiers.
+  /// Defaut Constructor
   /// </summary>
   /// <remarks>
   /// <para>
-  /// Holds the formatting information extracted from the format string by
-  /// the <see cref="PatternParser"/>. This is used by the <see cref="PatternConverter"/>
-  /// objects when rendering the output.
+  /// Initializes a new instance of the <see cref="FormattingInfo" /> class.
   /// </para>
   /// </remarks>
-  /// <author>Nicko Cadell</author>
-  /// <author>Gert Driesen</author>
-  public class FormattingInfo
+  public FormattingInfo()
   {
-    /// <summary>
-    /// Defaut Constructor
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Initializes a new instance of the <see cref="FormattingInfo" /> class.
-    /// </para>
-    /// </remarks>
-    public FormattingInfo()
-    {
-    }
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Initializes a new instance of the <see cref="FormattingInfo" /> class
-    /// with the specified parameters.
-    /// </para>
-    /// </remarks>
-    public FormattingInfo(int min, int max, bool leftAlign)
-    {
-      Min = min;
-      Max = max;
-      LeftAlign = leftAlign;
-    }
-
-    /// <summary>
-    /// Gets or sets the minimum value.
-    /// </summary>
-    public int Min { get; set; } = -1;
-
-    /// <summary>
-    /// Gets or sets the maximum value.
-    /// </summary>
-    public int Max { get; set; } = int.MaxValue;
-
-    /// <summary>
-    /// Gets or sets a flag indicating whether left align is enabled.
-    /// or not.
-    /// </summary>
-    public bool LeftAlign { get; set; } = false;
   }
+
+  /// <summary>
+  /// Constructor
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// Initializes a new instance of the <see cref="FormattingInfo" /> class
+  /// with the specified parameters.
+  /// </para>
+  /// </remarks>
+  public FormattingInfo(int min, int max, bool leftAlign)
+  {
+    Min = min;
+    Max = max;
+    LeftAlign = leftAlign;
+  }
+
+  /// <summary>
+  /// Gets or sets the minimum value.
+  /// </summary>
+  public int Min { get; set; } = -1;
+
+  /// <summary>
+  /// Gets or sets the maximum value.
+  /// </summary>
+  public int Max { get; set; } = int.MaxValue;
+
+  /// <summary>
+  /// Gets or sets a flag indicating whether left align is enabled.
+  /// or not.
+  /// </summary>
+  public bool LeftAlign { get; set; } = false;
 }

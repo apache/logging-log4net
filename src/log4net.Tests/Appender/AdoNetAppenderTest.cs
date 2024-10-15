@@ -31,63 +31,63 @@ using log4net.Tests.Appender.AdoNet;
 using log4net.Util;
 using NUnit.Framework;
 
-namespace log4net.Tests.Appender
+namespace log4net.Tests.Appender;
+
+[TestFixture]
+public class AdoNetAppenderTest
 {
-  [TestFixture]
-  public class AdoNetAppenderTest
+  [Test]
+  public void NoBufferingTest()
   {
-    [Test]
-    public void NoBufferingTest()
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+
+    AdoNetAppender adoNetAppender = new AdoNetAppender
     {
-      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+      BufferSize = -1,
+      ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!
+    };
+    adoNetAppender.ActivateOptions();
 
-      AdoNetAppender adoNetAppender = new AdoNetAppender
-      {
-          BufferSize = -1,
-          ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!
-      };
-      adoNetAppender.ActivateOptions();
+    BasicConfigurator.Configure(rep, adoNetAppender);
 
-      BasicConfigurator.Configure(rep, adoNetAppender);
+    ILog log = LogManager.GetLogger(rep.Name, "NoBufferingTest");
+    log.Debug("Message");
+    Assert.NotNull(Log4NetCommand.MostRecentInstance);
+    Assert.AreEqual(1, Log4NetCommand.MostRecentInstance!.ExecuteNonQueryCount);
+  }
 
-      ILog log = LogManager.GetLogger(rep.Name, "NoBufferingTest");
+  [Test]
+  public void BufferingTest()
+  {
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+
+    int bufferSize = 5;
+
+    AdoNetAppender adoNetAppender = new AdoNetAppender
+    {
+      BufferSize = bufferSize,
+      ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!
+    };
+    adoNetAppender.ActivateOptions();
+
+    BasicConfigurator.Configure(rep, adoNetAppender);
+
+    ILog log = LogManager.GetLogger(rep.Name, "BufferingTest");
+    for (int i = 0; i < bufferSize; i++)
+    {
       log.Debug("Message");
-      Assert.NotNull(Log4NetCommand.MostRecentInstance);
-      Assert.AreEqual(1, Log4NetCommand.MostRecentInstance!.ExecuteNonQueryCount);
+      Assert.IsNull(Log4NetCommand.MostRecentInstance);
     }
+    log.Debug("Message");
+    Assert.NotNull(Log4NetCommand.MostRecentInstance);
+    Assert.AreEqual(bufferSize + 1, Log4NetCommand.MostRecentInstance!.ExecuteNonQueryCount);
+  }
 
-    [Test]
-    public void BufferingTest()
-    {
-      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-
-      int bufferSize = 5;
-
-      AdoNetAppender adoNetAppender = new AdoNetAppender
-      {
-          BufferSize = bufferSize,
-          ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!
-      };
-      adoNetAppender.ActivateOptions();
-
-      BasicConfigurator.Configure(rep, adoNetAppender);
-
-      ILog log = LogManager.GetLogger(rep.Name, "BufferingTest");
-      for (int i = 0; i < bufferSize; i++)
-      {
-        log.Debug("Message");
-        Assert.IsNull(Log4NetCommand.MostRecentInstance);
-      }
-      log.Debug("Message");
-      Assert.NotNull(Log4NetCommand.MostRecentInstance);
-      Assert.AreEqual(bufferSize + 1, Log4NetCommand.MostRecentInstance!.ExecuteNonQueryCount);
-    }
-
-    [Test]
-    public void WebsiteExample()
-    {
-      XmlDocument log4netConfig = new XmlDocument();
-      log4netConfig.LoadXml(@"
+  [Test]
+  public void WebsiteExample()
+  {
+    XmlDocument log4netConfig = new XmlDocument();
+    log4netConfig.LoadXml(@"
                 <log4net>
                 <appender name=""AdoNetAppender"" type=""log4net.Appender.AdoNetAppender"">
                     <bufferSize value=""-1"" />
@@ -144,38 +144,38 @@ namespace log4net.Tests.Appender
                   </root>  
                 </log4net>");
 
-      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-      XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
-      ILog log = LogManager.GetLogger(rep.Name, "WebsiteExample");
-      log.Debug("Message");
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+    ILog log = LogManager.GetLogger(rep.Name, "WebsiteExample");
+    log.Debug("Message");
 
-      IDbCommand? command = Log4NetCommand.MostRecentInstance;
-      Assert.NotNull(command);
+    IDbCommand? command = Log4NetCommand.MostRecentInstance;
+    Assert.NotNull(command);
 
-      Assert.AreEqual(
-          "INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message],[Exception]) VALUES (@log_date, @thread, @log_level, @logger, @message, @exception)",
-          command!.CommandText);
+    Assert.AreEqual(
+        "INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message],[Exception]) VALUES (@log_date, @thread, @log_level, @logger, @message, @exception)",
+        command!.CommandText);
 
-      Assert.AreEqual(6, command.Parameters.Count);
+    Assert.AreEqual(6, command.Parameters.Count);
 
-      IDbDataParameter param = (IDbDataParameter)command.Parameters["@message"];
-      Assert.AreEqual("Message", param.Value);
+    IDbDataParameter param = (IDbDataParameter)command.Parameters["@message"];
+    Assert.AreEqual("Message", param.Value);
 
-      param = (IDbDataParameter)command.Parameters["@log_level"];
-      Assert.AreEqual(Level.Debug.ToString(), param.Value);
+    param = (IDbDataParameter)command.Parameters["@log_level"];
+    Assert.AreEqual(Level.Debug.ToString(), param.Value);
 
-      param = (IDbDataParameter)command.Parameters["@logger"];
-      Assert.AreEqual("WebsiteExample", param.Value);
+    param = (IDbDataParameter)command.Parameters["@logger"];
+    Assert.AreEqual("WebsiteExample", param.Value);
 
-      param = (IDbDataParameter)command.Parameters["@exception"];
-      Assert.IsEmpty((string?)param.Value);
-    }
+    param = (IDbDataParameter)command.Parameters["@exception"];
+    Assert.IsEmpty((string?)param.Value);
+  }
 
-    [Test]
-    public void BufferingWebsiteExample()
-    {
-      XmlDocument log4netConfig = new XmlDocument();
-      log4netConfig.LoadXml(@"
+  [Test]
+  public void BufferingWebsiteExample()
+  {
+    XmlDocument log4netConfig = new XmlDocument();
+    log4netConfig.LoadXml(@"
                 <log4net>
                 <appender name=""AdoNetAppender"" type=""log4net.Appender.AdoNetAppender"">
                     <bufferSize value=""2"" />
@@ -232,42 +232,42 @@ namespace log4net.Tests.Appender
                   </root>  
                 </log4net>");
 
-      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-      XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
-      ILog log = LogManager.GetLogger(rep.Name, "WebsiteExample");
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+    ILog log = LogManager.GetLogger(rep.Name, "WebsiteExample");
 
-      for (int i = 0; i < 3; i++)
-      {
-        log.Debug("Message");
-      }
-
-      IDbCommand? command = Log4NetCommand.MostRecentInstance;
-      Assert.NotNull(command);
-
-      Assert.AreEqual(
-          "INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message],[Exception]) VALUES (@log_date, @thread, @log_level, @logger, @message, @exception)",
-          command!.CommandText);
-
-      Assert.AreEqual(6, command.Parameters.Count);
-
-      IDbDataParameter param = (IDbDataParameter)command.Parameters["@message"];
-      Assert.AreEqual("Message", param.Value);
-
-      param = (IDbDataParameter)command.Parameters["@log_level"];
-      Assert.AreEqual(Level.Debug.ToString(), param.Value);
-
-      param = (IDbDataParameter)command.Parameters["@logger"];
-      Assert.AreEqual("WebsiteExample", param.Value);
-
-      param = (IDbDataParameter)command.Parameters["@exception"];
-      Assert.IsEmpty((string?)param.Value);
+    for (int i = 0; i < 3; i++)
+    {
+      log.Debug("Message");
     }
 
-    [Test]
-    public void NullPropertyXmlConfig()
-    {
-      XmlDocument log4netConfig = new XmlDocument();
-      log4netConfig.LoadXml(@"
+    IDbCommand? command = Log4NetCommand.MostRecentInstance;
+    Assert.NotNull(command);
+
+    Assert.AreEqual(
+        "INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message],[Exception]) VALUES (@log_date, @thread, @log_level, @logger, @message, @exception)",
+        command!.CommandText);
+
+    Assert.AreEqual(6, command.Parameters.Count);
+
+    IDbDataParameter param = (IDbDataParameter)command.Parameters["@message"];
+    Assert.AreEqual("Message", param.Value);
+
+    param = (IDbDataParameter)command.Parameters["@log_level"];
+    Assert.AreEqual(Level.Debug.ToString(), param.Value);
+
+    param = (IDbDataParameter)command.Parameters["@logger"];
+    Assert.AreEqual("WebsiteExample", param.Value);
+
+    param = (IDbDataParameter)command.Parameters["@exception"];
+    Assert.IsEmpty((string?)param.Value);
+  }
+
+  [Test]
+  public void NullPropertyXmlConfig()
+  {
+    XmlDocument log4netConfig = new XmlDocument();
+    log4netConfig.LoadXml(@"
                 <log4net>
                 <appender name=""AdoNetAppender"" type=""log4net.Appender.AdoNetAppender"">
                     <bufferSize value=""-1"" />
@@ -289,48 +289,47 @@ namespace log4net.Tests.Appender
                   </root>  
                 </log4net>");
 
-      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-      XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
-      ILog log = LogManager.GetLogger(rep.Name, "NullPropertyXmlConfig");
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+    ILog log = LogManager.GetLogger(rep.Name, "NullPropertyXmlConfig");
 
-      log.Debug("Message");
-      IDbCommand? command = Log4NetCommand.MostRecentInstance;
-      Assert.NotNull(command);
+    log.Debug("Message");
+    IDbCommand? command = Log4NetCommand.MostRecentInstance;
+    Assert.NotNull(command);
 
-      IDbDataParameter param = (IDbDataParameter)command!.Parameters["@productId"];
-      Assert.AreNotEqual(SystemInfo.NullText, param.Value);
-      Assert.AreEqual(DBNull.Value, param.Value);
-    }
+    IDbDataParameter param = (IDbDataParameter)command!.Parameters["@productId"];
+    Assert.AreNotEqual(SystemInfo.NullText, param.Value);
+    Assert.AreEqual(DBNull.Value, param.Value);
+  }
 
-    [Test]
-    public void NullPropertyProgrammaticConfig()
-    {
-      AdoNetAppenderParameter productIdParam = new AdoNetAppenderParameter();
-      productIdParam.ParameterName = "@productId";
-      productIdParam.DbType = DbType.String;
-      productIdParam.Size = 50;
-      RawPropertyLayout rawPropertyLayout = new RawPropertyLayout();
-      rawPropertyLayout.Key = "ProductId";
-      productIdParam.Layout = rawPropertyLayout;
+  [Test]
+  public void NullPropertyProgrammaticConfig()
+  {
+    AdoNetAppenderParameter productIdParam = new AdoNetAppenderParameter();
+    productIdParam.ParameterName = "@productId";
+    productIdParam.DbType = DbType.String;
+    productIdParam.Size = 50;
+    RawPropertyLayout rawPropertyLayout = new RawPropertyLayout();
+    rawPropertyLayout.Key = "ProductId";
+    productIdParam.Layout = rawPropertyLayout;
 
-      AdoNetAppender appender = new AdoNetAppender();
-      appender.ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!;
-      appender.BufferSize = -1;
-      appender.CommandText = "INSERT INTO Log ([productId]) VALUES (@productId)";
-      appender.AddParameter(productIdParam);
-      appender.ActivateOptions();
+    AdoNetAppender appender = new AdoNetAppender();
+    appender.ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!;
+    appender.BufferSize = -1;
+    appender.CommandText = "INSERT INTO Log ([productId]) VALUES (@productId)";
+    appender.AddParameter(productIdParam);
+    appender.ActivateOptions();
 
-      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-      BasicConfigurator.Configure(rep, appender);
-      ILog log = LogManager.GetLogger(rep.Name, "NullPropertyProgmaticConfig");
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    BasicConfigurator.Configure(rep, appender);
+    ILog log = LogManager.GetLogger(rep.Name, "NullPropertyProgmaticConfig");
 
-      log.Debug("Message");
-      IDbCommand? command = Log4NetCommand.MostRecentInstance;
-      Assert.NotNull(command);
+    log.Debug("Message");
+    IDbCommand? command = Log4NetCommand.MostRecentInstance;
+    Assert.NotNull(command);
 
-      IDbDataParameter param = (IDbDataParameter)command!.Parameters["@productId"];
-      Assert.AreNotEqual(SystemInfo.NullText, param.Value);
-      Assert.AreEqual(DBNull.Value, param.Value);
-    }
+    IDbDataParameter param = (IDbDataParameter)command!.Parameters["@productId"];
+    Assert.AreNotEqual(SystemInfo.NullText, param.Value);
+    Assert.AreEqual(DBNull.Value, param.Value);
   }
 }

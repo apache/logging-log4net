@@ -21,48 +21,47 @@ using System.Runtime.InteropServices;
 
 using log4net.Core;
 
-namespace log4net.Appender
+namespace log4net.Appender;
+
+/// <summary>
+/// Appends log events to the OutputDebugString system.
+/// </summary>
+/// <author>Nicko Cadell</author>
+/// <author>Gert Driesen</author>
+public class OutputDebugStringAppender : AppenderSkeleton
 {
   /// <summary>
-  /// Appends log events to the OutputDebugString system.
+  /// Writes the logging event to the output debug string API
   /// </summary>
-  /// <author>Nicko Cadell</author>
-  /// <author>Gert Driesen</author>
-  public class OutputDebugStringAppender : AppenderSkeleton
+  /// <param name="loggingEvent">the event to log</param>
+  [System.Security.SecuritySafeCritical]
+  [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
+  protected override void Append(LoggingEvent loggingEvent)
   {
-    /// <summary>
-    /// Writes the logging event to the output debug string API
-    /// </summary>
-    /// <param name="loggingEvent">the event to log</param>
-    [System.Security.SecuritySafeCritical]
-    [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
-    protected override void Append(LoggingEvent loggingEvent)
+#if NETSTANDARD2_0_OR_GREATER
+    if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
     {
-#if NETSTANDARD2_0_OR_GREATER
-      if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-      {
-        throw new System.PlatformNotSupportedException("OutputDebugString is only available on Windows");
-      }
-#endif
-
-      OutputDebugString(RenderLoggingEvent(loggingEvent));
+      throw new System.PlatformNotSupportedException("OutputDebugString is only available on Windows");
     }
-
-    /// <summary>
-    /// This appender requires a <see cref="Layout"/> to be set.
-    /// </summary>
-    protected override bool RequiresLayout => true;
-
-    /// <summary>
-    /// Stub for OutputDebugString native method
-    /// </summary>
-    /// <param name="message">the string to output</param>
-#if NETSTANDARD2_0_OR_GREATER
-    [DllImport("CoreDll.dll")]
-#else
-    [DllImport("Kernel32.dll")]
 #endif
-    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-    protected static extern void OutputDebugString(string message);
- }
+
+    OutputDebugString(RenderLoggingEvent(loggingEvent));
+  }
+
+  /// <summary>
+  /// This appender requires a <see cref="Layout"/> to be set.
+  /// </summary>
+  protected override bool RequiresLayout => true;
+
+  /// <summary>
+  /// Stub for OutputDebugString native method
+  /// </summary>
+  /// <param name="message">the string to output</param>
+#if NETSTANDARD2_0_OR_GREATER
+  [DllImport("CoreDll.dll")]
+#else
+  [DllImport("Kernel32.dll")]
+#endif
+  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+  protected static extern void OutputDebugString(string message);
 }

@@ -136,7 +136,7 @@ public class ColoredConsoleAppender : AppenderSkeleton
     HighIntensity = 0x0008,
   }
 
-  private static readonly char[] windowsNewline = { '\r', '\n' };
+  private static readonly char[] windowsNewline = ['\r', '\n'];
 
   /// <summary>
   /// Initializes a new instance of the <see cref="ColoredConsoleAppender" /> class.
@@ -351,7 +351,7 @@ public class ColoredConsoleAppender : AppenderSkeleton
       AutoFlush = true
     };
 
-    // SuppressFinalize on m_consoleOutputWriter because all it will do is flush
+    // SuppressFinalize on consoleOutputWriter because all it will do is flush
     // and close the file handle. Because we have set AutoFlush the additional flush
     // is not required. The console file handle should not be closed, so we don't call
     // Dispose, Close or the finalizer.

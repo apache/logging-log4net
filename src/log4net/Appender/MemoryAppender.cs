@@ -17,121 +17,119 @@
 //
 #endregion
 
-using System;
 using System.Collections.Generic;
 using log4net.Core;
 
-namespace log4net.Appender
+namespace log4net.Appender;
+
+/// <summary>
+/// Stores logging events in an array.
+/// </summary>
+/// <remarks>
+/// <para>
+/// The memory appender stores all the logging events
+/// that are appended in an in-memory array.
+/// </para>
+/// <para>
+/// Use the <see cref="M:PopAllEvents()"/> method to get
+/// and clear the current list of events that have been appended.
+/// </para>
+/// <para>
+/// Use the <see cref="M:GetEvents()"/> method to get the current
+/// list of events that have been appended.  Note there is a
+/// race-condition when calling <see cref="M:GetEvents()"/> and
+/// <see cref="M:Clear()"/> in pairs, you better use <see
+/// mref="M:PopAllEvents()"/> in that case.
+/// </para>
+/// <para>
+/// Use the <see cref="M:Clear()"/> method to clear the
+/// current list of events.  Note there is a
+/// race-condition when calling <see cref="M:GetEvents()"/> and
+/// <see cref="M:Clear()"/> in pairs, you better use <see
+/// mref="M:PopAllEvents()"/> in that case.
+/// </para>
+/// </remarks>
+/// <author>Julian Biddle</author>
+/// <author>Nicko Cadell</author>
+/// <author>Gert Driesen</author>
+public class MemoryAppender : AppenderSkeleton
 {
   /// <summary>
-  /// Stores logging events in an array.
+  /// Gets the events that have been logged.
+  /// </summary>
+  /// <returns>The events that have been logged</returns>
+  public virtual LoggingEvent[] GetEvents()
+  {
+    lock (syncRoot)
+    {
+      return [.. m_eventsList];
+    }
+  }
+
+  /// <summary>
+  /// Gets or sets the fields that will be fixed in the event
   /// </summary>
   /// <remarks>
   /// <para>
-  /// The memory appender stores all the logging events
-  /// that are appended in an in-memory array.
-  /// </para>
-  /// <para>
-  /// Use the <see cref="M:PopAllEvents()"/> method to get
-  /// and clear the current list of events that have been appended.
-  /// </para>
-  /// <para>
-  /// Use the <see cref="M:GetEvents()"/> method to get the current
-  /// list of events that have been appended.  Note there is a
-  /// race-condition when calling <see cref="M:GetEvents()"/> and
-  /// <see cref="M:Clear()"/> in pairs, you better use <see
-  /// mref="M:PopAllEvents()"/> in that case.
-  /// </para>
-  /// <para>
-  /// Use the <see cref="M:Clear()"/> method to clear the
-  /// current list of events.  Note there is a
-  /// race-condition when calling <see cref="M:GetEvents()"/> and
-  /// <see cref="M:Clear()"/> in pairs, you better use <see
-  /// mref="M:PopAllEvents()"/> in that case.
+  /// The logging event needs to have certain thread specific values 
+  /// captured before it can be buffered. See <see cref="LoggingEvent.Fix"/>
+  /// for details.
   /// </para>
   /// </remarks>
-  /// <author>Julian Biddle</author>
-  /// <author>Nicko Cadell</author>
-  /// <author>Gert Driesen</author>
-  public class MemoryAppender : AppenderSkeleton
+  public virtual FixFlags Fix { get; set; } = FixFlags.All;
+
+  /// <summary>
+  /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/> method. 
+  /// </summary>
+  /// <param name="loggingEvent">the event to log</param>
+  /// <remarks>
+  /// <para>Stores the <paramref name="loggingEvent"/> in the events list.</para>
+  /// </remarks>
+  protected override void Append(LoggingEvent loggingEvent)
   {
-    /// <summary>
-    /// Gets the events that have been logged.
-    /// </summary>
-    /// <returns>The events that have been logged</returns>
-    public virtual LoggingEvent[] GetEvents()
+    // Because we are caching the LoggingEvent beyond the
+    // lifetime of the Append() method we must fix any
+    // volatile data in the event.
+    loggingEvent.Fix = Fix;
+
+    lock (syncRoot)
     {
-      lock (m_lockObj)
-      {
-        return m_eventsList.ToArray();
-      }
+      m_eventsList.Add(loggingEvent);
     }
-
-    /// <summary>
-    /// Gets or sets the fields that will be fixed in the event
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The logging event needs to have certain thread specific values 
-    /// captured before it can be buffered. See <see cref="LoggingEvent.Fix"/>
-    /// for details.
-    /// </para>
-    /// </remarks>
-    public virtual FixFlags Fix { get; set; } = FixFlags.All;
-
-    /// <summary>
-    /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/> method. 
-    /// </summary>
-    /// <param name="loggingEvent">the event to log</param>
-    /// <remarks>
-    /// <para>Stores the <paramref name="loggingEvent"/> in the events list.</para>
-    /// </remarks>
-    protected override void Append(LoggingEvent loggingEvent)
-    {
-      // Because we are caching the LoggingEvent beyond the
-      // lifetime of the Append() method we must fix any
-      // volatile data in the event.
-      loggingEvent.Fix = Fix;
-
-      lock (m_lockObj)
-      {
-        m_eventsList.Add(loggingEvent);
-      }
-    }
-
-    /// <summary>
-    /// Clear the list of events
-    /// </summary>
-    /// <remarks>
-    /// Clear the list of events
-    /// </remarks>
-    public virtual void Clear()
-    {
-      lock (m_lockObj)
-      {
-        m_eventsList.Clear();
-      }
-    }
-
-    /// <summary>
-    /// Gets the events that have been logged and clears the list of events.
-    /// </summary>
-    /// <returns>The events that have been logged</returns>
-    public virtual LoggingEvent[] PopAllEvents()
-    {
-      lock (m_lockObj)
-      {
-        LoggingEvent[] tmp = m_eventsList.ToArray();
-        m_eventsList.Clear();
-        return tmp;
-      }
-    }
-
-    /// <summary>
-    /// The list of events that have been appended.
-    /// </summary>
-    protected List<LoggingEvent> m_eventsList = new();
-
-    private readonly object m_lockObj = new();
   }
+
+  /// <summary>
+  /// Clear the list of events
+  /// </summary>
+  /// <remarks>
+  /// Clear the list of events
+  /// </remarks>
+  public virtual void Clear()
+  {
+    lock (syncRoot)
+    {
+      m_eventsList.Clear();
+    }
+  }
+
+  /// <summary>
+  /// Gets the events that have been logged and clears the list of events.
+  /// </summary>
+  /// <returns>The events that have been logged</returns>
+  public virtual LoggingEvent[] PopAllEvents()
+  {
+    lock (syncRoot)
+    {
+      LoggingEvent[] tmp = [.. m_eventsList];
+      m_eventsList.Clear();
+      return tmp;
+    }
+  }
+
+  /// <summary>
+  /// The list of events that have been appended.
+  /// </summary>
+  protected List<LoggingEvent> m_eventsList = [];
+
+  private readonly object syncRoot = new();
 }

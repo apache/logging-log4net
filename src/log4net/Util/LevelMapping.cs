@@ -21,74 +21,73 @@ using System.Collections.Generic;
 using System.Linq;
 using log4net.Core;
 
-namespace log4net.Util
+namespace log4net.Util;
+
+/// <summary>
+/// Manages an ordered mapping from <see cref="Level"/> instances 
+/// to <see cref="LevelMappingEntry"/> subclasses.
+/// </summary>
+/// <author>Nicko Cadell</author>
+public sealed class LevelMapping : IOptionHandler
 {
+  private readonly Dictionary<Level, LevelMappingEntry> entries = [];
+  private List<LevelMappingEntry>? sortedEntries;
+
   /// <summary>
-  /// Manages an ordered mapping from <see cref="Level"/> instances 
-  /// to <see cref="LevelMappingEntry"/> subclasses.
+  /// Add a <see cref="LevelMappingEntry"/> to this mapping
   /// </summary>
-  /// <author>Nicko Cadell</author>
-  public sealed class LevelMapping : IOptionHandler
+  /// <param name="entry">the entry to add</param>
+  /// <remarks>
+  /// <para>
+  /// If a <see cref="LevelMappingEntry"/> has previously been added
+  /// for the same <see cref="Level"/> then that entry will be 
+  /// overwritten.
+  /// </para>
+  /// </remarks>
+  public void Add(LevelMappingEntry entry)
   {
-    private readonly Dictionary<Level, LevelMappingEntry> entries = new();
-    private List<LevelMappingEntry>? sortedEntries;
-
-    /// <summary>
-    /// Add a <see cref="LevelMappingEntry"/> to this mapping
-    /// </summary>
-    /// <param name="entry">the entry to add</param>
-    /// <remarks>
-    /// <para>
-    /// If a <see cref="LevelMappingEntry"/> has previously been added
-    /// for the same <see cref="Level"/> then that entry will be 
-    /// overwritten.
-    /// </para>
-    /// </remarks>
-    public void Add(LevelMappingEntry entry)
+    if (entry.Level is not null)
     {
-      if (entry.Level is not null)
-      {
-        entries[entry.Level] = entry;
-      }
+      entries[entry.Level] = entry;
     }
+  }
 
-    /// <summary>
-    /// Looks up the value for the specified level. Finds the nearest
-    /// mapping value for the level that is equal to or less than the
-    /// <paramref name="level"/> specified.
-    /// </summary>
-    /// <param name="level">the level to look up.</param>
-    /// <returns>The <see cref="LevelMappingEntry"/> for the level or <see langword="null"/> if no mapping found</returns>
-    public LevelMappingEntry? Lookup(Level? level)
+  /// <summary>
+  /// Looks up the value for the specified level. Finds the nearest
+  /// mapping value for the level that is equal to or less than the
+  /// <paramref name="level"/> specified.
+  /// </summary>
+  /// <param name="level">the level to look up.</param>
+  /// <returns>The <see cref="LevelMappingEntry"/> for the level or <see langword="null"/> if no mapping found</returns>
+  public LevelMappingEntry? Lookup(Level? level)
+  {
+    if (level is null || sortedEntries is null)
     {
-      if (level is null || sortedEntries is null)
-      {
-        return null;
-      }
-
-      foreach (LevelMappingEntry entry in sortedEntries)
-      {
-        if (level >= entry.Level)
-        {
-          return entry;
-        }
-      }
       return null;
     }
 
-    /// <summary>
-    /// Initialize options
-    /// </summary>
-    /// <remarks>
-    /// Caches the sorted list of <see cref="LevelMappingEntry"/>
-    /// </remarks>
-    public void ActivateOptions()
+    foreach (LevelMappingEntry entry in sortedEntries)
     {
-      sortedEntries = SortEntries();
-      sortedEntries.ForEach(entry => entry.ActivateOptions());
+      if (level >= entry.Level)
+      {
+        return entry;
+      }
     }
-
-    private List<LevelMappingEntry> SortEntries()
-      => entries.OrderByDescending(entry => entry.Key).Select(entry => entry.Value).ToList();
+    return null;
   }
+
+  /// <summary>
+  /// Initialize options
+  /// </summary>
+  /// <remarks>
+  /// Caches the sorted list of <see cref="LevelMappingEntry"/>
+  /// </remarks>
+  public void ActivateOptions()
+  {
+    sortedEntries = SortEntries();
+    sortedEntries.ForEach(entry => entry.ActivateOptions());
+  }
+
+  private List<LevelMappingEntry> SortEntries()
+    => entries.OrderByDescending(entry => entry.Key).Select(entry => entry.Value).ToList();
 }

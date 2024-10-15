@@ -4,49 +4,48 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace log4net.Tests.Appender.Internal
+namespace log4net.Tests.Appender.Internal;
+
+/// <summary>
+/// Telnet Client for unit testing
+/// </summary>
+/// <param name="received">Callback for received messages</param>
+/// <param name="port">TCP-Port to use</param>
+internal sealed class SimpleTelnetClient(
+  Action<string> received, int port) : IDisposable
 {
+  private readonly CancellationTokenSource cancellationTokenSource = new();
+  private readonly TcpClient client = new();
+
   /// <summary>
-  /// Telnet Client for unit testing
+  /// Runs the client (in a task)
   /// </summary>
-  /// <param name="received">Callback for received messages</param>
-  /// <param name="port">TCP-Port to use</param>
-  internal sealed class SimpleTelnetClient(
-    Action<string> received, int port) : IDisposable
+  internal void Run() => Task.Run(() =>
   {
-    private readonly CancellationTokenSource cancellationTokenSource = new();
-    private readonly TcpClient client = new();
+    client.Connect(new IPEndPoint(IPAddress.Loopback, port));
+    // Get a stream object for reading and writing
+    using NetworkStream stream = client.GetStream();
 
-    /// <summary>
-    /// Runs the client (in a task)
-    /// </summary>
-    internal void Run() => Task.Run(() =>
+    int i;
+    byte[] bytes = new byte[256];
+
+    // Loop to receive all the data sent by the server 
+    while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
     {
-      client.Connect(new IPEndPoint(IPAddress.Loopback, port));
-      // Get a stream object for reading and writing
-      using NetworkStream stream = client.GetStream();
-
-      int i;
-      byte[] bytes = new byte[256];
-
-      // Loop to receive all the data sent by the server 
-      while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
+      string data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+      received(data);
+      if (cancellationTokenSource.Token.IsCancellationRequested)
       {
-        string data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-        received(data);
-        if (cancellationTokenSource.Token.IsCancellationRequested)
-        {
-          return;
-        }
+        return;
       }
-    }, cancellationTokenSource.Token);
-
-    /// <inheritdoc/>
-    public void Dispose()
-    {
-      cancellationTokenSource.Cancel();
-      cancellationTokenSource.Dispose();
-      client.Dispose();
     }
+  }, cancellationTokenSource.Token);
+
+  /// <inheritdoc/>
+  public void Dispose()
+  {
+    cancellationTokenSource.Cancel();
+    cancellationTokenSource.Dispose();
+    client.Dispose();
   }
 }

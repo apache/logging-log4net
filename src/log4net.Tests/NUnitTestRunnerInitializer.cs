@@ -17,19 +17,18 @@
 //
 #endregion
 
-namespace log4net.Tests
+namespace log4net.Tests;
+
+using System.IO;
+
+using NUnit.Framework;
+
+[SetUpFixture]
+public class NUnitTestRunnerInitializer
 {
-  using System.IO;
-
-  using NUnit.Framework;
-
-  [SetUpFixture]
-  public class NUnitTestRunnerInitializer
+  [OneTimeSetUp]
+  public void RunBeforeAnyTests()
   {
-    [OneTimeSetUp]
-    public void RunBeforeAnyTests()
-    {
-      Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-    }
+    Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
   }
 }

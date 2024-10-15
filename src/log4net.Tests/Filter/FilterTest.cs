@@ -29,16 +29,16 @@ using log4net.Filter;
 using log4net.Repository;
 using NUnit.Framework;
 
-namespace log4net.Tests.Filter
+namespace log4net.Tests.Filter;
+
+[TestFixture]
+public class FilterTest
 {
-  [TestFixture]
-  public class FilterTest
+  [Test]
+  public void FilterConfigurationTest()
   {
-    [Test]
-    public void FilterConfigurationTest()
-    {
-      var log4netConfig = new XmlDocument();
-      log4netConfig.LoadXml(@"
+    var log4netConfig = new XmlDocument();
+    log4netConfig.LoadXml(@"
             <log4net>
             <appender name=""MemoryAppender"" type=""log4net.Appender.MemoryAppender, log4net"">
                 <filter type=""log4net.Tests.Filter.MultiplePropertyFilter, log4net.Tests"">
@@ -58,53 +58,52 @@ namespace log4net.Tests.Filter
             </root>
             </log4net>");
 
-      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-      XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
 
-      IAppender[] appenders = LogManager.GetRepository(rep.Name).GetAppenders();
-      Assert.IsTrue(appenders.Length == 1);
+    IAppender[] appenders = LogManager.GetRepository(rep.Name).GetAppenders();
+    Assert.IsTrue(appenders.Length == 1);
 
-      IAppender? appender = Array.Find(appenders, (IAppender a) =>
-      {
-        return a.Name == "MemoryAppender";
-      });
-      Assert.IsNotNull(appender);
+    IAppender? appender = Array.Find(appenders, (IAppender a) =>
+    {
+      return a.Name == "MemoryAppender";
+    });
+    Assert.IsNotNull(appender);
 
-      MultiplePropertyFilter? multiplePropertyFilter =
-          ((AppenderSkeleton)appender!).FilterHead as MultiplePropertyFilter;
-      Assert.IsNotNull(multiplePropertyFilter);
-      MultiplePropertyFilter.Condition[] conditions = multiplePropertyFilter!.GetConditions();
-      Assert.AreEqual(2, conditions.Length);
-      Assert.AreEqual("ABC", conditions[0].Key);
-      Assert.AreEqual("123", conditions[0].StringToMatch);
-      Assert.AreEqual("DEF", conditions[1].Key);
-      Assert.AreEqual("456", conditions[1].StringToMatch);
-    }
+    MultiplePropertyFilter? multiplePropertyFilter =
+        ((AppenderSkeleton)appender!).FilterHead as MultiplePropertyFilter;
+    Assert.IsNotNull(multiplePropertyFilter);
+    MultiplePropertyFilter.Condition[] conditions = multiplePropertyFilter!.GetConditions();
+    Assert.AreEqual(2, conditions.Length);
+    Assert.AreEqual("ABC", conditions[0].Key);
+    Assert.AreEqual("123", conditions[0].StringToMatch);
+    Assert.AreEqual("DEF", conditions[1].Key);
+    Assert.AreEqual("456", conditions[1].StringToMatch);
+  }
+}
+
+public class MultiplePropertyFilter : FilterSkeleton
+{
+  private readonly List<Condition> _conditions = new();
+
+  public override FilterDecision Decide(LoggingEvent loggingEvent)
+  {
+    return FilterDecision.Accept;
   }
 
-  public class MultiplePropertyFilter : FilterSkeleton
+  public Condition[] GetConditions()
   {
-    private readonly List<Condition> _conditions = new();
+    return _conditions.ToArray();
+  }
 
-    public override FilterDecision Decide(LoggingEvent loggingEvent)
-    {
-      return FilterDecision.Accept;
-    }
+  public void AddCondition(Condition condition)
+  {
+    _conditions.Add(condition);
+  }
 
-    public Condition[] GetConditions()
-    {
-      return _conditions.ToArray();
-    }
-
-    public void AddCondition(Condition condition)
-    {
-      _conditions.Add(condition);
-    }
-
-    public class Condition
-    {
-      public string? Key { get; set; }
-      public string? StringToMatch { get; set; }
-    }
+  public class Condition
+  {
+    public string? Key { get; set; }
+    public string? StringToMatch { get; set; }
   }
 }

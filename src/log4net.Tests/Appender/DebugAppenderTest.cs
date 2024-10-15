@@ -29,133 +29,132 @@ using log4net.Layout;
 using log4net.Repository;
 using NUnit.Framework;
 
-namespace log4net.Tests.Appender
+namespace log4net.Tests.Appender;
+
+[TestFixture]
+public class DebugAppenderTest
 {
-  [TestFixture]
-  public class DebugAppenderTest
+  [Test]
+  public void NullCategoryTest()
   {
-    [Test]
-    public void NullCategoryTest()
+    CategoryTraceListener categoryTraceListener = new CategoryTraceListener();
+    Debug.Listeners.Add(categoryTraceListener);
+
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+
+    DebugAppender debugAppender = new DebugAppender();
+    debugAppender.Layout = new SimpleLayout();
+    debugAppender.ActivateOptions();
+
+    debugAppender.Category = null;
+
+    TestErrorHandler testErrHandler = new TestErrorHandler();
+    debugAppender.ErrorHandler = testErrHandler;
+
+    BasicConfigurator.Configure(rep, debugAppender);
+
+    ILog log = LogManager.GetLogger(rep.Name, GetType());
+    log.Debug("Message");
+
+    Assert.IsNull(categoryTraceListener.Category);
+
+    Assert.IsFalse(testErrHandler.ErrorOccured);
+
+    Debug.Listeners.Remove(categoryTraceListener);
+  }
+
+  [Test]
+  public void EmptyStringCategoryTest()
+  {
+    CategoryTraceListener categoryTraceListener = new CategoryTraceListener();
+    Debug.Listeners.Add(categoryTraceListener);
+
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+
+    DebugAppender debugAppender = new DebugAppender();
+    debugAppender.Layout = new SimpleLayout();
+    debugAppender.ActivateOptions();
+
+    debugAppender.Category = new PatternLayout("");
+
+    BasicConfigurator.Configure(rep, debugAppender);
+
+    ILog log = LogManager.GetLogger(rep.Name, GetType());
+    log.Debug("Message");
+
+    Assert.IsNull(categoryTraceListener.Category);
+
+    Debug.Listeners.Remove(categoryTraceListener);
+  }
+
+  [Test]
+  public void DefaultCategoryTest()
+  {
+    CategoryTraceListener categoryTraceListener = new CategoryTraceListener();
+    Debug.Listeners.Add(categoryTraceListener);
+
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+
+    DebugAppender debugAppender = new DebugAppender();
+    debugAppender.Layout = new SimpleLayout();
+    debugAppender.ActivateOptions();
+
+    BasicConfigurator.Configure(rep, debugAppender);
+
+    ILog log = LogManager.GetLogger(rep.Name, GetType());
+    log.Debug("Message");
+
+    Assert.AreEqual(
+        GetType().ToString(),
+        categoryTraceListener.Category);
+
+    Debug.Listeners.Remove(categoryTraceListener);
+  }
+
+  [Test]
+  public void MethodNameCategoryTest()
+  {
+    CategoryTraceListener categoryTraceListener = new CategoryTraceListener();
+    Debug.Listeners.Add(categoryTraceListener);
+
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+
+    DebugAppender debugAppender = new DebugAppender();
+    PatternLayout methodLayout = new PatternLayout("%method");
+    methodLayout.ActivateOptions();
+    debugAppender.Category = methodLayout;
+    debugAppender.Layout = new SimpleLayout();
+    debugAppender.ActivateOptions();
+
+    BasicConfigurator.Configure(rep, debugAppender);
+
+    ILog log = LogManager.GetLogger(rep.Name, GetType());
+    log.Debug("Message");
+
+    Assert.AreEqual(
+        MethodInfo.GetCurrentMethod().Name,
+        categoryTraceListener.Category);
+
+    Debug.Listeners.Remove(categoryTraceListener);
+  }
+
+  private sealed class TestErrorHandler : IErrorHandler
+  {
+    public bool ErrorOccured { get; private set; }
+
+    public void Error(string message, Exception? e, ErrorCode errorCode)
     {
-      CategoryTraceListener categoryTraceListener = new CategoryTraceListener();
-      Debug.Listeners.Add(categoryTraceListener);
-
-      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-
-      DebugAppender debugAppender = new DebugAppender();
-      debugAppender.Layout = new SimpleLayout();
-      debugAppender.ActivateOptions();
-
-      debugAppender.Category = null;
-
-      TestErrorHandler testErrHandler = new TestErrorHandler();
-      debugAppender.ErrorHandler = testErrHandler;
-
-      BasicConfigurator.Configure(rep, debugAppender);
-
-      ILog log = LogManager.GetLogger(rep.Name, GetType());
-      log.Debug("Message");
-
-      Assert.IsNull(categoryTraceListener.Category);
-
-      Assert.IsFalse(testErrHandler.ErrorOccured);
-
-      Debug.Listeners.Remove(categoryTraceListener);
+      ErrorOccured = true;
     }
 
-    [Test]
-    public void EmptyStringCategoryTest()
+    public void Error(string message, Exception e)
     {
-      CategoryTraceListener categoryTraceListener = new CategoryTraceListener();
-      Debug.Listeners.Add(categoryTraceListener);
-
-      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-
-      DebugAppender debugAppender = new DebugAppender();
-      debugAppender.Layout = new SimpleLayout();
-      debugAppender.ActivateOptions();
-
-      debugAppender.Category = new PatternLayout("");
-
-      BasicConfigurator.Configure(rep, debugAppender);
-
-      ILog log = LogManager.GetLogger(rep.Name, GetType());
-      log.Debug("Message");
-
-      Assert.IsNull(categoryTraceListener.Category);
-
-      Debug.Listeners.Remove(categoryTraceListener);
+      Error(message, e, ErrorCode.GenericFailure);
     }
 
-    [Test]
-    public void DefaultCategoryTest()
+    public void Error(string message)
     {
-      CategoryTraceListener categoryTraceListener = new CategoryTraceListener();
-      Debug.Listeners.Add(categoryTraceListener);
-
-      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-
-      DebugAppender debugAppender = new DebugAppender();
-      debugAppender.Layout = new SimpleLayout();
-      debugAppender.ActivateOptions();
-
-      BasicConfigurator.Configure(rep, debugAppender);
-
-      ILog log = LogManager.GetLogger(rep.Name, GetType());
-      log.Debug("Message");
-
-      Assert.AreEqual(
-          GetType().ToString(),
-          categoryTraceListener.Category);
-
-      Debug.Listeners.Remove(categoryTraceListener);
-    }
-
-    [Test]
-    public void MethodNameCategoryTest()
-    {
-      CategoryTraceListener categoryTraceListener = new CategoryTraceListener();
-      Debug.Listeners.Add(categoryTraceListener);
-
-      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-
-      DebugAppender debugAppender = new DebugAppender();
-      PatternLayout methodLayout = new PatternLayout("%method");
-      methodLayout.ActivateOptions();
-      debugAppender.Category = methodLayout;
-      debugAppender.Layout = new SimpleLayout();
-      debugAppender.ActivateOptions();
-
-      BasicConfigurator.Configure(rep, debugAppender);
-
-      ILog log = LogManager.GetLogger(rep.Name, GetType());
-      log.Debug("Message");
-
-      Assert.AreEqual(
-          MethodInfo.GetCurrentMethod().Name,
-          categoryTraceListener.Category);
-
-      Debug.Listeners.Remove(categoryTraceListener);
-    }
-
-    private sealed class TestErrorHandler : IErrorHandler
-    {
-      public bool ErrorOccured { get; private set; }
-
-      public void Error(string message, Exception? e, ErrorCode errorCode)
-      {
-        ErrorOccured = true;
-      }
-
-      public void Error(string message, Exception e)
-      {
-        Error(message, e, ErrorCode.GenericFailure);
-      }
-
-      public void Error(string message)
-      {
-        Error(message, null, ErrorCode.GenericFailure);
-      }
+      Error(message, null, ErrorCode.GenericFailure);
     }
   }
 }

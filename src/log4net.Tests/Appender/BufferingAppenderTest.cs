@@ -23,82 +23,81 @@ using log4net.Core;
 
 using NUnit.Framework;
 
-namespace log4net.Tests.Appender
+namespace log4net.Tests.Appender;
+
+/// <summary>
+/// Used for internal unit testing the <see cref="BufferingAppenderSkeleton"/> class.
+/// </summary>
+[TestFixture]
+public class BufferingAppenderTest
 {
-  /// <summary>
-  /// Used for internal unit testing the <see cref="BufferingAppenderSkeleton"/> class.
-  /// </summary>
-  [TestFixture]
-  public class BufferingAppenderTest
+  private BufferingForwardingAppender bufferingForwardingAppender = new();
+  private CountingAppender countingAppender = new();
+  private Repository.Hierarchy.Hierarchy hierarchy = new();
+
+  private void SetupRepository()
   {
-    private BufferingForwardingAppender m_bufferingForwardingAppender = new();
-    private CountingAppender m_countingAppender = new();
-    private Repository.Hierarchy.Hierarchy m_hierarchy = new();
+    hierarchy = new Repository.Hierarchy.Hierarchy();
 
-    private void SetupRepository()
-    {
-      m_hierarchy = new Repository.Hierarchy.Hierarchy();
-      
-      m_countingAppender = new CountingAppender();
-      m_countingAppender.ActivateOptions();
+    countingAppender = new CountingAppender();
+    countingAppender.ActivateOptions();
 
-      m_bufferingForwardingAppender = new BufferingForwardingAppender();
-      m_bufferingForwardingAppender.AddAppender(m_countingAppender);
+    bufferingForwardingAppender = new BufferingForwardingAppender();
+    bufferingForwardingAppender.AddAppender(countingAppender);
 
-      m_bufferingForwardingAppender.BufferSize = 0;
-      m_bufferingForwardingAppender.ClearFilters();
-      m_bufferingForwardingAppender.Evaluator = null;
-      m_bufferingForwardingAppender.Fix = FixFlags.Partial;
-      m_bufferingForwardingAppender.Lossy = false;
-      m_bufferingForwardingAppender.LossyEvaluator = null;
-      m_bufferingForwardingAppender.Threshold = Level.All;
+    bufferingForwardingAppender.BufferSize = 0;
+    bufferingForwardingAppender.ClearFilters();
+    bufferingForwardingAppender.Evaluator = null;
+    bufferingForwardingAppender.Fix = FixFlags.Partial;
+    bufferingForwardingAppender.Lossy = false;
+    bufferingForwardingAppender.LossyEvaluator = null;
+    bufferingForwardingAppender.Threshold = Level.All;
 
-      m_bufferingForwardingAppender.ActivateOptions();
+    bufferingForwardingAppender.ActivateOptions();
 
-      BasicConfigurator.Configure(m_hierarchy, m_bufferingForwardingAppender);
-    }
+    BasicConfigurator.Configure(hierarchy, bufferingForwardingAppender);
+  }
 
-    [Test]
-    public void TestSetupAppender()
-    {
-      SetupRepository();
+  [Test]
+  public void TestSetupAppender()
+  {
+    SetupRepository();
 
-      Assert.AreEqual(0, m_countingAppender.Counter, "Test empty appender");
+    Assert.AreEqual(0, countingAppender.Counter, "Test empty appender");
 
-      ILogger logger = m_hierarchy.GetLogger("test");
-      logger.Log(typeof(BufferingAppenderTest), Level.Warn, "Message logged", null);
+    ILogger logger = hierarchy.GetLogger("test");
+    logger.Log(typeof(BufferingAppenderTest), Level.Warn, "Message logged", null);
 
-      Assert.AreEqual(1, m_countingAppender.Counter, "Test 1 event logged");
-    }
+    Assert.AreEqual(1, countingAppender.Counter, "Test 1 event logged");
+  }
 
-    [Test]
-    public void TestBufferSize5()
-    {
-      SetupRepository();
+  [Test]
+  public void TestBufferSize5()
+  {
+    SetupRepository();
 
-      m_bufferingForwardingAppender.BufferSize = 5;
-      m_bufferingForwardingAppender.ActivateOptions();
+    bufferingForwardingAppender.BufferSize = 5;
+    bufferingForwardingAppender.ActivateOptions();
 
-      Assert.AreEqual(m_countingAppender.Counter, 0);
+    Assert.AreEqual(countingAppender.Counter, 0);
 
-      ILogger logger = m_hierarchy.GetLogger("test");
+    ILogger logger = hierarchy.GetLogger("test");
 
-      logger.Log(typeof(BufferingAppenderTest), Level.Warn, "Message 1", null);
-      Assert.AreEqual(0, m_countingAppender.Counter, "Test 1 event in buffer");
-      logger.Log(typeof(BufferingAppenderTest), Level.Warn, "Message 2", null);
-      Assert.AreEqual(0, m_countingAppender.Counter, "Test 2 event in buffer");
-      logger.Log(typeof(BufferingAppenderTest), Level.Warn, "Message 3", null);
-      Assert.AreEqual(0, m_countingAppender.Counter, "Test 3 event in buffer");
-      logger.Log(typeof(BufferingAppenderTest), Level.Warn, "Message 4", null);
-      Assert.AreEqual(0, m_countingAppender.Counter, "Test 4 event in buffer");
-      logger.Log(typeof(BufferingAppenderTest), Level.Warn, "Message 5", null);
-      Assert.AreEqual(0, m_countingAppender.Counter, "Test 5 event in buffer");
-      logger.Log(typeof(BufferingAppenderTest), Level.Warn, "Message 6", null);
-      Assert.AreEqual(6, m_countingAppender.Counter, "Test 0 event in buffer. 6 event sent");
-      logger.Log(typeof(BufferingAppenderTest), Level.Warn, "Message 7", null);
-      Assert.AreEqual(6, m_countingAppender.Counter, "Test 1 event in buffer. 6 event sent");
-      logger.Log(typeof(BufferingAppenderTest), Level.Warn, "Message 8", null);
-      Assert.AreEqual(6, m_countingAppender.Counter, "Test 2 event in buffer. 6 event sent");
-    }
+    logger.Log(typeof(BufferingAppenderTest), Level.Warn, "Message 1", null);
+    Assert.AreEqual(0, countingAppender.Counter, "Test 1 event in buffer");
+    logger.Log(typeof(BufferingAppenderTest), Level.Warn, "Message 2", null);
+    Assert.AreEqual(0, countingAppender.Counter, "Test 2 event in buffer");
+    logger.Log(typeof(BufferingAppenderTest), Level.Warn, "Message 3", null);
+    Assert.AreEqual(0, countingAppender.Counter, "Test 3 event in buffer");
+    logger.Log(typeof(BufferingAppenderTest), Level.Warn, "Message 4", null);
+    Assert.AreEqual(0, countingAppender.Counter, "Test 4 event in buffer");
+    logger.Log(typeof(BufferingAppenderTest), Level.Warn, "Message 5", null);
+    Assert.AreEqual(0, countingAppender.Counter, "Test 5 event in buffer");
+    logger.Log(typeof(BufferingAppenderTest), Level.Warn, "Message 6", null);
+    Assert.AreEqual(6, countingAppender.Counter, "Test 0 event in buffer. 6 event sent");
+    logger.Log(typeof(BufferingAppenderTest), Level.Warn, "Message 7", null);
+    Assert.AreEqual(6, countingAppender.Counter, "Test 1 event in buffer. 6 event sent");
+    logger.Log(typeof(BufferingAppenderTest), Level.Warn, "Message 8", null);
+    Assert.AreEqual(6, countingAppender.Counter, "Test 2 event in buffer. 6 event sent");
   }
 }

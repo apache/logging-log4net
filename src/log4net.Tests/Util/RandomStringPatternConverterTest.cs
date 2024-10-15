@@ -21,44 +21,43 @@ using System.IO;
 using log4net.Util.PatternStringConverters;
 using NUnit.Framework;
 
-namespace log4net.Tests.Util
+namespace log4net.Tests.Util;
+
+/// <summary>
+/// Used for internal unit testing the <see cref="RandomStringPatternConverter"/> class.
+/// </summary>
+/// <remarks>
+/// Used for internal unit testing the <see cref="RandomStringPatternConverter"/> class.
+/// </remarks>
+[TestFixture]
+public class RandomStringPatternConverterTest
 {
-  /// <summary>
-  /// Used for internal unit testing the <see cref="RandomStringPatternConverter"/> class.
-  /// </summary>
-  /// <remarks>
-  /// Used for internal unit testing the <see cref="RandomStringPatternConverter"/> class.
-  /// </remarks>
-  [TestFixture]
-  public class RandomStringPatternConverterTest
+  [Test]
+  public void TestConvert()
   {
-    [Test]
-    public void TestConvert()
-    {
-      RandomStringPatternConverter converter = new RandomStringPatternConverter();
+    RandomStringPatternConverter converter = new RandomStringPatternConverter();
 
-      // Check default string length
-      StringWriter sw = new StringWriter();
-      converter.Convert(sw, null);
+    // Check default string length
+    StringWriter sw = new StringWriter();
+    converter.Convert(sw, null);
 
-      Assert.AreEqual(4, sw.ToString().Length, "Default string length should be 4");
+    Assert.AreEqual(4, sw.ToString().Length, "Default string length should be 4");
 
-      // Set string length to 7
-      converter.Option = "7";
-      converter.ActivateOptions();
+    // Set string length to 7
+    converter.Option = "7";
+    converter.ActivateOptions();
 
-      sw = new StringWriter();
-      converter.Convert(sw, null);
+    sw = new StringWriter();
+    converter.Convert(sw, null);
 
-      string string1 = sw.ToString();
-      Assert.AreEqual(7, string1.Length, "string length should be 7");
+    string string1 = sw.ToString();
+    Assert.AreEqual(7, string1.Length, "string length should be 7");
 
-      // Check for duplicate result
-      sw = new StringWriter();
-      converter.Convert(sw, null);
+    // Check for duplicate result
+    sw = new StringWriter();
+    converter.Convert(sw, null);
 
-      string string2 = sw.ToString();
-      Assert.IsTrue(string1 != string2, "strings should be different");
-    }
+    string string2 = sw.ToString();
+    Assert.IsTrue(string1 != string2, "strings should be different");
   }
 }

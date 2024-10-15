@@ -41,194 +41,195 @@ using System.IO;
 using log4net.Core;
 using log4net.Util;
 
-namespace log4net.Appender
+namespace log4net.Appender;
+
+/// <summary>
+/// Appends colorful logging events to the console, using .NET built-in capabilities.
+/// </summary>
+/// <remarks>
+/// <para>
+/// ManagedColoredConsoleAppender appends log events to the standard output stream
+/// or the error output stream using a layout specified by the
+/// user. It also allows the color of a specific type of message to be set.
+/// </para>
+/// <para>
+/// By default, all output is written to the console's standard output stream.
+/// The <see cref="Target"/> property can be set to direct the output to the
+/// error stream.
+/// </para>
+/// <para>
+/// When configuring the colored console appender, mappings should be
+/// specified to map logging levels to colors. For example:
+/// </para>
+/// <code lang="XML" escaped="true">
+/// <mapping>
+///  <level value="ERROR" />
+///  <foreColor value="DarkRed" />
+///  <backColor value="White" />
+/// </mapping>
+/// <mapping>
+///  <level value="WARN" />
+///  <foreColor value="Yellow" />
+/// </mapping>
+/// <mapping>
+///  <level value="INFO" />
+///  <foreColor value="White" />
+/// </mapping>
+/// <mapping>
+///  <level value="DEBUG" />
+///  <foreColor value="Blue" />
+/// </mapping>
+/// </code>
+/// <para>
+/// The Level is the standard log4net logging level while
+/// ForeColor and BackColor are the values of <see cref="ConsoleColor"/>
+/// enumeration.
+/// </para>
+/// <para>
+/// Based on the ColoredConsoleAppender
+/// </para>
+/// </remarks>
+/// <author>Rick Hobbs</author>
+/// <author>Nicko Cadell</author>
+/// <author>Pavlos Touboulidis</author>
+public class ManagedColoredConsoleAppender : AppenderSkeleton
 {
   /// <summary>
-  /// Appends colorful logging events to the console, using .NET built-in capabilities.
+  /// Gets or sets the console output stream.
+  /// This is either <c>"Console.Out"</c> or <c>"Console.Error"</c>.
   /// </summary>
+  public virtual string Target
+  {
+    get => writeToErrorStream ? ConsoleError : ConsoleOut;
+    set => writeToErrorStream = SystemInfo.EqualsIgnoringCase(ConsoleError, value.Trim());
+  }
+
+  /// <summary>
+  /// Add a mapping of level to color - done by the config file
+  /// </summary>
+  /// <param name="mapping">The mapping to add</param>
   /// <remarks>
   /// <para>
-  /// ManagedColoredConsoleAppender appends log events to the standard output stream
-  /// or the error output stream using a layout specified by the
-  /// user. It also allows the color of a specific type of message to be set.
-  /// </para>
-  /// <para>
-  /// By default, all output is written to the console's standard output stream.
-  /// The <see cref="Target"/> property can be set to direct the output to the
-  /// error stream.
-  /// </para>
-  /// <para>
-  /// When configuring the colored console appender, mappings should be
-  /// specified to map logging levels to colors. For example:
-  /// </para>
-  /// <code lang="XML" escaped="true">
-  /// <mapping>
-  ///  <level value="ERROR" />
-  ///  <foreColor value="DarkRed" />
-  ///  <backColor value="White" />
-  /// </mapping>
-  /// <mapping>
-  ///  <level value="WARN" />
-  ///  <foreColor value="Yellow" />
-  /// </mapping>
-  /// <mapping>
-  ///  <level value="INFO" />
-  ///  <foreColor value="White" />
-  /// </mapping>
-  /// <mapping>
-  ///  <level value="DEBUG" />
-  ///  <foreColor value="Blue" />
-  /// </mapping>
-  /// </code>
-  /// <para>
-  /// The Level is the standard log4net logging level while
-  /// ForeColor and BackColor are the values of <see cref="System.ConsoleColor"/>
-  /// enumeration.
-  /// </para>
-  /// <para>
-  /// Based on the ColoredConsoleAppender
+  /// Each mapping defines the foreground and background colors
+  /// for a level.
   /// </para>
   /// </remarks>
-  /// <author>Rick Hobbs</author>
-  /// <author>Nicko Cadell</author>
-  /// <author>Pavlos Touboulidis</author>
-  public class ManagedColoredConsoleAppender : AppenderSkeleton
+  public void AddMapping(LevelColors mapping)
+  {
+    levelMapping.Add(mapping);
+  }
+
+  /// <summary>
+  /// Writes the event to the console.
+  /// </summary>
+  /// <param name="loggingEvent">The event to log.</param>
+  /// <remarks>
+  /// <para>
+  /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(log4net.Core.LoggingEvent)"/> method.
+  /// </para>
+  /// <para>
+  /// The format of the output will depend on the appender's layout.
+  /// </para>
+  /// </remarks>
+  protected override void Append(LoggingEvent loggingEvent)
+  {
+    TextWriter writer = writeToErrorStream ? Console.Error : Console.Out;
+
+    Console.ResetColor();
+
+    // See if there is a specified lookup
+    if (levelMapping.Lookup(loggingEvent.Level) is LevelColors levelColors)
+    {
+      // If the backColor has been explicitly set
+      if (levelColors.HasBackColor)
+      {
+        Console.BackgroundColor = levelColors.BackColor;
+      }
+
+      // If the foreColor has been explicitly set
+      if (levelColors.HasForeColor)
+      {
+        Console.ForegroundColor = levelColors.ForeColor;
+      }
+    }
+
+    // Render the event to a string
+    string strLoggingMessage = RenderLoggingEvent(loggingEvent);
+    // and write it
+    writer.Write(strLoggingMessage);
+
+    // Reset color again
+    Console.ResetColor();
+  }
+
+  /// <summary>
+  /// This appender requires a <see cref="Layout"/> to be set.
+  /// </summary>
+  protected override bool RequiresLayout => true;
+
+  /// <summary>
+  /// Initializes the options for this appender.
+  /// </summary>
+  public override void ActivateOptions()
+  {
+    base.ActivateOptions();
+    levelMapping.ActivateOptions();
+  }
+
+  /// <summary>
+  /// The <see cref="Target"/> to use when writing to the Console
+  /// standard output stream.
+  /// </summary>
+  public const string ConsoleOut = "Console.Out";
+
+  /// <summary>
+  /// The <see cref="Target"/> to use when writing to the Console
+  /// standard error output stream.
+  /// </summary>
+  public const string ConsoleError = "Console.Error";
+
+  /// <summary>
+  /// Flag to write output to the error stream rather than the standard output stream
+  /// </summary>
+  private bool writeToErrorStream;
+
+  /// <summary>
+  /// Mapping from level object to color value
+  /// </summary>
+  private readonly LevelMapping levelMapping = new();
+
+  /// <summary>
+  /// A class to act as a mapping between the level that a logging call is made at and
+  /// the color it should be displayed as.
+  /// </summary>
+  public class LevelColors : LevelMappingEntry
   {
     /// <summary>
-    /// Gets or sets the console output stream.
-    /// This is either <c>"Console.Out"</c> or <c>"Console.Error"</c>.
+    /// The mapped foreground color for the specified level
     /// </summary>
-    public virtual string Target
+    public ConsoleColor ForeColor
     {
-      get => m_writeToErrorStream ? ConsoleError : ConsoleOut;
-      set => m_writeToErrorStream = SystemInfo.EqualsIgnoringCase(ConsoleError, value.Trim());
+      get => foreColor;
+      // Keep a flag that the color has been set
+      // and is no longer the default.
+      set { foreColor = value; HasForeColor = true; }
     }
+    private ConsoleColor foreColor;
+
+    internal bool HasForeColor { get; private set; }
 
     /// <summary>
-    /// Add a mapping of level to color - done by the config file
+    /// Gets or sets the mapped background color for the specified level
     /// </summary>
-    /// <param name="mapping">The mapping to add</param>
-    /// <remarks>
-    /// <para>
-    /// Each mapping defines the foreground and background colors
-    /// for a level.
-    /// </para>
-    /// </remarks>
-    public void AddMapping(LevelColors mapping)
+    public ConsoleColor BackColor
     {
-      m_levelMapping.Add(mapping);
+      get => backColor;
+      // Keep a flag that the color has been set
+      // and is no longer the default.
+      set { backColor = value; HasBackColor = true; }
     }
+    private ConsoleColor backColor;
 
-    /// <summary>
-    /// Writes the event to the console.
-    /// </summary>
-    /// <param name="loggingEvent">The event to log.</param>
-    /// <remarks>
-    /// <para>
-    /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(log4net.Core.LoggingEvent)"/> method.
-    /// </para>
-    /// <para>
-    /// The format of the output will depend on the appender's layout.
-    /// </para>
-    /// </remarks>
-    protected override void Append(LoggingEvent loggingEvent)
-    {
-      TextWriter writer = m_writeToErrorStream ? Console.Error : Console.Out;
-
-      Console.ResetColor();
-
-      // See if there is a specified lookup
-      if (m_levelMapping.Lookup(loggingEvent.Level) is LevelColors levelColors)
-      {
-        // If the backColor has been explicitly set
-        if (levelColors.HasBackColor)
-        {
-          Console.BackgroundColor = levelColors.BackColor;
-        }
-
-        // If the foreColor has been explicitly set
-        if (levelColors.HasForeColor)
-        {
-          Console.ForegroundColor = levelColors.ForeColor;
-        }
-      }
-
-      // Render the event to a string
-      string strLoggingMessage = RenderLoggingEvent(loggingEvent);
-      // and write it
-      writer.Write(strLoggingMessage);
-
-      // Reset color again
-      Console.ResetColor();
-    }
-
-    /// <summary>
-    /// This appender requires a <see cref="Layout"/> to be set.
-    /// </summary>
-    protected override bool RequiresLayout => true;
-
-    /// <summary>
-    /// Initializes the options for this appender.
-    /// </summary>
-    public override void ActivateOptions()
-    {
-      base.ActivateOptions();
-      m_levelMapping.ActivateOptions();
-    }
-
-    /// <summary>
-    /// The <see cref="ManagedColoredConsoleAppender.Target"/> to use when writing to the Console
-    /// standard output stream.
-    /// </summary>
-    public const string ConsoleOut = "Console.Out";
-
-    /// <summary>
-    /// The <see cref="ManagedColoredConsoleAppender.Target"/> to use when writing to the Console
-    /// standard error output stream.
-    /// </summary>
-    public const string ConsoleError = "Console.Error";
-
-    /// <summary>
-    /// Flag to write output to the error stream rather than the standard output stream
-    /// </summary>
-    private bool m_writeToErrorStream;
-
-    /// <summary>
-    /// Mapping from level object to color value
-    /// </summary>
-    private readonly LevelMapping m_levelMapping = new();
-
-    /// <summary>
-    /// A class to act as a mapping between the level that a logging call is made at and
-    /// the color it should be displayed as.
-    /// </summary>
-    public class LevelColors : LevelMappingEntry
-    {
-      /// <summary>
-      /// The mapped foreground color for the specified level
-      /// </summary>
-      public ConsoleColor ForeColor
-      {
-        get => m_foreColor;
-        // Keep a flag that the color has been set
-        // and is no longer the default.
-        set { m_foreColor = value; HasForeColor = true; }
-      }
-      private ConsoleColor m_foreColor;
-      internal bool HasForeColor { get; private set; }
-
-      /// <summary>
-      /// Gets or sets the mapped background color for the specified level
-      /// </summary>
-      public ConsoleColor BackColor
-      {
-        get => m_backColor;
-        // Keep a flag that the color has been set
-        // and is no longer the default.
-        set { m_backColor = value; HasBackColor = true; }
-      }
-      private ConsoleColor m_backColor;
-      internal bool HasBackColor { get; private set; }
-    }
+    internal bool HasBackColor { get; private set; }
   }
 }

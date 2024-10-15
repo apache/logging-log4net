@@ -20,42 +20,41 @@
 using System;
 using NUnit.Framework;
 
-namespace log4net.Tests
+namespace log4net.Tests;
+
+/// <summary>
+/// Utilities for testing
+/// </summary>
+public static class Utils
 {
   /// <summary>
-  /// Utilities for testing
+  /// Is the mono runtime used
   /// </summary>
-  public static class Utils
+  internal static bool IsMono { get; } = Type.GetType("Mono.Runtime") is not null;
+
+  /// <summary>
+  /// Skips the current test when run under mono
+  /// </summary>
+  internal static void InconclusiveOnMono()
   {
-    /// <summary>
-    /// Is the mono runtime used
-    /// </summary>
-    internal static bool IsMono { get; } = Type.GetType("Mono.Runtime") is not null;
-
-    /// <summary>
-    /// Skips the current test when run under mono
-    /// </summary>
-    internal static void InconclusiveOnMono()
+    if (IsMono)
     {
-      if (IsMono)
-      {
-        Assert.Inconclusive("mono has a different behaviour");
-      }
+      Assert.Inconclusive("mono has a different behaviour");
     }
+  }
 
-    /// <summary>
-    /// Sample property key
-    /// </summary>
-    internal const string PROPERTY_KEY = "prop1";
+  /// <summary>
+  /// Sample property key
+  /// </summary>
+  internal const string PROPERTY_KEY = "prop1";
 
-    /// <summary>
-    /// Remove the <see cref="PROPERTY_KEY"/> from alle log4net contexts
-    /// </summary>
-    internal static void RemovePropertyFromAllContexts()
-    {
-      GlobalContext.Properties.Remove(PROPERTY_KEY);
-      ThreadContext.Properties.Remove(PROPERTY_KEY);
-      LogicalThreadContext.Properties.Remove(PROPERTY_KEY);
-    }
+  /// <summary>
+  /// Remove the <see cref="PROPERTY_KEY"/> from alle log4net contexts
+  /// </summary>
+  internal static void RemovePropertyFromAllContexts()
+  {
+    GlobalContext.Properties.Remove(PROPERTY_KEY);
+    ThreadContext.Properties.Remove(PROPERTY_KEY);
+    LogicalThreadContext.Properties.Remove(PROPERTY_KEY);
   }
 }

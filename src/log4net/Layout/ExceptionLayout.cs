@@ -22,65 +22,64 @@ using System.IO;
 
 using log4net.Core;
 
-namespace log4net.Layout
+namespace log4net.Layout;
+
+/// <summary>
+/// A Layout that renders only the Exception text from the logging event
+/// </summary>
+/// <remarks>
+/// <para>
+/// This Layout should only be used with appenders that utilize multiple
+/// layouts (e.g. <see cref="log4net.Appender.AdoNetAppender"/>).
+/// </para>
+/// </remarks>
+/// <author>Nicko Cadell</author>
+/// <author>Gert Driesen</author>
+public class ExceptionLayout : LayoutSkeleton
 {
   /// <summary>
-  /// A Layout that renders only the Exception text from the logging event
+  /// Constructs an ExceptionLayout.
+  /// </summary>
+  public ExceptionLayout()
+  {
+    IgnoresException = false;
+  }
+
+  /// <summary>
+  /// Activates component options.
   /// </summary>
   /// <remarks>
   /// <para>
-  /// This Layout should only be used with appenders that utilize multiple
-  /// layouts (e.g. <see cref="log4net.Appender.AdoNetAppender"/>).
+  /// Part of the <see cref="IOptionHandler"/> component activation
+  /// framework.
+  /// </para>
+  /// <para>
+  /// This method does nothing as options become effective immediately.
   /// </para>
   /// </remarks>
-  /// <author>Nicko Cadell</author>
-  /// <author>Gert Driesen</author>
-  public class ExceptionLayout : LayoutSkeleton
+  public override void ActivateOptions()
   {
-    /// <summary>
-    /// Constructs an ExceptionLayout.
-    /// </summary>
-    public ExceptionLayout()
+    // nothing to do.
+  }
+
+  /// <summary>
+  /// Gets the exception text from the logging event
+  /// </summary>
+  /// <param name="writer">The TextWriter to write the formatted event to</param>
+  /// <param name="loggingEvent">the event being logged</param>
+  /// <remarks>
+  /// <para>
+  /// Write the exception string to the <see cref="TextWriter"/>.
+  /// The exception string is retrieved from <see cref="M:LoggingEvent.GetExceptionString()"/>.
+  /// </para>
+  /// </remarks>
+  public override void Format(TextWriter writer, LoggingEvent loggingEvent)
+  {
+    if (loggingEvent is null)
     {
-      IgnoresException = false;
+      throw new ArgumentNullException(nameof(loggingEvent));
     }
 
-    /// <summary>
-    /// Activates component options.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Part of the <see cref="IOptionHandler"/> component activation
-    /// framework.
-    /// </para>
-    /// <para>
-    /// This method does nothing as options become effective immediately.
-    /// </para>
-    /// </remarks>
-    public override void ActivateOptions()
-    {
-      // nothing to do.
-    }
-
-    /// <summary>
-    /// Gets the exception text from the logging event
-    /// </summary>
-    /// <param name="writer">The TextWriter to write the formatted event to</param>
-    /// <param name="loggingEvent">the event being logged</param>
-    /// <remarks>
-    /// <para>
-    /// Write the exception string to the <see cref="TextWriter"/>.
-    /// The exception string is retrieved from <see cref="M:LoggingEvent.GetExceptionString()"/>.
-    /// </para>
-    /// </remarks>
-    public override void Format(TextWriter writer, LoggingEvent loggingEvent)
-    {
-      if (loggingEvent is null)
-      {
-        throw new ArgumentNullException(nameof(loggingEvent));
-      }
-
-      writer.Write(loggingEvent.GetExceptionString());
-    }
+    writer.Write(loggingEvent.GetExceptionString());
   }
 }
