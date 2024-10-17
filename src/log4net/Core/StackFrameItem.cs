@@ -22,94 +22,93 @@ using System.Diagnostics;
 using System.Reflection;
 using log4net.Util;
 
-namespace log4net.Core
+namespace log4net.Core;
+
+/// <summary>
+/// Provides stack frame information without actually referencing a System.Diagnostics.StackFrame
+/// as that would require that the containing assembly is loaded.
+/// </summary>
+[Log4NetSerializable]
+public class StackFrameItem
 {
   /// <summary>
-  /// Provides stack frame information without actually referencing a System.Diagnostics.StackFrame
-  /// as that would require that the containing assembly is loaded.
+  /// Creates a stack frame item from a stack frame.
   /// </summary>
-  [Log4NetSerializable]
-  public class StackFrameItem
+  /// <param name="frame"></param>
+  public StackFrameItem(StackFrame frame)
   {
-    /// <summary>
-    /// Creates a stack frame item from a stack frame.
-    /// </summary>
-    /// <param name="frame"></param>
-    public StackFrameItem(StackFrame frame)
+    // set default values
+    LineNumber = NotAvailable;
+    FileName = NotAvailable;
+    Method = new MethodItem();
+    ClassName = NotAvailable;
+
+    try
     {
-      // set default values
-      LineNumber = NA;
-      FileName = NA;
-      Method = new MethodItem();
-      ClassName = NA;
+      // get frame values
+      LineNumber = frame.GetFileLineNumber().ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
+      FileName = frame.GetFileName() ?? string.Empty;
 
-      try
+      // get method values
+      if (frame.GetMethod() is MethodBase method)
       {
-        // get frame values
-        LineNumber = frame.GetFileLineNumber().ToString(System.Globalization.NumberFormatInfo.InvariantInfo);
-        FileName = frame.GetFileName() ?? string.Empty;
-
-        // get method values
-        if (frame.GetMethod() is MethodBase method)
+        if (method.DeclaringType?.FullName is string className)
         {
-          if (method.DeclaringType?.FullName is string className)
-          {
-            ClassName = className;
-          }
-
-          Method = new MethodItem(method);
+          ClassName = className;
         }
-      }
-      catch (Exception ex)
-      {
-        LogLog.Error(declaringType, "An exception occurred while retrieving stack frame information.", ex);
-      }
 
-      // set full info
-      FullInfo = $"{ClassName}.{Method.Name}({FileName}:{LineNumber})";
+        Method = new MethodItem(method);
+      }
+    }
+    catch (Exception ex)
+    {
+      LogLog.Error(_declaringType, "An exception occurred while retrieving stack frame information.", ex);
     }
 
-    /// <summary>
-    /// Gets the fully qualified class name of the caller making the logging 
-    /// request.
-    /// </summary>
-    public string ClassName { get; }
-
-    /// <summary>
-    /// Gets the file name of the caller.
-    /// </summary>
-    public string FileName { get; }
-
-    /// <summary>
-    /// Gets the line number of the caller.
-    /// </summary>
-    public string LineNumber { get; }
-
-    /// <summary>
-    /// Gets the method name of the caller.
-    /// </summary>
-    public MethodItem Method { get; }
-
-    /// <summary>
-    /// Gets all available caller information in the format
-    /// <c>fully.qualified.classname.of.caller.methodName(Filename:line)</c>
-    /// </summary>
-    public string FullInfo { get; }
-
-    /// <summary>
-    /// The fully qualified type of the StackFrameItem class.
-    /// </summary>
-    /// <remarks>
-    /// Used by the internal logger to record the Type of the
-    /// log message.
-    /// </remarks>
-    private static readonly Type declaringType = typeof(StackFrameItem);
-
-    /// <summary>
-    /// When location information is not available the constant
-    /// <c>NA</c> is returned. Current value of this string
-    /// constant is <b>?</b>.
-    /// </summary>
-    private const string NA = "?";
+    // set full info
+    FullInfo = $"{ClassName}.{Method.Name}({FileName}:{LineNumber})";
   }
+
+  /// <summary>
+  /// Gets the fully qualified class name of the caller making the logging 
+  /// request.
+  /// </summary>
+  public string ClassName { get; }
+
+  /// <summary>
+  /// Gets the file name of the caller.
+  /// </summary>
+  public string FileName { get; }
+
+  /// <summary>
+  /// Gets the line number of the caller.
+  /// </summary>
+  public string LineNumber { get; }
+
+  /// <summary>
+  /// Gets the method name of the caller.
+  /// </summary>
+  public MethodItem Method { get; }
+
+  /// <summary>
+  /// Gets all available caller information in the format
+  /// <c>fully.qualified.classname.of.caller.methodName(Filename:line)</c>
+  /// </summary>
+  public string FullInfo { get; }
+
+  /// <summary>
+  /// The fully qualified type of the StackFrameItem class.
+  /// </summary>
+  /// <remarks>
+  /// Used by the internal logger to record the Type of the
+  /// log message.
+  /// </remarks>
+  private static readonly Type _declaringType = typeof(StackFrameItem);
+
+  /// <summary>
+  /// When location information is not available the constant
+  /// <c>NA</c> is returned. Current value of this string
+  /// constant is <b>?</b>.
+  /// </summary>
+  private const string NotAvailable = "?";
 }

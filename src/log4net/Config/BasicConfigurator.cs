@@ -28,150 +28,149 @@ using log4net.Util;
 using log4net.Repository;
 using log4net.Repository.Hierarchy;
 
-namespace log4net.Config
+namespace log4net.Config;
+
+/// <summary>
+/// Use this class to quickly configure a <see cref="Hierarchy"/>.
+/// </summary>
+/// <remarks>
+/// <para>
+/// Allows very simple programmatic configuration of log4net.
+/// </para>
+/// <para>
+/// Only one appender can be configured using this configurator.
+/// The appender is set at the root of the hierarchy and all logging
+/// events will be delivered to that appender.
+/// </para>
+/// <para>
+/// Appenders can also implement the <see cref="log4net.Core.IOptionHandler"/> interface. Therefore
+/// they would require that the <see cref="M:log4net.Core.IOptionHandler.ActivateOptions()"/> method
+/// be called after the appenders properties have been configured.
+/// </para>
+/// </remarks>
+/// <author>Nicko Cadell</author>
+/// <author>Gert Driesen</author>
+public static class BasicConfigurator
 {
   /// <summary>
-  /// Use this class to quickly configure a <see cref="Hierarchy"/>.
+  /// The fully qualified type of the BasicConfigurator class.
+  /// </summary>
+  /// <remarks>
+  /// Used by the internal logger to record the Type of the
+  /// log message.
+  /// </remarks>
+  private static readonly Type _declaringType = typeof(BasicConfigurator);
+
+  /// <summary>
+  /// Initializes the log4net system with a default configuration.
   /// </summary>
   /// <remarks>
   /// <para>
-  /// Allows very simple programmatic configuration of log4net.
-  /// </para>
-  /// <para>
-  /// Only one appender can be configured using this configurator.
-  /// The appender is set at the root of the hierarchy and all logging
-  /// events will be delivered to that appender.
-  /// </para>
-  /// <para>
-  /// Appenders can also implement the <see cref="log4net.Core.IOptionHandler"/> interface. Therefore
-  /// they would require that the <see cref="M:log4net.Core.IOptionHandler.ActivateOptions()"/> method
-  /// be called after the appenders properties have been configured.
+  /// Initializes the log4net logging system using a <see cref="ConsoleAppender"/>
+  /// that will write to <c>Console.Out</c>. The log messages are
+  /// formatted using the <see cref="PatternLayout"/> layout object
+  /// with the <see cref="PatternLayout.DetailConversionPattern"/>
+  /// layout style.
   /// </para>
   /// </remarks>
-  /// <author>Nicko Cadell</author>
-  /// <author>Gert Driesen</author>
-  public static class BasicConfigurator
+  public static ICollection Configure()
   {
-    /// <summary>
-    /// The fully qualified type of the BasicConfigurator class.
-    /// </summary>
-    /// <remarks>
-    /// Used by the internal logger to record the Type of the
-    /// log message.
-    /// </remarks>
-    private static readonly Type declaringType = typeof(BasicConfigurator);
+    return Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()));
+  }
 
-    /// <summary>
-    /// Initializes the log4net system with a default configuration.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Initializes the log4net logging system using a <see cref="ConsoleAppender"/>
-    /// that will write to <c>Console.Out</c>. The log messages are
-    /// formatted using the <see cref="PatternLayout"/> layout object
-    /// with the <see cref="PatternLayout.DetailConversionPattern"/>
-    /// layout style.
-    /// </para>
-    /// </remarks>
-    public static ICollection Configure()
+  /// <summary>
+  /// Initializes the log4net system using the specified appenders.
+  /// </summary>
+  /// <param name="appenders">The appenders to use to log all logging events.</param>
+  /// <remarks>
+  /// <para>
+  /// Initializes the log4net system using the specified appenders.
+  /// </para>
+  /// </remarks>
+  public static ICollection Configure(params IAppender[] appenders)
+  {
+    var configurationMessages = new List<LogLog>();
+
+    ILoggerRepository repository = LogManager.GetRepository(Assembly.GetCallingAssembly());
+
+    using (new LogLog.LogReceivedAdapter(configurationMessages))
     {
-      return Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()));
+      InternalConfigure(repository, appenders);
     }
 
-    /// <summary>
-    /// Initializes the log4net system using the specified appenders.
-    /// </summary>
-    /// <param name="appenders">The appenders to use to log all logging events.</param>
-    /// <remarks>
-    /// <para>
-    /// Initializes the log4net system using the specified appenders.
-    /// </para>
-    /// </remarks>
-    public static ICollection Configure(params IAppender[] appenders)
+    repository.ConfigurationMessages = configurationMessages;
+
+    return configurationMessages;
+  }
+
+  /// <summary>
+  /// Initializes the <see cref="ILoggerRepository"/> with a default configuration.
+  /// </summary>
+  /// <param name="repository">The repository to configure.</param>
+  /// <remarks>
+  /// <para>
+  /// Initializes the specified repository using a <see cref="ConsoleAppender"/>
+  /// that will write to <c>Console.Out</c>. The log messages are
+  /// formatted using the <see cref="PatternLayout"/> layout object
+  /// with the <see cref="PatternLayout.DetailConversionPattern"/>
+  /// layout style.
+  /// </para>
+  /// </remarks>
+  public static ICollection Configure(ILoggerRepository repository)
+  {
+    var configurationMessages = new List<LogLog>();
+
+    using (new LogLog.LogReceivedAdapter(configurationMessages))
     {
-      var configurationMessages = new List<LogLog>();
+      // Create the layout
+      var layout = new PatternLayout { ConversionPattern = PatternLayout.DetailConversionPattern };
+      layout.ActivateOptions();
 
-      ILoggerRepository repository = LogManager.GetRepository(Assembly.GetCallingAssembly());
+      // Create the appender
+      var appender = new ConsoleAppender { Layout = layout };
+      appender.ActivateOptions();
 
-      using (new LogLog.LogReceivedAdapter(configurationMessages))
-      {
-        InternalConfigure(repository, appenders);
-      }
-
-      repository.ConfigurationMessages = configurationMessages;
-
-      return configurationMessages;
+      InternalConfigure(repository, appender);
     }
 
-    /// <summary>
-    /// Initializes the <see cref="ILoggerRepository"/> with a default configuration.
-    /// </summary>
-    /// <param name="repository">The repository to configure.</param>
-    /// <remarks>
-    /// <para>
-    /// Initializes the specified repository using a <see cref="ConsoleAppender"/>
-    /// that will write to <c>Console.Out</c>. The log messages are
-    /// formatted using the <see cref="PatternLayout"/> layout object
-    /// with the <see cref="PatternLayout.DetailConversionPattern"/>
-    /// layout style.
-    /// </para>
-    /// </remarks>
-    public static ICollection Configure(ILoggerRepository repository)
+    repository.ConfigurationMessages = configurationMessages;
+
+    return configurationMessages;
+  }
+
+  /// <summary>
+  /// Initializes the <see cref="ILoggerRepository"/> using the specified appenders.
+  /// </summary>
+  /// <param name="repository">The repository to configure.</param>
+  /// <param name="appenders">The appenders to use to log all logging events.</param>
+  /// <remarks>
+  /// <para>
+  /// Initializes the <see cref="ILoggerRepository"/> using the specified appender.
+  /// </para>
+  /// </remarks>
+  public static ICollection Configure(ILoggerRepository repository, params IAppender[] appenders)
+  {
+    var configurationMessages = new List<LogLog>();
+
+    using (new LogLog.LogReceivedAdapter(configurationMessages))
     {
-      var configurationMessages = new List<LogLog>();
-
-      using (new LogLog.LogReceivedAdapter(configurationMessages))
-      {
-        // Create the layout
-        var layout = new PatternLayout { ConversionPattern = PatternLayout.DetailConversionPattern };
-        layout.ActivateOptions();
-
-        // Create the appender
-        var appender = new ConsoleAppender { Layout = layout };
-        appender.ActivateOptions();
-
-        InternalConfigure(repository, appender);
-      }
-
-      repository.ConfigurationMessages = configurationMessages;
-
-      return configurationMessages;
+      InternalConfigure(repository, appenders);
     }
 
-    /// <summary>
-    /// Initializes the <see cref="ILoggerRepository"/> using the specified appenders.
-    /// </summary>
-    /// <param name="repository">The repository to configure.</param>
-    /// <param name="appenders">The appenders to use to log all logging events.</param>
-    /// <remarks>
-    /// <para>
-    /// Initializes the <see cref="ILoggerRepository"/> using the specified appender.
-    /// </para>
-    /// </remarks>
-    public static ICollection Configure(ILoggerRepository repository, params IAppender[] appenders)
+    repository.ConfigurationMessages = configurationMessages;
+
+    return configurationMessages;
+  }
+
+  private static void InternalConfigure(ILoggerRepository repository, params IAppender[] appenders)
+  {
+    if (repository is IBasicRepositoryConfigurator configurableRepository)
     {
-      var configurationMessages = new List<LogLog>();
-
-      using (new LogLog.LogReceivedAdapter(configurationMessages))
-      {
-        InternalConfigure(repository, appenders);
-      }
-
-      repository.ConfigurationMessages = configurationMessages;
-
-      return configurationMessages;
+      configurableRepository.Configure(appenders);
     }
-
-    private static void InternalConfigure(ILoggerRepository repository, params IAppender[] appenders)
+    else
     {
-      if (repository is IBasicRepositoryConfigurator configurableRepository)
-      {
-        configurableRepository.Configure(appenders);
-      }
-      else
-      {
-        LogLog.Warn(declaringType, $"BasicConfigurator: Repository [{repository}] does not support the BasicConfigurator");
-      }
+      LogLog.Warn(_declaringType, $"BasicConfigurator: Repository [{repository}] does not support the BasicConfigurator");
     }
   }
 }

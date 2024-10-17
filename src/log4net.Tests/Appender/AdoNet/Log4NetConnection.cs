@@ -22,62 +22,61 @@
 using System;
 using System.Data;
 
-namespace log4net.Tests.Appender.AdoNet
+namespace log4net.Tests.Appender.AdoNet;
+
+public class Log4NetConnection : IDbConnection
 {
-  public class Log4NetConnection : IDbConnection
+  private bool _open;
+
+  public Log4NetConnection()
   {
-    private bool _open;
+    MostRecentInstance = this;
+  }
 
-    public Log4NetConnection()
-    {
-      MostRecentInstance = this;
-    }
+  public void Close()
+  {
+    _open = false;
+  }
 
-    public void Close()
-    {
-      _open = false;
-    }
-
-    public ConnectionState State => _open ? ConnectionState.Open : ConnectionState.Closed;
+  public ConnectionState State => _open ? ConnectionState.Open : ConnectionState.Closed;
 
 #pragma warning disable CS8766 // Nullability of reference types in return type doesn't match implicitly implemented member (possibly because of nullability attributes).
-    public string? ConnectionString { get; set; }
+  public string? ConnectionString { get; set; }
 #pragma warning restore CS8766
 
-    public IDbTransaction BeginTransaction()
-    {
-      return new Log4NetTransaction();
-    }
+  public IDbTransaction BeginTransaction()
+  {
+    return new Log4NetTransaction();
+  }
 
-    public IDbCommand CreateCommand()
-    {
-      return new Log4NetCommand();
-    }
+  public IDbCommand CreateCommand()
+  {
+    return new Log4NetCommand();
+  }
 
-    public void Open()
-    {
-      _open = true;
-    }
+  public void Open()
+  {
+    _open = true;
+  }
 
-    public static Log4NetConnection? MostRecentInstance { get; private set; }
+  public static Log4NetConnection? MostRecentInstance { get; private set; }
 
-    public IDbTransaction BeginTransaction(IsolationLevel il)
-    {
-      throw new NotImplementedException();
-    }
+  public IDbTransaction BeginTransaction(IsolationLevel il)
+  {
+    throw new NotImplementedException();
+  }
 
-    public void ChangeDatabase(string databaseName)
-    {
-      throw new NotImplementedException();
-    }
+  public void ChangeDatabase(string databaseName)
+  {
+    throw new NotImplementedException();
+  }
 
-    public int ConnectionTimeout => throw new NotImplementedException();
+  public int ConnectionTimeout => throw new NotImplementedException();
 
-    public string Database => throw new NotImplementedException();
+  public string Database => throw new NotImplementedException();
 
-    public void Dispose()
-    {
-      throw new NotImplementedException();
-    }
+  public void Dispose()
+  {
+    throw new NotImplementedException();
   }
 }

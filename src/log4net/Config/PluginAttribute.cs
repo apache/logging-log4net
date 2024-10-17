@@ -23,87 +23,86 @@ using log4net.Core;
 using log4net.Util;
 using log4net.Plugin;
 
-namespace log4net.Config
+namespace log4net.Config;
+
+/// <summary>
+/// Assembly level attribute that specifies a plugin to attach to 
+/// the repository.
+/// </summary>
+/// <remarks>
+/// <para>
+/// Specifies the type of a plugin to create and attach to the
+/// assembly's repository. The plugin type must implement the
+/// <see cref="IPlugin"/> interface.
+/// </para>
+/// </remarks>
+/// <author>Nicko Cadell</author>
+/// <author>Gert Driesen</author>
+[AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
+[Log4NetSerializable]
+public sealed class PluginAttribute : Attribute, IPluginFactory
 {
   /// <summary>
-  /// Assembly level attribute that specifies a plugin to attach to 
-  /// the repository.
+  /// Initializes a new instance of the <see cref="PluginAttribute" /> class
+  /// with the specified type.
+  /// </summary>
+  /// <param name="typeName">The type name of plugin to create.</param>
+  /// <remarks>
+  /// <para>
+  /// Create the attribute with the plugin type specified.
+  /// </para>
+  /// <para>
+  /// Where possible use the constructor that takes a <see cref="System.Type"/>.
+  /// </para>
+  /// </remarks>
+  public PluginAttribute(string typeName) => TypeName = typeName;
+
+  /// <summary>
+  /// Initializes a new instance of the <see cref="PluginAttribute" /> class
+  /// with the specified type.
+  /// </summary>
+  /// <param name="type">The type of plugin to create.</param>
+  /// <remarks>
+  /// <para>
+  /// Create the attribute with the plugin type specified.
+  /// </para>
+  /// </remarks>
+  public PluginAttribute(Type type) => Type = type;
+
+  /// <summary>
+  /// Gets or sets the type for the plugin.
+  /// </summary>
+  public Type? Type { get; set; }
+
+  /// <summary>
+  /// Gets or sets the type name for the plugin.
   /// </summary>
   /// <remarks>
   /// <para>
-  /// Specifies the type of a plugin to create and attach to the
-  /// assembly's repository. The plugin type must implement the
-  /// <see cref="IPlugin"/> interface.
+  /// Where possible use the <see cref="Type"/> property instead.
   /// </para>
   /// </remarks>
-  /// <author>Nicko Cadell</author>
-  /// <author>Gert Driesen</author>
-  [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-  [Log4NetSerializable]
-  public sealed class PluginAttribute : Attribute, IPluginFactory
+  public string? TypeName { get; set; }
+
+  /// <summary>
+  /// Creates the plugin object defined by this attribute.
+  /// </summary>
+  /// <returns>The plugin object.</returns>
+  public IPlugin CreatePlugin()
   {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PluginAttribute" /> class
-    /// with the specified type.
-    /// </summary>
-    /// <param name="typeName">The type name of plugin to create.</param>
-    /// <remarks>
-    /// <para>
-    /// Create the attribute with the plugin type specified.
-    /// </para>
-    /// <para>
-    /// Where possible use the constructor that takes a <see cref="System.Type"/>.
-    /// </para>
-    /// </remarks>
-    public PluginAttribute(string typeName) => TypeName = typeName;
+    // Get the plugin object type from the type first before trying the string type name.
+    Type? pluginType = Type ?? SystemInfo.GetTypeFromString(TypeName!, true, true);
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PluginAttribute" /> class
-    /// with the specified type.
-    /// </summary>
-    /// <param name="type">The type of plugin to create.</param>
-    /// <remarks>
-    /// <para>
-    /// Create the attribute with the plugin type specified.
-    /// </para>
-    /// </remarks>
-    public PluginAttribute(Type type) => Type = type;
-
-    /// <summary>
-    /// Gets or sets the type for the plugin.
-    /// </summary>
-    public Type? Type { get; set; }
-
-    /// <summary>
-    /// Gets or sets the type name for the plugin.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Where possible use the <see cref="Type"/> property instead.
-    /// </para>
-    /// </remarks>
-    public string? TypeName { get; set; }
-
-    /// <summary>
-    /// Creates the plugin object defined by this attribute.
-    /// </summary>
-    /// <returns>The plugin object.</returns>
-    public IPlugin CreatePlugin()
+    // Check that the type is a plugin
+    if (!typeof(IPlugin).IsAssignableFrom(pluginType))
     {
-      // Get the plugin object type from the type first before trying the string type name.
-      Type? pluginType = Type ?? SystemInfo.GetTypeFromString(TypeName!, true, true);
-
-      // Check that the type is a plugin
-      if (!typeof(IPlugin).IsAssignableFrom(pluginType))
-      {
-        throw new LogException($"Plugin type [{pluginType?.FullName}] does not implement the log4net.IPlugin interface");
-      }
-
-      // Create an instance of the plugin using the default constructor
-      return Activator.CreateInstance(pluginType).EnsureIs<IPlugin>();
+      throw new LogException($"Plugin type [{pluginType?.FullName}] does not implement the log4net.IPlugin interface");
     }
 
-    /// <inheritdoc/>
-    public override string ToString() => $"PluginAttribute[Type={Type?.FullName ?? TypeName}]";
+    // Create an instance of the plugin using the default constructor
+    return Activator.CreateInstance(pluginType).EnsureIs<IPlugin>();
   }
+
+  /// <inheritdoc/>
+  public override string ToString() => $"PluginAttribute[Type={Type?.FullName ?? TypeName}]";
 }

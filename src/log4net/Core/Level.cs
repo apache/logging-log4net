@@ -383,6 +383,7 @@ public class Level : IComparable, ILog4NetSerializable, IEquatable<Level>, IComp
   /// The <see cref="Emergency" /> level designates very severe error events. 
   /// System unusable, emergencies.
   /// </summary>
+  // ReSharper disable once InconsistentNaming
   public static readonly Level Log4Net_Debug = new(120_000, "log4net:DEBUG");
 
   /// <summary>

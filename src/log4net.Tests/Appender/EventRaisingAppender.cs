@@ -22,52 +22,51 @@
 using log4net.Core;
 using System;
 
-namespace log4net.Tests.Appender
+namespace log4net.Tests.Appender;
+
+/// <summary>
+/// Provides data for the <see cref="EventRaisingAppender.LoggingEventAppended"/> event.
+/// </summary>
+/// <seealso cref="System.EventArgs" />
+public class LoggingEventEventArgs : EventArgs
 {
-  /// <summary>
-  /// Provides data for the <see cref="EventRaisingAppender.LoggingEventAppended"/> event.
-  /// </summary>
-  /// <seealso cref="System.EventArgs" />
-  public class LoggingEventEventArgs : EventArgs
+  public LoggingEvent LoggingEvent { get; private set; }
+
+  public LoggingEventEventArgs(LoggingEvent loggingEvent)
   {
-    public LoggingEvent LoggingEvent { get; private set; }
-
-    public LoggingEventEventArgs(LoggingEvent loggingEvent)
+    if (loggingEvent is null)
     {
-      if (loggingEvent is null)
-      {
-        throw new ArgumentNullException(nameof(loggingEvent));
-      }
-
-      LoggingEvent = loggingEvent;
+      throw new ArgumentNullException(nameof(loggingEvent));
     }
+
+    LoggingEvent = loggingEvent;
+  }
+}
+
+/// <summary>
+/// A log4net appender that raises an event each time a logging event is appended
+/// </summary>
+/// <remarks>
+/// This class is intended to provide a way for test code to inspect logging
+/// events as they are generated.
+/// </remarks>
+public class EventRaisingAppender : log4net.Appender.IAppender
+{
+  public event EventHandler<LoggingEventEventArgs>? LoggingEventAppended;
+
+  protected void OnLoggingEventAppended(LoggingEventEventArgs e)
+  {
+    LoggingEventAppended?.Invoke(this, e);
   }
 
-  /// <summary>
-  /// A log4net appender that raises an event each time a logging event is appended
-  /// </summary>
-  /// <remarks>
-  /// This class is intended to provide a way for test code to inspect logging
-  /// events as they are generated.
-  /// </remarks>
-  public class EventRaisingAppender : log4net.Appender.IAppender
+  public void Close()
   {
-    public event EventHandler<LoggingEventEventArgs>? LoggingEventAppended;
-
-    protected void OnLoggingEventAppended(LoggingEventEventArgs e)
-    {
-      LoggingEventAppended?.Invoke(this, e);
-    }
-
-    public void Close()
-    {
-    }
-
-    public void DoAppend(LoggingEvent loggingEvent)
-    {
-      OnLoggingEventAppended(new LoggingEventEventArgs(loggingEvent));
-    }
-
-    public string Name { get; set; } = string.Empty;
   }
+
+  public void DoAppend(LoggingEvent loggingEvent)
+  {
+    OnLoggingEventAppended(new LoggingEventEventArgs(loggingEvent));
+  }
+
+  public string Name { get; set; } = string.Empty;
 }

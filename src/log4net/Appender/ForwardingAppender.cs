@@ -22,210 +22,209 @@ using System;
 using log4net.Util;
 using log4net.Core;
 
-namespace log4net.Appender
+namespace log4net.Appender;
+
+/// <summary>
+/// This appender forwards logging events to attached appenders.
+/// </summary>
+/// <remarks>
+/// <para>
+/// The forwarding appender can be used to specify different thresholds
+/// and filters for the same appender at different locations within the hierarchy.
+/// </para>
+/// </remarks>
+/// <author>Nicko Cadell</author>
+/// <author>Gert Driesen</author>
+public class ForwardingAppender : AppenderSkeleton, IAppenderAttachable
 {
   /// <summary>
-  /// This appender forwards logging events to attached appenders.
+  /// Closes the appender and releases resources.
   /// </summary>
   /// <remarks>
   /// <para>
-  /// The forwarding appender can be used to specify different thresholds
-  /// and filters for the same appender at different locations within the hierarchy.
+  /// Releases any resources allocated within the appender such as file handles, 
+  /// network connections, etc.
+  /// </para>
+  /// <para>
+  /// It is a programming error to append to a closed appender.
   /// </para>
   /// </remarks>
-  /// <author>Nicko Cadell</author>
-  /// <author>Gert Driesen</author>
-  public class ForwardingAppender : AppenderSkeleton, IAppenderAttachable
+  protected override void OnClose()
   {
-    /// <summary>
-    /// Closes the appender and releases resources.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Releases any resources allocated within the appender such as file handles, 
-    /// network connections, etc.
-    /// </para>
-    /// <para>
-    /// It is a programming error to append to a closed appender.
-    /// </para>
-    /// </remarks>
-    protected override void OnClose()
+    // Remove all the attached appenders
+    lock (this)
     {
-      // Remove all the attached appenders
-      lock (this)
-      {
-        m_appenderAttachedImpl?.RemoveAllAppenders();
-      }
+      _appenderAttachedImpl?.RemoveAllAppenders();
     }
-
-    /// <summary>
-    /// Forward the logging event to the attached appenders 
-    /// </summary>
-    /// <param name="loggingEvent">The event to log.</param>
-    /// <remarks>
-    /// <para>
-    /// Delivers the logging event to all the attached appenders.
-    /// </para>
-    /// </remarks>
-    protected override void Append(LoggingEvent loggingEvent)
-    {
-      // Pass the logging event on to the attached appenders
-      m_appenderAttachedImpl?.AppendLoopOnAppenders(loggingEvent);
-    }
-
-    /// <summary>
-    /// Forward the logging events to the attached appenders 
-    /// </summary>
-    /// <param name="loggingEvents">The array of events to log.</param>
-    /// <remarks>
-    /// <para>
-    /// Delivers the logging events to all the attached appenders.
-    /// </para>
-    /// </remarks>
-    protected override void Append(LoggingEvent[] loggingEvents)
-    {
-      // Pass the logging event on to the attached appenders
-      m_appenderAttachedImpl?.AppendLoopOnAppenders(loggingEvents);
-    }
-
-    /// <summary>
-    /// Adds an <see cref="IAppender" /> to the list of appenders of this
-    /// instance.
-    /// </summary>
-    /// <param name="newAppender">The <see cref="IAppender" /> to add to this appender.</param>
-    /// <remarks>
-    /// <para>
-    /// If the specified <see cref="IAppender" /> is already in the list of
-    /// appenders, then it won't be added again.
-    /// </para>
-    /// </remarks>
-    public virtual void AddAppender(IAppender newAppender)
-    {
-      if (newAppender is null)
-      {
-        throw new ArgumentNullException(nameof(newAppender));
-      }
-      lock (this)
-      {
-        m_appenderAttachedImpl ??= new AppenderAttachedImpl();
-        m_appenderAttachedImpl.AddAppender(newAppender);
-      }
-    }
-
-    /// <summary>
-    /// Gets the appenders contained in this appender as an 
-    /// <see cref="System.Collections.ICollection"/>.
-    /// </summary>
-    /// <remarks>
-    /// If no appenders can be found, then an <see cref="EmptyCollection"/> 
-    /// is returned.
-    /// </remarks>
-    /// <returns>
-    /// A collection of the appenders in this appender.
-    /// </returns>
-    public virtual AppenderCollection Appenders
-    {
-      get
-      {
-        lock (this)
-        {
-          return m_appenderAttachedImpl?.Appenders ?? AppenderCollection.EmptyCollection;
-        }
-      }
-    }
-
-    /// <summary>
-    /// Looks for the appender with the specified name.
-    /// </summary>
-    /// <param name="name">The name of the appender to lookup.</param>
-    /// <returns>
-    /// The appender with the specified name, or <c>null</c>.
-    /// </returns>
-    /// <remarks>
-    /// <para>
-    /// Get the named appender attached to this appender.
-    /// </para>
-    /// </remarks>
-    public virtual IAppender? GetAppender(string? name)
-    {
-      lock (this)
-      {
-        if (m_appenderAttachedImpl is null || name is null)
-        {
-          return null;
-        }
-
-        return m_appenderAttachedImpl.GetAppender(name);
-      }
-    }
-
-    /// <summary>
-    /// Removes all previously added appenders from this appender.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// This is useful when re-reading configuration information.
-    /// </para>
-    /// </remarks>
-    public virtual void RemoveAllAppenders()
-    {
-      lock (this)
-      {
-        if (m_appenderAttachedImpl is not null)
-        {
-          m_appenderAttachedImpl.RemoveAllAppenders();
-          m_appenderAttachedImpl = null;
-        }
-      }
-    }
-
-    /// <summary>
-    /// Removes the specified appender from the list of appenders.
-    /// </summary>
-    /// <param name="appender">The appender to remove.</param>
-    /// <returns>The appender removed from the list</returns>
-    /// <remarks>
-    /// The appender removed is not closed.
-    /// If you are discarding the appender you must call
-    /// <see cref="IAppender.Close"/> on the appender removed.
-    /// </remarks>
-    public virtual IAppender? RemoveAppender(IAppender? appender)
-    {
-      lock (this)
-      {
-        if (appender is not null && m_appenderAttachedImpl is not null)
-        {
-          return m_appenderAttachedImpl.RemoveAppender(appender);
-        }
-      }
-      return null;
-    }
-
-    /// <summary>
-    /// Removes the appender with the specified name from the list of appenders.
-    /// </summary>
-    /// <param name="name">The name of the appender to remove.</param>
-    /// <returns>The appender removed from the list</returns>
-    /// <remarks>
-    /// The appender removed is not closed.
-    /// If you are discarding the appender you must call
-    /// <see cref="IAppender.Close"/> on the appender removed.
-    /// </remarks>
-    public virtual IAppender? RemoveAppender(string? name)
-    {
-      lock (this)
-      {
-        if (name is not null && m_appenderAttachedImpl is not null)
-        {
-          return m_appenderAttachedImpl.RemoveAppender(name);
-        }
-      }
-      return null;
-    }
-
-    /// <summary>
-    /// Implementation of the <see cref="IAppenderAttachable"/> interface
-    /// </summary>
-    private AppenderAttachedImpl? m_appenderAttachedImpl;
   }
+
+  /// <summary>
+  /// Forward the logging event to the attached appenders 
+  /// </summary>
+  /// <param name="loggingEvent">The event to log.</param>
+  /// <remarks>
+  /// <para>
+  /// Delivers the logging event to all the attached appenders.
+  /// </para>
+  /// </remarks>
+  protected override void Append(LoggingEvent loggingEvent)
+  {
+    // Pass the logging event on to the attached appenders
+    _appenderAttachedImpl?.AppendLoopOnAppenders(loggingEvent);
+  }
+
+  /// <summary>
+  /// Forward the logging events to the attached appenders 
+  /// </summary>
+  /// <param name="loggingEvents">The array of events to log.</param>
+  /// <remarks>
+  /// <para>
+  /// Delivers the logging events to all the attached appenders.
+  /// </para>
+  /// </remarks>
+  protected override void Append(LoggingEvent[] loggingEvents)
+  {
+    // Pass the logging event on to the attached appenders
+    _appenderAttachedImpl?.AppendLoopOnAppenders(loggingEvents);
+  }
+
+  /// <summary>
+  /// Adds an <see cref="IAppender" /> to the list of appenders of this
+  /// instance.
+  /// </summary>
+  /// <param name="newAppender">The <see cref="IAppender" /> to add to this appender.</param>
+  /// <remarks>
+  /// <para>
+  /// If the specified <see cref="IAppender" /> is already in the list of
+  /// appenders, then it won't be added again.
+  /// </para>
+  /// </remarks>
+  public virtual void AddAppender(IAppender newAppender)
+  {
+    if (newAppender is null)
+    {
+      throw new ArgumentNullException(nameof(newAppender));
+    }
+    lock (this)
+    {
+      _appenderAttachedImpl ??= new AppenderAttachedImpl();
+      _appenderAttachedImpl.AddAppender(newAppender);
+    }
+  }
+
+  /// <summary>
+  /// Gets the appenders contained in this appender as an 
+  /// <see cref="System.Collections.ICollection"/>.
+  /// </summary>
+  /// <remarks>
+  /// If no appenders can be found, then an <see cref="EmptyCollection"/> 
+  /// is returned.
+  /// </remarks>
+  /// <returns>
+  /// A collection of the appenders in this appender.
+  /// </returns>
+  public virtual AppenderCollection Appenders
+  {
+    get
+    {
+      lock (this)
+      {
+        return _appenderAttachedImpl?.Appenders ?? AppenderCollection.EmptyCollection;
+      }
+    }
+  }
+
+  /// <summary>
+  /// Looks for the appender with the specified name.
+  /// </summary>
+  /// <param name="name">The name of the appender to lookup.</param>
+  /// <returns>
+  /// The appender with the specified name, or <c>null</c>.
+  /// </returns>
+  /// <remarks>
+  /// <para>
+  /// Get the named appender attached to this appender.
+  /// </para>
+  /// </remarks>
+  public virtual IAppender? GetAppender(string? name)
+  {
+    lock (this)
+    {
+      if (_appenderAttachedImpl is null || name is null)
+      {
+        return null;
+      }
+
+      return _appenderAttachedImpl.GetAppender(name);
+    }
+  }
+
+  /// <summary>
+  /// Removes all previously added appenders from this appender.
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// This is useful when re-reading configuration information.
+  /// </para>
+  /// </remarks>
+  public virtual void RemoveAllAppenders()
+  {
+    lock (this)
+    {
+      if (_appenderAttachedImpl is not null)
+      {
+        _appenderAttachedImpl.RemoveAllAppenders();
+        _appenderAttachedImpl = null;
+      }
+    }
+  }
+
+  /// <summary>
+  /// Removes the specified appender from the list of appenders.
+  /// </summary>
+  /// <param name="appender">The appender to remove.</param>
+  /// <returns>The appender removed from the list</returns>
+  /// <remarks>
+  /// The appender removed is not closed.
+  /// If you are discarding the appender you must call
+  /// <see cref="IAppender.Close"/> on the appender removed.
+  /// </remarks>
+  public virtual IAppender? RemoveAppender(IAppender? appender)
+  {
+    lock (this)
+    {
+      if (appender is not null && _appenderAttachedImpl is not null)
+      {
+        return _appenderAttachedImpl.RemoveAppender(appender);
+      }
+    }
+    return null;
+  }
+
+  /// <summary>
+  /// Removes the appender with the specified name from the list of appenders.
+  /// </summary>
+  /// <param name="name">The name of the appender to remove.</param>
+  /// <returns>The appender removed from the list</returns>
+  /// <remarks>
+  /// The appender removed is not closed.
+  /// If you are discarding the appender you must call
+  /// <see cref="IAppender.Close"/> on the appender removed.
+  /// </remarks>
+  public virtual IAppender? RemoveAppender(string? name)
+  {
+    lock (this)
+    {
+      if (name is not null && _appenderAttachedImpl is not null)
+      {
+        return _appenderAttachedImpl.RemoveAppender(name);
+      }
+    }
+    return null;
+  }
+
+  /// <summary>
+  /// Implementation of the <see cref="IAppenderAttachable"/> interface
+  /// </summary>
+  private AppenderAttachedImpl? _appenderAttachedImpl;
 }

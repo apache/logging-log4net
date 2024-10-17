@@ -24,59 +24,58 @@ using System.Text;
 using log4net.Util;
 using log4net.Core;
 
-namespace log4net.Layout.Pattern
+namespace log4net.Layout.Pattern;
+
+/// <summary>
+/// Writes the <see cref="LocationInfo.StackFrames"/> to the output writer, using format:
+/// type3.MethodCall3(type param,...) > type2.MethodCall2(type param,...) > type1.MethodCall1(type param,...)
+/// </summary>
+/// <author>Adam Davies</author>
+internal sealed class StackTraceDetailPatternConverter : StackTracePatternConverter
 {
-  /// <summary>
-  /// Writes the <see cref="LocationInfo.StackFrames"/> to the output writer, using format:
-  /// type3.MethodCall3(type param,...) > type2.MethodCall2(type param,...) > type1.MethodCall1(type param,...)
-  /// </summary>
-  /// <author>Adam Davies</author>
-  internal sealed class StackTraceDetailPatternConverter : StackTracePatternConverter
+  internal override string GetMethodInformation(MethodItem method)
   {
-    internal override string GetMethodInformation(MethodItem method)
+    string returnValue = "";
+
+    try
     {
-      string returnValue = "";
-
-      try
+      string param = "";
+      string[] names = method.Parameters;
+      StringBuilder sb = new StringBuilder();
+      if (names is not null && names.GetUpperBound(0) > 0)
       {
-        string param = "";
-        string[] names = method.Parameters;
-        StringBuilder sb = new StringBuilder();
-        if (names is not null && names.GetUpperBound(0) > 0)
+        for (int i = 0; i <= names.GetUpperBound(0); i++)
         {
-          for (int i = 0; i <= names.GetUpperBound(0); i++)
-          {
-            sb.AppendFormat("{0}, ", names[i]);
-          }
+          sb.AppendFormat("{0}, ", names[i]);
         }
-
-        if (sb.Length > 0)
-        {
-          sb.Remove(sb.Length - 2, 2);
-          param = sb.ToString();
-        }
-
-        returnValue = base.GetMethodInformation(method) + "(" + param + ")";
-      }
-      catch (Exception ex)
-      {
-        LogLog.Error(declaringType, "An exception ocurred while retreiving method information.", ex);
       }
 
-      return returnValue;
+      if (sb.Length > 0)
+      {
+        sb.Remove(sb.Length - 2, 2);
+        param = sb.ToString();
+      }
+
+      returnValue = base.GetMethodInformation(method) + "(" + param + ")";
+    }
+    catch (Exception ex)
+    {
+      LogLog.Error(_declaringType, "An exception ocurred while retreiving method information.", ex);
     }
 
-    #region Private Static Fields
-
-    /// <summary>
-    /// The fully qualified type of the StackTraceDetailPatternConverter class.
-    /// </summary>
-    /// <remarks>
-    /// Used by the internal logger to record the Type of the
-    /// log message.
-    /// </remarks>
-    private static readonly Type declaringType = typeof(StackTracePatternConverter);
-
-    #endregion Private Static Fields
+    return returnValue;
   }
+
+  #region Private Static Fields
+
+  /// <summary>
+  /// The fully qualified type of the StackTraceDetailPatternConverter class.
+  /// </summary>
+  /// <remarks>
+  /// Used by the internal logger to record the Type of the
+  /// log message.
+  /// </remarks>
+  private static readonly Type _declaringType = typeof(StackTracePatternConverter);
+
+  #endregion Private Static Fields
 }

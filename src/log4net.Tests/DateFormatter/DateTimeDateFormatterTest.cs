@@ -24,36 +24,35 @@ using System.Text;
 using log4net.DateFormatter;
 using NUnit.Framework;
 
-namespace log4net.Tests.DateFormatter
+namespace log4net.Tests.DateFormatter;
+
+[TestFixture]
+public class DateTimeDateFormatterTest
 {
-  [TestFixture]
-  public class DateTimeDateFormatterTest
+  [Test]
+  public void TestFormattingResults()
   {
-    [Test]
-    public void TestFormattingResults()
-    {
-      var sb = new StringBuilder();
-      using var writer = new StringWriter(sb, CultureInfo.InvariantCulture);
+    var sb = new StringBuilder();
+    using var writer = new StringWriter(sb, CultureInfo.InvariantCulture);
 
-      // Tests for prepended 0 characters for 2-digit and 3-digit portions.
-      var formatter = new DateTimeDateFormatter();
-      formatter.FormatDate(new DateTime(1970, 1, 1, 1, 1, 1).AddMilliseconds(1), writer);
-      Assert.AreEqual("01 Jan 1970 01:01:01,001", sb.ToString());
-      sb.Clear();
+    // Tests for prepended 0 characters for 2-digit and 3-digit portions.
+    var formatter = new DateTimeDateFormatter();
+    formatter.FormatDate(new DateTime(1970, 1, 1, 1, 1, 1).AddMilliseconds(1), writer);
+    Assert.AreEqual("01 Jan 1970 01:01:01,001", sb.ToString());
+    sb.Clear();
 
-      // Non-zero-prepend case.
-      var formatter2 = new DifferentTypeNameDateTimeDateFormatter();
-      formatter2.FormatDate(new DateTime(2100, 12, 30, 11, 59, 59).AddMilliseconds(100), writer);
-      Assert.AreEqual("30 Dec 2100 11:59:59,100", sb.ToString());
-      sb.Clear();
-    }
+    // Non-zero-prepend case.
+    var formatter2 = new DifferentTypeNameDateTimeDateFormatter();
+    formatter2.FormatDate(new DateTime(2100, 12, 30, 11, 59, 59).AddMilliseconds(100), writer);
+    Assert.AreEqual("30 Dec 2100 11:59:59,100", sb.ToString());
+    sb.Clear();
+  }
 
-    /// <summary>
-    /// Internal caching of datetime strings is by datetime class name. Avoid waiting
-    /// by adding another type name.
-    /// </summary>
-    private sealed class DifferentTypeNameDateTimeDateFormatter : DateTimeDateFormatter
-    {
-    }
+  /// <summary>
+  /// Internal caching of datetime strings is by datetime class name. Avoid waiting
+  /// by adding another type name.
+  /// </summary>
+  private sealed class DifferentTypeNameDateTimeDateFormatter : DateTimeDateFormatter
+  {
   }
 }

@@ -17,17 +17,16 @@
 //
 #endregion
 
-namespace log4net.Util
+namespace log4net.Util;
+
+/// <summary>
+/// Base class for Context Properties implementations
+/// </summary>
+/// <author>Nicko Cadell</author>
+public abstract class ContextPropertiesBase
 {
   /// <summary>
-  /// Base class for Context Properties implementations
+  /// Gets or sets the value of a property.
   /// </summary>
-  /// <author>Nicko Cadell</author>
-  public abstract class ContextPropertiesBase
-  {
-    /// <summary>
-    /// Gets or sets the value of a property.
-    /// </summary>
-    public abstract object? this[string key] { get; set; }
-  }
+  public abstract object? this[string key] { get; set; }
 }

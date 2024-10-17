@@ -25,77 +25,76 @@ using CallContext = System.Runtime.Remoting.Messaging.CallContext;
 using CallContext = System.Threading.AsyncLocal<log4net.Util.PropertiesDictionary>;
 #endif
 
-namespace log4net
+namespace log4net;
+
+/// <summary>
+/// The log4net Logical Thread Context.
+/// </summary>
+/// <remarks>
+/// <para>
+/// The <c>LogicalThreadContext</c> provides a location for <see cref="CallContext"/> specific debugging 
+/// information to be stored.
+/// The <c>LogicalThreadContext</c> properties override any <see cref="ThreadContext"/> or <see cref="GlobalContext"/>
+/// properties with the same name.
+/// </para>
+/// <para>
+/// For .NET Standard this class uses System.Threading.AsyncLocal rather than <see cref="CallContext"/>.
+/// </para>
+/// <para>
+/// The Logical Thread Context has a properties map and a stack.
+/// The properties and stack can 
+/// be included in the output of log messages. The <see cref="Layout.PatternLayout"/>
+/// supports selecting and outputting these properties.
+/// </para>
+/// <para>
+/// The Logical Thread Context provides a diagnostic context for the current call context. 
+/// This is an instrument for distinguishing interleaved log
+/// output from different sources. Log output is typically interleaved
+/// when a server handles multiple clients near-simultaneously.
+/// </para>
+/// <para>
+/// The Logical Thread Context is managed on a per <see cref="CallContext"/> basis.
+/// </para>
+/// <para>
+/// The <see cref="CallContext"/> requires a link time 
+/// <see cref="System.Security.Permissions.SecurityPermission"/> for the
+/// <see cref="System.Security.Permissions.SecurityPermissionFlag.Infrastructure"/>.
+/// If the calling code does not have this permission then this context will be disabled.
+/// It will not store any property values set on it.
+/// </para>
+/// </remarks>
+/// <example>Example of using the thread context properties to store a username.
+/// <code lang="C#">
+/// LogicalThreadContext.Properties["user"] = userName;
+///  log.Info("This log message has a LogicalThreadContext Property called 'user'");
+/// </code>
+/// </example>
+/// <example>Example of how to push a message into the context stack
+/// <code lang="C#">
+///  using(LogicalThreadContext.Stacks["LDC"].Push("my context message"))
+///  {
+///    log.Info("This log message has a LogicalThreadContext Stack message that includes 'my context message'");
+///  
+///  } // at the end of the using block the message is automatically popped 
+/// </code>
+/// </example>
+/// <threadsafety static="true" instance="true" />
+/// <author>Nicko Cadell</author>
+public static class LogicalThreadContext
 {
   /// <summary>
-  /// The log4net Logical Thread Context.
+  /// The thread properties map
   /// </summary>
   /// <remarks>
   /// <para>
-  /// The <c>LogicalThreadContext</c> provides a location for <see cref="CallContext"/> specific debugging 
-  /// information to be stored.
-  /// The <c>LogicalThreadContext</c> properties override any <see cref="ThreadContext"/> or <see cref="GlobalContext"/>
-  /// properties with the same name.
-  /// </para>
-  /// <para>
-  /// For .NET Standard this class uses System.Threading.AsyncLocal rather than <see cref="CallContext"/>.
-  /// </para>
-  /// <para>
-  /// The Logical Thread Context has a properties map and a stack.
-  /// The properties and stack can 
-  /// be included in the output of log messages. The <see cref="Layout.PatternLayout"/>
-  /// supports selecting and outputting these properties.
-  /// </para>
-  /// <para>
-  /// The Logical Thread Context provides a diagnostic context for the current call context. 
-  /// This is an instrument for distinguishing interleaved log
-  /// output from different sources. Log output is typically interleaved
-  /// when a server handles multiple clients near-simultaneously.
-  /// </para>
-  /// <para>
-  /// The Logical Thread Context is managed on a per <see cref="CallContext"/> basis.
-  /// </para>
-  /// <para>
-  /// The <see cref="CallContext"/> requires a link time 
-  /// <see cref="System.Security.Permissions.SecurityPermission"/> for the
-  /// <see cref="System.Security.Permissions.SecurityPermissionFlag.Infrastructure"/>.
-  /// If the calling code does not have this permission then this context will be disabled.
-  /// It will not store any property values set on it.
+  /// The <c>LogicalThreadContext</c> properties override any <see cref="ThreadContext"/> 
+  /// or <see cref="GlobalContext"/> properties with the same name.
   /// </para>
   /// </remarks>
-  /// <example>Example of using the thread context properties to store a username.
-  /// <code lang="C#">
-  /// LogicalThreadContext.Properties["user"] = userName;
-  ///  log.Info("This log message has a LogicalThreadContext Property called 'user'");
-  /// </code>
-  /// </example>
-  /// <example>Example of how to push a message into the context stack
-  /// <code lang="C#">
-  ///  using(LogicalThreadContext.Stacks["LDC"].Push("my context message"))
-  ///  {
-  ///    log.Info("This log message has a LogicalThreadContext Stack message that includes 'my context message'");
-  ///  
-  ///  } // at the end of the using block the message is automatically popped 
-  /// </code>
-  /// </example>
-  /// <threadsafety static="true" instance="true" />
-  /// <author>Nicko Cadell</author>
-  public static class LogicalThreadContext
-  {
-    /// <summary>
-    /// The thread properties map
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The <c>LogicalThreadContext</c> properties override any <see cref="ThreadContext"/> 
-    /// or <see cref="GlobalContext"/> properties with the same name.
-    /// </para>
-    /// </remarks>
-    public static LogicalThreadContextProperties Properties { get; } = new();
+  public static LogicalThreadContextProperties Properties { get; } = new();
 
-    /// <summary>
-    /// The logical thread stacks.
-    /// </summary>
-    public static LogicalThreadContextStacks Stacks { get; } = new(Properties);
-  }
+  /// <summary>
+  /// The logical thread stacks.
+  /// </summary>
+  public static LogicalThreadContextStacks Stacks { get; } = new(Properties);
 }

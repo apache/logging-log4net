@@ -19,64 +19,63 @@
 
 using System;
 
-namespace log4net.Appender
+namespace log4net.Appender;
+
+public partial class RollingFileAppender
 {
-  public partial class RollingFileAppender
+  /// <summary>
+  /// This interface is used to supply Date/Time information to the <see cref="RollingFileAppender"/>.
+  /// </summary>
+  /// <remarks>
+  /// This interface is used to supply Date/Time information to the <see cref="RollingFileAppender"/>.
+  /// Used primarily to allow test classes to plug themselves in so they can
+  /// supply test date/times.
+  /// </remarks>
+  public interface IDateTime
   {
     /// <summary>
-    /// This interface is used to supply Date/Time information to the <see cref="RollingFileAppender"/>.
+    /// Gets the <i>current</i> time.
     /// </summary>
+    /// <value>The <i>current</i> time.</value>
     /// <remarks>
-    /// This interface is used to supply Date/Time information to the <see cref="RollingFileAppender"/>.
-    /// Used primarily to allow test classes to plug themselves in so they can
-    /// supply test date/times.
+    /// <para>
+    /// Gets the <i>current</i> time.
+    /// </para>
     /// </remarks>
-    public interface IDateTime
-    {
-      /// <summary>
-      /// Gets the <i>current</i> time.
-      /// </summary>
-      /// <value>The <i>current</i> time.</value>
-      /// <remarks>
-      /// <para>
-      /// Gets the <i>current</i> time.
-      /// </para>
-      /// </remarks>
-      DateTime Now { get; }
-    }
+    DateTime Now { get; }
+  }
 
+  /// <summary>
+  /// Default implementation of <see cref="IDateTime"/> that returns the current time.
+  /// </summary>
+  private sealed class LocalDateTime : IDateTime
+  {
     /// <summary>
-    /// Default implementation of <see cref="IDateTime"/> that returns the current time.
+    /// Gets the <b>current</b> time.
     /// </summary>
-    private sealed class LocalDateTime : IDateTime
-    {
-      /// <summary>
-      /// Gets the <b>current</b> time.
-      /// </summary>
-      /// <value>The <b>current</b> time.</value>
-      /// <remarks>
-      /// <para>
-      /// Gets the <b>current</b> time.
-      /// </para>
-      /// </remarks>
-      public DateTime Now => DateTime.Now;
-    }
+    /// <value>The <b>current</b> time.</value>
+    /// <remarks>
+    /// <para>
+    /// Gets the <b>current</b> time.
+    /// </para>
+    /// </remarks>
+    public DateTime Now => DateTime.Now;
+  }
 
+  /// <summary>
+  /// Implementation of <see cref="IDateTime"/> that returns the current time as the coordinated universal time (UTC).
+  /// </summary>
+  private sealed class UniversalDateTime : IDateTime
+  {
     /// <summary>
-    /// Implementation of <see cref="IDateTime"/> that returns the current time as the coordinated universal time (UTC).
+    /// Gets the <b>current</b> time.
     /// </summary>
-    private sealed class UniversalDateTime : IDateTime
-    {
-      /// <summary>
-      /// Gets the <b>current</b> time.
-      /// </summary>
-      /// <value>The <b>current</b> time.</value>
-      /// <remarks>
-      /// <para>
-      /// Gets the <b>current</b> time.
-      /// </para>
-      /// </remarks>
-      public DateTime Now => DateTime.UtcNow;
-    }
+    /// <value>The <b>current</b> time.</value>
+    /// <remarks>
+    /// <para>
+    /// Gets the <b>current</b> time.
+    /// </para>
+    /// </remarks>
+    public DateTime Now => DateTime.UtcNow;
   }
 }

@@ -24,370 +24,369 @@ using log4net.Util;
 using log4net.Layout;
 using log4net.Core;
 
-namespace log4net.Appender
+namespace log4net.Appender;
+
+/// <summary>
+/// Sends logging events to a <see cref="TextWriter"/>.
+/// </summary>
+/// <remarks>
+/// <para>
+/// An Appender that writes to a <see cref="TextWriter"/>.
+/// </para>
+/// <para>
+/// This appender may be used stand alone if initialized with an appropriate
+/// writer, however it is typically used as a base class for an appender that
+/// can open a <see cref="TextWriter"/> to write to.
+/// </para>
+/// </remarks>
+/// <author>Nicko Cadell</author>
+/// <author>Gert Driesen</author>
+/// <author>Douglas de la Torre</author>
+public class TextWriterAppender : AppenderSkeleton
 {
   /// <summary>
-  /// Sends logging events to a <see cref="TextWriter"/>.
+  /// Gets or set whether the appender will flush at the end 
+  /// of each append operation.
+  /// </summary>
+  /// <value>
+  /// <para>
+  /// The default behavior is to flush at the end of each 
+  /// append operation.
+  /// </para>
+  /// <para>
+  /// If this option is set to <c>false</c>, then the underlying 
+  /// stream can defer persisting the logging event to a later 
+  /// time.
+  /// </para>
+  /// </value>
+  /// <remarks>
+  /// Avoiding the flush operation at the end of each append results in
+  /// a performance gain of 10 to 20 percent. However, there is a safety
+  /// trade-off involved in skipping flushing. Indeed, when flushing is
+  /// skipped, then it is likely that the last few log events will not
+  /// be recorded on disk when the application exits. This is a high
+  /// price to pay even for a 20% performance gain.
+  /// </remarks>
+  public bool ImmediateFlush { get; set; } = true;
+
+  /// <summary>
+  /// Sets the <see cref="TextWriter"/> where the log output will go.
   /// </summary>
   /// <remarks>
   /// <para>
-  /// An Appender that writes to a <see cref="TextWriter"/>.
+  /// The specified <see cref="TextWriter"/> must be open and writable.
   /// </para>
   /// <para>
-  /// This appender may be used stand alone if initialized with an appropriate
-  /// writer, however it is typically used as a base class for an appender that
-  /// can open a <see cref="TextWriter"/> to write to.
+  /// The <see cref="TextWriter"/> will be closed when the appender 
+  /// instance is closed.
+  /// </para>
+  /// <para>
+  /// <b>Note:</b> Logging to an unopened <see cref="TextWriter"/> will fail.
   /// </para>
   /// </remarks>
-  /// <author>Nicko Cadell</author>
-  /// <author>Gert Driesen</author>
-  /// <author>Douglas de la Torre</author>
-  public class TextWriterAppender : AppenderSkeleton
+  public virtual TextWriter? Writer
   {
-    /// <summary>
-    /// Gets or set whether the appender will flush at the end 
-    /// of each append operation.
-    /// </summary>
-    /// <value>
-    /// <para>
-    /// The default behavior is to flush at the end of each 
-    /// append operation.
-    /// </para>
-    /// <para>
-    /// If this option is set to <c>false</c>, then the underlying 
-    /// stream can defer persisting the logging event to a later 
-    /// time.
-    /// </para>
-    /// </value>
-    /// <remarks>
-    /// Avoiding the flush operation at the end of each append results in
-    /// a performance gain of 10 to 20 percent. However, there is a safety
-    /// trade-off involved in skipping flushing. Indeed, when flushing is
-    /// skipped, then it is likely that the last few log events will not
-    /// be recorded on disk when the application exits. This is a high
-    /// price to pay even for a 20% performance gain.
-    /// </remarks>
-    public bool ImmediateFlush { get; set; } = true;
-
-    /// <summary>
-    /// Sets the <see cref="TextWriter"/> where the log output will go.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The specified <see cref="TextWriter"/> must be open and writable.
-    /// </para>
-    /// <para>
-    /// The <see cref="TextWriter"/> will be closed when the appender 
-    /// instance is closed.
-    /// </para>
-    /// <para>
-    /// <b>Note:</b> Logging to an unopened <see cref="TextWriter"/> will fail.
-    /// </para>
-    /// </remarks>
-    public virtual TextWriter? Writer
+    get => QuietWriter;
+    set
     {
-      get => QuietWriter;
-      set
-      {
-        lock (m_lockObj)
-        {
-          Reset();
-          if (value is not null)
-          {
-            QuietWriter = new QuietTextWriter(value, ErrorHandler);
-            WriteHeader();
-          }
-        }
-      }
-    }
-
-    /// <summary>
-    /// This method determines if there is a sense in attempting to append.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// This method checks if an output target has been set and if a
-    /// layout has been set. 
-    /// </para>
-    /// </remarks>
-    /// <returns><c>false</c> if any of the preconditions fail.</returns>
-    protected override bool PreAppendCheck()
-    {
-      if (!base.PreAppendCheck())
-      {
-        return false;
-      }
-
-      if (QuietWriter is null)
-      {
-        // Allow subclass to lazily create the writer
-        PrepareWriter();
-
-        if (QuietWriter is null)
-        {
-          ErrorHandler.Error("No output stream or file set for the appender named [" + Name + "].");
-          return false;
-        }
-      }
-      if (QuietWriter.Closed)
-      {
-        ErrorHandler.Error("Output stream for appender named [" + Name + "] has been closed.");
-        return false;
-      }
-
-      return true;
-    }
-
-    /// <summary>
-    /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/>
-    /// method. 
-    /// </summary>
-    /// <param name="loggingEvent">The event to log.</param>
-    /// <remarks>
-    /// <para>
-    /// Writes a log statement to the output stream if the output stream exists 
-    /// and is writable.  
-    /// </para>
-    /// <para>
-    /// The format of the output will depend on the appender's layout.
-    /// </para>
-    /// </remarks>
-    protected override void Append(LoggingEvent loggingEvent)
-    {
-      if (QuietWriter is null)
-      {
-        return;
-      }
-
-      RenderLoggingEvent(QuietWriter, loggingEvent);
-
-      if (ImmediateFlush)
-      {
-        QuietWriter.Flush();
-      }
-    }
-
-    /// <summary>
-    /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent[])"/>
-    /// method. 
-    /// </summary>
-    /// <param name="loggingEvents">The array of events to log.</param>
-    /// <remarks>
-    /// <para>
-    /// This method writes all the bulk logged events to the output writer
-    /// before flushing the stream.
-    /// </para>
-    /// </remarks>
-    protected override void Append(LoggingEvent[] loggingEvents)
-    {
-      if (QuietWriter is null)
-      {
-        return;
-      }
-
-      foreach (LoggingEvent loggingEvent in loggingEvents)
-      {
-        RenderLoggingEvent(QuietWriter, loggingEvent);
-      }
-
-      if (ImmediateFlush)
-      {
-        QuietWriter.Flush();
-      }
-    }
-
-    /// <summary>
-    /// Close this appender instance. The underlying stream or writer is also closed.
-    /// </summary>
-    /// <remarks>
-    /// Closed appenders cannot be reused.
-    /// </remarks>
-    protected override void OnClose()
-    {
-      lock (m_lockObj)
+      lock (_syncRoot)
       {
         Reset();
+        if (value is not null)
+        {
+          QuietWriter = new QuietTextWriter(value, ErrorHandler);
+          WriteHeader();
+        }
       }
     }
+  }
 
-    /// <summary>
-    /// Gets or set the <see cref="IErrorHandler"/> and the underlying 
-    /// <see cref="QuietTextWriter"/>, if any, for this appender. 
-    /// </summary>
-    /// <value>
-    /// The <see cref="IErrorHandler"/> for this appender.
-    /// </value>
-    public override IErrorHandler ErrorHandler
+  /// <summary>
+  /// This method determines if there is a sense in attempting to append.
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// This method checks if an output target has been set and if a
+  /// layout has been set. 
+  /// </para>
+  /// </remarks>
+  /// <returns><c>false</c> if any of the preconditions fail.</returns>
+  protected override bool PreAppendCheck()
+  {
+    if (!base.PreAppendCheck())
     {
-      get => base.ErrorHandler;
-      set
+      return false;
+    }
+
+    if (QuietWriter is null)
+    {
+      // Allow subclass to lazily create the writer
+      PrepareWriter();
+
+      if (QuietWriter is null)
       {
-        lock (m_lockObj)
+        ErrorHandler.Error("No output stream or file set for the appender named [" + Name + "].");
+        return false;
+      }
+    }
+    if (QuietWriter.Closed)
+    {
+      ErrorHandler.Error("Output stream for appender named [" + Name + "] has been closed.");
+      return false;
+    }
+
+    return true;
+  }
+
+  /// <summary>
+  /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/>
+  /// method. 
+  /// </summary>
+  /// <param name="loggingEvent">The event to log.</param>
+  /// <remarks>
+  /// <para>
+  /// Writes a log statement to the output stream if the output stream exists 
+  /// and is writable.  
+  /// </para>
+  /// <para>
+  /// The format of the output will depend on the appender's layout.
+  /// </para>
+  /// </remarks>
+  protected override void Append(LoggingEvent loggingEvent)
+  {
+    if (QuietWriter is null)
+    {
+      return;
+    }
+
+    RenderLoggingEvent(QuietWriter, loggingEvent);
+
+    if (ImmediateFlush)
+    {
+      QuietWriter.Flush();
+    }
+  }
+
+  /// <summary>
+  /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent[])"/>
+  /// method. 
+  /// </summary>
+  /// <param name="loggingEvents">The array of events to log.</param>
+  /// <remarks>
+  /// <para>
+  /// This method writes all the bulk logged events to the output writer
+  /// before flushing the stream.
+  /// </para>
+  /// </remarks>
+  protected override void Append(LoggingEvent[] loggingEvents)
+  {
+    if (QuietWriter is null)
+    {
+      return;
+    }
+
+    foreach (LoggingEvent loggingEvent in loggingEvents)
+    {
+      RenderLoggingEvent(QuietWriter, loggingEvent);
+    }
+
+    if (ImmediateFlush)
+    {
+      QuietWriter.Flush();
+    }
+  }
+
+  /// <summary>
+  /// Close this appender instance. The underlying stream or writer is also closed.
+  /// </summary>
+  /// <remarks>
+  /// Closed appenders cannot be reused.
+  /// </remarks>
+  protected override void OnClose()
+  {
+    lock (_syncRoot)
+    {
+      Reset();
+    }
+  }
+
+  /// <summary>
+  /// Gets or set the <see cref="IErrorHandler"/> and the underlying 
+  /// <see cref="QuietTextWriter"/>, if any, for this appender. 
+  /// </summary>
+  /// <value>
+  /// The <see cref="IErrorHandler"/> for this appender.
+  /// </value>
+  public override IErrorHandler ErrorHandler
+  {
+    get => base.ErrorHandler;
+    set
+    {
+      lock (_syncRoot)
+      {
+        if (value is null)
         {
-          if (value is null)
+          LogLog.Warn(_declaringType, "TextWriterAppender: You have tried to set a null error-handler.");
+        }
+        else
+        {
+          base.ErrorHandler = value;
+          if (QuietWriter is not null)
           {
-            LogLog.Warn(declaringType, "TextWriterAppender: You have tried to set a null error-handler.");
-          }
-          else
-          {
-            base.ErrorHandler = value;
-            if (QuietWriter is not null)
-            {
-              QuietWriter.ErrorHandler = value;
-            }
+            QuietWriter.ErrorHandler = value;
           }
         }
       }
     }
+  }
 
-    /// <summary>
-    /// This appender requires a <see cref="Layout"/> to be set.
-    /// </summary>
-    protected override bool RequiresLayout => true;
+  /// <summary>
+  /// This appender requires a <see cref="Layout"/> to be set.
+  /// </summary>
+  protected override bool RequiresLayout => true;
 
-    /// <summary>
-    /// Writes the footer and closes the underlying <see cref="TextWriter"/>.
-    /// </summary>
-    protected virtual void WriteFooterAndCloseWriter()
+  /// <summary>
+  /// Writes the footer and closes the underlying <see cref="TextWriter"/>.
+  /// </summary>
+  protected virtual void WriteFooterAndCloseWriter()
+  {
+    WriteFooter();
+    CloseWriter();
+  }
+
+  /// <summary>
+  /// Closes the underlying <see cref="TextWriter"/>.
+  /// </summary>
+  protected virtual void CloseWriter()
+  {
+    if (QuietWriter is not null)
     {
-      WriteFooter();
-      CloseWriter();
-    }
-
-    /// <summary>
-    /// Closes the underlying <see cref="TextWriter"/>.
-    /// </summary>
-    protected virtual void CloseWriter()
-    {
-      if (QuietWriter is not null)
+      try
       {
-        try
-        {
-          QuietWriter.Close();
-        }
-        catch (Exception e)
-        {
-          ErrorHandler.Error($"Could not close writer [{QuietWriter}]", e);
-          // do need to invoke an error handler
-          // at this late stage
-        }
+        QuietWriter.Close();
+      }
+      catch (Exception e)
+      {
+        ErrorHandler.Error($"Could not close writer [{QuietWriter}]", e);
+        // do need to invoke an error handler
+        // at this late stage
       }
     }
+  }
 
-    /// <summary>
-    /// Clears internal references to the underlying <see cref="TextWriter" /> 
-    /// and other variables.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Subclasses can override this method for an alternate closing behavior.
-    /// </para>
-    /// </remarks>
-    protected virtual void Reset()
-    {
-      WriteFooterAndCloseWriter();
-      QuietWriter = null;
-    }
+  /// <summary>
+  /// Clears internal references to the underlying <see cref="TextWriter" /> 
+  /// and other variables.
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// Subclasses can override this method for an alternate closing behavior.
+  /// </para>
+  /// </remarks>
+  protected virtual void Reset()
+  {
+    WriteFooterAndCloseWriter();
+    QuietWriter = null;
+  }
 
-    /// <summary>
-    /// Writes a footer as produced by the embedded layout's <see cref="ILayout.Footer"/> property.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Writes a footer as produced by the embedded layout's <see cref="ILayout.Footer"/> property.
-    /// </para>
-    /// </remarks>
-    protected virtual void WriteFooter()
+  /// <summary>
+  /// Writes a footer as produced by the embedded layout's <see cref="ILayout.Footer"/> property.
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// Writes a footer as produced by the embedded layout's <see cref="ILayout.Footer"/> property.
+  /// </para>
+  /// </remarks>
+  protected virtual void WriteFooter()
+  {
+    if (Layout is not null && QuietWriter is not null && !QuietWriter.Closed)
     {
-      if (Layout is not null && QuietWriter is not null && !QuietWriter.Closed)
+      string? f = Layout.Footer;
+      if (f is not null)
       {
-        string? f = Layout.Footer;
-        if (f is not null)
-        {
-          QuietWriter.Write(f);
-        }
+        QuietWriter.Write(f);
       }
     }
+  }
 
-    /// <summary>
-    /// Writes a header produced by the embedded layout's <see cref="ILayout.Header"/> property.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Writes a header produced by the embedded layout's <see cref="ILayout.Header"/> property.
-    /// </para>
-    /// </remarks>
-    protected virtual void WriteHeader()
+  /// <summary>
+  /// Writes a header produced by the embedded layout's <see cref="ILayout.Header"/> property.
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// Writes a header produced by the embedded layout's <see cref="ILayout.Header"/> property.
+  /// </para>
+  /// </remarks>
+  protected virtual void WriteHeader()
+  {
+    if (Layout is not null && QuietWriter is not null && !QuietWriter.Closed)
     {
-      if (Layout is not null && QuietWriter is not null && !QuietWriter.Closed)
+      if (Layout.Header is string h)
       {
-        if (Layout.Header is string h)
-        {
-          QuietWriter.Write(h);
-        }
+        QuietWriter.Write(h);
       }
     }
+  }
 
-    /// <summary>
-    /// Called to allow a subclass to lazily initialize the writer
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// This method is called when an event is logged and the <see cref="Writer"/> or
-    /// <see cref="QuietWriter"/> have not been set. This allows a subclass to
-    /// attempt to initialize the writer multiple times.
-    /// </para>
-    /// </remarks>
-    protected virtual void PrepareWriter()
+  /// <summary>
+  /// Called to allow a subclass to lazily initialize the writer
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// This method is called when an event is logged and the <see cref="Writer"/> or
+  /// <see cref="QuietWriter"/> have not been set. This allows a subclass to
+  /// attempt to initialize the writer multiple times.
+  /// </para>
+  /// </remarks>
+  protected virtual void PrepareWriter()
+  {
+  }
+
+  /// <summary>
+  /// Gets or sets the <see cref="log4net.Util.QuietTextWriter"/> where logging events
+  /// will be written to. 
+  /// </summary>
+  /// <value>
+  /// The <see cref="log4net.Util.QuietTextWriter"/> where logging events are written.
+  /// </value>
+  /// <remarks>
+  /// <para>
+  /// This is the <see cref="log4net.Util.QuietTextWriter"/> where logging events
+  /// will be written to. 
+  /// </para>
+  /// </remarks>
+  protected QuietTextWriter? QuietWriter { get; set; }
+
+  private readonly object _syncRoot = new();
+
+  /// <summary>
+  /// The fully qualified type of the TextWriterAppender class.
+  /// </summary>
+  /// <remarks>
+  /// Used by the internal logger to record the Type of the
+  /// log message.
+  /// </remarks>
+  private static readonly Type _declaringType = typeof(TextWriterAppender);
+
+  /// <summary>
+  /// Flushes any buffered log data.
+  /// </summary>
+  /// <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
+  /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+  public override bool Flush(int millisecondsTimeout)
+  {
+    // Nothing to do if ImmediateFlush is true
+    if (ImmediateFlush)
     {
-    }
-
-    /// <summary>
-    /// Gets or sets the <see cref="log4net.Util.QuietTextWriter"/> where logging events
-    /// will be written to. 
-    /// </summary>
-    /// <value>
-    /// The <see cref="log4net.Util.QuietTextWriter"/> where logging events are written.
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// This is the <see cref="log4net.Util.QuietTextWriter"/> where logging events
-    /// will be written to. 
-    /// </para>
-    /// </remarks>
-    protected QuietTextWriter? QuietWriter { get; set; }
-
-    private readonly object m_lockObj = new();
-
-    /// <summary>
-    /// The fully qualified type of the TextWriterAppender class.
-    /// </summary>
-    /// <remarks>
-    /// Used by the internal logger to record the Type of the
-    /// log message.
-    /// </remarks>
-    private static readonly Type declaringType = typeof(TextWriterAppender);
-
-    /// <summary>
-    /// Flushes any buffered log data.
-    /// </summary>
-    /// <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
-    /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
-    public override bool Flush(int millisecondsTimeout)
-    {
-      // Nothing to do if ImmediateFlush is true
-      if (ImmediateFlush)
-      {
-        return true;
-      }
-
-      // lock(this) will block any Appends while the buffer is flushed.
-      lock (m_lockObj)
-      {
-        QuietWriter?.Flush();
-      }
-
       return true;
     }
+
+    // lock(this) will block any Appends while the buffer is flushed.
+    lock (_syncRoot)
+    {
+      QuietWriter?.Flush();
+    }
+
+    return true;
   }
 }

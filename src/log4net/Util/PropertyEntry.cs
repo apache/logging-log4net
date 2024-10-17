@@ -19,30 +19,29 @@
  *
 */
 
-namespace log4net.Util
+namespace log4net.Util;
+
+/// <summary>
+/// A class to hold the key and data for a property set in the config file
+/// </summary>
+public class PropertyEntry
 {
   /// <summary>
-  /// A class to hold the key and data for a property set in the config file
+  /// Property Key
   /// </summary>
-  public class PropertyEntry
+  public string? Key { get; set; }
+
+  /// <summary>
+  /// Property Value
+  /// </summary>
+  public object? Value { get; set; }
+
+  /// <summary>
+  /// Override <c>Object.ToString</c> to return sensible debug info
+  /// </summary>
+  /// <returns>string info about this object</returns>
+  public override string ToString()
   {
-    /// <summary>
-    /// Property Key
-    /// </summary>
-    public string? Key { get; set; }
-
-    /// <summary>
-    /// Property Value
-    /// </summary>
-    public object? Value { get; set; }
-
-    /// <summary>
-    /// Override <c>Object.ToString</c> to return sensible debug info
-    /// </summary>
-    /// <returns>string info about this object</returns>
-    public override string ToString()
-    {
-      return $"PropertyEntry(Key={Key}, Value={Value})";
-    }
+    return $"PropertyEntry(Key={Key}, Value={Value})";
   }
 }

@@ -19,12 +19,24 @@
 
 using System;
 
-using log4net;
+namespace log4net.Core;
 
-namespace log4net.Core
+/// <summary>
+/// An evaluator that triggers at a threshold level
+/// </summary>
+/// <remarks>
+/// <para>
+/// This evaluator will trigger if the level of the event
+/// passed to <see cref="M:IsTriggeringEvent(LoggingEvent)"/>
+/// is equal to or greater than the <see cref="Threshold"/>
+/// level.
+/// </para>
+/// </remarks>
+/// <author>Nicko Cadell</author>
+public class LevelEvaluator : ITriggeringEventEvaluator
 {
   /// <summary>
-  /// An evaluator that triggers at a threshold level
+  /// Create a new evaluator using the <see cref="Level.Off"/> threshold.
   /// </summary>
   /// <remarks>
   /// <para>
@@ -34,77 +46,62 @@ namespace log4net.Core
   /// level.
   /// </para>
   /// </remarks>
-  /// <author>Nicko Cadell</author>
-  public class LevelEvaluator : ITriggeringEventEvaluator
+  public LevelEvaluator() : this(Level.Off)
   {
-    /// <summary>
-    /// Create a new evaluator using the <see cref="Level.Off"/> threshold.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// This evaluator will trigger if the level of the event
-    /// passed to <see cref="M:IsTriggeringEvent(LoggingEvent)"/>
-    /// is equal to or greater than the <see cref="Threshold"/>
-    /// level.
-    /// </para>
-    /// </remarks>
-    public LevelEvaluator() : this(Level.Off)
+  }
+
+  /// <summary>
+  /// Create a new evaluator using the specified <see cref="Level"/> threshold.
+  /// </summary>
+  /// <param name="threshold">the threshold to trigger at</param>
+  /// <remarks>
+  /// <para>
+  /// This evaluator will trigger if the level of the event
+  /// passed to <see cref="M:IsTriggeringEvent(LoggingEvent)"/>
+  /// is equal to or greater than the <see cref="Threshold"/>
+  /// level.
+  /// </para>
+  /// </remarks>
+  public LevelEvaluator(Level threshold)
+  {
+    if (threshold is null)
     {
+      throw new ArgumentNullException(nameof(threshold));
     }
 
-    /// <summary>
-    /// Create a new evaluator using the specified <see cref="Level"/> threshold.
-    /// </summary>
-    /// <param name="threshold">the threshold to trigger at</param>
-    /// <remarks>
-    /// <para>
-    /// This evaluator will trigger if the level of the event
-    /// passed to <see cref="M:IsTriggeringEvent(LoggingEvent)"/>
-    /// is equal to or greater than the <see cref="Threshold"/>
-    /// level.
-    /// </para>
-    /// </remarks>
-    public LevelEvaluator(Level threshold)
-    {
-      if (threshold is null)
-      {
-        throw new ArgumentNullException(nameof(threshold));
-      }
+    Threshold = threshold;
+  }
 
-      Threshold = threshold;
+  /// <summary>
+  /// the threshold to trigger at
+  /// </summary>
+  /// <value>
+  /// The <see cref="Level"/> that will cause this evaluator to trigger
+  /// </value>
+  /// <remarks>
+  /// <para>
+  /// This evaluator will trigger if the level of the event
+  /// passed to <see cref="M:IsTriggeringEvent(LoggingEvent)"/>
+  /// is equal to or greater than the <see cref="Threshold"/>
+  /// level.
+  /// </para>
+  /// </remarks>
+  public Level Threshold { get; set; }
+
+  /// <summary>
+  /// Is this <paramref name="loggingEvent"/> the triggering event?
+  /// </summary>
+  /// <param name="loggingEvent">The event to check</param>
+  /// <returns>This method returns <c>true</c>, if the event level
+  /// is equal or higher than the <see cref="Threshold"/>. 
+  /// Otherwise it returns <c>false</c></returns>
+  public bool IsTriggeringEvent(LoggingEvent loggingEvent)
+  {
+    if (loggingEvent is null)
+    {
+      throw new ArgumentNullException(nameof(loggingEvent));
     }
 
-    /// <summary>
-    /// the threshold to trigger at
-    /// </summary>
-    /// <value>
-    /// The <see cref="Level"/> that will cause this evaluator to trigger
-    /// </value>
-    /// <remarks>
-    /// <para>
-    /// This evaluator will trigger if the level of the event
-    /// passed to <see cref="M:IsTriggeringEvent(LoggingEvent)"/>
-    /// is equal to or greater than the <see cref="Threshold"/>
-    /// level.
-    /// </para>
-    /// </remarks>
-    public Level Threshold { get; set; }
-
-    /// <summary>
-    /// Is this <paramref name="loggingEvent"/> the triggering event?
-    /// </summary>
-    /// <param name="loggingEvent">The event to check</param>
-    /// <returns>This method returns <c>true</c>, if the event level
-    /// is equal or higher than the <see cref="Threshold"/>. 
-    /// Otherwise it returns <c>false</c></returns>
-    public bool IsTriggeringEvent(LoggingEvent loggingEvent)
-    {
-      if (loggingEvent is null)
-      {
-        throw new ArgumentNullException(nameof(loggingEvent));
-      }
-
-      return (loggingEvent.Level is null || loggingEvent.Level >= Threshold);
-    }
+    return (loggingEvent.Level is null || loggingEvent.Level >= Threshold);
   }
 }

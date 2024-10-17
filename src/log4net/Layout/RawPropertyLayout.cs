@@ -19,34 +19,33 @@
 
 using log4net.Core;
 
-namespace log4net.Layout
+namespace log4net.Layout;
+
+/// <summary>
+/// Extracts the value of a property from the <see cref="LoggingEvent"/>.
+/// </summary>
+/// <author>Nicko Cadell</author>
+public class RawPropertyLayout : IRawLayout
 {
   /// <summary>
-  /// Extracts the value of a property from the <see cref="LoggingEvent"/>.
+  /// The name of the value to look up in the LoggingEvent Properties collection.
   /// </summary>
-  /// <author>Nicko Cadell</author>
-  public class RawPropertyLayout : IRawLayout
-  {
-    /// <summary>
-    /// The name of the value to look up in the LoggingEvent Properties collection.
-    /// </summary>
-    public string Key { get; set; } = string.Empty;
+  public string Key { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Looks up the property for <see cref="Key"/>.
-    /// </summary>
-    /// <param name="loggingEvent">The event to format</param>
-    /// <returns>returns property value</returns>
-    /// <remarks>
-    /// <para>
-    /// Looks up and returns the object value of the property
-    /// named <see cref="Key"/>. If there is no property defined
-    /// with than name then <c>null</c> will be returned.
-    /// </para>
-    /// </remarks>
-    public virtual object? Format(LoggingEvent loggingEvent)
-    {
-      return loggingEvent.LookupProperty(Key);
-    }
+  /// <summary>
+  /// Looks up the property for <see cref="Key"/>.
+  /// </summary>
+  /// <param name="loggingEvent">The event to format</param>
+  /// <returns>returns property value</returns>
+  /// <remarks>
+  /// <para>
+  /// Looks up and returns the object value of the property
+  /// named <see cref="Key"/>. If there is no property defined
+  /// with than name then <c>null</c> will be returned.
+  /// </para>
+  /// </remarks>
+  public virtual object? Format(LoggingEvent loggingEvent)
+  {
+    return loggingEvent.LookupProperty(Key);
   }
 }

@@ -21,132 +21,131 @@ using System;
 using System.Collections.Concurrent;
 using log4net.Util;
 
-namespace log4net.Core
+namespace log4net.Core;
+
+/// <summary>
+/// Maps between string name and Level object.
+/// </summary>
+/// <remarks>
+/// <para>
+/// This mapping is held separately for each <see cref="log4net.Repository.ILoggerRepository"/>.
+/// The level name is case-insensitive.
+/// </para>
+/// </remarks>
+/// <author>Nicko Cadell</author>
+public sealed class LevelMap
 {
   /// <summary>
-  /// Maps between string name and Level object.
+  /// Mapping from level name to Level object. The
+  /// level name is case-insensitive
+  /// </summary>
+  private readonly ConcurrentDictionary<string, Level> _mapName2Level = new(StringComparer.OrdinalIgnoreCase);
+
+  /// <summary>
+  /// Clear the internal maps of all levels
   /// </summary>
   /// <remarks>
   /// <para>
-  /// This mapping is held separately for each <see cref="log4net.Repository.ILoggerRepository"/>.
-  /// The level name is case-insensitive.
+  /// Clear the internal maps of all levels
   /// </para>
   /// </remarks>
-  /// <author>Nicko Cadell</author>
-  public sealed class LevelMap
+  public void Clear()
   {
-    /// <summary>
-    /// Mapping from level name to Level object. The
-    /// level name is case-insensitive
-    /// </summary>
-    private readonly ConcurrentDictionary<string, Level> m_mapName2Level = new(StringComparer.OrdinalIgnoreCase);
+    // Clear all current levels
+    _mapName2Level.Clear();
+  }
 
-    /// <summary>
-    /// Clear the internal maps of all levels
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Clear the internal maps of all levels
-    /// </para>
-    /// </remarks>
-    public void Clear()
-    {
-      // Clear all current levels
-      m_mapName2Level.Clear();
-    }
-
-    /// <summary>
-    /// Looks up a <see cref="Level"/> by name
-    /// </summary>
-    /// <param name="name">The name of the Level to look up.</param>
-    /// <returns>A Level from the map with the name specified, or <c>null</c> if none is found.</returns>
-    public Level? this[string name]
-    {
-      get
-      {
-        if (name is null)
-        {
-          throw new ArgumentNullException(nameof(name));
-        }
-
-        m_mapName2Level.TryGetValue(name, out Level? level);
-        return level;
-      }
-    }
-
-    /// <summary>
-    /// Creates a new Level and adds it to the map.
-    /// </summary>
-    /// <param name="name">the string to display for the Level</param>
-    /// <param name="value">the level value to give to the Level</param>
-    /// <seealso cref="M:Add(string,int,string)"/>
-    public void Add(string name, int value)
-    {
-      Add(name, value, null);
-    }
-
-    /// <summary>
-    /// Creates a new Level and adds it to the map.
-    /// </summary>
-    /// <param name="name">the string to display for the Level</param>
-    /// <param name="value">the level value to give to the Level</param>
-    /// <param name="displayName">the display name to give to the Level</param>
-    public void Add(string name, int value, string? displayName)
+  /// <summary>
+  /// Looks up a <see cref="Level"/> by name
+  /// </summary>
+  /// <param name="name">The name of the Level to look up.</param>
+  /// <returns>A Level from the map with the name specified, or <c>null</c> if none is found.</returns>
+  public Level? this[string name]
+  {
+    get
     {
       if (name is null)
       {
         throw new ArgumentNullException(nameof(name));
       }
-      if (name.Length == 0)
-      {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(name), name, $"Parameter: name, Value: [{name}] out of range. Level name must not be empty");
-      }
 
-      if (string.IsNullOrEmpty(displayName))
-      {
-        displayName = name;
-      }
-
-      Add(new Level(value, name, displayName!));
+      _mapName2Level.TryGetValue(name, out Level? level);
+      return level;
     }
+  }
 
-    /// <summary>
-    /// Adds a Level to the map.
-    /// </summary>
-    /// <param name="level">the Level to add</param>
-    public void Add(Level level)
+  /// <summary>
+  /// Creates a new Level and adds it to the map.
+  /// </summary>
+  /// <param name="name">the string to display for the Level</param>
+  /// <param name="value">the level value to give to the Level</param>
+  /// <seealso cref="M:Add(string,int,string)"/>
+  public void Add(string name, int value)
+  {
+    Add(name, value, null);
+  }
+
+  /// <summary>
+  /// Creates a new Level and adds it to the map.
+  /// </summary>
+  /// <param name="name">the string to display for the Level</param>
+  /// <param name="value">the level value to give to the Level</param>
+  /// <param name="displayName">the display name to give to the Level</param>
+  public void Add(string name, int value, string? displayName)
+  {
+    if (name is null)
     {
-      if (level is null)
-      {
-        throw new ArgumentNullException(nameof(level));
-      }
-      m_mapName2Level[level.Name] = level;
+      throw new ArgumentNullException(nameof(name));
     }
-
-    /// <summary>
-    /// Gets all possible levels as a collection of Level objects.
-    /// </summary>
-    public LevelCollection AllLevels => new(m_mapName2Level.Values);
-
-    /// <summary>
-    /// Looks up a named level from the map.
-    /// </summary>
-    /// <param name="defaultLevel">
-    /// The name of the level to look up is taken from this level. 
-    /// If the level is not set in the map then this level is added.
-    /// If no level with the specified name is found then the 
-    /// <paramref name="defaultLevel"/> argument is added to the level map
-    /// and returned.
-    /// </param>
-    /// <returns>the level in the map with the name specified</returns>
-    public Level LookupWithDefault(Level defaultLevel)
+    if (name.Length == 0)
     {
-      if (defaultLevel is null)
-      {
-        throw new ArgumentNullException(nameof(defaultLevel));
-      }
-
-      return m_mapName2Level.GetOrAdd(defaultLevel.Name, defaultLevel);
+      throw SystemInfo.CreateArgumentOutOfRangeException(nameof(name), name, $"Parameter: name, Value: [{name}] out of range. Level name must not be empty");
     }
+
+    if (string.IsNullOrEmpty(displayName))
+    {
+      displayName = name;
+    }
+
+    Add(new Level(value, name, displayName!));
+  }
+
+  /// <summary>
+  /// Adds a Level to the map.
+  /// </summary>
+  /// <param name="level">the Level to add</param>
+  public void Add(Level level)
+  {
+    if (level is null)
+    {
+      throw new ArgumentNullException(nameof(level));
+    }
+    _mapName2Level[level.Name] = level;
+  }
+
+  /// <summary>
+  /// Gets all possible levels as a collection of Level objects.
+  /// </summary>
+  public LevelCollection AllLevels => new(_mapName2Level.Values);
+
+  /// <summary>
+  /// Looks up a named level from the map.
+  /// </summary>
+  /// <param name="defaultLevel">
+  /// The name of the level to look up is taken from this level. 
+  /// If the level is not set in the map then this level is added.
+  /// If no level with the specified name is found then the 
+  /// <paramref name="defaultLevel"/> argument is added to the level map
+  /// and returned.
+  /// </param>
+  /// <returns>the level in the map with the name specified</returns>
+  public Level LookupWithDefault(Level defaultLevel)
+  {
+    if (defaultLevel is null)
+    {
+      throw new ArgumentNullException(nameof(defaultLevel));
+    }
+
+    return _mapName2Level.GetOrAdd(defaultLevel.Name, defaultLevel);
   }
 }

@@ -19,44 +19,43 @@
 
 using System.IO;
 
-namespace log4net.Util
+namespace log4net.Util;
+
+/// <summary>
+/// A <see cref="TextWriter"/> that ignores the <see cref="Close"/> message
+/// </summary>
+/// <remarks>
+/// This writer is used in special cases where it is necessary 
+/// to protect a writer from being closed by a client.
+/// </remarks>
+/// <author>Nicko Cadell</author>
+public class ProtectCloseTextWriter : TextWriterAdapter
 {
   /// <summary>
-  /// A <see cref="TextWriter"/> that ignores the <see cref="Close"/> message
+  /// Constructor
   /// </summary>
+  /// <param name="writer">the writer to actually write to</param>
   /// <remarks>
-  /// This writer is used in special cases where it is necessary 
-  /// to protect a writer from being closed by a client.
+  /// Create a new ProtectCloseTextWriter using a writer
   /// </remarks>
-  /// <author>Nicko Cadell</author>
-  public class ProtectCloseTextWriter : TextWriterAdapter
+  public ProtectCloseTextWriter(TextWriter writer) : base(writer)
   {
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="writer">the writer to actually write to</param>
-    /// <remarks>
-    /// Create a new ProtectCloseTextWriter using a writer
-    /// </remarks>
-    public ProtectCloseTextWriter(TextWriter writer) : base(writer)
-    {
-    }
+  }
 
-    /// <summary>
-    /// Attaches this instance to a different underlying <see cref="TextWriter"/>.
-    /// </summary>
-    /// <param name="writer">the writer to attach to</param>
-    public void Attach(TextWriter writer)
-    {
-      Writer = writer;
-    }
+  /// <summary>
+  /// Attaches this instance to a different underlying <see cref="TextWriter"/>.
+  /// </summary>
+  /// <param name="writer">the writer to attach to</param>
+  public void Attach(TextWriter writer)
+  {
+    Writer = writer;
+  }
 
-    /// <summary>
-    /// Does not close the underlying output writer.
-    /// </summary>
-    public override void Close()
-    {
-      // do nothing
-    }
+  /// <summary>
+  /// Does not close the underlying output writer.
+  /// </summary>
+  public override void Close()
+  {
+    // do nothing
   }
 }

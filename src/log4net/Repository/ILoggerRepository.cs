@@ -25,173 +25,172 @@ using log4net.Core;
 using log4net.Plugin;
 using log4net.Util;
 
-namespace log4net.Repository
+namespace log4net.Repository;
+
+/// <summary>
+/// Delegate used to handle logger repository shutdown event notifications.
+/// </summary>
+/// <param name="sender">The <see cref="ILoggerRepository"/> that is shutting down.</param>
+/// <param name="e">Empty event args</param>
+public delegate void LoggerRepositoryShutdownEventHandler(object sender, EventArgs e);
+
+/// <summary>
+/// Delegate used to handle logger repository configuration reset event notifications.
+/// </summary>
+/// <param name="sender">The <see cref="ILoggerRepository"/> that has had its configuration reset.</param>
+/// <param name="e">Empty event args</param>
+public delegate void LoggerRepositoryConfigurationResetEventHandler(object sender, EventArgs e);
+
+/// <summary>
+/// Delegate used to handle event notifications for logger repository configuration changes.
+/// </summary>
+/// <param name="sender">The <see cref="ILoggerRepository"/> that has had its configuration changed.</param>
+/// <param name="e">Empty event arguments.</param>
+public delegate void LoggerRepositoryConfigurationChangedEventHandler(object sender, EventArgs e);
+
+/// <summary>
+/// Interface implemented by logger repositories, e.g. <see cref="Hierarchy"/>, and used by the
+/// <see cref="LogManager"/> to obtain <see cref="ILog"/> instances.
+/// </summary>
+/// <author>Nicko Cadell</author>
+/// <author>Gert Driesen</author>
+public interface ILoggerRepository
 {
   /// <summary>
-  /// Delegate used to handle logger repository shutdown event notifications.
+  /// Gets or sets the name of the repository.
   /// </summary>
-  /// <param name="sender">The <see cref="ILoggerRepository"/> that is shutting down.</param>
-  /// <param name="e">Empty event args</param>
-  public delegate void LoggerRepositoryShutdownEventHandler(object sender, EventArgs e);
+  string Name { get; set; }
 
   /// <summary>
-  /// Delegate used to handle logger repository configuration reset event notifications.
+  /// Gets the map from types to <see cref="IObjectRenderer"/> instances for custom rendering.
   /// </summary>
-  /// <param name="sender">The <see cref="ILoggerRepository"/> that has had its configuration reset.</param>
-  /// <param name="e">Empty event args</param>
-  public delegate void LoggerRepositoryConfigurationResetEventHandler(object sender, EventArgs e);
+  RendererMap RendererMap { get; }
 
   /// <summary>
-  /// Delegate used to handle event notifications for logger repository configuration changes.
+  /// Gets the map from plugin name to plugin value for plugins attacked to this repository.
   /// </summary>
-  /// <param name="sender">The <see cref="ILoggerRepository"/> that has had its configuration changed.</param>
-  /// <param name="e">Empty event arguments.</param>
-  public delegate void LoggerRepositoryConfigurationChangedEventHandler(object sender, EventArgs e);
+  PluginMap PluginMap { get; }
 
   /// <summary>
-  /// Interface implemented by logger repositories, e.g. <see cref="Hierarchy"/>, and used by the
-  /// <see cref="LogManager"/> to obtain <see cref="ILog"/> instances.
+  /// Gets the map from level names and <see cref="Level"/> values for this repository.
   /// </summary>
-  /// <author>Nicko Cadell</author>
-  /// <author>Gert Driesen</author>
-  public interface ILoggerRepository
-  {
-    /// <summary>
-    /// Gets or sets the name of the repository.
-    /// </summary>
-    string Name { get; set; }
+  LevelMap LevelMap { get; }
 
-    /// <summary>
-    /// Gets the map from types to <see cref="IObjectRenderer"/> instances for custom rendering.
-    /// </summary>
-    RendererMap RendererMap { get; }
+  /// <summary>
+  /// Gets or sets the threshold for all events in this repository.
+  /// </summary>
+  Level Threshold { get; set; }
 
-    /// <summary>
-    /// Gets the map from plugin name to plugin value for plugins attacked to this repository.
-    /// </summary>
-    PluginMap PluginMap { get; }
+  /// <summary>
+  /// Gets the named logger, or <c>null</c>.
+  /// </summary>
+  /// <param name="name">The name of the logger to look up.</param>
+  /// <returns>The logger if found, or <c>null</c>.</returns>
+  ILogger? Exists(string name);
 
-    /// <summary>
-    /// Gets the map from level names and <see cref="Level"/> values for this repository.
-    /// </summary>
-    LevelMap LevelMap { get; }
+  /// <summary>
+  /// Gets all the currently defined loggers.
+  /// </summary>
+  ILogger[] GetCurrentLoggers();
 
-    /// <summary>
-    /// Gets or sets the threshold for all events in this repository.
-    /// </summary>
-    Level Threshold { get; set; }
+  /// <summary>
+  /// Returns a named logger instance
+  /// </summary>
+  /// <param name="name">The name of the logger to retrieve</param>
+  /// <returns>The logger object with the name specified</returns>
+  /// <remarks>
+  /// <para>
+  /// Returns a named logger instance.
+  /// </para>
+  /// <para>
+  /// If a logger of that name already exists, then it will be
+  /// returned.  Otherwise, a new logger will be instantiated and
+  /// then linked with its existing ancestors as well as children.
+  /// </para>
+  /// </remarks>
+  ILogger GetLogger(string name);
 
-    /// <summary>
-    /// Gets the named logger, or <c>null</c>.
-    /// </summary>
-    /// <param name="name">The name of the logger to look up.</param>
-    /// <returns>The logger if found, or <c>null</c>.</returns>
-    ILogger? Exists(string name);
+  /// <summary>
+  /// Shuts down the repository, <i>safely</i> closing and removing
+  /// all appenders in all loggers including the root logger.
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// Some appenders need to be closed before the
+  /// application exists. Otherwise, pending logging events might be
+  /// lost.
+  /// </para>
+  /// <para>
+  /// The <see cref="M:Shutdown()"/> method is careful to close nested
+  /// appenders before closing regular appenders. This allows
+  /// configurations where a regular appender is attached to a logger
+  /// and again to a nested appender.
+  /// </para>
+  /// </remarks>
+  void Shutdown();
 
-    /// <summary>
-    /// Gets all the currently defined loggers.
-    /// </summary>
-    ILogger[] GetCurrentLoggers();
+  /// <summary>
+  /// Resets the repository configuration to a default state. Loggers are reset but not removed.
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// This method should be used sparingly and with care as it will
+  /// block all logging until it is completed.
+  /// </para>
+  /// </remarks>
+  void ResetConfiguration();
 
-    /// <summary>
-    /// Returns a named logger instance
-    /// </summary>
-    /// <param name="name">The name of the logger to retrieve</param>
-    /// <returns>The logger object with the name specified</returns>
-    /// <remarks>
-    /// <para>
-    /// Returns a named logger instance.
-    /// </para>
-    /// <para>
-    /// If a logger of that name already exists, then it will be
-    /// returned.  Otherwise, a new logger will be instantiated and
-    /// then linked with its existing ancestors as well as children.
-    /// </para>
-    /// </remarks>
-    ILogger GetLogger(string name);
+  /// <summary>
+  /// Logs a <see cref="LoggingEvent"/> through this repository.
+  /// </summary>
+  /// <param name="logEvent">The event to log.</param>
+  /// <remarks>
+  /// <para>
+  /// This method should not normally be used to log.
+  /// The <see cref="ILog"/> interface should be used 
+  /// for routine logging. This interface can be obtained
+  /// using the <see cref="M:log4net.LogManager.GetLogger(string)"/> method.
+  /// </para>
+  /// <para>
+  /// The <c>logEvent</c> is delivered to the appropriate logger and
+  /// that logger is then responsible for logging the event.
+  /// </para>
+  /// </remarks>
+  void Log(LoggingEvent logEvent);
 
-    /// <summary>
-    /// Shuts down the repository, <i>safely</i> closing and removing
-    /// all appenders in all loggers including the root logger.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Some appenders need to be closed before the
-    /// application exists. Otherwise, pending logging events might be
-    /// lost.
-    /// </para>
-    /// <para>
-    /// The <see cref="M:Shutdown()"/> method is careful to close nested
-    /// appenders before closing regular appenders. This allows
-    /// configurations where a regular appender is attached to a logger
-    /// and again to a nested appender.
-    /// </para>
-    /// </remarks>
-    void Shutdown();
+  /// <summary>
+  /// Gets or sets a value that indicates whether this repository has been configured.
+  /// </summary>
+  bool Configured { get; set; }
 
-    /// <summary>
-    /// Resets the repository configuration to a default state. Loggers are reset but not removed.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// This method should be used sparingly and with care as it will
-    /// block all logging until it is completed.
-    /// </para>
-    /// </remarks>
-    void ResetConfiguration();
+  /// <summary>
+  /// Collection of internal messages captured during the most 
+  /// recent configuration process.
+  /// </summary>
+  ICollection ConfigurationMessages { get; set; }
 
-    /// <summary>
-    /// Logs a <see cref="LoggingEvent"/> through this repository.
-    /// </summary>
-    /// <param name="logEvent">The event to log.</param>
-    /// <remarks>
-    /// <para>
-    /// This method should not normally be used to log.
-    /// The <see cref="ILog"/> interface should be used 
-    /// for routine logging. This interface can be obtained
-    /// using the <see cref="M:log4net.LogManager.GetLogger(string)"/> method.
-    /// </para>
-    /// <para>
-    /// The <c>logEvent</c> is delivered to the appropriate logger and
-    /// that logger is then responsible for logging the event.
-    /// </para>
-    /// </remarks>
-    void Log(LoggingEvent logEvent);
+  /// <summary>
+  /// Event to notify that the repository has been shut down.
+  /// </summary>
+  event LoggerRepositoryShutdownEventHandler? ShutdownEvent;
 
-    /// <summary>
-    /// Gets or sets a value that indicates whether this repository has been configured.
-    /// </summary>
-    bool Configured { get; set; }
+  /// <summary>
+  /// Event to notify that the repository has had its configuration reset to default.
+  /// </summary>
+  event LoggerRepositoryConfigurationResetEventHandler? ConfigurationReset;
 
-    /// <summary>
-    /// Collection of internal messages captured during the most 
-    /// recent configuration process.
-    /// </summary>
-    ICollection ConfigurationMessages { get; set; }
+  /// <summary>
+  /// Event to notify that the repository's configuration has changed.
+  /// </summary>
+  event LoggerRepositoryConfigurationChangedEventHandler? ConfigurationChanged;
 
-    /// <summary>
-    /// Event to notify that the repository has been shut down.
-    /// </summary>
-    event LoggerRepositoryShutdownEventHandler? ShutdownEvent;
+  /// <summary>
+  /// Repository specific properties.
+  /// </summary>
+  PropertiesDictionary Properties { get; }
 
-    /// <summary>
-    /// Event to notify that the repository has had its configuration reset to default.
-    /// </summary>
-    event LoggerRepositoryConfigurationResetEventHandler? ConfigurationReset;
-
-    /// <summary>
-    /// Event to notify that the repository's configuration has changed.
-    /// </summary>
-    event LoggerRepositoryConfigurationChangedEventHandler? ConfigurationChanged;
-
-    /// <summary>
-    /// Repository specific properties.
-    /// </summary>
-    PropertiesDictionary Properties { get; }
-
-    /// <summary>
-    /// Gets all Appenders that are configured for this repository.
-    /// </summary>
-    IAppender[] GetAppenders();
-  }
+  /// <summary>
+  /// Gets all Appenders that are configured for this repository.
+  /// </summary>
+  IAppender[] GetAppenders();
 }

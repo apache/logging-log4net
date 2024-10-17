@@ -29,21 +29,21 @@ using log4net.Repository;
 using log4net.Util;
 using NUnit.Framework;
 
-namespace log4net.Tests.LoggerRepository
-{
-  [TestFixture]
-  public class ConfigurationMessages
-  {
-    [Test]
-    public void ConfigurationMessagesTest()
-    {
-      try
-      {
-        LogLog.EmitInternalMessages = false;
-        LogLog.InternalDebugging = true;
+namespace log4net.Tests.LoggerRepository;
 
-        XmlDocument log4netConfig = new XmlDocument();
-        log4netConfig.LoadXml(@"
+[TestFixture]
+public class ConfigurationMessages
+{
+  [Test]
+  public void ConfigurationMessagesTest()
+  {
+    try
+    {
+      LogLog.EmitInternalMessages = false;
+      LogLog.InternalDebugging = true;
+
+      XmlDocument log4NetConfig = new();
+      log4NetConfig.LoadXml(@"
                 <log4net>
                   <appender name=""LogLogAppender"" type=""log4net.Tests.LoggerRepository.LogLogAppender, log4net.Tests"">
                     <layout type=""log4net.Layout.SimpleLayout"" />
@@ -58,46 +58,45 @@ namespace log4net.Tests.LoggerRepository
                   </root>  
                 </log4net>");
 
-        ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-        rep.ConfigurationChanged += new LoggerRepositoryConfigurationChangedEventHandler(rep_ConfigurationChanged);
+      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+      rep.ConfigurationChanged += new LoggerRepositoryConfigurationChangedEventHandler(rep_ConfigurationChanged);
 
-        ICollection configurationMessages = XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+      ICollection configurationMessages = XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
 
-        Assert.IsTrue(configurationMessages.Count > 0);
-      }
-      finally
-      {
-        LogLog.EmitInternalMessages = true;
-        LogLog.InternalDebugging = false;
-      }
+      Assert.IsTrue(configurationMessages.Count > 0);
     }
-
-    static void rep_ConfigurationChanged(object sender, EventArgs e)
+    finally
     {
-      ConfigurationChangedEventArgs configChanged = (ConfigurationChangedEventArgs)e;
-
-      Assert.IsTrue(configChanged.ConfigurationMessages.Count > 0);
+      LogLog.EmitInternalMessages = true;
+      LogLog.InternalDebugging = false;
     }
   }
 
-  public class LogLogAppender : AppenderSkeleton
+  static void rep_ConfigurationChanged(object sender, EventArgs e)
   {
-    private static readonly Type declaringType = typeof(LogLogAppender);
+    ConfigurationChangedEventArgs configChanged = (ConfigurationChangedEventArgs)e;
 
-    public override void ActivateOptions()
-    {
-      LogLog.Debug(declaringType, "Debug - Activating options...");
-      LogLog.Warn(declaringType, "Warn - Activating options...");
-      LogLog.Error(declaringType, "Error - Activating options...");
+    Assert.IsTrue(configChanged.ConfigurationMessages.Count > 0);
+  }
+}
 
-      base.ActivateOptions();
-    }
+public class LogLogAppender : AppenderSkeleton
+{
+  private static readonly Type _declaringType = typeof(LogLogAppender);
 
-    protected override void Append(LoggingEvent loggingEvent)
-    {
-      LogLog.Debug(declaringType, "Debug - Appending...");
-      LogLog.Warn(declaringType, "Warn - Appending...");
-      LogLog.Error(declaringType, "Error - Appending...");
-    }
+  public override void ActivateOptions()
+  {
+    LogLog.Debug(_declaringType, "Debug - Activating options...");
+    LogLog.Warn(_declaringType, "Warn - Activating options...");
+    LogLog.Error(_declaringType, "Error - Activating options...");
+
+    base.ActivateOptions();
+  }
+
+  protected override void Append(LoggingEvent loggingEvent)
+  {
+    LogLog.Debug(_declaringType, "Debug - Appending...");
+    LogLog.Warn(_declaringType, "Warn - Appending...");
+    LogLog.Error(_declaringType, "Error - Appending...");
   }
 }

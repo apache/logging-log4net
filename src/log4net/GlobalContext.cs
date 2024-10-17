@@ -17,46 +17,42 @@
 //
 #endregion
 
-using System;
-using System.Collections;
-
 using log4net.Util;
 
-namespace log4net
+namespace log4net;
+
+/// <summary>
+/// The log4net Global Context.
+/// </summary>
+/// <remarks>
+/// <para>
+/// The <c>GlobalContext</c> provides a location for global debugging 
+/// information to be stored.
+/// </para>
+/// <para>
+/// The global context has a properties map and these properties can 
+/// be included in the output of log messages. The <see cref="log4net.Layout.PatternLayout"/>
+/// supports selecting and outputing these properties.
+/// </para>
+/// <para>
+/// By default the <c>log4net:HostName</c> property is set to the name of 
+/// the current machine.
+/// </para>
+/// </remarks>
+/// <example>
+/// <code lang="C#">
+/// GlobalContext.Properties["hostname"] = Environment.MachineName;
+/// </code>
+/// </example>
+/// <threadsafety static="true" instance="true" />
+/// <author>Nicko Cadell</author>
+public static class GlobalContext
 {
   /// <summary>
-  /// The log4net Global Context.
+  /// The global properties map.
   /// </summary>
-  /// <remarks>
-  /// <para>
-  /// The <c>GlobalContext</c> provides a location for global debugging 
-  /// information to be stored.
-  /// </para>
-  /// <para>
-  /// The global context has a properties map and these properties can 
-  /// be included in the output of log messages. The <see cref="log4net.Layout.PatternLayout"/>
-  /// supports selecting and outputing these properties.
-  /// </para>
-  /// <para>
-  /// By default the <c>log4net:HostName</c> property is set to the name of 
-  /// the current machine.
-  /// </para>
-  /// </remarks>
-  /// <example>
-  /// <code lang="C#">
-  /// GlobalContext.Properties["hostname"] = Environment.MachineName;
-  /// </code>
-  /// </example>
-  /// <threadsafety static="true" instance="true" />
-  /// <author>Nicko Cadell</author>
-  public static class GlobalContext
+  public static GlobalContextProperties Properties { get; } = new()
   {
-    /// <summary>
-    /// The global properties map.
-    /// </summary>
-    public static GlobalContextProperties Properties { get; } = new()
-    {
-      [Core.LoggingEvent.HostNameProperty] = SystemInfo.HostName
-    };
-  }
+    [Core.LoggingEvent.HostNameProperty] = SystemInfo.HostName
+  };
 }

@@ -22,27 +22,26 @@
 using System;
 using System.Data;
 
-namespace log4net.Tests.Appender.AdoNet
+namespace log4net.Tests.Appender.AdoNet;
+
+public class Log4NetTransaction : IDbTransaction
 {
-  public class Log4NetTransaction : IDbTransaction
+  public void Commit()
   {
-    public void Commit()
-    {
-      // empty
-    }
+    // empty
+  }
 
-    public void Rollback()
-    {
-      // empty
-    }
+  public void Rollback()
+  {
+    // empty
+  }
 
-    public IDbConnection Connection => throw new NotImplementedException();
+  public IDbConnection Connection => throw new NotImplementedException();
 
-    public IsolationLevel IsolationLevel => throw new NotImplementedException();
+  public IsolationLevel IsolationLevel => throw new NotImplementedException();
 
-    public void Dispose()
-    {
-      throw new NotImplementedException();
-    }
+  public void Dispose()
+  {
+    throw new NotImplementedException();
   }
 }

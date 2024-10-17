@@ -27,10 +27,10 @@ namespace log4net.Util;
 /// <remarks>acts like the wrapped encoding, but without a preamble</remarks>
 internal sealed class EncodingWithoutPreamble : Encoding
 {
-  private readonly Encoding wrapped;
+  private readonly Encoding _wrapped;
 
   /// <inheritdoc/>
-  private EncodingWithoutPreamble(Encoding wrapped) => this.wrapped = wrapped.EnsureNotNull();
+  private EncodingWithoutPreamble(Encoding wrapped) => this._wrapped = wrapped.EnsureNotNull();
 
   /// <summary>
   /// wraps the <paramref name="encoding"/> in case it has a preamble
@@ -43,79 +43,79 @@ internal sealed class EncodingWithoutPreamble : Encoding
        : encoding;
 
   /// <inheritdoc/>
-  public override string BodyName => wrapped.BodyName;
+  public override string BodyName => _wrapped.BodyName;
 
   /// <inheritdoc/>
-  public override int CodePage => wrapped.CodePage;
+  public override int CodePage => _wrapped.CodePage;
 
   /// <inheritdoc/>
-  public override string EncodingName => wrapped.EncodingName;
+  public override string EncodingName => _wrapped.EncodingName;
 
   /// <inheritdoc/>
-  public override string HeaderName => wrapped.HeaderName;
+  public override string HeaderName => _wrapped.HeaderName;
 
   /// <inheritdoc/>
-  public override bool IsBrowserDisplay => wrapped.IsBrowserDisplay;
+  public override bool IsBrowserDisplay => _wrapped.IsBrowserDisplay;
 
   /// <inheritdoc/>
-  public override bool IsBrowserSave => wrapped.IsBrowserSave;
+  public override bool IsBrowserSave => _wrapped.IsBrowserSave;
 
   /// <inheritdoc/>
-  public override bool IsMailNewsDisplay => wrapped.IsMailNewsDisplay;
+  public override bool IsMailNewsDisplay => _wrapped.IsMailNewsDisplay;
 
   /// <inheritdoc/>
-  public override bool IsMailNewsSave => wrapped.IsMailNewsSave;
+  public override bool IsMailNewsSave => _wrapped.IsMailNewsSave;
 
   /// <inheritdoc/>
-  public override bool IsSingleByte => wrapped.IsSingleByte;
+  public override bool IsSingleByte => _wrapped.IsSingleByte;
 
   /// <inheritdoc/>
-  public override string WebName => wrapped.WebName;
+  public override string WebName => _wrapped.WebName;
 
   /// <inheritdoc/>
-  public override int WindowsCodePage => wrapped.WindowsCodePage;
+  public override int WindowsCodePage => _wrapped.WindowsCodePage;
 
 
   /// <inheritdoc/>
-  public override object Clone() => new EncodingWithoutPreamble(wrapped.Clone().EnsureIs<Encoding>());
+  public override object Clone() => new EncodingWithoutPreamble(_wrapped.Clone().EnsureIs<Encoding>());
 
   /// <inheritdoc/>
   public override int GetByteCount(char[] chars, int index, int count)
-    => wrapped.GetByteCount(chars, index, count);
+    => _wrapped.GetByteCount(chars, index, count);
 
   /// <inheritdoc/>
   public override int GetBytes(char[] chars, int charIndex, int charCount, byte[] bytes, int byteIndex)
-    => wrapped.GetBytes(chars, charIndex, charCount, bytes, byteIndex);
+    => _wrapped.GetBytes(chars, charIndex, charCount, bytes, byteIndex);
 
   /// <inheritdoc/>
   public override int GetCharCount(byte[] bytes, int index, int count)
-    => wrapped.GetCharCount(bytes, index, count);
+    => _wrapped.GetCharCount(bytes, index, count);
 
   /// <inheritdoc/>
   public override int GetChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex)
-    => wrapped.GetChars(bytes, byteIndex, byteCount, chars, charIndex);
+    => _wrapped.GetChars(bytes, byteIndex, byteCount, chars, charIndex);
 
   /// <inheritdoc/>
-  public override int GetMaxByteCount(int charCount) => wrapped.GetMaxByteCount(charCount);
+  public override int GetMaxByteCount(int charCount) => _wrapped.GetMaxByteCount(charCount);
 
   /// <inheritdoc/>
-  public override int GetMaxCharCount(int byteCount) => wrapped.GetMaxCharCount(byteCount);
+  public override int GetMaxCharCount(int byteCount) => _wrapped.GetMaxCharCount(byteCount);
 
   /// <inheritdoc/>
-  public override Decoder GetDecoder() => wrapped.GetDecoder();
+  public override Decoder GetDecoder() => _wrapped.GetDecoder();
 
   /// <inheritdoc/>
-  public override Encoder GetEncoder() => wrapped.GetEncoder();
+  public override Encoder GetEncoder() => _wrapped.GetEncoder();
 
   /// <inheritdoc/>
-  public override bool IsAlwaysNormalized(NormalizationForm form) => wrapped.IsAlwaysNormalized(form);
+  public override bool IsAlwaysNormalized(NormalizationForm form) => _wrapped.IsAlwaysNormalized(form);
 
   /// <inheritdoc/>
-  public override bool Equals(object value) => wrapped.Equals(value);
+  public override bool Equals(object value) => _wrapped.Equals(value);
 
   /// <inheritdoc/>
-  public override int GetHashCode() => wrapped.GetHashCode();
+  public override int GetHashCode() => _wrapped.GetHashCode();
 
   /// <inheritdoc/>
-  public override string ToString() => $"{wrapped}-WithoutPreamble";
+  public override string ToString() => $"{_wrapped}-WithoutPreamble";
 }

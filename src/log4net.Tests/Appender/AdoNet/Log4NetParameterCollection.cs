@@ -24,45 +24,44 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 
-namespace log4net.Tests.Appender.AdoNet
+namespace log4net.Tests.Appender.AdoNet;
+
+public class Log4NetParameterCollection : CollectionBase, IDataParameterCollection
 {
-  public class Log4NetParameterCollection : CollectionBase, IDataParameterCollection
+  private readonly Dictionary<string, int> _parameterNameToIndex = new(StringComparer.Ordinal);
+
+  protected override void OnInsertComplete(int index, object? value)
   {
-    private readonly Dictionary<string, int> m_parameterNameToIndex = new(StringComparer.Ordinal);
+    base.OnInsertComplete(index, value);
 
-    protected override void OnInsertComplete(int index, object? value)
+    if (value is IDataParameter param)
     {
-      base.OnInsertComplete(index, value);
-
-      if (value is IDataParameter param)
-      {
-        m_parameterNameToIndex[param.ParameterName] = index;
-      }
+      _parameterNameToIndex[param.ParameterName] = index;
     }
+  }
 
-    public int IndexOf(string parameterName)
+  public int IndexOf(string parameterName)
+  {
+    if (_parameterNameToIndex.TryGetValue(parameterName, out int index))
     {
-      if (m_parameterNameToIndex.TryGetValue(parameterName, out var index))
-      {
-        return index;
-      }
-      return -1;
+      return index;
     }
+    return -1;
+  }
 
-    public object this[string parameterName]
-    {
-      get => InnerList[IndexOf(parameterName)]!;
-      set => InnerList[IndexOf(parameterName)] = value;
-    }
+  public object this[string parameterName]
+  {
+    get => InnerList[IndexOf(parameterName)]!;
+    set => InnerList[IndexOf(parameterName)] = value;
+  }
 
-    public void RemoveAt(string parameterName)
-    {
-      throw new NotImplementedException();
-    }
+  public void RemoveAt(string parameterName)
+  {
+    throw new NotImplementedException();
+  }
 
-    public bool Contains(string parameterName)
-    {
-      throw new NotImplementedException();
-    }
+  public bool Contains(string parameterName)
+  {
+    throw new NotImplementedException();
   }
 }

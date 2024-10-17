@@ -22,88 +22,87 @@
 using System;
 using System.Data;
 
-namespace log4net.Tests.Appender.AdoNet
+namespace log4net.Tests.Appender.AdoNet;
+
+public class Log4NetCommand : IDbCommand
 {
-  public class Log4NetCommand : IDbCommand
+  public Log4NetCommand()
   {
-    public Log4NetCommand()
-    {
-      MostRecentInstance = this;
+    MostRecentInstance = this;
 
-      Parameters = new Log4NetParameterCollection();
-    }
+    Parameters = new Log4NetParameterCollection();
+  }
 
-    public void Dispose()
-    {
-      // empty
-    }
+  public void Dispose()
+  {
+    // empty
+  }
 
-    public IDbTransaction? Transaction { get; set; }
+  public IDbTransaction? Transaction { get; set; }
 
-    public int ExecuteNonQuery()
-    {
-      ExecuteNonQueryCount++;
-      return 0;
-    }
+  public int ExecuteNonQuery()
+  {
+    ExecuteNonQueryCount++;
+    return 0;
+  }
 
-    public int ExecuteNonQueryCount { get; private set; }
+  public int ExecuteNonQueryCount { get; private set; }
 
-    public IDbDataParameter CreateParameter()
-    {
-      return new Log4NetParameter();
-    }
+  public IDbDataParameter CreateParameter()
+  {
+    return new Log4NetParameter();
+  }
 
 #pragma warning disable CS8766 // Nullability of reference types in return type doesn't match implicitly implemented member (possibly because of nullability attributes).
-    public string? CommandText { get; set; }
+  public string? CommandText { get; set; }
 #pragma warning restore CS8766
 
-    public CommandType CommandType { get; set; }
+  public CommandType CommandType { get; set; }
 
-    public void Prepare()
-    {
-      // empty
-    }
+  public void Prepare()
+  {
+    // empty
+  }
 
-    public IDataParameterCollection Parameters { get; }
+  public IDataParameterCollection Parameters { get; }
 
-    public static Log4NetCommand? MostRecentInstance { get; private set; }
+  public static Log4NetCommand? MostRecentInstance { get; private set; }
 
-    public void Cancel()
-    {
-      throw new NotImplementedException();
-    }
+  public void Cancel()
+  {
+    throw new NotImplementedException();
+  }
 
-    public IDataReader ExecuteReader()
-    {
-      throw new NotImplementedException();
-    }
+  public IDataReader ExecuteReader()
+  {
+    throw new NotImplementedException();
+  }
 
-    public IDataReader ExecuteReader(CommandBehavior behavior)
-    {
-      throw new NotImplementedException();
-    }
+  public IDataReader ExecuteReader(CommandBehavior behavior)
+  {
+    throw new NotImplementedException();
+  }
 
-    public object ExecuteScalar()
-    {
-      throw new NotImplementedException();
-    }
+  public object ExecuteScalar()
+  {
+    throw new NotImplementedException();
+  }
 
-    public IDbConnection? Connection
-    {
-      get => throw new NotImplementedException();
-      set => throw new NotImplementedException();
-    }
+  public IDbConnection? Connection
+  {
+    get => throw new NotImplementedException();
+    set => throw new NotImplementedException();
+  }
 
-    public int CommandTimeout
-    {
-      get => throw new NotImplementedException();
-      set => throw new NotImplementedException();
-    }
+  public int CommandTimeout
+  {
+    get => throw new NotImplementedException();
+    set => throw new NotImplementedException();
+  }
 
-    public UpdateRowSource UpdatedRowSource
-    {
-      get => throw new NotImplementedException();
-      set => throw new NotImplementedException();
-    }
+  public UpdateRowSource UpdatedRowSource
+  {
+    get => throw new NotImplementedException();
+    set => throw new NotImplementedException();
   }
 }

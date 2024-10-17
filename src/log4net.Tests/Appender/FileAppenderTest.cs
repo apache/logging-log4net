@@ -71,8 +71,8 @@ public sealed class FileAppenderTest
     LogLog.LogReceived += LogReceived;
     try
     {
-      XmlDocument log4netConfig = new();
-      log4netConfig.LoadXml("""
+      XmlDocument log4NetConfig = new();
+      log4NetConfig.LoadXml("""
   <log4net>
     <appender name="ConsoleAppender" type="log4net.Appender.ConsoleAppender">
       <layout type="log4net.Layout.PatternLayout">
@@ -94,7 +94,7 @@ public sealed class FileAppenderTest
   </log4net>
 """);
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-      XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+      XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
     }
     finally
     {
@@ -117,8 +117,8 @@ public sealed class FileAppenderTest
       logs.Delete(true);
     }
 
-    XmlDocument log4netConfig = new();
-    log4netConfig.LoadXml("""
+    XmlDocument log4NetConfig = new();
+    log4NetConfig.LoadXml("""
   <log4net>
     <appender name="ConsoleAppender" type="log4net.Appender.ConsoleAppender">
       <layout type="log4net.Layout.PatternLayout">
@@ -142,7 +142,7 @@ public sealed class FileAppenderTest
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     // latest possible moment to set GlobalContext property used in filename
     GlobalContext.Properties["LogName"] = "custom_log_issue_193";
-    XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+    XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
     ILogger logger = rep.GetLogger(nameof(FilenameWithGlobalContextPatternStringTest));
     logger.Log(GetType(), Level.Info, nameof(FilenameWithGlobalContextPatternStringTest), null);
     logs.Refresh();

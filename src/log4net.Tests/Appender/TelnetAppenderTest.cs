@@ -48,9 +48,9 @@ public sealed class TelnetAppenderTest
   {
     List<string> received = [];
 
-    XmlDocument log4netConfig = new();
+    XmlDocument log4NetConfig = new();
     int port = 9090;
-    log4netConfig.LoadXml($"""
+    log4NetConfig.LoadXml($"""
     <log4net>
       <appender name="TelnetAppender" type="log4net.Appender.TelnetAppender">
         <port value="{port}" />
@@ -66,7 +66,7 @@ public sealed class TelnetAppenderTest
 """);
     string logId = Guid.NewGuid().ToString();
     ILoggerRepository repository = LogManager.CreateRepository(logId);
-    XmlConfigurator.Configure(repository, log4netConfig["log4net"]!);
+    XmlConfigurator.Configure(repository, log4NetConfig["log4net"]!);
     using (SimpleTelnetClient telnetClient = new(Received, port))
     {
       telnetClient.Run();

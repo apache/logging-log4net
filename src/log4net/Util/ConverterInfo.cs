@@ -21,44 +21,43 @@
 
 using System;
 
-namespace log4net.Util
+namespace log4net.Util;
+
+/// <summary>
+/// Wrapper class used to map converter names to converter types
+/// </summary>
+/// <remarks>
+/// <para>
+/// Pattern converter info class used during configuration by custom
+/// PatternString and PatternLayer converters.
+/// </para>
+/// </remarks>
+public sealed class ConverterInfo
 {
   /// <summary>
-  /// Wrapper class used to map converter names to converter types
+  /// Gets or sets the name of the conversion pattern in the format string.
   /// </summary>
-  /// <remarks>
-  /// <para>
-  /// Pattern converter info class used during configuration by custom
-  /// PatternString and PatternLayer converters.
-  /// </para>
-  /// </remarks>
-  public sealed class ConverterInfo
+  public string Name { get; set; } = string.Empty;
+
+  /// <summary>
+  /// Gets or sets the type of the converter. The type must extend <see cref="PatternConverter"/>.
+  /// </summary>
+  public Type? Type { get; set; }
+
+  /// <summary>
+  /// 
+  /// </summary>
+  /// <param name="entry"></param>
+  public void AddProperty(PropertyEntry entry)
   {
-    /// <summary>
-    /// Gets or sets the name of the conversion pattern in the format string.
-    /// </summary>
-    public string Name { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Gets or sets the type of the converter. The type must extend <see cref="PatternConverter"/>.
-    /// </summary>
-    public Type? Type { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="entry"></param>
-    public void AddProperty(PropertyEntry entry)
+    if (entry.Key is not null)
     {
-      if (entry.Key is not null)
-      {
-        Properties[entry.Key] = entry.Value;
-      }
+      Properties[entry.Key] = entry.Value;
     }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public PropertiesDictionary Properties { get; } = new();
   }
+
+  /// <summary>
+  /// 
+  /// </summary>
+  public PropertiesDictionary Properties { get; } = [];
 }

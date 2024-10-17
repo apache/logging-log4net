@@ -20,42 +20,41 @@
 using log4net.Appender;
 using log4net.Core;
 
-namespace log4net.Tests.Appender
+namespace log4net.Tests.Appender;
+
+/// <summary>
+/// Implements an Appender for test purposes that counts the
+/// number of output calls to <see cref="Append" />.
+/// </summary>
+/// <remarks>
+/// This appender is used in the unit tests.
+/// </remarks>
+/// <author>Nicko Cadell</author>
+/// <author>Gert Driesen</author>
+public class CountingAppender : AppenderSkeleton
 {
   /// <summary>
-  /// Implements an Appender for test purposes that counts the
-  /// number of output calls to <see cref="Append" />.
+  /// Returns the number of times <see cref="Append" /> has been called.
   /// </summary>
-  /// <remarks>
-  /// This appender is used in the unit tests.
-  /// </remarks>
-  /// <author>Nicko Cadell</author>
-  /// <author>Gert Driesen</author>
-  public class CountingAppender : AppenderSkeleton
+  /// <value>
+  /// The number of times <see cref="Append" /> has been called.
+  /// </value>
+  public int Counter { get; private set; }
+
+  /// <summary>
+  /// Reset the counter to zero
+  /// </summary>
+  public void ResetCounter()
   {
-    /// <summary>
-    /// Returns the number of times <see cref="Append" /> has been called.
-    /// </summary>
-    /// <value>
-    /// The number of times <see cref="Append" /> has been called.
-    /// </value>
-    public int Counter { get; private set; }
+    Counter = 0;
+  }
 
-    /// <summary>
-    /// Reset the counter to zero
-    /// </summary>
-    public void ResetCounter()
-    {
-      Counter = 0;
-    }
-
-    /// <summary>
-    /// Registers how many times the method has been called.
-    /// </summary>
-    /// <param name="logEvent">The logging event.</param>
-    protected override void Append(LoggingEvent logEvent)
-    {
-      Counter++;
-    }
+  /// <summary>
+  /// Registers how many times the method has been called.
+  /// </summary>
+  /// <param name="logEvent">The logging event.</param>
+  protected override void Append(LoggingEvent logEvent)
+  {
+    Counter++;
   }
 }

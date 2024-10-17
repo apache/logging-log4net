@@ -21,52 +21,51 @@ using System;
 using System.Text;
 using System.Globalization;
 
-namespace log4net.DateFormatter
+namespace log4net.DateFormatter;
+
+/// <summary>
+/// Formats a <see cref="DateTime"/> as <c>"dd MMM yyyy HH:mm:ss,fff"</c>
+/// </summary>
+/// <remarks>
+/// <para>
+/// Formats a <see cref="DateTime"/> in the format 
+/// <c>"dd MMM yyyy HH:mm:ss,fff"</c> for example, 
+/// <c>"06 Nov 1994 15:49:37,459"</c>.
+/// </para>
+/// </remarks>
+/// <author>Nicko Cadell</author>
+/// <author>Gert Driesen</author>
+/// <author>Angelika Schnagl</author>
+public class DateTimeDateFormatter : AbsoluteTimeDateFormatter
 {
   /// <summary>
-  /// Formats a <see cref="DateTime"/> as <c>"dd MMM yyyy HH:mm:ss,fff"</c>
+  /// Formats the date without the milliseconds part
   /// </summary>
+  /// <param name="dateToFormat">The date to format.</param>
+  /// <param name="buffer">The string builder to write to.</param>
   /// <remarks>
   /// <para>
-  /// Formats a <see cref="DateTime"/> in the format 
-  /// <c>"dd MMM yyyy HH:mm:ss,fff"</c> for example, 
-  /// <c>"06 Nov 1994 15:49:37,459"</c>.
+  /// Formats a DateTime in the format <c>"dd MMM yyyy HH:mm:ss"</c>
+  /// for example, <c>"06 Nov 1994 15:49:37"</c>.
+  /// </para>
+  /// <para>
+  /// The base class will append the <c>",fff"</c> milliseconds section.
+  /// This method will only be called at most once per second.
   /// </para>
   /// </remarks>
-  /// <author>Nicko Cadell</author>
-  /// <author>Gert Driesen</author>
-  /// <author>Angelika Schnagl</author>
-  public class DateTimeDateFormatter : AbsoluteTimeDateFormatter
+  protected override void FormatDateWithoutMillis(DateTime dateToFormat, StringBuilder buffer)
   {
-    /// <summary>
-    /// Formats the date without the milliseconds part
-    /// </summary>
-    /// <param name="dateToFormat">The date to format.</param>
-    /// <param name="buffer">The string builder to write to.</param>
-    /// <remarks>
-    /// <para>
-    /// Formats a DateTime in the format <c>"dd MMM yyyy HH:mm:ss"</c>
-    /// for example, <c>"06 Nov 1994 15:49:37"</c>.
-    /// </para>
-    /// <para>
-    /// The base class will append the <c>",fff"</c> milliseconds section.
-    /// This method will only be called at most once per second.
-    /// </para>
-    /// </remarks>
-    protected override void FormatDateWithoutMillis(DateTime dateToFormat, StringBuilder buffer)
+    int day = dateToFormat.Day;
+    if (day < 10)
     {
-      int day = dateToFormat.Day;
-      if (day < 10)
-      {
-        buffer.Append('0');
-      }
-      buffer
-        .Append(day).Append(' ')
-        .Append(DateTimeFormatInfo.InvariantInfo.GetAbbreviatedMonthName(dateToFormat.Month)).Append(' ')
-        .Append(dateToFormat.Year).Append(' ');
-
-      // Append the 'HH:mm:ss'
-      base.FormatDateWithoutMillis(dateToFormat, buffer);
+      buffer.Append('0');
     }
+    buffer
+      .Append(day).Append(' ')
+      .Append(DateTimeFormatInfo.InvariantInfo.GetAbbreviatedMonthName(dateToFormat.Month)).Append(' ')
+      .Append(dateToFormat.Year).Append(' ');
+
+    // Append the 'HH:mm:ss'
+    base.FormatDateWithoutMillis(dateToFormat, buffer);
   }
 }

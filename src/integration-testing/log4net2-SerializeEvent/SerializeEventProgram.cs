@@ -18,7 +18,7 @@ var localTimestamp = new DateTime(2000, 7, 1, 0, 0, 0, 0, CultureInfo.InvariantC
 
 var stackTrace = new StackTrace(true);
 
-var log4net2Event = new LoggingEvent(new LoggingEventData
+var log4Net2Event = new LoggingEvent(new LoggingEventData
 {
   // Deliberate use of obsolete local timestamp.
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -37,8 +37,8 @@ var log4net2Event = new LoggingEvent(new LoggingEventData
   Properties = new PropertiesDictionary { ["foo"] = "bar" },
 });
 
-log4net2Event.Fix = FixFlags.All;
+log4Net2Event.Fix = FixFlags.All;
 
 using var stream = File.OpenWrite("SerializeV2Event.dat");
 var formatter = new BinaryFormatter();
-formatter.Serialize(stream, log4net2Event);
+formatter.Serialize(stream, log4Net2Event);
