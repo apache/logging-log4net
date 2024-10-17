@@ -33,10 +33,8 @@ namespace log4net.Appender
   /// </summary>
   /// <remarks>  
   /// <para>
-  /// The TelnetAppender accepts socket connections and streams logging messages
-  /// back to the client.  
-  /// The output is provided in a telnet-friendly way so that a log can be monitored 
-  /// over a TCP/IP socket.
+  /// The TelnetAppender accepts socket connections and streams logging messages back to the client.
+  /// The output is provided in a telnet-friendly way so that a log can be monitored over a TCP/IP socket.
   /// This allows simple remote monitoring of application logging.
   /// </para>
   /// <para>
@@ -47,8 +45,8 @@ namespace log4net.Appender
   /// <author>Nicko Cadell</author>
   public class TelnetAppender : AppenderSkeleton
   {
-    private SocketHandler? m_handler;
-    private int m_listeningPort = 23;
+    private SocketHandler? handler;
+    private int listeningPort = 23;
 
     /// <summary>
     /// The fully qualified type of the TelnetAppender class.
@@ -75,18 +73,15 @@ namespace log4net.Appender
     /// or greater than <see cref="IPEndPoint.MaxPort" />.</exception>
     public int Port
     {
-      get => m_listeningPort;
+      get => listeningPort;
       set
       {
-        if (value < IPEndPoint.MinPort || value > IPEndPoint.MaxPort)
+        if (value is < IPEndPoint.MinPort or > IPEndPoint.MaxPort)
         {
           throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
             $"The value specified for Port is less than {IPEndPoint.MinPort} or greater than {IPEndPoint.MaxPort}.");
         }
-        else
-        {
-          m_listeningPort = value;
-        }
+        listeningPort = value;
       }
     }
 
@@ -102,11 +97,8 @@ namespace log4net.Appender
     {
       base.OnClose();
 
-      if (m_handler is not null)
-      {
-        m_handler.Dispose();
-        m_handler = null;
-      }
+      handler?.Dispose();
+      handler = null;
     }
 
     /// <summary>
@@ -115,31 +107,15 @@ namespace log4net.Appender
     protected override bool RequiresLayout => true;
 
     /// <summary>
-    /// Initializes the appender based on the options set.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// This is part of the <see cref="IOptionHandler"/> delayed object
-    /// activation scheme. The <see cref="ActivateOptions"/> method must 
-    /// be called on this object after the configuration properties have
-    /// been set. Until <see cref="ActivateOptions"/> is called this
-    /// object is in an undefined state and must not be used. 
-    /// </para>
-    /// <para>
-    /// If any of the configuration properties are modified then 
-    /// <see cref="ActivateOptions"/> must be called again.
-    /// </para>
-    /// <para>
     /// Create the socket handler and wait for connections
-    /// </para>
-    /// </remarks>
+    /// </summary>
     public override void ActivateOptions()
     {
       base.ActivateOptions();
       try
       {
-        LogLog.Debug(declaringType, $"Creating SocketHandler to listen on port [{m_listeningPort}]");
-        m_handler = new SocketHandler(m_listeningPort);
+        LogLog.Debug(declaringType, $"Creating SocketHandler to listen on port [{listeningPort}]");
+        handler = new SocketHandler(listeningPort);
       }
       catch (Exception ex)
       {
@@ -154,9 +130,9 @@ namespace log4net.Appender
     /// <param name="loggingEvent">The event to log.</param>
     protected override void Append(LoggingEvent loggingEvent)
     {
-      if (m_handler is not null && m_handler.HasConnections)
+      if (handler is not null && handler.HasConnections)
       {
-        m_handler.Send(RenderLoggingEvent(loggingEvent));
+        handler.Send(RenderLoggingEvent(loggingEvent));
       }
     }
 
@@ -165,27 +141,26 @@ namespace log4net.Appender
     /// </summary>
     /// <remarks>
     /// <para>
-    /// The SocketHandler class is used to accept connections from
-    /// clients.  It is threaded so that clients can connect/disconnect
-    /// asynchronously.
+    /// The SocketHandler class is used to accept connections from clients.
+    /// It is threaded so that clients can connect/disconnect asynchronously.
     /// </para>
     /// </remarks>
     protected class SocketHandler : IDisposable
     {
       private const int MAX_CONNECTIONS = 20;
 
-      private readonly Socket m_serverSocket;
-      private readonly List<SocketClient> m_clients = new();
-      private readonly object m_lockObj = new();
-      private bool m_disposed;
+      private readonly Socket serverSocket;
+      private readonly List<SocketClient> clients = new();
+      private readonly object syncRoot = new();
+      private bool wasDisposed;
 
       /// <summary>
       /// Class that represents a client connected to this handler
       /// </summary>
       protected class SocketClient : IDisposable
       {
-        private readonly Socket m_socket;
-        private readonly StreamWriter m_writer;
+        private readonly Socket socket;
+        private readonly StreamWriter writer;
 
         /// <summary>
         /// Create this <see cref="SocketClient"/> for the specified <see cref="Socket"/>
@@ -198,11 +173,10 @@ namespace log4net.Appender
         /// </remarks>
         public SocketClient(Socket socket)
         {
-          m_socket = socket;
-
+          this.socket = socket;
           try
           {
-            m_writer = new StreamWriter(new NetworkStream(socket));
+            writer = new(new NetworkStream(socket));
           }
           catch
           {
@@ -217,8 +191,8 @@ namespace log4net.Appender
         /// <param name="message">string to send</param>
         public void Send(string message)
         {
-          m_writer.Write(message);
-          m_writer.Flush();
+          writer.Write(message);
+          writer.Flush();
         }
 
         /// <summary>
@@ -228,7 +202,7 @@ namespace log4net.Appender
         {
           try
           {
-            m_writer.Dispose();
+            writer.Dispose();
           }
           catch
           {
@@ -237,7 +211,7 @@ namespace log4net.Appender
 
           try
           {
-            m_socket.Shutdown(SocketShutdown.Both);
+            socket.Shutdown(SocketShutdown.Both);
           }
           catch
           {
@@ -246,7 +220,7 @@ namespace log4net.Appender
 
           try
           {
-            m_socket.Dispose();
+            socket.Dispose();
           }
           catch
           {
@@ -266,16 +240,13 @@ namespace log4net.Appender
       /// </remarks>
       public SocketHandler(int port)
       {
-        m_serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        m_serverSocket.Bind(new IPEndPoint(IPAddress.Any, port));
-        m_serverSocket.Listen(5);
+        serverSocket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        serverSocket.Bind(new IPEndPoint(IPAddress.Any, port));
+        serverSocket.Listen(5);
         AcceptConnection();
       }
 
-      private void AcceptConnection()
-      {
-        m_serverSocket.BeginAccept(OnConnect, null);
-      }
+      private void AcceptConnection() => serverSocket.BeginAccept(OnConnect, null);
 
       /// <summary>
       /// Sends a string message to each of the connected clients.
@@ -283,13 +254,12 @@ namespace log4net.Appender
       /// <param name="message">the text to send</param>
       public void Send(string message)
       {
-
         List<SocketClient> localClients;
-        lock (m_lockObj)
+        lock (syncRoot)
         {
-          localClients = m_clients.ToList();
+          localClients = clients.ToList();
         }
-        
+
         // Send outside lock.
         foreach (SocketClient client in localClients)
         {
@@ -297,7 +267,7 @@ namespace log4net.Appender
           {
             client.Send(message);
           }
-          catch (Exception)
+          catch
           {
             // The client has closed the connection, remove it from our list
             client.Dispose();
@@ -312,9 +282,9 @@ namespace log4net.Appender
       /// <param name="client">client to add</param>
       private void AddClient(SocketClient client)
       {
-        lock (m_lockObj)
+        lock (syncRoot)
         {
-          m_clients.Add(client);
+          clients.Add(client);
         }
       }
 
@@ -324,33 +294,17 @@ namespace log4net.Appender
       /// <param name="client">client to remove</param>
       private void RemoveClient(SocketClient client)
       {
-        lock (m_lockObj)
+        lock (syncRoot)
         {
-          m_clients.Remove(client);
+          clients.Remove(client);
         }
       }
 
       /// <summary>
       /// Test if this handler has active connections
       /// </summary>
-      /// <value>
-      /// <c>true</c> if this handler has active connections
-      /// </value>
-      /// <remarks>
-      /// <para>
-      /// This property will be <c>true</c> while this handler has
-      /// active connections, that is at least one connection that 
-      /// the handler will attempt to send a message to.
-      /// </para>
-      /// </remarks>
-      public bool HasConnections
-      {
-        get
-        {
-          // m_clients.Count is an atomic read that can be done outside the lock.
-          return m_clients.Count > 0;
-        }
-      }
+      public bool HasConnections => clients.Count > 0;
+      // clients.Count is an atomic read that can be done outside the lock.
 
       /// <summary>
       /// Callback used to accept a connection on the server socket
@@ -364,20 +318,25 @@ namespace log4net.Appender
       /// </remarks>
       private void OnConnect(IAsyncResult asyncResult)
       {
+        if (wasDisposed)
+        {
+          return;
+        }
+
         try
         {
           // Block until a client connects
-          Socket socket = m_serverSocket.EndAccept(asyncResult);
+          Socket socket = serverSocket.EndAccept(asyncResult);
           LogLog.Debug(declaringType, $"Accepting connection from [{socket.RemoteEndPoint}]");
           var client = new SocketClient(socket);
 
           // m_clients.Count is an atomic read that can be done outside the lock.
-          int currentActiveConnectionsCount = m_clients.Count;
+          int currentActiveConnectionsCount = clients.Count;
           if (currentActiveConnectionsCount < MAX_CONNECTIONS)
           {
             try
             {
-              client.Send($"TelnetAppender v1.0 ({(currentActiveConnectionsCount + 1)} active connections)\r\n\r\n");
+              client.Send($"TelnetAppender v1.0 ({currentActiveConnectionsCount + 1} active connections)\r\n\r\n");
               AddClient(client);
             }
             catch
@@ -397,7 +356,10 @@ namespace log4net.Appender
         }
         finally
         {
-          AcceptConnection();
+          if (!wasDisposed)
+          {
+            AcceptConnection();
+          }
         }
       }
 
@@ -406,24 +368,24 @@ namespace log4net.Appender
       /// </summary>
       public void Dispose()
       {
-        if (m_disposed)
+        if (wasDisposed)
         {
           return;
         }
 
-        m_disposed = true;
+        wasDisposed = true;
 
-        lock (m_lockObj)
+        lock (syncRoot)
         {
-          foreach (SocketClient client in m_clients)
+          foreach (SocketClient client in clients)
           {
             client.Dispose();
           }
-          m_clients.Clear();
+          clients.Clear();
 
           try
           {
-            m_serverSocket.Shutdown(SocketShutdown.Both);
+            serverSocket.Shutdown(SocketShutdown.Both);
           }
           catch
           {
@@ -432,7 +394,7 @@ namespace log4net.Appender
 
           try
           {
-            m_serverSocket.Dispose();
+            serverSocket.Dispose();
           }
           catch
           {

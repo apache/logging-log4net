@@ -1,5 +1,5 @@
-$Version = '3.0.1'
-$Preview = '2'
+$Version = '3.0.2'
+$Preview = '1'
 'building ...'
 dotnet build -c Release "-p:GeneratePackages=true;PackageVersion=$Version-preview.$Preview" $PSScriptRoot/../src/log4net/log4net.csproj
 'signing ...'
