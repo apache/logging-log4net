@@ -154,7 +154,7 @@ public class EventLogAppender : AppenderSkeleton
   /// </remarks>
   public void AddMapping(Level2EventLogEntryType mapping)
   {
-    levelMapping.Add(mapping);
+    _levelMapping.Add(mapping);
   }
 
   /// <summary>
@@ -241,11 +241,11 @@ public class EventLogAppender : AppenderSkeleton
 
       if (sourceAlreadyExists && currentLogName != LogName)
       {
-        LogLog.Debug(declaringType, $"Changing event source [{ApplicationName}] from log [{currentLogName}] to log [{LogName}]");
+        LogLog.Debug(_declaringType, $"Changing event source [{ApplicationName}] from log [{currentLogName}] to log [{LogName}]");
       }
       else if (!sourceAlreadyExists)
       {
-        LogLog.Debug(declaringType, $"Creating event source Source [{ApplicationName}] in log {LogName}]");
+        LogLog.Debug(_declaringType, $"Creating event source Source [{ApplicationName}] in log {LogName}]");
       }
 
       string? registeredLogName = null;
@@ -271,9 +271,9 @@ public class EventLogAppender : AppenderSkeleton
         }
       }
 
-      levelMapping.ActivateOptions();
+      _levelMapping.ActivateOptions();
 
-      LogLog.Debug(declaringType, $"Source [{ApplicationName}] is registered to log [{registeredLogName}]");
+      LogLog.Debug(_declaringType, $"Source [{ApplicationName}] is registered to log [{registeredLogName}]");
     }
     catch (System.Security.SecurityException ex)
     {
@@ -318,31 +318,31 @@ public class EventLogAppender : AppenderSkeleton
     //
     // Write the resulting string to the event log system
     //
-    int eventID = EventId;
+    int eventId = EventId;
 
     // Look for the EventID property
-    if (loggingEvent.LookupProperty("EventID") is object eventIDPropertyObj)
+    if (loggingEvent.LookupProperty("EventID") is object eventIdPropertyObj)
     {
-      if (eventIDPropertyObj is int eventIdInt)
+      if (eventIdPropertyObj is int eventIdInt)
       {
-        eventID = eventIdInt;
+        eventId = eventIdInt;
       }
       else
       {
-        if (eventIDPropertyObj is not string eventIDPropertyString)
+        if (eventIdPropertyObj is not string eventIdPropertyString)
         {
-          eventIDPropertyString = eventIDPropertyObj.ToString();
+          eventIdPropertyString = eventIdPropertyObj.ToString();
         }
-        if (eventIDPropertyString.Length > 0)
+        if (eventIdPropertyString.Length > 0)
         {
           // Read the string property into a number
-          if (SystemInfo.TryParse(eventIDPropertyString, out int intVal))
+          if (SystemInfo.TryParse(eventIdPropertyString, out int intVal))
           {
-            eventID = intVal;
+            eventId = intVal;
           }
           else
           {
-            ErrorHandler.Error($"Unable to parse event ID property [{eventIDPropertyString}].");
+            ErrorHandler.Error($"Unable to parse event ID property [{eventIdPropertyString}].");
           }
         }
       }
@@ -384,16 +384,16 @@ public class EventLogAppender : AppenderSkeleton
       string eventTxt = RenderLoggingEvent(loggingEvent);
 
       // There is a limit of about 32K characters for an event log message
-      if (eventTxt.Length > MAX_EVENTLOG_MESSAGE_SIZE)
+      if (eventTxt.Length > _maxEventlogMessageSize)
       {
-        eventTxt = eventTxt.Substring(0, MAX_EVENTLOG_MESSAGE_SIZE);
+        eventTxt = eventTxt.Substring(0, _maxEventlogMessageSize);
       }
 
       EventLogEntryType entryType = GetEntryType(loggingEvent.Level);
 
       using (SecurityContext?.Impersonate(this))
       {
-        EventLog.WriteEntry(ApplicationName, eventTxt, entryType, eventID, category);
+        EventLog.WriteEntry(ApplicationName, eventTxt, entryType, eventId, category);
       }
     }
     catch (Exception ex)
@@ -422,7 +422,7 @@ public class EventLogAppender : AppenderSkeleton
   public virtual EventLogEntryType GetEntryType(Level? level)
   {
     // see if there is a specified lookup.
-    if (levelMapping.Lookup(level) is Level2EventLogEntryType entryType)
+    if (_levelMapping.Lookup(level) is Level2EventLogEntryType entryType)
     {
       return entryType.EventLogEntryType;
     }
@@ -451,7 +451,7 @@ public class EventLogAppender : AppenderSkeleton
   /// <summary>
   /// Mapping from level object to EventLogEntryType
   /// </summary>
-  private readonly LevelMapping levelMapping = new();
+  private readonly LevelMapping _levelMapping = new();
 
   /// <summary>
   /// A class to act as a mapping between the level that a logging call is made at and
@@ -477,7 +477,7 @@ public class EventLogAppender : AppenderSkeleton
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(EventLogAppender);
+  private static readonly Type _declaringType = typeof(EventLogAppender);
 
   /// <summary>
   /// The maximum size supported by default.
@@ -491,7 +491,7 @@ public class EventLogAppender : AppenderSkeleton
   /// the event log! See: System.Diagnostics.EventLogInternal.InternalWriteEvent() 
   /// for the use of the 32766 max size.
   /// </remarks>
-  private static readonly int MAX_EVENTLOG_MESSAGE_SIZE_DEFAULT = 32766;
+  private const int MaxEventlogMessageSizeDefault = 32766;
 
   /// <summary>
   /// The maximum size supported by a windows operating system that is vista
@@ -522,7 +522,7 @@ public class EventLogAppender : AppenderSkeleton
   /// terminator of #0#0, as we cannot see the source of ReportEvent (though we could use an API monitor to examine the
   /// buffer, given enough time).
   /// </remarks>
-  private static readonly int MAX_EVENTLOG_MESSAGE_SIZE_VISTA_OR_NEWER = 31839 - 2;
+  private const int MaxEventlogMessageSizeVistaOrNewer = 31839 - 2;
 
   /// <summary>
   /// The maximum size that the operating system supports for
@@ -533,7 +533,7 @@ public class EventLogAppender : AppenderSkeleton
   /// to the operating system event log and eventually truncate a string
   /// that exceeds the limits.
   /// </remarks>
-  private static readonly int MAX_EVENTLOG_MESSAGE_SIZE = GetMaxEventLogMessageSize();
+  private static readonly int _maxEventlogMessageSize = GetMaxEventLogMessageSize();
 
   /// <summary>
   /// This method determines the maximum event log message size allowed for
@@ -544,9 +544,9 @@ public class EventLogAppender : AppenderSkeleton
   {
     if (Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version.Major >= 6)
     {
-      return MAX_EVENTLOG_MESSAGE_SIZE_VISTA_OR_NEWER;
+      return MaxEventlogMessageSizeVistaOrNewer;
     }
-    return MAX_EVENTLOG_MESSAGE_SIZE_DEFAULT;
+    return MaxEventlogMessageSizeDefault;
   }
 }
 #endif // NET462_OR_GREATER

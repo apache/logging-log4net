@@ -34,7 +34,7 @@ namespace log4net.Util.TypeConverters;
 /// <seealso cref="ConverterRegistry"/>
 /// <seealso cref="IConvertFrom"/>
 /// <author>Nicko Cadell</author>
-internal sealed class IPAddressConverter : IConvertFrom
+internal sealed class IpAddressConverter : IConvertFrom
 {
   /// <summary>
   /// Can the source type be converted to the type supported by this object

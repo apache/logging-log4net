@@ -27,14 +27,14 @@ namespace log4net.Util;
 /// <author>Nicko Cadell</author>
 public sealed class ThreadContextStacks
 {
-  private readonly ContextPropertiesBase properties;
+  private readonly ContextPropertiesBase _properties;
 
   /// <summary>
   /// Initializes a new instance of the <see cref="ThreadContextStacks" /> class.
   /// </summary>
   internal ThreadContextStacks(ContextPropertiesBase properties)
   {
-    this.properties = properties;
+    this._properties = properties;
   }
 
   /// <summary>
@@ -45,11 +45,11 @@ public sealed class ThreadContextStacks
     get
     {
       ThreadContextStack? stack;
-      if (properties[key] is not object propertyValue)
+      if (_properties[key] is not object propertyValue)
       {
         // Stack does not exist, create
         stack = new ThreadContextStack();
-        properties[key] = stack;
+        _properties[key] = stack;
       }
       else
       {
@@ -68,7 +68,7 @@ public sealed class ThreadContextStacks
           {
           }
 
-          LogLog.Error(declaringType, $"ThreadContextStacks: Request for stack named [{key}] failed because a property with the same name exists which is a [{propertyValue.GetType().Name}] with value [{propertyValueString}]");
+          LogLog.Error(_declaringType, $"ThreadContextStacks: Request for stack named [{key}] failed because a property with the same name exists which is a [{propertyValue.GetType().Name}] with value [{propertyValueString}]");
 
           stack = new ThreadContextStack();
         }
@@ -85,5 +85,5 @@ public sealed class ThreadContextStacks
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(ThreadContextStacks);
+  private static readonly Type _declaringType = typeof(ThreadContextStacks);
 }

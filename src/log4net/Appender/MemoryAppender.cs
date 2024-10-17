@@ -60,9 +60,9 @@ public class MemoryAppender : AppenderSkeleton
   /// <returns>The events that have been logged</returns>
   public virtual LoggingEvent[] GetEvents()
   {
-    lock (syncRoot)
+    lock (_syncRoot)
     {
-      return [.. m_eventsList];
+      return m_eventsList.ToArray();
     }
   }
 
@@ -92,7 +92,7 @@ public class MemoryAppender : AppenderSkeleton
     // volatile data in the event.
     loggingEvent.Fix = Fix;
 
-    lock (syncRoot)
+    lock (_syncRoot)
     {
       m_eventsList.Add(loggingEvent);
     }
@@ -106,7 +106,7 @@ public class MemoryAppender : AppenderSkeleton
   /// </remarks>
   public virtual void Clear()
   {
-    lock (syncRoot)
+    lock (_syncRoot)
     {
       m_eventsList.Clear();
     }
@@ -118,9 +118,9 @@ public class MemoryAppender : AppenderSkeleton
   /// <returns>The events that have been logged</returns>
   public virtual LoggingEvent[] PopAllEvents()
   {
-    lock (syncRoot)
+    lock (_syncRoot)
     {
-      LoggingEvent[] tmp = [.. m_eventsList];
+      LoggingEvent[] tmp = m_eventsList.ToArray();
       m_eventsList.Clear();
       return tmp;
     }
@@ -129,7 +129,9 @@ public class MemoryAppender : AppenderSkeleton
   /// <summary>
   /// The list of events that have been appended.
   /// </summary>
+  // ReSharper disable once InconsistentNaming
+  // ReSharper disable once FieldCanBeMadeReadOnly.Global
   protected List<LoggingEvent> m_eventsList = [];
 
-  private readonly object syncRoot = new();
+  private readonly object _syncRoot = new();
 }

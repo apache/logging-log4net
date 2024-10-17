@@ -76,8 +76,8 @@ public class ConsoleAppender : AppenderSkeleton
   /// </remarks>
   public virtual string Target
   {
-    get => writeToErrorStream ? ConsoleError : ConsoleOut;
-    set => writeToErrorStream = SystemInfo.EqualsIgnoringCase(ConsoleError, value.Trim());
+    get => _writeToErrorStream ? ConsoleError : ConsoleOut;
+    set => _writeToErrorStream = SystemInfo.EqualsIgnoringCase(ConsoleError, value.Trim());
   }
 
   /// <summary>
@@ -94,7 +94,7 @@ public class ConsoleAppender : AppenderSkeleton
   /// </remarks>
   protected override void Append(LoggingEvent loggingEvent)
   {
-    if (writeToErrorStream)
+    if (_writeToErrorStream)
     {
       // Write to the error stream
       Console.Error.Write(RenderLoggingEvent(loggingEvent));
@@ -121,5 +121,5 @@ public class ConsoleAppender : AppenderSkeleton
   /// </summary>
   public const string ConsoleError = "Console.Error";
 
-  private bool writeToErrorStream;
+  private bool _writeToErrorStream;
 }

@@ -93,7 +93,7 @@ public class AbsoluteTimeDateFormatter : IDateFormatter
   /// </remarks>
   public virtual void FormatDate(DateTime dateToFormat, TextWriter writer)
   {
-    string timeString = s_lastTimeStrings.AddOrUpdate(GetType(),
+    string timeString = _sLastTimeStrings.AddOrUpdate(GetType(),
       _ => BuildTimeString(),
       (_, existing) =>
       {
@@ -103,11 +103,11 @@ public class AbsoluteTimeDateFormatter : IDateFormatter
         // Compare this time with the stored last time
         // If we are in the same second then append
         // the previously calculated time string
-        if (s_lastTimeToTheSecond == currentTimeToTheSecond)
+        if (_sLastTimeToTheSecond == currentTimeToTheSecond)
         {
           return existing;
         }
-        s_lastTimeToTheSecond = currentTimeToTheSecond;
+        _sLastTimeToTheSecond = currentTimeToTheSecond;
         return BuildTimeString();
       });
     writer.Write(timeString);
@@ -151,11 +151,11 @@ public class AbsoluteTimeDateFormatter : IDateFormatter
   /// <summary>
   /// Last stored time with precision up to the second.
   /// </summary>
-  private static long s_lastTimeToTheSecond;
+  private static long _sLastTimeToTheSecond;
 
   /// <summary>
   /// Last stored time with precision up to the second, formatted
   /// as a string.
   /// </summary>
-  private static readonly ConcurrentDictionary<Type, string> s_lastTimeStrings = new();
+  private static readonly ConcurrentDictionary<Type, string> _sLastTimeStrings = new();
 }

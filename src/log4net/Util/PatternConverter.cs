@@ -55,7 +55,7 @@ public abstract class PatternConverter
   /// <summary>
   /// Gets the next pattern converter in the chain.
   /// </summary>
-  public virtual PatternConverter? Next => next;
+  public virtual PatternConverter? Next => _next;
 
   /// <summary>
   /// Gets or sets the formatting info for this converter
@@ -70,12 +70,12 @@ public abstract class PatternConverter
   /// </remarks>
   public virtual FormattingInfo FormattingInfo
   {
-    get { return new FormattingInfo(min, max, leftAlign); }
+    get { return new FormattingInfo(_min, _max, _leftAlign); }
     set
     {
-      min = value.Min;
-      max = value.Max;
-      leftAlign = value.LeftAlign;
+      _min = value.Min;
+      _max = value.Max;
+      _leftAlign = value.LeftAlign;
     }
   }
 
@@ -118,8 +118,8 @@ public abstract class PatternConverter
   /// </remarks>
   public virtual PatternConverter SetNext(PatternConverter patternConverter)
   {
-    next = patternConverter;
-    return next;
+    _next = patternConverter;
+    return _next;
   }
 
   /// <summary>
@@ -137,7 +137,7 @@ public abstract class PatternConverter
   /// </remarks>
   public virtual void Format(TextWriter writer, object? state)
   {
-    if (min < 0 && max == int.MaxValue)
+    if (_min < 0 && _max == int.MaxValue)
     {
       // Formatting options are not in use
       Convert(writer, state);
@@ -146,18 +146,18 @@ public abstract class PatternConverter
     {
       string? msg;
       int len;
-      lock (formatWriter)
+      lock (_formatWriter)
       {
-        formatWriter.Reset(c_renderBufferMaxCapacity, c_renderBufferSize);
+        _formatWriter.Reset(CRenderBufferMaxCapacity, CRenderBufferSize);
 
-        Convert(formatWriter, state);
+        Convert(_formatWriter, state);
 
-        StringBuilder buf = formatWriter.GetStringBuilder();
+        StringBuilder buf = _formatWriter.GetStringBuilder();
         len = buf.Length;
-        if (len > max)
+        if (len > _max)
         {
-          msg = buf.ToString(len - max, max);
-          len = max;
+          msg = buf.ToString(len - _max, _max);
+          len = _max;
         }
         else
         {
@@ -165,16 +165,16 @@ public abstract class PatternConverter
         }
       }
 
-      if (len < min)
+      if (len < _min)
       {
-        if (leftAlign)
+        if (_leftAlign)
         {
           writer.Write(msg);
-          SpacePad(writer, min - len);
+          SpacePad(writer, _min - len);
         }
         else
         {
-          SpacePad(writer, min - len);
+          SpacePad(writer, _min - len);
           writer.Write(msg);
         }
       }
@@ -185,7 +185,7 @@ public abstract class PatternConverter
     }
   }
 
-  private static readonly string[] SPACES =
+  private static readonly string[] _spaces =
   [
     // 1,2,4,8 spaces
     " ", "  ", "    ", "        ",      
@@ -211,7 +211,7 @@ public abstract class PatternConverter
   {
     while (length >= 32)
     {
-      writer.Write(SPACES[5]);
+      writer.Write(_spaces[5]);
       length -= 32;
     }
 
@@ -219,27 +219,27 @@ public abstract class PatternConverter
     {
       if ((length & (1 << i)) != 0)
       {
-        writer.Write(SPACES[i]);
+        writer.Write(_spaces[i]);
       }
     }
   }
 
-  private PatternConverter? next;
-  private int min = -1;
-  private int max = int.MaxValue;
-  private bool leftAlign;
+  private PatternConverter? _next;
+  private int _min = -1;
+  private int _max = int.MaxValue;
+  private bool _leftAlign;
 
-  private readonly ReusableStringWriter formatWriter = new(System.Globalization.CultureInfo.InvariantCulture);
+  private readonly ReusableStringWriter _formatWriter = new(System.Globalization.CultureInfo.InvariantCulture);
 
   /// <summary>
   /// Initial buffer size
   /// </summary>
-  private const int c_renderBufferSize = 256;
+  private const int CRenderBufferSize = 256;
 
   /// <summary>
   /// Maximum buffer size before it is recycled
   /// </summary>
-  private const int c_renderBufferMaxCapacity = 1024;
+  private const int CRenderBufferMaxCapacity = 1024;
 
   /// <summary>
   /// Write an dictionary to a <see cref="TextWriter"/>

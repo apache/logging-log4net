@@ -28,7 +28,7 @@ namespace log4net.Tests.Appender.AdoNet;
 
 public class Log4NetParameterCollection : CollectionBase, IDataParameterCollection
 {
-  private readonly Dictionary<string, int> parameterNameToIndex = new(StringComparer.Ordinal);
+  private readonly Dictionary<string, int> _parameterNameToIndex = new(StringComparer.Ordinal);
 
   protected override void OnInsertComplete(int index, object? value)
   {
@@ -36,13 +36,13 @@ public class Log4NetParameterCollection : CollectionBase, IDataParameterCollecti
 
     if (value is IDataParameter param)
     {
-      parameterNameToIndex[param.ParameterName] = index;
+      _parameterNameToIndex[param.ParameterName] = index;
     }
   }
 
   public int IndexOf(string parameterName)
   {
-    if (parameterNameToIndex.TryGetValue(parameterName, out int index))
+    if (_parameterNameToIndex.TryGetValue(parameterName, out int index))
     {
       return index;
     }

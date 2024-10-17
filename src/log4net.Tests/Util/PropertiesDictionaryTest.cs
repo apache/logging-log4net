@@ -41,7 +41,7 @@ public class PropertiesDictionaryTest
   [Test]
   public void TestSerialization()
   {
-    PropertiesDictionary pd = new PropertiesDictionary();
+    PropertiesDictionary pd = new();
 
     for (int i = 0; i < 10; i++)
     {
@@ -53,8 +53,8 @@ public class PropertiesDictionaryTest
     Assert.IsNull(pd["notThere"], "Getter should act as IDictionary not IDictionary<TKey, TValue>");
 
     // Serialize the properties into a memory stream
-    BinaryFormatter formatter = new BinaryFormatter();
-    MemoryStream memory = new MemoryStream();
+    BinaryFormatter formatter = new();
+    MemoryStream memory = new();
     formatter.Serialize(memory, pd);
 
     // Deserialize the stream into a new properties dictionary

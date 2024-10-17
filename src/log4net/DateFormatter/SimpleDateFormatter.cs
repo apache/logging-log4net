@@ -48,7 +48,7 @@ public class SimpleDateFormatter : IDateFormatter
   /// that can be supplied to <see cref="M:DateTime.ToString(string, IFormatProvider)"/>.
   /// </para>
   /// </remarks>
-  public SimpleDateFormatter(string format) => formatString = format;
+  public SimpleDateFormatter(string format) => _formatString = format;
 
   /// <summary>
   /// Formats the date using <see cref="M:DateTime.ToString(string, IFormatProvider)"/>.
@@ -62,7 +62,7 @@ public class SimpleDateFormatter : IDateFormatter
   /// </para>
   /// </remarks>
   public virtual void FormatDate(DateTime dateToFormat, TextWriter writer)
-    => writer.Write(dateToFormat.ToString(formatString, System.Globalization.DateTimeFormatInfo.InvariantInfo));
+    => writer.Write(dateToFormat.ToString(_formatString, System.Globalization.DateTimeFormatInfo.InvariantInfo));
 
-  private readonly string formatString;
+  private readonly string _formatString;
 }

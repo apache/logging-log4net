@@ -111,7 +111,7 @@ public class XmlLayout : XmlLayoutBase
   /// then no prefix will be written.
   /// </para>
   /// </remarks>
-  public string Prefix { get; set; } = PREFIX;
+  public string Prefix { get; set; } = DefaultPrefix;
 
   /// <summary>
   /// Set whether to base64 encode the message.
@@ -169,12 +169,12 @@ public class XmlLayout : XmlLayoutBase
     // Cache the full element names including the prefix
     if (Prefix.Length > 0)
     {
-      elmEvent = Prefix + ":" + ELM_EVENT;
-      elmMessage = Prefix + ":" + ELM_MESSAGE;
-      elmProperties = Prefix + ":" + ELM_PROPERTIES;
-      elmData = Prefix + ":" + ELM_DATA;
-      elmException = Prefix + ":" + ELM_EXCEPTION;
-      elmLocation = Prefix + ":" + ELM_LOCATION;
+      _eventElementName = Prefix + ":" + DefaultEventElementName;
+      _messageElementName = Prefix + ":" + DefaultMessageElementName;
+      _propertiesElementName = Prefix + ":" + DefaultPropertiesElementName;
+      _dataElementName = Prefix + ":" + DefaultDataElementName;
+      _exceptionElementName = Prefix + ":" + DefaultExceptionElementName;
+      _locationElementName = Prefix + ":" + DefaultLocationElementName;
     }
   }
 
@@ -191,35 +191,35 @@ public class XmlLayout : XmlLayoutBase
   /// </remarks>
   protected override void FormatXml(XmlWriter writer, LoggingEvent loggingEvent)
   {
-    writer.WriteStartElement(elmEvent, Prefix, ELM_EVENT, Prefix);
-    writer.WriteAttributeString(ATTR_LOGGER, loggingEvent.LoggerName!);
+    writer.WriteStartElement(_eventElementName, Prefix, DefaultEventElementName, Prefix);
+    writer.WriteAttributeString(LoggerAttributeName, loggingEvent.LoggerName!);
 
-    writer.WriteAttributeString(ATTR_TIMESTAMP, XmlConvert.ToString(loggingEvent.TimeStamp, XmlDateTimeSerializationMode.Local));
+    writer.WriteAttributeString(TimestampAttributeName, XmlConvert.ToString(loggingEvent.TimeStamp, XmlDateTimeSerializationMode.Local));
 
     if (loggingEvent.Level is not null)
     {
-      writer.WriteAttributeString(ATTR_LEVEL, loggingEvent.Level.DisplayName);
+      writer.WriteAttributeString(LevelAttributeName, loggingEvent.Level.DisplayName);
     }
 
-    writer.WriteAttributeString(ATTR_THREAD, loggingEvent.ThreadName!);
+    writer.WriteAttributeString(ThreadAttributeName, loggingEvent.ThreadName!);
 
     if (loggingEvent.Domain is not null && loggingEvent.Domain.Length > 0)
     {
-      writer.WriteAttributeString(ATTR_DOMAIN, loggingEvent.Domain);
+      writer.WriteAttributeString(DomainAttributeName, loggingEvent.Domain);
     }
     if (loggingEvent.Identity is not null && loggingEvent.Identity.Length > 0)
     {
-      writer.WriteAttributeString(ATTR_IDENTITY, loggingEvent.Identity);
+      writer.WriteAttributeString(IdentityAttributeName, loggingEvent.Identity);
     }
     if (loggingEvent.UserName.Length > 0)
     {
-      writer.WriteAttributeString(ATTR_USERNAME, loggingEvent.UserName);
+      writer.WriteAttributeString(UsernameAttributeName, loggingEvent.UserName);
     }
 
     // Append the message text
     if (loggingEvent.RenderedMessage is not null)
     {
-      writer.WriteStartElement(elmMessage, Prefix, ELM_MESSAGE, Prefix);
+      writer.WriteStartElement(_messageElementName, Prefix, DefaultMessageElementName, Prefix);
       if (!Base64EncodeMessage)
       {
         Transform.WriteEscapedXmlString(writer, loggingEvent.RenderedMessage, InvalidCharReplacement);
@@ -238,11 +238,11 @@ public class XmlLayout : XmlLayoutBase
     // Append the properties text
     if (properties.Count > 0)
     {
-      writer.WriteStartElement(elmProperties, Prefix, ELM_PROPERTIES, Prefix);
+      writer.WriteStartElement(_propertiesElementName, Prefix, DefaultPropertiesElementName, Prefix);
       foreach (KeyValuePair<string, object?> entry in properties)
       {
-        writer.WriteStartElement(elmData, Prefix, ELM_DATA, Prefix);
-        writer.WriteAttributeString(ATTR_NAME, Transform.MaskXmlInvalidCharacters(entry.Key, InvalidCharReplacement));
+        writer.WriteStartElement(_dataElementName, Prefix, DefaultDataElementName, Prefix);
+        writer.WriteAttributeString(NameAttributeName, Transform.MaskXmlInvalidCharacters(entry.Key, InvalidCharReplacement));
 
         // Use an ObjectRenderer to convert the object to a string
         if (loggingEvent.Repository is not null)
@@ -257,7 +257,7 @@ public class XmlLayout : XmlLayoutBase
             byte[] propertyValueBytes = Encoding.UTF8.GetBytes(loggingEvent.Repository.RendererMap.FindAndRender(entry.Value));
             valueStr = Convert.ToBase64String(propertyValueBytes, 0, propertyValueBytes.Length);
           }
-          writer.WriteAttributeString(ATTR_VALUE, valueStr);
+          writer.WriteAttributeString(ValueAttributeName, valueStr);
         }
 
         writer.WriteEndElement();
@@ -269,7 +269,7 @@ public class XmlLayout : XmlLayoutBase
     if (exceptionStr is not null && exceptionStr.Length > 0)
     {
       // Append the stack trace line
-      writer.WriteStartElement(elmException, Prefix, ELM_EXCEPTION, Prefix);
+      writer.WriteStartElement(_exceptionElementName, Prefix, DefaultExceptionElementName, Prefix);
       Transform.WriteEscapedXmlString(writer, exceptionStr, InvalidCharReplacement);
       writer.WriteEndElement();
     }
@@ -278,11 +278,11 @@ public class XmlLayout : XmlLayoutBase
     {
       if (loggingEvent.LocationInformation is LocationInfo locationInfo)
       {
-        writer.WriteStartElement(elmLocation, Prefix, ELM_LOCATION, Prefix);
-        writer.WriteAttributeString(ATTR_CLASS, locationInfo.ClassName);
-        writer.WriteAttributeString(ATTR_METHOD, locationInfo.MethodName);
-        writer.WriteAttributeString(ATTR_FILE, locationInfo.FileName);
-        writer.WriteAttributeString(ATTR_LINE, locationInfo.LineNumber);
+        writer.WriteStartElement(_locationElementName, Prefix, DefaultLocationElementName, Prefix);
+        writer.WriteAttributeString(ClassAttributeName, locationInfo.ClassName!);
+        writer.WriteAttributeString(MethodAttributeName, locationInfo.MethodName);
+        writer.WriteAttributeString(FileAttributeName, locationInfo.FileName!);
+        writer.WriteAttributeString(LineAttributeName, locationInfo.LineNumber);
         writer.WriteEndElement();
       }
     }
@@ -290,34 +290,34 @@ public class XmlLayout : XmlLayoutBase
     writer.WriteEndElement();
   }
 
-  private string elmEvent = ELM_EVENT;
-  private string elmMessage = ELM_MESSAGE;
-  private string elmData = ELM_DATA;
-  private string elmProperties = ELM_PROPERTIES;
-  private string elmException = ELM_EXCEPTION;
-  private string elmLocation = ELM_LOCATION;
+  private string _eventElementName = DefaultEventElementName;
+  private string _messageElementName = DefaultMessageElementName;
+  private string _dataElementName = DefaultDataElementName;
+  private string _propertiesElementName = DefaultPropertiesElementName;
+  private string _exceptionElementName = DefaultExceptionElementName;
+  private string _locationElementName = DefaultLocationElementName;
 
-  private const string PREFIX = "log4net";
+  private const string DefaultPrefix = "log4net";
 
-  private const string ELM_EVENT = "event";
-  private const string ELM_MESSAGE = "message";
-  private const string ELM_PROPERTIES = "properties";
-  private const string ELM_DATA = "data";
-  private const string ELM_EXCEPTION = "exception";
-  private const string ELM_LOCATION = "locationInfo";
+  private const string DefaultEventElementName = "event";
+  private const string DefaultMessageElementName = "message";
+  private const string DefaultPropertiesElementName = "properties";
+  private const string DefaultDataElementName = "data";
+  private const string DefaultExceptionElementName = "exception";
+  private const string DefaultLocationElementName = "locationInfo";
 
-  private const string ATTR_LOGGER = "logger";
-  private const string ATTR_TIMESTAMP = "timestamp";
-  private const string ATTR_LEVEL = "level";
-  private const string ATTR_THREAD = "thread";
-  private const string ATTR_DOMAIN = "domain";
-  private const string ATTR_IDENTITY = "identity";
-  private const string ATTR_USERNAME = "username";
-  private const string ATTR_CLASS = "class";
-  private const string ATTR_METHOD = "method";
-  private const string ATTR_FILE = "file";
-  private const string ATTR_LINE = "line";
-  private const string ATTR_NAME = "name";
-  private const string ATTR_VALUE = "value";
+  private const string LoggerAttributeName = "logger";
+  private const string TimestampAttributeName = "timestamp";
+  private const string LevelAttributeName = "level";
+  private const string ThreadAttributeName = "thread";
+  private const string DomainAttributeName = "domain";
+  private const string IdentityAttributeName = "identity";
+  private const string UsernameAttributeName = "username";
+  private const string ClassAttributeName = "class";
+  private const string MethodAttributeName = "method";
+  private const string FileAttributeName = "file";
+  private const string LineAttributeName = "line";
+  private const string NameAttributeName = "name";
+  private const string ValueAttributeName = "value";
 }
 

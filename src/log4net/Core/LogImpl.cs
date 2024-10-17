@@ -132,11 +132,11 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     LevelMap levelMap = repository.LevelMap;
 
-    levelDebug = levelMap.LookupWithDefault(Level.Debug);
-    levelInfo = levelMap.LookupWithDefault(Level.Info);
-    levelWarn = levelMap.LookupWithDefault(Level.Warn);
-    levelError = levelMap.LookupWithDefault(Level.Error);
-    levelFatal = levelMap.LookupWithDefault(Level.Fatal);
+    _levelDebug = levelMap.LookupWithDefault(Level.Debug);
+    _levelInfo = levelMap.LookupWithDefault(Level.Info);
+    _levelWarn = levelMap.LookupWithDefault(Level.Warn);
+    _levelError = levelMap.LookupWithDefault(Level.Error);
+    _levelFatal = levelMap.LookupWithDefault(Level.Fatal);
   }
 
   /// <summary>
@@ -164,7 +164,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// </remarks>
   public virtual void Debug(object? message)
   {
-    Logger.Log(ThisDeclaringType, levelDebug, message, null);
+    Logger.Log(_thisDeclaringType, _levelDebug, message, null);
   }
 
   /// <summary>
@@ -185,7 +185,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// <seealso cref="M:Debug(object)"/>
   public virtual void Debug(object? message, Exception? exception)
   {
-    Logger.Log(ThisDeclaringType, levelDebug, message, exception);
+    Logger.Log(_thisDeclaringType, _levelDebug, message, exception);
   }
 
   /// <summary>
@@ -214,7 +214,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsDebugEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelDebug, new SystemStringFormat(CultureInfo.InvariantCulture, format, args ?? OneNullArgs), null);
+      Logger.Log(_thisDeclaringType, _levelDebug, new SystemStringFormat(CultureInfo.InvariantCulture, format, args ?? _oneNullArgs), null);
     }
   }
 
@@ -244,7 +244,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsDebugEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelDebug, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0]), null);
+      Logger.Log(_thisDeclaringType, _levelDebug, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0]), null);
     }
   }
 
@@ -275,7 +275,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsDebugEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelDebug, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0, arg1]), null);
+      Logger.Log(_thisDeclaringType, _levelDebug, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0, arg1]), null);
     }
   }
 
@@ -307,7 +307,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsDebugEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelDebug, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0, arg1, arg2]), null);
+      Logger.Log(_thisDeclaringType, _levelDebug, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0, arg1, arg2]), null);
     }
   }
 
@@ -333,7 +333,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsDebugEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelDebug, new SystemStringFormat(provider, format, args ?? OneNullArgs), null);
+      Logger.Log(_thisDeclaringType, _levelDebug, new SystemStringFormat(provider, format, args ?? _oneNullArgs), null);
     }
   }
 
@@ -362,7 +362,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// </remarks>
   public virtual void Info(object? message)
   {
-    Logger.Log(ThisDeclaringType, levelInfo, message, null);
+    Logger.Log(_thisDeclaringType, _levelInfo, message, null);
   }
 
   /// <summary>
@@ -383,7 +383,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// <seealso cref="M:Info(object)"/>
   public virtual void Info(object? message, Exception? exception)
   {
-    Logger.Log(ThisDeclaringType, levelInfo, message, exception);
+    Logger.Log(_thisDeclaringType, _levelInfo, message, exception);
   }
 
   /// <summary>
@@ -412,7 +412,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsInfoEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelInfo, new SystemStringFormat(CultureInfo.InvariantCulture, format, args ?? OneNullArgs), null);
+      Logger.Log(_thisDeclaringType, _levelInfo, new SystemStringFormat(CultureInfo.InvariantCulture, format, args ?? _oneNullArgs), null);
     }
   }
 
@@ -442,7 +442,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsInfoEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelInfo, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0]), null);
+      Logger.Log(_thisDeclaringType, _levelInfo, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0]), null);
     }
   }
 
@@ -473,7 +473,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsInfoEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelInfo, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0, arg1]), null);
+      Logger.Log(_thisDeclaringType, _levelInfo, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0, arg1]), null);
     }
   }
 
@@ -505,7 +505,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsInfoEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelInfo, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0, arg1, arg2]), null);
+      Logger.Log(_thisDeclaringType, _levelInfo, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0, arg1, arg2]), null);
     }
   }
 
@@ -531,7 +531,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsInfoEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelInfo, new SystemStringFormat(provider, format, args ?? OneNullArgs), null);
+      Logger.Log(_thisDeclaringType, _levelInfo, new SystemStringFormat(provider, format, args ?? _oneNullArgs), null);
     }
   }
 
@@ -560,7 +560,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// </remarks>
   public virtual void Warn(object? message)
   {
-    Logger.Log(ThisDeclaringType, levelWarn, message, null);
+    Logger.Log(_thisDeclaringType, _levelWarn, message, null);
   }
 
   /// <summary>
@@ -581,7 +581,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// <seealso cref="M:Warn(object)"/>
   public virtual void Warn(object? message, Exception? exception)
   {
-    Logger.Log(ThisDeclaringType, levelWarn, message, exception);
+    Logger.Log(_thisDeclaringType, _levelWarn, message, exception);
   }
 
   /// <summary>
@@ -610,7 +610,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsWarnEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelWarn, new SystemStringFormat(CultureInfo.InvariantCulture, format, args ?? OneNullArgs), null);
+      Logger.Log(_thisDeclaringType, _levelWarn, new SystemStringFormat(CultureInfo.InvariantCulture, format, args ?? _oneNullArgs), null);
     }
   }
 
@@ -640,7 +640,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsWarnEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelWarn, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0]), null);
+      Logger.Log(_thisDeclaringType, _levelWarn, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0]), null);
     }
   }
 
@@ -671,7 +671,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsWarnEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelWarn, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0, arg1]), null);
+      Logger.Log(_thisDeclaringType, _levelWarn, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0, arg1]), null);
     }
   }
 
@@ -703,7 +703,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsWarnEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelWarn, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0, arg1, arg2]), null);
+      Logger.Log(_thisDeclaringType, _levelWarn, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0, arg1, arg2]), null);
     }
   }
 
@@ -729,7 +729,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsWarnEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelWarn, new SystemStringFormat(provider, format, args ?? OneNullArgs), null);
+      Logger.Log(_thisDeclaringType, _levelWarn, new SystemStringFormat(provider, format, args ?? _oneNullArgs), null);
     }
   }
 
@@ -758,7 +758,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// </remarks>
   public virtual void Error(object? message)
   {
-    Logger.Log(ThisDeclaringType, levelError, message, null);
+    Logger.Log(_thisDeclaringType, _levelError, message, null);
   }
 
   /// <summary>
@@ -779,7 +779,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// <seealso cref="M:Error(object)"/>
   public virtual void Error(object? message, Exception? exception)
   {
-    Logger.Log(ThisDeclaringType, levelError, message, exception);
+    Logger.Log(_thisDeclaringType, _levelError, message, exception);
   }
 
   /// <summary>
@@ -808,7 +808,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsErrorEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelError, new SystemStringFormat(CultureInfo.InvariantCulture, format, args ?? OneNullArgs), null);
+      Logger.Log(_thisDeclaringType, _levelError, new SystemStringFormat(CultureInfo.InvariantCulture, format, args ?? _oneNullArgs), null);
     }
   }
 
@@ -838,7 +838,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsErrorEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelError, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0]), null);
+      Logger.Log(_thisDeclaringType, _levelError, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0]), null);
     }
   }
 
@@ -869,7 +869,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsErrorEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelError, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0, arg1]), null);
+      Logger.Log(_thisDeclaringType, _levelError, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0, arg1]), null);
     }
   }
 
@@ -901,7 +901,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsErrorEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelError, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0, arg1, arg2]), null);
+      Logger.Log(_thisDeclaringType, _levelError, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0, arg1, arg2]), null);
     }
   }
 
@@ -927,7 +927,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsErrorEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelError, new SystemStringFormat(provider, format, args ?? OneNullArgs), null);
+      Logger.Log(_thisDeclaringType, _levelError, new SystemStringFormat(provider, format, args ?? _oneNullArgs), null);
     }
   }
 
@@ -956,7 +956,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// </remarks>
   public virtual void Fatal(object? message)
   {
-    Logger.Log(ThisDeclaringType, levelFatal, message, null);
+    Logger.Log(_thisDeclaringType, _levelFatal, message, null);
   }
 
   /// <summary>
@@ -977,7 +977,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// <seealso cref="M:Fatal(object)"/>
   public virtual void Fatal(object? message, Exception? exception)
   {
-    Logger.Log(ThisDeclaringType, levelFatal, message, exception);
+    Logger.Log(_thisDeclaringType, _levelFatal, message, exception);
   }
 
   /// <summary>
@@ -1006,7 +1006,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsFatalEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelFatal, new SystemStringFormat(CultureInfo.InvariantCulture, format, args ?? OneNullArgs), null);
+      Logger.Log(_thisDeclaringType, _levelFatal, new SystemStringFormat(CultureInfo.InvariantCulture, format, args ?? _oneNullArgs), null);
     }
   }
 
@@ -1036,7 +1036,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsFatalEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelFatal, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0]), null);
+      Logger.Log(_thisDeclaringType, _levelFatal, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0]), null);
     }
   }
 
@@ -1067,7 +1067,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsFatalEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelFatal, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0, arg1]), null);
+      Logger.Log(_thisDeclaringType, _levelFatal, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0, arg1]), null);
     }
   }
 
@@ -1099,7 +1099,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsFatalEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelFatal, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0, arg1, arg2]), null);
+      Logger.Log(_thisDeclaringType, _levelFatal, new SystemStringFormat(CultureInfo.InvariantCulture, format, [arg0, arg1, arg2]), null);
     }
   }
 
@@ -1125,7 +1125,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   {
     if (IsFatalEnabled)
     {
-      Logger.Log(ThisDeclaringType, levelFatal, new SystemStringFormat(provider, format, args ?? OneNullArgs), null);
+      Logger.Log(_thisDeclaringType, _levelFatal, new SystemStringFormat(provider, format, args ?? _oneNullArgs), null);
     }
   }
 
@@ -1172,7 +1172,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// takes to actually log.
   /// </para>
   /// </remarks>
-  public virtual bool IsDebugEnabled => Logger.IsEnabledFor(levelDebug);
+  public virtual bool IsDebugEnabled => Logger.IsEnabledFor(_levelDebug);
 
   /// <summary>
   /// Checks if this logger is enabled for the <c>INFO</c> level.
@@ -1188,7 +1188,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// </para>
   /// </remarks>
   /// <seealso cref="LogImpl.IsDebugEnabled"/>
-  public virtual bool IsInfoEnabled => Logger.IsEnabledFor(levelInfo);
+  public virtual bool IsInfoEnabled => Logger.IsEnabledFor(_levelInfo);
 
   /// <summary>
   /// Checks if this logger is enabled for the <c>WARN</c> level.
@@ -1204,7 +1204,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// </para>
   /// </remarks>
   /// <seealso cref="ILog.IsDebugEnabled"/>
-  public virtual bool IsWarnEnabled => Logger.IsEnabledFor(levelWarn);
+  public virtual bool IsWarnEnabled => Logger.IsEnabledFor(_levelWarn);
 
   /// <summary>
   /// Checks if this logger is enabled for the <c>ERROR</c> level.
@@ -1219,7 +1219,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// </para>
   /// </remarks>
   /// <seealso cref="ILog.IsDebugEnabled"/>
-  public virtual bool IsErrorEnabled => Logger.IsEnabledFor(levelError);
+  public virtual bool IsErrorEnabled => Logger.IsEnabledFor(_levelError);
 
   /// <summary>
   /// Checks if this logger is enabled for the <c>FATAL</c> level.
@@ -1234,7 +1234,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// </para>
   /// </remarks>
   /// <seealso cref="ILog.IsDebugEnabled"/>
-  public virtual bool IsFatalEnabled => Logger.IsEnabledFor(levelFatal);
+  public virtual bool IsFatalEnabled => Logger.IsEnabledFor(_levelFatal);
 
   /// <summary>
   /// Event handler for the <see cref="log4net.Repository.ILoggerRepository.ConfigurationChanged"/> event
@@ -1252,18 +1252,18 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// <summary>
   /// The fully qualified name of this declaring type not the type of any subclass.
   /// </summary>
-  private static readonly Type ThisDeclaringType = typeof(LogImpl);
+  private static readonly Type _thisDeclaringType = typeof(LogImpl);
 
   /// <summary>
   /// Used to ensure 'params object?[]?' arguments that receive a null are converted
   /// to an array of one null value so that 'XxxFormat("{0}", null)' will work correctly.
   /// Overloads like 'XxxFormat(message, object? arg0)' are not matched by the compiler in this case.
   /// </summary>
-  private static readonly object?[] OneNullArgs = [null];
+  private static readonly object?[] _oneNullArgs = [null];
 
-  private Level levelDebug = Level.Debug;
-  private Level levelInfo = Level.Info;
-  private Level levelWarn = Level.Warn;
-  private Level levelError = Level.Error;
-  private Level levelFatal = Level.Fatal;
+  private Level _levelDebug = Level.Debug;
+  private Level _levelInfo = Level.Info;
+  private Level _levelWarn = Level.Warn;
+  private Level _levelError = Level.Error;
+  private Level _levelFatal = Level.Fatal;
 }

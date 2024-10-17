@@ -58,7 +58,7 @@ public class SecurityContextProvider
   /// <summary>
   /// The default provider
   /// </summary>
-  private static SecurityContextProvider s_defaultProvider = new SecurityContextProvider();
+  private static SecurityContextProvider _sDefaultProvider = new SecurityContextProvider();
 
   /// <summary>
   /// Gets or sets the default SecurityContextProvider
@@ -84,8 +84,8 @@ public class SecurityContextProvider
   /// </remarks>
   public static SecurityContextProvider DefaultProvider
   {
-    get { return s_defaultProvider; }
-    set { s_defaultProvider = value; }
+    get { return _sDefaultProvider; }
+    set { _sDefaultProvider = value; }
   }
 
   /// <summary>

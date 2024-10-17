@@ -35,10 +35,10 @@ public class RandomStringPatternConverterTest
   [Test]
   public void TestConvert()
   {
-    RandomStringPatternConverter converter = new RandomStringPatternConverter();
+    RandomStringPatternConverter converter = new();
 
     // Check default string length
-    StringWriter sw = new StringWriter();
+    StringWriter sw = new();
     converter.Convert(sw, null);
 
     Assert.AreEqual(4, sw.ToString().Length, "Default string length should be 4");

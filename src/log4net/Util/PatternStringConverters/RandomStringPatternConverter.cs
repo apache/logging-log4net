@@ -46,12 +46,12 @@ public sealed class RandomStringPatternConverter : PatternConverter, IOptionHand
   /// <summary>
   /// Shared random number generator
   /// </summary>
-  private static readonly Random s_random = new();
+  private static readonly Random _sRandom = new();
 
   /// <summary>
   /// Length of random string to generate. Default length 4.
   /// </summary>
-  private int length = 4;
+  private int _length = 4;
 
   /// <summary>
   /// Initialize the converter options
@@ -76,11 +76,11 @@ public sealed class RandomStringPatternConverter : PatternConverter, IOptionHand
     {
       if (SystemInfo.TryParse(optionStr!, out int lengthVal))
       {
-        length = lengthVal;
+        _length = lengthVal;
       }
       else
       {
-        LogLog.Error(declaringType, $"RandomStringPatternConverter: Could not convert Option [{optionStr}] to Length Int32");
+        LogLog.Error(_declaringType, $"RandomStringPatternConverter: Could not convert Option [{optionStr}] to Length Int32");
       }
     }
   }
@@ -94,11 +94,11 @@ public sealed class RandomStringPatternConverter : PatternConverter, IOptionHand
   {
     try
     {
-      lock (s_random)
+      lock (_sRandom)
       {
-        for (int i = 0; i < length; i++)
+        for (int i = 0; i < _length; i++)
         {
-          int randValue = s_random.Next(36);
+          int randValue = _sRandom.Next(36);
 
           if (randValue < 26)
           {
@@ -122,7 +122,7 @@ public sealed class RandomStringPatternConverter : PatternConverter, IOptionHand
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Error occurred while converting.", ex);
+      LogLog.Error(_declaringType, "Error occurred while converting.", ex);
     }
   }
 
@@ -133,5 +133,5 @@ public sealed class RandomStringPatternConverter : PatternConverter, IOptionHand
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(RandomStringPatternConverter);
+  private static readonly Type _declaringType = typeof(RandomStringPatternConverter);
 }

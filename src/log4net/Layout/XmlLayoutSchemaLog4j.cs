@@ -36,17 +36,17 @@ namespace log4net.Layout;
 /// </para>
 /// </remarks>
 /// <author>Nicko Cadell</author>
-public class XmlLayoutSchemaLog4j : XmlLayoutBase
+public class XmlLayoutSchemaLog4J : XmlLayoutBase
 {
   /// <summary>
   /// The 1st of January 1970 in UTC
   /// </summary>
-  private static readonly DateTime s_date1970 = new(1970, 1, 1);
+  private static readonly DateTime _sDate1970 = new(1970, 1, 1);
 
   /// <summary>
   /// Constructs an XMLLayoutSchemaLog4j
   /// </summary>
-  public XmlLayoutSchemaLog4j()
+  public XmlLayoutSchemaLog4J()
   {
   }
 
@@ -67,7 +67,7 @@ public class XmlLayoutSchemaLog4j : XmlLayoutBase
   /// appender as well.
   /// </para>
   /// </remarks>
-  public XmlLayoutSchemaLog4j(bool locationInfo) : base(locationInfo)
+  public XmlLayoutSchemaLog4J(bool locationInfo) : base(locationInfo)
   {
   }
 
@@ -167,7 +167,7 @@ method="run" file="Generator.java" line="94"/>
     // We must convert the TimeStamp to UTC before performing any mathematical
     // operations. This allows use to take into account discontinuities
     // caused by daylight savings time transitions.
-    TimeSpan timeSince1970 = loggingEvent.TimeStampUtc - s_date1970;
+    TimeSpan timeSince1970 = loggingEvent.TimeStampUtc - _sDate1970;
 
     writer.WriteAttributeString("timestamp", XmlConvert.ToString((long)timeSince1970.TotalMilliseconds));
     if (loggingEvent.Level is not null)

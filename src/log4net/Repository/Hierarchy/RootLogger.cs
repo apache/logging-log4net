@@ -94,7 +94,7 @@ public class RootLogger : Logger
     {
       if (value is null)
       {
-        LogLog.Error(declaringType, "You have tried to set a null level to root.", new LogException());
+        LogLog.Error(_declaringType, "You have tried to set a null level to root.", new LogException());
       }
       else
       {
@@ -110,5 +110,5 @@ public class RootLogger : Logger
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(RootLogger);
+  private static readonly Type _declaringType = typeof(RootLogger);
 }

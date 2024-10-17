@@ -69,14 +69,14 @@ public class AppenderAttachedImpl : IAppenderAttachable
     }
 
     // appenderList is null when empty
-    if (appenderList is null)
+    if (_appenderList is null)
     {
       return 0;
     }
 
-    appenderArray ??= [.. appenderList];
+    _appenderArray ??= _appenderList.ToArray();
 
-    foreach (IAppender appender in appenderArray)
+    foreach (IAppender appender in _appenderArray)
     {
       try
       {
@@ -84,10 +84,10 @@ public class AppenderAttachedImpl : IAppenderAttachable
       }
       catch (Exception ex)
       {
-        LogLog.Error(declaringType, $"Failed to append to appender [{appender.Name}]", ex);
+        LogLog.Error(_declaringType, $"Failed to append to appender [{appender.Name}]", ex);
       }
     }
-    return appenderList.Count;
+    return _appenderList.Count;
   }
 
   /// <summary>
@@ -118,14 +118,14 @@ public class AppenderAttachedImpl : IAppenderAttachable
     }
 
     // appenderList is null when empty
-    if (appenderList is null)
+    if (_appenderList is null)
     {
       return 0;
     }
 
-    appenderArray ??= [.. appenderList];
+    _appenderArray ??= _appenderList.ToArray();
 
-    foreach (IAppender appender in appenderArray)
+    foreach (IAppender appender in _appenderArray)
     {
       try
       {
@@ -133,10 +133,10 @@ public class AppenderAttachedImpl : IAppenderAttachable
       }
       catch (Exception ex)
       {
-        LogLog.Error(declaringType, $"Failed to append to appender [{appender.Name}]", ex);
+        LogLog.Error(_declaringType, $"Failed to append to appender [{appender.Name}]", ex);
       }
     }
-    return appenderList.Count;
+    return _appenderList.Count;
   }
 
   /// <summary>
@@ -185,11 +185,11 @@ public class AppenderAttachedImpl : IAppenderAttachable
       throw new ArgumentNullException(nameof(newAppender));
     }
 
-    appenderArray = null;
-    appenderList ??= new AppenderCollection(1);
-    if (!appenderList.Contains(newAppender))
+    _appenderArray = null;
+    _appenderList ??= new AppenderCollection(1);
+    if (!_appenderList.Contains(newAppender))
     {
-      appenderList.Add(newAppender);
+      _appenderList.Add(newAppender);
     }
   }
 
@@ -209,14 +209,14 @@ public class AppenderAttachedImpl : IAppenderAttachable
   {
     get
     {
-      if (appenderList is null)
+      if (_appenderList is null)
       {
         // We must always return a valid collection
         return AppenderCollection.EmptyCollection;
       }
       else
       {
-        return AppenderCollection.ReadOnly(appenderList);
+        return AppenderCollection.ReadOnly(_appenderList);
       }
     }
   }
@@ -236,9 +236,9 @@ public class AppenderAttachedImpl : IAppenderAttachable
   /// </remarks>
   public IAppender? GetAppender(string? name)
   {
-    if (appenderList is not null && name is not null)
+    if (_appenderList is not null && name is not null)
     {
-      foreach (IAppender appender in appenderList)
+      foreach (IAppender appender in _appenderList)
       {
         if (name == appender.Name)
         {
@@ -259,9 +259,9 @@ public class AppenderAttachedImpl : IAppenderAttachable
   /// </remarks>
   public void RemoveAllAppenders()
   {
-    if (appenderList is not null)
+    if (_appenderList is not null)
     {
-      foreach (IAppender appender in appenderList)
+      foreach (IAppender appender in _appenderList)
       {
         try
         {
@@ -269,11 +269,11 @@ public class AppenderAttachedImpl : IAppenderAttachable
         }
         catch (Exception ex)
         {
-          LogLog.Error(declaringType, $"Failed to Close appender [{appender.Name}]", ex);
+          LogLog.Error(_declaringType, $"Failed to Close appender [{appender.Name}]", ex);
         }
       }
-      appenderList = null;
-      appenderArray = null;
+      _appenderList = null;
+      _appenderArray = null;
     }
   }
 
@@ -291,14 +291,14 @@ public class AppenderAttachedImpl : IAppenderAttachable
   /// </remarks>
   public IAppender? RemoveAppender(IAppender? appender)
   {
-    if (appender is not null && appenderList is not null)
+    if (appender is not null && _appenderList is not null)
     {
-      appenderList.Remove(appender);
-      if (appenderList.Count == 0)
+      _appenderList.Remove(appender);
+      if (_appenderList.Count == 0)
       {
-        appenderList = null;
+        _appenderList = null;
       }
-      appenderArray = null;
+      _appenderArray = null;
     }
     return appender;
   }
@@ -320,12 +320,12 @@ public class AppenderAttachedImpl : IAppenderAttachable
   /// <summary>
   /// List of appenders
   /// </summary>
-  private AppenderCollection? appenderList;
+  private AppenderCollection? _appenderList;
 
   /// <summary>
   /// Array of appenders, used to cache the appenderList
   /// </summary>
-  private IAppender[]? appenderArray;
+  private IAppender[]? _appenderArray;
 
   /// <summary>
   /// The fully qualified type of the AppenderAttachedImpl class.
@@ -334,5 +334,5 @@ public class AppenderAttachedImpl : IAppenderAttachable
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(AppenderAttachedImpl);
+  private static readonly Type _declaringType = typeof(AppenderAttachedImpl);
 }

@@ -6,9 +6,9 @@ using System.Reflection;
 using log4net;
 using log4net.Config;
 
-const int NO_ERROR = 0;
-const int MISSING_LOGS = 1;
-const int OVERWRITTEN_LOGS = 2;
+const int NoError = 0;
+const int MissingLogs = 1;
+const int OverwrittenLogs = 2;
 
 var appPath = new Uri(Assembly.GetExecutingAssembly().Location).LocalPath;
 var appFolder = Path.GetDirectoryName(appPath);
@@ -38,7 +38,7 @@ for (var i = 0; i < 10; i++)
   var logged = LogWith(identifier, logCount);
   if (logged != logCount)
   {
-    Die($"Missing logs immediately for '{identifier}' - found {logged}/{logCount}", MISSING_LOGS);
+    Die($"Missing logs immediately for '{identifier}' - found {logged}/{logCount}", MissingLogs);
   }
 }
 
@@ -47,12 +47,12 @@ foreach (var identifier in identifiers)
   var logged = CountIdentifierInLogs(identifier);
   if (logged != logCount)
   {
-    Die($"Logs have been overwritten for '{identifier}' - found {logged}/{logCount}", OVERWRITTEN_LOGS);
+    Die($"Logs have been overwritten for '{identifier}' - found {logged}/{logCount}", OverwrittenLogs);
   }
 }
 
 Console.WriteLine("All good: LOG4NET-672 is resolved");
-return NO_ERROR;
+return NoError;
 
 void Die(string message, int exitCode)
 {

@@ -207,27 +207,18 @@ public class AnsiColorTerminalAppender : AppenderSkeleton
   /// to the standard output stream.
   /// </remarks>
   public AnsiColorTerminalAppender()
-  {
-  }
+  { }
 
   /// <summary>
   /// Gets the console output stream, one of <c>"Console.Out"</c> or <c>"Console.Error"</c>.
   /// </summary>
   public virtual string Target
   {
-    get => writeToErrorStream ? ConsoleError : ConsoleOut;
+    get => _writeToErrorStream ? ConsoleError : ConsoleOut;
     set
     {
       string trimmedTargetName = value.Trim();
-
-      if (SystemInfo.EqualsIgnoringCase(ConsoleError, trimmedTargetName))
-      {
-        writeToErrorStream = true;
-      }
-      else
-      {
-        writeToErrorStream = false;
-      }
+      _writeToErrorStream = SystemInfo.EqualsIgnoringCase(ConsoleError, trimmedTargetName);
     }
   }
 
@@ -235,10 +226,7 @@ public class AnsiColorTerminalAppender : AppenderSkeleton
   /// Adds a mapping of level to foreground and background colors.
   /// </summary>
   /// <param name="mapping">The mapping to add</param>
-  public void AddMapping(LevelColors mapping)
-  {
-    levelMapping.Add(mapping);
-  }
+  public void AddMapping(LevelColors mapping) => _levelMapping.Add(mapping);
 
   /// <summary>
   /// Writes the event to the console.
@@ -249,7 +237,7 @@ public class AnsiColorTerminalAppender : AppenderSkeleton
   /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/> method.
   /// </para>
   /// <para>
-  /// The format of the output will depend on the appender's layout.
+  /// The format of the output will depend on the appender layout.
   /// </para>
   /// </remarks>
   protected override void Append(LoggingEvent loggingEvent)
@@ -257,7 +245,7 @@ public class AnsiColorTerminalAppender : AppenderSkeleton
     string loggingMessage = RenderLoggingEvent(loggingEvent);
 
     // see if there is a specified lookup.
-    if (levelMapping.Lookup(loggingEvent.Level) is LevelColors levelColors)
+    if (_levelMapping.Lookup(loggingEvent.Level) is LevelColors levelColors)
     {
       // Prepend the Ansi Color code
       loggingMessage = levelColors.CombinedColor + loggingMessage;
@@ -294,7 +282,7 @@ public class AnsiColorTerminalAppender : AppenderSkeleton
       }
     }
 
-    if (writeToErrorStream)
+    if (_writeToErrorStream)
     {
       // Write to the error stream
       Console.Error.Write(loggingMessage);
@@ -318,30 +306,32 @@ public class AnsiColorTerminalAppender : AppenderSkeleton
   public override void ActivateOptions()
   {
     base.ActivateOptions();
-    levelMapping.ActivateOptions();
+    _levelMapping.ActivateOptions();
   }
 
   /// <summary>
   /// The <see cref="Target"/> to use when writing to the Console 
   /// standard output stream.
   /// </summary>
+  // ReSharper disable once MemberCanBePrivate.Global
   public const string ConsoleOut = "Console.Out";
 
   /// <summary>
   /// The <see cref="Target"/> to use when writing to the Console 
   /// standard error output stream.
   /// </summary>
+  // ReSharper disable once MemberCanBePrivate.Global
   public const string ConsoleError = "Console.Error";
 
   /// <summary>
   /// Flag to write output to the error stream rather than the standard output stream
   /// </summary>
-  private bool writeToErrorStream;
+  private bool _writeToErrorStream;
 
   /// <summary>
   /// Mapping from level object to color value
   /// </summary>
-  private readonly LevelMapping levelMapping = new();
+  private readonly LevelMapping _levelMapping = new();
 
   /// <summary>
   /// Ansi code to reset terminal

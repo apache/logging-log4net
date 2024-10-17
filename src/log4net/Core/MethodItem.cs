@@ -36,7 +36,7 @@ public class MethodItem
   /// </summary>
   public MethodItem()
   {
-    Name = NA;
+    Name = NotAvailable;
     Parameters = Array.Empty<string>();
   }
 
@@ -86,42 +86,20 @@ public class MethodItem
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "An exception ocurred while retreiving method parameters.", ex);
+      LogLog.Error(_declaringType, "An exception occurred while retrieving method parameters.", ex);
     }
 
-    return [.. methodParameterNames];
+    return methodParameterNames.ToArray();
   }
 
   /// <summary>
-  /// Gets the method name of the caller making the logging 
-  /// request.
+  /// Gets the method name of the caller making the logging request.
   /// </summary>
-  /// <value>
-  /// The method name of the caller making the logging 
-  /// request.
-  /// </value>
-  /// <remarks>
-  /// <para>
-  /// Gets the method name of the caller making the logging 
-  /// request.
-  /// </para>
-  /// </remarks>
   public string Name { get; }
 
   /// <summary>
-  /// Gets the method parameters of the caller making
-  /// the logging request.
+  /// Gets the method parameters of the caller making the logging request.
   /// </summary>
-  /// <value>
-  /// The method parameters of the caller making
-  /// the logging request
-  /// </value>
-  /// <remarks>
-  /// <para>
-  /// Gets the method parameters of the caller making
-  /// the logging request.
-  /// </para>
-  /// </remarks>
   public string[] Parameters { get; }
 
   /// <summary>
@@ -131,12 +109,12 @@ public class MethodItem
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(MethodItem);
+  private static readonly Type _declaringType = typeof(MethodItem);
 
   /// <summary>
   /// When location information is not available the constant
   /// <c>NA</c> is returned. Current value of this string
   /// constant is <b>?</b>.
   /// </summary>
-  private const string NA = "?";
+  private const string NotAvailable = "?";
 }

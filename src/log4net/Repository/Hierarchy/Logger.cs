@@ -55,7 +55,7 @@ public abstract class Logger : IAppenderAttachable, ILogger
   /// <summary>
   /// The fully qualified type of the Logger class.
   /// </summary>
-  private static readonly Type declaringType = typeof(Logger);
+  private static readonly Type _declaringType = typeof(Logger);
 
   /// <summary>
   /// The parent of this logger.
@@ -65,22 +65,22 @@ public abstract class Logger : IAppenderAttachable, ILogger
   /// All loggers have at least one ancestor which is the root logger.
   /// </para>
   /// </remarks>
-  private Logger? parent;
+  private Logger? _parent;
 
   /// <summary>
   /// Loggers need to know what Hierarchy they are in.
   /// </summary>
-  private Hierarchy? hierarchy;
+  private Hierarchy? _hierarchy;
 
   /// <summary>
   /// Helper implementation of the <see cref="IAppenderAttachable"/> interface
   /// </summary>
-  private AppenderAttachedImpl? appenderAttachedImpl;
+  private AppenderAttachedImpl? _appenderAttachedImpl;
 
   /// <summary>
   /// Lock to protect AppenderAttachedImpl variable appenderAttachedImpl
   /// </summary>
-  private readonly ReaderWriterLock appenderLock = new();
+  private readonly ReaderWriterLock _appenderLock = new();
 
   /// <summary>
   /// This constructor created a new <see cref="Logger" /> instance and
@@ -115,8 +115,8 @@ public abstract class Logger : IAppenderAttachable, ILogger
   /// </remarks>
   public virtual Logger? Parent
   {
-    get => parent;
-    set => parent = value;
+    get => _parent;
+    set => _parent = value;
   }
 
   /// <summary>
@@ -155,7 +155,7 @@ public abstract class Logger : IAppenderAttachable, ILogger
   {
     get
     {
-      for (Logger? c = this; c is not null; c = c.parent)
+      for (Logger? c = this; c is not null; c = c._parent)
       {
         if (c.Level is Level level)
         {
@@ -171,8 +171,8 @@ public abstract class Logger : IAppenderAttachable, ILogger
   /// </summary>
   public virtual Hierarchy? Hierarchy
   {
-    get => hierarchy;
-    set => hierarchy = value;
+    get => _hierarchy;
+    set => _hierarchy = value;
   }
 
   /// <summary>
@@ -195,15 +195,15 @@ public abstract class Logger : IAppenderAttachable, ILogger
   {
     newAppender.EnsureNotNull();
 
-    appenderLock.AcquireWriterLock();
+    _appenderLock.AcquireWriterLock();
     try
     {
-      appenderAttachedImpl ??= new AppenderAttachedImpl();
-      appenderAttachedImpl.AddAppender(newAppender);
+      _appenderAttachedImpl ??= new AppenderAttachedImpl();
+      _appenderAttachedImpl.AddAppender(newAppender);
     }
     finally
     {
-      appenderLock.ReleaseWriterLock();
+      _appenderLock.ReleaseWriterLock();
     }
   }
 
@@ -219,18 +219,18 @@ public abstract class Logger : IAppenderAttachable, ILogger
   {
     get
     {
-      appenderLock.AcquireReaderLock();
+      _appenderLock.AcquireReaderLock();
       try
       {
-        if (appenderAttachedImpl is null)
+        if (_appenderAttachedImpl is null)
         {
           return AppenderCollection.EmptyCollection;
         }
-        return appenderAttachedImpl.Appenders;
+        return _appenderAttachedImpl.Appenders;
       }
       finally
       {
-        appenderLock.ReleaseReaderLock();
+        _appenderLock.ReleaseReaderLock();
       }
     }
   }
@@ -242,19 +242,19 @@ public abstract class Logger : IAppenderAttachable, ILogger
   /// <returns>The appender with the name specified, or <see langword="null"/>.</returns>
   public virtual IAppender? GetAppender(string? name)
   {
-    appenderLock.AcquireReaderLock();
+    _appenderLock.AcquireReaderLock();
     try
     {
-      if (appenderAttachedImpl is null || name is null)
+      if (_appenderAttachedImpl is null || name is null)
       {
         return null;
       }
 
-      return appenderAttachedImpl.GetAppender(name);
+      return _appenderAttachedImpl.GetAppender(name);
     }
     finally
     {
-      appenderLock.ReleaseReaderLock();
+      _appenderLock.ReleaseReaderLock();
     }
   }
 
@@ -268,18 +268,18 @@ public abstract class Logger : IAppenderAttachable, ILogger
   /// </remarks>
   public virtual void RemoveAllAppenders()
   {
-    appenderLock.AcquireWriterLock();
+    _appenderLock.AcquireWriterLock();
     try
     {
-      if (appenderAttachedImpl is not null)
+      if (_appenderAttachedImpl is not null)
       {
-        appenderAttachedImpl.RemoveAllAppenders();
-        appenderAttachedImpl = null;
+        _appenderAttachedImpl.RemoveAllAppenders();
+        _appenderAttachedImpl = null;
       }
     }
     finally
     {
-      appenderLock.ReleaseWriterLock();
+      _appenderLock.ReleaseWriterLock();
     }
   }
 
@@ -297,17 +297,17 @@ public abstract class Logger : IAppenderAttachable, ILogger
   /// </remarks>
   public virtual IAppender? RemoveAppender(IAppender? appender)
   {
-    appenderLock.AcquireWriterLock();
+    _appenderLock.AcquireWriterLock();
     try
     {
-      if (appender is not null && appenderAttachedImpl is not null)
+      if (appender is not null && _appenderAttachedImpl is not null)
       {
-        return appenderAttachedImpl.RemoveAppender(appender);
+        return _appenderAttachedImpl.RemoveAppender(appender);
       }
     }
     finally
     {
-      appenderLock.ReleaseWriterLock();
+      _appenderLock.ReleaseWriterLock();
     }
     return null;
   }
@@ -326,17 +326,17 @@ public abstract class Logger : IAppenderAttachable, ILogger
   /// </remarks>
   public virtual IAppender? RemoveAppender(string? name)
   {
-    appenderLock.AcquireWriterLock();
+    _appenderLock.AcquireWriterLock();
     try
     {
-      if (name is not null && appenderAttachedImpl is not null)
+      if (name is not null && _appenderAttachedImpl is not null)
       {
-        return appenderAttachedImpl.RemoveAppender(name);
+        return _appenderAttachedImpl.RemoveAppender(name);
       }
     }
     finally
     {
-      appenderLock.ReleaseWriterLock();
+      _appenderLock.ReleaseWriterLock();
     }
     return null;
   }
@@ -369,12 +369,12 @@ public abstract class Logger : IAppenderAttachable, ILogger
     {
       if (IsEnabledFor(level))
       {
-        ForcedLog(callerStackBoundaryDeclaringType ?? declaringType, level, message, exception);
+        ForcedLog(callerStackBoundaryDeclaringType ?? _declaringType, level, message, exception);
       }
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -405,7 +405,7 @@ public abstract class Logger : IAppenderAttachable, ILogger
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -428,7 +428,7 @@ public abstract class Logger : IAppenderAttachable, ILogger
     {
       if (level is not null)
       {
-        if (hierarchy is not null && hierarchy.IsDisabled(level))
+        if (_hierarchy is not null && _hierarchy.IsDisabled(level))
         {
           return false;
         }
@@ -437,7 +437,7 @@ public abstract class Logger : IAppenderAttachable, ILogger
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
     return false;
   }
@@ -446,7 +446,7 @@ public abstract class Logger : IAppenderAttachable, ILogger
   /// Gets the <see cref="ILoggerRepository"/> where this 
   /// <see cref="Logger"/> instance is attached to.
   /// </summary>
-  public ILoggerRepository? Repository => hierarchy;
+  public ILoggerRepository? Repository => _hierarchy;
 
   /// <summary>
   /// Deliver the <see cref="LoggingEvent"/> to the attached appenders.
@@ -469,22 +469,22 @@ public abstract class Logger : IAppenderAttachable, ILogger
 
     int writes = 0;
 
-    for (Logger? c = this; c is not null; c = c.parent)
+    for (Logger? c = this; c is not null; c = c._parent)
     {
-      if (c.appenderAttachedImpl is not null)
+      if (c._appenderAttachedImpl is not null)
       {
         // Protected against simultaneous call to addAppender, removeAppender,...
-        c.appenderLock.AcquireReaderLock();
+        c._appenderLock.AcquireReaderLock();
         try
         {
-          if (c.appenderAttachedImpl is not null)
+          if (c._appenderAttachedImpl is not null)
           {
-            writes += c.appenderAttachedImpl.AppendLoopOnAppenders(loggingEvent);
+            writes += c._appenderAttachedImpl.AppendLoopOnAppenders(loggingEvent);
           }
         }
         finally
         {
-          c.appenderLock.ReleaseReaderLock();
+          c._appenderLock.ReleaseReaderLock();
         }
       }
 
@@ -503,17 +503,17 @@ public abstract class Logger : IAppenderAttachable, ILogger
     // or impossible to determine which .config file is missing appender
     // definitions.
     //
-    if (hierarchy is not null && !hierarchy.EmittedNoAppenderWarning && writes == 0)
+    if (_hierarchy is not null && !_hierarchy.EmittedNoAppenderWarning && writes == 0)
     {
-      hierarchy.EmittedNoAppenderWarning = true;
-      LogLog.Debug(declaringType, $"No appenders could be found for logger [{Name}] repository [{Repository?.Name}]");
-      LogLog.Debug(declaringType, "Please initialize the log4net system properly.");
+      _hierarchy.EmittedNoAppenderWarning = true;
+      LogLog.Debug(_declaringType, $"No appenders could be found for logger [{Name}] repository [{Repository?.Name}]");
+      LogLog.Debug(_declaringType, "Please initialize the log4net system properly.");
       try
       {
-        LogLog.Debug(declaringType, "    Current AppDomain context information: ");
-        LogLog.Debug(declaringType, "       BaseDirectory   : " + SystemInfo.ApplicationBaseDirectory);
-        LogLog.Debug(declaringType, "       FriendlyName    : " + AppDomain.CurrentDomain.FriendlyName);
-        LogLog.Debug(declaringType, "       DynamicDirectory: " + AppDomain.CurrentDomain.DynamicDirectory);
+        LogLog.Debug(_declaringType, "    Current AppDomain context information: ");
+        LogLog.Debug(_declaringType, "       BaseDirectory   : " + SystemInfo.ApplicationBaseDirectory);
+        LogLog.Debug(_declaringType, "       FriendlyName    : " + AppDomain.CurrentDomain.FriendlyName);
+        LogLog.Debug(_declaringType, "       DynamicDirectory: " + AppDomain.CurrentDomain.DynamicDirectory);
       }
       catch (System.Security.SecurityException)
       {
@@ -532,12 +532,12 @@ public abstract class Logger : IAppenderAttachable, ILogger
   /// </remarks>
   public virtual void CloseNestedAppenders()
   {
-    appenderLock.AcquireWriterLock();
+    _appenderLock.AcquireWriterLock();
     try
     {
-      if (appenderAttachedImpl is not null)
+      if (_appenderAttachedImpl is not null)
       {
-        AppenderCollection appenders = appenderAttachedImpl.Appenders;
+        AppenderCollection appenders = _appenderAttachedImpl.Appenders;
         foreach (IAppender appender in appenders)
         {
           if (appender is IAppenderAttachable)
@@ -549,7 +549,7 @@ public abstract class Logger : IAppenderAttachable, ILogger
     }
     finally
     {
-      appenderLock.ReleaseWriterLock();
+      _appenderLock.ReleaseWriterLock();
     }
   }
 
@@ -569,7 +569,7 @@ public abstract class Logger : IAppenderAttachable, ILogger
   {
     if (IsEnabledFor(level))
     {
-      ForcedLog(declaringType, level, message, exception);
+      ForcedLog(_declaringType, level, message, exception);
     }
   }
 

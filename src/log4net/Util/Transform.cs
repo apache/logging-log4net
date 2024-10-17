@@ -51,7 +51,7 @@ public static class Transform
     string stringData = MaskXmlInvalidCharacters(textData, invalidCharReplacement);
     // Write either escaped text or CDATA sections
 
-    int weightCData = 12 * (1 + CountSubstrings(stringData, CDATA_END));
+    int weightCData = 12 * (1 + CountSubstrings(stringData, CdataEnd));
     int weightStringEscapes = 3 * (CountSubstrings(stringData, "<") + CountSubstrings(stringData, ">")) + 4 * CountSubstrings(stringData, "&");
 
     if (weightStringEscapes <= weightCData)
@@ -63,7 +63,7 @@ public static class Transform
     {
       // Write string using CDATA section
 
-      int end = stringData.IndexOf(CDATA_END);
+      int end = stringData.IndexOf(CdataEnd);
 
       if (end < 0)
       {
@@ -78,14 +78,14 @@ public static class Transform
           if (end == stringData.Length - 3)
           {
             start = stringData.Length;
-            writer.WriteString(CDATA_END);
+            writer.WriteString(CdataEnd);
             break;
           }
           else
           {
-            writer.WriteString(CDATA_UNESCAPABLE_TOKEN);
+            writer.WriteString(CdataUnescapableToken);
             start = end + 2;
-            end = stringData.IndexOf(CDATA_END, start);
+            end = stringData.IndexOf(CdataEnd, start);
           }
         }
 
@@ -115,7 +115,7 @@ public static class Transform
   /// </remarks>
   public static string MaskXmlInvalidCharacters(string textData, string mask)
   {
-    return INVALIDCHARS.Replace(textData, mask);
+    return _invalidchars.Replace(textData, mask);
   }
 
   /// <summary>
@@ -160,11 +160,11 @@ public static class Transform
     return count;
   }
 
-  private const string CDATA_END = "]]>";
-  private const string CDATA_UNESCAPABLE_TOKEN = "]]";
+  private const string CdataEnd = "]]>";
+  private const string CdataUnescapableToken = "]]";
 
   /// <summary>
   /// Characters illegal in XML 1.0
   /// </summary>
-  private static readonly Regex INVALIDCHARS = new(@"[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD]", RegexOptions.Compiled);
+  private static readonly Regex _invalidchars = new(@"[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD]", RegexOptions.Compiled);
 }

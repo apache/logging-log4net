@@ -50,7 +50,7 @@ public sealed class PatternParser
   /// with the specified pattern string.
   /// </para>
   /// </remarks>
-  public PatternParser(string pattern) => this.pattern = pattern;
+  public PatternParser(string pattern) => this._pattern = pattern;
 
   /// <summary>
   /// Parses the pattern into a chain of pattern converters.
@@ -60,9 +60,9 @@ public sealed class PatternParser
   {
     string[] converterNamesCache = BuildCache();
 
-    ParseInternal(pattern, converterNamesCache);
+    ParseInternal(_pattern, converterNamesCache);
 
-    return head;
+    return _head;
   }
 
   /// <summary>
@@ -138,7 +138,7 @@ public sealed class PatternParser
     int offset = 0;
     while (offset < pattern.Length)
     {
-      int i = pattern.IndexOf(ESCAPE_CHAR, offset);
+      int i = pattern.IndexOf(EscapeChar, offset);
       if (i < 0 || i == pattern.Length - 1)
       {
         ProcessLiteral(pattern.Substring(offset));
@@ -146,7 +146,7 @@ public sealed class PatternParser
       }
       else
       {
-        if (pattern[i + 1] == ESCAPE_CHAR)
+        if (pattern[i + 1] == EscapeChar)
         {
           // Escaped
           ProcessLiteral(pattern.Substring(offset, i - offset + 1));
@@ -275,12 +275,12 @@ public sealed class PatternParser
   /// <param name="formattingInfo">the formatting info for the converter</param>
   private void ProcessConverter(string converterName, string? option, FormattingInfo formattingInfo)
   {
-    LogLog.Debug(declaringType, $"Converter [{converterName}] Option [{option}] Format [min={formattingInfo.Min},max={formattingInfo.Max},leftAlign={formattingInfo.LeftAlign}]");
+    LogLog.Debug(_declaringType, $"Converter [{converterName}] Option [{option}] Format [min={formattingInfo.Min},max={formattingInfo.Max},leftAlign={formattingInfo.LeftAlign}]");
 
     // Lookup the converter type
     if (PatternConverters[converterName] is not ConverterInfo converterInfo)
     {
-      LogLog.Error(declaringType, $"Unknown converter name [{converterName}] in conversion pattern.");
+      LogLog.Error(_declaringType, $"Unknown converter name [{converterName}] in conversion pattern.");
     }
     else
     {
@@ -292,7 +292,7 @@ public sealed class PatternParser
       }
       catch (Exception createInstanceEx)
       {
-        LogLog.Error(declaringType, $"Failed to create instance of Type [{converterInfo.Type?.FullName}] using default constructor. Exception: {createInstanceEx}");
+        LogLog.Error(_declaringType, $"Failed to create instance of Type [{converterInfo.Type?.FullName}] using default constructor. Exception: {createInstanceEx}");
         return;
       }
 
@@ -320,9 +320,9 @@ public sealed class PatternParser
   {
     // Add the pattern converter to the list.
 
-    if (head is null)
+    if (_head is null)
     {
-      head = tail = pc;
+      _head = _tail = pc;
     }
     else
     {
@@ -330,26 +330,26 @@ public sealed class PatternParser
       // Update the tail reference
       // note that a converter may combine the 'next' into itself
       // and therefore the tail would not change!
-      tail = tail!.SetNext(pc);
+      _tail = _tail!.SetNext(pc);
     }
   }
 
-  private const char ESCAPE_CHAR = '%';
+  private const char EscapeChar = '%';
 
   /// <summary>
   /// The first pattern converter in the chain
   /// </summary>
-  private PatternConverter? head;
+  private PatternConverter? _head;
 
   /// <summary>
   ///  the last pattern converter in the chain
   /// </summary>
-  private PatternConverter? tail;
+  private PatternConverter? _tail;
 
   /// <summary>
   /// The pattern
   /// </summary>
-  private readonly string pattern;
+  private readonly string _pattern;
 
   /// <summary>
   /// The fully qualified type of the PatternParser class.
@@ -358,5 +358,5 @@ public sealed class PatternParser
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(PatternParser);
+  private static readonly Type _declaringType = typeof(PatternParser);
 }

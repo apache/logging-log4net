@@ -117,9 +117,9 @@ public sealed class NativeError
   public static string? GetErrorMessage(int messageId)
   {
     // Win32 constants
-    int FORMAT_MESSAGE_ALLOCATE_BUFFER = 0x00000100;  // The function should allocates a buffer large enough to hold the formatted message
-    int FORMAT_MESSAGE_IGNORE_INSERTS = 0x00000200;    // Insert sequences in the message definition are to be ignored
-    int FORMAT_MESSAGE_FROM_SYSTEM = 0x00001000;    // The function should search the system message-table resource(s) for the requested message
+    int formatMessageAllocateBuffer = 0x00000100;  // The function should allocates a buffer large enough to hold the formatted message
+    int formatMessageIgnoreInserts = 0x00000200;    // Insert sequences in the message definition are to be ignored
+    int formatMessageFromSystem = 0x00001000;    // The function should search the system message-table resource(s) for the requested message
 
     string? msgBuf = "";        // buffer that will receive the message
     var sourcePtr = new IntPtr();  // Location of the message definition, will be ignored
@@ -129,7 +129,7 @@ public sealed class NativeError
     {
       // If the function succeeds, the return value is the number of TCHARs stored in the output buffer, excluding the terminating null character
       int messageSize = FormatMessage(
-        FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+        formatMessageAllocateBuffer | formatMessageFromSystem | formatMessageIgnoreInserts,
         ref sourcePtr,
         messageId,
         0,
@@ -140,7 +140,7 @@ public sealed class NativeError
       if (messageSize > 0)
       {
         // Remove trailing null-terminating characters (\r\n) from the message
-        msgBuf = msgBuf.TrimEnd(Newlines);
+        msgBuf = msgBuf.TrimEnd(_newlines);
       }
       else
       {
@@ -179,7 +179,7 @@ public sealed class NativeError
   /// <param name="dwLanguageId">Language identifier for the requested message.</param>
   /// <param name="lpBuffer">If <paramref name="dwFlags" /> includes FORMAT_MESSAGE_ALLOCATE_BUFFER, the function allocates a buffer using the <c>LocalAlloc</c> function, and places the pointer to the buffer at the address specified in <paramref name="lpBuffer" />.</param>
   /// <param name="nSize">If the FORMAT_MESSAGE_ALLOCATE_BUFFER flag is not set, this parameter specifies the maximum number of TCHARs that can be stored in the output buffer. If FORMAT_MESSAGE_ALLOCATE_BUFFER is set, this parameter specifies the minimum number of TCHARs to allocate for an output buffer.</param>
-  /// <param name="Arguments">Pointer to an array of values that are used as insert values in the formatted message.</param>
+  /// <param name="arguments">Pointer to an array of values that are used as insert values in the formatted message.</param>
   /// <remarks>
   /// <para>
   /// The function requires a message definition as input. The message definition can come from a 
@@ -213,7 +213,7 @@ public sealed class NativeError
     int dwLanguageId,
     ref string lpBuffer,
     int nSize,
-    IntPtr Arguments);
+    IntPtr arguments);
 
-  private static readonly char[] Newlines = ['\r', '\n'];
+  private static readonly char[] _newlines = ['\r', '\n'];
 }

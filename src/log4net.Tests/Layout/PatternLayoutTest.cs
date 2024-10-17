@@ -43,14 +43,14 @@ namespace log4net.Tests.Layout;
 public class PatternLayoutTest
 {
   private CultureInfo? _currentCulture;
-  private CultureInfo? _currentUICulture;
+  private CultureInfo? _currentUiCulture;
 
   [SetUp]
   public void SetUp()
   {
     // set correct thread culture
     _currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
-    _currentUICulture = System.Threading.Thread.CurrentThread.CurrentUICulture;
+    _currentUiCulture = System.Threading.Thread.CurrentThread.CurrentUICulture;
     System.Threading.Thread.CurrentThread.CurrentCulture = System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
   }
   [TearDown]
@@ -59,7 +59,7 @@ public class PatternLayoutTest
     Utils.RemovePropertyFromAllContexts();
     // restore previous culture
     System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture!;
-    System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture!;
+    System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUiCulture!;
   }
 
   protected virtual PatternLayout NewPatternLayout()
@@ -75,8 +75,10 @@ public class PatternLayoutTest
   [Test]
   public void TestThreadPropertiesPattern()
   {
-    StringAppender stringAppender = new StringAppender();
-    stringAppender.Layout = NewPatternLayout("%property{" + Utils.PROPERTY_KEY + "}");
+    StringAppender stringAppender = new()
+    {
+      Layout = NewPatternLayout("%property{" + Utils.PropertyKey + "}")
+    };
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     BasicConfigurator.Configure(rep, stringAppender);
@@ -87,13 +89,13 @@ public class PatternLayoutTest
     Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test no thread properties value set");
     stringAppender.Reset();
 
-    ThreadContext.Properties[Utils.PROPERTY_KEY] = "val1";
+    ThreadContext.Properties[Utils.PropertyKey] = "val1";
 
     log1.Info("TestMessage");
     Assert.AreEqual("val1", stringAppender.GetString(), "Test thread properties value set");
     stringAppender.Reset();
 
-    ThreadContext.Properties.Remove(Utils.PROPERTY_KEY);
+    ThreadContext.Properties.Remove(Utils.PropertyKey);
 
     log1.Info("TestMessage");
     Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test thread properties value removed");
@@ -103,8 +105,10 @@ public class PatternLayoutTest
   [Test]
   public void TestStackTracePattern()
   {
-    StringAppender stringAppender = new StringAppender();
-    stringAppender.Layout = NewPatternLayout("%stacktrace{2}");
+    StringAppender stringAppender = new()
+    {
+      Layout = NewPatternLayout("%stacktrace{2}")
+    };
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     BasicConfigurator.Configure(rep, stringAppender);
@@ -119,8 +123,10 @@ public class PatternLayoutTest
   [Test]
   public void TestGlobalPropertiesPattern()
   {
-    StringAppender stringAppender = new StringAppender();
-    stringAppender.Layout = NewPatternLayout("%property{" + Utils.PROPERTY_KEY + "}");
+    StringAppender stringAppender = new()
+    {
+      Layout = NewPatternLayout("%property{" + Utils.PropertyKey + "}")
+    };
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     BasicConfigurator.Configure(rep, stringAppender);
@@ -131,13 +137,13 @@ public class PatternLayoutTest
     Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test no global properties value set");
     stringAppender.Reset();
 
-    GlobalContext.Properties[Utils.PROPERTY_KEY] = "val1";
+    GlobalContext.Properties[Utils.PropertyKey] = "val1";
 
     log1.Info("TestMessage");
     Assert.AreEqual("val1", stringAppender.GetString(), "Test global properties value set");
     stringAppender.Reset();
 
-    GlobalContext.Properties.Remove(Utils.PROPERTY_KEY);
+    GlobalContext.Properties.Remove(Utils.PropertyKey);
 
     log1.Info("TestMessage");
     Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test global properties value removed");
@@ -147,7 +153,7 @@ public class PatternLayoutTest
   [Test]
   public void TestAddingCustomPattern()
   {
-    StringAppender stringAppender = new StringAppender();
+    StringAppender stringAppender = new();
     PatternLayout layout = NewPatternLayout();
 
     layout.AddConverter("TestAddingCustomPattern", typeof(TestMessagePatternConverter));
@@ -169,7 +175,7 @@ public class PatternLayoutTest
   [Test]
   public void NamedPatternConverterWithoutPrecisionShouldReturnFullName()
   {
-    StringAppender stringAppender = new StringAppender();
+    StringAppender stringAppender = new();
     PatternLayout layout = NewPatternLayout();
     layout.AddConverter("message-as-name", typeof(MessageAsNamePatternConverter));
     layout.ConversionPattern = "%message-as-name";
@@ -216,7 +222,7 @@ public class PatternLayoutTest
   [Test]
   public void NamedPatternConverterWithPrecision1ShouldStripLeadingStuffIfPresent()
   {
-    StringAppender stringAppender = new StringAppender();
+    StringAppender stringAppender = new();
     PatternLayout layout = NewPatternLayout();
     layout.AddConverter("message-as-name", typeof(MessageAsNamePatternConverter));
     layout.ConversionPattern = "%message-as-name{1}";
@@ -263,7 +269,7 @@ public class PatternLayoutTest
   [Test]
   public void NamedPatternConverterWithPrecision2ShouldStripLessLeadingStuffIfPresent()
   {
-    StringAppender stringAppender = new StringAppender();
+    StringAppender stringAppender = new();
     PatternLayout layout = NewPatternLayout();
     layout.AddConverter("message-as-name", typeof(MessageAsNamePatternConverter));
     layout.ConversionPattern = "%message-as-name{2}";
@@ -327,7 +333,7 @@ public class PatternLayoutTest
   [Test]
   public void TestExceptionPattern()
   {
-    StringAppender stringAppender = new StringAppender();
+    StringAppender stringAppender = new();
     PatternLayout layout = NewPatternLayout("%exception{stacktrace}");
     stringAppender.Layout = layout;
 
@@ -336,7 +342,7 @@ public class PatternLayoutTest
 
     ILog log1 = LogManager.GetLogger(rep.Name, "TestExceptionPattern");
 
-    Exception exception = new Exception("Oh no!");
+    Exception exception = new("Oh no!");
     log1.Info("TestMessage", exception);
 
     Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString());

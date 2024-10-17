@@ -35,8 +35,8 @@ public class Hierarchy
   public void SetRepositoryPropertiesInConfigFile()
   {
     // LOG4NET-53: Allow repository properties to be set in the config file
-    XmlDocument log4netConfig = new XmlDocument();
-    log4netConfig.LoadXml(@"
+    XmlDocument log4NetConfig = new();
+    log4NetConfig.LoadXml(@"
         <log4net>
           <property>
             <key value=""two-plus-two"" />
@@ -52,7 +52,7 @@ public class Hierarchy
         </log4net>");
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-    XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+    XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
 
     Assert.AreEqual("4", rep.Properties["two-plus-two"]);
     Assert.IsNull(rep.Properties["one-plus-one"]);
@@ -61,8 +61,8 @@ public class Hierarchy
   [Test]
   public void AddingMultipleAppenders()
   {
-    CountingAppender alpha = new CountingAppender();
-    CountingAppender beta = new CountingAppender();
+    CountingAppender alpha = new();
+    CountingAppender beta = new();
 
     Repository.Hierarchy.Hierarchy hierarchy =
         (Repository.Hierarchy.Hierarchy)LogManager.GetRepository();
@@ -81,8 +81,8 @@ public class Hierarchy
   [Test]
   public void AddingMultipleAppenders2()
   {
-    CountingAppender alpha = new CountingAppender();
-    CountingAppender beta = new CountingAppender();
+    CountingAppender alpha = new();
+    CountingAppender beta = new();
 
     BasicConfigurator.Configure(LogManager.GetRepository(), alpha, beta);
 
@@ -97,8 +97,8 @@ public class Hierarchy
   // LOG4NET-343
   public void LoggerNameCanConsistOfASingleDot()
   {
-    XmlDocument log4netConfig = new XmlDocument();
-    log4netConfig.LoadXml(@"
+    XmlDocument log4NetConfig = new();
+    log4NetConfig.LoadXml(@"
         <log4net>
           <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
             <layout type=""log4net.Layout.SimpleLayout"" />
@@ -113,14 +113,14 @@ public class Hierarchy
         </log4net>");
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-    XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+    XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
   }
 
   [Test]
   public void LoggerNameCanConsistOfASingleNonDot()
   {
-    XmlDocument log4netConfig = new XmlDocument();
-    log4netConfig.LoadXml(@"
+    XmlDocument log4NetConfig = new();
+    log4NetConfig.LoadXml(@"
         <log4net>
           <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
             <layout type=""log4net.Layout.SimpleLayout"" />
@@ -135,14 +135,14 @@ public class Hierarchy
         </log4net>");
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-    XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+    XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
   }
 
   [Test]
   public void LoggerNameCanContainSequenceOfDots()
   {
-    XmlDocument log4netConfig = new XmlDocument();
-    log4netConfig.LoadXml(@"
+    XmlDocument log4NetConfig = new();
+    log4NetConfig.LoadXml(@"
         <log4net>
           <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
             <layout type=""log4net.Layout.SimpleLayout"" />
@@ -157,7 +157,7 @@ public class Hierarchy
         </log4net>");
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-    XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+    XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
   }
 
   /// <summary>
@@ -167,8 +167,8 @@ public class Hierarchy
   [Test]
   public void CreateNestedLoggersInReverseOrder()
   {
-    XmlDocument log4netConfig = new XmlDocument();
-    log4netConfig.LoadXml(@"
+    XmlDocument log4NetConfig = new();
+    log4NetConfig.LoadXml(@"
         <log4net>
           <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
             <layout type=""log4net.Layout.SimpleLayout"" />
@@ -180,7 +180,7 @@ public class Hierarchy
         </log4net>");
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-    XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+    XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
     Assert.AreEqual("A.B.C", rep.GetLogger("A.B.C").Name);
     Assert.AreEqual("A.B", rep.GetLogger("A.B").Name);
   }

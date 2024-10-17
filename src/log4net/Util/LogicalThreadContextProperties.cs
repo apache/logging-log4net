@@ -45,15 +45,15 @@ namespace log4net.Util;
 public sealed class LogicalThreadContextProperties : ContextPropertiesBase
 {
 #if !NET462_OR_GREATER
-  private static readonly CallContext AsyncLocalDictionary = new CallContext();
+  private static readonly CallContext _asyncLocalDictionary = new CallContext();
 #else
-  private const string c_SlotName = "log4net.Util.LogicalThreadContextProperties";
+  private const string CSlotName = "log4net.Util.LogicalThreadContextProperties";
 #endif
 
   /// <summary>
   /// Flag used to disable this context if we don't have permission to access the CallContext.
   /// </summary>
-  private bool isDisabled;
+  private bool _isDisabled;
 
   /// <summary>
   /// Constructor
@@ -139,7 +139,7 @@ public sealed class LogicalThreadContextProperties : ContextPropertiesBase
   /// </remarks>
   internal PropertiesDictionary? GetProperties(bool create)
   {
-    if (!isDisabled)
+    if (!_isDisabled)
     {
       try
       {
@@ -153,10 +153,10 @@ public sealed class LogicalThreadContextProperties : ContextPropertiesBase
       }
       catch (SecurityException secEx)
       {
-        isDisabled = true;
+        _isDisabled = true;
 
         // Thrown if we don't have permission to read or write the CallContext
-        LogLog.Warn(declaringType, "SecurityException while accessing CallContext. Disabling LogicalThreadContextProperties", secEx);
+        LogLog.Warn(_declaringType, "SecurityException while accessing CallContext. Disabling LogicalThreadContextProperties", secEx);
       }
     }
 
@@ -180,9 +180,9 @@ public sealed class LogicalThreadContextProperties : ContextPropertiesBase
   private static PropertiesDictionary? GetLogicalProperties()
   {
 #if NET462_OR_GREATER
-    return CallContext.LogicalGetData(c_SlotName) as PropertiesDictionary;
+    return CallContext.LogicalGetData(CSlotName) as PropertiesDictionary;
 #else
-    return AsyncLocalDictionary.Value;
+    return _asyncLocalDictionary.Value;
 #endif
   }
 
@@ -198,9 +198,9 @@ public sealed class LogicalThreadContextProperties : ContextPropertiesBase
   private static void SetLogicalProperties(PropertiesDictionary properties)
   {
 #if NET462_OR_GREATER
-    CallContext.LogicalSetData(c_SlotName, properties);
+    CallContext.LogicalSetData(CSlotName, properties);
 #else
-    AsyncLocalDictionary.Value = properties;
+    _asyncLocalDictionary.Value = properties;
 #endif
   }
 
@@ -211,5 +211,5 @@ public sealed class LogicalThreadContextProperties : ContextPropertiesBase
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(LogicalThreadContextProperties);
+  private static readonly Type _declaringType = typeof(LogicalThreadContextProperties);
 }

@@ -48,7 +48,7 @@ public sealed class PluginMap
   /// </remarks>
   public PluginMap(ILoggerRepository repository)
   {
-    this.repository = repository;
+    this._repository = repository;
   }
 
   /// <summary>
@@ -68,7 +68,7 @@ public sealed class PluginMap
         throw new ArgumentNullException(nameof(name));
       }
 
-      mapName2Plugin.TryGetValue(name, out IPlugin? plugin);
+      _mapName2Plugin.TryGetValue(name, out IPlugin? plugin);
       return plugin;
     }
   }
@@ -77,7 +77,7 @@ public sealed class PluginMap
   /// Gets all possible plugins as a list of <see cref="IPlugin" /> objects.
   /// </summary>
   /// <value>All possible plugins as a list of <see cref="IPlugin" /> objects.</value>
-  public PluginCollection AllPlugins => new PluginCollection(mapName2Plugin.Values);
+  public PluginCollection AllPlugins => new PluginCollection(_mapName2Plugin.Values);
 
   /// <summary>
   /// Adds a <see cref="IPlugin" /> to the map.
@@ -102,7 +102,7 @@ public sealed class PluginMap
     }
 
     IPlugin? curPlugin = null;
-    mapName2Plugin.AddOrUpdate(plugin.Name, plugin, (_, existingPlugin) =>
+    _mapName2Plugin.AddOrUpdate(plugin.Name, plugin, (_, existingPlugin) =>
     {
       curPlugin = existingPlugin;
       return plugin;
@@ -112,7 +112,7 @@ public sealed class PluginMap
     curPlugin?.Shutdown();
 
     // Attach new plugin to repository
-    plugin.Attach(repository);
+    plugin.Attach(_repository);
   }
 
   /// <summary>
@@ -125,9 +125,9 @@ public sealed class PluginMap
     {
       throw new ArgumentNullException(nameof(plugin));
     }
-    mapName2Plugin.TryRemove(plugin.Name, out _);
+    _mapName2Plugin.TryRemove(plugin.Name, out _);
   }
 
-  private readonly ConcurrentDictionary<string, IPlugin> mapName2Plugin = new(StringComparer.Ordinal);
-  private readonly ILoggerRepository repository;
+  private readonly ConcurrentDictionary<string, IPlugin> _mapName2Plugin = new(StringComparer.Ordinal);
+  private readonly ILoggerRepository _repository;
 }

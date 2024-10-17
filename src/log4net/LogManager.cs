@@ -591,7 +591,7 @@ public static class LogManager
   [return: NotNullIfNotNull("logger")]
   private static ILog? WrapLogger(ILogger? logger)
   {
-    return (ILog?)s_wrapperMap.GetWrapper(logger);
+    return (ILog?)_sWrapperMap.GetWrapper(logger);
   }
 
   /// <summary>
@@ -623,5 +623,5 @@ public static class LogManager
   /// <summary>
   /// The wrapper map to use to hold the <see cref="LogImpl"/> objects.
   /// </summary>
-  private static readonly WrapperMap s_wrapperMap = new(WrapperCreationHandler);
+  private static readonly WrapperMap _sWrapperMap = new(WrapperCreationHandler);
 }

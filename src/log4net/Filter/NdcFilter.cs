@@ -20,11 +20,11 @@
 namespace log4net.Filter;
 
 /// <summary>
-/// Simple filter to match a string in the <see cref="NDC"/>
+/// Simple filter to match a string in the <see cref="Ndc"/>
 /// </summary>
 /// <remarks>
 /// <para>
-/// Simple filter to match a string in the <see cref="NDC"/>
+/// Simple filter to match a string in the <see cref="Ndc"/>
 /// </para>
 /// <para>
 /// As the NDC has been replaced with named stacks stored in the

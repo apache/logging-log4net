@@ -30,8 +30,8 @@ namespace log4net.Util;
 /// <author>Nicko Cadell</author>
 public sealed class LevelMapping : IOptionHandler
 {
-  private readonly Dictionary<Level, LevelMappingEntry> entries = [];
-  private List<LevelMappingEntry>? sortedEntries;
+  private readonly Dictionary<Level, LevelMappingEntry> _entries = [];
+  private List<LevelMappingEntry>? _sortedEntries;
 
   /// <summary>
   /// Add a <see cref="LevelMappingEntry"/> to this mapping
@@ -48,7 +48,7 @@ public sealed class LevelMapping : IOptionHandler
   {
     if (entry.Level is not null)
     {
-      entries[entry.Level] = entry;
+      _entries[entry.Level] = entry;
     }
   }
 
@@ -61,12 +61,12 @@ public sealed class LevelMapping : IOptionHandler
   /// <returns>The <see cref="LevelMappingEntry"/> for the level or <see langword="null"/> if no mapping found</returns>
   public LevelMappingEntry? Lookup(Level? level)
   {
-    if (level is null || sortedEntries is null)
+    if (level is null || _sortedEntries is null)
     {
       return null;
     }
 
-    foreach (LevelMappingEntry entry in sortedEntries)
+    foreach (LevelMappingEntry entry in _sortedEntries)
     {
       if (level >= entry.Level)
       {
@@ -84,10 +84,10 @@ public sealed class LevelMapping : IOptionHandler
   /// </remarks>
   public void ActivateOptions()
   {
-    sortedEntries = SortEntries();
-    sortedEntries.ForEach(entry => entry.ActivateOptions());
+    _sortedEntries = SortEntries();
+    _sortedEntries.ForEach(entry => entry.ActivateOptions());
   }
 
   private List<LevelMappingEntry> SortEntries()
-    => entries.OrderByDescending(entry => entry.Key).Select(entry => entry.Value).ToList();
+    => _entries.OrderByDescending(entry => entry.Key).Select(entry => entry.Value).ToList();
 }

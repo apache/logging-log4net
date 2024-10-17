@@ -39,16 +39,16 @@ public class SmtpPickupDirAppenderTest
 
   private sealed class SilentErrorHandler : IErrorHandler
   {
-    private readonly StringBuilder buffer = new();
+    private readonly StringBuilder _buffer = new();
 
-    public string Message => buffer.ToString();
+    public string Message => _buffer.ToString();
 
-    public void Error(string message) => buffer.Append(message + '\n');
+    public void Error(string message) => _buffer.Append(message + '\n');
 
-    public void Error(string message, Exception e) => buffer.Append(message + '\n' + e.Message + '\n');
+    public void Error(string message, Exception e) => _buffer.Append(message + '\n' + e.Message + '\n');
 
     public void Error(string message, Exception? e, ErrorCode errorCode)
-      => buffer.Append(message + '\n' + e?.Message + '\n');
+      => _buffer.Append(message + '\n' + e?.Message + '\n');
   }
 
   public SmtpPickupDirAppenderTest()
@@ -134,9 +134,11 @@ public class SmtpPickupDirAppenderTest
   /// <returns></returns>
   private SmtpPickupDirAppender CreateSmtpPickupDirAppender(IErrorHandler handler)
   {
-    SmtpPickupDirAppender appender = new SmtpPickupDirAppender();
-    appender.PickupDir = _testPickupDir;
-    appender.ErrorHandler = handler;
+    SmtpPickupDirAppender appender = new()
+    {
+      PickupDir = _testPickupDir,
+      ErrorHandler = handler
+    };
     return appender;
   }
 
@@ -158,7 +160,7 @@ public class SmtpPickupDirAppenderTest
   public void TestOutputContainsSentDate()
   {
     Utils.InconclusiveOnMono();
-    SilentErrorHandler sh = new SilentErrorHandler();
+    SilentErrorHandler sh = new();
     SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(sh);
     ILogger log = CreateLogger(appender);
     log.Log(GetType(), Level.Info, "This is a message", null);
@@ -193,7 +195,7 @@ public class SmtpPickupDirAppenderTest
   {
     Utils.InconclusiveOnMono();
     const string fileExtension = "eml";
-    SilentErrorHandler sh = new SilentErrorHandler();
+    SilentErrorHandler sh = new();
     SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(sh);
     appender.FileExtension = fileExtension;
     ILogger log = CreateLogger(appender);
@@ -202,7 +204,7 @@ public class SmtpPickupDirAppenderTest
     DestroyLogger();
 
     Assert.AreEqual(1, Directory.GetFiles(_testPickupDir).Length);
-    FileInfo fileInfo = new FileInfo(Directory.GetFiles(_testPickupDir)[0]);
+    FileInfo fileInfo = new(Directory.GetFiles(_testPickupDir)[0]);
     Assert.AreEqual("." + fileExtension, fileInfo.Extension);
     Assert.IsTrue(Guid.TryParse(fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length), out _));
 
@@ -216,7 +218,7 @@ public class SmtpPickupDirAppenderTest
   public void TestDefaultFileNameIsAGuid()
   {
     Utils.InconclusiveOnMono();
-    SilentErrorHandler sh = new SilentErrorHandler();
+    SilentErrorHandler sh = new();
     SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(sh);
     ILogger log = CreateLogger(appender);
     log.Log(GetType(), Level.Info, "This is a message", null);
@@ -224,7 +226,7 @@ public class SmtpPickupDirAppenderTest
     DestroyLogger();
 
     Assert.AreEqual(1, Directory.GetFiles(_testPickupDir).Length);
-    FileInfo fileInfo = new FileInfo(Directory.GetFiles(_testPickupDir)[0]);
+    FileInfo fileInfo = new(Directory.GetFiles(_testPickupDir)[0]);
     Assert.IsEmpty(fileInfo.Extension);
     Assert.IsTrue(Guid.TryParse(fileInfo.Name, out _));
 

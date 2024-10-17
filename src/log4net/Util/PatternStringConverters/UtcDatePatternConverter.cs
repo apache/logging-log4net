@@ -63,7 +63,7 @@ internal sealed class UtcDatePatternConverter : DatePatternConverter
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Error occurred while converting date.", ex);
+      LogLog.Error(_declaringType, "Error occurred while converting date.", ex);
     }
   }
 
@@ -74,5 +74,5 @@ internal sealed class UtcDatePatternConverter : DatePatternConverter
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(UtcDatePatternConverter);
+  private static readonly Type _declaringType = typeof(UtcDatePatternConverter);
 }

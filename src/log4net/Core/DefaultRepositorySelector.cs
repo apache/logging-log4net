@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 using log4net.Config;
@@ -78,9 +79,9 @@ public class DefaultRepositorySelector : IRepositorySelector
       throw SystemInfo.CreateArgumentOutOfRangeException("defaultRepositoryType", defaultRepositoryType, $"Parameter: defaultRepositoryType, Value: [{defaultRepositoryType}] out of range. Argument must implement the ILoggerRepository interface");
     }
 
-    this.defaultRepositoryType = defaultRepositoryType;
+    this._defaultRepositoryType = defaultRepositoryType;
 
-    LogLog.Debug(declaringType, $"defaultRepositoryType [{this.defaultRepositoryType}]");
+    LogLog.Debug(_declaringType, $"defaultRepositoryType [{this._defaultRepositoryType}]");
   }
 
   /// <summary>
@@ -107,7 +108,7 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// <returns>The <see cref="ILoggerRepository"/> for the assembly</returns>
   /// <exception cref="ArgumentNullException"><paramref name="repositoryAssembly"/> is <see langword="null" />.</exception>
   public ILoggerRepository GetRepository(Assembly repositoryAssembly)
-    => CreateRepository(repositoryAssembly.EnsureNotNull(), defaultRepositoryType);
+    => CreateRepository(repositoryAssembly.EnsureNotNull(), _defaultRepositoryType);
 
   /// <summary>
   /// Gets the <see cref="ILoggerRepository"/> for the specified repository.
@@ -128,9 +129,9 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// <exception cref="LogException"><paramref name="repositoryName"/> does not exist.</exception>
   public ILoggerRepository GetRepository(string repositoryName)
   {
-    lock (syncRoot)
+    lock (_syncRoot)
     {
-      if (name2repository.TryGetValue(repositoryName.EnsureNotNull(), out ILoggerRepository? rep))
+      if (_name2Repository.TryGetValue(repositoryName.EnsureNotNull(), out ILoggerRepository? rep))
       {
         return rep;
       }
@@ -221,14 +222,14 @@ public class DefaultRepositorySelector : IRepositorySelector
   {
     repositoryAssembly.EnsureNotNull();
 
-    repositoryType ??= defaultRepositoryType;
+    repositoryType ??= _defaultRepositoryType;
 
-    lock (syncRoot)
+    lock (_syncRoot)
     {
-      if (!assembly2repository.TryGetValue(repositoryAssembly, out ILoggerRepository? rep))
+      if (!_assembly2Repository.TryGetValue(repositoryAssembly, out ILoggerRepository? rep))
       {
         // Not found, therefore create
-        LogLog.Debug(declaringType, $"Creating repository for assembly [{repositoryAssembly}]");
+        LogLog.Debug(_declaringType, $"Creating repository for assembly [{repositoryAssembly}]");
 
         // Must specify defaults
         string actualRepositoryName = repositoryName;
@@ -240,10 +241,10 @@ public class DefaultRepositorySelector : IRepositorySelector
           GetInfoForAssembly(repositoryAssembly, ref actualRepositoryName, ref actualRepositoryType);
         }
 
-        LogLog.Debug(declaringType, $"Assembly [{repositoryAssembly}] using repository [{actualRepositoryName}] and repository type [{actualRepositoryType}]");
+        LogLog.Debug(_declaringType, $"Assembly [{repositoryAssembly}] using repository [{actualRepositoryName}] and repository type [{actualRepositoryType}]");
 
         // Lookup the repository in the map (as this may already be defined)
-        if (!name2repository.TryGetValue(actualRepositoryName, out rep))
+        if (!_name2Repository.TryGetValue(actualRepositoryName, out rep))
         {
           // Create the repository
           rep = CreateRepository(actualRepositoryName, actualRepositoryType);
@@ -263,13 +264,13 @@ public class DefaultRepositorySelector : IRepositorySelector
             }
             catch (Exception ex)
             {
-              LogLog.Error(declaringType, $"Failed to configure repository [{actualRepositoryName}] from assembly attributes.", ex);
+              LogLog.Error(_declaringType, $"Failed to configure repository [{actualRepositoryName}] from assembly attributes.", ex);
             }
           }
         }
         else
         {
-          LogLog.Debug(declaringType, $"repository [{actualRepositoryName}] already exists, using repository type [{rep.GetType().FullName}]");
+          LogLog.Debug(_declaringType, $"repository [{actualRepositoryName}] already exists, using repository type [{rep.GetType().FullName}]");
 
           if (readAssemblyAttributes)
           {
@@ -280,11 +281,11 @@ public class DefaultRepositorySelector : IRepositorySelector
             }
             catch (Exception ex)
             {
-              LogLog.Error(declaringType, $"Failed to configure repository [{actualRepositoryName}] from assembly attributes.", ex);
+              LogLog.Error(_declaringType, $"Failed to configure repository [{actualRepositoryName}] from assembly attributes.", ex);
             }
           }
         }
-        assembly2repository[repositoryAssembly] = rep;
+        _assembly2Repository[repositoryAssembly] = rep;
       }
       return rep;
     }
@@ -311,20 +312,20 @@ public class DefaultRepositorySelector : IRepositorySelector
     repositoryName.EnsureNotNull();
 
     // If the type is not set then use the default type
-    repositoryType ??= defaultRepositoryType;
+    repositoryType ??= _defaultRepositoryType;
 
-    lock (syncRoot)
+    lock (_syncRoot)
     {
       ILoggerRepository? rep = null;
 
       // First check that the repository does not exist
-      if (name2repository.ContainsKey(repositoryName))
+      if (_name2Repository.ContainsKey(repositoryName))
       {
         throw new LogException($"Repository [{repositoryName}] is already defined. Repositories cannot be redefined.");
       }
 
       // Look up an alias before trying to create the new repository
-      if (alias2repository.TryGetValue(repositoryName, out ILoggerRepository? aliasedRepository))
+      if (_alias2Repository.TryGetValue(repositoryName, out ILoggerRepository? aliasedRepository))
       {
         // Found an alias
 
@@ -332,16 +333,16 @@ public class DefaultRepositorySelector : IRepositorySelector
         if (aliasedRepository.GetType() == repositoryType)
         {
           // Repository type is compatible
-          LogLog.Debug(declaringType, $"Aliasing repository [{repositoryName}] to existing repository [{aliasedRepository.Name}]");
+          LogLog.Debug(_declaringType, $"Aliasing repository [{repositoryName}] to existing repository [{aliasedRepository.Name}]");
           rep = aliasedRepository;
 
           // Store in map
-          name2repository[repositoryName] = rep;
+          _name2Repository[repositoryName] = rep;
         }
         else
         {
           // Invalid repository type for alias
-          LogLog.Error(declaringType, $"Failed to alias repository [{repositoryName}] to existing repository [{aliasedRepository.Name}]. Requested repository type [{repositoryType.FullName}] is not compatible with existing type [{aliasedRepository.GetType().FullName}]");
+          LogLog.Error(_declaringType, $"Failed to alias repository [{repositoryName}] to existing repository [{aliasedRepository.Name}]. Requested repository type [{repositoryType.FullName}] is not compatible with existing type [{aliasedRepository.GetType().FullName}]");
 
           // We now drop through to create the repository without aliasing
         }
@@ -350,7 +351,7 @@ public class DefaultRepositorySelector : IRepositorySelector
       // If we could not find an alias
       if (rep is null)
       {
-        LogLog.Debug(declaringType, $"Creating repository [{repositoryName}] using type [{repositoryType}]");
+        LogLog.Debug(_declaringType, $"Creating repository [{repositoryName}] using type [{repositoryType}]");
 
         // Call the no arg constructor for the repositoryType
         rep = Activator.CreateInstance(repositoryType).EnsureIs<ILoggerRepository>();
@@ -359,7 +360,7 @@ public class DefaultRepositorySelector : IRepositorySelector
         rep.Name = repositoryName;
 
         // Store in map
-        name2repository[repositoryName] = rep;
+        _name2Repository[repositoryName] = rep;
 
         // Notify listeners that the repository has been created
         OnLoggerRepositoryCreatedEvent(rep);
@@ -383,9 +384,9 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// </remarks>
   public bool ExistsRepository(string repositoryName)
   {
-    lock (syncRoot)
+    lock (_syncRoot)
     {
-      return name2repository.ContainsKey(repositoryName);
+      return _name2Repository.ContainsKey(repositoryName);
     }
   }
 
@@ -400,9 +401,9 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// </remarks>
   public ILoggerRepository[] GetAllRepositories()
   {
-    lock (syncRoot)
+    lock (_syncRoot)
     {
-      return [.. name2repository.Values];
+      return _name2Repository.Values.ToArray();
     }
   }
 
@@ -431,10 +432,10 @@ public class DefaultRepositorySelector : IRepositorySelector
     repositoryAlias.EnsureNotNull();
     repositoryTarget.EnsureNotNull();
 
-    lock (syncRoot)
+    lock (_syncRoot)
     {
       // Check if the alias is already set
-      if (alias2repository.TryGetValue(repositoryAlias, out ILoggerRepository? existingTarget))
+      if (_alias2Repository.TryGetValue(repositoryAlias, out ILoggerRepository? existingTarget))
       {
         // Check if this is a duplicate of the current alias
         if (repositoryTarget != existingTarget)
@@ -444,7 +445,7 @@ public class DefaultRepositorySelector : IRepositorySelector
         }
       }
       // Check if the alias is already mapped to a repository
-      else if (name2repository.TryGetValue(repositoryAlias, out existingTarget))
+      else if (_name2Repository.TryGetValue(repositoryAlias, out existingTarget))
       {
         // Check if this is a duplicate of the current mapping
         if (repositoryTarget != existingTarget)
@@ -456,7 +457,7 @@ public class DefaultRepositorySelector : IRepositorySelector
       else
       {
         // Set the alias
-        alias2repository[repositoryAlias] = repositoryTarget;
+        _alias2Repository[repositoryAlias] = repositoryTarget;
       }
     }
   }
@@ -488,7 +489,7 @@ public class DefaultRepositorySelector : IRepositorySelector
 
     try
     {
-      LogLog.Debug(declaringType, $"Assembly [{assembly.FullName}] Loaded From [{SystemInfo.AssemblyLocationInfo(assembly)}]");
+      LogLog.Debug(_declaringType, $"Assembly [{assembly.FullName}] Loaded From [{SystemInfo.AssemblyLocationInfo(assembly)}]");
     }
     catch
     {
@@ -502,13 +503,13 @@ public class DefaultRepositorySelector : IRepositorySelector
       if (repositoryAttributes.Length == 0)
       {
         // This is not a problem, but it's nice to know what is going on.
-        LogLog.Debug(declaringType, $"Assembly [{assembly}] does not have a {nameof(RepositoryAttribute)} specified.");
+        LogLog.Debug(_declaringType, $"Assembly [{assembly}] does not have a {nameof(RepositoryAttribute)} specified.");
       }
       else
       {
         if (repositoryAttributes.Length > 1)
         {
-          LogLog.Error(declaringType, $"Assembly [{assembly}] has multiple log4net.Config.RepositoryAttribute assembly attributes. Only using first occurrence.");
+          LogLog.Error(_declaringType, $"Assembly [{assembly}] has multiple log4net.Config.RepositoryAttribute assembly attributes. Only using first occurrence.");
         }
 
         RepositoryAttribute domAttr = (RepositoryAttribute)repositoryAttributes[0];
@@ -528,14 +529,14 @@ public class DefaultRepositorySelector : IRepositorySelector
           }
           else
           {
-            LogLog.Error(declaringType, $"DefaultRepositorySelector: Repository Type [{domAttr.RepositoryType}] must implement the ILoggerRepository interface.");
+            LogLog.Error(_declaringType, $"DefaultRepositorySelector: Repository Type [{domAttr.RepositoryType}] must implement the ILoggerRepository interface.");
           }
         }
       }
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Unhandled exception in GetInfoForAssembly", ex);
+      LogLog.Error(_declaringType, "Unhandled exception in GetInfoForAssembly", ex);
     }
   }
 
@@ -571,7 +572,7 @@ public class DefaultRepositorySelector : IRepositorySelector
         }
         catch (Exception ex)
         {
-          LogLog.Error(declaringType, $"Exception calling [{configAttr.GetType().FullName}] .Configure method.", ex);
+          LogLog.Error(_declaringType, $"Exception calling [{configAttr.GetType().FullName}] .Configure method.", ex);
         }
       }
     }
@@ -592,7 +593,7 @@ public class DefaultRepositorySelector : IRepositorySelector
         }
         catch (Exception ex)
         {
-          LogLog.Warn(declaringType, $"Exception getting ApplicationBaseDirectory. appSettings log4net.Config path [{repositoryConfigFile}] will be treated as an absolute URI", ex);
+          LogLog.Warn(_declaringType, $"Exception getting ApplicationBaseDirectory. appSettings log4net.Config path [{repositoryConfigFile}] will be treated as an absolute URI", ex);
         }
 
         string repositoryConfigFilePath = repositoryConfigFile;
@@ -615,20 +616,20 @@ public class DefaultRepositorySelector : IRepositorySelector
           }
           catch (Exception ex)
           {
-            LogLog.Error(declaringType, $"DefaultRepositorySelector: Exception while parsing log4net.Config file physical path [{repositoryConfigFilePath}]", ex);
+            LogLog.Error(_declaringType, $"DefaultRepositorySelector: Exception while parsing log4net.Config file physical path [{repositoryConfigFilePath}]", ex);
           }
 
           if (repositoryConfigFileInfo is not null)
           {
             try
             {
-              LogLog.Debug(declaringType, $"Loading and watching configuration for default repository from AppSettings specified Config path [{repositoryConfigFilePath}]");
+              LogLog.Debug(_declaringType, $"Loading and watching configuration for default repository from AppSettings specified Config path [{repositoryConfigFilePath}]");
 
               XmlConfigurator.ConfigureAndWatch(repository, repositoryConfigFileInfo);
             }
             catch (Exception ex)
             {
-              LogLog.Error(declaringType, $"DefaultRepositorySelector: Exception calling XmlConfigurator.ConfigureAndWatch method with ConfigFilePath [{repositoryConfigFilePath}]", ex);
+              LogLog.Error(_declaringType, $"DefaultRepositorySelector: Exception calling XmlConfigurator.ConfigureAndWatch method with ConfigFilePath [{repositoryConfigFilePath}]", ex);
             }
           }
         }
@@ -643,12 +644,12 @@ public class DefaultRepositorySelector : IRepositorySelector
           }
           catch (Exception ex)
           {
-            LogLog.Error(declaringType, $"Exception while parsing log4net.Config file path [{repositoryConfigFile}]", ex);
+            LogLog.Error(_declaringType, $"Exception while parsing log4net.Config file path [{repositoryConfigFile}]", ex);
           }
 
           if (repositoryConfigUri is not null)
           {
-            LogLog.Debug(declaringType, $"Loading configuration for default repository from AppSettings specified Config URI [{repositoryConfigUri}]");
+            LogLog.Debug(_declaringType, $"Loading configuration for default repository from AppSettings specified Config URI [{repositoryConfigUri}]");
 
             try
             {
@@ -657,7 +658,7 @@ public class DefaultRepositorySelector : IRepositorySelector
             }
             catch (Exception ex)
             {
-              LogLog.Error(declaringType, $"Exception calling XmlConfigurator.Configure method with ConfigUri [{repositoryConfigUri}]", ex);
+              LogLog.Error(_declaringType, $"Exception calling XmlConfigurator.Configure method with ConfigUri [{repositoryConfigUri}]", ex);
             }
           }
         }
@@ -689,7 +690,7 @@ public class DefaultRepositorySelector : IRepositorySelector
       }
       catch (Exception ex)
       {
-        LogLog.Error(declaringType, $"Failed to create plugin. Attribute [{configAttr}]", ex);
+        LogLog.Error(_declaringType, $"Failed to create plugin. Attribute [{configAttr}]", ex);
       }
     }
   }
@@ -718,7 +719,7 @@ public class DefaultRepositorySelector : IRepositorySelector
       }
       catch (Exception ex)
       {
-        LogLog.Error(declaringType, $"Failed to alias repository [{configAttr.Name}]", ex);
+        LogLog.Error(_declaringType, $"Failed to alias repository [{configAttr.Name}]", ex);
       }
     }
   }
@@ -730,13 +731,13 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(DefaultRepositorySelector);
+  private static readonly Type _declaringType = typeof(DefaultRepositorySelector);
 
   private const string DefaultRepositoryName = "log4net-default-repository";
 
-  private readonly object syncRoot = new();
-  private readonly Dictionary<string, ILoggerRepository> name2repository = new(StringComparer.Ordinal);
-  private readonly Dictionary<Assembly, ILoggerRepository> assembly2repository = [];
-  private readonly Dictionary<string, ILoggerRepository> alias2repository = new(StringComparer.Ordinal);
-  private readonly Type defaultRepositoryType;
+  private readonly object _syncRoot = new();
+  private readonly Dictionary<string, ILoggerRepository> _name2Repository = new(StringComparer.Ordinal);
+  private readonly Dictionary<Assembly, ILoggerRepository> _assembly2Repository = [];
+  private readonly Dictionary<string, ILoggerRepository> _alias2Repository = new(StringComparer.Ordinal);
+  private readonly Type _defaultRepositoryType;
 }

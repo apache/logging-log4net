@@ -89,7 +89,7 @@ public class TextWriterAppender : AppenderSkeleton
     get => QuietWriter;
     set
     {
-      lock (syncRoot)
+      lock (_syncRoot)
       {
         Reset();
         if (value is not null)
@@ -204,7 +204,7 @@ public class TextWriterAppender : AppenderSkeleton
   /// </remarks>
   protected override void OnClose()
   {
-    lock (syncRoot)
+    lock (_syncRoot)
     {
       Reset();
     }
@@ -222,11 +222,11 @@ public class TextWriterAppender : AppenderSkeleton
     get => base.ErrorHandler;
     set
     {
-      lock (syncRoot)
+      lock (_syncRoot)
       {
         if (value is null)
         {
-          LogLog.Warn(declaringType, "TextWriterAppender: You have tried to set a null error-handler.");
+          LogLog.Warn(_declaringType, "TextWriterAppender: You have tried to set a null error-handler.");
         }
         else
         {
@@ -357,7 +357,7 @@ public class TextWriterAppender : AppenderSkeleton
   /// </remarks>
   protected QuietTextWriter? QuietWriter { get; set; }
 
-  private readonly object syncRoot = new();
+  private readonly object _syncRoot = new();
 
   /// <summary>
   /// The fully qualified type of the TextWriterAppender class.
@@ -366,7 +366,7 @@ public class TextWriterAppender : AppenderSkeleton
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(TextWriterAppender);
+  private static readonly Type _declaringType = typeof(TextWriterAppender);
 
   /// <summary>
   /// Flushes any buffered log data.
@@ -382,7 +382,7 @@ public class TextWriterAppender : AppenderSkeleton
     }
 
     // lock(this) will block any Appends while the buffer is flushed.
-    lock (syncRoot)
+    lock (_syncRoot)
     {
       QuietWriter?.Flush();
     }

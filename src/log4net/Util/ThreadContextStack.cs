@@ -39,7 +39,7 @@ public sealed class ThreadContextStack : IFixingRequired
   /// <summary>
   /// The stack store.
   /// </summary>
-  private readonly Stack<StackFrame> stack = new();
+  private readonly Stack<StackFrame> _stack = new();
 
   /// <summary>
   /// Internal constructor
@@ -66,7 +66,7 @@ public sealed class ThreadContextStack : IFixingRequired
   /// minus the number of times <see cref="Pop"/> has been called.
   /// </para>
   /// </remarks>
-  public int Count => stack.Count;
+  public int Count => _stack.Count;
 
   /// <summary>
   /// Clears all the contextual information held in this stack.
@@ -83,7 +83,7 @@ public sealed class ThreadContextStack : IFixingRequired
   /// syntax.
   /// </para>
   /// </remarks>
-  public void Clear() => stack.Clear();
+  public void Clear() => _stack.Clear();
 
   /// <summary>
   /// Removes the top context from this stack.
@@ -98,7 +98,7 @@ public sealed class ThreadContextStack : IFixingRequired
   /// </remarks>
   public string? Pop()
   {
-    Stack<StackFrame> local = stack;
+    Stack<StackFrame> local = _stack;
     if (local.Count > 0)
     {
       return local.Pop().Message;
@@ -131,8 +131,8 @@ public sealed class ThreadContextStack : IFixingRequired
   /// </example>
   public IDisposable Push(string? message)
   {
-    Stack<StackFrame> local = stack;
-    stack.Push(new StackFrame(message, (local.Count > 0) ? local.Peek() : null));
+    Stack<StackFrame> local = _stack;
+    _stack.Push(new StackFrame(message, (local.Count > 0) ? local.Peek() : null));
 
     return new AutoPopStackFrame(local, local.Count - 1);
   }
@@ -149,7 +149,7 @@ public sealed class ThreadContextStack : IFixingRequired
   /// </remarks>
   public string? Peek()
   {
-    Stack<StackFrame> local = stack;
+    Stack<StackFrame> local = _stack;
     if (local.Count > 0)
     {
       return local.Peek().Message;
@@ -163,7 +163,7 @@ public sealed class ThreadContextStack : IFixingRequired
   /// <returns>The current context information.</returns>
   internal string? GetFullMessage()
   {
-    Stack<StackFrame> local = stack;
+    Stack<StackFrame> local = _stack;
     if (local.Count > 0)
     {
       return local.Peek().FullMessage;
@@ -178,20 +178,20 @@ public sealed class ThreadContextStack : IFixingRequired
   /// <remarks>
   /// <para>
   /// This property is provided only to support backward compatibility 
-  /// of the <see cref="NDC"/>. Typically the internal stack should not
+  /// of the <see cref="Ndc"/>. Typically the internal stack should not
   /// be modified.
   /// </para>
   /// </remarks>
   internal Stack InternalStack
   {
-    get => new(new Stack(stack));
+    get => new(new Stack(_stack));
     set
     {
-      stack.Clear();
+      _stack.Clear();
       var frames = (StackFrame[])value.ToArray();
       for (int i = frames.Length - 1; i >= 0; i--)
       {
-        stack.Push(frames[i]);
+        _stack.Push(frames[i]);
       }
     }
   }
@@ -211,8 +211,8 @@ public sealed class ThreadContextStack : IFixingRequired
   /// </summary>
   internal sealed class StackFrame
   {
-    private readonly StackFrame? parent;
-    private string? fullMessage;
+    private readonly StackFrame? _parent;
+    private string? _fullMessage;
 
     /// <summary>
     /// Constructor
@@ -228,11 +228,11 @@ public sealed class ThreadContextStack : IFixingRequired
     internal StackFrame(string? message, StackFrame? parent)
     {
       Message = message;
-      this.parent = parent;
+      this._parent = parent;
 
       if (parent is null)
       {
-        fullMessage = message;
+        _fullMessage = message;
       }
     }
 
@@ -248,11 +248,11 @@ public sealed class ThreadContextStack : IFixingRequired
     {
       get
       {
-        if (fullMessage is null && parent is not null)
+        if (_fullMessage is null && _parent is not null)
         {
-          fullMessage = string.Concat(parent.FullMessage, " ", Message);
+          _fullMessage = string.Concat(_parent.FullMessage, " ", Message);
         }
-        return fullMessage;
+        return _fullMessage;
       }
     }
   }
@@ -271,12 +271,12 @@ public sealed class ThreadContextStack : IFixingRequired
     /// <summary>
     /// The ThreadContextStack internal stack
     /// </summary>
-    private readonly Stack<StackFrame> frameStack;
+    private readonly Stack<StackFrame> _frameStack;
 
     /// <summary>
     /// The depth to trim the stack to when this instance is disposed
     /// </summary>
-    private readonly int frameDepth;
+    private readonly int _frameDepth;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AutoPopStackFrame" /> class with
@@ -286,8 +286,8 @@ public sealed class ThreadContextStack : IFixingRequired
     /// <param name="frameDepth">The depth to return the stack to when this object is disposed.</param>
     internal AutoPopStackFrame(Stack<StackFrame> frameStack, int frameDepth)
     {
-      this.frameStack = frameStack;
-      this.frameDepth = frameDepth;
+      this._frameStack = frameStack;
+      this._frameDepth = frameDepth;
     }
 
     /// <summary>
@@ -295,11 +295,11 @@ public sealed class ThreadContextStack : IFixingRequired
     /// </summary>
     public void Dispose()
     {
-      if (frameDepth >= 0)
+      if (_frameDepth >= 0)
       {
-        while (frameStack.Count > frameDepth)
+        while (_frameStack.Count > _frameDepth)
         {
-          frameStack.Pop();
+          _frameStack.Pop();
         }
       }
     }

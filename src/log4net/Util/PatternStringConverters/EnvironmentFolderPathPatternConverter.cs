@@ -69,11 +69,11 @@ internal sealed class EnvironmentFolderPathPatternConverter : PatternConverter
       // This security exception will occur if the caller does not have 
       // unrestricted environment permission. If this occurs the expansion 
       // will be skipped with the following warning message.
-      LogLog.Debug(declaringType, "Security exception while trying to expand environment variables. Error Ignored. No Expansion.", secEx);
+      LogLog.Debug(_declaringType, "Security exception while trying to expand environment variables. Error Ignored. No Expansion.", secEx);
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Error occurred while converting environment variable.", ex);
+      LogLog.Error(_declaringType, "Error occurred while converting environment variable.", ex);
     }
   }
 
@@ -84,5 +84,5 @@ internal sealed class EnvironmentFolderPathPatternConverter : PatternConverter
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(EnvironmentFolderPathPatternConverter);
+  private static readonly Type _declaringType = typeof(EnvironmentFolderPathPatternConverter);
 }

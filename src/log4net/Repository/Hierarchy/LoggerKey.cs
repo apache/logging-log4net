@@ -65,7 +65,7 @@ internal readonly struct LoggerKey
   internal LoggerKey(string name)
   {
     Name = string.Intern(name);
-    hashCache = name.GetHashCode();
+    _hashCache = name.GetHashCode();
   }
 
   /// <summary>
@@ -77,21 +77,21 @@ internal readonly struct LoggerKey
   /// Returns the cached hashcode.
   /// </para>
   /// </remarks>
-  public override int GetHashCode() => hashCache;
+  public override int GetHashCode() => _hashCache;
 
   /// <summary>
   /// Name of the Logger
   /// </summary>
   internal string Name { get; }
 
-  private readonly int hashCache;
+  private readonly int _hashCache;
 
   public static Comparer ComparerInstance { get; } = new();
 
   public sealed class Comparer : IEqualityComparer<LoggerKey>
   {
-    public bool Equals(LoggerKey x, LoggerKey y) => x.hashCache == y.hashCache && x.Name == y.Name;
+    public bool Equals(LoggerKey x, LoggerKey y) => x._hashCache == y._hashCache && x.Name == y.Name;
 
-    public int GetHashCode(LoggerKey obj) => obj.hashCache;
+    public int GetHashCode(LoggerKey obj) => obj._hashCache;
   }
 }

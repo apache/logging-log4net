@@ -37,19 +37,19 @@ public sealed class LogicalThreadContextStack : IFixingRequired
   /// <summary>
   /// The stack store.
   /// </summary>
-  private Stack<StackFrame> stack = new();
+  private Stack<StackFrame> _stack = new();
 
   /// <summary>
   /// The name of this <see cref="LogicalThreadContextStack"/> within the
   /// <see cref="LogicalThreadContextProperties"/>.
   /// </summary>
-  private readonly string propertyKey;
+  private readonly string _propertyKey;
 
   /// <summary>
   /// The callback used to let the <see cref="LogicalThreadContextStacks"/> register a
   /// new instance of a <see cref="LogicalThreadContextStack"/>.
   /// </summary>
-  private readonly TwoArgAction<string, LogicalThreadContextStack> registerNew;
+  private readonly TwoArgAction<string, LogicalThreadContextStack> _registerNew;
 
   /// <summary>
   /// Internal constructor
@@ -61,8 +61,8 @@ public sealed class LogicalThreadContextStack : IFixingRequired
   /// </remarks>
   internal LogicalThreadContextStack(string propertyKey, TwoArgAction<string, LogicalThreadContextStack> registerNew)
   {
-    this.propertyKey = propertyKey;
-    this.registerNew = registerNew;
+    this._propertyKey = propertyKey;
+    this._registerNew = registerNew;
   }
 
   /// <summary>
@@ -75,7 +75,7 @@ public sealed class LogicalThreadContextStack : IFixingRequired
   /// minus the number of times <see cref="Pop"/> has been called.
   /// </para>
   /// </remarks>
-  public int Count => stack.Count;
+  public int Count => _stack.Count;
 
   /// <summary>
   /// Clears all the contextual information held in this stack.
@@ -94,7 +94,7 @@ public sealed class LogicalThreadContextStack : IFixingRequired
   /// </remarks>
   public void Clear()
   {
-    registerNew(propertyKey, new LogicalThreadContextStack(propertyKey, registerNew));
+    _registerNew(_propertyKey, new LogicalThreadContextStack(_propertyKey, _registerNew));
   }
 
   /// <summary>
@@ -111,14 +111,14 @@ public sealed class LogicalThreadContextStack : IFixingRequired
   public string? Pop()
   {
     // copy current stack
-    var stack = new Stack<StackFrame>(new Stack<StackFrame>(this.stack));
+    var stack = new Stack<StackFrame>(new Stack<StackFrame>(this._stack));
     string? result = string.Empty;
     if (stack.Count > 0)
     {
       result = stack.Pop().Message;
     }
-    var ltcs = new LogicalThreadContextStack(propertyKey, registerNew) { stack = stack };
-    registerNew(propertyKey, ltcs);
+    var ltcs = new LogicalThreadContextStack(_propertyKey, _registerNew) { _stack = stack };
+    _registerNew(_propertyKey, ltcs);
     return result;
   }
 
@@ -148,12 +148,12 @@ public sealed class LogicalThreadContextStack : IFixingRequired
   public IDisposable Push(string? message)
   {
     // do modifications on a copy
-    var stack = new Stack<StackFrame>(new Stack<StackFrame>(this.stack));
+    var stack = new Stack<StackFrame>(new Stack<StackFrame>(this._stack));
     stack.Push(new StackFrame(message, (stack.Count > 0) ? stack.Peek() : null));
 
-    LogicalThreadContextStack contextStack = new LogicalThreadContextStack(propertyKey, registerNew);
-    contextStack.stack = stack;
-    registerNew(propertyKey, contextStack);
+    LogicalThreadContextStack contextStack = new LogicalThreadContextStack(_propertyKey, _registerNew);
+    contextStack._stack = stack;
+    _registerNew(_propertyKey, contextStack);
     return new AutoPopStackFrame(contextStack, stack.Count - 1);
   }
 
@@ -169,7 +169,7 @@ public sealed class LogicalThreadContextStack : IFixingRequired
   /// </remarks>
   public string? Peek()
   {
-    Stack<StackFrame> local = stack;
+    Stack<StackFrame> local = _stack;
     if (local.Count > 0)
     {
       return local.Peek().Message;
@@ -183,7 +183,7 @@ public sealed class LogicalThreadContextStack : IFixingRequired
   /// <returns>The current context information.</returns>
   internal string? GetFullMessage()
   {
-    Stack<StackFrame> local = stack;
+    Stack<StackFrame> local = _stack;
     if (local.Count > 0)
     {
       return local.Peek().FullMessage;
@@ -207,8 +207,8 @@ public sealed class LogicalThreadContextStack : IFixingRequired
   /// </summary>
   internal sealed class StackFrame
   {
-    private readonly StackFrame? parent;
-    private string? fullMessage;
+    private readonly StackFrame? _parent;
+    private string? _fullMessage;
 
     /// <summary>
     /// Constructor
@@ -224,11 +224,11 @@ public sealed class LogicalThreadContextStack : IFixingRequired
     internal StackFrame(string? message, StackFrame? parent)
     {
       Message = message;
-      this.parent = parent;
+      this._parent = parent;
 
       if (parent is null)
       {
-        fullMessage = message;
+        _fullMessage = message;
       }
     }
 
@@ -258,12 +258,12 @@ public sealed class LogicalThreadContextStack : IFixingRequired
     {
       get
       {
-        if (fullMessage is null && parent is not null)
+        if (_fullMessage is null && _parent is not null)
         {
-          fullMessage = string.Concat(parent.FullMessage, " ", Message);
+          _fullMessage = string.Concat(_parent.FullMessage, " ", Message);
         }
 
-        return fullMessage;
+        return _fullMessage;
       }
     }
   }
@@ -282,12 +282,12 @@ public sealed class LogicalThreadContextStack : IFixingRequired
     /// <summary>
     /// The depth to trim the stack to when this instance is disposed
     /// </summary>
-    private readonly int frameDepth;
+    private readonly int _frameDepth;
 
     /// <summary>
     /// The outer LogicalThreadContextStack.
     /// </summary>
-    private readonly LogicalThreadContextStack logicalThreadContextStack;
+    private readonly LogicalThreadContextStack _logicalThreadContextStack;
 
     /// <summary>
     /// Constructor
@@ -302,8 +302,8 @@ public sealed class LogicalThreadContextStack : IFixingRequired
     /// </remarks>
     internal AutoPopStackFrame(LogicalThreadContextStack logicalThreadContextStack, int frameDepth)
     {
-      this.frameDepth = frameDepth;
-      this.logicalThreadContextStack = logicalThreadContextStack;
+      this._frameDepth = frameDepth;
+      this._logicalThreadContextStack = logicalThreadContextStack;
     }
 
     /// <summary>
@@ -316,18 +316,18 @@ public sealed class LogicalThreadContextStack : IFixingRequired
     /// </remarks>
     public void Dispose()
     {
-      if (frameDepth >= 0)
+      if (_frameDepth >= 0)
       {
-        Stack<StackFrame> local = new(new Stack<StackFrame>(logicalThreadContextStack.stack));
-        while (local.Count > frameDepth)
+        Stack<StackFrame> local = new(new Stack<StackFrame>(_logicalThreadContextStack._stack));
+        while (local.Count > _frameDepth)
         {
           local.Pop();
         }
-        LogicalThreadContextStack ltcs = new(logicalThreadContextStack.propertyKey, logicalThreadContextStack.registerNew)
+        LogicalThreadContextStack ltcs = new(_logicalThreadContextStack._propertyKey, _logicalThreadContextStack._registerNew)
         {
-          stack = local
+          _stack = local
         };
-        logicalThreadContextStack.registerNew(logicalThreadContextStack.propertyKey, ltcs);
+        _logicalThreadContextStack._registerNew(_logicalThreadContextStack._propertyKey, ltcs);
       }
     }
   }

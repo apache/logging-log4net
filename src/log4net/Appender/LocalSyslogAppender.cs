@@ -279,7 +279,7 @@ public class LocalSyslogAppender : AppenderSkeleton
   /// </remarks>
   public void AddMapping(LevelSeverity mapping)
   {
-    levelMapping.Add(mapping);
+    _levelMapping.Add(mapping);
   }
 
   /// <summary>
@@ -303,7 +303,7 @@ public class LocalSyslogAppender : AppenderSkeleton
   {
     base.ActivateOptions();
 
-    levelMapping.ActivateOptions();
+    _levelMapping.ActivateOptions();
 
     // Set to app name by default
     string? identString = Identity ?? SystemInfo.ApplicationFriendlyName;
@@ -311,10 +311,10 @@ public class LocalSyslogAppender : AppenderSkeleton
     // create the native heap ansi string. Note this is a copy of our string
     // so we do not need to hold on to the string itself, holding on to the
     // handle will keep the heap ansi string alive.
-    handleToIdentity = Marshal.StringToHGlobalAnsi(identString);
+    _handleToIdentity = Marshal.StringToHGlobalAnsi(identString);
 
     // open syslog
-    openlog(handleToIdentity, 1, Facility);
+    openlog(_handleToIdentity, 1, Facility);
   }
 
   /// <summary>
@@ -364,10 +364,10 @@ public class LocalSyslogAppender : AppenderSkeleton
       // Ignore dll not found at this point
     }
 
-    if (handleToIdentity != IntPtr.Zero)
+    if (_handleToIdentity != IntPtr.Zero)
     {
       // free global ident
-      Marshal.FreeHGlobal(handleToIdentity);
+      Marshal.FreeHGlobal(_handleToIdentity);
     }
   }
 
@@ -383,7 +383,7 @@ public class LocalSyslogAppender : AppenderSkeleton
   /// <returns>A syslog severity.</returns>
   protected virtual SyslogSeverity GetSeverity(Level? level)
   {
-    if (levelMapping.Lookup(level) is LevelSeverity levelSeverity)
+    if (_levelMapping.Lookup(level) is LevelSeverity levelSeverity)
     {
       return levelSeverity.Severity;
     }
@@ -439,12 +439,12 @@ public class LocalSyslogAppender : AppenderSkeleton
   /// string as the <c>openlog</c> and <c>syslog</c> APIs just hold the
   /// pointer to the ident and dereference it for each log message.
   /// </summary>
-  private IntPtr handleToIdentity = IntPtr.Zero;
+  private IntPtr _handleToIdentity = IntPtr.Zero;
 
   /// <summary>
   /// Mapping from level object to syslog severity
   /// </summary>
-  private readonly LevelMapping levelMapping = new();
+  private readonly LevelMapping _levelMapping = new();
 
   /// <summary>
   /// Open connection to system logger.

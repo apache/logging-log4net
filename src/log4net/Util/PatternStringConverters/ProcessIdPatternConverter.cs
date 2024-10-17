@@ -54,7 +54,7 @@ internal sealed class ProcessIdPatternConverter : PatternConverter
     {
       // This security exception will occur if the caller does not have 
       // some undefined set of SecurityPermission flags.
-      LogLog.Debug(declaringType, "Security exception while trying to get current process id. Error Ignored.");
+      LogLog.Debug(_declaringType, "Security exception while trying to get current process id. Error Ignored.");
 
       writer.Write(SystemInfo.NotAvailableText);
     }
@@ -67,5 +67,5 @@ internal sealed class ProcessIdPatternConverter : PatternConverter
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(ProcessIdPatternConverter);
+  private static readonly Type _declaringType = typeof(ProcessIdPatternConverter);
 }

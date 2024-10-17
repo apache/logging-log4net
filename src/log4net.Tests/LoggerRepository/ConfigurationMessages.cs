@@ -42,8 +42,8 @@ public class ConfigurationMessages
       LogLog.EmitInternalMessages = false;
       LogLog.InternalDebugging = true;
 
-      XmlDocument log4netConfig = new XmlDocument();
-      log4netConfig.LoadXml(@"
+      XmlDocument log4NetConfig = new();
+      log4NetConfig.LoadXml(@"
                 <log4net>
                   <appender name=""LogLogAppender"" type=""log4net.Tests.LoggerRepository.LogLogAppender, log4net.Tests"">
                     <layout type=""log4net.Layout.SimpleLayout"" />
@@ -61,7 +61,7 @@ public class ConfigurationMessages
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
       rep.ConfigurationChanged += new LoggerRepositoryConfigurationChangedEventHandler(rep_ConfigurationChanged);
 
-      ICollection configurationMessages = XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+      ICollection configurationMessages = XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
 
       Assert.IsTrue(configurationMessages.Count > 0);
     }
@@ -82,21 +82,21 @@ public class ConfigurationMessages
 
 public class LogLogAppender : AppenderSkeleton
 {
-  private static readonly Type declaringType = typeof(LogLogAppender);
+  private static readonly Type _declaringType = typeof(LogLogAppender);
 
   public override void ActivateOptions()
   {
-    LogLog.Debug(declaringType, "Debug - Activating options...");
-    LogLog.Warn(declaringType, "Warn - Activating options...");
-    LogLog.Error(declaringType, "Error - Activating options...");
+    LogLog.Debug(_declaringType, "Debug - Activating options...");
+    LogLog.Warn(_declaringType, "Warn - Activating options...");
+    LogLog.Error(_declaringType, "Error - Activating options...");
 
     base.ActivateOptions();
   }
 
   protected override void Append(LoggingEvent loggingEvent)
   {
-    LogLog.Debug(declaringType, "Debug - Appending...");
-    LogLog.Warn(declaringType, "Warn - Appending...");
-    LogLog.Error(declaringType, "Error - Appending...");
+    LogLog.Debug(_declaringType, "Debug - Appending...");
+    LogLog.Warn(_declaringType, "Warn - Appending...");
+    LogLog.Error(_declaringType, "Error - Appending...");
   }
 }

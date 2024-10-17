@@ -30,7 +30,7 @@ namespace log4net.Tests.Core;
 [TestFixture]
 public class FixingTest
 {
-  const string TEST_REPOSITORY = "Test Repository";
+  const string TestRepository = "Test Repository";
 
   [OneTimeSetUp]
   public void CreateRepository()
@@ -41,7 +41,7 @@ public class FixingTest
     {
       foreach (Repository.ILoggerRepository r in repositories)
       {
-        if (r.Name == TEST_REPOSITORY)
+        if (r.Name == TestRepository)
         {
           exists = true;
           break;
@@ -50,7 +50,7 @@ public class FixingTest
     }
     if (!exists)
     {
-      LogManager.CreateRepository(TEST_REPOSITORY);
+      LogManager.CreateRepository(TestRepository);
     }
 
     // write-once
@@ -81,9 +81,9 @@ public class FixingTest
     LoggingEventData loggingEventData = BuildStandardEventData();
 
     // LoggingEvents occur at distinct points in time
-    LoggingEvent loggingEvent = new LoggingEvent(
+    LoggingEvent loggingEvent = new(
       loggingEventData.LocationInfo?.GetType(),
-      LogManager.GetRepository(TEST_REPOSITORY),
+      LogManager.GetRepository(TestRepository),
       loggingEventData.LoggerName,
       loggingEventData.Level,
       loggingEventData.Message,
@@ -100,9 +100,9 @@ public class FixingTest
     LoggingEventData loggingEventData = BuildStandardEventData();
 
     // LoggingEvents occur at distinct points in time
-    LoggingEvent loggingEvent = new LoggingEvent(
+    LoggingEvent loggingEvent = new(
       loggingEventData.LocationInfo?.GetType(),
-      LogManager.GetRepository(TEST_REPOSITORY),
+      LogManager.GetRepository(TestRepository),
       loggingEventData.LoggerName,
       loggingEventData.Level,
       loggingEventData.Message,
@@ -121,9 +121,9 @@ public class FixingTest
     LoggingEventData loggingEventData = BuildStandardEventData();
 
     // LoggingEvents occur at distinct points in time
-    LoggingEvent loggingEvent = new LoggingEvent(
+    LoggingEvent loggingEvent = new(
       loggingEventData.LocationInfo?.GetType(),
-      LogManager.GetRepository(TEST_REPOSITORY),
+      LogManager.GetRepository(TestRepository),
       loggingEventData.LoggerName,
       loggingEventData.Level,
       loggingEventData.Message,
@@ -138,16 +138,18 @@ public class FixingTest
 
   private static LoggingEventData BuildStandardEventData()
   {
-    LoggingEventData loggingEventData = new LoggingEventData();
-    loggingEventData.LoggerName = typeof(FixingTest).FullName;
-    loggingEventData.Level = Level.Warn;
-    loggingEventData.Message = "Logging event works";
-    loggingEventData.Domain = "ReallySimpleApp";
-    loggingEventData.LocationInfo = new LocationInfo(typeof(FixingTest).Name, "Main", "Class1.cs", "29"); //Completely arbitary
-    loggingEventData.ThreadName = Thread.CurrentThread.Name;
-    loggingEventData.TimeStampUtc = DateTime.UtcNow.Date;
-    loggingEventData.ExceptionString = "Exception occured here";
-    loggingEventData.UserName = "TestUser";
+    LoggingEventData loggingEventData = new()
+    {
+      LoggerName = typeof(FixingTest).FullName,
+      Level = Level.Warn,
+      Message = "Logging event works",
+      Domain = "ReallySimpleApp",
+      LocationInfo = new LocationInfo(typeof(FixingTest).Name, "Main", "Class1.cs", "29"), //Completely arbitary
+      ThreadName = Thread.CurrentThread.Name,
+      TimeStampUtc = DateTime.UtcNow.Date,
+      ExceptionString = "Exception occured here",
+      UserName = "TestUser"
+    };
     return loggingEventData;
   }
 
@@ -160,7 +162,7 @@ public class FixingTest
     Assert.IsNotNull(loggingEvent.LocationInformation);
     Assert.AreEqual("get_LocationInformation", loggingEvent.LocationInformation!.MethodName, "Location Info is incorrect");
     Assert.AreEqual("log4net.Tests.Core.FixingTest", loggingEventData.LoggerName, "LoggerName is incorrect");
-    Assert.AreEqual(LogManager.GetRepository(TEST_REPOSITORY), loggingEvent.Repository, "Repository is incorrect");
+    Assert.AreEqual(LogManager.GetRepository(TestRepository), loggingEvent.Repository, "Repository is incorrect");
     Assert.AreEqual(Thread.CurrentThread.Name, loggingEventData.ThreadName, "ThreadName is incorrect");
     // This test is redundant as loggingEventData.TimeStamp is a value type and cannot be null
     //Assert.IsNotNull(loggingEventData.TimeStampUtc, "TimeStamp is incorrect");

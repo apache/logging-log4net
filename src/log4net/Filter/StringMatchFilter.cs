@@ -34,6 +34,7 @@ public class StringMatchFilter : FilterSkeleton
   /// <summary>
   /// A regex object to match (generated from m_stringRegexToMatch)
   /// </summary>
+  // ReSharper disable once InconsistentNaming
   protected Regex? m_regexToMatch;
 
   /// <summary>
@@ -56,7 +57,7 @@ public class StringMatchFilter : FilterSkeleton
   {
     if (RegexToMatch is not null)
     {
-      m_regexToMatch = new Regex(RegexToMatch, RegexOptions.Compiled);
+      m_regexToMatch = new(RegexToMatch, RegexOptions.Compiled);
     }
   }
 

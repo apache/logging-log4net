@@ -62,7 +62,7 @@ public static class OptionConverter
       }
       catch (Exception e)
       {
-        LogLog.Error(declaringType, $"[{argValue}] is not in proper bool form.", e);
+        LogLog.Error(_declaringType, $"[{argValue}] is not in proper bool form.", e);
       }
     }
     return defaultValue;
@@ -120,7 +120,7 @@ public static class OptionConverter
     }
     else
     {
-      LogLog.Error(declaringType, $"OptionConverter: [{s}] is not in the correct file size syntax.");
+      LogLog.Error(_declaringType, $"OptionConverter: [{s}] is not in the correct file size syntax.");
     }
     return defaultValue;
   }
@@ -304,17 +304,17 @@ public static class OptionConverter
         {
           if (!superClass.IsAssignableFrom(classObj))
           {
-            LogLog.Error(declaringType, $"OptionConverter: A [{className}] object is not assignable to a [{superClass.FullName}] variable.");
+            LogLog.Error(_declaringType, $"OptionConverter: A [{className}] object is not assignable to a [{superClass.FullName}] variable.");
             return defaultValue;
           }
           return Activator.CreateInstance(classObj);
         }
 
-        LogLog.Error(declaringType, $"Could not find class [{className}].");
+        LogLog.Error(_declaringType, $"Could not find class [{className}].");
       }
       catch (Exception e)
       {
-        LogLog.Error(declaringType, $"Could not instantiate class [{className}].", e);
+        LogLog.Error(_declaringType, $"Could not instantiate class [{className}].", e);
       }
     }
     return defaultValue;
@@ -372,7 +372,7 @@ public static class OptionConverter
 
     while (true)
     {
-      j = value.IndexOf(DELIM_START, i, StringComparison.Ordinal);
+      j = value.IndexOf(DelimStart, i, StringComparison.Ordinal);
       if (j == -1)
       {
         if (i == 0)
@@ -388,21 +388,21 @@ public static class OptionConverter
       else
       {
         buf.Append(value.Substring(i, j - i));
-        k = value.IndexOf(DELIM_STOP, j);
+        k = value.IndexOf(DelimStop, j);
         if (k == -1)
         {
           throw new LogException("[" + value + "] has no closing brace. Opening brace at position [" + j + "]");
         }
         else
         {
-          j += DELIM_START_LEN;
+          j += DelimStartLen;
           string key = value.Substring(j, k - j);
 
           if (props[key] is string replacement)
           {
             buf.Append(replacement);
           }
-          i = k + DELIM_STOP_LEN;
+          i = k + DelimStopLen;
         }
       }
     }
@@ -428,10 +428,10 @@ public static class OptionConverter
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(OptionConverter);
+  private static readonly Type _declaringType = typeof(OptionConverter);
 
-  private const string DELIM_START = "${";
-  private const char DELIM_STOP = '}';
-  private const int DELIM_START_LEN = 2;
-  private const int DELIM_STOP_LEN = 1;
+  private const string DelimStart = "${";
+  private const char DelimStop = '}';
+  private const int DelimStartLen = 2;
+  private const int DelimStopLen = 1;
 }

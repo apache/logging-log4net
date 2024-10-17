@@ -39,7 +39,7 @@ public class Layout2RawLayoutAdapter : IRawLayout
   /// <summary>
   /// The layout to adapt
   /// </summary>
-  private readonly ILayout layout;
+  private readonly ILayout _layout;
 
   /// <summary>
   /// Construct a new adapter
@@ -50,7 +50,7 @@ public class Layout2RawLayoutAdapter : IRawLayout
   /// Create the adapter for the specified <paramref name="layout"/>.
   /// </para>
   /// </remarks>
-  public Layout2RawLayoutAdapter(ILayout layout) => this.layout = layout;
+  public Layout2RawLayoutAdapter(ILayout layout) => this._layout = layout;
 
   /// <summary>
   /// Formats the logging event as an object.
@@ -66,7 +66,7 @@ public class Layout2RawLayoutAdapter : IRawLayout
   public virtual object Format(LoggingEvent loggingEvent)
   {
     using StringWriter writer = new(System.Globalization.CultureInfo.InvariantCulture);
-    layout.Format(writer, loggingEvent);
+    _layout.Format(writer, loggingEvent);
     return writer.ToString();
   }
 }

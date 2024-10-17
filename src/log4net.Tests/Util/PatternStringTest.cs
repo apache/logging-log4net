@@ -42,7 +42,7 @@ public class PatternStringTest : MarshalByRefObject
     {
       string pattern = "%envFolderPath{" + specialFolderName + "}";
 
-      PatternString patternString = new PatternString(pattern);
+      PatternString patternString = new(pattern);
 
       string evaluatedPattern = patternString.Format();
 
@@ -89,7 +89,7 @@ public class PatternStringTest : MarshalByRefObject
   public void TestAppSettingPathConverterInConfiguredDomain()
   {
     string pattern = "%appSetting{TestKey}";
-    PatternString patternString = new PatternString(pattern);
+    PatternString patternString = new(pattern);
     string evaluatedPattern = patternString.Format();
     string appSettingValue = ConfigurationManager.AppSettings["TestKey"];
     Assert.AreEqual("TestValue", appSettingValue, "Expected configuration file to contain a key TestKey with the value TestValue");
@@ -110,9 +110,11 @@ public class PatternStringTest : MarshalByRefObject
 
   private static AppDomain CreateConfiguredDomain(string domainName, string configurationFileName)
   {
-    AppDomainSetup ads = new AppDomainSetup();
-    ads.ApplicationBase = AppDomain.CurrentDomain.BaseDirectory;
-    ads.ConfigurationFile = configurationFileName;
+    AppDomainSetup ads = new()
+    {
+      ApplicationBase = AppDomain.CurrentDomain.BaseDirectory,
+      ConfigurationFile = configurationFileName
+    };
     AppDomain ad = AppDomain.CreateDomain(domainName, null, ads);
     return ad;
   }

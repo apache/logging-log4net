@@ -812,7 +812,7 @@ public class PatternLayout : LayoutSkeleton
   /// This static map is overridden by the converterRegistry instance map
   /// </para>
   /// </remarks>
-  private static readonly Dictionary<string, Type> s_globalRulesRegistry = new(StringComparer.Ordinal)
+  private static readonly Dictionary<string, Type> _sGlobalRulesRegistry = new(StringComparer.Ordinal)
   {
     ["literal"] = typeof(LiteralPatternConverter),
     ["newline"] = typeof(NewLinePatternConverter),
@@ -894,12 +894,12 @@ public class PatternLayout : LayoutSkeleton
   /// <summary>
   /// the head of the pattern converter chain
   /// </summary>
-  private PatternConverter? head;
+  private PatternConverter? _head;
 
   /// <summary>
   /// patterns defined on this PatternLayout only
   /// </summary>
-  private readonly Dictionary<string, ConverterInfo> instanceRulesRegistry = new(StringComparer.Ordinal);
+  private readonly Dictionary<string, ConverterInfo> _instanceRulesRegistry = new(StringComparer.Ordinal);
 
   /// <summary>
   /// Constructs a PatternLayout using the DefaultConversionPattern
@@ -975,7 +975,7 @@ public class PatternLayout : LayoutSkeleton
     PatternParser patternParser = new(pattern);
 
     // Add all the builtin patterns
-    foreach (KeyValuePair<string, Type> entry in s_globalRulesRegistry)
+    foreach (KeyValuePair<string, Type> entry in _sGlobalRulesRegistry)
     {
       ConverterInfo converterInfo = new()
       {
@@ -985,7 +985,7 @@ public class PatternLayout : LayoutSkeleton
       patternParser.PatternConverters[entry.Key] = converterInfo;
     }
     // Add the instance patterns
-    foreach (KeyValuePair<string, ConverterInfo> entry in instanceRulesRegistry)
+    foreach (KeyValuePair<string, ConverterInfo> entry in _instanceRulesRegistry)
     {
       patternParser.PatternConverters[entry.Key] = entry.Value;
     }
@@ -1011,9 +1011,9 @@ public class PatternLayout : LayoutSkeleton
   /// </remarks>
   public override void ActivateOptions()
   {
-    head = CreatePatternParser(ConversionPattern).Parse();
+    _head = CreatePatternParser(ConversionPattern).Parse();
 
-    PatternConverter? curConverter = head;
+    PatternConverter? curConverter = _head;
     while (curConverter is not null)
     {
       if (curConverter is PatternLayoutConverter layoutConverter)
@@ -1046,7 +1046,7 @@ public class PatternLayout : LayoutSkeleton
     writer.EnsureNotNull();
     loggingEvent.EnsureNotNull();
 
-    PatternConverter? c = head;
+    PatternConverter? c = _head;
     // loop through the chain of pattern converters
     while (c is not null)
     {
@@ -1071,7 +1071,7 @@ public class PatternLayout : LayoutSkeleton
     {
       throw new ArgumentException($"The converter type specified [{converterInfo.Type}] must be a subclass of log4net.Util.PatternConverter", nameof(converterInfo));
     }
-    instanceRulesRegistry[converterInfo.Name] = converterInfo;
+    _instanceRulesRegistry[converterInfo.Name] = converterInfo;
   }
 
   /// <summary>

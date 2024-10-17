@@ -36,8 +36,8 @@ namespace log4net.Tests.ObjectRenderer;
 [TestFixture]
 public class DefaultRendererTest
 {
-  readonly RendererMap rendererMap = new();
-  readonly DefaultRenderer renderer = new();
+  readonly RendererMap _rendererMap = new();
+  readonly DefaultRenderer _renderer = new();
 
   [Test]
   public void DefaultRendererForDifferentObjectTypes()
@@ -95,7 +95,7 @@ public class DefaultRendererTest
     StringBuilder sb = new();
     using (StringWriter textWriter = new(sb))
     {
-      renderer.RenderObject(rendererMap, toRender, textWriter);
+      _renderer.RenderObject(_rendererMap, toRender, textWriter);
     }
 
     validate(sb.ToString());

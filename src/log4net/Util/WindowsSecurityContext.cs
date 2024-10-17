@@ -63,8 +63,8 @@ public class WindowsSecurityContext : SecurityContext, IOptionHandler
     Process
   }
 
-  private string? password;
-  private WindowsIdentity? identity;
+  private string? _password;
+  private WindowsIdentity? _identity;
 
   /// <summary>
   /// Gets or sets the impersonation mode for this security context
@@ -140,7 +140,7 @@ public class WindowsSecurityContext : SecurityContext, IOptionHandler
   /// is set to <see cref="ImpersonationMode.User"/> (the default setting).
   /// </para>
   /// </remarks>
-  public string Password { set => password = value; }
+  public string Password { set => _password = value; }
 
   /// <summary>
   /// Initialize the SecurityContext based on the options set.
@@ -176,12 +176,12 @@ public class WindowsSecurityContext : SecurityContext, IOptionHandler
       {
         throw new ArgumentNullException(nameof(DomainName));
       }
-      if (password is null)
+      if (_password is null)
       {
         throw new ArgumentNullException(nameof(Password));
       }
 
-      identity = LogonUser(UserName, DomainName, password);
+      _identity = LogonUser(UserName, DomainName, _password);
     }
   }
 
@@ -203,9 +203,9 @@ public class WindowsSecurityContext : SecurityContext, IOptionHandler
   {
     if (Credentials == ImpersonationMode.User)
     {
-      if (identity is not null)
+      if (_identity is not null)
       {
-        return new DisposableImpersonationContext(identity.Impersonate());
+        return new DisposableImpersonationContext(_identity.Impersonate());
       }
     }
     else if (Credentials == ImpersonationMode.Process)
@@ -233,21 +233,21 @@ public class WindowsSecurityContext : SecurityContext, IOptionHandler
   [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
   private static WindowsIdentity LogonUser(string userName, string domainName, string password)
   {
-    const int LOGON32_PROVIDER_DEFAULT = 0;
+    const int logon32ProviderDefault = 0;
     //This parameter causes LogonUser to create a primary token.
-    const int LOGON32_LOGON_INTERACTIVE = 2;
+    const int logon32LogonInteractive = 2;
 
     // Call LogonUser to obtain a handle to an access token.
     IntPtr tokenHandle = IntPtr.Zero;
-    if (!LogonUser(userName, domainName, password, LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, ref tokenHandle))
+    if (!LogonUser(userName, domainName, password, logon32LogonInteractive, logon32ProviderDefault, ref tokenHandle))
     {
       NativeError error = NativeError.GetLastError();
       throw new Exception($"Failed to LogonUser [{userName}] in Domain [{domainName}]. Error: {error.ToString()}");
     }
 
-    const int SecurityImpersonation = 2;
+    const int securityImpersonation = 2;
     IntPtr dupeTokenHandle = IntPtr.Zero;
-    if (!DuplicateToken(tokenHandle, SecurityImpersonation, ref dupeTokenHandle))
+    if (!DuplicateToken(tokenHandle, securityImpersonation, ref dupeTokenHandle))
     {
       NativeError error = NativeError.GetLastError();
       if (tokenHandle != IntPtr.Zero)
@@ -282,7 +282,7 @@ public class WindowsSecurityContext : SecurityContext, IOptionHandler
 
   [DllImport("advapi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
   [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern bool DuplicateToken(IntPtr ExistingTokenHandle, int SECURITY_IMPERSONATION_LEVEL, ref IntPtr DuplicateTokenHandle);
+  private static extern bool DuplicateToken(IntPtr existingTokenHandle, int securityImpersonationLevel, ref IntPtr duplicateTokenHandle);
 
   /// <summary>
   /// Adds <see cref="IDisposable"/> to <see cref="WindowsImpersonationContext"/>
@@ -295,19 +295,19 @@ public class WindowsSecurityContext : SecurityContext, IOptionHandler
   /// </remarks>
   private sealed class DisposableImpersonationContext : IDisposable
   {
-    private readonly WindowsImpersonationContext impersonationContext;
+    private readonly WindowsImpersonationContext _impersonationContext;
 
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="impersonationContext">the impersonation context being wrapped</param>
     public DisposableImpersonationContext(WindowsImpersonationContext impersonationContext)
-      => this.impersonationContext = impersonationContext;
+      => this._impersonationContext = impersonationContext;
 
     /// <summary>
     /// Revert the impersonation
     /// </summary>
-    public void Dispose() => impersonationContext.Undo();
+    public void Dispose() => _impersonationContext.Undo();
   }
 }
 #endif // NET462_OR_GREATER

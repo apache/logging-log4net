@@ -37,7 +37,7 @@ namespace log4net.Layout.Pattern;
 /// <author>Michael Cromwell</author>
 internal class StackTracePatternConverter : PatternLayoutConverter, IOptionHandler
 {
-  private int stackFrameLevel = 1;
+  private int _stackFrameLevel = 1;
 
   /// <summary>
   /// Initialize the converter
@@ -69,16 +69,16 @@ internal class StackTracePatternConverter : PatternLayoutConverter, IOptionHandl
       {
         if (stackLevelVal <= 0)
         {
-          LogLog.Error(declaringType, $"StackTracePatternConverter: StackeFrameLevel option ({optStr}) isn't a positive integer.");
+          LogLog.Error(_declaringType, $"StackTracePatternConverter: StackeFrameLevel option ({optStr}) isn't a positive integer.");
         }
         else
         {
-          stackFrameLevel = stackLevelVal;
+          _stackFrameLevel = stackLevelVal;
         }
       }
       else
       {
-        LogLog.Error(declaringType, $"StackTracePatternConverter: StackFrameLevel option \"{optStr}\" not a decimal integer.");
+        LogLog.Error(_declaringType, $"StackTracePatternConverter: StackFrameLevel option \"{optStr}\" not a decimal integer.");
       }
     }
   }
@@ -98,11 +98,11 @@ internal class StackTracePatternConverter : PatternLayoutConverter, IOptionHandl
     StackFrameItem[]? stackframes = loggingEvent.LocationInformation?.StackFrames;
     if ((stackframes is null) || (stackframes.Length <= 0))
     {
-      LogLog.Error(declaringType, "loggingEvent.LocationInformation.StackFrames was null or empty.");
+      LogLog.Error(_declaringType, "loggingEvent.LocationInformation.StackFrames was null or empty.");
       return;
     }
 
-    int stackFrameIndex = stackFrameLevel - 1;
+    int stackFrameIndex = _stackFrameLevel - 1;
     while (stackFrameIndex >= 0)
     {
       if (stackFrameIndex >= stackframes.Length)
@@ -137,5 +137,5 @@ internal class StackTracePatternConverter : PatternLayoutConverter, IOptionHandl
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(StackTracePatternConverter);
+  private static readonly Type _declaringType = typeof(StackTracePatternConverter);
 }

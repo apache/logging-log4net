@@ -33,14 +33,14 @@ public sealed class LoggingEventTest
 {
   // net8 deprecates BinaryFormatter used in testing.
 #if NET462_OR_GREATER
-  private static readonly DateTime localTime
+  private static readonly DateTime _localTime
     = new(2000, 7, 1, 0, 0, 0, 0, CultureInfo.InvariantCulture.Calendar, DateTimeKind.Local);
 
   [Test]
   public void SerializeDeserialize_BinaryFormatter()
   {
     Utils.InconclusiveOnMono();
-    DateTime timestamp = localTime.ToUniversalTime();
+    DateTime timestamp = _localTime.ToUniversalTime();
     LoggingEvent ev = new(new()
     {
       LoggerName = "aLogger",
@@ -112,7 +112,7 @@ public sealed class LoggingEventTest
     Assert.AreEqual("aDomain", ev.Domain);
     Assert.AreEqual(1, ev.Properties.Count);
     Assert.AreEqual("bar", ev.Properties["foo"]);
-    Assert.AreEqual(localTime.ToUniversalTime(), ev.TimeStampUtc);
+    Assert.AreEqual(_localTime.ToUniversalTime(), ev.TimeStampUtc);
   }
 #endif // NET462_OR_GREATER
 

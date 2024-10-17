@@ -35,7 +35,7 @@ public class LogLogTest
   [Test]
   public void TraceListenerCounterTest()
   {
-    TraceListenerCounter listTraceListener = new TraceListenerCounter();
+    TraceListenerCounter listTraceListener = new();
 
     Trace.Listeners.Clear();
     Trace.Listeners.Add(listTraceListener);
@@ -49,7 +49,7 @@ public class LogLogTest
   [Test]
   public void EmitInternalMessages()
   {
-    TraceListenerCounter listTraceListener = new TraceListenerCounter();
+    TraceListenerCounter listTraceListener = new();
     Trace.Listeners.Clear();
     Trace.Listeners.Add(listTraceListener);
     LogLog.Error(GetType(), "Hello");

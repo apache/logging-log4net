@@ -81,14 +81,14 @@ public class SmtpPickupDirAppender : BufferingAppenderSkeleton
   /// </summary>
   public string? FileExtension
   {
-    get => fileExtension;
+    get => _fileExtension;
     set
     {
-      fileExtension = value ?? string.Empty;
+      _fileExtension = value ?? string.Empty;
       // Make sure any non-empty extension starts with a dot
-      if (!string.IsNullOrEmpty(fileExtension) && !fileExtension.StartsWith("."))
+      if (!string.IsNullOrEmpty(_fileExtension) && !_fileExtension.StartsWith("."))
       {
-        fileExtension = "." + fileExtension;
+        _fileExtension = "." + _fileExtension;
       }
     }
   }
@@ -127,7 +127,7 @@ public class SmtpPickupDirAppender : BufferingAppenderSkeleton
       StreamWriter writer;
 
       // Impersonate to open the file
-      string filePath = Path.Combine(PickupDir.EnsureNotNull(), Guid.NewGuid().ToString("N") + fileExtension);
+      string filePath = Path.Combine(PickupDir.EnsureNotNull(), Guid.NewGuid().ToString("N") + _fileExtension);
       using (SecurityContext?.Impersonate(this))
       {
         writer = File.CreateText(filePath);
@@ -222,5 +222,5 @@ public class SmtpPickupDirAppender : BufferingAppenderSkeleton
   /// </remarks>
   protected static string ConvertToFullPath(string path) => SystemInfo.ConvertToFullPath(path);
 
-  private string fileExtension = string.Empty;
+  private string _fileExtension = string.Empty;
 }

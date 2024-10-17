@@ -74,11 +74,11 @@ public class LocationInfo : ILog4NetSerializable
   public LocationInfo(Type? callerStackBoundaryDeclaringType)
   {
     // Initialize all fields
-    ClassName = NA;
-    FileName = NA;
-    LineNumber = NA;
-    MethodName = NA;
-    FullInfo = NA;
+    ClassName = NotAvailable;
+    FileName = NotAvailable;
+    LineNumber = NotAvailable;
+    MethodName = NotAvailable;
+    FullInfo = NotAvailable;
 
     if (callerStackBoundaryDeclaringType is not null)
     {
@@ -148,7 +148,7 @@ public class LocationInfo : ILog4NetSerializable
       {
         // This security exception will occur if the caller does not have 
         // some undefined set of SecurityPermission flags.
-        LogLog.Debug(declaringType, "Security exception while trying to get caller stack frame. Error Ignored. Location Information Not Available.");
+        LogLog.Debug(_declaringType, "Security exception while trying to get caller stack frame. Error Ignored. Location Information Not Available.");
       }
     }
   }
@@ -248,7 +248,7 @@ public class LocationInfo : ILog4NetSerializable
     SerializationFormatter = true)]
   public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
   {
-    // Use member names from log4net 2.x implicit serialzation for cross-version compat.
+    // Use member names from log4net 2.x implicit serialization for cross-version compat.
     info.AddValue("m_className", ClassName);
     info.AddValue("m_fileName", FileName);
     info.AddValue("m_lineNumber", LineNumber);
@@ -264,12 +264,12 @@ public class LocationInfo : ILog4NetSerializable
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(LocationInfo);
+  private static readonly Type _declaringType = typeof(LocationInfo);
 
   /// <summary>
   /// When location information is not available the constant
   /// <c>NA</c> is returned. Current value of this string
   /// constant is <b>?</b>.
   /// </summary>
-  private const string NA = "?";
+  private const string NotAvailable = "?";
 }

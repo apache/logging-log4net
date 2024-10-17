@@ -37,11 +37,11 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   public interface IAppenderCollectionEnumerator : IEnumerator<IAppender>
   { }
 
-  private const int DEFAULT_CAPACITY = 16;
+  private const int DefaultCapacity = 16;
 
-  private IAppender[] array;
-  private int count;
-  private int version;
+  private IAppender[] _array;
+  private int _count;
+  private int _version;
 
   /// <summary>
   /// Creates a read-only wrapper for a <see cref="AppenderCollection"/> instance.
@@ -63,7 +63,7 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// that is empty and has the default initial capacity.
   /// </summary>
   public AppenderCollection()
-    : this(DEFAULT_CAPACITY)
+    : this(DefaultCapacity)
   { }
 
   /// <summary>
@@ -73,7 +73,7 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// <param name="capacity">
   /// The number of elements that the new <see cref="AppenderCollection"/> is initially capable of storing.
   /// </param>
-  public AppenderCollection(int capacity) => array = new IAppender[capacity];
+  public AppenderCollection(int capacity) => _array = new IAppender[capacity];
 
   /// <summary>
   /// Initializes a new instance of the <see cref="AppenderCollection"/> class
@@ -82,7 +82,7 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// <param name="c">The <see cref="AppenderCollection"/> whose elements are copied to the new collection.</param>
   public AppenderCollection(AppenderCollection c)
   {
-    array = new IAppender[c.Count];
+    _array = new IAppender[c.Count];
     AddRange(c);
   }
 
@@ -93,7 +93,7 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// <param name="a">The <see cref="IAppender"/> array whose elements are copied to the new list.</param>
   public AppenderCollection(IAppender[] a)
   {
-    array = new IAppender[a.Length];
+    _array = new IAppender[a.Length];
     AddRange(a);
   }
 
@@ -104,7 +104,7 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// <param name="col">The <see cref="IAppender"/> collection whose elements are copied to the new list.</param>
   public AppenderCollection(ICollection col)
   {
-    array = new IAppender[col.Count];
+    _array = new IAppender[col.Count];
     AddRange(col);
   }
 
@@ -125,12 +125,12 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// Allow subclasses to avoid our default constructors
   /// </summary>
   /// <exclude/>
-  protected internal AppenderCollection(Tag _) => array = [];
+  protected internal AppenderCollection(Tag _) => _array = [];
 
   /// <summary>
   /// Gets the number of elements actually contained in the <see cref="AppenderCollection"/>.
   /// </summary>
-  public virtual int Count => count;
+  public virtual int Count => _count;
 
   /// <summary>
   /// Copies the entire <see cref="AppenderCollection"/> to a one-dimensional
@@ -147,12 +147,12 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// <param name="start">The zero-based index in <paramref name="array"/> at which copying begins.</param>
   public virtual void CopyTo(IAppender[] array, int start)
   {
-    if (count > array.GetUpperBound(0) + 1 - start)
+    if (_count > array.GetUpperBound(0) + 1 - start)
     {
       throw new ArgumentException("Destination array was not long enough.");
     }
 
-    Array.Copy(this.array, 0, array, start, count);
+    Array.Copy(this._array, 0, array, start, _count);
   }
 
   /// <summary>
@@ -164,7 +164,7 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// <summary>
   /// Gets an object that can be used to synchronize access to the collection.
   /// </summary>
-  public virtual object SyncRoot => array;
+  public virtual object SyncRoot => _array;
 
   /// <summary>
   /// Gets or sets the <see cref="IAppender"/> at the specified index.
@@ -180,13 +180,13 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
     get
     {
       ValidateIndex(index); // throws
-      return array[index];
+      return _array[index];
     }
     set
     {
       ValidateIndex(index); // throws
-      ++version;
-      array[index] = value;
+      ++_version;
+      _array[index] = value;
     }
   }
 
@@ -200,14 +200,14 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// <returns>The new <see cref="Count"/></returns>
   public virtual int Add(IAppender item)
   {
-    if (count == array.Length)
+    if (_count == _array.Length)
     {
-      EnsureCapacity(count + 1);
+      EnsureCapacity(_count + 1);
     }
 
-    array[count] = item;
-    version++;
-    return count++;
+    _array[_count] = item;
+    _version++;
+    return _count++;
   }
 
 
@@ -216,9 +216,9 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// </summary>
   public virtual void Clear()
   {
-    ++version;
-    array = new IAppender[DEFAULT_CAPACITY];
-    count = 0;
+    ++_version;
+    _array = new IAppender[DefaultCapacity];
+    _count = 0;
   }
 
   /// <summary>
@@ -227,10 +227,10 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// <returns>A new <see cref="AppenderCollection"/> with a shallow copy of the collection data.</returns>
   public virtual object Clone()
   {
-    AppenderCollection newCol = new(count);
-    Array.Copy(array, 0, newCol.array, 0, count);
-    newCol.count = count;
-    newCol.version = version;
+    AppenderCollection newCol = new(_count);
+    Array.Copy(_array, 0, newCol._array, 0, _count);
+    newCol._count = _count;
+    newCol._version = _version;
 
     return newCol;
   }
@@ -242,9 +242,9 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="AppenderCollection"/>; otherwise, <see langword="false"/>.</returns>
   public virtual bool Contains(IAppender item)
   {
-    for (int i = 0; i != count; ++i)
+    for (int i = 0; i != _count; ++i)
     {
-      if (array[i].Equals(item))
+      if (_array[i].Equals(item))
       {
         return true;
       }
@@ -263,9 +263,9 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// </returns>
   public virtual int IndexOf(IAppender item)
   {
-    for (int i = 0; i != count; ++i)
+    for (int i = 0; i != _count; ++i)
     {
-      if (array[i].Equals(item))
+      if (_array[i].Equals(item))
       {
         return i;
       }
@@ -287,19 +287,19 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   {
     ValidateIndex(index, true); // throws
 
-    if (count == array.Length)
+    if (_count == _array.Length)
     {
-      EnsureCapacity(count + 1);
+      EnsureCapacity(_count + 1);
     }
 
-    if (index < count)
+    if (index < _count)
     {
-      Array.Copy(array, index, array, index + 1, count - index);
+      Array.Copy(_array, index, _array, index + 1, _count - index);
     }
 
-    array[index] = item;
-    count++;
-    version++;
+    _array[index] = item;
+    _count++;
+    _version++;
   }
 
   /// <summary>
@@ -318,7 +318,7 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
       throw new ArgumentException("Cannot remove the specified item because it was not found in the specified Collection.");
     }
 
-    ++version;
+    ++_version;
     RemoveAt(i);
   }
 
@@ -341,19 +341,19 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   {
     ValidateIndex(index); // throws
 
-    count--;
+    _count--;
 
-    if (index < count)
+    if (index < _count)
     {
-      Array.Copy(array, index + 1, array, index, count - index);
+      Array.Copy(_array, index + 1, _array, index, _count - index);
     }
 
     // We can't set the deleted entry equal to null, because it might be a value type.
     // Instead, we'll create an empty single-element array of the right type and copy it 
     // over the entry we want to erase.
     IAppender[] temp = new IAppender[1];
-    Array.Copy(temp, 0, array, count, 1);
-    version++;
+    Array.Copy(temp, 0, _array, _count, 1);
+    _version++;
   }
 
   /// <summary>
@@ -379,25 +379,25 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// </summary>
   public virtual int Capacity
   {
-    get => array.Length;
+    get => _array.Length;
     set
     {
-      if (value < count)
+      if (value < _count)
       {
-        value = count;
+        value = _count;
       }
 
-      if (value != array.Length)
+      if (value != _array.Length)
       {
         if (value > 0)
         {
           IAppender[] temp = new IAppender[value];
-          Array.Copy(array, 0, temp, 0, count);
-          array = temp;
+          Array.Copy(_array, 0, temp, 0, _count);
+          _array = temp;
         }
         else
         {
-          array = new IAppender[DEFAULT_CAPACITY];
+          _array = new IAppender[DefaultCapacity];
         }
       }
     }
@@ -410,16 +410,16 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// <returns>The new <see cref="Count"/> of the <see cref="AppenderCollection"/>.</returns>
   public virtual int AddRange(AppenderCollection x)
   {
-    if (count + x.Count >= array.Length)
+    if (_count + x.Count >= _array.Length)
     {
-      EnsureCapacity(count + x.Count);
+      EnsureCapacity(_count + x.Count);
     }
 
-    Array.Copy(x.array, 0, array, count, x.Count);
-    count += x.Count;
-    version++;
+    Array.Copy(x._array, 0, _array, _count, x.Count);
+    _count += x.Count;
+    _version++;
 
-    return count;
+    return _count;
   }
 
   /// <summary>
@@ -429,16 +429,16 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// <returns>The new <see cref="Count"/> of the <see cref="AppenderCollection"/>.</returns>
   public virtual int AddRange(IAppender[] x)
   {
-    if (count + x.Length >= array.Length)
+    if (_count + x.Length >= _array.Length)
     {
-      EnsureCapacity(count + x.Length);
+      EnsureCapacity(_count + x.Length);
     }
 
-    Array.Copy(x, 0, array, count, x.Length);
-    count += x.Length;
-    version++;
+    Array.Copy(x, 0, _array, _count, x.Length);
+    _count += x.Length;
+    _version++;
 
-    return count;
+    return _count;
   }
 
   /// <summary>
@@ -448,9 +448,9 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// <returns>The new <see cref="Count"/> of the <see cref="AppenderCollection"/>.</returns>
   public virtual int AddRange(ICollection col)
   {
-    if (count + col.Count >= array.Length)
+    if (_count + col.Count >= _array.Length)
     {
-      EnsureCapacity(count + col.Count);
+      EnsureCapacity(_count + col.Count);
     }
 
     foreach (object item in col)
@@ -458,13 +458,13 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
       Add((IAppender)item);
     }
 
-    return count;
+    return _count;
   }
 
   /// <summary>
   /// Sets the capacity to the actual number of elements.
   /// </summary>
-  public virtual void TrimToSize() => Capacity = count;
+  public virtual void TrimToSize() => Capacity = _count;
 
   /// <summary>
   /// Return the collection elements as an array
@@ -472,10 +472,10 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// <returns>the array</returns>
   public virtual IAppender[] ToArray()
   {
-    var resultArray = new IAppender[count];
-    if (count > 0)
+    var resultArray = new IAppender[_count];
+    if (_count > 0)
     {
-      Array.Copy(array, 0, resultArray, 0, count);
+      Array.Copy(_array, 0, resultArray, 0, _count);
     }
     return resultArray;
   }
@@ -487,7 +487,7 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// </exception>
   private void ValidateIndex(int i, bool allowEqualEnd = false)
   {
-    int max = allowEqualEnd ? count : (count - 1);
+    int max = allowEqualEnd ? _count : (_count - 1);
     if (i < 0 || i > max)
     {
       throw SystemInfo.CreateArgumentOutOfRangeException(nameof(i), i,
@@ -497,7 +497,7 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
 
   private void EnsureCapacity(int min)
   {
-    int newCapacity = (array.Length == 0) ? DEFAULT_CAPACITY : array.Length * 2;
+    int newCapacity = (_array.Length == 0) ? DefaultCapacity : _array.Length * 2;
     if (newCapacity < min)
     {
       newCapacity = min;
@@ -508,9 +508,9 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
 
   void ICollection.CopyTo(Array array, int start)
   {
-    if (count > 0)
+    if (_count > 0)
     {
-      Array.Copy(this.array, 0, array, start, count);
+      Array.Copy(this._array, 0, array, start, _count);
     }
   }
 
@@ -558,24 +558,24 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   private sealed class Enumerator : IAppenderCollectionEnumerator
 #pragma warning restore CS0618 // Type or member is obsolete
   {
-    private readonly AppenderCollection collection;
-    private int index;
-    private readonly int version;
+    private readonly AppenderCollection _collection;
+    private int _index;
+    private readonly int _version;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Enumerator"/> class.
     /// </summary>
     internal Enumerator(AppenderCollection tc)
     {
-      collection = tc;
-      index = -1;
-      version = tc.version;
+      _collection = tc;
+      _index = -1;
+      _version = tc._version;
     }
 
     /// <summary>
     /// Gets the current element in the collection.
     /// </summary>
-    public IAppender Current => collection[index];
+    public IAppender Current => _collection[_index];
 
     /// <summary>
     /// Advances the enumerator to the next element in the collection.
@@ -589,19 +589,19 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
     /// </exception>
     public bool MoveNext()
     {
-      if (version != collection.version)
+      if (_version != _collection._version)
       {
         throw new InvalidOperationException("Collection was modified; enumeration operation may not execute.");
       }
 
-      ++index;
-      return index < collection.Count;
+      ++_index;
+      return _index < _collection.Count;
     }
 
     /// <summary>
     /// Sets the enumerator to its initial position, before the first element in the collection.
     /// </summary>
-    public void Reset() => index = -1;
+    public void Reset() => _index = -1;
 
     object IEnumerator.Current => Current;
 
@@ -613,26 +613,26 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// <exclude/>
   private sealed class ReadOnlyAppenderCollection : AppenderCollection, ICollection
   {
-    private readonly AppenderCollection collection;
+    private readonly AppenderCollection _collection;
 
     internal ReadOnlyAppenderCollection(AppenderCollection list)
-      : base(Tag.Default) => collection = list;
+      : base(Tag.Default) => _collection = list;
 
-    public override void CopyTo(IAppender[] array) => collection.CopyTo(array);
+    public override void CopyTo(IAppender[] array) => _collection.CopyTo(array);
 
-    public override void CopyTo(IAppender[] array, int start) => collection.CopyTo(array, start);
+    public override void CopyTo(IAppender[] array, int start) => _collection.CopyTo(array, start);
 
-    void ICollection.CopyTo(Array array, int start) => ((ICollection)collection).CopyTo(array, start);
+    void ICollection.CopyTo(Array array, int start) => ((ICollection)_collection).CopyTo(array, start);
 
-    public override int Count => collection.Count;
+    public override int Count => _collection.Count;
 
-    public override bool IsSynchronized => collection.IsSynchronized;
+    public override bool IsSynchronized => _collection.IsSynchronized;
 
-    public override object SyncRoot => collection.SyncRoot;
+    public override object SyncRoot => _collection.SyncRoot;
 
     public override IAppender this[int i]
     {
-      get => collection[i];
+      get => _collection[i];
       set => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
     }
 
@@ -642,9 +642,9 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
     public override void Clear()
       => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
 
-    public override bool Contains(IAppender x) => collection.Contains(x);
+    public override bool Contains(IAppender x) => _collection.Contains(x);
 
-    public override int IndexOf(IAppender x) => collection.IndexOf(x);
+    public override int IndexOf(IAppender x) => _collection.IndexOf(x);
 
     public override void Insert(int pos, IAppender x)
       => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
@@ -659,11 +659,11 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
 
     public override bool IsReadOnly => true;
 
-    public override IEnumerator<IAppender> GetEnumerator() => collection.GetEnumerator();
+    public override IEnumerator<IAppender> GetEnumerator() => _collection.GetEnumerator();
 
     public override int Capacity
     {
-      get => collection.Capacity;
+      get => _collection.Capacity;
       set => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
     }
 
@@ -673,7 +673,7 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
     public override int AddRange(IAppender[] x)
       => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
 
-    public override IAppender[] ToArray() => [.. collection];
+    public override IAppender[] ToArray() => _collection.ToArray();
 
     public override void TrimToSize() => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
   }

@@ -48,12 +48,12 @@ public class DynamicPatternLayout : PatternLayout
   /// <summary>
   /// The header PatternString
   /// </summary>
-  private PatternString headerPatternString = new(string.Empty);
+  private PatternString _headerPatternString = new(string.Empty);
 
   /// <summary>
   /// The footer PatternString
   /// </summary>
-  private PatternString footerPatternString = new(string.Empty);
+  private PatternString _footerPatternString = new(string.Empty);
 
   /// <summary>
   /// Constructs a DynamicPatternLayout using the DefaultConversionPattern
@@ -90,13 +90,13 @@ public class DynamicPatternLayout : PatternLayout
   /// </remarks>
   public override string? Header
   {
-    get => headerPatternString.Format();
+    get => _headerPatternString.Format();
     set
     {
       base.Header = value;
       if (value is not null)
       {
-        headerPatternString = new PatternString(value);
+        _headerPatternString = new PatternString(value);
       }
     }
   }
@@ -114,11 +114,11 @@ public class DynamicPatternLayout : PatternLayout
   /// </remarks>
   public override string? Footer
   {
-    get => footerPatternString.Format();
+    get => _footerPatternString.Format();
     set
     {
       base.Footer = value;
-      footerPatternString = new PatternString(value);
+      _footerPatternString = new PatternString(value);
     }
   }
 }

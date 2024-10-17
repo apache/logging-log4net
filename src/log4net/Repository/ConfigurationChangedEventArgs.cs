@@ -29,7 +29,7 @@ namespace log4net.Repository;
 /// </summary>
 public class ConfigurationChangedEventArgs : EventArgs
 {
-  private readonly ICollection configurationMessages;
+  private readonly ICollection _configurationMessages;
 
   /// <summary>
   /// 
@@ -37,7 +37,7 @@ public class ConfigurationChangedEventArgs : EventArgs
   /// <param name="configurationMessages"></param>
   public ConfigurationChangedEventArgs(ICollection configurationMessages)
   {
-    this.configurationMessages = configurationMessages;
+    this._configurationMessages = configurationMessages;
   }
 
   /// <summary>
@@ -45,6 +45,6 @@ public class ConfigurationChangedEventArgs : EventArgs
   /// </summary>
   public ICollection ConfigurationMessages
   {
-    get { return configurationMessages; }
+    get { return _configurationMessages; }
   }
 }

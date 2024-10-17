@@ -378,7 +378,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   {
     if (ReconnectOnError && (Connection is null || Connection.State != ConnectionState.Open))
     {
-      LogLog.Debug(declaringType, $"Attempting to reconnect to database. Current Connection State: {((Connection is null) ? SystemInfo.NullText : Connection.State.ToString())}");
+      LogLog.Debug(_declaringType, $"Attempting to reconnect to database. Current Connection State: {((Connection is null) ? SystemInfo.NullText : Connection.State.ToString())}");
 
       InitializeDatabaseConnection();
     }
@@ -502,7 +502,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
         // Get the command text from the Layout
         string logStatement = GetLogStatement(e);
 
-        LogLog.Debug(declaringType, $"LogStatement [{logStatement}]");
+        LogLog.Debug(_declaringType, $"LogStatement [{logStatement}]");
 
         dbCmd.CommandText = logStatement;
         dbCmd.ExecuteNonQuery();
@@ -690,7 +690,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
       }
       catch (Exception ex)
       {
-        LogLog.Warn(declaringType, "Exception while disposing cached connection object", ex);
+        LogLog.Warn(_declaringType, "Exception while disposing cached connection object", ex);
       }
       Connection = null;
     }
@@ -704,6 +704,9 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// The list of <see cref="AdoNetAppenderParameter"/> objects.
   /// </para>
   /// </remarks>
+  // ReSharper disable once InconsistentNaming
+  // ReSharper disable once FieldCanBeMadeReadOnly.Global
+  // ReSharper disable once MemberCanBePrivate.Global
   protected List<AdoNetAppenderParameter> m_parameters = [];
 
   /// <summary>
@@ -713,7 +716,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(AdoNetAppender);
+  private static readonly Type _declaringType = typeof(AdoNetAppender);
 }
 
 /// <summary>
@@ -779,11 +782,11 @@ public class AdoNetAppenderParameter
   /// <seealso cref="IDataParameter.DbType" />
   public DbType DbType
   {
-    get => dbType;
+    get => _dbType;
     set
     {
-      dbType = value;
-      inferType = false;
+      _dbType = value;
+      _inferType = false;
     }
   }
 
@@ -884,7 +887,7 @@ public class AdoNetAppenderParameter
     // Set the parameter properties
     param.ParameterName = ParameterName;
 
-    if (!inferType)
+    if (!_inferType)
     {
       param.DbType = DbType;
     }
@@ -933,10 +936,10 @@ public class AdoNetAppenderParameter
   /// <summary>
   /// The database type for this parameter.
   /// </summary>
-  private DbType dbType;
+  private DbType _dbType;
 
   /// <summary>
   /// Flag to infer type rather than use the DbType
   /// </summary>
-  private bool inferType = true;
+  private bool _inferType = true;
 }

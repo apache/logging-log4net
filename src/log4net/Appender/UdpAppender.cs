@@ -200,7 +200,7 @@ public class UdpAppender : AppenderSkeleton
   /// <exception cref="ArgumentOutOfRangeException">The value specified is less than <see cref="IPEndPoint.MinPort" /> or greater than <see cref="IPEndPoint.MaxPort" />.</exception>
   public int RemotePort
   {
-    get => remotePort;
+    get => _remotePort;
     set
     {
       if (value is < IPEndPoint.MinPort or > IPEndPoint.MaxPort)
@@ -210,7 +210,7 @@ public class UdpAppender : AppenderSkeleton
       }
       else
       {
-        remotePort = value;
+        _remotePort = value;
       }
     }
   }
@@ -234,7 +234,7 @@ public class UdpAppender : AppenderSkeleton
   /// <exception cref="ArgumentOutOfRangeException">The value specified is less than <see cref="IPEndPoint.MinPort" /> or greater than <see cref="IPEndPoint.MaxPort" />.</exception>
   public int LocalPort
   {
-    get => localPort;
+    get => _localPort;
     set
     {
       if (value is not 0 and (< IPEndPoint.MinPort or > IPEndPoint.MaxPort))
@@ -244,7 +244,7 @@ public class UdpAppender : AppenderSkeleton
       }
       else
       {
-        localPort = value;
+        _localPort = value;
       }
     }
   }
@@ -434,10 +434,10 @@ public class UdpAppender : AppenderSkeleton
   /// The TCP port number of the remote host or multicast group to 
   /// which the logging event will be sent.
   /// </summary>
-  private int remotePort;
+  private int _remotePort;
 
   /// <summary>
   /// The TCP port number from which the <see cref="UdpClient" /> will communicate.
   /// </summary>
-  private int localPort;
+  private int _localPort;
 }

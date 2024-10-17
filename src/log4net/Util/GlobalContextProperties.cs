@@ -44,12 +44,12 @@ public sealed class GlobalContextProperties : ContextPropertiesBase
   /// reordering reads and writes of this thread performed on different threads.
   /// </para>
   /// </remarks>
-  private volatile ReadOnlyPropertiesDictionary readOnlyProperties = [];
+  private volatile ReadOnlyPropertiesDictionary _readOnlyProperties = [];
 
   /// <summary>
   /// Lock object used to synchronize updates within this instance
   /// </summary>
-  private readonly object syncRoot = new();
+  private readonly object _syncRoot = new();
 
   /// <summary>
   /// Constructor
@@ -78,16 +78,16 @@ public sealed class GlobalContextProperties : ContextPropertiesBase
   /// </remarks>
   public override object? this[string key]
   {
-    get => readOnlyProperties[key];
+    get => _readOnlyProperties[key];
     set
     {
-      lock (syncRoot)
+      lock (_syncRoot)
       {
-        var mutableProps = new PropertiesDictionary(readOnlyProperties)
+        var mutableProps = new PropertiesDictionary(_readOnlyProperties)
         {
           [key] = value
         };
-        readOnlyProperties = new ReadOnlyPropertiesDictionary(mutableProps);
+        _readOnlyProperties = new ReadOnlyPropertiesDictionary(mutableProps);
       }
     }
   }
@@ -104,13 +104,13 @@ public sealed class GlobalContextProperties : ContextPropertiesBase
   /// </remarks>
   public void Remove(string key)
   {
-    lock (syncRoot)
+    lock (_syncRoot)
     {
-      if (readOnlyProperties.Contains(key))
+      if (_readOnlyProperties.Contains(key))
       {
-        var mutableProps = new PropertiesDictionary(readOnlyProperties);
+        var mutableProps = new PropertiesDictionary(_readOnlyProperties);
         mutableProps.Remove(key);
-        readOnlyProperties = new ReadOnlyPropertiesDictionary(mutableProps);
+        _readOnlyProperties = new ReadOnlyPropertiesDictionary(mutableProps);
       }
     }
   }
@@ -120,9 +120,9 @@ public sealed class GlobalContextProperties : ContextPropertiesBase
   /// </summary>
   public void Clear()
   {
-    lock (syncRoot)
+    lock (_syncRoot)
     {
-      readOnlyProperties = [];
+      _readOnlyProperties = [];
     }
   }
 
@@ -138,6 +138,6 @@ public sealed class GlobalContextProperties : ContextPropertiesBase
   /// </remarks>
   internal ReadOnlyPropertiesDictionary GetReadOnlyProperties()
   {
-    return readOnlyProperties;
+    return _readOnlyProperties;
   }
 }

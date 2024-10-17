@@ -167,7 +167,7 @@ public struct LoggingEventData
 [Log4NetSerializable]
 public class LoggingEvent : ILog4NetSerializable
 {
-  private static readonly Type declaringType = typeof(LoggingEvent);
+  private static readonly Type _declaringType = typeof(LoggingEvent);
 
   /// <summary>
   /// Initializes a new instance of the <see cref="LoggingEvent" /> class
@@ -203,16 +203,16 @@ public class LoggingEvent : ILog4NetSerializable
       object? message,
       Exception? exception)
   {
-    this.callerStackBoundaryDeclaringType = callerStackBoundaryDeclaringType;
-    this.message = message;
+    this._callerStackBoundaryDeclaringType = callerStackBoundaryDeclaringType;
+    this._message = message;
     Repository = repository;
     ExceptionObject = exception;
 
-    data.LoggerName = loggerName;
-    data.Level = level;
+    _data.LoggerName = loggerName;
+    _data.Level = level;
 
     // Store the event creation time
-    data.TimeStampUtc = DateTime.UtcNow;
+    _data.TimeStampUtc = DateTime.UtcNow;
   }
 
   /// <summary>
@@ -246,11 +246,11 @@ public class LoggingEvent : ILog4NetSerializable
       LoggingEventData data,
       FixFlags fixedData)
   {
-    this.callerStackBoundaryDeclaringType = callerStackBoundaryDeclaringType;
+    this._callerStackBoundaryDeclaringType = callerStackBoundaryDeclaringType;
     Repository = repository;
 
-    this.data = data;
-    fixFlags = fixedData;
+    this._data = data;
+    _fixFlags = fixedData;
   }
 
   /// <summary>
@@ -343,38 +343,38 @@ public class LoggingEvent : ILog4NetSerializable
   /// </remarks>
   protected LoggingEvent(SerializationInfo info, StreamingContext context)
   {
-    data.LoggerName = info.GetString("LoggerName");
+    _data.LoggerName = info.GetString("LoggerName");
 
     // Note we are deserializing the whole level object. That is the
     // name and the value. This value is correct for the source 
     // hierarchy but may not be for the target hierarchy that this
     // event may be re-logged into. If it is to be re-logged it may
     // be necessary to re-lookup the level based only on the name.
-    data.Level = info.GetValue("Level", typeof(Level)) as Level;
+    _data.Level = info.GetValue("Level", typeof(Level)) as Level;
 
-    data.Message = info.GetString("Message");
-    data.ThreadName = info.GetString("ThreadName");
+    _data.Message = info.GetString("Message");
+    _data.ThreadName = info.GetString("ThreadName");
 
     // Favor the newer serialization tag 'TimeStampUtc' while supporting the obsolete format from pre-3.0.
     try
     {
-      data.TimeStampUtc = info.GetDateTime("TimeStampUtc");
+      _data.TimeStampUtc = info.GetDateTime("TimeStampUtc");
     }
     catch (SerializationException)
     {
-      data.TimeStampUtc = info.GetDateTime("TimeStamp").ToUniversalTime();
+      _data.TimeStampUtc = info.GetDateTime("TimeStamp").ToUniversalTime();
     }
 
-    data.LocationInfo = info.GetValue("LocationInfo", typeof(LocationInfo)) as LocationInfo;
-    data.UserName = info.GetString("UserName");
-    data.ExceptionString = info.GetString("ExceptionString");
-    data.Properties = info.GetValue("Properties", typeof(PropertiesDictionary)) as PropertiesDictionary;
-    data.Domain = info.GetString("Domain");
-    data.Identity = info.GetString("Identity");
+    _data.LocationInfo = info.GetValue("LocationInfo", typeof(LocationInfo)) as LocationInfo;
+    _data.UserName = info.GetString("UserName");
+    _data.ExceptionString = info.GetString("ExceptionString");
+    _data.Properties = info.GetValue("Properties", typeof(PropertiesDictionary)) as PropertiesDictionary;
+    _data.Domain = info.GetString("Domain");
+    _data.Identity = info.GetString("Identity");
 
     // We have restored all the values of this instance, i.e. all the values are fixed
     // Set the fix flags otherwise the data values may be overwritten from the current environment.
-    fixFlags = FixFlags.All;
+    _fixFlags = FixFlags.All;
   }
 
   /// <summary>
@@ -426,7 +426,7 @@ public class LoggingEvent : ILog4NetSerializable
   /// In many cases it is equivalent of <see cref="Level.All"/>, other times
   /// it is mapped to Debug or Info defaults.
   /// </summary>
-  public Level? Level => data.Level;
+  public Level? Level => _data.Level;
 
   /// <summary>
   /// Gets the time of the logging event.
@@ -439,7 +439,7 @@ public class LoggingEvent : ILog4NetSerializable
   /// The TimeStamp is stored in UTC and converted to the local time zone for this computer.
   /// </para>
   /// </remarks>
-  public DateTime TimeStamp => data.TimeStampUtc.ToLocalTime();
+  public DateTime TimeStamp => _data.TimeStampUtc.ToLocalTime();
 
   /// <summary>
   /// Gets UTC the time of the logging event.
@@ -447,12 +447,12 @@ public class LoggingEvent : ILog4NetSerializable
   /// <value>
   /// The UTC time of the logging event.
   /// </value>
-  public DateTime TimeStampUtc => data.TimeStampUtc;
+  public DateTime TimeStampUtc => _data.TimeStampUtc;
 
   /// <summary>
   /// Gets the name of the logger that logged the event.
   /// </summary>
-  public string? LoggerName => data.LoggerName;
+  public string? LoggerName => _data.LoggerName;
 
   /// <summary>
   /// Gets the location information for this logging event.
@@ -471,12 +471,12 @@ public class LoggingEvent : ILog4NetSerializable
   {
     get
     {
-      if (data.LocationInfo is null && cacheUpdatable)
+      if (_data.LocationInfo is null && _cacheUpdatable)
       {
-        data.LocationInfo = new LocationInfo(callerStackBoundaryDeclaringType);
+        _data.LocationInfo = new LocationInfo(_callerStackBoundaryDeclaringType);
       }
 
-      return data.LocationInfo;
+      return _data.LocationInfo;
     }
   }
 
@@ -502,8 +502,8 @@ public class LoggingEvent : ILog4NetSerializable
   /// </remarks>
   public object? MessageObject
   {
-    get { return message; }
-    protected set { message = value; }
+    get { return _message; }
+    protected set { _message = value; }
   }
 
   /// <summary>
@@ -565,28 +565,28 @@ public class LoggingEvent : ILog4NetSerializable
   {
     get
     {
-      if (data.Message is null && cacheUpdatable)
+      if (_data.Message is null && _cacheUpdatable)
       {
-        if (message is null)
+        if (_message is null)
         {
-          data.Message = string.Empty;
+          _data.Message = string.Empty;
         }
-        else if (message is string s)
+        else if (_message is string s)
         {
-          data.Message = s;
+          _data.Message = s;
         }
         else if (Repository is not null)
         {
-          data.Message = Repository.RendererMap.FindAndRender(message);
+          _data.Message = Repository.RendererMap.FindAndRender(_message);
         }
         else
         {
           // Very last resort
-          data.Message = message.ToString();
+          _data.Message = _message.ToString();
         }
       }
 
-      return data.Message;
+      return _data.Message;
     }
   }
 
@@ -605,26 +605,26 @@ public class LoggingEvent : ILog4NetSerializable
   /// </remarks>
   public virtual void WriteRenderedMessage(TextWriter writer)
   {
-    if (data.Message is not null)
+    if (_data.Message is not null)
     {
-      writer.Write(data.Message);
+      writer.Write(_data.Message);
     }
     else
     {
-      if (message is not null)
+      if (_message is not null)
       {
-        if (message is string s)
+        if (_message is string s)
         {
           writer.Write(s);
         }
         else if (Repository is not null)
         {
-          Repository.RendererMap.FindAndRender(message, writer);
+          Repository.RendererMap.FindAndRender(_message, writer);
         }
         else
         {
           // Very last resort
-          writer.Write(message.ToString());
+          writer.Write(_message.ToString());
         }
       }
     }
@@ -646,12 +646,12 @@ public class LoggingEvent : ILog4NetSerializable
   {
     get
     {
-      if (data.ThreadName is null && cacheUpdatable)
+      if (_data.ThreadName is null && _cacheUpdatable)
       {
-        data.ThreadName = ReviseThreadName(Thread.CurrentThread.Name);
+        _data.ThreadName = ReviseThreadName(Thread.CurrentThread.Name);
       }
 
-      return data.ThreadName;
+      return _data.ThreadName;
     }
   }
 
@@ -680,7 +680,7 @@ public class LoggingEvent : ILog4NetSerializable
     {
       // This security exception will occur if the caller does not have 
       // some undefined set of SecurityPermission flags.
-      LogLog.Debug(declaringType,
+      LogLog.Debug(_declaringType,
         "Security exception while trying to get current thread ID. Error Ignored. Empty thread name.");
 
       // As a last resort use the hash code of the Thread object
@@ -736,7 +736,7 @@ public class LoggingEvent : ILog4NetSerializable
   /// </para>
   /// </remarks>
   public string UserName =>
-      data.UserName ??= TryGetCurrentUserName() ?? SystemInfo.NotAvailableText;
+      _data.UserName ??= TryGetCurrentUserName() ?? SystemInfo.NotAvailableText;
 
   private string? TryGetCurrentUserName()
   {
@@ -762,7 +762,7 @@ public class LoggingEvent : ILog4NetSerializable
       // This security exception will occur if the caller does not have 
       // some undefined set of SecurityPermission flags.
       LogLog.Debug(
-          declaringType,
+          _declaringType,
           "Security exception while trying to get current windows identity. Error Ignored."
       );
       return Environment.UserName;
@@ -801,17 +801,17 @@ public class LoggingEvent : ILog4NetSerializable
   {
     get
     {
-      if (data.Identity is null && cacheUpdatable)
+      if (_data.Identity is null && _cacheUpdatable)
       {
         try
         {
           if (Thread.CurrentPrincipal?.Identity?.Name is string name)
           {
-            data.Identity = name;
+            _data.Identity = name;
           }
           else
           {
-            data.Identity = string.Empty;
+            _data.Identity = string.Empty;
           }
         }
         catch (ObjectDisposedException)
@@ -819,23 +819,23 @@ public class LoggingEvent : ILog4NetSerializable
           // This exception will occur if Thread.CurrentPrincipal.Identity is not null but
           // the getter of the property Name tries to access disposed objects.
           // Seen to happen on IIS 7 or greater with windows authentication.
-          LogLog.Debug(declaringType,
+          LogLog.Debug(_declaringType,
               "Object disposed exception while trying to get current thread principal. Error Ignored. Empty identity name.");
 
-          data.Identity = string.Empty;
+          _data.Identity = string.Empty;
         }
         catch (SecurityException)
         {
           // This security exception will occur if the caller does not have 
           // some undefined set of SecurityPermission flags.
-          LogLog.Debug(declaringType,
+          LogLog.Debug(_declaringType,
               "Security exception while trying to get current thread principal. Error Ignored. Empty identity name.");
 
-          data.Identity = string.Empty;
+          _data.Identity = string.Empty;
         }
       }
 
-      return data.Identity;
+      return _data.Identity;
     }
   }
 
@@ -846,12 +846,12 @@ public class LoggingEvent : ILog4NetSerializable
   {
     get
     {
-      if (data.Domain is null && cacheUpdatable)
+      if (_data.Domain is null && _cacheUpdatable)
       {
-        data.Domain = SystemInfo.ApplicationFriendlyName;
+        _data.Domain = SystemInfo.ApplicationFriendlyName;
       }
 
-      return data.Domain;
+      return _data.Domain;
     }
   }
 
@@ -886,13 +886,13 @@ public class LoggingEvent : ILog4NetSerializable
     get
     {
       // If we have cached properties then return that otherwise changes will be lost
-      if (data.Properties is not null)
+      if (_data.Properties is not null)
       {
-        return data.Properties;
+        return _data.Properties;
       }
 
-      eventProperties ??= [];
-      return eventProperties;
+      _eventProperties ??= [];
+      return _eventProperties;
     }
   }
 
@@ -907,7 +907,7 @@ public class LoggingEvent : ILog4NetSerializable
   /// </remarks>
   public FixFlags Fix
   {
-    get => fixFlags;
+    get => _fixFlags;
     set => FixVolatileData(value);
   }
 
@@ -933,23 +933,23 @@ public class LoggingEvent : ILog4NetSerializable
   {
     // The caller must set Fix before this object can be serialized.
 
-    info.AddValue("LoggerName", data.LoggerName);
-    info.AddValue("Level", data.Level);
-    info.AddValue("Message", data.Message);
-    info.AddValue("ThreadName", data.ThreadName);
+    info.AddValue("LoggerName", _data.LoggerName);
+    info.AddValue("Level", _data.Level);
+    info.AddValue("Message", _data.Message);
+    info.AddValue("ThreadName", _data.ThreadName);
 
     // Serialize UTC->local time for backward compatibility with obsolete 'TimeStamp' property.
-    info.AddValue("TimeStamp", data.TimeStampUtc.ToLocalTime());
+    info.AddValue("TimeStamp", _data.TimeStampUtc.ToLocalTime());
 
     // Also add the UTC time under its own serialization tag.
-    info.AddValue("TimeStampUtc", data.TimeStampUtc);
+    info.AddValue("TimeStampUtc", _data.TimeStampUtc);
 
-    info.AddValue("LocationInfo", data.LocationInfo);
-    info.AddValue("UserName", data.UserName);
-    info.AddValue("ExceptionString", data.ExceptionString);
-    info.AddValue("Properties", data.Properties);
-    info.AddValue("Domain", data.Domain);
-    info.AddValue("Identity", data.Identity);
+    info.AddValue("LocationInfo", _data.LocationInfo);
+    info.AddValue("UserName", _data.UserName);
+    info.AddValue("ExceptionString", _data.ExceptionString);
+    info.AddValue("Properties", _data.Properties);
+    info.AddValue("Domain", _data.Domain);
+    info.AddValue("Identity", _data.Identity);
   }
 
   /// <summary>
@@ -985,7 +985,7 @@ public class LoggingEvent : ILog4NetSerializable
   public LoggingEventData GetLoggingEventData(FixFlags fixFlags)
   {
     Fix = fixFlags;
-    return data;
+    return _data;
   }
 
   /// <summary>
@@ -1003,28 +1003,28 @@ public class LoggingEvent : ILog4NetSerializable
   /// </remarks>
   public string? GetExceptionString()
   {
-    if (data.ExceptionString is null && cacheUpdatable)
+    if (_data.ExceptionString is null && _cacheUpdatable)
     {
       if (ExceptionObject is not null)
       {
         if (Repository is not null)
         {
           // Render exception using the repositories renderer map
-          data.ExceptionString = Repository.RendererMap.FindAndRender(ExceptionObject);
+          _data.ExceptionString = Repository.RendererMap.FindAndRender(ExceptionObject);
         }
         else
         {
           // Very last resort
-          data.ExceptionString = ExceptionObject.ToString();
+          _data.ExceptionString = ExceptionObject.ToString();
         }
       }
       else
       {
-        data.ExceptionString = string.Empty;
+        _data.ExceptionString = string.Empty;
       }
     }
 
-    return data.ExceptionString;
+    return _data.ExceptionString;
   }
 
   /// <summary>
@@ -1043,10 +1043,10 @@ public class LoggingEvent : ILog4NetSerializable
     // Unlock the cache so that new values can be stored
     // This may not be ideal if we are no longer in the correct context
     // and someone calls fix. 
-    cacheUpdatable = true;
+    _cacheUpdatable = true;
 
     // determine the flags that we are actually fixing
-    FixFlags updateFlags = (flags ^ fixFlags) & flags;
+    FixFlags updateFlags = (flags ^ _fixFlags) & flags;
 
     if (updateFlags > 0)
     {
@@ -1055,7 +1055,7 @@ public class LoggingEvent : ILog4NetSerializable
         // Force the message to be rendered
         _ = RenderedMessage;
 
-        fixFlags |= FixFlags.Message;
+        _fixFlags |= FixFlags.Message;
       }
 
       if ((updateFlags & FixFlags.ThreadName) != 0)
@@ -1063,7 +1063,7 @@ public class LoggingEvent : ILog4NetSerializable
         // Grab the thread name
         _ = ThreadName;
 
-        fixFlags |= FixFlags.ThreadName;
+        _fixFlags |= FixFlags.ThreadName;
       }
 
       if ((updateFlags & FixFlags.LocationInfo) != 0)
@@ -1071,7 +1071,7 @@ public class LoggingEvent : ILog4NetSerializable
         // Force the location information to be loaded
         _ = LocationInformation;
 
-        fixFlags |= FixFlags.LocationInfo;
+        _fixFlags |= FixFlags.LocationInfo;
       }
 
       if ((updateFlags & FixFlags.UserName) != 0)
@@ -1079,7 +1079,7 @@ public class LoggingEvent : ILog4NetSerializable
         // Grab the user name
         _ = UserName;
 
-        fixFlags |= FixFlags.UserName;
+        _fixFlags |= FixFlags.UserName;
       }
 
       if ((updateFlags & FixFlags.Domain) != 0)
@@ -1087,7 +1087,7 @@ public class LoggingEvent : ILog4NetSerializable
         // Grab the domain name
         _ = Domain;
 
-        fixFlags |= FixFlags.Domain;
+        _fixFlags |= FixFlags.Domain;
       }
 
       if ((updateFlags & FixFlags.Identity) != 0)
@@ -1095,7 +1095,7 @@ public class LoggingEvent : ILog4NetSerializable
         // Grab the identity
         _ = Identity;
 
-        fixFlags |= FixFlags.Identity;
+        _fixFlags |= FixFlags.Identity;
       }
 
       if ((updateFlags & FixFlags.Exception) != 0)
@@ -1103,28 +1103,28 @@ public class LoggingEvent : ILog4NetSerializable
         // Force the exception text to be loaded
         _ = GetExceptionString();
 
-        fixFlags |= FixFlags.Exception;
+        _fixFlags |= FixFlags.Exception;
       }
 
       if ((updateFlags & FixFlags.Properties) != 0)
       {
         CacheProperties();
 
-        fixFlags |= FixFlags.Properties;
+        _fixFlags |= FixFlags.Properties;
       }
     }
 
     // Finally lock everything we've cached.
-    cacheUpdatable = false;
+    _cacheUpdatable = false;
   }
 
   private void CreateCompositeProperties()
   {
     var compositeProperties = new CompositeProperties();
 
-    if (eventProperties is not null)
+    if (_eventProperties is not null)
     {
-      compositeProperties.Add(eventProperties);
+      compositeProperties.Add(_eventProperties);
     }
     var logicalThreadProperties = LogicalThreadContext.Properties.GetProperties(false);
     if (logicalThreadProperties is not null)
@@ -1139,8 +1139,8 @@ public class LoggingEvent : ILog4NetSerializable
     // TODO: Add Repository Properties
 
     // event properties
-    bool shouldFixUserName = (fixFlags & FixFlags.UserName) != 0;
-    bool shouldFixIdentity = (fixFlags & FixFlags.Identity) != 0;
+    bool shouldFixUserName = (_fixFlags & FixFlags.UserName) != 0;
+    bool shouldFixIdentity = (_fixFlags & FixFlags.Identity) != 0;
     if (shouldFixIdentity || shouldFixUserName)
     {
       var eventProperties = new PropertiesDictionary();
@@ -1158,19 +1158,19 @@ public class LoggingEvent : ILog4NetSerializable
     }
 
     compositeProperties.Add(GlobalContext.Properties.GetReadOnlyProperties());
-    this.compositeProperties = compositeProperties;
+    this._compositeProperties = compositeProperties;
   }
 
   private void CacheProperties()
   {
-    if (data.Properties is null && cacheUpdatable)
+    if (_data.Properties is null && _cacheUpdatable)
     {
-      if (compositeProperties is null)
+      if (_compositeProperties is null)
       {
         CreateCompositeProperties();
       }
 
-      var flattenedProperties = compositeProperties!.Flatten();
+      var flattenedProperties = _compositeProperties!.Flatten();
 
       var fixedProperties = new PropertiesDictionary();
 
@@ -1192,7 +1192,7 @@ public class LoggingEvent : ILog4NetSerializable
         }
       }
 
-      data.Properties = fixedProperties;
+      _data.Properties = fixedProperties;
     }
   }
 
@@ -1232,17 +1232,17 @@ public class LoggingEvent : ILog4NetSerializable
   /// </remarks>
   public object? LookupProperty(string key)
   {
-    if (data.Properties is not null)
+    if (_data.Properties is not null)
     {
-      return data.Properties[key];
+      return _data.Properties[key];
     }
 
-    if (compositeProperties is null)
+    if (_compositeProperties is null)
     {
       CreateCompositeProperties();
     }
 
-    return compositeProperties![key];
+    return _compositeProperties![key];
   }
 
   /// <summary>
@@ -1261,49 +1261,49 @@ public class LoggingEvent : ILog4NetSerializable
   /// </remarks>
   public PropertiesDictionary GetProperties()
   {
-    if (data.Properties is not null)
+    if (_data.Properties is not null)
     {
-      return data.Properties;
+      return _data.Properties;
     }
 
-    if (compositeProperties is null)
+    if (_compositeProperties is null)
     {
       CreateCompositeProperties();
     }
 
-    return compositeProperties!.Flatten();
+    return _compositeProperties!.Flatten();
   }
 
   /// <summary>
   /// The internal logging event data.
   /// </summary>
-  private LoggingEventData data;
+  private LoggingEventData _data;
 
   /// <summary>
   /// Location information for the caller.
   /// </summary>
-  public LocationInfo? LocationInfo => data.LocationInfo;
+  public LocationInfo? LocationInfo => _data.LocationInfo;
 
   /// <summary>
   /// The internal logging event data.
   /// </summary>
-  private CompositeProperties? compositeProperties;
+  private CompositeProperties? _compositeProperties;
 
   /// <summary>
   /// The internal logging event data.
   /// </summary>
-  private PropertiesDictionary? eventProperties;
+  private PropertiesDictionary? _eventProperties;
 
   /// <summary>
   /// The fully qualified Type of the calling 
   /// logger class in the stack frame (i.e. the declaring type of the method).
   /// </summary>
-  private readonly Type? callerStackBoundaryDeclaringType;
+  private readonly Type? _callerStackBoundaryDeclaringType;
 
   /// <summary>
   /// The application supplied message of logging event.
   /// </summary>
-  private object? message;
+  private object? _message;
 
   /// <summary>
   /// The fix state for this event
@@ -1312,7 +1312,7 @@ public class LoggingEvent : ILog4NetSerializable
   /// These flags indicate which fields have been fixed.
   /// Not serialized.
   /// </remarks>
-  private FixFlags fixFlags = FixFlags.None;
+  private FixFlags _fixFlags = FixFlags.None;
 
   /// <summary>
   /// Indicated that the internal cache is updateable (ie not fixed)
@@ -1321,7 +1321,7 @@ public class LoggingEvent : ILog4NetSerializable
   /// This is a separate flag to fixFlags as it allows incremental fixing and simpler
   /// changes in the caching strategy.
   /// </remarks>
-  private bool cacheUpdatable = true;
+  private bool _cacheUpdatable = true;
 
   /// <summary>
   /// The key into the Properties map for the host name value.

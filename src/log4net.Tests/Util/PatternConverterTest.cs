@@ -38,8 +38,8 @@ public class PatternConverterTest
   [Test]
   public void PatternLayoutConverterProperties()
   {
-    XmlDocument log4netConfig = new XmlDocument();
-    log4netConfig.LoadXml(@"
+    XmlDocument log4NetConfig = new();
+    log4NetConfig.LoadXml(@"
                 <log4net>
                   <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
                     <layout type=""log4net.Layout.PatternLayout"">
@@ -65,7 +65,7 @@ public class PatternConverterTest
                 </log4net>");
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-    XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+    XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
 
     ILog log = LogManager.GetLogger(rep.Name, "PatternLayoutConverterProperties");
     log.Debug("Message");
@@ -85,8 +85,8 @@ public class PatternConverterTest
   [Test]
   public void PatternConverterProperties()
   {
-    XmlDocument log4netConfig = new XmlDocument();
-    log4netConfig.LoadXml(@"
+    XmlDocument log4NetConfig = new();
+    log4NetConfig.LoadXml(@"
                 <log4net>
                   <appender name=""PatternStringAppender"" type=""log4net.Tests.Util.PatternStringAppender, log4net.Tests"">
                     <layout type=""log4net.Layout.SimpleLayout"" />
@@ -113,7 +113,7 @@ public class PatternConverterTest
                 </log4net>");
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-    XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+    XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
 
     ILog log = LogManager.GetLogger(rep.Name, "PatternConverterProperties");
     log.Debug("Message");
@@ -134,25 +134,25 @@ public class PatternConverterTest
 
 public class PropertyKeyCountPatternLayoutConverter : PatternLayoutConverter
 {
-  private static PropertyKeyCountPatternLayoutConverter? mostRecentInstance;
+  private static PropertyKeyCountPatternLayoutConverter? _mostRecentInstance;
 
-  public PropertyKeyCountPatternLayoutConverter() => mostRecentInstance = this;
+  public PropertyKeyCountPatternLayoutConverter() => _mostRecentInstance = this;
 
   protected override void Convert(TextWriter writer, LoggingEvent loggingEvent) => writer.Write(Properties!.GetKeys().Length);
 
-  public static PropertyKeyCountPatternLayoutConverter? MostRecentInstance => mostRecentInstance;
+  public static PropertyKeyCountPatternLayoutConverter? MostRecentInstance => _mostRecentInstance;
 }
 
 public class PropertyKeyCountPatternConverter : PatternConverter
 {
-  private static PropertyKeyCountPatternConverter? mostRecentInstance;
+  private static PropertyKeyCountPatternConverter? _mostRecentInstance;
 
-  public PropertyKeyCountPatternConverter() => mostRecentInstance = this;
+  public PropertyKeyCountPatternConverter() => _mostRecentInstance = this;
 
   public override void Convert(TextWriter writer, object? state)
     => writer.Write(Properties!.GetKeys().Length);
 
-  public static PropertyKeyCountPatternConverter? MostRecentInstance => mostRecentInstance;
+  public static PropertyKeyCountPatternConverter? MostRecentInstance => _mostRecentInstance;
 }
 
 public class PatternStringAppender : StringAppender

@@ -37,18 +37,20 @@ public class DebugAppenderTest
   [Test]
   public void NullCategoryTest()
   {
-    CategoryTraceListener categoryTraceListener = new CategoryTraceListener();
+    CategoryTraceListener categoryTraceListener = new();
     Debug.Listeners.Add(categoryTraceListener);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 
-    DebugAppender debugAppender = new DebugAppender();
-    debugAppender.Layout = new SimpleLayout();
+    DebugAppender debugAppender = new()
+    {
+      Layout = new SimpleLayout()
+    };
     debugAppender.ActivateOptions();
 
     debugAppender.Category = null;
 
-    TestErrorHandler testErrHandler = new TestErrorHandler();
+    TestErrorHandler testErrHandler = new();
     debugAppender.ErrorHandler = testErrHandler;
 
     BasicConfigurator.Configure(rep, debugAppender);
@@ -66,13 +68,15 @@ public class DebugAppenderTest
   [Test]
   public void EmptyStringCategoryTest()
   {
-    CategoryTraceListener categoryTraceListener = new CategoryTraceListener();
+    CategoryTraceListener categoryTraceListener = new();
     Debug.Listeners.Add(categoryTraceListener);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 
-    DebugAppender debugAppender = new DebugAppender();
-    debugAppender.Layout = new SimpleLayout();
+    DebugAppender debugAppender = new()
+    {
+      Layout = new SimpleLayout()
+    };
     debugAppender.ActivateOptions();
 
     debugAppender.Category = new PatternLayout("");
@@ -90,13 +94,15 @@ public class DebugAppenderTest
   [Test]
   public void DefaultCategoryTest()
   {
-    CategoryTraceListener categoryTraceListener = new CategoryTraceListener();
+    CategoryTraceListener categoryTraceListener = new();
     Debug.Listeners.Add(categoryTraceListener);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 
-    DebugAppender debugAppender = new DebugAppender();
-    debugAppender.Layout = new SimpleLayout();
+    DebugAppender debugAppender = new()
+    {
+      Layout = new SimpleLayout()
+    };
     debugAppender.ActivateOptions();
 
     BasicConfigurator.Configure(rep, debugAppender);
@@ -114,13 +120,13 @@ public class DebugAppenderTest
   [Test]
   public void MethodNameCategoryTest()
   {
-    CategoryTraceListener categoryTraceListener = new CategoryTraceListener();
+    CategoryTraceListener categoryTraceListener = new();
     Debug.Listeners.Add(categoryTraceListener);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 
-    DebugAppender debugAppender = new DebugAppender();
-    PatternLayout methodLayout = new PatternLayout("%method");
+    DebugAppender debugAppender = new();
+    PatternLayout methodLayout = new("%method");
     methodLayout.ActivateOptions();
     debugAppender.Category = methodLayout;
     debugAppender.Layout = new SimpleLayout();

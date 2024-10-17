@@ -39,12 +39,12 @@ namespace log4net.ObjectRenderer;
 /// <author>Gert Driesen</author>
 public class RendererMap
 {
-  private static readonly Type declaringType = typeof(RendererMap);
+  private static readonly Type _declaringType = typeof(RendererMap);
 
-  private readonly ConcurrentDictionary<Type, IObjectRenderer> map = new();
-  private readonly ConcurrentDictionary<Type, IObjectRenderer> cache = new();
+  private readonly ConcurrentDictionary<Type, IObjectRenderer> _map = new();
+  private readonly ConcurrentDictionary<Type, IObjectRenderer> _cache = new();
 
-  private static readonly IObjectRenderer s_defaultRenderer = new DefaultRenderer();
+  private static readonly IObjectRenderer _sDefaultRenderer = new DefaultRenderer();
 
   /// <summary>
   /// Renders <paramref name="obj"/> using the appropriate renderer.
@@ -108,7 +108,7 @@ public class RendererMap
         catch (Exception ex)
         {
           // Exception rendering the object
-          LogLog.Error(declaringType, $"Exception while rendering object of type [{obj.GetType().FullName}]", ex);
+          LogLog.Error(_declaringType, $"Exception while rendering object of type [{obj.GetType().FullName}]", ex);
 
           // return default message
           string objectTypeName = obj.GetType().FullName ?? string.Empty;
@@ -169,7 +169,7 @@ public class RendererMap
     }
 
     // Check cache
-    if (!cache.TryGetValue(type, out IObjectRenderer? result))
+    if (!_cache.TryGetValue(type, out IObjectRenderer? result))
     {
       for (Type? cur = type; cur is not null; cur = cur.BaseType)
       {
@@ -182,10 +182,10 @@ public class RendererMap
       }
 
       // if not set then use the default renderer
-      result ??= s_defaultRenderer;
+      result ??= _sDefaultRenderer;
 
       // Add to cache
-      cache.TryAdd(type, result);
+      _cache.TryAdd(type, result);
     }
 
     return result;
@@ -198,7 +198,7 @@ public class RendererMap
   /// <returns>The renderer for the specified type, or <c>null</c> if not found.</returns>
   private IObjectRenderer? SearchTypeAndInterfaces(Type type)
   {
-    if (map.TryGetValue(type, out IObjectRenderer? r))
+    if (_map.TryGetValue(type, out IObjectRenderer? r))
     {
       return r;
     }
@@ -217,7 +217,7 @@ public class RendererMap
   /// <summary>
   /// Gets the default renderer instance
   /// </summary>
-  public IObjectRenderer DefaultRenderer => s_defaultRenderer;
+  public IObjectRenderer DefaultRenderer => _sDefaultRenderer;
 
   /// <summary>
   /// Clears the map of custom renderers. The <see cref="DefaultRenderer"/>
@@ -225,8 +225,8 @@ public class RendererMap
   /// </summary>
   public void Clear()
   {
-    map.Clear();
-    cache.Clear();
+    _map.Clear();
+    _cache.Clear();
   }
 
   /// <summary>
@@ -245,7 +245,7 @@ public class RendererMap
       throw new ArgumentNullException(nameof(renderer));
     }
 
-    cache.Clear();
-    map[typeToRender] = renderer;
+    _cache.Clear();
+    _map[typeToRender] = renderer;
   }
 }

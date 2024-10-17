@@ -69,14 +69,14 @@ public static class LoggerManager
     }
     catch (System.Security.SecurityException)
     {
-      LogLog.Debug(declaringType, "Security Exception (ControlAppDomain LinkDemand) while trying " +
+      LogLog.Debug(_declaringType, "Security Exception (ControlAppDomain LinkDemand) while trying " +
         "to register Shutdown handler with the AppDomain. LoggerManager.Shutdown() " +
         "will not be called automatically when the AppDomain exits. It must be called " +
         "programmatically.");
     }
 
     // Dump out our assembly version into the log if debug is enabled
-    LogLog.Debug(declaringType, GetVersionInfo());
+    LogLog.Debug(_declaringType, GetVersionInfo());
 
     // Set the default repository selector
     // Look for the RepositorySelector type specified in the AppSettings 'log4net.RepositorySelector'
@@ -91,7 +91,7 @@ public static class LoggerManager
       }
       catch (Exception ex)
       {
-        LogLog.Error(declaringType, $"Exception while resolving RepositorySelector Type [{appRepositorySelectorTypeName}]", ex);
+        LogLog.Error(_declaringType, $"Exception while resolving RepositorySelector Type [{appRepositorySelectorTypeName}]", ex);
       }
 
       if (appRepositorySelectorType is not null)
@@ -104,7 +104,7 @@ public static class LoggerManager
         }
         catch (Exception ex)
         {
-          LogLog.Error(declaringType, $"Exception while creating RepositorySelector [{appRepositorySelectorType.FullName}]", ex);
+          LogLog.Error(_declaringType, $"Exception while creating RepositorySelector [{appRepositorySelectorType.FullName}]", ex);
         }
 
         if (appRepositorySelectorObj is IRepositorySelector sel)
@@ -113,7 +113,7 @@ public static class LoggerManager
         }
         else
         {
-          LogLog.Error(declaringType, $"RepositorySelector Type [{appRepositorySelectorType.FullName}] is not an IRepositorySelector");
+          LogLog.Error(_declaringType, $"RepositorySelector Type [{appRepositorySelectorType.FullName}] is not an IRepositorySelector");
         }
       }
     }
@@ -571,5 +571,5 @@ public static class LoggerManager
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(LoggerManager);
+  private static readonly Type _declaringType = typeof(LoggerManager);
 }

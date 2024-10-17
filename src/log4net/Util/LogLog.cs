@@ -270,10 +270,10 @@ public sealed class LogLog
     {
       if (EmitInternalMessages)
       {
-        EmitOutLine(PREFIX + message);
+        EmitOutLine(Log4NetPrefix + message);
       }
 
-      OnLogReceived(source, PREFIX, message, null);
+      OnLogReceived(source, Log4NetPrefix, message, null);
     }
   }
 
@@ -296,14 +296,14 @@ public sealed class LogLog
     {
       if (EmitInternalMessages)
       {
-        EmitOutLine(PREFIX + message);
+        EmitOutLine(Log4NetPrefix + message);
         if (exception is not null)
         {
           EmitOutLine(exception.ToString());
         }
       }
 
-      OnLogReceived(source, PREFIX, message, exception);
+      OnLogReceived(source, Log4NetPrefix, message, exception);
     }
   }
 
@@ -333,10 +333,10 @@ public sealed class LogLog
     {
       if (EmitInternalMessages)
       {
-        EmitErrorLine(WARN_PREFIX + message);
+        EmitErrorLine(WarnPrefix + message);
       }
 
-      OnLogReceived(source, WARN_PREFIX, message, null);
+      OnLogReceived(source, WarnPrefix, message, null);
     }
   }
 
@@ -359,14 +359,14 @@ public sealed class LogLog
     {
       if (EmitInternalMessages)
       {
-        EmitErrorLine(WARN_PREFIX + message);
+        EmitErrorLine(WarnPrefix + message);
         if (exception is not null)
         {
           EmitErrorLine(exception.ToString());
         }
       }
 
-      OnLogReceived(source, WARN_PREFIX, message, exception);
+      OnLogReceived(source, WarnPrefix, message, exception);
     }
   }
 
@@ -401,10 +401,10 @@ public sealed class LogLog
     {
       if (EmitInternalMessages)
       {
-        EmitErrorLine(ERR_PREFIX + message);
+        EmitErrorLine(ErrPrefix + message);
       }
 
-      OnLogReceived(source, ERR_PREFIX, message, null);
+      OnLogReceived(source, ErrPrefix, message, null);
     }
   }
 
@@ -427,14 +427,14 @@ public sealed class LogLog
     {
       if (EmitInternalMessages)
       {
-        EmitErrorLine(ERR_PREFIX + message);
+        EmitErrorLine(ErrPrefix + message);
         if (exception is not null)
         {
           EmitErrorLine(exception.ToString());
         }
       }
 
-      OnLogReceived(source, ERR_PREFIX, message, exception);
+      OnLogReceived(source, ErrPrefix, message, exception);
     }
   }
 
@@ -494,9 +494,9 @@ public sealed class LogLog
     }
   }
 
-  private const string PREFIX = "log4net: ";
-  private const string ERR_PREFIX = "log4net:ERROR ";
-  private const string WARN_PREFIX = "log4net:WARN ";
+  private const string Log4NetPrefix = "log4net: ";
+  private const string ErrPrefix = "log4net:ERROR ";
+  private const string WarnPrefix = "log4net:WARN ";
 
   /// <summary>
   /// Subscribes to the LogLog.LogReceived event and stores messages
@@ -504,7 +504,7 @@ public sealed class LogLog
   /// </summary>
   public class LogReceivedAdapter : IDisposable
   {
-    private readonly LogReceivedEventHandler handler;
+    private readonly LogReceivedEventHandler _handler;
 
     /// <summary>
     /// 
@@ -513,8 +513,8 @@ public sealed class LogLog
     public LogReceivedAdapter(List<LogLog> items)
     {
       Items = items;
-      handler = LogLog_LogReceived;
-      LogReceived += handler;
+      _handler = LogLog_LogReceived;
+      LogReceived += _handler;
     }
 
     void LogLog_LogReceived(object? source, LogReceivedEventArgs e)
@@ -535,7 +535,7 @@ public sealed class LogLog
     /// </summary>
     public void Dispose()
     {
-      LogReceived -= handler;
+      LogReceived -= _handler;
     }
   }
 }

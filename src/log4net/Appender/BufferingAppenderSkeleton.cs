@@ -22,6 +22,7 @@ using System;
 using log4net.Util;
 using log4net.Core;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace log4net.Appender;
 
@@ -100,7 +101,7 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
   /// </remarks>
   protected BufferingAppenderSkeleton(bool eventMustBeFixed)
   {
-    this.eventMustBeFixed = eventMustBeFixed;
+    this._eventMustBeFixed = eventMustBeFixed;
   }
 
   /// <summary>
@@ -146,7 +147,7 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
   /// be buffered.
   /// </para>
   /// </remarks>
-  public int BufferSize { get; set; } = DEFAULT_BUFFER_SIZE;
+  public int BufferSize { get; set; } = DefaultBufferSize;
 
   /// <summary>
   /// Gets or sets the <see cref="ITriggeringEventEvaluator"/> that causes the 
@@ -254,7 +255,7 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
     // Appends while the buffer is flushed.
     lock (LockObj)
     {
-      if (cyclicBuffer is not null && cyclicBuffer.Length > 0)
+      if (_cyclicBuffer is not null && _cyclicBuffer.Length > 0)
       {
         if (Lossy)
         {
@@ -264,7 +265,7 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
             if (LossyEvaluator is not null)
             {
               // Test the contents of the buffer against the lossy evaluator
-              LoggingEvent[] bufferedEvents = cyclicBuffer.PopAll();
+              LoggingEvent[] bufferedEvents = _cyclicBuffer.PopAll();
               var filteredEvents = new List<LoggingEvent>(bufferedEvents.Length);
 
               foreach (LoggingEvent loggingEvent in bufferedEvents)
@@ -278,20 +279,20 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
               // Send the events that meet the lossy evaluator criteria
               if (filteredEvents.Count > 0)
               {
-                SendBuffer([.. filteredEvents]);
+                SendBuffer(filteredEvents.ToArray());
               }
             }
             else
             {
               // No lossy evaluator, all buffered events are discarded
-              cyclicBuffer.Clear();
+              _cyclicBuffer.Clear();
             }
           }
         }
         else
         {
           // Not lossy, send whole buffer
-          SendFromBuffer(null, cyclicBuffer);
+          SendFromBuffer(null, _cyclicBuffer);
         }
       }
     }
@@ -327,11 +328,11 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
 
     if (BufferSize > 1)
     {
-      cyclicBuffer = new CyclicBuffer(BufferSize);
+      _cyclicBuffer = new CyclicBuffer(BufferSize);
     }
     else
     {
-      cyclicBuffer = null;
+      _cyclicBuffer = null;
     }
   }
 
@@ -387,14 +388,14 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
     // sent immediately because there is not enough space in the buffer
     // to buffer up more than 1 event. Therefore as a special case
     // we don't use the buffer at all.
-    if (cyclicBuffer is null || BufferSize <= 1)
+    if (_cyclicBuffer is null || BufferSize <= 1)
     {
       // Only send the event if we are in non-lossy mode or the event is a triggering event
       if ((!Lossy) ||
         (Evaluator is not null && Evaluator.IsTriggeringEvent(loggingEvent)) ||
         (LossyEvaluator is not null && LossyEvaluator.IsTriggeringEvent(loggingEvent)))
       {
-        if (eventMustBeFixed)
+        if (_eventMustBeFixed)
         {
           // Derive class expects fixed events
           loggingEvent.Fix = Fix;
@@ -412,14 +413,14 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
       loggingEvent.Fix = Fix;
 
       // Add to the buffer, returns the event discarded from the buffer if there is no space remaining after the append
-      LoggingEvent? discardedLoggingEvent = cyclicBuffer.Append(loggingEvent);
+      LoggingEvent? discardedLoggingEvent = _cyclicBuffer.Append(loggingEvent);
       if (discardedLoggingEvent is not null)
       {
         // Buffer is full and has had to discard an event
         if (!Lossy)
         {
           // Not lossy, must send all events
-          SendFromBuffer(discardedLoggingEvent, cyclicBuffer);
+          SendFromBuffer(discardedLoggingEvent, _cyclicBuffer);
         }
         else
         {
@@ -433,7 +434,7 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
           // Check if the event should trigger the whole buffer to be sent
           if (Evaluator is not null && Evaluator.IsTriggeringEvent(loggingEvent))
           {
-            SendFromBuffer(discardedLoggingEvent, cyclicBuffer);
+            SendFromBuffer(discardedLoggingEvent, _cyclicBuffer);
           }
           else if (discardedLoggingEvent is not null)
           {
@@ -449,7 +450,7 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
         // Check if the event should trigger the whole buffer to be sent
         if (Evaluator is not null && Evaluator.IsTriggeringEvent(loggingEvent))
         {
-          SendFromBuffer(null, cyclicBuffer);
+          SendFromBuffer(null, _cyclicBuffer);
         }
       }
     }
@@ -506,15 +507,15 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
   /// The default size of the cyclic buffer used to store events.
   /// This is set to 512 by default.
   /// </remarks>
-  private const int DEFAULT_BUFFER_SIZE = 512;
+  private const int DefaultBufferSize = 512;
 
   /// <summary>
   /// The cyclic buffer used to store the logging events.
   /// </summary>
-  private CyclicBuffer? cyclicBuffer;
+  private CyclicBuffer? _cyclicBuffer;
 
   /// <summary>
   /// The events delivered to the subclass must be fixed.
   /// </summary>
-  private readonly bool eventMustBeFixed;
+  private readonly bool _eventMustBeFixed;
 }

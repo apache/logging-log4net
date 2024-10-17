@@ -86,15 +86,15 @@ public sealed class SecurityContextProviderAttribute : ConfiguratorAttribute
   {
     if (ProviderType is null)
     {
-      LogLog.Error(declaringType, $"Attribute specified on assembly [{sourceAssembly.FullName}] with null ProviderType.");
+      LogLog.Error(_declaringType, $"Attribute specified on assembly [{sourceAssembly.FullName}] with null ProviderType.");
     }
     else
     {
-      LogLog.Debug(declaringType, $"Creating provider of type [{ProviderType.FullName}]");
+      LogLog.Debug(_declaringType, $"Creating provider of type [{ProviderType.FullName}]");
 
       if (Activator.CreateInstance(ProviderType) is not SecurityContextProvider provider)
       {
-        LogLog.Error(declaringType, $"Failed to create SecurityContextProvider instance of type [{ProviderType.Name}].");
+        LogLog.Error(_declaringType, $"Failed to create SecurityContextProvider instance of type [{ProviderType.Name}].");
       }
       else
       {
@@ -110,5 +110,5 @@ public sealed class SecurityContextProviderAttribute : ConfiguratorAttribute
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(SecurityContextProviderAttribute);
+  private static readonly Type _declaringType = typeof(SecurityContextProviderAttribute);
 }

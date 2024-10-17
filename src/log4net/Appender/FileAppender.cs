@@ -107,15 +107,15 @@ public class FileAppender : TextWriterAppender
       }
     }
 
-    private Stream? realStream;
-    private readonly LockingModelBase lockingModel;
-    private int lockLevel;
+    private Stream? _realStream;
+    private readonly LockingModelBase _lockingModel;
+    private int _lockLevel;
 
-    public LockingStream(LockingModelBase locking) => lockingModel = locking.EnsureNotNull();
+    public LockingStream(LockingModelBase locking) => _lockingModel = locking.EnsureNotNull();
 
     protected override void Dispose(bool disposing)
     {
-      lockingModel.CloseFile();
+      _lockingModel.CloseFile();
       base.Dispose(disposing);
     }
 
@@ -164,12 +164,12 @@ public class FileAppender : TextWriterAppender
 
     private Stream AssertLocked()
     {
-      if (realStream is null)
+      if (_realStream is null)
       {
         throw new LockStateException("The file is not currently locked");
       }
 
-      return realStream;
+      return _realStream;
     }
 
     public bool AcquireLock()
@@ -177,15 +177,15 @@ public class FileAppender : TextWriterAppender
       bool ret = false;
       lock (this)
       {
-        if (lockLevel == 0)
+        if (_lockLevel == 0)
         {
           // If lock is already acquired, nop
-          realStream = lockingModel.AcquireLock();
+          _realStream = _lockingModel.AcquireLock();
         }
 
-        if (realStream is not null)
+        if (_realStream is not null)
         {
-          lockLevel++;
+          _lockLevel++;
           ret = true;
         }
       }
@@ -197,12 +197,12 @@ public class FileAppender : TextWriterAppender
     {
       lock (this)
       {
-        lockLevel--;
-        if (lockLevel == 0)
+        _lockLevel--;
+        if (_lockLevel == 0)
         {
           // If already unlocked, nop
-          lockingModel.ReleaseLock();
-          realStream = null;
+          _lockingModel.ReleaseLock();
+          _realStream = null;
         }
       }
     }
@@ -364,7 +364,7 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   public class ExclusiveLock : LockingModelBase
   {
-    private Stream? stream;
+    private Stream? _stream;
 
     /// <summary>
     /// Open the file specified and prepare for logging.
@@ -384,7 +384,7 @@ public class FileAppender : TextWriterAppender
     {
       try
       {
-        stream = CreateStream(filename, append, FileShare.Read);
+        _stream = CreateStream(filename, append, FileShare.Read);
       }
       catch (Exception e1)
       {
@@ -403,10 +403,10 @@ public class FileAppender : TextWriterAppender
     /// </remarks>
     public override void CloseFile()
     {
-      if (stream is not null)
+      if (_stream is not null)
       {
-        CloseStream(stream);
-        stream = null;
+        CloseStream(_stream);
+        _stream = null;
       }
     }
 
@@ -419,7 +419,7 @@ public class FileAppender : TextWriterAppender
     /// Does nothing. The lock is already taken
     /// </para>
     /// </remarks>
-    public override Stream? AcquireLock() => stream;
+    public override Stream? AcquireLock() => _stream;
 
     /// <summary>
     /// Release the lock on the file
@@ -464,9 +464,9 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   public class MinimalLock : LockingModelBase
   {
-    private string? filename;
-    private bool append;
-    private Stream? stream;
+    private string? _filename;
+    private bool _append;
+    private Stream? _stream;
 
     /// <summary>
     /// Prepares to open the file when the first message is logged.
@@ -484,8 +484,8 @@ public class FileAppender : TextWriterAppender
     /// </remarks>
     public override void OpenFile(string filename, bool append, Encoding encoding)
     {
-      this.filename = filename;
-      this.append = append;
+      this._filename = filename;
+      this._append = append;
     }
 
     /// <summary>
@@ -514,18 +514,18 @@ public class FileAppender : TextWriterAppender
     /// </remarks>
     public override Stream? AcquireLock()
     {
-      if (stream is null)
+      if (_stream is null)
       {
-        if (filename is not null)
+        if (_filename is not null)
         {
           try
           {
-            stream = CreateStream(filename, append, FileShare.Read);
-            append = true;
+            _stream = CreateStream(_filename, _append, FileShare.Read);
+            _append = true;
           }
           catch (Exception e1)
           {
-            CurrentAppender?.ErrorHandler.Error("Unable to acquire lock on file " + filename + ". " +
+            CurrentAppender?.ErrorHandler.Error("Unable to acquire lock on file " + _filename + ". " +
                 e1.Message);
           }
         }
@@ -535,7 +535,7 @@ public class FileAppender : TextWriterAppender
         }
       }
 
-      return stream;
+      return _stream;
     }
 
     /// <summary>
@@ -549,10 +549,10 @@ public class FileAppender : TextWriterAppender
     /// </remarks>
     public override void ReleaseLock()
     {
-      if (stream is not null)
+      if (_stream is not null)
       {
-        CloseStream(stream);
-        stream = null;
+        CloseStream(_stream);
+        _stream = null;
       }
     }
 
@@ -580,9 +580,9 @@ public class FileAppender : TextWriterAppender
   /// <author>Steve Wranovsky</author>
   public class InterProcessLock : LockingModelBase
   {
-    private Mutex? mutex;
-    private Stream? stream;
-    private int recursiveWatch;
+    private Mutex? _mutex;
+    private Stream? _stream;
+    private int _recursiveWatch;
 
     /// <summary>
     /// Open the file specified and prepare for logging.
@@ -603,7 +603,7 @@ public class FileAppender : TextWriterAppender
     {
       try
       {
-        stream = CreateStream(filename, append, FileShare.ReadWrite);
+        _stream = CreateStream(filename, append, FileShare.ReadWrite);
       }
       catch (Exception e1)
       {
@@ -624,10 +624,10 @@ public class FileAppender : TextWriterAppender
     {
       try
       {
-        if (stream is not null)
+        if (_stream is not null)
         {
-          CloseStream(stream);
-          stream = null;
+          CloseStream(_stream);
+          _stream = null;
         }
       }
       finally
@@ -647,20 +647,20 @@ public class FileAppender : TextWriterAppender
     /// </remarks>
     public override Stream? AcquireLock()
     {
-      if (mutex is not null)
+      if (_mutex is not null)
       {
         // TODO: add timeout?
-        mutex.WaitOne();
+        _mutex.WaitOne();
 
         // increment recursive watch
-        recursiveWatch++;
+        _recursiveWatch++;
 
         // should always be true (and fast) for FileStream
-        if (stream is not null)
+        if (_stream is not null)
         {
-          if (stream.CanSeek)
+          if (_stream.CanSeek)
           {
-            stream.Seek(0, SeekOrigin.End);
+            _stream.Seek(0, SeekOrigin.End);
           }
         }
         else
@@ -674,7 +674,7 @@ public class FileAppender : TextWriterAppender
             "Programming error, no mutex available to acquire lock! From here on things will be dangerous!");
       }
 
-      return stream;
+      return _stream;
     }
 
     /// <summary>
@@ -682,12 +682,12 @@ public class FileAppender : TextWriterAppender
     /// </summary>
     public override void ReleaseLock()
     {
-      if (mutex is not null)
+      if (_mutex is not null)
       {
-        if (recursiveWatch > 0)
+        if (_recursiveWatch > 0)
         {
-          recursiveWatch--;
-          mutex.ReleaseMutex();
+          _recursiveWatch--;
+          _mutex.ReleaseMutex();
         }
       }
       else
@@ -701,7 +701,7 @@ public class FileAppender : TextWriterAppender
     /// </summary>
     public override void ActivateOptions()
     {
-      if (mutex is null)
+      if (_mutex is null)
       {
         if (CurrentAppender is not null)
         {
@@ -712,7 +712,7 @@ public class FileAppender : TextWriterAppender
                 .Replace(":", "_")
                 .Replace("/", "_");
 
-            mutex = new Mutex(false, mutexFriendlyFilename);
+            _mutex = new Mutex(false, mutexFriendlyFilename);
           }
           else
           {
@@ -731,10 +731,10 @@ public class FileAppender : TextWriterAppender
     /// </summary>
     public override void OnClose()
     {
-      if (mutex is not null)
+      if (_mutex is not null)
       {
-        mutex.Dispose();
-        mutex = null;
+        _mutex.Dispose();
+        _mutex = null;
       }
       else
       {
@@ -754,7 +754,7 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   public class NoLock : LockingModelBase
   {
-    private Stream? stream;
+    private Stream? _stream;
 
     /// <summary>
     /// Open the file specified and prepare for logging.
@@ -775,7 +775,7 @@ public class FileAppender : TextWriterAppender
       try
       {
         // no lock
-        stream = CreateStream(filename, append, FileShare.ReadWrite);
+        _stream = CreateStream(filename, append, FileShare.ReadWrite);
       }
       catch (Exception e1)
       {
@@ -795,10 +795,10 @@ public class FileAppender : TextWriterAppender
     /// </remarks>
     public override void CloseFile()
     {
-      if (stream is not null)
+      if (_stream is not null)
       {
-        CloseStream(stream);
-        stream = null;
+        CloseStream(_stream);
+        _stream = null;
       }
     }
 
@@ -811,7 +811,7 @@ public class FileAppender : TextWriterAppender
     /// Does nothing. The lock is already taken
     /// </para>
     /// </remarks>
-    public override Stream? AcquireLock() => stream;
+    public override Stream? AcquireLock() => _stream;
 
     /// <summary>
     /// Release the lock on the file
@@ -846,13 +846,13 @@ public class FileAppender : TextWriterAppender
   /// <summary>
   /// Default locking model (when no locking model was configured)
   /// </summary>
-  private static Type defaultLockingModelType = typeof(ExclusiveLock);
+  private static Type _defaultLockingModelType = typeof(ExclusiveLock);
 
   /// <summary>
   /// Specify default locking model
   /// </summary>
   /// <typeparam name="TLockingModel">Type of LockingModel</typeparam>
-  public static void SetDefaultLockingModelType<TLockingModel>() where TLockingModel : LockingModelBase => defaultLockingModelType = typeof(TLockingModel);
+  public static void SetDefaultLockingModelType<TLockingModel>() where TLockingModel : LockingModelBase => _defaultLockingModelType = typeof(TLockingModel);
 
   /// <summary>
   /// Gets or sets the path to the file that logging will be written to.
@@ -868,8 +868,8 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   public virtual string? File
   {
-    get => fileName;
-    set => fileName = value;
+    get => _fileName;
+    set => _fileName = value;
   }
 
   /// <summary>
@@ -939,7 +939,7 @@ public class FileAppender : TextWriterAppender
   /// </para>
   /// </remarks>
   public LockingModelBase LockingModel { get; set; }
-    = Activator.CreateInstance(defaultLockingModelType).EnsureIs<LockingModelBase>();
+    = Activator.CreateInstance(_defaultLockingModelType).EnsureIs<LockingModelBase>();
 
   /// <summary>
   /// Activate the options on the file appender. 
@@ -969,19 +969,19 @@ public class FileAppender : TextWriterAppender
     LockingModel.CurrentAppender = this;
     LockingModel.ActivateOptions();
 
-    if (fileName is not null)
+    if (_fileName is not null)
     {
       using (SecurityContext.Impersonate(this))
       {
-        fileName = ConvertToFullPath(fileName.Trim());
+        _fileName = ConvertToFullPath(_fileName.Trim());
       }
 
-      SafeOpenFile(fileName, AppendToFile);
+      SafeOpenFile(_fileName, AppendToFile);
     }
     else
     {
-      LogLog.Warn(declaringType, "FileAppender: File option not set for appender [" + Name + "].");
-      LogLog.Warn(declaringType, "FileAppender: Are you using FileAppender instead of ConsoleAppender?");
+      LogLog.Warn(_declaringType, "FileAppender: File option not set for appender [" + Name + "].");
+      LogLog.Warn(_declaringType, "FileAppender: Are you using FileAppender instead of ConsoleAppender?");
     }
   }
 
@@ -996,7 +996,7 @@ public class FileAppender : TextWriterAppender
   protected override void Reset()
   {
     base.Reset();
-    fileName = null;
+    _fileName = null;
   }
 
   /// <summary>
@@ -1019,9 +1019,9 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   protected override void PrepareWriter()
   {
-    if (fileName is not null)
+    if (_fileName is not null)
     {
-      SafeOpenFile(fileName, AppendToFile);
+      SafeOpenFile(_fileName, AppendToFile);
     }
   }
 
@@ -1041,7 +1041,7 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   protected override void Append(LoggingEvent loggingEvent)
   {
-    if (stream is not null && stream.AcquireLock())
+    if (_stream is not null && _stream.AcquireLock())
     {
       try
       {
@@ -1049,7 +1049,7 @@ public class FileAppender : TextWriterAppender
       }
       finally
       {
-        stream.ReleaseLock();
+        _stream.ReleaseLock();
       }
     }
   }
@@ -1067,7 +1067,7 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   protected override void Append(LoggingEvent[] loggingEvents)
   {
-    if (stream is not null && stream.AcquireLock())
+    if (_stream is not null && _stream.AcquireLock())
     {
       try
       {
@@ -1075,7 +1075,7 @@ public class FileAppender : TextWriterAppender
       }
       finally
       {
-        stream.ReleaseLock();
+        _stream.ReleaseLock();
       }
     }
   }
@@ -1090,17 +1090,17 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   protected override void WriteFooter()
   {
-    if (stream is not null)
+    if (_stream is not null)
     {
       //WriteFooter can be called even before a file is opened
-      stream.AcquireLock();
+      _stream.AcquireLock();
       try
       {
         base.WriteFooter();
       }
       finally
       {
-        stream.ReleaseLock();
+        _stream.ReleaseLock();
       }
     }
   }
@@ -1115,9 +1115,9 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   protected override void WriteHeader()
   {
-    if (stream is not null)
+    if (_stream is not null)
     {
-      if (stream.AcquireLock())
+      if (_stream.AcquireLock())
       {
         try
         {
@@ -1125,7 +1125,7 @@ public class FileAppender : TextWriterAppender
         }
         finally
         {
-          stream.ReleaseLock();
+          _stream.ReleaseLock();
         }
       }
     }
@@ -1141,16 +1141,16 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   protected override void CloseWriter()
   {
-    if (stream is not null)
+    if (_stream is not null)
     {
-      stream.AcquireLock();
+      _stream.AcquireLock();
       try
       {
         base.CloseWriter();
       }
       finally
       {
-        stream.ReleaseLock();
+        _stream.ReleaseLock();
       }
     }
   }
@@ -1217,7 +1217,7 @@ public class FileAppender : TextWriterAppender
 
       if (!isPathRooted)
       {
-        LogLog.Error(declaringType,
+        LogLog.Error(_declaringType,
             "INTERNAL ERROR. OpenFile(" + fileName + "): File name is not fully qualified.");
       }
     }
@@ -1226,26 +1226,26 @@ public class FileAppender : TextWriterAppender
     {
       Reset();
 
-      LogLog.Debug(declaringType, "Opening file for writing [" + fileName + "] append [" + append + "]");
+      LogLog.Debug(_declaringType, "Opening file for writing [" + fileName + "] append [" + append + "]");
 
       // Save these for later, allowing retries if file open fails
-      this.fileName = fileName;
+      this._fileName = fileName;
       AppendToFile = append;
 
       LockingModel.CurrentAppender = this;
       LockingModel.OpenFile(fileName, append, Encoding);
-      stream = new LockingStream(LockingModel);
+      _stream = new LockingStream(LockingModel);
 
-      if (stream is not null)
+      if (_stream is not null)
       {
-        stream.AcquireLock();
+        _stream.AcquireLock();
         try
         {
-          SetQWForFiles(stream);
+          SetQwForFiles(_stream);
         }
         finally
         {
-          stream.ReleaseLock();
+          _stream.ReleaseLock();
         }
       }
 
@@ -1269,12 +1269,12 @@ public class FileAppender : TextWriterAppender
   /// data using a <c>System.Security.Cryptography.CryptoStream</c>.
   /// </para>
   /// </remarks>
-  protected virtual void SetQWForFiles(Stream fileStream)
+  protected virtual void SetQwForFiles(Stream fileStream)
   {
 #pragma warning disable CA2000 // Dispose objects before losing scope
     StreamWriter writer = new(fileStream, Encoding);
 #pragma warning restore CA2000 // Dispose objects before losing scope
-    SetQWForFiles(writer);
+    SetQwForFiles(writer);
   }
 
   /// <summary>
@@ -1287,7 +1287,7 @@ public class FileAppender : TextWriterAppender
   /// wrap the <see cref="TextWriter"/> in some way.
   /// </para>
   /// </remarks>
-  protected virtual void SetQWForFiles(TextWriter writer) => QuietWriter = new QuietTextWriter(writer, ErrorHandler);
+  protected virtual void SetQwForFiles(TextWriter writer) => QuietWriter = new QuietTextWriter(writer, ErrorHandler);
 
   /// <summary>
   /// Convert a path into a fully qualified path.
@@ -1307,12 +1307,12 @@ public class FileAppender : TextWriterAppender
   /// <summary>
   /// The name of the log file.
   /// </summary>
-  private string? fileName;
+  private string? _fileName;
 
   /// <summary>
   /// The stream to log to. Has added locking semantics
   /// </summary>
-  private LockingStream? stream;
+  private LockingStream? _stream;
 
   /// <summary>
   /// The fully qualified type of the FileAppender class.
@@ -1321,5 +1321,5 @@ public class FileAppender : TextWriterAppender
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(FileAppender);
+  private static readonly Type _declaringType = typeof(FileAppender);
 }

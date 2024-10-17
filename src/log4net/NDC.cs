@@ -62,7 +62,7 @@ namespace log4net;
 /// <author>Nicko Cadell</author>
 /// <author>Gert Driesen</author>
 /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
-public static class NDC
+public static class Ndc
 {
   /// <summary>
   /// Gets the current context depth.

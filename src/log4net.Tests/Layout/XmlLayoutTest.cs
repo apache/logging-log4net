@@ -37,14 +37,14 @@ namespace log4net.Tests.Layout;
 public sealed class XmlLayoutTest
 {
   private CultureInfo? _currentCulture;
-  private CultureInfo? _currentUICulture;
+  private CultureInfo? _currentUiCulture;
 
   [SetUp]
   public void SetUp()
   {
     // set correct thread culture
     _currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
-    _currentUICulture = System.Threading.Thread.CurrentThread.CurrentUICulture;
+    _currentUiCulture = System.Threading.Thread.CurrentThread.CurrentUICulture;
     System.Threading.Thread.CurrentThread.CurrentCulture = System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
   }
 
@@ -53,7 +53,7 @@ public sealed class XmlLayoutTest
   {
     // restore previous culture
     System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture!;
-    System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture!;
+    System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUiCulture!;
   }
 
   /// <summary>
@@ -133,7 +133,7 @@ public sealed class XmlLayoutTest
   }
 
   [Test]
-  public void TestCDATAEscaping1()
+  public void TestCdataEscaping1()
   {
     using TextWriter writer = new StringWriter();
     var layout = new XmlLayout();
@@ -150,7 +150,7 @@ public sealed class XmlLayoutTest
   }
 
   [Test]
-  public void TestCDATAEscaping2()
+  public void TestCdataEscaping2()
   {
     using TextWriter writer = new StringWriter();
     var layout = new XmlLayout();
@@ -167,7 +167,7 @@ public sealed class XmlLayoutTest
   }
 
   [Test]
-  public void TestCDATAEscaping3()
+  public void TestCdataEscaping3()
   {
     using TextWriter writer = new StringWriter();
     var layout = new XmlLayout();

@@ -53,7 +53,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// </remarks>
   protected AppenderSkeleton()
   {
-    errorHandler = new OnlyOnceErrorHandler(this.GetType().Name);
+    _errorHandler = new OnlyOnceErrorHandler(this.GetType().Name);
   }
 
   /// <summary>
@@ -70,9 +70,9 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   {
     // An appender might be closed then garbage collected. 
     // There is no point in closing twice.
-    if (!isClosed)
+    if (!_isClosed)
     {
-      LogLog.Debug(declaringType, $"Finalizing appender named [{Name}].");
+      LogLog.Debug(_declaringType, $"Finalizing appender named [{Name}].");
       Close();
     }
   }
@@ -109,7 +109,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// </remarks>
   public virtual IErrorHandler ErrorHandler
   {
-    get => errorHandler;
+    get => _errorHandler;
     set
     {
       lock (LockObj)
@@ -118,11 +118,11 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
         {
           // We do not throw exception here since the cause is probably a
           // bad config file.
-          LogLog.Warn(declaringType, "You have tried to set a null error-handler.");
+          LogLog.Warn(_declaringType, "You have tried to set a null error-handler.");
         }
         else
         {
-          errorHandler = value;
+          _errorHandler = value;
         }
       }
     }
@@ -199,10 +199,10 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
     // This lock prevents the appender being closed while it is still appending
     lock (LockObj)
     {
-      if (!isClosed)
+      if (!_isClosed)
       {
         OnClose();
-        isClosed = true;
+        _isClosed = true;
       }
     }
   }
@@ -257,21 +257,21 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
 
     lock (LockObj)
     {
-      if (isClosed)
+      if (_isClosed)
       {
         ErrorHandler.Error($"Attempted to append to closed appender named [{Name}].");
         return;
       }
 
       // prevent re-entry
-      if (recursiveGuard)
+      if (_recursiveGuard)
       {
         return;
       }
 
       try
       {
-        recursiveGuard = true;
+        _recursiveGuard = true;
 
         if (FilterEvent(loggingEvent) && PreAppendCheck())
         {
@@ -284,7 +284,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
       }
       finally
       {
-        recursiveGuard = false;
+        _recursiveGuard = false;
       }
     }
   }
@@ -339,21 +339,21 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
 
     lock (LockObj)
     {
-      if (isClosed)
+      if (_isClosed)
       {
         ErrorHandler.Error("Attempted to append to closed appender named [" + Name + "].");
         return;
       }
 
       // prevent re-entry
-      if (recursiveGuard)
+      if (_recursiveGuard)
       {
         return;
       }
 
       try
       {
-        recursiveGuard = true;
+        _recursiveGuard = true;
 
         var filteredEvents = new List<LoggingEvent>(loggingEvents.Length);
 
@@ -376,7 +376,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
       }
       finally
       {
-        recursiveGuard = false;
+        _recursiveGuard = false;
       }
     }
   }
@@ -463,12 +463,12 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
 
     if (FilterHead is null)
     {
-      FilterHead = tailFilter = filter;
+      FilterHead = _tailFilter = filter;
     }
     else
     {
-      tailFilter!.Next = filter;
-      tailFilter = filter;
+      _tailFilter!.Next = filter;
+      _tailFilter = filter;
     }
   }
 
@@ -482,7 +482,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// </remarks>
   public virtual void ClearFilters()
   {
-    FilterHead = tailFilter = null;
+    FilterHead = _tailFilter = null;
   }
 
   /// <summary>
@@ -639,13 +639,13 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
     lock (LockObj)
     {
       // Create the render writer on first use
-      renderWriter ??= new ReusableStringWriter(System.Globalization.CultureInfo.InvariantCulture);
+      _renderWriter ??= new ReusableStringWriter(System.Globalization.CultureInfo.InvariantCulture);
 
       // Reset the writer so we can reuse it
-      renderWriter.Reset(renderBufferMaxCapacity, renderBufferSize);
+      _renderWriter.Reset(RenderBufferMaxCapacity, RenderBufferSize);
 
-      RenderLoggingEvent(renderWriter, loggingEvent);
-      return renderWriter.ToString();
+      RenderLoggingEvent(_renderWriter, loggingEvent);
+      return _renderWriter.ToString();
     }
   }
 
@@ -736,7 +736,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// See <see cref="ErrorHandler"/> for more information.
   /// </para>
   /// </remarks>
-  private IErrorHandler errorHandler;
+  private IErrorHandler _errorHandler;
 
   /// <summary>
   /// The last filter in the filter chain.
@@ -744,7 +744,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// <remarks>
   /// See <see cref="IFilter"/> for more information.
   /// </remarks>
-  private IFilter? tailFilter;
+  private IFilter? _tailFilter;
 
   /// <summary>
   /// Flag indicating if this appender is closed.
@@ -752,12 +752,12 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// <remarks>
   /// See <see cref="Close"/> for more information.
   /// </remarks>
-  private bool isClosed;
+  private bool _isClosed;
 
   /// <summary>
   /// The guard prevents an appender from repeatedly calling its own DoAppend method
   /// </summary>
-  private bool recursiveGuard;
+  private bool _recursiveGuard;
 
   /// <summary>
   /// Used for locking actions by this appender.
@@ -767,17 +767,17 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// <summary>
   /// StringWriter used to render events
   /// </summary>
-  private ReusableStringWriter? renderWriter;
+  private ReusableStringWriter? _renderWriter;
 
   /// <summary>
   /// Initial buffer size
   /// </summary>
-  private const int renderBufferSize = 256;
+  private const int RenderBufferSize = 256;
 
   /// <summary>
   /// Maximum buffer size before it is recycled
   /// </summary>
-  private const int renderBufferMaxCapacity = 1024;
+  private const int RenderBufferMaxCapacity = 1024;
 
   /// <summary>
   /// The fully qualified type of the AppenderSkeleton class.
@@ -786,5 +786,5 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(AppenderSkeleton);
+  private static readonly Type _declaringType = typeof(AppenderSkeleton);
 }

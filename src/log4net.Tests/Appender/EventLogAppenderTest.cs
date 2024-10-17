@@ -45,8 +45,10 @@ public sealed class EventLogAppenderTest
   [Test]
   public void TestGetEntryTypeForExistingApplicationName()
   {
-    EventLogAppender eventAppender = new EventLogAppender();
-    eventAppender.ApplicationName = "Winlogon";
+    EventLogAppender eventAppender = new()
+    {
+      ApplicationName = "Winlogon"
+    };
     eventAppender.ActivateOptions();
 
     Assert.AreEqual(

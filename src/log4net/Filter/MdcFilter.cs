@@ -20,11 +20,11 @@
 namespace log4net.Filter;
 
 /// <summary>
-/// Simple filter to match a keyed string in the <see cref="MDC"/>
+/// Simple filter to match a keyed string in the <see cref="Mdc"/>
 /// </summary>
 /// <remarks>
 /// <para>
-/// Simple filter to match a keyed string in the <see cref="MDC"/>
+/// Simple filter to match a keyed string in the <see cref="Mdc"/>
 /// </para>
 /// <para>
 /// As the MDC has been replaced with layered properties the

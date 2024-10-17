@@ -44,10 +44,10 @@ namespace log4net.Repository;
 /// <author>Gert Driesen</author>
 public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
 {
-  private readonly RendererMap rendererMap = new();
-  private readonly LevelMap levelMap = new();
-  private Level threshold = Level.All;  // Don't disable any levels by default.
-  private ICollection configurationMessages = EmptyCollection.Instance;
+  private readonly RendererMap _rendererMap = new();
+  private readonly LevelMap _levelMap = new();
+  private Level _threshold = Level.All;  // Don't disable any levels by default.
+  private ICollection _configurationMessages = EmptyCollection.Instance;
 
   /// <summary>
   /// Default Constructor
@@ -106,18 +106,18 @@ public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
   /// </remarks>
   public virtual Level Threshold
   {
-    get => threshold;
+    get => _threshold;
     set
     {
       if (value is not null)
       {
-        threshold = value;
+        _threshold = value;
       }
       else
       {
         // Must not set threshold to null
-        LogLog.Warn(declaringType, "LoggerRepositorySkeleton: Threshold cannot be set to null. Setting to ALL");
-        threshold = Level.All;
+        LogLog.Warn(_declaringType, "LoggerRepositorySkeleton: Threshold cannot be set to null. Setting to ALL");
+        _threshold = Level.All;
       }
     }
   }
@@ -137,7 +137,7 @@ public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
   /// <see cref="IObjectRenderer"/> objects.
   /// </para>
   /// </remarks>
-  public virtual RendererMap RendererMap => rendererMap;
+  public virtual RendererMap RendererMap => _rendererMap;
 
   /// <summary>
   /// The plugin map for this repository.
@@ -166,7 +166,7 @@ public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
   /// this repository.
   /// </para>
   /// </remarks>
-  public virtual LevelMap LevelMap => levelMap;
+  public virtual LevelMap LevelMap => _levelMap;
 
   /// <summary>
   /// Test if logger exists
@@ -250,9 +250,9 @@ public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
   public virtual void ResetConfiguration()
   {
     // Clear internal data structures
-    rendererMap.Clear();
-    levelMap.Clear();
-    configurationMessages = EmptyCollection.Instance;
+    _rendererMap.Clear();
+    _levelMap.Clear();
+    _configurationMessages = EmptyCollection.Instance;
 
     // Add the predefined levels to the map
     AddBuiltinLevels();
@@ -292,8 +292,8 @@ public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
   /// </summary>
   public virtual ICollection ConfigurationMessages
   {
-    get => configurationMessages;
-    set => configurationMessages = value;
+    get => _configurationMessages;
+    set => _configurationMessages = value;
   }
 
   /// <summary>
@@ -365,37 +365,37 @@ public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(LoggerRepositorySkeleton);
+  private static readonly Type _declaringType = typeof(LoggerRepositorySkeleton);
 
   private void AddBuiltinLevels()
   {
     // Add the predefined levels to the map
-    levelMap.Add(Level.Off);
+    _levelMap.Add(Level.Off);
 
     // Unrecoverable errors
-    levelMap.Add(Level.Emergency);
-    levelMap.Add(Level.Fatal);
-    levelMap.Add(Level.Alert);
+    _levelMap.Add(Level.Emergency);
+    _levelMap.Add(Level.Fatal);
+    _levelMap.Add(Level.Alert);
 
     // Recoverable errors
-    levelMap.Add(Level.Critical);
-    levelMap.Add(Level.Severe);
-    levelMap.Add(Level.Error);
-    levelMap.Add(Level.Warn);
+    _levelMap.Add(Level.Critical);
+    _levelMap.Add(Level.Severe);
+    _levelMap.Add(Level.Error);
+    _levelMap.Add(Level.Warn);
 
     // Information
-    levelMap.Add(Level.Notice);
-    levelMap.Add(Level.Info);
+    _levelMap.Add(Level.Notice);
+    _levelMap.Add(Level.Info);
 
     // Debug
-    levelMap.Add(Level.Debug);
-    levelMap.Add(Level.Fine);
-    levelMap.Add(Level.Trace);
-    levelMap.Add(Level.Finer);
-    levelMap.Add(Level.Verbose);
-    levelMap.Add(Level.Finest);
+    _levelMap.Add(Level.Debug);
+    _levelMap.Add(Level.Fine);
+    _levelMap.Add(Level.Trace);
+    _levelMap.Add(Level.Finer);
+    _levelMap.Add(Level.Verbose);
+    _levelMap.Add(Level.Finest);
 
-    levelMap.Add(Level.All);
+    _levelMap.Add(Level.All);
   }
 
   /// <summary>
@@ -419,7 +419,7 @@ public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
       throw new ArgumentNullException(nameof(rendererInstance));
     }
 
-    rendererMap.Put(typeToRender, rendererInstance);
+    _rendererMap.Put(typeToRender, rendererInstance);
   }
 
   /// <summary>

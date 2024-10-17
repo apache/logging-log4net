@@ -50,7 +50,7 @@ public class OnlyOnceErrorHandler : IErrorHandler
   /// Initializes a new instance of the <see cref="OnlyOnceErrorHandler" /> class.
   /// </para>
   /// </remarks>
-  public OnlyOnceErrorHandler() => prefix = string.Empty;
+  public OnlyOnceErrorHandler() => _prefix = string.Empty;
 
   /// <summary>
   /// Constructor
@@ -62,7 +62,7 @@ public class OnlyOnceErrorHandler : IErrorHandler
   /// with the specified prefix.
   /// </para>
   /// </remarks>
-  public OnlyOnceErrorHandler(string prefix) => this.prefix = prefix;
+  public OnlyOnceErrorHandler(string prefix) => this._prefix = prefix;
 
   /// <summary>
   /// Reset the error handler back to its initial disabled state.
@@ -116,7 +116,7 @@ public class OnlyOnceErrorHandler : IErrorHandler
 
     if (LogLog.InternalDebugging && !LogLog.QuietMode)
     {
-      LogLog.Error(declaringType, "[" + prefix + "] ErrorCode: " + errorCode.ToString() + ". " + message, e);
+      LogLog.Error(_declaringType, "[" + _prefix + "] ErrorCode: " + errorCode.ToString() + ". " + message, e);
     }
   }
 
@@ -204,7 +204,7 @@ public class OnlyOnceErrorHandler : IErrorHandler
   /// <summary>
   /// String to prefix each message with
   /// </summary>
-  private readonly string prefix;
+  private readonly string _prefix;
 
   /// <summary>
   /// The fully qualified type of the OnlyOnceErrorHandler class.
@@ -213,5 +213,5 @@ public class OnlyOnceErrorHandler : IErrorHandler
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(OnlyOnceErrorHandler);
+  private static readonly Type _declaringType = typeof(OnlyOnceErrorHandler);
 }

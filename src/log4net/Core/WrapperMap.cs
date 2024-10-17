@@ -74,10 +74,10 @@ public class WrapperMap
   /// </remarks>
   public WrapperMap(WrapperCreationHandler createWrapperHandler)
   {
-    this.createWrapperHandler = createWrapperHandler;
+    this._createWrapperHandler = createWrapperHandler;
 
     // Create the delegates for the event callbacks
-    shutdownHandler = ILoggerRepository_Shutdown;
+    _shutdownHandler = ILoggerRepository_Shutdown;
   }
 
   /// <summary>
@@ -117,7 +117,7 @@ public class WrapperMap
         if (logger.Repository is not null)
         {
           // Register for config reset & shutdown on repository
-          logger.Repository.ShutdownEvent += shutdownHandler;
+          logger.Repository.ShutdownEvent += _shutdownHandler;
         }
       }
 
@@ -166,7 +166,7 @@ public class WrapperMap
   /// </remarks>
   protected virtual ILoggerWrapper CreateNewWrapperObject(ILogger logger)
   {
-    return createWrapperHandler.Invoke(logger);
+    return _createWrapperHandler.Invoke(logger);
   }
 
   /// <summary>
@@ -190,7 +190,7 @@ public class WrapperMap
       Repositories.Remove(repository);
 
       // Unhook events from the repository
-      repository.ShutdownEvent -= shutdownHandler;
+      repository.ShutdownEvent -= _shutdownHandler;
     }
   }
 
@@ -211,10 +211,10 @@ public class WrapperMap
   /// <summary>
   /// The handler to use to create the extension wrapper objects.
   /// </summary>
-  private readonly WrapperCreationHandler createWrapperHandler;
+  private readonly WrapperCreationHandler _createWrapperHandler;
 
   /// <summary>
   /// Internal reference to the delegate used to register for repository shutdown events.
   /// </summary>
-  private readonly LoggerRepositoryShutdownEventHandler shutdownHandler;
+  private readonly LoggerRepositoryShutdownEventHandler _shutdownHandler;
 }

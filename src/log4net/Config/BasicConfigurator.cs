@@ -59,7 +59,7 @@ public static class BasicConfigurator
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(BasicConfigurator);
+  private static readonly Type _declaringType = typeof(BasicConfigurator);
 
   /// <summary>
   /// Initializes the log4net system with a default configuration.
@@ -170,7 +170,7 @@ public static class BasicConfigurator
     }
     else
     {
-      LogLog.Warn(declaringType, $"BasicConfigurator: Repository [{repository}] does not support the BasicConfigurator");
+      LogLog.Warn(_declaringType, $"BasicConfigurator: Repository [{repository}] does not support the BasicConfigurator");
     }
   }
 }

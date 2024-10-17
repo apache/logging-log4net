@@ -85,6 +85,7 @@ internal class DatePatternConverter : PatternConverter, IOptionHandler
   /// <summary>
   /// The <see cref="IDateFormatter"/> used to render the date to a string
   /// </summary>
+  // ReSharper disable once InconsistentNaming
   protected IDateFormatter? m_dateFormatter;
 
   /// <summary>
@@ -127,7 +128,7 @@ internal class DatePatternConverter : PatternConverter, IOptionHandler
       }
       catch (Exception e)
       {
-        LogLog.Error(declaringType, $"Could not instantiate SimpleDateFormatter with [{dateFormatStr}]", e);
+        LogLog.Error(_declaringType, $"Could not instantiate SimpleDateFormatter with [{dateFormatStr}]", e);
         m_dateFormatter = new Iso8601DateFormatter();
       }
     }
@@ -155,7 +156,7 @@ internal class DatePatternConverter : PatternConverter, IOptionHandler
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Error occurred while converting date.", ex);
+      LogLog.Error(_declaringType, "Error occurred while converting date.", ex);
     }
   }
 
@@ -166,5 +167,5 @@ internal class DatePatternConverter : PatternConverter, IOptionHandler
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(DatePatternConverter);
+  private static readonly Type _declaringType = typeof(DatePatternConverter);
 }

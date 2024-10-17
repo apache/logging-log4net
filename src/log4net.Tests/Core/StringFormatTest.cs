@@ -34,14 +34,14 @@ namespace log4net.Tests.Core;
 public class StringFormatTest
 {
   private CultureInfo? _currentCulture;
-  private CultureInfo? _currentUICulture;
+  private CultureInfo? _currentUiCulture;
 
   [SetUp]
   public void SetUp()
   {
     // set correct thread culture
     _currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
-    _currentUICulture = System.Threading.Thread.CurrentThread.CurrentUICulture;
+    _currentUiCulture = System.Threading.Thread.CurrentThread.CurrentUICulture;
     System.Threading.Thread.CurrentThread.CurrentCulture = System.Threading.Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
   }
 
@@ -50,7 +50,7 @@ public class StringFormatTest
   {
     // restore previous culture
     System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture!;
-    System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture!;
+    System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUiCulture!;
   }
 
   [Test]
@@ -105,7 +105,7 @@ public class StringFormatTest
 
     // ***
     log1.InfoFormat("IGNORE THIS WARNING - EXCEPTION EXPECTED Before {0} After {1} {2}", "Middle", "End");
-    Assert.AreEqual(STRING_FORMAT_ERROR, stringAppender.GetString(), "Test formatting error");
+    Assert.AreEqual(StringFormatError, stringAppender.GetString(), "Test formatting error");
     stringAppender.Reset();
 
     // *** Nulls
@@ -144,7 +144,7 @@ public class StringFormatTest
     stringAppender.Reset();
   }
 
-  private const string STRING_FORMAT_ERROR = "<log4net.Error>Exception during StringFormat: Index (zero based) must be greater than or equal to zero and less than the size of the argument list. <format>IGNORE THIS WARNING - EXCEPTION EXPECTED Before {0} After {1} {2}</format><args>{Middle, End}</args></log4net.Error>";
+  private const string StringFormatError = "<log4net.Error>Exception during StringFormat: Index (zero based) must be greater than or equal to zero and less than the size of the argument list. <format>IGNORE THIS WARNING - EXCEPTION EXPECTED Before {0} After {1} {2}</format><args>{Middle, End}</args></log4net.Error>";
 
   [Test]
   public void TestLogFormatApi_Debug()

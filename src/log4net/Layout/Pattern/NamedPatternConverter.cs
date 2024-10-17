@@ -42,7 +42,7 @@ namespace log4net.Layout.Pattern;
 /// <author>Nicko Cadell</author>
 public abstract class NamedPatternConverter : PatternLayoutConverter, IOptionHandler
 {
-  private int precision;
+  private int _precision;
 
   /// <summary>
   /// Initialize the converter 
@@ -62,7 +62,7 @@ public abstract class NamedPatternConverter : PatternLayoutConverter, IOptionHan
   /// </remarks>
   public void ActivateOptions()
   {
-    precision = 0;
+    _precision = 0;
 
     if (Option is not null)
     {
@@ -73,16 +73,16 @@ public abstract class NamedPatternConverter : PatternLayoutConverter, IOptionHan
         {
           if (precisionVal <= 0)
           {
-            LogLog.Error(declaringType, $"NamedPatternConverter: Precision option ({optStr}) isn't a positive integer.");
+            LogLog.Error(_declaringType, $"NamedPatternConverter: Precision option ({optStr}) isn't a positive integer.");
           }
           else
           {
-            precision = precisionVal;
+            _precision = precisionVal;
           }
         }
         else
         {
-          LogLog.Error(declaringType, $"NamedPatternConverter: Precision option \"{optStr}\" not a decimal integer.");
+          LogLog.Error(_declaringType, $"NamedPatternConverter: Precision option \"{optStr}\" not a decimal integer.");
         }
       }
     }
@@ -113,7 +113,7 @@ public abstract class NamedPatternConverter : PatternLayoutConverter, IOptionHan
   protected sealed override void Convert(TextWriter writer, LoggingEvent loggingEvent)
   {
     string? name = GetFullyQualifiedName(loggingEvent);
-    if (precision <= 0 || name is null || name.Length < 2)
+    if (_precision <= 0 || name is null || name.Length < 2)
     {
       writer.Write(name);
     }
@@ -121,15 +121,15 @@ public abstract class NamedPatternConverter : PatternLayoutConverter, IOptionHan
     {
       int len = name.Length;
       string trailingDot = string.Empty;
-      if (name.EndsWith(DOT))
+      if (name.EndsWith(Dot))
       {
-        trailingDot = DOT;
+        trailingDot = Dot;
         name = name.Substring(0, len - 1);
         len--;
       }
 
-      int end = name.LastIndexOf(DOT);
-      for (int i = 1; end > 0 && i < precision; i++)
+      int end = name.LastIndexOf(Dot);
+      for (int i = 1; end > 0 && i < _precision; i++)
       {
         end = name.LastIndexOf('.', end - 1);
       }
@@ -151,7 +151,7 @@ public abstract class NamedPatternConverter : PatternLayoutConverter, IOptionHan
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(NamedPatternConverter);
+  private static readonly Type _declaringType = typeof(NamedPatternConverter);
 
-  private const string DOT = ".";
+  private const string Dot = ".";
 }

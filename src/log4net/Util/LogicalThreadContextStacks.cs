@@ -27,7 +27,7 @@ namespace log4net.Util;
 /// <author>Nicko Cadell</author>
 public sealed class LogicalThreadContextStacks
 {
-  private readonly LogicalThreadContextProperties properties;
+  private readonly LogicalThreadContextProperties _properties;
 
   /// <summary>
   /// Internal constructor
@@ -39,7 +39,7 @@ public sealed class LogicalThreadContextStacks
   /// </remarks>
   internal LogicalThreadContextStacks(LogicalThreadContextProperties properties)
   {
-    this.properties = properties;
+    this._properties = properties;
   }
 
   /// <summary>
@@ -59,12 +59,12 @@ public sealed class LogicalThreadContextStacks
     {
       LogicalThreadContextStack? stack = null;
 
-      object? propertyValue = properties[key];
+      object? propertyValue = _properties[key];
       if (propertyValue is null)
       {
         // Stack does not exist, create
         stack = new LogicalThreadContextStack(key, RegisterNew);
-        properties[key] = stack;
+        _properties[key] = stack;
       }
       else
       {
@@ -83,7 +83,7 @@ public sealed class LogicalThreadContextStacks
           {
           }
 
-          LogLog.Error(declaringType, $"ThreadContextStacks: Request for stack named [{key}] failed because a property with the same name exists which is a [{propertyValue.GetType().Name}] with value [{propertyValueString}]");
+          LogLog.Error(_declaringType, $"ThreadContextStacks: Request for stack named [{key}] failed because a property with the same name exists which is a [{propertyValue.GetType().Name}] with value [{propertyValueString}]");
 
           stack = new LogicalThreadContextStack(key, RegisterNew);
         }
@@ -94,7 +94,7 @@ public sealed class LogicalThreadContextStacks
   }
 
   private void RegisterNew(string stackName, LogicalThreadContextStack stack)
-    => properties[stackName] = stack;
+    => _properties[stackName] = stack;
 
   /// <summary>
   /// The fully qualified type of the ThreadContextStacks class.
@@ -103,5 +103,5 @@ public sealed class LogicalThreadContextStacks
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(LogicalThreadContextStacks);
+  private static readonly Type _declaringType = typeof(LogicalThreadContextStacks);
 }

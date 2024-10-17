@@ -38,7 +38,7 @@ namespace log4net.Config;
 [AttributeUsage(AttributeTargets.Assembly)]
 public abstract class ConfiguratorAttribute : Attribute, IComparable
 {
-  private readonly int priority;
+  private readonly int _priority;
 
   /// <summary>
   /// Constructor used by subclasses.
@@ -51,7 +51,7 @@ public abstract class ConfiguratorAttribute : Attribute, IComparable
   /// before lower priority ones.
   /// </para>
   /// </remarks>
-  protected ConfiguratorAttribute(int priority) => this.priority = priority;
+  protected ConfiguratorAttribute(int priority) => this._priority = priority;
 
   /// <summary>
   /// Configures the <see cref="ILoggerRepository"/> for the specified assembly.
@@ -90,7 +90,7 @@ public abstract class ConfiguratorAttribute : Attribute, IComparable
     if (obj is ConfiguratorAttribute target)
     {
       // Compare the priorities
-      result = target.priority.CompareTo(priority);
+      result = target._priority.CompareTo(_priority);
       if (result == 0)
       {
         // Same priority, so have to provide some ordering

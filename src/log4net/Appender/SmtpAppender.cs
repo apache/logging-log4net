@@ -71,8 +71,8 @@ public class SmtpAppender : BufferingAppenderSkeleton
   /// </summary>
   public string? To
   {
-    get { return to; }
-    set { to = MaybeTrimSeparators(value); }
+    get { return _to; }
+    set { _to = MaybeTrimSeparators(value); }
   }
 
   /// <summary>
@@ -81,8 +81,8 @@ public class SmtpAppender : BufferingAppenderSkeleton
   /// </summary>
   public string? Cc
   {
-    get => cc;
-    set => cc = MaybeTrimSeparators(value);
+    get => _cc;
+    set => _cc = MaybeTrimSeparators(value);
   }
 
   /// <summary>
@@ -99,8 +99,8 @@ public class SmtpAppender : BufferingAppenderSkeleton
   /// </remarks>
   public string? Bcc
   {
-    get => bcc;
-    set => bcc = MaybeTrimSeparators(value);
+    get => _bcc;
+    set => _bcc = MaybeTrimSeparators(value);
   }
 
   /// <summary>
@@ -317,14 +317,14 @@ public class SmtpAppender : BufferingAppenderSkeleton
     mailMessage.Body = messageBody;
     mailMessage.BodyEncoding = BodyEncoding;
     mailMessage.From = new MailAddress(From.EnsureNotNull());
-    mailMessage.To.Add(to.EnsureNotNull());
-    if (!string.IsNullOrEmpty(cc))
+    mailMessage.To.Add(_to.EnsureNotNull());
+    if (!string.IsNullOrEmpty(_cc))
     {
-      mailMessage.CC.Add(cc);
+      mailMessage.CC.Add(_cc);
     }
-    if (!string.IsNullOrEmpty(bcc))
+    if (!string.IsNullOrEmpty(_bcc))
     {
-      mailMessage.Bcc.Add(bcc);
+      mailMessage.Bcc.Add(_bcc);
     }
     if (!string.IsNullOrEmpty(ReplyTo))
     {
@@ -338,9 +338,9 @@ public class SmtpAppender : BufferingAppenderSkeleton
     smtpClient.Send(mailMessage);
   }
 
-  private string? to;
-  private string? cc;
-  private string? bcc;
+  private string? _to;
+  private string? _cc;
+  private string? _bcc;
 
   // authentication fields
 
@@ -379,10 +379,10 @@ public class SmtpAppender : BufferingAppenderSkeleton
   }
 
   // Allow semicolon delimiters for backward compatibility.
-  private static readonly char[] ADDRESS_DELIMITERS = [',', ';'];
+  private static readonly char[] _addressDelimiters = [',', ';'];
 
   /// <summary>
   /// Trims leading and trailing commas or semicolons
   /// </summary>
-  private static string? MaybeTrimSeparators(string? s) => s?.Trim(ADDRESS_DELIMITERS);
+  private static string? MaybeTrimSeparators(string? s) => s?.Trim(_addressDelimiters);
 }

@@ -60,7 +60,7 @@ internal sealed class StackTraceDetailPatternConverter : StackTracePatternConver
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "An exception ocurred while retreiving method information.", ex);
+      LogLog.Error(_declaringType, "An exception ocurred while retreiving method information.", ex);
     }
 
     return returnValue;
@@ -75,7 +75,7 @@ internal sealed class StackTraceDetailPatternConverter : StackTracePatternConver
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(StackTracePatternConverter);
+  private static readonly Type _declaringType = typeof(StackTracePatternConverter);
 
   #endregion Private Static Fields
 }

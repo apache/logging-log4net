@@ -44,12 +44,12 @@ namespace log4net.Util;
 /// log.DebugExt("This is a debug message");
 /// </code>
 /// </example>
-public static class ILogExtensions
+public static class LogExtensions
 {
   /// <summary>
   /// The fully qualified type of the Logger class.
   /// </summary>
-  private static readonly Type declaringType = typeof(ILogExtensions);
+  private static readonly Type _declaringType = typeof(LogExtensions);
 
   /// <summary>
   /// Log a message object with the <see cref="Level.Debug"/> level.
@@ -87,7 +87,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -117,7 +117,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -158,7 +158,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -188,7 +188,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -223,7 +223,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -258,7 +258,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -294,7 +294,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -330,7 +330,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -367,7 +367,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -407,7 +407,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -437,7 +437,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -478,7 +478,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -508,7 +508,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -543,7 +543,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -578,7 +578,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -614,7 +614,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -650,7 +650,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -687,7 +687,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -727,7 +727,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -757,7 +757,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -798,7 +798,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -828,7 +828,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -863,7 +863,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -898,7 +898,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -934,7 +934,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -970,7 +970,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -1007,7 +1007,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -1047,7 +1047,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -1077,7 +1077,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -1118,7 +1118,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -1148,7 +1148,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -1183,7 +1183,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -1218,7 +1218,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -1254,7 +1254,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -1290,7 +1290,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -1327,7 +1327,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -1367,7 +1367,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -1397,7 +1397,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -1438,7 +1438,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -1468,7 +1468,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -1503,7 +1503,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -1538,7 +1538,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -1574,7 +1574,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -1610,7 +1610,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 
@@ -1647,7 +1647,7 @@ public static class ILogExtensions
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", ex);
     }
   }
 }

@@ -33,10 +33,11 @@ namespace log4net.Tests.Appender;
 [TestFixture]
 public class MemoryAppenderTest
 {
-  private static int cThreadsRunning;
-  private const int cThreadsMax = 10;
-  private const int cLogEntriesPerThread = 100;
-  private const long cEventsExpected = cLogEntriesPerThread * cThreadsMax;
+  // ReSharper disable once InconsistentNaming
+  private static int s_ThreadsRunning;
+  private const int MaxThreads = 10;
+  private const int LogEntriesPerThread = 100;
+  private const long EventsExpected = LogEntriesPerThread * MaxThreads;
 
   [Test]
   public void TestThreadSafety()
@@ -48,8 +49,8 @@ public class MemoryAppenderTest
     memoryAppender.ActivateOptions();
     BasicConfigurator.Configure(rep, memoryAppender);
 
-    cThreadsRunning = cThreadsMax;
-    var threads = Enumerable.Range(0, cThreadsMax)
+    s_ThreadsRunning = MaxThreads;
+    var threads = Enumerable.Range(0, MaxThreads)
         .Select(i => new Thread(LogMessages(rep.Name)))
         .ToList();
 
@@ -59,7 +60,7 @@ public class MemoryAppenderTest
     }
 
     long cEventsRead = 0;
-    while (cThreadsRunning > 0)
+    while (s_ThreadsRunning > 0)
     {
       var events = memoryAppender.PopAllEvents();
       cEventsRead += events.Length;
@@ -69,7 +70,7 @@ public class MemoryAppenderTest
       thread.Join();
     }
     cEventsRead += memoryAppender.PopAllEvents().Length;
-    Assert.AreEqual(cEventsExpected, cEventsRead, "Log events were lost.");
+    Assert.AreEqual(EventsExpected, cEventsRead, "Log events were lost.");
   }
 
   private static ThreadStart LogMessages(string repository)
@@ -77,11 +78,11 @@ public class MemoryAppenderTest
     return () =>
     {
       var logger = LogManager.GetLogger(repository, "LoggerThread");
-      for (var i = 0; i < cLogEntriesPerThread; i++)
+      for (var i = 0; i < LogEntriesPerThread; i++)
       {
         logger.InfoFormat("Logging message {0}", i);
       }
-      Interlocked.Decrement(ref cThreadsRunning);
+      Interlocked.Decrement(ref s_ThreadsRunning);
     };
   }
 }

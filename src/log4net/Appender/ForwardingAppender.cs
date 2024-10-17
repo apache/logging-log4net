@@ -54,7 +54,7 @@ public class ForwardingAppender : AppenderSkeleton, IAppenderAttachable
     // Remove all the attached appenders
     lock (this)
     {
-      appenderAttachedImpl?.RemoveAllAppenders();
+      _appenderAttachedImpl?.RemoveAllAppenders();
     }
   }
 
@@ -70,7 +70,7 @@ public class ForwardingAppender : AppenderSkeleton, IAppenderAttachable
   protected override void Append(LoggingEvent loggingEvent)
   {
     // Pass the logging event on to the attached appenders
-    appenderAttachedImpl?.AppendLoopOnAppenders(loggingEvent);
+    _appenderAttachedImpl?.AppendLoopOnAppenders(loggingEvent);
   }
 
   /// <summary>
@@ -85,7 +85,7 @@ public class ForwardingAppender : AppenderSkeleton, IAppenderAttachable
   protected override void Append(LoggingEvent[] loggingEvents)
   {
     // Pass the logging event on to the attached appenders
-    appenderAttachedImpl?.AppendLoopOnAppenders(loggingEvents);
+    _appenderAttachedImpl?.AppendLoopOnAppenders(loggingEvents);
   }
 
   /// <summary>
@@ -107,8 +107,8 @@ public class ForwardingAppender : AppenderSkeleton, IAppenderAttachable
     }
     lock (this)
     {
-      appenderAttachedImpl ??= new AppenderAttachedImpl();
-      appenderAttachedImpl.AddAppender(newAppender);
+      _appenderAttachedImpl ??= new AppenderAttachedImpl();
+      _appenderAttachedImpl.AddAppender(newAppender);
     }
   }
 
@@ -129,7 +129,7 @@ public class ForwardingAppender : AppenderSkeleton, IAppenderAttachable
     {
       lock (this)
       {
-        return appenderAttachedImpl?.Appenders ?? AppenderCollection.EmptyCollection;
+        return _appenderAttachedImpl?.Appenders ?? AppenderCollection.EmptyCollection;
       }
     }
   }
@@ -150,12 +150,12 @@ public class ForwardingAppender : AppenderSkeleton, IAppenderAttachable
   {
     lock (this)
     {
-      if (appenderAttachedImpl is null || name is null)
+      if (_appenderAttachedImpl is null || name is null)
       {
         return null;
       }
 
-      return appenderAttachedImpl.GetAppender(name);
+      return _appenderAttachedImpl.GetAppender(name);
     }
   }
 
@@ -171,10 +171,10 @@ public class ForwardingAppender : AppenderSkeleton, IAppenderAttachable
   {
     lock (this)
     {
-      if (appenderAttachedImpl is not null)
+      if (_appenderAttachedImpl is not null)
       {
-        appenderAttachedImpl.RemoveAllAppenders();
-        appenderAttachedImpl = null;
+        _appenderAttachedImpl.RemoveAllAppenders();
+        _appenderAttachedImpl = null;
       }
     }
   }
@@ -193,9 +193,9 @@ public class ForwardingAppender : AppenderSkeleton, IAppenderAttachable
   {
     lock (this)
     {
-      if (appender is not null && appenderAttachedImpl is not null)
+      if (appender is not null && _appenderAttachedImpl is not null)
       {
-        return appenderAttachedImpl.RemoveAppender(appender);
+        return _appenderAttachedImpl.RemoveAppender(appender);
       }
     }
     return null;
@@ -215,9 +215,9 @@ public class ForwardingAppender : AppenderSkeleton, IAppenderAttachable
   {
     lock (this)
     {
-      if (name is not null && appenderAttachedImpl is not null)
+      if (name is not null && _appenderAttachedImpl is not null)
       {
-        return appenderAttachedImpl.RemoveAppender(name);
+        return _appenderAttachedImpl.RemoveAppender(name);
       }
     }
     return null;
@@ -226,5 +226,5 @@ public class ForwardingAppender : AppenderSkeleton, IAppenderAttachable
   /// <summary>
   /// Implementation of the <see cref="IAppenderAttachable"/> interface
   /// </summary>
-  private AppenderAttachedImpl? appenderAttachedImpl;
+  private AppenderAttachedImpl? _appenderAttachedImpl;
 }

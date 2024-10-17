@@ -41,7 +41,7 @@ public class AdoNetAppenderTest
   {
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 
-    AdoNetAppender adoNetAppender = new AdoNetAppender
+    AdoNetAppender adoNetAppender = new()
     {
       BufferSize = -1,
       ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!
@@ -63,7 +63,7 @@ public class AdoNetAppenderTest
 
     int bufferSize = 5;
 
-    AdoNetAppender adoNetAppender = new AdoNetAppender
+    AdoNetAppender adoNetAppender = new()
     {
       BufferSize = bufferSize,
       ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!
@@ -86,8 +86,8 @@ public class AdoNetAppenderTest
   [Test]
   public void WebsiteExample()
   {
-    XmlDocument log4netConfig = new XmlDocument();
-    log4netConfig.LoadXml(@"
+    XmlDocument log4NetConfig = new();
+    log4NetConfig.LoadXml(@"
                 <log4net>
                 <appender name=""AdoNetAppender"" type=""log4net.Appender.AdoNetAppender"">
                     <bufferSize value=""-1"" />
@@ -145,7 +145,7 @@ public class AdoNetAppenderTest
                 </log4net>");
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-    XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+    XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
     ILog log = LogManager.GetLogger(rep.Name, "WebsiteExample");
     log.Debug("Message");
 
@@ -174,8 +174,8 @@ public class AdoNetAppenderTest
   [Test]
   public void BufferingWebsiteExample()
   {
-    XmlDocument log4netConfig = new XmlDocument();
-    log4netConfig.LoadXml(@"
+    XmlDocument log4NetConfig = new();
+    log4NetConfig.LoadXml(@"
                 <log4net>
                 <appender name=""AdoNetAppender"" type=""log4net.Appender.AdoNetAppender"">
                     <bufferSize value=""2"" />
@@ -233,7 +233,7 @@ public class AdoNetAppenderTest
                 </log4net>");
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-    XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+    XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
     ILog log = LogManager.GetLogger(rep.Name, "WebsiteExample");
 
     for (int i = 0; i < 3; i++)
@@ -266,8 +266,8 @@ public class AdoNetAppenderTest
   [Test]
   public void NullPropertyXmlConfig()
   {
-    XmlDocument log4netConfig = new XmlDocument();
-    log4netConfig.LoadXml(@"
+    XmlDocument log4NetConfig = new();
+    log4NetConfig.LoadXml(@"
                 <log4net>
                 <appender name=""AdoNetAppender"" type=""log4net.Appender.AdoNetAppender"">
                     <bufferSize value=""-1"" />
@@ -290,7 +290,7 @@ public class AdoNetAppenderTest
                 </log4net>");
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-    XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+    XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
     ILog log = LogManager.GetLogger(rep.Name, "NullPropertyXmlConfig");
 
     log.Debug("Message");
@@ -305,18 +305,24 @@ public class AdoNetAppenderTest
   [Test]
   public void NullPropertyProgrammaticConfig()
   {
-    AdoNetAppenderParameter productIdParam = new AdoNetAppenderParameter();
-    productIdParam.ParameterName = "@productId";
-    productIdParam.DbType = DbType.String;
-    productIdParam.Size = 50;
-    RawPropertyLayout rawPropertyLayout = new RawPropertyLayout();
-    rawPropertyLayout.Key = "ProductId";
+    AdoNetAppenderParameter productIdParam = new()
+    {
+      ParameterName = "@productId",
+      DbType = DbType.String,
+      Size = 50
+    };
+    RawPropertyLayout rawPropertyLayout = new()
+    {
+      Key = "ProductId"
+    };
     productIdParam.Layout = rawPropertyLayout;
 
-    AdoNetAppender appender = new AdoNetAppender();
-    appender.ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!;
-    appender.BufferSize = -1;
-    appender.CommandText = "INSERT INTO Log ([productId]) VALUES (@productId)";
+    AdoNetAppender appender = new()
+    {
+      ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!,
+      BufferSize = -1,
+      CommandText = "INSERT INTO Log ([productId]) VALUES (@productId)"
+    };
     appender.AddParameter(productIdParam);
     appender.ActivateOptions();
 

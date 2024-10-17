@@ -304,7 +304,7 @@ public class RemoteSyslogAppender : UdpAppender
   /// </remarks>
   public void AddMapping(LevelSeverity mapping)
   {
-    levelMapping.Add(mapping);
+    _levelMapping.Add(mapping);
   }
 
   /// <summary>
@@ -423,7 +423,7 @@ public class RemoteSyslogAppender : UdpAppender
   public override void ActivateOptions()
   {
     base.ActivateOptions();
-    levelMapping.ActivateOptions();
+    _levelMapping.ActivateOptions();
   }
 
   /// <summary>
@@ -433,7 +433,7 @@ public class RemoteSyslogAppender : UdpAppender
   /// <returns>A syslog severity.</returns>
   protected virtual SyslogSeverity GetSeverity(Level? level)
   {
-    if (levelMapping.Lookup(level) is LevelSeverity levelSeverity)
+    if (_levelMapping.Lookup(level) is LevelSeverity levelSeverity)
     {
       return levelSeverity.Severity;
     }
@@ -507,7 +507,7 @@ public class RemoteSyslogAppender : UdpAppender
   /// <summary>
   /// Mapping from level object to syslog severity
   /// </summary>
-  private readonly LevelMapping levelMapping = new();
+  private readonly LevelMapping _levelMapping = new();
 
   /// <summary>
   /// A class to act as a mapping between the level that a logging call is made at and

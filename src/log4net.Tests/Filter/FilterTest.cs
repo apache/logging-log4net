@@ -37,8 +37,8 @@ public class FilterTest
   [Test]
   public void FilterConfigurationTest()
   {
-    var log4netConfig = new XmlDocument();
-    log4netConfig.LoadXml(@"
+    var log4NetConfig = new XmlDocument();
+    log4NetConfig.LoadXml(@"
             <log4net>
             <appender name=""MemoryAppender"" type=""log4net.Appender.MemoryAppender, log4net"">
                 <filter type=""log4net.Tests.Filter.MultiplePropertyFilter, log4net.Tests"">
@@ -59,7 +59,7 @@ public class FilterTest
             </log4net>");
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-    XmlConfigurator.Configure(rep, log4netConfig["log4net"]!);
+    XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
 
     IAppender[] appenders = LogManager.GetRepository(rep.Name).GetAppenders();
     Assert.IsTrue(appenders.Length == 1);

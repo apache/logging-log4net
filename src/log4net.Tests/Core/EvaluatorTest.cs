@@ -32,72 +32,72 @@ namespace log4net.Tests.Core;
 [TestFixture]
 public class EvaluatorTest
 {
-  private BufferingForwardingAppender bufferingForwardingAppender = new();
-  private CountingAppender countingAppender = new();
-  private Repository.Hierarchy.Hierarchy hierarchy = new();
+  private BufferingForwardingAppender _bufferingForwardingAppender = new();
+  private CountingAppender _countingAppender = new();
+  private Repository.Hierarchy.Hierarchy _hierarchy = new();
 
   [SetUp]
   public void SetupRepository()
   {
-    hierarchy = new Repository.Hierarchy.Hierarchy();
+    _hierarchy = new Repository.Hierarchy.Hierarchy();
 
-    countingAppender = new CountingAppender();
-    countingAppender.ActivateOptions();
+    _countingAppender = new CountingAppender();
+    _countingAppender.ActivateOptions();
 
-    bufferingForwardingAppender = new BufferingForwardingAppender();
-    bufferingForwardingAppender.AddAppender(countingAppender);
+    _bufferingForwardingAppender = new BufferingForwardingAppender();
+    _bufferingForwardingAppender.AddAppender(_countingAppender);
 
-    bufferingForwardingAppender.BufferSize = 5;
-    bufferingForwardingAppender.ClearFilters();
-    bufferingForwardingAppender.Fix = FixFlags.Partial;
-    bufferingForwardingAppender.Lossy = false;
-    bufferingForwardingAppender.LossyEvaluator = null;
-    bufferingForwardingAppender.Threshold = Level.All;
+    _bufferingForwardingAppender.BufferSize = 5;
+    _bufferingForwardingAppender.ClearFilters();
+    _bufferingForwardingAppender.Fix = FixFlags.Partial;
+    _bufferingForwardingAppender.Lossy = false;
+    _bufferingForwardingAppender.LossyEvaluator = null;
+    _bufferingForwardingAppender.Threshold = Level.All;
   }
 
-  private ILogger GetLogger([CallerMemberName] string name = "") => hierarchy.GetLogger(name);
+  private ILogger GetLogger([CallerMemberName] string name = "") => _hierarchy.GetLogger(name);
 
   [Test]
   public void TestLevelEvaluator()
   {
-    bufferingForwardingAppender.Evaluator = new LevelEvaluator(Level.Info);
-    bufferingForwardingAppender.ActivateOptions();
-    log4net.Config.BasicConfigurator.Configure(hierarchy, bufferingForwardingAppender);
+    _bufferingForwardingAppender.Evaluator = new LevelEvaluator(Level.Info);
+    _bufferingForwardingAppender.ActivateOptions();
+    log4net.Config.BasicConfigurator.Configure(_hierarchy, _bufferingForwardingAppender);
 
     ILogger logger = GetLogger();
 
     logger.Log(typeof(EvaluatorTest), Level.Debug, "Debug message logged", null);
     logger.Log(typeof(EvaluatorTest), Level.Debug, "Debug message logged", null);
-    Assert.AreEqual(0, countingAppender.Counter, "Test 2 events buffered");
+    Assert.AreEqual(0, _countingAppender.Counter, "Test 2 events buffered");
 
     logger.Log(typeof(EvaluatorTest), Level.Info, "Info message logged", null);
-    Assert.AreEqual(3, countingAppender.Counter, "Test 3 events flushed on Info message.");
+    Assert.AreEqual(3, _countingAppender.Counter, "Test 3 events flushed on Info message.");
   }
 
   [Test]
   public void TestTimeEvaluatorWhenElapsed()
   {
-    bufferingForwardingAppender.Evaluator = new TimeEvaluator(1);
-    bufferingForwardingAppender.ActivateOptions();
-    log4net.Config.BasicConfigurator.Configure(hierarchy, bufferingForwardingAppender);
+    _bufferingForwardingAppender.Evaluator = new TimeEvaluator(1);
+    _bufferingForwardingAppender.ActivateOptions();
+    log4net.Config.BasicConfigurator.Configure(_hierarchy, _bufferingForwardingAppender);
 
     ILogger logger = GetLogger();
 
     logger.Log(typeof(EvaluatorTest), Level.Debug, "Debug message logged", null);
     logger.Log(typeof(EvaluatorTest), Level.Debug, "Debug message logged", null);
-    Assert.AreEqual(0, countingAppender.Counter, "Test 2 events buffered");
+    Assert.AreEqual(0, _countingAppender.Counter, "Test 2 events buffered");
 
     Thread.Sleep(1000);
     logger.Log(typeof(EvaluatorTest), Level.Debug, "Info message logged", null);
-    Assert.AreEqual(3, countingAppender.Counter, "Test 3 events flushed on Info message.");
+    Assert.AreEqual(3, _countingAppender.Counter, "Test 3 events flushed on Info message.");
   }
 
   [Test]
   public void TestTimeEvaluatorWhenBufferFull()
   {
-    bufferingForwardingAppender.Evaluator = new TimeEvaluator(10);
-    bufferingForwardingAppender.ActivateOptions();
-    log4net.Config.BasicConfigurator.Configure(hierarchy, bufferingForwardingAppender);
+    _bufferingForwardingAppender.Evaluator = new TimeEvaluator(10);
+    _bufferingForwardingAppender.ActivateOptions();
+    log4net.Config.BasicConfigurator.Configure(_hierarchy, _bufferingForwardingAppender);
 
     ILogger logger = GetLogger();
 
@@ -106,78 +106,78 @@ public class EvaluatorTest
     logger.Log(typeof(EvaluatorTest), Level.Debug, "Debug message logged", null);
     logger.Log(typeof(EvaluatorTest), Level.Debug, "Debug message logged", null);
     logger.Log(typeof(EvaluatorTest), Level.Debug, "Info message logged", null);
-    Assert.AreEqual(0, countingAppender.Counter, "Test 5 events buffered");
+    Assert.AreEqual(0, _countingAppender.Counter, "Test 5 events buffered");
 
     logger.Log(typeof(EvaluatorTest), Level.Debug, "Info message logged", null);
-    Assert.AreEqual(6, countingAppender.Counter, "Test 6 events flushed on Info message.");
+    Assert.AreEqual(6, _countingAppender.Counter, "Test 6 events flushed on Info message.");
   }
 
   [Test]
   public void TestExceptionEvaluator()
   {
-    bufferingForwardingAppender.Evaluator = new ExceptionEvaluator(typeof(ApplicationException), true);
-    bufferingForwardingAppender.ActivateOptions();
-    log4net.Config.BasicConfigurator.Configure(hierarchy, bufferingForwardingAppender);
+    _bufferingForwardingAppender.Evaluator = new ExceptionEvaluator(typeof(ApplicationException), true);
+    _bufferingForwardingAppender.ActivateOptions();
+    log4net.Config.BasicConfigurator.Configure(_hierarchy, _bufferingForwardingAppender);
 
     ILogger logger = GetLogger();
 
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", null);
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", null);
-    Assert.AreEqual(0, countingAppender.Counter, "Test 2 events buffered");
+    Assert.AreEqual(0, _countingAppender.Counter, "Test 2 events buffered");
 
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", new ApplicationException());
-    Assert.AreEqual(3, countingAppender.Counter, "Test 3 events flushed on ApplicationException message.");
+    Assert.AreEqual(3, _countingAppender.Counter, "Test 3 events flushed on ApplicationException message.");
   }
 
   [Test]
   public void TestExceptionEvaluatorTriggerOnSubClass()
   {
-    bufferingForwardingAppender.Evaluator = new ExceptionEvaluator(typeof(Exception), true);
-    bufferingForwardingAppender.ActivateOptions();
-    log4net.Config.BasicConfigurator.Configure(hierarchy, bufferingForwardingAppender);
+    _bufferingForwardingAppender.Evaluator = new ExceptionEvaluator(typeof(Exception), true);
+    _bufferingForwardingAppender.ActivateOptions();
+    log4net.Config.BasicConfigurator.Configure(_hierarchy, _bufferingForwardingAppender);
 
     ILogger logger = GetLogger();
 
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", null);
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", null);
-    Assert.AreEqual(0, countingAppender.Counter, "Test 2 events buffered");
+    Assert.AreEqual(0, _countingAppender.Counter, "Test 2 events buffered");
 
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", new ApplicationException());
-    Assert.AreEqual(3, countingAppender.Counter, "Test 3 events flushed on ApplicationException message.");
+    Assert.AreEqual(3, _countingAppender.Counter, "Test 3 events flushed on ApplicationException message.");
   }
 
   [Test]
   public void TestExceptionEvaluatorNoTriggerOnSubClass()
   {
-    bufferingForwardingAppender.Evaluator = new ExceptionEvaluator(typeof(Exception), false);
-    bufferingForwardingAppender.ActivateOptions();
-    log4net.Config.BasicConfigurator.Configure(hierarchy, bufferingForwardingAppender);
+    _bufferingForwardingAppender.Evaluator = new ExceptionEvaluator(typeof(Exception), false);
+    _bufferingForwardingAppender.ActivateOptions();
+    log4net.Config.BasicConfigurator.Configure(_hierarchy, _bufferingForwardingAppender);
 
     ILogger logger = GetLogger();
 
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", null);
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", null);
-    Assert.AreEqual(0, countingAppender.Counter, "Test 2 events buffered");
+    Assert.AreEqual(0, _countingAppender.Counter, "Test 2 events buffered");
 
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", new ApplicationException());
-    Assert.AreEqual(0, countingAppender.Counter, "Test 3 events buffered");
+    Assert.AreEqual(0, _countingAppender.Counter, "Test 3 events buffered");
   }
 
   [Test]
   public void TestInvalidExceptionEvaluator()
   {
     // warning: String is not a subclass of Exception
-    bufferingForwardingAppender.Evaluator = new ExceptionEvaluator(typeof(String), false);
-    bufferingForwardingAppender.ActivateOptions();
-    log4net.Config.BasicConfigurator.Configure(hierarchy, bufferingForwardingAppender);
+    _bufferingForwardingAppender.Evaluator = new ExceptionEvaluator(typeof(String), false);
+    _bufferingForwardingAppender.ActivateOptions();
+    log4net.Config.BasicConfigurator.Configure(_hierarchy, _bufferingForwardingAppender);
 
     ILogger logger = GetLogger();
 
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", null);
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", null);
-    Assert.AreEqual(0, countingAppender.Counter, "Test 2 events buffered");
+    Assert.AreEqual(0, _countingAppender.Counter, "Test 2 events buffered");
 
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", new ApplicationException());
-    Assert.AreEqual(0, countingAppender.Counter, "Test 3 events buffered");
+    Assert.AreEqual(0, _countingAppender.Counter, "Test 3 events buffered");
   }
 }

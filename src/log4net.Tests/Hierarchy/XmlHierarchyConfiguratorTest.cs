@@ -49,7 +49,7 @@ public class XmlHierarchyConfiguratorTest
 
   private void SetTestPropWithPath()
   {
-    XmlDocument doc = new XmlDocument();
+    XmlDocument doc = new();
     XmlElement el = doc.CreateElement("param");
     el.SetAttribute("name", "TestProp");
     el.SetAttribute("value", "Path=${path}");

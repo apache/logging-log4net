@@ -28,7 +28,7 @@ namespace log4net.Util;
 /// <author>Nicko Cadell</author>
 public sealed class SystemStringFormat
 {
-  private readonly IFormatProvider? provider;
+  private readonly IFormatProvider? _provider;
 
   /// <summary>
   /// Format
@@ -48,7 +48,7 @@ public sealed class SystemStringFormat
   /// <param name="args">An <see cref="object"/> array containing zero or more objects to format.</param>
   public SystemStringFormat(IFormatProvider? provider, string format, params object?[]? args)
   {
-    this.provider = provider;
+    this._provider = provider;
     Format = format;
     Args = args;
   }
@@ -57,7 +57,7 @@ public sealed class SystemStringFormat
   /// Format the string and arguments
   /// </summary>
   /// <returns>the formatted string</returns>
-  public override string? ToString() => StringFormat(provider, Format, Args);
+  public override string? ToString() => StringFormat(_provider, Format, Args);
 
   /// <summary>
   /// Replaces the format item in a specified <see cref="string"/> with the text equivalent 
@@ -98,7 +98,7 @@ public sealed class SystemStringFormat
     }
     catch (Exception ex)
     {
-      LogLog.Warn(declaringType, $"Exception while rendering format [{format}]", ex);
+      LogLog.Warn(_declaringType, $"Exception while rendering format [{format}]", ex);
       return StringFormatError(ex, format, args);
     }
   }
@@ -121,7 +121,7 @@ public sealed class SystemStringFormat
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "INTERNAL ERROR during StringFormat error handling", ex);
+      LogLog.Error(_declaringType, "INTERNAL ERROR during StringFormat error handling", ex);
       return "<log4net.Error>Exception during StringFormat. See Internal Log.</log4net.Error>";
     }
   }
@@ -189,5 +189,5 @@ public sealed class SystemStringFormat
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(SystemStringFormat);
+  private static readonly Type _declaringType = typeof(SystemStringFormat);
 }

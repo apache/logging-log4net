@@ -39,7 +39,7 @@ public sealed class LevelMap
   /// Mapping from level name to Level object. The
   /// level name is case-insensitive
   /// </summary>
-  private readonly ConcurrentDictionary<string, Level> mapName2Level = new(StringComparer.OrdinalIgnoreCase);
+  private readonly ConcurrentDictionary<string, Level> _mapName2Level = new(StringComparer.OrdinalIgnoreCase);
 
   /// <summary>
   /// Clear the internal maps of all levels
@@ -52,7 +52,7 @@ public sealed class LevelMap
   public void Clear()
   {
     // Clear all current levels
-    mapName2Level.Clear();
+    _mapName2Level.Clear();
   }
 
   /// <summary>
@@ -69,7 +69,7 @@ public sealed class LevelMap
         throw new ArgumentNullException(nameof(name));
       }
 
-      mapName2Level.TryGetValue(name, out Level? level);
+      _mapName2Level.TryGetValue(name, out Level? level);
       return level;
     }
   }
@@ -120,13 +120,13 @@ public sealed class LevelMap
     {
       throw new ArgumentNullException(nameof(level));
     }
-    mapName2Level[level.Name] = level;
+    _mapName2Level[level.Name] = level;
   }
 
   /// <summary>
   /// Gets all possible levels as a collection of Level objects.
   /// </summary>
-  public LevelCollection AllLevels => new(mapName2Level.Values);
+  public LevelCollection AllLevels => new(_mapName2Level.Values);
 
   /// <summary>
   /// Looks up a named level from the map.
@@ -146,6 +146,6 @@ public sealed class LevelMap
       throw new ArgumentNullException(nameof(defaultLevel));
     }
 
-    return mapName2Level.GetOrAdd(defaultLevel.Name, defaultLevel);
+    return _mapName2Level.GetOrAdd(defaultLevel.Name, defaultLevel);
   }
 }

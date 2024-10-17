@@ -38,10 +38,10 @@ public class StackFrameItem
   public StackFrameItem(StackFrame frame)
   {
     // set default values
-    LineNumber = NA;
-    FileName = NA;
+    LineNumber = NotAvailable;
+    FileName = NotAvailable;
     Method = new MethodItem();
-    ClassName = NA;
+    ClassName = NotAvailable;
 
     try
     {
@@ -62,7 +62,7 @@ public class StackFrameItem
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "An exception occurred while retrieving stack frame information.", ex);
+      LogLog.Error(_declaringType, "An exception occurred while retrieving stack frame information.", ex);
     }
 
     // set full info
@@ -103,12 +103,12 @@ public class StackFrameItem
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(StackFrameItem);
+  private static readonly Type _declaringType = typeof(StackFrameItem);
 
   /// <summary>
   /// When location information is not available the constant
   /// <c>NA</c> is returned. Current value of this string
   /// constant is <b>?</b>.
   /// </summary>
-  private const string NA = "?";
+  private const string NotAvailable = "?";
 }

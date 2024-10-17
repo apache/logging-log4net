@@ -217,7 +217,7 @@ public partial class RollingFileAppender : FileAppender
   /// </summary>
   ~RollingFileAppender()
   {
-    Interlocked.Exchange(ref mutexForRolling, null)?.Dispose();
+    Interlocked.Exchange(ref _mutexForRolling, null)?.Dispose();
   }
 
   /// <summary>
@@ -385,32 +385,32 @@ public partial class RollingFileAppender : FileAppender
   /// </remarks>
   public RollingMode RollingStyle
   {
-    get => rollingStyle;
+    get => _rollingStyle;
     set
     {
-      rollingStyle = value;
-      switch (rollingStyle)
+      _rollingStyle = value;
+      switch (_rollingStyle)
       {
         case RollingMode.Once:
-          rollDate = false;
-          rollSize = false;
+          _rollDate = false;
+          _rollSize = false;
 
           AppendToFile = false;
           break;
 
         case RollingMode.Size:
-          rollDate = false;
-          rollSize = true;
+          _rollDate = false;
+          _rollSize = true;
           break;
 
         case RollingMode.Date:
-          rollDate = true;
-          rollSize = false;
+          _rollDate = true;
+          _rollSize = false;
           break;
 
         case RollingMode.Composite:
-          rollDate = true;
-          rollSize = true;
+          _rollDate = true;
+          _rollSize = true;
           break;
       }
     }
@@ -460,7 +460,7 @@ public partial class RollingFileAppender : FileAppender
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(RollingFileAppender);
+  private static readonly Type _declaringType = typeof(RollingFileAppender);
 
   /// <summary>
   /// Sets the quiet writer being used.
@@ -469,7 +469,7 @@ public partial class RollingFileAppender : FileAppender
   /// This method can be overridden by subclasses.
   /// </remarks>
   /// <param name="writer">the writer to set</param>
-  protected override void SetQWForFiles(TextWriter writer)
+  protected override void SetQwForFiles(TextWriter writer)
   {
     QuietWriter = new CountingQuietTextWriter(writer, ErrorHandler);
   }
@@ -524,20 +524,20 @@ public partial class RollingFileAppender : FileAppender
     try
     {
       // if rolling should be locked, acquire the lock
-      mutexForRolling?.WaitOne();
-      if (rollDate)
+      _mutexForRolling?.WaitOne();
+      if (_rollDate)
       {
         var n = DateTimeStrategy.Now;
-        if (n >= nextCheck)
+        if (n >= _nextCheck)
         {
-          now = n;
-          nextCheck = NextCheckDate(now, rollPoint);
+          _now = n;
+          _nextCheck = NextCheckDate(_now, _rollPoint);
 
           RollOverTime(true);
         }
       }
 
-      if (rollSize)
+      if (_rollSize)
       {
         if ((File is not null) && ((CountingQuietTextWriter)QuietWriter!).Count >= MaxFileSize)
         {
@@ -548,7 +548,7 @@ public partial class RollingFileAppender : FileAppender
     finally
     {
       // if rolling should be locked, release the lock
-      mutexForRolling?.ReleaseMutex();
+      _mutexForRolling?.ReleaseMutex();
     }
   }
 
@@ -590,14 +590,14 @@ public partial class RollingFileAppender : FileAppender
           // The only exception is if we are not allowed to roll the existing file away.
           if (MaxSizeRollBackups != 0 && FileExists(fileName))
           {
-            LogLog.Error(declaringType, $"RollingFileAppender: INTERNAL ERROR. Append is False but OutputFile [{fileName}] already exists.");
+            LogLog.Error(_declaringType, $"RollingFileAppender: INTERNAL ERROR. Append is False but OutputFile [{fileName}] already exists.");
           }
         }
       }
 
       if (!StaticLogFileName)
       {
-        scheduledFilename = fileName;
+        _scheduledFilename = fileName;
       }
 
       // Open the file (call the base class to do it)
@@ -626,9 +626,9 @@ public partial class RollingFileAppender : FileAppender
     {
       fileName = fileName.Trim();
 
-      if (rollDate)
+      if (_rollDate)
       {
-        fileName = CombinePath(fileName, now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo));
+        fileName = CombinePath(fileName, _now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo));
       }
 
       if (CountDirection >= 0)
@@ -652,14 +652,14 @@ public partial class RollingFileAppender : FileAppender
 
     using (SecurityContext?.Impersonate(this))
     {
-      fullPath = Path.GetFullPath(baseFileName!);
+      fullPath = Path.GetFullPath(_baseFileName!);
       fileName = Path.GetFileName(fullPath);
     }
 
     List<string> arrayFiles = GetExistingFiles(fullPath);
     InitializeRollBackups(fileName, arrayFiles);
 
-    LogLog.Debug(declaringType, $"curSizeRollBackups starts at [{CurrentSizeRollBackups}]");
+    LogLog.Debug(_declaringType, $"curSizeRollBackups starts at [{CurrentSizeRollBackups}]");
   }
 
   /// <summary>
@@ -701,7 +701,7 @@ public partial class RollingFileAppender : FileAppender
         }
       }
     }
-    LogLog.Debug(declaringType, "Searched for existing files in [" + directory + "]");
+    LogLog.Debug(_declaringType, "Searched for existing files in [" + directory + "]");
     return alFiles;
   }
 
@@ -710,23 +710,23 @@ public partial class RollingFileAppender : FileAppender
   /// </summary>
   private void RollOverIfDateBoundaryCrossing()
   {
-    if (StaticLogFileName && rollDate)
+    if (StaticLogFileName && _rollDate)
     {
-      if (baseFileName is not null && FileExists(baseFileName))
+      if (_baseFileName is not null && FileExists(_baseFileName))
       {
         DateTime last;
         using (SecurityContext?.Impersonate(this))
           last = DateTimeStrategy is UniversalDateTime
-            ? System.IO.File.GetLastWriteTimeUtc(baseFileName)
-            : System.IO.File.GetLastWriteTime(baseFileName);
-        LogLog.Debug(declaringType, $"[{last.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo)}] vs. [{now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo)}]");
+            ? System.IO.File.GetLastWriteTimeUtc(_baseFileName)
+            : System.IO.File.GetLastWriteTime(_baseFileName);
+        LogLog.Debug(_declaringType, $"[{last.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo)}] vs. [{_now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo)}]");
 
-        if (!last.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo).Equals(now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo)))
+        if (!last.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo).Equals(_now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo)))
         {
-          scheduledFilename = CombinePath(baseFileName, last.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo));
-          LogLog.Debug(declaringType, $"Initial roll over to [{scheduledFilename}]");
+          _scheduledFilename = CombinePath(_baseFileName, last.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo));
+          LogLog.Debug(_declaringType, $"Initial roll over to [{_scheduledFilename}]");
           RollOverTime(false);
-          LogLog.Debug(declaringType, $"curSizeRollBackups after rollOver at [{CurrentSizeRollBackups}]");
+          LogLog.Debug(_declaringType, $"curSizeRollBackups after rollOver at [{CurrentSizeRollBackups}]");
         }
       }
     }
@@ -755,7 +755,7 @@ public partial class RollingFileAppender : FileAppender
       return;
 
     bool fileExists;
-    string fileName = GetNextOutputFileName(baseFileName!);
+    string fileName = GetNextOutputFileName(_baseFileName!);
 
     using (SecurityContext?.Impersonate(this))
       fileExists = System.IO.File.Exists(fileName);
@@ -764,10 +764,10 @@ public partial class RollingFileAppender : FileAppender
       return;
 
     if (MaxSizeRollBackups == 0)
-      LogLog.Debug(declaringType, $"Output file [{fileName}] already exists. MaxSizeRollBackups is 0; cannot roll. Overwriting existing file.");
+      LogLog.Debug(_declaringType, $"Output file [{fileName}] already exists. MaxSizeRollBackups is 0; cannot roll. Overwriting existing file.");
     else
     {
-      LogLog.Debug(declaringType, $"Output file [{fileName}] already exists. Not appending to file. Rolling existing file out of the way.");
+      LogLog.Debug(_declaringType, $"Output file [{fileName}] already exists. Not appending to file. Rolling existing file out of the way.");
       RollOverRenameFiles(fileName);
     }
   }
@@ -791,7 +791,7 @@ public partial class RollingFileAppender : FileAppender
       return; // Base log file is not an incremented logfile (.1 or .2, etc.)
 
     // Only look for files in the current roll point
-    if (rollDate && !StaticLogFileName)
+    if (_rollDate && !StaticLogFileName)
     {
       var date = DateTimeStrategy.Now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo).ToLower();
       var prefix = (PreserveLogFileNameExtension
@@ -802,7 +802,7 @@ public partial class RollingFileAppender : FileAppender
         : "";
       if (!curFileName.StartsWith(prefix) || !curFileName.EndsWith(suffix))
       {
-        LogLog.Debug(declaringType, $"Ignoring file [{curFileName}] because it is from a different date period");
+        LogLog.Debug(_declaringType, $"Ignoring file [{curFileName}] because it is from a different date period");
         return;
       }
     }
@@ -844,14 +844,14 @@ public partial class RollingFileAppender : FileAppender
             }
           }
         }
-        LogLog.Debug(declaringType, $"File name [{curFileName}] moves current count to [{CurrentSizeRollBackups}]");
+        LogLog.Debug(_declaringType, $"File name [{curFileName}] moves current count to [{CurrentSizeRollBackups}]");
       }
     }
     catch (FormatException)
     {
       //this happens when file.log -> file.log.yyyy-MM-dd which is normal
       //when staticLogFileName == false
-      LogLog.Debug(declaringType, $"Encountered a backup file not ending in .x [{curFileName}]");
+      LogLog.Debug(_declaringType, $"Encountered a backup file not ending in .x [{curFileName}]");
     }
   }
 
@@ -918,15 +918,15 @@ public partial class RollingFileAppender : FileAppender
     // purposes to calculate the resolution of the date pattern.
 
     // Get string representation of base line date
-    string r0 = s_date1970.ToString(datePattern, DateTimeFormatInfo.InvariantInfo);
+    string r0 = _sDate1970.ToString(datePattern, DateTimeFormatInfo.InvariantInfo);
 
     // Check each type of rolling mode starting with the smallest increment.
     for (var i = (int)RollPoint.TopOfMinute; i <= (int)RollPoint.TopOfMonth; i++)
     {
       // Get string representation of next pattern
-      string r1 = NextCheckDate(s_date1970, (RollPoint)i).ToString(datePattern, DateTimeFormatInfo.InvariantInfo);
+      string r1 = NextCheckDate(_sDate1970, (RollPoint)i).ToString(datePattern, DateTimeFormatInfo.InvariantInfo);
 
-      LogLog.Debug(declaringType, $"Type = [{i}], r0 = [{r0}], r1 = [{r1}]");
+      LogLog.Debug(_declaringType, $"Type = [{i}], r0 = [{r0}], r1 = [{r1}]");
 
       // Check if the string representations are different
       if (!r0.Equals(r1))
@@ -962,22 +962,22 @@ public partial class RollingFileAppender : FileAppender
   /// </remarks>
   public override void ActivateOptions()
   {
-    if (rollDate && DatePattern is not null)
+    if (_rollDate && DatePattern is not null)
     {
-      now = DateTimeStrategy.Now;
-      rollPoint = ComputeCheckPeriod(DatePattern);
+      _now = DateTimeStrategy.Now;
+      _rollPoint = ComputeCheckPeriod(DatePattern);
 
-      if (rollPoint == RollPoint.InvalidRollPoint)
+      if (_rollPoint == RollPoint.InvalidRollPoint)
       {
         throw new ArgumentException($"Invalid RollPoint, unable to parse [{DatePattern}]");
       }
 
       // next line added as this removes the name check in rollOver
-      nextCheck = NextCheckDate(now, rollPoint);
+      _nextCheck = NextCheckDate(_now, _rollPoint);
     }
     else
     {
-      if (rollDate)
+      if (_rollDate)
       {
         ErrorHandler.Error($"Either DatePattern or rollingStyle options are not set for [{Name}].");
       }
@@ -993,19 +993,19 @@ public partial class RollingFileAppender : FileAppender
       base.File = ConvertToFullPath(base.File!.Trim());
 
       // Store fully qualified base file name
-      baseFileName = base.File;
+      _baseFileName = base.File;
     }
 
     // initialize the mutex that is used to lock rolling
-    mutexForRolling = new Mutex(false, baseFileName
+    _mutexForRolling = new Mutex(false, _baseFileName
       .Replace("\\", "_")
       .Replace(":", "_")
       .Replace("/", "_") + "_rolling"
     );
 
-    if (rollDate && File is not null && scheduledFilename is null)
+    if (_rollDate && File is not null && _scheduledFilename is null)
     {
-      scheduledFilename = CombinePath(File, now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo));
+      _scheduledFilename = CombinePath(File, _now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo));
     }
 
     ExistingInit();
@@ -1052,10 +1052,10 @@ public partial class RollingFileAppender : FileAppender
       //is the new file name equivalent to the 'current' one
       //something has gone wrong if we hit this -- we should only
       //roll over if the new file will be different from the old
-      var dateFormat = now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo);
-      if (string.Equals(scheduledFilename, CombinePath(File!, dateFormat)))
+      var dateFormat = _now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo);
+      if (string.Equals(_scheduledFilename, CombinePath(File!, dateFormat)))
       {
-        ErrorHandler.Error($"Compare {scheduledFilename} : {CombinePath(File!, dateFormat)}");
+        ErrorHandler.Error($"Compare {_scheduledFilename} : {CombinePath(File!, dateFormat)}");
         return;
       }
 
@@ -1069,23 +1069,23 @@ public partial class RollingFileAppender : FileAppender
       for (var i = 1; i <= CurrentSizeRollBackups; i++)
       {
         var from = CombinePath(File!, "." + i);
-        var to = CombinePath(scheduledFilename!, "." + i);
+        var to = CombinePath(_scheduledFilename!, "." + i);
         RollFile(from, to);
       }
 
-      RollFile(File!, scheduledFilename!);
+      RollFile(File!, _scheduledFilename!);
     }
 
     //We've cleared out the old date and are ready for the new
     CurrentSizeRollBackups = 0;
 
     //new scheduled name
-    scheduledFilename = CombinePath(File!, now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo));
+    _scheduledFilename = CombinePath(File!, _now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo));
 
     if (fileIsOpen)
     {
       // This will also close the file. This is OK since multiple close operations are safe.
-      SafeOpenFile(baseFileName!, false);
+      SafeOpenFile(_baseFileName!, false);
     }
   }
 
@@ -1110,7 +1110,7 @@ public partial class RollingFileAppender : FileAppender
       // We may not have permission to move the file, or the file may be locked
       try
       {
-        LogLog.Debug(declaringType, $"Moving [{fromFile}] -> [{toFile}]");
+        LogLog.Debug(_declaringType, $"Moving [{fromFile}] -> [{toFile}]");
         using (SecurityContext?.Impersonate(this))
         {
           System.IO.File.Move(fromFile, toFile);
@@ -1123,7 +1123,7 @@ public partial class RollingFileAppender : FileAppender
     }
     else
     {
-      LogLog.Warn(declaringType, $"Cannot RollFile [{fromFile}] -> [{toFile}]. Source does not exist");
+      LogLog.Warn(_declaringType, $"Cannot RollFile [{fromFile}] -> [{toFile}]. Source does not exist");
     }
   }
 
@@ -1178,7 +1178,7 @@ public partial class RollingFileAppender : FileAppender
       }
       catch (Exception moveEx)
       {
-        LogLog.Debug(declaringType, $"Exception while moving file to be deleted [{fileName}] -> [{tempFileName}]", moveEx);
+        LogLog.Debug(_declaringType, $"Exception while moving file to be deleted [{fileName}] -> [{tempFileName}]", moveEx);
       }
 
       // Try to delete the file (either the original or the moved file)
@@ -1188,7 +1188,7 @@ public partial class RollingFileAppender : FileAppender
         {
           System.IO.File.Delete(fileToDelete);
         }
-        LogLog.Debug(declaringType, $"Deleted file [{fileName}]");
+        LogLog.Debug(_declaringType, $"Deleted file [{fileName}]");
       }
       catch (Exception deleteEx)
       {
@@ -1201,7 +1201,7 @@ public partial class RollingFileAppender : FileAppender
         {
           // Moved the file, but the delete failed. File is probably locked.
           // The file should automatically be deleted when the lock is released.
-          LogLog.Debug(declaringType, $"Exception while deleting temp file [{fileToDelete}]", deleteEx);
+          LogLog.Debug(_declaringType, $"Exception while deleting temp file [{fileToDelete}]", deleteEx);
         }
       }
     }
@@ -1237,10 +1237,10 @@ public partial class RollingFileAppender : FileAppender
   {
     CloseFile(); // keep windows happy.
 
-    LogLog.Debug(declaringType, $"rolling over count [{((CountingQuietTextWriter)QuietWriter!).Count}]");
-    LogLog.Debug(declaringType, $"maxSizeRollBackups [{MaxSizeRollBackups}]");
-    LogLog.Debug(declaringType, $"curSizeRollBackups [{CurrentSizeRollBackups}]");
-    LogLog.Debug(declaringType, $"countDirection [{CountDirection}]");
+    LogLog.Debug(_declaringType, $"rolling over count [{((CountingQuietTextWriter)QuietWriter!).Count}]");
+    LogLog.Debug(_declaringType, $"maxSizeRollBackups [{MaxSizeRollBackups}]");
+    LogLog.Debug(_declaringType, $"curSizeRollBackups [{CurrentSizeRollBackups}]");
+    LogLog.Debug(_declaringType, $"countDirection [{CountDirection}]");
 
     if (File is not null)
     {
@@ -1253,7 +1253,7 @@ public partial class RollingFileAppender : FileAppender
     }
 
     // This will also close the file. This is OK since multiple close operations are safe.
-    SafeOpenFile(baseFileName!, false);
+    SafeOpenFile(_baseFileName!, false);
   }
 
   /// <summary>
@@ -1447,22 +1447,22 @@ public partial class RollingFileAppender : FileAppender
   /// or will be the file transferred to on roll over
   /// (based on staticLogFileName).
   /// </summary>
-  private string? scheduledFilename;
+  private string? _scheduledFilename;
 
   /// <summary>
   /// The timestamp when we shall next recompute the filename.
   /// </summary>
-  private DateTime nextCheck = DateTime.MaxValue;
+  private DateTime _nextCheck = DateTime.MaxValue;
 
   /// <summary>
   /// Holds date of last roll over
   /// </summary>
-  private DateTime now;
+  private DateTime _now;
 
   /// <summary>
   /// The type of rolling done
   /// </summary>
-  private RollPoint rollPoint;
+  private RollPoint _rollPoint;
 
   /// <summary>
   /// How many sized based backups have been made so far
@@ -1472,30 +1472,30 @@ public partial class RollingFileAppender : FileAppender
   /// <summary>
   /// The rolling mode used in this appender.
   /// </summary>
-  private RollingMode rollingStyle = RollingMode.Composite;
+  private RollingMode _rollingStyle = RollingMode.Composite;
 
   /// <summary>
   /// Cache flag set if we are rolling by date.
   /// </summary>
-  private bool rollDate = true;
+  private bool _rollDate = true;
 
   /// <summary>
   /// Cache flag set if we are rolling by size.
   /// </summary>
-  private bool rollSize = true;
+  private bool _rollSize = true;
 
   /// <summary>
   /// FileName provided in configuration.  Used for rolling properly
   /// </summary>
-  private string? baseFileName;
+  private string? _baseFileName;
 
   /// <summary>
   /// A mutex that is used to lock rolling of files.
   /// </summary>
-  private Mutex? mutexForRolling;
+  private Mutex? _mutexForRolling;
 
   /// <summary>
   /// The 1st of January 1970 in UTC
   /// </summary>
-  private static readonly DateTime s_date1970 = new DateTime(1970, 1, 1);
+  private static readonly DateTime _sDate1970 = new DateTime(1970, 1, 1);
 }

@@ -46,15 +46,15 @@ public static class Utils
   /// <summary>
   /// Sample property key
   /// </summary>
-  internal const string PROPERTY_KEY = "prop1";
+  internal const string PropertyKey = "prop1";
 
   /// <summary>
-  /// Remove the <see cref="PROPERTY_KEY"/> from alle log4net contexts
+  /// Remove the <see cref="PropertyKey"/> from alle log4net contexts
   /// </summary>
   internal static void RemovePropertyFromAllContexts()
   {
-    GlobalContext.Properties.Remove(PROPERTY_KEY);
-    ThreadContext.Properties.Remove(PROPERTY_KEY);
-    LogicalThreadContext.Properties.Remove(PROPERTY_KEY);
+    GlobalContext.Properties.Remove(PropertyKey);
+    ThreadContext.Properties.Remove(PropertyKey);
+    LogicalThreadContext.Properties.Remove(PropertyKey);
   }
 }

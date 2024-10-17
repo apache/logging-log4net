@@ -57,7 +57,7 @@ public sealed class ReaderWriterLock
     try { }
     finally
     {
-      readerWriterLock.EnterReadLock();
+      _readerWriterLock.EnterReadLock();
     }
   }
 
@@ -72,7 +72,7 @@ public sealed class ReaderWriterLock
   /// </remarks>
   public void ReleaseReaderLock()
   {
-    readerWriterLock.ExitReadLock();
+    _readerWriterLock.ExitReadLock();
   }
 
   /// <summary>
@@ -89,7 +89,7 @@ public sealed class ReaderWriterLock
     try { }
     finally
     {
-      readerWriterLock.EnterWriteLock();
+      _readerWriterLock.EnterWriteLock();
     }
   }
 
@@ -104,8 +104,8 @@ public sealed class ReaderWriterLock
   /// </remarks>
   public void ReleaseWriterLock()
   {
-    readerWriterLock.ExitWriteLock();
+    _readerWriterLock.ExitWriteLock();
   }
 
-  private readonly ReaderWriterLockSlim readerWriterLock = new(LockRecursionPolicy.SupportsRecursion);
+  private readonly ReaderWriterLockSlim _readerWriterLock = new(LockRecursionPolicy.SupportsRecursion);
 }

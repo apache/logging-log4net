@@ -136,7 +136,7 @@ public class ColoredConsoleAppender : AppenderSkeleton
     HighIntensity = 0x0008,
   }
 
-  private static readonly char[] windowsNewline = ['\r', '\n'];
+  private static readonly char[] _windowsNewline = ['\r', '\n'];
 
   /// <summary>
   /// Initializes a new instance of the <see cref="ColoredConsoleAppender" /> class.
@@ -164,8 +164,8 @@ public class ColoredConsoleAppender : AppenderSkeleton
   /// </remarks>
   public virtual string Target
   {
-    get => writeToErrorStream ? ConsoleError : ConsoleOut;
-    set => writeToErrorStream = StringComparer.OrdinalIgnoreCase.Equals(ConsoleError, value.Trim());
+    get => _writeToErrorStream ? ConsoleError : ConsoleOut;
+    set => _writeToErrorStream = StringComparer.OrdinalIgnoreCase.Equals(ConsoleError, value.Trim());
   }
 
   /// <summary>
@@ -179,7 +179,7 @@ public class ColoredConsoleAppender : AppenderSkeleton
   /// for a level.
   /// </para>
   /// </remarks>
-  public void AddMapping(LevelColors mapping) => levelMapping.Add(mapping);
+  public void AddMapping(LevelColors mapping) => _levelMapping.Add(mapping);
 
   /// <summary>
   /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(log4net.Core.LoggingEvent)"/> method.
@@ -197,15 +197,15 @@ public class ColoredConsoleAppender : AppenderSkeleton
   [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
   protected override void Append(LoggingEvent loggingEvent)
   {
-    if (consoleOutputWriter is not null)
+    if (_consoleOutputWriter is not null)
     {
-      IntPtr consoleHandle = GetStdHandle(writeToErrorStream ? STD_ERROR_HANDLE : STD_OUTPUT_HANDLE);
+      IntPtr consoleHandle = GetStdHandle(_writeToErrorStream ? StdErrorHandle : StdOutputHandle);
 
       // Default to white on black
       ushort colorInfo = (ushort)Colors.White;
 
       // see if there is a specified lookup
-      if (levelMapping.Lookup(loggingEvent.Level) is LevelColors levelColors)
+      if (_levelMapping.Lookup(loggingEvent.Level) is LevelColors levelColors)
       {
         colorInfo = levelColors.CombinedColor;
       }
@@ -214,7 +214,7 @@ public class ColoredConsoleAppender : AppenderSkeleton
       string strLoggingMessage = RenderLoggingEvent(loggingEvent);
 
       // get the current console color - to restore later
-      GetConsoleScreenBufferInfo(consoleHandle, out CONSOLE_SCREEN_BUFFER_INFO bufferInfo);
+      GetConsoleScreenBufferInfo(consoleHandle, out ConsoleScreenBufferInfo bufferInfo);
 
       // set the console colors
       SetConsoleTextAttribute(consoleHandle, colorInfo);
@@ -311,7 +311,7 @@ public class ColoredConsoleAppender : AppenderSkeleton
       }
 
       // Write to the output stream
-      consoleOutputWriter.Write(messageCharArray, 0, arrayLength);
+      _consoleOutputWriter.Write(messageCharArray, 0, arrayLength);
 
       // Restore the console back to its previous color scheme
       SetConsoleTextAttribute(consoleHandle, bufferInfo.wAttributes);
@@ -319,7 +319,7 @@ public class ColoredConsoleAppender : AppenderSkeleton
       if (appendNewline)
       {
         // Write the newline, after changing the color scheme
-        consoleOutputWriter.Write(windowsNewline, 0, 2);
+        _consoleOutputWriter.Write(_windowsNewline, 0, 2);
       }
     }
   }
@@ -337,16 +337,16 @@ public class ColoredConsoleAppender : AppenderSkeleton
   public override void ActivateOptions()
   {
     base.ActivateOptions();
-    levelMapping.ActivateOptions();
+    _levelMapping.ActivateOptions();
 
     // Use the Console methods to open a Stream over the console std handle
-    Stream consoleOutputStream = writeToErrorStream ? Console.OpenStandardError() : Console.OpenStandardOutput();
+    Stream consoleOutputStream = _writeToErrorStream ? Console.OpenStandardError() : Console.OpenStandardOutput();
 
     // Look up the codepage encoding for the console
     Encoding consoleEncoding = EncodingWithoutPreamble.Get(Encoding.GetEncoding(GetConsoleOutputCP()));
 
     // Create a writer around the console stream
-    consoleOutputWriter = new StreamWriter(consoleOutputStream, consoleEncoding, 0x100)
+    _consoleOutputWriter = new StreamWriter(consoleOutputStream, consoleEncoding, 0x100)
     {
       AutoFlush = true
     };
@@ -355,7 +355,7 @@ public class ColoredConsoleAppender : AppenderSkeleton
     // and close the file handle. Because we have set AutoFlush the additional flush
     // is not required. The console file handle should not be closed, so we don't call
     // Dispose, Close or the finalizer.
-    GC.SuppressFinalize(consoleOutputWriter);
+    GC.SuppressFinalize(_consoleOutputWriter);
   }
 
   /// <summary>
@@ -373,12 +373,12 @@ public class ColoredConsoleAppender : AppenderSkeleton
   /// <summary>
   /// Flag to write output to the error stream rather than the standard output stream
   /// </summary>
-  private bool writeToErrorStream;
+  private bool _writeToErrorStream;
 
   /// <summary>
   /// Mapping from level object to color value
   /// </summary>
-  private readonly LevelMapping levelMapping = new();
+  private readonly LevelMapping _levelMapping = new();
 
   /// <summary>
   /// The console output stream writer to write to
@@ -388,7 +388,7 @@ public class ColoredConsoleAppender : AppenderSkeleton
   /// This writer is not thread safe.
   /// </para>
   /// </remarks>
-  private StreamWriter? consoleOutputWriter;
+  private StreamWriter? _consoleOutputWriter;
 
   [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
   [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
@@ -404,24 +404,24 @@ public class ColoredConsoleAppender : AppenderSkeleton
   [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
   private static extern bool GetConsoleScreenBufferInfo(
     IntPtr consoleHandle,
-    out CONSOLE_SCREEN_BUFFER_INFO bufferInfo);
+    out ConsoleScreenBufferInfo bufferInfo);
 
-  private const uint STD_OUTPUT_HANDLE = unchecked((uint)-11);
-  private const uint STD_ERROR_HANDLE = unchecked((uint)-12);
+  private const uint StdOutputHandle = unchecked((uint)-11);
+  private const uint StdErrorHandle = unchecked((uint)-12);
 
   [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
   [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
   private static extern IntPtr GetStdHandle(uint type);
 
   [StructLayout(LayoutKind.Sequential)]
-  private struct COORD
+  private struct Coord
   {
     public ushort x;
     public ushort y;
   }
 
   [StructLayout(LayoutKind.Sequential)]
-  private struct SMALL_RECT
+  private struct SmallRect
   {
     public ushort Left;
     public ushort Top;
@@ -430,13 +430,13 @@ public class ColoredConsoleAppender : AppenderSkeleton
   }
 
   [StructLayout(LayoutKind.Sequential)]
-  private struct CONSOLE_SCREEN_BUFFER_INFO
+  private struct ConsoleScreenBufferInfo
   {
-    public COORD dwSize;
-    public COORD dwCursorPosition;
+    public Coord dwSize;
+    public Coord dwCursorPosition;
     public ushort wAttributes;
-    public SMALL_RECT srWindow;
-    public COORD dwMaximumWindowSize;
+    public SmallRect srWindow;
+    public Coord dwMaximumWindowSize;
   }
 
   /// <summary>

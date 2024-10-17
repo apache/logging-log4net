@@ -36,24 +36,24 @@ public class TimeEvaluator : ITriggeringEventEvaluator
   /// <summary>
   /// The time threshold for triggering in seconds. Zero means it won't trigger at all.
   /// </summary>
-  private int interval;
+  private int _interval;
 
   /// <summary>
   /// The UTC time of last check. This gets updated when the object is created and when the evaluator triggers.
   /// </summary>
-  private DateTime lastTimeUtc;
+  private DateTime _lastTimeUtc;
 
   /// <summary>
   /// The default time threshold for triggering in seconds. Zero means it won't trigger at all.
   /// </summary>
-  const int DEFAULT_INTERVAL = 0;
+  const int DefaultInterval = 0;
 
   /// <summary>
-  /// Create a new evaluator using the <see cref="DEFAULT_INTERVAL"/> time threshold in seconds.
+  /// Create a new evaluator using the <see cref="DefaultInterval"/> time threshold in seconds.
   /// </summary>
   /// <remarks>
   /// <para>
-  /// Create a new evaluator using the <see cref="DEFAULT_INTERVAL"/> time threshold in seconds.
+  /// Create a new evaluator using the <see cref="DefaultInterval"/> time threshold in seconds.
   /// </para>
   /// <para>
   /// This evaluator will trigger if the specified time period 
@@ -61,7 +61,7 @@ public class TimeEvaluator : ITriggeringEventEvaluator
   /// </para>
   /// </remarks>
   public TimeEvaluator()
-    : this(DEFAULT_INTERVAL)
+    : this(DefaultInterval)
   { }
 
   /// <summary>
@@ -82,8 +82,8 @@ public class TimeEvaluator : ITriggeringEventEvaluator
   /// </remarks>
   public TimeEvaluator(int interval)
   {
-    this.interval = interval;
-    lastTimeUtc = DateTime.UtcNow;
+    this._interval = interval;
+    _lastTimeUtc = DateTime.UtcNow;
   }
 
   /// <summary>
@@ -101,8 +101,8 @@ public class TimeEvaluator : ITriggeringEventEvaluator
   /// </remarks>
   public int Interval
   {
-    get => interval;
-    set => interval = value;
+    get => _interval;
+    set => _interval = value;
   }
 
   /// <summary>
@@ -126,18 +126,18 @@ public class TimeEvaluator : ITriggeringEventEvaluator
     }
 
     // disable the evaluator if threshold is zero
-    if (interval == 0)
+    if (_interval == 0)
     {
       return false;
     }
 
     lock (this) // avoid triggering multiple times
     {
-      TimeSpan passed = DateTime.UtcNow.Subtract(lastTimeUtc);
+      TimeSpan passed = DateTime.UtcNow.Subtract(_lastTimeUtc);
 
-      if (passed.TotalSeconds > interval)
+      if (passed.TotalSeconds > _interval)
       {
-        lastTimeUtc = DateTime.UtcNow;
+        _lastTimeUtc = DateTime.UtcNow;
         return true;
       }
       return false;

@@ -43,8 +43,10 @@ public class ShutdownTest
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 
     // Create appender and configure repos
-    StringAppender stringAppender = new StringAppender();
-    stringAppender.Layout = new PatternLayout("%m");
+    StringAppender stringAppender = new()
+    {
+      Layout = new PatternLayout("%m")
+    };
     BasicConfigurator.Configure(rep, stringAppender);
 
     // Get logger from repos
@@ -61,8 +63,10 @@ public class ShutdownTest
     stringAppender.Reset();
 
     // Create new appender and configure
-    stringAppender = new StringAppender();
-    stringAppender.Layout = new PatternLayout("%m");
+    stringAppender = new StringAppender
+    {
+      Layout = new PatternLayout("%m")
+    };
     BasicConfigurator.Configure(rep, stringAppender);
 
     log1.Info("TestMessage3");

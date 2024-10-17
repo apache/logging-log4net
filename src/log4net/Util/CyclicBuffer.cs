@@ -53,11 +53,11 @@ public class CyclicBuffer
       throw SystemInfo.CreateArgumentOutOfRangeException(nameof(maxSize), maxSize, $"Parameter: {nameof(maxSize)}, Value: [{maxSize}] out of range. A positive integer is required.");
     }
 
-    this.maxSize = maxSize;
-    events = new LoggingEvent[maxSize];
-    first = 0;
-    last = 0;
-    numElems = 0;
+    this._maxSize = maxSize;
+    _events = new LoggingEvent[maxSize];
+    _first = 0;
+    _last = 0;
+    _numElems = 0;
   }
 
   /// <summary>
@@ -82,25 +82,25 @@ public class CyclicBuffer
     lock (this)
     {
       // save the discarded event
-      LoggingEvent? discardedLoggingEvent = events[last];
+      LoggingEvent? discardedLoggingEvent = _events[_last];
 
       // overwrite the last event position
-      events[last] = loggingEvent;
-      if (++last == maxSize)
+      _events[_last] = loggingEvent;
+      if (++_last == _maxSize)
       {
-        last = 0;
+        _last = 0;
       }
 
-      if (numElems < maxSize)
+      if (_numElems < _maxSize)
       {
-        numElems++;
+        _numElems++;
       }
-      else if (++first == maxSize)
+      else if (++_first == _maxSize)
       {
-        first = 0;
+        _first = 0;
       }
 
-      if (numElems < maxSize)
+      if (_numElems < _maxSize)
       {
         // Space remaining
         return null;
@@ -128,14 +128,14 @@ public class CyclicBuffer
     lock (this)
     {
       LoggingEvent? ret = null;
-      if (numElems > 0)
+      if (_numElems > 0)
       {
-        numElems--;
-        ret = events[first];
-        events[first] = null;
-        if (++first == maxSize)
+        _numElems--;
+        ret = _events[_first];
+        _events[_first] = null;
+        if (++_first == _maxSize)
         {
-          first = 0;
+          _first = 0;
         }
       }
       return ret;
@@ -155,18 +155,18 @@ public class CyclicBuffer
   {
     lock (this)
     {
-      LoggingEvent[] ret = new LoggingEvent[numElems];
+      LoggingEvent[] ret = new LoggingEvent[_numElems];
 
-      if (numElems > 0)
+      if (_numElems > 0)
       {
-        if (first < last)
+        if (_first < _last)
         {
-          Array.Copy(events, first, ret, 0, numElems);
+          Array.Copy(_events, _first, ret, 0, _numElems);
         }
         else
         {
-          Array.Copy(events, first, ret, 0, maxSize - first);
-          Array.Copy(events, 0, ret, maxSize - first, last);
+          Array.Copy(_events, _first, ret, 0, _maxSize - _first);
+          Array.Copy(_events, 0, ret, _maxSize - _first, _last);
         }
       }
 
@@ -189,11 +189,11 @@ public class CyclicBuffer
     lock (this)
     {
       // Set all the elements to null
-      Array.Clear(events, 0, events.Length);
+      Array.Clear(_events, 0, _events.Length);
 
-      first = 0;
-      last = 0;
-      numElems = 0;
+      _first = 0;
+      _last = 0;
+      _numElems = 0;
     }
   }
 
@@ -271,12 +271,12 @@ public class CyclicBuffer
     {
       lock (this)
       {
-        if (i < 0 || i >= numElems)
+        if (i < 0 || i >= _numElems)
         {
           return null;
         }
 
-        return events[(first + i) % maxSize];
+        return _events[(_first + i) % _maxSize];
       }
     }
   }
@@ -296,7 +296,7 @@ public class CyclicBuffer
     {
       lock (this)
       {
-        return maxSize;
+        return _maxSize;
       }
     }
 #if RESIZABLE_CYCLIC_BUFFER
@@ -324,14 +324,14 @@ public class CyclicBuffer
     {
       lock (this)
       {
-        return numElems;
+        return _numElems;
       }
     }
   }
 
-  private readonly LoggingEvent?[] events;
-  private int first;
-  private int last;
-  private int numElems;
-  private readonly int maxSize;
+  private readonly LoggingEvent?[] _events;
+  private int _first;
+  private int _last;
+  private int _numElems;
+  private readonly int _maxSize;
 }

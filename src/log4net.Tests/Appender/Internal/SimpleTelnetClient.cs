@@ -14,17 +14,17 @@ namespace log4net.Tests.Appender.Internal;
 internal sealed class SimpleTelnetClient(
   Action<string> received, int port) : IDisposable
 {
-  private readonly CancellationTokenSource cancellationTokenSource = new();
-  private readonly TcpClient client = new();
+  private readonly CancellationTokenSource _cancellationTokenSource = new();
+  private readonly TcpClient _client = new();
 
   /// <summary>
   /// Runs the client (in a task)
   /// </summary>
   internal void Run() => Task.Run(() =>
   {
-    client.Connect(new IPEndPoint(IPAddress.Loopback, port));
+    _client.Connect(new IPEndPoint(IPAddress.Loopback, port));
     // Get a stream object for reading and writing
-    using NetworkStream stream = client.GetStream();
+    using NetworkStream stream = _client.GetStream();
 
     int i;
     byte[] bytes = new byte[256];
@@ -34,18 +34,18 @@ internal sealed class SimpleTelnetClient(
     {
       string data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
       received(data);
-      if (cancellationTokenSource.Token.IsCancellationRequested)
+      if (_cancellationTokenSource.Token.IsCancellationRequested)
       {
         return;
       }
     }
-  }, cancellationTokenSource.Token);
+  }, _cancellationTokenSource.Token);
 
   /// <inheritdoc/>
   public void Dispose()
   {
-    cancellationTokenSource.Cancel();
-    cancellationTokenSource.Dispose();
-    client.Dispose();
+    _cancellationTokenSource.Cancel();
+    _cancellationTokenSource.Dispose();
+    _client.Dispose();
   }
 }

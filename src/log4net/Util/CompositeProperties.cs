@@ -33,8 +33,8 @@ namespace log4net.Util;
 /// <author>Nicko Cadell</author>
 public sealed class CompositeProperties
 {
-  private PropertiesDictionary? flattened;
-  private readonly List<ReadOnlyPropertiesDictionary> nestedProperties = [];
+  private PropertiesDictionary? _flattened;
+  private readonly List<ReadOnlyPropertiesDictionary> _nestedProperties = [];
 
   /// <summary>
   /// Constructor
@@ -72,13 +72,13 @@ public sealed class CompositeProperties
     get
     {
       // Look in the flattened properties first
-      if (flattened is not null)
+      if (_flattened is not null)
       {
-        return flattened[key];
+        return _flattened[key];
       }
 
       // Look for the key in all the nested properties
-      foreach (ReadOnlyPropertiesDictionary cur in nestedProperties)
+      foreach (ReadOnlyPropertiesDictionary cur in _nestedProperties)
       {
         if (cur.TryGetValue(key, out object? val))
         {
@@ -101,8 +101,8 @@ public sealed class CompositeProperties
   /// </remarks>
   public void Add(ReadOnlyPropertiesDictionary properties)
   {
-    flattened = null;
-    nestedProperties.Add(properties);
+    _flattened = null;
+    _nestedProperties.Add(properties);
   }
 
   /// <summary>
@@ -117,20 +117,20 @@ public sealed class CompositeProperties
   /// </remarks>
   public PropertiesDictionary Flatten()
   {
-    if (flattened is null)
+    if (_flattened is null)
     {
-      flattened = [];
+      _flattened = [];
 
-      for (int i = nestedProperties.Count; --i >= 0;)
+      for (int i = _nestedProperties.Count; --i >= 0;)
       {
-        ReadOnlyPropertiesDictionary cur = nestedProperties[i];
+        ReadOnlyPropertiesDictionary cur = _nestedProperties[i];
 
         foreach (KeyValuePair<string, object?> entry in cur)
         {
-          flattened[entry.Key] = entry.Value;
+          _flattened[entry.Key] = entry.Value;
         }
       }
     }
-    return flattened;
+    return _flattened;
   }
 }

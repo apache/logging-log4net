@@ -53,7 +53,7 @@ public static class ConverterRegistry
     AddConverter(typeof(Type), typeof(TypeConverter));
     AddConverter(typeof(Layout.PatternLayout), typeof(PatternLayoutConverter));
     AddConverter(typeof(PatternString), typeof(PatternStringConverter));
-    AddConverter(typeof(System.Net.IPAddress), typeof(IPAddressConverter));
+    AddConverter(typeof(System.Net.IPAddress), typeof(IpAddressConverter));
   }
 
   /// <summary>
@@ -69,11 +69,11 @@ public static class ConverterRegistry
     }
     if (converter is IConvertTo convertTo)
     {
-      s_type2ConvertTo[destinationType] = convertTo;
+      _sType2ConvertTo[destinationType] = convertTo;
     }
     if (converter is IConvertFrom convertFrom)
     {
-      s_type2ConvertFrom[destinationType] = convertFrom;
+      _sType2ConvertFrom[destinationType] = convertFrom;
     }
   }
 
@@ -102,14 +102,14 @@ public static class ConverterRegistry
     // TODO: Is destinationType required? We don't use it for anything.
 
     // Look up in the static registry
-    if (!s_type2ConvertTo.TryGetValue(sourceType, out IConvertTo? converter))
+    if (!_sType2ConvertTo.TryGetValue(sourceType, out IConvertTo? converter))
     {
       // Look up using attributes
       converter = GetConverterFromAttribute(sourceType) as IConvertTo;
       if (converter is not null)
       {
         // Store in registry
-        s_type2ConvertTo[sourceType] = converter;
+        _sType2ConvertTo[sourceType] = converter;
       }
     }
 
@@ -130,14 +130,14 @@ public static class ConverterRegistry
     // i.e. getting a type converter for a base of destinationType
 
     // Lookup in the static registry
-    if (!s_type2ConvertFrom.TryGetValue(destinationType, out IConvertFrom? converter))
+    if (!_sType2ConvertFrom.TryGetValue(destinationType, out IConvertFrom? converter))
     {
       // Look up using attributes
       converter = GetConverterFromAttribute(destinationType) as IConvertFrom;
       if (converter is not null)
       {
         // Store in registry
-        s_type2ConvertFrom[destinationType] = converter;
+        _sType2ConvertFrom[destinationType] = converter;
       }
     }
 
@@ -199,12 +199,12 @@ public static class ConverterRegistry
       }
       catch (Exception ex)
       {
-        LogLog.Error(declaringType, $"Cannot CreateConverterInstance of type [{converterType.FullName}], exception in call to Activator.CreateInstance", ex);
+        LogLog.Error(_declaringType, $"Cannot CreateConverterInstance of type [{converterType.FullName}], exception in call to Activator.CreateInstance", ex);
       }
     }
     else
     {
-      LogLog.Error(declaringType, $"Cannot CreateConverterInstance of type [{converterType.FullName}], type does not implement IConvertFrom or IConvertTo");
+      LogLog.Error(_declaringType, $"Cannot CreateConverterInstance of type [{converterType.FullName}], type does not implement IConvertFrom or IConvertTo");
     }
     return null;
   }
@@ -216,8 +216,8 @@ public static class ConverterRegistry
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(ConverterRegistry);
+  private static readonly Type _declaringType = typeof(ConverterRegistry);
 
-  private static readonly ConcurrentDictionary<Type, IConvertTo> s_type2ConvertTo = new();
-  private static readonly ConcurrentDictionary<Type, IConvertFrom> s_type2ConvertFrom = new();
+  private static readonly ConcurrentDictionary<Type, IConvertTo> _sType2ConvertTo = new();
+  private static readonly ConcurrentDictionary<Type, IConvertFrom> _sType2ConvertFrom = new();
 }

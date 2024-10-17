@@ -41,37 +41,37 @@ namespace log4net.Tests.Appender;
 [TestFixture]
 public sealed class RollingFileAppenderTest
 {
-  private const string c_fileName = "test_41d3d834_4320f4da.log";
+  private const string FileName = "test_41d3d834_4320f4da.log";
 
-  private const string c_testMessage98Chars =
+  private const string TestMessage98Chars =
     "01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567";
 
-  private const string c_testMessage99Chars =
+  private const string TestMessage99Chars =
     "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678";
 
-  private const int c_iMaximumFileSize = 450; // in bytes
-  private int _iMessagesLogged;
-  private int _iCountDirection;
-  private int _MaxSizeRollBackups = 3;
+  private const int MaximumFileSize = 450; // in bytes
+  private int _messagesLogged;
+  private int _countDirection;
+  private int _maxSizeRollBackups = 3;
   private CountingAppender? _caRoot;
   private Logger? _root;
   private CultureInfo? _currentCulture;
-  private CultureInfo? _currentUICulture;
+  private CultureInfo? _currentUiCulture;
 
   private sealed class SilentErrorHandler : IErrorHandler
   {
-    private readonly StringBuilder buffer = new();
+    private readonly StringBuilder _buffer = new();
 
-    public string Message => buffer.ToString();
+    public string Message => _buffer.ToString();
 
     public void Error(string message)
-      => buffer.Append(message + '\n');
+      => _buffer.Append(message + '\n');
 
     public void Error(string message, Exception e)
-      => buffer.Append(message + '\n' + e.Message + '\n');
+      => _buffer.Append(message + '\n' + e.Message + '\n');
 
     public void Error(string message, Exception? e, ErrorCode errorCode)
-      => buffer.Append(message + '\n' + e?.Message + '\n');
+      => _buffer.Append(message + '\n' + e?.Message + '\n');
   }
 
   private sealed class RollingFileAppenderForTest : RollingFileAppender
@@ -88,9 +88,9 @@ public sealed class RollingFileAppenderTest
   /// </summary>
   private void InitializeVariables()
   {
-    _iMessagesLogged = 0;
-    _iCountDirection = +1; // Up
-    _MaxSizeRollBackups = 3;
+    _messagesLogged = 0;
+    _countDirection = +1; // Up
+    _maxSizeRollBackups = 3;
   }
 
   /// <summary>
@@ -120,7 +120,7 @@ public sealed class RollingFileAppenderTest
 
     // set correct thread culture
     _currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
-    _currentUICulture = System.Threading.Thread.CurrentThread.CurrentUICulture;
+    _currentUiCulture = System.Threading.Thread.CurrentThread.CurrentUICulture;
     System.Threading.Thread.CurrentThread.CurrentCulture =
         System.Threading.Thread.CurrentThread.CurrentUICulture =
             CultureInfo.InvariantCulture;
@@ -136,7 +136,7 @@ public sealed class RollingFileAppenderTest
 
     // restore previous culture
     System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture!;
-    System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUICulture!;
+    System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUiCulture!;
   }
 
   /// <summary>
@@ -145,7 +145,7 @@ public sealed class RollingFileAppenderTest
   /// </summary>
   private static void VerifyFileCount(int iExpectedCount, bool preserveLogFileNameExtension = false)
   {
-    List<string> alFiles = GetExistingFiles(c_fileName, preserveLogFileNameExtension);
+    List<string> alFiles = GetExistingFiles(FileName, preserveLogFileNameExtension);
     Assert.IsNotNull(alFiles);
     Assert.AreEqual(iExpectedCount, alFiles.Count);
   }
@@ -155,7 +155,7 @@ public sealed class RollingFileAppenderTest
   /// </summary>
   private static void CreateFile(int iFileNumber)
   {
-    FileInfo fileInfo = new(MakeFileName(c_fileName, iFileNumber));
+    FileInfo fileInfo = new(MakeFileName(FileName, iFileNumber));
 
     FileStream? fileStream = null;
     try
@@ -210,7 +210,7 @@ public sealed class RollingFileAppenderTest
       CountDirection = 1,
       PreserveLogFileNameExtension = true,
       MaximumFileSize = "10KB",
-      File = c_fileName
+      File = FileName
     };
     roller.ActivateOptions();
     _root.AddAppender(roller);
@@ -241,8 +241,8 @@ public sealed class RollingFileAppenderTest
   /// </summary>
   private static void DeleteTestFiles()
   {
-    List<string> alFiles = GetExistingFiles(c_fileName);
-    alFiles.AddRange(GetExistingFiles(c_fileName, true));
+    List<string> alFiles = GetExistingFiles(FileName);
+    alFiles.AddRange(GetExistingFiles(FileName, true));
     foreach (string sFile in alFiles)
     {
       try
@@ -301,11 +301,11 @@ public sealed class RollingFileAppenderTest
     RollingFileAppender appender = new()
     {
       Layout = layout,
-      File = c_fileName,
+      File = FileName,
       Encoding = Encoding.ASCII,
-      MaximumFileSize = c_iMaximumFileSize.ToString(),
-      MaxSizeRollBackups = _MaxSizeRollBackups,
-      CountDirection = _iCountDirection,
+      MaximumFileSize = MaximumFileSize.ToString(),
+      MaxSizeRollBackups = _maxSizeRollBackups,
+      CountDirection = _countDirection,
       RollingStyle = RollingFileAppender.RollingMode.Size,
       LockingModel = lockModel
     };
@@ -357,13 +357,13 @@ public sealed class RollingFileAppenderTest
     /// A table of entries showing files that should exist and their expected sizes
     /// before logging is called
     /// </summary>
-    private readonly List<RollFileEntry> preLogFileEntries;
+    private readonly List<RollFileEntry> _preLogFileEntries;
 
     /// <summary>
     /// A table of entries showing files that should exist and their expected sizes
     /// after a message is logged
     /// </summary>
-    private readonly List<RollFileEntry> postLogFileEntries;
+    private readonly List<RollFileEntry> _postLogFileEntries;
 
     /// <summary>
     /// Constructor, taking all required parameters
@@ -372,21 +372,21 @@ public sealed class RollingFileAppenderTest
     /// <param name="postLogFileEntries"></param>
     public RollConditions(List<RollFileEntry> preLogFileEntries, List<RollFileEntry> postLogFileEntries)
     {
-      this.preLogFileEntries = preLogFileEntries;
-      this.postLogFileEntries = postLogFileEntries;
+      this._preLogFileEntries = preLogFileEntries;
+      this._postLogFileEntries = postLogFileEntries;
     }
 
     /// <summary>
     /// A table of entries showing files that should exist and their expected sizes
     /// before logging is called
     /// </summary>
-    public List<RollFileEntry> GetPreLogFileEntries() => preLogFileEntries;
+    public List<RollFileEntry> GetPreLogFileEntries() => _preLogFileEntries;
 
     /// <summary>
     /// A table of entries showing files that should exist and their expected sizes
     /// after a message is logged
     /// </summary>
-    public List<RollFileEntry> GetPostLogFileEntries() => postLogFileEntries;
+    public List<RollFileEntry> GetPostLogFileEntries() => _postLogFileEntries;
   }
 
   private static void VerifyExistenceAndRemoveFromList(List<string> alExisting,
@@ -465,10 +465,10 @@ public sealed class RollingFileAppenderTest
   private void LogMessage(string sMessageToLog)
   {
     Assert.IsNotNull(_caRoot);
-    Assert.AreEqual(_caRoot!.Counter, _iMessagesLogged++);
+    Assert.AreEqual(_caRoot!.Counter, _messagesLogged++);
     Assert.IsNotNull(_root);
     _root!.Log(Level.Debug, sMessageToLog, null);
-    Assert.AreEqual(_caRoot.Counter, _iMessagesLogged);
+    Assert.AreEqual(_caRoot.Counter, _messagesLogged);
   }
 
   /// <summary>
@@ -491,7 +491,7 @@ public sealed class RollingFileAppenderTest
     }
   }
 
-  private static readonly int s_Newline_Length = Environment.NewLine.Length;
+  private static readonly int _sNewlineLength = Environment.NewLine.Length;
 
   /// <summary>
   /// Returns the number of bytes logged per message, including
@@ -499,7 +499,7 @@ public sealed class RollingFileAppenderTest
   /// </summary>
   /// <param name="sMessage"></param>
   /// <returns></returns>
-  private static int TotalMessageLength(string sMessage) => sMessage.Length + s_Newline_Length;
+  private static int TotalMessageLength(string sMessage) => sMessage.Length + _sNewlineLength;
 
   /// <summary>
   /// Determines how many messages of a fixed length can be logged
@@ -509,14 +509,14 @@ public sealed class RollingFileAppenderTest
   /// <returns></returns>
   private static int MessagesPerFile(int iMessageLength)
   {
-    int iMessagesPerFile = c_iMaximumFileSize / iMessageLength;
+    int iMessagesPerFile = MaximumFileSize / iMessageLength;
 
     //
     // RollingFileAppender checks for wrap BEFORE logging,
     // so we will actually get one more message per file than
     // we would otherwise.
     //
-    if (iMessagesPerFile * iMessageLength < c_iMaximumFileSize)
+    if (iMessagesPerFile * iMessageLength < MaximumFileSize)
     {
       iMessagesPerFile++;
     }
@@ -531,7 +531,7 @@ public sealed class RollingFileAppenderTest
   private static string GetCurrentFile() =>
     // Current file name is always the base file name when
     // counting.  Dates will need a different approach
-    c_fileName;
+    FileName;
 
   /// <summary>
   /// Turns a group of file names into an array of file entries that include the name
@@ -721,7 +721,7 @@ public sealed class RollingFileAppenderTest
   private static string NumberedNameMaker(Match match)
   {
     int iValue = int.Parse(match.Value);
-    return MakeFileName(c_fileName, iValue);
+    return MakeFileName(FileName, iValue);
   }
 
   /// <summary>
@@ -817,7 +817,7 @@ public sealed class RollingFileAppenderTest
   private void VerifyRolling(RollConditions[] table)
   {
     ConfigureRootAppender();
-    RollFromTableEntries(c_fileName, table, GetTestMessage());
+    RollFromTableEntries(FileName, table, GetTestMessage());
   }
 
   /// <summary>
@@ -838,7 +838,7 @@ public sealed class RollingFileAppenderTest
     //
     // Count Up
     //
-    _iCountDirection = +1;
+    _countDirection = +1;
 
     //
     // Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500 
@@ -867,12 +867,12 @@ public sealed class RollingFileAppenderTest
     //
     // Count Up
     //
-    _iCountDirection = +1;
+    _countDirection = +1;
 
     //
     // Infinite backups
     //
-    _MaxSizeRollBackups = -1;
+    _maxSizeRollBackups = -1;
 
     //
     // Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500 
@@ -900,12 +900,12 @@ public sealed class RollingFileAppenderTest
     //
     // Count Up
     //
-    _iCountDirection = +1;
+    _countDirection = +1;
 
     //
     // No backups
     //
-    _MaxSizeRollBackups = 0;
+    _maxSizeRollBackups = 0;
 
     //
     // Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500 
@@ -934,7 +934,7 @@ public sealed class RollingFileAppenderTest
     //
     // Count Up
     //
-    _iCountDirection = -1;
+    _countDirection = -1;
 
     //
     // Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500 
@@ -963,12 +963,12 @@ public sealed class RollingFileAppenderTest
     //
     // Count Down
     //
-    _iCountDirection = -1;
+    _countDirection = -1;
 
     //
     // Infinite backups
     //
-    _MaxSizeRollBackups = -1;
+    _maxSizeRollBackups = -1;
 
     //
     // Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500 
@@ -996,12 +996,12 @@ public sealed class RollingFileAppenderTest
     //
     // Count Up
     //
-    _iCountDirection = -1;
+    _countDirection = -1;
 
     //
     // No backups
     //
-    _MaxSizeRollBackups = 0;
+    _maxSizeRollBackups = 0;
 
     //
     // Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500 
@@ -1086,7 +1086,7 @@ public sealed class RollingFileAppenderTest
   {
     List<string> alFiles = MakeTestDataFromString("3,4,5");
     int iExpectedValue = 5;
-    InitializeAndVerifyExpectedValue(alFiles, c_fileName, CreateRollingFileAppender("3,0,1"), iExpectedValue);
+    InitializeAndVerifyExpectedValue(alFiles, FileName, CreateRollingFileAppender("3,0,1"), iExpectedValue);
   }
 
   /// <summary>
@@ -1097,7 +1097,7 @@ public sealed class RollingFileAppenderTest
   {
     List<string> alFiles = MakeTestDataFromString("0,3");
     int iExpectedValue = 3;
-    InitializeAndVerifyExpectedValue(alFiles, c_fileName, CreateRollingFileAppender("3,0,1"), iExpectedValue);
+    InitializeAndVerifyExpectedValue(alFiles, FileName, CreateRollingFileAppender("3,0,1"), iExpectedValue);
   }
 
   /// <summary>
@@ -1109,7 +1109,7 @@ public sealed class RollingFileAppenderTest
   {
     List<string> alFiles = MakeTestDataFromString("0,3");
     int iExpectedValue = 0;
-    InitializeAndVerifyExpectedValue(alFiles, c_fileName, CreateRollingFileAppender("0,0,1"), iExpectedValue);
+    InitializeAndVerifyExpectedValue(alFiles, FileName, CreateRollingFileAppender("0,0,1"), iExpectedValue);
   }
 
   /// <summary>
@@ -1121,7 +1121,7 @@ public sealed class RollingFileAppenderTest
   {
     List<string> alFiles = MakeTestDataFromString("0,3");
     int iExpectedValue = 0;
-    InitializeAndVerifyExpectedValue(alFiles, c_fileName, CreateRollingFileAppender("0,0,-1"), iExpectedValue);
+    InitializeAndVerifyExpectedValue(alFiles, FileName, CreateRollingFileAppender("0,0,-1"), iExpectedValue);
   }
 
 
@@ -1132,7 +1132,7 @@ public sealed class RollingFileAppenderTest
   public void TestInitializeCountDownFixed()
   {
     List<string> alFiles = MakeTestDataFromString("4,5,6");
-    VerifyInitializeDownFixedExpectedValue(alFiles, c_fileName, 0);
+    VerifyInitializeDownFixedExpectedValue(alFiles, FileName, 0);
   }
 
   /// <summary>
@@ -1142,7 +1142,7 @@ public sealed class RollingFileAppenderTest
   public void TestInitializeCountDownFixed2()
   {
     List<string> alFiles = MakeTestDataFromString("1,5,6");
-    VerifyInitializeDownFixedExpectedValue(alFiles, c_fileName, 1);
+    VerifyInitializeDownFixedExpectedValue(alFiles, FileName, 1);
   }
 
   /// <summary>
@@ -1152,7 +1152,7 @@ public sealed class RollingFileAppenderTest
   public void TestInitializeCountDownFixed3()
   {
     List<string> alFiles = MakeTestDataFromString("2,5,6");
-    VerifyInitializeDownFixedExpectedValue(alFiles, c_fileName, 2);
+    VerifyInitializeDownFixedExpectedValue(alFiles, FileName, 2);
   }
 
   /// <summary>
@@ -1162,7 +1162,7 @@ public sealed class RollingFileAppenderTest
   public void TestInitializeCountDownFixed4()
   {
     List<string> alFiles = MakeTestDataFromString("3,5,6");
-    VerifyInitializeDownFixedExpectedValue(alFiles, c_fileName, 3);
+    VerifyInitializeDownFixedExpectedValue(alFiles, FileName, 3);
   }
 
   /// <summary>
@@ -1172,7 +1172,7 @@ public sealed class RollingFileAppenderTest
   public void TestInitializeCountDownFixed5()
   {
     List<string> alFiles = MakeTestDataFromString("1,2,3");
-    VerifyInitializeDownFixedExpectedValue(alFiles, c_fileName, 3);
+    VerifyInitializeDownFixedExpectedValue(alFiles, FileName, 3);
   }
 
   /// <summary>
@@ -1182,7 +1182,7 @@ public sealed class RollingFileAppenderTest
   public void TestInitializeCountDownFixed6()
   {
     List<string> alFiles = MakeTestDataFromString("1,2");
-    VerifyInitializeDownFixedExpectedValue(alFiles, c_fileName, 2);
+    VerifyInitializeDownFixedExpectedValue(alFiles, FileName, 2);
   }
 
   /// <summary>
@@ -1192,7 +1192,7 @@ public sealed class RollingFileAppenderTest
   public void TestInitializeCountDownFixed7()
   {
     List<string> alFiles = MakeTestDataFromString("2,3");
-    VerifyInitializeDownFixedExpectedValue(alFiles, c_fileName, 3);
+    VerifyInitializeDownFixedExpectedValue(alFiles, FileName, 3);
   }
 
   private static void InitializeAndVerifyExpectedValue(List<string> alFiles, string sBaseFile,
@@ -1248,7 +1248,7 @@ public sealed class RollingFileAppenderTest
   public void TestInitializeCountDownInfinite()
   {
     List<string> alFiles = MakeTestDataFromString("2,3");
-    VerifyInitializeDownInfiniteExpectedValue(alFiles, c_fileName, 3);
+    VerifyInitializeDownInfiniteExpectedValue(alFiles, FileName, 3);
   }
 
   /// <summary>
@@ -1259,7 +1259,7 @@ public sealed class RollingFileAppenderTest
   public void TestInitializeCountDownInfinite2()
   {
     List<string> alFiles = MakeTestDataFromString("2,3,4,5,6,7,8,9,10");
-    VerifyInitializeDownInfiniteExpectedValue(alFiles, c_fileName, 10);
+    VerifyInitializeDownInfiniteExpectedValue(alFiles, FileName, 10);
   }
 
   /// <summary>
@@ -1270,7 +1270,7 @@ public sealed class RollingFileAppenderTest
   public void TestInitializeCountDownInfinite3()
   {
     List<string> alFiles = MakeTestDataFromString("9,10,3,4,5,7,9,6,1,2,8");
-    VerifyInitializeDownInfiniteExpectedValue(alFiles, c_fileName, 10);
+    VerifyInitializeDownInfiniteExpectedValue(alFiles, FileName, 10);
   }
 
   /// <summary>
@@ -1281,7 +1281,7 @@ public sealed class RollingFileAppenderTest
   public void TestInitializeCountUpInfinite()
   {
     List<string> alFiles = MakeTestDataFromString("2,3");
-    VerifyInitializeUpInfiniteExpectedValue(alFiles, c_fileName, 3);
+    VerifyInitializeUpInfiniteExpectedValue(alFiles, FileName, 3);
   }
 
   /// <summary>
@@ -1292,7 +1292,7 @@ public sealed class RollingFileAppenderTest
   public void TestInitializeCountUpInfinite2()
   {
     List<string> alFiles = MakeTestDataFromString("2,3,4,5,6,7,8,9,10");
-    VerifyInitializeUpInfiniteExpectedValue(alFiles, c_fileName, 10);
+    VerifyInitializeUpInfiniteExpectedValue(alFiles, FileName, 10);
   }
 
   /// <summary>
@@ -1303,7 +1303,7 @@ public sealed class RollingFileAppenderTest
   public void TestInitializeCountUpInfinite3()
   {
     List<string> alFiles = MakeTestDataFromString("9,10,3,4,5,7,9,6,1,2,8");
-    VerifyInitializeUpInfiniteExpectedValue(alFiles, c_fileName, 10);
+    VerifyInitializeUpInfiniteExpectedValue(alFiles, FileName, 10);
   }
 
   /// <summary>
@@ -1699,7 +1699,7 @@ public sealed class RollingFileAppenderTest
   /// </summary>
   /// <param name="sFileNumbers">Comma separated list of numbers for counted file names</param>
   private static List<string> MakeTestDataFromString(string sFileNumbers)
-    => MakeTestDataFromString(c_fileName, sFileNumbers);
+    => MakeTestDataFromString(FileName, sFileNumbers);
 
   /// <summary>
   /// Turns a string of comma separated numbers into a collection of filenames
@@ -1821,8 +1821,8 @@ public sealed class RollingFileAppenderTest
 
   private static string GetTestMessage() => Environment.NewLine.Length switch
   {
-    2 => c_testMessage98Chars,
-    1 => c_testMessage99Chars,
+    2 => TestMessage98Chars,
+    1 => TestMessage99Chars,
     _ => throw new Exception("Unexpected Environment.NewLine.Length"),
   };
 }

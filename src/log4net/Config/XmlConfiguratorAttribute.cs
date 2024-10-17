@@ -220,7 +220,7 @@ public sealed class XmlConfiguratorAttribute : ConfiguratorAttribute
         }
         catch (Exception ex)
         {
-          LogLog.Error(declaringType, "XmlConfiguratorAttribute: Exception getting ConfigurationFileLocation. Must be able to resolve ConfigurationFileLocation when ConfigFile and ConfigFileExtension properties are not set.", ex);
+          LogLog.Error(_declaringType, "XmlConfiguratorAttribute: Exception getting ConfigurationFileLocation. Must be able to resolve ConfigurationFileLocation when ConfigFile and ConfigFileExtension properties are not set.", ex);
         }
       }
       else
@@ -238,7 +238,7 @@ public sealed class XmlConfiguratorAttribute : ConfiguratorAttribute
         }
         catch (Exception ex)
         {
-          LogLog.Error(declaringType, "Exception getting ApplicationBaseDirectory. Must be able to resolve ApplicationBaseDirectory and AssemblyFileName when ConfigFileExtension property is set.", ex);
+          LogLog.Error(_declaringType, "Exception getting ApplicationBaseDirectory. Must be able to resolve ApplicationBaseDirectory and AssemblyFileName when ConfigFileExtension property is set.", ex);
         }
 
         if (applicationBaseDirectory is not null)
@@ -256,7 +256,7 @@ public sealed class XmlConfiguratorAttribute : ConfiguratorAttribute
       }
       catch (Exception ex)
       {
-        LogLog.Warn(declaringType, $"Exception getting ApplicationBaseDirectory. ConfigFile property path [{ConfigFile}] will be treated as an absolute path.", ex);
+        LogLog.Warn(_declaringType, $"Exception getting ApplicationBaseDirectory. ConfigFile property path [{ConfigFile}] will be treated as an absolute path.", ex);
       }
 
       if (applicationBaseDirectory is not null)
@@ -315,7 +315,7 @@ public sealed class XmlConfiguratorAttribute : ConfiguratorAttribute
         }
         catch (Exception ex)
         {
-          LogLog.Error(declaringType, "XmlConfiguratorAttribute: Exception getting ConfigurationFileLocation. Must be able to resolve ConfigurationFileLocation when ConfigFile and ConfigFileExtension properties are not set.", ex);
+          LogLog.Error(_declaringType, "XmlConfiguratorAttribute: Exception getting ConfigurationFileLocation. Must be able to resolve ConfigurationFileLocation when ConfigFile and ConfigFileExtension properties are not set.", ex);
         }
 
         if (systemConfigFilePath is not null)
@@ -339,7 +339,7 @@ public sealed class XmlConfiguratorAttribute : ConfiguratorAttribute
         }
         catch (Exception ex)
         {
-          LogLog.Error(declaringType, "XmlConfiguratorAttribute: Exception getting ConfigurationFileLocation. Must be able to resolve ConfigurationFileLocation when the ConfigFile property are not set.", ex);
+          LogLog.Error(_declaringType, "XmlConfiguratorAttribute: Exception getting ConfigurationFileLocation. Must be able to resolve ConfigurationFileLocation when the ConfigFile property are not set.", ex);
         }
 
         if (systemConfigFilePath is not null)
@@ -369,7 +369,7 @@ public sealed class XmlConfiguratorAttribute : ConfiguratorAttribute
       }
       catch (Exception ex)
       {
-        LogLog.Warn(declaringType, $"Exception getting ApplicationBaseDirectory. ConfigFile property path [{ConfigFile}] will be treated as an absolute URI.", ex);
+        LogLog.Warn(_declaringType, $"Exception getting ApplicationBaseDirectory. ConfigFile property path [{ConfigFile}] will be treated as an absolute URI.", ex);
       }
 
       if (applicationBaseDirectory is not null)
@@ -395,7 +395,7 @@ public sealed class XmlConfiguratorAttribute : ConfiguratorAttribute
       {
         if (Watch)
         {
-          LogLog.Warn(declaringType, "XmlConfiguratorAttribute: Unable to watch config file loaded from a URI");
+          LogLog.Warn(_declaringType, "XmlConfiguratorAttribute: Unable to watch config file loaded from a URI");
         }
         XmlConfigurator.Configure(targetRepository, fullPath2ConfigFile);
       }
@@ -409,5 +409,5 @@ public sealed class XmlConfiguratorAttribute : ConfiguratorAttribute
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(XmlConfiguratorAttribute);
+  private static readonly Type _declaringType = typeof(XmlConfiguratorAttribute);
 }

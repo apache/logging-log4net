@@ -100,8 +100,8 @@ public class ManagedColoredConsoleAppender : AppenderSkeleton
   /// </summary>
   public virtual string Target
   {
-    get => writeToErrorStream ? ConsoleError : ConsoleOut;
-    set => writeToErrorStream = SystemInfo.EqualsIgnoringCase(ConsoleError, value.Trim());
+    get => _writeToErrorStream ? ConsoleError : ConsoleOut;
+    set => _writeToErrorStream = SystemInfo.EqualsIgnoringCase(ConsoleError, value.Trim());
   }
 
   /// <summary>
@@ -116,7 +116,7 @@ public class ManagedColoredConsoleAppender : AppenderSkeleton
   /// </remarks>
   public void AddMapping(LevelColors mapping)
   {
-    levelMapping.Add(mapping);
+    _levelMapping.Add(mapping);
   }
 
   /// <summary>
@@ -133,12 +133,12 @@ public class ManagedColoredConsoleAppender : AppenderSkeleton
   /// </remarks>
   protected override void Append(LoggingEvent loggingEvent)
   {
-    TextWriter writer = writeToErrorStream ? Console.Error : Console.Out;
+    TextWriter writer = _writeToErrorStream ? Console.Error : Console.Out;
 
     Console.ResetColor();
 
     // See if there is a specified lookup
-    if (levelMapping.Lookup(loggingEvent.Level) is LevelColors levelColors)
+    if (_levelMapping.Lookup(loggingEvent.Level) is LevelColors levelColors)
     {
       // If the backColor has been explicitly set
       if (levelColors.HasBackColor)
@@ -173,7 +173,7 @@ public class ManagedColoredConsoleAppender : AppenderSkeleton
   public override void ActivateOptions()
   {
     base.ActivateOptions();
-    levelMapping.ActivateOptions();
+    _levelMapping.ActivateOptions();
   }
 
   /// <summary>
@@ -191,12 +191,12 @@ public class ManagedColoredConsoleAppender : AppenderSkeleton
   /// <summary>
   /// Flag to write output to the error stream rather than the standard output stream
   /// </summary>
-  private bool writeToErrorStream;
+  private bool _writeToErrorStream;
 
   /// <summary>
   /// Mapping from level object to color value
   /// </summary>
-  private readonly LevelMapping levelMapping = new();
+  private readonly LevelMapping _levelMapping = new();
 
   /// <summary>
   /// A class to act as a mapping between the level that a logging call is made at and
@@ -209,12 +209,12 @@ public class ManagedColoredConsoleAppender : AppenderSkeleton
     /// </summary>
     public ConsoleColor ForeColor
     {
-      get => foreColor;
+      get => _foreColor;
       // Keep a flag that the color has been set
       // and is no longer the default.
-      set { foreColor = value; HasForeColor = true; }
+      set { _foreColor = value; HasForeColor = true; }
     }
-    private ConsoleColor foreColor;
+    private ConsoleColor _foreColor;
 
     internal bool HasForeColor { get; private set; }
 
@@ -223,12 +223,12 @@ public class ManagedColoredConsoleAppender : AppenderSkeleton
     /// </summary>
     public ConsoleColor BackColor
     {
-      get => backColor;
+      get => _backColor;
       // Keep a flag that the color has been set
       // and is no longer the default.
-      set { backColor = value; HasBackColor = true; }
+      set { _backColor = value; HasBackColor = true; }
     }
-    private ConsoleColor backColor;
+    private ConsoleColor _backColor;
 
     internal bool HasBackColor { get; private set; }
   }

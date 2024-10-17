@@ -75,16 +75,16 @@ public static class XmlConfigurator
 
   private static void InternalConfigure(ILoggerRepository repository)
   {
-    LogLog.Debug(declaringType, $"configuring repository [{repository.Name}] using .config file section");
+    LogLog.Debug(_declaringType, $"configuring repository [{repository.Name}] using .config file section");
 
     try
     {
-      LogLog.Debug(declaringType, $"Application config file is [{SystemInfo.ConfigurationFileLocation}]");
+      LogLog.Debug(_declaringType, $"Application config file is [{SystemInfo.ConfigurationFileLocation}]");
     }
     catch
     {
       // ignore error
-      LogLog.Debug(declaringType, "Application config file location unknown");
+      LogLog.Debug(_declaringType, "Application config file location unknown");
     }
 
     try
@@ -92,7 +92,7 @@ public static class XmlConfigurator
       if (System.Configuration.ConfigurationManager.GetSection("log4net") is not XmlElement configElement)
       {
         // Failed to load the xml config using configuration settings handler
-        LogLog.Error(declaringType, "Failed to find configuration section 'log4net' in the application's .config file. Check your .config file for the <log4net> and <configSections> elements. The configuration section should look like: <section name=\"log4net\" type=\"log4net.Config.Log4NetConfigurationSectionHandler,log4net\" />");
+        LogLog.Error(_declaringType, "Failed to find configuration section 'log4net' in the application's .config file. Check your .config file for the <log4net> and <configSections> elements. The configuration section should look like: <section name=\"log4net\" type=\"log4net.Config.Log4NetConfigurationSectionHandler,log4net\" />");
       }
       else
       {
@@ -105,13 +105,13 @@ public static class XmlConfigurator
       if (confEx.BareMessage.IndexOf("Unrecognized element", StringComparison.Ordinal) >= 0)
       {
         // Looks like the XML file is not valid
-        LogLog.Error(declaringType, "Failed to parse config file. Check your .config file is well formed XML.", confEx);
+        LogLog.Error(_declaringType, "Failed to parse config file. Check your .config file is well formed XML.", confEx);
       }
       else
       {
         // This exception is typically due to the assembly name not being correctly specified in the section type.
         string configSectionStr = "<section name=\"log4net\" type=\"log4net.Config.Log4NetConfigurationSectionHandler," + Assembly.GetExecutingAssembly().FullName + "\" />";
-        LogLog.Error(declaringType, "Failed to parse config file. Is the <configSections> specified as: " + configSectionStr, confEx);
+        LogLog.Error(_declaringType, "Failed to parse config file. Is the <configSections> specified as: " + configSectionStr, confEx);
       }
     }
   }
@@ -303,7 +303,7 @@ public static class XmlConfigurator
 
     using (new LogLog.LogReceivedAdapter(configurationMessages))
     {
-      LogLog.Debug(declaringType, "configuring repository [" + repository.Name + "] using XML element");
+      LogLog.Debug(_declaringType, "configuring repository [" + repository.Name + "] using XML element");
 
       InternalConfigureFromXml(repository, element);
     }
@@ -381,11 +381,11 @@ public static class XmlConfigurator
 
   private static void InternalConfigure(ILoggerRepository repository, FileInfo? configFile)
   {
-    LogLog.Debug(declaringType, $"configuring repository [{repository.Name}] using file [{configFile}]");
+    LogLog.Debug(_declaringType, $"configuring repository [{repository.Name}] using file [{configFile}]");
 
     if (configFile is null)
     {
-      LogLog.Error(declaringType, "Configure called with null 'configFile' parameter");
+      LogLog.Error(_declaringType, "Configure called with null 'configFile' parameter");
     }
     else
     {
@@ -408,7 +408,7 @@ public static class XmlConfigurator
           {
             if (retry == 0)
             {
-              LogLog.Error(declaringType, $"Failed to open XML config file [{configFile.Name}]", ex);
+              LogLog.Error(_declaringType, $"Failed to open XML config file [{configFile.Name}]", ex);
 
               // The stream cannot be valid
               fs = null;
@@ -433,7 +433,7 @@ public static class XmlConfigurator
       }
       else
       {
-        LogLog.Debug(declaringType, "config file [" + configFile.FullName + "] not found. Configuration unchanged.");
+        LogLog.Debug(_declaringType, "config file [" + configFile.FullName + "] not found. Configuration unchanged.");
       }
     }
   }
@@ -470,11 +470,11 @@ public static class XmlConfigurator
 
   private static void InternalConfigure(ILoggerRepository repository, Uri? configUri)
   {
-    LogLog.Debug(declaringType, $"configuring repository [{repository.Name}] using URI [{configUri}]");
+    LogLog.Debug(_declaringType, $"configuring repository [{repository.Name}] using URI [{configUri}]");
 
     if (configUri is null)
     {
-      LogLog.Error(declaringType, "Configure called with null 'configUri' parameter");
+      LogLog.Error(_declaringType, "Configure called with null 'configUri' parameter");
     }
     else
     {
@@ -494,7 +494,7 @@ public static class XmlConfigurator
         }
         catch (Exception ex)
         {
-          LogLog.Error(declaringType, $"Failed to create WebRequest for URI [{configUri}]", ex);
+          LogLog.Error(_declaringType, $"Failed to create WebRequest for URI [{configUri}]", ex);
         }
 
         if (configRequest is not null)
@@ -519,7 +519,7 @@ public static class XmlConfigurator
           }
           catch (Exception ex)
           {
-            LogLog.Error(declaringType, $"Failed to request config from URI [{configUri}]", ex);
+            LogLog.Error(_declaringType, $"Failed to request config from URI [{configUri}]", ex);
           }
         }
       }
@@ -558,11 +558,11 @@ public static class XmlConfigurator
 
   private static void InternalConfigure(ILoggerRepository repository, Stream? configStream)
   {
-    LogLog.Debug(declaringType, $"configuring repository [{repository.Name}] using stream");
+    LogLog.Debug(_declaringType, $"configuring repository [{repository.Name}] using stream");
 
     if (configStream is null)
     {
-      LogLog.Error(declaringType, "Configure called with null 'configStream' parameter");
+      LogLog.Error(_declaringType, "Configure called with null 'configStream' parameter");
     }
     else
     {
@@ -584,7 +584,7 @@ public static class XmlConfigurator
       }
       catch (Exception ex)
       {
-        LogLog.Error(declaringType, "Error while loading XML configuration", ex);
+        LogLog.Error(_declaringType, "Error while loading XML configuration", ex);
 
         // The document is invalid
         doc = null;
@@ -592,17 +592,17 @@ public static class XmlConfigurator
 
       if (doc is not null)
       {
-        LogLog.Debug(declaringType, "loading XML configuration");
+        LogLog.Debug(_declaringType, "loading XML configuration");
 
         // Configure using the 'log4net' element
         XmlNodeList configNodeList = doc.GetElementsByTagName("log4net");
         if (configNodeList.Count == 0)
         {
-          LogLog.Debug(declaringType, "XML configuration does not contain a <log4net> element. Configuration Aborted.");
+          LogLog.Debug(_declaringType, "XML configuration does not contain a <log4net> element. Configuration Aborted.");
         }
         else if (configNodeList.Count > 1)
         {
-          LogLog.Error(declaringType, $"XML configuration contains [{configNodeList.Count}] <log4net> elements. Only one is allowed. Configuration Aborted.");
+          LogLog.Error(_declaringType, $"XML configuration contains [{configNodeList.Count}] <log4net> elements. Only one is allowed. Configuration Aborted.");
         }
         else
         {
@@ -688,11 +688,11 @@ public static class XmlConfigurator
 
   private static void InternalConfigureAndWatch(ILoggerRepository repository, FileInfo? configFile)
   {
-    LogLog.Debug(declaringType, $"configuring repository [{repository.Name}] using file [{configFile}] watching for file updates");
+    LogLog.Debug(_declaringType, $"configuring repository [{repository.Name}] using file [{configFile}] watching for file updates");
 
     if (configFile is null)
     {
-      LogLog.Error(declaringType, "ConfigureAndWatch called with null 'configFile' parameter");
+      LogLog.Error(_declaringType, "ConfigureAndWatch called with null 'configFile' parameter");
     }
     else
     {
@@ -704,7 +704,7 @@ public static class XmlConfigurator
         // Support multiple repositories each having their own watcher.
         // Create and start a watch handler that will reload the
         // configuration whenever the config file is modified.
-        repositoryName2ConfigAndWatchHandler.AddOrUpdate(
+        _repositoryName2ConfigAndWatchHandler.AddOrUpdate(
           configFile.FullName,
           _ => new ConfigureAndWatchHandler(repository, configFile),
           (_, handler) =>
@@ -716,7 +716,7 @@ public static class XmlConfigurator
       }
       catch (Exception ex)
       {
-        LogLog.Error(declaringType, $"Failed to initialize configuration file watcher for file [{configFile.FullName}]", ex);
+        LogLog.Error(_declaringType, $"Failed to initialize configuration file watcher for file [{configFile.FullName}]", ex);
       }
     }
   }
@@ -742,17 +742,17 @@ public static class XmlConfigurator
     /// <summary>
     /// Holds the FileInfo used to configure the XmlConfigurator
     /// </summary>
-    private readonly FileInfo configFile;
+    private readonly FileInfo _configFile;
 
     /// <summary>
     /// Holds the repository being configured.
     /// </summary>
-    private readonly ILoggerRepository repository;
+    private readonly ILoggerRepository _repository;
 
     /// <summary>
     /// The timer used to compress the notification events.
     /// </summary>
-    private readonly Timer timer;
+    private readonly Timer _timer;
 
     /// <summary>
     /// The default amount of time to wait after receiving notification
@@ -764,7 +764,7 @@ public static class XmlConfigurator
     /// Watches file for changes. This object should be disposed when no longer
     /// needed to free system handles on the watched resources.
     /// </summary>
-    private readonly FileSystemWatcher watcher;
+    private readonly FileSystemWatcher _watcher;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ConfigureAndWatchHandler" /> class to
@@ -780,28 +780,28 @@ public static class XmlConfigurator
     [System.Security.SecuritySafeCritical]
     public ConfigureAndWatchHandler(ILoggerRepository repository, FileInfo configFile)
     {
-      this.repository = repository;
-      this.configFile = configFile;
+      this._repository = repository;
+      this._configFile = configFile;
 
       // Create a new FileSystemWatcher and set its properties.
-      watcher = new FileSystemWatcher()
+      _watcher = new FileSystemWatcher()
       {
-        Path = this.configFile.DirectoryName.EnsureNotNull(),
-        Filter = this.configFile.Name,
+        Path = this._configFile.DirectoryName.EnsureNotNull(),
+        Filter = this._configFile.Name,
         NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.LastWrite | NotifyFilters.FileName,
       };
 
       // Add event handlers. OnChanged will do for all event handlers that fire a FileSystemEventArgs
-      watcher.Changed += ConfigureAndWatchHandler_OnChanged;
-      watcher.Created += ConfigureAndWatchHandler_OnChanged;
-      watcher.Deleted += ConfigureAndWatchHandler_OnChanged;
-      watcher.Renamed += ConfigureAndWatchHandler_OnRenamed;
+      _watcher.Changed += ConfigureAndWatchHandler_OnChanged;
+      _watcher.Created += ConfigureAndWatchHandler_OnChanged;
+      _watcher.Deleted += ConfigureAndWatchHandler_OnChanged;
+      _watcher.Renamed += ConfigureAndWatchHandler_OnRenamed;
 
       // Begin watching.
-      watcher.EnableRaisingEvents = true;
+      _watcher.EnableRaisingEvents = true;
 
       // Create the timer that will be used to deliver events. Set as disabled
-      timer = new Timer(OnWatchedFileChange, state: null, Timeout.Infinite, Timeout.Infinite);
+      _timer = new Timer(OnWatchedFileChange, state: null, Timeout.Infinite, Timeout.Infinite);
     }
 
     /// <summary>
@@ -816,11 +816,11 @@ public static class XmlConfigurator
     /// </remarks>
     private void ConfigureAndWatchHandler_OnChanged(object source, FileSystemEventArgs e)
     {
-      LogLog.Debug(declaringType, $"ConfigureAndWatchHandler: {e.ChangeType} [{configFile.FullName}]");
+      LogLog.Debug(_declaringType, $"ConfigureAndWatchHandler: {e.ChangeType} [{_configFile.FullName}]");
 
       // Deliver the event in TimeoutMillis time
       // timer will fire only once
-      timer.Change(TimeoutMillis, Timeout.Infinite);
+      _timer.Change(TimeoutMillis, Timeout.Infinite);
     }
 
     /// <summary>
@@ -835,18 +835,18 @@ public static class XmlConfigurator
     /// </remarks>
     private void ConfigureAndWatchHandler_OnRenamed(object source, RenamedEventArgs e)
     {
-      LogLog.Debug(declaringType, $"ConfigureAndWatchHandler: {e.ChangeType} [{configFile.FullName}]");
+      LogLog.Debug(_declaringType, $"ConfigureAndWatchHandler: {e.ChangeType} [{_configFile.FullName}]");
 
       // Deliver the event in TimeoutMillis time
       // timer will fire only once
-      timer.Change(TimeoutMillis, Timeout.Infinite);
+      _timer.Change(TimeoutMillis, Timeout.Infinite);
     }
 
     /// <summary>
     /// Called by the timer when the configuration has been updated.
     /// </summary>
     /// <param name="state">null</param>
-    private void OnWatchedFileChange(object? state) => InternalConfigure(repository, configFile);
+    private void OnWatchedFileChange(object? state) => InternalConfigure(_repository, _configFile);
 
     /// <summary>
     /// Release the handles held by the watcher and timer.
@@ -854,9 +854,9 @@ public static class XmlConfigurator
     [System.Security.SecuritySafeCritical]
     public void Dispose()
     {
-      watcher.EnableRaisingEvents = false;
-      watcher.Dispose();
-      timer.Dispose();
+      _watcher.EnableRaisingEvents = false;
+      _watcher.Dispose();
+      _timer.Dispose();
     }
   }
 
@@ -879,19 +879,19 @@ public static class XmlConfigurator
   {
     if (element is null)
     {
-      LogLog.Error(declaringType, "ConfigureFromXml called with null 'element' parameter");
+      LogLog.Error(_declaringType, "ConfigureFromXml called with null 'element' parameter");
     }
     else if (repository is null)
     {
-      LogLog.Error(declaringType, "ConfigureFromXml called with null 'repository' parameter");
+      LogLog.Error(_declaringType, "ConfigureFromXml called with null 'repository' parameter");
     }
     else
     {
-      LogLog.Debug(declaringType, "Configuring Repository [" + repository.Name + "]");
+      LogLog.Debug(_declaringType, "Configuring Repository [" + repository.Name + "]");
 
       if (repository is not IXmlRepositoryConfigurator configurableRepository)
       {
-        LogLog.Warn(declaringType, "Repository [" + repository + "] does not support the XmlConfigurator");
+        LogLog.Warn(_declaringType, "Repository [" + repository + "] does not support the XmlConfigurator");
       }
       else
       {
@@ -912,7 +912,7 @@ public static class XmlConfigurator
   /// ConfigAndWatchHandler to dispose of its FileSystemWatcher when a repository is 
   /// reconfigured.
   /// </summary>
-  private static readonly ConcurrentDictionary<string, ConfigureAndWatchHandler> repositoryName2ConfigAndWatchHandler = new(StringComparer.Ordinal);
+  private static readonly ConcurrentDictionary<string, ConfigureAndWatchHandler> _repositoryName2ConfigAndWatchHandler = new(StringComparer.Ordinal);
 
   /// <summary>
   /// The fully qualified type of the XmlConfigurator class.
@@ -921,5 +921,5 @@ public static class XmlConfigurator
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(XmlConfigurator);
+  private static readonly Type _declaringType = typeof(XmlConfigurator);
 }

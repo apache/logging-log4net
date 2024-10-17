@@ -58,10 +58,10 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
     void Reset();
   }
 
-  private const int DEFAULT_CAPACITY = 16;
+  private const int DefaultCapacity = 16;
 
-  private Level[] array;
-  private int version;
+  private Level[] _array;
+  private int _version;
 
   /// <summary>
   /// Creates a read-only wrapper for a <c>LevelCollection</c> instance.
@@ -77,7 +77,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// Initializes a new instance of the <c>LevelCollection</c> class
   /// that is empty and has the default initial capacity.
   /// </summary>
-  public LevelCollection() => array = new Level[DEFAULT_CAPACITY];
+  public LevelCollection() => _array = new Level[DefaultCapacity];
 
   /// <summary>
   /// Initializes a new instance of the <c>LevelCollection</c> class
@@ -86,7 +86,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// <param name="capacity">
   /// The number of elements that the new <c>LevelCollection</c> is initially capable of storing.
   /// </param>
-  public LevelCollection(int capacity) => array = new Level[capacity];
+  public LevelCollection(int capacity) => _array = new Level[capacity];
 
   /// <summary>
   /// Initializes a new instance of the <c>LevelCollection</c> class
@@ -95,7 +95,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// <param name="c">The <c>LevelCollection</c> whose elements are copied to the new collection.</param>
   public LevelCollection(LevelCollection c)
   {
-    array = new Level[c.Count];
+    _array = new Level[c.Count];
     AddRange(c);
   }
 
@@ -106,7 +106,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// <param name="a">The <see cref="Level"/> array whose elements are copied to the new list.</param>
   public LevelCollection(Level[] a)
   {
-    array = new Level[a.Length];
+    _array = new Level[a.Length];
     AddRange(a);
   }
 
@@ -117,7 +117,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// <param name="col">The <see cref="Level"/> collection whose elements are copied to the new list.</param>
   public LevelCollection(ICollection col)
   {
-    array = new Level[col.Count];
+    _array = new Level[col.Count];
     AddRange(col);
   }
 
@@ -128,7 +128,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// <param name="col">The <see cref="Level"/> collection whose elements are copied to the new list.</param>
   public LevelCollection(ICollection<Level> col)
   {
-    array = new Level[col.Count];
+    _array = new Level[col.Count];
     AddRange((ICollection)col);
   }
 
@@ -149,7 +149,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// </summary>
   protected internal LevelCollection(Tag _)
   {
-    array = Array.Empty<Level>();
+    _array = Array.Empty<Level>();
   }
 
   /// <summary>
@@ -177,7 +177,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
       throw new ArgumentException("Destination array was not long enough.");
     }
 
-    Array.Copy(this.array, 0, array, start, Count);
+    Array.Copy(this._array, 0, array, start, Count);
   }
 
   /// <summary>
@@ -189,7 +189,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// <summary>
   /// Gets an object that can be used to synchronize access to the collection.
   /// </summary>
-  public virtual object SyncRoot => array;
+  public virtual object SyncRoot => _array;
 
   /// <summary>
   /// Gets or sets the <see cref="Level"/> at the specified index.
@@ -205,13 +205,13 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
     get
     {
       ValidateIndex(index); // throws
-      return array[index];
+      return _array[index];
     }
     set
     {
       ValidateIndex(index); // throws
-      ++version;
-      array[index] = value;
+      ++_version;
+      _array[index] = value;
     }
   }
 
@@ -222,13 +222,13 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// <returns>The index at which the value has been added.</returns>
   public virtual int Add(Level item)
   {
-    if (Count == array.Length)
+    if (Count == _array.Length)
     {
       EnsureCapacity(Count + 1);
     }
 
-    array[Count] = item;
-    version++;
+    _array[Count] = item;
+    _version++;
 
     return Count++;
   }
@@ -238,8 +238,8 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// </summary>
   public virtual void Clear()
   {
-    ++version;
-    array = new Level[DEFAULT_CAPACITY];
+    ++_version;
+    _array = new Level[DefaultCapacity];
     Count = 0;
   }
 
@@ -250,9 +250,9 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   public virtual object Clone()
   {
     var newCol = new LevelCollection(Count);
-    Array.Copy(array, 0, newCol.array, 0, Count);
+    Array.Copy(_array, 0, newCol._array, 0, Count);
     newCol.Count = Count;
-    newCol.version = version;
+    newCol._version = _version;
 
     return newCol;
   }
@@ -266,7 +266,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   {
     for (int i = 0; i != Count; ++i)
     {
-      if (array[i].Equals(item))
+      if (_array[i].Equals(item))
       {
         return true;
       }
@@ -287,7 +287,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   {
     for (int i = 0; i != Count; ++i)
     {
-      if (array[i].Equals(item))
+      if (_array[i].Equals(item))
       {
         return i;
       }
@@ -309,19 +309,19 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   {
     ValidateIndex(index, true); // throws
 
-    if (Count == array.Length)
+    if (Count == _array.Length)
     {
       EnsureCapacity(Count + 1);
     }
 
     if (index < Count)
     {
-      Array.Copy(array, index, array, index + 1, Count - index);
+      Array.Copy(_array, index, _array, index + 1, Count - index);
     }
 
-    array[index] = item;
+    _array[index] = item;
     Count++;
-    version++;
+    _version++;
   }
 
   /// <summary>
@@ -339,7 +339,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
       throw new System.ArgumentException("Cannot remove the specified item because it was not found in the specified Collection.");
     }
 
-    ++version;
+    ++_version;
     RemoveAt(i);
   }
 
@@ -360,15 +360,15 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
 
     if (index < Count)
     {
-      Array.Copy(array, index + 1, array, index, Count - index);
+      Array.Copy(_array, index + 1, _array, index, Count - index);
     }
 
     // We can't set the deleted entry equal to null, because it might be a value type.
     // Instead, we'll create an empty single-element array of the right type and copy it 
     // over the entry we want to erase.
     Level[] temp = new Level[1];
-    Array.Copy(temp, 0, array, Count, 1);
-    version++;
+    Array.Copy(temp, 0, _array, Count, 1);
+    _version++;
   }
 
   /// <summary>
@@ -396,7 +396,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   {
     get
     {
-      return array.Length;
+      return _array.Length;
     }
     set
     {
@@ -405,17 +405,17 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
         value = Count;
       }
 
-      if (value != array.Length)
+      if (value != _array.Length)
       {
         if (value > 0)
         {
           Level[] temp = new Level[value];
-          Array.Copy(array, 0, temp, 0, Count);
-          array = temp;
+          Array.Copy(_array, 0, temp, 0, Count);
+          _array = temp;
         }
         else
         {
-          array = new Level[DEFAULT_CAPACITY];
+          _array = new Level[DefaultCapacity];
         }
       }
     }
@@ -428,14 +428,14 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// <returns>The new <see cref="LevelCollection.Count"/> of the <c>LevelCollection</c>.</returns>
   public virtual int AddRange(LevelCollection x)
   {
-    if (Count + x.Count >= array.Length)
+    if (Count + x.Count >= _array.Length)
     {
       EnsureCapacity(Count + x.Count);
     }
 
-    Array.Copy(x.array, 0, array, Count, x.Count);
+    Array.Copy(x._array, 0, _array, Count, x.Count);
     Count += x.Count;
-    version++;
+    _version++;
 
     return Count;
   }
@@ -447,14 +447,14 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// <returns>The new <see cref="LevelCollection.Count"/> of the <c>LevelCollection</c>.</returns>
   public virtual int AddRange(Level[] x)
   {
-    if (Count + x.Length >= array.Length)
+    if (Count + x.Length >= _array.Length)
     {
       EnsureCapacity(Count + x.Length);
     }
 
-    Array.Copy(x, 0, array, Count, x.Length);
+    Array.Copy(x, 0, _array, Count, x.Length);
     Count += x.Length;
-    version++;
+    _version++;
 
     return Count;
   }
@@ -466,7 +466,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// <returns>The new <see cref="LevelCollection.Count"/> of the <c>LevelCollection</c>.</returns>
   public virtual int AddRange(ICollection col)
   {
-    if (Count + col.Count >= array.Length)
+    if (Count + col.Count >= _array.Length)
     {
       EnsureCapacity(Count + col.Count);
     }
@@ -507,7 +507,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
 
   private void EnsureCapacity(int min)
   {
-    int newCapacity = ((array.Length == 0) ? DEFAULT_CAPACITY : array.Length * 2);
+    int newCapacity = ((_array.Length == 0) ? DefaultCapacity : _array.Length * 2);
     if (newCapacity < min)
     {
       newCapacity = min;
@@ -516,7 +516,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
     Capacity = newCapacity;
   }
 
-  void ICollection.CopyTo(Array array, int start) => Array.Copy(this.array, 0, array, start, Count);
+  void ICollection.CopyTo(Array array, int start) => Array.Copy(this._array, 0, array, start, Count);
 
   object? IList.this[int i]
   {
@@ -543,9 +543,9 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// </summary>
   private sealed class Enumerator : IEnumerator, ILevelCollectionEnumerator
   {
-    private readonly LevelCollection collection;
-    private int index;
-    private readonly int version;
+    private readonly LevelCollection _collection;
+    private int _index;
+    private readonly int _version;
 
     /// <summary>
     /// Initializes a new instance of the <c>Enumerator</c> class.
@@ -553,15 +553,15 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
     /// <param name="tc"></param>
     internal Enumerator(LevelCollection tc)
     {
-      collection = tc;
-      index = -1;
-      version = tc.version;
+      _collection = tc;
+      _index = -1;
+      _version = tc._version;
     }
 
     /// <summary>
     /// Gets the current element in the collection.
     /// </summary>
-    public Level Current => collection[index];
+    public Level Current => _collection[_index];
 
     /// <summary>
     /// Advances the enumerator to the next element in the collection.
@@ -575,45 +575,45 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
     /// </exception>
     public bool MoveNext()
     {
-      if (version != collection.version)
+      if (_version != _collection._version)
       {
         throw new InvalidOperationException("Collection was modified; enumeration operation may not execute.");
       }
 
-      ++index;
-      return (index < collection.Count);
+      ++_index;
+      return (_index < _collection.Count);
     }
 
     /// <summary>
     /// Sets the enumerator to its initial position, before the first element in the collection.
     /// </summary>
-    public void Reset() => index = -1;
+    public void Reset() => _index = -1;
 
     object IEnumerator.Current => Current;
   }
 
   private sealed class ReadOnlyLevelCollection : LevelCollection
   {
-    private readonly LevelCollection collection;
+    private readonly LevelCollection _collection;
 
     internal ReadOnlyLevelCollection(LevelCollection list) : base(Tag.Default)
     {
-      collection = list;
+      _collection = list;
     }
 
-    public override void CopyTo(Level[] array) => collection.CopyTo(array);
+    public override void CopyTo(Level[] array) => _collection.CopyTo(array);
 
-    public override void CopyTo(Level[] array, int start) => collection.CopyTo(array, start);
+    public override void CopyTo(Level[] array, int start) => _collection.CopyTo(array, start);
 
-    public override int Count => collection.Count;
+    public override int Count => _collection.Count;
 
-    public override bool IsSynchronized => collection.IsSynchronized;
+    public override bool IsSynchronized => _collection.IsSynchronized;
 
-    public override object SyncRoot => collection.SyncRoot;
+    public override object SyncRoot => _collection.SyncRoot;
 
     public override Level this[int i]
     {
-      get => collection[i];
+      get => _collection[i];
       set => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
     }
 
@@ -621,9 +621,9 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
 
     public override void Clear() => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
 
-    public override bool Contains(Level x) => collection.Contains(x);
+    public override bool Contains(Level x) => _collection.Contains(x);
 
-    public override int IndexOf(Level x) => collection.IndexOf(x);
+    public override int IndexOf(Level x) => _collection.IndexOf(x);
 
     public override void Insert(int pos, Level x) => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
 
@@ -635,12 +635,12 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
 
     public override bool IsReadOnly => true;
 
-    public override ILevelCollectionEnumerator GetEnumerator() => collection.GetEnumerator();
+    public override ILevelCollectionEnumerator GetEnumerator() => _collection.GetEnumerator();
 
     // (just to mimic some nice features of ArrayList)
     public override int Capacity
     {
-      get => collection.Capacity;
+      get => _collection.Capacity;
       set => throw SystemInfo.CreateReadOnlyCollectionNotModifiableException();
     }
 

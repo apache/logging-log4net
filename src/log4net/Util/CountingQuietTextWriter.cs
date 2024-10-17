@@ -48,10 +48,7 @@ public class CountingQuietTextWriter : QuietTextWriter
   /// with the specified <see cref="TextWriter" /> and <see cref="IErrorHandler" />.
   /// </para>
   /// </remarks>
-  public CountingQuietTextWriter(TextWriter writer, IErrorHandler errorHandler) : base(writer, errorHandler)
-  {
-    Count = 0;
-  }
+  public CountingQuietTextWriter(TextWriter writer, IErrorHandler errorHandler) : base(writer, errorHandler) => Count = 0;
 
   /// <summary>
   /// Writes a character to the underlying writer and counts the number of bytes written.
@@ -71,7 +68,7 @@ public class CountingQuietTextWriter : QuietTextWriter
 
       // get the number of bytes needed to represent the 
       // char using the supplied encoding.
-      Count += Encoding.GetByteCount([value]);
+      Count += Encoding.GetByteCount(new[] { value });
     }
     catch (Exception e)
     {

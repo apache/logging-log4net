@@ -49,7 +49,7 @@ public class QuietTextWriter : TextWriterAdapter
   /// </remarks>
   public QuietTextWriter(TextWriter writer, IErrorHandler errorHandler)
     : base(writer)
-    => this.errorHandler = errorHandler.EnsureNotNull();
+    => this._errorHandler = errorHandler.EnsureNotNull();
 
   /// <summary>
   /// Gets or sets the error handler that all errors are passed to.
@@ -64,8 +64,8 @@ public class QuietTextWriter : TextWriterAdapter
   /// </remarks>
   public IErrorHandler ErrorHandler
   {
-    get => errorHandler;
-    set => errorHandler = value.EnsureNotNull();
+    get => _errorHandler;
+    set => _errorHandler = value.EnsureNotNull();
   }
 
   /// <summary>
@@ -98,7 +98,7 @@ public class QuietTextWriter : TextWriterAdapter
     }
     catch (Exception e)
     {
-      errorHandler.Error($"Failed to write [{value}].", e, ErrorCode.WriteFailure);
+      _errorHandler.Error($"Failed to write [{value}].", e, ErrorCode.WriteFailure);
     }
   }
 
@@ -121,7 +121,7 @@ public class QuietTextWriter : TextWriterAdapter
     }
     catch (Exception e)
     {
-      errorHandler.Error("Failed to write buffer.", e, ErrorCode.WriteFailure);
+      _errorHandler.Error("Failed to write buffer.", e, ErrorCode.WriteFailure);
     }
   }
 
@@ -137,7 +137,7 @@ public class QuietTextWriter : TextWriterAdapter
     }
     catch (Exception e)
     {
-      errorHandler.Error($"Failed to write [{value}].", e, ErrorCode.WriteFailure);
+      _errorHandler.Error($"Failed to write [{value}].", e, ErrorCode.WriteFailure);
     }
   }
 
@@ -158,5 +158,5 @@ public class QuietTextWriter : TextWriterAdapter
   /// <summary>
   /// The error handler instance to pass all errors to
   /// </summary>
-  private IErrorHandler errorHandler;
+  private IErrorHandler _errorHandler;
 }

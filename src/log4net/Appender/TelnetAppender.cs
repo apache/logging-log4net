@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
+using System.Linq;
 using log4net.Core;
 using log4net.Util;
 
@@ -44,8 +45,8 @@ namespace log4net.Appender;
 /// <author>Nicko Cadell</author>
 public class TelnetAppender : AppenderSkeleton
 {
-  private SocketHandler? handler;
-  private int listeningPort = 23;
+  private SocketHandler? _handler;
+  private int _listeningPort = 23;
 
   /// <summary>
   /// The fully qualified type of the TelnetAppender class.
@@ -54,7 +55,7 @@ public class TelnetAppender : AppenderSkeleton
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(TelnetAppender);
+  private static readonly Type _declaringType = typeof(TelnetAppender);
 
   /// <summary>
   /// Gets or sets the TCP port number on which this <see cref="TelnetAppender"/> will listen for connections.
@@ -72,7 +73,7 @@ public class TelnetAppender : AppenderSkeleton
   /// or greater than <see cref="IPEndPoint.MaxPort" />.</exception>
   public int Port
   {
-    get => listeningPort;
+    get => _listeningPort;
     set
     {
       if (value is < IPEndPoint.MinPort or > IPEndPoint.MaxPort)
@@ -80,7 +81,7 @@ public class TelnetAppender : AppenderSkeleton
         throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
           $"The value specified for Port is less than {IPEndPoint.MinPort} or greater than {IPEndPoint.MaxPort}.");
       }
-      listeningPort = value;
+      _listeningPort = value;
     }
   }
 
@@ -96,8 +97,8 @@ public class TelnetAppender : AppenderSkeleton
   {
     base.OnClose();
 
-    handler?.Dispose();
-    handler = null;
+    _handler?.Dispose();
+    _handler = null;
   }
 
   /// <summary>
@@ -113,12 +114,12 @@ public class TelnetAppender : AppenderSkeleton
     base.ActivateOptions();
     try
     {
-      LogLog.Debug(declaringType, $"Creating SocketHandler to listen on port [{listeningPort}]");
-      handler = new SocketHandler(listeningPort);
+      LogLog.Debug(_declaringType, $"Creating SocketHandler to listen on port [{_listeningPort}]");
+      _handler = new SocketHandler(_listeningPort);
     }
     catch (Exception ex)
     {
-      LogLog.Error(declaringType, "Failed to create SocketHandler", ex);
+      LogLog.Error(_declaringType, "Failed to create SocketHandler", ex);
       throw;
     }
   }
@@ -129,9 +130,9 @@ public class TelnetAppender : AppenderSkeleton
   /// <param name="loggingEvent">The event to log.</param>
   protected override void Append(LoggingEvent loggingEvent)
   {
-    if (handler is not null && handler.HasConnections)
+    if (_handler is not null && _handler.HasConnections)
     {
-      handler.Send(RenderLoggingEvent(loggingEvent));
+      _handler.Send(RenderLoggingEvent(loggingEvent));
     }
   }
 
@@ -146,20 +147,20 @@ public class TelnetAppender : AppenderSkeleton
   /// </remarks>
   protected class SocketHandler : IDisposable
   {
-    private const int MAX_CONNECTIONS = 20;
+    private const int MaxConnections = 20;
 
-    private readonly Socket serverSocket;
-    private readonly List<SocketClient> clients = [];
-    private readonly object syncRoot = new();
-    private bool wasDisposed;
+    private readonly Socket _serverSocket;
+    private readonly List<SocketClient> _clients = [];
+    private readonly object _syncRoot = new();
+    private bool _wasDisposed;
 
     /// <summary>
     /// Class that represents a client connected to this handler
     /// </summary>
     protected class SocketClient : IDisposable
     {
-      private readonly Socket socket;
-      private readonly StreamWriter writer;
+      private readonly Socket _socket;
+      private readonly StreamWriter _writer;
 
       /// <summary>
       /// Create this <see cref="SocketClient"/> for the specified <see cref="Socket"/>
@@ -172,10 +173,10 @@ public class TelnetAppender : AppenderSkeleton
       /// </remarks>
       public SocketClient(Socket socket)
       {
-        this.socket = socket;
+        this._socket = socket;
         try
         {
-          writer = new(new NetworkStream(socket));
+          _writer = new(new NetworkStream(socket));
         }
         catch
         {
@@ -190,8 +191,8 @@ public class TelnetAppender : AppenderSkeleton
       /// <param name="message">string to send</param>
       public void Send(string message)
       {
-        writer.Write(message);
-        writer.Flush();
+        _writer.Write(message);
+        _writer.Flush();
       }
 
       /// <summary>
@@ -201,7 +202,7 @@ public class TelnetAppender : AppenderSkeleton
       {
         try
         {
-          writer.Dispose();
+          _writer.Dispose();
         }
         catch
         {
@@ -210,7 +211,7 @@ public class TelnetAppender : AppenderSkeleton
 
         try
         {
-          socket.Shutdown(SocketShutdown.Both);
+          _socket.Shutdown(SocketShutdown.Both);
         }
         catch
         {
@@ -219,7 +220,7 @@ public class TelnetAppender : AppenderSkeleton
 
         try
         {
-          socket.Dispose();
+          _socket.Dispose();
         }
         catch
         {
@@ -239,13 +240,13 @@ public class TelnetAppender : AppenderSkeleton
     /// </remarks>
     public SocketHandler(int port)
     {
-      serverSocket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-      serverSocket.Bind(new IPEndPoint(IPAddress.Any, port));
-      serverSocket.Listen(5);
+      _serverSocket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+      _serverSocket.Bind(new IPEndPoint(IPAddress.Any, port));
+      _serverSocket.Listen(5);
       AcceptConnection();
     }
 
-    private void AcceptConnection() => serverSocket.BeginAccept(OnConnect, null);
+    private void AcceptConnection() => _serverSocket.BeginAccept(OnConnect, null);
 
     /// <summary>
     /// Sends a string message to each of the connected clients.
@@ -254,9 +255,9 @@ public class TelnetAppender : AppenderSkeleton
     public void Send(string message)
     {
       List<SocketClient> localClients;
-      lock (syncRoot)
+      lock (_syncRoot)
       {
-        localClients = [.. clients];
+        localClients = _clients.ToList();
       }
 
       // Send outside lock.
@@ -281,9 +282,9 @@ public class TelnetAppender : AppenderSkeleton
     /// <param name="client">client to add</param>
     private void AddClient(SocketClient client)
     {
-      lock (syncRoot)
+      lock (_syncRoot)
       {
-        clients.Add(client);
+        _clients.Add(client);
       }
     }
 
@@ -293,16 +294,16 @@ public class TelnetAppender : AppenderSkeleton
     /// <param name="client">client to remove</param>
     private void RemoveClient(SocketClient client)
     {
-      lock (syncRoot)
+      lock (_syncRoot)
       {
-        clients.Remove(client);
+        _clients.Remove(client);
       }
     }
 
     /// <summary>
     /// Test if this handler has active connections
     /// </summary>
-    public bool HasConnections => clients.Count > 0;
+    public bool HasConnections => _clients.Count > 0;
     // clients.Count is an atomic read that can be done outside the lock.
 
     /// <summary>
@@ -317,7 +318,7 @@ public class TelnetAppender : AppenderSkeleton
     /// </remarks>
     private void OnConnect(IAsyncResult asyncResult)
     {
-      if (wasDisposed)
+      if (_wasDisposed)
       {
         return;
       }
@@ -325,13 +326,13 @@ public class TelnetAppender : AppenderSkeleton
       try
       {
         // Block until a client connects
-        Socket socket = serverSocket.EndAccept(asyncResult);
-        LogLog.Debug(declaringType, $"Accepting connection from [{socket.RemoteEndPoint}]");
+        Socket socket = _serverSocket.EndAccept(asyncResult);
+        LogLog.Debug(_declaringType, $"Accepting connection from [{socket.RemoteEndPoint}]");
         SocketClient client = new(socket);
 
         // clients.Count is an atomic read that can be done outside the lock.
-        int currentActiveConnectionsCount = clients.Count;
-        if (currentActiveConnectionsCount < MAX_CONNECTIONS)
+        int currentActiveConnectionsCount = _clients.Count;
+        if (currentActiveConnectionsCount < MaxConnections)
         {
           try
           {
@@ -355,7 +356,7 @@ public class TelnetAppender : AppenderSkeleton
       }
       finally
       {
-        if (!wasDisposed)
+        if (!_wasDisposed)
         {
           AcceptConnection();
         }
@@ -367,24 +368,24 @@ public class TelnetAppender : AppenderSkeleton
     /// </summary>
     public void Dispose()
     {
-      if (wasDisposed)
+      if (_wasDisposed)
       {
         return;
       }
 
-      wasDisposed = true;
+      _wasDisposed = true;
 
-      lock (syncRoot)
+      lock (_syncRoot)
       {
-        foreach (SocketClient client in clients)
+        foreach (SocketClient client in _clients)
         {
           client.Dispose();
         }
-        clients.Clear();
+        _clients.Clear();
 
         try
         {
-          serverSocket.Shutdown(SocketShutdown.Both);
+          _serverSocket.Shutdown(SocketShutdown.Both);
         }
         catch
         {
@@ -393,7 +394,7 @@ public class TelnetAppender : AppenderSkeleton
 
         try
         {
-          serverSocket.Dispose();
+          _serverSocket.Dispose();
         }
         catch
         {

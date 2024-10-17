@@ -41,13 +41,13 @@ public class CyclicBufferTest
   [Test]
   public void TestSize1()
   {
-    CyclicBuffer cb = new CyclicBuffer(1);
+    CyclicBuffer cb = new(1);
 
     Assert.AreEqual(0, cb.Length, "Empty Buffer should have length 0");
     Assert.AreEqual(1, cb.MaxSize, "Buffer should have max size 1");
 
-    LoggingEvent event1 = new LoggingEvent(null, null, null, null, null, null);
-    LoggingEvent event2 = new LoggingEvent(null, null, null, null, null, null);
+    LoggingEvent event1 = new(null, null, null, null, null, null);
+    LoggingEvent event2 = new(null, null, null, null, null, null);
 
     LoggingEvent? discardedEvent = cb.Append(event1);
 
@@ -72,14 +72,14 @@ public class CyclicBufferTest
   [Test]
   public void TestSize2()
   {
-    CyclicBuffer cb = new CyclicBuffer(2);
+    CyclicBuffer cb = new(2);
 
     Assert.AreEqual(0, cb.Length, "Empty Buffer should have length 0");
     Assert.AreEqual(2, cb.MaxSize, "Buffer should have max size 2");
 
-    LoggingEvent event1 = new LoggingEvent(null, null, null, null, null, null);
-    LoggingEvent event2 = new LoggingEvent(null, null, null, null, null, null);
-    LoggingEvent event3 = new LoggingEvent(null, null, null, null, null, null);
+    LoggingEvent event1 = new(null, null, null, null, null, null);
+    LoggingEvent event2 = new(null, null, null, null, null, null);
+    LoggingEvent event3 = new(null, null, null, null, null, null);
 
     LoggingEvent? discardedEvent;
 

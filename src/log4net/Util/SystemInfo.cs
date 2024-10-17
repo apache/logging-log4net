@@ -33,8 +33,8 @@ namespace log4net.Util;
 /// <author>Alexey Solofnenko</author>
 public static class SystemInfo
 {
-  private const string DEFAULT_NULL_TEXT = "(null)";
-  private const string DEFAULT_NOT_AVAILABLE_TEXT = "NOT AVAILABLE";
+  private const string DefaultNullText = "(null)";
+  private const string DefaultNotAvailableText = "NOT AVAILABLE";
 
   /// <summary>
   /// Initialize default values for private static fields.
@@ -46,14 +46,14 @@ public static class SystemInfo
   /// </remarks>
   static SystemInfo()
   {
-    string nullText = DEFAULT_NULL_TEXT;
-    string notAvailableText = DEFAULT_NOT_AVAILABLE_TEXT;
+    string nullText = DefaultNullText;
+    string notAvailableText = DefaultNotAvailableText;
 
     // Look for log4net.NullText in AppSettings
     string? nullTextAppSettingsKey = GetAppSetting("log4net.NullText");
     if (nullTextAppSettingsKey is not null && nullTextAppSettingsKey.Length > 0)
     {
-      LogLog.Debug(declaringType, $"Initializing NullText value to [{nullTextAppSettingsKey}].");
+      LogLog.Debug(_declaringType, $"Initializing NullText value to [{nullTextAppSettingsKey}].");
       nullText = nullTextAppSettingsKey;
     }
 
@@ -61,7 +61,7 @@ public static class SystemInfo
     string? notAvailableTextAppSettingsKey = GetAppSetting("log4net.NotAvailableText");
     if (notAvailableTextAppSettingsKey is not null && notAvailableTextAppSettingsKey.Length > 0)
     {
-      LogLog.Debug(declaringType, $"Initializing NotAvailableText value to [{notAvailableTextAppSettingsKey}].");
+      LogLog.Debug(_declaringType, $"Initializing NotAvailableText value to [{notAvailableTextAppSettingsKey}].");
       notAvailableText = notAvailableTextAppSettingsKey;
     }
     NotAvailableText = notAvailableText;
@@ -103,7 +103,7 @@ public static class SystemInfo
     }
   }
 
-  private static string? entryAssemblyLocation;
+  private static string? _entryAssemblyLocation;
 
   /// <summary>
   /// Gets the path to the file that first executed in the current <see cref="AppDomain"/>.
@@ -112,14 +112,14 @@ public static class SystemInfo
   {
     get
     {
-      if (entryAssemblyLocation is not null)
+      if (_entryAssemblyLocation is not null)
       {
-        return entryAssemblyLocation;
+        return _entryAssemblyLocation;
       }
-      return entryAssemblyLocation = Assembly.GetEntryAssembly()?.Location
+      return _entryAssemblyLocation = Assembly.GetEntryAssembly()?.Location
         ?? throw new InvalidOperationException($"Unable to determine EntryAssembly location: EntryAssembly is null. Try explicitly setting {nameof(SystemInfo)}.{nameof(EntryAssemblyLocation)}");
     }
-    set => entryAssemblyLocation = value;
+    set => _entryAssemblyLocation = value;
   }
 
   /// <summary>
@@ -142,35 +142,35 @@ public static class SystemInfo
   {
     get
     {
-      if (s_hostName is null)
+      if (_sHostName is null)
       {
         // Get the DNS host name of the current machine
         try
         {
           // Lookup the host name
-          s_hostName = System.Net.Dns.GetHostName();
+          _sHostName = System.Net.Dns.GetHostName();
         }
         catch (System.Net.Sockets.SocketException)
         {
-          LogLog.Debug(declaringType, "Socket exception occurred while getting the dns hostname. Error Ignored.");
+          LogLog.Debug(_declaringType, "Socket exception occurred while getting the dns hostname. Error Ignored.");
         }
         catch (System.Security.SecurityException)
         {
           // We may get a security exception looking up the hostname
           // You must have Unrestricted DnsPermission to access resource
-          LogLog.Debug(declaringType, "Security exception occurred while getting the dns hostname. Error Ignored.");
+          LogLog.Debug(_declaringType, "Security exception occurred while getting the dns hostname. Error Ignored.");
         }
         catch (Exception ex)
         {
-          LogLog.Debug(declaringType, "Some other exception occurred while getting the dns hostname. Error Ignored.", ex);
+          LogLog.Debug(_declaringType, "Some other exception occurred while getting the dns hostname. Error Ignored.", ex);
         }
 
         // Get the NETBIOS machine name of the current machine
-        if (string.IsNullOrEmpty(s_hostName))
+        if (string.IsNullOrEmpty(_sHostName))
         {
           try
           {
-            s_hostName = Environment.MachineName;
+            _sHostName = Environment.MachineName;
           }
           catch (InvalidOperationException)
           {
@@ -183,13 +183,13 @@ public static class SystemInfo
         }
 
         // Couldn't find a value
-        if (string.IsNullOrEmpty(s_hostName))
+        if (string.IsNullOrEmpty(_sHostName))
         {
-          s_hostName = NotAvailableText;
-          LogLog.Debug(declaringType, "Could not determine the hostname. Error Ignored. Empty host name will be used");
+          _sHostName = NotAvailableText;
+          LogLog.Debug(_declaringType, "Could not determine the hostname. Error Ignored. Empty host name will be used");
         }
       }
-      return s_hostName!;
+      return _sHostName!;
     }
   }
 
@@ -209,25 +209,25 @@ public static class SystemInfo
   {
     get
     {
-      if (s_appFriendlyName is null)
+      if (_sAppFriendlyName is null)
       {
         try
         {
-          s_appFriendlyName = AppDomain.CurrentDomain.FriendlyName;
+          _sAppFriendlyName = AppDomain.CurrentDomain.FriendlyName;
         }
         catch (System.Security.SecurityException)
         {
           // This security exception will occur if the caller does not have 
           // some undefined set of SecurityPermission flags.
-          LogLog.Debug(declaringType, "Security exception while trying to get current domain friendly name. Error Ignored.");
+          LogLog.Debug(_declaringType, "Security exception while trying to get current domain friendly name. Error Ignored.");
         }
 
-        if (string.IsNullOrEmpty(s_appFriendlyName))
+        if (string.IsNullOrEmpty(_sAppFriendlyName))
         {
           try
           {
             string assemblyLocation = EntryAssemblyLocation;
-            s_appFriendlyName = Path.GetFileName(assemblyLocation);
+            _sAppFriendlyName = Path.GetFileName(assemblyLocation);
           }
           catch (System.Security.SecurityException)
           {
@@ -235,12 +235,12 @@ public static class SystemInfo
           }
         }
 
-        if (string.IsNullOrEmpty(s_appFriendlyName))
+        if (string.IsNullOrEmpty(_sAppFriendlyName))
         {
-          s_appFriendlyName = NotAvailableText;
+          _sAppFriendlyName = NotAvailableText;
         }
       }
-      return s_appFriendlyName!;
+      return _sAppFriendlyName!;
     }
   }
 
@@ -264,7 +264,7 @@ public static class SystemInfo
   /// will be set per AppDomain.
   /// </para>
   /// </remarks>
-  public static DateTime ProcessStartTimeUtc => s_processStartTimeUtc;
+  public static DateTime ProcessStartTimeUtc => _sProcessStartTimeUtc;
 
   /// <summary>
   /// Text to output when a <c>null</c> is encountered.
@@ -504,7 +504,7 @@ public static class SystemInfo
           if (assembly.GetType(typeName, false, ignoreCase) is Type t)
           {
             // Found type in loaded assembly
-            LogLog.Debug(declaringType, $"Loaded type [{typeName}] from assembly [{assembly.FullName}] by searching loaded assemblies.");
+            LogLog.Debug(_declaringType, $"Loaded type [{typeName}] from assembly [{assembly.FullName}] by searching loaded assemblies.");
             if (assembly.GlobalAssemblyCache)
             {
               fallback = t;
@@ -668,7 +668,7 @@ public static class SystemInfo
     catch (Exception ex)
     {
       // If an exception is thrown here then it looks like the config file does not parse correctly.
-      LogLog.Error(declaringType, "Exception while reading ConfigurationSettings. Check your .config file is well formed XML.", ex);
+      LogLog.Error(_declaringType, "Exception while reading ConfigurationSettings. Check your .config file is well formed XML.", ex);
     }
     return null;
   }
@@ -756,20 +756,20 @@ public static class SystemInfo
   /// Used by the internal logger to record the Type of the
   /// log message.
   /// </remarks>
-  private static readonly Type declaringType = typeof(SystemInfo);
+  private static readonly Type _declaringType = typeof(SystemInfo);
 
   /// <summary>
   /// Cache the host name for the current machine
   /// </summary>
-  private static string? s_hostName;
+  private static string? _sHostName;
 
   /// <summary>
   /// Cache the application friendly name
   /// </summary>
-  private static string? s_appFriendlyName;
+  private static string? _sAppFriendlyName;
 
   /// <summary>
   /// Start time for the current process.
   /// </summary>
-  private static DateTime s_processStartTimeUtc = DateTime.UtcNow;
+  private static DateTime _sProcessStartTimeUtc = DateTime.UtcNow;
 }

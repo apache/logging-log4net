@@ -258,7 +258,7 @@ public class PatternString : IOptionHandler
   /// <summary>
   /// Internal map of converter identifiers to converter types.
   /// </summary>
-  private static readonly Dictionary<string, Type> s_globalRulesRegistry = new(StringComparer.Ordinal)
+  private static readonly Dictionary<string, Type> _sGlobalRulesRegistry = new(StringComparer.Ordinal)
   {
     // TODO - have added common variants of casing for utcdate and appsetting.
     // Wouldn't it be better to use a case-insensitive dictionary?
@@ -285,12 +285,12 @@ public class PatternString : IOptionHandler
   /// <summary>
   /// the head of the pattern converter chain
   /// </summary>
-  private PatternConverter? head;
+  private PatternConverter? _head;
 
   /// <summary>
   /// patterns defined on this PatternString only
   /// </summary>
-  private readonly Dictionary<string, ConverterInfo> instanceRulesRegistry = new(StringComparer.Ordinal);
+  private readonly Dictionary<string, ConverterInfo> _instanceRulesRegistry = new(StringComparer.Ordinal);
 
   /// <summary>
   /// Default constructor
@@ -353,11 +353,11 @@ public class PatternString : IOptionHandler
   {
     if (ConversionPattern is null)
     {
-      head = null;
+      _head = null;
     }
     else
     {
-      head = CreatePatternParser(ConversionPattern).Parse();
+      _head = CreatePatternParser(ConversionPattern).Parse();
     }
   }
 
@@ -378,7 +378,7 @@ public class PatternString : IOptionHandler
     PatternParser patternParser = new(pattern);
 
     // Add all the builtin patterns
-    foreach (KeyValuePair<string, Type> entry in s_globalRulesRegistry)
+    foreach (KeyValuePair<string, Type> entry in _sGlobalRulesRegistry)
     {
       ConverterInfo converterInfo = new()
       {
@@ -388,7 +388,7 @@ public class PatternString : IOptionHandler
       patternParser.PatternConverters.Add(entry.Key, converterInfo);
     }
     // Add the instance patterns
-    foreach (KeyValuePair<string, ConverterInfo> entry in instanceRulesRegistry)
+    foreach (KeyValuePair<string, ConverterInfo> entry in _instanceRulesRegistry)
     {
       patternParser.PatternConverters[entry.Key] = entry.Value;
     }
@@ -409,7 +409,7 @@ public class PatternString : IOptionHandler
   {
     writer.EnsureNotNull();
 
-    PatternConverter? c = head;
+    PatternConverter? c = _head;
 
     // loop through the chain of pattern converters
     while (c is not null)
@@ -452,7 +452,7 @@ public class PatternString : IOptionHandler
     {
       throw new ArgumentException($"The converter type specified [{converterInfo.Type}] must be a subclass of log4net.Util.PatternConverter", "converterInfo");
     }
-    instanceRulesRegistry[converterInfo.Name] = converterInfo;
+    _instanceRulesRegistry[converterInfo.Name] = converterInfo;
   }
 
   /// <summary>
