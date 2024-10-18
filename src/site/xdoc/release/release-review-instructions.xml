@@ -30,9 +30,19 @@ limitations under the License.
           Windows (PowerShell)
           <ol>
             <li>
-              Prerequisites
+              Prerequisites (winget - in case of problems see next section choco)
               <pre class="code">winget install -e --id GnuPG.Gpg4win
-winget install -e --id TortoiseSVN.TortoiseSVN</pre>
+winget install -e --id TortoiseSVN.TortoiseSVN
+winget install -e --id Mono.Mono
+winget install -e --id Microsoft.DotNet.SDK.8</pre>
+            </li>
+            <li>
+              Prerequisites (choco - only in case of problems with winget)
+              <pre class="code">Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+choco install gpg4win
+choco install tortoisesvn
+choco install mono
+choco install dotnet-8.0-sdk</pre>
             </li>
             <li>
               Check out the release distribution
@@ -45,9 +55,7 @@ pushd log4net-{releaseVersion}</pre>
             </li>
             <li>
               <p>Verify the build</p>
-              <pre class="code">winget install -e --id Mono.Mono
-winget install Microsoft.DotNet.SDK.8
-dotnet test ./src/log4net.sln</pre>
+              <pre class="code">dotnet test ./src/log4net.sln</pre>
             </li>
           </ol>
         </li>
