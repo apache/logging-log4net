@@ -20,75 +20,74 @@
 using System;
 using System.IO;
 
-namespace log4net.Util.PatternStringConverters
+namespace log4net.Util.PatternStringConverters;
+
+/// <summary>
+/// Write an environment variable to the output
+/// </summary>
+/// <remarks>
+/// <para>
+/// Write an environment variable to the output writer.
+/// The value of the <see cref="log4net.Util.PatternConverter.Option"/> determines 
+/// the name of the variable to output.
+/// </para>
+/// </remarks>
+/// <author>Nicko Cadell</author>
+public sealed class EnvironmentPatternConverter : PatternConverter
 {
   /// <summary>
   /// Write an environment variable to the output
   /// </summary>
+  /// <param name="writer">the writer to write to</param>
+  /// <param name="state">null, state is not set</param>
   /// <remarks>
   /// <para>
-  /// Write an environment variable to the output writer.
-  /// The value of the <see cref="log4net.Util.PatternConverter.Option"/> determines 
-  /// the name of the variable to output.
+  /// Writes the environment variable to the output <paramref name="writer"/>.
+  /// The name of the environment variable to output must be set
+  /// using the <see cref="log4net.Util.PatternConverter.Option"/>
+  /// property.
   /// </para>
   /// </remarks>
-  /// <author>Nicko Cadell</author>
-  public sealed class EnvironmentPatternConverter : PatternConverter
+  public override void Convert(TextWriter writer, object? state)
   {
-    /// <summary>
-    /// Write an environment variable to the output
-    /// </summary>
-    /// <param name="writer">the writer to write to</param>
-    /// <param name="state">null, state is not set</param>
-    /// <remarks>
-    /// <para>
-    /// Writes the environment variable to the output <paramref name="writer"/>.
-    /// The name of the environment variable to output must be set
-    /// using the <see cref="log4net.Util.PatternConverter.Option"/>
-    /// property.
-    /// </para>
-    /// </remarks>
-    public override void Convert(TextWriter writer, object? state)
+    try
     {
-      try
+      if (Option?.Length > 0)
       {
-        if (Option?.Length > 0)
+        // Lookup the environment variable
+        string? envValue = Environment.GetEnvironmentVariable(Option);
+
+        // If we didn't see it for the process, try a user level variable.
+        envValue ??= Environment.GetEnvironmentVariable(Option, EnvironmentVariableTarget.User);
+
+        // If we still didn't find it, try a system level one.
+        envValue ??= Environment.GetEnvironmentVariable(Option, EnvironmentVariableTarget.Machine);
+
+        if (envValue?.Length > 0)
         {
-          // Lookup the environment variable
-          string? envValue = Environment.GetEnvironmentVariable(Option);
-
-          // If we didn't see it for the process, try a user level variable.
-          envValue ??= Environment.GetEnvironmentVariable(Option, EnvironmentVariableTarget.User);
-
-          // If we still didn't find it, try a system level one.
-          envValue ??= Environment.GetEnvironmentVariable(Option, EnvironmentVariableTarget.Machine);
-
-          if (envValue?.Length > 0)
-          {
-            writer.Write(envValue);
-          }
+          writer.Write(envValue);
         }
       }
-      catch (System.Security.SecurityException secEx)
-      {
-        // This security exception will occur if the caller does not have 
-        // unrestricted environment permission. If this occurs the expansion 
-        // will be skipped with the following warning message.
-        LogLog.Debug(declaringType, "Security exception while trying to expand environment variables. Error Ignored. No Expansion.", secEx);
-      }
-      catch (Exception ex)
-      {
-        LogLog.Error(declaringType, "Error occurred while converting environment variable.", ex);
-      }
     }
-
-    /// <summary>
-    /// The fully qualified type of the EnvironmentPatternConverter class.
-    /// </summary>
-    /// <remarks>
-    /// Used by the internal logger to record the Type of the
-    /// log message.
-    /// </remarks>
-    private static readonly Type declaringType = typeof(EnvironmentPatternConverter);
+    catch (System.Security.SecurityException secEx)
+    {
+      // This security exception will occur if the caller does not have 
+      // unrestricted environment permission. If this occurs the expansion 
+      // will be skipped with the following warning message.
+      LogLog.Debug(_declaringType, "Security exception while trying to expand environment variables. Error Ignored. No Expansion.", secEx);
+    }
+    catch (Exception ex)
+    {
+      LogLog.Error(_declaringType, "Error occurred while converting environment variable.", ex);
+    }
   }
+
+  /// <summary>
+  /// The fully qualified type of the EnvironmentPatternConverter class.
+  /// </summary>
+  /// <remarks>
+  /// Used by the internal logger to record the Type of the
+  /// log message.
+  /// </remarks>
+  private static readonly Type _declaringType = typeof(EnvironmentPatternConverter);
 }

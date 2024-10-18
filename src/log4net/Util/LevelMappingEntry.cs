@@ -20,38 +20,37 @@
 using System.Diagnostics;
 using log4net.Core;
 
-namespace log4net.Util
+namespace log4net.Util;
+
+/// <summary>
+/// An abstract base class for types that are stored in the
+/// <see cref="LevelMapping"/> object.
+/// </summary>
+/// <author>Nicko Cadell</author>
+[DebuggerDisplay("{Level}")]
+public abstract class LevelMappingEntry : IOptionHandler
 {
   /// <summary>
-  /// An abstract base class for types that are stored in the
-  /// <see cref="LevelMapping"/> object.
+  /// Default protected constructor
   /// </summary>
-  /// <author>Nicko Cadell</author>
-  [DebuggerDisplay("{Level}")]
-  public abstract class LevelMappingEntry : IOptionHandler
+  protected LevelMappingEntry()
+  { }
+
+  /// <summary>
+  /// Gets or sets the level that is the key for this mapping.
+  /// </summary>
+  public Level? Level { get; set; }
+
+  /// <summary>
+  /// Initialize any options defined on this entry
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// Should be overridden by any classes that need to initialize based on their options
+  /// </para>
+  /// </remarks>
+  public virtual void ActivateOptions()
   {
-    /// <summary>
-    /// Default protected constructor
-    /// </summary>
-    protected LevelMappingEntry()
-    { }
-
-    /// <summary>
-    /// Gets or sets the level that is the key for this mapping.
-    /// </summary>
-    public Level? Level { get; set; }
-
-    /// <summary>
-    /// Initialize any options defined on this entry
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Should be overridden by any classes that need to initialize based on their options
-    /// </para>
-    /// </remarks>
-    public virtual void ActivateOptions()
-    {
-      // default implementation is to do nothing
-    }
+    // default implementation is to do nothing
   }
 }

@@ -34,7 +34,7 @@ internal sealed class NullableAttribute : Attribute
 
   /// <inheritdoc/>
   [SuppressMessage("Design", "CA1019:Define accessors for attribute arguments")]
-  public NullableAttribute(byte nullableFlags) => NullableFlags = new[] { nullableFlags };
+  public NullableAttribute(byte nullableFlags) => NullableFlags = [nullableFlags];
 
   /// <inheritdoc/>
   public NullableAttribute(byte[] nullableFlags) => NullableFlags = nullableFlags;

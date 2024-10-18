@@ -21,56 +21,52 @@ using System.IO;
 
 using log4net.Core;
 
-namespace log4net.Layout
+namespace log4net.Layout;
+
+/// <summary>
+/// Adapts any <see cref="ILayout"/> to a <see cref="IRawLayout"/>
+/// </summary>
+/// <remarks>
+/// <para>
+/// Where an <see cref="IRawLayout"/> is required this adapter
+/// allows a <see cref="ILayout"/> to be specified.
+/// </para>
+/// </remarks>
+/// <author>Nicko Cadell</author>
+/// <author>Gert Driesen</author>
+public class Layout2RawLayoutAdapter : IRawLayout
 {
   /// <summary>
-  /// Adapts any <see cref="ILayout"/> to a <see cref="IRawLayout"/>
+  /// The layout to adapt
   /// </summary>
+  private readonly ILayout _layout;
+
+  /// <summary>
+  /// Construct a new adapter
+  /// </summary>
+  /// <param name="layout">the layout to adapt</param>
   /// <remarks>
   /// <para>
-  /// Where an <see cref="IRawLayout"/> is required this adapter
-  /// allows a <see cref="ILayout"/> to be specified.
+  /// Create the adapter for the specified <paramref name="layout"/>.
   /// </para>
   /// </remarks>
-  /// <author>Nicko Cadell</author>
-  /// <author>Gert Driesen</author>
-  public class Layout2RawLayoutAdapter : IRawLayout
+  public Layout2RawLayoutAdapter(ILayout layout) => this._layout = layout;
+
+  /// <summary>
+  /// Formats the logging event as an object.
+  /// </summary>
+  /// <param name="loggingEvent">The event to format</param>
+  /// <returns>returns the formatted event</returns>
+  /// <remarks>
+  /// <para>
+  /// Uses the <see cref="ILayout"/> object supplied to 
+  /// the constructor to perform the formatting.
+  /// </para>
+  /// </remarks>
+  public virtual object Format(LoggingEvent loggingEvent)
   {
-    /// <summary>
-    /// The layout to adapt
-    /// </summary>
-    private readonly ILayout m_layout;
-
-    /// <summary>
-    /// Construct a new adapter
-    /// </summary>
-    /// <param name="layout">the layout to adapt</param>
-    /// <remarks>
-    /// <para>
-    /// Create the adapter for the specified <paramref name="layout"/>.
-    /// </para>
-    /// </remarks>
-    public Layout2RawLayoutAdapter(ILayout layout)
-    {
-      m_layout = layout;
-    }
-
-    /// <summary>
-    /// Formats the logging event as an object.
-    /// </summary>
-    /// <param name="loggingEvent">The event to format</param>
-    /// <returns>returns the formatted event</returns>
-    /// <remarks>
-    /// <para>
-    /// Uses the <see cref="ILayout"/> object supplied to 
-    /// the constructor to perform the formatting.
-    /// </para>
-    /// </remarks>
-    public virtual object Format(LoggingEvent loggingEvent)
-    {
-      using var writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
-      m_layout.Format(writer, loggingEvent);
-      return writer.ToString();
-    }
+    using StringWriter writer = new(System.Globalization.CultureInfo.InvariantCulture);
+    _layout.Format(writer, loggingEvent);
+    return writer.ToString();
   }
 }

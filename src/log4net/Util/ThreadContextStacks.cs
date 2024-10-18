@@ -19,72 +19,71 @@
 
 using System;
 
-namespace log4net.Util
+namespace log4net.Util;
+
+/// <summary>
+/// Implementation of Stacks collection for the <see cref="log4net.ThreadContext"/>
+/// </summary>
+/// <author>Nicko Cadell</author>
+public sealed class ThreadContextStacks
 {
+  private readonly ContextPropertiesBase _properties;
+
   /// <summary>
-  /// Implementation of Stacks collection for the <see cref="log4net.ThreadContext"/>
+  /// Initializes a new instance of the <see cref="ThreadContextStacks" /> class.
   /// </summary>
-  /// <author>Nicko Cadell</author>
-  public sealed class ThreadContextStacks
+  internal ThreadContextStacks(ContextPropertiesBase properties)
   {
-    private readonly ContextPropertiesBase m_properties;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ThreadContextStacks" /> class.
-    /// </summary>
-    internal ThreadContextStacks(ContextPropertiesBase properties)
-    {
-      m_properties = properties;
-    }
-
-    /// <summary>
-    /// Gets the named thread context stack.
-    /// </summary>
-    public ThreadContextStack this[string key]
-    {
-      get
-      {
-        ThreadContextStack? stack;
-        if (m_properties[key] is not object propertyValue)
-        {
-          // Stack does not exist, create
-          stack = new ThreadContextStack();
-          m_properties[key] = stack;
-        }
-        else
-        {
-          // Look for existing stack
-          stack = propertyValue as ThreadContextStack;
-          if (stack is null)
-          {
-            // Property is not set to a stack!
-            string? propertyValueString = SystemInfo.NullText;
-
-            try
-            {
-              propertyValueString = propertyValue.ToString();
-            }
-            catch
-            {
-            }
-
-            LogLog.Error(declaringType, $"ThreadContextStacks: Request for stack named [{key}] failed because a property with the same name exists which is a [{propertyValue.GetType().Name}] with value [{propertyValueString}]");
-
-            stack = new ThreadContextStack();
-          }
-        }
-
-        return stack;
-      }
-    }
-
-    /// <summary>
-    /// The fully qualified type of the ThreadContextStacks class.
-    /// </summary>
-    /// <remarks>
-    /// Used by the internal logger to record the Type of the
-    /// log message.
-    /// </remarks>
-    private static readonly Type declaringType = typeof(ThreadContextStacks);
+    this._properties = properties;
   }
+
+  /// <summary>
+  /// Gets the named thread context stack.
+  /// </summary>
+  public ThreadContextStack this[string key]
+  {
+    get
+    {
+      ThreadContextStack? stack;
+      if (_properties[key] is not object propertyValue)
+      {
+        // Stack does not exist, create
+        stack = new ThreadContextStack();
+        _properties[key] = stack;
+      }
+      else
+      {
+        // Look for existing stack
+        stack = propertyValue as ThreadContextStack;
+        if (stack is null)
+        {
+          // Property is not set to a stack!
+          string? propertyValueString = SystemInfo.NullText;
+
+          try
+          {
+            propertyValueString = propertyValue.ToString();
+          }
+          catch
+          {
+          }
+
+          LogLog.Error(_declaringType, $"ThreadContextStacks: Request for stack named [{key}] failed because a property with the same name exists which is a [{propertyValue.GetType().Name}] with value [{propertyValueString}]");
+
+          stack = new ThreadContextStack();
+        }
+      }
+
+      return stack;
+    }
+  }
+
+  /// <summary>
+  /// The fully qualified type of the ThreadContextStacks class.
+  /// </summary>
+  /// <remarks>
+  /// Used by the internal logger to record the Type of the
+  /// log message.
+  /// </remarks>
+  private static readonly Type _declaringType = typeof(ThreadContextStacks);
 }

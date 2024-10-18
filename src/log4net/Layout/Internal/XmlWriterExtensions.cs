@@ -32,7 +32,7 @@ namespace log4net.Layout.Internal;
 internal static partial class XmlWriterExtensions
 {
 #if NETSTANDARD2_0_OR_GREATER
-  private static readonly XmlWriterSettings settings = new XmlWriterSettings
+  private static readonly XmlWriterSettings _settings = new XmlWriterSettings
   {
     Indent = false,
     OmitXmlDeclaration = true
@@ -63,7 +63,7 @@ internal static partial class XmlWriterExtensions
   /// <returns>XmlWriter</returns>
   internal static XmlWriter CreateXmlWriter(TextWriter writer)
 #if NETSTANDARD2_0_OR_GREATER
-    => XmlWriter.Create(new ProtectCloseTextWriter(writer), settings);
+    => XmlWriter.Create(new ProtectCloseTextWriter(writer), _settings);
 #else
     => new XmlTextWriter(new ProtectCloseTextWriter(writer))
     {

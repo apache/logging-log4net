@@ -27,104 +27,103 @@ using System.Threading.Tasks;
 using log4net.Util;
 using NUnit.Framework;
 
-namespace log4net.Tests.Util
+namespace log4net.Tests.Util;
+
+[TestFixture]
+public class LogLogTest
 {
-  [TestFixture]
-  public class LogLogTest
+  [Test]
+  public void TraceListenerCounterTest()
   {
-    [Test]
-    public void TraceListenerCounterTest()
+    TraceListenerCounter listTraceListener = new();
+
+    Trace.Listeners.Clear();
+    Trace.Listeners.Add(listTraceListener);
+
+    Trace.Write("Hello");
+    Trace.Write("World");
+
+    Assert.AreEqual(2, listTraceListener.Count);
+  }
+
+  [Test]
+  public void EmitInternalMessages()
+  {
+    TraceListenerCounter listTraceListener = new();
+    Trace.Listeners.Clear();
+    Trace.Listeners.Add(listTraceListener);
+    LogLog.Error(GetType(), "Hello");
+    LogLog.Error(GetType(), "World");
+    Trace.Flush();
+    Assert.AreEqual(2, listTraceListener.Count);
+
+    try
     {
-      TraceListenerCounter listTraceListener = new TraceListenerCounter();
+      LogLog.EmitInternalMessages = false;
 
-      Trace.Listeners.Clear();
-      Trace.Listeners.Add(listTraceListener);
-
-      Trace.Write("Hello");
-      Trace.Write("World");
-
-      Assert.AreEqual(2, listTraceListener.Count);
-    }
-
-    [Test]
-    public void EmitInternalMessages()
-    {
-      TraceListenerCounter listTraceListener = new TraceListenerCounter();
-      Trace.Listeners.Clear();
-      Trace.Listeners.Add(listTraceListener);
       LogLog.Error(GetType(), "Hello");
       LogLog.Error(GetType(), "World");
-      Trace.Flush();
       Assert.AreEqual(2, listTraceListener.Count);
-
-      try
-      {
-        LogLog.EmitInternalMessages = false;
-
-        LogLog.Error(GetType(), "Hello");
-        LogLog.Error(GetType(), "World");
-        Assert.AreEqual(2, listTraceListener.Count);
-      }
-      finally
-      {
-        LogLog.EmitInternalMessages = true;
-      }
     }
-
-    [Test]
-    public void LogReceivedAdapter()
+    finally
     {
-      var messages = new List<LogLog>();
-
-      using var _ = new LogLog.LogReceivedAdapter(messages);
-      LogLog.Debug(GetType(), "Won't be recorded");
-      LogLog.Error(GetType(), "This will be recorded.");
-      LogLog.Error(GetType(), "This will be recorded.");
-
-      Assert.AreEqual(2, messages.Count);
-    }
-    
-    /// <summary>
-    /// Tests multi threaded calls to <see cref="LogLog.OnLogReceived"/>
-    /// </summary>
-    [Test]
-    public void LogReceivedAdapterThreading()
-    {
-      for (int i = 0; i < 1000; i++)
-      {
-        LogReceivedAdapterThreadingCore(i);
-      }
-    }
-
-    private void LogReceivedAdapterThreadingCore(int seed)
-    {
-      var messages = new List<LogLog>(1);
-      var syncRoot = ((ICollection)messages).SyncRoot;
-      var random = new Random(seed);
-      using var _ = new LogLog.LogReceivedAdapter(messages);
-      Parallel.For(0, 10, i =>
-      {
-        if (random.Next(10) > 8)
-        {
-          lock (syncRoot)
-          {
-            messages.Clear();
-            messages.Capacity = 1;
-          }
-        }
-        LogLog.Warn(GetType(), messages.Capacity.ToString() + ' ' + messages.Count);
-      });
+      LogLog.EmitInternalMessages = true;
     }
   }
 
-  internal sealed class TraceListenerCounter : TraceListener
+  [Test]
+  public void LogReceivedAdapter()
   {
-    public override void Write(string? message) => Count++;
+    var messages = new List<LogLog>();
 
-    public override void WriteLine(string? message) => Write(message);
+    using var _ = new LogLog.LogReceivedAdapter(messages);
+    LogLog.Debug(GetType(), "Won't be recorded");
+    LogLog.Error(GetType(), "This will be recorded.");
+    LogLog.Error(GetType(), "This will be recorded.");
 
-    public void Reset() => Count = 0;
-
-    public int Count { get; private set; }
+    Assert.AreEqual(2, messages.Count);
   }
+  
+  /// <summary>
+  /// Tests multi threaded calls to <see cref="LogLog.OnLogReceived"/>
+  /// </summary>
+  [Test]
+  public void LogReceivedAdapterThreading()
+  {
+    for (int i = 0; i < 1000; i++)
+    {
+      LogReceivedAdapterThreadingCore(i);
+    }
+  }
+
+  private void LogReceivedAdapterThreadingCore(int seed)
+  {
+    var messages = new List<LogLog>(1);
+    var syncRoot = ((ICollection)messages).SyncRoot;
+    var random = new Random(seed);
+    using var _ = new LogLog.LogReceivedAdapter(messages);
+    Parallel.For(0, 10, i =>
+    {
+      if (random.Next(10) > 8)
+      {
+        lock (syncRoot)
+        {
+          messages.Clear();
+          messages.Capacity = 1;
+        }
+      }
+      LogLog.Warn(GetType(), messages.Capacity.ToString() + ' ' + messages.Count);
+    });
+  }
+}
+
+internal sealed class TraceListenerCounter : TraceListener
+{
+  public override void Write(string? message) => Count++;
+
+  public override void WriteLine(string? message) => Write(message);
+
+  public void Reset() => Count = 0;
+
+  public int Count { get; private set; }
 }

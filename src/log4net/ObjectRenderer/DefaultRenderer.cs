@@ -23,261 +23,260 @@ using System.Collections;
 
 using log4net.Util;
 
-namespace log4net.ObjectRenderer
+namespace log4net.ObjectRenderer;
+
+/// <summary>
+/// The default object Renderer.
+/// </summary>
+/// <remarks>
+/// <para>
+/// The default renderer supports rendering objects and collections to strings.
+/// </para>
+/// <para>
+/// See the <see cref="RenderObject"/> method for details of the output.
+/// </para>
+/// </remarks>
+/// <author>Nicko Cadell</author>
+/// <author>Gert Driesen</author>
+public sealed class DefaultRenderer : IObjectRenderer
 {
   /// <summary>
-  /// The default object Renderer.
+  /// Renders the object <paramref name="obj"/> to a string.
   /// </summary>
+  /// <param name="rendererMap">The map used to lookup renderers</param>
+  /// <param name="obj">The object to render</param>
+  /// <param name="writer">The writer to render to</param>
   /// <remarks>
   /// <para>
-  /// The default renderer supports rendering objects and collections to strings.
+  /// Render the object <paramref name="obj"/> to a string.
   /// </para>
   /// <para>
-  /// See the <see cref="RenderObject"/> method for details of the output.
+  /// The <paramref name="rendererMap"/> parameter is
+  /// provided to lookup and render other objects. This is
+  /// very useful where <paramref name="obj"/> contains
+  /// nested objects of unknown type. The <see cref="M:RendererMap.FindAndRender(object)"/>
+  /// method can be used to render these objects.
   /// </para>
+  /// <para>
+  /// The default renderer supports rendering objects to strings as follows:
+  /// </para>
+  /// <list type="table">
+  ///    <listheader>
+  ///      <term>Value</term>
+  ///      <description>Rendered String</description>
+  ///    </listheader>
+  ///    <item>
+  ///      <term><c>null</c></term>
+  ///      <description>
+  ///      <para>"(null)"</para>
+  ///      </description>
+  ///    </item>
+  ///    <item>
+  ///      <term><see cref="Array"/></term>
+  ///      <description>
+  ///      <para>
+  ///      For a one dimensional array this is the
+  ///      array type name, an open brace, followed by a comma
+  ///      separated list of the elements (using the appropriate
+  ///      renderer), followed by a close brace. 
+  ///      </para>
+  ///      <para>
+  ///      For example: <c>int[] {1, 2, 3}</c>.
+  ///      </para>
+  ///      <para>
+  ///      If the array is not one dimensional the 
+  ///      <c>Array.ToString()</c> is returned.
+  ///      </para>
+  ///      </description>
+  ///    </item>
+  ///    <item>
+  ///      <term><see cref="IEnumerable"/>, <see cref="ICollection"/> &amp; <see cref="IEnumerator"/></term>
+  ///      <description>
+  ///      <para>
+  ///      Rendered as an open brace, followed by a comma
+  ///      separated list of the elements (using the appropriate
+  ///      renderer), followed by a close brace.
+  ///      </para>
+  ///      <para>
+  ///      For example: <c>{a, b, c}</c>.
+  ///      </para>
+  ///      <para>
+  ///      All collection classes that implement <see cref="ICollection"/> its subclasses, 
+  ///      or generic equivalents all implement the <see cref="IEnumerable"/> interface.
+  ///      </para>
+  ///      </description>
+  ///    </item>    
+  ///    <item>
+  ///      <term><see cref="DictionaryEntry"/></term>
+  ///      <description>
+  ///      <para>
+  ///      Rendered as the key, an equals sign ('='), and the value (using the appropriate
+  ///      renderer). 
+  ///      </para>
+  ///      <para>
+  ///      For example: <c>key=value</c>.
+  ///      </para>
+  ///      </description>
+  ///    </item>    
+  ///    <item>
+  ///      <term>other</term>
+  ///      <description>
+  ///      <para><c>Object.ToString()</c></para>
+  ///      </description>
+  ///    </item>
+  /// </list>
   /// </remarks>
-  /// <author>Nicko Cadell</author>
-  /// <author>Gert Driesen</author>
-  public sealed class DefaultRenderer : IObjectRenderer
+  public void RenderObject(RendererMap rendererMap, object? obj, TextWriter writer)
   {
-    /// <summary>
-    /// Renders the object <paramref name="obj"/> to a string.
-    /// </summary>
-    /// <param name="rendererMap">The map used to lookup renderers</param>
-    /// <param name="obj">The object to render</param>
-    /// <param name="writer">The writer to render to</param>
-    /// <remarks>
-    /// <para>
-    /// Render the object <paramref name="obj"/> to a string.
-    /// </para>
-    /// <para>
-    /// The <paramref name="rendererMap"/> parameter is
-    /// provided to lookup and render other objects. This is
-    /// very useful where <paramref name="obj"/> contains
-    /// nested objects of unknown type. The <see cref="M:RendererMap.FindAndRender(object)"/>
-    /// method can be used to render these objects.
-    /// </para>
-    /// <para>
-    /// The default renderer supports rendering objects to strings as follows:
-    /// </para>
-    /// <list type="table">
-    ///    <listheader>
-    ///      <term>Value</term>
-    ///      <description>Rendered String</description>
-    ///    </listheader>
-    ///    <item>
-    ///      <term><c>null</c></term>
-    ///      <description>
-    ///      <para>"(null)"</para>
-    ///      </description>
-    ///    </item>
-    ///    <item>
-    ///      <term><see cref="Array"/></term>
-    ///      <description>
-    ///      <para>
-    ///      For a one dimensional array this is the
-    ///      array type name, an open brace, followed by a comma
-    ///      separated list of the elements (using the appropriate
-    ///      renderer), followed by a close brace. 
-    ///      </para>
-    ///      <para>
-    ///      For example: <c>int[] {1, 2, 3}</c>.
-    ///      </para>
-    ///      <para>
-    ///      If the array is not one dimensional the 
-    ///      <c>Array.ToString()</c> is returned.
-    ///      </para>
-    ///      </description>
-    ///    </item>
-    ///    <item>
-    ///      <term><see cref="IEnumerable"/>, <see cref="ICollection"/> &amp; <see cref="IEnumerator"/></term>
-    ///      <description>
-    ///      <para>
-    ///      Rendered as an open brace, followed by a comma
-    ///      separated list of the elements (using the appropriate
-    ///      renderer), followed by a close brace.
-    ///      </para>
-    ///      <para>
-    ///      For example: <c>{a, b, c}</c>.
-    ///      </para>
-    ///      <para>
-    ///      All collection classes that implement <see cref="ICollection"/> its subclasses, 
-    ///      or generic equivalents all implement the <see cref="IEnumerable"/> interface.
-    ///      </para>
-    ///      </description>
-    ///    </item>    
-    ///    <item>
-    ///      <term><see cref="DictionaryEntry"/></term>
-    ///      <description>
-    ///      <para>
-    ///      Rendered as the key, an equals sign ('='), and the value (using the appropriate
-    ///      renderer). 
-    ///      </para>
-    ///      <para>
-    ///      For example: <c>key=value</c>.
-    ///      </para>
-    ///      </description>
-    ///    </item>    
-    ///    <item>
-    ///      <term>other</term>
-    ///      <description>
-    ///      <para><c>Object.ToString()</c></para>
-    ///      </description>
-    ///    </item>
-    /// </list>
-    /// </remarks>
-    public void RenderObject(RendererMap rendererMap, object? obj, TextWriter writer)
+    if (rendererMap is null)
     {
-      if (rendererMap is null)
-      {
-        throw new ArgumentNullException(nameof(rendererMap));
-      }
-
-      if (obj is null)
-      {
-        writer.Write(SystemInfo.NullText);
-        return;
-      }
-
-      if (obj is Array objArray)
-      {
-        RenderArray(rendererMap, objArray, writer);
-        return;
-      }
-
-      // Test if we are dealing with some form of collection object
-      if (obj is IEnumerable objEnumerable)
-      {
-        // Get a collection interface if we can as its .Count property may be more
-        // performant than getting the IEnumerator object and trying to advance it.
-        if (obj is ICollection objCollection && objCollection.Count == 0)
-        {
-          writer.Write("{}");
-          return;
-        }
-
-        // This is a special check to allow us to get the enumerator from the IDictionary
-        // interface as this guarantees us DictionaryEntry objects. Note that in .NET 2.0
-        // the generic IDictionary<> interface enumerates KeyValuePair objects rather than
-        // DictionaryEntry ones. However the implementation of the plain IDictionary 
-        // interface on the generic Dictionary<> still returns DictionaryEntry objects.
-        if (obj is IDictionary objDictionary)
-        {
-          RenderEnumerator(rendererMap, objDictionary.GetEnumerator(), writer);
-          return;
-        }
-
-        RenderEnumerator(rendererMap, objEnumerable.GetEnumerator(), writer);
-        return;
-      }
-
-      if (obj is IEnumerator objEnumerator)
-      {
-        RenderEnumerator(rendererMap, objEnumerator, writer);
-        return;
-      }
-
-      if (obj is DictionaryEntry entry)
-      {
-        RenderDictionaryEntry(rendererMap, entry, writer);
-        return;
-      }
-
-      writer.Write(obj.ToString() ?? SystemInfo.NullText);
+      throw new ArgumentNullException(nameof(rendererMap));
     }
 
-    /// <summary>
-    /// Render the array argument into a string
-    /// </summary>
-    /// <param name="rendererMap">The map used to lookup renderers</param>
-    /// <param name="array">the array to render</param>
-    /// <param name="writer">The writer to render to</param>
-    /// <remarks>
-    /// <para>
-    /// For a one dimensional array this is the
-    ///  array type name, an open brace, followed by a comma
-    ///  separated list of the elements (using the appropriate
-    ///  renderer), followed by a close brace. For example:
-    ///  <c>int[] {1, 2, 3}</c>.
-    ///  </para>
-    ///  <para>
-    ///  If the array is not one dimensional the 
-    ///  <c>Array.ToString()</c> is returned.
-    ///  </para>
-    /// </remarks>
-    private static void RenderArray(RendererMap rendererMap, Array array, TextWriter writer)
+    if (obj is null)
     {
-      if (array.Rank != 1)
-      {
-        writer.Write(array.ToString());
-      }
-      else
-      {
-        writer.Write(array.GetType().Name + " {");
-        int len = array.Length;
-
-        if (len > 0)
-        {
-          rendererMap.FindAndRender(array.GetValue(0), writer);
-          for (int i = 1; i < len; i++)
-          {
-            writer.Write(", ");
-            rendererMap.FindAndRender(array.GetValue(i), writer);
-          }
-        }
-        writer.Write("}");
-      }
+      writer.Write(SystemInfo.NullText);
+      return;
     }
 
-    /// <summary>
-    /// Render the enumerator argument into a string
-    /// </summary>
-    /// <param name="rendererMap">The map used to lookup renderers</param>
-    /// <param name="enumerator">the enumerator to render</param>
-    /// <param name="writer">The writer to render to</param>
-    /// <remarks>
-    /// <para>
-    /// Rendered as an open brace, followed by a comma
-    ///  separated list of the elements (using the appropriate
-    ///  renderer), followed by a close brace. For example:
-    ///  <c>{a, b, c}</c>.
-    ///  </para>
-    /// </remarks>
-    private static void RenderEnumerator(RendererMap rendererMap, IEnumerator? enumerator, TextWriter writer)
+    if (obj is Array objArray)
     {
-      writer.Write("{");
+      RenderArray(rendererMap, objArray, writer);
+      return;
+    }
 
-      if (enumerator is not null && enumerator.MoveNext())
+    // Test if we are dealing with some form of collection object
+    if (obj is IEnumerable objEnumerable)
+    {
+      // Get a collection interface if we can as its .Count property may be more
+      // performant than getting the IEnumerator object and trying to advance it.
+      if (obj is ICollection objCollection && objCollection.Count == 0)
       {
-        rendererMap.FindAndRender(enumerator.Current, writer);
+        writer.Write("{}");
+        return;
+      }
 
-        while (enumerator.MoveNext())
+      // This is a special check to allow us to get the enumerator from the IDictionary
+      // interface as this guarantees us DictionaryEntry objects. Note that in .NET 2.0
+      // the generic IDictionary<> interface enumerates KeyValuePair objects rather than
+      // DictionaryEntry ones. However the implementation of the plain IDictionary 
+      // interface on the generic Dictionary<> still returns DictionaryEntry objects.
+      if (obj is IDictionary objDictionary)
+      {
+        RenderEnumerator(rendererMap, objDictionary.GetEnumerator(), writer);
+        return;
+      }
+
+      RenderEnumerator(rendererMap, objEnumerable.GetEnumerator(), writer);
+      return;
+    }
+
+    if (obj is IEnumerator objEnumerator)
+    {
+      RenderEnumerator(rendererMap, objEnumerator, writer);
+      return;
+    }
+
+    if (obj is DictionaryEntry entry)
+    {
+      RenderDictionaryEntry(rendererMap, entry, writer);
+      return;
+    }
+
+    writer.Write(obj.ToString() ?? SystemInfo.NullText);
+  }
+
+  /// <summary>
+  /// Render the array argument into a string
+  /// </summary>
+  /// <param name="rendererMap">The map used to lookup renderers</param>
+  /// <param name="array">the array to render</param>
+  /// <param name="writer">The writer to render to</param>
+  /// <remarks>
+  /// <para>
+  /// For a one dimensional array this is the
+  ///  array type name, an open brace, followed by a comma
+  ///  separated list of the elements (using the appropriate
+  ///  renderer), followed by a close brace. For example:
+  ///  <c>int[] {1, 2, 3}</c>.
+  ///  </para>
+  ///  <para>
+  ///  If the array is not one dimensional the 
+  ///  <c>Array.ToString()</c> is returned.
+  ///  </para>
+  /// </remarks>
+  private static void RenderArray(RendererMap rendererMap, Array array, TextWriter writer)
+  {
+    if (array.Rank != 1)
+    {
+      writer.Write(array.ToString());
+    }
+    else
+    {
+      writer.Write(array.GetType().Name + " {");
+      int len = array.Length;
+
+      if (len > 0)
+      {
+        rendererMap.FindAndRender(array.GetValue(0), writer);
+        for (int i = 1; i < len; i++)
         {
           writer.Write(", ");
-          rendererMap.FindAndRender(enumerator.Current, writer);
+          rendererMap.FindAndRender(array.GetValue(i), writer);
         }
       }
-
       writer.Write("}");
     }
+  }
 
-    /// <summary>
-    /// Renders the DictionaryEntry argument into a string.
-    /// </summary>
-    /// <param name="rendererMap">The map used to lookup renderers</param>
-    /// <param name="entry">the DictionaryEntry to render</param>
-    /// <param name="writer">The writer to render to</param>
-    /// <remarks>
-    /// <para>
-    /// Render the key, an equals sign ('='), and the value (using the appropriate
-    ///  renderer). For example: <c>key=value</c>.
-    ///  </para>
-    /// </remarks>
-    private static void RenderDictionaryEntry(RendererMap rendererMap, DictionaryEntry entry, TextWriter writer)
+  /// <summary>
+  /// Render the enumerator argument into a string
+  /// </summary>
+  /// <param name="rendererMap">The map used to lookup renderers</param>
+  /// <param name="enumerator">the enumerator to render</param>
+  /// <param name="writer">The writer to render to</param>
+  /// <remarks>
+  /// <para>
+  /// Rendered as an open brace, followed by a comma
+  ///  separated list of the elements (using the appropriate
+  ///  renderer), followed by a close brace. For example:
+  ///  <c>{a, b, c}</c>.
+  ///  </para>
+  /// </remarks>
+  private static void RenderEnumerator(RendererMap rendererMap, IEnumerator? enumerator, TextWriter writer)
+  {
+    writer.Write("{");
+
+    if (enumerator is not null && enumerator.MoveNext())
     {
-      rendererMap.FindAndRender(entry.Key, writer);
-      writer.Write("=");
-      rendererMap.FindAndRender(entry.Value, writer);
+      rendererMap.FindAndRender(enumerator.Current, writer);
+
+      while (enumerator.MoveNext())
+      {
+        writer.Write(", ");
+        rendererMap.FindAndRender(enumerator.Current, writer);
+      }
     }
+
+    writer.Write("}");
+  }
+
+  /// <summary>
+  /// Renders the DictionaryEntry argument into a string.
+  /// </summary>
+  /// <param name="rendererMap">The map used to lookup renderers</param>
+  /// <param name="entry">the DictionaryEntry to render</param>
+  /// <param name="writer">The writer to render to</param>
+  /// <remarks>
+  /// <para>
+  /// Render the key, an equals sign ('='), and the value (using the appropriate
+  ///  renderer). For example: <c>key=value</c>.
+  ///  </para>
+  /// </remarks>
+  private static void RenderDictionaryEntry(RendererMap rendererMap, DictionaryEntry entry, TextWriter writer)
+  {
+    rendererMap.FindAndRender(entry.Key, writer);
+    writer.Write("=");
+    rendererMap.FindAndRender(entry.Value, writer);
   }
 }

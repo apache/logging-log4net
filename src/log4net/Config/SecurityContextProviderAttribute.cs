@@ -24,92 +24,91 @@ using log4net.Util;
 using log4net.Repository;
 using log4net.Core;
 
-namespace log4net.Config
+namespace log4net.Config;
+
+/// <summary>
+/// Assembly level attribute to configure the <see cref="SecurityContextProvider"/>.
+/// </summary>
+/// <remarks>
+/// <para>
+/// This attribute may only be used at the assembly scope and can only
+/// be used once per assembly.
+/// </para>
+/// <para>
+/// Use this attribute to configure the <see cref="XmlConfigurator"/>
+/// without calling one of the <see cref="M:XmlConfigurator.Configure()"/>
+/// methods.
+/// </para>
+/// </remarks>
+/// <author>Nicko Cadell</author>
+[AttributeUsage(AttributeTargets.Assembly)]
+[Log4NetSerializable]
+public sealed class SecurityContextProviderAttribute : ConfiguratorAttribute
 {
   /// <summary>
-  /// Assembly level attribute to configure the <see cref="SecurityContextProvider"/>.
+  /// Construct provider attribute with type specified
+  /// </summary>
+  /// <param name="providerType">the type of the provider to use</param>
+  /// <remarks>
+  /// <para>
+  /// The provider specified must subclass the <see cref="SecurityContextProvider"/>
+  /// class.
+  /// </para>
+  /// </remarks>
+  public SecurityContextProviderAttribute(Type providerType) : base(100) /* configurator priority 100 to execute before the XmlConfigurator */
+  {
+    ProviderType = providerType;
+  }
+
+  /// <summary>
+  /// Gets or sets the type of the provider to use.
   /// </summary>
   /// <remarks>
   /// <para>
-  /// This attribute may only be used at the assembly scope and can only
-  /// be used once per assembly.
-  /// </para>
-  /// <para>
-  /// Use this attribute to configure the <see cref="XmlConfigurator"/>
-  /// without calling one of the <see cref="M:XmlConfigurator.Configure()"/>
-  /// methods.
+  /// The provider specified must subclass the <see cref="SecurityContextProvider"/>
+  /// class.
   /// </para>
   /// </remarks>
-  /// <author>Nicko Cadell</author>
-  [AttributeUsage(AttributeTargets.Assembly)]
-  [Log4NetSerializable]
-  public sealed class SecurityContextProviderAttribute : ConfiguratorAttribute
+  public Type ProviderType { get; set; }
+
+  /// <summary>
+  /// Configures the SecurityContextProvider
+  /// </summary>
+  /// <param name="sourceAssembly">The assembly that this attribute was defined on.</param>
+  /// <param name="targetRepository">The repository to configure.</param>
+  /// <remarks>
+  /// <para>
+  /// Creates a provider instance from the <see cref="ProviderType"/> specified.
+  /// Sets this as the default security context provider <see cref="SecurityContextProvider.DefaultProvider"/>.
+  /// </para>
+  /// </remarks>
+  public override void Configure(Assembly sourceAssembly, ILoggerRepository targetRepository)
   {
-    /// <summary>
-    /// Construct provider attribute with type specified
-    /// </summary>
-    /// <param name="providerType">the type of the provider to use</param>
-    /// <remarks>
-    /// <para>
-    /// The provider specified must subclass the <see cref="SecurityContextProvider"/>
-    /// class.
-    /// </para>
-    /// </remarks>
-    public SecurityContextProviderAttribute(Type providerType) : base(100) /* configurator priority 100 to execute before the XmlConfigurator */
+    if (ProviderType is null)
     {
-      ProviderType = providerType;
+      LogLog.Error(_declaringType, $"Attribute specified on assembly [{sourceAssembly.FullName}] with null ProviderType.");
     }
-
-    /// <summary>
-    /// Gets or sets the type of the provider to use.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The provider specified must subclass the <see cref="SecurityContextProvider"/>
-    /// class.
-    /// </para>
-    /// </remarks>
-    public Type ProviderType { get; set; }
-
-    /// <summary>
-    /// Configures the SecurityContextProvider
-    /// </summary>
-    /// <param name="sourceAssembly">The assembly that this attribute was defined on.</param>
-    /// <param name="targetRepository">The repository to configure.</param>
-    /// <remarks>
-    /// <para>
-    /// Creates a provider instance from the <see cref="ProviderType"/> specified.
-    /// Sets this as the default security context provider <see cref="SecurityContextProvider.DefaultProvider"/>.
-    /// </para>
-    /// </remarks>
-    public override void Configure(Assembly sourceAssembly, ILoggerRepository targetRepository)
+    else
     {
-      if (ProviderType is null)
+      LogLog.Debug(_declaringType, $"Creating provider of type [{ProviderType.FullName}]");
+
+      if (Activator.CreateInstance(ProviderType) is not SecurityContextProvider provider)
       {
-        LogLog.Error(declaringType, $"Attribute specified on assembly [{sourceAssembly.FullName}] with null ProviderType.");
+        LogLog.Error(_declaringType, $"Failed to create SecurityContextProvider instance of type [{ProviderType.Name}].");
       }
       else
       {
-        LogLog.Debug(declaringType, $"Creating provider of type [{ProviderType.FullName}]");
-
-        if (Activator.CreateInstance(ProviderType) is not SecurityContextProvider provider)
-        {
-          LogLog.Error(declaringType, $"Failed to create SecurityContextProvider instance of type [{ProviderType.Name}].");
-        }
-        else
-        {
-          SecurityContextProvider.DefaultProvider = provider;
-        }
+        SecurityContextProvider.DefaultProvider = provider;
       }
     }
-
-    /// <summary>
-    /// The fully qualified type of the SecurityContextProviderAttribute class.
-    /// </summary>
-    /// <remarks>
-    /// Used by the internal logger to record the Type of the
-    /// log message.
-    /// </remarks>
-    private static readonly Type declaringType = typeof(SecurityContextProviderAttribute);
   }
+
+  /// <summary>
+  /// The fully qualified type of the SecurityContextProviderAttribute class.
+  /// </summary>
+  /// <remarks>
+  /// Used by the internal logger to record the Type of the
+  /// log message.
+  /// </remarks>
+  private static readonly Type _declaringType = typeof(SecurityContextProviderAttribute);
 }

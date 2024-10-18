@@ -21,114 +21,113 @@ using System;
 using System.Collections.Concurrent;
 using log4net.Repository;
 
-namespace log4net.Plugin
+namespace log4net.Plugin;
+
+/// <summary>
+/// Map of repository plugins.
+/// </summary>
+/// <remarks>
+/// <para>
+/// This class is a name keyed map of the plugins that are
+/// attached to a repository.
+/// </para>
+/// </remarks>
+/// <author>Nicko Cadell</author>
+/// <author>Gert Driesen</author>
+public sealed class PluginMap
 {
   /// <summary>
-  /// Map of repository plugins.
+  /// Constructor
   /// </summary>
+  /// <param name="repository">The repository that the plugins should be attached to.</param>
   /// <remarks>
   /// <para>
-  /// This class is a name keyed map of the plugins that are
-  /// attached to a repository.
+  /// Initialize a new instance of the <see cref="PluginMap" /> class with a 
+  /// repository that the plugins should be attached to.
   /// </para>
   /// </remarks>
-  /// <author>Nicko Cadell</author>
-  /// <author>Gert Driesen</author>
-  public sealed class PluginMap
+  public PluginMap(ILoggerRepository repository)
   {
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="repository">The repository that the plugins should be attached to.</param>
-    /// <remarks>
-    /// <para>
-    /// Initialize a new instance of the <see cref="PluginMap" /> class with a 
-    /// repository that the plugins should be attached to.
-    /// </para>
-    /// </remarks>
-    public PluginMap(ILoggerRepository repository)
-    {
-      m_repository = repository;
-    }
-
-    /// <summary>
-    /// Gets a <see cref="IPlugin" /> by name.
-    /// </summary>
-    /// <param name="name">The name of the <see cref="IPlugin" /> to lookup.</param>
-    /// <returns>
-    /// The <see cref="IPlugin" /> from the map with the name specified, or 
-    /// <c>null</c> if no plugin is found.
-    /// </returns>
-    public IPlugin? this[string name]
-    {
-      get
-      {
-        if (name is null)
-        {
-          throw new ArgumentNullException(nameof(name));
-        }
-
-        m_mapName2Plugin.TryGetValue(name, out IPlugin? plugin);
-        return plugin;
-      }
-    }
-
-    /// <summary>
-    /// Gets all possible plugins as a list of <see cref="IPlugin" /> objects.
-    /// </summary>
-    /// <value>All possible plugins as a list of <see cref="IPlugin" /> objects.</value>
-    public PluginCollection AllPlugins => new PluginCollection(m_mapName2Plugin.Values);
-
-    /// <summary>
-    /// Adds a <see cref="IPlugin" /> to the map.
-    /// </summary>
-    /// <param name="plugin">The <see cref="IPlugin" /> to add to the map.</param>
-    /// <remarks>
-    /// <para>
-    /// The <see cref="IPlugin" /> will be attached to the repository when added.
-    /// </para>
-    /// <para>
-    /// If there already exists a plugin with the same name 
-    /// attached to the repository then the old plugin will
-    /// be <see cref="IPlugin.Shutdown"/> and replaced with
-    /// the new plugin.
-    /// </para>
-    /// </remarks>
-    public void Add(IPlugin plugin)
-    {
-      if (plugin is null)
-      {
-        throw new ArgumentNullException(nameof(plugin));
-      }
-
-      IPlugin? curPlugin = null;
-      m_mapName2Plugin.AddOrUpdate(plugin.Name, plugin, (_, existingPlugin) =>
-      {
-        curPlugin = existingPlugin;
-        return plugin;
-      });
-
-      // Shutdown existing plugin with same name
-      curPlugin?.Shutdown();
-
-      // Attach new plugin to repository
-      plugin.Attach(m_repository);
-    }
-
-    /// <summary>
-    /// Removes an <see cref="IPlugin" /> from the map.
-    /// </summary>
-    /// <param name="plugin">The <see cref="IPlugin" /> to remove from the map.</param>
-    public void Remove(IPlugin plugin)
-    {
-      if (plugin is null)
-      {
-        throw new ArgumentNullException(nameof(plugin));
-      }
-      m_mapName2Plugin.TryRemove(plugin.Name, out _);
-    }
-
-    private readonly ConcurrentDictionary<string, IPlugin> m_mapName2Plugin = new(StringComparer.Ordinal);
-    private readonly ILoggerRepository m_repository;
+    this._repository = repository;
   }
+
+  /// <summary>
+  /// Gets a <see cref="IPlugin" /> by name.
+  /// </summary>
+  /// <param name="name">The name of the <see cref="IPlugin" /> to lookup.</param>
+  /// <returns>
+  /// The <see cref="IPlugin" /> from the map with the name specified, or 
+  /// <c>null</c> if no plugin is found.
+  /// </returns>
+  public IPlugin? this[string name]
+  {
+    get
+    {
+      if (name is null)
+      {
+        throw new ArgumentNullException(nameof(name));
+      }
+
+      _mapName2Plugin.TryGetValue(name, out IPlugin? plugin);
+      return plugin;
+    }
+  }
+
+  /// <summary>
+  /// Gets all possible plugins as a list of <see cref="IPlugin" /> objects.
+  /// </summary>
+  /// <value>All possible plugins as a list of <see cref="IPlugin" /> objects.</value>
+  public PluginCollection AllPlugins => new PluginCollection(_mapName2Plugin.Values);
+
+  /// <summary>
+  /// Adds a <see cref="IPlugin" /> to the map.
+  /// </summary>
+  /// <param name="plugin">The <see cref="IPlugin" /> to add to the map.</param>
+  /// <remarks>
+  /// <para>
+  /// The <see cref="IPlugin" /> will be attached to the repository when added.
+  /// </para>
+  /// <para>
+  /// If there already exists a plugin with the same name 
+  /// attached to the repository then the old plugin will
+  /// be <see cref="IPlugin.Shutdown"/> and replaced with
+  /// the new plugin.
+  /// </para>
+  /// </remarks>
+  public void Add(IPlugin plugin)
+  {
+    if (plugin is null)
+    {
+      throw new ArgumentNullException(nameof(plugin));
+    }
+
+    IPlugin? curPlugin = null;
+    _mapName2Plugin.AddOrUpdate(plugin.Name, plugin, (_, existingPlugin) =>
+    {
+      curPlugin = existingPlugin;
+      return plugin;
+    });
+
+    // Shutdown existing plugin with same name
+    curPlugin?.Shutdown();
+
+    // Attach new plugin to repository
+    plugin.Attach(_repository);
+  }
+
+  /// <summary>
+  /// Removes an <see cref="IPlugin" /> from the map.
+  /// </summary>
+  /// <param name="plugin">The <see cref="IPlugin" /> to remove from the map.</param>
+  public void Remove(IPlugin plugin)
+  {
+    if (plugin is null)
+    {
+      throw new ArgumentNullException(nameof(plugin));
+    }
+    _mapName2Plugin.TryRemove(plugin.Name, out _);
+  }
+
+  private readonly ConcurrentDictionary<string, IPlugin> _mapName2Plugin = new(StringComparer.Ordinal);
+  private readonly ILoggerRepository _repository;
 }

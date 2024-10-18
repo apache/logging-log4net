@@ -21,29 +21,28 @@ using System;
 
 using log4net.Core;
 
-namespace log4net.Layout
+namespace log4net.Layout;
+
+/// <summary>
+/// Extracts the date from the <see cref="LoggingEvent"/>.
+/// </summary>
+/// <author>Nicko Cadell</author>
+/// <author>Gert Driesen</author>
+public class RawTimeStampLayout : IRawLayout
 {
   /// <summary>
-  /// Extracts the date from the <see cref="LoggingEvent"/>.
+  /// Gets the <see cref="LoggingEvent.TimeStamp"/> as a <see cref="DateTime"/>.
   /// </summary>
-  /// <author>Nicko Cadell</author>
-  /// <author>Gert Driesen</author>
-  public class RawTimeStampLayout : IRawLayout
+  /// <param name="loggingEvent">The event to format</param>
+  /// <returns>returns the time stamp</returns>
+  /// <remarks>
+  /// <para>
+  /// The time stamp is in local time. To format the time stamp
+  /// in universal time use <see cref="RawUtcTimeStampLayout"/>.
+  /// </para>
+  /// </remarks>
+  public virtual object Format(LoggingEvent loggingEvent)
   {
-    /// <summary>
-    /// Gets the <see cref="LoggingEvent.TimeStamp"/> as a <see cref="DateTime"/>.
-    /// </summary>
-    /// <param name="loggingEvent">The event to format</param>
-    /// <returns>returns the time stamp</returns>
-    /// <remarks>
-    /// <para>
-    /// The time stamp is in local time. To format the time stamp
-    /// in universal time use <see cref="RawUtcTimeStampLayout"/>.
-    /// </para>
-    /// </remarks>
-    public virtual object Format(LoggingEvent loggingEvent)
-    {
-      return loggingEvent.TimeStamp;
-    }
+    return loggingEvent.TimeStamp;
   }
 }

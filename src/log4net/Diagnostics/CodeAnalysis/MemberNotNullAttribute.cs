@@ -41,7 +41,7 @@ internal sealed class MemberNotNullAttribute : Attribute
   /// <param name="member">The field or property member that is promised to be non-null.</param>
   [SuppressMessage("Design", "CA1019:Define accessors for attribute arguments", Justification = "LuGe: 1-zu-1 von DotNet geklaut")]
   public MemberNotNullAttribute(string member)
-    : this(new[] { member })
+    : this([member])
   { }
 
   /// <summary>
