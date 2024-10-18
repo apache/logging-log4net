@@ -453,11 +453,6 @@ public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
   /// Notify the registered listeners that the repository has had its configuration changed
   /// </summary>
   /// <param name="e">Empty EventArgs</param>
-  /// <remarks>
-  /// <para>
-  /// Notify any listeners that this repository's configuration has changed.
-  /// </para>
-  /// </remarks>
   protected virtual void OnConfigurationChanged(EventArgs? e)
     => ConfigurationChanged?.Invoke(this, e ?? EventArgs.Empty);
 
@@ -475,18 +470,14 @@ public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
 
   private static int GetWaitTime(DateTime startTimeUtc, int millisecondsTimeout)
   {
-    if (millisecondsTimeout == Timeout.Infinite)
+    if (millisecondsTimeout is 0 or Timeout.Infinite)
     {
-      return Timeout.Infinite;
-    }
-    if (millisecondsTimeout == 0)
-    {
-      return 0;
+      return millisecondsTimeout;
     }
 
     int elapsedMilliseconds = (int)(DateTime.UtcNow - startTimeUtc).TotalMilliseconds;
     int timeout = millisecondsTimeout - elapsedMilliseconds;
-    return (timeout < 0) ? 0 : timeout;
+    return Math.Max(0, timeout);
   }
 
   /// <summary>
