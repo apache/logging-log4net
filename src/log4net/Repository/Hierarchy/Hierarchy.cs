@@ -41,22 +41,16 @@ public delegate void LoggerCreationEventHandler(object sender, LoggerCreationEve
 /// </summary>
 /// <remarks>
 /// <para>
-/// A <see cref="Hierarchy.LoggerCreatedEvent"/> event is raised every time a
-/// <see cref="Logger"/> is created.
+/// A <see cref="Hierarchy.LoggerCreatedEvent"/> event is raised every time a <see cref="Logger"/> is created.
 /// </para>
 /// </remarks>
-public class LoggerCreationEventArgs : EventArgs
+/// <param name="log">The <see cref="Logger"/> that has been created.</param>
+public class LoggerCreationEventArgs(Logger log) : EventArgs
 {
-  /// <summary>
-  /// Constructor
-  /// </summary>
-  /// <param name="log">The <see cref="Logger"/> that has been created.</param>
-  public LoggerCreationEventArgs(Logger log) => Logger = log;
-
   /// <summary>
   /// Gets the <see cref="Logger"/> that has been created.
   /// </summary>
-  public Logger Logger { get; }
+  public Logger Logger { get; } = log;
 }
 
 /// <summary>
@@ -64,8 +58,7 @@ public class LoggerCreationEventArgs : EventArgs
 /// </summary>
 /// <remarks>
 /// <para>
-/// <i>The casual user should not have to deal with this class
-/// directly.</i>
+/// <i>The casual user should not have to deal with this class directly.</i>
 /// </para>
 /// <para>
 /// This class is specialized in retrieving loggers by name and also maintaining the logger
@@ -343,9 +336,10 @@ public class Hierarchy : LoggerRepositorySkeleton, IBasicRepositoryConfigurator,
   /// The list returned is unordered but does not contain duplicates.
   /// </para>
   /// </remarks>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0305:Simplify collection initialization")]
   public override IAppender[] GetAppenders()
   {
-    var appenderList = new HashSet<IAppender>();
+    HashSet<IAppender> appenderList = [];
 
     CollectAppenders(appenderList, Root);
 
@@ -407,7 +401,7 @@ public class Hierarchy : LoggerRepositorySkeleton, IBasicRepositoryConfigurator,
   /// </remarks>
   protected void BasicRepositoryConfigure(params IAppender[] appenders)
   {
-    var configurationMessages = new List<LogLog>();
+    List<LogLog> configurationMessages = [];
 
     using (new LogLog.LogReceivedAdapter(configurationMessages))
     {
@@ -444,7 +438,7 @@ public class Hierarchy : LoggerRepositorySkeleton, IBasicRepositoryConfigurator,
   /// </remarks>
   protected void XmlRepositoryConfigure(System.Xml.XmlElement element)
   {
-    var configurationMessages = new List<LogLog>();
+    List<LogLog> configurationMessages = [];
 
     using (new LogLog.LogReceivedAdapter(configurationMessages))
     {
@@ -516,7 +510,7 @@ public class Hierarchy : LoggerRepositorySkeleton, IBasicRepositoryConfigurator,
     name.EnsureNotNull();
     factory.EnsureNotNull();
 
-    var key = new LoggerKey(name);
+    LoggerKey key = new(name);
 
     const int maxRetries = 5;
     for (int i = 0; i < maxRetries; i++)
@@ -631,7 +625,7 @@ public class Hierarchy : LoggerRepositorySkeleton, IBasicRepositoryConfigurator,
     {
       string substr = name.Substring(0, i);
 
-      var key = new LoggerKey(substr);
+      LoggerKey key = new(substr);
       _loggers.TryGetValue(key, out object? node);
 
       // Create a provision node for a future parent.
@@ -693,9 +687,11 @@ public class Hierarchy : LoggerRepositorySkeleton, IBasicRepositoryConfigurator,
   /// c's parent field to log.
   /// </para>
   /// </remarks>
-  private static void UpdateChildren(ProvisionNode pn, Logger log)
+  private static void UpdateChildren(ProvisionNode provisionNode, Logger log)
   {
-    foreach (Logger childLogger in pn)
+    provisionNode.ForEach(Update, log);
+
+    static void Update(Logger childLogger, Logger log)
     {
       // Unless this child already points to a correct (lower) parent,
       // make log.Parent point to childLogger.Parent and childLogger.Parent to log.

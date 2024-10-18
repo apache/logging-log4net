@@ -20,6 +20,7 @@
 */
 
 using System;
+using System.Threading.Tasks;
 using System.Xml;
 using log4net.Config;
 using log4net.Repository;
@@ -29,7 +30,7 @@ using NUnit.Framework;
 namespace log4net.Tests.Hierarchy;
 
 [TestFixture]
-public class Hierarchy
+public class HierarchyTest
 {
   [Test]
   public void SetRepositoryPropertiesInConfigFile()
@@ -37,19 +38,19 @@ public class Hierarchy
     // LOG4NET-53: Allow repository properties to be set in the config file
     XmlDocument log4NetConfig = new();
     log4NetConfig.LoadXml(@"
-        <log4net>
-          <property>
-            <key value=""two-plus-two"" />
-            <value value=""4"" />
-          </property>
-          <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
-            <layout type=""log4net.Layout.SimpleLayout"" />
-          </appender>
-          <root>
-            <level value=""ALL"" />
-            <appender-ref ref=""StringAppender"" />
-          </root>
-        </log4net>");
+      <log4net>
+        <property>
+          <key value=""two-plus-two"" />
+          <value value=""4"" />
+        </property>
+        <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
+          <layout type=""log4net.Layout.SimpleLayout"" />
+        </appender>
+        <root>
+          <level value=""ALL"" />
+          <appender-ref ref=""StringAppender"" />
+        </root>
+      </log4net>");
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
@@ -99,18 +100,18 @@ public class Hierarchy
   {
     XmlDocument log4NetConfig = new();
     log4NetConfig.LoadXml(@"
-        <log4net>
-          <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
-            <layout type=""log4net.Layout.SimpleLayout"" />
-          </appender>
-          <root>
-            <level value=""ALL"" />
-            <appender-ref ref=""StringAppender"" />
-          </root>
-          <logger name=""."">
-            <level value=""WARN"" />
-          </logger>
-        </log4net>");
+      <log4net>
+        <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
+          <layout type=""log4net.Layout.SimpleLayout"" />
+        </appender>
+        <root>
+          <level value=""ALL"" />
+          <appender-ref ref=""StringAppender"" />
+        </root>
+        <logger name=""."">
+          <level value=""WARN"" />
+        </logger>
+      </log4net>");
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
@@ -121,18 +122,18 @@ public class Hierarchy
   {
     XmlDocument log4NetConfig = new();
     log4NetConfig.LoadXml(@"
-        <log4net>
-          <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
-            <layout type=""log4net.Layout.SimpleLayout"" />
-          </appender>
-          <root>
-            <level value=""ALL"" />
-            <appender-ref ref=""StringAppender"" />
-          </root>
-          <logger name=""L"">
-            <level value=""WARN"" />
-          </logger>
-        </log4net>");
+      <log4net>
+        <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
+          <layout type=""log4net.Layout.SimpleLayout"" />
+        </appender>
+        <root>
+          <level value=""ALL"" />
+          <appender-ref ref=""StringAppender"" />
+        </root>
+        <logger name=""L"">
+          <level value=""WARN"" />
+        </logger>
+      </log4net>");
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
@@ -143,18 +144,18 @@ public class Hierarchy
   {
     XmlDocument log4NetConfig = new();
     log4NetConfig.LoadXml(@"
-        <log4net>
-          <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
-            <layout type=""log4net.Layout.SimpleLayout"" />
-          </appender>
-          <root>
-            <level value=""ALL"" />
-            <appender-ref ref=""StringAppender"" />
-          </root>
-          <logger name=""L..M"">
-            <level value=""WARN"" />
-          </logger>
-        </log4net>");
+      <log4net>
+        <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
+          <layout type=""log4net.Layout.SimpleLayout"" />
+        </appender>
+        <root>
+          <level value=""ALL"" />
+          <appender-ref ref=""StringAppender"" />
+        </root>
+        <logger name=""L..M"">
+          <level value=""WARN"" />
+        </logger>
+      </log4net>");
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
@@ -169,19 +170,44 @@ public class Hierarchy
   {
     XmlDocument log4NetConfig = new();
     log4NetConfig.LoadXml(@"
-        <log4net>
-          <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
-            <layout type=""log4net.Layout.SimpleLayout"" />
-          </appender>
-          <root>
-            <level value=""ALL"" />
-            <appender-ref ref=""StringAppender"" />
-          </root>
-        </log4net>");
+      <log4net>
+        <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
+          <layout type=""log4net.Layout.SimpleLayout"" />
+        </appender>
+        <root>
+          <level value=""ALL"" />
+          <appender-ref ref=""StringAppender"" />
+        </root>
+      </log4net>");
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
     Assert.AreEqual("A.B.C", rep.GetLogger("A.B.C").Name);
     Assert.AreEqual("A.B", rep.GetLogger("A.B").Name);
+  }
+
+  /// <summary>
+  /// https://github.com/apache/logging-log4net/issues/197
+  /// IndexOutOfRangeException when creating child loggers multithreaded
+  /// </summary>
+  [Test]
+  public void CreateChildLoggersMultiThreaded()
+  {
+    XmlDocument log4NetConfig = new();
+    log4NetConfig.LoadXml(@"
+      <log4net>
+        <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
+          <layout type=""log4net.Layout.SimpleLayout"" />
+        </appender>
+        <root>
+          <level value=""ALL"" />
+          <appender-ref ref=""StringAppender"" />
+        </root>
+      </log4net>");
+
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
+
+    Parallel.For(0, 100, i => Assert.AreEqual($"A.{i}", rep.GetLogger($"A.{i}").Name));
   }
 }

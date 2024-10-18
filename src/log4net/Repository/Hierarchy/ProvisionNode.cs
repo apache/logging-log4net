@@ -17,6 +17,8 @@
 //
 #endregion
 
+using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace log4net.Repository.Hierarchy;
@@ -36,14 +38,41 @@ namespace log4net.Repository.Hierarchy;
 /// </remarks>
 /// <author>Nicko Cadell</author>
 /// <author>Gert Driesen</author>
-internal sealed class ProvisionNode : List<Logger>
+internal sealed class ProvisionNode
 {
+  private readonly List<Logger> _loggers;
+
   /// <summary>
   /// Create a new provision node with child node
   /// </summary>
   /// <param name="log">A child logger to add to this node.</param>
-  internal ProvisionNode(Logger log)
+  internal ProvisionNode(Logger log) => _loggers = [log];
+
+  /// <summary>
+  /// Add a <see cref="Logger"/> to the internal List
+  /// </summary>
+  /// <param name="log">Logger</param>
+  internal void Add(Logger log)
   {
-    Add(log);
+    lock (((IList)_loggers).SyncRoot)
+    {
+      _loggers.Add(log);
+    }
+  }
+
+  /// <summary>
+  /// Calls <paramref name="callback"/> for each logger in the internal list
+  /// </summary>
+  /// <param name="callback">Callback to execute</param>
+  /// <param name="parent">Parant logger</param>
+  internal void ForEach(Action<Logger, Logger> callback, Logger parent)
+  {
+    lock (((IList)_loggers).SyncRoot)
+    {
+      foreach (Logger log in _loggers)
+      {
+        callback(log, parent);
+      }
+    }
   }
 }
