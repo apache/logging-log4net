@@ -447,10 +447,7 @@ public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
   /// </para>
   /// </remarks>
   protected virtual void OnConfigurationReset(EventArgs? e)
-  {
-    e ??= EventArgs.Empty;
-    ConfigurationReset?.Invoke(this, e);
-  }
+    => ConfigurationReset?.Invoke(this, e ?? EventArgs.Empty);
 
   /// <summary>
   /// Notify the registered listeners that the repository has had its configuration changed
@@ -462,10 +459,7 @@ public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
   /// </para>
   /// </remarks>
   protected virtual void OnConfigurationChanged(EventArgs? e)
-  {
-    e ??= EventArgs.Empty;
-    ConfigurationChanged?.Invoke(this, e);
-  }
+    => ConfigurationChanged?.Invoke(this, e ?? EventArgs.Empty);
 
   /// <summary>
   /// Raise a configuration changed event on this repository
@@ -477,20 +471,22 @@ public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
   /// raise this event notification to notify listeners.
   /// </para>
   /// </remarks>
-  public void RaiseConfigurationChanged(EventArgs e)
-  {
-    OnConfigurationChanged(e);
-  }
+  public void RaiseConfigurationChanged(EventArgs e) => OnConfigurationChanged(e);
 
   private static int GetWaitTime(DateTime startTimeUtc, int millisecondsTimeout)
   {
-    if (millisecondsTimeout == Timeout.Infinite) return Timeout.Infinite;
-    if (millisecondsTimeout == 0) return 0;
+    if (millisecondsTimeout == Timeout.Infinite)
+    {
+      return Timeout.Infinite;
+    }
+    if (millisecondsTimeout == 0)
+    {
+      return 0;
+    }
 
     int elapsedMilliseconds = (int)(DateTime.UtcNow - startTimeUtc).TotalMilliseconds;
     int timeout = millisecondsTimeout - elapsedMilliseconds;
-    if (timeout < 0) timeout = 0;
-    return timeout;
+    return (timeout < 0) ? 0 : timeout;
   }
 
   /// <summary>
@@ -501,7 +497,11 @@ public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
   /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
   public bool Flush(int millisecondsTimeout)
   {
-    if (millisecondsTimeout < -1) throw new ArgumentOutOfRangeException(nameof(millisecondsTimeout), "Timeout must be -1 (Timeout.Infinite) or non-negative");
+    if (millisecondsTimeout < -1)
+    {
+      throw new ArgumentOutOfRangeException(nameof(millisecondsTimeout),
+        "Timeout must be -1 (Timeout.Infinite) or non-negative");
+    }
 
     // Assume success until one of the appenders fails
     bool result = true;
@@ -520,7 +520,10 @@ public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
       if (appender is BufferingAppenderSkeleton)
       {
         int timeout = GetWaitTime(startTimeUtc, millisecondsTimeout);
-        if (!flushable.Flush(timeout)) result = false;
+        if (!flushable.Flush(timeout))
+        {
+          result = false;
+        }
       }
     }
 
