@@ -109,6 +109,7 @@ public sealed class FileAppenderTest
   /// </summary>
   /// <remarks>see https://github.com/apache/logging-log4net/issues/193</remarks>
   [Test]
+  [Platform(Include = "Win")]
   public void FilenameWithGlobalContextPatternStringTest()
   {
     DirectoryInfo logs = new("./Logs");
