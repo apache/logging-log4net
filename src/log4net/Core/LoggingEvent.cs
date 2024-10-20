@@ -745,15 +745,27 @@ public class LoggingEvent : ILog4NetSerializable
   {
     if (_platformDoesNotSupportWindowsIdentity)
     {
-      // we've already received one PlatformNotSupportedException
+      // we've already received one PlatformNotSupportedException or null from TryReadWindowsIdentityUserName
       // and it's highly unlikely that will change
       return Environment.UserName;
     }
 
     try
     {
-      return _cachedWindowsIdentityUserName ??=
-          TryReadWindowsIdentityUserName();
+      if(_cachedWindowsIdentityUserName is not null)
+      {
+        return _cachedWindowsIdentityUserName;
+      }
+      else if(TryReadWindowsIdentityUserName() is string userName)
+      {
+        _cachedWindowsIdentityUserName = userName;
+        return _cachedWindowsIdentityUserName;
+      }
+      else
+      {
+        _platformDoesNotSupportWindowsIdentity = true;
+        return Environment.UserName;
+      }
     }
     catch (PlatformNotSupportedException)
     {
@@ -777,12 +789,17 @@ public class LoggingEvent : ILog4NetSerializable
   }
 
   private string? _cachedWindowsIdentityUserName;
-  private static string TryReadWindowsIdentityUserName()
+  
+  /// <summary>
+  /// TODO
+  /// </summary>
+  /// <returns>TODO</returns>
+  private static string? TryReadWindowsIdentityUserName()
   {
 #if !NET462_OR_GREATER
     if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
     {
-      return string.Empty;
+      return null;
     }
 #endif
     using var identity = WindowsIdentity.GetCurrent();
