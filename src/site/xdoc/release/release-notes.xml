@@ -39,6 +39,9 @@ limitations under the License.
             <li>
               <a href="https://github.com/apache/logging-log4net/issues/189">separate review instructions for log4net</a> (by @FreeAndNil)
             </li>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/196">more modern coding style</a> (by @FreeAndNil)
+            </li>
           </ul>
         </section>
       </section>
