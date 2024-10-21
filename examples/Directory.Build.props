@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <Version>3.0.1</Version>
+    <Version>3.0.2</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <Deterministic>true</Deterministic>
     <LangVersion>latest</LangVersion>
@@ -23,7 +23,7 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup>
-    <Log4NetPackageVersion>3.0.1</Log4NetPackageVersion>
+    <Log4NetPackageVersion>3.0.2</Log4NetPackageVersion>
   </PropertyGroup>
   <PropertyGroup Label="GenerateAssemblyInfo">
     <GenerateAssemblyVersionAttribute>true</GenerateAssemblyVersionAttribute>

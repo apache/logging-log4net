@@ -1,47 +1,47 @@
 {
-  "name": "log4net",
-  "version": "3.0.2",
-  "description": "Log4Net is a logging framework for .NET",
-  "scripts": {
-    "test": "run-s clean-build test-dotnet run-dotnet-core-tests",
-    "test-xplatform": "run-s build-xplatform run-dotnet-core-tests",
-    "build-xplatform": "cross-env DOTNET_CORE=1 BUILD_CONFIGURATION=CrossPlatform zarro build",
-    "run-dotnet-core-tests": "cross-env DOTNET_CORE=1 zarro quick-test-dotnet",
-    "clean-build": "rimraf build",
-    "prebuild": "run-s clean-build",
-    "build": "zarro @",
-    "build-release": "cross-env BUILD_CONFIGURATION=Release run-s clean-build build",
-    "build-site": "zarro @",
-    "test-dotnet": "zarro @",
-    "prepare-build-artifacts": "zarro @",
-    "dump-env": "node -e \"console.log(process.env);\"",
-    "release": "run-s build-release prepare-build-artifacts build-site",
-    "release-beta": "cross-env DOTNET_CORE=1 VERSION_INCREMENT_STRATEGY=prerelease BUILD_CONFIGURATION=Release zarro release-nuget",
-    "zarro": "zarro",
-    "update-version-info": "zarro @",
-    "this-is-an-example": "zarro @"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/apache/logging-log4net.git"
-  },
-  "author": "",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/apache/logging-log4net/issues"
-  },
-  "homepage": "https://github.com/apache/logging-log4net#readme",
-  "devDependencies": {
-    "cross-env": "^7.0.2",
-    "gulp-debug": "^4.0.0",
-    "gulp-rename": "^2.0.0",
-    "gulp-zip": "^5.0.2",
-    "npm-run-all": "^4.1.5",
-    "rimraf": "^3.0.2",
-    "simple-git": "^3.22.0",
-    "typescript": "^5.3.3",
-    "which": "^2.0.2",
-    "yafs": "^1.36.0",
-    "zarro": "^1.178.0"
-  }
+    "name":  "log4net",
+    "version":  "3.0.3",
+    "description":  "Log4Net is a logging framework for .NET",
+    "scripts":  {
+                    "test":  "run-s clean-build test-dotnet run-dotnet-core-tests",
+                    "test-xplatform":  "run-s build-xplatform run-dotnet-core-tests",
+                    "build-xplatform":  "cross-env DOTNET_CORE=1 BUILD_CONFIGURATION=CrossPlatform zarro build",
+                    "run-dotnet-core-tests":  "cross-env DOTNET_CORE=1 zarro quick-test-dotnet",
+                    "clean-build":  "rimraf build",
+                    "prebuild":  "run-s clean-build",
+                    "build":  "zarro @",
+                    "build-release":  "cross-env BUILD_CONFIGURATION=Release run-s clean-build build",
+                    "build-site":  "zarro @",
+                    "test-dotnet":  "zarro @",
+                    "prepare-build-artifacts":  "zarro @",
+                    "dump-env":  "node -e \"console.log(process.env);\"",
+                    "release":  "run-s build-release prepare-build-artifacts build-site",
+                    "release-beta":  "cross-env DOTNET_CORE=1 VERSION_INCREMENT_STRATEGY=prerelease BUILD_CONFIGURATION=Release zarro release-nuget",
+                    "zarro":  "zarro",
+                    "update-version-info":  "zarro @",
+                    "this-is-an-example":  "zarro @"
+                },
+    "repository":  {
+                       "type":  "git",
+                       "url":  "git+ssh://git@github.com/apache/logging-log4net.git"
+                   },
+    "author":  "",
+    "license":  "Apache-2.0",
+    "bugs":  {
+                 "url":  "https://github.com/apache/logging-log4net/issues"
+             },
+    "homepage":  "https://github.com/apache/logging-log4net#readme",
+    "devDependencies":  {
+                            "cross-env":  "^7.0.2",
+                            "gulp-debug":  "^4.0.0",
+                            "gulp-rename":  "^2.0.0",
+                            "gulp-zip":  "^5.0.2",
+                            "npm-run-all":  "^4.1.5",
+                            "rimraf":  "^3.0.2",
+                            "simple-git":  "^3.22.0",
+                            "typescript":  "^5.3.3",
+                            "which":  "^2.0.2",
+                            "yafs":  "^1.36.0",
+                            "zarro":  "^1.178.0"
+                        }
 }

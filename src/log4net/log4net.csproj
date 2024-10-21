@@ -1,6 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Version>3.0.2</Version>
+    <Version>3.0.3</Version>
     <PackageId>log4net</PackageId>
     <Product>Apache log4net</Product>
     <Title>$(Product)</Title>

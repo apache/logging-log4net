@@ -22,7 +22,26 @@ limitations under the License.
   </properties>
   <meta name="keywords" content="log4net release notes, log4net"/>
   <body>
-    <section id="main" name="Apache log4net™ Release Notes">
+    <section id="main" name="Apache log4net Release Notes">
+      <section id="a3.0.3" name="3.0.3">
+        <section id="a3.0.3-breaking" name="Breaking Changes"/>
+        <br/>
+        Apache log4net 3.0.3 addresses reported issues:
+        <section id="a3.0.3-bug" name="Bug fixes">
+          <ul>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/tbd">tbd</a> (by tbd)
+            </li>
+          </ul>
+        </section>
+        <section id="a3.0.3-enhancements" name="Enhancements">
+          <ul>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/tbd">tbd</a> (by tbd)
+            </li>
+          </ul>
+        </section>
+      </section>
       <section id="a3.0.2" name="3.0.2">
         <br/>Apache log4net 3.0.2 addresses reported issues:
         <section id="a3.0.2-bug" name="Bug fixes">
@@ -948,7 +967,7 @@ limitations under the License.
       <section id="a1.2.11" name="1.2.11">
         <p>
           log4net 1.2.11 is not only a bugfix release, it also
-          adds support for MicrosoftÂ® .NET 4.0 as well as the client profiles
+          adds support for MicrosoftÃ‚Â® .NET 4.0 as well as the client profiles
           of .NET 3.5 and .NET 4.0.
         </p>
         <p>
@@ -1885,7 +1904,7 @@ limitations under the License.
         <h3>New Layout: XmlLayoutSchemaLog4j</h3>
         <p>
           This new layout formats the logging events as XML which complies with
-          the Apache log4jâ„¢ event dtd. This can be used to transfer log event from log4net
+          the Apache log4jÃ¢â€žÂ¢ event dtd. This can be used to transfer log event from log4net
           to log4j. Currently the only appender that can communicate directly with
           log4j is the <span class="code">UdpAppender</span>.
         </p>
