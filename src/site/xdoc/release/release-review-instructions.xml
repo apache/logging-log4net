@@ -32,15 +32,16 @@ limitations under the License.
             <li>
               Prerequisites (winget - in case of problems see next section choco)
               <pre class="code">winget install -e --id GnuPG.Gpg4win
-winget install -e --id TortoiseSVN.TortoiseSVN
+winget install -e --id TortoiseSVN.TortoiseSVN  # or any other subversion client
 winget install -e --id Mono.Mono
 winget install -e --id Microsoft.DotNet.SDK.8</pre>
+              <p>After installation, verify that gpg and svn are in the path and add them when not.</p>
             </li>
             <li>
               Prerequisites (choco - only in case of problems with winget)
               <pre class="code">Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 choco install gpg4win
-choco install tortoisesvn
+choco install tortoisesvn  # or any other subversion client
 choco install mono
 choco install dotnet-8.0-sdk</pre>
             </li>
@@ -54,7 +55,10 @@ pushd log4net-{releaseVersion}</pre>
               <pre class="code">&amp; ./verify-release.ps1</pre>
             </li>
             <li>
-              <p>Verify the build</p>
+              switch to the directory where you extracted the sources (in case you didn't use verify-release.ps1)
+            </li>
+            <li>
+              Verify the build
               <pre class="code">dotnet test ./src/log4net.sln</pre>
             </li>
           </ol>
