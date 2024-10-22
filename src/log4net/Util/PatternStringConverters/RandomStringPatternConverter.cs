@@ -90,6 +90,8 @@ public sealed class RandomStringPatternConverter : PatternConverter, IOptionHand
   /// </summary>
   /// <param name="writer">the writer to write to</param>
   /// <param name="state">null, state is not set</param>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA5394:Do not use insecure randomness", 
+    Justification = "Random value does not need to be cryptographically secure")]
   public override void Convert(TextWriter writer, object? state)
   {
     try
