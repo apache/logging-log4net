@@ -46,7 +46,7 @@ public class DefaultRepositorySelectorTest
     ILoggerRepository[] allRepositories = selector.GetAllRepositories();
     Assert.That(allRepositories, Is.Empty);
     Assert.That(numCreatedCallbacks, Is.EqualTo(0));
-    Assert.Throws<LogException>(() => selector.GetRepository(RepositoryName));
+    Assert.That(() => selector.GetRepository(RepositoryName), Throws.TypeOf<LogException>());
 
     ILoggerRepository logRep = selector.CreateRepository(RepositoryName, typeof(MockLoggerRepository));
     Assert.That(selector.ExistsRepository(RepositoryName));
@@ -58,10 +58,9 @@ public class DefaultRepositorySelectorTest
     ILoggerRepository rep2 = selector.GetRepository(RepositoryName);
     Assert.That(rep2, Is.SameAs(logRep));
 
-    LogException exception = Assert.Throws<LogException>(
-      () => selector.CreateRepository(RepositoryName, typeof(MockLoggerRepository)),
+    Assert.That(() => selector.CreateRepository(RepositoryName, typeof(MockLoggerRepository)),
+      Throws.TypeOf<LogException>().With.Message.Contains("already defined"),
       "Should have thrown exception on redefinition.");
-    Assert.That(exception.Message, Does.Contain("already defined"));
   }
 
   [Test]
@@ -113,8 +112,8 @@ public class DefaultRepositorySelectorTest
     selector.AliasRepository("alias1", logRep);
 
     MockLoggerRepository2 otherTypeLogRep = new();
-    Assert.Throws<InvalidOperationException>(() => selector.AliasRepository("alias1", otherTypeLogRep));
-    Assert.Throws<InvalidOperationException>(() => selector.AliasRepository(RepositoryName, otherTypeLogRep));
+    Assert.That(() => selector.AliasRepository("alias1", otherTypeLogRep), Throws.InvalidOperationException);
+    Assert.That(() => selector.AliasRepository(RepositoryName, otherTypeLogRep), Throws.InvalidOperationException);
 
     Assert.That(selector.ExistsRepository(RepositoryName));
     Assert.That(selector.ExistsRepository("alias1"), Is.False);

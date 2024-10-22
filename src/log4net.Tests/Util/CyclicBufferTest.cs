@@ -27,14 +27,14 @@ using NUnit.Framework;
 namespace log4net.Tests.Util;
 
 /// <summary>
-/// Used for internal unit testing the <see cref="PropertiesDictionary"/> class.
+/// Used for internal unit testing the <see cref="CyclicBuffer"/> class.
 /// </summary>
 [TestFixture]
 public class CyclicBufferTest
 {
   [Test]
-  public void TestConstructorSize0() 
-    => Assert.Throws<ArgumentOutOfRangeException>(() => new CyclicBuffer(0));
+  public void TestConstructorSize0()
+    => Assert.That(() => new CyclicBuffer(0), Throws.TypeOf<ArgumentOutOfRangeException>());
 
   [Test]
   public void TestSize1()

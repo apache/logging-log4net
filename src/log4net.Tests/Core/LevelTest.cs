@@ -65,7 +65,7 @@ public sealed class LevelTest
       }
       else
       {
-        Assert.Throws<ArgumentNullException>(() => left!.CompareTo(right!));
+        Assert.That(() => left!.CompareTo(right!), Throws.ArgumentNullException);
       }
     }
   }

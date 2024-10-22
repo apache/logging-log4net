@@ -62,7 +62,7 @@ public class SystemInfoTest
 
   [System.Diagnostics.CodeAnalysis.SuppressMessage("Structure", "NUnit1028:The non-test method is public",
     Justification = "Reflection")]
-  public static string TestAssemblyLocationInfoMethod() 
+  public static string TestAssemblyLocationInfoMethod()
     => SystemInfo.AssemblyLocationInfo(Assembly.GetCallingAssembly());
 
   [Test]
@@ -133,8 +133,8 @@ public class SystemInfoTest
     t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", false, false);
     Assert.That(t, Is.Null, "Test explicit case sensitive fails type load");
 
-    Assert.Throws<TypeLoadException>(
-      () => GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", true, false));
+    Assert.That(() => GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", true, false),
+      Throws.TypeOf<TypeLoadException>());
   }
 
   [Test]
@@ -145,36 +145,37 @@ public class SystemInfoTest
     t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", false, false);
     Assert.That(t, Is.Null, "Test explicit case sensitive fails type load");
 
-    Assert.Throws<TypeLoadException>(() => GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", true, false));
+    Assert.That(() => GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", true, false),
+      Throws.TypeOf<TypeLoadException>());
   }
 
   // Wraps SystemInfo.GetTypeFromString because the method relies on GetCallingAssembly, which is
   // unavailable in CoreFX. As a workaround, only overloads which explicitly take a Type or Assembly
   // are exposed for NETSTANDARD1_3.
-  private static Type? GetTypeFromString(string typeName, bool throwOnError, bool ignoreCase) 
+  private static Type? GetTypeFromString(string typeName, bool throwOnError, bool ignoreCase)
     => SystemInfo.GetTypeFromString(typeName, throwOnError, ignoreCase);
 
   [Test]
-  public void EqualsIgnoringCase_BothNull_true() 
+  public void EqualsIgnoringCase_BothNull_true()
     => Assert.That(SystemInfo.EqualsIgnoringCase(null, null), Is.True);
 
   [Test]
-  public void EqualsIgnoringCase_LeftNull_false() 
+  public void EqualsIgnoringCase_LeftNull_false()
     => Assert.That(SystemInfo.EqualsIgnoringCase(null, "foo"), Is.False);
 
   [Test]
-  public void EqualsIgnoringCase_RightNull_false() 
+  public void EqualsIgnoringCase_RightNull_false()
     => Assert.That(SystemInfo.EqualsIgnoringCase("foo", null), Is.False);
 
   [Test]
-  public void EqualsIgnoringCase_SameStringsSameCase_true() 
+  public void EqualsIgnoringCase_SameStringsSameCase_true()
     => Assert.That(SystemInfo.EqualsIgnoringCase("foo", "foo"), Is.True);
 
   [Test]
-  public void EqualsIgnoringCase_SameStringsDifferentCase_true() 
+  public void EqualsIgnoringCase_SameStringsDifferentCase_true()
     => Assert.That(SystemInfo.EqualsIgnoringCase("foo", "FOO"), Is.True);
 
   [Test]
-  public void EqualsIgnoringCase_DifferentStrings_false() 
+  public void EqualsIgnoringCase_DifferentStrings_false()
     => Assert.That(SystemInfo.EqualsIgnoringCase("foo", "foobar"), Is.False);
 }
