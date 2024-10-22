@@ -53,13 +53,13 @@ public class ShutdownTest
     ILog log1 = LogManager.GetLogger(rep.Name, "logger1");
 
     log1.Info("TestMessage1");
-    Assert.AreEqual("TestMessage1", stringAppender.GetString(), "Test logging configured");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("TestMessage1"), "Test logging configured");
     stringAppender.Reset();
 
     rep.Shutdown();
 
     log1.Info("TestMessage2");
-    Assert.AreEqual("", stringAppender.GetString(), "Test not logging while shutdown");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(""), "Test not logging while shutdown");
     stringAppender.Reset();
 
     // Create new appender and configure
@@ -70,7 +70,7 @@ public class ShutdownTest
     BasicConfigurator.Configure(rep, stringAppender);
 
     log1.Info("TestMessage3");
-    Assert.AreEqual("TestMessage3", stringAppender.GetString(), "Test logging re-configured");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("TestMessage3"), "Test logging re-configured");
     stringAppender.Reset();
   }
 }

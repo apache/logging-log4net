@@ -45,39 +45,29 @@ public sealed class EventLogAppenderTest
   [Test]
   public void TestGetEntryTypeForExistingApplicationName()
   {
-    EventLogAppender eventAppender = new()
-    {
-      ApplicationName = "Winlogon"
-    };
+    EventLogAppender eventAppender = new() { ApplicationName = "Winlogon" };
     eventAppender.ActivateOptions();
 
-    Assert.AreEqual(
-      EventLogEntryType.Information,
-      eventAppender.GetEntryType(Level.All));
+    Assert.That(eventAppender.GetEntryType(Level.All),
+      Is.EqualTo(EventLogEntryType.Information));
 
-    Assert.AreEqual(
-      EventLogEntryType.Information,
-      eventAppender.GetEntryType(Level.Debug));
+    Assert.That(eventAppender.GetEntryType(Level.Debug),
+      Is.EqualTo(EventLogEntryType.Information));
 
-    Assert.AreEqual(
-      EventLogEntryType.Information,
-      eventAppender.GetEntryType(Level.Info));
+    Assert.That(eventAppender.GetEntryType(Level.Info),
+      Is.EqualTo(EventLogEntryType.Information));
 
-    Assert.AreEqual(
-      EventLogEntryType.Warning,
-      eventAppender.GetEntryType(Level.Warn));
+    Assert.That(eventAppender.GetEntryType(Level.Warn),
+      Is.EqualTo(EventLogEntryType.Warning));
 
-    Assert.AreEqual(
-      EventLogEntryType.Error,
-      eventAppender.GetEntryType(Level.Error));
+    Assert.That(eventAppender.GetEntryType(Level.Error),
+      Is.EqualTo(EventLogEntryType.Error));
 
-    Assert.AreEqual(
-      EventLogEntryType.Error,
-      eventAppender.GetEntryType(Level.Fatal));
+    Assert.That(eventAppender.GetEntryType(Level.Fatal),
+      Is.EqualTo(EventLogEntryType.Error));
 
-    Assert.AreEqual(
-      EventLogEntryType.Error,
-      eventAppender.GetEntryType(Level.Off));
+    Assert.That(eventAppender.GetEntryType(Level.Off),
+      Is.EqualTo(EventLogEntryType.Error));
   }
 
   /// <summary>
@@ -87,9 +77,9 @@ public sealed class EventLogAppenderTest
   [Ignore("seems to require administrator privileges or a specific environment when run")]
   public void ActivateOptionsDisablesAppenderIfSourceDoesntExist()
   {
-    var eventAppender = new EventLogAppender();
+    EventLogAppender eventAppender = new();
     eventAppender.ActivateOptions();
-    Assert.AreEqual(Level.Off, eventAppender.Threshold);
+    Assert.That(eventAppender.Threshold, Is.EqualTo(Level.Off));
   }
 }
 

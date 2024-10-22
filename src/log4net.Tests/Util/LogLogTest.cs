@@ -43,7 +43,7 @@ public class LogLogTest
     Trace.Write("Hello");
     Trace.Write("World");
 
-    Assert.AreEqual(2, listTraceListener.Count);
+    Assert.That(listTraceListener.Count, Is.EqualTo(2));
   }
 
   [Test]
@@ -55,7 +55,7 @@ public class LogLogTest
     LogLog.Error(GetType(), "Hello");
     LogLog.Error(GetType(), "World");
     Trace.Flush();
-    Assert.AreEqual(2, listTraceListener.Count);
+    Assert.That(listTraceListener.Count, Is.EqualTo(2));
 
     try
     {
@@ -63,7 +63,7 @@ public class LogLogTest
 
       LogLog.Error(GetType(), "Hello");
       LogLog.Error(GetType(), "World");
-      Assert.AreEqual(2, listTraceListener.Count);
+      Assert.That(listTraceListener.Count, Is.EqualTo(2));
     }
     finally
     {
@@ -81,7 +81,7 @@ public class LogLogTest
     LogLog.Error(GetType(), "This will be recorded.");
     LogLog.Error(GetType(), "This will be recorded.");
 
-    Assert.AreEqual(2, messages.Count);
+    Assert.That(messages, Has.Count.EqualTo(2));
   }
   
   /// <summary>

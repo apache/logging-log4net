@@ -146,8 +146,8 @@ public sealed class RollingFileAppenderTest
   private static void VerifyFileCount(int iExpectedCount, bool preserveLogFileNameExtension = false)
   {
     List<string> alFiles = GetExistingFiles(FileName, preserveLogFileNameExtension);
-    Assert.IsNotNull(alFiles);
-    Assert.AreEqual(iExpectedCount, alFiles.Count);
+    Assert.That(alFiles, Is.Not.Null);
+    Assert.That(alFiles, Has.Count.EqualTo(iExpectedCount));
   }
 
   /// <summary>
@@ -351,51 +351,34 @@ public sealed class RollingFileAppenderTest
   /// Used for table-driven testing.  This class holds information that can be used
   /// for testing of file rolling.
   /// </summary>
-  public sealed class RollConditions
+  /// <param name="preLogFileEntries">
+  /// A table of entries showing files that should exist and their expected sizes
+  /// before logging is called
+  /// </param>
+  /// <param name="postLogFileEntries">
+  /// A table of entries showing files that should exist and their expected sizes
+  /// after a message is logged
+  /// </param>
+  public sealed class RollConditions(List<RollFileEntry> preLogFileEntries, List<RollFileEntry> postLogFileEntries)
   {
     /// <summary>
     /// A table of entries showing files that should exist and their expected sizes
     /// before logging is called
     /// </summary>
-    private readonly List<RollFileEntry> _preLogFileEntries;
+    public List<RollFileEntry> GetPreLogFileEntries() => preLogFileEntries;
 
     /// <summary>
     /// A table of entries showing files that should exist and their expected sizes
     /// after a message is logged
     /// </summary>
-    private readonly List<RollFileEntry> _postLogFileEntries;
-
-    /// <summary>
-    /// Constructor, taking all required parameters
-    /// </summary>
-    /// <param name="preLogFileEntries"></param>
-    /// <param name="postLogFileEntries"></param>
-    public RollConditions(List<RollFileEntry> preLogFileEntries, List<RollFileEntry> postLogFileEntries)
-    {
-      this._preLogFileEntries = preLogFileEntries;
-      this._postLogFileEntries = postLogFileEntries;
-    }
-
-    /// <summary>
-    /// A table of entries showing files that should exist and their expected sizes
-    /// before logging is called
-    /// </summary>
-    public List<RollFileEntry> GetPreLogFileEntries() => _preLogFileEntries;
-
-    /// <summary>
-    /// A table of entries showing files that should exist and their expected sizes
-    /// after a message is logged
-    /// </summary>
-    public List<RollFileEntry> GetPostLogFileEntries() => _postLogFileEntries;
+    public List<RollFileEntry> GetPostLogFileEntries() => postLogFileEntries;
   }
 
   private static void VerifyExistenceAndRemoveFromList(List<string> alExisting,
-      string sFileName,
-      FileInfo file,
-      RollFileEntry entry)
+    string sFileName, FileInfo file, RollFileEntry entry)
   {
-    Assert.IsTrue(alExisting.Contains(sFileName), "filename {0} not found in test directory", sFileName);
-    Assert.AreEqual(entry.FileLength, file.Length, "file length mismatch");
+    Assert.That(alExisting, Does.Contain(sFileName), $"filename {sFileName} not found in test directory");
+    Assert.That(file.Length, Is.EqualTo(entry.FileLength), "file length mismatch");
     // Remove this file from the list
     alExisting.Remove(sFileName);
   }
@@ -413,12 +396,12 @@ public sealed class RollingFileAppenderTest
     foreach (RollFileEntry rollFile in fileEntries)
     {
       string? sFileName = rollFile.FileName;
-      Assert.IsNotNull(sFileName);
+      Assert.That(sFileName, Is.Not.Null);
       FileInfo file = new(sFileName!);
 
       if (rollFile.FileLength > 0)
       {
-        Assert.IsTrue(file.Exists, "filename {0} does not exist", sFileName);
+        Assert.That(file.Exists, $"filename {sFileName} does not exist");
         VerifyExistenceAndRemoveFromList(alExisting, sFileName!, file, rollFile);
       }
       else
@@ -435,7 +418,7 @@ public sealed class RollingFileAppenderTest
 
     // This check ensures no extra files matching the wildcard pattern exist.
     // We only want the files we expect, and no others
-    Assert.AreEqual(0, alExisting.Count);
+    Assert.That(alExisting, Is.Empty);
   }
 
   /// <summary>
@@ -464,11 +447,11 @@ public sealed class RollingFileAppenderTest
   /// </summary>
   private void LogMessage(string sMessageToLog)
   {
-    Assert.IsNotNull(_caRoot);
-    Assert.AreEqual(_caRoot!.Counter, _messagesLogged++);
-    Assert.IsNotNull(_root);
+    Assert.That(_caRoot, Is.Not.Null);
+    Assert.That(_messagesLogged++, Is.EqualTo(_caRoot!.Counter));
+    Assert.That(_root, Is.Not.Null);
     _root!.Log(Level.Debug, sMessageToLog, null);
-    Assert.AreEqual(_caRoot.Counter, _messagesLogged);
+    Assert.That(_messagesLogged, Is.EqualTo(_caRoot.Counter));
   }
 
   /// <summary>
@@ -729,6 +712,8 @@ public sealed class RollingFileAppenderTest
   /// Calls back to a method that does the actual replacement, turning
   /// the numeric value into a filename.
   /// </summary>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "SYSLIB1045:Convert to 'GeneratedRegexAttribute'.", 
+    Justification = "only .net8")]
   private static string ConvertToFiles(string sBackupInfo, MatchEvaluator evaluator)
   {
     Regex regex = new(@"\d+");
@@ -1021,7 +1006,7 @@ public sealed class RollingFileAppenderTest
     _root.Level = Level.Debug;
     _caRoot = new CountingAppender();
     _root.AddAppender(_caRoot);
-    Assert.AreEqual(0, _caRoot.Counter);
+    Assert.That(_caRoot.Counter, Is.EqualTo(0));
 
     //
     // Set the root appender with a RollingFileAppender
@@ -1199,7 +1184,7 @@ public sealed class RollingFileAppenderTest
     RollingFileAppender rfa, int iExpectedValue)
   {
     rfa.InitializeRollBackups(sBaseFile, alFiles);
-    Assert.AreEqual(iExpectedValue, rfa.CurrentSizeRollBackups);
+    Assert.That(rfa.CurrentSizeRollBackups, Is.EqualTo(iExpectedValue));
   }
 
   /// <summary>
@@ -1354,7 +1339,7 @@ public sealed class RollingFileAppenderTest
   }
 
   /// <summary>
-  /// Destroys the logger hierarchy created by <see cref="RollingFileAppenderTest.CreateLogger"/>
+  /// Destroys the logger hierarchy created by <see cref="CreateLogger"/>
   /// </summary>
   private static void DestroyLogger()
   {
@@ -1363,13 +1348,13 @@ public sealed class RollingFileAppenderTest
     h.ResetConfiguration();
     //Replace the repository selector so that we can recreate the hierarchy with the same name if necessary
     LoggerManager.RepositorySelector =
-      new DefaultRepositorySelector(typeof(log4net.Repository.Hierarchy.Hierarchy));
+      new DefaultRepositorySelector(typeof(Repository.Hierarchy.Hierarchy));
   }
 
   private static void AssertFileEquals(string filename, string contents)
   {
     string logcont = File.ReadAllText(filename);
-    Assert.AreEqual(contents, logcont, "Log contents is not what is expected");
+    Assert.That(logcont, Is.EqualTo(contents), "Log contents is not what is expected");
     File.Delete(filename);
   }
 
@@ -1389,7 +1374,7 @@ public sealed class RollingFileAppenderTest
 
     AssertFileEquals(filename,
         "This is a message" + Environment.NewLine + "This is a message 2" + Environment.NewLine);
-    Assert.AreEqual("", sh.Message, "Unexpected error message");
+    Assert.That(sh.Message, Is.EqualTo(""), "Unexpected error message");
   }
 
   /// <summary>
@@ -1411,7 +1396,7 @@ public sealed class RollingFileAppenderTest
     fs.Close();
 
     AssertFileEquals(filename, "Test");
-    StringAssert.StartsWith("Unable to acquire lock on file", sh.Message, "Expecting an error message");
+    Assert.That(sh.Message, Does.StartWith("Unable to acquire lock on file"), "Expecting an error message");
   }
 
   /// <summary>
@@ -1434,7 +1419,7 @@ public sealed class RollingFileAppenderTest
     DestroyLogger();
 
     AssertFileEquals(filename, "This is a message 2" + Environment.NewLine);
-    StringAssert.StartsWith("Unable to acquire lock on file", sh.Message,
+    Assert.That(sh.Message, Does.StartWith("Unable to acquire lock on file"),
       "Expecting an error message");
   }
 
@@ -1460,7 +1445,7 @@ public sealed class RollingFileAppenderTest
     }
     catch (IOException e1)
     {
-      Assert.AreEqual("The process cannot access the file ", e1.Message.Substring(0, 35),
+      Assert.That(e1.Message.Substring(0, 35), Is.EqualTo("The process cannot access the file "),
       "Unexpected exception");
       locked = true;
     }
@@ -1468,10 +1453,10 @@ public sealed class RollingFileAppenderTest
     log.Log(GetType(), Level.Info, "This is a message 2", null);
     DestroyLogger();
 
-    Assert.IsTrue(locked, "File was not locked");
+    Assert.That(locked, "File was not locked");
     AssertFileEquals(filename,
       "This is a message" + Environment.NewLine + "This is a message 2" + Environment.NewLine);
-    Assert.AreEqual("", sh.Message, "Unexpected error message");
+    Assert.That(sh.Message, Is.EqualTo(""), "Unexpected error message");
   }
 
 
@@ -1495,7 +1480,7 @@ public sealed class RollingFileAppenderTest
     fs.Close();
 
     AssertFileEquals(filename, "Test");
-    Assert.AreEqual("Unable to acquire lock on file", sh.Message.Substring(0, 30),
+    Assert.That(sh.Message.Substring(0, 30), Is.EqualTo("Unable to acquire lock on file"),
         "Expecting an error message");
   }
 
@@ -1519,7 +1504,7 @@ public sealed class RollingFileAppenderTest
     DestroyLogger();
 
     AssertFileEquals(filename, "This is a message 2" + Environment.NewLine);
-    Assert.AreEqual("Unable to acquire lock on file", sh.Message.Substring(0, 30),
+    Assert.That(sh.Message.Substring(0, 30), Is.EqualTo("Unable to acquire lock on file"),
       "Expecting an error message");
   }
 
@@ -1545,11 +1530,11 @@ public sealed class RollingFileAppenderTest
     log.Log(GetType(), Level.Info, "This is a message 2", null);
     DestroyLogger();
 
-    Assert.IsTrue(locked, "File was not locked");
+    Assert.That(locked, "File was not locked");
     AssertFileEquals(filename,
       "This is a message" + Environment.NewLine + "Test" + Environment.NewLine + "This is a message 2" +
       Environment.NewLine);
-    Assert.AreEqual("", sh.Message, "Unexpected error message");
+    Assert.That(sh.Message, Is.EqualTo(""), "Unexpected error message");
   }
 
   /// <summary>
@@ -1572,7 +1557,7 @@ public sealed class RollingFileAppenderTest
     fs.Close();
 
     AssertFileEquals(filename, "Test");
-    Assert.AreEqual("Unable to acquire lock on file", sh.Message.Substring(0, 30),
+    Assert.That(sh.Message.Substring(0, 30), Is.EqualTo("Unable to acquire lock on file"),
         "Expecting an error message");
   }
 
@@ -1596,7 +1581,7 @@ public sealed class RollingFileAppenderTest
     DestroyLogger();
 
     AssertFileEquals(filename, "This is a message 2" + Environment.NewLine);
-    Assert.AreEqual("Unable to acquire lock on file", sh.Message.Substring(0, 30),
+    Assert.That(sh.Message.Substring(0, 30), Is.EqualTo("Unable to acquire lock on file"),
       "Expecting an error message");
   }
 
@@ -1622,11 +1607,11 @@ public sealed class RollingFileAppenderTest
     log.Log(GetType(), Level.Info, "This is a message 2", null);
     DestroyLogger();
 
-    Assert.IsTrue(locked, "File was not locked");
+    Assert.That(locked, "File was not locked");
     AssertFileEquals(filename,
       "This is a message" + Environment.NewLine + "Test" + Environment.NewLine + "This is a message 2" +
       Environment.NewLine);
-    Assert.AreEqual("", sh.Message, "Unexpected error message");
+    Assert.That(sh.Message, Is.EqualTo(""), "Unexpected error message");
   }
 
   /// <summary>
@@ -1648,7 +1633,7 @@ public sealed class RollingFileAppenderTest
 
     AssertFileEquals(filename, "A" + Environment.NewLine);
     AssertFileEquals(filename + ".1", "A" + Environment.NewLine);
-    Assert.IsEmpty(sh.Message);
+    Assert.That(sh.Message, Is.Empty);
   }
 
   /// <summary>
@@ -1663,11 +1648,11 @@ public sealed class RollingFileAppenderTest
     ILogger log = CreateLogger(filename, null, sh);
 
     IAppender[]? appenders = log.Repository?.GetAppenders();
-    Assert.IsNotNull(appenders);
-    Assert.AreEqual(1, appenders!.Length, "The wrong number of appenders are configured");
+    Assert.That(appenders, Is.Not.Null);
+    Assert.That(appenders!, Has.Length.EqualTo(1), "The wrong number of appenders are configured");
 
     RollingFileAppender rfa = (RollingFileAppender)(appenders[0]);
-    Assert.AreEqual(typeof(FileAppender.ExclusiveLock), rfa.LockingModel.GetType(),
+    Assert.That(rfa.LockingModel.GetType(), Is.EqualTo(typeof(FileAppender.ExclusiveLock)),
         "The LockingModel is of an unexpected type");
 
     DestroyLogger();
@@ -1766,11 +1751,11 @@ public sealed class RollingFileAppenderTest
     // 3 = file.log.2
     if (iBackups is 0 or 1)
     {
-      Assert.AreEqual(0, rfa.CurrentSizeRollBackups);
+      Assert.That(rfa.CurrentSizeRollBackups, Is.EqualTo(0));
     }
     else
     {
-      Assert.AreEqual(Math.Min(iBackups - 1, iMaxSizeRollBackups), rfa.CurrentSizeRollBackups);
+      Assert.That(rfa.CurrentSizeRollBackups, Is.EqualTo(Math.Min(iBackups - 1, iMaxSizeRollBackups)));
     }
   }
 
@@ -1835,14 +1820,13 @@ public sealed class RollingFileAppenderSubClassTest : RollingFileAppender
   {
     RollingFileAppender rfa = new();
 
-    Assert.AreEqual(RollPoint.TopOfMinute, rfa.ComputeCheckPeriod(".yyyy-MM-dd HH:mm"),
-        "TopOfMinute pattern");
-    Assert.AreEqual(RollPoint.TopOfHour, rfa.ComputeCheckPeriod(".yyyy-MM-dd HH"), "TopOfHour pattern");
-    Assert.AreEqual(RollPoint.HalfDay, rfa.ComputeCheckPeriod(".yyyy-MM-dd tt"), "HalfDay pattern");
-    Assert.AreEqual(RollPoint.TopOfDay, rfa.ComputeCheckPeriod(".yyyy-MM-dd"), "TopOfDay pattern");
-    Assert.AreEqual(RollPoint.TopOfMonth, rfa.ComputeCheckPeriod(".yyyy-MM"), "TopOfMonth pattern");
+    Assert.That(rfa.ComputeCheckPeriod(".yyyy-MM-dd HH:mm"), Is.EqualTo(RollPoint.TopOfMinute), "TopOfMinute pattern");
+    Assert.That(rfa.ComputeCheckPeriod(".yyyy-MM-dd HH"), Is.EqualTo(RollPoint.TopOfHour), "TopOfHour pattern");
+    Assert.That(rfa.ComputeCheckPeriod(".yyyy-MM-dd tt"), Is.EqualTo(RollPoint.HalfDay), "HalfDay pattern");
+    Assert.That(rfa.ComputeCheckPeriod(".yyyy-MM-dd"), Is.EqualTo(RollPoint.TopOfDay), "TopOfDay pattern");
+    Assert.That(rfa.ComputeCheckPeriod(".yyyy-MM"), Is.EqualTo(RollPoint.TopOfMonth), "TopOfMonth pattern");
 
     // Test invalid roll point
-    Assert.AreEqual(RollPoint.InvalidRollPoint, rfa.ComputeCheckPeriod("..."), "TopOfMonth pattern");
+    Assert.That(rfa.ComputeCheckPeriod("..."), Is.EqualTo(RollPoint.InvalidRollPoint), "TopOfMonth pattern");
   }
 }

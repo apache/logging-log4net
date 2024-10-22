@@ -53,9 +53,9 @@ public class TraceAppenderTest
     ILog log = LogManager.GetLogger(rep.Name, GetType());
     log.Debug("Message");
 
-    Assert.AreEqual(
-        GetType().ToString(),
-        categoryTraceListener.Category);
+    Assert.That(
+        categoryTraceListener.Category,
+        Is.EqualTo(GetType().ToString()));
   }
 
   [Test]
@@ -79,9 +79,9 @@ public class TraceAppenderTest
     ILog log = LogManager.GetLogger(rep.Name, GetType());
     log.Debug("Message");
 
-    Assert.AreEqual(
-        MethodInfo.GetCurrentMethod()!.Name,
-        categoryTraceListener.Category);
+    Assert.That(
+        categoryTraceListener.Category,
+        Is.EqualTo(MethodInfo.GetCurrentMethod()!.Name));
   }
 }
 

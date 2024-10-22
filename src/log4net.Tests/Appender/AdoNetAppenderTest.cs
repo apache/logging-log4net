@@ -52,8 +52,8 @@ public class AdoNetAppenderTest
 
     ILog log = LogManager.GetLogger(rep.Name, "NoBufferingTest");
     log.Debug("Message");
-    Assert.NotNull(Log4NetCommand.MostRecentInstance);
-    Assert.AreEqual(1, Log4NetCommand.MostRecentInstance!.ExecuteNonQueryCount);
+    Assert.That(Log4NetCommand.MostRecentInstance, Is.Not.Null);
+    Assert.That(Log4NetCommand.MostRecentInstance!.ExecuteNonQueryCount, Is.EqualTo(1));
   }
 
   [Test]
@@ -76,11 +76,11 @@ public class AdoNetAppenderTest
     for (int i = 0; i < bufferSize; i++)
     {
       log.Debug("Message");
-      Assert.IsNull(Log4NetCommand.MostRecentInstance);
+      Assert.That(Log4NetCommand.MostRecentInstance, Is.Null);
     }
     log.Debug("Message");
-    Assert.NotNull(Log4NetCommand.MostRecentInstance);
-    Assert.AreEqual(bufferSize + 1, Log4NetCommand.MostRecentInstance!.ExecuteNonQueryCount);
+    Assert.That(Log4NetCommand.MostRecentInstance, Is.Not.Null);
+    Assert.That(Log4NetCommand.MostRecentInstance!.ExecuteNonQueryCount, Is.EqualTo(bufferSize + 1));
   }
 
   [Test]
@@ -150,25 +150,23 @@ public class AdoNetAppenderTest
     log.Debug("Message");
 
     IDbCommand? command = Log4NetCommand.MostRecentInstance;
-    Assert.NotNull(command);
+    Assert.That(command, Is.Not.Null);
 
-    Assert.AreEqual(
-        "INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message],[Exception]) VALUES (@log_date, @thread, @log_level, @logger, @message, @exception)",
-        command!.CommandText);
-
-    Assert.AreEqual(6, command.Parameters.Count);
+    Assert.That(command.CommandText,
+      Is.EqualTo("INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message],[Exception]) VALUES (@log_date, @thread, @log_level, @logger, @message, @exception)"));
+    Assert.That(command.Parameters, Has.Count.EqualTo(6));
 
     IDbDataParameter param = (IDbDataParameter)command.Parameters["@message"];
-    Assert.AreEqual("Message", param.Value);
+    Assert.That(param.Value, Is.EqualTo("Message"));
 
     param = (IDbDataParameter)command.Parameters["@log_level"];
-    Assert.AreEqual(Level.Debug.ToString(), param.Value);
+    Assert.That(param.Value, Is.EqualTo(Level.Debug.ToString()));
 
     param = (IDbDataParameter)command.Parameters["@logger"];
-    Assert.AreEqual("WebsiteExample", param.Value);
+    Assert.That(param.Value, Is.EqualTo("WebsiteExample"));
 
     param = (IDbDataParameter)command.Parameters["@exception"];
-    Assert.IsEmpty((string?)param.Value);
+    Assert.That((string?)param.Value, Is.Empty);
   }
 
   [Test]
@@ -242,25 +240,24 @@ public class AdoNetAppenderTest
     }
 
     IDbCommand? command = Log4NetCommand.MostRecentInstance;
-    Assert.NotNull(command);
+    Assert.That(command, Is.Not.Null);
 
-    Assert.AreEqual(
-        "INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message],[Exception]) VALUES (@log_date, @thread, @log_level, @logger, @message, @exception)",
-        command!.CommandText);
+    Assert.That(command!.CommandText,
+     Is.EqualTo("INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message],[Exception]) VALUES (@log_date, @thread, @log_level, @logger, @message, @exception)"));
 
-    Assert.AreEqual(6, command.Parameters.Count);
+    Assert.That(command.Parameters, Has.Count.EqualTo(6));
 
     IDbDataParameter param = (IDbDataParameter)command.Parameters["@message"];
-    Assert.AreEqual("Message", param.Value);
+    Assert.That(param.Value, Is.EqualTo("Message"));
 
     param = (IDbDataParameter)command.Parameters["@log_level"];
-    Assert.AreEqual(Level.Debug.ToString(), param.Value);
+    Assert.That(param.Value, Is.EqualTo(Level.Debug.ToString()));
 
     param = (IDbDataParameter)command.Parameters["@logger"];
-    Assert.AreEqual("WebsiteExample", param.Value);
+    Assert.That(param.Value, Is.EqualTo("WebsiteExample"));
 
     param = (IDbDataParameter)command.Parameters["@exception"];
-    Assert.IsEmpty((string?)param.Value);
+    Assert.That(param.Value, Is.Empty);
   }
 
   [Test]
@@ -295,11 +292,11 @@ public class AdoNetAppenderTest
 
     log.Debug("Message");
     IDbCommand? command = Log4NetCommand.MostRecentInstance;
-    Assert.NotNull(command);
+    Assert.That(command, Is.Not.Null);
 
     IDbDataParameter param = (IDbDataParameter)command!.Parameters["@productId"];
-    Assert.AreNotEqual(SystemInfo.NullText, param.Value);
-    Assert.AreEqual(DBNull.Value, param.Value);
+    Assert.That(param.Value, Is.Not.EqualTo(SystemInfo.NullText));
+    Assert.That(param.Value, Is.EqualTo(DBNull.Value));
   }
 
   [Test]
@@ -332,10 +329,10 @@ public class AdoNetAppenderTest
 
     log.Debug("Message");
     IDbCommand? command = Log4NetCommand.MostRecentInstance;
-    Assert.NotNull(command);
+    Assert.That(command, Is.Not.Null);
 
     IDbDataParameter param = (IDbDataParameter)command!.Parameters["@productId"];
-    Assert.AreNotEqual(SystemInfo.NullText, param.Value);
-    Assert.AreEqual(DBNull.Value, param.Value);
+    Assert.That(param.Value, Is.Not.EqualTo(SystemInfo.NullText));
+    Assert.That(param.Value, Is.EqualTo(DBNull.Value));
   }
 }

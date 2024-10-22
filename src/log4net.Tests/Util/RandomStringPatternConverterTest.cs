@@ -41,7 +41,7 @@ public class RandomStringPatternConverterTest
     StringWriter sw = new();
     converter.Convert(sw, null);
 
-    Assert.AreEqual(4, sw.ToString().Length, "Default string length should be 4");
+    Assert.That(sw.ToString(), Has.Length.EqualTo(4), "Default string length should be 4");
 
     // Set string length to 7
     converter.Option = "7";
@@ -51,13 +51,13 @@ public class RandomStringPatternConverterTest
     converter.Convert(sw, null);
 
     string string1 = sw.ToString();
-    Assert.AreEqual(7, string1.Length, "string length should be 7");
+    Assert.That(string1, Has.Length.EqualTo(7), "string length should be 7");
 
     // Check for duplicate result
     sw = new StringWriter();
     converter.Convert(sw, null);
 
     string string2 = sw.ToString();
-    Assert.IsTrue(string1 != string2, "strings should be different");
+    Assert.That(string1 != string2, "strings should be different");
   }
 }

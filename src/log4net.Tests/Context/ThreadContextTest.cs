@@ -59,19 +59,19 @@ public class ThreadContextTest
     ILog log1 = LogManager.GetLogger(rep.Name, "TestThreadProperiesPattern");
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test no thread properties value set");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test no thread properties value set");
     stringAppender.Reset();
 
     ThreadContext.Properties[Utils.PropertyKey] = "val1";
 
     log1.Info("TestMessage");
-    Assert.AreEqual("val1", stringAppender.GetString(), "Test thread properties value set");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("val1"), "Test thread properties value set");
     stringAppender.Reset();
 
     ThreadContext.Properties.Remove(Utils.PropertyKey);
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test thread properties value removed");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test thread properties value removed");
     stringAppender.Reset();
   }
 
@@ -89,18 +89,18 @@ public class ThreadContextTest
     ILog log1 = LogManager.GetLogger(rep.Name, "TestThreadStackPattern");
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test no thread stack value set");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test no thread stack value set");
     stringAppender.Reset();
 
     using (ThreadContext.Stacks[Utils.PropertyKey].Push("val1"))
     {
       log1.Info("TestMessage");
-      Assert.AreEqual("val1", stringAppender.GetString(), "Test thread stack value set");
+      Assert.That(stringAppender.GetString(), Is.EqualTo("val1"), "Test thread stack value set");
       stringAppender.Reset();
     }
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test thread stack value removed");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test thread stack value removed");
     stringAppender.Reset();
   }
 
@@ -118,25 +118,25 @@ public class ThreadContextTest
     ILog log1 = LogManager.GetLogger(rep.Name, "TestThreadStackPattern");
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test no thread stack value set");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test no thread stack value set");
     stringAppender.Reset();
 
     using (ThreadContext.Stacks[Utils.PropertyKey].Push("val1"))
     {
       log1.Info("TestMessage");
-      Assert.AreEqual("val1", stringAppender.GetString(), "Test thread stack value set");
+      Assert.That(stringAppender.GetString(), Is.EqualTo("val1"), "Test thread stack value set");
       stringAppender.Reset();
 
       using (ThreadContext.Stacks[Utils.PropertyKey].Push("val2"))
       {
         log1.Info("TestMessage");
-        Assert.AreEqual("val1 val2", stringAppender.GetString(), "Test thread stack value pushed 2nd val");
+        Assert.That(stringAppender.GetString(), Is.EqualTo("val1 val2"), "Test thread stack value pushed 2nd val");
         stringAppender.Reset();
       }
     }
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test thread stack value removed");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test thread stack value removed");
     stringAppender.Reset();
   }
 
@@ -154,18 +154,18 @@ public class ThreadContextTest
     ILog log1 = LogManager.GetLogger(rep.Name, "TestThreadStackPattern");
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test no thread stack value set");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test no thread stack value set");
     stringAppender.Reset();
 
     using (ThreadContext.Stacks[Utils.PropertyKey].Push(null))
     {
       log1.Info("TestMessage");
-      Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test thread stack value set");
+      Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test thread stack value set");
       stringAppender.Reset();
     }
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test thread stack value removed");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test thread stack value removed");
     stringAppender.Reset();
   }
 
@@ -183,25 +183,25 @@ public class ThreadContextTest
     ILog log1 = LogManager.GetLogger(rep.Name, "TestThreadStackPattern");
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test no thread stack value set");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test no thread stack value set");
     stringAppender.Reset();
 
     using (ThreadContext.Stacks[Utils.PropertyKey].Push("val1"))
     {
       log1.Info("TestMessage");
-      Assert.AreEqual("val1", stringAppender.GetString(), "Test thread stack value set");
+      Assert.That(stringAppender.GetString(), Is.EqualTo("val1"), "Test thread stack value set");
       stringAppender.Reset();
 
       using (ThreadContext.Stacks[Utils.PropertyKey].Push(null))
       {
         log1.Info("TestMessage");
-        Assert.AreEqual("val1 ", stringAppender.GetString(), "Test thread stack value pushed null");
+        Assert.That(stringAppender.GetString(), Is.EqualTo("val1 "), "Test thread stack value pushed null");
         stringAppender.Reset();
       }
     }
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test thread stack value removed");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test thread stack value removed");
     stringAppender.Reset();
   }
 
@@ -234,7 +234,7 @@ public class ThreadContextTest
 
     var hierarchyLoggingRepository = (Repository.Hierarchy.Hierarchy?)log.Logger.Repository;
     StringAppender stringAppender = (StringAppender)hierarchyLoggingRepository!.Root.Appenders[0];
-    Assert.AreEqual(DateTime.Today.ToString(CultureInfo.InvariantCulture), stringAppender.GetString());
+    Assert.That(stringAppender.GetString(), Is.EqualTo(DateTime.Today.ToString(CultureInfo.InvariantCulture)));
   }
 
   [Test]
@@ -259,7 +259,7 @@ public class ThreadContextTest
       t.Join();
     }
 
-    Assert.IsTrue(flags.All(o => !o.Flag));
+    Assert.That(flags.All(o => !o.Flag));
   }
 
   public class FlagContainer

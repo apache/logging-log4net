@@ -33,13 +33,13 @@ public class TransformTest
   public void MaskXmlInvalidCharactersAllowsJapaneseCharacters()
   {
     string kome = "\u203B";
-    Assert.AreEqual(kome, Transform.MaskXmlInvalidCharacters(kome, "?"));
+    Assert.That(Transform.MaskXmlInvalidCharacters(kome, "?"), Is.EqualTo(kome));
   }
 
   [Test]
   public void MaskXmlInvalidCharactersMasks0Char()
   {
     string c = "\u0000";
-    Assert.AreEqual("?", Transform.MaskXmlInvalidCharacters(c, "?"));
+    Assert.That(Transform.MaskXmlInvalidCharacters(c, "?"), Is.EqualTo("?"));
   }
 }

@@ -82,16 +82,16 @@ public sealed class LevelMappingTest
       .GetMethod("SortEntries", BindingFlags.NonPublic | BindingFlags.Instance)!
       .Invoke(mapping, Array.Empty<object>())!;
 
-    CollectionAssert.AreEquivalent(withoutDuplicates, sorted);
-    CollectionAssert.AreNotEqual(withoutDuplicates, sorted);
+    Assert.That(sorted, Is.EquivalentTo(withoutDuplicates));
+    Assert.That(sorted, Is.Not.EqualTo(withoutDuplicates).AsCollection);
 
     int lowestLevelSeen = int.MaxValue;
     foreach (LevelMappingEntry entry in sorted)
     {
-      Assert.IsTrue(lowestLevelSeen >= entry.Level!.Value, entry.Level.Name);
+      Assert.That(lowestLevelSeen, Is.GreaterThanOrEqualTo(entry.Level!.Value), entry.Level.Name);
       lowestLevelSeen = entry.Level!.Value;
     }
-    Assert.AreEqual(Level.All.Value, lowestLevelSeen);
+    Assert.That(lowestLevelSeen, Is.EqualTo(Level.All.Value));
   }
 
   /// <summary>
@@ -106,19 +106,19 @@ public sealed class LevelMappingTest
     mapping.Add(new MappingEntry(Level.Emergency));
     mapping.Add(new MappingEntry(Level.Warn));
 
-    Assert.IsNull(mapping.Lookup(Level.Info)?.Level);
+    Assert.That(mapping.Lookup(Level.Info)?.Level, Is.Null);
 
     mapping.ActivateOptions();
 
-    Assert.AreEqual(Level.Info, mapping.Lookup(Level.Info)?.Level);
-    Assert.AreEqual(Level.Off, mapping.Lookup(Level.Off)?.Level);
-    Assert.AreEqual(Level.Emergency, mapping.Lookup(Level.Emergency)?.Level);
-    Assert.AreEqual(Level.Warn, mapping.Lookup(Level.Warn)?.Level);
-    Assert.AreEqual(Level.Warn, mapping.Lookup(Level.Error)?.Level);
-    Assert.IsNull(mapping.Lookup(Level.Fine)?.Level);
-    Assert.AreEqual(Level.Emergency, mapping.Lookup(Level.Log4Net_Debug)?.Level);
-    Assert.IsNull(mapping.Lookup(Level.Trace)?.Level);
-    Assert.AreEqual(Level.Warn, mapping.Lookup(Level.Alert)?.Level);
-    Assert.IsNull(mapping.Lookup(Level.All)?.Level);
+    Assert.That(mapping.Lookup(Level.Info)?.Level, Is.EqualTo(Level.Info));
+    Assert.That(mapping.Lookup(Level.Off)?.Level, Is.EqualTo(Level.Off));
+    Assert.That(mapping.Lookup(Level.Emergency)?.Level, Is.EqualTo(Level.Emergency));
+    Assert.That(mapping.Lookup(Level.Warn)?.Level, Is.EqualTo(Level.Warn));
+    Assert.That(mapping.Lookup(Level.Error)?.Level, Is.EqualTo(Level.Warn));
+    Assert.That(mapping.Lookup(Level.Fine)?.Level, Is.Null);
+    Assert.That(mapping.Lookup(Level.Log4Net_Debug)?.Level, Is.EqualTo(Level.Emergency));
+    Assert.That(mapping.Lookup(Level.Trace)?.Level, Is.Null);
+    Assert.That(mapping.Lookup(Level.Alert)?.Level, Is.EqualTo(Level.Warn));
+    Assert.That(mapping.Lookup(Level.All)?.Level, Is.Null);
   }
 }

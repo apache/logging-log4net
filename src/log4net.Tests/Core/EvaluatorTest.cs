@@ -68,10 +68,10 @@ public class EvaluatorTest
 
     logger.Log(typeof(EvaluatorTest), Level.Debug, "Debug message logged", null);
     logger.Log(typeof(EvaluatorTest), Level.Debug, "Debug message logged", null);
-    Assert.AreEqual(0, _countingAppender.Counter, "Test 2 events buffered");
+    Assert.That(_countingAppender.Counter, Is.EqualTo(0), "Test 2 events buffered");
 
     logger.Log(typeof(EvaluatorTest), Level.Info, "Info message logged", null);
-    Assert.AreEqual(3, _countingAppender.Counter, "Test 3 events flushed on Info message.");
+    Assert.That(_countingAppender.Counter, Is.EqualTo(3), "Test 3 events flushed on Info message.");
   }
 
   [Test]
@@ -85,11 +85,11 @@ public class EvaluatorTest
 
     logger.Log(typeof(EvaluatorTest), Level.Debug, "Debug message logged", null);
     logger.Log(typeof(EvaluatorTest), Level.Debug, "Debug message logged", null);
-    Assert.AreEqual(0, _countingAppender.Counter, "Test 2 events buffered");
+    Assert.That(_countingAppender.Counter, Is.EqualTo(0), "Test 2 events buffered");
 
     Thread.Sleep(1000);
     logger.Log(typeof(EvaluatorTest), Level.Debug, "Info message logged", null);
-    Assert.AreEqual(3, _countingAppender.Counter, "Test 3 events flushed on Info message.");
+    Assert.That(_countingAppender.Counter, Is.EqualTo(3), "Test 3 events flushed on Info message.");
   }
 
   [Test]
@@ -106,10 +106,10 @@ public class EvaluatorTest
     logger.Log(typeof(EvaluatorTest), Level.Debug, "Debug message logged", null);
     logger.Log(typeof(EvaluatorTest), Level.Debug, "Debug message logged", null);
     logger.Log(typeof(EvaluatorTest), Level.Debug, "Info message logged", null);
-    Assert.AreEqual(0, _countingAppender.Counter, "Test 5 events buffered");
+    Assert.That(_countingAppender.Counter, Is.EqualTo(0), "Test 5 events buffered");
 
     logger.Log(typeof(EvaluatorTest), Level.Debug, "Info message logged", null);
-    Assert.AreEqual(6, _countingAppender.Counter, "Test 6 events flushed on Info message.");
+    Assert.That(_countingAppender.Counter, Is.EqualTo(6), "Test 6 events flushed on Info message.");
   }
 
   [Test]
@@ -123,10 +123,10 @@ public class EvaluatorTest
 
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", null);
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", null);
-    Assert.AreEqual(0, _countingAppender.Counter, "Test 2 events buffered");
+    Assert.That(_countingAppender.Counter, Is.EqualTo(0), "Test 2 events buffered");
 
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", new ApplicationException());
-    Assert.AreEqual(3, _countingAppender.Counter, "Test 3 events flushed on ApplicationException message.");
+    Assert.That(_countingAppender.Counter, Is.EqualTo(3), "Test 3 events flushed on ApplicationException message.");
   }
 
   [Test]
@@ -140,10 +140,10 @@ public class EvaluatorTest
 
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", null);
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", null);
-    Assert.AreEqual(0, _countingAppender.Counter, "Test 2 events buffered");
+    Assert.That(_countingAppender.Counter, Is.EqualTo(0), "Test 2 events buffered");
 
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", new ApplicationException());
-    Assert.AreEqual(3, _countingAppender.Counter, "Test 3 events flushed on ApplicationException message.");
+    Assert.That(_countingAppender.Counter, Is.EqualTo(3), "Test 3 events flushed on ApplicationException message.");
   }
 
   [Test]
@@ -157,10 +157,10 @@ public class EvaluatorTest
 
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", null);
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", null);
-    Assert.AreEqual(0, _countingAppender.Counter, "Test 2 events buffered");
+    Assert.That(_countingAppender.Counter, Is.EqualTo(0), "Test 2 events buffered");
 
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", new ApplicationException());
-    Assert.AreEqual(0, _countingAppender.Counter, "Test 3 events buffered");
+    Assert.That(_countingAppender.Counter, Is.EqualTo(0), "Test 3 events buffered");
   }
 
   [Test]
@@ -175,9 +175,9 @@ public class EvaluatorTest
 
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", null);
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", null);
-    Assert.AreEqual(0, _countingAppender.Counter, "Test 2 events buffered");
+    Assert.That(_countingAppender.Counter, Is.EqualTo(0), "Test 2 events buffered");
 
     logger.Log(typeof(EvaluatorTest), Level.Warn, "Warn message logged", new ApplicationException());
-    Assert.AreEqual(0, _countingAppender.Counter, "Test 3 events buffered");
+    Assert.That(_countingAppender.Counter, Is.EqualTo(0), "Test 3 events buffered");
   }
 }

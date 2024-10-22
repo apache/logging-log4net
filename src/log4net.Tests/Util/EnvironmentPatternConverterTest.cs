@@ -56,7 +56,7 @@ public sealed class EnvironmentPatternConverterTest
     var sw = new StringWriter();
     converter.Convert(sw, null);
 
-    Assert.AreEqual(SystemLevelValue, sw.ToString(), "System level environment variable not expended correctly.");
+    Assert.That(sw.ToString(), Is.EqualTo(SystemLevelValue), "System level environment variable not expended correctly.");
 
     Environment.SetEnvironmentVariable(EnvironmentVariableName, null, EnvironmentVariableTarget.Machine);
   }
@@ -76,7 +76,7 @@ public sealed class EnvironmentPatternConverterTest
     var sw = new StringWriter();
     converter.Convert(sw, null);
 
-    Assert.AreEqual(UserLevelValue, sw.ToString(), "User level environment variable not expended correctly.");
+    Assert.That(sw.ToString(), Is.EqualTo(UserLevelValue), "User level environment variable not expended correctly.");
 
     Environment.SetEnvironmentVariable(EnvironmentVariableName, null, EnvironmentVariableTarget.User);
   }
@@ -92,7 +92,7 @@ public sealed class EnvironmentPatternConverterTest
     var sw = new StringWriter();
     converter.Convert(sw, null);
 
-    Assert.AreEqual(ProcessLevelValue, sw.ToString(), "Process level environment variable not expended correctly.");
+    Assert.That(sw.ToString(), Is.EqualTo(ProcessLevelValue), "Process level environment variable not expended correctly.");
 
     Environment.SetEnvironmentVariable(EnvironmentVariableName, null);
   }

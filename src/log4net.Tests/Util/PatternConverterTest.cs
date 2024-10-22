@@ -72,14 +72,14 @@ public class PatternConverterTest
 
     PropertyKeyCountPatternLayoutConverter? converter =
         PropertyKeyCountPatternLayoutConverter.MostRecentInstance;
-    Assert.IsNotNull(converter);
-    Assert.IsNotNull(converter!.Properties);
-    Assert.AreEqual(2, converter.Properties!.Count);
-    Assert.AreEqual("4", converter.Properties["two-plus-two"]);
+    Assert.That(converter, Is.Not.Null);
+    Assert.That(converter!.Properties, Is.Not.Null);
+    Assert.That(converter.Properties!, Has.Count.EqualTo(2));
+    Assert.That(converter.Properties["two-plus-two"], Is.EqualTo("4"));
 
     StringAppender appender =
         (StringAppender)LogManager.GetRepository(rep.Name).GetAppenders()[0];
-    Assert.AreEqual("2", appender.GetString());
+    Assert.That(appender.GetString(), Is.EqualTo("2"));
   }
 
   [Test]
@@ -120,47 +120,41 @@ public class PatternConverterTest
 
     PropertyKeyCountPatternConverter? converter =
         PropertyKeyCountPatternConverter.MostRecentInstance;
-    Assert.IsNotNull(converter);
-    Assert.IsNotNull(converter!.Properties);
-    Assert.AreEqual(2, converter!.Properties!.Count);
-    Assert.AreEqual("4", converter.Properties["two-plus-two"]);
+    Assert.That(converter, Is.Not.Null);
+    Assert.That(converter!.Properties, Is.Not.Null);
+    Assert.That(converter!.Properties!, Has.Count.EqualTo(2));
+    Assert.That(converter.Properties["two-plus-two"], Is.EqualTo("4"));
 
     PatternStringAppender appender =
         (PatternStringAppender)LogManager.GetRepository(rep.Name).GetAppenders()[0];
-    Assert.IsNotNull(appender.Setting);
-    Assert.AreEqual("2", appender.Setting!.Format());
+    Assert.That(appender.Setting, Is.Not.Null);
+    Assert.That(appender.Setting!.Format(), Is.EqualTo("2"));
   }
 }
 
 public class PropertyKeyCountPatternLayoutConverter : PatternLayoutConverter
 {
-  private static PropertyKeyCountPatternLayoutConverter? _mostRecentInstance;
+  public PropertyKeyCountPatternLayoutConverter() => MostRecentInstance = this;
 
-  public PropertyKeyCountPatternLayoutConverter() => _mostRecentInstance = this;
+  protected override void Convert(TextWriter writer, LoggingEvent loggingEvent) 
+    => writer.Write(Properties!.GetKeys().Length);
 
-  protected override void Convert(TextWriter writer, LoggingEvent loggingEvent) => writer.Write(Properties!.GetKeys().Length);
-
-  public static PropertyKeyCountPatternLayoutConverter? MostRecentInstance => _mostRecentInstance;
+  public static PropertyKeyCountPatternLayoutConverter? MostRecentInstance { get; private set; }
 }
 
 public class PropertyKeyCountPatternConverter : PatternConverter
 {
-  private static PropertyKeyCountPatternConverter? _mostRecentInstance;
-
-  public PropertyKeyCountPatternConverter() => _mostRecentInstance = this;
+  public PropertyKeyCountPatternConverter() => MostRecentInstance = this;
 
   public override void Convert(TextWriter writer, object? state)
     => writer.Write(Properties!.GetKeys().Length);
 
-  public static PropertyKeyCountPatternConverter? MostRecentInstance => _mostRecentInstance;
+  public static PropertyKeyCountPatternConverter? MostRecentInstance { get; private set; }
 }
 
 public class PatternStringAppender : StringAppender
 {
-  public PatternStringAppender()
-  {
-    MostRecentInstace = this;
-  }
+  public PatternStringAppender() => MostRecentInstace = this;
 
   public PatternString? Setting { get; set; }
 

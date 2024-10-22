@@ -11,9 +11,10 @@
     <SystemConfigurationConfigurationManagerPackageVersion>4.5.0</SystemConfigurationConfigurationManagerPackageVersion>
     <MicrosoftSourceLinkGitHubPackageVersion>8.0.0</MicrosoftSourceLinkGitHubPackageVersion>
     <!-- Test Packages -->
-    <MicrosoftNetTestSdkPackageVersion>17.9.0</MicrosoftNetTestSdkPackageVersion>
-    <NUnitPackageVersion>3.14.0</NUnitPackageVersion>
-    <NUnit3TestAdapterPackageVersion>4.5.0</NUnit3TestAdapterPackageVersion>
-    <QuackersTestLoggerPackageVersion>1.0.24</QuackersTestLoggerPackageVersion>
+    <MicrosoftNetTestSdkPackageVersion>17.11.1</MicrosoftNetTestSdkPackageVersion>
+    <NUnitAnalyzersPackageVersion>4.3.0</NUnitAnalyzersPackageVersion>
+    <NUnitPackageVersion>4.2.2</NUnitPackageVersion>
+    <NUnit3TestAdapterPackageVersion>4.6.0</NUnit3TestAdapterPackageVersion>
+    <QuackersTestLoggerPackageVersion>1.0.25</QuackersTestLoggerPackageVersion>
   </PropertyGroup>
 </Project>

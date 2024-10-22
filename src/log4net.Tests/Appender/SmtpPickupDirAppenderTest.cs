@@ -64,7 +64,7 @@ public class SmtpPickupDirAppenderTest
   /// with all appenders, and deletes any test files used
   /// for logging.
   /// </summary>
-  private void ResetLogger()
+  private static void ResetLogger()
   {
     // Regular users should not use the clear method lightly!
     LogManager.GetRepository().ResetConfiguration();
@@ -110,7 +110,7 @@ public class SmtpPickupDirAppenderTest
   /// </summary>
   /// <param name="appender">The appender to use</param>
   /// <returns>A configured ILogger</returns>
-  private ILogger CreateLogger(SmtpPickupDirAppender appender)
+  private static ILogger CreateLogger(SmtpPickupDirAppender appender)
   {
     Repository.Hierarchy.Hierarchy h = (Repository.Hierarchy.Hierarchy)LogManager.CreateRepository("TestRepository");
 
@@ -167,7 +167,7 @@ public class SmtpPickupDirAppenderTest
     log.Log(GetType(), Level.Info, "This is a message 2", null);
     DestroyLogger();
 
-    Assert.AreEqual(1, Directory.GetFiles(_testPickupDir).Length);
+    Assert.That(Directory.GetFiles(_testPickupDir), Has.Length.EqualTo(1));
     string[] fileContent = File.ReadAllLines((Directory.GetFiles(_testPickupDir)[0]));
     bool hasDateHeader = false;
     const string dateHeaderStart = "Date: ";
@@ -178,19 +178,22 @@ public class SmtpPickupDirAppenderTest
         string datePart = line.Substring(dateHeaderStart.Length);
         DateTime date = DateTime.ParseExact(datePart, "r", System.Globalization.CultureInfo.InvariantCulture);
         double diff = Math.Abs((DateTime.UtcNow - date).TotalMilliseconds);
-        Assert.LessOrEqual(diff, 1000, "Times should be equal, allowing a diff of one second to make test robust");
+        Assert.That(diff, Is.LessThanOrEqualTo(1000),
+          "Times should be equal, allowing a diff of one second to make test robust");
         hasDateHeader = true;
       }
     }
-    Assert.IsTrue(hasDateHeader, "Output must contains a date header");
+    Assert.That(hasDateHeader, "Output must contains a date header");
 
-    Assert.AreEqual(string.Empty, sh.Message, "Unexpected error message");
+    Assert.That(sh.Message, Is.EqualTo(string.Empty), "Unexpected error message");
   }
 
   /// <summary>
   /// Verifies that file extension is applied to output file name.
   /// </summary>
   [Test]
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1846:Prefer 'AsSpan' over 'Substring'",
+    Justification = "only .net8")]
   public void TestConfigurableFileExtension()
   {
     Utils.InconclusiveOnMono();
@@ -203,12 +206,12 @@ public class SmtpPickupDirAppenderTest
     log.Log(GetType(), Level.Info, "This is a message 2", null);
     DestroyLogger();
 
-    Assert.AreEqual(1, Directory.GetFiles(_testPickupDir).Length);
+    Assert.That(Directory.GetFiles(_testPickupDir), Has.Length.EqualTo(1));
     FileInfo fileInfo = new(Directory.GetFiles(_testPickupDir)[0]);
-    Assert.AreEqual("." + fileExtension, fileInfo.Extension);
-    Assert.IsTrue(Guid.TryParse(fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length), out _));
+    Assert.That(fileInfo.Extension, Is.EqualTo("." + fileExtension));
+    Assert.That(Guid.TryParse(fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length), out _));
 
-    Assert.AreEqual("", sh.Message, "Unexpected error message");
+    Assert.That(sh.Message, Is.EqualTo(""), "Unexpected error message");
   }
 
   /// <summary>
@@ -225,11 +228,11 @@ public class SmtpPickupDirAppenderTest
     log.Log(GetType(), Level.Info, "This is a message 2", null);
     DestroyLogger();
 
-    Assert.AreEqual(1, Directory.GetFiles(_testPickupDir).Length);
+    Assert.That(Directory.GetFiles(_testPickupDir), Has.Length.EqualTo(1));
     FileInfo fileInfo = new(Directory.GetFiles(_testPickupDir)[0]);
-    Assert.IsEmpty(fileInfo.Extension);
-    Assert.IsTrue(Guid.TryParse(fileInfo.Name, out _));
+    Assert.That(fileInfo.Extension, Is.Empty);
+    Assert.That(Guid.TryParse(fileInfo.Name, out _));
 
-    Assert.AreEqual(string.Empty, sh.Message, "Unexpected error message");
+    Assert.That(sh.Message, Is.EqualTo(string.Empty), "Unexpected error message");
   }
 }

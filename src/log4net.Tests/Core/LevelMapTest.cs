@@ -35,33 +35,33 @@ public sealed class LevelMapTest
   [Test]
   public void LevelMapCreateClear()
   {
-    var map = new LevelMap();
+    LevelMap map = new();
     LevelCollection allLevels = map.AllLevels;
-    Assert.AreEqual(0, allLevels.Count);
-    Assert.IsNull(map["nonexistent"]);
+    Assert.That(allLevels, Is.Empty);
+    Assert.That(map["nonexistent"], Is.Null);
 
     map.Add("level1234", 1234, "displayName");
     allLevels = map.AllLevels;
-    Assert.AreEqual(1, allLevels.Count);
-    Assert.AreEqual("level1234", allLevels[0].Name);
-    Assert.AreEqual("displayName", allLevels[0].DisplayName);
-    Assert.AreEqual(1234, allLevels[0].Value);
+    Assert.That(allLevels, Has.Count.EqualTo(1));
+    Assert.That(allLevels[0].Name, Is.EqualTo("level1234"));
+    Assert.That(allLevels[0].DisplayName, Is.EqualTo("displayName"));
+    Assert.That(allLevels[0].Value, Is.EqualTo(1234));
     Level? level1234 = map["level1234"];
-    Assert.IsNotNull(level1234);
-    Assert.AreSame(level1234, allLevels[0]);
+    Assert.That(level1234, Is.Not.Null);
+    Assert.That(allLevels[0], Is.SameAs(level1234));
 
     Level lookupLevel = map.LookupWithDefault(level1234!);
-    Assert.AreSame(level1234, lookupLevel);
+    Assert.That(lookupLevel, Is.SameAs(level1234));
 
-    var otherLevel = new Level(5678, "level5678", "display");
+    Level otherLevel = new(5678, "level5678", "display");
     lookupLevel = map.LookupWithDefault(otherLevel);
-    Assert.AreSame(otherLevel, lookupLevel);
-    Assert.AreSame(otherLevel, map["LEVEL5678"]);
+    Assert.That(lookupLevel, Is.SameAs(otherLevel));
+    Assert.That(map["LEVEL5678"], Is.SameAs(otherLevel));
 
     map.Clear();
     allLevels = map.AllLevels;
-    Assert.AreEqual(0, allLevels.Count);
-    Assert.IsNull(map["level1234"]);
-    Assert.IsNull(map["LEVEL5678"]);
+    Assert.That(allLevels, Is.Empty);
+    Assert.That(map["level1234"], Is.Null);
+    Assert.That(map["LEVEL5678"], Is.Null);
   }
 }

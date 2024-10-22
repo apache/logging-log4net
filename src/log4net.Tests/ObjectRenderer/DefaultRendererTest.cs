@@ -67,11 +67,11 @@ public class DefaultRendererTest
     VerifyRenderObject(ht, s =>
     {
       // table entries may be rendered in arbitrary order, e.g. "{b=2, c=3, a=1}".
-      Assert.AreEqual('{', s[0]);
-      Assert.IsTrue(s.EndsWith("}"));
-      Assert.IsTrue(s.Contains("a=1"));
-      Assert.IsTrue(s.Contains("b=2"));
-      Assert.IsTrue(s.Contains("c=3"));
+      Assert.That(s[0], Is.EqualTo('{'));
+      Assert.That(s.EndsWith("}"));
+      Assert.That(s, Does.Contain("a=1"));
+      Assert.That(s, Does.Contain("b=2"));
+      Assert.That(s, Does.Contain("c=3"));
     });
 
     Dictionary<string, int> dict = new()
@@ -87,7 +87,7 @@ public class DefaultRendererTest
 
   private void VerifyRenderObject(object? toRender, string expected)
   {
-    VerifyRenderObject(toRender, s => { Assert.AreEqual(expected, s); });
+    VerifyRenderObject(toRender, s => Assert.That(s, Is.EqualTo(expected)));
   }
 
   private void VerifyRenderObject(object? toRender, Action<string> validate)

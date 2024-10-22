@@ -71,7 +71,7 @@ public class FixingTest
     // Assert
     foreach (var flag in allFlags)
     {
-      Assert.AreEqual(flag, FixFlags.All & flag, $"FixFlags.All does not contain {flag}");
+      Assert.That(FixFlags.All & flag, Is.EqualTo(flag), $"FixFlags.All does not contain {flag}");
     }
   }
 
@@ -91,7 +91,7 @@ public class FixingTest
 
     AssertExpectedLoggingEvent(loggingEvent, loggingEventData);
 
-    Assert.AreEqual(FixFlags.None, loggingEvent.Fix, "Fixed Fields is incorrect");
+    Assert.That(loggingEvent.Fix, Is.EqualTo(FixFlags.None), "Fixed Fields is incorrect");
   }
 
   [Test]
@@ -112,7 +112,7 @@ public class FixingTest
 
     loggingEvent.Fix = FixFlags.All;
 
-    Assert.AreEqual(FixFlags.LocationInfo | FixFlags.UserName | FixFlags.Identity | FixFlags.Partial | FixFlags.Message | FixFlags.ThreadName | FixFlags.Exception | FixFlags.Domain | FixFlags.Properties, loggingEvent.Fix, "Fixed Fields is incorrect");
+    Assert.That(loggingEvent.Fix, Is.EqualTo(FixFlags.LocationInfo | FixFlags.UserName | FixFlags.Identity | FixFlags.Partial | FixFlags.Message | FixFlags.ThreadName | FixFlags.Exception | FixFlags.Domain | FixFlags.Properties), "Fixed Fields is incorrect");
   }
 
   [Test]
@@ -133,7 +133,7 @@ public class FixingTest
 
     loggingEvent.Fix = FixFlags.None;
 
-    Assert.AreEqual(FixFlags.None, loggingEvent.Fix, "Fixed Fields is incorrect");
+    Assert.That(loggingEvent.Fix, Is.EqualTo(FixFlags.None), "Fixed Fields is incorrect");
   }
 
   private static LoggingEventData BuildStandardEventData()
@@ -155,18 +155,16 @@ public class FixingTest
 
   private static void AssertExpectedLoggingEvent(LoggingEvent loggingEvent, LoggingEventData loggingEventData)
   {
-    Assert.AreEqual("ReallySimpleApp", loggingEventData.Domain, "Domain is incorrect");
-    Assert.AreEqual("System.Exception: This is the exception", loggingEvent.GetExceptionString(), "Exception is incorrect");
-    Assert.IsNull(loggingEventData.Identity, "Identity is incorrect");
-    Assert.AreEqual(Level.Warn, loggingEventData.Level, "Level is incorrect");
-    Assert.IsNotNull(loggingEvent.LocationInformation);
-    Assert.AreEqual("get_LocationInformation", loggingEvent.LocationInformation!.MethodName, "Location Info is incorrect");
-    Assert.AreEqual("log4net.Tests.Core.FixingTest", loggingEventData.LoggerName, "LoggerName is incorrect");
-    Assert.AreEqual(LogManager.GetRepository(TestRepository), loggingEvent.Repository, "Repository is incorrect");
-    Assert.AreEqual(Thread.CurrentThread.Name, loggingEventData.ThreadName, "ThreadName is incorrect");
-    // This test is redundant as loggingEventData.TimeStamp is a value type and cannot be null
-    //Assert.IsNotNull(loggingEventData.TimeStampUtc, "TimeStamp is incorrect");
-    Assert.AreEqual("TestUser", loggingEventData.UserName, "UserName is incorrect");
-    Assert.AreEqual("Logging event works", loggingEvent.RenderedMessage, "Message is incorrect");
+    Assert.That(loggingEventData.Domain, Is.EqualTo("ReallySimpleApp"), "Domain is incorrect");
+    Assert.That(loggingEvent.GetExceptionString(), Is.EqualTo("System.Exception: This is the exception"), "Exception is incorrect");
+    Assert.That(loggingEventData.Identity, Is.Null, "Identity is incorrect");
+    Assert.That(loggingEventData.Level, Is.EqualTo(Level.Warn), "Level is incorrect");
+    Assert.That(loggingEvent.LocationInformation, Is.Not.Null);
+    Assert.That(loggingEvent.LocationInformation!.MethodName, Is.EqualTo("get_LocationInformation"), "Location Info is incorrect");
+    Assert.That(loggingEventData.LoggerName, Is.EqualTo("log4net.Tests.Core.FixingTest"), "LoggerName is incorrect");
+    Assert.That(loggingEvent.Repository, Is.EqualTo(LogManager.GetRepository(TestRepository)), "Repository is incorrect");
+    Assert.That(loggingEventData.ThreadName, Is.EqualTo(Thread.CurrentThread.Name), "ThreadName is incorrect");
+    Assert.That(loggingEventData.UserName, Is.EqualTo("TestUser"), "UserName is incorrect");
+    Assert.That(loggingEvent.RenderedMessage, Is.EqualTo("Logging event works"), "Message is incorrect");
   }
 }

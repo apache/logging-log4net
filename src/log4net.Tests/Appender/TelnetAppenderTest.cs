@@ -76,8 +76,8 @@ public sealed class TelnetAppenderTest
       WaitForReceived(2); // wait for log message
     }
     repository.Shutdown();
-    Assert.AreEqual(2, received.Count);
-    StringAssert.Contains(logId, received[1]);
+    Assert.That(received, Has.Count.EqualTo(2));
+    Assert.That(received[1], Does.Contain(logId));
 
     void Received(string message) => received.Add(message);
 

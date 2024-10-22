@@ -32,7 +32,7 @@ public class Signing
     var asm = typeof(LoggerRepositorySkeleton).Assembly;
     // Act
     var result = asm.GetName().GetPublicKey();
-    Assert.IsNotNull(result);
-    Assert.AreNotEqual(0, result!.Length);
+    Assert.That(result, Is.Not.Null);
+    Assert.That(result!.Length, Is.Not.EqualTo(0));
   }
 }

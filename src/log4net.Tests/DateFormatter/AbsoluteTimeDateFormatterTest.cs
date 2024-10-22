@@ -44,7 +44,7 @@ public class AbsoluteTimeDateFormatterTest
     DateTime dt = DateTime.Now;
     f1.FormatDate(dt, sw);
     f2.FormatDate(dt, sw);
-    Assert.AreEqual(1, FormatterOne.Invocations);
+    Assert.That(FormatterOne.Invocations, Is.EqualTo(1));
   }
 
   [Test]
@@ -57,7 +57,7 @@ public class AbsoluteTimeDateFormatterTest
     DateTime dt2 = dt1.AddMilliseconds(600);
     f1.FormatDate(dt1, sw);
     f2.FormatDate(dt2, sw);
-    Assert.AreEqual(1, FormatterOne.Invocations);
+    Assert.That(FormatterOne.Invocations, Is.EqualTo(1));
   }
 
   [Test]
@@ -70,7 +70,7 @@ public class AbsoluteTimeDateFormatterTest
     DateTime dt2 = dt1.AddMilliseconds(1100);
     f1.FormatDate(dt1, sw);
     f2.FormatDate(dt2, sw);
-    Assert.AreEqual(2, FormatterOne.Invocations);
+    Assert.That(FormatterOne.Invocations, Is.EqualTo(2));
   }
 
   [Test]
@@ -82,7 +82,7 @@ public class AbsoluteTimeDateFormatterTest
     DateTime dt1 = DateTime.Today.AddMinutes(10);
     f1.FormatDate(dt1, sw);
     f2.FormatDate(dt1, sw);
-    Assert.AreEqual(2, FormatterOne.Invocations);
+    Assert.That(FormatterOne.Invocations, Is.EqualTo(2));
   }
 
   [Test]
@@ -94,12 +94,12 @@ public class AbsoluteTimeDateFormatterTest
 
     // Tests for prepended 0 characters for 2-digit and 3-digit portions.
     formatter.FormatDate(new DateTime(1970, 1, 1, 1, 1, 1).AddMilliseconds(1), writer);
-    Assert.AreEqual("01:01:01,001", sb.ToString());
+    Assert.That(sb.ToString(), Is.EqualTo("01:01:01,001"));
     sb.Clear();
 
     // Non-zero-prepend case.
     formatter.FormatDate(new DateTime(2100, 12, 30, 11, 59, 59).AddMilliseconds(100), writer);
-    Assert.AreEqual("11:59:59,100", sb.ToString());
+    Assert.That(sb.ToString(), Is.EqualTo("11:59:59,100"));
     sb.Clear();
   }
 }

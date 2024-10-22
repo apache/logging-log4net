@@ -49,7 +49,7 @@ public class PatternStringTest : MarshalByRefObject
       Environment.SpecialFolder specialFolder =
           (Environment.SpecialFolder)Enum.Parse(typeof(Environment.SpecialFolder), specialFolderName);
 
-      Assert.AreEqual(Environment.GetFolderPath(specialFolder), evaluatedPattern);
+      Assert.That(evaluatedPattern, Is.EqualTo(Environment.GetFolderPath(specialFolder)));
     }
   }
 
@@ -86,19 +86,19 @@ public class PatternStringTest : MarshalByRefObject
     }
   }
 
-  public void TestAppSettingPathConverterInConfiguredDomain()
+  private void TestAppSettingPathConverterInConfiguredDomain()
   {
     string pattern = "%appSetting{TestKey}";
     PatternString patternString = new(pattern);
     string evaluatedPattern = patternString.Format();
     string appSettingValue = ConfigurationManager.AppSettings["TestKey"];
-    Assert.AreEqual("TestValue", appSettingValue, "Expected configuration file to contain a key TestKey with the value TestValue");
-    Assert.AreEqual(appSettingValue, evaluatedPattern, "Evaluated pattern expected to be identical to appSetting value");
+    Assert.That(appSettingValue, Is.EqualTo("TestValue"), "Expected configuration file to contain a key TestKey with the value TestValue");
+    Assert.That(evaluatedPattern, Is.EqualTo(appSettingValue), "Evaluated pattern expected to be identical to appSetting value");
 
     string badPattern = "%appSetting{UnknownKey}";
     patternString = new PatternString(badPattern);
     evaluatedPattern = patternString.Format();
-    Assert.AreEqual("(null)", evaluatedPattern, "Evaluated pattern expected to be \"(null)\" for non-existent appSettings key");
+    Assert.That(evaluatedPattern, Is.EqualTo("(null)"), "Evaluated pattern expected to be \"(null)\" for non-existent appSettings key");
   }
 
   private static string CreateTempConfigFile(string configurationFileContent)
