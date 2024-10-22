@@ -7,4 +7,13 @@
     <Nullable>Enable</Nullable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
+  <PropertyGroup Label="Package Versions">
+    <SystemConfigurationConfigurationManagerPackageVersion>4.5.0</SystemConfigurationConfigurationManagerPackageVersion>
+    <MicrosoftSourceLinkGitHubPackageVersion>8.0.0</MicrosoftSourceLinkGitHubPackageVersion>
+    <!-- Test Packages -->
+    <MicrosoftNetTestSdkPackageVersion>17.9.0</MicrosoftNetTestSdkPackageVersion>
+    <NUnitPackageVersion>3.14.0</NUnitPackageVersion>
+    <NUnit3TestAdapterPackageVersion>4.5.0</NUnit3TestAdapterPackageVersion>
+    <QuackersTestLoggerPackageVersion>1.0.24</QuackersTestLoggerPackageVersion>
+  </PropertyGroup>
 </Project>

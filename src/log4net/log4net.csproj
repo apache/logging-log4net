@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Version>3.0.3</Version>
     <PackageId>log4net</PackageId>
@@ -81,22 +81,11 @@ log4net is designed with two distinct goals in mind: speed and flexibility
   </PropertyGroup>
   <PropertyGroup />
   <ItemGroup Condition="'$(TargetFramework)'=='net462'">
-    <Reference Update="System">
-      <Name>System</Name>
-    </Reference>
     <Reference Include="System.Configuration" />
-    <Reference Include="System.Web">
-      <Name>System.Web</Name>
-    </Reference>
-    <Reference Update="System.Data">
-      <Name>System.Data</Name>
-    </Reference>
-    <Reference Update="System.Xml">
-      <Name>System.XML</Name>
-    </Reference>
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'!='net462'">
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="$(SystemConfigurationConfigurationManagerPackageVersion)" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\log4net.snk">
@@ -110,7 +99,7 @@ log4net is designed with two distinct goals in mind: speed and flexibility
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(MicrosoftSourceLinkGitHubPackageVersion)" PrivateAssets="All" />
   </ItemGroup>
   <Import Project="../MonoForFramework.targets" />
   <Target Name="_ResolveCopyLocalNuGetPackagePdbsAndXml" Condition="$(CopyLocalLockFileAssemblies) == true" AfterTargets="ResolveReferences">
