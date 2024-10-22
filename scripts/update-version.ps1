@@ -32,7 +32,8 @@ function Update-TextVersion([System.IO.FileInfo]$TextFile, [string]$OldVersion, 
   $OldContent = Get-Content $TextFile | Out-String
   $NewContent = $OldContent.Replace($OldVersion, $NewVersion)
   "$($TextFile): $NewVersion"
-  $NewContent | Out-File $TextFile
+  $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
+  [System.IO.File]::WriteAllText($TextFile, $NewContent, $Utf8NoBomEncoding)
 }
 
 function Update-ReleaseNotes([System.IO.FileInfo]$XmlFile, [string]$Content, [string]$Version)
@@ -75,4 +76,4 @@ $ReleaseNoteSection = '
   </section>
 </section>'
 
-Update-ReleaseNotes $PSScriptRoot/../src/site/xdoc/release/release-notes.xml $ReleaseNoteSection $NewVersion
+#Update-ReleaseNotes $PSScriptRoot/../src/site/xdoc/release/release-notes.xml $ReleaseNoteSection $NewVersion
