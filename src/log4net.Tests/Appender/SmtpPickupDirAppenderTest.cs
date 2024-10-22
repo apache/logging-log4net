@@ -64,7 +64,7 @@ public class SmtpPickupDirAppenderTest
   /// with all appenders, and deletes any test files used
   /// for logging.
   /// </summary>
-  private void ResetLogger()
+  private static void ResetLogger()
   {
     // Regular users should not use the clear method lightly!
     LogManager.GetRepository().ResetConfiguration();
@@ -110,7 +110,7 @@ public class SmtpPickupDirAppenderTest
   /// </summary>
   /// <param name="appender">The appender to use</param>
   /// <returns>A configured ILogger</returns>
-  private ILogger CreateLogger(SmtpPickupDirAppender appender)
+  private static ILogger CreateLogger(SmtpPickupDirAppender appender)
   {
     Repository.Hierarchy.Hierarchy h = (Repository.Hierarchy.Hierarchy)LogManager.CreateRepository("TestRepository");
 
@@ -178,7 +178,8 @@ public class SmtpPickupDirAppenderTest
         string datePart = line.Substring(dateHeaderStart.Length);
         DateTime date = DateTime.ParseExact(datePart, "r", System.Globalization.CultureInfo.InvariantCulture);
         double diff = Math.Abs((DateTime.UtcNow - date).TotalMilliseconds);
-        Assert.LessOrEqual(diff, 1000, "Times should be equal, allowing a diff of one second to make test robust");
+        Assert.That(diff, Is.LessThanOrEqualTo(1000),
+          "Times should be equal, allowing a diff of one second to make test robust");
         hasDateHeader = true;
       }
     }
@@ -191,6 +192,8 @@ public class SmtpPickupDirAppenderTest
   /// Verifies that file extension is applied to output file name.
   /// </summary>
   [Test]
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1846:Prefer 'AsSpan' over 'Substring'",
+    Justification = "only .net8")]
   public void TestConfigurableFileExtension()
   {
     Utils.InconclusiveOnMono();

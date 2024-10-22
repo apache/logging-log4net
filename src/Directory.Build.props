@@ -13,7 +13,7 @@
     <!-- Test Packages -->
     <MicrosoftNetTestSdkPackageVersion>17.11.1</MicrosoftNetTestSdkPackageVersion>
     <NUnitAnalyzersPackageVersion>4.3.0</NUnitAnalyzersPackageVersion>
-    <NUnitPackageVersion>3.14.0</NUnitPackageVersion>
+    <NUnitPackageVersion>4.2.2</NUnitPackageVersion>
     <NUnit3TestAdapterPackageVersion>4.6.0</NUnit3TestAdapterPackageVersion>
     <QuackersTestLoggerPackageVersion>1.0.25</QuackersTestLoggerPackageVersion>
   </PropertyGroup>
