@@ -55,8 +55,8 @@ public class HierarchyTest
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
 
-    Assert.AreEqual("4", rep.Properties["two-plus-two"]);
-    Assert.IsNull(rep.Properties["one-plus-one"]);
+    Assert.That(rep.Properties["two-plus-two"], Is.EqualTo("4"));
+    Assert.That(rep.Properties["one-plus-one"], Is.Null);
   }
 
   [Test]
@@ -65,8 +65,7 @@ public class HierarchyTest
     CountingAppender alpha = new();
     CountingAppender beta = new();
 
-    Repository.Hierarchy.Hierarchy hierarchy =
-        (Repository.Hierarchy.Hierarchy)LogManager.GetRepository();
+    Repository.Hierarchy.Hierarchy hierarchy = (Repository.Hierarchy.Hierarchy)LogManager.GetRepository();
 
     hierarchy.Root.AddAppender(alpha);
     hierarchy.Root.AddAppender(beta);
@@ -75,8 +74,8 @@ public class HierarchyTest
     ILog log = LogManager.GetLogger(GetType());
     log.Debug("Hello World");
 
-    Assert.AreEqual(1, alpha.Counter);
-    Assert.AreEqual(1, beta.Counter);
+    Assert.That(alpha.Counter, Is.EqualTo(1));
+    Assert.That(beta.Counter, Is.EqualTo(1));
   }
 
   [Test]
@@ -90,8 +89,8 @@ public class HierarchyTest
     ILog log = LogManager.GetLogger(GetType());
     log.Debug("Hello World");
 
-    Assert.AreEqual(1, alpha.Counter);
-    Assert.AreEqual(1, beta.Counter);
+    Assert.That(alpha.Counter, Is.EqualTo(1));
+    Assert.That(beta.Counter, Is.EqualTo(1));
   }
 
   [Test]
@@ -182,8 +181,8 @@ public class HierarchyTest
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
-    Assert.AreEqual("A.B.C", rep.GetLogger("A.B.C").Name);
-    Assert.AreEqual("A.B", rep.GetLogger("A.B").Name);
+    Assert.That(rep.GetLogger("A.B.C").Name, Is.EqualTo("A.B.C"));
+    Assert.That(rep.GetLogger("A.B").Name, Is.EqualTo("A.B"));
   }
 
   /// <summary>
@@ -208,6 +207,6 @@ public class HierarchyTest
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
 
-    Parallel.For(0, 100, i => Assert.AreEqual($"A.{i}", rep.GetLogger($"A.{i}").Name));
+    Parallel.For(0, 100, i => Assert.That(rep.GetLogger($"A.{i}").Name, Is.EqualTo($"A.{i}")));
   }
 }

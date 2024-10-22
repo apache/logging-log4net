@@ -62,24 +62,24 @@ public sealed class LoggingEventTest
     stream.Position = 0;
     LoggingEvent ev2 = (LoggingEvent)formatter.Deserialize(stream);
 
-    Assert.AreEqual("aLogger", ev2.LoggerName);
-    Assert.AreEqual(Level.Log4Net_Debug, ev2.Level);
-    Assert.IsNull(ev2.MessageObject);
-    Assert.AreEqual("aMessage", ev2.RenderedMessage);
-    Assert.AreEqual("aThread", ev2.ThreadName);
-    Assert.AreEqual(timestamp, ev2.TimeStampUtc);
-    Assert.IsNotNull(ev2.LocationInfo);
-    Assert.AreEqual("System.RuntimeMethodHandle", ev2.LocationInfo!.ClassName);
-    Assert.AreEqual("InvokeMethod", ev2.LocationInfo!.MethodName);
-    Assert.IsNull(ev2.LocationInfo!.FileName);
-    Assert.AreEqual("0", ev2.LocationInfo!.LineNumber);
-    Assert.AreEqual("aUser", ev2.UserName);
-    Assert.AreEqual("anIdentity", ev2.Identity);
-    Assert.IsNull(ev2.ExceptionObject);
-    Assert.AreEqual("anException", ev2.GetExceptionString());
-    Assert.AreEqual("aDomain", ev2.Domain);
-    Assert.AreEqual(1, ev.Properties.Count);
-    Assert.AreEqual("bar", ev2.Properties["foo"]);
+    Assert.That(ev2.LoggerName, Is.EqualTo("aLogger"));
+    Assert.That(ev2.Level, Is.EqualTo(Level.Log4Net_Debug));
+    Assert.That(ev2.MessageObject, Is.Null);
+    Assert.That(ev2.RenderedMessage, Is.EqualTo("aMessage"));
+    Assert.That(ev2.ThreadName, Is.EqualTo("aThread"));
+    Assert.That(ev2.TimeStampUtc, Is.EqualTo(timestamp));
+    Assert.That(ev2.LocationInfo, Is.Not.Null);
+    Assert.That(ev2.LocationInfo!.ClassName, Is.EqualTo("System.RuntimeMethodHandle"));
+    Assert.That(ev2.LocationInfo!.MethodName, Is.EqualTo("InvokeMethod"));
+    Assert.That(ev2.LocationInfo!.FileName, Is.Null);
+    Assert.That(ev2.LocationInfo!.LineNumber, Is.EqualTo("0"));
+    Assert.That(ev2.UserName, Is.EqualTo("aUser"));
+    Assert.That(ev2.Identity, Is.EqualTo("anIdentity"));
+    Assert.That(ev2.ExceptionObject, Is.Null);
+    Assert.That(ev2.GetExceptionString(), Is.EqualTo("anException"));
+    Assert.That(ev2.Domain, Is.EqualTo("aDomain"));
+    Assert.That(ev.Properties, Has.Count.EqualTo(1));
+    Assert.That(ev2.Properties["foo"], Is.EqualTo("bar"));
   }
 
   /// <summary>
@@ -93,26 +93,26 @@ public sealed class LoggingEventTest
     using Stream stream = File.OpenRead(datPath);
     BinaryFormatter formatter = new();
     LoggingEvent ev = (LoggingEvent)formatter.Deserialize(stream);
-    Assert.IsNotNull(ev);
+    Assert.That(ev, Is.Not.Null);
 
-    Assert.AreEqual("aLogger", ev!.LoggerName);
-    Assert.AreEqual(Level.Log4Net_Debug, ev.Level);
-    Assert.IsNull(ev.MessageObject);
-    Assert.AreEqual("aMessage", ev.RenderedMessage);
-    Assert.AreEqual("aThread", ev.ThreadName);
-    Assert.IsNotNull(ev.LocationInfo);
-    Assert.AreEqual("?", ev.LocationInfo!.ClassName);
-    Assert.AreEqual("?", ev.LocationInfo!.MethodName);
-    Assert.AreEqual("?", ev.LocationInfo!.FileName);
-    Assert.AreEqual("?", ev.LocationInfo!.LineNumber);
-    Assert.AreEqual("aUser", ev.UserName);
-    Assert.AreEqual("anIdentity", ev.Identity);
-    Assert.IsNull(ev.ExceptionObject);
-    Assert.AreEqual("anException", ev.GetExceptionString());
-    Assert.AreEqual("aDomain", ev.Domain);
-    Assert.AreEqual(1, ev.Properties.Count);
-    Assert.AreEqual("bar", ev.Properties["foo"]);
-    Assert.AreEqual(_localTime.ToUniversalTime(), ev.TimeStampUtc);
+    Assert.That(ev!.LoggerName, Is.EqualTo("aLogger"));
+    Assert.That(ev.Level, Is.EqualTo(Level.Log4Net_Debug));
+    Assert.That(ev.MessageObject, Is.Null);
+    Assert.That(ev.RenderedMessage, Is.EqualTo("aMessage"));
+    Assert.That(ev.ThreadName, Is.EqualTo("aThread"));
+    Assert.That(ev.LocationInfo, Is.Not.Null);
+    Assert.That(ev.LocationInfo!.ClassName, Is.EqualTo("?"));
+    Assert.That(ev.LocationInfo!.MethodName, Is.EqualTo("?"));
+    Assert.That(ev.LocationInfo!.FileName, Is.EqualTo("?"));
+    Assert.That(ev.LocationInfo!.LineNumber, Is.EqualTo("?"));
+    Assert.That(ev.UserName, Is.EqualTo("aUser"));
+    Assert.That(ev.Identity, Is.EqualTo("anIdentity"));
+    Assert.That(ev.ExceptionObject, Is.Null);
+    Assert.That(ev.GetExceptionString(), Is.EqualTo("anException"));
+    Assert.That(ev.Domain, Is.EqualTo("aDomain"));
+    Assert.That(ev.Properties, Has.Count.EqualTo(1));
+    Assert.That(ev.Properties["foo"], Is.EqualTo("bar"));
+    Assert.That(ev.TimeStampUtc, Is.EqualTo(_localTime.ToUniversalTime()));
   }
 #endif // NET462_OR_GREATER
 
@@ -122,7 +122,7 @@ public sealed class LoggingEventTest
   [Test]
   public void ReviseThreadNameTest()
   {
-    Assert.AreEqual("PoolBoy", ReviseThreadName("PoolBoy"));
+    Assert.That(ReviseThreadName("PoolBoy"), Is.EqualTo("PoolBoy"));
     AssertIsCurrentThreadId(ReviseThreadName(null));
     AssertIsCurrentThreadId(ReviseThreadName(string.Empty));
     AssertIsCurrentThreadId(ReviseThreadName(".NET ThreadPool Worker"));
@@ -136,6 +136,6 @@ public sealed class LoggingEventTest
     }
 
     static void AssertIsCurrentThreadId(string name)
-      => Assert.AreEqual(name, SystemInfo.CurrentThreadId.ToString(CultureInfo.InvariantCulture));
+      => Assert.That(SystemInfo.CurrentThreadId.ToString(CultureInfo.InvariantCulture), Is.EqualTo(name));
   }
 }

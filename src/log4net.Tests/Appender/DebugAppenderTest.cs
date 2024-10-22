@@ -58,9 +58,9 @@ public class DebugAppenderTest
     ILog log = LogManager.GetLogger(rep.Name, GetType());
     log.Debug("Message");
 
-    Assert.IsNull(categoryTraceListener.Category);
+    Assert.That(categoryTraceListener.Category, Is.Null);
 
-    Assert.IsFalse(testErrHandler.ErrorOccured);
+    Assert.That(testErrHandler.ErrorOccured, Is.False);
 
     Debug.Listeners.Remove(categoryTraceListener);
   }
@@ -86,7 +86,7 @@ public class DebugAppenderTest
     ILog log = LogManager.GetLogger(rep.Name, GetType());
     log.Debug("Message");
 
-    Assert.IsNull(categoryTraceListener.Category);
+    Assert.That(categoryTraceListener.Category, Is.Null);
 
     Debug.Listeners.Remove(categoryTraceListener);
   }
@@ -110,9 +110,9 @@ public class DebugAppenderTest
     ILog log = LogManager.GetLogger(rep.Name, GetType());
     log.Debug("Message");
 
-    Assert.AreEqual(
-        GetType().ToString(),
-        categoryTraceListener.Category);
+    Assert.That(
+      categoryTraceListener.Category,
+      Is.EqualTo(GetType().ToString()));
 
     Debug.Listeners.Remove(categoryTraceListener);
   }
@@ -137,9 +137,9 @@ public class DebugAppenderTest
     ILog log = LogManager.GetLogger(rep.Name, GetType());
     log.Debug("Message");
 
-    Assert.AreEqual(
-        MethodInfo.GetCurrentMethod().Name,
-        categoryTraceListener.Category);
+    Assert.That(
+        categoryTraceListener.Category,
+        Is.EqualTo(MethodInfo.GetCurrentMethod().Name));
 
     Debug.Listeners.Remove(categoryTraceListener);
   }
@@ -149,19 +149,13 @@ public class DebugAppenderTest
     public bool ErrorOccured { get; private set; }
 
     public void Error(string message, Exception? e, ErrorCode errorCode)
-    {
-      ErrorOccured = true;
-    }
+      => ErrorOccured = true;
 
     public void Error(string message, Exception e)
-    {
-      Error(message, e, ErrorCode.GenericFailure);
-    }
+      => Error(message, e, ErrorCode.GenericFailure);
 
     public void Error(string message)
-    {
-      Error(message, null, ErrorCode.GenericFailure);
-    }
+      => Error(message, null, ErrorCode.GenericFailure);
   }
 }
 #endif

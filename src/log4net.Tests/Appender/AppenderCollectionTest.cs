@@ -44,8 +44,8 @@ public class AppenderCollectionTest
 
     IAppender[] appenderArray = appenderCollection.ToArray();
 
-    Assert.AreEqual(1, appenderArray.Length);
-    Assert.AreEqual(appender, appenderArray[0]);
+    Assert.That(appenderArray, Has.Length.EqualTo(1));
+    Assert.That(appenderArray[0], Is.EqualTo(appender));
   }
 
   [Test]
@@ -58,7 +58,7 @@ public class AppenderCollectionTest
 
     IAppender[] appenderArray = readonlyAppenderCollection.ToArray();
 
-    Assert.AreEqual(1, appenderArray.Length);
-    Assert.AreEqual(appender, appenderArray[0]);
+    Assert.That(appenderArray, Has.Length.EqualTo(1));
+    Assert.That(appenderArray[0], Is.EqualTo(appender));
   }
 }

@@ -147,6 +147,6 @@ public sealed class FileAppenderTest
     ILogger logger = rep.GetLogger(nameof(FilenameWithGlobalContextPatternStringTest));
     logger.Log(GetType(), Level.Info, nameof(FilenameWithGlobalContextPatternStringTest), null);
     logs.Refresh();
-    Assert.IsTrue(logs.GetFiles().Any(file => file.Name.StartsWith("file_custom_log_issue_193")));
+    Assert.That(logs.GetFiles().Any(file => file.Name.StartsWith("file_custom_log_issue_193")));
   }
 }

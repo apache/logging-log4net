@@ -67,6 +67,6 @@ public class RecursiveLoggingTest
     _eventCount = 0;
     _logger!.Log(typeof(RecursiveLoggingTest), Level.Warn, "Message logged", null);
 
-    Assert.AreEqual(MaxRecursion, _eventCount, "Expected MaxRecursion recursive calls");
+    Assert.That(_eventCount, Is.EqualTo(MaxRecursion), "Expected MaxRecursion recursive calls");
   }
 }

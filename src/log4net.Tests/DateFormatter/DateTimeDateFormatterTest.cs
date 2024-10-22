@@ -38,13 +38,13 @@ public class DateTimeDateFormatterTest
     // Tests for prepended 0 characters for 2-digit and 3-digit portions.
     var formatter = new DateTimeDateFormatter();
     formatter.FormatDate(new DateTime(1970, 1, 1, 1, 1, 1).AddMilliseconds(1), writer);
-    Assert.AreEqual("01 Jan 1970 01:01:01,001", sb.ToString());
+    Assert.That(sb.ToString(), Is.EqualTo("01 Jan 1970 01:01:01,001"));
     sb.Clear();
 
     // Non-zero-prepend case.
     var formatter2 = new DifferentTypeNameDateTimeDateFormatter();
     formatter2.FormatDate(new DateTime(2100, 12, 30, 11, 59, 59).AddMilliseconds(100), writer);
-    Assert.AreEqual("30 Dec 2100 11:59:59,100", sb.ToString());
+    Assert.That(sb.ToString(), Is.EqualTo("30 Dec 2100 11:59:59,100"));
     sb.Clear();
   }
 

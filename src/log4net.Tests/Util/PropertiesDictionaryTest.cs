@@ -48,9 +48,9 @@ public class PropertiesDictionaryTest
       pd[i.ToString()] = i;
     }
 
-    Assert.AreEqual(10, pd.Count, "Dictionary should have 10 items");
+    Assert.That(pd, Has.Count.EqualTo(10), "Dictionary should have 10 items");
 
-    Assert.IsNull(pd["notThere"], "Getter should act as IDictionary not IDictionary<TKey, TValue>");
+    Assert.That(pd["notThere"], Is.Null, "Getter should act as IDictionary not IDictionary<TKey, TValue>");
 
     // Serialize the properties into a memory stream
     BinaryFormatter formatter = new();
@@ -61,11 +61,11 @@ public class PropertiesDictionaryTest
     memory.Position = 0;
     PropertiesDictionary pd2 = (PropertiesDictionary)formatter.Deserialize(memory);
 
-    Assert.AreEqual(10, pd2.Count, "Deserialized Dictionary should have 10 items");
+    Assert.That(pd2, Has.Count.EqualTo(10), "Deserialized Dictionary should have 10 items");
 
     foreach (string key in pd.GetKeys())
     {
-      Assert.AreEqual(pd[key], pd2[key], "Check Value Persisted for key [{0}]", key);
+      Assert.That(pd2[key], Is.EqualTo(pd[key]), $"Check Value Persisted for key [{key}]");
     }
   }
 }

@@ -62,23 +62,20 @@ public class FilterTest
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
 
     IAppender[] appenders = LogManager.GetRepository(rep.Name).GetAppenders();
-    Assert.IsTrue(appenders.Length == 1);
+    Assert.That(appenders, Has.Length.EqualTo(1));
 
-    IAppender? appender = Array.Find(appenders, (IAppender a) =>
-    {
-      return a.Name == "MemoryAppender";
-    });
-    Assert.IsNotNull(appender);
+    IAppender? appender = Array.Find(appenders, (IAppender a) => a.Name == "MemoryAppender");
+    Assert.That(appender, Is.Not.Null);
 
     MultiplePropertyFilter? multiplePropertyFilter =
         ((AppenderSkeleton)appender!).FilterHead as MultiplePropertyFilter;
-    Assert.IsNotNull(multiplePropertyFilter);
+    Assert.That(multiplePropertyFilter, Is.Not.Null);
     MultiplePropertyFilter.Condition[] conditions = multiplePropertyFilter!.GetConditions();
-    Assert.AreEqual(2, conditions.Length);
-    Assert.AreEqual("ABC", conditions[0].Key);
-    Assert.AreEqual("123", conditions[0].StringToMatch);
-    Assert.AreEqual("DEF", conditions[1].Key);
-    Assert.AreEqual("456", conditions[1].StringToMatch);
+    Assert.That(conditions, Has.Length.EqualTo(2));
+    Assert.That(conditions[0].Key, Is.EqualTo("ABC"));
+    Assert.That(conditions[0].StringToMatch, Is.EqualTo("123"));
+    Assert.That(conditions[1].Key, Is.EqualTo("DEF"));
+    Assert.That(conditions[1].StringToMatch, Is.EqualTo("456"));
   }
 }
 
@@ -86,20 +83,11 @@ public class MultiplePropertyFilter : FilterSkeleton
 {
   private readonly List<Condition> _conditions = new();
 
-  public override FilterDecision Decide(LoggingEvent loggingEvent)
-  {
-    return FilterDecision.Accept;
-  }
+  public override FilterDecision Decide(LoggingEvent loggingEvent) => FilterDecision.Accept;
 
-  public Condition[] GetConditions()
-  {
-    return _conditions.ToArray();
-  }
+  public Condition[] GetConditions() => _conditions.ToArray();
 
-  public void AddCondition(Condition condition)
-  {
-    _conditions.Add(condition);
-  }
+  public void AddCondition(Condition condition) => _conditions.Add(condition);
 
   public class Condition
   {

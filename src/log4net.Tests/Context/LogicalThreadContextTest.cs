@@ -60,19 +60,19 @@ public class LogicalThreadContextTest
     ILog log1 = LogManager.GetLogger(rep.Name, "TestLogicalThreadPropertiesPattern");
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test no logical thread properties value set");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test no logical thread properties value set");
     stringAppender.Reset();
 
     LogicalThreadContext.Properties[Utils.PropertyKey] = "val1";
 
     log1.Info("TestMessage");
-    Assert.AreEqual("val1", stringAppender.GetString(), "Test logical thread properties value set");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("val1"), "Test logical thread properties value set");
     stringAppender.Reset();
 
     LogicalThreadContext.Properties.Remove(Utils.PropertyKey);
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test logical thread properties value removed");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test logical thread properties value removed");
     stringAppender.Reset();
   }
 
@@ -90,14 +90,14 @@ public class LogicalThreadContextTest
     ILog log1 = LogManager.GetLogger(rep.Name, "TestLogicalThreadPropertiesPattern");
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test no logical thread stack value set");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test no logical thread stack value set");
     stringAppender.Reset();
 
     string testValueForCurrentContext = "Outer";
     LogicalThreadContext.Properties[Utils.PropertyKey] = testValueForCurrentContext;
 
     log1.Info("TestMessage");
-    Assert.AreEqual(testValueForCurrentContext, stringAppender.GetString(), "Test logical thread properties value set");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(testValueForCurrentContext), "Test logical thread properties value set");
     stringAppender.Reset();
 
     var strings = await Task.WhenAll(Enumerable.Range(0, 10).Select(x => SomeWorkProperties(x.ToString())));
@@ -105,17 +105,17 @@ public class LogicalThreadContextTest
     // strings should be ["00AA0BB0", "01AA1BB1", "02AA2BB2", ...]
     for (int i = 0; i < strings.Length; i++)
     {
-      Assert.AreEqual(string.Format("{0}{1}AA{1}BB{1}", testValueForCurrentContext, i), strings[i], "Test logical thread properties expected sequence");
+      Assert.That(strings[i], Is.EqualTo(string.Format("{0}{1}AA{1}BB{1}", testValueForCurrentContext, i)), "Test logical thread properties expected sequence");
     }
 
     log1.Info("TestMessage");
-    Assert.AreEqual(testValueForCurrentContext, stringAppender.GetString(), "Test logical thread properties value set");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(testValueForCurrentContext), "Test logical thread properties value set");
     stringAppender.Reset();
 
     LogicalThreadContext.Properties.Remove(Utils.PropertyKey);
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test logical thread properties value removed");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test logical thread properties value removed");
     stringAppender.Reset();
   }
 
@@ -133,18 +133,18 @@ public class LogicalThreadContextTest
     ILog log1 = LogManager.GetLogger(rep.Name, "TestThreadStackPattern");
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test no logical thread stack value set");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test no logical thread stack value set");
     stringAppender.Reset();
 
     using (LogicalThreadContext.Stacks[Utils.PropertyKey].Push("val1"))
     {
       log1.Info("TestMessage");
-      Assert.AreEqual("val1", stringAppender.GetString(), "Test logical thread stack value set");
+      Assert.That(stringAppender.GetString(), Is.EqualTo("val1"), "Test logical thread stack value set");
       stringAppender.Reset();
     }
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test logical thread stack value removed");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test logical thread stack value removed");
     stringAppender.Reset();
   }
 
@@ -162,25 +162,25 @@ public class LogicalThreadContextTest
     ILog log1 = LogManager.GetLogger(rep.Name, "TestThreadStackPattern");
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test no logical thread stack value set");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test no logical thread stack value set");
     stringAppender.Reset();
 
     using (LogicalThreadContext.Stacks[Utils.PropertyKey].Push("val1"))
     {
       log1.Info("TestMessage");
-      Assert.AreEqual("val1", stringAppender.GetString(), "Test logical thread stack value set");
+      Assert.That(stringAppender.GetString(), Is.EqualTo("val1"), "Test logical thread stack value set");
       stringAppender.Reset();
 
       using (LogicalThreadContext.Stacks[Utils.PropertyKey].Push("val2"))
       {
         log1.Info("TestMessage");
-        Assert.AreEqual("val1 val2", stringAppender.GetString(), "Test logical thread stack value pushed 2nd val");
+        Assert.That(stringAppender.GetString(), Is.EqualTo("val1 val2"), "Test logical thread stack value pushed 2nd val");
         stringAppender.Reset();
       }
     }
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test logical thread stack value removed");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test logical thread stack value removed");
     stringAppender.Reset();
   }
 
@@ -198,18 +198,18 @@ public class LogicalThreadContextTest
     ILog log1 = LogManager.GetLogger(rep.Name, "TestThreadStackPattern");
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test no logical thread stack value set");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test no logical thread stack value set");
     stringAppender.Reset();
 
     using (LogicalThreadContext.Stacks[Utils.PropertyKey].Push(null))
     {
       log1.Info("TestMessage");
-      Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test logical thread stack value set");
+      Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test logical thread stack value set");
       stringAppender.Reset();
     }
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test logical thread stack value removed");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test logical thread stack value removed");
     stringAppender.Reset();
   }
 
@@ -227,25 +227,25 @@ public class LogicalThreadContextTest
     ILog log1 = LogManager.GetLogger(rep.Name, "TestThreadStackPattern");
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test no logical thread stack value set");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test no logical thread stack value set");
     stringAppender.Reset();
 
     using (LogicalThreadContext.Stacks[Utils.PropertyKey].Push("val1"))
     {
       log1.Info("TestMessage");
-      Assert.AreEqual("val1", stringAppender.GetString(), "Test logical thread stack value set");
+      Assert.That(stringAppender.GetString(), Is.EqualTo("val1"), "Test logical thread stack value set");
       stringAppender.Reset();
 
       using (LogicalThreadContext.Stacks[Utils.PropertyKey].Push(null))
       {
         log1.Info("TestMessage");
-        Assert.AreEqual("val1 ", stringAppender.GetString(), "Test logical thread stack value pushed null");
+        Assert.That(stringAppender.GetString(), Is.EqualTo("val1 "), "Test logical thread stack value pushed null");
         stringAppender.Reset();
       }
     }
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test logical thread stack value removed");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test logical thread stack value removed");
     stringAppender.Reset();
   }
 
@@ -263,7 +263,7 @@ public class LogicalThreadContextTest
     ILog log1 = LogManager.GetLogger(rep.Name, "TestLogicalThreadStackPattern");
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test no logical thread stack value set");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test no logical thread stack value set");
     stringAppender.Reset();
 
     string testValueForCurrentContext = "Outer";
@@ -271,7 +271,7 @@ public class LogicalThreadContextTest
     using (LogicalThreadContext.Stacks[Utils.PropertyKey].Push(testValueForCurrentContext))
     {
       log1.Info("TestMessage");
-      Assert.AreEqual(testValueForCurrentContext, stringAppender.GetString(), "Test logical thread stack value set");
+      Assert.That(stringAppender.GetString(), Is.EqualTo(testValueForCurrentContext), "Test logical thread stack value set");
       stringAppender.Reset();
 
       strings = await Task.WhenAll(Enumerable.Range(0, 10).Select(x => SomeWorkStack(x.ToString())));
@@ -280,11 +280,11 @@ public class LogicalThreadContextTest
     // strings should be ["Outer 0 AOuter 0 AOuter 0Outer 0 BOuter 0 B Outer 0", ...]
     for (int i = 0; i < strings.Length; i++)
     {
-      Assert.AreEqual(string.Format("{0} {1} A{0} {1} A{0} {1}{0} {1} B{0} {1} B{0} {1}", testValueForCurrentContext, i), strings[i], "Test logical thread properties expected sequence");
+      Assert.That(strings[i], Is.EqualTo(string.Format("{0} {1} A{0} {1} A{0} {1}{0} {1} B{0} {1} B{0} {1}", testValueForCurrentContext, i)), "Test logical thread properties expected sequence");
     }
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test logical thread properties value removed");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test logical thread properties value removed");
     stringAppender.Reset();
   }
 
@@ -335,7 +335,7 @@ public class LogicalThreadContextTest
     using (LogicalThreadContext.Stacks[Utils.PropertyKey].Push(stackName))
     {
       log.Info("TestMessage");
-      Assert.AreEqual(string.Format("Outer {0}", stackName), stringAppender.GetString(), "Test logical thread stack value set");
+      Assert.That(stringAppender.GetString(), Is.EqualTo(string.Format("Outer {0}", stackName)), "Test logical thread stack value set");
       stringAppender.Reset();
 
       await MoreWorkStack(log, "A");

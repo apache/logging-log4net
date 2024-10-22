@@ -50,18 +50,18 @@ public sealed class LevelTest
     [CallerArgumentExpression(nameof(left))] string leftName = "",
     [CallerArgumentExpression(nameof(right))] string rightName = "")
   {
-    Assert.AreEqual(leftInt < rightInt, left < right, "{0} < {1}", leftName, rightName);
-    Assert.AreEqual(leftInt > rightInt, left > right, "{0} > {1}", leftName, rightName);
-    Assert.AreEqual(leftInt <= rightInt, left <= right, "{0} <= {1}", leftName, rightName);
-    Assert.AreEqual(leftInt >= rightInt, left >= right, "{0} >= {1}", leftName, rightName);
-    Assert.AreEqual(leftInt == rightInt, left == right, "{0} == {1}", leftName, rightName);
-    Assert.AreEqual(leftInt != rightInt, left != right, "{0} != {1}", leftName, rightName);
-    Assert.AreEqual(leftInt?.Equals(rightInt), left?.Equals(right), "{0}?.Equals({1})", leftName, rightName);
+    Assert.That(left < right, Is.EqualTo(leftInt < rightInt), $"{leftName} < {rightName}");
+    Assert.That(left > right, Is.EqualTo(leftInt > rightInt), $"{leftName} > {rightName}");
+    Assert.That(left <= right, Is.EqualTo(leftInt <= rightInt), $"{leftName} <= {rightName}");
+    Assert.That(left >= right, Is.EqualTo(leftInt >= rightInt), $"{leftName} >= {rightName}");
+    Assert.That(left == right, Is.EqualTo(leftInt == rightInt), $"{leftName} == {rightName}");
+    Assert.That(left != right, Is.EqualTo(leftInt != rightInt), $"{leftName} != {rightName}");
+    Assert.That(left?.Equals(right), Is.EqualTo(leftInt?.Equals(rightInt)), $"{leftName}?.Equals({rightName})");
     if (leftInt is not null)
     {
       if (rightInt is not null)
       {
-        Assert.AreEqual(leftInt?.CompareTo(rightInt), left?.CompareTo(right!), "{0}?.CompareTo({1})", leftName, rightName);
+        Assert.That(left?.CompareTo(right!), Is.EqualTo(leftInt?.CompareTo(rightInt)), $"{leftName}?.CompareTo({rightName})");
       }
       else
       {

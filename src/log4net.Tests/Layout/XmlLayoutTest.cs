@@ -113,7 +113,7 @@ public sealed class XmlLayoutTest
 
     string expected = CreateEventNode("Test message");
 
-    Assert.AreEqual(expected, writer.ToString());
+    Assert.That(writer.ToString(), Is.EqualTo(expected));
   }
 
   [Test]
@@ -129,7 +129,7 @@ public sealed class XmlLayoutTest
 
     string expected = CreateEventNode("This is a masked char-&gt;?");
 
-    Assert.AreEqual(expected, writer.ToString());
+    Assert.That(writer.ToString(), Is.EqualTo(expected));
   }
 
   [Test]
@@ -146,7 +146,7 @@ public sealed class XmlLayoutTest
 
     string expected = CreateEventNode("<![CDATA[&&&&&&&Escape this ]]>]]<![CDATA[>. End here.]]>");
 
-    Assert.AreEqual(expected, writer.ToString());
+    Assert.That(writer.ToString(), Is.EqualTo(expected));
   }
 
   [Test]
@@ -163,7 +163,7 @@ public sealed class XmlLayoutTest
 
     string expected = CreateEventNode("<![CDATA[&&&&&&&Escape the end ]]>]]&gt;");
 
-    Assert.AreEqual(expected, writer.ToString());
+    Assert.That(writer.ToString(), Is.EqualTo(expected));
   }
 
   [Test]
@@ -180,7 +180,7 @@ public sealed class XmlLayoutTest
 
     string expected = CreateEventNode("<![CDATA[]]>]]<![CDATA[>&&&&&&&Escape the begining]]>");
 
-    Assert.AreEqual(expected, writer.ToString());
+    Assert.That(writer.ToString(), Is.EqualTo(expected));
   }
 
   [Test]
@@ -195,7 +195,7 @@ public sealed class XmlLayoutTest
 
     string expected = CreateEventNode("VGVzdCBtZXNzYWdl");
 
-    Assert.AreEqual(expected, writer.ToString());
+    Assert.That(writer.ToString(), Is.EqualTo(expected));
   }
 
   [Test]
@@ -215,7 +215,7 @@ public sealed class XmlLayoutTest
 
     string expected = CreateEventNode("Property1", "prop1");
 
-    Assert.AreEqual(expected, stringAppender.GetString());
+    Assert.That(stringAppender.GetString(), Is.EqualTo(expected));
   }
 
   [Test]
@@ -235,7 +235,7 @@ public sealed class XmlLayoutTest
 
     string expected = CreateEventNode("Property1", "cHJvcDE=");
 
-    Assert.AreEqual(expected, stringAppender.GetString());
+    Assert.That(stringAppender.GetString(), Is.EqualTo(expected));
   }
 
   [Test]
@@ -255,7 +255,7 @@ public sealed class XmlLayoutTest
 
     string expected = CreateEventNode("Property1", "prop1 &quot;quoted&quot;");
 
-    Assert.AreEqual(expected, stringAppender.GetString());
+    Assert.That(stringAppender.GetString(), Is.EqualTo(expected));
   }
 
   [Test]
@@ -275,7 +275,7 @@ public sealed class XmlLayoutTest
 
     string expected = CreateEventNode("Property1", "mask this -&gt;?");
 
-    Assert.AreEqual(expected, stringAppender.GetString());
+    Assert.That(stringAppender.GetString(), Is.EqualTo(expected));
   }
 
   [Test]
@@ -295,7 +295,7 @@ public sealed class XmlLayoutTest
 
     string expected = CreateEventNode("Property?", "mask this -&gt;?");
 
-    Assert.AreEqual(expected, stringAppender.GetString());
+    Assert.That(stringAppender.GetString(), Is.EqualTo(expected));
   }
 
   [Test]
@@ -363,12 +363,12 @@ public sealed class XmlLayoutTest
     var sub = log.Substring(startOfExceptionText, endOfExceptionText - startOfExceptionText);
     if (sub.StartsWith("<![CDATA["))
     {
-      StringAssert.EndsWith("]]>", sub);
+      Assert.That(sub, Does.EndWith("]]>"));
     }
     else
     {
-      StringAssert.DoesNotContain("<", sub);
-      StringAssert.DoesNotContain(">", sub);
+      Assert.That(sub, Does.Not.Contain("<"));
+      Assert.That(sub, Does.Not.Contain(">"));
     }
   }
 }

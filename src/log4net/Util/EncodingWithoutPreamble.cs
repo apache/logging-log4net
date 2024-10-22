@@ -30,7 +30,7 @@ internal sealed class EncodingWithoutPreamble : Encoding
   private readonly Encoding _wrapped;
 
   /// <inheritdoc/>
-  private EncodingWithoutPreamble(Encoding wrapped) => this._wrapped = wrapped.EnsureNotNull();
+  private EncodingWithoutPreamble(Encoding wrapped) => _wrapped = wrapped.EnsureNotNull();
 
   /// <summary>
   /// wraps the <paramref name="encoding"/> in case it has a preamble

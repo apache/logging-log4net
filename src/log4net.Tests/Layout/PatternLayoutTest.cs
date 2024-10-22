@@ -86,19 +86,19 @@ public class PatternLayoutTest
     ILog log1 = LogManager.GetLogger(rep.Name, "TestThreadProperiesPattern");
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test no thread properties value set");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test no thread properties value set");
     stringAppender.Reset();
 
     ThreadContext.Properties[Utils.PropertyKey] = "val1";
 
     log1.Info("TestMessage");
-    Assert.AreEqual("val1", stringAppender.GetString(), "Test thread properties value set");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("val1"), "Test thread properties value set");
     stringAppender.Reset();
 
     ThreadContext.Properties.Remove(Utils.PropertyKey);
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test thread properties value removed");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test thread properties value removed");
     stringAppender.Reset();
   }
 
@@ -116,7 +116,7 @@ public class PatternLayoutTest
     ILog log1 = LogManager.GetLogger(rep.Name, "TestStackTracePattern");
 
     log1.Info("TestMessage");
-    StringAssert.EndsWith("PatternLayoutTest.TestStackTracePattern", stringAppender.GetString(), "stack trace value set");
+    Assert.That(stringAppender.GetString(), Does.EndWith("PatternLayoutTest.TestStackTracePattern"), "stack trace value set");
     stringAppender.Reset();
   }
 
@@ -134,19 +134,19 @@ public class PatternLayoutTest
     ILog log1 = LogManager.GetLogger(rep.Name, "TestGlobalProperiesPattern");
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test no global properties value set");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test no global properties value set");
     stringAppender.Reset();
 
     GlobalContext.Properties[Utils.PropertyKey] = "val1";
 
     log1.Info("TestMessage");
-    Assert.AreEqual("val1", stringAppender.GetString(), "Test global properties value set");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("val1"), "Test global properties value set");
     stringAppender.Reset();
 
     GlobalContext.Properties.Remove(Utils.PropertyKey);
 
     log1.Info("TestMessage");
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString(), "Test global properties value removed");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test global properties value removed");
     stringAppender.Reset();
   }
 
@@ -168,7 +168,7 @@ public class PatternLayoutTest
     ILog log1 = LogManager.GetLogger(rep.Name, "TestAddingCustomPattern");
 
     log1.Info("TestMessage");
-    Assert.AreEqual("TestMessage", stringAppender.GetString(), "%TestAddingCustomPattern not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("TestMessage"), "%TestAddingCustomPattern not registered");
     stringAppender.Reset();
   }
 
@@ -186,36 +186,36 @@ public class PatternLayoutTest
     ILog log1 = LogManager.GetLogger(rep.Name, "TestAddingCustomPattern");
 
     log1.Info("NoDots");
-    Assert.AreEqual("NoDots", stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("NoDots"), "%message-as-name not registered");
     stringAppender.Reset();
 
     log1.Info("One.Dot");
-    Assert.AreEqual("One.Dot", stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("One.Dot"), "%message-as-name not registered");
     stringAppender.Reset();
 
     log1.Info("Tw.o.Dots");
-    Assert.AreEqual("Tw.o.Dots", stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("Tw.o.Dots"), "%message-as-name not registered");
     stringAppender.Reset();
 
     log1.Info("TrailingDot.");
-    Assert.AreEqual("TrailingDot.", stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("TrailingDot."), "%message-as-name not registered");
     stringAppender.Reset();
 
     log1.Info(".LeadingDot");
-    Assert.AreEqual(".LeadingDot", stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(".LeadingDot"), "%message-as-name not registered");
     stringAppender.Reset();
 
     // empty string and other evil combinations as tests for of-by-one mistakes in index calculations
     log1.Info(string.Empty);
-    Assert.AreEqual(string.Empty, stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(string.Empty), "%message-as-name not registered");
     stringAppender.Reset();
 
     log1.Info(".");
-    Assert.AreEqual(".", stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("."), "%message-as-name not registered");
     stringAppender.Reset();
 
     log1.Info("x");
-    Assert.AreEqual("x", stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("x"), "%message-as-name not registered");
     stringAppender.Reset();
   }
 
@@ -233,36 +233,36 @@ public class PatternLayoutTest
     ILog log1 = LogManager.GetLogger(rep.Name, "TestAddingCustomPattern");
 
     log1.Info("NoDots");
-    Assert.AreEqual("NoDots", stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("NoDots"), "%message-as-name not registered");
     stringAppender.Reset();
 
     log1.Info("One.Dot");
-    Assert.AreEqual("Dot", stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("Dot"), "%message-as-name not registered");
     stringAppender.Reset();
 
     log1.Info("Tw.o.Dots");
-    Assert.AreEqual("Dots", stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("Dots"), "%message-as-name not registered");
     stringAppender.Reset();
 
     log1.Info("TrailingDot.");
-    Assert.AreEqual("TrailingDot.", stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("TrailingDot."), "%message-as-name not registered");
     stringAppender.Reset();
 
     log1.Info(".LeadingDot");
-    Assert.AreEqual("LeadingDot", stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("LeadingDot"), "%message-as-name not registered");
     stringAppender.Reset();
 
     // empty string and other evil combinations as tests for of-by-one mistakes in index calculations
     log1.Info(string.Empty);
-    Assert.AreEqual(string.Empty, stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(string.Empty), "%message-as-name not registered");
     stringAppender.Reset();
 
     log1.Info("x");
-    Assert.AreEqual("x", stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("x"), "%message-as-name not registered");
     stringAppender.Reset();
 
     log1.Info(".");
-    Assert.AreEqual(".", stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("."), "%message-as-name not registered");
     stringAppender.Reset();
   }
 
@@ -280,36 +280,36 @@ public class PatternLayoutTest
     ILog log1 = LogManager.GetLogger(rep.Name, "TestAddingCustomPattern");
 
     log1.Info("NoDots");
-    Assert.AreEqual("NoDots", stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("NoDots"), "%message-as-name not registered");
     stringAppender.Reset();
 
     log1.Info("One.Dot");
-    Assert.AreEqual("One.Dot", stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("One.Dot"), "%message-as-name not registered");
     stringAppender.Reset();
 
     log1.Info("Tw.o.Dots");
-    Assert.AreEqual("o.Dots", stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("o.Dots"), "%message-as-name not registered");
     stringAppender.Reset();
 
     log1.Info("TrailingDot.");
-    Assert.AreEqual("TrailingDot.", stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("TrailingDot."), "%message-as-name not registered");
     stringAppender.Reset();
 
     log1.Info(".LeadingDot");
-    Assert.AreEqual("LeadingDot", stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("LeadingDot"), "%message-as-name not registered");
     stringAppender.Reset();
 
     // empty string and other evil combinations as tests for of-by-one mistakes in index calculations
     log1.Info(string.Empty);
-    Assert.AreEqual(string.Empty, stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo(string.Empty), "%message-as-name not registered");
     stringAppender.Reset();
 
     log1.Info("x");
-    Assert.AreEqual("x", stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("x"), "%message-as-name not registered");
     stringAppender.Reset();
 
     log1.Info(".");
-    Assert.AreEqual(".", stringAppender.GetString(), "%message-as-name not registered");
+    Assert.That(stringAppender.GetString(), Is.EqualTo("."), "%message-as-name not registered");
     stringAppender.Reset();
   }
 
@@ -345,7 +345,7 @@ public class PatternLayoutTest
     Exception exception = new("Oh no!");
     log1.Info("TestMessage", exception);
 
-    Assert.AreEqual(SystemInfo.NullText, stringAppender.GetString());
+    Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText));
 
     stringAppender.Reset();
   }

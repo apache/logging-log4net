@@ -35,16 +35,16 @@ public class XmlHierarchyConfiguratorTest
   [Platform(Include="Win")]
   public void EnvironmentOnWindowsIsCaseInsensitive()
   {
-    SetTestPropWithPath();      
-    Assert.AreNotEqual("Path=", TestProp);
+    SetTestPropWithPath();
+    Assert.That(TestProp, Is.Not.EqualTo("Path="));
   }
 
   [Test]
   [Platform(Include="Unix")]
   public void EnvironmentOnUnixIsCaseSensitive()
   {
-    SetTestPropWithPath();      
-    Assert.AreEqual("Path=", TestProp);
+    SetTestPropWithPath();
+    Assert.That(TestProp, Is.EqualTo("Path="));
   }
 
   private void SetTestPropWithPath()

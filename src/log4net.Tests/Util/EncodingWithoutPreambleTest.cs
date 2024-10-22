@@ -38,6 +38,8 @@ public sealed class EncodingWithoutPreambleTest
   /// Tests the wrapping functionality
   /// </summary>
   [Test]
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Assertion", "NUnit2010:Use EqualConstraint for better assertion messages in case of failure",
+    Justification = "Is.EqualTo checks the type first, we just want to call Equals()")]
   public void WrappedTest()
   {
     Encoding wrapped = Encoding.UTF8;
@@ -45,13 +47,13 @@ public sealed class EncodingWithoutPreambleTest
     Encoding target = (Encoding)encodingType
       .GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)
       .First()
-      .Invoke(new[] { wrapped });
-    Assert.IsTrue(target.Equals(wrapped));
+      .Invoke([wrapped]);
+    Assert.That(target.Equals(wrapped));
     const string text = "Hallöchen!";
     byte[] bytes = wrapped.GetBytes(text);
-    Assert.AreEqual(bytes, target.GetBytes(text));
-    Assert.AreEqual(wrapped.GetString(bytes), target.GetString(bytes));
-    CollectionAssert.AreEqual(new byte[] { 0xEF, 0xBB, 0xBF }, wrapped.GetPreamble());
-    CollectionAssert.AreEqual(Array.Empty<byte>(), target.GetPreamble());
+    Assert.That(target.GetBytes(text), Is.EqualTo(bytes));
+    Assert.That(target.GetString(bytes), Is.EqualTo(wrapped.GetString(bytes)));
+    Assert.That(wrapped.GetPreamble(), Is.EqualTo(new byte[] { 0xEF, 0xBB, 0xBF }).AsCollection);
+    Assert.That(target.GetPreamble(), Is.EqualTo(Array.Empty<byte>()).AsCollection);
   }
 }

@@ -63,7 +63,7 @@ public class ConfigurationMessages
 
       ICollection configurationMessages = XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
 
-      Assert.IsTrue(configurationMessages.Count > 0);
+      Assert.That(configurationMessages.Count > 0);
     }
     finally
     {
@@ -76,7 +76,7 @@ public class ConfigurationMessages
   {
     ConfigurationChangedEventArgs configChanged = (ConfigurationChangedEventArgs)e;
 
-    Assert.IsTrue(configChanged.ConfigurationMessages.Count > 0);
+    Assert.That(configChanged.ConfigurationMessages.Count > 0);
   }
 }
 

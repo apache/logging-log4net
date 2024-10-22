@@ -70,7 +70,7 @@ public class MemoryAppenderTest
       thread.Join();
     }
     cEventsRead += memoryAppender.PopAllEvents().Length;
-    Assert.AreEqual(EventsExpected, cEventsRead, "Log events were lost.");
+    Assert.That(cEventsRead, Is.EqualTo(EventsExpected), "Log events were lost.");
   }
 
   private static ThreadStart LogMessages(string repository)

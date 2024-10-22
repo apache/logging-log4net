@@ -167,7 +167,7 @@ public class SmtpPickupDirAppenderTest
     log.Log(GetType(), Level.Info, "This is a message 2", null);
     DestroyLogger();
 
-    Assert.AreEqual(1, Directory.GetFiles(_testPickupDir).Length);
+    Assert.That(Directory.GetFiles(_testPickupDir), Has.Length.EqualTo(1));
     string[] fileContent = File.ReadAllLines((Directory.GetFiles(_testPickupDir)[0]));
     bool hasDateHeader = false;
     const string dateHeaderStart = "Date: ";
@@ -182,9 +182,9 @@ public class SmtpPickupDirAppenderTest
         hasDateHeader = true;
       }
     }
-    Assert.IsTrue(hasDateHeader, "Output must contains a date header");
+    Assert.That(hasDateHeader, "Output must contains a date header");
 
-    Assert.AreEqual(string.Empty, sh.Message, "Unexpected error message");
+    Assert.That(sh.Message, Is.EqualTo(string.Empty), "Unexpected error message");
   }
 
   /// <summary>
@@ -203,12 +203,12 @@ public class SmtpPickupDirAppenderTest
     log.Log(GetType(), Level.Info, "This is a message 2", null);
     DestroyLogger();
 
-    Assert.AreEqual(1, Directory.GetFiles(_testPickupDir).Length);
+    Assert.That(Directory.GetFiles(_testPickupDir), Has.Length.EqualTo(1));
     FileInfo fileInfo = new(Directory.GetFiles(_testPickupDir)[0]);
-    Assert.AreEqual("." + fileExtension, fileInfo.Extension);
-    Assert.IsTrue(Guid.TryParse(fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length), out _));
+    Assert.That(fileInfo.Extension, Is.EqualTo("." + fileExtension));
+    Assert.That(Guid.TryParse(fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length), out _));
 
-    Assert.AreEqual("", sh.Message, "Unexpected error message");
+    Assert.That(sh.Message, Is.EqualTo(""), "Unexpected error message");
   }
 
   /// <summary>
@@ -225,11 +225,11 @@ public class SmtpPickupDirAppenderTest
     log.Log(GetType(), Level.Info, "This is a message 2", null);
     DestroyLogger();
 
-    Assert.AreEqual(1, Directory.GetFiles(_testPickupDir).Length);
+    Assert.That(Directory.GetFiles(_testPickupDir), Has.Length.EqualTo(1));
     FileInfo fileInfo = new(Directory.GetFiles(_testPickupDir)[0]);
-    Assert.IsEmpty(fileInfo.Extension);
-    Assert.IsTrue(Guid.TryParse(fileInfo.Name, out _));
+    Assert.That(fileInfo.Extension, Is.Empty);
+    Assert.That(Guid.TryParse(fileInfo.Name, out _));
 
-    Assert.AreEqual(string.Empty, sh.Message, "Unexpected error message");
+    Assert.That(sh.Message, Is.EqualTo(string.Empty), "Unexpected error message");
   }
 }
