@@ -87,12 +87,12 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// <summary>
   /// Gets the <see cref="ILoggerRepository"/> for the specified assembly.
   /// </summary>
-  /// <param name="repositoryAssembly">The assembly use to look up the <see cref="ILoggerRepository"/>.</param>
+  /// <param name="assembly">The assembly use to look up the <see cref="ILoggerRepository"/>.</param>
   /// <remarks>
   /// <para>
   /// The type of the <see cref="ILoggerRepository"/> created and the repository 
   /// to create can be overridden by specifying the <see cref="RepositoryAttribute"/> 
-  /// attribute on the <paramref name="repositoryAssembly"/>.
+  /// attribute on the <paramref name="assembly"/>.
   /// </para>
   /// <para>
   /// The default values are to use the <see cref="Repository.Hierarchy.Hierarchy"/> 
@@ -102,13 +102,13 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// <para>
   /// The <see cref="ILoggerRepository"/> created will be automatically configured using 
   /// any <see cref="ConfiguratorAttribute"/> attributes defined on
-  /// the <paramref name="repositoryAssembly"/>.
+  /// the <paramref name="assembly"/>.
   /// </para>
   /// </remarks>
   /// <returns>The <see cref="ILoggerRepository"/> for the assembly</returns>
-  /// <exception cref="ArgumentNullException"><paramref name="repositoryAssembly"/> is <see langword="null" />.</exception>
-  public ILoggerRepository GetRepository(Assembly repositoryAssembly)
-    => CreateRepository(repositoryAssembly.EnsureNotNull(), _defaultRepositoryType);
+  /// <exception cref="ArgumentNullException"><paramref name="assembly"/> is <see langword="null" />.</exception>
+  public ILoggerRepository GetRepository(Assembly assembly)
+    => CreateRepository(assembly.EnsureNotNull(), _defaultRepositoryType);
 
   /// <summary>
   /// Gets the <see cref="ILoggerRepository"/> for the specified repository.
@@ -142,7 +142,7 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// <summary>
   /// Creates a new repository for the assembly specified 
   /// </summary>
-  /// <param name="repositoryAssembly">the assembly to use to create the repository to associate with the <see cref="ILoggerRepository"/>.</param>
+  /// <param name="assembly">the assembly to use to create the repository to associate with the <see cref="ILoggerRepository"/>.</param>
   /// <param name="repositoryType">The type of repository to create, must implement <see cref="ILoggerRepository"/>.</param>
   /// <returns>The repository created.</returns>
   /// <remarks>
@@ -155,7 +155,7 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// The type of the <see cref="ILoggerRepository"/> created and
   /// the repository to create can be overridden by specifying the
   /// <see cref="RepositoryAttribute"/> attribute on the 
-  /// <paramref name="repositoryAssembly"/>.  The default values are to use the 
+  /// <paramref name="assembly"/>.  The default values are to use the 
   /// <paramref name="repositoryType"/> implementation of the 
   /// <see cref="ILoggerRepository"/> interface and to use the
   /// <see cref="AssemblyName.Name"/> as the name of the repository.
@@ -163,10 +163,10 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// <para>
   /// The <see cref="ILoggerRepository"/> created will be automatically
   /// configured using any <see cref="ConfiguratorAttribute"/> 
-  /// attributes defined on the <paramref name="repositoryAssembly"/>.
+  /// attributes defined on the <paramref name="assembly"/>.
   /// </para>
   /// <para>
-  /// If a repository for the <paramref name="repositoryAssembly"/> already exists
+  /// If a repository for the <paramref name="assembly"/> already exists
   /// that repository will be returned. An error will not be raised and that 
   /// repository may be of a different type to that specified in <paramref name="repositoryType"/>.
   /// Also the <see cref="RepositoryAttribute"/> attribute on the
@@ -174,11 +174,9 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// <paramref name="repositoryType"/>.
   /// </para>
   /// </remarks>
-  /// <exception cref="ArgumentNullException"><paramref name="repositoryAssembly"/> is <see langword="null" />.</exception>
-  public ILoggerRepository CreateRepository(Assembly repositoryAssembly, Type repositoryType)
-  {
-    return CreateRepository(repositoryAssembly, repositoryType, DefaultRepositoryName, true);
-  }
+  /// <exception cref="ArgumentNullException"><paramref name="assembly"/> is <see langword="null" />.</exception>
+  public ILoggerRepository CreateRepository(Assembly assembly, Type repositoryType) 
+    => CreateRepository(assembly, repositoryType, DefaultRepositoryName, true);
 
   /// <summary>
   /// Creates a new repository for the assembly specified.

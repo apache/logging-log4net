@@ -80,9 +80,9 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsDebugEnabled)
+      if (logger.EnsureNotNull().IsDebugEnabled)
       {
-        logger.Debug(callback());
+        logger.Debug(callback?.Invoke());
       }
     }
     catch (Exception e) when (!e.IsFatal())
@@ -110,9 +110,9 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsDebugEnabled)
+      if (logger.EnsureNotNull().IsDebugEnabled)
       {
-        logger.Debug(callback(), exception);
+        logger.Debug(callback?.Invoke(), exception);
       }
     }
     catch (Exception e) when (!e.IsFatal())
@@ -151,7 +151,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsDebugEnabled)
+      if (logger.EnsureNotNull().IsDebugEnabled)
       {
         logger.Debug(message);
       }
@@ -181,7 +181,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsDebugEnabled)
+      if (logger.EnsureNotNull().IsDebugEnabled)
       {
         logger.Debug(message, exception);
       }
@@ -216,7 +216,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsDebugEnabled)
+      if (logger.EnsureNotNull().IsDebugEnabled)
       {
         logger.DebugFormat(format, arg0);
       }
@@ -251,7 +251,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsDebugEnabled)
+      if (logger.EnsureNotNull().IsDebugEnabled)
       {
         logger.DebugFormat(format, args);
       }
@@ -287,7 +287,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsDebugEnabled)
+      if (logger.EnsureNotNull().IsDebugEnabled)
       {
         logger.DebugFormat(provider, format, args);
       }
@@ -323,7 +323,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsDebugEnabled)
+      if (logger.EnsureNotNull().IsDebugEnabled)
       {
         logger.DebugFormat(format, arg0, arg1);
       }
@@ -360,7 +360,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsDebugEnabled)
+      if (logger.EnsureNotNull().IsDebugEnabled)
       {
         logger.DebugFormat(format, arg0, arg1, arg2);
       }
@@ -400,9 +400,9 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsInfoEnabled)
+      if (logger.EnsureNotNull().IsInfoEnabled)
       {
-        logger.Info(callback());
+        logger.Info(callback?.Invoke());
       }
     }
     catch (Exception e) when (!e.IsFatal())
@@ -430,9 +430,9 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsInfoEnabled)
+      if (logger.EnsureNotNull().IsInfoEnabled)
       {
-        logger.Info(callback(), exception);
+        logger.Info(callback?.Invoke(), exception);
       }
     }
     catch (Exception e) when (!e.IsFatal())
@@ -471,7 +471,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsInfoEnabled)
+      if (logger.EnsureNotNull().IsInfoEnabled)
       {
         logger.Info(message);
       }
@@ -501,7 +501,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsInfoEnabled)
+      if (logger.EnsureNotNull().IsInfoEnabled)
       {
         logger.Info(message, exception);
       }
@@ -536,7 +536,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsInfoEnabled)
+      if (logger.EnsureNotNull().IsInfoEnabled)
       {
         logger.InfoFormat(format, arg0);
       }
@@ -571,7 +571,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsInfoEnabled)
+      if (logger.EnsureNotNull().IsInfoEnabled)
       {
         logger.InfoFormat(format, args);
       }
@@ -607,7 +607,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsInfoEnabled)
+      if (logger.EnsureNotNull().IsInfoEnabled)
       {
         logger.InfoFormat(provider, format, args);
       }
@@ -643,7 +643,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsInfoEnabled)
+      if (logger.EnsureNotNull().IsInfoEnabled)
       {
         logger.InfoFormat(format, arg0, arg1);
       }
@@ -680,7 +680,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsInfoEnabled)
+      if (logger.EnsureNotNull().IsInfoEnabled)
       {
         logger.InfoFormat(format, arg0, arg1, arg2);
       }
@@ -720,9 +720,9 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsWarnEnabled)
+      if (logger.EnsureNotNull().IsWarnEnabled)
       {
-        logger.Warn(callback());
+        logger.Warn(callback?.Invoke());
       }
     }
     catch (Exception e) when (!e.IsFatal())
@@ -750,9 +750,9 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsWarnEnabled)
+      if (logger.EnsureNotNull().IsWarnEnabled)
       {
-        logger.Warn(callback(), exception);
+        logger.Warn(callback?.Invoke(), exception);
       }
     }
     catch (Exception e) when (!e.IsFatal())
@@ -791,7 +791,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsWarnEnabled)
+      if (logger.EnsureNotNull().IsWarnEnabled)
       {
         logger.Warn(message);
       }
@@ -821,7 +821,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsWarnEnabled)
+      if (logger.EnsureNotNull().IsWarnEnabled)
       {
         logger.Warn(message, exception);
       }
@@ -856,7 +856,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsWarnEnabled)
+      if (logger.EnsureNotNull().IsWarnEnabled)
       {
         logger.WarnFormat(format, arg0);
       }
@@ -891,7 +891,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsWarnEnabled)
+      if (logger.EnsureNotNull().IsWarnEnabled)
       {
         logger.WarnFormat(format, args);
       }
@@ -927,7 +927,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsWarnEnabled)
+      if (logger.EnsureNotNull().IsWarnEnabled)
       {
         logger.WarnFormat(provider, format, args);
       }
@@ -963,7 +963,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsWarnEnabled)
+      if (logger.EnsureNotNull().IsWarnEnabled)
       {
         logger.WarnFormat(format, arg0, arg1);
       }
@@ -1000,7 +1000,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsWarnEnabled)
+      if (logger.EnsureNotNull().IsWarnEnabled)
       {
         logger.WarnFormat(format, arg0, arg1, arg2);
       }
@@ -1040,9 +1040,9 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsErrorEnabled)
+      if (logger.EnsureNotNull().IsErrorEnabled)
       {
-        logger.Error(callback());
+        logger.Error(callback?.Invoke());
       }
     }
     catch (Exception e) when (!e.IsFatal())
@@ -1070,9 +1070,9 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsErrorEnabled)
+      if (logger.EnsureNotNull().IsErrorEnabled)
       {
-        logger.Error(callback(), exception);
+        logger.Error(callback?.Invoke(), exception);
       }
     }
     catch (Exception e) when (!e.IsFatal())
@@ -1111,7 +1111,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsErrorEnabled)
+      if (logger.EnsureNotNull().IsErrorEnabled)
       {
         logger.Error(message);
       }
@@ -1141,7 +1141,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsErrorEnabled)
+      if (logger.EnsureNotNull().IsErrorEnabled)
       {
         logger.Error(message, exception);
       }
@@ -1176,7 +1176,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsErrorEnabled)
+      if (logger.EnsureNotNull().IsErrorEnabled)
       {
         logger.ErrorFormat(format, arg0);
       }
@@ -1211,7 +1211,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsErrorEnabled)
+      if (logger.EnsureNotNull().IsErrorEnabled)
       {
         logger.ErrorFormat(format, args);
       }
@@ -1247,7 +1247,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsErrorEnabled)
+      if (logger.EnsureNotNull().IsErrorEnabled)
       {
         logger.ErrorFormat(provider, format, args);
       }
@@ -1283,7 +1283,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsErrorEnabled)
+      if (logger.EnsureNotNull().IsErrorEnabled)
       {
         logger.ErrorFormat(format, arg0, arg1);
       }
@@ -1320,7 +1320,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsErrorEnabled)
+      if (logger.EnsureNotNull().IsErrorEnabled)
       {
         logger.ErrorFormat(format, arg0, arg1, arg2);
       }
@@ -1360,9 +1360,9 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsFatalEnabled)
+      if (logger.EnsureNotNull().IsFatalEnabled)
       {
-        logger.Fatal(callback());
+        logger.Fatal(callback?.Invoke());
       }
     }
     catch (Exception e) when (!e.IsFatal())
@@ -1390,9 +1390,9 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsFatalEnabled)
+      if (logger.EnsureNotNull().IsFatalEnabled)
       {
-        logger.Fatal(callback(), exception);
+        logger.Fatal(callback?.Invoke(), exception);
       }
     }
     catch (Exception e) when (!e.IsFatal())
@@ -1431,7 +1431,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsFatalEnabled)
+      if (logger.EnsureNotNull().IsFatalEnabled)
       {
         logger.Fatal(message);
       }
@@ -1461,7 +1461,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsFatalEnabled)
+      if (logger.EnsureNotNull().IsFatalEnabled)
       {
         logger.Fatal(message, exception);
       }
@@ -1496,7 +1496,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsFatalEnabled)
+      if (logger.EnsureNotNull().IsFatalEnabled)
       {
         logger.FatalFormat(format, arg0);
       }
@@ -1531,7 +1531,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsFatalEnabled)
+      if (logger.EnsureNotNull().IsFatalEnabled)
       {
         logger.FatalFormat(format, args);
       }
@@ -1567,7 +1567,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsFatalEnabled)
+      if (logger.EnsureNotNull().IsFatalEnabled)
       {
         logger.FatalFormat(provider, format, args);
       }
@@ -1603,7 +1603,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsFatalEnabled)
+      if (logger.EnsureNotNull().IsFatalEnabled)
       {
         logger.FatalFormat(format, arg0, arg1);
       }
@@ -1640,7 +1640,7 @@ public static class LogExtensions
   {
     try
     {
-      if (logger.IsFatalEnabled)
+      if (logger.EnsureNotNull().IsFatalEnabled)
       {
         logger.FatalFormat(format, arg0, arg1, arg2);
       }

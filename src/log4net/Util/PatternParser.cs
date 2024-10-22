@@ -216,7 +216,7 @@ public sealed class PatternParser
 
             if (key.Length <= remainingStringLength)
             {
-              if (string.Compare(pattern, offset, key, 0, key.Length) == 0)
+              if (string.Compare(pattern, offset, key, 0, key.Length, StringComparison.Ordinal) == 0)
               {
                 // Found match
                 offset += matches[m].Length;

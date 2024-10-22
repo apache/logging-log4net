@@ -359,19 +359,19 @@ public sealed class RollingFileAppenderTest
   /// A table of entries showing files that should exist and their expected sizes
   /// after a message is logged
   /// </param>
-  public sealed class RollConditions(List<RollFileEntry> preLogFileEntries, List<RollFileEntry> postLogFileEntries)
+  public sealed class RollConditions(IList<RollFileEntry> preLogFileEntries, IList<RollFileEntry> postLogFileEntries)
   {
     /// <summary>
     /// A table of entries showing files that should exist and their expected sizes
     /// before logging is called
     /// </summary>
-    public List<RollFileEntry> GetPreLogFileEntries() => preLogFileEntries;
+    public IList<RollFileEntry> PreLogFileEntries => preLogFileEntries;
 
     /// <summary>
     /// A table of entries showing files that should exist and their expected sizes
     /// after a message is logged
     /// </summary>
-    public List<RollFileEntry> GetPostLogFileEntries() => postLogFileEntries;
+    public IList<RollFileEntry> PostLogFileEntries => postLogFileEntries;
   }
 
   private static void VerifyExistenceAndRemoveFromList(List<string> alExisting,
@@ -389,7 +389,7 @@ public sealed class RollingFileAppenderTest
   /// </summary>
   /// <param name="sBaseFileName"></param>
   /// <param name="fileEntries"></param>
-  private static void VerifyFileConditions(string sBaseFileName, List<RollFileEntry> fileEntries)
+  private static void VerifyFileConditions(string sBaseFileName, IList<RollFileEntry> fileEntries)
   {
     List<string> alExisting = GetExistingFiles(sBaseFileName);
 
@@ -429,7 +429,7 @@ public sealed class RollingFileAppenderTest
   /// <param name="sBaseFileName"></param>
   /// <param name="entry"></param>
   private static void VerifyPreConditions(string sBaseFileName, RollConditions entry)
-    => VerifyFileConditions(sBaseFileName, entry.GetPreLogFileEntries());
+    => VerifyFileConditions(sBaseFileName, entry.PreLogFileEntries);
 
   /// <summary>
   /// Called after logging a message to check that all the expected files exist, 
@@ -439,7 +439,7 @@ public sealed class RollingFileAppenderTest
   /// <param name="sBaseFileName"></param>
   /// <param name="entry"></param>
   private static void VerifyPostConditions(string sBaseFileName, RollConditions entry)
-    => VerifyFileConditions(sBaseFileName, entry.GetPostLogFileEntries());
+    => VerifyFileConditions(sBaseFileName, entry.PostLogFileEntries);
 
   /// <summary>
   /// Logs a message, verifying the expected message counts against the 
@@ -672,7 +672,7 @@ public sealed class RollingFileAppenderTest
       return new RollConditions(AddFinalElement(null, current), post);
     }
 
-    return new RollConditions(preCondition.GetPostLogFileEntries(), post);
+    return new RollConditions(preCondition.PostLogFileEntries, post);
   }
 
   /// <summary>
@@ -1808,7 +1808,7 @@ public sealed class RollingFileAppenderTest
   {
     2 => TestMessage98Chars,
     1 => TestMessage99Chars,
-    _ => throw new Exception("Unexpected Environment.NewLine.Length"),
+    _ => throw new InvalidOperationException("Unexpected Environment.NewLine.Length"),
   };
 }
 
@@ -1818,15 +1818,13 @@ public sealed class RollingFileAppenderSubClassTest : RollingFileAppender
   [Test]
   public void TestComputeCheckPeriod()
   {
-    RollingFileAppender rfa = new();
-
-    Assert.That(rfa.ComputeCheckPeriod(".yyyy-MM-dd HH:mm"), Is.EqualTo(RollPoint.TopOfMinute), "TopOfMinute pattern");
-    Assert.That(rfa.ComputeCheckPeriod(".yyyy-MM-dd HH"), Is.EqualTo(RollPoint.TopOfHour), "TopOfHour pattern");
-    Assert.That(rfa.ComputeCheckPeriod(".yyyy-MM-dd tt"), Is.EqualTo(RollPoint.HalfDay), "HalfDay pattern");
-    Assert.That(rfa.ComputeCheckPeriod(".yyyy-MM-dd"), Is.EqualTo(RollPoint.TopOfDay), "TopOfDay pattern");
-    Assert.That(rfa.ComputeCheckPeriod(".yyyy-MM"), Is.EqualTo(RollPoint.TopOfMonth), "TopOfMonth pattern");
+    Assert.That(ComputeCheckPeriod(".yyyy-MM-dd HH:mm"), Is.EqualTo(RollPoint.TopOfMinute), "TopOfMinute pattern");
+    Assert.That(ComputeCheckPeriod(".yyyy-MM-dd HH"), Is.EqualTo(RollPoint.TopOfHour), "TopOfHour pattern");
+    Assert.That(ComputeCheckPeriod(".yyyy-MM-dd tt"), Is.EqualTo(RollPoint.HalfDay), "HalfDay pattern");
+    Assert.That(ComputeCheckPeriod(".yyyy-MM-dd"), Is.EqualTo(RollPoint.TopOfDay), "TopOfDay pattern");
+    Assert.That(ComputeCheckPeriod(".yyyy-MM"), Is.EqualTo(RollPoint.TopOfMonth), "TopOfMonth pattern");
 
     // Test invalid roll point
-    Assert.That(rfa.ComputeCheckPeriod("..."), Is.EqualTo(RollPoint.InvalidRollPoint), "TopOfMonth pattern");
+    Assert.That(ComputeCheckPeriod("..."), Is.EqualTo(RollPoint.InvalidRollPoint), "TopOfMonth pattern");
   }
 }

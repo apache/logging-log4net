@@ -409,17 +409,17 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// <summary>
   /// Adds the elements of another <see cref="AppenderCollection"/> to the current <see cref="AppenderCollection"/>.
   /// </summary>
-  /// <param name="x">The <see cref="AppenderCollection"/> whose elements should be added to the end of the current <see cref="AppenderCollection"/>.</param>
+  /// <param name="collection">The <see cref="AppenderCollection"/> whose elements should be added to the end of the current <see cref="AppenderCollection"/>.</param>
   /// <returns>The new <see cref="Count"/> of the <see cref="AppenderCollection"/>.</returns>
-  public virtual int AddRange(AppenderCollection x)
+  public virtual int AddRange(AppenderCollection collection)
   {
-    if (_count + x.Count >= _array.Length)
+    if (_count + collection.EnsureNotNull().Count >= _array.Length)
     {
-      EnsureCapacity(_count + x.Count);
+      EnsureCapacity(_count + collection.Count);
     }
 
-    Array.Copy(x._array, 0, _array, _count, x.Count);
-    _count += x.Count;
+    Array.Copy(collection._array, 0, _array, _count, collection.Count);
+    _count += collection.Count;
     _version++;
 
     return _count;
@@ -428,17 +428,17 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// <summary>
   /// Adds the elements of a <see cref="IAppender"/> array to the current <see cref="AppenderCollection"/>.
   /// </summary>
-  /// <param name="x">The <see cref="IAppender"/> array whose elements should be added to the end of the <see cref="AppenderCollection"/>.</param>
+  /// <param name="array">The <see cref="IAppender"/> array whose elements should be added to the end of the <see cref="AppenderCollection"/>.</param>
   /// <returns>The new <see cref="Count"/> of the <see cref="AppenderCollection"/>.</returns>
-  public virtual int AddRange(IAppender[] x)
+  public virtual int AddRange(IAppender[] array)
   {
-    if (_count + x.Length >= _array.Length)
+    if (_count + array.EnsureNotNull().Length >= _array.Length)
     {
-      EnsureCapacity(_count + x.Length);
+      EnsureCapacity(_count + array.Length);
     }
 
-    Array.Copy(x, 0, _array, _count, x.Length);
-    _count += x.Length;
+    Array.Copy(array, 0, _array, _count, array.Length);
+    _count += array.Length;
     _version++;
 
     return _count;
@@ -447,18 +447,18 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// <summary>
   /// Adds the elements of a <see cref="IAppender"/> collection to the current <see cref="AppenderCollection"/>.
   /// </summary>
-  /// <param name="col">The <see cref="IAppender"/> collection whose elements should be added to the end of the <see cref="AppenderCollection"/>.</param>
+  /// <param name="collection">The <see cref="IAppender"/> collection whose elements should be added to the end of the <see cref="AppenderCollection"/>.</param>
   /// <returns>The new <see cref="Count"/> of the <see cref="AppenderCollection"/>.</returns>
-  public virtual int AddRange(ICollection col)
+  public virtual int AddRange(ICollection collection)
   {
-    if (_count + col.Count >= _array.Length)
+    if (_count + collection.EnsureNotNull().Count >= _array.Length)
     {
-      EnsureCapacity(_count + col.Count);
+      EnsureCapacity(_count + collection.Count);
     }
 
-    foreach (object item in col)
+    foreach (object item in collection)
     {
-      Add((IAppender)item);
+      Add(item.EnsureIs<IAppender>());
     }
 
     return _count;
@@ -475,7 +475,7 @@ public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
   /// <returns>the array</returns>
   public virtual IAppender[] ToArray()
   {
-    var resultArray = new IAppender[_count];
+    IAppender[] resultArray = new IAppender[_count];
     if (_count > 0)
     {
       Array.Copy(_array, 0, resultArray, 0, _count);

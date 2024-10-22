@@ -25,10 +25,10 @@ using System.Diagnostics;
 namespace log4net.Util;
 
 /// <summary>
-/// 
+/// LogReceivedEventHandler
 /// </summary>
-/// <param name="source"></param>
-/// <param name="e"></param>
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1003:Use generic event handler instances")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix")]
 public delegate void LogReceivedEventHandler(object? source, LogReceivedEventArgs e);
 
 /// <summary>
@@ -502,14 +502,13 @@ public sealed class LogLog
   /// Subscribes to the LogLog.LogReceived event and stores messages
   /// to the supplied IList instance.
   /// </summary>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1063:Implement IDisposable Correctly")]
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1002:Do not expose generic lists")]
   public class LogReceivedAdapter : IDisposable
   {
     private readonly LogReceivedEventHandler _handler;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="items"></param>
+    /// <inheritdoc/>
     public LogReceivedAdapter(List<LogLog> items)
     {
       Items = items;

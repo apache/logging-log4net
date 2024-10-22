@@ -35,6 +35,7 @@ namespace log4net.Core;
 /// Portable data structure used by <see cref="LoggingEvent"/>
 /// </summary>
 /// <author>Nicko Cadell</author>
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1815:Override equals and operator equals on value types")]
 public struct LoggingEventData
 {
   /// <summary>
@@ -88,8 +89,7 @@ public struct LoggingEventData
   /// </summary>
   /// <remarks>
   /// <para>
-  /// String representation of the user's windows name,
-  /// like DOMAIN\username
+  /// String representation of the user's windows name, like DOMAIN\username
   /// </para>
   /// </remarks>
   public string? UserName;
@@ -203,16 +203,18 @@ public class LoggingEvent : ILog4NetSerializable
       object? message,
       Exception? exception)
   {
-    this._callerStackBoundaryDeclaringType = callerStackBoundaryDeclaringType;
-    this._message = message;
+    _callerStackBoundaryDeclaringType = callerStackBoundaryDeclaringType;
+    _message = message;
     Repository = repository;
     ExceptionObject = exception;
 
-    _data.LoggerName = loggerName;
-    _data.Level = level;
-
-    // Store the event creation time
-    _data.TimeStampUtc = DateTime.UtcNow;
+    _data = new()
+    {
+      LoggerName = loggerName,
+      Level = level,
+      // Store the event creation time
+      TimeStampUtc = DateTime.UtcNow
+    };
   }
 
   /// <summary>
@@ -246,10 +248,10 @@ public class LoggingEvent : ILog4NetSerializable
       LoggingEventData data,
       FixFlags fixedData)
   {
-    this._callerStackBoundaryDeclaringType = callerStackBoundaryDeclaringType;
+    _callerStackBoundaryDeclaringType = callerStackBoundaryDeclaringType;
     Repository = repository;
 
-    this._data = data;
+    _data = data;
     _fixFlags = fixedData;
   }
 
@@ -282,8 +284,7 @@ public class LoggingEvent : ILog4NetSerializable
       ILoggerRepository? repository,
       LoggingEventData data)
     : this(callerStackBoundaryDeclaringType, repository, data, FixFlags.All)
-  {
-  }
+  { }
 
   /// <summary>
   /// Initializes a new instance of the <see cref="LoggingEvent" /> class 
@@ -306,9 +307,9 @@ public class LoggingEvent : ILog4NetSerializable
   /// parameter and no other data should be captured from the environment.
   /// </para>
   /// </remarks>
-  public LoggingEvent(LoggingEventData data) : this(null, null, data)
-  {
-  }
+  public LoggingEvent(LoggingEventData data)
+    : this(null, null, data)
+  { }
 
   /// <summary>
   /// Initializes a new instance of the <see cref="LoggingEvent" /> class.
@@ -327,8 +328,7 @@ public class LoggingEvent : ILog4NetSerializable
   /// </para>
   /// </remarks>
   public LoggingEvent() : this(null, null, new LoggingEventData(), FixFlags.None)
-  {
-  }
+  { }
 
   /// <summary>
   /// Serialization constructor
@@ -343,38 +343,43 @@ public class LoggingEvent : ILog4NetSerializable
   /// </remarks>
   protected LoggingEvent(SerializationInfo info, StreamingContext context)
   {
-    _data.LoggerName = info.GetString("LoggerName");
-
-    // Note we are deserializing the whole level object. That is the
-    // name and the value. This value is correct for the source 
-    // hierarchy but may not be for the target hierarchy that this
-    // event may be re-logged into. If it is to be re-logged it may
-    // be necessary to re-lookup the level based only on the name.
-    _data.Level = info.GetValue("Level", typeof(Level)) as Level;
-
-    _data.Message = info.GetString("Message");
-    _data.ThreadName = info.GetString("ThreadName");
-
-    // Favor the newer serialization tag 'TimeStampUtc' while supporting the obsolete format from pre-3.0.
-    try
+    _data = new()
     {
-      _data.TimeStampUtc = info.GetDateTime("TimeStampUtc");
-    }
-    catch (SerializationException)
-    {
-      _data.TimeStampUtc = info.GetDateTime("TimeStamp").ToUniversalTime();
-    }
+      LoggerName = info.EnsureNotNull().GetString("LoggerName"),
 
-    _data.LocationInfo = info.GetValue("LocationInfo", typeof(LocationInfo)) as LocationInfo;
-    _data.UserName = info.GetString("UserName");
-    _data.ExceptionString = info.GetString("ExceptionString");
-    _data.Properties = info.GetValue("Properties", typeof(PropertiesDictionary)) as PropertiesDictionary;
-    _data.Domain = info.GetString("Domain");
-    _data.Identity = info.GetString("Identity");
+      // Note we are deserializing the whole level object. That is the
+      // name and the value. This value is correct for the source 
+      // hierarchy but may not be for the target hierarchy that this
+      // event may be re-logged into. If it is to be re-logged it may
+      // be necessary to re-lookup the level based only on the name.
+      Level = info.GetValue("Level", typeof(Level)) as Level,
+      Message = info.GetString("Message"),
+      ThreadName = info.GetString("ThreadName"),
+      TimeStampUtc = GetTimeStampUtc(info),
+      LocationInfo = info.GetValue("LocationInfo", typeof(LocationInfo)) as LocationInfo,
+      UserName = info.GetString("UserName"),
+      ExceptionString = info.GetString("ExceptionString"),
+      Properties = info.GetValue("Properties", typeof(PropertiesDictionary)) as PropertiesDictionary,
+      Domain = info.GetString("Domain"),
+      Identity = info.GetString("Identity")
+    };
 
     // We have restored all the values of this instance, i.e. all the values are fixed
     // Set the fix flags otherwise the data values may be overwritten from the current environment.
     _fixFlags = FixFlags.All;
+
+    static DateTime GetTimeStampUtc(SerializationInfo info)
+    {
+      // Favor the newer serialization tag 'TimeStampUtc' while supporting the obsolete format from pre-3.0.
+      try
+      {
+        return info.GetDateTime("TimeStampUtc");
+      }
+      catch (SerializationException)
+      {
+        return info.GetDateTime("TimeStamp").ToUniversalTime();
+      }
+    }
   }
 
   /// <summary>
@@ -473,7 +478,7 @@ public class LoggingEvent : ILog4NetSerializable
     {
       if (_data.LocationInfo is null && _cacheUpdatable)
       {
-        _data.LocationInfo = new LocationInfo(_callerStackBoundaryDeclaringType);
+        _data.LocationInfo = new(_callerStackBoundaryDeclaringType);
       }
 
       return _data.LocationInfo;
@@ -605,6 +610,7 @@ public class LoggingEvent : ILog4NetSerializable
   /// </remarks>
   public virtual void WriteRenderedMessage(TextWriter writer)
   {
+    writer.EnsureNotNull();
     if (_data.Message is not null)
     {
       writer.Write(_data.Message);
@@ -881,6 +887,7 @@ public class LoggingEvent : ILog4NetSerializable
   /// Dictionary than expected.
   /// </para>
   /// </remarks>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1721:Property names should not match get methods")]
   public PropertiesDictionary Properties
   {
     get
@@ -931,8 +938,8 @@ public class LoggingEvent : ILog4NetSerializable
       SerializationFormatter = true)]
   public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
   {
+    info.EnsureNotNull();
     // The caller must set Fix before this object can be serialized.
-
     info.AddValue("LoggerName", _data.LoggerName);
     info.AddValue("Level", _data.Level);
     info.AddValue("Message", _data.Message);

@@ -136,6 +136,7 @@ public class PropertyKeyCountPatternLayoutConverter : PatternLayoutConverter
 {
   public PropertyKeyCountPatternLayoutConverter() => MostRecentInstance = this;
 
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods")]
   protected override void Convert(TextWriter writer, LoggingEvent loggingEvent) 
     => writer.Write(Properties!.GetKeys().Length);
 
@@ -146,6 +147,7 @@ public class PropertyKeyCountPatternConverter : PatternConverter
 {
   public PropertyKeyCountPatternConverter() => MostRecentInstance = this;
 
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods")]
   public override void Convert(TextWriter writer, object? state)
     => writer.Write(Properties!.GetKeys().Length);
 

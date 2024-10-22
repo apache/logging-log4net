@@ -242,7 +242,7 @@ public class AnsiColorTerminalAppender : AppenderSkeleton
   /// </remarks>
   protected override void Append(LoggingEvent loggingEvent)
   {
-    string loggingMessage = RenderLoggingEvent(loggingEvent);
+    string loggingMessage = RenderLoggingEvent(loggingEvent.EnsureNotNull());
 
     // see if there is a specified lookup.
     if (_levelMapping.Lookup(loggingEvent.Level) is LevelColors levelColors)

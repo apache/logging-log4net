@@ -330,6 +330,7 @@ public class RemoteSyslogAppender : UdpAppender
       return;
     }
 
+    loggingEvent.EnsureNotNull();
     try
     {
       // Priority

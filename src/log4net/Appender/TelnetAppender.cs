@@ -145,6 +145,7 @@ public class TelnetAppender : AppenderSkeleton
   /// It is threaded so that clients can connect/disconnect asynchronously.
   /// </para>
   /// </remarks>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1063:Implement IDisposable Correctly")]
   protected class SocketHandler : IDisposable
   {
     private const int MaxConnections = 20;
@@ -157,6 +158,7 @@ public class TelnetAppender : AppenderSkeleton
     /// <summary>
     /// Class that represents a client connected to this handler
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1063:Implement IDisposable Correctly")]
     protected class SocketClient : IDisposable
     {
       private readonly Socket _socket;
@@ -317,6 +319,7 @@ public class TelnetAppender : AppenderSkeleton
     /// if there are too many open connections you will be disconnected
     /// </para>
     /// </remarks>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope")]
     private void OnConnect(IAsyncResult asyncResult)
     {
       if (_wasDisposed)

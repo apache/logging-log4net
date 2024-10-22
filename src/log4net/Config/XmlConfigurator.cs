@@ -300,6 +300,7 @@ public static class XmlConfigurator
   /// <param name="element">The element to parse.</param>
   public static ICollection Configure(ILoggerRepository repository, XmlElement element)
   {
+    repository.EnsureNotNull();
     List<LogLog> configurationMessages = [];
 
     using (new LogLog.LogReceivedAdapter(configurationMessages))
@@ -368,6 +369,7 @@ public static class XmlConfigurator
   /// </remarks>
   public static ICollection Configure(ILoggerRepository repository, FileInfo configFile)
   {
+    repository.EnsureNotNull();
     List<LogLog> configurationMessages = [];
 
     using (new LogLog.LogReceivedAdapter(configurationMessages))
@@ -457,6 +459,7 @@ public static class XmlConfigurator
   /// </remarks>
   public static ICollection Configure(ILoggerRepository repository, Uri configUri)
   {
+    repository.EnsureNotNull();
     List<LogLog> configurationMessages = [];
 
     using (new LogLog.LogReceivedAdapter(configurationMessages))
@@ -545,6 +548,7 @@ public static class XmlConfigurator
   /// </remarks>
   public static ICollection Configure(ILoggerRepository repository, Stream configStream)
   {
+    repository.EnsureNotNull();
     List<LogLog> configurationMessages = [];
 
     using (new LogLog.LogReceivedAdapter(configurationMessages))
@@ -677,6 +681,7 @@ public static class XmlConfigurator
   /// <seealso cref="M:Configure(FileInfo)"/>
   public static ICollection ConfigureAndWatch(ILoggerRepository repository, FileInfo configFile)
   {
+    repository.EnsureNotNull();
     List<LogLog> configurationMessages = [];
 
     using (new LogLog.LogReceivedAdapter(configurationMessages))

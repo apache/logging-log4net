@@ -181,25 +181,25 @@ public abstract class Logger : IAppenderAttachable, ILogger
   public virtual Level? Level { get; set; }
 
   /// <summary>
-  /// Add <paramref name="newAppender"/> to the list of appenders of this
+  /// Add <paramref name="appender"/> to the list of appenders of this
   /// Logger instance.
   /// </summary>
-  /// <param name="newAppender">An appender to add to this logger</param>
+  /// <param name="appender">An appender to add to this logger</param>
   /// <remarks>
   /// <para>
-  /// If <paramref name="newAppender"/> is already in the list of
+  /// If <paramref name="appender"/> is already in the list of
   /// appenders, then it won't be added again.
   /// </para>
   /// </remarks>
-  public virtual void AddAppender(IAppender newAppender)
+  public virtual void AddAppender(IAppender appender)
   {
-    newAppender.EnsureNotNull();
+    appender.EnsureNotNull();
 
     _appenderLock.AcquireWriterLock();
     try
     {
-      _appenderAttachedImpl ??= new AppenderAttachedImpl();
-      _appenderAttachedImpl.AddAppender(newAppender);
+      _appenderAttachedImpl ??= new();
+      _appenderAttachedImpl.AddAppender(appender);
     }
     finally
     {
@@ -608,7 +608,7 @@ public abstract class Logger : IAppenderAttachable, ILogger
     // The logging event may not have been created by this logger
     // the Repository may not be correctly set on the event. This
     // is required for the appenders to correctly lookup renderers etc...
-    logEvent.EnsureRepository(Hierarchy);
+    logEvent.EnsureNotNull().EnsureRepository(Hierarchy);
 
     CallAppenders(logEvent);
   }

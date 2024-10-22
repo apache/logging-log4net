@@ -132,6 +132,7 @@ public class MemoryAppender : AppenderSkeleton
   /// </summary>
   // ReSharper disable once InconsistentNaming
   // ReSharper disable once FieldCanBeMadeReadOnly.Global
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1002:Do not expose generic lists")]
   protected List<LoggingEvent> m_eventsList = [];
 
   private readonly object _syncRoot = new();

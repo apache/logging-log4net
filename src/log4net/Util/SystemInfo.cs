@@ -311,49 +311,44 @@ public static class SystemInfo
   /// </remarks>
   public static string AssemblyLocationInfo(Assembly myAssembly)
   {
-    if (myAssembly.GlobalAssemblyCache)
+    if (myAssembly.EnsureNotNull().GlobalAssemblyCache)
     {
       return "Global Assembly Cache";
     }
-    else
+    try
     {
-      try
+      if (myAssembly.IsDynamic)
       {
-        if (myAssembly.IsDynamic)
-        {
-          return "Dynamic Assembly";
-        }
-
-        if (myAssembly.GetType().FullName == "System.Reflection.Emit.InternalAssemblyBuilder")
-        {
-          return "Dynamic Assembly";
-        }
-        else
-        {
-          // This call requires FileIOPermission for access to the path
-          // if we don't have permission then we just ignore it and
-          // carry on.
-          return myAssembly.Location;
-        }
-      }
-      catch (NotSupportedException)
-      {
-        // The location information may be unavailable for dynamic assemblies and a NotSupportedException
-        // is thrown in those cases. See: http://msdn.microsoft.com/de-de/library/system.reflection.assembly.location.aspx
         return "Dynamic Assembly";
       }
-      catch (TargetInvocationException ex)
+
+      if (myAssembly.GetType().FullName == "System.Reflection.Emit.InternalAssemblyBuilder")
       {
-        return $"Location Detect Failed ({ex.Message})";
+        return "Dynamic Assembly";
       }
-      catch (ArgumentException ex)
-      {
-        return $"Location Detect Failed ({ex.Message})";
-      }
-      catch (System.Security.SecurityException)
-      {
-        return "Location Permission Denied";
-      }
+
+      // This call requires FileIOPermission for access to the path
+      // if we don't have permission then we just ignore it and
+      // carry on.
+      return myAssembly.Location;
+    }
+    catch (NotSupportedException)
+    {
+      // The location information may be unavailable for dynamic assemblies and a NotSupportedException
+      // is thrown in those cases. See: http://msdn.microsoft.com/de-de/library/system.reflection.assembly.location.aspx
+      return "Dynamic Assembly";
+    }
+    catch (TargetInvocationException ex)
+    {
+      return $"Location Detect Failed ({ex.Message})";
+    }
+    catch (ArgumentException ex)
+    {
+      return $"Location Detect Failed ({ex.Message})";
+    }
+    catch (System.Security.SecurityException)
+    {
+      return "Location Permission Denied";
     }
   }
 
@@ -377,17 +372,13 @@ public static class SystemInfo
   /// </remarks>
   public static string AssemblyShortName(Assembly myAssembly)
   {
-    string name = myAssembly.FullName ?? string.Empty;
+    string name = myAssembly.EnsureNotNull().FullName ?? string.Empty;
     int offset = name.IndexOf(',');
     if (offset > 0)
     {
       name = name.Substring(0, offset);
     }
     return name.Trim();
-
-    // TODO: Do we need to unescape the assembly name string? 
-    // Doc says '\' is an escape char but has this already been 
-    // done by the string loader?
   }
 
   /// <summary>
@@ -400,10 +391,8 @@ public static class SystemInfo
   /// Gets the file name portion of the <see cref="Assembly" />, including the extension.
   /// </para>
   /// </remarks>
-  public static string AssemblyFileName(Assembly myAssembly)
-  {
-    return Path.GetFileName(myAssembly.Location);
-  }
+  public static string AssemblyFileName(Assembly myAssembly) 
+    => Path.GetFileName(myAssembly.EnsureNotNull().Location);
 
   /// <summary>
   /// Loads the type specified in the type string.
@@ -427,7 +416,7 @@ public static class SystemInfo
   /// </remarks>
   public static Type? GetTypeFromString(Type relativeType, string typeName, bool throwOnError, bool ignoreCase)
   {
-    return GetTypeFromString(relativeType.Assembly, typeName, throwOnError, ignoreCase);
+    return GetTypeFromString(relativeType.EnsureNotNull().Assembly, typeName, throwOnError, ignoreCase);
   }
 
   /// <summary>
@@ -477,10 +466,10 @@ public static class SystemInfo
   public static Type? GetTypeFromString(Assembly relativeAssembly, string typeName, bool throwOnError, bool ignoreCase)
   {
     // Check if the type name specifies the assembly name
-    if (typeName.IndexOf(',') == -1)
+    if (typeName.EnsureNotNull().IndexOf(',') == -1)
     {
       // Attempt to look up the type from the relativeAssembly
-      if (relativeAssembly.GetType(typeName, false, ignoreCase) is Type type)
+      if (relativeAssembly.EnsureNotNull().GetType(typeName, false, ignoreCase) is Type type)
       {
         return type;
       }
@@ -544,19 +533,15 @@ public static class SystemInfo
   /// with the specified error message, parameter name, and value
   /// of the argument.
   /// </returns>
-  public static ArgumentOutOfRangeException CreateArgumentOutOfRangeException(string parameterName, object actualValue, string message)
-  {
-    return new ArgumentOutOfRangeException(parameterName, actualValue, message);
-  }
+  public static ArgumentOutOfRangeException CreateArgumentOutOfRangeException(string parameterName, object actualValue, string message) 
+    => new ArgumentOutOfRangeException(parameterName, actualValue, message);
 
   /// <summary>
   /// Creates a <see cref="NotSupportedException"/> for read-only collection modification calls.
   /// </summary>
   /// <returns>The NotSupportedException object</returns>
-  public static NotSupportedException CreateReadOnlyCollectionNotModifiableException()
-  {
-    return new NotSupportedException("This is a Read Only Collection and can not be modified");
-  }
+  public static NotSupportedException CreateReadOnlyCollectionNotModifiableException() 
+    => new NotSupportedException("This is a Read Only Collection and can not be modified");
 
   /// <summary>
   /// Parse a string into an <see cref="int"/> value
@@ -741,7 +726,7 @@ public static class SystemInfo
   /// <param name="a">The one string.</param>
   /// <param name="b">The other string.</param>
   /// <returns><c>true</c> if the strings are equal, <c>false</c> otherwise.</returns>
-  public static bool EqualsIgnoringCase(string? a, string? b) 
+  public static bool EqualsIgnoringCase(string? a, string? b)
     => string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
 
   /// <summary>

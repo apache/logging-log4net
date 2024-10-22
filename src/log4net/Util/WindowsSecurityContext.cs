@@ -20,6 +20,7 @@
 #if NET462_OR_GREATER
 using System;
 using System.Runtime.InteropServices;
+using System.Security;
 using System.Security.Principal;
 
 using log4net.Core;
@@ -39,7 +40,7 @@ namespace log4net.Util;
 /// using username, domain name and password or to revert to the process credentials.
 /// </para>
 /// </remarks>
-public class WindowsSecurityContext : SecurityContext, IOptionHandler
+public class WindowsSecurityContext : Core.SecurityContext, IOptionHandler
 {
   /// <summary>
   /// The impersonation modes for the <see cref="WindowsSecurityContext"/>
@@ -244,7 +245,7 @@ public class WindowsSecurityContext : SecurityContext, IOptionHandler
     if (!LogonUser(userName, domainName, password, logon32LogonInteractive, logon32ProviderDefault, ref tokenHandle))
     {
       NativeError error = NativeError.GetLastError();
-      throw new Exception($"Failed to LogonUser [{userName}] in Domain [{domainName}]. Error: {error.ToString()}");
+      throw new SecurityException($"Failed to LogonUser [{userName}] in Domain [{domainName}]. Error: {error}");
     }
 
     const int securityImpersonation = 2;
@@ -256,10 +257,10 @@ public class WindowsSecurityContext : SecurityContext, IOptionHandler
       {
         CloseHandle(tokenHandle);
       }
-      throw new Exception($"Failed to DuplicateToken after LogonUser. Error: {error}");
+      throw new SecurityException($"Failed to DuplicateToken after LogonUser. Error: {error}");
     }
 
-    var identity = new WindowsIdentity(dupeTokenHandle);
+    WindowsIdentity identity = new(dupeTokenHandle);
 
     // Free the tokens.
     if (dupeTokenHandle != IntPtr.Zero)

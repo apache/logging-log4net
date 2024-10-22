@@ -332,11 +332,12 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// </remarks>
   public void DoAppend(LoggingEvent[] loggingEvents)
   {
+    loggingEvents.EnsureNotNull();
+
     // This lock is absolutely critical for correct formatting
     // of the message in a multi-threaded environment.  Without
     // this, the message may be broken up into elements from
     // multiple thread contexts (like get the wrong thread ID).
-
     lock (LockObj)
     {
       if (_isClosed)
@@ -414,7 +415,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// </remarks>
   protected virtual bool FilterEvent(LoggingEvent loggingEvent)
   {
-    if (!IsAsSevereAsThreshold(loggingEvent.Level))
+    if (!IsAsSevereAsThreshold(loggingEvent.EnsureNotNull().Level))
     {
       return false;
     }
@@ -553,7 +554,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// </remarks>
   protected virtual void Append(LoggingEvent[] loggingEvents)
   {
-    foreach (LoggingEvent loggingEvent in loggingEvents)
+    foreach (LoggingEvent loggingEvent in loggingEvents.EnsureNotNull())
     {
       Append(loggingEvent);
     }
@@ -575,7 +576,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// </remarks>
   protected virtual void Append(IEnumerable<LoggingEvent> loggingEvents)
   {
-    foreach (LoggingEvent loggingEvent in loggingEvents)
+    foreach (LoggingEvent loggingEvent in loggingEvents.EnsureNotNull())
     {
       Append(loggingEvent);
     }
@@ -674,6 +675,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// </remarks>
   protected void RenderLoggingEvent(TextWriter writer, LoggingEvent loggingEvent)
   {
+    writer.EnsureNotNull();
     if (Layout is null)
     {
       throw new InvalidOperationException("A layout must be set");
@@ -681,7 +683,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
 
     if (Layout.IgnoresException)
     {
-      string? exceptionStr = loggingEvent.GetExceptionString();
+      string? exceptionStr = loggingEvent.EnsureNotNull().GetExceptionString();
       if (!string.IsNullOrEmpty(exceptionStr))
       {
         // render the event and the exception

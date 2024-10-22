@@ -83,7 +83,7 @@ public static class ConverterRegistry
   /// <param name="destinationType">The type being converted to.</param>
   /// <param name="converterType">The type of the type converter to use to convert to the destination type.</param>
   public static void AddConverter(Type destinationType, Type converterType)
-    => AddConverter(destinationType, CreateConverterInstance(converterType));
+    => AddConverter(destinationType, CreateConverterInstance(converterType.EnsureNotNull()));
 
   /// <summary>
   /// Gets the type converter to use to convert values to the destination type.
@@ -105,7 +105,7 @@ public static class ConverterRegistry
     if (!_sType2ConvertTo.TryGetValue(sourceType, out IConvertTo? converter))
     {
       // Look up using attributes
-      converter = GetConverterFromAttribute(sourceType) as IConvertTo;
+      converter = GetConverterFromAttribute(sourceType.EnsureNotNull()) as IConvertTo;
       if (converter is not null)
       {
         // Store in registry
@@ -133,7 +133,7 @@ public static class ConverterRegistry
     if (!_sType2ConvertFrom.TryGetValue(destinationType, out IConvertFrom? converter))
     {
       // Look up using attributes
-      converter = GetConverterFromAttribute(destinationType) as IConvertFrom;
+      converter = GetConverterFromAttribute(destinationType.EnsureNotNull()) as IConvertFrom;
       if (converter is not null)
       {
         // Store in registry

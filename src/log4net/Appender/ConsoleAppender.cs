@@ -77,7 +77,7 @@ public class ConsoleAppender : AppenderSkeleton
   public virtual string Target
   {
     get => _writeToErrorStream ? ConsoleError : ConsoleOut;
-    set => _writeToErrorStream = SystemInfo.EqualsIgnoringCase(ConsoleError, value.Trim());
+    set => _writeToErrorStream = SystemInfo.EqualsIgnoringCase(ConsoleError, value?.Trim());
   }
 
   /// <summary>

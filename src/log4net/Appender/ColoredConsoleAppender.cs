@@ -197,6 +197,7 @@ public class ColoredConsoleAppender : AppenderSkeleton
   [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
   protected override void Append(LoggingEvent loggingEvent)
   {
+    loggingEvent.EnsureNotNull();
     if (_consoleOutputWriter is not null)
     {
       IntPtr consoleHandle = GetStdHandle(_writeToErrorStream ? StdErrorHandle : StdOutputHandle);

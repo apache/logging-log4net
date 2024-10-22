@@ -450,6 +450,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// </remarks>
   protected virtual void SendBuffer(IDbTransaction? dbTran, LoggingEvent[] events)
   {
+    events.EnsureNotNull();
     if (!string.IsNullOrWhiteSpace(CommandText))
     {
       using IDbCommand dbCmd = Connection.EnsureNotNull().CreateCommand();
@@ -522,7 +523,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
       parameter.Prepare(dbCmd);
     }
 
-    dbCmd.Prepare();
+    dbCmd.EnsureNotNull().Prepare();
   }
 
   /// <summary>
@@ -883,7 +884,7 @@ public class AdoNetAppenderParameter
   public virtual void Prepare(IDbCommand command)
   {
     // Create a new parameter
-    IDbDataParameter param = command.CreateParameter();
+    IDbDataParameter param = command.EnsureNotNull().CreateParameter();
 
     // Set the parameter properties
     param.ParameterName = ParameterName;
@@ -923,7 +924,8 @@ public class AdoNetAppenderParameter
   public virtual void FormatValue(IDbCommand command, LoggingEvent loggingEvent)
   {
     // Lookup the parameter
-    IDbDataParameter param = (IDbDataParameter)command.Parameters[ParameterName.EnsureNotNull()];
+    IDbDataParameter param = command.EnsureNotNull().Parameters[ParameterName.EnsureNotNull()]
+      .EnsureIs<IDbDataParameter>();
 
     // Format the value
     object? formattedValue = Layout?.Format(loggingEvent);

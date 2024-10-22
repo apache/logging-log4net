@@ -37,6 +37,7 @@ public class StackFrameItem
   /// <param name="frame"></param>
   public StackFrameItem(StackFrame frame)
   {
+    frame.EnsureNotNull();
     // set default values
     LineNumber = NotAvailable;
     FileName = NotAvailable;

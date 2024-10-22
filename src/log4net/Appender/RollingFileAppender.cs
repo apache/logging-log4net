@@ -527,7 +527,7 @@ public partial class RollingFileAppender : FileAppender
       _mutexForRolling?.WaitOne();
       if (_rollDate)
       {
-        var n = DateTimeStrategy.Now;
+        DateTime n = DateTimeStrategy.Now;
         if (n >= _nextCheck)
         {
           _now = n;
@@ -678,33 +678,34 @@ public partial class RollingFileAppender : FileAppender
   /// <summary>
   /// Builds a list of filenames for all files matching the base filename plus a file pattern.
   /// </summary>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1002:Do not expose generic lists")]
   protected List<string> GetExistingFiles(string baseFilePath)
   {
-    var alFiles = new List<string>();
+    List<string> result = [];
 
     string? directory;
     using (SecurityContext?.Impersonate(this))
     {
-      var fullPath = Path.GetFullPath(baseFilePath);
+      string fullPath = Path.GetFullPath(baseFilePath);
 
       directory = Path.GetDirectoryName(fullPath);
       if (Directory.Exists(directory))
       {
-        var baseFileName = Path.GetFileName(fullPath);
+        string baseFileName = Path.GetFileName(fullPath);
 
-        var files = Directory.GetFiles(directory, GetWildcardPatternForFile(baseFileName));
-        for (var i = 0; i < files.Length; i++)
+        string[] files = Directory.GetFiles(directory, GetWildcardPatternForFile(baseFileName));
+        for (int i = 0; i < files.Length; i++)
         {
-          var curFileName = Path.GetFileName(files[i]);
+          string curFileName = Path.GetFileName(files[i]);
           if (curFileName.StartsWith(Path.GetFileNameWithoutExtension(baseFileName)))
           {
-            alFiles.Add(curFileName);
+            result.Add(curFileName);
           }
         }
       }
     }
     LogLog.Debug(_declaringType, "Searched for existing files in [" + directory + "]");
-    return alFiles;
+    return result;
   }
 
   /// <summary>
@@ -726,7 +727,8 @@ public partial class RollingFileAppender : FileAppender
 
         LogLog.Debug(_declaringType, $"[{last.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo)}] vs. [{_now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo)}]");
 
-        if (!last.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo).Equals(_now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo)))
+        if (!StringComparer.Ordinal.Equals(last.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo), 
+                                           _now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo)))
         {
           _scheduledFilename = CombinePath(_baseFileName, last.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo));
           LogLog.Debug(_declaringType, $"Initial roll over to [{_scheduledFilename}]");
@@ -796,14 +798,14 @@ public partial class RollingFileAppender : FileAppender
   /// <param name="curFileName"></param>
   private void InitializeFromOneFile(string baseFile, string curFileName)
   {
-    curFileName = curFileName.ToLower();
-    baseFile = baseFile.ToLower();
+    curFileName = curFileName.ToLowerInvariant();
+    baseFile = baseFile.ToLowerInvariant();
     if (curFileName.StartsWith(Path.GetFileNameWithoutExtension(baseFile)) == false)
     {
       return; // This is not a log file, so ignore
     }
 
-    if (curFileName.Equals(baseFile))
+    if (curFileName.Equals(baseFile, StringComparison.Ordinal))
     {
       return; // Base log file is not an incremented logfile (.1 or .2, etc.)
     }
@@ -811,12 +813,12 @@ public partial class RollingFileAppender : FileAppender
     // Only look for files in the current roll point
     if (_rollDate && !StaticLogFileName)
     {
-      var date = DateTimeStrategy.Now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo).ToLower();
-      var prefix = (PreserveLogFileNameExtension
+      string date = DateTimeStrategy.Now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo).ToLowerInvariant();
+      string prefix = (PreserveLogFileNameExtension
         ? Path.GetFileNameWithoutExtension(baseFile) + date
-        : baseFile + date).ToLower();
-      var suffix = PreserveLogFileNameExtension
-        ? Path.GetExtension(baseFile).ToLower()
+        : baseFile + date).ToLowerInvariant();
+      string suffix = PreserveLogFileNameExtension
+        ? Path.GetExtension(baseFile).ToLowerInvariant()
         : "";
       if (!curFileName.StartsWith(prefix) || !curFileName.EndsWith(suffix))
       {
@@ -828,7 +830,7 @@ public partial class RollingFileAppender : FileAppender
     try
     {
       // Bump the counter up to the highest count seen so far
-      var backup = GetBackUpIndex(curFileName);
+      int backup = GetBackUpIndex(curFileName);
 
       // caution: we might get a false positive when certain
       // date patterns such as yyyyMMdd are used...those are
@@ -882,15 +884,15 @@ public partial class RollingFileAppender : FileAppender
   /// </remarks>
   private int GetBackUpIndex(string curFileName)
   {
-    var backUpIndex = -1;
-    var fileName = curFileName;
+    int backUpIndex = -1;
+    string fileName = curFileName;
 
     if (PreserveLogFileNameExtension)
     {
       fileName = Path.GetFileNameWithoutExtension(fileName);
     }
 
-    var index = fileName.LastIndexOf(".", StringComparison.Ordinal);
+    int index = fileName.LastIndexOf(".", StringComparison.Ordinal);
     if (index > 0)
     {
       // if the "yyyy-MM-dd" component of file.log.yyyy-MM-dd is passed to TryParse
@@ -902,16 +904,15 @@ public partial class RollingFileAppender : FileAppender
   }
 
   /// <summary>
-  /// Takes a list of files and a base file name, and looks for 
-  /// 'incremented' versions of the base file.  Bumps the max
-  /// count up to the highest count seen.
+  /// Takes a list of files and a base file name, and looks for 'incremented' versions of the base file.
+  /// Bumps the max count up to the highest count seen.
   /// </summary>
   [EditorBrowsable(EditorBrowsableState.Never)]
-  public void InitializeRollBackups(string baseFile, List<string> arrayFiles)
+  public void InitializeRollBackups(string baseFile, IList<string> arrayFiles)
   {
-    var baseFileLower = baseFile.ToLowerInvariant();
+    string baseFileLower = baseFile.EnsureNotNull().ToLowerInvariant();
 
-    foreach (string curFileName in arrayFiles)
+    foreach (string curFileName in arrayFiles.EnsureNotNull())
     {
       InitializeFromOneFile(baseFileLower, curFileName.ToLowerInvariant());
     }
@@ -931,7 +932,7 @@ public partial class RollingFileAppender : FileAppender
   /// and hourly roll point as minutes could not be detected.
   /// </remarks>
   [EditorBrowsable(EditorBrowsableState.Never)]
-  public RollPoint ComputeCheckPeriod(string datePattern)
+  public static RollPoint ComputeCheckPeriod(string datePattern)
   {
     // s_date1970 is 1970-01-01 00:00:00 this is UniversalSortableDateTimePattern 
     // (based on ISO 8601) using universal time. This date is used for reference
@@ -941,7 +942,7 @@ public partial class RollingFileAppender : FileAppender
     string r0 = _sDate1970.ToString(datePattern, DateTimeFormatInfo.InvariantInfo);
 
     // Check each type of rolling mode starting with the smallest increment.
-    for (var i = (int)RollPoint.TopOfMinute; i <= (int)RollPoint.TopOfMonth; i++)
+    for (int i = (int)RollPoint.TopOfMinute; i <= (int)RollPoint.TopOfMonth; i++)
     {
       // Get string representation of next pattern
       string r1 = NextCheckDate(_sDate1970, (RollPoint)i).ToString(datePattern, DateTimeFormatInfo.InvariantInfo);
@@ -949,7 +950,7 @@ public partial class RollingFileAppender : FileAppender
       LogLog.Debug(_declaringType, $"Type = [{i}], r0 = [{r0}], r1 = [{r1}]");
 
       // Check if the string representations are different
-      if (!r0.Equals(r1))
+      if (!r0.Equals(r1, StringComparison.Ordinal))
       {
         // Found highest precision roll point
         return (RollPoint)i;
@@ -1074,8 +1075,8 @@ public partial class RollingFileAppender : FileAppender
       //is the new file name equivalent to the 'current' one
       //something has gone wrong if we hit this -- we should only
       //roll over if the new file will be different from the old
-      var dateFormat = _now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo);
-      if (string.Equals(_scheduledFilename, CombinePath(File!, dateFormat)))
+      string dateFormat = _now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo);
+      if (string.Equals(_scheduledFilename, CombinePath(File!, dateFormat), StringComparison.Ordinal))
       {
         ErrorHandler.Error($"Compare {_scheduledFilename} : {CombinePath(File!, dateFormat)}");
         return;
@@ -1088,10 +1089,10 @@ public partial class RollingFileAppender : FileAppender
       }
 
       //we may have to roll over a large number of backups here
-      for (var i = 1; i <= CurrentSizeRollBackups; i++)
+      for (int i = 1; i <= CurrentSizeRollBackups; i++)
       {
-        var from = CombinePath(File!, "." + i);
-        var to = CombinePath(_scheduledFilename!, "." + i);
+        string from = CombinePath(File!, "." + i);
+        string to = CombinePath(_scheduledFilename!, "." + i);
         RollFile(from, to);
       }
 
@@ -1185,11 +1186,11 @@ public partial class RollingFileAppender : FileAppender
     {
       // We may not have permission to delete the file, or the file may be locked
 
-      var fileToDelete = fileName;
+      string fileToDelete = fileName;
 
       // Try to move the file to temp name.
       // If the file is locked we may still be able to move it
-      var tempFileName = fileName + "." + Environment.TickCount + ".DeletePending";
+      string tempFileName = fileName + "." + Environment.TickCount + ".DeletePending";
       try
       {
         using (SecurityContext?.Impersonate(this))
@@ -1306,6 +1307,7 @@ public partial class RollingFileAppender : FileAppender
   /// </remarks>
   protected void RollOverRenameFiles(string baseFileName)
   {
+    baseFileName.EnsureNotNull();
     // If maxBackups <= 0, then there is no file renaming to be done.
     if (MaxSizeRollBackups != 0)
     {
@@ -1319,7 +1321,7 @@ public partial class RollingFileAppender : FileAppender
         }
 
         // Map {(maxBackupIndex - 1), ..., 2, 1} to {maxBackupIndex, ..., 3, 2}
-        for (var i = CurrentSizeRollBackups; i >= 1; i--)
+        for (int i = CurrentSizeRollBackups; i >= 1; i--)
         {
           RollFile((CombinePath(baseFileName, "." + i)), (CombinePath(baseFileName, "." + (i + 1))));
         }
@@ -1335,7 +1337,7 @@ public partial class RollingFileAppender : FileAppender
         if (CurrentSizeRollBackups >= MaxSizeRollBackups && MaxSizeRollBackups > 0)
         {
           //delete the first and keep counting up.
-          var oldestFileIndex = CurrentSizeRollBackups - MaxSizeRollBackups;
+          int oldestFileIndex = CurrentSizeRollBackups - MaxSizeRollBackups;
 
           // If static then there is 1 file without a number, therefore 1 less archive
           if (StaticLogFileName)
@@ -1346,14 +1348,14 @@ public partial class RollingFileAppender : FileAppender
           // If using a static log file then the base for the numbered sequence is the baseFileName passed in
           // If not using a static log file then the baseFileName will already have a numbered postfix which
           // we must remove, however it may have a date postfix which we must keep!
-          var archiveFileBaseName = baseFileName;
+          string archiveFileBaseName = baseFileName;
           if (!StaticLogFileName)
           {
             if (PreserveLogFileNameExtension)
             {
-              var extension = Path.GetExtension(archiveFileBaseName);
-              var baseName = Path.GetFileNameWithoutExtension(archiveFileBaseName);
-              var lastDotIndex = baseName.LastIndexOf(".", StringComparison.Ordinal);
+              string extension = Path.GetExtension(archiveFileBaseName);
+              string baseName = Path.GetFileNameWithoutExtension(archiveFileBaseName);
+              int lastDotIndex = baseName.LastIndexOf(".", StringComparison.Ordinal);
               if (lastDotIndex >= 0)
               {
                 archiveFileBaseName = baseName.Substring(0, lastDotIndex) + extension;
@@ -1361,7 +1363,7 @@ public partial class RollingFileAppender : FileAppender
             }
             else
             {
-              var lastDotIndex = archiveFileBaseName.LastIndexOf(".", StringComparison.Ordinal);
+              int lastDotIndex = archiveFileBaseName.LastIndexOf(".", StringComparison.Ordinal);
               if (lastDotIndex >= 0)
               {
                 archiveFileBaseName = archiveFileBaseName.Substring(0, lastDotIndex);
@@ -1399,7 +1401,7 @@ public partial class RollingFileAppender : FileAppender
   /// worth of time and get the start time of the next window for the rollpoint.
   /// </para>
   /// </remarks>
-  protected DateTime NextCheckDate(DateTime currentDateTime, RollPoint rollPoint)
+  protected static DateTime NextCheckDate(DateTime currentDateTime, RollPoint rollPoint)
   {
     // Local variable to work on (this does not look very efficient)
     DateTime current = currentDateTime;

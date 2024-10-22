@@ -469,7 +469,7 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
   /// </remarks>
   protected virtual void SendFromBuffer(LoggingEvent? firstLoggingEvent, CyclicBuffer buffer)
   {
-    LoggingEvent[] bufferEvents = buffer.PopAll();
+    LoggingEvent[] bufferEvents = buffer.EnsureNotNull().PopAll();
 
     if (firstLoggingEvent is null)
     {

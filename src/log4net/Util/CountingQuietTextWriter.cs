@@ -110,28 +110,28 @@ public class CountingQuietTextWriter : QuietTextWriter
   /// <summary>
   /// Writes a string to the output and counts the number of bytes written.
   /// </summary>
-  /// <param name="str">The string data to write to the output.</param>
+  /// <param name="value">The string data to write to the output.</param>
   /// <remarks>
   /// <para>
   /// Overrides implementation of <see cref="QuietTextWriter"/>. Counts
   /// the number of bytes written.
   /// </para>
   /// </remarks>
-  public override void Write(string? str)
+  public override void Write(string? value)
   {
-    if (str is not null && str.Length > 0)
+    if (value is not null && value.Length > 0)
     {
       try
       {
-        base.Write(str);
+        base.Write(value);
 
         // get the number of bytes needed to represent the 
         // string using the supplied encoding.
-        Count += Encoding.GetByteCount(str);
+        Count += Encoding.GetByteCount(value);
       }
       catch (Exception e) when (!e.IsFatal())
       {
-        ErrorHandler.Error($"Failed to write [{str}].", e, ErrorCode.WriteFailure);
+        ErrorHandler.Error($"Failed to write [{value}].", e, ErrorCode.WriteFailure);
       }
     }
   }

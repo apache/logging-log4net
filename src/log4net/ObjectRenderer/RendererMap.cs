@@ -41,10 +41,8 @@ public class RendererMap
 {
   private static readonly Type _declaringType = typeof(RendererMap);
 
-  private readonly ConcurrentDictionary<Type, IObjectRenderer> _map = new();
-  private readonly ConcurrentDictionary<Type, IObjectRenderer> _cache = new();
-
-  private static readonly IObjectRenderer _sDefaultRenderer = new DefaultRenderer();
+  private readonly ConcurrentDictionary<Type, IObjectRenderer> _map = [];
+  private readonly ConcurrentDictionary<Type, IObjectRenderer> _cache = [];
 
   /// <summary>
   /// Renders <paramref name="obj"/> using the appropriate renderer.
@@ -87,6 +85,7 @@ public class RendererMap
   /// </remarks>
   public void FindAndRender(object? obj, TextWriter writer)
   {
+    writer.EnsureNotNull();
     if (obj is null)
     {
       writer.Write(SystemInfo.NullText);
@@ -182,7 +181,7 @@ public class RendererMap
       }
 
       // if not set then use the default renderer
-      result ??= _sDefaultRenderer;
+      result ??= DefaultRenderer;
 
       // Add to cache
       _cache.TryAdd(type, result);
@@ -217,7 +216,7 @@ public class RendererMap
   /// <summary>
   /// Gets the default renderer instance
   /// </summary>
-  public IObjectRenderer DefaultRenderer => _sDefaultRenderer;
+  public static IObjectRenderer DefaultRenderer { get; } = new DefaultRenderer();
 
   /// <summary>
   /// Clears the map of custom renderers. The <see cref="DefaultRenderer"/>

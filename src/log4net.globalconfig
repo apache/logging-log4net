@@ -55,9 +55,6 @@ dotnet_diagnostic.CA1027.severity = warning
 #CA1031: Do not catch general exception types
 dotnet_diagnostic.CA1031.severity = warning
 
-#CA1034: Nested types should not be visible
-dotnet_diagnostic.CA1034.severity = warning
-
 #CA1040: Avoid empty interfaces
 dotnet_diagnostic.CA1040.severity = warning
 
@@ -461,7 +458,7 @@ dotnet_diagnostic.CA5402.severity = warning
 dotnet_diagnostic.CA5403.severity = warning
 
 #IDE0010: Add missing cases to switch statement
-dotnet_diagnostic.IDE0010.severity = warning
+dotnet_diagnostic.IDE0010.severity = none
 
 #IDE0067: Disposable object is never disposed
 dotnet_diagnostic.IDE0067.severity = warning
@@ -470,4 +467,4 @@ dotnet_diagnostic.IDE0067.severity = warning
 dotnet_diagnostic.IDE0068.severity = warning
 
 #IDE0072: Add missing cases to switch expression
-dotnet_diagnostic.IDE0072.severity = warning
+dotnet_diagnostic.IDE0072.severity = none

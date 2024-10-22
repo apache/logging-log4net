@@ -247,10 +247,10 @@ public static class OptionConverter
   /// </remarks>
   public static object ConvertTypeTo(object sourceInstance, Type targetType)
   {
-    Type sourceType = sourceInstance.GetType();
+    Type sourceType = sourceInstance.EnsureNotNull().GetType();
 
     // Check if we can assign directly from the source type to the target type
-    if (targetType.IsAssignableFrom(sourceType))
+    if (targetType.EnsureNotNull().IsAssignableFrom(sourceType))
     {
       return sourceInstance;
     }
@@ -302,7 +302,7 @@ public static class OptionConverter
         Type? classObj = SystemInfo.GetTypeFromString(className, true, true);
         if (classObj is not null)
         {
-          if (!superClass.IsAssignableFrom(classObj))
+          if (!superClass.EnsureNotNull().IsAssignableFrom(classObj))
           {
             LogLog.Error(_declaringType, $"OptionConverter: A [{className}] object is not assignable to a [{superClass.FullName}] variable.");
             return defaultValue;
@@ -365,6 +365,8 @@ public static class OptionConverter
   /// </remarks>
   public static string SubstituteVariables(string value, System.Collections.IDictionary props)
   {
+    value.EnsureNotNull();
+    props.EnsureNotNull();
     StringBuilder buf = new();
 
     int i = 0;

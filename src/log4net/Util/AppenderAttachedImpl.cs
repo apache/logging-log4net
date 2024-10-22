@@ -36,6 +36,7 @@ namespace log4net.Util;
 /// </remarks>
 /// <author>Nicko Cadell</author>
 /// <author>Gert Driesen</author>
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix")]
 public class AppenderAttachedImpl : IAppenderAttachable
 {
   /// <summary>
@@ -47,8 +48,7 @@ public class AppenderAttachedImpl : IAppenderAttachable
   /// </para>
   /// </remarks>
   public AppenderAttachedImpl()
-  {
-  }
+  { }
 
   /// <summary>
   /// Append on on all attached appenders.
@@ -171,26 +171,17 @@ public class AppenderAttachedImpl : IAppenderAttachable
   /// <summary>
   /// Attaches an appender.
   /// </summary>
-  /// <param name="newAppender">The appender to add.</param>
+  /// <param name="appender">The appender to add.</param>
   /// <remarks>
   /// <para>
   /// If the appender is already in the list it won't be added again.
   /// </para>
   /// </remarks>
-  public void AddAppender(IAppender newAppender)
+  public void AddAppender(IAppender appender)
   {
-    // Null values for newAppender parameter are strictly forbidden.
-    if (newAppender is null)
-    {
-      throw new ArgumentNullException(nameof(newAppender));
-    }
-
+    appender.EnsureNotNull();
     _appenderArray = null;
-    _appenderList ??= new AppenderCollection(1);
-    if (!_appenderList.Contains(newAppender))
-    {
-      _appenderList.Add(newAppender);
-    }
+    _appenderList ??= new(1) { appender };
   }
 
   /// <summary>
@@ -214,10 +205,7 @@ public class AppenderAttachedImpl : IAppenderAttachable
         // We must always return a valid collection
         return AppenderCollection.EmptyCollection;
       }
-      else
-      {
-        return AppenderCollection.ReadOnly(_appenderList);
-      }
+      return AppenderCollection.ReadOnly(_appenderList);
     }
   }
 

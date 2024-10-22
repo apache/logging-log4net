@@ -84,7 +84,7 @@ public class FileAppender : TextWriterAppender
   /// Write only <see cref="Stream"/> that uses the <see cref="LockingModelBase"/> 
   /// to manage access to an underlying resource.
   /// </summary>
-  private sealed class LockingStream : Stream, IDisposable
+  private sealed class LockingStream(LockingModelBase lockingModel) : Stream, IDisposable
   {
     [Log4NetSerializable]
     public sealed class LockStateException : LogException
@@ -107,15 +107,13 @@ public class FileAppender : TextWriterAppender
       }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "todo")]
     private Stream? _realStream;
-    private readonly LockingModelBase _lockingModel;
     private int _lockLevel;
-
-    public LockingStream(LockingModelBase locking) => _lockingModel = locking.EnsureNotNull();
 
     protected override void Dispose(bool disposing)
     {
-      _lockingModel.CloseFile();
+      lockingModel.CloseFile();
       base.Dispose(disposing);
     }
 
@@ -180,7 +178,7 @@ public class FileAppender : TextWriterAppender
         if (_lockLevel == 0)
         {
           // If lock is already acquired, nop
-          _realStream = _lockingModel.AcquireLock();
+          _realStream = lockingModel.AcquireLock();
         }
 
         if (_realStream is not null)
@@ -201,7 +199,7 @@ public class FileAppender : TextWriterAppender
         if (_lockLevel == 0)
         {
           // If already unlocked, nop
-          _lockingModel.ReleaseLock();
+          lockingModel.ReleaseLock();
           _realStream = null;
         }
       }

@@ -28,6 +28,7 @@ using log4net.Appender;
 using log4net.Util;
 using log4net.Core;
 using log4net.ObjectRenderer;
+using System.Linq;
 
 namespace log4net.Repository.Hierarchy;
 
@@ -236,7 +237,7 @@ public class XmlHierarchyConfigurator
   /// </remarks>
   protected IAppender? FindAppenderByReference(XmlElement appenderRef)
   {
-    string? appenderName = appenderRef.GetAttribute(RefAttr);
+    string? appenderName = appenderRef.EnsureNotNull().GetAttribute(RefAttr);
 
     if (_appenderBag.TryGetValue(appenderName, out IAppender? appender))
     {
@@ -285,7 +286,7 @@ public class XmlHierarchyConfigurator
   /// </remarks>
   protected IAppender? ParseAppender(XmlElement appenderElement)
   {
-    string appenderName = appenderElement.GetAttribute(NameAttr);
+    string appenderName = appenderElement.EnsureNotNull().GetAttribute(NameAttr);
     string typeName = appenderElement.GetAttribute(TypeAttr);
 
     LogLog.Debug(_declaringType, $"Loading Appender [{appenderName}] type: [{typeName}]");
@@ -358,7 +359,7 @@ public class XmlHierarchyConfigurator
   protected void ParseLogger(XmlElement loggerElement)
   {
     // Create a new log4net.Logger object from the <logger> element.
-    string loggerName = loggerElement.GetAttribute(NameAttr);
+    string loggerName = loggerElement.EnsureNotNull().GetAttribute(NameAttr);
 
     LogLog.Debug(_declaringType, $"Retrieving an instance of log4net.Repository.Logger for logger [{loggerName}].");
 
@@ -412,9 +413,9 @@ public class XmlHierarchyConfigurator
   {
     // Remove all existing appenders from log. They will be
     // reconstructed if need be.
-    log.RemoveAllAppenders();
+    log.EnsureNotNull().RemoveAllAppenders();
 
-    foreach (XmlNode currentNode in catElement.ChildNodes)
+    foreach (XmlNode currentNode in catElement.EnsureNotNull().ChildNodes)
     {
       if (currentNode.NodeType == XmlNodeType.Element)
       {
@@ -461,7 +462,7 @@ public class XmlHierarchyConfigurator
   /// </remarks>
   protected void ParseRenderer(XmlElement element)
   {
-    string renderingClassName = element.GetAttribute(RenderingTypeAttr);
+    string renderingClassName = element.EnsureNotNull().GetAttribute(RenderingTypeAttr);
     string renderedClassName = element.GetAttribute(RenderedTypeAttr);
 
     LogLog.Debug(_declaringType, $"Rendering class [{renderingClassName}], Rendered class [{renderedClassName}].");
@@ -492,15 +493,15 @@ public class XmlHierarchyConfigurator
   /// Parse an XML element that represents a level.
   /// </para>
   /// </remarks>
-  protected void ParseLevel(XmlElement element, Logger log, bool isRoot)
+  protected static void ParseLevel(XmlElement element, Logger log, bool isRoot)
   {
-    string loggerName = log.Name;
+    string loggerName = log.EnsureNotNull().Name;
     if (isRoot)
     {
       loggerName = "root";
     }
 
-    string levelStr = element.GetAttribute(ValueAttr);
+    string levelStr = element.EnsureNotNull().GetAttribute(ValueAttr);
     LogLog.Debug(_declaringType, $"Logger [{loggerName}] Level string is [{levelStr}].");
 
     if (Inherited == levelStr)
@@ -548,7 +549,7 @@ public class XmlHierarchyConfigurator
   protected void SetParameter(XmlElement element, object target)
   {
     // Get the property name
-    string name = element.GetAttribute(NameAttr);
+    string name = element.EnsureNotNull().GetAttribute(NameAttr);
 
     // If the name attribute does not exist then use the name of the element
     if (element.LocalName != ParamTag || name.Length == 0)
@@ -557,7 +558,7 @@ public class XmlHierarchyConfigurator
     }
 
     // Look for the property on the target object
-    Type targetType = target.GetType();
+    Type targetType = target.EnsureNotNull().GetType();
     Type? propertyType = null;
 
     MethodInfo? methInfo = null;
@@ -795,17 +796,8 @@ public class XmlHierarchyConfigurator
   /// </summary>
   /// <param name="element">the element to inspect</param>
   /// <returns><c>true</c> if the element has any attributes or child elements, <c>false</c> otherwise</returns>
-  private bool HasAttributesOrElements(XmlElement element)
-  {
-    foreach (XmlNode node in element.ChildNodes)
-    {
-      if (node.NodeType is XmlNodeType.Attribute or XmlNodeType.Element)
-      {
-        return true;
-      }
-    }
-    return false;
-  }
+  private static bool HasAttributesOrElements(XmlElement element)
+    => element.ChildNodes.OfType<XmlNode>().Any(node => node.NodeType is XmlNodeType.Attribute or XmlNodeType.Element);
 
   /// <summary>
   /// Test if a <see cref="Type"/> is constructible with <c>Activator.CreateInstance</c>.
@@ -915,7 +907,7 @@ public class XmlHierarchyConfigurator
     Type? objectType;
 
     // Get the object type
-    string objectTypeString = element.GetAttribute(TypeAttr);
+    string objectTypeString = element.EnsureNotNull().GetAttribute(TypeAttr);
     if (objectTypeString.Length == 0)
     {
       if (defaultTargetType is null)
@@ -955,7 +947,7 @@ public class XmlHierarchyConfigurator
         }
         else
         {
-          LogLog.Error(_declaringType, $"Object type [{objectType!.FullName}] is not assignable to type [{typeConstraint.FullName}]. There are no acceptable type conversions.");
+          LogLog.Error(_declaringType, $"Object type [{objectType?.FullName}] is not assignable to type [{typeConstraint.FullName}]. There are no acceptable type conversions.");
           return null;
         }
       }
@@ -969,7 +961,7 @@ public class XmlHierarchyConfigurator
     }
     catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, $"XmlHierarchyConfigurator: Failed to construct object of type [{objectType!.FullName}]", e);
+      LogLog.Error(_declaringType, $"XmlHierarchyConfigurator: Failed to construct object of type [{objectType?.FullName}]", e);
       return null;
     }
 
