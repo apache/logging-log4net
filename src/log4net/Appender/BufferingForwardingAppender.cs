@@ -89,23 +89,23 @@ public class BufferingForwardingAppender : BufferingAppenderSkeleton, IAppenderA
   /// Adds an <see cref="IAppender" /> to the list of appenders of this
   /// instance.
   /// </summary>
-  /// <param name="newAppender">The <see cref="IAppender" /> to add to this appender.</param>
+  /// <param name="appender">The <see cref="IAppender" /> to add to this appender.</param>
   /// <remarks>
   /// <para>
   /// If the specified <see cref="IAppender" /> is already in the list of
   /// appenders, then it won't be added again.
   /// </para>
   /// </remarks>
-  public virtual void AddAppender(IAppender newAppender)
+  public virtual void AddAppender(IAppender appender)
   {
-    if (newAppender is null)
+    if (appender is null)
     {
-      throw new ArgumentNullException(nameof(newAppender));
+      throw new ArgumentNullException(nameof(appender));
     }
     lock (LockObj)
     {
       _appenderAttachedImpl ??= new AppenderAttachedImpl();
-      _appenderAttachedImpl.AddAppender(newAppender);
+      _appenderAttachedImpl.AddAppender(appender);
     }
   }
 

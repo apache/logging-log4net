@@ -28,6 +28,7 @@ using NUnit.Framework;
 namespace log4net.Tests.Core;
 
 [TestFixture]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2201:Do not raise reserved exception types")]
 public class FixingTest
 {
   const string TestRepository = "Test Repository";

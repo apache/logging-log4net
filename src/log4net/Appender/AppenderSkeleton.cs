@@ -46,15 +46,17 @@ namespace log4net.Appender;
 public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandler, IFlushable
 {
   /// <summary>
+  /// SyncRoot
+  /// </summary>
+  private protected object SyncRoot { get; } = new();
+
+  /// <summary>
   /// Default constructor
   /// </summary>
   /// <remarks>
   /// <para>Empty default constructor</para>
   /// </remarks>
-  protected AppenderSkeleton()
-  {
-    _errorHandler = new OnlyOnceErrorHandler(this.GetType().Name);
-  }
+  protected AppenderSkeleton() => _errorHandler = new OnlyOnceErrorHandler(GetType().Name);
 
   /// <summary>
   /// Finalizes this appender by calling the implementation's 

@@ -564,7 +564,7 @@ public partial class RollingFileAppender : FileAppender
   /// </remarks>
   protected override void OpenFile(string fileName, bool append)
   {
-    lock (this)
+    lock (SyncRoot)
     {
       fileName = GetNextOutputFileName(fileName);
 

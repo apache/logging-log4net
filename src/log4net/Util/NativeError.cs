@@ -122,13 +122,13 @@ public sealed class NativeError
     int formatMessageFromSystem = 0x00001000;    // The function should search the system message-table resource(s) for the requested message
 
     string? msgBuf = "";        // buffer that will receive the message
-    var sourcePtr = new IntPtr();  // Location of the message definition, will be ignored
-    var argumentsPtr = new IntPtr();  // Pointer to array of values to insert, not supported as it requires unsafe code
+    IntPtr sourcePtr = new();  // Location of the message definition, will be ignored
+    IntPtr argumentsPtr = new();  // Pointer to array of values to insert, not supported as it requires unsafe code
 
     if (messageId != 0)
     {
       // If the function succeeds, the return value is the number of TCHARs stored in the output buffer, excluding the terminating null character
-      int messageSize = FormatMessage(
+      int messageSize =  NativeMethods.FormatMessage(
         formatMessageAllocateBuffer | formatMessageFromSystem | formatMessageIgnoreInserts,
         ref sourcePtr,
         messageId,
@@ -165,55 +165,8 @@ public sealed class NativeError
   /// Return error information string
   /// </para>
   /// </remarks>
-  public override string ToString()
-  {
-    return string.Format(CultureInfo.InvariantCulture, "0x{0:x8}", Number) + (Message is not null ? ": " + Message : string.Empty);
-  }
-
-  /// <summary>
-  /// Formats a message string.
-  /// </summary>
-  /// <param name="dwFlags">Formatting options, and how to interpret the <paramref name="lpSource" /> parameter.</param>
-  /// <param name="lpSource">Location of the message definition.</param>
-  /// <param name="dwMessageId">Message identifier for the requested message.</param>
-  /// <param name="dwLanguageId">Language identifier for the requested message.</param>
-  /// <param name="lpBuffer">If <paramref name="dwFlags" /> includes FORMAT_MESSAGE_ALLOCATE_BUFFER, the function allocates a buffer using the <c>LocalAlloc</c> function, and places the pointer to the buffer at the address specified in <paramref name="lpBuffer" />.</param>
-  /// <param name="nSize">If the FORMAT_MESSAGE_ALLOCATE_BUFFER flag is not set, this parameter specifies the maximum number of TCHARs that can be stored in the output buffer. If FORMAT_MESSAGE_ALLOCATE_BUFFER is set, this parameter specifies the minimum number of TCHARs to allocate for an output buffer.</param>
-  /// <param name="arguments">Pointer to an array of values that are used as insert values in the formatted message.</param>
-  /// <remarks>
-  /// <para>
-  /// The function requires a message definition as input. The message definition can come from a 
-  /// buffer passed into the function. It can come from a message table resource in an 
-  /// already-loaded module. Or the caller can ask the function to search the system's message 
-  /// table resource(s) for the message definition. The function finds the message definition 
-  /// in a message table resource based on a message identifier and a language identifier. 
-  /// The function copies the formatted message text to an output buffer, processing any embedded 
-  /// insert sequences if requested.
-  /// </para>
-  /// <para>
-  /// To prevent the usage of unsafe code, this stub does not support inserting values in the formatted message.
-  /// </para>
-  /// </remarks>
-  /// <returns>
-  /// <para>
-  /// If the function succeeds, the return value is the number of TCHARs stored in the output 
-  /// buffer, excluding the terminating null character.
-  /// </para>
-  /// <para>
-  /// If the function fails, the return value is zero. To get extended error information, 
-  /// call <see cref="M:Marshal.GetLastWin32Error()" />.
-  /// </para>
-  /// </returns>
-  [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern int FormatMessage(
-    int dwFlags,
-    ref IntPtr lpSource,
-    int dwMessageId,
-    int dwLanguageId,
-    ref string lpBuffer,
-    int nSize,
-    IntPtr arguments);
+  public override string ToString() 
+    => string.Format(CultureInfo.InvariantCulture, "0x{0:x8}", Number) + (Message is not null ? ": " + Message : string.Empty);
 
   private static readonly char[] _newlines = ['\r', '\n'];
 }

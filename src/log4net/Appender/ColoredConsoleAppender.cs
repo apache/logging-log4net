@@ -200,7 +200,7 @@ public class ColoredConsoleAppender : AppenderSkeleton
     loggingEvent.EnsureNotNull();
     if (_consoleOutputWriter is not null)
     {
-      IntPtr consoleHandle = GetStdHandle(_writeToErrorStream ? StdErrorHandle : StdOutputHandle);
+      IntPtr consoleHandle = NativeMethods.GetStdHandle(_writeToErrorStream ? NativeMethods.StdErrorHandle : NativeMethods.StdOutputHandle);
 
       // Default to white on black
       ushort colorInfo = (ushort)Colors.White;
@@ -215,10 +215,10 @@ public class ColoredConsoleAppender : AppenderSkeleton
       string strLoggingMessage = RenderLoggingEvent(loggingEvent);
 
       // get the current console color - to restore later
-      GetConsoleScreenBufferInfo(consoleHandle, out ConsoleScreenBufferInfo bufferInfo);
+      NativeMethods.GetConsoleScreenBufferInfo(consoleHandle, out NativeMethods.ConsoleScreenBufferInfo bufferInfo);
 
       // set the console colors
-      SetConsoleTextAttribute(consoleHandle, colorInfo);
+      NativeMethods.SetConsoleTextAttribute(consoleHandle, colorInfo);
 
       // Using WriteConsoleW seems to be unreliable.
       // If a large buffer is written, say 15,000 chars
@@ -315,7 +315,7 @@ public class ColoredConsoleAppender : AppenderSkeleton
       _consoleOutputWriter.Write(messageCharArray, 0, arrayLength);
 
       // Restore the console back to its previous color scheme
-      SetConsoleTextAttribute(consoleHandle, bufferInfo.wAttributes);
+      NativeMethods.SetConsoleTextAttribute(consoleHandle, bufferInfo.wAttributes);
 
       if (appendNewline)
       {
@@ -344,7 +344,7 @@ public class ColoredConsoleAppender : AppenderSkeleton
     Stream consoleOutputStream = _writeToErrorStream ? Console.OpenStandardError() : Console.OpenStandardOutput();
 
     // Look up the codepage encoding for the console
-    Encoding consoleEncoding = EncodingWithoutPreamble.Get(Encoding.GetEncoding(GetConsoleOutputCP()));
+    Encoding consoleEncoding = EncodingWithoutPreamble.Get(Encoding.GetEncoding(NativeMethods.GetConsoleOutputCP()));
 
     // Create a writer around the console stream
     _consoleOutputWriter = new StreamWriter(consoleOutputStream, consoleEncoding, 0x100)
@@ -390,55 +390,6 @@ public class ColoredConsoleAppender : AppenderSkeleton
   /// </para>
   /// </remarks>
   private StreamWriter? _consoleOutputWriter;
-
-  [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern int GetConsoleOutputCP();
-
-  [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern bool SetConsoleTextAttribute(
-    IntPtr consoleHandle,
-    ushort attributes);
-
-  [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern bool GetConsoleScreenBufferInfo(
-    IntPtr consoleHandle,
-    out ConsoleScreenBufferInfo bufferInfo);
-
-  private const uint StdOutputHandle = unchecked((uint)-11);
-  private const uint StdErrorHandle = unchecked((uint)-12);
-
-  [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern IntPtr GetStdHandle(uint type);
-
-  [StructLayout(LayoutKind.Sequential)]
-  private struct Coord
-  {
-    public ushort x;
-    public ushort y;
-  }
-
-  [StructLayout(LayoutKind.Sequential)]
-  private struct SmallRect
-  {
-    public ushort Left;
-    public ushort Top;
-    public ushort Right;
-    public ushort Bottom;
-  }
-
-  [StructLayout(LayoutKind.Sequential)]
-  private struct ConsoleScreenBufferInfo
-  {
-    public Coord dwSize;
-    public Coord dwCursorPosition;
-    public ushort wAttributes;
-    public SmallRect srWindow;
-    public Coord dwMaximumWindowSize;
-  }
 
   /// <summary>
   /// A class to act as a mapping between the level that a logging call is made at and

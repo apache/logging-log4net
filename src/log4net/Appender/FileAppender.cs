@@ -35,8 +35,7 @@ namespace log4net.Appender;
 /// </summary>
 /// <remarks>
 /// <para>
-/// Logging events are sent to the file specified by
-/// the <see cref="File"/> property.
+/// Logging events are sent to the file specified by the <see cref="File"/> property.
 /// </para>
 /// <para>
 /// The file can be opened in either append or overwrite mode 
@@ -90,23 +89,22 @@ public class FileAppender : TextWriterAppender
     public sealed class LockStateException : LogException
     {
       public LockStateException(string message)
-          : base(message)
-      {
-      }
+        : base(message)
+      { }
 
       public LockStateException()
-      {
-      }
+      { }
 
-      public LockStateException(string message, Exception innerException) : base(message, innerException)
-      {
-      }
+      public LockStateException(string message, Exception innerException)
+        : base(message, innerException)
+      { }
 
-      private LockStateException(SerializationInfo info, StreamingContext context) : base(info, context)
-      {
-      }
+      private LockStateException(SerializationInfo info, StreamingContext context)
+        : base(info, context)
+      { }
     }
 
+    private readonly object syncRoot = new();
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "todo")]
     private Stream? _realStream;
     private int _lockLevel;
@@ -173,7 +171,7 @@ public class FileAppender : TextWriterAppender
     public bool AcquireLock()
     {
       bool ret = false;
-      lock (this)
+      lock (syncRoot)
       {
         if (_lockLevel == 0)
         {
@@ -193,7 +191,7 @@ public class FileAppender : TextWriterAppender
 
     public void ReleaseLock()
     {
-      lock (this)
+      lock (syncRoot)
       {
         _lockLevel--;
         if (_lockLevel == 0)
@@ -843,8 +841,8 @@ public class FileAppender : TextWriterAppender
   /// Specify default locking model
   /// </summary>
   /// <typeparam name="TLockingModel">Type of LockingModel</typeparam>
-  public static void SetDefaultLockingModelType<TLockingModel>() 
-    where TLockingModel : LockingModelBase 
+  public static void SetDefaultLockingModelType<TLockingModel>()
+    where TLockingModel : LockingModelBase
     => _defaultLockingModelType = typeof(TLockingModel);
 
   /// <summary>
@@ -1215,7 +1213,7 @@ public class FileAppender : TextWriterAppender
       }
     }
 
-    lock (this)
+    lock (SyncRoot)
     {
       Reset();
 

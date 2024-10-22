@@ -242,7 +242,7 @@ public class WindowsSecurityContext : Core.SecurityContext, IOptionHandler
 
     // Call LogonUser to obtain a handle to an access token.
     IntPtr tokenHandle = IntPtr.Zero;
-    if (!LogonUser(userName, domainName, password, logon32LogonInteractive, logon32ProviderDefault, ref tokenHandle))
+    if (!NativeMethods.LogonUser(userName, domainName, password, logon32LogonInteractive, logon32ProviderDefault, ref tokenHandle))
     {
       NativeError error = NativeError.GetLastError();
       throw new SecurityException($"Failed to LogonUser [{userName}] in Domain [{domainName}]. Error: {error}");
@@ -250,12 +250,12 @@ public class WindowsSecurityContext : Core.SecurityContext, IOptionHandler
 
     const int securityImpersonation = 2;
     IntPtr dupeTokenHandle = IntPtr.Zero;
-    if (!DuplicateToken(tokenHandle, securityImpersonation, ref dupeTokenHandle))
+    if (!NativeMethods.DuplicateToken(tokenHandle, securityImpersonation, ref dupeTokenHandle))
     {
       NativeError error = NativeError.GetLastError();
       if (tokenHandle != IntPtr.Zero)
       {
-        CloseHandle(tokenHandle);
+        NativeMethods.CloseHandle(tokenHandle);
       }
       throw new SecurityException($"Failed to DuplicateToken after LogonUser. Error: {error}");
     }
@@ -265,27 +265,15 @@ public class WindowsSecurityContext : Core.SecurityContext, IOptionHandler
     // Free the tokens.
     if (dupeTokenHandle != IntPtr.Zero)
     {
-      CloseHandle(dupeTokenHandle);
+      NativeMethods.CloseHandle(dupeTokenHandle);
     }
     if (tokenHandle != IntPtr.Zero)
     {
-      CloseHandle(tokenHandle);
+      NativeMethods.CloseHandle(tokenHandle);
     }
 
     return identity;
   }
-
-  [DllImport("advapi32.dll", SetLastError = true)]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern bool LogonUser(string lpszUsername, string lpszDomain, string lpszPassword, int dwLogonType, int dwLogonProvider, ref IntPtr phToken);
-
-  [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern bool CloseHandle(IntPtr handle);
-
-  [DllImport("advapi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern bool DuplicateToken(IntPtr existingTokenHandle, int securityImpersonationLevel, ref IntPtr duplicateTokenHandle);
 
   /// <summary>
   /// Adds <see cref="IDisposable"/> to <see cref="WindowsImpersonationContext"/>
@@ -305,7 +293,7 @@ public class WindowsSecurityContext : Core.SecurityContext, IOptionHandler
     /// </summary>
     /// <param name="impersonationContext">the impersonation context being wrapped</param>
     public DisposableImpersonationContext(WindowsImpersonationContext impersonationContext)
-      => this._impersonationContext = impersonationContext;
+      => _impersonationContext = impersonationContext;
 
     /// <summary>
     /// Revert the impersonation
