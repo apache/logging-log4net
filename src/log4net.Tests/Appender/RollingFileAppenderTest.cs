@@ -170,7 +170,7 @@ public sealed class RollingFileAppenderTest
         {
           fileStream.Close();
         }
-        catch
+        catch (Exception e) when (e is not null)
         {
           // Ignore
         }
@@ -250,9 +250,9 @@ public sealed class RollingFileAppenderTest
         Debug.WriteLine("Deleting test file " + sFile);
         File.Delete(sFile);
       }
-      catch (Exception ex)
+      catch (Exception e) when (e is not null)
       {
-        Debug.WriteLine("Exception while deleting test file " + ex);
+        Debug.WriteLine("Exception while deleting test file " + e);
       }
     }
   }

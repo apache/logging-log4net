@@ -346,10 +346,8 @@ public class FileAppender : TextWriterAppender
     /// <param name="stream"></param>
     protected void CloseStream(Stream stream)
     {
-      using (CurrentAppender?.SecurityContext?.Impersonate(this))
-      {
-        stream.Dispose();
-      }
+      using var _ = CurrentAppender?.SecurityContext?.Impersonate(this);
+      stream?.Dispose();
     }
   }
 
@@ -386,10 +384,9 @@ public class FileAppender : TextWriterAppender
       {
         _stream = CreateStream(filename, append, FileShare.Read);
       }
-      catch (Exception e1)
+      catch (Exception e) when (!e.IsFatal())
       {
-        CurrentAppender?.ErrorHandler.Error("Unable to acquire lock on file " + filename + ". " +
-            e1.Message);
+        CurrentAppender?.ErrorHandler.Error($"Unable to acquire lock on file {filename}. {e.Message}");
       }
     }
 
@@ -523,10 +520,9 @@ public class FileAppender : TextWriterAppender
             _stream = CreateStream(_filename, _append, FileShare.Read);
             _append = true;
           }
-          catch (Exception e1)
+          catch (Exception e) when (!e.IsFatal())
           {
-            CurrentAppender?.ErrorHandler.Error("Unable to acquire lock on file " + _filename + ". " +
-                e1.Message);
+            CurrentAppender?.ErrorHandler.Error($"Unable to acquire lock on file {_filename}. {e.Message}");
           }
         }
         else
@@ -605,10 +601,9 @@ public class FileAppender : TextWriterAppender
       {
         _stream = CreateStream(filename, append, FileShare.ReadWrite);
       }
-      catch (Exception e1)
+      catch (Exception e) when (!e.IsFatal())
       {
-        CurrentAppender?.ErrorHandler.Error("Unable to acquire lock on file " + filename + ". " +
-            e1.Message);
+        CurrentAppender?.ErrorHandler.Error($"Unable to acquire lock on file {filename}. {e.Message}");
       }
     }
 
@@ -671,7 +666,7 @@ public class FileAppender : TextWriterAppender
       else
       {
         CurrentAppender?.ErrorHandler.Error(
-            "Programming error, no mutex available to acquire lock! From here on things will be dangerous!");
+          "Programming error, no mutex available to acquire lock! From here on things will be dangerous!");
       }
 
       return _stream;
@@ -708,9 +703,9 @@ public class FileAppender : TextWriterAppender
           if (CurrentAppender.File is not null)
           {
             string mutexFriendlyFilename = CurrentAppender.File
-                .Replace("\\", "_")
-                .Replace(":", "_")
-                .Replace("/", "_");
+              .Replace("\\", "_")
+              .Replace(":", "_")
+              .Replace("/", "_");
 
             _mutex = new Mutex(false, mutexFriendlyFilename);
           }
@@ -777,11 +772,9 @@ public class FileAppender : TextWriterAppender
         // no lock
         _stream = CreateStream(filename, append, FileShare.ReadWrite);
       }
-      catch (Exception e1)
+      catch (Exception e) when (!e.IsFatal())
       {
-        CurrentAppender?.ErrorHandler.Error(
-            $"Unable to acquire lock on file {filename}. {e1.Message}"
-        );
+        CurrentAppender?.ErrorHandler.Error($"Unable to acquire lock on file {filename}. {e.Message}");
       }
     }
 
@@ -852,7 +845,9 @@ public class FileAppender : TextWriterAppender
   /// Specify default locking model
   /// </summary>
   /// <typeparam name="TLockingModel">Type of LockingModel</typeparam>
-  public static void SetDefaultLockingModelType<TLockingModel>() where TLockingModel : LockingModelBase => _defaultLockingModelType = typeof(TLockingModel);
+  public static void SetDefaultLockingModelType<TLockingModel>() 
+    where TLockingModel : LockingModelBase 
+    => _defaultLockingModelType = typeof(TLockingModel);
 
   /// <summary>
   /// Gets or sets the path to the file that logging will be written to.
@@ -1183,7 +1178,7 @@ public class FileAppender : TextWriterAppender
     {
       OpenFile(fileName, append);
     }
-    catch (Exception e)
+    catch (Exception e) when (!e.IsFatal())
     {
       ErrorHandler.Error($"OpenFile({fileName},{append}) call failed.", e, ErrorCode.FileOpenFailure);
     }

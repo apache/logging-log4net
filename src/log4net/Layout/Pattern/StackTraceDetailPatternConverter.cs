@@ -41,7 +41,7 @@ internal sealed class StackTraceDetailPatternConverter : StackTracePatternConver
     {
       string param = "";
       string[] names = method.Parameters;
-      StringBuilder sb = new StringBuilder();
+      StringBuilder sb = new();
       if (names is not null && names.GetUpperBound(0) > 0)
       {
         for (int i = 0; i <= names.GetUpperBound(0); i++)
@@ -58,9 +58,9 @@ internal sealed class StackTraceDetailPatternConverter : StackTracePatternConver
 
       returnValue = base.GetMethodInformation(method) + "(" + param + ")";
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "An exception ocurred while retreiving method information.", ex);
+      LogLog.Error(_declaringType, "An exception ocurred while retreiving method information.", e);
     }
 
     return returnValue;

@@ -384,6 +384,7 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
   /// </remarks>
   protected override void Append(LoggingEvent loggingEvent)
   {
+    loggingEvent.EnsureNotNull();
     // If the buffer size is set to 1 or less then the buffer will be
     // sent immediately because there is not enough space in the buffer
     // to buffer up more than 1 event. Therefore as a special case

@@ -19,6 +19,7 @@
 
 using System.Collections.Generic;
 using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Appender;
 
@@ -90,7 +91,7 @@ public class MemoryAppender : AppenderSkeleton
     // Because we are caching the LoggingEvent beyond the
     // lifetime of the Append() method we must fix any
     // volatile data in the event.
-    loggingEvent.Fix = Fix;
+    loggingEvent.EnsureNotNull().Fix = Fix;
 
     lock (_syncRoot)
     {

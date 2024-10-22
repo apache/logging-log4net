@@ -333,7 +333,7 @@ public class LocalSyslogAppender : AppenderSkeleton
   [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
   protected override void Append(LoggingEvent loggingEvent)
   {
-    int priority = GeneratePriority(Facility, GetSeverity(loggingEvent.Level));
+    int priority = GeneratePriority(Facility, GetSeverity(loggingEvent.EnsureNotNull().Level));
     string message = RenderLoggingEvent(loggingEvent);
 
     // Call the local libc syslog method

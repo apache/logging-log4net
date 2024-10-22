@@ -68,9 +68,9 @@ internal sealed class UtcDatePatternConverter : DatePatternConverter
     {
       m_dateFormatter!.FormatDate(loggingEvent.TimeStampUtc, writer);
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Error occurred while converting date.", ex);
+      LogLog.Error(_declaringType, "Error occurred while converting date.", e);
     }
   }
 

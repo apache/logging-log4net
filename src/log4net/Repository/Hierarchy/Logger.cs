@@ -372,9 +372,9 @@ public abstract class Logger : IAppenderAttachable, ILogger
         ForcedLog(callerStackBoundaryDeclaringType ?? _declaringType, level, message, exception);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -403,9 +403,9 @@ public abstract class Logger : IAppenderAttachable, ILogger
         }
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -435,9 +435,9 @@ public abstract class Logger : IAppenderAttachable, ILogger
         return level >= EffectiveLevel;
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
     return false;
   }

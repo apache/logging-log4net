@@ -6,10 +6,17 @@
     <LangVersion>latest</LangVersion>
     <Nullable>Enable</Nullable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
+    <AnalysisLevel>8</AnalysisLevel>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+    <_SkipUpgradeNetAnalyzersNuGetWarning>true</_SkipUpgradeNetAnalyzersNuGetWarning>
+    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
   </PropertyGroup>
   <PropertyGroup Label="Package Versions">
     <SystemConfigurationConfigurationManagerPackageVersion>4.5.0</SystemConfigurationConfigurationManagerPackageVersion>
     <MicrosoftSourceLinkGitHubPackageVersion>8.0.0</MicrosoftSourceLinkGitHubPackageVersion>
+    <!-- Analyzer packages -->
+    <MicrosoftNetAnalyzersPackageVersion>8.0.0</MicrosoftNetAnalyzersPackageVersion>
     <!-- Test Packages -->
     <MicrosoftNetTestSdkPackageVersion>17.11.1</MicrosoftNetTestSdkPackageVersion>
     <NUnitAnalyzersPackageVersion>4.3.0</NUnitAnalyzersPackageVersion>
@@ -17,4 +24,7 @@
     <NUnit3TestAdapterPackageVersion>4.6.0</NUnit3TestAdapterPackageVersion>
     <QuackersTestLoggerPackageVersion>1.0.25</QuackersTestLoggerPackageVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <GlobalAnalyzerConfigFiles Include="$(MSBuildThisFileDirectory)\log4net.globalconfig" />
+  </ItemGroup>
 </Project>

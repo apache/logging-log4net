@@ -184,7 +184,7 @@ public class TextWriterAppender : AppenderSkeleton
     {
       return;
     }
-
+    loggingEvents.EnsureNotNull();
     foreach (LoggingEvent loggingEvent in loggingEvents)
     {
       RenderLoggingEvent(QuietWriter, loggingEvent);
@@ -265,7 +265,7 @@ public class TextWriterAppender : AppenderSkeleton
       {
         QuietWriter.Close();
       }
-      catch (Exception e)
+      catch (Exception e) when (!e.IsFatal())
       {
         ErrorHandler.Error($"Could not close writer [{QuietWriter}]", e);
         // do need to invoke an error handler

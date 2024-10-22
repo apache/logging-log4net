@@ -125,7 +125,7 @@ public static class SystemInfo
   /// <summary>
   /// Gets the ID of the current thread.
   /// </summary>
-  public static int CurrentThreadId => System.Threading.Thread.CurrentThread.ManagedThreadId;
+  public static int CurrentThreadId => Environment.CurrentManagedThreadId;
 
   /// <summary>
   /// Gets the host name or machine name for the current machine.
@@ -160,9 +160,9 @@ public static class SystemInfo
           // You must have Unrestricted DnsPermission to access resource
           LogLog.Debug(_declaringType, "Security exception occurred while getting the dns hostname. Error Ignored.");
         }
-        catch (Exception ex)
+        catch (Exception e) when (!e.IsFatal())
         {
-          LogLog.Debug(_declaringType, "Some other exception occurred while getting the dns hostname. Error Ignored.", ex);
+          LogLog.Debug(_declaringType, "Some other exception occurred while getting the dns hostname. Error Ignored.", e);
         }
 
         // Get the NETBIOS machine name of the current machine
@@ -264,7 +264,7 @@ public static class SystemInfo
   /// will be set per AppDomain.
   /// </para>
   /// </remarks>
-  public static DateTime ProcessStartTimeUtc => _sProcessStartTimeUtc;
+  public static DateTime ProcessStartTimeUtc { get; } = DateTime.UtcNow;
 
   /// <summary>
   /// Text to output when a <c>null</c> is encountered.
@@ -582,7 +582,7 @@ public static class SystemInfo
         return true;
       }
     }
-    catch
+    catch (Exception e) when (!e.IsFatal())
     {
       // Ignore exception, just return false
     }
@@ -614,7 +614,7 @@ public static class SystemInfo
         return true;
       }
     }
-    catch
+    catch (Exception e) when (!e.IsFatal())
     {
       // Ignore exception, just return false
     }
@@ -646,7 +646,7 @@ public static class SystemInfo
         return true;
       }
     }
-    catch
+    catch (Exception e) when (!e.IsFatal())
     {
       // Ignore exception, just return false
     }
@@ -665,10 +665,10 @@ public static class SystemInfo
     {
       return ConfigurationManager.AppSettings[key];
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
       // If an exception is thrown here then it looks like the config file does not parse correctly.
-      LogLog.Error(_declaringType, "Exception while reading ConfigurationSettings. Check your .config file is well formed XML.", ex);
+      LogLog.Error(_declaringType, "Exception while reading ConfigurationSettings. Check your .config file is well formed XML.", e);
     }
     return null;
   }
@@ -699,13 +699,13 @@ public static class SystemInfo
       string applicationBaseDirectory = ApplicationBaseDirectory;
 
       // applicationBaseDirectory may be a URI not a local file path
-      Uri applicationBaseDirectoryUri = new Uri(applicationBaseDirectory);
+      Uri applicationBaseDirectoryUri = new(applicationBaseDirectory);
       if (applicationBaseDirectoryUri.IsFile)
       {
         baseDirectory = applicationBaseDirectoryUri.LocalPath;
       }
     }
-    catch
+    catch (Exception e) when (!e.IsFatal())
     {
       // Ignore URI exceptions & SecurityExceptions from SystemInfo.ApplicationBaseDirectory
     }
@@ -727,10 +727,7 @@ public static class SystemInfo
   /// The new Hashtable instance uses the default load factor, the CaseInsensitiveHashCodeProvider, and the CaseInsensitiveComparer.
   /// </para>
   /// </remarks>
-  public static Hashtable CreateCaseInsensitiveHashtable()
-  {
-    return new Hashtable(StringComparer.OrdinalIgnoreCase);
-  }
+  public static Hashtable CreateCaseInsensitiveHashtable() => new(StringComparer.OrdinalIgnoreCase);
 
   /// <summary>
   /// Tests two strings for equality, the ignoring case.
@@ -744,10 +741,8 @@ public static class SystemInfo
   /// <param name="a">The one string.</param>
   /// <param name="b">The other string.</param>
   /// <returns><c>true</c> if the strings are equal, <c>false</c> otherwise.</returns>
-  public static bool EqualsIgnoringCase(string? a, string? b)
-  {
-    return string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
-  }
+  public static bool EqualsIgnoringCase(string? a, string? b) 
+    => string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
 
   /// <summary>
   /// The fully qualified type of the SystemInfo class.
@@ -767,9 +762,4 @@ public static class SystemInfo
   /// Cache the application friendly name
   /// </summary>
   private static string? _sAppFriendlyName;
-
-  /// <summary>
-  /// Start time for the current process.
-  /// </summary>
-  private static DateTime _sProcessStartTimeUtc = DateTime.UtcNow;
 }

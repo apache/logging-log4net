@@ -197,9 +197,9 @@ public static class ConverterRegistry
         // Create the type converter
         return Activator.CreateInstance(converterType);
       }
-      catch (Exception ex)
+      catch (Exception e) when (!e.IsFatal())
       {
-        LogLog.Error(_declaringType, $"Cannot CreateConverterInstance of type [{converterType.FullName}], exception in call to Activator.CreateInstance", ex);
+        LogLog.Error(_declaringType, $"Cannot CreateConverterInstance of type [{converterType.FullName}], exception in call to Activator.CreateInstance", e);
       }
     }
     else

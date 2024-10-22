@@ -278,7 +278,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
           Append(loggingEvent);
         }
       }
-      catch (Exception ex)
+      catch (Exception ex) when (!ex.IsFatal())
       {
         ErrorHandler.Error("Failed in DoAppend", ex);
       }
@@ -370,9 +370,9 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
           Append(filteredEvents);
         }
       }
-      catch (Exception ex)
+      catch (Exception e) when (!e.IsFatal())
       {
-        ErrorHandler.Error("Failed in Bulk DoAppend", ex);
+        ErrorHandler.Error("Failed in Bulk DoAppend", e);
       }
       finally
       {

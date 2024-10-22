@@ -22,7 +22,7 @@ using System;
 namespace log4net.Util;
 
 /// <summary>
-/// Implementation of Stacks collection for the <see cref="log4net.LogicalThreadContext"/>
+/// Implementation of Stacks collection for the <see cref="LogicalThreadContext"/>
 /// </summary>
 /// <author>Nicko Cadell</author>
 public sealed class LogicalThreadContextStacks
@@ -63,7 +63,7 @@ public sealed class LogicalThreadContextStacks
       if (propertyValue is null)
       {
         // Stack does not exist, create
-        stack = new LogicalThreadContextStack(key, RegisterNew);
+        stack = new(key, RegisterNew);
         _properties[key] = stack;
       }
       else
@@ -79,13 +79,12 @@ public sealed class LogicalThreadContextStacks
           {
             propertyValueString = propertyValue.ToString();
           }
-          catch
-          {
-          }
+          catch (Exception e) when (!e.IsFatal())
+          { }
 
           LogLog.Error(_declaringType, $"ThreadContextStacks: Request for stack named [{key}] failed because a property with the same name exists which is a [{propertyValue.GetType().Name}] with value [{propertyValueString}]");
 
-          stack = new LogicalThreadContextStack(key, RegisterNew);
+          stack = new(key, RegisterNew);
         }
       }
 

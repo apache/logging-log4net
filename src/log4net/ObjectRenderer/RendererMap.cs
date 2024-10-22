@@ -105,10 +105,10 @@ public class RendererMap
         {
           Get(obj.GetType()).RenderObject(this, obj, writer);
         }
-        catch (Exception ex)
+        catch (Exception e) when (!e.IsFatal())
         {
           // Exception rendering the object
-          LogLog.Error(_declaringType, $"Exception while rendering object of type [{obj.GetType().FullName}]", ex);
+          LogLog.Error(_declaringType, $"Exception while rendering object of type [{obj.GetType().FullName}]", e);
 
           // return default message
           string objectTypeName = obj.GetType().FullName ?? string.Empty;
@@ -118,9 +118,9 @@ public class RendererMap
           string? exceptionText = null;
           try
           {
-            exceptionText = ex.ToString();
+            exceptionText = e.ToString();
           }
-          catch
+          catch (Exception inner) when (!inner.IsFatal())
           {
             // Ignore exception
           }

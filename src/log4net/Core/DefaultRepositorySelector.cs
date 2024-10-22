@@ -262,9 +262,9 @@ public class DefaultRepositorySelector : IRepositorySelector
               // Configure the repository using the assembly attributes
               ConfigureRepository(repositoryAssembly, rep);
             }
-            catch (Exception ex)
+            catch (Exception e) when (!e.IsFatal())
             {
-              LogLog.Error(_declaringType, $"Failed to configure repository [{actualRepositoryName}] from assembly attributes.", ex);
+              LogLog.Error(_declaringType, $"Failed to configure repository [{actualRepositoryName}] from assembly attributes.", e);
             }
           }
         }
@@ -279,9 +279,9 @@ public class DefaultRepositorySelector : IRepositorySelector
               // Look for plugins defined on the assembly
               LoadPlugins(repositoryAssembly, rep);
             }
-            catch (Exception ex)
+            catch (Exception e) when (!e.IsFatal())
             {
-              LogLog.Error(_declaringType, $"Failed to configure repository [{actualRepositoryName}] from assembly attributes.", ex);
+              LogLog.Error(_declaringType, $"Failed to configure repository [{actualRepositoryName}] from assembly attributes.", e);
             }
           }
         }
@@ -491,7 +491,7 @@ public class DefaultRepositorySelector : IRepositorySelector
     {
       LogLog.Debug(_declaringType, $"Assembly [{assembly.FullName}] Loaded From [{SystemInfo.AssemblyLocationInfo(assembly)}]");
     }
-    catch
+    catch (Exception e) when (!e.IsFatal())
     {
       // Ignore exception from debug call
     }
@@ -534,9 +534,9 @@ public class DefaultRepositorySelector : IRepositorySelector
         }
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Unhandled exception in GetInfoForAssembly", ex);
+      LogLog.Error(_declaringType, "Unhandled exception in GetInfoForAssembly", e);
     }
   }
 
@@ -570,9 +570,9 @@ public class DefaultRepositorySelector : IRepositorySelector
         {
           configAttr.Configure(assembly, repository);
         }
-        catch (Exception ex)
+        catch (Exception e) when (!e.IsFatal())
         {
-          LogLog.Error(_declaringType, $"Exception calling [{configAttr.GetType().FullName}] .Configure method.", ex);
+          LogLog.Error(_declaringType, $"Exception calling [{configAttr.GetType().FullName}] .Configure method.", e);
         }
       }
     }
@@ -591,9 +591,9 @@ public class DefaultRepositorySelector : IRepositorySelector
         {
           applicationBaseDirectory = SystemInfo.ApplicationBaseDirectory;
         }
-        catch (Exception ex)
+        catch (Exception e) when (!e.IsFatal())
         {
-          LogLog.Warn(_declaringType, $"Exception getting ApplicationBaseDirectory. appSettings log4net.Config path [{repositoryConfigFile}] will be treated as an absolute URI", ex);
+          LogLog.Warn(_declaringType, $"Exception getting ApplicationBaseDirectory. appSettings log4net.Config path [{repositoryConfigFile}] will be treated as an absolute URI", e);
         }
 
         string repositoryConfigFilePath = repositoryConfigFile;
@@ -614,9 +614,9 @@ public class DefaultRepositorySelector : IRepositorySelector
           {
             repositoryConfigFileInfo = new FileInfo(repositoryConfigFilePath);
           }
-          catch (Exception ex)
+          catch (Exception e) when (!e.IsFatal())
           {
-            LogLog.Error(_declaringType, $"DefaultRepositorySelector: Exception while parsing log4net.Config file physical path [{repositoryConfigFilePath}]", ex);
+            LogLog.Error(_declaringType, $"DefaultRepositorySelector: Exception while parsing log4net.Config file physical path [{repositoryConfigFilePath}]", e);
           }
 
           if (repositoryConfigFileInfo is not null)
@@ -627,9 +627,9 @@ public class DefaultRepositorySelector : IRepositorySelector
 
               XmlConfigurator.ConfigureAndWatch(repository, repositoryConfigFileInfo);
             }
-            catch (Exception ex)
+            catch (Exception e) when (!e.IsFatal())
             {
-              LogLog.Error(_declaringType, $"DefaultRepositorySelector: Exception calling XmlConfigurator.ConfigureAndWatch method with ConfigFilePath [{repositoryConfigFilePath}]", ex);
+              LogLog.Error(_declaringType, $"DefaultRepositorySelector: Exception calling XmlConfigurator.ConfigureAndWatch method with ConfigFilePath [{repositoryConfigFilePath}]", e);
             }
           }
         }
@@ -642,9 +642,9 @@ public class DefaultRepositorySelector : IRepositorySelector
           {
             repositoryConfigUri = new Uri(repositoryConfigFilePath);
           }
-          catch (Exception ex)
+          catch (Exception e) when (!e.IsFatal())
           {
-            LogLog.Error(_declaringType, $"Exception while parsing log4net.Config file path [{repositoryConfigFile}]", ex);
+            LogLog.Error(_declaringType, $"Exception while parsing log4net.Config file path [{repositoryConfigFile}]", e);
           }
 
           if (repositoryConfigUri is not null)
@@ -656,9 +656,9 @@ public class DefaultRepositorySelector : IRepositorySelector
               // TODO: Support other types of configurator
               XmlConfigurator.Configure(repository, repositoryConfigUri);
             }
-            catch (Exception ex)
+            catch (Exception e) when (!e.IsFatal())
             {
-              LogLog.Error(_declaringType, $"Exception calling XmlConfigurator.Configure method with ConfigUri [{repositoryConfigUri}]", ex);
+              LogLog.Error(_declaringType, $"Exception calling XmlConfigurator.Configure method with ConfigUri [{repositoryConfigUri}]", e);
             }
           }
         }
@@ -688,9 +688,9 @@ public class DefaultRepositorySelector : IRepositorySelector
         // Create the plugin and add it to the repository
         repository.PluginMap.Add(configAttr.CreatePlugin());
       }
-      catch (Exception ex)
+      catch (Exception e) when (!e.IsFatal())
       {
-        LogLog.Error(_declaringType, $"Failed to create plugin. Attribute [{configAttr}]", ex);
+        LogLog.Error(_declaringType, $"Failed to create plugin. Attribute [{configAttr}]", e);
       }
     }
   }
@@ -717,9 +717,9 @@ public class DefaultRepositorySelector : IRepositorySelector
       {
         AliasRepository(configAttr.Name, repository);
       }
-      catch (Exception ex)
+      catch (Exception e) when (!e.IsFatal())
       {
-        LogLog.Error(_declaringType, $"Failed to alias repository [{configAttr.Name}]", ex);
+        LogLog.Error(_declaringType, $"Failed to alias repository [{configAttr.Name}]", e);
       }
     }
   }

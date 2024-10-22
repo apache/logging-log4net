@@ -82,9 +82,9 @@ public class AppenderAttachedImpl : IAppenderAttachable
       {
         appender.DoAppend(loggingEvent);
       }
-      catch (Exception ex)
+      catch (Exception e) when (!e.IsFatal())
       {
-        LogLog.Error(_declaringType, $"Failed to append to appender [{appender.Name}]", ex);
+        LogLog.Error(_declaringType, $"Failed to append to appender [{appender.Name}]", e);
       }
     }
     return _appenderList.Count;
@@ -131,9 +131,9 @@ public class AppenderAttachedImpl : IAppenderAttachable
       {
         CallAppend(appender, loggingEvents);
       }
-      catch (Exception ex)
+      catch (Exception e) when (!e.IsFatal())
       {
-        LogLog.Error(_declaringType, $"Failed to append to appender [{appender.Name}]", ex);
+        LogLog.Error(_declaringType, $"Failed to append to appender [{appender.Name}]", e);
       }
     }
     return _appenderList.Count;
@@ -267,9 +267,9 @@ public class AppenderAttachedImpl : IAppenderAttachable
         {
           appender.Close();
         }
-        catch (Exception ex)
+        catch (Exception e) when (!e.IsFatal())
         {
-          LogLog.Error(_declaringType, $"Failed to Close appender [{appender.Name}]", ex);
+          LogLog.Error(_declaringType, $"Failed to Close appender [{appender.Name}]", e);
         }
       }
       _appenderList = null;

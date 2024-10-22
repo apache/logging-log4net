@@ -624,7 +624,7 @@ public partial class RollingFileAppender : FileAppender
   {
     if (!StaticLogFileName)
     {
-      fileName = fileName.Trim();
+      fileName = fileName.EnsureNotNull().Trim();
 
       if (_rollDate)
       {
@@ -669,7 +669,9 @@ public partial class RollingFileAppender : FileAppender
   private string GetWildcardPatternForFile(string baseFileName)
   {
     if (PreserveLogFileNameExtension)
+    {
       return $"{Path.GetFileNameWithoutExtension(baseFileName)}*{Path.GetExtension(baseFileName)}";
+    }
     return $"{baseFileName}*";
   }
 
@@ -716,9 +718,12 @@ public partial class RollingFileAppender : FileAppender
       {
         DateTime last;
         using (SecurityContext?.Impersonate(this))
+        {
           last = DateTimeStrategy is UniversalDateTime
             ? System.IO.File.GetLastWriteTimeUtc(_baseFileName)
             : System.IO.File.GetLastWriteTime(_baseFileName);
+        }
+
         LogLog.Debug(_declaringType, $"[{last.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo)}] vs. [{_now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo)}]");
 
         if (!last.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo).Equals(_now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo)))
@@ -752,19 +757,27 @@ public partial class RollingFileAppender : FileAppender
 
     // If file exists and we are not appending then roll it out of the way
     if (AppendToFile)
+    {
       return;
+    }
 
     bool fileExists;
     string fileName = GetNextOutputFileName(_baseFileName!);
 
     using (SecurityContext?.Impersonate(this))
+    {
       fileExists = System.IO.File.Exists(fileName);
+    }
 
     if (!fileExists)
+    {
       return;
+    }
 
     if (MaxSizeRollBackups == 0)
+    {
       LogLog.Debug(_declaringType, $"Output file [{fileName}] already exists. MaxSizeRollBackups is 0; cannot roll. Overwriting existing file.");
+    }
     else
     {
       LogLog.Debug(_declaringType, $"Output file [{fileName}] already exists. Not appending to file. Rolling existing file out of the way.");
@@ -786,9 +799,14 @@ public partial class RollingFileAppender : FileAppender
     curFileName = curFileName.ToLower();
     baseFile = baseFile.ToLower();
     if (curFileName.StartsWith(Path.GetFileNameWithoutExtension(baseFile)) == false)
+    {
       return; // This is not a log file, so ignore
+    }
+
     if (curFileName.Equals(baseFile))
+    {
       return; // Base log file is not an incremented logfile (.1 or .2, etc.)
+    }
 
     // Only look for files in the current roll point
     if (_rollDate && !StaticLogFileName)
@@ -894,7 +912,9 @@ public partial class RollingFileAppender : FileAppender
     var baseFileLower = baseFile.ToLowerInvariant();
 
     foreach (string curFileName in arrayFiles)
+    {
       InitializeFromOneFile(baseFileLower, curFileName.ToLowerInvariant());
+    }
   }
 
   /// <summary>
@@ -1021,9 +1041,11 @@ public partial class RollingFileAppender : FileAppender
   /// <returns></returns>
   private string CombinePath(string path1, string path2)
   {
-    var extension = Path.GetExtension(path1);
+    string extension = Path.GetExtension(path1);
     if (PreserveLogFileNameExtension && extension.Length > 0)
+    {
       return Path.Combine(Path.GetDirectoryName(path1) ?? string.Empty, Path.GetFileNameWithoutExtension(path1) + path2 + extension);
+    }
     return path1 + path2;
   }
 
@@ -1116,9 +1138,9 @@ public partial class RollingFileAppender : FileAppender
           System.IO.File.Move(fromFile, toFile);
         }
       }
-      catch (Exception moveEx)
+      catch (Exception e) when (!e.IsFatal())
       {
-        ErrorHandler.Error($"Exception while rolling file [{fromFile}] -> [{toFile}]", moveEx, ErrorCode.GenericFailure);
+        ErrorHandler.Error($"Exception while rolling file [{fromFile}] -> [{toFile}]", e, ErrorCode.GenericFailure);
       }
     }
     else
@@ -1176,9 +1198,9 @@ public partial class RollingFileAppender : FileAppender
         }
         fileToDelete = tempFileName;
       }
-      catch (Exception moveEx)
+      catch (Exception e) when (!e.IsFatal())
       {
-        LogLog.Debug(_declaringType, $"Exception while moving file to be deleted [{fileName}] -> [{tempFileName}]", moveEx);
+        LogLog.Debug(_declaringType, $"Exception while moving file to be deleted [{fileName}] -> [{tempFileName}]", e);
       }
 
       // Try to delete the file (either the original or the moved file)
@@ -1190,18 +1212,18 @@ public partial class RollingFileAppender : FileAppender
         }
         LogLog.Debug(_declaringType, $"Deleted file [{fileName}]");
       }
-      catch (Exception deleteEx)
+      catch (Exception e) when (!e.IsFatal())
       {
         if (fileToDelete == fileName)
         {
           // Unable to move or delete the file
-          ErrorHandler.Error($"Exception while deleting file [{fileToDelete}]", deleteEx, ErrorCode.GenericFailure);
+          ErrorHandler.Error($"Exception while deleting file [{fileToDelete}]", e, ErrorCode.GenericFailure);
         }
         else
         {
           // Moved the file, but the delete failed. File is probably locked.
           // The file should automatically be deleted when the lock is released.
-          LogLog.Debug(_declaringType, $"Exception while deleting temp file [{fileToDelete}]", deleteEx);
+          LogLog.Debug(_declaringType, $"Exception while deleting temp file [{fileToDelete}]", e);
         }
       }
     }
@@ -1497,5 +1519,5 @@ public partial class RollingFileAppender : FileAppender
   /// <summary>
   /// The 1st of January 1970 in UTC
   /// </summary>
-  private static readonly DateTime _sDate1970 = new DateTime(1970, 1, 1);
+  private static readonly DateTime _sDate1970 = new(1970, 1, 1);
 }

@@ -290,9 +290,9 @@ public sealed class PatternParser
       {
         pc = Activator.CreateInstance(converterInfo.Type.EnsureNotNull()).EnsureIs<PatternConverter>();
       }
-      catch (Exception createInstanceEx)
+      catch (Exception e) when (!e.IsFatal())
       {
-        LogLog.Error(_declaringType, $"Failed to create instance of Type [{converterInfo.Type?.FullName}] using default constructor. Exception: {createInstanceEx}");
+        LogLog.Error(_declaringType, $"Failed to create instance of Type [{converterInfo.Type?.FullName}] using default constructor. Exception: {e}");
         return;
       }
 

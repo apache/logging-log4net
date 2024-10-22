@@ -217,7 +217,7 @@ public class AnsiColorTerminalAppender : AppenderSkeleton
     get => _writeToErrorStream ? ConsoleError : ConsoleOut;
     set
     {
-      string trimmedTargetName = value.Trim();
+      string? trimmedTargetName = value?.Trim();
       _writeToErrorStream = SystemInfo.EqualsIgnoringCase(ConsoleError, trimmedTargetName);
     }
   }
@@ -272,7 +272,7 @@ public class AnsiColorTerminalAppender : AppenderSkeleton
     }
     else
     {
-      if (loggingMessage[0] == '\n' || loggingMessage[0] == '\r')
+      if (loggingMessage[0] is '\n' or '\r')
       {
         loggingMessage = PostEventCodes + loggingMessage;
       }

@@ -89,7 +89,7 @@ public static class BasicConfigurator
   /// </remarks>
   public static ICollection Configure(params IAppender[] appenders)
   {
-    var configurationMessages = new List<LogLog>();
+    List<LogLog> configurationMessages = new();
 
     ILoggerRepository repository = LogManager.GetRepository(Assembly.GetCallingAssembly());
 
@@ -118,16 +118,17 @@ public static class BasicConfigurator
   /// </remarks>
   public static ICollection Configure(ILoggerRepository repository)
   {
-    var configurationMessages = new List<LogLog>();
+    repository.EnsureNotNull();
+    List<LogLog> configurationMessages = [];
 
     using (new LogLog.LogReceivedAdapter(configurationMessages))
     {
       // Create the layout
-      var layout = new PatternLayout { ConversionPattern = PatternLayout.DetailConversionPattern };
+      PatternLayout layout = new() { ConversionPattern = PatternLayout.DetailConversionPattern };
       layout.ActivateOptions();
 
       // Create the appender
-      var appender = new ConsoleAppender { Layout = layout };
+      ConsoleAppender appender = new() { Layout = layout };
       appender.ActivateOptions();
 
       InternalConfigure(repository, appender);
@@ -150,7 +151,8 @@ public static class BasicConfigurator
   /// </remarks>
   public static ICollection Configure(ILoggerRepository repository, params IAppender[] appenders)
   {
-    var configurationMessages = new List<LogLog>();
+    repository.EnsureNotNull();
+    List<LogLog> configurationMessages = new();
 
     using (new LogLog.LogReceivedAdapter(configurationMessages))
     {

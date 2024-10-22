@@ -138,13 +138,13 @@ public sealed class LogLog
       QuietMode = OptionConverter.ToBoolean(SystemInfo.GetAppSetting("log4net.Internal.Quiet"), false);
       EmitInternalMessages = OptionConverter.ToBoolean(SystemInfo.GetAppSetting("log4net.Internal.Emit"), true);
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
       // If an exception is thrown here then it looks like the config file does not
       // parse correctly.
       //
       // We will leave debug OFF and print an Error message
-      Error(typeof(LogLog), "Exception while reading ConfigurationSettings. Check your .config file is well formed XML.", ex);
+      Error(typeof(LogLog), "Exception while reading ConfigurationSettings. Check your .config file is well formed XML.", e);
     }
   }
 
@@ -459,7 +459,7 @@ public sealed class LogLog
       Console.Out.WriteLine(message);
       Trace.WriteLine(message);
     }
-    catch
+    catch (Exception e) when (!e.IsFatal())
     {
       // Ignore exception, what else can we do? Not really a good idea to propagate back to the caller
     }
@@ -488,7 +488,7 @@ public sealed class LogLog
       Console.Error.WriteLine(message);
       Trace.WriteLine(message);
     }
-    catch
+    catch (Exception e) when (!e.IsFatal())
     {
       // Ignore exception, what else can we do? Not really a good idea to propagate back to the caller
     }
@@ -530,13 +530,8 @@ public sealed class LogLog
     /// </summary>
     public List<LogLog> Items { get; }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public void Dispose()
-    {
-      LogReceived -= _handler;
-    }
+    /// <inheritdoc/>
+    public void Dispose() => LogReceived -= _handler;
   }
 }
 

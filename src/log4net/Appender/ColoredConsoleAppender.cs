@@ -165,7 +165,7 @@ public class ColoredConsoleAppender : AppenderSkeleton
   public virtual string Target
   {
     get => _writeToErrorStream ? ConsoleError : ConsoleOut;
-    set => _writeToErrorStream = StringComparer.OrdinalIgnoreCase.Equals(ConsoleError, value.Trim());
+    set => _writeToErrorStream = StringComparer.OrdinalIgnoreCase.Equals(ConsoleError, value?.Trim());
   }
 
   /// <summary>

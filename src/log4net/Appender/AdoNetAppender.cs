@@ -398,14 +398,14 @@ public class AdoNetAppender : BufferingAppenderSkeleton
           // commit transaction
           dbTran.Commit();
         }
-        catch (Exception ex)
+        catch (Exception ex) when (!ex.IsFatal())
         {
           // rollback the transaction
           try
           {
             dbTran.Rollback();
           }
-          catch (Exception)
+          catch (Exception inner) when (!inner.IsFatal())
           {
             // Ignore exception
           }
@@ -665,7 +665,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
         Connection.Open();
       }
     }
-    catch (Exception e)
+    catch (Exception e) when (!e.IsFatal())
     {
       // Sadly, your connection string is bad.
       ErrorHandler.Error($"Could not open database connection [{resolvedConnectionString}]. Connection string context [{connectionStringContext}].", e);
@@ -688,7 +688,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
       {
         Connection.Close();
       }
-      catch (Exception ex)
+      catch (Exception ex) when (!ex.IsFatal())
       {
         LogLog.Warn(_declaringType, "Exception while disposing cached connection object", ex);
       }
@@ -707,6 +707,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   // ReSharper disable once InconsistentNaming
   // ReSharper disable once FieldCanBeMadeReadOnly.Global
   // ReSharper disable once MemberCanBePrivate.Global
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1002:Do not expose generic lists")]
   protected List<AdoNetAppenderParameter> m_parameters = [];
 
   /// <summary>

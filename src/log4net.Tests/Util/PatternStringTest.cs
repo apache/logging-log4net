@@ -88,6 +88,7 @@ public class PatternStringTest : MarshalByRefObject
 
   private void TestAppSettingPathConverterInConfiguredDomain()
   {
+    _ = this; // force instance method for AppDomain-Call
     string pattern = "%appSetting{TestKey}";
     PatternString patternString = new(pattern);
     string evaluatedPattern = patternString.Format();

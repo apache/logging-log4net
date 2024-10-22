@@ -88,6 +88,7 @@ internal class DatePatternConverter : PatternLayoutConverter, IOptionHandler
   /// </summary>
   // ReSharper disable once InconsistentNaming
   // ReSharper disable once MemberCanBePrivate.Global
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles")]
   protected IDateFormatter? m_dateFormatter { get; set; }
 
   /// <summary>
@@ -128,7 +129,7 @@ internal class DatePatternConverter : PatternLayoutConverter, IOptionHandler
       {
         m_dateFormatter = new SimpleDateFormatter(dateFormatStr);
       }
-      catch (Exception e)
+      catch (Exception e) when (!e.IsFatal())
       {
         LogLog.Error(_declaringType, $"Could not instantiate SimpleDateFormatter with [{dateFormatStr}]", e);
         m_dateFormatter = new Iso8601DateFormatter();
@@ -156,9 +157,9 @@ internal class DatePatternConverter : PatternLayoutConverter, IOptionHandler
     {
       m_dateFormatter!.FormatDate(loggingEvent.TimeStamp, writer);
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Error occurred while converting date.", ex);
+      LogLog.Error(_declaringType, "Error occurred while converting date.", e);
     }
   }
 

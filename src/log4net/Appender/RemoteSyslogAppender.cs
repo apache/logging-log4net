@@ -372,12 +372,11 @@ public class RemoteSyslogAppender : UdpAppender
         Client.SendAsync(buffer, buffer.Length, RemoteEndPoint).Wait();
       }
     }
-    catch (Exception e)
+    catch (Exception e) when (!e.IsFatal())
     {
       ErrorHandler.Error(
         $"Unable to send logging event to remote syslog {RemoteAddress} on port {RemotePort}.",
-          e,
-          ErrorCode.WriteFailure);
+        e, ErrorCode.WriteFailure);
     }
   }
 
@@ -387,14 +386,17 @@ public class RemoteSyslogAppender : UdpAppender
   /// <param name="message">rendered message</param>
   /// <param name="characterIndex">index of the current character in the message</param>
   /// <param name="builder">buffer</param>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1045:Do not pass types by reference")]
   protected virtual void AppendMessage(string message, ref int characterIndex, StringBuilder builder)
   {
+    message.EnsureNotNull();
+    builder.EnsureNotNull();
     for (; characterIndex < message.Length; characterIndex++)
     {
       char c = message[characterIndex];
 
       // Accept only visible ASCII characters and space. See RFC 3164 section 4.1.3
-      if ((c >= ' ') && (c <= 126))
+      if (c is >= ' ' and <= (char)126)
       {
         builder.Append(c);
       }
@@ -488,12 +490,12 @@ public class RemoteSyslogAppender : UdpAppender
   /// </remarks>
   public static int GeneratePriority(SyslogFacility facility, SyslogSeverity severity)
   {
-    if (facility < SyslogFacility.Kernel || facility > SyslogFacility.Local7)
+    if (facility is < SyslogFacility.Kernel or > SyslogFacility.Local7)
     {
       throw new ArgumentException($"{nameof(SyslogFacility)} out of range", nameof(facility));
     }
 
-    if (severity < SyslogSeverity.Emergency || severity > SyslogSeverity.Debug)
+    if (severity is < SyslogSeverity.Emergency or > SyslogSeverity.Debug)
     {
       throw new ArgumentException($"{nameof(SyslogSeverity)} out of range", nameof(severity));
     }

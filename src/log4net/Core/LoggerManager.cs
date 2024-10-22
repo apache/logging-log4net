@@ -89,9 +89,9 @@ public static class LoggerManager
       {
         appRepositorySelectorType = SystemInfo.GetTypeFromString(appRepositorySelectorTypeName!, false, true);
       }
-      catch (Exception ex)
+      catch (Exception e) when (!e.IsFatal())
       {
-        LogLog.Error(_declaringType, $"Exception while resolving RepositorySelector Type [{appRepositorySelectorTypeName}]", ex);
+        LogLog.Error(_declaringType, $"Exception while resolving RepositorySelector Type [{appRepositorySelectorTypeName}]", e);
       }
 
       if (appRepositorySelectorType is not null)
@@ -102,9 +102,9 @@ public static class LoggerManager
         {
           appRepositorySelectorObj = Activator.CreateInstance(appRepositorySelectorType);
         }
-        catch (Exception ex)
+        catch (Exception e) when (!e.IsFatal())
         {
-          LogLog.Error(_declaringType, $"Exception while creating RepositorySelector [{appRepositorySelectorType.FullName}]", ex);
+          LogLog.Error(_declaringType, $"Exception while creating RepositorySelector [{appRepositorySelectorType.FullName}]", e);
         }
 
         if (appRepositorySelectorObj is IRepositorySelector sel)
@@ -528,9 +528,9 @@ public static class LoggerManager
     Assembly myAssembly = Assembly.GetExecutingAssembly();
     sb.Append("log4net assembly [").Append(myAssembly.FullName).Append("]. ");
     sb.Append("Loaded from [").Append(SystemInfo.AssemblyLocationInfo(myAssembly)).Append("]. ");
-    sb.Append("(.NET Runtime [").Append(Environment.Version).Append("]");
+    sb.Append("(.NET Runtime [").Append(Environment.Version).Append(']');
     sb.Append(" on ").Append(Environment.OSVersion);
-    sb.Append(")");
+    sb.Append(')');
     return sb.ToString();
   }
 

@@ -138,7 +138,7 @@ public class ManagedColoredConsoleAppender : AppenderSkeleton
     Console.ResetColor();
 
     // See if there is a specified lookup
-    if (_levelMapping.Lookup(loggingEvent.Level) is LevelColors levelColors)
+    if (_levelMapping.Lookup(loggingEvent.EnsureNotNull().Level) is LevelColors levelColors)
     {
       // If the backColor has been explicitly set
       if (levelColors.HasBackColor)

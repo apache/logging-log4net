@@ -85,9 +85,9 @@ public static class LogExtensions
         logger.Debug(callback());
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -115,9 +115,9 @@ public static class LogExtensions
         logger.Debug(callback(), exception);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -156,9 +156,9 @@ public static class LogExtensions
         logger.Debug(message);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -186,9 +186,9 @@ public static class LogExtensions
         logger.Debug(message, exception);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -221,9 +221,9 @@ public static class LogExtensions
         logger.DebugFormat(format, arg0);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -256,9 +256,9 @@ public static class LogExtensions
         logger.DebugFormat(format, args);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -292,9 +292,9 @@ public static class LogExtensions
         logger.DebugFormat(provider, format, args);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -328,9 +328,9 @@ public static class LogExtensions
         logger.DebugFormat(format, arg0, arg1);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -365,9 +365,9 @@ public static class LogExtensions
         logger.DebugFormat(format, arg0, arg1, arg2);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -405,9 +405,9 @@ public static class LogExtensions
         logger.Info(callback());
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -435,9 +435,9 @@ public static class LogExtensions
         logger.Info(callback(), exception);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -476,9 +476,9 @@ public static class LogExtensions
         logger.Info(message);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -506,9 +506,9 @@ public static class LogExtensions
         logger.Info(message, exception);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -541,9 +541,9 @@ public static class LogExtensions
         logger.InfoFormat(format, arg0);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -576,9 +576,9 @@ public static class LogExtensions
         logger.InfoFormat(format, args);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -612,9 +612,9 @@ public static class LogExtensions
         logger.InfoFormat(provider, format, args);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -648,9 +648,9 @@ public static class LogExtensions
         logger.InfoFormat(format, arg0, arg1);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -685,9 +685,9 @@ public static class LogExtensions
         logger.InfoFormat(format, arg0, arg1, arg2);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -725,9 +725,9 @@ public static class LogExtensions
         logger.Warn(callback());
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -755,9 +755,9 @@ public static class LogExtensions
         logger.Warn(callback(), exception);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -796,9 +796,9 @@ public static class LogExtensions
         logger.Warn(message);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -826,9 +826,9 @@ public static class LogExtensions
         logger.Warn(message, exception);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -861,9 +861,9 @@ public static class LogExtensions
         logger.WarnFormat(format, arg0);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -896,9 +896,9 @@ public static class LogExtensions
         logger.WarnFormat(format, args);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -932,9 +932,9 @@ public static class LogExtensions
         logger.WarnFormat(provider, format, args);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -968,9 +968,9 @@ public static class LogExtensions
         logger.WarnFormat(format, arg0, arg1);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -1005,9 +1005,9 @@ public static class LogExtensions
         logger.WarnFormat(format, arg0, arg1, arg2);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -1045,9 +1045,9 @@ public static class LogExtensions
         logger.Error(callback());
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -1075,9 +1075,9 @@ public static class LogExtensions
         logger.Error(callback(), exception);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -1116,9 +1116,9 @@ public static class LogExtensions
         logger.Error(message);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -1146,9 +1146,9 @@ public static class LogExtensions
         logger.Error(message, exception);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -1181,9 +1181,9 @@ public static class LogExtensions
         logger.ErrorFormat(format, arg0);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -1216,9 +1216,9 @@ public static class LogExtensions
         logger.ErrorFormat(format, args);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -1252,9 +1252,9 @@ public static class LogExtensions
         logger.ErrorFormat(provider, format, args);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -1288,9 +1288,9 @@ public static class LogExtensions
         logger.ErrorFormat(format, arg0, arg1);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -1325,9 +1325,9 @@ public static class LogExtensions
         logger.ErrorFormat(format, arg0, arg1, arg2);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -1365,9 +1365,9 @@ public static class LogExtensions
         logger.Fatal(callback());
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -1395,9 +1395,9 @@ public static class LogExtensions
         logger.Fatal(callback(), exception);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -1436,9 +1436,9 @@ public static class LogExtensions
         logger.Fatal(message);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -1466,9 +1466,9 @@ public static class LogExtensions
         logger.Fatal(message, exception);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -1501,9 +1501,9 @@ public static class LogExtensions
         logger.FatalFormat(format, arg0);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -1536,9 +1536,9 @@ public static class LogExtensions
         logger.FatalFormat(format, args);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -1572,9 +1572,9 @@ public static class LogExtensions
         logger.FatalFormat(provider, format, args);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -1608,9 +1608,9 @@ public static class LogExtensions
         logger.FatalFormat(format, arg0, arg1);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 
@@ -1645,9 +1645,9 @@ public static class LogExtensions
         logger.FatalFormat(format, arg0, arg1, arg2);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Exception while logging", ex);
+      LogLog.Error(_declaringType, "Exception while logging", e);
     }
   }
 }

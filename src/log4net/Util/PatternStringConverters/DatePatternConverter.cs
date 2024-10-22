@@ -126,7 +126,7 @@ internal class DatePatternConverter : PatternConverter, IOptionHandler
       {
         m_dateFormatter = new SimpleDateFormatter(dateFormatStr);
       }
-      catch (Exception e)
+      catch (Exception e) when (!e.IsFatal())
       {
         LogLog.Error(_declaringType, $"Could not instantiate SimpleDateFormatter with [{dateFormatStr}]", e);
         m_dateFormatter = new Iso8601DateFormatter();
@@ -154,9 +154,9 @@ internal class DatePatternConverter : PatternConverter, IOptionHandler
     {
       m_dateFormatter?.FormatDate(DateTime.Now, writer);
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Error occurred while converting date.", ex);
+      LogLog.Error(_declaringType, "Error occurred while converting date.", e);
     }
   }
 

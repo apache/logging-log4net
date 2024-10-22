@@ -23,6 +23,7 @@ using System.Net.Sockets;
 using System.Text;
 
 using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Appender;
 
@@ -363,12 +364,11 @@ public class UdpAppender : AppenderSkeleton
       byte[] buffer = Encoding.GetBytes(RenderLoggingEvent(loggingEvent).ToCharArray());
       Client.Send(buffer, buffer.Length, RemoteEndPoint);
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
       ErrorHandler.Error(
         $"Unable to send logging event to remote host {RemoteAddress} on port {RemotePort}.",
-        ex,
-        ErrorCode.WriteFailure);
+        e, ErrorCode.WriteFailure);
     }
   }
 
@@ -419,12 +419,11 @@ public class UdpAppender : AppenderSkeleton
         Client = new(LocalPort, RemoteAddress!.AddressFamily);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
       ErrorHandler.Error(
         $"Could not initialize the UdpClient connection on port {LocalPort}.",
-        ex,
-        ErrorCode.GenericFailure);
+        e, ErrorCode.GenericFailure);
 
       Client = null;
     }

@@ -48,7 +48,7 @@ public sealed class ThreadContextStacks
       if (_properties[key] is not object propertyValue)
       {
         // Stack does not exist, create
-        stack = new ThreadContextStack();
+        stack = new();
         _properties[key] = stack;
       }
       else
@@ -64,13 +64,12 @@ public sealed class ThreadContextStacks
           {
             propertyValueString = propertyValue.ToString();
           }
-          catch
-          {
-          }
+          catch (Exception e) when (!e.IsFatal())
+          { }
 
           LogLog.Error(_declaringType, $"ThreadContextStacks: Request for stack named [{key}] failed because a property with the same name exists which is a [{propertyValue.GetType().Name}] with value [{propertyValueString}]");
 
-          stack = new ThreadContextStack();
+          stack = new();
         }
       }
 

@@ -70,7 +70,7 @@ public class CountingQuietTextWriter : QuietTextWriter
       // char using the supplied encoding.
       Count += Encoding.GetByteCount(new[] { value });
     }
-    catch (Exception e)
+    catch (Exception e) when (!e.IsFatal())
     {
       ErrorHandler.Error($"Failed to write [{value}].", e, ErrorCode.WriteFailure);
     }
@@ -100,7 +100,7 @@ public class CountingQuietTextWriter : QuietTextWriter
         // char array using the supplied encoding.
         Count += Encoding.GetByteCount(buffer, index, count);
       }
-      catch (Exception e)
+      catch (Exception e) when (!e.IsFatal())
       {
         ErrorHandler.Error("Failed to write buffer.", e, ErrorCode.WriteFailure);
       }
@@ -129,7 +129,7 @@ public class CountingQuietTextWriter : QuietTextWriter
         // string using the supplied encoding.
         Count += Encoding.GetByteCount(str);
       }
-      catch (Exception e)
+      catch (Exception e) when (!e.IsFatal())
       {
         ErrorHandler.Error($"Failed to write [{str}].", e, ErrorCode.WriteFailure);
       }

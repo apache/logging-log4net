@@ -96,10 +96,10 @@ public sealed class SystemStringFormat
       // Try to format the string
       return string.Format(provider, format, args);
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Warn(_declaringType, $"Exception while rendering format [{format}]", ex);
-      return StringFormatError(ex, format, args);
+      LogLog.Warn(_declaringType, $"Exception while rendering format [{format}]", e);
+      return StringFormatError(e, format, args);
     }
   }
 
@@ -119,9 +119,9 @@ public sealed class SystemStringFormat
       buf.Append("</log4net.Error>");
       return buf.ToString();
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "INTERNAL ERROR during StringFormat error handling", ex);
+      LogLog.Error(_declaringType, "INTERNAL ERROR during StringFormat error handling", e);
       return "<log4net.Error>Exception during StringFormat. See Internal Log.</log4net.Error>";
     }
   }
@@ -143,7 +143,7 @@ public sealed class SystemStringFormat
       }
       else
       {
-        buffer.Append("{");
+        buffer.Append('{');
         int len = array.Length;
 
         if (len > 0)
@@ -155,7 +155,7 @@ public sealed class SystemStringFormat
             RenderObject(array.GetValue(i), buffer);
           }
         }
-        buffer.Append("}");
+        buffer.Append('}');
       }
     }
   }
@@ -175,9 +175,9 @@ public sealed class SystemStringFormat
       {
         buffer.Append(obj);
       }
-      catch (Exception ex)
+      catch (Exception e) when (!e.IsFatal())
       {
-        buffer.Append("<Exception: ").Append(ex.Message).Append(">");
+        buffer.Append("<Exception: ").Append(e.Message).Append('>');
       }
     }
   }

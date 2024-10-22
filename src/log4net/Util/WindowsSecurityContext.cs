@@ -140,6 +140,8 @@ public class WindowsSecurityContext : SecurityContext, IOptionHandler
   /// is set to <see cref="ImpersonationMode.User"/> (the default setting).
   /// </para>
   /// </remarks>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1044:Properties should not be write only", 
+    Justification = "Password must be write only")]
   public string Password { set => _password = value; }
 
   /// <summary>

@@ -147,9 +147,9 @@ public class XmlHierarchyConfigurator
           LogLog.Error(_declaringType, $"Invalid {ConfigUpdateModeAttr} attribute value [{configUpdateModeAttribute}]");
         }
       }
-      catch
+      catch (Exception e) when (!e.IsFatal())
       {
-        LogLog.Error(_declaringType, $"Invalid {ConfigUpdateModeAttr} attribute value [{configUpdateModeAttribute}]");
+        LogLog.Error(_declaringType, $"Invalid {ConfigUpdateModeAttr} attribute value [{configUpdateModeAttribute}]", e);
       }
     }
 
@@ -337,11 +337,11 @@ public class XmlHierarchyConfigurator
       LogLog.Debug(_declaringType, $"Created Appender [{appenderName}]");
       return appender;
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
       // Yes, it's ugly.  But all exceptions point to the same problem: we can't create an Appender
 
-      LogLog.Error(_declaringType, $"Could not create Appender [{appenderName}] of type [{typeName}]. Reported error follows.", ex);
+      LogLog.Error(_declaringType, $"Could not create Appender [{appenderName}] of type [{typeName}]. Reported error follows.", e);
       return null;
     }
   }
@@ -475,7 +475,7 @@ public class XmlHierarchyConfigurator
     {
       _hierarchy.RendererMap.Put(SystemInfo.GetTypeFromString(renderedClassName, true, true)!, renderer);
     }
-    catch (Exception e)
+    catch (Exception e) when (!e.IsFatal())
     {
       LogLog.Error(_declaringType, $"Could not find class [{renderedClassName}].", e);
     }
@@ -668,9 +668,9 @@ public class XmlHierarchyConfigurator
               propertyType = subType;
             }
           }
-          catch (Exception ex)
+          catch (Exception e) when (!e.IsFatal())
           {
-            LogLog.Error(_declaringType, $"Failed to find type [{subTypeString}] set on [{name}]", ex);
+            LogLog.Error(_declaringType, $"Failed to find type [{subTypeString}] set on [{name}]", e);
           }
         }
 
@@ -799,7 +799,7 @@ public class XmlHierarchyConfigurator
   {
     foreach (XmlNode node in element.ChildNodes)
     {
-      if (node.NodeType == XmlNodeType.Attribute || node.NodeType == XmlNodeType.Element)
+      if (node.NodeType is XmlNodeType.Attribute or XmlNodeType.Element)
       {
         return true;
       }
@@ -934,9 +934,9 @@ public class XmlHierarchyConfigurator
       {
         objectType = SystemInfo.GetTypeFromString(objectTypeString, true, true);
       }
-      catch (Exception ex)
+      catch (Exception e) when (!e.IsFatal())
       {
-        LogLog.Error(_declaringType, $"Failed to find type [{objectTypeString}]", ex);
+        LogLog.Error(_declaringType, $"Failed to find type [{objectTypeString}]", e);
         return null;
       }
     }
@@ -967,9 +967,9 @@ public class XmlHierarchyConfigurator
     {
       createdObject = Activator.CreateInstance(objectType!).EnsureNotNull();
     }
-    catch (Exception createInstanceEx)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, $"XmlHierarchyConfigurator: Failed to construct object of type [{objectType!.FullName}] Exception: {createInstanceEx}");
+      LogLog.Error(_declaringType, $"XmlHierarchyConfigurator: Failed to construct object of type [{objectType!.FullName}]", e);
       return null;
     }
 
@@ -1005,7 +1005,7 @@ public class XmlHierarchyConfigurator
     get
     {
       PlatformID platform = Environment.OSVersion.Platform;
-      return platform != PlatformID.Unix && platform != PlatformID.MacOSX;
+      return platform is not PlatformID.Unix and not PlatformID.MacOSX;
     }
   }
 

@@ -120,9 +120,9 @@ public sealed class RandomStringPatternConverter : PatternConverter, IOptionHand
         }
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Error occurred while converting.", ex);
+      LogLog.Error(_declaringType, "Error occurred while converting.", e);
     }
   }
 

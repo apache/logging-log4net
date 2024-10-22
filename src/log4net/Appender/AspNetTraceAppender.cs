@@ -22,6 +22,7 @@ using System.Web;
 
 using log4net.Layout;
 using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Appender;
 
@@ -64,7 +65,7 @@ public class AspNetTraceAppender : AppenderSkeleton
       // check if tracing is enabled for the current context
       if (HttpContext.Current.Trace.IsEnabled) 
       {
-        if (loggingEvent.Level is not null && loggingEvent.Level >= Level.Warn) 
+        if (loggingEvent.EnsureNotNull().Level is not null && loggingEvent.Level >= Level.Warn) 
         {
           HttpContext.Current.Trace.Warn(Category.Format(loggingEvent), RenderLoggingEvent(loggingEvent));
         }

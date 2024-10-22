@@ -173,12 +173,12 @@ public class TelnetAppender : AppenderSkeleton
       /// </remarks>
       public SocketClient(Socket socket)
       {
-        this._socket = socket;
+        _socket = socket;
         try
         {
           _writer = new(new NetworkStream(socket));
         }
-        catch
+        catch (Exception e) when (!e.IsFatal())
         {
           Dispose();
           throw;
@@ -198,13 +198,14 @@ public class TelnetAppender : AppenderSkeleton
       /// <summary>
       /// Cleans up the client connection.
       /// </summary>
+      [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1063:Implement IDisposable Correctly")]
       public void Dispose()
       {
         try
         {
           _writer.Dispose();
         }
-        catch
+        catch (Exception e) when (!e.IsFatal())
         {
           // Ignore
         }
@@ -213,7 +214,7 @@ public class TelnetAppender : AppenderSkeleton
         {
           _socket.Shutdown(SocketShutdown.Both);
         }
-        catch
+        catch (Exception e) when (!e.IsFatal())
         {
           // Ignore
         }
@@ -222,7 +223,7 @@ public class TelnetAppender : AppenderSkeleton
         {
           _socket.Dispose();
         }
-        catch
+        catch (Exception e) when (!e.IsFatal())
         {
           // Ignore
         }
@@ -267,7 +268,7 @@ public class TelnetAppender : AppenderSkeleton
         {
           client.Send(message);
         }
-        catch
+        catch (Exception e) when (!e.IsFatal())
         {
           // The client has closed the connection, remove it from our list
           client.Dispose();
@@ -339,7 +340,7 @@ public class TelnetAppender : AppenderSkeleton
             client.Send($"TelnetAppender v1.0 ({currentActiveConnectionsCount + 1} active connections)\r\n\r\n");
             AddClient(client);
           }
-          catch
+          catch (Exception e) when (!e.IsFatal())
           {
             client.Dispose();
           }
@@ -350,7 +351,7 @@ public class TelnetAppender : AppenderSkeleton
           client.Dispose();
         }
       }
-      catch
+      catch (Exception e) when (!e.IsFatal())
       {
         // Ignore
       }
@@ -387,7 +388,7 @@ public class TelnetAppender : AppenderSkeleton
         {
           _serverSocket.Shutdown(SocketShutdown.Both);
         }
-        catch
+        catch (Exception e) when (!e.IsFatal())
         {
           // Ignore
         }
@@ -396,7 +397,7 @@ public class TelnetAppender : AppenderSkeleton
         {
           _serverSocket.Dispose();
         }
-        catch
+        catch (Exception e) when (!e.IsFatal())
         {
           // Ignore
         }

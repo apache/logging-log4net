@@ -84,9 +84,9 @@ public class MethodItem
         methodParameterNames.Add(methodBaseGetParameters[i].ParameterType + " " + methodBaseGetParameters[i].Name);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "An exception occurred while retrieving method parameters.", ex);
+      LogLog.Error(_declaringType, "An exception occurred while retrieving method parameters.", e);
     }
 
     return methodParameterNames.ToArray();

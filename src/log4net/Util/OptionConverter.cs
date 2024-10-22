@@ -60,7 +60,7 @@ public static class OptionConverter
       {
         return bool.Parse(argValue);
       }
-      catch (Exception e)
+      catch (Exception e) when (!e.IsFatal())
       {
         LogLog.Error(_declaringType, $"[{argValue}] is not in proper bool form.", e);
       }
@@ -312,7 +312,7 @@ public static class OptionConverter
 
         LogLog.Error(_declaringType, $"Could not find class [{className}].");
       }
-      catch (Exception e)
+      catch (Exception e) when (!e.IsFatal())
       {
         LogLog.Error(_declaringType, $"Could not instantiate class [{className}].", e);
       }
@@ -365,7 +365,7 @@ public static class OptionConverter
   /// </remarks>
   public static string SubstituteVariables(string value, System.Collections.IDictionary props)
   {
-    StringBuilder buf = new StringBuilder();
+    StringBuilder buf = new();
 
     int i = 0;
     int j, k;

@@ -96,7 +96,7 @@ public class QuietTextWriter : TextWriterAdapter
     {
       base.Write(value);
     }
-    catch (Exception e)
+    catch (Exception e) when (!e.IsFatal())
     {
       _errorHandler.Error($"Failed to write [{value}].", e, ErrorCode.WriteFailure);
     }
@@ -119,7 +119,7 @@ public class QuietTextWriter : TextWriterAdapter
     {
       base.Write(buffer, index, count);
     }
-    catch (Exception e)
+    catch (Exception e) when (!e.IsFatal())
     {
       _errorHandler.Error("Failed to write buffer.", e, ErrorCode.WriteFailure);
     }
@@ -135,7 +135,7 @@ public class QuietTextWriter : TextWriterAdapter
     {
       base.Write(value);
     }
-    catch (Exception e)
+    catch (Exception e) when (!e.IsFatal())
     {
       _errorHandler.Error($"Failed to write [{value}].", e, ErrorCode.WriteFailure);
     }

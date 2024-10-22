@@ -502,8 +502,8 @@ public class LoggingEvent : ILog4NetSerializable
   /// </remarks>
   public object? MessageObject
   {
-    get { return _message; }
-    protected set { _message = value; }
+    get => _message;
+    protected set => _message = value;
   }
 
   /// <summary>
@@ -767,7 +767,7 @@ public class LoggingEvent : ILog4NetSerializable
       );
       return Environment.UserName;
     }
-    catch
+    catch (Exception e) when (!e.IsFatal())
     {
       return null;
     }
