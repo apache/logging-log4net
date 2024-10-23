@@ -17,6 +17,7 @@
 //
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 using log4net.Core;
@@ -28,6 +29,7 @@ namespace log4net.Layout.Pattern;
 /// the event to the output writer.
 /// </summary>
 /// <author>Nicko Cadell</author>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class FileLocationPatternConverter : PatternLayoutConverter
 {
   /// <summary>

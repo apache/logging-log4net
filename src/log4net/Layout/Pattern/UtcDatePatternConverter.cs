@@ -66,7 +66,7 @@ internal sealed class UtcDatePatternConverter : DatePatternConverter
   {
     try
     {
-      m_dateFormatter!.FormatDate(loggingEvent.TimeStampUtc, writer);
+      m_dateFormatter.EnsureNotNull().FormatDate(loggingEvent.TimeStampUtc, writer);
     }
     catch (Exception e) when (!e.IsFatal())
     {

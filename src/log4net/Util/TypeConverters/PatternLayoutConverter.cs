@@ -18,6 +18,7 @@
 #endregion
 
 using log4net.Layout;
+using System.Diagnostics.CodeAnalysis;
 
 namespace log4net.Util.TypeConverters;
 
@@ -34,6 +35,7 @@ namespace log4net.Util.TypeConverters;
 /// <seealso cref="IConvertFrom"/>
 /// <seealso cref="IConvertTo"/>
 /// <author>Nicko Cadell</author>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class PatternLayoutConverter : IConvertFrom
 {
   /// <summary>
@@ -44,10 +46,7 @@ internal sealed class PatternLayoutConverter : IConvertFrom
   /// <c>True</c> if the <paramref name="sourceType"/> is
   /// the <see cref="string"/> type.
   /// </returns>
-  public bool CanConvertFrom(System.Type sourceType)
-  {
-    return sourceType == typeof(string);
-  }
+  public bool CanConvertFrom(System.Type sourceType) => sourceType == typeof(string);
 
   /// <summary>
   /// Overrides the ConvertFrom method of IConvertFrom.

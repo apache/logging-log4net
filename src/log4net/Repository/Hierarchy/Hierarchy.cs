@@ -736,6 +736,7 @@ public class Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFac
   /// <summary>
   /// A class to hold the value, name and display name for a level
   /// </summary>
+  [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
   internal sealed class LevelEntry
   {
     /// <summary>

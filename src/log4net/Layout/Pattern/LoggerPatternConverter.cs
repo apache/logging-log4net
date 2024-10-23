@@ -18,6 +18,7 @@
 #endregion
 
 using log4net.Core;
+using System.Diagnostics.CodeAnalysis;
 
 namespace log4net.Layout.Pattern;
 
@@ -30,6 +31,7 @@ namespace log4net.Layout.Pattern;
 /// </para>
 /// </remarks>
 /// <author>Nicko Cadell</author>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class LoggerPatternConverter : NamedPatternConverter
 {
   /// <summary>
@@ -42,8 +44,5 @@ internal sealed class LoggerPatternConverter : NamedPatternConverter
   /// Returns the <see cref="LoggingEvent.LoggerName"/> of the <paramref name="loggingEvent"/>.
   /// </para>
   /// </remarks>
-  protected override string? GetFullyQualifiedName(LoggingEvent loggingEvent)
-  {
-    return loggingEvent.LoggerName;
-  }
+  protected override string? GetFullyQualifiedName(LoggingEvent loggingEvent) => loggingEvent.LoggerName;
 }

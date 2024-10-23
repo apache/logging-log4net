@@ -21,9 +21,11 @@
 
 using System;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 
 namespace log4net.Tests.Appender.AdoNet;
 
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class Log4NetConnection : IDbConnection
 {
   private bool _open;

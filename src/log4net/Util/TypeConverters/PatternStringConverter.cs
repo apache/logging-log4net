@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace log4net.Util.TypeConverters;
 
@@ -38,6 +39,7 @@ namespace log4net.Util.TypeConverters;
 /// <seealso cref="IConvertFrom"/>
 /// <seealso cref="IConvertTo"/>
 /// <author>Nicko Cadell</author>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class PatternStringConverter : IConvertTo, IConvertFrom
 {
   /// <summary>
@@ -51,10 +53,7 @@ internal sealed class PatternStringConverter : IConvertTo, IConvertFrom
   /// assignable from a <see cref="string"/> type.
   /// </para>
   /// </remarks>
-  public bool CanConvertTo(Type targetType)
-  {
-    return typeof(string).IsAssignableFrom(targetType);
-  }
+  public bool CanConvertTo(Type targetType) => typeof(string).IsAssignableFrom(targetType);
 
   /// <summary>
   /// Converts the given value object to the specified type, using the arguments

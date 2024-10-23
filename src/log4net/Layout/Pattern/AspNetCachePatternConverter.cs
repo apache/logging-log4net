@@ -18,6 +18,7 @@
 //
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Web;
 using log4net.Core;
@@ -34,6 +35,7 @@ namespace log4net.Layout.Pattern;
 /// </para>
 /// </remarks>
 /// <author>Ron Grabowski</author>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class AspNetCachePatternConverter : AspNetPatternLayoutConverter
 {
   /// <summary>

@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace log4net.Util.PatternStringConverters;
@@ -33,6 +34,7 @@ namespace log4net.Util.PatternStringConverters;
 /// </para>
 /// </remarks>
 /// <author>Ron Grabowski</author>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class EnvironmentFolderPathPatternConverter : PatternConverter
 {
   /// <summary>

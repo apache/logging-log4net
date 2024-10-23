@@ -174,7 +174,11 @@ public class AppenderAttachedImpl : IAppenderAttachable
   {
     appender.EnsureNotNull();
     _appenderArray = null;
-    _appenderList ??= new(1) { appender };
+    _appenderList ??= new(1);
+    if (!_appenderList.Contains(appender))
+    {
+      _appenderList.Add(appender);
+    }
   }
 
   /// <summary>

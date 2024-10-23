@@ -18,6 +18,7 @@
 #endregion
 
 using log4net.Core;
+using System.Diagnostics.CodeAnalysis;
 
 namespace log4net.Util.PatternStringConverters;
 
@@ -45,6 +46,7 @@ namespace log4net.Util.PatternStringConverters;
 /// </list>
 /// </remarks>
 /// <author>Nicko Cadell</author>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class NewLinePatternConverter : LiteralPatternConverter, IOptionHandler
 {
   /// <summary>

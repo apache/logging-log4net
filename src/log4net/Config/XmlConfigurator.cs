@@ -137,10 +137,8 @@ public static class XmlConfigurator
   /// </para>
   /// </remarks>
   /// <seealso cref="Log4NetConfigurationSectionHandler"/>
-  public static ICollection Configure()
-  {
-    return Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()));
-  }
+  public static ICollection Configure() 
+    => Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()));
 
   /// <summary>
   /// Configures log4net using a <c>log4net</c> element

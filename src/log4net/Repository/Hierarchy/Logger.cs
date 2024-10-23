@@ -28,6 +28,7 @@ namespace log4net.Repository.Hierarchy;
 /// <summary>
 /// Implementation of <see cref="ILogger"/> used by <see cref="Hierarchy"/>
 /// </summary>
+/// <param name="name">The name of the <see cref="Logger" />.</param>
 /// <remarks>
 /// <para>
 /// Internal class used to provide implementation of <see cref="ILogger"/>
@@ -50,7 +51,7 @@ namespace log4net.Repository.Hierarchy;
 /// <author>Gert Driesen</author>
 /// <author>Aspi Havewala</author>
 /// <author>Douglas de la Torre</author>
-public abstract class Logger : IAppenderAttachable, ILogger
+public abstract class Logger(string name) : IAppenderAttachable, ILogger
 {
   /// <summary>
   /// The fully qualified type of the Logger class.
@@ -81,25 +82,6 @@ public abstract class Logger : IAppenderAttachable, ILogger
   /// Lock to protect AppenderAttachedImpl variable appenderAttachedImpl
   /// </summary>
   private readonly ReaderWriterLock _appenderLock = new();
-
-  /// <summary>
-  /// This constructor created a new <see cref="Logger" /> instance and
-  /// sets its name.
-  /// </summary>
-  /// <param name="name">The name of the <see cref="Logger" />.</param>
-  /// <remarks>
-  /// <para>
-  /// This constructor is protected and designed to be used by
-  /// a subclass that is not abstract.
-  /// </para>
-  /// <para>
-  /// Loggers are constructed by <see cref="ILoggerFactory"/> 
-  /// objects. See <see cref="DefaultLoggerFactory"/> for the default
-  /// logger creator.
-  /// </para>
-  /// </remarks>
-  protected Logger(string name)
-    => Name = string.Intern(name);
 
   /// <summary>
   /// Gets or sets the parent logger in the hierarchy.
@@ -344,7 +326,7 @@ public abstract class Logger : IAppenderAttachable, ILogger
   /// <summary>
   /// Gets the logger name.
   /// </summary>
-  public virtual string Name { get; }
+  public virtual string Name { get; } = string.Intern(name);
 
   /// <summary>
   /// Generates a logging event for the specified <paramref name="level"/> using

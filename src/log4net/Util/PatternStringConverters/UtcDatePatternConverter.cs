@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 using log4net.DateFormatter;
@@ -38,6 +39,7 @@ namespace log4net.Util.PatternStringConverters;
 /// </remarks>
 /// <seealso cref="DatePatternConverter"/>
 /// <author>Nicko Cadell</author>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class UtcDatePatternConverter : DatePatternConverter
 {
   /// <summary>

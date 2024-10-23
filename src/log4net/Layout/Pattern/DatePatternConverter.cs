@@ -155,7 +155,7 @@ internal class DatePatternConverter : PatternLayoutConverter, IOptionHandler
   {
     try
     {
-      m_dateFormatter!.FormatDate(loggingEvent.TimeStamp, writer);
+      m_dateFormatter.EnsureNotNull().FormatDate(loggingEvent.TimeStamp, writer);
     }
     catch (Exception e) when (!e.IsFatal())
     {
@@ -163,12 +163,5 @@ internal class DatePatternConverter : PatternLayoutConverter, IOptionHandler
     }
   }
 
-  /// <summary>
-  /// The fully qualified type of the DatePatternConverter class.
-  /// </summary>
-  /// <remarks>
-  /// Used by the internal logger to record the Type of the
-  /// log message.
-  /// </remarks>
   private static readonly Type _declaringType = typeof(DatePatternConverter);
 }

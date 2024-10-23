@@ -30,6 +30,7 @@ using log4net.Tests.Appender;
 using log4net.Util;
 
 using NUnit.Framework;
+using System.Diagnostics.CodeAnalysis;
 
 namespace log4net.Tests.Layout;
 
@@ -310,6 +311,7 @@ public class PatternLayoutTest
   /// <summary>
   /// Converter to include event message
   /// </summary>
+  [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
   private sealed class TestMessagePatternConverter : PatternLayoutConverter
   {
     /// <summary>
@@ -341,6 +343,7 @@ public class PatternLayoutTest
     stringAppender.Reset();
   }
 
+  [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
   private sealed class MessageAsNamePatternConverter : NamedPatternConverter
   {
     protected override string GetFullyQualifiedName(LoggingEvent loggingEvent) => loggingEvent.MessageObject?.ToString() ?? string.Empty;

@@ -21,6 +21,7 @@ using System.IO;
 using System.Collections;
 using System.Configuration;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace log4net.Util.PatternStringConverters;
 
@@ -50,26 +51,27 @@ namespace log4net.Util.PatternStringConverters;
 /// </example>
 /// </para>
 /// </remarks>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class AppSettingPatternConverter : PatternConverter
 {
   private static IDictionary AppSettingsDictionary
   {
     get
     {
-      if (_appSettingsHashTable is null)
+      if (_appSettings is null)
       {
-        var h = new Dictionary<string, string?>();
+        Dictionary<string, string?> result = [];
         foreach (string key in ConfigurationManager.AppSettings)
         {
-          h.Add(key, ConfigurationManager.AppSettings[key]);
+          result.Add(key, ConfigurationManager.AppSettings[key]);
         }
-        _appSettingsHashTable = h;
+        _appSettings = result;
       }
-      return _appSettingsHashTable;
+      return _appSettings;
     }
 
   }
-  private static Dictionary<string, string?>? _appSettingsHashTable;
+  private static Dictionary<string, string?>? _appSettings;
 
   /// <summary>
   /// Write the property value to the output

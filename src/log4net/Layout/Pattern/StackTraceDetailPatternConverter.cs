@@ -18,11 +18,11 @@
  * under the License.
  *
 */
-using System;
-using System.Text;
-
-using log4net.Util;
 using log4net.Core;
+using log4net.Util;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 namespace log4net.Layout.Pattern;
 
@@ -31,11 +31,13 @@ namespace log4net.Layout.Pattern;
 /// type3.MethodCall3(type param,...) > type2.MethodCall2(type param,...) > type1.MethodCall1(type param,...)
 /// </summary>
 /// <author>Adam Davies</author>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class StackTraceDetailPatternConverter : StackTracePatternConverter
 {
+  /// <inheritdoc/>
   internal override string GetMethodInformation(MethodItem method)
   {
-    string returnValue = "";
+    string result = "";
 
     try
     {
@@ -56,14 +58,14 @@ internal sealed class StackTraceDetailPatternConverter : StackTracePatternConver
         param = sb.ToString();
       }
 
-      returnValue = base.GetMethodInformation(method) + "(" + param + ")";
+      result = base.GetMethodInformation(method) + "(" + param + ")";
     }
     catch (Exception e) when (!e.IsFatal())
     {
       LogLog.Error(_declaringType, "An exception ocurred while retreiving method information.", e);
     }
 
-    return returnValue;
+    return result;
   }
 
   #region Private Static Fields

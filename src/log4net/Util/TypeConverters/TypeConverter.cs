@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace log4net.Util.TypeConverters;
 
@@ -28,6 +29,7 @@ namespace log4net.Util.TypeConverters;
 /// <seealso cref="IConvertFrom"/>
 /// <seealso cref="IConvertTo"/>
 /// <author>Nicko Cadell</author>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class TypeConverter : IConvertFrom
 {
   /// <summary>
