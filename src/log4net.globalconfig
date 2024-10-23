@@ -19,20 +19,11 @@ dotnet_diagnostic.CA1002.severity = warning
 #CA1003: Use generic event handler instances
 dotnet_diagnostic.CA1003.severity = warning
 
-#CA1003: Use generic event handler instances
-dotnet_diagnostic.CA1003.severity = warning
-
 #CA1005: Avoid excessive parameters on generic types
 dotnet_diagnostic.CA1005.severity = warning
 
 #CA1008: Enums should have zero value
 dotnet_diagnostic.CA1008.severity = warning
-
-#CA1008: Enums should have zero value
-dotnet_diagnostic.CA1008.severity = warning
-
-#CA1012: Abstract types should not have constructors
-dotnet_diagnostic.CA1012.severity = warning
 
 #CA1012: Abstract types should not have constructors
 dotnet_diagnostic.CA1012.severity = warning
@@ -42,12 +33,6 @@ dotnet_diagnostic.CA1019.severity = warning
 
 #CA1024: Use properties where appropriate
 dotnet_diagnostic.CA1024.severity = warning
-
-#CA1024: Use properties where appropriate
-dotnet_diagnostic.CA1024.severity = warning
-
-#CA1027: Mark enums with FlagsAttribute
-dotnet_diagnostic.CA1027.severity = warning
 
 #CA1027: Mark enums with FlagsAttribute
 dotnet_diagnostic.CA1027.severity = warning
@@ -79,9 +64,6 @@ dotnet_diagnostic.CA1058.severity = warning
 #CA1060: Move P/Invokes to NativeMethods class
 dotnet_diagnostic.CA1060.severity = warning
 
-#CA1060: Move P/Invokes to NativeMethods class
-dotnet_diagnostic.CA1060.severity = warning
-
 #CA1062: Validate arguments of public methods
 dotnet_diagnostic.CA1062.severity = warning
 
@@ -100,9 +82,6 @@ dotnet_diagnostic.CA1303.severity = warning
 #CA1307: Specify StringComparison for clarity
 dotnet_diagnostic.CA1307.severity = warning
 
-#CA1307: Specify StringComparison for clarity
-dotnet_diagnostic.CA1307.severity = warning
-
 #CA1309: Use ordinal StringComparison
 dotnet_diagnostic.CA1309.severity = warning
 
@@ -115,12 +94,6 @@ dotnet_diagnostic.CA1421.severity = warning
 #CA1501: Avoid excessive inheritance
 dotnet_diagnostic.CA1501.severity = warning
 
-#CA1501: Avoid excessive inheritance
-dotnet_diagnostic.CA1501.severity = warning
-
-#CA1502: Avoid excessive complexity
-dotnet_diagnostic.CA1502.severity = warning
-
 #CA1502: Avoid excessive complexity
 dotnet_diagnostic.CA1502.severity = warning
 
@@ -129,9 +102,6 @@ dotnet_diagnostic.CA1505.severity = warning
 
 #CA1505: Avoid unmaintainable code
 dotnet_diagnostic.CA1505.severity = warning
-
-#CA1506: Avoid excessive class coupling
-dotnet_diagnostic.CA1506.severity = warning
 
 #CA1506: Avoid excessive class coupling
 dotnet_diagnostic.CA1506.severity = warning
@@ -165,9 +135,6 @@ dotnet_diagnostic.CA1802.severity = warning
 
 #CA1810: Initialize reference type static fields inline
 dotnet_diagnostic.CA1810.severity = warning
-
-#CA1812: Avoid uninstantiated internal classes
-dotnet_diagnostic.CA1812.severity = warning
 
 #CA1812: Avoid uninstantiated internal classes
 dotnet_diagnostic.CA1812.severity = warning
@@ -249,9 +216,6 @@ dotnet_diagnostic.CA2213.severity = warning
 
 #CA2214: Do not call overridable methods in constructors
 dotnet_diagnostic.CA2214.severity = warning
-
-#CA2217: Do not mark enums with FlagsAttribute
-dotnet_diagnostic.CA2217.severity = warning
 
 #CA2217: Do not mark enums with FlagsAttribute
 dotnet_diagnostic.CA2217.severity = warning
