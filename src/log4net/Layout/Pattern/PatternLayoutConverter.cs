@@ -80,7 +80,7 @@ public abstract class PatternLayoutConverter : PatternConverter
   {
     if (state is not LoggingEvent loggingEvent)
     {
-      throw new ArgumentException($"state must be of type [{typeof(LoggingEvent).FullName}]", "state");
+      throw new ArgumentException($"state must be of type [{typeof(LoggingEvent).FullName}]", nameof(state));
     }
 
     Convert(writer, loggingEvent);

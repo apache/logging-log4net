@@ -112,6 +112,7 @@ public abstract class NamedPatternConverter : PatternLayoutConverter, IOptionHan
   /// </remarks>
   protected sealed override void Convert(TextWriter writer, LoggingEvent loggingEvent)
   {
+    writer.EnsureNotNull();
     string? name = GetFullyQualifiedName(loggingEvent);
     if (_precision <= 0 || name is null || name.Length < 2)
     {

@@ -32,6 +32,8 @@ namespace log4net.Repository;
 /// </summary>
 /// <param name="sender">The <see cref="ILoggerRepository"/> that is shutting down.</param>
 /// <param name="e">Empty event args</param>
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1003:Use generic event handler instances")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix")]
 public delegate void LoggerRepositoryShutdownEventHandler(object sender, EventArgs e);
 
 /// <summary>
@@ -39,6 +41,8 @@ public delegate void LoggerRepositoryShutdownEventHandler(object sender, EventAr
 /// </summary>
 /// <param name="sender">The <see cref="ILoggerRepository"/> that has had its configuration reset.</param>
 /// <param name="e">Empty event args</param>
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1003:Use generic event handler instances")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix")]
 public delegate void LoggerRepositoryConfigurationResetEventHandler(object sender, EventArgs e);
 
 /// <summary>
@@ -46,6 +50,8 @@ public delegate void LoggerRepositoryConfigurationResetEventHandler(object sende
 /// </summary>
 /// <param name="sender">The <see cref="ILoggerRepository"/> that has had its configuration changed.</param>
 /// <param name="e">Empty event arguments.</param>
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1003:Use generic event handler instances")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix")]
 public delegate void LoggerRepositoryConfigurationChangedEventHandler(object sender, EventArgs e);
 
 /// <summary>
@@ -121,7 +127,7 @@ public interface ILoggerRepository
   /// lost.
   /// </para>
   /// <para>
-  /// The <see cref="M:Shutdown()"/> method is careful to close nested
+  /// The <see cref="Shutdown()"/> method is careful to close nested
   /// appenders before closing regular appenders. This allows
   /// configurations where a regular appender is attached to a logger
   /// and again to a nested appender.
@@ -149,7 +155,7 @@ public interface ILoggerRepository
   /// This method should not normally be used to log.
   /// The <see cref="ILog"/> interface should be used 
   /// for routine logging. This interface can be obtained
-  /// using the <see cref="M:log4net.LogManager.GetLogger(string)"/> method.
+  /// using the <see cref="log4net.LogManager.GetLogger(string)"/> method.
   /// </para>
   /// <para>
   /// The <c>logEvent</c> is delivered to the appropriate logger and
@@ -167,6 +173,7 @@ public interface ILoggerRepository
   /// Collection of internal messages captured during the most 
   /// recent configuration process.
   /// </summary>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227:Collection properties should be read only")]
   ICollection ConfigurationMessages { get; set; }
 
   /// <summary>

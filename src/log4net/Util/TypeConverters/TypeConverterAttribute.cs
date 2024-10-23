@@ -50,10 +50,8 @@ public sealed class TypeConverterAttribute : Attribute
   /// or the <see cref="IConvertTo"/> interfaces.
   /// </para>
   /// </remarks>
-  public TypeConverterAttribute(string typeName)
-  {
-    ConverterTypeName = typeName;
-  }
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1019:Define accessors for attribute arguments")]
+  public TypeConverterAttribute(string typeName) => ConverterTypeName = typeName;
 
   /// <summary>
   /// Creates a new type converter attribute for the specified type
@@ -65,10 +63,9 @@ public sealed class TypeConverterAttribute : Attribute
   /// or the <see cref="IConvertTo"/> interfaces.
   /// </para>
   /// </remarks>
-  public TypeConverterAttribute(Type converterType)
-  {
-    ConverterTypeName = converterType.AssemblyQualifiedName!;
-  }
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1019:Define accessors for attribute arguments")]
+  public TypeConverterAttribute(Type converterType) 
+    => ConverterTypeName = converterType.EnsureNotNull().AssemblyQualifiedName!;
 
   /// <summary>
   /// The string type name of the type converter 

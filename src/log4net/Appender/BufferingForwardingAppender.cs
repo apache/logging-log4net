@@ -17,8 +17,6 @@
 //
 #endregion
 
-using System;
-
 using log4net.Util;
 using log4net.Core;
 
@@ -98,13 +96,10 @@ public class BufferingForwardingAppender : BufferingAppenderSkeleton, IAppenderA
   /// </remarks>
   public virtual void AddAppender(IAppender appender)
   {
-    if (appender is null)
-    {
-      throw new ArgumentNullException(nameof(appender));
-    }
+    appender.EnsureNotNull();
     lock (LockObj)
     {
-      _appenderAttachedImpl ??= new AppenderAttachedImpl();
+      _appenderAttachedImpl ??= new();
       _appenderAttachedImpl.AddAppender(appender);
     }
   }

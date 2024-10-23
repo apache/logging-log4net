@@ -17,6 +17,7 @@
 //
 #endregion
 
+using log4net.Util;
 using System;
 
 namespace log4net.Core;
@@ -27,7 +28,7 @@ namespace log4net.Core;
 /// <remarks>
 /// <para>
 /// This evaluator will trigger if the type of the Exception
-/// passed to <see cref="M:IsTriggeringEvent(LoggingEvent)"/>
+/// passed to <see cref="IsTriggeringEvent(LoggingEvent)"/>
 /// is equal to a Type in <see cref="ExceptionType"/>.    /// 
 /// </para>
 /// </remarks>
@@ -49,12 +50,7 @@ public class ExceptionEvaluator : ITriggeringEventEvaluator
   /// <param name="triggerOnSubClass">If true, this evaluator will trigger on subclasses of <see cref="ExceptionType"/>.</param>
   public ExceptionEvaluator(Type exType, bool triggerOnSubClass)
   {
-    if (exType is null)
-    {
-      throw new ArgumentNullException(nameof(exType));
-    }
-
-    ExceptionType = exType;
+    ExceptionType = exType.EnsureNotNull();
     TriggerOnSubclass = triggerOnSubClass;
   }
 
@@ -78,32 +74,25 @@ public class ExceptionEvaluator : ITriggeringEventEvaluator
   /// <remarks>
   /// <para>
   /// This evaluator will trigger if the Exception Type of the event
-  /// passed to <see cref="M:IsTriggeringEvent(LoggingEvent)"/>
+  /// passed to <see cref="IsTriggeringEvent(LoggingEvent)"/>
   /// is <see cref="ExceptionType"/>.
   /// </para>
   /// </remarks>
   public bool IsTriggeringEvent(LoggingEvent loggingEvent)
   {
-    if (loggingEvent is null)
-    {
-      throw new ArgumentNullException(nameof(loggingEvent));
-    }
-
+    loggingEvent.EnsureNotNull();
     if (TriggerOnSubclass && loggingEvent.ExceptionObject is not null)
     {
       // check if loggingEvent.ExceptionObject is of type ExceptionType or subclass of ExceptionType
       Type exceptionObjectType = loggingEvent.ExceptionObject.GetType();
       return ExceptionType is null || exceptionObjectType == ExceptionType || ExceptionType.IsAssignableFrom(exceptionObjectType);
     }
-    else if (!TriggerOnSubclass && loggingEvent.ExceptionObject is not null)
+    if (!TriggerOnSubclass && loggingEvent.ExceptionObject is not null)
     {
       // check if loggingEvent.ExceptionObject is of type ExceptionType
       return loggingEvent.ExceptionObject.GetType() == ExceptionType;
     }
-    else
-    {
-      // loggingEvent.ExceptionObject is null
-      return false;
-    }
+    // loggingEvent.ExceptionObject is null
+    return false;
   }
 }

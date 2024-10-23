@@ -130,10 +130,11 @@ public class Level : IComparable, ILog4NetSerializable, IEquatable<Level>, IComp
   /// with serialized data.
   /// </para>
   /// </remarks>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter")]
   protected Level(SerializationInfo info, StreamingContext context)
   {
     // Use member names from log4net 2.x implicit serialzation for cross-version compat.
-    Value = info.GetInt32("m_levelValue");
+    Value = info.EnsureNotNull().GetInt32("m_levelValue");
     Name = info.GetString("m_levelName") ?? string.Empty;
     DisplayName = info.GetString("m_levelDisplayName") ?? string.Empty;
   }
@@ -176,7 +177,7 @@ public class Level : IComparable, ILog4NetSerializable, IEquatable<Level>, IComp
   public override string ToString() => Name;
 
   /// <inheritdoc cref="Equals(Level)"/>
-  public override bool Equals(object? o) => o is Level level && Equals(level);
+  public override bool Equals(object? obj) => obj is Level level && Equals(level);
 
   /// <summary>
   /// Compares levels.
@@ -201,7 +202,7 @@ public class Level : IComparable, ILog4NetSerializable, IEquatable<Level>, IComp
   public override int GetHashCode() => Value;
 
   /// <inheritdoc cref="CompareTo(Level)"/>
-  public int CompareTo(object? r) => Compare(this, r.EnsureIs<Level>());
+  public int CompareTo(object? obj) => Compare(this, obj.EnsureIs<Level>());
 
   /// <summary>
   /// Compares this instance to a specified object and returns an 
@@ -253,7 +254,7 @@ public class Level : IComparable, ILog4NetSerializable, IEquatable<Level>, IComp
   public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
   {
     // Use member names from log4net 2.x implicit serialzation for cross-version compat.
-    info.AddValue("m_levelValue", Value);
+    info.EnsureNotNull().AddValue("m_levelValue", Value);
     info.AddValue("m_levelName", Name);
     info.AddValue("m_levelDisplayName", DisplayName);
   }

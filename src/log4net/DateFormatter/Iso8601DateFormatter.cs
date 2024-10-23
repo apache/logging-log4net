@@ -17,6 +17,7 @@
 //
 #endregion
 
+using log4net.Util;
 using System;
 using System.Text;
 
@@ -50,7 +51,7 @@ public class Iso8601DateFormatter : AbsoluteTimeDateFormatter
   /// </remarks>
   protected override void FormatDateWithoutMillis(DateTime dateToFormat, StringBuilder buffer)
   {
-    buffer.Append(dateToFormat.Year).Append('-');
+    buffer.EnsureNotNull().Append(dateToFormat.Year).Append('-');
 
     int month = dateToFormat.Month;
     if (month < 10)

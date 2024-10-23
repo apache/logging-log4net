@@ -106,7 +106,7 @@ public sealed class XmlLayoutTest
   public void TestBasicEventLogging()
   {
     using TextWriter writer = new StringWriter();
-    var layout = new XmlLayout();
+    XmlLayout layout = new();
     LoggingEventData evt = CreateBaseEvent();
 
     layout.Format(writer, new LoggingEvent(evt));
@@ -119,8 +119,8 @@ public sealed class XmlLayoutTest
   [Test]
   public void TestIllegalCharacterMasking()
   {
-    using TextWriter writer = new StringWriter();
-    var layout = new XmlLayout();
+    using StringWriter writer = new();
+    XmlLayout layout = new();
     LoggingEventData evt = CreateBaseEvent();
 
     evt.Message = "This is a masked char->\uFFFF";
@@ -135,8 +135,8 @@ public sealed class XmlLayoutTest
   [Test]
   public void TestCdataEscaping1()
   {
-    using TextWriter writer = new StringWriter();
-    var layout = new XmlLayout();
+    using StringWriter writer = new();
+    XmlLayout layout = new();
     LoggingEventData evt = CreateBaseEvent();
 
     //The &'s trigger the use of a cdata block
@@ -152,8 +152,8 @@ public sealed class XmlLayoutTest
   [Test]
   public void TestCdataEscaping2()
   {
-    using TextWriter writer = new StringWriter();
-    var layout = new XmlLayout();
+    using StringWriter writer = new();
+    XmlLayout layout = new();
     LoggingEventData evt = CreateBaseEvent();
 
     //The &'s trigger the use of a cdata block
@@ -169,8 +169,8 @@ public sealed class XmlLayoutTest
   [Test]
   public void TestCdataEscaping3()
   {
-    using TextWriter writer = new StringWriter();
-    var layout = new XmlLayout();
+    using StringWriter writer = new();
+    XmlLayout layout = new();
     LoggingEventData evt = CreateBaseEvent();
 
     //The &'s trigger the use of a cdata block
@@ -186,8 +186,8 @@ public sealed class XmlLayoutTest
   [Test]
   public void TestBase64EventLogging()
   {
-    using TextWriter writer = new StringWriter();
-    var layout = new XmlLayout();
+    using StringWriter writer = new();
+    XmlLayout layout = new();
     LoggingEventData evt = CreateBaseEvent();
 
     layout.Base64EncodeMessage = true;
@@ -204,8 +204,8 @@ public sealed class XmlLayoutTest
     LoggingEventData evt = CreateBaseEvent();
     evt.Properties!["Property1"] = "prop1";
 
-    var layout = new XmlLayout();
-    var stringAppender = new StringAppender { Layout = layout };
+    XmlLayout layout = new();
+    StringAppender stringAppender = new() { Layout = layout };
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     BasicConfigurator.Configure(rep, stringAppender);
@@ -224,8 +224,8 @@ public sealed class XmlLayoutTest
     LoggingEventData evt = CreateBaseEvent();
     evt.Properties!["Property1"] = "prop1";
 
-    var layout = new XmlLayout { Base64EncodeProperties = true };
-    var stringAppender = new StringAppender { Layout = layout };
+    XmlLayout layout = new() { Base64EncodeProperties = true };
+    StringAppender stringAppender = new() { Layout = layout };
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     BasicConfigurator.Configure(rep, stringAppender);
@@ -244,8 +244,8 @@ public sealed class XmlLayoutTest
     LoggingEventData evt = CreateBaseEvent();
     evt.Properties!["Property1"] = "prop1 \"quoted\"";
 
-    var layout = new XmlLayout();
-    var stringAppender = new StringAppender { Layout = layout };
+    XmlLayout layout = new();
+    StringAppender stringAppender = new() { Layout = layout };
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     BasicConfigurator.Configure(rep, stringAppender);
@@ -264,8 +264,8 @@ public sealed class XmlLayoutTest
     LoggingEventData evt = CreateBaseEvent();
     evt.Properties!["Property1"] = "mask this ->\uFFFF";
 
-    var layout = new XmlLayout();
-    var stringAppender = new StringAppender { Layout = layout };
+    XmlLayout layout = new();
+    StringAppender stringAppender = new() { Layout = layout };
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     BasicConfigurator.Configure(rep, stringAppender);
@@ -284,8 +284,8 @@ public sealed class XmlLayoutTest
     LoggingEventData evt = CreateBaseEvent();
     evt.Properties!["Property\uFFFF"] = "mask this ->\uFFFF";
 
-    var layout = new XmlLayout();
-    var stringAppender = new StringAppender { Layout = layout };
+    XmlLayout layout = new();
+    StringAppender stringAppender = new() { Layout = layout };
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     BasicConfigurator.Configure(rep, stringAppender);
@@ -301,8 +301,8 @@ public sealed class XmlLayoutTest
   [Test]
   public void BracketsInStackTracesKeepLogWellFormed()
   {
-    var layout = new XmlLayout();
-    var stringAppender = new StringAppender { Layout = layout };
+    XmlLayout layout = new();
+    StringAppender stringAppender = new() { Layout = layout };
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     BasicConfigurator.Configure(rep, stringAppender);
@@ -314,7 +314,7 @@ public sealed class XmlLayoutTest
       {
         throw null!;
       }
-      catch (Exception ex)
+      catch (Exception ex) when (ex is not null)
       {
         log1.Error($"Error {foo}", ex);
       }
@@ -323,15 +323,15 @@ public sealed class XmlLayoutTest
     Bar(42);
 
     // really only asserts there is no exception
-    var loggedDoc = new XmlDocument();
+    XmlDocument loggedDoc = new();
     loggedDoc.LoadXml(stringAppender.GetString());
   }
 
   [Test]
   public void BracketsInStackTracesAreEscapedProperly()
   {
-    var layout = new XmlLayout();
-    var stringAppender = new StringAppender { Layout = layout };
+    XmlLayout layout = new();
+    StringAppender stringAppender = new() { Layout = layout };
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     BasicConfigurator.Configure(rep, stringAppender);
@@ -343,7 +343,7 @@ public sealed class XmlLayoutTest
       {
         throw null!;
       }
-      catch (Exception ex)
+      catch (Exception ex) when (ex is not null)
       {
         log1.Error($"Error {foo}", ex);
       }
@@ -357,10 +357,10 @@ public sealed class XmlLayoutTest
     const string nodeName = "exception";
 #endif
 
-    var log = stringAppender.GetString();
-    var startOfExceptionText = log.IndexOf("<" + nodeName + ">", StringComparison.InvariantCulture) + nodeName.Length + 2;
-    var endOfExceptionText = log.IndexOf("</" + nodeName + ">", StringComparison.InvariantCulture);
-    var sub = log.Substring(startOfExceptionText, endOfExceptionText - startOfExceptionText);
+    string log = stringAppender.GetString();
+    int startOfExceptionText = log.IndexOf("<" + nodeName + ">", StringComparison.InvariantCulture) + nodeName.Length + 2;
+    int endOfExceptionText = log.IndexOf("</" + nodeName + ">", StringComparison.InvariantCulture);
+    string sub = log.Substring(startOfExceptionText, endOfExceptionText - startOfExceptionText);
     if (sub.StartsWith("<![CDATA["))
     {
       Assert.That(sub, Does.EndWith("]]>"));

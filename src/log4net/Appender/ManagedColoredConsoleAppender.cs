@@ -125,7 +125,7 @@ public class ManagedColoredConsoleAppender : AppenderSkeleton
   /// <param name="loggingEvent">The event to log.</param>
   /// <remarks>
   /// <para>
-  /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(log4net.Core.LoggingEvent)"/> method.
+  /// This method is called by the <see cref="AppenderSkeleton.DoAppend(log4net.Core.LoggingEvent)"/> method.
   /// </para>
   /// <para>
   /// The format of the output will depend on the appender's layout.

@@ -37,7 +37,7 @@ namespace log4net.Appender;
 /// </para>
 /// <para>
 /// Appenders can also implement the <see cref="IOptionHandler"/> interface. Therefore
-/// they would require that the <see cref="M:IOptionHandler.ActivateOptions()"/> method
+/// they would require that the <see cref="IOptionHandler.ActivateOptions()"/> method
 /// be called after the appenders properties have been configured.
 /// </para>
 /// </remarks>
@@ -45,11 +45,6 @@ namespace log4net.Appender;
 /// <author>Gert Driesen</author>
 public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandler, IFlushable
 {
-  /// <summary>
-  /// SyncRoot
-  /// </summary>
-  private protected object SyncRoot { get; } = new();
-
   /// <summary>
   /// Default constructor
   /// </summary>
@@ -212,13 +207,13 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// <summary>
   /// Performs threshold checks and invokes filters before 
   /// delegating actual logging to the subclasses specific 
-  /// <see cref="M:Append(LoggingEvent)"/> method.
+  /// <see cref="Append(LoggingEvent)"/> method.
   /// </summary>
   /// <param name="loggingEvent">The event to log.</param>
   /// <remarks>
   /// <para>
   /// This method cannot be overridden by derived classes. A
-  /// derived class should override the <see cref="M:Append(LoggingEvent)"/> method
+  /// derived class should override the <see cref="Append(LoggingEvent)"/> method
   /// which is called by this method.
   /// </para>
   /// <para>
@@ -240,14 +235,14 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   ///    </item>
   ///    <item>
   ///      <description>
-  ///      Calls <see cref="M:PreAppendCheck()"/> and checks that 
+  ///      Calls <see cref="PreAppendCheck()"/> and checks that 
   ///      it returns <c>true</c>.</description>
   ///    </item>
   /// </list>
   /// </para>
   /// <para>
   /// If all of the above steps succeed then the <paramref name="loggingEvent"/>
-  /// will be passed to the abstract <see cref="M:Append(LoggingEvent)"/> method.
+  /// will be passed to the abstract <see cref="Append(LoggingEvent)"/> method.
   /// </para>
   /// </remarks>
   public void DoAppend(LoggingEvent loggingEvent)
@@ -294,13 +289,13 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// <summary>
   /// Performs threshold checks and invokes filters before 
   /// delegating actual logging to the subclasses specific 
-  /// <see cref="M:Append(LoggingEvent[])"/> method.
+  /// <see cref="Append(LoggingEvent[])"/> method.
   /// </summary>
   /// <param name="loggingEvents">The array of events to log.</param>
   /// <remarks>
   /// <para>
   /// This method cannot be overridden by derived classes. A
-  /// derived class should override the <see cref="M:Append(LoggingEvent[])"/> method
+  /// derived class should override the <see cref="Append(LoggingEvent[])"/> method
   /// which is called by this method.
   /// </para>
   /// <para>
@@ -322,14 +317,14 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   ///    </item>
   ///    <item>
   ///      <description>
-  ///      Calls <see cref="M:PreAppendCheck()"/> and checks that 
+  ///      Calls <see cref="PreAppendCheck()"/> and checks that 
   ///      it returns <c>true</c>.</description>
   ///    </item>
   /// </list>
   /// </para>
   /// <para>
   /// If all of the above steps succeed then the <paramref name="loggingEvents"/>
-  /// will be passed to the <see cref="M:Append(LoggingEvent[])"/> method.
+  /// will be passed to the <see cref="Append(LoggingEvent[])"/> method.
   /// </para>
   /// </remarks>
   public void DoAppend(LoggingEvent[] loggingEvents)
@@ -417,7 +412,8 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// </remarks>
   protected virtual bool FilterEvent(LoggingEvent loggingEvent)
   {
-    if (!IsAsSevereAsThreshold(loggingEvent.EnsureNotNull().Level))
+    loggingEvent.EnsureNotNull();
+    if (!IsAsSevereAsThreshold(loggingEvent.Level))
     {
       return false;
     }
@@ -459,11 +455,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// </remarks>
   public virtual void AddFilter(IFilter filter)
   {
-    if (filter is null)
-    {
-      throw new ArgumentNullException(nameof(filter));
-    }
-
+    filter.EnsureNotNull();
     if (FilterHead is null)
     {
       FilterHead = _tailFilter = filter;
@@ -483,10 +475,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// Clears the filter list for this appender.
   /// </para>
   /// </remarks>
-  public virtual void ClearFilters()
-  {
-    FilterHead = _tailFilter = null;
-  }
+  public virtual void ClearFilters() => FilterHead = _tailFilter = null;
 
   /// <summary>
   /// Checks if the message level is below this appender's threshold.
@@ -497,10 +486,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// requirements of this appender. A null level always maps to <c>true</c>,
   /// the equivalent of <see cref="Level.All"/>.
   /// </returns>
-  protected virtual bool IsAsSevereAsThreshold(Level? level)
-  {
-    return level is null || level >= Threshold;
-  }
+  protected virtual bool IsAsSevereAsThreshold(Level? level) => level is null || level >= Threshold;
 
   /// <summary>
   /// Is called when the appender is closed. Derived classes should override 
@@ -530,12 +516,12 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// A subclass must implement this method to perform
   /// logging of the <paramref name="loggingEvent"/>.
   /// </para>
-  /// <para>This method will be called by <see cref="M:DoAppend(LoggingEvent)"/>
+  /// <para>This method will be called by <see cref="DoAppend(LoggingEvent)"/>
   /// if all the conditions listed for that method are met.
   /// </para>
   /// <para>
   /// To restrict the logging of events in the appender
-  /// override the <see cref="M:PreAppendCheck()"/> method.
+  /// override the <see cref="PreAppendCheck()"/> method.
   /// </para>
   /// </remarks>
   protected abstract void Append(LoggingEvent loggingEvent);
@@ -546,12 +532,12 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// <param name="loggingEvents">the array of logging events</param>
   /// <remarks>
   /// <para>
-  /// This base class implementation calls the <see cref="M:Append(LoggingEvent)"/>
+  /// This base class implementation calls the <see cref="Append(LoggingEvent)"/>
   /// method for each element in the bulk array.
   /// </para>
   /// <para>
   /// A subclass that can better process a bulk array of events should
-  /// override this method in addition to <see cref="M:Append(LoggingEvent)"/>.
+  /// override this method in addition to <see cref="Append(LoggingEvent)"/>.
   /// </para>
   /// </remarks>
   protected virtual void Append(LoggingEvent[] loggingEvents)
@@ -568,12 +554,12 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// <param name="loggingEvents">The logging events</param>
   /// <remarks>
   /// <para>
-  /// This base class implementation calls the <see cref="M:Append(LoggingEvent)"/>
+  /// This base class implementation calls the <see cref="Append(LoggingEvent)"/>
   /// method for each element in the bulk array.
   /// </para>
   /// <para>
   /// A subclass that can better process a bulk array of events should
-  /// override this method in addition to <see cref="M:Append(LoggingEvent)"/>.
+  /// override this method in addition to <see cref="Append(LoggingEvent)"/>.
   /// </para>
   /// </remarks>
   protected virtual void Append(IEnumerable<LoggingEvent> loggingEvents)
@@ -585,23 +571,23 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   }
 
   /// <summary>
-  /// Called before <see cref="M:Append(LoggingEvent)"/> as a precondition.
+  /// Called before <see cref="Append(LoggingEvent)"/> as a precondition.
   /// </summary>
   /// <remarks>
   /// <para>
-  /// This method is called by <see cref="M:DoAppend(LoggingEvent)"/>
-  /// before the call to the abstract <see cref="M:Append(LoggingEvent)"/> method.
+  /// This method is called by <see cref="DoAppend(LoggingEvent)"/>
+  /// before the call to the abstract <see cref="Append(LoggingEvent)"/> method.
   /// </para>
   /// <para>
   /// This method can be overridden in a subclass to extend the checks 
-  /// made before the event is passed to the <see cref="M:Append(LoggingEvent)"/> method.
+  /// made before the event is passed to the <see cref="Append(LoggingEvent)"/> method.
   /// </para>
   /// <para>
   /// A subclass should ensure that they delegate this call to
   /// this base class if it is overridden.
   /// </para>
   /// </remarks>
-  /// <returns><c>true</c> if the call to <see cref="M:Append(LoggingEvent)"/> should proceed.</returns>
+  /// <returns><c>true</c> if the call to <see cref="Append(LoggingEvent)"/> should proceed.</returns>
   protected virtual bool PreAppendCheck()
   {
     if ((Layout is null) && RequiresLayout)
@@ -631,7 +617,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// </para>
   /// <para>
   /// Where possible use the alternative version of this method
-  /// <see cref="M:RenderLoggingEvent(TextWriter,LoggingEvent)"/>.
+  /// <see cref="RenderLoggingEvent(TextWriter,LoggingEvent)"/>.
   /// That method streams the rendering onto an existing Writer
   /// which can give better performance if the caller already has
   /// a <see cref="TextWriter"/> open and ready for writing.
@@ -669,9 +655,9 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// will append the exception text to the rendered string.
   /// </para>
   /// <para>
-  /// Use this method in preference to <see cref="M:RenderLoggingEvent(LoggingEvent)"/>
+  /// Use this method in preference to <see cref="RenderLoggingEvent(LoggingEvent)"/>
   /// where possible. If, however, the caller needs to render the event
-  /// to a string then <see cref="M:RenderLoggingEvent(LoggingEvent)"/> does
+  /// to a string then <see cref="RenderLoggingEvent(LoggingEvent)"/> does
   /// provide an efficient mechanism for doing so.
   /// </para>
   /// </remarks>

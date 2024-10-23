@@ -122,7 +122,7 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// does not exist a <see cref="LogException"/> is thrown.
   /// </para>
   /// <para>
-  /// Use <see cref="M:CreateRepository(string, Type)"/> to create a repository.
+  /// Use <see cref="CreateRepository(string, Type)"/> to create a repository.
   /// </para>
   /// </remarks>
   /// <exception cref="ArgumentNullException"><paramref name="repositoryName"/> is <see langword="null" />.</exception>
@@ -148,7 +148,7 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// <remarks>
   /// <para>
   /// The <see cref="ILoggerRepository"/> created will be associated with the repository
-  /// specified such that a call to <see cref="M:GetRepository(Assembly)"/> with the
+  /// specified such that a call to <see cref="GetRepository(Assembly)"/> with the
   /// same assembly specified will return the same repository instance.
   /// </para>
   /// <para>
@@ -189,7 +189,7 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// <remarks>
   /// <para>
   /// The <see cref="ILoggerRepository"/> created will be associated with the repository
-  /// specified such that a call to <see cref="M:GetRepository(Assembly)"/> with the
+  /// specified such that a call to <see cref="GetRepository(Assembly)"/> with the
   /// same assembly specified will return the same repository instance.
   /// </para>
   /// <para>
@@ -299,7 +299,7 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// <remarks>
   /// <para>
   /// The <see cref="ILoggerRepository"/> created will be associated with the repository
-  /// specified such that a call to <see cref="M:GetRepository(string)"/> with the
+  /// specified such that a call to <see cref="GetRepository(string)"/> with the
   /// same repository specified will return the same repository instance.
   /// </para>
   /// </remarks>
@@ -375,8 +375,8 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// <returns><c>true</c> if the repository exists</returns>
   /// <remarks>
   /// <para>
-  /// Test if a named repository exists. Use <see cref="M:CreateRepository(string, Type)"/>
-  /// to create a new repository and <see cref="M:GetRepository(string)"/> to retrieve 
+  /// Test if a named repository exists. Use <see cref="CreateRepository(string, Type)"/>
+  /// to create a new repository and <see cref="GetRepository(string)"/> to retrieve 
   /// a repository.
   /// </para>
   /// </remarks>

@@ -47,7 +47,7 @@ internal sealed class TypeConverter : IConvertFrom
   /// <returns>the Type</returns>
   /// <remarks>
   /// <para>
-  /// Uses the <see cref="M:Type.GetType(string,bool)"/> method to convert the
+  /// Uses the <see cref="Type.GetType(string,bool)"/> method to convert the
   /// <see cref="string"/> argument to a <see cref="Type"/>.
   /// Additional effort is made to locate partially specified types
   /// by searching the loaded assemblies.

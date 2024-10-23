@@ -35,6 +35,7 @@ namespace log4net.Util.TypeConverters;
 /// <author>Nicko Cadell</author>
 /// <author>Gert Driesen</author>
 [Log4NetSerializable]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1058:Types should not extend certain base types")]
 public class ConversionNotSupportedException : ApplicationException
 {
   /// <summary>
@@ -46,8 +47,7 @@ public class ConversionNotSupportedException : ApplicationException
   /// </para>
   /// </remarks>
   public ConversionNotSupportedException()
-  {
-  }
+  { }
 
   /// <summary>
   /// Constructor
@@ -59,9 +59,9 @@ public class ConversionNotSupportedException : ApplicationException
   /// with the specified message.
   /// </para>
   /// </remarks>
-  public ConversionNotSupportedException(string message) : base(message)
-  {
-  }
+  public ConversionNotSupportedException(string message)
+    : base(message)
+  { }
 
   /// <summary>
   /// Constructor
@@ -74,9 +74,9 @@ public class ConversionNotSupportedException : ApplicationException
   /// with the specified message and inner exception.
   /// </para>
   /// </remarks>
-  public ConversionNotSupportedException(string message, Exception? innerException) : base(message, innerException)
-  {
-  }
+  public ConversionNotSupportedException(string message, Exception? innerException)
+    : base(message, innerException)
+  { }
 
   /// <summary>
   /// Serialization constructor
@@ -89,9 +89,9 @@ public class ConversionNotSupportedException : ApplicationException
   /// with serialized data.
   /// </para>
   /// </remarks>
-  protected ConversionNotSupportedException(SerializationInfo info, StreamingContext context) : base(info, context)
-  {
-  }
+  protected ConversionNotSupportedException(SerializationInfo info, StreamingContext context)
+    : base(info, context)
+  { }
 
   /// <summary>
   /// Creates a new instance of the <see cref="ConversionNotSupportedException" /> class.
@@ -105,9 +105,7 @@ public class ConversionNotSupportedException : ApplicationException
   /// </para>
   /// </remarks>
   public static ConversionNotSupportedException Create(Type destinationType, object sourceValue)
-  {
-    return Create(destinationType, sourceValue, null);
-  }
+    => Create(destinationType, sourceValue, null);
 
   /// <summary>
   /// Creates a new instance of the <see cref="ConversionNotSupportedException" /> class.
@@ -127,9 +125,6 @@ public class ConversionNotSupportedException : ApplicationException
     {
       return new ConversionNotSupportedException($"Cannot convert value [null] to type [{destinationType}]", innerException);
     }
-    else
-    {
-      return new ConversionNotSupportedException($"Cannot convert from type [{sourceValue.GetType()}] value [{sourceValue}] to type [{destinationType}]", innerException);
-    }
+    return new ConversionNotSupportedException($"Cannot convert from type [{sourceValue.GetType()}] value [{sourceValue}] to type [{destinationType}]", innerException);
   }
 }

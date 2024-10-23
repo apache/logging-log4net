@@ -26,7 +26,7 @@ using System.Data;
 
 namespace log4net.Tests.Appender.AdoNet;
 
-public class Log4NetParameterCollection : CollectionBase, IDataParameterCollection
+internal sealed class Log4NetParameterCollection : CollectionBase, IDataParameterCollection
 {
   private readonly Dictionary<string, int> _parameterNameToIndex = new(StringComparer.Ordinal);
 
@@ -55,13 +55,7 @@ public class Log4NetParameterCollection : CollectionBase, IDataParameterCollecti
     set => InnerList[IndexOf(parameterName)] = value;
   }
 
-  public void RemoveAt(string parameterName)
-  {
-    throw new NotImplementedException();
-  }
+  public void RemoveAt(string parameterName) => throw new NotImplementedException();
 
-  public bool Contains(string parameterName)
-  {
-    throw new NotImplementedException();
-  }
+  public bool Contains(string parameterName) => throw new NotImplementedException();
 }

@@ -44,17 +44,11 @@ public class CountingAppender : AppenderSkeleton
   /// <summary>
   /// Reset the counter to zero
   /// </summary>
-  public void ResetCounter()
-  {
-    Counter = 0;
-  }
+  public void ResetCounter() => Counter = 0;
 
   /// <summary>
   /// Registers how many times the method has been called.
   /// </summary>
-  /// <param name="logEvent">The logging event.</param>
-  protected override void Append(LoggingEvent logEvent)
-  {
-    Counter++;
-  }
+  /// <param name="loggingEvent">The logging event.</param>
+  protected override void Append(LoggingEvent loggingEvent) => Counter++;
 }

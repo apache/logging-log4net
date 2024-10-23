@@ -234,7 +234,7 @@ public class AnsiColorTerminalAppender : AppenderSkeleton
   /// <param name="loggingEvent">The event to log.</param>
   /// <remarks>
   /// <para>
-  /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/> method.
+  /// This method is called by the <see cref="AppenderSkeleton.DoAppend(LoggingEvent)"/> method.
   /// </para>
   /// <para>
   /// The format of the output will depend on the appender layout.

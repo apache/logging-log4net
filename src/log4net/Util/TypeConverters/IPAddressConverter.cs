@@ -49,7 +49,7 @@ internal sealed class IpAddressConverter : IConvertFrom
   /// </remarks>
   public bool CanConvertFrom(Type sourceType)
   {
-    return (sourceType == typeof(string));
+    return sourceType == typeof(string);
   }
 
   /// <summary>

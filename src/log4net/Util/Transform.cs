@@ -48,6 +48,7 @@ public static class Transform
   /// </remarks>
   public static void WriteEscapedXmlString(XmlWriter writer, string textData, string invalidCharReplacement)
   {
+    writer.EnsureNotNull();
     string stringData = MaskXmlInvalidCharacters(textData, invalidCharReplacement);
     // Write either escaped text or CDATA sections
 
@@ -113,10 +114,8 @@ public static class Transform
   /// with the mask string specified.
   /// </para>
   /// </remarks>
-  public static string MaskXmlInvalidCharacters(string textData, string mask)
-  {
-    return _invalidchars.Replace(textData, mask);
-  }
+  public static string MaskXmlInvalidCharacters(string textData, string mask) 
+    => _invalidchars.Replace(textData, mask);
 
   /// <summary>
   /// Count the number of times that the substring occurs in the text

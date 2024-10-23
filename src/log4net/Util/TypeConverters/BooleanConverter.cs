@@ -46,7 +46,7 @@ internal sealed class BooleanConverter : IConvertFrom
   /// </returns>
   public bool CanConvertFrom(Type sourceType)
   {
-    return (sourceType == typeof(string));
+    return sourceType == typeof(string);
   }
 
   /// <summary>

@@ -35,7 +35,7 @@ namespace log4net.Layout;
 /// <remarks>
 /// <note type="inheritinfo">
 /// <para>
-/// Subclasses must implement the <see cref="M:Format(TextWriter,LoggingEvent)"/>
+/// Subclasses must implement the <see cref="Format(TextWriter,LoggingEvent)"/>
 /// method.
 /// </para>
 /// <para>

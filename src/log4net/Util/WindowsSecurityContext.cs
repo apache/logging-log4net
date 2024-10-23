@@ -171,20 +171,7 @@ public class WindowsSecurityContext : Core.SecurityContext, IOptionHandler
   {
     if (Credentials == ImpersonationMode.User)
     {
-      if (UserName is null)
-      {
-        throw new ArgumentNullException(nameof(UserName));
-      }
-      if (DomainName is null)
-      {
-        throw new ArgumentNullException(nameof(DomainName));
-      }
-      if (_password is null)
-      {
-        throw new ArgumentNullException(nameof(Password));
-      }
-
-      _identity = LogonUser(UserName, DomainName, _password);
+      _identity = LogonUser(UserName.EnsureNotNull(), DomainName.EnsureNotNull(), _password.EnsureNotNull());
     }
   }
 
@@ -278,27 +265,19 @@ public class WindowsSecurityContext : Core.SecurityContext, IOptionHandler
   /// <summary>
   /// Adds <see cref="IDisposable"/> to <see cref="WindowsImpersonationContext"/>
   /// </summary>
+  /// <param name="impersonationContext">the impersonation context being wrapped</param>
   /// <remarks>
   /// <para>
   /// Helper class to expose the <see cref="WindowsImpersonationContext"/>
   /// through the <see cref="IDisposable"/> interface.
   /// </para>
   /// </remarks>
-  private sealed class DisposableImpersonationContext : IDisposable
+  private sealed class DisposableImpersonationContext(WindowsImpersonationContext impersonationContext) : IDisposable
   {
-    private readonly WindowsImpersonationContext _impersonationContext;
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="impersonationContext">the impersonation context being wrapped</param>
-    public DisposableImpersonationContext(WindowsImpersonationContext impersonationContext)
-      => _impersonationContext = impersonationContext;
-
     /// <summary>
     /// Revert the impersonation
     /// </summary>
-    public void Dispose() => _impersonationContext.Undo();
+    public void Dispose() => impersonationContext.Undo();
   }
 }
 #endif // NET462_OR_GREATER

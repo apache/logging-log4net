@@ -21,6 +21,7 @@ using System;
 using System.Text.RegularExpressions;
 
 using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Filter;
 
@@ -130,12 +131,7 @@ public class StringMatchFilter : FilterSkeleton
   /// </remarks>
   public override FilterDecision Decide(LoggingEvent loggingEvent) 
   {
-    if (loggingEvent is null)
-    {
-      throw new ArgumentNullException(nameof(loggingEvent));
-    }
-
-    string? msg = loggingEvent.RenderedMessage;
+    string? msg = loggingEvent.EnsureNotNull().RenderedMessage;
 
     // Check if we have been setup to filter
     if (msg is null || (StringToMatch is null && m_regexToMatch is null))

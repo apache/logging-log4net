@@ -35,34 +35,15 @@ namespace log4net.Repository.Hierarchy;
 /// <summary>
 /// Initializes the log4net environment using an XML DOM.
 /// </summary>
-/// <remarks>
-/// <para>
-/// Configures a <see cref="Hierarchy"/> using an XML DOM.
-/// </para>
-/// </remarks>
+/// <param name="hierarchy">The hierarchy to build.</param>
 /// <author>Nicko Cadell</author>
 /// <author>Gert Driesen</author>
-public class XmlHierarchyConfigurator
+public class XmlHierarchyConfigurator(Hierarchy hierarchy)
 {
   private enum ConfigUpdateMode
   {
     Merge,
     Overwrite
-  }
-
-  /// <summary>
-  /// Construct the configurator for a hierarchy
-  /// </summary>
-  /// <param name="hierarchy">The hierarchy to build.</param>
-  /// <remarks>
-  /// <para>
-  /// Initializes a new instance of the <see cref="XmlHierarchyConfigurator" /> class
-  /// with the specified <see cref="Hierarchy" />.
-  /// </para>
-  /// </remarks>
-  public XmlHierarchyConfigurator(Hierarchy hierarchy)
-  {
-    this._hierarchy = hierarchy;
   }
 
   /// <summary>
@@ -161,7 +142,7 @@ public class XmlHierarchyConfigurator
     if (configUpdateMode == ConfigUpdateMode.Overwrite)
     {
       // Reset to original unset configuration
-      _hierarchy.ResetConfiguration();
+      hierarchy.ResetConfiguration();
       LogLog.Debug(_declaringType, "Configuration reset before reading config.");
     }
 
@@ -201,7 +182,7 @@ public class XmlHierarchyConfigurator
         else
         {
           // Read the param tags and set properties on the hierarchy
-          SetParameter(currentElement, _hierarchy);
+          SetParameter(currentElement, hierarchy);
         }
       }
     }
@@ -213,7 +194,7 @@ public class XmlHierarchyConfigurator
     {
       if (ConvertStringTo(typeof(Level), thresholdStr) is Level thresholdLevel)
       {
-        _hierarchy.Threshold = thresholdLevel;
+        hierarchy.Threshold = thresholdLevel;
       }
       else
       {
@@ -366,7 +347,7 @@ public class XmlHierarchyConfigurator
     // Setting up a logger needs to be an atomic operation, in order
     // to protect potential log operations while logger
     // configuration is in progress.
-    if (_hierarchy.GetLogger(loggerName) is Logger log)
+    if (hierarchy.GetLogger(loggerName) is Logger log)
     {
       lock (log)
       {
@@ -390,7 +371,7 @@ public class XmlHierarchyConfigurator
   /// </remarks>
   protected void ParseRoot(XmlElement rootElement)
   {
-    Logger root = _hierarchy.Root;
+    Logger root = hierarchy.Root;
     // logger configuration needs to be atomic
     lock (root)
     {
@@ -474,7 +455,7 @@ public class XmlHierarchyConfigurator
 
     try
     {
-      _hierarchy.RendererMap.Put(SystemInfo.GetTypeFromString(renderedClassName, true, true)!, renderer);
+      hierarchy.RendererMap.Put(SystemInfo.GetTypeFromString(renderedClassName, true, true)!, renderer);
     }
     catch (Exception e) when (!e.IsFatal())
     {
@@ -546,6 +527,7 @@ public class XmlHierarchyConfigurator
   /// string argument and return a value that can be used to
   /// set the property.
   /// </remarks>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
   protected void SetParameter(XmlElement element, object target)
   {
     // Get the property name
@@ -871,7 +853,7 @@ public class XmlHierarchyConfigurator
     if (typeof(Level) == type)
     {
       // Property wants a level
-      Level? levelValue = _hierarchy.LevelMap[value];
+      Level? levelValue = hierarchy.LevelMap[value];
 
       if (levelValue is null)
       {
@@ -1001,7 +983,7 @@ public class XmlHierarchyConfigurator
     }
   }
 
-  private static IDictionary CreateCaseInsensitiveWrapper(IDictionary dict)
+  private static Hashtable CreateCaseInsensitiveWrapper(IDictionary dict)
   {
     Hashtable hash = SystemInfo.CreateCaseInsensitiveHashtable();
     foreach (DictionaryEntry entry in dict)
@@ -1046,11 +1028,6 @@ public class XmlHierarchyConfigurator
   /// key: appenderName, value: appender.
   /// </summary>
   private readonly Dictionary<string, IAppender> _appenderBag = new(StringComparer.Ordinal);
-
-  /// <summary>
-  /// The Hierarchy being configured.
-  /// </summary>
-  private readonly Hierarchy _hierarchy;
 
   /// <summary>
   /// The fully qualified type of the XmlHierarchyConfigurator class.

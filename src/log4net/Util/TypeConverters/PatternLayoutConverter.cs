@@ -46,7 +46,7 @@ internal sealed class PatternLayoutConverter : IConvertFrom
   /// </returns>
   public bool CanConvertFrom(System.Type sourceType)
   {
-    return (sourceType == typeof(string));
+    return sourceType == typeof(string);
   }
 
   /// <summary>

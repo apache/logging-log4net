@@ -94,44 +94,48 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   /// Initializes a new instance of the <c>PluginCollection</c> class
   /// that contains elements copied from the specified <c>PluginCollection</c>.
   /// </summary>
-  /// <param name="c">The <c>PluginCollection</c> whose elements are copied to the new collection.</param>
-  public PluginCollection(PluginCollection c)
+  /// <param name="collection">The <c>PluginCollection</c> whose elements are copied to the new collection.</param>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2214:Do not call overridable methods in constructors")]
+  public PluginCollection(PluginCollection collection)
   {
-    _array = new IPlugin[c.Count];
-    AddRange(c);
+    _array = new IPlugin[collection.EnsureNotNull().Count];
+    AddRange(collection);
   }
 
   /// <summary>
   /// Initializes a new instance of the <c>PluginCollection</c> class
   /// that contains elements copied from the specified <see cref="IPlugin"/> array.
   /// </summary>
-  /// <param name="a">The <see cref="IPlugin"/> array whose elements are copied to the new list.</param>
-  public PluginCollection(IPlugin[] a)
+  /// <param name="array">The <see cref="IPlugin"/> array whose elements are copied to the new list.</param>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2214:Do not call overridable methods in constructors")]
+  public PluginCollection(IPlugin[] array)
   {
-    _array = new IPlugin[a.Length];
-    AddRange(a);
+    _array = new IPlugin[array.EnsureNotNull().Length];
+    AddRange(array);
   }
 
   /// <summary>
   /// Initializes a new instance of the <c>PluginCollection</c> class
   /// that contains elements copied from the specified <see cref="IPlugin"/> collection.
   /// </summary>
-  /// <param name="col">The <see cref="IPlugin"/> collection whose elements are copied to the new list.</param>
-  public PluginCollection(ICollection col)
+  /// <param name="collection">The <see cref="IPlugin"/> collection whose elements are copied to the new list.</param>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2214:Do not call overridable methods in constructors")]
+  public PluginCollection(ICollection collection)
   {
-    _array = new IPlugin[col.Count];
-    AddRange(col);
+    _array = new IPlugin[collection.EnsureNotNull().Count];
+    AddRange(collection);
   }
 
   /// <summary>
   /// Initializes a new instance of the <c>PluginCollection</c> class
   /// that contains elements copied from the specified <see cref="IPlugin"/> collection.
   /// </summary>
-  /// <param name="col">The <see cref="IPlugin"/> collection whose elements are copied to the new list.</param>
-  public PluginCollection(ICollection<IPlugin> col)
+  /// <param name="collection">The <see cref="IPlugin"/> collection whose elements are copied to the new list.</param>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2214:Do not call overridable methods in constructors")]
+  public PluginCollection(ICollection<IPlugin> collection)
   {
-    _array = new IPlugin[col.Count];
-    AddRange(col);
+    _array = new IPlugin[collection.EnsureNotNull().Count];
+    AddRange(collection);
   }
 
   /// <summary>
@@ -151,10 +155,7 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   /// Allow subclasses to avoid our default constructors
   /// </summary>
   /// <exclude/>
-  protected internal PluginCollection(Tag _)
-  {
-    _array = Array.Empty<IPlugin>();
-  }
+  protected internal PluginCollection(Tag _) => _array = Array.Empty<IPlugin>();
 
   /// <summary>
   /// Gets the number of elements actually contained in the <c>PluginCollection</c>.
@@ -176,12 +177,12 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   /// <param name="start">The zero-based index in <paramref name="array"/> at which copying begins.</param>
   public virtual void CopyTo(IPlugin[] array, int start)
   {
-    if (_count > array.GetUpperBound(0) + 1 - start)
+    if (_count > array.EnsureNotNull().GetUpperBound(0) + 1 - start)
     {
       throw new ArgumentException("Destination array was not long enough.");
     }
 
-    Array.Copy(this._array, 0, array, start, _count);
+    Array.Copy(_array, 0, array, start, _count);
   }
 
   /// <summary>
@@ -205,7 +206,7 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   /// <exception cref="ArgumentOutOfRangeException">
   /// <para><paramref name="index"/> is less than zero.</para>
   /// <para>-or-</para>
-  /// <para><paramref name="index"/> is equal to or greater than <see cref="PluginCollection.Count"/>.</para>
+  /// <para><paramref name="index"/> is equal to or greater than <see cref="Count"/>.</para>
   /// </exception>
   public virtual IPlugin this[int index]
   {
@@ -310,7 +311,7 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   /// <exception cref="ArgumentOutOfRangeException">
   /// <para><paramref name="index"/> is less than zero</para>
   /// <para>-or-</para>
-  /// <para><paramref name="index"/> is equal to or greater than <see cref="PluginCollection.Count"/>.</para>
+  /// <para><paramref name="index"/> is equal to or greater than <see cref="Count"/>.</para>
   /// </exception>
   public virtual void Insert(int index, IPlugin item)
   {
@@ -356,7 +357,7 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   /// <exception cref="ArgumentOutOfRangeException">
   /// <para><paramref name="index"/> is less than zero.</para>
   /// <para>-or-</para>
-  /// <para><paramref name="index"/> is equal to or greater than <see cref="PluginCollection.Count"/>.</para>
+  /// <para><paramref name="index"/> is equal to or greater than <see cref="Count"/>.</para>
   /// </exception>
   public virtual void RemoveAt(int index)
   {
@@ -430,17 +431,17 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   /// <summary>
   /// Adds the elements of another <c>PluginCollection</c> to the current <c>PluginCollection</c>.
   /// </summary>
-  /// <param name="x">The <c>PluginCollection</c> whose elements should be added to the end of the current <c>PluginCollection</c>.</param>
-  /// <returns>The new <see cref="PluginCollection.Count"/> of the <c>PluginCollection</c>.</returns>
-  public virtual int AddRange(PluginCollection x)
+  /// <param name="collection">The <c>PluginCollection</c> whose elements should be added to the end of the current <c>PluginCollection</c>.</param>
+  /// <returns>The new <see cref="Count"/> of the <c>PluginCollection</c>.</returns>
+  public virtual int AddRange(PluginCollection collection)
   {
-    if (_count + x.Count >= _array.Length)
+    if (_count + collection.EnsureNotNull().Count >= _array.Length)
     {
-      EnsureCapacity(_count + x.Count);
+      EnsureCapacity(_count + collection.Count);
     }
 
-    Array.Copy(x._array, 0, _array, _count, x.Count);
-    _count += x.Count;
+    Array.Copy(collection._array, 0, _array, _count, collection.Count);
+    _count += collection.Count;
     _version++;
 
     return _count;
@@ -449,17 +450,17 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   /// <summary>
   /// Adds the elements of a <see cref="IPlugin"/> array to the current <c>PluginCollection</c>.
   /// </summary>
-  /// <param name="x">The <see cref="IPlugin"/> array whose elements should be added to the end of the <c>PluginCollection</c>.</param>
-  /// <returns>The new <see cref="PluginCollection.Count"/> of the <c>PluginCollection</c>.</returns>
-  public virtual int AddRange(IPlugin[] x)
+  /// <param name="array">The <see cref="IPlugin"/> array whose elements should be added to the end of the <c>PluginCollection</c>.</param>
+  /// <returns>The new <see cref="Count"/> of the <c>PluginCollection</c>.</returns>
+  public virtual int AddRange(IPlugin[] array)
   {
-    if (_count + x.Length >= _array.Length)
+    if (_count + array.EnsureNotNull().Length >= _array.Length)
     {
-      EnsureCapacity(_count + x.Length);
+      EnsureCapacity(_count + array.Length);
     }
 
-    Array.Copy(x, 0, _array, _count, x.Length);
-    _count += x.Length;
+    Array.Copy(array, 0, _array, _count, array.Length);
+    _count += array.Length;
     _version++;
 
     return _count;
@@ -468,16 +469,16 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   /// <summary>
   /// Adds the elements of a <see cref="IPlugin"/> collection to the current <c>PluginCollection</c>.
   /// </summary>
-  /// <param name="col">The <see cref="IPlugin"/> collection whose elements should be added to the end of the <c>PluginCollection</c>.</param>
-  /// <returns>The new <see cref="PluginCollection.Count"/> of the <c>PluginCollection</c>.</returns>
-  public virtual int AddRange(ICollection col)
+  /// <param name="collection">The <see cref="IPlugin"/> collection whose elements should be added to the end of the <c>PluginCollection</c>.</param>
+  /// <returns>The new <see cref="Count"/> of the <c>PluginCollection</c>.</returns>
+  public virtual int AddRange(ICollection collection)
   {
-    if (_count + col.Count >= _array.Length)
+    if (_count + collection.EnsureNotNull().Count >= _array.Length)
     {
-      EnsureCapacity(_count + col.Count);
+      EnsureCapacity(_count + collection.Count);
     }
 
-    foreach (object item in col)
+    foreach (object item in collection)
     {
       Add((IPlugin)item);
     }
@@ -488,16 +489,16 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   /// <summary>
   /// Adds the elements of a <see cref="IPlugin"/> collection to the current <c>PluginCollection</c>.
   /// </summary>
-  /// <param name="col">The <see cref="IPlugin"/> collection whose elements should be added to the end of the <c>PluginCollection</c>.</param>
-  /// <returns>The new <see cref="PluginCollection.Count"/> of the <c>PluginCollection</c>.</returns>
-  public virtual int AddRange(ICollection<IPlugin> col)
+  /// <param name="collection">The <see cref="IPlugin"/> collection whose elements should be added to the end of the <c>PluginCollection</c>.</param>
+  /// <returns>The new <see cref="Count"/> of the <c>PluginCollection</c>.</returns>
+  public virtual int AddRange(ICollection<IPlugin> collection)
   {
-    if (_count + col.Count >= _array.Length)
+    if (_count + collection.EnsureNotNull().Count >= _array.Length)
     {
-      EnsureCapacity(_count + col.Count);
+      EnsureCapacity(_count + collection.Count);
     }
 
-    foreach (IPlugin item in col)
+    foreach (IPlugin item in collection)
     {
       Add(item);
     }
@@ -513,18 +514,18 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   /// <exception cref="ArgumentOutOfRangeException">
   /// <para><paramref name="i"/> is less than zero.</para>
   /// <para>-or-</para>
-  /// <para><paramref name="i"/> is equal to or greater than <see cref="PluginCollection.Count"/>.</para>
+  /// <para><paramref name="i"/> is equal to or greater than <see cref="Count"/>.</para>
   /// </exception>
   private void ValidateIndex(int i) => ValidateIndex(i, false);
 
   /// <exception cref="ArgumentOutOfRangeException">
   /// <para><paramref name="i"/> is less than zero.</para>
   /// <para>-or-</para>
-  /// <para><paramref name="i"/> is equal to or greater than <see cref="PluginCollection.Count"/>.</para>
+  /// <para><paramref name="i"/> is equal to or greater than <see cref="Count"/>.</para>
   /// </exception>
   private void ValidateIndex(int i, bool allowEqualEnd)
   {
-    int max = (allowEqualEnd) ? (_count) : (_count - 1);
+    int max = allowEqualEnd ? _count : (_count - 1);
     if (i < 0 || i > max)
     {
       throw SystemInfo.CreateArgumentOutOfRangeException(nameof(i), i, $"Index was out of range. Must be non-negative and less than the size of the collection. [{i}] Specified argument was out of the range of valid values.");
@@ -533,7 +534,7 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
 
   private void EnsureCapacity(int min)
   {
-    int newCapacity = ((_array.Length == 0) ? DefaultCapacity : _array.Length * 2);
+    int newCapacity = (_array.Length == 0) ? DefaultCapacity : _array.Length * 2;
     if (newCapacity < min)
     {
       newCapacity = min;
@@ -608,7 +609,7 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
       }
 
       ++_index;
-      return (_index < _collection.Count);
+      return _index < _collection.Count;
     }
 
     /// <summary>

@@ -30,15 +30,12 @@ namespace log4net.Tests.DateFormatter;
 public class AbsoluteTimeDateFormatterTest
 {
   [TearDown]
-  public void ResetCounts()
-  {
-    FormatterOne.Invocations = 0;
-  }
+  public void ResetCounts() => FormatterOne.Invocations = 0;
 
   [Test]
   public void CacheWorksForSameTicks()
   {
-    StringWriter sw = new();
+    using StringWriter sw = new();
     FormatterOne f1 = new();
     FormatterOne f2 = new();
     DateTime dt = DateTime.Now;
@@ -50,7 +47,7 @@ public class AbsoluteTimeDateFormatterTest
   [Test]
   public void CacheWorksForSameSecond()
   {
-    StringWriter sw = new();
+    using StringWriter sw = new();
     FormatterOne f1 = new();
     FormatterOne f2 = new();
     DateTime dt1 = DateTime.Today;
@@ -63,7 +60,7 @@ public class AbsoluteTimeDateFormatterTest
   [Test]
   public void CacheExpiresWhenCrossingSecond()
   {
-    StringWriter sw = new();
+    using StringWriter sw = new();
     FormatterOne f1 = new();
     FormatterOne f2 = new();
     DateTime dt1 = DateTime.Today.AddMinutes(1);
@@ -76,7 +73,7 @@ public class AbsoluteTimeDateFormatterTest
   [Test]
   public void CacheIsLocalToSubclass()
   {
-    StringWriter sw = new();
+    using StringWriter sw = new();
     FormatterOne f1 = new();
     FormatterTwo f2 = new();
     DateTime dt1 = DateTime.Today.AddMinutes(10);
@@ -88,9 +85,9 @@ public class AbsoluteTimeDateFormatterTest
   [Test]
   public void TestFormattingResults()
   {
-    var formatter = new AbsoluteTimeDateFormatter();
-    var sb = new StringBuilder();
-    using var writer = new StringWriter(sb, CultureInfo.InvariantCulture);
+    AbsoluteTimeDateFormatter formatter = new();
+    StringBuilder sb = new();
+    using StringWriter writer = new(sb, CultureInfo.InvariantCulture);
 
     // Tests for prepended 0 characters for 2-digit and 3-digit portions.
     formatter.FormatDate(new DateTime(1970, 1, 1, 1, 1, 1).AddMilliseconds(1), writer);
@@ -108,12 +105,8 @@ internal class FormatterOne : AbsoluteTimeDateFormatter
 {
   internal static int Invocations;
 
-  override protected void FormatDateWithoutMillis(DateTime dateToFormat, StringBuilder buffer)
-  {
-    Invocations++;
-  }
+  protected override void FormatDateWithoutMillis(DateTime dateToFormat, StringBuilder buffer) => Invocations++;
 }
 
 internal sealed class FormatterTwo : FormatterOne
-{
-}
+{ }

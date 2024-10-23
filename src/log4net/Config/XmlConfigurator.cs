@@ -636,10 +636,10 @@ public static class XmlConfigurator
   /// </para>
   /// <para>
   /// For more information on how to configure log4net using
-  /// a separate configuration file, see <see cref="M:Configure(FileInfo)"/>.
+  /// a separate configuration file, see <see cref="Configure(FileInfo)"/>.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Configure(FileInfo)"/>
+  /// <seealso cref="Configure(FileInfo)"/>
   public static ICollection ConfigureAndWatch(FileInfo configFile)
   {
     List<LogLog> configurationMessages = [];
@@ -675,10 +675,10 @@ public static class XmlConfigurator
   /// </para>
   /// <para>
   /// For more information on how to configure log4net using
-  /// a separate configuration file, see <see cref="M:Configure(FileInfo)"/>.
+  /// a separate configuration file, see <see cref="Configure(FileInfo)"/>.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Configure(FileInfo)"/>
+  /// <seealso cref="Configure(FileInfo)"/>
   public static ICollection ConfigureAndWatch(ILoggerRepository repository, FileInfo configFile)
   {
     repository.EnsureNotNull();

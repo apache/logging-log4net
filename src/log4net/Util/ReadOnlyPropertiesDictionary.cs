@@ -68,7 +68,7 @@ public class ReadOnlyPropertiesDictionary : ILog4NetSerializable, IDictionary, I
   /// </remarks>
   public ReadOnlyPropertiesDictionary(ReadOnlyPropertiesDictionary propertiesDictionary)
   {
-    foreach (KeyValuePair<string, object?> entry in propertiesDictionary)
+    foreach (KeyValuePair<string, object?> entry in propertiesDictionary.EnsureNotNull())
     {
       InnerHashtable[entry.Key] = entry.Value;
     }
@@ -85,9 +85,10 @@ public class ReadOnlyPropertiesDictionary : ILog4NetSerializable, IDictionary, I
   /// with serialized data.
   /// </para>
   /// </remarks>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter")]
   protected ReadOnlyPropertiesDictionary(SerializationInfo info, StreamingContext context)
   {
-    foreach (var entry in info)
+    foreach (SerializationEntry entry in info.EnsureNotNull())
     {
       // The keys are stored as Xml encoded names
       InnerHashtable[XmlConvert.DecodeName(entry.Name) ?? string.Empty] = entry.Value;
@@ -118,26 +119,20 @@ public class ReadOnlyPropertiesDictionary : ILog4NetSerializable, IDictionary, I
   /// <summary>
   /// See <see cref="IDictionary{TKey,TValue}.Add(TKey,TValue)"/>.
   /// </summary>
-  public virtual void Add(string key, object? value)
-  {
-    throw new NotSupportedException(ReadOnlyMessage);
-  }
+  public virtual void Add(string key, object? value) 
+    => throw new NotSupportedException(ReadOnlyMessage);
 
   /// <summary>
   /// See <see cref="IDictionary{TKey,TValue}.Remove(TKey)"/>.
   /// </summary>
-  public virtual bool Remove(string key)
-  {
-    throw new NotSupportedException(ReadOnlyMessage);
-  }
+  public virtual bool Remove(string key) 
+    => throw new NotSupportedException(ReadOnlyMessage);
 
   /// <summary>
   /// See <see cref="IDictionary{TKey,TValue}.TryGetValue(TKey,out TValue)"/>.
   /// </summary>
-  public bool TryGetValue(string key, out object? value)
-  {
-    return InnerHashtable.TryGetValue(key, out value);
-  }
+  public bool TryGetValue(string key, out object? value) 
+    => InnerHashtable.TryGetValue(key, out value);
 
   /// <summary>
   /// Gets or sets the value of the property with the specified key.
@@ -174,10 +169,7 @@ public class ReadOnlyPropertiesDictionary : ILog4NetSerializable, IDictionary, I
   /// Test if the dictionary contains a specified key
   /// </para>
   /// </remarks>
-  public bool Contains(string key)
-  {
-    return InnerHashtable.ContainsKey(key);
-  }
+  public bool Contains(string key) => InnerHashtable.ContainsKey(key);
 
   /// <summary>
   /// The hashtable used to store the properties
@@ -206,10 +198,11 @@ public class ReadOnlyPropertiesDictionary : ILog4NetSerializable, IDictionary, I
   [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, SerializationFormatter = true)]
   public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
   {
+    info.EnsureNotNull();
     foreach (KeyValuePair<string, object?> entry in InnerHashtable)
     {
       // If value is serializable then we add it to the list
-      var isSerializable = entry.Value?.GetType().IsSerializable ?? false;
+      bool isSerializable = entry.Value?.GetType().IsSerializable ?? false;
       if (!isSerializable)
       {
         continue;
@@ -219,8 +212,7 @@ public class ReadOnlyPropertiesDictionary : ILog4NetSerializable, IDictionary, I
       // which are NOT escaped by the Xml Serialization framework.
       // This must be a bug in the serialization framework as we cannot be expected
       // to know the implementation details of all the possible transport layers.
-      var localKeyName = XmlConvert.EncodeLocalName(entry.Key);
-      if (localKeyName is not null)
+      if (XmlConvert.EncodeLocalName(entry.Key) is string localKeyName)
       {
         info.AddValue(localKeyName, entry.Value);
       }
@@ -230,27 +222,18 @@ public class ReadOnlyPropertiesDictionary : ILog4NetSerializable, IDictionary, I
   /// <summary>
   /// See <see cref="IDictionary.GetEnumerator"/>
   /// </summary>
-  IDictionaryEnumerator IDictionary.GetEnumerator()
-  {
-    return InnerHashtable.GetEnumerator();
-  }
+  IDictionaryEnumerator IDictionary.GetEnumerator() => InnerHashtable.GetEnumerator();
 
   /// <summary>
   /// See <see cref="IEnumerable{T}.GetEnumerator"/>
   /// </summary>
-  IEnumerator<KeyValuePair<string, object?>> IEnumerable<KeyValuePair<string, object?>>.GetEnumerator()
-  {
-    return InnerHashtable.GetEnumerator();
-  }
+  IEnumerator<KeyValuePair<string, object?>> IEnumerable<KeyValuePair<string, object?>>.GetEnumerator() => InnerHashtable.GetEnumerator();
 
   /// <summary>
   /// See <see cref="IDictionary.Remove"/>
   /// </summary>
   /// <param name="key"></param>
-  void IDictionary.Remove(object key)
-  {
-    throw new NotSupportedException(ReadOnlyMessage);
-  }
+  void IDictionary.Remove(object key) => throw new NotSupportedException(ReadOnlyMessage);
 
   /// <summary>
   /// See <see cref="IDictionary.Contains"/>
@@ -267,36 +250,28 @@ public class ReadOnlyPropertiesDictionary : ILog4NetSerializable, IDictionary, I
   /// <summary>
   /// See <see cref="ICollection{T}.Add(T)"/>.
   /// </summary>
-  public void Add(KeyValuePair<string, object?> item)
-  {
-    InnerHashtable.Add(item.Key, item.Value);
-  }
+  public void Add(KeyValuePair<string, object?> item) => InnerHashtable.Add(item.Key, item.Value);
 
   /// <summary>
   /// Removes all properties from the properties collection
   /// </summary>
-  public virtual void Clear()
-  {
-    throw new NotSupportedException(ReadOnlyMessage);
-  }
+  public virtual void Clear() => throw new NotSupportedException(ReadOnlyMessage);
 
   /// <summary>
   /// See <see cref="ICollection{T}.Contains(T)"/>.
   /// </summary>
-  public bool Contains(KeyValuePair<string, object?> item)
-  {
-    return InnerHashtable.TryGetValue(item.Key, out object? v) && item.Value == v;
-  }
+  public bool Contains(KeyValuePair<string, object?> item) => InnerHashtable.TryGetValue(item.Key, out object? v) && item.Value == v;
 
   /// <summary>
   /// See <see cref="ICollection{T}.CopyTo(T[],int)"/>.
   /// </summary>
   public void CopyTo(KeyValuePair<string, object?>[] array, int arrayIndex)
   {
+    array.EnsureNotNull();
     int i = arrayIndex;
-    foreach (var kvp in InnerHashtable)
+    foreach (var entry in InnerHashtable)
     {
-      array[i] = kvp;
+      array[i] = entry;
       i++;
     }
   }
@@ -304,18 +279,12 @@ public class ReadOnlyPropertiesDictionary : ILog4NetSerializable, IDictionary, I
   /// <summary>
   /// See <see cref="ICollection{T}.Remove(T)"/>.
   /// </summary>
-  public bool Remove(KeyValuePair<string, object?> item)
-  {
-    return InnerHashtable.Remove(item.Key);
-  }
+  public bool Remove(KeyValuePair<string, object?> item) => InnerHashtable.Remove(item.Key);
 
   /// <summary>
   /// See <see cref="IDictionary.Add"/>.
   /// </summary>
-  void IDictionary.Add(object key, object? value)
-  {
-    throw new NotSupportedException(ReadOnlyMessage);
-  }
+  void IDictionary.Add(object key, object? value) => throw new NotSupportedException(ReadOnlyMessage);
 
   /// <summary>
   /// See <see cref="IDictionary.IsReadOnly"/>.
@@ -342,6 +311,7 @@ public class ReadOnlyPropertiesDictionary : ILog4NetSerializable, IDictionary, I
   /// <summary>
   /// See <see cref="IDictionary{TKey,TValue}.Keys"/>.
   /// </summary>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1721:Property names should not match get methods")]
   public ICollection<string> Keys => InnerHashtable.Keys;
 
   /// <summary>
@@ -367,10 +337,7 @@ public class ReadOnlyPropertiesDictionary : ILog4NetSerializable, IDictionary, I
   /// <summary>
   /// See <see cref="ICollection.CopyTo"/>
   /// </summary>
-  void ICollection.CopyTo(Array array, int index)
-  {
-    ((ICollection)InnerHashtable).CopyTo(array, index);
-  }
+  void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerHashtable).CopyTo(array, index);
 
   /// <summary>
   /// See <see cref="ICollection.IsSynchronized"/>
@@ -395,8 +362,5 @@ public class ReadOnlyPropertiesDictionary : ILog4NetSerializable, IDictionary, I
   /// <summary>
   /// See <see cref="IEnumerable.GetEnumerator"/>
   /// </summary>
-  IEnumerator IEnumerable.GetEnumerator()
-  {
-    return ((IEnumerable)InnerHashtable).GetEnumerator();
-  }
+  IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerHashtable).GetEnumerator();
 }

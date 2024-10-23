@@ -51,7 +51,7 @@ public class RawLayoutConverter : IConvertFrom
   public bool CanConvertFrom(Type sourceType)
   {
     // Accept an ILayout object
-    return (typeof(ILayout).IsAssignableFrom(sourceType));
+    return typeof(ILayout).IsAssignableFrom(sourceType);
   }
 
   /// <summary>

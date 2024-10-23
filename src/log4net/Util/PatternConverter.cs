@@ -49,8 +49,7 @@ public abstract class PatternConverter
   /// </para>
   /// </remarks>
   protected PatternConverter()
-  {
-  }
+  { }
 
   /// <summary>
   /// Gets the next pattern converter in the chain.
@@ -70,10 +69,10 @@ public abstract class PatternConverter
   /// </remarks>
   public virtual FormattingInfo FormattingInfo
   {
-    get { return new FormattingInfo(_min, _max, _leftAlign); }
+    get => new(_min, _max, _leftAlign);
     set
     {
-      _min = value.Min;
+      _min = value.EnsureNotNull().Min;
       _max = value.Max;
       _leftAlign = value.LeftAlign;
     }
@@ -137,6 +136,7 @@ public abstract class PatternConverter
   /// </remarks>
   public virtual void Format(TextWriter writer, object? state)
   {
+    writer.EnsureNotNull();
     if (_min < 0 && _max == int.MaxValue)
     {
       // Formatting options are not in use
@@ -146,9 +146,9 @@ public abstract class PatternConverter
     {
       string? msg;
       int len;
-      lock (_formatWriter)
+      lock (_syncRoot)
       {
-        _formatWriter.Reset(CRenderBufferMaxCapacity, CRenderBufferSize);
+        _formatWriter.Reset(MaxRenderBufferCapacity, DefaultRenderBufferSize);
 
         Convert(_formatWriter, state);
 
@@ -209,6 +209,7 @@ public abstract class PatternConverter
   /// </remarks>
   protected static void SpacePad(TextWriter writer, int length)
   {
+    writer.EnsureNotNull();
     while (length >= 32)
     {
       writer.Write(_spaces[5]);
@@ -229,17 +230,18 @@ public abstract class PatternConverter
   private int _max = int.MaxValue;
   private bool _leftAlign;
 
+  private readonly object _syncRoot = new();
   private readonly ReusableStringWriter _formatWriter = new(System.Globalization.CultureInfo.InvariantCulture);
 
   /// <summary>
   /// Initial buffer size
   /// </summary>
-  private const int CRenderBufferSize = 256;
+  private const int DefaultRenderBufferSize = 256;
 
   /// <summary>
   /// Maximum buffer size before it is recycled
   /// </summary>
-  private const int CRenderBufferMaxCapacity = 1024;
+  private const int MaxRenderBufferCapacity = 1024;
 
   /// <summary>
   /// Write an dictionary to a <see cref="TextWriter"/>
@@ -261,9 +263,7 @@ public abstract class PatternConverter
   /// </para>
   /// </remarks>
   protected static void WriteDictionary(TextWriter writer, ILoggerRepository? repository, IDictionary value)
-  {
-    WriteDictionary(writer, repository, value.GetEnumerator());
-  }
+    => WriteDictionary(writer, repository, value.EnsureNotNull().GetEnumerator());
 
   /// <summary>
   /// Writes a dictionary to a <see cref="TextWriter"/>
@@ -286,8 +286,8 @@ public abstract class PatternConverter
   /// </remarks>
   protected static void WriteDictionary(TextWriter writer, ILoggerRepository? repository, IDictionaryEnumerator value)
   {
-    writer.Write("{");
-
+    value.EnsureNotNull();
+    writer.EnsureNotNull().Write("{");
     bool first = true;
 
     // Write out all the dictionary key value pairs
@@ -324,6 +324,7 @@ public abstract class PatternConverter
   /// </remarks>
   protected static void WriteObject(TextWriter writer, ILoggerRepository? repository, object? value)
   {
+    writer.EnsureNotNull();
     if (repository is not null)
     {
       repository.RendererMap.FindAndRender(value, writer);
@@ -345,5 +346,6 @@ public abstract class PatternConverter
   /// <summary>
   /// 
   /// </summary>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227:Collection properties should be read only")]
   public PropertiesDictionary? Properties { get; set; }
 }

@@ -20,12 +20,14 @@
 using System;
 using System.Collections.Concurrent;
 using log4net.Repository;
+using log4net.Util;
 
 namespace log4net.Plugin;
 
 /// <summary>
 /// Map of repository plugins.
 /// </summary>
+/// <param name="repository">The repository that the plugins should be attached to.</param>
 /// <remarks>
 /// <para>
 /// This class is a name keyed map of the plugins that are
@@ -34,23 +36,8 @@ namespace log4net.Plugin;
 /// </remarks>
 /// <author>Nicko Cadell</author>
 /// <author>Gert Driesen</author>
-public sealed class PluginMap
+public sealed class PluginMap(ILoggerRepository repository)
 {
-  /// <summary>
-  /// Constructor
-  /// </summary>
-  /// <param name="repository">The repository that the plugins should be attached to.</param>
-  /// <remarks>
-  /// <para>
-  /// Initialize a new instance of the <see cref="PluginMap" /> class with a 
-  /// repository that the plugins should be attached to.
-  /// </para>
-  /// </remarks>
-  public PluginMap(ILoggerRepository repository)
-  {
-    this._repository = repository;
-  }
-
   /// <summary>
   /// Gets a <see cref="IPlugin" /> by name.
   /// </summary>
@@ -63,12 +50,7 @@ public sealed class PluginMap
   {
     get
     {
-      if (name is null)
-      {
-        throw new ArgumentNullException(nameof(name));
-      }
-
-      _mapName2Plugin.TryGetValue(name, out IPlugin? plugin);
+      _mapName2Plugin.TryGetValue(name.EnsureNotNull(), out IPlugin? plugin);
       return plugin;
     }
   }
@@ -77,7 +59,7 @@ public sealed class PluginMap
   /// Gets all possible plugins as a list of <see cref="IPlugin" /> objects.
   /// </summary>
   /// <value>All possible plugins as a list of <see cref="IPlugin" /> objects.</value>
-  public PluginCollection AllPlugins => new PluginCollection(_mapName2Plugin.Values);
+  public PluginCollection AllPlugins => new(_mapName2Plugin.Values);
 
   /// <summary>
   /// Adds a <see cref="IPlugin" /> to the map.
@@ -96,13 +78,8 @@ public sealed class PluginMap
   /// </remarks>
   public void Add(IPlugin plugin)
   {
-    if (plugin is null)
-    {
-      throw new ArgumentNullException(nameof(plugin));
-    }
-
     IPlugin? curPlugin = null;
-    _mapName2Plugin.AddOrUpdate(plugin.Name, plugin, (_, existingPlugin) =>
+    _mapName2Plugin.AddOrUpdate(plugin.EnsureNotNull().Name, plugin, (_, existingPlugin) =>
     {
       curPlugin = existingPlugin;
       return plugin;
@@ -112,22 +89,14 @@ public sealed class PluginMap
     curPlugin?.Shutdown();
 
     // Attach new plugin to repository
-    plugin.Attach(_repository);
+    plugin.Attach(repository);
   }
 
   /// <summary>
   /// Removes an <see cref="IPlugin" /> from the map.
   /// </summary>
   /// <param name="plugin">The <see cref="IPlugin" /> to remove from the map.</param>
-  public void Remove(IPlugin plugin)
-  {
-    if (plugin is null)
-    {
-      throw new ArgumentNullException(nameof(plugin));
-    }
-    _mapName2Plugin.TryRemove(plugin.Name, out _);
-  }
+  public void Remove(IPlugin plugin) => _mapName2Plugin.TryRemove(plugin.EnsureNotNull().Name, out _);
 
   private readonly ConcurrentDictionary<string, IPlugin> _mapName2Plugin = new(StringComparer.Ordinal);
-  private readonly ILoggerRepository _repository;
 }

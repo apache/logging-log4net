@@ -38,7 +38,7 @@ namespace log4net.Config;
 /// </para>
 /// <para>
 /// Use this attribute to configure the <see cref="XmlConfigurator"/>
-/// without calling one of the <see cref="M:XmlConfigurator.Configure()"/>
+/// without calling one of the <see cref="XmlConfigurator.Configure()"/>
 /// methods.
 /// </para>
 /// <para>
@@ -69,7 +69,7 @@ namespace log4net.Config;
 /// <para>
 /// If you cannot guarantee the order in which log4net calls will be made from 
 /// different assemblies you must use programmatic configuration instead, i.e.
-/// call the <see cref="M:XmlConfigurator.Configure()"/> method directly.
+/// call the <see cref="XmlConfigurator.Configure()"/> method directly.
 /// </para>
 /// </note>
 /// </remarks>
@@ -185,7 +185,7 @@ public sealed class XmlConfiguratorAttribute : ConfiguratorAttribute
         // and the application does not have PathDiscovery permission
       }
 
-      if (applicationBaseDirectory is null || (new Uri(applicationBaseDirectory)).IsFile)
+      if (applicationBaseDirectory is null || new Uri(applicationBaseDirectory).IsFile)
       {
         ConfigureFromFile(sourceAssembly, targetRepository);
       }

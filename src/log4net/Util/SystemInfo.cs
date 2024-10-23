@@ -406,7 +406,7 @@ public static class SystemInfo
   /// <para>
   /// If the type name is fully qualified, i.e. if contains an assembly name in 
   /// the type name, the type will be loaded from the system using 
-  /// <see cref="M:Type.GetType(string,bool)"/>.
+  /// <see cref="Type.GetType(string,bool)"/>.
   /// </para>
   /// <para>
   /// If the type name is not fully qualified, it will be loaded from the assembly
@@ -430,7 +430,7 @@ public static class SystemInfo
   /// <para>
   /// If the type name is fully qualified, i.e. if contains an assembly name in 
   /// the type name, the type will be loaded from the system using 
-  /// <see cref="M:Type.GetType(string,bool)"/>.
+  /// <see cref="Type.GetType(string,bool)"/>.
   /// </para>
   /// <para>
   /// If the type name is not fully qualified it will be loaded from the
@@ -455,7 +455,7 @@ public static class SystemInfo
   /// <para>
   /// If the type name is fully qualified, i.e. if contains an assembly name in 
   /// the type name, the type will be loaded from the system using 
-  /// <see cref="M:Type.GetType(string,bool)"/>.
+  /// <see cref="Type.GetType(string,bool)"/>.
   /// </para>
   /// <para>
   /// If the type name is not fully qualified it will be loaded from the specified
@@ -534,14 +534,14 @@ public static class SystemInfo
   /// of the argument.
   /// </returns>
   public static ArgumentOutOfRangeException CreateArgumentOutOfRangeException(string parameterName, object actualValue, string message) 
-    => new ArgumentOutOfRangeException(parameterName, actualValue, message);
+    => new(parameterName, actualValue, message);
 
   /// <summary>
   /// Creates a <see cref="NotSupportedException"/> for read-only collection modification calls.
   /// </summary>
   /// <returns>The NotSupportedException object</returns>
   public static NotSupportedException CreateReadOnlyCollectionNotModifiableException() 
-    => new NotSupportedException("This is a Read Only Collection and can not be modified");
+    => new("This is a Read Only Collection and can not be modified");
 
   /// <summary>
   /// Parse a string into an <see cref="int"/> value

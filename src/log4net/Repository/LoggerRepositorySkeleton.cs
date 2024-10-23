@@ -272,7 +272,7 @@ public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
   /// This method should not normally be used to log.
   /// The <see cref="ILog"/> interface should be used 
   /// for routine logging. This interface can be obtained
-  /// using the <see cref="M:log4net.LogManager.GetLogger(string)"/> method.
+  /// using the <see cref="log4net.LogManager.GetLogger(string)"/> method.
   /// </para>
   /// <para>
   /// The <c>logEvent</c> is delivered to the appropriate logger and
@@ -408,19 +408,8 @@ public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
   /// Adds an object renderer for a specific class. 
   /// </para>
   /// </remarks>
-  public virtual void AddRenderer(Type typeToRender, IObjectRenderer rendererInstance)
-  {
-    if (typeToRender is null)
-    {
-      throw new ArgumentNullException(nameof(typeToRender));
-    }
-    if (rendererInstance is null)
-    {
-      throw new ArgumentNullException(nameof(rendererInstance));
-    }
-
-    _rendererMap.Put(typeToRender, rendererInstance);
-  }
+  public virtual void AddRenderer(Type typeToRender, IObjectRenderer rendererInstance) 
+    => _rendererMap.Put(typeToRender.EnsureNotNull(), rendererInstance.EnsureNotNull());
 
   /// <summary>
   /// Notify the registered listeners that the repository is shutting down

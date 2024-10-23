@@ -53,7 +53,7 @@ internal sealed class PatternStringConverter : IConvertTo, IConvertFrom
   /// </remarks>
   public bool CanConvertTo(Type targetType)
   {
-    return (typeof(string).IsAssignableFrom(targetType));
+    return typeof(string).IsAssignableFrom(targetType);
   }
 
   /// <summary>
@@ -64,7 +64,7 @@ internal sealed class PatternStringConverter : IConvertTo, IConvertFrom
   /// <returns>the converted object</returns>
   /// <remarks>
   /// <para>
-  /// Uses the <see cref="M:PatternString.Format()"/> method to convert the
+  /// Uses the <see cref="PatternString.Format()"/> method to convert the
   /// <see cref="PatternString"/> argument to a <see cref="string"/>.
   /// </para>
   /// </remarks>

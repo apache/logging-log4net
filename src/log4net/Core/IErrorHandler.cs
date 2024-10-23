@@ -56,7 +56,7 @@ public interface IErrorHandler
   /// <param name="e">The <see cref="Exception" /> that was thrown when the error occurred.</param>
   /// <remarks>
   /// <para>
-  /// See <see cref="M:Error(string,Exception,ErrorCode)"/>.
+  /// See <see cref="Error(string,Exception,ErrorCode)"/>.
   /// </para>
   /// </remarks>
   void Error(string message, Exception e);
@@ -67,7 +67,7 @@ public interface IErrorHandler
   /// <param name="message">The message associated with the error.</param>
   /// <remarks>
   /// <para>
-  /// See <see cref="M:Error(string,Exception,ErrorCode)"/>.
+  /// See <see cref="Error(string,Exception,ErrorCode)"/>.
   /// </para>
   /// </remarks>
   void Error(string message);

@@ -42,7 +42,7 @@ internal sealed class EncodingConverter : IConvertFrom
   /// </returns>
   public bool CanConvertFrom(Type sourceType)
   {
-    return (sourceType == typeof(string));
+    return sourceType == typeof(string);
   }
 
   /// <summary>
@@ -52,7 +52,7 @@ internal sealed class EncodingConverter : IConvertFrom
   /// <returns>the encoding</returns>
   /// <remarks>
   /// <para>
-  /// Uses the <see cref="M:Encoding.GetEncoding(string)"/> method to 
+  /// Uses the <see cref="Encoding.GetEncoding(string)"/> method to 
   /// convert the <see cref="string"/> argument to an <see cref="Encoding"/>.
   /// </para>
   /// </remarks>

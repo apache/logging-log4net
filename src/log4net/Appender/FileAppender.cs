@@ -104,7 +104,7 @@ public class FileAppender : TextWriterAppender
       { }
     }
 
-    private readonly object syncRoot = new();
+    private readonly object _syncRoot = new();
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "todo")]
     private Stream? _realStream;
     private int _lockLevel;
@@ -171,7 +171,7 @@ public class FileAppender : TextWriterAppender
     public bool AcquireLock()
     {
       bool ret = false;
-      lock (syncRoot)
+      lock (_syncRoot)
       {
         if (_lockLevel == 0)
         {
@@ -191,7 +191,7 @@ public class FileAppender : TextWriterAppender
 
     public void ReleaseLock()
     {
-      lock (syncRoot)
+      lock (_syncRoot)
       {
         _lockLevel--;
         if (_lockLevel == 0)
@@ -477,8 +477,8 @@ public class FileAppender : TextWriterAppender
     /// </remarks>
     public override void OpenFile(string filename, bool append, Encoding encoding)
     {
-      this._filename = filename;
-      this._append = append;
+      _filename = filename;
+      _append = append;
     }
 
     /// <summary>
@@ -1017,7 +1017,7 @@ public class FileAppender : TextWriterAppender
   }
 
   /// <summary>
-  /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/>
+  /// This method is called by the <see cref="AppenderSkeleton.DoAppend(LoggingEvent)"/>
   /// method. 
   /// </summary>
   /// <param name="loggingEvent">The event to log.</param>
@@ -1046,7 +1046,7 @@ public class FileAppender : TextWriterAppender
   }
 
   /// <summary>
-  /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent[])"/>
+  /// This method is called by the <see cref="AppenderSkeleton.DoAppend(LoggingEvent[])"/>
   /// method. 
   /// </summary>
   /// <param name="loggingEvents">The array of events to log.</param>
@@ -1213,14 +1213,14 @@ public class FileAppender : TextWriterAppender
       }
     }
 
-    lock (SyncRoot)
+    lock (LockObj)
     {
       Reset();
 
       LogLog.Debug(_declaringType, "Opening file for writing [" + fileName + "] append [" + append + "]");
 
       // Save these for later, allowing retries if file open fails
-      this._fileName = fileName;
+      _fileName = fileName;
       AppendToFile = append;
 
       LockingModel.CurrentAppender = this;
@@ -1250,9 +1250,9 @@ public class FileAppender : TextWriterAppender
   /// <param name="fileStream">the file stream that has been opened for writing</param>
   /// <remarks>
   /// <para>
-  /// This implementation of <see cref="M:SetQWForFiles(Stream)"/> creates a <see cref="StreamWriter"/>
+  /// This implementation of <see cref="SetQwForFiles(Stream)"/> creates a <see cref="StreamWriter"/>
   /// over the <paramref name="fileStream"/> and passes it to the 
-  /// <see cref="M:SetQWForFiles(TextWriter)"/> method.
+  /// <see cref="SetQwForFiles(TextWriter)"/> method.
   /// </para>
   /// <para>
   /// This method can be overridden by subclasses that want to wrap the
@@ -1278,7 +1278,8 @@ public class FileAppender : TextWriterAppender
   /// wrap the <see cref="TextWriter"/> in some way.
   /// </para>
   /// </remarks>
-  protected virtual void SetQwForFiles(TextWriter writer) => QuietWriter = new QuietTextWriter(writer, ErrorHandler);
+  protected virtual void SetQwForFiles(TextWriter writer) 
+    => QuietWriter = new(writer, ErrorHandler);
 
   /// <summary>
   /// Convert a path into a fully qualified path.

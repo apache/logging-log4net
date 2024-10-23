@@ -63,10 +63,7 @@ public class AppenderAttachedImpl : IAppenderAttachable
   /// </remarks>
   public int AppendLoopOnAppenders(LoggingEvent loggingEvent)
   {
-    if (loggingEvent is null)
-    {
-      throw new ArgumentNullException(nameof(loggingEvent));
-    }
+    loggingEvent.EnsureNotNull();
 
     // appenderList is null when empty
     if (_appenderList is null)
@@ -103,11 +100,7 @@ public class AppenderAttachedImpl : IAppenderAttachable
   /// </remarks>
   public int AppendLoopOnAppenders(LoggingEvent[] loggingEvents)
   {
-    if (loggingEvents is null)
-    {
-      throw new ArgumentNullException(nameof(loggingEvents));
-    }
-    if (loggingEvents.Length == 0)
+    if (loggingEvents.EnsureNotNull().Length == 0)
     {
       throw new ArgumentException($"{nameof(loggingEvents)} array must not be empty", nameof(loggingEvents));
     }

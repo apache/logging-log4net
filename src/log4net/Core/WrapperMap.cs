@@ -21,6 +21,7 @@ using System;
 using System.Collections;
 
 using log4net.Repository;
+using log4net.Util;
 
 namespace log4net.Core;
 
@@ -62,6 +63,7 @@ public delegate ILoggerWrapper WrapperCreationHandler(ILogger logger);
 /// <author>Gert Driesen</author>
 public class WrapperMap
 {
+  private readonly object _syncRoot = new();
   /// <summary>
   /// Initializes a new instance of the <see cref="WrapperMap" />
   /// </summary>
@@ -74,7 +76,7 @@ public class WrapperMap
   /// </remarks>
   public WrapperMap(WrapperCreationHandler createWrapperHandler)
   {
-    this._createWrapperHandler = createWrapperHandler;
+    _createWrapperHandler = createWrapperHandler;
 
     // Create the delegates for the event callbacks
     _shutdownHandler = ILoggerRepository_Shutdown;
@@ -103,7 +105,7 @@ public class WrapperMap
       return null;
     }
 
-    lock (this)
+    lock (_syncRoot)
     {
       // Look up hierarchy in map.
       Hashtable? wrappersMap = (Hashtable?)Repositories[logger.Repository];
@@ -164,10 +166,8 @@ public class WrapperMap
   /// can be overridden in a subclass.
   /// </para>
   /// </remarks>
-  protected virtual ILoggerWrapper CreateNewWrapperObject(ILogger logger)
-  {
-    return _createWrapperHandler.Invoke(logger);
-  }
+  protected virtual ILoggerWrapper CreateNewWrapperObject(ILogger logger) 
+    => _createWrapperHandler.Invoke(logger);
 
   /// <summary>
   /// Called when a monitored repository shutdown event is received.
@@ -184,10 +184,10 @@ public class WrapperMap
   /// </remarks>
   protected virtual void RepositoryShutdown(ILoggerRepository repository)
   {
-    lock (this)
+    lock (_syncRoot)
     {
       // Remove the repository from map
-      Repositories.Remove(repository);
+      Repositories.Remove(repository.EnsureNotNull());
 
       // Unhook events from the repository
       repository.ShutdownEvent -= _shutdownHandler;

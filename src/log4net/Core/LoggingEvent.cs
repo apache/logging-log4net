@@ -204,7 +204,7 @@ public class LoggingEvent : ILog4NetSerializable
       Exception? exception)
   {
     _callerStackBoundaryDeclaringType = callerStackBoundaryDeclaringType;
-    _message = message;
+    MessageObject = message;
     Repository = repository;
     ExceptionObject = exception;
 
@@ -233,7 +233,7 @@ public class LoggingEvent : ILog4NetSerializable
   /// be useful if you require a custom serialization scheme.
   /// </para>
   /// <para>
-  /// Use the <see cref="M:GetLoggingEventData(FixFlags)"/> method to obtain an 
+  /// Use the <see cref="GetLoggingEventData(FixFlags)"/> method to obtain an 
   /// instance of the <see cref="LoggingEventData"/> class.
   /// </para>
   /// <para>
@@ -270,7 +270,7 @@ public class LoggingEvent : ILog4NetSerializable
   /// be useful if you require a custom serialization scheme.
   /// </para>
   /// <para>
-  /// Use the <see cref="M:GetLoggingEventData(FixFlags)"/> method to obtain an 
+  /// Use the <see cref="GetLoggingEventData(FixFlags)"/> method to obtain an 
   /// instance of the <see cref="LoggingEventData"/> class.
   /// </para>
   /// <para>
@@ -298,7 +298,7 @@ public class LoggingEvent : ILog4NetSerializable
   /// be useful if you require a custom serialization scheme.
   /// </para>
   /// <para>
-  /// Use the <see cref="M:GetLoggingEventData(FixFlags)"/> method to obtain an 
+  /// Use the <see cref="GetLoggingEventData(FixFlags)"/> method to obtain an 
   /// instance of the <see cref="LoggingEventData"/> class.
   /// </para>
   /// <para>
@@ -320,7 +320,7 @@ public class LoggingEvent : ILog4NetSerializable
   /// or Newtonsoft.Json.
   /// </para>
   /// <para>
-  /// Use the <see cref="M:GetLoggingEventData(FixFlags)"/> method to obtain an 
+  /// Use the <see cref="GetLoggingEventData(FixFlags)"/> method to obtain an 
   /// instance of the <see cref="LoggingEventData"/> class.
   /// </para>
   /// <para>
@@ -341,6 +341,7 @@ public class LoggingEvent : ILog4NetSerializable
   /// with serialized data.
   /// </para>
   /// </remarks>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter")]
   protected LoggingEvent(SerializationInfo info, StreamingContext context)
   {
     _data = new()
@@ -505,11 +506,7 @@ public class LoggingEvent : ILog4NetSerializable
   /// null will be returned.
   /// </para>
   /// </remarks>
-  public object? MessageObject
-  {
-    get => _message;
-    protected set => _message = value;
-  }
+  public object? MessageObject { get; protected set; }
 
   /// <summary>
   /// Gets the exception object used to initialize this event.
@@ -572,22 +569,22 @@ public class LoggingEvent : ILog4NetSerializable
     {
       if (_data.Message is null && _cacheUpdatable)
       {
-        if (_message is null)
+        if (MessageObject is null)
         {
           _data.Message = string.Empty;
         }
-        else if (_message is string s)
+        else if (MessageObject is string s)
         {
           _data.Message = s;
         }
         else if (Repository is not null)
         {
-          _data.Message = Repository.RendererMap.FindAndRender(_message);
+          _data.Message = Repository.RendererMap.FindAndRender(MessageObject);
         }
         else
         {
           // Very last resort
-          _data.Message = _message.ToString();
+          _data.Message = MessageObject.ToString();
         }
       }
 
@@ -617,20 +614,20 @@ public class LoggingEvent : ILog4NetSerializable
     }
     else
     {
-      if (_message is not null)
+      if (MessageObject is not null)
       {
-        if (_message is string s)
+        if (MessageObject is string s)
         {
           writer.Write(s);
         }
         else if (Repository is not null)
         {
-          Repository.RendererMap.FindAndRender(_message, writer);
+          Repository.RendererMap.FindAndRender(MessageObject, writer);
         }
         else
         {
           // Very last resort
-          writer.Write(_message.ToString());
+          writer.Write(MessageObject.ToString());
         }
       }
     }
@@ -973,10 +970,8 @@ public class LoggingEvent : ILog4NetSerializable
   /// in the logging event before returning the event data.
   /// </para>
   /// </remarks>
-  public LoggingEventData GetLoggingEventData()
-  {
-    return GetLoggingEventData(FixFlags.Partial);
-  }
+  public LoggingEventData GetLoggingEventData() 
+    => GetLoggingEventData(FixFlags.Partial);
 
   /// <summary>
   /// Gets the portable data for this <see cref="LoggingEvent" />.
@@ -1306,11 +1301,6 @@ public class LoggingEvent : ILog4NetSerializable
   /// logger class in the stack frame (i.e. the declaring type of the method).
   /// </summary>
   private readonly Type? _callerStackBoundaryDeclaringType;
-
-  /// <summary>
-  /// The application supplied message of logging event.
-  /// </summary>
-  private object? _message;
 
   /// <summary>
   /// The fix state for this event

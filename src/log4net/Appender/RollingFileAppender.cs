@@ -564,7 +564,7 @@ public partial class RollingFileAppender : FileAppender
   /// </remarks>
   protected override void OpenFile(string fileName, bool append)
   {
-    lock (SyncRoot)
+    lock (LockObj)
     {
       fileName = GetNextOutputFileName(fileName);
 
@@ -576,7 +576,7 @@ public partial class RollingFileAppender : FileAppender
         {
           if (System.IO.File.Exists(fileName))
           {
-            currentCount = (new FileInfo(fileName)).Length;
+            currentCount = new FileInfo(fileName).Length;
           }
         }
       }
@@ -1323,7 +1323,7 @@ public partial class RollingFileAppender : FileAppender
         // Map {(maxBackupIndex - 1), ..., 2, 1} to {maxBackupIndex, ..., 3, 2}
         for (int i = CurrentSizeRollBackups; i >= 1; i--)
         {
-          RollFile((CombinePath(baseFileName, "." + i)), (CombinePath(baseFileName, "." + (i + 1))));
+          RollFile(CombinePath(baseFileName, "." + i), CombinePath(baseFileName, "." + (i + 1)));
         }
 
         CurrentSizeRollBackups++;

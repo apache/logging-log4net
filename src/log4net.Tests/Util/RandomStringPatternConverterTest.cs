@@ -26,9 +26,6 @@ namespace log4net.Tests.Util;
 /// <summary>
 /// Used for internal unit testing the <see cref="RandomStringPatternConverter"/> class.
 /// </summary>
-/// <remarks>
-/// Used for internal unit testing the <see cref="RandomStringPatternConverter"/> class.
-/// </remarks>
 [TestFixture]
 public class RandomStringPatternConverterTest
 {
@@ -38,7 +35,7 @@ public class RandomStringPatternConverterTest
     RandomStringPatternConverter converter = new();
 
     // Check default string length
-    StringWriter sw = new();
+    using StringWriter sw = new();
     converter.Convert(sw, null);
 
     Assert.That(sw.ToString(), Has.Length.EqualTo(4), "Default string length should be 4");
@@ -47,17 +44,17 @@ public class RandomStringPatternConverterTest
     converter.Option = "7";
     converter.ActivateOptions();
 
-    sw = new StringWriter();
-    converter.Convert(sw, null);
+    using StringWriter sw2 = new();
+    converter.Convert(sw2, null);
 
-    string string1 = sw.ToString();
+    string string1 = sw2.ToString();
     Assert.That(string1, Has.Length.EqualTo(7), "string length should be 7");
 
     // Check for duplicate result
-    sw = new StringWriter();
-    converter.Convert(sw, null);
+    using StringWriter sw3 = new();
+    converter.Convert(sw3, null);
 
-    string string2 = sw.ToString();
-    Assert.That(string1 != string2, "strings should be different");
+    string string2 = sw3.ToString();
+    Assert.That(string1, Is.Not.EqualTo(string2), "strings should be different");
   }
 }

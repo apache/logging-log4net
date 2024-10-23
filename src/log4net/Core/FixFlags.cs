@@ -26,6 +26,8 @@ namespace log4net.Core;
 /// </summary>
 /// <author>Nicko Cadell</author>
 [Flags]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2217:Do not mark enums with FlagsAttribute")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix")]
 public enum FixFlags
 {
   /// <summary>

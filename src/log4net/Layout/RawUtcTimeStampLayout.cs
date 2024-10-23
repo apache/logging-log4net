@@ -20,6 +20,7 @@
 using System;
 
 using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Layout;
 
@@ -41,8 +42,6 @@ public class RawUtcTimeStampLayout : IRawLayout
   /// in local time use <see cref="RawTimeStampLayout"/>.
   /// </para>
   /// </remarks>
-  public virtual object Format(LoggingEvent loggingEvent)
-  {
-    return loggingEvent.TimeStampUtc;
-  }
+  public virtual object Format(LoggingEvent loggingEvent) 
+    => loggingEvent.EnsureNotNull().TimeStampUtc;
 }

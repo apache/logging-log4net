@@ -20,6 +20,7 @@
 using System;
 
 using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Filter;
 
@@ -87,11 +88,7 @@ public class LevelMatchFilter : FilterSkeleton
   /// </remarks>
   public override FilterDecision Decide(LoggingEvent loggingEvent)
   {
-    if (loggingEvent is null)
-    {
-      throw new ArgumentNullException(nameof(loggingEvent));
-    }
-
+    loggingEvent.EnsureNotNull();
     if (LevelToMatch is not null && LevelToMatch == loggingEvent.Level)
     {
       // Found match

@@ -49,11 +49,9 @@ public sealed class LevelMap
   /// Clear the internal maps of all levels
   /// </para>
   /// </remarks>
-  public void Clear()
-  {
+  public void Clear() =>
     // Clear all current levels
     _mapName2Level.Clear();
-  }
 
   /// <summary>
   /// Looks up a <see cref="Level"/> by name
@@ -64,12 +62,7 @@ public sealed class LevelMap
   {
     get
     {
-      if (name is null)
-      {
-        throw new ArgumentNullException(nameof(name));
-      }
-
-      _mapName2Level.TryGetValue(name, out Level? level);
+      _mapName2Level.TryGetValue(name.EnsureNotNull(), out Level? level);
       return level;
     }
   }
@@ -79,11 +72,8 @@ public sealed class LevelMap
   /// </summary>
   /// <param name="name">the string to display for the Level</param>
   /// <param name="value">the level value to give to the Level</param>
-  /// <seealso cref="M:Add(string,int,string)"/>
-  public void Add(string name, int value)
-  {
-    Add(name, value, null);
-  }
+  /// <seealso cref="Add(string,int,string)"/>
+  public void Add(string name, int value) => Add(name, value, null);
 
   /// <summary>
   /// Creates a new Level and adds it to the map.
@@ -93,13 +83,10 @@ public sealed class LevelMap
   /// <param name="displayName">the display name to give to the Level</param>
   public void Add(string name, int value, string? displayName)
   {
-    if (name is null)
+    if (name.EnsureNotNull().Length == 0)
     {
-      throw new ArgumentNullException(nameof(name));
-    }
-    if (name.Length == 0)
-    {
-      throw SystemInfo.CreateArgumentOutOfRangeException(nameof(name), name, $"Parameter: name, Value: [{name}] out of range. Level name must not be empty");
+      throw SystemInfo.CreateArgumentOutOfRangeException(nameof(name), name, 
+        $"Parameter: name, Value: [{name}] out of range. Level name must not be empty");
     }
 
     if (string.IsNullOrEmpty(displayName))
@@ -114,14 +101,7 @@ public sealed class LevelMap
   /// Adds a Level to the map.
   /// </summary>
   /// <param name="level">the Level to add</param>
-  public void Add(Level level)
-  {
-    if (level is null)
-    {
-      throw new ArgumentNullException(nameof(level));
-    }
-    _mapName2Level[level.Name] = level;
-  }
+  public void Add(Level level) => _mapName2Level[level.EnsureNotNull().Name] = level;
 
   /// <summary>
   /// Gets all possible levels as a collection of Level objects.
@@ -139,13 +119,6 @@ public sealed class LevelMap
   /// and returned.
   /// </param>
   /// <returns>the level in the map with the name specified</returns>
-  public Level LookupWithDefault(Level defaultLevel)
-  {
-    if (defaultLevel is null)
-    {
-      throw new ArgumentNullException(nameof(defaultLevel));
-    }
-
-    return _mapName2Level.GetOrAdd(defaultLevel.Name, defaultLevel);
-  }
+  public Level LookupWithDefault(Level defaultLevel) 
+    => _mapName2Level.GetOrAdd(defaultLevel.EnsureNotNull().Name, defaultLevel);
 }

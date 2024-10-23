@@ -31,6 +31,7 @@ namespace log4net.Util;
 /// </para>
 /// </remarks>
 /// <author>Nicko Cadell</author>
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static")]
 public sealed class ThreadContextProperties : ContextPropertiesBase
 {
   /// <summary>
@@ -48,8 +49,7 @@ public sealed class ThreadContextProperties : ContextPropertiesBase
   /// </para>
   /// </remarks>
   internal ThreadContextProperties()
-  {
-  }
+  { }
 
   /// <summary>
   /// Gets or sets the value of a property

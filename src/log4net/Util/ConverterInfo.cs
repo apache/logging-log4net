@@ -50,9 +50,9 @@ public sealed class ConverterInfo
   /// <param name="entry"></param>
   public void AddProperty(PropertyEntry entry)
   {
-    if (entry.Key is not null)
+    if (entry.EnsureNotNull().Key is string key)
     {
-      Properties[entry.Key] = entry.Value;
+      Properties[key] = entry.Value;
     }
   }
 

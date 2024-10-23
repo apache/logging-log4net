@@ -21,6 +21,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using log4net.Appender;
@@ -34,6 +35,8 @@ namespace log4net.Repository.Hierarchy;
 /// </summary>
 /// <param name="sender">The <see cref="Hierarchy"/> in which the <see cref="Logger"/> has been created.</param>
 /// <param name="e">The <see cref="LoggerCreationEventArgs"/> event args that hold the <see cref="Logger"/> instance that has been created.</param>
+[SuppressMessage("Design", "CA1003:Use generic event handler instances")]
+[SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix")]
 public delegate void LoggerCreationEventHandler(object sender, LoggerCreationEventArgs e);
 
 /// <summary>
@@ -79,10 +82,14 @@ public class LoggerCreationEventArgs(Logger log) : EventArgs
 /// </remarks>
 /// <author>Nicko Cadell</author>
 /// <author>Gert Driesen</author>
-public class Hierarchy : LoggerRepositorySkeleton, IBasicRepositoryConfigurator, IXmlRepositoryConfigurator
+/// <param name="properties">The properties to pass to this repository.</param>
+/// <param name="loggerFactory">The factory to use to create new logger instances.</param>
+[SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces")]
+public class Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFactory)
+  : LoggerRepositorySkeleton(properties), IBasicRepositoryConfigurator, IXmlRepositoryConfigurator
 {
   private readonly ConcurrentDictionary<LoggerKey, object> _loggers = new(LoggerKey.ComparerInstance);
-  private ILoggerFactory _defaultFactory;
+  private ILoggerFactory _defaultFactory = loggerFactory.EnsureNotNull();
   private Logger? _rootLogger;
 
   /// <summary>
@@ -101,14 +108,16 @@ public class Hierarchy : LoggerRepositorySkeleton, IBasicRepositoryConfigurator,
   /// <summary>
   /// Default constructor
   /// </summary>
-  public Hierarchy() : this(new DefaultLoggerFactory())
+  public Hierarchy() 
+    : this(new DefaultLoggerFactory())
   { }
 
   /// <summary>
   /// Construct with properties
   /// </summary>
   /// <param name="properties">The properties to pass to this repository.</param>
-  public Hierarchy(PropertiesDictionary properties) : this(properties, new DefaultLoggerFactory())
+  public Hierarchy(PropertiesDictionary properties) 
+    : this(properties, new DefaultLoggerFactory())
   { }
 
   /// <summary>
@@ -117,14 +126,6 @@ public class Hierarchy : LoggerRepositorySkeleton, IBasicRepositoryConfigurator,
   /// <param name="loggerFactory">The factory to use to create new logger instances.</param>
   public Hierarchy(ILoggerFactory loggerFactory) : this([], loggerFactory)
   { }
-
-  /// <summary>
-  /// Construct with properties and a logger factory
-  /// </summary>
-  /// <param name="properties">The properties to pass to this repository.</param>
-  /// <param name="loggerFactory">The factory to use to create new logger instances.</param>
-  public Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFactory)
-    : base(properties) => _defaultFactory = loggerFactory.EnsureNotNull();
 
   /// <summary>
   /// Has no appender warning been emitted
@@ -306,7 +307,7 @@ public class Hierarchy : LoggerRepositorySkeleton, IBasicRepositoryConfigurator,
   /// This method should not normally be used to log.
   /// The <see cref="ILog"/> interface should be used 
   /// for routine logging. This interface can be obtained
-  /// using the <see cref="M:log4net.LogManager.GetLogger(string)"/> method.
+  /// using the <see cref="LogManager.GetLogger(string)"/> method.
   /// </para>
   /// <para>
   /// The <paramref name="logEvent" /> is delivered to the appropriate logger and
@@ -328,7 +329,7 @@ public class Hierarchy : LoggerRepositorySkeleton, IBasicRepositoryConfigurator,
   /// <returns>An array containing all the currently configured appenders</returns>
   /// <remarks>
   /// <para>
-  /// Returns all the <see cref="log4net.Appender.IAppender"/> instances that are currently configured.
+  /// Returns all the <see cref="IAppender"/> instances that are currently configured.
   /// All the loggers are searched for appenders. The appenders may also be containers
   /// for appenders and these are also searched for additional loggers.
   /// </para>
@@ -336,7 +337,7 @@ public class Hierarchy : LoggerRepositorySkeleton, IBasicRepositoryConfigurator,
   /// The list returned is unordered but does not contain duplicates.
   /// </para>
   /// </remarks>
-  [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0305:Simplify collection initialization")]
+  [SuppressMessage("Style", "IDE0305:Simplify collection initialization")]
   public override IAppender[] GetAppenders()
   {
     HashSet<IAppender> appenderList = [];
@@ -395,12 +396,13 @@ public class Hierarchy : LoggerRepositorySkeleton, IBasicRepositoryConfigurator,
   /// <remarks>
   /// <para>
   /// This method provides the same functionality as the 
-  /// <see cref="M:IBasicRepositoryConfigurator.Configure(IAppender)"/> method implemented
+  /// <see cref="IBasicRepositoryConfigurator.Configure(IAppender)"/> method implemented
   /// on this object, but it is protected and therefore can be called by subclasses.
   /// </para>
   /// </remarks>
   protected void BasicRepositoryConfigure(params IAppender[] appenders)
   {
+    appenders.EnsureNotNull();
     List<LogLog> configurationMessages = [];
 
     using (new LogLog.LogReceivedAdapter(configurationMessages))
@@ -432,7 +434,7 @@ public class Hierarchy : LoggerRepositorySkeleton, IBasicRepositoryConfigurator,
   /// <remarks>
   /// <para>
   /// This method provides the same functionality as the 
-  /// <see cref="M:IBasicRepositoryConfigurator.Configure(IAppender)"/> method implemented
+  /// <see cref="IBasicRepositoryConfigurator.Configure(IAppender)"/> method implemented
   /// on this object, but it is protected and therefore can be called by subclasses.
   /// </para>
   /// </remarks>

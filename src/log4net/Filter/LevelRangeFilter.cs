@@ -20,6 +20,7 @@
 using System;
 
 using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Filter;
 
@@ -98,39 +99,20 @@ public class LevelRangeFilter : FilterSkeleton
   /// </remarks>
   public override FilterDecision Decide(LoggingEvent loggingEvent)
   {
-    if (loggingEvent is null)
+    loggingEvent.EnsureNotNull();
+
+    if (LevelMin is not null && loggingEvent.Level is not null && loggingEvent.Level < LevelMin)
     {
-      throw new ArgumentNullException(nameof(loggingEvent));
+      // level of event is less than minimum
+      return FilterDecision.Deny;
     }
 
-    if (LevelMin is not null)
+    if (LevelMax is not null && loggingEvent.Level is not null && loggingEvent.Level > LevelMax)
     {
-      if (loggingEvent.Level is not null && loggingEvent.Level < LevelMin)
-      {
-        // level of event is less than minimum
-        return FilterDecision.Deny;
-      }
+      // level of event is greater than maximum
+      return FilterDecision.Deny;
     }
 
-    if (LevelMax is not null)
-    {
-      if (loggingEvent.Level is not null && loggingEvent.Level > LevelMax)
-      {
-        // level of event is greater than maximum
-        return FilterDecision.Deny;
-      }
-    }
-
-    if (AcceptOnMatch)
-    {
-      // this filter set up to bypass later filters and always return
-      // accept if level in range
-      return FilterDecision.Accept;
-    }
-    else
-    {
-      // event is ok for this filter; allow later filters to have a look..
-      return FilterDecision.Neutral;
-    }
+    return AcceptOnMatch ? FilterDecision.Accept : FilterDecision.Neutral;
   }
 }

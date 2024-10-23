@@ -81,7 +81,7 @@ namespace log4net.Util;
 ///       </para>
 ///       <para>
 ///       The date format specifier admits the same syntax as the
-///       time pattern string of the <see cref="M:DateTime.ToString(string)"/>.
+///       time pattern string of the <see cref="DateTime.ToString(string)"/>.
 ///       </para>
 ///       <para>
 ///       For better results it is recommended to use the log4net date
@@ -94,7 +94,7 @@ namespace log4net.Util;
 ///       </para>
 ///       <para>
 ///       These dedicated date formatters perform significantly
-///       better than <see cref="M:DateTime.ToString(string)"/>.
+///       better than <see cref="DateTime.ToString(string)"/>.
 ///       </para>
 ///         </description>
 ///     </item>
@@ -216,7 +216,7 @@ namespace log4net.Util;
 ///       </para>
 ///       <para>
 ///       The date format specifier admits the same syntax as the
-///       time pattern string of the <see cref="M:DateTime.ToString(string)"/>.
+///       time pattern string of the <see cref="DateTime.ToString(string)"/>.
 ///       </para>
 ///       <para>
 ///       For better results it is recommended to use the log4net date
@@ -229,7 +229,7 @@ namespace log4net.Util;
 ///       </para>
 ///       <para>
 ///       These dedicated date formatters perform significantly
-///       better than <see cref="M:DateTime.ToString(string)"/>.
+///       better than <see cref="DateTime.ToString(string)"/>.
 ///       </para>
 ///         </description>
 ///     </item>
@@ -244,8 +244,8 @@ namespace log4net.Util;
 /// </list>
 /// <para>
 /// Additional pattern converters may be registered with a specific <see cref="PatternString"/>
-/// instance using <see cref="M:AddConverter(ConverterInfo)"/> or
-/// <see cref="M:AddConverter(string, Type)" />.
+/// instance using <see cref="AddConverter(ConverterInfo)"/> or
+/// <see cref="AddConverter(string, Type)" />.
 /// </para>
 /// <para>
 /// See the <see cref="log4net.Layout.PatternLayout"/> for details on the 
@@ -312,6 +312,7 @@ public class PatternString : IOptionHandler
   /// Initialize a new instance of <see cref="PatternString"/> with the pattern specified.
   /// </para>
   /// </remarks>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2214:Do not call overridable methods in constructors")]
   public PatternString(string? pattern)
   {
     ConversionPattern = pattern;
@@ -442,7 +443,7 @@ public class PatternString : IOptionHandler
   /// <remarks>
   /// <para>
   /// This version of the method is used by the configurator.
-  /// Programmatic users should use the alternative <see cref="M:AddConverter(string,Type)"/> method.
+  /// Programmatic users should use the alternative <see cref="AddConverter(string,Type)"/> method.
   /// The converter name is case-insensitive.
   /// </para>
   /// </remarks>
@@ -450,7 +451,7 @@ public class PatternString : IOptionHandler
   {
     if (!typeof(PatternConverter).IsAssignableFrom(converterInfo.EnsureNotNull().Type))
     {
-      throw new ArgumentException($"The converter type specified [{converterInfo.Type}] must be a subclass of log4net.Util.PatternConverter", "converterInfo");
+      throw new ArgumentException($"The converter type specified [{converterInfo.Type}] must be a subclass of log4net.Util.PatternConverter", nameof(converterInfo));
     }
     _instanceRulesRegistry[converterInfo.Name] = converterInfo;
   }
@@ -462,7 +463,7 @@ public class PatternString : IOptionHandler
   /// <param name="type">the type of the converter</param>
   public void AddConverter(string name, Type type)
   {
-    AddConverter(new ConverterInfo()
+    AddConverter(new()
     {
       Name = name.EnsureNotNull(),
       Type = type.EnsureNotNull()

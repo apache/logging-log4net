@@ -21,6 +21,7 @@ using System;
 using System.IO;
 
 using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Layout;
 
@@ -43,10 +44,7 @@ public class SimpleLayout : LayoutSkeleton
   /// <summary>
   /// Constructs a SimpleLayout
   /// </summary>
-  public SimpleLayout()
-  {
-    IgnoresException = true;
-  }
+  public SimpleLayout() => IgnoresException = true;
 
   /// <summary>
   /// Initialize layout options
@@ -83,14 +81,11 @@ public class SimpleLayout : LayoutSkeleton
   /// </remarks>
   public override void Format(TextWriter writer, LoggingEvent loggingEvent)
   {
-    if (loggingEvent is null)
-    {
-      throw new ArgumentNullException(nameof(loggingEvent));
-    }
+    writer.EnsureNotNull();
 
-    if (loggingEvent.Level is not null)
+    if (loggingEvent.EnsureNotNull().Level is Level level)
     {
-      writer.Write(loggingEvent.Level.DisplayName);
+      writer.Write(level.DisplayName);
       writer.Write(" - ");
     }
     loggingEvent.WriteRenderedMessage(writer);
