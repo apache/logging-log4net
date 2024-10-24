@@ -787,10 +787,12 @@ public class LoggingEvent : ILog4NetSerializable
 
   private string? _cachedWindowsIdentityUserName;
   
-  /// <summary>
-  /// TODO
-  /// </summary>
-  /// <returns>TODO</returns>
+  /// <returns>
+  ///  On Windows: UserName in case of success, empty string for null
+  ///  <para/>
+  ///  On other OSes: null
+  /// </returns>
+  /// <exception cref="PlatformNotSupportedException">Thrown on non-Windows platforms on net462</exception>
   private static string? TryReadWindowsIdentityUserName()
   {
 #if !NET462_OR_GREATER
