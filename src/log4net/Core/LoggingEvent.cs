@@ -701,8 +701,8 @@ public class LoggingEvent : ILog4NetSerializable
   /// </value>
   /// <remarks>
   /// <para>
-  /// Calls <c>WindowsIdentity.GetCurrent().Name</c> to get the name of
-  /// the current windows user.
+  /// On Windows it calls <c>WindowsIdentity.GetCurrent().Name</c> to get the name of
+  /// the current windows user. On other OSes it calls Environment.UserName.
   /// </para>
   /// <para>
   /// To improve performance, we could cache the string representation of 
@@ -745,15 +745,24 @@ public class LoggingEvent : ILog4NetSerializable
   {
     if (_platformDoesNotSupportWindowsIdentity)
     {
-      // we've already received one PlatformNotSupportedException
+      // we've already received one PlatformNotSupportedException or null from TryReadWindowsIdentityUserName
       // and it's highly unlikely that will change
       return Environment.UserName;
     }
 
     try
     {
-      return _cachedWindowsIdentityUserName ??=
-          TryReadWindowsIdentityUserName();
+      if (_cachedWindowsIdentityUserName is not null)
+      {
+        return _cachedWindowsIdentityUserName;
+      }
+      if (TryReadWindowsIdentityUserName() is string userName)
+      {
+        _cachedWindowsIdentityUserName = userName;
+        return _cachedWindowsIdentityUserName;
+      }
+      _platformDoesNotSupportWindowsIdentity = true;
+      return Environment.UserName;
     }
     catch (PlatformNotSupportedException)
     {
@@ -777,12 +786,19 @@ public class LoggingEvent : ILog4NetSerializable
   }
 
   private string? _cachedWindowsIdentityUserName;
-  private static string TryReadWindowsIdentityUserName()
+  
+  /// <returns>
+  ///  On Windows: UserName in case of success, empty string for null
+  ///  <para/>
+  ///  On other OSes: null
+  /// </returns>
+  /// <exception cref="PlatformNotSupportedException">Thrown on non-Windows platforms on net462</exception>
+  private static string? TryReadWindowsIdentityUserName()
   {
 #if !NET462_OR_GREATER
     if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
     {
-      return string.Empty;
+      return null;
     }
 #endif
     using var identity = WindowsIdentity.GetCurrent();
