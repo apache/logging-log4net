@@ -62,7 +62,17 @@ limitations under the License.
               <a href="https://github.com/apache/logging-log4net/issues/189">separate review instructions for log4net</a> (by @FreeAndNil)
             </li>
             <li>
-              <a href="https://github.com/apache/logging-log4net/issues/196">more modern coding style</a> (by @FreeAndNil)
+              <a href="https://github.com/apache/logging-log4net/pull/196">more modern coding style</a> (by @FreeAndNil)
+            </li>
+          </ul>
+        </section>
+        <section id="a3.0.2-known-issues" name="Known Issues">
+          <ul>
+            <li>
+              MDC was accidentally renamed into Mdc in <a href="https://github.com/apache/logging-log4net/pull/196">#196</a> - this will be reverted in 3.0.3
+            </li>
+            <li>
+              NDC was accidentally renamed into Ndc in <a href="https://github.com/apache/logging-log4net/pull/196">#196</a> - this will be reverted in 3.0.3
             </li>
           </ul>
         </section>
