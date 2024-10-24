@@ -23,28 +23,32 @@ using System.IO;
 using log4net.Core;
 using log4net.Layout;
 
-namespace SampleLayoutsApp.Layout
+namespace SampleLayoutsApp.Layout;
+
+/// <inheritdoc/>
+public sealed class LevelPatternLayout : PatternLayout
 {
+  private readonly Hashtable _levelToPatternLayout = [];
+
   /// <inheritdoc/>
-  public sealed class LevelPatternLayout : PatternLayout
+  public override void Format(TextWriter writer, LoggingEvent loggingEvent)
   {
-    private readonly Hashtable levelToPatternLayout = [];
-
-    /// <inheritdoc/>
-    public override void Format(TextWriter writer, LoggingEvent loggingEvent)
+    ArgumentNullException.ThrowIfNull(loggingEvent);
+    if (loggingEvent.Level is null 
+        || _levelToPatternLayout[loggingEvent.Level] is not PatternLayout patternLayout)
     {
-      ArgumentNullException.ThrowIfNull(loggingEvent);
-      if (levelToPatternLayout[loggingEvent.Level] is not PatternLayout patternLayout)
-        base.Format(writer, loggingEvent);
-      else
-        patternLayout.Format(writer, loggingEvent);
+      base.Format(writer, loggingEvent);
     }
-
-    /// <inheritdoc/>
-    public void AddLevelConversionPattern(LevelConversionPattern levelLayout)
+    else
     {
-      ArgumentNullException.ThrowIfNull(levelLayout);
-      levelToPatternLayout[levelLayout.Level] = new PatternLayout(levelLayout.ConversionPattern);
+      patternLayout.Format(writer, loggingEvent);
     }
+  }
+
+  /// <inheritdoc/>
+  public void AddLevelConversionPattern(LevelConversionPattern levelLayout)
+  {
+    ArgumentNullException.ThrowIfNull(levelLayout);
+    _levelToPatternLayout[levelLayout.Level] = new PatternLayout(levelLayout.ConversionPattern);
   }
 }

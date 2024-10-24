@@ -23,28 +23,27 @@ using log4net.Ext.EventID;
 // Configure this assembly using the 'EventIDLogApp.exe.config' config file
 [assembly: log4net.Config.XmlConfigurator(Watch = true)]
 
-namespace EventIDLogApp
+namespace EventIDLogApp;
+
+/// <summary>
+/// EventIDLogApp
+/// </summary>
+internal static class EventIDLogApp
 {
+  // Create a logger for use in this class
+  private static readonly IEventIDLog _log = EventIDLogManager.GetLogger(typeof(EventIDLogApp))
+    ?? throw new ArgumentNullException(nameof(EventIDLogManager.GetLogger));
+
   /// <summary>
-  /// EventIDLogApp
+  /// The main entry point for the application.
   /// </summary>
-  internal static class EventIDLogApp
+  [STAThread]
+  static void Main()
   {
-    // Create a logger for use in this class
-    private static readonly IEventIDLog log = EventIDLogManager.GetLogger(typeof(EventIDLogApp))
-      ?? throw new ArgumentNullException(nameof(EventIDLogManager.GetLogger));
+    _log.Info(1, "Application [" + typeof(EventIDLogApp).Assembly.GetName().Name + "] Start");
 
-    /// <summary>
-    /// The main entry point for the application.
-    /// </summary>
-    [STAThread]
-    static void Main()
-    {
-      log.Info(1, "Application [" + typeof(EventIDLogApp).Assembly.GetName().Name + "] Start");
+    _log.Warn(40, "This is a warn message ");
 
-      log.Warn(40, "This is a warn message ");
-
-      log.Info(2, "Application [" + typeof(EventIDLogApp).Assembly.GetName().Name + "] Stop");
-    }
+    _log.Info(2, "Application [" + typeof(EventIDLogApp).Assembly.GetName().Name + "] Stop");
   }
 }

@@ -19,18 +19,17 @@
 
 using System;
 
-namespace log4net.Ext.Trace
+namespace log4net.Ext.Trace;
+
+/// <inheritdoc/>
+public interface ITraceLog : ILog
 {
   /// <inheritdoc/>
-  public interface ITraceLog : ILog
-  {
-    /// <inheritdoc/>
-    void Trace(object message);
-    /// <inheritdoc/>
-    void Trace(object message, Exception t);
-    /// <inheritdoc/>
-    void TraceFormat(string format, params object[] args);
-    /// <inheritdoc/>
-    bool IsTraceEnabled { get; }
-  }
+  void Trace(object message);
+  /// <inheritdoc/>
+  void Trace(object message, Exception t);
+  /// <inheritdoc/>
+  void TraceFormat(string format, params object[] args);
+  /// <inheritdoc/>
+  bool IsTraceEnabled { get; }
 }

@@ -21,128 +21,129 @@ using System.IO;
 using log4net.Core;
 using log4net.Layout;
 
-namespace SampleLayoutsApp.Layout
+namespace SampleLayoutsApp.Layout;
+
+/// <summary>
+/// The ForwardingLayout forwards to a nested <see cref="ILayout"/>
+/// </summary>
+/// <remarks>
+/// The ForwardingLayout base class is used by layouts that want
+/// to decorate other <see cref="ILayout"/> objects.
+/// </remarks>
+public abstract class ForwardingLayout : ILayout, IOptionHandler
 {
+  /// <inheritdoc/>
+  protected ForwardingLayout()
+  {
+  }
+
+  /// <inheritdoc/>
+  public ILayout? Layout { get; set; }
+
+  #region Implementation of IOptionHandler
+
   /// <summary>
-  /// The ForwardingLayout forwards to a nested <see cref="ILayout"/>
+  /// Activate component options
   /// </summary>
   /// <remarks>
-  /// The ForwardingLayout base class is used by layouts that want
-  /// to decorate other <see cref="ILayout"/> objects.
+  /// <para>
+  /// This is part of the <see cref="IOptionHandler"/> delayed object
+  /// activation scheme. The <see cref="ActivateOptions"/> method must 
+  /// be called on this object after the configuration properties have
+  /// been set. Until <see cref="ActivateOptions"/> is called this
+  /// object is in an undefined state and must not be used. 
+  /// </para>
+  /// <para>
+  /// If any of the configuration properties are modified then 
+  /// <see cref="ActivateOptions"/> must be called again.
+  /// </para>
+  /// <para>
+  /// This method must be implemented by the subclass.
+  /// </para>
   /// </remarks>
-  public abstract class ForwardingLayout : ILayout, IOptionHandler
+  public virtual void ActivateOptions()
   {
-    /// <inheritdoc/>
-    protected ForwardingLayout()
+    if (Layout is IOptionHandler optionHandler)
     {
+      optionHandler.ActivateOptions();
     }
-
-    /// <inheritdoc/>
-    public ILayout? Layout { get; set; }
-
-    #region Implementation of IOptionHandler
-
-    /// <summary>
-    /// Activate component options
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// This is part of the <see cref="IOptionHandler"/> delayed object
-    /// activation scheme. The <see cref="ActivateOptions"/> method must 
-    /// be called on this object after the configuration properties have
-    /// been set. Until <see cref="ActivateOptions"/> is called this
-    /// object is in an undefined state and must not be used. 
-    /// </para>
-    /// <para>
-    /// If any of the configuration properties are modified then 
-    /// <see cref="ActivateOptions"/> must be called again.
-    /// </para>
-    /// <para>
-    /// This method must be implemented by the subclass.
-    /// </para>
-    /// </remarks>
-    public virtual void ActivateOptions()
-    {
-      if (Layout is IOptionHandler optionHandler)
-        optionHandler.ActivateOptions();
-    }
-
-    #endregion
-
-    #region Implementation of ILayout
-
-    /// <summary>
-    /// Implement this method to create your own layout format.
-    /// </summary>
-    /// <param name="writer">The TextWriter to write the formatted event to</param>
-    /// <param name="loggingEvent">The event to format</param>
-    /// <remarks>
-    /// <para>
-    /// This method is called by an appender to format
-    /// the <paramref name="loggingEvent"/> as text.
-    /// </para>
-    /// </remarks>
-    virtual public void Format(TextWriter writer, LoggingEvent loggingEvent)
-      => Layout?.Format(writer, loggingEvent);
-
-    /// <summary>
-    /// The content type output by this layout. 
-    /// </summary>
-    /// <value>The content type is <c>"text/plain"</c></value>
-    /// <remarks>
-    /// <para>
-    /// The content type output by this layout.
-    /// </para>
-    /// <para>
-    /// This base class uses the value <c>"text/plain"</c>.
-    /// To change this value a subclass must override this
-    /// property.
-    /// </para>
-    /// </remarks>
-    public virtual string ContentType => Layout?.ContentType ?? "text/plain";
-
-    /// <summary>
-    /// The header for the layout format.
-    /// </summary>
-    /// <value>the layout header</value>
-    /// <remarks>
-    /// <para>
-    /// The Header text will be appended before any logging events
-    /// are formatted and appended.
-    /// </para>
-    /// </remarks>
-    public virtual string? Header => Layout?.Header;
-
-    /// <summary>
-    /// The footer for the layout format.
-    /// </summary>
-    /// <value>the layout footer</value>
-    /// <remarks>
-    /// <para>
-    /// The Footer text will be appended after all the logging events
-    /// have been formatted and appended.
-    /// </para>
-    /// </remarks>
-    public virtual string? Footer => Layout?.Footer;
-
-    /// <summary>
-    /// Flag indicating if this layout handles exceptions
-    /// </summary>
-    /// <value><c>false</c> if this layout handles exceptions</value>
-    /// <remarks>
-    /// <para>
-    /// If this layout handles the exception object contained within
-    /// <see cref="LoggingEvent"/>, then the layout should return
-    /// <c>false</c>. Otherwise, if the layout ignores the exception
-    /// object, then the layout should return <c>true</c>.
-    /// </para>
-    /// <para>
-    /// Set this value to override a this default setting. The default
-    /// value is <c>true</c>, this layout does not handle the exception.
-    /// </para>
-    /// </remarks>
-    public virtual bool IgnoresException => Layout?.IgnoresException ?? true;
-
-    #endregion
   }
+
+  #endregion
+
+  #region Implementation of ILayout
+
+  /// <summary>
+  /// Implement this method to create your own layout format.
+  /// </summary>
+  /// <param name="writer">The TextWriter to write the formatted event to</param>
+  /// <param name="loggingEvent">The event to format</param>
+  /// <remarks>
+  /// <para>
+  /// This method is called by an appender to format
+  /// the <paramref name="loggingEvent"/> as text.
+  /// </para>
+  /// </remarks>
+  virtual public void Format(TextWriter writer, LoggingEvent loggingEvent)
+    => Layout?.Format(writer, loggingEvent);
+
+  /// <summary>
+  /// The content type output by this layout. 
+  /// </summary>
+  /// <value>The content type is <c>"text/plain"</c></value>
+  /// <remarks>
+  /// <para>
+  /// The content type output by this layout.
+  /// </para>
+  /// <para>
+  /// This base class uses the value <c>"text/plain"</c>.
+  /// To change this value a subclass must override this
+  /// property.
+  /// </para>
+  /// </remarks>
+  public virtual string ContentType => Layout?.ContentType ?? "text/plain";
+
+  /// <summary>
+  /// The header for the layout format.
+  /// </summary>
+  /// <value>the layout header</value>
+  /// <remarks>
+  /// <para>
+  /// The Header text will be appended before any logging events
+  /// are formatted and appended.
+  /// </para>
+  /// </remarks>
+  public virtual string? Header => Layout?.Header;
+
+  /// <summary>
+  /// The footer for the layout format.
+  /// </summary>
+  /// <value>the layout footer</value>
+  /// <remarks>
+  /// <para>
+  /// The Footer text will be appended after all the logging events
+  /// have been formatted and appended.
+  /// </para>
+  /// </remarks>
+  public virtual string? Footer => Layout?.Footer;
+
+  /// <summary>
+  /// Flag indicating if this layout handles exceptions
+  /// </summary>
+  /// <value><c>false</c> if this layout handles exceptions</value>
+  /// <remarks>
+  /// <para>
+  /// If this layout handles the exception object contained within
+  /// <see cref="LoggingEvent"/>, then the layout should return
+  /// <c>false</c>. Otherwise, if the layout ignores the exception
+  /// object, then the layout should return <c>true</c>.
+  /// </para>
+  /// <para>
+  /// Set this value to override a this default setting. The default
+  /// value is <c>true</c>, this layout does not handle the exception.
+  /// </para>
+  /// </remarks>
+  public virtual bool IgnoresException => Layout?.IgnoresException ?? true;
+
+  #endregion
 }

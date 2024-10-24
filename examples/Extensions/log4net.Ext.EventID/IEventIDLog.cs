@@ -25,53 +25,52 @@ using System;
 
 using log4net;
 
-namespace log4net.Ext.EventID
+namespace log4net.Ext.EventID;
+
+/// <summary>
+/// ILog-Extension
+/// </summary>
+public interface IEventIDLog : ILog
 {
   /// <summary>
-  /// ILog-Extension
+  /// Info
   /// </summary>
-  public interface IEventIDLog : ILog
-  {
-    /// <summary>
-    /// Info
-    /// </summary>
-    void Info(int eventId, object message);
+  void Info(int eventId, object message);
 
-    /// <summary>
-    /// Info
-    /// </summary>
-    void Info(int eventId, object message, Exception t);
+  /// <summary>
+  /// Info
+  /// </summary>
+  void Info(int eventId, object message, Exception t);
 
-    /// <summary>
-    /// Warn
-    /// </summary>
-    void Warn(int eventId, object message);
+  /// <summary>
+  /// Warn
+  /// </summary>
+  void Warn(int eventId, object message);
 
-    /// <summary>
-    /// Warn
-    /// </summary>
-    void Warn(int eventId, object message, Exception t);
+  /// <summary>
+  /// Warn
+  /// </summary>
+  void Warn(int eventId, object message, Exception t);
 
-    /// <summary>
-    /// Error
-    /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
-    void Error(int eventId, object message);
+  /// <summary>
+  /// Error
+  /// </summary>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
+  void Error(int eventId, object message);
 
-    /// <summary>
-    /// Error
-    /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
-    void Error(int eventId, object message, Exception t);
+  /// <summary>
+  /// Error
+  /// </summary>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
+  void Error(int eventId, object message, Exception t);
 
-    /// <summary>
-    /// Fatal
-    /// </summary>
-    void Fatal(int eventId, object message);
+  /// <summary>
+  /// Fatal
+  /// </summary>
+  void Fatal(int eventId, object message);
 
-    /// <summary>
-    /// Fatal
-    /// </summary>
-    void Fatal(int eventId, object message, Exception t);
-  }
+  /// <summary>
+  /// Fatal
+  /// </summary>
+  void Fatal(int eventId, object message, Exception t);
 }
