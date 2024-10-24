@@ -30,7 +30,7 @@ namespace log4net;
 /// </para>
 /// </note>
 /// <para>
-/// The MDC class is similar to the <see cref="Ndc"/> class except that it is
+/// The MDC class is similar to the <see cref="NDC"/> class except that it is
 /// based on a map instead of a stack. It provides <i>mapped
 /// diagnostic contexts</i>. A <i>Mapped Diagnostic Context</i>, or
 /// MDC in short, is an instrument for distinguishing interleaved log
@@ -45,7 +45,7 @@ namespace log4net;
 /// <author>Nicko Cadell</author>
 /// <author>Gert Driesen</author>
 /*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
-public static class Mdc
+public static class MDC
 {
   /// <summary>
   /// Gets the context value identified by the <paramref name="key" /> parameter.

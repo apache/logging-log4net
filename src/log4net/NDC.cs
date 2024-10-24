@@ -51,7 +51,7 @@ namespace log4net;
 /// </remarks>
 /// <example>How to push a message into the context
 /// <code lang="C#">
-///  using(NDC.Push("my context message"))
+///  using (NDC.Push("my context message"))
 ///  {
 ///    ... all log calls will have 'my context message' included ...
 ///  
@@ -62,7 +62,7 @@ namespace log4net;
 /// <author>Nicko Cadell</author>
 /// <author>Gert Driesen</author>
 /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
-public static class Ndc
+public static class NDC
 {
   /// <summary>
   /// Gets the current context depth.

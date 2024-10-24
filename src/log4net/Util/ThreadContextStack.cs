@@ -178,7 +178,7 @@ public sealed class ThreadContextStack : IFixingRequired
   /// <remarks>
   /// <para>
   /// This property is provided only to support backward compatibility 
-  /// of the <see cref="Ndc"/>. Typically the internal stack should not
+  /// of the <see cref="NDC"/>. Typically the internal stack should not
   /// be modified.
   /// </para>
   /// </remarks>
