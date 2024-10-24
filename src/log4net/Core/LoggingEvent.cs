@@ -701,8 +701,8 @@ public class LoggingEvent : ILog4NetSerializable
   /// </value>
   /// <remarks>
   /// <para>
-  /// Calls <c>WindowsIdentity.GetCurrent().Name</c> to get the name of
-  /// the current windows user.
+  /// On Windows it calls <c>WindowsIdentity.GetCurrent().Name</c> to get the name of
+  /// the current windows user. On other OSes it calls Environment.UserName.
   /// </para>
   /// <para>
   /// To improve performance, we could cache the string representation of 
@@ -752,20 +752,17 @@ public class LoggingEvent : ILog4NetSerializable
 
     try
     {
-      if(_cachedWindowsIdentityUserName is not null)
+      if (_cachedWindowsIdentityUserName is not null)
       {
         return _cachedWindowsIdentityUserName;
       }
-      else if(TryReadWindowsIdentityUserName() is string userName)
+      if (TryReadWindowsIdentityUserName() is string userName)
       {
         _cachedWindowsIdentityUserName = userName;
         return _cachedWindowsIdentityUserName;
       }
-      else
-      {
-        _platformDoesNotSupportWindowsIdentity = true;
-        return Environment.UserName;
-      }
+      _platformDoesNotSupportWindowsIdentity = true;
+      return Environment.UserName;
     }
     catch (PlatformNotSupportedException)
     {
