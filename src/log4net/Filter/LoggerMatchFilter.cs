@@ -20,6 +20,7 @@
 using System;
 
 using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Filter;
 
@@ -63,7 +64,7 @@ public class LoggerMatchFilter : FilterSkeleton
   /// <para>
   /// This filter will attempt to match this value against logger name in
   /// the following way. The match will be done against the beginning of the
-  /// logger name (using <see cref="M:String.StartsWith(string)"/>). The match is
+  /// logger name (using <see cref="String.StartsWith(string)"/>). The match is
   /// case sensitive. If a match is found then
   /// the result depends on the value of <see cref="AcceptOnMatch"/>.
   /// </para>
@@ -79,7 +80,7 @@ public class LoggerMatchFilter : FilterSkeleton
   /// <para>
   /// The rendered message is matched against the <see cref="LoggerToMatch"/>.
   /// If the <see cref="LoggerToMatch"/> equals the beginning of 
-  /// the incoming <see cref="LoggingEvent.LoggerName"/> (<see cref="M:String.StartsWith(string)"/>)
+  /// the incoming <see cref="LoggingEvent.LoggerName"/> (<see cref="String.StartsWith(string)"/>)
   /// then a match will have occurred. If no match occurs
   /// this function will return <see cref="FilterDecision.Neutral"/>
   /// allowing other filters to check the event. If a match occurs then
@@ -90,28 +91,17 @@ public class LoggerMatchFilter : FilterSkeleton
   /// </remarks>
   public override FilterDecision Decide(LoggingEvent loggingEvent)
   {
-    if (loggingEvent is null)
-    {
-      throw new ArgumentNullException(nameof(loggingEvent));
-    }
+    loggingEvent.EnsureNotNull();
 
     // Check if we have been set up to filter
-    if (!string.IsNullOrEmpty(LoggerToMatch) &&
-      loggingEvent.LoggerName is not null &&
-      loggingEvent.LoggerName.StartsWith(LoggerToMatch))
+    if (!string.IsNullOrEmpty(LoggerToMatch) 
+        && loggingEvent.LoggerName is not null 
+        && loggingEvent.LoggerName.StartsWith(LoggerToMatch))
     {
       // we've got a match
-      if (AcceptOnMatch)
-      {
-        return FilterDecision.Accept;
-      }
-      return FilterDecision.Deny;
+      return AcceptOnMatch ? FilterDecision.Accept : FilterDecision.Deny;
     }
-    else
-    {
-      // We cannot filter so allow the filter chain
-      // to continue processing
-      return FilterDecision.Neutral;
-    }
+    // We cannot filter so allow the filter chain to continue processing
+    return FilterDecision.Neutral;
   }
 }

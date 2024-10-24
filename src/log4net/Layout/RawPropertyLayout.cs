@@ -18,6 +18,7 @@
 #endregion
 
 using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Layout;
 
@@ -44,8 +45,6 @@ public class RawPropertyLayout : IRawLayout
   /// with than name then <c>null</c> will be returned.
   /// </para>
   /// </remarks>
-  public virtual object? Format(LoggingEvent loggingEvent)
-  {
-    return loggingEvent.LookupProperty(Key);
-  }
+  public virtual object? Format(LoggingEvent loggingEvent) 
+    => loggingEvent.EnsureNotNull().LookupProperty(Key);
 }

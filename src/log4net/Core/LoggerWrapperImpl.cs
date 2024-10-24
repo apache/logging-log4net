@@ -22,6 +22,7 @@ namespace log4net.Core;
 /// <summary>
 /// Implementation of the <see cref="ILoggerWrapper"/> interface.
 /// </summary>
+/// <param name="logger">The logger to wrap.</param>
 /// <remarks>
 /// <para>
 /// This class should be used as the base for all wrapper implementations.
@@ -29,22 +30,9 @@ namespace log4net.Core;
 /// </remarks>
 /// <author>Nicko Cadell</author>
 /// <author>Gert Driesen</author>
-public abstract class LoggerWrapperImpl : ILoggerWrapper
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix")]
+public abstract class LoggerWrapperImpl(ILogger logger) : ILoggerWrapper
 {
-  /// <summary>
-  /// Constructs a new wrapper for the specified logger.
-  /// </summary>
-  /// <param name="logger">The logger to wrap.</param>
-  /// <remarks>
-  /// <para>
-  /// Constructs a new wrapper for the specified logger.
-  /// </para>
-  /// </remarks>
-  protected LoggerWrapperImpl(ILogger logger)
-  {
-    Logger = logger;
-  }
-
   /// <summary>
   /// Gets the implementation behind this wrapper object.
   /// </summary>
@@ -61,5 +49,5 @@ public abstract class LoggerWrapperImpl : ILoggerWrapper
   /// the log events.
   /// </para>
   /// </remarks>
-  public virtual ILogger Logger { get; }
+  public virtual ILogger Logger { get; } = logger;
 }

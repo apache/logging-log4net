@@ -398,14 +398,14 @@ public class AdoNetAppender : BufferingAppenderSkeleton
           // commit transaction
           dbTran.Commit();
         }
-        catch (Exception ex)
+        catch (Exception ex) when (!ex.IsFatal())
         {
           // rollback the transaction
           try
           {
             dbTran.Rollback();
           }
-          catch (Exception)
+          catch (Exception inner) when (!inner.IsFatal())
           {
             // Ignore exception
           }
@@ -450,6 +450,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// </remarks>
   protected virtual void SendBuffer(IDbTransaction? dbTran, LoggingEvent[] events)
   {
+    events.EnsureNotNull();
     if (!string.IsNullOrWhiteSpace(CommandText))
     {
       using IDbCommand dbCmd = Connection.EnsureNotNull().CreateCommand();
@@ -522,7 +523,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
       parameter.Prepare(dbCmd);
     }
 
-    dbCmd.Prepare();
+    dbCmd.EnsureNotNull().Prepare();
   }
 
   /// <summary>
@@ -665,7 +666,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
         Connection.Open();
       }
     }
-    catch (Exception e)
+    catch (Exception e) when (!e.IsFatal())
     {
       // Sadly, your connection string is bad.
       ErrorHandler.Error($"Could not open database connection [{resolvedConnectionString}]. Connection string context [{connectionStringContext}].", e);
@@ -688,7 +689,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
       {
         Connection.Close();
       }
-      catch (Exception ex)
+      catch (Exception ex) when (!ex.IsFatal())
       {
         LogLog.Warn(_declaringType, "Exception while disposing cached connection object", ex);
       }
@@ -707,6 +708,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   // ReSharper disable once InconsistentNaming
   // ReSharper disable once FieldCanBeMadeReadOnly.Global
   // ReSharper disable once MemberCanBePrivate.Global
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1002:Do not expose generic lists")]
   protected List<AdoNetAppenderParameter> m_parameters = [];
 
   /// <summary>
@@ -882,7 +884,7 @@ public class AdoNetAppenderParameter
   public virtual void Prepare(IDbCommand command)
   {
     // Create a new parameter
-    IDbDataParameter param = command.CreateParameter();
+    IDbDataParameter param = command.EnsureNotNull().CreateParameter();
 
     // Set the parameter properties
     param.ParameterName = ParameterName;
@@ -922,7 +924,8 @@ public class AdoNetAppenderParameter
   public virtual void FormatValue(IDbCommand command, LoggingEvent loggingEvent)
   {
     // Lookup the parameter
-    IDbDataParameter param = (IDbDataParameter)command.Parameters[ParameterName.EnsureNotNull()];
+    IDbDataParameter param = command.EnsureNotNull().Parameters[ParameterName.EnsureNotNull()]
+      .EnsureIs<IDbDataParameter>();
 
     // Format the value
     object? formattedValue = Layout?.Format(loggingEvent);

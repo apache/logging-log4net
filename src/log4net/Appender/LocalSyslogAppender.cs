@@ -314,11 +314,11 @@ public class LocalSyslogAppender : AppenderSkeleton
     _handleToIdentity = Marshal.StringToHGlobalAnsi(identString);
 
     // open syslog
-    openlog(_handleToIdentity, 1, Facility);
+    NativeMethods.openlog(_handleToIdentity, 1, Facility);
   }
 
   /// <summary>
-  /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/> method.
+  /// This method is called by the <see cref="AppenderSkeleton.DoAppend(LoggingEvent)"/> method.
   /// </summary>
   /// <param name="loggingEvent">The event to log.</param>
   /// <remarks>
@@ -333,12 +333,12 @@ public class LocalSyslogAppender : AppenderSkeleton
   [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
   protected override void Append(LoggingEvent loggingEvent)
   {
-    int priority = GeneratePriority(Facility, GetSeverity(loggingEvent.Level));
+    int priority = GeneratePriority(Facility, GetSeverity(loggingEvent.EnsureNotNull().Level));
     string message = RenderLoggingEvent(loggingEvent);
 
     // Call the local libc syslog method
     // The second argument is a printf style format string
-    syslog(priority, "%s", message);
+    NativeMethods.syslog(priority, "%s", message);
   }
 
   /// <summary>
@@ -357,7 +357,7 @@ public class LocalSyslogAppender : AppenderSkeleton
     try
     {
       // close syslog
-      closelog();
+      NativeMethods.closelog();
     }
     catch (DllNotFoundException)
     {
@@ -445,33 +445,6 @@ public class LocalSyslogAppender : AppenderSkeleton
   /// Mapping from level object to syslog severity
   /// </summary>
   private readonly LevelMapping _levelMapping = new();
-
-  /// <summary>
-  /// Open connection to system logger.
-  /// </summary>
-  [DllImport("libc")]
-  private static extern void openlog(IntPtr ident, int option, SyslogFacility facility);
-
-  /// <summary>
-  /// Generate a log message.
-  /// </summary>
-  /// <remarks>
-  /// <para>
-  /// The libc syslog method takes a format string and a variable argument list similar
-  /// to the classic printf function. As this type of vararg list is not supported
-  /// by C# we need to specify the arguments explicitly. Here we have specified the
-  /// format string with a single message argument. The caller must set the format 
-  /// string to <c>"%s"</c>.
-  /// </para>
-  /// </remarks>
-  [DllImport("libc", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-  private static extern void syslog(int priority, string format, string message);
-
-  /// <summary>
-  /// Close descriptor used to write to system logger.
-  /// </summary>
-  [DllImport("libc")]
-  private static extern void closelog();
 
   /// <summary>
   /// A class to act as a mapping between the level that a logging call is made at and

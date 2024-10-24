@@ -298,7 +298,7 @@ public class EventLogAppender : AppenderSkeleton
   }
 
   /// <summary>
-  /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/>
+  /// This method is called by the <see cref="AppenderSkeleton.DoAppend(LoggingEvent)"/>
   /// method. 
   /// </summary>
   /// <param name="loggingEvent">the event to log</param>
@@ -321,7 +321,7 @@ public class EventLogAppender : AppenderSkeleton
     int eventId = EventId;
 
     // Look for the EventID property
-    if (loggingEvent.LookupProperty("EventID") is object eventIdPropertyObj)
+    if (loggingEvent.EnsureNotNull().LookupProperty("EventID") is object eventIdPropertyObj)
     {
       if (eventIdPropertyObj is int eventIdInt)
       {
@@ -396,9 +396,9 @@ public class EventLogAppender : AppenderSkeleton
         EventLog.WriteEntry(ApplicationName, eventTxt, entryType, eventId, category);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      ErrorHandler.Error($"Unable to write to event log [{LogName}] using source [{ApplicationName}]", ex);
+      ErrorHandler.Error($"Unable to write to event log [{LogName}] using source [{ApplicationName}]", e);
     }
   }
 

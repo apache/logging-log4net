@@ -145,6 +145,7 @@ public class TelnetAppender : AppenderSkeleton
   /// It is threaded so that clients can connect/disconnect asynchronously.
   /// </para>
   /// </remarks>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1063:Implement IDisposable Correctly")]
   protected class SocketHandler : IDisposable
   {
     private const int MaxConnections = 20;
@@ -157,6 +158,7 @@ public class TelnetAppender : AppenderSkeleton
     /// <summary>
     /// Class that represents a client connected to this handler
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1063:Implement IDisposable Correctly")]
     protected class SocketClient : IDisposable
     {
       private readonly Socket _socket;
@@ -173,12 +175,12 @@ public class TelnetAppender : AppenderSkeleton
       /// </remarks>
       public SocketClient(Socket socket)
       {
-        this._socket = socket;
+        _socket = socket;
         try
         {
           _writer = new(new NetworkStream(socket));
         }
-        catch
+        catch (Exception e) when (!e.IsFatal())
         {
           Dispose();
           throw;
@@ -198,13 +200,14 @@ public class TelnetAppender : AppenderSkeleton
       /// <summary>
       /// Cleans up the client connection.
       /// </summary>
+      [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1063:Implement IDisposable Correctly")]
       public void Dispose()
       {
         try
         {
           _writer.Dispose();
         }
-        catch
+        catch (Exception e) when (!e.IsFatal())
         {
           // Ignore
         }
@@ -213,7 +216,7 @@ public class TelnetAppender : AppenderSkeleton
         {
           _socket.Shutdown(SocketShutdown.Both);
         }
-        catch
+        catch (Exception e) when (!e.IsFatal())
         {
           // Ignore
         }
@@ -222,7 +225,7 @@ public class TelnetAppender : AppenderSkeleton
         {
           _socket.Dispose();
         }
-        catch
+        catch (Exception e) when (!e.IsFatal())
         {
           // Ignore
         }
@@ -267,7 +270,7 @@ public class TelnetAppender : AppenderSkeleton
         {
           client.Send(message);
         }
-        catch
+        catch (Exception e) when (!e.IsFatal())
         {
           // The client has closed the connection, remove it from our list
           client.Dispose();
@@ -316,6 +319,7 @@ public class TelnetAppender : AppenderSkeleton
     /// if there are too many open connections you will be disconnected
     /// </para>
     /// </remarks>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope")]
     private void OnConnect(IAsyncResult asyncResult)
     {
       if (_wasDisposed)
@@ -339,7 +343,7 @@ public class TelnetAppender : AppenderSkeleton
             client.Send($"TelnetAppender v1.0 ({currentActiveConnectionsCount + 1} active connections)\r\n\r\n");
             AddClient(client);
           }
-          catch
+          catch (Exception e) when (!e.IsFatal())
           {
             client.Dispose();
           }
@@ -350,7 +354,7 @@ public class TelnetAppender : AppenderSkeleton
           client.Dispose();
         }
       }
-      catch
+      catch (Exception e) when (!e.IsFatal())
       {
         // Ignore
       }
@@ -387,7 +391,7 @@ public class TelnetAppender : AppenderSkeleton
         {
           _serverSocket.Shutdown(SocketShutdown.Both);
         }
-        catch
+        catch (Exception e) when (!e.IsFatal())
         {
           // Ignore
         }
@@ -396,7 +400,7 @@ public class TelnetAppender : AppenderSkeleton
         {
           _serverSocket.Dispose();
         }
-        catch
+        catch (Exception e) when (!e.IsFatal())
         {
           // Ignore
         }

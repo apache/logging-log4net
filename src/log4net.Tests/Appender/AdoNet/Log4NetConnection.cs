@@ -21,22 +21,18 @@
 
 using System;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 
 namespace log4net.Tests.Appender.AdoNet;
 
-public class Log4NetConnection : IDbConnection
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
+internal sealed class Log4NetConnection : IDbConnection
 {
   private bool _open;
 
-  public Log4NetConnection()
-  {
-    MostRecentInstance = this;
-  }
+  public Log4NetConnection() => MostRecentInstance = this;
 
-  public void Close()
-  {
-    _open = false;
-  }
+  public void Close() => _open = false;
 
   public ConnectionState State => _open ? ConnectionState.Open : ConnectionState.Closed;
 
@@ -44,39 +40,21 @@ public class Log4NetConnection : IDbConnection
   public string? ConnectionString { get; set; }
 #pragma warning restore CS8766
 
-  public IDbTransaction BeginTransaction()
-  {
-    return new Log4NetTransaction();
-  }
+  public IDbTransaction BeginTransaction() => new Log4NetTransaction();
 
-  public IDbCommand CreateCommand()
-  {
-    return new Log4NetCommand();
-  }
+  public IDbCommand CreateCommand() => new Log4NetCommand();
 
-  public void Open()
-  {
-    _open = true;
-  }
+  public void Open() => _open = true;
 
   public static Log4NetConnection? MostRecentInstance { get; private set; }
 
-  public IDbTransaction BeginTransaction(IsolationLevel il)
-  {
-    throw new NotImplementedException();
-  }
+  public IDbTransaction BeginTransaction(IsolationLevel il) => throw new NotImplementedException();
 
-  public void ChangeDatabase(string databaseName)
-  {
-    throw new NotImplementedException();
-  }
+  public void ChangeDatabase(string databaseName) => throw new NotImplementedException();
 
   public int ConnectionTimeout => throw new NotImplementedException();
 
   public string Database => throw new NotImplementedException();
 
-  public void Dispose()
-  {
-    throw new NotImplementedException();
-  }
+  public void Dispose() => throw new NotImplementedException();
 }

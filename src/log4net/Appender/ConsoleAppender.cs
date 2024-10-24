@@ -77,11 +77,11 @@ public class ConsoleAppender : AppenderSkeleton
   public virtual string Target
   {
     get => _writeToErrorStream ? ConsoleError : ConsoleOut;
-    set => _writeToErrorStream = SystemInfo.EqualsIgnoringCase(ConsoleError, value.Trim());
+    set => _writeToErrorStream = SystemInfo.EqualsIgnoringCase(ConsoleError, value?.Trim());
   }
 
   /// <summary>
-  /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/> method.
+  /// This method is called by the <see cref="AppenderSkeleton.DoAppend(LoggingEvent)"/> method.
   /// </summary>
   /// <param name="loggingEvent">The event to log.</param>
   /// <remarks>

@@ -67,7 +67,7 @@ namespace log4net.Util.PatternStringConverters;
 ///     <description>
 ///     Any other pattern string uses the <see cref="SimpleDateFormatter"/> formatter. 
 ///     This formatter passes the pattern string to the <see cref="DateTime"/> 
-///     <see cref="M:DateTime.ToString(string)"/> method.
+///     <see cref="DateTime.ToString(string)"/> method.
 ///     For details on valid patterns see 
 ///     <a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/frlrfsystemglobalizationdatetimeformatinfoclasstopic.asp">DateTimeFormatInfo Class</a>.
 ///     </description>
@@ -126,7 +126,7 @@ internal class DatePatternConverter : PatternConverter, IOptionHandler
       {
         m_dateFormatter = new SimpleDateFormatter(dateFormatStr);
       }
-      catch (Exception e)
+      catch (Exception e) when (!e.IsFatal())
       {
         LogLog.Error(_declaringType, $"Could not instantiate SimpleDateFormatter with [{dateFormatStr}]", e);
         m_dateFormatter = new Iso8601DateFormatter();
@@ -154,9 +154,9 @@ internal class DatePatternConverter : PatternConverter, IOptionHandler
     {
       m_dateFormatter?.FormatDate(DateTime.Now, writer);
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Error occurred while converting date.", ex);
+      LogLog.Error(_declaringType, "Error occurred while converting date.", e);
     }
   }
 

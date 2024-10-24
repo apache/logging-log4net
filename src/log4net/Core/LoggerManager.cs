@@ -89,9 +89,9 @@ public static class LoggerManager
       {
         appRepositorySelectorType = SystemInfo.GetTypeFromString(appRepositorySelectorTypeName!, false, true);
       }
-      catch (Exception ex)
+      catch (Exception e) when (!e.IsFatal())
       {
-        LogLog.Error(_declaringType, $"Exception while resolving RepositorySelector Type [{appRepositorySelectorTypeName}]", ex);
+        LogLog.Error(_declaringType, $"Exception while resolving RepositorySelector Type [{appRepositorySelectorTypeName}]", e);
       }
 
       if (appRepositorySelectorType is not null)
@@ -102,9 +102,9 @@ public static class LoggerManager
         {
           appRepositorySelectorObj = Activator.CreateInstance(appRepositorySelectorType);
         }
-        catch (Exception ex)
+        catch (Exception e) when (!e.IsFatal())
         {
-          LogLog.Error(_declaringType, $"Exception while creating RepositorySelector [{appRepositorySelectorType.FullName}]", ex);
+          LogLog.Error(_declaringType, $"Exception while creating RepositorySelector [{appRepositorySelectorType.FullName}]", e);
         }
 
         if (appRepositorySelectorObj is IRepositorySelector sel)
@@ -278,7 +278,7 @@ public static class LoggerManager
     => RepositorySelector.GetRepository(repositoryAssembly.EnsureNotNull()).GetLogger(name.EnsureNotNull());
 
   /// <summary>
-  /// Shorthand for <see cref="M:LogManager.GetLogger(string)"/>.
+  /// Shorthand for <see cref="LogManager.GetLogger(string)"/>.
   /// </summary>
   /// <param name="repository">The repository to lookup in.</param>
   /// <param name="type">The <paramref name="type"/> of which the fullname will be used as the name of the logger to retrieve.</param>
@@ -298,7 +298,7 @@ public static class LoggerManager
   }
 
   /// <summary>
-  /// Shorthand for <see cref="M:LogManager.GetLogger(string)"/>.
+  /// Shorthand for <see cref="LogManager.GetLogger(string)"/>.
   /// </summary>
   /// <param name="repositoryAssembly">the assembly to use to look up the repository</param>
   /// <param name="type">The <paramref name="type"/> of which the fullname will be used as the name of the logger to retrieve.</param>
@@ -476,7 +476,7 @@ public static class LoggerManager
   /// <remarks>
   /// <para>
   /// The <see cref="ILoggerRepository"/> created will be associated with the repository
-  /// specified such that a call to <see cref="M:GetRepository(Assembly)"/> with the
+  /// specified such that a call to <see cref="GetRepository(Assembly)"/> with the
   /// same assembly specified will return the same repository instance.
   /// </para>
   /// </remarks>
@@ -509,7 +509,7 @@ public static class LoggerManager
   /// <para>
   /// The caller to <see cref="LogManager"/> supplies either a string name 
   /// or an assembly (if not supplied the assembly is inferred using 
-  /// <see cref="M:Assembly.GetCallingAssembly()"/>).
+  /// <see cref="Assembly.GetCallingAssembly()"/>).
   /// </para>
   /// <para>
   /// This context is used by the selector to look up a specific repository.
@@ -528,9 +528,9 @@ public static class LoggerManager
     Assembly myAssembly = Assembly.GetExecutingAssembly();
     sb.Append("log4net assembly [").Append(myAssembly.FullName).Append("]. ");
     sb.Append("Loaded from [").Append(SystemInfo.AssemblyLocationInfo(myAssembly)).Append("]. ");
-    sb.Append("(.NET Runtime [").Append(Environment.Version).Append("]");
+    sb.Append("(.NET Runtime [").Append(Environment.Version).Append(']');
     sb.Append(" on ").Append(Environment.OSVersion);
-    sb.Append(")");
+    sb.Append(')');
     return sb.ToString();
   }
 
@@ -544,7 +544,7 @@ public static class LoggerManager
   /// Called when the <see cref="AppDomain.DomainUnload"/> event fires.
   /// </para>
   /// <para>
-  /// When the event is triggered the log4net system is <see cref="M:Shutdown()"/>.
+  /// When the event is triggered the log4net system is <see cref="Shutdown()"/>.
   /// </para>
   /// </remarks>
   private static void OnDomainUnload(object? sender, EventArgs e) => Shutdown();
@@ -559,7 +559,7 @@ public static class LoggerManager
   /// Called when the <see cref="AppDomain.ProcessExit"/> event fires.
   /// </para>
   /// <para>
-  /// When the event is triggered the log4net system is <see cref="M:Shutdown()"/>.
+  /// When the event is triggered the log4net system is <see cref="Shutdown()"/>.
   /// </para>
   /// </remarks>
   private static void OnProcessExit(object? sender, EventArgs e) => Shutdown();

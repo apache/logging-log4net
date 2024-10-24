@@ -191,8 +191,8 @@ public class XmlLayout : XmlLayoutBase
   /// </remarks>
   protected override void FormatXml(XmlWriter writer, LoggingEvent loggingEvent)
   {
-    writer.WriteStartElement(_eventElementName, Prefix, DefaultEventElementName, Prefix);
-    writer.WriteAttributeString(LoggerAttributeName, loggingEvent.LoggerName!);
+    writer.EnsureNotNull().WriteStartElement(_eventElementName, Prefix, DefaultEventElementName, Prefix);
+    writer.WriteAttributeString(LoggerAttributeName, loggingEvent.EnsureNotNull().LoggerName!);
 
     writer.WriteAttributeString(TimestampAttributeName, XmlConvert.ToString(loggingEvent.TimeStamp, XmlDateTimeSerializationMode.Local));
 

@@ -217,7 +217,7 @@ public class AnsiColorTerminalAppender : AppenderSkeleton
     get => _writeToErrorStream ? ConsoleError : ConsoleOut;
     set
     {
-      string trimmedTargetName = value.Trim();
+      string? trimmedTargetName = value?.Trim();
       _writeToErrorStream = SystemInfo.EqualsIgnoringCase(ConsoleError, trimmedTargetName);
     }
   }
@@ -234,7 +234,7 @@ public class AnsiColorTerminalAppender : AppenderSkeleton
   /// <param name="loggingEvent">The event to log.</param>
   /// <remarks>
   /// <para>
-  /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/> method.
+  /// This method is called by the <see cref="AppenderSkeleton.DoAppend(LoggingEvent)"/> method.
   /// </para>
   /// <para>
   /// The format of the output will depend on the appender layout.
@@ -242,7 +242,7 @@ public class AnsiColorTerminalAppender : AppenderSkeleton
   /// </remarks>
   protected override void Append(LoggingEvent loggingEvent)
   {
-    string loggingMessage = RenderLoggingEvent(loggingEvent);
+    string loggingMessage = RenderLoggingEvent(loggingEvent.EnsureNotNull());
 
     // see if there is a specified lookup.
     if (_levelMapping.Lookup(loggingEvent.Level) is LevelColors levelColors)
@@ -272,7 +272,7 @@ public class AnsiColorTerminalAppender : AppenderSkeleton
     }
     else
     {
-      if (loggingMessage[0] == '\n' || loggingMessage[0] == '\r')
+      if (loggingMessage[0] is '\n' or '\r')
       {
         loggingMessage = PostEventCodes + loggingMessage;
       }

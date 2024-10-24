@@ -68,7 +68,7 @@ namespace log4net.Layout.Pattern;
 ///     <description>
 ///     Any other pattern string uses the <see cref="SimpleDateFormatter"/> formatter. 
 ///     This formatter passes the pattern string to the <see cref="DateTime"/> 
-///     <see cref="M:DateTime.ToString(string)"/> method.
+///     <see cref="DateTime.ToString(string)"/> method.
 ///     For details on valid patterns see 
 ///     <a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/frlrfsystemglobalizationdatetimeformatinfoclasstopic.asp">DateTimeFormatInfo Class</a>.
 ///     </description>
@@ -88,6 +88,7 @@ internal class DatePatternConverter : PatternLayoutConverter, IOptionHandler
   /// </summary>
   // ReSharper disable once InconsistentNaming
   // ReSharper disable once MemberCanBePrivate.Global
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles")]
   protected IDateFormatter? m_dateFormatter { get; set; }
 
   /// <summary>
@@ -128,7 +129,7 @@ internal class DatePatternConverter : PatternLayoutConverter, IOptionHandler
       {
         m_dateFormatter = new SimpleDateFormatter(dateFormatStr);
       }
-      catch (Exception e)
+      catch (Exception e) when (!e.IsFatal())
       {
         LogLog.Error(_declaringType, $"Could not instantiate SimpleDateFormatter with [{dateFormatStr}]", e);
         m_dateFormatter = new Iso8601DateFormatter();
@@ -154,20 +155,13 @@ internal class DatePatternConverter : PatternLayoutConverter, IOptionHandler
   {
     try
     {
-      m_dateFormatter!.FormatDate(loggingEvent.TimeStamp, writer);
+      m_dateFormatter.EnsureNotNull().FormatDate(loggingEvent.TimeStamp, writer);
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Error occurred while converting date.", ex);
+      LogLog.Error(_declaringType, "Error occurred while converting date.", e);
     }
   }
 
-  /// <summary>
-  /// The fully qualified type of the DatePatternConverter class.
-  /// </summary>
-  /// <remarks>
-  /// Used by the internal logger to record the Type of the
-  /// log message.
-  /// </remarks>
   private static readonly Type _declaringType = typeof(DatePatternConverter);
 }

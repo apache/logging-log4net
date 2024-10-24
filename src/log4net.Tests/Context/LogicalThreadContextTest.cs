@@ -41,10 +41,7 @@ namespace log4net.Tests.Context;
 public class LogicalThreadContextTest
 {
   [TearDown]
-  public void TearDown()
-  {
-    Utils.RemovePropertyFromAllContexts();
-  }
+  public void TearDown() => Utils.RemovePropertyFromAllContexts();
 
   [Test]
   public void TestLogicalThreadPropertiesPatternBasicGetSet()
@@ -100,7 +97,7 @@ public class LogicalThreadContextTest
     Assert.That(stringAppender.GetString(), Is.EqualTo(testValueForCurrentContext), "Test logical thread properties value set");
     stringAppender.Reset();
 
-    var strings = await Task.WhenAll(Enumerable.Range(0, 10).Select(x => SomeWorkProperties(x.ToString())));
+    string[] strings = await Task.WhenAll(Enumerable.Range(0, 10).Select(x => SomeWorkProperties(x.ToString()))).ConfigureAwait(false);
 
     // strings should be ["00AA0BB0", "01AA1BB1", "02AA2BB2", ...]
     for (int i = 0; i < strings.Length; i++)
@@ -274,7 +271,7 @@ public class LogicalThreadContextTest
       Assert.That(stringAppender.GetString(), Is.EqualTo(testValueForCurrentContext), "Test logical thread stack value set");
       stringAppender.Reset();
 
-      strings = await Task.WhenAll(Enumerable.Range(0, 10).Select(x => SomeWorkStack(x.ToString())));
+      strings = await Task.WhenAll(Enumerable.Range(0, 10).Select(x => SomeWorkStack(x.ToString()))).ConfigureAwait(false);
     }
 
     // strings should be ["Outer 0 AOuter 0 AOuter 0Outer 0 BOuter 0 B Outer 0", ...]
@@ -305,9 +302,9 @@ public class LogicalThreadContextTest
     LogicalThreadContext.Properties[Utils.PropertyKey] = propertyName;
     log.Info("TestMessage");
 
-    await MoreWorkProperties(log, "A");
+    await MoreWorkProperties(log, "A").ConfigureAwait(false);
     log.Info("TestMessage");
-    await MoreWorkProperties(log, "B");
+    await MoreWorkProperties(log, "B").ConfigureAwait(false);
     log.Info("TestMessage");
     return stringAppender.GetString();
   }
@@ -316,7 +313,7 @@ public class LogicalThreadContextTest
   {
     LogicalThreadContext.Properties[Utils.PropertyKey] = propertyName;
     log.Info("TestMessage");
-    await Task.Delay(1);
+    await Task.Delay(1).ConfigureAwait(false);
     log.Info("TestMessage");
   }
 
@@ -338,9 +335,9 @@ public class LogicalThreadContextTest
       Assert.That(stringAppender.GetString(), Is.EqualTo(string.Format("Outer {0}", stackName)), "Test logical thread stack value set");
       stringAppender.Reset();
 
-      await MoreWorkStack(log, "A");
+      await MoreWorkStack(log, "A").ConfigureAwait(false);
       log.Info("TestMessage");
-      await MoreWorkStack(log, "B");
+      await MoreWorkStack(log, "B").ConfigureAwait(false);
       log.Info("TestMessage");
     }
 
@@ -352,7 +349,7 @@ public class LogicalThreadContextTest
     using (LogicalThreadContext.Stacks[Utils.PropertyKey].Push(stackName))
     {
       log.Info("TestMessage");
-      await Task.Delay(1);
+      await Task.Delay(1).ConfigureAwait(false);
       log.Info("TestMessage");
     }
   }

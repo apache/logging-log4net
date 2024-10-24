@@ -139,7 +139,7 @@ public class TextWriterAppender : AppenderSkeleton
   }
 
   /// <summary>
-  /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/>
+  /// This method is called by the <see cref="AppenderSkeleton.DoAppend(LoggingEvent)"/>
   /// method. 
   /// </summary>
   /// <param name="loggingEvent">The event to log.</param>
@@ -168,7 +168,7 @@ public class TextWriterAppender : AppenderSkeleton
   }
 
   /// <summary>
-  /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent[])"/>
+  /// This method is called by the <see cref="AppenderSkeleton.DoAppend(LoggingEvent[])"/>
   /// method. 
   /// </summary>
   /// <param name="loggingEvents">The array of events to log.</param>
@@ -184,7 +184,7 @@ public class TextWriterAppender : AppenderSkeleton
     {
       return;
     }
-
+    loggingEvents.EnsureNotNull();
     foreach (LoggingEvent loggingEvent in loggingEvents)
     {
       RenderLoggingEvent(QuietWriter, loggingEvent);
@@ -265,7 +265,7 @@ public class TextWriterAppender : AppenderSkeleton
       {
         QuietWriter.Close();
       }
-      catch (Exception e)
+      catch (Exception e) when (!e.IsFatal())
       {
         ErrorHandler.Error($"Could not close writer [{QuietWriter}]", e);
         // do need to invoke an error handler

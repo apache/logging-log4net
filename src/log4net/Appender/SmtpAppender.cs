@@ -71,8 +71,8 @@ public class SmtpAppender : BufferingAppenderSkeleton
   /// </summary>
   public string? To
   {
-    get { return _to; }
-    set { _to = MaybeTrimSeparators(value); }
+    get => _to;
+    set => _to = MaybeTrimSeparators(value);
   }
 
   /// <summary>
@@ -249,6 +249,7 @@ public class SmtpAppender : BufferingAppenderSkeleton
   /// <param name="events">The logging events to send.</param>
   protected override void SendBuffer(LoggingEvent[] events)
   {
+    events.EnsureNotNull();
     // Note: this code already owns the monitor for this
     // appender. This frees us from needing to synchronize again.
     try
@@ -273,7 +274,7 @@ public class SmtpAppender : BufferingAppenderSkeleton
 
       SendEmail(writer.ToString());
     }
-    catch (Exception e)
+    catch (Exception e) when (!e.IsFatal())
     {
       ErrorHandler.Error("Error occurred while sending e-mail notification.", e);
     }

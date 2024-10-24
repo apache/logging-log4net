@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace log4net.Util.TypeConverters;
 
@@ -28,6 +29,7 @@ namespace log4net.Util.TypeConverters;
 /// <seealso cref="IConvertFrom"/>
 /// <seealso cref="IConvertTo"/>
 /// <author>Nicko Cadell</author>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class TypeConverter : IConvertFrom
 {
   /// <summary>
@@ -47,7 +49,7 @@ internal sealed class TypeConverter : IConvertFrom
   /// <returns>the Type</returns>
   /// <remarks>
   /// <para>
-  /// Uses the <see cref="M:Type.GetType(string,bool)"/> method to convert the
+  /// Uses the <see cref="Type.GetType(string,bool)"/> method to convert the
   /// <see cref="string"/> argument to a <see cref="Type"/>.
   /// Additional effort is made to locate partially specified types
   /// by searching the loaded assemblies.

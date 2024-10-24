@@ -29,9 +29,8 @@ namespace log4net.Util;
 /// </summary>
 /// <remarks>
 /// <para>
-/// While this collection is serializable, only member 
-/// objects that are serializable will
-/// be serialized along with this collection.
+/// While this collection is serializable, only member objects that are serializable
+/// will be serialized along with this collection.
 /// </para>
 /// </remarks>
 /// <author>Nicko Cadell</author>
@@ -48,8 +47,7 @@ public sealed class PropertiesDictionary : ReadOnlyPropertiesDictionary, ILog4Ne
   /// </para>
   /// </remarks>
   public PropertiesDictionary()
-  {
-  }
+  { }
 
   /// <summary>
   /// Constructor
@@ -60,9 +58,9 @@ public sealed class PropertiesDictionary : ReadOnlyPropertiesDictionary, ILog4Ne
   /// Initializes a new instance of the <see cref="PropertiesDictionary" /> class.
   /// </para>
   /// </remarks>
-  public PropertiesDictionary(ReadOnlyPropertiesDictionary propertiesDictionary) : base(propertiesDictionary)
-  {
-  }
+  public PropertiesDictionary(ReadOnlyPropertiesDictionary propertiesDictionary)
+    : base(propertiesDictionary)
+  { }
 
   /// <summary>
   /// Initializes a new instance of the <see cref="PropertiesDictionary" /> class 
@@ -75,9 +73,9 @@ public sealed class PropertiesDictionary : ReadOnlyPropertiesDictionary, ILog4Ne
   /// Because this class is sealed the serialization constructor is private.
   /// </para>
   /// </remarks>
-  private PropertiesDictionary(SerializationInfo info, StreamingContext context) : base(info, context)
-  {
-  }
+  private PropertiesDictionary(SerializationInfo info, StreamingContext context)
+    : base(info, context)
+  { }
 
   /// <summary>
   /// Gets or sets the value of the  property with the specified key.

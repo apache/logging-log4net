@@ -38,7 +38,7 @@ namespace log4net.Config;
 /// </para>
 /// <para>
 /// Use this attribute to configure the <see cref="XmlConfigurator"/>
-/// without calling one of the <see cref="M:XmlConfigurator.Configure()"/>
+/// without calling one of the <see cref="XmlConfigurator.Configure()"/>
 /// methods.
 /// </para>
 /// <para>
@@ -69,7 +69,7 @@ namespace log4net.Config;
 /// <para>
 /// If you cannot guarantee the order in which log4net calls will be made from 
 /// different assemblies you must use programmatic configuration instead, i.e.
-/// call the <see cref="M:XmlConfigurator.Configure()"/> method directly.
+/// call the <see cref="XmlConfigurator.Configure()"/> method directly.
 /// </para>
 /// </note>
 /// </remarks>
@@ -179,13 +179,13 @@ public sealed class XmlConfiguratorAttribute : ConfiguratorAttribute
       {
         applicationBaseDirectory = SystemInfo.ApplicationBaseDirectory;
       }
-      catch
+      catch (Exception e) when (!e.IsFatal())
       {
         // Ignore this exception because it is only thrown when ApplicationBaseDirectory is a file
         // and the application does not have PathDiscovery permission
       }
 
-      if (applicationBaseDirectory is null || (new Uri(applicationBaseDirectory)).IsFile)
+      if (applicationBaseDirectory is null || new Uri(applicationBaseDirectory).IsFile)
       {
         ConfigureFromFile(sourceAssembly, targetRepository);
       }
@@ -218,9 +218,9 @@ public sealed class XmlConfiguratorAttribute : ConfiguratorAttribute
         {
           fullPath2ConfigFile = SystemInfo.ConfigurationFileLocation;
         }
-        catch (Exception ex)
+        catch (Exception e) when (!e.IsFatal())
         {
-          LogLog.Error(_declaringType, "XmlConfiguratorAttribute: Exception getting ConfigurationFileLocation. Must be able to resolve ConfigurationFileLocation when ConfigFile and ConfigFileExtension properties are not set.", ex);
+          LogLog.Error(_declaringType, "XmlConfiguratorAttribute: Exception getting ConfigurationFileLocation. Must be able to resolve ConfigurationFileLocation when ConfigFile and ConfigFileExtension properties are not set.", e);
         }
       }
       else
@@ -236,9 +236,9 @@ public sealed class XmlConfiguratorAttribute : ConfiguratorAttribute
         {
           applicationBaseDirectory = SystemInfo.ApplicationBaseDirectory;
         }
-        catch (Exception ex)
+        catch (Exception e) when (!e.IsFatal())
         {
-          LogLog.Error(_declaringType, "Exception getting ApplicationBaseDirectory. Must be able to resolve ApplicationBaseDirectory and AssemblyFileName when ConfigFileExtension property is set.", ex);
+          LogLog.Error(_declaringType, "Exception getting ApplicationBaseDirectory. Must be able to resolve ApplicationBaseDirectory and AssemblyFileName when ConfigFileExtension property is set.", e);
         }
 
         if (applicationBaseDirectory is not null)
@@ -254,9 +254,9 @@ public sealed class XmlConfiguratorAttribute : ConfiguratorAttribute
       {
         applicationBaseDirectory = SystemInfo.ApplicationBaseDirectory;
       }
-      catch (Exception ex)
+      catch (Exception e) when (!e.IsFatal())
       {
-        LogLog.Warn(_declaringType, $"Exception getting ApplicationBaseDirectory. ConfigFile property path [{ConfigFile}] will be treated as an absolute path.", ex);
+        LogLog.Warn(_declaringType, $"Exception getting ApplicationBaseDirectory. ConfigFile property path [{ConfigFile}] will be treated as an absolute path.", e);
       }
 
       if (applicationBaseDirectory is not null)
@@ -313,9 +313,9 @@ public sealed class XmlConfiguratorAttribute : ConfiguratorAttribute
         {
           systemConfigFilePath = SystemInfo.ConfigurationFileLocation;
         }
-        catch (Exception ex)
+        catch (Exception e) when (!e.IsFatal())
         {
-          LogLog.Error(_declaringType, "XmlConfiguratorAttribute: Exception getting ConfigurationFileLocation. Must be able to resolve ConfigurationFileLocation when ConfigFile and ConfigFileExtension properties are not set.", ex);
+          LogLog.Error(_declaringType, "XmlConfiguratorAttribute: Exception getting ConfigurationFileLocation. Must be able to resolve ConfigurationFileLocation when ConfigFile and ConfigFileExtension properties are not set.", e);
         }
 
         if (systemConfigFilePath is not null)
@@ -337,9 +337,9 @@ public sealed class XmlConfiguratorAttribute : ConfiguratorAttribute
         {
           systemConfigFilePath = SystemInfo.ConfigurationFileLocation;
         }
-        catch (Exception ex)
+        catch (Exception e) when (!e.IsFatal())
         {
-          LogLog.Error(_declaringType, "XmlConfiguratorAttribute: Exception getting ConfigurationFileLocation. Must be able to resolve ConfigurationFileLocation when the ConfigFile property are not set.", ex);
+          LogLog.Error(_declaringType, "XmlConfiguratorAttribute: Exception getting ConfigurationFileLocation. Must be able to resolve ConfigurationFileLocation when the ConfigFile property are not set.", e);
         }
 
         if (systemConfigFilePath is not null)
@@ -367,9 +367,9 @@ public sealed class XmlConfiguratorAttribute : ConfiguratorAttribute
       {
         applicationBaseDirectory = SystemInfo.ApplicationBaseDirectory;
       }
-      catch (Exception ex)
+      catch (Exception e) when (!e.IsFatal())
       {
-        LogLog.Warn(_declaringType, $"Exception getting ApplicationBaseDirectory. ConfigFile property path [{ConfigFile}] will be treated as an absolute URI.", ex);
+        LogLog.Warn(_declaringType, $"Exception getting ApplicationBaseDirectory. ConfigFile property path [{ConfigFile}] will be treated as an absolute URI.", e);
       }
 
       if (applicationBaseDirectory is not null)

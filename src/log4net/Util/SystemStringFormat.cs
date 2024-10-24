@@ -26,38 +26,27 @@ namespace log4net.Util;
 /// Utility class that represents a format string.
 /// </summary>
 /// <author>Nicko Cadell</author>
-public sealed class SystemStringFormat
+/// <param name="provider">An <see cref="System.IFormatProvider"/> that supplies culture-specific formatting information.</param>
+/// <param name="format">A <see cref="string"/> containing zero or more format items.</param>
+/// <param name="args">An <see cref="object"/> array containing zero or more objects to format.</param>
+public sealed class SystemStringFormat(IFormatProvider? provider, string format, params object?[]? args)
 {
-  private readonly IFormatProvider? _provider;
-
   /// <summary>
   /// Format
   /// </summary>
-  public string Format { get; set; }
+  public string Format { get; set; } = format;
 
   /// <summary>
   /// Args
   /// </summary>
-  public object?[]? Args { get; set; }
-
-  /// <summary>
-  /// Constructor
-  /// </summary>
-  /// <param name="provider">An <see cref="System.IFormatProvider"/> that supplies culture-specific formatting information.</param>
-  /// <param name="format">A <see cref="string"/> containing zero or more format items.</param>
-  /// <param name="args">An <see cref="object"/> array containing zero or more objects to format.</param>
-  public SystemStringFormat(IFormatProvider? provider, string format, params object?[]? args)
-  {
-    this._provider = provider;
-    Format = format;
-    Args = args;
-  }
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1819:Properties should not return arrays")]
+  public object?[]? Args { get; set; } = args;
 
   /// <summary>
   /// Format the string and arguments
   /// </summary>
   /// <returns>the formatted string</returns>
-  public override string? ToString() => StringFormat(_provider, Format, Args);
+  public override string? ToString() => StringFormat(provider, Format, Args);
 
   /// <summary>
   /// Replaces the format item in a specified <see cref="string"/> with the text equivalent 
@@ -96,10 +85,10 @@ public sealed class SystemStringFormat
       // Try to format the string
       return string.Format(provider, format, args);
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Warn(_declaringType, $"Exception while rendering format [{format}]", ex);
-      return StringFormatError(ex, format, args);
+      LogLog.Warn(_declaringType, $"Exception while rendering format [{format}]", e);
+      return StringFormatError(e, format, args);
     }
   }
 
@@ -119,9 +108,9 @@ public sealed class SystemStringFormat
       buf.Append("</log4net.Error>");
       return buf.ToString();
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "INTERNAL ERROR during StringFormat error handling", ex);
+      LogLog.Error(_declaringType, "INTERNAL ERROR during StringFormat error handling", e);
       return "<log4net.Error>Exception during StringFormat. See Internal Log.</log4net.Error>";
     }
   }
@@ -143,7 +132,7 @@ public sealed class SystemStringFormat
       }
       else
       {
-        buffer.Append("{");
+        buffer.Append('{');
         int len = array.Length;
 
         if (len > 0)
@@ -155,7 +144,7 @@ public sealed class SystemStringFormat
             RenderObject(array.GetValue(i), buffer);
           }
         }
-        buffer.Append("}");
+        buffer.Append('}');
       }
     }
   }
@@ -175,9 +164,9 @@ public sealed class SystemStringFormat
       {
         buffer.Append(obj);
       }
-      catch (Exception ex)
+      catch (Exception e) when (!e.IsFatal())
       {
-        buffer.Append("<Exception: ").Append(ex.Message).Append(">");
+        buffer.Append("<Exception: ").Append(e.Message).Append('>');
       }
     }
   }

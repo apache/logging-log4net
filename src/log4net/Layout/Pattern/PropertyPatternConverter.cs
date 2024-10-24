@@ -17,6 +17,7 @@
 //
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 using log4net.Core;
@@ -29,15 +30,16 @@ namespace log4net.Layout.Pattern;
 /// <remarks>
 /// <para>
 /// Writes out the value of a named property. The property name
-/// should be set in the <see cref="log4net.Util.PatternConverter.Option"/>
+/// should be set in the <see cref="Util.PatternConverter.Option"/>
 /// property.
 /// </para>
 /// <para>
-/// If the <see cref="log4net.Util.PatternConverter.Option"/> is set to <c>null</c>
+/// If the <see cref="Util.PatternConverter.Option"/> is set to <c>null</c>
 /// then all the properties are written as key value pairs.
 /// </para>
 /// </remarks>
 /// <author>Nicko Cadell</author>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class PropertyPatternConverter : PatternLayoutConverter
 {
   /// <summary>
@@ -48,11 +50,11 @@ internal sealed class PropertyPatternConverter : PatternLayoutConverter
   /// <remarks>
   /// <para>
   /// Writes out the value of a named property. The property name
-  /// should be set in the <see cref="log4net.Util.PatternConverter.Option"/>
+  /// should be set in the <see cref="Util.PatternConverter.Option"/>
   /// property.
   /// </para>
   /// <para>
-  /// If the <see cref="log4net.Util.PatternConverter.Option"/> is set to <c>null</c>
+  /// If the <see cref="Util.PatternConverter.Option"/> is set to <c>null</c>
   /// then all the properties are written as key value pairs.
   /// </para>
   /// </remarks>

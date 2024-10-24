@@ -23,6 +23,7 @@ using System.Net.Sockets;
 using System.Text;
 
 using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Appender;
 
@@ -312,31 +313,24 @@ public class UdpAppender : AppenderSkeleton
   public override void ActivateOptions()
   {
     base.ActivateOptions();
+    RemoteAddress.EnsureNotNull();
 
-    if (RemoteAddress is null)
+    if (RemotePort is < IPEndPoint.MinPort or > IPEndPoint.MaxPort)
     {
-      throw new ArgumentNullException(nameof(RemoteAddress), $"The required property '{nameof(RemoteAddress)}' was not specified.");
-    }
-
-    else if (RemotePort is < IPEndPoint.MinPort or > IPEndPoint.MaxPort)
-    {
-      throw Util.SystemInfo.CreateArgumentOutOfRangeException(nameof(RemotePort), RemotePort,
+      throw SystemInfo.CreateArgumentOutOfRangeException(nameof(RemotePort), RemotePort,
         $"The RemotePort is less than {IPEndPoint.MinPort} or greater than {IPEndPoint.MaxPort}.");
     }
-    else if (LocalPort != 0 && (LocalPort < IPEndPoint.MinPort || this.LocalPort > IPEndPoint.MaxPort))
+    if (LocalPort is not 0 and (< IPEndPoint.MinPort or > IPEndPoint.MaxPort))
     {
-      throw Util.SystemInfo.CreateArgumentOutOfRangeException(nameof(LocalPort), LocalPort,
+      throw SystemInfo.CreateArgumentOutOfRangeException(nameof(LocalPort), LocalPort,
         $"The LocalPort is less than {IPEndPoint.MinPort} or greater than {IPEndPoint.MaxPort}.");
     }
-    else
-    {
-      RemoteEndPoint = new(RemoteAddress, RemotePort);
-      InitializeClientConnection();
-    }
+    RemoteEndPoint = new(RemoteAddress, RemotePort);
+    InitializeClientConnection();
   }
 
   /// <summary>
-  /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/> method.
+  /// This method is called by the <see cref="AppenderSkeleton.DoAppend(LoggingEvent)"/> method.
   /// </summary>
   /// <param name="loggingEvent">The event to log.</param>
   /// <remarks>
@@ -363,12 +357,11 @@ public class UdpAppender : AppenderSkeleton
       byte[] buffer = Encoding.GetBytes(RenderLoggingEvent(loggingEvent).ToCharArray());
       Client.Send(buffer, buffer.Length, RemoteEndPoint);
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
       ErrorHandler.Error(
         $"Unable to send logging event to remote host {RemoteAddress} on port {RemotePort}.",
-        ex,
-        ErrorCode.WriteFailure);
+        e, ErrorCode.WriteFailure);
     }
   }
 
@@ -419,12 +412,11 @@ public class UdpAppender : AppenderSkeleton
         Client = new(LocalPort, RemoteAddress!.AddressFamily);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
       ErrorHandler.Error(
         $"Could not initialize the UdpClient connection on port {LocalPort}.",
-        ex,
-        ErrorCode.GenericFailure);
+        e, ErrorCode.GenericFailure);
 
       Client = null;
     }

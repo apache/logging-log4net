@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 
@@ -34,6 +35,7 @@ namespace log4net.Util.TypeConverters;
 /// <seealso cref="ConverterRegistry"/>
 /// <seealso cref="IConvertFrom"/>
 /// <author>Nicko Cadell</author>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class IpAddressConverter : IConvertFrom
 {
   /// <summary>
@@ -47,10 +49,7 @@ internal sealed class IpAddressConverter : IConvertFrom
   /// the <see cref="string"/> type.
   /// </para>
   /// </remarks>
-  public bool CanConvertFrom(Type sourceType)
-  {
-    return (sourceType == typeof(string));
-  }
+  public bool CanConvertFrom(Type sourceType) => sourceType == typeof(string);
 
   /// <summary>
   /// Overrides the ConvertFrom method of IConvertFrom.

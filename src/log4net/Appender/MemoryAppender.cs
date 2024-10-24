@@ -19,6 +19,7 @@
 
 using System.Collections.Generic;
 using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Appender;
 
@@ -31,21 +32,21 @@ namespace log4net.Appender;
 /// that are appended in an in-memory array.
 /// </para>
 /// <para>
-/// Use the <see cref="M:PopAllEvents()"/> method to get
+/// Use the <see cref="PopAllEvents()"/> method to get
 /// and clear the current list of events that have been appended.
 /// </para>
 /// <para>
-/// Use the <see cref="M:GetEvents()"/> method to get the current
+/// Use the <see cref="GetEvents()"/> method to get the current
 /// list of events that have been appended.  Note there is a
-/// race-condition when calling <see cref="M:GetEvents()"/> and
-/// <see cref="M:Clear()"/> in pairs, you better use <see
+/// race-condition when calling <see cref="GetEvents()"/> and
+/// <see cref="Clear()"/> in pairs, you better use <see
 /// mref="M:PopAllEvents()"/> in that case.
 /// </para>
 /// <para>
-/// Use the <see cref="M:Clear()"/> method to clear the
+/// Use the <see cref="Clear()"/> method to clear the
 /// current list of events.  Note there is a
-/// race-condition when calling <see cref="M:GetEvents()"/> and
-/// <see cref="M:Clear()"/> in pairs, you better use <see
+/// race-condition when calling <see cref="GetEvents()"/> and
+/// <see cref="Clear()"/> in pairs, you better use <see
 /// mref="M:PopAllEvents()"/> in that case.
 /// </para>
 /// </remarks>
@@ -79,7 +80,7 @@ public class MemoryAppender : AppenderSkeleton
   public virtual FixFlags Fix { get; set; } = FixFlags.All;
 
   /// <summary>
-  /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(LoggingEvent)"/> method. 
+  /// This method is called by the <see cref="AppenderSkeleton.DoAppend(LoggingEvent)"/> method. 
   /// </summary>
   /// <param name="loggingEvent">the event to log</param>
   /// <remarks>
@@ -90,7 +91,7 @@ public class MemoryAppender : AppenderSkeleton
     // Because we are caching the LoggingEvent beyond the
     // lifetime of the Append() method we must fix any
     // volatile data in the event.
-    loggingEvent.Fix = Fix;
+    loggingEvent.EnsureNotNull().Fix = Fix;
 
     lock (_syncRoot)
     {
@@ -131,6 +132,7 @@ public class MemoryAppender : AppenderSkeleton
   /// </summary>
   // ReSharper disable once InconsistentNaming
   // ReSharper disable once FieldCanBeMadeReadOnly.Global
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1002:Do not expose generic lists")]
   protected List<LoggingEvent> m_eventsList = [];
 
   private readonly object _syncRoot = new();

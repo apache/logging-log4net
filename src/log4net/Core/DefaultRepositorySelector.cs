@@ -87,12 +87,12 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// <summary>
   /// Gets the <see cref="ILoggerRepository"/> for the specified assembly.
   /// </summary>
-  /// <param name="repositoryAssembly">The assembly use to look up the <see cref="ILoggerRepository"/>.</param>
+  /// <param name="assembly">The assembly use to look up the <see cref="ILoggerRepository"/>.</param>
   /// <remarks>
   /// <para>
   /// The type of the <see cref="ILoggerRepository"/> created and the repository 
   /// to create can be overridden by specifying the <see cref="RepositoryAttribute"/> 
-  /// attribute on the <paramref name="repositoryAssembly"/>.
+  /// attribute on the <paramref name="assembly"/>.
   /// </para>
   /// <para>
   /// The default values are to use the <see cref="Repository.Hierarchy.Hierarchy"/> 
@@ -102,13 +102,13 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// <para>
   /// The <see cref="ILoggerRepository"/> created will be automatically configured using 
   /// any <see cref="ConfiguratorAttribute"/> attributes defined on
-  /// the <paramref name="repositoryAssembly"/>.
+  /// the <paramref name="assembly"/>.
   /// </para>
   /// </remarks>
   /// <returns>The <see cref="ILoggerRepository"/> for the assembly</returns>
-  /// <exception cref="ArgumentNullException"><paramref name="repositoryAssembly"/> is <see langword="null" />.</exception>
-  public ILoggerRepository GetRepository(Assembly repositoryAssembly)
-    => CreateRepository(repositoryAssembly.EnsureNotNull(), _defaultRepositoryType);
+  /// <exception cref="ArgumentNullException"><paramref name="assembly"/> is <see langword="null" />.</exception>
+  public ILoggerRepository GetRepository(Assembly assembly)
+    => CreateRepository(assembly.EnsureNotNull(), _defaultRepositoryType);
 
   /// <summary>
   /// Gets the <see cref="ILoggerRepository"/> for the specified repository.
@@ -122,7 +122,7 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// does not exist a <see cref="LogException"/> is thrown.
   /// </para>
   /// <para>
-  /// Use <see cref="M:CreateRepository(string, Type)"/> to create a repository.
+  /// Use <see cref="CreateRepository(string, Type)"/> to create a repository.
   /// </para>
   /// </remarks>
   /// <exception cref="ArgumentNullException"><paramref name="repositoryName"/> is <see langword="null" />.</exception>
@@ -142,20 +142,20 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// <summary>
   /// Creates a new repository for the assembly specified 
   /// </summary>
-  /// <param name="repositoryAssembly">the assembly to use to create the repository to associate with the <see cref="ILoggerRepository"/>.</param>
+  /// <param name="assembly">the assembly to use to create the repository to associate with the <see cref="ILoggerRepository"/>.</param>
   /// <param name="repositoryType">The type of repository to create, must implement <see cref="ILoggerRepository"/>.</param>
   /// <returns>The repository created.</returns>
   /// <remarks>
   /// <para>
   /// The <see cref="ILoggerRepository"/> created will be associated with the repository
-  /// specified such that a call to <see cref="M:GetRepository(Assembly)"/> with the
+  /// specified such that a call to <see cref="GetRepository(Assembly)"/> with the
   /// same assembly specified will return the same repository instance.
   /// </para>
   /// <para>
   /// The type of the <see cref="ILoggerRepository"/> created and
   /// the repository to create can be overridden by specifying the
   /// <see cref="RepositoryAttribute"/> attribute on the 
-  /// <paramref name="repositoryAssembly"/>.  The default values are to use the 
+  /// <paramref name="assembly"/>.  The default values are to use the 
   /// <paramref name="repositoryType"/> implementation of the 
   /// <see cref="ILoggerRepository"/> interface and to use the
   /// <see cref="AssemblyName.Name"/> as the name of the repository.
@@ -163,10 +163,10 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// <para>
   /// The <see cref="ILoggerRepository"/> created will be automatically
   /// configured using any <see cref="ConfiguratorAttribute"/> 
-  /// attributes defined on the <paramref name="repositoryAssembly"/>.
+  /// attributes defined on the <paramref name="assembly"/>.
   /// </para>
   /// <para>
-  /// If a repository for the <paramref name="repositoryAssembly"/> already exists
+  /// If a repository for the <paramref name="assembly"/> already exists
   /// that repository will be returned. An error will not be raised and that 
   /// repository may be of a different type to that specified in <paramref name="repositoryType"/>.
   /// Also the <see cref="RepositoryAttribute"/> attribute on the
@@ -174,11 +174,9 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// <paramref name="repositoryType"/>.
   /// </para>
   /// </remarks>
-  /// <exception cref="ArgumentNullException"><paramref name="repositoryAssembly"/> is <see langword="null" />.</exception>
-  public ILoggerRepository CreateRepository(Assembly repositoryAssembly, Type repositoryType)
-  {
-    return CreateRepository(repositoryAssembly, repositoryType, DefaultRepositoryName, true);
-  }
+  /// <exception cref="ArgumentNullException"><paramref name="assembly"/> is <see langword="null" />.</exception>
+  public ILoggerRepository CreateRepository(Assembly assembly, Type repositoryType) 
+    => CreateRepository(assembly, repositoryType, DefaultRepositoryName, true);
 
   /// <summary>
   /// Creates a new repository for the assembly specified.
@@ -191,7 +189,7 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// <remarks>
   /// <para>
   /// The <see cref="ILoggerRepository"/> created will be associated with the repository
-  /// specified such that a call to <see cref="M:GetRepository(Assembly)"/> with the
+  /// specified such that a call to <see cref="GetRepository(Assembly)"/> with the
   /// same assembly specified will return the same repository instance.
   /// </para>
   /// <para>
@@ -262,9 +260,9 @@ public class DefaultRepositorySelector : IRepositorySelector
               // Configure the repository using the assembly attributes
               ConfigureRepository(repositoryAssembly, rep);
             }
-            catch (Exception ex)
+            catch (Exception e) when (!e.IsFatal())
             {
-              LogLog.Error(_declaringType, $"Failed to configure repository [{actualRepositoryName}] from assembly attributes.", ex);
+              LogLog.Error(_declaringType, $"Failed to configure repository [{actualRepositoryName}] from assembly attributes.", e);
             }
           }
         }
@@ -279,9 +277,9 @@ public class DefaultRepositorySelector : IRepositorySelector
               // Look for plugins defined on the assembly
               LoadPlugins(repositoryAssembly, rep);
             }
-            catch (Exception ex)
+            catch (Exception e) when (!e.IsFatal())
             {
-              LogLog.Error(_declaringType, $"Failed to configure repository [{actualRepositoryName}] from assembly attributes.", ex);
+              LogLog.Error(_declaringType, $"Failed to configure repository [{actualRepositoryName}] from assembly attributes.", e);
             }
           }
         }
@@ -301,7 +299,7 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// <remarks>
   /// <para>
   /// The <see cref="ILoggerRepository"/> created will be associated with the repository
-  /// specified such that a call to <see cref="M:GetRepository(string)"/> with the
+  /// specified such that a call to <see cref="GetRepository(string)"/> with the
   /// same repository specified will return the same repository instance.
   /// </para>
   /// </remarks>
@@ -377,8 +375,8 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// <returns><c>true</c> if the repository exists</returns>
   /// <remarks>
   /// <para>
-  /// Test if a named repository exists. Use <see cref="M:CreateRepository(string, Type)"/>
-  /// to create a new repository and <see cref="M:GetRepository(string)"/> to retrieve 
+  /// Test if a named repository exists. Use <see cref="CreateRepository(string, Type)"/>
+  /// to create a new repository and <see cref="GetRepository(string)"/> to retrieve 
   /// a repository.
   /// </para>
   /// </remarks>
@@ -491,7 +489,7 @@ public class DefaultRepositorySelector : IRepositorySelector
     {
       LogLog.Debug(_declaringType, $"Assembly [{assembly.FullName}] Loaded From [{SystemInfo.AssemblyLocationInfo(assembly)}]");
     }
-    catch
+    catch (Exception e) when (!e.IsFatal())
     {
       // Ignore exception from debug call
     }
@@ -534,9 +532,9 @@ public class DefaultRepositorySelector : IRepositorySelector
         }
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Unhandled exception in GetInfoForAssembly", ex);
+      LogLog.Error(_declaringType, "Unhandled exception in GetInfoForAssembly", e);
     }
   }
 
@@ -570,9 +568,9 @@ public class DefaultRepositorySelector : IRepositorySelector
         {
           configAttr.Configure(assembly, repository);
         }
-        catch (Exception ex)
+        catch (Exception e) when (!e.IsFatal())
         {
-          LogLog.Error(_declaringType, $"Exception calling [{configAttr.GetType().FullName}] .Configure method.", ex);
+          LogLog.Error(_declaringType, $"Exception calling [{configAttr.GetType().FullName}] .Configure method.", e);
         }
       }
     }
@@ -591,9 +589,9 @@ public class DefaultRepositorySelector : IRepositorySelector
         {
           applicationBaseDirectory = SystemInfo.ApplicationBaseDirectory;
         }
-        catch (Exception ex)
+        catch (Exception e) when (!e.IsFatal())
         {
-          LogLog.Warn(_declaringType, $"Exception getting ApplicationBaseDirectory. appSettings log4net.Config path [{repositoryConfigFile}] will be treated as an absolute URI", ex);
+          LogLog.Warn(_declaringType, $"Exception getting ApplicationBaseDirectory. appSettings log4net.Config path [{repositoryConfigFile}] will be treated as an absolute URI", e);
         }
 
         string repositoryConfigFilePath = repositoryConfigFile;
@@ -614,9 +612,9 @@ public class DefaultRepositorySelector : IRepositorySelector
           {
             repositoryConfigFileInfo = new FileInfo(repositoryConfigFilePath);
           }
-          catch (Exception ex)
+          catch (Exception e) when (!e.IsFatal())
           {
-            LogLog.Error(_declaringType, $"DefaultRepositorySelector: Exception while parsing log4net.Config file physical path [{repositoryConfigFilePath}]", ex);
+            LogLog.Error(_declaringType, $"DefaultRepositorySelector: Exception while parsing log4net.Config file physical path [{repositoryConfigFilePath}]", e);
           }
 
           if (repositoryConfigFileInfo is not null)
@@ -627,9 +625,9 @@ public class DefaultRepositorySelector : IRepositorySelector
 
               XmlConfigurator.ConfigureAndWatch(repository, repositoryConfigFileInfo);
             }
-            catch (Exception ex)
+            catch (Exception e) when (!e.IsFatal())
             {
-              LogLog.Error(_declaringType, $"DefaultRepositorySelector: Exception calling XmlConfigurator.ConfigureAndWatch method with ConfigFilePath [{repositoryConfigFilePath}]", ex);
+              LogLog.Error(_declaringType, $"DefaultRepositorySelector: Exception calling XmlConfigurator.ConfigureAndWatch method with ConfigFilePath [{repositoryConfigFilePath}]", e);
             }
           }
         }
@@ -642,9 +640,9 @@ public class DefaultRepositorySelector : IRepositorySelector
           {
             repositoryConfigUri = new Uri(repositoryConfigFilePath);
           }
-          catch (Exception ex)
+          catch (Exception e) when (!e.IsFatal())
           {
-            LogLog.Error(_declaringType, $"Exception while parsing log4net.Config file path [{repositoryConfigFile}]", ex);
+            LogLog.Error(_declaringType, $"Exception while parsing log4net.Config file path [{repositoryConfigFile}]", e);
           }
 
           if (repositoryConfigUri is not null)
@@ -656,9 +654,9 @@ public class DefaultRepositorySelector : IRepositorySelector
               // TODO: Support other types of configurator
               XmlConfigurator.Configure(repository, repositoryConfigUri);
             }
-            catch (Exception ex)
+            catch (Exception e) when (!e.IsFatal())
             {
-              LogLog.Error(_declaringType, $"Exception calling XmlConfigurator.Configure method with ConfigUri [{repositoryConfigUri}]", ex);
+              LogLog.Error(_declaringType, $"Exception calling XmlConfigurator.Configure method with ConfigUri [{repositoryConfigUri}]", e);
             }
           }
         }
@@ -688,9 +686,9 @@ public class DefaultRepositorySelector : IRepositorySelector
         // Create the plugin and add it to the repository
         repository.PluginMap.Add(configAttr.CreatePlugin());
       }
-      catch (Exception ex)
+      catch (Exception e) when (!e.IsFatal())
       {
-        LogLog.Error(_declaringType, $"Failed to create plugin. Attribute [{configAttr}]", ex);
+        LogLog.Error(_declaringType, $"Failed to create plugin. Attribute [{configAttr}]", e);
       }
     }
   }
@@ -717,9 +715,9 @@ public class DefaultRepositorySelector : IRepositorySelector
       {
         AliasRepository(configAttr.Name, repository);
       }
-      catch (Exception ex)
+      catch (Exception e) when (!e.IsFatal())
       {
-        LogLog.Error(_declaringType, $"Failed to alias repository [{configAttr.Name}]", ex);
+        LogLog.Error(_declaringType, $"Failed to alias repository [{configAttr.Name}]", e);
       }
     }
   }

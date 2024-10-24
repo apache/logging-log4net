@@ -17,6 +17,7 @@
 //
 #endregion
 
+using log4net.Util;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
@@ -51,6 +52,7 @@ public class AbsoluteTimeDateFormatter : IDateFormatter
   /// </remarks>
   protected virtual void FormatDateWithoutMillis(DateTime dateToFormat, StringBuilder buffer)
   {
+    buffer.EnsureNotNull();
     int hour = dateToFormat.Hour;
     if (hour < 10)
     {
@@ -98,7 +100,7 @@ public class AbsoluteTimeDateFormatter : IDateFormatter
       (_, existing) =>
       {
         // Calculate the current time precise only to the second
-        long currentTimeToTheSecond = (dateToFormat.Ticks - (dateToFormat.Ticks % TimeSpan.TicksPerSecond));
+        long currentTimeToTheSecond = dateToFormat.Ticks - (dateToFormat.Ticks % TimeSpan.TicksPerSecond);
 
         // Compare this time with the stored last time
         // If we are in the same second then append
@@ -110,7 +112,7 @@ public class AbsoluteTimeDateFormatter : IDateFormatter
         _sLastTimeToTheSecond = currentTimeToTheSecond;
         return BuildTimeString();
       });
-    writer.Write(timeString);
+    writer.EnsureNotNull().Write(timeString);
 
     // Append the current millisecond info
     writer.Write(',');

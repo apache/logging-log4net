@@ -84,7 +84,7 @@ public class LocationInfo : ILog4NetSerializable
     {
       try
       {
-        StackTrace st = new StackTrace(true);
+        StackTrace st = new(true);
         int frameIndex = 0;
 
         // skip frames not from fqnOfCallingClass
@@ -186,10 +186,11 @@ public class LocationInfo : ILog4NetSerializable
   /// with serialized data.
   /// </para>
   /// </remarks>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter")]
   protected LocationInfo(SerializationInfo info, StreamingContext context)
   {
     // Use member names from log4net 2.x implicit serialzation for cross-version compat.
-    ClassName = info.GetString("m_className");
+    ClassName = info.EnsureNotNull().GetString("m_className");
     FileName = info.GetString("m_fileName");
     LineNumber = info.GetString("m_lineNumber") ?? string.Empty;
     MethodName = info.GetString("m_methodName") ?? string.Empty;
@@ -225,17 +226,12 @@ public class LocationInfo : ILog4NetSerializable
   /// All available caller information, in the format
   /// <c>fully.qualified.classname.of.caller.methodName(Filename:line)</c>
   /// </value>
-  /// <remarks>
-  /// <para>
-  /// Gets all available caller information, in the format
-  /// <c>fully.qualified.classname.of.caller.methodName(Filename:line)</c>
-  /// </para>
-  /// </remarks>
   public string FullInfo { get; }
 
   /// <summary>
   /// Gets the stack frames from the stack trace of the caller making the log request
   /// </summary>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1819:Properties should not return arrays")]
   public StackFrameItem[]? StackFrames { get; }
 
   /// <summary>
@@ -249,7 +245,7 @@ public class LocationInfo : ILog4NetSerializable
   public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
   {
     // Use member names from log4net 2.x implicit serialization for cross-version compat.
-    info.AddValue("m_className", ClassName);
+    info.EnsureNotNull().AddValue("m_className", ClassName);
     info.AddValue("m_fileName", FileName);
     info.AddValue("m_lineNumber", LineNumber);
     info.AddValue("m_methodName", MethodName);

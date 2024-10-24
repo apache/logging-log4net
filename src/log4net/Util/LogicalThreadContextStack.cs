@@ -32,6 +32,7 @@ public delegate void TwoArgAction<T1, T2>(T1 t1, T2 t2);
 /// Implementation of Stack for the <see cref="LogicalThreadContext"/>
 /// </summary>
 /// <author>Nicko Cadell</author>
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix")]
 public sealed class LogicalThreadContextStack : IFixingRequired
 {
   /// <summary>
@@ -61,8 +62,8 @@ public sealed class LogicalThreadContextStack : IFixingRequired
   /// </remarks>
   internal LogicalThreadContextStack(string propertyKey, TwoArgAction<string, LogicalThreadContextStack> registerNew)
   {
-    this._propertyKey = propertyKey;
-    this._registerNew = registerNew;
+    _propertyKey = propertyKey;
+    _registerNew = registerNew;
   }
 
   /// <summary>
@@ -92,10 +93,7 @@ public sealed class LogicalThreadContextStack : IFixingRequired
   /// syntax.
   /// </para>
   /// </remarks>
-  public void Clear()
-  {
-    _registerNew(_propertyKey, new LogicalThreadContextStack(_propertyKey, _registerNew));
-  }
+  public void Clear() => _registerNew(_propertyKey, new LogicalThreadContextStack(_propertyKey, _registerNew));
 
   /// <summary>
   /// Removes the top context from this stack.
@@ -111,13 +109,13 @@ public sealed class LogicalThreadContextStack : IFixingRequired
   public string? Pop()
   {
     // copy current stack
-    var stack = new Stack<StackFrame>(new Stack<StackFrame>(this._stack));
+    Stack<StackFrame> stack = new(new Stack<StackFrame>(_stack));
     string? result = string.Empty;
     if (stack.Count > 0)
     {
       result = stack.Pop().Message;
     }
-    var ltcs = new LogicalThreadContextStack(_propertyKey, _registerNew) { _stack = stack };
+    LogicalThreadContextStack ltcs = new(_propertyKey, _registerNew) { _stack = stack };
     _registerNew(_propertyKey, ltcs);
     return result;
   }
@@ -148,11 +146,10 @@ public sealed class LogicalThreadContextStack : IFixingRequired
   public IDisposable Push(string? message)
   {
     // do modifications on a copy
-    var stack = new Stack<StackFrame>(new Stack<StackFrame>(this._stack));
+    Stack<StackFrame> stack = new(new Stack<StackFrame>(_stack));
     stack.Push(new StackFrame(message, (stack.Count > 0) ? stack.Peek() : null));
 
-    LogicalThreadContextStack contextStack = new LogicalThreadContextStack(_propertyKey, _registerNew);
-    contextStack._stack = stack;
+    LogicalThreadContextStack contextStack = new(_propertyKey, _registerNew) { _stack = stack };
     _registerNew(_propertyKey, contextStack);
     return new AutoPopStackFrame(contextStack, stack.Count - 1);
   }
@@ -224,7 +221,7 @@ public sealed class LogicalThreadContextStack : IFixingRequired
     internal StackFrame(string? message, StackFrame? parent)
     {
       Message = message;
-      this._parent = parent;
+      _parent = parent;
 
       if (parent is null)
       {
@@ -302,8 +299,8 @@ public sealed class LogicalThreadContextStack : IFixingRequired
     /// </remarks>
     internal AutoPopStackFrame(LogicalThreadContextStack logicalThreadContextStack, int frameDepth)
     {
-      this._frameDepth = frameDepth;
-      this._logicalThreadContextStack = logicalThreadContextStack;
+      _frameDepth = frameDepth;
+      _logicalThreadContextStack = logicalThreadContextStack;
     }
 
     /// <summary>

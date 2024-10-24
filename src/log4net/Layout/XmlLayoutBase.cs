@@ -52,10 +52,7 @@ public abstract class XmlLayoutBase : LayoutSkeleton
   /// with no location info.
   /// </para>
   /// </remarks>
-  protected XmlLayoutBase() : this(false)
-  {
-    IgnoresException = false;
-  }
+  protected XmlLayoutBase() : this(false) => IgnoresException = false;
 
   /// <summary>
   /// Protected constructor to support subclasses
@@ -169,10 +166,8 @@ public abstract class XmlLayoutBase : LayoutSkeleton
   /// </remarks>
   public override void Format(TextWriter writer, LoggingEvent loggingEvent)
   {
-    if (loggingEvent is null)
-    {
-      throw new ArgumentNullException(nameof(loggingEvent));
-    }
+    loggingEvent.EnsureNotNull();
+
     using XmlWriter xmlWriter = XmlWriterExtensions.CreateXmlWriter(writer);
     // Write the event to the writer
     FormatXml(xmlWriter, loggingEvent);
@@ -191,8 +186,7 @@ public abstract class XmlLayoutBase : LayoutSkeleton
   /// <param name="loggingEvent">The event to write.</param>
   /// <remarks>
   /// <para>
-  /// Subclasses should override this method to format
-  /// the <see cref="LoggingEvent"/> as XML.
+  /// Subclasses should override this method to format the <see cref="LoggingEvent"/> as XML.
   /// </para>
   /// </remarks>
   protected abstract void FormatXml(XmlWriter writer, LoggingEvent loggingEvent);

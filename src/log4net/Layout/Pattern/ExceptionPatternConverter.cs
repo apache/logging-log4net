@@ -17,6 +17,7 @@
 //
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using log4net.Core;
 
@@ -39,16 +40,13 @@ namespace log4net.Layout.Pattern;
 /// </para>
 /// </remarks>
 /// <author>Nicko Cadell</author>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class ExceptionPatternConverter : PatternLayoutConverter
 {
   /// <summary>
   /// Default constructor
   /// </summary>
-  public ExceptionPatternConverter()
-  {
-    // This converter handles the exception
-    IgnoresException = false;
-  }
+  public ExceptionPatternConverter() => IgnoresException = false;
 
   /// <summary>
   /// Write the exception text to the output

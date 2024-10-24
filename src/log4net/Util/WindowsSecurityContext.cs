@@ -20,6 +20,7 @@
 #if NET462_OR_GREATER
 using System;
 using System.Runtime.InteropServices;
+using System.Security;
 using System.Security.Principal;
 
 using log4net.Core;
@@ -39,7 +40,7 @@ namespace log4net.Util;
 /// using username, domain name and password or to revert to the process credentials.
 /// </para>
 /// </remarks>
-public class WindowsSecurityContext : SecurityContext, IOptionHandler
+public class WindowsSecurityContext : Core.SecurityContext, IOptionHandler
 {
   /// <summary>
   /// The impersonation modes for the <see cref="WindowsSecurityContext"/>
@@ -140,6 +141,8 @@ public class WindowsSecurityContext : SecurityContext, IOptionHandler
   /// is set to <see cref="ImpersonationMode.User"/> (the default setting).
   /// </para>
   /// </remarks>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1044:Properties should not be write only", 
+    Justification = "Password must be write only")]
   public string Password { set => _password = value; }
 
   /// <summary>
@@ -168,20 +171,7 @@ public class WindowsSecurityContext : SecurityContext, IOptionHandler
   {
     if (Credentials == ImpersonationMode.User)
     {
-      if (UserName is null)
-      {
-        throw new ArgumentNullException(nameof(UserName));
-      }
-      if (DomainName is null)
-      {
-        throw new ArgumentNullException(nameof(DomainName));
-      }
-      if (_password is null)
-      {
-        throw new ArgumentNullException(nameof(Password));
-      }
-
-      _identity = LogonUser(UserName, DomainName, _password);
+      _identity = LogonUser(UserName.EnsureNotNull(), DomainName.EnsureNotNull(), _password.EnsureNotNull());
     }
   }
 
@@ -239,75 +229,55 @@ public class WindowsSecurityContext : SecurityContext, IOptionHandler
 
     // Call LogonUser to obtain a handle to an access token.
     IntPtr tokenHandle = IntPtr.Zero;
-    if (!LogonUser(userName, domainName, password, logon32LogonInteractive, logon32ProviderDefault, ref tokenHandle))
+    if (!NativeMethods.LogonUser(userName, domainName, password, logon32LogonInteractive, logon32ProviderDefault, ref tokenHandle))
     {
       NativeError error = NativeError.GetLastError();
-      throw new Exception($"Failed to LogonUser [{userName}] in Domain [{domainName}]. Error: {error.ToString()}");
+      throw new SecurityException($"Failed to LogonUser [{userName}] in Domain [{domainName}]. Error: {error}");
     }
 
     const int securityImpersonation = 2;
     IntPtr dupeTokenHandle = IntPtr.Zero;
-    if (!DuplicateToken(tokenHandle, securityImpersonation, ref dupeTokenHandle))
+    if (!NativeMethods.DuplicateToken(tokenHandle, securityImpersonation, ref dupeTokenHandle))
     {
       NativeError error = NativeError.GetLastError();
       if (tokenHandle != IntPtr.Zero)
       {
-        CloseHandle(tokenHandle);
+        NativeMethods.CloseHandle(tokenHandle);
       }
-      throw new Exception($"Failed to DuplicateToken after LogonUser. Error: {error}");
+      throw new SecurityException($"Failed to DuplicateToken after LogonUser. Error: {error}");
     }
 
-    var identity = new WindowsIdentity(dupeTokenHandle);
+    WindowsIdentity identity = new(dupeTokenHandle);
 
     // Free the tokens.
     if (dupeTokenHandle != IntPtr.Zero)
     {
-      CloseHandle(dupeTokenHandle);
+      NativeMethods.CloseHandle(dupeTokenHandle);
     }
     if (tokenHandle != IntPtr.Zero)
     {
-      CloseHandle(tokenHandle);
+      NativeMethods.CloseHandle(tokenHandle);
     }
 
     return identity;
   }
 
-  [DllImport("advapi32.dll", SetLastError = true)]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern bool LogonUser(string lpszUsername, string lpszDomain, string lpszPassword, int dwLogonType, int dwLogonProvider, ref IntPtr phToken);
-
-  [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern bool CloseHandle(IntPtr handle);
-
-  [DllImport("advapi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  private static extern bool DuplicateToken(IntPtr existingTokenHandle, int securityImpersonationLevel, ref IntPtr duplicateTokenHandle);
-
   /// <summary>
   /// Adds <see cref="IDisposable"/> to <see cref="WindowsImpersonationContext"/>
   /// </summary>
+  /// <param name="impersonationContext">the impersonation context being wrapped</param>
   /// <remarks>
   /// <para>
   /// Helper class to expose the <see cref="WindowsImpersonationContext"/>
   /// through the <see cref="IDisposable"/> interface.
   /// </para>
   /// </remarks>
-  private sealed class DisposableImpersonationContext : IDisposable
+  private sealed class DisposableImpersonationContext(WindowsImpersonationContext impersonationContext) : IDisposable
   {
-    private readonly WindowsImpersonationContext _impersonationContext;
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="impersonationContext">the impersonation context being wrapped</param>
-    public DisposableImpersonationContext(WindowsImpersonationContext impersonationContext)
-      => this._impersonationContext = impersonationContext;
-
     /// <summary>
     /// Revert the impersonation
     /// </summary>
-    public void Dispose() => _impersonationContext.Undo();
+    public void Dispose() => impersonationContext.Undo();
   }
 }
 #endif // NET462_OR_GREATER

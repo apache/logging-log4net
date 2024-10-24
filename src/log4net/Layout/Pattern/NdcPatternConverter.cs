@@ -17,6 +17,7 @@
 //
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 using log4net.Core;
@@ -35,6 +36,7 @@ namespace log4net.Layout.Pattern;
 /// </para>
 /// </remarks>
 /// <author>Nicko Cadell</author>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class NdcPatternConverter : PatternLayoutConverter
 {
   /// <summary>
@@ -51,9 +53,6 @@ internal sealed class NdcPatternConverter : PatternLayoutConverter
   /// The <see cref="PropertyPatternConverter"/> should be used instead.
   /// </para>
   /// </remarks>
-  protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
-  {
-    // Write the value for the specified key
-    WriteObject(writer, loggingEvent.Repository, loggingEvent.LookupProperty("NDC"));
-  }
+  protected override void Convert(TextWriter writer, LoggingEvent loggingEvent) 
+    => WriteObject(writer, loggingEvent.Repository, loggingEvent.LookupProperty("NDC"));
 }

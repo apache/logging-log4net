@@ -21,6 +21,7 @@ using System;
 using System.IO;
 
 using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Layout;
 
@@ -40,10 +41,7 @@ public class ExceptionLayout : LayoutSkeleton
   /// <summary>
   /// Constructs an ExceptionLayout.
   /// </summary>
-  public ExceptionLayout()
-  {
-    IgnoresException = false;
-  }
+  public ExceptionLayout() => IgnoresException = false;
 
   /// <summary>
   /// Activates component options.
@@ -70,16 +68,9 @@ public class ExceptionLayout : LayoutSkeleton
   /// <remarks>
   /// <para>
   /// Write the exception string to the <see cref="TextWriter"/>.
-  /// The exception string is retrieved from <see cref="M:LoggingEvent.GetExceptionString()"/>.
+  /// The exception string is retrieved from <see cref="LoggingEvent.GetExceptionString()"/>.
   /// </para>
   /// </remarks>
-  public override void Format(TextWriter writer, LoggingEvent loggingEvent)
-  {
-    if (loggingEvent is null)
-    {
-      throw new ArgumentNullException(nameof(loggingEvent));
-    }
-
-    writer.Write(loggingEvent.GetExceptionString());
-  }
+  public override void Format(TextWriter writer, LoggingEvent loggingEvent) 
+    => writer.EnsureNotNull().Write(loggingEvent.EnsureNotNull().GetExceptionString());
 }

@@ -35,8 +35,6 @@ internal sealed class UserNamePatternConverter : PatternLayoutConverter
   /// </summary>
   /// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
   /// <param name="loggingEvent">the event being logged</param>
-  protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
-  {
-    writer.Write(loggingEvent.UserName);
-  }
+  protected override void Convert(TextWriter writer, LoggingEvent loggingEvent) 
+    => writer.Write(loggingEvent.UserName);
 }

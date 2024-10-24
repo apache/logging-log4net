@@ -37,6 +37,7 @@ public class StackFrameItem
   /// <param name="frame"></param>
   public StackFrameItem(StackFrame frame)
   {
+    frame.EnsureNotNull();
     // set default values
     LineNumber = NotAvailable;
     FileName = NotAvailable;
@@ -60,9 +61,9 @@ public class StackFrameItem
         Method = new MethodItem(method);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "An exception occurred while retrieving stack frame information.", ex);
+      LogLog.Error(_declaringType, "An exception occurred while retrieving stack frame information.", e);
     }
 
     // set full info

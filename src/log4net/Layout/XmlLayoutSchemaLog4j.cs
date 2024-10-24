@@ -81,9 +81,10 @@ public class XmlLayoutSchemaLog4J : XmlLayoutBase
   /// </remarks>
   public string Version
   {
-    get { return "1.2"; }
+    get => "1.2";
     set
     {
+      _ = this;
       if (value != "1.2")
       {
         throw new ArgumentException("Only version 1.2 of the log4j schema is currently supported");
@@ -129,23 +130,21 @@ method="run" file="Generator.java" line="94"/>
     // Translate logging events for log4j
 
     // Translate hostname property
-    if (loggingEvent.LookupProperty(LoggingEvent.HostNameProperty) is not null &&
-      loggingEvent.LookupProperty("log4jmachinename") is null)
+    if (loggingEvent.EnsureNotNull().LookupProperty(LoggingEvent.HostNameProperty) is not null
+        && loggingEvent.LookupProperty("log4jmachinename") is null)
     {
       loggingEvent.GetProperties()["log4jmachinename"] = loggingEvent.LookupProperty(LoggingEvent.HostNameProperty);
     }
 
     // translate appdomain name
-    if (loggingEvent.LookupProperty("log4japp") is null &&
-      loggingEvent.Domain is not null &&
-      loggingEvent.Domain.Length > 0)
+    if (loggingEvent.LookupProperty("log4japp") is null
+        && loggingEvent.Domain?.Length > 0)
     {
       loggingEvent.GetProperties()["log4japp"] = loggingEvent.Domain;
     }
 
     // translate identity name
-    if (loggingEvent.Identity is not null &&
-      loggingEvent.Identity.Length > 0 &&
+    if (loggingEvent.Identity?.Length > 0 &&
       loggingEvent.LookupProperty(LoggingEvent.IdentityProperty) is null)
     {
       loggingEvent.GetProperties()[LoggingEvent.IdentityProperty] = loggingEvent.Identity;
@@ -159,7 +158,7 @@ method="run" file="Generator.java" line="94"/>
     }
 
     // Write the start element
-    writer.WriteStartElement("log4j:event", "log4j", "event", "log4net");
+    writer.EnsureNotNull().WriteStartElement("log4j:event", "log4j", "event", "log4net");
     writer.WriteAttributeString("logger", loggingEvent.LoggerName);
 
     // Calculate the timestamp as the number of milliseconds since january 1970

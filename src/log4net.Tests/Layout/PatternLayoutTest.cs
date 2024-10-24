@@ -30,6 +30,7 @@ using log4net.Tests.Appender;
 using log4net.Util;
 
 using NUnit.Framework;
+using System.Diagnostics.CodeAnalysis;
 
 namespace log4net.Tests.Layout;
 
@@ -62,15 +63,9 @@ public class PatternLayoutTest
     System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUiCulture!;
   }
 
-  protected virtual PatternLayout NewPatternLayout()
-  {
-    return new PatternLayout();
-  }
+  protected virtual PatternLayout NewPatternLayout() => new();
 
-  protected virtual PatternLayout NewPatternLayout(string pattern)
-  {
-    return new PatternLayout(pattern);
-  }
+  protected virtual PatternLayout NewPatternLayout(string pattern) => new(pattern);
 
   [Test]
   public void TestThreadPropertiesPattern()
@@ -316,6 +311,7 @@ public class PatternLayoutTest
   /// <summary>
   /// Converter to include event message
   /// </summary>
+  [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
   private sealed class TestMessagePatternConverter : PatternLayoutConverter
   {
     /// <summary>
@@ -324,10 +320,7 @@ public class PatternLayoutTest
     /// <param name="writer"><see cref="TextWriter" /> that will receive the formatted result.</param>
     /// <param name="loggingEvent">the event being logged</param>
     /// <returns>the relevant location information</returns>
-    protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
-    {
-      loggingEvent.WriteRenderedMessage(writer);
-    }
+    protected override void Convert(TextWriter writer, LoggingEvent loggingEvent) => loggingEvent.WriteRenderedMessage(writer);
   }
 
   [Test]
@@ -342,7 +335,7 @@ public class PatternLayoutTest
 
     ILog log1 = LogManager.GetLogger(rep.Name, "TestExceptionPattern");
 
-    Exception exception = new("Oh no!");
+    InvalidOperationException exception = new("Oh no!");
     log1.Info("TestMessage", exception);
 
     Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText));
@@ -350,11 +343,9 @@ public class PatternLayoutTest
     stringAppender.Reset();
   }
 
+  [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
   private sealed class MessageAsNamePatternConverter : NamedPatternConverter
   {
-    protected override string GetFullyQualifiedName(LoggingEvent loggingEvent)
-    {
-      return loggingEvent.MessageObject?.ToString() ?? string.Empty;
-    }
+    protected override string GetFullyQualifiedName(LoggingEvent loggingEvent) => loggingEvent.MessageObject?.ToString() ?? string.Empty;
   }
 }

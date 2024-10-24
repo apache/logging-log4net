@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace log4net.Appender;
 
@@ -65,6 +66,7 @@ public partial class RollingFileAppender
   /// <summary>
   /// Implementation of <see cref="IDateTime"/> that returns the current time as the coordinated universal time (UTC).
   /// </summary>
+  [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
   private sealed class UniversalDateTime : IDateTime
   {
     /// <summary>

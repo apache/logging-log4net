@@ -72,6 +72,7 @@ public sealed class PluginAttribute : Attribute, IPluginFactory
   /// <summary>
   /// Gets or sets the type for the plugin.
   /// </summary>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1019:Define accessors for attribute arguments")]
   public Type? Type { get; set; }
 
   /// <summary>
@@ -82,6 +83,7 @@ public sealed class PluginAttribute : Attribute, IPluginFactory
   /// Where possible use the <see cref="Type"/> property instead.
   /// </para>
   /// </remarks>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1019:Define accessors for attribute arguments")]
   public string? TypeName { get; set; }
 
   /// <summary>

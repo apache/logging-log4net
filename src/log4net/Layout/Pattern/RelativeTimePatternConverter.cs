@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 using log4net.Core;
@@ -33,6 +34,7 @@ namespace log4net.Layout.Pattern;
 /// </para>
 /// </remarks>
 /// <author>Nicko Cadell</author>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class RelativeTimePatternConverter : PatternLayoutConverter
 {
   /// <summary>
@@ -47,10 +49,9 @@ internal sealed class RelativeTimePatternConverter : PatternLayoutConverter
   /// and the <see cref="LoggingEvent.StartTime"/>.
   /// </para>
   /// </remarks>
-  protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
-  {
-    writer.Write(TimeDifferenceInMillis(LoggingEvent.StartTimeUtc, loggingEvent.TimeStampUtc).ToString(System.Globalization.NumberFormatInfo.InvariantInfo));
-  }
+  protected override void Convert(TextWriter writer, LoggingEvent loggingEvent) 
+    => writer.Write(TimeDifferenceInMillis(LoggingEvent.StartTimeUtc, loggingEvent.TimeStampUtc)
+             .ToString(System.Globalization.NumberFormatInfo.InvariantInfo));
 
   /// <summary>
   /// Helper method to get the time difference between two DateTime objects
@@ -59,10 +60,8 @@ internal sealed class RelativeTimePatternConverter : PatternLayoutConverter
   /// <param name="end">end time (in the current local time zone)</param>
   /// <returns>the time difference in milliseconds</returns>
   private static long TimeDifferenceInMillis(DateTime start, DateTime end)
-  {
     // We must convert all times to UTC before performing any mathematical
     // operations on them. This allows use to take into account discontinuities
     // caused by daylight savings time transitions.
-    return (long)(end.ToUniversalTime() - start.ToUniversalTime()).TotalMilliseconds;
-  }
+    => (long)(end.ToUniversalTime() - start.ToUniversalTime()).TotalMilliseconds;
 }

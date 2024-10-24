@@ -27,20 +27,9 @@ namespace log4net.Tests.Appender;
 /// <summary>
 /// Provides data for the <see cref="EventRaisingAppender.LoggingEventAppended"/> event.
 /// </summary>
-/// <seealso cref="System.EventArgs" />
-public class LoggingEventEventArgs : EventArgs
+public class LoggingEventEventArgs(LoggingEvent loggingEvent) : EventArgs
 {
-  public LoggingEvent LoggingEvent { get; private set; }
-
-  public LoggingEventEventArgs(LoggingEvent loggingEvent)
-  {
-    if (loggingEvent is null)
-    {
-      throw new ArgumentNullException(nameof(loggingEvent));
-    }
-
-    LoggingEvent = loggingEvent;
-  }
+  public LoggingEvent LoggingEvent { get; } = loggingEvent ?? throw new ArgumentNullException(nameof(loggingEvent));
 }
 
 /// <summary>
@@ -55,18 +44,13 @@ public class EventRaisingAppender : log4net.Appender.IAppender
   public event EventHandler<LoggingEventEventArgs>? LoggingEventAppended;
 
   protected void OnLoggingEventAppended(LoggingEventEventArgs e)
-  {
-    LoggingEventAppended?.Invoke(this, e);
-  }
+    => LoggingEventAppended?.Invoke(this, e);
 
   public void Close()
-  {
-  }
+  { }
 
   public void DoAppend(LoggingEvent loggingEvent)
-  {
-    OnLoggingEventAppended(new LoggingEventEventArgs(loggingEvent));
-  }
+    => OnLoggingEventAppended(new LoggingEventEventArgs(loggingEvent));
 
   public string Name { get; set; } = string.Empty;
 }

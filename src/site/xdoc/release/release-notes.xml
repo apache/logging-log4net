@@ -37,7 +37,10 @@ limitations under the License.
         <section id="a3.0.3-enhancements" name="Enhancements">
           <ul>
             <li>
-              <a href="https://github.com/apache/logging-log4net/issues/tbd">tbd</a> (by tbd)
+              <a href="https://github.com/apache/logging-log4net/pull/200">bumped NUnit to 4.2.2</a> (by @FreeAndNil)
+            </li>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/pull/201">Enable Microsoft.CodeAnalysis.NetAnalyzers</a> (by @FreeAndNil)
             </li>
           </ul>
         </section>

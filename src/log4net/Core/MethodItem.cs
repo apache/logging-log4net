@@ -45,10 +45,7 @@ public class MethodItem
   /// </summary>
   /// <param name="name"></param>
   public MethodItem(string name)
-    : this()
-  {
-    Name = name;
-  }
+    : this() => Name = name;
 
   /// <summary>
   /// constructs a method item from the name of the method and its parameters.
@@ -56,23 +53,19 @@ public class MethodItem
   /// <param name="name"></param>
   /// <param name="parameters"></param>
   public MethodItem(string name, string[] parameters)
-    : this(name)
-  {
-    Parameters = parameters;
-  }
+    : this(name) => Parameters = parameters;
 
   /// <summary>
   /// constructs a method item from a method base by determining the method name and its parameters.
   /// </summary>
   /// <param name="methodBase"></param>
   public MethodItem(System.Reflection.MethodBase methodBase)
-    : this(methodBase.Name, GetMethodParameterNames(methodBase))
-  {
-  }
+    : this(methodBase.EnsureNotNull().Name, GetMethodParameterNames(methodBase))
+  { }
 
   private static string[] GetMethodParameterNames(System.Reflection.MethodBase methodBase)
   {
-    var methodParameterNames = new List<string>();
+    List<string> methodParameterNames = [];
     try
     {
       System.Reflection.ParameterInfo[] methodBaseGetParameters = methodBase.GetParameters();
@@ -84,9 +77,9 @@ public class MethodItem
         methodParameterNames.Add(methodBaseGetParameters[i].ParameterType + " " + methodBaseGetParameters[i].Name);
       }
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "An exception occurred while retrieving method parameters.", ex);
+      LogLog.Error(_declaringType, "An exception occurred while retrieving method parameters.", e);
     }
 
     return methodParameterNames.ToArray();
@@ -100,6 +93,7 @@ public class MethodItem
   /// <summary>
   /// Gets the method parameters of the caller making the logging request.
   /// </summary>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1819:Properties should not return arrays")]
   public string[] Parameters { get; }
 
   /// <summary>

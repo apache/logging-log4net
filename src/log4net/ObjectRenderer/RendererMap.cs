@@ -30,7 +30,7 @@ namespace log4net.ObjectRenderer;
 /// </summary>
 /// <remarks>
 /// <para>
-/// The <see cref="M:FindAndRender(object)"/> method is used to render an
+/// The <see cref="FindAndRender(object)"/> method is used to render an
 /// <c>object</c> using the appropriate renderers defined in this map,
 /// using a default renderer if no custom renderer is defined for a type.
 /// </para>
@@ -41,10 +41,8 @@ public class RendererMap
 {
   private static readonly Type _declaringType = typeof(RendererMap);
 
-  private readonly ConcurrentDictionary<Type, IObjectRenderer> _map = new();
-  private readonly ConcurrentDictionary<Type, IObjectRenderer> _cache = new();
-
-  private static readonly IObjectRenderer _sDefaultRenderer = new DefaultRenderer();
+  private readonly ConcurrentDictionary<Type, IObjectRenderer> _map = [];
+  private readonly ConcurrentDictionary<Type, IObjectRenderer> _cache = [];
 
   /// <summary>
   /// Renders <paramref name="obj"/> using the appropriate renderer.
@@ -54,7 +52,7 @@ public class RendererMap
   /// <remarks>
   /// <para>
   /// This is a convenience method used to render an object to a string.
-  /// The alternative method <see cref="M:FindAndRender(object,TextWriter)"/>
+  /// The alternative method <see cref="FindAndRender(object,TextWriter)"/>
   /// should be used when streaming output to a <see cref="TextWriter"/>.
   /// </para>
   /// </remarks>
@@ -80,13 +78,14 @@ public class RendererMap
   /// <para>
   /// Find the appropriate renderer for the type of the
   /// <paramref name="obj"/> parameter. This is accomplished by calling the
-  /// <see cref="M:Get(Type)"/> method. Once a renderer is found, it is
+  /// <see cref="Get(Type)"/> method. Once a renderer is found, it is
   /// applied on the object <paramref name="obj"/> and the result is returned
   /// as a <see cref="string"/>.
   /// </para>
   /// </remarks>
   public void FindAndRender(object? obj, TextWriter writer)
   {
+    writer.EnsureNotNull();
     if (obj is null)
     {
       writer.Write(SystemInfo.NullText);
@@ -105,10 +104,10 @@ public class RendererMap
         {
           Get(obj.GetType()).RenderObject(this, obj, writer);
         }
-        catch (Exception ex)
+        catch (Exception e) when (!e.IsFatal())
         {
           // Exception rendering the object
-          LogLog.Error(_declaringType, $"Exception while rendering object of type [{obj.GetType().FullName}]", ex);
+          LogLog.Error(_declaringType, $"Exception while rendering object of type [{obj.GetType().FullName}]", e);
 
           // return default message
           string objectTypeName = obj.GetType().FullName ?? string.Empty;
@@ -118,9 +117,9 @@ public class RendererMap
           string? exceptionText = null;
           try
           {
-            exceptionText = ex.ToString();
+            exceptionText = e.ToString();
           }
-          catch
+          catch (Exception inner) when (!inner.IsFatal())
           {
             // Ignore exception
           }
@@ -142,7 +141,7 @@ public class RendererMap
   /// Gets the renderer for the specified object type.
   /// </param>
   /// <param>
-  /// Syntactic sugar method that calls <see cref="M:Get(Type)"/> 
+  /// Syntactic sugar method that calls <see cref="Get(Type)"/> 
   /// with the type of the object parameter.
   /// </param>
   /// </remarks>
@@ -163,13 +162,8 @@ public class RendererMap
   /// <returns>The renderer for the specified type, or <see cref="DefaultRenderer"/> if no specific renderer has been defined.</returns>
   public IObjectRenderer Get(Type type)
   {
-    if (type is null)
-    {
-      throw new ArgumentNullException(nameof(type));
-    }
-
     // Check cache
-    if (!_cache.TryGetValue(type, out IObjectRenderer? result))
+    if (!_cache.TryGetValue(type.EnsureNotNull(), out IObjectRenderer? result))
     {
       for (Type? cur = type; cur is not null; cur = cur.BaseType)
       {
@@ -182,7 +176,7 @@ public class RendererMap
       }
 
       // if not set then use the default renderer
-      result ??= _sDefaultRenderer;
+      result ??= DefaultRenderer;
 
       // Add to cache
       _cache.TryAdd(type, result);
@@ -217,7 +211,7 @@ public class RendererMap
   /// <summary>
   /// Gets the default renderer instance
   /// </summary>
-  public IObjectRenderer DefaultRenderer => _sDefaultRenderer;
+  public static IObjectRenderer DefaultRenderer { get; } = new DefaultRenderer();
 
   /// <summary>
   /// Clears the map of custom renderers. The <see cref="DefaultRenderer"/>
@@ -236,16 +230,7 @@ public class RendererMap
   /// <param name="renderer">The renderer for <paramref name="typeToRender"/>.</param>
   public void Put(Type typeToRender, IObjectRenderer renderer)
   {
-    if (typeToRender is null)
-    {
-      throw new ArgumentNullException(nameof(typeToRender));
-    }
-    if (renderer is null)
-    {
-      throw new ArgumentNullException(nameof(renderer));
-    }
-
     _cache.Clear();
-    _map[typeToRender] = renderer;
+    _map[typeToRender.EnsureNotNull()] = renderer.EnsureNotNull();
   }
 }

@@ -17,6 +17,7 @@
 //
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 using log4net.Core;
@@ -32,6 +33,7 @@ namespace log4net.Layout.Pattern;
 /// </para>
 /// </remarks>
 /// <author>Nicko Cadell</author>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class ThreadPatternConverter : PatternLayoutConverter
 {
   /// <summary>
@@ -44,8 +46,5 @@ internal sealed class ThreadPatternConverter : PatternLayoutConverter
   /// Writes the <see cref="LoggingEvent.ThreadName"/> to the <paramref name="writer" />.
   /// </para>
   /// </remarks>
-  protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
-  {
-    writer.Write(loggingEvent.ThreadName);
-  }
+  protected override void Convert(TextWriter writer, LoggingEvent loggingEvent) => writer.Write(loggingEvent.ThreadName);
 }

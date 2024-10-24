@@ -44,7 +44,7 @@ public sealed class NullSecurityContext : SecurityContext
   /// Singleton instance of <see cref="NullSecurityContext"/>
   /// </para>
   /// </remarks>
-  public static readonly NullSecurityContext Instance = new NullSecurityContext();
+  public static readonly NullSecurityContext Instance = new();
 
   /// <summary>
   /// Private constructor

@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace log4net.Util.PatternStringConverters;
@@ -33,6 +34,7 @@ namespace log4net.Util.PatternStringConverters;
 /// </para>
 /// </remarks>
 /// <author>Ron Grabowski</author>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class EnvironmentFolderPathPatternConverter : PatternConverter
 {
   /// <summary>
@@ -71,9 +73,9 @@ internal sealed class EnvironmentFolderPathPatternConverter : PatternConverter
       // will be skipped with the following warning message.
       LogLog.Debug(_declaringType, "Security exception while trying to expand environment variables. Error Ignored. No Expansion.", secEx);
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Error occurred while converting environment variable.", ex);
+      LogLog.Error(_declaringType, "Error occurred while converting environment variable.", e);
     }
   }
 

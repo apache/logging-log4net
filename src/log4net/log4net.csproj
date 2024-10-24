@@ -100,6 +100,7 @@ log4net is designed with two distinct goals in mind: speed and flexibility
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(MicrosoftSourceLinkGitHubPackageVersion)" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="$(MicrosoftNetAnalyzersPackageVersion)" PrivateAssets="All" IncludeAssets="All"/>
   </ItemGroup>
   <Import Project="../MonoForFramework.targets" />
   <Target Name="_ResolveCopyLocalNuGetPackagePdbsAndXml" Condition="$(CopyLocalLockFileAssemblies) == true" AfterTargets="ResolveReferences">

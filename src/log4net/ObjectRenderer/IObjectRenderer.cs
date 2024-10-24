@@ -51,7 +51,7 @@ public interface IObjectRenderer
   /// The <paramref name="rendererMap"/> parameter is
   /// provided to lookup and render other objects. This is
   /// very useful where <paramref name="obj"/> contains
-  /// nested objects of unknown type. The <see cref="M:RendererMap.FindAndRender(object, TextWriter)"/>
+  /// nested objects of unknown type. The <see cref="RendererMap.FindAndRender(object, TextWriter)"/>
   /// method can be used to render these objects.
   /// </para>
   /// </remarks>

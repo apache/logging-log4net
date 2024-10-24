@@ -45,8 +45,7 @@ public sealed class CompositeProperties
   /// </para>
   /// </remarks>
   internal CompositeProperties()
-  {
-  }
+  { }
 
   /// <summary>
   /// Gets the value of a property

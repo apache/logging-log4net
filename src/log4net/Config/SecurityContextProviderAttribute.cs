@@ -29,6 +29,7 @@ namespace log4net.Config;
 /// <summary>
 /// Assembly level attribute to configure the <see cref="SecurityContextProvider"/>.
 /// </summary>
+/// <param name="providerType">the type of the provider to use</param>
 /// <remarks>
 /// <para>
 /// This attribute may only be used at the assembly scope and can only
@@ -36,30 +37,16 @@ namespace log4net.Config;
 /// </para>
 /// <para>
 /// Use this attribute to configure the <see cref="XmlConfigurator"/>
-/// without calling one of the <see cref="M:XmlConfigurator.Configure()"/>
+/// without calling one of the <see cref="XmlConfigurator.Configure()"/>
 /// methods.
 /// </para>
 /// </remarks>
 /// <author>Nicko Cadell</author>
 [AttributeUsage(AttributeTargets.Assembly)]
 [Log4NetSerializable]
-public sealed class SecurityContextProviderAttribute : ConfiguratorAttribute
+public sealed class SecurityContextProviderAttribute(Type providerType) 
+  : ConfiguratorAttribute(100)
 {
-  /// <summary>
-  /// Construct provider attribute with type specified
-  /// </summary>
-  /// <param name="providerType">the type of the provider to use</param>
-  /// <remarks>
-  /// <para>
-  /// The provider specified must subclass the <see cref="SecurityContextProvider"/>
-  /// class.
-  /// </para>
-  /// </remarks>
-  public SecurityContextProviderAttribute(Type providerType) : base(100) /* configurator priority 100 to execute before the XmlConfigurator */
-  {
-    ProviderType = providerType;
-  }
-
   /// <summary>
   /// Gets or sets the type of the provider to use.
   /// </summary>
@@ -69,7 +56,8 @@ public sealed class SecurityContextProviderAttribute : ConfiguratorAttribute
   /// class.
   /// </para>
   /// </remarks>
-  public Type ProviderType { get; set; }
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1019:Define accessors for attribute arguments")]
+  public Type ProviderType { get; set; } = providerType;
 
   /// <summary>
   /// Configures the SecurityContextProvider
@@ -107,8 +95,7 @@ public sealed class SecurityContextProviderAttribute : ConfiguratorAttribute
   /// The fully qualified type of the SecurityContextProviderAttribute class.
   /// </summary>
   /// <remarks>
-  /// Used by the internal logger to record the Type of the
-  /// log message.
+  /// Used by the internal logger to record the Type of the log message.
   /// </remarks>
   private static readonly Type _declaringType = typeof(SecurityContextProviderAttribute);
 }

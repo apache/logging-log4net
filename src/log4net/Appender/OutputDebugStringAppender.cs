@@ -20,6 +20,7 @@
 using System.Runtime.InteropServices;
 
 using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Appender;
 
@@ -45,23 +46,11 @@ public class OutputDebugStringAppender : AppenderSkeleton
     }
 #endif
 
-    OutputDebugString(RenderLoggingEvent(loggingEvent));
+     NativeMethods.OutputDebugString(RenderLoggingEvent(loggingEvent));
   }
 
   /// <summary>
   /// This appender requires a <see cref="Layout"/> to be set.
   /// </summary>
   protected override bool RequiresLayout => true;
-
-  /// <summary>
-  /// Stub for OutputDebugString native method
-  /// </summary>
-  /// <param name="message">the string to output</param>
-#if NETSTANDARD2_0_OR_GREATER
-  [DllImport("CoreDll.dll")]
-#else
-  [DllImport("Kernel32.dll")]
-#endif
-  [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-  protected static extern void OutputDebugString(string message);
 }

@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
@@ -79,4 +80,13 @@ internal static class Log4NetAssert
     }
     throw new InvalidCastException(@$"Can't convert objects objects of type ""{value.GetType()}"" to type ""{typeof(T)}"".");
   }
+
+  /// <summary>
+  /// Determines whether this is a fatal exception that should not be handled
+  /// </summary>
+  /// <param name="exception">Exception</param>
+  /// <returns><see langword="true"/>, if it is a fatal exception, otherwise <see langword="false"/></returns>
+  [EditorBrowsable(EditorBrowsableState.Never)]
+  public static bool IsFatal(this Exception exception)
+    => exception is OutOfMemoryException or StackOverflowException;
 }

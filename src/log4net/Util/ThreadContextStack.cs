@@ -34,6 +34,7 @@ namespace log4net.Util;
 /// </para>
 /// </remarks>
 /// <author>Nicko Cadell</author>
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix")]
 public sealed class ThreadContextStack : IFixingRequired
 {
   /// <summary>
@@ -50,8 +51,7 @@ public sealed class ThreadContextStack : IFixingRequired
   /// </para>
   /// </remarks>
   internal ThreadContextStack()
-  {
-  }
+  { }
 
   /// <summary>
   /// The number of messages in the stack
@@ -228,7 +228,7 @@ public sealed class ThreadContextStack : IFixingRequired
     internal StackFrame(string? message, StackFrame? parent)
     {
       Message = message;
-      this._parent = parent;
+      _parent = parent;
 
       if (parent is null)
       {
@@ -286,8 +286,8 @@ public sealed class ThreadContextStack : IFixingRequired
     /// <param name="frameDepth">The depth to return the stack to when this object is disposed.</param>
     internal AutoPopStackFrame(Stack<StackFrame> frameStack, int frameDepth)
     {
-      this._frameStack = frameStack;
-      this._frameDepth = frameDepth;
+      _frameStack = frameStack;
+      _frameDepth = frameDepth;
     }
 
     /// <summary>

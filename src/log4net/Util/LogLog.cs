@@ -25,10 +25,10 @@ using System.Diagnostics;
 namespace log4net.Util;
 
 /// <summary>
-/// 
+/// LogReceivedEventHandler
 /// </summary>
-/// <param name="source"></param>
-/// <param name="e"></param>
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1003:Use generic event handler instances")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix")]
 public delegate void LogReceivedEventHandler(object? source, LogReceivedEventArgs e);
 
 /// <summary>
@@ -138,13 +138,13 @@ public sealed class LogLog
       QuietMode = OptionConverter.ToBoolean(SystemInfo.GetAppSetting("log4net.Internal.Quiet"), false);
       EmitInternalMessages = OptionConverter.ToBoolean(SystemInfo.GetAppSetting("log4net.Internal.Emit"), true);
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
       // If an exception is thrown here then it looks like the config file does not
       // parse correctly.
       //
       // We will leave debug OFF and print an Error message
-      Error(typeof(LogLog), "Exception while reading ConfigurationSettings. Check your .config file is well formed XML.", ex);
+      Error(typeof(LogLog), "Exception while reading ConfigurationSettings. Check your .config file is well formed XML.", e);
     }
   }
 
@@ -459,7 +459,7 @@ public sealed class LogLog
       Console.Out.WriteLine(message);
       Trace.WriteLine(message);
     }
-    catch
+    catch (Exception e) when (!e.IsFatal())
     {
       // Ignore exception, what else can we do? Not really a good idea to propagate back to the caller
     }
@@ -488,7 +488,7 @@ public sealed class LogLog
       Console.Error.WriteLine(message);
       Trace.WriteLine(message);
     }
-    catch
+    catch (Exception e) when (!e.IsFatal())
     {
       // Ignore exception, what else can we do? Not really a good idea to propagate back to the caller
     }
@@ -502,14 +502,13 @@ public sealed class LogLog
   /// Subscribes to the LogLog.LogReceived event and stores messages
   /// to the supplied IList instance.
   /// </summary>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1063:Implement IDisposable Correctly")]
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1002:Do not expose generic lists")]
   public class LogReceivedAdapter : IDisposable
   {
     private readonly LogReceivedEventHandler _handler;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="items"></param>
+    /// <inheritdoc/>
     public LogReceivedAdapter(List<LogLog> items)
     {
       Items = items;
@@ -530,13 +529,8 @@ public sealed class LogLog
     /// </summary>
     public List<LogLog> Items { get; }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public void Dispose()
-    {
-      LogReceived -= _handler;
-    }
+    /// <inheritdoc/>
+    public void Dispose() => LogReceived -= _handler;
   }
 }
 

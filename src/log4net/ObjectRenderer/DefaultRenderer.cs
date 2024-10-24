@@ -54,7 +54,7 @@ public sealed class DefaultRenderer : IObjectRenderer
   /// The <paramref name="rendererMap"/> parameter is
   /// provided to lookup and render other objects. This is
   /// very useful where <paramref name="obj"/> contains
-  /// nested objects of unknown type. The <see cref="M:RendererMap.FindAndRender(object)"/>
+  /// nested objects of unknown type. The <see cref="RendererMap.FindAndRender(object)"/>
   /// method can be used to render these objects.
   /// </para>
   /// <para>
@@ -128,10 +128,8 @@ public sealed class DefaultRenderer : IObjectRenderer
   /// </remarks>
   public void RenderObject(RendererMap rendererMap, object? obj, TextWriter writer)
   {
-    if (rendererMap is null)
-    {
-      throw new ArgumentNullException(nameof(rendererMap));
-    }
+    rendererMap.EnsureNotNull();
+    writer.EnsureNotNull();
 
     if (obj is null)
     {

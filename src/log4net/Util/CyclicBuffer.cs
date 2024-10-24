@@ -35,6 +35,8 @@ namespace log4net.Util;
 /// <author>Gert Driesen</author>
 public class CyclicBuffer
 {
+  private readonly object _syncRoot = new();
+
   /// <summary>
   /// Constructor
   /// </summary>
@@ -53,7 +55,7 @@ public class CyclicBuffer
       throw SystemInfo.CreateArgumentOutOfRangeException(nameof(maxSize), maxSize, $"Parameter: {nameof(maxSize)}, Value: [{maxSize}] out of range. A positive integer is required.");
     }
 
-    this._maxSize = maxSize;
+    _maxSize = maxSize;
     _events = new LoggingEvent[maxSize];
     _first = 0;
     _last = 0;
@@ -74,12 +76,9 @@ public class CyclicBuffer
   /// </remarks>
   public LoggingEvent? Append(LoggingEvent loggingEvent)
   {
-    if (loggingEvent is null)
-    {
-      throw new ArgumentNullException(nameof(loggingEvent));
-    }
+    loggingEvent.EnsureNotNull();
 
-    lock (this)
+    lock (_syncRoot)
     {
       // save the discarded event
       LoggingEvent? discardedLoggingEvent = _events[_last];
@@ -105,11 +104,8 @@ public class CyclicBuffer
         // Space remaining
         return null;
       }
-      else
-      {
-        // Buffer is full and discarding an event
-        return discardedLoggingEvent;
-      }
+      // Buffer is full and discarding an event
+      return discardedLoggingEvent;
     }
   }
 
@@ -125,7 +121,7 @@ public class CyclicBuffer
   /// </remarks>
   public LoggingEvent? PopOldest()
   {
-    lock (this)
+    lock (_syncRoot)
     {
       LoggingEvent? ret = null;
       if (_numElems > 0)
@@ -153,7 +149,7 @@ public class CyclicBuffer
   /// </remarks>
   public LoggingEvent[] PopAll()
   {
-    lock (this)
+    lock (_syncRoot)
     {
       LoggingEvent[] ret = new LoggingEvent[_numElems];
 
@@ -186,7 +182,7 @@ public class CyclicBuffer
   /// </remarks>
   public void Clear()
   {
-    lock (this)
+    lock (_syncRoot)
     {
       // Set all the elements to null
       Array.Clear(_events, 0, _events.Length);
@@ -213,7 +209,7 @@ public class CyclicBuffer
   /// <exception cref="ArgumentOutOfRangeException">The <paramref name="newSize"/> argument is not a positive integer.</exception>
   public void Resize(int newSize) 
   {
-    lock(this)
+    lock (syncRoot)
     {
       if (newSize < 0) 
       {
@@ -269,7 +265,7 @@ public class CyclicBuffer
   {
     get
     {
-      lock (this)
+      lock (_syncRoot)
       {
         if (i < 0 || i >= _numElems)
         {
@@ -294,7 +290,7 @@ public class CyclicBuffer
   {
     get
     {
-      lock (this)
+      lock (_syncRoot)
       {
         return _maxSize;
       }
@@ -322,7 +318,7 @@ public class CyclicBuffer
   {
     get
     {
-      lock (this)
+      lock (_syncRoot)
       {
         return _numElems;
       }

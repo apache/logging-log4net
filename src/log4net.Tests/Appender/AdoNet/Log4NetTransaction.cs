@@ -24,7 +24,7 @@ using System.Data;
 
 namespace log4net.Tests.Appender.AdoNet;
 
-public class Log4NetTransaction : IDbTransaction
+internal sealed class Log4NetTransaction : IDbTransaction
 {
   public void Commit()
   {
@@ -40,8 +40,5 @@ public class Log4NetTransaction : IDbTransaction
 
   public IsolationLevel IsolationLevel => throw new NotImplementedException();
 
-  public void Dispose()
-  {
-    throw new NotImplementedException();
-  }
+  public void Dispose() => throw new NotImplementedException();
 }

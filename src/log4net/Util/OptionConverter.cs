@@ -60,7 +60,7 @@ public static class OptionConverter
       {
         return bool.Parse(argValue);
       }
-      catch (Exception e)
+      catch (Exception e) when (!e.IsFatal())
       {
         LogLog.Error(_declaringType, $"[{argValue}] is not in proper bool form.", e);
       }
@@ -142,13 +142,8 @@ public static class OptionConverter
   /// </remarks>
   public static object? ConvertStringTo(Type target, string txt)
   {
-    if (target is null)
-    {
-      throw new ArgumentNullException(nameof(target));
-    }
-
     // If we want a string we already have the correct type
-    if (typeof(string) == target || typeof(object) == target)
+    if (typeof(string) == target.EnsureNotNull() || typeof(object) == target)
     {
       return txt;
     }
@@ -160,32 +155,22 @@ public static class OptionConverter
       // Found appropriate converter
       return typeConverter.ConvertFrom(txt);
     }
-    else
+    if (target.IsEnum)
     {
-      if (target.IsEnum)
-      {
-        // Target type is an enum.
-
-        // Use the Enum.Parse(EnumType, string) method to get the enum value
-        return ParseEnum(target, txt, true);
-      }
-      else
-      {
-        // We essentially make a guess that to convert from a string
-        // to an arbitrary type T there will be a static method defined on type T called Parse
-        // that will take an argument of type string. i.e. T.Parse(string)->T we call this
-        // method to convert the string to the type required by the property.
-        if (target.GetMethod("Parse", [typeof(string)]) is MethodInfo meth)
-        {
-          // Call the Parse method
-          return meth.Invoke(null, BindingFlags.InvokeMethod, null, [txt], CultureInfo.InvariantCulture);
-        }
-        else
-        {
-          // No Parse() method found.
-        }
-      }
+      // Target type is an enum.
+      // Use the Enum.Parse(EnumType, string) method to get the enum value
+      return ParseEnum(target, txt, true);
     }
+    // We essentially make a guess that to convert from a string
+    // to an arbitrary type T there will be a static method defined on type T called Parse
+    // that will take an argument of type string. i.e. T.Parse(string)->T we call this
+    // method to convert the string to the type required by the property.
+    if (target.GetMethod("Parse", [typeof(string)]) is MethodInfo meth)
+    {
+      // Call the Parse method
+      return meth.Invoke(null, BindingFlags.InvokeMethod, null, [txt], CultureInfo.InvariantCulture);
+    }
+    // No Parse() method found.
     return null;
   }
 
@@ -214,24 +199,13 @@ public static class OptionConverter
     }
 
     // Look for a To converter
-    if (ConverterRegistry.GetConvertTo(sourceType, targetType) is IConvertTo tcSource)
+    if (ConverterRegistry.GetConvertTo(sourceType, targetType) is IConvertTo tcSource && tcSource.CanConvertTo(targetType))
     {
-      if (tcSource.CanConvertTo(targetType))
-      {
-        return true;
-      }
+      return true;
     }
 
     // Look for a From converter
-    if (ConverterRegistry.GetConvertFrom(targetType) is IConvertFrom tcTarget)
-    {
-      if (tcTarget.CanConvertFrom(sourceType))
-      {
-        return true;
-      }
-    }
-
-    return false;
+    return ConverterRegistry.GetConvertFrom(targetType) is IConvertFrom tcTarget && tcTarget.CanConvertFrom(sourceType);
   }
 
   /// <summary>
@@ -247,30 +221,24 @@ public static class OptionConverter
   /// </remarks>
   public static object ConvertTypeTo(object sourceInstance, Type targetType)
   {
-    Type sourceType = sourceInstance.GetType();
+    Type sourceType = sourceInstance.EnsureNotNull().GetType();
 
     // Check if we can assign directly from the source type to the target type
-    if (targetType.IsAssignableFrom(sourceType))
+    if (targetType.EnsureNotNull().IsAssignableFrom(sourceType))
     {
       return sourceInstance;
     }
 
     // Look for a TO converter
-    if (ConverterRegistry.GetConvertTo(sourceType, targetType) is IConvertTo tcSource)
+    if (ConverterRegistry.GetConvertTo(sourceType, targetType) is IConvertTo tcSource && tcSource.CanConvertTo(targetType))
     {
-      if (tcSource.CanConvertTo(targetType))
-      {
-        return tcSource.ConvertTo(sourceInstance, targetType);
-      }
+      return tcSource.ConvertTo(sourceInstance, targetType);
     }
 
     // Look for a FROM converter
-    if (ConverterRegistry.GetConvertFrom(targetType) is IConvertFrom tcTarget)
+    if (ConverterRegistry.GetConvertFrom(targetType) is IConvertFrom tcTarget && tcTarget.CanConvertFrom(sourceType))
     {
-      if (tcTarget.CanConvertFrom(sourceType))
-      {
-        return tcTarget.ConvertFrom(sourceInstance);
-      }
+      return tcTarget.ConvertFrom(sourceInstance);
     }
 
     throw new ArgumentException($"Cannot convert source object [{sourceInstance}] to target type [{targetType.Name}]", nameof(sourceInstance));
@@ -302,7 +270,7 @@ public static class OptionConverter
         Type? classObj = SystemInfo.GetTypeFromString(className, true, true);
         if (classObj is not null)
         {
-          if (!superClass.IsAssignableFrom(classObj))
+          if (!superClass.EnsureNotNull().IsAssignableFrom(classObj))
           {
             LogLog.Error(_declaringType, $"OptionConverter: A [{className}] object is not assignable to a [{superClass.FullName}] variable.");
             return defaultValue;
@@ -312,7 +280,7 @@ public static class OptionConverter
 
         LogLog.Error(_declaringType, $"Could not find class [{className}].");
       }
-      catch (Exception e)
+      catch (Exception e) when (!e.IsFatal())
       {
         LogLog.Error(_declaringType, $"Could not instantiate class [{className}].", e);
       }
@@ -365,7 +333,9 @@ public static class OptionConverter
   /// </remarks>
   public static string SubstituteVariables(string value, System.Collections.IDictionary props)
   {
-    StringBuilder buf = new StringBuilder();
+    value.EnsureNotNull();
+    props.EnsureNotNull();
+    StringBuilder buf = new();
 
     int i = 0;
     int j, k;
@@ -416,10 +386,8 @@ public static class OptionConverter
   /// <param name="value">The enum string value.</param>
   /// <param name="ignoreCase">If <c>true</c>, ignore case; otherwise, regard case.</param>
   /// <returns>An object of type <paramref name="enumType" /> whose value is represented by <paramref name="value" />.</returns>
-  private static object ParseEnum(Type enumType, string value, bool ignoreCase)
-  {
-    return Enum.Parse(enumType, value, ignoreCase);
-  }
+  private static object ParseEnum(Type enumType, string value, bool ignoreCase) 
+    => Enum.Parse(enumType, value, ignoreCase);
 
   /// <summary>
   /// The fully qualified type of the OptionConverter class.

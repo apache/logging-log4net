@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Reflection;
 
 using log4net.Core;
 
@@ -30,7 +31,7 @@ namespace log4net;
 /// <remarks>
 /// <para>
 /// Use the <see cref="LogManager"/> to obtain logger instances
-/// that implement this interface. The <see cref="M:LogManager.GetLogger(Assembly,Type)"/>
+/// that implement this interface. The <see cref="LogManager.GetLogger(Assembly,Type)"/>
 /// static method is used to get logger instances.
 /// </para>
 /// <para>
@@ -59,7 +60,7 @@ namespace log4net;
 /// </code>
 /// </example>
 /// <seealso cref="LogManager"/>
-/// <seealso cref="M:LogManager.GetLogger(Assembly, Type)"/>
+/// <seealso cref="LogManager.GetLogger(Assembly, Type)"/>
 /// <author>Nicko Cadell</author>
 /// <author>Gert Driesen</author>
 public interface ILog : ILoggerWrapper
@@ -84,10 +85,10 @@ public interface ILog : ILoggerWrapper
   /// <para><b>WARNING</b> Note that passing an <see cref="Exception"/> 
   /// to this method will print the name of the <see cref="Exception"/> 
   /// but no stack trace. To print a stack trace use the 
-  /// <see cref="M:Debug(object,Exception)"/> form instead.
+  /// <see cref="Debug(object,Exception)"/> form instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Debug(object,Exception)"/>
+  /// <seealso cref="Debug(object,Exception)"/>
   /// <seealso cref="IsDebugEnabled"/>
   void Debug(object? message);
 
@@ -100,10 +101,10 @@ public interface ILog : ILoggerWrapper
   /// <param name="exception">The exception to log, including its stack trace.</param>
   /// <remarks>
   /// <para>
-  /// See the <see cref="M:Debug(object)"/> form for more detailed information.
+  /// See the <see cref="Debug(object)"/> form for more detailed information.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Debug(object)"/>
+  /// <seealso cref="Debug(object)"/>
   /// <seealso cref="IsDebugEnabled"/>
   void Debug(object? message, Exception? exception);
 
@@ -116,16 +117,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Debug(object,Exception)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Debug(object,Exception)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Debug(object)"/>
+  /// <seealso cref="Debug(object)"/>
   /// <seealso cref="IsDebugEnabled"/>
   void DebugFormat(string format, params object?[]? args);
 
@@ -137,16 +138,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Debug(object,Exception)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Debug(object,Exception)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Debug(object)"/>
+  /// <seealso cref="Debug(object)"/>
   /// <seealso cref="IsDebugEnabled"/>
   void DebugFormat(string format, object? arg0);
 
@@ -159,16 +160,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Debug(object,Exception)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Debug(object,Exception)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Debug(object)"/>
+  /// <seealso cref="Debug(object)"/>
   /// <seealso cref="IsDebugEnabled"/>
   void DebugFormat(string format, object? arg0, object? arg1);
 
@@ -182,16 +183,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Debug(object,Exception)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Debug(object,Exception)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Debug(object)"/>
+  /// <seealso cref="Debug(object)"/>
   /// <seealso cref="IsDebugEnabled"/>
   void DebugFormat(string format, object? arg0, object? arg1, object? arg2);
 
@@ -204,16 +205,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Debug(object,Exception)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Debug(object,Exception)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Debug(object)"/>
+  /// <seealso cref="Debug(object)"/>
   /// <seealso cref="IsDebugEnabled"/>
   void DebugFormat(IFormatProvider? provider, string format, params object?[]? args);
 
@@ -236,11 +237,11 @@ public interface ILog : ILoggerWrapper
   /// <para><b>WARNING</b> Note that passing an <see cref="Exception"/> 
   /// to this method will print the name of the <see cref="Exception"/> 
   /// but no stack trace. To print a stack trace use the 
-  /// <see cref="M:Info(object,Exception)"/> form instead.
+  /// <see cref="Info(object,Exception)"/> form instead.
   /// </para>
   /// </remarks>
   /// <param name="message">The message object to log.</param>
-  /// <seealso cref="M:Info(object,Exception)"/>
+  /// <seealso cref="Info(object,Exception)"/>
   /// <seealso cref="IsInfoEnabled"/>
   void Info(object? message);
 
@@ -253,10 +254,10 @@ public interface ILog : ILoggerWrapper
   /// <param name="exception">The exception to log, including its stack trace.</param>
   /// <remarks>
   /// <para>
-  /// See the <see cref="M:Info(object)"/> form for more detailed information.
+  /// See the <see cref="Info(object)"/> form for more detailed information.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Info(object)"/>
+  /// <seealso cref="Info(object)"/>
   /// <seealso cref="IsInfoEnabled"/>
   void Info(object? message, Exception? exception);
 
@@ -269,16 +270,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Info(object)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Info(object)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Info(object,Exception)"/>
+  /// <seealso cref="Info(object,Exception)"/>
   /// <seealso cref="IsInfoEnabled"/>
   void InfoFormat(string format, params object?[]? args);
 
@@ -290,16 +291,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Info(object,Exception)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Info(object,Exception)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Info(object)"/>
+  /// <seealso cref="Info(object)"/>
   /// <seealso cref="IsInfoEnabled"/>
   void InfoFormat(string format, object? arg0);
 
@@ -312,16 +313,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Info(object,Exception)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Info(object,Exception)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Info(object)"/>
+  /// <seealso cref="Info(object)"/>
   /// <seealso cref="IsInfoEnabled"/>
   void InfoFormat(string format, object? arg0, object? arg1);
 
@@ -335,16 +336,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Info(object,Exception)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Info(object,Exception)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Info(object)"/>
+  /// <seealso cref="Info(object)"/>
   /// <seealso cref="IsInfoEnabled"/>
   void InfoFormat(string format, object? arg0, object? arg1, object? arg2);
 
@@ -357,16 +358,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Info(object)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Info(object)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Info(object,Exception)"/>
+  /// <seealso cref="Info(object,Exception)"/>
   /// <seealso cref="IsInfoEnabled"/>
   void InfoFormat(IFormatProvider? provider, string format, params object?[]? args);
 
@@ -389,11 +390,11 @@ public interface ILog : ILoggerWrapper
   /// <para><b>WARNING</b> Note that passing an <see cref="Exception"/> 
   /// to this method will print the name of the <see cref="Exception"/> 
   /// but no stack trace. To print a stack trace use the 
-  /// <see cref="M:Warn(object,Exception)"/> form instead.
+  /// <see cref="Warn(object,Exception)"/> form instead.
   /// </para>
   /// </remarks>
   /// <param name="message">The message object to log.</param>
-  /// <seealso cref="M:Warn(object,Exception)"/>
+  /// <seealso cref="Warn(object,Exception)"/>
   /// <seealso cref="IsWarnEnabled"/>
   void Warn(object? message);
 
@@ -406,10 +407,10 @@ public interface ILog : ILoggerWrapper
   /// <param name="exception">The exception to log, including its stack trace.</param>
   /// <remarks>
   /// <para>
-  /// See the <see cref="M:Warn(object)"/> form for more detailed information.
+  /// See the <see cref="Warn(object)"/> form for more detailed information.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Warn(object)"/>
+  /// <seealso cref="Warn(object)"/>
   /// <seealso cref="IsWarnEnabled"/>
   void Warn(object? message, Exception? exception);
 
@@ -422,16 +423,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Warn(object)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Warn(object)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Warn(object,Exception)"/>
+  /// <seealso cref="Warn(object,Exception)"/>
   /// <seealso cref="IsWarnEnabled"/>
   void WarnFormat(string format, params object?[]? args);
 
@@ -443,16 +444,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Warn(object,Exception)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Warn(object,Exception)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Warn(object)"/>
+  /// <seealso cref="Warn(object)"/>
   /// <seealso cref="IsWarnEnabled"/>
   void WarnFormat(string format, object? arg0);
 
@@ -465,16 +466,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Warn(object,Exception)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Warn(object,Exception)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Warn(object)"/>
+  /// <seealso cref="Warn(object)"/>
   /// <seealso cref="IsWarnEnabled"/>
   void WarnFormat(string format, object? arg0, object? arg1);
 
@@ -488,16 +489,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Warn(object,Exception)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Warn(object,Exception)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Warn(object)"/>
+  /// <seealso cref="Warn(object)"/>
   /// <seealso cref="IsWarnEnabled"/>
   void WarnFormat(string format, object? arg0, object? arg1, object? arg2);
 
@@ -510,16 +511,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Warn(object)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Warn(object)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Warn(object,Exception)"/>
+  /// <seealso cref="Warn(object,Exception)"/>
   /// <seealso cref="IsWarnEnabled"/>
   void WarnFormat(IFormatProvider? provider, string format, params object?[]? args);
 
@@ -543,10 +544,10 @@ public interface ILog : ILoggerWrapper
   /// <para><b>WARNING</b> Note that passing an <see cref="Exception"/> 
   /// to this method will print the name of the <see cref="Exception"/> 
   /// but no stack trace. To print a stack trace use the 
-  /// <see cref="M:Error(object,Exception)"/> form instead.
+  /// <see cref="Error(object,Exception)"/> form instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Error(object,Exception)"/>
+  /// <seealso cref="Error(object,Exception)"/>
   /// <seealso cref="IsErrorEnabled"/>
   void Error(object? message);
 
@@ -559,10 +560,10 @@ public interface ILog : ILoggerWrapper
   /// <param name="exception">The exception to log, including its stack trace.</param>
   /// <remarks>
   /// <para>
-  /// See the <see cref="M:Error(object)"/> form for more detailed information.
+  /// See the <see cref="Error(object)"/> form for more detailed information.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Error(object)"/>
+  /// <seealso cref="Error(object)"/>
   /// <seealso cref="IsErrorEnabled"/>
   void Error(object? message, Exception? exception);
 
@@ -575,16 +576,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Error(object)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Error(object)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Error(object,Exception)"/>
+  /// <seealso cref="Error(object,Exception)"/>
   /// <seealso cref="IsErrorEnabled"/>
   void ErrorFormat(string format, params object?[]? args);
 
@@ -596,16 +597,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Error(object,Exception)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Error(object,Exception)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Error(object)"/>
+  /// <seealso cref="Error(object)"/>
   /// <seealso cref="IsErrorEnabled"/>
   void ErrorFormat(string format, object? arg0);
 
@@ -618,16 +619,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Error(object,Exception)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Error(object,Exception)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Error(object)"/>
+  /// <seealso cref="Error(object)"/>
   /// <seealso cref="IsErrorEnabled"/>
   void ErrorFormat(string format, object? arg0, object? arg1);
 
@@ -641,16 +642,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Error(object,Exception)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Error(object,Exception)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Error(object)"/>
+  /// <seealso cref="Error(object)"/>
   /// <seealso cref="IsErrorEnabled"/>
   void ErrorFormat(string format, object? arg0, object? arg1, object? arg2);
 
@@ -663,16 +664,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Error(object)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Error(object)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Error(object,Exception)"/>
+  /// <seealso cref="Error(object,Exception)"/>
   /// <seealso cref="IsErrorEnabled"/>
   void ErrorFormat(IFormatProvider? provider, string format, params object?[]? args);
 
@@ -695,11 +696,11 @@ public interface ILog : ILoggerWrapper
   /// <para><b>WARNING</b> Note that passing an <see cref="Exception"/> 
   /// to this method will print the name of the <see cref="Exception"/> 
   /// but no stack trace. To print a stack trace use the 
-  /// <see cref="M:Fatal(object,Exception)"/> form instead.
+  /// <see cref="Fatal(object,Exception)"/> form instead.
   /// </para>
   /// </remarks>
   /// <param name="message">The message object to log.</param>
-  /// <seealso cref="M:Fatal(object,Exception)"/>
+  /// <seealso cref="Fatal(object,Exception)"/>
   /// <seealso cref="IsFatalEnabled"/>
   void Fatal(object? message);
 
@@ -712,10 +713,10 @@ public interface ILog : ILoggerWrapper
   /// <param name="exception">The exception to log, including its stack trace.</param>
   /// <remarks>
   /// <para>
-  /// See the <see cref="M:Fatal(object)"/> form for more detailed information.
+  /// See the <see cref="Fatal(object)"/> form for more detailed information.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Fatal(object)"/>
+  /// <seealso cref="Fatal(object)"/>
   /// <seealso cref="IsFatalEnabled"/>
   void Fatal(object? message, Exception? exception);
 
@@ -728,16 +729,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Fatal(object)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Fatal(object)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Fatal(object,Exception)"/>
+  /// <seealso cref="Fatal(object,Exception)"/>
   /// <seealso cref="IsFatalEnabled"/>
   void FatalFormat(string format, params object?[]? args);
 
@@ -749,16 +750,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Fatal(object,Exception)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Fatal(object,Exception)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Fatal(object)"/>
+  /// <seealso cref="Fatal(object)"/>
   /// <seealso cref="IsFatalEnabled"/>
   void FatalFormat(string format, object? arg0);
 
@@ -771,16 +772,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Fatal(object,Exception)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Fatal(object,Exception)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Fatal(object)"/>
+  /// <seealso cref="Fatal(object)"/>
   /// <seealso cref="IsFatalEnabled"/>
   void FatalFormat(string format, object? arg0, object? arg1);
 
@@ -794,16 +795,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Fatal(object,Exception)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Fatal(object,Exception)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Fatal(object)"/>
+  /// <seealso cref="Fatal(object)"/>
   /// <seealso cref="IsFatalEnabled"/>
   void FatalFormat(string format, object? arg0, object? arg1, object? arg2);
 
@@ -816,16 +817,16 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// <para>
   /// The message is formatted using the <c>String.Format</c> method. See
-  /// <see cref="M:String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
+  /// <see cref="String.Format(string, object[])"/> for details of the syntax of the format string and the behavior
   /// of the formatting.
   /// </para>
   /// <para>
   /// This method does not take an <see cref="Exception"/> object to include in the
-  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="M:Fatal(object)"/>
+  /// log event. To pass an <see cref="Exception"/> use one of the <see cref="Fatal(object)"/>
   /// methods instead.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Fatal(object,Exception)"/>
+  /// <seealso cref="Fatal(object,Exception)"/>
   /// <seealso cref="IsFatalEnabled"/>
   void FatalFormat(IFormatProvider? provider, string format, params object?[]? args);
 
@@ -863,7 +864,7 @@ public interface ILog : ILoggerWrapper
   /// the other hand, if the <c>log</c> is debug enabled, you
   /// will incur the cost of evaluating whether the logger is debug
   /// enabled twice. Once in <see cref="IsDebugEnabled"/> and once in
-  /// the <see cref="M:Debug(object)"/>.  This is an insignificant overhead
+  /// the <see cref="Debug(object)"/>.  This is an insignificant overhead
   /// since evaluating a logger takes about 1% of the time it
   /// takes to actually log. This is the preferred style of logging.
   /// </para>
@@ -896,8 +897,8 @@ public interface ILog : ILoggerWrapper
   /// speed or runtime flexibility.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Debug(object)"/>
-  /// <seealso cref="M:DebugFormat(IFormatProvider, string, object[])"/>
+  /// <seealso cref="Debug(object)"/>
+  /// <seealso cref="DebugFormat(IFormatProvider, string, object[])"/>
   bool IsDebugEnabled { get; }
 
   /// <summary>
@@ -909,8 +910,8 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// For more information see <see cref="ILog.IsDebugEnabled"/>.
   /// </remarks>
-  /// <seealso cref="M:Info(object)"/>
-  /// <seealso cref="M:InfoFormat(IFormatProvider, string, object[])"/>
+  /// <seealso cref="Info(object)"/>
+  /// <seealso cref="InfoFormat(IFormatProvider, string, object[])"/>
   /// <seealso cref="ILog.IsDebugEnabled"/>
   bool IsInfoEnabled { get; }
 
@@ -923,8 +924,8 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// For more information see <see cref="ILog.IsDebugEnabled"/>.
   /// </remarks>
-  /// <seealso cref="M:Warn(object)"/>
-  /// <seealso cref="M:WarnFormat(IFormatProvider, string, object[])"/>
+  /// <seealso cref="Warn(object)"/>
+  /// <seealso cref="WarnFormat(IFormatProvider, string, object[])"/>
   /// <seealso cref="ILog.IsDebugEnabled"/>
   bool IsWarnEnabled { get; }
 
@@ -937,8 +938,8 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// For more information see <see cref="ILog.IsDebugEnabled"/>.
   /// </remarks>
-  /// <seealso cref="M:Error(object)"/>
-  /// <seealso cref="M:ErrorFormat(IFormatProvider, string, object[])"/>
+  /// <seealso cref="Error(object)"/>
+  /// <seealso cref="ErrorFormat(IFormatProvider, string, object[])"/>
   /// <seealso cref="ILog.IsDebugEnabled"/>
   bool IsErrorEnabled { get; }
 
@@ -951,8 +952,8 @@ public interface ILog : ILoggerWrapper
   /// <remarks>
   /// For more information see <see cref="ILog.IsDebugEnabled"/>.
   /// </remarks>
-  /// <seealso cref="M:Fatal(object)"/>
-  /// <seealso cref="M:FatalFormat(IFormatProvider, string, object[])"/>
+  /// <seealso cref="Fatal(object)"/>
+  /// <seealso cref="FatalFormat(IFormatProvider, string, object[])"/>
   /// <seealso cref="ILog.IsDebugEnabled"/>
   bool IsFatalEnabled { get; }
 }

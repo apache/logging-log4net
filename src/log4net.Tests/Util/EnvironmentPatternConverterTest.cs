@@ -41,7 +41,7 @@ public sealed class EnvironmentPatternConverterTest
   [Platform(Include = "Win", Reason = @"https://learn.microsoft.com/en-us/dotnet/api/system.environment.setenvironmentvariable")]
   public void SystemLevelEnvironmentVariable()
   {
-    var converter = new EnvironmentPatternConverter();
+    EnvironmentPatternConverter converter = new();
     try
     {
       Environment.SetEnvironmentVariable(EnvironmentVariableName, SystemLevelValue, EnvironmentVariableTarget.Machine);
@@ -53,7 +53,7 @@ public sealed class EnvironmentPatternConverterTest
 
     converter.Option = EnvironmentVariableName;
 
-    var sw = new StringWriter();
+    using StringWriter sw = new();
     converter.Convert(sw, null);
 
     Assert.That(sw.ToString(), Is.EqualTo(SystemLevelValue), "System level environment variable not expended correctly.");
@@ -68,12 +68,12 @@ public sealed class EnvironmentPatternConverterTest
   [Platform(Include = "Win", Reason = @"https://learn.microsoft.com/en-us/dotnet/api/system.environment.setenvironmentvariable")]
   public void UserLevelEnvironmentVariable()
   {
-    var converter = new EnvironmentPatternConverter();
+    EnvironmentPatternConverter converter = new();
     Environment.SetEnvironmentVariable(EnvironmentVariableName, UserLevelValue, EnvironmentVariableTarget.User);
 
     converter.Option = EnvironmentVariableName;
 
-    var sw = new StringWriter();
+    using StringWriter sw = new();
     converter.Convert(sw, null);
 
     Assert.That(sw.ToString(), Is.EqualTo(UserLevelValue), "User level environment variable not expended correctly.");
@@ -84,12 +84,12 @@ public sealed class EnvironmentPatternConverterTest
   [Test]
   public void ProcessLevelEnvironmentVariable()
   {
-    var converter = new EnvironmentPatternConverter();
+    EnvironmentPatternConverter converter = new();
     Environment.SetEnvironmentVariable(EnvironmentVariableName, ProcessLevelValue);
 
     converter.Option = EnvironmentVariableName;
 
-    var sw = new StringWriter();
+    using StringWriter sw = new();
     converter.Convert(sw, null);
 
     Assert.That(sw.ToString(), Is.EqualTo(ProcessLevelValue), "Process level environment variable not expended correctly.");

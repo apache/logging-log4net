@@ -28,40 +28,22 @@ using log4net.Appender;
 using log4net.Util;
 using log4net.Core;
 using log4net.ObjectRenderer;
+using System.Linq;
 
 namespace log4net.Repository.Hierarchy;
 
 /// <summary>
 /// Initializes the log4net environment using an XML DOM.
 /// </summary>
-/// <remarks>
-/// <para>
-/// Configures a <see cref="Hierarchy"/> using an XML DOM.
-/// </para>
-/// </remarks>
+/// <param name="hierarchy">The hierarchy to build.</param>
 /// <author>Nicko Cadell</author>
 /// <author>Gert Driesen</author>
-public class XmlHierarchyConfigurator
+public class XmlHierarchyConfigurator(Hierarchy hierarchy)
 {
   private enum ConfigUpdateMode
   {
     Merge,
     Overwrite
-  }
-
-  /// <summary>
-  /// Construct the configurator for a hierarchy
-  /// </summary>
-  /// <param name="hierarchy">The hierarchy to build.</param>
-  /// <remarks>
-  /// <para>
-  /// Initializes a new instance of the <see cref="XmlHierarchyConfigurator" /> class
-  /// with the specified <see cref="Hierarchy" />.
-  /// </para>
-  /// </remarks>
-  public XmlHierarchyConfigurator(Hierarchy hierarchy)
-  {
-    this._hierarchy = hierarchy;
   }
 
   /// <summary>
@@ -147,9 +129,9 @@ public class XmlHierarchyConfigurator
           LogLog.Error(_declaringType, $"Invalid {ConfigUpdateModeAttr} attribute value [{configUpdateModeAttribute}]");
         }
       }
-      catch
+      catch (Exception e) when (!e.IsFatal())
       {
-        LogLog.Error(_declaringType, $"Invalid {ConfigUpdateModeAttr} attribute value [{configUpdateModeAttribute}]");
+        LogLog.Error(_declaringType, $"Invalid {ConfigUpdateModeAttr} attribute value [{configUpdateModeAttribute}]", e);
       }
     }
 
@@ -160,7 +142,7 @@ public class XmlHierarchyConfigurator
     if (configUpdateMode == ConfigUpdateMode.Overwrite)
     {
       // Reset to original unset configuration
-      _hierarchy.ResetConfiguration();
+      hierarchy.ResetConfiguration();
       LogLog.Debug(_declaringType, "Configuration reset before reading config.");
     }
 
@@ -200,7 +182,7 @@ public class XmlHierarchyConfigurator
         else
         {
           // Read the param tags and set properties on the hierarchy
-          SetParameter(currentElement, _hierarchy);
+          SetParameter(currentElement, hierarchy);
         }
       }
     }
@@ -212,7 +194,7 @@ public class XmlHierarchyConfigurator
     {
       if (ConvertStringTo(typeof(Level), thresholdStr) is Level thresholdLevel)
       {
-        _hierarchy.Threshold = thresholdLevel;
+        hierarchy.Threshold = thresholdLevel;
       }
       else
       {
@@ -236,7 +218,7 @@ public class XmlHierarchyConfigurator
   /// </remarks>
   protected IAppender? FindAppenderByReference(XmlElement appenderRef)
   {
-    string? appenderName = appenderRef.GetAttribute(RefAttr);
+    string? appenderName = appenderRef.EnsureNotNull().GetAttribute(RefAttr);
 
     if (_appenderBag.TryGetValue(appenderName, out IAppender? appender))
     {
@@ -285,7 +267,7 @@ public class XmlHierarchyConfigurator
   /// </remarks>
   protected IAppender? ParseAppender(XmlElement appenderElement)
   {
-    string appenderName = appenderElement.GetAttribute(NameAttr);
+    string appenderName = appenderElement.EnsureNotNull().GetAttribute(NameAttr);
     string typeName = appenderElement.GetAttribute(TypeAttr);
 
     LogLog.Debug(_declaringType, $"Loading Appender [{appenderName}] type: [{typeName}]");
@@ -337,11 +319,11 @@ public class XmlHierarchyConfigurator
       LogLog.Debug(_declaringType, $"Created Appender [{appenderName}]");
       return appender;
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
       // Yes, it's ugly.  But all exceptions point to the same problem: we can't create an Appender
 
-      LogLog.Error(_declaringType, $"Could not create Appender [{appenderName}] of type [{typeName}]. Reported error follows.", ex);
+      LogLog.Error(_declaringType, $"Could not create Appender [{appenderName}] of type [{typeName}]. Reported error follows.", e);
       return null;
     }
   }
@@ -358,14 +340,14 @@ public class XmlHierarchyConfigurator
   protected void ParseLogger(XmlElement loggerElement)
   {
     // Create a new log4net.Logger object from the <logger> element.
-    string loggerName = loggerElement.GetAttribute(NameAttr);
+    string loggerName = loggerElement.EnsureNotNull().GetAttribute(NameAttr);
 
     LogLog.Debug(_declaringType, $"Retrieving an instance of log4net.Repository.Logger for logger [{loggerName}].");
 
     // Setting up a logger needs to be an atomic operation, in order
     // to protect potential log operations while logger
     // configuration is in progress.
-    if (_hierarchy.GetLogger(loggerName) is Logger log)
+    if (hierarchy.GetLogger(loggerName) is Logger log)
     {
       lock (log)
       {
@@ -389,7 +371,7 @@ public class XmlHierarchyConfigurator
   /// </remarks>
   protected void ParseRoot(XmlElement rootElement)
   {
-    Logger root = _hierarchy.Root;
+    Logger root = hierarchy.Root;
     // logger configuration needs to be atomic
     lock (root)
     {
@@ -412,9 +394,9 @@ public class XmlHierarchyConfigurator
   {
     // Remove all existing appenders from log. They will be
     // reconstructed if need be.
-    log.RemoveAllAppenders();
+    log.EnsureNotNull().RemoveAllAppenders();
 
-    foreach (XmlNode currentNode in catElement.ChildNodes)
+    foreach (XmlNode currentNode in catElement.EnsureNotNull().ChildNodes)
     {
       if (currentNode.NodeType == XmlNodeType.Element)
       {
@@ -461,7 +443,7 @@ public class XmlHierarchyConfigurator
   /// </remarks>
   protected void ParseRenderer(XmlElement element)
   {
-    string renderingClassName = element.GetAttribute(RenderingTypeAttr);
+    string renderingClassName = element.EnsureNotNull().GetAttribute(RenderingTypeAttr);
     string renderedClassName = element.GetAttribute(RenderedTypeAttr);
 
     LogLog.Debug(_declaringType, $"Rendering class [{renderingClassName}], Rendered class [{renderedClassName}].");
@@ -473,9 +455,9 @@ public class XmlHierarchyConfigurator
 
     try
     {
-      _hierarchy.RendererMap.Put(SystemInfo.GetTypeFromString(renderedClassName, true, true)!, renderer);
+      hierarchy.RendererMap.Put(SystemInfo.GetTypeFromString(renderedClassName, true, true)!, renderer);
     }
-    catch (Exception e)
+    catch (Exception e) when (!e.IsFatal())
     {
       LogLog.Error(_declaringType, $"Could not find class [{renderedClassName}].", e);
     }
@@ -492,15 +474,15 @@ public class XmlHierarchyConfigurator
   /// Parse an XML element that represents a level.
   /// </para>
   /// </remarks>
-  protected void ParseLevel(XmlElement element, Logger log, bool isRoot)
+  protected static void ParseLevel(XmlElement element, Logger log, bool isRoot)
   {
-    string loggerName = log.Name;
+    string loggerName = log.EnsureNotNull().Name;
     if (isRoot)
     {
       loggerName = "root";
     }
 
-    string levelStr = element.GetAttribute(ValueAttr);
+    string levelStr = element.EnsureNotNull().GetAttribute(ValueAttr);
     LogLog.Debug(_declaringType, $"Logger [{loggerName}] Level string is [{levelStr}].");
 
     if (Inherited == levelStr)
@@ -545,10 +527,11 @@ public class XmlHierarchyConfigurator
   /// string argument and return a value that can be used to
   /// set the property.
   /// </remarks>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
   protected void SetParameter(XmlElement element, object target)
   {
     // Get the property name
-    string name = element.GetAttribute(NameAttr);
+    string name = element.EnsureNotNull().GetAttribute(NameAttr);
 
     // If the name attribute does not exist then use the name of the element
     if (element.LocalName != ParamTag || name.Length == 0)
@@ -557,7 +540,7 @@ public class XmlHierarchyConfigurator
     }
 
     // Look for the property on the target object
-    Type targetType = target.GetType();
+    Type targetType = target.EnsureNotNull().GetType();
     Type? propertyType = null;
 
     MethodInfo? methInfo = null;
@@ -668,9 +651,9 @@ public class XmlHierarchyConfigurator
               propertyType = subType;
             }
           }
-          catch (Exception ex)
+          catch (Exception e) when (!e.IsFatal())
           {
-            LogLog.Error(_declaringType, $"Failed to find type [{subTypeString}] set on [{name}]", ex);
+            LogLog.Error(_declaringType, $"Failed to find type [{subTypeString}] set on [{name}]", e);
           }
         }
 
@@ -795,17 +778,8 @@ public class XmlHierarchyConfigurator
   /// </summary>
   /// <param name="element">the element to inspect</param>
   /// <returns><c>true</c> if the element has any attributes or child elements, <c>false</c> otherwise</returns>
-  private bool HasAttributesOrElements(XmlElement element)
-  {
-    foreach (XmlNode node in element.ChildNodes)
-    {
-      if (node.NodeType == XmlNodeType.Attribute || node.NodeType == XmlNodeType.Element)
-      {
-        return true;
-      }
-    }
-    return false;
-  }
+  private static bool HasAttributesOrElements(XmlElement element)
+    => element.ChildNodes.OfType<XmlNode>().Any(node => node.NodeType is XmlNodeType.Attribute or XmlNodeType.Element);
 
   /// <summary>
   /// Test if a <see cref="Type"/> is constructible with <c>Activator.CreateInstance</c>.
@@ -879,7 +853,7 @@ public class XmlHierarchyConfigurator
     if (typeof(Level) == type)
     {
       // Property wants a level
-      Level? levelValue = _hierarchy.LevelMap[value];
+      Level? levelValue = hierarchy.LevelMap[value];
 
       if (levelValue is null)
       {
@@ -915,7 +889,7 @@ public class XmlHierarchyConfigurator
     Type? objectType;
 
     // Get the object type
-    string objectTypeString = element.GetAttribute(TypeAttr);
+    string objectTypeString = element.EnsureNotNull().GetAttribute(TypeAttr);
     if (objectTypeString.Length == 0)
     {
       if (defaultTargetType is null)
@@ -934,9 +908,9 @@ public class XmlHierarchyConfigurator
       {
         objectType = SystemInfo.GetTypeFromString(objectTypeString, true, true);
       }
-      catch (Exception ex)
+      catch (Exception e) when (!e.IsFatal())
       {
-        LogLog.Error(_declaringType, $"Failed to find type [{objectTypeString}]", ex);
+        LogLog.Error(_declaringType, $"Failed to find type [{objectTypeString}]", e);
         return null;
       }
     }
@@ -955,7 +929,7 @@ public class XmlHierarchyConfigurator
         }
         else
         {
-          LogLog.Error(_declaringType, $"Object type [{objectType!.FullName}] is not assignable to type [{typeConstraint.FullName}]. There are no acceptable type conversions.");
+          LogLog.Error(_declaringType, $"Object type [{objectType?.FullName}] is not assignable to type [{typeConstraint.FullName}]. There are no acceptable type conversions.");
           return null;
         }
       }
@@ -967,9 +941,9 @@ public class XmlHierarchyConfigurator
     {
       createdObject = Activator.CreateInstance(objectType!).EnsureNotNull();
     }
-    catch (Exception createInstanceEx)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, $"XmlHierarchyConfigurator: Failed to construct object of type [{objectType!.FullName}] Exception: {createInstanceEx}");
+      LogLog.Error(_declaringType, $"XmlHierarchyConfigurator: Failed to construct object of type [{objectType?.FullName}]", e);
       return null;
     }
 
@@ -1005,11 +979,11 @@ public class XmlHierarchyConfigurator
     get
     {
       PlatformID platform = Environment.OSVersion.Platform;
-      return platform != PlatformID.Unix && platform != PlatformID.MacOSX;
+      return platform is not PlatformID.Unix and not PlatformID.MacOSX;
     }
   }
 
-  private static IDictionary CreateCaseInsensitiveWrapper(IDictionary dict)
+  private static Hashtable CreateCaseInsensitiveWrapper(IDictionary dict)
   {
     Hashtable hash = SystemInfo.CreateCaseInsensitiveHashtable();
     foreach (DictionaryEntry entry in dict)
@@ -1054,11 +1028,6 @@ public class XmlHierarchyConfigurator
   /// key: appenderName, value: appender.
   /// </summary>
   private readonly Dictionary<string, IAppender> _appenderBag = new(StringComparer.Ordinal);
-
-  /// <summary>
-  /// The Hierarchy being configured.
-  /// </summary>
-  private readonly Hierarchy _hierarchy;
 
   /// <summary>
   /// The fully qualified type of the XmlHierarchyConfigurator class.

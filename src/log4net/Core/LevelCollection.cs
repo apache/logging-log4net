@@ -92,44 +92,48 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// Initializes a new instance of the <c>LevelCollection</c> class
   /// that contains elements copied from the specified <c>LevelCollection</c>.
   /// </summary>
-  /// <param name="c">The <c>LevelCollection</c> whose elements are copied to the new collection.</param>
-  public LevelCollection(LevelCollection c)
+  /// <param name="collection">The <c>LevelCollection</c> whose elements are copied to the new collection.</param>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2214:Do not call overridable methods in constructors")]
+  public LevelCollection(LevelCollection collection)
   {
-    _array = new Level[c.Count];
-    AddRange(c);
+    _array = new Level[collection.EnsureNotNull().Count];
+    AddRange(collection);
   }
 
   /// <summary>
   /// Initializes a new instance of the <c>LevelCollection</c> class
   /// that contains elements copied from the specified <see cref="Level"/> array.
   /// </summary>
-  /// <param name="a">The <see cref="Level"/> array whose elements are copied to the new list.</param>
-  public LevelCollection(Level[] a)
+  /// <param name="array">The <see cref="Level"/> array whose elements are copied to the new list.</param>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2214:Do not call overridable methods in constructors")]
+  public LevelCollection(Level[] array)
   {
-    _array = new Level[a.Length];
-    AddRange(a);
+    _array = new Level[array.EnsureNotNull().Length];
+    AddRange(array);
   }
 
   /// <summary>
   /// Initializes a new instance of the <c>LevelCollection</c> class
   /// that contains elements copied from the specified <see cref="Level"/> collection.
   /// </summary>
-  /// <param name="col">The <see cref="Level"/> collection whose elements are copied to the new list.</param>
-  public LevelCollection(ICollection col)
+  /// <param name="collection">The <see cref="Level"/> collection whose elements are copied to the new list.</param>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2214:Do not call overridable methods in constructors")]
+  public LevelCollection(ICollection collection)
   {
-    _array = new Level[col.Count];
-    AddRange(col);
+    _array = new Level[collection.EnsureNotNull().Count];
+    AddRange(collection);
   }
 
   /// <summary>
   /// Initializes a new instance of the <c>LevelCollection</c> class
   /// that contains elements copied from the specified <see cref="Level"/> collection.
   /// </summary>
-  /// <param name="col">The <see cref="Level"/> collection whose elements are copied to the new list.</param>
-  public LevelCollection(ICollection<Level> col)
+  /// <param name="collection">The <see cref="Level"/> collection whose elements are copied to the new list.</param>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2214:Do not call overridable methods in constructors")]
+  public LevelCollection(ICollection<Level> collection)
   {
-    _array = new Level[col.Count];
-    AddRange((ICollection)col);
+    _array = new Level[collection.EnsureNotNull().Count];
+    AddRange((ICollection)collection);
   }
 
   /// <summary>
@@ -147,10 +151,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// <summary>
   /// Allow subclasses to avoid our default constructors
   /// </summary>
-  protected internal LevelCollection(Tag _)
-  {
-    _array = Array.Empty<Level>();
-  }
+  protected internal LevelCollection(Tag _) => _array = Array.Empty<Level>();
 
   /// <summary>
   /// Gets the number of elements actually contained in the <c>LevelCollection</c>.
@@ -162,7 +163,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// <see cref="Level"/> array.
   /// </summary>
   /// <param name="array">The one-dimensional <see cref="Level"/> array to copy to.</param>
-  public virtual void CopyTo(Level[] array) => this.CopyTo(array, 0);
+  public virtual void CopyTo(Level[] array) => CopyTo(array, 0);
 
   /// <summary>
   /// Copies the entire <c>LevelCollection</c> to a one-dimensional
@@ -172,12 +173,12 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// <param name="start">The zero-based index in <paramref name="array"/> at which copying begins.</param>
   public virtual void CopyTo(Level[] array, int start)
   {
-    if (Count > array.GetUpperBound(0) + 1 - start)
+    if (Count > array.EnsureNotNull().GetUpperBound(0) + 1 - start)
     {
       throw new ArgumentException("Destination array was not long enough.");
     }
 
-    Array.Copy(this._array, 0, array, start, Count);
+    Array.Copy(_array, 0, array, start, Count);
   }
 
   /// <summary>
@@ -198,7 +199,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// <exception cref="ArgumentOutOfRangeException">
   /// <para><paramref name="index"/> is less than zero</para>
   /// <para>-or-</para>
-  /// <para><paramref name="index"/> is equal to or greater than <see cref="LevelCollection.Count"/>.</para>
+  /// <para><paramref name="index"/> is equal to or greater than <see cref="Count"/>.</para>
   /// </exception>
   public virtual Level this[int index]
   {
@@ -303,7 +304,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// <exception cref="ArgumentOutOfRangeException">
   /// <para><paramref name="index"/> is less than zero</para>
   /// <para>-or-</para>
-  /// <para><paramref name="index"/> is equal to or greater than <see cref="LevelCollection.Count"/>.</para>
+  /// <para><paramref name="index"/> is equal to or greater than <see cref="Count"/>.</para>
   /// </exception>
   public virtual void Insert(int index, Level item)
   {
@@ -336,7 +337,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
     int i = IndexOf(item);
     if (i < 0)
     {
-      throw new System.ArgumentException("Cannot remove the specified item because it was not found in the specified Collection.");
+      throw new ArgumentException("Cannot remove the specified item because it was not found in the specified Collection.");
     }
 
     ++_version;
@@ -350,7 +351,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// <exception cref="ArgumentOutOfRangeException">
   /// <para><paramref name="index"/> is less than zero</para>
   /// <para>-or-</para>
-  /// <para><paramref name="index"/> is equal to or greater than <see cref="LevelCollection.Count"/>.</para>
+  /// <para><paramref name="index"/> is equal to or greater than <see cref="Count"/>.</para>
   /// </exception>
   public virtual void RemoveAt(int index)
   {
@@ -394,10 +395,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// </summary>
   public virtual int Capacity
   {
-    get
-    {
-      return _array.Length;
-    }
+    get => _array.Length;
     set
     {
       if (value < Count)
@@ -424,17 +422,17 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// <summary>
   /// Adds the elements of another <c>LevelCollection</c> to the current <c>LevelCollection</c>.
   /// </summary>
-  /// <param name="x">The <c>LevelCollection</c> whose elements should be added to the end of the current <c>LevelCollection</c>.</param>
-  /// <returns>The new <see cref="LevelCollection.Count"/> of the <c>LevelCollection</c>.</returns>
-  public virtual int AddRange(LevelCollection x)
+  /// <param name="collection">The <c>LevelCollection</c> whose elements should be added to the end of the current <c>LevelCollection</c>.</param>
+  /// <returns>The new <see cref="Count"/> of the <c>LevelCollection</c>.</returns>
+  public virtual int AddRange(LevelCollection collection)
   {
-    if (Count + x.Count >= _array.Length)
+    if (Count + collection.EnsureNotNull().Count >= _array.Length)
     {
-      EnsureCapacity(Count + x.Count);
+      EnsureCapacity(Count + collection.Count);
     }
 
-    Array.Copy(x._array, 0, _array, Count, x.Count);
-    Count += x.Count;
+    Array.Copy(collection._array, 0, _array, Count, collection.Count);
+    Count += collection.Count;
     _version++;
 
     return Count;
@@ -443,17 +441,17 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// <summary>
   /// Adds the elements of a <see cref="Level"/> array to the current <c>LevelCollection</c>.
   /// </summary>
-  /// <param name="x">The <see cref="Level"/> array whose elements should be added to the end of the <c>LevelCollection</c>.</param>
-  /// <returns>The new <see cref="LevelCollection.Count"/> of the <c>LevelCollection</c>.</returns>
-  public virtual int AddRange(Level[] x)
+  /// <param name="array">The <see cref="Level"/> array whose elements should be added to the end of the <c>LevelCollection</c>.</param>
+  /// <returns>The new <see cref="Count"/> of the <c>LevelCollection</c>.</returns>
+  public virtual int AddRange(Level[] array)
   {
-    if (Count + x.Length >= _array.Length)
+    if (Count + array.EnsureNotNull().Length >= _array.Length)
     {
-      EnsureCapacity(Count + x.Length);
+      EnsureCapacity(Count + array.Length);
     }
 
-    Array.Copy(x, 0, _array, Count, x.Length);
-    Count += x.Length;
+    Array.Copy(array, 0, _array, Count, array.Length);
+    Count += array.Length;
     _version++;
 
     return Count;
@@ -462,16 +460,16 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// <summary>
   /// Adds the elements of a <see cref="Level"/> collection to the current <c>LevelCollection</c>.
   /// </summary>
-  /// <param name="col">The <see cref="Level"/> collection whose elements should be added to the end of the <c>LevelCollection</c>.</param>
-  /// <returns>The new <see cref="LevelCollection.Count"/> of the <c>LevelCollection</c>.</returns>
-  public virtual int AddRange(ICollection col)
+  /// <param name="collection">The <see cref="Level"/> collection whose elements should be added to the end of the <c>LevelCollection</c>.</param>
+  /// <returns>The new <see cref="Count"/> of the <c>LevelCollection</c>.</returns>
+  public virtual int AddRange(ICollection collection)
   {
-    if (Count + col.Count >= _array.Length)
+    if (Count + collection.EnsureNotNull().Count >= _array.Length)
     {
-      EnsureCapacity(Count + col.Count);
+      EnsureCapacity(Count + collection.Count);
     }
 
-    foreach (object item in col)
+    foreach (object item in collection)
     {
       Add((Level)item);
     }
@@ -487,27 +485,28 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// <exception cref="ArgumentOutOfRangeException">
   /// <para><paramref name="i"/> is less than zero</para>
   /// <para>-or-</para>
-  /// <para><paramref name="i"/> is equal to or greater than <see cref="LevelCollection.Count"/>.</para>
+  /// <para><paramref name="i"/> is equal to or greater than <see cref="Count"/>.</para>
   /// </exception>
   private void ValidateIndex(int i) => ValidateIndex(i, false);
 
   /// <exception cref="ArgumentOutOfRangeException">
   /// <para><paramref name="i"/> is less than zero</para>
   /// <para>-or-</para>
-  /// <para><paramref name="i"/> is equal to or greater than <see cref="LevelCollection.Count"/>.</para>
+  /// <para><paramref name="i"/> is equal to or greater than <see cref="Count"/>.</para>
   /// </exception>
   private void ValidateIndex(int i, bool allowEqualEnd)
   {
-    int max = (allowEqualEnd) ? (Count) : (Count - 1);
+    int max = allowEqualEnd ? Count : (Count - 1);
     if (i < 0 || i > max)
     {
-      throw log4net.Util.SystemInfo.CreateArgumentOutOfRangeException(nameof(i), i, $"Index was out of range. Must be non-negative and less than the size of the collection. [{i}] Specified argument was out of the range of valid values.");
+      throw SystemInfo.CreateArgumentOutOfRangeException(nameof(i), i, 
+        $"Index was out of range. Must be non-negative and less than the size of the collection. [{i}] Specified argument was out of the range of valid values.");
     }
   }
 
   private void EnsureCapacity(int min)
   {
-    int newCapacity = ((_array.Length == 0) ? DefaultCapacity : _array.Length * 2);
+    int newCapacity = (_array.Length == 0) ? DefaultCapacity : _array.Length * 2;
     if (newCapacity < min)
     {
       newCapacity = min;
@@ -516,7 +515,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
     Capacity = newCapacity;
   }
 
-  void ICollection.CopyTo(Array array, int start) => Array.Copy(this._array, 0, array, start, Count);
+  void ICollection.CopyTo(Array array, int start) => Array.Copy(_array, 0, array, start, Count);
 
   object? IList.this[int i]
   {
@@ -581,7 +580,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
       }
 
       ++_index;
-      return (_index < _collection.Count);
+      return _index < _collection.Count;
     }
 
     /// <summary>
@@ -596,10 +595,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   {
     private readonly LevelCollection _collection;
 
-    internal ReadOnlyLevelCollection(LevelCollection list) : base(Tag.Default)
-    {
-      _collection = list;
-    }
+    internal ReadOnlyLevelCollection(LevelCollection list) : base(Tag.Default) => _collection = list;
 
     public override void CopyTo(Level[] array) => _collection.CopyTo(array);
 

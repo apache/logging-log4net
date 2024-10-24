@@ -37,6 +37,8 @@ public sealed class LoggingEventTest
     = new(2000, 7, 1, 0, 0, 0, 0, CultureInfo.InvariantCulture.Calendar, DateTimeKind.Local);
 
   [Test]
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2300:Do not use insecure deserializer BinaryFormatter")]
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2301:Do not use insecure deserializer BinaryFormatter")]
   public void SerializeDeserialize_BinaryFormatter()
   {
     Utils.InconclusiveOnMono();
@@ -86,6 +88,8 @@ public sealed class LoggingEventTest
   /// Loads and validates the cached serialized v2 event data from the log4net2-SerializeEvent directory.
   /// </summary>
   [Test]
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2300:Do not use insecure deserializer BinaryFormatter")]
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2301:Do not use insecure deserializer BinaryFormatter")]
   public void DeserializeV2()
   {
     Utils.InconclusiveOnMono();

@@ -35,33 +35,22 @@ namespace log4net.Core;
 /// Delegate used to handle logger repository creation event notifications.
 /// </para>
 /// </remarks>
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1003:Use generic event handler instances")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix")]
 public delegate void LoggerRepositoryCreationEventHandler(object sender, LoggerRepositoryCreationEventArgs e);
 
 /// <summary>
 /// Provides data for the <see cref="IRepositorySelector.LoggerRepositoryCreatedEvent"/> event.
 /// </summary>
+/// <param name="repository">the <see cref="ILoggerRepository"/> that has been created</param>
 /// <remarks>
 /// <para>
 /// A <see cref="IRepositorySelector.LoggerRepositoryCreatedEvent"/> 
 /// event is raised every time a <see cref="ILoggerRepository"/> is created.
 /// </para>
 /// </remarks>
-public class LoggerRepositoryCreationEventArgs : EventArgs
+public class LoggerRepositoryCreationEventArgs(ILoggerRepository repository) : EventArgs
 {
-  /// <summary>
-  /// Construct instance using <see cref="ILoggerRepository"/> specified
-  /// </summary>
-  /// <param name="repository">the <see cref="ILoggerRepository"/> that has been created</param>
-  /// <remarks>
-  /// <para>
-  /// Construct instance using <see cref="ILoggerRepository"/> specified
-  /// </para>
-  /// </remarks>
-  public LoggerRepositoryCreationEventArgs(ILoggerRepository repository)
-  {
-    LoggerRepository = repository;
-  }
-
   /// <summary>
   /// The <see cref="ILoggerRepository"/> that has been created
   /// </summary>
@@ -73,7 +62,7 @@ public class LoggerRepositoryCreationEventArgs : EventArgs
   /// The <see cref="ILoggerRepository"/> that has been created
   /// </para>
   /// </remarks>
-  public ILoggerRepository LoggerRepository { get; }
+  public ILoggerRepository LoggerRepository { get; } = repository;
 }
 
 /// <summary>
@@ -116,7 +105,7 @@ public interface IRepositorySelector
   /// <returns>The named <see cref="ILoggerRepository"/></returns>
   /// <remarks>
   /// Lookup a named <see cref="ILoggerRepository"/>. This is the repository created by
-  /// calling <see cref="M:CreateRepository(string,Type)"/>.
+  /// calling <see cref="CreateRepository(string,Type)"/>.
   /// </remarks>
   ILoggerRepository GetRepository(string repositoryName);
 
@@ -129,7 +118,7 @@ public interface IRepositorySelector
   /// <remarks>
   /// <para>
   /// The <see cref="ILoggerRepository"/> created will be associated with the domain
-  /// specified such that a call to <see cref="M:GetRepository(Assembly)"/> with the
+  /// specified such that a call to <see cref="GetRepository(Assembly)"/> with the
   /// same assembly specified will return the same repository instance.
   /// </para>
   /// <para>
@@ -149,7 +138,7 @@ public interface IRepositorySelector
   /// <remarks>
   /// <para>
   /// The <see cref="ILoggerRepository"/> created will be associated with the name
-  /// specified such that a call to <see cref="M:GetRepository(string)"/> with the
+  /// specified such that a call to <see cref="GetRepository(string)"/> with the
   /// same name will return the same repository instance.
   /// </para>
   /// </remarks>
@@ -162,8 +151,8 @@ public interface IRepositorySelector
   /// <returns><c>true</c> if the repository exists</returns>
   /// <remarks>
   /// <para>
-  /// Test if a named repository exists. Use <see cref="M:CreateRepository(Assembly, Type)"/>
-  /// to create a new repository and <see cref="M:GetRepository(Assembly)"/> to retrieve 
+  /// Test if a named repository exists. Use <see cref="CreateRepository(Assembly, Type)"/>
+  /// to create a new repository and <see cref="GetRepository(Assembly)"/> to retrieve 
   /// a repository.
   /// </para>
   /// </remarks>

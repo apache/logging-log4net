@@ -20,6 +20,7 @@
 using System;
 
 using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Filter;
 
@@ -67,10 +68,7 @@ public class PropertyFilter : StringMatchFilter
   /// </remarks>
   public override FilterDecision Decide(LoggingEvent loggingEvent)
   {
-    if (loggingEvent is null)
-    {
-      throw new ArgumentNullException(nameof(loggingEvent));
-    }
+    loggingEvent.EnsureNotNull();
 
     // Check if we have a key to lookup the event property value with
     if (Key is null)
@@ -106,11 +104,7 @@ public class PropertyFilter : StringMatchFilter
       }
 
       // we've got a match
-      if (AcceptOnMatch)
-      {
-        return FilterDecision.Accept;
-      }
-      return FilterDecision.Deny;
+      return AcceptOnMatch ? FilterDecision.Accept : FilterDecision.Deny;
     }
     else if (StringToMatch is not null)
     {
@@ -122,11 +116,7 @@ public class PropertyFilter : StringMatchFilter
       }
 
       // we've got a match
-      if (AcceptOnMatch)
-      {
-        return FilterDecision.Accept;
-      }
-      return FilterDecision.Deny;
+      return AcceptOnMatch ? FilterDecision.Accept : FilterDecision.Deny;
     }
     return FilterDecision.Neutral;
   }

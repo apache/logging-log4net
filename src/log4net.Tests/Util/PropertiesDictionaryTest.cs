@@ -19,7 +19,6 @@
 
 #if NET462_OR_GREATER
 
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -39,6 +38,8 @@ namespace log4net.Tests.Util;
 public class PropertiesDictionaryTest
 {
   [Test]
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2300:Do not use insecure deserializer BinaryFormatter")]
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2301:Do not use insecure deserializer BinaryFormatter")]
   public void TestSerialization()
   {
     PropertiesDictionary pd = new();

@@ -17,23 +17,24 @@
 //
 #endregion
 
-using System;
+using log4net.Util;
 
 namespace log4net.Core;
 
 /// <summary>
 /// An evaluator that triggers at a threshold level
 /// </summary>
+/// <param name="threshold">the threshold to trigger at</param>
 /// <remarks>
 /// <para>
 /// This evaluator will trigger if the level of the event
-/// passed to <see cref="M:IsTriggeringEvent(LoggingEvent)"/>
+/// passed to <see cref="IsTriggeringEvent(LoggingEvent)"/>
 /// is equal to or greater than the <see cref="Threshold"/>
 /// level.
 /// </para>
 /// </remarks>
 /// <author>Nicko Cadell</author>
-public class LevelEvaluator : ITriggeringEventEvaluator
+public class LevelEvaluator(Level threshold) : ITriggeringEventEvaluator
 {
   /// <summary>
   /// Create a new evaluator using the <see cref="Level.Off"/> threshold.
@@ -41,36 +42,14 @@ public class LevelEvaluator : ITriggeringEventEvaluator
   /// <remarks>
   /// <para>
   /// This evaluator will trigger if the level of the event
-  /// passed to <see cref="M:IsTriggeringEvent(LoggingEvent)"/>
+  /// passed to <see cref="IsTriggeringEvent(LoggingEvent)"/>
   /// is equal to or greater than the <see cref="Threshold"/>
   /// level.
   /// </para>
   /// </remarks>
-  public LevelEvaluator() : this(Level.Off)
-  {
-  }
-
-  /// <summary>
-  /// Create a new evaluator using the specified <see cref="Level"/> threshold.
-  /// </summary>
-  /// <param name="threshold">the threshold to trigger at</param>
-  /// <remarks>
-  /// <para>
-  /// This evaluator will trigger if the level of the event
-  /// passed to <see cref="M:IsTriggeringEvent(LoggingEvent)"/>
-  /// is equal to or greater than the <see cref="Threshold"/>
-  /// level.
-  /// </para>
-  /// </remarks>
-  public LevelEvaluator(Level threshold)
-  {
-    if (threshold is null)
-    {
-      throw new ArgumentNullException(nameof(threshold));
-    }
-
-    Threshold = threshold;
-  }
+  public LevelEvaluator()
+    : this(Level.Off)
+  { }
 
   /// <summary>
   /// the threshold to trigger at
@@ -81,12 +60,12 @@ public class LevelEvaluator : ITriggeringEventEvaluator
   /// <remarks>
   /// <para>
   /// This evaluator will trigger if the level of the event
-  /// passed to <see cref="M:IsTriggeringEvent(LoggingEvent)"/>
+  /// passed to <see cref="IsTriggeringEvent(LoggingEvent)"/>
   /// is equal to or greater than the <see cref="Threshold"/>
   /// level.
   /// </para>
   /// </remarks>
-  public Level Threshold { get; set; }
+  public Level Threshold { get; set; } = threshold.EnsureNotNull();
 
   /// <summary>
   /// Is this <paramref name="loggingEvent"/> the triggering event?
@@ -96,12 +75,5 @@ public class LevelEvaluator : ITriggeringEventEvaluator
   /// is equal or higher than the <see cref="Threshold"/>. 
   /// Otherwise it returns <c>false</c></returns>
   public bool IsTriggeringEvent(LoggingEvent loggingEvent)
-  {
-    if (loggingEvent is null)
-    {
-      throw new ArgumentNullException(nameof(loggingEvent));
-    }
-
-    return (loggingEvent.Level is null || loggingEvent.Level >= Threshold);
-  }
+    => loggingEvent.EnsureNotNull().Level is null || loggingEvent.Level >= Threshold;
 }

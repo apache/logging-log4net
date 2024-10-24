@@ -22,6 +22,7 @@ using System.Web;
 
 using log4net.Layout;
 using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Appender;
 
@@ -42,8 +43,8 @@ namespace log4net.Appender;
 /// whether tracing is displayed to a page, to the trace viewer, or both.
 /// </para>
 /// <para>
-/// The logging event is passed to the <see cref="M:TraceContext.Write(string)"/> or 
-/// <see cref="M:TraceContext.Warn(string)"/> method depending on the level of the logging event.
+/// The logging event is passed to the <see cref="TraceContext.Write(string)"/> or 
+/// <see cref="TraceContext.Warn(string)"/> method depending on the level of the logging event.
 /// The event's logger name is the default value for the category parameter of the Write/Warn method. 
 /// </para>
 /// </remarks>
@@ -64,7 +65,7 @@ public class AspNetTraceAppender : AppenderSkeleton
       // check if tracing is enabled for the current context
       if (HttpContext.Current.Trace.IsEnabled) 
       {
-        if (loggingEvent.Level is not null && loggingEvent.Level >= Level.Warn) 
+        if (loggingEvent.EnsureNotNull().Level is not null && loggingEvent.Level >= Level.Warn) 
         {
           HttpContext.Current.Trace.Warn(Category.Format(loggingEvent), RenderLoggingEvent(loggingEvent));
         }

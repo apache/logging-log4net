@@ -17,8 +17,6 @@
 //
 #endregion
 
-using System;
-
 using log4net.Util;
 using log4net.Core;
 
@@ -52,7 +50,7 @@ public class ForwardingAppender : AppenderSkeleton, IAppenderAttachable
   protected override void OnClose()
   {
     // Remove all the attached appenders
-    lock (this)
+    lock (LockObj)
     {
       _appenderAttachedImpl?.RemoveAllAppenders();
     }
@@ -68,10 +66,7 @@ public class ForwardingAppender : AppenderSkeleton, IAppenderAttachable
   /// </para>
   /// </remarks>
   protected override void Append(LoggingEvent loggingEvent)
-  {
-    // Pass the logging event on to the attached appenders
-    _appenderAttachedImpl?.AppendLoopOnAppenders(loggingEvent);
-  }
+    => _appenderAttachedImpl?.AppendLoopOnAppenders(loggingEvent);
 
   /// <summary>
   /// Forward the logging events to the attached appenders 
@@ -83,32 +78,26 @@ public class ForwardingAppender : AppenderSkeleton, IAppenderAttachable
   /// </para>
   /// </remarks>
   protected override void Append(LoggingEvent[] loggingEvents)
-  {
-    // Pass the logging event on to the attached appenders
-    _appenderAttachedImpl?.AppendLoopOnAppenders(loggingEvents);
-  }
+    => _appenderAttachedImpl?.AppendLoopOnAppenders(loggingEvents);
 
   /// <summary>
   /// Adds an <see cref="IAppender" /> to the list of appenders of this
   /// instance.
   /// </summary>
-  /// <param name="newAppender">The <see cref="IAppender" /> to add to this appender.</param>
+  /// <param name="appender">The <see cref="IAppender" /> to add to this appender.</param>
   /// <remarks>
   /// <para>
   /// If the specified <see cref="IAppender" /> is already in the list of
   /// appenders, then it won't be added again.
   /// </para>
   /// </remarks>
-  public virtual void AddAppender(IAppender newAppender)
+  public virtual void AddAppender(IAppender appender)
   {
-    if (newAppender is null)
+    appender.EnsureNotNull();
+    lock (LockObj)
     {
-      throw new ArgumentNullException(nameof(newAppender));
-    }
-    lock (this)
-    {
-      _appenderAttachedImpl ??= new AppenderAttachedImpl();
-      _appenderAttachedImpl.AddAppender(newAppender);
+      _appenderAttachedImpl ??= new();
+      _appenderAttachedImpl.AddAppender(appender);
     }
   }
 
@@ -127,7 +116,7 @@ public class ForwardingAppender : AppenderSkeleton, IAppenderAttachable
   {
     get
     {
-      lock (this)
+      lock (LockObj)
       {
         return _appenderAttachedImpl?.Appenders ?? AppenderCollection.EmptyCollection;
       }
@@ -148,7 +137,7 @@ public class ForwardingAppender : AppenderSkeleton, IAppenderAttachable
   /// </remarks>
   public virtual IAppender? GetAppender(string? name)
   {
-    lock (this)
+    lock (LockObj)
     {
       if (_appenderAttachedImpl is null || name is null)
       {
@@ -169,7 +158,7 @@ public class ForwardingAppender : AppenderSkeleton, IAppenderAttachable
   /// </remarks>
   public virtual void RemoveAllAppenders()
   {
-    lock (this)
+    lock (LockObj)
     {
       if (_appenderAttachedImpl is not null)
       {
@@ -191,7 +180,7 @@ public class ForwardingAppender : AppenderSkeleton, IAppenderAttachable
   /// </remarks>
   public virtual IAppender? RemoveAppender(IAppender? appender)
   {
-    lock (this)
+    lock (LockObj)
     {
       if (appender is not null && _appenderAttachedImpl is not null)
       {
@@ -213,11 +202,11 @@ public class ForwardingAppender : AppenderSkeleton, IAppenderAttachable
   /// </remarks>
   public virtual IAppender? RemoveAppender(string? name)
   {
-    lock (this)
+    lock (LockObj)
     {
-      if (name is not null && _appenderAttachedImpl is not null)
+      if (name is not null)
       {
-        return _appenderAttachedImpl.RemoveAppender(name);
+        return _appenderAttachedImpl?.RemoveAppender(name);
       }
     }
     return null;

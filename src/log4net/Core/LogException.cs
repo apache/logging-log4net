@@ -35,6 +35,7 @@ namespace log4net.Core;
 /// <author>Nicko Cadell</author>
 /// <author>Gert Driesen</author>
 [Log4NetSerializable]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1058:Types should not extend certain base types")]
 public class LogException : ApplicationException
 {
   /// <summary>
@@ -46,8 +47,7 @@ public class LogException : ApplicationException
   /// </para>
   /// </remarks>
   public LogException()
-  {
-  }
+  { }
 
   /// <summary>
   /// Constructor
@@ -59,9 +59,9 @@ public class LogException : ApplicationException
   /// the specified message.
   /// </para>
   /// </remarks>
-  public LogException(string message) : base(message)
-  {
-  }
+  public LogException(string message)
+    : base(message)
+  { }
 
   /// <summary>
   /// Constructor
@@ -74,9 +74,9 @@ public class LogException : ApplicationException
   /// with the specified message and inner exception.
   /// </para>
   /// </remarks>
-  public LogException(string message, Exception innerException) : base(message, innerException)
-  {
-  }
+  public LogException(string message, Exception innerException)
+    : base(message, innerException)
+  { }
 
   /// <summary>
   /// Serialization constructor
@@ -91,6 +91,5 @@ public class LogException : ApplicationException
   /// </remarks>
   protected LogException(SerializationInfo info, StreamingContext context)
     : base(info, context)
-  {
-  }
+  { }
 }

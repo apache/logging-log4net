@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace log4net.Util.TypeConverters;
 
@@ -34,6 +35,7 @@ namespace log4net.Util.TypeConverters;
 /// <seealso cref="IConvertTo"/>
 /// <author>Nicko Cadell</author>
 /// <author>Gert Driesen</author>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class BooleanConverter : IConvertFrom
 {
   /// <summary>
@@ -44,10 +46,7 @@ internal sealed class BooleanConverter : IConvertFrom
   /// <c>True</c> if the <paramref name="sourceType"/> is
   /// the <see cref="string"/> type.
   /// </returns>
-  public bool CanConvertFrom(Type sourceType)
-  {
-    return (sourceType == typeof(string));
-  }
+  public bool CanConvertFrom(Type sourceType) => sourceType == typeof(string);
 
   /// <summary>
   /// Converts the source object to the type supported by this object

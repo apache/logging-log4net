@@ -101,7 +101,7 @@ public class ManagedColoredConsoleAppender : AppenderSkeleton
   public virtual string Target
   {
     get => _writeToErrorStream ? ConsoleError : ConsoleOut;
-    set => _writeToErrorStream = SystemInfo.EqualsIgnoringCase(ConsoleError, value.Trim());
+    set => _writeToErrorStream = SystemInfo.EqualsIgnoringCase(ConsoleError, value?.Trim());
   }
 
   /// <summary>
@@ -125,7 +125,7 @@ public class ManagedColoredConsoleAppender : AppenderSkeleton
   /// <param name="loggingEvent">The event to log.</param>
   /// <remarks>
   /// <para>
-  /// This method is called by the <see cref="M:AppenderSkeleton.DoAppend(log4net.Core.LoggingEvent)"/> method.
+  /// This method is called by the <see cref="AppenderSkeleton.DoAppend(log4net.Core.LoggingEvent)"/> method.
   /// </para>
   /// <para>
   /// The format of the output will depend on the appender's layout.
@@ -138,7 +138,7 @@ public class ManagedColoredConsoleAppender : AppenderSkeleton
     Console.ResetColor();
 
     // See if there is a specified lookup
-    if (_levelMapping.Lookup(loggingEvent.Level) is LevelColors levelColors)
+    if (_levelMapping.Lookup(loggingEvent.EnsureNotNull().Level) is LevelColors levelColors)
     {
       // If the backColor has been explicitly set
       if (levelColors.HasBackColor)

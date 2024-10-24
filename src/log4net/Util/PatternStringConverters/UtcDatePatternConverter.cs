@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 using log4net.DateFormatter;
@@ -38,6 +39,7 @@ namespace log4net.Util.PatternStringConverters;
 /// </remarks>
 /// <seealso cref="DatePatternConverter"/>
 /// <author>Nicko Cadell</author>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class UtcDatePatternConverter : DatePatternConverter
 {
   /// <summary>
@@ -61,9 +63,9 @@ internal sealed class UtcDatePatternConverter : DatePatternConverter
     {
       m_dateFormatter!.FormatDate(DateTime.UtcNow, writer);
     }
-    catch (Exception ex)
+    catch (Exception e) when (!e.IsFatal())
     {
-      LogLog.Error(_declaringType, "Error occurred while converting date.", ex);
+      LogLog.Error(_declaringType, "Error occurred while converting date.", e);
     }
   }
 

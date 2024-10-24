@@ -30,8 +30,8 @@ namespace log4net.Util.TypeConverters;
 /// Maintains a registry of type converters used to convert between types.
 /// </para>
 /// <para>
-/// Use the <see cref="M:AddConverter(Type, object)"/> and 
-/// <see cref="M:AddConverter(Type, Type)"/> methods to register new converters.
+/// Use the <see cref="AddConverter(Type, object)"/> and 
+/// <see cref="AddConverter(Type, Type)"/> methods to register new converters.
 /// The <see cref="GetConvertTo"/> and <see cref="GetConvertFrom"/> methods
 /// lookup appropriate converters to use.
 /// </para>
@@ -83,7 +83,7 @@ public static class ConverterRegistry
   /// <param name="destinationType">The type being converted to.</param>
   /// <param name="converterType">The type of the type converter to use to convert to the destination type.</param>
   public static void AddConverter(Type destinationType, Type converterType)
-    => AddConverter(destinationType, CreateConverterInstance(converterType));
+    => AddConverter(destinationType, CreateConverterInstance(converterType.EnsureNotNull()));
 
   /// <summary>
   /// Gets the type converter to use to convert values to the destination type.
@@ -105,7 +105,7 @@ public static class ConverterRegistry
     if (!_sType2ConvertTo.TryGetValue(sourceType, out IConvertTo? converter))
     {
       // Look up using attributes
-      converter = GetConverterFromAttribute(sourceType) as IConvertTo;
+      converter = GetConverterFromAttribute(sourceType.EnsureNotNull()) as IConvertTo;
       if (converter is not null)
       {
         // Store in registry
@@ -133,7 +133,7 @@ public static class ConverterRegistry
     if (!_sType2ConvertFrom.TryGetValue(destinationType, out IConvertFrom? converter))
     {
       // Look up using attributes
-      converter = GetConverterFromAttribute(destinationType) as IConvertFrom;
+      converter = GetConverterFromAttribute(destinationType.EnsureNotNull()) as IConvertFrom;
       if (converter is not null)
       {
         // Store in registry
@@ -197,9 +197,9 @@ public static class ConverterRegistry
         // Create the type converter
         return Activator.CreateInstance(converterType);
       }
-      catch (Exception ex)
+      catch (Exception e) when (!e.IsFatal())
       {
-        LogLog.Error(_declaringType, $"Cannot CreateConverterInstance of type [{converterType.FullName}], exception in call to Activator.CreateInstance", ex);
+        LogLog.Error(_declaringType, $"Cannot CreateConverterInstance of type [{converterType.FullName}], exception in call to Activator.CreateInstance", e);
       }
     }
     else

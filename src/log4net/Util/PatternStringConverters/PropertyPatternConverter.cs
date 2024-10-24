@@ -17,6 +17,7 @@
 //
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace log4net.Util.PatternStringConverters;
@@ -39,6 +40,7 @@ namespace log4net.Util.PatternStringConverters;
 /// </para>
 /// </remarks>
 /// <author>Nicko Cadell</author>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class PropertyPatternConverter : PatternConverter
 {
   /// <summary>
@@ -62,10 +64,14 @@ internal sealed class PropertyPatternConverter : PatternConverter
     CompositeProperties compositeProperties = new();
 
     if (LogicalThreadContext.Properties.GetProperties(false) is PropertiesDictionary logicalThreadProperties)
+    {
       compositeProperties.Add(logicalThreadProperties);
+    }
 
     if (ThreadContext.Properties.GetProperties(false) is PropertiesDictionary threadProperties)
+    {
       compositeProperties.Add(threadProperties);
+    }
 
     compositeProperties.Add(GlobalContext.Properties.GetReadOnlyProperties());
 

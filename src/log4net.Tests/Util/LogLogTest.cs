@@ -74,9 +74,9 @@ public class LogLogTest
   [Test]
   public void LogReceivedAdapter()
   {
-    var messages = new List<LogLog>();
+    List<LogLog> messages = new();
 
-    using var _ = new LogLog.LogReceivedAdapter(messages);
+    using LogLog.LogReceivedAdapter _ = new(messages);
     LogLog.Debug(GetType(), "Won't be recorded");
     LogLog.Error(GetType(), "This will be recorded.");
     LogLog.Error(GetType(), "This will be recorded.");
@@ -96,12 +96,14 @@ public class LogLogTest
     }
   }
 
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA5394:Do not use insecure randomness", 
+    Justification = "no cryptography")]
   private void LogReceivedAdapterThreadingCore(int seed)
   {
-    var messages = new List<LogLog>(1);
-    var syncRoot = ((ICollection)messages).SyncRoot;
-    var random = new Random(seed);
-    using var _ = new LogLog.LogReceivedAdapter(messages);
+    List<LogLog> messages = new(1);
+    object syncRoot = ((ICollection)messages).SyncRoot;
+    Random random = new(seed);
+    using LogLog.LogReceivedAdapter _ = new(messages);
     Parallel.For(0, 10, i =>
     {
       if (random.Next(10) > 8)

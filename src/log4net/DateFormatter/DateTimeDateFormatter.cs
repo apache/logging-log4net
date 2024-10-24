@@ -20,6 +20,7 @@
 using System;
 using System.Text;
 using System.Globalization;
+using log4net.Util;
 
 namespace log4net.DateFormatter;
 
@@ -55,6 +56,7 @@ public class DateTimeDateFormatter : AbsoluteTimeDateFormatter
   /// </remarks>
   protected override void FormatDateWithoutMillis(DateTime dateToFormat, StringBuilder buffer)
   {
+    buffer.EnsureNotNull();
     int day = dateToFormat.Day;
     if (day < 10)
     {

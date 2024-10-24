@@ -54,8 +54,7 @@ public sealed class RepositoryAttribute : Attribute
   /// </para>
   /// </remarks>
   public RepositoryAttribute()
-  {
-  }
+  { }
 
   /// <summary>
   /// Initialize a new instance of the <see cref="RepositoryAttribute" /> class 
@@ -67,10 +66,7 @@ public sealed class RepositoryAttribute : Attribute
   /// Initialize the attribute with the name for the assembly's repository.
   /// </para>
   /// </remarks>
-  public RepositoryAttribute(string name)
-  {
-    Name = name;
-  }
+  public RepositoryAttribute(string name) => Name = name;
 
   /// <summary>
   /// Gets or sets the name of the logging repository.
@@ -85,6 +81,7 @@ public sealed class RepositoryAttribute : Attribute
   /// same repository. They will share the logging configuration of the repository.
   /// </para>
   /// </remarks>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1019:Define accessors for attribute arguments")]
   public string? Name { get; set; }
 
   /// <summary>

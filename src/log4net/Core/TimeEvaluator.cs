@@ -24,6 +24,10 @@ namespace log4net.Core;
 /// <summary>
 /// An evaluator that triggers after specified number of seconds.
 /// </summary>
+/// <param name="interval">
+/// The time threshold in seconds to trigger after.
+/// Zero means it won't trigger at all.
+/// </param>
 /// <remarks>
 /// <para>
 /// This evaluator will trigger if the specified time period 
@@ -31,17 +35,14 @@ namespace log4net.Core;
 /// </para>
 /// </remarks>
 /// <author>Robert Sevcik</author>
-public class TimeEvaluator : ITriggeringEventEvaluator
+public class TimeEvaluator(int interval) : ITriggeringEventEvaluator
 {
-  /// <summary>
-  /// The time threshold for triggering in seconds. Zero means it won't trigger at all.
-  /// </summary>
-  private int _interval;
+  private readonly object _syncRoot = new();
 
   /// <summary>
   /// The UTC time of last check. This gets updated when the object is created and when the evaluator triggers.
   /// </summary>
-  private DateTime _lastTimeUtc;
+  private DateTime _lastTimeUtc = DateTime.UtcNow;
 
   /// <summary>
   /// The default time threshold for triggering in seconds. Zero means it won't trigger at all.
@@ -65,28 +66,6 @@ public class TimeEvaluator : ITriggeringEventEvaluator
   { }
 
   /// <summary>
-  /// Create a new evaluator using the specified time threshold in seconds.
-  /// </summary>
-  /// <param name="interval">
-  /// The time threshold in seconds to trigger after.
-  /// Zero means it won't trigger at all.
-  /// </param>
-  /// <remarks>
-  /// <para>
-  /// Create a new evaluator using the specified time threshold in seconds.
-  /// </para>
-  /// <para>
-  /// This evaluator will trigger if the specified time period 
-  /// <see cref="Interval"/> has passed since last check.
-  /// </para>
-  /// </remarks>
-  public TimeEvaluator(int interval)
-  {
-    this._interval = interval;
-    _lastTimeUtc = DateTime.UtcNow;
-  }
-
-  /// <summary>
   /// The time threshold in seconds to trigger after
   /// </summary>
   /// <value>
@@ -99,11 +78,7 @@ public class TimeEvaluator : ITriggeringEventEvaluator
   /// <see cref="Interval"/> has passed since last check.
   /// </para>
   /// </remarks>
-  public int Interval
-  {
-    get => _interval;
-    set => _interval = value;
-  }
+  public int Interval { get; set; } = interval;
 
   /// <summary>
   /// Is this <paramref name="loggingEvent"/> the triggering event?
@@ -120,22 +95,17 @@ public class TimeEvaluator : ITriggeringEventEvaluator
   /// </remarks>
   public bool IsTriggeringEvent(LoggingEvent loggingEvent)
   {
-    if (loggingEvent is null)
-    {
-      throw new ArgumentNullException(nameof(loggingEvent));
-    }
-
     // disable the evaluator if threshold is zero
-    if (_interval == 0)
+    if (Interval == 0)
     {
       return false;
     }
 
-    lock (this) // avoid triggering multiple times
+    lock (_syncRoot) // avoid triggering multiple times
     {
       TimeSpan passed = DateTime.UtcNow.Subtract(_lastTimeUtc);
 
-      if (passed.TotalSeconds > _interval)
+      if (passed.TotalSeconds > Interval)
       {
         _lastTimeUtc = DateTime.UtcNow;
         return true;

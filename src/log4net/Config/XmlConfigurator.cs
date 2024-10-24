@@ -61,7 +61,8 @@ public static class XmlConfigurator
   /// <param name="repository">The repository to configure.</param>
   public static ICollection Configure(ILoggerRepository repository)
   {
-    var configurationMessages = new List<LogLog>();
+    repository.EnsureNotNull();
+    List<LogLog> configurationMessages = [];
 
     using (new LogLog.LogReceivedAdapter(configurationMessages))
     {
@@ -81,7 +82,7 @@ public static class XmlConfigurator
     {
       LogLog.Debug(_declaringType, $"Application config file is [{SystemInfo.ConfigurationFileLocation}]");
     }
-    catch
+    catch (Exception e) when (!e.IsFatal())
     {
       // ignore error
       LogLog.Debug(_declaringType, "Application config file location unknown");
@@ -136,10 +137,8 @@ public static class XmlConfigurator
   /// </para>
   /// </remarks>
   /// <seealso cref="Log4NetConfigurationSectionHandler"/>
-  public static ICollection Configure()
-  {
-    return Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()));
-  }
+  public static ICollection Configure() 
+    => Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()));
 
   /// <summary>
   /// Configures log4net using a <c>log4net</c> element
@@ -153,7 +152,7 @@ public static class XmlConfigurator
   /// <param name="element">The element to parse.</param>
   public static ICollection Configure(XmlElement element)
   {
-    var configurationMessages = new List<LogLog>();
+    List<LogLog> configurationMessages = [];
 
     ILoggerRepository repository = LogManager.GetRepository(Assembly.GetCallingAssembly());
 
@@ -219,7 +218,7 @@ public static class XmlConfigurator
   /// </remarks>
   public static ICollection Configure(FileInfo configFile)
   {
-    var configurationMessages = new List<LogLog>();
+    List<LogLog> configurationMessages = [];
 
     using (new LogLog.LogReceivedAdapter(configurationMessages))
     {
@@ -245,7 +244,7 @@ public static class XmlConfigurator
   /// </remarks>
   public static ICollection Configure(Uri configUri)
   {
-    var configurationMessages = new List<LogLog>();
+    List<LogLog> configurationMessages = [];
 
     ILoggerRepository repository = LogManager.GetRepository(Assembly.GetCallingAssembly());
     using (new LogLog.LogReceivedAdapter(configurationMessages))
@@ -274,7 +273,7 @@ public static class XmlConfigurator
   /// </remarks>
   public static ICollection Configure(Stream configStream)
   {
-    var configurationMessages = new List<LogLog>();
+    List<LogLog> configurationMessages = [];
 
     ILoggerRepository repository = LogManager.GetRepository(Assembly.GetCallingAssembly());
     using (new LogLog.LogReceivedAdapter(configurationMessages))
@@ -299,7 +298,8 @@ public static class XmlConfigurator
   /// <param name="element">The element to parse.</param>
   public static ICollection Configure(ILoggerRepository repository, XmlElement element)
   {
-    var configurationMessages = new List<LogLog>();
+    repository.EnsureNotNull();
+    List<LogLog> configurationMessages = [];
 
     using (new LogLog.LogReceivedAdapter(configurationMessages))
     {
@@ -367,7 +367,8 @@ public static class XmlConfigurator
   /// </remarks>
   public static ICollection Configure(ILoggerRepository repository, FileInfo configFile)
   {
-    var configurationMessages = new List<LogLog>();
+    repository.EnsureNotNull();
+    List<LogLog> configurationMessages = [];
 
     using (new LogLog.LogReceivedAdapter(configurationMessages))
     {
@@ -456,7 +457,8 @@ public static class XmlConfigurator
   /// </remarks>
   public static ICollection Configure(ILoggerRepository repository, Uri configUri)
   {
-    var configurationMessages = new List<LogLog>();
+    repository.EnsureNotNull();
+    List<LogLog> configurationMessages = [];
 
     using (new LogLog.LogReceivedAdapter(configurationMessages))
     {
@@ -492,9 +494,9 @@ public static class XmlConfigurator
         {
           configRequest = WebRequest.Create(configUri);
         }
-        catch (Exception ex)
+        catch (Exception e) when (!e.IsFatal())
         {
-          LogLog.Error(_declaringType, $"Failed to create WebRequest for URI [{configUri}]", ex);
+          LogLog.Error(_declaringType, $"Failed to create WebRequest for URI [{configUri}]", e);
         }
 
         if (configRequest is not null)
@@ -504,7 +506,7 @@ public static class XmlConfigurator
           {
             configRequest.Credentials = CredentialCache.DefaultCredentials;
           }
-          catch
+          catch (Exception e) when (!e.IsFatal())
           {
             // ignore security exception
           }
@@ -513,13 +515,13 @@ public static class XmlConfigurator
             using WebResponse? response = configRequest.GetResponse();
             if (response is not null)
             {
-              using var configStream = response.GetResponseStream();
+              using Stream configStream = response.GetResponseStream();
               InternalConfigure(repository, configStream);
             }
           }
-          catch (Exception ex)
+          catch (Exception e) when (!e.IsFatal())
           {
-            LogLog.Error(_declaringType, $"Failed to request config from URI [{configUri}]", ex);
+            LogLog.Error(_declaringType, $"Failed to request config from URI [{configUri}]", e);
           }
         }
       }
@@ -544,7 +546,8 @@ public static class XmlConfigurator
   /// </remarks>
   public static ICollection Configure(ILoggerRepository repository, Stream configStream)
   {
-    var configurationMessages = new List<LogLog>();
+    repository.EnsureNotNull();
+    List<LogLog> configurationMessages = [];
 
     using (new LogLog.LogReceivedAdapter(configurationMessages))
     {
@@ -571,10 +574,12 @@ public static class XmlConfigurator
       try
       {
         // Allow the DTD to specify entity includes
-        var settings = new XmlReaderSettings();
-        // .NET 4.0 warning CS0618: 'System.Xml.XmlReaderSettings.ProhibitDtd'
-        // is obsolete: 'Use XmlReaderSettings.DtdProcessing property instead.'
-        settings.DtdProcessing = DtdProcessing.Ignore;
+        XmlReaderSettings settings = new()
+        {
+          // .NET 4.0 warning CS0618: 'System.Xml.XmlReaderSettings.ProhibitDtd'
+          // is obsolete: 'Use XmlReaderSettings.DtdProcessing property instead.'
+          DtdProcessing = DtdProcessing.Ignore
+        };
 
         // Create a reader over the input stream
         using XmlReader xmlReader = XmlReader.Create(configStream, settings);
@@ -582,9 +587,9 @@ public static class XmlConfigurator
         // load the data into the document
         doc.Load(xmlReader);
       }
-      catch (Exception ex)
+      catch (Exception e) when (!e.IsFatal())
       {
-        LogLog.Error(_declaringType, "Error while loading XML configuration", ex);
+        LogLog.Error(_declaringType, "Error while loading XML configuration", e);
 
         // The document is invalid
         doc = null;
@@ -629,13 +634,13 @@ public static class XmlConfigurator
   /// </para>
   /// <para>
   /// For more information on how to configure log4net using
-  /// a separate configuration file, see <see cref="M:Configure(FileInfo)"/>.
+  /// a separate configuration file, see <see cref="Configure(FileInfo)"/>.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Configure(FileInfo)"/>
+  /// <seealso cref="Configure(FileInfo)"/>
   public static ICollection ConfigureAndWatch(FileInfo configFile)
   {
-    var configurationMessages = new List<LogLog>();
+    List<LogLog> configurationMessages = [];
 
     ILoggerRepository repository = LogManager.GetRepository(Assembly.GetCallingAssembly());
 
@@ -668,13 +673,14 @@ public static class XmlConfigurator
   /// </para>
   /// <para>
   /// For more information on how to configure log4net using
-  /// a separate configuration file, see <see cref="M:Configure(FileInfo)"/>.
+  /// a separate configuration file, see <see cref="Configure(FileInfo)"/>.
   /// </para>
   /// </remarks>
-  /// <seealso cref="M:Configure(FileInfo)"/>
+  /// <seealso cref="Configure(FileInfo)"/>
   public static ICollection ConfigureAndWatch(ILoggerRepository repository, FileInfo configFile)
   {
-    var configurationMessages = new List<LogLog>();
+    repository.EnsureNotNull();
+    List<LogLog> configurationMessages = [];
 
     using (new LogLog.LogReceivedAdapter(configurationMessages))
     {
@@ -714,9 +720,9 @@ public static class XmlConfigurator
             return new ConfigureAndWatchHandler(repository, configFile);
           });
       }
-      catch (Exception ex)
+      catch (Exception e) when (!e.IsFatal())
       {
-        LogLog.Error(_declaringType, $"Failed to initialize configuration file watcher for file [{configFile.FullName}]", ex);
+        LogLog.Error(_declaringType, $"Failed to initialize configuration file watcher for file [{configFile.FullName}]", e);
       }
     }
   }
@@ -898,7 +904,7 @@ public static class XmlConfigurator
         // Copy the xml data into the root of a new document
         // this isolates the xml config data from the rest of
         // the document
-        XmlDocument newDoc = new XmlDocument { XmlResolver = null };
+        XmlDocument newDoc = new() { XmlResolver = null };
         XmlElement newElement = newDoc.AppendChild(newDoc.ImportNode(element, true)).EnsureIs<XmlElement>();
 
         // Pass the configurator the config element

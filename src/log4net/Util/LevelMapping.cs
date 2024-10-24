@@ -46,9 +46,9 @@ public sealed class LevelMapping : IOptionHandler
   /// </remarks>
   public void Add(LevelMappingEntry entry)
   {
-    if (entry.Level is not null)
+    if (entry.EnsureNotNull().Level is Level level)
     {
-      _entries[entry.Level] = entry;
+      _entries[level] = entry;
     }
   }
 

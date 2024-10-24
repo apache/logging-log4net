@@ -17,6 +17,7 @@
 //
 #endregion
 
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 using log4net.Core;
@@ -33,6 +34,7 @@ namespace log4net.Layout.Pattern;
 /// </remarks>
 /// <author>Daniel Cazzulino</author>
 /// <author>Nicko Cadell</author>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class AppDomainPatternConverter : PatternLayoutConverter
 {
   /// <summary>
@@ -45,8 +47,6 @@ internal sealed class AppDomainPatternConverter : PatternLayoutConverter
   /// Writes the <see cref="LoggingEvent.Domain"/> to the output <paramref name="writer"/>.
   /// </para>
   /// </remarks>
-  protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
-  {
-    writer.Write(loggingEvent.Domain);
-  }
+  protected override void Convert(TextWriter writer, LoggingEvent loggingEvent) 
+    => writer.Write(loggingEvent.Domain);
 }
