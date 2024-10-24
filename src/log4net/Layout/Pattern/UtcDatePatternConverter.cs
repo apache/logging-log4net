@@ -23,6 +23,7 @@ using System.IO;
 using log4net.Core;
 using log4net.Util;
 using log4net.DateFormatter;
+using System.Diagnostics.CodeAnalysis;
 
 namespace log4net.Layout.Pattern;
 
@@ -44,6 +45,7 @@ namespace log4net.Layout.Pattern;
 /// </remarks>
 /// <seealso cref="DatePatternConverter"/>
 /// <author>Nicko Cadell</author>
+[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class UtcDatePatternConverter : DatePatternConverter
 {
   /// <summary>
