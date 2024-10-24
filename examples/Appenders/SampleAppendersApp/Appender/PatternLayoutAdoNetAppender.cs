@@ -23,63 +23,64 @@ using log4net.Appender;
 using log4net.Layout;
 using log4net.Util;
 
-namespace SampleAppendersApp.Appender
+namespace SampleAppendersApp.Appender;
+
+/// <summary>
+/// 
+/// </summary>
+/// <example>
+/// <code>
+/// <![CDATA[
+///   <appender name="PatternLayoutAdoNetAppender" type="ConsoleApplication1.PatternLayoutAdoNetAppender, ConsoleApplication1">
+///   <connectionType value="log4net.Tests.Appender.AdoNet.Log4NetConnection, log4net.Tests" />
+///   <connectionString value="..." />
+///   <commandText value="INSERT INTO Log4Net (CustomValue1, CustomValue2) VALUES (@CustomValue1, @CustsomValue2)" />
+///   <converter>
+///    <name value="echo" />
+///     <type value="ConsoleApplication1.EchoConverter, ConsoleApplication1" />
+///   </converter>
+///   <converter>
+///     <name value="reverse" />
+///     <type value="ConsoleApplication1.ReverseConverter, ConsoleApplication1" />
+///   </converter>
+///   <patternLayoutParameter>
+///     <parameterName value="@CustomValue1"/>
+///     <dbType value="String" />
+///     <conversionPattern value="%echo{Hello World}" />
+///   </patternLayoutParameter>
+///   <patternLayoutParameter>
+///     <parameterName value="@CustomValue2"/>
+///     <dbType value="String" />
+///     <conversionPattern value="%reverse{Goodbye}" />
+///   </patternLayoutParameter>
+///   </appender>
+/// ]]>
+/// </code>
+/// </example>
+public sealed class PatternLayoutAdoNetAppender : AdoNetAppender
 {
-  /// <summary>
-  /// 
-  /// </summary>
-  /// <example>
-  /// <code>
-  /// <![CDATA[
-  ///   <appender name="PatternLayoutAdoNetAppender" type="ConsoleApplication1.PatternLayoutAdoNetAppender, ConsoleApplication1">
-  ///   <connectionType value="log4net.Tests.Appender.AdoNet.Log4NetConnection, log4net.Tests" />
-  ///   <connectionString value="..." />
-  ///   <commandText value="INSERT INTO Log4Net (CustomValue1, CustomValue2) VALUES (@CustomValue1, @CustsomValue2)" />
-  ///   <converter>
-  ///    <name value="echo" />
-  ///     <type value="ConsoleApplication1.EchoConverter, ConsoleApplication1" />
-  ///   </converter>
-  ///   <converter>
-  ///     <name value="reverse" />
-  ///     <type value="ConsoleApplication1.ReverseConverter, ConsoleApplication1" />
-  ///   </converter>
-  ///   <patternLayoutParameter>
-  ///     <parameterName value="@CustomValue1"/>
-  ///     <dbType value="String" />
-  ///     <conversionPattern value="%echo{Hello World}" />
-  ///   </patternLayoutParameter>
-  ///   <patternLayoutParameter>
-  ///     <parameterName value="@CustomValue2"/>
-  ///     <dbType value="String" />
-  ///     <conversionPattern value="%reverse{Goodbye}" />
-  ///   </patternLayoutParameter>
-  ///   </appender>
-  /// ]]>
-  /// </code>
-  /// </example>
-  public sealed class PatternLayoutAdoNetAppender : AdoNetAppender
+  private readonly ArrayList _converters = [];
+
+  /// <inheritdoc/>
+  public void AddConverter(ConverterInfo converterInfo) => _converters.Add(converterInfo);
+
+  /// <inheritdoc/>
+  public void AddPatternLayoutParameter(PatternLayoutAdoNetAppenderParameter parameter)
   {
-    private readonly ArrayList converters = [];
+    ArgumentNullException.ThrowIfNull(parameter);
+    PatternLayout patternLayout = new(parameter.ConversionPattern);
+    AddConveters(patternLayout);
+    patternLayout.ActivateOptions();
 
-    /// <inheritdoc/>
-    public void AddConverter(ConverterInfo converterInfo) => converters.Add(converterInfo);
+    parameter.Layout = new Layout2RawLayoutAdapter(patternLayout);
+    m_parameters.Add(parameter);
+  }
 
-    /// <inheritdoc/>
-    public void AddPatternLayoutParameter(PatternLayoutAdoNetAppenderParameter parameter)
+  private void AddConveters(PatternLayout patternLayout)
+  {
+    foreach (ConverterInfo conveterInfo in _converters)
     {
-      ArgumentNullException.ThrowIfNull(parameter);
-      PatternLayout patternLayout = new(parameter.ConversionPattern);
-      AddConveters(patternLayout);
-      patternLayout.ActivateOptions();
-
-      parameter.Layout = new Layout2RawLayoutAdapter(patternLayout);
-      m_parameters.Add(parameter);
-    }
-
-    private void AddConveters(PatternLayout patternLayout)
-    {
-      foreach (ConverterInfo conveterInfo in converters)
-        patternLayout.AddConverter(conveterInfo);
+      patternLayout.AddConverter(conveterInfo);
     }
   }
 }

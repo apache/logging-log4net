@@ -24,26 +24,25 @@ using log4net.Ext.Trace;
 // Configure this assembly using the 'TraceLogApp.exe.log4net' config file
 [assembly: log4net.Config.XmlConfigurator(ConfigFileExtension = "log4net", Watch = true)]
 
-namespace TraceLogApp
-{
-  /// <inheritdoc/>
-  internal static class TraceLogApp
-  {
-    // Create a logger for use in this class
-    private static readonly ITraceLog log = TraceLogManager.GetLogger(typeof(TraceLogApp))
-                                            ?? throw new ArgumentNullException(nameof(TraceLogManager.GetLogger));
+namespace TraceLogApp;
 
-    /// <summary>
-    /// The main entry point for the application.
-    /// </summary>
-    [STAThread]
-    static void Main()
+/// <inheritdoc/>
+internal static class TraceLogApp
+{
+  // Create a logger for use in this class
+  private static readonly ITraceLog _log = TraceLogManager.GetLogger(typeof(TraceLogApp))
+    ?? throw new ArgumentNullException(nameof(TraceLogManager.GetLogger));
+
+  /// <summary>
+  /// The main entry point for the application.
+  /// </summary>
+  [STAThread]
+  static void Main()
+  {
+    for (int i = 0; i < 10; i++)
     {
-      for (int i = 0; i < 10; i++)
-      {
-        log.Trace("This is a trace message " + i);
-        System.Threading.Thread.Sleep(new TimeSpan(0, 0, 2));
-      }
+      _log.Trace("This is a trace message " + i);
+      System.Threading.Thread.Sleep(new TimeSpan(0, 0, 2));
     }
   }
 }

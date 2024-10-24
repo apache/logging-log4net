@@ -21,65 +21,66 @@ using System;
 using System.IO;
 using log4net.Core;
 
-namespace SampleLayoutsApp.Layout
+namespace SampleLayoutsApp.Layout;
+
+/// <summary>
+/// The LineWrappingLayout wraps the output of a nested layout
+/// </summary>
+/// <remarks>
+/// The output of the nested layout is wrapped at
+/// <see cref="LineWidth"/>. Each of the continuation lines
+/// is prefixed with a number of spaces specified by <see cref="Indent"/>.
+/// </remarks>
+public sealed class LineWrappingLayout : ForwardingLayout
 {
-  /// <summary>
-  /// The LineWrappingLayout wraps the output of a nested layout
-  /// </summary>
-  /// <remarks>
-  /// The output of the nested layout is wrapped at
-  /// <see cref="LineWidth"/>. Each of the continuation lines
-  /// is prefixed with a number of spaces specified by <see cref="Indent"/>.
-  /// </remarks>
-  public sealed class LineWrappingLayout : ForwardingLayout
+  /// <inheritdoc/>
+  public int LineWidth { get; set; } = 76;
+
+  /// <inheritdoc/>
+  public int Indent { get; set; } = 4;
+
+  /// <inheritdoc/>
+  public override void Format(TextWriter writer, LoggingEvent loggingEvent)
   {
-    /// <inheritdoc/>
-    public int LineWidth { get; set; } = 76;
+    ArgumentNullException.ThrowIfNull(writer);
+    using StringWriter stringWriter = new();
 
-    /// <inheritdoc/>
-    public int Indent { get; set; } = 4;
+    base.Format(stringWriter, loggingEvent);
 
-    /// <inheritdoc/>
-    public override void Format(TextWriter writer, LoggingEvent loggingEvent)
+    string formattedString = stringWriter.ToString();
+
+    WrapText(writer, formattedString);
+  }
+
+  private void WrapText(TextWriter writer, string text)
+  {
+    if (text.Length <= LineWidth)
     {
-      ArgumentNullException.ThrowIfNull(writer);
-      using StringWriter stringWriter = new();
-
-      base.Format(stringWriter, loggingEvent);
-
-      string formattedString = stringWriter.ToString();
-
-      WrapText(writer, formattedString);
+      writer.Write(text);
     }
-
-    private void WrapText(TextWriter writer, string text)
+    else
     {
-      if (text.Length <= LineWidth)
-        writer.Write(text);
-      else
+      // Do the first line
+      writer.WriteLine(text.AsSpan(0, LineWidth));
+      string rest = text[LineWidth..];
+
+      string indentString = new(' ', Indent);
+      int continuationLineWidth = LineWidth - Indent;
+
+      // Do the continuation lines
+      while (true)
       {
-        // Do the first line
-        writer.WriteLine(text.AsSpan(0, LineWidth));
-        string rest = text[LineWidth..];
+        writer.Write(indentString);
 
-        string indentString = new(' ', Indent);
-        int continuationLineWidth = LineWidth - Indent;
-
-        // Do the continuation lines
-        while (true)
+        if (rest.Length > continuationLineWidth)
         {
-          writer.Write(indentString);
-
-          if (rest.Length > continuationLineWidth)
-          {
-            writer.WriteLine(rest[..continuationLineWidth]);
-            rest = rest[continuationLineWidth..];
-          }
-          else
-          {
-            writer.Write(rest);
-            break;
-          }
+          writer.WriteLine(rest[..continuationLineWidth]);
+          rest = rest[continuationLineWidth..];
+        }
+        else
+        {
+          writer.Write(rest);
+          break;
         }
       }
     }

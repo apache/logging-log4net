@@ -25,82 +25,85 @@ using log4net.Util;
 using log4net.Layout;
 using log4net.Core;
 
-namespace SampleAppendersApp.Appender
+namespace SampleAppendersApp.Appender;
+
+/// <summary>
+/// Appender that writes to a file named using a pattern
+/// </summary>
+/// <remarks>
+/// The file to write to is selected for each event using a
+/// PatternLayout specified in the File property. This allows
+/// each LoggingEvent to be written to a file based on properties
+/// of the event.
+/// The output file is opened to write each LoggingEvent as it arrives
+/// and closed afterwards.
+/// </remarks>
+public sealed class PatternFileAppender : AppenderSkeleton
 {
-  /// <summary>
-  /// Appender that writes to a file named using a pattern
-  /// </summary>
-  /// <remarks>
-  /// The file to write to is selected for each event using a
-  /// PatternLayout specified in the File property. This allows
-  /// each LoggingEvent to be written to a file based on properties
-  /// of the event.
-  /// The output file is opened to write each LoggingEvent as it arrives
-  /// and closed afterwards.
-  /// </remarks>
-  public sealed class PatternFileAppender : AppenderSkeleton
+  /// <inheritdoc/>
+  public PatternLayout? File { get; set; }
+
+  /// <inheritdoc/>
+  public Encoding Encoding { get; set; } = Encoding.Default;
+
+  /// <inheritdoc/>
+  public SecurityContext? SecurityContext { get; set; }
+
+  /// <inheritdoc/>
+  public override void ActivateOptions()
   {
-    /// <inheritdoc/>
-    public PatternLayout? File { get; set; }
+    base.ActivateOptions();
+    SecurityContext ??= SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
+  }
 
-    /// <inheritdoc/>
-    public Encoding Encoding { get; set; } = Encoding.Default;
-
-    /// <inheritdoc/>
-    public SecurityContext? SecurityContext { get; set; }
-
-    /// <inheritdoc/>
-    public override void ActivateOptions()
+  /// <inheritdoc/>
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types")]
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope")]
+  protected override void Append(LoggingEvent loggingEvent)
+  {
+    try
     {
-      base.ActivateOptions();
-      SecurityContext ??= SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
+      // Render the file name
+      using StringWriter stringWriter = new();
+      ArgumentNullException.ThrowIfNull(File);
+      File.Format(stringWriter, loggingEvent);
+      string fileName = stringWriter.ToString();
+
+      fileName = SystemInfo.ConvertToFullPath(fileName);
+
+      FileStream? fileStream = null;
+
+      ArgumentNullException.ThrowIfNull(SecurityContext);
+      using (SecurityContext.Impersonate(this))
+      {
+        // Ensure that the directory structure exists
+        string? directoryFullName = Path.GetDirectoryName(fileName);
+        ArgumentNullException.ThrowIfNull(directoryFullName);
+
+        // Only create the directory if it does not exist
+        // doing this check here resolves some permissions failures
+        if (!Directory.Exists(directoryFullName))
+        {
+          Directory.CreateDirectory(directoryFullName);
+        }
+
+        // Open file stream while impersonating
+        fileStream = new(fileName, FileMode.Append, FileAccess.Write, FileShare.Read);
+      }
+
+      if (fileStream is not null)
+      {
+        using (StreamWriter streamWriter = new(fileStream, Encoding))
+        {
+          RenderLoggingEvent(streamWriter, loggingEvent);
+        }
+
+        fileStream.Close();
+      }
     }
-
-    /// <inheritdoc/>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope")]
-    protected override void Append(LoggingEvent loggingEvent)
+    catch (Exception ex)
     {
-      try
-      {
-        // Render the file name
-        using StringWriter stringWriter = new();
-        ArgumentNullException.ThrowIfNull(File);
-        File.Format(stringWriter, loggingEvent);
-        string fileName = stringWriter.ToString();
-
-        fileName = SystemInfo.ConvertToFullPath(fileName);
-
-        FileStream? fileStream = null;
-
-        ArgumentNullException.ThrowIfNull(SecurityContext);
-        using (SecurityContext.Impersonate(this))
-        {
-          // Ensure that the directory structure exists
-          string? directoryFullName = Path.GetDirectoryName(fileName);
-          ArgumentNullException.ThrowIfNull(directoryFullName);
-
-          // Only create the directory if it does not exist
-          // doing this check here resolves some permissions failures
-          if (!Directory.Exists(directoryFullName))
-            Directory.CreateDirectory(directoryFullName);
-
-          // Open file stream while impersonating
-          fileStream = new(fileName, FileMode.Append, FileAccess.Write, FileShare.Read);
-        }
-
-        if (fileStream is not null)
-        {
-          using (StreamWriter streamWriter = new(fileStream, Encoding))
-            RenderLoggingEvent(streamWriter, loggingEvent);
-
-          fileStream.Close();
-        }
-      }
-      catch (Exception ex)
-      {
-        ErrorHandler.Error("Failed to append to file", ex);
-      }
+      ErrorHandler.Error("Failed to append to file", ex);
     }
   }
 }

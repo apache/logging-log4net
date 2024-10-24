@@ -22,45 +22,54 @@ using System.Reflection;
 
 using log4net.Core;
 
-namespace SampleAppendersApp.Appender
+namespace SampleAppendersApp.Appender;
+
+/// <summary>
+/// Forwarding Appender that introspects the <see cref="LoggingEvent.MessageObject"/>
+/// and extracts all public properties and fields and stores them in the
+/// <see cref="LoggingEvent.Properties"/>
+/// </summary>
+public sealed class MessageObjectExpanderAppender : log4net.Appender.ForwardingAppender
 {
-  /// <summary>
-  /// Forwarding Appender that introspects the <see cref="LoggingEvent.MessageObject"/>
-  /// and extracts all public properties and fields and stores them in the
-  /// <see cref="LoggingEvent.Properties"/>
-  /// </summary>
-  public sealed class MessageObjectExpanderAppender : log4net.Appender.ForwardingAppender
+  /// <inheritdoc/>
+  protected override void Append(LoggingEvent loggingEvent)
   {
-    /// <inheritdoc/>
-    protected override void Append(LoggingEvent loggingEvent)
+    ArgumentNullException.ThrowIfNull(loggingEvent);
+    object? messageObject = loggingEvent.MessageObject;
+
+    if (messageObject is not null and not string)
     {
-      ArgumentNullException.ThrowIfNull(loggingEvent);
-      object messageObject = loggingEvent.MessageObject;
+      Type messageType = messageObject.GetType();
 
-      if (messageObject != null && !(messageObject is string))
+      // Get all public instance properties
+      if (ExpandProperties)
       {
-        Type messageType = messageObject.GetType();
-
-        // Get all public instance properties
-        if (ExpandProperties)
-          foreach (PropertyInfo propertyInfo in messageType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
-            if (propertyInfo.CanRead)
-              loggingEvent.Properties[propertyInfo.Name] = propertyInfo.GetValue(messageObject, null);
-
-        // Get all public instance fields
-        if (ExpandFields)
-          foreach (FieldInfo fieldInfo in messageType.GetFields(BindingFlags.Instance | BindingFlags.Public))
-            loggingEvent.Properties[fieldInfo.Name] = fieldInfo.GetValue(messageObject);
+        foreach (PropertyInfo propertyInfo in messageType.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+        {
+          if (propertyInfo.CanRead)
+          {
+            loggingEvent.Properties[propertyInfo.Name] = propertyInfo.GetValue(messageObject, null);
+          }
+        }
       }
 
-      // Delegate to base class which will forward
-      base.Append(loggingEvent);
+      // Get all public instance fields
+      if (ExpandFields)
+      {
+        foreach (FieldInfo fieldInfo in messageType.GetFields(BindingFlags.Instance | BindingFlags.Public))
+        {
+          loggingEvent.Properties[fieldInfo.Name] = fieldInfo.GetValue(messageObject);
+        }
+      }
     }
 
-    /// <inheritdoc/>
-    public bool ExpandProperties { get; set; } = true;
-
-    /// <inheritdoc/>
-    public bool ExpandFields { get; set; } = true;
+    // Delegate to base class which will forward
+    base.Append(loggingEvent);
   }
+
+  /// <inheritdoc/>
+  public bool ExpandProperties { get; set; } = true;
+
+  /// <inheritdoc/>
+  public bool ExpandFields { get; set; } = true;
 }

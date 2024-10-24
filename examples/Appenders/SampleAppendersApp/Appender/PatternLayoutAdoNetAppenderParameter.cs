@@ -19,12 +19,11 @@
 
 using log4net.Appender;
 
-namespace SampleAppendersApp.Appender
+namespace SampleAppendersApp.Appender;
+
+/// <inheritdoc/>
+public sealed class PatternLayoutAdoNetAppenderParameter : AdoNetAppenderParameter
 {
   /// <inheritdoc/>
-  public sealed class PatternLayoutAdoNetAppenderParameter : AdoNetAppenderParameter
-  {
-    /// <inheritdoc/>
-    public string? ConversionPattern { get; set; }
-  }
+  public string? ConversionPattern { get; set; }
 }

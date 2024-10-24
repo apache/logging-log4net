@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
     <Nullable>enable</Nullable>
+    <RootNamespace>log4net.Appender</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="log4net" Version="$(Log4NetPackageVersion)" />
