@@ -138,4 +138,15 @@ public sealed class LoggingEventTest
     static void AssertIsCurrentThreadId(string name)
       => Assert.AreEqual(name, SystemInfo.CurrentThreadId.ToString(CultureInfo.InvariantCulture));
   }
+
+  [Test]
+  public void UserNameTest()
+  {
+    var expectedUserName =
+                Environment.OSVersion.VersionString.StartsWith("Microsoft Windows")?
+                  $"{Environment.UserDomainName}\\{Environment.UserName}"
+                : Environment.UserName;
+    var sut = new LoggingEvent();
+    Assert.AreEqual(expectedUserName, sut.UserName);
+  }
 }
