@@ -1,0 +1,157 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements. See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License. You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+////
+
+= Log4j Changelog Maven Plugin
+
+This project ships a Maven plugin providing access to the `ChangelogExporter` and `ChangelogReleaser` of xref:log4j-changelog.adoc[Log4j Changelog].
+
+[#dependencies]
+== Dependencies
+
+You need to have the `org.apache.logging.log4j:log4j-changelog-maven-plugin` dependency in your classpath:
+
+[source,xml,subs="+attributes"]
+----
+<plugin>
+  <groupId>org.apache.logging.log4j</groupId>
+  <artifactId>log4j-changelog-maven-plugin</artifactId>
+  <version>{project-version}</version>
+</plugin>
+----
+
+[#export]
+== Exporting changelogs
+
+_Exporting_ changelogs is the act of feeding provided changelog and release information into {freemarker-link} templates to generate certain files; e.g., release notes for the website.
+There are two types template files supported:
+
+xref:log4j-changelog.adoc#changelog-template[Changelog templates]::
+These templates are rendered with the release and changelog information of a particular release.
+These are generally used to generate release notes for a particular release.
+
+xref:log4j-changelog.adoc#index-template[Index templates]::
+These templates are rendered with the release information of all releases.
+These are generally used to generate the index page referencing to release notes of each release.
+
+See xref:#export[the Log4j Changelog documentation] for further details.
+
+You can use the `export` goal as follows:
+
+.`build > plugins` block entry of `pom.xml`
+[source,xml,subs="+attributes"]
+----
+<!-- Export AsciiDoc-formatted release notes -->
+<plugin>
+  <groupId>org.apache.logging.log4j</groupId>
+  <artifactId>log4j-changelog-maven-plugin</artifactId>
+  <version>{project-version}</version>
+  <inherited>false</inherited>
+  <configuration>
+    <indexTemplates>
+      <template>
+        <source>.index.adoc.ftl</source>
+      </template>
+    </indexTemplates>
+    <changelogTemplates>
+      <template>
+        <source>.release-notes.adoc.ftl</source>
+        <target>%v.adoc</target>
+      </template>
+    </changelogTemplates>
+  </configuration>
+  <executions>
+    <execution>
+      <id>generate-changelog</id>
+      <goals>
+        <goal>export</goal>
+      </goals>
+    </execution>
+  </executions>
+</plugin>
+----
+
+`export` goal by default runs during the `pre-site` phase and accepts the following configuration:
+
+`skip` (parameter)::
+Indicates if the execution should be skipped or not.
+It defaults to `false` and can be set using the `log4j.changelog.skip` property.
+
+`changelogDirectory` (parameter)::
+Directory containing release folders composed of changelog entry XML files.
+It defaults to `${project.basedir}/src/changelog` and can be set using the `log4j.changelog.directory` property.
+
+`outputDirectory` (parameter)::
+Directory to write rendered templates.
+It defaults to `${project.build.directory}/generated-sources/site/changelog` and can be set using the `log4j.changelog.exporter.outputDirectory` property.
+
+`indexTemplates` (parameter)::
+List of xref:#export-template-type[template]s that will be rendered with release information of all releases.
+See xref:log4j-changelog.adoc#index-template[the index template file documentation] for details.
+
+`changelogTemplates` (parameter)::
+List of xref:#export-template-type[template]s that will be rendered with release and changelog information of a particular release.
+See xref:log4j-changelog.adoc#changelog-template[the changelog template file documentation] for details.
+
+[#export-template-type]
+`Template` (type)::
+An object composed of following fields:
++
+`source` (parameter):::
+the {freemarker-link} template file
+
+`target` (parameter):::
+The output file.
+If not provided, it will be derived from the `source`: if the `source` is `.index.adoc.ftl`, the `target` will be set to `index.adoc`.
+If the value contains a `%v` (e.g., `%v.adoc`), it will be replaced with the associated release version.
+`%v` substitution is only allowed for changelog templates and will not work for index templates.
+
+`failIfNotFound` (parameter):::
+Indicates if export should fail when the source cannot be found.
+Defaults to `false`.
+
+[#release]
+== Populating a release changelog directory
+
+You can use the `release` goal wrapping xref:log4j-changelog.adoc#qa-deploy-release[`ChangelogReleaser` to populate a release changelog directory].
+An example usage is shared below.
+
+.Populate `src/changelog/2.19.0` from `src/changelog/.2.x.x`
+[source,bash]
+----
+./mvnw -N log4j-changelog:release -Dlog4j.changelog.releaseVersion=2.19.0
+----
+
+Note that above we are using `-N` (`--non-recursive`) to avoid visiting submodules, which also makes the run faster.
+
+`release` goal does not have default phase and accepts the following configuration parameters:
+
+`skip` (parameter)::
+Indicates if the execution should be skipped or not.
+It defaults to `false` and can be set using the `log4j.changelog.skip` property.
+
+`changelogDirectory` (parameter)::
+Directory containing release folders composed of changelog entry XML files.
+It defaults to `${project.basedir}/src/changelog` and can be set using the `log4j.changelog.directory` property.
+
+`releaseVersion` (parameter)::
+The version to be released.
+It can be set using the `log4j.changelog.releaseVersion` property.
+
+`versionPattern` (parameter)::
+The regular expression pattern for parsing versions.
+The pattern must provide the following named groups: `major`, `minor`, and `patch`.
+It defaults to `^(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*(-[a-zA-Z][0-9a-zA-Z-]*)?)$` and can be set using the `log4j.changelog.versionPattern` property.

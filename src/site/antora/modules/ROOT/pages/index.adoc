@@ -1,0 +1,52 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements. See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License. You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+////
+
+= Log4j Tools
+
+Tooling **internally** used by {logging-services-url}/log4j/2.x/[the Apache Log4j project] infrastructure:
+
+* xref:log4j-changelog.adoc[]
+* xref:log4j-changelog-maven-plugin.adoc[]
+* xref:log4j-docgen.adoc[]
+* xref:log4j-docgen-maven-plugin.adoc[]
+* xref:log4j-docgen-asciidoctor-extension.adoc[]
+
+[#maven-bom]
+== Maven Bill of Materials (BOM)
+
+To keep your {project-name} module versions aligned, a https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#bill-of-materials-bom-poms[Maven Bill of Materials (BOM) POM] is provided for your convenience.
+
+To use this with Maven, add the dependency listed below to your `pom.xml` file.
+Note that the `<dependencyManagement>` nesting and the `<scope>import</scope>` instruction.
+This will _import_ all modules bundled with the associated Log4j release to your `dependencyManagement`.
+As a result, you don't have to specify versions of the imported modules (`log4j-changelog`, `log4j-docgen`, etc.) while using them as a `<dependency>`.
+
+.`pom.xml` snippet importing `log4j-tools-bom`
+[source,subs="+attributes"]
+----
+<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-tools-bom</artifactId>
+      <version>{project-version}</version>
+      <scope>import</scope>
+      <type>pom</type>
+    </dependency>
+  </dependencies>
+</dependencyManagement>
+----

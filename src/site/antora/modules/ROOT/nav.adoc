@@ -1,0 +1,28 @@
+////
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+////
+
+* Components
+** xref:log4j-changelog.adoc[]
+** xref:log4j-changelog-maven-plugin.adoc[]
+** xref:log4j-docgen.adoc[]
+** xref:log4j-docgen-maven-plugin.adoc[]
+** xref:log4j-docgen-asciidoctor-extension.adoc[]
+* xref:development.adoc[]
+* xref:release-notes.adoc[]
+* {logging-services-url}/download.html[Download]
+* {logging-services-url}/support.html[Support]
+* {logging-services-url}/security.html[Security]
