@@ -240,6 +240,7 @@ src/GeneratedAssemblyInfo.cs
 *.orig
 *.old
 *.swp
+node
 build-tools
 buildreports
 vs_buildtools.exe
