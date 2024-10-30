@@ -146,11 +146,11 @@ public sealed class LoggingEventTest
   [Test]
   public void UserNameTest()
   {
-    var expectedUserName =
+    string expectedUserName =
                 Environment.OSVersion.VersionString.StartsWith("Microsoft Windows")?
                   $"{Environment.UserDomainName}\\{Environment.UserName}"
                 : Environment.UserName;
-    var sut = new LoggingEvent();
-    Assert.AreEqual(expectedUserName, sut.UserName);
+    LoggingEvent sut = new();
+    Assert.That(sut.UserName, Is.EqualTo(expectedUserName));
   }
 }
