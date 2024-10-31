@@ -38,7 +38,7 @@ public class AppenderCollectionTest
   [Test]
   public void ToArrayTest()
   {
-    AppenderCollection appenderCollection = new();
+    AppenderCollection appenderCollection = [];
     IAppender appender = new MemoryAppender();
     appenderCollection.Add(appender);
 
@@ -51,7 +51,7 @@ public class AppenderCollectionTest
   [Test]
   public void ReadOnlyToArrayTest()
   {
-    AppenderCollection appenderCollection = new();
+    AppenderCollection appenderCollection = [];
     IAppender appender = new MemoryAppender();
     appenderCollection.Add(appender);
     AppenderCollection readonlyAppenderCollection = AppenderCollection.ReadOnly(appenderCollection);

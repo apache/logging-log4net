@@ -67,7 +67,7 @@ public class FixingTest
     // Arrange
     // Act
     var allFlags = Enum.GetValues(typeof(FixFlags)).Cast<FixFlags>()
-      .Except(new[] { FixFlags.None })
+      .Except([FixFlags.None])
       .ToArray();
     // Assert
     foreach (var flag in allFlags)
@@ -88,7 +88,7 @@ public class FixingTest
       loggingEventData.LoggerName,
       loggingEventData.Level,
       loggingEventData.Message,
-      new Exception("This is the exception"));
+      new("This is the exception"));
 
     AssertExpectedLoggingEvent(loggingEvent, loggingEventData);
 
@@ -107,7 +107,7 @@ public class FixingTest
       loggingEventData.LoggerName,
       loggingEventData.Level,
       loggingEventData.Message,
-      new Exception("This is the exception"));
+      new("This is the exception"));
 
     AssertExpectedLoggingEvent(loggingEvent, loggingEventData);
 
@@ -128,7 +128,7 @@ public class FixingTest
       loggingEventData.LoggerName,
       loggingEventData.Level,
       loggingEventData.Message,
-      new Exception("This is the exception"));
+      new("This is the exception"));
 
     AssertExpectedLoggingEvent(loggingEvent, loggingEventData);
 
@@ -145,7 +145,7 @@ public class FixingTest
       Level = Level.Warn,
       Message = "Logging event works",
       Domain = "ReallySimpleApp",
-      LocationInfo = new LocationInfo(typeof(FixingTest).Name, "Main", "Class1.cs", "29"), //Completely arbitary
+      LocationInfo = new(nameof(FixingTest), "Main", "Class1.cs", "29"), //Completely arbitary
       ThreadName = Thread.CurrentThread.Name,
       TimeStampUtc = DateTime.UtcNow.Date,
       ExceptionString = "Exception occured here",
@@ -161,7 +161,7 @@ public class FixingTest
     Assert.That(loggingEventData.Identity, Is.Null, "Identity is incorrect");
     Assert.That(loggingEventData.Level, Is.EqualTo(Level.Warn), "Level is incorrect");
     Assert.That(loggingEvent.LocationInformation, Is.Not.Null);
-    Assert.That(loggingEvent.LocationInformation!.MethodName, Is.EqualTo("get_LocationInformation"), "Location Info is incorrect");
+    Assert.That(loggingEvent.LocationInformation.MethodName, Is.EqualTo("get_LocationInformation"), "Location Info is incorrect");
     Assert.That(loggingEventData.LoggerName, Is.EqualTo("log4net.Tests.Core.FixingTest"), "LoggerName is incorrect");
     Assert.That(loggingEvent.Repository, Is.EqualTo(LogManager.GetRepository(TestRepository)), "Repository is incorrect");
     Assert.That(loggingEventData.ThreadName, Is.EqualTo(Thread.CurrentThread.Name), "ThreadName is incorrect");

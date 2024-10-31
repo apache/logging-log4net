@@ -32,6 +32,7 @@ using log4net.Repository.Hierarchy;
 using log4net.Util;
 using NUnit.Framework;
 using System.Globalization;
+using System.Linq;
 
 namespace log4net.Tests.Appender;
 
@@ -448,15 +449,15 @@ public sealed class RollingFileAppenderTest
   private void LogMessage(string sMessageToLog)
   {
     Assert.That(_caRoot, Is.Not.Null);
-    Assert.That(_messagesLogged++, Is.EqualTo(_caRoot!.Counter));
+    Assert.That(_messagesLogged++, Is.EqualTo(_caRoot.Counter));
     Assert.That(_root, Is.Not.Null);
-    _root!.Log(Level.Debug, sMessageToLog, null);
+    _root.Log(Level.Debug, sMessageToLog, null);
     Assert.That(_messagesLogged, Is.EqualTo(_caRoot.Counter));
   }
 
   /// <summary>
   /// Runs through all table entries, logging messages.  Before each message is logged,
-  /// pre-conditions are checked to ensure the expected files exist and they are the
+  /// pre-conditions are checked to ensure the expected files exists, and they are the
   /// expected size.  After logging, verifies the same.
   /// </summary>
   /// <param name="sBaseFileName"></param>
@@ -464,10 +465,8 @@ public sealed class RollingFileAppenderTest
   /// <param name="sMessageToLog"></param>
   private void RollFromTableEntries(string sBaseFileName, RollConditions[] entries, string sMessageToLog)
   {
-    for (int i = 0; i < entries.Length; i++)
+    foreach (RollConditions entry in entries)
     {
-      RollConditions entry = entries[i];
-
       VerifyPreConditions(sBaseFileName, entry);
       LogMessage(sMessageToLog);
       VerifyPostConditions(sBaseFileName, entry);
@@ -524,23 +523,10 @@ public sealed class RollingFileAppenderTest
   /// <param name="sBackupGroup"></param>
   /// <param name="iBackupFileLength"></param>
   /// <returns></returns>
-  private static List<RollFileEntry> MakeBackupFileEntriesFromBackupGroup(string sBackupGroup, int iBackupFileLength)
-  {
-    string[] sFiles = sBackupGroup.Split(' ');
-
-    List<RollFileEntry> result = [];
-
-    for (int i = 0; i < sFiles.Length; i++)
-    {
-      // Weed out any whitespace entries from the array
-      if (sFiles[i].Trim().Length > 0)
-      {
-        result.Add(new RollFileEntry(sFiles[i], iBackupFileLength));
-      }
-    }
-
-    return result;
-  }
+  private static List<RollFileEntry> MakeBackupFileEntriesFromBackupGroup(string sBackupGroup, int iBackupFileLength) 
+    => sBackupGroup.Split(' ').Where(file => file.Trim().Length > 0)
+      .Select(file => new RollFileEntry(file, iBackupFileLength))
+      .ToList();
 
   /// <summary>
   /// Finds the iGroup group in the string (comma separated groups)
@@ -611,7 +597,7 @@ public sealed class RollingFileAppenderTest
 
   /// <summary>
   /// The stats are used to keep track of progress while we are algorithmically
-  /// generating a table of pre/post condition tests for file rolling.
+  /// generating a table of pre- / post-condition tests for file rolling.
   /// </summary>
   /// <param name="sTestMessage"></param>
   /// <returns></returns>
@@ -656,7 +642,7 @@ public sealed class RollingFileAppenderTest
   }
 
   /// <summary>
-  /// Generates the pre and post condition arrays from an array of backup files and the
+  /// Generates the pre- and post-condition arrays from an array of backup files and the
   /// current file / next file.
   /// </summary>
   private static RollConditions BuildTableEntry(string sBackupFiles,
@@ -735,7 +721,7 @@ public sealed class RollingFileAppenderTest
   /// <summary>
   /// This routine takes a list of backup file names and a message that will be logged
   /// repeatedly, and generates a collection of objects containing pre-condition and 
-  /// post-condition information.  This pre/post information shows the names and expected 
+  /// post-condition information.  This pre- / post-information shows the names and expected 
   /// file sizes for all files just before and just after a message is logged.
   /// </summary>
   /// <param name="sTestMessage">A message to log repeatedly</param>
@@ -880,7 +866,7 @@ public sealed class RollingFileAppenderTest
     // Oldest to newest when reading in a group left-to-right, so 1 2 3 means 1 is the
     // oldest, and 3 is the newest
     //
-    string sBackupInfo = ", , , , ";
+    const string sBackupInfo = ", , , , ";
 
     //
     // Count Up
@@ -896,7 +882,7 @@ public sealed class RollingFileAppenderTest
     // Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500 
     // bytes for current file as messages are logged.
     //
-    int iMessagesToLog = 30;
+    const int iMessagesToLog = 30;
 
     VerifyRolling(MakeNumericTestEntries(GetTestMessage(), sBackupInfo, iMessagesToLog));
   }
@@ -914,7 +900,7 @@ public sealed class RollingFileAppenderTest
     // Oldest to newest when reading in a group left-to-right, so 1 2 3 means 1 is the
     // oldest, and 3 is the newest
     //
-    string sBackupInfo = "1, 1 2, 1 2 3, 1 2 3, 1 2 3";
+    const string sBackupInfo = "1, 1 2, 1 2 3, 1 2 3, 1 2 3";
 
     //
     // Count Up
@@ -925,7 +911,7 @@ public sealed class RollingFileAppenderTest
     // Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500 
     // bytes for current file as messages are logged.
     //
-    int iMessagesToLog = 30;
+    const int iMessagesToLog = 30;
 
     VerifyRolling(MakeNumericTestEntries(GetTestMessage(), sBackupInfo, iMessagesToLog));
   }
@@ -943,7 +929,7 @@ public sealed class RollingFileAppenderTest
     // Oldest to newest when reading in a group left-to-right, so 1 2 3 means 1 is the
     // oldest, and 3 is the newest
     //
-    string sBackupInfo = "1, 1 2, 1 2 3, 1 2 3 4, 1 2 3 4 5";
+    const string sBackupInfo = "1, 1 2, 1 2 3, 1 2 3 4, 1 2 3 4 5";
 
     //
     // Count Down
@@ -959,7 +945,7 @@ public sealed class RollingFileAppenderTest
     // Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500 
     // bytes for current file as messages are logged.
     //
-    int iMessagesToLog = 30;
+    const int iMessagesToLog = 30;
 
     VerifyRolling(MakeNumericTestEntries(GetTestMessage(), sBackupInfo, iMessagesToLog));
   }
@@ -976,7 +962,7 @@ public sealed class RollingFileAppenderTest
     // Oldest to newest when reading in a group left-to-right, so 1 2 3 means 1 is the
     // oldest, and 3 is the newest
     //
-    string sBackupInfo = ", , , , ";
+    const string sBackupInfo = ", , , , ";
 
     //
     // Count Up
@@ -992,7 +978,7 @@ public sealed class RollingFileAppenderTest
     // Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500 
     // bytes for current file as messages are logged.
     //
-    int iMessagesToLog = 30;
+    const int iMessagesToLog = 30;
 
     VerifyRolling(MakeNumericTestEntries(GetTestMessage(), sBackupInfo, iMessagesToLog));
   }
@@ -1037,7 +1023,7 @@ public sealed class RollingFileAppenderTest
   [Test]
   public void TestInitializeRollBackups1()
   {
-    string sBaseFile = "LogFile.log";
+    const string sBaseFile = "LogFile.log";
     List<string> arrFiles =
     [
       "junk1",
@@ -1047,7 +1033,7 @@ public sealed class RollingFileAppenderTest
       "junk.log.2",
     ];
 
-    int iExpectedCurSizeRollBackups = 0;
+    const int iExpectedCurSizeRollBackups = 0;
     VerifyInitializeRollBackupsFromBaseFile(sBaseFile, arrFiles, iExpectedCurSizeRollBackups);
   }
 
@@ -1059,7 +1045,7 @@ public sealed class RollingFileAppenderTest
   {
     List<string> alFiles = MakeTestDataFromString(sBaseFile, "0,1,2");
 
-    int iExpectedCurSizeRollBackups = 2;
+    const int iExpectedCurSizeRollBackups = 2;
     VerifyInitializeRollBackupsFromBaseFile(sBaseFile, alFiles, iExpectedCurSizeRollBackups);
   }
 
@@ -1070,7 +1056,7 @@ public sealed class RollingFileAppenderTest
   public void TestInitializeCountUpFixed()
   {
     List<string> alFiles = MakeTestDataFromString("3,4,5");
-    int iExpectedValue = 5;
+    const int iExpectedValue = 5;
     InitializeAndVerifyExpectedValue(alFiles, FileName, CreateRollingFileAppender("3,0,1"), iExpectedValue);
   }
 
@@ -1081,7 +1067,7 @@ public sealed class RollingFileAppenderTest
   public void TestInitializeCountUpFixed2()
   {
     List<string> alFiles = MakeTestDataFromString("0,3");
-    int iExpectedValue = 3;
+    const int iExpectedValue = 3;
     InitializeAndVerifyExpectedValue(alFiles, FileName, CreateRollingFileAppender("3,0,1"), iExpectedValue);
   }
 
@@ -1093,7 +1079,7 @@ public sealed class RollingFileAppenderTest
   public void TestInitializeCountUpZeroBackups()
   {
     List<string> alFiles = MakeTestDataFromString("0,3");
-    int iExpectedValue = 0;
+    const int iExpectedValue = 0;
     InitializeAndVerifyExpectedValue(alFiles, FileName, CreateRollingFileAppender("0,0,1"), iExpectedValue);
   }
 
@@ -1105,7 +1091,7 @@ public sealed class RollingFileAppenderTest
   public void TestInitializeCountDownZeroBackups()
   {
     List<string> alFiles = MakeTestDataFromString("0,3");
-    int iExpectedValue = 0;
+    const int iExpectedValue = 0;
     InitializeAndVerifyExpectedValue(alFiles, FileName, CreateRollingFileAppender("0,0,-1"), iExpectedValue);
   }
 
@@ -1188,7 +1174,7 @@ public sealed class RollingFileAppenderTest
   }
 
   /// <summary>
-  /// Tests the count down case, with infinite max backups, to see that
+  /// Tests the count-down case, with infinite max backups, to see that
   /// initialization of the rolling file appender results in the expected value
   /// </summary>
   /// <param name="alFiles"></param>
@@ -1353,8 +1339,8 @@ public sealed class RollingFileAppenderTest
 
   private static void AssertFileEquals(string filename, string contents)
   {
-    string logcont = File.ReadAllText(filename);
-    Assert.That(logcont, Is.EqualTo(contents), "Log contents is not what is expected");
+    string logContent = File.ReadAllText(filename);
+    Assert.That(logContent, Is.EqualTo(contents), "Log contents is not what is expected");
     File.Delete(filename);
   }
 
@@ -1365,7 +1351,7 @@ public sealed class RollingFileAppenderTest
   public void TestLogOutput()
   {
     Utils.InconclusiveOnMono();
-    string filename = "test_simple.log";
+    const string filename = "test_simple.log";
     SilentErrorHandler sh = new();
     ILogger log = CreateLogger(filename, new FileAppender.ExclusiveLock(), sh);
     log.Log(GetType(), Level.Info, "This is a message", null);
@@ -1373,7 +1359,7 @@ public sealed class RollingFileAppenderTest
     DestroyLogger();
 
     AssertFileEquals(filename,
-        "This is a message" + Environment.NewLine + "This is a message 2" + Environment.NewLine);
+      "This is a message" + Environment.NewLine + "This is a message 2" + Environment.NewLine);
     Assert.That(sh.Message, Is.EqualTo(""), "Unexpected error message");
   }
 
@@ -1383,10 +1369,10 @@ public sealed class RollingFileAppenderTest
   [Test]
   public void TestExclusiveLockFails()
   {
-    string filename = "test_exclusive_lock_fails.log";
+    const string filename = "test_exclusive_lock_fails.log";
 
     FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
-    fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
+    fs.Write("Test"u8.ToArray(), 0, 4);
 
     SilentErrorHandler sh = new();
     ILogger log = CreateLogger(filename, new FileAppender.ExclusiveLock(), sh);
@@ -1406,10 +1392,10 @@ public sealed class RollingFileAppenderTest
   public void TestExclusiveLockRecovers()
   {
     Utils.InconclusiveOnMono();
-    string filename = "test_exclusive_lock_recovers.log";
+    const string filename = "test_exclusive_lock_recovers.log";
 
     FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
-    fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
+    fs.Write("Test"u8.ToArray(), 0, 4);
 
     SilentErrorHandler sh = new();
     ILogger log = CreateLogger(filename, new FileAppender.ExclusiveLock(), sh);
@@ -1430,7 +1416,7 @@ public sealed class RollingFileAppenderTest
   public void TestExclusiveLockLocks()
   {
     Utils.InconclusiveOnMono();
-    string filename = "test_exclusive_lock_locks.log";
+    const string filename = "test_exclusive_lock_locks.log";
     bool locked = false;
 
     SilentErrorHandler sh = new();
@@ -1440,7 +1426,7 @@ public sealed class RollingFileAppenderTest
     try
     {
       FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
-      fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
+      fs.Write("Test"u8.ToArray(), 0, 4);
       fs.Close();
     }
     catch (IOException e1)
@@ -1467,10 +1453,10 @@ public sealed class RollingFileAppenderTest
   public void TestMinimalLockFails()
   {
     Utils.InconclusiveOnMono();
-    string filename = "test_minimal_lock_fails.log";
+    const string filename = "test_minimal_lock_fails.log";
 
     FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
-    fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
+    fs.Write("Test"u8.ToArray(), 0, 4);
 
     SilentErrorHandler sh = new();
     ILogger log = CreateLogger(filename, new FileAppender.MinimalLock(), sh);
@@ -1491,10 +1477,10 @@ public sealed class RollingFileAppenderTest
   public void TestMinimalLockRecovers()
   {
     Utils.InconclusiveOnMono();
-    string filename = "test_minimal_lock_recovers.log";
+    const string filename = "test_minimal_lock_recovers.log";
 
     FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
-    fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
+    fs.Write("Test"u8.ToArray(), 0, 4);
 
     SilentErrorHandler sh = new();
     ILogger log = CreateLogger(filename, new FileAppender.MinimalLock(), sh);
@@ -1515,7 +1501,7 @@ public sealed class RollingFileAppenderTest
   public void TestMinimalLockUnlocks()
   {
     Utils.InconclusiveOnMono();
-    string filename = "test_minimal_lock_unlocks.log";
+    const string filename = "test_minimal_lock_unlocks.log";
     bool locked;
 
     SilentErrorHandler sh = new();
@@ -1544,10 +1530,10 @@ public sealed class RollingFileAppenderTest
   public void TestInterProcessLockFails()
   {
     Utils.InconclusiveOnMono();
-    string filename = "test_interprocess_lock_fails.log";
+    const string filename = "test_interprocess_lock_fails.log";
 
     FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
-    fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
+    fs.Write("Test"u8.ToArray(), 0, 4);
 
     SilentErrorHandler sh = new();
     ILogger log = CreateLogger(filename, new FileAppender.InterProcessLock(), sh);
@@ -1568,10 +1554,10 @@ public sealed class RollingFileAppenderTest
   public void TestInterProcessLockRecovers()
   {
     Utils.InconclusiveOnMono();
-    string filename = "test_interprocess_lock_recovers.log";
+    const string filename = "test_interprocess_lock_recovers.log";
 
     FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
-    fs.Write(Encoding.ASCII.GetBytes("Test"), 0, 4);
+    fs.Write("Test"u8.ToArray(), 0, 4);
 
     SilentErrorHandler sh = new();
     ILogger log = CreateLogger(filename, new FileAppender.InterProcessLock(), sh);
@@ -1592,7 +1578,7 @@ public sealed class RollingFileAppenderTest
   public void TestInterProcessLockUnlocks()
   {
     Utils.InconclusiveOnMono();
-    string filename = "test_interprocess_lock_unlocks.log";
+    const string filename = "test_interprocess_lock_unlocks.log";
     bool locked;
 
     SilentErrorHandler sh = new();
@@ -1642,7 +1628,7 @@ public sealed class RollingFileAppenderTest
   [Test]
   public void TestDefaultLockingModel()
   {
-    string filename = "test_default.log";
+    const string filename = "test_default.log";
 
     SilentErrorHandler sh = new();
     ILogger log = CreateLogger(filename, null, sh);
@@ -1695,19 +1681,9 @@ public sealed class RollingFileAppenderTest
   /// <param name="sFileName">Name of file to combine with numbers when generating counted file names</param>
   /// <param name="sFileNumbers">Comma separated list of numbers for counted file names</param>
   /// <returns></returns>
-  private static List<string> MakeTestDataFromString(string sFileName, string sFileNumbers)
-  {
-    List<string> alFiles = [];
-
-    string[] sNumbers = sFileNumbers.Split(',');
-    foreach (string sNumber in sNumbers)
-    {
-      int iValue = int.Parse(sNumber.Trim());
-      alFiles.Add(MakeFileName(sFileName, iValue));
-    }
-
-    return alFiles;
-  }
+  private static List<string> MakeTestDataFromString(string sFileName, string sFileNumbers) 
+    => sFileNumbers.Split(',').Select(sNumber => int.Parse(sNumber.Trim()))
+      .Select(iValue => MakeFileName(sFileName, iValue)).ToList();
 
   /// <summary>
   /// Tests that the current backup index is correctly detected
@@ -1729,8 +1705,8 @@ public sealed class RollingFileAppenderTest
   /// </summary>
   private static void VerifyInitializeRollBackups(int iBackups, int iMaxSizeRollBackups)
   {
-    string sBaseFile = "LogFile.log";
-    var arrFiles = new List<string> { "junk1" };
+    const string sBaseFile = "LogFile.log";
+    List<string> arrFiles = ["junk1"];
     for (int i = 0; i < iBackups; i++)
     {
       arrFiles.Add(MakeFileName(sBaseFile, i));
@@ -1749,14 +1725,9 @@ public sealed class RollingFileAppenderTest
     // 1 = file.log
     // 2 = file.log.1
     // 3 = file.log.2
-    if (iBackups is 0 or 1)
-    {
-      Assert.That(rfa.CurrentSizeRollBackups, Is.EqualTo(0));
-    }
-    else
-    {
-      Assert.That(rfa.CurrentSizeRollBackups, Is.EqualTo(Math.Min(iBackups - 1, iMaxSizeRollBackups)));
-    }
+    Assert.That(rfa.CurrentSizeRollBackups, iBackups is 0 or 1 
+      ? Is.EqualTo(0) 
+      : Is.EqualTo(Math.Min(iBackups - 1, iMaxSizeRollBackups)));
   }
 
   /// <summary>
@@ -1784,11 +1755,7 @@ public sealed class RollingFileAppenderTest
   /// when it has not also been initialized with ActivateOptions().
   /// </summary>
   [Test]
-  public void TestCreateCloseNoActivateOptions()
-  {
-    var appender = new RollingFileAppender();
-    appender.Close();
-  }
+  public void TestCreateCloseNoActivateOptions() => new RollingFileAppender().Close();
 
   //
   // Helper functions to dig into the appender

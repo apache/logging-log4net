@@ -56,13 +56,13 @@ public class PatternStringTest : MarshalByRefObject
   [Test]
   public void TestAppSettingPathConverter()
   {
-    string configurationFileContent = @"
-<configuration>
-  <appSettings>
-    <add key=""TestKey"" value = ""TestValue"" />
-  </appSettings>
-</configuration>
-";
+    string configurationFileContent = """
+      <configuration>
+        <appSettings>
+          <add key="TestKey" value = "TestValue" />
+        </appSettings>
+      </configuration>
+    """;
     string? configurationFileName = null;
     AppDomain? appDomain = null;
     try

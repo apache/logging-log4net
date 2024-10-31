@@ -38,25 +38,26 @@ public class FilterTest
   public void FilterConfigurationTest()
   {
     var log4NetConfig = new XmlDocument();
-    log4NetConfig.LoadXml(@"
-            <log4net>
-            <appender name=""MemoryAppender"" type=""log4net.Appender.MemoryAppender, log4net"">
-                <filter type=""log4net.Tests.Filter.MultiplePropertyFilter, log4net.Tests"">
-                    <condition>
-                        <key value=""ABC"" />
-                        <stringToMatch value=""123"" />
-                    </condition>
-                    <condition>
-                        <key value=""DEF"" />
-                        <stringToMatch value=""456"" />
-                    </condition>
-                </filter>
-            </appender>
-            <root>
-                <level value=""ALL"" />
-                <appender-ref ref=""MemoryAppender"" />
-            </root>
-            </log4net>");
+    log4NetConfig.LoadXml("""
+      <log4net>
+      <appender name="MemoryAppender" type="log4net.Appender.MemoryAppender, log4net">
+          <filter type="log4net.Tests.Filter.MultiplePropertyFilter, log4net.Tests">
+              <condition>
+                  <key value="ABC" />
+                  <stringToMatch value="123" />
+              </condition>
+              <condition>
+                  <key value="DEF" />
+                  <stringToMatch value="456" />
+              </condition>
+          </filter>
+      </appender>
+      <root>
+          <level value="ALL" />
+          <appender-ref ref="MemoryAppender" />
+      </root>
+      </log4net>
+    """);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
@@ -70,7 +71,7 @@ public class FilterTest
     MultiplePropertyFilter? multiplePropertyFilter =
         ((AppenderSkeleton)appender!).FilterHead as MultiplePropertyFilter;
     Assert.That(multiplePropertyFilter, Is.Not.Null);
-    MultiplePropertyFilter.Condition[] conditions = multiplePropertyFilter!.GetConditions();
+    MultiplePropertyFilter.Condition[] conditions = multiplePropertyFilter.GetConditions();
     Assert.That(conditions, Has.Length.EqualTo(2));
     Assert.That(conditions[0].Key, Is.EqualTo("ABC"));
     Assert.That(conditions[0].StringToMatch, Is.EqualTo("123"));
@@ -79,9 +80,9 @@ public class FilterTest
   }
 }
 
-public class MultiplePropertyFilter : FilterSkeleton
+internal sealed class MultiplePropertyFilter : FilterSkeleton
 {
-  private readonly List<Condition> _conditions = new();
+  private readonly List<Condition> _conditions = [];
 
   public override FilterDecision Decide(LoggingEvent loggingEvent) => FilterDecision.Accept;
 
@@ -89,7 +90,7 @@ public class MultiplePropertyFilter : FilterSkeleton
 
   public void AddCondition(Condition condition) => _conditions.Add(condition);
 
-  public class Condition
+  internal sealed class Condition
   {
     public string? Key { get; set; }
     public string? StringToMatch { get; set; }
