@@ -743,15 +743,15 @@ public class LoggingEvent : ILog4NetSerializable
 
   private string? TryGetCurrentUserName()
   {
-    if (_platformDoesNotSupportWindowsIdentity)
-    {
-      // we've already received one PlatformNotSupportedException or null from TryReadWindowsIdentityUserName
-      // and it's highly unlikely that will change
-      return Environment.UserName;
-    }
-
     try
     {
+      if (_platformDoesNotSupportWindowsIdentity)
+      {
+        // we've already received one PlatformNotSupportedException or null from TryReadWindowsIdentityUserName
+        // and it's highly unlikely that will change
+        return Environment.UserName;
+      }
+    
       if (_cachedWindowsIdentityUserName is not null)
       {
         return _cachedWindowsIdentityUserName;
@@ -788,14 +788,16 @@ public class LoggingEvent : ILog4NetSerializable
   private string? _cachedWindowsIdentityUserName;
   
   /// <returns>
-  ///  On Windows: UserName in case of success, empty string for null
+  ///  On Windows: UserName in case of success, empty string for unexpected null in identity or Name
   ///  <para/>
   ///  On other OSes: null
   /// </returns>
   /// <exception cref="PlatformNotSupportedException">Thrown on non-Windows platforms on net462</exception>
   private static string? TryReadWindowsIdentityUserName()
   {
-#if !NET462_OR_GREATER
+    // According to docs RuntimeInformation.IsOSPlatform is supported from netstandard1.1,
+    // but it's erroring in runtime on < net471
+#if NET471_OR_GREATER || NETSTANDARD2_0_OR_GREATER
     if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
     {
       return null;
