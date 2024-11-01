@@ -31,6 +31,10 @@ jobs:
       matrix:
         os: [ macos-latest, ubuntu-latest, windows-latest ]
 
+    env:
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
     steps:
 
       - name: Checkout repository
@@ -47,11 +51,15 @@ jobs:
         with:
           node-version: 20
 
-      - name: Build and test
-        env:
-          DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
-          DOTNET_CLIE_TELEMETRY_OPTOUT: 1
+      - name: Install build dependencies
         run: |
           npm update -g npm --no-progress
           npm install --no-progress
-          npm test
+
+      - name: Build
+        run: |
+            npm run build
+      
+      - name: Test
+        run: |
+            npm test
