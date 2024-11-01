@@ -51,6 +51,11 @@ jobs:
         with:
           node-version: 20
 
+      - name: Setup non-windows build
+        if: matrix.os != 'windows-latest'
+        run: |
+          echo "DOTNET_CORE=1" >> $GITHUB_ENV
+      
       - name: Install build dependencies
         run: |
           npm update -g npm --no-progress
