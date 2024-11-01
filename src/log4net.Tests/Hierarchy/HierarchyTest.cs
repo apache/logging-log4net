@@ -37,20 +37,22 @@ public class HierarchyTest
   {
     // LOG4NET-53: Allow repository properties to be set in the config file
     XmlDocument log4NetConfig = new();
-    log4NetConfig.LoadXml(@"
+    log4NetConfig.LoadXml(
+      """
       <log4net>
         <property>
-          <key value=""two-plus-two"" />
-          <value value=""4"" />
+          <key value="two-plus-two" />
+          <value value="4" />
         </property>
-        <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
-          <layout type=""log4net.Layout.SimpleLayout"" />
+        <appender name="StringAppender" type="log4net.Tests.Appender.StringAppender, log4net.Tests">
+          <layout type="log4net.Layout.SimpleLayout" />
         </appender>
         <root>
-          <level value=""ALL"" />
-          <appender-ref ref=""StringAppender"" />
+          <level value="ALL" />
+          <appender-ref ref="StringAppender" />
         </root>
-      </log4net>");
+      </log4net>
+      """);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
@@ -98,19 +100,21 @@ public class HierarchyTest
   public void LoggerNameCanConsistOfASingleDot()
   {
     XmlDocument log4NetConfig = new();
-    log4NetConfig.LoadXml(@"
+    log4NetConfig.LoadXml(
+      """
       <log4net>
-        <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
-          <layout type=""log4net.Layout.SimpleLayout"" />
+        <appender name="StringAppender" type="log4net.Tests.Appender.StringAppender, log4net.Tests">
+          <layout type="log4net.Layout.SimpleLayout" />
         </appender>
         <root>
-          <level value=""ALL"" />
-          <appender-ref ref=""StringAppender"" />
+          <level value="ALL" />
+          <appender-ref ref="StringAppender" />
         </root>
-        <logger name=""."">
-          <level value=""WARN"" />
+        <logger name=".">
+          <level value="WARN" />
         </logger>
-      </log4net>");
+      </log4net>
+      """);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
@@ -120,19 +124,21 @@ public class HierarchyTest
   public void LoggerNameCanConsistOfASingleNonDot()
   {
     XmlDocument log4NetConfig = new();
-    log4NetConfig.LoadXml(@"
+    log4NetConfig.LoadXml(
+      """
       <log4net>
-        <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
-          <layout type=""log4net.Layout.SimpleLayout"" />
+        <appender name="StringAppender" type="log4net.Tests.Appender.StringAppender, log4net.Tests">
+          <layout type="log4net.Layout.SimpleLayout" />
         </appender>
         <root>
-          <level value=""ALL"" />
-          <appender-ref ref=""StringAppender"" />
+          <level value="ALL" />
+          <appender-ref ref="StringAppender" />
         </root>
-        <logger name=""L"">
-          <level value=""WARN"" />
+        <logger name="L">
+          <level value="WARN" />
         </logger>
-      </log4net>");
+      </log4net>
+      """);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
@@ -142,19 +148,21 @@ public class HierarchyTest
   public void LoggerNameCanContainSequenceOfDots()
   {
     XmlDocument log4NetConfig = new();
-    log4NetConfig.LoadXml(@"
+    log4NetConfig.LoadXml(
+      """
       <log4net>
-        <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
-          <layout type=""log4net.Layout.SimpleLayout"" />
+        <appender name="StringAppender" type="log4net.Tests.Appender.StringAppender, log4net.Tests">
+          <layout type="log4net.Layout.SimpleLayout" />
         </appender>
         <root>
-          <level value=""ALL"" />
-          <appender-ref ref=""StringAppender"" />
+          <level value="ALL" />
+          <appender-ref ref="StringAppender" />
         </root>
-        <logger name=""L..M"">
-          <level value=""WARN"" />
+        <logger name="L..M">
+          <level value="WARN" />
         </logger>
-      </log4net>");
+      </log4net>
+      """);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
@@ -168,16 +176,18 @@ public class HierarchyTest
   public void CreateNestedLoggersInReverseOrder()
   {
     XmlDocument log4NetConfig = new();
-    log4NetConfig.LoadXml(@"
+    log4NetConfig.LoadXml(
+      """
       <log4net>
-        <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
-          <layout type=""log4net.Layout.SimpleLayout"" />
+        <appender name="StringAppender" type="log4net.Tests.Appender.StringAppender, log4net.Tests">
+          <layout type="log4net.Layout.SimpleLayout" />
         </appender>
         <root>
-          <level value=""ALL"" />
-          <appender-ref ref=""StringAppender"" />
+          <level value="ALL" />
+          <appender-ref ref="StringAppender" />
         </root>
-      </log4net>");
+      </log4net>
+      """);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
@@ -193,16 +203,18 @@ public class HierarchyTest
   public void CreateChildLoggersMultiThreaded()
   {
     XmlDocument log4NetConfig = new();
-    log4NetConfig.LoadXml(@"
+    log4NetConfig.LoadXml(
+      """
       <log4net>
-        <appender name=""StringAppender"" type=""log4net.Tests.Appender.StringAppender, log4net.Tests"">
-          <layout type=""log4net.Layout.SimpleLayout"" />
+        <appender name="StringAppender" type="log4net.Tests.Appender.StringAppender, log4net.Tests">
+          <layout type="log4net.Layout.SimpleLayout" />
         </appender>
         <root>
-          <level value=""ALL"" />
-          <appender-ref ref=""StringAppender"" />
+          <level value="ALL" />
+          <appender-ref ref="StringAppender" />
         </root>
-      </log4net>");
+      </log4net>
+      """);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);

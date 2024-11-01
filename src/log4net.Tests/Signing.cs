@@ -33,6 +33,6 @@ public class Signing
     // Act
     var result = asm.GetName().GetPublicKey();
     Assert.That(result, Is.Not.Null);
-    Assert.That(result!.Length, Is.Not.EqualTo(0));
+    Assert.That(result, Is.Not.Empty);
   }
 }

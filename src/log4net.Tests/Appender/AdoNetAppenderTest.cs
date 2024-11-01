@@ -53,7 +53,7 @@ public class AdoNetAppenderTest
     ILog log = LogManager.GetLogger(rep.Name, "NoBufferingTest");
     log.Debug("Message");
     Assert.That(Log4NetCommand.MostRecentInstance, Is.Not.Null);
-    Assert.That(Log4NetCommand.MostRecentInstance!.ExecuteNonQueryCount, Is.EqualTo(1));
+    Assert.That(Log4NetCommand.MostRecentInstance.ExecuteNonQueryCount, Is.EqualTo(1));
   }
 
   [Test]
@@ -61,7 +61,7 @@ public class AdoNetAppenderTest
   {
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
 
-    int bufferSize = 5;
+    const int bufferSize = 5;
 
     AdoNetAppender adoNetAppender = new()
     {
@@ -80,69 +80,71 @@ public class AdoNetAppenderTest
     }
     log.Debug("Message");
     Assert.That(Log4NetCommand.MostRecentInstance, Is.Not.Null);
-    Assert.That(Log4NetCommand.MostRecentInstance!.ExecuteNonQueryCount, Is.EqualTo(bufferSize + 1));
+    Assert.That(Log4NetCommand.MostRecentInstance.ExecuteNonQueryCount, Is.EqualTo(bufferSize + 1));
   }
 
   [Test]
   public void WebsiteExample()
   {
     XmlDocument log4NetConfig = new();
-    log4NetConfig.LoadXml(@"
-                <log4net>
-                <appender name=""AdoNetAppender"" type=""log4net.Appender.AdoNetAppender"">
-                    <bufferSize value=""-1"" />
-                    <connectionType value=""log4net.Tests.Appender.AdoNet.Log4NetConnection"" />
-                    <connectionString value=""data source=[database server];initial catalog=[database name];integrated security=false;persist security info=True;User ID=[user];Password=[password]"" />
-                    <commandText value=""INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message],[Exception]) VALUES (@log_date, @thread, @log_level, @logger, @message, @exception)"" />
-                    <parameter>
-                        <parameterName value=""@log_date"" />
-                        <dbType value=""DateTime"" />
-                        <layout type=""log4net.Layout.RawTimeStampLayout"" />
-                    </parameter>
-                    <parameter>
-                        <parameterName value=""@thread"" />
-                        <dbType value=""String"" />
-                        <size value=""255"" />
-                        <layout type=""log4net.Layout.PatternLayout"">
-                            <conversionPattern value=""%thread"" />
-                        </layout>
-                    </parameter>
-                    <parameter>
-                        <parameterName value=""@log_level"" />
-                        <dbType value=""String"" />
-                        <size value=""50"" />
-                        <layout type=""log4net.Layout.PatternLayout"">
-                            <conversionPattern value=""%level"" />
-                        </layout>
-                    </parameter>
-                    <parameter>
-                        <parameterName value=""@logger"" />
-                        <dbType value=""String"" />
-                        <size value=""255"" />
-                        <layout type=""log4net.Layout.PatternLayout"">
-                            <conversionPattern value=""%logger"" />
-                        </layout>
-                    </parameter>
-                    <parameter>
-                        <parameterName value=""@message"" />
-                        <dbType value=""String"" />
-                        <size value=""4000"" />
-                        <layout type=""log4net.Layout.PatternLayout"">
-                            <conversionPattern value=""%message"" />
-                        </layout>
-                    </parameter>
-                    <parameter>
-                        <parameterName value=""@exception"" />
-                        <dbType value=""String"" />
-                        <size value=""2000"" />
-                        <layout type=""log4net.Layout.ExceptionLayout"" />
-                    </parameter>
-                </appender>
-                <root>
-                    <level value=""ALL"" />
-                    <appender-ref ref=""AdoNetAppender"" />
-                  </root>  
-                </log4net>");
+    log4NetConfig.LoadXml(
+      """
+      <log4net>
+      <appender name="AdoNetAppender" type="log4net.Appender.AdoNetAppender">
+          <bufferSize value="-1" />
+          <connectionType value="log4net.Tests.Appender.AdoNet.Log4NetConnection" />
+          <connectionString value="data source=[database server];initial catalog=[database name];integrated security=false;persist security info=True;User ID=[user];Password=[password]" />
+          <commandText value="INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message],[Exception]) VALUES (@log_date, @thread, @log_level, @logger, @message, @exception)" />
+          <parameter>
+              <parameterName value="@log_date" />
+              <dbType value="DateTime" />
+              <layout type="log4net.Layout.RawTimeStampLayout" />
+          </parameter>
+          <parameter>
+              <parameterName value="@thread" />
+              <dbType value="String" />
+              <size value="255" />
+              <layout type="log4net.Layout.PatternLayout">
+                  <conversionPattern value="%thread" />
+              </layout>
+          </parameter>
+          <parameter>
+              <parameterName value="@log_level" />
+              <dbType value="String" />
+              <size value="50" />
+              <layout type="log4net.Layout.PatternLayout">
+                  <conversionPattern value="%level" />
+              </layout>
+          </parameter>
+          <parameter>
+              <parameterName value="@logger" />
+              <dbType value="String" />
+              <size value="255" />
+              <layout type="log4net.Layout.PatternLayout">
+                  <conversionPattern value="%logger" />
+              </layout>
+          </parameter>
+          <parameter>
+              <parameterName value="@message" />
+              <dbType value="String" />
+              <size value="4000" />
+              <layout type="log4net.Layout.PatternLayout">
+                  <conversionPattern value="%message" />
+              </layout>
+          </parameter>
+          <parameter>
+              <parameterName value="@exception" />
+              <dbType value="String" />
+              <size value="2000" />
+              <layout type="log4net.Layout.ExceptionLayout" />
+          </parameter>
+      </appender>
+      <root>
+          <level value="ALL" />
+          <appender-ref ref="AdoNetAppender" />
+        </root>  
+      </log4net>
+      """);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
@@ -173,62 +175,64 @@ public class AdoNetAppenderTest
   public void BufferingWebsiteExample()
   {
     XmlDocument log4NetConfig = new();
-    log4NetConfig.LoadXml(@"
-                <log4net>
-                <appender name=""AdoNetAppender"" type=""log4net.Appender.AdoNetAppender"">
-                    <bufferSize value=""2"" />
-                    <connectionType value=""log4net.Tests.Appender.AdoNet.Log4NetConnection"" />
-                    <connectionString value=""data source=[database server];initial catalog=[database name];integrated security=false;persist security info=True;User ID=[user];Password=[password]"" />
-                    <commandText value=""INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message],[Exception]) VALUES (@log_date, @thread, @log_level, @logger, @message, @exception)"" />
-                    <parameter>
-                        <parameterName value=""@log_date"" />
-                        <dbType value=""DateTime"" />
-                        <layout type=""log4net.Layout.RawTimeStampLayout"" />
-                    </parameter>
-                    <parameter>
-                        <parameterName value=""@thread"" />
-                        <dbType value=""String"" />
-                        <size value=""255"" />
-                        <layout type=""log4net.Layout.PatternLayout"">
-                            <conversionPattern value=""%thread"" />
-                        </layout>
-                    </parameter>
-                    <parameter>
-                        <parameterName value=""@log_level"" />
-                        <dbType value=""String"" />
-                        <size value=""50"" />
-                        <layout type=""log4net.Layout.PatternLayout"">
-                            <conversionPattern value=""%level"" />
-                        </layout>
-                    </parameter>
-                    <parameter>
-                        <parameterName value=""@logger"" />
-                        <dbType value=""String"" />
-                        <size value=""255"" />
-                        <layout type=""log4net.Layout.PatternLayout"">
-                            <conversionPattern value=""%logger"" />
-                        </layout>
-                    </parameter>
-                    <parameter>
-                        <parameterName value=""@message"" />
-                        <dbType value=""String"" />
-                        <size value=""4000"" />
-                        <layout type=""log4net.Layout.PatternLayout"">
-                            <conversionPattern value=""%message"" />
-                        </layout>
-                    </parameter>
-                    <parameter>
-                        <parameterName value=""@exception"" />
-                        <dbType value=""String"" />
-                        <size value=""2000"" />
-                        <layout type=""log4net.Layout.ExceptionLayout"" />
-                    </parameter>
-                </appender>
-                <root>
-                    <level value=""ALL"" />
-                    <appender-ref ref=""AdoNetAppender"" />
-                  </root>  
-                </log4net>");
+    log4NetConfig.LoadXml(
+      """
+      <log4net>
+      <appender name="AdoNetAppender" type="log4net.Appender.AdoNetAppender">
+          <bufferSize value="2" />
+          <connectionType value="log4net.Tests.Appender.AdoNet.Log4NetConnection" />
+          <connectionString value="data source=[database server];initial catalog=[database name];integrated security=false;persist security info=True;User ID=[user];Password=[password]" />
+          <commandText value="INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message],[Exception]) VALUES (@log_date, @thread, @log_level, @logger, @message, @exception)" />
+          <parameter>
+              <parameterName value="@log_date" />
+              <dbType value="DateTime" />
+              <layout type="log4net.Layout.RawTimeStampLayout" />
+          </parameter>
+          <parameter>
+              <parameterName value="@thread" />
+              <dbType value="String" />
+              <size value="255" />
+              <layout type="log4net.Layout.PatternLayout">
+                  <conversionPattern value="%thread" />
+              </layout>
+          </parameter>
+          <parameter>
+              <parameterName value="@log_level" />
+              <dbType value="String" />
+              <size value="50" />
+              <layout type="log4net.Layout.PatternLayout">
+                  <conversionPattern value="%level" />
+              </layout>
+          </parameter>
+          <parameter>
+              <parameterName value="@logger" />
+              <dbType value="String" />
+              <size value="255" />
+              <layout type="log4net.Layout.PatternLayout">
+                  <conversionPattern value="%logger" />
+              </layout>
+          </parameter>
+          <parameter>
+              <parameterName value="@message" />
+              <dbType value="String" />
+              <size value="4000" />
+              <layout type="log4net.Layout.PatternLayout">
+                  <conversionPattern value="%message" />
+              </layout>
+          </parameter>
+          <parameter>
+              <parameterName value="@exception" />
+              <dbType value="String" />
+              <size value="2000" />
+              <layout type="log4net.Layout.ExceptionLayout" />
+          </parameter>
+      </appender>
+      <root>
+          <level value="ALL" />
+          <appender-ref ref="AdoNetAppender" />
+        </root>  
+      </log4net>
+      """);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
@@ -242,7 +246,7 @@ public class AdoNetAppenderTest
     IDbCommand? command = Log4NetCommand.MostRecentInstance;
     Assert.That(command, Is.Not.Null);
 
-    Assert.That(command!.CommandText,
+    Assert.That(command.CommandText,
      Is.EqualTo("INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message],[Exception]) VALUES (@log_date, @thread, @log_level, @logger, @message, @exception)"));
 
     Assert.That(command.Parameters, Has.Count.EqualTo(6));
@@ -264,27 +268,29 @@ public class AdoNetAppenderTest
   public void NullPropertyXmlConfig()
   {
     XmlDocument log4NetConfig = new();
-    log4NetConfig.LoadXml(@"
-                <log4net>
-                <appender name=""AdoNetAppender"" type=""log4net.Appender.AdoNetAppender"">
-                    <bufferSize value=""-1"" />
-                    <connectionType value=""log4net.Tests.Appender.AdoNet.Log4NetConnection"" />
-                    <connectionString value=""data source=[database server];initial catalog=[database name];integrated security=false;persist security info=True;User ID=[user];Password=[password]"" />
-                    <commandText value=""INSERT INTO Log ([ProductId]) VALUES (@productId)"" />
-                    <parameter>
-                        <parameterName value=""@productId"" />
-                        <dbType value=""String"" />
-                        <size value=""50"" />
-                        <layout type="" log4net.Layout.RawPropertyLayout"">
-                           <key value=""ProductId"" />
-                        </layout>
-                    </parameter>                    
-                </appender>
-                <root>
-                    <level value=""ALL"" />
-                    <appender-ref ref=""AdoNetAppender"" />
-                  </root>  
-                </log4net>");
+    log4NetConfig.LoadXml(
+      """
+      <log4net>
+      <appender name="AdoNetAppender" type="log4net.Appender.AdoNetAppender">
+          <bufferSize value="-1" />
+          <connectionType value="log4net.Tests.Appender.AdoNet.Log4NetConnection" />
+          <connectionString value="data source=[database server];initial catalog=[database name];integrated security=false;persist security info=True;User ID=[user];Password=[password]" />
+          <commandText value="INSERT INTO Log ([ProductId]) VALUES (@productId)" />
+          <parameter>
+              <parameterName value="@productId" />
+              <dbType value="String" />
+              <size value="50" />
+              <layout type=" log4net.Layout.RawPropertyLayout">
+                 <key value="ProductId" />
+              </layout>
+          </parameter>                    
+      </appender>
+      <root>
+          <level value="ALL" />
+          <appender-ref ref="AdoNetAppender" />
+        </root>  
+      </log4net>
+      """);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
@@ -294,7 +300,7 @@ public class AdoNetAppenderTest
     IDbCommand? command = Log4NetCommand.MostRecentInstance;
     Assert.That(command, Is.Not.Null);
 
-    IDbDataParameter param = (IDbDataParameter)command!.Parameters["@productId"];
+    IDbDataParameter param = (IDbDataParameter)command.Parameters["@productId"];
     Assert.That(param.Value, Is.Not.EqualTo(SystemInfo.NullText));
     Assert.That(param.Value, Is.EqualTo(DBNull.Value));
   }
@@ -331,7 +337,7 @@ public class AdoNetAppenderTest
     IDbCommand? command = Log4NetCommand.MostRecentInstance;
     Assert.That(command, Is.Not.Null);
 
-    IDbDataParameter param = (IDbDataParameter)command!.Parameters["@productId"];
+    IDbDataParameter param = (IDbDataParameter)command.Parameters["@productId"];
     Assert.That(param.Value, Is.Not.EqualTo(SystemInfo.NullText));
     Assert.That(param.Value, Is.EqualTo(DBNull.Value));
   }

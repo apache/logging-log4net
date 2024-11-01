@@ -72,27 +72,28 @@ public sealed class FileAppenderTest
     try
     {
       XmlDocument log4NetConfig = new();
-      log4NetConfig.LoadXml("""
-  <log4net>
-    <appender name="ConsoleAppender" type="log4net.Appender.ConsoleAppender">
-      <layout type="log4net.Layout.PatternLayout">
-        <conversionPattern value="%date{ABSOLUTE} [%logger] %level - %message%newline%exception"/>
-      </layout>
-    </appender>
-    <appender name="GeneralFileAppender" type="log4net.Appender.FileAppender">
-      <file type="log4net.Util.PatternString" value="Logs\file_%property{LogName}_%date{yyyyMMddHHmmss}.Log"/>
-      <appendToFile value="true"/>
-      <lockingModel type="log4net.Appender.FileAppender+MinimalLock"/>
-      <layout type="log4net.Layout.PatternLayout">
-        <conversionPattern value="%date{ABSOLUTE} [%logger] %level - %message%newline%exception"/>
-      </layout>
-    </appender>
-    <root>
-      <level value="INFO"/>
-      <appender-ref ref="GeneralFileAppender"/>
-    </root>
-  </log4net>
-""");
+      log4NetConfig.LoadXml(
+        """
+        <log4net>
+          <appender name="ConsoleAppender" type="log4net.Appender.ConsoleAppender">
+            <layout type="log4net.Layout.PatternLayout">
+              <conversionPattern value="%date{ABSOLUTE} [%logger] %level - %message%newline%exception"/>
+            </layout>
+          </appender>
+          <appender name="GeneralFileAppender" type="log4net.Appender.FileAppender">
+            <file type="log4net.Util.PatternString" value="Logs\file_%property{LogName}_%date{yyyyMMddHHmmss}.Log"/>
+            <appendToFile value="true"/>
+            <lockingModel type="log4net.Appender.FileAppender+MinimalLock"/>
+            <layout type="log4net.Layout.PatternLayout">
+              <conversionPattern value="%date{ABSOLUTE} [%logger] %level - %message%newline%exception"/>
+            </layout>
+          </appender>
+          <root>
+            <level value="INFO"/>
+            <appender-ref ref="GeneralFileAppender"/>
+          </root>
+        </log4net>
+        """);
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
       XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
     }
@@ -119,27 +120,28 @@ public sealed class FileAppenderTest
     }
 
     XmlDocument log4NetConfig = new();
-    log4NetConfig.LoadXml("""
-  <log4net>
-    <appender name="ConsoleAppender" type="log4net.Appender.ConsoleAppender">
-      <layout type="log4net.Layout.PatternLayout">
-        <conversionPattern value="%date{ABSOLUTE} [%logger] %level - %message%newline%exception"/>
-      </layout>
-    </appender>
-    <appender name="GeneralFileAppender" type="log4net.Appender.FileAppender">
-      <file type="log4net.Util.PatternString" value="Logs\file_%property{LogName}_%date{yyyyMMddHHmmss}.Log"/>
-      <appendToFile value="true"/>
-      <lockingModel type="log4net.Appender.FileAppender+MinimalLock"/>
-      <layout type="log4net.Layout.PatternLayout">
-        <conversionPattern value="%date{ABSOLUTE} [%logger] %level - %message%newline%exception"/>
-      </layout>
-    </appender>
-    <root>
-      <level value="INFO"/>
-      <appender-ref ref="GeneralFileAppender"/>
-    </root>
-  </log4net>
-""");
+    log4NetConfig.LoadXml(
+      """
+      <log4net>
+        <appender name="ConsoleAppender" type="log4net.Appender.ConsoleAppender">
+          <layout type="log4net.Layout.PatternLayout">
+            <conversionPattern value="%date{ABSOLUTE} [%logger] %level - %message%newline%exception"/>
+          </layout>
+        </appender>
+        <appender name="GeneralFileAppender" type="log4net.Appender.FileAppender">
+          <file type="log4net.Util.PatternString" value="Logs\file_%property{LogName}_%date{yyyyMMddHHmmss}.Log"/>
+          <appendToFile value="true"/>
+          <lockingModel type="log4net.Appender.FileAppender+MinimalLock"/>
+          <layout type="log4net.Layout.PatternLayout">
+            <conversionPattern value="%date{ABSOLUTE} [%logger] %level - %message%newline%exception"/>
+          </layout>
+        </appender>
+        <root>
+          <level value="INFO"/>
+          <appender-ref ref="GeneralFileAppender"/>
+        </root>
+      </log4net>
+      """);
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     // latest possible moment to set GlobalContext property used in filename
     GlobalContext.Properties["LogName"] = "custom_log_issue_193";
