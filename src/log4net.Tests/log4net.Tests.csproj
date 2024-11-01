@@ -15,6 +15,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\log4net\Diagnostics\CodeAnalysis\CallerArgumentExpressionAttribute.cs" Link="Diagnostics\CodeAnalysis\CallerArgumentExpressionAttribute.cs" />
+    <Compile Include="..\log4net\Diagnostics\CodeAnalysis\IsExternalInit.cs" Link="Diagnostics\CodeAnalysis\IsExternalInit.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\log4net\log4net.csproj" />

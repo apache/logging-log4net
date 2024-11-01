@@ -37,7 +37,8 @@ public class HierarchyTest
   {
     // LOG4NET-53: Allow repository properties to be set in the config file
     XmlDocument log4NetConfig = new();
-    log4NetConfig.LoadXml("""
+    log4NetConfig.LoadXml(
+      """
       <log4net>
         <property>
           <key value="two-plus-two" />
@@ -51,7 +52,7 @@ public class HierarchyTest
           <appender-ref ref="StringAppender" />
         </root>
       </log4net>
-    """);
+      """);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
@@ -99,7 +100,8 @@ public class HierarchyTest
   public void LoggerNameCanConsistOfASingleDot()
   {
     XmlDocument log4NetConfig = new();
-    log4NetConfig.LoadXml("""
+    log4NetConfig.LoadXml(
+      """
       <log4net>
         <appender name="StringAppender" type="log4net.Tests.Appender.StringAppender, log4net.Tests">
           <layout type="log4net.Layout.SimpleLayout" />
@@ -112,7 +114,7 @@ public class HierarchyTest
           <level value="WARN" />
         </logger>
       </log4net>
-    """);
+      """);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
@@ -122,7 +124,8 @@ public class HierarchyTest
   public void LoggerNameCanConsistOfASingleNonDot()
   {
     XmlDocument log4NetConfig = new();
-    log4NetConfig.LoadXml("""
+    log4NetConfig.LoadXml(
+      """
       <log4net>
         <appender name="StringAppender" type="log4net.Tests.Appender.StringAppender, log4net.Tests">
           <layout type="log4net.Layout.SimpleLayout" />
@@ -135,7 +138,7 @@ public class HierarchyTest
           <level value="WARN" />
         </logger>
       </log4net>
-    """);
+      """);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
@@ -145,7 +148,8 @@ public class HierarchyTest
   public void LoggerNameCanContainSequenceOfDots()
   {
     XmlDocument log4NetConfig = new();
-    log4NetConfig.LoadXml("""
+    log4NetConfig.LoadXml(
+      """
       <log4net>
         <appender name="StringAppender" type="log4net.Tests.Appender.StringAppender, log4net.Tests">
           <layout type="log4net.Layout.SimpleLayout" />
@@ -158,7 +162,7 @@ public class HierarchyTest
           <level value="WARN" />
         </logger>
       </log4net>
-    """);
+      """);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
@@ -172,7 +176,8 @@ public class HierarchyTest
   public void CreateNestedLoggersInReverseOrder()
   {
     XmlDocument log4NetConfig = new();
-    log4NetConfig.LoadXml("""
+    log4NetConfig.LoadXml(
+      """
       <log4net>
         <appender name="StringAppender" type="log4net.Tests.Appender.StringAppender, log4net.Tests">
           <layout type="log4net.Layout.SimpleLayout" />
@@ -182,7 +187,7 @@ public class HierarchyTest
           <appender-ref ref="StringAppender" />
         </root>
       </log4net>
-    """);
+      """);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
@@ -198,7 +203,8 @@ public class HierarchyTest
   public void CreateChildLoggersMultiThreaded()
   {
     XmlDocument log4NetConfig = new();
-    log4NetConfig.LoadXml("""
+    log4NetConfig.LoadXml(
+      """
       <log4net>
         <appender name="StringAppender" type="log4net.Tests.Appender.StringAppender, log4net.Tests">
           <layout type="log4net.Layout.SimpleLayout" />
@@ -208,7 +214,7 @@ public class HierarchyTest
           <appender-ref ref="StringAppender" />
         </root>
       </log4net>
-    """);
+      """);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);

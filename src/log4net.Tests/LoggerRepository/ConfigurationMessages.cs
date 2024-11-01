@@ -43,7 +43,8 @@ public class ConfigurationMessages
       LogLog.InternalDebugging = true;
 
       XmlDocument log4NetConfig = new();
-      log4NetConfig.LoadXml("""
+      log4NetConfig.LoadXml(
+        """
         <log4net>
           <appender name="LogLogAppender" type="log4net.Tests.LoggerRepository.LogLogAppender, log4net.Tests">
             <layout type="log4net.Layout.SimpleLayout" />
@@ -57,7 +58,7 @@ public class ConfigurationMessages
             <appender-ref ref="MemoryAppender" />
           </root>  
         </log4net>
-      """);
+        """);
 
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
       rep.ConfigurationChanged += new LoggerRepositoryConfigurationChangedEventHandler(rep_ConfigurationChanged);

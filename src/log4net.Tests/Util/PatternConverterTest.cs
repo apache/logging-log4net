@@ -40,7 +40,8 @@ public class PatternConverterTest
   public void PatternLayoutConverterProperties()
   {
     XmlDocument log4NetConfig = new();
-    log4NetConfig.LoadXml("""
+    log4NetConfig.LoadXml(
+      """
       <log4net>
         <appender name="StringAppender" type="log4net.Tests.Appender.StringAppender, log4net.Tests">
           <layout type="log4net.Layout.PatternLayout">
@@ -64,7 +65,7 @@ public class PatternConverterTest
           <appender-ref ref="StringAppender" />
         </root>  
       </log4net>
-    """);
+      """);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
@@ -88,7 +89,8 @@ public class PatternConverterTest
   public void PatternConverterProperties()
   {
     XmlDocument log4NetConfig = new();
-    log4NetConfig.LoadXml("""
+    log4NetConfig.LoadXml(
+      """
       <log4net>
         <appender name="PatternStringAppender" type="log4net.Tests.Util.PatternStringAppender, log4net.Tests">
           <layout type="log4net.Layout.SimpleLayout" />
@@ -113,7 +115,7 @@ public class PatternConverterTest
           <appender-ref ref="PatternStringAppender" />
         </root>  
       </log4net>
-    """);
+      """);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);

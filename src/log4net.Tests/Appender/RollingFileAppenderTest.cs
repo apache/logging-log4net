@@ -144,19 +144,19 @@ public sealed class RollingFileAppenderTest
   /// Finds the number of files that match the base file name,
   /// and matches the result against an expected count
   /// </summary>
-  private static void VerifyFileCount(int iExpectedCount, bool preserveLogFileNameExtension = false)
+  private static void VerifyFileCount(int expectedCount, bool preserveLogFileNameExtension = false)
   {
-    List<string> alFiles = GetExistingFiles(FileName, preserveLogFileNameExtension);
-    Assert.That(alFiles, Is.Not.Null);
-    Assert.That(alFiles, Has.Count.EqualTo(iExpectedCount));
+    List<string> files = GetExistingFiles(FileName, preserveLogFileNameExtension);
+    Assert.That(files, Is.Not.Null);
+    Assert.That(files, Has.Count.EqualTo(expectedCount));
   }
 
   /// <summary>
   /// Creates a file with the given number, and the shared base file name
   /// </summary>
-  private static void CreateFile(int iFileNumber)
+  private static void CreateFile(int fileNumber)
   {
-    FileInfo fileInfo = new(MakeFileName(FileName, iFileNumber));
+    FileInfo fileInfo = new(MakeFileName(FileName, fileNumber));
 
     FileStream? fileStream = null;
     try
@@ -242,14 +242,14 @@ public sealed class RollingFileAppenderTest
   /// </summary>
   private static void DeleteTestFiles()
   {
-    List<string> alFiles = GetExistingFiles(FileName);
-    alFiles.AddRange(GetExistingFiles(FileName, true));
-    foreach (string sFile in alFiles)
+    List<string> files = GetExistingFiles(FileName);
+    files.AddRange(GetExistingFiles(FileName, true));
+    foreach (string file in files)
     {
       try
       {
-        Debug.WriteLine("Deleting test file " + sFile);
-        File.Delete(sFile);
+        Debug.WriteLine("Deleting test file " + file);
+        File.Delete(file);
       }
       catch (Exception e) when (e is not null)
       {
@@ -262,17 +262,17 @@ public sealed class RollingFileAppenderTest
   /// Generates a file name associated with the count, using
   /// the base file name.
   /// </summary>
-  /// <param name="sBaseFile"></param>
-  /// <param name="iFileCount"></param>
+  /// <param name="baseFile"></param>
+  /// <param name="fileCount"></param>
   /// <returns></returns>
-  private static string MakeFileName(string sBaseFile, int iFileCount)
+  private static string MakeFileName(string baseFile, int fileCount)
   {
-    if (0 == iFileCount)
+    if (0 == fileCount)
     {
-      return sBaseFile;
+      return baseFile;
     }
 
-    return sBaseFile + "." + iFileCount;
+    return baseFile + "." + fileCount;
   }
 
   /// <summary>
@@ -320,90 +320,51 @@ public sealed class RollingFileAppenderTest
   /// Used for test purposes, a table of these objects can be used to identify
   /// any existing files and their expected length.
   /// </summary>
-  public sealed class RollFileEntry
-  {
-    /// <summary>
-    /// Default constructor
-    /// </summary>
-    public RollFileEntry()
-    { }
-
-    /// <summary>
-    /// Constructor used when the fileInfo and expected length are known
-    /// </summary>
-    public RollFileEntry(string fileName, long fileLength)
-    {
-      FileName = fileName;
-      FileLength = fileLength;
-    }
-
-    /// <summary>
-    /// Gets the name of the file
-    /// </summary>
-    public string? FileName { get; }
-
-    /// <summary>
-    /// The expected length of the file
-    /// </summary>
-    public long FileLength { get; }
-  }
+  private record RollFileEntry(string FileName, long FileLength);
 
   /// <summary>
   /// Used for table-driven testing.  This class holds information that can be used
   /// for testing of file rolling.
   /// </summary>
-  /// <param name="preLogFileEntries">
+  /// <param name="PreLogFileEntries">
   /// A table of entries showing files that should exist and their expected sizes
   /// before logging is called
   /// </param>
-  /// <param name="postLogFileEntries">
+  /// <param name="PostLogFileEntries">
   /// A table of entries showing files that should exist and their expected sizes
   /// after a message is logged
   /// </param>
-  public sealed class RollConditions(IList<RollFileEntry> preLogFileEntries, IList<RollFileEntry> postLogFileEntries)
-  {
-    /// <summary>
-    /// A table of entries showing files that should exist and their expected sizes
-    /// before logging is called
-    /// </summary>
-    public IList<RollFileEntry> PreLogFileEntries => preLogFileEntries;
+  private record RollConditions(IList<RollFileEntry> PreLogFileEntries, IList<RollFileEntry> PostLogFileEntries);
 
-    /// <summary>
-    /// A table of entries showing files that should exist and their expected sizes
-    /// after a message is logged
-    /// </summary>
-    public IList<RollFileEntry> PostLogFileEntries => postLogFileEntries;
-  }
-
-  private static void VerifyExistenceAndRemoveFromList(List<string> alExisting,
-    string sFileName, FileInfo file, RollFileEntry entry)
+  private static void VerifyExistenceAndRemoveFromList(List<string> existing,
+    string fileName, FileInfo file, RollFileEntry entry)
   {
-    Assert.That(alExisting, Does.Contain(sFileName), $"filename {sFileName} not found in test directory");
+    Assert.That(existing, Does.Contain(fileName), $"filename {fileName} not found in test directory");
     Assert.That(file.Length, Is.EqualTo(entry.FileLength), "file length mismatch");
     // Remove this file from the list
-    alExisting.Remove(sFileName);
+    existing.Remove(fileName);
   }
 
   /// <summary>
   /// Checks that all the expected files exist, and only the expected files.  Also
   /// verifies the length of all files against the expected length
   /// </summary>
-  /// <param name="sBaseFileName"></param>
+  /// <param name="baseFileName"></param>
   /// <param name="fileEntries"></param>
-  private static void VerifyFileConditions(string sBaseFileName, IList<RollFileEntry> fileEntries)
+  private static void VerifyFileConditions(string baseFileName, IList<RollFileEntry> fileEntries)
   {
-    List<string> alExisting = GetExistingFiles(sBaseFileName);
+    List<string> existingFiles = GetExistingFiles(baseFileName);
 
     foreach (RollFileEntry rollFile in fileEntries)
     {
-      string? sFileName = rollFile.FileName;
-      Assert.That(sFileName, Is.Not.Null);
-      FileInfo file = new(sFileName!);
+      string fileName = rollFile.FileName;
+      Assert.That(fileName, Is.Not.Null);
+      FileInfo file = new(fileName);
 
       if (rollFile.FileLength > 0)
       {
-        Assert.That(file.Exists, $"filename {sFileName} does not exist");
-        VerifyExistenceAndRemoveFromList(alExisting, sFileName!, file, rollFile);
+        Assert.That(file.Exists, $"file {fileName} does not exist");
+        VerifyExistenceAndRemoveFromList(existingFiles, fileName, file, rollFile);
       }
       else
       {
@@ -412,14 +373,14 @@ public sealed class RollingFileAppenderTest
 
         if (file.Exists)
         {
-          VerifyExistenceAndRemoveFromList(alExisting, sFileName!, file, rollFile);
+          VerifyExistenceAndRemoveFromList(existingFiles, fileName, file, rollFile);
         }
       }
     }
 
     // This check ensures no extra files matching the wildcard pattern exist.
     // We only want the files we expect, and no others
-    Assert.That(alExisting, Is.Empty);
+    Assert.That(existingFiles, Is.Empty);
   }
 
   /// <summary>
@@ -427,31 +388,31 @@ public sealed class RollingFileAppenderTest
   /// and only the expected files.  Also verifies the length of all files against 
   /// the expected length
   /// </summary>
-  /// <param name="sBaseFileName"></param>
+  /// <param name="baseFileName"></param>
   /// <param name="entry"></param>
-  private static void VerifyPreConditions(string sBaseFileName, RollConditions entry)
-    => VerifyFileConditions(sBaseFileName, entry.PreLogFileEntries);
+  private static void VerifyPreConditions(string baseFileName, RollConditions entry)
+    => VerifyFileConditions(baseFileName, entry.PreLogFileEntries);
 
   /// <summary>
   /// Called after logging a message to check that all the expected files exist, 
   /// and only the expected files.  Also verifies the length of all files against 
   /// the expected length
   /// </summary>
-  /// <param name="sBaseFileName"></param>
+  /// <param name="baseFileName"></param>
   /// <param name="entry"></param>
-  private static void VerifyPostConditions(string sBaseFileName, RollConditions entry)
-    => VerifyFileConditions(sBaseFileName, entry.PostLogFileEntries);
+  private static void VerifyPostConditions(string baseFileName, RollConditions entry)
+    => VerifyFileConditions(baseFileName, entry.PostLogFileEntries);
 
   /// <summary>
   /// Logs a message, verifying the expected message counts against the 
   /// current running totals.
   /// </summary>
-  private void LogMessage(string sMessageToLog)
+  private void LogMessage(string messageToLog)
   {
     Assert.That(_caRoot, Is.Not.Null);
     Assert.That(_messagesLogged++, Is.EqualTo(_caRoot.Counter));
     Assert.That(_root, Is.Not.Null);
-    _root.Log(Level.Debug, sMessageToLog, null);
+    _root.Log(Level.Debug, messageToLog, null);
     Assert.That(_messagesLogged, Is.EqualTo(_caRoot.Counter));
   }
 
@@ -460,16 +421,16 @@ public sealed class RollingFileAppenderTest
   /// pre-conditions are checked to ensure the expected files exists, and they are the
   /// expected size.  After logging, verifies the same.
   /// </summary>
-  /// <param name="sBaseFileName"></param>
+  /// <param name="baseFileName"></param>
   /// <param name="entries"></param>
-  /// <param name="sMessageToLog"></param>
-  private void RollFromTableEntries(string sBaseFileName, RollConditions[] entries, string sMessageToLog)
+  /// <param name="messageToLog"></param>
+  private void RollFromTableEntries(string baseFileName, RollConditions[] entries, string messageToLog)
   {
     foreach (RollConditions entry in entries)
     {
-      VerifyPreConditions(sBaseFileName, entry);
-      LogMessage(sMessageToLog);
-      VerifyPostConditions(sBaseFileName, entry);
+      VerifyPreConditions(baseFileName, entry);
+      LogMessage(messageToLog);
+      VerifyPostConditions(baseFileName, entry);
     }
   }
 
@@ -479,110 +440,94 @@ public sealed class RollingFileAppenderTest
   /// Returns the number of bytes logged per message, including
   /// any newline characters in addition to the message length.
   /// </summary>
-  /// <param name="sMessage"></param>
   /// <returns></returns>
-  private static int TotalMessageLength(string sMessage) => sMessage.Length + _sNewlineLength;
+  private static int TotalMessageLength(string message) => message.Length + _sNewlineLength;
 
   /// <summary>
   /// Determines how many messages of a fixed length can be logged
   /// to a single file before the file rolls.
   /// </summary>
-  /// <param name="iMessageLength"></param>
   /// <returns></returns>
-  private static int MessagesPerFile(int iMessageLength)
+  private static int MessagesPerFile(int messageLength)
   {
-    int iMessagesPerFile = MaximumFileSize / iMessageLength;
+    int messagesPerFile = MaximumFileSize / messageLength;
 
     //
     // RollingFileAppender checks for wrap BEFORE logging,
     // so we will actually get one more message per file than
     // we would otherwise.
     //
-    if (iMessagesPerFile * iMessageLength < MaximumFileSize)
+    if (messagesPerFile * messageLength < MaximumFileSize)
     {
-      iMessagesPerFile++;
+      messagesPerFile++;
     }
 
-    return iMessagesPerFile;
+    return messagesPerFile;
   }
 
   /// <summary>
-  /// Determines the name of the current file
+  /// Current file name is always the base file name when counting. Dates will need a different approach.
   /// </summary>
   /// <returns></returns>
-  private static string GetCurrentFile() =>
-    // Current file name is always the base file name when
-    // counting.  Dates will need a different approach
-    FileName;
+  private static string GetCurrentFile() => FileName;
 
   /// <summary>
   /// Turns a group of file names into an array of file entries that include the name
   /// and a size.  This is useful for assigning the properties of backup files, when
   /// the length of the files are all the same size due to a fixed message length.
   /// </summary>
-  /// <param name="sBackupGroup"></param>
-  /// <param name="iBackupFileLength"></param>
   /// <returns></returns>
-  private static List<RollFileEntry> MakeBackupFileEntriesFromBackupGroup(string sBackupGroup, int iBackupFileLength) 
-    => sBackupGroup.Split(' ').Where(file => file.Trim().Length > 0)
-      .Select(file => new RollFileEntry(file, iBackupFileLength))
+  private static List<RollFileEntry> MakeBackupFileEntriesFromBackupGroup(
+    string backupGroup, 
+    int backupFileLength)
+  {
+    return backupGroup.Split(' ')
+      .Where(file => file.Trim().Length > 0)
+      .Select(file => new RollFileEntry(file, backupFileLength))
       .ToList();
+  }
 
   /// <summary>
   /// Finds the iGroup group in the string (comma separated groups)
   /// </summary>
-  /// <param name="sBackupGroups"></param>
-  /// <param name="iGroup"></param>
   /// <returns></returns>
-  private static string GetBackupGroup(string sBackupGroups, int iGroup)
-  {
-    string[] sGroups = sBackupGroups.Split(',');
-    return sGroups[iGroup];
-  }
+  private static string GetBackupGroup(string backupGroups, int group) 
+    => backupGroups.Split(',')[group];
 
   /// <summary>
   /// Builds a collection of file entries based on the file names
   /// specified in a groups string and the max file size from the
   /// stats object
   /// </summary>
-  /// <param name="sBackupGroups"></param>
-  /// <param name="stats"></param>
   /// <returns></returns>
-  private static List<RollFileEntry>? MakeBackupFileEntriesForPostCondition(string sBackupGroups, RollingStats stats)
+  private static List<RollFileEntry>? MakeBackupFileEntriesForPostCondition(string backupGroups, RollingStats stats)
   {
     if (0 == stats.NumberOfFileRolls)
     {
       return null; // first round has no previous backups
     }
 
-    string sGroup = GetBackupGroup(sBackupGroups, stats.NumberOfFileRolls - 1);
-    return MakeBackupFileEntriesFromBackupGroup(sGroup, stats.MaximumFileSize);
+    string group = GetBackupGroup(backupGroups, stats.NumberOfFileRolls - 1);
+    return MakeBackupFileEntriesFromBackupGroup(group, stats.MaximumFileSize);
   }
-
 
   /// <summary>
   /// This class holds information that is used while we are generating
   /// test data sets
   /// </summary>
-  public sealed class RollingStats
+  /// <param name="TotalMessageLength">
+  /// The length of a message, including any CR/LF characters.
+  /// This length assumes all messages are a fixed length for test purposes.
+  /// </param>
+  /// <param name="MessagesPerFile">A count of the number of messages that are logged to each file.</param>
+  private sealed record RollingStats(
+    int TotalMessageLength,
+    int MessagesPerFile)
   {
     /// <summary>
     /// Number of total bytes a log file can reach.
     /// </summary>
     public int MaximumFileSize => TotalMessageLength * MessagesPerFile;
-
-    /// <summary>
-    /// The length of a message, including any CR/LF characters.
-    /// This length assumes all messages are a fixed length for
-    /// test purposes.
-    /// </summary>
-    public int TotalMessageLength { get; set; }
-
-    /// <summary>
-    /// A count of the number of messages that are logged to each
-    /// file.
-    /// </summary>
-    public int MessagesPerFile { get; set; }
 
     /// <summary>
     /// Counts how many messages have been logged to the current file
@@ -599,20 +544,10 @@ public sealed class RollingFileAppenderTest
   /// The stats are used to keep track of progress while we are algorithmically
   /// generating a table of pre- / post-condition tests for file rolling.
   /// </summary>
-  /// <param name="sTestMessage"></param>
+  /// <param name="testMessage"></param>
   /// <returns></returns>
-  private static RollingStats InitializeStats(string sTestMessage)
-  {
-    RollingStats rollingStats = new()
-    {
-      TotalMessageLength = TotalMessageLength(sTestMessage)
-    };
-    rollingStats.MessagesPerFile = MessagesPerFile(rollingStats.TotalMessageLength);
-    rollingStats.MessagesThisFile = 0;
-    rollingStats.NumberOfFileRolls = 0;
-
-    return rollingStats;
-  }
+  private static RollingStats InitializeStats(string testMessage) 
+    => new(TotalMessageLength(testMessage), MessagesPerFile(TotalMessageLength(testMessage)));
 
   /// <summary>
   /// Takes an existing array of RollFileEntry objects, creates a new array one element
@@ -625,13 +560,13 @@ public sealed class RollingFileAppenderTest
   /// <returns></returns>
   private static List<RollFileEntry> AddFinalElement(List<RollFileEntry>? existing, RollFileEntry final)
   {
-    int iLength = 1;
+    int length = 1;
     if (existing is not null)
     {
-      iLength += existing.Count;
+      length += existing.Count;
     }
 
-    List<RollFileEntry> combined = new(iLength);
+    List<RollFileEntry> combined = new(length);
     if (existing is not null)
     {
       combined.AddRange(existing);
@@ -645,20 +580,17 @@ public sealed class RollingFileAppenderTest
   /// Generates the pre- and post-condition arrays from an array of backup files and the
   /// current file / next file.
   /// </summary>
-  private static RollConditions BuildTableEntry(string sBackupFiles,
+  private static RollConditions BuildTableEntry(string backupFiles,
     RollConditions? preCondition,
     RollFileEntry current,
     RollFileEntry currentNext,
     RollingStats rollingStats)
   {
-    List<RollFileEntry>? backupsPost = MakeBackupFileEntriesForPostCondition(sBackupFiles, rollingStats);
+    List<RollFileEntry>? backupsPost = MakeBackupFileEntriesForPostCondition(backupFiles, rollingStats);
     List<RollFileEntry> post = AddFinalElement(backupsPost, currentNext);
-    if (preCondition is null)
-    {
-      return new RollConditions(AddFinalElement(null, current), post);
-    }
-
-    return new RollConditions(preCondition.PostLogFileEntries, post);
+    return preCondition is null 
+      ? new(AddFinalElement(null, current), post) 
+      : new(preCondition.PostLogFileEntries, post);
   }
 
   /// <summary>
@@ -687,11 +619,8 @@ public sealed class RollingFileAppenderTest
   /// Callback point for the regular expression parser.  Turns
   /// the number into a file name.
   /// </summary>
-  private static string NumberedNameMaker(Match match)
-  {
-    int iValue = int.Parse(match.Value);
-    return MakeFileName(FileName, iValue);
-  }
+  private static string NumberedNameMaker(Match match) 
+    => MakeFileName(FileName, int.Parse(match.Value));
 
   /// <summary>
   /// Parses a numeric list of files, turning them into file names.
@@ -700,23 +629,22 @@ public sealed class RollingFileAppenderTest
   /// </summary>
   [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "SYSLIB1045:Convert to 'GeneratedRegexAttribute'.", 
     Justification = "only .net8")]
-  private static string ConvertToFiles(string sBackupInfo, MatchEvaluator evaluator)
-  {
-    Regex regex = new(@"\d+");
-    return regex.Replace(sBackupInfo, evaluator);
-  }
+  private static string ConvertToFiles(string backupInfo, MatchEvaluator evaluator) 
+    => Regex.Replace(backupInfo, @"\d+", evaluator);
 
   /// <summary>
   /// Makes test entries used for verifying counted file names
   /// </summary>
-  /// <param name="sTestMessage">A message to log repeatedly</param>
-  /// <param name="sBackupInfo">Filename groups used to indicate backup file name progression
+  /// <param name="testMessage">A message to log repeatedly</param>
+  /// <param name="backupInfo">Filename groups used to indicate backup file name progression
   /// that results after each message is logged</param>
-  /// <param name="iMessagesToLog">How many times the test message will be repeatedly logged</param>
+  /// <param name="messagesToLog">How many times the test message will be repeatedly logged</param>
   /// <returns></returns>
-  private static RollConditions[] MakeNumericTestEntries(string sTestMessage, string sBackupInfo,
-    int iMessagesToLog)
-    => MakeTestEntries(sTestMessage, sBackupInfo, iMessagesToLog, NumberedNameMaker);
+  private static RollConditions[] MakeNumericTestEntries(
+    string testMessage, 
+    string backupInfo,
+    int messagesToLog)
+    => MakeTestEntries(testMessage, backupInfo, messagesToLog, NumberedNameMaker);
 
   /// <summary>
   /// This routine takes a list of backup file names and a message that will be logged
@@ -724,34 +652,35 @@ public sealed class RollingFileAppenderTest
   /// post-condition information.  This pre- / post-information shows the names and expected 
   /// file sizes for all files just before and just after a message is logged.
   /// </summary>
-  /// <param name="sTestMessage">A message to log repeatedly</param>
-  /// <param name="sBackupInfo">Filename groups used to indicate backup file name progression
+  /// <param name="testMessage">A message to log repeatedly</param>
+  /// <param name="backupInfo">Filename groups used to indicate backup file name progression
   /// that results after each message is logged</param>
-  /// <param name="iMessagesToLog">How many times the test message will be repeatedly logged</param>
+  /// <param name="messagesToLog">How many times the test message will be repeatedly logged</param>
   /// <param name="evaluator">Function that can turn a number into a filename</param>
   /// <returns></returns>
-  private static RollConditions[] MakeTestEntries(string sTestMessage,
-      string sBackupInfo,
-      int iMessagesToLog,
-      MatchEvaluator evaluator)
+  private static RollConditions[] MakeTestEntries(
+    string testMessage,
+    string backupInfo,
+    int messagesToLog,
+    MatchEvaluator evaluator)
   {
-    string sBackupFiles = ConvertToFiles(sBackupInfo, evaluator);
+    string backupFiles = ConvertToFiles(backupInfo, evaluator);
 
-    RollConditions[] table = new RollConditions[iMessagesToLog];
+    RollConditions[] table = new RollConditions[messagesToLog];
 
-    RollingStats rollingStats = InitializeStats(sTestMessage);
+    RollingStats rollingStats = InitializeStats(testMessage);
 
     RollConditions? preCondition = null;
     rollingStats.MessagesThisFile = 0;
 
     RollFileEntry currentFile = new(GetCurrentFile(), 0);
-    for (int i = 0; i < iMessagesToLog; i++)
+    for (int i = 0; i < messagesToLog; i++)
     {
       RollFileEntry currentNext = new(
           GetCurrentFile(),
           (1 + rollingStats.MessagesThisFile) * rollingStats.TotalMessageLength);
 
-      table[i] = BuildTableEntry(sBackupFiles, preCondition, currentFile, currentNext, rollingStats);
+      table[i] = BuildTableEntry(backupFiles, preCondition, currentFile, currentNext, rollingStats);
       preCondition = table[i];
 
       //System.Diagnostics.Debug.WriteLine( "Message " + i );
@@ -804,7 +733,7 @@ public sealed class RollingFileAppenderTest
     // Oldest to newest when reading in a group left-to-right, so 1 2 3 means 1 is the
     // oldest, and 3 is the newest
     //
-    string sBackupInfo = "1, 1 2, 1 2 3, 2 3 4, 3 4 5";
+    const string backupInfo = "1, 1 2, 1 2 3, 2 3 4, 3 4 5";
 
     //
     // Count Up
@@ -812,12 +741,12 @@ public sealed class RollingFileAppenderTest
     _countDirection = +1;
 
     //
-    // Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500 
+    // Log 30 messages.  This is 5 groups, 6 checks per group (0, 100, 200, 300, 400, 500) 
     // bytes for current file as messages are logged.
     //
-    int iMessagesToLog = 30;
+    const int messagesToLog = 30;
 
-    VerifyRolling(MakeNumericTestEntries(GetTestMessage(), sBackupInfo, iMessagesToLog));
+    VerifyRolling(MakeNumericTestEntries(GetTestMessage(), backupInfo, messagesToLog));
   }
 
   /// <summary>
@@ -833,7 +762,7 @@ public sealed class RollingFileAppenderTest
     // Oldest to newest when reading in a group left-to-right, so 1 2 3 means 1 is the
     // oldest, and 3 is the newest
     //
-    string sBackupInfo = "1, 1 2, 1 2 3, 1 2 3 4, 1 2 3 4 5";
+    const string backupInfo = "1, 1 2, 1 2 3, 1 2 3 4, 1 2 3 4 5";
 
     //
     // Count Up
@@ -846,12 +775,12 @@ public sealed class RollingFileAppenderTest
     _maxSizeRollBackups = -1;
 
     //
-    // Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500 
+    // Log 30 messages.  This is 5 groups, 6 checks per group (0, 100, 200, 300, 400, 500) 
     // bytes for current file as messages are logged.
     //
-    int iMessagesToLog = 30;
+    const int messagesToLog = 30;
 
-    VerifyRolling(MakeNumericTestEntries(GetTestMessage(), sBackupInfo, iMessagesToLog));
+    VerifyRolling(MakeNumericTestEntries(GetTestMessage(), backupInfo, messagesToLog));
   }
 
   /// <summary>
@@ -866,7 +795,7 @@ public sealed class RollingFileAppenderTest
     // Oldest to newest when reading in a group left-to-right, so 1 2 3 means 1 is the
     // oldest, and 3 is the newest
     //
-    const string sBackupInfo = ", , , , ";
+    const string backupInfo = ", , , , ";
 
     //
     // Count Up
@@ -879,12 +808,12 @@ public sealed class RollingFileAppenderTest
     _maxSizeRollBackups = 0;
 
     //
-    // Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500 
+    // Log 30 messages.  This is 5 groups, 6 checks per group (0, 100, 200, 300, 400, 500) 
     // bytes for current file as messages are logged.
     //
-    const int iMessagesToLog = 30;
+    const int messagesToLog = 30;
 
-    VerifyRolling(MakeNumericTestEntries(GetTestMessage(), sBackupInfo, iMessagesToLog));
+    VerifyRolling(MakeNumericTestEntries(GetTestMessage(), backupInfo, messagesToLog));
   }
 
 
@@ -900,7 +829,7 @@ public sealed class RollingFileAppenderTest
     // Oldest to newest when reading in a group left-to-right, so 1 2 3 means 1 is the
     // oldest, and 3 is the newest
     //
-    const string sBackupInfo = "1, 1 2, 1 2 3, 1 2 3, 1 2 3";
+    const string backupInfo = "1, 1 2, 1 2 3, 1 2 3, 1 2 3";
 
     //
     // Count Up
@@ -908,12 +837,12 @@ public sealed class RollingFileAppenderTest
     _countDirection = -1;
 
     //
-    // Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500 
+    // Log 30 messages.  This is 5 groups, 6 checks per group (0, 100, 200, 300, 400, 500) 
     // bytes for current file as messages are logged.
     //
-    const int iMessagesToLog = 30;
+    const int messagesToLog = 30;
 
-    VerifyRolling(MakeNumericTestEntries(GetTestMessage(), sBackupInfo, iMessagesToLog));
+    VerifyRolling(MakeNumericTestEntries(GetTestMessage(), backupInfo, messagesToLog));
   }
 
   /// <summary>
@@ -929,7 +858,7 @@ public sealed class RollingFileAppenderTest
     // Oldest to newest when reading in a group left-to-right, so 1 2 3 means 1 is the
     // oldest, and 3 is the newest
     //
-    const string sBackupInfo = "1, 1 2, 1 2 3, 1 2 3 4, 1 2 3 4 5";
+    const string backupInfo = "1, 1 2, 1 2 3, 1 2 3 4, 1 2 3 4 5";
 
     //
     // Count Down
@@ -942,12 +871,12 @@ public sealed class RollingFileAppenderTest
     _maxSizeRollBackups = -1;
 
     //
-    // Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500 
+    // Log 30 messages.  This is 5 groups, 6 checks per group (0, 100, 200, 300, 400, 500) 
     // bytes for current file as messages are logged.
     //
-    const int iMessagesToLog = 30;
+    const int messagesToLog = 30;
 
-    VerifyRolling(MakeNumericTestEntries(GetTestMessage(), sBackupInfo, iMessagesToLog));
+    VerifyRolling(MakeNumericTestEntries(GetTestMessage(), backupInfo, messagesToLog));
   }
 
   /// <summary>
@@ -962,7 +891,7 @@ public sealed class RollingFileAppenderTest
     // Oldest to newest when reading in a group left-to-right, so 1 2 3 means 1 is the
     // oldest, and 3 is the newest
     //
-    const string sBackupInfo = ", , , , ";
+    const string backupInfo = ", , , , ";
 
     //
     // Count Up
@@ -975,12 +904,12 @@ public sealed class RollingFileAppenderTest
     _maxSizeRollBackups = 0;
 
     //
-    // Log 30 messages.  This is 5 groups, 6 checks per group ( 0, 100, 200, 300, 400, 500 
+    // Log 30 messages.  This is 5 groups, 6 checks per group (0, 100, 200, 300, 400, 500) 
     // bytes for current file as messages are logged.
     //
-    const int iMessagesToLog = 30;
+    const int messagesToLog = 30;
 
-    VerifyRolling(MakeNumericTestEntries(GetTestMessage(), sBackupInfo, iMessagesToLog));
+    VerifyRolling(MakeNumericTestEntries(GetTestMessage(), backupInfo, messagesToLog));
   }
 
   /// <summary>
@@ -1008,13 +937,13 @@ public sealed class RollingFileAppenderTest
   /// <summary>
   /// Verifies that the current backup index is detected correctly when initializing
   /// </summary>
-  /// <param name="sBaseFile"></param>
-  /// <param name="alFiles"></param>
-  /// <param name="iExpectedCurSizeRollBackups"></param>
-  private static void VerifyInitializeRollBackupsFromBaseFile(string sBaseFile,
-    List<string> alFiles, int iExpectedCurSizeRollBackups)
-    => InitializeAndVerifyExpectedValue(alFiles, sBaseFile, CreateRollingFileAppender("5,0,1"),
-        iExpectedCurSizeRollBackups);
+  /// <param name="baseFile"></param>
+  /// <param name="files"></param>
+  /// <param name="expectedCurSizeRollBackups"></param>
+  private static void VerifyInitializeRollBackupsFromBaseFile(string baseFile,
+    List<string> files, int expectedCurSizeRollBackups)
+    => InitializeAndVerifyExpectedValue(files, baseFile, CreateRollingFileAppender("5,0,1"),
+        expectedCurSizeRollBackups);
 
   /// <summary>
   /// Tests that the current backup index is 0 when no
@@ -1023,8 +952,8 @@ public sealed class RollingFileAppenderTest
   [Test]
   public void TestInitializeRollBackups1()
   {
-    const string sBaseFile = "LogFile.log";
-    List<string> arrFiles =
+    const string baseFile = "LogFile.log";
+    List<string> files =
     [
       "junk1",
       "junk1.log",
@@ -1033,20 +962,19 @@ public sealed class RollingFileAppenderTest
       "junk.log.2",
     ];
 
-    const int iExpectedCurSizeRollBackups = 0;
-    VerifyInitializeRollBackupsFromBaseFile(sBaseFile, arrFiles, iExpectedCurSizeRollBackups);
+    const int expectedCurSizeRollBackups = 0;
+    VerifyInitializeRollBackupsFromBaseFile(baseFile, files, expectedCurSizeRollBackups);
   }
 
   /// <summary>
   /// Verifies that files are detected when the base file is specified
   /// </summary>
-  /// <param name="sBaseFile"></param>
-  private static void VerifyInitializeRollBackupsFromBaseFile(string sBaseFile)
+  private static void VerifyInitializeRollBackupsFromBaseFile(string baseFile)
   {
-    List<string> alFiles = MakeTestDataFromString(sBaseFile, "0,1,2");
+    List<string> files = MakeTestDataFromString(baseFile, "0,1,2");
 
-    const int iExpectedCurSizeRollBackups = 2;
-    VerifyInitializeRollBackupsFromBaseFile(sBaseFile, alFiles, iExpectedCurSizeRollBackups);
+    const int expectedCurSizeRollBackups = 2;
+    VerifyInitializeRollBackupsFromBaseFile(baseFile, files, expectedCurSizeRollBackups);
   }
 
   /// <summary>
@@ -1055,9 +983,9 @@ public sealed class RollingFileAppenderTest
   [Test]
   public void TestInitializeCountUpFixed()
   {
-    List<string> alFiles = MakeTestDataFromString("3,4,5");
-    const int iExpectedValue = 5;
-    InitializeAndVerifyExpectedValue(alFiles, FileName, CreateRollingFileAppender("3,0,1"), iExpectedValue);
+    List<string> files = MakeTestDataFromString("3,4,5");
+    const int expectedValue = 5;
+    InitializeAndVerifyExpectedValue(files, FileName, CreateRollingFileAppender("3,0,1"), expectedValue);
   }
 
   /// <summary>
@@ -1066,9 +994,9 @@ public sealed class RollingFileAppenderTest
   [Test]
   public void TestInitializeCountUpFixed2()
   {
-    List<string> alFiles = MakeTestDataFromString("0,3");
-    const int iExpectedValue = 3;
-    InitializeAndVerifyExpectedValue(alFiles, FileName, CreateRollingFileAppender("3,0,1"), iExpectedValue);
+    List<string> files = MakeTestDataFromString("0,3");
+    const int expectedValue = 3;
+    InitializeAndVerifyExpectedValue(files, FileName, CreateRollingFileAppender("3,0,1"), expectedValue);
   }
 
   /// <summary>
@@ -1078,9 +1006,9 @@ public sealed class RollingFileAppenderTest
   [Test]
   public void TestInitializeCountUpZeroBackups()
   {
-    List<string> alFiles = MakeTestDataFromString("0,3");
-    const int iExpectedValue = 0;
-    InitializeAndVerifyExpectedValue(alFiles, FileName, CreateRollingFileAppender("0,0,1"), iExpectedValue);
+    List<string> files = MakeTestDataFromString("0,3");
+    const int expectedValue = 0;
+    InitializeAndVerifyExpectedValue(files, FileName, CreateRollingFileAppender("0,0,1"), expectedValue);
   }
 
   /// <summary>
@@ -1090,9 +1018,9 @@ public sealed class RollingFileAppenderTest
   [Test]
   public void TestInitializeCountDownZeroBackups()
   {
-    List<string> alFiles = MakeTestDataFromString("0,3");
-    const int iExpectedValue = 0;
-    InitializeAndVerifyExpectedValue(alFiles, FileName, CreateRollingFileAppender("0,0,-1"), iExpectedValue);
+    List<string> files = MakeTestDataFromString("0,3");
+    const int expectedValue = 0;
+    InitializeAndVerifyExpectedValue(files, FileName, CreateRollingFileAppender("0,0,-1"), expectedValue);
   }
 
 
@@ -1102,8 +1030,8 @@ public sealed class RollingFileAppenderTest
   [Test]
   public void TestInitializeCountDownFixed()
   {
-    List<string> alFiles = MakeTestDataFromString("4,5,6");
-    VerifyInitializeDownFixedExpectedValue(alFiles, FileName, 0);
+    List<string> files = MakeTestDataFromString("4,5,6");
+    VerifyInitializeDownFixedExpectedValue(files, FileName, 0);
   }
 
   /// <summary>
@@ -1112,8 +1040,8 @@ public sealed class RollingFileAppenderTest
   [Test]
   public void TestInitializeCountDownFixed2()
   {
-    List<string> alFiles = MakeTestDataFromString("1,5,6");
-    VerifyInitializeDownFixedExpectedValue(alFiles, FileName, 1);
+    List<string> files = MakeTestDataFromString("1,5,6");
+    VerifyInitializeDownFixedExpectedValue(files, FileName, 1);
   }
 
   /// <summary>
@@ -1122,8 +1050,8 @@ public sealed class RollingFileAppenderTest
   [Test]
   public void TestInitializeCountDownFixed3()
   {
-    List<string> alFiles = MakeTestDataFromString("2,5,6");
-    VerifyInitializeDownFixedExpectedValue(alFiles, FileName, 2);
+    List<string> files = MakeTestDataFromString("2,5,6");
+    VerifyInitializeDownFixedExpectedValue(files, FileName, 2);
   }
 
   /// <summary>
@@ -1132,8 +1060,8 @@ public sealed class RollingFileAppenderTest
   [Test]
   public void TestInitializeCountDownFixed4()
   {
-    List<string> alFiles = MakeTestDataFromString("3,5,6");
-    VerifyInitializeDownFixedExpectedValue(alFiles, FileName, 3);
+    List<string> files = MakeTestDataFromString("3,5,6");
+    VerifyInitializeDownFixedExpectedValue(files, FileName, 3);
   }
 
   /// <summary>
@@ -1142,8 +1070,8 @@ public sealed class RollingFileAppenderTest
   [Test]
   public void TestInitializeCountDownFixed5()
   {
-    List<string> alFiles = MakeTestDataFromString("1,2,3");
-    VerifyInitializeDownFixedExpectedValue(alFiles, FileName, 3);
+    List<string> files = MakeTestDataFromString("1,2,3");
+    VerifyInitializeDownFixedExpectedValue(files, FileName, 3);
   }
 
   /// <summary>
@@ -1152,8 +1080,8 @@ public sealed class RollingFileAppenderTest
   [Test]
   public void TestInitializeCountDownFixed6()
   {
-    List<string> alFiles = MakeTestDataFromString("1,2");
-    VerifyInitializeDownFixedExpectedValue(alFiles, FileName, 2);
+    List<string> files = MakeTestDataFromString("1,2");
+    VerifyInitializeDownFixedExpectedValue(files, FileName, 2);
   }
 
   /// <summary>
@@ -1162,41 +1090,40 @@ public sealed class RollingFileAppenderTest
   [Test]
   public void TestInitializeCountDownFixed7()
   {
-    List<string> alFiles = MakeTestDataFromString("2,3");
-    VerifyInitializeDownFixedExpectedValue(alFiles, FileName, 3);
+    List<string> files = MakeTestDataFromString("2,3");
+    VerifyInitializeDownFixedExpectedValue(files, FileName, 3);
   }
 
-  private static void InitializeAndVerifyExpectedValue(List<string> alFiles, string sBaseFile,
-    RollingFileAppender rfa, int iExpectedValue)
+  private static void InitializeAndVerifyExpectedValue(List<string> files, string baseFile,
+    RollingFileAppender rfa, int expectedValue)
   {
-    rfa.InitializeRollBackups(sBaseFile, alFiles);
-    Assert.That(rfa.CurrentSizeRollBackups, Is.EqualTo(iExpectedValue));
+    rfa.InitializeRollBackups(baseFile, files);
+    Assert.That(rfa.CurrentSizeRollBackups, Is.EqualTo(expectedValue));
   }
 
   /// <summary>
   /// Tests the count-down case, with infinite max backups, to see that
   /// initialization of the rolling file appender results in the expected value
   /// </summary>
-  /// <param name="alFiles"></param>
-  /// <param name="sBaseFile"></param>
-  /// <param name="iExpectedValue"></param>
-  private static void VerifyInitializeDownInfiniteExpectedValue(List<string> alFiles,
-    string sBaseFile, int iExpectedValue)
-    => InitializeAndVerifyExpectedValue(alFiles, sBaseFile, CreateRollingFileAppender("-1,0,-1"), iExpectedValue);
+  /// <param name="files"></param>
+  /// <param name="baseFile"></param>
+  /// <param name="expectedValue"></param>
+  private static void VerifyInitializeDownInfiniteExpectedValue(List<string> files,
+    string baseFile, int expectedValue)
+    => InitializeAndVerifyExpectedValue(files, baseFile, CreateRollingFileAppender("-1,0,-1"), expectedValue);
 
   /// <summary>
   /// Creates a RollingFileAppender with the desired values, where the
   /// values are passed as a comma separated string, with 3 parameters,
   /// maxSizeRollBackups, curSizeRollBackups, CountDirection
   /// </summary>
-  /// <param name="sParams"></param>
   /// <returns></returns>
-  private static RollingFileAppender CreateRollingFileAppender(string sParams)
+  private static RollingFileAppender CreateRollingFileAppender(string parameters)
   {
-    string[] asParams = sParams.Split(',');
-    if (asParams?.Length != 3)
+    string[] asParams = parameters.Split(',');
+    if (asParams.Length != 3)
     {
-      throw new ArgumentOutOfRangeException(sParams, sParams,
+      throw new ArgumentOutOfRangeException(parameters, parameters,
         "Must have 3 comma separated params: MaxSizeRollBackups, CurSizeRollBackups, CountDirection");
     }
 
@@ -1218,8 +1145,8 @@ public sealed class RollingFileAppenderTest
   [Test]
   public void TestInitializeCountDownInfinite()
   {
-    List<string> alFiles = MakeTestDataFromString("2,3");
-    VerifyInitializeDownInfiniteExpectedValue(alFiles, FileName, 3);
+    List<string> files = MakeTestDataFromString("2,3");
+    VerifyInitializeDownInfiniteExpectedValue(files, FileName, 3);
   }
 
   /// <summary>
@@ -1229,8 +1156,8 @@ public sealed class RollingFileAppenderTest
   [Test]
   public void TestInitializeCountDownInfinite2()
   {
-    List<string> alFiles = MakeTestDataFromString("2,3,4,5,6,7,8,9,10");
-    VerifyInitializeDownInfiniteExpectedValue(alFiles, FileName, 10);
+    List<string> files = MakeTestDataFromString("2,3,4,5,6,7,8,9,10");
+    VerifyInitializeDownInfiniteExpectedValue(files, FileName, 10);
   }
 
   /// <summary>
@@ -1240,8 +1167,8 @@ public sealed class RollingFileAppenderTest
   [Test]
   public void TestInitializeCountDownInfinite3()
   {
-    List<string> alFiles = MakeTestDataFromString("9,10,3,4,5,7,9,6,1,2,8");
-    VerifyInitializeDownInfiniteExpectedValue(alFiles, FileName, 10);
+    List<string> files = MakeTestDataFromString("9,10,3,4,5,7,9,6,1,2,8");
+    VerifyInitializeDownInfiniteExpectedValue(files, FileName, 10);
   }
 
   /// <summary>
@@ -1251,8 +1178,8 @@ public sealed class RollingFileAppenderTest
   [Test]
   public void TestInitializeCountUpInfinite()
   {
-    List<string> alFiles = MakeTestDataFromString("2,3");
-    VerifyInitializeUpInfiniteExpectedValue(alFiles, FileName, 3);
+    List<string> files = MakeTestDataFromString("2,3");
+    VerifyInitializeUpInfiniteExpectedValue(files, FileName, 3);
   }
 
   /// <summary>
@@ -1262,8 +1189,8 @@ public sealed class RollingFileAppenderTest
   [Test]
   public void TestInitializeCountUpInfinite2()
   {
-    List<string> alFiles = MakeTestDataFromString("2,3,4,5,6,7,8,9,10");
-    VerifyInitializeUpInfiniteExpectedValue(alFiles, FileName, 10);
+    List<string> files = MakeTestDataFromString("2,3,4,5,6,7,8,9,10");
+    VerifyInitializeUpInfiniteExpectedValue(files, FileName, 10);
   }
 
   /// <summary>
@@ -1273,8 +1200,8 @@ public sealed class RollingFileAppenderTest
   [Test]
   public void TestInitializeCountUpInfinite3()
   {
-    List<string> alFiles = MakeTestDataFromString("9,10,3,4,5,7,9,6,1,2,8");
-    VerifyInitializeUpInfiniteExpectedValue(alFiles, FileName, 10);
+    List<string> files = MakeTestDataFromString("9,10,3,4,5,7,9,6,1,2,8");
+    VerifyInitializeUpInfiniteExpectedValue(files, FileName, 10);
   }
 
   /// <summary>
@@ -1502,13 +1429,11 @@ public sealed class RollingFileAppenderTest
   {
     Utils.InconclusiveOnMono();
     const string filename = "test_minimal_lock_unlocks.log";
-    bool locked;
 
     SilentErrorHandler sh = new();
     ILogger log = CreateLogger(filename, new FileAppender.MinimalLock(), sh);
     log.Log(GetType(), Level.Info, "This is a message", null);
 
-    locked = true;
     FileStream fs = new(filename, FileMode.Append, FileAccess.Write, FileShare.None);
     fs.Write(Encoding.ASCII.GetBytes("Test" + Environment.NewLine), 0, 4 + Environment.NewLine.Length);
     fs.Close();
@@ -1516,7 +1441,6 @@ public sealed class RollingFileAppenderTest
     log.Log(GetType(), Level.Info, "This is a message 2", null);
     DestroyLogger();
 
-    Assert.That(locked, "File was not locked");
     AssertFileEquals(filename,
       "This is a message" + Environment.NewLine + "Test" + Environment.NewLine + "This is a message 2" +
       Environment.NewLine);
@@ -1579,13 +1503,11 @@ public sealed class RollingFileAppenderTest
   {
     Utils.InconclusiveOnMono();
     const string filename = "test_interprocess_lock_unlocks.log";
-    bool locked;
 
     SilentErrorHandler sh = new();
     ILogger log = CreateLogger(filename, new FileAppender.InterProcessLock(), sh);
     log.Log(GetType(), Level.Info, "This is a message", null);
 
-    locked = true;
     FileStream fs = new(filename, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
     fs.Write(Encoding.ASCII.GetBytes("Test" + Environment.NewLine), 0, 4 + Environment.NewLine.Length);
     fs.Close();
@@ -1593,7 +1515,6 @@ public sealed class RollingFileAppenderTest
     log.Log(GetType(), Level.Info, "This is a message 2", null);
     DestroyLogger();
 
-    Assert.That(locked, "File was not locked");
     AssertFileEquals(filename,
       "This is a message" + Environment.NewLine + "Test" + Environment.NewLine + "This is a message 2" +
       Environment.NewLine);
@@ -1648,18 +1569,18 @@ public sealed class RollingFileAppenderTest
   /// Tests the count up case, with infinite max backups , to see that
   /// initialization of the rolling file appender results in the expected value
   /// </summary>
-  private static void VerifyInitializeUpInfiniteExpectedValue(List<string> alFiles,
-    string sBaseFile, int iExpectedValue)
-    => InitializeAndVerifyExpectedValue(alFiles, sBaseFile, CreateRollingFileAppender("-1,0,1"), iExpectedValue);
+  private static void VerifyInitializeUpInfiniteExpectedValue(List<string> files,
+    string baseFile, int expectedValue)
+    => InitializeAndVerifyExpectedValue(files, baseFile, CreateRollingFileAppender("-1,0,1"), expectedValue);
 
 
   /// <summary>
   /// Tests the countdown case, with max backups limited to 3, to see that
   /// initialization of the rolling file appender results in the expected value
   /// </summary>
-  private static void VerifyInitializeDownFixedExpectedValue(List<string> alFiles, string sBaseFile,
-    int iExpectedValue)
-    => InitializeAndVerifyExpectedValue(alFiles, sBaseFile, CreateRollingFileAppender("3,0,-1"), iExpectedValue);
+  private static void VerifyInitializeDownFixedExpectedValue(List<string> files, string baseFile,
+    int expectedValue)
+    => InitializeAndVerifyExpectedValue(files, baseFile, CreateRollingFileAppender("3,0,-1"), expectedValue);
 
   /// <summary>
   /// Turns a string of comma separated numbers into a collection of filenames
@@ -1668,9 +1589,9 @@ public sealed class RollingFileAppenderTest
   /// Defaults to filename in _fileName variable.
   /// 
   /// </summary>
-  /// <param name="sFileNumbers">Comma separated list of numbers for counted file names</param>
-  private static List<string> MakeTestDataFromString(string sFileNumbers)
-    => MakeTestDataFromString(FileName, sFileNumbers);
+  /// <param name="fileNumbers">Comma separated list of numbers for counted file names</param>
+  private static List<string> MakeTestDataFromString(string fileNumbers)
+    => MakeTestDataFromString(FileName, fileNumbers);
 
   /// <summary>
   /// Turns a string of comma separated numbers into a collection of filenames
@@ -1679,11 +1600,11 @@ public sealed class RollingFileAppenderTest
   /// Uses the input filename.
   /// </summary>
   /// <param name="sFileName">Name of file to combine with numbers when generating counted file names</param>
-  /// <param name="sFileNumbers">Comma separated list of numbers for counted file names</param>
+  /// <param name="fileNumbers">Comma separated list of numbers for counted file names</param>
   /// <returns></returns>
-  private static List<string> MakeTestDataFromString(string sFileName, string sFileNumbers) 
-    => sFileNumbers.Split(',').Select(sNumber => int.Parse(sNumber.Trim()))
-      .Select(iValue => MakeFileName(sFileName, iValue)).ToList();
+  private static List<string> MakeTestDataFromString(string sFileName, string fileNumbers) 
+    => fileNumbers.Split(',').Select(number => int.Parse(number.Trim()))
+      .Select(value => MakeFileName(sFileName, value)).ToList();
 
   /// <summary>
   /// Tests that the current backup index is correctly detected
@@ -1703,31 +1624,31 @@ public sealed class RollingFileAppenderTest
   /// Makes sure that the initialization can detect the backup
   /// number correctly.
   /// </summary>
-  private static void VerifyInitializeRollBackups(int iBackups, int iMaxSizeRollBackups)
+  private static void VerifyInitializeRollBackups(int backups, int maxSizeRollBackups)
   {
-    const string sBaseFile = "LogFile.log";
+    const string baseFile = "LogFile.log";
     List<string> arrFiles = ["junk1"];
-    for (int i = 0; i < iBackups; i++)
+    for (int i = 0; i < backups; i++)
     {
-      arrFiles.Add(MakeFileName(sBaseFile, i));
+      arrFiles.Add(MakeFileName(baseFile, i));
     }
 
     RollingFileAppender rfa = new()
     {
       RollingStyle = RollingFileAppender.RollingMode.Size,
-      MaxSizeRollBackups = iMaxSizeRollBackups,
+      MaxSizeRollBackups = maxSizeRollBackups,
       CurrentSizeRollBackups = 0
     };
-    rfa.InitializeRollBackups(sBaseFile, arrFiles);
+    rfa.InitializeRollBackups(baseFile, arrFiles);
 
     // iBackups  / Meaning
     // 0 = none
     // 1 = file.log
     // 2 = file.log.1
     // 3 = file.log.2
-    Assert.That(rfa.CurrentSizeRollBackups, iBackups is 0 or 1 
+    Assert.That(rfa.CurrentSizeRollBackups, backups is 0 or 1 
       ? Is.EqualTo(0) 
-      : Is.EqualTo(Math.Min(iBackups - 1, iMaxSizeRollBackups)));
+      : Is.EqualTo(Math.Min(backups - 1, maxSizeRollBackups)));
   }
 
   /// <summary>
@@ -1737,17 +1658,17 @@ public sealed class RollingFileAppenderTest
   [Test]
   public void TestInitializeRollBackups4()
   {
-    const int iMaxRollBackups = 5;
-    VerifyInitializeRollBackups(0, iMaxRollBackups);
-    VerifyInitializeRollBackups(1, iMaxRollBackups);
-    VerifyInitializeRollBackups(2, iMaxRollBackups);
-    VerifyInitializeRollBackups(3, iMaxRollBackups);
-    VerifyInitializeRollBackups(4, iMaxRollBackups);
-    VerifyInitializeRollBackups(5, iMaxRollBackups);
-    VerifyInitializeRollBackups(6, iMaxRollBackups);
+    const int maxRollBackups = 5;
+    VerifyInitializeRollBackups(0, maxRollBackups);
+    VerifyInitializeRollBackups(1, maxRollBackups);
+    VerifyInitializeRollBackups(2, maxRollBackups);
+    VerifyInitializeRollBackups(3, maxRollBackups);
+    VerifyInitializeRollBackups(4, maxRollBackups);
+    VerifyInitializeRollBackups(5, maxRollBackups);
+    VerifyInitializeRollBackups(6, maxRollBackups);
     // Final we cap out at the max value
-    VerifyInitializeRollBackups(7, iMaxRollBackups);
-    VerifyInitializeRollBackups(8, iMaxRollBackups);
+    VerifyInitializeRollBackups(7, maxRollBackups);
+    VerifyInitializeRollBackups(8, maxRollBackups);
   }
 
   /// <summary>

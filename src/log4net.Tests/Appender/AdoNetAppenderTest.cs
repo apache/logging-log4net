@@ -87,7 +87,8 @@ public class AdoNetAppenderTest
   public void WebsiteExample()
   {
     XmlDocument log4NetConfig = new();
-    log4NetConfig.LoadXml("""
+    log4NetConfig.LoadXml(
+      """
       <log4net>
       <appender name="AdoNetAppender" type="log4net.Appender.AdoNetAppender">
           <bufferSize value="-1" />
@@ -143,7 +144,7 @@ public class AdoNetAppenderTest
           <appender-ref ref="AdoNetAppender" />
         </root>  
       </log4net>
-    """);
+      """);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
@@ -174,7 +175,8 @@ public class AdoNetAppenderTest
   public void BufferingWebsiteExample()
   {
     XmlDocument log4NetConfig = new();
-    log4NetConfig.LoadXml("""
+    log4NetConfig.LoadXml(
+      """
       <log4net>
       <appender name="AdoNetAppender" type="log4net.Appender.AdoNetAppender">
           <bufferSize value="2" />
@@ -230,7 +232,7 @@ public class AdoNetAppenderTest
           <appender-ref ref="AdoNetAppender" />
         </root>  
       </log4net>
-    """);
+      """);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
@@ -266,7 +268,8 @@ public class AdoNetAppenderTest
   public void NullPropertyXmlConfig()
   {
     XmlDocument log4NetConfig = new();
-    log4NetConfig.LoadXml("""
+    log4NetConfig.LoadXml(
+      """
       <log4net>
       <appender name="AdoNetAppender" type="log4net.Appender.AdoNetAppender">
           <bufferSize value="-1" />
@@ -287,7 +290,7 @@ public class AdoNetAppenderTest
           <appender-ref ref="AdoNetAppender" />
         </root>  
       </log4net>
-    """);
+      """);
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
