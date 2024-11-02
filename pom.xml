@@ -168,7 +168,7 @@
                 <exclude>**/.idea/*</exclude>
                 <exclude>src/changelog/**/*.xml</exclude>
                 <exclude>**/bin/**/*.xml</exclude>
-                <exclude>.github/*</exclude>
+                <exclude>**/*.y*ml</exclude>
               </excludes>
             </format>
           </formats>

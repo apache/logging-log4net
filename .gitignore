@@ -87,9 +87,6 @@ ipch/
 *.vspx
 *.sap
 
-# TFS 2012 Local Workspace
-$tf/
-
 # Guidance Automation Toolkit
 *.gpState
 
@@ -169,18 +166,6 @@ AppPackages/
 # but keep track of directories ending in .cache
 !*.[Cc]ache/
 
-# Others
-ClientBin/
-[Ss]tyle[Cc]op.*
-~$*
-*~
-*.dbmdl
-*.dbproj.schemaview
-*.pfx
-*.publishsettings
-node_modules/
-orleans.codegen.cs
-
 # RIA/Silverlight projects
 Generated_Code/
 
@@ -249,3 +234,4 @@ dotnetfx35.exe
 /src/Binaries/*
 
 local-tasks/*.generated.js
+/.flattened-pom.xml
