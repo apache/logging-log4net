@@ -16,8 +16,8 @@
 #
 
 site:
-  title: Apache Log4j Tools
-  url: "https://logging.apache.org/log4j/kotlin"
+  title: Apache log4net
+  url: "https://logging.apache.org/log4net"
   start_page: "ROOT::index.adoc"
 
 content:
@@ -138,4 +138,4 @@ ui:
     # Fix the `Edit this page` link
     - path: partials/edit-this-page.hbs
       contents: |
-        <div class="edit-this-page"><a href="https://github.com/apache/logging-log4j-tools/edit/main/src/site/antora/modules/{{page.module}}/pages/{{page.relativeSrcPath}}">Edit this Page</a></div>
+        <div class="edit-this-page"><a href="https://github.com/apache/logging-log4net/edit/Feature/Antora/src/site/antora/modules/{{page.module}}/pages/{{page.relativeSrcPath}}">Edit this Page</a></div>
