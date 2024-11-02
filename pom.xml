@@ -16,16 +16,6 @@
   ~ limitations under the License.
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" child.project.url.inherit.append.path="false" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
-  <!-- ██     ██  █████  ██████  ███    ██ ██ ███    ██  ██████  ██
-       ██     ██ ██   ██ ██   ██ ████   ██ ██ ████   ██ ██       ██
-       ██  █  ██ ███████ ██████  ██ ██  ██ ██ ██ ██  ██ ██   ███ ██
-       ██ ███ ██ ██   ██ ██   ██ ██  ██ ██ ██ ██  ██ ██ ██    ██
-        ███ ███  ██   ██ ██   ██ ██   ████ ██ ██   ████  ██████  ██
-
-       `log4j-tools` project modules should use `log4j-tools-parent` as their parents, not this POM!
-       This POM constitutes the BOM to be imported by applications using `log4j-tools` project modules. -->
-
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -34,35 +24,31 @@
     <version>11.0.0</version>
   </parent>
 
-  <groupId>org.apache.logging.log4j</groupId>
-  <artifactId>log4j-tools-bom</artifactId>
+  <groupId>org.apache.logging.log4net</groupId>
+  <artifactId>apache-log4net</artifactId>
   <version>${revision}</version>
   <packaging>pom</packaging>
 
-  <url>https://logging.apache.org/log4j/tools</url>
-
-  <inceptionYear>2022</inceptionYear>
+  <name>Apache log4net</name>
+  <description>Logging framework for Microsoft .NET Framework.</description>
+  <url>https://logging.apache.org/log4net</url>
+  <inceptionYear>2004</inceptionYear>
 
   <scm child.scm.connection.inherit.append.path="false" child.scm.developerConnection.inherit.append.path="false" child.scm.url.inherit.append.path="false">
-    <connection>scm:git:git@github.com:apache/logging-log4j-tools.git</connection>
-    <developerConnection>scm:git:git@github.com:apache/logging-log4j-tools.git</developerConnection>
-    <tag>HEAD</tag>
-    <url>https://github.com/apache/logging-log4j-tools</url>
+    <connection>scm:git:https://github.com/apache/logging-log4net</connection>
+    <developerConnection>scm:git:https://github.com/apache/logging-log4net</developerConnection>
+    <url>https://github.com/apache/logging-log4net</url>
   </scm>
 
   <issueManagement>
     <system>GitHub Issues</system>
-    <url>https://github.com/apache/logging-log4j-tools/issues</url>
+    <url>https://github.com/apache/logging-log4net/issues</url>
   </issueManagement>
 
   <ciManagement>
     <system>GitHub Actions</system>
-    <url>https://github.com/apache/logging-log4j-tools/actions</url>
+    <url>https://github.com/apache/logging-log4net/actions</url>
   </ciManagement>
-
-  <distributionManagement>
-    <downloadUrl>https://logging.apache.org/log4j/tools</downloadUrl>
-  </distributionManagement>
 
   <properties>
 

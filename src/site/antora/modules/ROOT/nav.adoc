@@ -15,13 +15,8 @@
     limitations under the License.
 ////
 
-* Components
-** xref:log4j-changelog.adoc[]
-** xref:log4j-changelog-maven-plugin.adoc[]
-** xref:log4j-docgen.adoc[]
-** xref:log4j-docgen-maven-plugin.adoc[]
-** xref:log4j-docgen-asciidoctor-extension.adoc[]
 * xref:development.adoc[]
+* xref:features.adoc[]
 * xref:release-notes.adoc[]
 * {logging-services-url}/download.html[Download]
 * {logging-services-url}/support.html[Support]

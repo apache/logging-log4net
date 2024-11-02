@@ -15,7 +15,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ////
 
-= log4net
+= Features
 
-The Apache log4net library is a tool to help the programmer output log statements to a variety of output targets.
-For more information on log4net see the xref:features.adoc[] document.
+log4net is a tool to help the programmer output log statements to a variety of output targets.
+In case of problems with an application, it is helpful to enable logging so that the problem
+can be located.
+With log4net it is possible to enable logging at runtime without modifying the application binary.
+The log4net package is designed so that log statements can remain in shipped code without incurring a
+high performance cost. It follows that the speed of logging (or rather not logging) is crucial.

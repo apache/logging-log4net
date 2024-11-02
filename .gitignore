@@ -226,6 +226,7 @@ src/GeneratedAssemblyInfo.cs
 *.old
 *.swp
 node
+node_modules
 build-tools
 buildreports
 vs_buildtools.exe
