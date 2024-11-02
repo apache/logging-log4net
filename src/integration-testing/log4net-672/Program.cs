@@ -70,7 +70,7 @@ int CountIdentifierInLogs(Guid id)
 int CountIdentifierInFile(Guid id, string filePath)
 {
   var contents = File.ReadAllLines(filePath);
-  return contents.Count(line => line.Contains(id.ToString()));
+  return contents.Count(line => line.Contains(id.ToString(), StringComparison.Ordinal));
 }
 
 int LogWith(Guid identifier, int howManyLogs)

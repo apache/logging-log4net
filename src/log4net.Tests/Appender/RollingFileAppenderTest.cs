@@ -171,7 +171,7 @@ public sealed class RollingFileAppenderTest
         {
           fileStream.Close();
         }
-        catch (Exception e) when (e is not null)
+        catch (ObjectDisposedException)
         {
           // Ignore
         }
@@ -320,7 +320,7 @@ public sealed class RollingFileAppenderTest
   /// Used for test purposes, a table of these objects can be used to identify
   /// any existing files and their expected length.
   /// </summary>
-  private record RollFileEntry(string FileName, long FileLength);
+  private sealed record RollFileEntry(string FileName, long FileLength);
 
   /// <summary>
   /// Used for table-driven testing.  This class holds information that can be used
@@ -334,7 +334,7 @@ public sealed class RollingFileAppenderTest
   /// A table of entries showing files that should exist and their expected sizes
   /// after a message is logged
   /// </param>
-  private record RollConditions(IList<RollFileEntry> PreLogFileEntries, IList<RollFileEntry> PostLogFileEntries);
+  private sealed record RollConditions(IList<RollFileEntry> PreLogFileEntries, IList<RollFileEntry> PostLogFileEntries);
 
   private static void VerifyExistenceAndRemoveFromList(List<string> existing,
     string fileName, FileInfo file, RollFileEntry entry)
@@ -481,6 +481,7 @@ public sealed class RollingFileAppenderTest
     string backupGroup, 
     int backupFileLength)
   {
+    // ReSharper disable once ArrangeMethodOrOperatorBody
     return backupGroup.Split(' ')
       .Where(file => file.Trim().Length > 0)
       .Select(file => new RollFileEntry(file, backupFileLength))
@@ -527,6 +528,7 @@ public sealed class RollingFileAppenderTest
     /// <summary>
     /// Number of total bytes a log file can reach.
     /// </summary>
+    // ReSharper disable once MemberHidesStaticFromOuterClass
     public int MaximumFileSize => TotalMessageLength * MessagesPerFile;
 
     /// <summary>
