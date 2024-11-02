@@ -55,9 +55,9 @@ public class SystemInfoTest
 
   private static Func<string> GetAssemblyLocationInfoMethodCall()
   {
-    var method = typeof(SystemInfoTest).GetMethod(nameof(TestAssemblyLocationInfoMethod), Array.Empty<Type>());
-    var methodCall = Expression.Call(null, method!, Array.Empty<Expression>());
-    return Expression.Lambda<Func<string>>(methodCall, Array.Empty<ParameterExpression>()).Compile();
+    var method = typeof(SystemInfoTest).GetMethod(nameof(TestAssemblyLocationInfoMethod), []);
+    var methodCall = Expression.Call(null, method!, []);
+    return Expression.Lambda<Func<string>>(methodCall, []).Compile();
   }
 
   [System.Diagnostics.CodeAnalysis.SuppressMessage("Structure", "NUnit1028:The non-test method is public",
@@ -68,9 +68,7 @@ public class SystemInfoTest
   [Test]
   public void TestGetTypeFromStringFullyQualified()
   {
-    Type? t;
-
-    t = GetTypeFromString("log4net.Tests.Util.SystemInfoTest,log4net.Tests", false, false);
+    Type? t = GetTypeFromString("log4net.Tests.Util.SystemInfoTest,log4net.Tests", false, false);
     Assert.That(t, Is.SameAs(typeof(SystemInfoTest)), "Test explicit case sensitive type load");
 
     t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,log4net.Tests", false, true);
@@ -84,9 +82,7 @@ public class SystemInfoTest
   [Platform(Include = "Win")]
   public void TestGetTypeFromStringCaseInsensitiveOnAssemblyName()
   {
-    Type? t;
-
-    t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", false, true);
+    Type? t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", false, true);
     Assert.That(t, Is.SameAs(typeof(SystemInfoTest)), "Test explicit case in-sensitive type load caps");
 
     t = GetTypeFromString("log4net.tests.util.systeminfotest,log4net.tests", false, true);
@@ -96,9 +92,7 @@ public class SystemInfoTest
   [Test]
   public void TestGetTypeFromStringRelative()
   {
-    Type? t;
-
-    t = GetTypeFromString("log4net.Tests.Util.SystemInfoTest", false, false);
+    Type? t = GetTypeFromString("log4net.Tests.Util.SystemInfoTest", false, false);
     Assert.That(t, Is.SameAs(typeof(SystemInfoTest)), "Test explicit case sensitive type load");
 
     t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", false, true);
@@ -111,9 +105,7 @@ public class SystemInfoTest
   [Test]
   public void TestGetTypeFromStringSearch()
   {
-    Type? t;
-
-    t = GetTypeFromString("log4net.Util.SystemInfo", false, false);
+    Type? t = GetTypeFromString("log4net.Util.SystemInfo", false, false);
     Assert.That(t, Is.SameAs(typeof(SystemInfo)),
                                      string.Format("Test explicit case sensitive type load found {0} rather than {1}",
                                                    t?.AssemblyQualifiedName, typeof(SystemInfo).AssemblyQualifiedName));
@@ -128,9 +120,7 @@ public class SystemInfoTest
   [Test]
   public void TestGetTypeFromStringFails1()
   {
-    Type? t;
-
-    t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", false, false);
+    Type? t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", false, false);
     Assert.That(t, Is.Null, "Test explicit case sensitive fails type load");
 
     Assert.That(() => GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST,LOG4NET.TESTS", true, false),
@@ -140,9 +130,7 @@ public class SystemInfoTest
   [Test]
   public void TestGetTypeFromStringFails2()
   {
-    Type? t;
-
-    t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", false, false);
+    Type? t = GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", false, false);
     Assert.That(t, Is.Null, "Test explicit case sensitive fails type load");
 
     Assert.That(() => GetTypeFromString("LOG4NET.TESTS.UTIL.SYSTEMINFOTEST", true, false),

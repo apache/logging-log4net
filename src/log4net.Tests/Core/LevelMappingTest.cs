@@ -17,7 +17,6 @@
 //
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -80,7 +79,7 @@ public sealed class LevelMappingTest
 
     List<LevelMappingEntry> sorted = (List<LevelMappingEntry>)typeof(LevelMapping)
       .GetMethod("SortEntries", BindingFlags.NonPublic | BindingFlags.Instance)!
-      .Invoke(mapping, Array.Empty<object>())!;
+      .Invoke(mapping, [])!;
 
     Assert.That(sorted, Is.EquivalentTo(withoutDuplicates));
     Assert.That(sorted, Is.Not.EqualTo(withoutDuplicates).AsCollection);

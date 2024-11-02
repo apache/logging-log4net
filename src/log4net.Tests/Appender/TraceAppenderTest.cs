@@ -79,9 +79,8 @@ public class TraceAppenderTest
     ILog log = LogManager.GetLogger(rep.Name, GetType());
     log.Debug("Message");
 
-    Assert.That(
-        categoryTraceListener.Category,
-        Is.EqualTo(MethodInfo.GetCurrentMethod()!.Name));
+    Assert.That(categoryTraceListener.Category,
+      Is.EqualTo(MethodBase.GetCurrentMethod()!.Name));
   }
 }
 
@@ -92,10 +91,7 @@ public class CategoryTraceListener : TraceListener
     // empty
   }
 
-  public override void WriteLine(string? message)
-  {
-    Write(message);
-  }
+  public override void WriteLine(string? message) => Write(message);
 
   public override void Write(string? message, string? category)
   {

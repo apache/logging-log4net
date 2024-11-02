@@ -71,10 +71,10 @@ public sealed class LoggingEventTest
     Assert.That(ev2.ThreadName, Is.EqualTo("aThread"));
     Assert.That(ev2.TimeStampUtc, Is.EqualTo(timestamp));
     Assert.That(ev2.LocationInfo, Is.Not.Null);
-    Assert.That(ev2.LocationInfo!.ClassName, Is.EqualTo("System.RuntimeMethodHandle"));
-    Assert.That(ev2.LocationInfo!.MethodName, Is.EqualTo("InvokeMethod"));
-    Assert.That(ev2.LocationInfo!.FileName, Is.Null);
-    Assert.That(ev2.LocationInfo!.LineNumber, Is.EqualTo("0"));
+    Assert.That(ev2.LocationInfo.ClassName, Is.EqualTo("System.RuntimeMethodHandle"));
+    Assert.That(ev2.LocationInfo.MethodName, Is.EqualTo("InvokeMethod"));
+    Assert.That(ev2.LocationInfo.FileName, Is.Null);
+    Assert.That(ev2.LocationInfo.LineNumber, Is.EqualTo("0"));
     Assert.That(ev2.UserName, Is.EqualTo("aUser"));
     Assert.That(ev2.Identity, Is.EqualTo("anIdentity"));
     Assert.That(ev2.ExceptionObject, Is.Null);
@@ -99,16 +99,16 @@ public sealed class LoggingEventTest
     LoggingEvent ev = (LoggingEvent)formatter.Deserialize(stream);
     Assert.That(ev, Is.Not.Null);
 
-    Assert.That(ev!.LoggerName, Is.EqualTo("aLogger"));
+    Assert.That(ev.LoggerName, Is.EqualTo("aLogger"));
     Assert.That(ev.Level, Is.EqualTo(Level.Log4Net_Debug));
     Assert.That(ev.MessageObject, Is.Null);
     Assert.That(ev.RenderedMessage, Is.EqualTo("aMessage"));
     Assert.That(ev.ThreadName, Is.EqualTo("aThread"));
     Assert.That(ev.LocationInfo, Is.Not.Null);
-    Assert.That(ev.LocationInfo!.ClassName, Is.EqualTo("?"));
-    Assert.That(ev.LocationInfo!.MethodName, Is.EqualTo("?"));
-    Assert.That(ev.LocationInfo!.FileName, Is.EqualTo("?"));
-    Assert.That(ev.LocationInfo!.LineNumber, Is.EqualTo("?"));
+    Assert.That(ev.LocationInfo.ClassName, Is.EqualTo("?"));
+    Assert.That(ev.LocationInfo.MethodName, Is.EqualTo("?"));
+    Assert.That(ev.LocationInfo.FileName, Is.EqualTo("?"));
+    Assert.That(ev.LocationInfo.LineNumber, Is.EqualTo("?"));
     Assert.That(ev.UserName, Is.EqualTo("aUser"));
     Assert.That(ev.Identity, Is.EqualTo("anIdentity"));
     Assert.That(ev.ExceptionObject, Is.Null);
@@ -141,5 +141,15 @@ public sealed class LoggingEventTest
 
     static void AssertIsCurrentThreadId(string name)
       => Assert.That(SystemInfo.CurrentThreadId.ToString(CultureInfo.InvariantCulture), Is.EqualTo(name));
+  }
+
+  [Test]
+  public void UserNameTest()
+  {
+    string expectedUserName = Environment.OSVersion.Platform == PlatformID.Win32NT
+      ? @$"{Environment.UserDomainName}\{Environment.UserName}"
+      : Environment.UserName;
+    LoggingEvent sut = new();
+    Assert.That(sut.UserName, Is.EqualTo(expectedUserName));
   }
 }

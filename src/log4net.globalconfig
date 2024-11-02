@@ -77,7 +77,7 @@ dotnet_diagnostic.CA1064.severity = warning
 dotnet_diagnostic.CA1066.severity = warning
 
 #CA1303: Do not pass literals as localized parameters
-dotnet_diagnostic.CA1303.severity = warning
+dotnet_diagnostic.CA1303.severity = none
 
 #CA1307: Specify StringComparison for clarity
 dotnet_diagnostic.CA1307.severity = warning
@@ -137,7 +137,7 @@ dotnet_diagnostic.CA1802.severity = warning
 dotnet_diagnostic.CA1810.severity = warning
 
 #CA1812: Avoid uninstantiated internal classes
-dotnet_diagnostic.CA1812.severity = warning
+dotnet_diagnostic.CA1812.severity = none
 
 #CA1813: Avoid unsealed attributes
 dotnet_diagnostic.CA1813.severity = warning

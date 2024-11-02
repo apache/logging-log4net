@@ -17,8 +17,6 @@
 //
 #endregion
 
-using System;
-
 using log4net.Util;
 
 using NUnit.Framework;
@@ -32,14 +30,14 @@ public class TransformTest
   [Test]
   public void MaskXmlInvalidCharactersAllowsJapaneseCharacters()
   {
-    string kome = "\u203B";
+    const string kome = "\u203B";
     Assert.That(Transform.MaskXmlInvalidCharacters(kome, "?"), Is.EqualTo(kome));
   }
 
   [Test]
   public void MaskXmlInvalidCharactersMasks0Char()
   {
-    string c = "\u0000";
+    const string c = "\0";
     Assert.That(Transform.MaskXmlInvalidCharacters(c, "?"), Is.EqualTo("?"));
   }
 }

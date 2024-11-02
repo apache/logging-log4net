@@ -319,7 +319,7 @@ public class LogicalThreadContextTest
 
   private static async Task<string> SomeWorkStack(string stackName)
   {
-    var stringAppender = new StringAppender
+    StringAppender stringAppender = new()
     {
       Layout = new PatternLayout("%property{" + Utils.PropertyKey + "}")
     };
@@ -332,7 +332,7 @@ public class LogicalThreadContextTest
     using (LogicalThreadContext.Stacks[Utils.PropertyKey].Push(stackName))
     {
       log.Info("TestMessage");
-      Assert.That(stringAppender.GetString(), Is.EqualTo(string.Format("Outer {0}", stackName)), "Test logical thread stack value set");
+      Assert.That(stringAppender.GetString(), Is.EqualTo($"Outer {stackName}"), "Test logical thread stack value set");
       stringAppender.Reset();
 
       await MoreWorkStack(log, "A").ConfigureAwait(false);

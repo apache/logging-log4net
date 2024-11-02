@@ -56,13 +56,14 @@ public class PatternStringTest : MarshalByRefObject
   [Test]
   public void TestAppSettingPathConverter()
   {
-    string configurationFileContent = @"
-<configuration>
-  <appSettings>
-    <add key=""TestKey"" value = ""TestValue"" />
-  </appSettings>
-</configuration>
-";
+    const string configurationFileContent = 
+      """
+      <configuration>
+        <appSettings>
+          <add key="TestKey" value = "TestValue" />
+        </appSettings>
+      </configuration>
+      """;
     string? configurationFileName = null;
     AppDomain? appDomain = null;
     try
@@ -93,13 +94,16 @@ public class PatternStringTest : MarshalByRefObject
     PatternString patternString = new(pattern);
     string evaluatedPattern = patternString.Format();
     string appSettingValue = ConfigurationManager.AppSettings["TestKey"];
-    Assert.That(appSettingValue, Is.EqualTo("TestValue"), "Expected configuration file to contain a key TestKey with the value TestValue");
-    Assert.That(evaluatedPattern, Is.EqualTo(appSettingValue), "Evaluated pattern expected to be identical to appSetting value");
+    Assert.That(appSettingValue, Is.EqualTo("TestValue"), 
+      "Expected configuration file to contain a key TestKey with the value TestValue");
+    Assert.That(evaluatedPattern, Is.EqualTo(appSettingValue), 
+      "Evaluated pattern expected to be identical to appSetting value");
 
     string badPattern = "%appSetting{UnknownKey}";
     patternString = new PatternString(badPattern);
     evaluatedPattern = patternString.Format();
-    Assert.That(evaluatedPattern, Is.EqualTo("(null)"), "Evaluated pattern expected to be \"(null)\" for non-existent appSettings key");
+    Assert.That(evaluatedPattern, Is.EqualTo("(null)"), 
+      "Evaluated pattern expected to be \"(null)\" for non-existent appSettings key");
   }
 
   private static string CreateTempConfigFile(string configurationFileContent)
@@ -116,8 +120,7 @@ public class PatternStringTest : MarshalByRefObject
       ApplicationBase = AppDomain.CurrentDomain.BaseDirectory,
       ConfigurationFile = configurationFileName
     };
-    AppDomain ad = AppDomain.CreateDomain(domainName, null, ads);
-    return ad;
+    return AppDomain.CreateDomain(domainName, null, ads);
   }
 }
 #endif

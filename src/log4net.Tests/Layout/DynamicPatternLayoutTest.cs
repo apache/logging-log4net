@@ -19,8 +19,6 @@
 
 using log4net.Layout;
 
-using NUnit.Framework;
-
 namespace log4net.Tests.Layout;
 
 /// <summary>

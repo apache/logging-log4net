@@ -1,7 +1,4 @@
-indent_style = space
-indent_size = 2
-
-[*.{cs,vb}]
+[*.cs]
 #### Naming styles ####
 
 # Naming rules
@@ -64,6 +61,7 @@ dotnet_naming_style.pascal_case.capitalization = pascal_case
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 tab_width = 2
 indent_size = 2
+indent_style = space
 end_of_line = crlf
 dotnet_style_coalesce_expression = true:suggestion
 dotnet_style_null_propagation = true:suggestion
@@ -88,20 +86,15 @@ dotnet_style_require_accessibility_modifiers = for_non_interface_members:silent
 dotnet_style_allow_multiple_blank_lines_experimental = true:silent
 dotnet_style_allow_statement_immediately_after_block_experimental = true:silent
 dotnet_code_quality_unused_parameters = all:suggestion
-dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity:silent
-dotnet_style_parentheses_in_other_binary_operators = always_for_clarity:silent
-dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity:silent
 dotnet_style_parentheses_in_other_operators = never_if_unnecessary:silent
 dotnet_style_qualification_for_field = false:silent
 dotnet_style_qualification_for_property = false:silent
 dotnet_style_qualification_for_method = false:silent
 dotnet_style_qualification_for_event = false:silent
 
-[*.cs]
 csharp_indent_labels = one_less_than_current
 csharp_using_directive_placement = outside_namespace:silent
 csharp_prefer_simple_using_statement = true:suggestion
-csharp_prefer_braces = true:suggestion
 csharp_style_namespace_declarations = block_scoped:silent
 csharp_style_prefer_method_group_conversion = true:silent
 csharp_style_prefer_top_level_statements = false:silent
@@ -143,9 +136,52 @@ csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
 csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
 csharp_style_prefer_not_pattern = true:suggestion
 csharp_style_prefer_extended_property_pattern = true:suggestion
-csharp_style_var_for_built_in_types = false:silent
-csharp_style_var_when_type_is_apparent = false:silent
-csharp_style_var_elsewhere = false:silent
+
+# Microsoft .NET properties
+csharp_new_line_before_members_in_object_initializers = false
+csharp_preferred_modifier_order = public, private, protected, internal, file, static, volatile, async, sealed, extern, virtual, abstract, new, unsafe, override, readonly, required:suggestion
+csharp_prefer_braces = true:none
+csharp_preserve_single_line_blocks = true
+csharp_style_var_elsewhere = false:suggestion
+csharp_style_var_for_built_in_types = false:suggestion
+csharp_style_var_when_type_is_apparent = false:suggestion
+dotnet_style_parentheses_in_arithmetic_binary_operators = never_if_unnecessary:none
+dotnet_style_parentheses_in_other_binary_operators = always_for_clarity:none
+dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity:none
+
+# ReSharper properties
+resharper_align_multiline_binary_expressions_chain = false
+resharper_blank_lines_after_block_statements = 0
+resharper_blank_lines_after_start_comment = 0
+resharper_blank_lines_after_using_list = 0
+resharper_blank_lines_around_property = 0
+resharper_blank_lines_around_single_line_local_method = 1
+resharper_braces_redundant = true
+resharper_constructor_or_destructor_body = expression_body
+resharper_csharp_blank_lines_around_field = 0
+resharper_csharp_blank_lines_around_invocable = 0
+resharper_csharp_blank_lines_around_region = 0
+resharper_csharp_blank_lines_inside_region = 0
+resharper_csharp_empty_block_style = together
+resharper_csharp_indent_size = 2
+resharper_csharp_keep_existing_enum_arrangement = false
+resharper_csharp_remove_blank_lines_near_braces_in_declarations = false
+resharper_csharp_wrap_before_binary_opsign = true
+resharper_instance_members_qualify_declared_in = 
+resharper_max_attribute_length_for_same_line = 70
+resharper_method_or_operator_body = expression_body
+resharper_parentheses_redundancy_style = remove
+resharper_place_accessorholder_attribute_on_same_line = false
+resharper_place_expr_accessor_on_single_line = true
+resharper_place_expr_property_on_single_line = true
+resharper_place_field_attribute_on_same_line = false
+resharper_place_simple_initializer_on_single_line = false
+resharper_space_between_attribute_sections = false
+resharper_use_roslyn_logic_for_evident_types = true
+resharper_wrap_after_primary_constructor_declaration_lpar = false
+resharper_wrap_before_arrow_with_expressions = true
+resharper_wrap_object_and_collection_initializer_style = chop_always
+resharper_wrap_primary_constructor_parameters_style = wrap_if_long
 
 # SYSLIB0003: Type or member is obsolete
 dotnet_diagnostic.SYSLIB0003.severity = none

@@ -74,7 +74,7 @@ public class LogLogTest
   [Test]
   public void LogReceivedAdapter()
   {
-    List<LogLog> messages = new();
+    List<LogLog> messages = [];
 
     using LogLog.LogReceivedAdapter _ = new(messages);
     LogLog.Debug(GetType(), "Won't be recorded");
