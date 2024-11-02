@@ -167,6 +167,7 @@
               <excludes>
                 <exclude>**/.idea/*</exclude>
                 <exclude>src/changelog/**/*.xml</exclude>
+                <exclude>**/bin/**/*.xml</exclude>
                 <exclude>.github/*</exclude>
               </excludes>
             </format>
