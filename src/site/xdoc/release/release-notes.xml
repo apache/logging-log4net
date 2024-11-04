@@ -52,6 +52,9 @@ limitations under the License.
             <li>
               <a href="https://github.com/apache/logging-log4net/pull/203">use raw strings for config files in unit tests</a> (by @FreeAndNil)
             </li>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/205">Make RollingFileAppender.RollOverRenameFiles virtual</a> (reported by @FerdinandStapenhorst, implemented by @FreeAndNil in <a href="https://github.com/apache/logging-log4net/pull/206">#206</a>)
+            </li>
           </ul>
         </section>
       </section>
@@ -60,7 +63,8 @@ limitations under the License.
         <section id="a3.0.2-bug" name="Bug fixes">
           <ul>
             <li>
-              <a href="https://github.com/apache/logging-log4net/issues/194">ObjectDisposedException in TelnetAppender (3.0.1)</a> (reported by VianneyTremelo, fixed by @FreeAndNil in <a href="https://github.com/apache/logging-log4net/pull/195">#195</a>)</li>
+              <a href="https://github.com/apache/logging-log4net/issues/194">ObjectDisposedException in TelnetAppender (3.0.1)</a> (reported by VianneyTremelo, fixed by @FreeAndNil in <a href="https://github.com/apache/logging-log4net/pull/195">#195</a>)
+            </li>
             <li>
               <a href="https://github.com/apache/logging-log4net/issues/197">IndexOutOfRangeException when creating child loggers multithreaded</a> (reported by @FreeAndNil, fixed by @FreeAndNil in <a href="https://github.com/apache/logging-log4net/pull/198">#198</a>)
             </li>
