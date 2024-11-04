@@ -21,37 +21,29 @@ release version 2.0.123:
                     - people who reported issues
                     - people who created pull requests
                     - people who suggested code that was implemented
-2. Update the log4net.csproj file with this new version
-3. Build release artifacts with `npm run release`
+2. Build release artifacts with `npm run release`
     - if this doesn't work, you may need to `npm ci` first!
-    - currently, this _must_ happen on a windows machine because of older
-        .net framework requirements which cannot be met on a Linux machine
-        (or at least, I haven't figured out how - in particular CF)
-4. Sign release artifacts (zips & nupkg) under `build/artifacts`
-    - eg `gpg --armor --output log4net-2.0.123.nupkg.asc --detach-sig log4net-2.0.123.nupkg`
-    - there is an accompanying `sign-log4net-libraries.sh/ps1` under scripts which you could invoke if you cd
-        into the `build/artifacts` folder
-        - I build on Windows and sign on Linux as my build machine belongs to my company
-            and I don't want to store keys there. Always protect your keys fervently!
-5. Clone out the log4net doc repo (https://github.com/apache/logging-log4net-site)
+3. Sign release artifacts (zips & nupkg) under `build/artifacts`
+    - `./scripts/sign-log4net-libraries.sh/ps1`
+4. Clone out the log4net doc repo (https://github.com/apache/logging-log4net-site)
     - check out the `asf-staging` branch
     - create a folder which includes the version, eg `log4net-2.0.123`
-6. Copy the contents of `target/site` from this repo into the folder created in (5)
+5. Copy the contents of `target/site` from this repo into the folder created in (5)
     - remember to either update or link in sdk docs from a prior release
-7. Update the symlinks in the base of the docs repo, ie:
+6. Update the symlinks in the base of the docs repo, ie:
     - 2.0.x -> 2.0.123
     - 2.x -> 2.0.123
-8. update the `doap_log4net.rdf` to point to the new release 
+7. update the `doap_log4net.rdf` to point to the new release 
     - (copy-paste-modify an existing release)
-9. update the `.htaccess` file
+8. update the `.htaccess` file
     - the trailing RewriteRule should point to the new log4net-2.0.123 folder
-10. push the `asf-staging` branch to github and wait a bit 
-    - after a minute or two, check the updates at https://logging.staged.apache.org/log4net
-        - are you seeing the correct releases page?
-        - download links should (at this point) not work
-11. create an rc-releasd at GitHub with a tag like `rc/2.0.123-rc1`
+9. push the `asf-staging` branch to github and wait a bit 
+   - after a minute or two, check the updates at https://logging.staged.apache.org/log4net
+      - are you seeing the correct releases page?
+      - download links should (at this point) not work
+10. create an rc-releasd at GitHub with a tag like `rc/2.0.123-rc1`
     - attach all the files from the build/artifacts folder, _including signatures_
-12. get the artifacts in build/artifacts up to https://downloads.apache.org/logging/log4net/
+11. get the artifacts in build/artifacts up to https://downloads.apache.org/logging/log4net/
     - `svn co https://dist.apache.org/repos/dist/dev/logging -N apache-dist-logging-dev`
     - `cd apache-dist-logging-dev`
     - `svn up log4net`
@@ -61,10 +53,10 @@ release version 2.0.123:
     - `svn add *`
     - `svn commit -m 'log4net 2.0.123'`
     - check https://dist.apache.org/repos/dist/dev/logging/log4net/2.0.123/
-13. raise a vote on the log4net mailing list (dev@logging.apache.org) - see MailTemplate.txt
-14. wait
-15. when the vote has 3 or more +1's, it's time to go live!
-16. copy the apache artifacts (binary and source) to the release svn repo and commit
+12. raise a vote on the log4net mailing list (dev@logging.apache.org) - see MailTemplate.txt
+13. wait
+14. when the vote has 3 or more +1's, it's time to go live!
+15. copy the apache artifacts (binary and source) to the release svn repo and commit
     - `svn co https://dist.apache.org/repos/dist/release/logging -N apache-dist-logging-release`
     - `cd apache-dist-logging-release`
     - `svn up log4net`
