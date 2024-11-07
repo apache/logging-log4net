@@ -1,6 +1,6 @@
 {
   "name": "log4net",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "Log4Net is a logging framework for .NET",
   "scripts": {
     "test": "run-s clean-build test-dotnet run-dotnet-core-tests",
