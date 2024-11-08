@@ -1,6 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Version>3.0.3</Version>
+    <Version>3.0.4</Version>
     <PackageId>log4net</PackageId>
     <Product>Apache log4net</Product>
     <Title>$(Product)</Title>
@@ -100,7 +100,7 @@ log4net is designed with two distinct goals in mind: speed and flexibility
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(MicrosoftSourceLinkGitHubPackageVersion)" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="$(MicrosoftNetAnalyzersPackageVersion)" PrivateAssets="All" IncludeAssets="All"/>
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="$(MicrosoftNetAnalyzersPackageVersion)" PrivateAssets="All" IncludeAssets="All" />
   </ItemGroup>
   <Import Project="../MonoForFramework.targets" />
   <Target Name="_ResolveCopyLocalNuGetPackagePdbsAndXml" Condition="$(CopyLocalLockFileAssemblies) == true" AfterTargets="ResolveReferences">

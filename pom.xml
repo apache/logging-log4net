@@ -15,7 +15,10 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" child.project.url.inherit.append.path="false" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         child.project.url.inherit.append.path="false"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -24,6 +27,7 @@
     <version>11.0.0</version>
   </parent>
 
+  <packaging>pom</packaging>
   <groupId>org.apache.logging.log4net</groupId>
   <artifactId>apache-log4net</artifactId>
   <version>${revision}</version>
@@ -34,7 +38,8 @@
   <url>https://logging.apache.org/log4net</url>
   <inceptionYear>2004</inceptionYear>
 
-  <scm child.scm.connection.inherit.append.path="false" child.scm.developerConnection.inherit.append.path="false" child.scm.url.inherit.append.path="false">
+  <scm child.scm.connection.inherit.append.path="false" child.scm.developerConnection.inherit.append.path="false"
+       child.scm.url.inherit.append.path="false">
     <connection>scm:git:https://github.com/apache/logging-log4net</connection>
     <developerConnection>scm:git:https://github.com/apache/logging-log4net</developerConnection>
     <url>https://github.com/apache/logging-log4net</url>
@@ -44,6 +49,16 @@
     <system>GitHub Issues</system>
     <url>https://github.com/apache/logging-log4net/issues</url>
   </issueManagement>
+
+  <mailingLists>
+    <mailingList>
+      <name>logging commits: all git commits of the logging projects including log4net</name>
+      <subscribe>commits-subscribe@logging.apache.org</subscribe>
+      <unsubscribe>commits-unsubscribe@logging.apache.org</unsubscribe>
+      <post>Read-Only List</post>
+      <archive>https://mail-archives.apache.org/mod_mbox/logging-commits/</archive>
+    </mailingList>
+  </mailingLists>
 
   <ciManagement>
     <system>GitHub Actions</system>
@@ -169,8 +184,6 @@
           <excludesFile>${basedir}/rat.excludesFile</excludesFile>
         </configuration>
       </plugin>
-
     </plugins>
   </build>
-
 </project>
