@@ -38,6 +38,4 @@
 
 <#if release.date?has_content>Release date:: ${release.date}</#if>
 
-This is the first release, aimed to assist [the Apache Log4j 2](https://logging.apache.org/log4j/2.x/) on generating release notes.
-
 <#include "../.changelog.adoc.ftl">
