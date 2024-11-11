@@ -12,6 +12,7 @@
     <DefineConstants>TRACE;DEBUG;$(DefineConstants)</DefineConstants>
     <!-- suppress analyzer mismatch warning -->
     <NoWarn>CS8032</NoWarn>
+    <VSTestLogger>quackers</VSTestLogger>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\log4net\Diagnostics\CodeAnalysis\CallerArgumentExpressionAttribute.cs" Link="Diagnostics\CodeAnalysis\CallerArgumentExpressionAttribute.cs" />
