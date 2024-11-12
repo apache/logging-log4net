@@ -42,3 +42,6 @@
 
 include::_release-notes/${release.version}.adoc[]
 </#if></#list>
+
+[#release-notes-2.x-and-older]
+=== https://logging.apache.org/log4net/log4net-2.0.17/release/release-notes.html[2.x and older]

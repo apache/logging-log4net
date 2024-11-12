@@ -20,8 +20,8 @@
 [#release-notes-${release.version?replace("[^a-zA-Z0-9]", "-", "r")}-${entryType?lower_case}]
 === ${entryType?capitalize}
 
-<#list entries as entry>
-* ${entry.description.text?replace("\\s+", " ", "r")}<#if entry.issues?has_content> (<#list entry.issues as issue>${issue.link}[${issue.id}]<#if issue?has_next>, </#if></#list>)</#if>
-</#list>
+  <#list entries as entry>
+  * ${entry.description.text?replace("\\s+", " ", "r")}<#if entry.issues?has_content> (<#list entry.issues as issue>${issue.link}[${issue.id}]<#if issue?has_next>, </#if></#list>)</#if>
+  </#list>
 </#list>
 </#if>
