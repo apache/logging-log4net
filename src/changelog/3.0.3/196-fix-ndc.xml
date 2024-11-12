@@ -3,6 +3,6 @@
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="fixed">
-  <issue id="196" link="https://github.com/apache/logging-log4net/pull/196"/>
+  <issue id="72fdee8" link="https://github.com/apache/logging-log4net/commit/72fdee8f58c2cea5bb300e4b6aee179180e7bb93"/>
   <description format="asciidoc">NDC was accidentally renamed into Ndc in 3.0.2 - this change was reverted</description>
 </entry>

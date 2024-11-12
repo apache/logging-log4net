@@ -38,4 +38,10 @@
 
 <#if release.date?has_content>Release date:: ${release.date}</#if>
 
+[#release-notes-3-0-2-known-issues]
+=== Known issues
+
+* MDC was accidentally renamed into Mdc - this will be reverted in 3.0.3
+* NDC was accidentally renamed into Ndc - this will be reverted in 3.0.3
+
 <#include "../.changelog.adoc.ftl">
