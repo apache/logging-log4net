@@ -50,25 +50,10 @@ jobs:
           dotnet-version: 8
           dotnet-quality: ga
 
-      - name: Set up NodeJs
-        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b   # 4.0.3
-        with:
-          node-version: 20
-
-      - name: Setup non-windows build
-        if: matrix.os != 'windows-latest'
-        run: |
-          echo "DOTNET_CORE=1" >> $GITHUB_ENV
-      
-      - name: Install build dependencies
-        run: |
-          npm update -g npm --no-progress
-          npm install --no-progress
-
       - name: Build
         run: |
-            npm run build
+            dotnet build ./src/log4net.sln
       
       - name: Test
         run: |
-            npm test
+            dotnet test ./src/log4net.sln
