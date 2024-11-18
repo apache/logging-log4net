@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="183" link="https://github.com/apache/logging-log4net/issues/183"/>
+  <description format="asciidoc">log4net.Util.PatternString not working in 3.0.0 (Unable to set property [file] on object [log4net.Appender.FileAppender]), reported by @sc-mk,
+  fixed by @FreeAndNil in https://github.com/apache/logging-log4net/pull/184[#184]</description>
+</entry>
