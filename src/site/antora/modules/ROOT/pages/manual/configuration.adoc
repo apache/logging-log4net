@@ -15,11 +15,5 @@
     limitations under the License.
 ////
 
-* xref:development.adoc[]
-* xref:manual/index.adoc[]
-** xref:manual/configuration.adoc[]
-* xref:features.adoc[]
-* xref:release-notes.adoc[]
-* {logging-services-url}/download.html[Download]
-* {logging-services-url}/support.html[Support]
-* {logging-services-url}/security.html[Security]
+[#configuration]
+= Configuration
