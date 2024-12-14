@@ -19,6 +19,10 @@ name: build
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - master
+  pull_request:
 
 jobs:
 
@@ -31,6 +35,10 @@ jobs:
       matrix:
         os: [ macos-latest, ubuntu-latest, windows-latest ]
 
+    env:
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
     steps:
 
       - name: Checkout repository
@@ -42,16 +50,10 @@ jobs:
           dotnet-version: 8
           dotnet-quality: ga
 
-      - name: Set up NodeJs
-        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b   # 4.0.3
-        with:
-          node-version: 20
-
-      - name: Build and test
-        env:
-          DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
-          DOTNET_CLIE_TELEMETRY_OPTOUT: 1
+      - name: Build
         run: |
-          npm update -g npm --no-progress
-          npm install --no-progress
-          npm test
+            dotnet build ./src/log4net.sln
+      
+      - name: Test
+        run: |
+            dotnet test ./src/log4net.sln
