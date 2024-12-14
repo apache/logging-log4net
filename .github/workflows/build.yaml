@@ -33,7 +33,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-latest, ubuntu-latest, windows-latest ]
+        os: [ macos-latest, ubuntu-22.04, windows-latest ]
 
     env:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
