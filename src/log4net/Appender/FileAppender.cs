@@ -1232,7 +1232,7 @@ public class FileAppender : TextWriterAppender
         _stream.AcquireLock();
         try
         {
-          SetQwForFiles(_stream);
+          SetQWForFiles(_stream);
         }
         finally
         {
@@ -1250,9 +1250,9 @@ public class FileAppender : TextWriterAppender
   /// <param name="fileStream">the file stream that has been opened for writing</param>
   /// <remarks>
   /// <para>
-  /// This implementation of <see cref="SetQwForFiles(Stream)"/> creates a <see cref="StreamWriter"/>
+  /// This implementation of <see cref="SetQWForFiles(Stream)"/> creates a <see cref="StreamWriter"/>
   /// over the <paramref name="fileStream"/> and passes it to the 
-  /// <see cref="SetQwForFiles(TextWriter)"/> method.
+  /// <see cref="SetQWForFiles(TextWriter)"/> method.
   /// </para>
   /// <para>
   /// This method can be overridden by subclasses that want to wrap the
@@ -1260,12 +1260,12 @@ public class FileAppender : TextWriterAppender
   /// data using a <c>System.Security.Cryptography.CryptoStream</c>.
   /// </para>
   /// </remarks>
-  protected virtual void SetQwForFiles(Stream fileStream)
+  protected virtual void SetQWForFiles(Stream fileStream)
   {
 #pragma warning disable CA2000 // Dispose objects before losing scope
     StreamWriter writer = new(fileStream, Encoding);
 #pragma warning restore CA2000 // Dispose objects before losing scope
-    SetQwForFiles(writer);
+    SetQWForFiles(writer);
   }
 
   /// <summary>
@@ -1278,7 +1278,7 @@ public class FileAppender : TextWriterAppender
   /// wrap the <see cref="TextWriter"/> in some way.
   /// </para>
   /// </remarks>
-  protected virtual void SetQwForFiles(TextWriter writer) 
+  protected virtual void SetQWForFiles(TextWriter writer) 
     => QuietWriter = new(writer, ErrorHandler);
 
   /// <summary>
