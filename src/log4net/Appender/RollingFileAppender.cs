@@ -468,7 +468,7 @@ public partial class RollingFileAppender : FileAppender
   /// This method can be overridden by subclasses.
   /// </remarks>
   /// <param name="writer">the writer to set</param>
-  protected override void SetQwForFiles(TextWriter writer) 
+  protected override void SetQWForFiles(TextWriter writer) 
     => QuietWriter = new CountingQuietTextWriter(writer, ErrorHandler);
 
   /// <summary>
