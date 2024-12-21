@@ -15,8 +15,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ////
 
-[#log4net]
-= log4net
+[#download]
+= Download
 
-The Apache log4net library is a tool to help the programmer output log statements to a variety of output targets.
-For more information on log4net see the xref:features.adoc[] document.
+You can manually download all published log4net distributions, verify them, and see their licensing information by following the instructions in the https://logging.apache.org/download.html[Download page] of https://logging.apache.org[Logging Services].
+
+[TIP]
+====
+* Are you looking for **the log4net installation instructions**?
+Proceed to xref:manual/installation.adoc[].
+* Are you looking for the list of changes associated with a particular release?
+Proceed to xref:release-notes.adoc[].
+====
+

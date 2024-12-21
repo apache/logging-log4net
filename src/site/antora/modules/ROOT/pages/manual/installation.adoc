@@ -15,11 +15,21 @@
     limitations under the License.
 ////
 
-* xref:download.adoc[]
-* xref:development.adoc[]
-* xref:manual/index.adoc[]
-** xref:manual/configuration.adoc[]
-* xref:features.adoc[]
-* xref:release-notes.adoc[]
-* {logging-services-url}/support.html[Support]
-* {logging-services-url}/security.html[Security]
+[#install]
+= Install Apache log4net
+
+The preferred way to install log4net is to use our https://www.nuget.org/packages/log4net[nuget package].
+
+Just add the following lines in your project file.
+[source,xml]
+----
+<ItemGroup>
+  <PackageReference Include="log4net" Version="*" />
+</ItemGroup>
+----
+Now you can use log4net. See our https://github.com/apache/logging-log4net/tree/master/examples[examples].
+
+[source,powershell]
+----
+dotnet add package log4net
+----
