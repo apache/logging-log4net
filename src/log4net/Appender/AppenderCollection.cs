@@ -28,6 +28,7 @@ namespace log4net.Appender;
 /// A strongly-typed collection of <see cref="IAppender"/> objects.
 /// </summary>
 /// <author>Nicko Cadell</author>
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1010:Generic interface should also be implemented")]
 public class AppenderCollection : IList, ICloneable, ICollection<IAppender>
 {
   /// <summary>

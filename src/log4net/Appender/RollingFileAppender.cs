@@ -126,7 +126,7 @@ namespace log4net.Appender;
 /// <author>Douglas de la Torre</author>
 /// <author>Edward Smit</author>
 // ReSharper disable GrammarMistakeInComment
-public partial class RollingFileAppender : FileAppender
+public partial class RollingFileAppender : FileAppender, IDisposable
 {
   /// <summary>
   /// Style of rolling to use
@@ -217,7 +217,26 @@ public partial class RollingFileAppender : FileAppender
   /// <summary>
   /// Cleans up all resources used by this appender.
   /// </summary>
-  ~RollingFileAppender() => Interlocked.Exchange(ref _mutexForRolling, null)?.Dispose();
+  protected virtual void Dispose(bool disposing)
+  {
+    if (!_wasDisposed)
+    {
+      Interlocked.Exchange(ref _mutexForRolling, null)?.Dispose();
+      _wasDisposed = true;
+    }
+  }
+
+  /// <inheritdoc/>
+  public void Dispose()
+  {
+    Dispose(true);
+    GC.SuppressFinalize(this);
+  }
+
+  /// <summary>
+  /// Cleans up all resources used by this appender.
+  /// </summary>
+  ~RollingFileAppender() => Dispose(false);
 
   /// <summary>
   /// Gets or sets the strategy for determining the current date and time. The default
@@ -1508,6 +1527,11 @@ public partial class RollingFileAppender : FileAppender
   /// A mutex that is used to lock rolling of files.
   /// </summary>
   private Mutex? _mutexForRolling;
+
+  /// <summary>
+  /// Was <see cref="Dispose()"/> called
+  /// </summary>
+  private bool _wasDisposed;
 
   /// <summary>
   /// The 1st of January 1970 in UTC

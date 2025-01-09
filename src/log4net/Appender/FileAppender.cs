@@ -342,7 +342,7 @@ public class FileAppender : TextWriterAppender
     /// <param name="stream"></param>
     protected void CloseStream(Stream stream)
     {
-      using var _ = CurrentAppender?.SecurityContext?.Impersonate(this);
+      using IDisposable? _ = CurrentAppender?.SecurityContext?.Impersonate(this);
       stream?.Dispose();
     }
   }

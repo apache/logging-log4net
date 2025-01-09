@@ -140,9 +140,9 @@ namespace log4net.Util
     /// </summary>
     /// <param name="message">the string to output</param>
 #if NETSTANDARD2_0_OR_GREATER
-    [DllImport("CoreDll.dll")]
+    [DllImport("CoreDll.dll", CharSet = CharSet.Unicode)]
 #else
-    [DllImport("Kernel32.dll")]
+    [DllImport("Kernel32.dll", CharSet = CharSet.Unicode)]
 #endif
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     internal static extern void OutputDebugString(string message);

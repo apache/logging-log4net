@@ -709,6 +709,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   // ReSharper disable once FieldCanBeMadeReadOnly.Global
   // ReSharper disable once MemberCanBePrivate.Global
   [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1002:Do not expose generic lists")]
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1051:Do not declare visible instance fields")]
   protected List<AdoNetAppenderParameter> m_parameters = [];
 
   /// <summary>

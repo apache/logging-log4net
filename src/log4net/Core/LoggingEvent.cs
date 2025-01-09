@@ -803,7 +803,7 @@ public class LoggingEvent : ILog4NetSerializable
       return null;
     }
 #endif
-    using var identity = WindowsIdentity.GetCurrent();
+    using WindowsIdentity identity = WindowsIdentity.GetCurrent();
     return identity?.Name ?? string.Empty;
   }
 
@@ -1140,13 +1140,13 @@ public class LoggingEvent : ILog4NetSerializable
 
   private void CreateCompositeProperties()
   {
-    var compositeProperties = new CompositeProperties();
+    CompositeProperties compositeProperties = new();
 
     if (_eventProperties is not null)
     {
       compositeProperties.Add(_eventProperties);
     }
-    var logicalThreadProperties = LogicalThreadContext.Properties.GetProperties(false);
+    PropertiesDictionary? logicalThreadProperties = LogicalThreadContext.Properties.GetProperties(false);
     if (logicalThreadProperties is not null)
     {
       compositeProperties.Add(logicalThreadProperties);
@@ -1163,7 +1163,7 @@ public class LoggingEvent : ILog4NetSerializable
     bool shouldFixIdentity = (_fixFlags & FixFlags.Identity) != 0;
     if (shouldFixIdentity || shouldFixUserName)
     {
-      var eventProperties = new PropertiesDictionary();
+      PropertiesDictionary eventProperties = new();
       if (shouldFixUserName)
       {
         eventProperties[UserNameProperty] = UserName;
@@ -1190,9 +1190,9 @@ public class LoggingEvent : ILog4NetSerializable
         CreateCompositeProperties();
       }
 
-      var flattenedProperties = _compositeProperties!.Flatten();
+      PropertiesDictionary flattenedProperties = _compositeProperties!.Flatten();
 
-      var fixedProperties = new PropertiesDictionary();
+      PropertiesDictionary fixedProperties = new();
 
       // Validate properties
       foreach (KeyValuePair<string, object?> entry in flattenedProperties)

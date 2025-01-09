@@ -257,11 +257,11 @@ public class AnsiColorTerminalAppender : AppenderSkeleton
     // are inserted afterward.
     if (loggingMessage.Length > 1)
     {
-      if (loggingMessage.EndsWith("\r\n") || loggingMessage.EndsWith("\n\r"))
+      if (loggingMessage.EndsWith("\r\n", StringComparison.Ordinal) || loggingMessage.EndsWith("\n\r", StringComparison.Ordinal))
       {
         loggingMessage = loggingMessage.Insert(loggingMessage.Length - 2, PostEventCodes);
       }
-      else if (loggingMessage.EndsWith("\n") || loggingMessage.EndsWith("\r"))
+      else if (loggingMessage.EndsWith("\n", StringComparison.Ordinal) || loggingMessage.EndsWith("\r", StringComparison.Ordinal))
       {
         loggingMessage = loggingMessage.Insert(loggingMessage.Length - 1, PostEventCodes);
       }
