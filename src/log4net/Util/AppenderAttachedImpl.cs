@@ -193,18 +193,9 @@ public class AppenderAttachedImpl : IAppenderAttachable
   /// The read only collection of all currently attached appenders.
   /// </para>
   /// </remarks>
-  public AppenderCollection Appenders
-  {
-    get
-    {
-      if (_appenderList is null)
-      {
-        // We must always return a valid collection
-        return AppenderCollection.EmptyCollection;
-      }
-      return AppenderCollection.ReadOnly(_appenderList);
-    }
-  }
+  public AppenderCollection Appenders => _appenderList is null // We must always return a valid collection
+    ? AppenderCollection.EmptyCollection 
+    : AppenderCollection.ReadOnly(_appenderList);
 
   /// <summary>
   /// Gets an attached appender with the specified name.
