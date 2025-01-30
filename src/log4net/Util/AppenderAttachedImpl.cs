@@ -71,9 +71,7 @@ public class AppenderAttachedImpl : IAppenderAttachable
       return 0;
     }
 
-    _appenderArray ??= _appenderList.ToArray();
-
-    foreach (IAppender appender in _appenderArray)
+    foreach (IAppender appender in _appenderList.ToArray())
     {
       try
       {
@@ -116,9 +114,7 @@ public class AppenderAttachedImpl : IAppenderAttachable
       return 0;
     }
 
-    _appenderArray ??= _appenderList.ToArray();
-
-    foreach (IAppender appender in _appenderArray)
+    foreach (IAppender appender in _appenderList.ToArray())
     {
       try
       {
@@ -173,7 +169,6 @@ public class AppenderAttachedImpl : IAppenderAttachable
   public void AddAppender(IAppender appender)
   {
     appender.EnsureNotNull();
-    _appenderArray = null;
     _appenderList ??= new(1);
     if (!_appenderList.Contains(appender))
     {
@@ -258,7 +253,6 @@ public class AppenderAttachedImpl : IAppenderAttachable
         }
       }
       _appenderList = null;
-      _appenderArray = null;
     }
   }
 
@@ -283,7 +277,6 @@ public class AppenderAttachedImpl : IAppenderAttachable
       {
         _appenderList = null;
       }
-      _appenderArray = null;
     }
     return appender;
   }
@@ -306,11 +299,6 @@ public class AppenderAttachedImpl : IAppenderAttachable
   /// List of appenders
   /// </summary>
   private AppenderCollection? _appenderList;
-
-  /// <summary>
-  /// Array of appenders, used to cache the appenderList
-  /// </summary>
-  private IAppender[]? _appenderArray;
 
   /// <summary>
   /// The fully qualified type of the AppenderAttachedImpl class.
