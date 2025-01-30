@@ -218,7 +218,7 @@ public class AppenderAttachedImpl : IAppenderAttachable
   {
     if (_appenderList is not null && name is not null)
     {
-      foreach (IAppender appender in _appenderList)
+      foreach (IAppender appender in _appenderList.ToArray())
       {
         if (name == appender.Name)
         {
