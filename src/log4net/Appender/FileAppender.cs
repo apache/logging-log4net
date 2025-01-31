@@ -1542,8 +1542,13 @@ namespace log4net.Appender
         m_fileName = fileName;
         m_appendToFile = append;
 
-        LockingModel.CurrentAppender = this;
-        LockingModel.OpenFile(fileName, append, m_encoding);
+        if (m_lockingModel == null)
+        {
+          m_lockingModel = (LockingModelBase)Activator.CreateInstance(defaultLockingModelType);
+        }
+
+        m_lockingModel.CurrentAppender = this;
+        m_lockingModel.OpenFile(fileName, append, m_encoding);
         m_stream = new LockingStream(LockingModel);
 
         if (m_stream != null)
