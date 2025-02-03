@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="156" link="https://github.com/apache/logging-log4net/issues/156"/>
+  <description format="asciidoc">Regression: Creating nested loggers in reverse order fails in 3.0.0-preview.1 (by @FreeAndNil)</description>
+</entry>
