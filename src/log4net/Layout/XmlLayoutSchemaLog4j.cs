@@ -221,7 +221,7 @@ method="run" file="Generator.java" line="94"/>
     if (!string.IsNullOrEmpty(exceptionStr))
     {
       // Append the stack trace line
-      writer.WriteStartElement("log4j:throwable", "log4j", "data", "log4net");
+      writer.WriteStartElement("log4j:throwable", "log4j", "throwable", "log4net");
       Transform.WriteEscapedXmlString(writer, exceptionStr!, InvalidCharReplacement);
       writer.WriteEndElement();
     }
