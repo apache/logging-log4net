@@ -1,4 +1,4 @@
-$Version = '3.0.3'
+$Version = '3.0.4'
 $Preview = '1'
 'building ...'
 dotnet build -c Release "-p:GeneratePackages=true;PackageVersion=$Version-preview.$Preview" $PSScriptRoot/../src/log4net/log4net.csproj

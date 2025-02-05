@@ -23,6 +23,19 @@ limitations under the License.
   <meta name="keywords" content="log4net release notes, log4net"/>
   <body>
     <section id="main" name="Apache log4net Release Notes">
+      <section id="a3.0.4" name="3.0.4">
+        Apache log4net 3.0.4 addresses reported issues:
+        <section id="a3.0.4-bug" name="Bug fixes">
+          <ul>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/216">Breaking change to FileAppender in 3.0.2</a> (reported by @sketchturner, fixed by @FreeAndNil in <a href="https://github.com/apache/logging-log4net/pull/217">#217</a>)
+            </li>
+            <li>
+              <a href="https://github.com/apache/logging-log4net/issues/225">XmlLayoutSchemaLog4J: Changed XML start element for exceptions since v3.0.0</a> (reported by @sita-martin, fixed by @FreeAndNil in <a href="https://github.com/apache/logging-log4net/pull/226">#226</a>)
+            </li>
+          </ul>
+        </section>
+      </section>
       <section id="a3.0.3" name="3.0.3">
         Apache log4net 3.0.3 addresses reported issues:
         <section id="a3.0.3-bug" name="Bug fixes">
