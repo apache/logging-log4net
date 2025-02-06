@@ -66,7 +66,7 @@ public static class XmlConfigurator
 
     using (new LogLog.LogReceivedAdapter(configurationMessages))
     {
-      InternalConfigure(repository);
+      InternalConfigure(repository, () => System.Configuration.ConfigurationManager.GetSection("log4net") as XmlElement);
     }
 
     repository.ConfigurationMessages = configurationMessages;
@@ -74,7 +74,7 @@ public static class XmlConfigurator
     return configurationMessages;
   }
 
-  private static void InternalConfigure(ILoggerRepository repository)
+  private static void InternalConfigure(ILoggerRepository repository, Func<XmlElement?> getConfigSection)
   {
     LogLog.Debug(_declaringType, $"configuring repository [{repository.Name}] using .config file section");
 
@@ -90,10 +90,12 @@ public static class XmlConfigurator
 
     try
     {
-      if (System.Configuration.ConfigurationManager.GetSection("log4net") is not XmlElement configElement)
+      if (getConfigSection() is not XmlElement configElement)
       {
         // Failed to load the xml config using configuration settings handler
-        LogLog.Error(_declaringType, "Failed to find configuration section 'log4net' in the application's .config file. Check your .config file for the <log4net> and <configSections> elements. The configuration section should look like: <section name=\"log4net\" type=\"log4net.Config.Log4NetConfigurationSectionHandler,log4net\" />");
+        LogLog.Error(_declaringType, @$"Failed to find configuration section 'log4net' in the .config file '{SystemInfo.ConfigurationFileLocation}'.
+Check your .config file for the <log4net> and <configSections> elements.
+The configuration section should look like: <section name=""log4net"" type=""log4net.Config.Log4NetConfigurationSectionHandler,log4net"" />");
       }
       else
       {
