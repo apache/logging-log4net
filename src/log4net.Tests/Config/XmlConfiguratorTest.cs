@@ -44,17 +44,22 @@ public class XmlConfiguratorTest
     Func<XmlElement?> getConfigSection = () => null;
     ILoggerRepository repository = LogManager.CreateRepository(Guid.NewGuid().ToString());
     SystemInfo.EntryAssemblyLocation = Guid.NewGuid().ToString();
-    List<LogLog> configurationMessages = [];
-
-    using (new LogLog.LogReceivedAdapter(configurationMessages))
+    try
     {
+      List<LogLog> configurationMessages = [];
+
+      using LogLog.LogReceivedAdapter _ = new(configurationMessages);
       typeof(XmlConfigurator)
         .GetMethod("InternalConfigure", BindingFlags.NonPublic | BindingFlags.Static, [typeof(ILoggerRepository), getConfigSection.GetType()])!
         .Invoke(null, [repository, getConfigSection]);
-    }
 
-    Assert.That(configurationMessages, Has.Count.EqualTo(1));
-    Assert.That(configurationMessages[0].Message, Contains.Substring(SystemInfo.EntryAssemblyLocation + ".config"));
+      Assert.That(configurationMessages, Has.Count.EqualTo(1));
+      Assert.That(configurationMessages[0].Message, Contains.Substring(SystemInfo.EntryAssemblyLocation + ".config"));
+    }
+    finally
+    {
+      SystemInfo.EntryAssemblyLocation = null!;
+    }
   }
 }
 #endif
