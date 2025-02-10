@@ -345,11 +345,11 @@ public class PatternLayoutTest
   }
 #if NET8_0_OR_GREATER
   [Test]
-  public void ConvertMicroSecondsPatternTest()
+  public void ConvertMicrosecondsPatternTest()
   {
     StringAppender stringAppender = new()
     {
-      Layout = NewPatternLayout("%date{yyyyMMdd HH:mm:ss.ffffff}")
+      Layout = NewPatternLayout("%utcdate{yyyyMMdd HH:mm:ss.ffffff}")
     };
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
@@ -357,8 +357,8 @@ public class PatternLayoutTest
 
     ILog logger = LogManager.GetLogger(rep.Name, "TestThreadProperiesPattern");
 
-    logger.Logger.Log(new(new() { TimeStampUtc = new(2025, 02, 10, 13, 01, 02, 123, 456), Message = "test", Level = Level.Info }));
-    Assert.That(stringAppender.GetString(), Is.EqualTo("20250210 14:01:02.123456"));
+    logger.Logger.Log(new(new() { TimeStampUtc = new(2025, 02, 10, 13, 01, 02, 123, 456, DateTimeKind.Utc), Message = "test", Level = Level.Info }));
+    Assert.That(stringAppender.GetString(), Is.EqualTo("20250210 13:01:02.123456"));
   }
 #endif
 
