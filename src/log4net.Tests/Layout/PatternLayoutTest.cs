@@ -31,6 +31,7 @@ using log4net.Util;
 
 using NUnit.Framework;
 using System.Diagnostics.CodeAnalysis;
+using log4net.Repository.Hierarchy;
 
 namespace log4net.Tests.Layout;
 
@@ -342,6 +343,24 @@ public class PatternLayoutTest
 
     stringAppender.Reset();
   }
+#if NET8_0_OR_GREATER
+  [Test]
+  public void ConvertMicroSecondsPatternTest()
+  {
+    StringAppender stringAppender = new()
+    {
+      Layout = NewPatternLayout("%date{yyyyMMdd HH:mm:ss.ffffff}")
+    };
+
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    BasicConfigurator.Configure(rep, stringAppender);
+
+    ILog logger = LogManager.GetLogger(rep.Name, "TestThreadProperiesPattern");
+
+    logger.Logger.Log(new(new() { TimeStampUtc = new(2025, 02, 10, 13, 01, 02, 123, 456), Message = "test", Level = Level.Info }));
+    Assert.That(stringAppender.GetString(), Is.EqualTo("20250210 14:01:02.123456"));
+  }
+#endif
 
   [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
   private sealed class MessageAsNamePatternConverter : NamedPatternConverter

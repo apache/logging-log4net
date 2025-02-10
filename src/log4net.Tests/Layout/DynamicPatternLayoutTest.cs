@@ -26,13 +26,7 @@ namespace log4net.Tests.Layout;
 /// </summary>
 public class DynamicPatternLayoutTest : PatternLayoutTest
 {
-  protected override PatternLayout NewPatternLayout()
-  {
-    return new DynamicPatternLayout();
-  }
+  protected override PatternLayout NewPatternLayout() => new DynamicPatternLayout();
 
-  protected override PatternLayout NewPatternLayout(string pattern)
-  {
-    return new DynamicPatternLayout(pattern);
-  }
+  protected override PatternLayout NewPatternLayout(string pattern) => new DynamicPatternLayout(pattern);
 }
