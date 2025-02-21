@@ -21,7 +21,7 @@
   <groupId>log4net</groupId>
   <artifactId>apache-log4net</artifactId>
   <packaging>pom</packaging>
-  <version>3.0.4</version>
+  <version>3.0.5</version>
   <name>Apache log4net</name>
   <description>Logging framework for Microsoft .NET Framework.</description>
   <url>https://logging.apache.org/log4net/</url>
