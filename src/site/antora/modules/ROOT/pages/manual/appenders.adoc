@@ -31,55 +31,73 @@ See xref:manual/layouts.adoc[] for more information.
 Appenders always have a name so that they can be referenced from a
 xref:manual/configuration.adoc#configuring-loggers[logger configuration].
 
-[#file-appenders]
-== File appenders
+[#appenders-list]
+== List of appenders
 
-File appenders write logs to the filesystem.
-They can be further split into:
+log4net ships with the following appenders
+[cols="Type,Description"]
+|===
+|Type |Description
 
-Single file appenders:::
-//See xref:manual/appenders/file.adoc[] for details.
+|AdoNetAppender
+|Writes logging events to a database using either prepared statements or stored procedures.
 
-Rolling file appenders:::
-//See xref:manual/appenders/rolling-file.adoc[] for details.
+|AnsiColorTerminalAppender
+|Writes color highlighted logging events to a an ANSI terminal window.
 
-[#database-appenders]
-=== Database appenders
+|AspNetTraceAppender
+|Writes logging events to the ASP trace context. These can then be rendered at the end of the ASP page or on the ASP trace page.
 
-The appenders write log events directly to a database.
+|ColoredConsoleAppender
+|Writes color highlighted logging events to the application's Windows Console.
 
-//xref:manual/appenders/database.adoc#JdbcAppender[JDBC appender]::
-Sends log events to a JDBC driver
+|ConsoleAppender
+|Writes logging events to the application's Console.
+The events may go to either the standard our stream or the standard error stream.
 
-//xref:manual/appenders/database.adoc#NoSqlAppender[NoSQL appender]::
-Store log events to a document-oriented database
+|DebugAppender
+|Writes logging events to the .net debugger (https://web.archive.org/web/20240930165834/https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.debug?view=net-8.0[System.Diagnostics.Debug]).
 
-//See xref:manual/appenders/database.adoc[] for details.
+|EventLogAppender
+|Writes logging events to the Windows Event Log.
 
-[#network-appenders]
-=== Network appenders
+|FileAppender
+|Writes logging events to a file in the file system.
 
-These appenders use simple network protocols to transmit log events to a remote host.
-The supported network protocols are:
+|LocalSyslogAppender
+|Writes logging events to the local https://datatracker.ietf.org/doc/html/rfc3164[syslog] service (UNIX only).
 
-`UDP`::
-`TCP`::
-//These are handled by the xref:manual/appenders/network.adoc#SocketAppender[Socket Appender].
+|MemoryAppender
+|Stores logging events in an in memory buffer.
 
-`HTTP`::
-//This is handled by the xref:manual/appenders/network.adoc#HttpAppender[HTTP Appender].
+|OutputDebugStringAppender
+|Writes logging events to the debugger (using https://web.archive.org/web/20241118170546/https://learn.microsoft.com/en-us/windows/win32/api/debugapi/nf-debugapi-outputdebugstringw[OutputDebugString]).
+If the application has no debugger, the system debugger displays the string.
+If the application has no debugger and the system debugger is not active, the message is ignored.
 
-`SMTP`::
-//This is handled by the xref:manual/appenders/network.adoc#HttpAppender[SMTP Appender].
+|RemoteSyslogAppender
+|Writes logging events to a remote https://datatracker.ietf.org/doc/html/rfc3164[syslog] service using UDP networking.
 
-//See xref:manual/appenders/network.adoc[] for details.
+|RollingFileAppender
+|Writes logging events to a file in the file system.
+The RollingFileAppender can be configured to log to multiple files based upon date or file size constraints.
 
-[#delegating-appenders]
-=== Delegating appenders
+|SmtpAppender
+|Sends logging events to an email address.
 
-Delegating appenders are intended to decorate other appenders:
+|SmtpPickupDirAppender
+|Sends logging events to an email address but writes the emails to a configurable directory rather than sending them directly via SMTP.
 
-//xref:manual/appenders/delegating.adoc#RoutingAppender[Routing appender]::
-Dynamically choose a different appender for each log event
+|TelnetAppender
+|*Clients* connect via Telnet to receive logging events.
 
-// See xref:manual/appenders/delegating.adoc[] for details.
+|TraceAppender
+|Writes logging events to the .NET trace system (https://web.archive.org/web/20240907024634/https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.trace?view=net-8.0[System.Diagnostics.Trace]).
+
+|UdpAppender
+|Sends logging events as connectionless UDP datagrams to a remote host or a multicast group using a UdpClient.
+
+|ForwardingAppender
+|Can be used to wrap another appender, for example to attach additional filters.
+
+|===
