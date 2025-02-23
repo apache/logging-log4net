@@ -18,9 +18,11 @@
 #endregion
 
 using System;
-using System.IO;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-
+using System.IO;
+using System.Linq;
+using System.Threading;
 using log4net.Config;
 using log4net.Core;
 using log4net.Layout;
@@ -28,9 +30,7 @@ using log4net.Layout.Pattern;
 using log4net.Repository;
 using log4net.Tests.Appender;
 using log4net.Util;
-
 using NUnit.Framework;
-using System.Diagnostics.CodeAnalysis;
 
 namespace log4net.Tests.Layout;
 
@@ -50,17 +50,17 @@ public class PatternLayoutTest
   public void SetUp()
   {
     // set correct thread culture
-    _currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
-    _currentUiCulture = System.Threading.Thread.CurrentThread.CurrentUICulture;
-    System.Threading.Thread.CurrentThread.CurrentCulture = System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
+    _currentCulture = Thread.CurrentThread.CurrentCulture;
+    _currentUiCulture = Thread.CurrentThread.CurrentUICulture;
+    Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
   }
   [TearDown]
   public void TearDown()
   {
     Utils.RemovePropertyFromAllContexts();
     // restore previous culture
-    System.Threading.Thread.CurrentThread.CurrentCulture = _currentCulture!;
-    System.Threading.Thread.CurrentThread.CurrentUICulture = _currentUiCulture!;
+    Thread.CurrentThread.CurrentCulture = _currentCulture!;
+    Thread.CurrentThread.CurrentUICulture = _currentUiCulture!;
   }
 
   protected virtual PatternLayout NewPatternLayout() => new();
@@ -78,7 +78,7 @@ public class PatternLayoutTest
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     BasicConfigurator.Configure(rep, stringAppender);
 
-    ILog log1 = LogManager.GetLogger(rep.Name, "TestThreadProperiesPattern");
+    ILog log1 = LogManager.GetLogger(rep.Name, nameof(TestThreadPropertiesPattern));
 
     log1.Info("TestMessage");
     Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test no thread properties value set");
@@ -126,7 +126,7 @@ public class PatternLayoutTest
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     BasicConfigurator.Configure(rep, stringAppender);
 
-    ILog log1 = LogManager.GetLogger(rep.Name, "TestGlobalProperiesPattern");
+    ILog log1 = LogManager.GetLogger(rep.Name, nameof(TestGlobalPropertiesPattern));
 
     log1.Info("TestMessage");
     Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test no global properties value set");
@@ -151,8 +151,8 @@ public class PatternLayoutTest
     StringAppender stringAppender = new();
     PatternLayout layout = NewPatternLayout();
 
-    layout.AddConverter("TestAddingCustomPattern", typeof(TestMessagePatternConverter));
-    layout.ConversionPattern = "%TestAddingCustomPattern";
+    layout.AddConverter(nameof(TestAddingCustomPattern), typeof(TestMessagePatternConverter));
+    layout.ConversionPattern = "%" + nameof(TestAddingCustomPattern);
     layout.ActivateOptions();
 
     stringAppender.Layout = layout;
@@ -160,7 +160,7 @@ public class PatternLayoutTest
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     BasicConfigurator.Configure(rep, stringAppender);
 
-    ILog log1 = LogManager.GetLogger(rep.Name, "TestAddingCustomPattern");
+    ILog log1 = LogManager.GetLogger(rep.Name, nameof(TestAddingCustomPattern));
 
     log1.Info("TestMessage");
     Assert.That(stringAppender.GetString(), Is.EqualTo("TestMessage"), "%TestAddingCustomPattern not registered");
@@ -178,7 +178,7 @@ public class PatternLayoutTest
     stringAppender.Layout = layout;
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     BasicConfigurator.Configure(rep, stringAppender);
-    ILog log1 = LogManager.GetLogger(rep.Name, "TestAddingCustomPattern");
+    ILog log1 = LogManager.GetLogger(rep.Name, nameof(NamedPatternConverterWithoutPrecisionShouldReturnFullName));
 
     log1.Info("NoDots");
     Assert.That(stringAppender.GetString(), Is.EqualTo("NoDots"), "%message-as-name not registered");
@@ -225,7 +225,7 @@ public class PatternLayoutTest
     stringAppender.Layout = layout;
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     BasicConfigurator.Configure(rep, stringAppender);
-    ILog log1 = LogManager.GetLogger(rep.Name, "TestAddingCustomPattern");
+    ILog log1 = LogManager.GetLogger(rep.Name, nameof(NamedPatternConverterWithPrecision1ShouldStripLeadingStuffIfPresent));
 
     log1.Info("NoDots");
     Assert.That(stringAppender.GetString(), Is.EqualTo("NoDots"), "%message-as-name not registered");
@@ -272,7 +272,7 @@ public class PatternLayoutTest
     stringAppender.Layout = layout;
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     BasicConfigurator.Configure(rep, stringAppender);
-    ILog log1 = LogManager.GetLogger(rep.Name, "TestAddingCustomPattern");
+    ILog log1 = LogManager.GetLogger(rep.Name, nameof(NamedPatternConverterWithPrecision2ShouldStripLessLeadingStuffIfPresent));
 
     log1.Info("NoDots");
     Assert.That(stringAppender.GetString(), Is.EqualTo("NoDots"), "%message-as-name not registered");
@@ -333,7 +333,7 @@ public class PatternLayoutTest
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
     BasicConfigurator.Configure(rep, stringAppender);
 
-    ILog log1 = LogManager.GetLogger(rep.Name, "TestExceptionPattern");
+    ILog log1 = LogManager.GetLogger(rep.Name, nameof(TestExceptionPattern));
 
     InvalidOperationException exception = new("Oh no!");
     log1.Info("TestMessage", exception);
@@ -342,6 +342,46 @@ public class PatternLayoutTest
 
     stringAppender.Reset();
   }
+#if NET8_0_OR_GREATER
+  [Test]
+  public void ConvertMicrosecondsPatternTest()
+  {
+    StringAppender stringAppender = new()
+    {
+      Layout = NewPatternLayout("%utcdate{yyyyMMdd HH:mm:ss.ffffff}")
+    };
+
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    BasicConfigurator.Configure(rep, stringAppender);
+
+    ILog logger = LogManager.GetLogger(rep.Name, nameof(ConvertMicrosecondsPatternTest));
+
+    logger.Logger.Log(new(new() { TimeStampUtc = new(2025, 02, 10, 13, 01, 02, 123, 456, DateTimeKind.Utc), Message = "test", Level = Level.Info }));
+    Assert.That(stringAppender.GetString(), Is.EqualTo("20250210 13:01:02.123456"));
+  }
+
+  [Test]
+  public void ConvertMultipleMicrosecondsPatternTest()
+  {
+    StringAppender stringAppender = new()
+    {
+      Layout = NewPatternLayout("[%date{yyyyMMdd HH:mm:ss.ffffff}] [%-5level] [%thread] - %message%newline")
+    };
+
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    BasicConfigurator.Configure(rep, stringAppender);
+
+    ILog logger = LogManager.GetLogger(rep.Name, nameof(ConvertMultipleMicrosecondsPatternTest));
+
+    for (int i = 0; i < 100; i++)
+    {
+      logger.Info(null);
+      Thread.Sleep(1);
+    }
+    string[] lines = stringAppender.GetString().Split('\n');
+    Assert.That(lines, Has.Length.EqualTo(lines.Distinct().Count()), "no duplicate timestamps allowed");
+  }
+#endif
 
   [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
   private sealed class MessageAsNamePatternConverter : NamedPatternConverter

@@ -85,7 +85,7 @@ pushd log4net-{releaseVersion}</pre>
             <li>
               <p>Extract sources</p>
               <pre class="code">umask 0022
-unzip -q *-src.zip -d src
+unzip -q *source*.zip -d src
 cd src</pre>
             </li>
             <li>
