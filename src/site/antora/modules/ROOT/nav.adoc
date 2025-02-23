@@ -25,5 +25,6 @@
 ** xref:manual/layouts.adoc[]
 * xref:features.adoc[]
 * xref:release-notes.adoc[]
+* xref:release-review.adoc[]
 * {logging-services-url}/support.html[Support]
 * {logging-services-url}/security.html[Security]
