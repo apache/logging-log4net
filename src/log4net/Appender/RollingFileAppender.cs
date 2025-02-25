@@ -1171,8 +1171,11 @@ public partial class RollingFileAppender : FileAppender
   /// </remarks>
   protected void DeleteFile(string fileName)
   {
+    LogLog.Debug(_declaringType, $"Trying to delete [{fileName}]");
+
     if (!FileExists(fileName))
     {
+      LogLog.Debug(_declaringType, $"[{fileName}] does not exist");
       return;
     }
     // We may not have permission to delete the file, or the file may be locked
@@ -1346,7 +1349,7 @@ public partial class RollingFileAppender : FileAppender
           if (PreserveLogFileNameExtension)
           {
             string extension = Path.GetExtension(archiveFileBaseName);
-            string baseName = Path.GetFileNameWithoutExtension(archiveFileBaseName);
+            string baseName = Path.Combine(Path.GetDirectoryName(archiveFileBaseName), Path.GetFileNameWithoutExtension(archiveFileBaseName));
             int lastDotIndex = baseName.LastIndexOf(".", StringComparison.Ordinal);
             if (lastDotIndex >= 0)
             {
