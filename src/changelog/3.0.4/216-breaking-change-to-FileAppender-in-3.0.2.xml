@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="216" link="https://github.com/apache/logging-log4net/issues/216"/>
+  <issue id="217" link="https://github.com/apache/logging-log4net/pull/217"/>
+  <issue id="196" link="https://github.com/apache/logging-log4net/pull/196"/>
+  <description format="asciidoc">fixed SetQWForFiles method name in FileAppender from https://github.com/apache/logging-log4net/pull/196[#196]
+  by @sketchturner in https://github.com/apache/logging-log4net/pull/217[#217]
+  (fixes https://github.com/apache/logging-log4net/issues/216[#216] reported by @sketchturner)</description>
+</entry>

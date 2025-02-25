@@ -206,3 +206,9 @@ dotnet_diagnostic.KR1037.severity = none
 dotnet_diagnostic.NUnit2045.severity = none
 # IDE0079: Remove unnecessary suppressions
 dotnet_diagnostic.IDE0079.severity = none
+
+[*.xml]
+tab_width = 2
+indent_size = 2
+indent_style = space
+end_of_line = crlf
