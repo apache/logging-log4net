@@ -232,3 +232,54 @@ Note that to obtain these different logging behaviors we did not need to recompi
 We could just as easily have logged to an email address or redirected all Animals.Carnivora output to an remote syslog server.
 
 For more examples of configuring appenders using the XmlConfigurator see the Example Appender Configuration #TODO document.
+
+[#configuration-attributes]
+== Configuration Attributes
+
+The log4net configuration can be configured using assembly-level attributes rather than specified programmatically.
+
+[#xml-configurator-attribute]
+=== XmlConfiguratorAttribute
+
+The log4net.Config.XmlConfiguratorAttribute Allows the XmlConfigurator to be configured using the following properties:
+ 
+ ConfigFile::
+
+If specified, this is the filename of the configuration file to use with the XmlConfigurator. This file path is relative to the application base directory (AppDomain.CurrentDomain.BaseDirectory).
+This property cannot be used in conjunction with the ConfigFileExtension property.
+
+ConfigFileExtension::
+
+If specified, this is the extension for the configuration file. The assembly file name is used as the base name with the this extension appended. For example if the assembly is loaded from the a file TestApp.exe and the ConfigFileExtension property is set to log4net then the configuration file name is TestApp.exe.log4net. This is equivalent to setting the ConfigFile property to TestApp.exe.log4net.
+The path to the configuration file is build by using the application base directory (AppDomain.CurrentDomain.BaseDirectory), the assembly file name and the configuration file extension.
+This property cannot be used in conjunction with the ConfigFile property.
+
+Watch::
+
+If this flag is specified and set to true then the framework will watch the configuration file and will reload the config each time the file is modified.
+
+If neither of the ConfigFile or ConfigFileExtension properties are specified, the application configuration file (e.g. TestApp.exe.config) will be used as the log4net configuration file.
+
+Example usage:
+[source,csharp]
+----
+// Configure log4net using the .config file
+[assembly: log4net.Config.XmlConfigurator(Watch = true)]
+// This will cause log4net to look for a configuration file
+// called TestApp.exe.config in the application base
+// directory (i.e. the directory containing TestApp.exe)
+// The config file will be watched for changes.
+----
+[source,csharp]
+----
+// Configure log4net using the .log4net file
+[assembly: log4net.Config.XmlConfigurator(ConfigFileExtension = "log4net",Watch = true)]
+// This will cause log4net to look for a configuration file
+// called TestApp.exe.log4net in the application base
+// directory (i.e. the directory containing TestApp.exe)
+// The config file will be watched for changes.
+----
+
+This attribute may only be used once per assembly. 
+
+Using attributes can be a clearer method for defining where the application's configuration will be loaded from. However it is worth noting that attributes are purely passive. They are information only. Therefore if you use configuration attributes you must invoke log4net to allow it to read the attributes. A simple call to LogManager.GetLogger will cause the attributes on the calling assembly to be read and processed. *Therefore it is imperative to make a logging call as early as possible during the application start-up, and certainly before any external assemblies have been loaded and invoked.*
