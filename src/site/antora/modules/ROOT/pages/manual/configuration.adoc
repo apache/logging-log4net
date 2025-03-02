@@ -231,7 +231,7 @@ When roll-over occurs, the old version of example.log is automatically moved to 
 Note that to obtain these different logging behaviors we did not need to recompile code. 
 We could just as easily have logged to an email address or redirected all Animals.Carnivora output to an remote syslog server.
 
-For more examples of configuring appenders using the XmlConfigurator see the Example Appender Configuration #TODO document.
+For more examples of configuring appenders using the XmlConfigurator see xref:configuration-examples.adoc[Example Appender Configuration].
 
 [#configuration-attributes]
 == Configuration Attributes
@@ -273,7 +273,7 @@ Example usage:
 [source,csharp]
 ----
 // Configure log4net using the .log4net file
-[assembly: log4net.Config.XmlConfigurator(ConfigFileExtension = "log4net",Watch = true)]
+[assembly: log4net.Config.XmlConfigurator(ConfigFileExtension = "log4net", Watch = true)]
 // This will cause log4net to look for a configuration file
 // called TestApp.exe.log4net in the application base
 // directory (i.e. the directory containing TestApp.exe)
@@ -282,4 +282,616 @@ Example usage:
 
 This attribute may only be used once per assembly. 
 
-Using attributes can be a clearer method for defining where the application's configuration will be loaded from. However it is worth noting that attributes are purely passive. They are information only. Therefore if you use configuration attributes you must invoke log4net to allow it to read the attributes. A simple call to LogManager.GetLogger will cause the attributes on the calling assembly to be read and processed. *Therefore it is imperative to make a logging call as early as possible during the application start-up, and certainly before any external assemblies have been loaded and invoked.*
+Using attributes can be a clearer method for defining where the application's configuration will be loaded from.
+However it is worth noting that attributes are purely passive.
+They are information only.
+Therefore if you use configuration attributes you must invoke log4net to allow it to read the attributes.
+A simple call to LogManager.GetLogger will cause the attributes on the calling assembly to be read and processed.
+*Therefore it is imperative to make a logging call as early as possible during the application start-up, and certainly before any external assemblies have been loaded and invoked.*
+
+[#appsettings]
+== AppSettings
+
+If you use xref:#configuration-attributes[attributes] to configure log4net, two settings of the appSettings section of your application's configuration file can be used to override the values given in your assembly's attributes.
+
+The setting with the key "log4net.Config" overrides the configuration file name (and is considered to be relative to your application's base directory), the setting with the key "log4net.Config.Watch" determines whether the file should be monitored for changes.
+
+Even though the assembly attribute
+
+[source,csharp]
+----
+[assembly: log4net.Config.XmlConfigurator(Watch = false)]
+----
+
+would configure your application to use a configuration file "TestApp.exe.config" and not monitor it for changes you can override this to use the file "log4net.config" and monitor it instead by adding
+
+[source,xml]
+----
+<appSettings>
+  <add key="log4net.Config" value="log4net.config"/>
+  <add key="log4net.Config.Watch" value="True"/>
+</appSettings>
+----
+
+to your application's configuration file.
+
+[#configuration-files]
+== Configuration Files
+
+Typically the log4net configuration is specified using a file. This file can be read in one of two ways:
+
+* Using the System.Configuration API
+* Reading the file contents directly
+
+[#config-files]
+=== .config Files
+
+The System.Configuration API is only available if the configuration data is in the application's config file;
+the file named MyApp.exe.config, MyApp.dll.config or Web.config.
+Because the System.Configuration API does not support reloading of the config file the configuration settings cannot be watched using the log4net.Config.XmlConfigurator.ConfigureAndWatch methods.
+The main advantage of using the System.Configuration APIs to read the configuration data is that it requires less permissions than accessing the configuration file directly.
+
+The only way to configure an application using the System.Configuration APIs is to call the log4net.Config.XmlConfigurator.Configure() method or the log4net.Config.XmlConfigurator.Configure(ILoggerRepository) method.
+
+In order to embed the configuration data in the .config file the section name must be identified to the .NET config file parser using a configSections element.
+The section must specify the log4net.Config.Log4NetConfigurationSectionHandler that will be used to parse the config section.
+This type must be fully assembly qualified because it is being loaded by the .NET config file parser not by log4net.
+The correct assembly name for the log4net assembly must be specified.
+
+The following is a simple example configuration file that specifies the correct section handler to use for the log4net section.
+
+[source,xml]
+----
+<configuration>
+  <configSections>
+    <section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler, log4net" />
+  </configSections>
+  <log4net>
+    <appender name="ConsoleAppender" type="log4net.Appender.ConsoleAppender" >
+      <layout type="log4net.Layout.PatternLayout">
+        <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
+      </layout>
+    </appender>
+    <root>
+      <level value="INFO" />
+      <appender-ref ref="ConsoleAppender" />
+    </root>
+  </log4net>
+</configuration>
+----
+
+In the above example the log4net assembly is specified.
+This assembly must be located where the .NET runtime can find it.
+For example it could be located in the same directory as the application.
+
+When using the .config file to specify the configuration the section name and XML element name must be log4net.
+
+[#reading-files-directly]
+=== Reading Files Directly
+
+The XmlConfigurator can directly read any XML file and use it to configure log4net.
+This includes the application's .config file; the file named MyApp.exe.config, MyApp.dll.config or Web.config.
+The only reason not to read the configuration file directly is if the application does not have sufficient permissions to read the file, then the configuration must be loaded using the .NET configuration APIs (see above).
+
+The file to read the configuration from can be specified using any of the log4net.Config.XmlConfigurator methods that accept a System.IO.FileInfo object.
+Because the file system can be monitored for file change notifications the ConfigureAndWatch methods can be used to monitor the configuration file for modifications and automatically reconfigure log4net.
+
+Additionally the log4net.Config.XmlConfiguratorAttribute can be used to specify the file to read the configuration from.
+
+The configuration is read from the log4net element in the file.
+Only one log4net element can be specified in the file but it may be located anywhere in the XML hierarchy.
+For example it may be the root element:
+
+[source,xml]
+----
+<log4net>
+  <appender name="ConsoleAppender" type="log4net.Appender.ConsoleAppender" >
+    <layout type="log4net.Layout.PatternLayout">
+      <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
+    </layout>
+  </appender>
+  <root>
+    <level value="INFO" />
+    <appender-ref ref="ConsoleAppender" />
+  </root>
+</log4net>
+----
+
+Or it may be nested within other elements: 
+
+[source,xml]
+----
+<configuration>
+  <configSections>
+    <section name="log4net" type="System.Configuration.IgnoreSectionHandler" />
+  </configSections>
+  <log4net>
+    <appender name="ConsoleAppender" type="log4net.Appender.ConsoleAppender" >
+      <layout type="log4net.Layout.PatternLayout">
+        <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
+      </layout>
+    </appender>
+    <root>
+      <level value="INFO" />
+      <appender-ref ref="ConsoleAppender" />
+    </root>
+  </log4net>
+</configuration>
+----
+
+The above example shows how the configuration data can be embedded inside a .config file even though the file is being read directly by log4net.
+An important note is that the .NET config file parser will throw an exception if it finds an element that has not been registered using the configSections element.
+Therefore in the above example the log4net section name is registered, but the type specified to handle the section is System.Configuration.IgnoreSectionHandler.
+This is a built-in class that indicates that another method for reading the config section will be employed.
+
+[#configuration-syntax]
+== Configuration Syntax
+
+log4net includes a configuration reader that parses an XML DOM, the log4net.Config.XmlConfigurator.
+This section defines the syntax accepted by the configurator.
+
+This is an example of a valid XML configuration.
+The root element must be <log4net>.
+Note that this does not mean that this element cannot be embedded in another XML document.
+See the section above on Configuration Files for more information on how to embed the XmlConfigurator XML in a configuration file.
+
+[source,xml]
+----
+<log4net>
+  <appender name="ConsoleAppender" type="log4net.Appender.ConsoleAppender" >
+    <layout type="log4net.Layout.PatternLayout">
+      <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
+    </layout>
+  </appender>
+  <root>
+    <level value="INFO" />
+    <appender-ref ref="ConsoleAppender" />
+  </root>
+</log4net>
+----
+
+The <log4net> element supports the following attributes:
+
+[cols="Attribute,Required,Allowed values,Default,Description"]
+|===
+|Attribute |Required |Allowed values |Default |Description
+
+|debug
+|no
+|true or false
+|false
+|Set this attribute to true to enable internal log4net debugging for this configuration.
+
+|update
+|no
+|Merge or Overwrite
+|Merge
+|Set this attribute to Overwrite to reset the configuration of the repository being configured before applying this configuration.
+
+|threshold
+|no
+|Level (e.g. DEBUG, INFO, WARN, ERROR)
+|ALL
+|Set this attribute to limit the messages that are logged across the whole repository, regardless of the logger that the message is logged to.
+
+|===
+
+The <log4net> element supports the following child elements:
+
+[cols="Element,Cardinality,Description"]
+|===
+|Element |Cardinality |Description
+
+|appender
+|0..*
+|Defines an appender.
+
+|logger
+|0..*
+|Defines the configuration of a logger.
+
+|renderer
+|0..*
+|Defines an object renderer.
+
+|root
+|0..1
+|Defines the configuration of the root logger.
+
+|param
+|0..*
+|Repository specific parameters
+
+|===
+
+[#appenders]
+== Appenders
+
+Appenders may only be defined as child elements of the <log4net> element.
+Each appender must be uniquely named.
+The implementing type for the appender must be specified.
+
+This example shows an appender of type log4net.Appender.ConsoleAppender being defined.
+The appender will be known as ConsoleAppender.
+
+[source,xml]
+----
+<appender name="ConsoleAppender" type="log4net.Appender.ConsoleAppender" >
+  <layout type="log4net.Layout.PatternLayout">
+    <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
+  </layout>
+</appender>
+----
+
+The <appender> element supports the following attributes:
+
+[cols="Attribute,Required,Allowed values,Description"]
+|===
+|Attribute |Required |Allowed values |Description
+
+|name
+|yes
+|Value must be a string name for this appender. The name must be unique among all the appenders defined in this configuration file.
+|This name is used by the <appender-ref> element of a Logger to reference an appender.
+
+|type
+|yes
+|Value must be the type name for this appender.
+|If the appender is not defined in the log4net assembly this type name must be fully assembly qualified.
+
+|===
+
+The <appender> element supports the following child elements:
+
+[cols="Element,Cardinality,Description"]
+|===
+|Element |Cardinality |Description
+
+|appender-ref
+|0..*
+|Allows the appender to reference other appenders. Not supported by all appenders.
+
+|filter
+|0..*
+|Defines the filters used by this appender.
+
+|layout
+|0..1
+|Defines the layout used by this appender.
+
+|param
+|0..*
+|Appender specific parameters
+
+|===
+
+For examples of configuring appenders see xref:configuration-examples.adoc[Example Appender Configuration].
+
+[#filters]
+=== Filters
+
+Filters elements may only be defined as children of <appender> elements.
+
+The <filter> element supports the following attributes:
+
+[cols="Attribute,Required,Allowed values,Description"]
+|===
+|Attribute |Required |Allowed values |Description
+
+|type
+|yes
+|Value must be the type name for this filter.
+|If the filter is not defined in the log4net assembly this type name must be fully assembly qualified.
+
+|===
+
+The <filter> element supports the following child elements:
+
+[cols="Element,Cardinality,Description"]
+|===
+|Element |Cardinality |Description
+
+|param
+|0..*
+|Filter specific parameters
+
+|===
+
+Filters form a chain that the event has to pass through.
+Any filter along the way can accept the event and stop processing, deny the event and stop processing, or allow the event on to the next filter.
+If the event gets to the end of the filter chain without being denied it is implicitly accepted and will be logged.
+
+[source,xml]
+----
+<filter type="log4net.Filter.LevelRangeFilter">
+  <levelMin value="INFO" />
+  <levelMax value="FATAL" />
+</filter>
+----
+
+This filter will deny events that have a level that is lower than INFO or higher than FATAL.
+All events between INFO and FATAL will be logged.
+
+If we want to only allow messages through that have a specific substring (e.g. 'database') then we need to specify the following filters:
+
+[source,xml]
+----
+<filter type="log4net.Filter.StringMatchFilter">
+  <stringToMatch value="database" />
+</filter>
+<filter type="log4net.Filter.DenyAllFilter" />
+----
+
+The first filter will look for the substring 'database' in the message text of the event.
+If the text is found the filter will accept the message and filter processing will stop, the message will be logged.
+If the substring is not found the event will be passed to the next filter to process.
+If there is no next filter the event would be implicitly accepted and would be logged.
+But because we don't want the non matching events to be logged we need to use a log4net.Filter.DenyAllFilter that will just deny all events that reach it. This filter is only useful at the end of the filter chain.
+
+If we want to allow events that have either 'database' or 'ldap' in the message text we can use the following filters:
+
+[source,xml]
+----
+<filter type="log4net.Filter.StringMatchFilter">
+  <stringToMatch value="database" />
+</filter>
+<filter type="log4net.Filter.StringMatchFilter">
+  <stringToMatch value="ldap" />
+</filter>
+<filter type="log4net.Filter.DenyAllFilter" />
+----
+
+[#layouts]
+=== Layouts
+
+Layout elements may only be defined as children of <appender> elements.
+
+The <layout> element supports the following attributes:
+
+[cols="Attribute,Required,Allowed values,Description"]
+|===
+|Attribute |Required |Allowed values |Description
+
+|type
+|yes
+|Value must be the type name for this layout.
+|If the layout is not defined in the log4net assembly this type name must be fully assembly qualified.
+
+|===
+
+The <layout> element supports the following child elements:
+
+[cols="Element,Cardinality,Description"]
+|===
+|Element |Cardinality |Description
+
+|param
+|0..*
+|Layout specific parameters
+
+|===
+
+This example shows how to configure a layout that uses the log4net.Layout.PatternLayout.
+
+[source,xml]
+----
+<layout type="log4net.Layout.PatternLayout">
+  <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
+</layout>
+----
+
+[#root-logger]
+=== Root Logger
+
+Only one root logger element may only be defined and it must be a child of <log4net> element.
+The root logger is the root of the logger hierarchy.
+All loggers ultimately inherit from this logger.
+
+An example root logger:
+
+[source,xml]
+----
+<root>
+  <level value="INFO" />
+  <appender-ref ref="ConsoleAppender" />
+</root>
+----
+
+The <root> element supports no attributes.
+
+The <root> element supports the following child elements:
+
+[cols="Element,Cardinality,Description"]
+|===
+|Element |Cardinality |Description
+
+|appender-ref
+|0..*
+|Allows the logger to reference appenders by name.
+
+|level
+|0..1
+|Defines the logging level for this logger. This logger will only accept event that are at this level or above.
+
+|param
+|0..*
+|Logger specific parameters
+
+|===
+
+[#loggers]
+=== Loggers
+
+Logger elements may only be defined as children of the <log4net> element.
+
+An example logger:
+
+[source,xml]
+----
+<logger name="MyLogger">
+  <level value="DEBUG" />
+  <appender-ref ref="ConsoleAppender" />
+</logger>
+----
+
+The <logger> element supports the following attributes.
+
+[cols="Attribute,Required,Allowed values,Default,Description"]
+|===
+|Attribute |Required |Allowed values |Default |Description
+
+|name
+|yes
+|any logger name
+|
+|Value must be the name of the logger. 
+
+|additivity
+|no
+|true or false
+|true
+|Set this attribute to false to prevent this logger from inheriting the appenders defined on parent loggers.
+
+|===
+
+The <logger> element supports the following child elements:
+
+[cols="Element,Cardinality,Description"]
+|===
+|Element |Cardinality |Description
+
+|appender-ref
+|0..*
+|Allows the logger to reference appenders by name.
+
+|level
+|0..1
+|Defines the logging level for this logger. This logger will only accept event that are at this level or above.
+
+|param
+|0..*
+|Logger specific parameters
+
+|===
+
+[#renderers]
+=== Renderers
+
+Renderer elements may only be defined as children of the <log4net> element.
+
+An example renderer:
+
+[source,xml]
+----
+<renderer renderingClass="Animals.Carnivora.Renderers.DogRenderer" renderedClass="Animals.Carnivora.Dog" />
+----
+
+The <renderer> element supports the following attributes.
+
+[cols="Attribute,Required,Allowed values,Description"]
+|===
+|Attribute |Required |Allowed values |Description
+
+|renderingClass
+|yes
+|Value must be the type name for this renderer.
+If the type is not defined in the log4net assembly this type name must be fully assembly qualified.
+|This is the type of the object that will take responsibility for rendering the renderedClass.
+
+|renderedClass
+|yes
+|Value must be the type name for the target type for this renderer.
+If the type is not defined in the log4net assembly this type name must be fully assembly qualified.
+|This is the name of the type that this renderer will render.
+
+|===
+
+The <renderer> element supports no child elements.
+
+[#parameters]
+=== Parameters
+
+Parameter elements may be children of many elements. See the specific elements above for details.
+
+An example param:
+
+[source,xml]
+----
+<param name="ConversionPattern" value="%date [%thread] %-5level %logger - %message%newline" />
+----
+
+The <param> element supports the following attributes.
+
+[cols="Attribute,Required,Allowed values,Description"]
+|===
+|Attribute |Required |Allowed values |Description
+
+|name
+|yes
+|Value must be the name of the parameter to set on the parent object.
+|
+
+|value
+|no +
+(One of value or type attributes must be specified.)
+|The value of this attribute is a string that can be converted to the value of the parameter.
+|
+
+|type
+|no +
+(One of value or type attributes must be specified.)
+|The value of this attribute is a type name to create and set as the value of the parameter.
+|If the type is not defined in the log4net assembly this type name must be fully assembly qualified. 
+
+|===
+
+The <param> element supports the following child elements:
+
+[cols="Element,Cardinality,Description"]
+|===
+|Element |Cardinality |Description
+
+|param
+|0..*
+|Parameter specific parameters
+|===
+
+An example param that uses nested param elements:
+
+[source,xml]
+----
+<param name="evaluator" type="log4net.Core.LevelEvaluator">
+  <param name="Threshold" value="WARN"/>
+<param>
+----
+
+[#extension-parameters]
+=== Extension Parameters
+
+Configuration parameters map directly to writable properties on an object.
+The properties available depend on the actual type of the object being configured.
+
+For 3rd party components please see their relevant API reference for details of the properties available.
+
+[#compact-parameter-syntax]
+=== Compact Parameter Syntax
+
+All parameters may alternately be specified using the parameter name as the element name rather than using the param element and name attribute.
+
+For example a param:
+
+[source,xml]
+----
+<param name="evaluator" type="log4net.Core.LevelEvaluator">
+  <param name="Threshold" value="WARN"/>
+<param>
+----
+
+may be written as:
+
+[source,xml]
+----
+<evaluator type="log4net.Core.LevelEvaluator">
+  <threshold value="WARN"/>
+<evaluator>
+----
