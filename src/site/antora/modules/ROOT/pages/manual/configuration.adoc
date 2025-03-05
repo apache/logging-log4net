@@ -75,7 +75,7 @@ The output will be formatted using a PatternLayout set to the following pattern:
 
 [source,log]
 ----
-%timestamp [%thread] %level %logger %ndc - %message%newline
+%timestamp [%thread] %level %logger - %message%newline
 ----
 
 Note that by default, the root logger is assigned to Level.DEBUG.
@@ -231,7 +231,7 @@ When roll-over occurs, the old version of example.log is automatically moved to 
 Note that to obtain these different logging behaviors we did not need to recompile code. 
 We could just as easily have logged to an email address or redirected all Animals.Carnivora output to an remote syslog server.
 
-For more examples of configuring appenders using the XmlConfigurator see xref:configuration-examples.adoc[Example Appender Configuration].
+For more examples of configuring appenders using the XmlConfigurator see xref:manual/configuration-examples.adoc[Example Appender Configuration].
 
 [#configuration-attributes]
 == Configuration Attributes
@@ -565,7 +565,7 @@ The <appender> element supports the following child elements:
 
 |===
 
-For examples of configuring appenders see xref:configuration-examples.adoc[Example Appender Configuration].
+For examples of configuring appenders see xref:manual/configuration-examples.adoc[Example Appender Configuration].
 
 [#filters]
 === Filters
