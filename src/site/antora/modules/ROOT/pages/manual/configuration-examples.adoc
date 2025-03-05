@@ -15,220 +15,91 @@
     limitations under the License.
 ////
 
-[#configuration]
-= Configuration
+[#config-examples]
+= Config Examples
 
-Using a configuration file is the most popular and recommended approach for configuring log4net.
-In this page we will examine the composition of a configuration file and how log4net uses it.
+This document presents example configurations for the built-in appenders. These configurations are designed to work with the log4net.Config.XmlConfigurator.
 
-[source,csharp]
+These examples are by no means exhaustive configurations for the appenders.
+
+[#adonetappender]
+== AdoNetAppender
+
+The configuration of the AdoNetAppender depends on the provider selected for the target database. Here are some examples. 
+
+[#mssqlserver]
+=== MS SQL Server
+
+The following example shows how to configure the AdoNetAppender to log messages to a SQL Server database. The events are written in batches of 100 (BufferSize). The ConnectionType specifies the fully qualified type name for the System.Data.IDbConnection to use to connect to the database. The ConnectionString is database provider specific. The CommandText is either a prepared statement or a stored procedure, in this case it is a prepared statement. Each parameter to the prepared statement or stored procedure is specified with its name, database type and a layout that renders the value for the parameter.
+
+The database table definition is:
+
+[source,sql]
 ----
-using Animals.Carnivora;
-// Import log4net classes.
-using log4net;
-using log4net.Config;
-
-namespace SampleApp;
-
-private static class MyApp 
-{
-  // Define a static logger variable so that it references the Logger instance named "MyApp".
-  private static readonly ILog logger = LogManager.GetLogger(typeof(MyApp));
-
-  private static void Main(string[] args) 
-  {
-      // Set up a simple configuration that logs on the console.
-    BasicConfigurator.Configure();
-
-    logger.Info("Entering application.");
-    Dog dog = new();
-    bar.Bark();
-    logger.Info("Exiting application.");
-  }
-}
-----
-
-MyApp begins by importing log4net related namespaces.
-It then defines a static logger variable with the name MyApp which happens to be the fully qualified name of the class.
-
-MyApp uses the following Dog class: 
-
-[source,csharp]
+create table dbo.Log
+(
+  Id bigint identity (1, 1) not null,
+  LogDate datetime not null,
+  Thread nvarchar(255) not null,
+  LogLevel nvarchar(50) not null,
+  Logger nvarchar(255) not null,
+  LogMessage nvarchar(2000) not null,
+  Exception nvarchar(2000) null,
+  constraint Log_PKEY primary key (Id)
+) with (data_compression = page)
 ----
 
-// Import log4net classes
-using log4net;
-
-namespace Animals.Carnivora;
-
-internal sealed class Dog 
-{
-  private static readonly ILog logger = LogManager.GetLogger(typeof(Dog));
-
-  internal void Bark() => logger.Debug("Woof!");
-}
-----
-
-The invocation of the BasicConfigurator.Configure() method creates a rather simple log4net setup.
-This method is hardwired to add to the root logger a ConsoleAppender.
-The output will be formatted using a PatternLayout set to the following pattern:
-
-[source,log]
-----
-%timestamp [%thread] %level %logger %ndc - %message%newline
-----
-
-Note that by default, the root logger is assigned to Level.DEBUG.
-
-The output of MyApp is: 
-
-[source,log]
-----
-2024-12-21 14:07:41,508 [main] INFO  SampleApp.MyApp - Entering application.
-2024-12-21 14:07:41,517 [main] DEBUG Animals.Carnivora.Dog - Woof!
-2024-12-21 14:07:41,529 [main] INFO  SampleApp.MyApp - Exiting application.
-----
-
-As a side note, let me mention that in log4net child loggers link only to their existing ancestors.
-In particular, the logger named Animals.Carnivora.Dog is linked directly to the root logger, thereby circumventing the unused Animals or Animals.Carnivora loggers.
-This significantly increases performance and reduces log4net's memory footprint.
-
-The MyApp class configures log4net by invoking BasicConfigurator.Configure() method. 
-Other classes only need to import the log4net namespace, retrieve the loggers they wish to use, and log away.
-
-The previous example always outputs the same log information.
-Fortunately, it is easy to modify MyApp so that the log output can be controlled at run-time.
-Here is a slightly modified version. 
-
-[source,csharp]
-----
-using Animals.Carnivora;
-// Import log4net classes.
-using log4net;
-using log4net.Config;
-
-namespace SampleApp;
-
-private static class MyApp 
-{
-  private static readonly ILog logger = LogManager.GetLogger(typeof(MyApp));
-
-  private static void Main(string[] args) 
-  {
-    // BasicConfigurator replaced with XmlConfigurator.
-    XmlConfigurator.Configure();
-
-    logger.Info("Entering application.");
-    Dog dog = new();
-    bar.Bark();
-    logger.Info("Exiting application.");
-  }
-}
-----
-
-This version of MyApp instructs the XmlConfigurator to parse a configuration file and set up logging accordingly.
-
-Here is a sample configuration file that results in exactly same output as the previous BasicConfigurator based example.
+The appender configuration is:
 
 [source,xml]
 ----
-<log4net>
-  <!-- ConsoleAppender is set to be a ConsoleAppender -->
-  <appender name="ConsoleAppender" type="log4net.Appender.ConsoleAppender">
-    <!-- ConsoleAppender uses PatternLayout -->
+<appender name="AdoNetAppender" type="log4net.Appender.AdoNetAppender">
+  <bufferSize value="100"/>
+  <connectionType value="System.Data.SqlClient.SqlConnection, System.Data"/>
+  <connectionString value="data source=[database server];initial catalog=[database name];integrated security=false;persist security info=True;User ID=[user];Password=[password]"/>
+  <commandText value="insert into dbo.Log (LogDate, Thread, LogLevel, Logger, LogMessage, Exception) values (@LogDate, @Thread, @LogLevel, @Logger, @LogMessage, @Exception)"/>
+  <parameter>
+    <parameterName value="@LogDate"/>
+    <dbType value="DateTime"/>
+    <layout type="log4net.Layout.RawTimeStampLayout"/>
+  </parameter>
+  <parameter>
+    <parameterName value="@Thread"/>
+    <dbType value="String"/>
+    <size value="255"/>
     <layout type="log4net.Layout.PatternLayout">
-      <conversionPattern value="%-4timestamp [%thread] %-5level %logger %ndc - %message%newline" />
+      <conversionPattern value="%thread"/>
     </layout>
-  </appender>
-  <!-- Set root logger level to DEBUG and its only appender to ConsoleAppender -->
-  <root>
-    <level value="DEBUG" />
-    <appender-ref ref="ConsoleAppender" />
-  </root>
-</log4net>
-----
-
-Suppose we are no longer interested in seeing the output of any component belonging to the Animals.Carnivora namespace.
-
-The following configuration file shows one possible way of achieving this.
-
-[source,xml]
-----
-<log4net>
-  <!-- ConsoleAppender is set to be a ConsoleAppender -->
-  <appender name="ConsoleAppender" type="log4net.Appender.ConsoleAppender">
-    <!-- ConsoleAppender uses PatternLayout -->
+  </parameter>
+  <parameter>
+    <parameterName value="@LogLevel"/>
+    <dbType value="String"/>
+    <size value="50"/>
     <layout type="log4net.Layout.PatternLayout">
-      <conversionPattern value="%-4timestamp [%thread] %-5level %logger %ndc - %message%newline" />
+      <conversionPattern value="%level"/>
     </layout>
-  </appender>
-  <!-- Set root logger level to DEBUG and its only appender to ConsoleAppender -->
-  <root>
-    <level value="DEBUG" />
-    <appender-ref ref="ConsoleAppender" />
-  </root>
-  <!-- Print only messages of level WARN or above in the namespace Animals.Carnivora -->
-  <logger name="Animals.Carnivora">
-    <level value="WARN" />
-  </logger>
-</log4net>
-----
-
-The output of MyApp configured with this file is shown below.
-
-[source,log]
-----
-2024-12-21 14:07:41,508 [main] INFO  SampleApp.MyApp - Entering application.
-2024-12-21 14:07:41,529 [main] INFO  SampleApp.MyApp - Exiting application.
-----
-
-As the logger Animals.Carnivora.Dog does not have an assigned level, it inherits its level from Animals.Carnivora, which was set to WARN in the configuration file.
-The log statement from the Dog.Bark method has the level DEBUG, lower than the logger level WARN.
-Consequently, Bark() method's log request is suppressed. 
-
-Here is another configuration file that uses multiple appenders.
-
-[source,xml]
-----
-<log4net>
-  <appender name="ConsoleAppender" type="log4net.Appender.ConsoleAppender">
+  </parameter>
+  <parameter>
+    <parameterName value="@Logger"/>
+    <dbType value="String"/>
+    <size value="255"/>
     <layout type="log4net.Layout.PatternLayout">
-      <!-- Pattern to output the caller's file name and line number -->
-      <conversionPattern value="%5level [%thread] (%file:%line) - %message%newline" />
+      <conversionPattern value="%logger"/>
     </layout>
-  </appender>
-  <appender name="RollingFileAppender" type="log4net.Appender.RollingFileAppender">
-    <file value="example.log" />
-    <appendToFile value="true" />
-    <maximumFileSize value="100KB" />
-    <maxSizeRollBackups value="2" />
+  </parameter>
+  <parameter>
+    <parameterName value="@LogMessage"/>
+    <dbType value="String"/>
+    <size value="2000"/>
     <layout type="log4net.Layout.PatternLayout">
-      <conversionPattern value="%level %thread %logger - %message%newline" />
+      <conversionPattern value="%message"/>
     </layout>
-  </appender>
-  <!-- Set root logger level to DEBUG and its only appender to ConsoleAppender -->
-  <root>
-    <level value="DEBUG" />
-    <appender-ref ref="ConsoleAppender" />
-    <appender-ref ref="RollingFile" />
-  </root>
-</log4net>
+  </parameter>
+  <parameter>
+    <parameterName value="@Exception"/>
+    <dbType value="String"/>
+    <size value="2000"/>
+    <layout type="log4net.Layout.ExceptionLayout"/>
+  </parameter>
+</appender>
 ----
-
-Calling the enhanced MyApp with the this configuration file will output the following on the console.
-
-[source,log]
-----
-INFO  [main] (MyApp.cs:17) - Entering application.
-DEBUG [main] (Dog.cs:10) - Woof!
-INFO  [main] (MyApp.cs:20) - Exiting application.
-----
-
-In addition, as the root logger has been allocated a second appender, output will also be directed to the example.log file.
-This file will be rolled over when it reaches 100KB.
-When roll-over occurs, the old version of example.log is automatically moved to example.log.1.
-
-Note that to obtain these different logging behaviors we did not need to recompile code. 
-We could just as easily have logged to an email address or redirected all Animals.Carnivora output to an remote syslog server.
-
-For more examples of configuring appenders using the XmlConfigurator see the Example Appender Configuration #TODO document.
