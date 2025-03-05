@@ -237,7 +237,7 @@ namespace log4net.Layout;
 ///      <term>identity</term>
 ///      <description>
 ///        <para>
-///        Used to output the user name for the currently active user
+///        Used to output the username for the currently active user
 ///        (Principal.Identity.Name).
 ///        </para>
 ///        <para>
@@ -315,7 +315,7 @@ namespace log4net.Layout;
 ///       <para>
 ///       If a precision specifier is given, then only the corresponding
 ///       number of right most components of the logger name will be
-///       printed. By default the logger name is printed in full.
+///       printed. By default, the logger name is printed in full.
 ///       </para>
 ///       <para>
 ///       For example, for the logger name "a.b.c" the pattern
@@ -410,12 +410,12 @@ namespace log4net.Layout;
 ///      <term>property</term>
 ///      <description>
 ///       <para>
-///       Used to output the an event specific property. The key to 
+///       Used to output an event specific property. The key to 
 ///       lookup must be specified within braces and directly following the
 ///       pattern specifier, e.g. <b>%property{user}</b> would include the value
 ///       from the property that is keyed by the string 'user'. Each property value
 ///       that is to be included in the log must be specified separately.
-///       Properties are added to events by loggers or appenders. By default 
+///       Properties are added to events by loggers or appenders. By default, 
 ///       the <c>log4net:HostName</c> property is set to the name of machine on 
 ///       which the event was originally logged.
 ///       </para>
@@ -527,7 +527,7 @@ namespace log4net.Layout;
 ///       <para>
 ///       If a precision specifier is given, then only the corresponding
 ///       number of right most components of the class name will be
-///       printed. By default the class name is output in fully qualified form.
+///       printed. By default, the class name is output in fully qualified form.
 ///       </para>
 ///       <para>
 ///       For example, for the class name "log4net.Layout.PatternLayout", the
@@ -618,7 +618,7 @@ namespace log4net.Layout;
 /// longer more descriptive pattern names.
 /// </para>
 /// <para>
-/// By default the relevant information is output as is. However,
+/// By default, the relevant information is output as is. However,
 /// with the aid of format modifiers it is possible to change the
 /// minimum field width, the maximum field width and justification.
 /// </para>
@@ -755,7 +755,7 @@ namespace log4net.Layout;
 /// </para>
 /// <para>
 /// This means that in a Release build the caller information may be incomplete or may 
-/// not exist at all! Therefore caller location information cannot be relied upon in a Release build.
+/// not exist at all! Therefore, caller location information cannot be relied upon in a Release build.
 /// </para>
 /// </note>
 /// <para>
@@ -939,7 +939,7 @@ public class PatternLayout : LayoutSkeleton
   /// </remarks>
   public PatternLayout(string? pattern)
   {
-    // By default we do not process the exception
+    // By default, we do not process the exception
     IgnoresException = true;
 
     ConversionPattern = pattern ?? DefaultConversionPattern;
@@ -1016,15 +1016,11 @@ public class PatternLayout : LayoutSkeleton
     PatternConverter? curConverter = _head;
     while (curConverter is not null)
     {
-      if (curConverter is PatternLayoutConverter layoutConverter)
+      if (curConverter is PatternLayoutConverter { IgnoresException: false })
       {
-        if (!layoutConverter.IgnoresException)
-        {
-          // Found converter that handles the exception
-          IgnoresException = false;
-
-          break;
-        }
+        // Found converter that handles the exception
+        IgnoresException = false;
+        break;
       }
       curConverter = curConverter.Next;
     }
@@ -1089,12 +1085,9 @@ public class PatternLayout : LayoutSkeleton
   /// <see cref="PatternConverter"/> type.
   /// </para>
   /// </remarks>
-  public void AddConverter(string name, Type type)
+  public void AddConverter(string name, Type type) => AddConverter(new()
   {
-    AddConverter(new()
-    {
-      Name = name.EnsureNotNull(),
-      Type = type.EnsureNotNull()
-    });
-  }
+    Name = name.EnsureNotNull(),
+    Type = type.EnsureNotNull()
+  });
 }
