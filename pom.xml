@@ -1,35 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
-}
- Licensed to the Apache Software Foundation (ASF) under one or more
- contributor license agreements.  See the NOTICE file distributed with
- this work for additional information regarding copyright ownership.
- The ASF licenses this file to You under the Apache License, Version 2.0
- (the "License"); you may not use this file except in compliance with
- the License.  You may obtain a copy of the License at
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to you under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         child.project.url.inherit.append.path="false"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-      http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
-
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>log4net</groupId>
-  <artifactId>apache-log4net</artifactId>
+
+  <parent>
+    <groupId>org.apache.logging</groupId>
+    <artifactId>logging-parent</artifactId>
+    <version>11.0.0</version>
+  </parent>
+
   <packaging>pom</packaging>
-  <version>3.0.5</version>
+  <groupId>org.apache.logging.log4net</groupId>
+  <artifactId>apache-log4net</artifactId>
+  <version>${revision}</version>
+
   <name>Apache log4net</name>
   <description>Logging framework for Microsoft .NET Framework.</description>
-  <url>https://logging.apache.org/log4net/</url>
+  <url>https://logging.apache.org/log4net</url>
   <inceptionYear>2004</inceptionYear>
+
+  <scm child.scm.connection.inherit.append.path="false" child.scm.developerConnection.inherit.append.path="false"
+       child.scm.url.inherit.append.path="false">
+    <connection>scm:git:https://github.com/apache/logging-log4net</connection>
+    <developerConnection>scm:git:https://github.com/apache/logging-log4net</developerConnection>
+    <url>https://github.com/apache/logging-log4net</url>
+  </scm>
+
   <issueManagement>
-    <system>Github</system>
+    <system>GitHub Issues</system>
     <url>https://github.com/apache/logging-log4net/issues</url>
   </issueManagement>
+
   <mailingLists>
     <mailingList>
       <name>logging commits: all git commits of the logging projects including log4net</name>
@@ -39,157 +58,131 @@
       <archive>https://mail-archives.apache.org/mod_mbox/logging-commits/</archive>
     </mailingList>
   </mailingLists>
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-  <scm>
-    <connection>scm:git:https://github.com/apache/logging-log4net</connection>
-    <developerConnection>scm:git:https://github.com/apache/logging-log4net</developerConnection>
-    <url>https://github.com/apache/logging-log4net</url>
-  </scm>
-  <organization>
-    <name>Apache Software Foundation</name>
-    <url>https://www.apache.org</url>
-  </organization>
+
+  <ciManagement>
+    <system>GitHub Actions</system>
+    <url>https://github.com/apache/logging-log4net/actions</url>
+  </ciManagement>
+
+  <properties>
+
+    <!-- project version -->
+    <revision>0.10.0-SNAPSHOT</revision>
+
+    <!-- `project.build.outputTimestamp` is required to be present for reproducible builds.
+         We actually inherit one from the `org.apache:apache` through our parent `org.apache.logging:logging-parent`.
+         Though inheriting this property has two undesired consequences:
+         1. `artifact:compare` dumps an `ERROR` log stating that this `property should not be inherited but defined` (apache/logging-parent#50)
+         2. This value is employed in various places while creating the distribution
+         To mitigate these, we define a *dummy* value here and let the CI replace it during a release.
+         Hence, *DO NOT MANUALLY EDIT THIS VALUE*! -->
+    <project.build.outputTimestamp>2024-05-09T11:40:45Z</project.build.outputTimestamp>
+
+    <!-- disable `maven-site-plugin`-->
+    <maven.site.skip>true</maven.site.skip>
+    <maven.site.deploy.skip>true</maven.site.deploy.skip>
+    <spotbugs.skip>true</spotbugs.skip>
+  </properties>
+
+  <!-- `dependencyManagement` must only contain `log4j-tools` modules and nothing else!
+       Modules here must have a corresponding entry in `modules` block above! -->
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-changelog</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-docgen</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-docgen-asciidoctor-extension</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+
   <build>
     <plugins>
+
+      <!-- Enable BOM flattening -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>flatten-maven-plugin</artifactId>
+        <version>${flatten-maven-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>flatten-bom</id>
+            <goals>
+              <goal>flatten</goal>
+            </goals>
+            <phase>process-resources</phase>
+            <inherited>false</inherited>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- *Temporarily* override the changelog entry file validation inherited from `logging-parent`.
+
+           Inherited `validate-changelog` execution explicitly fixes the `log4j-changelog` namespace and schema location.
+           This makes it impossible to upgrade changelog entry file schemas to a newer version than the one expected by `logging-parent`.
+
+           TODO: This will probably be fixed in `logging-parent` version `11.0.0` release.
+                 Hence, from then on, this `xml-maven-plugin` override can be removed. -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>xml-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>validate-changelog</id>
+            <configuration combine.self="override">
+              <validationSets>
+                <validationSet>
+                  <dir>src/changelog</dir>
+                  <includes>
+                    <include>**/*.xml</include>
+                  </includes>
+                  <validating>true</validating>
+                </validationSet>
+              </validationSets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <configuration>
+          <formats>
+            <format>
+              <excludes>
+                <exclude>**/.idea/*</exclude>
+                <exclude>src/changelog/**/*.xml</exclude>
+                <exclude>**/bin/**/*.xml</exclude>
+                <exclude>**/*.y*ml</exclude>
+              </excludes>
+            </format>
+          </formats>
+        </configuration>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
-        <version>0.11</version>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-        <version>3.4</version>
         <configuration>
-          <templateFile>${basedir}/src/site/site.vm</templateFile>
+          <consoleOutput>true</consoleOutput>
+          <excludesFile>${basedir}/rat.excludesFile</excludesFile>
         </configuration>
       </plugin>
     </plugins>
   </build>
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-        <version>3.4</version>
-        <configuration>
-          <templateFile>${basedir}/src/site/site.vm</templateFile>
-        </configuration>
-      </plugin>
-      <!-- RAT report -->
-      <plugin>
-        <groupId>org.apache.rat</groupId>
-        <artifactId>apache-rat-plugin</artifactId>
-        <version>0.12</version>
-        <configuration>
-          <excludesFile>${basedir}/rat.excludesFile</excludesFile>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>2.8.1</version>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>cim</report>
-              <report>scm</report>
-              <report>license</report>
-              <report>project-team</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-      </plugin>
-    </plugins>
-  </reporting>
-  <developers>
-    <developer>
-      <name>Davyd McColl</name>
-      <id>fluffynuts</id>
-    </developer>
-    <developer>
-      <name>Jan Friedrich</name>
-      <id>freeandnil</id>
-    </developer>
-    <developer>
-      <name>Curt Arnold</name>
-      <id>carnold</id>
-    </developer>
-    <developer>
-      <name>Stefan Bodewig</name>
-      <id>bodewig</id>
-    </developer>
-    <developer>
-      <name>Nicko Cadell</name>
-      <id>nicko</id>
-    </developer>
-    <developer>
-      <name>Niall Daley</name>
-      <id>niall</id>
-    </developer>
-    <developer>
-      <name>Gert Driesen</name>
-      <id>drieseng</id>
-    </developer>
-    <developer>
-      <name>Ron Grabowski</name>
-      <id>rgrabowski</id>
-    </developer>
-    <developer>
-      <name>Dominik Psenner</name>
-      <id>dpsenner</id>
-    </developer>
-  </developers>
-  <contributors>
-    <contributor>
-      <name>Erik Mavrinac</name>
-    </contributor>
-    <contributor>
-      <name>Julian Biddle</name>
-    </contributor>
-    <contributor>
-      <name>Daniel Cazzulino</name>
-    </contributor>
-    <contributor>
-      <name>Aspi Havewala</name>
-    </contributor>
-    <contributor>
-      <name>Rick Hobbs</name>
-    </contributor>
-    <contributor>
-      <name>Lance Nehring</name>
-    </contributor>
-    <contributor>
-      <name>Angelika Schnagl</name>
-    </contributor>
-    <contributor>
-      <name>Edward Smit</name>
-    </contributor>
-    <contributor>
-      <name>Douglas de la Torre</name>
-    </contributor>
-    <contributor>
-      <name>Pavlos Touboulidis</name>
-    </contributor>
-    <contributor>
-      <name>Thomas Voss</name>
-    </contributor>
-    <contributor>
-      <name>Jarrod Alexander</name>
-    </contributor>
-  </contributors>
-  <dependencies>
-  </dependencies>
-  <distributionManagement>
-    <site>
-      <id>logging.site</id>
-      <url>file:///${user.dir}/target/site-deploy</url>
-    </site>
-  </distributionManagement>
 </project>

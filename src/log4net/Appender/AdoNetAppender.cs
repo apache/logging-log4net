@@ -66,51 +66,69 @@ namespace log4net.Appender;
 /// <example>
 /// An example of a SQL Server table that could be logged to:
 /// <code lang="SQL">
-/// CREATE TABLE [dbo].[Log] ( 
-///   [ID] [int] IDENTITY (1, 1) NOT NULL ,
-///   [Date] [datetime] NOT NULL ,
-///   [Thread] [varchar] (255) NOT NULL ,
-///   [Level] [varchar] (20) NOT NULL ,
-///   [Logger] [varchar] (255) NOT NULL ,
-///   [Message] [varchar] (4000) NOT NULL 
-/// ) ON [PRIMARY]
+/// create table dbo.Log
+/// (
+///   Id bigint identity (1, 1) not null,
+///   LogDate datetime not null,
+///   Thread nvarchar(255) not null,
+///   LogLevel nvarchar(50) not null,
+///   Logger nvarchar(255) not null,
+///   LogMessage nvarchar(2000) not null,
+///   Exception nvarchar(2000) null,
+///   constraint Log_PKEY primary key (Id)
+/// ) with (data_compression = page)
 /// </code>
 /// </example>
 /// <example>
 /// An example configuration to log to the above table:
 /// <code lang="XML" escaped="true">
-/// <appender name="AdoNetAppender_SqlServer" type="log4net.Appender.AdoNetAppender" >
-///   <connectionType value="System.Data.SqlClient.SqlConnection, System.Data, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-///   <connectionString value="data source=SQLSVR;initial catalog=test_log4net;integrated security=false;persist security info=True;" />
-///   <commandText value="INSERT INTO Log ([Date],[Thread],[Level],[Logger],[Message]) VALUES (@log_date, @thread, @log_level, @logger, @message)" />
+/// <appender name="AdoNetAppender" type="log4net.Appender.AdoNetAppender">
+///   <bufferSize value="100"/>
+/// 	<connectionType value="Microsoft.Data.SqlClient.SqlConnection, Microsoft.Data.SqlClient"/>
+///   <connectionString value="data source=[database server];initial catalog=[database name];integrated security=false;persist security info=True;User ID=[user];Password=[password]"/>
+///   <commandText value="insert into dbo.Log (LogDate, Thread, LogLevel, Logger, LogMessage, Exception) values (@LogDate, @Thread, @LogLevel, @Logger, @LogMessage, @Exception)"/>
 ///   <parameter>
-///     <parameterName value="@log_date" />
-///     <dbType value="DateTime" />
-///     <layout type="log4net.Layout.PatternLayout" value="%date{yyyy'-'MM'-'dd HH':'mm':'ss'.'fff}" />
+///     <parameterName value="@LogDate"/>
+///     <dbType value="DateTime"/>
+///     <layout type="log4net.Layout.RawTimeStampLayout"/>
 ///   </parameter>
 ///   <parameter>
-///     <parameterName value="@thread" />
-///     <dbType value="String" />
-///     <size value="255" />
-///     <layout type="log4net.Layout.PatternLayout" value="%thread" />
+///     <parameterName value="@Thread"/>
+///     <dbType value="String"/>
+///     <size value="255"/>
+///     <layout type="log4net.Layout.PatternLayout">
+///       <conversionPattern value="%thread"/>
+///     </layout>
 ///   </parameter>
 ///   <parameter>
-///     <parameterName value="@log_level" />
-///     <dbType value="String" />
-///     <size value="50" />
-///     <layout type="log4net.Layout.PatternLayout" value="%level" />
+///     <parameterName value="@LogLevel"/>
+///     <dbType value="String"/>
+///     <size value="50"/>
+///     <layout type="log4net.Layout.PatternLayout">
+///       <conversionPattern value="%level"/>
+///     </layout>
 ///   </parameter>
 ///   <parameter>
-///     <parameterName value="@logger" />
-///     <dbType value="String" />
-///     <size value="255" />
-///     <layout type="log4net.Layout.PatternLayout" value="%logger" />
+///     <parameterName value="@Logger"/>
+///     <dbType value="String"/>
+///     <size value="255"/>
+///     <layout type="log4net.Layout.PatternLayout">
+///       <conversionPattern value="%logger"/>
+///     </layout>
 ///   </parameter>
 ///   <parameter>
-///     <parameterName value="@message" />
-///     <dbType value="String" />
-///     <size value="4000" />
-///     <layout type="log4net.Layout.PatternLayout" value="%message" />
+///     <parameterName value="@LogMessage"/>
+///     <dbType value="String"/>
+///     <size value="2000"/>
+///     <layout type="log4net.Layout.PatternLayout">
+///       <conversionPattern value="%message"/>
+///     </layout>
+///   </parameter>
+///   <parameter>
+///     <parameterName value="@Exception"/>
+///     <dbType value="String"/>
+///     <size value="2000"/>
+///     <layout type="log4net.Layout.ExceptionLayout"/>
 ///   </parameter>
 /// </appender>
 /// </code>

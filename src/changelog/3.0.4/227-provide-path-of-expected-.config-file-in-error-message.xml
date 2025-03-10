@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="added">
+  <issue id="227" link="https://github.com/apache/logging-log4net/issues/227"/>
+  <issue id="228" link="https://github.com/apache/logging-log4net/pull/228"/>
+  <description format="asciidoc">Provide path of expected .config file in error message
+  (requested by @FrankNuessle, implemented by @FreeAndNil in https://github.com/apache/logging-log4net/pull/228[#228])</description>
+</entry>
