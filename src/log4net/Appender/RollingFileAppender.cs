@@ -681,6 +681,7 @@ public partial class RollingFileAppender : FileAppender
     using (SecurityContext?.Impersonate(this))
     {
       string fullPath = Path.GetFullPath(baseFilePath);
+      string dir = Path.GetDirectoryName(baseFilePath);
 
       directory = Path.GetDirectoryName(fullPath);
       if (Directory.Exists(directory))
@@ -690,7 +691,8 @@ public partial class RollingFileAppender : FileAppender
         string[] files = Directory.GetFiles(directory, GetWildcardPatternForFile(baseFileName));
         result.AddRange(files
           .Select(Path.GetFileName)
-          .Where(curFileName => curFileName.StartsWith(Path.GetFileNameWithoutExtension(baseFileName))));
+          .Where(curFileName => curFileName.StartsWith(Path.GetFileNameWithoutExtension(baseFileName)))
+          .Select(file => Path.Combine(dir, file)));
       }
     }
     LogLog.Debug(_declaringType, "Searched for existing files in [" + directory + "]");
@@ -789,7 +791,9 @@ public partial class RollingFileAppender : FileAppender
   {
     curFileName = curFileName.ToLowerInvariant();
     baseFile = baseFile.ToLowerInvariant();
-    if (curFileName.StartsWith(Path.GetFileNameWithoutExtension(baseFile)) == false)
+    var baseFileWithoutExtension = Path.Combine(Path.GetDirectoryName(baseFile), Path.GetFileNameWithoutExtension(baseFile));
+    
+    if (curFileName.StartsWith(baseFileWithoutExtension) == false)
     {
       return; // This is not a log file, so ignore
     }
