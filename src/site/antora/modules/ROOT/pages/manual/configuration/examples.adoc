@@ -22,4 +22,5 @@ This document presents example configurations for the built-in appenders. These 
 
 These examples are by no means exhaustive configurations for the appenders.
 
-* xref:manual/examples/adonetappender.adoc[AdoNetAppender]
+* xref:manual/configuration/adonetappender.adoc[]
+* xref:manual/configuration/bufferingforwardingappender.adoc[]
