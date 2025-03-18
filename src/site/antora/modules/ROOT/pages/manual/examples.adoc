@@ -15,18 +15,7 @@
     limitations under the License.
 ////
 
-* xref:download.adoc[]
-* xref:development.adoc[]
-* xref:manual/index.adoc[]
-** xref:manual/appenders.adoc[]
-** xref:manual/configuration.adoc[]
-*** xref:manual/configuration/examples.adoc[]
-**** xref:manual/configuration/adonetappender.adoc[]
-** xref:manual/examples.adoc[]
-** xref:manual/filters.adoc[]
-** xref:manual/layouts.adoc[]
-* xref:features.adoc[]
-* xref:release-notes.adoc[]
-* xref:release-review.adoc[]
-* {logging-services-url}/support.html[Support]
-* {logging-services-url}/security.html[Security]
+[#examples]
+= Examples
+
+The examples can be found at https://github.com/apache/logging-log4net/tree/master/examples[examples]
