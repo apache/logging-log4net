@@ -25,6 +25,7 @@
 **** xref:manual/configuration/bufferingforwardingappender.adoc[]
 **** xref:manual/configuration/coloredconsoleappender.adoc[]
 **** xref:manual/configuration/consoleappender.adoc[]
+**** xref:manual/configuration/eventlogappender.adoc[]
 ** xref:manual/examples.adoc[]
 ** xref:manual/filters.adoc[]
 ** xref:manual/layouts.adoc[]

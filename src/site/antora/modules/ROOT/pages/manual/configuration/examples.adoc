@@ -26,3 +26,4 @@ These examples are by no means exhaustive configurations for the appenders.
 * xref:manual/configuration/bufferingforwardingappender.adoc[]
 * xref:manual/configuration/coloredconsoleappender.adoc[]
 * xref:manual/configuration/consoleappender.adoc[]
+* xref:manual/configuration/eventlogappender.adoc[]
