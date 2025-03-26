@@ -23,6 +23,8 @@
 *** xref:manual/configuration/examples.adoc[]
 **** xref:manual/configuration/adonetappender.adoc[]
 **** xref:manual/configuration/bufferingforwardingappender.adoc[]
+**** xref:manual/configuration/coloredconsoleappender.adoc[]
+**** xref:manual/configuration/consoleappender.adoc[]
 ** xref:manual/examples.adoc[]
 ** xref:manual/filters.adoc[]
 ** xref:manual/layouts.adoc[]
