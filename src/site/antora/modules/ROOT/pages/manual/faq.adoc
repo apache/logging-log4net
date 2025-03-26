@@ -14,18 +14,5 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 ////
-
-[#examples]
-= Examples
-
-This document presents example configurations for the built-in appenders. These configurations are designed to work with the log4net.Config.XmlConfigurator.
-
-These examples are by no means exhaustive configurations for the appenders.
-
-* xref:manual/configuration/adonetappender.adoc[]
-* xref:manual/configuration/bufferingforwardingappender.adoc[]
-* xref:manual/configuration/coloredconsoleappender.adoc[]
-* xref:manual/configuration/consoleappender.adoc[]
-* xref:manual/configuration/eventlogappender.adoc[]
-* xref:manual/configuration/fileappender.adoc[]
-* xref:manual/configuration/rollingfileappender.adoc[]
+[#faq]
+= Frequently Asked Questions
