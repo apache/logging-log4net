@@ -40,9 +40,9 @@ namespace log4net.Tests.Appender;
 /// Used for internal unit testing the <see cref="RollingFileAppender"/> class.
 /// </summary>
 [TestFixture]
-public sealed class RollingFileAppenderTest
+public class RollingFileAppenderTest
 {
-  private const string FileName = "test_41d3d834_4320f4da.log";
+  protected string FileName = "test_41d3d834_4320f4da.log";
 
   private const string TestMessage98Chars =
     "01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567";
@@ -99,7 +99,7 @@ public sealed class RollingFileAppenderTest
   /// with all appenders, and deletes any test files used
   /// for logging.
   /// </summary>
-  private static void ResetAndDeleteTestFiles()
+  private void ResetAndDeleteTestFiles()
   {
     // Regular users should not use the clear method lightly!
     LogManager.GetRepository().ResetConfiguration();
@@ -144,7 +144,7 @@ public sealed class RollingFileAppenderTest
   /// Finds the number of files that match the base file name,
   /// and matches the result against an expected count
   /// </summary>
-  private static void VerifyFileCount(int expectedCount, bool preserveLogFileNameExtension = false)
+  private void VerifyFileCount(int expectedCount, bool preserveLogFileNameExtension = false)
   {
     List<string> files = GetExistingFiles(FileName, preserveLogFileNameExtension);
     Assert.That(files, Is.Not.Null);
@@ -154,7 +154,7 @@ public sealed class RollingFileAppenderTest
   /// <summary>
   /// Creates a file with the given number, and the shared base file name
   /// </summary>
-  private static void CreateFile(int fileNumber)
+  private void CreateFile(int fileNumber)
   {
     FileInfo fileInfo = new(MakeFileName(FileName, fileNumber));
 
@@ -240,7 +240,7 @@ public sealed class RollingFileAppenderTest
   /// <summary>
   /// Removes all test files that exist
   /// </summary>
-  private static void DeleteTestFiles()
+  private void DeleteTestFiles()
   {
     List<string> files = GetExistingFiles(FileName);
     files.AddRange(GetExistingFiles(FileName, true));
@@ -469,7 +469,7 @@ public sealed class RollingFileAppenderTest
   /// Current file name is always the base file name when counting. Dates will need a different approach.
   /// </summary>
   /// <returns></returns>
-  private static string GetCurrentFile() => FileName;
+  private string GetCurrentFile() => FileName;
 
   /// <summary>
   /// Turns a group of file names into an array of file entries that include the name
@@ -604,7 +604,7 @@ public sealed class RollingFileAppenderTest
   /// <param name="rollingStats"></param>
   /// <param name="currentNext"></param>
   /// <returns></returns>
-  private static RollFileEntry MoveNextEntry(RollingStats rollingStats, RollFileEntry currentNext)
+  private RollFileEntry MoveNextEntry(RollingStats rollingStats, RollFileEntry currentNext)
   {
     rollingStats.MessagesThisFile++;
     if (rollingStats.MessagesThisFile >= rollingStats.MessagesPerFile)
@@ -621,7 +621,7 @@ public sealed class RollingFileAppenderTest
   /// Callback point for the regular expression parser.  Turns
   /// the number into a file name.
   /// </summary>
-  private static string NumberedNameMaker(Match match) 
+  private string NumberedNameMaker(Match match) 
     => MakeFileName(FileName, int.Parse(match.Value));
 
   /// <summary>
@@ -642,7 +642,7 @@ public sealed class RollingFileAppenderTest
   /// that results after each message is logged</param>
   /// <param name="messagesToLog">How many times the test message will be repeatedly logged</param>
   /// <returns></returns>
-  private static RollConditions[] MakeNumericTestEntries(
+  private RollConditions[] MakeNumericTestEntries(
     string testMessage, 
     string backupInfo,
     int messagesToLog)
@@ -660,7 +660,7 @@ public sealed class RollingFileAppenderTest
   /// <param name="messagesToLog">How many times the test message will be repeatedly logged</param>
   /// <param name="evaluator">Function that can turn a number into a filename</param>
   /// <returns></returns>
-  private static RollConditions[] MakeTestEntries(
+  private RollConditions[] MakeTestEntries(
     string testMessage,
     string backupInfo,
     int messagesToLog,
@@ -1592,7 +1592,7 @@ public sealed class RollingFileAppenderTest
   /// 
   /// </summary>
   /// <param name="fileNumbers">Comma separated list of numbers for counted file names</param>
-  private static List<string> MakeTestDataFromString(string fileNumbers)
+  private List<string> MakeTestDataFromString(string fileNumbers)
     => MakeTestDataFromString(FileName, fileNumbers);
 
   /// <summary>
