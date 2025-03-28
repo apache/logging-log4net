@@ -22,4 +22,5 @@
 # This list includes in the same order, committers of Log4net listed on:
 # https://logging.apache.org/support.html#sponsors
 github:
+  - fluffynuts
   - FreeAndNil
