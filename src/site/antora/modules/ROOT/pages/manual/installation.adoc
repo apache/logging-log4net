@@ -21,13 +21,17 @@
 The preferred way to install log4net is to use our https://www.nuget.org/packages/log4net[nuget package].
 
 Just add the following lines in your project file.
+
 [source,xml]
 ----
 <ItemGroup>
   <PackageReference Include="log4net" Version="*" />
 </ItemGroup>
 ----
+
 Now you can use log4net. See our https://github.com/apache/logging-log4net/tree/master/examples[examples].
+
+Alternatively you can use the dotnet tool. 
 
 [source,powershell]
 ----

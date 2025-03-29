@@ -16,3 +16,343 @@
 ////
 [#faq]
 = Frequently Asked Questions
+
+[#info]
+== Information
+
+[#what-is-log4net]
+=== What is log4net?
+
+log4net is a logging library that supports multiple output targets.
+
+It helps diagnose issues by enabling logging without modifying the application binary.
+Designed for minimal performance impact, log4net allows log statements to remain in production code.
+
+A key feature is hierarchical loggers, which enable fine-grained control over log output to prevent excessive logging.
+log4net is built for both speed and flexibility.
+
+[#prerequisites]
+=== What are the prerequisites for log4net?
+
+log4net runs on net462 or higher and any framework supporting netstandard2.0.
+
+[#examples]
+=== Are there examples for using log4net?
+
+The examples can be found at https://github.com/apache/logging-log4net/tree/master/examples[examples]
+
+[#features]
+=== What are the features of log4net?
+
+See the xref:../features.adoc[] document.
+
+[#thread-safety]
+=== Is log4net thread-safe?
+
+Yes, log4net is thread-safe.
+
+[#output]
+=== What does log output look like?
+
+The log output can be customized in many ways.
+One can completely override the output format by implementing a custom Layout
+
+Here is an example output using PatternLayout with the conversion pattern
+
+"%date [%thread] %-5level %logger - %message%newline"
+
+[source,text]
+----
+2024-12-21 14:07:41,517 [main] DEBUG Animals.Carnivora.Dog - Woof!
+2024-12-21 14:07:41,517 [main] WARN  Animals.Carnivora.Dog - Meow!
+----
+
+The first field is the date and time of the log event.
+The second field is the thread outputting the log statement.
+The third field is the level of the log statement.
+The fourth field is the name of the logger making the log request.
+The text after the '-' is the message of the statement.
+
+[#loggers]
+=== What are Loggers?
+
+Loggers are central to log4net's configuration.
+
+They are organized in a hierarchy and allow runtime control over which log statements are printed.
+
+Loggers inherit their levels from log4net's configuration.
+Whether a log statement reaches an appender depends on its level and associated logger.
+
+[#contributing]
+=== What should I keep in mind when contributing code?
+
+See https://github.com/apache/logging-log4net/blob/master/doc/CONTRIBUTING.md[contributing]
+
+[#distribution]
+=== Where can I find the latest distribution of log4net?
+
+See the xref:./installation.adoc[] or xref:../download.adoc[].
+
+[#disable-looging]
+=== How do I completely disable all logging at runtime?
+
+Setting the Threshold on the Hierarchy to Level OFF will disable all logging from that Hierarchy.
+This can be done in the log4net configuration file by setting the "threshold" attribute on the log4net configuration element to "OFF".
+
+For example:
+
+[source,xml]
+----
+<log4net threshold="OFF" />
+----
+
+[#options-for-appenders]
+=== What are the configurable options for an appender?
+
+log4net uses public properties to configure components such as Appenders, Layouts, Loggers etc.
+
+Thus, any writable public property in on the appender corresponds to a configurable option.
+For example, in RollingFileAppender the 
+
+[source,csharp]
+----
+public int MaxSizeRollBackups { set; }
+----
+
+property corresponds to the MaxSizeRollBackups option.
+
+Layouts options are also defined by their writable properties.
+Same goes for most other log4net components.
+
+[#direct-output-per-level]
+=== Is it possible to direct log output to different appenders by level?
+
+Yes, it is.
+
+Each appender has a Threshold option that filters out log events below a specified level.
+
+For example, setting an appender's threshold to DEBUG allows all higher levels (INFO, WARN, ERROR, FATAL) to pass through. This is useful since DEBUG messages are rarely helpful without surrounding context.
+
+On the other hand, setting the threshold to ERROR will exclude DEBUG, INFO, and WARN messages while keeping ERROR and FATAL.
+
+If you need to log only a specific level, use a LevelMatchFilter to ensure only events of that exact level are recorded.
+
+[#automatic-config-reload]
+=== Is there a way to get log4net to automatically reload a configuration file if it changes?
+
+Yes.
+The XmlConfigurator supports automatic reloading using the ConfigureAndWatch APIs.
+Refer to the API documentation for details.
+
+[#custom-assemblies]
+=== Can I load an appender from another assembly?
+
+Yes.
+When specifying the type in the configuration file you can give the assembly qualified name of the type.
+For example:
+
+[source,xml]
+----
+<appender name="..." type="MyNamespace.MyAppender, MyAssembly">
+----
+               
+The runtime will try to locate the assembly called MyAssembly.
+
+[#newline-in-header]
+=== How do I insert newlines into the layout header?
+
+To insert newlines in a layout header, use an XML numeric character reference.
+
+A carriage return and line feed (CR LF) are represented as \&#13;\&#10;.
+
+For example, to add a header and footer with newlines in the output, use this sequence in the configuration.
+
+[source,xml]
+----
+<layout type="log4net.Layout.PatternLayout">
+  <header value="[Header]&#13;&#10;" />
+  <footer value="[Footer]&#13;&#10;" />
+  <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
+</layout>
+----
+
+[#dynamic-patterns]
+=== How do I use a pattern to set the value of a string property?
+
+Log4net allows using pattern syntax to set string properties, similar to PatternLayout for formatting output.
+
+To enable this, set type="log4net.Util.PatternString" on the string property in the config file. This directs the parser to process the value using PatternString before converting it to a string.
+
+For example, to include the current process ID in a FileAppender filename, use the %processid pattern in the File property.
+
+[source,xml]
+----
+<appender name="LogFileAppender" type="log4net.Appender.FileAppender">
+  <file type="log4net.Util.PatternString" value="log-file-[%processid].txt" />
+  <layout type="log4net.Layout.PatternLayout" value="%date [%thread] %-5level %logger - %message%newline" />
+</appender>
+----
+
+[#implementation]
+== Implementing Logging
+
+[#naming-loggers]
+=== What is the suggested ways to name loggers?
+
+A common approach is to name loggers by locality, using the fully qualified class name. This has several benefits:
+
+* Simple to implement and explain to new developers.
+* Reflects the application's modular design.
+* Can be refined as needed.
+* Automatically provides context for log statements.
+
+[#getting-the-type]
+=== How do I get the type of a class in a static block?
+
+To retrieve the type use:
+
+[source,csharp]
+----
+private static readonly ILog log = LogManager.GetLogger(typeof(Foo));
+----
+
+Here, typeof(Foo) provides the type, and LogManager.GetLogger accepts a Type instance, which is commonly used.
+
+[#performance]
+=== What is the fastest way to (not) log?
+
+Concatenating strings in log statements, such as:
+
+[source,csharp]
+----
+log.Debug("Entry number: " + i + " is " + entry[i]);
+// or string interpolation
+log.Debug($"Entry number: {i} is {entry[i]}");
+----
+
+incurs the cost of constructing the message, including converting values to strings and concatenating them—regardless of whether the message is logged.
+
+A more efficient alternative is to use log.DebugFormat etc., which formats the message only if the log level is enabled:
+
+[source,csharp]
+----
+log.DebugFormat("Entry number: {0} is {1}", i, entry[i]);
+----
+
+Alternatively, check if logging is enabled before constructing the message:
+
+[source,csharp]
+----
+if (log.IsDebugEnabled) 
+{
+  log.Debug($"Entry number: {i} is {entry[i]}");
+}
+----
+
+[#locking-models]
+=== How do I get multiple process to log to the same file?
+
+Before proceeding, consider if it's absolutely necessary to have multiple processes log to the same file — it's often better to avoid this.
+
+FileAppender offers different locking models, but they have limitations:
+
+* **Default** - Holds an exclusive write lock, preventing other processes from writing.
+* **MinimalLock** - Acquires the write lock only while logging, allowing interleaved writes but with significant performance loss.
+* **InterProcessLock** - Uses a system-wide Mutex to synchronize, but requires all processes to cooperate. 
+While better than MinimalLock, it still causes performance issues due to frequent Mutex acquisition.
+* **NoLock** - Does not use any lock, allowing all processes to write simultaneously.
+However, this can lead to log data corruption if multiple processes write to the file at the same time.
+
+Using RollingFileAppender complicates things further, as multiple processes may try to roll the log file simultaneously, which is incompatible with any locking model.
+
+[#troubleshooting]
+== Troubleshooting
+
+[#internal-debugging]
+=== How do I enable log4net internal debugging?
+
+There are two ways to enable internal debugging in log4net:
+
+* **Via the Application Config File** (Preferred):
+   
+Set the `log4net.Internal.Debug` option to `true` in the application's config file (not the log4net configuration file).
+
+Example:
+
+[source,xml]
+----
+<configuration>
+    <appSettings>
+    <add key="log4net.Internal.Debug" value="true"/>
+    </appSettings>
+</configuration>
+----
+
+This setting is read on startup, and all internal debugging messages are emitted.
+
+* **Programmatically**:
+
+Set `log4net.Util.LogLog.InternalDebugging` to `true` in code as early as possible to capture the most debug information.
+
+Internal debug messages are written to the console and `System.Diagnostics.Trace`. 
+If there's no console, messages are lost unless redirected.
+You can capture these messages using a utility like DebugView from  http://www.sysinternals.com[Sysinternals].
+
+To redirect debug messages to a file, add a trace listener in the config file:
+
+[source,xml]
+----
+<configuration>
+  <system.diagnostics>
+    <trace autoflush="true">
+      <listeners>
+        <add name="textWriterTraceListener"
+             type="System.Diagnostics.TextWriterTraceListener"
+             initializeData="log4net.log" />
+      </listeners>
+    </trace>
+  </system.diagnostics>
+</configuration>
+----
+**Ensure the process has write permissions to the specified file.**
+
+[#configuration-errors]
+== How can I evaluate configuration errors at runtime?
+
+To prevent silent failures, log4net provides a way to evaluate whether it was properly configured and to check for any messages generated during startup. 
+
+To check if log4net has been configured correctly, you can check the `Configured` property of the `ILoggerRepository` and enumerate the configuration messages as follows:
+
+[source,csharp]
+----
+if (!log4net.LogManager.GetRepository().Configured) // log4net is not configured
+{
+  foreach (log4net.Util.LogLog message in log4net.LogManager.GetRepository().ConfigurationMessages.Cast<log4net.Util.LogLog>())
+  {
+    // Evaluate configuration message
+  }
+}
+----
+
+This allows you to catch any configuration issues and review them at runtime.
+
+[#logging-from-services]
+== Why doesn't the logging in my service work?
+
+A Windows service runs under a user account specified in the Services control panel.
+This account may have restricted permissions, so ensure that the account has permission to create and write files in the logging directory.
+
+Additionally, when a Windows service is launched, its current directory is set to the Windows system directory (e.g., `C:\Windows\System32`).
+If you are loading the configuration file from the current directory, keep in mind that this path won't be the location of your assemblies. 
+
+The best approach to get the correct path to your assemblies is by using `AppDomain.BaseDirectory`.
+Note that log4net internals never use the current directory.
+
+[#reporting-bugs]
+== How do I report bugs?
+
+First, ensure it's truly a bug and not a usage error.
+If unsure, it's best to start with a https://github.com/apache/logging-log4net/discussions/new?category=general[discussion].
+
+If you've identified a bug, please report it via our https://github.com/apache/logging-log4net/issues[Issue Tracker].
+Before submitting, check if the issue has already been reported by searching the existing issues.

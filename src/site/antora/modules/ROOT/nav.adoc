@@ -32,6 +32,7 @@
 ** xref:manual/faq.adoc[]
 ** xref:manual/filters.adoc[]
 ** xref:manual/layouts.adoc[]
+** xref:manual/installation.adoc[]
 * xref:features.adoc[]
 * xref:release-notes.adoc[]
 * xref:release-review.adoc[]

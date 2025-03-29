@@ -18,5 +18,5 @@ limitations under the License.
 [#log4net]
 = log4net
 
-The Apache log4net library is a tool to help the programmer output log statements to a variety of output targets.
+The Apache log4net library is a library to output log statements to a variety of output targets.
 For more information on log4net see the xref:features.adoc[] document.
