@@ -1,0 +1,55 @@
+////
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+////
+
+[#bufferingforwardingappender]
+= BufferingForwardingAppender
+
+The following example shows how to configure the BufferingForwardingAppender to buffer 100 messages before delivering them to the ConsoleAppender.
+
+[source,xml]
+----
+<appender name="BufferingForwardingAppender" type="log4net.Appender.BufferingForwardingAppender" >
+  <bufferSize value="100"/>
+  <!--
+    The value configures what gets fixed immediately when calling logger.Log(). 
+    The default value is All, which may negatively impact performance enough to warrant changing it to fix less data.
+    More information can be found at https://github.com/apache/logging-log4net/blob/master/src/log4net/Core/FixFlags.cs
+  -->    
+  <fix value="All"/>
+  <appender-ref ref="ConsoleAppender" />
+</appender>
+----
+
+This example shows how to deliver only significant events.
+
+A LevelEvaluator is specified with a threshold of WARN.
+This means that the events will only be delivered when a message with level of WARN or higher level is logged.
+
+Up to 512 (BufferSize) previous messages of any level will also be delivered to provide context information.
+Messages not sent will be discarded.
+
+[source,xml]
+----
+<appender name="BufferingForwardingAppender" type="log4net.Appender.BufferingForwardingAppender" >
+  <bufferSize value="512" />
+  <lossy value="true" />
+  <evaluator type="log4net.Core.LevelEvaluator">
+    <threshold value="WARN"/>
+  </evaluator>
+  <appender-ref ref="ConsoleAppender" />
+</appender>
+----

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="changed">
+  <issue id="2.x-and-older" link="https://logging.apache.org/log4net/log4net-2.0.17/release/release-notes.html"/>
+  <description format="asciidoc">release notes for older releases can be found here</description>
+</entry>
