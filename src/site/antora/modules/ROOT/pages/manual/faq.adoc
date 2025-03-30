@@ -15,10 +15,10 @@
     limitations under the License.
 ////
 [#faq]
-= Frequently Asked Questions
+= F.A.Q.
 
-[#info]
-== Information
+[#setup-and-usage]
+== Setup & Usage
 
 [#what-is-log4net]
 === What is log4net?

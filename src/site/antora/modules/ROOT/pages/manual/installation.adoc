@@ -15,8 +15,8 @@
     limitations under the License.
 ////
 
-[#install]
-= Install Apache log4net
+[#installation]
+= Installation
 
 The preferred way to install log4net is to use our https://www.nuget.org/packages/log4net[nuget package].
 
