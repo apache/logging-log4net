@@ -15,26 +15,14 @@
     limitations under the License.
 ////
 
-[#eventlogappender]
-= EventLogAppender
+[#traceappender]
+= TraceAppender
 
-The following example shows how to configure the `EventLogAppender` to log to the Application event log on the local machine using the event Source of the AppDomain.FriendlyName.
-
-[source,xml]
-----
-<appender name="EventLogAppender" type="log4net.Appender.EventLogAppender" >
-  <layout type="log4net.Layout.PatternLayout">
-    <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
-  </layout>
-</appender>
-----
-
-This example shows how to configure the `EventLogAppender` to use a specific event Source.
+The following example shows how to configure the `TraceAppender` to log messages to the https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.trace[System.Diagnostics.Trace] system.
 
 [source,xml]
 ----
-<appender name="EventLogAppender" type="log4net.Appender.EventLogAppender" >
-  <applicationName value="MyApp" />
+<appender name="TraceAppender" type="log4net.Appender.TraceAppender">
   <layout type="log4net.Layout.PatternLayout">
     <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
   </layout>

@@ -18,9 +18,9 @@
 [#fileappender]
 = FileAppender
 
-The following example shows how to configure the FileAppender to write messages to a file.
+The following example shows how to configure the `FileAppender` to write messages to a file.
 The file specified is log-file.txt.
-The file will be appended to rather than overwritten each time the logging process starts. 
+The file will be appended to rather than overwritten each time the logging process starts.
 
 [source,xml]
 ----
@@ -34,7 +34,7 @@ The file will be appended to rather than overwritten each time the logging proce
 ----
 
 This example shows how to configure the file name to write to using an environment variable TEMP.
-The encoding to use to write to the file is also specified. 
+The encoding to use to write to the file is also specified.
 
 [source,xml]
 ----
@@ -53,11 +53,11 @@ This example shows how to configure the appender to use the minimal locking mode
 [source,xml]
 ----
 <appender name="FileAppender" type="log4net.Appender.FileAppender">
-    <file value="log-file.txt" />
-    <appendToFile value="true" />
-    <lockingModel type="log4net.Appender.FileAppender+MinimalLock" />
-    <layout type="log4net.Layout.PatternLayout">
-        <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
-    </layout>
+  <file value="log-file.txt" />
+  <appendToFile value="true" />
+  <lockingModel type="log4net.Appender.FileAppender+MinimalLock" />
+  <layout type="log4net.Layout.PatternLayout">
+    <conversionPattern value="%date [%thread] %-5level %logger %message%newline" />
+  </layout>
 </appender>
 ----

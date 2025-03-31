@@ -18,17 +18,17 @@
 [#bufferingforwardingappender]
 = BufferingForwardingAppender
 
-The following example shows how to configure the BufferingForwardingAppender to buffer 100 messages before delivering them to the ConsoleAppender.
+The following example shows how to configure the `BufferingForwardingAppender` to buffer 100 messages before delivering them to the `ConsoleAppender`.
 
 [source,xml]
 ----
 <appender name="BufferingForwardingAppender" type="log4net.Appender.BufferingForwardingAppender" >
   <bufferSize value="100"/>
   <!--
-    The value configures what gets fixed immediately when calling logger.Log(). 
+    The value configures what gets fixed immediately when calling logger.Log().
     The default value is All, which may negatively impact performance enough to warrant changing it to fix less data.
     More information can be found at https://github.com/apache/logging-log4net/blob/master/src/log4net/Core/FixFlags.cs
-  -->    
+  -->
   <fix value="All"/>
   <appender-ref ref="ConsoleAppender" />
 </appender>
@@ -39,7 +39,7 @@ This example shows how to deliver only significant events.
 A LevelEvaluator is specified with a threshold of WARN.
 This means that the events will only be delivered when a message with level of WARN or higher level is logged.
 
-Up to 512 (BufferSize) previous messages of any level will also be delivered to provide context information.
+Up to 512 `bufferSize` previous messages of any level will also be delivered to provide context information.
 Messages not sent will be discarded.
 
 [source,xml]

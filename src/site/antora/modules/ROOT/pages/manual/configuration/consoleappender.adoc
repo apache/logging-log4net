@@ -18,7 +18,7 @@
 [#consoleappender]
 = ConsoleAppender
 
-The following example shows how to configure the ConsoleAppender to log messages to the console.
+The following example shows how to configure the `ConsoleAppender` to log messages to the console.
 By default the messages are sent to the console standard output stream.
 
 [source,xml]

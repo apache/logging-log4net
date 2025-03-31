@@ -15,28 +15,19 @@
     limitations under the License.
 ////
 
-[#eventlogappender]
-= EventLogAppender
+[#udpappender]
+= UdpAppender
 
-The following example shows how to configure the `EventLogAppender` to log to the Application event log on the local machine using the event Source of the AppDomain.FriendlyName.
-
-[source,xml]
-----
-<appender name="EventLogAppender" type="log4net.Appender.EventLogAppender" >
-  <layout type="log4net.Layout.PatternLayout">
-    <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
-  </layout>
-</appender>
-----
-
-This example shows how to configure the `EventLogAppender` to use a specific event Source.
+The following example shows how to configure the `UdpAppender` to send events to a `remoteAddress` on the specified `remotePort`.
 
 [source,xml]
 ----
-<appender name="EventLogAppender" type="log4net.Appender.EventLogAppender" >
-  <applicationName value="MyApp" />
-  <layout type="log4net.Layout.PatternLayout">
-    <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
+<appender name="UdpAppender" type="log4net.Appender.UdpAppender">
+  <localPort value="8080" />
+  <remoteAddress value="224.0.0.1" />
+  <remotePort value="8080" />
+  <layout type="log4net.Layout.PatternLayout, log4net">
+    <conversionPattern value="%-5level %logger - %message%newline" />
   </layout>
 </appender>
 ----

@@ -18,23 +18,88 @@
 [#rollingfileappender]
 = RollingFileAppender
 
-The following example shows how to configure the EventLogAppender to log to the Application event log on the local machine using the event Source of the AppDomain.FriendlyName. 
+The `RollingFileAppender` builds on the `FileAppender` and has the same options as that appender.
+
+The following example shows how to configure the `RollingFileAppender` to write to the file MyApp.log.
+
+The file written to will always be called MyApp.log because the `StaticLogFileName` param is specified.
+
+The file will be rolled based on a size constraint (`RollingStyle`).
+Up to 10 (`MaxSizeRollBackups`) old files of 100 KB each (`MaximumFileSize`) will be kept.
+
+These rolled files will be named: MyApp.log.1, MyApp.log.2, MyApp.log.3, etc.
 
 [source,xml]
 ----
-<appender name="EventLogAppender" type="log4net.Appender.EventLogAppender" >
+<appender name="RollingFileAppender" type="log4net.Appender.RollingFileAppender">
+  <file value="MyApp.log" />
+  <appendToFile value="true" />
+  <rollingStyle value="Size" />
+  <maxSizeRollBackups value="10" />
+  <maximumFileSize value="100KB" />
+  <staticLogFileName value="true" />
   <layout type="log4net.Layout.PatternLayout">
     <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
   </layout>
 </appender>
 ----
 
-This example shows how to configure the EventLogAppender to use a specific event Source. 
+This example show how to configure the `RollingFileAppender` to roll log files on a date period.
+
+This example will roll the log file every minute.
+To change the rolling period adjust the `DatePattern` value.
+For example, a date pattern of "yyyyMMdd" will roll every day.
+
+See `System.Globalization.DateTimeFormatInfo` for a list of available patterns.
 
 [source,xml]
 ----
-<appender name="EventLogAppender" type="log4net.Appender.EventLogAppender" >
-  <applicationName value="MyApp" />
+<appender name="RollingLogFileAppender" type="log4net.Appender.RollingFileAppender">
+  <file value="MyApp.log" />
+  <appendToFile value="true" />
+  <rollingStyle value="Date" />
+  <datePattern value="yyyyMMdd-HHmm" />
+  <layout type="log4net.Layout.PatternLayout">
+    <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
+  </layout>
+</appender>
+----
+
+This example show how to configure the `RollingFileAppender` to roll log files on a date period and within a date period on file size.
+
+For each day only the last 10 files of 1MB will be kept.
+
+[source,xml]
+----
+<appender name="RollingLogFileAppender" type="log4net.Appender.RollingFileAppender">
+  <file value="MyApp.log" />
+  <appendToFile value="true" />
+  <rollingStyle value="Composite" />
+  <datePattern value="yyyyMMdd" />
+  <maxSizeRollBackups value="10" />
+  <maximumFileSize value="1MB" />
+  <layout type="log4net.Layout.PatternLayout">
+    <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
+  </layout>
+</appender>
+----
+
+This example show how to configure the `RollingFileAppender` to roll log files once per program execution.
+
+The `appendToFile` property is set to false to prevent the appender from overwriting the existing files.
+
+The `maxSizeRollBackups` is set to negative 1 to allow an infinite number of backup files.
+
+The file size does have to be limited but here it is set to 50 Gigabytes which, if a log file exceeds this size limit during a single run then it will also be rolled.
+
+[source,xml]
+----
+<appender name="RollingLogFileAppender" type="log4net.Appender.RollingFileAppender">
+  <file value="MyApp.log" />
+  <appendToFile value="false" />
+  <rollingStyle value="Size" />
+  <maxSizeRollBackups value="-1" />
+  <maximumFileSize value="50GB" />
   <layout type="log4net.Layout.PatternLayout">
     <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
   </layout>

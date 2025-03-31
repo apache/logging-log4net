@@ -15,28 +15,20 @@
     limitations under the License.
 ////
 
-[#eventlogappender]
-= EventLogAppender
+[#forwardingappender]
+= ForwardingAppender
 
-The following example shows how to configure the `EventLogAppender` to log to the Application event log on the local machine using the event Source of the AppDomain.FriendlyName.
+The following example shows how to configure the `ForwardingAppender`.
+The forwarding appender allows a set of constraints to be used to decorate an appender.
 
-[source,xml]
-----
-<appender name="EventLogAppender" type="log4net.Appender.EventLogAppender" >
-  <layout type="log4net.Layout.PatternLayout">
-    <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
-  </layout>
-</appender>
-----
+In this example the `ConsoleAppender` is decorated with a Threshold of level WARN. This means that an event directed to the `ConsoleAppender` directly will be logged regardless of its level, but an event directed to the `ForwardingAppender` will only be passed on to the `ConsoleAppender` if its level is WARN or higher.
 
-This example shows how to configure the `EventLogAppender` to use a specific event Source.
+This appender is used only in special circumstances.
 
 [source,xml]
 ----
-<appender name="EventLogAppender" type="log4net.Appender.EventLogAppender" >
-  <applicationName value="MyApp" />
-  <layout type="log4net.Layout.PatternLayout">
-    <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
-  </layout>
+<appender name="ForwardingAppender" type="log4net.Appender.ForwardingAppender" >
+  <threshold value="WARN"/>
+  <appender-ref ref="ConsoleAppender" />
 </appender>
 ----

@@ -15,26 +15,14 @@
     limitations under the License.
 ////
 
-[#eventlogappender]
-= EventLogAppender
+[#outputdebugstringappender]
+= OutputDebugStringAppender
 
-The following example shows how to configure the `EventLogAppender` to log to the Application event log on the local machine using the event Source of the AppDomain.FriendlyName.
-
-[source,xml]
-----
-<appender name="EventLogAppender" type="log4net.Appender.EventLogAppender" >
-  <layout type="log4net.Layout.PatternLayout">
-    <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
-  </layout>
-</appender>
-----
-
-This example shows how to configure the `EventLogAppender` to use a specific event Source.
+The following example shows how to configure the `OutputDebugStringAppender` to write logging messages to the `OutputDebugString` API.
 
 [source,xml]
 ----
-<appender name="EventLogAppender" type="log4net.Appender.EventLogAppender" >
-  <applicationName value="MyApp" />
+<appender name="OutputDebugStringAppender" type="log4net.Appender.OutputDebugStringAppender" >
   <layout type="log4net.Layout.PatternLayout">
     <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
   </layout>
