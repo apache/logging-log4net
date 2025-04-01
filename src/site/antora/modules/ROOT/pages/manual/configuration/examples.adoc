@@ -33,6 +33,7 @@ These examples are by no means exhaustive configurations for the appenders.
 * xref:manual/configuration/managedcoloredconsoleappender.adoc[]
 * xref:manual/configuration/memoryappender.adoc[]
 * xref:manual/configuration/outputdebugstringappender.adoc[]
+* xref:manual/configuration/remotesyslogappender.adoc[]
 * xref:manual/configuration/smtpappender.adoc[]
 * xref:manual/configuration/smtppickupdirappender.adoc[]
 * xref:manual/configuration/traceappender.adoc[]
