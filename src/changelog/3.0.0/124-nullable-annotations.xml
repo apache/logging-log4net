@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="added">
+  <issue id="122" link="https://github.com/apache/logging-log4net/pull/122"/>
+  <issue id="123" link="https://github.com/apache/logging-log4net/pull/123"/>
+  <issue id="124" link="https://github.com/apache/logging-log4net/issues/124"/>
+  <issue id="126" link="https://github.com/apache/logging-log4net/pull/126"/>
+  <issue id="129" link="https://github.com/apache/logging-log4net/pull/129"/>
+  <issue id="131" link="https://github.com/apache/logging-log4net/pull/131"/>
+  <issue id="132" link="https://github.com/apache/logging-log4net/pull/132"/>
+  <issue id="136" link="https://github.com/apache/logging-log4net/pull/136"/>
+  <issue id="141" link="https://github.com/apache/logging-log4net/pull/141"/>
+  <description format="asciidoc">Add support for nullable annotations (by @erikmav)</description>
+</entry>

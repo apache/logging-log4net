@@ -1,0 +1,106 @@
+////
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+////
+
+= Layouts
+
+An xref:manual/appenders.adoc[appender] uses a *layout* to encode a LogEvent into a form that meets the needs of whatever will be consuming the log event.
+This page will try to answer following questions:
+
+* <<concerns,What are some common concerns shared by all predefined layouts?>>
+* <<collection,Which layouts does log4net provide?>>
+* <<extending,How can you create custom layouts?>>
+
+[#concerns]
+== Common concerns
+
+This section introduces you to some common concerns shared by almost all predefined layouts that you need to be aware of while using them.
+
+[#structured-logging]
+=== Structured logging
+
+In almost any modern production deployment, logs are no more written to files read by engineers while troubleshooting, but forwarded to log ingestion systems (Elasticsearch, Google Cloud Logging, etc.) for several observability use cases ranging from logging to metrics.
+This necessitates the applications to _structure_ their logs in a machine-readable way ready to be delivered to an external system.
+This act of encoding logs following a certain structure is called *structured logging*.
+
+log4net tries to provide good support for structured logging.
+To create an end-to-end experience, it provides several layouts supporting structured logging.
+
+We recommend XmlLayout or https://gitlab.com/gdziadkiewicz/log4net.Ext.Json/-/blob/develop/log4net.Ext.Json/Layout/SerializedLayout.cs[JsonLayout] for structured logging purposes.
+
+[#collection]
+== Collection
+
+log4net bundles predefined layouts to assist in several common deployment use cases.
+
+[id=pattern-layout]
+=== [[PatternLayout]] Pattern Layout
+
+`PatternLayout` is a customizable, efficient, garbage-free, and human-readable string generating layout using a user-provided pattern.
+It is analogous to `String.Format()` with specialized directives on injecting certain properties of a `LogEvent`.
+
+[IMPORTANT]
+====
+Pattern Layout is not intended for _structural logging_ purposes.
+For production environments, you are strongly advised to use XmlLayout or JsonLayout producing XML/JSON output ready to be delivered to log ingestion systems such as Elasticsearch or Google Cloud Logging.
+====
+
+A conversion pattern is composed of literal text and format control expressions.
+For instance, given the `%timestamp [%thread] %-5level %logger - %message%newline` pattern, following statements
+
+[source,charp]
+----
+logger.Debug("Woof!");
+logger.Warn("Meow!");
+----
+
+will yield the output
+
+[source,text]
+----
+2024-12-21 14:07:41,517 [main] DEBUG Animals.Carnivora.Dog - Woof!
+2024-12-21 14:07:41,517 [main] WARN  Animals.Carnivora.Dog - Meow!
+----
+
+[id=layout-list]
+=== [[LayoutList]] List of Layouts
+
+[cols="Type,Description"]
+|===
+|Type |Description
+
+|log4net.Layout.ExceptionLayout
+|Renders the exception text from the logging event.
+
+|log4net.Layout.PatternLayout
+|Formats the logging event according to a flexible set of formatting flags.
+
+|log4net.Layout.RawTimeStampLayout
+|Extracts the timestamp from the logging event.
+
+|log4net.Layout.RawUtcTimeStampLayout
+|Extracts the timestamp from the logging event in Universal Time.
+
+|log4net.Layout.SimpleLayout
+|Formats the logging event very simply: [level] - [message]
+
+|log4net.Layout.XmlLayout
+|Formats the logging event as an XML element.
+
+|log4net.Layout.XmlLayoutSchemaLog4j
+|Formats the logging event as an XML element that complies with the log4j event dtd.
+
+|===
