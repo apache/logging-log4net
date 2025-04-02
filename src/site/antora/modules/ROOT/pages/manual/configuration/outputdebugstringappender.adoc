@@ -18,6 +18,9 @@
 [#outputdebugstringappender]
 = OutputDebugStringAppender
 
+The `OutputDebugStringAppender` writes log events to the Windows debugger via the `OutputDebugString` function.
+This is useful for debugging and monitoring an application without writing to files or consoles.
+
 The following example shows how to configure the `OutputDebugStringAppender` to write logging messages to the `OutputDebugString` API.
 
 [source,xml]

@@ -18,6 +18,10 @@
 [#bufferingforwardingappender]
 = BufferingForwardingAppender
 
+The `BufferingForwardingAppender` buffers log events in memory before forwarding them to another appender.
+This helps improve performance by reducing the number of writes to the destination appender, especially in high-volume logging scenarios.
+Once the buffer reaches a specified size or time threshold, the events are forwarded to the target appender in a batch.
+
 The following example shows how to configure the `BufferingForwardingAppender` to buffer 100 messages before delivering them to the `ConsoleAppender`.
 
 [source,xml]

@@ -18,14 +18,23 @@
 [#adonetappender]
 = AdoNetAppender
 
-The configuration of the AdoNetAppender depends on the provider selected for the target database.
+The `AdoNetAppender` is used to log events directly to a database table.
+It writes log events in batches (with a default size of 100, controlled by the `BufferSize` setting).
 
-The following examples show how to configure the AdoNetAppender to log messages to different databases.
-The events are written in batches of 100 (BufferSize).
-The ConnectionType specifies the fully qualified type name for the System.Data.IDbConnection to use to connect to the database.
-The ConnectionString is database provider specific.
-The CommandText is either a prepared statement or a stored procedure, in this case it is a prepared statement.
-Each parameter to the prepared statement or stored procedure is specified with its name, database type and a layout that renders the value for the parameter.
+The configuration of `AdoNetAppender` depends on the database provider you're using.
+Here are the key configuration elements:
+
+* `ConnectionType`: Specifies the fully qualified type name for the `System.Data.IDbConnection` used to connect to the database.
+* `ConnectionString`: The connection string that is specific to the database provider (e.g., SQL Server, MySQL).
+* `CommandText`: Defines the SQL command to execute. This can either be a prepared statement or a stored procedure. In the examples below, a prepared statement is used.
+
+Each parameter in the prepared statement or stored procedure is defined with:
+
+* `Name`: The name of the parameter.
+* `DbType`: The database type for the parameter.
+* `Layout`: The layout used to render the value for the parameter.
+
+The following examples illustrate how to configure the `AdoNetAppender` for different databases.
 
 [#mssqlserver]
 == MS SQL Server
@@ -273,8 +282,8 @@ The appender configuration is:
 [#other-databases]
 == Other databases
 
-You can adjust the provided examples to other databases by
+To adapt the provided examples for use with other databases, follow these steps:
 
-* find a nuget package for connecting via ado.net
-* adjust the create table script (tweaking the used data types)
-* adjust the connectionType-Property in AdoNetAppender config to the connection type from the nuget package
+* Find a NuGet package that provides the necessary ADO.NET provider for your database.
+* Modify the `CREATE TABLE` script to match the data types used by your database.
+* Update the `ConnectionType` property in the `AdoNetAppender` configuration to reference the connection type from the selected NuGet package.

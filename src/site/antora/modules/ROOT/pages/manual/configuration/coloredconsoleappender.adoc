@@ -18,8 +18,10 @@
 [#coloredconsoleappender]
 = ColoredConsoleAppender
 
+The `ColoredConsoleAppender` writes log messages to the console with color coding based on log levels.
+It allows configurable colors for each log level, making it easier to identify log severity.
+
 The following example shows how to configure the ColoredConsoleAppender to log messages to the console.
-By default the messages are sent to the console standard output stream.
 This example shows how to highlight error messages.
 
 [source,xml]

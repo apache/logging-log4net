@@ -48,6 +48,9 @@ log4net ships with the following appenders
 |AspNetTraceAppender
 |Writes logging events to the ASP trace context. These can then be rendered at the end of the ASP page or on the ASP trace page.
 
+|BufferingForwardingAppender
+|Buffers events and then forwards them to attached appenders.
+
 |ColoredConsoleAppender
 |Writes color highlighted logging events to the application's Windows Console.
 

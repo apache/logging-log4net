@@ -18,6 +18,9 @@
 [#smtpappender]
 = SmtpAppender
 
+The `SmtpAppender` sends log events via email using the Simple Mail Transfer Protocol (SMTP).
+This appender is useful for sending email notifications when certain events occur, such as errors or critical failures in your application.
+
 The following example shows how to configure the `SmtpAppender` to deliver log events via SMTP email.
 The `To`, `From`, `Subject` and `SmtpHost` are required parameters.
 This example shows how to deliver only significant events.

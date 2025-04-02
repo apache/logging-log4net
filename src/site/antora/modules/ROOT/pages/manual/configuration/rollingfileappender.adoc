@@ -18,16 +18,20 @@
 [#rollingfileappender]
 = RollingFileAppender
 
-The `RollingFileAppender` builds on the `FileAppender` and has the same options as that appender.
+The `RollingFileAppender` extends the functionality of the `FileAppender` by adding the ability to automatically roll over log files based on specified criteria, such as file size or time intervals.
 
-The following example shows how to configure the `RollingFileAppender` to write to the file MyApp.log.
+This appender is useful for managing log files in production environments where log data grows over time and older logs should be preserved while maintaining a manageable file size.
 
-The file written to will always be called MyApp.log because the `StaticLogFileName` param is specified.
+The following example shows how to configure the `RollingFileAppender` to write to the file `MyApp.log`.
 
-The file will be rolled based on a size constraint (`RollingStyle`).
+The file written to will always be named `MyApp.log` because the `StaticLogFileName` parameter is specified.
+
+The file will be rolled based on a size constraint (`RollingStyle`), and old log files will be archived when the size limit is reached.
 Up to 10 (`MaxSizeRollBackups`) old files of 100 KB each (`MaximumFileSize`) will be kept.
 
-These rolled files will be named: MyApp.log.1, MyApp.log.2, MyApp.log.3, etc.
+These rolled files will be named: `MyApp.log.1`, `MyApp.log.2`, `MyApp.log.3`, etc.
+
+This allows you to keep a set number of backup log files, which can be helpful for both auditing and troubleshooting, while ensuring that log file growth doesn't fill up disk space.
 
 [source,xml]
 ----

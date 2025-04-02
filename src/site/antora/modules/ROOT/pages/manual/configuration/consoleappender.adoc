@@ -18,6 +18,9 @@
 [#consoleappender]
 = ConsoleAppender
 
+The `ConsoleAppender` writes log messages to the console.
+It outputs messages without color coding, making it simple and suitable for basic logging needs.
+
 The following example shows how to configure the `ConsoleAppender` to log messages to the console.
 By default the messages are sent to the console standard output stream.
 

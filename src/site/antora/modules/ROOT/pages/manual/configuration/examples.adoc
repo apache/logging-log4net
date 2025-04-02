@@ -30,6 +30,7 @@ These examples are by no means exhaustive configurations for the appenders.
 * xref:manual/configuration/fileappender.adoc[]
 * xref:manual/configuration/rollingfileappender.adoc[]
 * xref:manual/configuration/forwardingappender.adoc[]
+* xref:manual/configuration/localsyslogappender.adoc[]
 * xref:manual/configuration/managedcoloredconsoleappender.adoc[]
 * xref:manual/configuration/memoryappender.adoc[]
 * xref:manual/configuration/outputdebugstringappender.adoc[]

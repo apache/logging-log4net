@@ -18,6 +18,9 @@
 [#udpappender]
 = UdpAppender
 
+The `UdpAppender` sends log events over the network using the UDP protocol.
+It is typically used to forward log messages to remote logging systems over a network.
+
 The following example shows how to configure the `UdpAppender` to send events to a `remoteAddress` on the specified `remotePort`.
 
 [source,xml]

@@ -18,8 +18,11 @@
 [#remotesyslogappender]
 = RemoteSyslogAppender
 
-The following example shows how to configure the `RemoteSyslogAppender` to send log messages to a remote syslog daemon.
-The syslog server listens on UDP port 514 by default.
+The `RemoteSyslogAppender` sends log messages to a remote syslog daemon using the BSD syslog protocol over UDP (default port 514).
+It supports configurable syslog facilities and severity levels, but due to the nature of UDP, messages may be lost or truncated.
+
+This appender does not include timestamp or hostname fields, as the receiving syslog daemon adds them automatically.
+It also splits log messages at line breaks, sending each line as a separate syslog message.
 
 The following example sends all events with Level WARN or higher to the remote server 192.168.1.100 on the default port with UTF8-Encoding.
 
@@ -71,6 +74,8 @@ catch (InvalidTimeZoneException e)
   logger.Error(e, "setting daylight saving time failed")
 }
 ----
+
+Output (with intermixed messages):
 
 [source,log]
 ----

@@ -15,31 +15,38 @@
     limitations under the License.
 ////
 
-[#eventlogappender]
-= EventLogAppender
+[#localsyslogappender]
+= LocalSyslogAppender
 
-The EventLogAppender in log4net logs messages to the Windows Event Log.
-It is limited to .Net 4.x because it is Windows specific and .netstandard lacks support for writing to the Event Log.
+`LocalSyslogAppender` writes messages to the local syslog service on Unix-like operating systems.
+It uses the system's native syslog daemon and does not support remote logging.
 
-The following example shows how to configure the `EventLogAppender` to log to the Application event log on the local machine using the event Source of the AppDomain.FriendlyName.
+The following example shows how to configure the `LocalSyslogAppender`.
+It sends all events with Level WARN or higher.
 
 [source,xml]
 ----
-<appender name="EventLogAppender" type="log4net.Appender.EventLogAppender" >
+<appender name="LocalSyslogAppender" type="log4net.Appender.LocalSyslogAppender">
   <layout type="log4net.Layout.PatternLayout">
-    <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
+    <conversionPattern value="%date{MM/dd/yyyy HH:mm:ss.fff} [%thread] %-5level %logger - %message%newline" />
   </layout>
+  <threshold value="WARN" />
 </appender>
 ----
 
-This example shows how to configure the `EventLogAppender` to use a specific event Source.
+You can also specify:
+
+* Facility (default: user)
+* Identity (default: application name)
 
 [source,xml]
 ----
-<appender name="EventLogAppender" type="log4net.Appender.EventLogAppender" >
-  <applicationName value="MyApp" />
+<appender name="LocalSyslogAppender" type="log4net.Appender.LocalSyslogAppender">
+  <facility>Alert</facility>
   <layout type="log4net.Layout.PatternLayout">
-    <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
+    <conversionPattern value="%date{MM/dd/yyyy HH:mm:ss.fff} [%thread] %-5level %logger - %message%newline" />
   </layout>
+  <identity>MyApp-Canary</identity>
+  <threshold value="WARN" />
 </appender>
 ----

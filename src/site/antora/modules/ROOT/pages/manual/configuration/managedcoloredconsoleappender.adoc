@@ -18,6 +18,9 @@
 [#managedcoloredconsoleappender]
 = ManagedColoredConsoleAppender
 
+The `ManagedColoredConsoleAppender` writes log messages to the console with colored output.
+It provides more control over the colors used for different log levels.
+
 The following example shows how to configure the `ManagedColoredConsoleAppender` to log messages to the console.
 By default the messages are sent to the console standard output stream.
 

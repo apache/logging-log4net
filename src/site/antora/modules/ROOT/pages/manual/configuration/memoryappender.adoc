@@ -18,6 +18,9 @@
 [#memoryappender]
 = MemoryAppender
 
+The `MemoryAppender` stores log events in memory rather than writing them to a file or console.
+It is useful for in-memory logging and can be configured to store events until the application is stopped or the memory is cleared.
+
 It is unlikely that the `MemoryAppender` will be configured using a config file, but if you want to do it here's how.
 
 [source,xml]

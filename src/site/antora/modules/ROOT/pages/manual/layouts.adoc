@@ -83,24 +83,24 @@ will yield the output
 |Type |Description
 
 |log4net.Layout.ExceptionLayout
-|Renders the exception text from the logging event. 
+|Renders the exception text from the logging event.
 
 |log4net.Layout.PatternLayout
-|Formats the logging event according to a flexible set of formatting flags. 
+|Formats the logging event according to a flexible set of formatting flags.
 
 |log4net.Layout.RawTimeStampLayout
 |Extracts the timestamp from the logging event.
 
 |log4net.Layout.RawUtcTimeStampLayout
-|Extracts the timestamp from the logging event in Universal Time. 
+|Extracts the timestamp from the logging event in Universal Time.
 
 |log4net.Layout.SimpleLayout
 |Formats the logging event very simply: [level] - [message]
 
 |log4net.Layout.XmlLayout
-|Formats the logging event as an XML element. 
+|Formats the logging event as an XML element.
 
-|Eventlog4net.Layout.XmlLayoutSchemaLog4j
-|Formats the logging event as an XML element that complies with the log4j event dtd. 
+|log4net.Layout.XmlLayoutSchemaLog4j
+|Formats the logging event as an XML element that complies with the log4j event dtd.
 
 |===

@@ -18,6 +18,9 @@
 [#traceappender]
 = TraceAppender
 
+The `TraceAppender` writes log events to the Trace output, which can be viewed in debuggers or other trace listeners.
+It is useful for capturing logs in applications that are being debugged or for monitoring trace-level information during runtime.
+
 The following example shows how to configure the `TraceAppender` to log messages to the https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.trace[System.Diagnostics.Trace] system.
 
 [source,xml]
