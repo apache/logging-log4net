@@ -21,8 +21,7 @@ An xref:manual/appenders.adoc[appender] uses a *layout* to encode a LogEvent int
 This page will try to answer following questions:
 
 * <<concerns,What are some common concerns shared by all predefined layouts?>>
-* <<collection,Which layouts does log4net provide?>>
-* <<extending,How can you create custom layouts?>>
+* <<predefined-layouts,Which layouts does log4net provide?>>
 
 [#concerns]
 == Common Concerns

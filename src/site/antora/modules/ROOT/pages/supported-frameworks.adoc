@@ -1,0 +1,65 @@
+////
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+////
+
+= Supported Frameworks
+
+This document summarizes the .NET frameworks supported by log4net.
+
+The log4net project is actively built and tested by its maintainers against the following target frameworks:
+
+[cols="Framework,Website"]
+|===
+| Framework | Website
+
+| Microsoft .NET 8 (via .NET Standard 2.0)
+| https://dotnet.microsoft.com/en-us/download/dotnet/8.0
+
+| Microsoft .NET Framework 4.6.2
+| http://msdn.microsoft.com/en-us/netframework/
+|===
+
+[#appenders]
+== Supported Appenders
+
+The following appenders are supported on the specified frameworks:
+
+[cols="Appender,net462,netstandard2.0"]
+|===
+| Appender | .NET Framework 4.6.2 | .NET Standard 2.0
+
+| AdoNetAppender                | x | x
+| AnsiColorTerminalAppender     | x | x
+| AspNetTraceAppender           | x |
+| BufferingForwardingAppender   | x | x
+| ColoredConsoleAppender        | x | x
+| ConsoleAppender               | x | x
+| DebugAppender                 | x | x
+| EventLogAppender              | x |
+| FileAppender                  | x | x
+| ForwardingAppender            | x | x
+| LocalSyslogAppender           | x | x
+| ManagedColoredConsoleAppender | x | x
+| MemoryAppender                | x | x
+| OutputDebugStringAppender     | x | x
+| RemoteSyslogAppender          | x | x
+| RollingFileAppender           | x | x
+| SmtpAppender                  | x | x
+| SmtpPickupDirAppender         | x | x
+| TelnetAppender                | x | x
+| TraceAppender                 | x | x
+| UdpAppender                   | x | x
+|===

@@ -44,6 +44,7 @@
 ** xref:manual/layouts.adoc[]
 ** xref:manual/installation.adoc[]
 * xref:features.adoc[]
+* xref:supported-frameworks.adoc[]
 * xref:release-notes.adoc[]
 * xref:release-review.adoc[]
 * {logging-services-url}/support.html[Support]
