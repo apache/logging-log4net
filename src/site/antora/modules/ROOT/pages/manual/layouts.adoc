@@ -25,41 +25,45 @@ This page will try to answer following questions:
 * <<extending,How can you create custom layouts?>>
 
 [#concerns]
-== Common concerns
+== Common Concerns
 
-This section introduces you to some common concerns shared by almost all predefined layouts that you need to be aware of while using them.
+This section outlines some common concerns shared by most predefined layouts in log4net that users should be aware of.
 
 [#structured-logging]
-=== Structured logging
+=== Structured Logging
 
-In almost any modern production deployment, logs are no more written to files read by engineers while troubleshooting, but forwarded to log ingestion systems (Elasticsearch, Google Cloud Logging, etc.) for several observability use cases ranging from logging to metrics.
-This necessitates the applications to _structure_ their logs in a machine-readable way ready to be delivered to an external system.
-This act of encoding logs following a certain structure is called *structured logging*.
+In modern production environments, logs are typically not read from local files by engineers.
+Instead, they are sent to log ingestion systems like Elasticsearch, Google Cloud Logging, or similar platforms for observability, metrics, and monitoring purposes.
 
-log4net tries to provide good support for structured logging.
-To create an end-to-end experience, it provides several layouts supporting structured logging.
+To support this, logs must be encoded in a machine-readable format — a practice known as *structured logging*.
 
-We recommend XmlLayout or https://gitlab.com/gdziadkiewicz/log4net.Ext.Json/-/blob/develop/log4net.Ext.Json/Layout/SerializedLayout.cs[JsonLayout] for structured logging purposes.
+log4net provides support for structured logging through specialized layouts.
+For production use cases, we recommend using either:
 
-[#collection]
-== Collection
+* `XmlLayout` — for structured XML output.
+* `JsonLayout` — via the external project https://gitlab.com/gdziadkiewicz/log4net.Ext.Json/-/blob/develop/log4net.Ext.Json/Layout/SerializedLayout.cs[log4net.Ext.Json].
 
-log4net bundles predefined layouts to assist in several common deployment use cases.
+These layouts help ensure your logs are compatible with log aggregation and analysis tools.
 
-[id=pattern-layout]
-=== [[PatternLayout]] Pattern Layout
+[#predefined-layouts]
+== Predefined Layouts
 
-`PatternLayout` is a customizable, efficient, garbage-free, and human-readable string generating layout using a user-provided pattern.
-It is analogous to `String.Format()` with specialized directives on injecting certain properties of a `LogEvent`.
+log4net includes a set of predefined layouts designed to support a variety of common logging scenarios.
+
+[#patternlayout]
+=== PatternLayout
+
+`PatternLayout` is a customizable, efficient, and human-readable layout that generates log messages based on a user-defined pattern.
+It works similarly to `String.Format()` but provides specialized directives for injecting properties from a `LoggingEvent`.
 
 [IMPORTANT]
 ====
-Pattern Layout is not intended for _structural logging_ purposes.
-For production environments, you are strongly advised to use XmlLayout or JsonLayout producing XML/JSON output ready to be delivered to log ingestion systems such as Elasticsearch or Google Cloud Logging.
+`PatternLayout` is *not* intended for structured logging.
+In production, prefer `XmlLayout` or `JsonLayout` for generating machine-readable logs (e.g., XML or JSON) that can be consumed by log ingestion systems such as Elasticsearch or Google Cloud Logging.
 ====
 
-A conversion pattern is composed of literal text and format control expressions.
-For instance, given the `%timestamp [%thread] %-5level %logger - %message%newline` pattern, following statements
+A conversion pattern is composed of literal text and conversion specifiers (format control expressions).
+For example, the following pattern:
 
 [source,charp]
 ----
@@ -75,32 +79,54 @@ will yield the output
 2024-12-21 14:07:41,517 [main] WARN  Animals.Carnivora.Dog - Meow!
 ----
 
-[id=layout-list]
-=== [[LayoutList]] List of Layouts
+[#dynamic-pattern-layout]
+=== DyamicPatternLayout
+
+The `DynamicPatternLayout` should be used whenever the header or footer needs to include information that may change over time.
+
+Unlike the static `PatternLayout`, which renders headers and footers only once, the `DynamicPatternLayout` re-evaluates its pattern every time it is invoked.
+This makes it possible, for example, to include the current date and time in the header or footer—something not possible with the static layout.
+
+The following example shows how to configure the `DynamicPatternLayout`:
+
+[source,xml]
+----
+<layout type="log4net.Layout.DynamicPatternLayout">
+  <header value="Log started at %date%newline" />
+  <footer value="Log ended at %date%newline" />
+  <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
+</layout>
+----
+
+[#layout-list]
+=== List of Layouts
 
 [cols="Type,Description"]
 |===
 |Type |Description
 
-|log4net.Layout.ExceptionLayout
-|Renders the exception text from the logging event.
+|`log4net.Layout.DynamicPatternLayout`
+|Formats the logging event using a pattern string that is re-evaluated on every log event, allowing dynamic values like timestamps in headers or footers.
 
-|log4net.Layout.PatternLayout
-|Formats the logging event according to a flexible set of formatting flags.
+|`log4net.Layout.ExceptionLayout`
+|Outputs only the exception text from the logging event.
 
-|log4net.Layout.RawTimeStampLayout
-|Extracts the timestamp from the logging event.
+|`log4net.Layout.PatternLayout`
+|Formats the logging event using a flexible pattern string with various conversion specifiers.
 
-|log4net.Layout.RawUtcTimeStampLayout
-|Extracts the timestamp from the logging event in Universal Time.
+|`log4net.Layout.RawTimeStampLayout`
+|Outputs the raw timestamp (as a `DateTime`) from the logging event.
 
-|log4net.Layout.SimpleLayout
-|Formats the logging event very simply: [level] - [message]
+|`log4net.Layout.RawUtcTimeStampLayout`
+|Outputs the raw timestamp in UTC from the logging event.
 
-|log4net.Layout.XmlLayout
-|Formats the logging event as an XML element.
+|`log4net.Layout.SimpleLayout`
+|Provides a very simple format: `[level] - [message]`.
 
-|log4net.Layout.XmlLayoutSchemaLog4j
-|Formats the logging event as an XML element that complies with the log4j event dtd.
+|`log4net.Layout.XmlLayout`
+|Formats the logging event as a basic XML element.
+
+|`log4net.Layout.XmlLayoutSchemaLog4j`
+|Formats the logging event as XML compliant with the log4j event DTD.
 
 |===
