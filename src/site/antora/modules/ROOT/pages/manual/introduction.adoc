@@ -1,0 +1,319 @@
+////
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+////
+
+= Introduction
+
+[#overview]
+== Overview
+
+This document introduces the log4net API, its unique features, and the rationale behind its design.
+log4net enables developers to control logging output with fine-grained precision.
+It is fully configurable at runtime through external configuration files.
+
+Almost every large application includes some form of logging or tracing system.
+Adding log statements is a straightforward and effective method for debugging.
+Sometimes it's the only available method, especially in multithreaded or distributed applications.
+Traditional debuggers may be limited or unavailable in such environments.
+
+After deployment, logging often becomes the only way to understand application behavior.
+Effective logging systems allow administrators to diagnose and resolve issues.
+
+Experience shows that logging is a critical part of the development process.
+It provides detailed context about the application's execution.
+It operates automatically once integrated into the codebase.
+Log output can also be stored persistently for later analysis.
+Beyond development, a powerful logging system can also serve as an auditing mechanism.
+
+Logging has trade-offs.
+It can reduce performance.
+It can produce overwhelming amounts of output.
+log4net is designed to minimize these downsides.
+It is fast, reliable, and extensible.
+The log4net API emphasizes simplicity and ease of use.
+
+[#frameworks]
+== Frameworks
+
+log4net is available for several frameworks.
+For each supported framework, an assembly targeting that framework is built:
+
+* .NET Standard 2.0 via .NET 8.0
+* Microsoft .NET Framework 4.6.2
+
+Not all frameworks are created equal, and some features have been excluded from certain builds.
+For more information, see the xref:./supported-frameworks.adoc[] document.
+
+[#main-components]
+== Main Components
+
+log4net has three main components:
+
+* loggers - capture and categorize log messages.
+
+* appenders - define where and how log messages are output
+
+* layouts - control the format of log messages.
+
+These components work together to enable developers to log messages according to message type and level.
+They also allow controlling at runtime how these messages are formatted and where they are reported.
+
+These components are assisted by filters that control the actions of the appender.
+Object renderers are used to turn objects into strings.
+
+[#logger-hierarchy]
+== Logger hierarchy
+
+Loggers are named entities, with case-sensitive names that follow a hierarchical structure.
+The main advantage of logging APIs over `System.Console.WriteLine` is the ability to disable certain log statements while allowing others to print.
+
+Loggers can have parent-child relationships based on their names.
+For example, a logger named `Animals.Carnivora` is the parent of `Animals.Carnivora.Dog`, and `System` is the parent of `System.Text` and ancestor of `System.Text.StringBuilder`.
+This hierarchy is similar to .NET's namespace and class structure.
+
+The root logger sits at the top of the hierarchy:
+
+* It always exists
+* It cannot be retrieved by name
+* It always has an assigned level
+
+Loggers are retrieved using the static `GetLogger` method from the `log4net.LogManager` class.
+It can take either a string for the logger name or a `Type` for the desired class.
+
+[source,csharp]
+----
+namespace log4net
+{
+  public class LogManager
+  {
+    public static ILog GetLogger(string name);
+    public static ILog GetLogger(Type type);
+  }
+}
+----
+
+The `GetLogger` method that takes a `Type` parameter uses the fully qualified type name as the name of the logger to retrieve.
+
+These `GetLogger` methods return an `ILog` interface, which is the representation of the logger passed back to the developer.
+
+The `ILog` interface is defined as follows:
+
+[source,csharp]
+----
+namespace log4net
+{
+  public interface ILog
+  {
+    /* Test if a level is enabled for logging */
+    bool IsDebugEnabled { get; }
+    bool IsInfoEnabled { get; }
+    bool IsWarnEnabled { get; }
+    bool IsErrorEnabled { get; }
+    bool IsFatalEnabled { get; }
+
+    /* Log a message object */
+    void Debug(object message);
+    void Info(object message);
+    void Warn(object message);
+    void Error(object message);
+    void Fatal(object message);
+
+    /* Log a message object and exception */
+    void Debug(object message, Exception t);
+    void Info(object message, Exception t);
+    void Warn(object message, Exception t);
+    void Error(object message, Exception t);
+    void Fatal(object message, Exception t);
+
+    /* Log a message string using the System.String.Format syntax */
+    void DebugFormat(string format, params object[] args);
+    void InfoFormat(string format, params object[] args);
+    void WarnFormat(string format, params object[] args);
+    void ErrorFormat(string format, params object[] args);
+    void FatalFormat(string format, params object[] args);
+
+    /* Log a message string using the System.String.Format syntax and provide a culture / format provider */
+    void DebugFormat(IFormatProvider provider, string format, params object[] args);
+    void InfoFormat(IFormatProvider provider, string format, params object[] args);
+    void WarnFormat(IFormatProvider provider, string format, params object[] args);
+    void ErrorFormat(IFormatProvider provider, string format, params object[] args);
+    void FatalFormat(IFormatProvider provider, string format, params object[] args);
+  }
+}
+----
+
+[#logger-levels]
+== Logger Levels
+
+Loggers may be assigned levels.
+Levels are instances of the `log4net.Core.Level` class.
+The following levels are defined in order of increasing priority:
+
+* ALL
+* DEBUG
+* INFO
+* WARN
+* ERROR
+* FATAL
+* OFF
+
+If a given logger is not assigned a level, it inherits one from its closest ancestor with an assigned level.
+
+More formally:
+
+[#level-inheritance]
+=== Level Inheritance
+
+The inherited level for a given logger X is equal to the first non-null level in the logger hierarchy, starting at X and proceeding upwards in the hierarchy towards the root logger.
+
+To ensure that all loggers can eventually inherit a level, the root logger always has an assigned level.
+The default value for the root logger is `DEBUG`.
+
+Below are four examples showing various assigned level values and the resulting inherited levels according to the inheritance rule.
+
+[#example1]
+==== Example 1: Root Logger Assigned Level
+
+[cols="1,1,1"]
+|===
+| Logger name | Assigned level | Inherited level
+| root        | DEBUG          | DEBUG
+| X           | none           | DEBUG
+| X.Y         | none           | DEBUG
+| X.Y.Z       | none           | DEBUG
+|===
+
+In this example, the root logger is assigned the level `DEBUG`, so all child loggers inherit this level.
+
+[#example2]
+==== Example 2: All Loggers Have Assigned Levels
+
+[cols="1,1,1"]
+|===
+| Logger name | Assigned level | Inherited level
+| root        | DEBUG          | DEBUG
+| X           | INFO           | INFO
+| X.Y         | WARN           | WARN
+| X.Y.Z       | ERROR          | ERROR
+|===
+
+Here, each logger has its own assigned level, so no inheritance is needed.
+
+[#example3]
+==== Example 3: Some Loggers Inherit Level
+
+[cols="1,1,1"]
+|===
+| Logger name | Assigned level | Inherited level
+| root        | DEBUG          | DEBUG
+| X           | INFO           | INFO
+| X.Y         | none           | INFO
+| X.Y.Z       | ERROR          | ERROR
+|===
+
+In this example, the `X.Y` logger inherits the `INFO` level from its parent `X` logger. The `X.Y.Z` logger has its own assigned level, `ERROR`.
+
+[#example4]
+==== Example 4: Some Loggers Inherit from Parent
+
+[cols="1,1,1"]
+|===
+| Logger name | Assigned level | Inherited level
+| root        | DEBUG          | DEBUG
+| X           | INFO           | INFO
+| X.Y         | none           | INFO
+| X.Y.Z       | none           | INFO
+|===
+
+Here, the `X.Y` and `X.Y.Z` loggers inherit the level `INFO` from their parent `X` logger.
+
+[#example-summary]
+==== Summary
+
+The idea is that loggers inherit the level of their closest ancestor logger if no level is explicitly assigned. This ensures that you don’t need to manually assign levels to each logger, and the level can propagate upwards in the hierarchy.
+
+[#logging-requests]
+=== Logging Requests
+
+Logging requests are made by invoking one of the printing methods of a logger instance (through the log4net.ILog).
+
+The available printing methods are:
+
+* Debug
+* Info
+* Warn
+* Error
+* Fatal
+
+By definition, the printing method determines the level of a logging request. For example:
+
+[source,csharp]
+----
+log.Info("...");
+----
+
+This statement represents a logging request with level `INFO`.
+
+A logging request is considered "enabled" if its level is higher than or equal to the level of the logger. Otherwise, the request is "disabled."
+
+If a logger does not have an assigned level, it will inherit one from its closest ancestor in the logger hierarchy.
+
+[#basic-selection-rule]
+==== Basic Selection Rule
+
+A log request of level `L` in a logger with (either assigned or inherited, whichever is appropriate) level `K` is enabled if `L >= K`.
+
+This rule is at the heart of log4net. It assumes that levels are ordered. For the standard levels, we have:
+
+* DEBUG < INFO < WARN < ERROR < FATAL
+
+Calling the `log4net.LogManager.GetLogger` method with the same name will always return a reference to the exact same logger object.
+
+For example:
+
+[source,csharp]
+----
+ILog x = LogManager.GetLogger("wombat");
+ILog y = LogManager.GetLogger("wombat");
+----
+
+In this case, `x` and `y` refer to exactly the same logger object.
+
+Thus, it is possible to configure a logger and then to retrieve the same instance somewhere else in the code without passing around references.
+
+In fundamental contradiction to biological parenthood, where parents always precede their children, log4net loggers can be created and configured in any order.
+
+In particular, a "parent" logger will find and link to its descendants even if it is instantiated after them.
+
+Configuration of the log4net environment is typically done at application initialization.
+The preferred way is by reading a configuration file.
+This approach will be discussed shortly.
+
+Log4net makes it easy to name loggers by software component.
+This can be accomplished by statically instantiating a logger in each class, with the logger name equal to the fully qualified name of the class.
+
+This is a useful and straightforward method of defining loggers.
+As the log output bears the name of the generating logger, this naming strategy makes it easy to identify the origin of a log message.
+
+However, this is only one possible, albeit common, strategy for naming loggers.
+Log4net does not restrict the possible set of loggers.
+The developer is free to name the loggers as desired.
+
+Nevertheless, naming loggers after the class where they are located seems to be the best strategy known so far.
+It is simple and obvious to the developers where each log message came from.
+
+Most importantly, it leverages the design of the application to produce the design of the logger hierarchy.
+Hopefully, some thought has gone into the design of the application.
