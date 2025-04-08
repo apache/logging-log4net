@@ -298,22 +298,41 @@ In fundamental contradiction to biological parenthood, where parents always prec
 
 In particular, a "parent" logger will find and link to its descendants even if it is instantiated after them.
 
-Configuration of the log4net environment is typically done at application initialization.
-The preferred way is by reading a configuration file.
-This approach will be discussed shortly.
+Logger configuration is usually done during application startup, typically via a configuration file.
 
-Log4net makes it easy to name loggers by software component.
-This can be accomplished by statically instantiating a logger in each class, with the logger name equal to the fully qualified name of the class.
+Loggers are often named after the class they’re used in, using the fully qualified class name.
+This makes log output easy to trace and aligns naturally with the application's design.
 
-This is a useful and straightforward method of defining loggers.
-As the log output bears the name of the generating logger, this naming strategy makes it easy to identify the origin of a log message.
+While other naming strategies are possible, this approach is simple, effective, and widely adopted.
 
-However, this is only one possible, albeit common, strategy for naming loggers.
-Log4net does not restrict the possible set of loggers.
-The developer is free to name the loggers as desired.
+[#appenders]
+== Appenders
 
-Nevertheless, naming loggers after the class where they are located seems to be the best strategy known so far.
-It is simple and obvious to the developers where each log message came from.
+See xref:./appenders.adoc[]
 
-Most importantly, it leverages the design of the application to produce the design of the logger hierarchy.
-Hopefully, some thought has gone into the design of the application.
+[#filters]
+== Filters
+
+See xref:./filters.adoc[]
+
+[#layouts]
+== Layouts
+
+See xref:./layouts.adoc[]
+
+[#renderers]
+== Object Renderers
+
+log4net can render the content of log messages using custom logic defined by the user.
+
+For example, if you often log `Orange` objects, you can register an `OrangeRenderer` to format them consistently in logs.
+
+Renderers follow the class hierarchy.
+If you register a `FruitRenderer`, it will be used for all `Fruit` types—including `Orange`—unless a more specific `OrangeRenderer` is also registered.
+
+Renderers must implement the `log4net.ObjectRenderer.IObjectRenderer` interface.
+
+[NOTE]
+====
+Format methods like `DebugFormat`, `InfoFormat`, etc., do *not* use Object Renderers.
+====
