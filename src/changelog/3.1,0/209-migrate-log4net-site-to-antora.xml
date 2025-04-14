@@ -5,6 +5,6 @@
        type="added">
   <issue id="209" link="https://github.com/apache/logging-log4net/issues/209"/>
   <issue id="210" link="https://github.com/apache/logging-log4net/pull/210"/>
-  <description format="asciidoc">Migrate the log4net site to antora and use logging-parent pom
+  <description format="asciidoc">Migrate the log4net site to Antora and use logging-parent pom
   (implemented by @freeandnil in https://github.com/apache/logging-log4net/pull/210[#210])</description>
 </entry>
