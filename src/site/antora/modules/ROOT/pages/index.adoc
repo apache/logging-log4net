@@ -20,3 +20,8 @@ limitations under the License.
 
 The Apache log4net library is a library to output log statements to a variety of output targets.
 For more information on log4net see the xref:features.adoc[] document.
+
+[#github]
+== Github
+
+https://github.com/apache/logging-log4net[log4net]

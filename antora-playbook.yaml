@@ -138,4 +138,4 @@ ui:
     # Fix the `Edit this page` link
     - path: partials/edit-this-page.hbs
       contents: |
-        <div class="edit-this-page"><a href="https://github.com/apache/logging-log4net/edit/Feature/Antora/src/site/antora/modules/{{page.module}}/pages/{{page.relativeSrcPath}}">Edit this Page</a></div>
+        <div class="edit-this-page"><a href="https://github.com/apache/logging-log4net/edit/master/src/site/antora/modules/{{page.module}}/pages/{{page.relativeSrcPath}}">Edit this Page</a></div>
