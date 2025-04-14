@@ -1,0 +1,71 @@
+////
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+////
+= Manual
+
+log4net is a tool to help the programmer output log statements to a variety of output targets.
+
+In case of problems with an application, it is helpful to enable logging so that the problem can be located.
+With log4net it is possible to enable logging at runtime without modifying the application binary.
+The log4net package is designed so that log statements can remain in _production_ code without incurring a high performance cost.
+It follows that the speed of logging (or rather not logging) is crucial.
+
+At the same time, log output can be so voluminous that it quickly becomes overwhelming.
+One of the distinctive features of log4net (and common to all of
+the log4x libraries) is the notion of _hierarchical loggers_.
+Using these loggers it is possible to selectively control
+which log statements are output at arbitrary granularity.
+
+log4net is designed with two distinct goals in mind: speed and flexibility.
+There is a tight balance between these two requirements.
+
+== What are the prerequisites for log4net?
+
+log4net runs on net462 or higher and any framework supporting netstandard2.0.
+
+== Is there example code for using log4net?
+
+You can find many examples in https://github.com/apache/logging-log4net/tree/master/examples[log4net/examples].
+
+== What does log4net offer?
+
+log4net offers numerous features, including:
+
+* log4net is optimized for speed
+* log4net is based on a named logger hierarchy
+* log4net is thread-safe
+* Logging behavior can be set at runtime using a configuration file (xml)
+* log4net is designed to handle exceptions from the start
+* log4net can direct its output to many sinks including: a file, the console, Syslog/EventLog or even e-mail
+* log4net categorizes logging into levels: DEBUG, INFO, WARN, ERROR and FATAL.
+* The format of the log output can be easily changed by implementing a new layout class
+* The target of the log output as well as the writing strategy can be altered by writing a new appender class
+* log4net supports multiple output appenders per logger
+
+See xref:features.adoc[]
+
+////
+
+== How to learn more?
+
+    * xref:manual/getting-started.adoc[How can I get started with Log4j?]
+    * xref:manual/installation.adoc[How can I install Log4j?]
+    * xref:manual/configuration.adoc[How can I configure Log4j?]
+    * xref:manual/api.adoc[How can I use Log4j API?]
+    * xref:manual/performance.adoc[How can I tune my Log4j setup for performance?]
+    * xref:manual/plugins.adoc[What are Log4j plugins] and xref:manual/extending.adoc[how can I use them to extend Log4j?]
+
+////

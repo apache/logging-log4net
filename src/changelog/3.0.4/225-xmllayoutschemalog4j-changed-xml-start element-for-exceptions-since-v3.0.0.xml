@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="225" link="https://github.com/apache/logging-log4net/issues/225"/>
+  <issue id="226" link="https://github.com/apache/logging-log4net/pull/226"/>
+  <description format="asciidoc">XmlLayoutSchemaLog4J: Changed XML start element for exceptions since v3.0.0
+  (reported by @sita-martin, fixed in https://github.com/apache/logging-log4net/pull/226[#226] by @FreeAndNil)</description>
+</entry>

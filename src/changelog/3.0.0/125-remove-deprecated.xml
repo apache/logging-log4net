@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="removed">
+  <issue id="125" link="https://github.com/apache/logging-log4net/issues/125"/>
+  <issue id="138" link="https://github.com/apache/logging-log4net/pull/138"/>
+  <description format="asciidoc">Remove deprecated code for 3.0 (by @erikmav)</description>
+</entry>

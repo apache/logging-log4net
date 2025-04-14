@@ -1,5 +1,6 @@
 rat.excludesFile
 .editorconfig
+.gitattributes
 **/*.suo
 **/*.sln
 **/*.user
@@ -23,9 +24,13 @@ rat.excludesFile
 **/*.snk
 **/*.readme
 **/*.json
+**/*.globalconfig
 src/.idea/**
 src/integration-testing/**
 build/**
 build-tools/**
 doc/**
 src/site/**
+site.legacy/**
+NOTICE
+LICENSE

@@ -1,0 +1,138 @@
+////
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+////
+
+[#verify]
+= Release verification
+
+Releases of log4net can be verified with following steps:
+[#windows]
+== Windows
+
+. Prerequisites (winget - in case of problems see next section choco)
++
+[source,powershell]
+----
+winget install -e --id GnuPG.Gpg4win
+winget install -e --id TortoiseSVN.TortoiseSVN  # or any other subversion client
+winget install -e --id Mono.Mono
+winget install -e --id Microsoft.DotNet.SDK.8
+----
+After installation, verify that gpg and svn are in the path and add them when not.
+
+. Prerequisites (choco - only in case of problems with winget)
++
+[source,powershell]
+----
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+choco install gpg4win
+choco install tortoisesvn  # or any other subversion client
+choco install mono
+choco install dotnet-8.0-sdk
+----
+
+. Check out the release distribution
++
+[source,powershell]
+----
+svn co https://dist.apache.org/repos/dist/dev/logging/log4net/{releaseVersion} log4net-{releaseVersion}
+pushd log4net-{releaseVersion}
+----
+
+. Verify and extract
++
+[source,powershell]
+----
+& ./verify-release.ps1
+----
+
+. switch to the directory where you extracted the sources (in case you didn't use verify-release.ps1) 
+
+. Verify the build
++
+[source,powershell]
+----
+dotnet test ./src/log4net.sln
+----
+
+[#linux]
+== Linux
+
+. Check out the release distribution:
++
+[source,bash]
+----
+export releaseVersion=...
+svn co https://dist.apache.org/repos/dist/dev/logging/log4net/$releaseVersion \
+  log4net-$releaseVersion && cd $_
+----
++
+[%collapsible]
+.Click to see how to check out using `wget` instead of `svn`
+====
+[source,bash]
+----
+mkdir log4net-$releaseVersion> && cd $_
+wget --cut-dirs=6 \
+     --no-host-directories \
+     --no-parent \
+     --recursive \
+     https://dist.apache.org/repos/dist/dev/logging/log4net/$releaseVersion/
+----
+====
+
+. Verify checksums:
++
+[source,bash]
+----
+sha512sum --check *.sha512
+----
+
+. Import the release manager GPG keys, unless you haven't earlier done so:
++
+[source,bash]
+----
+wget -O - https://downloads.apache.org/logging/KEYS | gpg --import
+----
+
+. Verify signatures:
++
+[source,bash]
+----
+for sigFile in *.asc; do gpg --verify $sigFile ${sigFile%.asc}; done
+----
+
+. Extract sources:
++
+[source,bash]
+----
+umask 0022
+unzip -q *source*.zip -d src
+cd src
+----
+
+. Verify the build (install https://docs.docker.com/engine/install[docker], if you haven't already):
++  
+[source,bash]
+----
+docker build -t log4net-builder .
+docker run -it log4net-builder
+# this will
+# - install all dependencies in the container
+# - build src/log4net.sln
+# inside the container run
+dotnet test /logging-log4net/src/log4net.sln
+----

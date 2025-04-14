@@ -1,0 +1,167 @@
+////
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+////
+[#appenders]
+= Appenders
+
+Appenders are responsible for delivering log events to their destination.
+Every Appender must implement the `IAppender` interface.
+
+While not strictly required by the log4net architecture, most appenders inherit from `AppenderSkeleton` and:
+
+* delegate the filtering of log events to an implementation of `IFilter`.
+See xref:manual/filters.adoc[] for more information.
+* delegate the formatting of log events to an implementation of `ILayout`.
+See xref:manual/layouts.adoc[] for more information.
+* only directly handle the writing of log event data to the target destination.
+
+Appenders always have a name so that they can be referenced from a
+xref:manual/configuration.adoc#configuring-loggers[logger configuration].
+
+[#appenders-list]
+== List of appenders
+
+log4net ships with the following appenders
+[cols="Type,Description"]
+|===
+|Type |Description
+
+|AdoNetAppender
+|Writes logging events to a database using either prepared statements or stored procedures.
+
+|AnsiColorTerminalAppender
+|Writes color highlighted logging events to a an ANSI terminal window.
+
+|AspNetTraceAppender
+|Writes logging events to the ASP trace context. These can then be rendered at the end of the ASP page or on the ASP trace page.
+
+|BufferingForwardingAppender
+|Buffers events and then forwards them to attached appenders.
+
+|ColoredConsoleAppender
+|Writes color highlighted logging events to the application's Windows Console.
+
+|ConsoleAppender
+|Writes logging events to the application's Console.
+The events may go to either the standard our stream or the standard error stream.
+
+|DebugAppender
+|Writes logging events to the .net debugger (https://web.archive.org/web/20240930165834/https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.debug?view=net-8.0[System.Diagnostics.Debug]).
+
+|EventLogAppender
+|Writes logging events to the Windows Event Log.
+
+|FileAppender
+|Writes logging events to a file in the file system.
+
+|LocalSyslogAppender
+|Writes logging events to the local https://datatracker.ietf.org/doc/html/rfc3164[syslog] service (UNIX only).
+
+|MemoryAppender
+|Stores logging events in an in memory buffer.
+
+|OutputDebugStringAppender
+|Writes logging events to the debugger (using https://web.archive.org/web/20241118170546/https://learn.microsoft.com/en-us/windows/win32/api/debugapi/nf-debugapi-outputdebugstringw[OutputDebugString]).
+If the application has no debugger, the system debugger displays the string.
+If the application has no debugger and the system debugger is not active, the message is ignored.
+
+|RemoteSyslogAppender
+|Writes logging events to a remote https://datatracker.ietf.org/doc/html/rfc3164[syslog] service using UDP networking.
+
+|RollingFileAppender
+|Writes logging events to a file in the file system.
+The RollingFileAppender can be configured to log to multiple files based upon date or file size constraints.
+
+|SmtpAppender
+|Sends logging events to an email address.
+
+|SmtpPickupDirAppender
+|Sends logging events to an email address but writes the emails to a configurable directory rather than sending them directly via SMTP.
+
+|TelnetAppender
+|*Clients* connect via Telnet to receive logging events.
+
+|TraceAppender
+|Writes logging events to the .NET trace system (https://web.archive.org/web/20240907024634/https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.trace?view=net-8.0[System.Diagnostics.Trace]).
+
+|UdpAppender
+|Sends logging events as connectionless UDP datagrams to a remote host or a multicast group using a UdpClient.
+
+|ForwardingAppender
+|Can be used to wrap another appender, for example to attach additional filters.
+
+|===
+
+[#appender-additivity]
+== Appender Additivity
+
+A logger can have multiple appenders.
+
+Each enabled logging request is passed to all appenders attached to that logger, and also to appenders higher in the logger hierarchy.
+This behavior is called *appender additivity* and is enabled by default.
+
+For example, if a console appender is attached to the root logger, all enabled logs will at least print to the console.
+If a file appender is added to logger `X`, logs from `X` and its children will go to both the file and the console.
+
+Additivity can be disabled by setting a logger’s `additivity` flag to `false`.
+This prevents logging events from being passed to ancestor appenders beyond that point.
+
+[NOTE]
+====
+If the `Animals` logger has `additivity = false`, then the `Animals.Carnivora` logger will only send its log messages to its own appenders and to `Animals`’ appenders—
+but not to any appenders higher up in the hierarchy, such as those on the root logger.
+====
+
+[cols="Logger Name,Added Appender,Additivity Flag,Output Targets,Comment"]
+|===
+|Logger Name |Added Appenders |Additivity Flag |Output Targets |Comment
+
+|root
+|ConsoleAppender
+|not applicable
+|ConsoleAppender
+|Default appender at the root.
+
+|Animals
+|FileAppender, RollingFileAppender
+|true
+|ConsoleAppender, FileAppender, RollingFileAppender
+|Appenders of "Animals" and root.
+
+|Animals.Carnivora
+|none
+|true
+|ConsoleAppender, FileAppender, RollingFileAppender
+|Inherited from "Animals" and root.
+
+|Animals.Carnivora.Felidae
+|SmtpAppender
+|true
+|ConsoleAppender, FileAppender, RollingFileAppender, SmtpAppender
+|Appenders in "Animals.Carnivora.Felidae", "Animals", and root.
+
+|Security
+|UdpAppender
+|false
+|UdpAppender
+|No appender accumulation because additivity is set to false.
+
+|Security.Access
+|none
+|true
+|UdpAppender
+|Only appenders of "Security" are used due to disabled additivity in "Security".
+|===

@@ -1,0 +1,52 @@
+////
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+////
+
+* xref:download.adoc[]
+* xref:development.adoc[]
+* xref:manual/index.adoc[]
+** xref:manual/introduction.adoc[]
+** xref:manual/appenders.adoc[]
+** xref:manual/configuration.adoc[]
+*** xref:manual/configuration/examples.adoc[]
+**** xref:manual/configuration/adonetappender.adoc[]
+**** xref:manual/configuration/bufferingforwardingappender.adoc[]
+**** xref:manual/configuration/coloredconsoleappender.adoc[]
+**** xref:manual/configuration/consoleappender.adoc[]
+**** xref:manual/configuration/eventlogappender.adoc[]
+**** xref:manual/configuration/fileappender.adoc[]
+**** xref:manual/configuration/rollingfileappender.adoc[]
+**** xref:manual/configuration/forwardingappender.adoc[]
+**** xref:manual/configuration/localsyslogappender.adoc[]
+**** xref:manual/configuration/managedcoloredconsoleappender.adoc[]
+**** xref:manual/configuration/memoryappender.adoc[]
+**** xref:manual/configuration/outputdebugstringappender.adoc[]
+**** xref:manual/configuration/remotesyslogappender.adoc[]
+**** xref:manual/configuration/smtpappender.adoc[]
+**** xref:manual/configuration/smtppickupdirappender.adoc[]
+**** xref:manual/configuration/traceappender.adoc[]
+**** xref:manual/configuration/udpappender.adoc[]
+** xref:manual/examples.adoc[]
+** xref:manual/faq.adoc[]
+** xref:manual/filters.adoc[]
+** xref:manual/layouts.adoc[]
+** xref:manual/installation.adoc[]
+** xref:manual/supported-frameworks.adoc[]
+* xref:features.adoc[]
+* xref:release-notes.adoc[]
+* xref:release-review.adoc[]
+* {logging-services-url}/support.html[Support]
+* {logging-services-url}/security.html[Security]

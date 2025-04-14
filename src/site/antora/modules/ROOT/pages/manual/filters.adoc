@@ -1,0 +1,96 @@
+////
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+////
+
+[id=filters]
+= Filters
+
+Filters are log4net plugins that evaluate the parameters of a logging call or a log event and return one of three results:
+
+ACCEPT:: The filter accepts the log event.
+This effectively causes other filters in the same filtering stage to be skipped.
+
+DENY:: The filter drops the log event.
+
+NEUTRAL:: log4net behaves as if the filter was not present.
+It is evaluated by the next filter in the filter chain.
+
+Any filter along the way can accept the event and stop processing, deny the event and stop processing, or allow the event on to the next filter.
+If the event gets to the end of the filter chain without being denied it is implicitly accepted and will be logged.
+
+This filter will deny events that have a level that is lower than INFO or higher than FATAL. All events between INFO and FATAL will be logged.
+[source,xml]
+----
+<filter type="log4net.Filter.LevelRangeFilter">
+  <levelMin value="INFO" />
+  <levelMax value="FATAL" />
+</filter>
+----
+
+If we want to only allow messages through that have a specific substring (e.g. 'database') then we need to specify the following filters:
+[source,xml]
+----
+<filter type="log4net.Filter.StringMatchFilter">
+  <stringToMatch value="database" />
+</filter>
+<filter type="log4net.Filter.DenyAllFilter" />
+----
+The first filter will look for the substring 'database' in the message text of the event.
+If the text is found the filter will accept the message and filter processing will stop, the message will be logged.
+If the substring is not found the event will be passed to the next filter to process.
+If there is no next filter the event would be implicitly accepted and would be logged.
+But because we don't want the non matching events to be logged we need to use a log4net.Filter.DenyAllFilter that will just deny all events that reach it.
+This filter is only useful at the end of the filter chain.
+
+If we want to allow events that have either 'database' or 'ldap' in the message text we can use the following filters:
+[source,xml]
+----
+<filter type="log4net.Filter.StringMatchFilter">
+  <stringToMatch value="database"/>
+</filter>
+<filter type="log4net.Filter.StringMatchFilter">
+  <stringToMatch value="ldap"/>
+</filter>
+<filter type="log4net.Filter.DenyAllFilter" />
+----
+
+[#list-of-filters]
+== List of Filters
+
+The following filters are defined in the log4net package:
+
+[cols="Type,Description"]
+|===
+|Type |Description
+
+|log4net.Filter.DenyAllFilter
+|Drops all logging events unconditionally.
+
+|log4net.Filter.LevelMatchFilter
+|Allows only events with an exact level match.
+
+|log4net.Filter.LevelRangeFilter
+|Allows events within a specified range of levels.
+
+|log4net.Filter.LoggerMatchFilter
+|Matches events from loggers with names starting with a given string.
+
+|log4net.Filter.PropertyFilter
+|Matches events based on a specific property's value.
+
+|log4net.Filter.StringMatchFilter
+|Matches events containing a specific substring in the message.
+|===
