@@ -39,7 +39,7 @@ start_page: index.adoc
 asciidoc:
   attributes:
     project-github-url: "https://github.com/apache/logging-log4net"
-    project-version: "3.1.0"
+    project-version: "1.2.3"
     project-name: "log4net"
     project-id: "log4net"
     java-target-version: "8"
