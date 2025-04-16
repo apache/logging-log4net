@@ -38,10 +38,10 @@ version: ~
 start_page: index.adoc
 asciidoc:
   attributes:
-    project-github-url: "https://github.com/apache/logging-log4j-tools"
+    project-github-url: "https://github.com/apache/logging-log4net"
     project-version: "1.2.3"
-    project-name: "Log4j Tools"
-    project-id: "log4j-tools"
+    project-name: "log4net"
+    project-id: "log4net"
     java-target-version: "8"
     java-compiler-version: "[17,18)"
     logging-services-url: "https://logging.apache.org"
