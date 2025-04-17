@@ -681,6 +681,7 @@ public partial class RollingFileAppender : FileAppender
     using (SecurityContext?.Impersonate(this))
     {
       string fullPath = Path.GetFullPath(baseFilePath);
+      string dir = Path.GetDirectoryName(baseFilePath);
 
       directory = Path.GetDirectoryName(fullPath);
       if (Directory.Exists(directory))
@@ -690,7 +691,8 @@ public partial class RollingFileAppender : FileAppender
         string[] files = Directory.GetFiles(directory, GetWildcardPatternForFile(baseFileName));
         result.AddRange(files
           .Select(Path.GetFileName)
-          .Where(curFileName => curFileName.StartsWith(Path.GetFileNameWithoutExtension(baseFileName))));
+          .Where(curFileName => curFileName.StartsWith(Path.GetFileNameWithoutExtension(baseFileName)))
+          .Select(file => Path.Combine(dir, file)));
       }
     }
     LogLog.Debug(_declaringType, "Searched for existing files in [" + directory + "]");
@@ -789,7 +791,9 @@ public partial class RollingFileAppender : FileAppender
   {
     curFileName = curFileName.ToLowerInvariant();
     baseFile = baseFile.ToLowerInvariant();
-    if (curFileName.StartsWith(Path.GetFileNameWithoutExtension(baseFile)) == false)
+    var baseFileWithoutExtension = Path.Combine(Path.GetDirectoryName(baseFile) ?? "", Path.GetFileNameWithoutExtension(baseFile));
+    
+    if (curFileName.StartsWith(baseFileWithoutExtension) == false)
     {
       return; // This is not a log file, so ignore
     }
@@ -809,7 +813,8 @@ public partial class RollingFileAppender : FileAppender
       string suffix = PreserveLogFileNameExtension
         ? Path.GetExtension(baseFile).ToLowerInvariant()
         : "";
-      if (!curFileName.StartsWith(prefix) || !curFileName.EndsWith(suffix))
+      var curFileNameWithoutDir = Path.GetFileName(curFileName);
+      if (!curFileNameWithoutDir.StartsWith(prefix) || !curFileNameWithoutDir.EndsWith(suffix))
       {
         LogLog.Debug(_declaringType, $"Ignoring file [{curFileName}] because it is from a different date period");
         return;
@@ -1171,8 +1176,11 @@ public partial class RollingFileAppender : FileAppender
   /// </remarks>
   protected void DeleteFile(string fileName)
   {
+    LogLog.Debug(_declaringType, $"Trying to delete [{fileName}]");
+
     if (!FileExists(fileName))
     {
+      LogLog.Debug(_declaringType, $"[{fileName}] does not exist");
       return;
     }
     // We may not have permission to delete the file, or the file may be locked
@@ -1346,7 +1354,7 @@ public partial class RollingFileAppender : FileAppender
           if (PreserveLogFileNameExtension)
           {
             string extension = Path.GetExtension(archiveFileBaseName);
-            string baseName = Path.GetFileNameWithoutExtension(archiveFileBaseName);
+            string baseName = Path.Combine(Path.GetDirectoryName(archiveFileBaseName), Path.GetFileNameWithoutExtension(archiveFileBaseName));
             int lastDotIndex = baseName.LastIndexOf(".", StringComparison.Ordinal);
             if (lastDotIndex >= 0)
             {
