@@ -432,8 +432,7 @@ public partial class RollingFileAppender : FileAppender
   public bool PreserveLogFileNameExtension { get; set; }
 
   /// <summary>
-  /// Gets or sets a value indicating whether to always log to
-  /// the same file.
+  /// Gets or sets a value indicating whether to always log to the same file.
   /// </summary>
   /// <value>
   /// <see langword="true"/> if always should be logged to the same file, otherwise <see langword="false"/>.
@@ -456,8 +455,7 @@ public partial class RollingFileAppender : FileAppender
   /// The fully qualified type of the RollingFileAppender class.
   /// </summary>
   /// <remarks>
-  /// Used by the internal logger to record the Type of the
-  /// log message.
+  /// Used by the internal logger to record the Type of the log message.
   /// </remarks>
   private static readonly Type _declaringType = typeof(RollingFileAppender);
 
@@ -635,9 +633,9 @@ public partial class RollingFileAppender : FileAppender
   }
 
   /// <summary>
-  /// Determines curSizeRollBackups (only within the current roll point)
+  /// Determines CurrentSizeRollBackups (only within the current roll point)
   /// </summary>
-  private void DetermineCurSizeRollBackups()
+  private void DetermineCurrentSizeRollBackups()
   {
     CurrentSizeRollBackups = 0;
 
@@ -650,8 +648,8 @@ public partial class RollingFileAppender : FileAppender
       fileName = Path.GetFileName(fullPath);
     }
 
-    List<string> arrayFiles = GetExistingFiles(fullPath);
-    InitializeRollBackups(fileName, arrayFiles);
+    List<string> existingFiles = GetExistingFiles(fullPath);
+    InitializeRollBackups(fileName, existingFiles);
 
     LogLog.Debug(_declaringType, $"curSizeRollBackups starts at [{CurrentSizeRollBackups}]");
   }
@@ -681,9 +679,9 @@ public partial class RollingFileAppender : FileAppender
     using (SecurityContext?.Impersonate(this))
     {
       string fullPath = Path.GetFullPath(baseFilePath);
-      string dir = Path.GetDirectoryName(baseFilePath);
+      string dir = Path.GetDirectoryName(baseFilePath).EnsureNotNull();
 
-      directory = Path.GetDirectoryName(fullPath);
+      directory = Path.GetDirectoryName(fullPath).EnsureNotNull();
       if (Directory.Exists(directory))
       {
         string baseFileName = Path.GetFileName(fullPath);
@@ -745,7 +743,7 @@ public partial class RollingFileAppender : FileAppender
   /// </remarks>
   protected void ExistingInit()
   {
-    DetermineCurSizeRollBackups();
+    DetermineCurrentSizeRollBackups();
     RollOverIfDateBoundaryCrossing();
 
     // If file exists, and we are not appending then roll it out of the way
@@ -786,19 +784,19 @@ public partial class RollingFileAppender : FileAppender
   /// In either case, we want to know the highest count that is present.
   /// </summary>
   /// <param name="baseFile"></param>
-  /// <param name="curFileName"></param>
-  private void InitializeFromOneFile(string baseFile, string curFileName)
+  /// <param name="currentFileName"></param>
+  private void InitializeFromOneFile(string baseFile, string currentFileName)
   {
-    curFileName = curFileName.ToLowerInvariant();
+    currentFileName = currentFileName.ToLowerInvariant();
     baseFile = baseFile.ToLowerInvariant();
-    var baseFileWithoutExtension = Path.Combine(Path.GetDirectoryName(baseFile) ?? "", Path.GetFileNameWithoutExtension(baseFile));
+    string baseFileWithoutExtension = Path.Combine(Path.GetDirectoryName(baseFile) ?? "", Path.GetFileNameWithoutExtension(baseFile));
     
-    if (curFileName.StartsWith(baseFileWithoutExtension) == false)
+    if (!currentFileName.StartsWith(baseFileWithoutExtension))
     {
       return; // This is not a log file, so ignore
     }
 
-    if (curFileName.Equals(baseFile, StringComparison.Ordinal))
+    if (currentFileName.Equals(baseFile, StringComparison.Ordinal))
     {
       return; // Base log file is not an incremented logfile (.1 or .2, etc.)
     }
@@ -813,10 +811,10 @@ public partial class RollingFileAppender : FileAppender
       string suffix = PreserveLogFileNameExtension
         ? Path.GetExtension(baseFile).ToLowerInvariant()
         : "";
-      var curFileNameWithoutDir = Path.GetFileName(curFileName);
+      string curFileNameWithoutDir = Path.GetFileName(currentFileName).EnsureNotNull();
       if (!curFileNameWithoutDir.StartsWith(prefix) || !curFileNameWithoutDir.EndsWith(suffix))
       {
-        LogLog.Debug(_declaringType, $"Ignoring file [{curFileName}] because it is from a different date period");
+        LogLog.Debug(_declaringType, $"Ignoring file [{currentFileName}] because it is from a different date period");
         return;
       }
     }
@@ -824,7 +822,7 @@ public partial class RollingFileAppender : FileAppender
     try
     {
       // Bump the counter up to the highest count seen so far
-      int backup = GetBackupIndex(curFileName);
+      int backup = GetBackupIndex(currentFileName);
 
       // caution: we might get a false positive when certain
       // date patterns such as yyyyMMdd are used...those are
@@ -858,14 +856,14 @@ public partial class RollingFileAppender : FileAppender
             }
           }
         }
-        LogLog.Debug(_declaringType, $"File name [{curFileName}] moves current count to [{CurrentSizeRollBackups}]");
+        LogLog.Debug(_declaringType, $"File name [{currentFileName}] moves current count to [{CurrentSizeRollBackups}]");
       }
     }
     catch (FormatException)
     {
       //this happens when file.log -> file.log.yyyy-MM-dd which is normal
       //when staticLogFileName == false
-      LogLog.Debug(_declaringType, $"Encountered a backup file not ending in .x [{curFileName}]");
+      LogLog.Debug(_declaringType, $"Encountered a backup file not ending in .x [{currentFileName}]");
     }
   }
 
@@ -902,13 +900,13 @@ public partial class RollingFileAppender : FileAppender
   /// Bumps the max count up to the highest count seen.
   /// </summary>
   [EditorBrowsable(EditorBrowsableState.Never)]
-  public void InitializeRollBackups(string baseFile, IList<string> arrayFiles)
+  public void InitializeRollBackups(string baseFile, IList<string> files)
   {
     string baseFileLower = baseFile.EnsureNotNull().ToLowerInvariant();
 
-    foreach (string curFileName in arrayFiles.EnsureNotNull())
+    foreach (string file in files.EnsureNotNull())
     {
-      InitializeFromOneFile(baseFileLower, curFileName.ToLowerInvariant());
+      InitializeFromOneFile(baseFileLower, file.ToLowerInvariant());
     }
   }
 
@@ -1354,7 +1352,8 @@ public partial class RollingFileAppender : FileAppender
           if (PreserveLogFileNameExtension)
           {
             string extension = Path.GetExtension(archiveFileBaseName);
-            string baseName = Path.Combine(Path.GetDirectoryName(archiveFileBaseName), Path.GetFileNameWithoutExtension(archiveFileBaseName));
+            string baseName = Path.Combine(Path.GetDirectoryName(archiveFileBaseName).EnsureNotNull(), 
+              Path.GetFileNameWithoutExtension(archiveFileBaseName));
             int lastDotIndex = baseName.LastIndexOf(".", StringComparison.Ordinal);
             if (lastDotIndex >= 0)
             {

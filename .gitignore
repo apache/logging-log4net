@@ -248,3 +248,4 @@ dotnetfx35.exe
 /src/Binaries/*
 
 local-tasks/*.generated.js
+/node/**
