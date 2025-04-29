@@ -1,5 +1,5 @@
 To: dev@logging.apache.org
-Subject: [RESULT][VOTE] Release Apache Log4net 3.0.5
+Subject: [RESULT][VOTE] Release Apache Log4net 3.1.0
 
 and here is my +1.
 
@@ -9,6 +9,6 @@ I will continue the release process.
 Jan
 
 ---------------------------------------------------------------------------------------------------
-This is a vote to release the Apache Log4net 3.0.5.
+This is a vote to release the Apache Log4net 3.1.0.
 
 ...
