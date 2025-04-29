@@ -166,4 +166,9 @@ public class SystemInfoTest
   [Test]
   public void EqualsIgnoringCase_DifferentStrings_false()
     => Assert.That(SystemInfo.EqualsIgnoringCase("foo", "foobar"), Is.False);
+
+  [Test]
+  [Platform(Include = "Win,Linux,MacOsX")]
+  public void IsAndoid()
+    => Assert.That(typeof(SystemInfo).GetProperty("IsAndroid", BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(null), Is.False);
 }
