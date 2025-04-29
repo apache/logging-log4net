@@ -349,7 +349,6 @@ The section must specify the `log4net.Config.Log4NetConfigurationSectionHandler,
 
 The following is a simple example configuration file that specifies the correct section handler to use for the `log4net` section.
 
-
 [source,xml]
 ----
 <configuration>
@@ -426,6 +425,15 @@ Or it may be nested within other elements:
 The example shows how to embed configuration data in a .config file while allowing log4net to read it directly.
 Since the .NET config parser throws errors for unregistered elements, the `log4net` section is registered using `System.Configuration.IgnoreSectionHandler`.
 This tells .NET to ignore the section, as it will be processed by log4net instead.
+
+[#android]
+== Android
+
+Android does not support `.config` files.
+
+Instead, you can set `AppSettings` values as environment variables for your process — this works only on Android.
+
+You must also load the `log4net` configuration manually, for example by reading it from an XML file at runtime.
 
 [#configuration-syntax]
 == Configuration Syntax

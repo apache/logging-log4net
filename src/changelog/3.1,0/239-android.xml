@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="added">
+  <issue id="239" link="https://github.com/apache/logging-log4net/issues/239"/>
+  <issue id="240" link="https://github.com/apache/logging-log4net/pull/240"/>
+  <description format="asciidoc">detect Android and use environment variables instead of AppSettings
+  (reported by @arunjose696, implemented by @FreeAndNil in https://github.com/apache/logging-log4net/pull/240[#240])</description>
+</entry>

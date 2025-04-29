@@ -37,6 +37,11 @@ public static class SystemInfo
   private const string DefaultNotAvailableText = "NOT AVAILABLE";
 
   /// <summary>
+  /// Is OperatingSystem Android
+  /// </summary>
+  internal static bool IsAndroid { get; } = IsAndroidCore();
+
+  /// <summary>
   /// Initialize default values for private static fields.
   /// </summary>
   /// <remarks>
@@ -66,6 +71,34 @@ public static class SystemInfo
     }
     NotAvailableText = notAvailableText;
     NullText = nullText;
+  }
+
+  private static bool IsAndroidCore() // https://stackoverflow.com/questions/47521008/how-can-i-distinguish-between-unix-and-android-on-netstandard-2-0
+  {
+    if (Environment.OSVersion.Platform != PlatformID.Unix)
+      return false;
+    using System.Diagnostics.Process process = new()
+    {
+      StartInfo = new()
+      {
+        FileName = "getprop",
+        Arguments = "ro.build.user",
+        RedirectStandardOutput = true,
+        UseShellExecute = false,
+        CreateNoWindow = true
+      }
+    };
+
+    try
+    {
+      process.Start();
+      string output = process.StandardOutput.ReadToEnd();
+      return !string.IsNullOrEmpty(output);
+    }
+    catch (Exception ex) when (!ex.IsFatal())
+    {
+      return false;
+    }
   }
 
   /// <summary>
@@ -414,10 +447,8 @@ public static class SystemInfo
   /// then all the loaded assemblies will be searched for the type.
   /// </para>
   /// </remarks>
-  public static Type? GetTypeFromString(Type relativeType, string typeName, bool throwOnError, bool ignoreCase)
-  {
-    return GetTypeFromString(relativeType.EnsureNotNull().Assembly, typeName, throwOnError, ignoreCase);
-  }
+  public static Type? GetTypeFromString(Type relativeType, string typeName, bool throwOnError, bool ignoreCase) 
+    => GetTypeFromString(relativeType.EnsureNotNull().Assembly, typeName, throwOnError, ignoreCase);
 
   /// <summary>
   /// Loads the type specified in the type string.
@@ -438,10 +469,8 @@ public static class SystemInfo
   /// in the assembly then all the loaded assemblies will be searched for the type.
   /// </para>
   /// </remarks>
-  public static Type? GetTypeFromString(string typeName, bool throwOnError, bool ignoreCase)
-  {
-    return GetTypeFromString(Assembly.GetCallingAssembly(), typeName, throwOnError, ignoreCase);
-  }
+  public static Type? GetTypeFromString(string typeName, bool throwOnError, bool ignoreCase) 
+    => GetTypeFromString(Assembly.GetCallingAssembly(), typeName, throwOnError, ignoreCase);
 
   /// <summary>
   /// Loads the type specified in the type string.
@@ -646,6 +675,8 @@ public static class SystemInfo
   /// <returns>the value for the key, or <c>null</c></returns>
   public static string? GetAppSetting(string key)
   {
+    if (IsAndroid)
+      return Environment.GetEnvironmentVariable(key); // Android does not support config files
     try
     {
       return ConfigurationManager.AppSettings[key];

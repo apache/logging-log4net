@@ -449,10 +449,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// Adds a parameter to the ordered list of command parameters.
   /// </para>
   /// </remarks>
-  public void AddParameter(AdoNetAppenderParameter parameter)
-  {
-    m_parameters.Add(parameter);
-  }
+  public void AddParameter(AdoNetAppenderParameter parameter) => m_parameters.Add(parameter);
 
   /// <summary>
   /// Writes the events to the database using the transaction specified.

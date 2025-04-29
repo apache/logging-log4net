@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Licensed to the Apache Software Foundation (ASF) under one or more
   ~ contributor license agreements.  See the NOTICE file distributed with
@@ -15,40 +15,30 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         child.project.url.inherit.append.path="false"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" child.project.url.inherit.append.path="false" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
   <parent>
     <groupId>org.apache.logging</groupId>
     <artifactId>logging-parent</artifactId>
     <version>12.1.0</version>
   </parent>
-
   <packaging>pom</packaging>
   <groupId>org.apache.logging.log4net</groupId>
   <artifactId>apache-log4net</artifactId>
   <version>${revision}</version>
-
   <name>Apache log4net</name>
   <description>Logging framework for Microsoft .NET Framework.</description>
   <url>https://logging.apache.org/log4net</url>
   <inceptionYear>2004</inceptionYear>
-
-  <scm child.scm.connection.inherit.append.path="false" child.scm.developerConnection.inherit.append.path="false"
-       child.scm.url.inherit.append.path="false">
+  <scm child.scm.connection.inherit.append.path="false" child.scm.developerConnection.inherit.append.path="false" child.scm.url.inherit.append.path="false">
     <connection>scm:git:https://github.com/apache/logging-log4net</connection>
     <developerConnection>scm:git:https://github.com/apache/logging-log4net</developerConnection>
     <url>https://github.com/apache/logging-log4net</url>
   </scm>
-
   <issueManagement>
     <system>GitHub Issues</system>
     <url>https://github.com/apache/logging-log4net/issues</url>
   </issueManagement>
-
   <mailingLists>
     <mailingList>
       <name>logging commits: all git commits of the logging projects including log4net</name>
@@ -58,17 +48,14 @@
       <archive>https://mail-archives.apache.org/mod_mbox/logging-commits/</archive>
     </mailingList>
   </mailingLists>
-
   <ciManagement>
     <system>GitHub Actions</system>
     <url>https://github.com/apache/logging-log4net/actions</url>
   </ciManagement>
-
   <properties>
     <!-- project version -->
     <revision>3.1.0-SNAPSHOT</revision>
   </properties>
-
   <build>
     <plugins>
       <plugin>

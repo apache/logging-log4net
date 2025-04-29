@@ -469,10 +469,8 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// Raises the <see cref="LoggerRepositoryCreatedEvent"/> event.
   /// </para>
   /// </remarks>
-  protected virtual void OnLoggerRepositoryCreatedEvent(ILoggerRepository repository)
-  {
-    LoggerRepositoryCreatedEvent?.Invoke(this, new LoggerRepositoryCreationEventArgs(repository));
-  }
+  protected virtual void OnLoggerRepositoryCreatedEvent(ILoggerRepository repository) 
+    => LoggerRepositoryCreatedEvent?.Invoke(this, new(repository));
 
   /// <summary>
   /// Gets the repository name and repository type for the specified assembly.
