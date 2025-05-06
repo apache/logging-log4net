@@ -1,0 +1,5 @@
+[*.cs]
+# Naming styles
+dotnet_style_namespace_match_folder = false:suggestion
+# IDE1006: Naming Styles
+dotnet_diagnostic.IDE1006.severity = none

@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleAppendersApp", "Appen
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WmiAppender", "Appenders\WmiAppender\WmiAppender.csproj", "{BE56F892-37BA-489C-A91D-F2761FDB96EF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MauiTestApplication", "Maui\MauiTestApplication.csproj", "{CD3EA9CB-A272-4C43-9933-89C27B2211E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{BE56F892-37BA-489C-A91D-F2761FDB96EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE56F892-37BA-489C-A91D-F2761FDB96EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE56F892-37BA-489C-A91D-F2761FDB96EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD3EA9CB-A272-4C43-9933-89C27B2211E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD3EA9CB-A272-4C43-9933-89C27B2211E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD3EA9CB-A272-4C43-9933-89C27B2211E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD3EA9CB-A272-4C43-9933-89C27B2211E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
