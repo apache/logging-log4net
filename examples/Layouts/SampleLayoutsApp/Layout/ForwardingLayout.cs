@@ -84,7 +84,7 @@ public abstract class ForwardingLayout : ILayout, IOptionHandler
   /// the <paramref name="loggingEvent"/> as text.
   /// </para>
   /// </remarks>
-  virtual public void Format(TextWriter writer, LoggingEvent loggingEvent)
+  public virtual void Format(TextWriter writer, LoggingEvent loggingEvent)
     => Layout?.Format(writer, loggingEvent);
 
   /// <summary>
