@@ -12,8 +12,8 @@ release version 2.0.123:
 
 1. Update the documentation under `src/site`
     - minimally, this means at least:
-        - `src/site/xdoc/release/release-notes.xml`
-            - copy an existing release section & think about:
+        - `src/changelog`
+            - copy an existing release folder & think about:
                 - what does this release change?
                 - bug fixes?
                 - enhancements
@@ -28,7 +28,7 @@ release version 2.0.123:
 4. Clone out the log4net doc repo (https://github.com/apache/logging-log4net-site)
     - check out the `asf-staging` branch
     - create a folder which includes the version, eg `log4net-2.0.123`
-5. Copy the contents of `target/site` from this repo into the folder created in (5)
+5. Copy the contents of `target/site` from this repo into the folder created in (4)
     - remember to either update or link in sdk docs from a prior release
 6. Update the symlinks in the base of the docs repo, ie:
     - 2.0.x -> 2.0.123
@@ -60,8 +60,9 @@ release version 2.0.123:
     - `svn co https://dist.apache.org/repos/dist/release/logging -N apache-dist-logging-release`
     - `cd apache-dist-logging-release`
     - `svn up log4net`
-    - copy in source & binary artifacts to respective locations
     - `svn delete` old items
+    - copy all artifacts to the new folder
+    - `svn add *`
     - `svn commit`
 16. push the .nupkg to nuget.org
     - via `dotnet`: `dotnet nuget push <path to package> -s nuget.org -k <your nuget api key>`
