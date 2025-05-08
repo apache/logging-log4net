@@ -54,6 +54,4 @@ foreach ($File in Get-ChildItem $Directory *.asc)
 }
 
 Expand-Archive $Directory/*source*.zip -DestinationPath $Directory/src
-$VersionDirectory = "$Directory/src/$(@(Get-ChildItem $Directory/src)[0])"
-$VersionDirectory
-pushd $VersionDirectory
+pushd "$Directory/src/"
