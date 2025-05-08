@@ -28,6 +28,7 @@ github:
   homepage: https://logging.apache.org/log4net
   features:
     issues: true
+    discussions: true
   del_branch_on_merge: true
   labels:
     - apache
