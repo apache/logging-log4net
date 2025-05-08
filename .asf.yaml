@@ -23,6 +23,7 @@ notifications:
   # Please don't duplicate that noise here!
   commits: commits@logging.apache.org
   pullrequests_bot_dependabot: robots@logging.apache.org
+  discussions: dev@logging.apache.org
 github:
   description: "Apache Log4net is a versatile, feature-rich, efficient logging API and backend for .NET"
   homepage: https://logging.apache.org/log4net
