@@ -17,7 +17,7 @@
 
 = Layouts
 
-An xref:manual/appenders.adoc[appender] uses a *layout* to encode a LogEvent into a form that meets the needs of whatever will be consuming the log event.
+An xref:manual/configuration/appenders.adoc[appender] uses a *layout* to encode a LogEvent into a form that meets the needs of whatever will be consuming the log event.
 This page will try to answer following questions:
 
 * <<concerns,What are some common concerns shared by all predefined layouts?>>

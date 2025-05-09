@@ -89,6 +89,8 @@ ui:
           /* Make links more visible: */
           .doc a { text-decoration: underline; }
           .doc a code { text-decoration: underline; color: #1565c0; }
+          /* Make nav bar wider */
+          .nav-container { width:19rem; }
           /* Tab header fonts aren't rendered good, adjusting the font weight: */
           .tablist > ul li { font-weight: 500; }
           /* `page-toclevels` greater than 4 are not supported by Antora UI, patching it: */

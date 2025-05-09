@@ -308,17 +308,17 @@ While other naming strategies are possible, this approach is simple, effective, 
 [#appenders]
 == Appenders
 
-See xref:./appenders.adoc[]
+See xref:./configuration/appenders.adoc[]
 
 [#filters]
 == Filters
 
-See xref:./filters.adoc[]
+See xref:./configuration/filters.adoc[]
 
 [#layouts]
 == Layouts
 
-See xref:./layouts.adoc[]
+See xref:./configuration/layouts.adoc[]
 
 [#renderers]
 == Object Renderers

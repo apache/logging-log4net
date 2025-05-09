@@ -234,7 +234,7 @@ We could just as easily log to an email address or redirect all `Animals.Carnivo
 to a remote syslog server.
 
 For more examples of configuring appenders with `XmlConfigurator`, see
-xref:manual/configuration/examples.adoc[].
+xref:manual/configuration/appenders.adoc[].
 
 [#configuration-attributes]
 == Configuration Attributes
@@ -573,7 +573,7 @@ The `<appender>` element supports the following child elements:
 
 |===
 
-For examples of configuring appenders see xref:manual/configuration/examples.adoc[Example Appender Configuration].
+For examples of configuring appenders see xref:manual/configuration/appenders.adoc[Example Appender Configuration].
 
 [#filters]
 == Filters

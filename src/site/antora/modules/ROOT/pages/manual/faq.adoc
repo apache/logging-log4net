@@ -15,7 +15,7 @@
     limitations under the License.
 ////
 [#faq]
-= F.A.Q.
+= FAQ
 
 [#setup-and-usage]
 == Setup & Usage

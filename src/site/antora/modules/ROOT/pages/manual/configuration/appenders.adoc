@@ -23,9 +23,9 @@ Every Appender must implement the `IAppender` interface.
 While not strictly required by the log4net architecture, most appenders inherit from `AppenderSkeleton` and:
 
 * delegate the filtering of log events to an implementation of `IFilter`.
-See xref:manual/filters.adoc[] for more information.
+See xref:manual/configuration/filters.adoc[] for more information.
 * delegate the formatting of log events to an implementation of `ILayout`.
-See xref:manual/layouts.adoc[] for more information.
+See xref:manual/configuration/layouts.adoc[] for more information.
 * only directly handle the writing of log event data to the target destination.
 
 Appenders always have a name so that they can be referenced from a
@@ -39,7 +39,7 @@ log4net ships with the following appenders
 |===
 |Type |Description
 
-|AdoNetAppender
+|xref:manual/configuration/appenders/adonetappender.adoc[]
 |Writes logging events to a database using either prepared statements or stored procedures.
 
 |AnsiColorTerminalAppender
@@ -48,59 +48,64 @@ log4net ships with the following appenders
 |AspNetTraceAppender
 |Writes logging events to the ASP trace context. These can then be rendered at the end of the ASP page or on the ASP trace page.
 
-|BufferingForwardingAppender
+|xref:manual/configuration/appenders/bufferingforwardingappender.adoc[]
 |Buffers events and then forwards them to attached appenders.
 
-|ColoredConsoleAppender
+|xref:manual/configuration/appenders/coloredconsoleappender.adoc[]
 |Writes color highlighted logging events to the application's Windows Console.
 
-|ConsoleAppender
+|xref:manual/configuration/appenders/consoleappender.adoc[]
 |Writes logging events to the application's Console.
 The events may go to either the standard our stream or the standard error stream.
 
 |DebugAppender
 |Writes logging events to the .net debugger (https://web.archive.org/web/20240930165834/https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.debug?view=net-8.0[System.Diagnostics.Debug]).
 
-|EventLogAppender
+|xref:manual/configuration/appenders/eventlogappender.adoc[]
 |Writes logging events to the Windows Event Log.
 
-|FileAppender
+|xref:manual/configuration/appenders/fileappender.adoc[]
 |Writes logging events to a file in the file system.
 
-|LocalSyslogAppender
+|xref:manual/configuration/appenders/localsyslogappender.adoc[]
 |Writes logging events to the local https://datatracker.ietf.org/doc/html/rfc3164[syslog] service (UNIX only).
 
-|MemoryAppender
+|xref:manual/configuration/appenders/managedcoloredconsoleappender.adoc[]
+|Writes color highlighted logging events to the application's Windows Console.
+This appender is a managed version of the ColoredConsoleAppender and does not require the use of the Windows Console API.
+It is a replacement for the ColoredConsoleAppender and is the recommended appender for logging to the Console.
+
+|xref:manual/configuration/appenders/memoryappender.adoc[]
 |Stores logging events in an in memory buffer.
 
-|OutputDebugStringAppender
+|xref:manual/configuration/appenders/outputdebugstringappender.adoc[]
 |Writes logging events to the debugger (using https://web.archive.org/web/20241118170546/https://learn.microsoft.com/en-us/windows/win32/api/debugapi/nf-debugapi-outputdebugstringw[OutputDebugString]).
 If the application has no debugger, the system debugger displays the string.
 If the application has no debugger and the system debugger is not active, the message is ignored.
 
-|RemoteSyslogAppender
+|xref:manual/configuration/appenders/remotesyslogappender.adoc[]
 |Writes logging events to a remote https://datatracker.ietf.org/doc/html/rfc3164[syslog] service using UDP networking.
 
-|RollingFileAppender
+|xref:manual/configuration/appenders/rollingfileappender.adoc[]
 |Writes logging events to a file in the file system.
 The RollingFileAppender can be configured to log to multiple files based upon date or file size constraints.
 
-|SmtpAppender
+|xref:manual/configuration/appenders/smtpappender.adoc[]
 |Sends logging events to an email address.
 
-|SmtpPickupDirAppender
+|xref:manual/configuration/appenders/smtppickupdirappender.adoc[]
 |Sends logging events to an email address but writes the emails to a configurable directory rather than sending them directly via SMTP.
 
 |TelnetAppender
 |*Clients* connect via Telnet to receive logging events.
 
-|TraceAppender
+|xref:manual/configuration/appenders/traceappender.adoc[]
 |Writes logging events to the .NET trace system (https://web.archive.org/web/20240907024634/https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.trace?view=net-8.0[System.Diagnostics.Trace]).
 
-|UdpAppender
+|xref:manual/configuration/appenders/udpappender.adoc[]
 |Sends logging events as connectionless UDP datagrams to a remote host or a multicast group using a UdpClient.
 
-|ForwardingAppender
+|xref:manual/configuration/appenders/forwardingappender.adoc[]
 |Can be used to wrap another appender, for example to attach additional filters.
 
 |===
