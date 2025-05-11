@@ -41,11 +41,14 @@ internal sealed class SimpleTelnetClient(
   /// <summary>
   /// Runs the client (in a task)
   /// </summary>
-  internal void Run() => Task.Run(() =>
+  internal void Run(Action<string> log) => Task.Run(() =>
   {
+    log("client: starting ...");
     _client.Connect(new IPEndPoint(IPAddress.Loopback, port));
+    log("client: connected");
     // Get a stream object for reading and writing
     using NetworkStream stream = _client.GetStream();
+    log("client: has stream");
 
     int i;
     byte[] bytes = new byte[256];
@@ -54,9 +57,11 @@ internal sealed class SimpleTelnetClient(
     while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
     {
       string data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+      log("client: read: " + data);
       received(data);
       if (_cancellationTokenSource.Token.IsCancellationRequested)
       {
+        log("client: canceled");
         return;
       }
     }

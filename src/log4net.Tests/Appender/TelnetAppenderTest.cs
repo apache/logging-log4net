@@ -70,11 +70,15 @@ public sealed class TelnetAppenderTest
     XmlConfigurator.Configure(repository, log4NetConfig["log4net"]!);
     using (SimpleTelnetClient telnetClient = new(Received, port))
     {
-      telnetClient.Run();
+      TestContext.Out.WriteLine("test: starting client ...");
+      telnetClient.Run(TestContext.Out.WriteLine);
       WaitForReceived(1); // wait for welcome message
       ILogger logger = repository.GetLogger("Telnet");
+      TestContext.Out.WriteLine("test: logging to client ...");
       logger.Log(typeof(TelnetAppenderTest), Level.Info, logId, null);
+      TestContext.Out.WriteLine("test: waiting for message of client ...");
       WaitForReceived(2); // wait for log message
+      TestContext.Out.WriteLine("test: canceling client ...");
     }
     repository.Shutdown();
     Assert.That(received, Has.Count.EqualTo(2));
@@ -84,10 +88,18 @@ public sealed class TelnetAppenderTest
 
     void WaitForReceived(int count)
     {
+      int retries = 1;
       while (received.Count < count)
       {
+        retries++;
+        TestContext.Out.WriteLine($"receiver: waiting for message {count} of client - retry {retries} failed");
+        if (retries > 100)
+        {
+          Assert.Fail("Timeout waiting for received messages");
+        }
         Thread.Sleep(10);
       }
+      TestContext.Out.WriteLine($"receiver: waiting for message {count} of client - retry {retries} succeeded");
     }
   }
 }
