@@ -27,7 +27,7 @@ Releases of log4net can be verified with following steps:
 [source,powershell]
 ----
 winget install -e --id GnuPG.Gpg4win
-winget install -e --id TortoiseSVN.TortoiseSVN  # or any other subversion client
+winget install -e --id Slik.Subversion  # or any other subversion client
 winget install -e --id Mono.Mono
 winget install -e --id Microsoft.DotNet.SDK.8
 ----
@@ -39,7 +39,7 @@ After installation, verify that gpg and svn are in the path and add them when no
 ----
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 choco install gpg4win
-choco install tortoisesvn  # or any other subversion client
+choco install sliksvn  # or any other subversion client
 choco install mono
 choco install dotnet-8.0-sdk
 ----
@@ -94,6 +94,16 @@ wget --cut-dirs=6 \
 ----
 ====
 
+. Verify and extract
++
+[source,bash]
+----
+& ./verify-release.sh
+----
++
+[%collapsible]
+.Click to see how todo these steps manually
+====
 . Verify checksums:
 +
 [source,bash]
@@ -123,6 +133,7 @@ umask 0022
 unzip -q *source*.zip -d src
 cd src
 ----
+====
 
 . Verify the build (install https://docs.docker.com/engine/install[docker], if you haven't already):
 +  

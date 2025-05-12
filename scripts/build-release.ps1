@@ -10,7 +10,7 @@ pushd $PSScriptRoot/..
 git archive --format=zip --output $PSScriptRoot/../build/artifacts/apache-log4net-source-$Version.zip master
 popd
 'compressing binaries ...'
-cp $PSScriptRoot/verify-release.ps1 $PSScriptRoot/../build/artifacts/
+cp $PSScriptRoot/verify-release.* $PSScriptRoot/../build/artifacts/
 cp $PSScriptRoot/../LICENSE $PSScriptRoot/../build/Release/
 cp $PSScriptRoot/../NOTICE $PSScriptRoot/../build/Release/
 pushd $PSScriptRoot/../build/Release
@@ -27,6 +27,8 @@ gpg --armor --output ./apache-log4net-binaries-$Version.zip.asc --detach-sig ./a
 sha512sum -b ./apache-log4net-binaries-$Version.zip > ./apache-log4net-binaries-$Version.zip.sha512
 gpg --armor --output ./verify-release.ps1.asc --detach-sig ./verify-release.ps1
 sha512sum -b ./verify-release.ps1 > ./verify-release.ps1.sha512
+gpg --armor --output ./verify-release.ps1.asc --detach-sig ./verify-release.sh
+sha512sum -b ./verify-release.ps1 > ./verify-release.sh.sha512
 popd
 'cleaning site ...'
 rm -rf $PSScriptRoot/../target/*
