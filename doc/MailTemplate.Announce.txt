@@ -5,6 +5,6 @@ Hi,
 
 the Apache log4net team is pleased to announce the 3.1.1 release.
 For further information (support, download, etc.) see
-- https://logging.apache.org/log4net/release/release-notes.html
+- https://logging.apache.org/log4net/release-notes.html
 - https://github.com/apache/logging-log4net/releases/tag/rel%2F3.1.1
 - https://www.nuget.org/packages/log4net/3.1.1
