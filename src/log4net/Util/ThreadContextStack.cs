@@ -188,10 +188,10 @@ public sealed class ThreadContextStack : IFixingRequired
     set
     {
       _stack.Clear();
-      var frames = (StackFrame[])value.ToArray();
+      object[] frames = value.ToArray();
       for (int i = frames.Length - 1; i >= 0; i--)
       {
-        _stack.Push(frames[i]);
+        _stack.Push(frames[i].EnsureIs<StackFrame>());
       }
     }
   }
