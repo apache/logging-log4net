@@ -78,10 +78,7 @@ public abstract class PluginSkeleton : IPlugin
   /// This method is called when the plugin is attached to the repository.
   /// </para>
   /// </remarks>
-  public virtual void Attach(ILoggerRepository repository)
-  {
-    LoggerRepository = repository;
-  }
+  public virtual void Attach(ILoggerRepository repository) => LoggerRepository = repository;
 
   /// <summary>
   /// Is called when the plugin is to shutdown.

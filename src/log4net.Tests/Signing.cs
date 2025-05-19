@@ -28,10 +28,8 @@ public class Signing
   [Test]
   public void AssemblyShouldBeSigned()
   {
-    // Arrange
-    var asm = typeof(LoggerRepositorySkeleton).Assembly;
-    // Act
-    var result = asm.GetName().GetPublicKey();
+    System.Reflection.Assembly assembly = typeof(LoggerRepositorySkeleton).Assembly;
+    byte[]? result = assembly.GetName().GetPublicKey();
     Assert.That(result, Is.Not.Null);
     Assert.That(result, Is.Not.Empty);
   }

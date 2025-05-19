@@ -114,10 +114,7 @@ public class ManagedColoredConsoleAppender : AppenderSkeleton
   /// for a level.
   /// </para>
   /// </remarks>
-  public void AddMapping(LevelColors mapping)
-  {
-    _levelMapping.Add(mapping);
-  }
+  public void AddMapping(LevelColors mapping) => _levelMapping.Add(mapping);
 
   /// <summary>
   /// Writes the event to the console.

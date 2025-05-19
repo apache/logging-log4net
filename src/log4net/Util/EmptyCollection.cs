@@ -131,8 +131,5 @@ public sealed class EmptyCollection : ICollection
   /// As the collection is empty a <see cref="NullEnumerator"/> is returned.
   /// </para>
   /// </remarks>
-  public IEnumerator GetEnumerator()
-  {
-    return NullEnumerator.Instance;
-  }
+  public IEnumerator GetEnumerator() => NullEnumerator.Instance;
 }

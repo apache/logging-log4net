@@ -136,8 +136,5 @@ public sealed class GlobalContextProperties : ContextPropertiesBase
   /// stores a readonly copy of the properties.
   /// </para>
   /// </remarks>
-  internal ReadOnlyPropertiesDictionary GetReadOnlyProperties()
-  {
-    return _readOnlyProperties;
-  }
+  internal ReadOnlyPropertiesDictionary GetReadOnlyProperties() => _readOnlyProperties;
 }

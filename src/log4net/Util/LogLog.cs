@@ -234,10 +234,7 @@ public sealed class LogLog
   /// <param name="prefix"></param>
   /// <param name="message"></param>
   /// <param name="exception"></param>
-  public static void OnLogReceived(Type source, string prefix, string message, Exception? exception)
-  {
-    LogReceived?.Invoke(null, new LogReceivedEventArgs(new LogLog(source, prefix, message, exception)));
-  }
+  public static void OnLogReceived(Type source, string prefix, string message, Exception? exception) => LogReceived?.Invoke(null, new LogReceivedEventArgs(new LogLog(source, prefix, message, exception)));
 
   /// <summary>
   /// Test if LogLog.Debug is enabled for output.

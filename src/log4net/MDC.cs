@@ -65,10 +65,7 @@ public static class MDC
   /// </para>
   /// </remarks>
   /*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
-  public static string? Get(string key)
-  {
-    return ThreadContext.Properties[key]?.ToString();
-  }
+  public static string? Get(string key) => ThreadContext.Properties[key]?.ToString();
 
   /// <summary>
   /// Add an entry to the MDC
@@ -94,10 +91,7 @@ public static class MDC
   /// </para>
   /// </remarks>
   /*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
-  public static void Set(string key, string value)
-  {
-    ThreadContext.Properties[key] = value;
-  }
+  public static void Set(string key, string value) => ThreadContext.Properties[key] = value;
 
   /// <summary>
   /// Removes the key value mapping for the key specified.
@@ -115,10 +109,7 @@ public static class MDC
   /// </para>
   /// </remarks>
   /*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
-  public static void Remove(string key)
-  {
-    ThreadContext.Properties.Remove(key);
-  }
+  public static void Remove(string key) => ThreadContext.Properties.Remove(key);
 
   /// <summary>
   /// Clear all entries in the MDC
@@ -135,8 +126,5 @@ public static class MDC
   /// </para>
   /// </remarks>
   /*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
-  public static void Clear()
-  {
-    ThreadContext.Properties.Clear();
-  }
+  public static void Clear() => ThreadContext.Properties.Clear();
 }

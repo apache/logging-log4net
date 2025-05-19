@@ -73,10 +73,7 @@ public static class BasicConfigurator
   /// layout style.
   /// </para>
   /// </remarks>
-  public static ICollection Configure()
-  {
-    return Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()));
-  }
+  public static ICollection Configure() => Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()));
 
   /// <summary>
   /// Initializes the log4net system using the specified appenders.

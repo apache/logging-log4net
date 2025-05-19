@@ -221,10 +221,7 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
   /// of the buffer will NOT be flushed to the appender.
   /// </para>
   /// </remarks>
-  public virtual void Flush()
-  {
-    Flush(false);
-  }
+  public virtual void Flush() => Flush(false);
 
   /// <summary>
   /// Flush the currently buffered events
@@ -345,11 +342,7 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
   /// the buffer must be sent when the appender is closed.
   /// </para>
   /// </remarks>
-  protected override void OnClose()
-  {
-    // Flush the buffer on close
-    Flush(true);
-  }
+  protected override void OnClose() => Flush(true); // Flush the buffer on close
 
   /// <summary>
   /// This method is called by the <see cref="AppenderSkeleton.DoAppend(LoggingEvent)"/> method. 

@@ -70,10 +70,7 @@ public sealed class ReaderWriterLock
   /// reaches zero, the lock is released.
   /// </para>
   /// </remarks>
-  public void ReleaseReaderLock()
-  {
-    _readerWriterLock.ExitReadLock();
-  }
+  public void ReleaseReaderLock() => _readerWriterLock.ExitReadLock();
 
   /// <summary>
   /// Acquires the writer lock
@@ -102,10 +99,7 @@ public sealed class ReaderWriterLock
   /// When the count reaches zero, the writer lock is released.
   /// </para>
   /// </remarks>
-  public void ReleaseWriterLock()
-  {
-    _readerWriterLock.ExitWriteLock();
-  }
+  public void ReleaseWriterLock() => _readerWriterLock.ExitWriteLock();
 
   private readonly ReaderWriterLockSlim _readerWriterLock = new(LockRecursionPolicy.SupportsRecursion);
 }

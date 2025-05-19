@@ -114,8 +114,5 @@ public class SecurityContextProvider
   /// behavior.
   /// </para>
   /// </remarks>
-  public virtual SecurityContext CreateSecurityContext(object consumer)
-  {
-    return NullSecurityContext.Instance;
-  }
+  public virtual SecurityContext CreateSecurityContext(object consumer) => NullSecurityContext.Instance;
 }

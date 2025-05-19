@@ -40,8 +40,5 @@ public class PropertyEntry
   /// Override <c>Object.ToString</c> to return sensible debug info
   /// </summary>
   /// <returns>string info about this object</returns>
-  public override string ToString()
-  {
-    return $"PropertyEntry(Key={Key}, Value={Value})";
-  }
+  public override string ToString() => $"PropertyEntry(Key={Key}, Value={Value})";
 }

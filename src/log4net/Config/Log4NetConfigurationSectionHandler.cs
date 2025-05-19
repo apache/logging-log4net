@@ -71,8 +71,5 @@ public class Log4NetConfigurationSectionHandler : IConfigurationSectionHandler
   /// Returns the <see cref="XmlNode"/> containing the configuration data,
   /// </para>
   /// </remarks>
-  public object Create(object parent, object configContext, XmlNode section)
-  {
-    return section;
-  }
+  public object Create(object parent, object configContext, XmlNode section) => section;
 }

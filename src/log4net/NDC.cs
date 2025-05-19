@@ -85,10 +85,7 @@ public static class NDC
   /// </remarks>
   /// <seealso cref="SetMaxDepth"/>
   /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
-  public static int Depth
-  {
-    get { return ThreadContext.Stacks["NDC"].Count; }
-  }
+  public static int Depth => ThreadContext.Stacks["NDC"].Count;
 
   /// <summary>
   /// Clears all the contextual information held on the current thread.
@@ -105,10 +102,7 @@ public static class NDC
   /// </para>
   /// </remarks>
   /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
-  public static void Clear()
-  {
-    ThreadContext.Stacks["NDC"].Clear();
-  }
+  public static void Clear() => ThreadContext.Stacks["NDC"].Clear();
 
   /// <summary>
   /// Creates a clone of the stack of context information.
@@ -128,10 +122,7 @@ public static class NDC
   /// </para>
   /// </remarks>
   /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
-  public static Stack CloneStack()
-  {
-    return ThreadContext.Stacks["NDC"].InternalStack;
-  }
+  public static Stack CloneStack() => ThreadContext.Stacks["NDC"].InternalStack;
 
   /// <summary>
   /// Inherits the contextual information from another thread.
@@ -155,10 +146,7 @@ public static class NDC
   /// </para>
   /// </remarks>
   /*[Obsolete("NDC has been replaced by ThreadContext.Stacks", true)]*/
-  public static void Inherit(Stack stack)
-  {
-    ThreadContext.Stacks["NDC"].InternalStack = stack;
-  }
+  public static void Inherit(Stack stack) => ThreadContext.Stacks["NDC"].InternalStack = stack;
 
   /// <summary>
   /// Removes the top context from the stack.
@@ -181,10 +169,7 @@ public static class NDC
   /// </para>
   /// </remarks>
   /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
-  public static string? Pop()
-  {
-    return ThreadContext.Stacks["NDC"].Pop();
-  }
+  public static string? Pop() => ThreadContext.Stacks["NDC"].Pop();
 
   /// <summary>
   /// Pushes a new context message.
@@ -217,10 +202,7 @@ public static class NDC
   /// </code>
   /// </example>
   /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
-  public static IDisposable Push(string message)
-  {
-    return ThreadContext.Stacks["NDC"].Push(message);
-  }
+  public static IDisposable Push(string message) => ThreadContext.Stacks["NDC"].Push(message);
 
   /// <summary>
   /// Pushes a new context message.
@@ -255,10 +237,7 @@ public static class NDC
   /// </code>
   /// </example>
   /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
-  public static IDisposable PushFormat(string messageFormat, params object[] args)
-  {
-    return Push(string.Format(messageFormat, args));
-  }
+  public static IDisposable PushFormat(string messageFormat, params object[] args) => Push(string.Format(messageFormat, args));
 
   /// <summary>
   /// Removes the context information for this thread. It is

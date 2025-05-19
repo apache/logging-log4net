@@ -277,10 +277,7 @@ public class LocalSyslogAppender : AppenderSkeleton
   /// Adds a <see cref="LevelSeverity"/> to this appender.
   /// </para>
   /// </remarks>
-  public void AddMapping(LevelSeverity mapping)
-  {
-    _levelMapping.Add(mapping);
-  }
+  public void AddMapping(LevelSeverity mapping) => _levelMapping.Add(mapping);
 
   /// <summary>
   /// Initialize the appender based on the options set.

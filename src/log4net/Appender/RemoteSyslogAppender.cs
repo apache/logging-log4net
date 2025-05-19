@@ -302,10 +302,7 @@ public class RemoteSyslogAppender : UdpAppender
   /// Add a <see cref="LevelSeverity"/> mapping to this appender.
   /// </para>
   /// </remarks>
-  public void AddMapping(LevelSeverity mapping)
-  {
-    _levelMapping.Add(mapping);
-  }
+  public void AddMapping(LevelSeverity mapping) => _levelMapping.Add(mapping);
 
   /// <summary>
   /// Writes the event to a remote syslog daemon.

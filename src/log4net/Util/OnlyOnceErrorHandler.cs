@@ -130,10 +130,7 @@ public class OnlyOnceErrorHandler : IErrorHandler
   /// Invokes <see cref="FirstError"/> if and only if this is the first error or the first error after <see cref="Reset"/> has been called.
   /// </para>
   /// </remarks>
-  public void Error(string message, Exception e)
-  {
-    Error(message, e, ErrorCode.GenericFailure);
-  }
+  public void Error(string message, Exception e) => Error(message, e, ErrorCode.GenericFailure);
 
   /// <summary>
   /// Log an error
@@ -144,10 +141,7 @@ public class OnlyOnceErrorHandler : IErrorHandler
   /// Invokes <see cref="FirstError"/> if and only if this is the first error or the first error after <see cref="Reset"/> has been called.
   /// </para>
   /// </remarks>
-  public void Error(string message)
-  {
-    Error(message, null, ErrorCode.GenericFailure);
-  }
+  public void Error(string message) => Error(message, null, ErrorCode.GenericFailure);
 
   /// <summary>
   /// Is error logging enabled

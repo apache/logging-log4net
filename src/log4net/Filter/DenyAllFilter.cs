@@ -50,8 +50,5 @@ public sealed class DenyAllFilter : FilterSkeleton
   /// as any further filters will be ignored!
   /// </para>
   /// </remarks>
-  public override FilterDecision Decide(LoggingEvent loggingEvent)
-  {
-    return FilterDecision.Deny;
-  }
+  public override FilterDecision Decide(LoggingEvent loggingEvent) => FilterDecision.Deny;
 }

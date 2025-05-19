@@ -178,13 +178,12 @@ public sealed class LogicalThreadContextProperties : ContextPropertiesBase
   /// </remarks>
   [SecuritySafeCritical]
   private static PropertiesDictionary? GetLogicalProperties()
-  {
 #if NET462_OR_GREATER
-    return CallContext.LogicalGetData(CSlotName) as PropertiesDictionary;
+    => CallContext.LogicalGetData(CSlotName) as PropertiesDictionary;
 #else
-    return _asyncLocalDictionary.Value;
+    => _asyncLocalDictionary.Value;
 #endif
-  }
+
 
   /// <summary>
   /// Sets the call context data.
@@ -196,13 +195,12 @@ public sealed class LogicalThreadContextProperties : ContextPropertiesBase
   /// </remarks>
   [SecuritySafeCritical]
   private static void SetLogicalProperties(PropertiesDictionary properties)
-  {
 #if NET462_OR_GREATER
-    CallContext.LogicalSetData(CSlotName, properties);
+    => CallContext.LogicalSetData(CSlotName, properties);
 #else
-    _asyncLocalDictionary.Value = properties;
+    => _asyncLocalDictionary.Value = properties;
 #endif
-  }
+
 
   /// <summary>
   /// The fully qualified type of the LogicalThreadContextProperties class.

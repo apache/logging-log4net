@@ -48,11 +48,9 @@ public class RawLayoutConverter : IConvertFrom
   /// as the <paramref name="sourceType"/>.
   /// </para>
   /// </remarks>
-  public bool CanConvertFrom(Type sourceType)
-  {
+  public bool CanConvertFrom(Type sourceType) =>
     // Accept an ILayout object
-    return typeof(ILayout).IsAssignableFrom(sourceType);
-  }
+    typeof(ILayout).IsAssignableFrom(sourceType);
 
   /// <summary>
   /// Converts the value to a <see cref="IRawLayout"/> object.

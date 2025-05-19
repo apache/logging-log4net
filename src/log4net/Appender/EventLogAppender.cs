@@ -152,10 +152,7 @@ public class EventLogAppender : AppenderSkeleton
   /// Each mapping defines the event log entry type for a level.
   /// </para>
   /// </remarks>
-  public void AddMapping(Level2EventLogEntryType mapping)
-  {
-    _levelMapping.Add(mapping);
-  }
+  public void AddMapping(Level2EventLogEntryType mapping) => _levelMapping.Add(mapping);
 
   /// <summary>
   /// Gets or sets the <see cref="SecurityContext"/> used to write to the EventLog.

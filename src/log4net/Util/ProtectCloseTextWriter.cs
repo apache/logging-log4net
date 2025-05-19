@@ -46,10 +46,7 @@ public class ProtectCloseTextWriter : TextWriterAdapter
   /// Attaches this instance to a different underlying <see cref="TextWriter"/>.
   /// </summary>
   /// <param name="writer">the writer to attach to</param>
-  public void Attach(TextWriter writer)
-  {
-    Writer = writer;
-  }
+  public void Attach(TextWriter writer) => Writer = writer;
 
   /// <summary>
   /// Does not close the underlying output writer.

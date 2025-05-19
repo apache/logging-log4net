@@ -68,8 +68,5 @@ public sealed class NullSecurityContext : SecurityContext
   /// No impersonation is done and <c>null</c> is always returned.
   /// </para>
   /// </remarks>
-  public override IDisposable? Impersonate(object state)
-  {
-    return null;
-  }
+  public override IDisposable? Impersonate(object state) => null;
 }
