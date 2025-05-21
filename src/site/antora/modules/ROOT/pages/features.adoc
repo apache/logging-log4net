@@ -33,16 +33,8 @@ Using these loggers it is possible to selectively control which log statements a
 log4net is designed with two distinct goals in mind: speed and flexibility
 
 [#featurelist]
-== Features
-* Support for multiple frameworks
-* Output to multiple logging targets
-* Hierarchical logging architecture
-* XML Configuration
-* Dynamic Configuration
-* Logging Context
-* Proven architecture
-* Modular and extensible design
-* High performance with flexibility
+== What does log4net offer?
+include::partial$log4net-features.adoc[]
 
 [#frameworks]
 == Support for multiple frameworks
