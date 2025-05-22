@@ -37,6 +37,8 @@ namespace log4net.DateFormatter;
 /// <author>Gert Driesen</author>
 public class AbsoluteTimeDateFormatter : IDateFormatter
 {
+  private readonly record struct TimeString(long TimeToTheSecond, string AsString);
+
   /// <summary>
   /// Renders the date into a string. Format is <c>"HH:mm:ss"</c>.
   /// </summary>
@@ -95,24 +97,16 @@ public class AbsoluteTimeDateFormatter : IDateFormatter
   /// </remarks>
   public virtual void FormatDate(DateTime dateToFormat, TextWriter writer)
   {
-    string timeString = _sLastTimeStrings.AddOrUpdate(GetType(),
-      _ => BuildTimeString(),
-      (_, existing) =>
-      {
-        // Calculate the current time precise only to the second
-        long currentTimeToTheSecond = dateToFormat.Ticks - (dateToFormat.Ticks % TimeSpan.TicksPerSecond);
-
-        // Compare this time with the stored last time
-        // If we are in the same second then append
-        // the previously calculated time string
-        if (_sLastTimeToTheSecond == currentTimeToTheSecond)
-        {
-          return existing;
-        }
-        _sLastTimeToTheSecond = currentTimeToTheSecond;
-        return BuildTimeString();
-      });
-    writer.EnsureNotNull().Write(timeString);
+    // Calculate the current time precise only to the second
+    long timeToTheSecond = dateToFormat.Ticks - (dateToFormat.Ticks % TimeSpan.TicksPerSecond);
+    // Compare this time with the stored last time
+    // If we are in the same second then append the previously calculated time string
+    if (!_sLastTimeStrings.TryGetValue(GetType(), out TimeString timeString) || timeString.TimeToTheSecond != timeToTheSecond)
+    {
+      timeString = BuildTimeString(dateToFormat, timeToTheSecond);
+      _sLastTimeStrings[GetType()] = timeString;
+    }
+    writer.EnsureNotNull().Write(timeString.AsString);
 
     // Append the current millisecond info
     writer.Write(',');
@@ -127,12 +121,13 @@ public class AbsoluteTimeDateFormatter : IDateFormatter
     }
     writer.Write(millis);
 
-    string BuildTimeString()
-    {
-      var sb = new StringBuilder();
-      FormatDateWithoutMillis(dateToFormat, sb);
-      return sb.ToString();
-    }
+  }
+
+  private TimeString BuildTimeString(DateTime dateToFormat, long timeToTheSecond)
+  {
+    StringBuilder sb = new();
+    FormatDateWithoutMillis(dateToFormat, sb);
+    return new(timeToTheSecond, sb.ToString());
   }
 
   /// <summary>
@@ -151,13 +146,8 @@ public class AbsoluteTimeDateFormatter : IDateFormatter
   public const string Iso8601TimeDateFormat = "ISO8601";
 
   /// <summary>
-  /// Last stored time with precision up to the second.
-  /// </summary>
-  private static long _sLastTimeToTheSecond;
-
-  /// <summary>
   /// Last stored time with precision up to the second, formatted
   /// as a string.
   /// </summary>
-  private static readonly ConcurrentDictionary<Type, string> _sLastTimeStrings = new();
+  private static readonly ConcurrentDictionary<Type, TimeString> _sLastTimeStrings = new();
 }
