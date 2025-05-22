@@ -342,6 +342,27 @@ public class PatternLayoutTest
 
     stringAppender.Reset();
   }
+
+  [Test]
+  public void ConvertMultipleDatePatternsTest()
+  {
+    StringAppender stringAppender = new()
+    {
+      Layout = NewPatternLayout("%utcdate{ABSOLUTE} - %utcdate{ISO8601}")
+    };
+
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    BasicConfigurator.Configure(rep, stringAppender);
+
+    ILog logger = LogManager.GetLogger(rep.Name, nameof(ConvertMultipleDatePatternsTest));
+
+    logger.Logger.Log(new(new() { TimeStampUtc = new(2025, 02, 10, 13, 01, 02, 123, DateTimeKind.Utc), Message = "test", Level = Level.Info }));
+    Assert.That(stringAppender.GetString(), Is.EqualTo("13:01:02,123 - 2025-02-10 13:01:02,123"));
+    stringAppender.Reset();
+    logger.Logger.Log(new(new() { TimeStampUtc = new(2025, 02, 10, 13, 01, 03, 123, DateTimeKind.Utc), Message = "test", Level = Level.Info }));
+    Assert.That(stringAppender.GetString(), Is.EqualTo("13:01:03,123 - 2025-02-10 13:01:03,123"));
+  }
+
 #if NET8_0_OR_GREATER
   [Test]
   public void ConvertMicrosecondsPatternTest()
