@@ -41,13 +41,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".doc", ".doc", "{33D80AD3-8048-4220-8BB0-38E3BDE5FCF4}"
 	ProjectSection(SolutionItems) = preProject
 		..\doc\BUILDING.md = ..\doc\BUILDING.md
-		site\xdoc\release\config-examples.xml = site\xdoc\release\config-examples.xml
-		site\xdoc\download_log4net.xml = site\xdoc\download_log4net.xml
 		..\doc\MailTemplate.Announce.txt = ..\doc\MailTemplate.Announce.txt
 		..\doc\MailTemplate.Result.txt = ..\doc\MailTemplate.Result.txt
 		..\doc\MailTemplate.txt = ..\doc\MailTemplate.txt
-		site\xdoc\release\release-notes.xml = site\xdoc\release\release-notes.xml
-		site\xdoc\release\release-review-instructions.xml = site\xdoc\release\release-review-instructions.xml
 		..\doc\RELEASING.md = ..\doc\RELEASING.md
 	EndProjectSection
 EndProject
