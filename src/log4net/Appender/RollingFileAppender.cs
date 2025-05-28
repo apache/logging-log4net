@@ -791,7 +791,8 @@ public partial class RollingFileAppender : FileAppender
   {
     curFileName = curFileName.ToLowerInvariant();
     baseFile = baseFile.ToLowerInvariant();
-    var baseFileWithoutExtension = Path.Combine(Path.GetDirectoryName(baseFile) ?? "", Path.GetFileNameWithoutExtension(baseFile));
+    string dir = string.IsNullOrEmpty(baseFile) ? "" : Path.GetDirectoryName(baseFile);
+    var baseFileWithoutExtension = Path.Combine(dir ?? "", Path.GetFileNameWithoutExtension(baseFile));
     
     if (curFileName.StartsWith(baseFileWithoutExtension) == false)
     {
