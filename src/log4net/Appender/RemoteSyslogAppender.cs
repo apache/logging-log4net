@@ -23,6 +23,10 @@ using log4net.Core;
 using log4net.Util;
 using log4net.Layout;
 using System.Text;
+using System.Net.Sockets;
+using System.Threading.Tasks;
+using System.Threading;
+using System.Collections.Concurrent;
 
 namespace log4net.Appender;
 
@@ -367,7 +371,8 @@ public class RemoteSyslogAppender : UdpAppender
         // Grab as a byte array
         byte[] buffer = Encoding.GetBytes(builder.ToString());
 
-        Client.SendAsync(buffer, buffer.Length, RemoteEndPoint).Wait();
+        //Client.SendAsync(buffer, buffer.Length, RemoteEndPoint).Wait();
+        _sendQueue.Add(buffer);
       }
     }
     catch (Exception e) when (!e.IsFatal())
@@ -420,11 +425,11 @@ public class RemoteSyslogAppender : UdpAppender
   /// Initialize the level to syslog severity mappings set on this appender.
   /// </para>
   /// </remarks>
-  public override void ActivateOptions()
-  {
-    base.ActivateOptions();
-    _levelMapping.ActivateOptions();
-  }
+  //public override void ActivateOptions()
+  //{
+  //  base.ActivateOptions();
+  //  _levelMapping.ActivateOptions();
+  //}
 
   /// <summary>
   /// Translates a log4net level to a syslog severity.
@@ -530,5 +535,58 @@ public class RemoteSyslogAppender : UdpAppender
     /// </para>
     /// </remarks>
     public SyslogSeverity Severity { get; set; }
+  }
+  private readonly BlockingCollection<byte[]> _sendQueue = new();
+  private CancellationTokenSource? _cts;
+  private Task? _pumpTask;
+  public override void ActivateOptions()
+  {
+    base.ActivateOptions();
+    // Start the background pump
+    _cts = new CancellationTokenSource();
+    _pumpTask = Task.Run(() => ProcessQueueAsync(_cts.Token), CancellationToken.None);
+  }
+
+  protected override void OnClose()
+  {
+    // Signal shutdown and wait for the pump to drain
+    _cts?.Cancel();
+    _pumpTask?.Wait(TimeSpan.FromSeconds(5)); // or your own timeout
+    base.OnClose();
+  }
+
+  private async Task ProcessQueueAsync(CancellationToken token)
+  {
+    // We create our own UdpClient here, so that client lifetime is tied to this task
+    using (var udp = new UdpClient())
+    {
+      udp.Connect(RemoteAddress?.ToString(), RemotePort);
+
+      try
+      {
+        while (!token.IsCancellationRequested)
+        {
+          // Take next message or throw when cancelled
+          byte[] datagram = _sendQueue.Take(token);
+          try
+          {
+            await udp.SendAsync(datagram, datagram.Length);
+          }
+          catch (Exception ex) when (!ex.IsFatal())
+          {
+            ErrorHandler.Error("RemoteSyslogAppender: send failed", ex, ErrorCode.WriteFailure);
+          }
+        }
+      }
+      catch (OperationCanceledException)
+      {
+        // Clean shutdown: drain remaining items if desired
+        while (_sendQueue.TryTake(out var leftover))
+        {
+          try { await udp.SendAsync(leftover, leftover.Length); }
+          catch { /* ignore */ }
+        }
+      }
+    }
   }
 }
