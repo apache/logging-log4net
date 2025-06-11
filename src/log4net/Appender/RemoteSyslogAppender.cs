@@ -259,6 +259,10 @@ public class RemoteSyslogAppender : UdpAppender
     Local7 = 23
   }
 
+  private readonly BlockingCollection<byte[]> _sendQueue = new();
+  private CancellationTokenSource? _cts;
+  private Task? _pumpTask;
+  
   /// <summary>
   /// Initializes a new instance of the <see cref="RemoteSyslogAppender" /> class.
   /// </summary>
@@ -425,12 +429,15 @@ public class RemoteSyslogAppender : UdpAppender
   /// Initialize the level to syslog severity mappings set on this appender.
   /// </para>
   /// </remarks>
-  //public override void ActivateOptions()
-  //{
-  //  base.ActivateOptions();
-  //  _levelMapping.ActivateOptions();
-  //}
-
+  public override void ActivateOptions()
+  {
+    base.ActivateOptions();
+    _levelMapping.ActivateOptions();
+    // Start the background pump
+    _cts = new CancellationTokenSource();
+    _pumpTask = Task.Run(() => ProcessQueueAsync(_cts.Token), CancellationToken.None);
+  }
+  
   /// <summary>
   /// Translates a log4net level to a syslog severity.
   /// </summary>
@@ -535,16 +542,6 @@ public class RemoteSyslogAppender : UdpAppender
     /// </para>
     /// </remarks>
     public SyslogSeverity Severity { get; set; }
-  }
-  private readonly BlockingCollection<byte[]> _sendQueue = new();
-  private CancellationTokenSource? _cts;
-  private Task? _pumpTask;
-  public override void ActivateOptions()
-  {
-    base.ActivateOptions();
-    // Start the background pump
-    _cts = new CancellationTokenSource();
-    _pumpTask = Task.Run(() => ProcessQueueAsync(_cts.Token), CancellationToken.None);
   }
 
   protected override void OnClose()
