@@ -342,8 +342,8 @@ public static class LoggerManager
     foreach (ILoggerRepository repository in GetAllRepositories())
     {
       //Cleanup event handlers since they only call this mathod anyways
-      AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
-      AppDomain.CurrentDomain.DomainUnload += OnDomainUnload;
+      AppDomain.CurrentDomain.ProcessExit -= OnProcessExit;
+      AppDomain.CurrentDomain.DomainUnload -= OnDomainUnload;
       
       repository.Shutdown();
     }
