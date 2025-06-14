@@ -339,6 +339,10 @@ public static class LoggerManager
   /// </remarks>
   public static void Shutdown()
   {
+    //Cleanup event handlers since they only call this mathod anyways
+    AppDomain.CurrentDomain.ProcessExit -= OnProcessExit;
+    AppDomain.CurrentDomain.DomainUnload -= OnDomainUnload;
+    
     foreach (ILoggerRepository repository in GetAllRepositories())
     {
       repository.Shutdown();
