@@ -344,7 +344,7 @@ public static class LoggerManager
     AppDomain.CurrentDomain.DomainUnload -= OnDomainUnload;
     
     foreach (ILoggerRepository repository in GetAllRepositories())
-    {      
+    {
       repository.Shutdown();
     }
   }
