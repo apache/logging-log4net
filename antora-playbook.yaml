@@ -108,7 +108,7 @@ ui:
         <header class="header">
           <nav class="navbar">
             <div class="navbar-brand">
-              <span class="navbar-item title">{{site.title}}</span>
+              <img src="{{{uiRootPath}}}/../_images/log4net.svg" alt="Apache log4net"/>
             </div>
             <div id="topbar-nav" class="navbar-menu">
               <div class="navbar-end">
