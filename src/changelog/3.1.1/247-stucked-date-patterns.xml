@@ -3,10 +3,9 @@
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="fixed">
-  <issue id="245" link="https://github.com/apache/logging-log4net/issues/245"/>
-  <issue id="246" link="https://github.com/apache/logging-log4net/pull/246"/>
+  <issue id="247" link="https://github.com/apache/logging-log4net/issues/247"/>
+  <issue id="248" link="https://github.com/apache/logging-log4net/pull/248"/>
   <description format="asciidoc">
-    Fix InvalidCastException in NDC.Inherit(System.Collections.Stack)
-    (reported by @jberg7, fixed by @FreeAndNil in https://github.com/apache/logging-log4net/pull/246[#246])
+    Fix caching of time strings in AbsoluteTimeDateFormatter (reported by @LeadAssimilator, fixed by @FreeAndNil in https://github.com/apache/logging-log4net/pull/248[#248])
   </description>
 </entry>

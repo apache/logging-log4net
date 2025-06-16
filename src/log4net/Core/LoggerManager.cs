@@ -339,7 +339,7 @@ public static class LoggerManager
   /// </remarks>
   public static void Shutdown()
   {
-    //Cleanup event handlers since they only call this mathod anyways
+    // Cleanup event handlers since they only call this method anyway
     AppDomain.CurrentDomain.ProcessExit -= OnProcessExit;
     AppDomain.CurrentDomain.DomainUnload -= OnDomainUnload;
     
